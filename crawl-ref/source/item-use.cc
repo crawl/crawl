@@ -3349,10 +3349,7 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     // Get item name now before changing enchantment.
     string iname = _item_name(wpn);
 
-    if (is_weapon(wpn)
-        && !is_artefact(wpn)
-        && wpn.base_type == OBJ_WEAPONS
-        && wpn.plus < MAX_WPN_ENCHANT)
+    if (is_enchantable_weapon(wpn))
     {
         wpn.plus++;
         success = true;

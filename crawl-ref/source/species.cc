@@ -131,11 +131,6 @@ namespace species
         return species == SP_DEEP_ELF;
     }
 
-    bool is_orcish(species_type species)
-    {
-        return species == SP_HILL_ORC;
-    }
-
     bool is_undead(species_type species)
     {
         return undead_type(species) != US_ALIVE;

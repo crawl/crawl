@@ -1708,8 +1708,12 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
         return true;
 
     // Artefacts or highly enchanted armour cannot be enchanted.
-    if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
+    if ((is_artefact(arm)
+        && (!you.has_mutation(MUT_ARTIFACT_ENCHANTING) || is_unrandom_artefact(arm))
+        || arm.plus >= armour_max_enchant(arm)))
+    {
         return false;
+    }
 
     return true;
 }
@@ -1717,7 +1721,9 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
 bool is_enchantable_weapon(const item_def &weapon, bool unknown)
 {
     return weapon.base_type == OBJ_WEAPONS
-       && !is_artefact(weapon)
+       && (!is_artefact(weapon)
+           || (!is_unrandom_artefact(weapon)
+               && you.has_mutation(MUT_ARTIFACT_ENCHANTING)))
        && (unknown && !item_ident(weapon, ISFLAG_KNOW_PLUSES)
            || weapon.plus < MAX_WPN_ENCHANT);
 }

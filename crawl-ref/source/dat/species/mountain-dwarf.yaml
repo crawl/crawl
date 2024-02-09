@@ -1,0 +1,58 @@
+enum: SP_MOUNTAIN_DWARF
+monster: MONS_DWARF
+name: Mountain Dwarf
+short_name: MD
+difficulty: Simple
+difficulty_priority: 100
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: 0
+  wl: 4
+  fighting: 1
+  long_blades: -1
+  short_blades: -2
+  axes: 2
+  maces_and_flails: 2
+  polearms: 1
+  staves: -1
+  ranged weapons: -2
+  throwing: -2
+  armour: 1
+  dodging: -3
+  stealth: -1
+  shields: 1
+  spellcasting: -3
+  translocations: -2
+  shapeshifting: -2
+  hexes: -1
+  summoning: -1
+  fire_magic: 2
+  earth_magic: 1
+  ice_magic: -1
+  air_magic: -3
+  alchemy: -2
+  conjurations: -1
+  invocations: 3
+str: 10
+int: 8
+dex: 5
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - int
+mutations:
+  1:
+    MUT_STURDY_FRAME: 3
+    MUT_ARTIFACT_ENCHANTING: 1
+recommended_jobs:
+  - JOB_FIGHTER
+  - JOB_MONK
+  - JOB_BERSERKER
+  - JOB_CINDER_ACOLYTE
+  - JOB_REAVER
+  - JOB_FIRE_ELEMENTALIST
+recommended_weapons:
+  - SK_MACES_FLAILS
+  - SK_AXES
+  - SK_POLEARMS

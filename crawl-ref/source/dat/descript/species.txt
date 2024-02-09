@@ -57,11 +57,6 @@ Gnoll
 Gnolls are canine-like humanoids. They are unable to specialise in any single
 skill, but instead gradually become proficient in all skills at once.
 %%%%
-Hill Orc
-
-Hill Orcs are skilled in close combat, and often dabble in offensive magic. Only
-they may worship the Orc god Beogh.
-%%%%
 Human
 
 Humans are natural explorers. Discovering new places refreshes and invigorates them.
@@ -86,6 +81,11 @@ Minotaur
 
 Minotaurs are large muscular humans with bovine heads. They excel at all forms
 of close and ranged combat.
+%%%%
+Mountain Dwarf
+
+Mountain Dwarves are strong melee fighters and capable heavy-armoured casters.
+They can use scrolls to enchant even some artifacts.
 %%%%
 Mummy
 

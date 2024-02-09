@@ -2473,6 +2473,12 @@ static const mutation_def mut_data[] =
   {"You brawl whenever you drink a healing potion.", "", ""},
   {"You no longer brawl whenever you drink a healing potion.", "", ""},
 },
+
+{ MUT_ARTIFACT_ENCHANTING, 0, 1, mutflag::good, false, "artifact enchanting",
+  {"You can use scrolls of enchantment on lesser artifacts.", "", ""},
+  {"You can now use scrolls of enchantment on lesser artifacts.", "", ""},
+  {"You can no longer use scrolls of enchantment on lesser artifacts.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

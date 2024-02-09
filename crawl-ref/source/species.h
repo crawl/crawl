@@ -33,7 +33,6 @@ namespace species
                                                     bool initial_only = false);
 
     bool is_elven(species_type species);
-    bool is_orcish(species_type species);
     bool is_undead(species_type species);
     bool is_draconian(species_type species);
     undead_state_type undead_type(species_type species) PURE;
