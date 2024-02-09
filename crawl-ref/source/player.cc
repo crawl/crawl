@@ -7688,6 +7688,12 @@ bool player::do_shaft()
         mpr("Your tunneler's instincts keep you from falling into a shaft!");
         return false;
     }
+    if (you_worship(GOD_YREDELEMNUL) && yred_torch_is_raised())
+    {
+        mpr("Yredelemnul refuses to let your conquest be stopped by a trick of"
+            " the earth!");
+        return false;
+    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
