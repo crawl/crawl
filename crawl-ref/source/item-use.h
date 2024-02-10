@@ -46,8 +46,8 @@ bool can_wield(const item_def *weapon, bool say_why = false,
                bool ignore_temporary_disability = false, bool unwield = false,
                bool only_known = true);
 
-bool auto_wield(bool adjust_time_taken = true);
-bool wield_weapon(int slot, bool adjust_time_taken = true);
+bool auto_wield();
+bool wield_weapon(int slot);
 
 bool use_an_item(operation_types oper, item_def *target=nullptr);
 

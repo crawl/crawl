@@ -1021,7 +1021,7 @@ static bool _can_generically_use(operation_types oper)
     return true;
 }
 
-static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken=true);
+static bool _do_wield_weapon(item_def *to_wield);
 static bool _do_wear_armour(item_def *to_wear);
 
 static bool _unequip_item(item_def &i)
@@ -1435,7 +1435,7 @@ static int _get_item_slot_maybe_with_move(const item_def &item)
     return ret;
 }
 
-bool auto_wield(bool adjust_time_taken)
+bool auto_wield()
 {
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
@@ -1455,7 +1455,7 @@ bool auto_wield(bool adjust_time_taken)
     if (to_wield && (!to_wield->defined() || !item_is_wieldable(*to_wield)))
         to_wield = nullptr;
 
-    return _do_wield_weapon(to_wield, adjust_time_taken);
+    return _do_wield_weapon(to_wield);
 }
 
 /**
@@ -1465,7 +1465,7 @@ bool auto_wield(bool adjust_time_taken)
  *        choice of weapon (if auto_wield is false) or choose one by default.
  *      - SLOT_BARE_HANDS: equip nothing (unwielding current weapon, if any)
  */
-bool wield_weapon(int slot, bool adjust_time_taken)
+bool wield_weapon(int slot)
 {
     ASSERT(slot == SLOT_BARE_HANDS || slot >= 0 && slot < ENDOFPACK);
 
@@ -1481,10 +1481,10 @@ bool wield_weapon(int slot, bool adjust_time_taken)
     if (to_wield && (!to_wield->defined() || !item_is_wieldable(*to_wield)))
         to_wield = nullptr;
 
-    return _do_wield_weapon(to_wield, adjust_time_taken);
+    return _do_wield_weapon(to_wield);
 }
 
-static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
+static bool _do_wield_weapon(item_def *to_wield)
 {
     // Reset the warning counter. We do this before the rewield check to
     // provide a (slightly hacky) way to let players reset this without
@@ -1510,48 +1510,49 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 
     if (!to_wield)
     {
-        if (const item_def* wpn = you.weapon())
+        const item_def* wpn = you.weapon();
+        if (!wpn)
         {
-            bool penance = false;
-            // Can we safely unwield this item?
-            if (!can_wield(wpn, true, false, true))
-                return false;
-            // XX possible code dup with `check_old_item_warning`?
-            if (needs_handle_warning(*wpn, OPER_WIELD, penance)
-                // check specifically for !u inscriptions:
-                || needs_handle_warning(*wpn, OPER_UNEQUIP, penance))
+            canned_msg(MSG_EMPTY_HANDED_ALREADY);
+            return false;
+        }
+
+        bool penance = false;
+        // Can we safely unwield this item?
+        if (!can_wield(wpn, true, false, true))
+            return false;
+        // XX possible code dup with `check_old_item_warning`?
+        if (needs_handle_warning(*wpn, OPER_WIELD, penance)
+            // check specifically for !u inscriptions:
+            || needs_handle_warning(*wpn, OPER_UNEQUIP, penance))
+        {
+            string prompt =
+                "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
+            if (penance)
+                prompt += " This could place you under penance!";
+
+            if (!yesno(prompt.c_str(), false, 'n'))
             {
-                string prompt =
-                    "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
-                if (penance)
-                    prompt += " This could place you under penance!";
-
-                if (!yesno(prompt.c_str(), false, 'n'))
-                {
-                    canned_msg(MSG_OK);
-                    return false;
-                }
+                canned_msg(MSG_OK);
+                return false;
             }
+        }
 
-            // check if you'd get stat-zeroed
-            if (!_safe_to_remove_or_wear(*wpn, true))
-                return false;
+        // check if you'd get stat-zeroed
+        if (!_safe_to_remove_or_wear(*wpn, true))
+            return false;
 
-            if (!unwield_item())
-                return false;
+        if (!unwield_item())
+            return false;
 
 #ifdef USE_SOUND
-            parse_sound(WIELD_NOTHING_SOUND);
+        parse_sound(WIELD_NOTHING_SOUND);
 #endif
-            canned_msg(MSG_EMPTY_HANDED_NOW);
+        canned_msg(MSG_EMPTY_HANDED_NOW);
 
-            // Switching to bare hands is the same speed as other weapon swaps.
-            you.turn_is_over = true;
-            if (adjust_time_taken)
-                you.time_taken /= 2;
-        }
-        else
-            canned_msg(MSG_EMPTY_HANDED_ALREADY);
+        // Switching to bare hands is the same speed as other weapon swaps.
+        you.turn_is_over = true;
+        you.time_taken /= 2;
 
         return true;
     }
@@ -1624,13 +1625,10 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 
     check_item_hint(you.inv[item_slot], old_talents);
 
-    // Time calculations.
-    if (adjust_time_taken)
-        you.time_taken /= 2;
-
     you.wield_change  = true;
     quiver::on_weapon_changed();
     you.turn_is_over  = true;
+    you.time_taken /= 2;
 
     return true;
 }
