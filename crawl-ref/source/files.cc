@@ -3326,6 +3326,15 @@ void delete_level(const level_id &level)
         save_abyss_uniques();
         destroy_abyss();
     }
+    // Since Pandemonium is internally all the same floor, we need to actually
+    // clean up our torch status whenever we leave a Pan floor so that the player
+    // will be able to use it on the next one.
+    else if (level.branch == BRANCH_PANDEMONIUM && you.religion == GOD_YREDELEMNUL)
+    {
+        CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
+        levels.erase(level.describe());
+    }
+
     _do_lost_monsters();
     _do_lost_items();
 }
