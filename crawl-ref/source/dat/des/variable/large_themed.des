@@ -93,19 +93,18 @@ x..............................................................................x
 ENDMAP
 
 ###############################################################################
-#hidden cave vault, possibly with statue
+# hidden cave vault with statue
 #
 NAME:    statuecave_lemuel
-ORIENT:  northeast
 TAGS:    no_descent
+ORIENT:  northeast
 DEPTH:   D:7-, Lair, Crypt:1-4
 : if you.in_branch("Crypt") then
 MONS:    orange crystal statue
 : else
 MONS:    ice statue / obsidian statue / orange crystal statue
 : end
-SHUFFLE: 1|/!*
-SUBST:   *:*$, ?:x., !:., '=w.
+SUBST:   *:*$, ?:x., '=w.
 ITEM:    ring of flight ident:type
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -123,22 +122,22 @@ xxxxxwwwwwxxxxxxxxxxxxxxxxxxxxxxx
 xxxwwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
 wwwwwwwwwww''..................xx
 .'wwwwwww''....................xx
-..''wwww'......................xx
-.....'w........................xx
+..''wwww'..............    ....xx
+.....'w............          ..xx
 ENDMAP
 
 
 ###############################################################################
 # Black bear nests (Eino)
-# Bears are wimpy when you meet them, so here's an early challenge.
-#
+# Old vaults placing black bears much earlier than they used to,
+# before they got moved to much earlier depths.
 NAME:   black_bear_nest_1
-ORIENT: northwest
-WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
-NSUBST: ' = 1:1 / *:.
+ORIENT: northwest
+WEIGHT: 5
 MONS:   patrolling black bear
+NSUBST: ' = 1:1 / *:.
 MAP
 xxxxxxxxxxxxxxx
 xx''.xxxxxxxxxx
@@ -150,12 +149,12 @@ xxxxxxxxxxxxxx@
 ENDMAP
 
 NAME:   black_bear_nest_2
-ORIENT: southeast
-WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
-NSUBST: ' = 1:1 / *:.
+ORIENT: southeast
+WEIGHT: 5
 MONS:   patrolling black bear
+NSUBST: ' = 1:1 / *:.
 MAP
 xxxxxxxx@xx
 xxxxxxxx.xx
@@ -895,22 +894,20 @@ DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / shadow wraith / eidolon
 MONS:   ghost moth, Jory, vampire knight
 MONS:   vampire mosquito
-KFEAT:  G = metal_statue
+KFEAT:  g = metal_statue
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
-TILE:   G = dngn_statue_iron_golem
-COLOUR: G = cyan
+COLOUR: g = mist
+TILE:   G = dngn_statue_wraith
+TILE:   g = dngn_mystic_cage
 COLOUR: 5M% = white
-# Making things other things.
-# Markers:
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
                 size = 30, size_buildup_amnt = 1, \
                 size_buildup_time = 10, cloud_type = "purple smoke" \
             }
-# Final subst
 SUBST:  MV = .
-:       set_feature_name("metal_statue", "iron statue")
+:       set_feature_name("metal_statue", "mystic cage")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then
@@ -931,7 +928,7 @@ xxxv.......+vvv...Y...vvv+.......vxxxxxxxxxxxxxxxxxxx
 xxxvvvV1.vvv.vvv.....vvv.vvv.1Vvvvxxxxxxxxxxxxxxxxxxx
 xxxv.......vv.vv+++++vv.vv.......vxxxxxxxxxxxxxxxxxxx
 xxxvv.....vvv.vv.1.1.vv.vvv.....vvxxxxxxxxxxxxxxxxxxx
-xxvvvvv+vvvvv.v...G...v.vvvvv+vvvvvxxxxxxxxxxxxxxxxxx
+xxvvvvv+vvvvv.v...g...v.vvvvv+vvvvvxxxxxxxxxxxxxxxxxx
 xxv.B1+.+1vvv.vv.1.1.vv.vvv1+.+1A.vxxxxxxxxxxxxxxxxxx
 xxv.vvv.vvvvvv.vv+++vv.vvvvvv.vvv.vxxxxxxxxxxxxxxxxxx
 xxv.B1+.+1Cvvvv+v...v+vvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
@@ -942,10 +939,10 @@ xxv.B1+.+1Cvvvvvv.*.vvvvvvD1+.+1A.vxxxxxxxxxxxxxxxxxx
 xxv.vvvvvvvvv.V.vv+vv.V.vvvvvvvvv.vxxxxxxxxxxxxxxxxxx
 xxv.........+.1.v4.4v.1.+.........vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvv...v.3.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
-xxxvvvvvvvvvvv+vv...vv+vvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
+xxxvvvvvvvvvvv+vv...vv+vvvvgvvvvvvvxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
 xxv555%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
-xxv555%G%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
+xxv555%g%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
 xxv555%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
@@ -2995,23 +2992,27 @@ ITEM:    any wand charges:1, wand of digging charges:1 ident:type
 : kitem("| = randbook disc:necromancy disc2:alchemy numspells:5 " ..
 :       "slevels:" .. you.absdepth())
 KFEAT:   F = G
+KFEAT:   M = metal_statue
 SUBST:   C = c, X = xx.
 SHUFFLE: aAbB, Hhe / Idi, de, fg, hi, JKL
 SUBST:   HJK = +, ILa = c, A : c', bB = '
 NSUBST:  m = 1:m / *:c
+COLOUR:  G = mist
 TILE:    F = dngn_statue_maw / dngn_statue_tentacles
 TILE:    G = dngn_statue_wraith / dngn_statue_princess
+TILE:    M = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
      xxxxxxxxxxxxxxxcccccccccccccccxx
-    ccccccccccccccccccXXXXXXXXXXXXcxx
+    ccccccccccccccccccXXXXXXXXXXXMcxx
    ccccccccccccccccccc..2.7...9.|Xcxx
   cccc"""ddccg3g4g3gCc.X'X'''''8.Xcxx
-  ccc"8..7dcg'''''''.c.'''X'''X'9Xcxx
+  ccc"8..7dcg'''''''.c.'''X'''M'9Xcxx
   cc".....ccg'''''''.c.X'X'X$6''.Xcxx
   cc".....JJ''''V'''$m.''''$>$''.Xcxx
-  cc".....JJ''''''''.c.X'X'X$X''.Xcxx
+  cc".....JJ''''''''.c.X'X'M$X''.Xcxx
   ccc"7...cc''''''''.c.dfgX'''X'.Xcxx
   ccCc"...ccc+C+c+C+cccccciX'X'X.Xcxx
   ccccKKKccc"""""""""cccCch'''''1Xcxx

@@ -3325,11 +3325,10 @@ string raw_feature_description(const coord_def &where)
 {
     dungeon_feature_type feat = env.grid(where);
 
-    int mapi = env.level_map_ids(where);
-    if (mapi == INVALID_MAP_INDEX)
-        mapi = 0;
+    vault_placement *lv = dgn_vault_at(where);
+    if (!lv)
+        lv = dgn_find_layout();
 
-    const auto &lv = env.level_vaults[mapi];
     if (lv)
     {
         const auto &renames = lv->map.feat_renames;

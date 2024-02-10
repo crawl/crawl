@@ -838,7 +838,13 @@ VISUAL:@The_monster@ barks [happily|excitedly]!
 
 VISUAL:@The_monster@ runs in silly circles!
 
-VISUAL:@The_monster@ looks up at you expectantly.
+VISUAL:@The_monster@ looks {{
+  if you.race() == "Felid" then
+      return "down"
+  else
+     return "up"
+  end
+}} at you expectantly.
 
 VISUAL:@The_monster@ scratches @possessive@ ear.
 
@@ -858,7 +864,13 @@ w:50
 
 VISUAL:@The_monster@ [plays|frolics] in the surf!
 
-A distinct wet dog smell emanates from @the_monster@.
+{{
+if you.can_smell() then
+    return "VISUAL:A distinct wet dog smell emanates from @the_monster@."
+else
+    return "VISUAL:@The_monster@ motions as if to dry itself off on you."
+end
+}}
 
 w:1
 VISUAL:@The_monster@ hopefully picks up a piece of driftwood and looks at you.
@@ -4959,7 +4971,7 @@ _Ignacio_rare_
 @The_monster@ says @to_foe@, "No gallows around, so decapitation it is."
 ## END Ignacio ##
 %%%%
-############ IJYB ### A twisted goblin
+############ IJYB ### A goblin artificer
 Ijyb
 
 @_Ijyb_common_@
@@ -4971,49 +4983,60 @@ _Ijyb_common_
 
 VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ screams @at_foe@, "Die!"
+VISUAL:@The_monster@ stops to [study|check on] @possessive@ wand.
 
-@The_monster@ screams @at_foe@, "Me kill you!"
+@The_monster@ screams @at_foe@, "Time for continue experiment!"
 
-@The_monster@ screams @at_foe@, "Me stronger than you!"
+@The_monster@ screams @at_foe@, "Me wand stronger than you!"
 
 @The_monster@ screams @at_foe@, "It's all mine!"
 
-@The_monster@ screams @at_foe@, "Get away!"
-
 @The_monster@ screams @at_foe@, "Level is mine! All mine!"
 
-@The_monster@ screams @at_foe@, "You nasty! Big nasty!"
+@The_monster@ screams @at_foe@, "{{
+    if you.skill("Evocations") >= 2 then
+      return "Me learn from your wands next!"
+    else
+      return "You look like good test subject!"
+    end }}" @player_only@
 %%%%
 _Ijyb_rare_
 
-@The_monster@ screams @at_foe@, "I cut your head off!"
+@The_monster@ screams @at_foe@, "Don't stand in way of progress!"
 
-@The_monster@ screams @at_foe@, "I dance on your bones!"
+@The_monster@ screams @at_foe@, "Me am play god!"
 
-@The_monster@ screams @at_foe@, "Me very upset!"
+@The_monster@ screams, "They call me mad!"
 
-@The_monster@ screams @at_foe@, "No! No, no, no, no!"
+w:5
+@The_monster@ screams @at_foe@, "Me yet to meet anyone who can outsmart wand!"
 
 @The_monster@ screams @at_foe@, "I no like you!"
 %%%%
 confused Ijyb
 
-@The_monster@ cowers and screams, "My head! Aaaah! Get out now!"
+@The_monster@ cowers and screams, "Me head! Aaaah! Get out now!"
 
 @The_monster@ screams @at_foe@, "Me give you whole level! Then you leave me be!"
 
-@The_monster@ screams @at_foe@, "Me still stronger! You very nasty!"
+@The_monster@ screams @at_foe@, "Wand still stronger! You very nasty!"
 
-@The_monster@ screams @at_foe@, "Me deserve better than this!"
+w:5
+@The_monster@ screams, "Science deserve better than this!"
 
 @The_monster@ screams @at_foe@, "Me be nice to you! Me promise!"
 
-@The_monster@ screams @at_foe@, "Me back to killing you soon!"
+@The_monster@ screams, "Me go back to drawing board!"
 
 @The_monster@ screams @at_foe@, "No nasty magic on me!"
 
 VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
+%%%%
+ijyb triumphant
+
+@The_monster@ screams, "Time for next experiment!"
+
+@The_monster@ screams, "Good help so hard to find!"
 ## END Ijyb ##
 %%%%
 ############ ILSUIW ### a powerful merfolk witch
@@ -5665,7 +5688,7 @@ w:2
 %%%%
 _Maurice_common_
 
-VISUAL:@The_monster@ tries to hide in the shadows.
+VISUAL:@The_monster@ tries to stalk through the shadows.
 
 VISUAL:@The_monster@ lashes his vines and gnashes his teeth.
 
@@ -5675,7 +5698,7 @@ VISUAL:@The_monster@ lashes his vines and gnashes his teeth.
 %%%%
 _Maurice_medium_
 
-VISUAL:@The_monster@ looks sneaky.
+VISUAL:@The_monster@ looks lost in thought, consulting taken memories.
 
 @The_monster@ says, "Lost something?"
 
@@ -5706,7 +5729,7 @@ Maurice confused nonstealing
 w:70
 __NONE
 
-@The_monster@ makes a clumsy attempt to grab your valuables.
+@The_monster@ clumsily fails to latch onto your valuables.
 
 @The_monster@ fumbles for your pockets and misses.
 
@@ -7403,6 +7426,15 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says @to_foe@, "Come and play with me!"
 
 @The_monster@ says, "Trust me, I'm a doctor."
+%%%%
+Killer Klown triumphant
+
+VISUAL: @The_monster@ begins to take a bow, but slips on a banana peel.
+
+@The_monster@ honks, delighted.
+
+# Yes, of course they could tie together a tree or a wisp.
+VISUAL: @The_monster@ begins to tie you into a balloon animal.
 ## END Killer Klown ##
 %%%%
 ################## Laughing skull ###########################
@@ -7417,14 +7449,12 @@ laughing skull
 # Kill Six Billion Demons
 @The_monster@ @_laughs_@ at the inescapable nature of violence.
 
-w:20
 __NONE
 %%%%
 friendly laughing skull
 
 @laughing skull@
 
-w:20
 __NONE
 %%%%
 laughing skull triumphant
@@ -7579,7 +7609,7 @@ w:7
 w:1
 @_weeping_skull_rare_@
 
-w:4
+w:3
 __NONE
 %%%%
 _weeping_skull_common_
@@ -7601,9 +7631,8 @@ _weeping_skull_rare_
 # Hollow Knight
 @The_monster@ asks how much longer can this world bear the weight of past lives.
 
-# Don't add literally everything to this one- only the ones with no chance.
-w:1
-@The_monster@ mourns the extinction of [gnomes|halflings|high elves|hill dwarves].
+w:5
+@The_monster@ mourns the many lost in the orcish exodus to the Dungeon.
 
 # The shrieker shrieks.
 w:1

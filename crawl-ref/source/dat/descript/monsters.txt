@@ -238,9 +238,9 @@ test its edge.
 %%%%
 Ijyb
 
-A small and twisted goblin, wearing some ugly blue rags. She claims dominion
-over this level of the dungeon; those who trespass will find themselves
-tortured at wandpoint and killed.
+A small and shrewd goblin inventor, wearing blue rags coated in soot. She claims
+dominion over this level of the dungeon; trespassers will find themselves on the
+business end of a homemade wand.
 %%%%
 Ilsuiw
 

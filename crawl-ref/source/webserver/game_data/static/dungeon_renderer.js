@@ -18,10 +18,13 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.FLOOR_MAX)
             return options.get("tile_water_anim");
-        else if (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.BLOOD
-                (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < ARCANE_CONDUIT)
+        else if ((base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.BLOOD)
+                 || (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < dngn.ARCANE_CONDUIT)
+                 || (base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT)
                  || is_torch(base_bg))
+        {
             return options.get("tile_misc_anim");
+        }
         else
             return false;
     }
@@ -36,7 +39,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             cell.bg.value = base_bg + (cell.bg.value - base_bg + 1) % dngn.tile_count(base_bg);
         }
         else if ((base_bg > dngn.DNGN_LAVA && base_bg < dngn.BLOOD) ||
-                 (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < ARCANE_CONDUIT))
+                 (base_bg >= dngn.DNGN_SILVER_STATUE && base_bg < dngn.ARCANE_CONDUIT))
         {
             cell.bg.value = base_bg + Math.floor(Math.random() * dngn.tile_count(base_bg))
         }

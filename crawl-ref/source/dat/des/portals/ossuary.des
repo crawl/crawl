@@ -800,24 +800,24 @@ ORIENT:  encompass
 # Most of the loot helps right here, if need be.
 : item( dgn.loot_scrolls .. " / " .. dgn.loot_potions )
 MONS:    mummy, crocodile zombie
-MONS:    kobold zombie / centaur zombie / gnoll zombie
+MONS:    kobold zombie / centaur zombie w:5 / gnoll zombie
 KFEAT:   ~ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ^ = net trap w:20 / dispersal trap w:5
 SUBST:   M = 111., z = c...
-NSUBST:  3 = 2:2 / 3:. / * = 333..
+NSUBST:  3 = 1:2 / 4:. / * = 333..
 NSUBST:  ~ = 4:~ / 40:. / * = ~:25 .:200
 NSUBST:  ^ = 1:^ / 1:. / * = ^.
 : ossuary_setup_features(_G)
 MAP
-            ccccccccccccccccccccc
- cccccccccccc3c3c3c3c3c3c3ccddddcc
-cc3........~~~~~~~~~~~~~~~~^.....cc
-c..........~~~~~~~~~~~~~~~~^.....Mcc
-c1....A..<.....z...z...z...^.....2<c
-c..........~~~~~~~~~~~~~~~~^.....Mcc
-cc2........~~~~~~~~~~~~~~~~^.....cc
- cccccccccccc3c3c3c3c3c3c3ccddddcc
-            ccccccccccccccccccccc
+            cccccccccccccccccccccc
+ cccccccccccc3c3c3c3c3c3c3cccddddcc
+cc3........~c~~~~~~~~~~~~~c+^.....cc
+c..........~~~~~~~~~~~~~~~~+^.....Mcc
+c1....A..<.....z...z...z...+^.....2<c
+c..........~~~~~~~~~~~~~~~~+^.....Mcc
+cc2........~c~~~~~~~~~~~~~c+^.....cc
+ cccccccccccc3c3c3c3c3c3c3cccddddcc
+            cccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_due_mausoleum

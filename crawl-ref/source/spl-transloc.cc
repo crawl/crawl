@@ -736,16 +736,13 @@ spret electric_charge(int powc, bool fail, const coord_def &target)
     if (you.attribute[ATTR_HELD])
         return spret::success;
 
-    const int base_delay =
-        div_rand_round(you.time_taken * player_movement_speed(), 10);
-
     melee_attack charge_atk(&you, target_mons);
     charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, you.pos());
     charge_atk.attack();
 
-    // Normally this is 10 aut (times haste, chei etc), but slow weapons
+    // Normally this is 10 aut (times haste, slow), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.
-    you.time_taken = max(charge_atk.roll_delay(), base_delay);
+    you.time_taken = max(charge_atk.roll_delay(), you.time_taken);
 
     return spret::success;
 }

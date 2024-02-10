@@ -17,6 +17,7 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
+    m_mirror_horizontal(false),
     m_prefix("TILE"),
     m_start_value("0"),
     m_start_value_module(""),
@@ -505,8 +506,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             CHECK_ARG(1);
             if (!process_list(m_args[1]))
             {
-                fprintf(stderr, "Error (%s:%d): include failed.\n",
-                        list_file, line);
+                fprintf(stderr, "Error (%s:%d): include of '%s' failed.\n",
+                        list_file, line, m_args[1]);
                 return false;
             }
         }

@@ -915,7 +915,7 @@ static const struct spell_desc spelldata[] =
     100,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DEBUGGING_RAY,
 },
 
 {
@@ -951,7 +951,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MINDBURST,
 },
 
 {
@@ -1816,7 +1816,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_AWAKEN_FOREST,
 },
 
 {
@@ -1871,7 +1871,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_HOLIES,
 },
 
 {
@@ -2359,7 +2359,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_LEGENDARY_DESTRUCTION,
 },
 
 {
@@ -2663,7 +2663,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_EMPEROR_SCORPIONS,
 },
 
 {
@@ -2799,7 +2799,7 @@ static const struct spell_desc spelldata[] =
     0,
     3, 3,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BERSERK_OTHER,
 },
 
 {
@@ -2810,7 +2810,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CORRUPTING_PULSE,
 },
 
 {
@@ -2865,7 +2865,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DRAINING_GAZE,
 },
 
 {
@@ -2920,7 +2920,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_SCARABS,
 },
 
 {
@@ -2942,7 +2942,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CLEANSING_FLAME,
 },
 
 {
@@ -2986,7 +2986,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_EXECUTIONERS,
 },
 
 {
@@ -3351,7 +3351,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL
+    TILEG_ROLL
 },
 
 {
@@ -3373,7 +3373,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_TZITZIMITL,
 },
 
 {
@@ -3384,7 +3384,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_HELL_SENTINEL,
 },
 
 {
@@ -3462,7 +3462,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CORRUPT,
 },
 
 {
@@ -3550,7 +3550,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_SPIDERS,
 },
 
 {

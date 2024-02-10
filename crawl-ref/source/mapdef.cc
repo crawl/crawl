@@ -3006,6 +3006,9 @@ bool map_def::is_minivault() const
 // built on it.
 bool map_def::is_overwritable_layout() const
 {
+    // XX this code apparently does *not* check whether something is a layout.
+    // In almost all cases "overwritable" and "layout" coincide, but there are
+    // cases where they don't...
 #ifdef DEBUG_TAG_PROFILING
     ASSERT(cache_overwritable == has_tag("overwritable"));
 #endif

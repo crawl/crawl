@@ -2067,6 +2067,13 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_BORIS:
+        force_item = true;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        make_item_randart(item);
+        item.plus = random_range(2, 4);
+        break;
+
     case MONS_JOSEPHINA:
         level = ISPEC_GOOD_ITEM;
     case MONS_ORC_SORCERER:

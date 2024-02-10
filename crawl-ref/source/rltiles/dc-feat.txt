@@ -288,7 +288,7 @@ statue_iron DNGN_STATUE_IRON
 ## Features only used in certain minivaults
 %sdir dngn/vaults
 
-## Reworked statues for Zonguldrok Wizlab: gravestones
+## Renamed statues for undead vaults: gravestones
 gravestone_blank DNGN_GRAVESTONE
 gravestone_writing1
 gravestone_writing2
@@ -319,6 +319,11 @@ scintillating_statue_1
 scintillating_statue_2
 scintillating_statue_3
 scintillating_statue_4
+
+## Renamed statues for menageries, kennels, experiments, etc
+mystic_cage_0 DNGN_MYSTIC_CAGE
+mystic_cage_1
+mystic_cage_2
 
 #### Random tile animation for statuary ends here.
 #### Cycling tile animation for statuary starts here.

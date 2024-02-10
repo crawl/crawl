@@ -879,6 +879,10 @@ Ooze status
 Acidic ooze creeps out of the walls around you. Each turn, foes are damaged
 depending on the number of slimy walls they remain adjacent to.
 %%%%
+Dog status
+
+You have summoned your canine familiar.
+%%%%
 -Dog status
 
 Your canine familiar is recovering from its injuries, and cannot be summoned

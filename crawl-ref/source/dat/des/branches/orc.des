@@ -1089,15 +1089,20 @@ ENDMAP
 
 ###################################
 # warg stables, with kobold stablehand
-NAME:  mines5_lemuel
-MONS:  warg / wolf, kobold blastminer
-SUBST: ? : wx
+NAME:   mines5_lemuel
+MONS:   warg / wolf, kobold blastminer
+KFEAT:  G = metal_statue
+SUBST:  ? : wx, G : GGG..
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
+
 MAP
 x???????x
 xwwwwwwwx
 xwwwwwwwx
 x1.1.1.1x
-x.1...1.x
+xG1...1Gx
 x1.2...1x
 xxxx+xxxx
 ENDMAP
@@ -1616,16 +1621,21 @@ TAGS:   no_monster_gen transparent
 DEPTH:  Orc
 ORIENT: float
 MONS:   warg
+KFEAT:  G = metal_statue
 NSUBST: 1 = 3:1 / 4 = 1..
+SUBST:  G : GGI
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 xxx..@..xxx
 x1...1...1x
 x.........x
-...IxxxI...
+...IxxxG...
 ...x$$$x...
 @1.x$$$+..@
 ...x$$$x...
-...IxxxI...
+...GxxxI...
 x.........x
 x1...1...1x
 xxx..@..xxx
@@ -1738,21 +1748,25 @@ KMONS:   9 = ogre / two-headed ogre
 KMONS:   0 = ogre mage
 KFEAT:   S = any shop
 KFEAT:   _ = altar_beogh
+KFEAT:   G = metal_statue
 SHUFFLE: 34? / 56! / 78` / 90~, AC / BD / BD
 SUBST:   ? = 33444, ! = 55666, ` = 77888, ~ = 990
 SUBST:   1 = 1., 2 = 222.
-SUBST:   AC = +, BD = c, T : TIII
+SUBST:   AC = +, BD = c, T : TIII, G : GGGcc
 NSUBST:  S = 1:R / *:S
+COLOUR:  G = mist
+TILE:    G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 ...................................
 ...................................
 ..cccccc..ccc.ccc.ccccccc..cccccc..
 ..cS?31c..ccc.ccc.ccccccc..c15!Sc..
-..c?311D..ccc.ccc2ccccccc..B.16!c..
+..c?311D..ccc.ccc2cccGccc..B.16!c..
 ..c3111c2...........151..2.c..15c..
 ..cccCcc.....1...2ccc1ccc..ccAccc..
 @......2...11311..ccc.ccc.........@
-@.........1T343T1.ccc.ccc.2.......@
+@.........1T343T1.Gcc.ccG.2.......@
 ..cccCcc...113112.ccc.ccc.cccAccc..
 ..c11..c2.ccc+ccc.ccc1ccc2c...11c..
 ..c311.D..c1...1c...161...B..115c..
@@ -1793,10 +1807,13 @@ NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar /\
-         orc w:10 ; orcbow . trident | hand axe | mace
-MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; arbalest . glaive | broad axe | great mace
+MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar . \
+                           leather armour | ring mail / \
+         orc w:10 ; orcbow . trident | hand axe | mace . leather armour
+MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace . \
+                                leather armour | ring mail
+MONS:    orc knight ; arbalest . glaive | broad axe | great mace . \
+                                 leather armour | ring mail
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1, kobold blastminer
 SUBST:   3 = 23
@@ -1811,8 +1828,8 @@ MAP
 ....5...5..wwwwcccccwwww..5...5....
 ..c....5.wwwwccccSccccwwww.5....c..
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
-........1221...34S43...1221........
-........1221...34S43...1221........
+........1221...34S43....221........
+........122....34S43...1221........
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
 ..c....5.wwwwccccSccccwwww.5....c..
 ....5...5..wwwwcccccwwww..5...5....
@@ -2270,11 +2287,11 @@ cc...cc.....cc...cc
  cc...c..2..c...cc
   cc.4.......4.cc
 ccccc.........ccccc
-..I....A...B....I..
+..I....A.c.B....I..
 ...................
-@4..1...._....1..4@
+@...1..c._.c..1...@
 ...................
-..I....C...D....I..
+..I....C.c.D....I..
 ccccc.........ccccc
   cc.4.......4.cc
  cc...c..3..c...cc
@@ -2293,10 +2310,10 @@ NAME:    pf_orc_diabolical
 TAGS:    patrolling no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc / nothing w:5, orc warrior / nothing w:5
-MONS:    orc priest / nothing w:5, common demon / nothing w:5
+MONS:    orc / nothing w:6, orc warrior / nothing w:6
+MONS:    orc priest / nothing w:6, common demon / nothing w:6
 MONS:    orc knight / kobold blastminer w:1
-MONS:    demonspawn / nothing w:5
+MONS:    demonspawn / nothing w:6
 MONS:    orc high priest / orc sorcerer
 KFEAT:   A = w:20 general shop / distillery shop / scroll shop
 KFEAT:   B = book shop / jewellery shop

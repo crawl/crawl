@@ -318,7 +318,8 @@ this spell, but fleshless beings (e.g., those made of stone) cannot.
 %%%%
 Cleansing Flame spell
 
-<Cleansing Flame ability>
+Invokes a huge blast of divine fury centered on the user, severely damaging
+undead and demons and dealing damage to all other hostile creatures.
 %%%%
 Cold Breath spell
 
@@ -1287,10 +1288,10 @@ Sigil of Binding spell
 
 Creates two sigils nearby. Anyone who passes over them will be bound, able to
 act and dodge normally but unable to move away. When the effect wears off,
-their movement speed will rebound, giving them temporary swiftness and preventing
-subsequent binding effects.
+their movement speed will rebound, giving them temporary swiftness. Swiftness
+from any source grants immunity to binding.
 
-Only one set of sigils can be maintained at a time and they will expire
+Only one set of sigils can be maintained at a time, and they will expire
 prematurely if they leave your sight.
 %%%%
 Silence spell
@@ -1711,7 +1712,8 @@ length of the charge, the power of the spell, and the physical damage of the
 attack. The caster is wrapped in an envelope of twisted space, allowing them
 to safely pass through creatures, traps, and harmful terrain, and to displace
 creatures at their destination. The time taken by the spell is the greater of
-the time needed to move one step or that needed to launch one melee attack.
+the time normally needed to cast a spell or that needed to launch one melee
+attack.
 %%%%
 Vitrify spell
 

@@ -1574,20 +1574,15 @@ DEPTH:   D, Orc, !Orc:$
 TAGS:    no_monster_gen patrolling temple_overflow_1 temple_overflow_makhleb
 TAGS:    transparent layout_rooms layout_city layout_open uniq_altar_makhleb
 KFEAT:   _ = altar_makhleb
-# Either one type 3 or 4 demon (rust devil or smoke demon) or
-# three slow type 5 demons (iron imp).
-# The higher demons can only come up in D:9-11.
+MONS:    rust devil, smoke demon, iron imp ; damaged sling
 : if you.absdepth() > 9 then
-SHUFFLE: 123
-NSUBST:  1 = 1:1 / *:.
-NSUBST:  2 = 1:2 / *:.
+SUBST:   3 = 12
 : end
-MONS:    rust devil, smoke demon, iron imp
 MAP
 xxxxxxxxxxxxxxx
 x.............x
 x.ll.......ll.x
-x.ll..3_3..ll.x
+x.ll..._...ll.x
 x.ll...3...ll.x
 x..ll.....ll..x
 x...lll.lll...x
@@ -1641,25 +1636,29 @@ DEPTH:  D:4-8
 : dgn.delayed_decay(_G, '1', 'human corpse')
 KMONS:  2 = hound
 : else
-KMONS:  1 = necrophage
+KMONS:  1 = human skeleton
 KMONS:  2 = hound skeleton
 : end
 KFEAT:  _ = altar_makhleb
+KFEAT:  G = metal_statue
+KFEAT:  X = x
 KPROP:  y' = bloody
-TILE:   c = wall_hall
-SUBST:  ' = .
-SUBST:  y = x
+TILE:   X = wall_hall
+SUBST:  ' = ., y = x, G = GGx
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
   @@@
  x..'.xxx
  xx...'yxx
  xxxx..'yxx
  xxxxxx.'yx
- xxxxxxy'.x
+ xxxGxxy'.x
 xxxx.'y'.xx
-xcc.12'.xx
-xcA_'.xxx
-xcc..xxx
+xXX.12'.xx
+xXA_'.xxx
+xXX..xxx
 xxxxxx
 ENDMAP
 
@@ -1668,14 +1667,18 @@ TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:   no_monster_gen transparent
 # hound depth
 DEPTH:  D:4-7
-KFEAT:  _ = altar_makhleb
 KMONS:  _ = patrolling hound
-TILE:   c = wall_hall
-SUBST:  y = xx.
+KFEAT:  _ = altar_makhleb
+KFEAT:  X = x
+SUBST:  y = xx., G = GXXX
+TILE:   X = wall_hall
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
  xxxxx
-xxcccxx
-xycAcyx
+xxXGXxx
+xyXAXyx
 x.._..x
 xy...yx
  y...y
@@ -2588,13 +2591,20 @@ ENDMAP
 NAME:   kennysheep_orc_sif_temple
 TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup transparent
 TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
-DEPTH:  D, Orc
+DEPTH:  D:4-, Orc
 KFEAT:  _ = altar_sif_muna
-: if you.absdepth() < 6 then
-MONS:   orc wizard w:2 / nothing, orc
+: if you.absdepth() < 7 then
+MONS:   orc wizard, orc
+NSUBST: 1 = 1:1 / 1:1. / 1:$ / *:.
+: elseif you.absdepth() < 12 then
+MONS:   orc wizard, orc warrior
+NSUBST: 1 = 3:1 / 1:1. / 1:% / 1:$ / *:.
 : else
-MONS:   orc wizard / nothing, orc warrior
+MONS:   orc sorcerer, orc knight, orc wizard
+NSUBST: 1 = 1:1 / 1:1. / 2:3 / 2 = %%* / *:.
 : end
+TILE:   G = dngn_statue_princess / dngn_statue_cat / dngn_statue_mermaid / \
+            dngn_statue_tengu / dngn_statue_twins / dngn_statue_maw
 MAP
      xxxxx
    xxxwwwxxx
@@ -2607,7 +2617,7 @@ xxww.nv1vn.wwxx
  xwwwWv+vWwwwx
  xxwwWG.GWwwxx
   xxww.2.wwxx
-   xxxG.Gxxx
+   xxxv.vxxx
      x...x
      xG.Gx
        @
@@ -4266,10 +4276,9 @@ KFEAT:   B = altar_zin
 KFEAT:   L-_ = floor
 KFEAT:   C = stone_wall
 KFEAT:   N = clear_stone_wall
-KFEAT:   e = iron_grate
 KFEAT:   g = metal_statue
 SUBST:   ; = -_, - = --_, X = C-
-SHUFFLE: 12nN / 12nN / gGee
+SHUFFLE: 12nN / 12nN / Gg''
 KPROP:   -1 = bloody / nothing w:5
 KPROP:   12gG = no_tele_into
 KMASK:   12gG = opaque
@@ -4488,7 +4497,8 @@ KITEM:   X = randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1
 KITEM:   Y = randbook owner:Kikubaaqudgha disc:necromancy numspells:1 slevels:1
 KITEM:   Z = randbook owner:Vehumet disc:conjuration numspells:1 slevels:1
 SHUFFLE: x'y"z` / x'y"z` / X~y"z` / x'Y~z` / x'y"Z~
-SUBST:   '"` = ., ~ = ~.
+SUBST:   '"` = .
+NSUBST:  ~ = 1:~ / 2:. / * = 1.
 MAP
 ccccccccccccc
 c'x'c"y"c`z`c

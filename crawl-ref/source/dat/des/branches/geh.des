@@ -558,11 +558,11 @@ MAP
 .lcl..LLlllcc
 .LlLM..MLLllcc
 ...M.....MLllc
-cL........MLlcc
-clL........Lllc
+cL...x....MLlcc
+clL.....x..Lllc
 clLM...{...MLlc
-cllL........Llc
-cclLM........Lc
+cllL..x.....Llc
+cclLM....x...Lc
  cllLM.....M...
  ccllLLM..MLlL.
   cclllLL..lcl.

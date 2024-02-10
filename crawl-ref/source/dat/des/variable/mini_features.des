@@ -730,14 +730,14 @@ ENDMAP
 NAME:   minmay_misc_feat_hallway
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Crypt
-SUBST:  G : ..GGxb
+SUBST:  G : ..GGxv
 MAP
 xxxxxxxxx
-xGxGxGxGx
+xxxGxGxGx
 x.x.x.x.x
 @.......@
 x.x.x.x.x
-xGxGxGxGx
+xGxGxGxxx
 xxxxxxxxx
 ENDMAP
 
@@ -952,7 +952,7 @@ ENDMAP
 
 NAME:   minmay_crystal_water
 TAGS:   extra decor
-DEPTH:  D, Depths
+DEPTH:  D:8-, Depths
 MAP
 wwwwwwwww
 wbwwwwwbw
@@ -1014,7 +1014,7 @@ ENDMAP
 
 NAME:   minmay_curled_crystal
 TAGS:   transparent extra decor
-DEPTH:  D, Depths, Elf
+DEPTH:  D:8-, Depths, Elf
 WEIGHT: 3
 MAP
 ................
@@ -4056,9 +4056,9 @@ MAP
   xx.....xx
  xx.G...G.xx
 xx.x.....x.xx
-x...G...G...x
+x...x...G...x
 +.....*.....+
-x...G...G...x
+x...G...x...x
 xx.x.....x.xx
  xx.G...G.xx
   xx.....xx

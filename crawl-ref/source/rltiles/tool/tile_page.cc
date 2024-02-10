@@ -118,7 +118,7 @@ int tile_page::find_ctg_start(const string &ctgname) const
 
 int tile_page::find_ctg_end(const string &ctgname) const
 {
-    for (size_t i = m_tiles.size() - 1; i >= 0; --i)
+    for (int i = (int)m_tiles.size() - 1; i >= 0; --i)
         if (m_tiles[i]->parts_ctg() == ctgname)
             return i;
 
