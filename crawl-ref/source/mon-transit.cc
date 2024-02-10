@@ -494,7 +494,11 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from,
     if (!_mons_can_follow_player_from(*fol, from, true))
         return false;
 
-    if (fol->find_place_to_live(true))
+    // Specifically leave friendly monsters behind if there is nowhere to place
+    // then on the other side of a transporter (instead of teleporting them to
+    // random other places on the floor). Doing so can interact poorly with
+    // Guantlet and Beogh in particular.
+    if (fol->find_place_to_live(true, fol->friendly()))
     {
         real_follower = true;
         env.map_knowledge(pos).clear_monster();
