@@ -134,7 +134,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_BEOGH_VENGEANCE_CLEANUP:
         return mon->has_ench(ENCH_VENGEANCE_TARGET)
                && mon->get_ench(ENCH_VENGEANCE_TARGET).degree
-                  < you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
+                  <= you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
 
     default:
         return false;

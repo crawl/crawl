@@ -41,13 +41,6 @@
 #include "terrain.h"
 #include "tilepick.h"
 
-enum apostle_death_reason
-{
-    APOSTLE_DEAD,
-    APOSTLE_BANISHED,
-    APOSTLE_LEFT
-};
-
 map<mid_t, companion> companion_list;
 
 companion::companion(const monster& m)
@@ -107,11 +100,7 @@ void remove_all_companions(god_type god)
 
     // Cleanup apostle data structures on god abandonment
     if (god == GOD_BEOGH)
-    {
-        CrawlVector& vec = you.props[BEOGH_SAVED_APOSTLES_KEY].get_vector();
-        vec.clear();
-        you.props.erase(BEOGH_NUM_FOLLOWERS_KEY);
-    }
+        apostles.clear();
 }
 
 void move_companion_to(const monster* mons, const level_id lid)
@@ -325,54 +314,23 @@ void fixup_bad_priest_monster(monster &mons)
 }
 #endif
 
-// Look at the orc stored in a given slot.
-// NOTE: It is not safe to place this apostle on the map! This is only for
-//       querying apostle properties, like their mid. Use _beogh_restore_apostle()
-//       to actually get a placeable apostle.
-static monster* _beogh_peek_apostle(int slot)
+vector<apostle_data> apostles;
+
+apostle_data::apostle_data(const monster& m) : state(STATE_ALIVE),
+    corpse_location(level_id::current()), vengeance_bonus(0)
 {
-    // Invalid slots
-    if (slot < 0 || slot > 3)
-        return nullptr;
-
-    if (!you.props.exists(BEOGH_SAVED_APOSTLES_KEY))
-        return nullptr;
-
-    CrawlVector& vec = you.props[BEOGH_SAVED_APOSTLES_KEY].get_vector();
-
-    // Uninitialized vector
-    if (slot > vec.size())
-        return nullptr;
-
-    CrawlVector& save = vec[slot].get_vector();
-
-    if (save.size() < 1)
-        return nullptr;
-
-    monster* apostle = &save[0].get_monster();
-
-    return apostle;
+    apostle = follower(m);
 }
 
-static bool _beogh_apostle_is_alive(int slot)
+monster* apostle_data::restore()
 {
-    monster* apostle = _beogh_peek_apostle(slot);
+    state = STATE_ALIVE;
+    vengeance_bonus = 0;
+    monster* ret = apostle.place(true);
 
-    if (!apostle)
-        return false;
-
-    monster* real = monster_by_mid(apostle->mid);
-
-    // They currently exist on our floor
-    if (real && real->alive())
-        return true;
-
-    // They aren't on our floor, but are listed as living companions (so they
-    // are presumably alive SOMEWHERE)
-    if (companion_list.count(apostle->mid))
-        return true;
-
-    return false;
+    if (ret)
+        add_companion(ret);
+    return ret;
 }
 
 static void _remove_offlevel_companion(mid_t mid)
@@ -394,15 +352,13 @@ static void _remove_offlevel_companion(mid_t mid)
 void beogh_do_ostracism()
 {
     mprf(MSGCH_GOD, "Beogh sends your followers elsewhere.");
-    for (int i = 0; i < you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int(); ++i)
+    for (unsigned int i = 1; i < apostles.size(); ++i)
     {
-        if (_beogh_apostle_is_alive(i+1))
+        if (apostles[i].state == STATE_ALIVE)
         {
-            mid_t mid = _beogh_peek_apostle(i+1)->mid;
+            apostles[i].state = STATE_ABANDONED;
 
-            string key = BEOGH_FOLLOWER_DEATH_PREFIX + std::to_string(mid);
-            you.props[key] = APOSTLE_LEFT;
-
+            const mid_t mid = apostles[i].apostle.mons.mid;
             if (companion_is_elsewhere(mid))
                 _remove_offlevel_companion(mid);
             else
@@ -422,78 +378,6 @@ void beogh_end_ostracism()
     // XXX: It's kind of ugly to wrap this in the resurrection function, but
     // the process of restoring dead apostles is kind of complicated...
     beogh_resurrect_followers(true);
-}
-
-// Save the base state of a given apostle into a given slot.
-// Slot 0 = recruitable apostle (not yet joined)
-// Slot 1-3 = follower apostles
-static void _beogh_save_apostle(monster* apostle, int slot)
-{
-    CrawlVector& vec = you.props[BEOGH_SAVED_APOSTLES_KEY].get_vector();
-
-    // Initialize vector if isn't aren't already
-    if (vec.size() == 0)
-    {
-        for (int i = 0; i < 4; ++i)
-            vec.push_back(0);
-    }
-
-    // We save a copy of the apostle monster themselves in [0], with their
-    // inventory going in subsequent slots.
-    CrawlVector save;
-    monster saved_mon(*apostle);
-    save.push_back(saved_mon);
-
-    // If we save a monster while its hp is 0 (such as when an apostle is first
-    // defeated), it will be reset on marshall. So make sure it doesn't look dead!
-    saved_mon.hit_points = saved_mon.max_hit_points;
-    saved_mon.timeout_enchantments(1000);
-    saved_mon.flags &= ~MF_APOSTLE_BAND;
-
-    // Clone item_defs of apostle inventory and save along with them.
-    // NOTE: Monster inventories are merely links to entries in the master item
-    // list per floor, and monsters stored in props CANNOT safely have items. We
-    // need to save the items separately and give them back to them later.
-    for (mon_inv_iterator ii(saved_mon); ii; ++ii)
-    {
-        item_def clone_item = item_def(*ii);
-        clone_item.link = NON_ITEM;
-        clone_item.pos.reset();
-        saved_mon.unequip(env.item[ii->index()], false, true);
-        saved_mon.inv[ii.slot()] = NON_ITEM;
-        //mprf("Cloned item: %d, %d, %d, %d", clone_item.base_type, clone_item.sub_type, clone_item.plus, clone_item.special);
-        save.push_back(clone_item);
-    }
-
-    save[0] = saved_mon;
-    vec[slot] = save;
-}
-
-static monster* _beogh_restore_apostle(int slot)
-{
-    monster* apostle = _beogh_peek_apostle(slot);
-
-    if (!apostle)
-        return nullptr;
-
-    CrawlVector& vec = you.props[BEOGH_SAVED_APOSTLES_KEY].get_vector();
-    CrawlVector& save = vec[slot].get_vector();
-
-    // Clone our stored apostle and initialize it into the monster array
-    monster* new_mon = get_free_monster();
-    *new_mon = monster(*apostle);
-    env.mid_cache[new_mon->mid] = new_mon->mindex();
-
-    // Copy saved monster inventory and link to the new monster
-    for (unsigned int i = 1; i < save.size(); ++i)
-    {
-        item_def clone_item = item_def(save[i].get_item());
-        // mprf("Restoring item: %d, %d, %d, %d", clone_item.base_type,
-        //         clone_item.sub_type, clone_item.plus, clone_item.special);
-        give_specific_item(new_mon, clone_item);
-    }
-
-    return new_mon;
 }
 
 static int _apostle_challenge_piety_needed()
@@ -724,16 +608,18 @@ void win_apostle_challenge(monster& apostle)
         beogh_progress_vengeance();
     }
 
-    apostle.timeout_enchantments(100);
+    apostle.hit_points = apostle.max_hit_points;
+    apostle.timeout_enchantments(1000);
     apostle.attitude = ATT_GOOD_NEUTRAL;
     mons_att_changed(&apostle);
     apostle.stop_constricting_all();
     apostle.stop_being_constricted();
 
-    you.props[BEOGH_RECRUITABLE_APOSTLE_KEY].get_int() = apostle.mid;
-
     // Save the recruit's current, healthy state
-    _beogh_save_apostle(&apostle, 0);
+    if (apostles.size() > 0)
+        apostles[0] = apostle_data(apostle);
+    else
+        apostles.emplace_back(apostle_data(apostle));
 
     mprf(MSGCH_GOD, "Beogh will allow you to induct %s into your service.",
          apostle.name(DESC_THE, true).c_str());
@@ -762,50 +648,31 @@ void win_apostle_challenge(monster& apostle)
 
 void end_beogh_recruit_window()
 {
-    monster* apostle = monster_by_mid(you.props[BEOGH_RECRUITABLE_APOSTLE_KEY].get_int());
+    monster* apostle = monster_by_mid(apostles[0].apostle.mons.mid);
     if (apostle && !mons_is_god_gift(*apostle))
     {
         simple_monster_message(*apostle, " is recalled by the power of Beogh.");
         place_cloud(CLOUD_TLOC_ENERGY, apostle->pos(), 1 + random2(3), apostle);
         monster_die(*apostle, KILL_RESET, -1, true);
     }
-    you.props.erase(BEOGH_RECRUITABLE_APOSTLE_KEY);
 }
 
 string get_apostle_name(int slot, bool with_title)
 {
-    monster* apostle = _beogh_peek_apostle(slot);
-
-    if (!apostle)
+    if (slot > (int)apostles.size() - 1)
         return "Buggy Apostle";
 
-    string name = apostle->name(DESC_PLAIN, true);
+    const monster& apostle = apostles[slot].apostle.mons;
+    string name = apostle.name(DESC_PLAIN, true);
     if (with_title)
-        name += ", " + apostle_type_names[apostle->props[APOSTLE_TYPE_KEY].get_int()];
+        name += ", " + apostle_type_names[apostle.props[APOSTLE_TYPE_KEY].get_int()];
 
     return name;
 }
 
-// Attempt to the recall the recruit immediately next to you (slightly better
-// for wording of anointing them). If this fails, try to at least place them
-// SOMEWHERE.
-static bool _try_recall_recruit(monster* mon)
-{
-    coord_def empty;
-    if (find_habitable_spot_near(you.pos(), MONS_ORC_APOSTLE, 1, false, empty))
-        return mon->move_to_pos(empty);
-    else if (find_habitable_spot_near(you.pos(), MONS_ORC_APOSTLE, 5, false, empty))
-        return mon->move_to_pos(empty);
-
-    return false;
-}
-
 void beogh_recruit_apostle()
 {
-    monster* apostle = _beogh_peek_apostle(0);
-    ASSERT(apostle);
-
-    monster* real = monster_by_mid(apostle->mid);
+    monster* real = monster_by_mid(apostles[0].apostle.mons.mid);
 
     string msg;
 
@@ -815,34 +682,15 @@ void beogh_recruit_apostle()
         // Recall them back into our sight, if we can
         if (!you.can_see(*real))
         {
-            _try_recall_recruit(real);
-            msg += "Beogh recalls " + real->name(DESC_THE, true) + " to your side and ";
+            if (try_recall(real->mid))
+                msg += "Beogh recalls " + real->name(DESC_THE, true) + " to your side and ";
         }
     }
     // Apostle died before we could recruit them
-    else if (you.props.exists(BEOGH_RECRUITABLE_APOSTLE_DEATH_POS_KEY))
-    {
-        real = _beogh_restore_apostle(0);
-        coord_def pos = you.props[BEOGH_RECRUITABLE_APOSTLE_DEATH_POS_KEY].get_coord();
-
-        if (you.see_cell_no_trans(pos))
-        {
-            // Revive them in place, if we can see where they died and the space is free
-            if (monster_habitable_grid(real, env.grid(pos)) && !actor_at(pos))
-                real->move_to_pos(pos);
-            else
-                _try_recall_recruit(real);
-
-            msg += "Beogh breathes life back into " + real->name(DESC_THE, true) + " and ";
-        }
-    }
-    // Neither dead nor present. They're shaft-immune, so I'm not exactly sure
-    // how this happens, but it feels worth accounting for anyway.
     else
     {
-        real = _beogh_restore_apostle(0);
-        _try_recall_recruit(real);
-        msg += "Beogh recalls " + real->name(DESC_THE, true) + " to your side and ";
+        real = apostles[0].restore();
+        msg += "Beogh breathes life back into " + real->name(DESC_THE, true) + " and ";
     }
 
     if (msg.length() > 0)
@@ -853,11 +701,11 @@ void beogh_recruit_apostle()
     mpr(msg.c_str());
 
     // Now atually convert and save the apostle
-    int slot = ++you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int();
-
+    real->hit_points = real->max_hit_points;
+    real->timeout_enchantments(1000);
+    real->flags &= ~MF_APOSTLE_BAND;
     real->attitude = ATT_FRIENDLY;
     mons_make_god_gift(*real, GOD_BEOGH);
-    add_companion(real);
     mons_att_changed(real);
 
     // Make the apostle stop wandering around and head back to you.
@@ -865,15 +713,16 @@ void beogh_recruit_apostle()
     real->behaviour = BEH_SEEK;
     real->patrol_point.reset();
 
-    _beogh_save_apostle(real, slot);
+    add_companion(real);
+
+    apostles.emplace_back(apostle_data(*real));
 
     you.duration[DUR_BEOGH_CAN_RECRUIT] = 0;
 }
 
-static void _cleanup_apostle_corpse(mid_t mid)
+static void _cleanup_apostle_corpse(int slot)
 {
-    const string key = BEOGH_APOSTLE_DEATH_FLOOR_PREFIX + std::to_string(mid);
-    level_id floor = you.props[key].get_level_id();
+    level_id floor = apostles[slot].corpse_location;
 
     if (!floor.is_valid() || !is_connected_branch(floor))
         return;
@@ -882,6 +731,7 @@ static void _cleanup_apostle_corpse(mid_t mid)
     if (floor != level_id::current())
         le.go_to(floor);
 
+    mid_t mid = apostles[slot].apostle.mons.mid;
     for (int j = 0; j < MAX_ITEMS; ++j)
     {
         if (env.item[j].base_type != OBJ_CORPSES
@@ -899,10 +749,7 @@ void beogh_dismiss_apostle(int slot)
 {
     ASSERT(slot > 0 && slot < 4);
 
-    monster* apostle = _beogh_peek_apostle(slot);
-    ASSERT(apostle);
-
-    string name = apostle->name(DESC_THE, true);
+    const string name = apostles[slot].apostle.mons.name(DESC_THE, true);
     if (!yesno(make_stringf("Really dismiss %s?", name.c_str()).c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -913,15 +760,15 @@ void beogh_dismiss_apostle(int slot)
 
     // Remove our follower monster (if they are elsewhere, use an excursion to
     // remove them immediately.)
-    if (companion_is_elsewhere(apostle->mid, true)
-        && is_connected_branch(companion_list[apostle->mid].level))
+    mid_t mid = apostles[slot].apostle.mons.mid;
+    if (companion_is_elsewhere(mid, true)
+        && is_connected_branch(companion_list[mid].level))
     {
         level_excursion le;
-        le.go_to(companion_list[apostle->mid].level);
-        monster* dist_real = monster_by_mid(apostle->mid);
+        le.go_to(companion_list[mid].level);
+        monster* dist_real = monster_by_mid(mid);
 
-        // While this should almost always find the original, sometimes it may
-        // not (eg: if you left them in the Abyss). Let's double-check.
+        // While this should almost always find the original,let's double-check.
         if (dist_real)
         {
             remove_companion(dist_real);
@@ -930,29 +777,66 @@ void beogh_dismiss_apostle(int slot)
     }
     else
     {
-        monster* real = monster_by_mid(apostle->mid);
+        monster* real = monster_by_mid(mid);
         if (real)
         {
             if (you.can_see(*real))
             {
                 mons_speaks_msg(real, getSpeakString("orc_apostle_dismissed"), MSGCH_TALK);
-                place_cloud(CLOUD_TLOC_ENERGY, real->pos(), 1 + random2(3), apostle);
+                place_cloud(CLOUD_TLOC_ENERGY, real->pos(), 1 + random2(3), real);
             }
             remove_companion(real);
             monster_die(*real, KILL_RESET, -1, true);
         }
     }
 
-    _cleanup_apostle_corpse(apostle->mid);
+    _cleanup_apostle_corpse(slot);
 
-    // Then remove their stored copies
-    CrawlVector& vec = you.props[BEOGH_SAVED_APOSTLES_KEY].get_vector();
-    vec.erase(slot);
-    vec.push_back(0);
+    // Then remove their stored copy
+    apostles.erase(apostles.begin() + slot);
+}
 
-    you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() -= 1;
+static int _get_num_dead_apostles()
+{
+    int num_dead = 0;
+    for (unsigned int i = 1; i < apostles.size(); ++i)
+    {
+        if (apostles[i].state == STATE_DEAD || apostles[i].state == STATE_BANISHED)
+            ++num_dead;
+    }
 
-    //mprf("You now have %d followers.", you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int());
+    return num_dead;
+}
+
+// Calculate cost based on how many of our apostles are already dead, capped at
+// a certain value.
+static int _get_apostle_revival_cost()
+{
+    // Apostles cost 60, 50, 40 piety each. No more than 150 piety cost total
+    // (required so that repeatedly replacing dead apostles with new recruits
+    // doesn't result in a spiral where you can never revive anyone.)
+    int amount = 60 - (_get_num_dead_apostles() * 10);
+    if (you.props.exists(BEOGH_RES_PIETY_NEEDED_KEY))
+        amount = min(amount, 150 - you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int());
+
+    return amount;
+}
+
+static apostle_data& _get_saved_apostle(const monster apostle)
+{
+    for (unsigned int i = 1; i < apostles.size(); ++i)
+    {
+        if (apostles[i].apostle.mons.mid == apostle.mid)
+            return apostles[i];
+    }
+
+    // Should be impossible to reach here unless we did something wrong
+    ASSERT(false);
+}
+
+int get_num_apostles()
+{
+    return apostles.size() - 1;
 }
 
 void beogh_swear_vegeance(monster& apostle)
@@ -984,32 +868,32 @@ void beogh_swear_vegeance(monster& apostle)
     if (new_targets)
         mprf(MSGCH_DURATION, "You swear to avenge %s death!", apostle.name(DESC_ITS, true).c_str());
 
-    // Calculate how much additional piety it should cost to resurrect this follower.
-    you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() += 60;
+    apostle_data& a = _get_saved_apostle(apostle);
+    a.state = STATE_DEAD;
+    a.corpse_location = level_id::current();
 
-    // Cap piety required so that repeatedly replacing dead apostles with new
-    // recruits doesn't result in a spiral where you can never revive anyone.
-    if (you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() > 150)
-        you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() = 150;
+    // Calculate how much additional piety it should cost to resurrect this follower.
+    const int cost = _get_apostle_revival_cost();
+    you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() += cost;
 
     // If an apostle dies with no visible enemy to mark, and you are not already
-    // avenging a different dead, give the bonus process immediately (otherwise
+    // avenging a different dead, give the bonus progress immediately (otherwise
     // the player may never receive it)
     if (new_targets || already_avenging)
-        you.props[BEOGH_VENGEANCE_BONUS_KEY].get_int() += 40;
+        a.vengeance_bonus = cost * 2 / 3;
     else
-        you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() -= 40;
+        you.props[BEOGH_RES_PIETY_GAINED_KEY].get_int() += (cost * 2 / 3);
 }
 
 void beogh_follower_banished(monster& apostle)
 {
-    // Don't swear vengeance when this happens, and set a very small piety
-    // revival counter instead, additionally marking this follower as banished
+    // Don't swear vengeance when this happens, and set a smaller randomized piety
+    // revival counter instead, additionally marking this follower as banished.
     you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() += random_range(10, 30);
+    if (you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() > 150)
+        you.props[BEOGH_RES_PIETY_NEEDED_KEY] = 150;
 
-    string key = BEOGH_FOLLOWER_DEATH_PREFIX + std::to_string(apostle.mid);
-    you.props[key] = APOSTLE_BANISHED;
-
+    _get_saved_apostle(apostle).state = STATE_BANISHED;
     remove_companion(&apostle);
 }
 
@@ -1030,12 +914,13 @@ void beogh_progress_vengeance()
             mi->del_ench(ENCH_VENGEANCE_TARGET);
         add_daction(DACT_BEOGH_VENGEANCE_CLEANUP);
 
-        // XXX: Temporary protection for uninitialized key. Remove before master merge.
-        const int bonus = you.props.exists(BEOGH_VENGEANCE_BONUS_KEY)
-                                ? you.props[BEOGH_VENGEANCE_BONUS_KEY].get_int()
-                                : 50;
-
-        you.props.erase(BEOGH_VENGEANCE_BONUS_KEY);
+        // Calculate total vengeance bonus and apply it
+        int bonus = 0;
+        for (unsigned int i = 0; i < apostles.size(); ++i)
+        {
+            bonus += apostles[i].vengeance_bonus;
+            apostles[i].vengeance_bonus = 0;
+        }
 
         you.props[BEOGH_RES_PIETY_GAINED_KEY].get_int() += bonus;
         beogh_progress_resurrection(0);
@@ -1047,7 +932,7 @@ void beogh_progress_vengeance()
 void beogh_progress_resurrection(int amount)
 {
     // Nobody's dead
-    if (you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() == 0)
+    if (_get_num_dead_apostles() == 0)
         return;
 
     you.props[BEOGH_RES_PIETY_GAINED_KEY].get_int() += amount;
@@ -1061,82 +946,47 @@ void beogh_progress_resurrection(int amount)
     }
 }
 
-static bool _apostle_was_banished(const monster& apostle)
-{
-    const string key = BEOGH_FOLLOWER_DEATH_PREFIX + std::to_string(apostle.mid);
-    return you.props.exists(key) && you.props[key].get_int() == APOSTLE_BANISHED;
-}
-
-static bool _apostle_left_you(const monster& apostle)
-{
-    const string key = BEOGH_FOLLOWER_DEATH_PREFIX + std::to_string(apostle.mid);
-    return you.props.exists(key) && you.props[key].get_int() == APOSTLE_LEFT;
-}
-
 void beogh_resurrect_followers(bool end_ostracism_only)
 {
-    vector<monster*> dead_apostles;
+    vector<int> dead_apostles;
     vector<string> revived_names;
     vector<bool> was_banished;
 
-    for (int i = 0; i < you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int(); ++i)
+    for (unsigned int i = 1; i < apostles.size(); ++i)
     {
-        if (!_beogh_apostle_is_alive(i+1))
+        if (apostles[i].state != STATE_ALIVE)
         {
             // If we are merely returning followers after penance, skip any
             // followers who are dead for 'real'.
-            if (end_ostracism_only && !_apostle_left_you(*_beogh_peek_apostle(i+1)))
+            if (end_ostracism_only && apostles[i].state != STATE_ABANDONED)
                 continue;
 
-            monster* apostle = _beogh_restore_apostle(i+1);
-            dead_apostles.push_back(apostle);
+            dead_apostles.push_back(i);
+            was_banished.push_back(apostles[i].state == STATE_BANISHED);
 
-            if (_apostle_was_banished(*apostle))
+            if (apostles[i].state == STATE_DEAD)
+                revived_names.push_back(apostles[i].apostle.mons.name(DESC_THE, true));
+        }
+    }
+
+    for (unsigned int i = 0; i < dead_apostles.size(); ++i)
+    {
+        // Attempt to place our revived apostle next to us. If this fails somehow,
+        // they will still be added to the companion list so they can be recalled
+        // later.
+        monster* apostle = apostles[dead_apostles[i]].restore();
+        if (apostle)
+        {
+            if (was_banished[i])
             {
                 // Rough up our poor Abyss escapeee
                 apostle->hit_points -= random2avg(apostle->max_hit_points - 1, 3);
                 if (coinflip())
                     apostle->add_ench(ENCH_WRETCHED);
 
-                was_banished.push_back(true);
-            }
-            else
-            {
-                revived_names.push_back(apostle->name(DESC_THE, true));
-                was_banished.push_back(false);
-            }
-
-            const string key = BEOGH_FOLLOWER_DEATH_PREFIX + std::to_string(apostle->mid);
-            you.props.erase(key);
-        }
-    }
-
-    for (unsigned int i = 0; i < dead_apostles.size(); ++i)
-    {
-        bool placed = false;
-
-        coord_def empty;
-        if (find_habitable_spot_near(you.pos(), MONS_ORC_APOSTLE, 2, false, empty))
-            placed = dead_apostles[i]->move_to_pos(empty);
-        else if (find_habitable_spot_near(you.pos(), MONS_ORC_APOSTLE, LOS_RADIUS, false, empty))
-            placed = dead_apostles[i]->move_to_pos(empty);
-
-        // If there was somehow nowhere to place them, put them back in 'limbo',
-        // but as a companion so they can be recalled later.
-        if (!placed)
-        {
-            add_companion(dead_apostles[i]);
-            monster_die(*dead_apostles[i], KILL_RESET, -1, true, false);
-        }
-        else
-        {
-            add_companion(dead_apostles[i]);
-
-            if (was_banished[i])
-            {
-                simple_monster_message(*dead_apostles[i],
+                simple_monster_message(*apostle,
                                 " has fought their way back out of the Abyss!");
-                mons_speaks_msg(dead_apostles[i],
+                mons_speaks_msg(apostle,
                     getSpeakString("orc_apostle_unbanished"), MSGCH_TALK);
             }
         }
@@ -1153,7 +1003,7 @@ void beogh_resurrect_followers(bool end_ostracism_only)
         if (was_banished[i])
             continue;
 
-        _cleanup_apostle_corpse(dead_apostles[i]->mid);
+        _cleanup_apostle_corpse(dead_apostles[i]);
     }
 
     if (!revived_names.empty())
@@ -1168,18 +1018,10 @@ void beogh_resurrect_followers(bool end_ostracism_only)
     // End vengeance statuses (in case we revived companions without finishing them)
     you.duration[DUR_BEOGH_SEEKING_VENGEANCE] = 0;
     add_daction(DACT_BEOGH_VENGEANCE_CLEANUP);
-    you.props.erase(BEOGH_VENGEANCE_BONUS_KEY);
 
     // Increment how many times vengeance has been declared (so that the daction
     // will only clean up past marks and not future ones)
     you.props[BEOGH_VENGEANCE_NUM_KEY].get_int() += 1;
-}
-
-// Save where the given follower died, so that we can clean up their corpse later
-void beogh_note_follower_death(const monster& apostle)
-{
-    string key = BEOGH_APOSTLE_DEATH_FLOOR_PREFIX + std::to_string(apostle.mid);
-    you.props[key] = level_id::current();
 }
 
 bool tile_has_valid_bfb_corpse(const coord_def pos)
