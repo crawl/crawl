@@ -1021,7 +1021,9 @@ static bool _can_generically_use(operation_types oper)
     return true;
 }
 
-static bool _do_wield_weapon(item_def *to_wield);
+static bool _try_wield_weapon(item_def *to_wield, bool nonweapons_ok = false);
+static bool _do_wield_weapon(item_def &to_wield, const item_def *old_wpn);
+static bool _do_unwield_weapon(const item_def &wpn);
 static bool _do_wear_armour(item_def *to_wear);
 
 static bool _unequip_item(item_def &i)
@@ -1130,7 +1132,7 @@ bool use_an_item(operation_types oper, item_def *target)
     case OPER_EVOKE:
         return _evoke_item(*target);
     case OPER_WIELD:
-        return _do_wield_weapon(target);
+        return _try_wield_weapon(target, true);
     case OPER_WEAR:
         return _do_wear_armour(target);
     case OPER_PUTON:
@@ -1449,13 +1451,7 @@ bool auto_wield()
     {
         to_wield = &you.inv[1];      // backup is 'b'
     }
-
-    // If the autoswap slot has a bad or invalid item in it, the
-    // swap will be to bare hands.
-    if (to_wield && (!to_wield->defined() || !item_is_wieldable(*to_wield)))
-        to_wield = nullptr;
-
-    return _do_wield_weapon(to_wield);
+    return _try_wield_weapon(to_wield);
 }
 
 /**
@@ -1474,92 +1470,93 @@ bool wield_weapon(int slot)
     if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
 
-    item_def *to_wield = slot == SLOT_BARE_HANDS ? nullptr : &you.inv[slot];
-
-    // If the swap slot has a bad or invalid item in it, the
-    // swap will be to bare hands.
-    if (to_wield && (!to_wield->defined() || !item_is_wieldable(*to_wield)))
-        to_wield = nullptr;
-
-    return _do_wield_weapon(to_wield);
+    return _try_wield_weapon(slot == SLOT_BARE_HANDS ? nullptr : &you.inv[slot]);
 }
 
-static bool _do_wield_weapon(item_def *to_wield)
+static bool _try_wield_weapon(item_def *to_wield, bool nonweapons_ok)
 {
+    const item_def* old_wpn = you.weapon();
+    if (to_wield && to_wield == old_wpn)
+    {
+        if (!Options.equip_unequip)
+        {
+            mprf(MSGCH_PROMPT, "You are already wielding that!");
+            return true;
+        }
+        to_wield = nullptr;
+    }
+
     // Reset the warning counter. We do this before the rewield check to
     // provide a (slightly hacky) way to let players reset this without
     // unwielding. (TODO: better ui?)
     you.received_weapon_warning = false;
 
-    if (to_wield && to_wield->pos != ITEM_IN_INVENTORY
-        && !_can_move_item_from_floor_to_inv(*to_wield)) // does messaging
+    // If the swap slot has a bad or invalid item in it, the
+    // swap will be to bare hands.
+    if (to_wield
+        && to_wield->defined()
+        && (nonweapons_ok || item_is_wieldable(*to_wield)))
+    {
+        return _do_wield_weapon(*to_wield, old_wpn);
+    }
+
+    if (!old_wpn)
+    {
+        canned_msg(MSG_EMPTY_HANDED_ALREADY);
+        return false;
+    }
+    return _do_unwield_weapon(*old_wpn);
+}
+
+static bool _do_unwield_weapon(const item_def &wpn)
+{
+    bool penance = false;
+    // Can we safely unwield this item?
+    if (!can_wield(&wpn, true, false, true))
+        return false;
+    // XX possible code dup with `check_old_item_warning`?
+    if (needs_handle_warning(wpn, OPER_WIELD, penance)
+        // check specifically for !u inscriptions:
+        || needs_handle_warning(wpn, OPER_UNEQUIP, penance))
+    {
+        string prompt =
+            "Really unwield " + wpn.name(DESC_INVENTORY) + "?";
+        if (penance)
+            prompt += " This could place you under penance!";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
+    // check if you'd get stat-zeroed
+    if (!_safe_to_remove_or_wear(wpn, true))
+        return false;
+
+    if (!unwield_item())
+        return false;
+
+#ifdef USE_SOUND
+    parse_sound(WIELD_NOTHING_SOUND);
+#endif
+    canned_msg(MSG_EMPTY_HANDED_NOW);
+
+    // Switching to bare hands is the same speed as other weapon swaps.
+    you.turn_is_over = true;
+    you.time_taken /= 2;
+
+    return true;
+}
+
+static bool _do_wield_weapon(item_def &new_wpn, const item_def *old_wpn)
+{
+    if (new_wpn.pos != ITEM_IN_INVENTORY
+        && !_can_move_item_from_floor_to_inv(new_wpn)) // does messaging
     {
         return false;
     }
-
-    if (to_wield && to_wield == you.weapon())
-    {
-        if (Options.equip_unequip)
-            to_wield = nullptr;
-        else
-        {
-            mprf(MSGCH_PROMPT, "You are already wielding that!");
-            return true;
-        }
-    }
-
-    if (!to_wield)
-    {
-        const item_def* wpn = you.weapon();
-        if (!wpn)
-        {
-            canned_msg(MSG_EMPTY_HANDED_ALREADY);
-            return false;
-        }
-
-        bool penance = false;
-        // Can we safely unwield this item?
-        if (!can_wield(wpn, true, false, true))
-            return false;
-        // XX possible code dup with `check_old_item_warning`?
-        if (needs_handle_warning(*wpn, OPER_WIELD, penance)
-            // check specifically for !u inscriptions:
-            || needs_handle_warning(*wpn, OPER_UNEQUIP, penance))
-        {
-            string prompt =
-                "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
-            if (penance)
-                prompt += " This could place you under penance!";
-
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-        }
-
-        // check if you'd get stat-zeroed
-        if (!_safe_to_remove_or_wear(*wpn, true))
-            return false;
-
-        if (!unwield_item())
-            return false;
-
-#ifdef USE_SOUND
-        parse_sound(WIELD_NOTHING_SOUND);
-#endif
-        canned_msg(MSG_EMPTY_HANDED_NOW);
-
-        // Switching to bare hands is the same speed as other weapon swaps.
-        you.turn_is_over = true;
-        you.time_taken /= 2;
-
-        return true;
-    }
-
-    // By now we're sure we're swapping to a real weapon, not bare hands
-
-    item_def& new_wpn = *to_wield;
 
     // Switching to a launcher while berserk is likely a mistake.
     if (you.berserk() && is_range_weapon(new_wpn))
@@ -1589,11 +1586,11 @@ static bool _do_wield_weapon(item_def *to_wield)
         return false;
     }
 
-    if (!_safe_to_remove_or_wear(new_wpn, you.weapon(), false))
+    if (!_safe_to_remove_or_wear(new_wpn, old_wpn, false))
         return false;
 
     // Unwield any old weapon.
-    if (you.weapon())
+    if (old_wpn)
     {
         if (unwield_item())
         {
