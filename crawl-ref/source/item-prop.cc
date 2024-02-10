@@ -2263,6 +2263,7 @@ int ammo_type_damage(int missile_type)
 
 branch_type branch_for_gem(gem_type gem)
 {
+    ASSERT_RANGE(static_cast<int>(gem), 0, NUM_GEM_TYPES);
     return Gem_prop[ Gem_index[gem]].branch;
 }
 
@@ -2282,11 +2283,13 @@ gem_type gem_for_branch(branch_type br)
 
 const char* gem_adj(gem_type gem)
 {
+    ASSERT_RANGE(static_cast<int>(gem), 0, NUM_GEM_TYPES);
     return Gem_prop[ Gem_index[gem]].adj;
 }
 
 int gem_time_limit(gem_type gem)
 {
+    ASSERT_RANGE(static_cast<int>(gem), 0, NUM_GEM_TYPES);
     const int per_floor = Gem_prop[ Gem_index[gem]].time_per_floor;
     const branch_type br = Gem_prop[ Gem_index[gem]].branch;
     const int floors = branches[br].numlevels;
