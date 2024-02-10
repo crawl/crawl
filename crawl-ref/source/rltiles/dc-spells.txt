@@ -185,18 +185,23 @@ brain_bite BRAIN_BITE
 call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH
+confusion_gaze CONFUSION_GAZE
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 draining_gaze DRAINING_GAZE
 earth_elementals EARTH_ELEMENTALS
+ensnare ENSNARE
+eruption ERUPTION
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
+forceful_invitation FORCEFUL_INVITATION
 ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
 ink_cloud INK_CLOUD
+injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
 legendary_destruction LEGENDARY_DESTRUCTION
 malmutate MALMUTATE
@@ -208,6 +213,7 @@ noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
 petrifying_cloud PETRIFYING_CLOUD
 phantom_mirror PHANTOM_MIRROR
+plane_rend PLANE_REND
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
@@ -215,6 +221,7 @@ roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK
 sleep SLEEP
+slug_dart SLUG_DART
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON
@@ -223,6 +230,7 @@ sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
 strip_willpower STRIP_WILLPOWER
+stunning_burst STUNNING_BURST
 summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
 summon_emperor_scorpions SUMMON_EMPEROR_SCORPIONS
@@ -240,8 +248,11 @@ summon_ufetubus SUMMON_UFETUBUS
 summon_tzitzimitl SUMMON_TZITZIMITL
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
+virulence VIRULENCE
 wall_of_brambles WALL_OF_BRAMBLES
+warning_cry WARNING_CRY
 water_elementals WATER_ELEMENTALS
+woodweal WOODWEAL
 %back none
 
 # spells mimicking natural abilities
@@ -262,6 +273,9 @@ trog_brothers_in_arms BROTHERS_IN_ARMS
 yred_drain_life DRAIN_LIFE
 yred_injury_mirror INJURY_MIRROR
 tso_cleansing_flame CLEANSING_FLAME
+
+%sdir gui/abilities
+blinkbolt BLINKBOLT
 
 %sdir gui/spells/misc
 debugging_ray DEBUGGING_RAY
