@@ -819,7 +819,7 @@ at all.
 %%%%
 runic magic mutation
 
-You cast spells with the assistance of glyphs marked upon your armor, greatly
+You cast spells with the assistance of glyphs marked upon your armour, greatly
 reducing the complex movements which would otherwise be required.
 
 (The encumbrance rating of all armour you wear is reduced by 1/2 for purposes
