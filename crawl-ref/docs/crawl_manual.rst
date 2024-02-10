@@ -1544,9 +1544,8 @@ Mountain Dwarves (MD)
   blugeoning weapons, though lacking the dexterity to excel at other forms of
   combat. Their reserves of magic are somewhat poor, though they still make
   passable spellcasters, and their connection with the blood of the earth gives
-  them a particular talent at fire and earth magics. Any dwarven adventurer worth
-  their salt also knows how to get the best fit from their armor, letting them to
-  be much less encumbered by it than others would be.
+  them a particular talent at fire and earth magics. Their spell success is
+  significantly less encumbered by armour than other species.
 
   They are superlative artisans and smiths, employed in ancient times by even the
   gods themselves, and this spiritual history makes them exceptional at invoking

@@ -2479,6 +2479,12 @@ static const mutation_def mut_data[] =
   {"You can now use scrolls of enchantment on lesser artefacts.", "", ""},
   {"You can no longer use scrolls of enchantment on lesser artefacts.", "", ""},
 },
+
+{ MUT_RUNIC_MAGIC, 0, 1, mutflag::good, false, "runic magic",
+  {"Your spellcasting is much less encumbered by armour.", "", ""},
+  {"Your spellcasting becomes less encumbered by armour.", "", ""},
+  {"Your spellcasting no longer less encumbered by armour.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

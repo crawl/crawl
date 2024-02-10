@@ -14,25 +14,25 @@ aptitudes:
   short_blades: -2
   axes: 2
   maces_and_flails: 2
-  polearms: 1
-  staves: -1
+  polearms: 0
+  staves: 1
   ranged weapons: -2
   throwing: -2
   armour: 1
   dodging: -3
-  stealth: -1
+  stealth: -2
   shields: 1
-  spellcasting: -3
+  spellcasting: -2
   translocations: -2
   shapeshifting: -2
-  hexes: -1
-  summoning: -1
   fire_magic: 2
   earth_magic: 1
   ice_magic: -1
   air_magic: -3
   alchemy: -2
+  necromancy: 1
   conjurations: -1
+  evocations: 1
   invocations: 3
 str: 10
 int: 8
@@ -43,8 +43,8 @@ levelup_stats:
   - int
 mutations:
   1:
-    MUT_STURDY_FRAME: 3
     MUT_ARTEFACT_ENCHANTING: 1
+    MUT_RUNIC_MAGIC: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK
