@@ -892,7 +892,7 @@ You join the legions of the undead harvest.
 %%%%
 Yredelemnul death corpse nonliving
 
-Your body becomes fuel for the black torch.
+Your body vanishes in a gout of umbral fire.
 %%%%
 Yredelemnul death undead
 
