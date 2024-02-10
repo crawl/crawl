@@ -79,8 +79,11 @@ Remove all of your blood, transitioning to a bloodless state.
 %%%%
 Revivify ability
 
-Return to life, transitioning from bloodless to alive. This process renders
-the user temporarily frail.
+Return to life, becoming bloodcrazed. While bloodcrazed, you gain powerful
+life-draining attacks, move quickly and can sense creatures from afar but lose
+undead powers and the ability to regenerate naturally. You can drain blood
+from enemies to extend your bloodcraze. When your supply of blood runs out, you
+revert back to your bloodless form and are weakened for some time.
 %%%%
 Hurl Damnation ability
 

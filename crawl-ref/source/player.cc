@@ -1254,8 +1254,7 @@ bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || you.duration[DUR_COLLAPSE]
-        || (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive))
+        || you.duration[DUR_COLLAPSE])
     {
         if (m)
             return _mons_inhibits_regen(*m);
@@ -1921,7 +1920,10 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
-
+    //vampire alive makes you faster if not suppressed by chei
+    else if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+        mv -= 4;
+        
     if (temp && you.duration[DUR_FROZEN])
         mv += 3;
 
@@ -2615,17 +2617,18 @@ static void _handle_god_wrath(int exp)
 /// update vampire blood
 static void _handle_vamp_blood(int exp)
 {
-    //blood gain while alive doesn't use xp
+    // blood gain while alive doesn't use xp
     if (you.attribute[ATTR_VAMP_BLOOD] >= 100 || you.vampire_alive)
         return;
 
     you.attribute[ATTR_VAMP_BLOOD_XP] -= exp;
     
     const int xpreq = (exp_needed(you.experience_level + 1)
-             - exp_needed(you.experience_level)) / 100;
+             - exp_needed(you.experience_level)) / 200;
 
-    //gain a maximum of x blood per kill
-    int max_gain = 2;
+    // gain a maximum of x blood per kill to make revivify
+    // not immediately available at low xl
+    int max_gain = 5;
     while (max_gain > 0 && you.attribute[ATTR_VAMP_BLOOD] < 100
         && you.attribute[ATTR_VAMP_BLOOD_XP] <= 0)
     {
@@ -3302,7 +3305,7 @@ int player_stealth()
 
     // Bloodless vampires are stealthier.
     if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-        stealth += STEALTH_PIP * 2;
+        stealth += STEALTH_PIP;
 
     if (feat_is_water(env.grid(you.pos())))
     {
@@ -3405,7 +3408,12 @@ static void _display_vampire_status()
         attrib.push_back("resist torment");
     }
     else
-        attrib.push_back("do not heal with monsters in sight.");
+    {
+        attrib.push_back("do not regenerate");
+        attrib.push_back("cover ground extremely quickly");
+        attrib.push_back("drain life from creatures you melee");
+        attrib.push_back("sense creatures from afar");
+    }
 
     if (!attrib.empty())
     {
@@ -4230,6 +4238,7 @@ int get_real_mp(bool include_items)
 bool player_regenerates_hp()
 {
     return !regeneration_is_inhibited()
+    && !(you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
 #if TAG_MAJOR_VERSION == 34
     && !you.has_mutation(MUT_NO_REGENERATION)
 #endif
@@ -8348,6 +8357,9 @@ static string _constriction_description()
 **/
 int player_monster_detect_radius()
 {
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+        return 12;
+    
     int radius = you.get_mutation_level(MUT_ANTENNAE) * 2;
 
     if (player_equip_unrand(UNRAND_HOOD_ASSASSIN))

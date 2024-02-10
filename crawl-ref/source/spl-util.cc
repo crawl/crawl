@@ -40,6 +40,8 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+
+#include "ability.h"
 #include "spl-zap.h"
 #include "stringutil.h"
 #include "target.h"
@@ -1951,4 +1953,8 @@ void end_wait_spells(bool quiet)
     end_searing_ray(you);
     end_maxwells_coupling(quiet);
     end_flame_wave();
+
+    //technically not a spell, but uses the same mechanics
+    //and should be interrupted by the same stuff
+    interrupt_revivify();
 }

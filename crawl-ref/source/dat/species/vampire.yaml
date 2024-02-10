@@ -7,12 +7,12 @@ difficulty: Advanced
 difficulty_priority: 80
 aptitudes:
   xp: -1
-  hp: -1
+  hp: -2
   mp_mod: 0
   wl: 4
   fighting: -1
   short_blades: +1
-  axes: -1
+  axes: -2
   maces_and_flails: -2
   polearms: -1
   staves: -2

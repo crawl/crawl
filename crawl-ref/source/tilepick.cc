@@ -3298,6 +3298,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
+        if (bolt.name == "blood")
+            return TILE_BOLT_BLOOD;
         break;
 
     case LIGHTRED:

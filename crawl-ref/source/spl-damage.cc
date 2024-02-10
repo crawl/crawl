@@ -4267,6 +4267,73 @@ void attempt_jinxbite_hit(actor& victim)
         you.duration[DUR_JINXBITE] = 1;
 }
 
+void attempt_blooddrain_hit(actor& victim)
+{
+    if (!victim.is_monster() || victim.wont_attack())
+        return;
+    
+    if (!actor_is_susceptible_to_vampirism(victim, true))
+        return;
+
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+
+    //get the victim's position before dealing damage and potentially
+    //disappearing the victim
+    //reduce draw delay if target is far away
+    bolt beam;
+    beam.source = victim.pos();
+    beam.target = you.pos();
+    beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour = RED;
+    beam.name = "blood";
+    beam.range = LOS_RADIUS;
+    beam.aimed_at_spot = true;
+    beam.flavour = BEAM_VISUAL;
+    beam.draw_delay = 5;
+
+    //2-8 base, 2-18 at xl 27
+    const int damage = roll_dice(2, 4 + div_rand_round(you.experience_level * 5, 27));
+
+    if (you.can_see(victim))
+    {
+        mprf("You draw life force from %s%s",
+             victim.name(DESC_THE).c_str(),
+             attack_strength_punctuation(damage).c_str());
+    }
+
+    if ((Options.use_animations & UA_BEAM))
+    {
+#ifdef USE_TILE
+        view_add_tile_overlay(victim.pos(), tileidx_bolt(beam));
+#endif
+        view_add_glyph_overlay(victim.pos(), {dchar_glyph(DCHAR_FIRED_ZAP),
+                                static_cast<unsigned short>(RED)});
+        animation_delay(25, true);
+    }
+    
+    const int drain_amount = victim.hurt(&you, damage,
+                                         BEAM_VAMPIRIC_DRAINING,
+                                         KILLED_BY_BEAM, "",
+                                         "by vampiric draining");
+    
+    beam.fire();
+    viewwindow();
+    update_screen();
+    
+    if (you.duration[DUR_DEATHS_DOOR] || you.hp == you.hp_max)
+        return;
+    
+    int hp_gain = div_rand_round(drain_amount, 2);
+
+    //cap healing per turn
+    hp_gain = min(you.attribute[ATTR_VAMP_HEAL_POOL], hp_gain);
+    if (hp_gain)
+    {
+        you.attribute[ATTR_VAMP_HEAL_POOL] -= hp_gain;
+        inc_hp(hp_gain);
+    }
+}
+
 void foxfire_attack(const monster *foxfire, const actor *target)
 {
     actor * summoner = actor_by_mid(foxfire->summoner);

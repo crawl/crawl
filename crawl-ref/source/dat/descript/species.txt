@@ -124,8 +124,8 @@ rapidly.
 %%%%
 Vampire
 
-Shifting between the states of life and undeath at will, Vampires are
-accomplished stabbers and casters.
+Although usually undead, Vampires can expend a large amount of blood to revive
+themselves and gain powerful abilities, if only for a short while.
 %%%%
 Vine Stalker
 

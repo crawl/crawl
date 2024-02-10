@@ -571,7 +571,9 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
-
+    
+    trigger_blooddrain();
+    
     // Apply flux form's sfx.
     if (attacker->is_player() && you.form == transformation::flux
         && defender->alive() && defender->is_monster())

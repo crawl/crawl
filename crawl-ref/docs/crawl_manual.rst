@@ -1827,15 +1827,14 @@ Vine Stalkers (VS)
   spells' fuel with each voracious bite.
 
 Vampires (Vp)
-  Vampires are an undead species, with the ability to shift between bloodless
-  and alive forms at will. Bloodless Vampires can heal themselves by drinking
-  the blood of the living in combat, and have the traits of the undead (immunity
-  to poisons, negative energy and torment, and resistance to damage from cold),
-  but are much less resilient and cannot regenerate health when monsters are in
-  sight. On the other hand, a Vampire full with blood will regenerate very
-  quickly, but will lose all undead powers. Upon growing, they learn to
-  transform from their bloodless form into a fast-moving bat. Unlike other
-  undead species, they may be mutated normally at all times.
+  Vampires are an undead species with the ability to temporarily revive
+  themselves in exchange for a large amount of blood stolen from the living.
+  Bloodless Vampires have the traits of the undead (immunity to poisons,
+  negative energy and torment, and resistance to damage from cold). On the
+  other hand, a Vampire who has revived themself gains powerful life-draining
+  attacks, moves quickly and can sense their prey from afar, but will lose all
+  undead powers and the ability to regenerate naturally. Unlike other undead
+  species, they may be mutated normally at all times.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.

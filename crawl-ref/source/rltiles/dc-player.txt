@@ -157,6 +157,8 @@ merfolk_water_f MERFOLK_WATER
 merfolk_water_m
 vampire_f VAMPIRE
 vampire_m
+vampire_alive_f VAMPIRE_ALIVE
+vampire_alive_m
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m

@@ -752,6 +752,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = TILEP_HAIR_PART2_RED;
             break;
         case SP_VAMPIRE:
+            result = you.vampire_alive ? TILEP_BASE_VAMPIRE_ALIVE
+                                  : TILEP_BASE_VAMPIRE;
             hair = TILEP_HAIR_ARWEN;
             break;
         case SP_SPRIGGAN:

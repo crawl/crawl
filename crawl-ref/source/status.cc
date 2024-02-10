@@ -366,17 +366,22 @@ bool fill_status_info(int status, status_info& inf)
         {
             const int vamp_blood = you.attribute[ATTR_VAMP_BLOOD];
             
-            if (!you.vampire_alive)
+            if (you.props.exists(REVIVIFY_TURNS_KEY))
             {
-                //show as red if we're transforming
-                inf.light_colour = you.props.exists(REVIVIFY_TURNS_KEY) ? RED : LIGHTGRAY;
+                inf.light_colour = LIGHTRED;
+                inf.light_text   = make_stringf("Turning (%d%%)",
+                    you.props[REVIVIFY_TURNS_KEY].get_int() > 0 ? 33 : 66);
+            }
+            else if (!you.vampire_alive)
+            {
+                inf.light_colour = vamp_blood == 100 ? WHITE : LIGHTGRAY;
                 inf.light_text   = make_stringf("Bloodless (%d)", vamp_blood);
-                inf.short_text = "bloodless";
+                inf.short_text   = "bloodless";
             }
             else
             {
-                inf.light_colour = LIGHTRED;
-                inf.light_text   = make_stringf("Alive (%d)", vamp_blood);
+                inf.light_colour = RED;
+                inf.light_text   = make_stringf("Bloodcraze (%d)", vamp_blood);
             }
         }
         break;

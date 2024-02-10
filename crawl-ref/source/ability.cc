@@ -2614,7 +2614,7 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
-static void _vampire_exsanguinate(bool force_end = false)
+void vampire_exsanguinate(bool force_end)
 {
     if (force_end)
         blood_spray(you.pos(), MONS_PLAYER, 10);
@@ -2624,63 +2624,89 @@ static void _vampire_exsanguinate(bool force_end = false)
     mpr("You feel anemic as the last of your blood leaves you.");
     vampire_update_transformations();
 
-    //you.attribute[ATTR_VAMP_BLOOD] = 0;
+    you.attribute[ATTR_VAMP_BLOOD] = 0;
 
     you.increase_duration(DUR_WEAK,
-                          random2(15) + 15, 50);
+                          roll_dice(2, 12) + 12, 50);
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
 }
 
-static void _vampire_revivify()
+void vampire_revivify()
 {
-    blood_spray(you.pos(), MONS_PLAYER, 10);
-    
     you.vampire_alive = true;
     you.redraw_status_lights = true;
     mpr("Life gushes and overflows. You are reborn with a terrible thirst!");
     vampire_update_transformations();
-    
+
+    //heal you for 20%-30% of your max health
+    const int healing = you.hp_max / 5 + random2(you.hp_max / 10);
+    inc_hp(healing);
+
     you.props.erase(REVIVIFY_TURNS_KEY);
 
-    //heal you for 20%-40% of your max health
-    const int healing = you.hp_max / 5 + random2(you.hp_max / 5);
-    inc_hp(healing);
+    //put this after aliving you or you won't bleed
+    blood_spray(you.pos(), MONS_PLAYER, 20);
+
+    //don't lose blood the turn you transform
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
 }
 
-void vampire_progress()
+void interrupt_revivify()
+{
+    if (you.props.exists(REVIVIFY_TURNS_KEY))
+    {
+        you.props.erase(REVIVIFY_TURNS_KEY);
+        mpr("You barely contain your bloodthirst.");
+    }
+}
+
+void vampire_revivify_progress()
 {
     if (!you.has_mutation(MUT_VAMPIRISM))
         return;
     
-    if (you.props.exists(REVIVIFY_TURNS_KEY))
-    {
-        const int revivify_turns_left = you.props[REVIVIFY_TURNS_KEY].get_int();
+    if (!you.props.exists(REVIVIFY_TURNS_KEY))
+        return;
 
-        //interrupt the transformation if you do anything other than wait
-        //but not right after you start transforming
-        if (revivify_turns_left < 2 && crawl_state.prev_cmd != CMD_WAIT)
-        {
-            you.props.erase(REVIVIFY_TURNS_KEY);
-            mpr("You barely contain your bloodthirst.");
-            return;
-        }
-        
-        switch (revivify_turns_left)
-        {
-        case 2:
-            mpr("A pulse ripples across your motionless veins.");
-            break;
-        case 1:
-            mpr("Warmth returns to your vessel as blood surges within.");
-            break;
-        case 0:
-            _vampire_revivify();
-            return;
-        default:
-            break;
-        }
-        
-        you.props[REVIVIFY_TURNS_KEY] = revivify_turns_left - 1;
+    const int revivify_turns_left = you.props[REVIVIFY_TURNS_KEY].get_int();
+
+    //interrupt the transformation if you do anything other than wait
+    //but not right after you start transforming
+    if (revivify_turns_left < 2 && crawl_state.prev_cmd != CMD_WAIT)
+    {
+        interrupt_revivify();
+        return;
     }
+        
+    switch (revivify_turns_left)
+    {
+    case 2:
+        {
+            mpr("A pulse ripples across your motionless veins.");
+            string msg = "(Press <w>%</w> to complete your transformation.)";
+            insert_commands(msg, { CMD_WAIT });
+            mpr(msg);
+            break;
+        }
+    case 1:
+        mpr("Warmth returns to your vessel as blood surges within.");
+        break;
+    case 0:
+        vampire_revivify();
+        return;
+    default:
+        break;
+    }
+        
+    you.props[REVIVIFY_TURNS_KEY] = revivify_turns_left - 1;
+    
 }
 
 static bool _evoke_orb_of_dispater(dist *target)
@@ -3433,7 +3459,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_EXSANGUINATE:
-        _vampire_exsanguinate(true);
+        vampire_exsanguinate(true);
         break;
 
     case ABIL_REVIVIFY:

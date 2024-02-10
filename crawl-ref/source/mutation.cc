@@ -959,13 +959,15 @@ static vector<string> _get_fakemuts(bool terse)
 
     if (you.has_mutation(MUT_VAMPIRISM))
     {
-        if (you.vampire_alive)
+        if (terse)
+            result.push_back(you.vampire_alive ? "bloodcraze" : "bloodless");
+        else if (you.vampire_alive)
         {
-            result.push_back(terse ? "alive" :
-                _formmut("You do not regenerate."));
+            result.push_back(_formmut("You do not regenerate."));
+            result.push_back(_formmut("You cover ground extremely quickly."));
+            result.push_back(_formmut("You drain life from creatures you melee."));
+            result.push_back(_formmut("You sense creatures from afar."));
         }
-        else if (terse)
-            result.push_back("bloodless");
         else
         {
             // XX automatically color this green somehow? Handled below more
@@ -1218,38 +1220,38 @@ private:
         const int lines = 17;
         string columns[lines][3] =
         {
-            {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
-                                     //Full       Bloodless
-            {"Regeneration         ", "fast       ", "none with monsters in sight"},
+            {"                     ", "<lightgray>Bloodless</lightgray>   ", "<lightred>Bloodcraze</lightred>"},
+                                     //Bloodless     Bloodcraze
+            {"Regeneration         ", "normal      ", "none  "},
 
-            {"HP modifier          ", "none       ", "-20%"},
+            {"Stealth boost        ", "minor       ", "none  "},
 
-            {"Stealth boost        ", "none       ", "major "},
+            {"Movement speed       ", "normal      ", "fast  "},
 
-            {"Heal on bite         ", "no         ", "yes "},
+            {"Life drain           ", "no          ", "yes   "},
+
+            {"Sense creatures      ", "no          ", "yes   "},
 
             {"", "", ""},
             {"<w>Resistances</w>", "", ""},
-            {"Poison resistance    ", "           ", "immune"},
+            {"Poison resistance    ", "immune      ", ".     "},
 
-            {"Cold resistance      ", "           ", "++    "},
+            {"Cold resistance      ", "+           ", ".     "},
 
-            {"Negative resistance  ", "           ", "+++   "},
+            {"Negative resistance  ", "+++         ", ".     "},
 
-            {"Miasma resistance    ", "           ", "immune"},
+            {"Miasma resistance    ", "immune      ", ".     "},
 
-            {"Torment resistance   ", "           ", "immune"},
+            {"Torment resistance   ", "immune      ", ".     "},
 
             {"", "", ""},
             {"<w>Transformations</w>", "", ""},
-            {"Bat form (XL 3+)     ", "no         ", "yes   "},
+            {"Other forms          ", "no          ", "yes   "},
 
-            {"Other forms          ", "yes        ", "no    "},
-
-            {"Berserk              ", "yes        ", "no    "}
+            {"Berserk              ", "no          ", "yes   "}
         };
 
-        const int highlight_col = you.vampire_alive ? 1 : 2;
+        const int highlight_col = you.vampire_alive ? 2 : 1;
 
         for (int y = 0; y < lines; y++)  // lines   (properties)
         {

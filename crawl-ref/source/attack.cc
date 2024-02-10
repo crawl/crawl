@@ -1608,6 +1608,13 @@ void attack::maybe_trigger_jinxbite()
         jinxbite_fineff::schedule(defender);
 }
 
+void attack::trigger_blooddrain()
+{
+    if (attacker->is_player() && you.has_mutation(MUT_VAMPIRISM)
+        && you.vampire_alive && defender->type != MONS_NO_MONSTER)
+        attempt_blooddrain_hit(*defender);
+}
+
 void attack::maybe_trigger_fugue_wail(const coord_def pos)
 {
     if (attacker->is_player() && you.duration[DUR_FUGUE]

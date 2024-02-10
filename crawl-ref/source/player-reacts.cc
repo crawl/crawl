@@ -90,6 +90,8 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "ability.h"
+#include "bloodspatter.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -1042,6 +1044,28 @@ static void _handle_fugue(int delay)
     }
 }
 
+static void _handle_vampire_alive()
+{
+    if (!you.has_mutation(MUT_VAMPIRISM))
+        return;
+    
+    if (you.vampire_alive)
+    {
+        blood_spray(you.pos(), MONS_PLAYER, 1);
+        //blood goes down when you fail to drail anything
+        if(you.attribute[ATTR_VAMP_LOSE_BLOOD])
+        {   
+            you.attribute[ATTR_VAMP_BLOOD] -= you.attribute[ATTR_VAMP_LOSE_BLOOD];
+            if (you.attribute[ATTR_VAMP_BLOOD] <= 0)
+                vampire_exsanguinate();
+        }
+    }
+
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 2;
+    //cap for healing each turn, scales from 3-12 depending on xl
+    you.attribute[ATTR_VAMP_HEAL_POOL] = 3 + you.experience_level / 3;
+}
+
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1066,6 +1090,8 @@ void player_reacts()
     _handle_fugue(you.time_taken);
     if (you.has_mutation(MUT_WARMUP_STRIKES))
         you.rev_down(you.time_taken);
+
+    _handle_vampire_alive();
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {

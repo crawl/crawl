@@ -107,5 +107,7 @@ enum attribute_type
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
     ATTR_VAMP_BLOOD,           // How much blood our vampire has
     ATTR_VAMP_BLOOD_XP,        // XP needed for our vampire to gain 1 blood
+    ATTR_VAMP_HEAL_POOL,       // Remaining health we can heal from vamp this turn
+    ATTR_VAMP_LOSE_BLOOD,      // Amount of blood to lose this turn
     NUM_ATTRIBUTES
 };
