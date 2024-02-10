@@ -917,7 +917,7 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
             const mon_holy_type holi = you.holiness();
 
             if (holi & MH_NONLIVING)
-                mprf(MSGCH_GOD, "Your body becomes fuel for the black torch.");
+                mprf(MSGCH_GOD, "Your body vanishes in a gout of umbral fire.");
             else
                 mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
                      "zombie.");
