@@ -224,7 +224,7 @@ public:
     void set_transit(const level_id &destination);
     bool is_trap_safe(const coord_def& where) const;
     bool is_location_safe(const coord_def &place);
-    bool find_place_to_live(bool near_player = false);
+    bool find_place_to_live(bool near_player = false, bool force_near = false);
     bool find_home_near_place(const coord_def &c);
     bool find_home_near_player();
     bool find_home_anywhere();

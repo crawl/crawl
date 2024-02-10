@@ -4650,10 +4650,10 @@ bool monster::find_home_anywhere()
     return false;
 }
 
-bool monster::find_place_to_live(bool near_player)
+bool monster::find_place_to_live(bool near_player, bool force_near)
 {
     return near_player && find_home_near_player()
-           || find_home_anywhere();
+           || (!force_near && find_home_anywhere());
 }
 
 void monster::destroy_inventory()
