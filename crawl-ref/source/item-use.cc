@@ -4266,20 +4266,6 @@ void tile_item_drop(int idx, bool partdrop)
     drop_item(idx, quantity);
 }
 
-void tile_item_use_secondary(int idx)
-{
-    const item_def item = you.inv[idx];
-
-    // TODO: add quiver stuff here?
-    if (you.equip[EQ_WEAPON] == idx)
-        wield_weapon(SLOT_BARE_HANDS);
-    else if (item_is_wieldable(item))
-    {
-        // secondary wield for several spells and such
-        wield_weapon(idx); // wield
-    }
-}
-
 void tile_item_use(int idx)
 {
     item_def &item = you.inv[idx];
@@ -4310,34 +4296,27 @@ void tile_item_use(int idx)
         return;
     }
 
+    if (is_weapon(item))
+    {
+        if (equipped)
+            wield_weapon(SLOT_BARE_HANDS);
+        else
+            wield_weapon(idx);
+        return;
+    }
+
+    if (item_ever_evokable(item))
+    {
+        if (check_warning_inscriptions(item, OPER_EVOKE))
+            evoke_item(item);
+        return;
+    }
+
     const int type = item.base_type;
 
     // Use it
     switch (type)
     {
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-    case OBJ_MISCELLANY:
-    case OBJ_TALISMANS:
-    case OBJ_WANDS:
-        // Wield any unwielded item of these types.
-        // XX this case looks pretty outdated
-        if (!equipped && item_is_wieldable(item))
-        {
-            wield_weapon(idx);
-            return;
-        }
-        // Evoke misc. items or wands.
-        if (item_ever_evokable(item))
-        {
-            if (check_warning_inscriptions(item, OPER_EVOKE))
-                evoke_item(item);
-            return;
-        }
-        // Unwield wielded items.
-        if (equipped)
-            wield_weapon(SLOT_BARE_HANDS);
-        return;
 
     case OBJ_MISSILES:
         if (check_warning_inscriptions(item, OPER_FIRE))

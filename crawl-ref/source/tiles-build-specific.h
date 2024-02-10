@@ -26,5 +26,4 @@ VColour str_to_tile_colour(string colour); // in colour.cc
 void tile_item_pickup(int idx, bool part);
 void tile_item_drop(int idx, bool partdrop);
 void tile_item_use(int idx);
-void tile_item_use_secondary(int idx);
 #endif
