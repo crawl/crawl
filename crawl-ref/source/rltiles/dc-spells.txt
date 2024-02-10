@@ -187,6 +187,7 @@ cantrip CANTRIP
 cold_breath COLD_BREATH
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
+draining_gaze DRAINING_GAZE
 earth_elementals EARTH_ELEMENTALS
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON

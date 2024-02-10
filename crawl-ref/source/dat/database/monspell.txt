@@ -415,6 +415,16 @@ Weakening Gaze cast
 # Unique monsters
 ########################################################################
 %%%%
+Ensnare Arachne cast
+
+@The_monster@ points @possessive@ staff @at@ @target@, shooting a stream of webbing.
+
+@The_monster@'s staff shoots out a stream of webbing.
+%%%%
+unseen Ensnare Arachne cast
+
+A stream of webbing shoots out from thin air.
+%%%%
 March of Sorrows Boris cast
 
 @The_monster@ [casts|pitches] forth @possessive@ victims' sorrows.
@@ -502,6 +512,36 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
+Smiting Jeremiah cast
+
+@The_monster@ lets out a twisted cry.
+
+@The_monster@ mumbles a slurred invocation.
+
+VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
+
+@The_monster@ cries, "Fearful master, protect me!"
+
+@The_monster@ shouts, "O dreadful one, destroy my foe!"
+%%%%
+Mennas cast
+
+VISUAL:@The_monster@ gestures frantically.
+%%%%
+Primal Wave Norris cast
+
+@The_monster@ invokes the aid of something beyond life against @target@.
+
+@The_monster@ calmly calls forth the wrath of something past death upon @target@.
+
+@The_monster@ prays to the universe for peace to reach @target@.
+%%%%
+Draining Gaze Norris cast
+
+Something numinous underneath @The_monster@'s waves suddenly gazes at @target@.
+
+@The_monster@'s eyes shimmer, overwhelming @target@ with visions from beyond.
+%%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
 
@@ -521,29 +561,9 @@ Rupert cast targeted
 
 @The_monster@ yells loudly @at@ @target@.
 %%%%
-Ensnare Arachne cast
-
-@The_monster@ points @possessive@ staff @at@ @target@, shooting a stream of webbing.
-
-@The_monster@'s staff shoots out a stream of webbing.
-%%%%
-unseen Ensnare Arachne cast
-
-A stream of webbing shoots out from thin air.
-%%%%
 Lehudib's Crystal Spear the Serpent of Hell cast
 
 @The_monster@ spits crystal @at@ @target@.
-%%%%
-Mennas cast
-
-VISUAL:@The_monster@ gestures frantically.
-%%%%
-Paralyse Xtahua cast
-
-@The_monster@ roars overwhelmingly @at@ @target@!
-
-@The_monster@ thunders ferociously @at@ @target@!
 %%%%
 Vv cast
 
@@ -560,18 +580,11 @@ unseen Vv cast
 
 You hear the sound of rock striking rock.
 %%%%
-Smiting Jeremiah cast
+Paralyse Xtahua cast
 
-@The_monster@ lets out a twisted cry.
+@The_monster@ roars overwhelmingly @at@ @target@!
 
-@The_monster@ mumbles a slurred invocation.
-
-VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
-
-@The_monster@ cries, "Fearful master, protect me!"
-
-@The_monster@ shouts, "O dreadful one, destroy my foe!"
-%%%%
+@The_monster@ thunders ferociously @at@ @target@!
 ########################################################################
 # Individual monsters
 ########################################################################
