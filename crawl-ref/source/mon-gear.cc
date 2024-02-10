@@ -2381,8 +2381,8 @@ void give_apostle_equipment(monster* apostle)
 
             // If we have no spell besides battlecry, have a chance for
             // boomerangs or javelins.
-            if (apostle->spells.size() == 0
-                || apostle->spells[0].spell == SPELL_BATTLECRY
+            if ((apostle->spells.size() == 0
+                 || apostle->spells[0].spell == SPELL_BATTLECRY)
                 && pow >= 25 && one_chance_in(3))
             {
                 if (one_chance_in(3))
