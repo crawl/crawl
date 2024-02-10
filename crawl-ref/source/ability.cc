@@ -1150,17 +1150,17 @@ ability_type fixup_ability(ability_type ability)
         return ability;
 
     case ABIL_BEOGH_DISMISS_APOSTLE_1:
-        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() < 1)
+        if (get_num_apostles() < 1)
             return ABIL_NON_ABILITY;
         return ability;
 
     case ABIL_BEOGH_DISMISS_APOSTLE_2:
-        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() < 2)
+        if (get_num_apostles() < 2)
             return ABIL_NON_ABILITY;
         return ability;
 
     case ABIL_BEOGH_DISMISS_APOSTLE_3:
-        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() < 3)
+        if (get_num_apostles() < 3)
             return ABIL_NON_ABILITY;
         return ability;
 
@@ -2143,7 +2143,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_BEOGH_RECRUIT_APOSTLE:
-        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() == 3)
+        if (get_num_apostles() == 3)
         {
             if (!quiet)
                 mpr("You already have the maximum number of followers. Dismiss one first.");

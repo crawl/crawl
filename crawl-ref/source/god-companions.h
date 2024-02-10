@@ -27,18 +27,44 @@ struct companion
 
 extern map<mid_t, companion> companion_list;
 
+enum apostle_state
+{
+    STATE_ALIVE,
+    STATE_DEAD,
+    STATE_BANISHED,
+    STATE_ABANDONED,
+};
+
+struct apostle_data
+{
+    // Saved copy of the apostle's healthy state
+    follower apostle;
+
+    // Apostle's current state
+    apostle_state state;
+
+    // Where the apostle died (if they are dead)
+    level_id corpse_location;
+
+    // Piety this follower will contribute when we resolve vengeance for them
+    int vengeance_bonus;
+
+    apostle_data(const monster& apostle);
+    apostle_data() : apostle(), state(), corpse_location(), vengeance_bonus() { }
+
+    // Returns a follower to life and tries to place them near the player
+    monster* restore();
+};
+
+// List of currently recruited apostles for a Beogh worshipper
+// Slot 0 is reserved for potential recruits. Recruited apostles are slots 1-3
+extern vector<apostle_data> apostles;
+
 #define BEOGH_CHALLENGE_PROGRESS_KEY "beogh_challenge_progress"
-#define BEOGH_RECRUITABLE_APOSTLE_KEY "beogh_recruitable_apostle"
-#define BEOGH_SAVED_APOSTLES_KEY "beogh_saved_apostles"
-#define BEOGH_RECRUITABLE_APOSTLE_DEATH_POS_KEY "beogh_recruitable_death_pos"
-#define BEOGH_NUM_FOLLOWERS_KEY "beogh_num_followers"
 #define BEOGH_RES_PIETY_NEEDED_KEY "beogh_resurrection_piety_needed"
 #define BEOGH_RES_PIETY_GAINED_KEY "beogh_resurrection_piety_gained"
 #define BEOGH_VENGEANCE_NUM_KEY "beogh_vengeance_num"
-#define BEOGH_VENGEANCE_BONUS_KEY "beogh_vengeance_bonus"
-#define BEOGH_APOSTLE_DEATH_FLOOR_PREFIX "beogh_apostle_death_floor_"
 #define BEOGH_BFB_VALID_KEY "beogh_bfb_valid"
-#define BEOGH_FOLLOWER_DEATH_PREFIX "beogh_apostle_banished_"
 
 void init_companions();
 void add_companion(monster* mons);
@@ -70,14 +96,13 @@ void beogh_end_ostracism();
 void beogh_recruit_apostle();
 void beogh_dismiss_apostle(int slot);
 string get_apostle_name(int slot, bool with_title = false);
+int get_num_apostles();
 
 void beogh_swear_vegeance(monster& apostle);
 void beogh_follower_banished(monster& apostle);
 void beogh_progress_vengeance();
 void beogh_progress_resurrection(int amount);
 void beogh_resurrect_followers(bool end_ostracism_only = false);
-
-void beogh_note_follower_death(const monster& apostle);
 
 bool tile_has_valid_bfb_corpse(const coord_def pos);
 

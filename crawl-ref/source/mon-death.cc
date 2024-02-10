@@ -162,7 +162,6 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         corpse.props[CORPSE_MID_KEY].get_int() = mons.mid;
         if (mons.is_divine_companion())
             corpse.props[BEOGH_BFB_VALID_KEY] = true;
-        beogh_note_follower_death(mons);
     }
 
     return true;
@@ -2149,13 +2148,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Short-circuit this death
             return nullptr;
         }
-    }
-    // Note when a recruitable apostle dies during the recruitment window, so that
-    // messages about the player reviving them upon recruitment will be correct
-    else if (mons.type == MONS_ORC_APOSTLE && !mons.has_ench(ENCH_TOUCH_OF_BEOGH)
-             && you.duration[DUR_BEOGH_CAN_RECRUIT])
-    {
-        you.props[BEOGH_RECRUITABLE_APOSTLE_DEATH_POS_KEY] = mons.pos();
     }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
