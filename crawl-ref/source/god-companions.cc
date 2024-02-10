@@ -839,6 +839,14 @@ int get_num_apostles()
     return apostles.size() - 1;
 }
 
+bool beogh_apostle_is_alive(int slot)
+{
+    if (slot > (int)apostles.size())
+        return false;
+
+    return apostles[slot].state != STATE_DEAD;
+}
+
 void beogh_swear_vegeance(monster& apostle)
 {
     bool already_avenging = you.duration[DUR_BEOGH_SEEKING_VENGEANCE];

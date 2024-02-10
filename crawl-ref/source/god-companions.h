@@ -96,6 +96,7 @@ void beogh_end_ostracism();
 void beogh_recruit_apostle();
 void beogh_dismiss_apostle(int slot);
 string get_apostle_name(int slot, bool with_title = false);
+bool beogh_apostle_is_alive(int slot);
 int get_num_apostles();
 
 void beogh_swear_vegeance(monster& apostle);
