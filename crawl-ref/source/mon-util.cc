@@ -4005,6 +4005,22 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
         return true;
     }
 
+    // Let warrior apostles push through other apostles, but (importantly)
+    // NOT let wizards displace warriors to move into melee range
+    if (m1.type == MONS_ORC_APOSTLE && m2.type == MONS_ORC_APOSTLE)
+    {
+        if (m1.props[APOSTLE_TYPE_KEY].get_int() == APOSTLE_WARRIOR)
+        {
+            return m2.props[APOSTLE_TYPE_KEY].get_int() != APOSTLE_WARRIOR
+                   || m2.get_hit_dice() < m1.get_hit_dice();
+        }
+        if (m2.props[APOSTLE_TYPE_KEY].get_int() == APOSTLE_WARRIOR)
+        {
+            return m1.props[APOSTLE_TYPE_KEY].get_int() == APOSTLE_WARRIOR
+                   && m2.get_hit_dice() < m1.get_hit_dice();
+        }
+    }
+
     // Band leaders can displace followers regardless of type considerations.
     // -cao
     if (m1.is_band_leader_of(m2))
