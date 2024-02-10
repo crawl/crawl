@@ -14,6 +14,7 @@
 #include "env.h"
 #include "tile-env.h"
 #include "files.h"
+#include "god-companions.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -3822,6 +3823,25 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BEOGH_RECALL;
     case ABIL_CONVERT_TO_BEOGH:
         return TILEG_ABILITY_CONVERT_TO_BEOGH;
+    case ABIL_BEOGH_RECRUIT_APOSTLE:
+        return TILEG_ABILITY_BEOGH_RECRUIT_APOSTLE;
+    case ABIL_BEOGH_DISMISS_APOSTLE_1:
+        if (!beogh_apostle_is_alive(1))
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE_DEAD;
+        else
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE;
+    case ABIL_BEOGH_DISMISS_APOSTLE_2:
+        if (!beogh_apostle_is_alive(2))
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE_DEAD;
+        else
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE;
+    case ABIL_BEOGH_DISMISS_APOSTLE_3:
+        if (!beogh_apostle_is_alive(3))
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE_DEAD;
+        else
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE;
+    case ABIL_BEOGH_BLOOD_FOR_BLOOD:
+        return TILEG_ABILITY_BEOGH_BLOOD_FOR_BLOOD;
     // Jiyva
     case ABIL_JIYVA_OOZEMANCY:
         return TILEG_ABILITY_JIYVA_OOZEMANCY;
