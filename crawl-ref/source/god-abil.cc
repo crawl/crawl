@@ -1435,6 +1435,8 @@ string yred_cannot_light_torch_reason()
     }
     else if (player_in_branch(BRANCH_BAZAAR) || player_in_branch(BRANCH_TROVE))
         return "There are no souls worth scouring here.";
+    else if (player_in_branch(BRANCH_ABYSS))
+        return "Not even a god could conquer a realm without end; waste no time trying.";
 
     if (!you.props.exists(YRED_TORCH_USED_KEY))
         return "";
