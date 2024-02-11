@@ -2637,7 +2637,7 @@ static void _handle_vamp_blood(int exp)
         you.attribute[ATTR_VAMP_BLOOD_XP] += xpreq;
 
         if (you.attribute[ATTR_VAMP_BLOOD] == 100)
-            mpr("You feel ready to transform.");
+            mpr("You have enough blood to revivify.");
     }
 
     //excess exp is stored up to the amount needed for 1 blood
@@ -3410,9 +3410,11 @@ static void _display_vampire_status()
     else
     {
         attrib.push_back("do not regenerate");
-        attrib.push_back("cover ground extremely quickly");
         attrib.push_back("drain life from creatures you melee");
         attrib.push_back("sense creatures from afar");
+        
+        if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
+            attrib.push_back("cover ground extremely quickly");
     }
 
     if (!attrib.empty())

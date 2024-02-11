@@ -964,9 +964,11 @@ static vector<string> _get_fakemuts(bool terse)
         else if (you.vampire_alive)
         {
             result.push_back(_formmut("You do not regenerate."));
-            result.push_back(_formmut("You cover ground extremely quickly."));
             result.push_back(_formmut("You drain life from creatures you melee."));
             result.push_back(_formmut("You sense creatures from afar."));
+
+            if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
+                result.push_back(_formmut("You cover ground extremely quickly."));
         }
         else
         {
