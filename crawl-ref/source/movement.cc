@@ -296,8 +296,7 @@ bool cancel_confused_move(bool stationary)
                 && (stationary
                     || !(is_sanctuary(you.pos()) && is_sanctuary(mons->pos()))
                        && !fedhas_passthrough(mons))
-                && bad_attack(mons, adj, suffix, penance)
-                && mons->angered_by_attacks())
+                && bad_attack(mons, adj, suffix, penance))
             {
                 bad_mons = mons;
                 bad_suff = suffix;
