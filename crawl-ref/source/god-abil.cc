@@ -2702,6 +2702,58 @@ bool beogh_cancel_leaving_floor()
     return false;
 }
 
+void beogh_increase_orcification()
+{
+    // Currently gaining a second level doesn't have much messaging. Perhaps in
+    // future, it should?
+    if (you.props.exists(ORCIFICATION_LEVEL_KEY))
+    {
+        you.props[ORCIFICATION_LEVEL_KEY] = 2;
+        mprf(MSGCH_MUTATION, "Your orcish features manifest fully.");
+        return;
+    }
+
+    // Adjust the message we give to the player's physiology.
+    string msg;
+    switch (you.species)
+    {
+        case SP_FORMICID:
+            msg += "Your mandibles take on a glossy white sheen and your antennae grow pointier.";
+            break;
+
+        case SP_TENGU:
+            msg += "Your beak becomes more hooked and the plumage around your ears grows tufted.";
+            break;
+
+        case SP_GARGOYLE:
+            msg += "You feel a divine power chisle tusks from your teeth and sculpt your ears to a sharp point.";
+            break;
+
+        case SP_VINE_STALKER:
+            msg += "A pair of ivory tusks grows out from your maw and flowers begin to bloom upon you.";
+            break;
+
+        case SP_MUMMY:
+            msg += "A small pair of tusks begins to pierce through your wrappings.";
+            break;
+
+        case SP_BARACHI:
+            msg += "Your teeth grow more tusk-like and your tympanum bulges.";
+            break;
+
+        case SP_OCTOPODE:
+            msg += "Your beak grows more hooked and small fins emerge from the sides of your head.";
+            break;
+
+        default:
+            msg += "Your teeth grow more tusk-like and your ears lengthen.";
+            break;
+    }
+
+    mprf(MSGCH_MUTATION, "%s", msg.c_str());
+    you.props[ORCIFICATION_LEVEL_KEY] = 1;
+}
+
 spret dithmenos_shadow_step(bool fail)
 {
     // You can shadow-step anywhere within your umbra.

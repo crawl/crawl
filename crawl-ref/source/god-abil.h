@@ -33,6 +33,7 @@ class dist;
 #define OKAWARU_DUEL_ABANDONED_KEY "okawaru_duel_abandoned"
 
 #define BEOGH_DAMAGE_DONE_KEY "beogh_damage_done"
+#define ORCIFICATION_LEVEL_KEY "orcification_level"
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -151,6 +152,8 @@ void beogh_blood_for_blood_tick(int delay);
 void beogh_end_blood_for_blood();
 void beogh_ally_healing();
 bool beogh_cancel_leaving_floor();
+
+void beogh_increase_orcification();
 
 spret dithmenos_shadow_step(bool fail);
 

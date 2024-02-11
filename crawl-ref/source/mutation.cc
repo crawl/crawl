@@ -817,6 +817,17 @@ static vector<string> _get_fakemuts(bool terse)
         }
     }
 
+    if (you.props.exists(ORCIFICATION_LEVEL_KEY))
+    {
+        if (!terse)
+        {
+            if (you.props[ORCIFICATION_LEVEL_KEY].get_int() == 1)
+                result.push_back(_formmut("Your facial features look somewhat orcish"));
+            else
+                result.push_back(_formmut("Your facial features are unmistakably orcish"));
+        }
+    }
+
     if (have_passive(passive_t::frail)
         || player_under_penance(GOD_HEPLIAKLQANA))
     {
