@@ -126,13 +126,10 @@ void player::moveto(const coord_def &c, bool clear_net)
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 {
-    actor *target = actor_at(c);
-    if (!target)
-    {
-        moveto(c, clear_net);
-        return true;
-    }
-    return false;
+    if (actor_at(c))
+        return false;
+    moveto(c, clear_net);
+    return true;
 }
 
 void player::apply_location_effects(const coord_def &oldpos,

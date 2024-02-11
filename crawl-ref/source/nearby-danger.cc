@@ -207,7 +207,7 @@ static void _announce_monsters(string announcement, vector<monster*> &visible)
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognise as being monsters
+// is able to recognise as being monsters.
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only

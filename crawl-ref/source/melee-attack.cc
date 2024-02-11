@@ -1560,14 +1560,8 @@ bool melee_attack::player_aux_unarmed()
         handle_noise(defender->pos());
         alert_nearby_monsters();
 
-        // [ds] kraken can flee when near death, causing the tentacle
-        // the player was beating up to "die" and no longer be
-        // available to answer questions beyond this point.
-        // handle_noise stirs up all nearby monsters with a stick, so
-        // the player may be beating up a tentacle, but the main body
-        // of the kraken still gets a chance to act and submerge
-        // tentacles before we get here.
-        // This should no longer be relevant but I'm scared to remove it
+        // Just about anything could've happened after all that racket.
+        // Let's be paranoid.
         if (!defender->alive())
             return true;
 

@@ -503,17 +503,14 @@ move_again:
             }
         }
 
-        // TODO make sure this code is still sensible
-        // now that submerge has been removed
+        // TODO remove this goto (and the other one)
         if (mons && mons->type == MONS_BATTLESPHERE)
         {
             if (mon.swap_with(mons))
                 return false;
-            else // if swap fails, move ahead
-            {
-                mon.lose_energy(EUT_MOVE);
-                goto move_again;
-            }
+            // if swap fails, move ahead (but it shouldn't!)
+            mon.lose_energy(EUT_MOVE);
+            goto move_again;
         }
 
         if (victim && _iood_shielded(mon, *victim))
