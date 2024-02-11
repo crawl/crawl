@@ -2339,7 +2339,7 @@ bool ashenzari_uncurse_item()
 
 bool can_convert_to_beogh()
 {
-    if (!(env.level_state & LSTATE_BEOGH) || you.hp > you.hp_max / 2
+    if (!(env.level_state & LSTATE_BEOGH) || you.hp * 3 / 2 > you.hp_max
         || silenced(you.pos()))
     {
         return false;
@@ -2357,7 +2357,7 @@ void announce_beogh_conversion_offer()
     if (you.attribute[ATTR_SEEN_BEOGH]
         || you.religion != GOD_NO_GOD
         || !(env.level_state & LSTATE_BEOGH)
-        || you.hp > you.hp_max / 2)
+        || you.hp * 3 / 2 > you.hp_max)
     {
         return;
     }
