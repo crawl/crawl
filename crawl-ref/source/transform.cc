@@ -506,13 +506,7 @@ bool Form::player_can_swim() const
  */
 bool Form::player_likes_water() const
 {
-    // Grey dracs can't swim, so can't statue form merfolk/octopodes
-    // -- yet they can still survive in water.
-    if (species::likes_water(you.species) && permits_liking_water())
-        return true;
-
-    // otherwise, you gotta swim to survive!
-    return player_can_swim();
+    return species::likes_water(you.species) && !forbids_swimming() || player_can_swim();
 }
 
 /**
@@ -736,13 +730,6 @@ public:
         // there's special casing in base_hand_name to get "fists"
         string hand = you.base_hand_name(true, true);
         return make_stringf("Stone %s", hand.c_str());
-    }
-
-    bool permits_liking_water() const override
-    {
-        // Statue form amphib species are still OK in water, despite
-        // not being able to swim.
-        return true;
     }
 };
 

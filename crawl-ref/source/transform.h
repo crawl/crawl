@@ -174,7 +174,6 @@ public:
     bool enables_flight() const;
     bool forbids_flight() const;
     bool forbids_swimming() const;
-    virtual bool permits_liking_water() const { return !forbids_swimming(); }
 
     bool player_can_fly() const;
     bool player_can_swim() const;
