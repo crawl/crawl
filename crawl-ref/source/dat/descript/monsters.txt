@@ -364,11 +364,14 @@ reduced to mouldering bandages and dry, brittle bones.
 %%%%
 Mennas
 
-There was once a human priest named Mennas. He travelled far and wide preaching
-of Zin to any who would listen, going even so far as to travel into Orcish
-lands, preaching to orcs about laws and mercy. By all accounts the orcs were
-not happy with Mennas. They demanded he swear Beogh was the one true god, and
-when Mennas remained silent they cut out his tongue.
+There was once a human priest named Mennas. He travelled far and wide as a
+missionary of Zin, often venturing even into Orcish lands. He beseeched the orcs
+to abandon their false tribes and return to the peoples of their birth; only
+Zin's light could truly cleanse the weight of sin that had twisted their bodies.
+
+By all accounts the orcs were not happy with Mennas. Eventually, a group of them
+demanded he recant his words and when Mennas remained silent, they cut out his
+tongue.
 
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
