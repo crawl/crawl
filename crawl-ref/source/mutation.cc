@@ -822,9 +822,9 @@ static vector<string> _get_fakemuts(bool terse)
         if (!terse)
         {
             if (you.props[ORCIFICATION_LEVEL_KEY].get_int() == 1)
-                result.push_back(_formmut("Your facial features look somewhat orcish"));
+                result.push_back(_formmut("Your facial features look somewhat orcish."));
             else
-                result.push_back(_formmut("Your facial features are unmistakably orcish"));
+                result.push_back(_formmut("Your facial features are unmistakably orcish."));
         }
     }
 

@@ -2726,7 +2726,7 @@ void beogh_increase_orcification()
             break;
 
         case SP_GARGOYLE:
-            msg += "You feel a divine power chisle tusks from your teeth and sculpt your ears to a sharp point.";
+            msg += "You feel a divine power chisel tusks from your teeth and sculpt your ears to a sharp point.";
             break;
 
         case SP_VINE_STALKER:
