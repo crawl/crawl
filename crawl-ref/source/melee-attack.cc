@@ -1752,17 +1752,13 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
 
-    // Can't affect much of anything as a shadow.
-    if (you.form == transformation::shadow)
-        damage = div_rand_round(damage, 2);
-
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
 
-    return damage;
+    return attack::player_apply_final_multipliers(damage, aux);
 }
 
 int melee_attack::player_apply_postac_multipliers(int damage)
