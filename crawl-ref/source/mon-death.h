@@ -48,6 +48,8 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
 
 bool mons_will_goldify(const monster &mons);
 
+void handle_monster_dies_lua(monster& mons, killer_type killer);
+
 item_def* place_monster_corpse(const monster& mons, bool force = false);
 void maybe_drop_monster_organ(monster_type mon, monster_type orig,
                               coord_def pos, bool silent = false);
