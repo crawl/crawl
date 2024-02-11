@@ -3328,28 +3328,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (you.has_mutation(MUT_NO_GRASPING))
-            return true;
-
-        if (!you.could_wield(item, true, !temp)
-            && !is_throwable(&you, item))
-        {
-            // Weapon is too large (or small) to be wielded and cannot
-            // be thrown either.
-            return true;
-        }
-
-        if (you.undead_or_demonic() && is_holy_item(item, false))
-        {
-            if (!temp && you.form == transformation::death
-                && you.species != SP_DEMONSPAWN)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        return false;
+        return !you.has_mutation(MUT_NO_GRASPING)
+            && !you.could_wield(item, true, !temp);
 
     case OBJ_MISSILES:
         // All missiles are useless for felids.

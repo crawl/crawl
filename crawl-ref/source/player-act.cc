@@ -441,11 +441,10 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
  * what they're currently wielding, transformed into, or any other state.
  *
  * @param item              The item to wield.
- * @param ignore_brand      Whether to disregard the weapon's brand.
  * @return                  Whether the player could potentially wield the
  *                          item.
  */
-bool player::could_wield(const item_def &item, bool ignore_brand,
+bool player::could_wield(const item_def &item, bool /*ignore_brand*/,
                          bool ignore_transform, bool quiet) const
 {
     // Some lingering flavor from the days where sandblast ammo was wielded.
@@ -496,14 +495,6 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (get_mutation_level(MUT_MISSING_HAND)
         && you.hands_reqd(item) == HANDS_TWO)
     {
-        return false;
-    }
-
-    // don't let undead/demonspawn wield holy weapons/scrolls (out of spite)
-    if (!ignore_brand && undead_or_demonic() && is_holy_item(item))
-    {
-        if (!quiet)
-            mpr("This weapon is holy and will not allow you to wield it.");
         return false;
     }
 

@@ -1407,6 +1407,9 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_HOLY_WRATH:
+        if (attacker->undead_or_demonic())
+            break; // No holy wrath for thee!
+
         if (defender->holy_wrath_susceptible())
             special_damage = 1 + (random2(damage_done * 15) / 10);
 

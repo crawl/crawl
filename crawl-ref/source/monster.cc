@@ -638,6 +638,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
     {
         // Undead and demonic monsters and monsters that are
         // gifts/worshippers of Yredelemnul won't use holy weapons.
+        // They could, they just don't want to.
         if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
             && is_holy_item(item))
         {

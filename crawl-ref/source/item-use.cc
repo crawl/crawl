@@ -1257,7 +1257,7 @@ static bool _safe_to_remove_or_wear(const item_def &item,
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(const item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield, bool only_known)
+               bool ignore_temporary_disability, bool unwield)
 {
 #define SAY(x) {if (say_reason) { x; }}
     if (you.melded[EQ_WEAPON] && unwield)
@@ -1325,34 +1325,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
         }
         else
             return true;
-    }
-
-    bool id_brand = false;
-
-    if (you.undead_or_demonic() && is_holy_item(*weapon)
-        && (item_type_known(*weapon) || !only_known))
-    {
-        if (say_reason)
-        {
-            mprf(MSGCH_PROMPT, "This weapon is holy and will not allow you to wield it.");
-            id_brand = true;
-        }
-        else
-            return false;
-    }
-    if (id_brand)
-    {
-        auto wwpn = const_cast<item_def*>(weapon);
-        if (!is_artefact(*weapon) && !is_blessed(*weapon)
-            && !item_type_known(*weapon))
-        {
-            set_ident_flags(*wwpn, ISFLAG_KNOW_TYPE);
-            if (in_inventory(*weapon))
-                mprf_nocap("%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
-        }
-        else if (is_artefact(*weapon) && !item_type_known(*weapon))
-            artefact_learn_prop(*wwpn, ARTP_BRAND);
-        return false;
     }
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
@@ -1572,10 +1544,6 @@ static bool _do_wield_weapon(item_def &new_wpn, const item_def *old_wpn)
 
     // Ensure wieldable
     if (!can_wield(&new_wpn, true))
-        return false;
-
-    // Really ensure wieldable, even unknown brand
-    if (!can_wield(&new_wpn, true, false, false, false))
         return false;
 
     // At this point, we know it's possible to equip this item. However, there

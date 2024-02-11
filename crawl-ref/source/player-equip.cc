@@ -472,10 +472,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         if (artefact)
             equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
-        special = item.brand;
-
-        if (artefact)
-            special = artefact_property(item, ARTP_BRAND);
+        special = get_weapon_brand(item);
 
         if (special != SPWPN_NORMAL)
         {
@@ -497,8 +494,16 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_HOLY_WRATH:
-                    mprf("%s softly glows with a divine radiance!",
-                         item_name.c_str());
+                    if (you.undead_or_demonic())
+                    {
+                        mprf("%s sits dull and lifeless in your grasp.",
+                             item_name.c_str());
+                    }
+                    else
+                    {
+                        mprf("%s softly glows with a divine radiance!",
+                             item_name.c_str());
+                    }
                     break;
 
                 case SPWPN_ELECTROCUTION:
@@ -650,8 +655,11 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                     mprf("%s stops flaming.", msg.c_str());
                 break;
 
-            case SPWPN_FREEZING:
             case SPWPN_HOLY_WRATH:
+                if (you.undead_or_demonic())
+                    break;
+                // Fallthrough to SPWPN_FREEZING.
+            case SPWPN_FREEZING:
                 if (showMsgs)
                     mprf("%s stops glowing.", msg.c_str());
                 break;
