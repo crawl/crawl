@@ -1612,7 +1612,9 @@ void attack::trigger_blooddrain()
 {
     if (attacker->is_player() && you.has_mutation(MUT_VAMPIRISM)
         && you.vampire_alive && !invalid_monster(defender->as_monster()))
+    {
         attempt_blooddrain_hit(*defender);
+    }
 }
 
 void attack::maybe_trigger_fugue_wail(const coord_def pos)

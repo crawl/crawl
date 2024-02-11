@@ -1055,7 +1055,9 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool include_demonic, b
 {
     if (!(act.holiness() & (MH_NATURAL | MH_PLANT) ||
         (include_demonic && act.holiness() == MH_DEMONIC)))
+    {
         return false;
+    }
 
     if (act.is_player())
         return true;

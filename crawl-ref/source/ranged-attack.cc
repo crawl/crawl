@@ -331,7 +331,9 @@ bool ranged_attack::handle_phase_hit()
 
     if (!(projectile->is_type(OBJ_MISSILES, MI_DART)
         || projectile->is_type(OBJ_MISSILES, MI_THROWING_NET)))
+    {
         trigger_blooddrain();
+    }
 
     if (!ret)
         return false;

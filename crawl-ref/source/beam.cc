@@ -2279,7 +2279,9 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 {
     if (damage < 1 || !actor_is_susceptible_to_vampirism(victim,
                 agent.is_player() && you.has_mutation(MUT_VAMPIRISM)))
+    {
         return;
+    }
 
     if (you.can_see(victim) || you.can_see(agent))
     {
