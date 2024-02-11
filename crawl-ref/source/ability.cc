@@ -1164,6 +1164,11 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_NON_ABILITY;
         return ability;
 
+    case ABIL_BEOGH_RECALL_APOSTLES:
+        if (get_num_apostles() < 1)
+            return ABIL_NON_ABILITY;
+        return ability;
+
     default:
         return ability;
     }

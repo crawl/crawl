@@ -245,14 +245,14 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Beogh
-        {   { 3, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},
+        {   { 2, ABIL_BEOGH_SMITING, "smite your foes" },
+            { 1, ABIL_BEOGH_RECALL_APOSTLES, "recall your orcish followers" },
+            { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
+            { 3, ABIL_BEOGH_RECRUIT_APOSTLE, "recruit orcish followers" },
+            { 3, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},
             { 3, ABIL_BEOGH_DISMISS_APOSTLE_2, ""},
             { 3, ABIL_BEOGH_DISMISS_APOSTLE_3, ""},
-            { 2, ABIL_BEOGH_SMITING, "smite your foes" },
-            { 3, ABIL_BEOGH_RECRUIT_APOSTLE, "recruit orcish followers" },
-            { 3, ABIL_BEOGH_RECALL_APOSTLES, "recall your orcish followers" },
             { 5, "walk on water" },
-            { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
         },
 
         // Jiyva
