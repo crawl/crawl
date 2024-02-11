@@ -1617,6 +1617,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HOLY:
+    case BEAM_FOUL_FLAME:
     {
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (doFlavouredEffects && original > 0
@@ -2971,6 +2972,9 @@ bool bolt::is_harmless(const monster* mon) const
     case BEAM_HOLY:
         return mon->res_holy_energy() >= 3;
 
+    case BEAM_FOUL_FLAME:
+        return mon->res_foul_flame() >= 3;
+
     case BEAM_STEAM:
         return mon->res_steam() >= 3;
 
@@ -3033,6 +3037,9 @@ bool bolt::harmless_to_player() const
 
     case BEAM_HOLY:
         return you.res_holy_energy() >= 3;
+
+    case BEAM_FOUL_FLAME:
+        return you.res_foul_flame() >= 3;
 
     case BEAM_MIASMA:
         return you.res_miasma();
@@ -6743,6 +6750,10 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_HOLY)
         return mon->res_holy_energy() < 3;
 
+    // Foul flame.
+    if (flavour == BEAM_FOUL_FLAME)
+        return mon->res_foul_flame() < 3;
+
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
@@ -7011,6 +7022,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_STEAM:                 return "steam";
     case BEAM_ENERGY:                return "energy";
     case BEAM_HOLY:                  return "cleansing flame";
+    case BEAM_FOUL_FLAME:            return "foul flame";
     case BEAM_FRAG:                  return "fragments";
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
