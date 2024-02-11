@@ -511,8 +511,11 @@ bool mons_speaks(monster* mons)
     {
         // Animals only look at the current player form, smart monsters at the
         // actual player genus.
-        if (is_player_same_genus(mons->type))
-            prefixes.emplace_back("related"); // maybe overkill for Beogh?
+        if (is_player_same_genus(mons->type)
+            || mons_genus(mons->type) == MONS_ORC && you_worship(GOD_BEOGH))
+        {
+            prefixes.emplace_back("related");
+        }
     }
     else
     {
