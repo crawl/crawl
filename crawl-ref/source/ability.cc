@@ -1707,6 +1707,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     switch (abil.ability)
     {
+    case ABIL_REVIVIFY:
+    {
+        if (you.attribute[ATTR_VAMP_BLOOD] < 100)
+        {
+            if (!quiet)
+                mpr("You don't have enough blood.");
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_ZIN_RECITE:
     {
         if (!zin_check_able_to_recite(quiet))
@@ -3975,8 +3986,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
     case ABIL_REVIVIFY:
-        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
-            && you.attribute[ATTR_VAMP_BLOOD] >= 100;
+        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
     case ABIL_EXSANGUINATE:
         return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_BREATHE_FIRE:
