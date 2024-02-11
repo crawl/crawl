@@ -1053,7 +1053,7 @@ static void _handle_vampire_alive()
     {
         blood_spray(you.pos(), MONS_PLAYER, 1);
         //blood goes down when you fail to drail anything
-        if(you.attribute[ATTR_VAMP_LOSE_BLOOD])
+        if (you.attribute[ATTR_VAMP_LOSE_BLOOD])
         {
             you.attribute[ATTR_VAMP_BLOOD] -= you.attribute[ATTR_VAMP_LOSE_BLOOD];
             if (you.attribute[ATTR_VAMP_BLOOD] <= 0)

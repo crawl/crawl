@@ -1330,7 +1330,7 @@ void majin_bo_vampirism(monster &mon, int damage)
 
     int hp_boost = 1 + random2(damage);
 
-    if(!include_demonic)
+    if (!include_demonic)
         hp_boost = resist_adjust_damage(&mon, BEAM_NEG, hp_boost);
 
     if (hp_boost)
