@@ -254,6 +254,8 @@ static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
 
 bool ranged_attack::handle_phase_hit()
 {
+    bool ret = true;
+    
     if (mulch_bonus()
         // XXX: this kind of hijacks the shield block check
         || !is_penetrating_attack(*attacker, weapon, *projectile))
@@ -286,7 +288,7 @@ bool ranged_attack::handle_phase_hit()
         if (damage_done > 0)
         {
             if (!handle_phase_damaged())
-                return false;
+                ret = false;
             // Jiyva mutation - piercing projectiles won't keep going if they
             // get eaten.
             if (attacker->is_monster()
@@ -318,15 +320,22 @@ bool ranged_attack::handle_phase_hit()
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
         {
-            return false;
+            ret = false;
         }
-        if ((!defender->is_player() || !you.pending_revival)
+        if (throwing()
             && apply_missile_brand())
         {
-            return false;
+            ret = false;
         }
     }
 
+    if (!(projectile->is_type(OBJ_MISSILES, MI_DART)
+        || projectile->is_type(OBJ_MISSILES, MI_THROWING_NET)))
+        trigger_blooddrain();
+
+    if (!ret)
+        return false;
+    
     // XXX: unify this with melee_attack's code
     if (attacker->is_player() && defender->is_monster())
     {

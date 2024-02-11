@@ -3410,7 +3410,7 @@ static void _display_vampire_status()
     else
     {
         attrib.push_back("do not regenerate");
-        attrib.push_back("drain life from creatures you melee");
+        attrib.push_back("drain life from creatures you attack");
         attrib.push_back("sense creatures from afar");
         
         if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
