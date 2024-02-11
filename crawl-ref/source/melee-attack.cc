@@ -1322,9 +1322,10 @@ public:
 
     int get_base_chance() const override
     {
-        // scale final chance as the square of XL, following
-        // the old UC-skill-based logic. This is silly!
-        return 10 + you.experience_level * 3 / 2;
+        // Huh, this is a bit low. 5% at 0 UC, 50% at 27 UC..!
+        // We don't div-rand-round because we want this to be
+        // consistent for mut descriptions.
+        return 5 + you.skill(SK_UNARMED_COMBAT, 5) / 3;
     }
 };
 
