@@ -2724,12 +2724,11 @@ item_def* monster_die(monster& mons, killer_type killer,
             || pet_kill))
     {
         // Killing Jory fully recharges your blood bar as a vampire
-        // Hopefully not too nethacky
         if (mons.type == MONS_JORY
             && you.attribute[ATTR_VAMP_BLOOD] < 100)
         {
             you.attribute[ATTR_VAMP_BLOOD] = 100;
-            mpr("You are full to bursting with blood.");
+            mpr("You are full to bursting with blood!");
         }
 
         if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, true))
