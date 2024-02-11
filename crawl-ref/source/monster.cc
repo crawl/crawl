@@ -3780,6 +3780,22 @@ int monster::res_holy_energy() const
     return 0;
 }
 
+int monster::res_foul_flame() const
+{
+    if (undead_or_demonic())
+        return 1;
+
+    if (is_holy()
+        || is_good_god(god)
+        || (!crawl_state.game_is_arena()
+            && (is_good_god(you.religion) && is_follower(*this))))
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
 int monster::res_negative_energy(bool intrinsic_only) const
 {
     // If you change this, also change get_mons_resists.

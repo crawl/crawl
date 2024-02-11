@@ -6583,6 +6583,17 @@ int player::res_holy_energy() const
     return 0;
 }
 
+int player::res_foul_flame() const
+{
+    if (undead_or_demonic())
+        return 1;
+
+    if (is_holy())
+        return -1;
+
+    return 0;
+}
+
 int player::res_negative_energy(bool intrinsic_only) const
 {
     return player_prot_life(true, true, !intrinsic_only);
