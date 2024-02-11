@@ -2451,6 +2451,12 @@ static void _gain_piety_point()
             && rank == 2 && you.num_current_gifts[you.religion] == 0)
         {
             you.props[BEOGH_CHALLENGE_PROGRESS_KEY] = 25;
+            beogh_increase_orcification();
+        }
+        else if (you_worship(GOD_BEOGH) && rank == 5
+                 && you.props[ORCIFICATION_LEVEL_KEY].get_int() < 2)
+        {
+            beogh_increase_orcification();
         }
     }
 
@@ -3672,6 +3678,12 @@ static void _join_zin()
         // widow is not spared doesn't mean the rich can't be milked for more.
         lucre.props[ACQUIRE_KEY] = 0;
         you.gold -= zin_tithe(lucre, lucre.quantity, true);
+    }
+
+    if (you.props.exists(ORCIFICATION_LEVEL_KEY))
+    {
+        mprf(MSGCH_GOD, "Zin cleanses your body of Beogh's taint.");
+        you.props.erase(ORCIFICATION_LEVEL_KEY);
     }
 }
 
