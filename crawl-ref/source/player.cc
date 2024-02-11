@@ -7368,7 +7368,7 @@ bool player::backlit(bool self_halo, bool temp) const
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))
-           || self_halo && (you.has_mutation(MUT_GLOWING)
+           || self_halo && (you.has_mutation(MUT_FOUL_GLOW)
                             || you.form == transformation::flux);
     // TODO: find some way to mark !invis for autopickup while
     // fluxing while still marking it temp-useless (and while

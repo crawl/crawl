@@ -2954,6 +2954,8 @@ static const facet_def _demon_facets[] =
       { 50, 50, 50 } },
     { 3, { MUT_CORRUPTING_PRESENCE, MUT_CORRUPTING_PRESENCE, MUT_WORD_OF_CHAOS },
       { 50, 50, 50 } },
+    { 3, { MUT_FOUL_GLOW, MUT_FOUL_GLOW, MUT_FOUL_GLOW },
+      { 50, 50, 50 } },
 };
 
 static bool _works_at_tier(const facet_def& facet, int tier)

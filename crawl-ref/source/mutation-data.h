@@ -2450,10 +2450,18 @@ static const mutation_def mut_data[] =
   {"You feel long-lived.", "", ""},
 },
 
-{ MUT_GLOWING, 0, 1, mutflag::bad, false, "glowing",
-  {"You glow in the dark.", "", ""},
-  {"Your body begins glowing.", "", ""},
-  {"You feel a bit dim.", "", ""},
+{ MUT_FOUL_GLOW, 0, 3, mutflag::good, false, "foul glow",
+  {"You glow faintly, very rarely releasing foul flame when damaged in melee.",
+   "You glow, sometimes releasing foul flame when damaged in melee.",
+   "You glow brightly, frequently releasing foul flame when damaged in melee."},
+  {"Your body begins glowing with foul flame.",
+   "Your body glows brighter with foul flame.",
+   "Your body glows brighter with foul flame."},
+  {"You stop glowing with foul flame.",
+   "Your foul glow dims.",
+   "Your foul glow dims."},
+
+  TILEG_MUT_FOUL_GLOW,
 },
 
 { MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false, "explore regen",
