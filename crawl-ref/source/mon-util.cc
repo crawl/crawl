@@ -909,10 +909,6 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_offers_beogh_conversion(const monster& mon)
 {
-    // Only try to convert atheists
-    if (you.religion != GOD_NO_GOD)
-        return false;
-
     return mons_genus(mon.type) == MONS_ORC
            && mon.is_priest() && mon.god == GOD_BEOGH;
 }
@@ -921,7 +917,9 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
 {
     // Do the expensive LOS check last.
     return mons_offers_beogh_conversion(mon)
-                && you.hp <= you.hp_max / 2
+                // Only try to convert atheists
+                && you.religion == GOD_NO_GOD
+                && you.hp * 3 / 2 <= you.hp_max
                 && !mon.is_summoned() && !mon.friendly()
                 && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
                 && !mons_is_confused(mon) && mons_is_seeking(mon)
