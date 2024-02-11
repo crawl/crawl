@@ -249,16 +249,22 @@ string Form::get_description(bool past_tense) const
  *
  * @return The message for turning into this form.
  */
-string Form::transform_message(transformation previous_trans) const
+string Form::transform_message(bool was_flying) const
 {
     // XXX: refactor this into a second function (and also rethink the logic)
     string start = "Buggily, y";
-    if (you.in_water() && player_can_fly())
+    if (!was_flying
+        && player_can_fly()
+        && feat_is_water(env.grid(you.pos())))
+    {
         start = "You fly out of the water as y";
-    else if (get_form(previous_trans)->player_can_fly()
+    }
+    else if (was_flying
              && player_can_swim()
              && feat_is_water(env.grid(you.pos())))
+    {
         start = "As you dive into the water, y";
+    }
     else
         start = "Y";
 
@@ -609,7 +615,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation /*previous_trans*/) const override
+    string transform_message(bool /*was_flying*/) const override
     {
         const bool singular = you.arm_count() == 1;
 
@@ -668,7 +674,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation previous_trans) const override
+    string transform_message(bool was_flying) const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
@@ -676,7 +682,7 @@ public:
 #endif
         if (you.species == SP_GARGOYLE)
             return "Your body stiffens and grows slower.";
-        return Form::transform_message(previous_trans);
+        return Form::transform_message(was_flying);
     }
 
     /**
@@ -807,7 +813,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation /*previous_trans*/) const override
+    string transform_message(bool /*was_flying*/) const override
     {
         return "Your flesh twists and warps into a mockery of life!";
     }
@@ -1719,18 +1725,15 @@ void set_form(transformation which_trans, int dur)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int pow, transformation which_trans)
+static void _enter_form(int pow, transformation which_trans, bool was_flying)
 {
-    const transformation previous_trans = you.form;
-    const bool was_flying = you.airborne();
-
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
     // Give the transformation message.
-    mpr(get_form(which_trans)->transform_message(previous_trans));
+    mpr(get_form(which_trans)->transform_message(was_flying));
 
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
@@ -1828,12 +1831,6 @@ static void _enter_form(int pow, transformation which_trans)
  * @return                  If the player was transformed, or if they were
  *                          already in the given form, returns true.
  *                          Otherwise, false.
- *                          If just_check is set, returns true if the player
- *                          could enter the form (or is in it already) and
- *                          false otherwise.
- *                          N.b. that transform() can fail even when a
- *                          just_check run returns true; e.g. when Zin decides
- *                          to intervene. (That may be the only case.)
  */
 bool transform(int pow, transformation which_trans, bool involuntary)
 {
@@ -1876,16 +1873,18 @@ bool transform(int pow, transformation which_trans, bool involuntary)
         return true;
     }
 
+    const bool was_flying = you.airborne();
+
     if (you.form != transformation::none)
         untransform(true);
 
-    _enter_form(pow, which_trans);
+    _enter_form(pow, which_trans, was_flying);
 
     return true;
 }
 
 /**
- * End the player's transformation and return them to their normal
+ * End the player's transformation and return them to having no
  * form.
  * @param skip_move      If true, skip any move that was in progress before
  *                       the transformation ended.
@@ -2006,9 +2005,9 @@ void return_to_default_form()
         untransform();
     else
     {
-        if (you.form != transformation::none)
+        const bool success = transform(0, you.default_form, true);
+        if (!success && you.form != transformation::none)
             untransform(true);
-        transform(0, you.default_form, true);
     }
     ASSERT(you.form == you.default_form);
 }
