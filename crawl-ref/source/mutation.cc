@@ -871,7 +871,7 @@ static vector<string> _get_fakemuts(bool terse)
     {
         result.push_back(_annotate_form_based(
                     terse ? "amphibious" : "You are amphibious.",
-                    !form_likes_water(), terse));
+                    !form_can_swim(), terse));
     }
 
     if (species::arm_count(you.species) > 2)

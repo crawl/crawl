@@ -456,16 +456,6 @@ bool Form::forbids_flight() const
 }
 
 /**
- * Does this form disable swimming?
- *
- * @return Whether swimming is always impossible while in this form.
- */
-bool Form::forbids_swimming() const
-{
-    return can_swim == FC_FORBID;
-}
-
-/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -494,19 +484,6 @@ bool Form::player_can_swim() const
            || species::can_swim(you.species)
               && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
-}
-
-/**
- * Can the player survive in deep water when in the given form?
- *
- * Doesn't count flight or beogh water-walking.
- *
- * @return          Whether the player won't be killed when entering deep water
- *                  in that form.
- */
-bool Form::player_likes_water() const
-{
-    return species::likes_water(you.species) && !forbids_swimming() || player_can_swim();
 }
 
 /**
@@ -1171,7 +1148,7 @@ bool form_can_fly(transformation form)
  * Can the player swim, if in this form?
  *
  * (Swimming = traversing deep & shallow water without penalties; includes
- * floating (ice form) and wading forms (giants - currently just dragon form,
+ * swimming (snake form) and wading forms (giants - currently just dragon form,
  * which normally flies anyway...))
  *
  * DOES consider player state besides form.
@@ -1181,20 +1158,6 @@ bool form_can_fly(transformation form)
 bool form_can_swim(transformation form)
 {
     return get_form(form)->player_can_swim();
-}
-
-/**
- * Can the player survive in deep water when in the given form?
- *
- * Doesn't count flight or beogh water-walking.
- *
- * @param form      The form in question.
- * @return          Whether the player won't be killed when entering deep water
- *                  in that form.
- */
-bool form_likes_water(transformation form)
-{
-    return get_form(form)->player_likes_water();
 }
 
 // Used to mark transformations which override species intrinsics.
@@ -1505,7 +1468,7 @@ bool feat_dangerous_for_form(transformation which_trans,
         return true;
 
     if (feat == DNGN_DEEP_WATER)
-        return !you.can_water_walk() && !form_likes_water(which_trans);
+        return !you.can_water_walk() && !form_can_swim(which_trans);
 
     return false;
 }

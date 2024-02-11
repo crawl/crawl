@@ -696,7 +696,7 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return cur_form(!permanently)->player_likes_water()
+    return cur_form(!permanently)->player_can_swim()
            || !permanently && you.can_water_walk();
 }
 

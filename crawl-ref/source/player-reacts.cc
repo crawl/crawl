@@ -566,7 +566,7 @@ static void _decrement_transform_duration(int delay)
         || you.transform_uncancellable)
     {
         if (form_can_fly()
-            || form_likes_water() && feat_is_water(env.grid(you.pos())))
+            || form_can_swim() && feat_is_water(env.grid(you.pos())))
         {
             // Disable emergency flight if it was active
             you.props.erase(EMERGENCY_FLIGHT_KEY);
