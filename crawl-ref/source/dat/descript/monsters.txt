@@ -1433,8 +1433,8 @@ constantly changing form.
 %%%%
 gnoll
 
-A taller and better-equipped relative of goblins and orcs, somewhat doglike in
-appearance.
+A taller and better-equipped relative of goblins, and ally of orcs. It is
+somewhat doglike in appearance.
 %%%%
 gnoll sergeant
 
@@ -1985,8 +1985,8 @@ the waves and serve their King.
 %%%%
 ogre
 
-A large, ugly, and fat creature, distantly related to orcs and goblins. It is
-tremendously strong.
+A large, ugly, and fat creature, distantly related to goblins. It is
+tremendously strong, and likes fighting alongside its orc friends.
 %%%%
 ogre mage
 
