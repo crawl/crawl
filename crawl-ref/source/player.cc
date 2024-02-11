@@ -732,17 +732,13 @@ monster_type player_mons(bool transform)
 
     if (mons == MONS_ORC)
     {
+        // Orc implies Beogh worship nowadays, but someone might still be
+        // playing a Hill Orc from an old save...
         if (you_worship(GOD_BEOGH))
         {
             mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
                                                       : MONS_ORC_PRIEST;
         }
-    }
-    else if (mons == MONS_OGRE)
-    {
-        const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-        if (sk >= SK_SPELLCASTING && sk <= SK_LAST_MAGIC)
-            mons = MONS_OGRE_MAGE;
     }
 
     return mons;

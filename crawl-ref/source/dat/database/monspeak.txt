@@ -7937,7 +7937,7 @@ w:4
 %%%%
 _hostile_orc_beogh_unbeliever_speech_common_
 
-@The_monster@ @_orc_says_to_foe_@, "I don't believe in Beogh!"
+@The_monster@ @_orc_says_to_foe_@, "Beogh doesn't tell me what to do!"
 
 @The_monster@ @_shouts_@ @at_foe@, "You're not the messiah, I am!"
 %%%%
@@ -7995,7 +7995,7 @@ VISUAL:@The_monster@ stares at you quizzically. @player_only@
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
-w:80
+w:20
 __NONE
 
 # general friendly speech
@@ -8024,17 +8024,19 @@ w:5
 
 @The_monster@ says, "Your appearance changed my life!"
 
-@The_monster@ @_says_or_shouts_@, "Dying for Beogh is much better than a random rampage."
+@The_monster@ @_says_or_shouts_@, "Dying for Beogh gives my life meaning."
 
 @The_monster@ @_shouts_@, "Blood in Beogh's name!"
 
-@The_monster@ shouts, "All @_orc_heathen_@s must die!"
+@The_monster@ shouts, "All our enemies must die!"
 
-@The_monster@ @_shouts_@, "Let's [kill|smash|burn|maim] those @_orc_heathen_@s!"
+@The_monster@ @_shouts_@, "Let's [kill|smash|burn|maim] whoever stands in our way!"
 
-@The_monster@ @_orc_says_@, "With Beogh's help we'll overthrow the @_orc_heathen_@s!"
+@The_monster@ @_orc_says_@, "With Beogh's help we'll overthrow all the false gods!"
 
 @The_monster@ @_shouts_@, "Smite the @_orc_heathen_@s!"
+
+@The_monster@ @_shouts_@, "Take back everything that was taken from us!"
 
 # messages submitted by Lemuel
 @The_monster@ @_says_or_shouts_@, "I'm proud to serve; I'm ready to die."
@@ -8045,7 +8047,7 @@ w:5
 
 @The_monster@ lets loose a series of foul curses in Beogh's name.
 
-@The_monster@ @_says_or_shouts_@, "I fight for @player_name@, for Beogh rules over all!"
+@The_monster@ @_says_or_shouts_@, "I fight for @player_name@, for Beogh shepherds all!"
 
 @The_monster@ @_says_or_shouts_@, "Orcs will kill them all!"
 
@@ -8074,9 +8076,7 @@ VISUAL:@The_monster@ looks @at_foe/around@ nervously.
 
 @The_monster@ chants, "I shall fear no evil, for @player_name@ is my saviour."
 
-@The_monster@ says, "Orcs get a bad rep."
-
-@The_monster@ @_mutters_@, "It's always Elves, Elves, Elves."
+@The_monster@ says, "I'm proud to be an orc."
 
 @The_monster@ says, "I'm an Orc, you're an Orc, it's OK."
 
@@ -8161,7 +8161,7 @@ beogh_converted_orc_reaction_sight
 %%%%
 beogh_converted_orc_speech_sight
 
-@Subjective@ shouts, "I'll follow thee gladly!"
+@Subjective@ shouts, "@player_name@ is one of us!"
 
 @Subjective@ shouts, "Surely Beogh must have sent you!"
 
@@ -8184,7 +8184,7 @@ beogh_converted_orc_speech_battle
 
 @Subjective@ says, "You must be the Messiah, I see it now!"
 
-@Subjective@ yells, "Beogh is my god, I swear it!"
+@Subjective@ yells, "I follow Beogh's word, I swear it!"
 %%%%
 # these are actually used even if the orc previously was allied
 beogh_converted_orc_resurrection
