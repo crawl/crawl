@@ -585,7 +585,7 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
     const bool include_demonic = agent->is_player() && you.has_mutation(MUT_VAMPIRISM);
-    
+
     if (!actor_is_susceptible_to_vampirism(*act, include_demonic)
         || (!include_demonic && act->res_negative_energy() >= 3))
     {
@@ -4271,7 +4271,7 @@ void attempt_blooddrain_hit(actor& victim)
 {
     if (!victim.is_monster() || victim.wont_attack())
         return;
-    
+
     if (!actor_is_susceptible_to_vampirism(victim, true))
         return;
 
@@ -4310,19 +4310,19 @@ void attempt_blooddrain_hit(actor& victim)
                                 static_cast<unsigned short>(RED)});
         animation_delay(25, true);
     }
-    
+
     const int drain_amount = victim.hurt(&you, damage,
                                          BEAM_VAMPIRIC_DRAINING,
                                          KILLED_BY_BEAM, "",
                                          "by vampiric draining");
-    
+
     beam.fire();
     viewwindow();
     update_screen();
-    
+
     if (you.duration[DUR_DEATHS_DOOR] || you.hp == you.hp_max)
         return;
-    
+
     int hp_gain = div_rand_round(drain_amount, 2);
 
     //cap healing per turn

@@ -2618,7 +2618,7 @@ void vampire_exsanguinate(bool force_end)
 {
     if (force_end)
         blood_spray(you.pos(), MONS_PLAYER, 10);
-    
+
     you.vampire_alive = false;
     you.redraw_status_lights = true;
     mpr("You feel anemic as the last of your blood leaves you.");
@@ -2671,7 +2671,7 @@ void vampire_revivify_progress()
 {
     if (!you.has_mutation(MUT_VAMPIRISM))
         return;
-    
+
     if (!you.props.exists(REVIVIFY_TURNS_KEY))
         return;
 
@@ -2684,7 +2684,7 @@ void vampire_revivify_progress()
         interrupt_revivify();
         return;
     }
-        
+
     switch (revivify_turns_left)
     {
     case 2:
@@ -2704,9 +2704,8 @@ void vampire_revivify_progress()
     default:
         break;
     }
-        
+
     you.props[REVIVIFY_TURNS_KEY] = revivify_turns_left - 1;
-    
 }
 
 static bool _evoke_orb_of_dispater(dist *target)

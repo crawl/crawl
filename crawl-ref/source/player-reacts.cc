@@ -598,7 +598,7 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    
+
     if (you.transform_uncancellable)
     {
         if (form_can_fly()
@@ -1048,13 +1048,13 @@ static void _handle_vampire_alive()
 {
     if (!you.has_mutation(MUT_VAMPIRISM))
         return;
-    
+
     if (you.vampire_alive)
     {
         blood_spray(you.pos(), MONS_PLAYER, 1);
         //blood goes down when you fail to drail anything
         if(you.attribute[ATTR_VAMP_LOSE_BLOOD])
-        {   
+        {
             you.attribute[ATTR_VAMP_BLOOD] -= you.attribute[ATTR_VAMP_LOSE_BLOOD];
             if (you.attribute[ATTR_VAMP_BLOOD] <= 0)
                 vampire_exsanguinate();

@@ -1923,7 +1923,7 @@ int player_movement_speed(bool check_terrain, bool temp)
     //vampire alive makes you faster if not suppressed by chei
     else if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
         mv -= 4;
-        
+
     if (temp && you.duration[DUR_FROZEN])
         mv += 3;
 
@@ -2622,7 +2622,7 @@ static void _handle_vamp_blood(int exp)
         return;
 
     you.attribute[ATTR_VAMP_BLOOD_XP] -= exp;
-    
+
     const int xpreq = (exp_needed(you.experience_level + 1)
              - exp_needed(you.experience_level)) / 200;
 
@@ -3412,7 +3412,7 @@ static void _display_vampire_status()
         attrib.push_back("do not regenerate");
         attrib.push_back("drain life from creatures you attack");
         attrib.push_back("sense creatures from afar");
-        
+
         if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
             attrib.push_back("cover ground extremely quickly");
     }
@@ -8361,7 +8361,7 @@ int player_monster_detect_radius()
 {
     if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
         return 12;
-    
+
     int radius = you.get_mutation_level(MUT_ANTENNAE) * 2;
 
     if (player_equip_unrand(UNRAND_HOOD_ASSASSIN))

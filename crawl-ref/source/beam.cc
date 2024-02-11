@@ -2277,7 +2277,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
 
 static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 {
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(victim, 
+    if (damage < 1 || !actor_is_susceptible_to_vampirism(victim,
                 agent.is_player() && you.has_mutation(MUT_VAMPIRISM)))
         return;
 
@@ -5869,12 +5869,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_VAMPIRIC_DRAINING:
     {
         const bool include_demonic = agent()->is_player() && you.has_mutation(MUT_VAMPIRISM);
-            
+
         int dam = damage.roll();
-            
+
         if (!include_demonic)
             dam = resist_adjust_damage(mon, flavour, dam);
-            
+
         if (dam && actor_is_susceptible_to_vampirism(*mon, include_demonic))
         {
             _vampiric_draining_effect(*mon, *agent(), dam);

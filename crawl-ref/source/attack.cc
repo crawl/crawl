@@ -1276,7 +1276,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_VAMPIRISM:
     {
         const bool include_demonic = attacker->is_player() && you.has_mutation(MUT_VAMPIRISM);
-            
+
         if (!weapon
             || damage_done < 1
             || !actor_is_susceptible_to_vampirism(*defender, include_demonic)

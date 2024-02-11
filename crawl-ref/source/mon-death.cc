@@ -2716,7 +2716,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
-    
     // Vampire blood gaining
     if (gives_player_xp && you.has_mutation(MUT_VAMPIRISM)
         && (killer == KILL_YOU

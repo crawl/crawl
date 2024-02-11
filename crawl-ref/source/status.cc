@@ -365,7 +365,7 @@ bool fill_status_info(int status, status_info& inf)
         if (you.has_mutation(MUT_VAMPIRISM))
         {
             const int vamp_blood = you.attribute[ATTR_VAMP_BLOOD];
-            
+
             if (you.props.exists(REVIVIFY_TURNS_KEY))
             {
                 inf.light_colour = LIGHTRED;

@@ -255,7 +255,7 @@ static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
 bool ranged_attack::handle_phase_hit()
 {
     bool ret = true;
-    
+
     if (mulch_bonus()
         // XXX: this kind of hijacks the shield block check
         || !is_penetrating_attack(*attacker, weapon, *projectile))
@@ -335,7 +335,7 @@ bool ranged_attack::handle_phase_hit()
 
     if (!ret)
         return false;
-    
+
     // XXX: unify this with melee_attack's code
     if (attacker->is_player() && defender->is_monster())
     {
