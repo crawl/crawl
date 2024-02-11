@@ -5696,13 +5696,18 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
     else if (mons_is_tentacle_or_tentacle_segment(type)
              && !mons_is_solo_tentacle(type)
-             && flavour != BEAM_TORMENT_DAMAGE
-             && monster_by_mid(tentacle_connect)
-             && monster_by_mid(tentacle_connect)->is_parent_monster_of(this))
+             && flavour != BEAM_TORMENT_DAMAGE)
     {
-        deferred_damage_fineff::schedule(oppressor,
-                                         monster_by_mid(tentacle_connect),
-                                         damage, false);
+        monster *headmaster = monster_by_mid(tentacle_connect);
+        if (headmaster && headmaster->is_parent_monster_of(this))
+        {
+            int &hits = headmaster->props[TENTACLE_LORD_HITS].get_int();
+            // Reduce damage taken by the parent when blasting many tentacles.
+            const int master_damage = damage >> hits;
+            deferred_damage_fineff::schedule(oppressor, headmaster,
+                                             master_damage, false);
+            ++hits;
+        }
     }
 
     if (!alive())
