@@ -1744,7 +1744,7 @@ static string _describe_weapon_brand(const item_def &item)
     case SPWPN_HOLY_WRATH:
         return "It has been blessed by the Shining One, dealing an additional "
                "three-quarters of any damage that pierces undead and demons' "
-               "armour.";
+               "armour. Undead and demons cannot use this.";
     case SPWPN_ELECTROCUTION:
         return "It sometimes electrocutes victims (1/4 chance, 8-20 damage).";
     case SPWPN_VENOM:

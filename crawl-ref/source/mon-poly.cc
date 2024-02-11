@@ -287,7 +287,6 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mon_enchant charm     = mons->get_ench(ENCH_CHARM);
     mon_enchant shifter   = mons->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                            ENCH_SHAPESHIFTER);
-    mon_enchant sub       = mons->get_ench(ENCH_SUBMERGED);
     mon_enchant summon    = mons->get_ench(ENCH_SUMMON);
     mon_enchant tp        = mons->get_ench(ENCH_TP);
     mon_enchant vines     = mons->get_ench(ENCH_AWAKEN_VINES);
@@ -329,21 +328,12 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->add_ench(fabj);
     mons->add_ench(charm);
     mons->add_ench(shifter);
-    mons->add_ench(sub);
     mons->add_ench(summon);
     mons->add_ench(tp);
     mons->add_ench(vines);
     mons->add_ench(forest);
     mons->add_ench(hexed);
     mons->add_ench(insanity);
-
-    // Allows for handling of submerged monsters which polymorph into
-    // monsters that can't submerge on this square.
-    if (mons->has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(mons, env.grid(mons->pos())))
-    {
-        mons->del_ench(ENCH_SUBMERGED);
-    }
 
     mons->ench_countdown = old_ench_countdown;
 

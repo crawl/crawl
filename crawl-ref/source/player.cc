@@ -635,8 +635,7 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     // Really must be clear.
     ASSERT(you.can_pass_through_feat(env.grid(p)));
 
-    // Better not be an unsubmerged monster either.
-    ASSERT(!monster_at(p) || monster_at(p)->submerged()
+    ASSERT(!monster_at(p)
            || fedhas_passthrough(monster_at(p))
            || mons_is_player_shadow(*monster_at(p))
            || mons_is_wrath_avatar(*monster_at(p)));
@@ -1209,8 +1208,7 @@ static bool _mons_inhibits_regen(const monster &m)
 {
     return mons_is_threatening(m)
                 && !m.wont_attack()
-                && !m.neutral()
-                && !m.submerged();
+                && !m.neutral();
 }
 
 /// Is the player's hp regeneration inhibited by nearby monsters?
@@ -6304,7 +6302,7 @@ int player::corrosion_amount() const
         corrosion += slime_wall_corrosion(&you);
 
     if (player_in_branch(BRANCH_DIS))
-        corrosion += 2;
+        corrosion += 8;
 
     return corrosion;
 }
@@ -6348,7 +6346,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
         AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;
 
-    AC -= 400 * corrosion_amount();
+    AC -= 100 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
 
@@ -6924,16 +6922,6 @@ bool player::resists_dislodge(string event) const
 
 bool player::corrode_equipment(const char* corrosion_source, int degree)
 {
-    // rCorr protects against 50% of corrosion.
-    if (res_corr())
-    {
-        degree = binomial(degree, 50);
-        if (!degree)
-        {
-            dprf("rCorr protects.");
-            return false;
-        }
-    }
     // always increase duration, but...
     increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
                       make_stringf("%s corrodes you!",
@@ -6941,12 +6929,13 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
 
     // the more corrosion you already have, the lower the odds of more
     // Static environmental corrosion doesn't factor in
+    // Reduce corrosion amount by 50% if you have resistance
     int prev_corr = props[CORROSION_KEY].get_int();
     bool did_corrode = false;
     for (int i = 0; i < degree; i++)
-        if (!x_chance_in_y(prev_corr, prev_corr + 7))
+        if (!x_chance_in_y(prev_corr, prev_corr + 28))
         {
-            props[CORROSION_KEY].get_int()++;
+            props[CORROSION_KEY].get_int() += res_corr() ? 2 : 4;
             prev_corr++;
             did_corrode = true;
         }

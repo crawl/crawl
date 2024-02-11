@@ -32,6 +32,8 @@ using std::vector;
 #define FAKE_BLINK_KEY "fake_blink"
 #define CEREBOV_DISARMED_KEY "cerebov_disarmed"
 
+#define TENTACLE_LORD_HITS "tentacle_lord_hits_key"
+
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
 #define KIKU_WRETCH_KEY "kiku_wretch"
@@ -259,7 +261,6 @@ public:
     bool     defined() const { return alive(); }
     bool     swimming() const override;
 
-    bool     submerged() const override;
     bool     can_drown() const;
     bool     floundering_at(const coord_def p) const;
     bool     floundering() const override;

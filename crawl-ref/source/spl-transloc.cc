@@ -1137,7 +1137,7 @@ void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
 
 spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
 {
-    if (target == nullptr || target->submerged() || !you.can_see(*target))
+    if (target == nullptr || !you.can_see(*target))
     {
         canned_msg(MSG_NOTHING_THERE);
         // You cannot place a bullseye on invisible enemies, so just abort

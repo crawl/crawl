@@ -1115,7 +1115,7 @@ static void _print_stats_wp(int y)
         item_def wpn = *you.weapon(); // copy
 
         if (you.corrosion_amount() && wpn.base_type == OBJ_WEAPONS)
-            wpn.plus -= 4 * you.corrosion_amount();
+            wpn.plus -= you.corrosion_amount();
 
         text = wpn.name(DESC_PLAIN, true, false, true);
     }

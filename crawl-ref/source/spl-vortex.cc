@@ -327,8 +327,6 @@ void polar_vortex_damage(actor *caster, int dur)
             bool leda = false; // squares with ledaed enemies are no-go
             if (actor* victim = actor_at(*dam_i))
             {
-                if (victim->submerged())
-                    continue;
                 if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough

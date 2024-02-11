@@ -4136,7 +4136,6 @@ bool handle_mon_spell(monster* mons)
     // .. berserk check is necessary for out-of-sequence actions like emergency
     // slot spells {blue}
     if (mons->asleep()
-        || mons->submerged()
         || mons->berserk_or_frenzied()
         || mons_is_confused(*mons, false)
         || !mons->has_spells())

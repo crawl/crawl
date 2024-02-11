@@ -1274,7 +1274,7 @@ bool interrupt_activity(activity_interrupt ai,
         || ai == activity_interrupt::monster_attacks)
     {
         const monster* mon = at.mons_data;
-        if (mon && !mon->visible_to(&you) && !mon->submerged())
+        if (mon && !mon->visible_to(&you))
             autotoggle_autopickup(true);
     }
 

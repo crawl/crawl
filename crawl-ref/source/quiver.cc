@@ -627,9 +627,6 @@ namespace quiver
             const int x_distance  = abs(delta.x);
             const int y_distance  = abs(delta.y);
             monster* mons = monster_at(target.target);
-            // don't allow targeting of submerged monsters
-            if (mons && mons->submerged())
-                mons = nullptr;
 
             if (x_distance > reach_range || y_distance > reach_range)
             {
@@ -697,7 +694,6 @@ namespace quiver
                 bool success = true;
                 monster *midmons;
                 if ((midmons = monster_at(middle))
-                    && !midmons->submerged()
                     && !god_protects(&you, midmons, true)
                     && (midmons->type != MONS_SPECTRAL_WEAPON
                         || !midmons->wont_attack())

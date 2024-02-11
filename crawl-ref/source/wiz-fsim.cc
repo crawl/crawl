@@ -200,7 +200,8 @@ static bool _equip_weapon(const string &weapon, bool &abort)
         {
             if (i != you.equip[EQ_WEAPON])
             {
-                wield_weapon(i, false);
+                unwind_var<int> reset_speed(you.time_taken, you.time_taken);
+                wield_weapon(i);
                 if (i != you.equip[EQ_WEAPON])
                 {
                     abort = true;

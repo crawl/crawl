@@ -1322,9 +1322,10 @@ public:
 
     int get_base_chance() const override
     {
-        // scale final chance as the square of XL, following
-        // the old UC-skill-based logic. This is silly!
-        return 10 + you.experience_level * 3 / 2;
+        // Huh, this is a bit low. 5% at 0 UC, 50% at 27 UC..!
+        // We don't div-rand-round because we want this to be
+        // consistent for mut descriptions.
+        return 5 + you.skill(SK_UNARMED_COMBAT, 5) / 3;
     }
 };
 
@@ -1490,15 +1491,12 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
  */
 bool melee_attack::player_gets_aux_punch()
 {
-    if (!get_form()->can_offhand_punch())
-        return false;
-
+    return !weapon // UC only
+    // Bats like drinking punch, not throwing 'em.
+           && get_form()->can_offhand_punch()
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
-    if (you.arm_count() <= 2 && !you.has_usable_offhand())
-        return false;
-
-    return true;
+           && you.arm_count() <= 2 || you.has_usable_offhand();
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1562,13 +1560,8 @@ bool melee_attack::player_aux_unarmed()
         handle_noise(defender->pos());
         alert_nearby_monsters();
 
-        // [ds] kraken can flee when near death, causing the tentacle
-        // the player was beating up to "die" and no longer be
-        // available to answer questions beyond this point.
-        // handle_noise stirs up all nearby monsters with a stick, so
-        // the player may be beating up a tentacle, but the main body
-        // of the kraken still gets a chance to act and submerge
-        // tentacles before we get here.
+        // Just about anything could've happened after all that racket.
+        // Let's be paranoid.
         if (!defender->alive())
             return true;
 
@@ -1752,17 +1745,13 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
 
-    // Can't affect much of anything as a shadow.
-    if (you.form == transformation::shadow)
-        damage = div_rand_round(damage, 2);
-
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
 
-    return damage;
+    return attack::player_apply_final_multipliers(damage, aux);
 }
 
 int melee_attack::player_apply_postac_multipliers(int damage)

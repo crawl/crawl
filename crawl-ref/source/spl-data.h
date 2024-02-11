@@ -157,7 +157,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BLINKBOLT,
 },
 
 {
@@ -1313,7 +1313,7 @@ static const struct spell_desc spelldata[] =
     0,
     1, 1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WOODWEAL,
 },
 
 {
@@ -2009,7 +2009,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ENSNARE,
 },
 
 {
@@ -2111,7 +2111,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_INJURY_BOND,
 },
 
 {
@@ -2315,7 +2315,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_VIRULENCE,
 },
 
 {
@@ -2370,7 +2370,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FORCEFUL_INVITATION,
 },
 
 {
@@ -2381,7 +2381,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_PLANE_REND,
 },
 
 {
@@ -2744,7 +2744,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     25,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WARNING_CRY,
 },
 
 {
@@ -2854,7 +2854,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CONFUSION_GAZE,
 },
 
 {
@@ -3030,7 +3030,7 @@ static const struct spell_desc spelldata[] =
     25,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SLUG_DART,
 },
 
 {
@@ -3107,7 +3107,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_GHOSTLY_FIREBALL,
 },
 
 {
@@ -3429,7 +3429,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ERUPTION,
 },
 
 {
@@ -3451,7 +3451,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_STUNNING_BURST,
 },
 
 {

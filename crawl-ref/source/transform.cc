@@ -853,7 +853,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        if (you.undead_state() == US_ALIVE)
+        if (you.undead_state(false) == US_ALIVE)
             return "You feel yourself come back to life.";
         return "You feel your undeath return to normal.";
         // ^^^ vampires only, probably
@@ -1244,13 +1244,6 @@ _init_equipment_removal(transformation form)
     set<equipment_type> result;
     if (!form_can_wield(form) && you.weapon() || you.melded[EQ_WEAPON])
         result.insert(EQ_WEAPON);
-
-    // Liches can't wield holy weapons.
-    if (form == transformation::death && you.weapon()
-        && is_holy_item(*you.weapon()))
-    {
-        result.insert(EQ_WEAPON);
-    }
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
@@ -1658,23 +1651,6 @@ bool check_transform_into(transformation which_trans, bool involuntary)
             mpr(reason);
         return false;
     }
-
-    // if going into lichform causes us to drop a holy weapon with consequences
-    // for unwielding (e.g. contam), warn first.
-    if (which_trans == transformation::death
-        && !involuntary
-        && you.weapon()
-        && is_holy_item(*you.weapon()))
-    {
-        item_def nil_item;
-        nil_item.link = -1;
-        if (!check_old_item_warning(nil_item, OPER_WIELD, true))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-
     return true;
 }
 
@@ -1722,6 +1698,16 @@ static void _on_enter_form(transformation which_trans)
 
     case transformation::death:
         you.redraw_status_lights = true;
+    {
+        const item_def *weapon = you.weapon();
+        if (weapon
+            && get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH
+            && !you.undead_or_demonic(false))
+        {
+            mprf("%s goes dull and lifeless in your grasp.",
+                 weapon->name(DESC_YOUR).c_str());
+        }
+    }
         break;
 
     case transformation::shadow:
@@ -1994,6 +1980,18 @@ void untransform(bool skip_move)
         }
     }
     _unmeld_equipment(melded);
+
+    if (old_form == transformation::death)
+    {
+        const item_def *weapon = you.weapon();
+        if (weapon
+            && get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH
+            && !you.undead_or_demonic(false))
+        {
+            mprf("%s softly glows with a divine radiance!",
+                 uppercase_first(weapon->name(DESC_YOUR)).c_str());
+        }
+    }
 
     // Update skill boosts for the current state of equipment melds
     // Must happen before the HP check!

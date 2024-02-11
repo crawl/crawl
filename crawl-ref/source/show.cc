@@ -451,10 +451,6 @@ static void _update_monster(monster* mons)
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
 
-    // Being submerged is not the same as invisibility.
-    if (mons->submerged())
-        return;
-
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
     if (env.grid(gp) == DNGN_SHALLOW_WATER

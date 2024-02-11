@@ -405,22 +405,28 @@ void blood_fineff::fire()
 
 void deferred_damage_fineff::fire()
 {
-    if (actor *df = defender())
-    {
-        if (!fatal)
-        {
-            // Cap non-fatal damage by the defender's hit points
-            // FIXME: Consider adding a 'fatal' parameter to ::hurt
-            //        to better interact with damage reduction/boosts
-            //        which may be applied later.
-            int df_hp = df->is_player() ? you.hp
-                                        : df->as_monster()->hit_points;
-            damage = min(damage, df_hp - 1);
-        }
+    actor *df = defender();
+    if (!df)
+        return;
 
-        df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
-                 true, attacker_effects);
+    // Once we actually apply damage to tentacle monsters,
+    // remove their protection from further damage.
+    if (df->props.exists(TENTACLE_LORD_HITS))
+        df->props.erase(TENTACLE_LORD_HITS);
+
+    if (!fatal)
+    {
+        // Cap non-fatal damage by the defender's hit points
+        // FIXME: Consider adding a 'fatal' parameter to ::hurt
+        //        to better interact with damage reduction/boosts
+        //        which may be applied later.
+        int df_hp = df->is_player() ? you.hp
+                                    : df->as_monster()->hit_points;
+        damage = min(damage, df_hp - 1);
     }
+
+    df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
+             true, attacker_effects);
 }
 
 static void _do_merge_masses(monster* initial_mass, monster* merge_to)

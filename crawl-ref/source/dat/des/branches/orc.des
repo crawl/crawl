@@ -1753,7 +1753,6 @@ SHUFFLE: 34? / 56! / 78` / 90~, AC / BD / BD
 SUBST:   ? = 33444, ! = 55666, ` = 77888, ~ = 990
 SUBST:   1 = 1., 2 = 222.
 SUBST:   AC = +, BD = c, T : TIII, G : GGGcc
-NSUBST:  S = 1:R / *:S
 COLOUR:  G = mist
 TILE:    G = dngn_mystic_cage
 : set_feature_name("metal_statue", "mystic cage")

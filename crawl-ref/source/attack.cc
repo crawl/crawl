@@ -96,7 +96,6 @@ bool attack::handle_phase_damaged()
     // react to damage.
     if (defender->can_bleed()
         && !defender->is_summoned()
-        && !defender->submerged()
         && in_bounds(defender->pos())
         && !simu)
     {
@@ -1104,7 +1103,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
                         || (weapon && is_range_weapon(*weapon)
                                    && using_weapon());
     damage_plus += slaying_bonus(throwing);
-    damage_plus -= 4 * you.corrosion_amount();
+    damage_plus -= you.corrosion_amount();
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
@@ -1407,6 +1406,9 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_HOLY_WRATH:
+        if (attacker->undead_or_demonic())
+            break; // No holy wrath for thee!
+
         if (defender->holy_wrath_susceptible())
             special_damage = 1 + (random2(damage_done * 15) / 10);
 

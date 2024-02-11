@@ -1871,7 +1871,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
     const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
-    const bool submerged     = mons.submerged();
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
@@ -2047,7 +2046,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
 
         if (mons.type == MONS_FIRE_VORTEX && !wizard && !mons_reset
-            && !submerged && !was_banished && !cell_is_solid(mons.pos()))
+            && !was_banished && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_FIRE, mons.pos(), 2 + random2(4), &mons);
         }
@@ -2071,7 +2070,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             did_death_message = true;
         }
 
-        if (!wizard && !mons_reset && !submerged && !was_banished
+        if (!wizard && !mons_reset && !was_banished
             && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_COLD, mons.pos(), 2 + random2(4), &mons);
@@ -2687,7 +2686,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                             in_los, corpseworthy);
     }
 
-    if (!wizard && !submerged && !was_banished)
+    if (!wizard && !was_banished)
     {
         _monster_die_cloud(&mons, !fake_abjure && !timeout && !mons_reset,
                            silent, summoned);

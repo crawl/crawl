@@ -1431,22 +1431,9 @@ void make_mons_leave_level(monster* mon)
 }
 
 // Given an adjacent monster, returns true if the monster can hit it
-// (the monster should not be submerged, be submerged in shallow water
-// if the monster has a polearm, or be submerged in anything if the
-// monster has tentacles).
 bool monster_can_hit_monster(monster* mons, const monster* targ)
 {
-    if (!summon_can_attack(mons, targ))
-        return false;
-
-    if (!targ->submerged() || mons->has_damage_type(DVORP_TENTACLE))
-        return true;
-
-    if (env.grid(targ->pos()) != DNGN_SHALLOW_WATER)
-        return false;
-
-    const item_def *weapon = mons->weapon();
-    return weapon && item_attack_skill(*weapon) == SK_POLEARMS;
+    return summon_can_attack(mons, targ);
 }
 
 static bool _mons_attacks_outside_los(const monster &mon)

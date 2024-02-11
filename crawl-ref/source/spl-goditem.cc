@@ -939,11 +939,11 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
 
 spret cast_smiting(int pow, monster* mons, bool fail)
 {
-    if (mons == nullptr || mons->submerged())
+    if (mons == nullptr)
     {
         fail_check();
         canned_msg(MSG_NOTHING_THERE);
-        // Counts as a real cast, due to invisible/submerged monsters.
+        // Counts as a real cast, due to invisible monsters.
         return spret::success;
     }
 

@@ -989,7 +989,7 @@ void move_player_action(coord_def move)
 
     coord_def mon_swap_dest;
 
-    if (targ_monst && !targ_monst->submerged())
+    if (targ_monst)
     {
         if (try_to_swap && !beholder && !fmonger)
         {

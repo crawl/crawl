@@ -613,7 +613,7 @@ bool bolt::can_affect_actor(const actor *act) const
         return false;
     }
 
-    return !act->submerged();
+    return true;
 }
 
 // Choose the beam effect for BEAM_CHAOS that's analogous to the effect used by

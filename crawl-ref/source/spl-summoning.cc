@@ -2893,7 +2893,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
         fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible/submerged monsters.
+        // order to prevent locating invisible monsters.
         return spret::success;
     }
 
