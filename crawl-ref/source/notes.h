@@ -50,7 +50,7 @@ enum NOTE_TYPES
     NOTE_XOM_EFFECT,            /* needs: description (name string) */
     NOTE_XOM_REVIVAL,           /* needs: death cause (string) */
     NOTE_PARALYSIS,             /* needs: paralysis source (string) */
-    NOTE_NAMED_ALLY,            /* needs: ally name (string) */
+    NOTE_RECRUITED_APOSTLE,     /* needs: ally name (string), class name (string) */
     NOTE_ALLY_DEATH,            /* needs: ally name (string) */
     NOTE_FEAT_MIMIC,            /* needs: mimiced feature (string) */
     NOTE_OFFERED_SPELL,         /* needs: spell idx */
