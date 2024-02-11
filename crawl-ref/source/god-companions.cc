@@ -718,6 +718,9 @@ void beogh_recruit_apostle()
     apostles.emplace_back(apostle_data(*real));
 
     you.duration[DUR_BEOGH_CAN_RECRUIT] = 0;
+
+    take_note(Note(NOTE_RECRUITED_APOSTLE, 0, 0, real->name(DESC_THE, true),
+                   apostle_type_names[real->props[APOSTLE_TYPE_KEY].get_int()]));
 }
 
 static void _cleanup_apostle_corpse(int slot)
