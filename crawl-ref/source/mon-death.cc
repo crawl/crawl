@@ -245,9 +245,8 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
-    experience = (experience * mons->damage_friendly / mons->damage_total
-                  + 1) / 2;
-    ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
+    experience = (experience * mons->damage_friendly / mons->damage_total + 1);
+    ASSERT(mons->damage_friendly <= mons->damage_total);
 
     return experience;
 }
@@ -610,15 +609,19 @@ static bool _is_pet_kill(killer_type killer, int i)
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
-int exp_rate(int killer)
+// Returns whether damage from a given agent counts as a 'player source' for
+// purposes of the player gaining XP from damage/kills they cause.
+bool damage_contributes_xp(const actor& agent)
 {
+    const int killer = agent.mindex();
+
     if (killer == MHITYOU || killer == YOU_FAULTLESS)
-        return 2;
+        return true;
 
     if (_is_pet_kill(KILL_MON, killer))
-        return 2;
+        return true;
 
-    return 0;
+    return false;
 }
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
@@ -2454,9 +2457,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         dprf("Non-damage %s of %s.", mons_reset ? "reset" : "kill",
                                         mons.name(DESC_A, true).c_str());
-        if (YOU_KILL(killer))
-            mons.damage_friendly += mons.hit_points * 2;
-        else if (pet_kill)
+        if (YOU_KILL(killer) || pet_kill)
             mons.damage_friendly += mons.hit_points;
         mons.damage_total += mons.hit_points;
 

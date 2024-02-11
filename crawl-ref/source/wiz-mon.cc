@@ -381,8 +381,8 @@ void debug_stethoscope(int mon)
     if (mons.damage_total)
     {
         mprf(MSGCH_DIAGNOSTICS,
-             "pdam=%1.1f/%d (%d%%)",
-             0.5 * mons.damage_friendly, mons.damage_total,
+             "pdam=%d/%d (%d%%)",
+             mons.damage_friendly, mons.damage_total,
              50 * mons.damage_friendly / mons.damage_total);
     }
 

@@ -2716,12 +2716,11 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
 
     simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (agent && mons_gives_xp(*this, *agent)
-        && (agent->is_player() || agent->mid == MID_YOU_FAULTLESS))
+    if (agent && mons_gives_xp(*this, *agent) && damage_contributes_xp(*agent))
     {
-        // Count all remaining HP as damage done by you - no need to
-        // pass flags this way.
-        damage_friendly += hit_points * 2;
+        // Count all remaining HP as damage done by you.
+        // (monster_die won't double-dip as KILL_BANISHED has an anonymous source)
+        damage_friendly += hit_points;
         // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
         did_god_conduct(DID_BANISH, get_experience_level(),
@@ -3344,11 +3343,8 @@ void monster::blame_damage(const actor* attacker, int amount)
 {
     ASSERT(amount >= 0);
     damage_total = min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
-    if (attacker)
-    {
-        damage_friendly = min<int>(MAX_DAMAGE_COUNTER * 2,
-                      damage_friendly + amount * exp_rate(attacker->mindex()));
-    }
+    if (attacker && damage_contributes_xp(*attacker))
+        damage_friendly = min<int>(MAX_DAMAGE_COUNTER, damage_friendly + amount);
 }
 
 void monster::suicide(int hp_target)

@@ -114,7 +114,8 @@ public:
     seen_context_type seen_context;    // Non-standard context for
                                        // activity_interrupt::see_monster
 
-    int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
+    int damage_friendly;               // Damage taken by a player-related source
+                                       // (used for XP calculations)
     int damage_total;
 
     uint32_t client_id;                // for ID of monster_info between turns

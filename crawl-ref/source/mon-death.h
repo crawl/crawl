@@ -63,7 +63,7 @@ void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false)
 void end_flayed_effect(monster* ghost);
 
 
-int exp_rate(int killer);
+bool damage_contributes_xp(const actor& agent);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
