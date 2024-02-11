@@ -68,10 +68,11 @@ function pan_lord_setup(_G, name)
                  "flayed ghost / laughing skull band / shadow wraith / " ..
                  "demonspawn black sun"
     }
+    local decName = "empty"
 
     _G.set_random_mon_list(monsters[name])
 
-    -- Set level colours / tiles, the rune, and vengeful demonspawn.
+    -- Set level colours / tiles, the rune, vengeful demonspawn, and decor tag.
     if name == "Mnoleg" then
         _G.lfloorcol("lightred")
         _G.lrockcol("yellow")
@@ -80,6 +81,7 @@ function pan_lord_setup(_G, name)
         _G.tile ("c = dngn_stone_wall_yellow")
         _G.kitem("O = glowing rune of Zot")
         _G.kmons("& = patrolling demonspawn corrupter")
+        decName = "mnolegdec"
     elseif name == "Lom Lobon" then
         _G.lfloorcol("lightgrey")
         _G.lrockcol("white")
@@ -88,6 +90,7 @@ function pan_lord_setup(_G, name)
         _G.tile ("c = stone_wall_shoals")
         _G.kitem("O = magical rune of Zot")
         _G.kmons("& = patrolling demonspawn blood saint")
+        decName = "lomdec"
     elseif name == "Cerebov" then
         _G.lfloorcol("red")
         _G.lrockcol("red")
@@ -96,6 +99,7 @@ function pan_lord_setup(_G, name)
         _G.kitem("O = fiery rune of Zot")
         _G.tile ("v = dngn_metal_wall_brown")
         _G.kmons("& = patrolling demonspawn warmonger")
+        decName = "cerebovdec"
     elseif name == "Gloorx Vloq" then
         _G.lfloorcol("blue")
         _G.lrockcol("blue")
@@ -104,6 +108,7 @@ function pan_lord_setup(_G, name)
         _G.tile ("c = dngn_stone_dark")
         _G.kitem("O = dark rune of Zot")
         _G.kmons("& = patrolling demonspawn black sun")
+        decName = "gloorxdec"
     end
 
     -- Make each rune a little bit harder for each one you get.
@@ -111,6 +116,13 @@ function pan_lord_setup(_G, name)
         _G.nsubst("& = " .. count_pan_runes() .. ":& / *:.")
     else
         _G.subst("& = .")
+    end
+
+    -- Have a decent chance to fancify the floor afterwards.
+    if crawl.one_chance_in(3) then
+        _G.hook("post_place", function()
+            dgn.place_maps{ tag=decName, count=1 }
+        end)
     end
 end
 
@@ -205,6 +217,18 @@ function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
                                 demonspawn corrupter w:1 / \
                                 demonspawn warmonger w:1")
     e.kfeat('< = {')
+
+    -- Have a small chance to fancify the floor afterwards.
+    if crawl.one_chance_in(5) then
+        local decName = "pandec"
+        if crawl.coinflip() then
+            decName = "luniq_decor_lord"
+        end
+
+        e.hook("post_place", function()
+            dgn.place_maps{ tag=decName, count=1 }
+        end)
+    end
 end
 
 function pan_entry_feature(e, glyph)
@@ -3095,126 +3119,15 @@ ENDMAP
 # Pandemonium vaults: non-panlord-related.
 #############################################################################
 
-###################################
-# A couple of small vaults featuring blood fountains.
-
-NAME:   pan_blood_fountain
-TAGS:   extra allow_dup transparent
-CHANCE: 10%
-SUBST:  ' = '..
-SUBST:  . = " / .:80
-KPROP:  '" = bloody
-SUBST:  '=. , "=.
-MAP
- ...
-.'''.
-.'Y'.
-.'''.
- ...@
-ENDMAP
-
-NAME:   pan_blood_fountain_2
-TAGS:   extra allow_dup transparent
-CHANCE: 5%
-SUBST:  Y = YYV
-SUBST:  ' = '..
-SUBST:  . = " / .:80
-KPROP:  '" = bloody
-SUBST:  '=. , "=.
-MAP
- @.....
- '''.'''
-.'Y'.'Y'.
-.'''''''.
- ..'Y'..
-  .'''.
-   ...
-ENDMAP
-
-NAME:   pan_blood_fountain_small
-TAGS:   extra allow_dup transparent
-CHANCE: 15%
-MAP
-Y
-ENDMAP
-
-###################################
-
 NAME:   pan_surprise
 TAGS:   extra
 KMONS:  1 = executioner
-# It may be a surprise for the executioner as well if the player has high
-# stealth -- an alarm trap would be found by most chars who dare Pan and thus
-# spoil the fun.
+# It may be a surprise for the executioner as well...
 MAP
 xxxx
 xx.x
 x1x@
 xxx
-ENDMAP
-
-##################################
-NAME:   reaverb_pan_chaos_star
-TAGS:   extra decor transparent
-MAP
-        ...
- ....  ..x..  ....
- .xx.  .x.x.  .xx.
- .x... ..x.. ...x.
- ...x.. .x. ..x...
-   ..x...x...x..
-    ..x.....x..
- ... ....x.... ...
-..x.....xxx.....x..
-.x.xxx.xxxxx.xxx.x.
-..x.....xxx.....x..
- ... ....x.... ...
-    ..x.....x..
-   ..x...x...x..
- ...x.. .x....x...
- .x... ..x.. ...x.
- .xx.  .x.x.  .xx.
- ....  ..x..  ....
-        ...
-ENDMAP
-
-###################################
-NAME: reaverb_pan_squares
-TAGS: extra decor transparent
-MAP
-.......
-.xxxxx.
-.x...x.
-.x...x.
-.x...x.
-.x...x.
-.xxx+x.
- .x..x.
- .x..x.
- .xx+x.
-  .x.x.
-  .x+x.
-  .....
-ENDMAP
-
-###################################
-NAME: reaverb_pan_figure_eight
-TAGS: extra decor transparent
-MAP
-    x@x
-   xx.xx
-  xx...xx
-xxx..x..xxx
-@...xxx...@
-xxx..x..xxx
-  xx...xx
-  xx...xx
-xxx..x..xxx
-@...xxx...@
-xxx..x..xxx
-  xx...xx
-   xx.xx
-    x@x
 ENDMAP
 
 ###################################
@@ -3252,9 +3165,140 @@ xxoxx
 ENDMAP
 
 ###################################
+# A couple of small vaults featuring bloodied demonspawn divinity decor.
+
+NAME:    pan_blood_fountain_1
+TAGS:    extra allow_dup transparent
+CHANCE:  10%
+KFEAT:   T = altar_trog
+KFEAT:   K = altar_kikubaaqudgha
+KFEAT:   M = altar_makhleb
+KFEAT:   L = altar_lugonu
+KFEAT:   t = demonic_tree
+: if crawl.one_chance_in(3) then
+SHUFFLE: YT / xK / GM / tL
+TILE:    x = wall_undead
+TILE:    G = dngn_scintillating_statue
+:   set_feature_name("granite_statue", "scintillating statue")
+: else
+SUBST:   T = Y
+: end
+SUBST:   ' = '..
+NSUBST:  ' = 2:' / * = '.., ` = 3:' / * = ' .:80
+KPROP:   '" = bloody
+MAP
+ ```
+`'Y'`
+`'"'`
+`'T'`
+ ```@
+ENDMAP
+
+NAME:    pan_blood_fountain_2
+TAGS:    extra allow_dup transparent
+CHANCE:  5%
+KFEAT:   T = altar_trog
+KFEAT:   K = altar_kikubaaqudgha
+KFEAT:   M = altar_makhleb
+KFEAT:   L = altar_lugonu
+KFEAT:   t = demonic_tree
+: if crawl.one_chance_in(3) then
+SHUFFLE: YT / xK / GM / tL
+TILE:    x = wall_undead
+TILE:    G = dngn_scintillating_statue
+:   set_feature_name("granite_statue", "scintillating statue")
+: else
+SUBST:   T = Y
+: end
+SUBST:   ' = '..
+NSUBST:  ' = 2:' / * = '.., ` = 3:' / * = ' .:80
+KPROP:   '" = bloody
+MAP
+ @`````
+ '''`'''
+`'Y'`'Y'`
+`''"'"''`
+ ``'T'``
+  `'''`
+   ```
+ENDMAP
+
+NAME:   pan_blood_fountain_small
+TAGS:   extra allow_dup transparent
+CHANCE: 15%
+MAP
+Y
+ENDMAP
+
+##################################
+NAME:   reaverb_pan_chaos_star
+TAGS:   extra transparent pandec
+MAP
+        ...
+ ....  ..x..  ....
+ .xx.  .x.x.  .xx.
+ .x... ..x.. ...x.
+ ...x.. .x. ..x...
+   ..x...x...x..
+    ..x.....x..
+ ... ....x.... ...
+..x.....xxx.....x..
+.x.xxx.xxxxx.xxx.x.
+..x.....xxx.....x..
+ ... ....x.... ...
+    ..x.....x..
+   ..x...x...x..
+ ...x.. .x....x...
+ .x... ..x.. ...x.
+ .xx.  .x.x.  .xx.
+ ....  ..x..  ....
+        ...
+ENDMAP
+
+###################################
+NAME:  reaverb_pan_squares
+TAGS:  extra transparent pandec
+SUBST: - = xxx+
+MAP
+.......
+.xxx-x.
+.x...x.
+.x...x.
+.x...x.
+.x...x.
+.xxx+x.
+ .x..x.
+ .x..x.
+ .xx+x.
+  .x.x.
+  .x+x.
+  .....
+ENDMAP
+
+###################################
+NAME: reaverb_pan_figure_eight
+TAGS: extra decor transparent pandec
+MAP
+    x@x
+   xx.xx
+  xx...xx
+xxx..x..xxx
+@...xxx...@
+xxx..x..xxx
+  xx...xx
+  xx...xx
+xxx..x..xxx
+@...xxx...@
+xxx..x..xxx
+  xx...xx
+   xx.xx
+    x@x
+ENDMAP
+
+###################################
 
 NAME: nicolae_pan_sigil_obb
-TAGS: transparent extra decor allow_dup luniq_pan_sigil
+TAGS: transparent extra allow_dup luniq_pan_sigil pandec
 SHUFFLE: ef
 SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : ., g : .x, h : .x, \
        i : .x, j : .x, k : .x, l : .x, m : .x, n : .x, o : .x
@@ -3273,7 +3317,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_sigil_nadil
-TAGS: transparent extra decor allow_dup luniq_pan_sigil
+TAGS: transparent extra allow_dup luniq_pan_sigil pandec
 SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, h : .x, \
        i : .x, j : .x, k : .x, l : .x, m : .x, n : .x
 MAP
@@ -3301,7 +3345,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_sigil_itan
-TAGS: transparent extra decor allow_dup luniq_pan_sigil
+TAGS: transparent extra allow_dup luniq_pan_sigil pandec
 SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, \
        h : .x, i : .x, j : .x, k : .x, l : .x, m : .x, n : .x, \
        o : .x, p : .x, q : .x
@@ -3330,7 +3374,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_sigil_eeng
-TAGS: transparent extra decor allow_dup luniq_pan_sigil
+TAGS: transparent extra allow_dup luniq_pan_sigil pandec
 SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, h : .x, i : .x, \
        j : .x, k : .x, l : .x, m : .x, n : .x
 MAP
@@ -3360,7 +3404,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_sigil_uleosi
-TAGS: transparent extra decor allow_dup luniq_pan_sigil
+TAGS: transparent extra allow_dup luniq_pan_sigil pandec
 SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, h : .x, i : .x, \
        j : .x, k : .x, l : .x, m : .x, n : .x, o : .x, p : .x, q : .x, r : .x, \
        s : .x, t : .x, u : .x, v : .x, w : .x, y : .x
@@ -3387,7 +3431,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_mnolegish_1
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: AB, DG/CH, EI/FJ
 SUBST: ACEHI : c, BDF : ., GI : @
 TILE: c = dngn_stone_wall_yellow
@@ -3410,7 +3454,7 @@ cccccEIEcccFJFc
 ENDMAP
 
 NAME: nicolae_pan_mnolegish_2
-TAGS: extra decor allow_dup luniq_decor_lord
+TAGS: extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: Aa/Bb, Dd/Ee, Ff/Gg, Hh/Ii, jklm
 SUBST: ADFH = @, adfh = ., BbEeGgIi = c, j : ., k : .c, l : .c, m : .c
 TILE: c = dngn_stone_wall_yellow
@@ -3433,7 +3477,7 @@ ccciIiccchHhccc
 ENDMAP
 
 NAME: nicolae_pan_mnolegish_3
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: ABC
 SUBST: ' = @..., AB = ., C = c, D : .c, E : .c, F : .c
 TILE: c = dngn_stone_wall_yellow
@@ -3455,7 +3499,7 @@ ccccc.@.cccccc
 ENDMAP
 
 NAME: nicolae_pan_mnolegish_4
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: AB, CD, EFGH, IJKL, MN, OP, QR, ST
 SUBST: ACEI = ., BDFGHJKLNPRT = c, MOQS = @
 TILE: c = dngn_stone_wall_yellow
@@ -3478,7 +3522,7 @@ cRRcccccccccQQc
 ENDMAP
 
 NAME: nicolae_pan_mnolegish_5
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord mnolegdec
 SHUFFLE: ABCDEF
 SUBST: A : .c, B : .c, CDEF : ., G : .c, H : .c, I : .c
 TILE: c = dngn_stone_wall_yellow
@@ -3501,7 +3545,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_1
-TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
 SHUFFLE: BQ/BQ/''
 SUBST: ' = ., Q = b, B : wb
 COLOUR: x = white
@@ -3525,7 +3569,7 @@ x...wbbbbbw...x
 ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_2
-TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
 SHUFFLE: Dd/Ee
 SUBST: A : .w, B : .w, C : .w, D = ., d = w, Ee = b, W = .w
 COLOUR: x = white
@@ -3549,7 +3593,7 @@ xxwww...bbb....
 ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_3
-TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
 SUBST: - = ..w, B = bw, X = ..x, p = ..b
 COLOUR: x = white
 TILE: x = wall_hall_white
@@ -3570,7 +3614,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_lom_lobonic_4
-TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+TAGS: transparent extra allow_dup no_pool_fixup luniq_decor_lord lomdec
 SHUFFLE: IJKL
 SUBST: A : .w, B : .w, C : .w, D : .w, E : .w, F : .w, G : .w, H : .w, \
        I : .b, JKL : .
@@ -3594,7 +3638,7 @@ bbbb..bAAA..b
 ENDMAP
 
 NAME: nicolae_pan_cerebovesque_1
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord cerebovdec
 SUBST: A : .lv, B : .lv, C : .lv
 TILE: v = dngn_metal_wall_brown
 MAP
@@ -3616,7 +3660,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_cerebovesque_2
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord cerebovdec
 SHUFFLE: Aa/Bb, CD
 SUBST: Bb : v, a : ., A : .lv, C : +, D : v+, E : .v, F : .v, L : .l, V : .v
 TILE: v = dngn_metal_wall_brown
@@ -3638,7 +3682,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_cerebovesque_3
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord cerebovdec
 SHUFFLE: EFG, HIJ
 SUBST: GJ = v, EFHI = +
 TILE: v = dngn_metal_wall_brown
@@ -3660,7 +3704,7 @@ vvEvGv..vGvEvv
 ENDMAP
 
 NAME: nicolae_pan_cerebovesque_4
-TAGS: extra decor allow_dup luniq_decor_lord
+TAGS: extra allow_dup luniq_decor_lord cerebovdec
 SHUFFLE: AB/GH, CD, EF
 SUBST: A : .l, B = l, G : .v, CEH : v, DF : +
 TILE: v = dngn_metal_wall_brown
@@ -3684,12 +3728,12 @@ vvvvvvv.@@.
 ENDMAP
 
 NAME: nicolae_pan_gloorx_vloqian_1
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SHUFFLE: Aa/Bb, de, DE
 SUBST: aD = x, be = ., A = +, B = c, d : .x, E : .x
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_wall_darkgray
+TILE: c = dngn_stone_dark
 MAP
 xxxxxx.@.xxxxxx
 x..d.e.d.e.d..x
@@ -3709,11 +3753,11 @@ xxxxxx.@.xxxxxx
 ENDMAP
 
 NAME: nicolae_pan_gloorx_vloqian_2
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SUBST: A : .x, B : .x, C : .x, D : .x, E : .x, F : .x, G : Hc, H : ..c
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_wall_darkgray
+TILE: c = dngn_stone_dark
 MAP
 ...............
 .A.B..D.D..B.A.
@@ -3733,7 +3777,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_pan_gloorx_vloqian_3
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SHUFFLE: abfg/dehi
 : if crawl.coinflip() then
 SUBST: d = a, e = b, h = f, i = g
@@ -3748,7 +3792,7 @@ SHUFFLE: ab
 SUBST: a = x, b = .
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_wall_darkgray
+TILE: c = dngn_stone_dark
 MAP
     ccccccc
    ccabdeacc
@@ -3768,12 +3812,12 @@ ccghifghifghicc
 ENDMAP
 
 NAME: nicolae_pan_gloorx_vloqian_4
-TAGS: transparent extra decor allow_dup luniq_decor_lord
+TAGS: transparent extra allow_dup luniq_decor_lord gloorxdec
 SHUFFLE: ab, de, fg
 SUBST: a = x, b = ., df = c, e : .ccc, g : .ccc
 COLOUR: x = blue
 TILE: x = wall_hall_darkgray
-TILE: c = dngn_stone_wall_darkgray
+TILE: c = dngn_stone_dark
 MAP
 ...............
 .ababababababa.
@@ -3793,8 +3837,8 @@ MAP
 ENDMAP
 
 NAME:    nicolae_pan_sick_transit
+TAGS:    transparent extra decor allow_dup pandec
 DEPTH:   Pan
-TAGS:    transparent extra decor allow_dup
 SHUFFLE: Aai/Bbj/Cck/Ddl/Eem/Ffn/Ggo/Hhp, Ffn/Qqr/Qqr, Ggo/Sst/Sst
 SHUFFLE: Hhp/Uuv/Uuv
 SUBST:   ABCDFGHijklnop = x, abcdfgh = -, EQSU = @, emqrstuv = .
@@ -3820,8 +3864,8 @@ xxx..KJ.JK..xxx
 ENDMAP
 
 NAME: nicolae_pan_strange_glyphs
+TAGS: allow_dup luniq transparent decor extra pandec
 DEPTH: Pan
-TAGS: allow_dup luniq transparent decor extra
 # 2/15 chance of five glyphs, 1/3 chance of four glyphs, 1/3 chance of three,
 # 2/15 chance of two, 1/15 chance of just one.
 : local count = crawl.random2(15)
@@ -4079,6 +4123,100 @@ x.BBB.x
 x.....x
 .xPQRx.
 ENDMAP
+
+NAME:    regret_index_pan_guarantee_froz
+TAGS:    luniq no_pool_fixup allow_dup extra pandec
+WEIGHT:  3
+KMONS:   P = demonic plant
+KFEAT:   m = iron_grate
+SHUFFLE: w-, ----lPm, wl
+KPROP:   ? = no_tele_into
+SUBST:   - = ., ? = PPGGYmmlw, ! : PGGmm, c : cx
+TILE:    G = dngn_statue_ancient_evil
+MAP
+ccccc...@
+.ww!c---.
+.wwwc-?-.
+..wwcc--.
+@....cccc
+   ..ww!c
+    .wwwc
+    ..wwc
+    @...c
+ENDMAP
+
+NAME:    regret_index_pan_divided_teeth
+TAGS:    transparent allow_dup extra pandec
+KFEAT:   ^ : alarm trap / dispersal trap
+SHUFFLE: ABCDEFHI
+SUBST:   A : cccxxxxYG^..., B : x.., C : x.., DEFHI = .
+SUBST:   c : cxx, - : xx+, ? : xx+, ! : xx+
+TILE:    G = dngn_statue_ancient_evil
+MAP
+    x         x
+   xxx..   ..xxx
+ .xx.xx.. ..xx.xx.
+..+...+.....+...+..
+.x?.A.!x...x!.B.-x.
+ x..C..x...x..D..x
+xx.EFE.xx.xx.HIH.xx
+ccccccccccccccccccccccc
+    xx.HIH.xx.xx.EFE.xx
+     x..D..x...x..C..x
+    .x-.B.!x...x!.A.?x.
+    ..+...+.....+...+..
+     .xx.xx.. ..xx.xx.
+       xxx..   ..xxx
+        x         x
+ENDMAP
+
+NAME:    regret_index_pan_diabol
+TAGS:    transparent allow_dup extra pandec
+SHUFFLE: ABCDEFHI
+SUBST:   A : cccxxxxYG..., B : x., C : x., DEFHI = ., c : cxx
+TILE:    G = dngn_statue_ancient_evil
+MAP
+   xxx
+  xx.xx
+ xx.A.xx
+xx..BC.xx
+x.D...E.x
+xx.FHI.xx
+ xx...xx
+    @xxxxxxx@
+      xxxxx...xx
+        xx.IHF.xx
+        x.E...D.x
+        xx.CB..xx
+         xx.A.xx
+          xx.xx
+           xxx
+ENDMAP
+
+NAME:    regret_index_pan_glitter_hall
+TAGS:    transparent allow_dup extra pandec
+SHUFFLE: ABCDEFHIJK
+SUBST:   A : mmxxxxYG..., B : x., C : x., DEFHIJK = x
+SUBST:   y : x', z : x'
+CLEAR:   '
+TILE:    G = dngn_statue_ancient_evil
+MAP
+xxxxxxxxxxy
+xAA...........
+xAA.B.C.D.D.E.
+x.............
+x.B.H..I..J.K.
+x....H..I.J.K.
+x.C...xxxxxxz
+x...I.x
+x.D..Ix
+x.....x
+y.D.JJx
+ .....x
+ .E.KKz
+ .....
+ENDMAP
+
 
 ### Holy Pan Level ############################################################
 #
