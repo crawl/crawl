@@ -825,6 +825,9 @@ static int _get_apostle_revival_cost()
     return amount;
 }
 
+// XXX: Temporary bandaid;
+static apostle_data HACKY_FIXUP;
+
 static apostle_data& _get_saved_apostle(const monster apostle)
 {
     for (unsigned int i = 1; i < apostles.size(); ++i)
@@ -834,7 +837,10 @@ static apostle_data& _get_saved_apostle(const monster apostle)
     }
 
     // Should be impossible to reach here unless we did something wrong
-    ASSERT(false);
+    //ASSERT(false);
+
+    // XXX: Quick hack job to fix old experimental saves
+    return HACKY_FIXUP;
 }
 
 int get_num_apostles()
