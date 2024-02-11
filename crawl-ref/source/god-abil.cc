@@ -49,6 +49,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "killer-type.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -1739,6 +1740,11 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     monster_drop_things(mon, false, [](const item_def& item)
                                     { return is_holy_item(item); });
     mon->remove_summons();
+
+    // Fire death events (since the monster avoids *actually* dying).
+    // In practice, this mostly means "Let Binding TRJ actually open the vault"
+    handle_monster_dies_lua(*mon, KILL_BOUND);
+    fire_monster_death_event(mon, KILL_BOUND, false);
 
     const monster orig = *mon;
 

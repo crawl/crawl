@@ -1701,6 +1701,30 @@ bool mons_will_goldify(const monster &mons)
     return have_passive(passive_t::goldify_corpses) && mons_gives_xp(mons, you);
 }
 
+void handle_monster_dies_lua(monster& mons, killer_type killer)
+{
+    if (mons.props.exists(MONSTER_DIES_LUA_KEY))
+    {
+        lua_stack_cleaner clean(dlua);
+
+        dlua_chunk &chunk = mons.props[MONSTER_DIES_LUA_KEY];
+
+        if (!chunk.load(dlua))
+        {
+            push_monster(dlua, &mons);
+            clua_pushcxxstring(dlua, _killer_type_name(killer));
+            dlua.callfn(nullptr, 2, 0);
+        }
+        else
+        {
+            mprf(MSGCH_ERROR,
+                 "Lua death function for monster '%s' didn't load: %s",
+                 mons.full_name(DESC_PLAIN).c_str(),
+                 dlua.error.c_str());
+        }
+    }
+}
+
 /**
  * Kill off a monster.
  *
@@ -1768,27 +1792,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
 
-    if (mons.props.exists(MONSTER_DIES_LUA_KEY))
-    {
-        lua_stack_cleaner clean(dlua);
-
-        dlua_chunk &chunk = mons.props[MONSTER_DIES_LUA_KEY];
-
-        if (!chunk.load(dlua))
-        {
-            push_monster(dlua, &mons);
-            clua_pushcxxstring(dlua, _killer_type_name(killer));
-            dlua.callfn(nullptr, 2, 0);
-        }
-        else
-        {
-            mprf(MSGCH_ERROR,
-                 "Lua death function for monster '%s' didn't load: %s",
-                 mons.full_name(DESC_PLAIN).c_str(),
-                 dlua.error.c_str());
-        }
-    }
-
+    handle_monster_dies_lua(mons, killer);
     mons_clear_trapping_net(&mons);
     mons.stop_constricting_all();
     mons.stop_being_constricted();
