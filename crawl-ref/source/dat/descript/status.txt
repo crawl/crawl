@@ -934,9 +934,11 @@ An orcish apostle is available to recruit as a permanent companion.
 %%%%
 Torch status
 
-You have called upon Yredelemnul to light the Black Torch. So long as the torch
-burns, you will gain piety for kills. With sufficient piety, you will be able to
-use its umbral fire to empower your undead servants and damage your enemies.
+You carry the Black Torch. If this indicator is dark, the torch is unlit; if it
+is bright, you have called upon Yredelemnul to light the torch. So long as the
+torch burns, you will gain piety for kills. With sufficient piety, you will be
+able to use its umbral fire to empower your undead servants and damage your
+enemies.
 %%%%
 Shackles status
 
