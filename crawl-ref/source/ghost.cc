@@ -226,6 +226,7 @@ void ghost_demon::set_pan_lord_special_attack()
         // Low chance
         10, _brand_attack(SPWPN_VENOM),
         10, _brand_attack(SPWPN_DRAINING),
+        2, _brand_attack(SPWPN_FOUL_FLAME),
         4, _flavour_attack(AF_DRAIN_STR),
         4, _flavour_attack(AF_DRAIN_INT),
         2, _flavour_attack(AF_DRAIN_DEX),
