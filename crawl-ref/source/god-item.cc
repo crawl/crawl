@@ -113,6 +113,7 @@ bool is_evil_brand(int brand)
     case SPWPN_VAMPIRISM:
     case SPWPN_REAPING:
     case SPWPN_DISTORTION:
+    case SPWPN_FOUL_FLAME:
         return true;
     default:
         return false;

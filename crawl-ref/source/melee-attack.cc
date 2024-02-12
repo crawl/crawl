@@ -3090,9 +3090,27 @@ void melee_attack::mons_apply_attack_flavour()
                  attacker->conj_verb("sear").c_str(),
                  defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
-
         }
         break;
+
+    case AF_FOUL_FLAME:
+    {
+        const int rff = defender->res_foul_flame();
+        if (rff < 0)
+            special_damage = attk_damage * 0.75;
+        else if (rff < 3)
+            special_damage = attk_damage / ((rff + 1) * 2);
+
+        if (needs_message && special_damage)
+        {
+            mprf("%s %s %s%s",
+                 atk_name(DESC_THE).c_str(),
+                 attacker->conj_verb("sear").c_str(),
+                 defender_name(true).c_str(),
+                 attack_strength_punctuation(special_damage).c_str());
+        }
+        break;
+    }
 
     case AF_ANTIMAGIC:
 

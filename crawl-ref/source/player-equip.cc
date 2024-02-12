@@ -506,6 +506,19 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     }
                     break;
 
+                case SPWPN_FOUL_FLAME:
+                    if (you.is_holy())
+                    {
+                        mprf("%s sits dull and lifeless in your grasp.",
+                             item_name.c_str());
+                    }
+                    else
+                    {
+                        mprf("%s glows horrifically with a foul radiance!",
+                             item_name.c_str());
+                    }
+                    break;
+
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.pos()))
                     {
@@ -656,9 +669,15 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 break;
 
             case SPWPN_HOLY_WRATH:
-                if (you.undead_or_demonic())
-                    break;
-                // Fallthrough to SPWPN_FREEZING.
+                if (showMsgs && !you.undead_or_demonic())
+                    mprf("%s stops glowing.", msg.c_str());
+                break;
+
+            case SPWPN_FOUL_FLAME:
+                if (showMsgs && !you.is_holy())
+                    mprf("%s stops glowing.", msg.c_str());
+                break;
+
             case SPWPN_FREEZING:
                 if (showMsgs)
                     mprf("%s stops glowing.", msg.c_str());
