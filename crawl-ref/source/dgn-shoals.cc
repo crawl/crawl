@@ -118,7 +118,7 @@ static inline bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
 // NOTE: uses RNG!
 static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
 {
-    return feat_is_watery(feat)
+    return feat_is_water(feat)
            // The Shoals tide can sometimes lap past the doorways of rooms
            // near the water. Note that the actual probability of the tide
            // getting through a doorway is this probability * 0.5 --

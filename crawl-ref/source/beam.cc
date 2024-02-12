@@ -2734,12 +2734,12 @@ void bolt::affect_place_clouds()
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
-        || feat_is_watery(feat) && is_fiery())
+        || feat_is_water(feat) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent(), 11);
     }
 
-    if (feat_is_watery(feat) && flavour == BEAM_COLD
+    if (feat_is_water(feat) && flavour == BEAM_COLD
         && damage.num * damage.size > 35)
     {
         place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
@@ -2801,7 +2801,7 @@ void bolt::affect_place_explosion_clouds()
 
     // First check: fire/cold over water/lava.
     if (env.grid(p) == DNGN_LAVA && flavour == BEAM_COLD
-        || feat_is_watery(env.grid(p)) && is_fiery())
+        || feat_is_water(env.grid(p)) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
         return;

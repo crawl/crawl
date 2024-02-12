@@ -3467,7 +3467,7 @@ static bool _monster_move(monster* mons)
             if (!cell_is_solid(*ai))
             {
                 adj_move.push_back(*ai);
-                if (habitat == HT_WATER && feat_is_watery(env.grid(*ai))
+                if (habitat == HT_WATER && feat_is_water(env.grid(*ai))
                     || habitat == HT_LAVA && feat_is_lava(env.grid(*ai)))
                 {
                     adj_water.push_back(*ai);

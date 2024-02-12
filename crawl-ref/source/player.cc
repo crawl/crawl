@@ -4588,7 +4588,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_sticky_flame() || duration <= 0 || you.duration[DUR_WATER_HOLD]
-        || feat_is_watery(env.grid(you.pos())))
+        || feat_is_water(env.grid(you.pos())))
     {
         return false;
     }
@@ -4629,7 +4629,7 @@ void dec_sticky_flame_player(int delay)
 {
     delay = min(delay, you.duration[DUR_STICKY_FLAME]);
 
-    if (feat_is_watery(env.grid(you.pos())))
+    if (feat_is_water(env.grid(you.pos())))
     {
         mprf(MSGCH_RECOVERY, "You dip into the water, and the flames go out!");
         end_sticky_flame_player();

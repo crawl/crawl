@@ -424,7 +424,7 @@ static int _spread_cloud(const cloud_struct &cloud)
             continue;
         }
 
-        if (cloud.type == CLOUD_INK && !feat_is_watery(env.grid(*ai)))
+        if (cloud.type == CLOUD_INK && !feat_is_water(env.grid(*ai)))
             continue;
 
         int newdecay = cloud.decay / 2 + 1;
@@ -494,7 +494,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
     {
         const coord_def p(*ai);
         if (in_bounds(p)
-            && feat_is_watery(env.grid(p))
+            && feat_is_water(env.grid(p))
             && !cell_is_solid(p)
             && !cloud_at(p)
             && one_chance_in(14))
@@ -529,7 +529,7 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
     }
 
     // Ink cloud shouldn't appear outside of water.
-    if (cloud.type == CLOUD_INK && !feat_is_watery(env.grid(cloud.pos)))
+    if (cloud.type == CLOUD_INK && !feat_is_water(env.grid(cloud.pos)))
         return cloud.decay;
 
     return dissipate;
@@ -754,7 +754,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
 
-    if (cl_type == CLOUD_INK && !feat_is_watery(env.grid(ctarget)))
+    if (cl_type == CLOUD_INK && !feat_is_water(env.grid(ctarget)))
         return;
 
     if (env.level_state & LSTATE_STILL_WINDS

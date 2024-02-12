@@ -258,7 +258,7 @@ mon_attitude_type monster::temp_attitude() const
 bool monster::swimming() const
 {
     const dungeon_feature_type grid = env.grid(pos());
-    return feat_is_watery(grid) && mons_primary_habitat(*this) == HT_WATER;
+    return feat_is_water(grid) && mons_primary_habitat(*this) == HT_WATER;
 }
 
 bool monster::extra_balanced_at(const coord_def p) const

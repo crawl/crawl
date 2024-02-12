@@ -103,7 +103,7 @@ static bool _feat_compatible(dungeon_feature_type wanted_feat,
                              dungeon_feature_type actual_feat)
 {
     return wanted_feat == actual_feat
-           || wanted_feat == DNGN_DEEP_WATER && feat_is_watery(actual_feat)
+           || wanted_feat == DNGN_DEEP_WATER && feat_is_water(actual_feat)
            || wanted_feat == DNGN_FLOOR && feat_has_solid_floor(actual_feat);
 }
 

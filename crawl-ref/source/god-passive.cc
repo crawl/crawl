@@ -898,7 +898,7 @@ void qazlal_storm_clouds()
         bool water = false;
         for (adjacent_iterator ai(candidates[i]); ai; ++ai)
         {
-            if (feat_is_watery(env.grid(*ai)))
+            if (feat_is_water(env.grid(*ai)))
                 water = true;
         }
 

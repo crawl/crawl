@@ -126,7 +126,7 @@ bool monster_inherently_flies(const monster &mons)
 
 static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
-    if (feat_is_watery(grid))
+    if (feat_is_water(grid))
         return HT_WATER;
 
     switch (grid)
