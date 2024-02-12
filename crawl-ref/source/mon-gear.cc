@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "dungeon.h"
+#include "ghost.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -206,6 +207,7 @@ static item_def* make_item_for_monster(
     iflags_t flags = 0);
 
 typedef vector<pair<weapon_type, int>> weapon_list;
+typedef vector<pair<armour_type, int>> armour_list;
 struct plus_range
 {
     int odds; ///<1/x chance of getting +[min,max] to weapon plus
@@ -2255,6 +2257,9 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
+
+    if (mons->type == MONS_ORC_APOSTLE)
+        give_apostle_equipment(mons);
 }
 
 void view_monster_equipment(monster* mon)
@@ -2269,5 +2274,175 @@ void view_monster_equipment(monster* mon)
         item.flags |= ISFLAG_SEEN;
         if (item.base_type == OBJ_WANDS)
             set_ident_type(item, true);
+    }
+}
+
+// Reduced weight of axes compared to normal orcs, since they are much stronger
+// in player ally hands. (And also stronger against your apostles)
+static const weapon_list APOSTLE_WARRIOR_WEAPONS =
+    {   { WPN_GREAT_SWORD,      3 },
+        { WPN_GREAT_MACE,       3 },
+        { WPN_DIRE_FLAIL,       3 },
+        { WPN_LONG_SWORD,       2 },
+        { WPN_HALBERD,          2 },
+        { WPN_WAR_AXE,          2 },
+        { WPN_BATTLEAXE,        1 },
+        { WPN_GLAIVE,           1 },
+        { WPN_TRIDENT,          1 }, };
+
+static const weapon_list APOSTLE_WARRIOR_WEAPONS_GOOD =
+    {   { WPN_GREAT_SWORD,      3 },
+        { WPN_DOUBLE_SWORD,     3 },
+        { WPN_TRIPLE_SWORD,     1 },
+        { WPN_EVENINGSTAR,      4 },
+        { WPN_BATTLEAXE,        6 },
+        { WPN_EXECUTIONERS_AXE, 3 },
+        { WPN_BROAD_AXE,        3 },
+        { WPN_GREAT_MACE,       2 },
+        { WPN_BARDICHE,         2 },
+        { WPN_GLAIVE,           2 }, };
+
+static const weapon_list APOSTLE_PRIEST_WEAPONS =
+    {   { WPN_FLAIL,            60 },
+        { WPN_HAND_AXE,         40 },
+        { WPN_MACE,             40 },
+        { WPN_TRIDENT,          20 },
+        { WPN_HALBERD,          10 },
+        { WPN_WAR_AXE,          14 },
+        { WPN_MORNINGSTAR,      25 } };
+
+static const armour_list APOSTLE_HEAVY_ARMOUR =
+    {   { ARM_SCALE_MAIL,            50 },
+        { ARM_CHAIN_MAIL,            40 },
+        { ARM_PLATE_ARMOUR,          30 }, };
+
+static const armour_list APOSTLE_LIGHT_ARMOUR =
+    {   { ARM_LEATHER_ARMOUR,       50 },
+        { ARM_RING_MAIL,            40 },
+        { ARM_STEAM_DRAGON_ARMOUR,  5 },
+        };
+
+static const armour_list APOSTLE_ELITE_HEAVY_ARMOUR =
+    {   { ARM_PLATE_ARMOUR,          60 },
+        { ARM_STORM_DRAGON_ARMOUR,   25 },
+        { ARM_SHADOW_DRAGON_ARMOUR,  20 },
+        { ARM_GOLD_DRAGON_ARMOUR,    8 },
+        { ARM_CRYSTAL_PLATE_ARMOUR,  12 }, };
+
+void give_apostle_equipment(monster* apostle)
+{
+    ASSERT(apostle->type == MONS_ORC_APOSTLE);
+
+    int pow = apostle->props[APOSTLE_POWER_KEY].get_int();
+    mprf("Pow: %d", pow);
+
+    switch (static_cast<apostle_type>(apostle->props[APOSTLE_TYPE_KEY].get_int()))
+    {
+        default:
+        case APOSTLE_WARRIOR:
+        {
+            weapon_list list = x_chance_in_y(max(0, pow - 50), 100)
+                                 ? APOSTLE_WARRIOR_WEAPONS_GOOD
+                                 : APOSTLE_WARRIOR_WEAPONS;
+
+            const weapon_type *wpn_type = random_choose_weighted(list);
+            const bool randart = x_chance_in_y(pow, 350);
+
+            item_def* weapon =
+                make_item_for_monster(apostle, OBJ_WEAPONS, *wpn_type,
+                                      randart ? ISPEC_RANDART : ISPEC_GIFT,
+                                      true, ISFLAG_KNOW_TYPE);
+
+            // Sometimes give a shield if we rolled a one-handed weapon (with it
+            // being more likely at higher apostle power)
+            if (apostle->hands_reqd(*weapon) == HANDS_ONE
+                && x_chance_in_y(pow, 125))
+            {
+                make_item_for_monster(apostle, OBJ_ARMOUR,
+                                      one_chance_in(3) ? ARM_TOWER_SHIELD
+                                                       : ARM_KITE_SHIELD,
+                                      pow);
+            }
+
+            armour_list alist = x_chance_in_y(max(0, pow - 50), 200)
+                                 ? APOSTLE_ELITE_HEAVY_ARMOUR
+                                 : APOSTLE_HEAVY_ARMOUR;
+
+            const armour_type *arm_type = random_choose_weighted(alist);
+
+            item_def* armour =
+                make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
+                                      100, true, ISFLAG_KNOW_TYPE);
+
+            armour->plus += roll_dice(2, 2);
+            if (x_chance_in_y(max(0, pow - 50), 50))
+                armour->plus += roll_dice(2, 2);
+
+            // If we have no spell besides battlecry, have a chance for
+            // boomerangs or javelins.
+            if (apostle->spells.size() == 0
+                || apostle->spells[0].spell == SPELL_BATTLECRY
+                && pow >= 20 && one_chance_in(3))
+            {
+                if (one_chance_in(3))
+                    make_item_for_monster(apostle, OBJ_MISSILES, MI_JAVELIN, 0);
+                else
+                    make_item_for_monster(apostle, OBJ_MISSILES, MI_BOOMERANG, 0);
+            }
+
+            // TODO: Very slim chance of specific unrand weapons?
+        }
+        break;
+
+        case APOSTLE_WIZARD:
+        {
+            make_item_for_monster(apostle, OBJ_WEAPONS, WPN_DAGGER,
+                                  x_chance_in_y(pow, 250) ? ISPEC_RANDART
+                                                          : ISPEC_GIFT,
+                                  true, ISFLAG_KNOW_TYPE);
+
+            make_item_for_monster(apostle, OBJ_ARMOUR, ARM_ROBE,
+                                  x_chance_in_y(pow, 550) ? ISPEC_RANDART
+                                                          : ISPEC_GIFT,
+                                  true, ISFLAG_KNOW_TYPE);
+
+            // Slim chance at higher levels of a random ring or orb of energy
+            if (x_chance_in_y(max(0, pow - 40), 500))
+            {
+                give_specific_item(apostle, items(false, OBJ_ARMOUR,
+                                    ARM_ORB, ISPEC_RANDART, SPARM_ENERGY));
+            }
+            else if (x_chance_in_y(pow, 500))
+            {
+                make_item_for_monster(apostle, OBJ_JEWELLERY, OBJ_RANDOM,
+                                    0, ISPEC_RANDART, ISFLAG_KNOW_TYPE);
+            }
+        }
+        break;
+
+        case APOSTLE_PRIEST:
+        {
+            const weapon_type *wpn_type = random_choose_weighted(APOSTLE_PRIEST_WEAPONS);
+            const bool randart = x_chance_in_y(pow, 500);
+
+            make_item_for_monster(apostle, OBJ_WEAPONS, *wpn_type,
+                                    randart ? ISPEC_RANDART : ISPEC_GIFT,
+                                    true, ISFLAG_KNOW_TYPE);
+
+            // No shields for priests
+
+            armour_list alist = x_chance_in_y(max(0, pow - 50), 200)
+                                 ? APOSTLE_HEAVY_ARMOUR
+                                 : APOSTLE_LIGHT_ARMOUR;
+
+            const armour_type *arm_type = random_choose_weighted(alist);
+
+            item_def* armour =
+                make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
+                                      100, true, ISFLAG_KNOW_TYPE);
+
+            armour->plus += roll_dice(2, 2);
+        }
+        break;
     }
 }

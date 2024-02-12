@@ -926,11 +926,6 @@ static bool _beogh_retribution()
             break;
         } // else fall through
     }
-    case 3: // 25%, relatively harmless
-    case 4: // in effect, only for penance
-        if (you_worship(god) && beogh_followers_abandon_you())
-            break;
-        // else fall through
     default: // send orcs after you (3/8 to 5/8)
     {
         const int points = you.experience_level + 3
@@ -2172,7 +2167,7 @@ static bool _uskayaw_retribution()
 
     // check if we have monsters around
     monster* mon = nullptr;
-    mon = choose_random_nearby_monster(0, _choose_hostile_monster);
+    mon = choose_random_nearby_monster(_choose_hostile_monster);
 
     switch (random2(5))
     {
@@ -2214,10 +2209,10 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     if (is_unavailable_god(god))
         return false;
 
-    // Good gods don't use divine retribution on their followers, and
-    // gods don't use divine retribution on followers of gods they don't
+    // Good gods (and Beogh) don't use divine retribution on their followers,
+    // and gods don't use divine retribution on followers of gods they don't
     // hate.
-    if (!force && ((god == you.religion && is_good_god(god))
+    if (!force && ((god == you.religion && (is_good_god(god) || god == GOD_BEOGH))
         || (god != you.religion && !god_hates_your_god(god))))
     {
         return false;

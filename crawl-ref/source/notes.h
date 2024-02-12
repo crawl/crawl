@@ -67,6 +67,7 @@ enum NOTE_TYPES
     NOTE_GEM_LOST,              /* needs: gem idx */
     NOTE_GAIN_LIFE,             /* needs: lives left */
     NOTE_LOSE_LIFE,             /* needs: lives left */
+    NOTE_FLED_CHALLENGE,
     NOTE_NUM_TYPES
 };
 

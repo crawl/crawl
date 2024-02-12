@@ -5706,6 +5706,14 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
         return;
     }
 
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+    {
+        simple_god_message(" refuses to let the Abyss claim you during a challenge!",
+                           GOD_BEOGH);
+
+        return;
+    }
+
     if (elapsed_time <= attribute[ATTR_BANISHMENT_IMMUNITY])
     {
         mpr("You resist the pull of the Abyss.");
@@ -7646,7 +7654,9 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 bool player::shaftable() const
 {
     return is_valid_shaft_level()
-        && feat_is_shaftable(env.grid(pos()));
+        && feat_is_shaftable(env.grid(pos()))
+        // Prevent shafting the player during an apostle challenge; that would be a bit unfair.
+        && !you.duration[DUR_BEOGH_DIVINE_CHALLENGE];
 }
 
 // Used for falling into traps and other bad effects, but is a slightly

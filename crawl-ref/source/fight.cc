@@ -1070,11 +1070,17 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_FRENZIED))
+    if (mon->neutral()
+        && (is_good_god(you.religion)
+            || you_worship(GOD_BEOGH) && mons_genus(mon->type) == MONS_ORC)
+        && !mon->has_ench(ENCH_FRENZIED))
     {
         adj += "neutral ";
-        if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
+        if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON)
+            || you_worship(GOD_BEOGH))
+        {
             would_cause_penance = true;
+        }
     }
     else if (mon->wont_attack())
     {

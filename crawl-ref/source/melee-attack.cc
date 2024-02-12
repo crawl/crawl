@@ -3927,6 +3927,9 @@ int melee_attack::apply_damage_modifiers(int damage)
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
 
+    if (as_mon->has_ench(ENCH_TOUCH_OF_BEOGH))
+        damage = damage * 4 / 3;
+
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()
                      || (attk_flavour == AF_SHADOWSTAB

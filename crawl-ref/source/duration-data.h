@@ -5,6 +5,8 @@
 #pragma once
 
 #include "act-iter.h"
+#include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h"
 #include "spl-selfench.h"
 #include "tag-version.h"
@@ -347,6 +349,11 @@ static const duration_def duration_data[] =
       LIGHTGREY, "Vortex",
       "in a vortex", "vortex",
       "You are in the eye of a polar vortex.", D_EXPIRES},
+    { DUR_BLOOD_FOR_BLOOD,
+      LIGHTBLUE, "Pray",
+      "chanting a vengeful prayer", "blood for blood",
+      "You are chanting a vengeful prayer.", D_EXPIRES,
+      {{"", beogh_end_blood_for_blood}, { "Your prayer is nearing its end.", 1}}, 6},
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",
@@ -610,6 +617,9 @@ static const duration_def duration_data[] =
     { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
       "You are unable to call your canine familiar.", "", D_EXPIRES, {{ "",
         [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
+    { DUR_BEOGH_CAN_ANNOINT, LIGHTBLUE, "Recruit", "", "can recruit",
+      "You may recruit a defeated apostle into your service", D_EXPIRES,
+       {{ "", end_beogh_recruit_window}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -680,6 +690,11 @@ static const duration_def duration_data[] =
     { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
     { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
     { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},
+    { DUR_BEOGH_DIVINE_CHALLENGE, WHITE, "Challenge", "", "apostle challenge",
+      "A servant of Beogh has come to challenge you", D_NO_FLAGS},
+    { DUR_BEOGH_SEEKING_VENGEANCE, LIGHTRED, "Vengeance", "", "vengeance",
+      "You are seeking vengeance for the death of your brethren", D_NO_FLAGS},
+
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

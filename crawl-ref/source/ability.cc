@@ -522,15 +522,21 @@ static vector<ability_def> &_get_ability_list()
             5, 0, 10, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Beogh
+        { ABIL_BEOGH_DISMISS_APOSTLE_1, "Dismiss Apostle #1",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_BEOGH_DISMISS_APOSTLE_2, "Dismiss Apostle #2",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_BEOGH_DISMISS_APOSTLE_3, "Dismiss Apostle #3",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_BEOGH_SMITING, "Smiting",
-            3, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
+            3, 0, 2, LOS_MAX_RANGE,
             {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
             2, 0, 0, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
-        { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
-            0, 0, 0, LOS_MAX_RANGE, {fail_basis::invo}, abflag::none },
-        { ABIL_BEOGH_RESURRECTION, "Resurrection",
-            0, 0, 28, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_BEOGH_RECRUIT_APOSTLE, "Recruit Apostle",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_BEOGH_BLOOD_FOR_BLOOD, "Blood for Blood",
+            8, 0, 20, -1, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
         // Jiyva
         { ABIL_JIYVA_OOZEMANCY, "Oozemancy",
@@ -698,7 +704,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::conf_ok },
 #ifdef WIZARD
         { ABIL_WIZ_BUILD_TERRAIN, "Build terrain",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::instant },
@@ -1150,6 +1156,26 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_NON_ABILITY;
         return ability;
 
+    case ABIL_BEOGH_RECRUIT_APOSTLE:
+        if (!you.duration[DUR_BEOGH_CAN_ANNOINT])
+            return ABIL_NON_ABILITY;
+        return ability;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_1:
+        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() < 1)
+            return ABIL_NON_ABILITY;
+        return ability;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_2:
+        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() < 2)
+            return ABIL_NON_ABILITY;
+        return ability;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_3:
+        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() < 3)
+            return ABIL_NON_ABILITY;
+        return ability;
+
     default:
         return ability;
     }
@@ -1210,9 +1236,38 @@ talent get_talent(ability_type ability, bool check_confused)
     return result;
 }
 
-string ability_name(ability_type ability)
+string ability_name(ability_type ability, bool dbname)
 {
-    return get_ability_def(ability).name;
+    // Special-case some dynamic names
+    switch (ability)
+    {
+        case ABIL_BEOGH_RECRUIT_APOSTLE:
+            if (dbname)
+                return "Recruit Apostle";
+            else
+                return "Recruit " + get_apostle_name(0);
+
+        case ABIL_BEOGH_DISMISS_APOSTLE_1:
+            if (dbname)
+                return "Dismiss Apostle";
+            else
+                return "Dismiss " + get_apostle_name(1, true);
+
+        case ABIL_BEOGH_DISMISS_APOSTLE_2:
+            if (dbname)
+                return "Dismiss Apostle";
+            else
+                return "Dismiss " + get_apostle_name(2, true);
+
+        case ABIL_BEOGH_DISMISS_APOSTLE_3:
+            if (dbname)
+                return "Dismiss Apostle";
+            else
+                return "Dismiss " + get_apostle_name(3, true);
+
+        default:
+            return get_ability_def(ability).name;
+    }
 }
 
 vector<string> get_ability_names()
@@ -1283,7 +1338,7 @@ static string _nemelex_desc(ability_type ability)
 // XXX: should this be in describe.cc?
 string get_ability_desc(const ability_type ability, bool need_title)
 {
-    const string& name = ability_name(ability);
+    const string& name = ability_name(ability, true);
 
     string lookup;
 
@@ -2067,6 +2122,36 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_BEOGH_RECRUIT_APOSTLE:
+        if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() == 3)
+        {
+            if (!quiet)
+                mpr("You already have the maximum number of followers. Dismiss one first.");
+            return false;
+        }
+        return true;
+
+    case ABIL_BEOGH_BLOOD_FOR_BLOOD:
+        if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        {
+            if (!quiet)
+                mpr("You have already called for blood!");
+            return false;
+        }
+        else if (!you.props.exists(BEOGH_RES_PIETY_NEEDED_KEY))
+        {
+            if (!quiet)
+                mpr("Your apostles are all alive!");
+            return false;
+        }
+        else if (!tile_has_valid_bfb_corpse(you.pos()))
+        {
+            if (!quiet)
+                mpr("You must be standing atop the corpse of a fallen apostle!");
+            return false;
+        }
+        return true;
+
     default:
         return true;
     }
@@ -2590,6 +2675,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (you.can_do_shaft_ability(false))
         {
             if (cancel_harmful_move())
+                return spret::abort;
+
+            if (beogh_cancel_leaving_floor())
                 return spret::abort;
 
             if (yesno("Are you sure you want to shaft yourself?", true, 'n'))
@@ -3188,16 +3276,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return your_spells(SPELL_SMITING, 12 + skill_bump(SK_INVOCATIONS, 6),
                            false, nullptr, target, fail);
 
-    case ABIL_BEOGH_GIFT_ITEM:
-        if (!beogh_gift_item())
-            return spret::abort;
-        break;
-
-    case ABIL_BEOGH_RESURRECTION:
-        if (!beogh_resurrect())
-            return spret::abort;
-        break;
-
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         fail_check();
         start_recall(recall_t::beogh);
@@ -3206,6 +3284,27 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_STOP_RECALL:
         mpr("You stop recalling your allies.");
         end_recall();
+        break;
+
+    case ABIL_BEOGH_RECRUIT_APOSTLE:
+        beogh_recruit_apostle();
+        break;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_1:
+        beogh_dismiss_apostle(1);
+        break;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_2:
+        beogh_dismiss_apostle(2);
+        break;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_3:
+        beogh_dismiss_apostle(3);
+        break;
+
+    case ABIL_BEOGH_BLOOD_FOR_BLOOD:
+        fail_check();
+        beogh_blood_for_blood();
         break;
 
     case ABIL_FEDHAS_WALL_OF_BRIARS:
@@ -4042,6 +4141,19 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_1:
+        first_slot = letter_to_index('A');
+        break;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_2:
+        first_slot = letter_to_index('B');
+        break;
+
+    case ABIL_BEOGH_DISMISS_APOSTLE_3:
+        first_slot = letter_to_index('C');
+        break;
+
 #ifdef WIZARD
     case ABIL_WIZ_BUILD_TERRAIN:
     case ABIL_WIZ_SET_TERRAIN:

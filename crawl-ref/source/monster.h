@@ -81,7 +81,6 @@ public:
     monster_flags_t flags;             // bitfield of boolean flags
     xp_tracking_type xp_tracking;
 
-    unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
     union
     {
@@ -145,8 +144,6 @@ public:
     bool has_base_name() const;
 
     const monsterentry *find_monsterentry() const;
-
-    void init_experience();
 
     void mark_summoned(int longevity, bool mark_items_summoned,
                        int summon_type = 0, bool abj = true);
@@ -214,7 +211,6 @@ public:
     int energy_cost(energy_use_type et, int div = 1, int mult = 1) const;
 
     void scale_hp(int num, int den);
-    bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
 
@@ -526,7 +522,6 @@ public:
 
     // Hacks, with a capital H.
     void check_speed();
-    void upgrade_type(monster_type after, bool adjust_hd, bool adjust_hp);
 
     string describe_enchantments() const;
 
@@ -596,8 +591,6 @@ private:
 
     void init_with(const monster& mons);
 
-    bool level_up();
-    bool level_up_change();
     int armour_bonus(const item_def &item) const;
 
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,

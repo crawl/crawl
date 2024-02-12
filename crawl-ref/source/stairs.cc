@@ -22,6 +22,7 @@
 #include "env.h"
 #include "files.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
@@ -770,6 +771,12 @@ void floor_transition(dungeon_feature_type how,
             targ->del_ench(ENCH_BULLSEYE_TARGET);
     }
 
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+        flee_apostle_challenge();
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_end_blood_for_blood();
+
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
@@ -1285,7 +1292,7 @@ static void _update_level_state()
 
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
-        if (mons_allows_beogh(**mon_it))
+        if (mons_offers_beogh_conversion(**mon_it))
             env.level_state |= LSTATE_BEOGH;
         if (mon_it->has_ench(ENCH_STILL_WINDS))
             env.level_state |= LSTATE_STILL_WINDS;

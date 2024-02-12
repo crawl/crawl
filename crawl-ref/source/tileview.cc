@@ -1495,6 +1495,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
 
+    if (mc.flags & MAP_BFB_CORPSE)
+        cell.has_bfb_corpse = true;
+
     if (you.rampage_hints.count(gc) > 0)
         cell.bg |= TILE_FLAG_RAMPAGE;
 

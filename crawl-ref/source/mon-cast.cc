@@ -4203,7 +4203,8 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     if (mons.wont_attack() && !mon_enemies_around(&mons) && !one_chance_in(10))
         return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 
-    bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS);
+    bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS)
+                  || mons.has_ench(ENCH_TOUCH_OF_BEOGH);
     for (int attempt = 0; attempt < 2; attempt++)
     {
         const bool prefer_selfench = attempt > 0 && coinflip();
@@ -6967,6 +6968,7 @@ spell_type living_spell_type_for(monster_type mtyp)
     case MONS_CRYSTAL_TOME:
         return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
     case MONS_DIVINE_TOME:
+    case MONS_ORC_APOSTLE:
         return SPELL_SMITING;
     case MONS_FROSTBOUND_TOME:
         return SPELL_ICEBLAST;

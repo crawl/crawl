@@ -33,6 +33,7 @@
 #define MAP_UMBRAED        0x1000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
+#define MAP_BFB_CORPSE    0X20000000
 
 struct cloud_info
 {

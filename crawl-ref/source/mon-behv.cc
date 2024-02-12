@@ -687,7 +687,9 @@ void handle_behaviour(monster* mon)
 
             // Creatures not currently pursuing another foe are
             // alerted by a sentinel's mark
-            if (mon->foe == MHITNOT && you.duration[DUR_SENTINEL_MARK]
+            if (mon->foe == MHITNOT
+                && (you.duration[DUR_SENTINEL_MARK]
+                    || mon->has_ench(ENCH_TOUCH_OF_BEOGH))
                 && in_bounds(you.pos())
                 && (!isFriendly && !mons_is_avatar(mon->type) && !isNeutral
                     && !isPacified
@@ -1262,7 +1264,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
-    if (mons_allows_beogh_now(*mon))
+    if (mons_offers_beogh_conversion_now(*mon))
     {
         const bool first = !you.attribute[ATTR_SEEN_BEOGH];
         if (first || one_chance_in(10))

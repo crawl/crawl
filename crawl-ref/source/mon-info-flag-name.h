@@ -143,4 +143,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_VITRIFIED, "vitrified", "fragile as glass", "vitrified" },
     { MB_CURSE_OF_AGONY, "agonized", "cursed with the promise of agony", "cursed with agony" },
     { MB_RETREATING, "retreating", "retreating", "retreating"},
+    { MB_TOUCH_OF_BEOGH, "divinely empowered", "empowered by the touch of Beogh", "divinely empowered"},
+    { MB_AWAITING_RECRUITMENT, "anointable", "ready to become your apostle", "anointable"},
+    { MB_VENGEANCE_TARGET, "target of vengeance", "target of orcish vengeance", "targets of vengeance"},
 };

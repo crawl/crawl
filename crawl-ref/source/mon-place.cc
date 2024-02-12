@@ -88,6 +88,7 @@ static monster* _place_pghost_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos, bool dont_place);
 
+static int _fill_apostle_band(monster& mons, monster_type* band);
 
 /**
  * Is this feature "close enough" to the one we want for monster generation?
@@ -753,6 +754,13 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     mgen_data band_template = mg;
 
+    // Create apostle bands via custom method, before they would be used
+    if (mon->type == MONS_ORC_APOSTLE && create_band)
+    {
+        band_size = _fill_apostle_band(*mon, band_monsters);
+        leader = true;
+    }
+
     if (leader && !mg.summoner)
     {
         band_template.summoner = mon;
@@ -798,6 +806,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             }
             else if (mon->type == MONS_KIRKE)
                 member->props[KIRKE_BAND_KEY] = true;
+            else if (mon->type == MONS_ORC_APOSTLE)
+                member->flags |= (MF_HARD_RESET | MF_APOSTLE_BAND | MF_NO_REWARD);
         }
     }
     dprf(DIAG_DNGN, "Placing %s at %d,%d", mon->name(DESC_PLAIN, true).c_str(),
@@ -938,6 +948,19 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             break;
         default: ; // if it spawns out of Hell (sprint, wizmode), use Gehenna
         }
+    }
+
+    // Pass along type props for apostles
+    if (mon->type == MONS_ORC_APOSTLE)
+    {
+        if (mg.props.exists(APOSTLE_TYPE_KEY))
+            mon->props[APOSTLE_TYPE_KEY] = mg.props[APOSTLE_TYPE_KEY].get_int();
+
+        if (mg.props.exists(APOSTLE_POWER_KEY))
+            mon->props[APOSTLE_POWER_KEY] = mg.props[APOSTLE_POWER_KEY].get_int();
+
+        if (mg.props.exists(APOSTLE_BAND_POWER_KEY))
+            mon->props[APOSTLE_BAND_POWER_KEY] = mg.props[APOSTLE_BAND_POWER_KEY].get_int();
     }
 
     // Generate a brand shiny new monster, or zombie.
@@ -1398,7 +1421,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         }
     }
 
-    // Initialise (very) ugly things and pandemonium demons.
+    // Initialise (very) ugly things and dancing weapons
     if (mon->type == MONS_UGLY_THING
         || mon->type == MONS_VERY_UGLY_THING)
     {
@@ -1434,6 +1457,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
+    else if (mon->type == MONS_ORC_APOSTLE)
+        mon->flags |= (MF_APOSTLE_BAND | MF_HARD_RESET);
 
     tile_init_props(mon);
 
@@ -3264,4 +3289,149 @@ void setup_vault_mon_list()
     }
     if (size)
         dprf(DIAG_MONPLACE, "Level has a custom monster set.");
+}
+
+// Code for determining Beogh apostle bands, based on power and apostle type
+enum apostle_band_type
+{
+    APOSTLE_BAND_ORCS,
+    APOSTLE_BAND_BRUTES,
+    APOSTLE_BAND_DEMONS,
+    APOSTLE_BAND_BEASTS,
+
+    NUM_APOSTLE_BANDS,
+};
+
+static const vector<pop_entry> band_weights[] =
+{
+
+// APOSTLE_BAND_ORCS,
+{
+    {  0,  35,  400, FALL, MONS_ORC },
+    {  0,  55,  350, SEMI, MONS_ORC_WARRIOR },
+    { -10, 75,  125, PEAK, MONS_ORC_PRIEST },
+    {  0,  55,  200, FALL, MONS_ORC_WIZARD },
+    {  25, 100, 250, SEMI, MONS_ORC_KNIGHT },
+    {  25, 110, 150, SEMI, MONS_ORC_HIGH_PRIEST },
+    {  25, 110, 100, SEMI, MONS_ORC_SORCERER },
+    {  50, 100, 200, RISE, MONS_ORC_WARLORD },
+},
+
+// APOSTLE_BAND_BRUTES
+{
+    {   0,  40,  50, FALL, MONS_NO_MONSTER },
+    {   0,  30,  50, FALL, MONS_OGRE },
+    {  20,  45,  35, FLAT, MONS_TROLL },
+    {  25,  70,  50, SEMI, MONS_CYCLOPS },
+    {  40, 120, 150, RISE, MONS_ETTIN },
+    {  45, 80,   80, SEMI, MONS_IRON_TROLL },
+    {  60, 120, 100, RISE, MONS_STONE_GIANT },
+},
+
+// APOSTLE_BAND_DEMONS,
+{
+    {0, 25, 100, FALL, MONS_CRIMSON_IMP},
+    {0, 25, 100, FALL, MONS_QUASIT},
+    {0, 25, 100, FALL, MONS_WHITE_IMP},
+    {0, 25, 100, FALL, MONS_UFETUBUS},
+    {0, 25, 100, FALL, MONS_IRON_IMP},
+    {0, 25, 100, FALL, MONS_SHADOW_IMP},
+
+    {20, 55, 125, SEMI, MONS_ICE_DEVIL},
+    {20, 55, 125, SEMI, MONS_RUST_DEVIL},
+    {20, 55, 125, SEMI, MONS_ORANGE_DEMON},
+    {20, 55, 125, SEMI, MONS_RED_DEVIL},
+    {20, 55, 125, SEMI, MONS_HELLWING},
+
+    {45, 70, 150, SEMI, MONS_SUN_DEMON},
+    {45, 70, 150, SEMI, MONS_SOUL_EATER},
+    {45, 70, 150, SEMI, MONS_SMOKE_DEMON},
+    {45, 70, 150, SEMI, MONS_YNOXINUL},
+    {45, 70, 150, SEMI, MONS_SIXFIRHY},
+
+    {55, 110, 150, RISE, MONS_REAPER},
+    {55, 110, 150, RISE, MONS_GREEN_DEATH},
+    {55, 110, 150, RISE, MONS_BLIZZARD_DEMON},
+    {55, 110, 150, RISE, MONS_BALRUG},
+    {55, 110, 150, RISE, MONS_HELLION},
+    {55, 110,  80, RISE, MONS_SHADOW_DEMON},
+},
+
+// APOSTLE_BAND_BEASTS,
+{
+    {0,  20,  200, FALL, MONS_HOUND},
+    {0,  55,  200, PEAK, MONS_WOLF},
+    {25,  60, 220, FLAT, MONS_WARG},
+    {45,  70, 150, RISE, MONS_HELL_HOUND},
+    {40,  70,  80, RISE, MONS_RAIJU},
+    {35,  75, 120, SEMI, MONS_MANTICORE},
+    {40,  80, 140, SEMI, MONS_LINDWURM},
+    {70, 110,  90, PEAK, MONS_LINDWURM},
+},
+
+};
+
+static void _fill_types_by_weight(vector<monster_type>& vec, apostle_band_type type, int pow,
+                                  int num, bool all_same = false)
+{
+    monster_picker picker = monster_picker();
+
+    monster_type mtype = picker.pick(band_weights[int(type)], pow, MONS_NO_MONSTER);
+
+    for (int i = 0; i < num; ++i)
+    {
+        if (mtype != MONS_NO_MONSTER)
+            vec.push_back(mtype);
+
+        if (!all_same)
+            mtype = picker.pick(band_weights[int(type)], pow, MONS_NO_MONSTER);
+    }
+}
+
+static int _fill_apostle_band(monster& mons, monster_type* band)
+{
+    // Pull type and power from props, if they have been set
+    const apostle_type type = mons.props.exists(APOSTLE_TYPE_KEY)
+                                ? static_cast<apostle_type>(mons.props[APOSTLE_TYPE_KEY].get_int())
+                                : APOSTLE_WARRIOR;
+
+    const int pow = mons.props.exists(APOSTLE_BAND_POWER_KEY)
+                        ? mons.props[APOSTLE_BAND_POWER_KEY].get_int()
+                        : 50;
+
+    vector<monster_type> vec;
+
+    switch (type)
+    {
+        default:
+        case APOSTLE_WARRIOR:
+        case APOSTLE_PRIEST:
+        {
+            int num_orcs = random_range(0, 5);
+            int num_brutes = (5 - num_orcs) / 2;
+
+            if (pow > 50)
+                num_brutes += random_range(0, 2);
+
+            _fill_types_by_weight(vec, APOSTLE_BAND_ORCS, pow, num_orcs);
+            _fill_types_by_weight(vec, APOSTLE_BAND_BRUTES, pow, num_brutes);
+        }
+        break;
+
+        case APOSTLE_WIZARD:
+            _fill_types_by_weight(vec, APOSTLE_BAND_DEMONS, pow, random_range(2, 3), coinflip());
+            if (coinflip())
+            {
+                if (coinflip())
+                    _fill_types_by_weight(vec, APOSTLE_BAND_DEMONS, pow / 2, random_range(2, 3), coinflip());
+                else
+                    _fill_types_by_weight(vec, APOSTLE_BAND_ORCS, pow, random_range(2, 3));
+            }
+        break;
+    }
+
+    for (unsigned int i = 0; i < vec.size(); ++i)
+        band[i+1] = vec[i];
+
+    return vec.size()+1;
 }

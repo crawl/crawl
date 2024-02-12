@@ -757,6 +757,6 @@ void seen_monster(monster* mons)
         mons->flags |= MF_TSO_SEEN;
     }
 
-    if (mons_allows_beogh(*mons))
+    if (mons_offers_beogh_conversion(*mons))
         env.level_state |= LSTATE_BEOGH;
 }

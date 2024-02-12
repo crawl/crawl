@@ -365,9 +365,8 @@ void debug_dump_mon(const monster* mon, bool recurse)
     fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%" PRIx64"\n",
             mon->attitude, mon->behaviour, mon->number, mon->flags.flags);
 
-    fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
-                  "experience: %u\n",
-            mon->colour, mon->foe_memory, mon->shield_blocks, mon->experience);
+    fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d\n",
+            mon->colour, mon->foe_memory, mon->shield_blocks);
 
     fprintf(stderr, "god: %s, seen_context: %d\n",
             god_name(mon->god).c_str(), mon->seen_context);

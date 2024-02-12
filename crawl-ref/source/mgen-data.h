@@ -4,6 +4,7 @@
 #include "coord.h"
 #include "god-type.h"
 #include "mgen-enum.h"
+#include "mon-enum.h"
 #include "mon-flags.h"
 #include "xp-tracking-type.h"
 
@@ -181,7 +182,8 @@ struct mgen_data
                || summon_type == SPELL_FULMINANT_PRISM
                || summon_type == SPELL_INFESTATION
                || summon_type == SPELL_FOXFIRE
-               || summon_type == SPELL_MARSHLIGHT);
+               || summon_type == SPELL_MARSHLIGHT
+               || summon_type == MON_SUMM_AID);
         return *this;
     }
 

@@ -17,11 +17,6 @@
 
 class dist;
 
-#define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
-#define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
-#define BEOGH_ARM_GIFT_KEY "given beogh armour"
-#define BEOGH_SH_GIFT_KEY "given beogh shield"
-
 #define AVAILABLE_SAC_KEY "available_sacrifices"
 #define HEALTH_SAC_KEY "current_health_sacrifice"
 #define ESSENCE_SAC_KEY "current_essence_sacrifice"
@@ -36,6 +31,8 @@ class dist;
 #define OKAWARU_DUEL_TARGET_KEY "okawaru_duel_target"
 #define OKAWARU_DUEL_CURRENT_KEY "okawaru_duel_current"
 #define OKAWARU_DUEL_ABANDONED_KEY "okawaru_duel_abandoned"
+
+#define BEOGH_DAMAGE_DONE_KEY "beogh_damage_done"
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -107,11 +104,6 @@ bool vehumet_supports_spell(spell_type spell);
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
-bool given_gift(const monster* mons);
-bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
-bool beogh_gift_item();
-bool beogh_resurrect();
-
 bool yred_can_bind_soul(monster* mon);
 void yred_make_bound_soul(monster* mon, bool force_hostile = false);
 
@@ -138,6 +130,11 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();
+void beogh_blood_for_blood();
+void beogh_blood_for_blood_tick(int delay);
+void beogh_end_blood_for_blood();
+void beogh_ally_healing();
+bool beogh_cancel_leaving_floor();
 
 spret dithmenos_shadow_step(bool fail);
 

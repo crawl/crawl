@@ -2499,9 +2499,6 @@ static bool _jelly_divide(monster& parent)
     if (parent.hit_points > parent.max_hit_points)
         parent.hit_points = parent.max_hit_points;
 
-    parent.init_experience();
-    parent.experience = parent.experience * 3 / 5 + 1;
-
     // Create child {dlb}:
     // This is terribly partial and really requires
     // more thought as to generation ... {dlb}

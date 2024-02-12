@@ -2053,6 +2053,22 @@ A peculiar subterranean creature, thought to be a distant relative of the
 human, or the pig, or perhaps the platypus. Orcs love groups, in which they
 gather for whatever worrying activities orcs enjoy.
 %%%%
+orc apostle
+
+A orcish wayfarer who has been touched by the hand of Beogh. Whether out of
+religious devotion or personal jealousy, they have come to bar your path.
+
+Hold nothing back - for neither they nor their followers will do so.
+
+Glory to Beogh!
+%%%%
+orc apostle follower
+
+A favoured child of Beogh, once not so unlike yourself.
+
+Now that you have proven yourself to them, they will fight and die for both you
+and the cause. Shephard them well.
+%%%%
 orc high priest
 
 An exalted servant of the orc god Beogh and a master of many foul rites, to

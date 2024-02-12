@@ -947,8 +947,23 @@ spret cast_smiting(int pow, monster* mons, bool fail)
         return spret::success;
     }
 
+    if (mons->friendly())
+    {
+        mpr("Beogh will not strike down an ally of the cause.");
+        return spret::abort;
+    }
+
+    // The above should prevent most cases of attack prompts, but just in case...
     if (stop_attack_prompt(mons, false, you.pos()))
         return spret::abort;
+
+    // No direct divine intervention during apostle challenges
+    if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+    {
+        simple_god_message(" booms, \"This is a trial of mortal prowess."
+                           " Fight with your own strength!\"");
+        return spret::abort;
+    }
 
     fail_check();
 
@@ -963,7 +978,7 @@ spret cast_smiting(int pow, monster* mons, bool fail)
          attack_strength_punctuation(damage).c_str());
 
     behaviour_event(mons, ME_ANNOY, &you);
-    mons->hurt(&you, damage);
+    mons->hurt(&you, damage, BEAM_MISSILE, KILLED_BY_BEOGH_SMITING);
 
     if (mons->alive())
     {

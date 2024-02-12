@@ -8240,13 +8240,67 @@ The priest shouts, "You had your chance, apostate scum!"
 ####
 orc_priest_preaching
 
-@The_monster@ shouts, "Join the one true god or die!"
+@The_monster@ shouts, "Beogh offers mercy even to people such as you. Join us and be reborn!"
 
-@The_monster@ shouts, "Beogh is our master! Accept the truth or die!"
+@The_monster@ shouts, "The Pantheon deserves no one's loyalty. Let us show you the true path!"
 
 @The_monster@ shouts, "Surrender to Beogh and we'll let you live!"
 
-@The_monster@ threatens, "By the altar or by the axe, you will meet Beogh!"
+@The_monster@ threatens, "Beogh's wrath is as vast as their mercy. Make your choice!"
+%%%%
+########################################################
+orc_apostle_yield
+
+@The_monster@ shouts, "I yield! You are indeed the chosen one!"
+
+@The_monster@ shouts, "I yield! Victory is yours!"
+
+@The_monster@ falls to @possessive@ knees and submits.
+%%%%
+orc_apostle_dismissed
+
+@The_monster@ says, "I will never forget you!"
+
+@The_monster@ leaves to spread the word of Beogh to the surface.
+
+@The_monster@ salutes you before departing.
+%%%%
+orc_apostle_unbanished
+
+VISUAL:@The_monster@ pulls a severed tentacle out of their boot and sighs heavily.
+
+@The_monster@ grins, "Not even The Unformed can stop the chosen ones of Beogh!"
+
+@The_monster@ shouts triumpantly, "Who's laughing NOW?"
+
+@The_monster@ shudders. "I think my head was attached to my elbow for a minute there..."
+
+@The_monster@ says, "I don't think I'll ever look at the stars the same way again."
+
+@The_monster@ yells, "Just try that again; I dare you!"
+
+w:1
+@The_monster@ gibbers softly, "It was just one butterfly...."
+
+VISUAL:@The_monster@ wobbles unsteadily, but gives you a thumbs up.
+%%%%
+friendly bfb orc
+
+@The_monster@ shouts, "Vengeance for the fallen!"
+
+@The_monster@ shouts, "Blood calls out to blood!"
+
+@The_monster@ cries, "Kill them all! Beogh will know their own!"
+
+@The_monster@ beats @possessive@ weapon against @possessive@ chest and roars.
+
+@The_monster@ cries out, "For our kin! And for all that died before them!"
+
+@The_monster@ smears @possessive@ weapon with vermillion and lifts it high.
+
+@The_monster@ shouts, "Eye for eye, tooth for tooth, life for life!"
+
+@The_monster@ cries, "Return their pain upon them a hundredfold!"
 %%%%
 #################################
 # Cherubs.

@@ -363,11 +363,10 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
+         "HD=%d/%d HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
          mons.get_experience_level(),
-         mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
@@ -600,19 +599,6 @@ void debug_make_monster_shout(monster* mon)
     }
 
     mpr("== Done ==");
-}
-
-void wizard_gain_monster_level(monster* mon)
-{
-    // Give monster as much experience as it can hold,
-    // but cap the levels gained to just 1.
-    bool worked = mon->gain_exp(INT_MAX - mon->experience, 1);
-    if (!worked)
-        simple_monster_message(*mon, " seems unable to mature further.", MSGCH_WARN);
-
-    // (The gain_exp() method will chop the monster's experience down
-    // to half-way between its new level and the next, so we needn't
-    // worry about it being left with too much experience.)
 }
 
 void wizard_apply_monster_blessing(monster* mon)

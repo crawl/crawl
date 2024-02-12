@@ -494,6 +494,17 @@ void player_reacts_to_monsters()
         }
     }
 
+    // Expire Blood For Blood much faster when there are no enemies around for
+    // the horde to fight (but not at the tail end of its duration, which could
+    // otherwise make the expiry message misleading)
+    if (you.duration[DUR_BLOOD_FOR_BLOOD] > 40
+        && !there_are_monsters_nearby(true, true, false))
+    {
+        you.duration[DUR_BLOOD_FOR_BLOOD] -= you.time_taken * 3;
+        if (you.duration[DUR_BLOOD_FOR_BLOOD] < 1)
+            you.duration[DUR_BLOOD_FOR_BLOOD] = 1;
+    }
+
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
@@ -869,6 +880,9 @@ static void _decrement_durations()
     if (you.duration[DUR_TEMP_CLOUD_IMMUNITY])
         _decrement_a_duration(DUR_TEMP_CLOUD_IMMUNITY, delay);
 
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_blood_for_blood_tick(delay);
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
@@ -1037,6 +1051,10 @@ void player_reacts()
     // don't allow reactions while stair peeking in descent mode
     if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
         return;
+
+    // This happens as close as possible after the player acts, for better messaging
+    if (you_worship(GOD_BEOGH))
+        beogh_ally_healing();
 
     //XXX: does this _need_ to be calculated up here?
     const int stealth = player_stealth();

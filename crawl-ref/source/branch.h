@@ -112,6 +112,7 @@ bool is_random_subbranch(branch_type branch);
 bool is_connected_branch(const Branch *branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
+bool branch_has_rune(branch_type branch);
 level_id current_level_parent();
 
 branch_type branch_by_abbrevname(const string &branch, branch_type err = NUM_BRANCHES);

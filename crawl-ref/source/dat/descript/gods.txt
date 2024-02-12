@@ -12,11 +12,13 @@ all the same thing.
 %%%%
 Beogh
 
-Beogh is an evil deity, worshipped by the cave orcs native to the dungeon. Only
-orcs may devote their service to Beogh, and they must prove their devotion with
-bloodshed. Especially fervent devotees of Beogh will find orcish followers
-flocking to their banner: it is an age of signs and portents, and the orcs have
-become increasingly certain that the coming of their Messiah is nigh.
+A god of outcasts, pariahs, and the dispossessed, Beogh's altars are rarely
+found among those of other faiths, but their missionaries may always be sought
+by those looking for a place to belong. Worshippers will find many friends
+within the dungeon, and those who prove their strength to Beogh may gain
+lifelong companions the equal of any adventurer. To worship Beogh is to believe
+there is strength that transcends species and bloodline. To worship Beogh is to
+be an orc.
 %%%%
 Cheibriados
 
@@ -233,11 +235,13 @@ protect worshippers from the Dungeon's malevolent forces.
 %%%%
 Beogh powers
 
-Followers of Beogh can smite their foes, and will even gain orcish followers of
-their own, who may be blessed by Beogh in battle and can be recalled as needed.
-Eventually, followers will gain the power to walk on water. Beogh will
-sometimes directly intervene to save a follower's life, and the chosen of
-Beogh will eventually be able to resurrect other fallen orcs.
+Worshippers will gain the power to call down Beogh's wrath upon their
+oppressors, and other orcs will start to see you as one of their own. Especially
+promising adherents will find themselves beset by rivals for Beogh's favor, but
+overcoming these trials without fleeing will gain you loyal companions whom
+Beogh will resurrect time and time again - just so long as you continue to fight
+and avenge in their name. A true chosen one may even rally an entire orcish army
+to avenge a wrongful death.
 %%%%
 Cheibriados powers
 

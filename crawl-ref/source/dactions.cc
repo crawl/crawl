@@ -76,6 +76,7 @@ static const char *daction_names[] =
     "ancestor vanishes",
     "upgrade ancestor",
     "remove Ignis altars",
+    "cleanup Beogh vengeance markers",
 };
 #endif
 
@@ -129,6 +130,11 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_JIYVA_DEAD:
         return mon->type == MONS_DISSOLUTION;
+
+    case DACT_BEOGH_VENGEANCE_CLEANUP:
+        return mon->has_ench(ENCH_VENGEANCE_TARGET)
+               && mon->get_ench(ENCH_VENGEANCE_TARGET).degree
+                  < you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
 
     default:
         return false;
@@ -252,6 +258,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             mon->props[CUSTOM_SPELLS_KEY] = true;
             break;
 
+        case DACT_BEOGH_VENGEANCE_CLEANUP:
+            mon->del_ench(ENCH_VENGEANCE_TARGET);
+            mon->patrol_point.reset();
+            break;
+
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -282,6 +293,7 @@ static void _apply_daction(daction_type act)
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
+    case DACT_BEOGH_VENGEANCE_CLEANUP:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))

@@ -427,6 +427,9 @@ Re-using this ability will discard the current stack.
 Smiting ability
 
 [[Smiting spell]] The strength of the smiting is increased by Invocations skill.
+
+Beogh will not allow you to use this directly against another apostle during a
+divine trial.
 %%%%
 Recall Orcish Followers ability
 
@@ -437,15 +440,34 @@ Stop Recall ability
 
 Stops recalling your followers.
 %%%%
-Give Item to Named Follower ability
+Dismiss Apostle ability
 
-Gives a weapon or piece of armour to a named orcish follower. An orc can only
-ever receive one of these gifts.
+Frees this apostle from your service, sending them out to do good in the world
+in Beogh's name.
 %%%%
-Resurrection ability
+Recruit Apostle ability
 
-Bring an orc corpse back to life. The orc will be an ally, even if it was not
-already one before it died.
+Annoints a defeated apostle and welcomes them as a permanent follower. They will
+follow you between floors and into any peril, willingly giving their life for
+the cause and their kin.
+
+If they die, Beogh will eventually revive them once you gain sufficient piety -
+this process can be greatly accellerated by satisfying Beogh with the slaying of
+all foes who may have contributed to their apostle's death.
+
+You can have at most 3 followers accompanying you at a time, though you may
+freely dismiss old ones to invite new ones.
+%%%%
+Blood for Blood ability
+
+Beseeches Beogh to grant you an army with which to wreck bloody retribution.
+The user will be immediately surrounded by orcish allies, with more of them
+arriving over time from all directions. The prayer lasts a considerable
+length of time, but will expire far more rapidly once there are no more foes in
+sight.
+
+Usable only while you are standing over the corpse of one of your apostles, and
+at most once per death.
 %%%%
 # Fedhas
 Wall of Briars ability

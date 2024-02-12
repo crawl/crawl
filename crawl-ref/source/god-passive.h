@@ -56,12 +56,6 @@ enum class passive_t
     /// You can walk on water.
     water_walk,
 
-    /// You share experience with followers.
-    share_exp,
-
-    /// Your god blesses your followers.
-    bless_followers,
-
     /// Your god blesses your followers when they kill evil things.
     bless_followers_vs_evil,
 

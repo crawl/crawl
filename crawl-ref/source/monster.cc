@@ -82,7 +82,7 @@ monster::monster()
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(), xp_tracking(XP_NON_VAULT), experience(0),
+      enchantments(), flags(), xp_tracking(XP_NON_VAULT),
       base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
       foe_memory(0), god(GOD_NO_GOD), ghost(), seen_context(SC_NONE),
       client_id(0), hit_dice(0)
@@ -131,7 +131,6 @@ void monster::reset()
 
     mid             = 0;
     flags           = MF_NO_FLAGS;
-    experience      = 0;
     type            = MONS_NO_MONSTER;
     base_monster    = MONS_NO_MONSTER;
     hit_points      = 0;
@@ -199,7 +198,6 @@ void monster::init_with(const monster& mon)
     enchantments      = mon.enchantments;
     ench_cache        = mon.ench_cache;
     flags             = mon.flags;
-    experience        = mon.experience;
     number            = mon.number;
     colour            = mon.colour;
     summoner          = mon.summoner;
@@ -1510,12 +1508,6 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
-    // Don't pick up a new weapon if we've been gifted one by the player.
-    if (is_range_weapon(weap) && props.exists(BEOGH_RANGE_WPN_GIFT_KEY))
-        return false;
-    else if (props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
-        return false;
-
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
@@ -1543,12 +1535,6 @@ bool monster::wants_armour(const item_def &item) const
     {
         return false;
     }
-
-    // Don't pick up new armour if we've been gifted something by the player.
-    if (is_offhand(item) && props.exists(BEOGH_SH_GIFT_KEY))
-        return false;
-    else if (props.exists(BEOGH_ARM_GIFT_KEY))
-        return false;
 
     // Spellcasters won't pick up restricting armour, although they can
     // start with one. Applies to arcane spells only, of course.
@@ -4295,7 +4281,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
             && kill_type != KILLED_BY_POISON
-            && kill_type != KILLED_BY_CLOUD)
+            && kill_type != KILLED_BY_CLOUD
+            && kill_type != KILLED_BY_BEOGH_SMITING)
         {
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
@@ -4690,7 +4677,10 @@ bool monster::needs_abyss_transit() const
             || get_experience_level() > 8 + random2(25)
             && mons_can_use_stairs(*this))
         && !is_summoned()
-        && !mons_is_conjured(type);
+        && !mons_is_conjured(type)
+        // We want to 'kill' banished apostles for real, so that they can escape
+        // on their own instead of being actually lost in the abyss
+        && type != MONS_ORC_APOSTLE;
 }
 
 void monster::set_transit(const level_id &dest)
@@ -5044,6 +5034,12 @@ bool monster::can_polymorph() const
     // Abominations re-randomize their tile when mutated, so can_mutate returns
     // true for them. Like all undead, they can't be polymorphed.
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return false;
+
+    // Polymorphing apostles breaks all sorts of things (like making challenges
+    // unwinnable if it happens) and it would be complex to fix this, so let's
+    // veto it.
+    if (type == MONS_ORC_APOSTLE)
         return false;
 
     return can_mutate();
@@ -6326,6 +6322,8 @@ int monster::spell_hd(spell_type spell) const
         hd *= 2;
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
+    if (has_ench(ENCH_TOUCH_OF_BEOGH))
+        hd = hd * 3 / 2;
     return hd;
 }
 

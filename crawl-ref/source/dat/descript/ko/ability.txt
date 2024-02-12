@@ -603,11 +603,6 @@ Elemental Force ability
 주변의 원소구름을 합쳐 정령으로 부린다. 자신이 만든 구름은 아군 정령으로
 적대적인 구름은 적군 정령으로, 중립구름은 중립정령이 된다.
 %%%%
-Give Item to Named Follower ability
-
-1개의 무기 혹은 1개의 방어구를 이름있는 오크 추종자에게 하사한다.
-오크는 이런 선물을 딱 하나만 받을 수 있다.
-%%%%
 Greater Servant of Makhleb ability
 
 대악마를 소환한다. 이 능력을 정확히 이용하지 못하면 악마는 적의를 갖고
