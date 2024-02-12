@@ -2992,7 +2992,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_YRED_FATHOMLESS_SHACKLES:
         fail_check();
-        mprf(MSGCH_DURATION, "You call down the inexorable grip of Yredelemnul.");
+        mprf(MSGCH_DURATION, "You call down Yredelemnul's inexorable grip.");
         // XXX: Some invo formula
         you.duration[DUR_FATHOMLESS_SHACKLES] = random_range(15, 25) * BASELINE_DELAY;
         yred_make_blasphemy();

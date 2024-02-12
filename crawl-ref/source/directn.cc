@@ -3941,7 +3941,7 @@ static bool _print_cloud_desc(const coord_def where)
     if (disjunction_haloed(where))
         areas.emplace_back("is bathed in translocational energy");
     if (is_blasphemy(where))
-        areas.emplace_back("within the grip of Yredelemnul");
+        areas.emplace_back("within Yredelemnul's grip");
     if (!areas.empty())
     {
         mprf("This square %s.",
