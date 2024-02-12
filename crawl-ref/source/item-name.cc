@@ -436,6 +436,7 @@ static const char *weapon_brands_terse[] =
 #endif
     "weak",
     "vuln",
+    "foul flame",
     "debug",
 };
 
@@ -463,6 +464,7 @@ static const char *weapon_brands_verbose[] =
 #endif
     "weakness",
     "vulnerability",
+    "foul flame",
     "debug",
 };
 
@@ -490,6 +492,7 @@ static const char *weapon_brands_adj[] =
 #endif
     "weakening",
     "will-reducing",
+    "foul flame",
     "debug",
 };
 

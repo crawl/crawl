@@ -1204,6 +1204,29 @@ bool attack::apply_damage_brand(const char *what)
         }
         break;
 
+    case SPWPN_FOUL_FLAME:
+    {
+        if (attacker->is_holy())
+            break; // No foul flame for thee!
+
+        const int rff = defender->res_foul_flame();
+        if (rff < 0)
+            special_damage = 1 + (random2(damage_done) * 0.75);
+        else if (rff < 3)
+            special_damage = 1 + (random2(damage_done) / ((rff + 1) * 2));
+
+        if (defender_visible && special_damage)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s%s",
+                    defender_name(false).c_str(),
+                    defender->conj_verb("convulse").c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
+        }
+        break;
+    }
+
     case SPWPN_ELECTROCUTION:
         if (defender->res_elec() > 0)
             break;

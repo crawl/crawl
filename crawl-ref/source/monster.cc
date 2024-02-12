@@ -809,6 +809,9 @@ void monster::equip_weapon_message(item_def &item)
     case SPWPN_HOLY_WRATH:
         mpr("It softly glows with a divine radiance!");
         break;
+    case SPWPN_FOUL_FLAME:
+        mpr("It glows horrifically with a foul radiance!");
+        break;
     case SPWPN_ELECTROCUTION:
         mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
         break;
@@ -938,6 +941,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
             break;
 
         case SPWPN_HOLY_WRATH:
+        case SPWPN_FOUL_FLAME:
             mpr("It stops glowing.");
             break;
 

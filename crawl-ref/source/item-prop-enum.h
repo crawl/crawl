@@ -181,6 +181,7 @@ enum brand_type // item_def.special
 #endif
     SPWPN_WEAKNESS,
     SPWPN_VULNERABILITY,
+    SPWPN_FOUL_FLAME,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
