@@ -6028,6 +6028,10 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.foe);
     marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XP_CONTRIBUTE_FIXUP)
+        m.damage_friendly /= 2;
+#endif
     marshallShort(th, m.damage_total);
     marshallByte(th, m.went_unseen_this_turn);
     marshallCoord(th, m.unseen_pos);
