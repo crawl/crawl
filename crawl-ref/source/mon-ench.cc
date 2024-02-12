@@ -863,16 +863,20 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     {
-        const string noun = me.ench == ENCH_VILE_CLUTCH ? "zombie hands"
-                                                        : "roots";
         if (is_constricted())
         {
-            // We handle the end-of-enchantment message here since the method
-            // of constriction is no longer detectable.
             if (!quiet && you.can_see(*this))
             {
-                mprf("The %s release their grip on %s.", noun.c_str(),
-                        name(DESC_THE).c_str());
+                if (me.ench == ENCH_VILE_CLUTCH)
+                {
+                    mprf("%s zombie hands return to the earth.",
+                         me.agent()->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s grasping roots sink back into the ground.",
+                         me.agent()->name(DESC_THE).c_str());
+                }
             }
             stop_being_constricted(true);
         }

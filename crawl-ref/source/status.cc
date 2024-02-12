@@ -482,12 +482,9 @@ bool fill_status_info(int status, status_info& inf)
             const monster * const cstr = monster_by_mid(you.constricted_by);
             ASSERT(cstr);
 
-            const bool damage =
-                cstr->constriction_does_damage(you.get_constrict_type());
-
             inf.light_colour = YELLOW;
-            inf.light_text   = damage ? "Constr"      : "Held";
-            inf.short_text   = damage ? "constricted" : "held";
+            inf.light_text   = "Constr";
+            inf.short_text   = "constricted";
         }
         break;
 

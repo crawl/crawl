@@ -765,7 +765,7 @@ void move_solo_tentacle(monster* tentacle)
     actor* constrictee = nullptr;
     if (tentacle->is_constricting())
     {
-        constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+        constrictee = actor_by_mid((*tentacle->constricting)[0]);
 
         // Don't drag things that cannot move
         if (!constrictee->is_stationary()
@@ -1023,7 +1023,7 @@ void move_child_tentacles(monster* mons)
         actor* constrictee = nullptr;
         if (tentacle->is_constricting() && retract_found)
         {
-            constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+            constrictee = actor_by_mid((*tentacle->constricting)[0]);
             if (feat_has_solid_floor(env.grid(old_pos))
                 && constrictee->is_habitable(old_pos)
                 && !constrictee->resists_dislodge("being pulled by " + tentacle->name(DESC_THE)))

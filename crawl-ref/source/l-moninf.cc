@@ -678,7 +678,7 @@ LUAFN(moninf_get_can_be_constricted)
         monster dummy;
         dummy.type = mi->type;
         dummy.base_monster = mi->base_type;
-        lua_pushboolean(ls, dummy.res_constrict() < 3);
+        lua_pushboolean(ls, !dummy.res_constrict());
     }
     return 1;
 }

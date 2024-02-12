@@ -298,6 +298,7 @@ enum tag_minor_version
     TAG_MINOR_NO_INCREMENTAL_RECALL, // Remove incremental recall and make instant again
     TAG_MINOR_APOSTLE_DATA,        // Convert apostles to using custom structs instead of props
     TAG_MINOR_XP_CONTRIBUTE_FIXUP, // Removes the 2x multiplier for player XP contribution
+    TAG_MINOR_NO_CONSTRICTION_DUR, // Remove duration parameter from constriction tracking
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

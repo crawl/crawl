@@ -72,17 +72,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     if (is_constricted())
     {
         was_constricted = true;
-
-        if (!attempt_escape(2))
-        {
-            if (!quiet)
-            {
-                string message = " struggles to " + verb
-                                 + " free from constriction.";
-                simple_monster_message(*this, message.c_str());
-            }
-            return false;
-        }
+        stop_being_constricted(false, "blinks");
     }
 
     if (!quiet)

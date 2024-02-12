@@ -3141,10 +3141,6 @@ void bolt::tracer_affect_player()
         is_explosion = true;
 
     const actor* ag = agent();
-    if (flavour == BEAM_ROOTS && !ag->can_constrict(you, CONSTRICT_ROOTS))
-        return; // this should probably go elsewhere
-    else if (flavour == BEAM_VILE_CLUTCH && ! ag->can_constrict(you, CONSTRICT_BVC))
-        return;
 
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
@@ -3639,31 +3635,19 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ROOTS:
     {
-        // No friendly fire from roots.
-        if (mons_att_wont_attack(attitude))
-            return;
-        if (!agent()->can_constrict(you, CONSTRICT_ROOTS))
-            return;
-        const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
-        dprf("Roots duration: %d", turns);
-        grasp_with_roots(*agent(), you, turns);
-        obvious_effect = true;
+        const int turns = 1 + random_range(div_rand_round(ench_power, 20),
+                                           div_rand_round(ench_power, 12) + 1);
+        if (start_ranged_constriction(*agent(), you, turns, CONSTRICT_ROOTS))
+            obvious_effect = true;
         break;
     }
 
     case BEAM_VILE_CLUTCH:
     {
-        // No friendly fire from BVC.
-        if (mons_att_wont_attack(attitude))
-            return;
-        if (!agent()->can_constrict(you, CONSTRICT_BVC))
-            return;
-        const int turns = 4 + random2avg(div_rand_round(ench_power, 10), 2);
-        dprf("BVC duration: %d", turns);
-        you.increase_duration(DUR_VILE_CLUTCH, turns);
-        agent()->start_constricting(you);
-        mprf(MSGCH_WARN, "You are grabbed by zombie hands!");
-        obvious_effect = true;
+        const int turns = 3 + random_range(div_rand_round(ench_power, 50),
+                                           div_rand_round(ench_power, 35) + 1);
+        if (start_ranged_constriction(*agent(), you, turns, CONSTRICT_BVC))
+            obvious_effect = true;
         break;
     }
 
@@ -4233,6 +4217,13 @@ bool bolt::ignores_player() const
     {
         // friends!
         return true;
+    }
+
+    if (flavour == BEAM_ROOTS || flavour == BEAM_VILE_CLUTCH)
+    {
+        return agent()->wont_attack()
+               || !agent()->can_constrict(you, flavour == BEAM_ROOTS ? CONSTRICT_ROOTS
+                                                                     : CONSTRICT_BVC);
     }
 
     return false;
@@ -6227,20 +6218,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_VILE_CLUTCH:
     {
-        const int dur = (4 + random2avg(div_rand_round(ench_power, 10), 2))
-            * BASELINE_DELAY;
-        dprf("Vile clutch duration: %d", dur);
-        mon->add_ench(mon_enchant(ENCH_VILE_CLUTCH, 0, &you, dur));
-        obvious_effect = true;
+        const int dur = 4 + random_range(div_rand_round(ench_power, 35),
+                                         div_rand_round(ench_power, 25) + 1);
+        if (start_ranged_constriction(*agent(), *mon, dur, CONSTRICT_BVC))
+            obvious_effect = true;
         return MON_AFFECTED;
     }
 
     case BEAM_ROOTS:
     {
-        const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
-        dprf("Roots duration: %d", turns);
-        grasp_with_roots(*agent(), *mon, turns);
-        obvious_effect = true;
+        const int dur = 3 + random_range(div_rand_round(ench_power, 22),
+                                         div_rand_round(ench_power, 16) + 1);
+        if (start_ranged_constriction(*agent(), *mon, dur, CONSTRICT_ROOTS))
+            obvious_effect = true;
         return MON_AFFECTED;
     }
 

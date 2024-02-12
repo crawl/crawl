@@ -719,15 +719,15 @@ static void _fix_missing_constrictions()
             continue;
 
         if (!h->constricting)
-            h->constricting = new actor::constricting_t;
-        if (h->constricting->find(m->mid) == h->constricting->end())
+            h->constricting = new vector<mid_t>;
+        if (!h->is_constricting(*m))
         {
             dprf("Fixing missing constriction for %s (mindex=%d mid=%d)"
                  " of %s (mindex=%d mid=%d)",
                  h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid,
                  m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid);
 
-            (*h->constricting)[m->mid] = 0;
+            h->constricting->push_back(m->mid);
         }
     }
 }
@@ -738,10 +738,10 @@ static void _marshall_constriction(writer &th, const actor *who)
     marshallInt(th, who->constricted_by);
     marshallInt(th, who->escape_attempts);
 
-    // Assumes an empty map is marshalled as just the int 0.
-    const actor::constricting_t * const cmap = who->constricting;
-    if (cmap)
-        marshallMap(th, *cmap, _marshall_as_int<mid_t>, _marshall_as_int<int>);
+    // Assumes an empty vector is marshalled as just the int 0.
+    const vector<mid_t> * const cvec = who->constricting;
+    if (cvec)
+        _marshall_iterator(th, cvec->begin(), cvec->end(), marshallInt);
     else
         marshallInt(th, 0);
 }
@@ -755,13 +755,35 @@ static void _unmarshall_constriction(reader &th, actor *who)
     who->constricted_by = unmarshallInt(th);
     who->escape_attempts = unmarshallInt(th);
 
-    actor::constricting_t cmap;
-    unmarshallMap(th, cmap, unmarshall_int_as<mid_t>, unmarshallInt);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NO_CONSTRICTION_DUR)
+    {
+        map<mid_t, int> cmap;
+        unmarshallMap(th, cmap, unmarshall_int_as<mid_t>, unmarshallInt);
 
-    if (cmap.size() == 0)
-        who->constricting = 0;
+        if (cmap.size() == 0)
+            who->constricting = 0;
+        else
+        {
+            vector<mid_t> cvec;
+            for (const auto &entry : cmap)
+                cvec.push_back(entry.first);
+
+            if (!cvec.empty())
+                who->constricting = new vector<mid_t>(cvec);
+        }
+    }
     else
-        who->constricting = new actor::constricting_t(cmap);
+    {
+        vector<mid_t> cvec;
+        unsigned int count = unmarshallInt(th);
+        for (unsigned int i = 0; i < count; ++i)
+            cvec.push_back(unmarshallInt(th));
+
+        if (!cvec.empty())
+            who->constricting = new vector<mid_t>(cvec);
+    }
+#endif
 }
 
 template <typename marshall, typename grid>

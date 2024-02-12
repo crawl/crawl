@@ -390,7 +390,7 @@ public:
     int res_acid() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
-    int res_constrict() const override;
+    bool res_constrict() const override;
     resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
@@ -534,7 +534,7 @@ public:
 
     void bind_melee_flags();
     void calc_speed();
-    bool attempt_escape(int attempts = 1) override;
+    bool attempt_escape() override;
     void struggle_against_net();
     void catch_breath();
     bool has_usable_tentacle() const override;

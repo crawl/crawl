@@ -6448,7 +6448,7 @@ int player::evasion(bool ignore_helpless, const actor* act) const
 {
     const int base_evasion = _player_evasion(ignore_helpless);
 
-    const int constrict_penalty = is_constricted() ? 3 : 0;
+    const int constrict_penalty = is_constricted() ? 10 : 0;
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
@@ -6677,18 +6677,12 @@ bool player::res_petrify(bool temp) const
            || cur_form(temp)->res_petrify();
 }
 
-int player::res_constrict() const
+bool player::res_constrict() const
 {
-    if (is_insubstantial())
-        return 3;
-
-    if (get_mutation_level(MUT_SPINY))
-        return 3;
-
-    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
-        return 3;
-
-    return 0;
+    return is_insubstantial()
+           || get_mutation_level(MUT_SPINY)
+           || player_equip_unrand(UNRAND_SLICK_SLIPPERS)
+           || you.duration[DUR_CONSTRICTION_IMMUNITY];
 }
 
 int player::willpower() const
@@ -7887,7 +7881,13 @@ void player::goto_place(const level_id &lid)
     ASSERT_RANGE(depth, 1, brdepth[where_are_you] + 1);
 }
 
-bool player::attempt_escape(int attempts)
+static int _constriction_escape_chance(int attempts)
+{
+    static int escape_chance[] = {40, 75, 100};
+    return escape_chance[min(3, attempts) - 1];
+}
+
+bool player::attempt_escape()
 {
     monster *themonst;
 
@@ -7896,23 +7896,26 @@ bool player::attempt_escape(int attempts)
 
     themonst = monster_by_mid(constricted_by);
     ASSERT(themonst);
-    escape_attempts += attempts;
+    escape_attempts += 1;
 
     const auto constr_typ = get_constrict_type();
     const string object
         = constr_typ == CONSTRICT_ROOTS ? "the roots'"
           : constr_typ == CONSTRICT_BVC ? "the zombie hands'"
                                         : themonst->name(DESC_ITS, true);
-    // player breaks free if (4+n)d13 >= 5d(8+HD/4)
-    const int escape_score = roll_dice(4 + escape_attempts, 13);
-    if (escape_score
-        >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
+
+    if (x_chance_in_y(_constriction_escape_chance(escape_attempts), 100))
     {
         mprf("You escape %s grasp.", object.c_str());
 
-        // Stun the monster to prevent it from constricting again right away.
+        // Stun the monster we struggled again and prevent the player from being
+        // constricted for several turns (so that they are guaranteed to be able
+        // to make it up the stairs after pulling away this way)
         if (constr_typ == CONSTRICT_MELEE)
-            themonst->speed_increment -= 5;
+        {
+            themonst->speed_increment -= 10;
+            you.duration[DUR_CONSTRICTION_IMMUNITY] = 20;
+        }
 
         stop_being_constricted(true);
 
@@ -8072,9 +8075,7 @@ static string _constriction_description()
         if (!cinfo.empty())
             cinfo += "\n";
 
-        cinfo += make_stringf("You are being %s by %s.",
-                              constrictor->constriction_does_damage(constr_typ) ?
-                                  "held" : "constricted",
+        cinfo += make_stringf("You are being constricted by %s.",
                               constrictor->name(DESC_A).c_str());
     }
 
@@ -8082,7 +8083,7 @@ static string _constriction_description()
     {
         for (const auto &entry : *you.constricting)
         {
-            monster *whom = monster_by_mid(entry.first);
+            monster *whom = monster_by_mid(entry);
             ASSERT(whom);
 
             if (whom->get_constrict_type() != CONSTRICT_MELEE)
