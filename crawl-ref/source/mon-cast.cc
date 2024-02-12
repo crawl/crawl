@@ -948,11 +948,12 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
     actor* foe = caster.get_foe();
     ASSERT(foe);
 
-    const int turns = 4 + random2avg(div_rand_round(
-                mons_spellpower(caster, SPELL_GRASPING_ROOTS), 10), 2);
+    const int pow = mons_spellpower(caster, SPELL_GRASPING_ROOTS);
+    const int turns = 1 + random_range(div_rand_round(pow, 20),
+                                       div_rand_round(pow, 12) + 1);
     dprf("Grasping roots turns: %d", turns);
     mpr("Roots burst forth from the earth!");
-    grasp_with_roots(caster, *foe, turns);
+    start_ranged_constriction(caster, *foe, turns, CONSTRICT_ROOTS);
 }
 
 static void _cast_regenerate_other(monster* caster)
@@ -4133,8 +4134,7 @@ static bool _target_and_justify_spell(monster &mons,
     if (victim
         && beem.can_knockback()
         && !victim->is_stationary()
-        && mons.is_constricting()
-        && mons.constricting->count(victim->mid))
+        && mons.is_constricting(*victim))
     {
         return false;
     }

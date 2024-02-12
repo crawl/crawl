@@ -182,17 +182,13 @@ string debug_constriction_string(const actor *act)
     if (act->constricting)
     {
         for (const auto &entry : *act->constricting)
-        {
-            s += make_stringf("Constricting %s for %d ticks.\n",
-                        _debug_mid_name(entry.first).c_str(), entry.second);
-        }
+            s += make_stringf("Constricting %s.\n", _debug_mid_name(entry).c_str());
     }
 
     if (act->constricted_by)
     {
-        s += make_stringf("Constricted by %s for %d ticks.\n",
-                _debug_mid_name(act->constricted_by).c_str(),
-                    actor_by_mid(act->constricted_by)->constricting->find(act->mid)->second);
+        s += make_stringf("Constricted by %s.\n",
+                          _debug_mid_name(act->constricted_by).c_str());
     }
     return s;
 }

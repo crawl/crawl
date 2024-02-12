@@ -2832,8 +2832,7 @@ spret dithmenos_shadow_step(bool fail)
 
     fail_check();
 
-    if (!you.attempt_escape(2))
-        return spret::success;
+    you.stop_being_constricted(false, "step");
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -5066,7 +5065,7 @@ void ru_draw_out_power()
     stop_being_held();
 
     // Escape constriction
-    you.stop_being_constricted(false);
+    you.stop_being_constricted(false, "burst");
 
     // cancel petrification/confusion/slow
     you.duration[DUR_CONF] = 0;
@@ -5186,8 +5185,7 @@ bool ru_power_leap()
         }
     }
 
-    if (!you.attempt_escape(2)) // returns true if not constricted
-        return true;
+    you.stop_being_constricted(false, "leap");
 
     if (cell_is_solid(beam.target) || monster_at(beam.target))
     {
@@ -5498,8 +5496,8 @@ bool uskayaw_line_pass()
         mpr("Something unexpectedly blocks you, preventing you from passing!");
     else
     {
+        you.stop_being_constricted(false, "dance");
         line_pass.fire();
-        you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
         player_did_deliberate_movement();
     }
@@ -6125,8 +6123,7 @@ spret wu_jian_wall_jump_ability()
         return spret::abort;
     }
 
-    if (!you.attempt_escape())
-        return spret::fail;
+    you.stop_being_constricted(false, "jump");
 
     // query for location:
     dist beam;
@@ -6253,7 +6250,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     behaviour_event(mons, ME_ALERT, &you);
     mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
     mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
-    mons->stop_being_constricted();
+    mons->stop_being_constricted(true);
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
     if (mons_is_elven_twin(mons))
@@ -6293,7 +6290,7 @@ void okawaru_end_duel()
             {
                 mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
                 mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
-                mi->stop_being_constricted();
+                mi->stop_being_constricted(true);
                 mi->set_transit(current_level_parent());
                 mi->destroy_inventory();
                 monster_cleanup(*mi);

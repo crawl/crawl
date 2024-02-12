@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constrict-type.h"
 #include "spl-cast.h"
 
 struct bolt;
@@ -17,4 +18,5 @@ bool backlight_monster(monster* mons);
 bool do_slow_monster(monster& mon, const actor *agent, int dur = 0);
 bool enfeeble_monster(monster &mon, int pow);
 spret cast_vile_clutch(int pow, bolt &beam, bool fail);
-void grasp_with_roots(actor &caster, actor &target, int turns);
+bool start_ranged_constriction(actor& caster, actor& target, int duration,
+                               constrict_type type);

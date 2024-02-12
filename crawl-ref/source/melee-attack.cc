@@ -3270,6 +3270,10 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_CRUSH:
+        // Works on 2/3 of hits
+        if (one_chance_in(3))
+            break;
+
         if (needs_message)
         {
             mprf("%s %s %s.",
