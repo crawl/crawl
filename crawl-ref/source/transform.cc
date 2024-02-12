@@ -2005,9 +2005,12 @@ void return_to_default_form()
         untransform();
     else
     {
-        const bool success = transform(0, you.default_form, true);
-        if (!success && you.form != transformation::none)
+        // Forcibly break out of forced forms at this point (since this should
+        // only be called in situations where those should end and transform()
+        // will refuse to do that on its own)
+        if (you.transform_uncancellable)
             untransform(true);
+        transform(0, you.default_form, true);
     }
     ASSERT(you.form == you.default_form);
 }
