@@ -2723,8 +2723,12 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
         damage_friendly += hit_points;
         // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
-        did_god_conduct(DID_BANISH, get_experience_level(),
-                        true /*possibly wrong*/, this);
+
+        if (agent->is_player())
+        {
+            did_god_conduct(DID_BANISH, get_experience_level(),
+                            true /*possibly wrong*/, this);
+        }
     }
     monster_die(*this, KILL_BANISHED, NON_MONSTER);
 
