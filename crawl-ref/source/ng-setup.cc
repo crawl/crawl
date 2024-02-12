@@ -540,7 +540,17 @@ static void _setup_generic(const newgame_def& ng,
 
     if (you.char_class == JOB_SHAPESHIFTER)
     {
-        set_default_form(transformation::beast, nullptr); // XXX: pass talisman?
+        const item_def* talisman = nullptr;
+        for (auto& item : you.inv)
+        {
+            if (item.is_type(OBJ_TALISMANS, TALISMAN_BEAST))
+            {
+                talisman = &item;
+                break;
+            }
+        }
+        ASSERT(talisman);
+        set_default_form(transformation::beast, talisman);
         set_form(transformation::beast, 1); // hacky...
     }
 

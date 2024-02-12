@@ -131,7 +131,7 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(transformation previous_trans) const;
+    virtual string transform_message(bool was_flying) const;
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -173,8 +173,6 @@ public:
 
     bool enables_flight() const;
     bool forbids_flight() const;
-    bool forbids_swimming() const;
-    virtual bool permits_liking_water() const { return !forbids_swimming(); }
 
     bool player_can_fly() const;
     bool player_can_swim() const;

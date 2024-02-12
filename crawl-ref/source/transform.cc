@@ -249,16 +249,22 @@ string Form::get_description(bool past_tense) const
  *
  * @return The message for turning into this form.
  */
-string Form::transform_message(transformation previous_trans) const
+string Form::transform_message(bool was_flying) const
 {
     // XXX: refactor this into a second function (and also rethink the logic)
     string start = "Buggily, y";
-    if (you.in_water() && player_can_fly())
+    if (!was_flying
+        && player_can_fly()
+        && feat_is_water(env.grid(you.pos())))
+    {
         start = "You fly out of the water as y";
-    else if (get_form(previous_trans)->player_can_fly()
+    }
+    else if (was_flying
              && player_can_swim()
              && feat_is_water(env.grid(you.pos())))
+    {
         start = "As you dive into the water, y";
+    }
     else
         start = "Y";
 
@@ -456,16 +462,6 @@ bool Form::forbids_flight() const
 }
 
 /**
- * Does this form disable swimming?
- *
- * @return Whether swimming is always impossible while in this form.
- */
-bool Form::forbids_swimming() const
-{
-    return can_swim == FC_FORBID;
-}
-
-/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -494,25 +490,6 @@ bool Form::player_can_swim() const
            || species::can_swim(you.species)
               && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
-}
-
-/**
- * Can the player survive in deep water when in the given form?
- *
- * Doesn't count flight or beogh water-walking.
- *
- * @return          Whether the player won't be killed when entering deep water
- *                  in that form.
- */
-bool Form::player_likes_water() const
-{
-    // Grey dracs can't swim, so can't statue form merfolk/octopodes
-    // -- yet they can still survive in water.
-    if (species::likes_water(you.species) && permits_liking_water())
-        return true;
-
-    // otherwise, you gotta swim to survive!
-    return player_can_swim();
 }
 
 /**
@@ -638,7 +615,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation /*previous_trans*/) const override
+    string transform_message(bool /*was_flying*/) const override
     {
         const bool singular = you.arm_count() == 1;
 
@@ -697,7 +674,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation previous_trans) const override
+    string transform_message(bool was_flying) const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
@@ -705,7 +682,7 @@ public:
 #endif
         if (you.species == SP_GARGOYLE)
             return "Your body stiffens and grows slower.";
-        return Form::transform_message(previous_trans);
+        return Form::transform_message(was_flying);
     }
 
     /**
@@ -736,13 +713,6 @@ public:
         // there's special casing in base_hand_name to get "fists"
         string hand = you.base_hand_name(true, true);
         return make_stringf("Stone %s", hand.c_str());
-    }
-
-    bool permits_liking_water() const override
-    {
-        // Statue form amphib species are still OK in water, despite
-        // not being able to swim.
-        return true;
     }
 };
 
@@ -843,7 +813,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation /*previous_trans*/) const override
+    string transform_message(bool /*was_flying*/) const override
     {
         return "Your flesh twists and warps into a mockery of life!";
     }
@@ -1184,7 +1154,7 @@ bool form_can_fly(transformation form)
  * Can the player swim, if in this form?
  *
  * (Swimming = traversing deep & shallow water without penalties; includes
- * floating (ice form) and wading forms (giants - currently just dragon form,
+ * swimming (snake form) and wading forms (giants - currently just dragon form,
  * which normally flies anyway...))
  *
  * DOES consider player state besides form.
@@ -1194,20 +1164,6 @@ bool form_can_fly(transformation form)
 bool form_can_swim(transformation form)
 {
     return get_form(form)->player_can_swim();
-}
-
-/**
- * Can the player survive in deep water when in the given form?
- *
- * Doesn't count flight or beogh water-walking.
- *
- * @param form      The form in question.
- * @return          Whether the player won't be killed when entering deep water
- *                  in that form.
- */
-bool form_likes_water(transformation form)
-{
-    return get_form(form)->player_likes_water();
 }
 
 // Used to mark transformations which override species intrinsics.
@@ -1518,7 +1474,7 @@ bool feat_dangerous_for_form(transformation which_trans,
         return true;
 
     if (feat == DNGN_DEEP_WATER)
-        return !you.can_water_walk() && !form_likes_water(which_trans);
+        return !you.can_water_walk() && !form_can_swim(which_trans);
 
     return false;
 }
@@ -1769,18 +1725,15 @@ void set_form(transformation which_trans, int dur)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int pow, transformation which_trans)
+static void _enter_form(int pow, transformation which_trans, bool was_flying)
 {
-    const transformation previous_trans = you.form;
-    const bool was_flying = you.airborne();
-
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
     // Give the transformation message.
-    mpr(get_form(which_trans)->transform_message(previous_trans));
+    mpr(get_form(which_trans)->transform_message(was_flying));
 
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
@@ -1878,12 +1831,6 @@ static void _enter_form(int pow, transformation which_trans)
  * @return                  If the player was transformed, or if they were
  *                          already in the given form, returns true.
  *                          Otherwise, false.
- *                          If just_check is set, returns true if the player
- *                          could enter the form (or is in it already) and
- *                          false otherwise.
- *                          N.b. that transform() can fail even when a
- *                          just_check run returns true; e.g. when Zin decides
- *                          to intervene. (That may be the only case.)
  */
 bool transform(int pow, transformation which_trans, bool involuntary)
 {
@@ -1926,16 +1873,18 @@ bool transform(int pow, transformation which_trans, bool involuntary)
         return true;
     }
 
+    const bool was_flying = you.airborne();
+
     if (you.form != transformation::none)
         untransform(true);
 
-    _enter_form(pow, which_trans);
+    _enter_form(pow, which_trans, was_flying);
 
     return true;
 }
 
 /**
- * End the player's transformation and return them to their normal
+ * End the player's transformation and return them to having no
  * form.
  * @param skip_move      If true, skip any move that was in progress before
  *                       the transformation ended.
@@ -2056,7 +2005,10 @@ void return_to_default_form()
         untransform();
     else
     {
-        if (you.form != transformation::none)
+        // Forcibly break out of forced forms at this point (since this should
+        // only be called in situations where those should end and transform()
+        // will refuse to do that on its own)
+        if (you.transform_uncancellable)
             untransform(true);
         transform(0, you.default_form, true);
     }

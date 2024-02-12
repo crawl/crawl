@@ -109,7 +109,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13,
     FormScaling().Base(27).Scaling(11), true, FormScaling().Base(9),
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_FORBID, true,
+    FC_DEFAULT, FC_DEFAULT, FC_FORBID, true,
     "", 0, "", "", "place yourself before", "stone",
     { { "slow and powerful", "Your actions are slow, but your melee attacks are powerful." },
       { "torment resistance 1", "You are resistant to unholy torment." } // same as MUT_TORMENT_RESISTANCE
