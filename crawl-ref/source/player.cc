@@ -1922,7 +1922,7 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
     //vampire alive makes you faster if not suppressed by chei
     else if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
-        mv -= 4;
+        mv -= 3;
 
     if (temp && you.duration[DUR_FROZEN])
         mv += 3;
@@ -3414,7 +3414,7 @@ static void _display_vampire_status()
         attrib.push_back("sense creatures from afar");
 
         if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
-            attrib.push_back("cover ground extremely quickly");
+            attrib.push_back("cover ground very quickly");
     }
 
     if (!attrib.empty())

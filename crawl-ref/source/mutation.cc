@@ -968,7 +968,7 @@ static vector<string> _get_fakemuts(bool terse)
             result.push_back(_formmut("You sense creatures from afar."));
 
             if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
-                result.push_back(_formmut("You cover ground extremely quickly."));
+                result.push_back(_formmut("You cover ground very quickly."));
         }
         else
         {
