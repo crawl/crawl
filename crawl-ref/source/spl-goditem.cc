@@ -960,8 +960,8 @@ spret cast_smiting(int pow, monster* mons, bool fail)
     // No direct divine intervention during apostle challenges
     if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
     {
-        simple_god_message(" booms, \"This is a trial of mortal prowess."
-                           " Fight with your own strength!\"");
+        simple_god_message(" booms: This is a trial of mortal prowess."
+                           " Fight with your own strength!");
         return spret::abort;
     }
 
