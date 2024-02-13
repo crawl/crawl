@@ -1196,6 +1196,13 @@ static bool _grab_follower_at(const coord_def &pos)
     if (!fol || !fol->alive() || fol->incapacitated())
         return false;
 
+    // Only friendlies can follow the player through portals
+    if (!fol->friendly() && (!is_connected_branch(you.where_are_you)
+                            || you.where_are_you == BRANCH_PANDEMONIUM))
+    {
+        return false;
+    }
+
     // The monster has to already be tagged in order to follow.
     if (!testbits(fol->flags, MF_TAKING_STAIRS))
         return false;
