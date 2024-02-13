@@ -1834,7 +1834,7 @@ Vampires (Vp)
   other hand, a Vampire who has revived themself gains powerful life-draining
   attacks, moves quickly and can sense their prey from afar, but will lose all
   undead powers and the ability to regenerate naturally. Unlike other undead
-  species, they may be mutated normally at all times.
+  species, they may mutate or shapeshift normally at all times.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.

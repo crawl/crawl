@@ -1530,15 +1530,12 @@ static int _transform_duration(transformation which_trans, int pow)
  *
  * @param which_trans   The transformation which the player is undergoing
  *                      (default you.form).
- * @param involuntary   Whether the transformation is involuntary or not.
- * @param temp                   Whether to factor in temporary limits, e.g. wrong blood level.
  * @return              UFR_GOOD if the player is not blocked from entering the
  *                      given form by their undead race; UFR_TOO_ALIVE if the
  *                      player is too satiated as a vampire; UFR_TOO_DEAD if
  *                      the player is too dead (or too thirsty as a vampire).
  */
-undead_form_reason lifeless_prevents_form(transformation which_trans,
-                                          bool involuntary, bool temp)
+undead_form_reason lifeless_prevents_form(transformation which_trans)
 {
     if (!you.undead_state(false)) // intentionally don't pass temp in here
         return UFR_GOOD; // not undead!
@@ -1555,16 +1552,7 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
     if (which_trans == transformation::death)
         return UFR_TOO_DEAD; // vampires can never lichform
 
-    if (which_trans == transformation::bat) // can batform bloodless
-    {
-        if (involuntary)
-            return UFR_TOO_DEAD; // but not as a forced polymorph effect
-
-        return !you.vampire_alive || !temp ? UFR_GOOD : UFR_TOO_ALIVE;
-    }
-
-    // other forms can only be entered when alive
-    return you.vampire_alive || !temp ? UFR_GOOD : UFR_TOO_DEAD;
+    return UFR_GOOD;
 }
 
 /**
@@ -1577,7 +1565,7 @@ string cant_transform_reason(transformation which_trans,
         return "You have sacrificed the ability to change form!";
 
     // the undead cannot enter most forms.
-    if (lifeless_prevents_form(which_trans, involuntary, temp) == UFR_TOO_DEAD)
+    if (lifeless_prevents_form(which_trans) == UFR_TOO_DEAD)
         return "Your unliving flesh cannot be transformed in this way.";
 
     if (SP_GARGOYLE == you.species && which_trans == transformation::statue)

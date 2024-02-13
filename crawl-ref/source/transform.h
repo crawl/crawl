@@ -302,9 +302,7 @@ enum undead_form_reason
     UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
     UFR_TOO_ALIVE = 1,
 };
-undead_form_reason lifeless_prevents_form(transformation form = you.form,
-                                          bool involuntary = false,
-                                          bool temp = true);
+undead_form_reason lifeless_prevents_form(transformation form = you.form);
 
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);

@@ -7734,7 +7734,7 @@ bool player::is_lifeless_undead(bool temp) const
 
 bool player::can_polymorph() const
 {
-    return !(transform_uncancellable || is_lifeless_undead());
+    return !(transform_uncancellable || undead_state() == US_UNDEAD);
 }
 
 bool player::can_bleed(bool temp) const
