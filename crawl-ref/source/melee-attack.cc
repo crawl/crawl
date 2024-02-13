@@ -1499,7 +1499,7 @@ bool melee_attack::player_gets_aux_punch()
            && get_form()->can_offhand_punch()
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
-           && (you.arm_count() <= 2 || you.has_usable_offhand());
+           && (you.arm_count() > 2 || you.has_usable_offhand());
 }
 
 bool melee_attack::player_aux_test_hit()
