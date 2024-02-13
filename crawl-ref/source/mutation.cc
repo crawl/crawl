@@ -763,8 +763,10 @@ static vector<string> _get_form_fakemuts(bool terse)
                     : "")));
 
     // immunity comes from form
+    // bloodless vampires already print their own message
     if (!terse && player_res_poison(false, true, false) == 3
-        && !player_res_poison(false, false, false))
+        && !player_res_poison(false, false, false)
+        && !(you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         // wispform has a fakemut that prints something more general
         if (you.form != transformation::wisp)
