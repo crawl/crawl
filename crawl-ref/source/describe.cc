@@ -2954,7 +2954,7 @@ string get_item_description(const item_def &item,
                 {
                     if (is_unrandom_artefact(item))
                     {
-                        description << "\nEnchanting this artifact any further "
+                        description << "\nEnchanting this artefact any further "
                             "is beyond even your skills.";
                     }
                 }
