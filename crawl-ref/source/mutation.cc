@@ -978,6 +978,9 @@ static vector<string> _get_fakemuts(bool terse)
             // generally for non-vampires
             result.push_back(_formmut("You are immune to poison."));
         }
+
+        if (!terse)
+            result.push_back(_formmut("Your bite is vampiric."));
     }
     else if (!terse && player_res_poison(false, false, false) == 3)
         result.push_back(_innatemut("You are immune to poison."));

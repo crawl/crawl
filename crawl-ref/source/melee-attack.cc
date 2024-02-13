@@ -4076,8 +4076,9 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 {
     ASSERT(you.has_mutation(MUT_VAMPIRISM));
 
-    if (!_vamp_wants_blood_from_monster(mon) ||
-        (!adjacent(defender->pos(), attack_position) && needs_bite_msg))
+    if (!_vamp_wants_blood_from_monster(mon)
+        || (!adjacent(defender->pos(), attack_position) && needs_bite_msg)
+        || !you.has_fangs())
     {
         return false;
     }
@@ -4085,13 +4086,13 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && you.form != transformation::bat)
     {
-        mprf("You bite %s, and draw %s blood!",
+        mprf("You bite %s, and draw %s life force!",
              mon->name(DESC_THE, true).c_str(),
              mon->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
     else
     {
-        mprf("You draw %s blood!",
+        mprf("You draw %s life force!",
              apostrophise(mon->name(DESC_THE, true)).c_str());
     }
 
@@ -4122,8 +4123,7 @@ bool melee_attack::apply_damage_brand(const char *what)
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.has_mutation(MUT_VAMPIRISM)
-           && actor_is_susceptible_to_vampirism(*mon, true)
-           && mons_has_blood(mon->type);
+           && actor_is_susceptible_to_vampirism(*mon, true);
 }
 
 string mut_aux_attack_desc(mutation_type mut)
