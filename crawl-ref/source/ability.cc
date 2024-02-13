@@ -2633,7 +2633,6 @@ void vampire_exsanguinate(bool force_end)
     you.vampire_alive = false;
     you.redraw_status_lights = true;
     mpr("You feel anemic as the last of your blood leaves you.");
-    vampire_update_transformations();
 
     you.attribute[ATTR_VAMP_BLOOD] = 0;
 
@@ -2650,7 +2649,6 @@ void vampire_revivify()
     you.vampire_alive = true;
     you.redraw_status_lights = true;
     mpr("Life gushes and overflows. You are reborn with a terrible thirst!");
-    vampire_update_transformations();
 
     //heal you for 20%-30% of your max health
     const int healing = you.hp_max / 5 + random2(you.hp_max / 10);

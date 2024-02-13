@@ -2110,21 +2110,6 @@ void set_default_form(transformation t, const item_def *source)
         you.active_talisman.clear();
 }
 
-void vampire_update_transformations()
-{
-    const undead_form_reason form_reason = lifeless_prevents_form();
-    if (form_reason != UFR_GOOD && you.duration[DUR_TRANSFORMATION])
-    {
-        print_stats();
-        update_screen();
-        mprf(MSGCH_WARN,
-             "Your blood-%s body can't sustain your transformation.",
-             form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
-        unset_default_form();
-        untransform();
-    }
-}
-
 // TODO: dataify? move to member functions?
 int form_base_movespeed(transformation tran)
 {
