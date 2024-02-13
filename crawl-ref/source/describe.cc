@@ -2950,8 +2950,19 @@ string get_item_description(const item_def &item,
             if (item.base_type == OBJ_ARMOUR
                 || item.base_type == OBJ_WEAPONS)
             {
-                description << "\nThis ancient artefact cannot be changed "
-                    "by magic or mundane means.";
+                if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
+                {
+                    if (is_unrandom_artefact(item))
+                    {
+                        description << "\nEnchanting this artifact any further "
+                            "is beyond even your skills.";
+                    }
+                }
+                else
+                {
+                    description << "\nThis ancient artefact cannot be changed "
+                        "by magic or mundane means.";
+                }
             }
             // Randart jewellery has already displayed this line.
             else if (item.base_type != OBJ_JEWELLERY
