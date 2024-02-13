@@ -665,6 +665,7 @@ bool melee_attack::handle_phase_hit()
         // parameters.
         do_passive_freeze();
         do_fiery_armour_burn();
+        do_foul_flame();
         emit_foul_stench();
     }
 
@@ -3497,6 +3498,21 @@ void melee_attack::do_spines()
             }
             attacker->hurt(defender, hurt, BEAM_MISSILE, KILLED_BY_SPINES);
         }
+    }
+}
+
+void melee_attack::do_foul_flame()
+{
+    monster* mon = attacker->as_monster();
+
+    if (you.has_mutation(MUT_FOUL_GLOW)
+        && attacker->alive()
+        && adjacent(you.pos(), mon->pos()))
+    {
+        const int mut = you.get_mutation_level(MUT_FOUL_GLOW);
+
+        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20))
+            foul_flame_monster(attacker->as_monster());
     }
 }
 
