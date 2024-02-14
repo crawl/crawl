@@ -2595,7 +2595,7 @@ bool monster::go_frenzy(actor *source)
 
     // Wake sleeping monsters.
     if (asleep())
-        behaviour_event(this, ME_ALERT, source, source->pos());
+        behaviour_event(this, ME_ALERT, source);
 
     if (has_ench(ENCH_SLOW))
     {
