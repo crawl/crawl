@@ -98,6 +98,7 @@ void beogh_dismiss_apostle(int slot);
 string get_apostle_name(int slot, bool with_title = false);
 bool beogh_apostle_is_alive(int slot);
 int get_num_apostles();
+bool apostle_has_unique_name(const monster& apostle);
 
 void beogh_swear_vegeance(monster& apostle);
 void beogh_follower_banished(monster& apostle);

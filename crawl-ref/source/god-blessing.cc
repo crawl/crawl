@@ -48,12 +48,7 @@ static bool _blessing_healing(monster* mon)
 
     // Heal a monster.
     if (mon->heal(healing + random2(healing + 1)))
-    {
-        // A high-HP monster might get a unique name.
-        if (x_chance_in_y(mon->max_hit_points + 1, 100))
-            give_monster_proper_name(*mon);
         return true;
-    }
 
     return false;
 }

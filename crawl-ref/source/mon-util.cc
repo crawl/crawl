@@ -32,6 +32,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -3009,6 +3010,12 @@ void define_monster(monster& mons, bool friendly)
 
         give_monster_proper_name(mons);
 
+        // Reroll our name until it is different from all player apostle names,
+        // to try and lessen possible confusion if they end up with two that
+        // have identical names.
+        while(!apostle_has_unique_name(mons))
+            give_monster_proper_name(mons);
+
         break;
     }
 
@@ -3244,30 +3251,12 @@ static string _get_proper_monster_name(const monster& mon)
     return getRandMonNameString(get_monster_data(mons_genus(mon.type))->name);
 }
 
-// Names a previously unnamed monster.
-bool give_monster_proper_name(monster& mon, bool orcs_only)
+// Names a monster (will rename it if it already had a name)
+bool give_monster_proper_name(monster& mon)
 {
-    // Already has a unique name.
-    if (mon.is_named())
-        return false;
-
-    // Since this is called from the various divine blessing routines,
-    // don't bless non-orcs, and normally don't bless plain orcs, either.
-    if (orcs_only)
-    {
-        if (mons_genus(mon.type) != MONS_ORC
-            || mon.type == MONS_ORC && !one_chance_in(8))
-        {
-            return false;
-        }
-    }
-
     mon.mname = _get_proper_monster_name(mon);
     if (!mon.props.exists(DBNAME_KEY))
         mon.props[DBNAME_KEY] = mons_class_name(mon.type);
-
-    if (mon.friendly())
-        take_note(Note(NOTE_RECRUITED_APOSTLE, 0, 0, mon.mname));
 
     return mon.is_named();
 }

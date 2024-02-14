@@ -850,6 +850,22 @@ bool beogh_apostle_is_alive(int slot)
     return apostles[slot].state != STATE_DEAD;
 }
 
+// Returns whether a given apostle has a name that does not appear among any of
+// the apostles the player currently has.
+bool apostle_has_unique_name(const monster& apostle)
+{
+    for (unsigned int i = 1; i < apostles.size(); ++i)
+    {
+        if (apostles[i].apostle.mons.name(DESC_PLAIN, true)
+            == apostle.name(DESC_PLAIN, true))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void beogh_swear_vegeance(monster& apostle)
 {
     bool already_avenging = you.duration[DUR_BEOGH_SEEKING_VENGEANCE];
