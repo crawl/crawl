@@ -671,7 +671,7 @@ bool ranged_attack::apply_missile_brand()
                                       atk_name(DESC_A));
         break;
     case SPMSL_CHAOS:
-        chaos_affects_defender();
+        obvious_effect = chaos_affects_actor(defender, attacker);
         break;
     case SPMSL_DISPERSAL:
     {

@@ -3067,7 +3067,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_CHAOTIC:
-        chaos_affects_defender();
+        obvious_effect = chaos_affects_actor(defender, attacker);
         break;
 
     case AF_STEAL:
@@ -3796,20 +3796,6 @@ int melee_attack::martial_damage_mod(int dam)
         dam = div_rand_round(dam * 8, 10);
 
     return dam;
-}
-
-void melee_attack::chaos_affect_actor(actor *victim)
-{
-    ASSERT(victim); // XXX: change to actor &victim
-    melee_attack attk(victim, victim);
-    attk.weapon = nullptr;
-    attk.fake_chaos_attack = true;
-    attk.chaos_affects_defender();
-    if (!attk.special_damage_message.empty()
-        && you.can_see(*victim))
-    {
-        mpr(attk.special_damage_message);
-    }
 }
 
 /**
