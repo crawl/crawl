@@ -2,7 +2,7 @@ enum: SP_MOUNTAIN_DWARF
 monster: MONS_DWARF
 name: Mountain Dwarf
 short_name: MD
-adjective: "Dwarvish"
+adjective: "Dwarven"
 genus: "Dwarf"
 difficulty: Simple
 difficulty_priority: 100
