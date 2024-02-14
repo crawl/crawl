@@ -586,6 +586,8 @@ static const vector<chaos_attack_type> chaos_types = {
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
       [](const actor &d) { return d.antimagic_susceptible(); } },
+    { AF_FOUL_FLAME, SPWPN_FOUL_FLAME,   2,
+      [](const actor &d) { return d.res_foul_flame() < 3; } },
 };
 
 brand_type attack::random_chaos_brand()
