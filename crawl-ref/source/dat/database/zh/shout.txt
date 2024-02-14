@@ -286,7 +286,7 @@ Earth Elementalist player ghost
 
 @player ghost@
 %%%%
-Venom Mage player ghost
+Alchemist player ghost
 
 @player ghost@
 %%%%
