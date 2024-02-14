@@ -1278,8 +1278,11 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
             continue; // this should be enough to avoid penance?
         if (mon && (mons_is_firewood(*mon) || mons_is_projectile(*mon)))
             continue;
-        if (!agent.can_see(**ai))
+        if (!agent.can_see(**ai)
+            || (agent.is_monster() && !monster_los_is_valid(agent.as_monster(), *ai)))
+        {
             continue;
+        }
 
         // If this was triggered by the Autumn Katana, don't hit the original
         // target a second time
