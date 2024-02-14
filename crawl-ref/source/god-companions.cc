@@ -51,6 +51,7 @@ companion::companion(const monster& m)
 void init_companions()
 {
     companion_list.clear();
+    apostles.clear();
 }
 
 void add_companion(monster* mons)
