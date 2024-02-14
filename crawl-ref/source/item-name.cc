@@ -3328,8 +3328,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        return !you.has_mutation(MUT_NO_GRASPING)
-            && !you.could_wield(item, true, !temp);
+        return you.has_mutation(MUT_NO_GRASPING)
+            || !you.could_wield(item, true, !temp);
 
     case OBJ_MISSILES:
         // All missiles are useless for felids.
