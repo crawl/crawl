@@ -3013,7 +3013,7 @@ void define_monster(monster& mons, bool friendly)
         // Reroll our name until it is different from all player apostle names,
         // to try and lessen possible confusion if they end up with two that
         // have identical names.
-        while(!apostle_has_unique_name(mons))
+        while (!apostle_has_unique_name(mons))
             give_monster_proper_name(mons);
 
         break;
