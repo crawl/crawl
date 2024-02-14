@@ -3004,7 +3004,7 @@ Dispater
 
 __NONE
 %%%%
-Earth Alchemy owner
+Alchemy Earth owner
 
 Roxanne
 
@@ -3028,13 +3028,13 @@ Vv
 
 __NONE
 %%%%
-highlevel Necromancy Alchemy owner
+highlevel Alchemy Necromancy owner
 
 Gloorx Vloq
 
 __NONE
 %%%%
-Necromancy Alchemy owner
+Alchemy Necromancy owner
 
 Cigotuvi
 
