@@ -407,6 +407,7 @@ static void _setup_innate_spells()
         for (int s = 0; s < NUM_SPELLS; ++s)
         {
             const spell_type spell = static_cast<spell_type>(s);
+	    const spschools_type typeflags = get_spell_disciplines(spell);
 
             if (!is_player_book_spell(spell)
                 || spellset.find(spell) != spellset.end()
@@ -416,6 +417,69 @@ static void _setup_innate_spells()
                 continue;
             }
 
+            switch (you.char_class)
+            {
+            case JOB_CONJURER:
+                if (!(typeflags & spschool::conjuration))
+                {
+                    continue;
+                }
+                break;
+            case JOB_ALCHEMIST:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+                if (!(typeflags & spschool::conjuration)
+                    && !(typeflags & spschool::alchemy)
+                    && !(typeflags & spschool::fire)
+                    && !(typeflags & spschool::ice)
+                    && !(typeflags & spschool::earth)
+                    && !(typeflags & spschool::air))
+                {
+                    continue;
+                }
+                break;
+            case JOB_HEXSLINGER:
+		if (!(typeflags & spschool::hexes)
+                    && !(typeflags & spschool::ice))
+                {
+                    continue;
+                }
+                break;
+            case JOB_SUMMONER:
+                if (!(typeflags & spschool::summoning)
+                    && !(typeflags & spschool::earth))
+                {
+                    continue;
+                }
+                break;
+            case JOB_NECROMANCER:
+                if (!(typeflags & spschool::necromancy))
+                {
+                    continue;
+                }
+                break;
+            case JOB_WARPER:
+                if (!(typeflags & spschool::translocation))
+                {
+                    continue;
+                }
+                break;
+            case JOB_ENCHANTER:
+                if (!(typeflags & spschool::hexes)
+                    && !(typeflags & spschool::necromancy)
+                    && !(typeflags & spschool::translocation)
+                    && !(typeflags & spschool::conjuration))
+                {
+                    continue;
+                }
+                break;
+
+            default:
+                break;
+            }
+
             const int lev = spell_difficulty(spell);
             if (lev >= min_lev[i] && lev <= max_lev[i]
                 && one_chance_in(++seen))
@@ -423,6 +487,56 @@ static void _setup_innate_spells()
                 next_spell = spell;
             }
         }
+	// patch missing spell configurations
+        if (you.char_class == JOB_SUMMONER && min_lev[i] == 2 && max_lev[i] == 2 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_SUMMON_ICE_BEAST;
+        }
+        if (you.char_class == JOB_HEXSLINGER && min_lev[i] == 7 && max_lev[i] == 8 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_INFESTATION;
+        }
+        if (you.char_class == JOB_HEXSLINGER && min_lev[i] == 9 && max_lev[i] == 9 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_SHATTER;
+        }
+        if (you.char_class == JOB_NECROMANCER && min_lev[i] == 2 && max_lev[i] == 2 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_MEPHITIC_CLOUD;
+        }
+        if (you.char_class == JOB_NECROMANCER && min_lev[i] == 6 && max_lev[i] == 7 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_IOOD;
+        }
+        if (you.char_class == JOB_NECROMANCER && min_lev[i] == 5 && max_lev[i] == 5 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_ISKENDERUNS_MYSTIC_BLAST;
+        }
+        if (you.char_class == JOB_NECROMANCER && min_lev[i] == 9 && max_lev[i] == 9 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_POLAR_VORTEX;
+        }
+        if (you.char_class == JOB_WARPER && min_lev[i] == 5 && max_lev[i] == 5 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_IRRADIATE;
+        }
+        if (you.char_class == JOB_WARPER && min_lev[i] == 6 && max_lev[i] == 7 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_SPELLFORGED_SERVITOR;
+        }
+        if (you.char_class == JOB_WARPER && min_lev[i] == 7 && max_lev[i] == 8 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_MAXWELLS_COUPLING;
+        }
+        if (you.char_class == JOB_WARPER && min_lev[i] == 8 && max_lev[i] == 9 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_CHAIN_LIGHTNING;
+        }
+        if (you.char_class == JOB_WARPER && min_lev[i] == 9 && max_lev[i] == 9 && next_spell == SPELL_NO_SPELL)
+        {
+            next_spell = SPELL_DRAGON_CALL;
+        }
+
         ASSERT(next_spell != SPELL_NO_SPELL);
         spellset.insert(next_spell);
         chosen_spells.push_back(next_spell);
