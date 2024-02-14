@@ -721,9 +721,16 @@ ENDMAP
 
 NAME:   dpeg_vaults_monster_doublerow
 TAGS:   vaults_hard
-WEIGHT: 1
-SUBST:  0 : 0000000z, z : z., 0 = 0009..
-KMONS:  z = human skeleton
+WEIGHT: 3
+MONS:   vault guard skeleton, necromancer, phantasmal warrior
+: local d = you.depth() + 1
+: mons("centaur warrior skeleton w:" .. 9 - d ..
+:      " / vault warden skeleton w:" .. d)
+: mons("necromancer w:" .. 7 - d .. " / deep elf death mage w:" .. d)
+: mons("phantasmal warrior w:" .. 7 - d .. " / flayed ghost w:" .. d)
+SUBST:  0 : 0000z
+NSUBST: 0 = 1:0 / 3:% / * = 0009..
+NSUBST: z = 2:1 / 2:2 / 1:3 / 3:% / * = 11113$..
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx00xx00xx00xx00xx00xx00xx
@@ -849,15 +856,17 @@ MAP
      .......
 ENDMAP
 
-NAME: nicolae_vaults_statue_guard
-TAGS: vaults_hard vaults_orient_e
-MONS: obsidian statue / orange crystal statue
-KPROP: % = no_tele_into
+NAME:  nicolae_vaults_statue_guard
+TAGS:  vaults_hard vaults_orient_e
+MONS:  obsidian statue / orange crystal statue
+KMONS: 2 = ironbound preserver / entropy weaver
+KITEM: 2 = %, %, $
 SUBST: % = %%%*
+KPROP: %*2 = no_tele_into
 MAP
 xxxx......xx
 x%%x....x..x
-x%%1....m.(.
+x%21....m.(.
 x%%x....x..x
 xxxx......xx
 ENDMAP
@@ -1152,10 +1161,9 @@ ENDMAP
 
 ####
 
-NAME: lightli_bank_vault
-TAGS: vaults_hard vaults_orient_s
-MONS: vault guard
-KMONS: 2 = vault guard
+NAME:  lightli_bank_vault
+TAGS:  vaults_hard vaults_orient_s
+KMONS: 12 = vault guard
 KMONS: 3 = vault warden
 KITEM: 23 = $
 KFEAT: ^ = alarm trap
@@ -1185,14 +1193,14 @@ KITEM:  12 = gold
 KFEAT:  B = altar_gozag
 KFEAT:  D = granite_statue
 KFEAT:  G = metal_statue
+KFEAT:  _ = antiques shop name:Gozag greed:100 /\
+            antique weapon shop name:Gozag greed:100 /\
+            antique armour shop name:Gozag greed:100
 TILE:   GD = dngn_golden_statue
 : set_feature_name("metal_statue", "golden statue")
 COLOUR: cGD = yellow
 FTILE:  $|B}+nc12-D = floor_limestone
 FTILE:  " = floor_hall
-KFEAT:  _ = antiques shop name:Gozag greed:100 /\
-            antique weapon shop name:Gozag greed:100 /\
-            antique armour shop name:Gozag greed:100
 MAP
 ...............
 .G.""c+++c"".G.
@@ -1258,7 +1266,7 @@ NAME: nicolae_vaults_holding_cells
 TAGS: vaults_hard
 WEIGHT: 5
 KMONS: P = human ; nothing / orc ; nothing / elf ; nothing / troll ; nothing / \
-       centaur ; nothing / kobold ; nothing
+           centaur ; nothing / kobold ; nothing
 KFEAT: g = iron_grate
 KFEAT: ^ = alarm trap
 KMONS: 1 = vault guard

@@ -1503,7 +1503,7 @@ ENDMAP
 NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body, necrophage, ghoul
+MONS:    bog body, small abomination, ghoul
 KFEAT:   % = shallow_water / .
 SUBST:   jl = t
 SHUFFLE: jJ / lL, })
@@ -1602,7 +1602,8 @@ ENDMAP
 
 NAME:    st_shrine_of_shade
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, ghost crab
+MONS:    bog body w:20 / small abomination w:5 / ghoul w:5 / nothing w:25
+MONS:    ghost crab
 KMONS:   P = withered plant
 SUBST:   p = Pp, p = PP., o = P..
 MAP
@@ -3191,7 +3192,7 @@ SHUFFLE: ab, 12
 SUBST:   a = c, b = ', " = ttw, ` = tt`
 SUBST:   u = wwwwwWWWWxxx., ' = W....
 NSUBST:  1 = 2:. / 2:1 / * = 1111.
-NSUBST:  2 = 2:. / 2:2 / * = 2222.
+NSUBST:  2 = 3:. / 2:2 / * = 2222.
 SUBST:   3 = 3333.
 CLEAR:   `
 MAP
@@ -3500,8 +3501,8 @@ KITEM:   o = mossy gem
 KITEM:   O = decaying rune of Zot
 KFEAT:   1 = . w:20 / shallow_water
 SHUFFLE: Oo / Pp / Qq
-SUBST:   PQ = *, pq = .
-SUBST:   1 = 111'', % = %'
+SUBST:   PQ = *, pq = ., % = %'
+NSUBST:  1 = 5:1 / 2:' / * = 111''
 SUBST:   ' = .....WWW, - = ..wwwWW, T = .wWtt, C = ccct
 MAP
    tt  tt
@@ -3552,8 +3553,8 @@ KFEAT:   - = altar_yredelemnul
 KFEAT:   E = x
 SHUFFLE: Oo / Nn
 SUBST:   N = %, n = ., x = xxxxxxttT
-NSUBST:  1 = 7:1 / 7 = 1. / * = .W, 3 = 6:5 / 7:3 / 7 = 3. / *:.
-NSUBST:  6 = 3:6 / 3 = 6. / ., P = 3=' / ppW
+NSUBST:  1 = 6:1 / 6 = 1. / * = .W, 3 = 5:5 / 7:3 / 7 = 3. / *:.
+NSUBST:  6 = 2:6 / 3 = 6. / ., P = 3=' / ppW
 SUBST:   3 = 2344, . = ...W
 KPROP:   q = bloody
 TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD
@@ -3606,7 +3607,7 @@ KITEM:  R = mossy gem
 KITEM:  O = decaying rune of Zot
 KFEAT:  B = stone_arch
 KFEAT:  a = c
-NSUBST: ' = 14:4 / 4 = 4. / * = W:55 .:20
+NSUBST: ' = 16:4 / 6 = 4. / * = W:55 .:20
 SUBST:  4 = 004449, b = baaaa
 MARKER: B = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \

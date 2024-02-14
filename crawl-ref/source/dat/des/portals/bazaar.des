@@ -14,17 +14,13 @@
 
 lua {{
 
-function place_bazaar_portal(e, perm)
+function place_bazaar_portal(e)
   e.tags("bzr_entry")
   e.kfeat("O = enter_bazaar")
-  if perm then
-     e.lua_marker('O', bazaar_portal(false))
-  else
-     e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
-  end
+  e.lua_marker('O', bazaar_portal)
 end
 
-function bazaar_portal(timed)
+function bazaar_portal()
   local messager =
     timed_msg {
       initmsg = { "You hear coins being counted.",
@@ -37,16 +33,13 @@ function bazaar_portal(timed)
     }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
-  if timed then
-    return timed_marker {
-                  low=blow, high=bhigh, msg=messager, single_timed=true,
-                  disappear='The gate to the bazaar disappears!',
-                  desc = "flickering gateway to a bazaar",
-                  floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
-              }
-  else
-    return one_way_stair { floor = 'stone_arch' }
-  end
+
+  return timed_marker {
+               low=blow, high=bhigh, msg=messager, single_timed=true,
+               disappear='The gate to the bazaar disappears!',
+               desc = "flickering gateway to a bazaar",
+               floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
+  }
 end
 
 local tilesets = {
@@ -249,13 +242,11 @@ ENDMAP
 
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
-KPROP:  O = no_tele_into
-SUBST:  G = G111
 MONS:   orange crystal statue / obsidian statue / ice statue
-: place_bazaar_portal(_G, true)
+: place_bazaar_portal(_G)
 MAP
  @
-cGc
+c1c
 cOc
 ccc
 ENDMAP

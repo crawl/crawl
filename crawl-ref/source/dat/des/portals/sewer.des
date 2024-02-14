@@ -1366,8 +1366,8 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
 : else
-KMONS:   34 = kobold brigand / necrophage
-KMONS:   5 = phantom / necrophage
+KMONS:   34 = kobold brigand / kobold brigand zombie
+KMONS:   5 = phantom / crocodile skeleton
 KFEAT:   B = altar_kikubaaqudgha
 SUBST:   F : VY
 : end

@@ -2588,18 +2588,18 @@ ORIENT: northeast
 KMONS: P = plant
 MONS: bullfrog / cane toad, water moccasin / black mamba, hydra
 FTILE: _ = floor_dirt
-SUBST: P = ..P, - = .:1 x
-NSUBST: " = 1:3 / 4:P / 3=P. / 2:. / 2=.W / *:W
+SUBST: P = ..P, p = P, - = .:1 x
+NSUBST: " = 4:P / 3=P. / 2:. / 2=.W / *:W
 NSUBST: ; = 3=12 / 2=12.. / 2:. / 2=.W / *:W
 NSUBST: ` = 1:1 . 1:2 / 1=12.., ' = 1=|* / 1=*% / *:%
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwxxxxxxxxxxxxxxxxxxx
-PwwwwPPP;-;;+;;+."""""xx
-PwwwwwPP;-;;-;;x".""""xx
+PwwwwPPP;-;;+;;+p"""""xx
+PwwwwwPP;-;;-;;xp.""""xx
 PwwwwwwP;-+---;x".""""xx
 @PwwwwwPP;;;-;;x""."""xx
-.PwwwwwwP``;-;;x""".."xx
+.PwwwwwwP``;-;;x"""..3xx
 ..Pwwwwww``;---xxxxxx.xx
 ..Pwwwwwww.P;;;;PPPx''xx
  ..Pwwwwww_wwwPPPPPx''xx
@@ -2960,7 +2960,7 @@ KMONS:   P = plant
 KITEM:   % = any, any
 KITEM:   *| = gold, gold, gold / maw talisman / maw talisman randart w:2, \
               any good_item
-NSUBST:  2 = 2:22334 / *:3, 8 = 1:8 / *:.
+NSUBST:  2 = 3:22334 / *:3, 8 = 1:8 / *:.
 SHUFFLE: %'*" / %'"|
 SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP.
 SUBST:   H = 3:3 4:1, 0 = 2
@@ -2999,22 +2999,23 @@ ENDMAP
 
 # One of the three dragon's lair end vaults,
 # and the most dragon-focused of them.
-NAME:   guppyfry_lair_end_dragon
-TAGS:   patrolling no_monster_gen no_pool_fixup
-PLACE:  Lair:$
-ORIENT: southeast
-MONS:   rime drake / swamp drake / acid dragon / steam dragon
-MONS:   basilisk / komodo dragon, iguana
-MONS:   fire dragon / ice dragon, swamp dragon
-KMONS:  P = plant
-SUBST:  - = wwWW....%Ptt233, W = WWW., ? = 12**
+NAME:    guppyfry_lair_end_dragon
+TAGS:    patrolling no_monster_gen no_pool_fixup
+PLACE:   Lair:$
+ORIENT:  southeast
+MONS:    rime drake w:12 / swamp drake / acid dragon / steam dragon
+MONS:    basilisk / komodo dragon, iguana
+MONS:    fire dragon / ice dragon, swamp dragon
+KMONS:   P = plant
+SUBST:   - = wwWW....%Ptt233, W = WWW., ? = 12**
+SHUFFLE: 45
 : lair_small_ending(_G)
 MAP
 @..@..@..xxxxxxxxxxxxxxxxx
 xPWW-P.xxxxttttttttttxxxxx
 xttWW-ttttttttPWW-R.ttxxxx
 xtttW-tt.tttt-WwwWP.1ttxxx
-xtttWWtt...t--WwwwW-.tttxx
+xtttWWtt...t--WwwwW-1tttxx
 xtt1Wttt1.tt.WWttPWW.-tttx
 xttWw-tP.t..Wttt--WWW.tttx
 xxttWWt-1t..W--ttPWwwWttxx
@@ -3023,14 +3024,14 @@ xxtt--WttP.wWtttWwwwwWtttx
 xttP.tWWttwWPtt.WWWwwWttxx
 xttt.ttWww-.ttttPWwwwWtttx
 xxttP.P-W-.tt%?$.WwwW.ttxx
-xxtt...PWWttt*%.WwwW.ttxxx
-xxttt.t.-Wtt45*.WwwW.ttxxx
-xttttt..Wwttt*%..WW.tttxxx
+xxtt...PWWttt4%.WwwW.ttxxx
+xxttt.t.-Wtt***.WwwW.ttxxx
+xttttt..Wwttt5%..WW.tttxxx
 xxxxtt..-WWtt%?$.WwWW.ttxx
 xxxxxtt..-WWtttPWWwW..ttxx
 xxxxxxtt..PWWttWWwW.tttxxx
 xxxxxxxttt1.WWttWW..ttxxxx
-xxxxxxxxttt.WwwwWP-ttxxxxx
+xxxxxxxxttt1WwwwWP-ttxxxxx
 xxxxxxxxxtt.-WwW..ttttxxxx
 xxxxxxxxxttttWW-.tttxxxxxx
 xxxxxxxxxxtttttttttxxxxxxx
@@ -3466,16 +3467,14 @@ MONS:    deep troll shaman, dire elephant / hydra / lindwurm
 MONS:    catoblepas, death yak band
 MONS:    elephant, wolf, black bear / polar bear
 KMONS:   P = plant / fungus w:2 / bush w:1
+ITEM:    human skeleton / orc skeleton / elf skeleton / dwarf skeleton /\
+         ogre skeleton w:1 / naga skeleton w:1 / minotaur skeleton w:1 /\
+         merfolk skeleton w:1
 KITEM:   R = earthy gem
 SHUFFLE: 567
 SUBST:   C = cx.., P = P .:9 t:1
 NSUBST:  % = 2:| / 3:* / *:%
-NSUBST:  5 = 2:5 / 3 = 5. / *:.
-NSUBST:  6 = 3:6 / 4 = 6. / *:.
-NSUBST:  7 = 1:7 / 2 = 7. / *:.
-ITEM:    human skeleton / orc skeleton / elf skeleton / dwarf skeleton /\
-         ogre skeleton w:1 / naga skeleton w:1 / minotaur skeleton w:1 /\
-         merfolk skeleton w:1
+NSUBST:  5 = 3:5 / 3 = 5. / *:., 6 = 3:6 / 4 = 6. / *:., 7 = 2:7 / 2 = 7. / *:.
 MAP
                 xxxxxxxxxxxxxx
           xxxxxxx5P.Pxxxxxxxxx

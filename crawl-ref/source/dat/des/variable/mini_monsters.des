@@ -1236,8 +1236,8 @@ KFEAT:   !O = c
 SHUFFLE: pqrs/O!!O/!O!O/!!O!
 SUBST:   pqrs = O
 : nsubst( "1 = " .. you.depth() .. "=1 / 1=1. / ." )
-TILE:    ! = DNGN_TRANSPARENT_STONE_WHITE
-TILE:    O = DNGN_TRANSPARENT_STONE_DARKGRAY
+TILE:    ! = WALL_STONE_SMOOTH
+TILE:    O = DNGN_STONE_DARK
 COLOUR:  ! = white
 COLOUR:  O = magenta
 MAP
@@ -2340,6 +2340,34 @@ bb......bb
    b++b
 ENDMAP
 
+NAME:   cheibrodos_lost_city_excavation
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:11-, Depths
+: if you.in_branch("D") then
+MONS:   deep elf pyromancer w:8 / fire elemental w:5
+MONS:   arcanist / occultist
+: else
+MONS:   occultist / sun demon, lich
+: end
+ITEM:   randbook / any scroll
+NSUBST: 1 = 1:1 / 1:. / * = 1.
+SUBST:  - = .lx
+MAP
+llllll
+llllllllll
+.l-x-llllllllllllll
+@.+1xlxx-lllllllllll
+.lx.-l-1xlxx-lxxxxll
+lll.llx...+1xlxddxll
+llx.xlll.l-.xlx22xll
+ll+1.l-x.lx..lx..xll
+llx--..1+l-.xlx..xll
+llllll-xxlx1+.+..xll
+llllllllll-xxlxxxxll
+    llllllllllllllll
+        lllllllllll
+ENDMAP
+
 NAME:  minmay_a_box_with_orc_wizards_in_it
 TAGS:  transparent
 DEPTH: D:4-7
@@ -3047,7 +3075,7 @@ ENDMAP
 NAME:   roderic_carrion_pond
 TAGS:   no_monster_gen no_trap_gen transparent extra
 DEPTH:  Lair:2-, !Lair:$, Swamp
-MONS:   necrophage, bloated husk
+MONS:   vampire mosquito, bloated husk
 NSUBST: ' = 1:1 / 2:. / * = 111.
 : if you.in_branch("Swamp") then
 SUBST:  1 = 2
@@ -3657,7 +3685,7 @@ ENDMAP
 
 # Another Ice Statue vault
 NAME:  ice2_lemuel
-TAGS:  no_pool_fixup no_monster_gen no_descent
+TAGS:  no_pool_fixup no_monster_gen no_descent patrolling
 DEPTH: D:12-, Depths, !Depths:$, Lair:2-
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
@@ -5188,16 +5216,17 @@ MAP
      cc***cc
      ccc+ccc
     cc8.8.8cc
-    c.......c
+    cc.....cc
+    cccc=cccc
    cc.......cc
    c9.9.9.9.9c
   cc.........cc
-  c...........c
+  cccccc=cccccc
  cc...........cc
  c.............c
 cc0.0.0.0.0.0.0cc
 c...............c
-cccccccc=cccccccc
+cccccccc+cccccccc
 ENDMAP
 
 NAME: lightli_airlock
@@ -7537,7 +7566,7 @@ ENDMAP
 # Places an early-ish talisman with corresponding monsters and scenery
 NAME:  hellmonk_talismancer
 TAGS:  transparent no_item_gen patrolling
-DEPTH: D:12-, Lair:2-, Orc:1
+DEPTH: D:12-, Lair:2-, Orc:$
 : local r = 0
 : if you.branch() == "Lair" then
 :   r = crawl.random_range(1, 4)
@@ -9129,7 +9158,7 @@ WEIGHT: 3
 ITEM:   dagger randart ego:pain ident:type no_pickup, w:30 book of necromancy / w:5 book of decay \
         / w:5 book of death
 KMONS:  p = withered plant
-MONS:   skeleton / zombie, spectral thing / simulacrum, necrophage, phantom
+MONS:   skeleton / zombie, spectral thing / simulacrum, weeping skull, phantom
 MONS:   wraith
 : if you.depth() < 5 then
 KMONS:  D = natasha, phantom
@@ -10100,14 +10129,14 @@ NAME:    hangedman_stone_soup
 DEPTH:   D:10-14
 TAGS:    extra patrolling no_rotate no_vmirror
 # Branch representatives working together to cook some soup:
-# D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
+# D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Pan.
 KMONS:   A = kobold
 KMONS:   B = orc
 KMONS:   C = deep elf pyromancer / deep elf zephyrmancer
 KMONS:   D = spriggan
 KMONS:   E = merfolk
 KMONS:   F = human
-KMONS:   G = necrophage
+KMONS:   G = vampire
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
