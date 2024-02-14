@@ -188,7 +188,7 @@ Word of Recall cast
 %%%%
 Call Lost Soul cast
 
-@The_monster@召唤出一个不安分的灵魂！
+@The_monster@召唤出不安分的灵魂！
 %%%%
 Haste Plants cast
 
@@ -286,6 +286,14 @@ Acid Splash cast
 unseen Acid Splash cast
 
 你听到喷吐的声音。
+%%%%
+Ensnare natural cast
+
+@The_monster@排出一串黏性的网。
+%%%%
+unseen Ensnare natural cast
+
+稀薄的空气中冒出一串黏性的网。
 %%%%
 unseen Cold Breath cast
 
@@ -402,6 +410,13 @@ Weakening Gaze cast
 ########################################################################
 # 独特的怪物
 ########################################################################
+%%%%
+March of Sorrows Boris cast
+
+@The_monster@[发|投射]出其受害者的悲伤。
+
+w:5
+@The_monster@朗诵着其受害者的[挽歌|痛苦]。
 %%%%
 Cantrip Dissolution cast
 
@@ -723,6 +738,40 @@ golden eye cast targeted
 
 @The_monster@闪烁的目光@at@ @target@。
 %%%%
+weeping skull cast
+
+@The_monster@[倾泻出|宣泄出]不绝于耳的抽泣声。
+
+@The_monster@的痛苦[倾泻而出|满溢而出]。
+%%%%
+silent weeping skull cast
+
+@The_monster@的痛苦[倾泻而出|满溢而出]。
+%%%%
+unseen weeping skull cast
+
+你听到不绝于耳的抽泣声。
+%%%%
+laughing skull cast
+
+@The_monster@恶意地咯咯笑。
+
+@The_monster@不屑一顾地胡言乱语。
+
+@The_monster@发出恶毒的轰然大笑。
+%%%%
+silent laughing skull cast
+
+@The_monster@嘲弄地无声咯咯笑。
+
+@The_monster@欢快、猛烈地发出咯咯声。
+%%%%
+unseen laughing skull cast
+
+你听到恶意的咯咯笑声。
+
+你听到不屑一顾的胡言乱语。
+%%%%
 Death Rattle ushabti cast
 
 @The_monster@摇晃着，嘎嘎作响。
@@ -827,6 +876,10 @@ kobold blastminer cast targeted
 
 @The_monster@用火铳释出的爆炸@at@ @target@。
 %%%%
+burial acolyte cast
+
+@The_monster@[低沉单调地唱|吟诵]着一首挽歌。
+%%%%
 ########################################################################
 # 怪物的种族和属的消息
 ########################################################################
@@ -917,6 +970,14 @@ Corrupting Pulse wretched star cast
 living spell cast
 
 @The_monster@投射出自身@at@ @target@。
+%%%%
+bombardier beetle cast
+
+@The_monster@喷出的可燃液体@at@ @target@。
+%%%%
+sun moth cast
+
+@The_monster@猛烈地扑打着翅膀。
 ###########################################################################
 # 牧师和巫师的通用消息，这些消息已被改动为可适用于没有手的东西。
 ###########################################################################
