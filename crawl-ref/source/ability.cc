@@ -2636,8 +2636,10 @@ void vampire_exsanguinate(bool force_end)
 
     you.attribute[ATTR_VAMP_BLOOD] = 0;
 
-    you.increase_duration(DUR_WEAK,
-                          roll_dice(2, 12) + 12, 50);
+    you.increase_duration(DUR_WEAK,roll_dice(2, 12) + 12, 50);
+
+    //expel poison
+    you.duration[DUR_POISONING] = 0;
 
 #ifdef USE_TILE
     init_player_doll();
