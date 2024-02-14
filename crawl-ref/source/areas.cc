@@ -595,8 +595,11 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_EOS))
+    if (player_equip_unrand(UNRAND_EOS)
+        || player_equip_unrand(UNRAND_BRILLIANCE))
+    {
         size = max(size, 3);
+    }
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
@@ -636,8 +639,11 @@ int monster::halo_radius() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
+    if (weap && (is_unrandom_artefact(*weap, UNRAND_EOS)
+                 || is_unrandom_artefact(*weap, UNRAND_BRILLIANCE)))
+    {
         size = 3;
+    }
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = 3;

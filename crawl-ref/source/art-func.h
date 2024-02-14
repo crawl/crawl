@@ -729,6 +729,17 @@ static void _EOS_unequip(item_def */*item*/, bool */*show_msgs*/)
 }
 
 ///////////////////////////////////////////////////
+static void _BRILLIANCE_equip(item_def */*item*/, bool */*show_msgs*/, bool /*unmeld*/)
+{
+    invalidate_agrid(true);
+}
+
+static void _BRILLIANCE_unequip(item_def */*item*/, bool */*show_msgs*/)
+{
+    invalidate_agrid(true);
+}
+
+///////////////////////////////////////////////////
 static void _SHADOWS_equip(item_def */*item*/, bool */*show_msgs*/, bool /*unmeld*/)
 {
     invalidate_agrid(true);

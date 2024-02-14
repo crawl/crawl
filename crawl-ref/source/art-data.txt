@@ -408,19 +408,16 @@ BOOL:    poison, skip_ego, nogen
 WILL:    1
 # end TAG_MAJOR_VERSION
 
-# start TAG_MAJOR_VERSION == 34
 NAME:    eveningstar "Brilliance"
 OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
 PLUS:    +1
-COLOUR:  ETC_HOLY
+INSCRIP: Halo
+COLOUR:  ETC_FOUL_FLAME
 TILE:    urand_brilliance
 TILE_EQ: mace_of_brilliance
-BRAND:   SPWPN_HOLY_WRATH
-AC:      5
-INT:     5
-LIFE:    1
-BOOL:    nogen
-# end TAG_MAJOR_VERSION
+BRAND:   SPWPN_FOUL_FLAME
+DESCRIP: Halo:      It grants its wielder a halo, revealing invisible creatures
+ and increasing accuracy against all within it other than the wielder.
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE

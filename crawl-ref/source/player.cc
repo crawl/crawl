@@ -4935,8 +4935,11 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
     {
         vector<string> sources;
 
-        if (temp && player_equip_unrand(UNRAND_EOS))
+        if (temp && (player_equip_unrand(UNRAND_EOS)
+                     || player_equip_unrand(UNRAND_BRILLIANCE)))
+        {
             sources.push_back("weapon");
+        }
 
         if (temp && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
             sources.push_back("orb");
