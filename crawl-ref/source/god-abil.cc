@@ -1486,14 +1486,7 @@ bool yred_light_the_torch()
     // Note: You are given 'hidden' internal torchlight charges even below the
     // piety threshold to hurl torchlight, in case you gain that ability on the
     // current floor.
-    if (you.piety >= piety_breakpoint(4))
-        you.props[YRED_TORCH_POWER_KEY] = 5;
-    if (you.piety >= piety_breakpoint(3))
-        you.props[YRED_TORCH_POWER_KEY] = 4;
-    if (you.piety >= piety_breakpoint(2))
-        you.props[YRED_TORCH_POWER_KEY] = 3;
-    else
-        you.props[YRED_TORCH_POWER_KEY] = 2;
+    you.props[YRED_TORCH_POWER_KEY] = min(5, max(piety_rank(), 2));
 
     // Mark the torch as having been used on this level
     you.props[YRED_TORCH_USED_KEY].get_table()
