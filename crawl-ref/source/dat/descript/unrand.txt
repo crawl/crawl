@@ -108,12 +108,17 @@ scimitar of Flaming Death
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
 covering opponents in magical flame.
 %%%%
-# TAG_MAJOR_VERSION == 34
 eveningstar "Brilliance"
 
-A brightly shining eveningstar. It illuminates the dungeon's recesses, but its
-halo may alert enemies to your presence. Its light is hated by the undead, and
-reveals the machinations of those who would prefer to stay invisible.
+Soon after their fall, Yredelemnul attempted to twist holy energy into a mockery
+of itself, turning it against its progenitors and weakening it against undead
+and demons. They found out too late that such energy was uncontrollable without
+strict adherence to holy law; the foul flame they produced destabilised or
+destroyed everything it was infused into, except for several demonic test
+subjects and one stolen holy weapon.
+
+This is that weapon: an eveningstar that has never lost its bright shine, even
+though its light now repulses the ones it used to comfort...
 %%%%
 demon blade "Leech"
 
