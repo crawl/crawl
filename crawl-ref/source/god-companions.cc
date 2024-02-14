@@ -883,6 +883,9 @@ void beogh_swear_vegeance(monster& apostle)
     {
         monster* mon = monster_at(*ri);
         if (mon && !mon->wont_attack() && !mons_is_firewood(*mon)
+            // This isn't redundant with wont_attack here, but additionally
+            // prevents marking frenzied apostles
+            && mon->attitude != ATT_FRIENDLY
             && !mon->is_summoned() && !mons_is_conjured(mon->type)
             && !mon->has_ench(ENCH_VENGEANCE_TARGET))
         {
