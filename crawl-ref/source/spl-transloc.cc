@@ -1367,10 +1367,11 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
 
         // Stop further attacks if we somehow died in the process.
         // (Unclear how this is possible?)
-        if (agent.is_player() && you.hp <= 0 || you.pending_revival)
+        if (agent.is_player() && (you.hp <= 0 || you.pending_revival)
+            || agent.is_monster() && !agent.alive())
+        {
             break;
-        else if (agent.is_monster() && !agent.alive())
-            break;
+        }
     }
 
     if (animate)
