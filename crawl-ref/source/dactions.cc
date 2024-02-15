@@ -200,6 +200,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_ALLY_HEPLIAKLQANA:
+            // Skip this if we have since regained enough piety to get our
+            // ancestor back.
+            if (you_worship(GOD_HEPLIAKLQANA) && piety_rank() >= 1)
+                break;
+
             simple_monster_message(*mon, " returns to the mists of memory.");
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
@@ -210,6 +215,10 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_OLD_CHARMD_SOULS_POOF:
+            // Skip if this is our CURRENT bound soul (ie: in our companion list)
+            if (companion_list.count(mon->mid))
+                break;
+
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);

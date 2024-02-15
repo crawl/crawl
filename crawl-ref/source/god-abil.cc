@@ -1701,8 +1701,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     ASSERT(mon); // XXX: change to monster &mon
     ASSERT(mon->has_ench(ENCH_SOUL_RIPE));
 
-    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_bound_soul_companion();
+    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
