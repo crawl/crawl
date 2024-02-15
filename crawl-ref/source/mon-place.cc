@@ -807,7 +807,10 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             else if (mon->type == MONS_KIRKE)
                 member->props[KIRKE_BAND_KEY] = true;
             else if (mon->type == MONS_ORC_APOSTLE)
+            {
                 member->flags |= (MF_HARD_RESET | MF_APOSTLE_BAND | MF_NO_REWARD);
+                member->mark_summoned(0, true, 0, false);
+            }
         }
     }
     dprf(DIAG_DNGN, "Placing %s at %d,%d", mon->name(DESC_PLAIN, true).c_str(),
