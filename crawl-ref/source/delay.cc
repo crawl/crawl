@@ -221,6 +221,8 @@ bool PasswallDelay::try_interrupt(bool /*force*/)
     if (interrupt_block::blocked())
         return false;
     mpr("Your meditation is interrupted.");
+    you.props.erase(PASSWALL_ARMOUR_KEY);
+    you.redraw_armour_class = true;
     return true;
 }
 
