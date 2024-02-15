@@ -7969,6 +7969,43 @@ ttttttttttttttttttttt
 ttttttttttttttttttttt
 ENDMAP
 
+NAME:    minmay_guarded_unrand_brilliance
+DEPTH:   D:13-, Depths
+MONS:    profane servitor
+SUBST:   1 = 1.
+: if you.unrands("brilliance") then
+ITEM:    eveningstar randart ego:draining ident:type no_pickup / \
+         eveningstar randart ego:pain ident:type no_pickup / \
+         eveningstar randart ego:vampirism ident:type no_pickup
+: else
+ITEM:    brilliance no_pickup
+: end
+MAP
+         ...
+         .c.
+         .n.
+  ...    .c.    ...
+  .c... ..n.. ...c.
+  ..cn...ncn...nc..
+   .ncnc.cdc.cncn.
+   ..n*ncn.ncn*n..
+    .cn.nc.cn.nc.
+   ...cn1n1n1nc...
+....ncncn...ncncn....
+.ncnc*..1...1..*cncn.
+....ncncn...ncncn....
+   ...cn1n1n1nc...
+    .cn.nc.cn.nc.
+   ..n*ncn.ncn*n..
+  ..ncnc.c.c.cncn..
+  .ncn...n=n...ncn.
+ ..cn.. ..... ..nc..
+ .c...   .c.   ...c.
+ ...     .n.     ...
+         .c.
+         ...
+ENDMAP
+
 NAME:    minmay_guarded_unrand_prune
 TAGS:    transparent no_monster_gen
 DEPTH:   D:12-
