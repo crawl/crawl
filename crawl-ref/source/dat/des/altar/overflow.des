@@ -603,8 +603,10 @@ NAME:   elyvilon_altar_1
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
 TAGS:   transparent decor
 KFEAT:  C = altar_elyvilon
-SUBST:  X : T G t 1 2 3
+SUBST:  X : T G t 1 2 3 4:30
 MONS:   plant, bush, fungus
+KMONS:  4 = sacred lotus
+KFEAT:  4 = W
 KMASK:  T = no_monster_gen
 : interest_check(_G)
 MAP
@@ -655,20 +657,29 @@ ENDMAP
 
 NAME:   elyvilon_altar_4
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
-TAGS:   no_monster_gen transparent decor
+TAGS:   no_monster_gen transparent patrolling decor
+WEIGHT: 5
 KFEAT:  C = altar_elyvilon
-MONS:   patrolling quokka att:good_neutral
+: local g = "att:good_neutral"
+: mons("quokka " .. g .. " w:30 / bombardier beetle " .. g)
+: mons("bat " .. g .. " / rat " .. g .. " / butterfly " .. g)
+KMASK:  '12CFJ = opaque
+FTILE:  '12CFJt = floor_grass
+MARKER: E = lua:transp_loc("ely_altar_entry")
+MARKER: F = lua:transp_dest_loc("ely_altar_entry")
+MARKER: J = lua:transp_loc("ely_altar_exit")
+MARKER: K = lua:transp_dest_loc("ely_altar_exit")
 : interest_check(_G)
 MAP
-xxx.@.xxx
-xWW...WWx
-xW..t..Wx
-....1....
-@.t.C.t.@
-.........
-xW..t..Wx
-xWW...WWx
-xxx.@.xxx
+xxx..@..xxx
+xWW.....WWx
+xWccctcccWx
+..c1''''c..
+@EnF'C'JnK@
+..c''''2c..
+xWccctcccWx
+xWW.....WWx
+xxx..@..xxx
 ENDMAP
 
 NAME:   elyvilon_altar_5
@@ -711,20 +722,21 @@ ENDMAP
 
 NAME:  nicolae_elyvilon_temple_path
 TAGS:  temple_overflow_elyvilon temple_overflow_1 decor no_pool_fixup
-TAGS:  transparent
-TAGS:  no_trap_gen uniq_altar_elyvilon
-SUBST: p = ppp....
+TAGS:  transparent no_trap_gen uniq_altar_elyvilon
 KMONS: p = plant
+KMONS: s = sacred lotus
+KFEAT: s = w
 KFEAT: _ = altar_elyvilon
+SUBST: s : sswww, p = ppp....
 : interest_check(_G)
 MAP
   ccccc
  ccwwwcc @ppppppppp
-ccwwUwwccppcppcppcp
+ccswUwwccppcppcppcp
 cww...wwwwwwwwwwwww
 cwU._..............@
 cww...wwwwwwwwwwwww
-ccwwUwwccppcppcppcp
+ccswUwwccppcppcppcp
  ccwwwcc @ppppppppp
   ccccc
 ENDMAP
@@ -745,20 +757,23 @@ MAP
 .....
 ENDMAP
 
-NAME:   fedhas_altar_2
-TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas
-TAGS:   transparent decor
-KFEAT:  C = altar_fedhas
-NSUBST: w = 2:W / *:w
-SUBST:  . = ..wW
-SUBST:  w = wwwP
+NAME:    fedhas_altar_2
+TAGS:    uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas
+TAGS:    transparent no_pool_fixup decor
+KMONS:   1 = sacred lotus
+KMONS:   2 = plant
+KFEAT:   1 = w
+KFEAT:   2 = W
+KFEAT:   C = altar_fedhas
+SHUFFLE: abcd, efghij
+SUBST:   a = W, b : 112ww, c : Ww, d = w, e : Ww., f : W2.., g : W.., hij = .
 : interest_check(_G)
 MAP
-.....
-.www.
-.wCw.
-.www.
-.....
+.efg.
+jabch
+idCdi
+hcbaj
+.gfe.
 ENDMAP
 
 NAME:   fedhas_altar_3
@@ -805,15 +820,16 @@ DEPTH:   D, Lair
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_tele_into
 MONS:    plant, fungus, oklob plant, bush, toadstool
+KMONS:   S = sacred lotus
 KFEAT:   d = floor
+KFEAT:   S = w
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
 : if you.absdepth() > 5 then
 SHUFFLE: PQR
 SUBST:   Q = 114, R = 11124
 : end
-SUBST:   P = 112
-SUBST:   z = .
+SUBST:   P = 112, z = ., S : Sww
 SHUFFLE: ...", TU
 SUBST:   T = xt, U = xx
 SUBST:   " = .....5
@@ -832,7 +848,7 @@ cxxxxx..www.www..xxxPxc
 cxxxx..wwww.wwww..xxxxc
 cxxxx.wwwww.wwwww.xxxxc
 cxxxx.wwww'''wwww.xxxxc
-cxxxx.wwww'_'wwww.xxxxc
+cxxxx.wSww'_'wwSw.xxxxc
 cxxxx.wwww'''wwww.xxxxc
 cxxxx.wwwwwwwwwww.xxxxc
 cxxxx..wwwwwwwww..xxxxc
@@ -844,14 +860,17 @@ cxxxxxxxxxc.cxxxxxxxxxc
 ccccccccccc@ccccccccccc
 ENDMAP
 
-NAME:  fedhas_ov_isle_minmay
-TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas no_monster_gen
-TAGS:  transparent no_descent
-DEPTH: D, !D:$
-MONS:  plant / bush w:5
-SUBST: 1 = 111t'''
-KFEAT: _ = altar_fedhas
-KMASK: _1'<> = opaque
+NAME:   fedhas_ov_isle_minmay
+TAGS:   temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas 
+TAGS:   no_monster_gen transparent no_descent
+DEPTH:  D, !D:$
+MONS:   plant / bush w:5
+KMONS:  S = sacred lotus
+KFEAT:  S = w
+SUBST:  S : Sww
+NSUBST: 1 = 1:' / * = 111t''', 2 = 1:' / * = 111t'''
+KFEAT:  _ = altar_fedhas
+KMASK:  _1'<> = opaque
 : interest_check(_G)
 MAP
      .....
@@ -860,9 +879,9 @@ MAP
  ..wwwwwwwww..
  .wwwwwwwwwww.
 ..wwww1<1wwww..
-.wwww11111wwww.
-.wwww11_11wwww.
-.wwww11111wwww.
+.wwww12221wwww.
+.wwSw12_21wSww.
+.wwww12221wwww.
 ..wwww1>1wwww..
  .wwwwwwwwwww.
  ..wwwwwwwww..
@@ -3147,9 +3166,11 @@ ENDMAP
 NAME:    nzn_wu_jian_contemplation
 TAGS:    temple_overflow_1 temple_overflow_wu_jian no_monster_gen no_item_gen
 TAGS:    no_pool_fixup transparent decor uniq_altar_wu_jian
+KMONS:   S = sacred lotus
 ITEM:    mundane spear / w:2 mundane quarterstaff / w:2 mundane trident, stone
+KFEAT:   S = W
 NSUBST:  ' = 3=e / ', " = 4=W / ', t = t / d / -
-SUBST:   ` = '
+SUBST:   ` = ', S = SSW
 KFEAT:   _ = altar_wu_jian
 FTILE:   e' = floor_sand
 FTILE:   td- = floor_grass
@@ -3162,7 +3183,7 @@ xx.xxxxxxxxxx
 x'`.```'``"Wx
 x```.`'``"WWx
 x'`.````"WWWx
-x`.t`'``"WWWx
+x`.t`'``"WWSx
 x`t_t`'`"WWWx
 x``t.'`'`"WWx
 x'`'`.``'`"Wx
@@ -5661,13 +5682,16 @@ f.qp.c.pq.f
   ffghgff
 ENDMAP
 
-NAME:  mainiacjoe_overflow_alcove_3
-TAGS:  temple_overflow_generic_4 transparent
-SUBST: c : xcvb
-SUBST: p : cnvbt123wl
-MONS:  plant, bush, fungus
-KMASK: wl = no_monster_gen
-KMASK: w = no_pool_fixup
+NAME:   mainiacjoe_overflow_alcove_3
+TAGS:   temple_overflow_generic_4 transparent
+MONS:   plant, bush, fungus
+KMONS:  4 = sacred lotus
+KFEAT:  4 = w
+SUBST:  c : xccv
+SUBST:  p : cnvbt1234wl
+NSUBST: 4 = 1:4 / * = W
+KMASK:  wl = no_monster_gen
+KMASK:  w = no_pool_fixup
 MAP
 ccccccc
 cB.c.Bc

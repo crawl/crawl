@@ -3178,14 +3178,16 @@ ENDMAP
 
 
 NAME:    hallowed_hall
-TAGS:    no_monster_gen no_trap_gen
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup
 DEPTH:   Depths
 MONS:    pearl dragon, apis, ophan, plant
+KMONS:   S = sacred lotus
 ITEM:    potion of curing ident:type / potion of heal wounds ident:type
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
 KFEAT:   C = altar_zin
 KFEAT:   g = metal_statue
+KFEAT:   S = w
 SHUFFLE: ABC
 COLOUR:  c = white
 TILE:    c = wall_church
@@ -3204,10 +3206,10 @@ xcA.1.Ccx
 xcd...dcx4''
 xcg...Gcx'''''
 xccc+cccx4''''''
-xct...tcx''''''''
+xct...Scx''''''''
 xc..2..cx'''''''''xx
 xc..2..+'''33'''''cx
-xct....c'''''''''4cx
+xcS....c'''''''''4cx
 xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
 ENDMAP

@@ -175,16 +175,19 @@ NAME:    lemuel_angel_altar
 TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup
 DEPTH:   Vaults, !Vaults:$, Depths
 MONS:    patrolling Angel, patrolling Daeva
+KMONS:   P = sacred lotus
 KFEAT:   A = altar_elyvilon
 KFEAT:   B = altar_zin
 KFEAT:   C = altar_the_shining_one
+KFEAT:   P = w
 KFEAT:   g = metal_statue
 KFEAT:   n = iron_grate
-SHUFFLE: AG / Bg / CG
+SHUFFLE: AP / Bg / CG
 SUBST:   - = c
 : if you.in_branch("Depths") then
 SHUFFLE: 1m= / 2n-
 CLEAR:   '
+TILE:    c = wall_church
 : else
 SUBST:   ' = ., = = c
 : end
@@ -200,11 +203,11 @@ MAP
     .....
    ..cmc..
   ..xc>cx..
-'..xxc"cGx..'
+'..xxc"cPx..'
 '.ccc=1cccc.'
 '.m>""A"">m.'
 '.cccc"cccc.'
-'..xGc"cxx..'
+'..xPc"cxx..'
   ..xc>cx..
    ..cmc..
     .....

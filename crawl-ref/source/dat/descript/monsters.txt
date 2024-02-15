@@ -2306,6 +2306,12 @@ rust devil
 A hideous humanoid figure with rust-spotted metal skin, spreading corrosion
 and decay to all it touches.
 %%%%
+sacred lotus
+
+A large and vivid bloom drifting placidly upon the surface of the water. The
+cradle of the lotus's petals shine with eternity and elegance- while it is
+entirely harmless, it would take immense effort to destroy it.
+%%%%
 salamander
 
 A red, flaming half-human half-snake creature with a legendary affinity for

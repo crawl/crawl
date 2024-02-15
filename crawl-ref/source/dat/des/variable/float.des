@@ -6035,16 +6035,46 @@ wwwwwwG.Gwwwwww
 ENDMAP
 
 ###############################################################################
-NAME:    dreamdust_wu_jian_sword_trials
-TAGS:    no_monster_gen no_item_gen no_descent
-ORIENT:  float
-DEPTH:   D:12-, Orc, Elf
-COLOUR:  t = lightred / red w:3
-TILE:    t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
-KPROP:   -QRSTUVOt$123 = no_tele_into
-KFEAT:   O = altar_wu_jian
-TILE:    G = dngn_statue_sword
-: set_feature_name("granite_statue", "a statue of a sword")
+NAME:   dreamdust_wu_jian_sword_trials
+TAGS:   no_monster_gen no_item_gen no_descent no_pool_fixup
+ORIENT: float
+DEPTH:  D:12-, Orc, Elf
+# Three possible monster sets
+: if you.in_branch("D") then
+KMONS:  1 = human ; ring mail . \
+            falchion good_item | long sword good_item
+KMONS:  2 = vault guard ; chain mail . \
+            scimitar good_item | great sword good_item
+KMONS:  3 = vault warden ; plate armour . \
+            autumn katana w:1 | demon blade good_item | \
+            double sword good_item | great sword good_item | \
+            triple sword good_item | great sword ego:spectral
+: elseif you.in_branch("Orc") then
+KMONS:  1 = orc warrior ; ring mail . \
+            falchion good_item | long sword good_item
+KMONS:  2 = orc knight ; chain mail . \
+            scimitar good_item | great sword good_item
+KMONS:  3 = orc warlord ; plate armour . \
+            autumn katana w:1 | demon blade good_item | \
+            double sword good_item | great sword good_item | \
+            triple sword good_item | great sword ego:spectral
+: else
+KMONS:  1 = elf ; ring mail . \
+            falchion good_item | long sword good_item
+KMONS:  2 = deep elf knight ; leather armour . \
+            scimitar good_item | great sword good_item
+KMONS:  3 = deep elf blademaster ; leather armour . \
+            autumn katana w:1 | demon blade good_item | \
+            double sword good_item | great sword good_item | \
+            triple sword good_item | great sword ego:spectral
+: end
+KMONS:  s = sacred lotus
+KFEAT:  s = w
+KFEAT:  O = altar_wu_jian
+KPROP:  -QRSTUVOt$123 = no_tele_into
+TILE:   G = dngn_statue_sword
+COLOUR: t = lightred / red w:3
+TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 MARKER: P = lua:transp_loc("sword_trial_1_entry")
 MARKER: Q = lua:transp_dest_loc("sword_trial_1_entry")
 MARKER: R = lua:transp_loc("sword_trial_2_entry")
@@ -6053,35 +6083,6 @@ MARKER: T = lua:transp_loc("sword_trial_3_entry")
 MARKER: U = lua:transp_dest_loc("sword_trial_3_entry")
 MARKER: V = lua:transp_loc("sword_trial_exit")
 MARKER: W = lua:transp_dest_loc("sword_trial_exit")
-# Three possible monster sets
-: if you.in_branch("D") then
-KMONS:   1 = human ; ring mail . \
-             falchion good_item | long sword good_item
-KMONS:   2 = vault guard ; chain mail . \
-             scimitar good_item | great sword good_item
-KMONS:   3 = vault warden ; plate armour . \
-             autumn katana w:1 | demon blade good_item | \
-             double sword good_item | great sword good_item | \
-             triple sword good_item | great sword ego:spectral
-: elseif you.in_branch("Orc") then
-KMONS:   1 = orc warrior ; ring mail . \
-             falchion good_item | long sword good_item
-KMONS:   2 = orc knight ; chain mail . \
-             scimitar good_item | great sword good_item
-KMONS:   3 = orc warlord ; plate armour . \
-             autumn katana w:1 | demon blade good_item | \
-             double sword good_item | great sword good_item | \
-             triple sword good_item | great sword ego:spectral
-: else
-KMONS:   1 = elf ; ring mail . \
-             falchion good_item | long sword good_item
-KMONS:   2 = deep elf knight ; leather armour . \
-             scimitar good_item | great sword good_item
-KMONS:   3 = deep elf blademaster ; leather armour . \
-             autumn katana w:1 | demon blade good_item | \
-             double sword good_item | great sword good_item | \
-             triple sword good_item | great sword ego:spectral
-: end
 MAP
    .....
   ..GWG..
@@ -6089,7 +6090,7 @@ MAP
 .ccc$V$ccc.
 .ct$$3$$tc.
 .ct$$$$$tc.
-.ct-tOt-tc.
+.cs-tOt-sc.
 .ct-----tc.
 .ct-----tc.
 .ccc-U-ccc.

@@ -1558,15 +1558,17 @@ c.   ..x...
 ENDMAP
 
 NAME:    regret_index_zotdec_alabaster_prism
-TAGS:    extra zotdec
+TAGS:    extra zotdec no_pool_fixup
 DEPTH:   Zot, !Zot:$
 WEIGHT:  4
+KMONS:   s = sacred lotus
 KFEAT:   no = m
+KFEAT:   s = w
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_zin
 KFEAT:   C = altar_elyvilon
 KFEAT:   g = metal_statue
-SHUFFLE: mno, AG / Bg / CT
+SHUFFLE: mno, AG / Bg / Cs
 SUBST:   } = {([}}))]]<>, y : x.., z : x..
 SUBST:   X : xx., Y : xx., Z : xx., + = +++.
 COLOUR:  g = silver
@@ -1579,7 +1581,7 @@ TILE:    g = dngn_silver_statue
 : set_feature_name("metal_statue", "silver statue")
 MAP
            xxxxxxx..
-          xxxx.Txc..
+          xxxx.sxc..
          xxmx..xx...
         xx..x.xx....
        xx...xx......
@@ -1594,7 +1596,7 @@ xxxxZx.xxxxx+xxxxxxxxxxxx
 xxxxxxx..Y'gx...x.....nxx
     xx.x.'B'x...x..z..xx
     xx..x.'Yx........xx
-    xx..cx..xxx.T'..xx
+    xx..cx..xxx.s'..xx
     xc.}..x.x...'C'xx
     xxo....x.....'xx
     xcxcxxxxx.y..xx

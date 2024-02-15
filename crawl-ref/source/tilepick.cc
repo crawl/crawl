@@ -2091,7 +2091,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
     if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch))
-        || mons.type == MONS_ORC_APOSTLE)
+        || mons.type == MONS_ORC_APOSTLE || mons.type == MONS_SACRED_LOTUS)
     {
         ch |= TILE_FLAG_FLYING;
     }

@@ -412,30 +412,26 @@ ENDMAP
 NAME:   shapermc_ecumenical_altar_flowoftime
 TAGS:   transparent
 MONS:   plant, withered plant, demonic plant
-SUBST: ' = P.....
-SUBST: - = PPPPP.
+KMONS:  0 = sacred lotus
+KFEAT:  0 = W
+SUBST:  ' = P....., - = ppppp.
 : if crawl.one_chance_in(20) then
-SUBST:  P : 2223
+SUBST:  Pp : 2223
+: elseif crawl.one_chance_in(10) then
+NSUBST: p = 1:0 / * = 1
+SUBST:  P = 2
 : else
-SUBST:  P = 11222
+SUBST:  p = 112, P = 122, b = c
 : end
 : ecumenical_altar_setup(_G)
 MAP
-xxb+bxx
-x'''''x
-x'''''x
-x'''''x
-x'''''x
-xb'''bx
-xbb'bbx
-xbb_bbx
-xbb-bbx
-xb---bx
-x-----x
-x-----x
-x-----x
-x-----x
-xxb+bxx
+xxxxxxxxxxxxxxx
+x''''bbbbb----x
+x'''''bbb-----x
++''''''_------+
+x'''''bbb-----x
+x''''bbbbb----x
+xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   dilly_ecumenical_altar_fadedgnrine
