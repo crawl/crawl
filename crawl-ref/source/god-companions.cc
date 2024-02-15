@@ -374,11 +374,9 @@ void beogh_do_ostracism()
 
 void beogh_end_ostracism()
 {
-    mprf(MSGCH_GOD, "Your apostles return to your side.");
-
     // XXX: It's kind of ugly to wrap this in the resurrection function, but
     // the process of restoring dead apostles is kind of complicated...
-    beogh_resurrect_followers(true);
+    beogh_resurrection_fineff::schedule(true);
 }
 
 static int _apostle_challenge_piety_needed()
@@ -1025,7 +1023,10 @@ void beogh_resurrect_followers(bool end_ostracism_only)
 
     // The rest of the bookkeeping only applies to real resurrections
     if (end_ostracism_only)
+    {
+        mprf(MSGCH_GOD, "Your apostles return to your side.");
         return;
+    }
 
     // Now clean up the corpses
     for (unsigned int i = 0; i < dead_apostles.size(); ++i)

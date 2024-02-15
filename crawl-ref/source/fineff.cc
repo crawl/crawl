@@ -955,9 +955,16 @@ void jinxbite_fineff::fire()
         attempt_jinxbite_hit(*defend);
 }
 
+bool beogh_resurrection_fineff::mergeable(const final_effect &fe) const
+{
+    const beogh_resurrection_fineff *o =
+        dynamic_cast<const beogh_resurrection_fineff *>(&fe);
+    return o && ostracism_only == o->ostracism_only;
+}
+
 void beogh_resurrection_fineff::fire()
 {
-    beogh_resurrect_followers();
+    beogh_resurrect_followers(ostracism_only);
 }
 
 void dismiss_divine_allies_fineff::fire()

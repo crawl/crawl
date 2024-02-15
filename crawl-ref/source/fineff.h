@@ -538,18 +538,19 @@ protected:
 class beogh_resurrection_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &/*a*/) const override { return true; };
+    bool mergeable(const final_effect &a) const override;
     void fire() override;
 
-    static void schedule()
+    static void schedule(bool end_ostracism_only = false)
     {
-        final_effect::schedule(new beogh_resurrection_fineff());
+        final_effect::schedule(new beogh_resurrection_fineff(end_ostracism_only));
     }
 protected:
-    beogh_resurrection_fineff()
-        : final_effect(nullptr, nullptr, coord_def())
+    beogh_resurrection_fineff(bool end_ostracism_only)
+        : final_effect(nullptr, nullptr, coord_def()), ostracism_only(end_ostracism_only)
     {
     }
+    const bool ostracism_only;
 };
 
 class dismiss_divine_allies_fineff : public final_effect
