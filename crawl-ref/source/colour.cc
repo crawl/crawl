@@ -634,6 +634,11 @@ void init_element_colours()
                               {60,  RED},
                             }));
     add_element_colour(new random_element_colour_calc(
+                            ETC_FOUL_FLAME, "foul_flame",
+                            { {60,  WHITE},
+                              {60,  BROWN},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_MOUNTAIN, "mountain",
                             { {40,  LIGHTGREEN},
                               {40,  LIGHTMAGENTA},
