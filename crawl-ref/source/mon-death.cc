@@ -706,8 +706,9 @@ static bool _yred_bind_soul(monster* mons, killer_type killer)
 {
     if (you_worship(GOD_YREDELEMNUL) && mons->has_ench(ENCH_SOUL_RIPE)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
-        && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED)
+        && killer != KILL_DISMISSED && killer != KILL_BANISHED
+        // You can't deliberately bind a summon, but this also handles mirror copies
+        && !mons->is_summoned())
     {
         record_monster_defeat(mons, killer);
         record_monster_defeat(mons, KILL_BOUND);
