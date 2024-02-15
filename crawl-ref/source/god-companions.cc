@@ -193,10 +193,23 @@ bool companion_is_elsewhere(mid_t mid, bool must_exist)
 {
     if (companion_list.count(mid))
     {
-        return companion_list[mid].level != level_id::current()
-               || (player_in_branch(BRANCH_PANDEMONIUM)
-                   && companion_list[mid].level.branch == BRANCH_PANDEMONIUM
-                   && !monster_by_mid(mid));
+        // They're definitely not here
+        if (companion_list[mid].level != level_id::current())
+            return true;
+
+        // The companion list says they're on our current floor, but we still
+        // need to double-check, as there are a few ways that they can still
+        // not be where they should be. (eg: all of Pandemonium is considered
+        // a single floor, and the Abyss can eat our companions without notice)
+        if (!monster_by_mid(mid))
+        {
+            // Mark them as being on a non-existant floor, for the future.
+            // (This also lets interlevel recall pull them back again)
+            companion_list[mid].level = level_id();
+            return true;
+        }
+
+        return false;
     }
 
     return !must_exist;
