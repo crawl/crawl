@@ -2522,6 +2522,10 @@ kmons("q = vault warden ; " .. disto_weapon("knight", "randart") ..
       "    . kite shield good_item | tower shield good_item w:5" ..
       "    . chain mail good_item | plate armour good_item")
 }}
+# XXX: When the preserve_wall tag is used, it seems the Vaults room layout is
+# replacing stone wall with rock. Until this can be fixed in the layout code,
+# just use crystal and metal walls.
+SUBST:  c = bv
 :     else
 # Vaults needs the warlord on H, so just redefine H in Elf so we can use the
 # same NSUBST.
