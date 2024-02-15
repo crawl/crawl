@@ -32,6 +32,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -126,7 +127,7 @@ bool monster_inherently_flies(const monster &mons)
 
 static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
-    if (feat_is_watery(grid))
+    if (feat_is_water(grid))
         return HT_WATER;
 
     switch (grid)
@@ -907,24 +908,24 @@ bool mons_is_sensed(monster_type mc)
            || mc == MONS_SENSED_NASTY;
 }
 
-bool mons_allows_beogh(const monster& mon)
+bool mons_offers_beogh_conversion(const monster& mon)
 {
-    if (!species::is_orcish(you.species) || you_worship(GOD_BEOGH))
-        return false; // no one else gives a damn
-
     return mons_genus(mon.type) == MONS_ORC
            && mon.is_priest() && mon.god == GOD_BEOGH;
 }
 
-bool mons_allows_beogh_now(const monster& mon)
+bool mons_offers_beogh_conversion_now(const monster& mon)
 {
     // Do the expensive LOS check last.
-    return mons_allows_beogh(mon)
-               && !mon.is_summoned() && !mon.friendly()
-               && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
-               && !mons_is_confused(mon) && mons_is_seeking(mon)
-               && mon.foe == MHITYOU && !mons_is_immotile(mon)
-               && you.visible_to(&mon) && you.can_see(mon);
+    return mons_offers_beogh_conversion(mon)
+                // Only try to convert atheists
+                && you.religion == GOD_NO_GOD
+                && you.hp * 3 / 2 <= you.hp_max
+                && !mon.is_summoned() && !mon.friendly()
+                && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
+                && !mons_is_confused(mon) && mons_is_seeking(mon)
+                && mon.foe == MHITYOU && !mons_is_immotile(mon)
+                && you.visible_to(&mon) && you.can_see(mon);
 }
 
 // Returns true for monsters that obviously (to the player) feel
@@ -1590,7 +1591,7 @@ mon_itemuse_type mons_class_itemuse(monster_type mc)
 
 mon_itemuse_type mons_itemuse(const monster& mon)
 {
-    if (mons_bound_soul(mon))
+    if (mon.type == MONS_BOUND_SOUL)
         return mons_class_itemuse(mons_zombie_base(mon));
 
     return mons_class_itemuse(mon.type);
@@ -1753,7 +1754,7 @@ bool mons_can_be_zombified(const monster& mon)
 {
     return mons_class_can_be_zombified(mon.type)
            && !mon.is_summoned()
-           && !mons_bound_body_and_soul(mon)
+           && !mon.has_ench(ENCH_SOUL_RIPE)
            && mons_has_attacks(mon, true);
 }
 
@@ -1763,6 +1764,7 @@ bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
     ASSERT_smc();
     return mons_class_holiness(mzc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
         && mc != MONS_PANDEMONIUM_LORD
+        && mzc != MONS_ORC_APOSTLE
         && (!divine || smc->attack[0].type != AT_NONE); // i.e. has_attack
 }
 
@@ -1813,16 +1815,6 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 
     // Everything else is fine
     return true;
-}
-
-bool mons_bound_body_and_soul(const monster& mon)
-{
-    return mon.has_ench(ENCH_SOUL_RIPE);
-}
-
-bool mons_bound_soul(const monster& mon)
-{
-    return mon.type == MONS_BOUND_SOUL;
 }
 
 void name_zombie(monster& mon, monster_type mc, const string &mon_name)
@@ -2963,7 +2955,6 @@ void define_monster(monster& mons, bool friendly)
     }
 
     mons.flags      = MF_NO_FLAGS;
-    mons.experience = 0;
     mons.colour     = col;
 
     mons.bind_melee_flags();
@@ -2984,6 +2975,47 @@ void define_monster(monster& mons, bool friendly)
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
+        break;
+    }
+
+    case MONS_ORC_APOSTLE:
+    {
+        ghost_demon ghost;
+
+        // Pull type and power from props, if they have been set
+        apostle_type type = mons.props.exists(APOSTLE_TYPE_KEY)
+                            ? static_cast<apostle_type>(mons.props[APOSTLE_TYPE_KEY].get_int())
+                            : APOSTLE_WARRIOR;
+
+        int pow = mons.props.exists(APOSTLE_POWER_KEY)
+                    ? mons.props[APOSTLE_POWER_KEY].get_int()
+                    : 50;
+
+        ghost.init_orc_apostle(type, pow);
+        mons.set_ghost(ghost);
+        mons.ghost_demon_init();
+        mons.bind_melee_flags();
+
+        mons.props[MON_GENDER_KEY] = random_choose(GENDER_MALE,
+                                                   GENDER_FEMALE,
+                                                   GENDER_NEUTRAL);
+
+        // Choose tile based on apostle class
+        if (type == APOSTLE_WIZARD)
+            mons.props[TILE_NUM_KEY].get_short() = 0;
+        else if (type == APOSTLE_PRIEST)
+            mons.props[TILE_NUM_KEY].get_short() = 100;
+        else
+            mons.props[TILE_NUM_KEY].get_short() = 200;
+
+        give_monster_proper_name(mons);
+
+        // Reroll our name until it is different from all player apostle names,
+        // to try and lessen possible confusion if they end up with two that
+        // have identical names.
+        while (!apostle_has_unique_name(mons))
+            give_monster_proper_name(mons);
+
         break;
     }
 
@@ -3212,38 +3244,19 @@ static string _get_proper_monster_name(const monster& mon)
     if (!me)
         return "";
 
-    string name = getRandNameString(me->name, " name");
+    string name = getRandMonNameString(me->name);
     if (!name.empty())
         return name;
 
-    return getRandNameString(get_monster_data(mons_genus(mon.type))->name,
-                             " name");
+    return getRandMonNameString(get_monster_data(mons_genus(mon.type))->name);
 }
 
-// Names a previously unnamed monster.
-bool give_monster_proper_name(monster& mon, bool orcs_only)
+// Names a monster (will rename it if it already had a name)
+bool give_monster_proper_name(monster& mon)
 {
-    // Already has a unique name.
-    if (mon.is_named())
-        return false;
-
-    // Since this is called from the various divine blessing routines,
-    // don't bless non-orcs, and normally don't bless plain orcs, either.
-    if (orcs_only)
-    {
-        if (mons_genus(mon.type) != MONS_ORC
-            || mon.type == MONS_ORC && !one_chance_in(8))
-        {
-            return false;
-        }
-    }
-
     mon.mname = _get_proper_monster_name(mon);
     if (!mon.props.exists(DBNAME_KEY))
         mon.props[DBNAME_KEY] = mons_class_name(mon.type);
-
-    if (mon.friendly())
-        take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon.mname));
 
     return mon.is_named();
 }
@@ -3327,7 +3340,7 @@ mon_intel_type mons_intel(const monster& m)
 {
     const monster& mon = get_tentacle_head(m);
 
-    if (mons_bound_soul(mon))
+    if (mon.type == MONS_BOUND_SOUL)
         return mons_class_intel(mons_zombie_base(mon));
 
     return mons_class_intel(mon.type);
@@ -3971,6 +3984,22 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
         && (m2.type == MONS_REVENANT || m2.type == MONS_GHOST_CRAB))
     {
         return true;
+    }
+
+    // Let warrior apostles push through other apostles, but (importantly)
+    // NOT let wizards displace warriors to move into melee range
+    if (m1.type == MONS_ORC_APOSTLE && m2.type == MONS_ORC_APOSTLE)
+    {
+        if (m1.props[APOSTLE_TYPE_KEY].get_int() == APOSTLE_WARRIOR)
+        {
+            return m2.props[APOSTLE_TYPE_KEY].get_int() != APOSTLE_WARRIOR
+                   || m2.get_hit_dice() < m1.get_hit_dice();
+        }
+        if (m2.props[APOSTLE_TYPE_KEY].get_int() == APOSTLE_WARRIOR)
+        {
+            return m1.props[APOSTLE_TYPE_KEY].get_int() == APOSTLE_WARRIOR
+                   && m2.get_hit_dice() < m1.get_hit_dice();
+        }
     }
 
     // Band leaders can displace followers regardless of type considerations.
@@ -4838,7 +4867,11 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 bool mons_foe_is_marked(const monster& mon)
 {
     if (mon.foe == MHITYOU)
-        return you.duration[DUR_SENTINEL_MARK] && in_bounds(you.pos());
+    {
+        return (you.duration[DUR_SENTINEL_MARK]
+                || testbits(mon.flags, MF_APOSTLE_BAND))
+               && in_bounds(you.pos());
+    }
     else
         return false;
 }
@@ -5152,17 +5185,13 @@ bool choose_any_monster(const monster& mon)
     return !mons_is_projectile(mon.type);
 }
 
-// Find a nearby monster and return its index, including you as a
-// possibility with probability weight. suitable() should return true
-// for the type of monster wanted.
-// If prefer_named is true, named monsters (including uniques) are twice
-// as likely to get chosen compared to non-named ones.
-// If prefer_priest is true, priestly monsters (including uniques) are
-// twice as likely to get chosen compared to non-priestly ones.
-monster* choose_random_nearby_monster(int weight,
-                                      bool (*suitable)(const monster& mon),
-                                      bool prefer_named_or_priest)
+// Pick a random monster within line of sight of the player which matches a
+// given criteria and return it.
+//
+// suitable() should return true for any monsters we want to be eligable.
+monster* choose_random_nearby_monster(bool (*suitable)(const monster& mon))
 {
+    int weight = 0;
     monster* chosen = nullptr;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
@@ -5170,47 +5199,28 @@ monster* choose_random_nearby_monster(int weight,
         if (!mon || !suitable(*mon))
             continue;
 
-        // FIXME: if the intent is to favour monsters
-        // named by $DEITY, we should set a flag on the
-        // monster (something like MF_DEITY_PREFERRED) and
-        // use that instead of checking the name, given
-        // that other monsters can also have names.
-
-        // True, but it's currently only used for orcs, and
-        // Blork and Urug also being preferred to non-named orcs
-        // is fine, I think. Once more gods name followers (and
-        // prefer them) that should be changed, of course. (jpeg)
-        int mon_weight = 1;
-
-        if (prefer_named_or_priest)
-            mon_weight += mon->is_named() + mon->is_priest();
-
-        if (x_chance_in_y(mon_weight, weight += mon_weight))
+        if (one_chance_in(++weight))
             chosen = mon;
     }
 
     return chosen;
 }
 
-monster* choose_random_monster_on_level(int weight,
-                                        bool (*suitable)(const monster& mon),
-                                        bool prefer_named_or_priest)
+// Pick a random monster on the current floor which matches a given criteria and
+// return it.
+//
+// suitable() should return true for any monsters we want to be eligable.
+monster* choose_random_monster_on_level(bool (*suitable)(const monster& mon))
 {
+    int weight = 0;
     monster* chosen = nullptr;
-
-    for (rectangle_iterator ri(1); ri; ++ri)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monster* mon = monster_at(*ri);
-        if (!mon || !suitable(*mon))
+        if (!suitable(**mi))
             continue;
 
-        int mon_weight = 1;
-
-        if (prefer_named_or_priest)
-            mon_weight += mon->is_named() + mon->is_priest();
-
-        if (x_chance_in_y(mon_weight, weight += mon_weight))
-            chosen = mon;
+        if (one_chance_in(++weight))
+            chosen = *mi;
     }
 
     return chosen;
@@ -5587,4 +5597,12 @@ bool apply_monsters_around_square(monster_func f, const coord_def& where,
 bool apply_visible_monsters(monster_func f, const coord_def& where, los_type los)
 {
     return _apply_to_monsters(f, radius_iterator(where, los, true));
+}
+
+int touch_of_beogh_hp_mult(const monster& mon)
+{
+    const int pow = mon.props.exists(APOSTLE_POWER_KEY)
+                    ? mon.props[APOSTLE_POWER_KEY].get_int() : 0;
+
+    return 100 + (min(50, pow * 2 / 3));
 }

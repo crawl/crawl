@@ -11,6 +11,7 @@
 #include <numeric>
 #include <sstream>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -32,6 +33,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
+#include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -47,6 +49,8 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "killer-type.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -57,8 +61,10 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h"
@@ -1418,257 +1424,282 @@ void trog_remove_trogs_hand()
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
-/**
- * Has the monster been given a Beogh gift?
- *
- * @param mon the orc in question.
- * @returns whether you have given the monster a Beogh gift before now.
- */
-bool given_gift(const monster* mon)
+// Return whether the player can light the torch on their current floor
+// (ie: it is a valid place to do so and it has never been lit here before)
+string yred_cannot_light_torch_reason()
 {
-    return mon->props.exists(BEOGH_RANGE_WPN_GIFT_KEY)
-            || mon->props.exists(BEOGH_MELEE_WPN_GIFT_KEY)
-            || mon->props.exists(BEOGH_ARM_GIFT_KEY)
-            || mon->props.exists(BEOGH_SH_GIFT_KEY);
+    // First check invalid locations
+    if (player_in_branch(BRANCH_TEMPLE))
+    {
+        return "There are no souls to scour here; only the pathetic idols"
+               " of powerless gods.";
+    }
+    else if (player_in_branch(BRANCH_BAZAAR) || player_in_branch(BRANCH_TROVE))
+        return "There are no souls worth scouring here.";
+    else if (player_in_branch(BRANCH_ABYSS))
+        return "Not even a god could conquer a realm without end; waste no time trying.";
+
+    if (!you.props.exists(YRED_TORCH_USED_KEY))
+        return "";
+
+    CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
+    if (levels.exists(level_id::current().describe()))
+    {
+        return "You have raised the torch once already on this floor."
+               " Yredelemnul offers no second-chances.";
+    }
+
+    return "";
 }
 
-/**
- * Checks whether the target monster is a valid target for beogh item-gifts.
- *
- * @param mons[in]  The monster to consider giving an item to.
- * @param quiet     Whether to print messages if the target is invalid.
- * @return          Whether the player can give an item to the monster.
- */
-bool beogh_can_gift_items_to(const monster* mons, bool quiet)
+bool yred_light_the_torch()
 {
-    if (!mons || !mons->visible_to(&you))
+    mprf("You lift the black torch aloft and begin your conquest of %s in "
+         "Yredelemnul's name!",
+            level_id::current().describe(true, true).c_str());
+
+    bool aid = false;
+
+    // The power of the allies you get is based on the player's xl, but capped
+    // by their current piety. 5* allows fully uncapped servants.
+    int cap = div_rand_round(min((int)you.piety, piety_breakpoint(4)) * 27, piety_breakpoint(4));
+    int pow = min(you.experience_level, cap);
+
+    // Summon one stronger servant and two lesser ones.
+    // (Note that a 'single' servant can be multiple monsters, depending on what
+    // type we roll)
+    if (yred_random_servant(pow))
+        aid = true;
+    if (yred_random_servant(div_rand_round(pow * 7, 10), false, 2))
+        aid = true;
+    // At very high power, a chance for additional servants
+    if (x_chance_in_y(max(0, pow - 20), 10))
     {
-        if (!quiet)
-            canned_msg(MSG_NOTHING_THERE);
-        return false;
+        if (yred_random_servant(div_rand_round(pow * random_range(6, 9), 10), false, 2))
+            aid = true;
     }
 
-    if (!is_orcish_follower(*mons) || mons_genus(mons->type) != MONS_ORC)
-    {
-        if (!quiet)
-            mpr("That's not an orcish ally!");
-        return false;
-    }
+    if (aid)
+        mpr("Yredelemnul sends servants to aid you!");
 
-    if (!mons->is_named())
-    {
-        if (!quiet)
-            mpr("That orc has not proved itself worthy of your gift.");
-        return false;
-    }
+    // Determine number of torch charges based on piety stars.
+    // Note: You are given 'hidden' internal torchlight charges even below the
+    // piety threshold to hurl torchlight, in case you gain that ability on the
+    // current floor.
+    you.props[YRED_TORCH_POWER_KEY] = min(5, max(piety_rank(), 2));
 
-    if (given_gift(mons))
-    {
-        if (!quiet)
-        {
-            mprf("%s has already been given a gift.",
-                 mons->name(DESC_THE, false).c_str());
-        }
-        return false;
-    }
+    // Mark the torch as having been used on this level
+    you.props[YRED_TORCH_USED_KEY].get_table()
+        [level_id::current().describe()] = true;
 
     return true;
 }
 
-/**
- * Checks whether there are any valid targets for beogh gifts in LOS.
- */
-static bool _valid_beogh_gift_targets_in_sight()
+// Called whenever you leave a floor with the black torch lit.
+// Handles cleanup and prints messages based on how thoroughly the player
+// scoured the floor.
+void yred_end_conquest()
 {
-    for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
-        if (beogh_can_gift_items_to(*rad))
-            return true;
-    return false;
-}
-
-/**
- * Allow the player to give an item to a named orcish ally that hasn't
- * been given a gift before
- *
- * @returns whether an item was given.
- */
-bool beogh_gift_item()
-{
-    if (!_valid_beogh_gift_targets_in_sight())
+    // Calculate how cleared the floor is:
+    int souls_remaining = 0;
+    for (monster_iterator mi; mi; ++mi)
     {
-        mpr("No worthy followers in sight.");
-        return false;
+        if (!mi->wont_attack() && !mons_is_firewood(**mi)
+            && mons_can_be_spectralised(**mi, true)
+            // Ignore monsters in no-tele-into areas, since these are often
+            // literally unreachable, and we also don't want Yred to be unhappy
+            // whenever there was a ghost vault on the floor.
+            && !(env.pgrid(mi->pos()) & FPROP_NO_TELE_INTO))
+        {
+            ++souls_remaining;
+        }
     }
 
-    dist spd;
+    int kills = you.props[YRED_KILLS_LOGGED_KEY].get_int();
 
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_BEOGH_GIFTABLE;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.self = confirm_prompt_type::cancel;
-    args.show_floor_desc = true;
-    args.top_prompt = "Select a follower to give a gift to.";
+    int ratio = kills * 100 / (kills + souls_remaining + 1);
 
-    direction(spd, args);
+    // Print a message about how happy Yred is about our performance this floor
+    string msg = "You return your torch's flame to Yredelemnul,";
 
-    if (!spd.isValid)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    monster* mons = monster_at(spd.target);
-    if (!beogh_can_gift_items_to(mons, false))
-        return false;
-
-    int item_slot = prompt_invent_item("Give which item?",
-                                       menu_type::invlist, OSEL_BEOGH_GIFT);
-
-    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    item_def& gift = you.inv[item_slot];
-
-    const bool shield = is_offhand(gift);
-    const bool body_armour = gift.base_type == OBJ_ARMOUR
-                             && get_armour_slot(gift) == EQ_BODY_ARMOUR;
-    const bool weapon = gift.base_type == OBJ_WEAPONS;
-    const bool range_weapon = weapon && is_range_weapon(gift);
-    const item_def* mons_weapon = mons->weapon();
-    const item_def* mons_alt_weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
-
-    if (weapon && !mons->could_wield(gift)
-        || body_armour && !check_armour_size(gift, mons->body_size())
-        || !item_is_selected(gift, OSEL_BEOGH_GIFT))
-    {
-        mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
-
-        return false;
-    }
-    else if (shield
-             && (mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
-                 || mons_alt_weapon
-                    && mons->hands_reqd(*mons_alt_weapon) == HANDS_TWO))
-    {
-        mprf("%s can't equip that with a two-handed weapon.",
-             mons->name(DESC_THE, false).c_str());
-        return false;
-    }
-
-    // if we're giving a ranged weapon to an orc holding a melee weapon in
-    // their hands, or vice versa, put it in their carried slot instead.
-    // this will of course drop anything that's there.
-    const bool use_alt_slot = weapon && mons_weapon
-                              && is_range_weapon(gift) !=
-                                 is_range_weapon(*mons_weapon);
-
-    const auto mslot = body_armour ? MSLOT_ARMOUR :
-                                    shield ? MSLOT_SHIELD :
-                              use_alt_slot ? MSLOT_ALT_WEAPON :
-                                             MSLOT_WEAPON;
-
-    item_def *floor_item = mons->take_item(item_slot, mslot);
-    if (!floor_item)
-    {
-        // this probably means move_to_grid in drop_item failed?
-        mprf(MSGCH_ERROR, "Gift failed: %s is unable to take %s.",
-                                        mons->name(DESC_THE, false).c_str(),
-                                        gift.name(DESC_THE, false).c_str());
-        return false;
-    }
-    if (use_alt_slot)
-        mons->swap_weapons();
-
-    if (shield)
-        mons->props[BEOGH_SH_GIFT_KEY] = true;
-    else if (body_armour)
-        mons->props[BEOGH_ARM_GIFT_KEY] = true;
-    else if (range_weapon)
-        mons->props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
+    if (ratio > 90)
+        msg+= " and they are glorified by your conquest!";
+    else if (ratio > 65)
+        msg+= " and they are satisfied with your conquest.";
+    else if (ratio > 30)
+        msg+= " and feel their disappointment in your meagre crusade.";
     else
-        mons->props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
+        msg+= " and feel their disdain for your failure.";
 
+    mprf(MSGCH_GOD, "%s", msg.c_str());
+
+    // Actually end the torch effect
+    you.props.erase(YRED_TORCH_POWER_KEY);
+    you.props.erase(YRED_KILLS_LOGGED_KEY);
+}
+
+bool yred_torch_is_raised()
+{
+    return yred_get_torch_power() > -1;
+}
+
+// Whether the black torch is currently raised, and how many uses of
+// Hurl Torchlight it has remaining. (Returns -1 if the torch is unlit, and
+// the number of remaining charges otherwise)
+int yred_get_torch_power()
+{
+    if (!you.props.exists(YRED_TORCH_POWER_KEY))
+        return -1;
+    else
+        return you.props[YRED_TORCH_POWER_KEY].get_int();
+}
+
+// Feed a slain enemy to fuel our torch (maybe)
+void yred_feed_torch(const monster* mons)
+{
+    if (!mons_can_be_spectralised(*mons, true))
+        return;
+
+    // Track any valid kill, so we can tell how throughly the player scoured
+    // the floor afterward
+    you.props[YRED_KILLS_LOGGED_KEY].get_int() += 1;
+
+    // Only gain fuel from uniques we could raise, and will not bind
+    if (!mons_is_unique(mons->type)
+        || mons->has_ench(ENCH_SOUL_RIPE))
+    {
+        return;
+    }
+
+    if (!player_has_ability(ABIL_YRED_HURL_TORCHLIGHT))
+        return;
+
+    // Gain one torchlight charge for each unique killed
+    mprf(MSGCH_GOD, "The black torch howls with new intensity!");
+    you.props[YRED_TORCH_POWER_KEY].get_int() += 1;
+}
+
+// Determine if this enemy is adjacent to at least one ally
+static bool _is_isolated_soul(monster* mons)
+{
+    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+    {
+        const actor* act = actor_at(*ai);
+        if (!act || !act->is_monster())
+            continue;
+
+        const monster* mon = act->as_monster();
+        if (!mons_is_firewood(*mon) && mons_aligned(mons, mon))
+            return false;
+    }
     return true;
 }
 
-bool beogh_resurrect()
+#define YRED_BLASPEMY_MAX_RADIUS 4
+
+static void _set_blasphemy_radius(int radius)
 {
-    item_def* corpse = nullptr;
-    bool found_any = false;
-    for (stack_iterator si(you.pos()); si; ++si)
-        if (si->props.exists(ORC_CORPSE_KEY))
-        {
-            found_any = true;
-            if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
-                       + "?").c_str(), true, 'n'))
-            {
-                corpse = &*si;
-                break;
-            }
-        }
-    if (!corpse)
-    {
-        mprf("There's nobody %shere you can resurrect.",
-             found_any ? "else " : "");
-        return false;
-    }
+    const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
 
-    coord_def pos;
-    ASSERT(corpse->props.exists(ORC_CORPSE_KEY));
-    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        if (!actor_at(*ai)
-            && corpse->props[ORC_CORPSE_KEY].get_monster().is_location_safe(*ai))
-        {
-            pos = *ai;
-        }
-    }
-    if (pos.origin())
-    {
-        mpr("There's no room!");
-        return false;
-    }
+    for (distance_iterator di(p, false, false, YRED_BLASPEMY_MAX_RADIUS); di; ++di)
+        env.pgrid(*di) &= ~FPROP_BLASPHEMY;
 
-    monster* mon = get_free_monster();
-    *mon = corpse->props[ORC_CORPSE_KEY];
-    destroy_item(corpse->index());
-    env.mid_cache[mon->mid] = mon->mindex();
-    mon->hit_points = mon->max_hit_points;
-    mon->inv.init(NON_ITEM);
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (distance_iterator di(p, false, false, radius); di; ++di)
+        env.pgrid(*di) |= FPROP_BLASPHEMY;
+}
+
+void yred_make_blasphemy()
+{
+    you.props[YRED_BLASPHEMY_CENTER_KEY] = you.pos();
+    _set_blasphemy_radius(YRED_BLASPEMY_MAX_RADIUS);
+}
+
+void yred_end_blasphemy()
+{
+    if (!you.props.exists(YRED_BLASPHEMY_CENTER_KEY))
+        return;
+
+    _set_blasphemy_radius(-1);
+}
+
+static int _calc_blasphemy_radius()
+{
+    if (you.duration[DUR_FATHOMLESS_SHACKLES] < 20)
+        return 0;
+    else if (you.duration[DUR_FATHOMLESS_SHACKLES] < 50)
+        return 1;
+    else if (you.duration[DUR_FATHOMLESS_SHACKLES] < 90)
+        return 2;
+    if (you.duration[DUR_FATHOMLESS_SHACKLES] < 150)
+        return 3;
+    else
+        return 4;
+}
+
+void yred_fathomless_shackles_effect(int delay)
+{
+    // Adjust blasphemy size based on duration
+    int radius = _calc_blasphemy_radius();
+    _set_blasphemy_radius(radius);
+
+    // You're not standing in the zone. Release all bound monsters and skip effects.
+    if (!is_blasphemy(you.pos()))
+        radius = 0;
+
+    int total_drained = 0;
+    const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
+    int pow = div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay);
+    for (monster_near_iterator mi(p); mi; ++mi)
     {
-        if (!si->props.exists(DROPPER_MID_KEY)
-            || si->props[DROPPER_MID_KEY].get_int() != int(mon->mid))
+        if (grid_distance(mi->pos(), p) > radius
+            || mi->wont_attack() || mons_is_firewood(**mi))
         {
             continue;
         }
-        unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->pickup_item(*si, false, true);
-    }
-    mon->move_to_pos(pos);
-    mon->timeout_enchantments(100);
-    beogh_convert_orc(mon, conv_t::resurrection);
 
-    return true;
+        if (!mi->has_ench(ENCH_BOUND))
+            mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, INFINITE_DURATION));
+
+        // Cache this first, since damage might kill them
+        bool can_drain = actor_is_susceptible_to_vampirism(**mi, false);
+
+        int dam = resist_adjust_damage(*mi, BEAM_NEG, random2avg(pow, 2));
+        if (_is_isolated_soul(*mi))
+            dam *= 3/2;
+
+        // You can't drain life from summons, but you can still hurt them.
+        int dam_done = mi->hurt(&you, dam, BEAM_NEG, KILLED_BY_BEAM);
+        if (can_drain)
+            total_drained += dam_done;
+
+        behaviour_event(*mi, ME_WHACK, &you);
+    }
+
+    // Cap healing so that we can make this still worth using against moderate
+    // numbers of enemies without making it complete invincibility against large
+    // numbers.
+    you.heal(min(total_drained / 2, delay * 2));
 }
 
 bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon, true)
-           && !mons_bound_body_and_soul(*mon)
+           && !mon->has_ench(ENCH_SOUL_RIPE)
            && mon->attitude != ATT_FRIENDLY;
+}
+
+int yred_get_bound_soul_hp(monster_type mt, bool estimate_only)
+{
+    return get_monster_data(mt)->avg_hp_10x
+           * (7 + (estimate_only ? (you.skill(SK_INVOCATIONS) / 5)
+                                 : you.skill_rdiv(SK_INVOCATIONS, 1, 5))) / 100
+           + 15;
 }
 
 void yred_make_bound_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_bound_body_and_soul(*mon));
+    ASSERT(mon->has_ench(ENCH_SOUL_RIPE));
 
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_bound_soul_companion();
@@ -1676,8 +1707,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
 
-    // Remove the monster's soul-enslaving enchantment, as it's no
-    // longer needed.
+    // Heal the health we paid wrestling for this soul
+    you.heal(mon->get_ench(ENCH_SOUL_RIPE).degree);
     mon->del_ench(ENCH_SOUL_RIPE, false, false);
 
     // Remove the monster's invisibility enchantment. If we don't do
@@ -1703,11 +1734,20 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
                                     { return is_holy_item(item); });
     mon->remove_summons();
 
+    // Fire death events (since the monster avoids *actually* dying).
+    // In practice, this mostly means "Let Binding TRJ actually open the vault"
+    handle_monster_dies_lua(*mon, KILL_BOUND);
+    fire_monster_death_event(mon, KILL_BOUND, false);
+
     const monster orig = *mon;
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
+
+    // Modify health based on invocations skill
+    mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
+    mon->hit_points = mon->max_hit_points;
 
     mon->flags |= MF_NO_REWARD;
 
@@ -1720,6 +1760,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
             mon->spells.push_back(slot);
     if (mon->spells.size())
         mon->props[CUSTOM_SPELLS_KEY] = true;
+
+    mon->props[KNOWN_MAX_HP_KEY] = mon->max_hit_points;
 
     name_zombie(*mon, orig);
 
@@ -2290,14 +2332,46 @@ bool ashenzari_uncurse_item()
 
 bool can_convert_to_beogh()
 {
-    if (silenced(you.pos()))
+    if (!(env.level_state & LSTATE_BEOGH) || you.hp * 3 / 2 > you.hp_max
+        || silenced(you.pos()))
+    {
         return false;
+    }
 
     for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
-        if (mons_allows_beogh_now(*m))
+        if (mons_offers_beogh_conversion_now(*m))
             return true;
 
     return false;
+}
+
+void announce_beogh_conversion_offer()
+{
+    if (you.attribute[ATTR_SEEN_BEOGH]
+        || you.religion != GOD_NO_GOD
+        || !(env.level_state & LSTATE_BEOGH)
+        || you.hp * 3 / 2 > you.hp_max)
+    {
+        return;
+    }
+
+    for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
+    {
+        if (mons_offers_beogh_conversion_now(*m))
+        {
+            mons_speaks_msg(m, getSpeakString("orc_priest_preaching"),
+                            MSGCH_TALK);
+
+            ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                            'A', 'z' + 1);
+            mprf("(press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)",
+                    get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                    command_to_string(CMD_USE_ABILITY).c_str());
+            you.attribute[ATTR_SEEN_BEOGH] = 1;
+
+            return;
+        }
+    }
 }
 
 void spare_beogh_convert()
@@ -2326,7 +2400,7 @@ void spare_beogh_convert()
 
         // Anyone who has seen the priest perform the ceremony will spare you
         // as well.
-        if (mons_allows_beogh(*mon))
+        if (mons_offers_beogh_conversion(*mon))
         {
             for (radius_iterator pi(you.pos(), LOS_DEFAULT); pi; ++pi)
             {
@@ -2357,13 +2431,320 @@ void spare_beogh_convert()
     you.religion = GOD_BEOGH;
     you.one_time_ability_used.set(GOD_BEOGH);
 
-    if (witc == 1)
-        mpr("The priest welcomes you and lets you live.");
+    // Grant the player succor for accepting the Shepherd as their god
+    you.heal(random_range(10, 20));
+    you.duration[DUR_CONF] = 0;
+
+    mpr("The priest grants you succor and welcomes you into the fold.");
+    if (witc > 1)
+        mpr("The other orcs roar their approval!");
+}
+
+static monster_type _get_orc_reinforcement_type(int pow)
+{
+    // 2/7 split between priests and fighters.
+    // (Sorcerers tend to be less useful in among such a swarm)
+    if (x_chance_in_y(5, 7))
+    {
+        if (x_chance_in_y(pow, 255))
+            return MONS_ORC_WARLORD;
+        else if (x_chance_in_y(pow, 110))
+            return MONS_ORC_KNIGHT;
+        else if (x_chance_in_y(pow, 75))
+            return MONS_ORC_WARRIOR;
+    }
     else
     {
-        mpr("With a roar of approval, the orcs welcome you as one of their own,"
-            " and spare your life.");
+        if (x_chance_in_y(pow, 135))
+            return MONS_ORC_HIGH_PRIEST;
+        else
+            return MONS_ORC_PRIEST;
     }
+
+    return MONS_ORC;
+}
+
+void beogh_blood_for_blood()
+{
+    // Mark all corpses at our feet as having already been used, in case this
+    // blood oath fails to generate enough piety to revive them.
+    string apostle_name;
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
+            && si->props.exists(BEOGH_BFB_VALID_KEY))
+        {
+            si->props.erase(BEOGH_BFB_VALID_KEY);
+            apostle_name = si->props[CORPSE_NAME_KEY].get_string();
+        }
+    }
+
+    mprf("You place your %s atop %s's lifeless body and utter a vengeful prayer.",
+         you.hand_name(false).c_str(), apostle_name.c_str());
+
+    you.duration[DUR_BLOOD_FOR_BLOOD] = random_range(130, 180) * BASELINE_DELAY;
+
+    // Summon a bunch of high level orcs immediately around the player (based on
+    // invocations)
+    bool orc_spoke = false;
+    int pow = you.skill(SK_INVOCATIONS, 5);
+    int num_orcs = min(3 + you.skill_rdiv(SK_INVOCATIONS, 3, 4), 24);
+    for (distance_iterator di(you.pos(), false, true, 2); di && num_orcs > 0; ++di)
+    {
+        if (actor_at(*di) || !feat_has_solid_floor(env.grid(*di))
+            || !you.see_cell_no_trans(*di))
+        {
+            continue;
+        }
+
+        mgen_data mg(_get_orc_reinforcement_type(pow), BEH_FRIENDLY, *di,
+                     MHITNOT, MG_AUTOFOE | MG_FORCE_PLACE);
+        mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+        monster* orc = create_monster(mg);
+        if (orc)
+        {
+            orc->flags |= MF_HARD_RESET;
+            orc->mark_summoned(0, true, MON_SUMM_AID, false);
+            orc->god = GOD_BEOGH;
+            num_orcs -= 1;
+
+            // At least one orc will always speak, but more may also do so
+            if (!orc_spoke || one_chance_in(12))
+            {
+                mons_speaks_msg(orc, getSpeakString("friendly bfb orc"), MSGCH_TALK);
+                orc_spoke = true;
+            }
+        }
+    }
+}
+
+static int _count_orcish_reinforcements()
+{
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_SUMMON)
+            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+            && mons_genus(mi->type) == MONS_ORC)
+        {
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+static void _place_orcish_reinforcement()
+{
+    // Find placement spot
+    coord_def pos;
+    int tries_left = 5;
+    for (distance_iterator di(you.pos(), true, true, 9); di && tries_left > 0; ++di)
+    {
+        if (grid_distance(you.pos(), *di) < 8
+            || !feat_has_solid_floor(env.grid(*di))
+            || actor_at(*di))
+        {
+            continue;
+        }
+
+        // We're at least marginally viable, so let's try the more expensive checks
+        tries_left -= 1;
+
+        // Finally, test that we can reach the player from here
+        monster_pathfind mp;
+        mp.set_range(10);   // Don't search further than this
+        if (mp.init_pathfind(*di, you.pos()))
+        {
+            pos = *di;
+            break;
+        }
+    }
+
+    // If we found no suitable placement spot, bail out
+    if (pos.origin())
+        return;
+
+    // Otherwise, generate an orc!
+
+    mgen_data mg(MONS_ORC_PRIEST, BEH_FRIENDLY, pos, MHITNOT, MG_AUTOFOE);
+    mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+    mg.cls = _get_orc_reinforcement_type(you.skill_rdiv(SK_INVOCATIONS, 7, 2));
+
+    monster* orc = create_monster(mg);
+    if (orc)
+    {
+        orc->flags |= MF_HARD_RESET;
+        orc->mark_summoned(0, true, MON_SUMM_AID, false);
+        orc->god = GOD_BEOGH;
+    }
+}
+
+void beogh_blood_for_blood_tick(int delay)
+{
+    // This isn't scaled by delay, since I'm not really sure how. We could make
+    // it probabilistic, but then there's the chance of going several turns
+    // without making any noise at all. Not sure...
+    noisy(12, you.pos());
+
+    // Cap the number of orcs we can summon at once (based on invocations)
+    int count = _count_orcish_reinforcements();
+    int max = 7 + you.skill_rdiv(SK_INVOCATIONS, 3, 4);
+    if (count >= max)
+        return;
+
+    // Summon orcs faster, the fewer of them we have.
+    // Scales from ~1 orc per 6 aut at 0, up to ~1 orc per 50 aut near max
+    int rate = 10 + 30 * (10 - (count * 10 / max)) / 10;
+    if (count * 3 <= max)
+        rate *= 2;
+
+    int num_to_summon = div_rand_round(rate, delay * 5);
+
+    for (int i = 0; i < num_to_summon; ++i)
+        _place_orcish_reinforcement();
+}
+
+void beogh_end_blood_for_blood()
+{
+    mprf(MSGCH_DURATION,
+         "You reach the end of your prayer and your brethren are recalled.");
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_SUMMON)
+            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+            && mons_genus(mi->type) == MONS_ORC)
+        {
+            place_cloud(CLOUD_TLOC_ENERGY, mi->pos(), 1 + random2(3), *mi);
+            monster_die(**mi, KILL_RESET, -1, true);
+        }
+    }
+    you.duration[DUR_BLOOD_FOR_BLOOD] = 0;
+}
+
+void beogh_ally_healing()
+{
+    if (!you.props.exists(BEOGH_DAMAGE_DONE_KEY)
+        || x_chance_in_y(2, 5))
+    {
+        you.props.erase(BEOGH_DAMAGE_DONE_KEY);
+        return;
+    }
+
+    int value = you.props[BEOGH_DAMAGE_DONE_KEY].get_int();
+    you.props.erase(BEOGH_DAMAGE_DONE_KEY);
+
+    value = value * 4 / 10;
+
+    // Skip small heals
+    if (value < 5)
+        return;
+
+    vector<monster*> heal_list;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (mi->is_divine_companion() && mi->hit_points < mi->max_hit_points)
+            heal_list.push_back(*mi);
+    }
+
+    if (heal_list.empty())
+        return;
+
+    value = max(1, (int)(value / heal_list.size()));
+    int healing_done = 0;
+    for (auto mon : heal_list)
+    {
+        healing_done += min(value, mon->max_hit_points - mon->hit_points);
+        mon->heal(value);
+    }
+
+    mprf("%s %s%sinvigorated by your prowess.",
+          heal_list.size() == 1 ? heal_list[0]->name(DESC_THE).c_str()
+                                : "Your followers are",
+          heal_list.size() == 1 ? "is " : "",
+          healing_done > 25 ? " greatly " : "");
+}
+
+// Prompts the player for reasons they may not wish to leave a floor.
+// Returns whether the player decided to cancel the move.
+bool beogh_cancel_leaving_floor()
+{
+    if (!you_worship(GOD_BEOGH))
+        return false;
+
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+    {
+        if (!yesno("Are you sure you wish to flee a divine trial? This will "
+                   "place you under penance!", false, 'n'))
+        {
+            mpr("Beogh appreciates your bravery.");
+            return true;
+        }
+    }
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+    {
+        if (!yesno("Your vengeful prayer will end if you leave here."
+                   " Continue?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void beogh_increase_orcification()
+{
+    // Currently gaining a second level doesn't have much messaging. Perhaps in
+    // future, it should?
+    if (you.props.exists(ORCIFICATION_LEVEL_KEY))
+    {
+        you.props[ORCIFICATION_LEVEL_KEY] = 2;
+        mprf(MSGCH_MUTATION, "Your orcish features manifest fully.");
+        return;
+    }
+
+    // Adjust the message we give to the player's physiology.
+    string msg;
+    switch (you.species)
+    {
+        case SP_FORMICID:
+            msg += "Your mandibles take on a glossy white sheen and your antennae grow pointier.";
+            break;
+
+        case SP_TENGU:
+            msg += "Your beak becomes more hooked and the plumage around your ears grows tufted.";
+            break;
+
+        case SP_GARGOYLE:
+            msg += "You feel a divine power chisel tusks from your teeth and sculpt your ears to a sharp point.";
+            break;
+
+        case SP_VINE_STALKER:
+            msg += "A pair of ivory tusks grows out from your maw and flowers begin to bloom upon you.";
+            break;
+
+        case SP_MUMMY:
+            msg += "A small pair of tusks begins to pierce through your wrappings.";
+            break;
+
+        case SP_BARACHI:
+            msg += "Your teeth grow more tusk-like and your tympanum bulges.";
+            break;
+
+        case SP_OCTOPODE:
+            msg += "Your beak grows more hooked and small fins emerge from the sides of your head.";
+            break;
+
+        default:
+            msg += "Your teeth grow more tusk-like and your ears lengthen.";
+            break;
+    }
+
+    mprf(MSGCH_MUTATION, "%s", msg.c_str());
+    you.props[ORCIFICATION_LEVEL_KEY] = 1;
 }
 
 spret dithmenos_shadow_step(bool fail)

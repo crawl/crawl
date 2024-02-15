@@ -324,8 +324,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define FLAY_BLOOD_KEY "flay_blood"
 #define IDEAL_RANGE_KEY "ideal_range"
 #define LAST_POS_KEY "last_pos"
-#define IDLE_POINT_KEY "idle_point"
-#define IDLE_DEADLINE_KEY "idle_deadline"
 #define BLOCKED_DEADLINE_KEY "blocked_deadline"
 #define BROTHERS_KEY "brothers_count"
 #define OLD_HEADS_KEY "old_heads"

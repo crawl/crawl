@@ -31,7 +31,7 @@
 #include "god-blessing.h"
 #include "god-companions.h"
 #include "god-conduct.h"
-#include "god-passive.h" // passive_t::bless_followers, share_exp, convert_orcs
+#include "god-passive.h" // passive_t::bless_followers, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
 #include "item-name.h"
@@ -155,16 +155,13 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
-    // 0 mid indicates this is a dummy monster, such as for kiku corpse drop
-    if (mons_genus(mons.type) == MONS_ORC && mons.mid != 0)
+    // Store mid of dead orc apostles so we can find their corpse again later.
+    // (And note the floor they died on)
+    if (mons.type == MONS_ORC_APOSTLE)
     {
-        auto &saved_mon = corpse.props[ORC_CORPSE_KEY].get_monster();
-        saved_mon = mons;
-
-        // Ensure that saved_mon is alive, lest it be cleared on marshall.
-        if (saved_mon.max_hit_points <= 0)
-            saved_mon.max_hit_points = 1;
-        saved_mon.hit_points = saved_mon.max_hit_points;
+        corpse.props[CORPSE_MID_KEY].get_int() = mons.mid;
+        if (mons.is_divine_companion())
+            corpse.props[BEOGH_BFB_VALID_KEY] = true;
     }
 
     return true;
@@ -231,62 +228,6 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
     return true;
 }
 
-static int _calc_monster_experience(monster* victim, killer_type killer,
-                                    int killer_index)
-{
-    const int experience = exper_value(*victim);
-
-    if (!experience || !MON_KILL(killer) || invalid_monster_index(killer_index))
-        return 0;
-
-    monster* mon = &env.mons[killer_index];
-    if (!mon->alive() || !mons_gives_xp(*victim, *mon))
-        return 0;
-
-    return experience;
-}
-
-static void _give_monster_experience(int experience, int killer_index)
-{
-    if (experience <= 0 || invalid_monster_index(killer_index))
-        return;
-
-    monster* mon = &env.mons[killer_index];
-    if (!mon->alive())
-        return;
-
-    if (mon->gain_exp(experience))
-    {
-        if (!have_passive(passive_t::bless_followers) || !one_chance_in(3))
-            return;
-
-        // Randomly bless the follower who gained experience.
-        if (random2(you.piety) >= piety_breakpoint(2))
-            bless_follower(mon);
-    }
-}
-
-static void _beogh_spread_experience(int exp)
-{
-    int total_hd = 0;
-
-    for (monster_near_iterator mi(&you); mi; ++mi)
-    {
-        if (is_orcish_follower(**mi))
-            total_hd += mi->get_experience_level();
-    }
-
-    if (total_hd <= 0)
-        return;
-
-    for (monster_near_iterator mi(&you); mi; ++mi)
-        if (is_orcish_follower(**mi))
-        {
-            _give_monster_experience(exp * mi->get_experience_level() / total_hd,
-                                         mi->mindex());
-        }
-}
-
 static int _calc_player_experience(const monster* mons)
 {
     int experience = exper_value(*mons);
@@ -304,9 +245,8 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
-    experience = (experience * mons->damage_friendly / mons->damage_total
-                  + 1) / 2;
-    ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
+    experience = (experience * mons->damage_friendly / mons->damage_total + 1);
+    ASSERT(mons->damage_friendly <= mons->damage_total);
 
     return experience;
 }
@@ -359,19 +299,6 @@ static void _give_player_experience(int experience, killer_type killer,
     // Give a message for monsters dying out of sight.
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
-
-    if (kc == KC_YOU && have_passive(passive_t::share_exp))
-        _beogh_spread_experience(experience / 2);
-}
-
-static void _give_experience(int player_exp, int monster_exp,
-                             killer_type killer, int killer_index,
-                             bool pet_kill, bool was_visible,
-                             xp_tracking_type xp_tracking)
-{
-    _give_player_experience(player_exp, killer, pet_kill, was_visible,
-            xp_tracking);
-    _give_monster_experience(monster_exp, killer_index);
 }
 
 /**
@@ -530,7 +457,9 @@ void maybe_drop_monster_organ(monster_type mon, monster_type orig,
 item_def* place_monster_corpse(const monster& mons, bool force)
 {
     if (mons.is_summoned()
-        || mons.flags & (MF_BANISHED | MF_HARD_RESET)
+        || mons.flags & MF_BANISHED
+        // Follower apostles should drop corpses (but nothing else)
+        || mons.flags & MF_HARD_RESET && !mons.is_divine_companion()
         || mons.props.exists(PIKEL_BAND_KEY))
     {
         return nullptr;
@@ -597,6 +526,10 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
+    // Preserve the corpses of your followers (helps to tell where they died)
+    if (mons.type == MONS_ORC_APOSTLE)
+        corpse.props[CORPSE_NEVER_DECAYS] = true;
+
     return &env.item[o];
 }
 
@@ -610,7 +543,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_CHARMD ? "charmed" :
+           killer == KILL_BOUND ? "bound" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -676,24 +609,19 @@ static bool _is_pet_kill(killer_type killer, int i)
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
-int exp_rate(int killer)
+// Returns whether damage from a given agent counts as a 'player source' for
+// purposes of the player gaining XP from damage/kills they cause.
+bool damage_contributes_xp(const actor& agent)
 {
-    // Damage by Beogh orcs counts for half experience. Hepliaklqana ancestors
-    // and all other allies grant full experience.
-    if (!invalid_monster_index(killer)
-        && env.mons[killer].is_divine_companion()
-        && env.mons[killer].god == GOD_BEOGH)
-    {
-        return 1;
-    }
+    const int killer = agent.mindex();
 
     if (killer == MHITYOU || killer == YOU_FAULTLESS)
-        return 2;
+        return true;
 
     if (_is_pet_kill(KILL_MON, killer))
-        return 2;
+        return true;
 
-    return 0;
+    return false;
 }
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
@@ -774,15 +702,15 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
     return true;
 }
 
-static bool _yred_bound_soul(monster* mons, killer_type killer)
+static bool _yred_bind_soul(monster* mons, killer_type killer)
 {
-    if (you_worship(GOD_YREDELEMNUL) && mons_bound_body_and_soul(*mons)
+    if (you_worship(GOD_YREDELEMNUL) && mons->has_ench(ENCH_SOUL_RIPE)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
         record_monster_defeat(mons, killer);
-        record_monster_defeat(mons, KILL_CHARMD);
+        record_monster_defeat(mons, KILL_BOUND);
         yred_make_bound_soul(mons, player_under_penance());
         return true;
     }
@@ -838,7 +766,9 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (!have_passive(passive_t::convert_orcs)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
-        || !you.see_cell(mons.pos()) || mons_is_god_gift(mons))
+        || !you.see_cell(mons.pos()) || mons_is_god_gift(mons)
+        || mons.flags & MF_APOSTLE_BAND
+        || mons.type == MONS_ORC_APOSTLE)
     {
         return false;
     }
@@ -877,11 +807,24 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Yredelemnul special.
-    if (_yred_bound_soul(mons, killer))
+    if (_yred_bind_soul(mons, killer))
         return true;
 
     // Beogh special.
-    if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
+    if (mons->type == MONS_ORC_APOSTLE && you_worship(GOD_BEOGH))
+    {
+        if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+        {
+            if (killer == KILL_BANISHED)
+                simple_god_message(" pulls their child back from the Abyss.", GOD_BEOGH);
+
+            win_apostle_challenge(*mons);
+            mons->hit_points = mons->max_hit_points;
+            avoided_death_fineff::schedule(mons);
+            return true;
+        }
+    }
+    else if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
         return true;
 
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
@@ -1142,8 +1085,8 @@ static string _killer_type_name(killer_type killer)
 #endif
     case KILL_PACIFIED:
         return "pacified";
-    case KILL_CHARMD:
-        return "charmed";
+    case KILL_BOUND:
+        return "bound";
     case KILL_SLIMIFIED:
         return "slimified";
     }
@@ -1581,7 +1524,8 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
         return false;
 
     // Yred takes priority over everything but Infestation.
-    if (in_los && have_passive(passive_t::reaping))
+    if (in_los && have_passive(passive_t::reaping)
+        && mons.umbraed())
     {
         if (yred_reap_chance())
             _yred_reap(mons, corpse_gone);
@@ -1607,11 +1551,9 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
 
 static bool _god_will_bless_follower(monster* victim)
 {
-    return have_passive(passive_t::bless_followers)
-           && random2(you.piety) >= piety_breakpoint(2)
-           || have_passive(passive_t::bless_followers_vs_evil)
-              && victim->evil()
-              && random2(you.piety) >= piety_breakpoint(0);
+    return have_passive(passive_t::bless_followers_vs_evil)
+           && victim->evil()
+           && random2(you.piety) >= piety_breakpoint(0);
 }
 
 /**
@@ -1624,7 +1566,7 @@ static bool _god_will_bless_follower(monster* victim)
  * @param maybe_good_kill   Whether the kill can be rewarding in piety.
  *                          (Not summoned, etc)
  */
-static void _fire_kill_conducts(monster &mons, killer_type killer,
+static void _fire_kill_conducts(const monster &mons, killer_type killer,
                                 int killer_index, bool maybe_good_kill)
 {
     const bool your_kill = killer == KILL_YOU ||
@@ -1632,10 +1574,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
                            killer == KILL_YOU_MISSILE ||
                            killer_index == YOU_FAULTLESS;
     const bool pet_kill = _is_pet_kill(killer, killer_index);
-
-    // Pretend the monster is already dead, so that make_god_gifts_disappear
-    // (and similar) don't kill it twice.
-    unwind_var<int> fake_hp(mons.hit_points, 0);
 
     // if you or your pets didn't do it, no one cares
     if (!your_kill && !pet_kill)
@@ -1766,6 +1704,30 @@ bool mons_will_goldify(const monster &mons)
     return have_passive(passive_t::goldify_corpses) && mons_gives_xp(mons, you);
 }
 
+void handle_monster_dies_lua(monster& mons, killer_type killer)
+{
+    if (mons.props.exists(MONSTER_DIES_LUA_KEY))
+    {
+        lua_stack_cleaner clean(dlua);
+
+        dlua_chunk &chunk = mons.props[MONSTER_DIES_LUA_KEY];
+
+        if (!chunk.load(dlua))
+        {
+            push_monster(dlua, &mons);
+            clua_pushcxxstring(dlua, _killer_type_name(killer));
+            dlua.callfn(nullptr, 2, 0);
+        }
+        else
+        {
+            mprf(MSGCH_ERROR,
+                 "Lua death function for monster '%s' didn't load: %s",
+                 mons.full_name(DESC_PLAIN).c_str(),
+                 dlua.error.c_str());
+        }
+    }
+}
+
 /**
  * Kill off a monster.
  *
@@ -1833,27 +1795,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
 
-    if (mons.props.exists(MONSTER_DIES_LUA_KEY))
-    {
-        lua_stack_cleaner clean(dlua);
-
-        dlua_chunk &chunk = mons.props[MONSTER_DIES_LUA_KEY];
-
-        if (!chunk.load(dlua))
-        {
-            push_monster(dlua, &mons);
-            clua_pushcxxstring(dlua, _killer_type_name(killer));
-            dlua.callfn(nullptr, 2, 0);
-        }
-        else
-        {
-            mprf(MSGCH_ERROR,
-                 "Lua death function for monster '%s' didn't load: %s",
-                 mons.full_name(DESC_PLAIN).c_str(),
-                 dlua.error.c_str());
-        }
-    }
-
+    handle_monster_dies_lua(mons, killer);
     mons_clear_trapping_net(&mons);
     mons.stop_constricting_all();
     mons.stop_being_constricted();
@@ -2469,6 +2411,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 if (!mons.is_summoned())
                     drop_items = false;
                 break;
+
+
             }
 
             {
@@ -2513,9 +2457,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         dprf("Non-damage %s of %s.", mons_reset ? "reset" : "kill",
                                         mons.name(DESC_A, true).c_str());
-        if (YOU_KILL(killer))
-            mons.damage_friendly += mons.hit_points * 2;
-        else if (pet_kill)
+        if (YOU_KILL(killer) || pet_kill)
             mons.damage_friendly += mons.hit_points;
         mons.damage_total += mons.hit_points;
 
@@ -2682,6 +2624,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
+        if (in_los && corpseworthy && yred_torch_is_raised())
+            yred_feed_torch(&mons);
+
         corpse_consumed = _apply_necromancy(mons, !death_message, corpse_gone,
                                             in_los, corpseworthy);
     }
@@ -2713,8 +2658,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
-    const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
-                                                             killer_index);
 
     // Player Powered by Death
     if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
@@ -2744,8 +2687,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (fake)
     {
-        _give_experience(player_xp, monster_xp, killer, killer_index,
-                         pet_kill, was_visible, mons.xp_tracking);
+        _give_player_experience(player_xp, killer, pet_kill,
+                                was_visible, mons.xp_tracking);
         crawl_state.dec_mon_acting(&mons);
 
         return corpse;
@@ -2764,6 +2707,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
     }
+
+    if (mons.has_ench(ENCH_VENGEANCE_TARGET))
+        beogh_progress_vengeance();
 
     mons_remove_from_grid(mons);
     fire_monster_death_event(&mons, killer, false);
@@ -2825,6 +2771,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (hepliaklqana_ancestor() == MID_NOBODY)
                 you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
         }
+        else if (mons.type == MONS_ORC_APOSTLE)
+            beogh_swear_vegeance(mons);
+    }
+    else if (mons.is_divine_companion()
+             && killer == KILL_BANISHED
+             && mons.type == MONS_ORC_APOSTLE)
+    {
+        beogh_follower_banished(mons);
     }
 
     // If we kill an invisible monster reactivate autopickup.
@@ -2850,8 +2804,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (!mons_reset)
     {
-        _give_experience(player_xp, monster_xp, killer, killer_index,
-                pet_kill, was_visible, mons.xp_tracking);
+        _give_player_experience(player_xp, killer, pet_kill, was_visible,
+                                mons.xp_tracking);
     }
     return corpse;
 }
@@ -3059,7 +3013,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Yredelemnul special, redux: It's the only one that can
     // work on drowned monsters.
-    if (!_yred_bound_soul(mons, killer))
+    if (!_yred_bind_soul(mons, killer))
         monster_die(*mons, killer, killnum, true);
 }
 
@@ -3148,11 +3102,17 @@ string summoned_poof_msg(const monster* mons, bool plural)
             msg      = "dissolve%s into sparkling lights";
             no_chaos = true;
         }
+        else if (valid_mon && mons->god == GOD_YREDELEMNUL)
+            msg      = "returns to the grave";
         break;
 
     case SPELL_SPECTRAL_CLOUD:
     case SPELL_CALL_LOST_SOULS:
         msg = "fade%s away";
+        break;
+
+    case SPELL_STICKS_TO_SNAKES:
+        msg = "turns back into a lifeless stick";
         break;
     }
 

@@ -1379,7 +1379,7 @@ static void _redraw_title()
     // Minotaur [of God] [Piety]
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
-    string species = species::name(you.species);
+    string species = player_species_name();
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {

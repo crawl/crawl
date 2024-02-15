@@ -198,7 +198,7 @@ monster *monster_at(const coord_def &pos);
 // this is the old moname()
 string mons_type_name(monster_type type, description_level_type desc);
 
-bool give_monster_proper_name(monster& mon, bool orcs_only = true);
+bool give_monster_proper_name(monster& mon);
 
 bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);
@@ -323,8 +323,6 @@ bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);
 bool mons_can_use_stairs(const monster& mon,
                          dungeon_feature_type stair = DNGN_UNSEEN);
-bool mons_bound_body_and_soul(const monster& mon);
-bool mons_bound_soul(const monster& mon);
 void name_zombie(monster& mon, monster_type mc, const string &mon_name);
 void name_zombie(monster& mon, const monster& orig);
 
@@ -421,8 +419,8 @@ bool mons_is_projectile(const monster& mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
-bool mons_allows_beogh(const monster& mon);
-bool mons_allows_beogh_now(const monster& mon);
+bool mons_offers_beogh_conversion(const monster& mon);
+bool mons_offers_beogh_conversion_now(const monster& mon);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
@@ -519,16 +517,12 @@ void debug_monspells();
 
 bool choose_any_monster(const monster& mon);
 monster *choose_random_nearby_monster(
-    int weight,
     bool (*suitable)(const monster& mon) =
-        choose_any_monster,
-    bool prefer_named_or_priest = false);
+        choose_any_monster);
 
 monster *choose_random_monster_on_level(
-    int weight,
     bool (*suitable)(const monster& mon) =
-        choose_any_monster,
-    bool prefer_named_or_priest = false);
+        choose_any_monster);
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);
@@ -566,3 +560,5 @@ bool apply_visible_monsters(monster_func mf,
                             los_type los = LOS_NO_TRANS);
 
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
+
+int touch_of_beogh_hp_mult(const monster& mon);

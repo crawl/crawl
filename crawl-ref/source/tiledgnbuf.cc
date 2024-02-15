@@ -392,6 +392,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
+            if (cell.is_blasphemy)
+                m_buf_feat.add(TILE_BLASPHEMY, x, y);
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
@@ -407,6 +409,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
             if (cell.awakened_forest)
                 m_buf_icons.add(TILEI_BERSERK, x, y);
+            if (cell.has_bfb_corpse)
+                m_buf_feat.add(TILE_BLOOD_FOR_BLOOD, x, y);
 
             if (cell.fg)
             {
@@ -501,16 +505,19 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_BULLSEYE,       10 },
     { TILEI_VITRIFIED,      6 },
     { TILEI_CURSE_OF_AGONY, 10 },
+    { TILEI_REGENERATION,   8 },
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
     { TILEI_IDEALISED,      FIXED_LOC_ICON },
+    { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
 
     // These are always in the top left. They may overlap.
     // (E.g. for summoned dancing weapons or animated armour.)
     { TILEI_ANIMATED_WEAPON, FIXED_LOC_ICON },
     { TILEI_SUMMONED,        FIXED_LOC_ICON },
     { TILEI_PERM_SUMMON,     FIXED_LOC_ICON },
+    { TILEI_VENGEANCE_TARGET,FIXED_LOC_ICON },
 };
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)

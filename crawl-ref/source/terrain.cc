@@ -524,13 +524,6 @@ bool feat_is_water(dungeon_feature_type feat)
            || feat == DNGN_MANGROVE;
 }
 
-/** Does this feature have enough water to keep water-only monsters alive in it?
- */
-bool feat_is_watery(dungeon_feature_type feat)
-{
-    return feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE;
-}
-
 /** Is this feature a kind of lava?
  */
 bool feat_is_lava(dungeon_feature_type feat)

@@ -328,6 +328,10 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (mons->has_ench(ENCH_BULLSEYE_TARGET))
         mons->del_ench(ENCH_BULLSEYE_TARGET);
 
+    // Remove Beogh's Touch from an apostle of Beogh may get very confused when they die
+    if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+        mons->del_ench(ENCH_TOUCH_OF_BEOGH);
+
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {

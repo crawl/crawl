@@ -82,7 +82,7 @@ monster::monster()
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(), xp_tracking(XP_NON_VAULT), experience(0),
+      enchantments(), flags(), xp_tracking(XP_NON_VAULT),
       base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
       foe_memory(0), god(GOD_NO_GOD), ghost(), seen_context(SC_NONE),
       client_id(0), hit_dice(0)
@@ -131,7 +131,6 @@ void monster::reset()
 
     mid             = 0;
     flags           = MF_NO_FLAGS;
-    experience      = 0;
     type            = MONS_NO_MONSTER;
     base_monster    = MONS_NO_MONSTER;
     hit_points      = 0;
@@ -199,7 +198,6 @@ void monster::init_with(const monster& mon)
     enchantments      = mon.enchantments;
     ench_cache        = mon.ench_cache;
     flags             = mon.flags;
-    experience        = mon.experience;
     number            = mon.number;
     colour            = mon.colour;
     summoner          = mon.summoner;
@@ -260,7 +258,7 @@ mon_attitude_type monster::temp_attitude() const
 bool monster::swimming() const
 {
     const dungeon_feature_type grid = env.grid(pos());
-    return feat_is_watery(grid) && mons_primary_habitat(*this) == HT_WATER;
+    return feat_is_water(grid) && mons_primary_habitat(*this) == HT_WATER;
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
@@ -678,7 +676,7 @@ bool monster::can_throw_large_rocks() const
            || species == MONS_CYCLOPS
            || species == MONS_OGRE
            || type == MONS_PARGHIT // he's stronger than your average troll
-           || mons_bound_soul(*this);
+           || type == MONS_BOUND_SOUL;
 }
 
 bool monster::can_speak()
@@ -738,6 +736,8 @@ void monster::bind_melee_flags()
         flags |= MF_TWO_WEAPONS;
     if (mons_class_flag(type, M_ARCHER))
         flags |= MF_ARCHER;
+    if (mons_class_flag(type, M_CAUTIOUS))
+        flags |= MF_CAUTIOUS;
 }
 
 static bool _needs_ranged_attack(const monster* mon)
@@ -1508,12 +1508,6 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
-    // Don't pick up a new weapon if we've been gifted one by the player.
-    if (is_range_weapon(weap) && props.exists(BEOGH_RANGE_WPN_GIFT_KEY))
-        return false;
-    else if (props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
-        return false;
-
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
@@ -1541,12 +1535,6 @@ bool monster::wants_armour(const item_def &item) const
     {
         return false;
     }
-
-    // Don't pick up new armour if we've been gifted something by the player.
-    if (is_offhand(item) && props.exists(BEOGH_SH_GIFT_KEY))
-        return false;
-    else if (props.exists(BEOGH_ARM_GIFT_KEY))
-        return false;
 
     // Spellcasters won't pick up restricting armour, although they can
     // start with one. Applies to arcane spells only, of course.
@@ -2607,7 +2595,7 @@ bool monster::go_frenzy(actor *source)
 
     // Wake sleeping monsters.
     if (asleep())
-        behaviour_event(this, ME_ALERT, source, source->pos());
+        behaviour_event(this, ME_ALERT, source);
 
     if (has_ench(ENCH_SLOW))
     {
@@ -2728,16 +2716,19 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
 
     simple_monster_message(*this, " is devoured by a tear in reality.",
                            MSGCH_BANISHMENT);
-    if (agent && mons_gives_xp(*this, *agent)
-        && (agent->is_player() || agent->mid == MID_YOU_FAULTLESS))
+    if (agent && mons_gives_xp(*this, *agent) && damage_contributes_xp(*agent))
     {
-        // Count all remaining HP as damage done by you - no need to
-        // pass flags this way.
-        damage_friendly += hit_points * 2;
+        // Count all remaining HP as damage done by you.
+        // (monster_die won't double-dip as KILL_BANISHED has an anonymous source)
+        damage_friendly += hit_points;
         // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
-        did_god_conduct(DID_BANISH, get_experience_level(),
-                        true /*possibly wrong*/, this);
+
+        if (agent->is_player())
+        {
+            did_god_conduct(DID_BANISH, get_experience_level(),
+                            true /*possibly wrong*/, this);
+        }
     }
     monster_die(*this, KILL_BANISHED, NON_MONSTER);
 
@@ -2826,6 +2817,9 @@ int monster::constriction_damage(constrict_type typ) const
     case CONSTRICT_ROOTS:
         return roll_dice(2, div_rand_round(40 +
                     mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
+    case CONSTRICT_BVC:
+        return roll_dice(2, div_rand_round(60 +
+                    mons_spellpower(*this, SPELL_BORGNJORS_VILE_CLUTCH), 20));
     default:
         return 0;
     }
@@ -3353,11 +3347,8 @@ void monster::blame_damage(const actor* attacker, int amount)
 {
     ASSERT(amount >= 0);
     damage_total = min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
-    if (attacker)
-    {
-        damage_friendly = min<int>(MAX_DAMAGE_COUNTER * 2,
-                      damage_friendly + amount * exp_rate(attacker->mindex()));
-    }
+    if (attacker && damage_contributes_xp(*attacker))
+        damage_friendly = min<int>(MAX_DAMAGE_COUNTER, damage_friendly + amount);
 }
 
 void monster::suicide(int hp_target)
@@ -3698,7 +3689,9 @@ bool monster::res_water_drowning() const
 {
     habitat_type hab = mons_habitat(*this, true);
 
-    return is_unbreathing() || hab == HT_WATER || hab == HT_AMPHIBIOUS;
+    return is_unbreathing() || hab == HT_WATER
+        // XXX: Ugly hack to let apostles walk on water inside of through it
+        || (hab == HT_AMPHIBIOUS && type != MONS_ORC_APOSTLE);
 }
 
 int monster::res_poison(bool temp) const
@@ -4290,7 +4283,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
             && kill_type != KILLED_BY_POISON
-            && kill_type != KILLED_BY_CLOUD)
+            && kill_type != KILLED_BY_CLOUD
+            && kill_type != KILLED_BY_BEOGH_SMITING)
         {
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
@@ -4656,10 +4650,10 @@ bool monster::find_home_anywhere()
     return false;
 }
 
-bool monster::find_place_to_live(bool near_player)
+bool monster::find_place_to_live(bool near_player, bool force_near)
 {
     return near_player && find_home_near_player()
-           || find_home_anywhere();
+           || (!force_near && find_home_anywhere());
 }
 
 void monster::destroy_inventory()
@@ -4685,7 +4679,10 @@ bool monster::needs_abyss_transit() const
             || get_experience_level() > 8 + random2(25)
             && mons_can_use_stairs(*this))
         && !is_summoned()
-        && !mons_is_conjured(type);
+        && !mons_is_conjured(type)
+        // We want to 'kill' banished apostles for real, so that they can escape
+        // on their own instead of being actually lost in the abyss
+        && type != MONS_ORC_APOSTLE;
 }
 
 void monster::set_transit(const level_id &dest)
@@ -4995,7 +4992,7 @@ bool monster::near_foe() const
 {
     const actor *afoe = get_foe();
     return afoe && see_cell_no_trans(afoe->pos())
-           && summon_can_attack(this, afoe);
+           && monster_los_is_valid(this, afoe);
 }
 
 /**
@@ -5039,6 +5036,12 @@ bool monster::can_polymorph() const
     // Abominations re-randomize their tile when mutated, so can_mutate returns
     // true for them. Like all undead, they can't be polymorphed.
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
+        return false;
+
+    // Polymorphing apostles breaks all sorts of things (like making challenges
+    // unwinnable if it happens) and it would be complex to fix this, so let's
+    // veto it.
+    if (type == MONS_ORC_APOSTLE)
         return false;
 
     return can_mutate();
@@ -6274,7 +6277,9 @@ bool monster::is_divine_companion() const
 {
     return attitude == ATT_FRIENDLY
            && !is_summoned()
-           && (mons_is_god_gift(*this, GOD_BEOGH)
+           // Orcs from Blood for Blood still count as god gifts, but should not
+           // be considered companions for most functions - only apostles should
+           && ((mons_is_god_gift(*this, GOD_BEOGH) && type == MONS_ORC_APOSTLE)
                || mons_is_god_gift(*this, GOD_YREDELEMNUL)
                || mons_is_god_gift(*this, GOD_HEPLIAKLQANA))
            && mons_can_use_stairs(*this);
@@ -6379,7 +6384,7 @@ bool monster::angered_by_attacks() const
     return !has_ench(ENCH_FRENZIED)
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
-            && type != MONS_BOUND_SOUL
+            && !is_divine_companion()
             && type != MONS_SPELLFORGED_SERVITOR
             && type != MONS_BLOCK_OF_ICE
             && !mons_is_conjured(type)

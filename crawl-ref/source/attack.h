@@ -80,8 +80,6 @@ public:
 
     item_def        *defender_shield;
 
-    bool      fake_chaos_attack;
-
     bool simu;
 
 // Public Methods
@@ -156,7 +154,6 @@ protected:
     bool distortion_affects_defender();
     void antimagic_affects_defender(int pow);
     void pain_affects_defender();
-    void chaos_affects_defender();
     brand_type random_chaos_brand();
     void drain_defender();
     void drain_defender_speed();

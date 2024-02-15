@@ -364,11 +364,14 @@ reduced to mouldering bandages and dry, brittle bones.
 %%%%
 Mennas
 
-There was once a human priest named Mennas. He travelled far and wide preaching
-of Zin to any who would listen, going even so far as to travel into Orcish
-lands, preaching to orcs about laws and mercy. By all accounts the orcs were
-not happy with Mennas. They demanded he swear Beogh was the one true god, and
-when Mennas remained silent they cut out his tongue.
+There was once a human priest named Mennas. He travelled far and wide as a
+missionary of Zin, often venturing even into Orcish lands. He beseeched the orcs
+to abandon their false tribes and return to the peoples of their birth; only
+Zin's light could truly cleanse the weight of sin that had twisted their bodies.
+
+By all accounts the orcs were not happy with Mennas. Eventually, a group of them
+demanded he recant his words and when Mennas remained silent, they cut out his
+tongue.
 
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
@@ -405,8 +408,14 @@ be seen again.
 %%%%
 Nergalle
 
-A withered sorceress, exceptionally cruel even by orc standards. The living
-fear her; the dead obey her every command. She has a soft spot for the latter.
+A shrewd and wizened orc who has devoted her life to chronicling the bloody
+history of her people. She claims to know the names and deeds of every last orc
+who lost their life in their great exodus into the Dungeon, and even if this is
+a lie, she nonetheless seems to be on a first-name basis with many of them.
+
+More than any other orc still breathing, she knows the blood and sacrifice it
+took to make this place a refuge for her kind. She will not brook it being
+intruded upon by anyone - least of all you.
 %%%%
 Nessos
 
@@ -1427,8 +1436,8 @@ constantly changing form.
 %%%%
 gnoll
 
-A taller and better-equipped relative of goblins and orcs, somewhat doglike in
-appearance.
+A taller and better-equipped relative of goblins, and ally of orcs. It is
+somewhat doglike in appearance.
 %%%%
 gnoll sergeant
 
@@ -1979,8 +1988,8 @@ the waves and serve their King.
 %%%%
 ogre
 
-A large, ugly, and fat creature, distantly related to orcs and goblins. It is
-tremendously strong.
+A large, ugly, and fat creature, distantly related to goblins. It is
+tremendously strong, and likes fighting alongside its orc friends.
 %%%%
 ogre mage
 
@@ -2046,6 +2055,22 @@ orc
 A peculiar subterranean creature, thought to be a distant relative of the
 human, or the pig, or perhaps the platypus. Orcs love groups, in which they
 gather for whatever worrying activities orcs enjoy.
+%%%%
+orc apostle
+
+A orcish wayfarer who has been touched by the hand of Beogh. Whether out of
+religious devotion or personal jealousy, they have come to bar your path.
+
+Hold nothing back - for neither they nor their followers will do so.
+
+Glory to Beogh!
+%%%%
+orc apostle follower
+
+A favoured child of Beogh, once not so unlike yourself.
+
+Now that you have proven yourself to them, they will fight and die for both you
+and the cause. Shepherd them well.
 %%%%
 orc high priest
 

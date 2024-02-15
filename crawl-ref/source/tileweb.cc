@@ -1093,7 +1093,7 @@ void TilesFramework::_send_player(bool force_full)
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
     _update_int(force_full, c.explore, you.explore, "explore");
-    _update_string(force_full, c.species, species::name(you.species),
+    _update_string(force_full, c.species, player_species_name(),
                    "species");
     string god = "";
     if (you_worship(GOD_JIYVA))
@@ -1613,6 +1613,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.is_sanctuary != current_pc.is_sanctuary)
             json_write_bool("sanctuary", next_pc.is_sanctuary);
+        if (next_pc.is_blasphemy != current_pc.is_blasphemy)
+            json_write_bool("blasphemy", next_pc.is_blasphemy);
+
+        if (next_pc.has_bfb_corpse != current_pc.has_bfb_corpse)
+            json_write_bool("has_bfb_corpse", next_pc.has_bfb_corpse);
 
         if (next_pc.is_liquefied != current_pc.is_liquefied)
             json_write_bool("liquefied", next_pc.is_liquefied);

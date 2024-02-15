@@ -14,6 +14,7 @@
 #include "env.h"
 #include "tile-env.h"
 #include "files.h"
+#include "god-companions.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -1848,12 +1849,12 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 {
     const bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
 
+    if (mon.props.exists(MONSTER_TILE_KEY))
+        return mon.props[MONSTER_TILE_KEY].get_int();
+
     // Show only base class for detected monsters.
     if (mons_class_is_zombified(mon.type))
         return _tileidx_monster_zombified(mon);
-
-    if (mon.props.exists(MONSTER_TILE_KEY))
-        return mon.props[MONSTER_TILE_KEY].get_int();
 
     int tile_num = 0;
     if (mon.props.exists(TILE_NUM_KEY))
@@ -2089,8 +2090,11 @@ tileidx_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch)))
+    if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch))
+        || mons.type == MONS_ORC_APOSTLE)
+    {
         ch |= TILE_FLAG_FLYING;
+    }
     if (mons.is(MB_CAUGHT))
         ch |= TILE_FLAG_NET;
     if (mons.is(MB_WEBBED))
@@ -2261,6 +2265,10 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_VITRIFIED, TILEI_VITRIFIED},
     { MB_CURSE_OF_AGONY, TILEI_CURSE_OF_AGONY},
     { MB_SPECTRALISED, TILEI_GHOSTLY},
+    { MB_REGENERATION, TILEI_REGENERATION },
+    { MB_RETREATING, TILEI_RETREAT  },
+    { MB_TOUCH_OF_BEOGH, TILEI_TOUCH_OF_BEOGH },
+    { MB_VENGEANCE_TARGET, TILEI_VENGEANCE_TARGET },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3322,6 +3330,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case CYAN:
         if (bolt.name == "slug dart")
             return TILE_BOLT_STONE_ARROW + dir;
+        else if (bolt.name == "umbral torchlight")
+            return TILE_BOLT_UMBRAL_TORCHLIGHT;
         break;
 
     case ETC_MUTAGENIC:
@@ -3669,8 +3679,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_END_TRANSFORMATION:
     case ABIL_BEGIN_UNTRANSFORM:
         return TILEG_ABILITY_END_TRANSFORMATION;
-    case ABIL_STOP_RECALL:
-        return TILEG_ABILITY_STOP_RECALL;
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -3739,10 +3747,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Yredelemnul
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
-    case ABIL_YRED_DARK_BARGAIN:
-        return TILEG_ABILITY_YRED_DARK_BARGAIN;
-    case ABIL_YRED_DRAIN_LIFE:
-        return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_BIND_SOUL:
         return TILEG_ABILITY_YRED_BIND_SOUL;
     // Xom, Vehumet = 90
@@ -3816,16 +3820,31 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_NEMELEX_DRAW_STACK:
         return TILEG_ABILITY_NEMELEX_DRAW_STACK;
     // Beogh
-    case ABIL_BEOGH_GIFT_ITEM:
-        return TILEG_ABILITY_BEOGH_GIFT_ITEM;
     case ABIL_BEOGH_SMITING:
         return TILEG_ABILITY_BEOGH_SMITE;
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_BEOGH_RECALL_APOSTLES:
         return TILEG_ABILITY_BEOGH_RECALL;
     case ABIL_CONVERT_TO_BEOGH:
         return TILEG_ABILITY_CONVERT_TO_BEOGH;
-    case ABIL_BEOGH_RESURRECTION:
-        return TILEG_ABILITY_BEOGH_RESURRECTION;
+    case ABIL_BEOGH_RECRUIT_APOSTLE:
+        return TILEG_ABILITY_BEOGH_RECRUIT_APOSTLE;
+    case ABIL_BEOGH_DISMISS_APOSTLE_1:
+        if (!beogh_apostle_is_alive(1))
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE_DEAD;
+        else
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE;
+    case ABIL_BEOGH_DISMISS_APOSTLE_2:
+        if (!beogh_apostle_is_alive(2))
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE_DEAD;
+        else
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE;
+    case ABIL_BEOGH_DISMISS_APOSTLE_3:
+        if (!beogh_apostle_is_alive(3))
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE_DEAD;
+        else
+            return TILEG_ABILITY_BEOGH_DISMISS_APOSTLE;
+    case ABIL_BEOGH_BLOOD_FOR_BLOOD:
+        return TILEG_ABILITY_BEOGH_BLOOD_FOR_BLOOD;
     // Jiyva
     case ABIL_JIYVA_OOZEMANCY:
         return TILEG_ABILITY_JIYVA_OOZEMANCY;
@@ -4116,12 +4135,13 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_HUMAN:
 #if TAG_MAJOR_VERSION == 34
         case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
 #endif
             return TILEG_SP_HUMAN;
+        case SP_MOUNTAIN_DWARF:
+            return TILEG_SP_MOUNTAIN_DWARF;
         case SP_DEEP_ELF:
             return TILEG_SP_DEEP_ELF;
-        case SP_HILL_ORC:
-            return TILEG_SP_HILL_ORC;
         case SP_KOBOLD:
             return TILEG_SP_KOBOLD;
         case SP_MUMMY:

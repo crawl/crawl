@@ -151,11 +151,13 @@ static void _monster_regenerate(monster* mons)
     }
 
     if (mons_class_fast_regen(mons->type)
-        || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(mons_class_regen_amount(mons->type));
     }
+
+    if (mons->has_ench(ENCH_REGENERATION))
+        mons->heal(3 + div_rand_round(mons->max_hit_points, 20));
 
     if (mons_is_hepliaklqana_ancestor(mons->type))
     {
@@ -1229,7 +1231,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
-        && !mons_bound_soul(*mons)
+        && mons->type != MONS_BOUND_SOUL
         && !mons_class_is_animated_object(mons->type))
     {
         return false;
@@ -1824,6 +1826,17 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
+    {
+        // If we are continuing to fire searing ray, remain in place.
+        if (handle_searing_ray(*mons))
+        {
+            mons->speed_increment -= non_move_energy;
+            return;
+        }
+        // Otherwise (if it was cancelled or interrupted), take turn as normal
+    }
+
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
         simple_monster_message(*mons, " is lost in a daze.");
@@ -1985,7 +1998,7 @@ void handle_monster_move(monster* mons)
             && mons->behaviour != BEH_WITHDRAW
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 || mons->has_ench(ENCH_FRENZIED))
-            && monster_can_hit_monster(mons, targ))
+            && monster_los_is_valid(mons, targ))
         {
             // Maybe they can swap places?
             if (_swap_monsters(*mons, *targ))
@@ -2486,9 +2499,6 @@ static bool _jelly_divide(monster& parent)
     if (parent.hit_points > parent.max_hit_points)
         parent.hit_points = parent.max_hit_points;
 
-    parent.init_experience();
-    parent.experience = parent.experience * 3 / 5 + 1;
-
     // Create child {dlb}:
     // This is terribly partial and really requires
     // more thought as to generation ... {dlb}
@@ -2982,7 +2992,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false; // blocks square
         }
 
-        if (!summon_can_attack(mons, targ))
+        if (!monster_los_is_valid(mons, targ))
             return false;
 
         // Cut down plants only when no alternative, or they're
@@ -3457,7 +3467,7 @@ static bool _monster_move(monster* mons)
             if (!cell_is_solid(*ai))
             {
                 adj_move.push_back(*ai);
-                if (habitat == HT_WATER && feat_is_watery(env.grid(*ai))
+                if (habitat == HT_WATER && feat_is_water(env.grid(*ai))
                     || habitat == HT_LAVA && feat_is_lava(env.grid(*ai)))
                 {
                     adj_water.push_back(*ai);
@@ -3487,6 +3497,17 @@ static bool _monster_move(monster* mons)
         }
 
         return _do_move_monster(*mons, newpos - mons->pos());
+    }
+
+    // If we're cautious, can see our foe, and already have a valid spell we
+    // could have cast, often hold position instead of advancing closer
+    if (mons->flags & MF_CAUTIOUS
+        && mons->props.exists(MON_SPELL_USABLE_KEY)
+        && mons->get_foe() && mons->can_see(*mons->get_foe())
+        && !one_chance_in(3))
+    {
+        mons->props.erase(MON_SPELL_USABLE_KEY);
+        mmov.reset();
     }
 
     // Let's not even bother with this if mmov is zero.

@@ -474,6 +474,14 @@ creature with the Will to resist will still be irresistibly blinked a shorter
 distance, and any monster it affects at all has a separate Will-based chance
 of being confused by the warping of space.
 %%%%
+Divine Armament spell
+
+Manifests the caster's faith as a spiritual weapon, which will fight and slay
+the caster's enemies under its own power.
+
+As it is a direct reflection of the caster's unique zeal, the weapon they
+receive from their god will be the same each time.
+%%%%
 Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While
@@ -1171,6 +1179,11 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
+Regenerate Other spell
+
+Causes another creature to rapidly regenerate over a short period of time.
+This regeneration is proportional to that creature's maximum health.
+%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them
@@ -1387,6 +1400,11 @@ Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
 %%%%
+Sticks to Snakes spell
+
+Casts forth sticks and transforms them into snakes. Stronger casters will always
+create stronger snakes.
+%%%%
 Sticky Flame spell
 
 Unleashes a short-ranged spray of incendiary goo that clings to an adjacent
@@ -1570,11 +1588,6 @@ Summon Small Mammal spell
 Summons a rat, bat, or quokka to the caster's aid. Spell power increases the
 chance of summoning a quokka.
 %%%%
-Summon Spectral Orcs spell
-
-Summons between one and three spectral orcs, specialised for melee combat
-and equipped with spectral weaponry and armour.
-%%%%
 Summon Spiders spell
 
 Summons one or more spiders.
@@ -1690,6 +1703,14 @@ Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.
 %%%%
+Vanquished Vanguard spell
+
+Calls out to the lingering souls of orcs who died in earlier ages, and, for a
+brief moment, gives them purpose in battle once again.
+
+More anchored to their past lives than most spectrals, they wield polearms with
+living skill, and will encircle their quarry with cold efficiency.
+%%%%
 Venom Bolt spell
 
 Fires a penetrating bolt of poison.
@@ -1714,6 +1735,14 @@ to safely pass through creatures, traps, and harmful terrain, and to displace
 creatures at their destination. The time taken by the spell is the greater of
 the time normally needed to cast a spell or that needed to launch one melee
 attack.
+%%%%
+Vhi's Electrolunge spell
+
+Sends the caster hurtling at a chosen nearby enemy, launching a high-accuracy
+melee attack on arrival, with additional electrical damage based on spellpower.
+The caster is wrapped in an envelope of twisted space, allowing them to safely
+pass through creatures, traps, and harmful terrain, and to displace creatures at
+their destination.
 %%%%
 Vitrify spell
 

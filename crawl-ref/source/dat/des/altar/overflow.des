@@ -128,7 +128,7 @@ function species_mock(e)
     return "will-o-the-wisp"
   elseif you.race() == "Gnoll" then
     return "jackal"
-  elseif you.race() == "Hill Orc" then
+  elseif you.race() == "Moutain Dwarf" then
     return "goblin ; mundane hand axe . mundane ring mail"
   elseif you.race() == "Human" then
     return "killer klown"
@@ -139,7 +139,7 @@ function species_mock(e)
   elseif you.race() == "Gargoyle" then
     return "earth elemental"
   elseif you.race() == "Ghoul" then
-    return "necrophage"
+    return "bloated husk"
   elseif you.race() == "Kobold" then
     return "boggart"
   elseif you.race() == "Merfolk" then
@@ -920,23 +920,24 @@ ENDMAP
 NAME:   fedhas_altar_decomposition
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas transparent
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-# Necrophage depth
 DEPTH:  D:4-8
-MONS:   bush, plant, necrophage, zombie
+MONS:   bush, plant
+ITEM:   random skeleton
 KFEAT:  _ = altar_fedhas
 FTILE:  '!12@ = floor_moss
 COLOUR: '!@ = green
-NSUBST: 3 = 3:3 / 3 = 3 4:25 / 3 = 4 .:25 / *:.
+NSUBST:  d = 3:d / 3:e / 3 = e. / *:.
 KPROP:  .3 = no_tele_into
+: dgn.delayed_decay(_G, "e", "random corpse")
 MAP
  xxxxxxxxx
-xx33...33xx
-x33.222.33x
-x332111233x
-x3321_1233x
-x3321'1233x
-x3.2x'x2.3x
-x3..x'x..3x
+xx.ddddd.xx
+x.dd222dd.x
+x.d21112d.x
+x.d21_12d.x
+x.d21'12d.x
+x.d2x'x2d.x
+x..dx'xd..x
 xxxxx'xxxxx
    xx'xx
    x2@2x
@@ -1397,7 +1398,7 @@ MONS:   zombie, guardian mummy, skeletal warrior, ghoul
 NSUBST: ? = 1:* / *:?
 : else
 :   if you.depth() < 6 then
-MONS:   zombie, skeleton, necrophage, shadow imp
+MONS:   zombie, skeleton, phantom, shadow imp
 :   else
 MONS:   zombie, skeleton, wight, burial acolyte
 :   end
@@ -1630,7 +1631,6 @@ ENDMAP
 
 NAME:   makhleb_blood_cavern_becter
 TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb transparent
-# necrophage depth (contains hound too)
 DEPTH:  D:4-8
 : if crawl.coinflip() then
 : dgn.delayed_decay(_G, '1', 'human corpse')
@@ -3643,9 +3643,9 @@ TAGS:   uniq_mausoleum_altar transparent
 DEPTH:  D:4-10, Crypt
 : if you.in_branch("Crypt") then
 MONS:   zombie, guardian mummy, skeletal warrior, ghoul
-:else
-MONS:   zombie, mummy, wight, necrophage
-:end
+: else
+MONS:   zombie, mummy, wight, weeping skull
+: end
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4
 KFEAT:  _ = altar_yredelemnul
@@ -4562,11 +4562,11 @@ TAGS:   no_monster_gen no_trap_gen temple_overflow_2 no_descent
 TAGS:   temple_overflow_kikubaaqudgha temple_overflow_yredelemnul
 : if you.depth() <= 4 then
 MONS: zombie / skeleton
-MONS: mummy / shadow imp / wight / necrophage / phantom
-KMONS: 3 = menkaure, necrophage / wight
+MONS: mummy / shadow imp / wight / mummy / phantom
+KMONS: 3 = menkaure, wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
-MONS: zombie / skeleton / mummy / shadow imp / wight / necrophage / phantom
+MONS: zombie / skeleton / mummy / shadow imp / wight / mummy / phantom
 MONS: burial acolyte / wraith / vampire
 KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--

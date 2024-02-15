@@ -820,8 +820,9 @@ ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
 ITEM:       any w:20 / star_item / superb_item / any book w:5
 ITEM:       randart ring of flight / pair of boots ego:flying \
             / pair of boots ego:rampaging / good_item quick blade \
-            / good_item ring of evasion
+            / good_item ring of evasion / storm talisman w:5
 ITEM:       randbook disc:air
+KFEAT:      D = w
 KFEAT:      #6 = deep_water
 KPROP:      #6 = no_tele_into
 SUBST:      . = .:220 1:8 2:4 3:2
@@ -1807,7 +1808,7 @@ KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
              cloak_of_starlight w:20 / cloak_of_the_thief
-
+KITEM:   13 = mundane cloak no_pickup
 KFEAT:   m = iron_grate
 KFEAT:   ~ = deep_water / web w:2
 KFEAT:   ^ = permanent teleport trap / web w:20
@@ -1827,8 +1828,8 @@ SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W
 NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 7 = 2:7 / *:`
 NSUBST:  ` = 1:3 / 1:6 / 4:d / 3:| / 1:|j / 1:i / 4:j / *:`
 # Randomize enemies outside of the center.
-NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / 1:. / * = 9222
-NSUBST:  1 = 2:3 / 1:6 / 2:2 / 3 = 012 / 2:. / *:1, 0 = 2:9 / 1:6 / 1:. / *:0
+NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / 1:. / * = 92222
+NSUBST:  1 = 2:3 / 1:6 / 1:2 / 3 = 012 / 2:. / *:1, 0 = 2:9 / 1:6 / 1:. / *:0
 NSUBST:  4 = 1:3 / 3:5 / 1:. / *:4
 # Randomize starting / chambers, chamber / reward items, and escapes.
 NSUBST:  A = 1:) / 1:< / 1:{ / 1:A, ( = 1:} / 1:( / *:<
@@ -2355,23 +2356,24 @@ ENDMAP
 # incorporeal undead on the other. Lost souls spawn continuously, and the ending
 # includes some halazid warlocks and their servants. Loot is necromancy
 # themed, as you'd expect.
-NAME:   wizlab_borgnjor
-TAGS:   no_rotate
-MONS:   spectral spriggan berserker / spectral titan / spectral spark wasp /\
-        spectral harpy / spectral quicksilver dragon / spectral wolf spider /\
-        spectral caustic shrike / phantasmal warrior w:60
-MONS:   flayed ghost / shadow wraith / eidolon
-MONS:   spriggan berserker zombie / titan zombie / spark wasp zombie /\
-        harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
-        caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
-MONS:   ancient champion / revenant, laughing skull
-MONS:   deep elf death mage / vampire mage / necromancer, halazid warlock
-ITEM:   randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
-        necronomicon / randbook disc:necromancy / staff of death /\
-        macabre finger necklace w:1 / sceptre of torment w:1
-ITEM:   any book / scroll of torment ident:all q:3 /\
-        any weapon good_item ego:pain / any weapon good_item ego:vampirism
-ITEM:   any ring / any amulet w:5
+NAME:    wizlab_borgnjor
+TAGS:    no_rotate
+MONS:    spectral spriggan berserker / spectral titan / spectral spark wasp /\
+         spectral harpy / spectral quicksilver dragon / spectral wolf spider /\
+         spectral caustic shrike / phantasmal warrior w:60
+MONS:    flayed ghost / shadow wraith / eidolon
+MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
+         harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
+         caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
+MONS:    ancient champion / revenant, laughing skull
+MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
+ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
+         necronomicon / randbook disc:necromancy / staff of death /\
+         macabre finger necklace w:1 / sceptre of torment w:1
+ITEM:    any book / scroll of torment ident:all q:3 /\
+         any weapon good_item ego:pain / any weapon good_item ego:vampirism
+ITEM:    any ring / any amulet w:5
+KFEAT:   G = metal_statue
 : if crawl.one_chance_in(4) then
 SUBST:   F = c..., E = cccc., D = c
 : else
@@ -2383,7 +2385,9 @@ NSUBST:  4 = 2:4 / 1:. / *=4.., 2 = 2:2 / * = 2..
 NSUBST:  A = 1:< / *:A
 SUBST:   1 = 1.., 3 = 3.., 5 = 55..., V = VVVY
 TILE:    c = wall_borg_stone
+TILE:    G = soul_conduit
 LFLOORTILE: floor_borg
+: set_feature_name ("metal_statue", "soul conduit")
 {{
 local summon_marker = TriggerableFunction:new ({
     func="wizlab_borgnjor_call_souls",
@@ -2403,16 +2407,17 @@ epilogue {{
             wizlab_milestone(_G, "Borgnjor's Mausoleum")
 }}
 MAP
-             ccccc
+              ccc
+             ccGcc
            ccc565ccc
           cc.5...5.cc
          cc..5.7.5..cc
         cc5.5c+++c5.5cc
         c6..cc...cc..6c
        cc5.cc..7..cc.5cc
-       c...c5.5.5.5c...c
-       c2.2cY57575Yc4.4c
-       c.5.c.76.67.c.5.c
+      cc...c5.5.5.5c...cc
+      cG2.2cY57575Yc4.4Gc
+      cc.5.c.76.67.c.5.cc
       ccc..cc.$$$.cc..ccc
      cc1c...ccfffcc...c3cc
     cc11FF...cc+cc...FF33cc

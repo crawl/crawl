@@ -33,11 +33,6 @@ int absdungeon_depth(branch_type branch, int subdepth)
     return branches[branch].absdepth + subdepth - 1;
 }
 
-bool branch_allows_followers(branch_type branch)
-{
-    return is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM;
-}
-
 vector<level_id> all_dungeon_ids()
 {
     vector<level_id> out;

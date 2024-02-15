@@ -1780,7 +1780,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_NERGALLE,
       {
        { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
-       { SPELL_SUMMON_SPECTRAL_ORCS, 24, MON_SPELL_WIZARD },
+       { SPELL_VANQUISHED_VANGUARD, 24, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 12, MON_SPELL_WIZARD },
       }
     },

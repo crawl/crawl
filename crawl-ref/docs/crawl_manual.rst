@@ -1538,21 +1538,19 @@ the player to set aside many aspects of the game while still developing a
 strong character.
 
 
-Hill Orcs (HO)
-  Hill Orcs are Orcs from the upper world who, jealous of the riches which their
-  cousins (the Cave Orcs) possess below the ground, descend in search of plunder
-  and adventure.
+Mountain Dwarves (MD)
 
-  Hill Orcs are strong and robust. Their forte is brute-force fighting, and they
-  are skilled at using most hand weapons (particularly axes, with which they are
-  experts), though they are not particularly good at using missile weapons. Hill
-  Orcs are passable users of most types of magic and are particularly skilled
-  with fire.
+  Mountain Dwarves are stout and hardy folk, adept at fighting with axes and
+  blugeoning weapons, though lacking the dexterity to excel at other forms of
+  combat. Their reserves of magic are somewhat poor, though they still make
+  passable spellcasters, and their connection with the blood of the earth gives
+  them a particular talent at fire and earth magics. Their spell success is
+  significantly less encumbered by armour than other species.
 
-  Hill Orcs have a strong connection to the gods and learn Invocations very
-  quickly. The Orc god Beogh is worshipped only by Orcs, and the orc priests of
-  the Dungeon preach that Beogh is indeed the only true god. Hill Orcs may
-  convert to Beogh even without an altar whenever an orc priest is in sight.
+  They are superlative artisans and smiths, employed in ancient times by even the
+  gods themselves, and this spiritual history makes them exceptional at invoking
+  divine aid. They can even use enchantment scrolls to improve artefacts that
+  would be beyond the understanding of any other species.
 
 Minotaurs (Mi)
   The Minotaurs are a species of hybrids, possessing Human bodies with bovine

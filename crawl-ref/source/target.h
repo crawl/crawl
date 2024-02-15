@@ -406,8 +406,6 @@ private:
     vector<coord_def> path_taken; // Path the charge took.
 };
 
-string bad_charge_target(coord_def a);
-
 // a fixed los targeter matching how it is called for shatter, with a custom
 // tweak to affect walls.
 class targeter_shatter : public targeter_radius
@@ -588,4 +586,11 @@ public:
 
 private:
     set<coord_def> chain_targ;
+};
+
+class targeter_bind_soul : public targeter_smite
+{
+public:
+    targeter_bind_soul();
+    bool valid_aim(coord_def a) override;
 };

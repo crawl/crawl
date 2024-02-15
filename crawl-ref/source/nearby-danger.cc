@@ -20,6 +20,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "monster.h"
 #include "mon-pathfind.h"
@@ -485,10 +486,23 @@ void revive()
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+        yred_end_blasphemy();
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_end_blood_for_blood();
+
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
-        if (dur != DUR_PIETY_POOL && dur != DUR_TRANSFORMATION)
+    {
+        if (dur != DUR_PIETY_POOL
+            && dur != DUR_TRANSFORMATION
+            && dur != DUR_BEOGH_SEEKING_VENGEANCE
+            && dur != DUR_BEOGH_DIVINE_CHALLENGE)
+        {
             you.duration[dur] = 0;
+        }
+    }
 
     update_vision_range(); // in case you had darkness cast before
     you.props[CORROSION_KEY] = 0;

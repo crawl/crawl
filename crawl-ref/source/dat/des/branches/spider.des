@@ -671,7 +671,7 @@ KMONS:  M = fungus
  lua_marker('z', tm)
  lua_marker('Z', wm)
 }}
-SUBST:  W = Ww , z : * , * = %%$*..M , . = WW.
+SUBST:  W = Ww , z : * , * = %%$*..M
 MONS:   wolf spider / redback w:15 / tarantella w:2 / nothing w:5
 MAP
   xxxxx    xxxx
@@ -850,7 +850,7 @@ ENDMAP
 
 NAME:    hangedman_creepy_crawlies
 TAGS:    no_monster_gen patrolling
-ORIENT:  float
+ORIENT:  west
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 KMONS:   1 = scorpion w:55 / hornet w:13 / brain worm w:2
@@ -864,38 +864,37 @@ KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
 KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
 KFEAT:   . = . w:39 / web w:1
 KMASK:   ' = !no_monster_gen
-KPROP:   ` = no_tele_into
 SHUFFLE: ab, AB, cd, CD, ef, EF, gh, GH
 SUBST:   ' = .:28 W:1 %:1, % = 00%%.
 SUBST:   cC = c:13 4:1 3:1, 1 = 1:17 2:2 5:1
 SUBST:   ` = .
 :        dgn.delayed_decay(_G, '%', 'any corpse')
 MAP
-                  ' '     'xxx'     ' '
-    . .  . .     ''''''  ''xDx''   '''''
-   ..........   ''xxx''''''x2x''' ''xxx''
-  ..xxx..xxx..   'xExx''xxxx1xxx'''xxBx'
-  .xx1x..x1xx.  ''xx5xxxx.....%xxxxx1xx''
- ''x1xx%%xx1x''  ''xx4x%.........xx1xx''
- ''xx1%%%%1xx''   ''xx...xxx1xxx..%xx''
-  ''xxx..xxx''    ''x...xx`x2x`xx%..x''
-   ''xx..xx''   '''xx.%x4xxxCxxx1x..xx''
-''''xx..xx''  '''''x.1xxx5xxxxx1xxx..x''
-xxxxx..xx''   'xxx'x11x`xxFx'xAxx`x..x''
-x21x..xxxx'' ''x6xxx%3xxxxxx'xxxxxx..xx''
-xxx....12x'''''xx42%%%24xxx''''x21....xxx
-''xx..xxxxxx'xxxxxx3%xxx6x'' ''xxxx..x12x
- ''x..x`xxax'xexx`x11x'xxx''  ''xx..xxxxx
- ''x..xxx1xxxxx5xxx1.x'''''  ''xx..xx''''
- ''xx..x1xxxcxxx4x%.xx''    ''xx..xx''
-  ''x..%xx`x2x`xx...x''    ''xxx..xxx''
-  ''xx%..xxx1xxx...xx''   ''xx1%%%%1xx''
- ''xx1x..........%x4xx''  ''x1xx%%xx1x''
-''xx1xxxxx%......xxx5xx''  .xx1x..x1xx..
- 'xbxx'''xxx1xxxxx'xxfx'   ..xxx..xxx..
-''xxx'' '''x2x''''''xxx''   ..........
- '''''   ''xdx''  ''''''     . .  . .
-  ' '     'xxx'     ' '
+xxxxxx              ' '     'xxx'     ' '
+xxxxxx. .  . .     ''''''  ''xDx''   '''''
+xxxxx..........   ''xxx''''''x2x''' ''xxx''
+xxxx..xxx..xxx..   'xExx''xxxx1xxx'''xxBx'
+xxxx.xx1x..x1xx.  ''xx5xxxx.....%xxxxx1xx''
+xxx''x1xx%%xx1x''  ''xx4x%.........xx1xx''
+xxx''xx1%%%%1xx''   ''xx...xxx1xxx..%xx''
+xxxx''xxx..xxx''    ''x...xxxx2xxxx%..x''
+xxxxx''xx..xx''   '''xx.%x4xxxCxxx1x..xx''
+xx''''xx..xx''  '''''x.1xxx5xxxxx1xxx..x''
+xxxxxxx..xx''   'xxx'x11xxxxFx'xAxxxx..x''
+xxx21x..xxxx'' ''x6xxx%3xxxxxx'xxxxxx..xx''
+xxxxx....12x'''''xx42%%%24xxx''''x21....xxx
+xx''xx..xxxxxx'xxxxxx3%xxx6x'' ''xxxx..x12x
+xx'''x..xxxxax'xexxxx11x'xxx''  ''xx..xxxxx
+xx'''x..xxx1xxxxx5xxx1.x'''''  ''xx..xx''''
+xxx''xx..x1xxxcxxx4x%.xx''    ''xx..xx''
+xxxx''x..%xxxx2xxxx...x''    ''xxx..xxx''
+xxxx''xx%..xxx1xxx...xx''   ''xx1%%%%1xx''
+xxx''xx1x..........%x4xx''  ''x1xx%%xx1x''
+xx''xx1xxxxx%......xxx5xx''  .xx1x..x1xx..
+xxx'xbxx'''xxx1xxxxx'xxfx'   ..xxx..xxx..
+xx''xxx'' '''x2x''''''xxx''   ..........
+xxx'''''   ''xdx''  ''''''     . .  . .
+xxxx' '     'xxx'     ' '
 ENDMAP
 
 # Some hornet vaults. Hornets eat spiders (and players).

@@ -74,11 +74,13 @@ msc += $boring:dissolves? into (sparkling lights|shadows)
 msc += $boring:(crumbles|melts) away\.
 msc += $boring:returns to the deep
 msc += $boring:shimmers and vanishes
+msc += $boring:turns back into a lifeless stick
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
+msc += $boring:is recalled by Beogh
 
 # Ignore Uskayaw *** and **** power loss messages by default; they're spammy.
 msc += mute:Uskayaw will no longer force your foes to helplessly watch your dance\.
@@ -179,6 +181,9 @@ force_more_message += may now remember your ancestor
 force_more_message += deals you some cards
 force_more_message += deal. but finds you have enough
 force_more_message += partake of a vision and a curse
+force_more_message += allow you to induct
+
+force_more_message += Beogh speaks to you:
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

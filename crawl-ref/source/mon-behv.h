@@ -12,6 +12,8 @@
 #include "enum.h"
 #include "mon-attitude-type.h"
 
+#define MON_SPELL_USABLE_KEY "mon_spell_usable"
+
 class actor;
 
 enum mon_event_type
@@ -44,11 +46,9 @@ void make_mons_stop_fleeing(monster* mon);
 
 void make_mons_leave_level(monster* mon);
 
-bool monster_can_hit_monster(monster* mons, const monster* targ);
-
-bool summon_can_attack(const monster* mons);
-bool summon_can_attack(const monster* mons, const coord_def &p);
-bool summon_can_attack(const monster* mons, const actor* targ);
+bool monster_needs_los(const monster* mons);
+bool monster_los_is_valid(const monster* mons, const coord_def &p);
+bool monster_los_is_valid(const monster* mons, const actor* targ);
 
 void shake_off_monsters(const actor* target);
 
@@ -56,3 +56,5 @@ void set_nearest_monster_foe(monster* mon, bool near_player = false);
 
 vector<monster *> find_allies_targeting(const actor &a);
 bool is_ally_target(const actor &a);
+
+void mons_end_withdraw_order(monster& mons);

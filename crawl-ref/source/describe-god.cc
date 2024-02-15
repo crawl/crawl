@@ -147,9 +147,9 @@ static const char *divine_title[][8] =
     {"Tormented",          "Purveyor of Pain",      "Scholar of Death",         "Merchant of Misery",
         "Artisan of Death",   "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
-    // Yredelemnul -- zombie death.
-    {"Traitor",            "Tainted",                "Torchbearer",             "Fey @Genus@",
-        "Black Crusader",     "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
+    // Yredelemnul
+    {"Traitor",            "Torchbearer",            "Despoiler",               "Black Crusader",
+     "Fallen @Genus@",     "Harbinger of Doom",      "Inexorable Tide",         "Bringer of Blasphemy"},
 
     // Xom.
     {"Toy",                "Toy",                   "Toy",                      "Toy",
@@ -188,8 +188,8 @@ static const char *divine_title[][8] =
         "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
     // Beogh -- messiah theme.
-    {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
-        "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
+    {"Apostate",           "Convert",               "Proselytiser",             "Priest",
+        "Missionary",         "Evangelist",            "Unifier",                  "Messiah"},
 
     // Jiyva -- slime and jelly theme.
     {"Scum",               "Squelcher",             "Ooze",                     "Jelly",
@@ -252,7 +252,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
+    else if (which_god == GOD_USKAYAW)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
@@ -533,20 +533,17 @@ static formatted_string _beogh_extra_description()
 {
     formatted_string desc;
 
-    _add_par(desc, "Named Followers:");
+    _add_par(desc, "Apostles:");
 
     vector<monster*> followers;
 
     for (monster_iterator mi; mi; ++mi)
-        if (is_orcish_follower(**mi))
+        if (is_apostle_follower(**mi))
             followers.push_back(*mi);
     for (auto &entry : companion_list)
         // if not elsewhere, follower already seen by monster_iterator
         if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
             followers.push_back(&entry.second.mons.mons);
-
-    sort(followers.begin(), followers.end(),
-        [] (monster* a, monster* b) { return a->experience > b->experience;});
 
     bool has_named_followers = false;
     for (auto mons : followers)
@@ -560,27 +557,6 @@ static formatted_string _beogh_extra_description()
         {
             desc += formatted_string::parse_string(
                             " (<blue>on another level</blue>)");
-        }
-        else if (given_gift(mons))
-        {
-            mon_inv_type slot =
-                mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
-                mons->props.exists(BEOGH_ARM_GIFT_KEY) ? MSLOT_ARMOUR :
-                mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
-                MSLOT_WEAPON;
-
-            // An orc can still lose its gift, e.g. by being turned into a
-            // shapeshifter via a chaos cloud. TODO: should the gift prop be
-            // deleted at that point?
-            if (mons->inv[slot] != NON_ITEM)
-            {
-                desc.cprintf(" (");
-
-                item_def &gift = env.item[mons->inv[slot]];
-                desc += formatted_string::parse_string(
-                                    menu_colour_item_name(gift,DESC_PLAIN));
-                desc.cprintf(")");
-            }
         }
         desc.cprintf("\n");
     }
@@ -809,6 +785,18 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     switch (which_god)
     {
+    case GOD_BEOGH:
+    {
+        if (piety >= piety_breakpoint(5))
+            desc.cprintf("Orcs frequently recognize you as Beogh's chosen one.\n");
+        else if (piety >= piety_breakpoint(1))
+            desc.cprintf("Orcs sometimes recognize you as one of their own.\n");
+
+        if (piety >= piety_breakpoint(2))
+            desc.cprintf("Your orcish followers are sometimes invigorated when you deal damage.\n");
+    }
+    break;
+
     case GOD_ZIN:
     {
         have_any = true;
@@ -910,6 +898,11 @@ static formatted_string _describe_god_powers(god_type which_god)
         }
         break;
 
+    case GOD_YREDELEMNUL:
+        desc.cprintf("You are surrounded by an umbra.\n"
+                     "Foes that die within your umbra may be raised as undead servants.\n");
+        break;
+
     case GOD_DITHMENOS:
     {
         have_any = true;
@@ -993,6 +986,14 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(DARKGREY);
 
         string buf = power.general;
+
+        // Skip listing powers with no description (they are intended to be hidden)
+        if (buf.length() == 0)
+        {
+            have_any = false;
+            continue;
+        }
+
         if (!isupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
         const int desc_len = buf.size();

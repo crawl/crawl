@@ -5,6 +5,8 @@
 #pragma once
 
 #include "act-iter.h"
+#include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h"
 #include "spl-selfench.h"
 #include "tag-version.h"
@@ -63,6 +65,12 @@ static void _maybe_expire_jinxbite()
         mprf(MSGCH_DURATION, "The sprites lose interest in your situation.");
         you.duration[DUR_JINXBITE] = 0;
     }
+}
+
+static void _post_shackles_effect()
+{
+    mprf(MSGCH_DURATION, "You lose your grip on the chains of life and death.");
+    yred_end_blasphemy();
 }
 
 // properties of the duration.
@@ -347,6 +355,16 @@ static const duration_def duration_data[] =
       LIGHTGREY, "Vortex",
       "in a vortex", "vortex",
       "You are in the eye of a polar vortex.", D_EXPIRES},
+    { DUR_BLOOD_FOR_BLOOD,
+      LIGHTBLUE, "Pray",
+      "chanting a vengeful prayer", "blood for blood",
+      "You are chanting a vengeful prayer.", D_EXPIRES,
+      {{"", beogh_end_blood_for_blood}, { "Your prayer is nearing its end.", 1}}, 6},
+    { DUR_FATHOMLESS_SHACKLES,
+      WHITE, "Shackles",
+      "enshackling", "fathomless shackles",
+      "You are channelling the inexorable grasp of Yredelemnul.", D_NO_FLAGS,
+      {{"", _post_shackles_effect}}},
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",
@@ -610,6 +628,9 @@ static const duration_def duration_data[] =
     { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
       "You are unable to call your canine familiar.", "", D_EXPIRES, {{ "",
         [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
+    { DUR_BEOGH_CAN_RECRUIT, LIGHTBLUE, "Recruit", "", "can recruit",
+      "You may recruit a defeated apostle into your service", D_EXPIRES,
+       {{ "", end_beogh_recruit_window}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -652,6 +673,8 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
+    { DUR_VILE_CLUTCH, 0, "", "grasped by zombie hands", "vile clutch",
+      "You are constricted by zombie hands.", D_NO_FLAGS},
     { DUR_NOXIOUS_BOG,
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
@@ -677,6 +700,12 @@ static const duration_def duration_data[] =
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
     { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
     { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
+    { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},
+    { DUR_BEOGH_DIVINE_CHALLENGE, WHITE, "Challenge", "", "apostle challenge",
+      "A servant of Beogh has come to challenge you", D_NO_FLAGS},
+    { DUR_BEOGH_SEEKING_VENGEANCE, LIGHTRED, "Vengeance", "", "vengeance",
+      "You are seeking vengeance for the death of your brethren", D_NO_FLAGS},
+
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

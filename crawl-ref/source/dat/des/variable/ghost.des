@@ -808,13 +808,12 @@ KMONS:  O = player ghost
 : if you.in_branch("D") then
 :     if you.depth() < 6 then
 MONS:   skeleton place:D:6 / zombie place:D:6
-MONS:   mummy / shadow imp / wight / necrophage / phantom
+MONS:   mummy / shadow imp / wight w:5 / phantom
 SUBST:  d = *%, e = %$, f = %$--, ghij = -
 NSUBST: D = 2=1 / 2=1- / 2- / -
 :     elseif you.depth() < 9 then
 MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 \
-        / simulacrum place:D:9 / mummy / shadow imp / wight / necrophage \
-        / phantom
+        / simulacrum place:D:9 / mummy / shadow imp / wight / phantom
 MONS:   wraith / vampire
 SUBST:  d = *, e = *%, f = %$,  ghi = -
 NSUBST: D = 2=1 / 3=1- / 2=2- / -
@@ -2523,6 +2522,10 @@ kmons("q = vault warden ; " .. disto_weapon("knight", "randart") ..
       "    . kite shield good_item | tower shield good_item w:5" ..
       "    . chain mail good_item | plate armour good_item")
 }}
+# XXX: When the preserve_wall tag is used, it seems the Vaults room layout is
+# replacing stone wall with rock. Until this can be fixed in the layout code,
+# just use crystal and metal walls.
+SUBST:  c = bv
 :     else
 # Vaults needs the warlord on H, so just redefine H in Elf so we can use the
 # same NSUBST.

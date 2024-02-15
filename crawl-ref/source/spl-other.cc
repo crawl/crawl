@@ -126,13 +126,11 @@ spret cast_animate_dead(int pow, bool fail)
     return spret::success;
 }
 
-void start_recall(recall_t type)
+void do_player_recall(recall_t type)
 {
-    // Assemble the recall list.
-    typedef pair<mid_t, int> mid_hd;
-    vector<mid_hd> rlist;
+    bool did_recall = false;
 
-    you.recall_list.clear();
+    // Search for recallable allies on your current floor
     for (monster_iterator mi; mi; ++mi)
     {
         if (!mons_is_recallable(&you, **mi))
@@ -145,33 +143,26 @@ void start_recall(recall_t type)
         }
         else if (type == recall_t::beogh)
         {
-            if (!is_orcish_follower(**mi))
+            if (!is_apostle_follower(**mi))
                 continue;
         }
 
-        mid_hd m(mi->mid, mi->get_experience_level());
-        rlist.push_back(m);
+        if (try_recall(mi->mid))
+            did_recall = true;
     }
 
-    if (branch_allows_followers(you.where_are_you))
-        populate_offlevel_recall_list(rlist);
-
-    if (!rlist.empty())
+    // Then search for recallable companions on any floor
+    for (auto &entry : companion_list)
     {
-        // Sort the recall list roughly
-        for (mid_hd &entry : rlist)
-            entry.second += random2(10);
-        sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
-
-        you.recall_list.clear();
-        for (mid_hd &entry : rlist)
-            you.recall_list.push_back(entry.first);
-
-        you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
-        you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
-        mpr("You begin recalling your allies.");
+        const int mid = entry.first;
+        if (companion_is_elsewhere(mid, true))
+        {
+            if (try_recall(mid))
+                did_recall = true;
+        }
     }
-    else
+
+    if (!did_recall)
         mpr("Nothing appears to have answered your call.");
 }
 
@@ -223,41 +214,6 @@ bool try_recall(mid_t mid)
     // mons may have been killed, shafted, etc,
     // but they were still recalled!
     return true;
-}
-
-// Attempt to recall a number of allies proportional to how much time
-// has passed. Once the list has been fully processed, terminate the
-// status.
-void do_recall(int time)
-{
-    while (time > you.attribute[ATTR_NEXT_RECALL_TIME])
-    {
-        // Try to recall an ally.
-        mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
-        you.attribute[ATTR_NEXT_RECALL_INDEX]++;
-        if (try_recall(mid))
-        {
-            time -= you.attribute[ATTR_NEXT_RECALL_TIME];
-            you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
-        }
-        if ((unsigned int)you.attribute[ATTR_NEXT_RECALL_INDEX] >
-             you.recall_list.size())
-        {
-            end_recall();
-            mpr("You finish recalling your allies.");
-            return;
-        }
-    }
-
-    you.attribute[ATTR_NEXT_RECALL_TIME] -= time;
-    return;
-}
-
-void end_recall()
-{
-    you.attribute[ATTR_NEXT_RECALL_INDEX] = 0;
-    you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
-    you.recall_list.clear();
 }
 
 static bool _feat_is_passwallable(dungeon_feature_type feat)

@@ -1369,7 +1369,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_revivify = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster",
+        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp",
 
@@ -1622,7 +1622,7 @@ void game_options::reset_options()
     force_ability_targeter =
         { ABIL_ZIN_SANCTUARY, ABIL_TSO_CLEANSING_FLAME, ABIL_WORD_OF_CHAOS,
           ABIL_ZIN_RECITE, ABIL_QAZLAL_ELEMENTAL_FORCE, ABIL_JIYVA_OOZEMANCY,
-          ABIL_BREATHE_LIGHTNING, ABIL_KIKU_TORMENT, ABIL_YRED_DRAIN_LIFE,
+          ABIL_BREATHE_LIGHTNING, ABIL_KIKU_TORMENT, ABIL_YRED_FATHOMLESS_SHACKLES,
           ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE,
           ABIL_SIPHON_ESSENCE };

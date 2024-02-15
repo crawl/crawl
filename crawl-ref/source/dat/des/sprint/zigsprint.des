@@ -137,7 +137,7 @@ function choose_mset_1(e)
     e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5")
 -- Crypt
   elseif rnd < 49 then
-    e.kmons("1 = zombie / skeleton / wight w:5 / necrophage / phantom")
+    e.kmons("1 = zombie / skeleton / wight w:5 / weeping skull / phantom")
 -- Abyss
   elseif rnd < 59 then
     e.kmons("1 = lesser demon / place:Abyss w:3")
@@ -228,7 +228,7 @@ function choose_mset_2(e)
                wolf spider w:5 / redback w:5")
 -- Crypt
   elseif rnd < 44 then
-    e.kmons("1 = zombie w:20 / skeleton w:20 / wight / necrophage / phantom")
+    e.kmons("1 = zombie w:20 / skeleton w:20 / wight / weeping skull / phantom")
 -- Abyss
   elseif rnd < 54 then
     e.kmons("1 = lesser demon / place:Abyss w:6")
@@ -324,7 +324,7 @@ function choose_mset_3(e)
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
-                 necrophage w:5 / vampire w:5 / vampire mage w:5 /\
+                 laughing skull w:5 / vampire w:5 / vampire mage w:5 /\
                  vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow /\
                  wight / necromancer")
 -- Abyss
@@ -454,7 +454,7 @@ local rnd = crawl.random2(142)
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
-                 necrophage w:5 / vampire w:5 / vampire mage w:5 /\
+                 laughing skull / vampire mage w:5 /\
                  vampire knight / lich w:5 / ancient lich w:2 / shadow /\
                  wight / necromancer")
 -- Abyss

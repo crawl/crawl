@@ -173,6 +173,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ELECTROLUNGE, "Vhi's Electrolunge",
+    spschool::air | spschool::translocation,
+    spflag::noisy | spflag::dir_or_target | spflag::monster,
+    4,
+    100,
+    5, 5,
+    0,
+    TILEG_ELECTRIC_CHARGE,
+},
+
+{
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
     spschool::conjuration | spschool::fire | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
@@ -1853,7 +1864,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_SPECTRAL_ORCS, "Summon Spectral Orcs",
+    SPELL_VANQUISHED_VANGUARD, "Vanquished Vanguard",
     spschool::necromancy | spschool::summoning,
     spflag::monster | spflag::target,
     4,
@@ -2043,6 +2054,17 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     0,
     TILEG_SUMMON_MINOR_DEMON,
+},
+
+{
+    SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
+    spschool::summoning,
+    spflag::monster,
+    2,
+    200,
+    -1, -1,
+    0,
+    TILEG_STICKS_TO_SNAKES,
 },
 
 {
@@ -3401,7 +3423,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
-    spflag::no_ghost,
+    spflag::none,
     4,
     100,
     -1, -1,
@@ -3512,7 +3534,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SCORCH, "Scorch",
     spschool::fire,
-    spflag::no_ghost | spflag::destructive,
+    spflag::destructive,
     2,
     50,
     3, 3,
@@ -3587,9 +3609,20 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DIVINE_ARMAMENT, "Divine Armament",
+    spschool::summoning,
+    spflag::monster,
+    4,
+    200,
+    -1, -1,
+    0,
+    TILEG_DIVINE_ARMAMENT,
+},
+
+{
     SPELL_KISS_OF_DEATH, "Kiss of Death",
     spschool::conjuration | spschool::necromancy,
-    spflag::dir_or_target | spflag::not_self,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::not_self,
     1,
     25,
     1, 1,
@@ -3675,6 +3708,18 @@ static const struct spell_desc spelldata[] =
     TILEG_LEES_RAPID_DECONSTRUCTION, // close enough
 },
 
+{
+    SPELL_REGENERATE_OTHER, "Regenerate Other",
+    spschool::necromancy,
+    spflag::monster | spflag::not_self | spflag::helpful,
+    4,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",
@@ -3694,6 +3739,17 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::chaotic | spflag::needs_tracer,
     3,
     0,
+    5, 5,
+    0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_HURL_TORCHLIGHT, "Hurl Torchlight",
+    spschool::conjuration | spschool::necromancy,
+    spflag::dir_or_target | spflag::needs_tracer,
+    4,
+    200,
     5, 5,
     0,
     TILEG_ERROR,
@@ -3766,7 +3822,6 @@ AXED_SPELL(SPELL_SILVER_BLAST, "Silver Blast")
 AXED_SPELL(SPELL_SINGULARITY, "Singularity")
 AXED_SPELL(SPELL_SONG_OF_SHIELDING, "Song of Shielding")
 AXED_SPELL(SPELL_SPECTRAL_WEAPON, "Spectral Weapon")
-AXED_SPELL(SPELL_STICKS_TO_SNAKES, "Sticks to Snakes")
 AXED_SPELL(SPELL_STONESKIN, "Stoneskin")
 AXED_SPELL(SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies")
 AXED_SPELL(SPELL_SUMMON_ELEMENTAL, "Summon Elemental")

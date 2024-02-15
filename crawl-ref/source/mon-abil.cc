@@ -148,7 +148,14 @@ static void _split_ench_durations(monster* initial_slime, monster* split_off)
     for (const auto &entry : initial_slime->enchantments)
     {
         if (_should_share_ench(entry.second.ench))
+        {
             split_off->add_ench(entry.second);
+
+            // The newly split slime will also be vengeance marked, so we need
+            // to increment the total number of monsters the player has to kill
+            if (entry.second.ench == ENCH_VENGEANCE_TARGET)
+                you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+        }
     }
 }
 

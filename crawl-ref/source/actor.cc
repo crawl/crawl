@@ -39,7 +39,8 @@ bool actor::will_trigger_shaft() const
     return is_valid_shaft_level()
            // let's pretend that they always make their saving roll
            && !(is_monster()
-                && mons_is_elven_twin(static_cast<const monster* >(this)));
+                && (mons_is_elven_twin(static_cast<const monster* >(this))
+                    || as_monster()->type == MONS_ORC_APOSTLE));
 }
 
 level_id actor::shaft_dest() const
@@ -450,7 +451,8 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     monster * const mons = monster_by_mid(whom);
     bool roots = constrictee->is_player() && you.duration[DUR_GRASPING_ROOTS]
         || mons && mons->has_ench(ENCH_GRASPING_ROOTS);
-    bool vile_clutch = mons && mons->has_ench(ENCH_VILE_CLUTCH);
+    bool vile_clutch = constrictee->is_player() && you.duration[DUR_VILE_CLUTCH]
+        || mons && mons->has_ench(ENCH_VILE_CLUTCH);
 
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
@@ -481,7 +483,12 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     }
 
     if (vile_clutch)
-        mons->del_ench(ENCH_VILE_CLUTCH);
+    {
+        if (mons)
+            mons->del_ench(ENCH_VILE_CLUTCH);
+        else
+            you.duration[DUR_VILE_CLUTCH] = 0;
+    }
     else if (roots)
     {
         if (mons)
@@ -694,6 +701,8 @@ constrict_type actor::get_constrict_type() const
     {
         if (you.duration[DUR_GRASPING_ROOTS])
             return CONSTRICT_ROOTS;
+        else if (you.duration[DUR_VILE_CLUTCH])
+            return CONSTRICT_BVC;
         return CONSTRICT_MELEE;
     }
     const monster* mon = as_monster();

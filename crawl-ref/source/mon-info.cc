@@ -130,6 +130,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BULLSEYE_TARGET, MB_BULLSEYE_TARGET },
     { ENCH_VITRIFIED,       MB_VITRIFIED },
     { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
+    { ENCH_TOUCH_OF_BEOGH,  MB_TOUCH_OF_BEOGH },
+    { ENCH_VENGEANCE_TARGET, MB_VENGEANCE_TARGET },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -674,8 +676,12 @@ monster_info::monster_info(const monster* m, int milev)
     // Otherwise the description lies wildly about the average hp of melee pan
     // lords, and an average player will have no idea how durable their canine
     // familiar really is - which matters when you want to keep it alive.
-    else if (m->type == MONS_PANDEMONIUM_LORD || m->type == MONS_INUGAMI)
-        props[KNOWN_MAX_HP_KEY] = (int)(m->ghost->max_hp);
+    else if (m->type == MONS_PANDEMONIUM_LORD
+             || m->type == MONS_INUGAMI
+             || m->type == MONS_ORC_APOSTLE)
+    {
+        props[KNOWN_MAX_HP_KEY] = (int)(m->max_hit_points);
+    }
 
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
@@ -688,7 +694,7 @@ monster_info::monster_info(const monster* m, int milev)
     // book loading for player ghost and vault monsters
     spells.clear();
     if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type)
-        || type == MONS_PANDEMONIUM_LORD)
+        || type == MONS_PANDEMONIUM_LORD || type == MONS_ORC_APOSTLE)
     {
         spells = m->spells;
     }
@@ -789,6 +795,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (is_ally_target(*m))
         mb.set(MB_ALLY_TARGET);
 
+    if (m->behaviour == BEH_WITHDRAW)
+        mb.set(MB_RETREATING);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -807,7 +816,15 @@ monster_info::monster_info(const monster* m, int milev)
 string monster_info::get_max_hp_desc() const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
-        return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
+    {
+        const int hp = props[KNOWN_MAX_HP_KEY].get_int();
+
+        // Indicate that this apostle's HP has been increased by Beogh
+        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
+            return make_stringf("*%d*", hp);
+
+        return std::to_string(hp);
+    }
 
     const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
@@ -1659,7 +1676,7 @@ bool monster_info::has_spells() const
         return false;
 
     // Ghosts / pan lords may have custom spell lists, so check spells directly
-    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
+    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD || type == MONS_ORC_APOSTLE)
         return spells.size() > 0;
 
     return true;

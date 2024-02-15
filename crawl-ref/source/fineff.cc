@@ -9,6 +9,7 @@
 #include "fineff.h"
 
 #include "act-iter.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "bloodspatter.h"
 #include "coordit.h"
@@ -20,6 +21,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
 #include "libutil.h"
 #include "losglobal.h"
@@ -763,18 +765,13 @@ void make_derived_undead_fineff::fire()
 
     if (mg.god != GOD_YREDELEMNUL)
     {
-        if (undead->type == MONS_ZOMBIE)
-            undead->props[ANIMATE_DEAD_KEY] = true;
-        else
-        {
-            int dur = undead->type == MONS_SKELETON ? 3 : 5;
+        int dur = undead->type == MONS_SKELETON ? 3 : 5;
 
-            // Sculpt Simulacrum has a shorter duration than Bind Soul simulacra
-            if (spell == SPELL_SIMULACRUM)
-                dur = 3;
+        // Sculpt Simulacrum has a shorter duration than Bind Soul simulacra
+        if (spell == SPELL_SIMULACRUM)
+            dur = 3;
 
-            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
-        }
+        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
     }
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);
@@ -956,6 +953,19 @@ void jinxbite_fineff::fire()
     actor* defend = defender();
     if (defend && defend->alive())
         attempt_jinxbite_hit(*defend);
+}
+
+void beogh_resurrection_fineff::fire()
+{
+    beogh_resurrect_followers();
+}
+
+void dismiss_divine_allies_fineff::fire()
+{
+    if (god == GOD_BEOGH)
+        beogh_do_ostracism();
+    else
+        dismiss_god_summons(god);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

@@ -74,7 +74,6 @@ string feat_preposition(dungeon_feature_type feat, bool active = false,
 string stair_climb_verb(dungeon_feature_type feat);
 
 bool feat_is_water(dungeon_feature_type feat);
-bool feat_is_watery(dungeon_feature_type feat);
 bool feat_is_lava(dungeon_feature_type feat);
 god_type feat_altar_god(dungeon_feature_type feat);
 dungeon_feature_type altar_for_god(god_type god);

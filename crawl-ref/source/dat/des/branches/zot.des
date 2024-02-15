@@ -2750,7 +2750,7 @@ SHUFFLE: GHIJ
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
-ITEM:    lightning rod, book of lightning, staff of air, book of storms
+ITEM:    storm talisman, book of lightning, staff of air, book of storms
 COLOUR:  G = electricity
 TILE:    G = storm_conduit
 :   set_feature_name("metal_statue", "storm conduit")
@@ -3870,7 +3870,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
 KFEAT:  G = metal_statue
-ITEM:   lightning rod, book of lightning
+ITEM:   storm talisman, book of lightning
 : local e = "ego:electrocution good_item ident:type"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
 :      "executioner's axe " .. e .. " w:5 / eveningstar " .. e .. " w:5 / " ..

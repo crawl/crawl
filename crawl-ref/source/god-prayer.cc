@@ -130,8 +130,6 @@ static bool _pray_ecumenical_altar()
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
     else if (you_worship(GOD_XOM))
         xom_is_stimulated(200, XM_INTRIGUED, true);
-    else if (you_worship(GOD_YREDELEMNUL))
-        give_yred_bonus_zombies(1);
     else
         gain_piety(20, 1, false);
 

@@ -361,6 +361,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
     }
 
+    case ENCH_TOUCH_OF_BEOGH:
+        scale_hp(touch_of_beogh_hp_mult(*this), 100);
+        break;
+
     default:
         break;
     }
@@ -657,11 +661,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SOUL_RIPE:
+        // Print message notifying the player, even if they cannot see us
         if (!quiet)
-        {
-            simple_monster_message(*this,
-                                   "'s soul is no longer ripe for the taking.");
-        }
+            mprf("You lose your grip on %s soul.", name(DESC_ITS, true).c_str());
         break;
 
     case ENCH_AWAKEN_FOREST:
@@ -897,11 +899,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_BOUND:
-        if (!quiet)
-            simple_monster_message(*this, "'s lost momentum returns!");
-        add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
-                 props[BINDING_SIGIL_DURATION_KEY].get_int()));
-        props.erase(BINDING_SIGIL_DURATION_KEY);
+        // From Sigil of Binding
+        if (props.exists(BINDING_SIGIL_DURATION_KEY))
+        {
+            if (!quiet)
+                simple_monster_message(*this, "'s lost momentum returns!");
+            add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
+                                 props[BINDING_SIGIL_DURATION_KEY].get_int()));
+            props.erase(BINDING_SIGIL_DURATION_KEY);
+        }
+        // Fathomless Shackles doesn't need messages for removal
+
         break;
 
     case ENCH_BULLSEYE_TARGET:
@@ -938,6 +946,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CURSE_OF_AGONY:
         simple_monster_message(*this, " is freed from its curse.");
+        break;
+
+    case ENCH_TOUCH_OF_BEOGH:
+        scale_hp(100, touch_of_beogh_hp_mult(*this));
         break;
 
     default:
@@ -1300,7 +1312,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_WL:
-    case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
     case ENCH_REGENERATION:
     case ENCH_STRONG_WILLED:
@@ -1341,7 +1352,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WATERLOGGED:
     case ENCH_NECROTISE:
     case ENCH_CONCENTRATE_VENOM:
-    case ENCH_BOUND:
     case ENCH_VITRIFIED:
     case ENCH_INSTANT_CLEAVE:
     case ENCH_PROTEAN_SHAPESHIFTING:
@@ -1435,7 +1445,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(env.grid(pos())) && ground_level())
+        if (feat_is_water(env.grid(pos())) && ground_level())
         {
             if (you.can_see(*this))
             {
@@ -1782,6 +1792,63 @@ void monster::apply_enchantment(const mon_enchant &me)
             simple_monster_message(*this, " is no longer haunted by guilt.");
         break;
 
+    case ENCH_CHANNEL_SEARING_RAY:
+        // If we've gotten incapacitated since we started, cancel the spell
+        if (is_silenced() || cannot_act() || confused() || asleep() || has_ench(ENCH_FEAR))
+        {
+            del_ench(en, true, false);
+            if (you.can_see(*this))
+                mprf("%s searing ray is interrupted.", name(DESC_ITS).c_str());
+        }
+        break;
+
+    case ENCH_BOUND:
+        // Remove Yred binding as soon as we're not in the effect area
+        if (!props.exists(BINDING_SIGIL_DURATION_KEY)
+            && (!is_blasphemy(pos()) || !is_blasphemy(you.pos())
+                || !you.duration[DUR_FATHOMLESS_SHACKLES]))
+        {
+            del_ench(en, true, true);
+        }
+        else
+            decay_enchantment(en);
+        break;
+
+    case ENCH_SOUL_RIPE:
+        if (!cell_see_cell(you.pos(), pos(), LOS_NO_TRANS))
+        {
+            // This implies the player *just* lost sight of us, so start the countdown
+            if (me.duration == INFINITE_DURATION)
+            {
+                // XXX: The most awkward way to work around not being able to lower
+                //      duration directly, or decay things with INFINITE_DURATION....
+                mon_enchant timeout(ENCH_SOUL_RIPE, me.degree, &you, 20);
+                del_ench(en, true, false);
+                add_ench(timeout);
+            }
+            else
+            {
+                if (!decay_enchantment(ENCH_SOUL_RIPE)
+                    && me.duration <= 10)
+                {
+                    mprf("Your grip on %s soul is slipping...",
+                         name(DESC_ITS, true).c_str());
+                }
+            }
+
+        }
+        else
+        {
+            if (me.duration < INFINITE_DURATION)
+            {
+                // XXX: See above. I hate it. Surely there's a better way than this.
+                mon_enchant renew(ENCH_SOUL_RIPE, me.degree, &you, INFINITE_DURATION);
+                del_ench(en, true, false);
+                add_ench(renew);
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -2028,6 +2095,8 @@ static const char *enchant_names[] =
 #endif
     "bound", "bullseye_target", "vitrified", "cleaving_attack",
     "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
+    "channel_searing_ray",
+    "touch_of_beogh", "vengeance_target",
     "buggy", // NUM_ENCHANTMENTS
 };
 

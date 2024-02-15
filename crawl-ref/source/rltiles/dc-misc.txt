@@ -100,6 +100,8 @@ searing_ray5
 
 damnation BOLT_DAMNATION
 
+umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+
 irradiate0 BOLT_IRRADIATE
 irradiate1
 irradiate2

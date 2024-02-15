@@ -2420,7 +2420,7 @@ ENDMAP
 NAME:   nicolae_pan_performance_anxiety
 TAGS:   no_trap_gen
 WEIGHT: 1
-KMONS:  p = human / elf / orc ; nothing / kobold ; nothing / mummy / \
+KMONS:  p = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
             ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
@@ -3170,7 +3170,7 @@ ENDMAP
 NAME:    pan_blood_fountain_1
 TAGS:    extra allow_dup transparent
 CHANCE:  10%
-KFEAT:   T = altar_trog
+KFEAT:   T = altar_trog / altar_nemelex_xobeh w:5
 KFEAT:   K = altar_kikubaaqudgha
 KFEAT:   M = altar_makhleb
 KFEAT:   L = altar_lugonu
@@ -3197,7 +3197,7 @@ ENDMAP
 NAME:    pan_blood_fountain_2
 TAGS:    extra allow_dup transparent
 CHANCE:  5%
-KFEAT:   T = altar_trog
+KFEAT:   T = altar_trog / altar_nemelex_xobeh w:5
 KFEAT:   K = altar_kikubaaqudgha
 KFEAT:   M = altar_makhleb
 KFEAT:   L = altar_lugonu
@@ -4216,7 +4216,6 @@ y.D.JJx
  .E.KKz
  .....
 ENDMAP
-
 
 ### Holy Pan Level ############################################################
 #

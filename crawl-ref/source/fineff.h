@@ -535,4 +535,39 @@ protected:
     }
 };
 
+class beogh_resurrection_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return true; };
+    void fire() override;
+
+    static void schedule()
+    {
+        final_effect::schedule(new beogh_resurrection_fineff());
+    }
+protected:
+    beogh_resurrection_fineff()
+        : final_effect(nullptr, nullptr, coord_def())
+    {
+    }
+};
+
+class dismiss_divine_allies_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(const god_type god)
+    {
+        final_effect::schedule(new dismiss_divine_allies_fineff(god));
+    }
+protected:
+    dismiss_divine_allies_fineff(const god_type _god)
+        : final_effect(0, 0, coord_def()), god(_god)
+    {
+    }
+    const god_type god;
+};
+
 void fire_final_effects();

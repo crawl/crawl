@@ -2,7 +2,7 @@ enum: SP_HILL_ORC
 monster: MONS_ORC
 name: Hill Orc
 short_name: HO
-difficulty: Simple
+difficulty: False
 difficulty_priority: 100
 aptitudes:
   xp: 0
@@ -36,16 +36,5 @@ dex: 6
 levelup_stat_frequency: 5
 levelup_stats:
   - str
-recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_MONK
-  - JOB_BERSERKER
-  - JOB_CINDER_ACOLYTE
-  - JOB_REAVER
-  - JOB_FIRE_ELEMENTALIST
-recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_POLEARMS
 # if you add any mutations here: you'll need to fix test/mut_species.lua, which
 # relies on HO having none.

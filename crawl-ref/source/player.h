@@ -368,9 +368,6 @@ public:
     // A stack -- back() is the first to go.
     vector<pair<uncancellable_type, int> > uncancel;
 
-    // A list of allies awaiting an active recall
-    vector<mid_t> recall_list;
-
     // Hash seed for deterministic stuff.
     uint64_t game_seed;
     bool fully_seeded; // true on all games started since 0.23 seeding changes
@@ -919,7 +916,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = nullptr);
 
-    bool attempt_escape(int attempts = 1);
+    bool attempt_escape(int attempts = 1) override;
     int usable_tentacles() const;
     bool has_usable_tentacle() const override;
 

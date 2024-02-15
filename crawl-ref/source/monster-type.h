@@ -399,6 +399,9 @@ enum monster_type                      // env.mons[].type
     MONS_ORC_KNIGHT,
     MONS_ORC_SORCERER,
     MONS_ORC_WARLORD,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ORC_APOSTLE,
+#endif
     MONS_DWARF,
     MONS_DEEP_DWARF,
 #if TAG_MAJOR_VERSION == 34
@@ -1231,6 +1234,7 @@ enum monster_type                      // env.mons[].type
     MONS_BURIAL_ACOLYTE,
     MONS_BLAZEHEART_CORE,
     MONS_MARTYRED_SHADE,
+    MONS_ORC_APOSTLE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

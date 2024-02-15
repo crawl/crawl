@@ -2950,8 +2950,19 @@ string get_item_description(const item_def &item,
             if (item.base_type == OBJ_ARMOUR
                 || item.base_type == OBJ_WEAPONS)
             {
-                description << "\nThis ancient artefact cannot be changed "
-                    "by magic or mundane means.";
+                if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
+                {
+                    if (is_unrandom_artefact(item))
+                    {
+                        description << "\nEnchanting this artefact any further "
+                            "is beyond even your skills.";
+                    }
+                }
+                else
+                {
+                    description << "\nThis ancient artefact cannot be changed "
+                        "by magic or mundane means.";
+                }
             }
             // Randart jewellery has already displayed this line.
             else if (item.base_type != OBJ_JEWELLERY
@@ -4956,6 +4967,8 @@ static string _monster_attacks_description(const monster_info& mi)
             real_dam = real_dam * 2;
         if (mi.is(MB_WEAK))
             real_dam = real_dam * 2 / 3;
+        if (mi.is(MB_TOUCH_OF_BEOGH))
+            real_dam = real_dam * 4 / 3;
 
         string dam_str;
         if (dam != real_dam)
@@ -5274,8 +5287,10 @@ string _monster_habitat_description(const monster_info& mi)
     switch (mons_habitat_type(type, mi.base_type))
     {
     case HT_AMPHIBIOUS:
-        return uppercase_first(make_stringf("%s can travel through water.\n",
-                               mi.pronoun(PRONOUN_SUBJECTIVE)));
+        return uppercase_first(make_stringf("%s can %s water.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE),
+                               mi.type == MONS_ORC_APOSTLE
+                                ? "walk on" : "travel through"));
     case HT_AMPHIBIOUS_LAVA:
         return uppercase_first(make_stringf("%s can travel through lava.\n",
                                mi.pronoun(PRONOUN_SUBJECTIVE)));
@@ -5883,6 +5898,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mons_species(mi.type) == MONS_SERPENT_OF_HELL)
         db_name += " " + serpent_of_hell_flavour(mi.type);
+    if (mi.type == MONS_ORC_APOSTLE && mi.attitude == ATT_FRIENDLY)
+        db_name = "orc apostle follower";
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
@@ -6513,4 +6530,83 @@ string extra_cloud_info(cloud_type cloud_type)
                        " %s once outside their sight.\n",
                        opaque ? "quickly" : "almost instantly");
     return opacity_info + vanish_info;
+}
+
+string player_species_name()
+{
+    if (!you_worship(GOD_BEOGH))
+        return species::name(you.species);
+    switch (you.species)
+    {
+#if TAG_MAJOR_VERSION == 34
+        case SP_HILL_ORC:
+            return "Antique Orc";
+#endif
+        case SP_MOUNTAIN_DWARF:
+            return "Mountain Orc";
+        case SP_MINOTAUR:
+            return "Minotorc";
+        case SP_MERFOLK:
+            return "Merforc";
+        case SP_GARGOYLE:
+            return "Gargorcle";
+        case SP_ARMATAUR:
+            return "Orcataur";
+        case SP_BASE_DRACONIAN:
+            return "Orconian";
+        case SP_RED_DRACONIAN:
+            return "Red Orconian";
+        case SP_WHITE_DRACONIAN:
+            return "White Orconian";
+        case SP_YELLOW_DRACONIAN:
+            return "Yellow Orconian";
+        case SP_PURPLE_DRACONIAN:
+            return "Purple Orconian";
+        case SP_PALE_DRACONIAN:
+            return "Pale Orconian";
+        case SP_GREY_DRACONIAN:
+            return "Grey Orconian";
+        case SP_GREEN_DRACONIAN:
+            return "Green Orconian";
+        case SP_TROLL:
+            return "Trorc";
+        case SP_GHOUL:
+            return "Rotting Orc";
+        case SP_GNOLL:
+            return "Hyenorc";
+        case SP_HUMAN:
+            return "Orc";
+        case SP_KOBOLD:
+            return "Orcobold";
+        case SP_DEMONSPAWN:
+            return "Demon Orc";
+        case SP_DJINNI:
+            return "Orcfreeti";
+        case SP_SPRIGGAN:
+            return "Spriggorc";
+        case SP_TENGU:
+            return "Tengorc";
+        case SP_DEEP_ELF:
+            return "Deep Orc";
+        case SP_ONI:
+            return "Big Orc";
+        case SP_VINE_STALKER:
+            return "Orchid Stalker";
+        case SP_VAMPIRE:
+            return "Orcula";
+        case SP_FORMICID:
+            return "Orcmicid";
+        case SP_NAGA:
+            return "Nagorc";
+        case SP_OCTOPODE:
+            return "Orctopode";
+        case SP_FELID:
+            return "Orcat";
+        case SP_BARACHI:
+            return "Orcphibian";
+        case SP_MUMMY:
+            return "Orcish Mummy";
+        default:
+            return "Buggy Orc";
+    }
 }

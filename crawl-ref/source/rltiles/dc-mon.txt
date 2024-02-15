@@ -1154,6 +1154,9 @@ orc_knight MONS_ORC_KNIGHT
 orc_warlord MONS_ORC_WARLORD
 orc_sorcerer MONS_ORC_SORCERER
 orc_high_priest MONS_ORC_HIGH_PRIEST
+orc_apostle_wizard1 MONS_ORC_APOSTLE
+orc_apostle_priest1
+orc_apostle_warrior1
 %rim 1
 %sdir mon/vault
 deformed_orc MONS_DEFORMED_ORC

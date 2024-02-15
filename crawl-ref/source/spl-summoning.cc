@@ -2259,7 +2259,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_FIRE_ELEMENTALS,          { 0, 3 } },
     { SPELL_EARTH_ELEMENTALS,         { 0, 3 } },
     { SPELL_AIR_ELEMENTALS,           { 0, 3 } },
-    { SPELL_SUMMON_SPECTRAL_ORCS,     { 0, 3 } },
+    { SPELL_STICKS_TO_SNAKES,         { 0, 2 } },
+    { SPELL_VANQUISHED_VANGUARD,      { 0, 3 } },
     { SPELL_FIRE_SUMMON,              { 0, 4 } },
     { SPELL_SUMMON_MINOR_DEMON,       { 0, 3 } },
     { SPELL_CALL_LOST_SOULS,          { 0, 3 } },
@@ -2280,6 +2281,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
     { SPELL_CONJURE_LIVING_SPELLS,    { 0, 4 } },
     { SPELL_SHEZAS_DANCE,             { 0, 6 } },
+    { SPELL_DIVINE_ARMAMENT,          { 0, 1 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -2875,6 +2877,9 @@ string mons_simulacrum_immune_reason(const monster *mons)
 
     if (!mons_can_be_spectralised(*mons))
         return "You can't make a simulacrum of that!";
+
+    if (mons->friendly() || mons->neutral())
+        return "That would be terribly rude!";
 
     return "";
 }

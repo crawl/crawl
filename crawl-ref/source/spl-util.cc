@@ -1412,7 +1412,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_MANIFOLD_ASSAULT:
         if (temp)
         {
-            const string unproj_reason = weapon_unprojectability_reason();
+            const string unproj_reason = weapon_unprojectability_reason(you.weapon());
             if (unproj_reason != "")
                 return unproj_reason;
         }
@@ -1566,7 +1566,7 @@ bool spell_no_hostile_in_range(spell_type spell)
          return cast_intoxicate(-1, false, true) == spret::abort;
 
     case SPELL_MANIFOLD_ASSAULT:
-         return cast_manifold_assault(-1, false, false) == spret::abort;
+         return cast_manifold_assault(you, -1, false, false) == spret::abort;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
          return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
@@ -1593,10 +1593,10 @@ bool spell_no_hostile_in_range(spell_type spell)
     // Check slightly beyond our target range, in case someone wants to catch
     // something in the AoE at the edge of range.
     case SPELL_MERCURY_VAPOURS:
-        return find_near_hostiles(range + 1, false).empty();
+        return find_near_hostiles(range + 1, false, you).empty();
 
     case SPELL_SCORCH:
-        return find_near_hostiles(range, false).empty();
+        return find_near_hostiles(range, false, you).empty();
 
     case SPELL_ANGUISH:
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1883,7 +1883,6 @@ const set<spell_type> removed_spells =
     SPELL_SONG_OF_SHIELDING,
     SPELL_SPECTRAL_WEAPON,
     SPELL_STEAM_CLOUD,
-    SPELL_STICKS_TO_SNAKES,
     SPELL_STONESKIN,
     SPELL_STRIKING,
     SPELL_SUMMON_BUTTERFLIES,
@@ -1948,7 +1947,7 @@ bool spell_was_form(spell_type spell)
 
 void end_wait_spells(bool quiet)
 {
-    end_searing_ray();
+    end_searing_ray(you);
     end_maxwells_coupling(quiet);
     end_flame_wave();
 }

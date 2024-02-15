@@ -109,7 +109,9 @@ enum monclass_flag_type : uint64_t
     /// can do damage when attacked in melee
     M_SPINY             = BIT(32),
 
-                        //BIT(33),
+    // Prefers not to move closer to its foe if it's already in range to cast
+    // spells against it.
+    M_CAUTIOUS          = BIT(33),
 
     /// not a valid polymorph target (but can be polymorphed)
     M_NO_POLY_TO        = BIT(34),
@@ -282,7 +284,13 @@ enum monster_flag_type : uint64_t
     /// possibly got piety with TSO
     MF_TSO_SEEN           = BIT(38),
 
+    /// Part of an orc apostle band
+    MF_APOSTLE_BAND       = BIT(39),
+
     // MF_BAND_LEADER      = BIT(40) // Created as the leader of a band
+
+    /// Will prefer not to approach enemies it's already in spellcast range of
+    MF_CAUTIOUS           = BIT(41),
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

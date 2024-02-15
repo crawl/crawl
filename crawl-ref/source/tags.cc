@@ -1737,10 +1737,6 @@ static void _tag_construct_you(writer &th)
         marshallInt(th, unc.second);
     }
 
-    marshallUnsigned(th, you.recall_list.size());
-    for (mid_t recallee : you.recall_list)
-        _marshall_as_int(th, recallee);
-
     marshallUByte(th, 1); // number of seeds, for historical reasons: always 1
     marshallUnsigned(th, you.game_seed);
     marshallBoolean(th, you.fully_seeded); // TODO: remove on major version inc?
@@ -1971,6 +1967,24 @@ static companion unmarshall_companion(reader &th)
     c.level = unmarshall_level_id(th);
     c.timestamp = unmarshallInt(th);
     return c;
+}
+
+static void marshall_apostle(writer &th, const apostle_data &a)
+{
+    marshall_follower(th, a.apostle);
+    marshall_level_id(th, a.corpse_location);
+    marshallInt(th, a.state);
+    marshallInt(th, a.vengeance_bonus);
+}
+
+static apostle_data unmarshall_apostle_data(reader &th)
+{
+    apostle_data a;
+    a.apostle = unmarshall_follower(th);
+    a.corpse_location = unmarshall_level_id(th);
+    a.state = static_cast<apostle_state>(unmarshallInt(th));
+    a.vengeance_bonus = unmarshallInt(th);
+    return a;
 }
 
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
@@ -2292,6 +2306,11 @@ static void _tag_construct_companions(writer &th)
 #endif
     marshallMap(th, companion_list, _marshall_as_int<mid_t>,
                  marshall_companion);
+
+    const uint8_t size = apostles.size();
+    marshallByte(th, size);
+    for (auto &apostle: apostles)
+        marshall_apostle(th, apostle);
 }
 
 // Save versions 30-32.26 are readable but don't store the names.
@@ -2408,6 +2427,7 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_THROW_FROST:
         case SPELL_RING_OF_FLAMES:
         case SPELL_HASTE:
+        case SPELL_STICKS_TO_SNAKES:
             return SPELL_NO_SPELL;
 
         case SPELL_FLAME_TONGUE:
@@ -4056,16 +4076,13 @@ static void _tag_read_you(reader &th)
     }
     }
 
-    if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL)
+    if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL
+        && th.getMinorVersion() < TAG_MINOR_NO_INCREMENTAL_RECALL)
     {
-#endif
-    count = unmarshallUnsigned(th);
-    you.recall_list.resize(count);
-    for (int i = 0; i < count; i++)
-        you.recall_list[i] = unmarshall_int_as<mid_t>(th);
-#if TAG_MAJOR_VERSION == 34
+        count = unmarshallUnsigned(th);
+        for (int i = 0; i < count; i++)
+            unmarshallInt(th);
     }
-
 
     if (th.getMinorVersion() < TAG_MINOR_SEEDS)
     {
@@ -4931,6 +4948,16 @@ static void _tag_read_companions(reader &th)
 
     unmarshallMap(th, companion_list, unmarshall_int_as<mid_t>,
                   unmarshall_companion);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_APOSTLE_DATA)
+        return;
+#endif
+
+    apostles.clear();
+    int count = unmarshallByte(th);
+    for (int i = 0; i < count; ++i)
+        apostles.push_back(unmarshall_apostle_data(th));
 }
 
 template <typename Z>
@@ -5197,14 +5224,6 @@ void unmarshallItem(reader &th, item_def &item)
         && !item.props[FORCED_ITEM_COLOUR_KEY].get_int())
     {
         item.props[FORCED_ITEM_COLOUR_KEY] = LIGHTRED;
-    }
-
-    // If we lost the monster held in an orc corpse because we marshalled
-    // it as a dead monster, clear out the prop.
-    if (item.props.exists(ORC_CORPSE_KEY)
-        && item.props[ORC_CORPSE_KEY].get_monster().type == MONS_NO_MONSTER)
-    {
-        item.props.erase(ORC_CORPSE_KEY);
     }
 #endif
     // Fixup artefact props to handle reloading items when the new version
@@ -5986,7 +6005,6 @@ void marshallMonster(writer &th, const monster& m)
         marshallCoord(th, pos);
 
     marshallUnsigned(th, m.flags.flags);
-    marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
     for (const auto &entry : m.enchantments)
@@ -6939,7 +6957,11 @@ void unmarshallMonster(reader &th, monster& m)
         m.travel_path.push_back(unmarshallCoord(th));
 
     m.flags.flags = unmarshallUnsigned(th);
-    m.experience  = unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_MONSTER_XP)
+        unmarshallInt(th);
+#endif
 
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);
@@ -6990,7 +7012,7 @@ void unmarshallMonster(reader &th, monster& m)
             m.del_ench(ENCH_SPELL_CHARGED);
         }
 
-        if (mons_is_zombified(m) && !mons_bound_soul(m)
+        if (mons_is_zombified(m) && m.type != MONS_BOUND_SOUL
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells
@@ -7018,6 +7040,11 @@ void unmarshallMonster(reader &th, monster& m)
         else if (slot.spell == SPELL_SERPENT_OF_HELL_BREATH_REMOVED)
         {
             slot.spell = _fixup_soh_breath(m.type);
+            m.spells.push_back(slot);
+        }
+        else if (slot.spell == SPELL_ELECTRIC_CHARGE)
+        {
+            slot.spell = SPELL_ELECTROLUNGE;
             m.spells.push_back(slot);
         }
 #if TAG_MAJOR_VERSION == 34
@@ -7055,6 +7082,10 @@ void unmarshallMonster(reader &th, monster& m)
     m.foe_memory = unmarshallInt(th);
 
     m.damage_friendly = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XP_CONTRIBUTE_FIXUP)
+        m.damage_friendly /= 2;
+#endif
     m.damage_total = unmarshallShort(th);
 
 #if TAG_MAJOR_VERSION == 34
@@ -7310,30 +7341,6 @@ void unmarshallMonster(reader &th, monster& m)
     {
         m.props[ORIGINAL_TYPE_KEY].get_int() =
             get_monster_by_name(m.props["original_name"].get_string());
-    }
-
-    if (m.props.exists("given beogh shield"))
-    {
-        m.props.erase("given beogh shield");
-        m.props[BEOGH_SH_GIFT_KEY] = true;
-    }
-
-    if (m.props.exists("given beogh armour"))
-    {
-        m.props.erase("given beogh armour");
-        m.props[BEOGH_ARM_GIFT_KEY] = true;
-    }
-
-    if (m.props.exists("given beogh weapon"))
-    {
-        m.props.erase("given beogh weapon");
-        m.props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
-    }
-
-    if (m.props.exists("given beogh range weapon"))
-    {
-        m.props.erase("given beogh range weapon");
-        m.props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
     }
 
     // fixup for versions of frenzy that involved a permanent attitude change,

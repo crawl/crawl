@@ -1523,6 +1523,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
+    if (ygrd != DNGN_TRANSPORTER && beogh_cancel_leaving_floor())
+        return false;
+
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))
@@ -2815,7 +2818,7 @@ static void _do_berserk_no_combat_penalty()
  */
 static void _do_wait_spells()
 {
-    handle_searing_ray();
+    handle_searing_ray(you);
     handle_maxwells_coupling();
     handle_flame_wave();
 }

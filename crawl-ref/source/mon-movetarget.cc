@@ -721,7 +721,7 @@ void set_random_target(monster* mon)
         if (!in_bounds(newtarget))
             continue;
 
-        if (!summon_can_attack(mon, newtarget))
+        if (!monster_los_is_valid(mon, newtarget))
             continue;
 
         if (!mon->is_location_safe(newtarget))

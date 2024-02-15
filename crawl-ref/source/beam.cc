@@ -1704,6 +1704,16 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             mons->strip_willpower(pbolt.agent(), random_range(20, 30));
         break;
 
+    case BEAM_UMBRAL_TORCHLIGHT:
+        if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        {
+            if (doFlavouredEffects && !mons_aligned(mons, pbolt.agent(true)))
+                simple_monster_message(*mons, " completely resists.");
+
+            hurted = 0;
+        }
+        break;
+
     default:
         break;
     }
@@ -2724,12 +2734,12 @@ void bolt::affect_place_clouds()
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
-        || feat_is_watery(feat) && is_fiery())
+        || feat_is_water(feat) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent(), 11);
     }
 
-    if (feat_is_watery(feat) && flavour == BEAM_COLD
+    if (feat_is_water(feat) && flavour == BEAM_COLD
         && damage.num * damage.size > 35)
     {
         place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1, agent());
@@ -2791,7 +2801,7 @@ void bolt::affect_place_explosion_clouds()
 
     // First check: fire/cold over water/lava.
     if (env.grid(p) == DNGN_LAVA && flavour == BEAM_COLD
-        || feat_is_watery(env.grid(p)) && is_fiery())
+        || feat_is_water(env.grid(p)) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
         return;
@@ -2988,6 +2998,9 @@ bool bolt::is_harmless(const monster* mon) const
     case BEAM_MEPHITIC:
         return mon->res_poison() > 0 || mon->clarity();
 
+    case BEAM_UMBRAL_TORCHLIGHT:
+        return (bool)!(mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+
     default:
         return false;
     }
@@ -3047,6 +3060,13 @@ bool bolt::harmless_to_player() const
 
     case BEAM_ROOTS:
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_ROOTS);
+
+    case BEAM_VILE_CLUTCH:
+        return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_BVC);
+
+    case BEAM_UMBRAL_TORCHLIGHT:
+        return agent(true)->is_player()
+               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
     default:
         return false;
@@ -3116,6 +3136,8 @@ void bolt::tracer_affect_player()
     const actor* ag = agent();
     if (flavour == BEAM_ROOTS && !ag->can_constrict(you, CONSTRICT_ROOTS))
         return; // this should probably go elsewhere
+    else if (flavour == BEAM_VILE_CLUTCH && ! ag->can_constrict(you, CONSTRICT_BVC))
+        return;
 
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
@@ -3350,7 +3372,6 @@ void bolt::affect_player_enchantment(bool resistible)
 
     // Never affects the player.
     if (flavour == BEAM_INFESTATION
-        || flavour == BEAM_VILE_CLUTCH
         || flavour == BEAM_ENFEEBLE)
     {
         return;
@@ -3619,6 +3640,22 @@ void bolt::affect_player_enchantment(bool resistible)
         const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
         dprf("Roots duration: %d", turns);
         grasp_with_roots(*agent(), you, turns);
+        obvious_effect = true;
+        break;
+    }
+
+    case BEAM_VILE_CLUTCH:
+    {
+        // No friendly fire from BVC.
+        if (mons_att_wont_attack(attitude))
+            return;
+        if (!agent()->can_constrict(you, CONSTRICT_BVC))
+            return;
+        const int turns = 4 + random2avg(div_rand_round(ench_power, 10), 2);
+        dprf("BVC duration: %d", turns);
+        you.increase_duration(DUR_VILE_CLUTCH, turns);
+        agent()->start_constricting(you);
+        mprf(MSGCH_WARN, "You are grabbed by zombie hands!");
         obvious_effect = true;
         break;
     }
@@ -4896,6 +4933,17 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (origin_spell == SPELL_PRIMAL_WAVE && agent() && agent()->is_player())
         _waterlog_mon(*mon, ench_power);
+
+    if (origin_spell == SPELL_HURL_TORCHLIGHT && agent() && agent()->is_player()
+        && mon->friendly() && mon->holiness() & MH_UNDEAD)
+    {
+        int dur = random_range(2 + you.skill_rdiv(SK_INVOCATIONS, 1, 5),
+                               4 + you.skill_rdiv(SK_INVOCATIONS, 1, 3))
+                               * BASELINE_DELAY;
+        mon->add_ench(mon_enchant(ENCH_MIGHT, 0, &you, dur));
+        mon->speed_increment += 10;
+        simple_monster_message(*mon, " is empowered.");
+    }
 }
 
 static int _knockback_dist(spell_type origin, int pow)
@@ -5489,6 +5537,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     case BEAM_INFESTATION:
         rc = (mons_gives_xp(*mon, you) || mon->props.exists(KIKU_WRETCH_KEY))
+             && !mon->friendly()
              && !mon->has_ench(ENCH_INFESTATION);
         break;
 
@@ -6304,6 +6353,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The cloud of blastmotes explodes!",
         "a concussive explosion",
     } },
+    { SPELL_HURL_TORCHLIGHT, {
+        "The gout of umbral fire explodes!",
+        "the shriek of umbral fire",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -7026,6 +7079,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VITRIFYING_GAZE:       return "vitrification";
     case BEAM_WEAKNESS:              return "weakness";
     case BEAM_DEVASTATION:           return "devastation";
+    case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

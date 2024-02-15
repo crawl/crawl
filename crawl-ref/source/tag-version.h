@@ -294,6 +294,10 @@ enum tag_minor_version
     TAG_MINOR_GEMS,                // Add gems.
     TAG_MINOR_ALCHEMY_MERGER,      // Poison magic and transmuations merged.
     TAG_MINOR_UNTRAVEL_ALLY_PACE,  // Cut pace travel to slowest ally setting
+    TAG_MINOR_REMOVE_MONSTER_XP,   // Remove the experience member from monster
+    TAG_MINOR_NO_INCREMENTAL_RECALL, // Remove incremental recall and make instant again
+    TAG_MINOR_APOSTLE_DATA,        // Convert apostles to using custom structs instead of props
+    TAG_MINOR_XP_CONTRIBUTE_FIXUP, // Removes the 2x multiplier for player XP contribution
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

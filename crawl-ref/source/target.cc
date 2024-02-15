@@ -120,32 +120,6 @@ targeting_iterator targeter::affected_iterator(aff_type threshold)
     return targeting_iterator(*this, threshold);
 }
 
-// Is the given location a valid endpoint for an electric charge?
-// That is, is there an enemy there which is visible to the player and
-// is not firewood? If not, why not?
-// Note that this does NOT handle checking the intervening path for
-// obstacles or checking the distance from the player.
-string bad_charge_target(coord_def a)
-{
-    const monster* mons = monster_at(a);
-    // You can only charge at monsters.
-    // Specifically, monsters you can see. (No guessing!)
-    // You can't charge at plants you walk right through.
-    if (!mons || !you.can_see(*mons) || fedhas_passthrough(mons))
-        return "You can't see anything there to charge at.";
-
-    // You can't charge at friends. (Also, rude.)
-    // You can't charge at firewood. It's firewood.
-    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
-        return "Why would you want to do that?";
-    return "";
-}
-
-static bool _ok_charge_target(coord_def a)
-{
-    return bad_charge_target(a) == "";
-}
-
 targeter_charge::targeter_charge(const actor *act, int r)
     : targeter(), range(r)
 {
@@ -157,43 +131,13 @@ targeter_charge::targeter_charge(const actor *act, int r)
 
 bool targeter_charge::valid_aim(coord_def a)
 {
-    if (agent->pos() == a)
-        return notify_fail("You can't charge at yourself.");
-    if (adjacent(agent->pos(), a))
-        return notify_fail("You're already next to there.");
-    const int dist_to_targ = grid_distance(agent->pos(), a);
-    if (dist_to_targ > range)
-        return notify_fail("That's out of range!");
+    string msg;
 
-    ray_def ray;
-    if (!find_ray(agent->pos(), a, ray, opc_solid))
-        return notify_fail("There's something in the way.");
-    while (ray.advance())
-    {
-        if (ray.pos() == a)
-        {
-            const string bad = bad_charge_target(ray.pos());
-            if (bad != "")
-                return notify_fail(bad);
-            return true;
-        }
-        if (grid_distance(ray.pos(), agent->pos()) == dist_to_targ -1)
-        {
-            if (is_feat_dangerous(env.grid(ray.pos())))
-            {
-                return notify_fail("There's "
-                                   + feature_description_at(ray.pos())
-                                   + " there.");
-            }
-            const monster* mon = monster_at(ray.pos());
-            if (mon && you.can_see(*mon) && mons_class_is_stationary(mon->type))
-            {
-                return notify_fail(mon->name(DESC_THE)
-                                   + " is immovably fixed there.");
-            }
-        }
-    }
-    die("Ray never reached the end?");
+    coord_def landing = get_electric_charge_landing_spot(*agent, a, &msg);
+    if (landing.origin())
+        return notify_fail(msg);
+
+    return true;
 }
 
 bool targeter_charge::set_aim(coord_def a)
@@ -225,7 +169,7 @@ aff_type targeter_charge::is_affected(coord_def loc)
     }
     if (!in_path)
         return AFF_NO;
-    if (_ok_charge_target(loc))
+    if (path_taken.size() >= 2 && loc == path_taken[path_taken.size() - 1])
         return AFF_MAYBE; // the target of the attack
     if (path_taken.size() >= 2 && loc == path_taken[path_taken.size() - 2])
         return AFF_LANDING;
@@ -1918,7 +1862,7 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
 
 targeter_scorch::targeter_scorch(const actor &a, int _range, bool affect_invis)
     : targeter_multiposition(&a,
-                        find_near_hostiles(_range, affect_invis), AFF_MAYBE),
+                        find_near_hostiles(_range, affect_invis, a), AFF_MAYBE),
       range(_range)
 { }
 
@@ -2257,4 +2201,36 @@ aff_type targeter_petrify::is_affected(coord_def loc)
     if (chain_targ.count(loc) > 0)
         return AFF_MAYBE;
     return AFF_NO;
+}
+
+targeter_bind_soul::targeter_bind_soul() :
+    targeter_smite(&you, LOS_MAX_RANGE, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_bind_soul::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* targ = monster_at(a);
+    if (!targ || !agent->can_see(*targ))
+        return notify_fail("You can't see anything there.");
+
+    if (!yred_can_bind_soul(targ))
+    {
+        if (targ->type == MONS_PANDEMONIUM_LORD)
+            return notify_fail("You are unable to grasp such an alien soul.");
+        else if (targ->is_summoned())
+            return notify_fail("You cannot bind the soul of a summoned being.");
+        else if (targ->friendly())
+            return notify_fail("You cannot bind the soul of an ally.");
+        else
+            return notify_fail("That does not possess a soul you can bind.");
+    }
+
+    if (mons_get_damage_level(*targ) > MDAM_LIGHTLY_DAMAGED)
+        return notify_fail("Their soul is too badly injured.");
+
+    return true;
 }

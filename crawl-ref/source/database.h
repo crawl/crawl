@@ -44,6 +44,7 @@ string getGameStartDescription(const string &key);
 
 string getShoutString(const string &monst, const string &suffix = "");
 string getSpeakString(const string &key);
+string getRandMonNameString(const string &montype);
 string getRandNameString(const string &itemtype, const string &suffix = "");
 string getHelpString(const string &topic);
 string getMiscString(const string &misc, const string &suffix = "");

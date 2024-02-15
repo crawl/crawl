@@ -18,7 +18,7 @@ function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
 
     local did_change = false
     for replica in iter.replica_iterator("wall_phase", 1) do
-        if dgn.feature_name(dgn.grid(replica.x, replica.y)) == "iron_grate" then
+        if dgn.feature_name(dgn.grid(replica.x, replica.y)) == "iron_grate" or dgn.feature_name(dgn.grid(replica.x, replica.y)) == "trap_mechanical" then
           if you.see_cell(replica.x, replica.y) then
             did_change = true
           end
@@ -2214,7 +2214,7 @@ KMONS:  G = crystal guardian
 KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
 KMONS:  H = hell knight
-KMONS:  M = zombie / skeleton / w:5 necrophage
+KMONS:  M = zombie / skeleton / bog body w:5
 KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
 # red metal walls
 COLOUR: a = red
@@ -2307,23 +2307,25 @@ ENDMAP
 
 ##############################################################################
 #       eye to eye with the evil
-#
-# XXX: Undiggable glass has been converted to grates.
+#       (Some of the glass was converted to grates.)
 NAME:   david_glass_crypt
-ORIENT: float
 TAGS:   no_item_gen no_rotate transparent
+ORIENT: float
 PLACE:  Crypt:$
-MARKER: m = lua:portal_desc {wall_phase = 1}
-KFEAT:  m = iron_grate
-KMASK:  1 = opaque
-MONS:   patrolling lich w:20 / patrolling ancient lich / patrolling dread lich
+MONS:   patrolling lich w:20 / patrolling ancient lich
+MONS:   patrolling dread lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   laughing skull / skeletal warrior / skeleton
 MONS:   ancient champion
 KMONS:  F = orange crystal statue / obsidian statue
 KITEM:  | = | no_pickup
 KFEAT:  ^ = alarm trap
-SUBST:  3 = 3., F = G:99 F:1
+KFEAT:  m = iron_grate
+KFEAT:  | = pressure plate trap
+SUBST:  4 = 4., F = G:99 F:1
+MARKER: m = lua:portal_desc {wall_phase = 1}
+MARKER: | = lua:portal_desc {wall_phase = 1}
+KMASK:  12 = opaque
 {{
 lua_marker("|",
            Triggerable.synchronized_markers(
@@ -2343,11 +2345,11 @@ MAP
 .4vll..%|||||%..llv4.
 ..vl....%|||%....lv..
 ..vmm...........mmv..
-..v1m..F.vvv.F..m1v..
+..v2m..F.vvv.F..m2v..
 ..v1m...^^^^^...m1v..
 ..vvvvvvv+++vvvvvvv..
-...vv..2..4..2..vv...
- ..vv.333333333.vv..
+...vv..3..5..3..vv...
+ ..vv.444444444.vv..
  ...vvv.......vvv...
    ...vv+++++vv...
     .............
@@ -2547,7 +2549,7 @@ KMONS:  H = w:20 patrolling death knight / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
-KMONS:  C = necrophage
+KMONS:  C = wight
 KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
 KMONS:  F = patrolling bone dragon
 : else
@@ -2768,7 +2770,7 @@ MONS:    skeletal warrior / jiangshi, laughing skull / weeping skull w:1
 SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
 
 KMONS:   3 = ghoul
-KMONS:   4 = necrophage
+KMONS:   4 = bog body
 KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5

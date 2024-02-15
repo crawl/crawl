@@ -233,8 +233,11 @@ bool melee_attack::handle_phase_attempted()
     }
     else
     {
-        // Only the first attack costs any energy.
-        if (!effective_attack_number)
+        // Only the first attack costs any energy normally.
+        // Projected attacks will have already had their energy costs paid
+        // elsewhere (ie: from casting Manifold Assault or making a normal attack
+        // with the Autumn Katana)
+        if (!effective_attack_number && !is_projected)
         {
             int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
             int delay = attacker->attack_delay().roll();
@@ -1076,7 +1079,7 @@ bool melee_attack::attack()
     else
     {
         if (attacker != defender
-            && (adjacent(defender->pos(), attack_position) || is_projected)
+            && (adjacent(defender->pos(), attack_position))
             && !is_riposte)
         {
             // Check for defender Spines
@@ -1496,7 +1499,7 @@ bool melee_attack::player_gets_aux_punch()
            && get_form()->can_offhand_punch()
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
-           && (you.arm_count() <= 2 || you.has_usable_offhand());
+           && (you.arm_count() > 2 || you.has_usable_offhand());
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -2590,7 +2593,10 @@ string melee_attack::charge_desc()
     if (!charge_pow || defender->res_elec() > 0)
         return "";
     const string pronoun = defender->pronoun(PRONOUN_OBJECTIVE);
-    return make_stringf(" and electrocute %s", pronoun.c_str());
+    return make_stringf(" and electrocute%s %s",
+                        attacker->is_player() ? "" : "s",
+                        pronoun.c_str());
+
 }
 
 void melee_attack::announce_hit()
@@ -2600,10 +2606,11 @@ void melee_attack::announce_hit()
 
     if (attacker->is_monster())
     {
-        mprf("%s %s %s%s%s%s",
+        mprf("%s %s %s%s%s%s%s",
              atk_name(DESC_THE).c_str(),
              attacker->conj_verb(mons_attack_verb()).c_str(),
              defender_name(true).c_str(),
+             charge_desc().c_str(),
              debug_damage_number().c_str(),
              mons_attack_desc().c_str(),
              attack_strength_punctuation(damage_done).c_str());
@@ -2724,12 +2731,20 @@ bool melee_attack::mons_attack_effects()
         return false;
     }
 
+    // Vhi's Electrolunge damage
+    if (charge_pow > 0 && defender->alive() && defender->res_elec() <= 0)
+    {
+       int dmg = electrolunge_damage(charge_pow).roll();
+       int hurt = attacker->apply_ac(dmg, 0, ac_type::half);
+       inflict_damage(hurt, BEAM_ELECTRICITY);
+    }
+
     const bool slippery = defender->is_player()
                           && adjacent(attacker->pos(), defender->pos())
                           && !player_stair_delay() // feet otherwise occupied
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
-    if (attacker != defender && (attk_flavour == AF_TRAMPLE ||
-                                 slippery && attk_flavour != AF_DRAG))
+    if (attacker != defender && !is_projected
+        && (attk_flavour == AF_TRAMPLE || slippery && attk_flavour != AF_DRAG))
     {
         do_knockback(slippery);
     }
@@ -3052,7 +3067,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_CHAOTIC:
-        chaos_affects_defender();
+        obvious_effect = chaos_affects_actor(defender, attacker);
         break;
 
     case AF_STEAL:
@@ -3458,7 +3473,7 @@ void melee_attack::do_spines()
             // Dithmenos' shadow can't take damage, don't spam.
             || attacker->type == MONS_PLAYER_SHADOW
             // Don't let spines kill things out of LOS.
-            || !summon_can_attack(defender->as_monster(), attacker))
+            || !monster_los_is_valid(defender->as_monster(), attacker))
         {
             return;
         }
@@ -3783,20 +3798,6 @@ int melee_attack::martial_damage_mod(int dam)
     return dam;
 }
 
-void melee_attack::chaos_affect_actor(actor *victim)
-{
-    ASSERT(victim); // XXX: change to actor &victim
-    melee_attack attk(victim, victim);
-    attk.weapon = nullptr;
-    attk.fake_chaos_attack = true;
-    attk.chaos_affects_defender();
-    if (!attk.special_damage_message.empty()
-        && you.can_see(*victim))
-    {
-        mpr(attk.special_damage_message);
-    }
-}
-
 /**
  * Does the player get to use the given aux attack during this melee attack?
  *
@@ -3911,6 +3912,9 @@ int melee_attack::apply_damage_modifiers(int damage)
 
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
+
+    if (as_mon->has_ench(ENCH_TOUCH_OF_BEOGH))
+        damage = damage * 4 / 3;
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()

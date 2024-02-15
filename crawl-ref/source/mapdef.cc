@@ -28,6 +28,7 @@
 #include "tile-env.h"
 #include "english.h"
 #include "files.h"
+#include "ghost.h"
 #include "initfile.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -3972,6 +3973,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
         mspec.abjuration_duration = dur;
 
+        // Orc apostle power and band power
+        int pow = strip_number_tag(mon_str, "pow:");
+        if (pow != TAG_UNFOUND)
+            mspec.props[APOSTLE_POWER_KEY] = pow;
+        int band_pow = strip_number_tag(mon_str, "bandpow:");
+        if (band_pow != TAG_UNFOUND)
+        {
+            if (pow != TAG_UNFOUND)
+                band_pow = pow;
+            mspec.props[APOSTLE_BAND_POWER_KEY] = band_pow;
+        }
+
         string shifter_name = replace_all_of(strip_tag_prefix(mon_str, "shifter:"), "_", " ");
 
         if (!shifter_name.empty())
@@ -4203,6 +4216,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             MAYBE_COPY(MUTANT_BEAST_FACETS);
             MAYBE_COPY(MGEN_BLOB_SIZE);
             MAYBE_COPY(MGEN_NUM_HEADS);
+            MAYBE_COPY(APOSTLE_TYPE_KEY);
 #undef MAYBE_COPY
         }
 
@@ -4649,6 +4663,25 @@ mons_spec mons_list::mons_by_name(string name) const
 
     if (ends_with(name, "-shaped pillar of salt"))
         return get_salt_spec(name);
+
+    if (ends_with(name, " apostle"))
+    {
+        mons_spec spec = MONS_ORC_APOSTLE;
+        const auto m_index = name.find(" apostle");
+        const string trimmed = name.substr(0, m_index);
+        vector<string> segments = split_string(" ", trimmed);
+
+        // No subtype specified
+        if (segments.size() < 2)
+            return spec;
+
+        if (segments.size() > 2 || lowercase(segments[0]) != "orc")
+            return MONS_PROGRAM_BUG; // non-matching formating
+
+        spec.props[APOSTLE_TYPE_KEY] = apostle_type_by_name(segments[1]);
+
+        return spec;
+    }
 
     const auto m_index = name.find(" mutant beast");
     if (m_index != string::npos)

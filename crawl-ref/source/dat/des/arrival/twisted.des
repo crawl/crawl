@@ -84,7 +84,7 @@ TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  west
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
-KMONS:   C = orc ; nothing
+KMONS:   C = dwarf ; nothing
 KMONS:   D = kobold ; nothing
 KMONS:   E = mummy
 KMONS:   F = naga ; nothing
@@ -135,7 +135,7 @@ SHUFFLE: M/N/O/P/Q/R
 SUBST:   P = MNO
 KMASK:   EMNOQR = no_item_gen
 # Player monsters:
-KMONS: M = human / elf / orc ; nothing / kobold ; nothing / mummy / \
+KMONS: M = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
            naga ; nothing / troll / draconian / demigod ; nothing / \
            spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
            ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
@@ -145,7 +145,7 @@ KMONS: M = human / elf / orc ; nothing / kobold ; nothing / mummy / \
            oni ; nothing
 # Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
 # don't leave corpses):
-KMONS: N = human zombie / elf zombie / orc zombie / kobold zombie / \
+KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
            naga zombie / troll zombie / draconian zombie / demigod zombie / \
            spriggan zombie / minotaur zombie / demonspawn zombie / \
            tengu zombie / merfolk zombie / felid zombie / octopode zombie / \
@@ -153,7 +153,7 @@ KMONS: N = human zombie / elf zombie / orc zombie / kobold zombie / \
            oni zombie
 # Player monsters, skeleton versions (octopodes and formicids drop out because
 # they have no skeletons):
-KMONS: N = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
+KMONS: N = human skeleton / elf skeleton / dwarf skeleton / kobold skeleton / \
            naga skeleton / troll skeleton / draconian skeleton / \
            demigod skeleton / spriggan skeleton / minotaur skeleton / \
            demonspawn skeleton / tengu skeleton / merfolk skeleton / \
@@ -699,7 +699,7 @@ WEIGHT: 1
 KMONS:  K = kraken att:neutral
 KFEAT:  K = w
 NSUBST: ' = 12:! / *:'
-KMONS:  ! = human / elf / orc ; nothing / kobold ; nothing / mummy / \
+KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
             ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
@@ -733,7 +733,7 @@ WEIGHT: 1
 KMONS:  K = kraken att:neutral
 KFEAT:  K = w
 NSUBST: ' = 15:! / *:'
-KMONS:  ! = human / elf / orc ; nothing / kobold ; nothing / mummy / \
+KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             naga ; nothing / troll / draconian / demigod ; nothing / \
             spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
             ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \

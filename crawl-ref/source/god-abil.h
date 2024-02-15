@@ -17,11 +17,6 @@
 
 class dist;
 
-#define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
-#define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
-#define BEOGH_ARM_GIFT_KEY "given beogh armour"
-#define BEOGH_SH_GIFT_KEY "given beogh shield"
-
 #define AVAILABLE_SAC_KEY "available_sacrifices"
 #define HEALTH_SAC_KEY "current_health_sacrifice"
 #define ESSENCE_SAC_KEY "current_essence_sacrifice"
@@ -36,6 +31,9 @@ class dist;
 #define OKAWARU_DUEL_TARGET_KEY "okawaru_duel_target"
 #define OKAWARU_DUEL_CURRENT_KEY "okawaru_duel_current"
 #define OKAWARU_DUEL_ABANDONED_KEY "okawaru_duel_abandoned"
+
+#define BEOGH_DAMAGE_DONE_KEY "beogh_damage_done"
+#define ORCIFICATION_LEVEL_KEY "orcification_level"
 
 const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
@@ -73,6 +71,11 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define ASHENZARI_BASE_PIETY 2
 #define ASHENZARI_PIETY_SCALE 168
 
+#define YRED_TORCH_POWER_KEY "yred_torch_power"
+#define YRED_TORCH_USED_KEY "yred_torch_used"
+#define YRED_KILLS_LOGGED_KEY "yred_souls_scoured"
+#define YRED_BLASPHEMY_CENTER_KEY "blasphemy_center"
+
 struct bolt;
 class stack_iterator;
 
@@ -107,13 +110,18 @@ bool vehumet_supports_spell(spell_type spell);
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
-bool given_gift(const monster* mons);
-bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
-bool beogh_gift_item();
-bool beogh_resurrect();
-
+string yred_cannot_light_torch_reason();
+bool yred_light_the_torch();
+void yred_end_conquest();
+int yred_get_torch_power();
+bool yred_torch_is_raised();
+void yred_feed_torch(const monster* mons);
+void yred_fathomless_shackles_effect(int delay);
+int yred_get_bound_soul_hp(monster_type mt, bool estimate_only = false);
 bool yred_can_bind_soul(monster* mon);
 void yred_make_bound_soul(monster* mon, bool force_hostile = false);
+void yred_make_blasphemy();
+void yred_end_blasphemy();
 
 bool kiku_gift_capstone_spells();
 
@@ -137,7 +145,15 @@ string curse_name(const CrawlStoreValue& curse);
 const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 
 bool can_convert_to_beogh();
+void announce_beogh_conversion_offer();
 void spare_beogh_convert();
+void beogh_blood_for_blood();
+void beogh_blood_for_blood_tick(int delay);
+void beogh_end_blood_for_blood();
+void beogh_ally_healing();
+bool beogh_cancel_leaving_floor();
+
+void beogh_increase_orcification();
 
 spret dithmenos_shadow_step(bool fail);
 

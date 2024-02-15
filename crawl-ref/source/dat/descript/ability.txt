@@ -228,29 +228,58 @@ Recall Undead Harvest ability
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Dark Bargain ability
+Light the Black Torch ability
 
-Offer up your reaped souls to Yredelemnul in exchange for the temporary help of
-an undead servant. The strength of the servant granted is increased by
-Invocations skill.
+Raises the Black Torch aloft and calls upon Yredelemnul to light it aflame.
+Yredelemnul will then dispatch multiple temporary undead servants to help begin
+your conquest, with stronger servants being provided to the experienced and
+especially pious.
+
+Yredelemnul wishes for their worshippers to pour across the land as an endless
+despoiling tide, and so you will only earn piety for kills made while their
+symbol is lit; its flame will be taken from you the next time you leave the
+floor. They also do not offer second chances - the torch may only be lit once
+per floor, ever.
 %%%%
-Drain Life ability
+Hurl Torchlight ability
 
-[[Drain Life spell]] The amount of life force drained is increased by
-Invocations skill.
+Hurls a gout of umbral fire from the Black Torch, which deals irresistible
+damage to living, demonic, and unholy beings. The torchlight will also briefly
+empower any of your undead servants caught in its blast, and is harmless to its
+user.
+
+Can only be used while the torch is lit, and doing so will expend a significant
+amount of its flame - never extinguishing it entirely, but leaving you unable to
+hurl more until you enter a new floor, or stoke its flames with a particularly
+remarkable enemy soul.
 %%%%
 Bind Soul ability
 
-Marks a monster's soul as ripe for the taking. If the monster dies before the mark
-expires, it will return as a bound soul, still retaining the equipment, spells and
-abilities it had in life.
+Attempts to bind the soul of a living, holy, or demonic being into your eternal
+service. If the targeted monster is slain before it leaves your sight, it will
+return as a bound soul, retaining the equipment, spells and abilities it had in
+life.
 
-Living, holy and demonic monsters can be targeted (excepting most lords of
-Pandemonium), as long as they are relatively uninjured. The duration of the mark
-is dependent on Invocations skill.
+Only beings who are relatively uninjured may be targeted, and the focus required
+to keep their soul from escaping will consume 1/3 of the user's current health -
+returning it only upon slaying them. The attempt will fail entirely if the
+targeted monster leaves your sight before the process is complete.
 
-The bound soul will follow its captor through stairs, and can be recalled from
-other levels. Only one soul can be bound at a time.
+The bound soul's health is influenced by the user's Invocations skill. It will
+follow its captor through stairs, and can be recalled from other levels.
+
+Only one soul can be bound at a time.
+%%%%
+Fathomless Shackles ability
+
+Engulfs the user's surroundings in Yredelemnul's inexorable grip. So long as you
+remain within this profane sanctuary, all hostile creatures that share it with
+you will be bound in place, and their life force will be continuously drained to
+restore your own. Victims who are isolated from their allies will take damage at
+a greatly increased rate.
+
+The affected area will shrink over time, and a new one cannot be created until
+the old one has fully expired.
 %%%%
 # Okawaru
 Heroism ability
@@ -427,25 +456,43 @@ Re-using this ability will discard the current stack.
 Smiting ability
 
 [[Smiting spell]] The strength of the smiting is increased by Invocations skill.
-%%%%
-Recall Orcish Followers ability
 
-Recalls your orcish followers from anywhere in the dungeon to your immediate
+Beogh will not allow you to use this directly against another apostle during a
+divine trial.
+%%%%
+Recall Orcish Apostles ability
+
+Recalls your apostles from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Stop Recall ability
+Dismiss Apostle ability
 
-Stops recalling your followers.
+Frees this apostle from your service, sending them out to do good in the world
+in Beogh's name.
 %%%%
-Give Item to Named Follower ability
+Recruit Apostle ability
 
-Gives a weapon or piece of armour to a named orcish follower. An orc can only
-ever receive one of these gifts.
+Anoints a defeated apostle, and welcomes them as a permanent follower. They will
+follow you between floors and into any peril, willingly giving their life for
+the cause and their kin.
+
+If they die, Beogh will eventually revive them once you gain sufficient piety -
+this process can be greatly accelerated by satisfying Beogh with the slaying of
+all foes who may have contributed to their apostle's death.
+
+You can have at most 3 followers accompanying you at a time, though you may
+freely dismiss old ones to invite new ones.
 %%%%
-Resurrection ability
+Blood for Blood ability
 
-Bring an orc corpse back to life. The orc will be an ally, even if it was not
-already one before it died.
+Beseeches Beogh to grant you an army with which to wreak bloody retribution.
+The user will be immediately surrounded by orcish allies, with more of them
+arriving over time from all directions. The prayer lasts a considerable
+length of time, but will expire far more rapidly once there are no more foes in
+sight.
+
+Usable only while you are standing over the corpse of one of your apostles, and
+at most once per death.
 %%%%
 # Fedhas
 Wall of Briars ability

@@ -105,7 +105,7 @@ dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
-spret cast_scorch(int pow, bool fail);
+spret cast_scorch(const actor& agent, int pow, bool fail = false);
 dice_def scorch_damage(int pow, bool random);
 
 vector<coord_def> get_ignition_blast_sources(const actor *agent,
@@ -134,9 +134,9 @@ dice_def ramparts_damage(int pow, bool random = true);
 
 bool wait_spell_active(spell_type spell);
 
-spret cast_searing_ray(int pow, bolt &beam, bool fail);
-void handle_searing_ray();
-void end_searing_ray();
+spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail);
+bool handle_searing_ray(actor& agent);
+void end_searing_ray(actor& agent);
 
 vector<monster *> find_maxwells_possibles();
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
@@ -146,7 +146,8 @@ void end_maxwells_coupling(bool quiet = false);
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);
 
-vector<coord_def> find_near_hostiles(int range, bool affect_invis);
+vector<coord_def> find_near_hostiles(int range, bool affect_invis,
+                                     const actor& agent);
 
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
@@ -154,3 +155,5 @@ bool siphon_essence_affects(const monster &m);
 void attempt_jinxbite_hit(actor& victim);
 dice_def boulder_damage(int pow, bool random);
 void do_boulder_impact(monster& boulder, actor& victim);
+
+dice_def electrolunge_damage(int pow);

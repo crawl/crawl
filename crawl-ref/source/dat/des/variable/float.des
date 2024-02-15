@@ -3657,35 +3657,6 @@ MAP
            .........
 ENDMAP
 
-NAME:   cheibrodos_lost_city_excavation
-TAGS:   no_item_gen no_monster_gen
-DEPTH:  D:11-, Depths
-ORIENT: float
-: if you.in_branch("D") then
-MONS:   deep elf pyromancer w:8 / fire elemental w:5
-MONS:   arcanist / occultist
-: else
-MONS:   occultist / sun demon, lich
-: end
-ITEM:   randbook / any scroll
-NSUBST: 1 = 1:1 / 1:. / * = 1.
-SUBST:  - = .lx
-MAP
-llllll
-llllllllll
-.l-x-llllllllllllll
-@.+1xlxx-lllllllllll
-.lx.-l-1xlxx-lxxxxll
-lll.llx...+1xlxddxll
-llx.xlll.l-.xlx22xll
-ll+1.l-x.lx..lx..xll
-llx--..1+l-.xlx..xll
-llllll-xxlx1+.+..xll
-llllllllll-xxlxxxxll
-    llllllllllllllll
-        lllllllllll
-ENDMAP
-
 NAME: cheibrodos_magma_flow
 TAGS: no_item_gen no_monster_gen
 DEPTH: D:11-, !D:$, Lair:3-, !Lair:$
@@ -9988,10 +9959,10 @@ ENDMAP
 ####
 
 NAME:   kennysheep_gozag_temple
-DEPTH:  Depths, !Depths:$
-ORIENT: centre
 TAGS:   transparent no_monster_gen no_pool_fixup no_item_gen
 TAGS:   uniq_kennysheep_gozag_temple
+DEPTH:  Depths, !Depths:$
+ORIENT: centre
 KMONS:  2 = guardian serpent
 KMONS:  B = golden dragon
 KITEM:  | = gold good_item
@@ -10005,6 +9976,7 @@ COLOUR: cGD = yellow
 FTILE:  .0_Gt = floor_grass
 FTILE:  $|B}+nc23-D = floor_limestone
 FTILE:  " = floor_dirt
+TILE:   c = wall_tomb
 KFEAT:  _ = antiques shop name:Gozag greed:100 count:3 /\
             antique weapon shop name:Gozag greed:100 count:3 /\
             antique armour shop name:Gozag greed:100 count:3

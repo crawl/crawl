@@ -732,17 +732,13 @@ monster_type player_mons(bool transform)
 
     if (mons == MONS_ORC)
     {
+        // Orc implies Beogh worship nowadays, but someone might still be
+        // playing a Hill Orc from an old save...
         if (you_worship(GOD_BEOGH))
         {
             mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
                                                       : MONS_ORC_PRIEST;
         }
-    }
-    else if (mons == MONS_OGRE)
-    {
-        const skill_type sk = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-        if (sk >= SK_SPELLCASTING && sk <= SK_LAST_MAGIC)
-            mons = MONS_OGRE_MAGE;
     }
 
     return mons;
@@ -2165,8 +2161,13 @@ int player_armour_shield_spell_penalty()
 {
     const int scale = 100;
 
-    const int body_armour_penalty =
+    int body_armour_penalty =
         max(19 * you.adjusted_body_armour_penalty(scale), 0);
+
+    // This is actually cutting the base ER of our armour by half (not 1/4th),
+    // since that ER has already been squared by this point.
+    if (you.has_mutation(MUT_RUNIC_MAGIC))
+        body_armour_penalty /= 4;
 
     const int total_penalty = body_armour_penalty
                  + 19 * you.adjusted_shield_penalty(scale);
@@ -4587,7 +4588,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_sticky_flame() || duration <= 0 || you.duration[DUR_WATER_HOLD]
-        || feat_is_watery(env.grid(you.pos())))
+        || feat_is_water(env.grid(you.pos())))
     {
         return false;
     }
@@ -4628,7 +4629,7 @@ void dec_sticky_flame_player(int delay)
 {
     delay = min(delay, you.duration[DUR_STICKY_FLAME]);
 
-    if (feat_is_watery(env.grid(you.pos())))
+    if (feat_is_water(env.grid(you.pos())))
     {
         mprf(MSGCH_RECOVERY, "You dip into the water, and the flames go out!");
         end_sticky_flame_player();
@@ -5703,6 +5704,14 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
     {
         simple_god_message(" prevents your banishment from the Arena!",
                            GOD_OKAWARU);
+        return;
+    }
+
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+    {
+        simple_god_message(" refuses to let the Abyss claim you during a challenge!",
+                           GOD_BEOGH);
+
         return;
     }
 
@@ -7646,7 +7655,9 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 bool player::shaftable() const
 {
     return is_valid_shaft_level()
-        && feat_is_shaftable(env.grid(pos()));
+        && feat_is_shaftable(env.grid(pos()))
+        // Prevent shafting the player during an apostle challenge; that would be a bit unfair.
+        && !you.duration[DUR_BEOGH_DIVINE_CHALLENGE];
 }
 
 // Used for falling into traps and other bad effects, but is a slightly
@@ -7665,6 +7676,12 @@ bool player::do_shaft()
     if (you.species == SP_FORMICID)
     {
         mpr("Your tunneler's instincts keep you from falling into a shaft!");
+        return false;
+    }
+    if (you_worship(GOD_YREDELEMNUL) && yred_torch_is_raised())
+    {
+        mpr("Yredelemnul refuses to let your conquest be stopped by a trick of"
+            " the earth!");
         return false;
     }
 
@@ -7824,7 +7841,8 @@ bool player::attempt_escape(int attempts)
 
     const auto constr_typ = get_constrict_type();
     const string object
-        = constr_typ == CONSTRICT_ROOTS ? "the roots"
+        = constr_typ == CONSTRICT_ROOTS ? "the roots'"
+          : constr_typ == CONSTRICT_BVC ? "the zombie hands'"
                                         : themonst->name(DESC_ITS, true);
     // player breaks free if (4+n)d13 >= 5d(8+HD/4)
     const int escape_score = roll_dice(4 + escape_attempts, 13);

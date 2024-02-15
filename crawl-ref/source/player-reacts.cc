@@ -469,13 +469,48 @@ void player_reacts_to_monsters()
         mprf("The grasping roots release their grip on you.");
         you.stop_being_constricted(true);
     }
+    if (_decrement_a_duration(DUR_VILE_CLUTCH, you.time_taken)
+        && you.is_constricted())
+    {
+        mprf("The zombie hands release their grip on you.");
+        you.stop_being_constricted(true);
+    }
 
     _handle_jinxbite_interest();
+
+    // If you have signalled your allies to stop attacking, cancel this order
+    // once there are no longer any enemies in view for 50 consecutive aut
+    if (you.pet_target == MHITYOU)
+    {
+        // Reset the timer if there are hostiles in sight
+        if (there_are_monsters_nearby(true, true, false))
+            you.duration[DUR_ALLY_RESET_TIMER] = 0;
+        else
+        {
+            if (!you.duration[DUR_ALLY_RESET_TIMER])
+                you.duration[DUR_ALLY_RESET_TIMER] = 50;
+            else if (_decrement_a_duration(DUR_ALLY_RESET_TIMER, you.time_taken))
+                you.pet_target = MHITNOT;
+        }
+    }
+
+    // Expire Blood For Blood much faster when there are no enemies around for
+    // the horde to fight (but not at the tail end of its duration, which could
+    // otherwise make the expiry message misleading)
+    if (you.duration[DUR_BLOOD_FOR_BLOOD] > 40
+        && !there_are_monsters_nearby(true, true, false))
+    {
+        you.duration[DUR_BLOOD_FOR_BLOOD] -= you.time_taken * 3;
+        if (you.duration[DUR_BLOOD_FOR_BLOOD] < 1)
+            you.duration[DUR_BLOOD_FOR_BLOOD] = 1;
+    }
 
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
+
+    announce_beogh_conversion_offer();
 }
 
 static bool _check_recite()
@@ -791,6 +826,9 @@ static void _decrement_durations()
     if (you.duration[DUR_TOXIC_RADIANCE])
         toxic_radiance_effect(&you, min(delay, you.duration[DUR_TOXIC_RADIANCE]));
 
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+        yred_fathomless_shackles_effect(min(delay, you.duration[DUR_FATHOMLESS_SHACKLES]));
+
     if (you.duration[DUR_RECITE] && _check_recite())
     {
         const int old_recite =
@@ -801,9 +839,6 @@ static void _decrement_durations()
         if (old_recite != new_recite)
             _handle_recitation(new_recite);
     }
-
-    if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
-        do_recall(delay);
 
     if (you.duration[DUR_DRAGON_CALL])
         do_dragon_call(delay);
@@ -846,6 +881,9 @@ static void _decrement_durations()
 
     if (you.duration[DUR_TEMP_CLOUD_IMMUNITY])
         _decrement_a_duration(DUR_TEMP_CLOUD_IMMUNITY, delay);
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_blood_for_blood_tick(delay);
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
@@ -1015,6 +1053,10 @@ void player_reacts()
     // don't allow reactions while stair peeking in descent mode
     if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
         return;
+
+    // This happens as close as possible after the player acts, for better messaging
+    if (you_worship(GOD_BEOGH))
+        beogh_ally_healing();
 
     //XXX: does this _need_ to be calculated up here?
     const int stealth = player_stealth();

@@ -737,26 +737,25 @@ ENDMAP
 #
 NAME:   minmay_goldmine
 ORIENT: southeast
-DEPTH:  D:8-, Orc
+DEPTH:  D:8-12, Orc
 MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
-SUBST:  X = xxxZ
-KPROP:  Z = no_tele_into
-SUBST:  Z = .$
+MONS:   two-headed ogre / troll / cyclops / wraith / shadow
+SUBST:  X = x:60 . $
 MAP
+xxxxxxxx    xxxxxx    xxx
+xXxXXXxxx  xxxxxxxx  xxxx
+.XXX1XXXxxxxxXXXXxxxxxxxx
+@..XX..XxxxxXX..Xxxxxxxxx
+x.X..X1XxxxxX.XXXxxxxxxxx
+xXXXX.XXxxxxX.X1XxXXXXxxx
+xXX1.X.XXxxxXX.XXxX$XXxxx
+xX.XXX..XXxXX1XXxxXX1Xxxx
+xX.XX.XX1XXX...XXXX.2XXxx
+xXXXX.XxX..X.XX.XX.XX1Xxx
+xxXX1XXxX.X1XXXX.1XXX$Xxx
+xxX.XXxxXXXXXxxXXXXX$XXxx
+xxXXXxxxxxxxxxxxxxxXXXxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xXXXXXXXXXXXXXXXXXXXXXXXx
-.XXX1XXXXXXXXXXXXXXXXXXXx
-@..XX..XXXXXXXXXXXXXXXXXx
-x.X..X1XXXXXX.XXXXXXXXXXx
-xXXXX.XXXXXXX.X1XXXXXXXXx
-xXX1.X.XXXXXXX.XXXX.XXXXx
-xXXXXX..XXXXX1XXXXXX1XXXx
-xXXXX.XX1XXX...XXXX..XXXx
-xXXXX.XXX..X.XX.XX.XX1XXx
-xXXX1XXXX.X1XXXX.1XXX.XXx
-xXXXXXXXXXXXXXXXXXXX.XXXx
-xXXXXXXXXXXXXXXXXXXXXXXXx
-xXXXXXXXXXXXXXXXXXXXXXXXx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

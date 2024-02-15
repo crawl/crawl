@@ -382,6 +382,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
     {
         case SPELL_FREEZE:
             return freeze_damage(pow, false);
+        case SPELL_SCORCH:
+            return scorch_damage(pow, false);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -404,6 +406,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return resonance_strike_base_damage(hd);
         case SPELL_POLAR_VORTEX:
             return polar_vortex_dice(pow, false);
+        case SPELL_ELECTROLUNGE:
+            return electrolunge_damage(pow);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers
@@ -442,8 +446,11 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTBLUE;
         case SPELL_IOOD:
             return LIGHTMAGENTA;
+        case SPELL_SCORCH:
         case SPELL_ERUPTION:
             return RED;
+        case SPELL_ELECTROLUNGE:
+            return LIGHTCYAN;
         default:
             break;
     }
@@ -520,10 +527,12 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     }
 
     string mult = "";
-    if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)
+    if (spell == SPELL_MARSHLIGHT || spell == SPELL_FOXFIRE || spell == SPELL_PLASMA_BEAM)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
+    else if (spell == SPELL_ELECTROLUNGE)
+        mult = "+";
     const char* asterisk = (spell == SPELL_LRD || spell == SPELL_PYRE_ARROW) ? "*" : "";
     return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
 }

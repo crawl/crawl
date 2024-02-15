@@ -291,6 +291,14 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             you.strip_willpower(beam->agent(), random_range(8, 14));
         break;
 
+    case BEAM_UMBRAL_TORCHLIGHT:
+        if (you.holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY)
+            || beam->agent(true)->is_player())
+        {
+            hurted = 0;
+        }
+        break;
+
     default:
         break;
     }                           // end switch

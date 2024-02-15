@@ -2,6 +2,7 @@
 
 #include "status.h"
 
+#include "ability.h"
 #include "areas.h"
 #include "art-enum.h" // bearserk
 #include "artefact.h"
@@ -193,6 +194,32 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_BLACK_TORCH:
+        if (!you_worship(GOD_YREDELEMNUL))
+            break;
+
+        if (!yred_torch_is_raised())
+        {
+            if (yred_cannot_light_torch_reason().empty())
+            {
+                inf.light_colour = DARKGRAY;
+                inf.light_text = "Torch";
+            }
+        }
+        else
+        {
+            inf.light_colour = MAGENTA;
+
+            if (player_has_ability(ABIL_YRED_HURL_TORCHLIGHT))
+            {
+                inf.light_text = make_stringf("Torch (%d)",
+                                    yred_get_torch_power());
+            }
+            else
+                inf.light_text = "Torch";
+        }
+    break;
+
     case STATUS_CORROSION:
         // No blank or double lights
         if (you.corrosion_amount() == 0 || you.duration[DUR_CORROSION])
@@ -526,16 +553,6 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text = "Beogh";
-        }
-        break;
-
-    case STATUS_RECALL:
-        if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
-        {
-            inf.light_colour = WHITE;
-            inf.light_text   = "Recall";
-            inf.short_text   = "recalling";
-            inf.long_text    = "You are recalling your allies.";
         }
         break;
 

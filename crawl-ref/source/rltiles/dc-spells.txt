@@ -189,6 +189,7 @@ confusion_gaze CONFUSION_GAZE
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 draining_gaze DRAINING_GAZE
+divine_armament DIVINE_ARMAMENT
 earth_elementals EARTH_ELEMENTALS
 ensnare ENSNARE
 eruption ERUPTION
@@ -229,6 +230,7 @@ sporulate SPORULATE
 sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
+sticks_to_snakes STICKS_TO_SNAKES
 strip_willpower STRIP_WILLPOWER
 stunning_burst STUNNING_BURST
 summon_drakes SUMMON_DRAKES

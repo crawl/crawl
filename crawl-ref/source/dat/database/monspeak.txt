@@ -6026,30 +6026,32 @@ w:2
 
 @The_monster@ says, "I think I remember you..."
 %%%%
-############ NERGALLE ### ugly orc sorceress
+############ NERGALLE ### orcish lorekeeper
 Nergalle
 
-@_Nergalle_common_@
+@The_monster@ says, "You have no idea what it means to truly have nothing. We will teach you."
 
-@_Nergalle_rare_@
+@The_monster@ says, "I've lived long enough to see a hundred people like you fail."
+
+VISUAL:@The_monster@ consults an enormous parchment and nods.
+
+VISUAL:@The_monster@ engages in an animated conversation with the air beside them.
+
+@The_monster@ says, "Orcish loyalty transcends such trifles as death."
+
+@The_monster@ says, "Take it from an old woman: your time is up."
+
+@The_monster@ says, "You'll be just another bloodstain on the stones of this place."
+
 %%%%
-_Nergalle_common_
+confused Nergalle
 
-VISUAL:@The_monster@ grimaces horribly.
+@The_monster@ mutters, "Now, where did I put that quill..."
 
-@The_monster@ mutters something.
+@The_monster@ mumbles, "Leave me be, @orc name@. I told you I'm busy..."
 
-@The_monster@ asks @foe,@ "There's a tasty morsel, hm?"
-%%%%
-_Nergalle_rare_
+@The_monster@ mumbles, "Stop that blasted singing, @orc name@. You were always terrible."
 
-@The_monster@ yells @at_foe@, "What are YOU looking at?"
-
-@The_monster@ shouts @at_foe@, "Kill, kill, my pretties!"
-
-@The_monster@ says @to_foe@, "THAT's why. How awful. You!"
-
-@The_monster@ blows @possessive@ nose.
 ## END Nergalle ##
 %%%%
 ############ NESSOS ### evil centaur
@@ -7935,7 +7937,7 @@ w:4
 %%%%
 _hostile_orc_beogh_unbeliever_speech_common_
 
-@The_monster@ @_orc_says_to_foe_@, "I don't believe in Beogh!"
+@The_monster@ @_orc_says_to_foe_@, "Beogh doesn't tell me what to do!"
 
 @The_monster@ @_shouts_@ @at_foe@, "You're not the messiah, I am!"
 %%%%
@@ -7956,16 +7958,6 @@ _hostile_orc_beogh_believer_speech_common_
 @The_monster@ @_orc_says_to_foe_@, "The messiah will not be a {{ return you.race() }}!"
 
 @The_monster@ @_orc_says_to_foe_@, "The messiah will be a true Orc!"
-
-@The_monster@ @_orc_says_to_foe_@, "{{
-    if you.race() == "Hill Orc" then
-        return "Turn back to the hills"
-    elseif you.race() == "Lava Orc" then
-        return "Go swim in a volcano"
-    else -- shouldn't happen
-        return "Go to hell"
-    end
-}}, deceiver!"
 
 @The_monster@ @_shouts_@ @at_foe@, "Die, @_orc_heathen_@!"
 
@@ -8003,7 +7995,7 @@ VISUAL:@The_monster@ stares at you quizzically. @player_only@
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
-w:80
+w:20
 __NONE
 
 # general friendly speech
@@ -8032,17 +8024,19 @@ w:5
 
 @The_monster@ says, "Your appearance changed my life!"
 
-@The_monster@ @_says_or_shouts_@, "Dying for Beogh is much better than a random rampage."
+@The_monster@ @_says_or_shouts_@, "Dying for Beogh gives my life meaning."
 
 @The_monster@ @_shouts_@, "Blood in Beogh's name!"
 
-@The_monster@ shouts, "All @_orc_heathen_@s must die!"
+@The_monster@ shouts, "All our enemies must die!"
 
-@The_monster@ @_shouts_@, "Let's [kill|smash|burn|maim] those @_orc_heathen_@s!"
+@The_monster@ @_shouts_@, "Let's [kill|smash|burn|maim] whoever stands in our way!"
 
-@The_monster@ @_orc_says_@, "With Beogh's help we'll overthrow the @_orc_heathen_@s!"
+@The_monster@ @_orc_says_@, "With Beogh's help we'll overthrow all the false gods!"
 
 @The_monster@ @_shouts_@, "Smite the @_orc_heathen_@s!"
+
+@The_monster@ @_shouts_@, "Take back everything that was taken from us!"
 
 # messages submitted by Lemuel
 @The_monster@ @_says_or_shouts_@, "I'm proud to serve; I'm ready to die."
@@ -8053,7 +8047,7 @@ w:5
 
 @The_monster@ lets loose a series of foul curses in Beogh's name.
 
-@The_monster@ @_says_or_shouts_@, "I fight for @player_name@, for Beogh rules over all!"
+@The_monster@ @_says_or_shouts_@, "I fight for @player_name@, for Beogh shepherds all!"
 
 @The_monster@ @_says_or_shouts_@, "Orcs will kill them all!"
 
@@ -8082,9 +8076,7 @@ VISUAL:@The_monster@ looks @at_foe/around@ nervously.
 
 @The_monster@ chants, "I shall fear no evil, for @player_name@ is my saviour."
 
-@The_monster@ says, "Orcs get a bad rep."
-
-@The_monster@ @_mutters_@, "It's always Elves, Elves, Elves."
+@The_monster@ says, "I'm proud to be an orc."
 
 @The_monster@ says, "I'm an Orc, you're an Orc, it's OK."
 
@@ -8169,7 +8161,7 @@ beogh_converted_orc_reaction_sight
 %%%%
 beogh_converted_orc_speech_sight
 
-@Subjective@ shouts, "I'll follow thee gladly!"
+@Subjective@ shouts, "@player_name@ is one of us!"
 
 @Subjective@ shouts, "Surely Beogh must have sent you!"
 
@@ -8192,7 +8184,7 @@ beogh_converted_orc_speech_battle
 
 @Subjective@ says, "You must be the Messiah, I see it now!"
 
-@Subjective@ yells, "Beogh is my god, I swear it!"
+@Subjective@ yells, "I follow Beogh's word, I swear it!"
 %%%%
 # these are actually used even if the orc previously was allied
 beogh_converted_orc_resurrection
@@ -8238,13 +8230,67 @@ The priest shouts, "You had your chance, apostate scum!"
 ####
 orc_priest_preaching
 
-@The_monster@ shouts, "Join the one true god or die!"
+@The_monster@ shouts, "Beogh offers mercy even to people such as you. Join us and be reborn!"
 
-@The_monster@ shouts, "Beogh is our master! Accept the truth or die!"
+@The_monster@ shouts, "The Pantheon deserves no one's loyalty. Let us show you the true path!"
 
 @The_monster@ shouts, "Surrender to Beogh and we'll let you live!"
 
-@The_monster@ threatens, "By the altar or by the axe, you will meet Beogh!"
+@The_monster@ threatens, "Beogh's wrath is as vast as their mercy. Make your choice!"
+%%%%
+########################################################
+orc_apostle_yield
+
+@The_monster@ shouts, "I yield! You are indeed the chosen one!"
+
+@The_monster@ shouts, "I yield! Victory is yours!"
+
+@The_monster@ falls to @possessive@ knees and submits.
+%%%%
+orc_apostle_dismissed
+
+@The_monster@ says, "I will never forget you!"
+
+@The_monster@ leaves to spread the word of Beogh to the surface.
+
+@The_monster@ salutes you before departing.
+%%%%
+orc_apostle_unbanished
+
+VISUAL:@The_monster@ pulls a severed tentacle out of their boot and sighs heavily.
+
+@The_monster@ grins, "Not even The Unformed can stop the chosen ones of Beogh!"
+
+@The_monster@ shouts triumpantly, "Who's laughing NOW?"
+
+@The_monster@ shudders. "I think my head was attached to my elbow for a minute there..."
+
+@The_monster@ says, "I don't think I'll ever look at the stars the same way again."
+
+@The_monster@ yells, "Just try that again; I dare you!"
+
+w:1
+@The_monster@ gibbers softly, "It was just one butterfly...."
+
+VISUAL:@The_monster@ wobbles unsteadily, but gives you a thumbs up.
+%%%%
+friendly bfb orc
+
+@The_monster@ shouts, "Vengeance for the fallen!"
+
+@The_monster@ shouts, "Blood calls out to blood!"
+
+@The_monster@ cries, "Kill them all! Beogh will know their own!"
+
+@The_monster@ beats @possessive@ weapon against @possessive@ chest and roars.
+
+@The_monster@ cries out, "For our kin! And for all that died before them!"
+
+@The_monster@ smears @possessive@ weapon with vermillion and lifts it high.
+
+@The_monster@ shouts, "Eye for eye, tooth for tooth, life for life!"
+
+@The_monster@ cries, "Return their pain upon them a hundredfold!"
 %%%%
 #################################
 # Cherubs.
@@ -8392,7 +8438,9 @@ the evils of necromancy.
 undead, and why they are evil.
 
 # the gods
-the fall of Lugonu.
+the fall of Yredelemnul.
+
+the reprobation of Lugonu.
 
 the alliance of Zin and the Shining One.
 
