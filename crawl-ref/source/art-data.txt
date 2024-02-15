@@ -74,9 +74,8 @@
 # * corrode:  Randomly causes corrosion when taking damage.
 # * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
-# * evil:     Is treated as an evil item.
-# * fragile:  Is destroyed when unequipped.
 # * evil:     Is treated as an evil item (hated by good gods).
+# * fragile:  Is destroyed when unequipped.
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Grants wearer flight.
