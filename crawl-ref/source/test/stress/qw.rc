@@ -5551,7 +5551,7 @@ function can_use_stairs(mname)
   if mname:find("zombie") or mname:find("skeleton") or mname:find("spectral")
      or mname:find("simulacrum") or mname:find("oklob")
      or mname:find("statue") or mname:find("ballistomycete")
-     or mname == "burning bush" or mname == "lightning spire"
+     or mname == "scrub nettle" or mname == "lightning spire"
      or mname:find("tentacle") or mname == "silent spectre"
      or mname == "Geryon" or mname == "Royal Jelly"
      or mname:find("'s ghost") or mname:find("' ghost")

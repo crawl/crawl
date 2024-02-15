@@ -847,11 +847,6 @@ burial acolyte
 A masked priest in the service of Kikubaaqudgha, well-versed in choral rituals
 to both rouse the dead and send them to eternal rest.
 %%%%
-burning bush
-
-A mass of blackened twigs wreathed in orange flames, with scorch marks scarring
-its surroundings.
-%%%%
 bush
 
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
@@ -2343,6 +2338,11 @@ scorpion
 A loathsome arachnid, armed to the teeth. Its body is covered in a thick
 carapace, its tail is tipped by a venomous sting, and its forelimbs are
 equipped with a pair of sharp grasping claws.
+%%%%
+scrub nettle
+
+An irritable, bristling shrub. It fends off anything that might graze upon it by
+launching some of its innumerable toxic stinging hairs.
 %%%%
 sea snake
 

@@ -24,7 +24,7 @@ TAGS:     allow_dup transparent no_monster_gen no_descent
 DEPTH:    Lair, Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
           Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
           Zot, !Zot:$, Crypt, !Crypt:$
-KMONS:    P = bush / burning bush w:1
+KMONS:    P = bush / scrub nettle w:1
 : if you.in_branch("Snake") then
 KMONS:    0 = black mamba / naga / salamander
 KMONS:    9 = mana viper / anaconda / naga mage

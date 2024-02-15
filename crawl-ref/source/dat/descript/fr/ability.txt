@@ -563,11 +563,6 @@ Remove Curse ability
 
 Enlève les malédictions de tout votre équipement.
 %%%%
-Make burning bush ability
-
-Plante un buisson ardent, avec la faculté de projeter du feu et de voir les
-monstres invisibles, sur la position ciblée.
-%%%%
 Make altar ability
 
 Crée à vos pieds l'autel d'un dieu.

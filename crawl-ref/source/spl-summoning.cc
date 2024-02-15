@@ -2491,7 +2491,7 @@ static void _overgrow_wall(const coord_def &pos)
     destroy_wall(pos);
 
     const monster_type mon = random_choose_weighted(4, MONS_OKLOB_SAPLING,
-                                                    4, MONS_BURNING_BUSH,
+                                                    4, MONS_SCRUB_NETTLE,
                                                     4, MONS_WANDERING_MUSHROOM,
                                                     1, MONS_BALLISTOMYCETE,
                                                     1, MONS_OKLOB_PLANT);

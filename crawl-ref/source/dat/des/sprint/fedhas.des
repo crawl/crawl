@@ -11,7 +11,7 @@ KMONS:  D = oklob sapling hp:15 name:wizard n_suf \
             spells:spit_acid.50.natural;magic_dart.36.wizard;cantrip.18.wizard
 KMONS:  E = scorpion
 KMONS:  F = wandering mushroom
-KMONS:  G = burning bush
+KMONS:  G = scrub nettle
 KMONS:  H = killer bee
 KMONS:  I = queen bee
 KMONS:  L = oklob plant
@@ -69,7 +69,7 @@ xc.I....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
 xcHH...t..t..ccccccttttt..t*ccc.+.*+.....*%+Q+..Tt..Zcx
 xcc+cccc+ccccccC|+......t..tccM.c.Nc.A....Pcccccccccccx
 xc*.c$$$$+......Fct..ttt.tJ.ccc.cc+cc.A.O..cccccccccccx
-xcL*cG|cccG...L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
+xcL*cG|cccG.G.L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
 xcccccccccccccccccccccccccccccccc.....ccccccccccccccccx
 xc......................ccccccc..t..t....cccccccccccccx
 xcZa..N...............Y.ccccc.U.t......t...tccccccccccx

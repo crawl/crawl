@@ -743,6 +743,10 @@ Invisibility shadow cast
 
 @The_monster@ slips into darkness.
 %%%%
+scrub nettle cast targeted
+
+@The_monster@ launches toxic spines @at@ @target@.
+%%%%
 ghost moth cast targeted
 
 @The_monster@ stares @at@ @target@.

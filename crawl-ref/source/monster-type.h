@@ -362,7 +362,7 @@ enum monster_type                      // env.mons[].type
     MONS_OKLOB_SAPLING,
     MONS_OKLOB_PLANT,
     MONS_BUSH,
-    MONS_BURNING_BUSH,
+    MONS_SCRUB_NETTLE,
 #if TAG_MAJOR_VERSION > 34
     MONS_THORN_HUNTER,
     MONS_BRIAR_PATCH,
