@@ -7,9 +7,9 @@ genus: ghoul
 holiness: [undead]
 will: 40
 attacks:
- - {type: hit, flavour: drain, damage: 8}
+ - {type: hit, flavour: drain, damage: 6}
 hd: 5
-hp_10x: 275
+hp_10x: 220
 ac: 2
 ev: 10
 has_corpse: true

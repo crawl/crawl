@@ -861,7 +861,7 @@ ccccccccccc@ccccccccccc
 ENDMAP
 
 NAME:   fedhas_ov_isle_minmay
-TAGS:   temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas 
+TAGS:   temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 TAGS:   no_monster_gen transparent no_descent
 DEPTH:  D, !D:$
 MONS:   plant / bush w:5
