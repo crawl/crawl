@@ -2628,7 +2628,7 @@ static void _cause_vampire_bat_form_stat_drain()
 void vampire_exsanguinate(bool force_end)
 {
     if (force_end)
-        blood_spray(you.pos(), MONS_PLAYER, 10);
+        blood_spray(you.pos(), MONS_PLAYER, you.attribute[ATTR_VAMP_BLOOD] / 2);
 
     you.vampire_alive = false;
     you.redraw_status_lights = true;
