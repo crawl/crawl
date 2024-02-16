@@ -2618,8 +2618,11 @@ static void _handle_god_wrath(int exp)
 static void _handle_vamp_blood(int exp)
 {
     // blood gain while alive doesn't use xp
-    if (you.attribute[ATTR_VAMP_BLOOD] >= 100 || you.vampire_alive)
+    if (you.attribute[ATTR_VAMP_BLOOD] >= 100 || you.vampire_alive
+        || !you.has_mutation(MUT_VAMPIRISM))
+    {
         return;
+    }
 
     you.attribute[ATTR_VAMP_BLOOD_XP] -= exp;
 
