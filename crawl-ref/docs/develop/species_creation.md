@@ -36,6 +36,7 @@ You can view existing files to get a sense of the format, it's quite straightfor
 | recommended_weapons | `array of strings` | No | Weapons, identified by skill, recommended for the species. Entries must match a known weapon skill (`SK_LONG_BLADES`, etc). Defaults to all weapons except short blades and unarmed combat. |
 | walking_verb | `string` | No | What "verb" should be used to describe the species' movement style? The "verb" will have "er" or "ing" appended when used. Examples: "Slid" (Naga), "Glid" (Tengu). Defaults to "Walk". |
 | altar_action | `string` | No | When praying at an altar, print `You $altar_action the altar of foo.` for the species. Defaults to "kneel at". |
+| child_name | `string` | No | Species child name, like 'Pup' or 'Kitten'. Defaults to 'Child'. |
 
 ### Advanced Keys
 
