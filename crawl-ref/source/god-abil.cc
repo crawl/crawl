@@ -2715,11 +2715,11 @@ void beogh_increase_orcification()
     switch (you.species)
     {
         case SP_FORMICID:
-            msg += "Your mandibles take on a glossy white sheen and your antennae grow pointier.";
+            msg += "Your mandibles take on a glossy white sheen, and your antennae grow pointier.";
             break;
 
         case SP_TENGU:
-            msg += "Your beak becomes more hooked and the plumage around your ears grows tufted.";
+            msg += "Your beak becomes more hooked, and the plumage around your ears grows tufted.";
             break;
 
         case SP_GARGOYLE:
@@ -2727,7 +2727,7 @@ void beogh_increase_orcification()
             break;
 
         case SP_VINE_STALKER:
-            msg += "A pair of ivory tusks grows out from your maw and flowers begin to bloom upon you.";
+            msg += "A pair of ivory tusks grows out from your maw, and flowers begin to bloom upon you.";
             break;
 
         case SP_MUMMY:
@@ -2735,15 +2735,15 @@ void beogh_increase_orcification()
             break;
 
         case SP_BARACHI:
-            msg += "Your teeth grow more tusk-like and your tympanum bulges.";
+            msg += "Your teeth grow more tusk-like, and your tympanum bulges.";
             break;
 
         case SP_OCTOPODE:
-            msg += "Your beak grows more hooked and small fins emerge from the sides of your head.";
+            msg += "Your beak grows more hooked, and small fins emerge from the sides of your head.";
             break;
 
         default:
-            msg += "Your teeth grow more tusk-like and your ears lengthen.";
+            msg += "Your teeth grow more tusk-like, and your ears lengthen.";
             break;
     }
 
