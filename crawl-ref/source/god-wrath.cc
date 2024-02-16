@@ -2134,7 +2134,7 @@ static bool _uskayaw_retribution()
     case 3:
         if (mon)
         {
-            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+            simple_god_message(" booms out, \"Time for someone else to take a solo!\"",
                                     god);
             paralyse_player(_god_wrath_name(god));
             dec_penance(god, 1);
