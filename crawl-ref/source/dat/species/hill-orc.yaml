@@ -38,3 +38,5 @@ levelup_stats:
   - str
 # if you add any mutations here: you'll need to fix test/mut_species.lua, which
 # relies on HO having none.
+
+orc_name: Antique Orc

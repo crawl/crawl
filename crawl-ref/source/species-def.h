@@ -58,4 +58,5 @@ struct species_def
     const char* altar_action; ///<"You %s the altar of foo.". If null, use
                               ///"kneel at"
     const char* child_name;   ///<"Foo the %s.". If null, use "Child".
+    const char* orc_name;     ///<"Foo the %s.". If null, use "Orc".
 };

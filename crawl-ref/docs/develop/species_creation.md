@@ -37,6 +37,7 @@ You can view existing files to get a sense of the format, it's quite straightfor
 | walking_verb | `string` | No | What "verb" should be used to describe the species' movement style? The "verb" will have "er" or "ing" appended when used. Examples: "Slid" (Naga), "Glid" (Tengu). Defaults to "Walk". |
 | altar_action | `string` | No | When praying at an altar, print `You $altar_action the altar of foo.` for the species. Defaults to "kneel at". |
 | child_name | `string` | No | Species child name, like 'Pup' or 'Kitten'. Defaults to 'Child'. |
+| orc_name | `string` | No | Species name if orcish from worshipping Beogh. Defaults to 'Orc'. |
 
 ### Advanced Keys
 

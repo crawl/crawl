@@ -50,3 +50,5 @@ mutations:
     MUT_FAST: 2
     MUT_DEFORMED: 1
     MUT_HOOVES: 3
+
+orc_name: Centorc

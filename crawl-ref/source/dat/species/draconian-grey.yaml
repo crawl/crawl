@@ -32,3 +32,5 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+
+orc_name: Grey Orconian
