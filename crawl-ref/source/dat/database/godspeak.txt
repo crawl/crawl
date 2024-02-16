@@ -620,7 +620,7 @@ Jiyva sends a jelly to digest your remains.
 %%%%
 Jiyva death corpse undead
 
-<Jiyva death corpse>
+@Jiyva death corpse@
 %%%%
 Jiyva death corpse nonliving
 
@@ -640,15 +640,15 @@ Kikubaaqudgha rasps: You have failed me! Welcome... oblivion!
 %%%%
 Kikubaaqudgha death corpse nonliving
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Kikubaaqudgha death undead
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Kikubaaqudgha death nonliving
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Lugonu welcome
 
@@ -769,11 +769,11 @@ Your body falls in perfect tune with the rhythm.
 %%%%
 Uskayaw death corpse undead
 
-<Uskayaw death corpse>
+@Uskayaw death corpse@
 %%%%
 Uskayaw death corpse nonliving
 
-<Uskayaw death corpse>
+@Uskayaw death corpse@
 %%%%
 Vehumet welcome
 
@@ -896,7 +896,7 @@ Your body vanishes in a gout of umbral fire.
 %%%%
 Yredelemnul death undead
 
-<Yredelemnul death corpse undead>
+@Yredelemnul death corpse undead@
 %%%%
 Zin penance
 
