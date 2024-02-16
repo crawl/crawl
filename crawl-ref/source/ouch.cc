@@ -23,6 +23,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
@@ -1282,12 +1283,18 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         canned_msg(MSG_YOU_DIE);
         xom_death_message((kill_method_type) se.get_death_type());
+
         more();
 
         if (death_type != KILLED_BY_ZOT)
             _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
+
+    //explode if you're a vampire with blood
+    //don't use MONS_PLAYER as that would cause this to fail if you're bloodless
+    if (you.has_mutation(MUT_VAMPIRISM))
+        blood_spray(you.pos(), MONS_JORY, you.attribute[ATTR_VAMP_BLOOD] / 2);
 
     // Prevent bogus notes.
     activate_notes(false);
