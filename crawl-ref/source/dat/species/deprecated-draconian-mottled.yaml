@@ -34,3 +34,5 @@ fake_mutations:
   - long: You can spit globs of burning liquid.
     short: breathe sticky flame splash
   - long: You can ignite nearby creatures when you spit burning liquid.
+
+orc_name: Mottled Orconian

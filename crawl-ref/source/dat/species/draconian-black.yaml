@@ -38,3 +38,5 @@ mutations:
 fake_mutations:
   - long: You can breathe wild blasts of lightning.
     short: breathe lightning
+
+orc_name: Black Orconian

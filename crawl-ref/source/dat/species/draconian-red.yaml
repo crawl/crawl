@@ -36,3 +36,5 @@ mutations:
 fake_mutations:
   - long: You can breathe blasts of fire.
     short: breathe fire
+
+orc_name: Red Orconian

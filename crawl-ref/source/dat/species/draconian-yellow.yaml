@@ -36,3 +36,5 @@ mutations:
 fake_mutations:
   - long: You can spit globs of acid.
     short: spit acid
+
+orc_name: Yellow Orconian

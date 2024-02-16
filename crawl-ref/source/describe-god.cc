@@ -266,6 +266,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
         { "Walking", species::walking_title(which_species) + "ing" },
         { "Walker", species::walking_title(which_species) + "er" },
         { "Child", species::child_name(which_species) },
+        { "Orc", species::orc_name(which_species) },
     };
 
     return replace_keys(title, replacements);

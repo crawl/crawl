@@ -33,3 +33,5 @@ mutations:
 fake_mutations:
   - long: You can breathe bolts of dispelling energy.
     short: breathe power
+
+orc_name: Purple Orconian
