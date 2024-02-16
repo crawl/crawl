@@ -175,6 +175,7 @@ void recall_orders(monster *mons)
 
     // Don't patrol
     mons->patrol_point = coord_def(0, 0);
+    mons->travel_path.clear();
 
     // Don't wander
     mons->behaviour = BEH_SEEK;

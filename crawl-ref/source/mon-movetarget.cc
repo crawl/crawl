@@ -532,8 +532,9 @@ static bool _handle_monster_travelling(monster* mon)
         }
     }
 
-    // Else, we can see the next waypoint and are making good progress.
-    // Carry on, then!
+    // We can see the next waypoint and should be able to walk there.
+    // (Reset our target to this, just in case)
+    mon->target = mon->travel_path[0];
     return false;
 }
 

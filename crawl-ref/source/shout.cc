@@ -465,6 +465,7 @@ static void _set_allies_patrol_point(bool clear = false)
             mi->behaviour = BEH_WANDER;
         else
             mi->behaviour = BEH_SEEK;
+        mi->travel_path.clear();
     }
 }
 
