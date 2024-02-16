@@ -231,9 +231,9 @@ surroundings.
 Light the Black Torch ability
 
 Raises the Black Torch aloft and calls upon Yredelemnul to light it aflame.
-Yredelemnul will then dispatch multiple temporary undead servants to help begin
-your conquest, with stronger servants being provided to the experienced and
-especially pious.
+Those who have already earned the god's favour will be gifted temporary undead
+servants to help begin their conquest, with stronger servants being provided to
+the experienced and especially pious.
 
 Yredelemnul wishes for their worshippers to pour across the land as an endless
 despoiling tide, and so you will only earn piety for kills made while their

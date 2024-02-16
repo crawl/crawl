@@ -1458,6 +1458,20 @@ bool yred_light_the_torch()
          "Yredelemnul's name!",
             level_id::current().describe(true, true).c_str());
 
+    // Determine number of torch charges based on piety stars.
+    // Note: You are given 'hidden' internal torchlight charges even below the
+    // piety threshold to hurl torchlight, in case you gain that ability on the
+    // current floor.
+    you.props[YRED_TORCH_POWER_KEY] = min(5, max(piety_rank(), 2));
+
+    // Mark the torch as having been used on this level
+    you.props[YRED_TORCH_USED_KEY].get_table()
+        [level_id::current().describe()] = true;
+
+    // No instant allies at 0*
+    if (you.piety < piety_breakpoint(0))
+        return true;
+
     bool aid = false;
 
     // The power of the allies you get is based on the player's xl, but capped
@@ -1481,16 +1495,6 @@ bool yred_light_the_torch()
 
     if (aid)
         mpr("Yredelemnul sends servants to aid you!");
-
-    // Determine number of torch charges based on piety stars.
-    // Note: You are given 'hidden' internal torchlight charges even below the
-    // piety threshold to hurl torchlight, in case you gain that ability on the
-    // current floor.
-    you.props[YRED_TORCH_POWER_KEY] = min(5, max(piety_rank(), 2));
-
-    // Mark the torch as having been used on this level
-    you.props[YRED_TORCH_USED_KEY].get_table()
-        [level_id::current().describe()] = true;
 
     return true;
 }

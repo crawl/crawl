@@ -1009,18 +1009,18 @@ static void _inc_gift_timeout(int val)
 //   do too much collateral damage
 static const vector<random_pick_entry<monster_type>> _yred_servants =
 {
-  { -2,  4,   80, PEAK, MONS_NECROPHAGE },
-  { -1,  5,   75, PEAK, MONS_PHANTOM },
-  {  2,  9,  145, SEMI, MONS_WIGHT },
-  {  6,  12,  90, SEMI, MONS_SHADOW },
-  {  7,  14,  110, SEMI, MONS_WRAITH },
+  { -2,  5,   80, PEAK, MONS_NECROPHAGE },
+  { -1,  7,   75, PEAK, MONS_PHANTOM },
+  {  4,  11,  145, SEMI, MONS_WIGHT },
+  {  6,  13,  90, SEMI, MONS_SHADOW },
+  {  8,  15,  110, SEMI, MONS_WRAITH },
   {  9,  15,  90, SEMI, MONS_VAMPIRE },
   { 10,  16,  110, SEMI, MONS_FREEZING_WRAITH },
   { 13,  20,  150, SEMI, MONS_SKELETAL_WARRIOR },
-  { 13,  20,  55, SEMI, MONS_SHADOW_WRAITH },
-  { 14,  20,  100, SEMI, MONS_PHANTASMAL_WARRIOR },
+  { 13,  20,  75, SEMI, MONS_SHADOW_WRAITH },
+  { 14,  20,  125, SEMI, MONS_PHANTASMAL_WARRIOR },
   { 13,  22,  60, FLAT, MONS_FLAYED_GHOST },
-  { 13,  23,  150, SEMI, MONS_LAUGHING_SKULL },
+  { 13,  22,  125, SEMI, MONS_LAUGHING_SKULL },
   { 14,  21,  120, SEMI, MONS_BOG_BODY },
   { 16,  23,  180, SEMI, MONS_JIANGSHI },
   { 18,  25,  120, SEMI, MONS_EIDOLON },
@@ -1031,7 +1031,7 @@ static const vector<random_pick_entry<monster_type>> _yred_servants =
   { 23,  27,  180, SEMI, MONS_ANCIENT_CHAMPION },
   { 24,  30,  110, SEMI, MONS_SEARING_WRETCH },
   { 24,  30,  220, SEMI, MONS_PROFANE_SERVITOR },
-  { 25,  32,  100, SEMI, MONS_BONE_DRAGON },
+  { 25,  32,  120, SEMI, MONS_BONE_DRAGON },
 };
 
 bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
@@ -1040,7 +1040,9 @@ bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
 
     monster_type mon_type = yred_picker.pick(_yred_servants, pow, MONS_NECROPHAGE);
 
-    if ((mon_type == MONS_WIGHT || mon_type == MONS_SKELETAL_WARRIOR) && coinflip())
+    if (mon_type == MONS_WIGHT && x_chance_in_y(pow, 8))
+        num *= 2;
+    else if (mon_type == MONS_SKELETAL_WARRIOR && x_chance_in_y(pow, 17))
         num *= 2;
     else if (mon_type == MONS_LAUGHING_SKULL)
         num *= random_range(2, 3);
