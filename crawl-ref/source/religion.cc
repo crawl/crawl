@@ -2948,7 +2948,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_BEOGH:
-        simple_god_message("'s voice booms out, \"Traitor to your kin!\"", old_god);
+        simple_god_message("'s voice booms out: Traitor to your kin!", old_god);
         mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
 
         add_daction(DACT_ALLY_BEOGH);
