@@ -462,8 +462,10 @@ static void _catchup_monster_moves(monster* mon, int turns)
     }
 
     // Yred & animate dead zombies crumble on floor change
-    if (mon->friendly() && is_yred_undead_follower(*mon)
-        && mon->type != MONS_BOUND_SOUL)
+    if (mon->friendly()
+        && ((is_yred_undead_follower(*mon) && mon->type != MONS_BOUND_SOUL)
+            || (mon->has_ench(ENCH_SUMMON)
+                && mon->get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD)))
     {
         if (turns > 2)
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);

@@ -1803,9 +1803,13 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     if (!mons_class_can_use_stairs(mon.type))
         return false;
 
-    // Summons can't use stairs.
-    if (mon.has_ench(ENCH_ABJ) || mon.has_ench(ENCH_FAKE_ABJURATION))
+    // Summons can't use stairs. (And neither can animated zombies)
+    if (mon.has_ench(ENCH_ABJ) || mon.has_ench(ENCH_FAKE_ABJURATION)
+        || (mon.has_ench(ENCH_SUMMON)
+            && mon.get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD))
+    {
         return false;
+    }
 
     if (mon.has_ench(ENCH_FRIENDLY_BRIBED)
         && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))
