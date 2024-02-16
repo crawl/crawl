@@ -905,7 +905,7 @@ burial acolyte cast
 
 @The_monster@ [drones|recites] a funeral chant.
 %%%%
-vhi's electric charge cast
+vhi's electrolunge cast
 
 @The_monster@ charges forward with an electric crackle.
 %%%%
