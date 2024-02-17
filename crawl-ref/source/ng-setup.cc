@@ -430,8 +430,7 @@ static void _setup_innate_spells()
             case JOB_ICE_ELEMENTALIST:
             case JOB_AIR_ELEMENTALIST:
             case JOB_EARTH_ELEMENTALIST:
-                if (!(typeflags & spschool::conjuration)
-                    && !(typeflags & spschool::alchemy)
+                if (!(typeflags & spschool::alchemy)
                     && !(typeflags & spschool::fire)
                     && !(typeflags & spschool::ice)
                     && !(typeflags & spschool::earth)
@@ -441,7 +440,7 @@ static void _setup_innate_spells()
                 }
                 break;
             case JOB_HEXSLINGER:
-		if (!(typeflags & spschool::hexes)
+                if (!(typeflags & spschool::hexes)
                     && !(typeflags & spschool::ice))
                 {
                     continue;
