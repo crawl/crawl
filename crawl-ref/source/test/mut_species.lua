@@ -131,6 +131,6 @@ end
 
 -- the testbed doesn't really clean up much of anything.
 you.delete_all_mutations("Species mutation test")
-assert(you.change_species("hill orc")) -- should clean up any innate mutations
+assert(you.change_species("deep elf")) -- should clean up any innate mutations
 assert(you.set_xl(1, false))
 you.moveto(you_x, you_y) -- restore original player pos
