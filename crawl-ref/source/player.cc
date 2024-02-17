@@ -2040,8 +2040,8 @@ int player_shield_racial_factor()
 
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
-// not as a randart property).
-static int _player_adjusted_evasion_penalty(const int scale)
+// not as a randart property), EXCEPT body armour. Affects evasion only.
+static int _player_aux_evasion_penalty(const int scale)
 {
     int piece_armour_evasion_penalty = 0;
 
@@ -2058,18 +2058,13 @@ static int _player_adjusted_evasion_penalty(const int scale)
             piece_armour_evasion_penalty += penalty;
     }
 
-    return piece_armour_evasion_penalty * scale / 10 +
-           you.adjusted_body_armour_penalty(scale);
+    return piece_armour_evasion_penalty * scale / 10;
 }
 
-// Player EV bonuses for various effects and transformations. This
-// does not include tengu/merfolk EV bonuses for flight/swimming.
-static int _player_evasion_bonuses()
+// Long-term player flat EV bonuses/penalties (eg: evasion rings, EV mutations, forms)
+static int _player_base_evasion_modifiers()
 {
     int evbonus = 0;
-
-    if (you.duration[DUR_AGILITY])
-        evbonus += AGILITY_BONUS;
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
@@ -2088,21 +2083,42 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
+    // Consider this a 'permanent' bonus, since players in forms will often
+    // remain in that form for a long time. This is slightly untrue for
+    // hostile polymorph, however I don't think any of them affect the player's
+    // EV in this manner (tree form simply caps it in the same way as paralysis)
     evbonus += get_form()->ev_bonus();
+
+    return evbonus;
+}
+
+// Transient player flat EV modifiers
+static int _player_temporary_evasion_modifiers()
+{
+    int evbonus = 0;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    if (you.duration[DUR_AGILITY])
+        evbonus += AGILITY_BONUS;
 
     // If you have an active amulet of the acrobat and just moved or waited,
     // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
 
+    if (you.duration[DUR_VERTIGO])
+        evbonus -= 5;
+
+    if (you.is_constricted())
+        evbonus -= 10;
+
     return evbonus;
 }
 
-// Player EV scaling for being flying tengu or swimming merfolk.
-static int _player_scale_evasion(int prescaled_ev, const int scale)
+// Player EV multipliers for transient effects
+static int _player_apply_evasion_multipliers(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
@@ -2158,34 +2174,39 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
     return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
 }
 
-// Total EV for player using the revised 0.6 evasion model.
-static int _player_evasion(bool ignore_helpless)
+// Total EV for player
+static int _player_evasion(bool ignore_temporary)
 {
     const int size_factor = _player_evasion_size_factor();
-    // Size is all that matters when paralysed or at 0 dex.
-    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
-            || you.form == transformation::tree)
-        && !ignore_helpless)
-    {
-        return max(1, 2 + size_factor / 2);
-    }
-
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
-    const int vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 * scale : 0;
-
+    // Calculate 'base' evasion from all permanent modifiers
     const int natural_evasion =
         size_base_ev
         + _player_armour_adjusted_dodge_bonus(scale)
-        - _player_adjusted_evasion_penalty(scale)
+        - you.adjusted_body_armour_penalty(scale)
         - you.adjusted_shield_penalty(scale)
-        - vertigo_penalty;
+        - _player_aux_evasion_penalty(scale)
+        + _player_base_evasion_modifiers() * scale;
 
-    const int evasion_bonuses = _player_evasion_bonuses() * scale;
+    // Everything below this are transient modifiers
+    if (ignore_temporary)
+        return unscale_round_up(natural_evasion, scale);
 
-    const int final_evasion =
-        _player_scale_evasion(natural_evasion, scale) + evasion_bonuses;
+    // Apply temporary bonuses, penalties, and multipliers
+    int final_evasion =
+       _player_apply_evasion_multipliers(natural_evasion, scale)
+       + (_player_temporary_evasion_modifiers() * scale);
+
+    // Cap EV at a very low level if the player cannot act, has 0 dex,
+    // or is a tree.
+    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
+        || you.form == transformation::tree))
+    {
+        final_evasion = min((2 + _player_evasion_size_factor() / 2) * scale,
+                            final_evasion);
+    }
 
     return unscale_round_up(final_evasion, scale);
 }
@@ -6439,22 +6460,20 @@ int player::gdr_perc() const
  * What is the player's actual, current EV, possibly relative to an attacker,
  * including various temporary penalties?
  *
- * @param ignore_helpless  Whether to ignore helplessness for the calculation.
+ * @param ignore_temporary Whether to ignore temporary modifiers.
  * @param act              The creature that the player is attempting to evade,
                            if any. May be null.
  * @return                 The player's relevant EV.
  */
-int player::evasion(bool ignore_helpless, const actor* act) const
+int player::evasion(bool ignore_temporary, const actor* act) const
 {
-    const int base_evasion = _player_evasion(ignore_helpless);
-
-    const int constrict_penalty = is_constricted() ? 10 : 0;
+    int base_evasion = _player_evasion(ignore_temporary);
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
-        = attacker_invis && !ignore_helpless ? 10 : 0;
+        = attacker_invis && !ignore_temporary ? 10 : 0;
 
-    return base_evasion - constrict_penalty - invis_penalty;
+    return base_evasion - invis_penalty;
 }
 
 bool player::heal(int amount)

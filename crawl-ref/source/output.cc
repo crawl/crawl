@@ -625,9 +625,7 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY]
-           || you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
-           || acrobat_boost_active();
+    return you.evasion() > you.evasion(true);
 }
 
 static bool _boosted_sh()
@@ -1060,10 +1058,12 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolour(you.duration[DUR_PETRIFYING]
-               || you.cannot_act() ? RED
-                                   : _boosted_ev() ? LIGHTBLUE
-                                                    : HUD_VALUE_COLOUR);
+
+    // Color EV based on whether temporary effects are raising or lowering it
+    const int bonus = you.evasion() - you.evasion(true);
+    textcolour(bonus < 0 ? RED
+                         : bonus > 0 ? LIGHTBLUE
+                                     : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", you.evasion());
 
     you.redraw_evasion = false;

@@ -3278,10 +3278,10 @@ int monster::base_evasion() const
 /**
  * What's the current evasion of this monster?
  *
- * @param ignore_helpless Whether to ignore helplessness.
+ * @param ignore_temporary Whether to ignore temporary bonuses/penalties.
  * @return The evasion of this monster, after applying items & statuses.
  **/
-int monster::evasion(bool ignore_helpless, const actor* /*act*/) const
+int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
 {
     int ev = base_evasion();
 
@@ -3305,22 +3305,23 @@ int monster::evasion(bool ignore_helpless, const actor* /*act*/) const
     // evasion from artefacts
     ev += scan_artefacts(ARTP_EVASION);
 
-    if (has_ench(ENCH_AGILE))
-        ev += AGILITY_BONUS;
-
-    if (ignore_helpless)
+    // Only temporary modifiers after this
+    if (ignore_temporary)
         return max(ev, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
         return 0;
 
-    if (is_constricted())
-        ev -= 10;
-
     if (caught())
         ev /= 5;
     else if (confused())
         ev /= 2;
+
+    if (has_ench(ENCH_AGILE))
+        ev += AGILITY_BONUS;
+
+    if (is_constricted())
+        ev -= 10;
 
     return max(ev, 0);
 }
