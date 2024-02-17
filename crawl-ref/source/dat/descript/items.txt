@@ -1568,6 +1568,11 @@ foes in quick-growing tree roots. Those entangled will be immobilized and take
 increasing damage over time until they escape or the roots wither away. The roots
 will only sprout from solid ground.
 %%%%
+wand of warping
+
+A magical device which creates a brief but violent rift in space, damaging
+everything caught in its wake and sometimes blinking them a short distance away.
+%%%%
 war axe
 
 A military axe with a long haft and a single-bladed head.

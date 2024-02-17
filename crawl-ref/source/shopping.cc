@@ -405,6 +405,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case WAND_ICEBLAST:
             case WAND_ROOTS:
+            case WAND_WARPING:
             case WAND_CHARMING:
             case WAND_PARALYSIS:
                 valued += 24 * item.plus;

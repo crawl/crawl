@@ -313,6 +313,14 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
+    case BEAM_WARPING:
+        if (doEffects
+            && x_chance_in_y(min(90, 35 + (beam->ench_power)), 100))
+        {
+            you.blink();
+        }
+        break;
+
     default:
         break;
     }                           // end switch

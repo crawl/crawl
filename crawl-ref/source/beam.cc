@@ -1732,6 +1732,14 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         break;
 
+    case BEAM_WARPING:
+        if (doFlavouredEffects
+            && x_chance_in_y(min(90, 35 + (pbolt.ench_power)), 100))
+        {
+            monster_blink(mons);
+        }
+        break;
+
     default:
         break;
     }
@@ -6372,6 +6380,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The gout of umbral fire explodes!",
         "the shriek of umbral fire",
     } },
+    { SPELL_WARP_SPACE, {
+        "Space twists violently!",
+        "shrill echo",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -7098,6 +7110,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DEVASTATION:           return "devastation";
     case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
     case BEAM_CRYSTALLIZING:         return "crystallizing";
+    case BEAM_WARPING:               return "spatial disruption";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

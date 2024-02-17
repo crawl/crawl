@@ -1906,4 +1906,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     true,
 },
 
+{
+    ZAP_WARP_SPACE,
+    "rupture",
+    200,
+    new calcdice_calculator<3, 12, 3, 5>,
+    new tohit_calculator<40>,
+    new dicedef_calculator<3, 4, 1, 12>,
+    new tohit_calculator<40>,
+    LIGHTMAGENTA,
+    false,
+    BEAM_WARPING,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
 };
