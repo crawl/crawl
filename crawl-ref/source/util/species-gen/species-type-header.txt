@@ -22,8 +22,8 @@ enum species_type
 #if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
     SP_HALFLING,
-#endif
     SP_HILL_ORC,
+#endif
     SP_KOBOLD,
     SP_MUMMY,
     SP_NAGA,
