@@ -31,7 +31,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn,
                              const item_def *wpn, const item_def *proj,
                              bool tele, actor *blame, bool mulch)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
-      projectile(proj), teleport(tele), orig_to_hit(0), mulched(mulch)
+      projectile(proj), teleport(tele), mulched(mulch)
 {
     weapon = wpn;
     if (weapon)
@@ -83,10 +83,6 @@ int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
                          BULLSEYE_TO_HIT_DIV, random);
     }
 
-    // Duplicates describe.cc::_to_hit_pct().
-    if (defender && defender->missile_repulsion())
-        modifiers -= (mhit + 1) / 2;
-
     return modifiers;
 }
 
@@ -103,7 +99,12 @@ bool ranged_attack::attack()
         return true;
     }
 
-    const int ev = defender->evasion(false, attacker);
+    int ev = defender->evasion(false, attacker);
+
+    // Works even if the defender is incapacitated
+    if (defender->missile_repulsion())
+        ev += REPEL_MISSILES_EV_BONUS;
+
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(false);
 
@@ -204,12 +205,7 @@ bool ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(false, attacker);
-
-    const int orig_ev_margin =
-        test_hit(orig_to_hit, ev, !attacker->is_player());
-
-    if (defender->missile_repulsion() && orig_ev_margin >= 0)
+    if (defender->missile_repulsion() && ev_margin > -REPEL_MISSILES_EV_BONUS)
     {
         if (needs_message && defender_visible)
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());

@@ -2940,28 +2940,17 @@ bool bolt::fuzz_invis_tracer()
 // A first step towards to-hit sanity for beams. We're still being
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
-static bool _test_beam_hit(int attack, int defence, bool pierce,
-                           bool repel, defer_rand &r)
+static int _test_beam_hit(int attack, int defence, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return true;
 
-    if (pierce)
-    {
-        if (repel && attack >= 2) // don't increase acc of 0
-            attack = r[0].random_range((attack + 1) / 2 + 1, attack);
-    }
-    else if (repel)
-        attack = r[0].random2(attack);
-
-    dprf(DIAG_BEAM, "Beam attack: %d, defence: %d", attack, defence);
-
     attack = r[1].random2(attack);
     defence = r[2].random2avg(defence, 2);
 
-    dprf(DIAG_BEAM, "Beam new attack: %d, defence: %d", attack, defence);
+    dprf(DIAG_BEAM, "Beam attack: %d, defence: %d", attack, defence);
 
-    return attack >= defence;
+    return attack - defence;
 }
 
 bool bolt::is_harmless(const monster* mon) const
@@ -3227,7 +3216,7 @@ bool bolt::misses_player()
         return false;
     }
 
-    const int dodge = you.evasion();
+    int dodge = you.evasion();
     int real_tohit  = hit;
 
     if (real_tohit != AUTOMATIC_HIT)
@@ -3307,17 +3296,22 @@ bool bolt::misses_player()
 
     defer_rand r;
 
-    bool repel = you.missile_repulsion();
+    const int repel = you.missile_repulsion() ? REPEL_MISSILES_EV_BONUS : 0;
+    dodge += repel;
 
-    if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
+    const int hit_margin = _test_beam_hit(real_tohit, dodge, r);
+    if (hit_margin < 0)
     {
-        mprf("The %s misses you.", name.c_str());
-        count_action(CACT_DODGE, DODGE_EVASION);
-    }
-    else if (repel && !_test_beam_hit(real_tohit, dodge, pierce, repel, r))
-    {
-        mprf("The %s is repelled.", name.c_str());
-        count_action(CACT_DODGE, DODGE_REPEL);
+        if (hit_margin <= repel)
+        {
+            mprf("The %s is repelled.", name.c_str());
+            count_action(CACT_DODGE, DODGE_REPEL);
+        }
+        else
+        {
+            mprf("The %s misses you.", name.c_str());
+            count_action(CACT_DODGE, DODGE_EVASION);
+        }
     }
     else
         return false;
@@ -5266,19 +5260,21 @@ void bolt::affect_monster(monster* mon)
         return;
 
     defer_rand r;
-    int rand_ev = random2(mon->evasion());
-    bool repel = mon->missile_repulsion();
+    const int repel = mon->missile_repulsion() ? REPEL_MISSILES_EV_BONUS : 0;
+    int rand_ev = random2(mon->evasion() + repel);
+
+    const int hit_margin = _test_beam_hit(beam_hit, rand_ev, r);
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit. This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, pierce, repel, r))
+    if (!engulfs && hit_margin < 0)
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
             // if it would have hit otherwise...
-            if (_test_beam_hit(beam_hit, rand_ev, pierce, 0, r))
+            if (hit_margin > -repel)
             {
                 msg::stream << mon->name(DESC_THE) << " "
                             << "repels the " << name

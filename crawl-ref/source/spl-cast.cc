@@ -1450,7 +1450,7 @@ int hex_success_chance(const int wl, int powc, int scale, bool round_up)
 }
 
 // approximates _test_beam_hit in a deterministic fashion.
-static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
+static int _to_hit_pct(const monster_info& mi, int acc)
 {
     if (acc == AUTOMATIC_HIT)
         return 100;
@@ -1459,10 +1459,11 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
 
+    const int base_ev = mi.ev + (mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
+
     int hits = 0;
     int iters = 0;
-    const bool rmsl = mi.is(MB_REPEL_MSL);
-    for (int outer_ev_roll = 0; outer_ev_roll < mi.ev; outer_ev_roll++)
+    for (int outer_ev_roll = 0; outer_ev_roll < base_ev; outer_ev_roll++)
     {
         for (int inner_ev_roll_a = 0; inner_ev_roll_a < outer_ev_roll; inner_ev_roll_a++)
         {
@@ -1471,20 +1472,10 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
                 const int ev = (inner_ev_roll_a + inner_ev_roll_b) / 2; // not right but close
                 for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
                 {
-                    int adjusted_mhit = rolled_mhit;
-                    if (rmsl)
-                    {
-                        // this is wrong - we should be re-rolling here.
-                        if (pierce)
-                            adjusted_mhit = adjusted_mhit * 3 /4;
-                        else
-                            adjusted_mhit /= 2;
-                    }
-
                     iters++;
                     if (iters >= 1000000)
                         return -1; // sanity breakout to not kill servers
-                    if (adjusted_mhit >= ev)
+                    if (rolled_mhit >= ev)
                         hits++;
                 }
             }
@@ -1497,11 +1488,11 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     return hits * 100 / iters;
 }
 
-static vector<string> _desc_hit_chance(const monster_info& mi, int acc, bool pierces)
+static vector<string> _desc_hit_chance(const monster_info& mi, int acc)
 {
     if (!acc)
         return vector<string>{};
-    const int hit_pct = _to_hit_pct(mi, acc, pierces);
+    const int hit_pct = _to_hit_pct(mi, acc);
     if (hit_pct == -1)
         return vector<string>{};
     return vector<string>{make_stringf("%d%% to hit", hit_pct)};
@@ -1512,14 +1503,14 @@ vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     if (!beam_hitf)
         return vector<string>{};
-    return _desc_hit_chance(mi, beam_hitf->beam.hit, beam_hitf->beam.pierce);
+    return _desc_hit_chance(mi, beam_hitf->beam.hit);
 }
 
 static vector<string> _desc_plasma_hit_chance(const monster_info& mi, int powc)
 {
     bolt beam;
     zappy(spell_to_zap(SPELL_PLASMA_BEAM), powc, false, beam);
-    const int hit_pct = _to_hit_pct(mi, beam.hit, beam.pierce);
+    const int hit_pct = _to_hit_pct(mi, beam.hit);
     if (hit_pct == -1)
         return vector<string>{};
     return vector<string>{make_stringf("2x%d%% to hit", hit_pct)};
@@ -1608,14 +1599,14 @@ static vector<string> _desc_hailstorm_hit_chance(const monster_info& mi, int pow
 {
     bolt beam;
     zappy(ZAP_HAILSTORM, pow, false, beam);
-    return _desc_hit_chance(mi, beam.hit, false);
+    return _desc_hit_chance(mi, beam.hit);
 }
 
 static vector<string> _desc_momentum_strike_hit_chance(const monster_info& mi, int pow)
 {
     bolt beam;
     zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
-    return _desc_hit_chance(mi, beam.hit, false);
+    return _desc_hit_chance(mi, beam.hit);
 }
 
 static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
