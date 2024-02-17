@@ -2628,7 +2628,7 @@ static void _cause_vampire_bat_form_stat_drain()
 void vampire_exsanguinate(bool force_end)
 {
     if (force_end)
-        blood_spray(you.pos(), MONS_PLAYER, you.attribute[ATTR_VAMP_BLOOD] / 2);
+        blood_spray(you.pos(), MONS_JORY, you.attribute[ATTR_VAMP_BLOOD] / 2);
 
     you.vampire_alive = false;
     you.redraw_status_lights = true;
@@ -2658,8 +2658,7 @@ void vampire_revivify()
 
     you.props.erase(REVIVIFY_TURNS_KEY);
 
-    //put this after aliving you or you won't bleed
-    blood_spray(you.pos(), MONS_PLAYER, 20);
+    blood_spray(you.pos(), MONS_JORY, 20);
 
     //don't lose blood the turn you transform
     you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
