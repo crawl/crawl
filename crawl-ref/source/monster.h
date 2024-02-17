@@ -464,7 +464,7 @@ public:
     int armour_class() const override;
     int gdr_perc() const override { return 0; }
     int base_evasion() const;
-    int evasion(bool ignore_helpless = false,
+    int evasion(bool ignore_temporary = false,
                 const actor* /*attacker*/ = nullptr) const override;
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;

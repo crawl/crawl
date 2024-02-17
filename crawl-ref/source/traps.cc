@@ -320,6 +320,7 @@ bool player_caught_in_net()
     // and we get a glimpse of a web because there isn't a trapping net
     // item yet
     you.attribute[ATTR_HELD] = 1;
+    you.redraw_evasion = true;
 
     stop_delay(true); // even stair delays
     return true;

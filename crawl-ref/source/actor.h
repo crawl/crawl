@@ -247,7 +247,7 @@ public:
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;
-    virtual int evasion(bool ignore_helpless = false,
+    virtual int evasion(bool ignore_temporary = false,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
     virtual int shield_block_limit() const;
