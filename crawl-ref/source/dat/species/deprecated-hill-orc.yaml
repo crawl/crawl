@@ -1,3 +1,4 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_HILL_ORC
 monster: MONS_ORC
 name: Hill Orc
