@@ -872,7 +872,7 @@ static const item_set_def item_sets[] =
 {
     { "hex wand",           OBJ_WANDS,      { WAND_CHARMING, WAND_PARALYSIS } },
     { "beam wand",          OBJ_WANDS,      { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
-    { "blast wand",         OBJ_WANDS,      { WAND_ICEBLAST, WAND_ROOTS } },
+    { "blast wand",         OBJ_WANDS,      { WAND_ICEBLAST, WAND_ROOTS, WAND_WARPING } },
     { "ally scroll",        OBJ_SCROLLS,    { SCR_SUMMONING, SCR_BUTTERFLIES } },
     { "area misc",          OBJ_MISCELLANY, { MISC_CONDENSER_VANE,
                                               MISC_TIN_OF_TREMORSTONES } },
@@ -1631,6 +1631,7 @@ int wand_charge_value(int type, int item_level)
     // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
     case WAND_ROOTS:
+    case WAND_WARPING:
     case WAND_ACID:
     case WAND_LIGHT:
     case WAND_QUICKSILVER:
@@ -1688,6 +1689,7 @@ bool is_offensive_wand(const item_def& item)
     case WAND_FLAME:
     case WAND_ICEBLAST:
     case WAND_ROOTS:
+    case WAND_WARPING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
         return true;

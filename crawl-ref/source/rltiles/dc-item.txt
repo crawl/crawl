@@ -613,7 +613,8 @@ i-scattershot WAND_REMOVEME12
 # end TAG_MAJOR_VERSION
 i-light WAND_LIGHT
 i-quicksilver WAND_QUICKSILVER
-i-roots WAND_ROOTS WAND_ID_LAST
+i-roots WAND_ROOTS
+i-disruption WAND_WARPING WAND_ID_LAST
 
 ################# Skeletons
 %sdir item/food

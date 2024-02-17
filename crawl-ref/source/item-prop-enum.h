@@ -794,6 +794,7 @@ enum wand_type
     WAND_LIGHT,
     WAND_QUICKSILVER,
     WAND_ROOTS,
+    WAND_WARPING,
     NUM_WANDS
 };
 

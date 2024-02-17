@@ -655,6 +655,7 @@ static const char* _wand_type_name(int wandtype)
     case WAND_LIGHT:           return "light";
     case WAND_QUICKSILVER:     return "quicksilver";
     case WAND_ROOTS:           return "roots";
+    case WAND_WARPING:         return "warping";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";

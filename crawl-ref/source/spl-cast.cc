@@ -1183,6 +1183,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FIREBALL:
     case SPELL_ICEBLAST:
     case SPELL_FASTROOT:
+    case SPELL_WARP_SPACE:
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow,
                                           1, 1);
     case SPELL_HURL_DAMNATION:

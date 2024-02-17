@@ -100,6 +100,7 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_QUICKSILVER, SPELL_QUICKSILVER_BOLT },
     { WAND_MINDBURST, SPELL_MINDBURST },
     { WAND_ROOTS, SPELL_FASTROOT },
+    { WAND_WARPING, SPELL_WARP_SPACE },
 };
 
 

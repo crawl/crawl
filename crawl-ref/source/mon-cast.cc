@@ -1527,6 +1527,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_CHARMING:
     case SPELL_BOLT_OF_LIGHT:
     case SPELL_FASTROOT:
+    case SPELL_WARP_SPACE:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_PRIMAL_WAVE:
     case SPELL_BLINKBOLT:
