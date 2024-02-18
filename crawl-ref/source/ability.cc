@@ -1533,9 +1533,16 @@ static bool _can_rising_flame(bool quiet)
             mpr("You're already rising!");
         return false;
     }
-    if (you.where_are_you == BRANCH_DUNGEON && you.depth == 1 && player_has_orb())
+    if (you.where_are_you == BRANCH_DUNGEON && you.depth == 1)
     {
-        return true;
+        if (player_has_orb())
+            return true;
+        else
+        {
+            if (!quiet)
+                mpr("You can't rise from this level without the Orb!");
+            return false;
+        }
     }
     if (!level_above().is_valid())
     {
