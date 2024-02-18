@@ -1,8 +1,8 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_MAYFLYTAUR
 monster: MONS_BUTTERFLY
-name: "Mayflytaur"
-short_name: "My"
+name: Mayflytaur
+short_name: My
 difficulty: False
 aptitudes:
   xp: 0

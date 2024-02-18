@@ -1,8 +1,8 @@
 enum: SP_DEMONSPAWN
 monster: MONS_DEMONSPAWN
-name: "Demonspawn"
-short_name: "Ds"
-adjective: "Demonic"
+name: Demonspawn
+short_name: Ds
+adjective: Demonic
 difficulty: Intermediate
 difficulty_priority: 80
 aptitudes:

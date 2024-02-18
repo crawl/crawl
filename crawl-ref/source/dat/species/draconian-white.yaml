@@ -1,9 +1,9 @@
 enum: SP_WHITE_DRACONIAN
 monster: MONS_WHITE_DRACONIAN
-name: "White Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: White Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN

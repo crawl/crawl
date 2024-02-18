@@ -1,9 +1,9 @@
 enum: SP_DEEP_ELF
 monster: MONS_ELF
-name: "Deep Elf"
-short_name: "DE"
-adjective: "Elven"
-genus: "Elf"
+name: Deep Elf
+short_name: DE
+adjective: Elven
+genus: Elf
 difficulty: Simple
 difficulty_priority: 40
 aptitudes:

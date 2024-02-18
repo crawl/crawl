@@ -1,7 +1,7 @@
 enum: SP_FORMICID
 monster: MONS_FORMICID
-name: "Formicid"
-genus: "Ant"
+name: Formicid
+genus: Ant
 difficulty: Advanced
 difficulty_priority: 70
 species_flags: # n.b. ants have hair

@@ -1,10 +1,10 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_MOTTLED_DRACONIAN
 monster: MONS_MOTTLED_DRACONIAN
-name: "Mottled Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Mottled Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN

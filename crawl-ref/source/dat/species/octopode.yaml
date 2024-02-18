@@ -1,9 +1,9 @@
 enum: SP_OCTOPODE
 monster: MONS_OCTOPODE
-name: "Octopode"
-short_name: "Op"
-adjective: "Octopoid"
-genus: "Octopus"
+name: Octopode
+short_name: Op
+adjective: Octopoid
+genus: Octopus
 difficulty: Advanced
 difficulty_priority: 50
 aptitudes:

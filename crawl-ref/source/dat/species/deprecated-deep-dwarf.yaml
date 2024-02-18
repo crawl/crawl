@@ -1,10 +1,10 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_DEEP_DWARF
 monster: MONS_DEEP_DWARF
-name: "Deep Dwarf"
-short_name: "DD"
-adjective: "Dwarven"
-genus: "Dwarf"
+name: Deep Dwarf
+short_name: DD
+adjective: Dwarven
+genus: Dwarf
 difficulty: False
 aptitudes:
   xp: -1
