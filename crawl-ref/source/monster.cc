@@ -5733,6 +5733,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
+    // Interrupt autorest for allies standing clouds, poisoned, etc.
+    if (damage > 0 && !crawl_state.game_is_arena() && friendly()
+        && you.can_see(*this))
+    {
+        interrupt_activity(activity_interrupt::ally_attacked);
+    }
+
     if (!alive())
         return;
 
