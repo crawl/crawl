@@ -718,17 +718,6 @@ static void _UNDEADHUNTER_melee_effects(item_def* /*item*/, actor* attacker,
 }
 
 ///////////////////////////////////////////////////
-static void _EOS_equip(item_def */*item*/, bool */*show_msgs*/, bool /*unmeld*/)
-{
-    invalidate_agrid(true);
-}
-
-static void _EOS_unequip(item_def */*item*/, bool */*show_msgs*/)
-{
-    invalidate_agrid(true);
-}
-
-///////////////////////////////////////////////////
 static void _BRILLIANCE_equip(item_def */*item*/, bool */*show_msgs*/, bool /*unmeld*/)
 {
     invalidate_agrid(true);

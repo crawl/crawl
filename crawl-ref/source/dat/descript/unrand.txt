@@ -196,6 +196,7 @@ who eschewed the use of magic in combat, preferring to destroy her enemies with
 brute force. Unfortunately for her, not all of her opponents shared her
 limitations.
 %%%%
+# TAG_MAJOR_VERSION == 34
 morningstar "Eos"
 
 A jewelled morningstar, glowing brightly with the light of the dawn. It

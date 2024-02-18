@@ -561,6 +561,7 @@ WILL:    1
 BOOL:    nospell, nogen
 # end TAG_MAJOR_VERSION
 
+# start TAG_MAJOR_VERSION == 34
 NAME:    morningstar "Eos"
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +10
@@ -569,9 +570,8 @@ COLOUR:  ETC_JEWEL
 TILE:    urand_eos
 TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
-BOOL:    elec
-DESCRIP: Halo:      It grants its wielder a halo, revealing invisible creatures
- and increasing accuracy against all within it other than the wielder.
+BOOL:    elec, nogen
+# end TAG_MAJOR_VERSION
 
 # start TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
