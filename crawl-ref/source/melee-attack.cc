@@ -931,9 +931,9 @@ void melee_attack::set_weapon(item_def *wpn, bool offhand)
         wpn_skill = SK_FIGHTING;
 }
 
-bool melee_attack::swing_with(item_def &weapon, bool offhand)
+bool melee_attack::swing_with(item_def &wpn, bool offhand)
 {
-    const bool reaching = weapon_reach(weapon) > REACH_NONE;
+    const bool reaching = weapon_reach(wpn) > REACH_NONE;
     if (!is_projected
         && !reaching
         && !adjacent(attacker->pos(), defender->pos()))
@@ -945,7 +945,7 @@ bool melee_attack::swing_with(item_def &weapon, bool offhand)
                        attack_number,
                        effective_attack_number);
     copy_to(swing);
-    swing.set_weapon(&weapon, offhand);
+    swing.set_weapon(&wpn, offhand);
     bool success = swing.attack();
     cancel_attack = swing.cancel_attack;
     return success;
