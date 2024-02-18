@@ -2154,6 +2154,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // else fall-through
     case CMD_WAIT:
         update_acrobat_status();
+        you.note_keeping_limber();
         you.turn_is_over = true;
         break;
 

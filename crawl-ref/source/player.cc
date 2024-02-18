@@ -1956,23 +1956,23 @@ bool player::legs_stiff() const
     return you.props.exists(LEGS_STIFF_KEY);
 }
 
-#define MOVED_DELIBERATELY "moved_deliberately_key"
+#define KEEPING_LIMBER "moved_deliberately_key"
 
-void player::note_deliberate_move()
+void player::note_keeping_limber()
 {
     if (!you.has_mutation(MUT_WARMUP_MOVES))
         return;
-    you.props[MOVED_DELIBERATELY] = true;
+    you.props[KEEPING_LIMBER] = true;
     you.props.erase(LEGS_STIFF_KEY);
 }
 
-void player::check_deliberate_move()
+void player::check_keeping_limber()
 {
     if (!you.has_mutation(MUT_WARMUP_MOVES))
         return;
-    if (!you.props.exists(MOVED_DELIBERATELY))
+    if (!you.props.exists(KEEPING_LIMBER))
         you.props[LEGS_STIFF_KEY] = true;
-    you.props.erase(MOVED_DELIBERATELY);
+    you.props.erase(KEEPING_LIMBER);
 }
 
 bool is_effectively_light_armour(const item_def *item)

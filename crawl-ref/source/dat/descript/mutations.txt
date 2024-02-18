@@ -854,8 +854,7 @@ Both weapon-based and unarmed attacks are affected.
 warmup strides mutation
 
 Your charm-wrought legs need time to limber up, making you take longer to
-move whenever you end a turn in the same place you began. This only affects
-movement actions.
+cover ground if your last action was neither movement nor waiting.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation

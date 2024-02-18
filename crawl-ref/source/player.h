@@ -886,8 +886,8 @@ public:
     void rev_down(int time_taken);
 
     bool legs_stiff() const;
-    void check_deliberate_move();
-    void note_deliberate_move();
+    void check_keeping_limber();
+    void note_keeping_limber();
 
     bool allies_forbidden();
 
