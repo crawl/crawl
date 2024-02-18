@@ -727,6 +727,8 @@ void throw_it(quiver::action &a)
     alert_nearby_monsters();
 
     you.turn_is_over = true;
+    if (launcher && you.has_mutation(MUT_WARMUP_STRIKES))
+        you.rev_up(you.time_taken);
 
     if ((launcher || is_thrown)
         && will_have_passive(passive_t::shadow_attacks)

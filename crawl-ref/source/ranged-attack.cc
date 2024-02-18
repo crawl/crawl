@@ -340,13 +340,6 @@ bool ranged_attack::handle_phase_hit()
     return true;
 }
 
-bool ranged_attack::handle_phase_end()
-{
-    if (you.has_mutation(MUT_WARMUP_STRIKES) && !throwing())
-        you.rev_up(you.attack_delay(projectile).roll());
-    return attack::handle_phase_end();
-}
-
 bool ranged_attack::throwing() const
 {
     return SK_THROWING == wpn_skill;
