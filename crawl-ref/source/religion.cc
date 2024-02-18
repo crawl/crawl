@@ -3724,6 +3724,25 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
 };
 
+static void _print_good_god_brand_changes(item_def *weapon, bool joining_good)
+{
+    if (!weapon
+        || get_weapon_brand(*weapon) != SPWPN_FOUL_FLAME)
+    {
+        return;
+    }
+    if (joining_good)
+    {
+        mprf("%s goes dull and lifeless in your grasp.",
+             weapon->name(DESC_YOUR).c_str());
+    }
+    else
+    {
+        mprf("%s glows horrifically with a foul radiance!",
+             uppercase_first(weapon->name(DESC_YOUR)).c_str());
+    }
+}
+
 void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
@@ -3765,6 +3784,17 @@ void join_religion(god_type which_god)
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
         (*join_effect)();
+
+    if (!is_good_god(old_god) && is_good_god(you.religion))
+    {
+        _print_good_god_brand_changes(you.weapon(), true);
+        _print_good_god_brand_changes(you.offhand_weapon(), true);
+    }
+    else if (is_good_god(old_god) && !is_good_god(you.religion))
+    {
+        _print_good_god_brand_changes(you.weapon(), false);
+        _print_good_god_brand_changes(you.offhand_weapon(), false);
+    }
 
     // after join_effect() so that gozag's service fee is right for monks
     if (you.worshipped[you.religion] < 100)
