@@ -1789,6 +1789,8 @@ static void _setup_fallback_randart(const int unrand_id,
  * @param item_level How powerful the item is allowed to be
  * @param force_ego The desired ego/brand
  * @param agent The agent creating the item (Example: Xom) or -1 if NA
+ * @param custom_name A custom name for the item
+ * @param props Any special item props
  *
  * @return The generated item's item slot or NON_ITEM if it fails.
  */
@@ -1798,7 +1800,8 @@ int items(bool allow_uniques,
           int item_level,
           int force_ego,
           int agent,
-          string custom_name)
+          string custom_name,
+          CrawlHashTable const *fixed_props)
 {
     rng::subgenerator item_rng;
 
@@ -1894,12 +1897,15 @@ int items(bool allow_uniques,
     if (!custom_name.empty())
         item.props[ITEM_NAME_KEY] = custom_name;
 
+    if (fixed_props)
+        item.props[FIXED_PROPS_KEY].get_table() = *fixed_props;
+
     // Determine sub_type accordingly. {dlb}
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        _generate_weapon_item(item, allow_uniques, force_type,
-                              item_level, agent);
+        _generate_weapon_item(item, allow_uniques, force_type, item_level,
+                              agent);
         break;
 
     case OBJ_MISSILES:
@@ -1935,7 +1941,8 @@ int items(bool allow_uniques,
     case OBJ_STAVES:
         // Don't generate unrand staves this way except through acquirement,
         // since they also generate as OBJ_WEAPONS.
-        _generate_staff_item(item, (agent != NO_AGENT), force_type, item_level, agent);
+        _generate_staff_item(item, (agent != NO_AGENT), force_type,
+                             item_level, agent);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}

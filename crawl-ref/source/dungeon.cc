@@ -4968,9 +4968,13 @@ int dgn_place_item(const item_spec &spec,
                 item_made = _dgn_item_corpse(spec, where);
             else
             {
+                CrawlHashTable const *fixed_props = nullptr;
+                if (spec.props.exists(FIXED_PROPS_KEY))
+                    fixed_props = &spec.props[FIXED_PROPS_KEY].get_table();
+
                 item_made = items(spec.allow_uniques, base_type,
                                   spec.sub_type, level, spec.ego, NO_AGENT,
-                                  _get_custom_name(spec));
+                                  _get_custom_name(spec), fixed_props);
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);

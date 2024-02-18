@@ -14,6 +14,7 @@
 #define ARTEFACT_PROPS_KEY  "artefact_props"
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
+#define FIXED_PROPS_KEY     "artefact_fixed_props"
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
@@ -132,7 +133,7 @@ void artefact_set_property(item_def           &item,
                            int                 val);
 
 /// Type for the value of an artefact property
-enum artp_value_type
+enum artefact_value_type
 {
     ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
     ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
@@ -140,9 +141,11 @@ enum artp_value_type
                     ///      See \ref brand_type in item-prop-enum.h
     ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
 };
-artp_value_type artp_potential_value_types(artefact_prop_type prop);
+artefact_value_type artp_value_type(artefact_prop_type prop);
+bool artp_value_is_valid(artefact_prop_type prop, int value);
 
 const char *artp_name(artefact_prop_type prop);
+artefact_prop_type artp_type_from_name(const string &name);
 bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
 
