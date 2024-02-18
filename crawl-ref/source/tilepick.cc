@@ -531,6 +531,10 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_BLOOD_FOUNTAIN;
     case DNGN_DRY_FOUNTAIN:
         return TILE_DNGN_DRY_FOUNTAIN;
+    case DNGN_CACHE_OF_FRUIT:
+        return TILE_DNGN_CACHE_OF_FRUIT;
+    case DNGN_CACHE_OF_MEAT:
+        return TILE_DNGN_CACHE_OF_MEAT;
     case DNGN_RUNELIGHT:
         return TILE_DNGN_RUNELIGHT;
     case DNGN_PASSAGE_OF_GOLUBRIA:

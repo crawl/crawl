@@ -765,6 +765,11 @@ ENDMAP
 NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
+MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
+        orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
+: orc_with_polearm(_G)
+: orc_warrior_with_polearm(_G)
+: orc_knight_with_polearm(_G)
 ITEM:   potion of experience ident:type q:1
 : item(dgn.loot_potions)
 ITEM:   scroll of brand weapon ident:type w:5 / \
@@ -773,28 +778,21 @@ ITEM:   scroll of brand weapon ident:type w:5 / \
 ITEM:   scroll of enchant weapon ident:type /\
         scroll of enchant armour ident:type /\
         scroll of summoning ident:type no_pickup
-SUBST:  1 = 11.
-SUBST:  2 = 22.
-SUBST:  3 = 32.
-SUBST:  4 = 43322..
-SUBST:  5 = 4333
+KFEAT:  C = cache of meat
+SUBST:  1 = 11., 2 = 22., 3 = 32.
+SUBST:  4 = 43322.., 5 = 4333, C : CC.
 NSUBST: ! = 1:deee / *:e
 NSUBST: ? = 1:fffg / *:g
-MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
-        orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
 : bailey_setup(_G)
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cc.<.......1cccccccc....1ccccccccc....1ccc..........cc
+cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
 c......c...12cccccc.....13c.....c.....14+....5......5c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
 cA.....G...13+.$$.+..G..13+.!!!.+.....14+.......???.<c
 c.....ccc..12c.$$.c..cc.13+.!!!.+..c..14+.......???..c
 c......c...12cccccc.....13c.....c.....14+....5......5c
-cc.<.......1cccccccc....1ccccccccc....1ccc..........cc
+cc.<.......1cccccccc....1ccccccccc....1ccc.........Ccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -913,42 +911,36 @@ ENDMAP
 # loot is 4 of each: weapons, armour, and potions/scrolls
 # 1 of each is a guaranteed good item
 # along with 1 guaranteed acquirement scroll and 3 gold piles in the bastions
-NAME:   bailey_axe_of_yendor_kennysheep
-ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+NAME:    bailey_axe_of_yendor_kennysheep
+TAGS:    bailey_axe no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
-KMONS:  3 = orc sorcerer ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail  / \
-        orc high priest ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail / \
-        kobold demonologist w:20 ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail
-KMONS:  4 = electric eel
-KITEM:  d = any weapon
-KITEM:  D = any weapon good_item
-KITEM:  e = any armour
-KITEM:  E = any armour good_item
-:kitem("f = " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-KITEM:  F = scroll of enchant weapon ident:type q:2 / \
-            scroll of enchant armour ident:type q:2 / \
-            potion of experience ident:type q:1 / \
-            scroll of acquirement ident:type q:1 / \
-            any good_item book w:30
-KITEM:  | = scroll of acquirement ident:type
-KITEM:  $ = gold
-NSUBST: | = 1:| / *:$
-KFEAT:  ^ = zot trap
-KFEAT:  B = altar_okawaru
-NSUBST: w = 10 = 4w / *:w
-NSUBST: 2 = 2:2 / * = 2..
-NSUBST: 1 = 6 = 2. / * = 11.
-NSUBST: 3 = 2:3 / * = 2
+: local wm = "war axe | broad axe w:2 | battleaxe w:1 . scale mail | ring mail"
+: kmons("3 = orc sorcerer ; " .. wm .. " / orc high priest ; " .. wm .. " / " ..
+:           "kobold demonologist w:20 ; " .. wm)
+KMONS:   4 = electric eel
+KITEM:   d = any weapon
+KITEM:   D = any weapon good_item
+KITEM:   e = any armour
+KITEM:   E = any armour good_item
+: kitem("f = " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+KITEM:   F = scroll of enchant weapon ident:type q:2 / \
+             scroll of enchant armour ident:type q:2 / \
+             potion of experience ident:type q:1 / \
+             scroll of acquirement ident:type q:1 / \
+             any good_item book w:30
+KITEM:   h = stone q:1 no_pickup
+KITEM:   | = scroll of acquirement ident:type
+KITEM:   $ = gold
+KFEAT:   ^ = zot trap
+KFEAT:   B = altar_okawaru
+KFEAT:   g = cache of meat
+NSUBST:  | = 1:| / *:$
+NSUBST:  w = 10 = 4w / *:w
+NSUBST:  2 = 2:2 / * = 2.., 1 = 6 = 2. / * = 11., 3 = 2:3 / * = 2
 SHUFFLE: defg
-NSUBST: d = 1:D
-NSUBST: e = 1:E
-NSUBST: f = 1:F
-SUBST:  g = .
+NSUBST:  d = 1:D / *:d, e = 1:E / *:e, f = 1:F / *:f, g = 2:gh / *:h
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1245,8 +1237,9 @@ ITEM:   good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
         good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
         good_item quicksilver dragon scales w:3
+KFEAT:  C = cache of fruit
 KFEAT:  D = deep_water
-SUBST:  ! = t:20 x c:3, - = t c:30 x
+SUBST:  C : CC., ! = t:20 x c:3, - = t c:30 x
 NSUBST: ' = 20 = 1... / 2 = 2... / *:.
 NSUBST: " = 1:2 / 12 = 2... / *:., 3 = 1:3 / *:.
 NSUBST: d = 1:d / 1:e / 1:ef / * = d:14 e:1 f:1
@@ -1264,7 +1257,7 @@ cc''--""ttttt""--''cc
 cc''-""ttdddtt""-''cc
 cc''-""!ddwdd!""-''cc
 cc''-""!dwDwd!""-''cc
-cc''-""!..w..!""-''cc
+cc''-""!C.w.C!""-''cc
 cc''-""tt...tt""-''cc
 cc''--""t!W!t""--''cc
 ccc''--3"""""3--''cc

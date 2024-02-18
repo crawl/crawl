@@ -358,6 +358,20 @@ A fountain of sparkling water
 
 A decorative fountain, flowing with brightly sparkling water.
 %%%%
+A cache of fruit
+
+A pile of assorted fruit, ranging from common dungeon staples like chokos and
+snozzcumbers, to rarer treats such as apples and oranges. You already carry as
+much food as you will ever need for this journey, but the occasional nibble
+wouldn't hurt.
+%%%%
+A cache of meat
+
+A stash of preserved meats of varied origins and preparations: strips of jerky,
+lumpy smoked sausages, and indeterminate protein rations. You already carry as
+much food as you will ever need for this journey, but this could offer the rare
+chance to try out yak...
+%%%%
 A runelight
 
 An unearthly, glittering light, floating and twisting in midair. A Rune of

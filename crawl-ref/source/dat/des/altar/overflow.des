@@ -869,10 +869,11 @@ DEPTH:  D, !D:$
 MONS:   plant / bush w:5
 KMONS:  S = sacred lotus
 KFEAT:  S = w
+KFEAT:  % = cache of fruit
 SUBST:  S : Sww
-NSUBST: 1 = 1:' / * = 111t''', 2 = 1:' / * = 111t'''
+NSUBST: 1 = 1:' / * = 111t''', 2 = 1:%'' / * = 111t'''
 KFEAT:  _ = altar_fedhas
-KMASK:  _1'<> = opaque
+KMASK:  _1%'<> = opaque
 : interest_check(_G)
 MAP
      .....
@@ -892,33 +893,32 @@ MAP
      .....
 ENDMAP
 
-NAME:   fedhas_altar_fruit_tree
-TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas transparent
-TAGS:   no_item_gen no_rotate no_vmirror decor
-NSUBST: g = 4:f/*:.
-NSUBST: f = 4:A/*:.
-NSUBST: w = 2:4 / *:w
-KFEAT:  C = altar_fedhas
-KFEAT:  A = .
-FTILE:  .tfCA = floor_moss
-FTILE:  d = floor_hall
-COLOUR: fd = brown
-COLOUR: AC. = green
+NAME:    fedhas_altar_fruit_tree
+TAGS:    uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas transparent
+TAGS:    no_item_gen no_rotate no_vmirror decor
+KFEAT:   de = cache of fruit
+KFEAT:   C = altar_fedhas
+SHUFFLE: defghijk
+SUBST:   fghijk = .
+COLOUR:  . = green
+COLOUR:  '@ = brown
+FTILE:   .det = floor_moss
+FTILE:   '@ = floor_hall
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxxx
 xtttttttttttttttx
 xtttttttttttttttx
-xttttttgfgttttttx
-xtttttgf.fgtttttx
-xttttgf.f.fgttttx
-xtttgf..C..fgtttx
-xtttgf.f.f.fgtttx
-xttgfffffffffgttx
-xttgt.......tgttx
-xttttttdddttttttx
-xttttttdddttttttx
-xtttttdd@ddtttttx
+xtttttt...ttttttx
+xtttttg...gtttttx
+xtttt.......ttttx
+xtttf...C...ftttx
+xttt.........tttx
+xtt...e...e...ttx
+xttdt.......tdttx
+xtttttt'''ttttttx
+xtttttt'''ttttttx
+xttttt''@''tttttx
 ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
@@ -2874,18 +2874,19 @@ MAP
  .....
 ENDMAP
 
-NAME:   eat_drink_and_be_merry_uskayaw
-TAGS:   temple_overflow_1 temple_overflow_uskayaw transparent
-TAGS:   uniq_altar_uskayaw
-KFEAT:  _ = altar_uskayaw
-ITEM:   any potion q:1, any weapon
+NAME:    eat_drink_and_be_merry_uskayaw
+TAGS:    temple_overflow_1 temple_overflow_uskayaw transparent
+TAGS:    uniq_altar_uskayaw
+KFEAT:   _ = altar_uskayaw
+SHUFFLE: def
+ITEM:    any potion q:1, any weapon
+KFEAT:   f = cache of fruit / cache of meat
 : interest_check(_G)
-# TODO: replace ration flavor?
 MAP
 ...........
 .G.......G.
 ...........
-.G.......G.
+.c.......c.
 ....def....
 .G..._...G.
 ....ccc....

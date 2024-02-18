@@ -23,6 +23,7 @@
 #include "colour.h"
 #include "command.h"
 #include "coordit.h"
+#include "database.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "english.h"
@@ -3278,6 +3279,27 @@ void describe_floor()
     mprf(channel, "%s%s here.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_GAUNTLET)
         mprf(MSGCH_EXAMINE, "Beware, the minotaur awaits!");
+    else if (feat_is_fountain(grid) || feat_is_food(grid))
+        _walk_on_decor(grid);
+}
+
+void _walk_on_decor(dungeon_feature_type new_grid)
+{
+    string messageLookup = "";
+    string decorLine = "";
+
+    if (new_grid == DNGN_CACHE_OF_FRUIT)
+        messageLookup += "fruit cache";
+    else if (new_grid == DNGN_CACHE_OF_MEAT)
+       messageLookup += "meat cache";
+
+    if (messageLookup != "" && one_chance_in(3))
+    {
+        decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
+        if (decorLine == "")
+            decorLine = getMiscString(messageLookup);
+        mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
+    }
 }
 
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)

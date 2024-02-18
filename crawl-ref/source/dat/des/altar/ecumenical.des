@@ -323,8 +323,8 @@ MAP
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_totnotflames
-COLOUR: . = green / brown
 TAGS:   transparent
+COLOUR: . = green / brown
 FTILE:  A. = floor_grass:20 / floor_dirt
 SUBST:  A = ATUV
 : ecumenical_altar_setup(_G)
