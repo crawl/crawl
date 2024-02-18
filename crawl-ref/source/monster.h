@@ -511,11 +511,6 @@ public:
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
 
-    // Combat-related class methods
-    int     unadjusted_body_armour_penalty() const override { return 0; }
-    int     adjusted_body_armour_penalty(int) const override { return 0; }
-    int     adjusted_shield_penalty(int) const override { return 0; }
-
     bool is_player() const override { return false; }
     monster* as_monster() override { return this; }
     player* as_player() override { return nullptr; }
