@@ -1955,6 +1955,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
                 result = "Rockslime";
+            else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
+                result = "Cobgoblin"; // hm.
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
