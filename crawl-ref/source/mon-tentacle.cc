@@ -948,7 +948,7 @@ void move_child_tentacles(monster* mons)
     bool no_foe = false;
 
     vector<coord_def> foe_positions;
-    _collect_foe_positions(mons, foe_positions, 
+    _collect_foe_positions(mons, foe_positions,
                             [mons] (const actor *test) -> bool
                             {
                                 return _tentacle_in_range(mons, test);

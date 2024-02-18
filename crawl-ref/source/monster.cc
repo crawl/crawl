@@ -5703,7 +5703,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             int &hits = headmaster->props[TENTACLE_LORD_HITS].get_int();
             // Reduce damage taken by the parent when blasting many tentacles.
-            const int master_damage = damage >> 4; 
+            const int master_damage = damage >> 4;
             deferred_damage_fineff::schedule(oppressor, headmaster,
                                              master_damage, false);
             ++hits;
