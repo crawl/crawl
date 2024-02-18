@@ -128,7 +128,7 @@ namespace species
 
     bool is_elven(species_type species)
     {
-        return species == SP_DEEP_ELF || species == SP_COGLIN;
+        return species == SP_DEEP_ELF;
     }
 
     bool is_undead(species_type species)
