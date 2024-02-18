@@ -722,6 +722,7 @@ void rise_through_ceiling()
 
     mpr("With a burst of heat and light, you rocket upward!");
     untag_followers(); // XXX: is this needed?
+    stop_delay(true);
     floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
                      whither, true, true, false, false);
     you.clear_far_engulf();
