@@ -181,7 +181,13 @@ public:
     transformation default_form;
     item_def active_talisman;
 
-    FixedVector< item_def, ENDOFPACK > inv;
+    // XXX: ENDOFPACK marks the total size of the player inventory, but we add
+    //      a single extra slot after that for purposes of examining EV of
+    //      non-inventory items, since implementation-wise the player can only
+    //      ever equip items that are in this vector.
+    //
+    //      Most other places should never know this slot exists.
+    FixedVector< item_def, ENDOFPACK + 1 > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
     int obtainable_runes; // can be != 15 in Sprint
 
@@ -854,6 +860,10 @@ public:
     int unadjusted_body_armour_penalty() const;
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
+
+    // Calculates total permanent EV if the player was/wasn't wearing a given item
+    int evasion_with_specific_armour(const item_def& new_armour) const;
+    int evasion_without_specific_armour(const item_def& armour_to_remove) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,

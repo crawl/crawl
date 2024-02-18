@@ -6476,6 +6476,64 @@ int player::evasion(bool ignore_temporary, const actor* act) const
     return base_evasion - invis_penalty;
 }
 
+// What would our natural EV be if we wore a given piece of armour instead of
+// whatever might be in that slot currently (if anything)?
+int player::evasion_with_specific_armour(const item_def& new_armour) const
+{
+    // Since there are a lot of things which can affect the calculation of EV,
+    // including artifact properties on either the item we're equipped or the
+    // one we're swapping out for it, we check by very briefly 'putting on' the
+    // new item and calling the normal evasion calculation function.
+    //
+    // As we edit the item links directly, this should be invisible to the
+    // player, bypass normal equip/unequip routines, and have no side-effects.
+
+    // Save reference to whatever the player currently has equipped in this slot.
+    equipment_type slot = get_armour_slot(new_armour);
+    short old_armour = you.equip[slot];
+
+    // If the item we're comparing is already in the player's inventor, this is
+    // simple.
+    if (in_inventory(new_armour))
+        you.equip[slot] = new_armour.link;
+    // If the item is not, things are more complicated. Since player equipment
+    // is stored as an index into the player's internal inventory, any item we
+    // want to try on *must* be in our inventory. So what we do is make a *copy*
+    // of the item in a 'secret' slot past the normal end of the inventory
+    // array (which is invisible for most purposes, as ENDOFPACK is used to
+    // terminate iteration)
+    else
+    {
+        you.inv[ENDOFPACK] = new_armour;
+        you.equip[slot] = ENDOFPACK;
+    }
+
+    // Now, simply calculate evasion without temporary boosts.
+    int ret = evasion(true);
+
+    // Restore old armour and clear out any item copies, just in case.
+    you.equip[slot] = old_armour;
+    you.inv[ENDOFPACK].clear();
+
+    return ret;
+}
+
+int player::evasion_without_specific_armour(const item_def& armour_to_remove) const
+{
+    equipment_type slot = get_armour_slot(armour_to_remove);
+
+    // Verify that the armour is currently equipped
+    // (or this function will give bogus info)
+    ASSERT(you.equip[slot] == armour_to_remove.link);
+
+    // Briefly remove item, calculate EV, then put it back on
+    you.equip[slot] = -1;
+    int ret = evasion(true);
+    you.equip[slot] = armour_to_remove.link;
+
+    return ret;
+}
+
 bool player::heal(int amount)
 {
     int oldhp = hp;

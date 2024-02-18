@@ -1788,10 +1788,12 @@ static void _tag_construct_you(writer &th)
 
 static void _tag_construct_you_items(writer &th)
 {
-    // how many inventory slots?
+    // ENDOFPACK is the end of our real inventory, but there is one hidden slot
+    // after that to temporarily hold items for examining items, so it's
+    // important not to marshall the entire array.
     marshallByte(th, ENDOFPACK);
-    for (const auto &item : you.inv)
-        marshallItem(th, item);
+    for (int i = 0; i < ENDOFPACK; ++i)
+        marshallItem(th, you.inv[i]);
     marshallItem(th, you.active_talisman);
 
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
