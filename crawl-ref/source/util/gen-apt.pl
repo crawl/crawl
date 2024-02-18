@@ -127,6 +127,7 @@ sub aptitude_table
         next if $sp eq 'Mottled Draconian';
         next if $sp eq 'High Elf';
         next if $sp eq 'Sludge Elf';
+        next if $sp eq 'Hill Orc';
         next if $sp eq 'Lava Orc';
         next if $sp eq 'Centaur';
         next if $sp eq 'Halfling';
