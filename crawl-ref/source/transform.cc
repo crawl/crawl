@@ -180,7 +180,9 @@ bool Form::can_wear_item(const item_def& item) const
     if (is_unrandom_artefact(item, UNRAND_LEAR))
         return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
 
-    return slot_available(get_armour_slot(item));
+    const equipment_type slot = is_weapon(item) ? EQ_OFFHAND
+                                                : get_armour_slot(item);
+    return slot_available(slot);
 }
 
 /**
