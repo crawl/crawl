@@ -352,6 +352,16 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         {
             return mutation_activity_type::FULL;
         }
+        // XXX EVIL HACK: we want to meld coglins' exoskeletons in 'full meld'
+        // forms like serpent and dragon, but treeform keeps using weapons and
+        // should really keep allowing dual wielding. I'm so sorry about this.
+        if (you.form == transformation::tree
+            && (mut == MUT_WIELD_OFFHAND
+                || mut == MUT_SLOW_WIELD
+                || mut == MUT_WARMUP_STRIKES))
+        {
+            return mutation_activity_type::FULL;
+        }
         // Dex and HP changes are kept in all forms.
 #if TAG_MAJOR_VERSION == 34
         if (mut == MUT_ROUGH_BLACK_SCALES)
