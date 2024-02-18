@@ -633,18 +633,20 @@ void win_apostle_challenge(monster& apostle)
     else
         apostles.emplace_back(apostle_data(apostle));
 
-    mprf(MSGCH_GOD, "Beogh will allow you to induct %s into your service.",
-         apostle.name(DESC_THE, true).c_str());
-
-    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
+    string msg = make_stringf("Beogh will allow you to induct %s into your service.",
+                              apostle.name(DESC_THE, true).c_str());
 
     // Remind the player how to do this, if they don't already have an apostle
     if (companion_list.empty())
     {
-        mprf("(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
-                get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
-                command_to_string(CMD_USE_ABILITY).c_str());
+        msg += make_stringf("\n(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
+                            get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
+                            command_to_string(CMD_USE_ABILITY).c_str());
     }
+
+    mprf(MSGCH_GOD, "%s", msg.c_str());
+
+    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
 
     // Remove the rest of the apostle's band
     for (monster_iterator mi; mi; ++mi)
