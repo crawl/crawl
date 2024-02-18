@@ -1830,7 +1830,7 @@ Coglins (Co)
    back into action; and though their arms can fly in a whir of destruction,
    it takes quite a bit of swinging to rev them up to that speed.
 
-   Even so, a true Coglin would never criticize their creation. They believe
+   Even so, a true Coglin would never criticise their creation. They believe
    that spirits of steel and sandalwood come to rest within every thing that
    draws blood, slowly and carefully re-attuning their exoskeletons to those
    spirits whenever they wield or remove weapons. Never scorn the spirits!
