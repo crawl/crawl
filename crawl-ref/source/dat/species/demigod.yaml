@@ -1,8 +1,8 @@
 enum: SP_DEMIGOD
 monster: MONS_DEMIGOD
-name: "Demigod"
-short_name: "Dg"
-adjective: "Divine"
+name: Demigod
+short_name: Dg
+adjective: Divine
 difficulty: Advanced
 difficulty_priority: 80
 aptitudes:

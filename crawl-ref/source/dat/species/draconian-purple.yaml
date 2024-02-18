@@ -1,9 +1,9 @@
 enum: SP_PURPLE_DRACONIAN
 monster: MONS_PURPLE_DRACONIAN
-name: "Purple Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Purple Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN

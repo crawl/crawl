@@ -1,6 +1,6 @@
 enum: SP_BASE_DRACONIAN
 monster: MONS_DRACONIAN
-name: "Draconian"
+name: Draconian
 difficulty: Simple
 difficulty_priority: 60
 species_flags:

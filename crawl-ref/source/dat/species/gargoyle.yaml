@@ -1,7 +1,7 @@
 enum: SP_GARGOYLE
 monster: MONS_GARGOYLE
-name: "Gargoyle"
-short_name: "Gr"
+name: Gargoyle
+short_name: Gr
 difficulty: Simple
 difficulty_priority: 70
 species_flags:

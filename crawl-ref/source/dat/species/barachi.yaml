@@ -1,8 +1,8 @@
 enum: SP_BARACHI
 monster: MONS_BARACHI
-name: "Barachi"
-adjective: "Barachian"
-genus: "Frog"
+name: Barachi
+adjective: Barachian
+genus: Frog
 difficulty: Advanced
 difficulty_priority: 100
 species_flags:

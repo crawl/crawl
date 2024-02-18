@@ -1,7 +1,7 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_CENTAUR
 monster: MONS_CENTAUR
-name: "Centaur"
+name: Centaur
 difficulty: False
 species_flags:
   - SPF_SMALL_TORSO
