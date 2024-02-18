@@ -6217,11 +6217,9 @@ vector<const item_def *> player::get_armour_items() const
 
     for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
-        if (!slot_item(static_cast<equipment_type>(eq)))
-            continue;
-
-        armour_items.push_back(&inv[equip[eq]]);
-
+        item_def *it = slot_item(static_cast<equipment_type>(eq));
+        if (it && it->base_type == OBJ_ARMOUR)
+            armour_items.push_back(it);
     }
 
     return armour_items;
