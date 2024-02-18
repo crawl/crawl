@@ -8,7 +8,7 @@ attacks:
  - {type: tentacle_slap, damage: 22}
  - {type: tentacle_slap, damage: 17}
  - {type: tentacle_slap, damage: 13}
- - {type: constrict, flavour: crush, damage: 8}
+ - {type: constrict, flavour: crush, damage: 6}
 hd: 23
 hp_10x: 1265
 ac: 5
