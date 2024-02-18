@@ -1298,7 +1298,7 @@ static void _unmeld_equipment_type(equipment_type e)
             force_remove = true;
         }
     }
-    else if (item.base_type != OBJ_JEWELLERY)
+    else if (item.base_type == OBJ_ARMOUR)
     {
         // This could happen if the player was mutated during the form.
         if (!can_wear_armour(item, false, true))
@@ -1309,7 +1309,6 @@ static void _unmeld_equipment_type(equipment_type e)
         // (This is only possible with Statue Form.)
         if (e == EQ_OFFHAND
             && you.weapon()
-            && !is_weapon(item)
             && is_shield_incompatible(*you.weapon(), &item))
         {
             force_remove = true;
