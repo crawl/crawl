@@ -5,8 +5,8 @@ genus: tentacled_starspawn
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: constrict, flavour: crush, damage: 3}
-hd: 11
+ - {type: constrict, flavour: crush, damage: 4}
+hd: 21
 hp_10x: 220
 ac: 8
 ev: 2
