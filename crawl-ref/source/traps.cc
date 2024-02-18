@@ -532,7 +532,8 @@ void trap_def::trigger(actor& triggerer)
         if (!you_trigger && you.see_cell_no_trans(pos))
         {
             you.blink();
-            interrupt_activity(activity_interrupt::teleport);
+            if (!you.no_tele(true))
+                interrupt_activity(activity_interrupt::teleport);
         }
         // Don't chain disperse
         triggerer.blink();
