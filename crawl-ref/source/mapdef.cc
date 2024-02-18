@@ -5322,6 +5322,54 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     else
         result.props[PLUS_KEY].get_int() = plus;
 
+    string artprops = strip_tag_prefix(s, "artprops:");
+    if (!artprops.empty())
+    {
+        auto &fixed_artp = result.props[FIXED_PROPS_KEY].get_table();
+        vector<string> prop_list = split_string("&", artprops);
+        for (auto prop_def : prop_list)
+        {
+            vector<string> prop_parts = split_string(":", prop_def, true,
+                    false, 1);
+
+            const auto prop = artp_type_from_name(prop_parts[0]);
+            if (prop == ARTP_NUM_PROPERTIES)
+            {
+                error = make_stringf("Unknown artefact property: %s",
+                        prop_parts[0].c_str());
+                return false;
+            }
+
+            int val = 1;
+            if (prop_parts.size() == 2 && !parse_int(prop_parts[1].c_str(), val))
+            {
+                error = make_stringf("Bad artefact property value: %s",
+                        prop_parts[1].c_str());
+                return false;
+            }
+
+            if (prop == ARTP_BRAND)
+            {
+                error = make_stringf("Item brand can only be set with the "
+                        "'ego:' tag.");
+                return false;
+            }
+
+            const string prop_name = artp_name(prop);
+            if (!artp_value_is_valid(prop, val))
+            {
+                error = make_stringf("Bad value for artefact property %s: %d",
+                        prop_name.c_str(), val);
+                return false;
+            }
+
+            fixed_artp[prop_name] = val;
+        }
+
+        // Setting fixed properties always make the item randart.
+        result.level = ISPEC_RANDART;
+    }
+
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
     if (strip_tag(s, "allow_uniq"))

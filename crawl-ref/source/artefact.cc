@@ -688,7 +688,7 @@ struct artefact_prop_data
     /// The name of the prop, as displayed on item annotations, etc.
     const char *name;
     /// The types of values this prop can have (e.g. bool, positive int, int)
-    artp_value_type value_types;
+    artefact_value_type value_types;
     /// Weight in randart selection (higher = more common)
     int weight;
     /// Randomly generate a 'good' value; null if this prop is never good
@@ -881,19 +881,43 @@ bool artp_potentially_bad(artefact_prop_type prop)
 }
 
 /**
- * What type of values can this prop have?
- *
- * Positive, boolean (0 or 1), or any (integer).
+ * What type of value does this prop have?
  *
  * There should be a better way of expressing this...
  *
  * @param prop      The prop type in question.
- * @return          Possible value types for the prop.
+ * @return          An artefact_value_type describing that values the prop
+ *                  accepts.
  */
-artp_value_type artp_potential_value_types(artefact_prop_type prop)
+artefact_value_type artp_value_type(artefact_prop_type prop)
 {
     ASSERT_RANGE(prop, 0, ARRAYSZ(artp_data));
     return artp_data[prop].value_types;
+}
+
+/**
+ * Is the given value for the given prop in the range allowed for the prop
+ * across all item types? For the brand prop/value type, we can't check validity without
+ *
+ * @param prop      The prop type in question.
+ * @param value     The value in question.
+ * @return          True is the value is in the valid range for the prop, false
+ *                  otherwise.
+ */
+bool artp_value_is_valid(artefact_prop_type prop, int value)
+{
+    switch (artp_value_type(prop))
+    {
+    case ARTP_VAL_BOOL:
+        return value == 0 || value == 1;
+    case ARTP_VAL_POS:
+    case ARTP_VAL_BRAND:
+        return value >= 0;
+    case ARTP_VAL_ANY:
+        return true;
+    default:
+        die("Buggy artefact_value_type");
+    }
 }
 
 /**
@@ -906,6 +930,27 @@ const char *artp_name(artefact_prop_type prop)
 {
     ASSERT_RANGE(prop, 0, ARRAYSZ(artp_data));
     return artp_data[prop].name;
+}
+
+/**
+ * Return the property type for a given artefact property name.
+ *
+ * @param name      The name of the artp.
+ * @return          The type of artp. The value ARTP_NUM_PROPERTIES is returned
+ *                  if there is no match.
+ */
+artefact_prop_type artp_type_from_name(const string &name)
+{
+    const auto prop_name = lowercase_string(name);
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        const auto prop = static_cast<artefact_prop_type>(i);
+        const string pname = artp_name(prop);
+        if (lowercase_string(pname) == prop_name)
+            return prop;
+    }
+
+    return ARTP_NUM_PROPERTIES;
 }
 
 /**
@@ -952,29 +997,57 @@ static void _add_good_randart_prop(artefact_prop_type prop,
                         be given.
  */
 static void _get_randart_properties(const item_def &item,
-                                    artefact_properties_t &item_props,
-                                    int quality = 0,
-                                    const int max_bad_props = 2)
+                                    artefact_properties_t &item_props)
 {
     const object_class_type item_class = item.base_type;
 
-    // If we didn't receive a quality level, figure out how good we want the
-    // artefact to be. The default calculation range is 1 to 7.
-    if (quality < 1)
-        quality = max(1, binomial(7, 30));
+    // For any fixed properties, initialize our item with their values and
+    // count how many good and bad properties we've fixed.
+    CrawlHashTable const *fixed_props = nullptr;
+    int fixed_bad = 0, fixed_good = 0;
+    if (item.props.exists(FIXED_PROPS_KEY))
+    {
+        fixed_props = &item.props[FIXED_PROPS_KEY].get_table();
+        for (auto const &kv : *fixed_props)
+        {
+            const auto prop = artp_type_from_name(kv.first);
+            const auto &prop_val = kv.second.get_int();
 
-    // then consider adding bad properties. the better the artefact, the more
-    // likely we add a bad property, up to a max of 2.
-    int bad = min(binomial(1 + div_rand_round(quality, 5), 30), max_bad_props);
-    // we start by assuming we'll allow one good property per quality level
-    // and an additional one for each bad property.
-    int good = quality + bad;
-    // but we want avoid generating more then 4-ish properties properties or
-    // things get spammy. Extra "good" properties will be used to enhance
-    // properties only, not to add more distinct properties. There is still a
-    // small chance of >4 properties.
+            if (!_artp_can_go_on_item(prop, item, item_props))
+                continue;
+
+            const bool ever_good = artp_potentially_good(prop);
+            if (ever_good && prop_val > 0)
+                fixed_good += 1;
+            else if (artp_potentially_bad(prop)
+                    && (ever_good && prop_val < 0
+                        || !ever_good && prop_val > 0))
+                fixed_bad += 1;
+
+            item_props[prop] = prop_val;
+        }
+    }
+
+    const int quality = max(1, binomial(7, 30));
+
+    // We then consider adding bad properties. The better the artefact, the
+    // more likely we add a bad property, up to a max of 2. We start by
+    // assuming we'll allow one good property per quality level and an
+    // additional one for each bad property.
+    int bad = 0;
+    if (fixed_bad < 2)
+        bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2 - fixed_bad);
+
+    int good = max(quality + fixed_bad + bad - fixed_good, 0);
+
+    // We want avoid generating more then 4-ish properties properties or things
+    // get spammy. Extra "good" properties will be used to enhance properties
+    // only, not to add more distinct properties. There's still a small chance
+    // of >4 properties.
     int max_properties = 4 + one_chance_in(20);
+    // sequence point
     max_properties += one_chance_in(40);
+
     int enhance = 0;
     if (good + bad > max_properties)
     {
@@ -982,16 +1055,18 @@ static void _get_randart_properties(const item_def &item,
         good = max_properties - bad;
     }
 
-    // initialize a vector of weighted artefact properties to pick from
+    // Initialize a vector of weighted artefact properties. Don't add any
+    // properties that are already fixed.
     vector<pair<artefact_prop_type, int>> art_prop_weights;
     for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        art_prop_weights.emplace_back(static_cast<artefact_prop_type>(i),
-                                      artp_data[i].weight);
+        const artefact_prop_type prop = static_cast<artefact_prop_type>(i);
+        const string prop_name = artp_name(prop);
+        if (!fixed_props || !fixed_props->exists(prop_name))
+            art_prop_weights.emplace_back(prop, artp_data[i].weight);
     }
-    item_props.init(0);
 
-    // make sure all weapons have a brand
+    // Make sure all weapons have a brand.
     if (item_class == OBJ_WEAPONS)
         _add_randart_weapon_brand(item, item_props);
     else if (item_class == OBJ_ARMOUR
@@ -1002,9 +1077,9 @@ static void _get_randart_properties(const item_def &item,
             choose_armour_ego(static_cast<armour_type>(item.sub_type));
     }
 
-    // randomly pick properties from the list, choose an appropriate value,
-    // then subtract them from the good/bad/enhance count as needed
-    // the 'enhance' count is not guaranteed to be used.
+    // Randomly pick properties from the list, choose an appropriate value,
+    // then subtract them from the good/bad/enhance count as needed the
+    // 'enhance' count is not guaranteed to be used.
     while (good > 0 || bad > 0)
     {
         const artefact_prop_type *prop_ptr
@@ -1016,16 +1091,16 @@ static void _get_randart_properties(const item_def &item,
         if (!_artp_can_go_on_item(prop, item, item_props))
             continue;
 
-        // should we try to generate a good or bad version of the prop?
+        // Should we try to generate a good or bad version of the prop?
         const bool can_gen_good = good > 0 && artp_potentially_good(prop);
         const bool can_gen_bad = bad > 0 && artp_potentially_bad(prop);
         const bool gen_good = can_gen_good && (!can_gen_bad || coinflip());
 
         if (gen_good)
         {
-            // potentially increment the value of the property more than once,
-            // using up a good property each time.
-            // always do so if there's any 'enhance' left, if possible.
+            // Potentially increment the value of the property more than once,
+            // using up a good property each time. Always do so if there's any
+            // 'enhance' left, if possible.
             for (int chance_denom = 1;
                  item_props[prop] <= artp_data[prop].max_dup
                     && (enhance > 0
@@ -1047,7 +1122,7 @@ static void _get_randart_properties(const item_def &item,
         else
             continue;
 
-        // don't choose the same prop twice
+        // Don't choose the same prop twice.
         const auto weight_tuple = make_pair(prop, artp_data[prop].weight);
         const auto old_end = art_prop_weights.end();
         const auto new_end = std::remove(art_prop_weights.begin(), old_end,

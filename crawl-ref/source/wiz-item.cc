@@ -320,7 +320,7 @@ static void _tweak_randart(item_def &item)
     }
 
     const artefact_prop_type prop = (artefact_prop_type)choice_to_prop[choice];
-    switch (artp_potential_value_types(prop))
+    switch (artp_value_type(prop))
     {
     case ARTP_VAL_BOOL:
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
