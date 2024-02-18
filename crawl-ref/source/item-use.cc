@@ -4501,7 +4501,7 @@ void tile_item_use_secondary(int idx)
         const item_def *offhand = you.offhand_weapon();
         if (offhand && offhand == &item)
             unwield_weapon(item); // undocumented convenience
-        else
+        else if (you.weapon() != &item)
             _do_wield_weapon(item, you.offhand_weapon(), false);
         return;
     }
