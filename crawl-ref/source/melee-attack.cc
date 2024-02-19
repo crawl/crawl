@@ -4111,6 +4111,9 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         }
     }
 
+    // Don't lose blood this turn
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+
     return true;
 }
 
