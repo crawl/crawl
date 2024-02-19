@@ -3297,7 +3297,7 @@ void foul_flame_monster(monster *mons)
     if (!mons || mons->res_foul_flame() >= 3)
         return;
 
-    const int mult = you.get_mutation_level(MUT_FOUL_GLOW);
+    const int mult = you.get_mutation_level(MUT_FOUL_SHADOW);
     const int pow = 100;
 
     const int raw_damage = foul_flame_damage(pow, true).roll() * mult;

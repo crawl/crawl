@@ -595,11 +595,8 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_EOS)
-        || player_equip_unrand(UNRAND_BRILLIANCE))
-    {
+    if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
-    }
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
@@ -639,11 +636,8 @@ int monster::halo_radius() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && (is_unrandom_artefact(*weap, UNRAND_EOS)
-                 || is_unrandom_artefact(*weap, UNRAND_BRILLIANCE)))
-    {
+    if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
-    }
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = 3;
@@ -772,14 +766,24 @@ int player::umbra_radius() const
             size = 2;
     }
 
-    if (player_equip_unrand(UNRAND_SHADOWS))
+    if (you.has_mutation(MUT_FOUL_SHADOW))
+        size = max(size, you.get_mutation_level(MUT_FOUL_SHADOW));
+
+    if ((player_equip_unrand(UNRAND_BRILLIANCE))
+         || player_equip_unrand(UNRAND_SHADOWS))
+    {
         size = max(size, 3);
+    }
 
     return size;
 }
 
 int monster::umbra_radius() const
 {
+    item_def* wpn = mslot_item(MSLOT_WEAPON);
+    if (wpn && is_unrandom_artefact(*wpn, UNRAND_BRILLIANCE))
+        return 3;
+
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         return 3;
