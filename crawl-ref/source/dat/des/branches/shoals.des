@@ -2987,11 +2987,13 @@ MONS:    w:15 merfolk impaler ; trident ego:flaming good_item |\
 MONS:    cherub
 KMONS:   H = angel / daeva w:3
 KMONS:   P = plant
+KMONS:   s = sacred lotus
 KITEM:   H = barnacled rune of Zot
 KITEM:   h = azure gem
 KFEAT:   D = altar_zin
 KFEAT:   E = altar_elyvilon
 KFEAT:   F = altar_the_shining_one
+KFEAT:   s = w
 SHUFFLE: Hh / Ii / Jj, DEF
 SUBST:   IJ = |, ij = .
 NSUBST:  < = 1:( / 1:[ / 1:{ / *: <''
@@ -3028,7 +3030,7 @@ wwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwww
 wwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwww
 wwwwwwwwwwwww---_'''''''''''''''''''''''_----wwwwwwwwwwww
 wwwwwwwwwwwwww--__'''''''''''''''''''''__--wwwwwwwwwwwwww
-wwwwwwwwwwwwwww--___'''''''~~~''''''___--wwwwwwwwwwwwwwww
+wwwwwwwwwwwwsww--___'''''''~~~''''''___--wwwswwwwwwwwwwww
 wwwwwwwwwwwwwwwww--___'cc''~<~''cc'__--wwwwwwwwwwwwwwwwww
 wwwwwwwwwwww-wwwwww--___cc'~~~'cc__--wwwwww---wwwwwwwwwww
 wwwwwwwwwww----wwwwww--__ccccccc_--wwwwww-----wwwwwwwwwww
@@ -3055,7 +3057,7 @@ wwwwwwww-c3.000.3c_______-www-_________c3.000.3c-wwwwwwww
 wwwwwwww-cc|3i3|cc___-----www-------___cc|3j3|cc-wwwwwwww
 wwwwwwwww-cccIccc---------www-----------cccJccc-wwwwwwwww
 wwwwwwwwww--ccc----------www--------------ccc--wwwwwwwwww
-wwwwwwwwwww--------------www------------------wwwwwwwwwww
+wwwwwwwwwww--------------wsw------------------wwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -3079,6 +3081,8 @@ SUBVAULT: E : storm_palace_corner
 SUBVAULT: F : storm_palace_corner
 SUBVAULT: H : storm_palace_corner
 SUBVAULT: J : storm_palace_corner
+TILE:     G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
+              dngn_statue_dragon / dngn_statue_maw
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccc
@@ -3207,6 +3211,8 @@ KITEM:  O = barnacled rune of Zot
 KITEM:  R = |, azure gem
 NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
 SUBST:  p : W., q: W., . = W..., c = cc.
+TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
+            dngn_statue_dragon / dngn_statue_maw
 MAP
 c....................c
 1.cccccccccccccccccc.1
@@ -3235,6 +3241,7 @@ ENDMAP
 NAME:   storm_palace_corner_pillars
 TAGS:   storm_palace_corner allow_dup no_pool_fixup
 SUBST:  ; = AGG..., W : wWW
+TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_maw / dngn_statue_dragon
 MAP
 ...........
 .WWWW;WWWW.
@@ -3270,6 +3277,8 @@ ENDMAP
 NAME:   storm_palace_corner_grid
 TAGS:   storm_palace_corner allow_dup
 SUBST:  . = WW., c = cc., c : ccbG
+TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
+            dngn_statue_dragon / dngn_statue_maw
 MAP
 ...........
 .c.c.c.c.c.
@@ -3286,14 +3295,18 @@ ENDMAP
 
 NAME:   storm_palace_corner_altar
 TAGS:   storm_palace_corner allow_dup no_pool_fixup
+KMONS:  S = sacred lotus
 KFEAT:  _ = altar_qazlal / altar_fedhas w:5
-SUBST:  _ = __C, t : ttG
+KFEAT:  S = W
+SUBST:  _ = __C, t : ttG, S : SW
+TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
+            dngn_statue_dragon / dngn_statue_maw
 MAP
 cccccccW...
 cccccccW...
-ccccWWWW...
+ccccSWWW...
 ccccW......
-ccWWW......
+ccSWW......
 ccW.. ..t..
 ccW........
 WWW....WWW.
@@ -3305,6 +3318,8 @@ ENDMAP
 NAME:   storm_palace_corner_narrow
 TAGS:   storm_palace_corner allow_dup no_pool_fixup
 SUBST:  . = W.., ; : wWW., + : ++.
+TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
+            dngn_statue_dragon / dngn_statue_maw
 MAP
 G.........+
 .W........+
@@ -3319,11 +3334,13 @@ G.........+
 ++cccccccc
 ENDMAP
 
-#don't allow_dup this one to avoid disconnects
+# don't allow_dup this one to avoid disconnects
 NAME:   storm_palace_corner_blocked
 TAGS:   storm_palace_corner no_pool_fixup
 KMONS:  P = plant
 SUBST:  . = P......., G = GG., W : wW
+TILE:   G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
+            dngn_statue_dragon / dngn_statue_maw
 MAP
 WWWW.......
 WWW........

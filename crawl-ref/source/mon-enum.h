@@ -148,6 +148,7 @@ enum attack_flavour
     AF_MINIPARA,
     AF_FLANK,
     AF_DRAG,
+    AF_FOUL_FLAME,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

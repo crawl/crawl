@@ -420,10 +420,6 @@ Remove Curse ability
 
 현재 입고있는 장비에 걸린 모든 저주를 해제한다.
 %%%%
-Make burning bush ability
-
-해당 지역에 투명한 적들을 볼 수 있으며 불을 뿜는, 화염의 식물을 심는다.
-%%%%
 Make altar ability
 
 당신이 서있는 곳에, 선택한 신의 제단을 만든다.

@@ -763,14 +763,9 @@ void make_derived_undead_fineff::fire()
     if (!mg.mname.empty())
         name_zombie(*undead, mg.base_type, mg.mname);
 
-    if (mg.god != GOD_YREDELEMNUL)
+    if (mg.god != GOD_YREDELEMNUL && undead->type != MONS_ZOMBIE)
     {
-        int dur = undead->type == MONS_SKELETON ? 3 : 5;
-
-        // Sculpt Simulacrum has a shorter duration than Bind Soul simulacra
-        if (spell == SPELL_SIMULACRUM)
-            dur = 3;
-
+        int dur = (undead->type == MONS_SKELETON || spell == SPELL_SIMULACRUM) ? 3 : 5;
         undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
     }
     if (!agent.empty())
@@ -902,11 +897,7 @@ void spectral_weapon_fineff::fire()
         if (one_chance_in(seen_valid))
             chosen_pos = *ai;
     }
-    if (!seen_valid)
-        return;
-
-    const item_def *weapon = atkr->weapon();
-    if (!weapon)
+    if (!seen_valid || !weapon || !weapon->defined())
         return;
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,
@@ -955,9 +946,16 @@ void jinxbite_fineff::fire()
         attempt_jinxbite_hit(*defend);
 }
 
+bool beogh_resurrection_fineff::mergeable(const final_effect &fe) const
+{
+    const beogh_resurrection_fineff *o =
+        dynamic_cast<const beogh_resurrection_fineff *>(&fe);
+    return o && ostracism_only == o->ostracism_only;
+}
+
 void beogh_resurrection_fineff::fire()
 {
-    beogh_resurrect_followers();
+    beogh_resurrect_followers(ostracism_only);
 }
 
 void dismiss_divine_allies_fineff::fire()

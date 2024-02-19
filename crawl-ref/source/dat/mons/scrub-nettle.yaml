@@ -1,0 +1,17 @@
+name: "scrub nettle"
+glyph: {char: "P", colour: lightred}
+flags: [see_invis, stationary]
+resists: {poison: 1}
+species: bush
+genus: plant
+holiness: [plant]
+will: 40
+attacks:
+hd: 3
+hp_10x: 280
+ac: 8
+ev: 0
+spells: scrub_nettle
+intelligence: brainless
+size: medium
+shape: plant

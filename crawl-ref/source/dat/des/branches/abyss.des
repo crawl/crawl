@@ -722,21 +722,21 @@ ENDMAP
 NAME:    hangedman_illusive_loot
 TAGS:    patrolling
 WEIGHT:  5
-MONS:    rakshasa, guardian serpent / great orb of eyes
-ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
-         any blast wand / any beam wand / wand of paralysis / \
-         ring mail good_item / chain mail good_item w:12 / kite shield / \
-         spear good_item / trident good_item / any weapon w:12 / any w:2
+MONS:    rakshasa ; whip good_item | trident good_item | long sword good_item . \
+                    ring mail good_item | kite shield good_item . \
+                    javelin | boomerang | throwing net
+MONS:    guardian serpent / great orb of eyes
+ITEM:    d = potion of curing ident:all / potion of degeneration ident:all
 SUBST:   x = ccccvbb
 MAP
      .x.x
    x.xxx.x
   x.xx1xx.x
  x. x.. x .x
- .xxx.ddxxx.
-.xx..dddd xx.
-xx1.ddd...1xx
-.xx dd..x.xx.
+ .xxx.d$xxx.
+.xx..$$$d xx.
+xx1.d$$...1xx
+.xx $$..x.xx.
 x.xxxd.x+xx..
  x. x ..x2. x
   x.xx1xx.x.

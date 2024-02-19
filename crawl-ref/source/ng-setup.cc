@@ -159,6 +159,9 @@ item_def* newgame_make_item(object_class_type base,
         return nullptr;
     }
 
+    // Make sure branded and/or enchanted items appear as such.
+    item_set_appearance(item);
+
     if ((item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
         || item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, false))
         && you.equip[get_item_slot(item)] == -1)
@@ -170,6 +173,8 @@ item_def* newgame_make_item(object_class_type base,
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
 
     origin_set_startequip(item);
+    if (item.base_type == OBJ_WEAPONS && you.species == SP_COGLIN)
+        name_weapon(item);
 
     return &item;
 }

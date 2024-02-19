@@ -672,6 +672,14 @@ bool feat_is_fountain(dungeon_feature_type feat)
            || feat == DNGN_DRY_FOUNTAIN;
 }
 
+/** Is this feature a pile of food?
+ */
+bool feat_is_food(dungeon_feature_type feat)
+{
+    return feat == DNGN_CACHE_OF_FRUIT
+           || feat == DNGN_CACHE_OF_MEAT;
+}
+
 /** Is this feature non-solid enough that you can reach past it?
  */
 bool feat_is_reachable_past(dungeon_feature_type feat)

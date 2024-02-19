@@ -2160,19 +2160,28 @@ ccccccccccccccccccccC
 ENDMAP
 
 NAME:  lightli_orcish_oven
-DEPTH: D:6-11, Orc
-MONS:  orc warrior, orc
-:dgn.delayed_decay(_G, '1', 'rat corpse')
+TAGS:  vaults_room vaults_orient_s
+DEPTH: D:6-11, Orc, Vaults
+MONS:  orc warrior, orc, orc warlord, orc knight w:14 / lindwurm w:1
+KITEM: d = stone q:1 no_pickup
+KFEAT: e = cache of meat
+: if you.in_branch("Vaults") then
+SUBST: 1 = 3, 2 = 4, @ = ., d = e, f = g
+: else
+SUBST: d = ddeee
+: end
+: dgn.delayed_decay(_G, 'f', 'rat corpse')
+: dgn.delayed_decay(_G, 'g', 'hog corpse / lindwurm corpse')
 MAP
 xxxxxxxxxx
-xvvv....xx
+xvvvffffxx
 xvl+.222.x
 xvvv.212.x
 xxxx...xxx
 xxx.x..xxx
 xxx+xx..xx
-xdd.xx..xx
-xddxx..xxx
+x$$.xx..xx
+xd$xx..xxx
 xxxx.@xxxx
 ENDMAP
 
@@ -2249,23 +2258,24 @@ xlllxlllx1lll%x
 xxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: sigmund_edmund_badplayer
-TAGS: no_item_gen no_monster_gen no_pool_fixup no_trap_gen transparent
-DEPTH: D:4-7
-KITEM: ( = flail / any armour
-KITEM: s = halberd itemname:scythe tile:wpn_scythe wtile:scythe / robe
-KMONS: S = Sigmund
-KMONS: E = Edmund
-MONS: plant w:25 / bush w:25 / nothing w:50
-NSUBST: S = 1:S / *:.
-NSUBST: E = 1:E / *:.
-SHUFFLE: S / E
+NAME:    sigmund_edmund_badplayer
+TAGS:    no_item_gen no_monster_gen no_pool_fixup no_trap_gen transparent
+DEPTH:   D:4-7
+MONS:    plant / bush
+KMONS:   S = Sigmund
+KMONS:   E = Edmund
+KITEM:   ( = flail / any armour
+KITEM:   s = halberd itemname:scythe tile:wpn_scythe wtile:scythe / robe
+KFEAT:   F = cache of meat / cache of fruit
+SHUFFLE: SE, 1' / 'F
+NSUBST:  S = 1:S / *:., E = 1:E / *:., 1 = 1:1 / * = 1.
+SUBST:   ' = .
 veto {{ return you.uniques("Edmund") or you.uniques("Sigmund") }}
 MAP
 ....................
 .xxxxxxxxxxxxxxxx...
-.xEEEExWS....x..x11.
-.x....xWE.......x11.
+.xEEEExWS....x.'x11.
+.x...'xWE.......x11.
 .x..xxxxxx.xxx..x11.
 .x.........xsxx.xxx.
 .xx...........xSSSx.
@@ -2501,14 +2511,15 @@ NAME:   hangedman_fish_farm
 TAGS:   no_monster_gen no_pool_fixup patrolling
 DEPTH:  D:9-14
 KMONS:  A = merfolk ; spear
-KFEAT:  g = shallow_water
 ITEM:   throwing net / spear
-:       dgn.delayed_decay(_G, 'g', 'electric eel corpse')
+KFEAT:  % = cache of meat
+KFEAT:  e = shallow_water
+:       dgn.delayed_decay(_G, 'e', 'electric eel corpse')
 MAP
 xxxxxx
-x..ddx
+x.dd%x
 +...Ax
-xWWWgx
+xWWeex
 xxxxxx
 ENDMAP
 
@@ -2528,6 +2539,7 @@ DEPTH:  D:7-14
   end
 }}
 ITEM:   throwing net
+KFEAT:  % = cache of meat
 KITEM:  g = orc skeleton / human skeleton / elf skeleton / dwarf skeleton
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
@@ -2535,8 +2547,8 @@ MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
 MAP
  xxxxx
 xxxxxxx
-xx..gxx
-xx1Ogxx
+xx.1gxx
+xx%Ogxx
 xxd..xx
  xxx.xx
  xx.xx
@@ -2549,14 +2561,16 @@ ENDMAP
 NAME:     blue_anna_alchemist
 TAGS:     extra
 DEPTH:    D:5-11
-MONS:     kobold brigand ; wand of flame ident:type . short sword \
-              . dart ego:poisoned | dart ego:curare w:5
+MONS:     kobold brigand ; wand of flame ident:type . short sword . \
+                           dart ego:poisoned | dart ego:curare w:5
 ITEM:     potion of degeneration w:50 ident:all / potion of ambrosia ident:all
+KFEAT:    e = cache of fruit
+SUBST:    e : e.
 MAP
     c++c
 ccccc..ccccc
 cddc....cddc
-cd.+.1..+.dc
+cde+.1..+edc
 cccc....cccc
 cccccccccccc
 ENDMAP
@@ -3178,14 +3192,16 @@ ENDMAP
 
 
 NAME:    hallowed_hall
-TAGS:    no_monster_gen no_trap_gen
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup
 DEPTH:   Depths
 MONS:    pearl dragon, apis, ophan, plant
+KMONS:   S = sacred lotus
 ITEM:    potion of curing ident:type / potion of heal wounds ident:type
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
 KFEAT:   C = altar_zin
 KFEAT:   g = metal_statue
+KFEAT:   S = w
 SHUFFLE: ABC
 COLOUR:  c = white
 TILE:    c = wall_church
@@ -3204,10 +3220,10 @@ xcA.1.Ccx
 xcd...dcx4''
 xcg...Gcx'''''
 xccc+cccx4''''''
-xct...tcx''''''''
+xct...Scx''''''''
 xc..2..cx'''''''''xx
 xc..2..+'''33'''''cx
-xct....c'''''''''4cx
+xcS....c'''''''''4cx
 xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -4180,13 +4196,14 @@ TAGS:    no_monster_gen
 DEPTH:   Elf
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
+KFEAT:   C = cache of fruit
 ITEM:    randbook title:Forbidden_Fruit owner:the_Tempter \
          numspells:2 spells:summon_mana_viper&discord
 NSUBST:  1 = 2:1 / *:.
-NSUBST:  d = 1:d / *:.
+NSUBST:  d = 1:d / 1:C. /  *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
-FTILE:   12p.dt@ = floor_lair
+FTILE:   12p.dCt@ = floor_lair
 MAP
        xxx
   xxx xxpxx
@@ -7967,6 +7984,43 @@ ttttttttttttttttttttt
 ttttttttttttttttttttt
 ENDMAP
 
+NAME:    minmay_guarded_unrand_brilliance
+DEPTH:   D:13-, Depths
+MONS:    profane servitor
+SUBST:   1 = 1.
+: if you.unrands("brilliance") then
+ITEM:    eveningstar randart ego:draining ident:type no_pickup / \
+         eveningstar randart ego:pain ident:type no_pickup / \
+         eveningstar randart ego:vampirism ident:type no_pickup
+: else
+ITEM:    brilliance no_pickup
+: end
+MAP
+         ...
+         .c.
+         .n.
+  ...    .c.    ...
+  .c... ..n.. ...c.
+  ..cn...ncn...nc..
+   .ncnc.cdc.cncn.
+   ..n*ncn.ncn*n..
+    .cn.nc.cn.nc.
+   ...cn1n1n1nc...
+....ncncn...ncncn....
+.ncnc*..1...1..*cncn.
+....ncncn...ncncn....
+   ...cn1n1n1nc...
+    .cn.nc.cn.nc.
+   ..n*ncn.ncn*n..
+  ..ncnc.c.c.cncn..
+  .ncn...n=n...ncn.
+ ..cn.. ..... ..nc..
+ .c...   .c.   ...c.
+ ...     .n.     ...
+         .c.
+         ...
+ENDMAP
+
 NAME:    minmay_guarded_unrand_prune
 TAGS:    transparent no_monster_gen
 DEPTH:   D:12-
@@ -10114,11 +10168,12 @@ MONS:   human ; animal skin . hand axe
   end
 }}
 KFEAT:  K = iron_grate
+KFEAT:  F = cache of meat
 KFEAT:  - = open_door
 MAP
 .xxxxxxx
-@+...edx
-.x...1dx
+@+...$$x
+.x...1Fx
  xKK-KKx
  x2...2x
  x.2.2.x
@@ -10141,7 +10196,8 @@ KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
 KITEM:   b = gold / nothing w:12
-KFEAT:   1Yab = shallow_water
+KFEAT:   1 = cache of fruit / cache of meat
+KFEAT:   Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
                  pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
@@ -10168,16 +10224,15 @@ KMONS:    A = three-headed hydra / w:5 two-headed hydra
 KMONS:    B = dream sheep
 KMONS:    C = yak
 KMONS:    D = kobold brigand
-KMONS:    E = kobold brigand ; nothing
+KMONS:    E = kobold brigand ; falchion ego:flaming | hand axe ego:flaming
 KMONS:    F = plant
-KITEM:    E = falchion ego:flaming ident:type / \
-              hand axe ego:flaming ident:type
-KITEM:    I = halberd
+KITEM:    E = halberd
+KFEAT:    H = cache of meat
 KFEAT:    EF = shallow_water
 MAP
 cccccccccc
 cAH+.....c
-cIDcD..BBc
+cHDcD..BBc
 c+ccm+++cc
 x.WF.....x
 xFWW.t.t.x

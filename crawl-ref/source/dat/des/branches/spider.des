@@ -661,7 +661,6 @@ ENDMAP
 # basket of spiders trap.
 NAME:   spiders_nest_spider_trap
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-NSUBST: * = 1:z / *:*
 KMONS:  M = fungus
 {{
  local tm = TriggerableFunction:new{func="callback.spider_nest_trap"}
@@ -671,7 +670,7 @@ KMONS:  M = fungus
  lua_marker('z', tm)
  lua_marker('Z', wm)
 }}
-SUBST:  W = Ww , z : * , * = %%$*..M
+SUBST:  W = Ww , * = %%$*..M
 MONS:   wolf spider / redback w:15 / tarantella w:2 / nothing w:5
 MAP
   xxxxx    xxxx
@@ -686,8 +685,8 @@ xxW.xxxW..xxxxW.xx
     xxx.Wxxx.Wxxx
   xxxxW.xxxxx.W1xx
    xx1..x***xx.Wxx
- xxxx.Wxx****xx.xx
-.....xxx******Z.xx
+ xxxx.Wxx***zxx.xx
+.....xxx****zMZ.xx
 ..xxxx xxxxxxxxxx
 @..xx   xxxxxxxx
 ENDMAP

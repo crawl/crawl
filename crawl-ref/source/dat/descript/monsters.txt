@@ -238,9 +238,10 @@ test its edge.
 %%%%
 Ijyb
 
-A small and shrewd goblin inventor, wearing blue rags coated in soot. She claims
-dominion over this level of the dungeon; trespassers will find themselves on the
-business end of a homemade wand.
+A small and shrewd goblin inventor, cast out from her Coglin kin after
+accidentally exploding her own exoskeleton and half of the surrounding mountain.
+She claims dominion over this level of the dungeon; trespassers will find
+themselves on the business end of a homemade wand.
 %%%%
 Ilsuiw
 
@@ -846,11 +847,6 @@ burial acolyte
 
 A masked priest in the service of Kikubaaqudgha, well-versed in choral rituals
 to both rouse the dead and send them to eternal rest.
-%%%%
-burning bush
-
-A mass of blackened twigs wreathed in orange flames, with scorch marks scarring
-its surroundings.
 %%%%
 bush
 
@@ -2311,6 +2307,12 @@ rust devil
 A hideous humanoid figure with rust-spotted metal skin, spreading corrosion
 and decay to all it touches.
 %%%%
+sacred lotus
+
+A large and vivid bloom drifting placidly upon the surface of the water. The
+cradle of the lotus's petals shine with eternity and elegance- while it is
+entirely harmless, it would take immense effort to destroy it.
+%%%%
 salamander
 
 A red, flaming half-human half-snake creature with a legendary affinity for
@@ -2343,6 +2345,11 @@ scorpion
 A loathsome arachnid, armed to the teeth. Its body is covered in a thick
 carapace, its tail is tipped by a venomous sting, and its forelimbs are
 equipped with a pair of sharp grasping claws.
+%%%%
+scrub nettle
+
+An irritable, bristling shrub. It fends off anything that might graze upon it by
+launching some of its innumerable toxic stinging hairs.
 %%%%
 sea snake
 

@@ -367,7 +367,7 @@ static const form_entry formdata[] =
     transformation::flux, MONS_SHAPESHIFTER, "Flux", "flux-form", "flux",
     "something dangerously unstable.",
     7, 14, TALISMAN_FLUX,
-    SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD) | SLOTF(EQ_BODY_ARMOUR), MR_NO_FLAGS,
+    SLOTF(EQ_WEAPON) | SLOTF(EQ_OFFHAND) | SLOTF(EQ_BODY_ARMOUR), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},
     SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,

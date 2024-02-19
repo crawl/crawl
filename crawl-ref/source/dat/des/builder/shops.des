@@ -1148,23 +1148,24 @@ MAP
 ENDMAP
 
 # Get away from it all.
-NAME: nicolae_island_escapes
-DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
-TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup no_descent
-WEIGHT: 5
-SHUFFLE: Aa/Bb
-SUBST: Aa = t, B = ..t, b = .
+NAME:    nicolae_island_escapes
+DEPTH:   D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
+TAGS:    no_item_gen no_monster_gen water_ok no_tide no_pool_fixup no_descent
+WEIGHT:  5
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
- scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
- potion of enlightenment | potion of invisibility w:8 | potion of haste w:3 | \
- ring of flight w:5 | wand of digging w:4
+           scroll of blinking | scroll of teleportation w:15 | \
+           scroll of fog w:8 | potion of enlightenment | potion of haste w:3 | \
+           potion of invisibility w:8 | ring of flight w:5 | wand of digging w:4
+KFEAT:   C = cache of fruit
+SHUFFLE: Aa/Bb
+SUBST:   Aa = t, B = ..t, b = ., C = CC.
 MAP
   wwwwwwwww
  wwwwwwwwwww
  wwwwwwwwwww
  wwwwBABwwww
 @wwwa...Awww
-@wwwb.S>Bwww
+@wwwbCS>Bwww
 @wwwa...Awww
  wwwwBABwwww
  wwwwwwwwwww

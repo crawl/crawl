@@ -129,6 +129,7 @@ bool is_offensive_wand(const item_def &item) PURE;
 bool is_enchantable_weapon(const item_def &weapon, bool unknown = false) PURE;
 bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
+bool is_shield(const item_def *item) PURE;
 bool is_shield(const item_def &item) PURE;
 bool is_offhand(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
@@ -159,7 +160,7 @@ bool is_blessed_convertible(const item_def &item) PURE;
 bool convert2good(item_def &item);
 bool convert2bad(item_def &item);
 
-int get_vorpal_type(const item_def &item) PURE;
+vorpal_damage_type get_vorpal_type(const item_def &item) PURE;
 int get_damage_type(const item_def &item) PURE;
 int single_damage_type(const item_def &item) PURE;
 

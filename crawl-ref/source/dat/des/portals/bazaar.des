@@ -253,16 +253,17 @@ ENDMAP
 
 # Freezing bazaar (Lemuel)
 NAME:   freezing_bzr
-MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 1, pow_max = 5, delay_min = 20, delay_max = 30, \
-             size = 2, walk_dist = 3, spread_rate= 20 }
+TAGS:   no_pool_fixup
+MARKER: w = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 4, delay_min = 50, delay_max = 60, \
+             size = 1, excl_rad = 0 }
 : place_bazaar_portal(_G)
 MAP
-  W
- WWW
-WWOWW
- WWW
-  W
+  w
+ wWw
+wWOWw
+ wWw
+  w
 ENDMAP
 
 # Bazaar in the mist (Lemuel)

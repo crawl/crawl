@@ -456,16 +456,13 @@ static bool _returning(const item_def &item)
     return item.is_type(OBJ_MISSILES, MI_BOOMERANG);
 }
 
-static void _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
+static void _setup_missile_beam(const actor *agent, bolt &beam,
+                                item_def &item, item_def const *launcher)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
     beam.colour = cglyph.col;
     beam.was_missile = true;
-
-    item_def *launcher = nullptr;
-    if (!is_throwable(agent, item))
-        launcher = agent->weapon(0);
 
     if (agent->is_player())
     {
@@ -603,8 +600,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
     noisy(noise, act->pos(), msg, act->mid);
 }
 
-static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
-                          int ammo_slot);
+static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher);
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled
 // in mons_throw().
@@ -612,7 +608,15 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
 // refactored to be a method of quiver::ammo_action.
 void throw_it(quiver::action &a)
 {
-    const item_def *launcher = a.get_launcher();
+    const item_def *primary = a.get_launcher();
+    const item_def *offhand = you.offhand_weapon();
+    const item_def *launcher = primary;
+    const item_def *alt_launcher = offhand;
+    if (primary && offhand && is_range_weapon(*offhand) && coinflip())
+    {
+        launcher = offhand;
+        alt_launcher = primary;
+    }
     // launchers have get_item set to the launcher. But, if we are tossing
     // the launcher itself, get_launcher() will be nullptr.
     // XX can this api be simplified now that projectiles and launchers are
@@ -659,7 +663,7 @@ void throw_it(quiver::action &a)
     if (ammo_slot != -1)
         item.slot     = index_to_letter(item.link);
 
-    _setup_missile_beam(&you, pbolt, item);
+    _setup_missile_beam(&you, pbolt, item, launcher);
 
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
@@ -702,29 +706,29 @@ void throw_it(quiver::action &a)
     // want to use tx, ty to make the missile fly to map edge.
     pbolt.set_target(a.target);
 
-    if (launcher)
-    {
-        practise_launching(*launcher);
-        if (is_unrandom_artefact(*launcher)
-            && get_unrand_entry(launcher->unrand_idx)->type_name)
-        {
-            count_action(CACT_FIRE, launcher->unrand_idx);
-        }
-        else
-            count_action(CACT_FIRE, launcher->sub_type);
-    } else if (is_thrown)
-    {
-        practise_throwing((missile_type)item.sub_type);
-        count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
-    }
+    you.time_taken = you.attack_delay(&item).roll();
+    _player_shoot(pbolt, item, launcher);
+    if (ammo_slot != -1 && (pbolt.item_mulches || !_returning(item)))
+        dec_inv_item_quantity(ammo_slot, 1);
 
-    _player_shoot(pbolt, item, launcher, ammo_slot);
+    if (launcher && alt_launcher && is_range_weapon(*alt_launcher))
+    {
+        item_def alt_fake_proj;
+        populate_fake_projectile(*alt_launcher, alt_fake_proj);
+
+        bolt alt_pbolt;
+        alt_pbolt.set_target(a.target);
+        _setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
+        _player_shoot(alt_pbolt, alt_fake_proj, alt_launcher);
+    }
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
     alert_nearby_monsters();
 
     you.turn_is_over = true;
+    if (launcher && you.has_mutation(MUT_WARMUP_STRIKES))
+        you.rev_up(you.time_taken);
 
     if ((launcher || is_thrown)
         && will_have_passive(passive_t::shadow_attacks)
@@ -736,8 +740,7 @@ void throw_it(quiver::action &a)
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.
-static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
-                          int ammo_slot)
+static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
 {
     const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
     const int ammo_brand = get_ammo_brand(item);
@@ -745,7 +748,22 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
     const bool is_thrown = is_throwable(&you, item);
     const bool tossing = !launcher && !is_thrown;
 
-    you.time_taken = you.attack_delay(&item).roll();
+    if (launcher)
+    {
+        practise_launching(*launcher);
+        if (is_unrandom_artefact(*launcher)
+            && get_unrand_entry(launcher->unrand_idx)->type_name)
+        {
+            count_action(CACT_FIRE, launcher->unrand_idx);
+        }
+        else
+            count_action(CACT_FIRE, launcher->sub_type);
+    }
+    else if (is_thrown)
+    {
+        practise_throwing((missile_type)item.sub_type);
+        count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
+    }
 
     // Create message.
     mprf("You %s %s.",
@@ -791,8 +809,6 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
         update_screen();
         pbolt.fire();
     }
-    else if (ammo_slot != -1)
-        dec_inv_item_quantity(ammo_slot, 1);
 
     _throw_noise(&you, item);
 
@@ -836,7 +852,10 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     item_def item = missile;
     item.quantity = 1;
 
-    _setup_missile_beam(mons, beam, item);
+    item_def *launcher = nullptr;
+    if (!is_throwable(mons, item))
+        launcher = mons->weapon(0);
+    _setup_missile_beam(mons, beam, item, launcher);
     beam.aimed_at_spot |= _returning(item);
     // Avoid overshooting and potentially hitting the player.
     // Piercing beams' tracers already account for this.

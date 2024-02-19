@@ -494,15 +494,19 @@ public:
     bool mergeable(const final_effect &) const override { return false; };
     void fire() override;
 
-    static void schedule(const actor &attack, const actor &defend)
+    static void schedule(const actor &attack, const actor &defend,
+                         const item_def *weapon)
     {
-        final_effect::schedule(new spectral_weapon_fineff(attack, defend));
+        final_effect::schedule(new spectral_weapon_fineff(attack, defend, weapon));
     }
 protected:
-    spectral_weapon_fineff(const actor &attack, const actor &defend)
-        : final_effect(&attack, &defend, coord_def())
+    spectral_weapon_fineff(const actor &attack, const actor &defend,
+                           const item_def *wpn)
+        : final_effect(&attack, &defend, coord_def()), weapon(wpn)
     {
     }
+
+    const item_def *weapon;
 };
 
 class lugonu_meddle_fineff : public final_effect
@@ -538,18 +542,19 @@ protected:
 class beogh_resurrection_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &/*a*/) const override { return true; };
+    bool mergeable(const final_effect &a) const override;
     void fire() override;
 
-    static void schedule()
+    static void schedule(bool end_ostracism_only = false)
     {
-        final_effect::schedule(new beogh_resurrection_fineff());
+        final_effect::schedule(new beogh_resurrection_fineff(end_ostracism_only));
     }
 protected:
-    beogh_resurrection_fineff()
-        : final_effect(nullptr, nullptr, coord_def())
+    beogh_resurrection_fineff(bool end_ostracism_only)
+        : final_effect(nullptr, nullptr, coord_def()), ostracism_only(end_ostracism_only)
     {
     }
+    const bool ostracism_only;
 };
 
 class dismiss_divine_allies_fineff : public final_effect

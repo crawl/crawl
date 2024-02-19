@@ -293,6 +293,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
     mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
     mon_enchant insanity  = mons->get_ench(ENCH_FRENZIED);
+    mon_enchant vengeance = mons->get_ench(ENCH_VENGEANCE_TARGET);
 
     mons->number       = 0;
 
@@ -334,6 +335,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->add_ench(forest);
     mons->add_ench(hexed);
     mons->add_ench(insanity);
+    mons->add_ench(vengeance);
 
     mons->ench_countdown = old_ench_countdown;
 

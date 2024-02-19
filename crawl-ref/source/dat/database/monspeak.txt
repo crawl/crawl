@@ -3202,6 +3202,10 @@ _yredelemnul_Donald_
 @The_monster@ says, "Angels painted black are so last century."
 
 @The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
+
+@The_monster@ says, "How does that torch stay lit when you throw its fire all over?"
+
+@The_monster@ says, "I hate being shackled."
 %%%%
 Okawaru Donald
 
@@ -3363,17 +3367,17 @@ Beogh Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Beogh's pretty racist."
+@The_monster@ says, "Beogh's pretty vain. All their worshippers get remade in their image."
 
 @The_monster@ says, "One of the priests looked like she was going to ask me to join... I guess she changed her mind."
 
 @The_monster@ says, "You think walking on water is cool? I can swim."
 
-@The_monster@ says, "Isn't it annoying when people just start following you around?"
+@The_monster@ says, "Isn't it annoying when people just start challenging you, and you can't get away from them?"
 
-@The_monster@ says, "I'd get sick of organising so many troops."
+@The_monster@ says, "I'd get sick of only having three followers at most."
 
-@The_monster@ says, "How do you feed them all? Five loaves and a few fish?"
+@The_monster@ says, "How do you find enough ash and charcoal to anoint them all?"
 
 @The_monster@ says, "You'll need more than orcs to take me on."
 
@@ -5021,6 +5025,8 @@ confused Ijyb
 
 @The_monster@ screams @at_foe@, "Wand still stronger! You very nasty!"
 
+@The_monster@ wonders, "Where me metal friend go?"
+
 w:5
 @The_monster@ screams, "Science deserve better than this!"
 
@@ -5036,7 +5042,7 @@ ijyb triumphant
 
 @The_monster@ screams, "Time for next experiment!"
 
-@The_monster@ screams, "Good help so hard to find!"
+@The_monster@ moans, "Good help so hard to find!"
 ## END Ijyb ##
 %%%%
 ############ ILSUIW ### a powerful merfolk witch

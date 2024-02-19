@@ -58,9 +58,7 @@ enum element_type
     ETC_DITHMENOS,      // Dithmenos altar colours
     ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
-#if TAG_MAJOR_VERSION == 34
-    ETC_SHINING,        // shining gold (Gozag)
-#endif
+    ETC_FOUL_FLAME,     // Foul flame
     ETC_MOUNTAIN,       // Mountain boots
     ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.

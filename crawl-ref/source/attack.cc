@@ -586,6 +586,8 @@ static const vector<chaos_attack_type> chaos_types = {
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
       [](const actor &d) { return d.antimagic_susceptible(); } },
+    { AF_FOUL_FLAME, SPWPN_FOUL_FLAME,   2,
+      [](const actor &d) { return d.res_foul_flame() < 3; } },
 };
 
 brand_type attack::random_chaos_brand()
@@ -907,6 +909,19 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     return damage;
 }
 
+int attack::apply_rev_penalty(int damage) const
+{
+    if (!attacker->is_player()
+        || !you.has_mutation(MUT_WARMUP_STRIKES)
+        || you.rev_percent() >= 66)
+    {
+        return damage;
+    }
+    // 2/3rds at 0 rev, 100% at 66+ rev
+    return div_rand_round(damage * 2 * 66 + damage * you.rev_percent(),
+                          3 * 66);
+}
+
 int attack::player_apply_postac_multipliers(int damage)
 {
     return damage;
@@ -1203,6 +1218,29 @@ bool attack::apply_damage_brand(const char *what)
                     attack_strength_punctuation(special_damage).c_str());
         }
         break;
+
+    case SPWPN_FOUL_FLAME:
+    {
+        if (attacker->is_holy())
+            break; // No foul flame for thee!
+
+        const int rff = defender->res_foul_flame();
+        if (rff < 0)
+            special_damage = 1 + (random2(damage_done) * 0.75);
+        else if (rff < 3)
+            special_damage = 1 + (random2(damage_done) / ((rff + 1) * 2));
+
+        if (defender_visible && special_damage)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s%s",
+                    defender_name(false).c_str(),
+                    defender->conj_verb("convulse").c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
+        }
+        break;
+    }
 
     case SPWPN_ELECTROCUTION:
         if (defender->res_elec() > 0)

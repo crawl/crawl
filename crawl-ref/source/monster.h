@@ -213,7 +213,8 @@ public:
 
     void scale_hp(int num, int den);
 
-    void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
+    void react_to_damage(const actor *oppressor, int damage, beam_type flavour,
+                         kill_method_type ktype);
 
     void apply_enchantments();
 
@@ -270,7 +271,7 @@ public:
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;
     brand_type  damage_brand(int which_attack = -1) override;
-    int         damage_type(int which_attack = -1) override;
+    vorpal_damage_type damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
     int         has_claws(bool allow_tran = true) const override;
@@ -384,6 +385,7 @@ public:
     bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
+    int res_foul_flame() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     int res_acid() const override;

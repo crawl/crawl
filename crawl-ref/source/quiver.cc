@@ -567,17 +567,6 @@ namespace quiver
 
             const item_def *weapon = you.weapon();
 
-            // TODO: is there any use case for allowing targeting in this case?
-            // if this check isn't here, it is treated as a clumsy melee attack
-            // XX this messaging is obsolete without ammo, but is this
-            // reachable somehow?
-            if (weapon && is_range_weapon(*weapon))
-            {
-                mprf("You do not have any ammo quivered for %s.",
-                                    you.weapon()->name(DESC_YOUR).c_str());
-                return;
-            }
-
             // This is redundant with a later check in fight_melee; but, the
             // way this check works, if the player overrides it once it won't
             // give a warning until they switch weapons. UI-wise, if there is
@@ -586,8 +575,7 @@ namespace quiver
                 return;
 
             target.isEndpoint = true; // is this needed? imported from autofight code
-            const reach_type reach_range = !weapon ? REACH_NONE
-                                                    : weapon_reach(*weapon);
+            const reach_type reach_range = you.reach_range();
 
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -597,7 +585,7 @@ namespace quiver
             args.self = confirm_prompt_type::cancel;
 
             unique_ptr<targeter> hitfunc;
-            if (attack_cleaves(you, -1))
+            if (attack_cleaves(you))
             {
                 const int range = reach_range;
                 hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);

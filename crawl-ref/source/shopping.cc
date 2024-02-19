@@ -236,6 +236,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_FREEZING:
             case SPWPN_HEAVY:
             case SPWPN_HOLY_WRATH:
+            case SPWPN_FOUL_FLAME:
                 valued *= 18;
                 break;
 

@@ -1817,7 +1817,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
     // XXX: interact with clouds of cold?
     // XXX: dedup with beam::affect_place_clouds()?
     if (feat_is_water(env.grid(p)) && !cloud_at(p))
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), &you, 11);
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), &agent, 11);
 
     if (!targ->alive())
     {
@@ -3280,6 +3280,36 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
     }
 
     return spret::success;
+}
+
+dice_def foul_flame_damage(int pow, bool random)
+{
+    if (random)
+    {
+        const int max_dam = 5 + div_rand_round(pow, 9);
+        return calc_dice(2, max_dam);
+    }
+    return dice_def(2, 5 + pow / 9);
+}
+
+void foul_flame_monster(monster *mons)
+{
+    if (!mons || mons->res_foul_flame() >= 3)
+        return;
+
+    const int mult = you.get_mutation_level(MUT_FOUL_GLOW);
+    const int pow = 100;
+
+    const int raw_damage = foul_flame_damage(pow, true).roll() * mult;
+
+    simple_monster_message(*mons,
+                           " is seared by the foul flame within you!");
+
+    bolt beam;
+    beam.flavour = BEAM_FOUL_FLAME;
+    const int damage = mons_adjust_flavoured(mons, beam, raw_damage);
+    dprf("Foul flame damage: %d", damage);
+    _player_hurt_monster(*mons, damage, beam.flavour);
 }
 
 static bool _toxic_can_affect(const actor *act)

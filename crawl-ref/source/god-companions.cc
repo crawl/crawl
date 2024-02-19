@@ -193,10 +193,23 @@ bool companion_is_elsewhere(mid_t mid, bool must_exist)
 {
     if (companion_list.count(mid))
     {
-        return companion_list[mid].level != level_id::current()
-               || (player_in_branch(BRANCH_PANDEMONIUM)
-                   && companion_list[mid].level.branch == BRANCH_PANDEMONIUM
-                   && !monster_by_mid(mid));
+        // They're definitely not here
+        if (companion_list[mid].level != level_id::current())
+            return true;
+
+        // The companion list says they're on our current floor, but we still
+        // need to double-check, as there are a few ways that they can still
+        // not be where they should be. (eg: all of Pandemonium is considered
+        // a single floor, and the Abyss can eat our companions without notice)
+        if (!monster_by_mid(mid))
+        {
+            // Mark them as being on a non-existant floor, for the future.
+            // (This also lets interlevel recall pull them back again)
+            companion_list[mid].level = level_id();
+            return true;
+        }
+
+        return false;
     }
 
     return !must_exist;
@@ -374,11 +387,9 @@ void beogh_do_ostracism()
 
 void beogh_end_ostracism()
 {
-    mprf(MSGCH_GOD, "Your apostles return to your side.");
-
     // XXX: It's kind of ugly to wrap this in the resurrection function, but
     // the process of restoring dead apostles is kind of complicated...
-    beogh_resurrect_followers(true);
+    beogh_resurrection_fineff::schedule(true);
 }
 
 static int _apostle_challenge_piety_needed()
@@ -622,18 +633,20 @@ void win_apostle_challenge(monster& apostle)
     else
         apostles.emplace_back(apostle_data(apostle));
 
-    mprf(MSGCH_GOD, "Beogh will allow you to induct %s into your service.",
-         apostle.name(DESC_THE, true).c_str());
-
-    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
+    string msg = make_stringf("Beogh will allow you to induct %s into your service.",
+                              apostle.name(DESC_THE, true).c_str());
 
     // Remind the player how to do this, if they don't already have an apostle
     if (companion_list.empty())
     {
-        mprf("(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
-                get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
-                command_to_string(CMD_USE_ABILITY).c_str());
+        msg += make_stringf("\n(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
+                            get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
+                            command_to_string(CMD_USE_ABILITY).c_str());
     }
+
+    mprf(MSGCH_GOD, "%s", msg.c_str());
+
+    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
 
     // Remove the rest of the apostle's band
     for (monster_iterator mi; mi; ++mi)
@@ -1025,7 +1038,10 @@ void beogh_resurrect_followers(bool end_ostracism_only)
 
     // The rest of the bookkeeping only applies to real resurrections
     if (end_ostracism_only)
+    {
+        mprf(MSGCH_GOD, "Your apostles return to your side.");
         return;
+    }
 
     // Now clean up the corpses
     for (unsigned int i = 0; i < dead_apostles.size(); ++i)

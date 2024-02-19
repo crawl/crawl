@@ -1009,18 +1009,18 @@ static void _inc_gift_timeout(int val)
 //   do too much collateral damage
 static const vector<random_pick_entry<monster_type>> _yred_servants =
 {
-  { -2,  4,   80, PEAK, MONS_NECROPHAGE },
-  { -1,  5,   75, PEAK, MONS_PHANTOM },
-  {  2,  9,  145, SEMI, MONS_WIGHT },
-  {  6,  12,  90, SEMI, MONS_SHADOW },
-  {  7,  14,  110, SEMI, MONS_WRAITH },
+  { -2,  5,   80, PEAK, MONS_NECROPHAGE },
+  { -1,  7,   75, PEAK, MONS_PHANTOM },
+  {  4,  11,  145, SEMI, MONS_WIGHT },
+  {  6,  13,  90, SEMI, MONS_SHADOW },
+  {  8,  15,  110, SEMI, MONS_WRAITH },
   {  9,  15,  90, SEMI, MONS_VAMPIRE },
   { 10,  16,  110, SEMI, MONS_FREEZING_WRAITH },
   { 13,  20,  150, SEMI, MONS_SKELETAL_WARRIOR },
-  { 13,  20,  55, SEMI, MONS_SHADOW_WRAITH },
-  { 14,  20,  100, SEMI, MONS_PHANTASMAL_WARRIOR },
+  { 13,  20,  75, SEMI, MONS_SHADOW_WRAITH },
+  { 14,  20,  125, SEMI, MONS_PHANTASMAL_WARRIOR },
   { 13,  22,  60, FLAT, MONS_FLAYED_GHOST },
-  { 13,  23,  150, SEMI, MONS_LAUGHING_SKULL },
+  { 13,  22,  125, SEMI, MONS_LAUGHING_SKULL },
   { 14,  21,  120, SEMI, MONS_BOG_BODY },
   { 16,  23,  180, SEMI, MONS_JIANGSHI },
   { 18,  25,  120, SEMI, MONS_EIDOLON },
@@ -1031,7 +1031,7 @@ static const vector<random_pick_entry<monster_type>> _yred_servants =
   { 23,  27,  180, SEMI, MONS_ANCIENT_CHAMPION },
   { 24,  30,  110, SEMI, MONS_SEARING_WRETCH },
   { 24,  30,  220, SEMI, MONS_PROFANE_SERVITOR },
-  { 25,  32,  100, SEMI, MONS_BONE_DRAGON },
+  { 25,  32,  120, SEMI, MONS_BONE_DRAGON },
 };
 
 bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
@@ -1040,7 +1040,9 @@ bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
 
     monster_type mon_type = yred_picker.pick(_yred_servants, pow, MONS_NECROPHAGE);
 
-    if ((mon_type == MONS_WIGHT || mon_type == MONS_SKELETAL_WARRIOR) && coinflip())
+    if (mon_type == MONS_WIGHT && x_chance_in_y(pow, 8))
+        num *= 2;
+    else if (mon_type == MONS_SKELETAL_WARRIOR && x_chance_in_y(pow, 17))
         num *= 2;
     else if (mon_type == MONS_LAUGHING_SKULL)
         num *= random_range(2, 3);
@@ -2948,7 +2950,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_BEOGH:
-        simple_god_message("'s voice booms out, \"Traitor to your kin!\"", old_god);
+        simple_god_message("'s voice booms out: Traitor to your kin!", old_god);
         mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
 
         add_daction(DACT_ALLY_BEOGH);
@@ -3722,6 +3724,25 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
 };
 
+static void _print_good_god_brand_changes(item_def *weapon, bool joining_good)
+{
+    if (!weapon
+        || get_weapon_brand(*weapon) != SPWPN_FOUL_FLAME)
+    {
+        return;
+    }
+    if (joining_good)
+    {
+        mprf("%s goes dull and lifeless in your grasp.",
+             weapon->name(DESC_YOUR).c_str());
+    }
+    else
+    {
+        mprf("%s glows horrifically with a foul radiance!",
+             uppercase_first(weapon->name(DESC_YOUR)).c_str());
+    }
+}
+
 void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
@@ -3763,6 +3784,17 @@ void join_religion(god_type which_god)
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
         (*join_effect)();
+
+    if (!is_good_god(old_god) && is_good_god(you.religion))
+    {
+        _print_good_god_brand_changes(you.weapon(), true);
+        _print_good_god_brand_changes(you.offhand_weapon(), true);
+    }
+    else if (is_good_god(old_god) && !is_good_god(you.religion))
+    {
+        _print_good_god_brand_changes(you.weapon(), false);
+        _print_good_god_brand_changes(you.offhand_weapon(), false);
+    }
 
     // after join_effect() so that gozag's service fee is right for monks
     if (you.worshipped[you.religion] < 100)

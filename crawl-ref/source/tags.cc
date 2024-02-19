@@ -4372,7 +4372,7 @@ static void _tag_read_you_items(reader &th)
             if ((is_unrandom_artefact(*item, UNRAND_DISPATER)
                  || is_unrandom_artefact(*item, UNRAND_WUCAD_MU)
                  || is_unrandom_artefact(*item, UNRAND_BATTLE))
-                && i != EQ_SHIELD)
+                && i != EQ_OFFHAND)
             {
                 you.equip[i] = -1;
                 you.melded.set(i, false);

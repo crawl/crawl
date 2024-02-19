@@ -400,6 +400,13 @@ int ranged_attack::apply_damage_modifiers(int damage)
     return damage;
 }
 
+int ranged_attack::player_apply_final_multipliers(int damage, bool /*aux*/)
+{
+    if (!throwing())
+        damage = apply_rev_penalty(damage);
+    return damage;
+}
+
 bool ranged_attack::mulch_bonus() const
 {
     return mulched
@@ -428,8 +435,8 @@ bool ranged_attack::ignores_shield(bool verbose)
             mprf("%s pierces through %s %s!",
                  projectile->name(DESC_THE).c_str(),
                  apostrophise(defender_name(false)).c_str(),
-                 defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
-                                 : "shielding");
+                 is_shield(defender_shield) ? defender_shield->name(DESC_PLAIN).c_str()
+                                            : "shielding");
         }
         return true;
     }

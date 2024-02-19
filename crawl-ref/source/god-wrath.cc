@@ -208,7 +208,7 @@ static void _tso_summon_warriors()
 static void _tso_shouts()
 {
     simple_god_message(" booms out: "
-                       "\"Take the path of righteousness! REPENT!\"",
+                       "Take the path of righteousness! REPENT!",
                        GOD_SHINING_ONE);
     noisy(25, you.pos()); // same as scroll of noise
 }
@@ -315,7 +315,7 @@ static bool _zin_retribution()
         }
         break;
     case 5: // noisiness
-        simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
+        simple_god_message(" booms out: Turn to the light! REPENT!", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
     }
@@ -758,7 +758,7 @@ static bool _trog_retribution()
     }
     else if (!one_chance_in(3))
     {
-        simple_god_message("'s voice booms out, \"Feel my wrath!\"", god);
+        simple_god_message("'s voice booms out: Feel my wrath!", god);
 
         // A collection of physical effects that might be better
         // suited to Trog than wild fire magic... messages could
@@ -2134,7 +2134,7 @@ static bool _uskayaw_retribution()
     case 3:
         if (mon)
         {
-            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+            simple_god_message(" booms out: Time for someone else to take a solo!",
                                     god);
             paralyse_player(_god_wrath_name(god));
             dec_penance(god, 1);
@@ -2143,7 +2143,7 @@ static bool _uskayaw_retribution()
         // else we intentionally fall through
 
     case 4:
-        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
+        simple_god_message(" booms out: Revellers, it's time to dance!", god);
         noisy(35, you.pos());
         break;
     }

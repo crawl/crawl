@@ -10,7 +10,7 @@ enum equipment_type
     EQ_HELMET,
     EQ_GLOVES,
     EQ_BOOTS,
-    EQ_SHIELD,
+    EQ_OFFHAND,
     EQ_BODY_ARMOUR,
     EQ_FIRST_JEWELLERY,
     EQ_LEFT_RING = EQ_FIRST_JEWELLERY,

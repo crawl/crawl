@@ -43,8 +43,28 @@ void random_var::init_weights(weight_func w)
         weights.push_back(w ? (*w)(v) : 1);
 }
 
+bool random_var::weights_divisible_by(int factor) const
+{
+    for (int weight : weights)
+        if (weight % factor != 0)
+            return false;
+    return true;
+}
+
+// Sloppy algorithm to losslessly downscale weights
+void random_var::reduce_weights()
+{
+    static const vector<int> primes = {2, 3, 5, 7}; // almost every prime! wow!
+    for (int prime : primes)
+        while (weights_divisible_by(prime))
+            for (int &weight : weights)
+                weight /= prime;
+}
+
 void random_var::init()
 {
+    reduce_weights();
+
     int64_t sum = 0;
     for (int v = start; v < end; ++v)
         sum += weight(v);

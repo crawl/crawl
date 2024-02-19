@@ -28,6 +28,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "corpse.h"
+#include "database.h" // getRandNameString
 #include "dbg-util.h"
 #include "defines.h"
 #include "delay.h"
@@ -387,7 +388,7 @@ bool dec_inv_item_quantity(int obj, int amount)
             {
                 if (i == EQ_WEAPON)
                 {
-                    unwield_item();
+                    unwield_item(*you.weapon());
                     canned_msg(MSG_EMPTY_HANDED_NOW);
                 }
                 you.equip[i] = -1;
@@ -2576,6 +2577,22 @@ bool drop_item(int item_dropped, int quant_drop)
     {
         mprf("%s is stuck to you!", item.name(DESC_THE).c_str());
         return false;
+    }
+
+    if (you.has_mutation(MUT_SLOW_WIELD)
+        && is_weapon(item)
+        && (you.equip[EQ_WEAPON] == item_dropped
+            || you.equip[EQ_OFFHAND] == item_dropped))
+    {
+        if (!Options.easy_unequip)
+        {
+            mpr("You will have to unwield that first.");
+            return false;
+        }
+        if (!unwield_weapon(item))
+            return false;
+        start_delay<DropItemDelay>(1, item);
+        return true;
     }
 
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
@@ -4887,4 +4904,55 @@ bool maybe_identify_base_type(item_def &item)
 
     _identify_last_item(item);
     return true;
+}
+
+#define WEAPON_NAME_KEY "weapon_name"
+
+void name_weapon(item_def &item)
+{
+    string name = getRandMonNameString("steelspirit");
+    if (name == "RANDGEN")
+        name = make_name();
+    item.props[WEAPON_NAME_KEY] = name;
+
+    if (!item.inscription.empty())
+        item.inscription += ", ";
+    item.inscription += name;
+}
+
+void maybe_name_weapon(item_def &item)
+{
+    const string it_name = item.name(DESC_YOUR, false, false, false);
+    if (is_artefact(item))
+    {
+        // TODO: variant messages? (in the database?)
+        mprf("You welcome %s into your grasp.", it_name.c_str());
+        return;
+    }
+
+    const bool new_name = !item.props.exists(WEAPON_NAME_KEY);
+    if (new_name)
+        name_weapon(item);
+
+    const string name = item.props[WEAPON_NAME_KEY].get_string();
+    // TODO: variant messages? (in the database?)
+    mprf("You welcome %s \"%s\"%s into your grasp.",
+         it_name.c_str(),
+         name.c_str(),
+         new_name ? "" : " back");
+}
+
+void say_farewell_to_weapon(const item_def &item)
+{
+    if (is_artefact(item))
+    {
+        // TODO: variant messages? (in the database?)
+        const string it_name = item.name(DESC_YOUR, false, false, false);
+        mprf("You whisper farewell to %s.", it_name.c_str());
+        return;
+    }
+
+    const string name = item.props[WEAPON_NAME_KEY].get_string();
+    // TODO: variant messages? (in the database?)
+    mprf("You whisper farewell to %s.", name.c_str());
 }

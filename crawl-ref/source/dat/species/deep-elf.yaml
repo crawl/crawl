@@ -1,9 +1,9 @@
 enum: SP_DEEP_ELF
 monster: MONS_ELF
-name: "Deep Elf"
-short_name: "DE"
-adjective: "Elven"
-genus: "Elf"
+name: Deep Elf
+short_name: DE
+adjective: Elven
+genus: Elf
 difficulty: Simple
 difficulty_priority: 40
 aptitudes:
@@ -42,6 +42,8 @@ dex: 10
 levelup_stat_frequency: 4
 levelup_stats:
   - int
+# if you add any mutations here: you'll need to fix test/mut_species.lua, which
+# relies on DE having none.
 recommended_jobs:
   - JOB_HEDGE_WIZARD
   - JOB_CONJURER
@@ -55,3 +57,5 @@ recommended_jobs:
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_STAVES
+
+orc_name: Deep Orc

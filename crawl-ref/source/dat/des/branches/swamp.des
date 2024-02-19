@@ -688,8 +688,11 @@ TTTTTtttt.t.t.ttttTTTTT
          Tt@tT
 ENDMAP
 
-NAME: nicolae_swamp_godswood
-TAGS: transparent extra decor
+NAME:  nicolae_swamp_godswood
+TAGS:  transparent extra decor no_pool_fixup
+KMONS: S = sacred lotus
+KFEAT: C = altar_elyvilon / altar_fedhas / altar_wu_jian
+SUBST: S = SSw
 MAP
 ttt     ttt
 ..ttttttt..
@@ -699,7 +702,7 @@ tttt...tttt
  tt..t..tt
  t.......t
  tt..w..tt
-  t.www.t
+  t.wSw.t
  tt..w..tt
  t...C...t
  tt..t..tt
@@ -767,9 +770,9 @@ ENDMAP
 
 NAME:    hangedman_swamp_lotus
 TAGS:    transparent extra no_pool_fixup decor
-MONS:    plant
-SHUFFLE: ABCDE
-SUBST:   AB : w, C : wwW1, D : wWW1, E : W1
+MONS:    plant, sacred lotus
+SHUFFLE: ABCD
+SUBST:   AB : w, C : wwW1, D : wWW1, E : 2w
 KMASK:   wW = no_monster_gen
 MAP
         ... ...
@@ -1566,7 +1569,12 @@ KMONS:   % = ghoul / bog body w:2
 KMONS:   *d = golden dragon w:8 / seven-headed hydra w:5 / \
               eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
-SHUFFLE: A%| / ad*
+KFEAT:   t = demonic_tree
+KFEAT:   T = mangrove
+SHUFFLE: A%|t / ad*T
+TILE:    t = dngn_demonic_tree_1 w:3 / dngn_demonic_tree_16 w:3 / \
+             dngn_demonic_tree_8 w:12 / dngn_demonic_tree_9 w:12 / \
+             dngn_demonic_tree_10 / dngn_demonic_tree_11
 : end
 KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch

@@ -1063,7 +1063,7 @@ static const string message_channel_names[] =
     "friend_enchant", "monster_damage", "monster_target", "banishment",
     "equipment", "floor", "multiturn", "examine", "examine_filter", "diagnostic",
     "error", "tutorial", "orb", "timed_portal", "hell_effect", "monster_warning",
-    "dgl_message",
+    "dgl_message", "decor_flavour",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)

@@ -61,8 +61,11 @@ MONS:    goblin; sling / hobgoblin w:2; sling / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
 MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
+ITEM:    stone q:1 no_pickup
+KFEAT:   M = cache of meat
 SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
-SUBST:   5 = 2 1:2 .:24
+NSUBST:  ' = 3 = MMMdd / *:d
+SUBST:   5 = 2 1:2 .:22
 SHUFFLE: ABCD
 KITEM:   D = gold
 KMONS:   D = hobgoblin / kobold / gnoll
@@ -74,15 +77,15 @@ xxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxx
 xxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccwwwwxxxxxx
 xxxwwwwwcAAAccccccccccccccccccccccccccccccccccccccccccccccccccccccDDDcwwwwwxxxxx
-xxxwwwwwcAAAc1.....ccccc.....c5555555c1..1c5555555c.............1cDDDcwwwwwwxxxx
-xxxwwwwwcAAAc.......ccc.2....+5555555c....c5555555+...........2..cDDDcwwwwwwxxxx
+xxxwwwwwcAAAc1.....ccccc.....c555555'c1..1c'555555c.............1cDDDcwwwwwwxxxx
+xxxwwwwwcAAAc.......ccc.2....+555555'c....c'555555+...........2..cDDDcwwwwwwxxxx
 xxwwwwwwcc+cc........c1...2..ccccccccc....ccccccccc..............cc+ccwwwwwwwxxx
 xxwwwwwwwc1..........c..2...........c.2..2.c..........cccccccc.....1cwwwwwwwwxxx
 xxwwwwwwwc...........+..............+......+..........cccccccc.2....cwwwwwwwwwxx
 xxwwwwwwwc1..........c..2...........c.2..2.c..........cccccccc.....1cwwwwwwwwwxx
 xwwwwwwwcc+cc........c1...2..ccccccccc....ccccccccc..............cc+ccwwwwwwwwxx
-xwwwwwwwcBBBc.......ccc.2....+5555555c....c5555555+...........2..cCCCcwwwwwwwwwx
-xwwwwwwwcBBBc1.....ccccc.....c5555555c....c5555555c.............1cCCCcwwwwwwwwwx
+xwwwwwwwcBBBc.......ccc.2....+555555'c....c'555555+...........2..cCCCcwwwwwwwwwx
+xwwwwwwwcBBBc1.....ccccc.....c555555'c....c'555555c.............1cCCCcwwwwwwwwwx
 xwwwwwwwcBBBccccccccccccccccccccccccccc++cccccccccccccccccccccccccCCCcwwwwwwwwwx
 xwwwwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwyY1..1Yywwwwwwwwwwwwwwwwwwwwwcccccwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwyY....Yywwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
@@ -211,7 +214,6 @@ ENDMAP
 NAME:    giant_chief_lemuel
 DEPTH:   D:11-, Orc, Depths:2-, !Depths:$
 ORIENT:  north
-SUBST:   ; = .'
 : if you.in_branch("Depths") then
 MONS:    patrolling juggernaut, nothing, nothing
 MONS:    ettin, stone giant w:40 / fire giant / frost giant
@@ -237,25 +239,28 @@ KMONS:   Z = cyclops zombie / stone giant zombie / titan zombie
 KMONS:   P = plant
 KITEM:   ( = any weapon good_item
 KITEM:   Z = large rock
+# Think of a giant eating fruit like we'd eat a handful of raisins,
+# or like how a hippo can just eat an entire pumpkin, rind and all.
+KFEAT:   F = cache of fruit / cache of meat
 SHUFFLE: aA / bB / dD / eE
-SUBST:   aA = ., b : x., B : x., d : x., D : x., e : x., E : x.
-SUBST:   0 = 4 7 9:2 P:18 ., 5 = 5:20 x`
+SUBST:   ; = .', aA = ., b : x., B : x., d : x., D : x., e : x., E : x.
+SUBST:   F = Fxx, 0 = 4 7 9:2 P:18 ., 5 = 5:20 x`
 SUBST:   | : |||Z
 SUBST:   X = x., - = +x, ' = .
 KPROP:   5` = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxccccccccccccx
-xxxxXXXxxxxxxX***XXxxxxxxxxxxxxx.........7...c...444..cccc.........<cx
-xx$$$$$$XxxxxX.6..XxxxxxxxxxAAAA..7..........+........+..+.........5cx
-xX$$$$$$.XxxX.666.xxxxxxAAAAAxxx7....7.......c........cccc.........1cx
+xxxxXFXxxxxxxX***XXxxxxxxxxxxxxx.........7...c...444..cccc.........<cx
+xx$$$$$$FxxxxX.6..XxxxxxxxxxAAAA..7..........+........+..+.........5cx
+xF$$$$$$.XxxX.666.xxxxxxAAAAAxxx7....7.......c........cccc.........1cx
 x.$$$$$$..Xx...6..AAAAAAAxxxxxxx............7ccccc+ccccccc.........5cx
 x....<.....+X....xxxxxxxxx$$$..cccc+cccccccccccccc.c(((((+..........cx
-xX........Xxxxx.xxxxxxxx<+$$$..+.......+...........c(((((c.......***cx
+xX........Xxxxx.xxxxxxxF<+$$$..+.......+...........c(((((c.......***cx
 xx........Xxx...xxxxxxxxxxx-xxxc..4.4..ccccccccccccccccccc444....***cx
 xxxxX...Xxxxx.xxxxxxxxxxxxx5xxxc...4...cxxx5xxxxxxxxxxxxxxxxxxxxx+xxxx
-xxxxxx-xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxx
-xxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0eeeeddddddXXXXxxx||xxx
+xxxxxx-xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxF||xxx
+xxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0eeeeddddddXXXXxxx||Fxx
 x...xxxxxXXX0Xaaaaabbbb..;'''''ccc+++ccc''''';...eeeeeeddddddXXXxxxxxx
 xx.xxxXXX......aaaabbbbb...;''G,''''''',G'';........eeeeeedddd.XXXxxxx
 xX-XX.....0...aaaa..bbb........;''''''';.........eeeeeee.ddd..0...Xxxx
@@ -407,38 +412,40 @@ DEPTH:  Depths
 MONS:   plant, bush
 MONS:   spriggan w:70 / spriggan druid / spriggan berserker / spriggan rider
 MONS:   spriggan defender
-SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444.
+KFEAT:  % = cache of fruit
+SUBST:  1 : 12t p:1, p = 12t, c : xc, 3 = 3, 4 = 444., % : %$
 MAP
-ccccccccccccccccccccccccccccxx
-c11111111111111111111111111c1.
-c1.........3.............31c13
-c1........................1c1.
-c1..111........3.....111..1c1.
-c13.1c1..3...........1c1..1c1.
-c1..111..........3...111..1c1.
-c1...........3............1c1.
-c1.........3...3..........1c1.
-c1.......111....111.......1c1.
-c1.......1ccc++ccc1.......1c1.
-c1.......1c1....1c1..3....1c1.
-c1.......1c1....1c1.......1c1.
-c1....3..1c14..41c1.......1c13
-c1.......1c1****1c1.......1c1.
-c1.......1c1****1c1.......1c1.
-c1.......1c111111c1....3..1c1.
-c1..3....1cccccccc1.......1c1.
-c1.......1111111111.......1c1.
-c1........................1c1.
-c1........................1c1.
-c1..111........3.....111..1c1.
-c1..1c1..3...........1c1..1c1.
-c1..111..............111..1c1.
-c1........................1c1.
-c13......................31c1.
-c11111111111....11111111111c1.
-ccccccccccccc++ccccccccccccc1.
-x11111111111....11111111111113
-x.3........3.3..3.............
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccccccccccccccccccccccccccxx
+xc11111111111111111111111111c1.
+xc1.........3.............31c13
+xc1........................1c1.
+xc1..111........3.....111..1c1.
+xc13.1c1..3...........1c1..1c1.
+xc1..111..........3...111..1c1.
+xc1...........3............1c1.
+xc1.........3...3..........1c1.
+xc1.......11t....t11.......1c1.
+xc1.......1ccc++ccc1.......1c1.
+xc1.......1c1....1c1..3....1c1.
+xc1.......1c1....1c1.......1c1.
+xc1....3..1c14**41c1.......1c13
+xc1.......1c1****1c1.......1c1.
+xc1.......1c1%**%1c1.......1c1.
+xc1.......1c111111c1....3..1c1.
+xc1..3....1cccccccc1.......1c1.
+xc1.......1111111111.......1c1.
+xc1........................1c1.
+xc1........................1c1.
+xc1..111........3.....111..1c1.
+xc1..1c1..3...........1c1..1c1.
+xc1..111..............111..1c1.
+xc1........................1c1.
+xc13......................31c1.
+xc1111111111t....t1111111111c1.
+xccccccccccccc++ccccccccccccc1.
+xx1111111111t....t1111111111113
+xx.3........3.3..3.............
 ENDMAP
 
 NAME:   minmay_haunted_quarter
@@ -483,18 +490,23 @@ ENDMAP
 # Orc temple
 #
 NAME:   orc_temple
-ORIENT: southwest
 TAGS:   no_rotate
+ORIENT: southwest
 DEPTH:  D:12-, !D:$, Orc
 MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
 MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
+ITEM:   battleaxe good_item no_pickup / plate armour good_item no_pickup / \
+        kite shield good_item no_pickup / manual of invocations / \
+        $ q:50 no_pickup w:30
 KFEAT:  C = altar_beogh
+KFEAT:  e = cache of fruit / cache of meat
+SUBST:  e : e$
 MAP
 xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx...xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx4.4xxxxxxxxxxxxxxx
-xx**..........x414x..........**xx
+xxe*..........x414x..........*exx
 xx**..........x4.4x..........**xx
 xx............+...+....4.......xx
 xx....4..4....x...x............xx
@@ -505,7 +517,7 @@ xx........xxx.......xxx........xx
 xxxx...xxxx..2.....2..xxxx...xxxx
 xxxxx+xxxx.............xxxx+xxxxx
 xxxx...xxx.............xxx...xxxx
-xx......x...............x......xx
+xx......x.......d.......x......xx
 xx..4...x...2...C...2...x...5..xx
 xx......x...............x......xx
 xx...4..xx.............xx..5...xx
@@ -520,40 +532,52 @@ ENDMAP
 # Fort Yaktaur
 #
 NAME:   fort_yaktaur
-TAGS:   no_pool_fixup no_descent
-ORIENT: southeast
-DEPTH:  D:11-, !D:$
+TAGS:   no_pool_fixup vaults_hard vaults_orient_w allow_dup
+ORIENT: float
+DEPTH:  D:11-, !D:$, Vaults, !Vaults:$
+WEIGHT: 20 (Vaults), 10
+: if you.in_branch("Vaults") then
+TAGS:   no_monster_gen
+MONS:   vault guard / centaur warrior w:4 / dire elephant w:2 / arcanist w:2
+MONS:   yaktaur, yaktaur captain
+MONS:   vault sentinel ; arbalest . halberd . ring mail
+MONS:   vault warden ; arbalest | hand cannon w:4 . glaive . scale mail
+SUBST:  @ = ., * = **%, | = ||*
+CLEAR:  x
+: else
 MONS:   gnoll, yak, death yak, yaktaur, minotaur
+SUBST:  d : d.
+: end
+KFEAT:  d = cache of fruit
 MAP
-.........@....wwwwwwwwwwwwwwwwwxxx
-.ccccc.......ww....wwww....wwwwxxx
-.c$c%c......ww.ccccccccc.......xxx
-.c+c+c......ww.c.%$....ccccccccxxx
-.c...+......ww.c*.542..c$$+|*|cxxx
-.c4..c.....ww..c...22+ccc+cxx+cxxx
-.ccccc.....ww..ccccccc....c|+*cxxx
-............ww.......c2...cxx+cxxx
-....1.ccccc.ww.w...3.+24..c|5.cxxx
-....14+...c..wwww..34+24..c3.3cxxx
-....1.ccccc..wwwwww..c2...cc+ccxxx
-............wwwwwww..c........cxxx
-............wwwwwww..ccccccccccxxx
-...........ww4w..www...........xxx
-.......211.www.....www.........xxx
-.........4ww....ccccc..........xxx
-.....211.w......+...c..........xxx
-.........www....ccccc..........xxx
-...........ww............wwwwwwxxx
-.......4....wwwww......www.....xxx
-......111.......ww...www.......xxx
-.....cc+cc.......wwwww.........xxx
-.....c...c.....................xxx
-.....ccccc.....................xxx
-...............................xxx
-...............................xxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.........@....wwwwwwwwwwwwwwwwwxx
+.ccccc.......ww....wwwwwwwwwwwwxx
+.c$c%c......ww.cccccccccwwwwwwwxx
+.c+c+c......ww.cd%$....ccccccccxx
+.c...+......ww.c*.542..c$$+|*|cxx
+.c4..c.....ww..cd..22+ccc+cxx+cxx
+.ccccc.....ww..ccccccc....c|+*cxx
+............ww.......c2...cxx+cxx
+....1.ccccc.ww.w...3.+24..c|5.cxx
+....14+...c..wwww..34+24..c3.3cxx
+....1.ccccc..wwwwww..c2...cc+ccxx
+............wwwwwww..c........cxx
+............wwwwwww..ccccccccccxx
+...........ww4w..www...........xx
+.......211.www.....www.........xx
+........4www....ccccc..........xx
+.....211.w......+..<c..........xx
+.........www....ccccc.........wxx
+...........ww............wwwww.xx
+.......4....wwwww......www....wxx
+......111.......ww...www.......xx
+.....cc+cc.......wwwww.........xx
+.....c...c.....................xx
+.....ccccc.....................xx
+...............................xx
+...............................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -1517,92 +1541,112 @@ xxxvvvvvvvvv
 ENDMAP
 
 NAME:   kennysheep_seaside_town
-ORIENT: northeast
 TAGS:   no_monster_gen transparent
-DEPTH:  D:7-14
+ORIENT: northeast
+DEPTH:  D:7-, !D:$
+PLACE:  D:$
+WEIGHT: 2 (D:$), 10
 KFEAT:  W = open_sea
+: if you.depth() < 12 then
 MONS:   ogre, orc warrior, gnoll bouda, centaur, kobold brigand
 KMONS:  8 = orc warrior band
 KMONS:  9 = gnoll bouda band
+SUBST:  GU = H
+: elseif you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
+MONS:   two-headed ogre / tengu warrior w:5, orc knight, yaktaur
+MONS:   arcanist / tengu conjurer, kobold demonologist / ogre mage
+KMONS:  8 = orc knight band / orc high priest band w:4
+KMONS:  9 = centaur warrior band / boggart band w:2
+SUBST:  GU = H
+: else
+MONS:   deep troll, tengu warrior / tengu conjurer
+MONS:   shapeshifter, occultist, hell knight / necromancer
+KMONS:  8U = rakshasa band / glowing shapeshifter
+KMONS:  9 = ettin / flayed ghost / phantasmal warrior w:2
+KITEM:  G = smoky gem
+KFEAT:  U = enter_depths
+FTILE:  GU = floor_depthstone
+: end
 KMONS:  p = plant
 KMONS:  P = fungus
-FTILE: ' = floor_sand
-FTILE: .pt89 = floor_dirt
-NSUBST: H = 3:* / 7:1
-KFEAT:  H = floor
-NSUBST: . = 2:9
-SUBST:  p = p...
-NSUBST: . = 5:p
-SUBST:  1 = 12345
-NSUBST: q = 3:1 / 6:P / *:.
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
-                 delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
+KFEAT:  C = cache of fruit / cache of meat
+KFEAT:  ~ = w
+NSUBST: H = 3:* / 7:1 / 3 = CC""" / *:"
+NSUBST: . = 2:9 / 5:p / *:., q = 3:1 / 6:P / *:"
+SUBST:  p = p..., 1 = 12345
+KMASK:  ~ = no_pool_fixup
+COLOUR: '.89p = brown
+FTILE:  ' = floor_sand
+FTILE:  .pt89 = floor_dirt
+FTILE:  "C*F+12345P = floor_pebble_darkgray
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                               pow_max = 100, delay = 10, size = 1, \
+                               walk_dist = 0, excl_rad = -1 }
 MAP
 xxxxWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW
-xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW
-xxxxwwwwwwwwww'wwwwwww''wwwww'wwwwwwW
-xxxxwww'wwwww'''w''''ww''''''''wwwwwW
-xxxxwwww'''''..'''.''''''..''''wwwwwW
-xxxxwwww'...cccc...cccc.......''wwwwW
-xxxxwwww''..cHHc...cHHc........'wwwwW
-xxxxw''''...cHHc...cHH+...cccc.''wwwW
-xxxx''cccc..cc+c...cccc...cHHc..'wwwW
-xxxx..cHHc................+HHc..''wwW
-xxxx..cHH+................cccc...'wwW
-xxxx..cccc.......ccccc...........'wwW
-xxxx.......8..ccccHHHc..........''wwW
-xxxxtp.p.pt..tc>zcHHH+..........'wwwW
-xxxxt.p.p.ptxxczz+HHH+..........'wwwW
-xxxxtpppptxxx!!!ccccccxxxppp....'wwwW
-xxxxttptpxx!!!!xxxxxxxxxppppppp.''wwW
-xcccc+tptx!!!xxxxxqxxxx.pptptppp''wwW
-xcHHHctttx!!xxxxxxxqqqqqxtptptpcmcwwW
-xcHHHcxxxx!xxxxxxxqxxxxxxxttttccHccwW
-xcHHHcx!!!!!xxxxxxqxqxxxxxptppmHFHmwW
-xccccc!!!x!xxxxxxqqxqqqqxxtpptc+HccwW
-xxxxx!!xxxxxxxxxxqxqqxxqxxpppppcmcwwW
-xxxxxx!!xxxxxxxxxxxxqxxqqqxxxxxxwwwwW
+xxxx~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~W
+xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~W
+xxxxwwwwwwwwww'wwwwwww''wwwww'wwwww~W
+xxxxwww'wwwww'''w''''ww''''''''wwww~W
+xxxxwwww'''''..'''.''''''..''''wwww~W
+xxxxwwww'...cccc...cccc.......''www~W
+xxxxwwww''..cHHc...cHHc........'www~W
+xxxxw''''...cHHc...cHH+...cccc.''ww~W
+xxxx''cccc..cc+c...cccc...cHHc..'ww~W
+xxxx..cHHc................+HHc..''w~W
+xxxx..cHH+................cccc...'w~W
+xxxx..cccc.......ccccc...........'w~W
+xxxx.......8..ccccHHHc..........''w~W
+xxxxtp.p.pt..tc>zcHHH+..........'ww~W
+xxxxt.p.p.ptxxczz+HHH+..........'ww~W
+xxxxtpppptxxx---ccccccxxxppp....'ww~W
+xxxxttptpxx----xxxxxxxxxppppppp.''w~W
+xcccc+tptx---xxxxxqxxxx.pptptppp''w~W
+xcHHGctttx--xxxxxxxqqqqqxtptptpcmcw~W
+xcHHHcxxxx-xxxxxxxqxxxxxxxttttccHcc~W
+xcUHHcx-----xxxxxxqxqxxxxxptppmHFHmwW
+xccccc---x-xxxxxxqqxqqqqxxtpptc+HccwW
+xxxxx--xxxxxxxxxxqxqqxxqxxpppppcmcwwW
+xxxxxx--xxxxxxxxxxxxqxxqqqxxxxxxwwwwW
 xxxxxxx@@xxxxxxxxxxxxxxxxxx    xxxxxx
 ENDMAP
 
 NAME:   kennysheep_kobold_camp
-ORIENT: north
 TAGS:   no_monster_gen no_trap_gen
+ORIENT: north
 DEPTH:  D:4-9
 MONS:   kobold brigand, kobold
-MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                               pow_max = 100, delay = 10, size = 1, \
-                               walk_dist = 0, excl_rad = 0 }
 KMONS:  p = plant
-NSUBST: . = 15:2 / *:.
-SUBST:  t = tp`
-NSUBST: ' = 5:C / 5:2
+KFEAT:  M = cache of meat
+NSUBST: . = 13:2 / 3 = 2. / *:., ' = 5:C / 2 = M.. / 5:2
+SUBST:  P = tp`
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
 : dgn.delayed_decay(_G, 'C', 'human corpse')
-KPROP:  ` = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxttttttttxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxtttttttttttttxxxxxxxxx
-       xxxxtttttttttttttttttttttxx
-       xxtttttttttt*t..*t.ttttttxx
-     xxxtttttttttt.''1'......ttttxxx
-    xxtttttttt....''''''.....ttttttxx
-   xxtttttt.......''FF'''.....ttttttxx
-  xxtttttttt.....'''FF'''.....ttttttt@
- xxttxxxxtttt.....''''''.....ttttxxxxx
-xxttxx  xxtttt.....''''.....tttxxx
-@txxx    xtttttt.........tttttxx
-xxx      xxxtttttttt....ttttttx
-           xtttttttttt.ttttxxxx
-           xxxxxxtttxt.ttxxx
-                xttxxtt.ttxx
-                xtttxxtt.ttxx
-                xxttxxxtt.ttx
-                 xtttxxxtt.txx
-                 xxttxxxxt.ttx
-                  xxxttxxtt.txx
-                    xttxxxxt.tx
+       xxxxttPPPPtPPPPPPPPPtttttxx
+       xxttttP..PPP*t..*P.PPPPttxx
+     xxxtttttPP.PP.''1'......Ptttxxx
+    xxttttPPPP....''''''.....PPPPttxxx
+   xxtttttP.......''FF'''.......PtttPx
+  xxttttttPP.....'''FF'''.....PPPtttP@
+xxxttxxxxttPP.....''''''.....PPttxxxxx
+xPttxx  xxtPP......''''.....PPtxxx
+@Pxxx    xtP.PPP.........PPPPtxx
+xxx      xxxPPtPPPP.....PPttttx
+           xttttPP.PPP.PPttxxxx
+           xxxxxx.PPxP.PPxxx
+                xPPxxPP.PPxx
+                xtttxxPP.PPxx
+                xxttxxxPP.PPx
+                 xtttxxxPP.Pxx
+                 xxttxxxxP.PPx
+                  xxxttxxPP.Pxx
+                    xPPxxxxP.Px
                      @@    @@@
 ENDMAP
 
@@ -1644,12 +1688,14 @@ DEPTH:  D:3-4
   kmons("O = " .. boss)
 }}
 MONS:   goblin, goblin ; sling, jackal
+KFEAT:  F = cache of fruit / cache of meat
+SUBST:  F : F.
 NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
-x...+....B..x%%*xww
+x...+....B.Fx%%*xww
 x...+......O+%%%xww
-x...x....B..xxxxxww
+x...x....B.Fxxxxxww
 x...xxxxxxxxxx...ww
 x............x...ww
 x.....1.1....x.2.ww
@@ -1730,28 +1776,30 @@ ccccccccccc................ccccccccccc
               cccccccccc
 ENDMAP
 
-NAME:   kennysheep_housing_project
-ORIENT: north
-TAGS:   no_monster_gen
-DEPTH:  D:6-9
-MONS:   kobold / hound w:5 / gnoll / hobgoblin, \
-        kobold brigand / orc warrior w:5 / ogre / gnoll sergeant, \
-        orc priest / orc wizard / gnoll bouda / centaur
-NSUBST: . = 4:2 / 20:1 / 5:3
-NSUBST: . = 8:% / 2:* / 10:$
-FTILE: 'pt = floor_grass
-KMONS:  p = plant
-SUBST:  !':.
+NAME:    kennysheep_housing_project
+TAGS:    no_monster_gen
+ORIENT:  north
+DEPTH:   D:6-9
+MONS:    kobold / gnoll / hobgoblin / hound w:5
+MONS:    kobold brigand / orc warrior w:5 / ogre / gnoll sergeant
+MONS:    orc priest / orc wizard / gnoll bouda / centaur
+KFEAT:   F = cache of fruit
+KFEAT:   f = cache of meat
+NSUBST:  . = 4:2 / 20:1 / 5:3 / 8:% / 2:* / 10:$ / *:.
+SHUFFLE: Ff / fF / -- / -- / --
+FTILE:   'pt = floor_grass
+KMONS:   p = plant
+SUBST:   !'- = .
 MAP
 xxxxccccccccccccccccccccccccccccxxxxx
 ''''m.......+..............+...m'''''
 ''''m.......+..............+...m'''''
 'pptc.......cccc++cccccccc+c...cppt''
 'tptc.......c..........c...c...ctpp''
-ppptc.......c..........c...c...ctpt''
+ppptc.......c..........c...c..Fctpt''
 'pttc.......c..........c.>.ccccctpp''
 'pptc.......c..........c...cptttpt'''
-'pttc.......ccccmmcccccc+++cppppp'''
+'pttc......fccccmmcccccc+++cppppp'''
  'ttccmmcccccttt''ptttt'!1!tppptp'''
   ''tt''ttt'tptp''pptpp'!!!'ptp'''''
   ptpt'''ptp'p'p''ptptp'!!!'p'p''''
@@ -1810,16 +1858,18 @@ xxxwxxxx......xxxw.xx..xxx..xxx
 ENDMAP
 
 NAME:    kennysheep_kobold_grotto
+TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D:12-, !D:$
-TAGS:    no_monster_gen
 ORIENT:  northwest
 MONS:    kobold blastminer, kobold brigand, patrolling kobold demonologist
-MONS:    kobold, plant, lesser demon, obsidian statue
+MONS:    kobold, plant, crimson imp ; sling / white imp / iron imp ; sling
+MONS:    obsidian statue
 KMONS:   g = bush
+KFEAT:   M = cache of meat
 SHUFFLE: !'
-NSUBST:  ! = 3:C / 4:- / 2:6 / *:., ' = 2:C / *:.
+NSUBST:  ! = 3:C / 4:- / 2:6 / *:., ' = 2:C / 3 = M.. / *:.
 NSUBST:  . = 10:4 / 4:6
-SUBST:  .z = .:220 W:15 5:20
+SUBST:   .z = .:220 5:25
 : dgn.delayed_decay(_G, 'C', 'spriggan corpse / spriggan skeleton')
 KPROP:  -C = bloody
 MAP
@@ -1834,7 +1884,7 @@ x'g....w.........w...xx
 x'g..........x2.wWw.2xx
 xxx....w....xx.wW7Ww..x
 xx....wGw...xx..wWw..xx
-xxx.w2.w.2wxxx...w...xx
+xxx.W2.w.2Wxxx...w...xx
 xxxxww.2.wwxx.2.....2xx
  xxxx3***3xxx.......xxx
  xxxx**|**1xxxx.....xxx
@@ -2684,9 +2734,10 @@ TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_descent
 DEPTH:   D:7-, !D:$, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
 ORIENT:  north
 KMONS:   F = fungus
+KFEAT:   C = cache of fruit
 SHUFFLE: op, qr
 SUBST:   o = w, p = t, q : tw., r = .
-SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF
+SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF, C : C..
 : if you.in_branch("D") then
 {{
   -- Three tiers scaling alongside depth: D:7-9, D:9-13, D:12-14.
@@ -2732,7 +2783,7 @@ SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF
     subst("[ = ):40 >")
   end
 }}
-FTILE:   @.fgP`12345F$%*{([})]^wtxT : floor_pebble_darkbrown / floor_moss
+FTILE:   @.fgP`12345F$%*{([})]^wtxTC : floor_pebble_darkbrown / floor_moss
 : elseif you.in_branch("Lair") then
 MONS:    blink frog / wyvern, basilisk, rime drake / cane toad
 MONS:    catoblepas / komodo dragon, lindwurm / torpor snail
@@ -2788,7 +2839,7 @@ xxxttt$$wttttttttPPPPtttttttPPPPttttttttw$$ttttxx
 xxttt|...ww...tt..1.2.wwtww.2.1..tt...ww...|tttxx
 xxtt*....t..w..t.T.............T.t..w..t....*ttxx
 xxtt3.....t.w..t...wt.^.{.^.tx...t..w.t.....4ttxx
-xxt5.1..^..tw.....wtw.......xtx.....wt..^..1.3txx
+xxt5C1..^..tw.....wtw.......xtx.....wt..^..1C3txx
 xxtt3.....t.w.T..xtw...(.[...xtw..T.w.t.....4ttxx
 xxtt*....t..w...xtx...........wtw...w..t....*ttxx
 xxtttt$$www.....tx3...wwwww...3wt.....www$$ttttxx
@@ -2992,9 +3043,10 @@ ITEM:    any wand charges:1, wand of digging charges:1 ident:type
 :       "slevels:" .. you.absdepth())
 KFEAT:   F = G
 KFEAT:   M = metal_statue
+KFEAT:   E = cache of meat
 SUBST:   C = c, X = xx.
 SHUFFLE: aAbB, Hhe / Idi, de, fg, hi, JKL
-SUBST:   HJK = +, ILa = c, A : c', bB = '
+SUBST:   HJK = +, ILa = c, A : c', bB = ', E : EE.
 NSUBST:  m = 1:m / *:c
 COLOUR:  G = mist
 TILE:    F = dngn_statue_maw / dngn_statue_tentacles
@@ -3006,17 +3058,17 @@ MAP
       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
      xxxxxxxxxxxxxxxcccccccccccccccxx
     ccccccccccccccccccXXXXXXXXXXXMcxx
-   ccccccccccccccccccc..2.7...9.|Xcxx
+   cccccccccccccccccccE.2.7...9.|Xcxx
   cccc"""ddccg3g4g3gCc.X'X'''''8.Xcxx
   ccc"8..7dcg'''''''.c.'''X'''M'9Xcxx
   cc".....ccg'''''''.c.X'X'X$6''.Xcxx
   cc".....JJ''''V'''$m.''''$>$''.Xcxx
   cc".....JJ''''''''.c.X'X'M$X''.Xcxx
-  ccc"7...cc''''''''.c.dfgX'''X'.Xcxx
+  ccc"7...cc''''''''.cEdfgX'''X'.Xcxx
   ccCc"...ccc+C+c+C+cccccciX'X'X.Xcxx
   ccccKKKccc"""""""""cccCch'''''1Xcxx
   ccc"'''''C"''''''''"""cceX'X'X.Xcxx
-  ccc3'5G''C"'BB''''''V"cc.......xcxx
+  ccc3'5G''C"'BB''''''V"ccE.....Excxx
   cc"'G'''LC"'B.1....6'"ccccmccccccxx
  .cc"'''''L"'''2cJKLc.''"c..$.2Ccccxx
  1CccHHccCL"'''.cj''L.''"+'''''fccxxx

@@ -940,6 +940,8 @@ bush2
 bush3
 bush4
 bush_burning MONS_BURNING_BUSH
+sacred_lotus MONS_SACRED_LOTUS
+scrub_nettle MONS_SCRUB_NETTLE
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT

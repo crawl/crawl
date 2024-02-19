@@ -418,6 +418,11 @@ persistent drain mutation
 Your health recovers twice as slowly from being drained. (The total experience
 needed is doubled.)
 %%%%
+initially attractive mutation
+
+The first time you see a monster, it may be magically pulled toward you.
+This does not wake sleeping monsters.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 
@@ -771,10 +776,12 @@ You are foreign to this world, easily perceived by dark forces. You have only
 one-tenth the normal time on each dungeon floor before Zot finds you and
 permanently reduces your health.
 %%%%
-glowing mutation
+foul glow mutation
 
-You glow in the dark. Foes hit you more often, your stealth is badly impaired,
-and you cannot become invisible.
+You glow in the dark with foul flame. Foes hit you more often, your stealth is
+badly impaired, and you cannot become invisible. Foes who strike you in melee
+are sometimes seared by the foul flame; undead and demonic foes take less damage
+from it, while holy beings and good god worshippers take more.
 %%%%
 explore regen mutation
 
@@ -824,6 +831,30 @@ reducing the complex movements which would otherwise be required.
 
 (The encumbrance rating of all armour you wear is reduced by 1/2 for purposes
 of spell success.)
+%%%%
+off-hand wielding mutation
+
+You can wield a one-handed weapon in your off-hand, if not wielding a
+two-handed weapon or wearing a shield or orb. You will follow up attacks from
+your primary weapon with your off-hand weapon, with attack delay determined
+by the average of the two. Ranged weapons can only follow attacks by ranged
+weapons, and likewise melee weapons.
+%%%%
+slow wielding mutation
+
+You must recalibrate your grasping arms when wielding or unwielding weapons.
+This takes as long as donning armour.
+%%%%
+warmup strikes mutation
+
+Your grasping arms need time to limber up, making your first few attacks in
+each fight less effective. Slow, heavy attacks help more than fast attacks.
+Both weapon-based and unarmed attacks are affected.
+%%%%
+legs shutdown mutation
+
+Attacking or casting spells requires you to redirect power from your legs.
+For a moment afterward, your legs will be too weak to allow for travel.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation

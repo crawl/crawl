@@ -1,7 +1,7 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_CENTAUR
 monster: MONS_CENTAUR
-name: "Centaur"
+name: Centaur
 difficulty: False
 species_flags:
   - SPF_SMALL_TORSO
@@ -50,3 +50,5 @@ mutations:
     MUT_FAST: 2
     MUT_DEFORMED: 1
     MUT_HOOVES: 3
+
+orc_name: Centorc

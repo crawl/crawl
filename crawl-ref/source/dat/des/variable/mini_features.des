@@ -2285,9 +2285,11 @@ ENDMAP
 NAME:    kennysheep_cross_bottleneck
 TAGS:    extra decor
 DEPTH:   D:2-, Depths, !D:$, !Depths:$
+KMONS:   1 = sacred lotus
+KFEAT:   1 = W
 KFEAT:   g = metal_statue
 SHUFFLE: DEFH / DEDE / FHFH / FHFH
-SUBST:   D = +, E = ., F = c, H = w, t = tGg
+SUBST:   D = +, E = ., F = c, H = w, t = t1Gg
 KMASK:   W = no_monster_gen
 FTILE:   'tGg : floor_w_marble / floor_limestone
 TILE:    G = dngn_statue_angel

@@ -1,7 +1,7 @@
 enum: SP_ARMATAUR
 monster: MONS_ARMATAUR
-name: "Armataur"
-short_name: "At"
+name: Armataur
+short_name: At
 difficulty: Simple
 difficulty_priority: 30
 species_flags:
@@ -66,3 +66,4 @@ recommended_weapons:
 
 altar_action: curl up in front of
 child_name: Pup
+orc_name: Orcataur

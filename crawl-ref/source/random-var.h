@@ -37,8 +37,11 @@ public:
 
 protected:
     void init_weights(weight_func w);
+    void reduce_weights();
     void init();
     int roll2val(int r) const;
+
+    bool weights_divisible_by(int factor) const;
 };
 
 random_var operator+(const random_var& x, const random_var& y);

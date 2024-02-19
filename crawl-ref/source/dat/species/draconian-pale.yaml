@@ -1,9 +1,9 @@
 enum: SP_PALE_DRACONIAN
 monster: MONS_PALE_DRACONIAN
-name: "Pale Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Pale Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN
@@ -37,3 +37,5 @@ mutations:
 fake_mutations:
   - long: You can breathe blasts of scalding, opaque steam.
     short: breathe steam
+
+orc_name: Pale Orconian

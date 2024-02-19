@@ -38,13 +38,13 @@ KMONS:   Q = bush
 KMONS:   R = plant
 KFEAT:   ~ = +
 KFEAT:   u = t
+KFEAT:   Ff = cache of fruit
 ITEM:    dagger / short sword / rapier / flail / whip / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
-ITEM:    gold
 KFEAT:   _ = altar_trog
 NSUBST:  . = 10:0 / 8 = 00... / 2:O / 1:3 / 1:5 / *:.
 NSUBST:  6 = 1:9 / 2 = 669 / *:6
-SUBST:   T = t:20 P .:40, P = RRQ.
+SUBST:   T = t:20 P .:40, P = RRQ., F = F..
 : old_forest_ends(_G)
 SUBST:   C = c
 COLOUR:  "MN = green
@@ -59,17 +59,17 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ttttPP.Tttt...tttttttttttttttttttttttttttttttttttttttttttttttttTTTTTttTTTTtttttt
 tCCCCT.....ttt..ttttttttttttttttttttttttttttttTtTTtttttttQTtttTT.T.Ttt.T.TTTtttt
 tC%4C...Tttttttt.ttttttttttttttttttttttttttttT*....QQPtt..CCCCC....CCCC.TT.Ttttt
-tC..+..Ttttttttt..ttttttttttttttttttttttcccccccccccccc....C%.1C....C.1C.t.TTtttt
+tCF.+..Ttttttttt..ttttttttttttttttttttttcccccccccccccc....C%F1C....C.1C.t.TTtttt
 tC.4C...Ttttttt.t..tttttttttttttttttttttc-6-c6--6c$*|ctT..C.1.+....+.%CT.TT.tttt
 tCCCCt.Tttttt..tttt........tttttttttttttc7--~----~$*|ctt..CCCCC....CCCC.TT.Ttttt
 tttT..tttttt.tttttttttttttt.ttttttttttttc-6-c6--6c$*|cttQ..................ttttt
 ttTPTTtttt...ttttttttttttttt..ttttttttttcccccc~~ccccccttttCCCCC....CCCC......ttt
 ttTTtttttt..ttttttttttttttttt.ttttttttttceeec....cdddcttttCfxLC....C1%C.....tttt
-tttttttt...ttttttttttttttttttt.tttttttttceee~..1.~dddcttttCf..+....+.5C..1...ttt
+tttttttt...ttttttttttttttttttt.tttttttttceee~..1.~dddcttttCF$.+....+.5C..1...ttt
 tttttt.tttt..ttttttttttttttttt.tttttttttceeec1...cdddcttttCCCCC....CCCC...1.tttt
 tttttt.ttttt.tttttttttttttt.....ttttttttcccccc++ccccccttttt...................tt
 ttttt.ttttt..ttttttttttt...tttT..tttttttcR.....1....RcCCCCCCCCC....Y.........ttt
-ttt..tttttt..ttttttttt..tttttttt.tttttttc..1........1cCKxKxKxKC......2......tttt
+ttt..tttttt..ttttttttt..tttttttt.tttttttcf.1......1.fcCKxKxKxKC......2......tttt
 tt.ttttttt.tttttttt...ttttttttttt.ttttttcR1..5..5..1RcC.22.1..C.....22......tttt
 tt.tttttt.ttttttt...1.tttttttttttt.tttttcccccc++ccccccC+CCCCCCC....2.2.....ttttt
 ttt.tuuu..tttttt...22.-uutttttttttt.tttt..................................tttttt
@@ -99,8 +99,8 @@ ttttTT.1....ttttttttttttttttttttt.tttttttttttttttttt.ttttt.ttttttttttttttt..tttt
 ttttttt.tttt...ttttttttttttttttt..tttttttttttttttt..ttttttt..ttttttttttttt.ttttt
 tttttt.tttttttt...ttttttttttttt.tttttttttttttttt..ttttttttttt....tttttttt.tttttt
 ttttt..tttttttttt.ttttttttttttt.tttttttttttttttt.ttttttttttttttt.........ttttttt
-ttttt.ttttttttttt.tttttttttttt-.-tttttttttttttt.ttttttttttttttt.ttt..t..tttttttt
-tttt..tttttttttt..tttttttttttt3G3ttttttttttttt.tttttt.tttttttt.ttttttt....tttttt
+ttttt.ttttttttttt.tttttttttttt-F-tttttttttttttt.ttttttttttttttt.ttt..t..tttttttt
+tttt..tttttttttt..tttttttttttt3G3ttttttttttttt.ttttttFtttttttt.ttttttt....tttttt
 ttttt.ttttttttt..ttttttttttttt*3*tttttttttttt.t.tttttt.....tt.tttttttttt...ttttt
 tttt.tttttttttt.t..tttttttttttttttttttttttt..ttt.tttttttttt...ttttttttttt..ttttt
 tttt.ttttttttt..ttt...ttttttttttttttttttttt.ttttt.ttttttttwwwtttttttttttt...tttt
@@ -112,7 +112,7 @@ ttttt.ttttttttttttttttttt.tttttttttt.tttttttttttt..tttttttt..tt...ttttttt.+.1Ctt
 tttttt.ttttttttttttttttt.tttttttttt..tttttttttttttt.tttttt.t...ttt..tttttTC1%Ctt
 ttttttt.ttttttttttttttt.ttttttttttt....xxxxxtttttttt..tttt...tttttt.ttttttCCCCtt
 ttttttt.tttttttttttttt.ttttttttttttT...x..4xtttttttttt....ttttttttt.tttttttxxxxx
-ttttttt.tttttttttttttt.ttttttttttttT...+...xtttttttttttttttttttttttt.tttxxxxxxxx
+ttttttt.tttttttttttttt.ttttttttttttT...+..Fxtttttttttttttttttttttttt.tttxxxxxxxx
 txxxtt.ttttttttttt....ttttttttttttttt.tx..4xttttttttttttttttttttttttt..xxxxxxxxx
 txg+"""""""tt......t.....ttttttttttttt.x*4_xttttttttttttttttttttttttt...-xxxxxxx
 txxx""""""""".tttttttt..TTtttttttttttttxxxxxttttttttttttttttttttttt.....-}xxxxxx
@@ -138,9 +138,11 @@ MONS:   tengu conjurer w:20 / occultist w:5 / eleionoma w:20 / rakshasa / \
 KMONS:  8 = ettin ; giant club randart . giant club randart / \
             glowing shapeshifter hd:13 w:5 / stone giant / \
             sphinx / tengu reaver w:5 / deep elf high priest w:5
+KFEAT:  C = cache of fruit
 NSUBST: 3 = 6:3 / 4:6 / * = 36., 7 = 4:7 / * = 77., 1 = 1:8 / 2 = 118 / *:1
+SUBST:  C : CC.
 : old_forest_ends(_G)
-FTILE: .O1234678+T%*| = floor_marble
+FTILE: .O1234678+CT%*| = floor_marble
 veto {{
   return crawl.game_started() and you.uniques("the Enchantress")
 }}
@@ -149,7 +151,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 tttttttttttttccccccccttttttttttttt
 tttttttttttccc||||||cccttttttttttt
-ttttttttttcc..........cctttttttttt
+ttttttttttccC........Ccctttttttttt
 tttttttttcc....3..3....ccttttttttt
 tttttttttc..............cttttttttt
 ttttttttcc....4....4....cctttttttt
@@ -205,14 +207,15 @@ MONS:   tengu conjurer ; quarterstaff . robe . longbow / \
         deep elf archer / rakshasa / eleionoma
 KMONS:  L = water nymph
 KMONS:  P = plant
-ITEM:   gold / nothing w:90
-ITEM:   any potion / nothing w:35
+ITEM:   gold q:1 / stone q:1 no_pickup w:20
+ITEM:   any potion, potion of degeneration ident:all
 KFEAT:  L = deep_water
+KFEAT:  F = cache of fruit
 NSUBST: w = 2:L / *:w
 SUBST:  X = xt, T = t.
-FTILE:  e124+|%*$- = floor_vines
+FTILE:  efF124+|%*$- = floor_vines
 NSUBST: 5 = 1:4 / 3:6 / 1:56 / *:5
-NSUBST: 2 = 1:3 / 1:223 / *:2
+NSUBST: 2 = 1:3 / 1:223 / *:2, e = 3:F / * = e f:35
 : old_forest_ends(_G)
 veto {{
   return crawl.game_started() and you.uniques("the Enchantress")
@@ -263,12 +266,13 @@ MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
 MONS:   caustic shrike w:1 / deep elf knight w:5 / deep elf archer w:5 / \
         rakshasa / occultist / eleionoma w:5 / glowing shapeshifter w:5 / \
         stone giant w:4
+KFEAT:  C = cache of fruit
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor
-SUBST:  T = tx
+SUBST:  T = tx, C : C..
 NSUBST: 2 = 1:3 / 2 = 22233 / *:2, 4 = 3:4 / 4:5 / * = 4455.
 FTILE:  1|*$-+ = floor_dirt
-FTILE:  ._@2345Gtx = floor_grass
+FTILE:  .C_@2345Gtx = floor_grass
 : old_forest_ends(_G)
 veto {{
   return crawl.game_started() and you.uniques("the Enchantress")
@@ -278,7 +282,7 @@ MAP
  TTtttttttttttTT
 TTtt.......4.ttTT
 Ttt4..........ttT
-Tt..ccccccccc..tTTTTTTTT
+TtC.ccccccccc..tTTTTTTTT
 Tt..c||c$$$$c..ttttttttt
 Tt..c|-c****c.2t..4....t
 Tt..cc+c2-4-+....G.G.G.@
@@ -286,7 +290,7 @@ Tt2.c-1-4-_-+..2........
 Tt..cc+c2-4-+....G.G.G.@
 Tt..c|-c****c.2t..4....t
 Tt..c||c$$$$c..ttttttttt
-Tt..ccccccccc..tTTTTTTTT
+TtC.ccccccccc..tTTTTTTTT
 Ttt4..........ttT
 TTtt.......4.ttTT
  TTtttttttttttTT

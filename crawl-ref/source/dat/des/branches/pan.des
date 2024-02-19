@@ -4265,10 +4265,12 @@ KMONS:  E = apis
 KMONS:  B = daeva god:Zin
 KMONS:  Z = daeva god:Zin
 KMONS:  S = patrolling seraph
+KMONS:  P = sacred lotus
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
 KFEAT:  G = metal_statue
+KFEAT:  P = w
 TILE:   c = wall_church
 COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
@@ -4291,16 +4293,16 @@ end
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
-xxxxxxxC%%%CxxxxxxxxxxwwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
+xxxxxxxC%%%CxxxxxxxxxxPwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
 xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+..{.(..+...Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
-xxxCCCC.....Cxxxx""0"""wwwwwwwwwww;wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxx""0"""wwwwwPwwwww;wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCC"""""""""wwwwwwww;;;;wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCd[+9......+""0"www0"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd[+9......+""0"wPw0"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCCx""""ww"""""wwwww;;;wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxxx""""""""""wwwww;;wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
-xxxxxxxCe.eCxxxxxxx""""xxxxxx"wwwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
+xxxxxxxCe.eCxxxxxxx""""xxxxxx"wwPwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
 xxxxxxxCeeeCxxxxxxxxx"xxxxxx""wwwwwwwxxxxxxxxxxxxxxxCCCCCCCC+CCCCCCCCxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxxxxx"wwwwwwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx.wwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx

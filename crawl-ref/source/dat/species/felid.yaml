@@ -1,8 +1,8 @@
 enum: SP_FELID
 monster: MONS_FELID
-name: "Felid"
-adjective: "Feline"
-genus: "Cat"
+name: Felid
+adjective: Feline
+genus: Cat
 difficulty: Advanced
 difficulty_priority: 40
 aptitudes:
@@ -68,3 +68,4 @@ recommended_weapons:
 
 altar_action: sit before
 child_name: Kitten
+orc_name: Orcat

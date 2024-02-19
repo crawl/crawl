@@ -1731,7 +1731,10 @@ MONS:   jackal / hound, yak, human
 # XXX: Use some function to cover for used uniques,
 # like in kennysheep_goblin_castle.
 MONS:   Edmund / Jessica / Sigmund, Ijyb / Psyche
-SUBST:  1 = 11., 3 = 3., 4 = 34, 5 = 35
+KITEM:  d = robe, leather armour, club, dagger
+KFEAT:  e = cache of fruit
+KFEAT:  f = cache of meat
+SUBST:  1 = 11., 3 = 3., 4 = 34, 5 = 35, d = def
 # Guarantee two winding tunnel into the center in this mess.
 SHUFFLE: rR / sS / uU / vV / wW / yY / zZ, uU / nN
 SUBST:   rsn = ., RSN = @, uUvVwWyYzZ = x
@@ -1742,9 +1745,9 @@ xxxxxxxxxxxxxssx    x111xxxxxuxx
 xxxzzzxxxxxxxxxsxxxxxx1xxxxxxuxx
 Zzzxzxzxx222xxsxxxxxxx1xxxxxuxxx
 xxxxxxxzxx2xxx.xxx..x1xxxxxuxxxx
-   xxxxzxx2xxxx......xxxxxuuxxxx
-   xxxzxxxx2xx...3...ccccxxux
-   xxxzxxxx....3335..+$$cxuxx
+   xxxxzxx2xxxx......ccccxuuxxxx
+   xxxzxxxx2xx...3...+$dcxxux
+   xxxzxxxx....3335..+$dcxuxx
    xxxxz.......3ll33.ccccxxux
    xxxxxx......4333.xxxxxxuxxxxxxxxx
    xxxxxxyxxxx3.......xxuuxxvvvvxxxx
@@ -2163,34 +2166,43 @@ ENDMAP
 # Ogre Cave, by Lemuel
 #
 NAME:    lemuel_ogre_cave
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup vaults_hard vaults_orient_w
 ORIENT:  float
-DEPTH:   D:9-, !D:$, Orc
-MONS:    ogre, two-headed ogre, ogre mage / Erolcha, plant / fungus
+DEPTH:   D:9-, !D:$, Orc, Vaults, !Vaults:$
+WEIGHT:  20 (Vaults), 10
+: if you.in_branch("Vaults") then
+TAGS:    no_monster_gen no_wall_fixup
+MONS:    two-headed ogre / deep troll / dire elephant w:2
+MONS:    ironbound preserver, ogre mage, ironbound thunderhulk
+ITEM:    large rock no_pickup q:1
+NSUBST:  23 = 1:2 / 1:3 / 1:4 / 1:24 / *:3
+SUBST:   @> = ., W : xd., ~ = d, ?Y = +., A = $
+: else
+MONS:    ogre, two-headed ogre, ogre mage / Erolcha, fungus
 MONS:    ogre zombie, two-headed ogre zombie
-SHUFFLE: WX/ZY , 12/12/67
-SUBST:   W:ww. , X:. , Z:x , Y:+.
-SHUFFLE: *5/WW
-SUBST:   *=. , W=wW , !:$.
-SUBST:   5 = 5 6 + .:5 I:5 F:5
-KFEAT:   A = >
 KITEM:   A = $
+KFEAT:   A = >
+SHUFFLE: 12 / 12 / 56
+SUBST:   W : .ww4xxx, Y = +., ~ = WW4.., ? = 456+wwww.
+: end
+KFEAT:   F = cache of fruit / cache of meat
+SUBST:   ! : $., F : F.
 MAP
               xxxxx
           xxxxxx12xx
-         xx*..x.122xx
- xxxxxxxxx5xxx...11xx
-xxWxxxxxxx*xxxxx>...xx
-xxWWxxxxxx.xxxxxx**xxxx
-xWWWxxxxxx.xxxxxxx**xxxxx
-WWWW**xxxxx.xxxxxxx5xxxxxxxx
+         xx~..x.122xx
+ xxxxxxxxx?xxx...11xx
+xxWxxxxxxx~xxxxx>...xx
+xxWWxxxxxx.xxxxxx~~xxxx
+xWWWxxxxxx.xxxxxxx~~xxxxx
+xWWW~~xxxxx.xxxxxxx?xxxxxxxx
 xWWWW..xxxxx.xxxxxx.xccccccx
 xxWW....1xxx.xxxxx.xxc$$$Acx
-@..X...111..xxxxxx.xxc$$$$cx
+@~.....111..xxxxxx.xxc$$$$cx
 xxWWW...11xxxxxxx.xxxc!!!!cx
-xWWW....*xxxxxxx*..xxc+ccccx
-xxWWW..**xxxxxx*....x..xxxxx
- xxWWWW*xxxxxxx*.11.Y.xx
+xWWW....~xxxxxxx~.Fxxc+ccccx
+xxWWW..~~xxxxxx~...Fx..xxxxx
+ xxWWWW~xxxxxxx~.11.Y.xx
   xxWWWWWxxxxxxx1221xxx
   xxxxWWWWxxxxxxx23xx
   xxxxxWWxxxxxxxxx|xx
@@ -2209,29 +2221,30 @@ DEPTH:  Lair:3-, D:11-
 TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
-# TODO: it looks like this fog machine is a little overzealous
-MARKER: F = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 4, size_buildup_amnt = 4, \
-                size_buildup_time = 25, cloud_type = "freezing vapour" \
-            }
 MONS:   death yak w:5 / dream sheep w:3 / yak w:7
 MONS:   generate_awake human ; dagger | hand axe
-SUBST:  F=d, 2=2.
-# these corpses are in the freezer, so never_decay is appropriate. (Also, I
-# couldn't get this item_spec to work with delayed_decay.)
-ITEM:   never_decay yak corpse w:1 / nothing
+# these corpses are in the freezer, so never_decay is appropriate.
+KITEM:  d = $, $, animal skin good_item
+KITEM:  e = never_decay yak corpse / never_decay dream sheep corpse w:5
+KFEAT:  f = cache of meat
 KFEAT:  ~ = closed_clear_door
+SUBST:  e = e:2 f:1 ':7, 2=2.
+KPROP:  de' = no_tele_into
+MARKER: F = lua:fog_machine { \
+                pow_max = 10, delay_min = 30, delay_max = 50, \
+                size = 3, size_buildup_amnt = 2, \
+                size_buildup_time = 35, cloud_type = "freezing vapour" \
+            }
 MAP
 cccccc       ccccccc
-cddddcxxxxxxxxcddddc
-cdFdd+..+..+..+ddFdc
-cddddcxxx..xxxcddddc
-cccccc..x..x  cccccc
+ceeeecxxxxxxxxceeeec
+ceFee+..+..+..+eeFec
+ceeeecxxx..xxxceeeec
+cccccc  x..x  cccccc
         x2.x
 nnnnnn  x..x  nnnnnn
 n1111nxxx..xxxn1111n
-n1111~..+..+..~1111n
+n1d11~..+..+..~11d1n
 n1111nxxx..xxxn1111n
 nnnnnn  x..x  nnnnnn
         x.2x
@@ -2251,6 +2264,7 @@ DEPTH:  D, Depths, Lair
 ORIENT: float
 MONS:   spriggan, spriggan rider, spriggan defender
 MONS:   boggart, spriggan druid
+KFEAT:  d = cache of fruit
 : if you.absdepth() < 8 then
 SUBST:  130 = ., 245 = 0
 : elseif you.absdepth() < 13 then
@@ -2260,7 +2274,8 @@ SUBST:  3 = 0, 5 = 4
 : else
 SUBST:  2 = 3, 1 = 2
 : end
-FTILE:  .t0@*12345 = floor_moss
+SUBST:  d : dd.
+FTILE:  .dt0@*12345 = floor_moss
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
     xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
@@ -2273,7 +2288,7 @@ xt.ttttttttttttttt...1tttttttttt.tttt.tttttttttttxx
 @.ttttttttttttttt..tttttttttttt1.tt...ttttttttttttx
 xttttttttttttttt..tttttttttttttt5...ttttttttttttttx
 xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
-xtttttttttttttttt1.1.tttttttttttt.tttttttttt%..tttx
+xtttttttttttttttt1.1.tttttttttttt.tttttttttt%.dtttx
 xtttttttttttttttttt.0...tttttttttt..ttttttt.5*..ttx
 xttttttttttttttttttttt1...ttttttttt.ttttttt.000%ttx
 xttttttttttttttttttttttt...tttttttt.ttttt1..2.5tttx
@@ -2281,7 +2296,7 @@ xttttttttttttttttttttttttt....tttt.ttttttt.tt.t3ttx
 xtttttttttttttttttttttttttttt.....tttttttt.tttttttx
 .....ttttttttttttttttttttttt1..tttttttttt.ttttttttx
 @.....tttttttt..1ttttttttttt1..tttttttt..ttttttttxx
-xttttt..ttt0...tt...tt.......20.ttttt..tttttttttxx
+xttttt..ttt0...tt...tt.......20dttttt..tttttttttxx
 xttttttt....ttttttt....ttttttt..ttt..ttttttttttxx
 xxxtttttttttttttttttttttttttttt....ttttttttttxxx
   xxxtttttttttttttttttttttttttttttttttttttxxxx
@@ -2967,32 +2982,34 @@ ORIENT:  float
 DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hog
-MONS:    caustic shrike w:1 / catoblepas / dire elephant / emperor scorpion / nothing w:3
-MONS:    12-headed hydra / anaconda / ghost moth w:2 / wolf spider w:8 / harpy / moth of wrath
-MONS:    spriggan druid, spriggan rider / spriggan defender / nothing
-MONS:    sphinx / hell beast w:5 / caustic shrike w:5
-ITEM:    gold / nothing w:80
+MONS:    spark wasp w:5 / catoblepas / bunyip / emperor scorpion
+MONS:    12-headed hydra / anaconda / torpor snail w:5 / \
+         demonic crawler w:5 / skyshark / bunyip w:5
+MONS:    spriggan druid, spriggan berserker / spriggan defender
+MONS:    sphinx / hell beast w:5 / caustic shrike
+KFEAT:   d = cache of fruit
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
 NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
 NSUBST:  C : 2:1 / * = c:299 1:1
-SUBST:   X = xx., 1 = 1:29 .:1, t = t:99 1:1, u = t
+SUBST:   3 = 3 .:1, 6 = 66.
+SUBST:   X = xx., 1 = 1:29 .:1, t = t:99 1:1, u = t, d = d..
 SUBST:   . = .:2975 1:20 2:1 3:2 4:2, | = *||
 TILE:    c = wall_marble
-FTILE:   .Tt1234567Gcx+d*| = floor_lair
+FTILE:   .dTt1234567Gcx+d%$*| = floor_lair
 COLOUR:  c = white
-COLOUR:  .1234567d*| = green
+COLOUR:  .1234567d%$*| = green
 MAP
    ccccccccccccccccccccccccccccccccc
    ctttttttttttttttttttttttttttttttcc
-   ctdd...""....""................2|c
-cccct"5................1"........".7c
+   ctd$$..""....""................2|c
+cccct"5................1"........"%7c
 ctttt*"................".ww.."tttttcc
 ctd"*G*..................ww..tcccccc.
-ctd5"*7.........".t..........tC1111..
-ct.....T...WWW."dt.........."tC11...
-ct.........WWW.dt.1.....ttttttC...1.
+ct$5"*7.........".t..........tC1111..
+ct$....T...WWW."dt.........."tC11...
+ct.........WWW..t.1.....ttttttC...1.
 ct.............t.11....tcCCCCCC.....
-ct"......."dt..........tC1111.......
+ct".......".t..........tC1111.......
 ct"......"dt....1......tC11'.........
 ct........t.1.....ttttttC...1.XXXXXXX
 ct.......t.11.....cCCCCCC....Xxxxxxxx
@@ -3005,7 +3022,7 @@ ct........"tC11'.....'1Xx
 ct...."tttttC...16XXXXXxx
 ct....tcCCCCC....Xxxxxxx
 ct..".tc1111....'Xx
-ct.2..tc11'....'1Xx
+ct.2%.tc11'....'1Xx
 cc.|7.cc...1.XXXXxx
 .cccccc.....Xxxxxx
  .11111.....Xx
@@ -3354,14 +3371,16 @@ ORIENT: float
 DEPTH:  D:2-4
 KMONS:  1 = Ijyb / hobgoblin, hobgoblin
 KMONS:  2 = goblin
+KFEAT:  F = cache of fruit / cache of meat
+SUBST:  F : F..
 MAP
 xxxxxxxxx
-x..%1%..x
+xF.%1%.Fx
 xG2...2Gx
 x.2...2.x
-xG2...2Gx
+xc2...2cx
 x.......x
-xG.....Gx
+xc.....cx
 x.......x
 xG.....Gx
  @@@@@@@
@@ -3620,7 +3639,8 @@ DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   tengu warrior, tengu conjurer, tengu reaver
 KFEAT:  m = iron_grate
-SUBST:  " = ........1W
+KFEAT:  F = cache of fruit / cache of meat
+NSUBST: " = 2 = FFF1W / * = ........1W
 NSUBST: ' = 2:3 / 4=12 / *:.
 NSUBST: ? = 3:* / *:%
 MAP
@@ -4299,17 +4319,19 @@ MAP
 .....
 ENDMAP
 
-NAME: cheibrodos_two_vegetables
-TAGS: no_item_gen no_monster_gen no_pool_fixup
-DEPTH: D:5-10
+NAME:   cheibrodos_two_vegetables
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+DEPTH:  D:5-10
 ORIENT: float
-KMONS: 1 = electric eel
-SUBST: ; = .W
-NSUBST: - = 3:1 / w, _ = 3:1 / w, A = 3:% / 1:* / 2:. / W
-NSUBST: B = 2:% / 1:* / 3:. / W, ` = 7:C / 4:. / W
-KFEAT: C = W
-KFEAT: 1 = w
-KMONS: C = plant
+KMONS:  1 = electric eel
+KMONS:  C = plant
+KFEAT:  1 = w
+KFEAT:  C = W
+KFEAT:  F = cache of fruit
+SUBST:  ; = .W
+NSUBST: - = 3:1 / w, _ = 3:1 / w, A = 3:% / 1:* / 1:F / 1:. / W
+NSUBST: B = 2:% / 1:* / 1:F / 2:. / W, ` = 7:C / 4:. / W
+SUBST:  F : F..
 MAP
   xxxxxxxxxx
  xx0..;WWWWxx
@@ -4506,12 +4528,14 @@ MAP
   ....@....
 ENDMAP
 
-NAME: cheibrodos_greedy_goblins
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:2-4
+NAME:   cheibrodos_greedy_goblins
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:2-4
 ORIENT: float
-MONS: goblin, hobgoblin
-SUBST: - = 112..., " = 12., ' = 12.
+MONS:   goblin, hobgoblin
+KFEAT:  % = cache of fruit / cache of meat
+SUBST:  - = 112..., " = 12`, ' = 12`
+NSUBST: ` = 1:%. / *:.
 MAP
     .....
    ..xxx..
@@ -4553,27 +4577,29 @@ ENDMAP
 
 NAME:   cheibrodos_fertilizer
 TAGS:   no_item_gen no_monster_gen no_tele_into
-DEPTH:  D:2-8
+DEPTH:  D:3-8
 ORIENT: float
 KMONS:  A = fungus / toadstool
-: if you.absdepth() > 4 then
+: if you.absdepth() > 5 then
 MONS:   kobold / kobold brigand w:6, endoplasm / jelly, slime creature
 : else
 MONS:   kobold, endoplasm, jelly
 : end
 ITEM:   goblin skeleton / hobgoblin skeleton / rat skeleton / bat skeleton
 ITEM:   human skeleton, star_item
+KFEAT:  M = cache of meat
 NSUBST: ' = 3:1 / 5 = 1. / 1:% / 2 = %.
 NSUBST: " = 5:2 / 5 = 2' / 1:3 / 2 = 3` / 2:d / 3 = d` / *:`
-NSUBST: A = 2 = dAA` / 1:`, B = 2 = dAA. / 1:`
-NSUBST: C = 2 = dAA` / 1:`, D = 2 = dAA` / 1:`
+NSUBST: A = 2 = dAA` / 1:` / * = A`, B = 2 = dAA. / 1:` / * = A`
+NSUBST: C = 2 = dAA` / 1:` / * = A`, D = 2 = dAA` / 1:` / * = A`
+SUBST:  M = M..
 FTILE:  `ABCDd = floor_mud
 COLOUR: `ABCDd = brown
 MAP
         xxxxxxxxxxxxx
   xxxxxxxxxxxxxxxxxxx
  xxxxxxxxxxxx""""""xx
- xxx''''''xx+AAAAAAxx
+ xxx'''''Mxx+AAAAAAxx
 .xx'''''''x1x""""""xx
 .+.'''''''x.xBBBBBBxx
 @+.'''''''x.x""""""xx
@@ -4590,17 +4616,18 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:12-
 ORIENT: float
 MONS:   ogre / two-headed ogre
-MONS:   stone giant / frost giant w:3 / fire giant w:3
+KMONS:  2 = stone giant / frost giant w:3 / fire giant w:3
 KMONS:  P = plant
 KMONS:  B = plant
 KMONS:  C = cyclops
 KFEAT:  A = granite_statue
 KFEAT:  C = W
-FTILE:  2$|*%AB = floor_grass
-COLOUR: 2$|*%AB = green
+KFEAT:  2 = cache of fruit / cache of meat / floor w:30
 SUBST:  P = PPP..
 NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
 NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
+FTILE:  2$|*%AB = floor_grass
+COLOUR: 2$|*%AB = green
 MAP
    ....._.c.'.....
   @..c__c_G'c''c..@
@@ -4786,16 +4813,17 @@ KMONS: r = lich w:40 / ancient lich / dread lich
 KMONS: E = w:3 plant / nothing
 KITEM: r = |
 KFEAT: H = iron_grate
+KFEAT: a = cache of meat
+SHUFFLE: AB, CD
+SUBST: A = ., B = x, C = ., D = x
+NSUBST: - = 1:| / 1=|* / 2=*$ / 3=*%, q = 3:* / 3 = $$%%a / * = $$$%%
+NSUBST: _ = 2:T / 2:Y / 2=Yu / 1:U / 1=Uu / *:u, ; = 2:3 / 1=3. / 1:4 / 1=4.
+NSUBST: ' = 1:1 / 1=1. / 1:2 / 1=2. / 1:4, ` = 1:1 / 1=1. / 1:2 / 1=2. / 1:4
+NSUBST: p = 2:1 / 2=1.
 FTILE: s = floor_mud
 COLOUR: s = brown
 FTILE: uETYU_ = floor_grass
 COLOUR: uETYU_ = green
-SHUFFLE: AB, CD
-SUBST: A = ., B = x, C = ., D = x
-NSUBST: - = 1:| / 1=|* / 2=*$ / 3=*%, q = 3:* / 9=$$%%.
-NSUBST: _ = 2:T / 2:Y / 2=Yu / 1:U / 1=Uu / *:u, ; = 2:3 / 1=3. / 1:4 / 1=4.
-NSUBST: ' = 1:1 / 1=1. / 1:2 / 1=2. / 1:4, ` = 1:1 / 1=1. / 1:2 / 1=2. / 1:4
-NSUBST: p = 2:1 / 2=1.
 MAP
 ttttttttttttttttttttttttttttt
 txxxxxxxxxxxxxxxxxxxxxxxxxxxt
@@ -6035,16 +6063,46 @@ wwwwwwG.Gwwwwww
 ENDMAP
 
 ###############################################################################
-NAME:    dreamdust_wu_jian_sword_trials
-TAGS:    no_monster_gen no_item_gen no_descent
-ORIENT:  float
-DEPTH:   D:12-, Orc, Elf
-COLOUR:  t = lightred / red w:3
-TILE:    t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
-KPROP:   -QRSTUVOt$123 = no_tele_into
-KFEAT:   O = altar_wu_jian
-TILE:    G = dngn_statue_sword
-: set_feature_name("granite_statue", "a statue of a sword")
+NAME:   dreamdust_wu_jian_sword_trials
+TAGS:   no_monster_gen no_item_gen no_descent no_pool_fixup
+ORIENT: float
+DEPTH:  D:12-, Orc, Elf
+# Three possible monster sets
+: if you.in_branch("D") then
+KMONS:  1 = human ; ring mail . \
+            falchion good_item | long sword good_item
+KMONS:  2 = vault guard ; chain mail . \
+            scimitar good_item | great sword good_item
+KMONS:  3 = vault warden ; plate armour . \
+            autumn katana w:1 | demon blade good_item | \
+            double sword good_item | great sword good_item | \
+            triple sword good_item | great sword ego:spectral
+: elseif you.in_branch("Orc") then
+KMONS:  1 = orc warrior ; ring mail . \
+            falchion good_item | long sword good_item
+KMONS:  2 = orc knight ; chain mail . \
+            scimitar good_item | great sword good_item
+KMONS:  3 = orc warlord ; plate armour . \
+            autumn katana w:1 | demon blade good_item | \
+            double sword good_item | great sword good_item | \
+            triple sword good_item | great sword ego:spectral
+: else
+KMONS:  1 = elf ; ring mail . \
+            falchion good_item | long sword good_item
+KMONS:  2 = deep elf knight ; leather armour . \
+            scimitar good_item | great sword good_item
+KMONS:  3 = deep elf blademaster ; leather armour . \
+            autumn katana w:1 | demon blade good_item | \
+            double sword good_item | great sword good_item | \
+            triple sword good_item | great sword ego:spectral
+: end
+KMONS:  s = sacred lotus
+KFEAT:  s = w
+KFEAT:  O = altar_wu_jian
+KPROP:  -QRSTUVOt$123 = no_tele_into
+TILE:   G = dngn_statue_sword
+COLOUR: t = lightred / red w:3
+TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 MARKER: P = lua:transp_loc("sword_trial_1_entry")
 MARKER: Q = lua:transp_dest_loc("sword_trial_1_entry")
 MARKER: R = lua:transp_loc("sword_trial_2_entry")
@@ -6053,35 +6111,6 @@ MARKER: T = lua:transp_loc("sword_trial_3_entry")
 MARKER: U = lua:transp_dest_loc("sword_trial_3_entry")
 MARKER: V = lua:transp_loc("sword_trial_exit")
 MARKER: W = lua:transp_dest_loc("sword_trial_exit")
-# Three possible monster sets
-: if you.in_branch("D") then
-KMONS:   1 = human ; ring mail . \
-             falchion good_item | long sword good_item
-KMONS:   2 = vault guard ; chain mail . \
-             scimitar good_item | great sword good_item
-KMONS:   3 = vault warden ; plate armour . \
-             autumn katana w:1 | demon blade good_item | \
-             double sword good_item | great sword good_item | \
-             triple sword good_item | great sword ego:spectral
-: elseif you.in_branch("Orc") then
-KMONS:   1 = orc warrior ; ring mail . \
-             falchion good_item | long sword good_item
-KMONS:   2 = orc knight ; chain mail . \
-             scimitar good_item | great sword good_item
-KMONS:   3 = orc warlord ; plate armour . \
-             autumn katana w:1 | demon blade good_item | \
-             double sword good_item | great sword good_item | \
-             triple sword good_item | great sword ego:spectral
-: else
-KMONS:   1 = elf ; ring mail . \
-             falchion good_item | long sword good_item
-KMONS:   2 = deep elf knight ; leather armour . \
-             scimitar good_item | great sword good_item
-KMONS:   3 = deep elf blademaster ; leather armour . \
-             autumn katana w:1 | demon blade good_item | \
-             double sword good_item | great sword good_item | \
-             triple sword good_item | great sword ego:spectral
-: end
 MAP
    .....
   ..GWG..
@@ -6089,7 +6118,7 @@ MAP
 .ccc$V$ccc.
 .ct$$3$$tc.
 .ct$$$$$tc.
-.ct-tOt-tc.
+.cs-tOt-sc.
 .ct-----tc.
 .ct-----tc.
 .ccc-U-ccc.
@@ -6117,15 +6146,15 @@ NAME:    dreamdust_merry_men
 TAGS:    no_monster_gen transparent
 DEPTH:   Depths
 ORIENT:  float
-TILE:    G = dngn_statue_archer
-: set_feature_name("granite_statue", "a statue of an archer")
-KMONS:   ? = deep elf master archer ; longbow good_item
-KITEM:   ? = quick blade good_item / cloak good_item / q:1000 gold
-SUBST:   - = .tt
-SUBST:   ' = ..t
-NSUBST:  . = 2=22. / 4=1 / 4=1. / .
 MONS:    centaur warrior / deep elf archer
 MONS:    deep elf master archer
+KMONS:   ? = deep elf master archer ; longbow good_item
+KITEM:   ? = quick blade good_item / cloak good_item / q:1000 gold
+KFEAT:   % = cache of fruit
+SUBST:   - = .tt, ' = ..t, % : %..
+NSUBST:  . = 2 = 22. / 4:1 / 4 = 1. / .
+TILE:    G = dngn_statue_archer
+: set_feature_name("granite_statue", "a statue of an archer")
 MAP
 .'''.'''.'''.'''.'''.''
 '.'.'.'.'.'.'.'.'.'.'.'
@@ -6137,7 +6166,7 @@ MAP
 '.'.--t.........t--.'.'
 ''.-.--.........--.-.''
 '.'.--t...xxx...t--.'.'
-.''-.--...x?x...--.-''.
+.''-.--%..x?x..%--.-''.
 '.'.--t...x+x...t--.'.'
 ''.-.--..G...G..--.-.''
 '.'.--t.........t--.'.'
@@ -6240,20 +6269,22 @@ MONS:    harpy, caustic shrike, spriggan druid
 MONS:    tengu warrior, tengu conjurer, tengu reaver
 KMONS:   p = plant / bush
 KFEAT:   - = +
-SHUFFLE: mno
-SUBST:   n : xxm, o = x, ' = t:2 p:3 `
+KFEAT:   d = cache of meat
+KFEAT:   e = cache of fruit
+SHUFFLE: mno, de / de / ~~
+SUBST:   n : xxm, o = x, '~ = t:2 p:3 `
 NSUBST:  2 = 2 = 112 / 1:_ / *:2
-FTILE:   _`%*|t-1234567p = floor_grass
+FTILE:   _`%*|det-1234567p = floor_grass
 MAP
   .........     ..........
  ..xxmmmxx..   ..xxnnnxxx.
 ..xx%''''xx.. ..xx''''%1x.
-.xx1'222''xx. .xx''4'5`'x.
+.xx1d222''xx. .xx''4'5`'x.
 .x*'`'`''''xx+xx'''`'`'|o.
 .o'````'`'`-..x-``````6'o.
 .o'3```````-x..-`'`'```'o.
 .x|'`'`''''xx+xx'''`'`'*o.
-.xx1'222''xx. .xx''4'5`'x.
+.xx1'222''xx. .xx''4'5e'x.
 ..xx%''''xx.. ..xx''''%1x.
  ..xxnnnxx..   ..xxmmmxxx.
   .........     ..........
@@ -6276,7 +6307,7 @@ KMONS:   0 = shapeshifter
 KMONS:   B = shapeshifter zombie
 KMONS:   C = shapeshifter simulacrum
 KMONS:   D = spectral shapeshifter
-KMONS:   E = unseen horror
+KMONS:   E = laughing skull band
 KMONS:   F = vampire mage
 KMONS:   G = golden eye band
 KMONS:   H = rakshasa ; demon whip ego:chaos | demon trident ego:chaos | \
@@ -6296,7 +6327,7 @@ KMONS:   0 = glowing shapeshifter
 KMONS:   B = glowing shapeshifter zombie / apis zombie
 KMONS:   C = glowing shapeshifter simulacrum / fire giant simulacrum
 KMONS:   D = spectral glowing shapeshifter / spectral pearl dragon
-KMONS:   E = phantasmal warrior
+KMONS:   E = laughing skull band
 KMONS:   F = mummy priest god:Xom
 KMONS:   G = tentacled monstrosity
 KMONS:   H = reaper ; halberd itemname:scythe \
@@ -6392,7 +6423,8 @@ SUBST:   ! = '
 KITEM:   d = potion of ambrosia ident:type
 KFEAT:   X = x
 KFEAT:   C = altar_nemelex_xobeh
-SUBST:   T = tt.
+KFEAT:   F = cache of fruit
+SUBST:   T = tt., F : FF.
 SHUFFLE: 678
 COLOUR:  x = yellow
 COLOUR:  b = white
@@ -6415,13 +6447,13 @@ X..t..????..t...'bb''bb'*bb.
 X..t.?????tt..T..wb'b''7bbb.
 X..t?????t..t....w'b'''bbb..
  ..t.t..t...t....9G'bbbbbb..
- ..tt...t........!9llbbb....
+ ..ttF..t........!9llbbb....
   ..tttt.tt.T.......'bbt...
   ..ttb........U.....'xtt..
    .tt..T.....C.....T.'tt.
   ..ttb......U........xtt..
   ...txx........T.tt.tttt..
- ....xxx...4........t...tt..
+ ....xxx...4........t..Ftt..
  ..xxxxx.x......t...t..t.t..
  ..xxx..xGx.....t..t????.t..X
  .xxx1..1x....T..tt?????.t..X

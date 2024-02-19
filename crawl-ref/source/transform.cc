@@ -44,7 +44,7 @@
 
 static const int EQF_NONE = 0;
 // "hand" slots (not rings)
-static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
+static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_OFFHAND)
                              | SLOTF(EQ_GLOVES);
 // auxen
 static const int EQF_AUXES = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
@@ -56,7 +56,7 @@ static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
 static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
 // everything you can (W)ear
 static const int EQF_WEAR = EQF_AUXES | SLOTF(EQ_BODY_ARMOUR)
-                            | SLOTF(EQ_SHIELD);
+                            | SLOTF(EQ_OFFHAND);
 // everything but jewellery
 static const int EQF_PHYSICAL = EQF_HANDS | EQF_WEAR;
 // all rings (except for the macabre finger amulet's)
@@ -180,7 +180,9 @@ bool Form::can_wear_item(const item_def& item) const
     if (is_unrandom_artefact(item, UNRAND_LEAR))
         return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
 
-    return slot_available(get_armour_slot(item));
+    const equipment_type slot = is_weapon(item) ? EQ_OFFHAND
+                                                : get_armour_slot(item);
+    return slot_available(slot);
 }
 
 /**
@@ -1198,8 +1200,13 @@ static set<equipment_type>
 _init_equipment_removal(transformation form)
 {
     set<equipment_type> result;
-    if (!form_can_wield(form) && you.weapon() || you.melded[EQ_WEAPON])
-        result.insert(EQ_WEAPON);
+    if (!form_can_wield(form))
+    {
+        if (you.weapon() || you.melded[EQ_WEAPON])
+            result.insert(EQ_WEAPON);
+        if (you.offhand_weapon() || you.melded[EQ_OFFHAND])
+            result.insert(EQ_OFFHAND); // ^ dubious!
+    }
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
@@ -1255,7 +1262,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
         {
             if (e == EQ_WEAPON)
             {
-                unwield_item(!you.berserk());
+                unwield_item(*you.weapon(), !you.berserk());
                 canned_msg(MSG_EMPTY_HANDED_NOW);
             }
             else
@@ -1287,13 +1294,13 @@ static void _unmeld_equipment_type(equipment_type e)
 
     if (e == EQ_WEAPON)
     {
-        if (you.slot_item(EQ_SHIELD)
-            && is_shield_incompatible(item, you.slot_item(EQ_SHIELD)))
+        if (you.slot_item(EQ_OFFHAND)
+            && is_shield_incompatible(item, you.slot_item(EQ_OFFHAND)))
         {
             force_remove = true;
         }
     }
-    else if (item.base_type != OBJ_JEWELLERY)
+    else if (item.base_type == OBJ_ARMOUR)
     {
         // This could happen if the player was mutated during the form.
         if (!can_wear_armour(item, false, true))
@@ -1302,7 +1309,8 @@ static void _unmeld_equipment_type(equipment_type e)
         // If you switched weapons during the transformation, make
         // sure you can still wear your shield.
         // (This is only possible with Statue Form.)
-        if (e == EQ_SHIELD && you.weapon()
+        if (e == EQ_OFFHAND
+            && you.weapon()
             && is_shield_incompatible(*you.weapon(), &item))
         {
             force_remove = true;
@@ -1610,6 +1618,26 @@ bool check_transform_into(transformation which_trans, bool involuntary)
     return true;
 }
 
+static void _print_death_brand_changes(item_def *weapon, bool entering_death)
+{
+    if (!weapon
+        || get_weapon_brand(*weapon) != SPWPN_HOLY_WRATH
+        || you.undead_or_demonic(false))
+    {
+        return;
+    }
+    if (entering_death)
+    {
+        mprf("%s goes dull and lifeless in your grasp.",
+             weapon->name(DESC_YOUR).c_str());
+    }
+    else
+    {
+        mprf("%s softly glows with a divine radiance!",
+             uppercase_first(weapon->name(DESC_YOUR)).c_str());
+    }
+}
+
 /// Form-specific special effects. Should be in a class?
 static void _on_enter_form(transformation which_trans)
 {
@@ -1654,16 +1682,8 @@ static void _on_enter_form(transformation which_trans)
 
     case transformation::death:
         you.redraw_status_lights = true;
-    {
-        const item_def *weapon = you.weapon();
-        if (weapon
-            && get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH
-            && !you.undead_or_demonic(false))
-        {
-            mprf("%s goes dull and lifeless in your grasp.",
-                 weapon->name(DESC_YOUR).c_str());
-        }
-    }
+        _print_death_brand_changes(you.weapon(), true);
+        _print_death_brand_changes(you.offhand_weapon(), true);
         break;
 
     case transformation::shadow:
@@ -1932,14 +1952,8 @@ void untransform(bool skip_move)
 
     if (old_form == transformation::death)
     {
-        const item_def *weapon = you.weapon();
-        if (weapon
-            && get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH
-            && !you.undead_or_demonic(false))
-        {
-            mprf("%s softly glows with a divine radiance!",
-                 uppercase_first(weapon->name(DESC_YOUR)).c_str());
-        }
+        _print_death_brand_changes(you.weapon(), false);
+        _print_death_brand_changes(you.offhand_weapon(), false);
     }
 
     // Update skill boosts for the current state of equipment melds

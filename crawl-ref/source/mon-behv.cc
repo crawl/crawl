@@ -362,9 +362,14 @@ void handle_behaviour(monster* mon)
     }
 
     // Friendly allies will come back to the player if they go out of sight
-    // (and haven't been commanded to run away).
-    if (isFriendly && monster_needs_los(mon) && mon->behaviour != BEH_WITHDRAW)
+    // (and haven't been commanded to run away or guard an area).
+    if (isFriendly && monster_needs_los(mon)
+        && mon->behaviour != BEH_WITHDRAW
+        && !mon->is_patrolling()
+        && !you.can_see(*mon))
+    {
         mon->target = you.pos();
+    }
 
     // Monsters do not attack themselves. {dlb}
     if (mon->foe == mon->mindex())

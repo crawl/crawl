@@ -90,6 +90,7 @@ bool feat_is_portal_exit(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_descent_exitable(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
+bool feat_is_food(dungeon_feature_type feat);
 bool feat_is_reachable_past(dungeon_feature_type feat);
 
 bool feat_is_critical(dungeon_feature_type feat);

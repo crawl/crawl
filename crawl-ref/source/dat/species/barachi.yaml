@@ -1,10 +1,10 @@
 enum: SP_BARACHI
 monster: MONS_BARACHI
-name: "Barachi"
-adjective: "Barachian"
-genus: "Frog"
-difficulty: Intermediate
-difficulty_priority: 20
+name: Barachi
+adjective: Barachian
+genus: Frog
+difficulty: Advanced
+difficulty_priority: 100
 species_flags:
   - SPF_NO_HAIR
 aptitudes:
@@ -56,3 +56,4 @@ recommended_jobs:
   - JOB_REAVER
 
 child_name: Tadpole
+orc_name: Orcphibian

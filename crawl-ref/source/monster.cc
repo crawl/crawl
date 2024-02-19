@@ -371,7 +371,7 @@ brand_type monster::damage_brand(int which_attack)
                                     : SPWPN_NORMAL;
 }
 
-int monster::damage_type(int which_attack)
+vorpal_damage_type monster::damage_type(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
 
@@ -809,6 +809,9 @@ void monster::equip_weapon_message(item_def &item)
     case SPWPN_HOLY_WRATH:
         mpr("It softly glows with a divine radiance!");
         break;
+    case SPWPN_FOUL_FLAME:
+        mpr("It glows horrifically with a foul radiance!");
+        break;
     case SPWPN_ELECTROCUTION:
         mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
         break;
@@ -938,6 +941,7 @@ void monster::unequip_weapon(item_def &item, bool msg)
             break;
 
         case SPWPN_HOLY_WRATH:
+        case SPWPN_FOUL_FLAME:
             mpr("It stops glowing.");
             break;
 
@@ -1653,11 +1657,11 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         break;
     case ARM_GLOVES:
         if (base_type == MONS_NIKOLA)
-            eq = EQ_SHIELD;
+            eq = EQ_OFFHAND;
         break;
     case ARM_HELMET:
         if (base_type == MONS_ROBIN)
-            eq = EQ_SHIELD;
+            eq = EQ_OFFHAND;
         break;
     default:
         eq = get_armour_slot(item);
@@ -1668,7 +1672,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         if (eq != EQ_HELMET && base_type == MONS_GASTRONOK)
             return false;
 
-        if (eq != EQ_HELMET && eq != EQ_SHIELD
+        if (eq != EQ_HELMET && eq != EQ_OFFHAND
             && genus == MONS_OCTOPODE)
         {
             return false;
@@ -1680,7 +1684,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         return false;
 
     // XXX: Monsters can only equip body armour and shields (as of 0.4).
-    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
+    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_OFFHAND)
         return false;
 
     const mon_inv_type mslot = equip_slot_to_mslot(eq);
@@ -3780,6 +3784,22 @@ int monster::res_holy_energy() const
     return 0;
 }
 
+int monster::res_foul_flame() const
+{
+    if (undead_or_demonic())
+        return 1;
+
+    if (is_holy()
+        || is_good_god(god)
+        || (!crawl_state.game_is_arena()
+            && (is_good_god(you.religion) && is_follower(*this))))
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
 int monster::res_negative_energy(bool intrinsic_only) const
 {
     // If you change this, also change get_mons_resists.
@@ -4308,7 +4328,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly or Uskayaw's Pain Bond).
-        react_to_damage(agent, amount, flavour);
+        react_to_damage(agent, amount, flavour, kill_type);
 
         // Don't mirror Yredelemnul's effects (in particular don't mirror
         // mirrored damage).
@@ -5641,7 +5661,7 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 }
 
 void monster::react_to_damage(const actor *oppressor, int damage,
-                               beam_type flavour)
+                               beam_type flavour, kill_method_type ktype)
 {
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
@@ -5711,6 +5731,16 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                                              master_damage, false);
             ++hits;
         }
+    }
+
+    // Interrupt autorest for allies standing clouds, on fire, etc.
+    // (We exclude poison, since even in cases where this is lethal, there's
+    // usually nothing the player can do about this, and it otherwise
+    // interrupts rest without even a visible message)
+    if (damage > 0 && ktype != KILLED_BY_POISON
+        && !crawl_state.game_is_arena() && friendly() && you.can_see(*this))
+    {
+        interrupt_activity(activity_interrupt::ally_attacked);
     }
 
     if (!alive())

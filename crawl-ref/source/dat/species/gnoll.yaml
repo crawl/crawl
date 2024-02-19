@@ -1,6 +1,6 @@
 enum: SP_GNOLL
 monster: MONS_GNOLL
-name: "Gnoll"
+name: Gnoll
 difficulty: Simple
 difficulty_priority: 10
 aptitudes:
@@ -54,3 +54,4 @@ recommended_jobs:
   - JOB_WANDERER
 
 child_name: Pup
+orc_name: Hyenorc

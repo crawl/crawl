@@ -226,6 +226,7 @@ void ghost_demon::set_pan_lord_special_attack()
         // Low chance
         10, _brand_attack(SPWPN_VENOM),
         10, _brand_attack(SPWPN_DRAINING),
+        2, _brand_attack(SPWPN_FOUL_FLAME),
         4, _flavour_attack(AF_DRAIN_STR),
         4, _flavour_attack(AF_DRAIN_INT),
         2, _flavour_attack(AF_DRAIN_DEX),
@@ -546,18 +547,18 @@ static const vector<random_pick_entry<spell_type>> wizard_primary_spells =
   { 15,  85, 160, SEMI, SPELL_SCORCH},
   { 25,  80, 150, SEMI, SPELL_STONE_ARROW },
   { 25,  85, 105, SEMI, SPELL_SEARING_RAY },
-  { 45, 100, 110, SEMI, SPELL_LRD },
-  { 45, 135,  70, PEAK, SPELL_BORGNJORS_VILE_CLUTCH },
+  { 45, 120, 150, SEMI, SPELL_LRD },
+  { 45, 140, 170, PEAK, SPELL_BORGNJORS_VILE_CLUTCH },
   { 45, 125, 150, SEMI, SPELL_FIREBALL },
   { 40, 125, 100, SEMI, SPELL_ICEBLAST },
-  { 45, 100,  50, FLAT, SPELL_AIRSTRIKE },
-  { 40, 90,  120, SEMI, SPELL_VENOM_BOLT },
+  { 45, 100,  80, FLAT, SPELL_AIRSTRIKE },
+  { 35, 75,  120, SEMI, SPELL_VENOM_BOLT },
   { 40, 90,  190, SEMI, SPELL_BOLT_OF_DRAINING },
   { 25, 110, 120, SEMI, SPELL_FORCE_LANCE },
   { 30, 100,  90, PEAK, SPELL_LIGHTNING_BOLT },
   { 20, 85,  140, PEAK, SPELL_BOLT_OF_MAGMA },
   { 20, 65,  140, PEAK, SPELL_THROW_ICICLE },
-  { 40, 80,  100, SEMI, SPELL_POISON_ARROW },
+  { 40, 90,  110, SEMI, SPELL_POISON_ARROW },
   { 35, 90, 155, RISE, SPELL_BOLT_OF_COLD },
   { 35, 90, 280, RISE, SPELL_BOLT_OF_FIRE },
   { 50, 100, 180, RISE, SPELL_BOMBARD },
@@ -570,7 +571,7 @@ static const vector<random_pick_entry<spell_type>> wizard_secondary_spells =
   { 0,  100, 200, FLAT, SPELL_HASTE },
   { 0,  120, 250, FALL, SPELL_CONFUSE },
   { 0,  70,  250, FALL, SPELL_SLOW },
-  { 0,  150, 400, FALL, SPELL_BLINK },
+  { 0,  150, 325, FALL, SPELL_BLINK },
   { 30, 100, 150, RISE, SPELL_BLINK_RANGE },
   { 15, 130, 100,  PEAK, SPELL_VITRIFY },
   { 25, 130,  80,  PEAK, SPELL_PARALYSE },
@@ -621,16 +622,16 @@ static const map<spell_type, int> freq_map =
 {
     {SPELL_BLINK, 15},
     {SPELL_BLINK_RANGE, 30},
-    {SPELL_PARALYSE, 15},
-    {SPELL_SLOW, 15},
+    {SPELL_PARALYSE, 20},
+    {SPELL_SLOW, 20},
     {SPELL_CONFUSE, 20},
-    {SPELL_PETRIFY, 15},
+    {SPELL_PETRIFY, 20},
     {SPELL_MIGHT, 35},
     {SPELL_HASTE, 35},
     {SPELL_BATTLESPHERE, 80},
     {SPELL_AURA_OF_BRILLIANCE, 60},
     {SPELL_CALL_DOWN_LIGHTNING, 15},
-    {SPELL_SEARING_RAY, 25},
+    {SPELL_SEARING_RAY, 30},
     {SPELL_CONJURE_LIVING_SPELLS, 40},
     {SPELL_MANIFOLD_ASSAULT, 40},
 };
@@ -718,10 +719,10 @@ void ghost_demon::pick_apostle_spells(apostle_type type, int pow)
             const spell_type secondary =
                 picker.pick(wizard_secondary_spells, pow, SPELL_NO_SPELL);
 
-            _add_apostle_spell(spells, primary, 40, MON_SPELL_WIZARD);
+            _add_apostle_spell(spells, primary, 45, MON_SPELL_WIZARD);
 
             if (coinflip() || x_chance_in_y(pow, 50))
-                _add_apostle_spell(spells, primary2, 30, MON_SPELL_WIZARD);
+                _add_apostle_spell(spells, primary2, 35, MON_SPELL_WIZARD);
 
             if (spells.size() == 1 || coinflip() || x_chance_in_y(pow, 60))
                 _add_apostle_spell(spells, secondary, 30, MON_SPELL_WIZARD);
@@ -791,8 +792,9 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
             break;
 
         case APOSTLE_WIZARD:
-            max_hp = max_hp * 3 / 4;
+            max_hp = max_hp * 5 / 6;
             damage = 2 + div_rand_round(pow, 8);
+            ev += div_rand_round(pow, 12);
 
             // A little spellpower boost compared to others (but not for the
             // very earliest challenges)

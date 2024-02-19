@@ -226,7 +226,7 @@ static const armour_def Armour_prop[] =
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
     { ARM_ORB,                 "orb",                     0,   0,   90,
-        EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
+        EQ_OFFHAND,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
             { SPARM_LIGHT,  1 },
             { SPARM_RAGE,   1 },
             { SPARM_MAYHEM, 1 },
@@ -234,11 +234,11 @@ static const armour_def Armour_prop[] =
             { SPARM_ENERGY, 1 },
     }},
     { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
-        EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
+        EQ_OFFHAND,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
     { ARM_KITE_SHIELD,         "kite shield",             8, -100,  45,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true, 0, SHIELD_EGOS },
+        EQ_OFFHAND,      SIZE_SMALL,  SIZE_LARGE, true, 0, SHIELD_EGOS },
     { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  45,
-        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true, 0, SHIELD_EGOS },
+        EQ_OFFHAND,      SIZE_MEDIUM, SIZE_GIANT, true, 0, SHIELD_EGOS },
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
@@ -1410,7 +1410,7 @@ int armour_max_enchant(const item_def &item)
     int max_plus = MAX_SEC_ENCHANT;
     if (eq_slot == EQ_BODY_ARMOUR || item.sub_type == ARM_BARDING)
         max_plus = property(item, PARM_AC);
-    else if (eq_slot == EQ_SHIELD)
+    else if (eq_slot == EQ_OFFHAND)
         // 3 / 5 / 8 for bucklers/shields/lg. shields
         max_plus = (property(item, PARM_AC) - 3)/2 + 3;
 
@@ -1524,6 +1524,9 @@ int armour_acq_weight(const armour_type armour)
 
 equipment_type get_armour_slot(const item_def &item)
 {
+    if (you.has_mutation(MUT_WIELD_OFFHAND) && is_weapon(item))
+        return EQ_OFFHAND;
+
     ASSERT(item.base_type == OBJ_ARMOUR);
 
     return Armour_prop[ Armour_index[item.sub_type] ].slot;
@@ -1740,14 +1743,13 @@ int weapon_rarity(int w_type)
     return Weapon_prop[Weapon_index[w_type]].commonness;
 }
 
-int get_vorpal_type(const item_def &item)
+vorpal_damage_type get_vorpal_type(const item_def &item)
 {
-    int ret = DVORP_NONE;
+    if (item.base_type != OBJ_WEAPONS)
+        return DVORP_NONE;
 
-    if (item.base_type == OBJ_WEAPONS)
-        ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAMV_MASK);
-
-    return ret;
+    int vorp = Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAMV_MASK;
+    return static_cast<vorpal_damage_type>(vorp);
 }
 
 int get_damage_type(const item_def &item)
@@ -3019,10 +3021,6 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-#if TAG_MAJOR_VERSION == 34
-    case OBJ_RODS:
-#endif
-    case OBJ_MISCELLANY:
         return EQ_WEAPON;
 
     case OBJ_ARMOUR:
@@ -3038,25 +3036,30 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     return EQ_NONE;
 }
 
+bool is_shield(const item_def *item)
+{
+    return item && is_shield(*item);
+}
+
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
-           && get_armour_slot(item) == EQ_SHIELD
+           && get_armour_slot(item) == EQ_OFFHAND
            && item.sub_type != ARM_ORB;
 }
 
 bool is_offhand(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
-           && get_armour_slot(item) == EQ_SHIELD;
+           && get_armour_slot(item) == EQ_OFFHAND;
 }
 
 // Returns true if the given item cannot be wielded _by you_ with the given shield.
 // The currently equipped shield is used if no shield is passed in.
 bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 {
-    // If there's no shield, there's no problem.
-    if (!shield && !(shield = you.shield()))
+    // If there's no shield or off-hand weapon, there's no problem.
+    if (!shield && !(shield = you.shield()) && !you.offhand_weapon())
         return false;
 
     hands_reqd_type hand = you.hands_reqd(weapon);

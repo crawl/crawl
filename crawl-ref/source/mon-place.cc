@@ -807,7 +807,10 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             else if (mon->type == MONS_KIRKE)
                 member->props[KIRKE_BAND_KEY] = true;
             else if (mon->type == MONS_ORC_APOSTLE)
+            {
                 member->flags |= (MF_HARD_RESET | MF_APOSTLE_BAND | MF_NO_REWARD);
+                member->mark_summoned(0, true, 0, false);
+            }
         }
     }
     dprf(DIAG_DNGN, "Placing %s at %d,%d", mon->name(DESC_PLAIN, true).c_str(),
@@ -1826,7 +1829,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_RIVER_RAT,       { {}, {{ BAND_GREEN_RATS, {4, 10} }}}},
     { MONS_HELL_RAT,        { {}, {{ BAND_HELL_RATS, {3, 7} }}}},
     { MONS_DREAM_SHEEP,     { {}, {{ BAND_DREAM_SHEEP, {3, 7} }}}},
-    { MONS_GHOUL,           { {}, {{ BAND_GHOULS, {2, 5} }}}},
+    { MONS_GHOUL,           { {}, {{ BAND_GHOULS, {1, 4} }}}},
     { MONS_KIRKE,           { {}, {{ BAND_HOGS, {3, 8}, true }}}},
     { MONS_HOG,             { {}, {{ BAND_HOGS, {1, 4} }}}},
     { MONS_VAMPIRE_MOSQUITO, { {}, {{ BAND_VAMPIRE_MOSQUITOES, {1, 4} }}}},
@@ -2308,8 +2311,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_NAGA_SHARPSHOOTER,   {{{MONS_NAGA_SHARPSHOOTER, 1},
                                   {MONS_NAGA, 2}}}},
     { BAND_GHOULS,              {{{MONS_GHOUL, 4},
-                                  {MONS_NECROPHAGE, 3},
-                                  {MONS_BOG_BODY, 2}}}},
+                                  {MONS_BOG_BODY, 5}}}},
     { BAND_ILSUIW,              {{{MONS_MERFOLK_SIREN, 6},
                                   {MONS_MERFOLK, 3},
                                   {MONS_MERFOLK_JAVELINEER, 2},

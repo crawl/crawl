@@ -1319,7 +1319,7 @@ void tso_divine_shield()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
-        if (you.shield())
+        if (is_shield(you.shield()))
         {
             mprf("Your shield is strengthened by %s divine power.",
                  apostrophise(god_name(GOD_SHINING_ONE)).c_str());
@@ -1458,6 +1458,20 @@ bool yred_light_the_torch()
          "Yredelemnul's name!",
             level_id::current().describe(true, true).c_str());
 
+    // Determine number of torch charges based on piety stars.
+    // Note: You are given 'hidden' internal torchlight charges even below the
+    // piety threshold to hurl torchlight, in case you gain that ability on the
+    // current floor.
+    you.props[YRED_TORCH_POWER_KEY] = min(5, max(piety_rank(), 2));
+
+    // Mark the torch as having been used on this level
+    you.props[YRED_TORCH_USED_KEY].get_table()
+        [level_id::current().describe()] = true;
+
+    // No instant allies at 0*
+    if (you.piety < piety_breakpoint(0))
+        return true;
+
     bool aid = false;
 
     // The power of the allies you get is based on the player's xl, but capped
@@ -1481,16 +1495,6 @@ bool yred_light_the_torch()
 
     if (aid)
         mpr("Yredelemnul sends servants to aid you!");
-
-    // Determine number of torch charges based on piety stars.
-    // Note: You are given 'hidden' internal torchlight charges even below the
-    // piety threshold to hurl torchlight, in case you gain that ability on the
-    // current floor.
-    you.props[YRED_TORCH_POWER_KEY] = min(5, max(piety_rank(), 2));
-
-    // Mark the torch as having been used on this level
-    you.props[YRED_TORCH_USED_KEY].get_table()
-        [level_id::current().describe()] = true;
 
     return true;
 }
@@ -1701,8 +1705,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     ASSERT(mon); // XXX: change to monster &mon
     ASSERT(mon->has_ench(ENCH_SOUL_RIPE));
 
-    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_bound_soul_companion();
+    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
@@ -1765,13 +1769,13 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     name_zombie(*mon, orig);
 
-    mons_make_god_gift(*mon, GOD_YREDELEMNUL);
-    add_companion(mon);
-
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
     mons_att_changed(mon);
+
+    mons_make_god_gift(*mon, GOD_YREDELEMNUL);
+    add_companion(mon);
 
     mon->stop_constricting_all();
     mon->stop_being_constricted();
@@ -2711,11 +2715,11 @@ void beogh_increase_orcification()
     switch (you.species)
     {
         case SP_FORMICID:
-            msg += "Your mandibles take on a glossy white sheen and your antennae grow pointier.";
+            msg += "Your mandibles take on a glossy white sheen, and your antennae grow pointier.";
             break;
 
         case SP_TENGU:
-            msg += "Your beak becomes more hooked and the plumage around your ears grows tufted.";
+            msg += "Your beak becomes more hooked, and the plumage around your ears grows tufted.";
             break;
 
         case SP_GARGOYLE:
@@ -2723,7 +2727,7 @@ void beogh_increase_orcification()
             break;
 
         case SP_VINE_STALKER:
-            msg += "A pair of ivory tusks grows out from your maw and flowers begin to bloom upon you.";
+            msg += "A pair of ivory tusks grows out from your maw, and flowers begin to bloom upon you.";
             break;
 
         case SP_MUMMY:
@@ -2731,15 +2735,15 @@ void beogh_increase_orcification()
             break;
 
         case SP_BARACHI:
-            msg += "Your teeth grow more tusk-like and your tympanum bulges.";
+            msg += "Your teeth grow more tusk-like, and your tympanum bulges.";
             break;
 
         case SP_OCTOPODE:
-            msg += "Your beak grows more hooked and small fins emerge from the sides of your head.";
+            msg += "Your beak grows more hooked, and small fins emerge from the sides of your head.";
             break;
 
         default:
-            msg += "Your teeth grow more tusk-like and your ears lengthen.";
+            msg += "Your teeth grow more tusk-like, and your ears lengthen.";
             break;
     }
 
@@ -2889,7 +2893,7 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
             continue;
         if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
             continue;
-        if (*which == POT_INVISIBILITY && you.has_mutation(MUT_GLOWING))
+        if (*which == POT_INVISIBILITY && you.has_mutation(MUT_FOUL_GLOW))
             continue;
         if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
             continue;
@@ -4609,7 +4613,7 @@ static void _extra_sacrifice_code(ability_type sac)
         auto ring_slots = species::ring_slots(you.species, true);
         equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
 
-        item_def* const shield = you.slot_item(EQ_SHIELD, true);
+        item_def* const shield = you.slot_item(EQ_OFFHAND, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
         item_def* const ring = you.slot_item(sac_ring_slot, true);
         int ring_inv_slot = you.equip[sac_ring_slot];
@@ -4620,7 +4624,7 @@ static void _extra_sacrifice_code(ability_type sac)
         {
             mprf("You can no longer hold %s!",
                  shield->name(DESC_YOUR).c_str());
-            unequip_item(EQ_SHIELD);
+            unequip_item(EQ_OFFHAND);
         }
 
         // And your two-handed weapon

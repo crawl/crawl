@@ -1,9 +1,9 @@
 enum: SP_RED_DRACONIAN
 monster: MONS_RED_DRACONIAN
-name: "Red Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Red Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN
@@ -36,3 +36,5 @@ mutations:
 fake_mutations:
   - long: You can breathe blasts of fire.
     short: breathe fire
+
+orc_name: Red Orconian

@@ -217,8 +217,8 @@ static int l_item_do_remove(lua_State *ls)
     }
 
     bool result = false;
-    if (eq == EQ_WEAPON)
-        result = wield_weapon(SLOT_BARE_HANDS);
+    if (is_weapon(*item))
+        result = unwield_weapon(*item);
     else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else

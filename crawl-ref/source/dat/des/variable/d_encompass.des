@@ -129,7 +129,7 @@ ORIENT:  encompass
 DEPTH:   Depths:2-
 PLACE:   D:$, Depths:$
 WEIGHT:  1 (D:$), 2 (Depths:$), 10
-KMONS:   - = plant
+KMONS:   - : plant / bush
 KMONS:   _ = demonic plant
 KMONS:   mo = vault guard
 KMONS:   p = glass eye
@@ -176,6 +176,7 @@ KITEM:   Z = midnight gem
 KFEAT:   ^ = permanent teleport trap
 KFEAT:   ~ = teleport trap
 KFEAT:   aD = stone_arch
+KFEAT:   ; = cache of fruit
 KFEAT:   A = enter_hell
 KFEAT:   & = enter_pandemonium
 KFEAT:   @ = enter_abyss
@@ -205,7 +206,7 @@ SUBST:   f = ', 2 = r
 : end
 SUBST:   {} = **|||, ) = C, [ = !, ] = ?
 NSUBST:  < = { / ( / [, > = } / ) / ]
-SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
+SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0, ; : ;"
 SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
 SHUFFLE: })]` / {([>, ?!, mo / pq, pq / pq / pq / qp / pp / qq
 SHUFFLE: LM / LM / LM / LM / LM / LM / ML / ML / MM
@@ -217,7 +218,7 @@ SUBST:   Iy = D, uz = a
 NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / .
 COLOUR:  "-_ = green
 COLOUR:  '`089rs%*|!? = white
-FTILE:   ^"aAFHuz@&-_U = floor_grass
+FTILE:   ^";aAFHuz@&-_U = floor_grass
 : if crawl.coinflip() then
 FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_vault
 : else
@@ -259,8 +260,8 @@ MAP
 vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
 v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
 v%''c.NO~~~~~..+'''%bnlll"_""""""lbbbbck'cc..~~MLM~..+'''v
-v['3c..~~~~~ML.c'5'}Gnl^H""""""U"lllnb%'''+..MLM~~~..c''%v
-v%''c..~~~MLM..+'''%bnlll"U""""""u^lnI]'7'c.LM~~~~~..c1'{v
+v['3c..~~~~~ML.c'5'}Gnl^H"""";"U"lllnb%'''+..MLM~~~..c''%v
+v%''c..~~~MLM..+'''%bnlll"U";""""u^lnI]'7'c.LM~~~~~..c1'{v
 v'''+..~MLM~~..cc'icbbbbl""""""_"lllnb%'''+..~~~~~ON.c''%v
 vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
  vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv

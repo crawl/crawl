@@ -1,10 +1,10 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_DEEP_DWARF
 monster: MONS_DEEP_DWARF
-name: "Deep Dwarf"
-short_name: "DD"
-adjective: "Dwarven"
-genus: "Dwarf"
+name: Deep Dwarf
+short_name: DD
+adjective: Dwarven
+genus: Dwarf
 difficulty: False
 aptitudes:
   xp: -1
@@ -62,3 +62,5 @@ recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES
   - SK_LONG_BLADES
+
+orc_name: Deep Dworc

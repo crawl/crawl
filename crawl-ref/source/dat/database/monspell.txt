@@ -743,6 +743,10 @@ Invisibility shadow cast
 
 @The_monster@ slips into darkness.
 %%%%
+scrub nettle cast targeted
+
+@The_monster@ launches toxic spines @at@ @target@.
+%%%%
 ghost moth cast targeted
 
 @The_monster@ stares @at@ @target@.
@@ -901,7 +905,7 @@ burial acolyte cast
 
 @The_monster@ [drones|recites] a funeral chant.
 %%%%
-vhi's electric charge cast
+vhi's electrolunge cast
 
 @The_monster@ charges forward with an electric crackle.
 %%%%

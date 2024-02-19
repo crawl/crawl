@@ -352,6 +352,16 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         {
             return mutation_activity_type::FULL;
         }
+        // XXX EVIL HACK: we want to meld coglins' exoskeletons in 'full meld'
+        // forms like serpent and dragon, but treeform keeps using weapons and
+        // should really keep allowing dual wielding. I'm so sorry about this.
+        if (you.form == transformation::tree
+            && (mut == MUT_WIELD_OFFHAND
+                || mut == MUT_SLOW_WIELD
+                || mut == MUT_WARMUP_STRIKES))
+        {
+            return mutation_activity_type::FULL;
+        }
         // Dex and HP changes are kept in all forms.
 #if TAG_MAJOR_VERSION == 34
         if (mut == MUT_ROUGH_BLACK_SCALES)
@@ -1808,6 +1818,22 @@ static bool _body_facet_blocks(mutation_type mutat)
     return false;
 }
 
+static bool _exoskeleton_incompatible(mutation_type mutat)
+{
+    // Coglins attack with and wear aux armour on their exoskeleton-limbs,
+    // not their fleshy, mutatation-prone hands. Disable mutations that would
+    // make no sense in this scheme.
+    switch (mutat)
+    {
+    case MUT_HOOVES:
+    case MUT_CLAWS:
+    case MUT_TALONS:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool physiology_mutation_conflict(mutation_type mutat)
 {
     if (mutat == MUT_IRIDESCENT_SCALES)
@@ -1909,6 +1935,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Mutations of the same slot conflict
     if (_body_facet_blocks(mutat))
+        return true;
+
+    if (you.species == SP_COGLIN && _exoskeleton_incompatible(mutat))
         return true;
 
     return false;
@@ -2942,6 +2971,8 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_FOUL_STENCH, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
       { -33, 0, 0 } },
     { 2, { MUT_MANA_REGENERATION, MUT_MANA_SHIELD, MUT_MANA_LINK },
+      { -33, 0, 0 } },
+    { 2, { MUT_FOUL_GLOW, MUT_FOUL_GLOW, MUT_FOUL_GLOW },
       { -33, 0, 0 } },
     // Tier 3 facets
     { 3, { MUT_DEMONIC_WILL, MUT_TORMENT_RESISTANCE, MUT_HURL_DAMNATION },

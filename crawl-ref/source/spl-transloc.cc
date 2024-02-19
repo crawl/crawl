@@ -788,7 +788,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
     else
         charge_atk.charge_pow = powc;
 
-    charge_atk.attack();
+    charge_atk.launch_attack_set();
 
     // Monsters will already use up attack energy via the melee attack itself,
     // so we only need to handle delay for players.
@@ -796,7 +796,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
     {
         // Normally this is 10 aut (times haste, chei etc), but slow weapons
         // take longer. Most relevant for low-skill players and Dark Maul.
-        you.time_taken = max(you.time_taken, player_speed());
+        you.time_taken = max(you.attack_delay().roll(), player_speed());
     }
 
     return spret::success;
@@ -1363,7 +1363,10 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
 
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
-        atk.attack();
+        atk.launch_attack_set();
+
+        if (i == 0)
+            you.time_taken = you.attack_delay().roll();
 
         // Stop further attacks if we somehow died in the process.
         // (Unclear how this is possible?)
@@ -1825,6 +1828,38 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
            && mons.is_habitable(pos);
 }
 
+/// Attempt to pull a monster toward the player.
+void attract_monster(monster &mon, int max_move)
+{
+    const int orig_dist = grid_distance(you.pos(), mon.pos());
+    if (orig_dist <= 1)
+        return;
+
+    ray_def ray;
+    if (!find_ray(mon.pos(), you.pos(), ray, opc_solid))
+        return;
+
+    for (int i = 0; i < max_move && i < orig_dist - 1; i++)
+        ray.advance();
+
+    while (!_can_move_mons_to(mon, ray.pos()) && ray.pos() != mon.pos())
+        ray.regress();
+
+    if (ray.pos() == mon.pos())
+        return;
+
+    const coord_def old_pos = mon.pos();
+    if (!mon.move_to_pos(ray.pos()))
+        return;
+
+    mprf("%s is attracted toward you.", mon.name(DESC_THE).c_str());
+
+    _place_tloc_cloud(old_pos);
+    _place_tloc_cloud(ray.pos());
+    mon.apply_location_effects(old_pos);
+    mons_relocated(&mon);
+}
+
 /**
   * Attempt to pull nearby monsters toward the player.
  */
@@ -1839,35 +1874,7 @@ void attract_monsters(int delay)
     sort(targets.begin(), targets.end(), sorter);
 
     for (monster *mi : targets)
-    {
-        const int orig_dist = grid_distance(you.pos(), mi->pos());
-        if (orig_dist <= 1)
-            continue;
-
-        ray_def ray;
-        if (!find_ray(mi->pos(), you.pos(), ray, opc_solid))
-            continue;
-
-        const int max_move = div_rand_round(3 * delay, BASELINE_DELAY);
-        for (int i = 0; i < max_move && i < orig_dist - 1; i++)
-            ray.advance();
-
-        while (!_can_move_mons_to(*mi, ray.pos()) && ray.pos() != mi->pos())
-            ray.regress();
-
-        if (ray.pos() == mi->pos())
-            continue;
-
-        const coord_def old_pos = mi->pos();
-        if (!mi->move_to_pos(ray.pos()))
-            continue;
-
-        mprf("%s is attracted toward you.", mi->name(DESC_THE).c_str());
-
-        _place_tloc_cloud(old_pos);
-        mi->apply_location_effects(old_pos);
-        mons_relocated(mi);
-    }
+        attract_monster(*mi, div_rand_round(3 * delay, BASELINE_DELAY));
 }
 
 vector<monster *> find_chaos_targets(bool just_check)

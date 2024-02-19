@@ -128,6 +128,7 @@ protected:
     virtual int calc_base_unarmed_damage() const;
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
+    int apply_rev_penalty(int damage) const;
     virtual int calc_damage();
     int lighting_effects();
     int test_hit(int to_hit, int ev, bool randomise_ev);

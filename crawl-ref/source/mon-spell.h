@@ -1202,9 +1202,9 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('P') Immobile plants.
-    {  MST_BURNING_BUSH,
+    {  MST_SCRUB_NETTLE,
       {
-       { SPELL_THROW_FLAME, 67, MON_SPELL_NATURAL },
+       { SPELL_STING, 60, MON_SPELL_NATURAL },
       }
     },
 

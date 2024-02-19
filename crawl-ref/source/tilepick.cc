@@ -531,6 +531,10 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_BLOOD_FOUNTAIN;
     case DNGN_DRY_FOUNTAIN:
         return TILE_DNGN_DRY_FOUNTAIN;
+    case DNGN_CACHE_OF_FRUIT:
+        return TILE_DNGN_CACHE_OF_FRUIT;
+    case DNGN_CACHE_OF_MEAT:
+        return TILE_DNGN_CACHE_OF_MEAT;
     case DNGN_RUNELIGHT:
         return TILE_DNGN_RUNELIGHT;
     case DNGN_PASSAGE_OF_GOLUBRIA:
@@ -2091,7 +2095,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
     if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch))
-        || mons.type == MONS_ORC_APOSTLE)
+        || mons.type == MONS_ORC_APOSTLE || mons.type == MONS_SACRED_LOTUS)
     {
         ch |= TILE_FLAG_FLYING;
     }
@@ -4195,6 +4199,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_METEORAN:
             return TILEG_SP_METEORAN;
 #endif
+        case SP_COGLIN:
+            return TILEG_SP_COGLIN;
         default:
             return TILEP_ERROR;
     }

@@ -3,7 +3,7 @@ monster: MONS_VINE_STALKER
 name: Vine Stalker
 short_name: VS
 difficulty: Advanced
-difficulty_priority: 100
+difficulty_priority: 90
 aptitudes:
   xp: 0
   hp: -3
@@ -56,3 +56,4 @@ recommended_weapons:
   - SK_STAVES
 
 walking_verb: Stalk
+orc_name: Orchid Stalker

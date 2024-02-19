@@ -328,6 +328,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:
     case SPWPN_REAPING: // only exists on Sword of Zonguldrok
+    case SPWPN_FOUL_FLAME: // only exists on Brilliance
         if (is_range_weapon(item))
             return false;
         break;
@@ -796,7 +797,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
-        return slot == EQ_SHIELD;
+        return slot == EQ_OFFHAND;
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
@@ -831,7 +832,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK
+        return slot == EQ_BODY_ARMOUR || slot == EQ_OFFHAND || slot == EQ_CLOAK
                        || !strict;
 
     case SPARM_SPIRIT_SHIELD:
@@ -841,7 +842,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_CAP ||
                type == ARM_SCARF ||
 #endif
-               slot == EQ_SHIELD || !strict;
+               slot == EQ_OFFHAND || !strict;
 
     case SPARM_REPULSION:
     case SPARM_HARM:
@@ -885,7 +886,7 @@ static int _armour_plus_threshold(equipment_type armour_type)
         case EQ_BODY_ARMOUR:
             return 3;
         // shields are fairly common
-        case EQ_SHIELD:
+        case EQ_OFFHAND:
             return 2;
         // aux armour is relatively uncommon
         default:
@@ -1683,6 +1684,7 @@ static bool _ego_unrand_only(int base_type, int ego)
         switch (static_cast<brand_type>(ego))
         {
         case SPWPN_REAPING:
+        case SPWPN_FOUL_FLAME:
         case SPWPN_ACID:
             return true;
         default:

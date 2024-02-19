@@ -274,6 +274,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_HOLY:
+    case BEAM_FOUL_FLAME:
     {
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)

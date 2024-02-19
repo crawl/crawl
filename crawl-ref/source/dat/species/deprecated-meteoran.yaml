@@ -1,9 +1,9 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_METEORAN
 monster: MONS_METEORAN
-name: "Meteoran"
-short_name: "Me"
-adjective: "Meteoric"
+name: Meteoran
+short_name: Me
+adjective: Meteoric
 difficulty: False
 aptitudes:
   xp: 2
@@ -50,9 +50,11 @@ mutations:
   1:
     MUT_SHORT_LIFESPAN: 1
     MUT_EXPLORE_REGEN: 1
-    MUT_GLOWING: 1
+    MUT_FOUL_GLOW: 1
     MUT_PASSIVE_MAPPING: 1
   9:
     MUT_PASSIVE_MAPPING: 1
   18:
     MUT_PASSIVE_MAPPING: 1
+
+orc_name: Meteorc

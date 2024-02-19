@@ -1,3 +1,4 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_HILL_ORC
 monster: MONS_ORC
 name: Hill Orc
@@ -36,5 +37,5 @@ dex: 6
 levelup_stat_frequency: 5
 levelup_stats:
   - str
-# if you add any mutations here: you'll need to fix test/mut_species.lua, which
-# relies on HO having none.
+
+orc_name: Antique Orc

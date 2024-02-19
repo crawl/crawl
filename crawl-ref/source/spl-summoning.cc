@@ -716,7 +716,8 @@ bool tukima_affects(const actor &target)
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
            // XX use god_protects here. But, need to know the caster too...
-           && !mons_is_hepliaklqana_ancestor(target.type);
+           && !mons_is_hepliaklqana_ancestor(target.type)
+           && !(target.is_monster() && target.as_monster()->type == MONS_ORC_APOSTLE);
 }
 
 /**
@@ -2491,7 +2492,7 @@ static void _overgrow_wall(const coord_def &pos)
     destroy_wall(pos);
 
     const monster_type mon = random_choose_weighted(4, MONS_OKLOB_SAPLING,
-                                                    4, MONS_BURNING_BUSH,
+                                                    4, MONS_SCRUB_NETTLE,
                                                     4, MONS_WANDERING_MUSHROOM,
                                                     1, MONS_BALLISTOMYCETE,
                                                     1, MONS_OKLOB_PLANT);
@@ -2756,7 +2757,7 @@ spret foxfire_swarm()
     bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        if (_create_foxfire(you, *ri, GOD_NO_GOD, 10))
+        if (_create_foxfire(you, *ri, GOD_NO_GOD, 20))
         {
             created = true;
             continue;

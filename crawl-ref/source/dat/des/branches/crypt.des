@@ -1403,6 +1403,8 @@ MONS:    deep troll skeleton w:18 / deep troll zombie w:18 / \
          iron troll zombie w:6 / iron troll simulacrum w:3
 NSUBST:  T = 3:1 / 2 = 1. / *:.
 SHUFFLE: 12
+TILE:    G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
 MAP
 ccccccccccc
 cGT..S..TGc
@@ -1423,6 +1425,8 @@ KMONS:   2 = spectral deep troll w:30 / spectral iron troll
 KITEM:   * = *
 KFEAT:   *12 = W
 NSUBST:  T = 3:2 / 2=2W / *:W
+TILE:    G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
 MAP
   ccc
  ccGcc

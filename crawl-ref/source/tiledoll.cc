@@ -413,7 +413,7 @@ void fill_doll_equipment(dolls_data &result)
     // Off hand.
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_SHIELD] ? -1 : you.equip[EQ_SHIELD];
+        const int item = you.melded[EQ_OFFHAND] ? -1 : you.equip[EQ_OFFHAND];
         if (you.form == transformation::blade_hands)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
@@ -425,6 +425,8 @@ void fill_doll_equipment(dolls_data &result)
         }
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
+        else if (you.offhand_weapon())
+            result.parts[TILEP_PART_HAND2] = mirror_weapon(you.inv[item]);
         else
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
     }
@@ -639,9 +641,9 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             item = new item_def(get_item_known_info(*you.slot_item(EQ_WEAPON)));
             minfo.inv[MSLOT_WEAPON].reset(item);
         }
-        if (you.slot_item(EQ_SHIELD))
+        if (you.slot_item(EQ_OFFHAND))
         {
-            item = new item_def(get_item_known_info(*you.slot_item(EQ_SHIELD)));
+            item = new item_def(get_item_known_info(*you.slot_item(EQ_OFFHAND)));
             minfo.inv[MSLOT_SHIELD].reset(item);
         }
         tileidx_t mcache_idx = mcache.register_monster(minfo);
@@ -651,6 +653,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             draw_info_count = entry->info(&dinfo[0]);
         }
     }
+
     // A higher index here means that the part should be drawn on top.
     // This is drawn in reverse order because this could be a ghost
     // or being drawn in water, in which case we want the top-most part
@@ -669,13 +672,14 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
 
         int ofs_x = 0, ofs_y = 0;
         if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON)
-             || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
+             || p == TILEP_PART_HAND2 && you.slot_item(EQ_OFFHAND))
             && dind < draw_info_count - 1)
         {
             ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
             ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
             ++dind;
         }
+
         const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }

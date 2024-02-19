@@ -668,7 +668,7 @@ runelight1
 runelight2
 runelight3
 
-%sdir dngn
+%sdir dngn/decor
 blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
 blue_fountain2
 
@@ -686,6 +686,11 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+cache_of_fruit_0 DNGN_CACHE_OF_FRUIT
+cache_of_fruit_1
+cache_of_meat_0 DNGN_CACHE_OF_MEAT
+
+%sdir dngn
 # Remove this entry when TAG_MAJOR_VERSION == 34 is false.
 teleporter DNGN_TELEPORTER
 

@@ -751,6 +751,51 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_WIELD_OFFHAND, 0, 1, mutflag::good, true,
+  "off-hand wielding",
+
+  {"You can wield a second weapon in your off-hand.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_SLOW_WIELD, 0, 1, mutflag::bad, true,
+  "slow wielding",
+
+  {"It takes a long time for you to wield or remove held weapons.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_INITIALLY_ATTRACTIVE, 0, 1, mutflag::bad, false,
+  "initially attractive",
+
+  {"You sometimes attract newly seen creatures.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_WARMUP_STRIKES, 0, 1, mutflag::bad, true,
+  "warmup strikes",
+
+  {"Your first few attacks do less damage.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_LEGS_SHUTDOWN, 0, 1, mutflag::bad, true,
+  "legs shutdown",
+
+  {"Attacking and casting redirects power from your legs.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 { MUT_HURL_DAMNATION, 0, 1, mutflag::good, false,
   "hurl damnation",
 
@@ -2450,10 +2495,18 @@ static const mutation_def mut_data[] =
   {"You feel long-lived.", "", ""},
 },
 
-{ MUT_GLOWING, 0, 1, mutflag::bad, false, "glowing",
-  {"You glow in the dark.", "", ""},
-  {"Your body begins glowing.", "", ""},
-  {"You feel a bit dim.", "", ""},
+{ MUT_FOUL_GLOW, 0, 3, mutflag::good, false, "foul glow",
+  {"You glow faintly, very rarely releasing foul flame when damaged in melee.",
+   "You glow, sometimes releasing foul flame when damaged in melee.",
+   "You glow brightly, frequently releasing foul flame when damaged in melee."},
+  {"Your body begins glowing with foul flame.",
+   "Your body glows brighter with foul flame.",
+   "Your body glows brighter with foul flame."},
+  {"You stop glowing with foul flame.",
+   "Your foul glow dims.",
+   "Your foul glow dims."},
+
+  TILEG_MUT_FOUL_GLOW,
 },
 
 { MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false, "explore regen",

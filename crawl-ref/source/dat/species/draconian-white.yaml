@@ -1,9 +1,9 @@
 enum: SP_WHITE_DRACONIAN
 monster: MONS_WHITE_DRACONIAN
-name: "White Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: White Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN
@@ -36,3 +36,5 @@ mutations:
 fake_mutations:
   - long: You can breathe waves of freezing cold which knock back foes.
     short: breathe frost
+
+orc_name: White Orconian

@@ -1282,9 +1282,12 @@ KMONS:   4 = spriggan rider / faun w:4
 KMONS:   9 = 9
 KITEM:   94 = *
 KFEAT:   94 = W
-SHUFFLE: wW'"-9 / ''GG'4 / '''0'% / ````1G
+KFEAT:   C = cache of fruit
+SHUFFLE: wW'"-9 / ''GG'4 / 'C'0'% / ```C1G
 SUBST:   t = t.., '. = p:49 .:405, W = WW., "w = wwwW
-NSUBST:  1 = 3=1 / 2=2 / 3 / .
+NSUBST:  1 = 3:1 / 2:2 / 1:3 / *:.
+TILE:    G = dngn_statue_elephant / dngn_statue_hydra / \
+             dngn_statue_dragon / dngn_statue_snail / dngn_statue_cat w:5
 MAP
       tt@@@tt
     ttt.....ttt
@@ -1610,23 +1613,26 @@ NAME:   lemuel_fruit_fields
 TAGS:   allow_dup extra transparent decor
 DEPTH:  Lair
 ORIENT: float
-WEIGHT: 9
 MONS:   plant, butterfly
 ITEM:   gold
+KFEAT:  e = cache of fruit
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
-SUBST:  '`"- = ^:20 ~:15 ., . = d:3 .:150 1:10 2:4
+SUBST:  '`"- = ^:35 ~:5 .
+NSUBST: . = 2:1 / * = d:2 e:1 .:140 1:20 2:4
 : elseif size > 3 then
-SUBST:  "` = ^:20 ~:15 ., . = d:5 .:50 1:8 2:4
+SUBST:  "` = ^:35 ~:5 .
+NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
 : else
-SUBST:  '" = ^:20 ~:15 ., . = d:5 .:50 1:8 2:4
+SUBST:  '" = ^:35 ~:5 .
+NSUBST: . = 2:1 / * = . = d:3 e:2 .:42 1:18 2:4
 : end
 CLEAR:  `'"-
-COLOUR: ^ = green
-FTILE:  ^ = floor_grass
+COLOUR: ^d = green
+FTILE:  ^.de12 = floor_grass
 COLOUR: ~ = brown
-FTILE:  ~ = floor_dirt
+FTILE:  ~ = floor_pebble_red
 MAP
        -------
      -----------
@@ -1652,24 +1658,23 @@ TAGS:   extra transparent decor
 DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
-KITEM:  a : stone
+ITEM:   stone q:1 no_pickup
+KFEAT:  a = cache of fruit
 : if crawl.one_chance_in(5) then
-SUBST:  '"~ = . 1
-SUBST:  0`-. = .:90 a:2 2:1
-SUBST:  _ = .:90 a:4
+SUBST:  '"~ = 1.
+SUBST:  `-. = .:90 2:1, _ = d
 : else
 CLEAR:  '-_
-SUBST:  `" = . a 2:1
-SUBST:  ~. = .:90 a:2 2:1
-SUBST:  0 = 1
+SUBST:  ~ = d:90 1:5 2:1, . = .:90 1:10 2:1
 : end
+NSUBST: `" = 1:a / 1:a. / *:.
 MAP
    ________
   _--------_
  _---..~..--_
 _--'.......--_
 _---..`"`.~--_
-_---..`0`..--_
+_---..`t`..--_
 _---..`"`..--_
  _--~....~.-_
   _--.....-_
@@ -1949,7 +1954,8 @@ ORIENT:  northeast
 DEPTH:   D:5-8, Lair:1-3
 MONS:    rat, quokka, river rat, hell rat
 ITEM:    gold / stone
-SUBST:   d = d$$$........., e = d$$$
+KFEAT:   e = cache of fruit
+SUBST:   d = d$$$........., e : e$.
 SHUFFLE: 234 / 324 / 243
 : if you.in_branch("Lair") then
 NSUBST:  4 = 1:4 / * = 40, 3 = 2:3 / * = 34.
@@ -1967,8 +1973,8 @@ SUBST:   4 = 30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.eexxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx343dxx.xxxxxxxx.334433xxxxxxxxx23..exx
+xxxxxxxxxxdeexxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx343dxx.xxxxxxxx.334433xxxxxxxxx23.dexx
 xxd222...xxxxxxxx..224422xxxxxx1111...xxx
 x..111..xxxxxxxxx..111111.xxx.111...xxxxx
 xx.111..xxxxxxxxxx.11111..x......xxxxxxxx
@@ -3358,7 +3364,8 @@ KITEM:  * = gold no_pickup, star_item no_pickup, star_item no_pickup
 KITEM:  | = gold no_pickup, superb_item no_pickup, star_item no_pickup
 KITEM:  $ = gold no_pickup, star_item no_pickup
 KITEM:  R = earthy gem
-SUBST:  T : T:20 .:1 t:1, T = tt..., E = t_
+KFEAT:  C = cache of fruit
+SUBST:  T : T:20 .:1 t:1, T = tt..., E = t_, C = C..
 CLEAR:  _
 NSUBST: . = 5:1 / 3 = 10 / 3:3 / 3 = 3.. / *:.
 NSUBST: 2 = 8:2 / 18 = 2. / *:., 4 = 6:4 / 6 = 4. / *:.
@@ -3371,7 +3378,7 @@ tttttttttT*G*Ttttttt....ttttttttt.....ttTTtttttTT
 ttttttttt4.*.9TTT....Tt.5..TTT....ttT.2222TTtt..@
 tttttttTT.4R4....TTttttttT..4...TttttttTT222..ttT
 tttttT.....9..4TtttttttttT4...4ttttttttt22ttttttt
-ttttT..ttT4.4.Tttttttt..T....4.tttttttt..tttttttE
+ttttT..ttT4C4.Tttttttt..T....4.tttttttt..tttttttE
 tttt.ttttttttttttttttt......tt..TttT...TT.tttttt
 tttT2tttttttttttttttttT....ttttt.....ttttT.Tttt
 ttT22tttT.9TtttttttT....tTTttttttTTttttttt..ttE
@@ -3383,7 +3390,7 @@ tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttE
 ttT.tttt.....TTT222TttttttttttT...TT...TttttE
 ttt..tt...TTttttttt..TTttttttttT..4...Tttttt
 tttT....TtttttttttttT@   EEttttt49.49ttttttE
-ttttT..tttttttttttttE      EEttttT.$TttttE
+ttttT..tttttttttttttE      EEttttTC$TttttE
 ttttT..TtttttttttttE          ttttttttt
 ttttt...ttttttttttE            ttttttt
 tttttT..TttttttE                 EEE

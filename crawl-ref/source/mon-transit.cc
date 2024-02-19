@@ -188,7 +188,11 @@ static void _level_place_lost_monsters(m_transit_list &m)
         // a duel, even in the Abyss.
         if (player_in_branch(BRANCH_ABYSS)
             && !mon->mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY)
-            && coinflip())
+            // The Abyss can try to place monsters as 'lost' before it places
+            // followers normally, and this can result in companion list desyncs.
+            // Try to prevent that.
+            && ((mon->mons.flags & MF_TAKING_STAIRS)
+                || coinflip()))
         {
             continue;
         }

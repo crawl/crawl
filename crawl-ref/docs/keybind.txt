@@ -94,7 +94,6 @@ O         CMD_OPEN_DOOR
 >         CMD_GO_DOWNSTAIRS
 ;         CMD_INSPECT_FLOOR
 !         CMD_ANNOTATE_LEVEL
-^T        CMD_TOGGLE_TRAVEL_SPEED
 
 Player status
 -------------

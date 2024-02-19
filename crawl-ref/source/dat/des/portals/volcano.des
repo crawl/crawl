@@ -1397,25 +1397,25 @@ ENDMAP
 # There are scientists about; beware, as they may wish to experiment on you! The
 # idea was by Zaba, and the execution by due!
 NAME:   volcano_bunker
-TAGS:   no_item_gen no_monster_gen no_rotate
+TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 WEIGHT: 20
 ORIENT: encompass
 # Loot: 11 items, 8 gold.
 : volcano_setup(_G)
-NSUBST: h = 1:h / *:W
-KITEM:  h = gold
-COLOUR: m = blue
 MONS:   human ; mace ego:flaming . robe ego:fire_resistance
 MONS:   occultist ; mace ego:flaming . robe ego:fire_resistance
 MONS:   orc sorcerer, toenail golem
 MONS:   dancing weapon ; mace ego:flaming
-: place_chained_volcano(_G)
+KFEAT:  h = cache of fruit
 KFEAT:  K = w
-KFEAT:  h = W
+: place_chained_volcano(_G)
+SUBST:  h = hhw
 NSUBST: 1 = 1:2 / 1:3 / *:1
 MARKER: K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=250, size=3 } )
 KPROP:  lVK = no_tele_into
+COLOUR: m = blue
+FTILE:  - = floor_pebble_darkgray
 MAP
       xxxx                 vvvvvvvvvvvvvvv
    xxxxllxxx xxx           v.............v
@@ -1424,8 +1424,8 @@ xxlllVlllllllllllxxxx      v..v4f$e$$2v..v
  xxlllllllllllllllllxxx    v..v$$egddgv..v
 xxllllllllllllllllllllxx   v..+ggdf$$5v..v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv..v
- xxllllllllm..4..vKWhW..1.1..v.....+.....v
-  xxlllllllv.414.vWWthW..4...+.<.vvvvvvvvv
+ xxllllllllm..4..vKWWW..1.1..v.....+.....v
+  xxlllllllv.414.v--tWW..4...+.<.vvvvvvvvv
    xxllllllm.....vlltth...1..v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
       xxlllm.....v.v..1v1....1v..m..yxx
@@ -1528,10 +1528,12 @@ MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
          komodo dragon / fire bat
 MONS:    patrolling fire bat band
 KMONS:   p = plant
+KITEM:   C = human skeleton
+KFEAT:   F = cache of fruit
 NSUBST:  G = 1:2 / *:3, H = 1:2 / *:3, I = 1:2 / *:3
 # fixed loot types for the cave, but shuffle it a little
 SHUFFLE: def
-SUBST:   g = def
+SUBST:   g = def, F = FF.
 : volcano_setup(_G)
 SHUFFLE: JKM
 MARKER:  J = lua:fog_machine { cloud_type = "flame", \
@@ -1544,7 +1546,6 @@ MARKER:  M = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 5, delay = 47, start_clouds = 1, \
              size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:   JKM = l
-KITEM:   C = human skeleton
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxllllllllxxxxxxxxxxxxxxxxxx
@@ -1552,7 +1553,7 @@ xxxxxxxxxxxxxxxxxxxxllllllllllllxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxlllll.g.t.<.tllxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxllllll..t.$..$.g.llxxxxxxxxxxxxxx
 xxxxxxxxxxxxxlllMlll.t$.gp.t.p.t.lxxxxxxxxxxxxxx
-xxxxxxxxxxxxlllllllt.g.$..g$.g..tllxxxxxxxxxxxxx
+xxxxxxxxxxxxlllllllt.gF$..g$.g.Ftllxxxxxxxxxxxxx
 xxxxxxxxxxxllllllllt.gt.3.1.p.t..lllxxxx<xxxxxxx
 xxxxxxxxxxlllllJllltp..p.....$...lllxxxxxpxxxxxx
 xxxxxxxxxlllKllllllt.......3...t.llxxxxxdCexxxxx

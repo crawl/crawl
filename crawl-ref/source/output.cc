@@ -706,7 +706,7 @@ static int _count_digits(int val)
 
 static const equipment_type e_order[] =
 {
-    EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
+    EQ_WEAPON, EQ_OFFHAND, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
     EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
@@ -1070,28 +1070,56 @@ static void _print_stats_ev(int x, int y)
 }
 
 /**
- * Get the appropriate colour for the UI text describing the player's weapon.
- * (Or hands/ice fists/etc, as appropriate.)
+ * Get the appropriate colour for the UI text describing the given weapon.
  *
- * @return     A colour enum for the player's weapon.
+ * @return     A colour enum for the given weapon.
  */
-static int _wpn_name_colour()
+static int _wpn_name_colour(const item_def &wpn)
 {
     if (you.corrosion_amount())
         return RED;
 
-    if (you.weapon())
-    {
-        const item_def& wpn = *you.weapon();
+    const string prefix = item_prefix(wpn);
+    const int prefcol = menu_colour(wpn.name(DESC_INVENTORY),
+                                    prefix, "stats", false);
+    if (prefcol != -1)
+        return prefcol;
+    return LIGHTGREY;
+}
 
-        const string prefix = item_prefix(wpn);
-        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats", false);
-        if (prefcol != -1)
-            return prefcol;
-        return LIGHTGREY;
-    }
+static string _wpn_name_corroded(const item_def &weapon)
+{
+    if (!you.corrosion_amount() || weapon.base_type != OBJ_WEAPONS)
+        return weapon.name(DESC_PLAIN, true);
 
-    return get_form()->uc_colour;
+    item_def wpn_copy = weapon;
+    wpn_copy.plus -= you.corrosion_amount();
+    return wpn_copy.name(DESC_PLAIN, true);
+}
+
+static void _print_unarmed_name()
+{
+    textcolour(HUD_CAPTION_COLOUR);
+    const string slot_name = "-) ";
+    CPRINTF("%s", slot_name.c_str());
+    textcolour(you.corrosion_amount() ? RED : get_form()->uc_colour);
+    const int max_name_width = crawl_view.hudsz.x - slot_name.size();
+    CPRINTF("%s", chop_string(you.unarmed_attack_name(),
+                              max_name_width).c_str());
+    textcolour(LIGHTGREY);
+}
+
+static void _print_weapon_name(const item_def &weapon, int width)
+{
+    textcolour(HUD_CAPTION_COLOUR);
+    const char slot_letter = index_to_letter(weapon.link);
+    const string slot_name = make_stringf("%c) ", slot_letter);
+    CPRINTF("%s", slot_name.c_str());
+    textcolour(_wpn_name_colour(weapon));
+    const int max_name_width = width - slot_name.size();
+    const string name = _wpn_name_corroded(weapon);
+    CPRINTF("%s", chop_string(name, max_name_width).c_str());
+    textcolour(LIGHTGREY);
 }
 
 /**
@@ -1101,7 +1129,6 @@ static int _wpn_name_colour()
  */
 static void _print_stats_wp(int y)
 {
-    string text;
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
     {
@@ -1110,27 +1137,18 @@ static void _print_stats_wp(int y)
 
     CGOTOXY(1, y, GOTO_STAT);
 
-    if (you.weapon())
+    const item_def *weapon = you.weapon();
+    const item_def *offhand = you.offhand_weapon();
+    if (weapon && offhand)
     {
-        item_def wpn = *you.weapon(); // copy
-
-        if (you.corrosion_amount() && wpn.base_type == OBJ_WEAPONS)
-            wpn.plus -= you.corrosion_amount();
-
-        text = wpn.name(DESC_PLAIN, true, false, true);
+        _print_weapon_name(*weapon, crawl_view.hudsz.x/2-1);
+        CPRINTF("  ");
+        _print_weapon_name(*offhand, crawl_view.hudsz.x/2-1);
     }
+    else if (weapon || offhand)
+        _print_weapon_name(weapon ? *weapon : *offhand, crawl_view.hudsz.x);
     else
-        text = you.unarmed_attack_name();
-
-    textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
-                                          : '-';
-    const string slot_name = make_stringf("%c) ", slot_letter);
-    CPRINTF("%s", slot_name.c_str());
-    textcolour(_wpn_name_colour());
-    const int max_name_width = crawl_view.hudsz.x - slot_name.size();
-    CPRINTF("%s", chop_string(text, max_name_width).c_str());
-    textcolour(LIGHTGREY);
+        _print_unarmed_name();
 
     you.wield_change  = false;
 }

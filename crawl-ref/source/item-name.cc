@@ -272,7 +272,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_HELMET:
                 case EQ_GLOVES:
                 case EQ_BOOTS:
-                case EQ_SHIELD:
+                case EQ_OFFHAND:
                 case EQ_BODY_ARMOUR:
                     buff << " (worn)";
                     break;
@@ -436,6 +436,7 @@ static const char *weapon_brands_terse[] =
 #endif
     "weak",
     "vuln",
+    "foul flame",
     "debug",
 };
 
@@ -463,6 +464,7 @@ static const char *weapon_brands_verbose[] =
 #endif
     "weakness",
     "vulnerability",
+    "foul flame",
     "debug",
 };
 
@@ -490,6 +492,7 @@ static const char *weapon_brands_adj[] =
 #endif
     "weakening",
     "will-reducing",
+    "foul flame",
     "debug",
 };
 
