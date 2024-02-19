@@ -4328,7 +4328,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly or Uskayaw's Pain Bond).
-        react_to_damage(agent, amount, flavour);
+        react_to_damage(agent, amount, flavour, kill_type);
 
         // Don't mirror Yredelemnul's effects (in particular don't mirror
         // mirrored damage).
@@ -5661,7 +5661,7 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 }
 
 void monster::react_to_damage(const actor *oppressor, int damage,
-                               beam_type flavour)
+                               beam_type flavour, kill_method_type ktype)
 {
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
@@ -5733,9 +5733,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
-    // Interrupt autorest for allies standing clouds, poisoned, etc.
-    if (damage > 0 && !crawl_state.game_is_arena() && friendly()
-        && you.can_see(*this))
+    // Interrupt autorest for allies standing clouds, on fire, etc.
+    // (We exclude poison, since even in cases where this is lethal, there's
+    // usually nothing the player can do about this, and it otherwise
+    // interrupts rest without even a visible message)
+    if (damage > 0 && ktype != KILLED_BY_POISON
+        && !crawl_state.game_is_arena() && friendly() && you.can_see(*this))
     {
         interrupt_activity(activity_interrupt::ally_attacked);
     }

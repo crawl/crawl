@@ -213,7 +213,8 @@ public:
 
     void scale_hp(int num, int den);
 
-    void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
+    void react_to_damage(const actor *oppressor, int damage, beam_type flavour,
+                         kill_method_type ktype);
 
     void apply_enchantments();
 
