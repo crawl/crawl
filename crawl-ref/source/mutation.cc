@@ -2972,6 +2972,8 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_MANA_REGENERATION, MUT_MANA_SHIELD, MUT_MANA_LINK },
       { -33, 0, 0 } },
+    { 2, { MUT_FOUL_GLOW, MUT_FOUL_GLOW, MUT_FOUL_GLOW },
+      { -33, 0, 0 } },
     // Tier 3 facets
     { 3, { MUT_DEMONIC_WILL, MUT_TORMENT_RESISTANCE, MUT_HURL_DAMNATION },
       { 50, 50, 50 } },
@@ -2982,8 +2984,6 @@ static const facet_def _demon_facets[] =
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
       { 50, 50, 50 } },
     { 3, { MUT_CORRUPTING_PRESENCE, MUT_CORRUPTING_PRESENCE, MUT_WORD_OF_CHAOS },
-      { 50, 50, 50 } },
-    { 3, { MUT_FOUL_GLOW, MUT_FOUL_GLOW, MUT_FOUL_GLOW },
       { 50, 50, 50 } },
 };
 
