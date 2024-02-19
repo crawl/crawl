@@ -1041,6 +1041,8 @@ int player::wearing_ego(equipment_type slot, int special) const
         {
             ret++;
         }
+        if ((item = offhand_weapon()) && get_weapon_brand(*item) == special)
+            ++ret;
         break;
 
     case EQ_LEFT_RING:
