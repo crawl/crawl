@@ -435,8 +435,8 @@ bool ranged_attack::ignores_shield(bool verbose)
             mprf("%s pierces through %s %s!",
                  projectile->name(DESC_THE).c_str(),
                  apostrophise(defender_name(false)).c_str(),
-                 defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
-                                 : "shielding");
+                 is_shield(defender_shield) ? defender_shield->name(DESC_PLAIN).c_str()
+                                            : "shielding");
         }
         return true;
     }
