@@ -204,8 +204,13 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
 
     // put the actual revival at the end of the round
-    if (conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+    // But first verify that the orc is still here! (They may have left the
+    // floor immediately when pacified!)
+    if ((conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+        && orc->alive())
+    {
         avoided_death_fineff::schedule(orc);
+    }
 }
 
 static void _fedhas_neutralise_plant(monster* plant)
