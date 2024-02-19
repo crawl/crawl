@@ -1267,7 +1267,8 @@ bool regeneration_is_inhibited(const monster *m)
     return false;
 }
 
-int player_regen()
+// Regeneration before anti regen / divine effects
+int player_normal_regen()
 {
     // Note: if some condition can set rr = 0, can't be rested off, and
     // would allow travel, please update is_sufficiently_rested.
@@ -1280,6 +1281,16 @@ int player_regen()
     // Before applying other effects, make sure that there's something
     // to heal.
     rr = max(1, rr);
+
+    return rr;
+}
+
+int player_regen()
+{
+    // Note: if some condition can set rr = 0, can't be rested off, and
+    // would allow travel, please update is_sufficiently_rested.
+
+    int rr = player_normal_regen();
 
     if (you.duration[DUR_SICKNESS]
         || !player_regenerates_hp())
@@ -1338,6 +1349,12 @@ int player_mp_regen()
     {
         // We use piety rank to avoid leaking piety info to the player.
         regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
+    }
+
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+    {
+        // Bloodcrazed vampires gain part of their health regen as mp regen
+        regen_amount += player_normal_regen() / 2;
     }
 
     return regen_amount;
