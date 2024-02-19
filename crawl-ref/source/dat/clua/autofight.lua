@@ -198,7 +198,11 @@ local function move_towards(dx, dy)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
   else
-    crawl.do_commands({delta_to_cmd(move[1],move[2])})
+    if you.status("immotile") then
+      crawl.do_commands({"CMD_WAIT"})
+    else
+      crawl.do_commands({delta_to_cmd(move[1],move[2])})
+    end
   end
 end
 
