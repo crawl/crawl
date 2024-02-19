@@ -1938,6 +1938,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             }
             break;
 
+        case SK_ARMOUR:
+            if (species == SP_COGLIN && skill_rank == 5)
+                result = "Iron Golem";
+            break;
+
         case SK_INVOCATIONS:
             if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
                 result = "Blood Saint";
@@ -1974,6 +1979,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
                 result = "Wishgranter";
+            else if (species == SP_COGLIN && skill_rank == 5)
+                result = "Cogmind";
             break;
 
         case SK_CONJURATIONS:
