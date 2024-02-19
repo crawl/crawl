@@ -920,6 +920,7 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
     return mons_offers_beogh_conversion(mon)
                 // Only try to convert atheists
                 && you.religion == GOD_NO_GOD
+                && !you.has_mutation(MUT_FORLORN)
                 && you.hp * 3 / 2 <= you.hp_max
                 && !mon.is_summoned() && !mon.friendly()
                 && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
