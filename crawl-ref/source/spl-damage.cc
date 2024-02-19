@@ -3282,25 +3282,15 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-dice_def foul_flame_damage(int pow, bool random)
-{
-    if (random)
-    {
-        const int max_dam = 5 + div_rand_round(pow, 9);
-        return calc_dice(2, max_dam);
-    }
-    return dice_def(2, 5 + pow / 9);
-}
-
 void foul_flame_monster(monster *mons)
 {
     if (!mons || mons->res_foul_flame() >= 3)
         return;
 
-    const int mult = you.get_mutation_level(MUT_FOUL_SHADOW);
-    const int pow = 100;
+    const int mut = you.get_mutation_level(MUT_FOUL_SHADOW);
 
-    const int raw_damage = foul_flame_damage(pow, true).roll() * mult;
+    const int raw_damage = random_range(mut,
+            div_rand_round(you.experience_level * 3, 4) + mut * 4);
 
     simple_monster_message(*mons,
                            " is seared by the foul flame within you!");
