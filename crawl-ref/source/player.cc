@@ -2235,9 +2235,6 @@ int player_channeling()
 
 static int _sh_from_shield(const item_def &item)
 {
-    if (item.sub_type == ARM_ORB)
-        return 0;
-
     const int base_shield = property(item, PARM_AC) * 2;
 
     // bonus applied only to base, see above for effect:
@@ -2268,7 +2265,7 @@ int player_shield_class()
         return 0;
 
     const item_def *shield_item = you.shield();
-    if (shield_item)
+    if (is_shield(shield_item))
         shield += _sh_from_shield(*shield_item);
 
     // mutations
