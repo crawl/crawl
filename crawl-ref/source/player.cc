@@ -9032,7 +9032,7 @@ bool player::immune_to_hex(const spell_type hex) const
     case SPELL_PETRIFY:
         return res_petrify();
     case SPELL_PORKALATOR:
-        return is_lifeless_undead();
+        return undead_state() == US_UNDEAD;
     case SPELL_VIRULENCE:
         return res_poison() == 3;
     // don't include the hidden "sleep immunity" duration
