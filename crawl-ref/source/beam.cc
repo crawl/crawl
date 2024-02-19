@@ -2315,6 +2315,9 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
                  attack_strength_punctuation(hp_gain).c_str());
             inc_hp(hp_gain);
         }
+
+        // Don't lose blood this turn if you're an alive vampire
+        you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
     }
 }
 
