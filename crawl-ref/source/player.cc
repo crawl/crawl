@@ -3174,7 +3174,8 @@ int player_stealth()
                 umbra_mul = you.piety + MAX_PIETY;
                 umbra_div = MAX_PIETY;
             }
-            if (player_equip_unrand(UNRAND_SHADOWS)
+            if ((player_equip_unrand(UNRAND_BRILLIANCE)
+                 || player_equip_unrand(UNRAND_SHADOWS))
                 && 2 * umbra_mul < 3 * umbra_div)
             {
                 umbra_mul = 3;
@@ -4949,11 +4950,8 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
     {
         vector<string> sources;
 
-        if (temp && (player_equip_unrand(UNRAND_EOS)
-                     || player_equip_unrand(UNRAND_BRILLIANCE)))
-        {
+        if (temp && player_equip_unrand(UNRAND_EOS))
             sources.push_back("weapon");
-        }
 
         if (temp && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
             sources.push_back("orb");
@@ -6862,6 +6860,7 @@ undead_state_type player::undead_state(bool temp) const
 bool player::nightvision() const
 {
     return have_passive(passive_t::nightvision)
+           || player_equip_unrand(UNRAND_BRILLIANCE)
            || player_equip_unrand(UNRAND_SHADOWS);
 }
 
@@ -7395,8 +7394,7 @@ bool player::backlit(bool self_halo, bool temp) const
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))
-           || self_halo && (you.has_mutation(MUT_FOUL_GLOW)
-                            || you.form == transformation::flux);
+           || self_halo && you.form == transformation::flux;
     // TODO: find some way to mark !invis for autopickup while
     // fluxing while still marking it temp-useless (and while
     // marking it perma-useless for meteors)

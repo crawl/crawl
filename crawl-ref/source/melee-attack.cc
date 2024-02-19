@@ -3621,11 +3621,11 @@ void melee_attack::do_foul_flame()
 {
     monster* mon = attacker->as_monster();
 
-    if (you.has_mutation(MUT_FOUL_GLOW)
+    if (you.has_mutation(MUT_FOUL_SHADOW)
         && attacker->alive()
         && adjacent(you.pos(), mon->pos()))
     {
-        const int mut = you.get_mutation_level(MUT_FOUL_GLOW);
+        const int mut = you.get_mutation_level(MUT_FOUL_SHADOW);
 
         if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20))
             foul_flame_monster(attacker->as_monster());

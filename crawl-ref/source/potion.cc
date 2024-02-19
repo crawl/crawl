@@ -457,8 +457,6 @@ public:
                 afflictions.push_back("liquid flames");
             if (you.duration[DUR_QUAD_DAMAGE])
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
-            if (you.has_mutation(MUT_FOUL_GLOW))
-                afflictions.push_back("body"); // all flesh is a curse...
             if (you.form == transformation::flux)
                 afflictions.push_back("form");
             mprf(MSGCH_DURATION,

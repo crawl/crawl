@@ -776,12 +776,12 @@ You are foreign to this world, easily perceived by dark forces. You have only
 one-tenth the normal time on each dungeon floor before Zot finds you and
 permanently reduces your health.
 %%%%
-foul glow mutation
+foul shadow mutation
 
-You glow in the dark with foul flame. Foes hit you more often, your stealth is
-badly impaired, and you cannot become invisible. Foes who strike you in melee
-are sometimes seared by the foul flame; undead and demonic foes take less damage
-from it, while holy beings and good god worshippers take more.
+Your body is shadowed by foul flame. Foes hit you less often, and your stealth
+is greatly enhanced. Foes who strike you in melee are sometimes seared by the
+foul flame; undead and demonic foes take less damage from it, while holy beings
+and good god worshippers take more.
 %%%%
 explore regen mutation
 
