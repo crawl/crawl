@@ -5895,7 +5895,7 @@ void player::shield_block_succeeded(actor *attacker)
 
     shield_blocks++;
     practise_shield_block();
-    if (shield())
+    if (is_shield(shield()))
         count_action(CACT_BLOCK, shield()->sub_type);
     else
         count_action(CACT_BLOCK, -1, BLOCK_OTHER); // non-shield block
