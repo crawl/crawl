@@ -3036,6 +3036,11 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     return EQ_NONE;
 }
 
+bool is_shield(const item_def *item)
+{
+    return item && is_shield(*item);
+}
+
 bool is_shield(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR
