@@ -4251,6 +4251,7 @@ MONS:   lich , ancient lich / dread lich
 NSUBST: . = 4 = 2. / 16 = 1... / 12 = 8... / 12 = 0...
 NSUBST:  < = 1 = {([. / 1 = )}].
 TILE:   G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
 MAP
 bbbbbbbbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbb

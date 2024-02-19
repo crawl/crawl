@@ -1011,60 +1011,61 @@ dedicated to the ineffable cosmic games of chaos.
 A mystic cage
 
 A sturdy metal cage, inscribed with cryptic magics. Whatever it once held -
-whether person, beast, or experiment - is now just as free as you are.
+whether person, beast, or experiment - was evidently already freed in response
+to intruders infiltrating the Dungeon.
 %%%%
 # Themed magic branches / portals / vaults.
 An arcane conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 destructive mystic energy will harmlessly disperse.
 %%%%
 A misfortune conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 malevolent cursed energy will harmlessly disperse.
 %%%%
 A dimensional conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 extraplanar warp energy will harmlessly disperse.
 %%%%
 A soul conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 negative energy will harmlessly disperse.
 %%%%
 An alchemical conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 venomous churning energy will harmlessly disperse.
 %%%%
 A fiery conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 ever-burning energy will harmlessly disperse.
 %%%%
 An icy conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 chilling cold energy will harmlessly disperse.
 %%%%
 An earthen conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 seismic energy will harmlessly disperse.
 %%%%
 A storm conduit
 
-A strange but sturdy metal construct, collecting and analyzing raw ambient
+A strange but benign metal construct, collecting and analyzing raw ambient
 magical energy. If destroyed and disrupted by sufficiently mighty magic, its
 crackling energy will harmlessly disperse.
 %%%%

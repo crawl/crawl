@@ -1752,30 +1752,26 @@ NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
 KMONS:   1 = jumping spider w:15 / redback / orb spider w:5
 KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
-# Rough order and weights for the tiered stuff:
-# direct abyss spawn (w:120, less at the top),
-# abyss demons, abyss undead (both w:30ish),
-# elementals, guests (both w:20ish, fuzzed with heavy un/holy overlap.)
 {{
  local distoquip = "boomerang ego:dispersal w:20 | " ..
                    "whip ego:distortion | spear ego:distortion | nothing w:5"
- local lowtier = "large abomination w:25 / unseen horror w:15 / " ..
-                 "thrashing horror w:30 / raiju w:20 / worldbinder w:30 / " ..
+ local lowtier = "large abomination w:20 / unseen horror / " ..
+                 "thrashing horror w:20 / raiju w:35 / worldbinder w:35 / " ..
                  "smoke demon / sixfirhy / hellwing / " ..
-                 "dire elephant skeleton / anaconda skeleton / " ..
-                 "freezing wraith / air elemental / water elemental / " ..
+                 "alligator skeleton / anaconda skeleton / " ..
+                 "efreet / air elemental / water elemental / " ..
                  "will-o-the-wisp w:5 / mana viper / demonic crawler w:5"
- local midtier = "tentacled starspawn w:50 / very ugly thing w:30 / " ..
-                 "glowing shapeshifter w:40 / efreet w:5 / " ..
+ local midtier = "tentacled starspawn w:50 / very ugly thing w:25 / " ..
+                 "jorogumo perm_ench:glowing_shapeshifter w:20 / " ..
+                 "torpor snail perm_ench:glowing_shapeshifter w:25 / " ..
                  "soul eater / shadow demon / eidolon / " ..
-                 "shadow wraith / storm dragon skeleton / death drake / " ..
-                 "base draconian w:5 / spark wasp / glowing orange brain w:5"
- local hightier = "starcursed mass w:30 / apocalypse crab w:30 / " ..
+                 "shadow wraith / emperor scorpion zombie / death drake / " ..
+                 "base draconian w:5 / spark wasp / glowing orange brain"
+ local hightier = "starcursed mass w:20 / apocalypse crab w:40 / " ..
                   "tentacled monstrosity w:20 / executioner w:15 /" ..
                   "cacodemon / hellion w:5 / tormentor w:5 /  " ..
-                  "lorocyproca w:5 / lich / angel / " ..
-                  "profane servitor / balrug w:15 / " ..
-                  "blizzard demon w:15 / hellephant / " ..
+                  "lich / profane servitor / balrug w:20 / " ..
+                  "blizzard demon w:20 / hellephant / " ..
                   "draconian shifter w:15 / demonspawn corrupter w:5"
 
  kmons("2 = rakshasa ; " .. distoquip .. " / boggart ; " .. distoquip)
@@ -1808,9 +1804,9 @@ KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
              cloak_of_starlight w:20 / cloak_of_the_thief
-KITEM:   13 = mundane cloak no_pickup
+KITEM:   136 = mundane cloak no_pickup
 KFEAT:   m = iron_grate
-KFEAT:   ~ = deep_water / web w:2
+KFEAT:   ~ = deep_water / web w:4
 KFEAT:   ^ = permanent teleport trap / web w:20
 KFEAT:   _ = altar_lugonu
 KFEAT:   opqsrtuvw@}) = floor
@@ -1825,15 +1821,15 @@ SHUFFLE: ozRrIUuLO / uLOozRrIU / rIUuLOozR, pZSsJVvMP / vMPpZSsJV / sJVvMPpZS
 SHUFFLE: zRIULO / RzUIOL, ZSJVMP / SZVJPM, HTKW / THWK
 SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W
 # Place the center's features, enemies, and items.
-NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 7 = 2:7 / *:`
+NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<
 NSUBST:  ` = 1:3 / 1:6 / 4:d / 3:| / 1:|j / 1:i / 4:j / *:`
 # Randomize enemies outside of the center.
 NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / 1:. / * = 92222
-NSUBST:  1 = 2:3 / 1:6 / 1:2 / 3 = 012 / 2:. / *:1, 0 = 2:9 / 1:6 / 1:. / *:0
-NSUBST:  4 = 1:3 / 3:5 / 1:. / *:4
+NSUBST:  1 = 2:3 / 1:6 / 1:2 / 3 = 00112 / 3:. / *:1
+NSUBST:  0 = 2:9 / 1:6 / 1:. / *:0, 4 = 1:3 / 3:5 / 1:. / *:4
 # Randomize starting / chambers, chamber / reward items, and escapes.
 NSUBST:  A = 1:) / 1:< / 1:{ / 1:A, ( = 1:} / 1:( / *:<
-NSUBST:  [ = 2:< / 1:3 / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj / *:d
+NSUBST:  [ = 2:< / 1:3d / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj / *:d
 SUBST:   e = de, j = jjjjg., k = kkj
 # Randomize outside terrain and chamber pillars / glass.
 NSUBST:  a = 4:_ / 4:_^ / *:a, + = 1:+ / *:c
@@ -1880,51 +1876,51 @@ MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXcccccccEEccccccccccXXXXXXXXXXXXXXXXX
 XXXXXccccccXXXXccxxxcc.o..ccxxxxxxccXXXXccccccXXXXXX
-XXXEEc...Pccccccxaacc......ccaaaaaxccccccZ...cEEXXXX
-XXXEv.....ccxxxxaaacz......Rcaaaaaaxxxxcc.....pEXXXX
-XXcc.......naaaaaaan..BBBB..naaaaaaaaaan.......ccXXX
-XXc....B...n"aaaaa"n..0B2...n"aaaaaaaa"n...B....cXXX
-XXc...BBB.1c"aaaaa"c...B....c"aaaaaaaa"c0.BBB...cXXX
-XXc....BB..cccaaaaacc......ccaaaaaaaaccc..BB....cXXX
-XXcM.....2...caaaaaac1.[..1caaaaaaaaac...2.....ScXXX
-XXccc..0..[..caaaaaacc....cc---aaaaaac..[..1..cccXXX
-XXXccnncc..1.ccaaaa--cc..cc-----aaaacc.1..ccnnccXXXX
-XXXcxa""c.....c--a--'-c+cc-''-'--a--c.....c""aXcXXXX
-XXXcxaaacccc..c'---'-''-'-'--'-'---'c..ccccaaaxcXXXX
-XXccxaaaaaaccc+-'-'------4------'-'-+cccaaaaaaxccXXX
-Xccxaaaaaaaa-'---'------'~'------'---'-aaaaaaaaxcXXX
+XXXEEc..1Pccccccxaacc..c...ccaaaaaxccccccZ0..cEEXXXX
+XXXE2.....ccxxxxaaacz......Rcaaaaaaxxxxcc.....2EXXXX
+XXcc.[.....n"aaaaaan..BBBB..naaaaaaaaaan.....[.ccXXX
+XXc...1B...n"aaaaa"n...B....n"aaaaaaaa"n...B1...cXXX
+XXc...BBB..ccaaaaa"c0..B...2c"aaaaaaaa"c..BBB...cXXX
+XXc0...BBB..ccaaaaacc......ccaaaaaaaaccc.BBB...1cXXX
+XXcM....BB...caaaaaac1.[..1caaaaaaaaac...BB....ScXXX
+XXccc.....B.Bcaaaaaacc....cc---aaaaaacB.B.....cccXXX
+XXXccnncc....ccaaaa--cc..cc-----aaaacc.....cnnccXXXX
+XXXcxa""c.B...cc-a--'-c+cc-''-'--a-cc...B.cc""XcXXXX
+XXXcxaaacccc.v.c---'-''-'-'--'-'---c.p.ccccaaaxcXXXX
+XXccxaaaaaacc..c'-'------4------'-'c..ccaaaaaaxccXXX
+Xccxaaaaaaaaccc+-'------'~'------'-+cccaaaaaaaaxcXXX
 Xcxaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaxcXX
 Xcxaaaaaaaaaa--'-~-''C'C'-'C'C''-~-'--aaaaaaaaaaxcXX
 Xcxaaaaaaaaa--'-'-'CCCCCC(CCCCCC'-'-'--aaaa""aaaxcXX
 Xcxaaaaaaaa--'---'CnCC^'CnC'^CCnC'---'--aaccnnccxcXX
-Xcxaaaaaaaa-'----'CCnC'`'n'`'CnCC'----'-ccc...HcccXX
+Xcxaaaaaaaa-'----'CCnC'`'n'`'CnCC'----'-ccc0..HcccXX
 Xcxaaa""aaa--'--'CCCC@```````@CCCC'--'-cc1......ccXX
-Xcxccnnccaa-'----'C^'`````````'^C'---'cc....0B...cXXXXXXXXX
-XcccO...ccc-'---'CC'````m7m````'CC'---+..[.BBB..qEXXXnnnnnX
-Xcc......1cc-'-'-'CC'``mm`mm```CC'-'-'c.....2B...EXXXnA.AnX
+Xcxccnnccaa-'----'C^'`````````'^C'---'cc.....B...cXXXXXXXXX
+XcccO..2ccc-'---'CC'````m`m````'CC'---+..[.BBB..qEXXXnnnnnX
+Xcc......1cc-'-'-'CC'``mm`mm```CC'-'-'c......B...EXXXnA.AnX
 Xc.........cc-4~--(nn``78_87``nn(--~4-cc.........cXXXn...nX
-XE...B2.....c'-'-'CC'``mm`mm```CC'-'-'-cc1......ccXXXnA.AnX
-XEu..BBB.[..+---'CC'````m7m````'CC'---'-ccc...TcccXXXnnnnnX
-Xc...B0....cc'---'C^'`````````'^C'----'-aaccnnccxcXXXXXXXXX
+XE...B......c'-'-'CC'``mm`mm```CC'-'-'-cc1......ccXXXnA.AnX
+XEuc.BBB.[..+---'CC'````m`m````'CC'---'-ccc2..TcccXXXnnnnnX
+Xc...B.....cc'---'C^'`````````'^C'----'-aaccnnccxcXXXXXXXXX
 Xcc......1cc-'--'CCCC@```````@CCCC'--'--aaa""aaaxcXX
-XcccL...ccc-'----'CCnC'`'n'`'CnCC'----'-aaaaaaaaxcXX
+XcccL..0ccc-'----'CCnC'`'n'`'CnCC'----'-aaaaaaaaxcXX
 Xcxccnnccaa--'---'CnCC^'CnC'^CCnC'---'--aaaaaaaaxcXX
 Xcxaaa""aaaa--'-'-'CCCCCC(CCCCCC'-'-'--aaaaaaaaaxcXX
 Xcxaaaaaaaaaa--'-~-''C'C'-'C'C''-~-'--aaaaaaaaaaxcXX
 Xcxaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaxcXX
-Xccxaaaaaaaa-'---'------'~'------'---'-aaaaaaaaxccXX
-XXccxaaaaaaccc+-'-'------4------'-'-+cccaaaaaaxccXXX
-XXXcxaaaaccc..c'---'-'--'-'-''-'---'c..ccccaaaxcXXXX
-XXXcxa""cc....c--a--'-''-cc+c-'--a--c.....c""axcXXXX
-XXXccnncc..1.ccaaaa-----cc..cc--aaaacc.1..ccnnccXXXX
-XXccc..1..[..caaaaaaaaacc....ccaaaaaac..[..0..cccXXX
-XXcW.....2...caaaaaaaaac1..[.1caaaaaac...2.....IcXXX
-XXc....BB..cccaaaaaaaacc......ccaaaaaccc..BB....cXXX
-XXc...BBB.0c"aaaaaaaa"c....B...c"aaaaa"c1.BBB...cXXX
-XXc....B...n"aaaaaaaa"n...2B0..n"aaaaa"n...B....cXXX
-XXcc.......naaaaaaaaaan...BBB..naaaaaaan.......EcXXX
-XXXEt.....ccxxxxaaaaaacV......Jcaaaxxxxcc.....rcXXXX
-XXXEEc...Kccccccxaaaaacc......ccaaxccccccU...EcEXXXX
+Xccxaaaaaaaaccc+-'------'~'------'---'-aaaaaaaaxccXX
+XXccxaaaaaacc..c'-'------4------'-'-+cccaaaaaaxccXXX
+XXXcxaaacccc.t.c---'-'--'-'-''-'---'c..ccccaaaxcXXXX
+XXXcx""cc.B...cc-a--'-''-cc+c-'--a--c.r.B.c""axcXXXX
+XXXccnnc.....ccaaaa-----cc..cc--aaaacc....ccnnccXXXX
+XXccc.....B.Bcaaaaaaaaacc....ccaaaaaacB.B.....cccXXX
+XXcW....BB...caaaaaaaaac1..[.1caaaaaac...BB....IcXXX
+XXc1...BBB.cccaaaaaaaacc......ccaaaaacc..BBB...0cXXX
+XXc...BBB..c"aaaaaaaa"c2...B..0c"aaaaacc..BBB...cXXX
+XXc...1B...n"aaaaaaaa"n....B...n"aaaaa"n...B1...cXXX
+XXcc.[.....naaaaaaaaaan...BBB..naaaaaa"n.....[.EcXXX
+XXXE2.....ccxxxxaaaaaacV......Jcaaaxxxxcc.....2cXXXX
+XXXEEc..0Kccccccxaaaaacc...c..ccaaxccccccU1..EcEXXXX
 XXXXXccccccXXXXccxxxxxxcc..s.ccxxxccXXXXccccccXXXXXX
 XXXXXXXXXXXXXXXXccccccccccEEcccccccXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -2371,6 +2367,13 @@ MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
          necronomicon / randbook disc:necromancy / staff of death /\
          macabre finger necklace w:1 / sceptre of torment w:1
+: local p = "good_item ego:pain w:3"
+: local v = "good_item ego:vampirism w:3"
+: item("any book w:12 / scroll of torment ident:all q:3 w:12 / " ..
+:       "great mace " .. p .. " / great sword " .. p .. " / " ..
+:       "glaive " .. p .. " / battleaxe " .. p .. " / " ..
+:       "demon whip " .. v .. " / demon blade " .. v .. " / " ..
+:       "demon trident " .. v .. " / quick blade " .. v)
 ITEM:    any book / scroll of torment ident:all q:3 /\
          any weapon good_item ego:pain / any weapon good_item ego:vampirism
 ITEM:    any ring / any amulet w:5

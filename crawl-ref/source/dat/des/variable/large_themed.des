@@ -535,6 +535,7 @@ NAME:   fort_yaktaur
 TAGS:   no_pool_fixup vaults_hard vaults_orient_w allow_dup
 ORIENT: float
 DEPTH:  D:11-, !D:$, Vaults, !Vaults:$
+WEIGHT: 20 (Vaults), 10
 : if you.in_branch("Vaults") then
 TAGS:   no_monster_gen
 MONS:   vault guard / centaur warrior w:4 / dire elephant w:2 / arcanist w:2
