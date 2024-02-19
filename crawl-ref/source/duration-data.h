@@ -425,7 +425,7 @@ static const duration_def duration_data[] =
       RED, "-Move",
       "immotile", "",
       "You are unable to move around.", D_DISPELLABLE,
-      {{ "You are no longer robbed of momentum." }}},
+      {{ "You are no longer unable to travel." }}},
     { DUR_ENLIGHTENED,
       BLUE, "Will+",
       "enlightened", "",

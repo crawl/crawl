@@ -884,10 +884,7 @@ public:
     int rev_percent() const;
     void rev_up(int time_taken);
     void rev_down(int time_taken);
-
-    bool legs_stiff() const;
-    void check_keeping_limber();
-    void note_keeping_limber();
+    void maybe_shutdown_legs();
 
     bool allies_forbidden();
 

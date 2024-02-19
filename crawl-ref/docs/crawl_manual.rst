@@ -1826,9 +1826,10 @@ Coglins (Co)
    creations.
 
    Haphazard and jerry-rigged, Coglin exoskeletons lack the flexibility of
-   natural bodies. Whenever their legs stop moving, they must be coaxed slowly
-   back into action; and though their arms can fly in a whir of destruction,
-   it takes quite a bit of swinging to rev them up to that speed.
+   natural bodies. Though their arms can fly in a whir of destruction, it
+   takes quite a bit of swinging to rev them up to that speed, and the energy
+   needed for them to attack or cast spells requires temporarily powering
+   down their legs!
 
    Even so, a true Coglin would never criticise their creation. They believe
    that spirits of steel and sandalwood come to rest within every thing that

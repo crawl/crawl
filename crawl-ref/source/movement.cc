@@ -162,7 +162,6 @@ void player_did_deliberate_movement(bool rampaging)
 {
     _apply_barbs_damage(rampaging);
     shake_off_sticky_flame();
-    you.note_keeping_limber();
 }
 
 static bool _cancel_ice_move()

@@ -1888,9 +1888,6 @@ int player_movement_speed(bool check_terrain, bool temp)
     if (temp && you.duration[DUR_FROZEN])
         mv += 3;
 
-    if (temp && you.legs_stiff())
-        mv += 10; // yikes!
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
@@ -1949,32 +1946,6 @@ int player_speed()
     }
 
     return ps;
-}
-
-#define LEGS_STIFF_KEY "legs_stiff"
-
-bool player::legs_stiff() const
-{
-    return you.props.exists(LEGS_STIFF_KEY);
-}
-
-#define KEEPING_LIMBER "moved_deliberately_key"
-
-void player::note_keeping_limber()
-{
-    if (!you.has_mutation(MUT_WARMUP_MOVES))
-        return;
-    you.props[KEEPING_LIMBER] = true;
-    you.props.erase(LEGS_STIFF_KEY);
-}
-
-void player::check_keeping_limber()
-{
-    if (!you.has_mutation(MUT_WARMUP_MOVES))
-        return;
-    if (!you.props.exists(KEEPING_LIMBER))
-        you.props[LEGS_STIFF_KEY] = true;
-    you.props.erase(KEEPING_LIMBER);
 }
 
 bool is_effectively_light_armour(const item_def *item)
@@ -8244,6 +8215,16 @@ void player::rev_up(int dur)
     // Fuzz it between 4/2 and 6/2 (ie 2x to 3x) to avoid tracking.
     const int perc_gained = random_range(dur * 2, dur * 3);
     you.props[REV_PERCENT_KEY] = min(100, you.rev_percent() + perc_gained);
+}
+
+void player::maybe_shutdown_legs()
+{
+    if (!you.has_mutation(MUT_LEGS_SHUTDOWN))
+        return;
+
+    // Take one normal action longer.
+    you.duration[DUR_NO_MOMENTUM] = max(you.time_taken + player_speed(),
+                                        you.duration[DUR_NO_MOMENTUM]);
 }
 
 void player_open_door(coord_def doorpos)

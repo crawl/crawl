@@ -851,10 +851,10 @@ Your grasping arms need time to limber up, making your first few attacks in
 each fight less effective. Slow, heavy attacks help more than fast attacks.
 Both weapon-based and unarmed attacks are affected.
 %%%%
-warmup strides mutation
+legs shutdown mutation
 
-Your charm-wrought legs need time to limber up, making you take longer to
-cover ground if your last action was neither movement nor waiting.
+Attacking or casting spells requires you to redirect power from your legs.
+For a moment afterward, your legs will be too weak to allow for travel.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation

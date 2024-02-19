@@ -54,8 +54,7 @@ enum status_type
     STATUS_BLACK_TORCH,
     STATUS_GEM,
     STATUS_REV,
-    STATUS_STIFF,
-    STATUS_LAST_STATUS = STATUS_STIFF
+    STATUS_LAST_STATUS = STATUS_REV
 };
 
 struct status_info

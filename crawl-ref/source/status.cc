@@ -278,16 +278,6 @@ bool fill_status_info(int status, status_info& inf)
         _describe_airborne(inf);
         break;
 
-    case STATUS_STIFF:
-        if (you.legs_stiff())
-        {
-            inf.light_colour = BROWN;
-            inf.light_text   = "Stiff";
-            inf.short_text   = "stiff-legged";
-            inf.long_text    = "Your next movement will be very slow.";
-        }
-        break;
-
     case STATUS_BEHELD:
         if (you.beheld())
         {

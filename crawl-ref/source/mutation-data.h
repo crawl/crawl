@@ -787,10 +787,10 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_WARMUP_MOVES, 0, 1, mutflag::bad, true,
-  "warmup strides",
+{ MUT_LEGS_SHUTDOWN, 0, 1, mutflag::bad, true,
+  "legs shutdown",
 
-  {"Your first movements take longer.",
+  {"Attacking and casting redirects power from your legs.",
    "", ""},
   {"", "", ""},
   {"", "", ""},
