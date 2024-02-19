@@ -3202,6 +3202,10 @@ _yredelemnul_Donald_
 @The_monster@ says, "Angels painted black are so last century."
 
 @The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
+
+@The_monster@ says, "How does that torch stay lit when you throw its fire all over?"
+
+@The_monster@ says, "I hate being shackled."
 %%%%
 Okawaru Donald
 
