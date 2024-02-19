@@ -516,7 +516,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     }
                     else
                     {
-                        mprf("%s glows horrifically with a foul radiance!",
+                        mprf("%s glows horrifically with a foul blackness!",
                              item_name.c_str());
                     }
                     break;

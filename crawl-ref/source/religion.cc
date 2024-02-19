@@ -3738,7 +3738,7 @@ static void _print_good_god_brand_changes(item_def *weapon, bool joining_good)
     }
     else
     {
-        mprf("%s glows horrifically with a foul radiance!",
+        mprf("%s glows horrifically with a foul blackness!",
              uppercase_first(weapon->name(DESC_YOUR)).c_str());
     }
 }

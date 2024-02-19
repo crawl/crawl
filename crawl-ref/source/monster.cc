@@ -810,7 +810,7 @@ void monster::equip_weapon_message(item_def &item)
         mpr("It softly glows with a divine radiance!");
         break;
     case SPWPN_FOUL_FLAME:
-        mpr("It glows horrifically with a foul radiance!");
+        mpr("It glows horrifically with a foul blackness!");
         break;
     case SPWPN_ELECTROCUTION:
         mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
