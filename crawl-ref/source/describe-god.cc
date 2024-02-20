@@ -1192,6 +1192,8 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
+        if (desc_sw->current_widget()->on_event(ev))
+            return true;
         return done = ui::key_exits_popup(key, false);
     });
 
