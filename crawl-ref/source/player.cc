@@ -1095,9 +1095,10 @@ bool player_equip_unrand(int unrand_index, bool include_melded)
     case EQ_WEAPON:
         // Hands can have more than just weapons.
         if ((item = you.slot_item(slot, include_melded))
-            && item->base_type == OBJ_WEAPONS
-            && is_unrandom_artefact(*item)
-            && item->unrand_idx == unrand_index)
+                && item->base_type == OBJ_WEAPONS
+                && is_unrandom_artefact(*item, unrand_index)
+            || (item = you.offhand_weapon())
+                && is_unrandom_artefact(*item, unrand_index))
         {
             return true;
         }
