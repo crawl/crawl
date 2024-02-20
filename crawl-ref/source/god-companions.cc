@@ -634,11 +634,15 @@ void win_apostle_challenge(monster& apostle)
     else
         apostles.emplace_back(apostle_data(apostle));
 
+    // We have to set this before the message or the ability technically won't
+    // exist yet for the player, and thus trying to get its hotkey will be wrong
+    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
+
     string msg = make_stringf("Beogh will allow you to induct %s into your service.",
                               apostle.name(DESC_THE, true).c_str());
 
     // Remind the player how to do this, if they don't already have an apostle
-    if (companion_list.empty())
+    if (get_num_apostles() == 0)
     {
         msg += make_stringf("\n(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
                             get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
@@ -646,8 +650,6 @@ void win_apostle_challenge(monster& apostle)
     }
 
     mprf(MSGCH_GOD, "%s", msg.c_str());
-
-    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
 
     // Remove the rest of the apostle's band
     for (monster_iterator mi; mi; ++mi)
