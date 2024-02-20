@@ -20,6 +20,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "env.h"
+#include "fight.h"
 #include "files.h"
 #include "fineff.h"
 #include "ghost.h"
@@ -1083,4 +1084,71 @@ bool tile_has_valid_bfb_corpse(const coord_def pos)
     }
 
     return false;
+}
+
+static const char* _apostle_type_colours[] =
+{
+    "yellow",
+    "magenta",
+    "lightcyan"
+};
+
+// XXX: Duplicates calculations in melee_attack that are also duplicated in
+//      _monster_attacks_description. Sadness.
+static int _calc_attack_damage(const monster& apostle)
+{
+    const item_def* weapon = apostle.weapon();
+    return mons_attack_spec(apostle, 0, false).damage
+           + brand_adjust_weapon_damage(property(*weapon, PWPN_DAMAGE), weapon->brand, false)
+           + weapon->plus;
+}
+
+string apostle_short_description(int slot)
+{
+    apostle_data& apostle_d = apostles[slot];
+    monster& apostle = *apostle_d.apostle.peek();
+    const apostle_type atype
+        = static_cast<apostle_type>(apostle.props[APOSTLE_TYPE_KEY].get_int());
+
+    string str;
+
+    // Make title line
+    str = make_stringf("%s (<%s>%s</%s>)     %s\n",
+        apostle.name(DESC_PLAIN, true).c_str(),
+        _apostle_type_colours[atype],
+        apostle_type_names[atype].c_str(),
+        _apostle_type_colours[atype],
+        slot > 0 ? beogh_apostle_is_alive(slot) ? ""
+                                                : "<lightred>**DEAD**</lightred>"
+                 : "<green>**Available to recruit**</green>");
+
+    // Stat line
+    str += make_stringf("HP: %d    AC: %d    Damage:%d (w/weapon)\n",
+        apostle.max_hit_points, apostle.armour_class(),
+        _calc_attack_damage(apostle));
+
+    string item_str;
+    for (unsigned int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+        if (apostle.inv[i] != NON_ITEM)
+            str += env.item[apostle.inv[i]].name(DESC_PLAIN, false, false, true, false) + "\n";
+    }
+
+    string spell_str;
+    for (unsigned int i = 0; i < apostle.spells.size(); ++i)
+    {
+        if (!spell_str.empty())
+            spell_str += ", ";
+        spell_str += spell_title(apostle.spells[i].spell);
+    }
+
+    while (!spell_str.empty())
+        str += wordwrap_line(spell_str, 71);
+
+    // Destroyed peeked monster (or we'll keep making copies of their equipment
+    // all over the floor's item list)
+    apostle.destroy_inventory();
+    apostle.reset();
+
+    return str;
 }

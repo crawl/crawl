@@ -108,6 +108,8 @@ void beogh_resurrect_followers(bool end_ostracism_only = false);
 
 bool tile_has_valid_bfb_corpse(const coord_def pos);
 
+string apostle_short_description(int slot);
+
 #if TAG_MAJOR_VERSION == 34
 void fixup_bad_companions();
 bool maybe_bad_priest_monster(monster &mons);

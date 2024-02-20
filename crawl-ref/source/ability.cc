@@ -1346,6 +1346,13 @@ string get_ability_desc(const ability_type ability, bool need_title)
     if (ability == ABIL_ASHENZARI_CURSE)
         lookup += _curse_desc();
 
+    if (ability == ABIL_BEOGH_DISMISS_APOSTLE_1)
+        lookup += "\n" + apostle_short_description(1) + "\n";
+    else if (ability == ABIL_BEOGH_DISMISS_APOSTLE_2)
+        lookup += "\n" + apostle_short_description(2) + "\n";
+    else if (ability == ABIL_BEOGH_DISMISS_APOSTLE_3)
+        lookup += "\n" + apostle_short_description(3) + "\n";
+
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
 
