@@ -34,6 +34,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h" // armataur charge
@@ -579,7 +580,8 @@ coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
         // be our landing spot (if it's valid)
         if (grid_distance(ray.pos(), agent.pos()) == dist_to_targ -1)
         {
-            if (is_feat_dangerous(env.grid(ray.pos())))
+            if (agent.is_player() ? is_feat_dangerous(env.grid(ray.pos()))
+                                  : !monster_habitable_grid(agent.as_monster(), env.grid(ray.pos())))
             {
                 if (fail_reason)
                 {
