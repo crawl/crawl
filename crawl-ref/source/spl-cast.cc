@@ -1023,7 +1023,8 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         noisy(spell_noise(spell), you.pos());
 
         // Coglin: redirect all power to waggly arms!
-        you.maybe_shutdown_legs();
+        if (!fake_spell)
+            you.maybe_shutdown_legs();
     }
 
     alert_nearby_monsters();
