@@ -635,8 +635,9 @@ void init_element_colours()
                             }));
     add_element_colour(new random_element_colour_calc(
                             ETC_FOUL_FLAME, "foul_flame",
-                            { {60,  WHITE},
-                              {60,  BROWN},
+                            { {60,  DARKGREY},
+                              {60,  MAGENTA},
+                              {20,  WHITE},
                             }));
     add_element_colour(new random_element_colour_calc(
                             ETC_MOUNTAIN, "mountain",
