@@ -182,21 +182,29 @@ battlecry BATTLECRY
 berserk_other BERSERK_OTHER
 blink_other BLINK_OTHER
 brain_bite BRAIN_BITE
+call_of_chaos CALL_OF_CHAOS
 call_down_damnation CALL_DOWN_DAMNATION
+call_tide CALL_TIDE
 cantrip CANTRIP
 cold_breath COLD_BREATH
+concentrate_venom CONCENTRATE_VENOM
 confusion_gaze CONFUSION_GAZE
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
+crystal_bolt CRYSTAL_BOLT
 draining_gaze DRAINING_GAZE
+drain_magic DRAIN_MAGIC
+dream_dust DREAM_DUST
 divine_armament DIVINE_ARMAMENT
 earth_elementals EARTH_ELEMENTALS
 ensnare ENSNARE
+entropic_weave ENTROPIC_WEAVE
 eruption ERUPTION
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
+fire_summon FIRE_SUMMON
 forceful_invitation FORCEFUL_INVITATION
 ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
@@ -221,6 +229,7 @@ quicksilver_bolt QUICKSILVER_BOLT
 roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK
+shezas_dance SHEZAS_DANCE
 sleep SLEEP
 slug_dart SLUG_DART
 spectral_cloud SPECTRAL_CLOUD
@@ -240,6 +249,7 @@ summon_executioners SUMMON_EXECUTIONERS
 summon_hell_beast SUMMON_HELL_BEAST
 summon_hell_sentinel SUMMON_HELL_SENTINEL
 summon_holies SUMMON_HOLIES
+summon_illusion SUMMON_ILLUSION
 summon_minor_demon SUMMON_MINOR_DEMON
 summon_mushrooms SUMMON_MUSHROOMS
 summon_scarabs SUMMON_SCARABS
@@ -250,16 +260,30 @@ summon_ufetubus SUMMON_UFETUBUS
 summon_tzitzimitl SUMMON_TZITZIMITL
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
+throw_ally THROW_ALLY
+throw_klown_pie THROW_KLOWN_PIE
 virulence VIRULENCE
 wall_of_brambles WALL_OF_BRAMBLES
 warning_cry WARNING_CRY
 water_elementals WATER_ELEMENTALS
+weakening_gaze WEAKENING_GAZE
 woodweal WOODWEAL
 %back none
 
 # spells mimicking natural abilities
 %sdir gui/abilities
+blinkbolt BLINKBOLT
 hurl_damnation HURL_DAMNATION
+
+# spells flavoured as divine abilities
+%sdir gui/spells/monster
+aura_of_brilliance AURA_OF_BRILLIANCE
+drain_life DRAIN_LIFE
+druids_call DRUIDS_CALL
+injury_mirror INJURY_MIRROR
+malign_offering MALIGN_OFFERING
+regeneration REGENERATION
+sap_magic SAP_MAGIC
 
 # spells mimicking divine abilities
 %sdir gui/invocations
@@ -272,12 +296,7 @@ lugonu_banish BANISHMENT
 lugonu_corrupt CORRUPT
 trog_hand TROGS_HAND
 trog_brothers_in_arms BROTHERS_IN_ARMS
-yred_drain_life DRAIN_LIFE
-yred_injury_mirror INJURY_MIRROR
 tso_cleansing_flame CLEANSING_FLAME
-
-%sdir gui/abilities
-blinkbolt BLINKBOLT
 
 %sdir gui/spells/misc
 debugging_ray DEBUGGING_RAY

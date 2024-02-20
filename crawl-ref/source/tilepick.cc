@@ -3751,8 +3751,12 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Yredelemnul
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
+    case ABIL_YRED_HURL_TORCHLIGHT:
+        return TILEG_ABILITY_YRED_HURL_TORCHLIGHT;
     case ABIL_YRED_BIND_SOUL:
         return TILEG_ABILITY_YRED_BIND_SOUL;
+    case ABIL_YRED_FATHOMLESS_SHACKLES:
+        return TILEG_ABILITY_YRED_FATHOMLESS_SHACKLES;
     // Xom, Vehumet = 90
     // Okawaru
     case ABIL_OKAWARU_HEROISM:

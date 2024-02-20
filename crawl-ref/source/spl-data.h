@@ -1623,7 +1623,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_COLD_BREATH,
 },
 
 {
@@ -1748,7 +1748,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_ILLUSION,
 },
 
 {
@@ -1770,7 +1770,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CALL_TIDE,
 },
 
 {
@@ -1838,7 +1838,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DRUIDS_CALL,
 },
 
 {
@@ -1987,7 +1987,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FIRE_SUMMON,
 },
 
 {
@@ -2291,7 +2291,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MALIGN_OFFERING,
 },
 
 {
@@ -2425,7 +2425,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CALL_OF_CHAOS,
 },
 
 {
@@ -2447,7 +2447,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SAP_MAGIC,
 },
 
 {
@@ -2536,7 +2536,7 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CRYSTAL_BOLT,
 },
 
 {
@@ -2604,7 +2604,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DRAIN_MAGIC,
 },
 
 {
@@ -2638,7 +2638,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FIRE_BREATH,
 },
 
 {
@@ -2650,7 +2650,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_COLD_BREATH,
 },
 
 {
@@ -2662,7 +2662,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
 {
@@ -2674,7 +2674,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MIASMA_BREATH,
 },
 
 {
@@ -2898,7 +2898,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WEAKENING_GAZE,
 },
 
 {
@@ -2953,7 +2953,7 @@ static const struct spell_desc spelldata[] =
     50,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_THROW_ALLY,
 },
 
 {
@@ -2997,7 +2997,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ENTROPIC_WEAVE,
 },
 
 {
@@ -3030,7 +3030,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_AURA_OF_BRILLIANCE,
 },
 
 {
@@ -3140,7 +3140,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DREAM_DUST,
 },
 
 {
@@ -3207,7 +3207,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_GRASPING_ROOTS,
 },
 
 {
@@ -3240,7 +3240,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_THROW_KLOWN_PIE,
 },
 
 {
@@ -3440,7 +3440,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CONCENTRATE_VENOM,
 },
 
 {
@@ -3605,7 +3605,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SHEZAS_DANCE,
 },
 
 {
@@ -3716,7 +3716,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_REGENERATION,
 },
 
 
