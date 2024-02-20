@@ -1,6 +1,7 @@
 drop_filter += useless_item
 
-auto_exclude += oklob,statue,roxanne,lightning spire,starflower,strange machine
+auto_exclude += oklob,statue,roxanne,lightning spire
+auto_exclude += scrub nettle,starflower,strange machine
 
 # Interrupting run and rest compound commands:
 runrest_ignore_monster += ^butterfly$:1
