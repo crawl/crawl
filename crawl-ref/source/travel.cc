@@ -1072,8 +1072,11 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        if (Options.explore_auto_rest && !you.is_sufficiently_rested())
+        if (Options.explore_auto_rest && !you.is_sufficiently_rested()
+            || you.duration[DUR_NO_MOMENTUM])
+        {
             return CMD_WAIT;
+        }
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP
