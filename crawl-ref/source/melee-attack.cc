@@ -996,7 +996,7 @@ bool melee_attack::run_attack_set()
     {
         // Don't launch UC attacks when you have an offhand weapon.
         if (offhand)
-            set_weapon(offhand);
+            set_weapon(offhand, true);
         return attack();
     }
 
