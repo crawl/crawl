@@ -246,6 +246,7 @@ public:
     void load_ghost_spells();
     brand_type ghost_brand() const;
     bool has_ghost_brand() const;
+    int ghost_umbra_radius() const;
 
     actor *get_foe() const;
 

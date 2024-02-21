@@ -67,6 +67,7 @@ public:
     attack_flavour att_flav;
     resists_t resists;
     enchant_type cloud_ring_ench;
+    int umbra_rad;
 
     colour_t colour;
 
