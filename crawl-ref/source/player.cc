@@ -8221,6 +8221,15 @@ void player::maybe_shutdown_legs()
     if (!you.has_mutation(MUT_LEGS_SHUTDOWN))
         return;
 
+    if (!there_are_monsters_nearby(true, false, false))
+    {
+        // We might have a leftover small duration from a previous action
+        // if the current action was fast, so remove that too.
+        if (you.duration[DUR_NO_MOMENTUM] <= player_speed())
+            you.duration[DUR_NO_MOMENTUM] = 0;
+        return;
+    }
+
     // Take one normal action longer.
     you.duration[DUR_NO_MOMENTUM] = max(you.time_taken + player_speed(),
                                         you.duration[DUR_NO_MOMENTUM]);
