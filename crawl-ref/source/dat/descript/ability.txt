@@ -81,9 +81,10 @@ Revivify ability
 
 Return to life, becoming bloodcrazed. While bloodcrazed, you gain powerful
 life-draining attacks, move quickly and can sense creatures from afar but lose
-undead powers and the ability to regenerate naturally. You can drain blood
-from enemies to extend your bloodcraze. When your supply of blood runs out, you
-revert back to your bloodless form and are weakened for some time.
+undead resistances and the ability to regenerate naturally. Half of your health
+regeneration is converted to MP regeneration. You can drain blood from enemies
+to extend your bloodcraze. When your supply of blood runs out, you revert back
+to your bloodless form and are weakened for some time.
 %%%%
 Hurl Damnation ability
 

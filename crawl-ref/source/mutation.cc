@@ -1224,12 +1224,14 @@ private:
 
         string result;
 
-        const int lines = 17;
+        const int lines = 18;
         string columns[lines][3] =
         {
             {"                     ", "<lightgray>Bloodless</lightgray>   ", "<lightred>Bloodcraze</lightred>"},
                                      //Bloodless     Bloodcraze
             {"Regeneration         ", "normal      ", "none  "},
+
+            {"MP Regeneration      ", "normal      ", "raised"},
 
             {"Stealth boost        ", "minor       ", "none  "},
 
@@ -1252,10 +1254,10 @@ private:
             {"Torment resistance   ", "immune      ", ".     "},
 
             {"", "", ""},
-            {"<w>Transformations</w>", "", ""},
-            {"Other forms          ", "no          ", "yes   "},
+            {"<w>Other</w>", "", ""},
+            {"Berserk              ", "no          ", "yes   "},
 
-            {"Berserk              ", "no          ", "yes   "}
+            {"Sleep                ", "no          ", "yes   "}
         };
 
         const int highlight_col = you.vampire_alive ? 2 : 1;
