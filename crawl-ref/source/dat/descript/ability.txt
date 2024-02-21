@@ -7,51 +7,55 @@ Spit Poison ability
 
 Spits poison at a targeted creature.
 %%%%
-Breathe Dispelling Energy ability
+Combustion Breath ability
 
-Breathes a bolt of dispelling energy at a targeted creature, possibly removing
-some of its enchantments.
+Breathes a blast of volatile embers that explode violently around each creature
+they touch. It is harmless to its user.
+%%%%
+Glacial Breath ability
+
+Exhales a powerful wave of frost which encases anything it kills in a solid
+block of durable ice.
+%%%%
+Nullifying Breath ability
+
+Breathes a large blast of pure antimagic that dispels magical effects from
+every creature it hits and also significantly interferes with their ability to
+cast spells for a while. It is harmless to its user.
+%%%%
+Steam Breath ability
+
+Breathes a powerful blast of steam, scalding a target and leaving
+sight-obscuring steam clouds in its wake.
+%%%%
+Galvanic Breath ability
+
+Exhales a charged burst of electricity that will arc through a target and every
+other creature that is connected to it.
+%%%%
+Mud Breath ability
+
+Spits an enormous ball of mud that knocks back whatever it hits and drenches the
+surrounding area in a mud slick which impedes enemy movement and causes them to
+sometimes fumble their attacks.
+%%%%
+Caustic Breath ability
+
+Breathes a spray of concentrated acid which leaves corrosive clouds on any
+unoccupied tiles it passes over and corrodes whatever it hits.
+%%%%
+Noxious Breath ability
+
+Breathes a line of noxious vapour which can confuse anything standing in it
+which does not resist poison. At higher levels, the clouds can cover a larger
+area and last longer.
 %%%%
 Breathe Fire ability
 
-{{
-    local desc = "Breathes a blast of fire at a targeted creature"
-
-    if you.race() == "Red Draconian" then
-        desc = desc .. ", leaving a cloud of flames at the endpoint"
-    end
-
-    desc = desc .. "."
-
-    return desc
-}}
-%%%%
-Breathe Frost ability
-
-<Chilling Breath spell>
-%%%%
+Breathes a blast of fire at a targeted creature.
 Breathe Poison Gas ability
 
 Breathes a blast of poison gas at a targeted creature.
-%%%%
-Breathe Lightning ability
-
-Releases a great discharge of electricity, causing an uncontrollable lightning
-storm. It partially bypasses armour.
-%%%%
-Breathe Acid ability
-
-Spits a glob of acid at a nearby creature, covering it in corrosive slime
-for a short time. It may also splash onto other nearby creatures on impact.
-%%%%
-Breathe Steam ability
-
-Breathes a jet of steam at a targeted location, which will scald any creatures
-it hits and will also obscure vision.
-%%%%
-Breathe Noxious Fumes ability
-
-Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 

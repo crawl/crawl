@@ -2649,24 +2649,19 @@ dice_def arcjolt_damage(int pow, bool random)
     return dice_def(1, random ? 10 + div_rand_round(pow, 2) : 10 + pow / 2);
 }
 
-vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
+static vector<coord_def> _get_chain_targets(const actor &agent,
+                                            vector<coord_def>& seed_points, bool actual)
 {
-    vector<coord_def> targets;
     set<coord_def> seen;
-    vector<coord_def> to_check;
-    to_check.push_back(agent.pos());
-    seen.insert(agent.pos());
+    vector<coord_def> targets;
 
-    for (radius_iterator ri(agent.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
-    {
-        to_check.push_back(*ri);
-        seen.insert(*ri);
-    }
+    for (auto point : seed_points)
+        seen.insert(point);
 
-    while (!to_check.empty())
+    while (!seed_points.empty())
     {
         vector<coord_def> next_frontier;
-        for (coord_def p : to_check)
+        for (coord_def p : seed_points)
         {
             actor* act = actor_at(p);
             const bool seen_act = act && (actual || agent.can_see(*act));
@@ -2692,24 +2687,13 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
                 }
             }
         }
-        to_check = next_frontier;
+        seed_points = next_frontier;
     }
     return targets;
 }
 
-spret cast_arcjolt(int pow, const actor &agent, bool fail)
+static void _do_chain_jolt(const actor& agent, vector<coord_def>& targets, dice_def damage)
 {
-    if (agent.is_player()
-        && _warn_about_bad_targets(SPELL_ARCJOLT,
-                                   arcjolt_targets(agent, false)))
-    {
-            return spret::abort;
-    }
-    // NOTE: it's possible to hit something not in this list by
-    // arcing through an invisible enemy into an ally. Oh well...
-
-    fail_check();
-
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY;
     beam.thrower = agent.is_player() ? KILL_YOU : KILL_MON;
@@ -2720,26 +2704,21 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
 #endif
     beam.draw_delay = 10;
 
-    if (agent.is_player())
-        mpr("Electricity surges outward!");
-    else
+    // Do the full animation first, so it doesn't get interrupted mid-way by messages
+    if (Options.use_animations & UA_BEAM)
     {
-        simple_monster_message(*agent.as_monster(),
-                               " emits a burst of electricity!");
+        for (coord_def t : targets)
+                beam.draw(t);
     }
 
-    auto targets = arcjolt_targets(agent, true);
     for (coord_def t : targets)
     {
-        if (Options.use_animations & UA_BEAM)
-            beam.draw(t);
-
         actor *act = actor_at(t);
         if (!act || !act->alive()) // may have died midway through casting
             continue;
 
         monster* mon = act->as_monster();
-        const int rolled_dam = arcjolt_damage(pow, true).roll();
+        const int rolled_dam = damage.roll();
         const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0,
                                                      ac_type::half));
         const int post_resist_dam = mon ? mons_adjust_flavoured(mon, beam,
@@ -2772,8 +2751,59 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
     }
     if (Options.use_animations & UA_BEAM)
         animation_delay(100, Options.reduce_animations);
+}
+
+vector<coord_def> galvanic_targets(const actor &agent, coord_def pos, bool actual)
+{
+    vector<coord_def> to_check;
+    to_check.push_back(pos);
+
+    return _get_chain_targets(agent, to_check, actual);
+}
+
+vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
+{
+    vector<coord_def> to_check;
+    to_check.push_back(agent.pos());
+
+    for (radius_iterator ri(agent.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        to_check.push_back(*ri);
+
+    return _get_chain_targets(agent, to_check, actual);
+}
+
+spret cast_arcjolt(int pow, const actor &agent, bool fail)
+{
+    if (agent.is_player()
+        && _warn_about_bad_targets(SPELL_ARCJOLT,
+                                   arcjolt_targets(agent, false)))
+    {
+            return spret::abort;
+    }
+    // NOTE: it's possible to hit something not in this list by
+    // arcing through an invisible enemy into an ally. Oh well...
+
+    fail_check();
+
+    if (agent.is_player())
+        mpr("Electricity surges outward!");
+    else
+    {
+        simple_monster_message(*agent.as_monster(),
+                               " emits a burst of electricity!");
+    }
+
+    auto targets = arcjolt_targets(agent, true);
+
+    _do_chain_jolt(agent, targets, arcjolt_damage(pow, true));
 
     return spret::success;
+}
+
+void do_galvanic_jolt(const actor& agent, coord_def pos, dice_def damage)
+{
+    auto targets = galvanic_targets(agent, pos, true);
+    _do_chain_jolt(agent, targets, damage);
 }
 
 static bool _plasma_targetable(const actor &agent, monster &m, bool actual)

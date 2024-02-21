@@ -31,7 +31,7 @@ mutations:
   1:
     MUT_COLD_BLOODED: 1
 fake_mutations:
-  - long: You can breathe bolts of dispelling energy.
-    short: breathe power
+  - long: You can breathe blasts of antimagic.
+    short: nullifying breath
 
 orc_name: Purple Orconian

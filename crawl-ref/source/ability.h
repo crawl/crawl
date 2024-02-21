@@ -39,6 +39,7 @@ enum class abflag
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     torchlight          = 0x00008000, // costs torchlight (Yred)
+    drac_charges        = 0x00010000, // consumes draconian breath charges
 
     // targeting flags
     dir_or_target       = 0x10000000, // uses DIR_NONE targeting

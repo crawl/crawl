@@ -1380,6 +1380,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_boulder>(&you);
     case SPELL_PETRIFY:
         return make_unique<targeter_petrify>(&you, range);
+    case SPELL_COMBUSTION_BREATH:
+        return make_unique<targeter_explosive_beam>(&you, pow, range);
+    case SPELL_NOXIOUS_BREATH:
+        // Note the threshold where it becomes possible to make clouds off the main beam
+        return make_unique<targeter_explosive_beam>(&you, pow, range, pow > 10);
+    case SPELL_GALVANIC_BREATH:
+        return make_unique<targeter_galvanic>(&you, pow, range);
+    case SPELL_NULLIFYING_BREATH:
+        return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH, pow,
+                                          2, 2);
 
     default:
         break;
@@ -2504,6 +2514,32 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_BOULDER:
         return cast_broms_barrelling_boulder(you, beam.target, powc, fail);
+
+    // Just to do extra messaging; spell is handled by default zapping
+    case SPELL_COMBUSTION_BREATH:
+    case SPELL_GLACIAL_BREATH:
+    case SPELL_STEAM_BREATH:
+    case SPELL_CAUSTIC_BREATH:
+    case SPELL_MUD_BREATH:
+    case SPELL_NULLIFYING_BREATH:
+    case SPELL_NOXIOUS_BREATH:
+    {
+        static map<spell_type, string> breath_message =
+        {
+            { SPELL_COMBUSTION_BREATH, "You breathe a blast of explosive embers." },
+            { SPELL_GLACIAL_BREATH, "You exhale a wave of glacial cold." },
+            { SPELL_STEAM_BREATH, "You exhale a blast of scalding steam." },
+            { SPELL_NULLIFYING_BREATH, "You breathe a sphere of nullifying energy." },
+            { SPELL_NOXIOUS_BREATH, "You exhale a blast of noxious fumes." },
+            { SPELL_CAUSTIC_BREATH, "You breathe a spray of caustic vapour." },
+            { SPELL_MUD_BREATH, "You spew a torrent of mud." },
+            { SPELL_GALVANIC_BREATH, "You breathe wild lightning."}
+        };
+        mpr(breath_message[spell].c_str());
+    }
+    break;
+
+
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

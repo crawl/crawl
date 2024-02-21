@@ -594,3 +594,25 @@ public:
     targeter_bind_soul();
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_explosive_beam : public targeter_beam
+{
+public:
+    targeter_explosive_beam(const actor *act, int pow, int range,
+                            bool always_explode = false);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    explosion_map exp_map;
+    bool always_explode;
+};
+
+class targeter_galvanic : public targeter_beam
+{
+public:
+    targeter_galvanic(const actor *act, int pow, int range);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<coord_def> jolt_targets;
+};

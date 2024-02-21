@@ -29,6 +29,11 @@ str: 10
 int: 8
 dex: 6
 levelup_stat_frequency: 4
+fake_mutations:
+  - long: You can breathe torrents of mud.
+  - short: mud breath
+  - long: You are unimpeded by mud.
+    short: mud-swimmer
 mutations:
   1:
     MUT_COLD_BLOODED: 1

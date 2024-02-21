@@ -195,6 +195,27 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_DRACONIAN_BREATH:
+    {
+        if (!species::is_draconian(you.species) || you.experience_level < 7)
+            break;
+
+        inf.light_text = "Breath";
+
+        const int num = draconian_breath_uses_available();
+        if (num == 0)
+            inf.light_colour = DARKGREY;
+        else
+        {
+            inf.light_colour = LIGHTCYAN;
+            if (num == 2)
+                inf.light_text += "+";
+            else if (num == 3)
+                inf.light_text += "++";
+        }
+        break;
+    }
+
     case STATUS_BLACK_TORCH:
         if (!you_worship(GOD_YREDELEMNUL))
             break;

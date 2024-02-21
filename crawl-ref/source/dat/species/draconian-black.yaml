@@ -36,7 +36,7 @@ mutations:
   14:
     MUT_BIG_WINGS: 1
 fake_mutations:
-  - long: You can breathe wild blasts of lightning.
-    short: breathe lightning
+  - long: You can breathe arcing electricity.
+    short: galvanic breath
 
 orc_name: Black Orconian
