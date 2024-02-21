@@ -3623,12 +3623,34 @@ void melee_attack::do_foul_flame()
 
     if (you.has_mutation(MUT_FOUL_SHADOW)
         && attacker->alive()
+        && attacker->res_foul_flame() < 3
         && adjacent(you.pos(), mon->pos()))
     {
         const int mut = you.get_mutation_level(MUT_FOUL_SHADOW);
 
         if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20))
-            foul_flame_monster(attacker->as_monster());
+        {
+            const int raw_dmg = random_range(mut,
+                div_rand_round(you.experience_level * 3, 4) + mut * 4);
+
+            bolt beam;
+            beam.flavour = BEAM_FOUL_FLAME;
+            beam.thrower = KILL_YOU;
+            const int dmg = mons_adjust_flavoured(mon, beam, raw_dmg);
+
+            if (!dmg)
+                return;
+
+            dprf(DIAG_COMBAT, "Foul flame damage: raw_dmg %d, dmg %d", raw_dmg,
+                 dmg);
+            mprf("%s is seared by the foul flame within you%s",
+                 attacker->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dmg).c_str());
+            mon->hurt(&you, dmg);
+
+            if (mon->alive())
+                print_wounds(*mon);
+        }
     }
 }
 
