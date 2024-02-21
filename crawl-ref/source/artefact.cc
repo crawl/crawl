@@ -1981,22 +1981,17 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
 void unrand_reacts()
 {
-    item_def*  weapon     = you.weapon();
-    const int  old_plus   = weapon ? weapon->plus : 0;
-
     for (int i = 0; i < NUM_EQUIP; i++)
     {
-        if (you.unrand_reacts[i])
-        {
-            item_def&        item  = you.inv[you.equip[i]];
-            const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
+        if (!you.unrand_reacts[i])
+            continue;
 
-            entry->world_reacts_func(&item);
-        }
+        item_def&        item  = you.inv[you.equip[i]];
+        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
+        ASSERT(entry);
+
+        entry->world_reacts_func(&item);
     }
-
-    if (weapon && (old_plus != weapon->plus))
-        you.wield_change = true;
 }
 
 void unrand_death_effects(monster* mons, killer_type killer)
