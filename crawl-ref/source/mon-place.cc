@@ -904,9 +904,12 @@ static void _place_monster_set_god(const mgen_data &mg, monster *mon)
                 break;
             }
         }
+
+        return;
     }
+
     // The Royal Jelly belongs to Jiyva.
-    else if (mg.cls == MONS_ROYAL_JELLY)
+    if (mg.cls == MONS_ROYAL_JELLY)
         mon->god = GOD_JIYVA;
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
