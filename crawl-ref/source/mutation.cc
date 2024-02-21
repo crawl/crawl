@@ -345,8 +345,10 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_STEAM_RESISTANCE && drag == MONS_STEAM_DRAGON)
                 return mutation_activity_type::FULL;
         }
-        // Vampire bats keep their fangs.
-        if (you.form == transformation::bat
+        // Vampire bats and serpents keep their fangs.
+        // Vampire dragons have their own bite which overrides this.
+        if ((you.form == transformation::bat
+            || you.form == transformation::serpent)
             && you.has_innate_mutation(MUT_VAMPIRISM)
             && mut == MUT_FANGS)
         {
