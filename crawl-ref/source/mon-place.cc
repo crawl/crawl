@@ -1110,11 +1110,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         _place_monster_set_god(mon, mg.cls, mg.place);
 
-    // Holy monsters need their halo!
-    if (mon->holiness() & MH_HOLY)
+    // Monsters that need halos/silence auras/umbras.
+    if ((mon->holiness() & MH_HOLY)
+         || mg.cls == MONS_SILENT_SPECTRE
+         || mg.cls == MONS_PROFANE_SERVITOR)
+    {
         invalidate_agrid(true);
-    if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
-        invalidate_agrid(true);
+    }
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
