@@ -1028,16 +1028,18 @@ static void _get_randart_properties(const item_def &item,
         }
     }
 
-    const int quality = max(1, binomial(7, 30));
+    // Each point of quality lets us add or enhance a good property.
+    const int max_quality = 7;
+    const int quality = 1 + binomial(max_quality - 1, 21);
 
-    // We then consider adding bad properties. The better the artefact, the
-    // more likely we add a bad property, up to a max of 2. We start by
-    // assuming we'll allow one good property per quality level and an
-    // additional one for each bad property.
+    // We'll potentially add up to 2 bad properties, also considering any fixed
+    // bad properties.
     int bad = 0;
     if (fixed_bad < 2)
-        bad = min(binomial(1 + div_rand_round(quality, 5), 30), 2 - fixed_bad);
+        bad = binomial(2 - fixed_bad,  21);
 
+    // For each point of quality and for each bad property added, we'll add or
+    // enhance one good property.
     int good = max(quality + fixed_bad + bad - fixed_good, 0);
 
     // We want avoid generating more then 4-ish properties properties or things
