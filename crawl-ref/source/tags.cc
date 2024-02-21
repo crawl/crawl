@@ -7817,6 +7817,7 @@ static void _marshallGhost(writer &th, const ghost_demon &ghost)
     marshallInt(th, ghost.resists);
     marshallByte(th, ghost.colour);
     marshallBoolean(th, ghost.flies);
+    marshallShort(th, ghost.umbra_rad);
 
     _marshallSpells(th, ghost.spells);
 }
@@ -7871,6 +7872,12 @@ static ghost_demon _unmarshallGhost(reader &th)
     else
 #endif
     ghost.flies        = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_GHOST_UMBRAS)
+        ghost.umbra_rad    = -1;
+    else
+#endif
+    ghost.umbra_rad    = unmarshallShort(th);
 
     unmarshallSpells(th, ghost.spells
 #if TAG_MAJOR_VERSION == 34

@@ -788,6 +788,9 @@ int monster::umbra_radius() const
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         return 3;
 
+    if (mons_is_ghost_demon(type))
+        return ghost_umbra_radius();
+
     if (!(holiness() & MH_UNDEAD))
         return -1;
 

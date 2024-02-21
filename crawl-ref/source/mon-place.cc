@@ -1113,7 +1113,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Monsters that need halos/silence auras/umbras.
     if ((mon->holiness() & MH_HOLY)
          || mg.cls == MONS_SILENT_SPECTRE
-         || mg.cls == MONS_PROFANE_SERVITOR)
+         || mg.cls == MONS_PROFANE_SERVITOR
+         || mons_is_ghost_demon(mg.cls))
     {
         invalidate_agrid(true);
     }

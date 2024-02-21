@@ -360,6 +360,18 @@ bool monster::has_ghost_brand() const
     return ghost_brand() != SPWPN_NORMAL;
 }
 
+/**
+ * Is there a ghost_demon associated with this monster that has an umbra radius
+ * set? Used for player ghosts, illusions, and pan lords. Safe to call if
+ * `ghost` is not set; will just return -1 for this case.
+ */
+int monster::ghost_umbra_radius() const
+{
+    if (!ghost)
+        return -1;
+    return ghost->umbra_rad;
+}
+
 brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
