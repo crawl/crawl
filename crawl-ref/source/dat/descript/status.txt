@@ -103,10 +103,24 @@ Your maximum health has been temporarily drained by negative energy. This
 status will not wear off by waiting, but will gradually expire as you gain
 experience.
 %%%%
-Breath status
+-Breath status
 
 You are catching your breath, and are unable to use your innate breath ability
 until the status expires.
+%%%%
+Breath status
+
+Indicates how many uses of your draconian breath weapon are available. If the
+indicator is dim, there are zero. Otherwise, the number of plusses indicate
+additional uses available.
+%%%%
+Breath+ status
+
+<Breath status>
+%%%%
+Breath++ status
+
+<Breath status>
 %%%%
 Exh status
 

@@ -242,6 +242,7 @@ void wizard_heal(bool super_heal)
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
         decr_zot_clock();
         you.redraw_stats = true;
+        gain_draconian_breath_uses(3);
     }
     else
         mpr("Healing.");

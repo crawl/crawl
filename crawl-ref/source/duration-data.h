@@ -187,7 +187,7 @@ static const duration_def duration_data[] =
       "on berserk cooldown", "berserk cooldown",
       "You are unable to berserk.", D_NO_FLAGS},
     { DUR_BREATH_WEAPON,
-      YELLOW, "Breath",
+      YELLOW, "-Breath",
       "short of breath", "breath weapon",
       "You are short of breath.", D_NO_FLAGS,
       { { "You have got your breath back." }, {}, true }},

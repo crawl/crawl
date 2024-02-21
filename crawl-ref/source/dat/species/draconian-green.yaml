@@ -36,6 +36,6 @@ mutations:
     MUT_STINGER: 1
 fake_mutations:
   - long: You can breathe blasts of noxious fumes.
-    short: breathe noxious fumes
+    short: noxious breath
 
 orc_name: Green Orconian

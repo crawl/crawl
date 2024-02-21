@@ -659,6 +659,28 @@ static beam_type _chaos_beam_flavour(bolt* beam)
     return flavour;
 }
 
+static void _combustion_breath_explode(bolt *parent, coord_def pos)
+{
+    bolt beam;
+
+    bolt_parent_init(*parent, beam);
+    beam.name         = "fiery explosion";
+    beam.aux_source   = "combustion breath";
+    beam.damage       = dice_def(3, 3 + div_rand_round(parent->ench_power * 2, 3));
+    beam.colour       = RED;
+    beam.flavour      = BEAM_FIRE;
+    beam.is_explosion = true;
+    beam.source       = pos;
+    beam.target       = pos;
+    beam.origin_spell = SPELL_COMBUSTION_BREATH;
+    beam.refine_for_explosion();
+    beam.explode();
+    parent->friend_info += beam.friend_info;
+    parent->foe_info    += beam.foe_info;
+    if (beam.is_tracer && beam.beam_cancelled)
+        parent->beam_cancelled = true;
+}
+
 bool bolt::visible() const
 {
     return !is_tracer && glyph != 0 && !is_enchantment();
@@ -2137,7 +2159,8 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
 set<coord_def> create_feat_splash(coord_def center,
                                 int radius,
                                 int number,
-                                int duration)
+                                int duration,
+                                dungeon_feature_type new_feat)
 {
     set<coord_def> splash_coords;
 
@@ -2149,7 +2172,7 @@ set<coord_def> create_feat_splash(coord_def center,
         {
             number--;
             int time = random_range(duration, duration * 3 / 2) - (di.radius() * 20);
-            temp_change_terrain(*di, DNGN_SHALLOW_WATER, time,
+            temp_change_terrain(*di, new_feat, time,
                                 TERRAIN_CHANGE_FLOOD);
             splash_coords.insert(*di);
         }
@@ -2575,6 +2598,16 @@ void bolt::affect_endpoint()
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
         break;
 
+    case SPELL_MUD_BREATH:
+    {
+        mpr("The mud splashes down.");
+        const int num = 3 + div_rand_round(ench_power * 3, 7) + random2(4);
+        const int dur = (div_rand_round(ench_power * 1, 3) + 15) * BASELINE_DELAY;
+        const int rad = (num > 20) ? 3 : (num > 9) ? 2 : 1;
+        create_feat_splash(pos(), rad, num, dur, DNGN_MUD);
+    }
+    break;
+
     default:
         break;
     }
@@ -2749,15 +2782,18 @@ void bolt::affect_place_clouds()
     if (flavour == BEAM_MIASMA)
         place_cloud(CLOUD_MIASMA, p, random2(5) + 2, agent());
 
-    //XXX: these use the name for a gameplay effect.
-    if (name == "ball of steam")
-        place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
 
+    if (flavour == BEAM_STEAM)
+    {
+        if (origin_spell == SPELL_STEAM_BREATH)
+            place_cloud(CLOUD_STEAM, p, div_rand_round(ench_power, 3) + 3, agent());
+        else
+            place_cloud(CLOUD_STEAM, p, random2(5) + 2, agent());
+    }
+
+    //XXX: these use the name for a gameplay effect.
     if (name == "poison gas")
         place_cloud(CLOUD_POISON, p, random2(4) + 3, agent());
-
-    if (name == "blast of choking fumes")
-        place_cloud(CLOUD_MEPHITIC, p, random2(4) + 3, agent());
 
     if (name == "trail of fire")
         place_cloud(CLOUD_FIRE, p, random2(ench_power) + ench_power, agent());
@@ -2770,6 +2806,34 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_DEATH_RATTLE)
         place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
+
+    if (origin_spell == SPELL_CAUSTIC_BREATH)
+    {
+        if (!actor_at(p))
+        {
+            place_cloud(CLOUD_ACID, p, 3 + random_range(ench_power / 2,
+                                                        ench_power * 4 / 5),
+                        agent());
+        }
+    }
+
+    if (origin_spell == SPELL_NOXIOUS_BREATH)
+    {
+        place_cloud(CLOUD_MEPHITIC, p,
+                    2 + random_range(ench_power / 2, ench_power * 4 / 5), agent());
+
+        for (adjacent_iterator ai(pos()); ai; ++ai)
+        {
+            if (feat_is_solid(env.grid(*ai)))
+                continue;
+
+            if (x_chance_in_y(max(0, ench_power - 10), ench_power - 5))
+            {
+                place_cloud(CLOUD_MEPHITIC, *ai,
+                        2 + random_range(ench_power / 3, ench_power / 2), agent());
+            }
+        }
+    }
 
     // Only place clouds on creatures who are immune to them
     if (origin_spell == SPELL_MOURNING_WAIL)
@@ -3019,6 +3083,12 @@ bool bolt::harmless_to_player() const
 
     if (you.cloud_immune() && is_big_cloud())
         return true;
+
+    if (origin_spell == SPELL_COMBUSTION_BREATH
+        || origin_spell == SPELL_NULLIFYING_BREATH)
+    {
+        return true;
+    }
 
     switch (flavour)
     {
@@ -4163,6 +4233,17 @@ void bolt::affect_player()
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_player();
 
+    if (origin_spell == SPELL_NULLIFYING_BREATH)
+    {
+        debuff_player();
+        int amount = min(you.magic_points, random2avg(ench_power, 3));
+        if (amount > 0)
+        {
+            mprf(MSGCH_WARN, "You feel your power leaking away.");
+            drain_mp(amount);
+        }
+    }
+
     if (origin_spell == SPELL_THROW_PIE && final_dam > 0)
     {
         const pie_effect effect = _random_pie_effect(you);
@@ -4227,6 +4308,12 @@ bool bolt::ignores_player() const
     // Digging -- don't care.
     if (flavour == BEAM_DIGGING)
         return true;
+
+    if (origin_spell == SPELL_COMBUSTION_BREATH
+        || origin_spell == SPELL_NULLIFYING_BREATH)
+    {
+        return true;
+    }
 
     if (agent() && agent()->is_monster()
         && mons_is_hepliaklqana_ancestor(agent()->as_monster()->type))
@@ -4538,6 +4625,9 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
+
+    if (origin_spell == SPELL_COMBUSTION_BREATH && !in_explosion_phase)
+        _combustion_breath_explode(this, mon->pos());
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4747,8 +4837,11 @@ void bolt::handle_petrify_chaining(coord_def centre)
 static void _print_pre_death_message(const monster &mon, bool goldify,
                                      spell_type origin_spell)
 {
-    if (mon.is_insubstantial() || origin_spell != SPELL_GLACIATE)
+    if (mon.is_insubstantial()
+        || (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH))
+    {
         return;
+    }
     if (goldify)
         simple_monster_message(mon, " shatters and turns to gold!");
     else
@@ -4793,7 +4886,7 @@ void bolt::kill_monster(monster &mon)
 
     item_def *corpse = monster_die(mon, ref_killer, kindex);
 
-    if (origin_spell != SPELL_GLACIATE)
+    if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH)
         return;
 
     if (corpse)
@@ -4806,35 +4899,17 @@ void bolt::kill_monster(monster &mon)
                                                    MG_FORCE_PLACE).set_base(species),
                                          false))
     {
+        // Make glacial breath ice blocks more sturdy, since they're supposed
+        // to make useful obstacles
+        if (origin_spell == SPELL_GLACIAL_BREATH)
+        {
+            pillar->max_hit_points = 15 + div_rand_round(ench_power * 5, 2);
+            pillar->hit_points = pillar->max_hit_points;
+        }
+
         const int time_left = random_range(7, 17) * BASELINE_DELAY;
         mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
         pillar->add_ench(temp_en);
-    }
-}
-
-static void _acid_splash_monsters(const bolt& beam, monster* mon, actor* agent)
-{
-    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-    {
-        if (actor *victim = actor_at(*ai))
-        {
-            if (victim == agent)
-                continue;
-
-            if (victim->is_monster()
-                && beam.ignores_monster(victim->as_monster()))
-            {
-                continue;
-            }
-
-            if (you.see_cell(*ai))
-            {
-                mprf("The acid splashes onto %s!",
-                     victim->name(DESC_THE).c_str());
-            }
-
-            victim->splash_with_acid(agent);
-        }
     }
 }
 
@@ -4878,14 +4953,28 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         sticky_flame_monster(mon, agent(), 3 + random2(ench_power / 20));
     }
 
-    // purple draconian breath
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_monster(*mon);
+
+    if (origin_spell == SPELL_NULLIFYING_BREATH)
+    {
+        debuff_monster(*mon);
+        if (mon->antimagic_susceptible())
+        {
+            const int dur = (5 + random_range(div_rand_round(ench_power, 2),
+                                             div_rand_round(ench_power * 3, 4) + 1))
+                            * BASELINE_DELAY;
+            mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0, agent(), dur));
+        }
+    }
 
     if (dmg)
         beogh_follower_convert(mon, true);
 
     knockback_actor(mon, dmg);
+
+    if (origin_spell == SPELL_COMBUSTION_BREATH && !in_explosion_phase)
+        _combustion_breath_explode(this, mon->pos());
 
     if (origin_spell == SPELL_FLASH_FREEZE
              || name == "blast of ice"
@@ -4960,8 +5049,6 @@ static int _knockback_dist(spell_type origin, int pow)
     case SPELL_FORCE_LANCE:
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return 2 + div_rand_round(pow, 50);
-    case SPELL_CHILLING_BREATH:
-        return 2;
     default:
         return 1;
     }
@@ -4980,9 +5067,7 @@ void bolt::knockback_actor(actor *act, int dam)
                      : 17;
     const int dist = binomial(max_dist, roll - weight, roll); // This is silly! -- PF
 
-    const string push_type =
-        origin_spell == SPELL_CHILLING_BREATH ? "freezing wind" : name;
-    act->knockback(*agent(), dist, ench_power, push_type);
+    act->knockback(*agent(), dist, ench_power, name);
 }
 
 void bolt::pull_actor(actor *act, int dam)
@@ -5341,6 +5426,10 @@ void bolt::affect_monster(monster* mon)
     // Apply flavoured specials.
     mons_adjust_flavoured(mon, *this, postac, true);
 
+    // Arc out from the original target AFTER damage done to the main target
+    if (origin_spell == SPELL_GALVANIC_BREATH)
+        do_galvanic_jolt(*agent(), pos(), damage);
+
     // mons_adjust_flavoured may kill the monster directly.
     if (mon->alive())
     {
@@ -5353,9 +5442,6 @@ void bolt::affect_monster(monster* mon)
             const int blood = min(postac/2, mon->hit_points);
             bleed_onto_floor(mon->pos(), mon->type, blood, true);
         }
-        // Acid splash from yellow draconians.
-        if (origin_spell == SPELL_ACID_SPLASH)
-            _acid_splash_monsters(*this, mon, agent());
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }
@@ -6364,6 +6450,14 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The gout of umbral fire explodes!",
         "the shriek of umbral fire",
     } },
+    { SPELL_COMBUSTION_BREATH, {
+        "The embers explode!",
+        "a fiery explosion",
+    } },
+    { SPELL_NULLIFYING_BREATH, {
+        "The antimagic surges outward!",
+        "a quiet echo",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -6409,6 +6503,11 @@ void bolt::refine_for_explosion()
     {
         colour     = LIGHTCYAN;
         ex_size    = 2;
+    }
+    else if (origin_spell = SPELL_NULLIFYING_BREATH)
+    {
+        colour  = MAGENTA;
+        ex_size = 2;
     }
 
     if (!is_tracer && !seeMsg.empty() && !hearMsg.empty())
@@ -6518,7 +6617,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
         // Not an "explosion", but still a bit noisy at the target location.
         if (origin_spell == SPELL_INFESTATION
-            || origin_spell == SPELL_DAZZLING_FLASH)
+            || origin_spell == SPELL_DAZZLING_FLASH
+            || origin_spell == SPELL_NULLIFYING_BREATH)
         {
             loudness = spell_effect_noise(origin_spell);
         }
@@ -7120,8 +7220,8 @@ bool bolt::can_knockback(int dam) const
     switch (origin_spell)
     {
     case SPELL_PRIMAL_WAVE:
-        return flavour == BEAM_WATER;
-    case SPELL_CHILLING_BREATH:
+    case SPELL_MUD_BREATH:
+        return true;
     case SPELL_FORCE_LANCE:
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return dam != 0;

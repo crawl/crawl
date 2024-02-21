@@ -29,5 +29,3 @@ int tremorstone_count(int pow);
 string target_evoke_desc(const monster_info& mi, const item_def& item);
 string evoke_damage_string(const item_def& item);
 string evoke_noise_string(const item_def& item);
-
-void black_drac_breath();

@@ -1319,10 +1319,10 @@ bool mons_spell_is_spell(spell_type spell)
     {
         case SPELL_HOLY_BREATH:
         case SPELL_SPIT_ACID:
-        case SPELL_ACID_SPLASH:
+        case SPELL_CAUSTIC_BREATH:
         case SPELL_CHAOS_BREATH:
         case SPELL_COLD_BREATH:
-        case SPELL_CHILLING_BREATH:
+        case SPELL_GLACIAL_BREATH:
         case SPELL_FIRE_BREATH:
         case SPELL_SEARING_BREATH:
         case SPELL_ELECTRICAL_BOLT:
@@ -1547,7 +1547,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_HURL_SLUDGE:
     case SPELL_HOLY_BREATH:
     case SPELL_SPIT_ACID:
-    case SPELL_ACID_SPLASH:
+    case SPELL_CAUSTIC_BREATH:
     case SPELL_ELECTRICAL_BOLT:
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
@@ -1626,13 +1626,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source = "blast of icy breath";
         beam.short_name = "frost";
-        break;
-
-    case SPELL_CHILLING_BREATH:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.name = "chilling breath";
-        beam.aux_source  = "blast of chilling breath";
-        beam.short_name  = "frost";
         break;
 
     case SPELL_PORKALATOR:

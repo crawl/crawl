@@ -34,7 +34,7 @@ mutations:
   7:
     MUT_COLD_RESISTANCE: 1
 fake_mutations:
-  - long: You can breathe waves of freezing cold which knock back foes.
-    short: breathe frost
+  - long: You can breathe waves of cold which freeze foes solid.
+    short: glacial breath
 
 orc_name: White Orconian

@@ -1373,13 +1373,13 @@ namespace quiver
         case ABIL_BLINKBOLT: // TODO: disable under nomove?
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
-        case ABIL_BREATHE_ACID:
+        case ABIL_CAUSTIC_BREATH:
         case ABIL_BREATHE_FIRE:
-        case ABIL_BREATHE_FROST:
+        case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
-        case ABIL_BREATHE_POWER:
-        case ABIL_BREATHE_STEAM:
-        case ABIL_BREATHE_MEPHITIC:
+        case ABIL_NULLIFYING_BREATH:
+        case ABIL_STEAM_BREATH:
+        case ABIL_NOXIOUS_BREATH:
         case ABIL_DAMNATION:
         case ABIL_MAKHLEB_MINOR_DESTRUCTION:
         case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -1444,7 +1444,7 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
-            case ABIL_BREATHE_ACID:
+            case ABIL_CAUSTIC_BREATH:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:

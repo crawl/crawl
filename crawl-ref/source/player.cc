@@ -2504,6 +2504,28 @@ static void _handle_hp_drain(int exp)
         mprf(MSGCH_RECOVERY, "Your life force feels restored.");
 }
 
+static void _handle_breath_recharge(int exp)
+{
+    if (!species::is_draconian(you.species) || you.experience_level < 7
+        || you.props[DRACONIAN_BREATH_USES_KEY].get_int() >= MAX_DRACONIAN_BREATH)
+    {
+        return;
+    }
+
+    if (!you.props.exists(DRACONIAN_BREATH_RECHARGE_KEY))
+        you.props[DRACONIAN_BREATH_RECHARGE_KEY] = 50;
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level));
+    you.props[DRACONIAN_BREATH_RECHARGE_KEY].get_int() -= loss;
+
+    if (you.props[DRACONIAN_BREATH_RECHARGE_KEY].get_int() <= 0)
+    {
+        you.props.erase(DRACONIAN_BREATH_RECHARGE_KEY);
+        gain_draconian_breath_uses(1);
+        mprf(MSGCH_DURATION, "You feel power welling in your lungs.");
+    }
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2564,6 +2586,7 @@ void apply_exp()
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
+    _handle_breath_recharge(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -2924,6 +2947,8 @@ void level_change(bool skip_attribute_increase)
                     // Tell the player about their new species
                     for (auto &mut : species::fake_mutations(you.species, false))
                         mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
+
+                    gain_draconian_breath_uses(2);
 
                     // needs to be done early here, so HP doesn't look drained
                     // when we redraw the screen
@@ -5831,6 +5856,7 @@ bool player::petrified() const
 bool player::liquefied_ground() const
 {
     return liquefied(pos())
+           && you.species != SP_GREY_DRACONIAN
            && ground_level() && !is_insubstantial();
 }
 

@@ -65,6 +65,7 @@
 #include "religion.h"
 #include "rltiles/tiledef-icons.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
@@ -324,26 +325,34 @@ static vector<ability_def> &_get_ability_list()
             abflag::breath | abflag::dir_or_target },
         { ABIL_BREATHE_FIRE, "Breathe Fire",
             0, 0, 0, 5, {fail_basis::xl, 30, 1},
-            abflag::breath |  abflag::dir_or_target },
-        { ABIL_BREATHE_FROST, "Breathe Frost",
-            0, 0, 0, 5, {fail_basis::xl, 30, 1},
             abflag::breath | abflag::dir_or_target },
+        { ABIL_COMBUSTION_BREATH, "Combustion Breath",
+            0, 0, 0, 5, {fail_basis::xl, 30, 1},
+            abflag::drac_charges },
+        { ABIL_GLACIAL_BREATH, "Glacial Breath",
+            0, 0, 0, 5, {fail_basis::xl, 30, 1},
+            abflag::drac_charges },
         { ABIL_BREATHE_POISON, "Breathe Poison Gas",
             0, 0, 0, 6, {fail_basis::xl, 30, 1},
             abflag::breath | abflag::dir_or_target },
-        { ABIL_BREATHE_MEPHITIC, "Breathe Noxious Fumes",
+        { ABIL_NOXIOUS_BREATH, "Noxious Breath",
             0, 0, 0, 6, {fail_basis::xl, 30, 1},
-            abflag::breath | abflag::dir_or_target },
-        { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
-            0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1}, abflag::breath },
-        { ABIL_BREATHE_POWER, "Breathe Dispelling Energy",
+            abflag::drac_charges },
+        { ABIL_GALVANIC_BREATH, "Galvanic Breath",
             0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1},
-            abflag::breath | abflag::dir_or_target | abflag::not_self },
-        { ABIL_BREATHE_STEAM, "Breathe Steam",
+            abflag::drac_charges },
+        { ABIL_NULLIFYING_BREATH, "Nullifying Breath",
+            0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1},
+            abflag::drac_charges },
+        { ABIL_STEAM_BREATH, "Steam Breath",
             0, 0, 0, 6, {fail_basis::xl, 20, 1},
-            abflag::breath | abflag::dir_or_target },
-        { ABIL_BREATHE_ACID, "Breathe Acid",
-            0, 0, 0, 3, {fail_basis::xl, 30, 1}, abflag::breath },
+            abflag::drac_charges },
+        { ABIL_CAUSTIC_BREATH, "Caustic Breath",
+            0, 0, 0, 3, {fail_basis::xl, 30, 1},
+            abflag::drac_charges },
+        { ABIL_MUD_BREATH, "Mud Breath",
+            0, 0, 0, 3, {fail_basis::xl, 30, 1},
+            abflag::drac_charges },
         { ABIL_TRAN_BAT, "Bat Form",
             2, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
         { ABIL_EXSANGUINATE, "Exsanguinate",
@@ -761,13 +770,12 @@ static int _ability_zap_pow(ability_type abil)
     {
         case ABIL_SPIT_POISON:
             return 10 + you.experience_level;
-        case ABIL_BREATHE_ACID:
+        case ABIL_CAUSTIC_BREATH:
         case ABIL_BREATHE_FIRE:
-        case ABIL_BREATHE_FROST:
+        case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
-        case ABIL_BREATHE_POWER:
-        case ABIL_BREATHE_STEAM:
-        case ABIL_BREATHE_MEPHITIC:
+        case ABIL_NULLIFYING_BREATH:
+        case ABIL_NOXIOUS_BREATH:
             return you.form == transformation::dragon
                                  ? 2 * you.experience_level
                                  : you.experience_level;
@@ -919,6 +927,13 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::breath)
         ret += ", Breath";
 
+    if (abil.flags & abflag::drac_charges)
+    {
+        ret += make_stringf(", %d/%d uses available",
+                    draconian_breath_uses_available(),
+                    MAX_DRACONIAN_BREATH);
+    }
+
     if (abil.flags & abflag::delay)
         ret += ", Delay";
 
@@ -1060,6 +1075,9 @@ static const string _detailed_cost_description(ability_type ability)
         ret << ".";
     }
 
+    if (abil.flags & abflag::drac_charges)
+        ret << "\nGaining experience will replenish charges of this ability.";
+
 #if TAG_MAJOR_VERSION == 34
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
@@ -1180,12 +1198,13 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
     switch (ability)
     {
     case ABIL_BREATHE_FIRE:
-    case ABIL_BREATHE_FROST:
-    case ABIL_BREATHE_ACID:
-    case ABIL_BREATHE_LIGHTNING:
-    case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_MEPHITIC:
-    case ABIL_BREATHE_STEAM:
+    case ABIL_GLACIAL_BREATH:
+    case ABIL_CAUSTIC_BREATH:
+    case ABIL_GALVANIC_BREATH:
+    case ABIL_NULLIFYING_BREATH:
+    case ABIL_NOXIOUS_BREATH:
+    case ABIL_STEAM_BREATH:
+    case ABIL_MUD_BREATH:
         if (you.form == transformation::dragon)
             return base_chance - 20;
         return base_chance;
@@ -1904,15 +1923,25 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
-    case ABIL_SPIT_POISON:
+    case ABIL_COMBUSTION_BREATH:
+    case ABIL_GLACIAL_BREATH:
+    case ABIL_GALVANIC_BREATH:
+    case ABIL_CAUSTIC_BREATH:
+    case ABIL_NULLIFYING_BREATH:
+    case ABIL_STEAM_BREATH:
+    case ABIL_NOXIOUS_BREATH:
+    case ABIL_MUD_BREATH:
+        if (draconian_breath_uses_available() <= 0)
+        {
+            if (!quiet)
+                mpr("You have exhausted your breath weapon. Dive deeper!");
+            return false;
+        }
+        return true;
+
     case ABIL_BREATHE_FIRE:
-    case ABIL_BREATHE_FROST:
+    case ABIL_SPIT_POISON:
     case ABIL_BREATHE_POISON:
-    case ABIL_BREATHE_LIGHTNING:
-    case ABIL_BREATHE_ACID:
-    case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STEAM:
-    case ABIL_BREATHE_MEPHITIC:
         if (you.duration[DUR_BREATH_WEAPON])
         {
             if (!quiet)
@@ -2278,9 +2307,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_siphon_essence>();
 
     // Full LOS:
-    case ABIL_BREATHE_LIGHTNING: // Doesn't account for bounces/explosions
-                                 // hitting areas behind glass/statues.
-        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID, LOS_RADIUS);
     case ABIL_KIKU_TORMENT:
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_QAZLAL_DISASTER_AREA: // Doesn't account for explosions hitting
@@ -2489,21 +2515,6 @@ bool activate_talent(const talent& tal, dist *target)
     }
 }
 
-static bool _acid_breath_can_hit(const actor *act)
-{
-    if (act->is_monster())
-    {
-        const monster* mons = act->as_monster();
-        bolt testbeam;
-        testbeam.thrower = KILL_YOU;
-        zappy(ZAP_BREATHE_ACID, 100, false, testbeam);
-
-        return !testbeam.ignores_monster(mons);
-    }
-    else
-        return false;
-}
-
 /// If the player is stationary, print 'You cannot move.' and return true.
 static bool _abort_if_stationary()
 {
@@ -2694,6 +2705,30 @@ static spret _siphon_essence(bool fail)
     return spret::success;
 }
 
+static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fail)
+{
+    spret result = spret::abort;
+
+    static map<ability_type, spell_type> breath_to_spell =
+        {
+            { ABIL_COMBUSTION_BREATH, SPELL_COMBUSTION_BREATH },
+            { ABIL_GLACIAL_BREATH, SPELL_GLACIAL_BREATH },
+            { ABIL_NULLIFYING_BREATH, SPELL_NULLIFYING_BREATH },
+            { ABIL_STEAM_BREATH, SPELL_STEAM_BREATH },
+            { ABIL_NOXIOUS_BREATH, SPELL_NOXIOUS_BREATH },
+            { ABIL_CAUSTIC_BREATH, SPELL_CAUSTIC_BREATH },
+            { ABIL_MUD_BREATH, SPELL_MUD_BREATH },
+            { ABIL_GALVANIC_BREATH, SPELL_GALVANIC_BREATH },
+        };
+    result = your_spells(breath_to_spell[abil.ability], you.experience_level,
+                            false, nullptr, target, fail);
+
+    if (result == spret::success)
+        you.props[DRACONIAN_BREATH_USES_KEY].get_int() -= 1;
+
+    return result;
+}
+
 /*
  * Use an ability.
  *
@@ -2788,43 +2823,18 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
     }
 
-    case ABIL_BREATHE_ACID:       // Draconian acid splash
-    {
-        int pow = (you.form == transformation::dragon) ?
-            2 * you.experience_level : you.experience_level;
-        targeter_splash hitfunc(&you, beam.range, pow);
-        direction_chooser_args args;
-        args.mode = TARG_HOSTILE;
-        args.hitfunc = &hitfunc;
-        args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1, &hitfunc);
-        if (!spell_direction(*target, beam, &args))
-            return spret::abort;
-
-        if (stop_attack_prompt(hitfunc, "spit acid", _acid_breath_can_hit))
-            return spret::abort;
-
-        fail_check();
-        zapping(ZAP_BREATHE_ACID, pow, beam, false, "You spit a glob of acid.");
-
-        you.increase_duration(DUR_BREATH_WEAPON,
-                          3 + random2(10) + random2(30 - you.experience_level));
-        break;
-    }
-
-    case ABIL_BREATHE_LIGHTNING:
-        fail_check();
-        mpr("You breathe a wild blast of lightning!");
-        black_drac_breath();
-        you.increase_duration(DUR_BREATH_WEAPON,
-                          3 + random2(10) + random2(30 - you.experience_level));
-        break;
+    case ABIL_COMBUSTION_BREATH:
+    case ABIL_GLACIAL_BREATH:
+    case ABIL_NULLIFYING_BREATH:
+    case ABIL_STEAM_BREATH:
+    case ABIL_NOXIOUS_BREATH:
+    case ABIL_CAUSTIC_BREATH:
+    case ABIL_GALVANIC_BREATH:
+    case ABIL_MUD_BREATH:
+        return _do_draconian_breath(abil, target, fail);
 
     case ABIL_BREATHE_FIRE:
-    case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
-    case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STEAM:
-    case ABIL_BREATHE_MEPHITIC:
     {
         spret result = spret::abort;
         int cooldown = 3 + random2(10) + random2(30 - you.experience_level);
@@ -2832,11 +2842,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         static map<ability_type, string> breath_message =
         {
             { ABIL_BREATHE_FIRE, "You breathe a blast of fire." },
-            { ABIL_BREATHE_FROST, "You exhale a wave of freezing cold." },
             { ABIL_BREATHE_POISON, "You exhale a blast of poison gas." },
-            { ABIL_BREATHE_POWER, "You breathe a bolt of dispelling energy." },
-            { ABIL_BREATHE_STEAM, "You exhale a blast of scalding steam." },
-            { ABIL_BREATHE_MEPHITIC, "You exhale a blast of noxious fumes." },
         };
 
         result = zapping(ability_to_zap(abil.ability),
@@ -3136,7 +3142,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                               ZAP_LIGHTNING_BOLT,
                               ZAP_BOLT_OF_MAGMA,
                               ZAP_BOLT_OF_DRAINING,
-                              ZAP_CORROSIVE_BOLT);
+                              ZAP_BREATHE_ACID);
             zapping(ztype, power, beam);
         }
         break;
@@ -3946,13 +3952,15 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_HOP,
             ABIL_SPIT_POISON,
             ABIL_BREATHE_FIRE,
-            ABIL_BREATHE_FROST,
+            ABIL_COMBUSTION_BREATH,
+            ABIL_GLACIAL_BREATH,
             ABIL_BREATHE_POISON,
-            ABIL_BREATHE_LIGHTNING,
-            ABIL_BREATHE_POWER,
-            ABIL_BREATHE_STEAM,
-            ABIL_BREATHE_MEPHITIC,
-            ABIL_BREATHE_ACID,
+            ABIL_GALVANIC_BREATH,
+            ABIL_NULLIFYING_BREATH,
+            ABIL_STEAM_BREATH,
+            ABIL_NOXIOUS_BREATH,
+            ABIL_CAUSTIC_BREATH,
+            ABIL_MUD_BREATH,
             ABIL_TRAN_BAT,
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,

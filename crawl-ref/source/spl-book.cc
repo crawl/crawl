@@ -243,7 +243,14 @@ static unordered_set<int> _player_nonbook_spells =
     // Ds powers
     SPELL_HURL_DAMNATION,
     // Green Draconian breath
-    SPELL_MEPHITIC_BREATH,
+    SPELL_NOXIOUS_BREATH,
+    SPELL_COMBUSTION_BREATH,
+    SPELL_GLACIAL_BREATH,
+    SPELL_NULLIFYING_BREATH,
+    SPELL_STEAM_BREATH,
+    SPELL_CAUSTIC_BREATH,
+    SPELL_GALVANIC_BREATH,
+    SPELL_MUD_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)
