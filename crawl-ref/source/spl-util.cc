@@ -1430,9 +1430,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your stasis prevents you from teleporting.";
         if (temp)
         {
-            const string no_move_reason = movement_impossible_reason();
-            if (!no_move_reason.empty())
-                return no_move_reason;
             if (you.no_tele(true))
                 return lowercase_first(you.no_tele_reason(true));
             const string no_charge_reason = electric_charge_impossible_reason(true);
