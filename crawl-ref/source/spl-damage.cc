@@ -4314,7 +4314,6 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     }
 
     int drain_amount;
-    
     if (deadtarget)
     {
         drain_amount = damage;
@@ -4341,7 +4340,7 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
         hp_gain = min(you.attribute[ATTR_VAMP_HEAL_POOL], hp_gain);
         you.attribute[ATTR_VAMP_HEAL_POOL] -= hp_gain;
     }
-    
+
     if (hp_gain)
     {
         inc_hp(hp_gain);

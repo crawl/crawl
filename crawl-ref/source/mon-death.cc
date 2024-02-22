@@ -2549,7 +2549,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.type == MONS_JORY && !in_transit)
         {
             blood_spray(mons.pos(), MONS_JORY, 50);
-            
+
             // Killing Jory fully recharges your blood bar as a vampire
             if (you.has_mutation(MUT_VAMPIRISM) && you.attribute[ATTR_VAMP_BLOOD] < 100)
             {
