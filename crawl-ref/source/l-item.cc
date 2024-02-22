@@ -666,6 +666,19 @@ IDEF(is_melded)
     return 1;
 }
 
+/*** Is this item a weapon?
+ * @field is_weapon boolean
+ */
+IDEF(is_weapon)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_weapon(*item));
+
+    return 1;
+}
+
 /*** Is this a corpse?
  * @field is_corpse boolean
  */
@@ -1758,6 +1771,7 @@ static ItemAccessor item_attrs[] =
     { "is_throwable",      l_item_is_throwable },
     { "is_xp_evoker",      l_item_is_xp_evoker },
     { "dropped",           l_item_dropped },
+    { "is_weapon",         l_item_is_weapon },
     { "is_melded",         l_item_is_melded },
     { "is_corpse",         l_item_is_corpse },
     { "is_useless",        l_item_is_useless },

@@ -84,17 +84,21 @@ local function vector_move(a, dx, dy)
   end
 end
 
-local function have_reaching()
-  local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range >= 2 and not wp.is_melded
-end
-
 local function reach_range()
+  local r = 1
   local wp = items.equipped_at("weapon")
   if wp and not wp.is_melded then
-      return wp.reach_range
+      r = wp.reach_range
   end
-  return 1
+  local o = items.equipped_at("shield")
+  if o and not o.is_melded and o.is_weapon and o.reach_range > r then
+      r = o.reach_range
+  end
+  return r
+end
+
+local function have_reaching()
+  return reach_range() > 1
 end
 
 local function have_ranged()
