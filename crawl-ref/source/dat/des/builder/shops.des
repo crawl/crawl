@@ -1951,9 +1951,10 @@ NAME:   nicolae_clarity_for_sale
 TAGS:   transparent
 DEPTH:  D:7-, Depths, Elf, Snake
 WEIGHT: 5
-KFEAT:  S = general shop type:Clear_Minds suffix:Boutique count:4 use_all ; \
+KFEAT:  S = general shop type:Clear_Minds suffix:Boutique count:5 use_all ; \
             any weapon artprops:Clar | any armour artprops:Clar | \
-            any jewellery artprops:Clar | any magical staff artprops:Clar
+            any jewellery artprops:Clar | any magical staff artprops:Clar | \
+            any talisman artprops:Clar
 MAP
 ...m...
 .m...m.
@@ -1963,7 +1964,6 @@ m..S..m
 .m...m.
 ...m...
 ENDMAP
-
 
 ###############################################################################
 # <<3>> Multi
