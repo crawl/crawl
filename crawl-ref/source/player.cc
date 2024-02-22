@@ -8231,8 +8231,9 @@ void player::maybe_shutdown_legs()
         return;
     }
 
-    // Take one normal action longer.
-    you.duration[DUR_NO_MOMENTUM] = max(you.time_taken + player_speed(),
+    // Take one normal action longer (minus 0.1 time to account for
+    // player_speed() randomization when hasted).
+    you.duration[DUR_NO_MOMENTUM] = max(you.time_taken + player_speed() - 1,
                                         you.duration[DUR_NO_MOMENTUM]);
 }
 
