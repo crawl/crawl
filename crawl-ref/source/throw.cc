@@ -530,12 +530,11 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         return;
 
     // blast smoke
-    for (fair_adjacent_iterator ai(act.pos(), false); ai; ++ai)
+    for (fair_adjacent_iterator ai(act.pos()); ai; ++ai)
     {
         if (!in_bounds(*ai)
             || cell_is_solid(*ai)
-            || cloud_at(*ai)
-            || !one_chance_in(3))
+            || cloud_at(*ai))
         {
             continue;
         }
