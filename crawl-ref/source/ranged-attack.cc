@@ -198,6 +198,12 @@ bool ranged_attack::handle_phase_blocked()
 
     maybe_trigger_jinxbite();
 
+    if (!(projectile->is_type(OBJ_MISSILES, MI_DART)
+        || projectile->is_type(OBJ_MISSILES, MI_THROWING_NET)))
+    {
+        trigger_blooddrain();
+    }
+
     return attack::handle_phase_blocked();
 }
 

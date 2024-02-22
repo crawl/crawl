@@ -286,6 +286,8 @@ bool melee_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
+    trigger_blooddrain();
+
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
@@ -1190,6 +1192,9 @@ bool melee_attack::attack()
     if (shield_blocked)
     {
         handle_phase_blocked();
+        // don't put the following in handle_phase_blocked unless
+        // you want them to trigger on ranged blocks too
+        trigger_blooddrain();
         maybe_riposte();
         if (!attacker->alive())
         {
