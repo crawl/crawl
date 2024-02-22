@@ -4267,26 +4267,28 @@ void attempt_jinxbite_hit(actor& victim)
         you.duration[DUR_JINXBITE] = 1;
 }
 
-void attempt_blooddrain_hit(actor& victim)
+void attempt_blooddrain_hit(actor& victim, bool deadtarget)
 {
-    if (!victim.is_monster() || victim.wont_attack())
+    if (invalid_monster(victim.as_monster())
+        || !victim.is_monster()
+        || victim.wont_attack()
+        || !actor_is_susceptible_to_vampirism(victim, true))
+    {
         return;
+    }
 
-    if (!actor_is_susceptible_to_vampirism(victim, true))
-        return;
-
+    you.attribute[ATTR_VAMP_LAST_TARGET] = victim.mindex();
     you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
 
     //get the victim's position before dealing damage and potentially
     //disappearing the victim
-    //reduce draw delay if target is far away
     bolt beam;
     beam.source = victim.pos();
     beam.target = you.pos();
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour = RED;
     beam.name = "blood";
-    beam.range = LOS_RADIUS;
+    beam.range = INFINITE_DISTANCE;
     beam.aimed_at_spot = true;
     beam.flavour = BEAM_VISUAL;
     beam.draw_delay = 5;
@@ -4311,10 +4313,18 @@ void attempt_blooddrain_hit(actor& victim)
         animation_delay(25, true);
     }
 
-    const int drain_amount = victim.hurt(&you, damage,
-                                         BEAM_VAMPIRIC_DRAINING,
-                                         KILLED_BY_BEAM, "",
-                                         "by vampiric draining");
+    int drain_amount;
+    
+    if (deadtarget)
+    {
+        drain_amount = damage;
+    }
+    else
+    {
+        drain_amount = victim.hurt(&you, damage,BEAM_VAMPIRIC_DRAINING,
+                                 KILLED_BY_BEAM, "",
+                                 "by vampiric draining");
+    }
 
     beam.fire();
     viewwindow();
@@ -4325,11 +4335,15 @@ void attempt_blooddrain_hit(actor& victim)
 
     int hp_gain = div_rand_round(drain_amount, 2);
 
-    //cap healing per turn
-    hp_gain = min(you.attribute[ATTR_VAMP_HEAL_POOL], hp_gain);
+    //cap healing per turn if the source was a regular attack
+    if (!deadtarget)
+    {
+        hp_gain = min(you.attribute[ATTR_VAMP_HEAL_POOL], hp_gain);
+        you.attribute[ATTR_VAMP_HEAL_POOL] -= hp_gain;
+    }
+    
     if (hp_gain)
     {
-        you.attribute[ATTR_VAMP_HEAL_POOL] -= hp_gain;
         inc_hp(hp_gain);
     }
 }

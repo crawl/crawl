@@ -1064,6 +1064,9 @@ static void _handle_vampire_alive()
     you.attribute[ATTR_VAMP_LOSE_BLOOD] = 2;
     //cap for healing each turn, scales from 4-10 depending on xl
     you.attribute[ATTR_VAMP_HEAL_POOL] = 3 + you.experience_level / 4;
+
+    //reset last blooddrain target
+    you.attribute[ATTR_VAMP_LAST_TARGET] = NON_MONSTER;
 }
 
 void player_reacts()

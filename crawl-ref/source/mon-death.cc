@@ -2724,12 +2724,15 @@ item_def* monster_die(monster& mons, killer_type killer,
             || pet_kill))
     {
         // Killing Jory fully recharges your blood bar as a vampire
-        if (mons.type == MONS_JORY
-            && you.attribute[ATTR_VAMP_BLOOD] < 100)
+        if (mons.type == MONS_JORY && you.attribute[ATTR_VAMP_BLOOD] < 100)
         {
             you.attribute[ATTR_VAMP_BLOOD] = 100;
             mpr("You are full to bursting with blood!");
         }
+        
+        // blooddrain if target wasn't already drained from this turn
+        if (you.vampire_alive && you.attribute[ATTR_VAMP_LAST_TARGET] != monster_killed)
+            attempt_blooddrain_hit(mons, true);
 
         if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, true))
         {

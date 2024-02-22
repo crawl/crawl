@@ -109,5 +109,6 @@ enum attribute_type
     ATTR_VAMP_BLOOD_XP,        // XP needed for our vampire to gain 1 blood
     ATTR_VAMP_HEAL_POOL,       // Remaining health we can heal from vamp this turn
     ATTR_VAMP_LOSE_BLOOD,      // Amount of blood to lose this turn
+    ATTR_VAMP_LAST_TARGET,     // Last monster you blooddrained from this turn
     NUM_ATTRIBUTES
 };

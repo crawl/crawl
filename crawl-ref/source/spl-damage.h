@@ -157,7 +157,7 @@ int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
 
 void attempt_jinxbite_hit(actor& victim);
-void attempt_blooddrain_hit(actor& victim);
+void attempt_blooddrain_hit(actor& victim, bool deadtarget = false);
 dice_def boulder_damage(int pow, bool random);
 void do_boulder_impact(monster& boulder, actor& victim);
 
