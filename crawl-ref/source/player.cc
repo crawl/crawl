@@ -6861,6 +6861,7 @@ undead_state_type player::undead_state(bool temp) const
 bool player::nightvision() const
 {
     return have_passive(passive_t::nightvision)
+           || has_mutation(MUT_FOUL_SHADOW)
            || player_equip_unrand(UNRAND_BRILLIANCE)
            || player_equip_unrand(UNRAND_SHADOWS);
 }
