@@ -411,7 +411,7 @@ WILL:    1
 NAME:    eveningstar "Brilliance"
 OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
 PLUS:    +1
-INSCRIP: Halo
+INSCRIP: Umbra
 COLOUR:  ETC_FOUL_FLAME
 TILE:    urand_brilliance
 TILE_EQ: mace_of_brilliance
