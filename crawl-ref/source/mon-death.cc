@@ -245,7 +245,7 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
-    experience = (experience * mons->damage_friendly / mons->damage_total + 1);
+    experience = experience * mons->damage_friendly / mons->damage_total;
     ASSERT(mons->damage_friendly <= mons->damage_total);
 
     return experience;
