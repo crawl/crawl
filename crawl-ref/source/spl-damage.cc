@@ -4293,8 +4293,8 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     beam.flavour = BEAM_VISUAL;
     beam.draw_delay = 5;
 
-    //2-6 base, 2-14 at xl 27
-    const int damage = roll_dice(2, 3 + div_rand_round(you.experience_level * 4, 27));
+    //2-8 base, 2-18 at xl 27
+    const int damage = roll_dice(2, 4 + div_rand_round(you.experience_level * 5, 27));
 
     if (you.can_see(victim))
     {
