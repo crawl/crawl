@@ -4313,17 +4313,9 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
         animation_delay(25, true);
     }
 
-    int drain_amount;
-    if (deadtarget)
-    {
-        drain_amount = damage;
-    }
-    else
-    {
-        drain_amount = victim.hurt(&you, damage,BEAM_VAMPIRIC_DRAINING,
-                                 KILLED_BY_BEAM, "",
-                                 "by vampiric draining");
-    }
+    const int drain_amount = deadtarget ? damage :
+    victim.hurt(&you, damage,BEAM_VAMPIRIC_DRAINING,
+    KILLED_BY_BEAM, "","by vampiric draining");
 
     beam.fire();
     viewwindow();
@@ -4342,9 +4334,7 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     }
 
     if (hp_gain)
-    {
         inc_hp(hp_gain);
-    }
 }
 
 void foxfire_attack(const monster *foxfire, const actor *target)
