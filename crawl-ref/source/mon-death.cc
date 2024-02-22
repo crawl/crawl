@@ -2225,6 +2225,25 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Apply unrand effects.
     unrand_death_effects(&mons, killer);
 
+    // Vampire blood gaining
+    if (gives_player_xp && you.has_mutation(MUT_VAMPIRISM)
+        && (killer == KILL_YOU
+            || killer == KILL_YOU_MISSILE
+            || killer == KILL_YOU_CONF
+            || pet_kill))
+    {
+        // blooddrain if target wasn't already drained from this turn
+        if (you.vampire_alive && you.attribute[ATTR_VAMP_LAST_TARGET] != monster_killed)
+            attempt_blooddrain_hit(mons, true);
+
+        if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, true))
+        {
+            you.attribute[ATTR_VAMP_BLOOD] += 6 + random2(8);
+            you.attribute[ATTR_VAMP_BLOOD] = min(100, you.attribute[ATTR_VAMP_BLOOD]);
+            you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+        }
+    }
+
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.
@@ -2530,6 +2549,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.type == MONS_JORY && !in_transit)
         {
             blood_spray(mons.pos(), MONS_JORY, 50);
+            
+            // Killing Jory fully recharges your blood bar as a vampire
+            if (you.has_mutation(MUT_VAMPIRISM) && you.attribute[ATTR_VAMP_BLOOD] < 100)
+            {
+                you.attribute[ATTR_VAMP_BLOOD] = 100;
+                mpr("You are full to bursting with blood!");
+            }
         }
         else if (mons_is_mons_class(&mons, MONS_KIRKE)
                  && !in_transit
@@ -2713,32 +2739,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             you.props[POWERED_BY_DEATH_KEY] = pbd_str + pbd_inc;
             dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
-        }
-    }
-
-    // Vampire blood gaining
-    if (gives_player_xp && you.has_mutation(MUT_VAMPIRISM)
-        && (killer == KILL_YOU
-            || killer == KILL_YOU_MISSILE
-            || killer == KILL_YOU_CONF
-            || pet_kill))
-    {
-        // Killing Jory fully recharges your blood bar as a vampire
-        if (mons.type == MONS_JORY && you.attribute[ATTR_VAMP_BLOOD] < 100)
-        {
-            you.attribute[ATTR_VAMP_BLOOD] = 100;
-            mpr("You are full to bursting with blood!");
-        }
-        
-        // blooddrain if target wasn't already drained from this turn
-        if (you.vampire_alive && you.attribute[ATTR_VAMP_LAST_TARGET] != monster_killed)
-            attempt_blooddrain_hit(mons, true);
-
-        if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, true))
-        {
-            you.attribute[ATTR_VAMP_BLOOD] += 6 + random2(8);
-            you.attribute[ATTR_VAMP_BLOOD] = min(100, you.attribute[ATTR_VAMP_BLOOD]);
-            you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
         }
     }
 
