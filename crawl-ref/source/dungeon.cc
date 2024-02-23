@@ -5072,9 +5072,13 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 item_made = _dgn_item_corpse(spec, mon->pos());
             else
             {
+                CrawlHashTable const *fixed_props = nullptr;
+                if (spec.props.exists(FIXED_PROPS_KEY))
+                    fixed_props = &spec.props[FIXED_PROPS_KEY].get_table();
+
                 item_made = items(spec.allow_uniques, spec.base_type,
                                   spec.sub_type, item_level, spec.ego, NO_AGENT,
-                                  _get_custom_name(spec));
+                                  _get_custom_name(spec), fixed_props);
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);
