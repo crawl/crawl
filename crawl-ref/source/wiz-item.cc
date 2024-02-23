@@ -1281,7 +1281,7 @@ static void _debug_randart_stats()
         {
             ind = dgn_place_item(ispec, coord_def(0, 0));
             if (ind != NON_ITEM
-                && (!is_artefact(env.item[ind])
+                && (!is_random_artefact(env.item[ind])
                     || env.item[ind].base_type == OBJ_BOOKS))
             {
                 destroy_item(env.item[ind], true);
