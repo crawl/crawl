@@ -2838,18 +2838,28 @@ bool melee_attack::mons_attack_effects()
        inflict_damage(hurt, BEAM_ELECTRICITY);
     }
 
-    const bool slippery = defender->is_player()
+    // If the attacker and/or defender are bound in place, don't move
+    // them via trampling or dragging (which only monsters can do).
+    const bool att_bound = attacker->is_monster()
+                           && attacker->as_monster()->has_ench(ENCH_BOUND);
+    const bool def_bound = defender->is_monster()
+                           && defender->as_monster()->has_ench(ENCH_BOUND);
+    if (!att_bound && !def_bound)
+    {
+        const bool slippery = defender->is_player()
                           && adjacent(attacker->pos(), defender->pos())
                           && !player_stair_delay() // feet otherwise occupied
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
-    if (attacker != defender && !is_projected
-        && (attk_flavour == AF_TRAMPLE || slippery && attk_flavour != AF_DRAG))
-    {
-        do_knockback(slippery);
-    }
+        if (attacker != defender && !is_projected
+            && (attk_flavour == AF_TRAMPLE
+                || slippery && attk_flavour != AF_DRAG))
+        {
+            do_knockback(slippery);
+        }
 
-    if (attacker != defender && attk_flavour == AF_DRAG)
-        do_drag();
+        if (attacker != defender && attk_flavour == AF_DRAG)
+            do_drag();
+    }
 
     special_damage = 0;
     special_damage_message.clear();
