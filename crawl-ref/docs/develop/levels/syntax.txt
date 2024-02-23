@@ -555,9 +555,8 @@ ITEM:     (list of items, separated by comma)
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
           * "randart" will force the item to be randart if it's of a type that
-            can be an artefact. Randarts ignore modifiers that affect item
-            quality will be ignored, although "plus" works normally and "ego"
-            works for weapons.
+            can be an artefact. Modifiers that affect item quality are ignored,
+            although "plus" works normally and "ego" works for weapons.
           * "artprops:prop1:val1&prop2:val2..." will force randart and
             make the specified properties always be fixed to the given levels,
             while still potentially adding random additional properties.
@@ -569,7 +568,7 @@ ITEM:     (list of items, separated by comma)
 
             Note that certain artefact properties are only supported on
             specific item classes. You can test your specification with the
-            "&%" wizmode command if you're unsure. Also note that and any good
+            "&%" wizmode command if you're unsure. Also note that any good
             fixed properties use up quality points for adding additional good
             properties. Hence the more good properties you fix, the fewer good
             random properties will be added, on average. Additionally, fixed
