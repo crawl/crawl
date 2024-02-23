@@ -3,12 +3,12 @@ function callback.nemelex_gamble_announce(data,triggerable,triggerer,marker,ev)
     if not dgn.persist.nemelex_gamble_announced then
         dgn.persist.nemelex_gamble_announced = true
         local msg = {
-            "\"Care to risk it all for some fabulous prizes, mortal?\"",
-            "\"Through this portal lies a prize... or peril!\"",
-            "\"The prize could be yours... at the risk of your life!\"",
-            "\"Care for a little wager, mortal?\""
+            "Care to risk it all for some fabulous prizes, mortal?",
+            "Through this portal lies a prize... or peril!",
+            "The prize could be yours... at the risk of your life!",
+            "Care for a little wager, mortal?"
         }
-        crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, " ..
+        crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says: " ..
                          msg[crawl.random_range(1, 4)])
         crawl.god_speaks("Nemelex Xobeh", "\"Beware! This is a limited " ..
                          "time offer!\"")
@@ -40,7 +40,7 @@ function callback.nemelex_gamble_prize(data,triggerable,triggerer,marker,ev)
         return
     end
 
-    crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You win!\"")
+    crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says: You win!")
     nemelex_gamble_make_transporter("the_gamble_prize",
                                     "the_gamble_peril_landing")
     dgn.persist.nemelex_gamble_triggered = true
@@ -51,7 +51,7 @@ function callback.nemelex_gamble_peril(data,triggerable,triggerer,marker,ev)
         return
     end
 
-    crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You lose!\"")
+    crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says: You lose!")
     nemelex_gamble_make_transporter("the_gamble_peril",
                                     "the_gamble_prize_landing")
     dgn.persist.nemelex_gamble_triggered = true
