@@ -4070,9 +4070,10 @@ static string _get_jinxsprite_message(const monster& victim)
     {
         if (victim.inv[MSLOT_WEAPON] != NON_ITEM && coinflip())
         {
-            return make_stringf("bonks %s with %s.",
+            return make_stringf("bonks %s with %s %s.",
                                 victim.name(DESC_THE).c_str(),
-                                env.item[victim.inv[MSLOT_WEAPON]].name(DESC_ITS).c_str());
+                                victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                                env.item[victim.inv[MSLOT_WEAPON]].name(DESC_PLAIN).c_str());
         }
         else if (one_chance_in(3))
         {
