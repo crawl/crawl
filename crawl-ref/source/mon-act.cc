@@ -2409,6 +2409,7 @@ void handle_monsters(bool with_noise)
         _pre_monster_move(**mi);
         if (!invalid_monster(*mi) && mi->alive() && mi->has_action_energy())
             monster_queue.emplace(*mi, mi->speed_increment);
+        fire_final_effects();
     }
 
     int tries = 0; // infinite loop protection, shouldn't be ever needed
