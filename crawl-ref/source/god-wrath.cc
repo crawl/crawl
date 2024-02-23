@@ -1961,6 +1961,7 @@ static bool _wu_jian_retribution()
         case 0:
             wu_jian_sifu_message(" says: Die by a thousand cuts!");
             you.set_duration(DUR_BARBS, random_range(5, 10));
+            you.attribute[ATTR_BARBS_POW] = 5;
             break;
         case 1:
             wu_jian_sifu_message(" whispers: Nowhere to run...");
