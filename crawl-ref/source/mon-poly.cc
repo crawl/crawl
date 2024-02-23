@@ -580,7 +580,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (targetc == MONS_NO_MONSTER)
         return simple_monster_message(*mons, " shudders.");
 
-    const bool was_invisible = mons->has_ench(ENCH_INVIS) && !you.can_see_invisible() && !mons->friendly();
+    const bool was_invisible = mons->has_ench(ENCH_INVIS) && !mons->friendly();
     bool could_see = you.can_see(*mons);
     bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
@@ -631,7 +631,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
     }
 
-    const bool is_invisible = mons->has_ench(ENCH_INVIS) && !you.can_see_invisible() && !mons->friendly();
+    const bool is_invisible = mons->has_ench(ENCH_INVIS) && !mons->friendly();
     if (you.see_cell(mons->pos()))
     {
         if (was_invisible && !is_invisible)
