@@ -554,7 +554,7 @@ ITEM:     (list of items, separated by comma)
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
-          * "randart" will force the item to be randart if its of a type that
+          * "randart" will force the item to be randart if it's of a type that
             can be an artefact. Randarts ignore modifiers that affect item
             quality will be ignored, although "plus" works normally and "ego"
             works for weapons.
@@ -564,7 +564,7 @@ ITEM:     (list of items, separated by comma)
             Properties are referred to with the name used on artefact
             inscriptions, (e.g. rPois, +Inv, ^Contam, *Slow), and the match is
             case-insensitive. The value defaults to 1 level of the property, so
-            boolean values like rPois can ommit the value entirely, otherwise
+            boolean values like rPois can omit the value entirely, otherwise
             specify e.g. "rF:3" to give rF+++.
 
             Note that certain artefact properties are only supported on
