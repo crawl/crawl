@@ -554,8 +554,27 @@ ITEM:     (list of items, separated by comma)
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
-          * "randart" will force a randart. Most of the above modifiers
-            will be ignored, except for "ego" (for weapons only).
+          * "randart" will force the item to be randart if its of a type that
+            can be an artefact. Randarts ignore modifiers that affect item
+            quality will be ignored, although "plus" works normally and "ego"
+            works for weapons.
+          * "artprops:prop1:val1&prop2:val2..." will force randart and
+            make the specified properties always be fixed to the given levels,
+            while still potentially adding random additional properties.
+            Properties are referred to with the name used on artefact
+            inscriptions, (e.g. rPois, +Inv, ^Contam, *Slow), and the match is
+            case-insensitive. The value defaults to 1 level of the property, so
+            boolean values like rPois can ommit the value entirely, otherwise
+            specify e.g. "rF:3" to give rF+++.
+
+            Note that certain artefact properties are only supported on
+            specific item classes. You can test your specification with the
+            "&%" wizmode command if you're unsure. Also note that and any good
+            fixed properties use up quality points for adding additional good
+            properties. Hence the more good properties you fix, the fewer good
+            random properties will be added, on average. Additionally, fixed
+            bad properties count towards the limit of adding at most 2 random
+            bad properties.
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
           * "ident:" will make the item pre-identified. You need to specify
