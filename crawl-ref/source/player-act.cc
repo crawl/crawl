@@ -907,6 +907,11 @@ bool player::is_web_immune() const
         || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 
+bool player::is_binding_sigil_immune() const
+{
+    return false;
+}
+
 bool player::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)

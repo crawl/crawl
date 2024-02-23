@@ -405,6 +405,7 @@ public:
     bool airborne() const override;
     bool is_banished() const override;
     bool is_web_immune() const override;
+    bool is_binding_sigil_immune() const override;
     bool invisible() const override;
     bool can_see_invisible() const override;
     bool visible_to(const actor *looker) const override;

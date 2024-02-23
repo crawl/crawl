@@ -588,22 +588,22 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
 
 void trigger_binding_sigil(actor& actor)
 {
+    if (actor.is_binding_sigil_immune())
+    {
+        mprf("%s cannot be bound by the sigil due to %s high momentum!",
+             actor.name(DESC_THE).c_str(), actor.pronoun(PRONOUN_POSSESSIVE).c_str());
+        return;
+    }
+
     if (actor.is_player())
     {
-        mprf(MSGCH_WARN, "You move over your own binding sigil and are bound in place!");
+        mprf(MSGCH_WARN, "You move over the binding sigil and are bound in place!");
         you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 6));
         revert_terrain_change(you.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
         return;
     }
 
     monster* m = actor.as_monster();
-    if (m->has_ench(ENCH_SWIFT))
-    {
-        mprf("%s has too much momentum for your sigil to bind %s!",
-             m->name(DESC_THE).c_str(), m->pronoun(PRONOUN_OBJECTIVE).c_str());
-        return;
-    }
-
     const int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
     const int dur = max(2, random_range(4 + div_rand_round(pow, 12),
                                         7 + div_rand_round(pow, 8))
@@ -613,7 +613,7 @@ void trigger_binding_sigil(actor& actor)
     if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
     {
         simple_monster_message(*m,
-            " moves over your binding sigil and is bound in place!",
+            " moves over the binding sigil and is bound in place!",
             MSGCH_FRIEND_SPELL);
 
         // The enemy will gain swift for twice as long as it was bound
