@@ -5240,7 +5240,7 @@ void bolt::affect_monster(monster* mon)
 
     if (nasty_to(mon))
     {
-        if (agent()->is_player()  && final > 0)
+        if (agent() && agent()->is_player()  && final > 0)
             set_attack_conducts(conducts, *mon, you.can_see(*mon));
     }
 
