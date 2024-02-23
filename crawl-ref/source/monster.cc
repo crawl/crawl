@@ -6206,6 +6206,16 @@ bool monster::is_web_immune() const
             || is_insubstantial();
 }
 
+/**
+ * Checks if the monster can pass over binding sigils freely.
+ *
+ * @return Whether the monster is immune to binding sigils.
+ */
+bool monster::is_binding_sigil_immune() const
+{
+    return has_ench(ENCH_SWIFT);
+}
+
 // Monsters with an innate umbra don't have their accuracy reduced by it, and
 // nor do followers of Yredelemnul and Dithmenos.
 bool monster::nightvision() const

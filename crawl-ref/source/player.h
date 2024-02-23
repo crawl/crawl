@@ -516,6 +516,7 @@ public:
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
+    bool is_binding_sigil_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
     bool can_see_invisible() const override;
