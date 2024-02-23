@@ -556,7 +556,8 @@ static bool _is_bad_moment_for_challenge()
 // attempt to generate one if they are. (Called every ~10-30 turns)
 bool maybe_generate_apostle_challenge()
 {
-    if (you.religion != GOD_BEOGH || you.piety < piety_breakpoint(2)
+    if (you.religion != GOD_BEOGH || player_under_penance(GOD_BEOGH)
+        || you.piety < piety_breakpoint(2)
         || you.duration[DUR_BEOGH_DIVINE_CHALLENGE]
         || you.gift_timeout
         || _is_invalid_challenge_level()
