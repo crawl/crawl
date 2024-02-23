@@ -1734,8 +1734,8 @@ COLOUR:  ETC_DITHMENOS
 EV:      4
 VALUE:   270
 INSCRIP: slick, slippery,
-DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted or
- webbed.
+DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted,
+ webbed, or stopped by binding sigils.
 +Slippery:  Its wearer slips away from damaging melee attacks, pulling the
  attacker onward.
 
