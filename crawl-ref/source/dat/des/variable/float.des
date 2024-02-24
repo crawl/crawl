@@ -3809,6 +3809,14 @@ KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
 KMONS:  & = ancient lich
 KITEM:  $ = $ no_pickup
 KITEM:  Z = midnight gem
+KITEM:  | = staff of cold randart artprops:fire&Stlth:-2 / \
+            staff of fire randart artprops:ice&Stlth:-2 / \
+            staff of air randart artprops:earth&Stlth:-2 / \
+            staff of earth randart artprops:air&Stlth:-2 / \
+            storm dragon scales plus:6 randart artprops:rF&rC&Stlth:-2 / \
+            fire dragon scales plus:6 randart artprops:rElec&Stlth:-2 / \
+            storm talisman randart artprops:rC&Stlth:-2 / \
+            book of annihilations / manual of invocations w:2
 KFEAT:  ~ = .
 KFEAT:  _ = altar_qazlal
 KFEAT:  Z = enter_zot
@@ -4200,7 +4208,6 @@ ENDMAP
 NAME:    cheibrodos_frozen_isle
 TAGS:    no_item_gen no_monster_gen no_pool_fixup vaults_hard
 DEPTH:   D:8-, Vaults, !Vaults:$, Zot
-WEIGHT:  5 (Vaults), 10
 ORIENT:  float
 MONS:    ice statue
 : if you.branch() == "Zot" then
@@ -5098,6 +5105,10 @@ MONS:   very ugly thing / thrashing horror / large abomination
 MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab
 MONS:   tentacled starspawn / glowing shapeshifter / tentacled monstrosity w:5
 MONS:   starcursed mass / wretched star
+KITEM:  % = amulet of regeneration / amulet of magic regeneration / \
+            any weapon ego:distortion ident:all
+KITEM:  * = any talisman / any wand charges:2 / demon blade w:2
+KITEM:  | = randbook disc:alchemy / any magical staff
 NSUBST: ' = 2=d / f / 3=|* / * / %$ / -
 NSUBST: - = 5=0 / 5=0. / 2 / 2. / 3=3 / 4=3. / 4 / 2=4. / .
 : end
@@ -6474,7 +6485,7 @@ NAME:   dpeg_index_elf_rogue_hall
 TAGS:   no_monster_gen no_item_gen no_rotate no_trap_gen no_pool_fixup
 TAGS:   vaults_hard vaults_orient_s
 DEPTH:  D:9-, Vaults
-WEIGHT: 5 (Vaults), 10
+WEIGHT: 20 (Vaults), 10
 ORIENT: float
 : if you.in_branch("D") then
 :   if you.depth() < 12 then
@@ -6535,7 +6546,7 @@ NAME:    regret_index_early_branch_jog
 TAGS:    no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_n vaults_orient_w vaults_orient_s
 DEPTH:   D:9-, !D:$, Vaults
-WEIGHT:  5 (Vaults), 10
+WEIGHT:  20 (Vaults), 10
 ORIENT:  float
 KFEAT:   O = any shop
 NSUBST:  W = 3:W / 2 = W. / *:.
@@ -7846,17 +7857,24 @@ WEIGHT:  5 (Elf, Snake), 10
 KMONS:   12 = 0
 KMONS:   34 = 9
 KMONS:   5 = 9 / 8
+: if you.in_branch("Abyss") then
+SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W
+SUBST:   ' = .:55 WWwl G:5, 23 = 1, 45 = 2
+KITEM:   1 = $
+KITEM:   2 = barding / serpent talisman randart / \
+             potion of curing ident:all / any magical staff / \
+             randbook numspells:2 disc:alchemy disc2:earth
+: else
 KITEM:   1 = $ / % w:5
 KITEM:   23 = % / $ w:5
 KITEM:   45 = * / % w:5
-: if you.in_branch("Abyss") then
-SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
-: elseif you.absdepth() > 20 then
+:   if you.absdepth() > 20 then
 SUBST:   x : x m:5, X : ccccbv, ' : .:70 w:20 l
-: elseif you.absdepth() > 11 then
+:   elseif you.absdepth() > 11 then
 SUBST:   x : x m:3, X : xcc, ' : .:80 wW
-: else
+:   else
 SUBST:   x : x m:2, X : xxc, ' : .:90 W, 5 = 4
+:   end
 : end
 MAP
   xxxxxxxx

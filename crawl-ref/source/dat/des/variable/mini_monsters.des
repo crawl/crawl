@@ -256,13 +256,14 @@ KMONS:   2 = boulder beetle
 KMONS:   3 = redback w:5 / orb spider w:5 / nothing
 KMONS:   4 = thrashing horror
 KITEM:   ' = stone no_pickup q:1 w:5 / nothing
-KITEM:   01234 = % w:90 no_pickup / * no_pickup
 SHUFFLE: ABCDEF / ABCDEF / ABCCBA, ABC, DEF, 13 / 13 / 31, {`
 :  if you.in_branch("Abyss") then
+KFEAT:   04 = abyssal_stair
 SUBST:   G = BEG, C : x:5 cvb, B : x:5 cvbw, A : xcvb w:4
 SUBST:   D: x:5 cvb, E : x:5 cvbw, F : xcvb w:4, { = '
 SUBST:   0 = 4:50 0
 :  else
+KITEM:   01234 = % w:90 no_pickup / * no_pickup
 SUBST:   { = {[( .:15, ` = '
 NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ( = 1:] / 1:)
 SUBST:   G = BEG, C: xc, B : x., A : xxc .:2
@@ -1761,8 +1762,9 @@ wwww..11x.x..wwwwwwwww
 ENDMAP
 
 NAME:   kilobyte_rumbling_trees
-TAGS:   transparent
+TAGS:   transparent misc_elf_vault
 DEPTH:  Lair:2-, Elf, Depths
+WEIGHT: 5 (Elf), 10
 MONS:   black bear w:5 / polar bear / wolf
 MONS:   shapeshifter / glowing shapeshifter
 MONS:   ice dragon / spark wasp w:20 / caustic shrike
@@ -1947,21 +1949,24 @@ DEPTH:   Depths, Elf, Crypt, Abyss
 MONS:    boggart, orc high priest, kobold demonologist
 MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
-ITEM:    book of callings w:5 / book of the wilderness w:20 / grand grimoire w:5 / \
-         randbook disc:summoning numspells:6
+ITEM:    book of callings w:5 / book of the wilderness w:20 / \
+         grand grimoire w:5 / randbook disc:summoning numspells:6
 ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \
-            amulet of magic regeneration randart
-ITEM:    any ally misc
+         amulet of magic regeneration randart
+ITEM:    any ally misc / orb randart artprops:Summ
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
+KITEM:   _ = any ally scroll ident:type, any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
+KFEAT:   ? = altar_lugonu
+KFEAT:   < = exit_abyss
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
 NSUBST:  ' = 1:@ / * = .@
 SUBST:   c : ccb
 : if you.in_branch("Abyss") then
 SUBST:   bc = xcccccvb
+SUBST:   %efg = $, * = <, _ = ?
 : elseif you.in_branch("Crypt") then
 SUBST:   5 = 7, 6 = 8
 : else
@@ -2073,7 +2078,7 @@ MAP
 ENDMAP
 
 NAME:    guppyfry_library_mini
-TAGS:    patrolling no_monster_gen transparent
+TAGS:    patrolling no_monster_gen transparent misc_elf_vault
 DEPTH:   Orc, Snake, Elf, Zot
 ITEM:    gold / any scroll / any book w:4
 SUBST:   ? = 123d
@@ -2089,14 +2094,15 @@ MONS:    deep elf death mage / deep elf elementalist
 MONS:    any draconian, draconian scorcher
 MONS:    draconian annihilator / draconian knight
 : end
+TILE:    c = wall_studio
 MAP
 ............
 .xxmxxxxmxx.
 .x.?....?.x.
 .x........x.
 .x.xx++xx.x.
-.+1xd33dx.+.
-.+.xd33dx1+.
+.+1cd33dc.+.
+.+.cd33dc1+.
 .x.xx++xx.x.
 .x........x.
 .x.?....?.x.
@@ -4071,16 +4077,18 @@ TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
 MONS:   golden eye, ophan, glass eye, eye of devastation
 MONS:   great orb of eyes / shining eye w:5
+ITEM:   scroll of vulnerability q:1 ident:type / orb ego:guile randart w:4 / \
+        book of the spheres w:4 / potion of enlightenment q:2 ident:type
 NSUBST: 5 = 2:5 / *:4 5:15
 KFEAT:  m = iron_grate
 : if you.in_branch("Abyss") then
-SUBST:  c = c:4 v:1 b:1
+SUBST:  c = c:4 v:1 b:1, '| = d
 : end
 MAP
      c++cccc
    ccc..c3.ccc
-  cc.c..c+m..cc
- cc.mm..c.mmm.cc
+  cc'c..c+m..cc
+ cc'mm..c.mmm.cc
  c.mm...c...mm.c
 cc.m....c..5.m.cc
 c.mm...mc+...mm.c
@@ -4496,11 +4504,12 @@ xxCCCxx
 xxxxxxx
 ENDMAP
 
-NAME:  kb_rosetta
-TAGS:  vaults_hard transparent
-DEPTH: D:6-, Depths, Vaults, Elf
-SUBST: x : xcvmnt
-SUBST: X : GtTU
+NAME:   kb_rosetta
+TAGS:   vaults_hard transparent misc_elf_vault
+WEIGHT: 3 (Elf), 10
+DEPTH:  D:6-, Depths, Vaults, Elf
+SUBST:  x : xcvmnt
+SUBST:  X : GtTU
 MAP
    ...   ...
   ..x.. ..x..
@@ -4632,15 +4641,19 @@ ENDMAP
 NAME:    onia_ninara_dug_in_and_dangerous
 TAGS:    ruin_abyss transparent no_descent
 DEPTH:   D:8-, !D:$, Depths:2-, !Depths:$, Abyss
-SHUFFLE: vcb, AB?/CD!, d<>, de
-SUBST:   A=9, B=8, C=1, D=9
-SUBST:   ? = %:10 *:50 |:60
-SUBST:   ! = %:90 *:30 |:10
-KMASK:   x = no_wall_fixup
-KMASK:   189%*|de<> = opaque
-KPROP:   189%*|de<> = no_tele_into
 ITEM:    wand of digging ident:type
 ITEM:    scroll of teleportation ident:type q:2
+ITEM:    randbook disc:earth numspells:1 / any ring / any talisman w:2
+SHUFFLE: vcb, AB? / CD!, d<>, de
+SUBST:   AD = 9, B = 8, C = 0
+SUBST:   ? = %:10 *:50 |:60, ! = %:90 *:30 |:10
+: if you.in_branch("Abyss") then
+TAGS:    patrolling
+SUBST:   de%*| = f
+: end
+KMASK:   x = no_wall_fixup
+KMASK:   089%*|de<> = opaque
+KPROP:   089%*|de<> = no_tele_into
 MAP
 ...........
 .vvnvvvnvv.
@@ -4669,22 +4682,25 @@ ITEM:   any scroll / any book w:6
 MONS:   arcanist w:25 / occultist w:25 / necromancer w:20 / \
         deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \
         orc sorcerer / ogre mage / naga mage / vampire mage
+ITEM:   scroll of identify w:2 / any scroll w:8 / any book w:4
 : else
-MONS:   arcanist w:20 / necromancer w:20 / \
-        deep elf pyromancer w:20 / orc sorcerer / \
-        naga mage w:5 / kobold demonologist
-ITEM:   any scroll / any book w:3
+MONS:   arcanist w:25 / deep elf pyromancer w:25 / orc sorcerer / \
+        naga mage w:5 / kobold demonologist w:15
+ITEM:   scroll of identify w:3 / scroll of amnesia w:2 / \
+        any scroll w:5 / randbook numspells:2 w:3
 : end
+SUBST:  c : cx
+TILE:   c = wall_studio
 MAP
 xxxxxxxxxxxxx
 xd....1....dx
-xx.........xx
+xc.........cx
 xd.........dx
-xx.........xx
+xc.........cx
 xd.........dx
-xx.........xx
+xc.........cx
 xd.........dx
-xx.........xx
+xc.........cx
 xd.........dx
 xxxxxx+xxxxxx
 ENDMAP
@@ -8027,12 +8043,9 @@ DEPTH:   D:12-
 WEIGHT:  3
 MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / occultist / \
          arcanist / kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
-NSUBST:  1 = 6:1 / 10=1.... / .
 ITEM:    glaive_of_prune no_pickup
-SUBST:   " : .:50 cvbnG
-SUBST:   ' : .:50 cvbnG
-SUBST:   ? : .:50 cvbnG
-SUBST:   ! : .:60 cvbnGT
+SUBST:   " : .:50 ccvbn, ' : .:50 ccvbn, ? : .:50 ccvbn, ! : .:60 ccvbnT
+NSUBST:  1 = 6:1 / 10=1.... / .
 KMASK:   l = no_monster_gen
 MAP
      ...........
@@ -8130,7 +8143,6 @@ NAME:    minmay_guarded_unrand_vampires_tooth
 TAGS:    transparent
 DEPTH:   D:10-, Crypt, Depths
 WEIGHT:  3
-ITEM:    vampires_tooth no_pickup
 : if you.in_branch("D") then
 :   if you.depth() < 13 then
 MONS:    vampire mosquito / tyrant leech w:5, vampire
@@ -8140,6 +8152,7 @@ MONS:    vampire mosquito / tyrant leech / vampire, vampire knight
 : else
 MONS:    vampire knight, vampire mage
 : end
+ITEM:    vampires_tooth no_pickup
 MAP
 .........
 .ccc.ccc.
@@ -8156,8 +8169,8 @@ NAME:    minmay_guarded_unrand_wrath_of_trog
 TAGS:    transparent
 DEPTH:   D:13-, Depths
 WEIGHT:  3
-ITEM:    wrath_of_trog no_pickup ident:all
 MONS:    spriggan berserker
+ITEM:    wrath_of_trog no_pickup ident:all
 NSUBST:  1 = 3=1 / 9=1...... / .
 MAP
     .......
@@ -8179,7 +8192,6 @@ NAME:    minmay_guarded_unrand_skullcrusher
 TAGS:    transparent
 DEPTH:   D:12-, Crypt
 WEIGHT:  3
-ITEM:    skullcrusher no_pickup ident:all
 MONS:    laughing skull
 : if you.in_branch("Crypt") then
 MONS:    curse skull
@@ -8191,6 +8203,7 @@ MONS:    skeletal warrior
 NSUBST:  d = 1:d / *:%, ' = 4:1 / 6 = 1.... / *:.
 NSUBST:  " = 2:1 / 2 = 1.. / *:., ! = 2:2 / *:.
 : end
+ITEM:    skullcrusher no_pickup ident:all
 MAP
      .........
    ...ccccc.....
@@ -8222,12 +8235,12 @@ NAME:    minmay_guarded_unrand_finisher
 TAGS:    transparent
 DEPTH:   D:7-
 WEIGHT:  3
-ITEM:    finisher no_pickup ident:all
 : if you.depth() < 13 then
 MONS:    wraith, skeletal warrior
 : else
 MONS:    skeletal warrior, reaper
 : end
+ITEM:    finisher no_pickup ident:all
 NSUBST:  2 = 2 / 1, 1 = 1.
 NSUBST:  D = . / c, E = . / c
 SUBST:   c = c .:2
@@ -8251,9 +8264,9 @@ NAME:    minmay_guarded_unrand_resistance
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   D:9-
 WEIGHT:  3
-KMASK:   lw = opaque
-ITEM:    shield_of_resistance no_pickup
 MONS:    fire dragon, ice dragon
+ITEM:    shield_of_resistance no_pickup
+KMASK:   lw = opaque
 MAP
 ...........
 .vnnv=vnnv.
@@ -8272,8 +8285,8 @@ NAME:    chequers_guarded_unrand_ignorance
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   D:7-, Orc
 WEIGHT:  3
-ITEM:    tower shield_of_ignorance no_pickup
 MONS:    orange crystal statue
+ITEM:    tower shield_of_ignorance no_pickup
 KPROP:   .d1 = no_tele_into
 SUBST:   - = .
 MAP
@@ -10033,10 +10046,13 @@ ENDMAP
 NAME:    minivault_13
 TAGS:    ruin_abyss transparent
 DEPTH:   D:9-, Elf, Abyss
-SHUFFLE: AB, CD, EH/FG
-KITEM:   ABCD = gold / nothing
-SUBST:   F = G:99 F:1
 KMONS:   F = orange crystal statue / obsidian statue / ice statue
+ITEM:    robe good_item / scale mail good_item
+SHUFFLE: AB, CD, EH/FG
+SUBST:   F = G:99 F:1, ABCD = $'
+: if you.in_branch("Abyss") then
+SUBST:   '| = dd$, = = +
+: end
 MAP
 ............
 .xxxxxxxxxx.
@@ -10119,9 +10135,13 @@ ENDMAP
 NAME:    minivault_25_ag
 TAGS:    allow_dup extra ruin_abyss transparent
 DEPTH:   D:9-, Elf, Abyss
+KFEAT:   > = abyssal_stair
 SHUFFLE: XY, ABCDE
 SUBST:   X=x, Y=+
 SUBST:   A=?, B=%%%*, C=T, D=0009, E=89
+: if you.in_branch("Abyss") then
+SUBST:   %* = >
+: end
 MAP
 ............
 .xxXxxxxxxx.

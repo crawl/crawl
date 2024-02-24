@@ -67,12 +67,14 @@ end
 function crypt_loot_plus(e)
   -- Since Crypt is an optional, late, difficult branch,
   -- provide some unreliable but high quality incentives.
+  -- TODO: shove this into an extra-greedy shop so people actually notice the
+  -- existence of this and thus are more incentivized for optional branch #3.
   local drain = "ego:draining good_item ident:type"
   local pain = "ego:pain ident:type"
   local vamp = "ego:vampirism ident:type"
   local book = "randbook disc:necromancy numspells:6 spells:"
-  local ring = "ring of positive energy randart good_item"
-  local amulet = "amulet of regeneration randart good_item"
+  local ring = "any ring randart artprops:rN:2"
+  local amulet = "any amulet randart artprops:Regen:1"
   -- One drop-off of these,
   e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
           " / quick blade " .. drain .. " / executioner's axe " .. drain ..

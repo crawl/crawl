@@ -2917,7 +2917,7 @@ TILE:    v = dngn_metal_wall_red
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
              plate armor ego:fire_resistance ident:type / \
-             fire dragon scales / fire dragon scales randart
+             fire dragon scales good_item / fire dragon scales randart
 KITEM:   d = large rock q:1 / stone q:10
 KITEM:   e = any weapon
 KFEAT:   L = l

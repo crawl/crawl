@@ -2567,7 +2567,7 @@ ENDMAP
 # There is an 70% chance all three upstairs will be here.
 #
 NAME:    lemuel_draconian_sentries
-TAGS:    no_rotate no_pool_fixup
+TAGS:    no_monster_gen no_rotate no_pool_fixup
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
 MONS:    draconian stormcaller / draconian scorcher w:5
@@ -2575,22 +2575,23 @@ KFEAT:   m = iron_grate
 SHUFFLE: {([>, wW / -?, '2n / "3o / "3o
 SUBST:   { = {:80 >, ( = (:80 > , [ = [:80 >
 SUBST:   -?' = ., 2 = 1, n = m
+KMASK:   ~ = !no_monster_gen
 CLEAR:   "3o
 MAP
 ''''''''''''''''''''''''''''
-''nnn'................'nnn''
-''n2n'................'n2n''
-''nnn'..mmmwwWWwwmmm..'nnn''
-''''''..m1mWWwwWWm1m..''''''
-''''''..mmmwwWWwwmmm..''''''
-nnn'''..WwW.{..(.WwW..'''nnn
-n2n'''..wWw......wWw..'''n2n
-nnn'''..WwW.[..>.WwW..'''nnn
-''''''..mmmwwWWwwmmm..''''''
-''''''..m1mWWwwWWm1m..''''''
-''nnn'..mmmwwWWwwmmm..'nnn''
-''n2n'................'n2n''
-''nnn'................'nnn''
+''nnn'~~~~~~~~~~~~~~~~'nnn''
+''n2n'~~~..........~~~'n2n''
+''nnn'~~mmmwwWWwwmmm~~'nnn''
+''''''~.m1mWWwwWWm1m.~''''''
+''''''~.mmmwwWWwwmmm.~''''''
+nnn'''~.WwW.{..(.WwW.~'''nnn
+n2n'''~.wWw......wWw.~'''n2n
+nnn'''~.WwW.[..>.WwW.~'''nnn
+''''''~.mmmwwWWwwmmm.~''''''
+''''''~.m1mWWwwWWm1m.~''''''
+''nnn'~~mmmwwWWwwmmm~~'nnn''
+''n2n'~~~..........~~~'n2n''
+''nnn'~~~~~~~~~~~~~~~~'nnn''
 ''''''''''''''''''''''''''''
 ENDMAP
 
@@ -3398,7 +3399,7 @@ MARKER:  + = lua:restrict_door()
 # Till then, it's just a style thing.
 KFEAT:   _ = altar_qazlal w:40 / altar_xom / altar_lugonu / \
              altar_makhleb / altar_yredelemnul
-SUBST:   1 = 1., g : gG
+SUBST:   1 = 1., S : SSG
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
 KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike \
@@ -3872,7 +3873,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
 KFEAT:  G = metal_statue
-ITEM:   storm talisman, book of lightning
+ITEM:   storm talisman, randbook disc:air spells:chain_lightning
 : local e = "ego:electrocution good_item ident:type"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
 :      "executioner's axe " .. e .. " w:5 / eveningstar " .. e .. " w:5 / " ..
