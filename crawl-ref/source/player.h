@@ -55,6 +55,7 @@
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
 #define RAMPAGE_HEAL_KEY "rampage_heal_strength"
 #define RAMPAGE_HEAL_MAX 7
+#define LUCIDITY_KEY "lucidity"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3

@@ -441,6 +441,17 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case DUR_LUCIDITY:
+        {
+            const int lucidity = you.props[LUCIDITY_KEY].get_int();
+            if (lucidity > 0)
+            {
+                inf.light_colour = LIGHTMAGENTA;
+                inf.light_text   = make_stringf("Lucid (%d)", lucidity);
+            }
+            break;
+        }
+
     case DUR_RAMPAGE_HEAL:
     {
         const int rh_pwr = you.props[RAMPAGE_HEAL_KEY].get_int();

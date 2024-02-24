@@ -517,7 +517,8 @@ int spell_mana(spell_type which_spell, bool real_spell)
 {
     const int level = _seekspell(which_spell)->level;
     if (real_spell && (you.duration[DUR_BRILLIANCE]
-                       || player_equip_unrand(UNRAND_FOLLY)))
+                       || player_equip_unrand(UNRAND_FOLLY)
+                       || enough_lucidity()))
     {
         return level/2 + level%2; // round up
     }
@@ -1947,4 +1948,9 @@ void end_wait_spells(bool quiet)
     end_searing_ray(you);
     end_maxwells_coupling(quiet);
     end_flame_wave();
+}
+
+bool enough_lucidity()
+{
+    return you.props[LUCIDITY_KEY].get_int() >= 1;
 }

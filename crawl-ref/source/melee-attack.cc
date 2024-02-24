@@ -507,6 +507,8 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
+    ghoul_apply_devour();
+
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
     // meaning it could have made the attacked creature vanish. That
@@ -801,6 +803,20 @@ static void _consider_devouring(monster &defender)
 
     // chow down.
     _devour(defender);
+}
+
+void melee_attack::ghoul_apply_devour()
+{
+    //enable ghouls to become lucid if target dies
+    if (attacker->is_player()
+    && defender->is_monster()
+    && !is_projected
+    && you.has_mutation(MUT_DEVOUR_ON_KILL))
+    {
+        //todo make this last only as long as your turn
+        defender->as_monster()->add_ench(mon_enchant(ENCH_GHOUL_DEVOUR,
+            0, &you, you.attack_delay().max() + 10));
+    }
 }
 
 /**

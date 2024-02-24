@@ -501,6 +501,10 @@ int calc_spell_power(spell_type spell)
     power *= 10 + 4 * augmentation_amount();
     power /= 10;
 
+    // Lucidity boosts spell power
+    if (enough_lucidity())
+        power *= 2;
+
     // Each level of horror reduces spellpower by 10%
     if (you.duration[DUR_HORROR])
     {
@@ -934,6 +938,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     if (_majin_charge_hp())
         pay_hp(hp_cost);
 
+    const bool lucid_boosted = enough_lucidity();
+
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target, force_failure);
     if (cast_result == spret::abort
@@ -964,6 +970,15 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
     you.turn_is_over = true;
     alert_nearby_monsters();
+
+    if (lucid_boosted && cast_result == spret::success)
+    {
+        if(!have_passive(passive_t::no_haste))
+            you.time_taken = div_rand_round(you.time_taken * 2, 3);
+
+        const int lucidity = you.props[LUCIDITY_KEY].get_int();
+        you.props[LUCIDITY_KEY] = lucidity - 1;
+    }
 
     return cast_result;
 }
@@ -2041,10 +2056,11 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         }
     }
 
+    const int powersurge = _spell_enhancement(spell) + enough_lucidity();
     if (evoked_wand)
         surge_power_wand(wand_mp_cost());
     else if (actual_spell)
-        surge_power(_spell_enhancement(spell));
+        surge_power(powersurge);
 
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)

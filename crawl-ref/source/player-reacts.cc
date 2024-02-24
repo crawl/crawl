@@ -705,6 +705,14 @@ static void _decrement_durations()
         reset_powered_by_death_duration();
     }
 
+    // Decrement Lucidity
+    int lucidity = you.props[LUCIDITY_KEY].get_int();
+    if (lucidity > 0 && _decrement_a_duration(DUR_LUCIDITY, delay))
+    {
+        you.props[LUCIDITY_KEY] = lucidity - 1;
+        you.set_duration(DUR_LUCIDITY, 1);
+    }
+
     _decrement_rampage_heal_duration(delay);
 
     dec_ambrosia_player(delay);

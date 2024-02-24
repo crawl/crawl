@@ -147,3 +147,4 @@ bool spell_was_form(spell_type spell);
 #endif
 
 void end_wait_spells(bool quiet = false);
+bool enough_lucidity();

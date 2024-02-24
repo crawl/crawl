@@ -2267,8 +2267,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             if (valid_heal_source
                 && you.has_mutation(MUT_DEVOUR_ON_KILL)
-                && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                && coinflip())
+                && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC))
             {
                 hp_heal += 1 + random2avg(1 + you.experience_level, 3);
             }
@@ -2694,6 +2693,18 @@ item_def* monster_die(monster& mons, killer_type killer,
             dprf("Powered by Death strength +%d=%d", pbd_inc,
                  pbd_str + pbd_inc);
         }
+    }
+
+    if (gives_player_xp && mons.has_ench(ENCH_GHOUL_DEVOUR)
+        && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC))
+    {
+        const int lucidity_dur = random_range(3, 5);
+        you.set_duration(DUR_LUCIDITY, lucidity_dur);
+
+        const int lucidity = you.props[LUCIDITY_KEY].get_int();
+        you.props[LUCIDITY_KEY] = min(3, lucidity + 1);
+    
+        mpr("You feel lucid.");
     }
 
     if (!crawl_state.game_is_arena() && leaves_corpse && !in_transit)

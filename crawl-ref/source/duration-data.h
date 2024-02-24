@@ -706,6 +706,7 @@ static const duration_def duration_data[] =
     { DUR_BEOGH_SEEKING_VENGEANCE, LIGHTRED, "Vengeance", "", "vengeance",
       "You are seeking vengeance for the death of your brethren.", D_NO_FLAGS},
     { DUR_CONSTRICTION_IMMUNITY, 0, "", "", "constrict immune", "", D_NO_FLAGS, {{""}}},
+    { DUR_LUCIDITY, 0, "", "", "lucidity", "", D_NO_FLAGS},
 
 
 #if TAG_MAJOR_VERSION == 34

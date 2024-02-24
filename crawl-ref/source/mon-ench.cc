@@ -1368,6 +1368,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INSTANT_CLEAVE:
     case ENCH_PROTEAN_SHAPESHIFTING:
     case ENCH_CURSE_OF_AGONY:
+    case ENCH_GHOUL_DEVOUR:
         decay_enchantment(en);
         break;
 
@@ -2109,6 +2110,7 @@ static const char *enchant_names[] =
     "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
     "channel_searing_ray",
     "touch_of_beogh", "vengeance_target",
+    "delectable",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2379,6 +2381,8 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_NECROTISE:
         return 10;
+    case ENCH_GHOUL_DEVOUR:
+        return 0;
     case ENCH_RING_OF_THUNDER:
     case ENCH_RING_OF_FLAMES:
     case ENCH_RING_OF_CHAOS:
