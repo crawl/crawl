@@ -973,7 +973,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     if (lucid_boosted && cast_result == spret::success)
     {
-        if(!have_passive(passive_t::no_haste))
+        if (!have_passive(passive_t::no_haste))
             you.time_taken = div_rand_round(you.time_taken * 2, 3);
 
         const int lucidity = you.props[LUCIDITY_KEY].get_int();

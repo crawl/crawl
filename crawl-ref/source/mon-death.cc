@@ -2703,7 +2703,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         const int lucidity = you.props[LUCIDITY_KEY].get_int();
         you.props[LUCIDITY_KEY] = min(3, lucidity + 1);
-    
+
         mpr("You feel lucid.");
     }
 
