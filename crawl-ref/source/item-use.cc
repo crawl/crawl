@@ -139,15 +139,7 @@ public:
 
     bool allow_full_inv() const
     {
-        switch (oper)
-        {
-        case OPER_WIELD:
-        case OPER_WEAR:
-        case OPER_PUTON:
-            return true;
-        default: // disallow for everything else, incl OPER_EQUIP, OPER_ANY
-            return false;
-        }
+        return oper == OPER_WIELD;
     }
 
 private:
