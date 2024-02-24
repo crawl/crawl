@@ -2677,7 +2677,7 @@ string melee_attack::mons_attack_desc()
     }
 
     if (weapon && !mons_class_is_animated_weapon(attacker->type))
-        ret += " with " + weapon->name(DESC_A);
+        ret += " with " + weapon->name(DESC_A, false, false, false);
 
     return ret;
 }
