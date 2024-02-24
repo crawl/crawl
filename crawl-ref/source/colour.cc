@@ -638,6 +638,7 @@ void init_element_colours()
                             { {60,  DARKGREY},
                               {60,  MAGENTA},
                               {20,  WHITE},
+                              {20,  LIGHTMAGENTA},
                             }));
     add_element_colour(new random_element_colour_calc(
                             ETC_MOUNTAIN, "mountain",
