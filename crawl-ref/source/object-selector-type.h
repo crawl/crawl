@@ -9,8 +9,8 @@ enum object_selector
     OSEL_RECHARGE                =  -4,
 #endif
     OSEL_ENCHANTABLE_ARMOUR      =  -5,
-    OSEL_BEOGH_GIFT              =  -6,
 #if TAG_MAJOR_VERSION == 34
+    OSEL_BEOGH_GIFT              =  -6,
     OSEL_DRAW_DECK               =  -7,
 #endif
     OSEL_LAUNCHING               =  -8,
