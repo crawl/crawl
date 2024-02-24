@@ -53,7 +53,7 @@ mutations:
     MUT_COLD_RESISTANCE: 1
     MUT_CLAWS: 1
     MUT_DEVOUR_ON_KILL: 1
-    MUT_LOW_MAGIC: 2
+    MUT_LOW_MAGIC: 3
 recommended_jobs:
   - JOB_WARPER
   - JOB_GLADIATOR
