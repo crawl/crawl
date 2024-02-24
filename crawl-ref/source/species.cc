@@ -541,6 +541,8 @@ namespace species
     vector<equipment_type> ring_slots(species_type species, bool missing_hand)
     {
         vector<equipment_type> result;
+        if (you.has_mutation(MUT_NO_RINGS))
+            return result;
 
         const equipment_type missing = missing_hand
                             ? sacrificial_arm(species) : EQ_NONE;

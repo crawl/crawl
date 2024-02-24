@@ -802,13 +802,19 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     if (species::bans_eq(you.species, eq))
         return false;
 
+    if (you.has_mutation(MUT_NO_RINGS)
+        && (eq == EQ_RIGHT_RING || eq == EQ_LEFT_RING))
+    {
+        return false;
+    }
+
     switch (eq)
     {
     case EQ_RING_EIGHT:
     case EQ_LEFT_RING:
         if (you.get_mutation_level(MUT_MISSING_HAND))
             return false;
-        // intentional fallthrough
+        // intentional fallthrough to EQ_RIGHT_RING
     case EQ_RIGHT_RING:
     case EQ_RING_ONE:
     case EQ_RING_TWO:
@@ -8215,26 +8221,6 @@ void player::rev_up(int dur)
     // Fuzz it between 4/2 and 6/2 (ie 2x to 3x) to avoid tracking.
     const int perc_gained = random_range(dur * 2, dur * 3);
     you.props[REV_PERCENT_KEY] = min(100, you.rev_percent() + perc_gained);
-}
-
-void player::maybe_shutdown_legs()
-{
-    if (!you.has_mutation(MUT_LEGS_SHUTDOWN))
-        return;
-
-    if (!there_are_monsters_nearby(true, false, false))
-    {
-        // We might have a leftover small duration from a previous action
-        // if the current action was fast, so remove that too.
-        if (you.duration[DUR_NO_MOMENTUM] <= player_speed())
-            you.duration[DUR_NO_MOMENTUM] = 0;
-        return;
-    }
-
-    // Take one normal action longer (minus 0.1 time to account for
-    // player_speed() randomization when hasted).
-    you.duration[DUR_NO_MOMENTUM] = max(you.time_taken + player_speed() - 1,
-                                        you.duration[DUR_NO_MOMENTUM]);
 }
 
 void player_open_door(coord_def doorpos)

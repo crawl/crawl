@@ -1021,10 +1021,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
-
-        // Coglin: redirect all power to waggly arms!
-        if (!fake_spell)
-            you.maybe_shutdown_legs();
     }
 
     alert_nearby_monsters();

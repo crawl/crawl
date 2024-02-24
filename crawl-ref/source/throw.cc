@@ -731,8 +731,6 @@ void throw_it(quiver::action &a)
     you.turn_is_over = true;
     if (aimed_at_foe && launcher && you.has_mutation(MUT_WARMUP_STRIKES))
         you.rev_up(you.time_taken);
-    // Coglin: redirect all power to waggly arms!
-    you.maybe_shutdown_legs();
 
     if ((launcher || is_thrown)
         && will_have_passive(passive_t::shadow_attacks)

@@ -787,10 +787,10 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_LEGS_SHUTDOWN, 0, 1, mutflag::bad, true,
-  "legs shutdown",
+{ MUT_NO_RINGS, 0, 1, mutflag::bad, true,
+  "no rings",
 
-  {"Attacking and casting redirects power from your legs.",
+  {"Your grasper-arms cannot wear rings.",
    "", ""},
   {"", "", ""},
   {"", "", ""},

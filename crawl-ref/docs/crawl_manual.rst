@@ -1795,9 +1795,9 @@ Coglins (Co)
 
    Haphazard and jerry-rigged, Coglin exoskeletons lack the flexibility of
    natural bodies. Though their arms can fly in a whir of destruction, it
-   takes quite a bit of swinging to rev them up to that speed, and the energy
-   needed for them to attack or cast spells requires temporarily powering
-   down their legs!
+   takes quite a bit of swinging to rev them up to that speed. Further, with
+   their hands swallowed in the controls of their machine, they cannot wear
+   rings - the interference of multiple magical fields would be catastrophic!
 
    Even so, a true Coglin would never criticise their creation. They believe
    that spirits of steel and sandalwood come to rest within every thing that

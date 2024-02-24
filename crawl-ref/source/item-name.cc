@@ -3443,6 +3443,15 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
 
+        if (you.has_mutation(MUT_NO_RINGS)
+            && !jewellery_is_amulet(item)
+            // This is an ugly check, and violates the assumption that
+            // perma-useless items will always be useless. Sorry!
+            && !player_equip_unrand(UNRAND_FINGER_AMULET))
+        {
+            return true;
+        }
+
         if (!ident && !item_type_known(item))
             return false;
 
