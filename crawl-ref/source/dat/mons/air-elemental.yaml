@@ -1,6 +1,6 @@
 name: "air elemental"
 glyph: {char: "E", colour: etc_air}
-flags: [flies, see_invis, unblindable, insubstantial]
+flags: [flies, see_invis, insubstantial]
 resists: {elec: 3}
 xp_mult: 6
 genus: elemental
