@@ -715,9 +715,9 @@ Splinterspray cast
 
 @The_monster@ hurls a spray of @beam@ @at@ @target@.
 %%%%
-Crystal Bolt crystal guardian cast
+Crystallizing Shot crystal guardian cast
 
-@The_monster@ fires a crystalline bolt @at@ @target@.
+@The_monster@ fires a shard of itself @at@ @target@.
 %%%%
 Blink Other statue cast
 

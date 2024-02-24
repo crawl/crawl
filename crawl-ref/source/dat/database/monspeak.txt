@@ -7292,7 +7292,10 @@ VISUAL:@The_monster@ rams the @surface@ with @possessive@ head heavily.
 ################## Crystal guardian ###########################
 crystal guardian
 
-VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light.
+VISUAL:@The_monster@ glitters, immutable and inevitable, in the dim dungeon light.
+
+w:5
+VISUAL:You see your fractured reflection in @the_monster@ contort and writhe. @player_only@
 %%%%
 ################## Death cob ###############################
 death cob

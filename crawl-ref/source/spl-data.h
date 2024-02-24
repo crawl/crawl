@@ -3698,6 +3698,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CRYSTALLIZING_SHOT, "Crystallizing Shot",
+    spschool::conjuration | spschool::earth | spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    6,
+    50,
+    4, 4,
+    0,
+    TILEG_CRYSTALLIZING_SHOT,
+},
+
+{
     SPELL_TREMORSTONE, "Tremorstone",
     spschool::earth,
     spflag::area,

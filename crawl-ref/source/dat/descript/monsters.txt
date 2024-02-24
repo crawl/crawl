@@ -943,14 +943,15 @@ A crocodilian with powerful jaws.
 crystal echidna
 
 A spiny, long snouted rodent grown out of pure living crystal. It is
-immune to most forms of magic and hurls both crystalline bolts and painful
+immune to most forms of magic and hurls both crystallizing shots and painful
 barbs.
 %%%%
 crystal guardian
 
-An intricate animated statue made of heavily ensorcelled, tough crystal. It is
-immune to most forms of magic, and is magically charged to toss great bolts of
-fire and cold that are reflected by any surface.
+An intricate animated statue made of heavily ensorcelled crystal that is
+immune to most forms of magic. The spells which created it are so powerful
+that even flesh may start to crystalize around any fragments that become
+embedded in it - leaving its foes brittle and vulnerable.
 %%%%
 culicivora
 

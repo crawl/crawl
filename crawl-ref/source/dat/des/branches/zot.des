@@ -3513,7 +3513,8 @@ TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Zot, !Zot:$
 ORIENT:  centre
 # Humanoids, guardian beasts, the strongest; first V, then Zot.
-MONS:    ettin / stone giant w:5 / fire giant / frost giant / crystal guardian
+MONS:    ettin / stone giant w:5 / fire giant / \
+         frost giant / crystal guardian w:5
 MONS:    base draconian
 MONS:    glowing shapeshifter w:20 / sphinx w:15 / war gargoyle w:20 / \
          iron dragon w:20 / shadow dragon / golden dragon

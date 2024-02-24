@@ -1598,7 +1598,7 @@ WEIGHT: 5 (Vaults), 10
 : if you.branch() == "Vaults" then
 TAGS:   no_monster_gen
 MONS:   orc warlord, orc knight w:20 / orc sorcerer
-MONS:   peacekeeper / war gargoyle w:5 / crystal guardian w:5
+MONS:   peacekeeper / crystal guardian w:4
 SUBST:  Gw = .
 : else
 :   if you.absdepth() > 11 then

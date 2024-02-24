@@ -114,6 +114,22 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_CRYSTALLIZING_SHOT,
+    "crystallizing shot",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 5, 1, 10>,
+    new tohit_calculator<15, 1, 30>,
+    LIGHTCYAN,
+    false,
+    BEAM_CRYSTALLIZING,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+},
+
+{
     ZAP_SPLINTERSPRAY,
     "spray of wooden splinters",
     200,

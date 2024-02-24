@@ -1705,6 +1705,30 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             mons->strip_willpower(pbolt.agent(), random_range(20, 30));
         break;
 
+    case BEAM_CRYSTALLIZING:
+        if (doFlavouredEffects && x_chance_in_y(2, 3))
+        {
+            bool had_status = mons->has_ench(ENCH_VITRIFIED);
+            mons->add_ench(mon_enchant(ENCH_VITRIFIED, 0, pbolt.agent(),
+                           random_range(8, 18) * BASELINE_DELAY));
+            {
+                if (you.can_see(*mons))
+                {
+                    if (had_status)
+                    {
+                        mprf("%s looks even more glass-like.",
+                             mons->name(DESC_THE).c_str());
+                    }
+                    else
+                    {
+                        mprf("%s becomes as fragile as glass!",
+                             mons->name(DESC_THE).c_str());
+                    }
+                }
+            }
+        }
+        break;
+
     case BEAM_UMBRAL_TORCHLIGHT:
         if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
         {
@@ -7092,6 +7116,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_WEAKNESS:              return "weakness";
     case BEAM_DEVASTATION:           return "devastation";
     case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
+    case BEAM_CRYSTALLIZING:         return "crystallizing";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

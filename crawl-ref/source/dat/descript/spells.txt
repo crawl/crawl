@@ -396,6 +396,12 @@ Projects a penetrating projectile with peculiar magical properties. It is
 randomly imbued with either fire or ice, and additionally will reflect from
 walls of any material due to the crystal embedded in the shot.
 %%%%
+Crystallizing Shot spell
+
+Hurls a large and heavy shard of crystal. It may render a creature's body
+structure as brittle and fragile as shattered and unrefined crystal, increasing
+the damage they take from all sources.
+%%%%
 Curse of Agony spell
 
 Curses a foe, halving their remaining health after the next two times that

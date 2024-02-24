@@ -694,7 +694,7 @@ Splinterspray cast
 
 @The_monster@掷出的一小串@beam@ @at@ @target@。
 %%%%
-Crystal Bolt crystal guardian cast
+Crystallizing Shot crystal guardian cast
 
 @The_monster@射出的水晶箭@at@ @target@。
 %%%%

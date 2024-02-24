@@ -192,6 +192,7 @@ confusion_gaze CONFUSION_GAZE
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 crystal_bolt CRYSTAL_BOLT
+crystallizing_shot CRYSTALLIZING_SHOT
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
 dream_dust DREAM_DUST
