@@ -1730,11 +1730,14 @@ Spriggans (Sp)
 Ghouls (Gh)
   Ghouls are horrible undead creatures that sleep in their graves for years on
   end, only to rise and stalk the living. Slain foes heal these monstrous
-  beings as they feast on the macabre energies released.
+  beings as they feast on the macabre energies released. The energy released by
+  foes slain in melee combat is especially invigorating, granting them a
+  fleeting moment of lucidity that empowers their magic.
 
   They learn most skills slowly, although they make decent unarmed fighters
   with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, and necromantic magic without too many difficulties.
+  use ice, earth, and necromantic magic without too many difficulties. However,
+  their rotten minds give them much less magic to cast with.
 
   Like other undead, ghouls are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
