@@ -978,6 +978,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
         const int lucidity = you.props[LUCIDITY_KEY].get_int();
         you.props[LUCIDITY_KEY] = lucidity - 1;
+
+        const int lucidity_dur = max(BASELINE_DELAY, you.duration[DUR_LUCIDITY]);
+        you.duration[DUR_LUCIDITY] = lucidity_dur;
     }
 
     return cast_result;
