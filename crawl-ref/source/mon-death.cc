@@ -2695,16 +2695,23 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
-    if (gives_player_xp && mons.has_ench(ENCH_GHOUL_DEVOUR)
-        && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC))
+    if (mons.props.exists(GHOUL_DEVOUR_TURN_KEY))
     {
-        const int lucidity_dur = random_range(3, 5);
-        you.set_duration(DUR_LUCIDITY, lucidity_dur);
+        const int applied_turn = mons.props[GHOUL_DEVOUR_TURN_KEY];
 
-        const int lucidity = you.props[LUCIDITY_KEY].get_int();
-        you.props[LUCIDITY_KEY] = min(3, lucidity + 1);
+        if (gives_player_xp
+            && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC)
+            && (applied_turn == you.num_turns
+                || applied_turn == you.num_turns + 1 && you.turn_is_over))
+        {
+            const int lucidity_dur = random_range(3, 5);
+            you.set_duration(DUR_LUCIDITY, lucidity_dur);
 
-        mpr("You feel lucid.");
+            const int lucidity = you.props[LUCIDITY_KEY].get_int();
+            you.props[LUCIDITY_KEY] = min(3, lucidity + 1);
+
+            mpr("You feel lucid.");
+        }
     }
 
     if (!crawl_state.game_is_arena() && leaves_corpse && !in_transit)

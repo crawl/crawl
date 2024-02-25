@@ -221,7 +221,6 @@ enum enchant_type
     ENCH_CHANNEL_SEARING_RAY,
     ENCH_TOUCH_OF_BEOGH,
     ENCH_VENGEANCE_TARGET,
-    ENCH_GHOUL_DEVOUR,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

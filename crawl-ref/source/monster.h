@@ -38,6 +38,9 @@ using std::vector;
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
 #define KIKU_WRETCH_KEY "kiku_wretch"
 
+// the last turn this monster was attacked by a player ghoul
+#define GHOUL_DEVOUR_TURN_KEY "ghoul_devour_turn"
+
 #define DROPPER_MID_KEY "dropper_mid"
 
 #define MAP_KEY "map"

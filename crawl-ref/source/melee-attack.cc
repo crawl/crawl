@@ -287,6 +287,8 @@ bool melee_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
+    ghoul_apply_devour();
+
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
@@ -813,9 +815,7 @@ void melee_attack::ghoul_apply_devour()
     && !is_projected
     && you.has_mutation(MUT_DEVOUR_ON_KILL))
     {
-        //todo make this last only as long as your turn
-        defender->as_monster()->add_ench(mon_enchant(ENCH_GHOUL_DEVOUR,
-            0, &you, you.attack_delay().max() + 10));
+        defender->as_monster()->props[GHOUL_DEVOUR_TURN_KEY] = you.num_turns;
     }
 }
 
@@ -1205,6 +1205,7 @@ bool melee_attack::attack()
     if (shield_blocked)
     {
         handle_phase_blocked();
+        ghoul_apply_devour();
         maybe_riposte();
         if (!attacker->alive())
         {
