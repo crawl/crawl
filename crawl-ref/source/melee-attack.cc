@@ -812,7 +812,6 @@ void melee_attack::ghoul_apply_devour()
     //enable ghouls to become lucid if target dies
     if (attacker->is_player()
     && defender->is_monster()
-    && !is_projected
     && you.has_mutation(MUT_DEVOUR_ON_KILL))
     {
         defender->as_monster()->props[GHOUL_DEVOUR_TURN_KEY] = you.num_turns;
