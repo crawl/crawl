@@ -606,7 +606,7 @@ i-acid WAND_ACID
 # start TAG_MAJOR_VERSION == 34
 i-random_effects WAND_REMOVEME14
 # end TAG_MAJOR_VERSION
-i-disintegration WAND_DISINTEGRATION
+i-mindburst WAND_MINDBURST
 # start TAG_MAJOR_VERSION == 34
 i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12
