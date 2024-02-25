@@ -2207,6 +2207,26 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Apply unrand effects.
     unrand_death_effects(&mons, killer);
 
+    int hp_heal = 0, mp_heal = 0;
+    // Divine and innate health and mana restoration doesn't happen when
+    // killing born-friendly monsters.
+    const bool valid_heal_source = gives_player_xp
+        && !mons_is_object(mons.type);
+    const bool can_divine_heal = valid_heal_source
+        && !player_under_penance()
+        && random2(you.piety) >= piety_breakpoint(0);
+
+    if (valid_heal_source
+    && you.has_mutation(MUT_DEVOUR_ON_KILL)
+    && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC)
+    && (killer == KILL_YOU
+            || killer == KILL_YOU_MISSILE
+            || killer == KILL_YOU_CONF
+            || pet_kill))
+    {
+        hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+    }
+
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.
@@ -2256,22 +2276,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
-            int hp_heal = 0, mp_heal = 0;
-            // Divine and innate health and mana restoration doesn't happen when
-            // killing born-friendly monsters.
-            const bool valid_heal_source = gives_player_xp
-                && !mons_is_object(mons.type);
-            const bool can_divine_heal = valid_heal_source
-                && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0);
-
-            if (valid_heal_source
-                && you.has_mutation(MUT_DEVOUR_ON_KILL)
-                && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC))
-            {
-                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-            }
-
             if (can_divine_heal && have_passive(passive_t::restore_hp))
             {
                 hp_heal += (1 + mons.get_experience_level()) / 2
@@ -2286,19 +2290,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             if (can_divine_heal && have_passive(passive_t::mp_on_kill))
                 mp_heal += 1 + random2(mons.get_experience_level() / 2);
-
-            if (hp_heal && you.hp < you.hp_max
-                && !you.duration[DUR_DEATHS_DOOR])
-            {
-                canned_msg(MSG_GAIN_HEALTH);
-                inc_hp(hp_heal);
-            }
-
-            if (mp_heal && you.magic_points < you.max_magic_points)
-            {
-                canned_msg(MSG_GAIN_MAGIC);
-                inc_mp(mp_heal);
-            }
 
             if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
@@ -2460,6 +2451,19 @@ item_def* monster_die(monster& mons, killer_type killer,
         default:
             drop_items = false;
             break;
+    }
+
+    if (hp_heal && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR])
+    {
+        canned_msg(MSG_GAIN_HEALTH);
+        inc_hp(hp_heal);
+    }
+
+    if (mp_heal && you.magic_points < you.max_magic_points)
+    {
+        canned_msg(MSG_GAIN_MAGIC);
+        inc_mp(mp_heal);
     }
 
     // Make sure Boris has a foe to address.
