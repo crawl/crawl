@@ -17,6 +17,7 @@
 
 #include "ability.h"
 #include "abyss.h"
+#include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
@@ -802,8 +803,8 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     if (species::bans_eq(you.species, eq))
         return false;
 
-    if (you.has_mutation(MUT_NO_RINGS)
-        && (eq == EQ_RIGHT_RING || eq == EQ_LEFT_RING))
+    if (you.has_mutation(MUT_NO_JEWELRY)
+        && (eq == EQ_RINGS || eq == EQ_AMULET))
     {
         return false;
     }
@@ -840,6 +841,9 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET);
+
+    case EQ_GIZMO:
+        return you.species == SP_COGLIN;
 
     default:
         break;
@@ -1049,6 +1053,14 @@ int player::wearing_ego(equipment_type slot, int special) const
         }
         if ((item = offhand_weapon()) && get_weapon_brand(*item) == special)
             ++ret;
+        break;
+
+    case EQ_GIZMO:
+        if ((item = slot_item(EQ_GIZMO))
+            && item->brand == special)
+        {
+            ++ret;
+        }
         break;
 
     case EQ_LEFT_RING:
@@ -1307,6 +1319,9 @@ int player_mp_regen()
     // Rampage healing grants a variable regen boost while active.
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
+
+    if (you.rev_percent() >= 66 && you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+        regen_amount += 80;
 
     if (have_passive(passive_t::jelly_regen))
     {
@@ -2420,6 +2435,9 @@ static void _recharge_xp_evokers(int exp)
     const int skill_denom = 3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
     const int xp_factor = max(xp_by_xl / 5, 100) / skill_denom;
 
+    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER))
+        exp = exp * 130 / 100;
+
     for (int i = 0; i < NUM_MISCELLANY; ++i)
     {
         item_def* evoker = evokers[i];
@@ -3035,6 +3053,29 @@ void level_change(bool skip_attribute_increase)
                     }
                 }
 
+                break;
+            }
+
+            case SP_COGLIN:
+            {
+                switch (you.experience_level)
+                {
+                    case 3:
+                    case 7:
+                    case 11:
+                        coglin_announce_gizmo_name();
+                        break;
+
+                    case COGLIN_GIZMO_XL:
+                    {
+                        mpr("You feel a burst of inspiration! You are finally "
+                            "ready to make a one-of-a-kind gizmo!");
+                        mprf("(press <w>%c</w> on the <w>%s</w>bility menu to create your gizmo)",
+                                get_talent(ABIL_INVENT_GIZMO, false).hotkey,
+                                command_to_string(CMD_USE_ABILITY).c_str());
+                    }
+                    break;
+                }
                 break;
             }
 
@@ -6448,6 +6489,9 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
             AC += _meek_bonus() * scale;
     }
 
+    if (rev_percent() >= 66 && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
+        AC += 500;
+
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
         AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;
 
@@ -8344,6 +8388,9 @@ void player::rev_down(int dur)
     // Drop from 100% to 0 in about 12 normal turns (120 aut).
     const int perc_lost = div_rand_round(dur * 5, 6);
     you.props[REV_PERCENT_KEY] = max(0, you.rev_percent() - perc_lost);
+
+    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
+        you.redraw_armour_class = true;
 }
 
 void player::rev_up(int dur)
@@ -8354,6 +8401,9 @@ void player::rev_up(int dur)
     // Fuzz it between 4/2 and 6/2 (ie 2x to 3x) to avoid tracking.
     const int perc_gained = random_range(dur * 2, dur * 3);
     you.props[REV_PERCENT_KEY] = min(100, you.rev_percent() + perc_gained);
+
+    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
+        you.redraw_armour_class = true;
 }
 
 void player_open_door(coord_def doorpos)

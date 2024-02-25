@@ -1962,6 +1962,11 @@ int items(bool allow_uniques,
         _generate_misc_item(item, force_type, item_level);
         break;
 
+    case OBJ_GIZMOS:
+        item.base_type = OBJ_GIZMOS;
+        item.sub_type = 0;
+        break;
+
     // that is, everything turns to gold if not enumerated above, so ... {dlb}
     default:
         item.base_type = OBJ_GOLD;

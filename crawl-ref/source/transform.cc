@@ -1212,7 +1212,7 @@ _init_equipment_removal(transformation form)
         const item_def *pitem = you.slot_item(eq, true);
 
         if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
-                      || (i != EQ_RING_AMULET
+                      || (i != EQ_RING_AMULET && i != EQ_GIZMO
                           && !get_form(form)->can_wear_item(*pitem))))
         {
             result.insert(eq);

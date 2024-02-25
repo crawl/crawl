@@ -1611,3 +1611,38 @@ void attack::maybe_trigger_fugue_wail(const coord_def pos)
         do_fugue_wail(pos);
     }
 }
+
+void attack::maybe_trigger_autodazzler()
+{
+    if (defender->is_player() && you.wearing_ego(EQ_GIZMO, SPGIZMO_AUTODAZZLE)
+        && one_chance_in(20))
+    {
+        bolt proj;
+        zappy(ZAP_AUTODAZZLE, you.get_experience_level(), false, proj);
+
+        proj.target = attacker->pos();
+        proj.source = you.pos();
+        proj.range = LOS_RADIUS;
+        proj.source_id = MID_PLAYER;
+        proj.draw_delay = 5;
+        proj.attitude = ATT_FRIENDLY;
+        proj.is_tracer = true;
+        proj.is_targeting = true;
+
+        // To suppress prompts for aiming at allies. We'll never fire in that
+        // situation anyway.
+        proj.thrower = KILL_MON_MISSILE;
+
+        // Make sure the beam path is clear
+        proj.fire();
+        if (proj.friend_info.count == 0)
+        {
+            mpr("Your autodazzler retaliates!");
+
+            proj.thrower = KILL_YOU_MISSILE;
+            proj.is_tracer = false;
+            proj.is_targeting = false;
+            proj.fire();
+        }
+    }
+}

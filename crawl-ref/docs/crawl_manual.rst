@@ -1791,13 +1791,14 @@ Coglins (Co)
    charm-wrought steel. Their exoskeletons, capable of wielding weapons
    independently in each arm, are begun with hand-me-downs from their sprawling
    families. By the time they come of age, they are inseparable from their
-   creations.
+   creations, and experienced individuals often further customize themselves
+   with uniquely powerful additions.
 
    Haphazard and jerry-rigged, Coglin exoskeletons lack the flexibility of
    natural bodies. Though their arms can fly in a whir of destruction, it
    takes quite a bit of swinging to rev them up to that speed. Further, with
-   their hands swallowed in the controls of their machine, they cannot wear
-   rings - the interference of multiple magical fields would be catastrophic!
+   their bodies swallowed in the controls of their machine, they cannot wear
+   jewelry - the interference of multiple magical fields would be catastrophic!
 
    Even so, a true Coglin would never criticise their creation. They believe
    that spirits of steel and sandalwood come to rest within every thing that

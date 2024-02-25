@@ -852,3 +852,12 @@ enum talisman_type
     TALISMAN_FLUX,
     NUM_TALISMANS,
 };
+
+enum special_gizmo_type
+{
+    SPGIZMO_NORMAL,
+    SPGIZMO_MANAREV,
+    SPGIZMO_GADGETEER,
+    SPGIZMO_PARRYREV,
+    SPGIZMO_AUTODAZZLE,
+};

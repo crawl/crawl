@@ -28,6 +28,7 @@ enum equipment_type
     // Finger amulet provides an extra ring slot
     EQ_RING_AMULET,
     EQ_LAST_JEWELLERY = EQ_RING_AMULET,
+    EQ_GIZMO,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,

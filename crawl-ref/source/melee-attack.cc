@@ -314,6 +314,8 @@ bool melee_attack::handle_phase_dodged()
                 do_starlight();
         }
 
+        maybe_trigger_autodazzler();
+
         maybe_riposte();
         // Retaliations can kill!
         if (!attacker->alive())
@@ -406,6 +408,26 @@ void melee_attack::do_ooze_engulf()
         mprf("You engulf %s in ooze!", defender->name(DESC_THE).c_str());
         // Smothers sticky flame.
         defender->expose_to_element(BEAM_WATER, 0);
+    }
+}
+
+void melee_attack::try_parry_disarm()
+{
+    if (attacker->is_player()
+        && defender->is_monster()
+        && defender->alive()
+        && you.rev_percent() > 66
+        && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV)
+        && one_chance_in(50 + defender->get_experience_level() * 2
+                         - you.get_experience_level()))
+    {
+        item_def *wpn = defender->as_monster()->disarm();
+        if (wpn)
+        {
+            mprf("You knock the %s out of %s grip!",
+                wpn->name(DESC_THE).c_str(),
+                defender->name(DESC_ITS).c_str());
+        }
     }
 }
 
@@ -589,6 +611,7 @@ bool melee_attack::handle_phase_hit()
     {
         apply_black_mark_effects();
         do_ooze_engulf();
+        try_parry_disarm();
     }
 
     if (attacker->is_player())

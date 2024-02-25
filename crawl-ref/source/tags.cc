@@ -4591,6 +4591,16 @@ static void _tag_read_you_items(reader &th)
     if (you.species == SP_FORMICID)
         remove_one_equip(EQ_HELMET, false, true);
 
+    if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELRY)
+    {
+        if (you.has_mutation(MUT_NO_JEWELRY))
+        {
+            remove_one_equip(EQ_AMULET, false, true);
+            remove_one_equip(EQ_RIGHT_RING, false, true);
+            remove_one_equip(EQ_LEFT_RING, false, true);
+        }
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
     {
         // merge scroll seeds

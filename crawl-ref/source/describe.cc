@@ -570,6 +570,8 @@ static vector<string> _randart_propnames(const item_def& item,
             ego = weapon_brand_name(item, true);
         else if (item.base_type == OBJ_ARMOUR)
             ego = armour_ego_name(item, true);
+        else if (item.base_type == OBJ_GIZMOS)
+            ego = gizmo_effect_name(item.brand);
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
@@ -2589,6 +2591,46 @@ static string _describe_item_curse(const item_def &item)
     return desc.str();
 }
 
+static string _describe_gizmo(const item_def &item)
+{
+    string ret = "\n\n";
+
+    if (item.brand)
+    {
+        string name = string(gizmo_effect_name(item.brand)) + ":";
+        ret += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 2, name.c_str());
+        switch (item.brand)
+        {
+            case SPGIZMO_MANAREV:
+                ret += "Your magic regeneration is greatly increased while "
+                       "fully Revved.\n";
+                break;
+
+            case SPGIZMO_GADGETEER:
+                ret += "Your evocable items recharge 30% faster and wands have "
+                       "a 30% chance to not spend a charge.\n";
+                break;
+
+            case SPGIZMO_PARRYREV:
+                ret += "While fully Revved, you have +5 AC and your attacks may "
+                       "knock an enemy's weapon away.\n";
+                break;
+
+            case SPGIZMO_AUTODAZZLE:
+                ret += "It sometimes fires a blinding ray at enemies whose attacks "
+                       "you dodge.\n";
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    ret += _artefact_descrip(item);
+
+    return ret;
+}
+
 bool is_dumpable_artefact(const item_def &item)
 {
     return is_known_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES);
@@ -2739,6 +2781,12 @@ string get_item_description(const item_def &item,
                  && item.base_type == OBJ_JEWELLERY)
         {
             description << "It is an ancient artefact.";
+            need_base_desc = false;
+        }
+        else if (item.base_type == OBJ_GIZMOS)
+        {
+            description << "It is a fabulous contraption, custom-made by your "
+                           "own hands.";
             need_base_desc = false;
         }
 
@@ -2946,6 +2994,10 @@ string get_item_description(const item_def &item,
             description << desc;
         break;
 
+    case OBJ_GIZMOS:
+        description << _describe_gizmo(item);
+        break;
+
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
@@ -2991,7 +3043,8 @@ string get_item_description(const item_def &item,
                 }
             }
             // Randart jewellery has already displayed this line.
-            else if (item.base_type != OBJ_JEWELLERY
+            // And gizmos really shouldn't (you just made them!)
+            else if (item.base_type != OBJ_JEWELLERY && item.base_type != OBJ_GIZMOS
                      || (item_type_known(item) && is_unrandom_artefact(item)))
             {
                 description << "\nIt is an ancient artefact.";

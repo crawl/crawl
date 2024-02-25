@@ -227,8 +227,11 @@ void zap_wand(int slot, dist *_target)
     if (mp_cost)
         finalize_mp_cost();
 
-    // Take off a charge.
-    wand.charges--;
+    // Take off a charge (unless gadgeteer procs)
+    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER) && x_chance_in_y(3, 10))
+        mpr("You conserve a charge of your wand.");
+    else
+        wand.charges--;
 
     if (wand.charges == 0)
     {
