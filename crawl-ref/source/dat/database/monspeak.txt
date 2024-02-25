@@ -7555,6 +7555,13 @@ VISUAL:@The_monster@ flickers into the darkness.
 
 VISUAL:@The_monster@ grins at you slowly.
 %%%%
+################## Thermic dynamo ##########################
+thermic dynamo
+
+VISUAL:@The_monster@ revs up and whimsically whirls.
+
+VISUAL:@The_monster@ hisses and glimmers.
+%%%%
 ################## Tormentor ###############################
 # A cruel demon
 tormentor

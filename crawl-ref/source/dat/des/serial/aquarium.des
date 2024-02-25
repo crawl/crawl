@@ -96,13 +96,12 @@ function init_aquarium(e)
   e.kprop('! = no_jiyva')
 
   if you.in_branch("Elf") then
-    -- if we get a diamond obelisk, the winds will kill
-    --  everything else except the air elementals
+    -- if we get a diamond obelisk, the winds will kill everything else
     e.subst('w = w:' .. (nothing_weight + 64) .. ' _:1')
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
                  w:50 generate_awake ball lightning /
-                 w:5  generate_awake water elemental /
+                 w:5  generate_awake thermic dynamo /
                  w:4  generate_awake air elemental]] )
     -- I tried using [[ ]] here, but Crawl could not find the
     --  mons_diamond_obelisk tile then. The problem went away

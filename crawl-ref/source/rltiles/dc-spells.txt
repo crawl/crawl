@@ -191,7 +191,6 @@ concentrate_venom CONCENTRATE_VENOM
 confusion_gaze CONFUSION_GAZE
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
-crystal_bolt CRYSTAL_BOLT
 crystallizing_shot CRYSTALLIZING_SHOT
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
@@ -227,6 +226,8 @@ plane_rend PLANE_REND
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
+rebounding_blaze REBOUNDING_BLAZE
+rebounding_chill REBOUNDING_CHILL
 roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK

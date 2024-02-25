@@ -2529,14 +2529,25 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CRYSTAL_BOLT, "Crystal Bolt",
-    spschool::conjuration | spschool::fire | spschool::ice,
+    SPELL_REBOUNDING_BLAZE, "Rebounding Blaze",
+    spschool::conjuration | spschool::fire,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
-    6,
+    7,
     200,
     6, 6,
     0,
-    TILEG_CRYSTAL_BOLT,
+    TILEG_REBOUNDING_BLAZE,
+},
+
+{
+    SPELL_REBOUNDING_CHILL, "Rebounding Chill",
+    spschool::conjuration | spschool::ice,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    7,
+    200,
+    6, 6,
+    0,
+    TILEG_REBOUNDING_CHILL,
 },
 
 {

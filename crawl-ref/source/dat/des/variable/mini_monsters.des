@@ -3815,24 +3815,24 @@ ENDMAP
 NAME:    minmay_crystal_box
 TAGS:    no_monster_gen patrolling transparent no_descent
 DEPTH:   D:12-, Depths, !Depths:$
-MONS:    crystal guardian, orange crystal statue
+MONS:    crystal guardian, thermic dynamo, orange crystal statue
 SUBST:   . = .:80 %$*|
 KPROP:   .012 = no_tele_into
-: if you.absdepth() > 16 then
-SUBST:   0 = 1
+: if you.absdepth() < 16 then
+SUBST:   1 = 0
 : end
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
-Wbb1.......0bW
+Wbb2.......1bW
 Wbb.........bW
 Wbb.........bW
 Wnn.........bW
-WW=....2....bW
+WW=....3.1..bW
 Wnn.........bW
 Wbb.........bW
 Wbb.........bW
-Wbb1.......0bW
+Wbb2.......1bW
 WbbbbbbbbbbbbW
 WWWWWWWWWWWWWW
 ENDMAP
@@ -4055,8 +4055,11 @@ ENDMAP
 NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
-MONS:   fire bat, lava snake, fire elemental, hell hound
+MONS:   fire bat, lava snake, fire elemental, hell hound, thermic dynamo
 NSUBST: ' = 4:' / *:.
+: if you.depth() > 11 then
+NSUBST: 1 = 1:335 / *:1
+: end
 MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
             pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
 KPROP:  l = no_cloud_gen
@@ -9015,16 +9018,16 @@ MONS:   deep elf pyromancer / efreet / fire crab w:5 / fire dragon w:5
 MONS:   white ugly thing / freezing wraith / ice dragon w:5
 MONS:   catoblepas / boulder beetle / earth elemental
 MONS:   raiju / tengu conjurer / air elemental
-MONS:   white very ugly thing / stone giant / shock serpent \
-        / deep elf zephyrmancer
+MONS:   white very ugly thing / stone giant / thermic dynamo / \
+        deep elf zephyrmancer
 MONS:   tengu reaver ; elemental staff \
             . ring mail good_item | scale mail good_item . buckler good_item
 SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4..., 5 = 5.
 :     end
 : elseif you.in_branch("Elf") then
-MONS:   fire elemental / deep elf pyromancer / fire dragon w:5
-MONS:   water elemental / ice dragon w:5
-MONS:   earth elemental / stone giant w:5
+MONS:   fire elemental / deep elf pyromancer / thermic dynamo w:5
+MONS:   water elemental / thermic dynamo w:5
+MONS:   earth elemental / deep troll earth mage w:5
 MONS:   air elemental / deep elf zephyrmancer
 MONS:   deep elf elementalist w:40 / fire giant / frost giant / iron dragon \
         / storm dragon
@@ -10158,7 +10161,7 @@ MAP
 ENDMAP
 
 NAME:  minivault_28
-TAGS:  allow_dup ruin_abyss misc_elf_vault transparent
+TAGS:  allow_dup ruin_abyss transparent
 DEPTH: D:9-, Elf, Abyss
 MAP
 ...........
@@ -10176,8 +10179,8 @@ ENDMAP
 
 # These next three are former food vaults
 NAME:   grunt_livestock
-DEPTH:  D:7-14
 TAGS:   extra no_monster_gen no_trap_gen patrolling
+DEPTH:  D:7-14
 MONS:   human ; animal skin . hand axe
 {{
   local hog_weight = 14 - you.absdepth()

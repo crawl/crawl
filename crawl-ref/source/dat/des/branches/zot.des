@@ -2710,22 +2710,17 @@ ENDMAP
 
 ######################################
 # This is weird, but in Zot weirdness fits. (nrook)
-NAME: nrook_zot_tub
-DEPTH: Zot
-KFEAT: X = W
+NAME:  nrook_zot_tub
+DEPTH:  Zot
+KFEAT:  X = W
 MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
-KMONS: M = patrolling red draconian att:neutral / \
-      patrolling red draconian scorcher att:neutral w:2 / \
-      patrolling red draconian stormcaller att:neutral w:2 / \
-      patrolling red draconian shifter att:neutral w:2 / \
-      patrolling red draconian annihilator att:neutral w:2 / \
-      patrolling red draconian knight att:neutral w:2 / \
-      patrolling red draconian monk att:neutral w:2
-KFEAT: M = W
-KMONS: F = orb of fire att:neutral
-KFEAT: F = W
+KMONS:  M = patrolling red draconian att:neutral / \
+            patrolling nonbase red draconian att:neutral
+KFEAT:  M = W
+KMONS:  F = orb of fire att:neutral
+KFEAT:  F = W
 MAP
      @
 xxxxx+xxxxx
@@ -2758,7 +2753,7 @@ COLOUR:  G = electricity
 TILE:    G = storm_conduit
 :   set_feature_name("metal_statue", "storm conduit")
 : elseif crawl.coinflip() then
-MONS:    frost giant, ice dragon
+MONS:    frost giant, ice dragon / thermic dynamo w:3
 KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
@@ -2773,7 +2768,7 @@ COLOUR:  G = ice
 TILE:    G = icy_conduit
 :   set_feature_name("metal_statue", "icy conduit")
 : else
-MONS:    fire giant, fire dragon
+MONS:    fire giant, fire dragon / thermic dynamo w:3
 KMONS:   F = balrug
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
@@ -3776,7 +3771,7 @@ ORIENT:  northwest
 WEIGHT:  5
 # Cheap plastic imitations, mostly. Well, maybe not cheap...
 MONS:    hell knight w:6 / very ugly thing / caustic shrike zombie / \
-         lorocyproca / crystal guardian / quicksilver ooze / \
+         lorocyproca / thermic dynamo / quicksilver ooze / \
          tentacled starspawn / spark wasp / glowing shapeshifter
 MONS:    guardian serpent / deep elf annihilator / balrug / \
          deep elf high priest / will-o-the-wisp / acid blob
@@ -3862,7 +3857,7 @@ NAME:   infiniplex_zot_generator
 TAGS:   no_pool_fixup no_item_gen no_monster_gen no_trap_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: south
-MONS:   shock serpent w:14 / sixfirhy / air elemental w:6
+MONS:   shock serpent w:20 / air elemental w:6 / thermic dynamo w:2
 MONS:   black draconian ; cloak . mundane staff of air
 MONS:   war gargoyle / dancing weapon ; scimitar good_item / spark wasp w:5
 MONS:   black draconian stormcaller / black draconian shifter / storm dragon

@@ -900,13 +900,6 @@ void bolt::fake_flavour()
         flavour = static_cast<beam_type>(random_range(BEAM_FIRST_RANDOM, BEAM_LAST_RANDOM));
     else if (real_flavour == BEAM_CHAOS)
         flavour = _chaos_beam_flavour(this);
-    else if (real_flavour == BEAM_CRYSTAL && flavour == BEAM_CRYSTAL)
-    {
-        flavour = random_choose(BEAM_FIRE, BEAM_COLD);
-        hit_verb = (flavour == BEAM_FIRE) ? "burns" :
-                   (flavour == BEAM_COLD) ? "freezes"
-                                          : "bugs";
-    }
 }
 
 void bolt::digging_wall_effect()
@@ -2324,7 +2317,8 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return true;
     }
 
-    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL)
+    if ((origin_spell == SPELL_REBOUNDING_BLAZE ||
+        origin_spell == SPELL_REBOUNDING_CHILL)
         && feat_is_solid(feat)
         && !feat_is_tree(feat))
     {
@@ -2675,6 +2669,7 @@ bool bolt::can_burn_trees() const
     {
     case SPELL_LIGHTNING_BOLT:
     case SPELL_BOLT_OF_FIRE:
+    case SPELL_REBOUNDING_BLAZE:
     case SPELL_BOLT_OF_MAGMA:
     case SPELL_FIREBALL:
     case SPELL_FIRE_STORM:
@@ -2727,9 +2722,8 @@ void bolt::affect_place_clouds()
     // Is there already a cloud here?
     if (cloud_struct* cloud = cloud_at(p))
     {
-        const bool hot_beam = flavour == BEAM_FIRE || flavour == BEAM_LAVA;
         // fire cancelling cold & vice versa
-        if ((cloud->type == CLOUD_COLD && hot_beam)
+        if ((cloud->type == CLOUD_COLD && is_fiery())
             || (cloud->type == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
@@ -2740,7 +2734,7 @@ void bolt::affect_place_clouds()
             return;
         }
         // blastmote explosions
-        if (cloud->type == CLOUD_BLASTMOTES && hot_beam)
+        if (cloud->type == CLOUD_BLASTMOTES && is_fiery())
             explode_blastmotes_at(p);
         return;
     }
@@ -6503,8 +6497,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // FIXME: The entire flavour/real_flavour thing needs some
     // rewriting!
     if (real_flavour == BEAM_CHAOS
-        || real_flavour == BEAM_RANDOM
-        || real_flavour == BEAM_CRYSTAL)
+        || real_flavour == BEAM_RANDOM)
     {
         flavour = real_flavour;
     }
@@ -6993,8 +6986,7 @@ string bolt::get_short_name() const
     }
 
     if (real_flavour == BEAM_RANDOM
-        || real_flavour == BEAM_CHAOS
-        || real_flavour == BEAM_CRYSTAL)
+        || real_flavour == BEAM_CHAOS)
     {
         return _beam_type_name(real_flavour);
     }
@@ -7095,7 +7087,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_VIRULENCE:             return "virulence";
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
-    case BEAM_CRYSTAL:               return "crystal bolt";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";

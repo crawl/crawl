@@ -2176,7 +2176,7 @@ ENDMAP
 NAME:       wizlab_maxwell
 TAGS:       no_rotate no_pool_fixup
 MONS:       peacekeeper / gargoyle / earth elemental w:5
-MONS:       molten gargoyle / salamander / fire elemental w:5
+MONS:       molten gargoyle / thermic dynamo / fire elemental w:5
 MONS:       salamander tyrant / fire giant ; great mace ego:flaming
 MONS:       war gargoyle / crystal guardian
 MONS:       ettin / ironbound preserver ; great mace /\
@@ -2203,7 +2203,7 @@ NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
 NSUBST:     e = 3:e / *=dff
 TILE:       v = dngn_metal_wall_cyan
 :           set_random_mon_list(
-:               "gargoyle / earth elemental / molten gargoyle / " ..
+:               "earth elemental / molten gargoyle / thermic dynamo / " ..
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)

@@ -390,12 +390,6 @@ Calls forth freezing cold from the walls. Any enemies of the caster standing
 next to the walls will be frozen and will find their movements slowed. Cold
 resistance will reduce damage, but not prevent the freezing effect.
 %%%%
-Crystal Bolt spell
-
-Projects a penetrating projectile with peculiar magical properties. It is
-randomly imbued with either fire or ice, and additionally will reflect from
-walls of any material due to the crystal embedded in the shot.
-%%%%
 Crystallizing Shot spell
 
 Hurls a large and heavy shard of crystal. It may render a creature's body
@@ -1184,6 +1178,16 @@ next to or above lava will be burned.
 Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
+%%%%
+Rebounding Blaze spell
+
+Fires a penetrating bolt of energetic flames that can bounce off walls to hit
+targets twice.
+%%%%
+Rebounding Chill spell
+
+Fires a penetrating bolt of energetic cold that can bounce off walls to hit
+targets twice.
 %%%%
 Regenerate Other spell
 

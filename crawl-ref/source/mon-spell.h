@@ -617,6 +617,13 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('v') Vortices.
+    {  MST_THERMIC_DYNAMO,
+      {
+       { SPELL_REBOUNDING_BLAZE, 32, MON_SPELL_MAGICAL },
+       { SPELL_REBOUNDING_CHILL, 32, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_WILL_O_THE_WISP,
       {
        { SPELL_MARSHLIGHT, 50, MON_SPELL_MAGICAL },

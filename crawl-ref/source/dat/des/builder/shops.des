@@ -1917,7 +1917,7 @@ MONS:  nagaraja / naga sharpshooter, naga ritualist / salamander mystic
 MONS:  naga / salamander / mana viper w:5
 : elseif you.in_branch("Elf") then
 MONS:  deep elf high priest / deep elf sorcerer / \
-       deep elf elementalist / crystal guardian
+       deep elf elementalist / thermic dynamo
 MONS:  deep elf knight / deep elf archer w:5
 MONS:  deep elf zephyrmancer / deep elf pyromancer
 : elseif you.in_branch("Vaults") then

@@ -308,6 +308,10 @@ fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
 fire_vortex4
+thermic_dynamo1 MONS_THERMIC_DYNAMO /*'v'*/
+thermic_dynamo2
+thermic_dynamo3
+thermic_dynamo4
 spatial_vortex1 MONS_SPATIAL_VORTEX /*'v'*/
 spatial_vortex2
 spatial_vortex3

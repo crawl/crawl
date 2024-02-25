@@ -699,7 +699,7 @@ ENDMAP
 ##############################################################################
 # The Constructs Gauntlet (by Mu, modernized by HangedMan)
 #
-# Each room is progressively more challenging; both the golems, and their
+# Each room is progressively more challenging; both the constructs, and their
 # creators.
 NAME:   constructs_gauntlet_mu_hangedman
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_descent
@@ -714,7 +714,7 @@ MARKER: z = lua:fog_machine { \
                 size = 4, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" }
 MONS:   gargoyle, earth elemental, air elemental
-MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
+MONS:   thermic dynamo, crystal guardian, war gargoyle
 KMONS:  A = occultist
 KMONS:  B = deep elf pyromancer
 KMONS:  C = deep elf zephyrmancer
@@ -1234,7 +1234,8 @@ MONS:   statue hd:12 spells:orb_of_destruction.62.magical \
         tile:mons_statue_mage col:vehumet name:conjurer n_adj
 : if you.in_branch("D") then
 MONS:   tengu conjurer / deep elf pyromancer / occultist w:5 / arcanist w:5
-MONS:   ogre mage / orc sorcerer / deep elf zephyrmancer, salamander tyrant
+MONS:   ogre mage / orc sorcerer / deep elf zephyrmancer
+MONS:   salamander mystic / thermic dynamo w:5
 KMONS:  5 = nikola / jorgrun, deep elf annihilator
 SUBST:  1 = 2GG, 4 = 4.
 : else
@@ -1356,7 +1357,7 @@ SHUFFLE: MN / NM / NN, OP / PO / PP, QR / RQ / RR
 SUBST:   ACEGIKMOQ = b
 SUBST:   BDFHJLNPR = .
 {{
-  -- This is a list of monsters in D that have attacks that can bounce off of
+  -- This was a list of monsters in D that have attacks that can bounce off of
   -- crystal walls (fire, cold, lightning), weighted by their normal dungeon
   -- weight functions!
   local function peak(depth, low, high, chance)
@@ -1398,7 +1399,7 @@ SUBST:   BDFHJLNPR = .
     mons = add_mons(mons, "deep elf pyromancer / deep elf zephyrmancer", flat(depth, 26, 28, 6))
     mons = add_mons(mons, "golden dragon", peak(depth, 29, 33, 8))
     mons = add_mons(mons, "titan", peak(depth, 28, 34, 25))
-    mons = add_mons(mons, "deep elf annihilator", peak(depth, 30, 31, 4))
+    mons = add_mons(mons, "thermic dynamo", peak(depth, 28, 31, 25))
     if mons == nil then return "nothing" end
     return mons
   end

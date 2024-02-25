@@ -2563,7 +2563,7 @@ KMONS:  2 = deep elf pyromancer / efreet
 SUBST:  1 = 1..., * = *...
 :    else
 KMONS:  1 = hell hound / lindwurm / deep elf pyromancer / efreet
-KMONS:  2 = fire dragon / salamander tyrant / fire giant
+KMONS:  2 = fire dragon / fire giant / thermic dynamo
 SUBST:  1 = 1., * = *..
 :    end
 # Depths
@@ -3100,8 +3100,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight \
-         / deep elf archer
+KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / \
+              deep elf archer / thermic dynamo w:4
 MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
@@ -3738,19 +3738,15 @@ ENDMAP
 
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling no_descent
-DEPTH:   Depths, !Depths:$
+DEPTH:   D:12-, Depths, !Depths:$
 ORIENT:  float
-MONS:    necromancer ; \
-         staff of fire w:15 | quarterstaff ego:flaming w:15 . \
-         robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
-         robe ego:resistance w:1
-MONS:    necromancer ; \
-         staff of cold ident:type | quarterstaff ego:freezing ident:type . \
-         robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
-         robe ego:resistance w:1
+MONS:    arcanist ; staff of fire w:15 | quarterstaff ego:flaming w:15 . \
+                    robe ego:resistance
+MONS:    occultist ; staff of cold ident:type | quarterstaff ego:freezing . \
+                     robe ego:resistance
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, hell hog, deep elf pyromancer / deep elf zephyrmancer
+MONS:    ettin simulacrum, hell hog, thermic dynamo
 KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
@@ -3762,6 +3758,10 @@ MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 6, pow_max = 6, delay = 200, \
              size_min = 2, size_max = 2, walk_dist = 0, start_clouds = 1 }
+:  if you.in_branch("D") then
+SUBST:   34 = 7
+NSUBST:  5 = 1:5 / 1:5. / *:., 6 = 1:6 / 1:6. / *:.
+:  end
 :  if you.depth() == dgn.br_depth(you.branch()) then
 SUBST:   [(< = '
 : end
@@ -4391,11 +4391,11 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup no_descent
 DEPTH:   D:12-, Depths
 ORIENT:  float
 : if you.in_branch("Depths") then
-MONS:    smoke demon / sun demon, balrug / w:2 nothing
-MONS:    ynoxinul, blizzard demon / w:2 nothing
+MONS:    smoke demon / sun demon, balrug / nothing w:2
+MONS:    ynoxinul, blizzard demon / nothing w:2
 : else
-MONS:    red devil ; trident, sun demon / w:5 smoke demon / w:3 nothing
-MONS:    ice devil, ynoxinul / w:2 nothing
+MONS:    red devil ; trident, sun demon / smoke demon w:5 / nothing w:2
+MONS:    ice devil, thermic dynamo / ynoxinul w:5 / nothing w:2
 : end
 KFEAT:   yz = b
 SUBST:   y : yccc
@@ -6495,7 +6495,8 @@ NSUBST: 3 = 2:1
 :   else
 MONS:   deep elf pyromancer / deep elf archer, deep elf knight
 MONS:   deep elf zephyrmancer, gargoyle
-MONS:   fire elemental, water elemental, glowing shapeshifter
+MONS:   fire elemental, water elemental
+MONS:   glowing shapeshifter / thermic dynamo w:2
 :   end
 SUBST:  z = c
 NSUBST: 4 = 1:. / 1:4 / * = 4., 56 = 3:., ? = 2:. / 3 = 23.. / * : 23

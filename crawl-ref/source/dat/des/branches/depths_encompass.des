@@ -32,7 +32,7 @@
         e.mons("w:20 obsidian statue / w:1 orange crystal statue")
         e.mons("glowing shapeshifter")
         e.mons("very ugly thing / ugly thing w:5")
-        e.mons("ball lightning")
+        e.mons("thermic dynamo")
         e.mons("crystal guardian")
         e.kmons("8 = dancing weapon")
         e.kmons("9 = war gargoyle")
@@ -41,7 +41,6 @@
         e.kmons("e = earth elemental")
         e.kmons("f = fire elemental")
         e.kmons("a = air elemental")
-        e.kmons("o = iron golem")
         e.kmons("r = war gargoyle / molten gargoyle / nothing w:20")
         e.kmons("t = glowing orange brain / wind drake w:5")
         e.kfeat("A = stone_arch")
@@ -64,12 +63,12 @@
         e.subst("s = ..$*p|")
         e.subst("u = ..$||")
         e.subst("3 = 3.")
-        e.subst("5 = 5 .:4")
+        e.subst("5 = 5 .:6")
         e.subst("g = E:30 3 .:30")
         e.subst("h = a:30 3 .:30")
         e.subst("K = r:20 f e:40 .:70")
         e.subst("iL = e.")
-        e.subst("jM = 79 o:1 .:21")
+        e.subst("jM = 79 .:21")
         e.subst("m = 4:15 .:25")
         e.subst("N = ef..")
         e.subst("n = 0 8:5 .:25")
@@ -83,7 +82,7 @@
         e.tile("G = depths_column")
         e.lfloortile("floor_depthstone")
         e.set_random_mon_list(
-            "glowing shapeshifter w:100 / air elemental / water elemental / " ..
+            "glowing shapeshifter w:100 / air elemental / thermic dynamo / " ..
             "earth elemental / crystal guardian / molten gargoyle / " ..
             "war gargoyle / dancing weapon / very ugly thing band")
     end
