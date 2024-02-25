@@ -59,6 +59,12 @@ Will++ status
 
 Your willpower is much stronger, protecting against many magical effects.
 %%%%
+Regen Will++ status
+
+Trog's Hand is simultaneously making you regenerate health at an unnaturally
+fast rate and strengthening your willpower to protect you against many magical
+effects.
+%%%%
 Berserk status
 
 You are hasted, deal increased damage in combat, and have increased health, but
