@@ -3638,7 +3638,7 @@ void melee_attack::do_foul_flame()
     {
         const int mut = you.get_mutation_level(MUT_FOUL_SHADOW);
 
-        if (damage_done > 0 && x_chance_in_y(mut * 3 - 1, 20))
+        if (damage_done > 0 && x_chance_in_y(mut * 3, 20))
         {
             const int raw_dmg = random_range(mut,
                 div_rand_round(you.experience_level * 3, 4) + mut * 4);
