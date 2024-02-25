@@ -702,9 +702,9 @@ static const duration_def duration_data[] =
     { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
     { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},
     { DUR_BEOGH_DIVINE_CHALLENGE, WHITE, "Challenge", "", "apostle challenge",
-      "A servant of Beogh has come to challenge you", D_NO_FLAGS},
+      "A servant of Beogh has come to challenge you.", D_NO_FLAGS},
     { DUR_BEOGH_SEEKING_VENGEANCE, LIGHTRED, "Vengeance", "", "vengeance",
-      "You are seeking vengeance for the death of your brethren", D_NO_FLAGS},
+      "You are seeking vengeance for the death of your brethren.", D_NO_FLAGS},
 
 
 #if TAG_MAJOR_VERSION == 34
