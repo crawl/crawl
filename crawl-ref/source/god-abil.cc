@@ -2436,11 +2436,11 @@ void spare_beogh_convert()
     you.religion = GOD_BEOGH;
     you.one_time_ability_used.set(GOD_BEOGH);
 
-    // Grant the player succor for accepting the Shepherd as their god
+    // Grant the player succour for accepting the Shepherd as their god
     you.heal(random_range(10, 20));
     you.duration[DUR_CONF] = 0;
 
-    mpr("The priest grants you succor and welcomes you into the fold.");
+    mpr("The priest grants you succour and welcomes you into the fold.");
     if (witc > 1)
         mpr("The other orcs roar their approval!");
 }
