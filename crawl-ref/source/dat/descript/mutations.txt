@@ -798,8 +798,8 @@ devour on kill mutation
 
 When you kill living or demonic creatures, you devour their life force and
 restore health. Devouring the life force of a slain creature in melee makes you
-lucid, causing the next spell you cast to have more power, consume less magic
-and take less time.
+lucid, causing the next spell you cast to have more power, consume less magic,
+take less time and be easier to cast.
 %%%%
 rollpage mutation
 
