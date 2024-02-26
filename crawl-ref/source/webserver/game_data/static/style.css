@@ -210,14 +210,11 @@ canvas {
     overflow: hidden;
 }
 
-.status_light[data-desc]:hover::after {
-    content: attr(data-desc);
-
+#stats_status_lights_tooltip
+{
     position: absolute;
-    display: block;
     z-index: 100;
 
-    color: #babdb6;
     border: 5px solid black;
     background-color: #040204;
     outline: 2px solid #7d623c;
