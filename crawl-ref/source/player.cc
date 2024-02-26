@@ -4688,7 +4688,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
                          intensity_str.c_str());
     }
 
-    you.increase_duration(DUR_STICKY_FLAME, duration, 100);
+    you.increase_duration(DUR_STICKY_FLAME, duration, 35);
 
     return true;
 }
