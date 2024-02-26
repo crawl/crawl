@@ -1964,7 +1964,6 @@ void handle_monster_move(monster* mons)
                     _do_move_monster(*mons, coord_def(0,0));
                 _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
-                mmov.reset(); //TODO: check if this is needed for e.g.thorn hunters
                 return;
             }
         }
@@ -2005,7 +2004,6 @@ void handle_monster_move(monster* mons)
             {
                 _handle_battiness(*mons);
 
-                mmov.reset(); //TODO again check if needed
                 DEBUG_ENERGY_USE("fight_melee()");
                 return;
             }
@@ -3050,15 +3048,14 @@ static bool _may_cutdown(monster* mons, monster* targ)
             || mons->armour_class() * mons->hit_points >= 400);
 }
 
-// Uses, and updates the global variable mmov.
-static void _find_good_alternate_move(monster* mons, coord_def& mmov,
+static void _find_good_alternate_move(monster* mons, coord_def& delta,
                                       const move_array& good_move)
 {
     const coord_def target = mons->firing_pos.zero() ? mons->target
                                                      : mons->firing_pos;
     const int current_distance = distance2(mons->pos(), target);
 
-    int dir = _compass_idx(mmov);
+    int dir = _compass_idx(delta);
 
     // Only handle if the original move is to an adjacent square.
     if (dir == -1)
@@ -3105,12 +3102,12 @@ static void _find_good_alternate_move(monster* mons, coord_def& mmov,
         {
             if (dist[0] >= dist[1] && dist[0] >= current_distance)
             {
-                mmov = mon_compass[dir0];
+                delta = mon_compass[dir0];
                 break;
             }
             if (dist[1] >= dist[0] && dist[1] >= current_distance)
             {
-                mmov = mon_compass[dir1];
+                delta = mon_compass[dir1];
                 break;
             }
         }
@@ -3118,12 +3115,12 @@ static void _find_good_alternate_move(monster* mons, coord_def& mmov,
         {
             if (dist[0] <= dist[1] && dist[0] <= current_distance)
             {
-                mmov = mon_compass[dir0];
+                delta = mon_compass[dir0];
                 break;
             }
             if (dist[1] <= dist[0] && dist[1] <= current_distance)
             {
-                mmov = mon_compass[dir1];
+                delta = mon_compass[dir1];
                 break;
             }
         }
