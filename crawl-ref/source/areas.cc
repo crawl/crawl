@@ -637,10 +637,10 @@ int monster::halo_radius() const
 
     item_def* wpn = mslot_item(MSLOT_WEAPON);
     if (wpn && is_unrandom_artefact(*wpn, UNRAND_EOS))
-        size = 3;
+        size = max(size, 3);
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
-        size = 3;
+        size = max(size, 3);
 
     if (!(holiness() & MH_HOLY))
         return size;
@@ -784,11 +784,11 @@ int monster::umbra_radius() const
 
     item_def* wpn = mslot_item(MSLOT_WEAPON);
     if (wpn && is_unrandom_artefact(*wpn, UNRAND_BRILLIANCE))
-        size = 3;
+        size = max(size, 3);
 
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
-        size = 3;
+        size = max(size, 3);
 
     if (mons_is_ghost_demon(type))
         size = max(size, ghost_umbra_radius());
