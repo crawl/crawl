@@ -2397,15 +2397,26 @@ void give_apostle_equipment(monster* apostle)
 
         case APOSTLE_WIZARD:
         {
-            make_item_for_monster(apostle, OBJ_WEAPONS, WPN_DAGGER,
-                                  x_chance_in_y(pow, 250) ? ISPEC_RANDART
-                                                          : ISPEC_GIFT,
-                                  true, ISFLAG_KNOW_TYPE);
+            item_def *item;
+            do
+            {
+                item = make_item_for_monster(apostle, OBJ_WEAPONS, WPN_DAGGER,
+                                             x_chance_in_y(pow, 250) ? ISPEC_RANDART
+                                                                     : ISPEC_GIFT,
+                                             true, ISFLAG_KNOW_TYPE);
+            }
+            while (!(is_artefact(*item)
+                     && artefact_property(*item, ARTP_PREVENT_SPELLCASTING)));
 
-            make_item_for_monster(apostle, OBJ_ARMOUR, ARM_ROBE,
-                                  x_chance_in_y(pow, 550) ? ISPEC_RANDART
-                                                          : ISPEC_GIFT,
-                                  true, ISFLAG_KNOW_TYPE);
+            do
+            {
+                item = make_item_for_monster(apostle, OBJ_ARMOUR, ARM_ROBE,
+                                             x_chance_in_y(pow, 550) ? ISPEC_RANDART
+                                                                     : ISPEC_GIFT,
+                                             true, ISFLAG_KNOW_TYPE);
+            }
+            while (!(is_artefact(*item)
+                     && artefact_property(*item, ARTP_PREVENT_SPELLCASTING)));
 
             // Slim chance at higher levels of a random ring or orb of energy
             if (x_chance_in_y(max(0, pow - 40), 280))
@@ -2424,9 +2435,14 @@ void give_apostle_equipment(monster* apostle)
                                                      RING_LIFE_PROTECTION,
                                                      RING_PROTECTION);
 
-                make_item_for_monster(apostle, OBJ_JEWELLERY, rtype, 0,
-                                      x_chance_in_y(pow, 125)? ISPEC_RANDART : 0,
-                                      ISFLAG_KNOW_TYPE);
+                do
+                {
+                    item = make_item_for_monster(apostle, OBJ_JEWELLERY, rtype, 0,
+                                                 x_chance_in_y(pow, 125)? ISPEC_RANDART : 0,
+                                                 ISFLAG_KNOW_TYPE);
+                }
+                while (!(is_artefact(*item)
+                         && artefact_property(*item, ARTP_PREVENT_SPELLCASTING)));
             }
         }
         break;
