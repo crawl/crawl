@@ -786,6 +786,9 @@ int monster::umbra_radius() const
 {
     int size = -1;
 
+    if (mons_is_ghost_demon(type))
+        size = ghost_umbra_radius();
+
     item_def* wpn = mslot_item(MSLOT_WEAPON);
     if (wpn && is_unrandom_artefact(*wpn, UNRAND_BRILLIANCE))
         size = max(size, 3);
@@ -797,9 +800,6 @@ int monster::umbra_radius() const
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         size = max(size, 3);
-
-    if (mons_is_ghost_demon(type))
-        size = max(size, ghost_umbra_radius());
 
     if (!(holiness() & MH_UNDEAD))
         return size;
