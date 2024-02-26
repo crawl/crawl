@@ -71,12 +71,9 @@
 #include "view.h"
 
 static bool _handle_pickup(monster* mons);
-static bool _monster_move(monster* mons);
+static bool _monster_move(monster* mons, coord_def& delta);
 static bool _monster_swaps_places(monster* mon, const coord_def& delta);
 static bool _do_move_monster(monster& mons, const coord_def& delta);
-
-// [dshaligram] Doesn't need to be extern.
-static coord_def mmov;
 
 /**
  * Get the monster's "hit dice".
@@ -293,16 +290,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
     return true;
 }
 
-static bool _do_mon_spell(monster* mons)
-{
-    if (handle_mon_spell(mons))
-    {
-        mmov.reset();
-        return true;
-    }
 
-    return false;
-}
 
 static energy_use_type _get_swim_or_move(monster& mon)
 {
@@ -496,19 +484,17 @@ static bool _mons_can_cast_dig(const monster* mons, bool random)
             && !(mons->is_silenced() && flags & MON_SPELL_SILENCE_MASK);
 }
 
-static void _set_mons_move_dir(const monster* mons,
-                               coord_def* dir, coord_def* delta)
+//Returns the delta from the monster's position to their target position
+static coord_def _get_mons_destination(const monster* mons)
 {
-    ASSERT(dir);
-    ASSERT(delta);
-
+    coord_def delta;
     // Some calculations.
     if ((mons->can_burrow()
          || _mons_can_cast_dig(mons, false))
         && mons->foe == MHITYOU)
     {
         // Digging monsters always move in a straight line in your direction.
-        *delta = you.pos() - mons->pos();
+        delta = you.pos() - mons->pos();
     }
     else
     {
@@ -516,18 +502,22 @@ static void _set_mons_move_dir(const monster* mons,
                                     && !mons_is_fleeing(*mons)
                                     && !mons_is_confused(*mons)
                                     && !mons->berserk_or_frenzied();
-        *delta = (use_firing_pos ? mons->firing_pos : mons->target)
+        delta = (use_firing_pos ? mons->firing_pos : mons->target)
                  - mons->pos();
     }
+    return delta;
+}
 
-    // Move the monster.
-    *dir = delta->sgn();
+static coord_def _get_step_from_dest(const monster* mons, const coord_def dest)
+{
+    coord_def direction = dest.sgn();
 
     if (mons_is_retreating(*mons)
         && (!mons->friendly() || mons->target != you.pos()))
     {
-        *dir *= -1;
+        direction *= -1;
     }
+    return direction;
 }
 
 typedef FixedArray< bool, 3, 3 > move_array;
@@ -582,13 +572,10 @@ static bool _fungal_move_check(monster &mon)
     return true;
 }
 
-static void _handle_movement(monster* mons)
+static coord_def _find_best_step(monster* mons)
 {
     if (!_fungal_move_check(*mons))
-    {
-        mmov.reset();
-        return;
-    }
+        return coord_def();
 
     _maybe_set_patrol_route(mons);
 
@@ -618,27 +605,27 @@ static void _handle_movement(monster* mons)
         }
     }
 
-    coord_def delta;
-    _set_mons_move_dir(mons, &mmov, &delta);
+    coord_def delta = _get_mons_destination(mons);
+    coord_def dir = _get_step_from_dest(mons, delta);
 
     if (sanctuary_exists())
     {
         // Don't allow monsters to enter a sanctuary or attack you inside a
         // sanctuary, even if you're right next to them.
-        if (is_sanctuary(mons->pos() + mmov)
+        if (is_sanctuary(mons->pos() + dir)
             && (!is_sanctuary(mons->pos())
-                || mons->pos() + mmov == you.pos()))
+                || mons->pos() + dir == you.pos()))
         {
-            mmov.reset();
+            return coord_def();
         }
     }
 
     // Bounds check: don't let fleeing monsters try to run off the grid.
-    const coord_def s = mons->pos() + mmov;
+    const coord_def s = mons->pos() + dir;
     if (!in_bounds_x(s.x))
-        mmov.x = 0;
+        dir.x = 0;
     if (!in_bounds_y(s.y))
-        mmov.y = 0;
+        dir.y = 0;
 
     if (delta.rdist() > 3)
     {
@@ -652,18 +639,18 @@ static void _handle_movement(monster* mons)
 
         // Sometimes we'll just move parallel the x axis.
         if (abs(delta.x) > abs(delta.y) && coinflip())
-            mmov.y = 0;
+            dir.y = 0;
 
         // Sometimes we'll just move parallel the y axis.
         if (abs(delta.y) > abs(delta.x) && coinflip())
-            mmov.x = 0;
+            dir.x = 0;
     }
 
     // Now quit if we can't move.
-    if (mmov.origin())
-        return;
+    if (dir.origin())
+        return dir;
 
-    const coord_def newpos(mons->pos() + mmov);
+    const coord_def newpos(mons->pos() + dir);
 
     // Filling this is relatively costly and not always needed, so be a bit
     // lazy about it.
@@ -693,96 +680,96 @@ static void _handle_movement(monster* mons)
         // a) an ally is behind us and can't easily move around us;
         // or
         // b) we're intelligent and blocking a ranged attack.
-        if (mmov.y == 0)
+        if (dir.y == 0)
         {
-            if ((good_move[mmov.x+1][0] || good_move[mmov.x+1][2])
-                && ((_allied_monster_at(mons, coord_def(-mmov.x, -1))
-                     || _allied_monster_at(mons, coord_def(-mmov.x, 0))
-                     || _allied_monster_at(mons, coord_def(-mmov.x, 1)))
+            if ((good_move[dir.x+1][0] || good_move[dir.x+1][2])
+                && ((_allied_monster_at(mons, coord_def(-dir.x, -1))
+                     || _allied_monster_at(mons, coord_def(-dir.x, 0))
+                     || _allied_monster_at(mons, coord_def(-dir.x, 1)))
                        && !good_move[1][0] && !good_move[1][2]
-                    || _allied_monster_at(mons, coord_def(-mmov.x, -1))
-                       && !good_move[1][0] && !good_move[1-mmov.x][1]
-                    || _allied_monster_at(mons, coord_def(-mmov.x, 1))
-                       && !good_move[1][2] && !good_move[1-mmov.x][1]
+                    || _allied_monster_at(mons, coord_def(-dir.x, -1))
+                       && !good_move[1][0] && !good_move[1-dir.x][1]
+                    || _allied_monster_at(mons, coord_def(-dir.x, 1))
+                       && !good_move[1][2] && !good_move[1-dir.x][1]
                     || mons_intel(*mons) >= I_HUMAN
-                       && _ranged_ally_in_dir(mons, coord_def(-mmov.x, 0))))
+                       && _ranged_ally_in_dir(mons, coord_def(-dir.x, 0))))
             {
-                if (good_move[mmov.x+1][0])
-                    mmov.y = -1;
-                if (good_move[mmov.x+1][2] && (mmov.y == 0 || coinflip()))
-                    mmov.y = 1;
+                if (good_move[dir.x+1][0])
+                    dir.y = -1;
+                if (good_move[dir.x+1][2] && (dir.y == 0 || coinflip()))
+                    dir.y = 1;
             }
         }
-        else if (mmov.x == 0)
+        else if (dir.x == 0)
         {
-            if ((good_move[0][mmov.y+1] || good_move[2][mmov.y+1])
-                && ((_allied_monster_at(mons, coord_def(-1, -mmov.y))
-                     || _allied_monster_at(mons, coord_def(0, -mmov.y))
-                     || _allied_monster_at(mons, coord_def(1, -mmov.y)))
+            if ((good_move[0][dir.y+1] || good_move[2][dir.y+1])
+                && ((_allied_monster_at(mons, coord_def(-1, -dir.y))
+                     || _allied_monster_at(mons, coord_def(0, -dir.y))
+                     || _allied_monster_at(mons, coord_def(1, -dir.y)))
                        && !good_move[0][1] && !good_move[2][1]
-                    || _allied_monster_at(mons, coord_def(-1, -mmov.y))
-                       && !good_move[0][1] && !good_move[1][1-mmov.y]
-                    || _allied_monster_at(mons, coord_def(1, -mmov.y))
-                       && !good_move[2][1] && !good_move[1][1-mmov.y]
+                    || _allied_monster_at(mons, coord_def(-1, -dir.y))
+                       && !good_move[0][1] && !good_move[1][1-dir.y]
+                    || _allied_monster_at(mons, coord_def(1, -dir.y))
+                       && !good_move[2][1] && !good_move[1][1-dir.y]
                     || mons_intel(*mons) >= I_HUMAN
-                       && _ranged_ally_in_dir(mons, coord_def(0, -mmov.y))))
+                       && _ranged_ally_in_dir(mons, coord_def(0, -dir.y))))
             {
-                if (good_move[0][mmov.y+1])
-                    mmov.x = -1;
-                if (good_move[2][mmov.y+1] && (mmov.x == 0 || coinflip()))
-                    mmov.x = 1;
+                if (good_move[0][dir.y+1])
+                    dir.x = -1;
+                if (good_move[2][dir.y+1] && (dir.x == 0 || coinflip()))
+                    dir.x = 1;
             }
         }
         else
         // We're moving diagonally now. Sometimes move horizontally or
         // vertically in that direction instead, under similar conditions.
         {
-            if (good_move[mmov.x+1][1] && !good_move[1][mmov.y+1])
+            if (good_move[dir.x+1][1] && !good_move[1][dir.y+1])
             {
-                if ((_allied_monster_at(mons, coord_def(-mmov.x, -1))
-                     || _allied_monster_at(mons, coord_def(-mmov.x, 0))
-                     || _allied_monster_at(mons, coord_def(-mmov.x, 1)))
+                if ((_allied_monster_at(mons, coord_def(-dir.x, -1))
+                     || _allied_monster_at(mons, coord_def(-dir.x, 0))
+                     || _allied_monster_at(mons, coord_def(-dir.x, 1)))
                     || mons_intel(*mons) >= I_HUMAN
-                       && _ranged_ally_in_dir(mons, coord_def(-mmov.x, -mmov.y)))
+                       && _ranged_ally_in_dir(mons, coord_def(-dir.x, -dir.y)))
                 {
-                    mmov.y = 0;
+                    dir.y = 0;
                 }
             }
-            else if (good_move[1][mmov.y+1] && !good_move[mmov.x+1][1])
+            else if (good_move[1][dir.y+1] && !good_move[dir.x+1][1])
             {
-                if ((_allied_monster_at(mons, coord_def(-1, -mmov.y))
-                     || _allied_monster_at(mons, coord_def(0, -mmov.y))
-                     || _allied_monster_at(mons, coord_def(1, -mmov.y)))
+                if ((_allied_monster_at(mons, coord_def(-1, -dir.y))
+                     || _allied_monster_at(mons, coord_def(0, -dir.y))
+                     || _allied_monster_at(mons, coord_def(1, -dir.y)))
                     || mons_intel(*mons) >= I_HUMAN
-                       && _ranged_ally_in_dir(mons, coord_def(-mmov.x, -mmov.y)))
+                       && _ranged_ally_in_dir(mons, coord_def(-dir.x, -dir.y)))
                 {
-                    mmov.x = 0;
+                    dir.x = 0;
                 }
             }
-            else if (good_move[mmov.x+1][1] && good_move[1][mmov.y+1])
+            else if (good_move[dir.x+1][1] && good_move[1][dir.y+1])
             {
-                if (_allied_monster_at(mons, coord_def(-mmov.x, -mmov.y))
-                    && !good_move[1-mmov.x][1] && !good_move[1][1-mmov.y]
+                if (_allied_monster_at(mons, coord_def(-dir.x, -dir.y))
+                    && !good_move[1-dir.x][1] && !good_move[1][1-dir.y]
                     || mons_intel(*mons) >= I_HUMAN
-                       && _ranged_ally_in_dir(mons, coord_def(-mmov.x, -mmov.y)))
+                       && _ranged_ally_in_dir(mons, coord_def(-dir.x, -dir.y)))
                 {
                     if (coinflip())
-                        mmov.x = 0;
+                        dir.x = 0;
                     else
-                        mmov.y = 0;
+                        dir.y = 0;
                 }
             }
         }
     }
 
     // Now quit if we can't move.
-    if (mmov.origin())
-        return;
+    if (dir.origin())
+        return dir;
 
     // everything below here is irrelevant if the player is not in bounds, for
     // example if they have stepped from time.
     if (!in_bounds(you.pos()))
-        return;
+        return dir;
 
     // Try to stay in sight of the player if we're moving towards
     // him/her, in order to avoid the monster coming into view,
@@ -793,30 +780,30 @@ static void _handle_movement(monster* mons)
 
     // Doesn't matter for arena mode.
     if (crawl_state.game_is_arena())
-        return;
+        return dir;
 
     // Did we just come into view?
     // TODO: This doesn't seem to work right. Fix, or remove?
 
     if (mons->seen_context != SC_JUST_SEEN)
-        return;
+        return dir;
     if (testbits(mons->flags, MF_WAS_IN_VIEW))
-        return;
+        return dir;
 
     const coord_def old_pos  = mons->pos();
     const int       old_dist = grid_distance(you.pos(), old_pos);
 
     // We're already staying in the player's LOS.
-    if (you.see_cell(old_pos + mmov))
-        return;
+    if (you.see_cell(old_pos + dir))
+        return dir;
 
     // We're not moving towards the player.
-    if (grid_distance(you.pos(), old_pos + mmov) >= old_dist)
+    if (grid_distance(you.pos(), old_pos + dir) >= old_dist)
     {
         // Instead of moving out of view, we stay put.
         if (you.see_cell(old_pos))
-            mmov.reset();
-        return;
+            dir.reset();
+        return dir;
     }
 
     // Try to find a move that brings us closer to the player while
@@ -844,15 +831,17 @@ static void _handle_movement(monster* mons)
             if (grid_distance(you.pos(), tmp) < old_dist)
             {
                 if (one_chance_in(++matches))
-                    mmov = d;
+                    dir = d;
                 break;
             }
         }
 
     // We haven't been able to find a visible cell to move to. If previous
     // position was visible, we stay put.
-    if (you.see_cell(old_pos) && !you.see_cell(old_pos + mmov))
-        mmov.reset();
+    if (you.see_cell(old_pos) && !you.see_cell(old_pos + dir))
+        dir.reset();
+
+    return dir;
 }
 
 /**
@@ -1417,13 +1406,14 @@ static void _monster_add_energy(monster& mons)
 #    define DEBUG_ENERGY_USE_REF(problem) ((void) 0)
 #endif
 
-static void _confused_move_dir(monster *mons)
+static coord_def _confused_move_dir(monster *mons)
 {
-    mmov.reset();
+    coord_def conf_mov = coord_def();
     int pfound = 0;
     for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         if (mons->can_pass_through(*ai) && one_chance_in(++pfound))
-            mmov = *ai - mons->pos();
+            conf_mov = *ai - mons->pos();
+    return conf_mov;
 }
 
 static int _tentacle_move_speed(monster_type type)
@@ -1582,6 +1572,7 @@ static void _pre_monster_move(monster& mons)
 // Handle weird stuff like spells/special abilities, item use,
 // reaching, swooping, etc.
 // Returns true iff the monster used up their turn.
+// There should be a more elegant solution than passing in a ref to mmov
 static bool _mons_take_special_action(monster &mons, int old_energy)
 {
     if ((mons.asleep() || mons_is_wandering(mons))
@@ -1619,12 +1610,11 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         // [ds] Special abilities shouldn't overwhelm
         // spellcasting in monsters that have both. This aims
         // to give them both roughly the same weight.
-        if (coinflip() ? mon_special_ability(&mons) || _do_mon_spell(&mons)
-                       : _do_mon_spell(&mons) || mon_special_ability(&mons))
+        if (coinflip() ? mon_special_ability(&mons) || handle_mon_spell(&mons)
+                       : handle_mon_spell(&mons) || mon_special_ability(&mons))
         {
             _handle_battiness(mons);
             DEBUG_ENERGY_USE_REF("spell or special");
-            mmov.reset();
             return true;
         }
     }
@@ -1670,6 +1660,8 @@ void handle_monster_move(monster* mons)
     const monsterentry* entry = get_monster_data(mons->type);
     if (!entry)
         return;
+
+    coord_def mmov = coord_def();
 
     const bool disabled = crawl_state.disables[DIS_MON_ACT]
                           && _unfriendly_or_impaired(*mons);
@@ -1913,14 +1905,14 @@ void handle_monster_move(monster* mons)
     else if (!mons->petrified())
     {
         // Calculates mmov based on monster target.
-        _handle_movement(mons);
+        mmov = _find_best_step(mons);
 
         // Confused monsters sometimes stumble about instead of moving with
         // purpose.
         if (mons_is_confused(*mons) && !one_chance_in(3))
         {
             set_random_target(mons);
-            _confused_move_dir(mons);
+            mmov = _confused_move_dir(mons);
         }
     }
     if (!mons->asleep())
@@ -1972,7 +1964,7 @@ void handle_monster_move(monster* mons)
                     _do_move_monster(*mons, coord_def(0,0));
                 _handle_battiness(*mons);
                 DEBUG_ENERGY_USE("fight_melee()");
-                mmov.reset();
+                mmov.reset(); //TODO: check if this is needed for e.g.thorn hunters
                 return;
             }
         }
@@ -2013,7 +2005,7 @@ void handle_monster_move(monster* mons)
             {
                 _handle_battiness(*mons);
 
-                mmov.reset();
+                mmov.reset(); //TODO again check if needed
                 DEBUG_ENERGY_USE("fight_melee()");
                 return;
             }
@@ -2034,7 +2026,7 @@ void handle_monster_move(monster* mons)
             return;
         }
 
-        if (mons->cannot_act() || !_monster_move(mons))
+        if (mons->cannot_act() || !_monster_move(mons, mmov))
             mons->speed_increment -= non_move_energy;
     }
     you.update_beholder(mons);
@@ -3059,7 +3051,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
 }
 
 // Uses, and updates the global variable mmov.
-static void _find_good_alternate_move(monster* mons,
+static void _find_good_alternate_move(monster* mons, coord_def& mmov,
                                       const move_array& good_move)
 {
     const coord_def target = mons->firing_pos.zero() ? mons->target
@@ -3436,7 +3428,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     return true;
 }
 
-static bool _monster_move(monster* mons)
+static bool _monster_move(monster* mons, coord_def& delta)
 {
     ASSERT(mons); // XXX: change to monster &mons
     move_array good_move;
@@ -3507,11 +3499,11 @@ static bool _monster_move(monster* mons)
         && !one_chance_in(3))
     {
         mons->props.erase(MON_SPELL_USABLE_KEY);
-        mmov.reset();
+        delta.reset();
     }
 
     // Let's not even bother with this if mmov is zero.
-    if (mmov.origin() && !mons->confused())
+    if (delta.origin() && !mons->confused())
         return false;
 
     for (int count_x = 0; count_x < 3; count_x++)
@@ -3537,7 +3529,7 @@ static bool _monster_move(monster* mons)
 
     // Now we know where we _can_ move.
 
-    const coord_def newpos = mons->pos() + mmov;
+    const coord_def newpos = mons->pos() + delta;
     // Water creatures have a preference for water they can hide in -- bwr
     // [ds] Weakened the powerful attraction to deep water if the monster
     // is in good health.
@@ -3560,8 +3552,8 @@ static bool _monster_move(monster* mons)
                 {
                     if (one_chance_in(++count))
                     {
-                        mmov.x = cx - 1;
-                        mmov.y = cy - 1;
+                        delta.x = cx - 1;
+                        delta.y = cy - 1;
                     }
                 }
             }
@@ -3571,8 +3563,8 @@ static bool _monster_move(monster* mons)
     // either side. If they're both good, move in whichever dir
     // gets it closer (farther for fleeing monsters) to its target.
     // If neither does, do nothing.
-    if (good_move[mmov.x + 1][mmov.y + 1] == false)
-        _find_good_alternate_move(mons, good_move);
+    if (good_move[delta.x + 1][delta.y + 1] == false)
+        _find_good_alternate_move(mons, delta, good_move);
 
     // ------------------------------------------------------------------
     // If we haven't found a good move by this point, we're not going to.
@@ -3580,10 +3572,10 @@ static bool _monster_move(monster* mons)
 
     if (mons->type == MONS_SPATIAL_MAELSTROM)
     {
-        const dungeon_feature_type feat = env.grid(mons->pos() + mmov);
+        const dungeon_feature_type feat = env.grid(mons->pos() + delta);
         if (!feat_is_permarock(feat) && feat_is_solid(feat))
         {
-            const coord_def target(mons->pos() + mmov);
+            const coord_def target(mons->pos() + delta);
             create_monster(
                     mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), target)
                     .set_summoned(mons, 2, MON_SUMM_ANIMATE, GOD_LUGONU));
@@ -3597,7 +3589,7 @@ static bool _monster_move(monster* mons)
     // Take care of Dissolution burrowing, lerny, etc
     if (burrows || flattens_trees || digs)
     {
-        const dungeon_feature_type feat = env.grid(mons->pos() + mmov);
+        const dungeon_feature_type feat = env.grid(mons->pos() + delta);
         if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
                 && !burrows && digs
             || feat == DNGN_GRATE && digs)
@@ -3606,7 +3598,7 @@ static bool _monster_move(monster* mons)
             if (_mons_can_cast_dig(mons, true))
             {
                 setup_mons_cast(mons, beem, SPELL_DIG);
-                beem.target = mons->pos() + mmov;
+                beem.target = mons->pos() + delta;
                 mons_cast(mons, beem, SPELL_DIG,
                           mons->spell_slot_flags(SPELL_DIG));
             }
@@ -3618,9 +3610,9 @@ static bool _monster_move(monster* mons)
         else if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
                   && burrows)
                   || (flattens_trees && feat_is_tree(feat)))
-                 && good_move[mmov.x + 1][mmov.y + 1] == true)
+                 && good_move[delta.x + 1][delta.y + 1] == true)
         {
-            const coord_def target(mons->pos() + mmov);
+            const coord_def target(mons->pos() + delta);
             destroy_wall(target);
 
             if (flattens_trees)
@@ -3640,21 +3632,21 @@ static bool _monster_move(monster* mons)
                     noisy(25, target, "You hear a crashing sound.");
             }
             // Dissolution dissolves walls.
-            else if (player_can_hear(mons->pos() + mmov))
+            else if (player_can_hear(mons->pos() + delta))
                 mprf(MSGCH_SOUND, "You hear a sizzling sound.");
         }
     }
 
     bool ret = false;
-    if (good_move[mmov.x + 1][mmov.y + 1] && !mmov.origin())
+    if (good_move[delta.x + 1][delta.y + 1] && !delta.origin())
     {
         // Check for attacking player.
         // XX is this actually reachable? this exact condition is already dealt
         // with in handle_monster_move
-        if (mons->pos() + mmov == you.pos())
+        if (mons->pos() + delta == you.pos())
         {
             ret = fight_melee(mons, &you);
-            mmov.reset();
+            delta.reset();
         }
 
         // If we're following the player through stairs, the only valid
@@ -3671,7 +3663,7 @@ static bool _monster_move(monster* mons)
             else
             {
                 ret    = true;
-                mmov.reset();
+                delta.reset();
 
                 dprf("%s is skipping movement in order to follow.",
                      mons->name(DESC_THE).c_str());
@@ -3679,22 +3671,22 @@ static bool _monster_move(monster* mons)
         }
 
         // Check for attacking another monster.
-        if (monster* targ = monster_at(mons->pos() + mmov))
+        if (monster* targ = monster_at(mons->pos() + delta))
         {
             if ((mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 && !(mons->has_ench(ENCH_FRENZIED)
                      || mons->confused()))
             {
-                ret = _monster_swaps_places(mons, mmov);
+                ret = _monster_swaps_places(mons, delta);
             }
-            else if (!mmov.origin()) // confused self-hit handled below
+            else if (!delta.origin()) // confused self-hit handled below
             {
                 fight_melee(mons, targ);
                 ret = true;
             }
 
             // If the monster swapped places, the work's already done.
-            mmov.reset();
+            delta.reset();
         }
 
         // The monster could die after a melee attack due to a mummy
@@ -3722,14 +3714,14 @@ static bool _monster_move(monster* mons)
     }
     else
     {
-        monster* targ = monster_at(mons->pos() + mmov);
-        if (!mmov.origin() && targ && _may_cutdown(mons, targ))
+        monster* targ = monster_at(mons->pos() + delta);
+        if (!delta.origin() && targ && _may_cutdown(mons, targ))
         {
             fight_melee(mons, targ);
             ret = true;
         }
 
-        mmov.reset();
+        delta.reset();
 
         // Don't let boulder beetles roll in place.
         if (mons->has_ench(ENCH_ROLLING))
@@ -3745,8 +3737,8 @@ static bool _monster_move(monster* mons)
     // called. I'm taking this as a sort of intentional slapstick effect and
     // leaving it in place. (It's also reachable in a few other rare cases
     // where mmov.reset() is called.)
-    if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
-        return _do_move_monster(*mons, mmov);
+    if (delta.x || delta.y || (mons->confused() && one_chance_in(6)))
+        return _do_move_monster(*mons, delta);
 
     // Battlespheres need to preserve their tracking targets after each move
     if (mons_is_wandering(*mons)
