@@ -750,9 +750,7 @@ void trap_def::trigger(actor& triggerer)
             // still need to turn autopickup back on, such as
             // TSO's halo or sticky flame.
             if (triggerer_was_invisible_monster)
-            {
                 autotoggle_autopickup(false);
-            }
         }
         }
         break;

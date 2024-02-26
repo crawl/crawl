@@ -617,9 +617,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
     }
     else if (can_see)
-    {
         mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
-    }
     else
         player_messaged = false;
 
@@ -645,9 +643,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             autotoggle_autopickup(false);
         }
         else if (could_see && !can_see)
-        {
             autotoggle_autopickup(true);
-        }
     }
 
     // do this here, so that any "changes into" notes come first
