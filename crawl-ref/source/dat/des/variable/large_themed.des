@@ -2867,6 +2867,7 @@ DEPTH:   D:9-, Depths, Zot, !Zot:$
 PLACE:   Depths:$
 WEIGHT:  1 (Depths:$), 10
 ORIENT:  north
+KMONS:   s = boulder dbname:still_boulder
 : if you.in_branch("D") then
 SUBST:   > = .
 NSUBST:  01 = 2:.
@@ -2925,7 +2926,7 @@ KFEAT:   L = l
 KFEAT:   - = broken_door
 KFEAT:   _ = altar_ecumenical / altar_ignis
 SHUFFLE: ABCDEF
-SUBST:   A = v, B : v., C : v., DEF" = ., d = xldd, ~ = lld., _ = __b
+SUBST:   A = v, B : v., C : v., DEF" = ., d = xldd, ~ = lllds., _ = __b
 NSUBST:  0 = 1:56 / 2:1 / 2:2 / 2:3 / 2:5 / * = 1123.
 NSUBST:  1 = 2:. / 2:L / *:1, | = 1:& / *:|
 SHUFFLE: 23, 23 / 23 / 23 / 24 / 34

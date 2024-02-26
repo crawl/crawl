@@ -1676,18 +1676,19 @@ TAGS:   no_descent
 DEPTH:  D:10-
 ORIENT: float
 WEIGHT: 5
-KMONS:  " = earth elemental
-KITEM:  " = any scroll / any potion
+MONS:   boulder dbname:still_boulder
+KMONS:  2 = earth elemental
+KITEM:  2 = any scroll / any potion
 MAP
 cccccccccc
-c{......>c
+c{..11..>c
 c........c
 c........c
-c...""...c
-c...""...c
+c1..22..1c
+c1..22..1c
 c........c
 c........c
-c<......}c
+c<..11..}c
 cccccccccc
 ENDMAP
 
@@ -4624,13 +4625,13 @@ DEPTH:  D:12-
 ORIENT: float
 MONS:   ogre / two-headed ogre
 KMONS:  2 = stone giant / frost giant w:3 / fire giant w:3
-KMONS:  P = plant
-KMONS:  B = plant
+KMONS:  PB = plant
+KMONS:  b = boulder dbname:still_boulder
 KMONS:  C = cyclops
 KFEAT:  A = granite_statue
 KFEAT:  C = W
 KFEAT:  2 = cache of fruit / cache of meat / floor w:30
-SUBST:  P = PPP..
+SUBST:  b : bPP, P = PPP..
 NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
 NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
 FTILE:  2$|*%AB = floor_grass
@@ -4639,21 +4640,21 @@ MAP
    ....._.c.'.....
   @..c__c_G'c''c..@
  @..c__c_PWP'c''c..@
-....____PWWWP''''....
+....____bWWWb''''....
 ..c__c_GWW"WWG'c''c..
 .c__c_PWWWWWWWP'c''c.
 .____PWWWWWWWWWP''''.
 ._c_GWW"WWAWW"WWG'c'.
-_c_PWWWWWB-BWWWWWP'c'
+_c_bWWWWWB-BWWWWWb'c'
 ._PWWWWWB-$-BWWWWWP'.
 cGWW"WWA-$2$-AWW"WWGc
 .;PWWWWWB-$-BWWWWWP`.
-;c;PWWWWWB-BWWWWWP`c`
+;c;bWWWWWB-BWWWWWb`c`
 .;c;GWW"WWAWW"WWG`c`.
 .;;;;PWWWWWWWWWP````.
 .c;;c;PWWWWWWWP`c``c.
 ..c;;c;GWW"WWG`c``c..
-....;;;;PWWWP````....
+....;;;;bWWWb````....
  @..c;;c;PWP`c``c..@
   @..c;;c;G`c``c..@
    .....;.c.`.....
@@ -6481,40 +6482,42 @@ ENDMAP
 
 # A revival of an ancient Elf endvault, now refurbished
 # for D / V elementals meeting with elves instead.
-NAME:   dpeg_index_elf_rogue_hall
-TAGS:   no_monster_gen no_item_gen no_rotate no_trap_gen no_pool_fixup
-TAGS:   vaults_hard vaults_orient_s
-DEPTH:  D:9-, Vaults
-WEIGHT: 20 (Vaults), 10
-ORIENT: float
+NAME:    dpeg_index_elf_rogue_hall
+TAGS:    no_monster_gen no_item_gen no_rotate no_trap_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_s
+DEPTH:   D:9-, Vaults
+WEIGHT:  20 (Vaults), 10
+ORIENT:  float
+KMONS:   B = boulder dbname:still_boulder
 : if you.in_branch("D") then
 :   if you.depth() < 12 then
-MONS:   orc wizard, deep elf pyromancer, deep elf archer
-MONS:   sky beast, fire bat, ice beast, shapeshifter
-NSUBST: 3 = 2:1
+MONS:    orc wizard, deep elf pyromancer, deep elf archer
+MONS:    sky beast, fire bat, ice beast, shapeshifter
+NSUBST:  3 = 2:1
 :   else
-MONS:   deep elf pyromancer / deep elf archer, deep elf knight
-MONS:   deep elf zephyrmancer, gargoyle
-MONS:   fire elemental, water elemental
-MONS:   glowing shapeshifter / thermic dynamo w:2
+MONS:    deep elf pyromancer / deep elf archer, deep elf knight
+MONS:    deep elf zephyrmancer, gargoyle
+MONS:    fire elemental, water elemental
+MONS:    glowing shapeshifter / thermic dynamo w:2
 :   end
-SUBST:  z = c
-NSUBST: 4 = 1:. / 1:4 / * = 4., 56 = 3:., ? = 2:. / 3 = 23.. / * : 23
+SUBST:   z = c
+NSUBST:  4 = 1:. / 1:4 / * = 4., 56 = 3:., ? = 2:. / 3 = 23.. / * : 23
 : else -- Vaults
-MONS:   deep elf death mage / deep elf high priest
-MONS:   deep elf sorcerer / deep elf demonologist w:5
-MONS:   deep elf annihilator, glowing shapeshifter
-MONS:   war gargoyle, crystal guardian, golden dragon / storm dragon
-SUBST:  @ = ., c = x
-NSUBST: 2 = 1:14 / *:2, 23 = 1:., 4 = 1:. / 2:4 / * = 4., 56 = 4:.
-NSUBST: 7 = 1:. / 1:56 / *:7, ? = 2 = 1. / 2 = 1233... / * : 233
-NSUBST: % = 2:| / 4:% / *:$
-CLEAR:  z
+MONS:    deep elf death mage / deep elf high priest
+MONS:    deep elf sorcerer / deep elf demonologist w:5
+MONS:    deep elf annihilator, glowing shapeshifter
+MONS:    war gargoyle, crystal guardian, golden dragon / storm dragon
+SUBST:   @ = ., c = x
+NSUBST:  2 = 1:14 / *:2, 23 = 1:., 4 = 1:. / 2:4 / * = 4., 56 = 4:.
+NSUBST:  7 = 1:. / 1:56 / *:7, ? = 2 = 1. / 2 = 1233... / * : 233
+NSUBST:  % = 2:| / 4:% / *:$
+CLEAR:   z
 : end
-KFEAT:  ^ = teleport trap
-KITEM:  | = any book w:5 / any magical staff / any ring / any amulet / \
-            any misc / any wand w:5
-SUBST:  ! = 56
+KFEAT:   ^ = teleport trap
+KITEM:   | = any book w:5 / any magical staff / any ring / any amulet / \
+             any misc / any wand w:5
+SUBST:   ! = 56
+SHUFFLE: wl / wl / wl / wB / lB
 MAP
  zzzzzzzzzzzzzzzzzzz   zzzzzzzzzzzzzzzzzzz
 zzcccccccccccccccccc   cccccccccccccccccczz
@@ -6537,7 +6540,7 @@ zcc..ccccc+cccccb...bbb...bccccc+cccc+..ccz
 zc..%ccc.....ccclb...?...bwccc.....ccc%..cz
 zc.%.cc.......ccccccccccccccc.......cc.%.cz
 zcc..cc...!...cccc...^...cccc...!...cc..ccz
-zcccccc.......ccc..cc.cc..ccc.......ccccccz
+zcccclc.......ccc..cc.cc..ccc.......cwccccz
 zzzzzccc.1..5..$..ccc.ccc..$..6..1.ccczzzzz
     zzccc...ccccccccc.ccccccccc...ccczz
     zzzcccccccccccccc@cccccccccccccczzz

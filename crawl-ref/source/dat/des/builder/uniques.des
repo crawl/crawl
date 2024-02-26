@@ -529,6 +529,7 @@ TAGS:    place_unique no_monster_gen no_item_gen
 DEPTH:   D:2-7
 MONS:    Crazy Yiuf
 MONS:    fungus / bush w:1
+KMONS:   B = boulder dbname:still_boulder
 ITEM:    mace tile:wpn_hammer wtile:hammer itemname:hammer
 KFEAT:   e = cache of fruit
 # Randomisation 1: Some chance for a gate.
@@ -549,7 +550,7 @@ SUBST:   ; = .:10 d:2
 : if crawl.one_chance_in(300) then
 SUBST:   t = "
 : end
-SUBST:   e = e''', ':.......' , "=' , ':d' , '=..d
+SUBST:   e = eB'', ':.......' , "=' , ':d' , '=..d
 # Randomisation 4: trees or rock
 SUBST:   t : ttx
 MAP

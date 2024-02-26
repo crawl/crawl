@@ -372,7 +372,9 @@ NAME:   shapermc_ecumenical_altar_hornbeckon
 TAGS:   transparent
 KMONS:  p = plant
 KMONS:  f = fungus
+KMONS:  B = boulder dbname:still_boulder
 NSUBST: ' = 8:pf / 12=ppf... / .
+SUBST:  G = GGB
 : ecumenical_altar_setup(_G)
 MAP
 ....@....
@@ -855,9 +857,10 @@ MONS:   orc
 : else
 MONS:   rat / giant cockroach / dart slug
 : end
-ITEM:   human skeleton / kobold skeleton / elf skeleton / gnoll skeleton /\
-        ogre skeleton / naga skeleton / minotaur skeleton / merfolk skeleton /\
-        tengu skeleton / draconian skeleton
+KMONS:  d = boulder dbname:still_boulder / nothing w:30
+KITEM:  d = human skeleton / kobold skeleton / elf skeleton / gnoll skeleton / \
+            ogre skeleton / naga skeleton / minotaur skeleton / \
+            merfolk skeleton / tengu skeleton / draconian skeleton
 KITEM:  _ = stone q:1 / large rock q:1 w:3
 KFEAT:  B = altar_beogh
 KPROP:  B = no_tele_into

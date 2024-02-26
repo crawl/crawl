@@ -338,21 +338,22 @@ cccc.....cccc
 ccccccccccccc
 ENDMAP
 
-NAME: nicolae_tomb_entry_rubble_hallway
+NAME:   nicolae_tomb_entry_rubble_hallway
+TAGS:   tomb_entry no_monster_gen no_item_gen no_wall_fixup
 ORIENT: float
-TAGS: tomb_entry no_monster_gen no_item_gen no_wall_fixup
+MONS:   boulder dbname:still_boulder
+KITEM:  s = stone q:1 / large rock q:1 w:5
+KFEAT:  O = enter_tomb
 NSUBST: R = 7:r / *:.
-SUBST: r = xx..., . = ....s
-KITEM: s = stone q:1 / large rock q:1 w:5
-RTILE: x = wall_pebble_darkgray
-KFEAT: O = enter_tomb
+SUBST:  r = xx..., 1 = 1xx..., . = ....s
+RTILE:  x = wall_pebble_darkgray
 MAP
 ccccccccccccccccc
-cccccccccccr...rc
-c..rrr.rrr..RRR.c
-+.r.r.r.r.rrROR.c
-c.rr.rrr.rr.RRR.c
-cccccccccccr...rc
+ccccccccccc1...1c
+c..rrr.r1r..RRR.c
++.r.r.r.r.11ROR1c
+c.rr.r1r.rr.RRR.c
+ccccccccccc1...1c
 ccccccccccccccccc
 ENDMAP
 

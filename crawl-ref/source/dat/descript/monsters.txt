@@ -3321,6 +3321,10 @@ spriggan hatter
 
 A spriggan who is going slightly mad from the toxic fumes of their craft.
 %%%%
+still boulder
+
+A gargantuan mass of stone at rest.
+%%%%
 water elementalist statue
 
 A smooth statue of a beautiful merfolk bathing in a fountain, sculpted from

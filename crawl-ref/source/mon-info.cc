@@ -438,6 +438,9 @@ monster_info::monster_info(const monster* m, int milev)
     else
         number = 0;
 
+    if (type == MONS_BOULDER && m->props.exists(BOULDER_DIRECTION_KEY))
+        mb.set(MB_ROLLING);
+
     _colour = m->colour;
 
     if (m->is_summoned()

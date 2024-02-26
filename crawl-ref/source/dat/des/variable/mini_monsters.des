@@ -10216,6 +10216,7 @@ KMONS:   E = merfolk
 KMONS:   F = human
 KMONS:   G = vampire
 KMONS:   H = crimson imp
+KMONS:   1 = boulder dbname:still_boulder / nothing w:30
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
 KITEM:   b = gold / nothing w:12

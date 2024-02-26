@@ -1492,9 +1492,10 @@ ENDMAP
 NAME:    regret_index_zotdec_under_construction
 TAGS:    extra transparent zotdec luniq_zotdec_large
 DEPTH:   Zot, !Zot:$
-NSUBST:  x = 4 = x. / *:x, + = 1:xx. / 3 = +.. / *:+
-NSUBST:  ' = 1:Gxx / *:., . = 1:Gxx / 1:{([})]TUV<>>>
-SUBST:   X = x..
+MONS:    boulder dbname:still_boulder
+NSUBST:  x = 4 = x. / *:x, + = 1:xxx1.. / 3 = +.. / *:+
+NSUBST:  ' = 1:Gxx / *:., . = 1:G1x / 1:{([})]TUV<>>>
+SUBST:   X = xx1....
 SHUFFLE: @&
 CLEAR:   &
 MAP

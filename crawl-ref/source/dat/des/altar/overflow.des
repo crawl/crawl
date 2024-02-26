@@ -3565,11 +3565,12 @@ NAME:    regret_index_xom_buried_treasure
 TAGS:    transparent temple_overflow_1 temple_overflow_xom
 TAGS:    uniq_altar_xom extra decor
 ITEM:    stone q:1 no_pickup
-KITEM:   ? = plate armour randart plus:-12 ident:all / \
-             kite shield randart plus:-12 ident:all / \
-             mundane club / gold q:1 w:9970, large rock q:1
+KMONS:   ! = boulder dbname:still_boulder
+KITEM:   ! = plate armour randart plus:-12 ident:all / \
+             kite shield randart plus:-12 ident:all / mundane club w:9980
+KITEM:   ? = mundane club / gold q:1 w:9970, large rock q:1
 KFEAT:   _ = altar_xom
-SUBST:   b : bcc, y : xx., z : xx., Y : xxd, Z : xxd
+SUBST:   b : bcc, y : xx., z : xx., Y : xxd, Z : xxd, ? = !
 MAP
 xx@. ..xx
 xbx...zbx

@@ -1686,6 +1686,7 @@ ENDMAP
 NAME:  nicolae_elf_deep_mausoleum
 TAGS:  transparent patrolling no_monster_gen
 DEPTH: Elf
+KMONS: B = boulder dbname:still_boulder
 KITEM: S = large rock q:1 / stone
 KITEM: % = % / * w:5
 KITEM: * = * / | w:5
@@ -1698,7 +1699,7 @@ KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf blademaster simulacrum / spectral deep elf knight / \
            deep elf knight simulacrum
 KFEAT: 1V = V
-SUBST: 2 = 22., 3 = 33., D = 32., G = G:90 S
+SUBST: 2 = 22., 3 = 33., D = 32., G = G:85 S B:5
 TILE:  G = dngn_gravestone
 : set_feature_name("granite_statue", "a gravestone")
 MAP
@@ -1706,7 +1707,7 @@ cccccccccccccccccccccc
 ccccG*GcccG%GcccG%Gccc
 ccc.2.2.c.D.D.c.3.3.cc
 ccG2...2GD...DG3...3Gc
-cc*..1.....V.....V...+
+cc|..1.....V.....V...+
 ccG2...2GD...DG3...3Gc
 ccc.2.2.c.D.D.c.3.3.cc
 ccccG*GcccG%GcccG%Gccc

@@ -116,8 +116,10 @@ ENDMAP
 NAME:    hangedman_research_geology
 MONS:    boulder beetle / catoblepas, crystal guardian, iron dragon
 KMONS:   D = caustic shrike
-COLOUR:  .x012345D = brown
-FTILE:   .+x012345D = floor_pebble_brown
+KMONS:   B = boulder dbname:still_boulder
+KITEM:   B = large rock q:1
+COLOUR:  .xB012345D = brown
+FTILE:   .+xB012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown
 COLOUR:  G = earth
 TILE:    G = earthen_conduit
@@ -126,8 +128,8 @@ TILE:    G = earthen_conduit
 MAP
 @'''@'''@
 abcd+dcba
-b...x...b
-c0x1.1x0c
+bB..x..Bb
+c0B1.1B0c
 d.2xxx2.d
 a.xxDxx.a
 b.x3.3x.b
