@@ -2218,7 +2218,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (valid_heal_source
     && you.has_mutation(MUT_DEVOUR_ON_KILL)
-    && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC)
+    && coinflip()
     && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF
@@ -2704,7 +2704,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         const int applied_turn = mons.props[GHOUL_DEVOUR_TURN_KEY];
 
         if (gives_player_xp && !was_banished
-            && mons.holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC)
             && (applied_turn == you.num_turns
                 || applied_turn == you.num_turns + 1 && you.turn_is_over))
         {

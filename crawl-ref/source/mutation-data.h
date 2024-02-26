@@ -2485,7 +2485,7 @@ static const mutation_def mut_data[] =
 
 { MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true,
   "devour on kill",
-  {"You thrive by killing the living.", "", ""},
+  {"You thrive by killing.", "", ""},
   {"You feel hungry for flesh.", "", ""},
   {"You feel less hungry for flesh.", "", ""},
 },
