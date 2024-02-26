@@ -513,7 +513,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             autotoggle_autopickup(false);
 
-            if (backlit() || has_ench(ENCH_SUBMERGED))
+            if (backlit())
                 break;
 
             if (!quiet)
@@ -548,7 +548,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                      name(DESC_THE, true).c_str());
             }
 
-            if(!friendly())
+            if (!friendly())
             {
                 //turn off auto pickup
                 autotoggle_autopickup(true);
