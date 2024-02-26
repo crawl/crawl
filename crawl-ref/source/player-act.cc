@@ -293,7 +293,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
 
     // re-use of projectile is very dubious here
     const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
-    return (primary_delay + offhand_delay) / 2;
+    return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
