@@ -5095,8 +5095,7 @@ static void _blink_allies_encircle(const monster* mon)
     }
     shuffle_array(allies);
 
-    int count = max(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
-                       + random2(mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 4));
+    int count = random_range(3, 6);
 
     for (monster *ally : allies)
     {
@@ -5116,7 +5115,9 @@ static void _blink_allies_encircle(const monster* mon)
         ally->behaviour = BEH_SEEK;
         ally->foe = mon->foe;
         ally->drain_action_energy();
-        count--;
+
+        if (!--count)
+            break;
     }
 }
 
