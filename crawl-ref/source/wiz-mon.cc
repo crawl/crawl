@@ -603,21 +603,17 @@ void debug_make_monster_shout(monster* mon)
 
 void wizard_apply_monster_blessing(monster* mon)
 {
-    mprf(MSGCH_PROMPT, "Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? ");
+    mprf(MSGCH_PROMPT, "Apply blessing of the (S)hining One? ");
 
     char type = (char) getchm(KMC_DEFAULT);
     type = toalower(type);
 
-    if (type != 'b' && type != 's' && type != 'r')
+    if (type != 's')
     {
         canned_msg(MSG_OK);
         return;
     }
-    god_type god = GOD_NO_GOD;
-    if (type == 'b' || type == 'r' && coinflip())
-        god = GOD_BEOGH;
-    else
-        god = GOD_SHINING_ONE;
+    god_type god = GOD_SHINING_ONE;
 
     if (!bless_follower(mon, god, true))
         mprf("%s won't bless this monster for you!", god_name(god).c_str());
