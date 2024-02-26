@@ -1729,6 +1729,17 @@ void handle_monster_dies_lua(monster& mons, killer_type killer)
     }
 }
 
+static void _maybe_set_monster_foe(monster& mons, int killer_index)
+{
+    if (mons.foe == MHITNOT)
+    {
+        if (!mons.wont_attack() && !crawl_state.game_is_arena())
+            mons.foe = MHITYOU;
+        else if (!invalid_monster_index(killer_index))
+            mons.foe = killer_index;
+    }
+}
+
 /**
  * Kill off a monster.
  *
@@ -2445,13 +2456,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Make sure Boris has a foe to address.
-    if (mons.foe == MHITNOT)
-    {
-        if (!mons.wont_attack() && !crawl_state.game_is_arena())
-            mons.foe = MHITYOU;
-        else if (!invalid_monster_index(killer_index))
-            mons.foe = killer_index;
-    }
+    _maybe_set_monster_foe(mons, killer_index);
 
     // Make sure that the monster looks dead.
     if (mons.alive() && (!summoned || duration > 0))
@@ -3359,6 +3364,9 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (mons->asleep())
         behaviour_event(mons, ME_DISTURB, 0, mons->pos());
 
+    // If the other didn't have a foe yet, it sure does now!
+    _maybe_set_monster_foe(*mons, killer_index);
+
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
@@ -3387,11 +3395,14 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
     string death_message = getSpeakString(key);
 
-    // Check if they can speak or not: they may have been polymorphed.
-    if (you.see_cell(mons->pos()) && !death_message.empty() && mons->can_speak())
-        mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
-    else if (mons->can_speak())
-        mpr(death_message);
+    if (!death_message.empty() && !invalid_msg(*mons, death_message))
+    {
+        // Check if they can speak or not: they may have been polymorphed.
+        if (you.see_cell(mons->pos()) && mons->can_speak())
+            mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
+        else if (mons->can_speak())
+            mpr(death_message);
+    }
 
     // Upgrade the spellbook here, as elven_twin_energize
     // may not be called due to lack of visibility.
