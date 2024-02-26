@@ -1572,7 +1572,6 @@ static void _pre_monster_move(monster& mons)
 // Handle weird stuff like spells/special abilities, item use,
 // reaching, swooping, etc.
 // Returns true iff the monster used up their turn.
-// There should be a more elegant solution than passing in a ref to mmov
 static bool _mons_take_special_action(monster &mons, int old_energy)
 {
     if ((mons.asleep() || mons_is_wandering(mons))
