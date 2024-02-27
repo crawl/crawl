@@ -72,6 +72,7 @@ my %field_type = (
     RANDAPP  => "bool",
     RCORR    => "bool",
     REGEN    => "num",
+    REGEN_MP => "num",
     RMSL     => "bool",
     RMUT     => "bool",
     SEEINV   => "bool",
@@ -550,7 +551,7 @@ my @art_order = (
     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "unused", "ENH_FIRE", "\n",
     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-    "ACROBAT",
+    "ACROBAT", "REGEN_MP",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -565,7 +566,7 @@ my @art_order = (
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
 #     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
 #     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-#     "ACROBAT",
+#     "ACROBAT", "REGEN_MP",
 #     "}",
 # end TAG_MAJOR_VERSION
 

@@ -910,31 +910,51 @@ static void _handle_emergency_flight()
     }
 }
 
-// Regen equipment only begins to function when full health is reached.
-static void _update_equipment_attunement_by_health()
+static bool _is_regen_item(const item_def& item)
 {
-    if (you.hp != you.hp_max
-#if TAG_MAJOR_VERSION == 34
-        || you.get_mutation_level(MUT_NO_REGENERATION)
-#endif
-        )
-    {
+    return is_artefact(item) && artefact_property(item, ARTP_REGENERATION)
+            || item.base_type == OBJ_ARMOUR
+              && armour_type_prop(item.sub_type, ARMF_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_REGENERATION);
+}
+
+static bool _is_mana_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_MANA_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
+}
+
+// Regeneration and Magic Regeneration items only work if the player has reached
+// max hp/mp while they are being worn. This scans and updates such items when
+// the player refills their hp/mp.
+static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
+{
+    if (!attune_regen && !attune_mana_regen)
         return;
-    }
 
     vector<string> eq_list;
     bool plural = false;
+
+    bool gained_regen = false;
+    bool gained_mana_regen = false;
 
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
     {
         if (you.melded[slot] || you.equip[slot] == -1 || you.activated[slot])
             continue;
         const item_def &arm = you.inv[you.equip[slot]];
-        if (is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION)
-            || arm.base_type == OBJ_ARMOUR
-               && armour_type_prop(arm.sub_type, ARMF_REGENERATION)
-            || arm.is_type(OBJ_JEWELLERY, AMU_REGENERATION))
+
+        if ((attune_regen && _is_regen_item(arm)
+             && (you.magic_points == you.max_magic_points || !_is_mana_regen_item(arm)))
+            || (attune_mana_regen && _is_mana_regen_item(arm)
+                && (you.hp == you.hp_max || !_is_regen_item(arm))))
         {
+            // Track which properties we should notify the player they have gained.
+            if (!gained_regen && _is_regen_item(arm))
+                gained_regen = true;
+            if (!gained_mana_regen && _is_mana_regen_item(arm))
+                gained_mana_regen = true;
+
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
                 slot == EQ_AMULET ? "amulet" :
                 slot != EQ_BODY_ARMOUR ?
@@ -953,29 +973,14 @@ static void _update_equipment_attunement_by_health()
     if (eq_list.empty())
         return;
 
+    const char* msg = (gained_regen && gained_mana_regen) ? " health and magic"
+                       : (gained_regen ? "" : " magic");
+
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
-    mprf("Your %s attune%s to your body as you begin to regenerate "
-         "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself");
-}
-
-// Amulet of magic regeneration needs to be worn while at full magic before it
-// begins to function.
-static void _update_mana_regen_amulet_attunement()
-{
-    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
-        && player_regenerates_mp())
-    {
-        if (you.magic_points == you.max_magic_points
-            && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 0)
-        {
-            you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
-            mpr("Your amulet attunes itself to your body and you begin to "
-                "regenerate magic more quickly.");
-        }
-    }
-    else if (!you.melded[EQ_AMULET])
-        you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
+    mprf("Your %s attune%s to your body and you begin to regenerate%s "
+         "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself",
+         msg);
 }
 
 // cjo: Handles player hp and mp regeneration. If the counter
@@ -989,6 +994,9 @@ static void _regenerate_hp_and_mp(int delay)
 {
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
+
+    const int old_hp = you.hp;
+    const int old_mp = you.magic_points;
 
     // HP Regeneration
     if (!you.duration[DUR_DEATHS_DOOR])
@@ -1012,28 +1020,29 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    _update_equipment_attunement_by_health();
-
     // MP Regeneration
-    if (!player_regenerates_mp())
-        return;
-
-    if (you.magic_points < you.max_magic_points)
+    if (player_regenerates_mp())
     {
-        const int base_val = player_mp_regen();
-        int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
-        you.magic_points_regeneration += mp_regen_countup;
+        if (you.magic_points < you.max_magic_points)
+        {
+            const int base_val = player_mp_regen();
+            int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
+            you.magic_points_regeneration += mp_regen_countup;
+        }
+
+        while (you.magic_points_regeneration >= 100)
+        {
+            inc_mp(1);
+            you.magic_points_regeneration -= 100;
+        }
+
+        ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
     }
 
-    while (you.magic_points_regeneration >= 100)
-    {
-        inc_mp(1);
-        you.magic_points_regeneration -= 100;
-    }
-
-    ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
-
-    _update_mana_regen_amulet_attunement();
+    // Update attunement of regeneration items if our hp/mp has refilled.
+    _maybe_attune_items(you.hp != old_hp && you.hp == you.hp_max,
+                        you.magic_points != old_mp
+                        && you.magic_points == you.max_magic_points);
 }
 
 static void _handle_fugue(int delay)

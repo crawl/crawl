@@ -1292,13 +1292,16 @@ int player_mp_regen()
     if (you.get_mutation_level(MUT_MANA_REGENERATION))
         regen_amount *= 2;
 
-    if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION)
-        && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
+    // Amulets and artefacts.
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
     {
-        regen_amount += 40;
-        // grants a second pip on top of its base type
-        if (player_equip_unrand(UNRAND_VITALITY))
+        if (you.melded[slot] || you.equip[slot] == -1 || !you.activated[slot])
+            continue;
+        const item_def &arm = you.inv[you.equip[slot]];
+        if (arm.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION))
             regen_amount += 40;
+        if (is_artefact(arm))
+            regen_amount += 40 * artefact_property(arm, ARTP_MANA_REGENERATION);
     }
 
     // Rampage healing grants a variable regen boost while active.

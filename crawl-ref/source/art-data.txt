@@ -1203,9 +1203,9 @@ LIFE:     1
 BOOL:     poison, evil
 
 NAME:     amulet of Vitality
-OBJ:      OBJ_JEWELLERY/AMU_MANA_REGENERATION
-INSCRIP:  RegenMP++
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 REGEN:    2
+REGEN_MP: 2
 COLOUR:   ETC_MUTAGENIC
 BOOL:     skip_ego
 VALUE:    1000

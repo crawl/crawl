@@ -445,6 +445,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ACROBAT,
             "It increases your evasion after moving or waiting.",
             prop_note::plain },
+        { ARTP_MANA_REGENERATION,
+            "It increases your rate of magic regeneration.",
+            prop_note::symbolic },
     };
     return data;
 }
@@ -509,6 +512,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_NEGATIVE_ENERGY,
         ARTP_WILLPOWER,
         ARTP_REGENERATION,
+        ARTP_MANA_REGENERATION,
         ARTP_RMUT,
         ARTP_RCORR,
 
@@ -772,7 +776,8 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
             sdesc = replace_all(sdesc, "%d", make_stringf("%+d", stval));
 
         if (desc.display_type == prop_note::symbolic
-            && desc.property != ARTP_REGENERATION) // symbolic, but no text modification
+            && desc.property != ARTP_REGENERATION // symbolic, but no text modification
+            && desc.property != ARTP_MANA_REGENERATION)
         {
             // for symbolic props, desc.desc is just the resist name, need
             // to fill in to get a complete sentence
