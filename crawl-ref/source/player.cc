@@ -4821,6 +4821,11 @@ void dec_slow_player(int delay)
 
 void barb_player(int turns)
 {
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (turns <= 0)
+        return;
+
     const int max_turns = 12;
     const int max_pow = 6;
 
