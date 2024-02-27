@@ -1983,7 +1983,8 @@ bool player_is_shapechanged()
 bool player_acrobatic()
 {
     return you.wearing(EQ_AMULET, AMU_ACROBAT)
-        || you.has_mutation(MUT_ACROBATIC);
+        || you.has_mutation(MUT_ACROBATIC)
+        || you.scan_artefacts(ARTP_ACROBAT);
 }
 
 void update_acrobat_status()

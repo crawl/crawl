@@ -442,6 +442,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_ALCHEMY,
             "It increases the power of your Alchemy spells.",
             prop_note::plain },
+        { ARTP_ACROBAT,
+            "It increases your evasion after moving or waiting.",
+            prop_note::plain },
     };
     return data;
 }
@@ -487,6 +490,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_NOISE,
         ARTP_HARM,
         ARTP_RAMPAGING,
+        ARTP_ACROBAT,
         ARTP_CORRODE,
         ARTP_DRAIN,
         ARTP_SLOW,

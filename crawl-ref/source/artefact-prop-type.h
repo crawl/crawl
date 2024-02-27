@@ -86,5 +86,6 @@ enum artefact_prop_type
     ARTP_ENHANCE_AIR,
     ARTP_ENHANCE_EARTH,
     ARTP_ENHANCE_ALCHEMY,
+    ARTP_ACROBAT,
     ARTP_NUM_PROPERTIES
 };
