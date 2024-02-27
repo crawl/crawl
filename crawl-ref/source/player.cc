@@ -4819,6 +4819,23 @@ void dec_slow_player(int delay)
     }
 }
 
+void barb_player(int turns)
+{
+    if (!you.duration[DUR_BARBS])
+    {
+        mpr("Barbed spikes become lodged in your body.");
+        you.set_duration(DUR_BARBS, random_range(4, 8));
+        you.attribute[ATTR_BARBS_POW] = 4;
+    }
+    else
+    {
+        mpr("More barbed spikes become lodged in your body.");
+        you.increase_duration(DUR_BARBS, turns, 12);
+        you.attribute[ATTR_BARBS_POW] =
+            min(6, you.attribute[ATTR_BARBS_POW]++);
+    }
+}
+
 void dec_berserk_recovery_player(int delay)
 {
     if (!you.duration[DUR_BERSERK_COOLDOWN])
