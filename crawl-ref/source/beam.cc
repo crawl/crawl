@@ -2718,6 +2718,7 @@ bool bolt::can_burn_trees() const
     case SPELL_INNER_FLAME:
     case SPELL_STARBURST:
     case SPELL_FLAME_WAVE:
+    case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
         return true;
     default:
         return false;
