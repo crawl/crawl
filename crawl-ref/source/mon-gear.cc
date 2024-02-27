@@ -9,7 +9,6 @@
 
 #include <algorithm>
 
-#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "dungeon.h"
@@ -73,10 +72,6 @@ void give_specific_item(monster* mon, int thing)
             set_equip_desc(mthing, ISFLAG_GLOWING);
     }
 
-    // Get monster halo/umbra before we wield this item.
-    int old_halo = mon->halo_radius();
-    int old_umbra = mon->umbra_radius();
-
     unwind_var<int> save_speedinc(mon->speed_increment);
     if (!mon->pickup_item(mthing, false, true))
     {
@@ -92,15 +87,6 @@ void give_specific_item(monster* mon, int thing)
 
     if (!mthing.appearance_initialized())
         item_colour(mthing);
-
-    // Get monster halo/umbra after we wield this item.
-    int new_halo = mon->halo_radius();
-    int new_umbra = mon->umbra_radius();
-
-    // If monster halo/umbra has changed after wielding this item, update the
-    // halo/umbra.
-    if (old_halo != new_halo || old_umbra != new_umbra)
-        invalidate_agrid(true);
 }
 
 void give_specific_item(monster* mon, const item_def& tpl)
