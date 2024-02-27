@@ -2648,7 +2648,7 @@ static void _handle_vamp_blood(int exp)
 
     // gain a maximum of x blood per kill to make revivify
     // not immediately available at low xl
-    int max_gain = 3;
+    int max_gain = 4;
     while (max_gain > 0 && you.attribute[ATTR_VAMP_BLOOD] < 100
         && you.attribute[ATTR_VAMP_BLOOD_XP] <= 0)
     {
