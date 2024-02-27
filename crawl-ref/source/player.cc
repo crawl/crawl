@@ -4844,6 +4844,7 @@ void barb_player(int turns)
     }
     else
     {
+        mpr("More barbed spikes become lodged in your body.");
         you.increase_duration(DUR_BARBS, turns, max_turns);
         you.attribute[ATTR_BARBS_POW] =
             min(max_pow, you.attribute[ATTR_BARBS_POW]++);
