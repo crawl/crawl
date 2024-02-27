@@ -4215,7 +4215,7 @@ void bolt::affect_player()
 
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
-        barb_player(random_range(4, 8));
+        barb_player(random_range(4, 8), 4);
 
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;

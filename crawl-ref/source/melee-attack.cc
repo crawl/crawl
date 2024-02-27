@@ -3064,9 +3064,9 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_BARBS:
-        // same duration as manticore barbs
+        // same duration/power as manticore barbs
         if (defender->is_player())
-            barb_player(random_range(4, 8));
+            barb_player(random_range(4, 8), 4);
         // Insubstantial and jellies are immune
         else if (!(defender->is_insubstantial() &&
                     mons_genus(defender->type) != MONS_JELLY))
