@@ -7088,6 +7088,11 @@ void unmarshallMonster(reader &th, monster& m)
             slot.spell = SPELL_CORRUPTING_PULSE;
             m.spells.push_back(slot);
         }
+        else if (slot.spell == SPELL_CAUSTIC_BREATH)
+        {
+            slot.spell = SPELL_SPIT_ACID;
+            m.spells.push_back(slot);
+        }
     }
 #endif
     }
