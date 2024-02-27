@@ -4839,8 +4839,8 @@ void barb_player(int turns, int pow)
     if (!you.duration[DUR_BARBS])
     {
         mpr("Barbed spikes become lodged in your body.");
-        you.set_duration(DUR_BARBS, turns);
-        you.attribute[ATTR_BARBS_POW] = pow;
+        you.set_duration(DUR_BARBS, min(max_turns, turns));
+        you.attribute[ATTR_BARBS_POW] = min(max_pow, pow);
     }
     else
     {
