@@ -6520,7 +6520,7 @@ void bolt::refine_for_explosion()
         colour     = LIGHTCYAN;
         ex_size    = 2;
     }
-    else if (origin_spell = SPELL_NULLIFYING_BREATH)
+    else if (origin_spell == SPELL_NULLIFYING_BREATH)
     {
         colour  = MAGENTA;
         ex_size = 2;
