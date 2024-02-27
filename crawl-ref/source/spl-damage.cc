@@ -4293,8 +4293,8 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     beam.flavour = BEAM_VISUAL;
     beam.draw_delay = 5;
 
-    //2-6 base, 2-14 at xl 27
-    const int damage = roll_dice(2, 3 + div_rand_round(you.experience_level * 4, 27));
+    //1-3 base, 1-7 at xl 27
+    const int damage = roll_dice(1, 3 + div_rand_round(you.experience_level * 4, 27));
 
     if (you.can_see(victim))
     {
@@ -4324,7 +4324,7 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     if (you.duration[DUR_DEATHS_DOOR] || you.hp == you.hp_max)
         return;
 
-    int hp_gain = div_rand_round(drain_amount, 2);
+    int hp_gain = drain_amount;
 
     //cap healing per turn if the source was a regular attack
     if (!deadtarget)
