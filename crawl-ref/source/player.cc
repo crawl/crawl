@@ -4821,6 +4821,16 @@ void dec_slow_player(int delay)
 
 void barb_player(int turns)
 {
+    const int max_turns = 12;
+    const int max_pow = 6;
+
+    if (you.duration[DUR_BARBS] == max_turns
+        && you.attribute[ATTR_BARBS_POW] == max_pow)
+    {
+        mpr("Your body cannot hold any more barbed spikes.");
+        return;
+    }
+
     if (!you.duration[DUR_BARBS])
     {
         mpr("Barbed spikes become lodged in your body.");
@@ -4829,10 +4839,9 @@ void barb_player(int turns)
     }
     else
     {
-        mpr("More barbed spikes become lodged in your body.");
-        you.increase_duration(DUR_BARBS, turns, 12);
+        you.increase_duration(DUR_BARBS, turns, max_turns);
         you.attribute[ATTR_BARBS_POW] =
-            min(6, you.attribute[ATTR_BARBS_POW]++);
+            min(max_pow, you.attribute[ATTR_BARBS_POW]++);
     }
 }
 
