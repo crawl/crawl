@@ -292,11 +292,32 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             you.strip_willpower(beam->agent(), random_range(8, 14));
         break;
 
+    case BEAM_CRYSTALLIZING:
+        if (doEffects)
+        {
+            if (x_chance_in_y(2, 3)) {
+                if (!you.duration[DUR_VITRIFIED])
+                    mpr("Your body becomes as fragile as glass!");
+                else
+                    mpr("You feel your fragility will last longer.");
+                you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
+            }
+        }
+        break;
+
     case BEAM_UMBRAL_TORCHLIGHT:
         if (you.holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY)
             || beam->agent(true)->is_player())
         {
             hurted = 0;
+        }
+        break;
+
+    case BEAM_WARPING:
+        if (doEffects
+            && x_chance_in_y(min(90, 35 + (beam->ench_power)), 100))
+        {
+            you.blink();
         }
         break;
 

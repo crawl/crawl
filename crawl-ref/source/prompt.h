@@ -67,3 +67,47 @@ protected:
     bool in_prompt_mode;
 
 };
+
+#ifdef WIZARD
+// If _symbol is 0, a copy in a WizardMenu will be given the next unused symbol.
+// symbol in the menu's copy.
+class WizardEntry : public MenuEntry
+{
+public:
+    WizardEntry(int _symbol, string _text, int _output)
+    : MenuEntry(_text, MEL_ITEM, 1, _symbol), output(_output)
+    { indent_no_hotkeys = true; }
+    WizardEntry(int _symbol, string _text) // Return the symbol from run().
+    : WizardEntry(_symbol, _text, _symbol) { }
+    WizardEntry(string _text, int _output) // Find a symbol later.
+    : WizardEntry(0, _text, _output) { }
+
+    int output;
+};
+
+class WizardMenu : private PromptMenu
+{
+public:
+    WizardMenu(string _title, vector<WizardEntry> &_options, int _default=127);
+    int run(bool to_bool = false);
+
+    int result() const
+    {
+        return last_result;
+    }
+    bool success() const
+    {
+        return last_success;
+    }
+protected:
+    void run_aux();
+    int index_to_symbol(int index) const;
+    int next_unused_symbol();
+
+    unsigned last_symbol_index = 0;
+    int last_result = 0;
+    bool last_success = false;
+
+    int default_value;
+};
+#endif

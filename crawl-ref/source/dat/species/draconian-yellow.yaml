@@ -34,7 +34,7 @@ mutations:
   14:
     MUT_ACIDIC_BITE: 1
 fake_mutations:
-  - long: You can spit globs of acid.
-    short: spit acid
+  - long: You can breathe corrosive fumes.
+    short: caustic breath
 
 orc_name: Yellow Orconian

@@ -106,9 +106,9 @@ demonic_guardian_3
 demonic_magic_1 DEMONIC_MAGIC
 demonic_magic_2
 demonic_magic_3
-foul_glow_1 FOUL_GLOW
-foul_glow_2
-foul_glow_3
+foul_shadow_1 FOUL_SHADOW
+foul_shadow_2
+foul_shadow_3
 foul_stench_1 FOUL_STENCH
 foul_stench_2
 foul_stench_3

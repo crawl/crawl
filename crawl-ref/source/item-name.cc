@@ -268,11 +268,17 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                     else
                         buff << " (in " << you.hand_name(false) << ")";
                     break;
+                case EQ_OFFHAND:
+                    if (is_weapon(*this))
+                    {
+                        buff << " (offhand)";
+                        break;
+                    }
+                    // fallthrough to EQ_CLOAK...EQ_BODY_ARMOUR
                 case EQ_CLOAK:
                 case EQ_HELMET:
                 case EQ_GLOVES:
                 case EQ_BOOTS:
-                case EQ_OFFHAND:
                 case EQ_BODY_ARMOUR:
                     buff << " (worn)";
                     break;
@@ -531,6 +537,7 @@ const char* brand_type_adj(brand_type brand)
  *
  * @param item              The weapon with the brand.
  * @param bool              Whether to use a terse or verbose name.
+ * @param override_brand    A brand to use instead of the weapon's actual brand.
  * @return                  The name of the given item's brand.
  */
 const char* weapon_brand_name(const item_def& item, bool terse,
@@ -541,11 +548,11 @@ const char* weapon_brand_name(const item_def& item, bool terse,
     return brand_type_name(brand, terse);
 }
 
-const char* armour_ego_name(const item_def& item, bool terse)
+const char* special_armour_type_name(special_armour_type ego, bool terse)
 {
     if (!terse)
     {
-        switch (get_armour_ego_type(item))
+        switch (ego)
         {
         case SPARM_NORMAL:            return "";
 #if TAG_MAJOR_VERSION == 34
@@ -593,7 +600,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
     }
     else
     {
-        switch (get_armour_ego_type(item))
+        switch (ego)
         {
         case SPARM_NORMAL:            return "";
 #if TAG_MAJOR_VERSION == 34
@@ -640,6 +647,11 @@ const char* armour_ego_name(const item_def& item, bool terse)
     }
 }
 
+const char* armour_ego_name(const item_def& item, bool terse)
+{
+    return special_armour_type_name(get_armour_ego_type(item), terse);
+}
+
 static const char* _wand_type_name(int wandtype)
 {
     switch (wandtype)
@@ -655,6 +667,7 @@ static const char* _wand_type_name(int wandtype)
     case WAND_LIGHT:           return "light";
     case WAND_QUICKSILVER:     return "quicksilver";
     case WAND_ROOTS:           return "roots";
+    case WAND_WARPING:         return "warping";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";
@@ -3430,6 +3443,15 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_JEWELLERY:
         if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
+
+        if (you.has_mutation(MUT_NO_RINGS)
+            && !jewellery_is_amulet(item)
+            // This is an ugly check, and violates the assumption that
+            // perma-useless items will always be useless. Sorry!
+            && !player_equip_unrand(UNRAND_FINGER_AMULET))
+        {
+            return true;
+        }
 
         if (!ident && !item_type_known(item))
             return false;

@@ -308,6 +308,10 @@ fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
 fire_vortex4
+thermic_dynamo1 MONS_THERMIC_DYNAMO /*'v'*/
+thermic_dynamo2
+thermic_dynamo3
+thermic_dynamo4
 spatial_vortex1 MONS_SPATIAL_VORTEX /*'v'*/
 spatial_vortex2
 spatial_vortex3
@@ -321,6 +325,7 @@ twister2
 twister3
 twister4
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
+boulder MONS_BOULDER /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2
 orb_of_destruction3

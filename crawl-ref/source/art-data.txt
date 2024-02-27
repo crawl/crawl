@@ -411,13 +411,13 @@ WILL:    1
 NAME:    eveningstar "Brilliance"
 OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
 PLUS:    +1
-INSCRIP: Halo
+INSCRIP: Umbra
 COLOUR:  ETC_FOUL_FLAME
 TILE:    urand_brilliance
-TILE_EQ: mace_of_brilliance
+TILE_EQ: eveningstar_brilliance
 BRAND:   SPWPN_FOUL_FLAME
-DESCRIP: Halo:      It grants its wielder a halo, revealing invisible creatures
- and increasing accuracy against all within it other than the wielder.
+DESCRIP: Umbra:     It surrounds you with an aura of shadow, increasing your
+ stealth and reducing the accuracy of all others within it.
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -1734,8 +1734,8 @@ COLOUR:  ETC_DITHMENOS
 EV:      4
 VALUE:   270
 INSCRIP: slick, slippery,
-DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted or
- webbed.
+DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted,
+ webbed, or stopped by binding sigils.
 +Slippery:  Its wearer slips away from damaging melee attacks, pulling the
  attacker onward.
 

@@ -908,6 +908,7 @@ DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / boulder beetle / cyclops w:3
 KMONS:   2 = stone giant / catoblepas / deep troll earth mage / \
              iron dragon w:4
+KMONS:   B = boulder dbname:still_boulder
 ITEM:    stone
 KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
              stone w:15 | large rock w:15 | sling w:8  | \
@@ -916,18 +917,19 @@ KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
              randbook disc:earth w:5 | book of the earth w:2 | \
              book of geomancy w:2 | book of iron w:2 | book of the moon w:2 | \
              book of blasting w:2 | crystal plate armour w:1
-SUBST:   ? = 2d.
+SUBST:   ? = 2dd
 : if you.absdepth() < 16 then
 SUBST:   2 = 1
 : end
+SUBST:   B : B., C : B.
 MAP
-.......
+B.....C
 .xx+xx.
 .x???x.
 .m?S?m.
 .x???x.
 .xx+xx.
-.......
+C.....B
 ENDMAP
 
 #####################################################
@@ -1068,16 +1070,17 @@ ENDMAP
 # associated with one of each of the four elemental schools. Falls back to
 # generating additional books if the evocable in question is excluded due to
 # item sets.
-NAME: nicolae_elemental_shop
-TAGS: no_monster_gen no_item_gen no_pool_fixup transparent extra
-DEPTH: D:4-, Depths
+NAME:    nicolae_elemental_shop
+TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent extra
+DEPTH:   D:4-, Depths
+KMONS:   b = boulder dbname:still_boulder
 SHUFFLE: AB
-NSUBST: A = a / l / w / x
-SUBST: B = .
-KPROP: l = no_cloud_gen
-MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
-            pow_min = 100, pow_max = 100, delay = 1, \
-            size = 1, walk_dist = 0, start_clouds = 1 }
+NSUBST:  A = 1:a / 1:l / 1:w / *:xxb
+SUBST:   B = .
+KPROP:   l = no_cloud_gen
+MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
+             pow_min = 100, pow_max = 100, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1 }
 {{
   local evocables = {"wand of flame","wand of iceblast",
                      "lightning rod","tin of tremorstones"}
@@ -1917,7 +1920,7 @@ MONS:  nagaraja / naga sharpshooter, naga ritualist / salamander mystic
 MONS:  naga / salamander / mana viper w:5
 : elseif you.in_branch("Elf") then
 MONS:  deep elf high priest / deep elf sorcerer / \
-       deep elf elementalist / crystal guardian
+       deep elf elementalist / thermic dynamo
 MONS:  deep elf knight / deep elf archer w:5
 MONS:  deep elf zephyrmancer / deep elf pyromancer
 : elseif you.in_branch("Vaults") then
@@ -1945,6 +1948,24 @@ cc3.....3cc
 ccc.....ccc
  ccc...ccc
   ccb+bcc
+ENDMAP
+
+NAME:   nicolae_clarity_for_sale
+TAGS:   transparent
+DEPTH:  D:7-, Depths, Elf, Snake
+WEIGHT: 5
+KFEAT:  S = general shop type:Clear_Minds suffix:Boutique count:5 use_all ; \
+            any weapon artprops:Clar | any armour artprops:Clar | \
+            any jewellery artprops:Clar | any magical staff artprops:Clar | \
+            any talisman artprops:Clar
+MAP
+...m...
+.m...m.
+.......
+m..S..m
+.......
+.m...m.
+...m...
 ENDMAP
 
 ###############################################################################

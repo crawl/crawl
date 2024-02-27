@@ -34,7 +34,7 @@ mutations:
   7:
     MUT_HEAT_RESISTANCE: 1
 fake_mutations:
-  - long: You can breathe blasts of fire.
-    short: breathe fire
+  - long: You can breathe blasts of explosive embers.
+    short: combustion breath
 
 orc_name: Red Orconian

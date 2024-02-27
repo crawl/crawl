@@ -36,6 +36,6 @@ mutations:
     MUT_STEAM_RESISTANCE: 1
 fake_mutations:
   - long: You can breathe blasts of scalding, opaque steam.
-    short: breathe steam
+    short: steam breath
 
 orc_name: Pale Orconian

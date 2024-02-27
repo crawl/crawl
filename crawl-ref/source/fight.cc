@@ -98,9 +98,10 @@ int aux_to_hit()
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
 {
     const int to_land = atk.calc_pre_roll_to_hit(false);
-    int ev = mi.ev;
     if (to_land >= AUTOMATIC_HIT)
         return 100;
+
+    int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
@@ -121,9 +122,6 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
                 adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
                                  / 2 / BULLSEYE_TO_HIT_DIV;
             }
-
-            if (mi.is(MB_REPEL_MSL))
-                adjusted_mhit -= (adjusted_mhit + 1) / 2;
         }
 
         if (adjusted_mhit >= ev)
@@ -347,10 +345,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (attk.cancel_attack)
             you.turn_is_over = false;
         else
-        {
             you.time_taken = you.attack_delay().roll();
-            you.maybe_shutdown_legs();
-        }
+
         if (!success)
             return !attk.cancel_attack;
 

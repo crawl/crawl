@@ -595,11 +595,8 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_EOS)
-        || player_equip_unrand(UNRAND_BRILLIANCE))
-    {
+    if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
-    }
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
@@ -636,17 +633,18 @@ static int _mons_class_halo_radius(monster_type type)
 
 int monster::halo_radius() const
 {
-    item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && (is_unrandom_artefact(*weap, UNRAND_EOS)
-                 || is_unrandom_artefact(*weap, UNRAND_BRILLIANCE)))
-    {
-        size = 3;
-    }
+    item_def* wpn = mslot_item(MSLOT_WEAPON);
+    if (wpn && is_unrandom_artefact(*wpn, UNRAND_EOS))
+        size = max(size, 3);
+
+    item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
+    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
+        size = max(size, 3);
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
-        size = 3;
+        size = max(size, 3);
 
     if (!(holiness() & MH_HOLY))
         return size;
@@ -772,20 +770,39 @@ int player::umbra_radius() const
             size = 2;
     }
 
-    if (player_equip_unrand(UNRAND_SHADOWS))
+    if (you.has_mutation(MUT_FOUL_SHADOW))
+        size = max(size, you.get_mutation_level(MUT_FOUL_SHADOW));
+
+    if ((player_equip_unrand(UNRAND_BRILLIANCE))
+         || player_equip_unrand(UNRAND_SHADOWS))
+    {
         size = max(size, 3);
+    }
 
     return size;
 }
 
 int monster::umbra_radius() const
 {
+    int size = -1;
+
+    if (mons_is_ghost_demon(type))
+        size = ghost_umbra_radius();
+
+    item_def* wpn = mslot_item(MSLOT_WEAPON);
+    if (wpn && is_unrandom_artefact(*wpn, UNRAND_BRILLIANCE))
+        size = max(size, 3);
+
+    item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
+    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_BRILLIANCE))
+        size = max(size, 3);
+
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
-        return 3;
+        size = max(size, 3);
 
     if (!(holiness() & MH_UNDEAD))
-        return -1;
+        return size;
 
     // Bound holies get an umbra.
     if (type == MONS_BOUND_SOUL)

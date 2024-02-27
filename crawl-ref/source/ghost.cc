@@ -146,6 +146,7 @@ void ghost_demon::reset()
     colour           = COLOUR_UNDEF;
     flies            = false;
     cloud_ring_ench  = ENCH_NONE;
+    umbra_rad        = -1;
 }
 
 #define ADD_SPELL(which_spell) \
@@ -266,6 +267,10 @@ void ghost_demon::set_pan_lord_special_attack()
         default:
             break;
     }
+
+    // Foul flame always gets radius-1 umbra.
+    if (brand == SPWPN_FOUL_FLAME)
+        umbra_rad = 1;
 }
 
 void ghost_demon::set_pan_lord_cloud_ring()

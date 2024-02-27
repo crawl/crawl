@@ -3752,6 +3752,10 @@ ENDMAP
 NAME:   eino_small_chamber_without_monster
 TAGS:   allow_dup extra ruin_lair ruin_abyss transparent
 DEPTH:  D:4-, Depths, Lair, Abyss
+KFEAT:  > = abyssal_stair
+: if you.in_branch("Abyss") then
+SUBST:  * = >
+: end
 MAP
  xxxxx
 xx...xx
@@ -4156,13 +4160,12 @@ ENDMAP
 ##########################################################################
 
 NAME:   lemuel_flamethrower_3
-DEPTH:  D:12-, Depths, Elf, Geh, Abyss
 TAGS:   allow_dup ruin_abyss
-MARKER: * = lua:fog_machine { cloud_type="flame", \
+DEPTH:  D:12-, Depths, Elf, Geh, Abyss
+KFEAT:  F = floor
+MARKER: F = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
             size = 2, walk_dist = 0, spread_rate= 75 }
-COLOUR: * = red
-SUBST:  * = .
 :  if you.in_branch("Geh") then
 TAGS:   transparent extra
 :  end
@@ -4171,49 +4174,47 @@ MAP
 cc.cc
 cc.cc
 cc.cc
- c*c
+ cFc
  ccc
   c
 ENDMAP
 
 NAME:   lemuel_flamethrower_2
-DEPTH:  D:5-, Depths, Elf, Geh, Abyss
 TAGS:   ruin_abyss
-MARKER: * = lua:fog_machine { cloud_type="flame", \
-            pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
-            size = 2, walk_dist = 0, spread_rate= 75 }
-COLOUR: n = red
-SUBST:  * = .
+DEPTH:  D:5-, Depths, Elf, Geh, Abyss
+KFEAT:  F = floor
 :  if you.in_branch("Geh") then
 TAGS:   transparent extra
 :  end
+MARKER: F = lua:fog_machine { cloud_type="flame", \
+            pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
+            size = 2, walk_dist = 0, spread_rate= 75 }
 MAP
 ...........
 .xxxx.xxxx.
 .xxxx.xxxx.
-.xxxx*xxxx.
+.xxxxFxxxx.
 .xxxnnnxxx.
-...*nGn*...
+...FnGnF...
 .xxxnnnxxx.
-.xxxx*xxxx.
+.xxxxFxxxx.
 .xxxx.xxxx.
 .xxxx.xxxx.
 ...........
 ENDMAP
 
 NAME:   lemuel_flamethrower_1
-DEPTH:  D:5-, Depths, Elf, Geh
 TAGS:   layout_rooms layout_city
-MARKER: * = lua:fog_machine { cloud_type="flame", \
-            pow_min = 20, pow_max = 40, delay = 150, \
-            size = 2, walk_dist = 0, spread_rate= 75 }
-COLOUR: * = red
-SUBST:  * = .
+DEPTH:  D:5-, Depths, Elf, Geh
+KFEAT:  F = floor
 :  if you.in_branch("Geh") then
 TAGS:   transparent extra
 :  end
+MARKER: F = lua:fog_machine { cloud_type="flame", \
+            pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
+            size = 2, walk_dist = 0, spread_rate= 75 }
 MAP
-xxxxxxxxxxxxx
+ xxxxxxxxxxx
 xxxxxxxxxxxxx
 xxxxxxxxxxxxx
 xxxxxxxxxxxxx
@@ -4224,11 +4225,11 @@ xxxxxxGxxxxxx
 xxxxxx.xxxxxx
 xxxxxx.xxxxxx
 xxxxxx.xxxxxx
-xxxxxx*xxxxxx
+xxxxxxFxxxxxx
 xxxxxxxxxxxxx
 xxxxxxxxxxxxx
 xxxxxxxxxxxxx
-xxxxxxxxxxxxx
+ xxxxxxxxxxx
 ENDMAP
 
 # Little wisps of steam around the lava, and then occasionally a big
@@ -4406,20 +4407,24 @@ ENDMAP
 
 # No item generation for the sake of autoexplore.
 NAME:   lemuel_flamethrower_hall
-DEPTH:  D:9-, Depths, Elf, Geh, Abyss
 TAGS:   layout_rooms layout_city no_item_gen ruin_abyss
-MARKER: * = lua:fog_machine { cloud_type="flame", \
-            pow_min = 25, pow_max = 50, delay = 150, \
-            size = 3, walk_dist = 0, spread_rate= 40 }
-COLOUR: * = red
-SUBST:  * = .
+DEPTH:  D:9-, Depths, Elf, Geh, Abyss
+ITEM:   any weapon good_item ego:flaming / scroll of immolation ident:type
+ITEM:   fire dragon scales good_item / randbook disc:fire numspells:1
 SUBST:  $ : $$*|.c
 :  if you.in_branch("Geh") then
 TAGS:   extra
+NSUBST: $*| = 1:} / 3:8 / *:.
+:  elseif you.in_branch("Abyss") then
+SUBST:  * = d, | = dde
 :  end
+MARKER: F = lua:fog_machine { cloud_type="flame", \
+            pow_min = 25, pow_max = 50, delay = 150, \
+            size = 3, walk_dist = 0, spread_rate= 40 }
+COLOUR: F = red
 MAP
 ccccccccccccccccccccccc
-ccxxx*xxxxx*xxxxx*xxxxc
+ccxxxFxxxxxFxxxxxFxxxxc
 Gcxxx.xxxxx.xxxxx.xxxxc
 ccccc.ccccc.ccccc.ccccc
 c.................+$$$c
@@ -4427,17 +4432,23 @@ c.................+$$$c
 c.................+$$$c
 cc.ccccc.ccccc.cccccccc
 Gc.xxxxx.xxxxx.xxxxxxxc
-cc*xxxxx*xxxxx*xxxxxxxc
+ccFxxxxxFxxxxxFxxxxxxxc
 ccccccccccccccccccccccc
 ENDMAP
 
 # A poor man's Radiant Cavern (1KB)
-NAME:  kilobyte_mutagenic_chamber
-DEPTH: Depths, Elf, Abyss
-TAGS:  ruin_abyss
-MARKER:     U = lua:fog_machine { cloud_type = "mutagenic fog", \
-                pow_min = 10, pow_max = 30, delay = 5, \
-                size = 4, walk_dist = 0, spread_rate= 0 }
+NAME:   kilobyte_mutagenic_chamber
+TAGS:   ruin_abyss
+DEPTH:  Depths, Elf, Abyss
+ITEM:   randbook disc:alchemy numspells:4
+ITEM:   maw talisman randart / flux talisman randart / granite talisman
+ITEM:   double sword ego:chaos / manual of alchemy / manual of shapeshifting
+: if you.in_branch("Abyss") then
+NSUBST: | = 1:def / 1:def$$ / *:$
+: end
+MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", \
+            pow_min = 10, pow_max = 30, delay = 5, \
+            size = 4, walk_dist = 0, spread_rate= 0 }
 MAP
 ccccccccc
 cvvvvvvvc
@@ -4479,6 +4490,9 @@ ENDMAP
 NAME:  minivault_1
 TAGS:  transparent allow_dup extra ruin_abyss
 DEPTH: D:4-, Depths, Abyss
+: if you.in_branch("Abyss") then
+KITEM: * = $, $, scale mail good_item / buckler good_item / any wand charges:2
+: end
 MAP
 ............
 ..xxxx+xxx..
@@ -4512,9 +4526,14 @@ MAP
 ............
 ENDMAP
 
-NAME:  minivault_5
-TAGS:  transparent allow_dup extra ruin_abyss
-DEPTH: D, Elf, Crypt, Abyss
+NAME:    minivault_5
+TAGS:    transparent allow_dup extra ruin_abyss
+DEPTH:   D, Elf, Crypt, Abyss
+ITEM:    scale mail good_item / buckler good_item / any wand charges:2
+KFEAT:   > = abyssal_stair
+: if you.in_branch("Abyss") then
+NSUBST:  * = 1:> / 1:d / *:$
+: end
 MAP
 ............
 .x.xxxxxxxx.
@@ -4626,7 +4645,12 @@ ENDMAP
 NAME:  minivault_22
 TAGS:  transparent allow_dup extra ruin_abyss
 DEPTH: D:6-, Depths, !Depths:$, Abyss
+ITEM:  large rock q:4, flux talisman, demon blade / demon trident / demon whip
+: if you.in_branch("Abyss") then
+SUBST: $ : def$$
+: else
 SUBST: $ : $ *:5
+: end
 SUBST: ~ : . +:2
 MAP
 ............

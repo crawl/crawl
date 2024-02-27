@@ -529,7 +529,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
-    if (grid == DNGN_BINDING_SIGIL)
+    if (grid == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
         return false;
 
     if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
@@ -1072,8 +1072,11 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        if (Options.explore_auto_rest && !you.is_sufficiently_rested())
+        if (Options.explore_auto_rest && !you.is_sufficiently_rested()
+            || you.duration[DUR_NO_MOMENTUM])
+        {
             return CMD_WAIT;
+        }
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP

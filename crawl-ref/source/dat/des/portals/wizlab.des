@@ -818,9 +818,9 @@ ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.
 ITEM:       any w:20 / star_item / superb_item / any book w:5
-ITEM:       randart ring of flight / pair of boots ego:flying \
-            / pair of boots ego:rampaging / good_item quick blade \
-            / good_item ring of evasion / storm talisman w:5
+ITEM:       randart ring of flight / pair of boots ego:flying / \
+            pair of boots ego:rampaging / good_item quick blade / \
+            ring of evasion good_item / storm talisman w:5
 ITEM:       randbook disc:air
 KFEAT:      D = w
 KFEAT:      #6 = deep_water
@@ -1184,7 +1184,8 @@ KITEM:      | = scroll of acquirement q:1 ident:type / \
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
-KITEM:      | = robe ego:resistance ident:type / gold dragon scales
+KITEM:      | = granite talisman randart artprops:Int:6&Stlth:1 / \
+                gold dragon scales
 :           else
 KITEM:      % = any / star_item w:2
 KITEM:      * = star_item / superb_item w:2
@@ -1507,7 +1508,7 @@ ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
             plate armour good_item w:15 / plate armour randart w:15 / \
             chain mail good_item / chain mail randart / \
             kite shield randart / tower shield randart / \
-            talisman of death / talisman of death randart w:2
+            talisman of death randart artprops:str:2&dex:2&slay:2
 KFEAT:      GW = G
 NSUBST:     Z = Z / ', d = 5:e / 3:f / * = d:20 e:2, G = 22:G / 5 = G. / *:.
 {{
@@ -2175,7 +2176,7 @@ ENDMAP
 NAME:       wizlab_maxwell
 TAGS:       no_rotate no_pool_fixup
 MONS:       peacekeeper / gargoyle / earth elemental w:5
-MONS:       molten gargoyle / salamander / fire elemental w:5
+MONS:       molten gargoyle / thermic dynamo / fire elemental w:5
 MONS:       salamander tyrant / fire giant ; great mace ego:flaming
 MONS:       war gargoyle / crystal guardian
 MONS:       ettin / ironbound preserver ; great mace /\
@@ -2202,7 +2203,7 @@ NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
 NSUBST:     e = 3:e / *=dff
 TILE:       v = dngn_metal_wall_cyan
 :           set_random_mon_list(
-:               "gargoyle / earth elemental / molten gargoyle / " ..
+:               "earth elemental / molten gargoyle / thermic dynamo / " ..
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)

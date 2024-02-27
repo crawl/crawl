@@ -606,14 +606,15 @@ i-acid WAND_ACID
 # start TAG_MAJOR_VERSION == 34
 i-random_effects WAND_REMOVEME14
 # end TAG_MAJOR_VERSION
-i-disintegration WAND_DISINTEGRATION
+i-mindburst WAND_MINDBURST
 # start TAG_MAJOR_VERSION == 34
 i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12
 # end TAG_MAJOR_VERSION
 i-light WAND_LIGHT
 i-quicksilver WAND_QUICKSILVER
-i-roots WAND_ROOTS WAND_ID_LAST
+i-roots WAND_ROOTS
+i-disruption WAND_WARPING WAND_ID_LAST
 
 ################# Skeletons
 %sdir item/food

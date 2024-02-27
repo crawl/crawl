@@ -225,6 +225,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_ELECTROCUTION:
             case SPWPN_PAIN:
             case SPWPN_ACID: // Unrand-only.
+            case SPWPN_FOUL_FLAME: // Unrand only.
             case SPWPN_PENETRATION: // Unrand-only.
             case SPWPN_SPECTRAL:
                 valued *= 25;
@@ -236,7 +237,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_FREEZING:
             case SPWPN_HEAVY:
             case SPWPN_HOLY_WRATH:
-            case SPWPN_FOUL_FLAME:
                 valued *= 18;
                 break;
 
@@ -405,6 +405,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case WAND_ICEBLAST:
             case WAND_ROOTS:
+            case WAND_WARPING:
             case WAND_CHARMING:
             case WAND_PARALYSIS:
                 valued += 24 * item.plus;
@@ -1648,13 +1649,6 @@ shop_type str_to_shoptype(const string &s)
 const char *shoptype_to_str(shop_type type)
 {
     return shop_types[type];
-}
-
-void list_shop_types()
-{
-    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
-    for (const char *type : shop_types)
-        mprf_nocap("%s", type);
 }
 
 ////////////////////////////////////////////////////////////////////////

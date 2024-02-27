@@ -171,8 +171,10 @@ bool unmeld_slot(equipment_type slot)
     return false;
 }
 
-static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
-static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld,
+                                 equipment_type slot);
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld,
+                                   equipment_type slot);
 static void _equip_armour_effect(item_def& arm, bool unmeld,
                                  equipment_type slot);
 static void _unequip_armour_effect(item_def& item, bool meld,
@@ -223,7 +225,7 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
     identify_item(item);
 
     if (slot == EQ_WEAPON || (slot == EQ_OFFHAND && is_weapon(item)))
-        _equip_weapon_effect(item, msg, unmeld);
+        _equip_weapon_effect(item, msg, unmeld, slot);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
@@ -243,7 +245,7 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
     const interrupt_block block_meld_interrupts(meld);
 
     if (slot == EQ_WEAPON || (slot == EQ_OFFHAND && is_weapon(item)))
-        _unequip_weapon_effect(item, msg, meld);
+        _unequip_weapon_effect(item, msg, meld, slot);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
@@ -449,7 +451,8 @@ static void _equip_use_warning(const item_def& item)
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
-static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld,
+                                 equipment_type slot)
 {
     you.wield_change = true;
     quiver::on_weapon_changed();
@@ -463,7 +466,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     case OBJ_STAVES:
     {
         if (artefact)
-            equip_artefact_effect(item, &showMsgs, unmeld, EQ_STAFF);
+            equip_artefact_effect(item, &showMsgs, unmeld, slot);
         break;
     }
 
@@ -472,7 +475,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         // Note that if the unrand equip prints a message, it will
         // generally set showMsgs to false.
         if (artefact)
-            equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
+            equip_artefact_effect(item, &showMsgs, unmeld, slot);
 
         special = get_weapon_brand(item);
 
@@ -516,7 +519,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     }
                     else
                     {
-                        mprf("%s glows horrifically with a foul radiance!",
+                        mprf("%s glows horrifically with a foul blackness!",
                              item_name.c_str());
                     }
                     break;
@@ -639,7 +642,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 }
 
 static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
-                                   bool meld)
+                                   bool meld, equipment_type slot)
 {
     you.wield_change = true;
     quiver::on_weapon_changed();
@@ -650,10 +653,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
     if (is_artefact(item))
-    {
-        unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
-                                true);
-    }
+        unequip_artefact_effect(real_item, &showMsgs, meld, slot, true);
 
     if (item.base_type == OBJ_WEAPONS)
     {

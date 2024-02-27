@@ -330,7 +330,7 @@ KMONS:    7 = fire dragon
 KMONS:    8 = frost giant
 KMONS:    A = Azrael band w:2 / salamander mystic band, salamander mystic band
 KMONS:    B = shock serpent perm_ench:glowing_shapeshifter
-KMONS:    CD = crystal guardian
+KMONS:    CD = thermic dynamo
 KITEM:    R = smoky gem
 KFEAT:    O = enter_depths
 NSUBST:   { = 1:{ / 1:[ / 1:( / 2:< / *:T, 1 = 4:. / *:1
@@ -343,8 +343,10 @@ MONS:     tengu conjurer / deep elf elementalist / occultist w:2 / \
                         any beam wand . trident ego:freezing | trident ego:flaming
 MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
           ice dragon w:5 / ice dragon perm_ench:shapeshifter w:5 / \
-          very ugly thing w:20 / spark wasp / war gargoyle / crystal guardian / \
-          spriggan defender simulacrum w:4 / quicksilver dragon simulacrum w:6 / \
+          very ugly thing w:20 / thermic dynamo band w:5 / \
+          spark wasp / war gargoyle / crystal guardian / \
+          spriggan defender simulacrum w:4 / \
+          quicksilver dragon simulacrum w:6 / \
           dancing weapon w:8 ; trident ego:flaming | trident ego:freezing | \
                                war axe ego:flaming | war axe ego:freezing
 MONS:     fire giant ; battleaxe ego:freezing / \

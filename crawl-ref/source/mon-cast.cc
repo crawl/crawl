@@ -948,11 +948,12 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
     actor* foe = caster.get_foe();
     ASSERT(foe);
 
-    const int turns = 4 + random2avg(div_rand_round(
-                mons_spellpower(caster, SPELL_GRASPING_ROOTS), 10), 2);
+    const int pow = mons_spellpower(caster, SPELL_GRASPING_ROOTS);
+    const int turns = 1 + random_range(div_rand_round(pow, 20),
+                                       div_rand_round(pow, 12) + 1);
     dprf("Grasping roots turns: %d", turns);
     mpr("Roots burst forth from the earth!");
-    grasp_with_roots(caster, *foe, turns);
+    start_ranged_constriction(caster, *foe, turns, CONSTRICT_ROOTS);
 }
 
 static void _cast_regenerate_other(monster* caster)
@@ -1319,10 +1320,10 @@ bool mons_spell_is_spell(spell_type spell)
     {
         case SPELL_HOLY_BREATH:
         case SPELL_SPIT_ACID:
-        case SPELL_ACID_SPLASH:
+        case SPELL_CAUSTIC_BREATH:
         case SPELL_CHAOS_BREATH:
         case SPELL_COLD_BREATH:
-        case SPELL_CHILLING_BREATH:
+        case SPELL_GLACIAL_BREATH:
         case SPELL_FIRE_BREATH:
         case SPELL_SEARING_BREATH:
         case SPELL_ELECTRICAL_BOLT:
@@ -1526,6 +1527,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_CHARMING:
     case SPELL_BOLT_OF_LIGHT:
     case SPELL_FASTROOT:
+    case SPELL_WARP_SPACE:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_PRIMAL_WAVE:
     case SPELL_BLINKBOLT:
@@ -1542,18 +1544,20 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_MIASMA_BREATH:      // death drake
     case SPELL_GHOSTLY_FIREBALL:
     case SPELL_FLASH_FREEZE:
-    case SPELL_CRYSTAL_BOLT:
+    case SPELL_REBOUNDING_BLAZE:
+    case SPELL_REBOUNDING_CHILL:
     case SPELL_SPIT_LAVA:
     case SPELL_HURL_SLUDGE:
     case SPELL_HOLY_BREATH:
     case SPELL_SPIT_ACID:
-    case SPELL_ACID_SPLASH:
+    case SPELL_CAUSTIC_BREATH:
     case SPELL_ELECTRICAL_BOLT:
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
     case SPELL_MALIGN_OFFERING:
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BORGNJORS_VILE_CLUTCH:
+    case SPELL_CRYSTALLIZING_SHOT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1626,13 +1630,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source = "blast of icy breath";
         beam.short_name = "frost";
-        break;
-
-    case SPELL_CHILLING_BREATH:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.name = "chilling breath";
-        beam.aux_source  = "blast of chilling breath";
-        beam.short_name  = "frost";
         break;
 
     case SPELL_PORKALATOR:
@@ -4131,8 +4128,7 @@ static bool _target_and_justify_spell(monster &mons,
     if (victim
         && beem.can_knockback()
         && !victim->is_stationary()
-        && mons.is_constricting()
-        && mons.constricting->count(victim->mid))
+        && mons.is_constricting(*victim))
     {
         return false;
     }
@@ -5099,8 +5095,7 @@ static void _blink_allies_encircle(const monster* mon)
     }
     shuffle_array(allies);
 
-    int count = max(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
-                       + random2(mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 4));
+    int count = random_range(3, 6);
 
     for (monster *ally : allies)
     {
@@ -5120,7 +5115,9 @@ static void _blink_allies_encircle(const monster* mon)
         ally->behaviour = BEH_SEEK;
         ally->foe = mon->foe;
         ally->drain_action_energy();
-        count--;
+
+        if (!--count)
+            break;
     }
 }
 

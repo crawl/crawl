@@ -26,6 +26,21 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return first + mod % (last - first + 1);
 }
 
+static tileidx_t _part_start(int p)
+{
+    if (p != TILEP_PART_HAND2)
+        return tile_player_part_start[p];
+    return tile_player_part_start[TILEP_PART_HAND1_MIRROR];
+}
+
+static unsigned int _part_count(int p)
+{
+    const unsigned int count = tile_player_part_count[p];
+    if (p != TILEP_PART_HAND2)
+        return count;
+    return count + tile_player_part_count[TILEP_PART_HAND1_MIRROR];
+}
+
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
@@ -660,7 +675,7 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing)
     *base = TILEP_BASE_DRACONIAN + colour_offset;
 
     if (you.has_mutation(MUT_BIG_WINGS))
-        *wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
+        *wing = _part_start(TILEP_PART_DRCWING) + colour_offset;
 }
 
 static const string DOLL_BASE_KEY = "doll_base";
@@ -1229,11 +1244,11 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
         }
         else if (idx == 0)
             doll.parts[p] = 0;
-        else if (idx > tile_player_part_count[p])
-            doll.parts[p] = tile_player_part_start[p];
+        else if (idx > _part_count(p))
+            doll.parts[p] = _part_start(p);
         else
         {
-            const tileidx_t idx2 = tile_player_part_start[p] + idx - 1;
+            const tileidx_t idx2 = _part_start(p) + idx - 1;
             if (get_tile_texture(idx2) != TEX_PLAYER)
                 doll.parts[p] = TILEP_SHOW_EQUIP;
             else
@@ -1261,8 +1276,8 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
             }
             else if (idx != 0)
             {
-                idx = doll.parts[p] - tile_player_part_start[p] + 1;
-                if (idx > tile_player_part_count[p])
+                idx = doll.parts[p] - _part_start(p) + 1;
+                if (idx > _part_count(p))
                     idx = 0;
             }
         }

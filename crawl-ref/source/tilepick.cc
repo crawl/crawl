@@ -1973,13 +1973,12 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_BURNING_BUSH;
             return base;
 
+        // Temporary borrowing tiles for the non-beetle boulders.
         case MONS_BOULDER_BEETLE:
+        case MONS_BOULDER:
             return mon.is(MB_ROLLING)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number)
                    : base;
-
-        case MONS_BOULDER:
-            return _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number);
 
         case MONS_DANCING_WEAPON:
         {
@@ -3280,6 +3279,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case LIGHTCYAN:
         if (bolt.name == "iron shot")
             return TILE_BOLT_IRON_SHOT + dir;
+        else if (bolt.name == "crystallizing shot")
+            return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "zap")
             return TILE_BOLT_ZAP + dir % tile_main_count(TILE_BOLT_ZAP);
         break;
@@ -3653,21 +3654,24 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_SPIT_POISON:
         return TILEG_ABILITY_SPIT_POISON;
     case ABIL_BREATHE_FIRE:
+    case ABIL_COMBUSTION_BREATH:
         return TILEG_ABILITY_BREATHE_FIRE;
-    case ABIL_BREATHE_FROST:
+    case ABIL_GLACIAL_BREATH:
         return TILEG_ABILITY_BREATHE_FROST;
     case ABIL_BREATHE_POISON:
         return TILEG_ABILITY_BREATHE_POISON;
-    case ABIL_BREATHE_LIGHTNING:
+    case ABIL_GALVANIC_BREATH:
         return TILEG_ABILITY_BREATHE_LIGHTNING;
-    case ABIL_BREATHE_POWER:
+    case ABIL_NULLIFYING_BREATH:
         return TILEG_ABILITY_BREATHE_ENERGY;
-    case ABIL_BREATHE_STEAM:
+    case ABIL_STEAM_BREATH:
         return TILEG_ABILITY_BREATHE_STEAM;
-    case ABIL_BREATHE_MEPHITIC:
+    case ABIL_NOXIOUS_BREATH:
         return TILEG_ABILITY_BREATHE_MEPHITIC;
-    case ABIL_BREATHE_ACID:
+    case ABIL_CAUSTIC_BREATH:
         return TILEG_ABILITY_BREATHE_ACID;
+    case ABIL_MUD_BREATH:
+        return TILEG_ABILITY_BREATHE_MUD;
 #if TAG_MAJOR_VERSION == 34
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
@@ -3751,8 +3755,12 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Yredelemnul
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
+    case ABIL_YRED_HURL_TORCHLIGHT:
+        return TILEG_ABILITY_YRED_HURL_TORCHLIGHT;
     case ABIL_YRED_BIND_SOUL:
         return TILEG_ABILITY_YRED_BIND_SOUL;
+    case ABIL_YRED_FATHOMLESS_SHACKLES:
+        return TILEG_ABILITY_YRED_FATHOMLESS_SHACKLES;
     // Xom, Vehumet = 90
     // Okawaru
     case ABIL_OKAWARU_HEROISM:

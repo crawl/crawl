@@ -4,6 +4,7 @@
 #include "mpr.h"
 #include "species.h"
 
+#include "branch.h"
 #include "item-prop.h"
 #include "mutation.h"
 #include "output.h"
@@ -15,6 +16,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "tiledoll.h"
+#include "travel.h"
 
 #include "species-data.h"
 
@@ -227,14 +229,15 @@ namespace species
     {
         switch (species)
         {
-        case SP_GREEN_DRACONIAN:   return ABIL_BREATHE_MEPHITIC;
-        case SP_RED_DRACONIAN:     return ABIL_BREATHE_FIRE;
-        case SP_WHITE_DRACONIAN:   return ABIL_BREATHE_FROST;
-        case SP_YELLOW_DRACONIAN:  return ABIL_BREATHE_ACID;
-        case SP_BLACK_DRACONIAN:   return ABIL_BREATHE_LIGHTNING;
-        case SP_PURPLE_DRACONIAN:  return ABIL_BREATHE_POWER;
-        case SP_PALE_DRACONIAN:    return ABIL_BREATHE_STEAM;
-        case SP_BASE_DRACONIAN: case SP_GREY_DRACONIAN:
+        case SP_GREEN_DRACONIAN:   return ABIL_NOXIOUS_BREATH;
+        case SP_RED_DRACONIAN:     return ABIL_COMBUSTION_BREATH;
+        case SP_WHITE_DRACONIAN:   return ABIL_GLACIAL_BREATH;
+        case SP_YELLOW_DRACONIAN:  return ABIL_CAUSTIC_BREATH;
+        case SP_BLACK_DRACONIAN:   return ABIL_GALVANIC_BREATH;
+        case SP_PURPLE_DRACONIAN:  return ABIL_NULLIFYING_BREATH;
+        case SP_PALE_DRACONIAN:    return ABIL_STEAM_BREATH;
+        case SP_GREY_DRACONIAN:    return ABIL_MUD_BREATH;
+        case SP_BASE_DRACONIAN:
         default: return ABIL_NON_ABILITY;
         }
     }
@@ -541,6 +544,8 @@ namespace species
     vector<equipment_type> ring_slots(species_type species, bool missing_hand)
     {
         vector<equipment_type> result;
+        if (you.has_mutation(MUT_NO_RINGS))
+            return result;
 
         const equipment_type missing = missing_hand
                             ? sacrificial_arm(species) : EQ_NONE;
@@ -658,6 +663,30 @@ namespace species
         }
         return species;
     }
+}
+
+int draconian_breath_uses_available()
+{
+    if (!species::is_draconian(you.species))
+        return 0;
+
+    if (!you.props.exists(DRACONIAN_BREATH_USES_KEY))
+        return 0;
+
+    return you.props[DRACONIAN_BREATH_USES_KEY].get_int();
+}
+
+// Attempts to gain num uses of our draconian breath weapon.
+// Returns true if any were gained (ie: we were not already capped)
+bool gain_draconian_breath_uses(int num)
+{
+    int cur = draconian_breath_uses_available();
+
+    if (cur >= MAX_DRACONIAN_BREATH)
+        return false;
+
+    you.props[DRACONIAN_BREATH_USES_KEY] = min(MAX_DRACONIAN_BREATH, cur + num);
+    return true;
 }
 
 void give_basic_mutations(species_type species)

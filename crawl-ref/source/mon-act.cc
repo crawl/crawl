@@ -1535,15 +1535,10 @@ static void _pre_monster_move(monster& mons)
 
     // Handle clouds on nonmoving monsters.
     if (mons.speed == 0)
-    {
         actor_apply_cloud(&mons);
 
-        // Update constriction durations
-        mons.accum_has_constricted();
-
-        if (mons.type == MONS_NO_MONSTER)
-            return;
-    }
+    if (mons.type == MONS_NO_MONSTER)
+        return;
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -2409,6 +2404,7 @@ void handle_monsters(bool with_noise)
         _pre_monster_move(**mi);
         if (!invalid_monster(*mi) && mi->alive() && mi->has_action_energy())
             monster_queue.emplace(*mi, mi->speed_increment);
+        fire_final_effects();
     }
 
     int tries = 0; // infinite loop protection, shouldn't be ever needed

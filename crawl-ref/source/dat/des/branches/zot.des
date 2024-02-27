@@ -1492,9 +1492,10 @@ ENDMAP
 NAME:    regret_index_zotdec_under_construction
 TAGS:    extra transparent zotdec luniq_zotdec_large
 DEPTH:   Zot, !Zot:$
-NSUBST:  x = 4 = x. / *:x, + = 1:xx. / 3 = +.. / *:+
-NSUBST:  ' = 1:Gxx / *:., . = 1:Gxx / 1:{([})]TUV<>>>
-SUBST:   X = x..
+MONS:    boulder dbname:still_boulder
+NSUBST:  x = 4 = x. / *:x, + = 1:xxx1.. / 3 = +.. / *:+
+NSUBST:  ' = 1:Gxx / *:., . = 1:G1x / 1:{([})]TUV<>>>
+SUBST:   X = xx1....
 SHUFFLE: @&
 CLEAR:   &
 MAP
@@ -2567,7 +2568,7 @@ ENDMAP
 # There is an 70% chance all three upstairs will be here.
 #
 NAME:    lemuel_draconian_sentries
-TAGS:    no_rotate no_pool_fixup
+TAGS:    no_monster_gen no_rotate no_pool_fixup
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
 MONS:    draconian stormcaller / draconian scorcher w:5
@@ -2575,22 +2576,23 @@ KFEAT:   m = iron_grate
 SHUFFLE: {([>, wW / -?, '2n / "3o / "3o
 SUBST:   { = {:80 >, ( = (:80 > , [ = [:80 >
 SUBST:   -?' = ., 2 = 1, n = m
+KMASK:   ~ = !no_monster_gen
 CLEAR:   "3o
 MAP
 ''''''''''''''''''''''''''''
-''nnn'................'nnn''
-''n2n'................'n2n''
-''nnn'..mmmwwWWwwmmm..'nnn''
-''''''..m1mWWwwWWm1m..''''''
-''''''..mmmwwWWwwmmm..''''''
-nnn'''..WwW.{..(.WwW..'''nnn
-n2n'''..wWw......wWw..'''n2n
-nnn'''..WwW.[..>.WwW..'''nnn
-''''''..mmmwwWWwwmmm..''''''
-''''''..m1mWWwwWWm1m..''''''
-''nnn'..mmmwwWWwwmmm..'nnn''
-''n2n'................'n2n''
-''nnn'................'nnn''
+''nnn'~~~~~~~~~~~~~~~~'nnn''
+''n2n'~~~..........~~~'n2n''
+''nnn'~~mmmwwWWwwmmm~~'nnn''
+''''''~.m1mWWwwWWm1m.~''''''
+''''''~.mmmwwWWwwmmm.~''''''
+nnn'''~.WwW.{..(.WwW.~'''nnn
+n2n'''~.wWw......wWw.~'''n2n
+nnn'''~.WwW.[..>.WwW.~'''nnn
+''''''~.mmmwwWWwwmmm.~''''''
+''''''~.m1mWWwwWWm1m.~''''''
+''nnn'~~mmmwwWWwwmmm~~'nnn''
+''n2n'~~~..........~~~'n2n''
+''nnn'~~~~~~~~~~~~~~~~'nnn''
 ''''''''''''''''''''''''''''
 ENDMAP
 
@@ -2709,22 +2711,17 @@ ENDMAP
 
 ######################################
 # This is weird, but in Zot weirdness fits. (nrook)
-NAME: nrook_zot_tub
-DEPTH: Zot
-KFEAT: X = W
+NAME:  nrook_zot_tub
+DEPTH:  Zot
+KFEAT:  X = W
 MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
-KMONS: M = patrolling red draconian att:neutral / \
-      patrolling red draconian scorcher att:neutral w:2 / \
-      patrolling red draconian stormcaller att:neutral w:2 / \
-      patrolling red draconian shifter att:neutral w:2 / \
-      patrolling red draconian annihilator att:neutral w:2 / \
-      patrolling red draconian knight att:neutral w:2 / \
-      patrolling red draconian monk att:neutral w:2
-KFEAT: M = W
-KMONS: F = orb of fire att:neutral
-KFEAT: F = W
+KMONS:  M = patrolling red draconian att:neutral / \
+            patrolling nonbase red draconian att:neutral
+KFEAT:  M = W
+KMONS:  F = orb of fire att:neutral
+KFEAT:  F = W
 MAP
      @
 xxxxx+xxxxx
@@ -2757,7 +2754,7 @@ COLOUR:  G = electricity
 TILE:    G = storm_conduit
 :   set_feature_name("metal_statue", "storm conduit")
 : elseif crawl.coinflip() then
-MONS:    frost giant, ice dragon
+MONS:    frost giant, ice dragon / thermic dynamo w:3
 KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
@@ -2772,7 +2769,7 @@ COLOUR:  G = ice
 TILE:    G = icy_conduit
 :   set_feature_name("metal_statue", "icy conduit")
 : else
-MONS:    fire giant, fire dragon
+MONS:    fire giant, fire dragon / thermic dynamo w:3
 KMONS:   F = balrug
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
@@ -3398,7 +3395,7 @@ MARKER:  + = lua:restrict_door()
 # Till then, it's just a style thing.
 KFEAT:   _ = altar_qazlal w:40 / altar_xom / altar_lugonu / \
              altar_makhleb / altar_yredelemnul
-SUBST:   1 = 1., g : gG
+SUBST:   1 = 1., S : SSG
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
 KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike \
@@ -3512,7 +3509,8 @@ TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Zot, !Zot:$
 ORIENT:  centre
 # Humanoids, guardian beasts, the strongest; first V, then Zot.
-MONS:    ettin / stone giant w:5 / fire giant / frost giant / crystal guardian
+MONS:    ettin / stone giant w:5 / fire giant / \
+         frost giant / crystal guardian w:5
 MONS:    base draconian
 MONS:    glowing shapeshifter w:20 / sphinx w:15 / war gargoyle w:20 / \
          iron dragon w:20 / shadow dragon / golden dragon
@@ -3774,7 +3772,7 @@ ORIENT:  northwest
 WEIGHT:  5
 # Cheap plastic imitations, mostly. Well, maybe not cheap...
 MONS:    hell knight w:6 / very ugly thing / caustic shrike zombie / \
-         lorocyproca / crystal guardian / quicksilver ooze / \
+         lorocyproca / thermic dynamo / quicksilver ooze / \
          tentacled starspawn / spark wasp / glowing shapeshifter
 MONS:    guardian serpent / deep elf annihilator / balrug / \
          deep elf high priest / will-o-the-wisp / acid blob
@@ -3860,7 +3858,7 @@ NAME:   infiniplex_zot_generator
 TAGS:   no_pool_fixup no_item_gen no_monster_gen no_trap_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: south
-MONS:   shock serpent w:14 / sixfirhy / air elemental w:6
+MONS:   shock serpent w:20 / air elemental w:6 / thermic dynamo w:2
 MONS:   black draconian ; cloak . mundane staff of air
 MONS:   war gargoyle / dancing weapon ; scimitar good_item / spark wasp w:5
 MONS:   black draconian stormcaller / black draconian shifter / storm dragon
@@ -3872,7 +3870,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
 KFEAT:  G = metal_statue
-ITEM:   storm talisman, book of lightning
+ITEM:   storm talisman, randbook disc:air spells:chain_lightning
 : local e = "ego:electrocution good_item ident:type"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
 :      "executioner's axe " .. e .. " w:5 / eveningstar " .. e .. " w:5 / " ..

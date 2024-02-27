@@ -438,6 +438,9 @@ monster_info::monster_info(const monster* m, int milev)
     else
         number = 0;
 
+    if (type == MONS_BOULDER && m->props.exists(BOULDER_DIRECTION_KEY))
+        mb.set(MB_ROLLING);
+
     _colour = m->colour;
 
     if (m->is_summoned()
@@ -761,8 +764,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
-        constrictor_name = (constrictor->constriction_does_damage(constr_typ) ?
-                            "constricted by " : "held by ")
+        constrictor_name = "constricted by "
                            + constrictor->name(_article_for(constrictor),
                                                true);
     }
@@ -770,15 +772,13 @@ monster_info::monster_info(const monster* m, int milev)
     // Names of what this monster is directly constricting, if any
     if (m->constricting)
     {
-        const char *participle =
-            m->constriction_does_damage(CONSTRICT_MELEE) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
-            const actor* const constrictee = actor_by_mid(entry.first);
+            const actor* const constrictee = actor_by_mid(entry);
 
             if (constrictee && constrictee->get_constrict_type() == CONSTRICT_MELEE)
             {
-                constricting_name.push_back(participle
+                constricting_name.push_back("constricting "
                                             + constrictee->name(
                                                   _article_for(constrictee),
                                                   true));

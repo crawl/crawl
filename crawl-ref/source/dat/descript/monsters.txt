@@ -943,14 +943,15 @@ A crocodilian with powerful jaws.
 crystal echidna
 
 A spiny, long snouted rodent grown out of pure living crystal. It is
-immune to most forms of magic and hurls both crystalline bolts and painful
+immune to most forms of magic and hurls both crystallizing shots and painful
 barbs.
 %%%%
 crystal guardian
 
-An intricate animated statue made of heavily ensorcelled, tough crystal. It is
-immune to most forms of magic, and is magically charged to toss great bolts of
-fire and cold that are reflected by any surface.
+An intricate animated statue made of heavily ensorcelled crystal that is
+immune to most forms of magic. The spells which created it are so powerful
+that even flesh may start to crystalize around any fragments that become
+embedded in it - leaving its foes brittle and vulnerable.
 %%%%
 culicivora
 
@@ -2712,6 +2713,12 @@ titan
 A huge, bolt-hurling, lightning-limned humanoid. It is unusually large and
 powerful, even among giants.
 %%%%
+thermic dynamo
+
+A restlessly roaming, bejewelled engine. Its whirls of fire and ice attempt to
+produce boundless energy, which occasionally escapes and wildly ricochets off
+of walls.
+%%%%
 thorn hunter
 
 A predatory marsh plant, possessed of motility and a rudimentary intelligence.
@@ -3313,6 +3320,10 @@ to.
 spriggan hatter
 
 A spriggan who is going slightly mad from the toxic fumes of their craft.
+%%%%
+still boulder
+
+A gargantuan mass of stone at rest.
 %%%%
 water elementalist statue
 

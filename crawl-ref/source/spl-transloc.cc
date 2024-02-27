@@ -34,6 +34,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h" // armataur charge
@@ -143,8 +144,7 @@ void uncontrolled_blink(bool override_stasis)
         return;
     }
 
-    if (!you.attempt_escape(2)) // prints its own messages
-        return;
+    you.stop_being_constricted(false, "blink");
 
     canned_msg(MSG_YOU_BLINK);
     const coord_def origin = you.pos();
@@ -410,8 +410,7 @@ spret frog_hop(bool fail, dist *target)
 
     fail_check();
 
-    if (!you.attempt_escape(2)) // XXX: 1?
-        return spret::success; // of a sort
+    you.stop_being_constricted(false, "hop");
 
     // invisible monster that the targeter didn't know to avoid, or similar
     if (target->target.origin())
@@ -579,7 +578,8 @@ coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
         // be our landing spot (if it's valid)
         if (grid_distance(ray.pos(), agent.pos()) == dist_to_targ -1)
         {
-            if (is_feat_dangerous(env.grid(ray.pos())))
+            if (agent.is_player() ? is_feat_dangerous(env.grid(ray.pos()))
+                                  : !monster_habitable_grid(agent.as_monster(), env.grid(ray.pos())))
             {
                 if (fail_reason)
                 {
@@ -701,7 +701,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
         return spret::success;
     }
 
-    if (!agent.attempt_escape(1)) // prints its own messages
+    if (!agent.attempt_escape()) // prints its own messages
         return spret::success;
 
     const coord_def orig_pos = agent.pos();
@@ -828,9 +828,6 @@ spret controlled_blink(bool safe_cancel, dist *target)
     if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
         return spret::abort;
 
-    if (!you.attempt_escape(2))
-        return spret::success; // of a sort
-
     // invisible monster that the targeter didn't know to avoid
     if (monster_at(target->target))
     {
@@ -838,6 +835,8 @@ spret controlled_blink(bool safe_cancel, dist *target)
         uncontrolled_blink();
         return spret::success; // of a sort
     }
+
+    you.stop_being_constricted(false, "blink");
 
     _place_tloc_cloud(you.pos());
     move_player_to_grid(target->target, false);
@@ -1977,10 +1976,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
     fail_check();
 
-    // Storm Form is immune to constriction, but check for it anyway in
-    // case casting Blinkbolt becomes possible in some other way!
-    if (!you.attempt_escape(2))
-        return spret::success;
+    you.stop_being_constricted(false, "bolt");
 
     beam.thrower = KILL_YOU_MISSILE;
     zappy(ZAP_BLINKBOLT, power, false, beam);

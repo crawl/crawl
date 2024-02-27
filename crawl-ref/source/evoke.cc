@@ -113,29 +113,6 @@ static bool _evoke_horn_of_geryon()
     return true;
 }
 
-/**
- * Spray lightning in all directions. (Randomly lightning bolt or OoE.)
- *
- * @param range         The range of the beams. (As with all beams, eventually
- *                      capped at LOS.)
- * @param power         The power of the beams. (Affects damage.)
- */
-static void _spray_lightning(int range, int power)
-{
-    const zap_type zap = random_choose_weighted(3, ZAP_LIGHTNING_BOLT,
-                                                2, ZAP_ORB_OF_ELECTRICITY);
-
-    bolt beam;
-    // range has no tracer, so randomness is ok
-    beam.range = range;
-    beam.source = you.pos();
-    beam.target = you.pos();
-    beam.target.x += random2(13) - 6;
-    beam.target.y += random2(13) - 6;
-    // Non-controlleable, so no player tracer.
-    zapping(zap, power, beam);
-}
-
 static int _lightning_rod_power()
 {
     return 5 + you.skill(SK_EVOCATIONS, 3);
@@ -156,21 +133,6 @@ static bool _lightning_rod(dist *preselect)
         return false;
 
     return true;
-}
-
-/**
- * Spray lightning in all directions around the player.
- *
- * Quantity, range & power increase with level.
- */
-void black_drac_breath()
-{
-    const int num_shots = roll_dice(2, 1 + you.experience_level / 7);
-    const int range = you.experience_level / 3 + 5; // 5-14
-    const int power = 25 + (you.form == transformation::dragon
-                            ? 2 * you.experience_level : you.experience_level);
-    for (int i = 0; i < num_shots; ++i)
-        _spray_lightning(range, power);
 }
 
 /**

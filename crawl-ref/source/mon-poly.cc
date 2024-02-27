@@ -580,6 +580,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (targetc == MONS_NO_MONSTER)
         return simple_monster_message(*mons, " shudders.");
 
+    const bool was_invisible = mons->has_ench(ENCH_INVIS) && !mons->friendly();
     bool could_see = you.can_see(*mons);
     bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
@@ -616,10 +617,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
     }
     else if (can_see)
-    {
         mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
-        autotoggle_autopickup(false);
-    }
     else
         player_messaged = false;
 
@@ -629,6 +627,23 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                   : "something unseen";
 
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
+    }
+
+    const bool is_invisible = mons->has_ench(ENCH_INVIS) && !mons->friendly();
+    if (you.see_cell(mons->pos()))
+    {
+        if (was_invisible && !is_invisible)
+        {
+            // If we poly an invisible monster reactivate autopickup.
+            // We need to check for actual invisibility rather than
+            // whether we can see the monster. There are several edge
+            // cases where a monster is visible to the player but we
+            // still need to turn autopickup back on, such as
+            // TSO's halo or sticky flame.
+            autotoggle_autopickup(false);
+        }
+        else if (could_see && !can_see)
+            autotoggle_autopickup(true);
     }
 
     // do this here, so that any "changes into" notes come first

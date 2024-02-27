@@ -853,6 +853,100 @@ static void _place_twister_clouds(monster *mon)
     polar_vortex_damage(mon, -10);
 }
 
+static void _place_monster_set_god(monster *mon, monster_type cls,
+                                   level_id place)
+{
+    // Give priestly monsters a god.
+    if (mon->is_priest())
+    {
+        // Berserkers belong to Trog.
+        if (cls == MONS_SPRIGGAN_BERSERKER)
+            mon->god = GOD_TROG;
+        // Death knights belong to Yredelemnul.
+        else if (cls == MONS_DEATH_KNIGHT)
+            mon->god = GOD_YREDELEMNUL;
+        // Seraphim follow the Shining One.
+        else if (cls == MONS_SERAPH)
+            mon->god = GOD_SHINING_ONE;
+        // Draconian stormcallers worship Qazlal.
+        else if (cls == MONS_DRACONIAN_STORMCALLER)
+            mon->god = GOD_QAZLAL;
+        else if (cls == MONS_DEMONSPAWN_BLOOD_SAINT
+                 || cls == MONS_ASTERION)
+        {
+            mon->god = GOD_MAKHLEB;
+        }
+        else if (cls == MONS_DEMONSPAWN_BLACK_SUN
+                 || cls == MONS_BURIAL_ACOLYTE)
+        {
+            mon->god = GOD_KIKUBAAQUDGHA;
+        }
+        else if (cls == MONS_DEMONSPAWN_CORRUPTER
+                 || cls == MONS_MLIOGLOTL)
+        {
+            mon->god = GOD_LUGONU;
+        }
+        else
+        {
+            switch (mons_genus(cls))
+            {
+            case MONS_ORC:
+                mon->god = GOD_BEOGH;
+                break;
+            case MONS_JELLY:
+                mon->god = GOD_JIYVA;
+                break;
+            case MONS_MUMMY:
+            case MONS_DRACONIAN:
+            case MONS_ELF:
+                // [ds] Vault defs can request priest monsters of unusual types.
+            default:
+                mon->god = GOD_NAMELESS;
+                break;
+            }
+        }
+
+        return;
+    }
+
+    // The Royal Jelly belongs to Jiyva.
+    if (cls == MONS_ROYAL_JELLY)
+        mon->god = GOD_JIYVA;
+    // Mennas belongs to Zin.
+    else if (cls == MONS_MENNAS)
+        mon->god = GOD_ZIN;
+    // Yiuf is a faithful Xommite.
+    else if (cls == MONS_CRAZY_YIUF)
+        mon->god = GOD_XOM;
+    // Grinder and Ignacio belong to Makhleb.
+    // Hell Knights need some reason to be evil.
+    else if (cls == MONS_GRINDER
+             || cls == MONS_IGNACIO
+             || cls == MONS_HELL_KNIGHT)
+    {
+        mon->god = GOD_MAKHLEB;
+    }
+    // 1 out of 7 non-priestly orcs are unbelievers.
+    else if (mons_genus(cls) == MONS_ORC)
+    {
+        if (!one_chance_in(7))
+            mon->god = GOD_BEOGH;
+    }
+    else if (cls == MONS_APIS)
+        mon->god = GOD_ELYVILON;
+    else if (cls == MONS_PROFANE_SERVITOR)
+        mon->god = GOD_YREDELEMNUL;
+    // Angels (other than Mennas) and daevas belong to TSO, but 1 out of
+    // 7 in the Abyss are adopted by Xom.
+    else if (mons_class_holiness(cls) == MH_HOLY)
+    {
+        if (place != BRANCH_ABYSS || !one_chance_in(7))
+            mon->god = GOD_SHINING_ONE;
+        else
+            mon->god = GOD_XOM;
+    }
+}
+
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos, bool dont_place)
@@ -1012,98 +1106,18 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
         mons_make_god_gift(*mon, mg.god);
-    // Not a god gift, give priestly monsters a god.
-    else if (mon->is_priest())
-    {
-        // Berserkers belong to Trog.
-        if (mg.cls == MONS_SPRIGGAN_BERSERKER)
-            mon->god = GOD_TROG;
-        // Death knights belong to Yredelemnul.
-        else if (mg.cls == MONS_DEATH_KNIGHT)
-            mon->god = GOD_YREDELEMNUL;
-        // Seraphim follow the Shining One.
-        else if (mg.cls == MONS_SERAPH)
-            mon->god = GOD_SHINING_ONE;
-        // Draconian stormcallers worship Qazlal.
-        else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
-            mon->god = GOD_QAZLAL;
-        else if (mg.cls == MONS_DEMONSPAWN_BLOOD_SAINT
-                 || mg.cls == MONS_ASTERION)
-        {
-            mon->god = GOD_MAKHLEB;
-        }
-        else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN
-                 || mg.cls == MONS_BURIAL_ACOLYTE)
-        {
-            mon->god = GOD_KIKUBAAQUDGHA;
-        }
-        else if (mg.cls == MONS_DEMONSPAWN_CORRUPTER
-                 || mg.cls == MONS_MLIOGLOTL)
-        {
-            mon->god = GOD_LUGONU;
-        }
-        else
-        {
-            switch (mons_genus(mg.cls))
-            {
-            case MONS_ORC:
-                mon->god = GOD_BEOGH;
-                break;
-            case MONS_JELLY:
-                mon->god = GOD_JIYVA;
-                break;
-            case MONS_MUMMY:
-            case MONS_DRACONIAN:
-            case MONS_ELF:
-                // [ds] Vault defs can request priest monsters of unusual types.
-            default:
-                mon->god = GOD_NAMELESS;
-                break;
-            }
-        }
-    }
-    // The Royal Jelly belongs to Jiyva.
-    else if (mg.cls == MONS_ROYAL_JELLY)
-        mon->god = GOD_JIYVA;
-    // Mennas belongs to Zin.
-    else if (mg.cls == MONS_MENNAS)
-        mon->god = GOD_ZIN;
-    // Yiuf is a faithful Xommite.
-    else if (mg.cls == MONS_CRAZY_YIUF)
-        mon->god = GOD_XOM;
-    // Grinder and Ignacio belong to Makhleb.
-    // Hell Knights need some reason to be evil.
-    else if (mg.cls == MONS_GRINDER
-             || mg.cls == MONS_IGNACIO
-             || mg.cls == MONS_HELL_KNIGHT)
-    {
-        mon->god = GOD_MAKHLEB;
-    }
-    // 1 out of 7 non-priestly orcs are unbelievers.
-    else if (mons_genus(mg.cls) == MONS_ORC)
-    {
-        if (!one_chance_in(7))
-            mon->god = GOD_BEOGH;
-    }
-    else if (mg.cls == MONS_APIS)
-        mon->god = GOD_ELYVILON;
-    else if (mg.cls == MONS_PROFANE_SERVITOR)
-        mon->god = GOD_YREDELEMNUL;
-    // Angels (other than Mennas) and daevas belong to TSO, but 1 out of
-    // 7 in the Abyss are adopted by Xom.
-    else if (mons_class_holiness(mg.cls) == MH_HOLY)
-    {
-        if (mg.place != BRANCH_ABYSS || !one_chance_in(7))
-            mon->god = GOD_SHINING_ONE;
-        else
-            mon->god = GOD_XOM;
-    }
+    // Not a god gift. Give the monster a god.
+    else
+        _place_monster_set_god(mon, mg.cls, mg.place);
 
-    // Holy monsters need their halo!
-    if (mon->holiness() & MH_HOLY)
+    // Monsters that need halos/silence auras/umbras.
+    if ((mon->holiness() & MH_HOLY)
+         || mg.cls == MONS_SILENT_SPECTRE
+         || mg.cls == MONS_PROFANE_SERVITOR
+         || mons_is_ghost_demon(mg.cls))
+    {
         invalidate_agrid(true);
-    if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
-        invalidate_agrid(true);
+    }
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
@@ -1979,7 +1993,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_LAUGHING_SKULL, { {}, {{ BAND_LAUGHING_SKULLS, {0, 1} }}}},
     { MONS_WEEPING_SKULL, { {}, {{ BAND_WEEPING_SKULLS, {0, 1} }}}},
     { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
-
+    { MONS_THERMIC_DYNAMO, { {}, {{ BAND_THERMIC_DYNAMOS, {0, 1} }}}},
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2115,6 +2129,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         break;
 
     case MONS_PROTEAN_PROGENITOR:
+    case MONS_THERMIC_DYNAMO:
         if (x_chance_in_y(2, 3))
             band_size = 1;
         break;
@@ -2218,6 +2233,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
     { BAND_BLASTMINER,          {{{MONS_KOBOLD_BLASTMINER, 1}}}},
+    { BAND_THERMIC_DYNAMOS,     {{{MONS_THERMIC_DYNAMO, 1}}}},
     { BAND_PROTEAN_PROGENITORS, {{{MONS_PROTEAN_PROGENITOR, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},

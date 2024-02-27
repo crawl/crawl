@@ -794,10 +794,11 @@ bool mons_is_active_ballisto(const monster& mon)
  */
 bool mons_class_is_firewood(monster_type mc)
 {
-    return mons_class_is_stationary(mc)
+    return mc == MONS_BOULDER ||
+           (mons_class_is_stationary(mc)
            && !mons_class_is_test(mc)
            && mons_class_flag(mc, M_NO_THREAT)
-           && !mons_is_tentacle_or_tentacle_segment(mc);
+           && !mons_is_tentacle_or_tentacle_segment(mc));
 }
 
 /**
@@ -920,6 +921,7 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
     return mons_offers_beogh_conversion(mon)
                 // Only try to convert atheists
                 && you.religion == GOD_NO_GOD
+                && !you.has_mutation(MUT_FORLORN)
                 && you.hp * 3 / 2 <= you.hp_max
                 && !mon.is_summoned() && !mon.friendly()
                 && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
@@ -2799,7 +2801,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
     switch (drac_type)
     {
     case MONS_BLACK_DRACONIAN:   sp = SPELL_LIGHTNING_BOLT; break;
-    case MONS_YELLOW_DRACONIAN:  sp = SPELL_ACID_SPLASH; break;
+    case MONS_YELLOW_DRACONIAN:  sp = SPELL_CAUSTIC_BREATH; break;
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;

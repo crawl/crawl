@@ -305,6 +305,21 @@ monster* follower::place(bool near_player)
     return nullptr;
 }
 
+monster* follower::peek()
+{
+    ASSERT(mons.alive());
+
+    monster *m = get_free_monster();
+    if (!m)
+        return nullptr;
+
+    // Copy the saved data.
+    *m = mons;
+    restore_mons_items(*m);
+
+    return m;
+}
+
 void follower::restore_mons_items(monster& m)
 {
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)

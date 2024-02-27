@@ -726,15 +726,13 @@ WEIGHT: 2
     "javelin ego:silver q:25", "any misc" }, 2)
 
   -- one guaranteed randart weapon with holy wrath, including ranged weapons
-  local holyinv = util.random_subset( { "quick blade randart ego:holy_wrath",
-    "rapier randart ego:holy_wrath", "eudemon blade randart ego:holy_wrath",
-    "great sword randart ego:holy_wrath", "battleaxe randart ego:holy_wrath",
-    "executioner's axe randart ego:holy_wrath",
-    "trishula randart ego:holy_wrath", "sacred scourge randart ego:holy_wrath",
-    "eveningstar randart ego:holy_wrath", "bardiche randart ego:holy_wrath",
-    "lajatang randart ego:holy_wrath", "hand cannon randart ego:holy_wrath",
-    "longbow randart ego:holy_wrath", "arbalest randart ego:holy_wrath",
-    "triple crossbow randart ego:holy_wrath" }, 1 )
+  local hw = " randart ego:holy_wrath"
+  local holyinv = util.random_subset( { "quick blade" .. hw, "rapier" .. hw,
+    "eudemon blade" .. hw, "triple sword" .. hw, "battleaxe" .. hw,
+    "executioner's axe" .. hw, "trishula" .. hw, "bardiche" .. hw,
+    "sacred scourge" .. hw, "eveningstar" .. hw, "lajatang" .. hw,
+    "longbow " .. hw, "arbalest" .. hw, "hand cannon" .. hw,
+    "triple crossbow" .. hw }, 1 )
 
    local fullinv = util.join( " | ", { util.join( " | ", disinv ),
      util.join( " | ", gehinv ), util.join( " | ", cocinv ),

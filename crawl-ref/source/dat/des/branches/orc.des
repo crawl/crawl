@@ -557,15 +557,16 @@ xxxSSxXxx
   .xxx
 ENDMAP
 
-NAME: nicolae_orc_tapped_out
-TAGS: no_item_gen no_trap_gen luniq_orc_cave
+NAME:  nicolae_orc_tapped_out
+TAGS:  no_item_gen no_trap_gen luniq_orc_cave
 DEPTH: Orc
+MONS:  boulder dbname:still_boulder
+ITEM:  stone q:1 / large rock q:1 w:3 / gold q:1 w:3
+KFEAT: ^ = shaft trap
 SUBST: X = 'xx, ' = .:5 d:4 ^:1
 : if you.depth() == dgn.br_depth(you.branch()) then
-SUBST: ^ = .:5 d:4
+SUBST: ^ = 1:5 d:4
 : end
-KITEM: d = stone q:1 / large rock q:1 w:3 / gold q:1 w:3
-KFEAT: ^ = shaft trap
 MAP
    xxx.
  xxxX...@
@@ -757,12 +758,13 @@ xxxxXXxxxxxX....@
       xxxxxxxxx
 ENDMAP
 
-NAME: nicolae_orc_rockfall
-TAGS: transparent extra decor no_item_gen
-DEPTH: Orc
-: dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
-KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
-KITEM: R = stone q:1 / stone q:2 / large rock q:1 w:5
+NAME:   nicolae_orc_rockfall
+TAGS:   transparent extra decor no_item_gen
+DEPTH:  Orc
+MONS:   boulder dbname:still_boulder
+ITEM:   stone q:1, stone q:2, large rock q:1
+: dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1, large rock q:1')
+NSUBST: R = 2:11f / * = ddeef, r = 1:d / * = d .:5 f:3
 MAP
  .....
 ..rrr..
@@ -795,7 +797,8 @@ ENDMAP
 NAME: nicolae_orc_stony_grotto
 TAGS: extra decor transparent
 DEPTH: Orc
-SUBST: X = xxxc...., C = xc, D = ...c
+MONS:  boulder dbname:still_boulder
+SUBST: X = xxxc...., C = x1cc, D = ..1c
 MAP
   @Cxxxx
  @..xCcxxxx
@@ -1446,7 +1449,7 @@ ENDMAP
 NAME:   blackcustard_rock_pile
 TAGS:   no_item_gen no_monster_gen transparent preserve_wall vaults_hard
 DEPTH:  Orc, Vaults
-WEIGHT: 1 (Vaults), 10
+WEIGHT: 2 (Vaults), 10
 MONS:   orc ; sling, kobold blastminer, boulder beetle
 MONS:   orc knight ; plate armour . sling, stone giant
 ITEM:   stone w:30 / large rock q:1, gold q:100

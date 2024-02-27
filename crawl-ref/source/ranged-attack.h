@@ -59,6 +59,5 @@ private:
 private:
     const item_def *projectile;
     bool teleport;
-    int orig_to_hit;
     bool mulched;
 };

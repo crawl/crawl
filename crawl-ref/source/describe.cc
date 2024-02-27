@@ -64,6 +64,7 @@
 #include "output.h"
 #include "potion.h"
 #include "prompt.h"
+#include "player.h"
 #include "ranged-attack.h" // describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
@@ -2009,24 +2010,23 @@ static string _describe_point_diff(int original,
     int difference = changed - original;
 
     if (difference == 0)
-        return "remain unchanged.";
+        return "remain unchanged";
 
     description += _describe_point_change(difference);
     description += " (";
     description += to_string(original);
     description += " -> ";
     description += to_string(changed);
-    description += ").";
+    description += ")";
 
     return description;
 }
 
-static string _armour_ac_sub_change_description(const item_def &item)
+static string _armour_ac_ev_sub_change_description(const item_def &item)
 {
     string description;
 
     description.reserve(100);
-
 
     description += "\n\nIf you switch to wearing this armour,"
                         " your AC would ";
@@ -2037,10 +2037,16 @@ static string _armour_ac_sub_change_description(const item_def &item)
     description += _describe_point_diff(you.armour_class(),
                                         you_ac_with_this_item);
 
+    description += " and your EV would ";
+    description += _describe_point_diff(you.evasion(true),
+                                        you.evasion_with_specific_armour(item));
+
+    description += ".";
+
     return description;
 }
 
-static string _armour_ac_remove_change_description(const item_def &item)
+static string _armour_ac_ev_remove_change_description(const item_def &item)
 {
     string description;
 
@@ -2053,6 +2059,12 @@ static string _armour_ac_remove_change_description(const item_def &item)
     description += _describe_point_diff(you.armour_class(),
                                         you_ac_without_item);
 
+    description += " and your EV would ";
+    description += _describe_point_diff(you.evasion(true),
+                                        you.evasion_without_specific_armour(item));
+
+    description += ".";
+
     return description;
 }
 
@@ -2061,14 +2073,14 @@ static bool _you_are_wearing_item(const item_def &item)
     return get_equip_slot(&item) != EQ_NONE;
 }
 
-static string _armour_ac_change(const item_def &item)
+static string _armour_ac_ev_change(const item_def &item)
 {
     string description;
 
     if (!_you_are_wearing_item(item))
-        description = _armour_ac_sub_change_description(item);
+        description = _armour_ac_ev_sub_change_description(item);
     else
-        description = _armour_ac_remove_change_description(item);
+        description = _armour_ac_ev_remove_change_description(item);
 
     return description;
 }
@@ -2273,7 +2285,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && item_ident(item, ISFLAG_KNOW_PLUSES)
         && !is_offhand(item))
     {
-        description += _armour_ac_change(item);
+        description += _armour_ac_ev_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -4956,6 +4968,8 @@ static string _monster_attacks_description(const monster_info& mi)
         int dam = attack.damage;
         if (attack.flavour == AF_PURE_FIRE)
             dam = flav_dam;
+        else if (attack.flavour == AF_CRUSH)
+            dam = 0;
         else if (info.weapon)
         {
             const int base_dam = property(*info.weapon, PWPN_DAMAGE);
@@ -5002,6 +5016,8 @@ static string _monster_attacks_description(const monster_info& mi)
                 result << " each";
             result << ")";
         }
+        else if (attack.flavour == AF_CRUSH)
+            result << " (" << attack.damage << "-" <<  (attack.damage*2) << " dam)";
 
         if (flavour_without_dam
             && !base_desc.empty()
@@ -5612,7 +5628,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const string holi = holiness == MH_NONLIVING ? "Nonliv."
                                                  : single_holiness_description(holiness);
     pr.AddRow();
-    if (mi.threat != MTHRT_UNDEF)
+    if (mi.threat != MTHRT_UNDEF && !mons_is_conjured(mi.type))
         pr.AddCell("Threat", _get_threat_desc(mi.threat));
     else // ?/m
         pr.AddCell(); // ensure alignment

@@ -794,10 +794,10 @@ ENDMAP
 NAME: sprint_mu_d2_genie
 TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
 MONS: yaktaur / yaktaur captain, glass eye, orc priest / \
- orc high priest hd:5 hp:70
+      orc high priest hd:5 hp:70
 MONS: spriggan defender hd:5 hp:55 ; dagger
 MONS: obsidian statue / orange crystal statue
-MONS: crystal guardian hd:10 hp:45, skeletal warrior
+MONS: thermic dynamo, skeletal warrior
 KMONS: 2 = glass eye
 KITEM: 2 = q:10 scroll of identify ident:all
 KMONS: P = plant

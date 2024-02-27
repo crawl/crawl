@@ -437,9 +437,10 @@ void actor::clear_constricted()
     escape_attempts = 0;
 }
 
-// End my constriction of i->first, but don't yet update my constricting map,
-// so as not to invalidate i.
-void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
+// End my constriction of the target, but don't yet update my constricting list
+// so as not to invalidate iteration.
+void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
+                             const string& escape_verb)
 {
     actor *const constrictee = actor_by_mid(whom);
 
@@ -474,12 +475,23 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
         else
             attacker_desc = name(DESC_THE);
 
-        mprf("%s %s %s grip on %s.",
-             attacker_desc.c_str(),
-             force_plural ? verb.c_str()
-                          : conj_verb(verb).c_str(),
-             force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
-             constrictee->name(DESC_THE).c_str());
+        // Print a different message when breaking free of constriction via
+        // blinking or similar
+        if (!escape_verb.empty())
+        {
+            mprf("%s %s free of %s.",
+                 constrictee->name(DESC_THE).c_str(), escape_verb.c_str(),
+                 lowercase(attacker_desc).c_str());
+        }
+        else
+        {
+            mprf("%s %s %s grip on %s.",
+                attacker_desc.c_str(),
+                force_plural ? verb.c_str()
+                            : conj_verb(verb).c_str(),
+                force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
+                constrictee->name(DESC_THE).c_str());
+        }
     }
 
     if (vile_clutch)
@@ -501,22 +513,26 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
         you.redraw_evasion = true;
 }
 
-void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
+void actor::stop_constricting(mid_t whom, bool intentional, bool quiet,
+                              const string& escape_verb)
 {
     if (!constricting)
         return;
 
-    auto i = constricting->find(whom);
-
-    if (i != constricting->end())
+    for (int i = constricting->size() - 1; i >= 0; --i)
     {
-        end_constriction(whom, intentional, quiet);
-        constricting->erase(i);
-
-        if (constricting->empty())
+        if ((*constricting)[i] == whom)
         {
-            delete constricting;
-            constricting = nullptr;
+            end_constriction(whom, intentional, quiet, escape_verb);
+            constricting->erase(constricting->begin() + i);
+
+            if (constricting->empty())
+            {
+                delete constricting;
+                constricting = nullptr;
+            }
+
+            return;
         }
     }
 }
@@ -534,7 +550,7 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
         return;
 
     for (const auto &entry : *constricting)
-        end_constriction(entry.first, intentional, quiet);
+        end_constriction(entry, intentional, quiet);
 
     delete constricting;
     constricting = nullptr;
@@ -559,21 +575,15 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     if (!constricting)
         return;
 
-    vector<mid_t> need_cleared;
-    for (const auto &entry : *constricting)
+    for (int i = constricting->size() - 1; i >= 0; --i)
     {
-        const actor * const constrictee = actor_by_mid(entry.first);
+        const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
             || constrictee->get_constrict_type() == CONSTRICT_MELEE)
         {
-            need_cleared.push_back(entry.first);
+            end_constriction(constrictee->mid, intentional, quiet);
+            constricting->erase(constricting->begin() + i);
         }
-    }
-
-    for (auto whom : need_cleared)
-    {
-        end_constriction(whom, intentional, quiet);
-        constricting->erase(whom);
     }
 
     if (constricting->empty())
@@ -583,13 +593,13 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     }
 }
 
-void actor::stop_being_constricted(bool quiet)
+void actor::stop_being_constricted(bool quiet, const string& escape_verb)
 {
     // Make sure we are actually being constricted.
     actor* const constrictor = actor_by_mid(constricted_by);
 
     if (constrictor)
-        constrictor->stop_constricting(mid, false, quiet);
+        constrictor->stop_constricting(mid, false, quiet, escape_verb);
 
     // In case the actor no longer exists.
     clear_constricted();
@@ -648,29 +658,25 @@ void actor::clear_invalid_constrictions(bool move)
     if (!constricting)
         return;
 
-    vector<mid_t> need_cleared;
-    for (const auto &entry : *constricting)
+    for (int i = constricting->size() - 1; i >= 0; --i)
     {
-        const actor * const constrictee = actor_by_mid(entry.first, true);
+        const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
             || constrictee->has_invalid_constrictor())
         {
-            need_cleared.push_back(entry.first);
+            stop_constricting(constrictee->mid, false, false);
         }
     }
-
-    for (auto whom : need_cleared)
-        stop_constricting(whom, false, false);
 }
 
-void actor::start_constricting(actor &whom, int dur)
+void actor::start_constricting(actor &whom)
 {
     if (!constricting)
-        constricting = new constricting_t();
+        constricting = new vector<mid_t>;
 
-    ASSERT(constricting->find(whom.mid) == constricting->end());
+    ASSERT(!is_constricting(whom));
 
-    (*constricting)[whom.mid] = dur;
+    constricting->push_back(whom.mid);
     whom.constricted_by = mid;
 
     if (whom.is_player())
@@ -685,6 +691,13 @@ int actor::num_constricting() const
 bool actor::is_constricting() const
 {
     return constricting && !constricting->empty();
+}
+
+bool actor::is_constricting(const actor &victim) const
+{
+    return is_constricting()
+           && find(constricting->begin(), constricting->end(), victim.mid)
+              != constricting->end();
 }
 
 bool actor::is_constricted() const
@@ -713,27 +726,18 @@ constrict_type actor::get_constrict_type() const
     return CONSTRICT_MELEE;
 }
 
-void actor::accum_has_constricted()
-{
-    if (!constricting)
-        return;
-
-    for (auto &entry : *constricting)
-        entry.second += you.time_taken;
-}
-
 bool actor::can_engulf(const actor &defender) const
 {
     return can_see(defender)
         && !confused()
         && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
-        && defender.res_constrict() < 3
+        && !defender.res_constrict()
         && adjacent(pos(), defender.pos());
 }
 
 bool actor::can_constrict(const actor &defender, constrict_type typ) const
 {
-    if (defender.is_constricted() || defender.res_constrict() >= 3)
+    if (defender.is_constricted() || defender.res_constrict())
         return false;
 
 
@@ -756,26 +760,18 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
 #endif
 
 /*
- * Damage the defender with constriction damage. Longer duration gives more
- * damage, but with a 50 aut step-down. Direct constriction uses strength-based
- * base damage that is modified by XL, whereas indirect, spell-based
- * constriction uses spellpower.
+ * Damage the defender with constriction damage.
+ * (The exact damage formula depends on the type of constriction applied,
+ * whether physical or magical)
  *
  * @param defender The defender being constricted.
- * @param duration How long the defender has been constricted in AUT.
  */
-void actor::constriction_damage_defender(actor &defender, int duration)
+void actor::constriction_damage_defender(actor &defender)
 {
     const auto typ = defender.get_constrict_type();
     int damage = constriction_damage(typ);
-
     DIAG_ONLY(const int basedam = damage);
-    damage += div_rand_round(damage * duration, BASELINE_DELAY * 5);
-    if (is_player() && typ == CONSTRICT_MELEE)
-        damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
-
-    DIAG_ONLY(const int durdam = damage);
-    damage -= random2(1 + (div_rand_round(defender.armour_class(), 2)));
+    damage = defender.apply_ac(damage, 0, ac_type::half);
     DIAG_ONLY(const int acdam = damage);
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
@@ -839,10 +835,10 @@ void actor::constriction_damage_defender(actor &defender, int duration)
                            "", false);
     DIAG_ONLY(const int infdam = damage);
 
-    dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
+    dprf("constrict at: %s df: %s base %d ac %d tsc %d inf %d",
          name(DESC_PLAIN, true).c_str(),
          defender.name(DESC_PLAIN, true).c_str(),
-         basedam, durdam, acdam, timescale_dam, infdam);
+         basedam, acdam, timescale_dam, infdam);
 
     if (defender.is_monster()
         && defender.type != MONS_NO_MONSTER // already dead and reset
@@ -868,21 +864,15 @@ void actor::handle_constriction()
 
     // need to make a copy, since constriction_damage_defender can
     // unpredictably invalidate constricting
-    constricting_t tmp_constricting = *constricting;
+    vector<mid_t> tmp_constricting = *constricting;
     for (auto &i : tmp_constricting)
     {
-        actor* const defender = actor_by_mid(i.first);
-        const int duration = i.second;
+        actor* const defender = actor_by_mid(i);
         if (defender && defender->alive())
-            constriction_damage_defender(*defender, duration);
+            constriction_damage_defender(*defender);
     }
 
     clear_invalid_constrictions();
-}
-
-bool actor::constriction_does_damage(constrict_type typ) const
-{
-    return constriction_damage(typ) > 0;
 }
 
 string actor::describe_props() const

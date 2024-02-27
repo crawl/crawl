@@ -135,7 +135,8 @@ MONS:    ice fiend / shard shrike
 MONS:    wendigo band / simulacrum w:20
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Abyss") then
-MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
+MONS:    blizzard demon / frost giant / \
+         dancing weapon ; battleaxe ego:freezing ident:type w:5
 MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
          white very ugly thing w:15 / ice devil w:8
 MONS:    balrug / hellion / fire crab w:5 / hellephant w:5

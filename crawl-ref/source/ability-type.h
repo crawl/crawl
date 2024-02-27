@@ -8,16 +8,14 @@ enum ability_type
     // Innate abilities and (Demonspawn) mutations.
     ABIL_SPIT_POISON = 1,
     ABIL_BREATHE_FIRE,
-    ABIL_BREATHE_FROST,
+    ABIL_GLACIAL_BREATH,
     ABIL_BREATHE_POISON,
-    ABIL_BREATHE_LIGHTNING,
-    ABIL_BREATHE_POWER,
-#if TAG_MAJOR_VERSION == 34
-    ABIL_BREATHE_STICKY_FLAME,
-#endif
-    ABIL_BREATHE_STEAM,
-    ABIL_BREATHE_MEPHITIC,
-    ABIL_BREATHE_ACID,
+    ABIL_GALVANIC_BREATH,
+    ABIL_NULLIFYING_BREATH,
+    ABIL_COMBUSTION_BREATH,
+    ABIL_STEAM_BREATH,
+    ABIL_NOXIOUS_BREATH,
+    ABIL_CAUSTIC_BREATH,
     // Others
 #if TAG_MAJOR_VERSION == 34
     ABIL_BLINK,
@@ -64,6 +62,7 @@ enum ability_type
     ABIL_SIPHON_ESSENCE,
     // Talismans
     ABIL_BEGIN_UNTRANSFORM,
+    ABIL_MUD_BREATH,
 
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 

@@ -2420,8 +2420,9 @@ MONS:   raiju / shapeshifter / thrashing horror / arcanist / occultist \
         / hell hog / very ugly thing
 MONS:   ancient zyme / rakshasa / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
-        / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
-        / tentacled monstrosity w:2 / starcursed mass w:2 / daeva god:Xom w:2 \
+        / hellion / apocalypse crab / glowing shapeshifter \
+        / crystal guardian w:2 / tentacled monstrosity w:2 \
+        / starcursed mass w:2 / daeva god:Xom w:2 \
         / executioner w:2 / profane servitor w:2
 SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = yzDF / 2=1 / 3=1- / 2 / 2=2- / 3 / 4- / -
@@ -2458,8 +2459,9 @@ MONS:   shapeshifter / rakshasa / thrashing horror / occultist / hell hog \
         / very ugly thing
 MONS:   ancient zyme / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
-        / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
-        / tentacled monstrosity w:2 / starcursed mass w:2 / daeva god:Xom w:2 \
+        / hellion / apocalypse crab / glowing shapeshifter \
+        / crystal guardian w:2 / tentacled monstrosity w:2 \
+        / starcursed mass w:2 / daeva god:Xom w:2 \
         / executioner w:2 / profane servitor w:2
 SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = DH / 2=1 / 3=1- / 2 / 2=2- / 3 / 4- / -

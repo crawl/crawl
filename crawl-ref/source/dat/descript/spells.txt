@@ -282,6 +282,10 @@ Causes fear in those near to the caster, causing those affected to be unable to
 approach the caster, and to sometimes fail to attack them in melee. Leaving the
 caster's line of sight will end the effect.
 %%%%
+Caustic Breath spell
+
+<Caustic Breath ability>
+%%%%
 Chain of Chaos spell
 
 Creates an arc of pure chaos, striking nearby creatures with unpredictable
@@ -301,10 +305,6 @@ Causes an otherwise hostile creature to fight on the caster's side for a while.
 Chaos Breath spell
 
 Exhales a large cloud of fumes filled with the very essence of chaos.
-%%%%
-Chilling Breath spell
-
-Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
 Cigotuvi's Dreadful Rot spell
 
@@ -329,6 +329,10 @@ Concentrate Venom spell
 
 Intensifies the natural venom of the target monster. Poisonous bites and spit
 become intense enough to slow and asphyxiate.
+%%%%
+Combustion Breath spell
+
+<Combustion Breath ability>
 %%%%
 Confuse spell
 
@@ -390,11 +394,11 @@ Calls forth freezing cold from the walls. Any enemies of the caster standing
 next to the walls will be frozen and will find their movements slowed. Cold
 resistance will reduce damage, but not prevent the freezing effect.
 %%%%
-Crystal Bolt spell
+Crystallizing Shot spell
 
-Projects a penetrating projectile with peculiar magical properties. It is
-randomly imbued with either fire or ice, and additionally will reflect from
-walls of any material due to the crystal embedded in the shot.
+Hurls a large and heavy shard of crystal. It may render a creature's body
+structure as brittle and fragile as shattered and unrefined crystal, increasing
+the damage they take from all sources.
 %%%%
 Curse of Agony spell
 
@@ -655,6 +659,10 @@ Funeral Dirge spell
 A ritual chant that briefly rouses several nearby undead allies to move more
 swiftly and strike with greater might.
 %%%%
+Galvanic Breath spell
+
+<Galvanic Breath ability>
+%%%%
 Gell's Gravitas spell
 
 Briefly redirects gravity around a target point, causing 'down' to be towards
@@ -671,6 +679,10 @@ Ghostly Sacrifice spell
 Uses an ally's motivating essence to create a blast of negative energy,
 draining any living creature it engulfs. The being used to fuel the spell, no
 matter whether living or construct, is consumed and unmade in the process.
+%%%%
+Glacial Breath spell
+
+<Glacial Breath ability>
 %%%%
 Glaciate spell
 
@@ -1021,15 +1033,27 @@ its wake but skipping past creatures that would be vulnerable to it. These
 clouds of negative energy will rapidly drain the living of small fractions of
 their maximum health.
 %%%%
+Mud Breath spell
+
+<Mud Breath ability>
+%%%%
 Necrotise spell
 
 Agonizingly rots away the victim's flesh. Those slain by this spell (or otherwise
 dying immediately afterward) may rise as skeletons to fight for the caster. Only
 the living can be affected.
 %%%%
+Noxious Breath spell
+
+<Noxious Breath ability>
+%%%%
 Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
+%%%%
+Nullifying Breath spell
+
+<Nullifying Breath ability>
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -1177,7 +1201,18 @@ next to or above lava will be burned.
 %%%%
 Quicksilver Bolt spell
 
-<Breathe Dispelling Energy ability>
+Breathes a bolt of dispelling energy at a targeted creature, possibly removing
+some of its enchantments.
+%%%%
+Rebounding Blaze spell
+
+Fires a penetrating bolt of energetic flames that can bounce off walls to hit
+targets twice.
+%%%%
+Rebounding Chill spell
+
+Fires a penetrating bolt of energetic cold that can bounce off walls to hit
+targets twice.
 %%%%
 Regenerate Other spell
 
@@ -1399,6 +1434,10 @@ bypasses half of defenders' armour.
 Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
+%%%%
+Steam Breath spell
+
+<Steam breath ability>
 %%%%
 Sticks to Snakes spell
 
@@ -1655,9 +1694,8 @@ Throw Klown Pie spell
 
 Throws a harmful yet strangely delicious pie that can inflict its victim with a
 number of irresistible and debilitating temporary effects. These include
-inducing vertigo, silence, fire vulnerability, stat drain, or an aversion to
-drinking potions. The dreaded clear moon pie will even make any adventurer as
-fragile as its delicate flaky crust.
+inducing vertigo, silence, fire vulnerability, stat drain, fragility, or an
+aversion to drinking potions.
 %%%%
 Thunderbolt spell
 

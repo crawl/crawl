@@ -530,12 +530,11 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         return;
 
     // blast smoke
-    for (fair_adjacent_iterator ai(act.pos(), false); ai; ++ai)
+    for (fair_adjacent_iterator ai(act.pos()); ai; ++ai)
     {
         if (!in_bounds(*ai)
             || cell_is_solid(*ai)
-            || cloud_at(*ai)
-            || !one_chance_in(3))
+            || cloud_at(*ai))
         {
             continue;
         }
@@ -668,6 +667,7 @@ void throw_it(quiver::action &a)
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
     // Portaled Projectile, but obviously don't trace a path.
+    bool aimed_at_foe = false;
     if (!you.confused())
     {
         // Set values absurdly high to make sure the tracer will
@@ -687,6 +687,8 @@ void throw_it(quiver::action &a)
         pbolt.damage = dice_def();
         if (pbolt.friendly_past_target)
             pbolt.aimed_at_spot = true;
+        if (pbolt.foe_info.count)
+            aimed_at_foe = true; // dubious
 
         // Should only happen if the player answered 'n' to one of those
         // "Fire through friendly?" prompts.
@@ -727,7 +729,7 @@ void throw_it(quiver::action &a)
     alert_nearby_monsters();
 
     you.turn_is_over = true;
-    if (launcher && you.has_mutation(MUT_WARMUP_STRIKES))
+    if (aimed_at_foe && launcher && you.has_mutation(MUT_WARMUP_STRIKES))
         you.rev_up(you.time_taken);
 
     if ((launcher || is_thrown)

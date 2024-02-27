@@ -1626,7 +1626,7 @@ SUBST:  "` = ^:35 ~:5 .
 NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
 : else
 SUBST:  '" = ^:35 ~:5 .
-NSUBST: . = 2:1 / * = . = d:3 e:2 .:42 1:18 2:4
+NSUBST: . = 2:1 / * = d:3 e:2 .:42 1:18 2:4
 : end
 CLEAR:  `'"-
 COLOUR: ^d = green

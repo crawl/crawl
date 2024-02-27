@@ -181,7 +181,13 @@ public:
     transformation default_form;
     item_def active_talisman;
 
-    FixedVector< item_def, ENDOFPACK > inv;
+    // XXX: ENDOFPACK marks the total size of the player inventory, but we add
+    //      a single extra slot after that for purposes of examining EV of
+    //      non-inventory items, since implementation-wise the player can only
+    //      ever equip items that are in this vector.
+    //
+    //      Most other places should never know this slot exists.
+    FixedVector< item_def, ENDOFPACK + 1 > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
     int obtainable_runes; // can be != 15 in Sprint
 
@@ -516,6 +522,7 @@ public:
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
+    bool is_binding_sigil_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
     bool can_see_invisible() const override;
@@ -622,8 +629,6 @@ public:
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
                                   const item_def *weapon) const;
     int         constriction_damage(constrict_type typ) const override;
-    bool        constriction_does_damage(constrict_type /* typ */) const override
-                    { return true; };
 
     int       has_claws(bool allow_tran = true) const override;
     bool      has_usable_claws(bool allow_tran = true) const;
@@ -784,7 +789,7 @@ public:
     bool res_torment() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
-    int res_constrict() const override;
+    bool res_constrict() const override;
     int willpower() const override;
     bool no_tele(bool blink = false, bool temp = true) const override;
     string no_tele_reason(bool blink = false, bool temp = true) const;
@@ -839,7 +844,7 @@ public:
     int base_ac(int scale) const;
     int armour_class() const override;
     int gdr_perc() const override;
-    int evasion(bool ignore_helpless = false,
+    int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;
 
     int stat_hp() const override     { return hp; }
@@ -853,9 +858,13 @@ public:
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
-    int unadjusted_body_armour_penalty() const override;
-    int adjusted_body_armour_penalty(int scale = 1) const override;
-    int adjusted_shield_penalty(int scale = 1) const override;
+    int unadjusted_body_armour_penalty() const;
+    int adjusted_body_armour_penalty(int scale = 1) const;
+    int adjusted_shield_penalty(int scale = 1) const;
+
+    // Calculates total permanent EV if the player was/wasn't wearing a given item
+    int evasion_with_specific_armour(const item_def& new_armour) const;
+    int evasion_without_specific_armour(const item_def& armour_to_remove) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -884,7 +893,6 @@ public:
     int rev_percent() const;
     void rev_up(int time_taken);
     void rev_down(int time_taken);
-    void maybe_shutdown_legs();
 
     bool allies_forbidden();
 
@@ -923,7 +931,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = nullptr);
 
-    bool attempt_escape(int attempts = 1) override;
+    bool attempt_escape() override;
     int usable_tentacles() const;
     bool has_usable_tentacle() const override;
 

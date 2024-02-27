@@ -130,6 +130,7 @@ enum band_type
     BAND_MARGERY,
     BAND_LATE_ROKA,
     BAND_WEEPING_SKULLS,
+    BAND_THERMIC_DYNAMOS,
     NUM_BANDS                   // always last
 };
 

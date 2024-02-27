@@ -68,6 +68,8 @@ int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
 dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
+vector<coord_def> galvanic_targets(const actor &agent, coord_def pos, bool actual);
+void do_galvanic_jolt(const actor& agent, coord_def pos, dice_def damage);
 bool mons_should_fire_plasma(int pow, const actor &agent);
 spret cast_plasma_beam(int pow, const actor &agent, bool fail);
 vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);
@@ -96,9 +98,6 @@ int dazzle_chance_numerator(int hd);
 int dazzle_chance_denom(int pow);
 bool dazzle_monster(monster *mon, int pow);
 spret cast_dazzling_flash(int pow, bool fail, bool tracer = false);
-
-dice_def foul_flame_damage(int pow, bool random);
-void foul_flame_monster(monster *mons);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);

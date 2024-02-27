@@ -122,7 +122,7 @@ vampire fruit cache
 
 You root around, looking for a blood orange, but fail to find any.
 
-w:3
+w:4
 You reach down and find a blood orange. Delicious.
 %%%%
 mummy fruit cache
@@ -141,5 +141,5 @@ spriggan meat cache
 
 You root around, looking for pizza, but fail to find any.
 
-w:3
+w:4
 You find a slice of magically-preserved pizza, and pick the meat off. Delicious!

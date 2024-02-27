@@ -38,6 +38,8 @@ enum beam_type                  // bolt::flavour
     BEAM_DEVASTATION,
     BEAM_UMBRAL_TORCHLIGHT,
     BEAM_FOUL_FLAME,
+    BEAM_CRYSTALLIZING,
+    BEAM_WARPING,
 
     // Enchantments
     BEAM_SLOW,
@@ -98,7 +100,6 @@ enum beam_type                  // bolt::flavour
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_ENSNARE,
-    BEAM_CRYSTAL,
     BEAM_DEATH_RATTLE,
     BEAM_LAST_REAL = BEAM_DEATH_RATTLE,
 

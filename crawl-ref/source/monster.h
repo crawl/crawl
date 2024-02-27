@@ -246,6 +246,7 @@ public:
     void load_ghost_spells();
     brand_type ghost_brand() const;
     bool has_ghost_brand() const;
+    int ghost_umbra_radius() const;
 
     actor *get_foe() const;
 
@@ -391,7 +392,7 @@ public:
     int res_acid() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
-    int res_constrict() const override;
+    bool res_constrict() const override;
     resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
@@ -404,6 +405,7 @@ public:
     bool airborne() const override;
     bool is_banished() const override;
     bool is_web_immune() const override;
+    bool is_binding_sigil_immune() const override;
     bool invisible() const override;
     bool can_see_invisible() const override;
     bool visible_to(const actor *looker) const override;
@@ -462,7 +464,7 @@ public:
     int armour_class() const override;
     int gdr_perc() const override { return 0; }
     int base_evasion() const;
-    int evasion(bool ignore_helpless = false,
+    int evasion(bool ignore_temporary = false,
                 const actor* /*attacker*/ = nullptr) const override;
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;
@@ -512,11 +514,6 @@ public:
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
 
-    // Combat-related class methods
-    int     unadjusted_body_armour_penalty() const override { return 0; }
-    int     adjusted_body_armour_penalty(int) const override { return 0; }
-    int     adjusted_shield_penalty(int) const override { return 0; }
-
     bool is_player() const override { return false; }
     monster* as_monster() override { return this; }
     player* as_player() override { return nullptr; }
@@ -535,7 +532,7 @@ public:
 
     void bind_melee_flags();
     void calc_speed();
-    bool attempt_escape(int attempts = 1) override;
+    bool attempt_escape() override;
     void struggle_against_net();
     void catch_breath();
     bool has_usable_tentacle() const override;

@@ -1544,13 +1544,12 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ACID_SPLASH, "Acid Splash",
-    spschool::alchemy,
-    spflag::dir_or_target | spflag::monster | spflag::noisy
-        | spflag::needs_tracer,
+    SPELL_CAUSTIC_BREATH, "Caustic Breath",
+    spschool::conjuration | spschool::alchemy,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
     5,
     0,
-    LOS_RADIUS, LOS_RADIUS,
+    5, 5,
     0,
     TILEG_SPIT_ACID,
 },
@@ -1615,15 +1614,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CHILLING_BREATH, "Chilling Breath",
+    SPELL_GLACIAL_BREATH, "Glacial Breath",
     spschool::conjuration | spschool::ice,
-    spflag::dir_or_target | spflag::monster | spflag::noisy
-        | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
     5,
     0,
-    5, 5,
+    LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_COLD_BREATH,
 },
 
 {
@@ -1748,7 +1746,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SUMMON_ILLUSION,
 },
 
 {
@@ -1770,7 +1768,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CALL_TIDE,
 },
 
 {
@@ -1838,7 +1836,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DRUIDS_CALL,
 },
 
 {
@@ -1987,7 +1985,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FIRE_SUMMON,
 },
 
 {
@@ -2291,7 +2289,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MALIGN_OFFERING,
 },
 
 {
@@ -2425,7 +2423,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CALL_OF_CHAOS,
 },
 
 {
@@ -2447,7 +2445,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SAP_MAGIC,
 },
 
 {
@@ -2529,14 +2527,25 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CRYSTAL_BOLT, "Crystal Bolt",
-    spschool::conjuration | spschool::fire | spschool::ice,
+    SPELL_REBOUNDING_BLAZE, "Rebounding Blaze",
+    spschool::conjuration | spschool::fire,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
-    6,
+    7,
     200,
     6, 6,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_REBOUNDING_BLAZE,
+},
+
+{
+    SPELL_REBOUNDING_CHILL, "Rebounding Chill",
+    spschool::conjuration | spschool::ice,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    7,
+    200,
+    6, 6,
+    0,
+    TILEG_REBOUNDING_CHILL,
 },
 
 {
@@ -2604,7 +2613,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DRAIN_MAGIC,
 },
 
 {
@@ -2638,7 +2647,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FIRE_BREATH,
 },
 
 {
@@ -2650,7 +2659,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_COLD_BREATH,
 },
 
 {
@@ -2662,7 +2671,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
 {
@@ -2674,7 +2683,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_MIASMA_BREATH,
 },
 
 {
@@ -2898,7 +2907,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WEAKENING_GAZE,
 },
 
 {
@@ -2953,7 +2962,7 @@ static const struct spell_desc spelldata[] =
     50,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_THROW_ALLY,
 },
 
 {
@@ -2997,7 +3006,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ENTROPIC_WEAVE,
 },
 
 {
@@ -3030,7 +3039,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_AURA_OF_BRILLIANCE,
 },
 
 {
@@ -3140,7 +3149,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DREAM_DUST,
 },
 
 {
@@ -3207,6 +3216,17 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
+    TILEG_GRASPING_ROOTS,
+},
+
+{
+    SPELL_WARP_SPACE, "Warp Space",
+    spschool::translocation,
+    spflag::dir_or_target | spflag::needs_tracer,
+    5,
+    200,
+    5, 5,
+    0,
     TILEG_GENERIC_MONSTER_SPELL,
 },
 
@@ -3240,7 +3260,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_THROW_KLOWN_PIE,
 },
 
 {
@@ -3440,7 +3460,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CONCENTRATE_VENOM,
 },
 
 {
@@ -3605,7 +3625,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SHEZAS_DANCE,
 },
 
 {
@@ -3698,6 +3718,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CRYSTALLIZING_SHOT, "Crystallizing Shot",
+    spschool::conjuration | spschool::earth | spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    6,
+    50,
+    4, 4,
+    0,
+    TILEG_CRYSTALLIZING_SHOT,
+},
+
+{
     SPELL_TREMORSTONE, "Tremorstone",
     spschool::earth,
     spflag::area,
@@ -3716,13 +3747,11 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_REGENERATION,
 },
 
-
-// Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
-    SPELL_MEPHITIC_BREATH, "Mephitic Breath",
+    SPELL_NOXIOUS_BREATH, "Noxious Breath",
     spschool::conjuration | spschool::air | spschool:: alchemy,
     spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
     5,
@@ -3752,6 +3781,61 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_COMBUSTION_BREATH, "Combustion Breath",
+    spschool::conjuration | spschool::fire,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
+    5,
+    0,
+    5, 5,
+    0,
+    TILEG_FIRE_BREATH,
+},
+
+{
+    SPELL_NULLIFYING_BREATH, "Nullifying Breath",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5,
+    TILEG_QUICKSILVER_BOLT,
+},
+
+{
+    SPELL_STEAM_BREATH, "Steam Breath",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer,
+    4,
+    0,
+    6, 6,
+    0,
+    TILEG_STEAM_BALL,
+},
+
+{
+    SPELL_MUD_BREATH, "Mud Breath",
+    spschool::conjuration | spschool::earth,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
+    5,
+    0,
+    6, 6,
+    10,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_GALVANIC_BREATH, "Galvanic Breath",
+    spschool::conjuration | spschool::air,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    10,
     TILEG_ERROR,
 },
 

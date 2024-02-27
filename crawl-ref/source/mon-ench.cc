@@ -508,13 +508,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // Note: Invisible monsters are not forced to stay invisible, so
         // that they can properly have their invisibility removed just
         // before being polymorphed into a non-invisible monster.
-        if (you.see_cell(pos()) && !you.can_see_invisible() && !backlit()
+        if (you.see_cell(pos()) && !you.can_see_invisible()
             && !friendly())
         {
+            autotoggle_autopickup(false);
+
+            if (backlit())
+                break;
+
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
 
-            autotoggle_autopickup(false);
             handle_seen_interrupt(this);
         }
         break;
@@ -544,7 +548,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                      name(DESC_THE, true).c_str());
             }
 
-            autotoggle_autopickup(friendly());
+            if (!friendly())
+            {
+                //turn off auto pickup
+                autotoggle_autopickup(true);
+            }
         }
         else
         {
@@ -863,16 +871,20 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     {
-        const string noun = me.ench == ENCH_VILE_CLUTCH ? "zombie hands"
-                                                        : "roots";
         if (is_constricted())
         {
-            // We handle the end-of-enchantment message here since the method
-            // of constriction is no longer detectable.
             if (!quiet && you.can_see(*this))
             {
-                mprf("The %s release their grip on %s.", noun.c_str(),
-                        name(DESC_THE).c_str());
+                if (me.ench == ENCH_VILE_CLUTCH)
+                {
+                    mprf("%s zombie hands return to the earth.",
+                         me.agent()->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s grasping roots sink back into the ground.",
+                         me.agent()->name(DESC_THE).c_str());
+                }
             }
             stop_being_constricted(true);
         }

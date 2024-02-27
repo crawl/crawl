@@ -2268,6 +2268,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_SILENCE_AURA:
+        case MUT_FOUL_SHADOW:
             invalidate_agrid(true);
             break;
 
@@ -2419,6 +2420,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         break;
 
     case MUT_SILENCE_AURA:
+    case MUT_FOUL_SHADOW:
         invalidate_agrid(true);
         break;
 
@@ -2972,7 +2974,7 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_MANA_REGENERATION, MUT_MANA_SHIELD, MUT_MANA_LINK },
       { -33, 0, 0 } },
-    { 2, { MUT_FOUL_GLOW, MUT_FOUL_GLOW, MUT_FOUL_GLOW },
+    { 2, { MUT_FOUL_SHADOW, MUT_FOUL_SHADOW, MUT_FOUL_SHADOW },
       { -33, 0, 0 } },
     // Tier 3 facets
     { 3, { MUT_DEMONIC_WILL, MUT_TORMENT_RESISTANCE, MUT_HURL_DAMNATION },
@@ -3036,6 +3038,7 @@ try_again:
     int absfacet = 0;
     int elemental = 0;
     int cloud_producing = 0;
+    int retaliation = 0;
 
     set<const facet_def *> facets_used;
 
@@ -3068,6 +3071,9 @@ try_again:
 
                     if (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD)
                         cloud_producing++;
+
+                    if (m == MUT_SPINY || m == MUT_FOUL_SHADOW)
+                        retaliation++;
                 }
             }
 
@@ -3079,6 +3085,9 @@ try_again:
         goto try_again;
 
     if (cloud_producing > 1)
+        goto try_again;
+
+    if (retaliation > 1)
         goto try_again;
 
     return ret;

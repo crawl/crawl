@@ -534,36 +534,14 @@ static formatted_string _beogh_extra_description()
 {
     formatted_string desc;
 
-    _add_par(desc, "Apostles:");
+    for (int i = 1; i <= get_num_apostles(); ++i)
+        _add_par(desc, apostle_short_description(i));
 
-    vector<monster*> followers;
-
-    for (monster_iterator mi; mi; ++mi)
-        if (is_apostle_follower(**mi))
-            followers.push_back(*mi);
-    for (auto &entry : companion_list)
-        // if not elsewhere, follower already seen by monster_iterator
-        if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
-            followers.push_back(&entry.second.mons.mons);
-
-    bool has_named_followers = false;
-    for (auto mons : followers)
+    if (you.duration[DUR_BEOGH_CAN_RECRUIT])
     {
-        if (!mons->is_named())
-            continue;
-        has_named_followers = true;
-
-        desc += mons->full_name(DESC_PLAIN);
-        if (companion_is_elsewhere(mons->mid))
-        {
-            desc += formatted_string::parse_string(
-                            " (<blue>on another level</blue>)");
-        }
-        desc.cprintf("\n");
+        _add_par(desc, "-----------------------------------\n");
+        _add_par(desc, apostle_short_description(0));
     }
-
-    if (!has_named_followers)
-        _add_par(desc, "None");
 
     return desc;
 }
@@ -1214,6 +1192,8 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
+        if (desc_sw->current_widget()->on_event(ev))
+            return true;
         return done = ui::key_exits_popup(key, false);
     });
 

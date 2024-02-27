@@ -259,7 +259,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
 
     if (!_check_moveto_dangerous(p, msg))
         return false;
-    if (env.grid(p) == DNGN_BINDING_SIGIL)
+    if (env.grid(p) == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
     {
         string prompt;
         if (prompted)
@@ -802,13 +802,19 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     if (species::bans_eq(you.species, eq))
         return false;
 
+    if (you.has_mutation(MUT_NO_RINGS)
+        && (eq == EQ_RIGHT_RING || eq == EQ_LEFT_RING))
+    {
+        return false;
+    }
+
     switch (eq)
     {
     case EQ_RING_EIGHT:
     case EQ_LEFT_RING:
         if (you.get_mutation_level(MUT_MISSING_HAND))
             return false;
-        // intentional fallthrough
+        // intentional fallthrough to EQ_RIGHT_RING
     case EQ_RIGHT_RING:
     case EQ_RING_ONE:
     case EQ_RING_TWO:
@@ -1095,9 +1101,10 @@ bool player_equip_unrand(int unrand_index, bool include_melded)
     case EQ_WEAPON:
         // Hands can have more than just weapons.
         if ((item = you.slot_item(slot, include_melded))
-            && item->base_type == OBJ_WEAPONS
-            && is_unrandom_artefact(*item)
-            && item->unrand_idx == unrand_index)
+                && item->base_type == OBJ_WEAPONS
+                && is_unrandom_artefact(*item, unrand_index)
+            || (item = you.offhand_weapon())
+                && is_unrandom_artefact(*item, unrand_index))
         {
             return true;
         }
@@ -2013,8 +2020,8 @@ int player_shield_racial_factor()
 
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
-// not as a randart property).
-static int _player_adjusted_evasion_penalty(const int scale)
+// not as a randart property), EXCEPT body armour. Affects evasion only.
+static int _player_aux_evasion_penalty(const int scale)
 {
     int piece_armour_evasion_penalty = 0;
 
@@ -2031,18 +2038,13 @@ static int _player_adjusted_evasion_penalty(const int scale)
             piece_armour_evasion_penalty += penalty;
     }
 
-    return piece_armour_evasion_penalty * scale / 10 +
-           you.adjusted_body_armour_penalty(scale);
+    return piece_armour_evasion_penalty * scale / 10;
 }
 
-// Player EV bonuses for various effects and transformations. This
-// does not include tengu/merfolk EV bonuses for flight/swimming.
-static int _player_evasion_bonuses()
+// Long-term player flat EV bonuses/penalties (eg: evasion rings, EV mutations, forms)
+static int _player_base_evasion_modifiers()
 {
     int evbonus = 0;
-
-    if (you.duration[DUR_AGILITY])
-        evbonus += AGILITY_BONUS;
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
@@ -2061,21 +2063,42 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
+    // Consider this a 'permanent' bonus, since players in forms will often
+    // remain in that form for a long time. This is slightly untrue for
+    // hostile polymorph, however I don't think any of them affect the player's
+    // EV in this manner (tree form simply caps it in the same way as paralysis)
     evbonus += get_form()->ev_bonus();
+
+    return evbonus;
+}
+
+// Transient player flat EV modifiers
+static int _player_temporary_evasion_modifiers()
+{
+    int evbonus = 0;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    if (you.duration[DUR_AGILITY])
+        evbonus += AGILITY_BONUS;
 
     // If you have an active amulet of the acrobat and just moved or waited,
     // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
 
+    if (you.duration[DUR_VERTIGO])
+        evbonus -= 5;
+
+    if (you.is_constricted())
+        evbonus -= 10;
+
     return evbonus;
 }
 
-// Player EV scaling for being flying tengu or swimming merfolk.
-static int _player_scale_evasion(int prescaled_ev, const int scale)
+// Player EV multipliers for transient effects
+static int _player_apply_evasion_multipliers(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
@@ -2131,34 +2154,39 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
     return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
 }
 
-// Total EV for player using the revised 0.6 evasion model.
-static int _player_evasion(bool ignore_helpless)
+// Total EV for player
+static int _player_evasion(bool ignore_temporary)
 {
     const int size_factor = _player_evasion_size_factor();
-    // Size is all that matters when paralysed or at 0 dex.
-    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
-            || you.form == transformation::tree)
-        && !ignore_helpless)
-    {
-        return max(1, 2 + size_factor / 2);
-    }
-
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
-    const int vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 * scale : 0;
-
+    // Calculate 'base' evasion from all permanent modifiers
     const int natural_evasion =
         size_base_ev
         + _player_armour_adjusted_dodge_bonus(scale)
-        - _player_adjusted_evasion_penalty(scale)
+        - you.adjusted_body_armour_penalty(scale)
         - you.adjusted_shield_penalty(scale)
-        - vertigo_penalty;
+        - _player_aux_evasion_penalty(scale)
+        + _player_base_evasion_modifiers() * scale;
 
-    const int evasion_bonuses = _player_evasion_bonuses() * scale;
+    // Everything below this are transient modifiers
+    if (ignore_temporary)
+        return unscale_round_up(natural_evasion, scale);
 
-    const int final_evasion =
-        _player_scale_evasion(natural_evasion, scale) + evasion_bonuses;
+    // Apply temporary bonuses, penalties, and multipliers
+    int final_evasion =
+       _player_apply_evasion_multipliers(natural_evasion, scale)
+       + (_player_temporary_evasion_modifiers() * scale);
+
+    // Cap EV at a very low level if the player cannot act, has 0 dex,
+    // or is a tree.
+    if ((you.cannot_act() || you.duration[DUR_CLUMSY]
+        || you.form == transformation::tree))
+    {
+        final_evasion = min((2 + _player_evasion_size_factor() / 2) * scale,
+                            final_evasion);
+    }
 
     return unscale_round_up(final_evasion, scale);
 }
@@ -2497,6 +2525,28 @@ static void _handle_hp_drain(int exp)
         mprf(MSGCH_RECOVERY, "Your life force feels restored.");
 }
 
+static void _handle_breath_recharge(int exp)
+{
+    if (!species::is_draconian(you.species) || you.experience_level < 7
+        || you.props[DRACONIAN_BREATH_USES_KEY].get_int() >= MAX_DRACONIAN_BREATH)
+    {
+        return;
+    }
+
+    if (!you.props.exists(DRACONIAN_BREATH_RECHARGE_KEY))
+        you.props[DRACONIAN_BREATH_RECHARGE_KEY] = 50;
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level));
+    you.props[DRACONIAN_BREATH_RECHARGE_KEY].get_int() -= loss;
+
+    if (you.props[DRACONIAN_BREATH_RECHARGE_KEY].get_int() <= 0)
+    {
+        you.props.erase(DRACONIAN_BREATH_RECHARGE_KEY);
+        gain_draconian_breath_uses(1);
+        mprf(MSGCH_DURATION, "You feel power welling in your lungs.");
+    }
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2557,6 +2607,7 @@ void apply_exp()
     _recharge_xp_evokers(skill_xp);
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
+    _handle_breath_recharge(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -2918,6 +2969,8 @@ void level_change(bool skip_attribute_increase)
                     for (auto &mut : species::fake_mutations(you.species, false))
                         mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
 
+                    gain_draconian_breath_uses(2);
+
                     // needs to be done early here, so HP doesn't look drained
                     // when we redraw the screen
                     _gain_and_note_hp_mp();
@@ -3174,7 +3227,8 @@ int player_stealth()
                 umbra_mul = you.piety + MAX_PIETY;
                 umbra_div = MAX_PIETY;
             }
-            if (player_equip_unrand(UNRAND_SHADOWS)
+            if ((player_equip_unrand(UNRAND_BRILLIANCE)
+                 || player_equip_unrand(UNRAND_SHADOWS))
                 && 2 * umbra_mul < 3 * umbra_div)
             {
                 umbra_mul = 3;
@@ -4634,7 +4688,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
                          intensity_str.c_str());
     }
 
-    you.increase_duration(DUR_STICKY_FLAME, duration, 100);
+    you.increase_duration(DUR_STICKY_FLAME, duration, 35);
 
     return true;
 }
@@ -4949,11 +5003,8 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
     {
         vector<string> sources;
 
-        if (temp && (player_equip_unrand(UNRAND_EOS)
-                     || player_equip_unrand(UNRAND_BRILLIANCE)))
-        {
+        if (temp && player_equip_unrand(UNRAND_EOS))
             sources.push_back("weapon");
-        }
 
         if (temp && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
             sources.push_back("orb");
@@ -5826,6 +5877,7 @@ bool player::petrified() const
 bool player::liquefied_ground() const
 {
     return liquefied(pos())
+           && you.species != SP_GREY_DRACONIAN
            && ground_level() && !is_insubstantial();
 }
 
@@ -6407,22 +6459,78 @@ int player::gdr_perc() const
  * What is the player's actual, current EV, possibly relative to an attacker,
  * including various temporary penalties?
  *
- * @param ignore_helpless  Whether to ignore helplessness for the calculation.
+ * @param ignore_temporary Whether to ignore temporary modifiers.
  * @param act              The creature that the player is attempting to evade,
                            if any. May be null.
  * @return                 The player's relevant EV.
  */
-int player::evasion(bool ignore_helpless, const actor* act) const
+int player::evasion(bool ignore_temporary, const actor* act) const
 {
-    const int base_evasion = _player_evasion(ignore_helpless);
-
-    const int constrict_penalty = is_constricted() ? 3 : 0;
+    int base_evasion = _player_evasion(ignore_temporary);
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
-        = attacker_invis && !ignore_helpless ? 10 : 0;
+        = attacker_invis && !ignore_temporary ? 10 : 0;
 
-    return base_evasion - constrict_penalty - invis_penalty;
+    return base_evasion - invis_penalty;
+}
+
+// What would our natural EV be if we wore a given piece of armour instead of
+// whatever might be in that slot currently (if anything)?
+int player::evasion_with_specific_armour(const item_def& new_armour) const
+{
+    // Since there are a lot of things which can affect the calculation of EV,
+    // including artifact properties on either the item we're equipped or the
+    // one we're swapping out for it, we check by very briefly 'putting on' the
+    // new item and calling the normal evasion calculation function.
+    //
+    // As we edit the item links directly, this should be invisible to the
+    // player, bypass normal equip/unequip routines, and have no side-effects.
+
+    // Save reference to whatever the player currently has equipped in this slot.
+    equipment_type slot = get_armour_slot(new_armour);
+    short old_armour = you.equip[slot];
+
+    // If the item we're comparing is already in the player's inventor, this is
+    // simple.
+    if (in_inventory(new_armour))
+        you.equip[slot] = new_armour.link;
+    // If the item is not, things are more complicated. Since player equipment
+    // is stored as an index into the player's internal inventory, any item we
+    // want to try on *must* be in our inventory. So what we do is make a *copy*
+    // of the item in a 'secret' slot past the normal end of the inventory
+    // array (which is invisible for most purposes, as ENDOFPACK is used to
+    // terminate iteration)
+    else
+    {
+        you.inv[ENDOFPACK] = new_armour;
+        you.equip[slot] = ENDOFPACK;
+    }
+
+    // Now, simply calculate evasion without temporary boosts.
+    int ret = evasion(true);
+
+    // Restore old armour and clear out any item copies, just in case.
+    you.equip[slot] = old_armour;
+    you.inv[ENDOFPACK].clear();
+
+    return ret;
+}
+
+int player::evasion_without_specific_armour(const item_def& armour_to_remove) const
+{
+    equipment_type slot = get_armour_slot(armour_to_remove);
+
+    // Verify that the armour is currently equipped
+    // (or this function will give bogus info)
+    ASSERT(you.equip[slot] == armour_to_remove.link);
+
+    // Briefly remove item, calculate EV, then put it back on
+    you.equip[slot] = -1;
+    int ret = evasion(true);
+    you.equip[slot] = armour_to_remove.link;
+
+    return ret;
 }
 
 bool player::heal(int amount)
@@ -6645,18 +6753,12 @@ bool player::res_petrify(bool temp) const
            || cur_form(temp)->res_petrify();
 }
 
-int player::res_constrict() const
+bool player::res_constrict() const
 {
-    if (is_insubstantial())
-        return 3;
-
-    if (get_mutation_level(MUT_SPINY))
-        return 3;
-
-    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
-        return 3;
-
-    return 0;
+    return is_insubstantial()
+           || get_mutation_level(MUT_SPINY)
+           || player_equip_unrand(UNRAND_SLICK_SLIPPERS)
+           || you.duration[DUR_CONSTRICTION_IMMUNITY];
 }
 
 int player::willpower() const
@@ -6862,6 +6964,8 @@ undead_state_type player::undead_state(bool temp) const
 bool player::nightvision() const
 {
     return have_passive(passive_t::nightvision)
+           || has_mutation(MUT_FOUL_SHADOW)
+           || player_equip_unrand(UNRAND_BRILLIANCE)
            || player_equip_unrand(UNRAND_SHADOWS);
 }
 
@@ -7395,8 +7499,7 @@ bool player::backlit(bool self_halo, bool temp) const
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))
-           || self_halo && (you.has_mutation(MUT_FOUL_GLOW)
-                            || you.form == transformation::flux);
+           || self_halo && you.form == transformation::flux;
     // TODO: find some way to mark !invis for autopickup while
     // fluxing while still marking it temp-useless (and while
     // marking it perma-useless for meteors)
@@ -7855,7 +7958,13 @@ void player::goto_place(const level_id &lid)
     ASSERT_RANGE(depth, 1, brdepth[where_are_you] + 1);
 }
 
-bool player::attempt_escape(int attempts)
+static int _constriction_escape_chance(int attempts)
+{
+    static int escape_chance[] = {40, 75, 100};
+    return escape_chance[min(3, attempts) - 1];
+}
+
+bool player::attempt_escape()
 {
     monster *themonst;
 
@@ -7864,23 +7973,26 @@ bool player::attempt_escape(int attempts)
 
     themonst = monster_by_mid(constricted_by);
     ASSERT(themonst);
-    escape_attempts += attempts;
+    escape_attempts += 1;
 
     const auto constr_typ = get_constrict_type();
     const string object
         = constr_typ == CONSTRICT_ROOTS ? "the roots'"
           : constr_typ == CONSTRICT_BVC ? "the zombie hands'"
                                         : themonst->name(DESC_ITS, true);
-    // player breaks free if (4+n)d13 >= 5d(8+HD/4)
-    const int escape_score = roll_dice(4 + escape_attempts, 13);
-    if (escape_score
-        >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
+
+    if (x_chance_in_y(_constriction_escape_chance(escape_attempts), 100))
     {
         mprf("You escape %s grasp.", object.c_str());
 
-        // Stun the monster to prevent it from constricting again right away.
+        // Stun the monster we struggled again and prevent the player from being
+        // constricted for several turns (so that they are guaranteed to be able
+        // to make it up the stairs after pulling away this way)
         if (constr_typ == CONSTRICT_MELEE)
-            themonst->speed_increment -= 5;
+        {
+            themonst->speed_increment -= 10;
+            you.duration[DUR_CONSTRICTION_IMMUNITY] = 20;
+        }
 
         stop_being_constricted(true);
 
@@ -8040,9 +8152,7 @@ static string _constriction_description()
         if (!cinfo.empty())
             cinfo += "\n";
 
-        cinfo += make_stringf("You are being %s by %s.",
-                              constrictor->constriction_does_damage(constr_typ) ?
-                                  "held" : "constricted",
+        cinfo += make_stringf("You are being constricted by %s.",
                               constrictor->name(DESC_A).c_str());
     }
 
@@ -8050,7 +8160,7 @@ static string _constriction_description()
     {
         for (const auto &entry : *you.constricting)
         {
-            monster *whom = monster_by_mid(entry.first);
+            monster *whom = monster_by_mid(entry);
             ASSERT(whom);
 
             if (whom->get_constrict_type() != CONSTRICT_MELEE)
@@ -8215,16 +8325,6 @@ void player::rev_up(int dur)
     // Fuzz it between 4/2 and 6/2 (ie 2x to 3x) to avoid tracking.
     const int perc_gained = random_range(dur * 2, dur * 3);
     you.props[REV_PERCENT_KEY] = min(100, you.rev_percent() + perc_gained);
-}
-
-void player::maybe_shutdown_legs()
-{
-    if (!you.has_mutation(MUT_LEGS_SHUTDOWN))
-        return;
-
-    // Take one normal action longer.
-    you.duration[DUR_NO_MOMENTUM] = max(you.time_taken + player_speed(),
-                                        you.duration[DUR_NO_MOMENTUM]);
 }
 
 void player_open_door(coord_def doorpos)

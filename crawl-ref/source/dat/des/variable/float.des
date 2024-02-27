@@ -1676,18 +1676,19 @@ TAGS:   no_descent
 DEPTH:  D:10-
 ORIENT: float
 WEIGHT: 5
-KMONS:  " = earth elemental
-KITEM:  " = any scroll / any potion
+MONS:   boulder dbname:still_boulder
+KMONS:  2 = earth elemental
+KITEM:  2 = any scroll / any potion
 MAP
 cccccccccc
-c{......>c
+c{..11..>c
 c........c
 c........c
-c...""...c
-c...""...c
+c1..22..1c
+c1..22..1c
 c........c
 c........c
-c<......}c
+c<..11..}c
 cccccccccc
 ENDMAP
 
@@ -2563,7 +2564,7 @@ KMONS:  2 = deep elf pyromancer / efreet
 SUBST:  1 = 1..., * = *...
 :    else
 KMONS:  1 = hell hound / lindwurm / deep elf pyromancer / efreet
-KMONS:  2 = fire dragon / salamander tyrant / fire giant
+KMONS:  2 = fire dragon / fire giant / thermic dynamo
 SUBST:  1 = 1., * = *..
 :    end
 # Depths
@@ -3100,8 +3101,8 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight \
-         / deep elf archer
+KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / \
+              deep elf archer / thermic dynamo w:4
 MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
@@ -3738,19 +3739,15 @@ ENDMAP
 
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling no_descent
-DEPTH:   Depths, !Depths:$
+DEPTH:   D:12-, Depths, !Depths:$
 ORIENT:  float
-MONS:    necromancer ; \
-         staff of fire w:15 | quarterstaff ego:flaming w:15 . \
-         robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
-         robe ego:resistance w:1
-MONS:    necromancer ; \
-         staff of cold ident:type | quarterstaff ego:freezing ident:type . \
-         robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
-         robe ego:resistance w:1
+MONS:    arcanist ; staff of fire w:15 | quarterstaff ego:flaming w:15 . \
+                    robe ego:resistance
+MONS:    occultist ; staff of cold ident:type | quarterstaff ego:freezing . \
+                     robe ego:resistance
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, hell hog, deep elf pyromancer / deep elf zephyrmancer
+MONS:    ettin simulacrum, hell hog, thermic dynamo
 KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
@@ -3762,6 +3759,10 @@ MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 6, pow_max = 6, delay = 200, \
              size_min = 2, size_max = 2, walk_dist = 0, start_clouds = 1 }
+:  if you.in_branch("D") then
+SUBST:   34 = 7
+NSUBST:  5 = 1:5 / 1:5. / *:., 6 = 1:6 / 1:6. / *:.
+:  end
 :  if you.depth() == dgn.br_depth(you.branch()) then
 SUBST:   [(< = '
 : end
@@ -3809,6 +3810,14 @@ KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
 KMONS:  & = ancient lich
 KITEM:  $ = $ no_pickup
 KITEM:  Z = midnight gem
+KITEM:  | = staff of cold randart artprops:fire&Stlth:-2 / \
+            staff of fire randart artprops:ice&Stlth:-2 / \
+            staff of air randart artprops:earth&Stlth:-2 / \
+            staff of earth randart artprops:air&Stlth:-2 / \
+            storm dragon scales plus:6 randart artprops:rF&rC&Stlth:-2 / \
+            fire dragon scales plus:6 randart artprops:rElec&Stlth:-2 / \
+            storm talisman randart artprops:rC&Stlth:-2 / \
+            book of annihilations / manual of invocations w:2
 KFEAT:  ~ = .
 KFEAT:  _ = altar_qazlal
 KFEAT:  Z = enter_zot
@@ -4200,7 +4209,6 @@ ENDMAP
 NAME:    cheibrodos_frozen_isle
 TAGS:    no_item_gen no_monster_gen no_pool_fixup vaults_hard
 DEPTH:   D:8-, Vaults, !Vaults:$, Zot
-WEIGHT:  5 (Vaults), 10
 ORIENT:  float
 MONS:    ice statue
 : if you.branch() == "Zot" then
@@ -4384,11 +4392,11 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup no_descent
 DEPTH:   D:12-, Depths
 ORIENT:  float
 : if you.in_branch("Depths") then
-MONS:    smoke demon / sun demon, balrug / w:2 nothing
-MONS:    ynoxinul, blizzard demon / w:2 nothing
+MONS:    smoke demon / sun demon, balrug / nothing w:2
+MONS:    ynoxinul, blizzard demon / nothing w:2
 : else
-MONS:    red devil ; trident, sun demon / w:5 smoke demon / w:3 nothing
-MONS:    ice devil, ynoxinul / w:2 nothing
+MONS:    red devil ; trident, sun demon / smoke demon w:5 / nothing w:2
+MONS:    ice devil, thermic dynamo / ynoxinul w:5 / nothing w:2
 : end
 KFEAT:   yz = b
 SUBST:   y : yccc
@@ -4617,13 +4625,13 @@ DEPTH:  D:12-
 ORIENT: float
 MONS:   ogre / two-headed ogre
 KMONS:  2 = stone giant / frost giant w:3 / fire giant w:3
-KMONS:  P = plant
-KMONS:  B = plant
+KMONS:  PB = plant
+KMONS:  b = boulder dbname:still_boulder
 KMONS:  C = cyclops
 KFEAT:  A = granite_statue
 KFEAT:  C = W
 KFEAT:  2 = cache of fruit / cache of meat / floor w:30
-SUBST:  P = PPP..
+SUBST:  b : bPP, P = PPP..
 NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
 NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
 FTILE:  2$|*%AB = floor_grass
@@ -4632,21 +4640,21 @@ MAP
    ....._.c.'.....
   @..c__c_G'c''c..@
  @..c__c_PWP'c''c..@
-....____PWWWP''''....
+....____bWWWb''''....
 ..c__c_GWW"WWG'c''c..
 .c__c_PWWWWWWWP'c''c.
 .____PWWWWWWWWWP''''.
 ._c_GWW"WWAWW"WWG'c'.
-_c_PWWWWWB-BWWWWWP'c'
+_c_bWWWWWB-BWWWWWb'c'
 ._PWWWWWB-$-BWWWWWP'.
 cGWW"WWA-$2$-AWW"WWGc
 .;PWWWWWB-$-BWWWWWP`.
-;c;PWWWWWB-BWWWWWP`c`
+;c;bWWWWWB-BWWWWWb`c`
 .;c;GWW"WWAWW"WWG`c`.
 .;;;;PWWWWWWWWWP````.
 .c;;c;PWWWWWWWP`c``c.
 ..c;;c;GWW"WWG`c``c..
-....;;;;PWWWP````....
+....;;;;bWWWb````....
  @..c;;c;PWP`c``c..@
   @..c;;c;G`c``c..@
    .....;.c.`.....
@@ -5098,6 +5106,10 @@ MONS:   very ugly thing / thrashing horror / large abomination
 MONS:   lurking horror / ancient zyme / worldbinder / apocalypse crab
 MONS:   tentacled starspawn / glowing shapeshifter / tentacled monstrosity w:5
 MONS:   starcursed mass / wretched star
+KITEM:  % = amulet of regeneration / amulet of magic regeneration / \
+            any weapon ego:distortion ident:all
+KITEM:  * = any talisman / any wand charges:2 / demon blade w:2
+KITEM:  | = randbook disc:alchemy / any magical staff
 NSUBST: ' = 2=d / f / 3=|* / * / %$ / -
 NSUBST: - = 5=0 / 5=0. / 2 / 2. / 3=3 / 4=3. / 4 / 2=4. / .
 : end
@@ -6470,39 +6482,42 @@ ENDMAP
 
 # A revival of an ancient Elf endvault, now refurbished
 # for D / V elementals meeting with elves instead.
-NAME:   dpeg_index_elf_rogue_hall
-TAGS:   no_monster_gen no_item_gen no_rotate no_trap_gen no_pool_fixup
-TAGS:   vaults_hard vaults_orient_s
-DEPTH:  D:9-, Vaults
-WEIGHT: 5 (Vaults), 10
-ORIENT: float
+NAME:    dpeg_index_elf_rogue_hall
+TAGS:    no_monster_gen no_item_gen no_rotate no_trap_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_s
+DEPTH:   D:9-, Vaults
+WEIGHT:  20 (Vaults), 10
+ORIENT:  float
+KMONS:   B = boulder dbname:still_boulder
 : if you.in_branch("D") then
 :   if you.depth() < 12 then
-MONS:   orc wizard, deep elf pyromancer, deep elf archer
-MONS:   sky beast, fire bat, ice beast, shapeshifter
-NSUBST: 3 = 2:1
+MONS:    orc wizard, deep elf pyromancer, deep elf archer
+MONS:    sky beast, fire bat, ice beast, shapeshifter
+NSUBST:  3 = 2:1
 :   else
-MONS:   deep elf pyromancer / deep elf archer, deep elf knight
-MONS:   deep elf zephyrmancer, gargoyle
-MONS:   fire elemental, water elemental, glowing shapeshifter
+MONS:    deep elf pyromancer / deep elf archer, deep elf knight
+MONS:    deep elf zephyrmancer, gargoyle
+MONS:    fire elemental, water elemental
+MONS:    glowing shapeshifter / thermic dynamo w:2
 :   end
-SUBST:  z = c
-NSUBST: 4 = 1:. / 1:4 / * = 4., 56 = 3:., ? = 2:. / 3 = 23.. / * : 23
+SUBST:   z = c
+NSUBST:  4 = 1:. / 1:4 / * = 4., 56 = 3:., ? = 2:. / 3 = 23.. / * : 23
 : else -- Vaults
-MONS:   deep elf death mage / deep elf high priest
-MONS:   deep elf sorcerer / deep elf demonologist w:5
-MONS:   deep elf annihilator, glowing shapeshifter
-MONS:   war gargoyle, crystal guardian, golden dragon / storm dragon
-SUBST:  @ = ., c = x
-NSUBST: 2 = 1:14 / *:2, 23 = 1:., 4 = 1:. / 2:4 / * = 4., 56 = 4:.
-NSUBST: 7 = 1:. / 1:56 / *:7, ? = 2 = 1. / 2 = 1233... / * : 233
-NSUBST: % = 2:| / 4:% / *:$
-CLEAR:  z
+MONS:    deep elf death mage / deep elf high priest
+MONS:    deep elf sorcerer / deep elf demonologist w:5
+MONS:    deep elf annihilator, glowing shapeshifter
+MONS:    war gargoyle, crystal guardian, golden dragon / storm dragon
+SUBST:   @ = ., c = x
+NSUBST:  2 = 1:14 / *:2, 23 = 1:., 4 = 1:. / 2:4 / * = 4., 56 = 4:.
+NSUBST:  7 = 1:. / 1:56 / *:7, ? = 2 = 1. / 2 = 1233... / * : 233
+NSUBST:  % = 2:| / 4:% / *:$
+CLEAR:   z
 : end
-KFEAT:  ^ = teleport trap
-KITEM:  | = any book w:5 / any magical staff / any ring / any amulet / \
-            any misc / any wand w:5
-SUBST:  ! = 56
+KFEAT:   ^ = teleport trap
+KITEM:   | = any book w:5 / any magical staff / any ring / any amulet / \
+             any misc / any wand w:5
+SUBST:   ! = 56
+SHUFFLE: wl / wl / wl / wB / lB
 MAP
  zzzzzzzzzzzzzzzzzzz   zzzzzzzzzzzzzzzzzzz
 zzcccccccccccccccccc   cccccccccccccccccczz
@@ -6525,7 +6540,7 @@ zcc..ccccc+cccccb...bbb...bccccc+cccc+..ccz
 zc..%ccc.....ccclb...?...bwccc.....ccc%..cz
 zc.%.cc.......ccccccccccccccc.......cc.%.cz
 zcc..cc...!...cccc...^...cccc...!...cc..ccz
-zcccccc.......ccc..cc.cc..ccc.......ccccccz
+zcccclc.......ccc..cc.cc..ccc.......cwccccz
 zzzzzccc.1..5..$..ccc.ccc..$..6..1.ccczzzzz
     zzccc...ccccccccc.ccccccccc...ccczz
     zzzcccccccccccccc@cccccccccccccczzz
@@ -6535,7 +6550,7 @@ NAME:    regret_index_early_branch_jog
 TAGS:    no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_n vaults_orient_w vaults_orient_s
 DEPTH:   D:9-, !D:$, Vaults
-WEIGHT:  5 (Vaults), 10
+WEIGHT:  20 (Vaults), 10
 ORIENT:  float
 KFEAT:   O = any shop
 NSUBST:  W = 3:W / 2 = W. / *:.
@@ -7846,17 +7861,24 @@ WEIGHT:  5 (Elf, Snake), 10
 KMONS:   12 = 0
 KMONS:   34 = 9
 KMONS:   5 = 9 / 8
+: if you.in_branch("Abyss") then
+SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W
+SUBST:   ' = .:55 WWwl G:5, 23 = 1, 45 = 2
+KITEM:   1 = $
+KITEM:   2 = barding / serpent talisman randart / \
+             potion of curing ident:all / any magical staff / \
+             randbook numspells:2 disc:alchemy disc2:earth
+: else
 KITEM:   1 = $ / % w:5
 KITEM:   23 = % / $ w:5
 KITEM:   45 = * / % w:5
-: if you.in_branch("Abyss") then
-SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
-: elseif you.absdepth() > 20 then
+:   if you.absdepth() > 20 then
 SUBST:   x : x m:5, X : ccccbv, ' : .:70 w:20 l
-: elseif you.absdepth() > 11 then
+:   elseif you.absdepth() > 11 then
 SUBST:   x : x m:3, X : xcc, ' : .:80 wW
-: else
+:   else
 SUBST:   x : x m:2, X : xxc, ' : .:90 W, 5 = 4
+:   end
 : end
 MAP
   xxxxxxxx

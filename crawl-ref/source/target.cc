@@ -1084,7 +1084,7 @@ aff_type targeter_cloud::is_affected(coord_def loc)
 
 
 targeter_splash::targeter_splash(const actor *act, int r, int pow)
-    : targeter_beam(act, r, ZAP_BREATHE_ACID, pow, 0, 0)
+    : targeter_beam(act, r, ZAP_COMBUSTION_BREATH, pow, 0, 0)
 {
 }
 
@@ -2233,4 +2233,106 @@ bool targeter_bind_soul::valid_aim(coord_def a)
         return notify_fail("Their soul is too badly injured.");
 
     return true;
+}
+
+targeter_explosive_beam::targeter_explosive_beam(const actor *act, int pow, int r,
+                                                 bool _always_explode) :
+                          targeter_beam(act, r, ZAP_COMBUSTION_BREATH, pow, 0, 0),
+                          always_explode(_always_explode)
+{
+}
+
+bool targeter_explosive_beam::set_aim(coord_def a)
+{
+    if (!targeter_beam::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = origin;
+    for (auto c : path_taken)
+    {
+        if (cell_is_solid(c))
+            break;
+
+        tempbeam.target = c;
+        if (always_explode || anyone_there(c))
+        {
+            tempbeam.use_target_as_pos = true;
+            exp_map.init(INT_MAX);
+            tempbeam.determine_affected_cells(exp_map, coord_def(), 0,
+                                              1, true, true);
+        }
+    }
+
+    return true;
+}
+
+aff_type targeter_explosive_beam::is_affected(coord_def loc)
+{
+    // First check the main beam path
+    for (auto c : path_taken)
+    {
+        if (cell_is_solid(c))
+            break;
+        if (c == loc)
+            return AFF_YES;
+    }
+
+    // Then check the explosion radius
+    for (auto c : path_taken)
+    {
+        if ((always_explode
+             || (anyone_there(c)
+                 && !beam.ignores_monster(monster_at(c))))
+            && (loc - c).rdist() <= 9)
+        {
+            coord_def centre(9,9);
+            if (exp_map(loc - c + centre) < INT_MAX
+                && !cell_is_solid(loc))
+            {
+                return AFF_MAYBE;
+            }
+        }
+    }
+
+    return AFF_NO;
+}
+
+targeter_galvanic::targeter_galvanic(const actor *act, int pow, int r) :
+                        targeter_beam(act, r, ZAP_GALVANIC_BREATH, pow, 0, 0)
+{
+}
+
+bool targeter_galvanic::set_aim(coord_def a)
+{
+    jolt_targets.clear();
+
+    if (!targeter_beam::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = origin;
+
+    const coord_def pos = path_taken[path_taken.size() - 1];
+    monster* targ = monster_at(pos);
+    if (!targ || !agent->can_see(*targ))
+        return true;
+
+    jolt_targets = galvanic_targets(*agent, pos, false);
+
+    return true;
+}
+
+aff_type targeter_galvanic::is_affected(coord_def loc)
+{
+    if (targeter_beam::is_affected(loc) == AFF_YES)
+        return AFF_YES;
+
+    for (coord_def pos : jolt_targets)
+    {
+        if (pos == loc)
+            return AFF_YES;
+    }
+
+    return AFF_NO;
 }

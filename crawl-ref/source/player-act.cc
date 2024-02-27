@@ -293,7 +293,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
 
     // re-use of projectile is very dubious here
     const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
-    return (primary_delay + offhand_delay) / 2;
+    return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
@@ -907,6 +907,11 @@ bool player::is_web_immune() const
         || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 
+bool player::is_binding_sigil_immune() const
+{
+    return player_equip_unrand(UNRAND_SLICK_SLIPPERS);
+}
+
 bool player::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)
@@ -934,15 +939,15 @@ int player::constriction_damage(constrict_type typ) const
     switch (typ)
     {
     case CONSTRICT_BVC:
-        return roll_dice(2, div_rand_round(40 +
-                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 25));
+        return roll_dice(2, div_rand_round(80 +
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
     case CONSTRICT_ROOTS:
         // Assume we're using the wand.
-        // Min power 2d3, max power ~2d14 (also ramps over time)
-        return roll_dice(2, div_rand_round(20 +
-                    you.props[FASTROOT_POWER_KEY].get_int(), 10));
+        // Min power 2d5, max power ~2d19
+        return roll_dice(2, div_rand_round(25 +
+                    you.props[FASTROOT_POWER_KEY].get_int(), 7));
     default:
-        return roll_dice(2, div_rand_round(strength(), 5));
+        return roll_dice(2, div_rand_round(5 * (22 + 5 * you.experience_level), 81));
     }
 
 }

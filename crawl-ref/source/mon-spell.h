@@ -566,8 +566,8 @@ static const mon_spellbook mspell_list[] =
     // ('r') rodents
     {  MST_CRYSTAL_ECHIDNA,
       {
-       { SPELL_CRYSTAL_BOLT, 33, MON_SPELL_NATURAL },
-       { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
+       { SPELL_CRYSTALLIZING_SHOT, 30, MON_SPELL_NATURAL },
+       { SPELL_THROW_BARBS, 30, MON_SPELL_NATURAL },
       }
     },
 
@@ -617,6 +617,13 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('v') Vortices.
+    {  MST_THERMIC_DYNAMO,
+      {
+       { SPELL_REBOUNDING_BLAZE, 32, MON_SPELL_MAGICAL },
+       { SPELL_REBOUNDING_CHILL, 32, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_WILL_O_THE_WISP,
       {
        { SPELL_MARSHLIGHT, 50, MON_SPELL_MAGICAL },
@@ -1629,7 +1636,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CRYSTAL_GUARDIAN,
       {
-       { SPELL_CRYSTAL_BOLT, 66, MON_SPELL_MAGICAL },
+       { SPELL_CRYSTALLIZING_SHOT, 50, MON_SPELL_MAGICAL },
       }
     },
 

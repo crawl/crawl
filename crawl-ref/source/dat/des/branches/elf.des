@@ -958,7 +958,9 @@ TAGS:   misc_elf_vault
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 6
-MONS:   deep elf zephyrmancer / deep elf pyromancer / nothing w:40
+MONS:   deep elf zephyrmancer / deep elf pyromancer / \
+        thermic dynamo w:2
+NSUBST: 1 = 2:1 / 3:. / * = 1..
 MAP
     +bbbbbbbbb+
     b...1b1...b
@@ -985,7 +987,8 @@ DEPTH:  Elf
 ORIENT: float
 WEIGHT: 4
 MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / \
-        deep elf death mage / nothing w:70
+        deep elf death mage / thermic dynamo w:5 / nothing w:70
+NSUBST: 1 = 2:1 / 4:. / * = 1:4 .:7
 MAP
     +bbbbbbb+
    bb.......bb
@@ -1083,13 +1086,14 @@ MAP
        ...1......
 ENDMAP
 
-NAME:  minmay_elf_annihilation
-TAGS:  misc_elf_vault transparent
-DEPTH: Elf
-MONS:  deep elf pyromancer / deep elf zephyrmancer / nothing w:20
-KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
-KITEM: 2 = randbook disc:conjuration slevels:16
-SUBST: x : x c:1
+NAME:   minmay_elf_annihilation
+TAGS:   misc_elf_vault transparent
+DEPTH:  Elf
+MONS:   deep elf pyromancer / deep elf zephyrmancer w:8 / thermic dynamo w:4
+KMONS:  2 = deep elf annihilator / deep elf sorcerer w:2
+KITEM:  2 = randbook disc:conjuration slevels:16
+NSUBST: 1 = 1:1 / 2:. / * = 1.
+SUBST:  x : x c:1
 MAP
         ...
         .x1
@@ -1314,7 +1318,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_altar
-DEPTH: Elf:2-
+TAGS:  misc_elf_vault
 MONS:  deep elf knight / deep elf archer / \
        deep elf pyromancer / deep elf zephyrmancer
 MONS:  deep elf high priest
@@ -1339,13 +1343,14 @@ ENDMAP
 NAME:  guppyfry_elf_lava
 TAGS:  transparent
 DEPTH: Elf:2-
-MONS:  deep elf pyromancer / deep elf zephyrmancer
-MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
+MONS:  deep elf pyromancer / deep elf zephyrmancer / thermic dynamo w:2
+MONS:  deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
-       w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
-       w:4 any weapon ego:flaming | w:4 shortbow ego:flaming | \
-       w:7 wand of flame | w:9 any armour ego:fire_resistance | \
-       w:4 staff of fire | w:17 randbook disc:fire | w:6 robe ego:fire_resistance
+           ring of fire w:10 | scroll of immolation w:5 | \
+           ring of protection from fire w:10 | \
+           any weapon ego:flaming w:4 | hand cannon ego:flaming w:4 | \
+           wand of flame w:4 | any armour ego:fire_resistance w:9 | \
+           staff of fire w:7 | randbook disc:fire w:20
 SUBST: ? = .l1
 SUBST: - = .l
 MAP
@@ -1369,16 +1374,17 @@ NAME:    hangedman_elf_power_crystal
 TAGS:    extra transparent
 DEPTH:   Elf
 KMONS:   1 = crystal guardian
+KMONS:   2 = thermic dynamo
 SHUFFLE: @ABC, QRST, n1' / n1' / xxx
 SUBST:   A : b:8 .:1 @:1, BC = b, x : b:8 x:1
 SUBST:   Q : b:8 .:1, R : b.., S : b:1 .:8, T = .
-KMASK:   1' = no_trap_gen
-KMASK:   1' = no_item_gen
-KMASK:   1' = no_monster_gen
-KMASK:   1' = opaque
-KPROP:   1' = no_tele_into
-TILE:    1' = floor_pebble_green
-COLOUR:  1' = green
+KMASK:   12' = no_trap_gen
+KMASK:   12' = no_item_gen
+KMASK:   12' = no_monster_gen
+KMASK:   12' = opaque
+KPROP:   12' = no_tele_into
+TILE:    12' = floor_pebble_green
+COLOUR:  12' = green
 MAP
           bbbbbbbbAb
          Bb.b..T..bA
@@ -1388,10 +1394,10 @@ MAP
     @b.....bb''bb..b
     b.b...bb'1'b.b.b
    bb..b.bb'''nb..bb
-  Cbb...bb'1'bb.Q..b
+  Cbb...bb'2'bb.Q..b
  Cb.b..bb'''nb.b..bb
 bb..b.bn'''bb..b.bC
-b..Q.bb'1'bb...bbC
+b..Q.bb'2'bb...bbC
 bb..bn'''bb.b..bb
 b.b.b'1'bb...b.b
 b..bb''bb.....b@
@@ -1405,7 +1411,7 @@ ENDMAP
 NAME:    hangedman_elven_crosses_minicolossus
 TAGS:    no_monster_gen transparent misc_elf_vault
 DEPTH:   Elf
-MONS:    deep elf pyromancer / deep elf zephyrmancer
+MONS:    deep elf pyromancer / deep elf zephyrmancer / thermic dynamo w:2
 MONS:    deep elf knight / deep elf pyromancer w:3 / deep elf zephyrmancer w:3
 MONS:    deep elf pyromancer / deep elf zephyrmancer
 MONS:    dancing weapon ; short sword ego:flaming | short sword ego:freezing | \
@@ -1445,27 +1451,31 @@ ENDMAP
 NAME:    hangedman_elf_represent
 TAGS:    no_monster_gen misc_elf_vault
 DEPTH:   Elf
+WEIGHT:  3
 # Place two pairings of lower and higher tier elves.
 MONS:    deep elf pyromancer, deep elf elementalist
 MONS:    deep elf zephyrmancer, deep elf annihilator
 MONS:    deep elf knight, deep elf blademaster, deep elf archer
 KMONS:   8 = deep elf master archer
+ITEM:    staff of fire ident:type / staff of air ident:type / \
+         ring of wizardry ident:type / ring of slaying ident:type / \
+         ring of dexterity ident:type / longbow good_item
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
 SHUFFLE: 12 / 34, 56 / 78
 SUBST:   ' : x., " : x.
 MAP
-xxxxxxxxxxx'........
-xxx..xxxx"x'x.x.x.x@
+xxxxxxxxxx''........
+xxx..xxxx"x.x.x.x.x@
 xx1..2xx1...x.x.x.x@
-x......====.........
-x......=$"===5xxxxxx
-xx1..1x=.%%.=xx..xxx
-xxx..xx=.%%.=x5...xx
-xxxxxx1==="$=......x
-.........====......x
+x..xx..====.x.......
+x..xx..=$"===5xxxxxx
+xx1..1x=$%d$=xx..xxx
+xxx..xx=$d%$=x5...xx
+xxxxxx1==="$=..xx..x
+.......x.====..xx..x
 @x.x.x.x...3xx6..5xx
-@x.x.x.x'x"xxxx..xxx
-........'xxxxxxxxxxx
+@x.x.x.x.x"xxxx..xxx
+........''xxxxxxxxxx
 ENDMAP
 
 NAME:    hangedman_elf_disciples
@@ -1543,18 +1553,19 @@ MAP
   xxxxxxxxx
 ENDMAP
 
-NAME:  nicolae_elf_altarnating
-TAGS:  transparent no_monster_gen no_item_gen
-DEPTH: Elf
+NAME:   nicolae_elf_altarnating
+TAGS:   transparent no_monster_gen no_item_gen misc_elf_vault
+DEPTH:  Elf
+WEIGHT: 5
 : if crawl.coinflip() then
-KMONS: 1 = dancing weapon ; any weapon
-KMONS: _ = dancing weapon ; any weapon good_item | any weapon randart w:5
-KFEAT: _ = altar_uskayaw
+KMONS:  1 = dancing weapon ; any weapon
+KMONS:  _ = dancing weapon ; any weapon good_item | any weapon randart w:5
+KFEAT:  _ = altar_uskayaw
 : else
-KMONS: 1_ = fire elemental / water elemental / air elemental / earth elemental
-KFEAT: _ = altar_qazlal
+KMONS:  1_ = fire elemental / water elemental / air elemental / earth elemental
+KFEAT:  _ = altar_qazlal
 : end
-SUBST: 1 = 111..
+SUBST:  1 = 111..
 MAP
 xxxxx
 x111x
@@ -1591,7 +1602,7 @@ NAME:   nicolae_elf_blasts_and_bolts
 TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   deep elf knight / deep elf pyromancer / deep elf zephyrmancer
-MONS:   deep elf annihilator, deep elf elementalist
+MONS:   deep elf annihilator, deep elf elementalist / thermic dynamo w:4
 KFEAT:  G = metal_statue
 NSUBST: D = 2 / 3 / * = 1:60 .:60 1 2
 SUBST:  E = 1:140 .:140 1 2, % = %%%*., G : GGx
@@ -1675,6 +1686,7 @@ ENDMAP
 NAME:  nicolae_elf_deep_mausoleum
 TAGS:  transparent patrolling no_monster_gen
 DEPTH: Elf
+KMONS: B = boulder dbname:still_boulder
 KITEM: S = large rock q:1 / stone
 KITEM: % = % / * w:5
 KITEM: * = * / | w:5
@@ -1687,7 +1699,7 @@ KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf blademaster simulacrum / spectral deep elf knight / \
            deep elf knight simulacrum
 KFEAT: 1V = V
-SUBST: 2 = 22., 3 = 33., D = 32., G = G:90 S
+SUBST: 2 = 22., 3 = 33., D = 32., G = G:85 S B:5
 TILE:  G = dngn_gravestone
 : set_feature_name("granite_statue", "a gravestone")
 MAP
@@ -1695,7 +1707,7 @@ cccccccccccccccccccccc
 ccccG*GcccG%GcccG%Gccc
 ccc.2.2.c.D.D.c.3.3.cc
 ccG2...2GD...DG3...3Gc
-cc*..1.....V.....V...+
+cc|..1.....V.....V...+
 ccG2...2GD...DG3...3Gc
 ccc.2.2.c.D.D.c.3.3.cc
 ccccG*GcccG%GcccG%Gccc
@@ -1778,8 +1790,8 @@ KITEM:   S = randbook disc:air slevels:5
 MONS:    deep elf zephyrmancer / deep elf pyromancer
 MONS:    deep elf elementalist
 # A small chance of an elementalist transfer student:
-MONS:    spriggan air mage / deep troll earth mage / merfolk aquamancer \
-         / salamander tyrant
+MONS:    spriggan air mage / deep troll earth mage / \
+         merfolk aquamancer / salamander tyrant
 KMONS:   P = fire elemental
 KMONS:   Q = earth elemental
 KMONS:   R = water elemental
@@ -1864,9 +1876,9 @@ KITEM:   R = staff of cold / randbook disc:ice / wand of iceblast \
 KITEM:   S = staff of air / randbook disc:air / ring of flight \
          / ring of evasion / condenser vane / lightning rod \
          / any weapon ego:electrocution
-KMONS:   1P = fire elemental
+KMONS:   1P = fire elemental / thermic dynamo w:2
 KMONS:   2Q = earth elemental
-KMONS:   3R = water elemental
+KMONS:   3R = water elemental / thermic dynamo w:2
 KMONS:   4S = air elemental
 SHUFFLE: DE, FH, JKL, P1 / R3, Q2 / S4
 SUBST:   1 = 1., 2 = 2., 3 = 3., 4 = 4., DF = +, EHJ = m, KL = x
@@ -1930,7 +1942,7 @@ xxZ.......Zxx
 ENDMAP
 
 NAME:   nicolae_elf_theology_debate
-TAGS:   transparent
+TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   orc knight, deep elf knight
 : if crawl.coinflip() then
@@ -3146,21 +3158,19 @@ xxxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
 ENDMAP
 
-# The elves have created golems to guard their treasure.
-# XXX: Possibly too much of a outlier in the vault roster.
-# Lowered weight for now, should be addressed some time.
-#
+# The elves had created golems to guard their treasure.
+# Then those turned out to be too much, so we're using turbines instead.
 # Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
 NAME:    minmay_elf_hall_golems
 TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
-WEIGHT:  2
+WEIGHT:  5
 : elf_setup(_G)
 : elf_monsters(_G)
-KMONS:   8 = crystal guardian
+KMONS:   8 = thermic dynamo
 SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
-NSUBST:  8 = 2:. / 1:8 / * = 8.
+NSUBST:  8 = 1:8 / 2:. / * = 8.
 SHUFFLE: 12, 34, 67
 SUBST:   b : bc
 : elf_loot_defenders(_G)
