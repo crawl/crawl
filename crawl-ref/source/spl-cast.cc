@@ -971,7 +971,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     you.turn_is_over = true;
     alert_nearby_monsters();
 
-    if (lucid_boosted && cast_result == spret::success)
+    if (lucid_boosted)
     {
         const int lucidity = you.props[LUCIDITY_KEY].get_int();
         you.props[LUCIDITY_KEY] = lucidity - 1;
