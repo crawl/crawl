@@ -451,6 +451,30 @@ static void _set_friendly_foes(bool allow_patrol = false)
     }
 }
 
+static void _set_allies_stick()
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        mi->patrol_point = coord_def(0, 0);
+        mi->behaviour = BEH_STICK;
+        mi->travel_path.clear();
+    }
+}
+
+static void _set_allies_seek()
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        mi->patrol_point = coord_def(0, 0);
+        mi->behaviour = BEH_SEEK;
+        mi->travel_path.clear();
+    }
+}
+
 static void _set_allies_patrol_point(bool clear = false)
 {
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
@@ -518,6 +542,7 @@ static int _issue_orders_prompt()
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
         mpr("                   r - Retreat!             s - Stop attacking.");
         mpr("                   g - Guard the area.      f - Follow me.");
+        mpr("                   d - Stick together.      ");
     }
     mpr(" Anything else - Cancel.");
 
@@ -558,6 +583,12 @@ static bool _issue_order(int keyn, int &mons_targd)
 
     switch (keyn)
     {
+        case 'd':
+            //mons_targd = MHITYOU;
+            _set_allies_stick();
+            mpr("Stick together!");
+            break;
+        
         case 'f':
         case 's':
             mons_targd = MHITYOU;
@@ -635,6 +666,7 @@ static bool _issue_order(int keyn, int &mons_targd)
             }
 
             mons_targd = m->mindex();
+            _set_allies_seek();
         }
             break;
 

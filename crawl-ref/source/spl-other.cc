@@ -178,7 +178,7 @@ void recall_orders(monster *mons)
     mons->travel_path.clear();
 
     // Don't wander
-    mons->behaviour = BEH_SEEK;
+    mons->behaviour = BEH_STICK;
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();

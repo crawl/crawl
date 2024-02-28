@@ -19,6 +19,8 @@ enum beh_type
     BEH_WITHDRAW,                      //  an ally given a command to withdraw
                                        //  (will not respond to attacks)
     BEH_BATTY,                         //  flapping around randomly for a bit
+    BEH_STICK,                         //  stick to the owner, attacking
+                                       //  only targets within reach
     NUM_BEHAVIOURS,                    //  max # of legal states
     BEH_CHARMED,                       //  hostile-but-charmed; creation only
     BEH_FRIENDLY,                      //  used during creation only

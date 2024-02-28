@@ -103,8 +103,8 @@ bool try_pathfind(monster* mon)
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    const actor* foe = (mon->friendly() && mon->foe == MHITYOU ? &you
-                                                               : mon->get_foe());
+    const actor* foe = mon->behaviour == BEH_STICK ||
+                      (mon->friendly() && mon->foe == MHITYOU) ? &you : mon->get_foe();
 
     // Trying to pathfind towards nothing in particular; bail out.
     if (!foe)

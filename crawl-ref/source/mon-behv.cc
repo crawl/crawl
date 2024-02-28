@@ -331,11 +331,13 @@ void handle_behaviour(monster* mon)
     }
 
     // Instead, berserkers attack nearest monsters.
-    if (mon->behaviour != BEH_SLEEP
+    // Followers who stick to the player too.
+    if (mon->behaviour == BEH_STICK
+        || (mon->behaviour != BEH_SLEEP
         && (mon->has_ench(ENCH_FRENZIED)
             || ((mon->berserk() || mons_self_destructs(*mon))
                 && (mon->foe == MHITNOT
-                    || isFriendly && mon->foe == MHITYOU))))
+                    || isFriendly && mon->foe == MHITYOU)))))
     {
         // Intelligent monsters prefer to attack the player,
         // even when berserking.
@@ -450,6 +452,38 @@ void handle_behaviour(monster* mon)
             mon->target = mon->pos();
             mon->firing_pos = mon->pos();
             new_foe = MHITNOT;
+            break;
+
+        case BEH_STICK:
+            // sticking is only for friendly monsters
+            // berserk monsters are too dumb to stick
+            if (!isFriendly || mon->berserk_or_frenzied())
+            {
+                new_beh = BEH_SEEK;
+                break;
+            }
+
+            if (mon->foe == MHITNOT)
+            {
+                if (!crawl_state.game_is_arena())
+                {
+                    new_foe = MHITYOU;
+                    mon->target = you.pos();
+                }
+                break;
+            }
+
+            // just because a move takes us closer to the target doesn't mean
+            // that the move will stay in los of the target, and if it leaves
+            // los of the target, it's possible for just naively moving toward
+            // the target will not let us reach it (due to walls or whatever)
+            if (!mon->see_cell(you.pos()))
+                try_pathfind(mon);
+
+            mon->foe_memory = 0;
+            if (mon->foe != MHITNOT)
+                _decide_monster_firing_position(mon, owner);
+
             break;
 
         case BEH_SEEK:
@@ -1050,7 +1084,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else if (!mons_is_fleeing(*mon))
+        //don't suddenly start seeking if you're sticking
+        else if (!mons_is_fleeing(*mon) && mon->behaviour != BEH_STICK)
             mon->behaviour = BEH_SEEK;
 
         if (src == &you && mon->angered_by_attacks())
@@ -1123,7 +1158,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_retreating(*mon))
+        if (!mons_is_retreating(*mon) && mon->behaviour != BEH_STICK)
             mon->behaviour = BEH_SEEK;
 
         if (mon->foe == MHITNOT)

@@ -502,7 +502,9 @@ static coord_def _get_mons_destination(const monster* mons)
                                     && !mons_is_fleeing(*mons)
                                     && !mons_is_confused(*mons)
                                     && !mons->berserk_or_frenzied();
-        delta = (use_firing_pos ? mons->firing_pos : mons->target)
+
+        delta = (mons->behaviour == BEH_STICK && !mons->is_travelling() ? you.pos() :
+            use_firing_pos ? mons->firing_pos : mons->target)
                  - mons->pos();
     }
     return delta;
@@ -976,6 +978,45 @@ static bool _handle_reaching(monster& mons)
 
     const coord_def foepos(foe->pos());
     if (can_reach_attack_between(mons.pos(), foepos, range)
+        // The monster has to be attacking the correct position.
+        && mons.target == foepos)
+    {
+        ret = true;
+
+        ASSERT(foe->is_player() || foe->is_monster());
+
+        fight_melee(&mons, foe);
+    }
+
+    return ret;
+}
+
+/**
+ * Check whether this monster can make a non-reaching attack, and do so if
+ * they can.
+ *
+ * @param mons The monster who might be attacking.
+ * @return Whether they attempted an attack.
+ */
+static bool _handle_nonreaching(monster& mons)
+{
+    bool       ret = false;
+    actor *foe = mons.get_foe();
+
+    if (mons.caught()
+        || mons_is_confused(mons)
+        || !foe
+        || is_sanctuary(mons.pos())
+        || is_sanctuary(foe->pos())
+        || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_FRENZIED))
+        || mons_is_fleeing(mons)
+        || mons.pacified())
+    {
+        return false;
+    }
+
+    const coord_def foepos(foe->pos());
+    if (adjacent(mons.pos(), foepos)
         // The monster has to be attacking the correct position.
         && mons.target == foepos)
     {
@@ -1613,6 +1654,10 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         }
     }
 
+    // do not do any of the below if you can move
+    if (mons.behaviour == BEH_STICK && mon_can_move_to_pos(&mons, mmov))
+        return false;
+
     if (_handle_wand(mons))
     {
         DEBUG_ENERGY_USE_REF("_handle_wand()");
@@ -1641,12 +1686,19 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         return true;
     }
 
+    if (mons.behaviour == BEH_STICK && _handle_nonreaching(mons))
+    {
+        DEBUG_ENERGY_USE_REF("_handle_nonreaching()");
+        return true;
+    }
+
 #ifndef DEBUG
     UNUSED(old_energy);
 #endif
 
     return false;
 }
+
 
 void handle_monster_move(monster* mons)
 {
@@ -3047,7 +3099,8 @@ static bool _may_cutdown(monster* mons, monster* targ)
 static void _find_good_alternate_move(monster* mons, coord_def& delta,
                                       const move_array& good_move)
 {
-    const coord_def target = mons->firing_pos.zero() ? mons->target
+    const coord_def target = mons->behaviour == BEH_STICK && !mons->is_travelling() ? you.pos()
+                                                     : mons->firing_pos.zero() ? mons->target
                                                      : mons->firing_pos;
     const int current_distance = distance2(mons->pos(), target);
 
@@ -3556,7 +3609,11 @@ static bool _monster_move(monster* mons, coord_def& delta)
     // either side. If they're both good, move in whichever dir
     // gets it closer (farther for fleeing monsters) to its target.
     // If neither does, do nothing.
-    if (good_move[delta.x + 1][delta.y + 1] == false)
+    // Don't bother if we're sticking and there is an enemy and
+    // we're adjacent to the player and our target isn't adjacent to the player
+    if (!(mons->behaviour == BEH_STICK && mons->foe != MHITYOU
+        && adjacent(mons->position, you.pos()) && !adjacent(mons->target, you.pos()))
+        && good_move[delta.x + 1][delta.y + 1] == false)
         _find_good_alternate_move(mons, delta, good_move);
 
     // ------------------------------------------------------------------
