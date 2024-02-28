@@ -874,7 +874,7 @@ You cannot sustain this transformation in areas out of your line of sight.
 Enlightened status
 
 You are in touch with a greater truth, increasing your resistance to effects
-which target your Willpower. Tragically, this epiphany won't last.
+which target your willpower. Tragically, this epiphany won't last.
 %%%%
 Will+ status
 
