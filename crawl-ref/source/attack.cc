@@ -390,14 +390,13 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     defender_shield = defender ? defender->shield() : defender_shield;
 
+    unrand_entry = nullptr;
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
         artefact_properties(*weapon, art_props);
         if (is_unrandom_artefact(*weapon))
             unrand_entry = get_unrand_entry(weapon->unrand_idx);
     }
-    else
-        unrand_entry = nullptr;
 
     attacker_visible   = attacker->observable();
     defender_visible   = defender && defender->observable();
