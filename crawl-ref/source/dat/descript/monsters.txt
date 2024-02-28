@@ -799,12 +799,6 @@ A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
-gnoll bouda
-
-A gnoll witch possessed by a spirit of spite which flashes out from behind
-their eyes. Its strange chants and ululations send other gnolls into a wild
-frenzy.
-%%%%
 boulder
 
 A mass of fast-rolling stone, crushing everything in its path.
@@ -1435,6 +1429,12 @@ gnoll
 
 A taller and better-equipped relative of goblins, and ally of orcs. It is
 somewhat doglike in appearance.
+%%%%
+gnoll bouda
+
+A gnoll witch possessed by a spirit of spite which flashes out from behind
+their eyes. Its strange chants and ululations send other gnolls into a wild
+frenzy.
 %%%%
 gnoll sergeant
 
