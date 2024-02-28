@@ -854,7 +854,7 @@ static void _decrement_durations()
     if (!you.cannot_act()
         && !you.confused())
     {
-        extract_manticore_spikes(
+        extract_barbs(
             make_stringf("You %s the barbed spikes from your body.",
                 you.berserk() ? "rip and tear" : "carefully extract").c_str());
     }
@@ -1144,7 +1144,7 @@ void player_reacts()
     incr_zot_clock();
 }
 
-void extract_manticore_spikes(const char* endmsg)
+void extract_barbs(const char* endmsg)
 {
     if (_decrement_a_duration(DUR_BARBS, you.time_taken, endmsg))
     {

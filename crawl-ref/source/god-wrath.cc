@@ -1960,9 +1960,7 @@ static bool _wu_jian_retribution()
         {
         case 0:
             wu_jian_sifu_message(" says: Die by a thousand cuts!");
-            you.increase_duration(DUR_BARBS, random_range(5, 10), 12);
-            you.attribute[ATTR_BARBS_POW] =
-                max(6, you.attribute[ATTR_BARBS_POW]);
+            barb_player(random_range(5, 10), 5);
             break;
         case 1:
             wu_jian_sifu_message(" whispers: Nowhere to run...");

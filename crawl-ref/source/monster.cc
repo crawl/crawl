@@ -1022,6 +1022,10 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     if (!force && item.cursed())
         return false;
 
+    // Get monster halo/umbra before we unequip this item.
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -1043,6 +1047,15 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     default:
         break;
     }
+
+    // Get monster halo/umbra after we unequip this item.
+    int new_halo = halo_radius();
+    int new_umbra = umbra_radius();
+
+    // If monster halo/umbra has changed after unequipping this item, update
+    // the halo/umbra.
+    if (old_halo != new_halo || old_umbra != new_umbra)
+        invalidate_agrid(true);
 
     return true;
 }
@@ -1155,6 +1168,10 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     if (item.flags & ISFLAG_MIMIC)
         return false;
 
+    // Get monster halo/umbra before we equip this item.
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
+
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
                   mindex()),
@@ -1173,6 +1190,16 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         equip_message(item);
     }
     lose_pickup_energy();
+
+    // Get monster halo/umbra after we equip this item.
+    int new_halo = halo_radius();
+    int new_umbra = umbra_radius();
+
+    // If monster halo/umbra has changed after equipping this item, update the
+    // halo/umbra.
+    if (old_halo != new_halo || old_umbra != new_umbra)
+        invalidate_agrid(true);
+
     return true;
 }
 

@@ -7075,6 +7075,11 @@ void unmarshallMonster(reader &th, monster& m)
             slot.spell = SPELL_ELECTROLUNGE;
             m.spells.push_back(slot);
         }
+        else if (slot.spell == SPELL_CAUSTIC_BREATH)
+        {
+            slot.spell = SPELL_SPIT_ACID;
+            m.spells.push_back(slot);
+        }
 #if TAG_MAJOR_VERSION == 34
         else if (slot.spell != SPELL_DELAYED_FIREBALL
                  && slot.spell != SPELL_MELEE

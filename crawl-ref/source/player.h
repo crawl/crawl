@@ -1177,6 +1177,7 @@ void end_sticky_flame_player();
 bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
+void barb_player(int turns, int pow);
 void dec_berserk_recovery_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);

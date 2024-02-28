@@ -2718,6 +2718,7 @@ bool bolt::can_burn_trees() const
     case SPELL_INNER_FLAME:
     case SPELL_STARBURST:
     case SPELL_FLAME_WAVE:
+    case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
         return true;
     default:
         return false;
@@ -4215,21 +4216,7 @@ void bolt::affect_player()
 
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
-    {
-        mpr("The barbed spikes become lodged in your body.");
-        if (!you.duration[DUR_BARBS])
-            you.set_duration(DUR_BARBS, random_range(4, 8));
-        else
-            you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
-
-        if (you.attribute[ATTR_BARBS_POW])
-        {
-            you.attribute[ATTR_BARBS_POW] =
-                min(6, you.attribute[ATTR_BARBS_POW]++);
-        }
-        else
-            you.attribute[ATTR_BARBS_POW] = 4;
-    }
+        barb_player(random_range(4, 8), 4);
 
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
@@ -6520,7 +6507,7 @@ void bolt::refine_for_explosion()
         colour     = LIGHTCYAN;
         ex_size    = 2;
     }
-    else if (origin_spell = SPELL_NULLIFYING_BREATH)
+    else if (origin_spell == SPELL_NULLIFYING_BREATH)
     {
         colour  = MAGENTA;
         ex_size = 2;
