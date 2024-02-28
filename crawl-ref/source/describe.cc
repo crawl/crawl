@@ -5628,7 +5628,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const string holi = holiness == MH_NONLIVING ? "Nonliv."
                                                  : single_holiness_description(holiness);
     pr.AddRow();
-    if (mi.threat != MTHRT_UNDEF)
+    if (mi.threat != MTHRT_UNDEF && !mons_is_conjured(mi.type))
         pr.AddCell("Threat", _get_threat_desc(mi.threat));
     else // ?/m
         pr.AddCell(); // ensure alignment

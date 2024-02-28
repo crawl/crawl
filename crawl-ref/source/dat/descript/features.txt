@@ -1074,8 +1074,8 @@ A bedeviled crystal wall
 
 A wall made from shimmering crystal, from which some demonic plane peers out.
 While its composition both make it resist destruction plus reflect both fire and
-cold, the otherworldy forces within it seem to be entirely harmless... from this
-end, anyway.
+cold, the otherworldly forces within it seem to be entirely harmless... from
+this end, anyway.
 %%%%
 # Holy Pan.
 A silver wall
