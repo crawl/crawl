@@ -3614,7 +3614,9 @@ static bool _monster_move(monster* mons, coord_def& delta)
     if (!(mons->behaviour == BEH_STICK && mons->foe != MHITYOU
         && adjacent(mons->position, you.pos()) && !adjacent(mons->target, you.pos()))
         && good_move[delta.x + 1][delta.y + 1] == false)
+    {
         _find_good_alternate_move(mons, delta, good_move);
+    }
 
     // ------------------------------------------------------------------
     // If we haven't found a good move by this point, we're not going to.
