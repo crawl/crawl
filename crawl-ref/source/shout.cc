@@ -588,7 +588,7 @@ static bool _issue_order(int keyn, int &mons_targd)
             _set_allies_stick();
             mpr("Stick together!");
             break;
-        
+
         case 'f':
         case 's':
             mons_targd = MHITYOU;
