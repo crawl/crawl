@@ -27,7 +27,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter
+                drop_filter, drop_disables_autopickup
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -675,6 +675,10 @@ drop_filter += <regex>, <regex>, ...
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
         expression(s).
+
+drop_disables_autopickup = false
+        drop_disables_autopickup = true automatically removes dropped items
+        from autopickup.
 
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------

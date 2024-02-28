@@ -2636,6 +2636,9 @@ bool drop_item(int item_dropped, int quant_drop)
 
     ASSERT(item.defined());
 
+    if (Options.drop_disables_autopickup)
+        set_item_autopickup(item, AP_FORCE_OFF);
+
     if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
     {
         mpr("Too many items on this level, not dropping the item.");

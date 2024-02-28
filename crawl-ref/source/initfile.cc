@@ -496,6 +496,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
+        new BoolGameOption(SIMPLE_NAME(drop_disables_autopickup), false),
         new MaybeBoolGameOption(SIMPLE_NAME(show_god_gift), maybe_bool::maybe,
             {"unid", "unident", "unidentified"}),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
