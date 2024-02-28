@@ -1780,6 +1780,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
+    mon->behaviour = BEH_STICK;
+
     if (orig.halo_radius()
         || orig.umbra_radius()
         || orig.silence_radius())
