@@ -3391,7 +3391,7 @@ bool bolt::misses_player()
     const int hit_margin = _test_beam_hit(real_tohit, dodge, r);
     if (hit_margin < 0)
     {
-        if (hit_margin <= repel)
+        if (hit_margin > -repel)
         {
             mprf("The %s is repelled.", name.c_str());
             count_action(CACT_DODGE, DODGE_REPEL);
