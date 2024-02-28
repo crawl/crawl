@@ -336,7 +336,8 @@ static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 static bool _monster_blocks_travel(const monster_info *mons)
 {
     return mons
-           && mons_class_is_stationary(mons->type)
+           && (mons_class_is_stationary(mons->type)
+               || mons->type == MONS_BOULDER /* dubious */)
            && !fedhas_passthrough(mons);
 }
 
