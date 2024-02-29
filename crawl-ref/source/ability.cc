@@ -2014,6 +2014,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 mprf("In %d experience levels, you will have learned enough to "
                      "assemble a masterpiece.", (COGLIN_GIZMO_XL - you.experience_level));
             }
+            return false;
         }
 
         return true;
