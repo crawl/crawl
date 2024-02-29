@@ -910,20 +910,6 @@ static void _handle_emergency_flight()
     }
 }
 
-static bool _is_regen_item(const item_def& item)
-{
-    return is_artefact(item) && artefact_property(item, ARTP_REGENERATION)
-            || item.base_type == OBJ_ARMOUR
-              && armour_type_prop(item.sub_type, ARMF_REGENERATION)
-            || item.is_type(OBJ_JEWELLERY, AMU_REGENERATION);
-}
-
-static bool _is_mana_regen_item(const item_def& item)
-{
-    return is_artefact(item) && artefact_property(item, ARTP_MANA_REGENERATION)
-            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
-}
-
 // Regeneration and Magic Regeneration items only work if the player has reached
 // max hp/mp while they are being worn. This scans and updates such items when
 // the player refills their hp/mp.
@@ -944,15 +930,15 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
             continue;
         const item_def &arm = you.inv[you.equip[slot]];
 
-        if ((attune_regen && _is_regen_item(arm)
-             && (you.magic_points == you.max_magic_points || !_is_mana_regen_item(arm)))
-            || (attune_mana_regen && _is_mana_regen_item(arm)
-                && (you.hp == you.hp_max || !_is_regen_item(arm))))
+        if ((attune_regen && is_regen_item(arm)
+             && (you.magic_points == you.max_magic_points || !is_mana_regen_item(arm)))
+            || (attune_mana_regen && is_mana_regen_item(arm)
+                && (you.hp == you.hp_max || !is_regen_item(arm))))
         {
             // Track which properties we should notify the player they have gained.
-            if (!gained_regen && _is_regen_item(arm))
+            if (!gained_regen && is_regen_item(arm))
                 gained_regen = true;
-            if (!gained_mana_regen && _is_mana_regen_item(arm))
+            if (!gained_mana_regen && is_mana_regen_item(arm))
                 gained_mana_regen = true;
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :

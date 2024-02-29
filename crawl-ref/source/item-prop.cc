@@ -3096,6 +3096,20 @@ int guile_adjust_willpower(int wl)
     return max(0, wl - 2 * WL_PIP);
 }
 
+bool is_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_REGENERATION)
+            || item.base_type == OBJ_ARMOUR
+              && armour_type_prop(item.sub_type, ARMF_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_REGENERATION);
+}
+
+bool is_mana_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_MANA_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
+}
+
 string talisman_type_name(int type)
 {
     switch (type)
