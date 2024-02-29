@@ -803,8 +803,11 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     if (species::bans_eq(you.species, eq))
         return false;
 
+    // These more specific ring slots may seem redundant with EQ_RINGS, but
+    // is needed to make the % screen properly say that those slots are unavailable
     if (you.has_mutation(MUT_NO_JEWELRY)
-        && (eq == EQ_RINGS || eq == EQ_AMULET))
+        && (eq == EQ_RINGS || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
+            || eq == EQ_AMULET))
     {
         return false;
     }
