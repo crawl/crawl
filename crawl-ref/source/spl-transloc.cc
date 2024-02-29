@@ -634,7 +634,7 @@ static bool _displace_charge_blocker(actor& agent, coord_def pos)
             && blocker->blink_to(targ, true))
         {
             if (blocker->is_player())
-                mpr("Your are hurled out of the way!");
+                mpr("You are hurled out of the way!");
 
             continue;
         }
