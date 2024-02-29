@@ -1056,15 +1056,8 @@ static void _remove_amulet_of_faith(item_def &item)
 
 static void _handle_regen_item_equip(const item_def& item)
 {
-    const bool regen_hp = (is_artefact(item)
-                           && artefact_property(item, ARTP_REGENERATION))
-                          || item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
-                          || item.base_type == OBJ_ARMOUR
-                             && armour_type_prop(item.sub_type, ARMF_REGENERATION);
-
-    const bool regen_mp = (is_artefact(item)
-                            && artefact_property(item, ARTP_MANA_REGENERATION))
-                          || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
+    const bool regen_hp = is_regen_item(item);
+    const bool regen_mp = is_mana_regen_item(item);
 
     if (!regen_hp && !regen_mp)
         return;
