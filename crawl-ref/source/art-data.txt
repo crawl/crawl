@@ -806,17 +806,15 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
-FB_BRAND: SPARM_INVISIBILITY
-INSCRIP:  *Fog
-PLUS:     +2
+INSCRIP:  Quiet
+PLUS:     +0
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-SLAY:     -2
+SLAY:     -3
 STEALTH:  1
 BOOL:     seeinv
-DESCRIP:  *Fog:      It may release a thick cloud of smoke when the wearer is
- hurt.
+DESCRIP:  Quiet:      All noise in your surroundings is dampened.
 
 # start TAG_MAJOR_VERSION == 34
 NAME:    tower shield "Bullseye"
