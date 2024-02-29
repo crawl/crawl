@@ -416,7 +416,7 @@ void melee_attack::try_parry_disarm()
     if (attacker->is_player()
         && defender->is_monster()
         && defender->alive()
-        && you.rev_percent() > 66
+        && you.rev_percent() > FULL_REV_PERCENT
         && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV)
         && one_chance_in(50 + defender->get_experience_level() * 2
                          - you.get_experience_level()))

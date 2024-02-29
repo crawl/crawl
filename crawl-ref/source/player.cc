@@ -1323,8 +1323,11 @@ int player_mp_regen()
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
 
-    if (you.rev_percent() >= 66 && you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+    if (you.rev_percent() >= FULL_REV_PERCENT
+        && you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+    {
         regen_amount += 80;
+    }
 
     if (have_passive(passive_t::jelly_regen))
     {
@@ -6495,8 +6498,11 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
             AC += _meek_bonus() * scale;
     }
 
-    if (rev_percent() >= 66 && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
+    if (rev_percent() >= FULL_REV_PERCENT
+        && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
+    {
         AC += 500;
+    }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
         AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;

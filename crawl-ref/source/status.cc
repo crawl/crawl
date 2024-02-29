@@ -962,7 +962,7 @@ static void _describe_rev(status_info& inf)
         return;
 
     const int perc = you.rev_percent();
-    if (perc < 33)
+    if (perc < FULL_REV_PERCENT / 2)
     {
         inf.light_colour = BLUE;
         inf.light_text   = "Rev";
@@ -970,7 +970,7 @@ static void _describe_rev(status_info& inf)
         inf.long_text    = "You're starting to limber up.";
         return;
     }
-    if (perc < 66)
+    if (perc < FULL_REV_PERCENT)
     {
         inf.light_colour = LIGHTBLUE;
         inf.light_text   = "Rev+";

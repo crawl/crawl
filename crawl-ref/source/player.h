@@ -81,6 +81,9 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
+/// At this percent rev, Coglins' attacks do full damage.
+static const int FULL_REV_PERCENT = 66;
+
 class targeter;
 class Delay;
 struct player_save_info;
