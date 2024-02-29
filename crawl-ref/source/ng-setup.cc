@@ -229,7 +229,7 @@ static void _give_offhand_weapon()
         return;
     if (is_range_weapon(*wpn))
     {
-        const int plus = you.char_class == JOB_HUNTER ? 1 : -2;
+        const int plus = you.char_class == JOB_HUNTER ? 0 : -2;
         newgame_make_item(OBJ_WEAPONS, WPN_SLING, 1, plus);
     }
     else
@@ -314,7 +314,7 @@ void give_items_skills(const newgame_def& ng)
         {
             item_def *wpn = you.weapon();
             wpn->sub_type = WPN_SLING;
-            wpn->plus = 1;
+            wpn->plus = 2;
         }
         _give_offhand_weapon();
     }
