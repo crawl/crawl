@@ -29,7 +29,6 @@
 #include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
-#include "religion-enum.h"
 #include "skill-menu-state.h"
 #include "species.h"
 #include "stat-type.h"

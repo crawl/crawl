@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "adjust.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "cluautil.h"

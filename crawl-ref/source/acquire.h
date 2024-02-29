@@ -7,6 +7,14 @@
 
 #include "item-prop-enum.h"
 
+#define ACQUIRE_KEY "acquired" // acquirement source prop on acquired items
+#define ACQUIRE_ITEMS_KEY "acquire_items" // acquirement items player prop
+
+#define OKAWARU_WEAPONS_KEY "okawaru_weapons"
+#define OKAWARU_WEAPON_GIFTED_KEY "okawaru_weapon_gifted"
+#define OKAWARU_ARMOUR_KEY "okawaru_armour"
+#define OKAWARU_ARMOUR_GIFTED_KEY "okawaru_armour_gifted"
+
 #define INVENT_GIZMO_USED_KEY "invent_gizmo_used"
 #define COGLIN_GIZMO_KEY "coglin_gizmos"
 #define COGLIN_GIZMO_NAMES_KEY "coglin_gizmo_names"
