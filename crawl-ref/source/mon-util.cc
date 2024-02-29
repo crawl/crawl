@@ -4416,7 +4416,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
 
-    if (you.see_cell(mons.pos()))
+    // XXX: Shouldn't be able to see 'fake' monsters
+    if (you.see_cell(mons.pos()) && mons.mid != MID_NOBODY)
     {
         dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)
