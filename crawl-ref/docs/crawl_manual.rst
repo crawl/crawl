@@ -1791,7 +1791,7 @@ Coglins (Co)
    charm-wrought steel. Their exoskeletons, capable of wielding weapons
    independently in each arm, are begun with hand-me-downs from their sprawling
    families. By the time they come of age, they are inseparable from their
-   creations, and experienced individuals often further customize themselves
+   creations, and experienced individuals often further customise themselves
    with uniquely powerful additions.
 
    Haphazard and jerry-rigged, Coglin exoskeletons lack the flexibility of
