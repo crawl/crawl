@@ -152,7 +152,7 @@ try to struggle free.
 %%%%
 Constr status
 
-You are being constricted by an enemy. Your evasion is impaired and you will
+You are being constricted by an enemy. Your evasion is impaired, and you will
 take damage over time. You are unable to move away from the enemy, although you
 can struggle to escape by attempting to do so, and will become increasingly more
 likely to succeed and break the constriction when doing so multiple times.
