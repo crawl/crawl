@@ -39,6 +39,9 @@ automatic
 reticulated
 
 pneumatic
+
+# A. E. van Vogt, "Far Centaurus"
+adeledicnander
 %%%%
 gizmo_noun
 
@@ -72,7 +75,15 @@ subsystem
 
 assembler
 
+capacitor
+
 encabulator
+
+# Calvin and Hobbes
+transmogrifier
+
+# ThunderCats
+samoflange
 %%%%
 gizmo_modifier
 
