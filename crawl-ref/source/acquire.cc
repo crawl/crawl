@@ -2023,6 +2023,19 @@ bool coglin_invent_gizmo()
 
     auto &acq_items = you.props[COGLIN_GIZMO_KEY].get_vector();
 
+    int index = 0;
+    if (!clua.callfn("c_choose_coglin_gizmo", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], COGLIN_GIZMO_KEY, true);
+        you.props[INVENT_GIZMO_USED_KEY] = true;
+        return true;
+    }
+
     AcquireMenu acq_menu(acq_items, COGLIN_GIZMO_KEY, true);
     acq_menu.show();
 

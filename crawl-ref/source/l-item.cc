@@ -1602,6 +1602,11 @@ static int l_item_shopping_list(lua_State *ls)
 
 /*** See the items offered by acquirement.
  * Only works when the acquirement menu is active.
+ * @tparam int An integer indicating the type of acquirement:
+ *                 1: The normal acquirement menu.
+ *                 2: Okawaru weapon gift acquirement.
+ *                 3: Okawaru armour gift acquirement.
+ *                 4: Coglin gizmo acquirement.
  * @treturn array|nil An array of @{Item} objects or nil if not acquiring.
  * @function acquirement_items
  */
@@ -1616,6 +1621,8 @@ static int l_item_acquirement_items(lua_State *ls)
         acquire_key = OKAWARU_WEAPONS_KEY;
     else if (acquire_type == 3)
         acquire_key = OKAWARU_ARMOUR_KEY;
+    else if (acquire_type == 4)
+        acquire_key = COGLIN_GIZMO_KEY;
     else
         return 0;
 
