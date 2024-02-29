@@ -805,7 +805,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     // These more specific ring slots may seem redundant with EQ_RINGS, but
     // is needed to make the % screen properly say that those slots are unavailable
-    if (you.has_mutation(MUT_NO_JEWELRY)
+    if (you.has_mutation(MUT_NO_JEWELLERY)
         && (eq == EQ_RINGS || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
             || eq == EQ_AMULET))
     {

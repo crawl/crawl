@@ -3474,7 +3474,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
 
-        if (you.has_mutation(MUT_NO_JEWELRY))
+        if (you.has_mutation(MUT_NO_JEWELLERY))
             return true;
 
         if (!ident && !item_type_known(item))

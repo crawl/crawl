@@ -787,8 +787,8 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_NO_JEWELRY, 0, 1, mutflag::bad, true,
-  "no jewelry",
+{ MUT_NO_JEWELLERY, 0, 1, mutflag::bad, true,
+  "no jewellery",
 
   {"You cannot equip rings or amulets.",
    "", ""},

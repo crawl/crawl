@@ -4593,7 +4593,7 @@ static void _tag_read_you_items(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELRY)
     {
-        if (you.has_mutation(MUT_NO_JEWELRY))
+        if (you.has_mutation(MUT_NO_JEWELLERY))
         {
             remove_one_equip(EQ_AMULET, false, true);
             remove_one_equip(EQ_RIGHT_RING, false, true);

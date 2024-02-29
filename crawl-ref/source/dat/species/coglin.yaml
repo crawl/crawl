@@ -43,7 +43,7 @@ mutations:
     MUT_WIELD_OFFHAND: 1
     MUT_SLOW_WIELD: 1
     MUT_WARMUP_STRIKES: 1
-    MUT_NO_JEWELRY: 1
+    MUT_NO_JEWELLERY: 1
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BRIGAND
