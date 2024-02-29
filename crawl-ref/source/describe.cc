@@ -3030,7 +3030,11 @@ string get_item_description(const item_def &item,
             {
                 if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
                 {
-                    if (is_unrandom_artefact(item))
+                    if (is_unrandom_artefact(item)
+                        || (item.base_type == OBJ_ARMOUR
+                            && item.plus >= armour_max_enchant(item))
+                        || (item.base_type == OBJ_WEAPONS
+                            && item.plus >= MAX_WPN_ENCHANT))
                     {
                         description << "\nEnchanting this artefact any further "
                             "is beyond even your skills.";
