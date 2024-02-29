@@ -684,7 +684,7 @@ MARKER:  A = lua:fog_machine {cloud_type = "flame", \
 MARKER:  B = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 2, pow_max = 3, delay = 55, size_min = 4, size_max = 6, \
              walk_dist = 2, start_clouds = 2, excl_rad = 0 }
-MARKER:  C = lua:fog_machine {cloud_type = "poisonous gas", \
+MARKER:  C = lua:fog_machine {cloud_type = "poison gas", \
              pow_min = 3, pow_max = 4, delay = 30, size_min = 4, size_max = 6, \
              walk_dist = 2, start_clouds = 2, excl_rad = 0 }
 MARKER:  D = lua:fog_machine {cloud_type = "calcifying dust", \

@@ -4433,7 +4433,7 @@ COLOUR: G = white
 TILE:   G = dngn_silver_statue
 TILE:   x = wall_orc
 FTILE:  +._OG$ = floor_w_marble
-:   set_feature_name("metal_statue", "silver_statue")
+:   set_feature_name("metal_statue", "silver statue")
 : else
 COLOUR: G = yellow
 COLOUR: v = white

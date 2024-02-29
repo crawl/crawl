@@ -874,7 +874,7 @@ HINT_YOU_RESIST
 
 Most attacks in Crawl are defended against by your AC. Some, like fire or
 draining attacks, can be further reduced by specific resistances. Other magical
-effects, such as Slow or Confusion hexes, are resisted by your Willpower.
+effects, such as Slow or Confusion hexes, are resisted by your willpower.
 You'll find items that increase both kinds of resistances.
 
 To view your current set of resistances, <localtiles><w>right-click</w> on the

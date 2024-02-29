@@ -689,6 +689,7 @@ KFEAT:   G = metal_statue
 SHUFFLE: G = GT
 COLOUR:  G = silver
 TILE:    G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 .xx.xx.xx.xx.xx.xx.
 ...................

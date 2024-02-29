@@ -589,6 +589,7 @@ Paralyse Xtahua cast
 @The_monster@ roars overwhelmingly @at@ @target@!
 
 @The_monster@ thunders ferociously @at@ @target@!
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

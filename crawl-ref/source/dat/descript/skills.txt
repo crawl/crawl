@@ -86,7 +86,7 @@ Dodging
 
 The Dodging skill will affect your chance of dodging an attack, be it melee,
 ranged or magical. Certain types of attack cannot be dodged, however, such as
-enchantments (which must be resisted with Willpower) and explosions.
+enchantments (which must be resisted with willpower) and explosions.
 %%%%
 Stealth
 
