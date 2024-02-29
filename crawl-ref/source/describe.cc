@@ -329,7 +329,7 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It insulates you from electricity.",
             prop_note::plain },
         { ARTP_POISON,
-            "It protects you from poison",
+            "It protects you from poison.",
             prop_note::plain },
         { ARTP_NEGATIVE_ENERGY,
             "negative energy",
