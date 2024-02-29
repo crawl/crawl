@@ -976,6 +976,18 @@ i-attraction POT_REMOVEME10 POT_ID_LAST
 %back none
 %rim 1
 
+%sdir item/gizmo
+gizmo0 GIZMO
+gizmo1
+gizmo2
+gizmo3
+gizmo4
+gizmo5
+gizmo6
+gizmo7
+gizmo8
+gizmo9
+
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
 %sdir item/book
@@ -1043,18 +1055,6 @@ staff-artefact5
 staff-artefact6
 staff-artefact7
 %rim 1
-
-%sdir item/gizmo
-gizmo0 GIZMO
-gizmo1
-gizmo2
-gizmo3
-gizmo4
-gizmo5
-gizmo6
-gizmo7
-gizmo8
-gizmo9
 
 # These must be in the same order as the enum in item-prop-enum.h!
 # start TAG_MAJOR_VERSION == 34
