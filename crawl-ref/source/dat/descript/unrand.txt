@@ -810,3 +810,10 @@ hand cannon "Mule"
 Hand cannons use magical dust to launch projectiles. The alchemists who craft
 them boast of their potency, but omit the smoke and noise blasted out with each
 shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.
+%%%%
+gloves of the gadgeteer
+
+A pair of suede gloves covered in a dizzing array of delicate sigils. While
+originally intended to aid in the crafting of magical devices, they are
+nonetheless useful for wringing every last drop of power out of someone else's
+work.

@@ -1813,6 +1813,20 @@ BRAND:    SPWPN_FLAMING
 INSCRIP:  backblast,
 DBRAND:   Backblast: When fired, it often launches its wielder backwards.
 
+ENUM:    GADGETEER
+NAME:    gloves of the gadgeteer
+INSCRIP: Gadgeteer Wandboost
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +0
+COLOUR:  MAGENTA
+TILE:    urand_gadgeteer
+TILE_EQ: glove_purple
+BOOL:    fragile
+VALUE:   400
+DESCRIP: Gadgeteer:   Your evocable items recharge 30% faster and wands have a 30%
+ chance to not spend a charge.
++Wandboost:   Your wands are more powerful.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
