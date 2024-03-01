@@ -192,7 +192,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         || item_is_orb(*this)
         || item_is_horn_of_geryon(*this)
         || (ident || item_ident(*this, ISFLAG_KNOW_PROPERTIES))
-           && is_artefact(*this) && special != UNRAND_OCTOPUS_KING_RING)
+           && is_artefact(*this) && special != UNRAND_OCTOPUS_KING_RING
+           && base_type != OBJ_GIZMOS)
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -309,6 +310,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                     break;
                 case EQ_RING_AMULET:
                     buff << " (on amulet)";
+                    break;
+                case EQ_GIZMO:
+                    buff << " (installed)";
                     break;
                 default:
                     die("Item in an invalid slot");
@@ -1021,6 +1025,20 @@ static string misc_type_name(int type)
     }
 }
 
+const char* gizmo_effect_name(int type)
+{
+    switch (static_cast<special_gizmo_type>(type))
+    {
+        case SPGIZMO_MANAREV:       return "RevMP";
+        case SPGIZMO_GADGETEER:     return "Gadgeteer";
+        case SPGIZMO_PARRYREV:      return "RevParry";
+        case SPGIZMO_AUTODAZZLE:    return "AutoDazzle";
+
+        default:
+        case SPGIZMO_NORMAL:        return "";
+    }
+}
+
 static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
@@ -1172,6 +1190,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_RUNES: return "rune";
     case OBJ_GEMS: return "gem";
     case OBJ_TALISMANS: return "talisman";
+    case OBJ_GIZMOS: return "gizmo";
     default: return "";
     }
 }
@@ -1308,6 +1327,8 @@ string ego_type_string(const item_def &item, bool terse)
         return missile_brand_name(item, terse ? MBN_TERSE : MBN_BRAND);
     case OBJ_JEWELLERY:
         return jewellery_effect_name(item.sub_type, terse);
+    case OBJ_GIZMOS:
+        return gizmo_effect_name(item.brand);
     default:
         return "";
     }
@@ -1956,6 +1977,15 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
         break;
     }
+
+    case OBJ_GIZMOS:
+    {
+        if (props.exists(ARTEFACT_NAME_KEY))
+            buff << props[ARTEFACT_NAME_KEY].get_string();
+        else
+            buff << "Unnamed gizmo";
+    }
+    break;
 
     default:
         buff << "!";
@@ -3444,14 +3474,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
 
-        if (you.has_mutation(MUT_NO_RINGS)
-            && !jewellery_is_amulet(item)
-            // This is an ugly check, and violates the assumption that
-            // perma-useless items will always be useless. Sorry!
-            && !player_equip_unrand(UNRAND_FINGER_AMULET))
-        {
+        if (you.has_mutation(MUT_NO_JEWELLERY))
             return true;
-        }
 
         if (!ident && !item_type_known(item))
             return false;

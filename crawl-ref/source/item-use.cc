@@ -214,11 +214,6 @@ static int _default_osel(operation_types oper)
     case OPER_WEAR:
         return OBJ_ARMOUR;
     case OPER_PUTON:
-        if (you.has_mutation(MUT_NO_RINGS)
-            && !player_equip_unrand(UNRAND_FINGER_AMULET))
-        {
-            return OSEL_AMULET;
-        }
         return OBJ_JEWELLERY;
     case OPER_QUAFF:
         return OBJ_POTIONS;
@@ -997,8 +992,9 @@ static bool _can_generically_use(operation_types oper)
         // can't differentiate between these two at this point
         if (!you_can_wear(EQ_RINGS, true) && !you_can_wear(EQ_AMULET, true))
         {
-            mprf(MSGCH_PROMPT, "You can't %s jewellery in your present form.",
-                oper == OPER_PUTON ? "wear" : "remove");
+            mprf(MSGCH_PROMPT, "You can't %s jewellery%s.",
+                oper == OPER_PUTON ? "wear" : "remove",
+                you.has_mutation(MUT_NO_JEWELLERY) ? "" :  "in your present form");
             return false;
         }
         break;
@@ -2809,10 +2805,7 @@ static bool _can_puton_ring(const item_def &item)
     if (bool(!you_can_wear(EQ_RINGS, true))
         && !player_equip_unrand(UNRAND_FINGER_AMULET))
     {
-        if (you.has_mutation(MUT_NO_RINGS))
-            mprf(MSGCH_PROMPT, "You can't wear rings.");
-        else
-            mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
+        mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
         return false;
     }
 

@@ -3031,6 +3031,9 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     case OBJ_JEWELLERY:
         return jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS;
 
+    case OBJ_GIZMOS:
+        return EQ_GIZMO;
+
     default:
         break;
     }
@@ -3091,6 +3094,20 @@ int shield_block_limit(const item_def &shield)
 int guile_adjust_willpower(int wl)
 {
     return max(0, wl - 2 * WL_PIP);
+}
+
+bool is_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_REGENERATION)
+            || item.base_type == OBJ_ARMOUR
+              && armour_type_prop(item.sub_type, ARMF_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_REGENERATION);
+}
+
+bool is_mana_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_MANA_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
 }
 
 string talisman_type_name(int type)

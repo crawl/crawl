@@ -29,7 +29,6 @@
 #include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
-#include "religion-enum.h"
 #include "skill-menu-state.h"
 #include "species.h"
 #include "stat-type.h"
@@ -45,7 +44,6 @@
 #define POWERED_BY_DEATH_KEY "powered_by_death_strength"
 #define FUGUE_KEY "fugue_of_the_fallen_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
-#define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
 #define PARALYSED_BY_KEY "paralysed_by"
@@ -81,6 +79,9 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
+
+/// At this percent rev, Coglins' attacks do full damage.
+static const int FULL_REV_PERCENT = 66;
 
 class targeter;
 class Delay;
@@ -891,6 +892,7 @@ public:
     void be_agile(int pow);
 
     int rev_percent() const;
+    int rev_tier() const;
     void rev_up(int time_taken);
     void rev_down(int time_taken);
 

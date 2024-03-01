@@ -28,6 +28,7 @@ enum object_class_type : uint8_t           // env.item[].base_type
     OBJ_RUNES,
     OBJ_TALISMANS,
     OBJ_GEMS,
+    OBJ_GIZMOS,
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()

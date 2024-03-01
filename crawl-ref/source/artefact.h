@@ -121,6 +121,8 @@ void make_ashenzari_randart(item_def &item);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
 
+void fill_gizmo_properties(CrawlVector& gizmos);
+
 bool randart_is_bad(const item_def &item);
 bool randart_is_bad(const item_def &item, artefact_properties_t &proprt);
 

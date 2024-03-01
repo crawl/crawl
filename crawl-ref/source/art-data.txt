@@ -806,17 +806,15 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
-FB_BRAND: SPARM_INVISIBILITY
-INSCRIP:  *Fog
-PLUS:     +2
+INSCRIP:  Quiet
+PLUS:     +0
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-SLAY:     -2
+SLAY:     -3
 STEALTH:  1
 BOOL:     seeinv
-DESCRIP:  *Fog:      It may release a thick cloud of smoke when the wearer is
- hurt.
+DESCRIP:  Quiet:      All noise in your surroundings is dampened.
 
 # start TAG_MAJOR_VERSION == 34
 NAME:    tower shield "Bullseye"
@@ -1203,9 +1201,9 @@ LIFE:     1
 BOOL:     poison, evil
 
 NAME:     amulet of Vitality
-OBJ:      OBJ_JEWELLERY/AMU_MANA_REGENERATION
-INSCRIP:  RegenMP++
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 REGEN:    2
+REGEN_MP: 2
 COLOUR:   ETC_MUTAGENIC
 BOOL:     skip_ego
 VALUE:    1000
@@ -1812,6 +1810,20 @@ COLOUR:   ETC_INCARNADINE
 BRAND:    SPWPN_FLAMING
 INSCRIP:  backblast,
 DBRAND:   Backblast: When fired, it often launches its wielder backwards.
+
+ENUM:    GADGETEER
+NAME:    gloves of the gadgeteer
+INSCRIP: Gadgeteer Wandboost
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +0
+COLOUR:  MAGENTA
+TILE:    urand_gadgeteer
+TILE_EQ: glove_purple
+BOOL:    fragile
+VALUE:   400
+DESCRIP: Gadgeteer:   Your evocable items recharge 30% faster and wands have a 30%
+ chance to not spend a charge.
++Wandboost:   Your wands are more powerful.
 
 # This entry must always be last.
 ENUM:   DUMMY2

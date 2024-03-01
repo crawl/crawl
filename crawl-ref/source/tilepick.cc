@@ -3022,6 +3022,9 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_GEMS:
         return _tileidx_gem(item);
 
+    case OBJ_GIZMOS:
+        return TILE_GIZMO + item.rnd % tile_main_count(TILE_GIZMO);
+
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;
 
@@ -3272,8 +3275,11 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             return TILE_BOLT_ICICLE + dir;
         else if (bolt.name == "searing ray")
             return TILE_BOLT_SEARING_RAY;
-        else if (bolt.name == "bolt of light")
+        else if (bolt.name == "bolt of light"
+                 || bolt.name == "blinding ray")
+        {
             return TILE_BOLT_LIGHT + dir;
+        }
         break;
 
     case LIGHTCYAN:
@@ -3682,6 +3688,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BLINKBOLT;
     case ABIL_SIPHON_ESSENCE:
         return TILEG_ABILITY_SIPHON_ESSENCE;
+    case ABIL_INVENT_GIZMO:
+        return TILEG_ABILITY_INVENT_GIZMO;
 
     // Others
     case ABIL_END_TRANSFORMATION:

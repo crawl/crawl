@@ -708,7 +708,7 @@ static const equipment_type e_order[] =
     EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-    EQ_RING_AMULET,
+    EQ_RING_AMULET, EQ_GIZMO
 };
 
 static void _print_stats_equip(int x, int y)
@@ -1948,7 +1948,7 @@ static const char *s_equip_slot_names[] =
     "Shield", "Body Armour", "Left Ring", "Right Ring", "Amulet",
     "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
     "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
-    "Amulet Ring"
+    "Amulet Ring", "Gizmo"
 };
 
 const char *equip_slot_to_name(int equip)
@@ -2065,6 +2065,9 @@ static void _print_overview_screen_equip(column_composer& cols,
         }
 
         if (eqslot == EQ_RING_AMULET && bool(!you_can_wear(eqslot)))
+            continue;
+
+        if (eqslot == EQ_GIZMO && bool(!you_can_wear(eqslot)))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));

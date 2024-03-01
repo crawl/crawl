@@ -168,6 +168,15 @@ item_def* newgame_make_item(object_class_type base,
     {
         you.equip[get_item_slot(item)] = slot;
     }
+    else if (item.base_type == OBJ_WEAPONS
+             && you.species == SP_COGLIN
+             && you.hands_reqd(item) == HANDS_ONE
+             && you.equip[EQ_OFFHAND] == -1
+             && you.weapon() // should always be true here
+             && you.hands_reqd(*you.weapon()) == HANDS_ONE)
+    {
+        you.equip[EQ_OFFHAND] = slot;
+    }
 
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
@@ -211,6 +220,20 @@ static void _give_job_spells(job_type job)
     {
         add_spell_to_memory(first_spell);
     }
+}
+
+static void _give_offhand_weapon()
+{
+    const item_def *wpn = you.weapon();
+    if (!wpn || you.shield() || you.hands_reqd(*wpn) != HANDS_ONE)
+        return;
+    if (is_range_weapon(*wpn))
+    {
+        const int plus = you.char_class == JOB_HUNTER ? 0 : -2;
+        newgame_make_item(OBJ_WEAPONS, WPN_SLING, 1, plus);
+    }
+    else
+        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER);
 }
 
 void give_items_skills(const newgame_def& ng)
@@ -278,11 +301,23 @@ void give_items_skills(const newgame_def& ng)
     if (you.char_class == JOB_GLADIATOR)
         _give_throwing_ammo();
 
-    if (you.has_mutation(MUT_NO_GRASPING))
+    if (you.has_mutation(MUT_NO_GRASPING)) // i.e. felids
         you.skills[SK_THROWING] = 0;
 
-    if (you.has_mutation(MUT_NO_ARMOUR))
-        you.skills[SK_SHIELDS] = 0;
+    if (you.has_mutation(MUT_NO_ARMOUR)) // i.e. felids
+        you.skills[SK_SHIELDS] = 0; // i.e. FeFi
+
+    if (you.has_mutation(MUT_WIELD_OFFHAND))
+    {
+        // Coglins would rather have two slings than one bow.
+        if (you.char_class == JOB_HUNTER)
+        {
+            item_def *wpn = you.weapon();
+            wpn->sub_type = WPN_SLING;
+            wpn->plus = 2;
+        }
+        _give_offhand_weapon();
+    }
 
     if (!you_worship(GOD_NO_GOD))
     {

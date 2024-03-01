@@ -4,6 +4,7 @@
 
 #include <cmath>
 
+#include "acquire.h"
 #include "artefact.h"
 #include "database.h"
 #include "describe-god.h"

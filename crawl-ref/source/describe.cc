@@ -256,7 +256,6 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_HARM:                return "Harm";
     case AMU_THE_GOURMAND:        return "Gourm";
 #endif
-    case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_ACROBAT:             return "Acrobat";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
@@ -329,7 +328,7 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It insulates you from electricity.",
             prop_note::plain },
         { ARTP_POISON,
-            "It protects you from poison",
+            "It protects you from poison.",
             prop_note::plain },
         { ARTP_NEGATIVE_ENERGY,
             "negative energy",
@@ -442,6 +441,12 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_ALCHEMY,
             "It increases the power of your Alchemy spells.",
             prop_note::plain },
+        { ARTP_ACROBAT,
+            "It increases your evasion after moving or waiting.",
+            prop_note::plain },
+        { ARTP_MANA_REGENERATION,
+            "It increases your rate of magic regeneration.",
+            prop_note::symbolic },
     };
     return data;
 }
@@ -487,6 +492,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_NOISE,
         ARTP_HARM,
         ARTP_RAMPAGING,
+        ARTP_ACROBAT,
         ARTP_CORRODE,
         ARTP_DRAIN,
         ARTP_SLOW,
@@ -505,6 +511,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_NEGATIVE_ENERGY,
         ARTP_WILLPOWER,
         ARTP_REGENERATION,
+        ARTP_MANA_REGENERATION,
         ARTP_RMUT,
         ARTP_RCORR,
 
@@ -562,6 +569,8 @@ static vector<string> _randart_propnames(const item_def& item,
             ego = weapon_brand_name(item, true);
         else if (item.base_type == OBJ_ARMOUR)
             ego = armour_ego_name(item, true);
+        else if (item.base_type == OBJ_GIZMOS)
+            ego = gizmo_effect_name(item.brand);
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
@@ -768,7 +777,8 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
             sdesc = replace_all(sdesc, "%d", make_stringf("%+d", stval));
 
         if (desc.display_type == prop_note::symbolic
-            && desc.property != ARTP_REGENERATION) // symbolic, but no text modification
+            && desc.property != ARTP_REGENERATION // symbolic, but no text modification
+            && desc.property != ARTP_MANA_REGENERATION)
         {
             // for symbolic props, desc.desc is just the resist name, need
             // to fill in to get a complete sentence
@@ -2580,6 +2590,46 @@ static string _describe_item_curse(const item_def &item)
     return desc.str();
 }
 
+static string _describe_gizmo(const item_def &item)
+{
+    string ret = "\n\n";
+
+    if (item.brand)
+    {
+        string name = string(gizmo_effect_name(item.brand)) + ":";
+        ret += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 2, name.c_str());
+        switch (item.brand)
+        {
+            case SPGIZMO_MANAREV:
+                ret += "Your magic regeneration increases greatly based on how "
+                       "Revved you are.\n";
+                break;
+
+            case SPGIZMO_GADGETEER:
+                ret += "Your evocable items recharge 30% faster and wands have "
+                       "a 30% chance to not spend a charge.\n";
+                break;
+
+            case SPGIZMO_PARRYREV:
+                ret += "Your AC increases as you Rev (up to +5) and while "
+                       "fully Revved, your attacks may disarm enemies.\n";
+                break;
+
+            case SPGIZMO_AUTODAZZLE:
+                ret += "It sometimes fires a blinding ray at enemies whose attacks "
+                       "you dodge.\n";
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    ret += _artefact_descrip(item);
+
+    return ret;
+}
+
 bool is_dumpable_artefact(const item_def &item)
 {
     return is_known_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES);
@@ -2730,6 +2780,12 @@ string get_item_description(const item_def &item,
                  && item.base_type == OBJ_JEWELLERY)
         {
             description << "It is an ancient artefact.";
+            need_base_desc = false;
+        }
+        else if (item.base_type == OBJ_GIZMOS)
+        {
+            description << "It is a fabulous contraption, custom-made by your "
+                           "own hands.";
             need_base_desc = false;
         }
 
@@ -2937,6 +2993,10 @@ string get_item_description(const item_def &item,
             description << desc;
         break;
 
+    case OBJ_GIZMOS:
+        description << _describe_gizmo(item);
+        break;
+
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
@@ -2969,7 +3029,11 @@ string get_item_description(const item_def &item,
             {
                 if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
                 {
-                    if (is_unrandom_artefact(item))
+                    if (is_unrandom_artefact(item)
+                        || (item.base_type == OBJ_ARMOUR
+                            && item.plus >= armour_max_enchant(item))
+                        || (item.base_type == OBJ_WEAPONS
+                            && item.plus >= MAX_WPN_ENCHANT))
                     {
                         description << "\nEnchanting this artefact any further "
                             "is beyond even your skills.";
@@ -2982,7 +3046,8 @@ string get_item_description(const item_def &item,
                 }
             }
             // Randart jewellery has already displayed this line.
-            else if (item.base_type != OBJ_JEWELLERY
+            // And gizmos really shouldn't (you just made them!)
+            else if (item.base_type != OBJ_JEWELLERY && item.base_type != OBJ_GIZMOS
                      || (item_type_known(item) && is_unrandom_artefact(item)))
             {
                 description << "\nIt is an ancient artefact.";

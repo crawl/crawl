@@ -309,8 +309,8 @@ animals, each chosen for the unique strengths it could grant the robe's wearer.
 cloak of the Thief
 
 A pitch-black cloak which allows its wearer to excel in the arts of thievery.
-As a precaution in case of detection, it also bears enchantments allowing the
-wearer to make a hasty retreat under cover of fog.
+Even the clumsy will find their footsteps softer and the shouts of their
+adversaries less attention-getting.
 %%%%
 # TAG_MAJOR_VERSION == 34
 tower shield "Bullseye"
@@ -810,3 +810,10 @@ hand cannon "Mule"
 Hand cannons use magical dust to launch projectiles. The alchemists who craft
 them boast of their potency, but omit the smoke and noise blasted out with each
 shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.
+%%%%
+gloves of the gadgeteer
+
+A pair of suede gloves covered in a dizzing array of delicate sigils. While
+originally intended to aid in the crafting of magical devices, they are
+nonetheless useful for wringing every last drop of power out of someone else's
+work.

@@ -381,6 +381,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_BEGIN_UNTRANSFORM, "Begin Untransformation",
             0, 0, 0, -1, {}, abflag::none },
+        { ABIL_INVENT_GIZMO, "Invent Gizmo",
+            0, 0, 0, -1, {}, abflag::none },
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
@@ -2003,6 +2005,21 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_HOP:
         return _can_hop(quiet);
 
+    case ABIL_INVENT_GIZMO:
+    {
+        if (you.experience_level < COGLIN_GIZMO_XL)
+        {
+            if (!quiet)
+            {
+                mprf("In %d experience levels, you will have learned enough to "
+                     "assemble a masterpiece.", (COGLIN_GIZMO_XL - you.experience_level));
+            }
+            return false;
+        }
+
+        return true;
+    }
+
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
@@ -2897,6 +2914,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         }
         start_delay<TransformDelay>(transformation::none, nullptr);
+        break;
+
+    case ABIL_INVENT_GIZMO:
+        if (!coglin_invent_gizmo())
+            return spret::abort;
         break;
 
     // INVOCATIONS:
@@ -3890,6 +3912,9 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:
         return you.form == transformation::death;
+    case ABIL_INVENT_GIZMO:
+        return you.species == SP_COGLIN
+        && !you.props.exists(INVENT_GIZMO_USED_KEY);
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -3966,6 +3991,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_EXSANGUINATE,
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
+            ABIL_INVENT_GIZMO,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
             ABIL_END_TRANSFORMATION,

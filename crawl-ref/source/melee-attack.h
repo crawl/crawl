@@ -145,6 +145,7 @@ private:
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
     void do_ooze_engulf();
+    void try_parry_disarm();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.

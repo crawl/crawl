@@ -29,6 +29,7 @@ enum item_source_type
 #endif
     IT_SRC_START,
     IT_SRC_SHOP,
+    AQ_INVENTED,
 
     // Empty space for new non-wizmode acquisition methods
 
@@ -58,7 +59,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p,
                         bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
-bool move_item_to_inv(item_def& item);
+bool move_item_to_inv(item_def& item, bool quiet = false);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
 item_def* auto_assign_item_slot(item_def& item);
 void mark_items_non_pickup_at(const coord_def &pos);

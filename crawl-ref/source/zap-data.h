@@ -1986,5 +1986,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_AUTODAZZLE,
+    "blinding ray",
+    50,
+    new dicedef_calculator<0, 1, 0, 1>,
+    new tohit_calculator<10, 1, 25>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_LIGHT,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
 
 };

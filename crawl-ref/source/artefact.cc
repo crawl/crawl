@@ -381,6 +381,7 @@ struct jewellery_fake_artp
 
 static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
+    { AMU_MANA_REGENERATION, { { ARTP_MANA_REGENERATION, 1} } },
     { AMU_REFLECTION, { { ARTP_SHIELDING, AMU_REFLECT_SH / 2} } },
 
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
@@ -847,6 +848,11 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Alchemy", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ALCHEMY,
         []() {return 1;}, nullptr, 0, 0},
+
+    { "Acrobat", ARTP_VAL_BOOL, 0, // ARTP_ACROBAT,
+        []() {return 1;}, nullptr, 0, 0},
+    { "RegenMP", ARTP_VAL_BOOL, 0,   // ARTP_MANA_REGENERATION,
+        []() { return 1; }, nullptr, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1942,6 +1948,125 @@ void make_ashenzari_randart(item_def &item)
     item.props[ARTEFACT_APPEAR_KEY].get_string() =
         make_artefact_name(item, true);
 
+}
+
+enum gizmo_prop_type
+{
+    GIZMO_REGEN,
+    GIZMO_REPEL,
+    GIZMO_RAMPAGE,
+    GIZMO_GADGETEER,
+    GIZMO_PARRYREV,
+    GIZMO_MANAREV,
+    GIZMO_AUTODAZZLE,
+    LAST_RARE_GIZMO = GIZMO_AUTODAZZLE,
+
+    GIZMO_RF,
+    GIZMO_RC,
+    GIZMO_RELEC,
+    GIZMO_RPOIS,
+    GIZMO_SLAY,
+    GIZMO_WILL,
+
+    NUM_GIZMO_PROPS,
+};
+
+static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
+{
+    switch (prop)
+    {
+        // Common props
+        case GIZMO_RF:
+            artefact_set_property(gizmo, ARTP_FIRE, 1);
+            break;
+
+        case GIZMO_RC:
+            artefact_set_property(gizmo, ARTP_COLD, 1);
+            break;
+
+        case GIZMO_RELEC:
+            artefact_set_property(gizmo, ARTP_ELECTRICITY, 1);
+            break;
+
+        case GIZMO_RPOIS:
+            artefact_set_property(gizmo, ARTP_POISON, 1);
+            artefact_set_property(gizmo, ARTP_RCORR, 1);
+            break;
+
+        case GIZMO_SLAY:
+            artefact_set_property(gizmo, ARTP_SLAYING, 3);
+            break;
+
+        case GIZMO_WILL:
+            artefact_set_property(gizmo, ARTP_WILLPOWER, 1);
+            break;
+
+        // Rare props
+        case GIZMO_REGEN:
+            artefact_set_property(gizmo, ARTP_REGENERATION, 1);
+            artefact_set_property(gizmo, ARTP_MANA_REGENERATION, 1);
+            break;
+
+        case GIZMO_REPEL:
+            artefact_set_property(gizmo, ARTP_RMSL, 1);
+            artefact_set_property(gizmo, ARTP_CLARITY, 1);
+            break;
+
+        case GIZMO_RAMPAGE:
+            artefact_set_property(gizmo, ARTP_RAMPAGING, 1);
+            artefact_set_property(gizmo, ARTP_ACROBAT, 1);
+            break;
+
+        case GIZMO_GADGETEER:
+            gizmo.brand = SPGIZMO_GADGETEER;
+            break;
+
+        case GIZMO_PARRYREV:
+            gizmo.brand = SPGIZMO_PARRYREV;
+            break;
+
+        case GIZMO_MANAREV:
+            gizmo.brand = SPGIZMO_MANAREV;
+            break;
+
+        case GIZMO_AUTODAZZLE:
+            gizmo.brand = SPGIZMO_AUTODAZZLE;
+            break;
+
+        default:
+            break;
+    }
+}
+
+// Takes a list of existing gizmos in a CrawlVector (having been created by
+// acquiement) and fills out their properties.
+void fill_gizmo_properties(CrawlVector& gizmos)
+{
+    // Shuffle all props
+    vector<gizmo_prop_type> rare_props;
+    for (int i = 0; i <= LAST_RARE_GIZMO; ++i)
+        rare_props.push_back(static_cast<gizmo_prop_type>(i));
+    shuffle_array(rare_props);
+
+    vector<gizmo_prop_type> common_props;
+    for (int i = LAST_RARE_GIZMO + 1; i < NUM_GIZMO_PROPS; ++i)
+        common_props.push_back(static_cast<gizmo_prop_type>(i));
+    shuffle_array(common_props);
+
+    int num = min(3, (int)gizmos.size());
+    for (int i = 0; i < num; ++i)
+    {
+        item_def& gizmo = gizmos[i].get_item();
+        _artefact_setup_prop_vectors(gizmo);
+        gizmo.flags |= ISFLAG_RANDART;
+
+        // Apply 1 rare prop and 2 common props to each gizmo.
+        // (We are gauranteed to see all common props each run, but only a few
+        // of the rare props)
+        _apply_gizmo_prop(gizmo, rare_props[i]);
+        _apply_gizmo_prop(gizmo, common_props[i * 2]);
+        _apply_gizmo_prop(gizmo, common_props[i * 2 + 1]);
+    }
 }
 
 static void _make_faerie_armour(item_def &item)

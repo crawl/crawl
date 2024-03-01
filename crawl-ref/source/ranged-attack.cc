@@ -230,6 +230,8 @@ bool ranged_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
+    maybe_trigger_autodazzler();
+
     return true;
 }
 

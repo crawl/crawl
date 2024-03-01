@@ -836,6 +836,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_STAVES,
+    OBJ_GIZMOS,
 #if TAG_MAJOR_VERSION == 34
     OBJ_RODS,
 #endif
@@ -1070,6 +1071,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_RUNES:      return "Runes of Zot";
         case OBJ_GEMS:       return "Ancient Gems";
         case OBJ_TALISMANS:  return "Talismans";
+        case OBJ_GIZMOS:     return "Gizmo";
         }
     }
     return "";

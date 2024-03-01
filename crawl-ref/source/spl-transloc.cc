@@ -631,8 +631,11 @@ static bool _displace_charge_blocker(actor& agent, coord_def pos)
         const coord_def orig = blocker->pos();
         coord_def targ;
         if (random_near_space(blocker, blocker->pos(), targ, true)
-            && blocker->blink_to(targ, true)) // XXX: should ignore constrict
+            && blocker->blink_to(targ, true))
         {
+            if (blocker->is_player())
+                mpr("You are hurled out of the way!");
+
             continue;
         }
 

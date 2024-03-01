@@ -301,6 +301,7 @@ enum tag_minor_version
     TAG_MINOR_GHOST_UMBRAS,        // Allow ghost demons to have umbras.
     TAG_MINOR_NO_CONSTRICTION_DUR, // Remove duration parameter from constriction tracking
     TAG_MINOR_NEW_DRACONIAN_BREATH, // Add charges to draconian breaths, revamp effects
+    TAG_MINOR_COGLIN_NO_JEWELRY,   // Remove all jewelry from Coglins
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -961,27 +961,30 @@ static void _describe_rev(status_info& inf)
     if (!you.has_mutation(MUT_WARMUP_STRIKES) || !you.rev_percent())
         return;
 
-    const int perc = you.rev_percent();
-    if (perc < 33)
+    const int tier = you.rev_tier();
+    switch (tier)
     {
-        inf.light_colour = BLUE;
-        inf.light_text   = "Rev";
-        inf.short_text   = "revving";
-        inf.long_text    = "You're starting to limber up.";
-        return;
+        case 1:
+            inf.light_colour = BLUE;
+            inf.light_text   = "Rev";
+            inf.short_text   = "revving";
+            inf.long_text    = "You're starting to limber up.";
+            return;
+
+        case 2:
+            inf.light_colour = LIGHTBLUE;
+            inf.light_text   = "Rev+";
+            inf.short_text   = "revving";
+            inf.long_text    = "You're limbering up.";
+            return;
+
+        case 3:
+            inf.light_colour = WHITE;
+            inf.light_text   = "Rev*";
+            inf.short_text   = "revved";
+            inf.long_text    = "You're fully limbered up.";
+            return;
     }
-    if (perc < 66)
-    {
-        inf.light_colour = LIGHTBLUE;
-        inf.light_text   = "Rev+";
-        inf.short_text   = "revving";
-        inf.long_text    = "You're limbering up.";
-        return;
-    }
-    inf.light_colour = WHITE;
-    inf.light_text   = "Rev*";
-    inf.short_text   = "revved";
-    inf.long_text    = "You're fully limbered up.";
 }
 
 static void _describe_regen(status_info& inf)

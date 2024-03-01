@@ -787,10 +787,10 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_NO_RINGS, 0, 1, mutflag::bad, true,
-  "no rings",
+{ MUT_NO_JEWELLERY, 0, 1, mutflag::bad, true,
+  "no jewellery",
 
-  {"Your grasper-arms cannot wear rings.",
+  {"You cannot equip rings or amulets.",
    "", ""},
   {"", "", ""},
   {"", "", ""},

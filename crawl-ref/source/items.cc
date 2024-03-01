@@ -1294,6 +1294,9 @@ string origin_desc(const item_def &item)
             case AQ_SCROLL:
                 desc += "You acquired " + _article_it(item) + " ";
                 break;
+            case AQ_INVENTED:
+                desc += "You invented it yourself ";
+                break;
 #if TAG_MAJOR_VERSION == 34
             case AQ_CARD_GENIE:
                 desc += "You drew the Genie ";
@@ -1759,10 +1762,10 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 // Currently only used for moving shop items into inventory, since they are
 // not in env.item. This doesn't work with partial pickup, because that requires
 // an env.item slot...
-bool move_item_to_inv(item_def& item)
+bool move_item_to_inv(item_def& item, bool quiet)
 {
     bool junk;
-    return _put_item_in_inv(item, item.quantity, false, junk);
+    return _put_item_in_inv(item, item.quantity, quiet, junk);
 }
 
 /**
@@ -2544,6 +2547,12 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (!_check_dangerous_drop(item))
         return false;
+
+    if (item_dropped == you.equip[EQ_GIZMO])
+    {
+        mpr("That is permanently installed in your exoskeleton.");
+        return false;
+    }
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -3351,6 +3360,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_RUNE_TYPES,
         NUM_TALISMANS,
         NUM_GEM_TYPES,
+        1,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 

@@ -63,6 +63,8 @@ enum ability_type
     // Talismans
     ABIL_BEGIN_UNTRANSFORM,
     ABIL_MUD_BREATH,
+    // Coglins
+    ABIL_INVENT_GIZMO,
 
     // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 
