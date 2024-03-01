@@ -2038,8 +2038,8 @@ static string _armour_ac_ev_sub_change_description(const item_def &item)
 
     description.reserve(100);
 
-    description += "\n\nIf you switch to wearing this armour,"
-                        " your AC would ";
+    description += "\n\nIf you switch to wearing this armour:"
+                        "\nYour AC would ";
 
     int you_ac_with_this_item =
                  you.armour_class_with_one_sub(item);
@@ -2047,7 +2047,7 @@ static string _armour_ac_ev_sub_change_description(const item_def &item)
     description += _describe_point_diff(you.armour_class(),
                                         you_ac_with_this_item);
 
-    description += " and your EV would ";
+    description += ".\nYour EV would ";
     description += _describe_point_diff(you.evasion(true),
                                         you.evasion_with_specific_armour(item));
 
@@ -2060,8 +2060,8 @@ static string _armour_ac_ev_remove_change_description(const item_def &item)
 {
     string description;
 
-    description += "\n\nIf you remove this armour,"
-                        " your AC would ";
+    description += "\n\nIf you remove this armour:"
+                        "\nYour AC would ";
 
     int you_ac_without_item =
                  you.armour_class_with_one_removal(item);
@@ -2069,7 +2069,7 @@ static string _armour_ac_ev_remove_change_description(const item_def &item)
     description += _describe_point_diff(you.armour_class(),
                                         you_ac_without_item);
 
-    description += " and your EV would ";
+    description += ".\nYour EV would ";
     description += _describe_point_diff(you.evasion(true),
                                         you.evasion_without_specific_armour(item));
 
