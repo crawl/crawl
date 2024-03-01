@@ -61,3 +61,6 @@ bool enchant_armour(item_def &arm, bool quiet);
 void prompt_inscribe_item();
 
 bool has_drunken_brawl_targets();
+
+string item_equip_verb(const item_def& item);
+string item_unequip_verb(const item_def& item);
