@@ -864,8 +864,8 @@ public:
     int adjusted_shield_penalty(int scale = 1) const;
 
     // Calculates total permanent EV if the player was/wasn't wearing a given item
-    int evasion_with_specific_armour(const item_def& new_armour) const;
-    int evasion_without_specific_armour(const item_def& armour_to_remove) const;
+    int evasion_with_specific_item(const item_def& new_item) const;
+    int evasion_without_specific_item(const item_def& item_to_remove) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,

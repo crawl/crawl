@@ -1019,6 +1019,12 @@ int player::wearing(equipment_type slot, int sub_type) const
                 ret += (slot == EQ_RINGS_PLUS ? item->plus : 1);
             }
         }
+        // XXX: Also check EV preview slot
+        if ((item = slot_item(static_cast<equipment_type>(EQ_PREVIEW_RING)))
+            && item->sub_type == sub_type)
+        {
+            ret += (slot == EQ_RINGS_PLUS ? item->plus : 1);
+        }
         break;
 
     case EQ_ALL_ARMOUR:
@@ -6562,7 +6568,7 @@ int player::evasion(bool ignore_temporary, const actor* act) const
 
 // What would our natural EV be if we wore a given piece of armour instead of
 // whatever might be in that slot currently (if anything)?
-int player::evasion_with_specific_armour(const item_def& new_armour) const
+int player::evasion_with_specific_item(const item_def& new_item) const
 {
     // Since there are a lot of things which can affect the calculation of EV,
     // including artifact properties on either the item we're equipped or the
@@ -6572,14 +6578,23 @@ int player::evasion_with_specific_armour(const item_def& new_armour) const
     // As we edit the item links directly, this should be invisible to the
     // player, bypass normal equip/unequip routines, and have no side-effects.
 
-    // Save reference to whatever the player currently has equipped in this slot.
-    equipment_type slot = get_armour_slot(new_armour);
-    short old_armour = you.equip[slot];
+    // Figure out where this item should be equipped and save a reference to
+    // whatever the player currently has equipped in this slot (if anything).
+    equipment_type slot = get_item_slot(new_item);
 
-    // If the item we're comparing is already in the player's inventor, this is
+    // Since it's not reasonable to automatically determine *which* ring a
+    // previewed ring should replace, we opt to have it replace none instead,
+    // and simply give the total EV that would be gained from this item in a
+    // vaccuum.
+    if (slot == EQ_RINGS)
+        slot = EQ_PREVIEW_RING;
+
+    short old_item = you.equip[slot];
+
+    // If the item we're comparing is already in the player's inventory, this is
     // simple.
-    if (in_inventory(new_armour))
-        you.equip[slot] = new_armour.link;
+    if (in_inventory(new_item))
+        you.equip[slot] = new_item.link;
     // If the item is not, things are more complicated. Since player equipment
     // is stored as an index into the player's internal inventory, any item we
     // want to try on *must* be in our inventory. So what we do is make a *copy*
@@ -6588,32 +6603,32 @@ int player::evasion_with_specific_armour(const item_def& new_armour) const
     // terminate iteration)
     else
     {
-        you.inv[ENDOFPACK] = new_armour;
+        you.inv[ENDOFPACK] = new_item;
         you.equip[slot] = ENDOFPACK;
     }
 
     // Now, simply calculate evasion without temporary boosts.
     int ret = evasion(true);
 
-    // Restore old armour and clear out any item copies, just in case.
-    you.equip[slot] = old_armour;
+    // Restore old item and clear out any item copies, just in case.
+    you.equip[slot] = old_item;
     you.inv[ENDOFPACK].clear();
 
     return ret;
 }
 
-int player::evasion_without_specific_armour(const item_def& armour_to_remove) const
+int player::evasion_without_specific_item(const item_def& item_to_remove) const
 {
-    equipment_type slot = get_armour_slot(armour_to_remove);
+    int slot = get_equip_slot(&item_to_remove);
 
-    // Verify that the armour is currently equipped
+    // Verify that the item is currently equipped
     // (or this function will give bogus info)
-    ASSERT(you.equip[slot] == armour_to_remove.link);
+    ASSERT(slot != -1);
 
     // Briefly remove item, calculate EV, then put it back on
     you.equip[slot] = -1;
     int ret = evasion(true);
-    you.equip[slot] = armour_to_remove.link;
+    you.equip[slot] = item_to_remove.link;
 
     return ret;
 }

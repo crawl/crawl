@@ -1824,6 +1824,122 @@ static string _describe_weapon_brand(const item_def &item)
     }
 }
 
+static string _describe_point_change(int points)
+{
+    string point_diff_description;
+
+    point_diff_description += make_stringf("%s by %d",
+                                           points > 0 ? "increase" : "decrease",
+                                           abs(points));
+
+    return point_diff_description;
+}
+
+static string _describe_point_diff(int original,
+                                   int changed)
+{
+    string description;
+
+    int difference = changed - original;
+
+    if (difference == 0)
+        return "remain unchanged";
+
+    description += _describe_point_change(difference);
+    description += " (";
+    description += to_string(original);
+    description += " -> ";
+    description += to_string(changed);
+    description += ")";
+
+    return description;
+}
+
+static string _equip_type_name(const item_def &item)
+{
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (jewellery_is_amulet(item))
+            return "amulet";
+        else
+            return "ring";
+    }
+
+    return base_type_string(item.base_type);
+}
+
+static string _equipment_switchto_string(const item_def &item)
+{
+    if (item.base_type == OBJ_WEAPONS)
+        return "wielding";
+    // Not always the same verb used elsewhere, but "switch putting on" sounds weird
+    else
+        return "wearing";
+}
+
+static string _equipment_ac_ev_change_description(const item_def &item, bool remove = false)
+{
+    // First, test if there is any EV change at all.
+    const int cur_ev = you.evasion(true);
+    const int new_ev = remove ? you.evasion_without_specific_item(item)
+                              : you.evasion_with_specific_item(item);
+
+    // If we're previewing non-armour and there is no EV change, print no
+    // extra description at all (since almost all items of these types will
+    // change nothing)
+    if (cur_ev == new_ev && item.base_type != OBJ_ARMOUR)
+        return "";
+
+    string description;
+    description.reserve(100);
+    description = "\n\n";
+
+    if (remove)
+    {
+        description += "If you " + item_unequip_verb(item) + " this "
+                        + _equip_type_name(item) + ":";
+    }
+    else if (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item))
+        description += "If you were wearing this ring:";
+    else if (item.base_type == OBJ_WEAPONS && you.has_mutation(MUT_WIELD_OFFHAND))
+        description += "If you switch to wielding this weapon in your main hand:";
+    else
+    {
+        description += "If you switch to " + _equipment_switchto_string(item) + " this "
+                        + _equip_type_name(item) + ":";
+    }
+
+    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND)
+    {
+        description += "\nYour AC would ";
+
+        const int new_ac = remove ? you.armour_class_with_one_removal(item)
+                                  : you.armour_class_with_one_sub(item);
+        description += _describe_point_diff(you.armour_class(), new_ac) + ".";
+    }
+
+    description += "\nYour EV would " + _describe_point_diff(cur_ev, new_ev) + ".";
+
+    return description;
+}
+
+static bool _you_are_wearing_item(const item_def &item)
+{
+    return get_equip_slot(&item) != EQ_NONE;
+}
+
+static string _equipment_ac_ev_change(const item_def &item)
+{
+    string description;
+
+    if (!_you_are_wearing_item(item))
+        description = _equipment_ac_ev_change_description(item);
+    else
+        description = _equipment_ac_ev_change_description(item, true);
+
+    return description;
+}
+
 static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 {
     string description;
@@ -1855,6 +1971,9 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
+
+    if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
+        description += _equipment_ac_ev_change(item);
 
     if (verbose)
     {
@@ -1999,100 +2118,6 @@ static string _warlock_mirror_reflect_desc()
     return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
            "% chance to reflect attacks against your willpower and other "
            "normally unblockable effects.";
-}
-
-static string _describe_point_change(int points)
-{
-    string point_diff_description;
-
-    point_diff_description += make_stringf("%s by %d",
-                                           points > 0 ? "increase" : "decrease",
-                                           abs(points));
-
-    return point_diff_description;
-}
-
-static string _describe_point_diff(int original,
-                                   int changed)
-{
-    string description;
-
-    int difference = changed - original;
-
-    if (difference == 0)
-        return "remain unchanged";
-
-    description += _describe_point_change(difference);
-    description += " (";
-    description += to_string(original);
-    description += " -> ";
-    description += to_string(changed);
-    description += ")";
-
-    return description;
-}
-
-static string _armour_ac_ev_sub_change_description(const item_def &item)
-{
-    string description;
-
-    description.reserve(100);
-
-    description += "\n\nIf you switch to wearing this armour:"
-                        "\nYour AC would ";
-
-    int you_ac_with_this_item =
-                 you.armour_class_with_one_sub(item);
-
-    description += _describe_point_diff(you.armour_class(),
-                                        you_ac_with_this_item);
-
-    description += ".\nYour EV would ";
-    description += _describe_point_diff(you.evasion(true),
-                                        you.evasion_with_specific_armour(item));
-
-    description += ".";
-
-    return description;
-}
-
-static string _armour_ac_ev_remove_change_description(const item_def &item)
-{
-    string description;
-
-    description += "\n\nIf you remove this armour:"
-                        "\nYour AC would ";
-
-    int you_ac_without_item =
-                 you.armour_class_with_one_removal(item);
-
-    description += _describe_point_diff(you.armour_class(),
-                                        you_ac_without_item);
-
-    description += ".\nYour EV would ";
-    description += _describe_point_diff(you.evasion(true),
-                                        you.evasion_without_specific_armour(item));
-
-    description += ".";
-
-    return description;
-}
-
-static bool _you_are_wearing_item(const item_def &item)
-{
-    return get_equip_slot(&item) != EQ_NONE;
-}
-
-static string _armour_ac_ev_change(const item_def &item)
-{
-    string description;
-
-    if (!_you_are_wearing_item(item))
-        description = _armour_ac_ev_sub_change_description(item);
-    else
-        description = _armour_ac_ev_remove_change_description(item);
-
-    return description;
 }
 
 static const char* _item_ego_desc(special_armour_type ego)
@@ -2292,10 +2317,9 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     if (verbose
         && crawl_state.need_save
         && can_wear_armour(item, false, true)
-        && item_ident(item, ISFLAG_KNOW_PLUSES)
-        && !is_offhand(item))
+        && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _armour_ac_ev_change(item);
+        description += _equipment_ac_ev_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2567,6 +2591,15 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
+
+    if (verbose
+        && crawl_state.need_save
+        && !you.has_mutation(MUT_NO_JEWELLERY)
+        && item_ident(item, ISFLAG_KNOW_PROPERTIES)
+        && (item.sub_type != RING_EVASION || is_artefact(item)))
+    {
+        description += _equipment_ac_ev_change(item);
+    }
 
     return description;
 }

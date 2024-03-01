@@ -29,6 +29,8 @@ enum equipment_type
     EQ_RING_AMULET,
     EQ_LAST_JEWELLERY = EQ_RING_AMULET,
     EQ_GIZMO,
+    // Slot for 'equip preview' for rings - not a real equipment slot
+    EQ_PREVIEW_RING,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
