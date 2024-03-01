@@ -2675,7 +2675,8 @@ bool bolt::found_player() const
     const bool needs_fuzz = is_tracer
             && !YOU_KILL(thrower)
             && !can_see_invis && you.invisible()
-            && (!agent() || !agent()->as_monster()->friendly())
+            && (!agent()
+                || agent()->is_monster() && !agent()->as_monster()->friendly())
             // No point in fuzzing to a position that could never be hit.
             && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
