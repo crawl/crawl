@@ -1408,7 +1408,7 @@ static void _monster_add_energy(monster& mons)
 
 static coord_def _confused_move_dir(monster *mons)
 {
-    coord_def conf_mov = coord_def();
+    coord_def conf_mov;
     int pfound = 0;
     for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         if (mons->can_pass_through(*ai) && one_chance_in(++pfound))
@@ -1655,7 +1655,7 @@ void handle_monster_move(monster* mons)
     if (!entry)
         return;
 
-    coord_def mmov = coord_def();
+    coord_def mmov;
 
     const bool disabled = crawl_state.disables[DIS_MON_ACT]
                           && _unfriendly_or_impaired(*mons);
@@ -1923,9 +1923,10 @@ void handle_monster_move(monster* mons)
     if (_mons_take_special_action(*mons, old_energy))
         return;
 
+    const coord_def new_pos = mons->pos() + mmov;
     if (!mons->caught())
     {
-        if (mons->pos() + mmov == you.pos())
+        if (new_pos == you.pos())
         {
             ASSERT(!crawl_state.game_is_arena());
 
@@ -1963,7 +1964,7 @@ void handle_monster_move(monster* mons)
         }
 
         // See if we move into (and fight) an unfriendly monster.
-        monster* targ = monster_at(mons->pos() + mmov);
+        monster* targ = monster_at(new_pos);
 
         //If a tentacle owner is attempting to move into an adjacent
         //segment, kill the segment and adjust connectivity data.
@@ -2004,7 +2005,7 @@ void handle_monster_move(monster* mons)
         }
         else if (mons->behaviour == BEH_WITHDRAW
                  && ((targ && targ != mons && targ->friendly())
-                      || (you.pos() == mons->pos() + mmov)))
+                      || (you.pos() == new_pos)))
         {
             // Don't count turns spent blocked by friendly creatures
             // (or the player) as an indication that we're stuck
@@ -3075,7 +3076,7 @@ static void _find_good_alternate_move(monster* mons, coord_def& delta,
             else
             {
                 // If we can cut firewood there, it's still not a good move,
-                // but update mmov so we can fall back to it.
+                // but update delta so we can fall back to it.
                 monster* targ = monster_at(mons->pos() + mon_compass[newdir]);
                 const bool retreating = mons_is_retreating(*mons);
 
@@ -3494,7 +3495,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
         delta.reset();
     }
 
-    // Let's not even bother with this if mmov is zero.
+    // Let's not even bother with this if we're standing still.
     if (delta.origin() && !mons->confused())
         return false;
 
@@ -3725,10 +3726,10 @@ static bool _monster_move(monster* mons, coord_def& delta)
     }
 
     // This handles the chance for the monster to hit itself.
-    // n.b. this is reachable by hitting another monster and having mmov.reset()
+    // n.b. this is reachable by hitting another monster and having delta.reset()
     // called. I'm taking this as a sort of intentional slapstick effect and
     // leaving it in place. (It's also reachable in a few other rare cases
-    // where mmov.reset() is called.)
+    // where delta.reset() is called.)
     if (delta.x || delta.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(*mons, delta);
 
