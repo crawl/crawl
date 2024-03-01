@@ -1323,10 +1323,10 @@ int player_mp_regen()
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
 
-    if (you.rev_percent() >= FULL_REV_PERCENT
-        && you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
     {
-        regen_amount += 80;
+        const static int rev_bonus[] = {0, 20, 40, 80};
+        regen_amount += rev_bonus[you.rev_tier()];
     }
 
     if (have_passive(passive_t::jelly_regen))
@@ -6498,10 +6498,10 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
             AC += _meek_bonus() * scale;
     }
 
-    if (rev_percent() >= FULL_REV_PERCENT
-        && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
+    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
     {
-        AC += 500;
+        const static int rev_bonus[] = {0, 200, 400, 500};
+        AC += rev_bonus[you.rev_tier()];
     }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
@@ -8393,6 +8393,19 @@ int player::rev_percent() const
     if (!you.props.exists(REV_PERCENT_KEY))
         return 0;
     return you.props[REV_PERCENT_KEY].get_int();
+}
+
+int player::rev_tier() const
+{
+    const int rev = rev_percent();
+    if (rev >= FULL_REV_PERCENT)
+        return 3;
+    else if (rev >= FULL_REV_PERCENT / 2)
+        return 2;
+    else if (rev > 0)
+        return 1;
+
+    return 0;
 }
 
 void player::rev_down(int dur)

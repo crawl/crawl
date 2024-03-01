@@ -2601,8 +2601,8 @@ static string _describe_gizmo(const item_def &item)
         switch (item.brand)
         {
             case SPGIZMO_MANAREV:
-                ret += "Your magic regeneration is greatly increased while "
-                       "fully Revved.\n";
+                ret += "Your magic regeneration increases greatly based on how "
+                       "Revved you are.\n";
                 break;
 
             case SPGIZMO_GADGETEER:
@@ -2611,8 +2611,8 @@ static string _describe_gizmo(const item_def &item)
                 break;
 
             case SPGIZMO_PARRYREV:
-                ret += "While fully Revved, you have +5 AC and your attacks may "
-                       "knock an enemy's weapon away.\n";
+                ret += "Your AC increases as you Rev (up to +5) and while "
+                       "fully Revved, your attacks may disarm enemies.\n";
                 break;
 
             case SPGIZMO_AUTODAZZLE:

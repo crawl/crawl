@@ -892,6 +892,7 @@ public:
     void be_agile(int pow);
 
     int rev_percent() const;
+    int rev_tier() const;
     void rev_up(int time_taken);
     void rev_down(int time_taken);
 
