@@ -96,18 +96,21 @@ void wizard_create_spec_object_by_name()
 
 void wizard_create_spec_object()
 {
-    string title = "Which item class (ESC to exit)?";
-    vector<WizardEntry> options =
+    vector<WizardEntry> options;
+    object_class_type list[] =
     {
-        {')', "weapons"}, {'(', "missiles"}, {'[', "armour"}, {'/', "wands"},
-        {'?', "scrolls"}, {'=', "jewellery"}, {'!', "potions"}, {':', "books"},
-        {'|', "staves"}, {'}', "miscellany"}, {'%', "talismans"},
-        {'X', "corpses"}, {'$', "gold"}, {'0', "the Orb"}
+        OBJ_WEAPONS, OBJ_MISSILES, OBJ_ARMOUR, OBJ_WANDS, OBJ_SCROLLS,
+        OBJ_JEWELLERY, OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_MISCELLANY,
+        OBJ_TALISMANS, OBJ_CORPSES, OBJ_GOLD, OBJ_ORBS
     };
-    auto menu = WizardMenu(title, options);
-    object_class_type class_wanted = item_class_by_sym(menu.run());
-    if (NUM_OBJECT_CLASSES == class_wanted)
+    char c = 'a';
+    for (auto typ : list)
+        options.emplace_back(WizardEntry(c++, item_class_name(typ), typ));
+    auto menu = WizardMenu("Which item class (ESC to exit)?", options,
+                           OBJ_UNASSIGNED);
+    if (!menu.run(true))
         return;
+    auto class_wanted = static_cast<object_class_type>(menu.result());
 
     // Allocate an item to play with.
     int thing_created = get_mitm_slot();
