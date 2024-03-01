@@ -442,6 +442,19 @@ function c_message(text, channel) end
 -- @function c_choose_okawaru_armour
 -- @treturn int An index between 1 and the number of offered items.
 
+--- Coglin gizmo hook.
+--
+-- This hooks can be defined to execute lua when a coglin's Invent Gizmo
+-- ability is used.
+--
+-- The hook should call @{items.acquirement_items} with an argument of 4
+-- to get an array of @{items.Item} representations of the offered items. If it
+-- returns a valid index in this array, the given item will be acquired without
+-- the usual acquirement menu.
+--
+-- @function c_choose_coglin_gizmo
+-- @treturn int An index between 1 and the number of offered items.
+
 -- Identify scroll hook.
 --
 -- This hook can be defined to execute lua when an identify scroll is read. If
