@@ -887,30 +887,26 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static operation_types _item_to_oper(item_def *target)
+static operation_types _item_type_to_oper(object_class_type type)
 {
-    if (!target)
-        return OPER_WIELD; // unwield
-    switch (target->base_type)
+    switch (type)
     {
-    case OBJ_WANDS:
-    case OBJ_TALISMANS:
-    case OBJ_MISCELLANY: return OPER_EVOKE;
-    case OBJ_POTIONS:    return OPER_QUAFF;
-    case OBJ_SCROLLS:    return OPER_READ;
-    case OBJ_ARMOUR:     return OPER_WEAR;
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:     return OPER_WIELD;
-    case OBJ_JEWELLERY:  return OPER_PUTON;
-    default:             return OPER_NONE;
+        case OBJ_WANDS:
+        case OBJ_TALISMANS:
+        case OBJ_MISCELLANY: return OPER_EVOKE;
+        case OBJ_POTIONS:    return OPER_QUAFF;
+        case OBJ_SCROLLS:    return OPER_READ;
+        case OBJ_ARMOUR:     return OPER_WEAR;
+        case OBJ_WEAPONS:
+        case OBJ_STAVES:     return OPER_WIELD;
+        case OBJ_JEWELLERY:  return OPER_PUTON;
+        default:             return OPER_NONE;
     }
 }
 
-static operation_types _item_to_removal(item_def *target)
+static operation_types _item_type_to_remove_oper(object_class_type type)
 {
-    if (!target)
-        return OPER_NONE;
-    switch (target->base_type)
+    switch (type)
     {
     case OBJ_ARMOUR:    return OPER_TAKEOFF;
     case OBJ_WEAPONS:
@@ -920,10 +916,36 @@ static operation_types _item_to_removal(item_def *target)
     }
 }
 
+static operation_types _item_to_oper(item_def *target)
+{
+    if (!target)
+        return OPER_WIELD; // unwield
+    else
+        return _item_type_to_oper(target->base_type);
+}
+
+static operation_types _item_to_removal(item_def *target)
+{
+    if (!target)
+        return OPER_NONE;
+    else
+        return _item_type_to_remove_oper(target->base_type);
+}
+
 static bool _equip_oper(operation_types oper)
 {
     const auto gen = generalize_oper(oper);
     return gen == OPER_EQUIP || gen == OPER_UNEQUIP;
+}
+
+string item_equip_verb(const item_def& item)
+{
+    return _oper_name(_item_type_to_oper(item.base_type));
+}
+
+string item_unequip_verb(const item_def& item)
+{
+    return _oper_name(_item_type_to_remove_oper(item.base_type));
 }
 
 static bool _can_generically_use_armour(bool wear=true)
