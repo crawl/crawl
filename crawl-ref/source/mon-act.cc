@@ -3099,7 +3099,9 @@ static bool _may_cutdown(monster* mons, monster* targ)
 static void _find_good_alternate_move(monster* mons, coord_def& delta,
                                       const move_array& good_move)
 {
-    const coord_def target = mons->behaviour == BEH_STICK && !mons->is_travelling() ? you.pos()
+    const coord_def target = mons->behaviour == BEH_STICK && !mons->is_travelling()
+        && !(mons->foe != MHITYOU && adjacent(mons->position, you.pos())
+            && adjacent(mons->target, you.pos())) ? you.pos()
                                                      : mons->firing_pos.zero() ? mons->target
                                                      : mons->firing_pos;
     const int current_distance = distance2(mons->pos(), target);
