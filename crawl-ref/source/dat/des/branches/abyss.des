@@ -1556,8 +1556,8 @@ ENDMAP
 NAME:  evilmike_abyss_rune_siren_acolytes
 TAGS:  abyss_rune unrand patrolling no_pool_fixup
 # They really should have bend space instead of blink / other.
-MONS:   occultist hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-        tile:mons_mad_acolyte_of_lugonu \
+MONS:   occultist god:Lugonu hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des \
+        col:lightgreen tile:mons_mad_acolyte_of_lugonu \
         spells:smiting.20.priest;malign_gateway.20.priest;\
                blink.10.priest;blink_other.10.priest;\
                invisibility.10.priest ; \
