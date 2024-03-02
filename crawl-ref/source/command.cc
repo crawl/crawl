@@ -350,7 +350,8 @@ void list_jewellery()
                  (i == EQ_RING_SIX)    ? "6th ring" :
                  (i == EQ_RING_SEVEN)  ? "7th ring" :
                  (i == EQ_RING_EIGHT)  ? "8th ring" :
-                 (i == EQ_RING_AMULET) ? "Amulet ring"
+                 (i == EQ_RING_AMULET) ? "Amulet ring" :
+                 (i == EQ_GIZMO)       ? "Gizmo"
                                        : "unknown";
 
         string item;
