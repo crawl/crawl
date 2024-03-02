@@ -4936,6 +4936,8 @@ string get_weapon_name(const item_def &item, bool full_name)
     if (is_artefact(item))
         return it_name;
 
+    ASSERT(item.props.exists(WEAPON_NAME_KEY));
+
     const string name = item.props[WEAPON_NAME_KEY].get_string();
 
     // For non-artefacts, get the names we gave them.

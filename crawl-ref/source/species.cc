@@ -820,7 +820,7 @@ void change_species_to(species_type sp)
             {
                 // Coglins' wielded non-offhand weapons need names. Without
                 // them, wielding a non-offhand weapon, changing species to
-                // coglin, and then trying to unwield that weapon will crash.
+                // coglin, and then trying to unwield that weapon will assert.
                 maybe_name_weapon(you.inv[you.equip[i]], true);
             }
 
