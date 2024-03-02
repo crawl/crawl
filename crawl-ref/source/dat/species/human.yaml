@@ -1,5 +1,5 @@
 enum: SP_HUMAN
-monster: MONS_HUMAN
+monster: MONS_BOGGART
 name: Human
 difficulty: Intermediate
 difficulty_priority: 100
@@ -25,3 +25,4 @@ recommended_jobs:
 mutations:
   1:
     MUT_EXPLORE_REGEN: 1
+    MUT_LUCKY: 1

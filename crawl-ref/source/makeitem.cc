@@ -200,7 +200,7 @@ static bool _weapon_disallows_randart(int sub_type)
 // Return whether we made an artefact.
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
-                                      int agent)
+                                      int agent, bool lucky)
 {
     if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
         || force_randart)
@@ -232,7 +232,9 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             return false;
 
         // Mean enchantment +5.
-        item.plus = 12 - biased_random2(10,2);
+        const int plus_start = lucky ? 16 : 12;
+        item.plus = plus_start - biased_random2(7,2);
+
         item.plus -= biased_random2(7,2);
         item.plus -= biased_random2(7,2);
 
@@ -240,7 +242,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
-        make_item_randart(item);
+        make_item_randart(item, false, lucky);
 
         return true;
     }
@@ -404,7 +406,7 @@ void set_artefact_brand(item_def &item, int brand)
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = NO_AGENT)
+                                  int agent = NO_AGENT, bool lucky = false)
 {
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
@@ -421,7 +423,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_weapon_artefact(item, force_type, 0, true, agent)
+            if (_try_make_weapon_artefact(item, force_type, 0, true, agent, lucky)
                 && is_artefact(item))
             {
                 if (ego > SPWPN_NORMAL)
@@ -444,12 +446,25 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     // If we make the unique roll, no further generation necessary.
     if (allow_uniques
-        && _try_make_weapon_artefact(item, force_type, item_level, false, agent))
+        && _try_make_weapon_artefact(item, force_type, item_level, false, agent, lucky))
     {
         return;
     }
 
     ASSERT(!is_artefact(item));
+
+    // For normal weapons, being lucky upgrades the item level. For negative
+    // item_level the actual value has no effect, so just set to 0 some of the
+    // time.
+    const bool lucky_negative_negative_ilvl = coinflip();
+    if (lucky)
+    {
+        rng_generator rng(RNG_GAMEPLAY);
+        if (item_level >= 0)
+            item_level = (item_level + 2) * 2;
+        else if (lucky_negative_negative_ilvl)
+            item_level = 0;
+    }
 
     // Artefacts handled, let's make a normal item.
     const bool force_good = item_level >= ISPEC_GIFT;
@@ -679,7 +694,8 @@ static void _generate_missile_item(item_def& item, int force_type,
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
-                                      int item_level, int agent)
+                                      int item_level, int agent,
+                                      bool lucky)
 {
     const bool force_randart = item_level == ISPEC_RANDART;
     if (!force_randart && (item_level <= 0
@@ -717,6 +733,12 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         if (one_chance_in(6))
             item.plus -= random2(max_plus + 6);
 
+
+        // Always calculate so we don't affect number of rng draws.
+        const int lucky_bonus = random2(max_plus);
+        if (lucky)
+            item.plus += random2(lucky_bonus) / 2;
+
         // On body armour, an enchantment of less than 0 is never viable.
         // On aux armour & shields, going below -2 is likewise unviable.
         // (You think you're better than the hat of the Alchemist?)
@@ -728,7 +750,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
     // Needs to be done after the barding chance else we get randart
     // bardings named Boots of xy.
-    make_item_randart(item);
+    make_item_randart(item, false ,lucky);
 
     return true;
 }
@@ -983,7 +1005,7 @@ static armour_type _get_random_armour_type(int item_level)
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = NO_AGENT)
+                                  int agent = NO_AGENT, bool lucky = false)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1002,7 +1024,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, item_level, agent)
+            if (_try_make_armour_artefact(item, force_type, item_level, agent, lucky),
                 && is_artefact(item))
             {
                 // borrowed from similar code for weapons -- is this really the
@@ -1028,7 +1050,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 
     if (allow_uniques
-        && _try_make_armour_artefact(item, force_type, item_level, agent))
+        && _try_make_armour_artefact(item, force_type, item_level, agent, lucky))
     {
         return;
     }
@@ -1148,7 +1170,7 @@ bool is_high_tier_wand(int type)
     }
 }
 
-void generate_wand_item(item_def& item, int force_type, int item_level)
+void generate_wand_item(item_def& item, int force_type, int item_level, bool lucky)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1158,6 +1180,12 @@ void generate_wand_item(item_def& item, int force_type, int item_level)
     // Add wand charges and ensure we have at least one charge.
     const int max_charges = wand_charge_value(item.sub_type, item_level);
     item.charges = 1 + random2avg(max_charges, 2);
+
+    // Always calculate so we don't affect number of rng draws.
+    const int lucky_charge_bonus = random2avg(
+        wand_charge_value(item.sub_type), 5);
+    if (lucky)
+        item.charges += lucky_charge_bonus;
 
     // Don't let monsters pickup early high-tier wands
     if (item_level < 2 && is_high_tier_wand(item.sub_type))
@@ -1184,7 +1212,7 @@ static int _potion_weight(item_rarity_type rarity)
 }
 
 static void _generate_potion_item(item_def& item, int force_type,
-                                  int item_level)
+                                  int item_level, bool lucky)
 {
     item.quantity = 1;
 
@@ -1193,6 +1221,11 @@ static void _generate_potion_item(item_def& item, int force_type,
 
     if (one_chance_in(25))
         item.quantity++;
+
+    // Always calculate so we don't affect number of rng draws.
+    const int lucky_extra_potion = one_chance_in(3);
+    if (lucky && lucky_extra_potion)
+        item.quantity++;    
 
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1239,7 +1272,7 @@ static int _scroll_weight(item_rarity_type rarity)
 }
 
 static void _generate_scroll_item(item_def& item, int force_type,
-                                  int item_level, int agent)
+                                  int item_level, int agent, bool lucky)
 {
     // determine sub_type:
     if (force_type != OBJ_RANDOM)
@@ -1284,8 +1317,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
     }
 
     item.quantity = random_choose_weighted(46, 1,
-                                            1, 2,
-                                            1, 3);
+                                            1 + lucky, 2,
+                                            1 + lucky, 3);
 
     item.plus = 0;
 
@@ -1820,6 +1853,20 @@ int items(bool allow_uniques,
 
     const bool force_good = item_level >= ISPEC_GIFT;
 
+    // Luck makes items better. We have to take some care to not break seeding:
+    // * Don't change the number of RNG draws. So always choose the same base
+    //   type, and make any luck-specific rolls either use the dungeon RNG or
+    //   always roll even if the player isn't lucky. (The latter is preferred
+    //   so in a seeded game your "luck" is the same.)
+    // * Never upgrade an item into an unrand. This potentially affects future
+    //   dungeon generation.
+    //
+    // Because every item type generation code is unique, some of them can
+    // simply accept an increased item_level. But others need more intricate
+    // modification.
+    const bool lucky = you.get_mutation_level(MUT_LUCKY);
+    const int modified_item_level = lucky ? (item_level + 2) * 2 : item_level;
+
     if (force_ego != 0)
         allow_uniques = false;
 
@@ -1905,28 +1952,28 @@ int items(bool allow_uniques,
     {
     case OBJ_WEAPONS:
         _generate_weapon_item(item, allow_uniques, force_type, item_level,
-                              agent);
+                              agent, lucky);
         break;
 
     case OBJ_MISSILES:
-        _generate_missile_item(item, force_type, item_level);
+        _generate_missile_item(item, force_type, modified_item_level);
         break;
 
     case OBJ_ARMOUR:
         _generate_armour_item(item, allow_uniques, force_type, item_level,
-                              agent);
+                              agent, lucky);
         break;
 
     case OBJ_WANDS:
-        generate_wand_item(item, force_type, item_level);
+        generate_wand_item(item, force_type, item_level, lucky);
         break;
 
     case OBJ_POTIONS:
-        _generate_potion_item(item, force_type, item_level);
+        _generate_potion_item(item, force_type, item_level, lucky);
         break;
 
     case OBJ_SCROLLS:
-        _generate_scroll_item(item, force_type, item_level, agent);
+        _generate_scroll_item(item, force_type, item_level, agent, lucky);
         break;
 
     case OBJ_JEWELLERY:
@@ -1935,7 +1982,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_BOOKS:
-        _generate_book_item(item, allow_uniques, force_type, item_level);
+        _generate_book_item(item, allow_uniques, force_type, modified_item_level);
         break;
 
     case OBJ_STAVES:
@@ -1976,6 +2023,9 @@ int items(bool allow_uniques,
         {
             item.quantity = 1 + random2avg(19, 2);
             item.quantity += random2(item_level);
+        }
+        if (lucky) {
+            item.quantity *= 2;
         }
         break;
     }

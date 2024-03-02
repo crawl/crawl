@@ -2538,6 +2538,13 @@ static const mutation_def mut_data[] =
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
 },
+
+{ MUT_LUCKY, 0, 1, mutflag::good, false, "lucky",
+
+   {"You are lucky and find better items.", "", ""},
+   {"You feel luckier", "", ""},
+   {"You feel unlucky", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
