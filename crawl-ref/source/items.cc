@@ -4916,8 +4916,6 @@ bool maybe_identify_base_type(item_def &item)
     return true;
 }
 
-#define WEAPON_NAME_KEY "weapon_name"
-
 void name_weapon(item_def &item)
 {
     string name = getRandMonNameString("steelspirit");
