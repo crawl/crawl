@@ -818,6 +818,9 @@ void change_species_to(species_type sp)
             if (i == EQ_WEAPON && you.inv[you.equip[i]].base_type == OBJ_WEAPONS
                 && sp == SP_COGLIN)
             {
+                // Coglins' wielded non-offhand weapons need names. Without
+                // them, wielding a non-offhand weapon, changing species to
+                // coglin, and then trying to unwield that weapon will crash.
                 maybe_name_weapon(you.inv[you.equip[i]], true);
             }
 
