@@ -1608,7 +1608,7 @@ static void _pre_monster_move(monster& mons)
 // Handle weird stuff like spells/special abilities, item use,
 // reaching, swooping, etc.
 // Returns true iff the monster used up their turn.
-static bool _mons_take_special_action(monster &mons, int old_energy)
+static bool _mons_take_special_action(monster &mons, int old_energy, bool can_move)
 {
     if ((mons.asleep() || mons_is_wandering(mons))
         // Slime creatures can split while wandering or resting.
@@ -1654,8 +1654,8 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         }
     }
 
-    // do not do any of the below if you can move
-    if (mons.behaviour == BEH_STICK && mon_can_move_to_pos(&mons, mmov))
+    // do not do any of the below if you can move while sticking
+    if (mons.behaviour == BEH_STICK && can_move)
         return false;
 
     if (_handle_wand(mons))
@@ -1972,7 +1972,7 @@ void handle_monster_move(monster* mons)
     if (mons_stores_tracking_data(*mons))
         mons->props[MMOV_KEY].get_coord() = mmov;
 
-    if (_mons_take_special_action(*mons, old_energy))
+    if (_mons_take_special_action(*mons, old_energy, mon_can_move_to_pos(mons, mmov)))
         return;
 
     const coord_def new_pos = mons->pos() + mmov;
@@ -3100,7 +3100,7 @@ static void _find_good_alternate_move(monster* mons, coord_def& delta,
                                       const move_array& good_move)
 {
     const coord_def target = mons->behaviour == BEH_STICK && !mons->is_travelling()
-        && !(mons->foe != MHITYOU && adjacent(mons->position, you.pos())
+        && !(mons->foe != MHITYOU && adjacent(mons->pos(), you.pos())
             && adjacent(mons->target, you.pos())) ? you.pos()
                                                      : mons->firing_pos.zero() ? mons->target
                                                      : mons->firing_pos;
@@ -3614,7 +3614,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
     // Don't bother if we're sticking and there is an enemy and
     // we're adjacent to the player and our target isn't adjacent to the player
     if (!(mons->behaviour == BEH_STICK && mons->foe != MHITYOU
-        && adjacent(mons->position, you.pos()) && !adjacent(mons->target, you.pos()))
+        && adjacent(mons->pos(), you.pos()) && !adjacent(mons->target, you.pos()))
         && good_move[delta.x + 1][delta.y + 1] == false)
     {
         _find_good_alternate_move(mons, delta, good_move);
