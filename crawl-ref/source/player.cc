@@ -848,6 +848,10 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_GIZMO:
         return you.species == SP_COGLIN;
 
+    // A dummy slot, not meant to put anything in outside of EV previews
+    case EQ_PREVIEW_RING:
+        return false;
+
     default:
         break;
     }
