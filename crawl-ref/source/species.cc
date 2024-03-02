@@ -4,7 +4,6 @@
 #include "mpr.h"
 #include "species.h"
 
-#include "artefact.h"
 #include "branch.h"
 #include "item-prop.h"
 #include "items.h"
@@ -819,13 +818,7 @@ void change_species_to(species_type sp)
             if (i == EQ_WEAPON && you.inv[you.equip[i]].base_type == OBJ_WEAPONS
                 && sp == SP_COGLIN)
             {
-                if (!is_artefact(you.inv[you.equip[i]]))
-                {
-                    // If our wielded weapon doesn't have a name, give it one.
-                    const bool new_name = !you.inv[you.equip[i]].props.exists(WEAPON_NAME_KEY);
-                    if (new_name)
-                        name_weapon(you.inv[you.equip[i]]);
-                }
+                maybe_name_weapon(you.inv[you.equip[i]], true);
             }
 
             if (bool(!you_can_wear(static_cast<equipment_type>(i)))
