@@ -4945,13 +4945,16 @@ string get_weapon_name(const item_def &item, bool full_name)
     return it_name + " \"" + name + "\"";
 }
 
-void maybe_name_weapon(item_def &item)
+void maybe_name_weapon(item_def &item, bool silent)
 {
     const bool new_name = is_artefact(item)
                           || !item.props.exists(WEAPON_NAME_KEY);
 
     if (new_name)
         name_weapon(item);
+
+    if (silent)
+        return;
 
     string full_name = get_weapon_name(item, true);
 
