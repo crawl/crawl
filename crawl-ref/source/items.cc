@@ -4947,10 +4947,11 @@ string get_weapon_name(const item_def &item, bool full_name)
 
 void maybe_name_weapon(item_def &item, bool silent)
 {
-    const bool new_name = is_artefact(item)
+    const bool has_own_name = is_artefact(item);
+    const bool new_name = has_own_name
                           || !item.props.exists(WEAPON_NAME_KEY);
 
-    if (new_name && !is_artefact(item))
+    if (new_name && !has_own_name)
         name_weapon(item);
 
     if (silent)
