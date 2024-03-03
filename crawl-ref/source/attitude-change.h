@@ -13,6 +13,8 @@ enum class conv_t
     sight,
     deathbed,
     deathbed_follower,
+    vengeance,
+    vengeance_follower,
     resurrection,
 };
 void beogh_convert_orc(monster* orc, conv_t conv);
