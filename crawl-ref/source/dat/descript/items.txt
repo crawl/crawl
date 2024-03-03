@@ -1334,21 +1334,6 @@ spear
 A hunting weapon consisting of a wooden shaft with a pointed metal head
 fastened on one end.
 %%%%
-spellforging talisman
-
-A clear glass dewar of molten mana. Transforms the user's flesh to a substance
-equal parts mana and metal, held together by constant concentration.
-The spellforged flesh will provide more intelligent users with stronger
-armouring, but their intellect is fully occupied and does not help reduce spell
-failure.
-Their spellforged flesh is also an excellent conductor for mana,
-expending up to 2 MP per attack to empower their blows to a degree dependant on
-shapeshifting skill.
-
-However, an inexpert shapeshifter will find their evasion hindered by the
-transformed flesh, and regardless of skill this form will meld body armour and
-gloves.
-%%%%
 staff of air
 
 A staff that increases the power of air spells cast by its wielder, and
