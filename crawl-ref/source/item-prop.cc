@@ -1524,7 +1524,7 @@ int armour_acq_weight(const armour_type armour)
 
 equipment_type get_armour_slot(const item_def &item)
 {
-    if (you.has_mutation(MUT_WIELD_OFFHAND) && is_weapon(item))
+    if (you.has_mutation(MUT_WIELD_OFFHAND) && item.base_type != OBJ_ARMOUR)
         return EQ_OFFHAND;
 
     ASSERT(item.base_type == OBJ_ARMOUR);
