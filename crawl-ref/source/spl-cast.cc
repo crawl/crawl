@@ -406,9 +406,7 @@ int raw_spell_fail(spell_type spell)
     // scale by 6, which I guess was chosen because it seems to work.
     // realistic range for spellpower: -6 to -366 (before scale -1 to -61)
     chance -= _skill_power(spell) * 6 / 100;
-    //Spellforged form disregards int for spell fail
-    if (you.form != transformation::spellforged)
-        chance -= (you.intel() * 2); // realistic range: -2 to -70
+    chance -= (you.intel() * 2); // realistic range: -2 to -70
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
     chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
