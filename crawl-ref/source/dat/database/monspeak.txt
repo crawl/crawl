@@ -8222,9 +8222,9 @@ beogh_converted_orc_reaction_battle_follower
 
 @beogh_converted_orc_reaction_battle@
 %%%%
-beogh_converted_orc_reaction_speech_follower
+beogh_converted_orc_speech_battle_follower
 
-@beogh_converted_orc_reaction_speech@
+@beogh_converted_orc_speech_battle@
 %%%%
 #######################################################
 # Or if they weren't converted because you did this already.
