@@ -661,6 +661,7 @@ ENDMAP
 # basket of spiders trap.
 NAME:   spiders_nest_spider_trap
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
+NSUBST: z = 1:z / *:*
 KMONS:  M = fungus
 {{
  local tm = TriggerableFunction:new{func="callback.spider_nest_trap"}
