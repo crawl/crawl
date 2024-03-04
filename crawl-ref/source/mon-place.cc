@@ -841,13 +841,17 @@ monster* get_free_monster()
     return nullptr;
 }
 
-void mons_add_blame(monster* mon, const string &blame_string)
+// TODO: make mon a reference
+void mons_add_blame(monster* mon, const string &blame_string, bool at_front)
 {
     const bool exists = mon->props.exists(BLAME_KEY);
     CrawlStoreValue& blame = mon->props[BLAME_KEY];
     if (!exists)
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
-    blame.get_vector().push_back(blame_string);
+    if (at_front)
+        blame.get_vector().insert(0, blame_string);
+    else
+        blame.get_vector().push_back(blame_string);
 }
 
 static void _place_twister_clouds(monster *mon)

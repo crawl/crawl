@@ -117,7 +117,7 @@ void setup_vault_mon_list();
 
 monster* get_free_monster();
 
-void mons_add_blame(monster* mon, const string &blame_string);
+void mons_add_blame(monster* mon, const string &blame_string, bool at_front = false);
 
 void debug_bands();
 
