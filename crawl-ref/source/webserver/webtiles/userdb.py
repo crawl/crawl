@@ -403,6 +403,19 @@ def change_email(user_id, email):  # type: (str, str) -> Optional[str]
 
     return None
 
+def remove_account(user_id):
+    user_info = get_user_by_id(user_id)
+
+    if not user_info:
+        return "Invalid account!"
+
+    with user_db as db:
+        db.execute("DELETE FROM dglusers WHERE id=?", (user_info.id,))
+
+        db.execute("DELETE FROM recovery_tokens WHERE user_id=?", (user_info.id,))
+
+    return None
+
 def set_ban(username, banned=True):
     user_info = get_user_info(username)
 

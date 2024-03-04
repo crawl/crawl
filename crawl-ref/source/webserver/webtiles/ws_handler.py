@@ -334,6 +334,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "change_password": self.change_password,
             "forgot_password": self.forgot_password,
             "reset_password": self.reset_password,
+            "remove_account": self.remove_account,
             "go_lobby": self.go_lobby,
             "go_admin": self.go_admin,
             "get_rc": self.get_rc,
@@ -1145,6 +1146,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.logger.info("Failed to update password for user %s: %s",
                                  username, error)
             self.send_message("reset_password_fail", reason = error)
+
+    def remove_account(self):
+        if self.username is None:
+            self.send_message("remove_account_fail",
+                    reason="You need to log in to removed your account.")
+            return
+
+        error = userdb.remove_account(self.user_id)
+        if error is None:
+            self.logger.info("User %s removed_account.", self.username)
+            self.send_message("remove_account_done")
+        else:
+            self.logger.info("Failed to remove_account for %s: %s", self.username, error)
+            self.send_message("remove_account_fail", reason = error)
 
     def go_lobby(self, message=None):
         if not config.get('dgl_mode'):
