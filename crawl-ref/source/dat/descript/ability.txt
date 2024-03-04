@@ -53,6 +53,7 @@ area and last longer.
 Breathe Fire ability
 
 Breathes a blast of fire at a targeted creature.
+%%%%
 Breathe Poison Gas ability
 
 Breathes a blast of poison gas at a targeted creature.
