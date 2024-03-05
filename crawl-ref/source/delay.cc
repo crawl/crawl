@@ -527,10 +527,15 @@ void BaseRunDelay::handle()
 
     command_type cmd = CMD_NO_CMD;
 
-    if ((want_move() && you.confused())
-        || !(unsafe_once && first_move) && !i_feel_safe(true, want_move())
-        || you.running.is_rest()
-           && (!can_rest_here(true) || regeneration_is_inhibited()))
+    if (want_move() && you.confused())
+    {
+        mprf("You're confused, stopping %s.",
+             you.running.runmode_name().c_str());
+        stop_running();
+    }
+    else if (!(unsafe_once && first_move) && !i_feel_safe(true, want_move())
+            || you.running.is_rest()
+               && (!can_rest_here(true) || regeneration_is_inhibited()))
     {
         stop_running();
     }
