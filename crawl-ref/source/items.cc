@@ -3537,6 +3537,7 @@ colour_t item_def::missile_colour() const
         case MI_ARROW:         // removed as an item, but don't crash
         case MI_BOLT:          // removed as an item, but don't crash
         case MI_SLING_BULLET:  // removed as an item, but don't crash
+        case MI_SLUG:          // never existed as an item
         case MI_DART:
             return WHITE;
         case MI_JAVELIN:
