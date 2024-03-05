@@ -162,7 +162,8 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
     if (old_dog && !you.can_see(*old_dog))
     {
-        mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
+        if (!is_tabcasting())
+            mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
         return spret::abort;
     }
 
@@ -230,7 +231,8 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
     if (armour == nullptr)
     {
         // I don't think we can ever reach this line, but let's be safe.
-        mpr("You aren't wearing any armour!");
+        if (!is_tabcasting())
+            mpr("You aren't wearing any armour!");
         return spret::abort;
     }
 
@@ -697,7 +699,8 @@ bool summon_holy_warrior(int pow, bool punish)
  **/
 static bool _fail_tukimas()
 {
-    mprf("You can't see a target there!");
+    if (!is_tabcasting())
+        mprf("You can't see a target there!");
     return false; // Waste the turn - no anti-invis tech
 }
 
@@ -1465,12 +1468,14 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     if (m == nullptr)
     {
         fail_check();
-        mpr("An evil force gathers, but it quickly dissipates.");
+        if (!is_tabcasting())
+            mpr("An evil force gathers, but it quickly dissipates.");
         return spret::success; // still losing a turn
     }
     else if (m->wont_attack())
     {
-        mpr("You cannot haunt those who bear you no hostility.");
+        if (!is_tabcasting())
+            mpr("You cannot haunt those who bear you no hostility.");
         return spret::abort;
     }
 
@@ -2247,6 +2252,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_MARTYRS_KNELL,            { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
+    { SPELL_SIMULACRUM,               { 5, 5 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -2417,6 +2423,37 @@ int count_summons(const actor *summoner, spell_type spell)
     }
 
     return count;
+}
+
+// XXX: This entire method feels like a hack. But normal summon cap functions
+// won't work because simulacra don't use ENCH_ABJ, and even if it DID work, it
+// would probably make the simulacra disappear in a puff of smoke instead of
+// collapsing in the normal fashion.
+int count_expire_player_simulacra(bool expire, bool include_ice_blocks)
+{
+    vector <monster*> simul;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        // We're looking only for simulacra that are friendly to the player and
+        // created by the Sculpt Simulacrum spell.
+        // If include_ice_blocks is true, we also count ice blocks.
+        if (mi->friendly() && ((mi->type == MONS_SIMULACRUM
+            && mi->has_ench(ENCH_SUMMON)
+            && mi->get_ench(ENCH_SUMMON).degree == SPELL_SIMULACRUM)
+            || (include_ice_blocks && mi->type == MONS_BLOCK_OF_ICE
+             && mi->has_ench(ENCH_SIMULACRUM_SCULPTING))))
+        {
+            simul.push_back(*mi);
+        }
+    }
+
+    // If we have too many, expire the oldest.
+    // (Maybe it should use some other logic, like weakest or injured?)
+    const int size = static_cast<int>(simul.size());
+    if (expire && size >= summons_limit(SPELL_SIMULACRUM, true))
+        simul[0]->del_ench(ENCH_FAKE_ABJURATION);
+
+    return size;
 }
 
 static bool _create_briar_patch(coord_def& target)
@@ -2721,7 +2758,8 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlig
 
     if (agent.is_player() && !see_space)
     {
-        mpr("There is not enough space to conjure foxfire!");
+        if (!is_tabcasting())
+            mpr("There is not enough space to conjure foxfire!");
         return spret::abort;
     }
 
@@ -2835,7 +2873,8 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     ray_def ray;
     if (!find_ray(agent.pos(), targ, ray, opc_solid) || !ray.advance())
     {
-        mpr("There's something in the way.");
+        if (!is_tabcasting())
+            mpr("There's something in the way.");
         return spret::abort;
     }
     const coord_def pos = ray.pos();
@@ -2843,7 +2882,8 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     // For unseen invisble enemies
     if (actor_at(pos))
     {
-        mpr("Something unseen is already there!");
+        if (!is_tabcasting())
+            mpr("Something unseen is already there!");
         return spret::success;
     }
 
@@ -2897,7 +2937,8 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     if (!mons || !you.can_see(*mons))
     {
         fail_check();
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
+        if (!is_tabcasting())
+            canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
         // order to prevent locating invisible monsters.
         return spret::success;
@@ -2905,7 +2946,8 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
 
     if (!mons_can_be_spectralised(*mons))
     {
-        mpr("You can't make simulacra of that!");
+        if (!is_tabcasting())
+            mpr("You can't make simulacra of that!");
         return spret::abort;
     }
 

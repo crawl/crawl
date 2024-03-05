@@ -170,6 +170,7 @@ public:
     virtual int get_ac_bonus(bool max = false) const;
     virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
     virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
+    virtual int get_tabcast_chance(bool /*base*/ = false, spell_type /*base*/ = SPELL_NO_SPELL) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -199,6 +200,8 @@ public:
 
     /// flat str bonus
     const int str_mod;
+    /// flat str bonus
+    const int int_mod;
     /// flat dex bonus
     const int dex_mod;
 

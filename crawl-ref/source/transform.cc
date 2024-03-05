@@ -115,7 +115,7 @@ Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       duration(fe.duration),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
-      str_mod(fe.str_mod), dex_mod(fe.dex_mod),
+      str_mod(fe.str_mod), int_mod(fe.int_mod), dex_mod(fe.dex_mod),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
@@ -1042,6 +1042,80 @@ public:
     }
 };
 
+class FormFiend : public Form
+{
+private:
+    FormFiend() : Form(transformation::fiend) { }
+    DISALLOW_COPY_AND_ASSIGN(FormFiend);
+public:
+    static const FormFiend &instance() { static FormFiend inst; return inst; }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(bool /*was_flying*/) const override
+    {
+        if (you.species == SP_DEMONSPAWN)
+            return "Your hatred against existence grows!";
+        return "You feel a hatred against all existence as your inner demon emerges!";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        if (you.species == SP_DEMONSPAWN)
+            return "Your hatred against existence wanes slightly.";
+        return "Your inner demon fades into your depths.";
+    }
+
+    bool can_offhand_punch() const override { return true; }
+
+    /**
+     * Chance to cast a spell on melee?
+     * Returns an int from 0-100
+     */
+    int get_tabcast_chance(bool get_max, spell_type spell) const override
+    {
+        spell = spell == SPELL_NO_SPELL ? you.tabcast_spell : spell;
+        int diff = spell_difficulty(spell);
+        //reduce cast chance of sandblast to compensate for the fact
+        //that its increased cast time is now instant
+        if (spell == SPELL_SANDBLAST)
+            diff++;
+
+        //base chance of 50, scaling up to 400 at max skill
+        //divided by 1 + spell level, capped at 100
+        const int scale = 100;
+        const int lvl = max(get_level(scale), min_skill * scale);
+        const int div = (max_skill - min_skill) * scale;
+        const int prop = get_max ? div : max(0, lvl - min_skill * scale);
+        return min(100, (scale + prop * scale * 3 / div)
+            / (1 + diff));
+    }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        string a = make_stringf("You %s %s",
+                        past_tense ? "were" : "are",
+                        get_transform_description().c_str());
+
+        if (you.tabcast_spell != SPELL_NO_SPELL)
+        {
+            a += make_stringf(" Your chance to cast %s with melee attacks %s %d%%.",
+                spell_title(you.tabcast_spell),
+                past_tense ? "was" : "is",
+                get_tabcast_chance(false, you.tabcast_spell));
+        }
+
+        return a;
+    }
+};
+
 #if TAG_MAJOR_VERSION == 34
 
 class FormHydra : public Form
@@ -1090,6 +1164,7 @@ static const Form* forms[] =
     &FormBeast::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
+    &FormFiend::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1496,11 +1571,13 @@ bool feat_dangerous_for_form(transformation which_trans,
 bool check_form_stat_safety(transformation new_form, bool quiet)
 {
     const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
+    const int int_mod = get_form(new_form)->int_mod - get_form()->int_mod;
     const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
 
     const bool bad_str = you.strength() > 0 && str_mod + you.strength() <= 0;
+    const bool bad_int = you.intel() > 0 && int_mod + you.intel() <= 0;
     const bool bad_dex = you.dex() > 0 && dex_mod + you.dex() <= 0;
-    if (!bad_str && !bad_dex)
+    if (!bad_str && !bad_int && !bad_dex)
         return true;
     if (quiet)
         return false;
@@ -1509,7 +1586,7 @@ bool check_form_stat_safety(transformation new_form, bool quiet)
                                  new_form == transformation::none
                                      ? "Turning back"
                                      : "Transforming",
-                                 bad_str ? "strength" : "dexterity");
+                                 bad_int ? "intelligence" : bad_str ? "strength" : "dexterity");
     if (yesno(prompt.c_str(), false, 'n'))
         return true;
 
@@ -1676,6 +1753,7 @@ static void _on_enter_form(transformation which_trans)
         }
         break;
 
+    case transformation::fiend:
     case transformation::death:
         you.redraw_status_lights = true;
         _print_death_brand_changes(you.weapon(), true);
@@ -1704,6 +1782,20 @@ static void _on_enter_form(transformation which_trans)
     default:
         break;
     }
+
+    if (which_trans == transformation::fiend)
+    {
+        item_def* const weapon = you.slot_item(EQ_WEAPON, true);
+        if (weapon != nullptr)
+        {
+            if (you.hands_reqd(*weapon) == HANDS_TWO)
+            {
+                mprf("You can no longer hold %s!",
+                     weapon->name(DESC_YOUR).c_str());
+                unequip_item(EQ_WEAPON);
+            }
+        }
+    }
 }
 
 void set_form(transformation which_trans, int dur)
@@ -1714,10 +1806,14 @@ void set_form(transformation which_trans, int dur)
     update_player_symbol();
 
     const int str_mod = get_form(which_trans)->str_mod;
+    const int int_mod = get_form(which_trans)->int_mod;
     const int dex_mod = get_form(which_trans)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
@@ -1734,6 +1830,7 @@ void set_form(transformation which_trans, int dur)
                                  && old_form == transformation::none;
     const bool scale_hp = !entering_default && !leaving_default;
     calc_hp(scale_hp);
+    calc_mp();
 
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
@@ -1923,10 +2020,14 @@ void untransform(bool skip_move)
     set_form(transformation::none, 0);
 
     const int str_mod = get_form(old_form)->str_mod;
+    const int int_mod = get_form(old_form)->int_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, -str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, -int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
@@ -1946,7 +2047,7 @@ void untransform(bool skip_move)
     }
     _unmeld_equipment(melded);
 
-    if (old_form == transformation::death)
+    if (old_form == transformation::death || old_form == transformation::fiend)
     {
         _print_death_brand_changes(you.weapon(), false);
         _print_death_brand_changes(you.offhand_weapon(), false);
@@ -2283,6 +2384,7 @@ void describe_talisman_form(transformation form_type, talisman_form_desc &d,
         break;
     }
     _maybe_add_prop(d.offenses, "Str", form->str_mod);
+    _maybe_add_prop(d.offenses, "Int", form->int_mod);
     _maybe_add_prop(d.offenses, "Dex", form->dex_mod);
 
    _pad_talisman_descs(d.skills);

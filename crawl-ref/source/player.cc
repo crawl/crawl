@@ -4181,8 +4181,12 @@ int get_real_mp(bool include_items)
     enp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
     enp /= 100;
 
-    if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
+    if (you.form == transformation::fiend
+        || (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC)))
+    {
         enp /= 3;
+    }
+
 
     enp = max(enp, 0);
 
@@ -5536,6 +5540,7 @@ player::player()
 
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
+    tabcast_spell = SPELL_NO_SPELL;
 
     // Non-saved UI state:
     prev_targ        = MHITNOT;
@@ -6677,6 +6682,8 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
         {
             holi = MH_NONLIVING;
         }
+        else if (f == transformation::fiend)
+            holi = MH_DEMONIC;
     }
 
     // Petrification takes precedence over base holiness and lich form
@@ -6692,7 +6699,8 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
 bool player::undead_or_demonic(bool temp) const
 {
     // This is only for TSO-related stuff, so demonspawn are included.
-    return undead_state(temp) || species == SP_DEMONSPAWN;
+    return undead_state(temp) || species == SP_DEMONSPAWN
+    || (temp && you.form == transformation::fiend);
 }
 
 bool player::evil() const

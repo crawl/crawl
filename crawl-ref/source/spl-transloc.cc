@@ -1528,8 +1528,11 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
 {
     if (player_in_branch(BRANCH_GAUNTLET))
     {
-        mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
+        if (!is_tabcasting())
+        {
+            mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
                 "opening a passage!");
+        }
         return spret::abort;
     }
 
@@ -1583,8 +1586,11 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         else
         {
             // XXX: bleh, dumb message
-            mpr("Creating a passage of Golubria requires sufficient empty "
-                "space.");
+            if (!is_tabcasting())
+            {
+                mpr("Creating a passage of Golubria requires sufficient empty "
+                    "space.");
+            }
         }
 
         return spret::abort;

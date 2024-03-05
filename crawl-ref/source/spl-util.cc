@@ -516,6 +516,9 @@ bool spell_is_direct_attack(spell_type spell)
 // not via an evocable or other odd source.
 int spell_mana(spell_type which_spell, bool real_spell)
 {
+    if (is_tabcasting())
+        return 0;
+
     const int level = _seekspell(which_spell)->level;
     if (real_spell && (you.duration[DUR_BRILLIANCE]
                        || player_equip_unrand(UNRAND_FOLLY)))

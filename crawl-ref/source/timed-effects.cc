@@ -63,6 +63,10 @@ static void _apply_contam_over_time()
     if (!you.duration[DUR_INVIS])
         added_contamination -= 75;
 
+    //Fiend form decontaminates you quicker
+    if (you.form == transformation::fiend)
+        added_contamination *= 3;
+
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
                                          BASELINE_DELAY);

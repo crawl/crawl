@@ -413,6 +413,8 @@ public:
 
     // The last spell cast by the player.
     spell_type last_cast_spell;
+    // Spell used by tabcasting
+    spell_type tabcast_spell;
     map<int,int> last_pickup;
     int last_unequip;
 

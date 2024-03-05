@@ -2482,6 +2482,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
             description += make_stringf(" (max %d)", max_contam_dam);
     }
     description += _maybe_desc_prop("Str", form->str_mod);
+    description += _maybe_desc_prop("Int", form->int_mod);
     description += _maybe_desc_prop("Dex", form->dex_mod);
 
     if (form_type == transformation::maw)
@@ -2499,6 +2500,17 @@ static string _describe_talisman_form(const item_def &item, bool monster)
         description += "\n\nBite:" + aux_attack_desc(UNAT_BITE, 1 + DRAGON_FANGS * 2);
         // Wrong if the player doesn't have muts melded and is e.g. an At:
         description += "\n\nTail slap:" + aux_attack_desc(UNAT_TAILSLAP);
+    }
+
+    if (form_type == transformation::fiend && you.tabcast_spell != SPELL_NO_SPELL)
+    {
+        //describe chance for spellcast on melee
+        const int chance = form->get_tabcast_chance();
+        const int maxchance = form->get_tabcast_chance(true);
+        description += make_stringf("\n%s chance: %d%%",
+            spell_title(you.tabcast_spell), chance);
+        if (chance != maxchance)
+            description += make_stringf(" (%d%% at max skill)", maxchance);
     }
 
     // TODO: show resists (find an example of this elsewhere) (remember to include holiness)
@@ -4458,13 +4470,20 @@ static string _player_spell_desc(spell_type spell)
                     << " supports the use of this spell.\n";
     }
 
+    if (you.form == transformation::fiend)
+    {
+        description << "Your chance to cast this spell with melee attacks is "
+                    << get_form(transformation::fiend)->get_tabcast_chance(false, spell)
+                    << "%.\n";
+    }
+
     if (!you_can_memorise(spell))
     {
         description << "\nYou cannot "
                     << (you.has_spell(spell) ? "cast" : "memorise")
                     << " this spell because "
                     << desc_cannot_memorise_reason(spell)
-                    << "\n";
+                    << "%.\n";
     }
     else if (casting_is_useless(spell, true))
     {
@@ -4480,7 +4499,6 @@ static string _player_spell_desc(spell_type spell)
                     << spell_uselessness_reason(spell, true, false)
                     << "\n";
     }
-
     return description.str();
 }
 

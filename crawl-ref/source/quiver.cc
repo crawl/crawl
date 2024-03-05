@@ -1183,6 +1183,13 @@ namespace quiver
             if (!is_valid())
                 return;
 
+            //don't allow tabcasting a spell by quivering it directly
+            if (is_tabcasting())
+            {
+                set_tabcast_spell(spell);
+                return;
+            }
+
             set_target(t);
 
             // don't do the range check check if doing manual firing.

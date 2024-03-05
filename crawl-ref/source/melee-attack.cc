@@ -255,6 +255,207 @@ bool melee_attack::handle_phase_attempted()
     return true;
 }
 
+
+
+static bool _find_tabcast_prism_target(dist &target)
+{
+    vector<coord_def> dests;
+
+    for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, false); ri; ++ri)
+    {
+        if (actor_at(*ri) || !in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
+static bool _find_tabcast_lrd_target(dist &target)
+{
+    vector<coord_def> dests;
+    
+    bolt tempbeam;
+    bool temp;
+
+    if (setup_fragmentation_beam(tempbeam, 0, &you,
+            target.target, true, nullptr, temp))
+    {
+        return true;
+    }
+    
+    for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
+    {
+        //never try to deconstruct yourself
+        if (*ri == you.pos())
+        {
+            continue;
+        }
+        
+        if (!setup_fragmentation_beam(tempbeam, 0, &you,
+            *ri, true, nullptr, temp))
+        {
+            continue;
+        }
+
+        //check to see if you can hit
+        if (grid_distance(*ri, target.target) > tempbeam.ex_size)
+            continue;
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
+static void _find_tabcast_boulder_target(dist &target)
+{
+    coord_def offset = target.target - you.pos();
+    offset.x = max(min(offset.x, 1), -1);
+    offset.y = max(min(offset.y, 1), -1);
+    target.target = you.pos() + offset;
+}
+
+static void _tabcast_spell(monster &m)
+{
+    const spell_type spell = you.tabcast_spell;
+
+    if (spell == SPELL_NO_SPELL || invalid_monster(&m)
+        || !you.attribute[ATTR_TABCAST_LIMIT])
+        return;
+
+    //some spells do nothing if the target is killed
+    //might even crash through an assert
+    switch (spell)
+    {
+    //this just doesn't work at all
+    case SPELL_PASSWALL:
+        return;
+    case SPELL_ELECTRIC_CHARGE:
+    case SPELL_AIRSTRIKE:
+    case SPELL_FREEZE:
+    case SPELL_SIMULACRUM:
+    case SPELL_VAMPIRIC_DRAINING:
+    case SPELL_DISPEL_UNDEAD:
+    case SPELL_KISS_OF_DEATH:
+    case SPELL_HAUNT:
+    case SPELL_MOMENTUM_STRIKE:
+    case SPELL_BECKONING:
+    //single target hexes
+    case SPELL_DIMENSIONAL_BULLSEYE:
+    case SPELL_SLOW:
+    case SPELL_HIBERNATION:
+    case SPELL_INNER_FLAME:
+    case SPELL_TUKIMAS_DANCE:
+    case SPELL_VIOLENT_UNRAVELLING:
+    case SPELL_ENFEEBLE:
+    case SPELL_CURSE_OF_AGONY:
+    case SPELL_PETRIFY:
+    case SPELL_NECROTISE:
+        if (!m.alive())
+            return;
+        break;
+    default:
+        break;
+    }
+
+    if (wait_spell_active(spell))
+    {
+        if (spell == SPELL_SEARING_RAY)
+        {
+            you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
+            you.props[SEARING_RAY_TARGET_KEY] = m.pos();
+        }
+        return;
+    }
+
+    const auto form = get_form(transformation::fiend);
+    if (!x_chance_in_y(form->get_tabcast_chance(), 100))
+        return;
+
+    you.attribute[ATTR_TABCAST_LIMIT]--;
+
+    dist target;
+    target.target = m.pos();
+    switch (spell)
+    {
+    case SPELL_ELECTRIC_CHARGE:
+    case SPELL_BECKONING:
+        if (adjacent(you.pos(), target.target))
+            return;
+        break;
+    case SPELL_SILENCE:
+        if (you.duration[DUR_SILENCE])
+            return;
+        break;
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (you.duration[DUR_ICY_ARMOUR])
+            return;
+        break;
+    case SPELL_JINXBITE:
+        if (you.duration[DUR_JINXBITE])
+            return;
+        break;
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        if (you.duration[DUR_TOXIC_RADIANCE])
+            return;
+        break;
+    case SPELL_FUGUE_OF_THE_FALLEN:
+        if (you.duration[DUR_FUGUE])
+            return;
+        break;
+    case SPELL_ANIMATE_DEAD:
+        if (you.duration[DUR_ANIMATE_DEAD])
+            return;
+        break;
+    case SPELL_CONFUSING_TOUCH:
+        if (you.duration[DUR_CONFUSING_TOUCH] || m.has_ench(ENCH_CONFUSION))
+            return;
+        break;
+    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_CALL_IMP:
+    case SPELL_SUMMON_ICE_BEAST:
+    case SPELL_ANIMATE_ARMOUR:
+    case SPELL_MONSTROUS_MENAGERIE:
+    case SPELL_SUMMON_CACTUS:
+    case SPELL_SUMMON_HYDRA:
+    case SPELL_SUMMON_MANA_VIPER:
+    case SPELL_SUMMON_BLAZEHEART_GOLEM:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_MARTYRS_KNELL:
+    case SPELL_HAUNT:
+        if (count_summons(&you, spell) >= summons_limit(spell, true))
+            return;
+        break;
+    case SPELL_SIMULACRUM:
+        if (count_expire_player_simulacra(false, true) >= summons_limit(spell, true))
+            return;
+        break;
+    case SPELL_FULMINANT_PRISM:
+        if (!_find_tabcast_prism_target(target))
+            return;
+        break;
+    case SPELL_LRD:
+        if (!_find_tabcast_lrd_target(target))
+            return;
+    case SPELL_BOULDER:
+        _find_tabcast_boulder_target(target);
+        break;
+    default:
+        break;
+    }
+    cast_a_spell(false, spell, &target);
+}
+
 bool melee_attack::handle_phase_dodged()
 {
     did_hit = false;
@@ -286,6 +487,12 @@ bool melee_attack::handle_phase_dodged()
         count_action(CACT_DODGE, DODGE_EVASION);
 
     maybe_trigger_jinxbite();
+
+    if (attacker->is_player() && you.form == transformation::fiend
+        && defender->is_monster() && !is_projected)
+    {
+        _tabcast_spell(*(defender->as_monster()));
+    }
 
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
@@ -578,6 +785,13 @@ bool melee_attack::handle_phase_hit()
         && defender->alive() && defender->is_monster())
     {
         _apply_flux_contam(*(defender->as_monster()));
+    }
+
+    // Spell autocasting for tabcasting form
+    if (attacker->is_player() && you.form == transformation::fiend
+        && defender->is_monster() && !is_projected)
+    {
+        _tabcast_spell(*(defender->as_monster()));
     }
 
     // Fireworks when using Serpent's Lash to kill.
@@ -1189,6 +1403,14 @@ bool melee_attack::attack()
     if (shield_blocked)
     {
         handle_phase_blocked();
+
+        // Spell autocasting for tabcasting form
+        if (attacker->is_player() && you.form == transformation::fiend
+            && defender->is_monster() && !is_projected)
+        {
+            _tabcast_spell(*(defender->as_monster()));
+        }
+
         maybe_riposte();
         if (!attacker->alive())
         {

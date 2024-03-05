@@ -145,3 +145,5 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
+bool is_tabcasting();
+void set_tabcast_spell(spell_type spell);

@@ -363,6 +363,23 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_ARM]     = 0;
         result.parts[TILEP_PART_CLOAK]   = 0;
         break;
+    case transformation::fiend:
+        switch (you.species)
+        {
+        default:         ch = TILEP_MONS_ICE_FIEND; break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+        result.parts[TILEP_PART_HAIR]    = 0;
+        result.parts[TILEP_PART_BEARD]   = 0;
+        result.parts[TILEP_PART_LEG]     = 0;
+
+        // fixme: these should show up, but look ugly with the lich tile
+        result.parts[TILEP_PART_HELM]    = 0;
+        result.parts[TILEP_PART_BOOTS]   = 0;
+        result.parts[TILEP_PART_BODY]    = 0;
+        result.parts[TILEP_PART_ARM]     = 0;
+        result.parts[TILEP_PART_CLOAK]   = 0;
+        break;
     default:
         // A monster tile is being used for the player.
         if (Options.tile_use_monster != MONS_0)

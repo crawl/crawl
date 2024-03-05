@@ -1388,6 +1388,10 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     if (noun.empty())
         return false;
 
+    //if tabcasting, abort silently
+    if (is_tabcasting())
+        return true;
+
     string prompt = make_stringf("Really %s while emitting a %s?",
                                  verb.c_str(), noun.c_str());
 

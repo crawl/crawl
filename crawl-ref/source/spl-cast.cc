@@ -634,7 +634,8 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()
+        && you.form != transformation::fiend)
     {
         if (!quiet)
             mpr("You cannot cast spells while unable to breathe!");
@@ -677,7 +678,7 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (silenced(you.pos()))
+    if (silenced(you.pos()) && you.form != transformation::fiend)
     {
         if (!quiet)
             mpr("You cannot cast spells when silenced!");
@@ -758,8 +759,11 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         return spret::abort;
     }
 
-    if (!can_cast_spells())
+    if (!can_cast_spells(is_tabcasting()))
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         crawl_state.zero_turns_taken();
         return spret::abort;
     }
@@ -875,10 +879,19 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         }
         else
             spell = get_spell_by_letter(keyin);
+
+        if (is_tabcasting())
+        {
+            set_tabcast_spell(spell);
+            return spret::abort;
+        }
     }
 
     if (spell == SPELL_NO_SPELL)
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         mpr("You don't know that spell.");
         crawl_state.zero_turns_taken();
         return spret::abort;
@@ -888,6 +901,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     const auto reason = casting_uselessness_reason(spell, true);
     if (!reason.empty())
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         mpr(reason);
         crawl_state.zero_turns_taken();
         return spret::abort;
@@ -913,6 +929,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     if (god_punishes_spell(spell, you.religion)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
+        if (is_tabcasting())
+            return spret::abort;
+
         // None currently dock just piety, right?
         if (!yesno("Casting this spell will place you under penance. "
                    "Really cast?", true, 'n'))
@@ -939,7 +958,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     if (cast_result == spret::abort
         || you.divine_exegesis && cast_result == spret::fail)
     {
-        if (cast_result == spret::abort)
+        if (cast_result == spret::abort && !is_tabcasting())
             crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
         refund_mp(cost);
@@ -962,10 +981,25 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
-    you.turn_is_over = true;
+    if (!is_tabcasting())
+        you.turn_is_over = true;
     alert_nearby_monsters();
 
     return cast_result;
+}
+
+void set_tabcast_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL || spell == you.tabcast_spell)
+    {
+        you.tabcast_spell = SPELL_NO_SPELL;
+        mpr("Your attacks no longer cast spells.");
+    }
+    else
+    {
+        you.tabcast_spell = spell;
+        mprf("Your attacks now cast %s.", spell_title(spell));
+    }
 }
 
 /**
@@ -1103,7 +1137,8 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
 
     if (!msg.empty())
     {
-        mpr(msg);
+        if (!is_tabcasting())
+            mpr(msg);
         return true;
     }
 
@@ -3045,4 +3080,9 @@ void do_demonic_magic(int pow, int rank)
         if (mons->check_willpower(&you, pow) <= 0)
             mons->paralyse(&you, random_range(2, 5));
     }
+}
+
+bool is_tabcasting()
+{
+    return you.form == transformation::fiend && !you.divine_exegesis;
 }

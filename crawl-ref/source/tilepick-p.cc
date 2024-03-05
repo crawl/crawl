@@ -472,6 +472,7 @@ tileidx_t tileidx_player()
     case transformation::statue:
     case transformation::death:
     case transformation::tree:
+    case transformation::fiend:
     // (so is storm form)
     case transformation::storm:
         break;

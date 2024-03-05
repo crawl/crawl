@@ -1014,7 +1014,7 @@ static bool _can_generically_use(operation_types oper)
         // can't differentiate between these two at this point
         if (!you_can_wear(EQ_RINGS, true) && !you_can_wear(EQ_AMULET, true))
         {
-            mprf(MSGCH_PROMPT, "You can't %s jewellery%s.",
+            mprf(MSGCH_PROMPT, "You can't %s jewellery %s.",
                 oper == OPER_PUTON ? "wear" : "remove",
                 you.has_mutation(MUT_NO_JEWELLERY) ? "" :  " in your present form");
             return false;
@@ -1318,12 +1318,20 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (!weapon)
         return true;
 
-    if (you.get_mutation_level(MUT_MISSING_HAND)
-            && you.hands_reqd(*weapon) == HANDS_TWO)
+    if (you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        SAY(mprf(MSGCH_PROMPT, "You can't wield that without your missing %s.",
-            species::arm_name(you.species).c_str()));
-        return false;
+        if (you.form == transformation::fiend)
+        {
+            SAY(mprf(MSGCH_PROMPT, "You can't wield that in your current form."));
+            return false;
+        }
+
+        if (you.get_mutation_level(MUT_MISSING_HAND))
+        {
+            SAY(mprf(MSGCH_PROMPT, "You can't wield that without your missing %s.",
+                species::arm_name(you.species).c_str()));
+            return false;
+        }
     }
 
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)

@@ -122,3 +122,4 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool f
 
 string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
+int count_expire_player_simulacra(bool expire = false, bool include_ice_blocks = false);

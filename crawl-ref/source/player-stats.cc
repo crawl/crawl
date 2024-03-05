@@ -358,6 +358,9 @@ static int _int_modifier(bool innate_only)
 
         // randarts of intelligence
         result += you.scan_artefacts(ARTP_INTELLIGENCE);
+
+        // form
+        result += get_form()->int_mod;
     }
 
     // mutations

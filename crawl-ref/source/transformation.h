@@ -35,6 +35,7 @@ enum class transformation
     beast,
     maw,
     flux,
+    fiend,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);
