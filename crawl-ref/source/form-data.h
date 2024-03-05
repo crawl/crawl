@@ -391,7 +391,9 @@ static const form_entry formdata[] =
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
     { { "artificial casting", "Your melee attacks have a chance to cast spells." },
-      { "", "Your magic capacity is greatly reduced." }
+      { "", "Your magic capacity is greatly reduced." },
+      { "", "You dissipate magical contamination at a faster rate." },
+      { "", "You are immune to damage from your own spells." }
     }
 },
 
