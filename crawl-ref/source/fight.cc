@@ -1236,6 +1236,8 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         mon_name = mon_name.substr(4); // strlen("the ")
     if (!starts_with(adj, "your"))
         adj = "the " + adj;
+    if (mons_is_hepliaklqana_ancestor(mon->type))
+	adj = "";
     mon_name = adj + mon_name;
     string verb;
     if (beam_attack)
