@@ -1026,7 +1026,7 @@ prototype talisman
 
 A slab inscribed with intricate circuitry and sprouting countless loose wires.
 Transforms one of the user's arms into a mass of magic cables which discharge
-spells uncontrollably. 
+spells uncontrollably.
 
 Each melee attack has a chance to cast a chosen spell without costing magic
 once per turn, with the chance rising with Shapeshifting skill but falling with
