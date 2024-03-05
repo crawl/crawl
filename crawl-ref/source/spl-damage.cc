@@ -777,7 +777,9 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             {
                 if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc,
                         nullptr, nullptr, is_tabcasting()))
+                {
                     return spret::abort;
+                }
 
                 fail_check();
             }
@@ -1664,7 +1666,9 @@ spret cast_shatter(int pow, bool fail)
     };
     if (stop_attack_prompt(hitfunc, "attack", vulnerable,
         nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
     const bool silence = silenced(you.pos());
@@ -3367,7 +3371,9 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
     // and let this blind through glass
     if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable,
             nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -3411,7 +3417,9 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect,
                 nullptr, nullptr, is_tabcasting()))
+        {
             return spret::abort;
+        }
 
         fail_check();
 
@@ -3597,7 +3605,9 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
 
     if (stop_attack_prompt(hitfunc, "unravel", vulnerable,
             nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -4384,7 +4394,9 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
     if (stop_attack_prompt(*hitfunc, "hailstorm", vulnerable,
             nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -4442,7 +4454,9 @@ spret cast_imb(int pow, bool fail)
 
     if (stop_attack_prompt(*hitfunc, "blast", vulnerable,
             nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 

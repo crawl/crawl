@@ -329,7 +329,9 @@ static void _tabcast_spell(monster &m)
 
     if (spell == SPELL_NO_SPELL || invalid_monster(&m)
         || !you.attribute[ATTR_TABCAST_LIMIT])
+    {
         return;
+    }
 
     //some spells do nothing if the target is killed
     //might even crash through an assert
