@@ -3497,6 +3497,22 @@ static void _display_damage_rating(const item_def *weapon)
     return;
 }
 
+/**
+ * Print a message listing current chance to tabcast a spell
+ */
+static void _display_tabcast_chance()
+{
+    if (you.form != transformation::fiend)
+        return;
+
+    if (you.tabcast_spell != SPELL_NO_SPELL)
+    {
+        mpr(make_stringf("Your chance to cast %s with melee attacks is %d%%.",
+            spell_title(you.tabcast_spell),
+            get_form(transformation::fiend)->get_tabcast_chance()));
+    }
+}
+
 // forward declaration
 static string _constriction_description();
 
@@ -3535,6 +3551,7 @@ void display_char_status()
     _display_damage_rating(you.weapon());
     if (offhand)
         _display_damage_rating(offhand);
+    _display_tabcast_chance();
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()

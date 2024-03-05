@@ -1094,26 +1094,6 @@ public:
         return min(100, (scale + prop * scale * 3 / div)
             / (1 + diff));
     }
-
-    /**
-     * @ description
-     */
-    string get_description(bool past_tense) const override
-    {
-        string a = make_stringf("You %s %s",
-                        past_tense ? "were" : "are",
-                        get_transform_description().c_str());
-
-        if (you.tabcast_spell != SPELL_NO_SPELL)
-        {
-            a += make_stringf(" Your chance to cast %s with melee attacks %s %d%%.",
-                spell_title(you.tabcast_spell),
-                past_tense ? "was" : "is",
-                get_tabcast_chance(false, you.tabcast_spell));
-        }
-
-        return a;
-    }
 };
 
 #if TAG_MAJOR_VERSION == 34
