@@ -112,8 +112,10 @@ djinni_purple_m
 coglin COGLIN
 %rim 1
 formicid FORMICID
-vine_stalker_f VINE_STALKER
-vine_stalker_m
+vine_stalker_green_f VINE_STALKER
+vine_stalker_green_m
+vine_stalker_red_f
+vine_stalker_red_m
 
 # draconians
 draconian DRACONIAN DRACONIAN_FIRST
