@@ -1169,7 +1169,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             would_cause_penance = true;
 
         }
-        else if (mon->angered_by_attacks())
+        else
         {
             adj = "your ";
 
