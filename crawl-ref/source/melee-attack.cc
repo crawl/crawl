@@ -360,6 +360,7 @@ static void _tabcast_spell(monster &m)
     case SPELL_CURSE_OF_AGONY:
     case SPELL_PETRIFY:
     case SPELL_NECROTISE:
+    case SPELL_TELEPORT_OTHER:
         if (!m.alive())
             return;
         break;
