@@ -1365,8 +1365,16 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
 
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
+        if (katana_defender)
+        {
+            if (you.offhand_weapon() && is_unrandom_artefact(*you.offhand_weapon(), UNRAND_AUTUMN_KATANA))
+                atk.set_weapon(you.offhand_weapon(), true);
+            // Only the katana can attack through space!
+            atk.attack();
+        }
         // Only rev up once, no matter how many targets you hit.
-        atk.launch_attack_set(i == 0);
+        else
+            atk.launch_attack_set(i == 0);
 
         if (i == 0)
             you.time_taken = you.attack_delay().roll();
