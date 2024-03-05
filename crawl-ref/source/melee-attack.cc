@@ -326,7 +326,8 @@ static void _tabcast_spell(monster &m)
     const spell_type spell = you.tabcast_spell;
 
     if (spell == SPELL_NO_SPELL || invalid_monster(&m)
-        || !you.attribute[ATTR_TABCAST_LIMIT])
+        || !you.attribute[ATTR_TABCAST_LIMIT]
+        || mons_is_firewood(m))
     {
         return;
     }
