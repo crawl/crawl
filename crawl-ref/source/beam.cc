@@ -3099,7 +3099,7 @@ bool bolt::harmless_to_player() const
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
     if (agent() && agent()->is_player()
-        && you.form == transformation::fiend
+        && you.form == transformation::conduit
         && is_player_book_spell(origin_spell))
     {
         return true;
@@ -4309,7 +4309,7 @@ bool bolt::ignores_player() const
         return true;
 
     if (agent() && agent()->is_player()
-        && you.form == transformation::fiend
+        && you.form == transformation::conduit
         && is_player_book_spell(origin_spell))
     {
         return true;

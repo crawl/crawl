@@ -1284,7 +1284,7 @@ static void _input()
         you.turn_is_over = false;
 #endif
 
-    //reset tabcasting limit for fiend form
+    //reset tabcasting limit for conduit form
     //this is here so it gets reset even when using serpent's lash
     you.attribute[ATTR_TABCAST_LIMIT] = 1;
 

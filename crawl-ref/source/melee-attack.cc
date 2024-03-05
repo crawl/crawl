@@ -378,7 +378,7 @@ static void _tabcast_spell(monster &m)
         return;
     }
 
-    const auto form = get_form(transformation::fiend);
+    const auto form = get_form(transformation::conduit);
     if (!x_chance_in_y(form->get_tabcast_chance(), 100))
         return;
 
@@ -490,7 +490,7 @@ bool melee_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
-    if (attacker->is_player() && you.form == transformation::fiend
+    if (attacker->is_player() && you.form == transformation::conduit
         && defender->is_monster() && !is_projected)
     {
         _tabcast_spell(*(defender->as_monster()));
@@ -790,7 +790,7 @@ bool melee_attack::handle_phase_hit()
     }
 
     // Spell autocasting for tabcasting form
-    if (attacker->is_player() && you.form == transformation::fiend
+    if (attacker->is_player() && you.form == transformation::conduit
         && defender->is_monster() && !is_projected)
     {
         _tabcast_spell(*(defender->as_monster()));
@@ -1407,7 +1407,7 @@ bool melee_attack::attack()
         handle_phase_blocked();
 
         // Spell autocasting for tabcasting form
-        if (attacker->is_player() && you.form == transformation::fiend
+        if (attacker->is_player() && you.form == transformation::conduit
             && defender->is_monster() && !is_projected)
         {
             _tabcast_spell(*(defender->as_monster()));

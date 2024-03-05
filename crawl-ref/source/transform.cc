@@ -1042,22 +1042,29 @@ public:
     }
 };
 
-class FormFiend : public Form
+class FormConduit : public Form
 {
 private:
-    FormFiend() : Form(transformation::fiend) { }
-    DISALLOW_COPY_AND_ASSIGN(FormFiend);
+    FormConduit() : Form(transformation::conduit) { }
+    DISALLOW_COPY_AND_ASSIGN(FormConduit);
 public:
-    static const FormFiend &instance() { static FormFiend inst; return inst; }
+    static const FormConduit &instance() { static FormConduit inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your arm %s replaced by magic cables.",
+                            past_tense ? "was" : "is");
+    }
 
     /**
      * Get a message for transforming into this form.
      */
     string transform_message(bool /*was_flying*/) const override
     {
-        if (you.species == SP_DEMONSPAWN)
-            return "Your hatred against existence grows!";
-        return "You feel a hatred against all existence as your inner demon emerges!";
+        return "Cables sprout from where your arm used to be!";
     }
 
     /**
@@ -1065,9 +1072,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        if (you.species == SP_DEMONSPAWN)
-            return "Your hatred against existence wanes slightly.";
-        return "Your inner demon fades into your depths.";
+        return "Your arm returns to normal as the cables withdraw.";
     }
 
     bool can_offhand_punch() const override { return true; }
@@ -1144,7 +1149,7 @@ static const Form* forms[] =
     &FormBeast::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
-    &FormFiend::instance(),
+    &FormConduit::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1733,7 +1738,6 @@ static void _on_enter_form(transformation which_trans)
         }
         break;
 
-    case transformation::fiend:
     case transformation::death:
         you.redraw_status_lights = true;
         _print_death_brand_changes(you.weapon(), true);
@@ -1763,7 +1767,7 @@ static void _on_enter_form(transformation which_trans)
         break;
     }
 
-    if (which_trans == transformation::fiend)
+    if (which_trans == transformation::conduit)
     {
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
         if (weapon != nullptr)
@@ -2027,7 +2031,7 @@ void untransform(bool skip_move)
     }
     _unmeld_equipment(melded);
 
-    if (old_form == transformation::death || old_form == transformation::fiend)
+    if (old_form == transformation::death)
     {
         _print_death_brand_changes(you.weapon(), false);
         _print_death_brand_changes(you.offhand_weapon(), false);

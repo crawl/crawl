@@ -635,7 +635,7 @@ bool can_cast_spells(bool quiet)
     }
 
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()
-        && you.form != transformation::fiend)
+        && you.form != transformation::conduit)
     {
         if (!quiet)
             mpr("You cannot cast spells while unable to breathe!");
@@ -678,7 +678,7 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (silenced(you.pos()) && you.form != transformation::fiend)
+    if (silenced(you.pos()) && you.form != transformation::conduit)
     {
         if (!quiet)
             mpr("You cannot cast spells when silenced!");
@@ -3084,5 +3084,5 @@ void do_demonic_magic(int pow, int rank)
 
 bool is_tabcasting()
 {
-    return you.form == transformation::fiend && !you.divine_exegesis;
+    return you.form == transformation::conduit && !you.divine_exegesis;
 }

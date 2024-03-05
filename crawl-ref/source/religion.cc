@@ -3216,8 +3216,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
 
-    if (is_good_god(which_god) && (you.form == transformation::death
-        || you.form == transformation::fiend))
+    if (is_good_god(which_god) && you.form == transformation::death)
     {
         return false;
     }

@@ -1320,7 +1320,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
     if (you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        if (you.form == transformation::fiend)
+        if (you.form == transformation::conduit)
         {
             SAY(mprf(MSGCH_PROMPT, "You can't wield that in your current form."));
             return false;

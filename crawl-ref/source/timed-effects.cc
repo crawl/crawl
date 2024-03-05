@@ -63,8 +63,8 @@ static void _apply_contam_over_time()
     if (!you.duration[DUR_INVIS])
         added_contamination -= 75;
 
-    //Fiend form decontaminates you quicker
-    if (you.form == transformation::fiend)
+    //conduit form decontaminates you quicker
+    if (you.form == transformation::conduit)
         added_contamination *= 3;
 
     // Scaling to turn length

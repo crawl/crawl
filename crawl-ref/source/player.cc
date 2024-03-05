@@ -3502,14 +3502,14 @@ static void _display_damage_rating(const item_def *weapon)
  */
 static void _display_tabcast_chance()
 {
-    if (you.form != transformation::fiend)
+    if (you.form != transformation::conduit)
         return;
 
     if (you.tabcast_spell != SPELL_NO_SPELL)
     {
         mpr(make_stringf("Your chance to cast %s with melee attacks is %d%%.",
             spell_title(you.tabcast_spell),
-            get_form(transformation::fiend)->get_tabcast_chance()));
+            get_form(transformation::conduit)->get_tabcast_chance()));
     }
 }
 
@@ -4198,7 +4198,7 @@ int get_real_mp(bool include_items)
     enp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
     enp /= 100;
 
-    if (you.form == transformation::fiend
+    if (you.form == transformation::conduit
         || (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC)))
     {
         enp /= 3;
@@ -6699,8 +6699,6 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
         {
             holi = MH_NONLIVING;
         }
-        else if (f == transformation::fiend)
-            holi = MH_DEMONIC;
     }
 
     // Petrification takes precedence over base holiness and lich form
@@ -6716,8 +6714,7 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
 bool player::undead_or_demonic(bool temp) const
 {
     // This is only for TSO-related stuff, so demonspawn are included.
-    return undead_state(temp) || species == SP_DEMONSPAWN
-    || (temp && you.form == transformation::fiend);
+    return undead_state(temp) || species == SP_DEMONSPAWN;
 }
 
 bool player::evil() const

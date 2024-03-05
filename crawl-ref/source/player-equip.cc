@@ -597,7 +597,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld,
                     break;
 
                 case SPWPN_ANTIMAGIC:
-                    if (you.has_mutation(MUT_HP_CASTING) || you.form == transformation::fiend)
+                    if (you.has_mutation(MUT_HP_CASTING) || you.form == transformation::conduit)
                         mpr("You feel a force failing to suppress your magic.");
                     else
                     {
@@ -716,7 +716,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
             case SPWPN_ANTIMAGIC:
                 calc_mp();
-                if (!you.has_mutation(MUT_HP_CASTING) && you.form != transformation::fiend)
+                if (!you.has_mutation(MUT_HP_CASTING) && you.form != transformation::conduit)
                     mpr("You feel magic returning to you.");
                 break;
 

@@ -607,22 +607,6 @@ fen folio
 
 A collection of spells once used by the great swamp civilisations.
 %%%%
-fiendish talisman
-
-TODO ADD COOL DESCRIPTION. Transforms the user into an arcane fiend which
-unleashes magic through contact. Each melee attack has a chance to cast a
-chosen spell, with the chance rising with Shapeshifting skill but falling with
-the level of the spell. Casting spells this way is not impeded by silence and
-does not cost magic, but the user's magic capacity is greatly reduced. The user
-gains resistance to poison and immunity to miasma, negative energy and torment,
-but becomes vulnerable to holy damage. The user is no longer harmed by their
-own spells outside of miscasts and sheds magical contamination at a faster
-rate.
-
-While transformed, any shields or weapons in the off-hand are melded.
-Additionally, the user loses the ability to cast spells normally or wield a
-weapon with their off-hand.
-%%%%
 figurine of a ziggurat
 
 A small figurine made of some strange material, shaped like a stepped pyramid.
@@ -1037,6 +1021,23 @@ prismatic gem
 
 Shining with every colour of the rainbow and a few others besides, some
 consider this gem 'a bit tacky'. Preposterous!
+%%%%
+prototype talisman
+
+A slab inscribed with intricate circuitry and sprouting countless loose wires.
+Transforms one of the user's arms into a mass of magic cables which discharge
+spells uncontrollably. 
+
+Each melee attack has a chance to cast a chosen spell without costing magic
+once per turn, with the chance rising with Shapeshifting skill but falling with
+the level of the spell. The cables can discharge spells even when silenced, but
+the artificially-implanted magic circuits drain the user's own magic capacity
+and prevent the regular use of spells. Additionally, the exposed magic circuits
+can absorb the user's own spells, preventing damage and dissipate magical
+contamination at a faster rate.
+
+While transformed, equipped shields and weapons in the off-hand are melded. The
+messy cables are hard to coordinate, and cannot be used to wield a weapon.
 %%%%
 quad damage
 

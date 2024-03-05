@@ -2599,7 +2599,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
     if (victim->is_player())
     {
-        if (!(agent.is_player() && you.form == transformation::fiend))
+        if (!(agent.is_player() && you.form == transformation::conduit))
         {
             dprf("You: static discharge damage: %d", damage);
             damage = check_your_resists(damage, BEAM_ELECTRICITY,
@@ -3792,7 +3792,7 @@ void handle_flame_wave()
     if (lvl == 1) // just cast it this turn
         return;
 
-    //fiend form allows you to channel wait spells while attacking
+    //conduit form allows you to channel wait spells while attacking
     //maybe use something other than berserk penalty
     if (!((is_tabcasting() && !you.apply_berserk_penalty) || crawl_state.prev_cmd == CMD_WAIT)
         || !can_cast_spells(true))

@@ -472,7 +472,6 @@ tileidx_t tileidx_player()
     case transformation::statue:
     case transformation::death:
     case transformation::tree:
-    case transformation::fiend:
     // (so is storm form)
     case transformation::storm:
         break;
@@ -511,6 +510,7 @@ tileidx_t tileidx_player()
     }
     // no special tile
     case transformation::blade_hands:
+    case transformation::conduit:
     case transformation::none:
     default:
         break;

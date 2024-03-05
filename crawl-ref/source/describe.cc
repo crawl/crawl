@@ -2502,7 +2502,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
         description += "\n\nTail slap:" + aux_attack_desc(UNAT_TAILSLAP);
     }
 
-    if (form_type == transformation::fiend && you.tabcast_spell != SPELL_NO_SPELL)
+    if (form_type == transformation::conduit && you.tabcast_spell != SPELL_NO_SPELL)
     {
         //describe chance for spellcast on melee
         const int chance = form->get_tabcast_chance();
@@ -4470,10 +4470,10 @@ static string _player_spell_desc(spell_type spell)
                     << " supports the use of this spell.\n";
     }
 
-    if (you.form == transformation::fiend)
+    if (you.form == transformation::conduit)
     {
         description << "Your chance to cast this spell with melee attacks is "
-                    << get_form(transformation::fiend)->get_tabcast_chance(false, spell)
+                    << get_form(transformation::conduit)->get_tabcast_chance(false, spell)
                     << "%.\n";
     }
 

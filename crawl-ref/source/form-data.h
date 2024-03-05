@@ -381,17 +381,16 @@ static const form_entry formdata[] =
 },
 
 {
-    transformation::fiend, MONS_ICE_FIEND, "Fiend", "fiend-form", "fiend",
-    "an arcane fiend.",
-    10, 19, TALISMAN_FIEND,
-    SLOTF(EQ_OFFHAND), mrd(MR_RES_NEG, 3) | MR_RES_POISON | MR_RES_MIASMA,
+    transformation::conduit, MONS_LIGHTNING_SPIRE, "Conduit", "conduit-form", "conduit",
+    "a failed experiment.",
+    10, 19, TALISMAN_CONDUIT,
+    SLOTF(EQ_OFFHAND), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 5, 0, SIZE_CHARACTER, 10,
-    {}, true, FormScaling().Base(2),
+    {}, true, {},
     SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_DEFAULT, FC_FORBID, true, false,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
-    { { "demonic casting", "Your melee attacks have a chance to cast spells." },
-      { "torment immunity", "You are immune to unholy pain and torment."},
+    { { "artificial casting", "Your melee attacks have a chance to cast spells." },
       { "", "Your magic capacity is greatly reduced." }
     }
 },

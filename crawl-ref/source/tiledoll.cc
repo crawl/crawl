@@ -363,23 +363,6 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_ARM]     = 0;
         result.parts[TILEP_PART_CLOAK]   = 0;
         break;
-    case transformation::fiend:
-        switch (you.species)
-        {
-        default:         ch = TILEP_MONS_ICE_FIEND; break;
-        }
-        result.parts[TILEP_PART_BASE]    = ch;
-        result.parts[TILEP_PART_HAIR]    = 0;
-        result.parts[TILEP_PART_BEARD]   = 0;
-        result.parts[TILEP_PART_LEG]     = 0;
-
-        // fixme: these should show up, but look ugly with the lich tile
-        result.parts[TILEP_PART_HELM]    = 0;
-        result.parts[TILEP_PART_BOOTS]   = 0;
-        result.parts[TILEP_PART_BODY]    = 0;
-        result.parts[TILEP_PART_ARM]     = 0;
-        result.parts[TILEP_PART_CLOAK]   = 0;
-        break;
     default:
         // A monster tile is being used for the player.
         if (Options.tile_use_monster != MONS_0)
@@ -439,6 +422,15 @@ void fill_doll_equipment(dolls_data &result)
                      || Options.tile_use_monster == MONS_NATASHA)
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
+        }
+        else if (you.form == transformation::conduit)
+        {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+                result.parts[TILEP_PART_HAND2] = 0;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
+                     || Options.tile_use_monster == MONS_NATASHA)
+                         result.parts[TILEP_PART_HAND2] = 0;
+            else result.parts[TILEP_PART_HAND2] = TILEP_HAND2_FIRE_CYAN;
         }
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
