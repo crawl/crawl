@@ -196,7 +196,11 @@ bool ranged_attack::handle_phase_blocked()
              punctuation.c_str());
     }
 
-    maybe_trigger_jinxbite();
+    if (!projectile->is_type(OBJ_MISSILES, MI_DART)
+        && !projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    {
+        maybe_trigger_jinxbite();
+    }
 
     return attack::handle_phase_blocked();
 }
@@ -228,7 +232,11 @@ bool ranged_attack::handle_phase_dodged()
              attack_strength_punctuation(damage_done).c_str());
     }
 
-    maybe_trigger_jinxbite();
+    if (!projectile->is_type(OBJ_MISSILES, MI_DART)
+        && !projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    {
+        maybe_trigger_jinxbite();
+    }
 
     maybe_trigger_autodazzler();
 

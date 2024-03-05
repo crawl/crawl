@@ -255,6 +255,16 @@ bool melee_attack::handle_phase_attempted()
     return true;
 }
 
+bool melee_attack::handle_phase_blocked()
+{
+    //We need to handle jinxbite here instead of in
+    //attack::handle_phase_blocked as some attacks
+    //such as darts don't trigger it
+    maybe_trigger_jinxbite();
+
+    return attack::handle_phase_blocked();
+}
+
 bool melee_attack::handle_phase_dodged()
 {
     did_hit = false;

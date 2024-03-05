@@ -84,8 +84,6 @@ bool attack::handle_phase_blocked()
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
-    maybe_trigger_jinxbite();
-
     return true;
 }
 
