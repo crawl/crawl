@@ -292,9 +292,7 @@ static bool _find_tabcast_lrd_target(dist &target)
     {
         //never try to deconstruct yourself
         if (*ri == you.pos())
-        {
             continue;
-        }
 
         if (!setup_fragmentation_beam(tempbeam, 0, &you,
             *ri, true, nullptr, temp))
