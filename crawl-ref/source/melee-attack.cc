@@ -278,7 +278,7 @@ static bool _find_tabcast_prism_target(dist &target)
 static bool _find_tabcast_lrd_target(dist &target)
 {
     vector<coord_def> dests;
-    
+
     bolt tempbeam;
     bool temp;
 
@@ -287,7 +287,7 @@ static bool _find_tabcast_lrd_target(dist &target)
     {
         return true;
     }
-    
+
     for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
     {
         //never try to deconstruct yourself
@@ -295,7 +295,7 @@ static bool _find_tabcast_lrd_target(dist &target)
         {
             continue;
         }
-        
+
         if (!setup_fragmentation_beam(tempbeam, 0, &you,
             *ri, true, nullptr, temp))
         {
