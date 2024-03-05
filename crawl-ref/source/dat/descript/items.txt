@@ -874,7 +874,7 @@ quest is complete.
 orcbow
 
 A recurved bow, crudely crafted from troll-bone and warg hair. The cave orcs'
-use of archery, so unlike their surface-dwelling cousins, shows the influence
+use of archery, so unlike their surface-dwelling ancestors, shows the influence
 of their elvish allies.
 %%%%
 pair of boots
