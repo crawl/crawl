@@ -265,7 +265,9 @@ static bool _find_tabcast_prism_target(dist &target)
     {
         if (actor_at(*ri) || !in_bounds(*ri)
             || cell_is_solid(*ri) || !you.see_cell(*ri))
+        {
             continue;
+        }
 
         dests.emplace_back(*ri);
     }
