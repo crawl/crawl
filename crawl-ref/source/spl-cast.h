@@ -147,3 +147,4 @@ void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
 bool is_tabcasting();
 void set_tabcast_spell(spell_type spell);
+void tabcast_spell(coord_def &pos);

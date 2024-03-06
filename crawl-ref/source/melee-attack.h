@@ -176,6 +176,7 @@ private:
                                    bool check_only = false);
     void _defender_die();
     void handle_spectral_brand();
+    void maybe_trigger_tabcast();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);

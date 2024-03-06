@@ -988,20 +988,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     return cast_result;
 }
 
-void set_tabcast_spell(spell_type spell)
-{
-    if (spell == SPELL_NO_SPELL || spell == you.tabcast_spell)
-    {
-        you.tabcast_spell = SPELL_NO_SPELL;
-        mpr("Your attacks no longer cast spells.");
-    }
-    else
-    {
-        you.tabcast_spell = spell;
-        mprf("Your attacks now cast %s.", spell_title(spell));
-    }
-}
-
 /**
  * Handles divine response to spellcasting.
  *
@@ -3085,4 +3071,111 @@ void do_demonic_magic(int pow, int rank)
 bool is_tabcasting()
 {
     return you.form == transformation::conduit && !you.divine_exegesis;
+}
+
+void set_tabcast_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL || spell == you.tabcast_spell)
+    {
+        you.tabcast_spell = SPELL_NO_SPELL;
+        mpr("Your attacks no longer cast spells.");
+    }
+    else
+    {
+        you.tabcast_spell = spell;
+        mprf("Your attacks now cast %s.", spell_title(spell));
+    }
+}
+
+static bool _find_tabcast_prism_target(dist &target)
+{
+    vector<coord_def> dests;
+
+    for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, false); ri; ++ri)
+    {
+        if (actor_at(*ri) || !in_bounds(*ri)
+            || cell_is_solid(*ri) || !you.see_cell(*ri))
+        {
+            continue;
+        }
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
+static bool _find_tabcast_lrd_target(dist &target)
+{
+    vector<coord_def> dests;
+
+    bolt tempbeam;
+    bool temp;
+
+    if (setup_fragmentation_beam(tempbeam, 0, &you,
+            target.target, true, nullptr, temp))
+    {
+        return true;
+    }
+
+    for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
+    {
+        //never try to deconstruct yourself
+        if (*ri == you.pos() || !you.see_cell(*ri))
+            continue;
+
+        if (!setup_fragmentation_beam(tempbeam, 0, &you,
+            *ri, true, nullptr, temp))
+        {
+            continue;
+        }
+
+        //check to see if you can hit
+        if (grid_distance(*ri, target.target) > tempbeam.ex_size)
+            continue;
+
+        dests.emplace_back(*ri);
+    }
+
+    if (dests.empty())
+        return false;
+    target.target = dests[random2(dests.size())];
+    return true;
+}
+
+static void _find_tabcast_boulder_target(dist &target)
+{
+    coord_def offset = target.target - you.pos();
+    offset.x = max(min(offset.x, 1), -1);
+    offset.y = max(min(offset.y, 1), -1);
+    target.target = you.pos() + offset;
+}
+
+void tabcast_spell(coord_def &pos)
+{
+    const spell_type spell = you.tabcast_spell;
+
+    dist target;
+    target.target = pos;
+    switch (spell)
+    {
+    case SPELL_FULMINANT_PRISM:
+        if (!_find_tabcast_prism_target(target))
+            return;
+        break;
+    case SPELL_LRD:
+        if (!_find_tabcast_lrd_target(target))
+            return;
+        break;
+    case SPELL_BOULDER:
+        _find_tabcast_boulder_target(target);
+        break;
+    default:
+        break;
+    }
+
+    cast_a_spell(false, spell, &target);
 }

@@ -575,4 +575,22 @@ protected:
     const god_type god;
 };
 
+class tabcast_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(coord_def pos)
+    {
+        final_effect::schedule(new tabcast_fineff(pos));
+    }
+protected:
+    tabcast_fineff(coord_def pos)
+        : final_effect(0, 0, pos)
+    {
+    }
+    string name;
+};
+
 void fire_final_effects();

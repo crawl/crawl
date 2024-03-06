@@ -941,6 +941,11 @@ void dismiss_divine_allies_fineff::fire()
         dismiss_god_summons(god);
 }
 
+void tabcast_fineff::fire()
+{
+    tabcast_spell(posn);
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
