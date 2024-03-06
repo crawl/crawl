@@ -882,7 +882,7 @@ static void _debug_acquirement_stats()
 
         destroy_item(item_index, true);
 
-        if ((i + 1) % (num_itrs / 10) == 0)
+        if (num_itrs >= 10 && (i + 1) % (num_itrs / 10) == 0)
         {
             clear_messages();
             mprf("%d%% done.", 100 * (i + 1) / num_itrs);
@@ -1287,7 +1287,7 @@ static void _debug_randart_stats()
 
         destroy_item(env.item[ind], true);
 
-        if ((i + 1) % (num_itrs / 10) == 0)
+        if (num_itrs >= 10 && (i + 1) % (num_itrs / 10) == 0)
         {
             clear_messages();
             mprf("%d%% done.", 100 * (i + 1) / num_itrs);
