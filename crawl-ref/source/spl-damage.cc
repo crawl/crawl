@@ -3571,7 +3571,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     }
 
     const actor* victim = actor_at(target);
-    if ((!victim || !you.can_see(*victim))
+    if ((!victim || !you.can_see(*victim)) && !is_tabcasting()
         && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -3595,7 +3595,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return !(act->is_monster() && god_protects(act->as_monster()));
     };
 
-    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE
+    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE && !is_tabcasting()
         && !yesno("The unravelling is likely to hit you. Continue anyway?",
                   false, 'n'))
     {
