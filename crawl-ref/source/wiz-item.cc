@@ -924,6 +924,10 @@ static void _debug_acquirement_stats()
     bool naked = true;
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
     {
+        // We can't acquire for the gizmo or preview ring slots. Skip them.
+        if (i == EQ_GIZMO || i == EQ_PREVIEW_RING)
+            continue;
+
         int eqslot = e_order[i];
 
         // Only output filled slots.
