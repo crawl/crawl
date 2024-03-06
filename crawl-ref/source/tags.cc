@@ -4591,7 +4591,7 @@ static void _tag_read_you_items(reader &th)
     if (you.species == SP_FORMICID)
         remove_one_equip(EQ_HELMET, false, true);
 
-    if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELRY)
+    if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
     {
         if (you.has_mutation(MUT_NO_JEWELLERY))
         {
