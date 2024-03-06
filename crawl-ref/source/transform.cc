@@ -1103,8 +1103,8 @@ public:
         if (lvl < min_skill * scale)
             return min(100, base * lvl / (min_skill * scale) / div);
 
-        const int prop = (lvl - min_skill * scale) / ((max_skill - min_skill) * scale);
-        return min(100, (base + scaling * prop) / div);
+        const int prop = scaling * (lvl - min_skill * scale) / ((max_skill - min_skill) * scale);
+        return min(100, (base + prop) / div);
     }
 };
 
