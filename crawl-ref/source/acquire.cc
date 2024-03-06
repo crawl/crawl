@@ -1532,25 +1532,18 @@ static void _create_acquirement_item(item_def &item, string items_key,
 {
     auto &acq_items = you.props[items_key].get_vector();
 
+    // Now that we have a selection, mark any generated unrands as not having
+    // been generated, so they go back in circulation. Exclude the selected
+    // item from this, if it's an unrand.
     for (item_def &aitem : acq_items)
     {
-        // Now that we have a selection, mark any generated unrands as not
-        // having been generated, so they go back in circulation. Exclude the
-        // selected item from this, if it's an unrand.
         if (is_unrandom_artefact(aitem)
             && (!is_unrandom_artefact(item)
                 || !is_unrandom_artefact(aitem, item.unrand_idx)))
         {
             destroy_item(aitem, true);
         }
-        // Also mark any generated misc items as not having been generated, so
-        // they're treated as unseen the next time we try to acquire them.
-        // Exclude the selected item from this, if it's a misc item.
-        if (aitem.base_type == OBJ_MISCELLANY
-            && item.base_type != OBJ_MISCELLANY)
-        {
-            destroy_item(aitem, true);
-        }
+        // TODO: if we allow misc acquirement, also destroy unchosen miscs
     }
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),
