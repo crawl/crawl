@@ -1090,14 +1090,21 @@ public:
         if (spell == SPELL_SANDBLAST)
             diff++;
 
-        //base chance of 50, scaling up to 400 at max skill
-        //divided by 1 + spell level, capped at 100
-        const int scale = 100;
-        const int lvl = max(get_level(scale), min_skill * scale);
-        const int div = (max_skill - min_skill) * scale;
-        const int prop = get_max ? div : max(0, lvl - min_skill * scale);
-        return min(100, (scale + prop * scale * 3 / div)
-            / (1 + diff));
+        //base chance of 200, scaling up to 400 at max skill
+        //divided by 3 + spell level, capped at 100
+        constexpr int scale = 100;
+        constexpr int base = 200;
+        constexpr int scaling = 200;
+        const int div = (3 + diff);
+        const int lvl = get_level(scale);
+
+        if (get_max)
+            return min(100, (base + scaling) / div);
+        if (lvl < min_skill * scale)
+            return min(100, base * lvl / (min_skill * scale) / div);
+
+        const int prop = (lvl - min_skill * scale) / ((max_skill - min_skill) * scale);
+        return min(100, (base + scaling * prop) / div);
     }
 };
 
