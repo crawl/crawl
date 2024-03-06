@@ -1720,7 +1720,9 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
             rand_classes.emplace_back(OBJ_STAVES);
     }
 
-    rand_classes.emplace_back(OBJ_JEWELLERY);
+    if (!you.has_mutation(MUT_NO_JEWELLERY))
+        rand_classes.emplace_back(OBJ_JEWELLERY);
+
     rand_classes.emplace_back(OBJ_BOOKS);
 
     // dungeon generation
