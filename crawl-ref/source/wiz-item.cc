@@ -779,7 +779,7 @@ static void _debug_acquirement_stats()
     object_class_type list[] =
     {
         OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY, OBJ_BOOKS, OBJ_STAVES,
-        OBJ_MISCELLANY
+        OBJ_MISCELLANY, OBJ_TALISMANS
     };
     char c = 'a';
     for (auto typ : list)

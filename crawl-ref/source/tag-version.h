@@ -302,6 +302,7 @@ enum tag_minor_version
     TAG_MINOR_NO_CONSTRICTION_DUR, // Remove duration parameter from constriction tracking
     TAG_MINOR_NEW_DRACONIAN_BREATH, // Add charges to draconian breaths, revamp effects
     TAG_MINOR_COGLIN_NO_JEWELLERY, // Remove all jewellery from Coglins
+    TAG_MINOR_TALISMANS_SEEN,      // Keep track of seen talismans
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

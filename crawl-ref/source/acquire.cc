@@ -752,6 +752,83 @@ static int _acquirement_book_subtype(int & /*quantity*/,
     //or asserts will get set off
 }
 
+static vector<pair<talisman_type, int>> _base_talisman_tiers()
+{
+    vector<pair<talisman_type, int>> tiers = {
+        { TALISMAN_BEAST,   1 },
+        { TALISMAN_FLUX,    2 },
+        { TALISMAN_MAW,     3 },
+        { TALISMAN_SERPENT, 3 },
+        { TALISMAN_BLADE,   3 },
+        { TALISMAN_STATUE,  4 },
+        { TALISMAN_DRAGON,  4 },
+        { TALISMAN_STORM,   5 },
+        { TALISMAN_DEATH,   5 },
+        { NUM_TALISMANS,    5 },
+    };
+    return tiers;
+}
+
+// Scale talisman chances, biased in favour of those we haven't seen before,
+// and more biased in favour of those we have shapeshifting skill for.
+static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
+                                    int agent)
+{
+    // This will produce a tier range between 1 and 5.
+    const int skill_value = _skill_rdiv(SK_SHAPESHIFTING) / 6 + 1;
+
+    // Change all the tier values, other than the random option, to weights
+    // that are multiples of 5. The random option will stay 5.
+    for (auto &tier : tiers)
+    {
+        // Skip the random option.
+        if (tier.first == NUM_TALISMANS)
+            continue;
+
+        // Xom will set all weights but the one for the random option to 0.
+        if (agent == GOD_XOM)
+        {
+            tier.second = 0;
+            continue;
+        }
+
+        int scale_value = 1;
+
+        if (!you.seen_talisman[tier.first])
+            scale_value *= 2;
+
+        if (skill_value >= tier.second)
+            scale_value *= 5;
+
+        tier.second = scale_value * 5;
+    }
+}
+
+/**
+ * Choose a random type of talisman to be generated via acquirement or god
+ * gifts.
+ *
+ * Weighted toward talismans the player hasn't yet seen, and heavily weighted
+ * toward talismans the player has the shapeshifting skill to use.
+ *
+ * @return          A random talisman type.
+ */
+static int _acquirement_talisman_subtype(int & /*quantity*/,
+                                         int agent)
+{
+    vector<pair<talisman_type, int>> tiers = _base_talisman_tiers();
+    talisman_type talisman = NUM_TALISMANS;
+
+    _scale_talisman_weights(tiers, agent);
+    talisman = *random_choose_weighted(tiers);
+
+    // Choose randomly.
+    if (talisman == NUM_TALISMANS)
+        talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+
+    return talisman;
+}
+
 typedef int (*acquirement_subtype_finder)(int &quantity, int agent);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
@@ -775,7 +852,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no rods
 #endif
     0, // no runes either
-    0, // no talismans... for now. TODO: add talisman acquirement
+    _acquirement_talisman_subtype,
     0, // no gems either
     0, // no gizmos (handled elsewhere)
 };
@@ -1725,6 +1802,12 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
         rand_classes.emplace_back(OBJ_JEWELLERY);
 
     rand_classes.emplace_back(OBJ_BOOKS);
+
+    if (!you_worship(GOD_ZIN)
+        && x_chance_in_y(_skill_rdiv(SK_SHAPESHIFTING) + 5, 100))
+    {
+        rand_classes.emplace_back(OBJ_TALISMANS);
+    }
 
     // dungeon generation
     if (!scroll)
