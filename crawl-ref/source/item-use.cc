@@ -1016,7 +1016,7 @@ static bool _can_generically_use(operation_types oper)
         {
             mprf(MSGCH_PROMPT, "You can't %s jewellery%s.",
                 oper == OPER_PUTON ? "wear" : "remove",
-                you.has_mutation(MUT_NO_JEWELLERY) ? "" :  "in your present form");
+                you.has_mutation(MUT_NO_JEWELLERY) ? "" :  " in your present form");
             return false;
         }
         break;
