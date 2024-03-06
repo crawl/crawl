@@ -263,7 +263,8 @@ static bool _find_tabcast_prism_target(dist &target)
 
     for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, false); ri; ++ri)
     {
-        if (actor_at(*ri) || !in_bounds(*ri) || cell_is_solid(*ri))
+        if (actor_at(*ri) || !in_bounds(*ri)
+            || cell_is_solid(*ri) || !you.see_cell(*ri))
             continue;
 
         dests.emplace_back(*ri);
@@ -291,7 +292,7 @@ static bool _find_tabcast_lrd_target(dist &target)
     for (radius_iterator ri(target.target, 2, C_SQUARE, LOS_SOLID, true); ri; ++ri)
     {
         //never try to deconstruct yourself
-        if (*ri == you.pos())
+        if (*ri == you.pos() || !you.see_cell(*ri))
             continue;
 
         if (!setup_fragmentation_beam(tempbeam, 0, &you,
@@ -449,6 +450,7 @@ static void _tabcast_spell(monster &m)
     case SPELL_LRD:
         if (!_find_tabcast_lrd_target(target))
             return;
+        break;
     case SPELL_BOULDER:
         _find_tabcast_boulder_target(target);
         break;
