@@ -494,6 +494,12 @@ bool melee_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
+    if (attacker->is_player() && you.form == transformation::conduit
+        && defender->is_monster() && !is_projected)
+    {
+        _tabcast_spell(*(defender->as_monster()));
+    }
+
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
@@ -1403,6 +1409,14 @@ bool melee_attack::attack()
     if (shield_blocked)
     {
         handle_phase_blocked();
+
+        // Spell autocasting for tabcasting form
+        if (attacker->is_player() && you.form == transformation::conduit
+            && defender->is_monster() && !is_projected)
+        {
+            _tabcast_spell(*(defender->as_monster()));
+        }
+
         maybe_riposte();
         if (!attacker->alive())
         {
