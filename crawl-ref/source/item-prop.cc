@@ -1163,6 +1163,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
     {
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
+        if (item.base_type == OBJ_TALISMANS)
+            you.seen_talisman.set(item.sub_type);
     }
 }
 
@@ -3203,6 +3205,8 @@ void seen_item(item_def &item)
             you.seen_armour[item.sub_type] = 1U;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
+        if (item.base_type == OBJ_TALISMANS)
+            you.seen_talisman.set(item.sub_type);
     }
 
     _maybe_note_found_unrand(item);

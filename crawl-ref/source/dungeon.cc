@@ -779,6 +779,7 @@ void dgn_flush_map_memory()
     you.seen_weapon.init(0);
     you.seen_armour.init(0);
     you.seen_misc.reset();
+    you.seen_talisman.reset();
 }
 
 static void _dgn_load_colour_grid()
