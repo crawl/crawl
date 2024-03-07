@@ -3769,7 +3769,8 @@ spret cast_flame_wave(int pow, bool fail)
     beam.refine_for_explosion();
     beam.explode(true, true);
 
-    you.props[FLAME_WAVE_KEY] = 0;
+    //usually this is 0, but tabcasting casts in a fineff
+    you.props[FLAME_WAVE_KEY] = is_tabcasting() ? 1 : 0;
     you.props[FLAME_WAVE_POWER_KEY].get_int() = pow;
 
     if (!is_tabcasting())
@@ -3867,7 +3868,9 @@ spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
         {
             // Special value, used to avoid terminating ray immediately, since we
             // took a non-wait action on this turn (ie: casting it)
-            you.attribute[ATTR_SEARING_RAY] = -1;
+            // Unless we are tabcasting because in that case this is called
+            // in a fineff
+            you.attribute[ATTR_SEARING_RAY] = is_tabcasting()? 1 : -1;
 
             if (!is_tabcasting())
             {

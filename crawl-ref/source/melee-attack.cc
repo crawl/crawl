@@ -865,24 +865,11 @@ void melee_attack::maybe_trigger_tabcast()
         //change target
         you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
         you.props[SEARING_RAY_TARGET_KEY] = m->pos();
-
-        //because this is cast in a fineff, we have to do this here
-        //or it'll skip a turn
-        int &lvl = you.attribute[ATTR_SEARING_RAY];
-        if (lvl == -1)
-            lvl = 1;
         return;
     }
 
     if (wait_spell_active(SPELL_FLAME_WAVE))
-    {
-        //ditto here
-        int &lvl = you.props[FLAME_WAVE_KEY].get_int();
-        if (lvl == 0)
-            ++lvl;
         return;
-    }
-
     if (wait_spell_active(SPELL_MAXWELLS_COUPLING))
         return;
 
