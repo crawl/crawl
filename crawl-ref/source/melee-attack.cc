@@ -967,11 +967,11 @@ void melee_attack::maybe_trigger_tabcast()
         break;
     }
 
+    you.attribute[ATTR_TABCAST_LIMIT]--;
+
     const auto form = get_form(transformation::conduit);
     if (!x_chance_in_y(form->get_tabcast_chance(), 100))
         return;
-
-    you.attribute[ATTR_TABCAST_LIMIT]--;
 
     tabcast_fineff::schedule(m->pos());
 }
