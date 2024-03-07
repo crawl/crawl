@@ -443,7 +443,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         else if (did_hit && !(*did_hit))
             *did_hit = melee_attk.did_hit;
 
-        fire_final_effects();
+        if (attacker->type != MONS_PLAYER_SHADOW)
+            fire_final_effects();
     }
 
     return true;
