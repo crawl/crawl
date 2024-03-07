@@ -1021,11 +1021,9 @@ static bool _should_acquire_manual(int agent)
     if (you_worship(GOD_TROG))
         magic_weights = 0;
 
-    // If someone has 25% or more magic skills, never give manuals.
-    // Otherwise, count magic skills double to bias against manuals
-    // for magic users.
-    return magic_weights * 3 < other_weights
-           && x_chance_in_y(other_weights, 2*magic_weights + other_weights);
+    // Give magic skills double the weight of non-magic skills, since
+    // even a pure caster will be training various non-magic skills.
+    return x_chance_in_y(other_weights, 2*magic_weights + other_weights);
 }
 
 /**
