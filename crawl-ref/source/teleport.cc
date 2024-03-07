@@ -406,13 +406,15 @@ void blink_close(monster* mon)
 // readability for dubious speed improvements.
 bool valid_blink_destination(const actor* moved, const coord_def& target,
                              bool forbid_sanctuary,
-                             bool forbid_unhabitable)
+                             bool forbid_unhabitable,
+                             bool incl_unseen)
 {
     ASSERT(moved);
 
     if (!in_bounds(target))
         return false;
-    if (actor_at(target))
+    actor *targ_act = actor_at(target);
+    if (targ_act && (incl_unseen || moved->can_see(*targ_act)))
         return false;
     if (forbid_unhabitable)
     {
