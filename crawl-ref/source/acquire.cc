@@ -622,12 +622,6 @@ static bool _remove_ided_staff_weights(vector<pair<stave_type, int>> &weights)
     return found;
 }
 
-static bool _unided_acq_staves()
-{
-    vector<pair<stave_type, int>> weights = _base_staff_weights();
-    return _remove_ided_staff_weights(weights);
-}
-
 static int _acquirement_staff_subtype(int & /*quantity*/,
                                       int /*agent*/)
 {
@@ -638,7 +632,6 @@ static int _acquirement_staff_subtype(int & /*quantity*/,
 
     // chance to choose randomly, goes to 100% if all staves are id'd or 0
     // skill. Just brute force it.
-    // should not be used in normal acquirement..
     if (staff == NUM_STAVES)
     {
         do
@@ -1793,8 +1786,11 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        // skip staves if player has already seen all the acquirable staves
-        if (_unided_acq_staves())
+        // Staves are often less interesting options one way or the
+        // other (either they are exactly what your pure caster wants
+        // or they are the wrong staff or you aren't interested in
+        // staves). So make this option a bit rarer.
+        if (!one_chance_in(3))
             rand_classes.emplace_back(OBJ_STAVES);
     }
 
@@ -1803,10 +1799,11 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
 
     rand_classes.emplace_back(OBJ_BOOKS);
 
-    if (!you_worship(GOD_ZIN)
-        && x_chance_in_y(_skill_rdiv(SK_SHAPESHIFTING) + 5, 100))
+    if (!you_worship(GOD_ZIN) && !you.has_mutation(MUT_NO_FORMS))
     {
-        rand_classes.emplace_back(OBJ_TALISMANS);
+        // We want talisman acq to be fairly rare.
+        if (one_chance_in(3))
+            rand_classes.emplace_back(OBJ_TALISMANS);
     }
 
     // dungeon generation
