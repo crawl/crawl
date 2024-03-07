@@ -3270,6 +3270,32 @@ static void _gozag_place_shop(int index)
                     shop->shop_suffix_name.c_str());
 }
 
+static bool _shop_type_valid(shop_type type)
+{
+    switch (type)
+    {
+#if TAG_MAJOR_VERSION == 34
+    case SHOP_FOOD:
+    case SHOP_EVOKABLES:
+        return false;
+#endif
+    case SHOP_DISTILLERY:
+        return !you.has_mutation(MUT_NO_DRINK);
+    case SHOP_WEAPON:
+    case SHOP_WEAPON_ANTIQUE:
+        return !you.has_mutation(MUT_NO_GRASPING);
+    case SHOP_ARMOUR:
+    case SHOP_ARMOUR_ANTIQUE:
+        return !you.has_mutation(MUT_NO_ARMOUR);
+    case SHOP_JEWELLERY:
+        return !you.has_mutation(MUT_NO_JEWELLERY);
+    case SHOP_BOOK:
+        return !you.has_mutation(MUT_INNATE_CASTER);
+    default:
+        return true;
+    }
+}
+
 bool gozag_call_merchant()
 {
     // Only offer useful shops.
@@ -3277,27 +3303,8 @@ bool gozag_call_merchant()
     for (int i = 0; i < NUM_SHOPS; i++)
     {
         shop_type type = static_cast<shop_type>(i);
-#if TAG_MAJOR_VERSION == 34
-        if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
-            continue;
-#endif
-        if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
-            continue;
-
-        if (you.has_mutation(MUT_NO_ARMOUR) &&
-            (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE))
-        {
-            continue;
-        }
-        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
-            && you.has_mutation(MUT_NO_GRASPING))
-        {
-            continue;
-        }
-        if (type == SHOP_JEWELLERY && you.has_mutation(MUT_NO_JEWELLERY))
-            continue;
-        valid_shops.push_back(type);
+        if (_shop_type_valid(type))
+            valid_shops.push_back(type);
     }
 
     // Set up some dummy shops.
