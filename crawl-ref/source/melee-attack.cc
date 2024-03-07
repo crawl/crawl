@@ -886,6 +886,7 @@ void melee_attack::maybe_trigger_tabcast()
     case SPELL_DISPEL_UNDEAD:
     case SPELL_KISS_OF_DEATH:
     case SPELL_MOMENTUM_STRIKE:
+    case SPELL_STICKY_FLAME:
     //single target hexes
     case SPELL_DIMENSIONAL_BULLSEYE:
     case SPELL_SLOW:
