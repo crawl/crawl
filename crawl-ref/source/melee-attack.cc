@@ -897,8 +897,12 @@ void melee_attack::maybe_trigger_tabcast()
     case SPELL_CURSE_OF_AGONY:
     case SPELL_PETRIFY:
     case SPELL_NECROTISE:
-    case SPELL_TELEPORT_OTHER:
         if (!m->alive())
+            return;
+        break;
+    case SPELL_TELEPORT_OTHER:
+        //don't tabcast teleport other on teleporting monsters
+        if (!m->alive() || m->has_ench(ENCH_TP))
             return;
         break;
     case SPELL_SILENCE:
