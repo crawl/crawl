@@ -366,36 +366,32 @@ bool blink_away(monster* mon, bool self_cast)
 }
 
 // Blink the monster within range but at distance to its foe.
-void blink_range(monster* mon)
+void blink_range(monster &mon)
 {
-    ASSERT(mon); // XXX: change to monster &mon
-
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(*foe))
+    actor* foe = mon.get_foe();
+    if (!foe || !mon.can_see(*foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, false, true);
+    coord_def dest = random_space_weighted(&mon, foe, false, true);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest);
-    ASSERT(success || mon->is_constricted());
+    bool success = mon.blink_to(dest);
+    ASSERT(success || mon.is_constricted());
 #ifndef ASSERTS
     UNUSED(success);
 #endif
 }
 
 // Blink the monster close to its foe.
-void blink_close(monster* mon)
+void blink_close(monster &mon)
 {
-    ASSERT(mon); // XXX: change to monster &mon
-
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(*foe))
+    actor* foe = mon.get_foe();
+    if (!foe || !mon.can_see(*foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, true, true, true);
+    coord_def dest = random_space_weighted(&mon, foe, true, true, true);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest, false);
-    ASSERT(success || mon->is_constricted());
+    bool success = mon.blink_to(dest, false);
+    ASSERT(success || mon.is_constricted());
 #ifndef ASSERTS
     UNUSED(success);
 #endif

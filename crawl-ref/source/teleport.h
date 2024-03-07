@@ -6,8 +6,8 @@ class monster;
 void blink_other_close(actor* victim, const coord_def& target);
 bool blink_away(monster* mon, bool self_cast = false);
 bool blink_away(monster* mon, actor* caster, bool from_seen = true, bool self_cast = false);
-void blink_range(monster* mon);
-void blink_close(monster* mon);
+void blink_range(monster &mon);
+void blink_close(monster &mon);
 void mons_relocated(monster* mons);
 bool monster_blink(monster* mons, bool quiet = false);
 bool monster_space_valid(const monster* mons, coord_def target,
