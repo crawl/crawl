@@ -3295,6 +3295,10 @@ bool gozag_call_merchant()
         {
             continue;
         }
+        if (type == SHOP_JEWELLERY && you.has_mutation(MUT_NO_JEWELLERY))
+        {
+            continue;
+        }
         valid_shops.push_back(type);
     }
 
