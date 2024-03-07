@@ -3129,7 +3129,7 @@ string talisman_type_name(int type)
     case TALISMAN_DRAGON:   return "dragon-blood talisman";
     case TALISMAN_DEATH:    return "talisman of death";
     case TALISMAN_STORM:    return "storm talisman";
-    case TALISMAN_CONDUIT:     return "prototype talisman";
+    case TALISMAN_CONDUIT:  return "prototype talisman";
     default:
         return "buggy talisman";
     }
