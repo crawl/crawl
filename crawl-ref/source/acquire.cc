@@ -762,16 +762,20 @@ static vector<pair<talisman_type, int>> _base_talisman_tiers()
     return tiers;
 }
 
-// Scale talisman chances, biased in favour of those we haven't seen before,
-// and more biased in favour of those we have shapeshifting skill for.
+// Scale talisman chances, strongly biased in favour of those we haven't
+// seen before, and also biased in favour of higher tier talismans when
+// we have more Shapeshifting skill.
 static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
                                     int agent)
 {
-    // This will produce a tier range between 1 and 5.
-    const int skill_value = _skill_rdiv(SK_SHAPESHIFTING) / 6 + 1;
+    // This will produce a target tier between 3 and 6 depending on skill.
+    // This is very roughly one tier higher than the tier of talisman you
+    // can use with your current skill, because you probably already have a
+    // talisman matching your current skill and are looking for an upgrade.
+    const int target_tier = min(6, div_rand_round(_skill_rdiv(SK_SHAPESHIFTING), 7) + 3);
 
-    // Change all the tier values, other than the random option, to weights
-    // that are multiples of 5. The random option will stay 5.
+    // Change all the tier values, other than the random option, to weights.
+    // The random option will stay weight 5.
     for (auto &tier : tiers)
     {
         // Skip the random option.
@@ -788,12 +792,16 @@ static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
         int scale_value = 1;
 
         if (!you.seen_talisman[tier.first])
-            scale_value *= 2;
+            scale_value *= 10;
 
-        if (skill_value >= tier.second)
+        if (tier.second == target_tier)
+            scale_value *= 30;
+        else if (abs(tier.second - target_tier) == 1)
+            scale_value *= 15;
+        else if (abs(tier.second - target_tier) == 2)
             scale_value *= 5;
 
-        tier.second = scale_value * 5;
+        tier.second = scale_value;
     }
 }
 
@@ -801,8 +809,9 @@ static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
  * Choose a random type of talisman to be generated via acquirement or god
  * gifts.
  *
- * Weighted toward talismans the player hasn't yet seen, and heavily weighted
- * toward talismans the player has the shapeshifting skill to use.
+ * Heavily weighted toward talismans the player hasn't yet seen, and also
+ * weighted toward higher level talismans when the player has more
+ * shapeshifting skill.
  *
  * @return          A random talisman type.
  */
