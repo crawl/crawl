@@ -798,7 +798,7 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
 
     // Monsters will already use up attack energy via the melee attack itself,
     // so we only need to handle delay for players.
-    if (agent.is_player())
+    if (agent.is_player() && !is_tabcasting())
     {
         // Normally this is 10 aut (times haste, chei etc), but slow weapons
         // take longer. Most relevant for low-skill players and Dark Maul.
@@ -1379,7 +1379,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         else
             atk.launch_attack_set(i == 0);
 
-        if (i == 0)
+        if (i == 0 && !is_tabcasting())
             you.time_taken = you.attack_delay().roll();
 
         // Stop further attacks if we somehow died in the process.

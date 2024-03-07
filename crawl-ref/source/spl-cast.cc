@@ -322,7 +322,8 @@ static void _apply_post_zap_effect(spell_type spell, coord_def target)
     switch (spell)
     {
     case SPELL_SANDBLAST:
-        you.time_taken = you.time_taken * 3 / 2;
+        if (!is_tabcasting())
+            you.time_taken = you.time_taken * 3 / 2;
         break;
     case SPELL_KISS_OF_DEATH:
         drain_player(100, true, true);
