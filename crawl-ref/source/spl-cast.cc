@@ -3076,16 +3076,11 @@ bool is_tabcasting()
 
 void set_tabcast_spell(spell_type spell)
 {
-    if (spell == SPELL_NO_SPELL || spell == you.tabcast_spell)
-    {
-        you.tabcast_spell = SPELL_NO_SPELL;
+    if (spell == SPELL_NO_SPELL)
         mpr("Your attacks no longer cast spells.");
-    }
     else
-    {
-        you.tabcast_spell = spell;
         mprf("Your attacks now cast %s.", spell_title(spell));
-    }
+    you.tabcast_spell = spell;
 }
 
 static bool _find_tabcast_prism_target(dist &target)
