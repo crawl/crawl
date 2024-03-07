@@ -3423,7 +3423,7 @@ static void _display_tohit()
 #endif
 }
 
-static double _delay(const item_def *weapon)
+static int _delay(const item_def *weapon)
 {
     if (!weapon || !is_range_weapon(*weapon))
         return you.attack_delay().expected();
@@ -3446,7 +3446,7 @@ static bool _at_min_delay(const item_def *weapon)
 static void _display_attack_delay(const item_def *offhand)
 {
     const item_def* weapon = you.weapon();
-    const double delay = _delay(weapon);
+    const int delay = _delay(weapon);
     const bool at_min_delay = _at_min_delay(weapon)
                               && (!offhand || _at_min_delay(offhand));
 
@@ -3468,7 +3468,7 @@ static void _display_attack_delay(const item_def *offhand)
     }
 
     mprf("Your attack delay is about %.1f%s%s.",
-         delay / 10.0f,
+         (float)delay / 10,
          at_min_delay ?
             " (and cannot be improved with additional weapon skill)" : "",
          penalty_msg.c_str());
