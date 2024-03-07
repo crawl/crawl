@@ -350,7 +350,7 @@ public:
         for (radius_iterator ri(a, exp_range_max, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
-            if (valid_blink_destination(agent, *ri, false, true, incl_unseen))
+            if (valid_blink_destination(*agent, *ri, false, true, incl_unseen))
                 exp_map_max(*ri - a + centre) = 1;
         }
         return true;
