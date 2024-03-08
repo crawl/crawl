@@ -4923,7 +4923,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_SWOOP,             "swoops behind the defender beforehand" },
         { AF_FLANK,             "slips behind the defender beforehand" },
         { AF_DRAG,              "drag the defender backwards"},
-        { AF_FOUL_FLAME,        "extra damage to holies/good god worshippers" },
+        { AF_FOUL_FLAME,        "extra damage, especially to the good" },
         { AF_PLAIN,             "" },
     };
 
