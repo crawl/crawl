@@ -981,7 +981,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         count_action(CACT_CAST, spell);
     }
 
-    finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
+    if (_majin_charge_hp() || cost)
+        finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
     if (!is_tabcasting())
         you.turn_is_over = true;
     alert_nearby_monsters();
