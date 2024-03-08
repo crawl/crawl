@@ -2564,7 +2564,7 @@ static afsz _abort_for_stat_zero(const item_def &item, int prop_str,
 static bool _safe_to_remove_or_wear(const item_def &item, const item_def
                                     *old_item, bool remove, bool quiet)
 {
-    // Check that removing item will not cauase a dangerous loss of
+    // Check that removing item will not cause a dangerous loss of
     // flight.
     if (remove && !safe_to_remove(item, quiet))
         return false;
