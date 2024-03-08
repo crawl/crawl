@@ -336,7 +336,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/arwen
 %finish SP_RECOMMENDED_VAMPIRE
 %start
-%compose base/vine_stalker_f
+%compose base/vine_stalker_green_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_VINE_STALKER
 %start

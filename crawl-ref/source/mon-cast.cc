@@ -581,7 +581,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BLINK_RANGE, {
         _mons_likes_blinking,
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            blink_range(&caster);
+            blink_range(caster);
         }
     } },
     { SPELL_BLINK_AWAY, {
@@ -599,7 +599,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return _mons_likes_blinking(caster);
         },
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            blink_close(&caster);
+            blink_close(caster);
         }
     } },
     { SPELL_ELECTROLUNGE, {

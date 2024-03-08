@@ -328,6 +328,8 @@ Eideard
 
 Esmond
 
+Florimund
+
 Gladwin
 
 Hrodulf
@@ -344,7 +346,11 @@ Leofsige
 
 Osbert
 
+Theodoric
+
 Ulric
+
+Vidar
 
 Wigmund
 
@@ -639,9 +645,15 @@ Friðuswiþ
 
 Kendra
 
+Saranna
+
+Solveig
+
 Sunngifu
 
 Synnove
+
+Walburga
 
 Wilfreda
 %%%%

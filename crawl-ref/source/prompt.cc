@@ -604,4 +604,11 @@ int WizardMenu::next_unused_symbol()
     }
 }
 
+bool WizardMenu::skip_process_command(int keyin)
+{
+    if (keyin == '!' || keyin == '?')
+        return true; // potions and scrolls in item creation
+    return Menu::skip_process_command(keyin);
+}
+
 #endif // defined(WIZARD)

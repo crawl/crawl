@@ -8202,6 +8202,14 @@ beogh_converted_orc_speech_battle
 
 @Subjective@ yells, "I follow Beogh's word, I swear it!"
 %%%%
+beogh_converted_orc_speech_vengeance
+
+@Subjective@ shouts, "You have your revenge! Let me go!"
+
+@Subjective@ shouts, "Spare me, and you'll never see me again!"
+
+@Subjective@ says, "I deserve death, but Beogh is merciful!"
+%%%%
 # these are actually used even if the orc previously was allied
 beogh_converted_orc_resurrection
 
@@ -8222,9 +8230,13 @@ beogh_converted_orc_reaction_battle_follower
 
 @beogh_converted_orc_reaction_battle@
 %%%%
-beogh_converted_orc_reaction_speech_follower
+beogh_converted_orc_speech_battle_follower
 
-@beogh_converted_orc_reaction_speech@
+@beogh_converted_orc_speech_battle@
+%%%%
+beogh_converted_orc_speech_vengeance_follower
+
+@beogh_converted_orc_speech_vengeance@
 %%%%
 #######################################################
 # Or if they weren't converted because you did this already.

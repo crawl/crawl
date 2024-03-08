@@ -622,12 +622,6 @@ static bool _remove_ided_staff_weights(vector<pair<stave_type, int>> &weights)
     return found;
 }
 
-static bool _unided_acq_staves()
-{
-    vector<pair<stave_type, int>> weights = _base_staff_weights();
-    return _remove_ided_staff_weights(weights);
-}
-
 static int _acquirement_staff_subtype(int & /*quantity*/,
                                       int /*agent*/)
 {
@@ -638,7 +632,6 @@ static int _acquirement_staff_subtype(int & /*quantity*/,
 
     // chance to choose randomly, goes to 100% if all staves are id'd or 0
     // skill. Just brute force it.
-    // should not be used in normal acquirement..
     if (staff == NUM_STAVES)
     {
         do
@@ -752,6 +745,92 @@ static int _acquirement_book_subtype(int & /*quantity*/,
     //or asserts will get set off
 }
 
+static vector<pair<talisman_type, int>> _base_talisman_tiers()
+{
+    vector<pair<talisman_type, int>> tiers = {
+        { TALISMAN_BEAST,   1 },
+        { TALISMAN_FLUX,    2 },
+        { TALISMAN_MAW,     3 },
+        { TALISMAN_SERPENT, 3 },
+        { TALISMAN_BLADE,   3 },
+        { TALISMAN_STATUE,  4 },
+        { TALISMAN_DRAGON,  4 },
+        { TALISMAN_STORM,   5 },
+        { TALISMAN_DEATH,   5 },
+        { NUM_TALISMANS,    5 },
+    };
+    return tiers;
+}
+
+// Scale talisman chances, strongly biased in favour of those we haven't
+// seen before, and also biased in favour of higher tier talismans when
+// we have more Shapeshifting skill.
+static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
+                                    int agent)
+{
+    // This will produce a target tier between 3 and 6 depending on skill.
+    // This is very roughly one tier higher than the tier of talisman you
+    // can use with your current skill, because you probably already have a
+    // talisman matching your current skill and are looking for an upgrade.
+    const int target_tier = min(6, div_rand_round(_skill_rdiv(SK_SHAPESHIFTING), 7) + 3);
+
+    // Change all the tier values, other than the random option, to weights.
+    // The random option will stay weight 5.
+    for (auto &tier : tiers)
+    {
+        // Skip the random option.
+        if (tier.first == NUM_TALISMANS)
+            continue;
+
+        // Xom will set all weights but the one for the random option to 0.
+        if (agent == GOD_XOM)
+        {
+            tier.second = 0;
+            continue;
+        }
+
+        int scale_value = 1;
+
+        if (!you.seen_talisman[tier.first])
+            scale_value *= 10;
+
+        if (tier.second == target_tier)
+            scale_value *= 30;
+        else if (abs(tier.second - target_tier) == 1)
+            scale_value *= 15;
+        else if (abs(tier.second - target_tier) == 2)
+            scale_value *= 5;
+
+        tier.second = scale_value;
+    }
+}
+
+/**
+ * Choose a random type of talisman to be generated via acquirement or god
+ * gifts.
+ *
+ * Heavily weighted toward talismans the player hasn't yet seen, and also
+ * weighted toward higher level talismans when the player has more
+ * shapeshifting skill.
+ *
+ * @return          A random talisman type.
+ */
+static int _acquirement_talisman_subtype(int & /*quantity*/,
+                                         int agent)
+{
+    vector<pair<talisman_type, int>> tiers = _base_talisman_tiers();
+    talisman_type talisman = NUM_TALISMANS;
+
+    _scale_talisman_weights(tiers, agent);
+    talisman = *random_choose_weighted(tiers);
+
+    // Choose randomly.
+    if (talisman == NUM_TALISMANS)
+        talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+
+    return talisman;
+}
+
 typedef int (*acquirement_subtype_finder)(int &quantity, int agent);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
@@ -775,7 +854,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no rods
 #endif
     0, // no runes either
-    0, // no talismans... for now. TODO: add talisman acquirement
+    _acquirement_talisman_subtype,
     0, // no gems either
     0, // no gizmos (handled elsewhere)
 };
@@ -788,7 +867,8 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     ASSERT(class_wanted != OBJ_RANDOM);
 
     if (class_wanted == OBJ_ARMOUR && !player_can_use_armour()
-        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING))
+        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING)
+        || class_wanted == OBJ_JEWELLERY && you.has_mutation(MUT_NO_JEWELLERY))
     {
         return OBJ_RANDOM;
     }
@@ -941,11 +1021,9 @@ static bool _should_acquire_manual(int agent)
     if (you_worship(GOD_TROG))
         magic_weights = 0;
 
-    // If someone has 25% or more magic skills, never give manuals.
-    // Otherwise, count magic skills double to bias against manuals
-    // for magic users.
-    return magic_weights * 3 < other_weights
-           && x_chance_in_y(other_weights, 2*magic_weights + other_weights);
+    // Give magic skills double the weight of non-magic skills, since
+    // even a pure caster will be training various non-magic skills.
+    return x_chance_in_y(other_weights, 2*magic_weights + other_weights);
 }
 
 /**
@@ -1715,13 +1793,25 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        // skip staves if player has already seen all the acquirable staves
-        if (_unided_acq_staves())
+        // Staves are often less interesting options one way or the
+        // other (either they are exactly what your pure caster wants
+        // or they are the wrong staff or you aren't interested in
+        // staves). So make this option a bit rarer.
+        if (!one_chance_in(3))
             rand_classes.emplace_back(OBJ_STAVES);
     }
 
-    rand_classes.emplace_back(OBJ_JEWELLERY);
+    if (!you.has_mutation(MUT_NO_JEWELLERY))
+        rand_classes.emplace_back(OBJ_JEWELLERY);
+
     rand_classes.emplace_back(OBJ_BOOKS);
+
+    if (!you_worship(GOD_ZIN) && !you.has_mutation(MUT_NO_FORMS))
+    {
+        // We want talisman acq to be fairly rare.
+        if (one_chance_in(3))
+            rand_classes.emplace_back(OBJ_TALISMANS);
+    }
 
     // dungeon generation
     if (!scroll)

@@ -6200,7 +6200,8 @@ item_def* monster::disarm()
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok
-        || mons_wpn->flags & ISFLAG_SUMMONED)
+        || mons_wpn->flags & ISFLAG_SUMMONED
+        || type == MONS_ORC_APOSTLE)
     {
         return nullptr;
     }

@@ -994,13 +994,14 @@ void melee_attack::force_cleave(item_def &wpn, coord_def target_pos)
  *
  * Returns true iff either sub-attack succeeded.
  */
-bool melee_attack::launch_attack_set()
+bool melee_attack::launch_attack_set(bool allow_rev)
 {
     if (!attacker->is_player())
         return attack();
 
     // Calculate this first, in case the defender dies.
     const bool should_rev = you.has_mutation(MUT_WARMUP_STRIKES)
+                            && allow_rev
                             && defender && !defender->is_player()
                             && !defender->wont_attack()
                             && !mons_is_firewood(*defender->as_monster())

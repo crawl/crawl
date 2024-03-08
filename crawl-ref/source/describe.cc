@@ -1760,7 +1760,8 @@ static string _describe_weapon_brand(const item_def &item)
         return "It has been infused with foul flame, dealing an additional "
                "three-quarters of damage to holy beings, an additional quarter "
                "damage to undead and demons, and an additional half damage to "
-               "all others. Holy beings cannot use this.";
+               "all others. Holy beings and good god worshippers cannot use "
+               "this.";
     case SPWPN_ELECTROCUTION:
         return "It sometimes electrocutes victims (1/4 chance, 8-20 damage).";
     case SPWPN_VENOM:
@@ -4922,7 +4923,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_SWOOP,             "swoops behind the defender beforehand" },
         { AF_FLANK,             "slips behind the defender beforehand" },
         { AF_DRAG,              "drag the defender backwards"},
-        { AF_FOUL_FLAME,        "extra damage to holies/good god worshippers" },
+        { AF_FOUL_FLAME,        "extra damage, especially to the good" },
         { AF_PLAIN,             "" },
     };
 

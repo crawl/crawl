@@ -103,6 +103,7 @@ protected:
     void run_aux();
     int index_to_symbol(int index) const;
     int next_unused_symbol();
+    bool skip_process_command(int keyin) override;
 
     unsigned last_symbol_index = 0;
     int last_result = 0;
