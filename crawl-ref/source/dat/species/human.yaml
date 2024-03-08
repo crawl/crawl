@@ -26,3 +26,7 @@ mutations:
   1:
     MUT_EXPLORE_REGEN: 1
     MUT_LUCKY: 1
+    MUT_INNATE_MAN: 1
+fake_mutations:
+  - long: You have a case of the dropsies! Woops!
+    short: fragile items

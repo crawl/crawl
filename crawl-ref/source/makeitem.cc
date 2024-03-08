@@ -459,7 +459,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     const bool lucky_negative_negative_ilvl = coinflip();
     if (lucky)
     {
-        rng_generator rng(RNG_GAMEPLAY);
+        rng::generator gameplay(rng::GAMEPLAY);
         if (item_level >= 0)
             item_level = (item_level + 2) * 2;
         else if (lucky_negative_negative_ilvl)
@@ -1024,8 +1024,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, item_level, agent, lucky),
-                && is_artefact(item))
+            if (_try_make_armour_artefact(item, force_type, item_level, agent, lucky) && is_artefact(item))
             {
                 // borrowed from similar code for weapons -- is this really the
                 // best way to force an ego??
@@ -1170,7 +1169,7 @@ bool is_high_tier_wand(int type)
     }
 }
 
-void generate_wand_item(item_def& item, int force_type, int item_level, bool lucky)
+static void _generate_wand_item(item_def& item, int force_type, int item_level, bool lucky)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1669,13 +1668,13 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     return NUM_MISCELLANY;
 }
 
-static void _generate_misc_item(item_def& item, int force_type, int item_level)
+static void _generate_misc_item(item_def& item, int force_type, int item_level, bool lucky)
 {
     const auto typ = get_misc_item_type(force_type);
     if (typ == NUM_MISCELLANY)
     {
         item.base_type = OBJ_WANDS;
-        generate_wand_item(item, OBJ_RANDOM, item_level);
+        _generate_wand_item(item, OBJ_RANDOM, item_level, lucky);
         return;
     }
     item.sub_type = typ;
@@ -1965,7 +1964,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_WANDS:
-        generate_wand_item(item, force_type, item_level, lucky);
+        _generate_wand_item(item, force_type, item_level, lucky);
         break;
 
     case OBJ_POTIONS:
@@ -2006,7 +2005,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_MISCELLANY:
-        _generate_misc_item(item, force_type, item_level);
+        _generate_misc_item(item, force_type, item_level, lucky);
         break;
 
     case OBJ_GIZMOS:
@@ -2236,7 +2235,8 @@ void makeitem_tests()
         _generate_armour_item(item,
                               coinflip(),
                               type,
-                              level);
+                              level,
+                              lucky);
     }
     mpr("Running acquirement tests.");
     // note: without char customization this won't exercise all acquirement

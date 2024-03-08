@@ -75,6 +75,7 @@ void change_skill_level(skill_type exsk, int num_level);
 void change_skill_points(skill_type sk, int points, bool do_level_up);
 
 bool is_magic_skill(skill_type sk);
+bool is_martial_skill(skill_type sk);
 
 void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
@@ -139,7 +140,9 @@ bool check_training_targets();
 
 void set_training_status(skill_type sk, training_status st);
 void set_magic_training(training_status st);
+void set_martial_training(training_status st);
 void cleanup_innate_magic_skills();
+void cleanup_innate_martial_skills();
 
 static const skill_type skill_display_order[] =
 {

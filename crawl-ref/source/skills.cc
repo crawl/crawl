@@ -250,6 +250,34 @@ void cleanup_innate_magic_skills()
     }
 }
 
+/// Ditto for melee skills
+void cleanup_innate_martial_skills()
+{
+    unsigned int melee_xp = 0;
+    unsigned int n_skills = 0;
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; sk++)
+    {
+        if (is_useless_skill(sk))
+            continue;
+        melee_xp += you.skill_points[sk];
+        ++n_skills;
+    }
+    // Not my code, less sorry.
+    const unsigned int xp_per = melee_xp / n_skills;
+
+    int lvl = 0;
+    while (xp_per > skill_exp_needed(lvl + 1, SK_FIRST_WEAPON))
+        ++lvl;
+
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; sk++)
+    {
+        if (is_useless_skill(sk))
+            continue;
+        you.skill_points[sk] = xp_per;
+        you.skills[sk] = lvl;
+    }
+}
+
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
 // skill levels.
@@ -308,6 +336,8 @@ void reassess_starting_skills()
 
     if (you.has_mutation(MUT_INNATE_CASTER))
         cleanup_innate_magic_skills();
+    if (you.has_mutation(MUT_INNATE_MAN))
+        cleanup_innate_martial_skills();
 }
 
 static void _change_skill_level(skill_type exsk, int n)
@@ -532,6 +562,22 @@ static void _check_innate_magic_skills()
         you.skills_to_hide.erase(sk);
 }
 
+static void _check_innate_martial_skills()
+{
+    if (!you.has_mutation(MUT_INNATE_MAN))
+        return;
+
+    bool any_magic = false;
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+        if (!is_removed_skill(sk) && !you.skills_to_hide.count(sk))
+            any_magic = true;
+    if (!any_magic)
+        return;
+
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+        you.skills_to_hide.erase(sk);
+}
+
 string skill_names(const skill_set &skills)
 {
     return comma_separated_fn(begin(skills), end(skills), skill_name);
@@ -561,6 +607,7 @@ static void _check_skills_to_hide()
     _check_spell_skills();
     _check_abil_skills();
     _check_innate_magic_skills();
+    _check_innate_martial_skills();
 
     if (you.skills_to_hide.empty())
         return;
@@ -844,6 +891,38 @@ static void _balance_magic_training()
             you.training[sk] = to_train;
 }
 
+/// Ditto
+static void _balance_martial_training()
+{
+    // To minimize int rounding issues with manual training,
+    // scale up skill training numbers here. We'll scale em back down later.
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        you.training[i] *= 100;
+
+    int n_skills = 0;
+    int train_total = 0;
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_MELEE_WEAPON; ++sk)
+    {
+        if (is_removed_skill(sk) || you.skills[sk] >= MAX_SKILL_LEVEL)
+        {
+            you.training[sk] = 0;
+            continue;
+        }
+        n_skills++;
+        train_total += you.training[sk];
+    }
+    if (!train_total)
+        return;
+
+    ASSERT(n_skills > 0);
+    // Total training for all magic skills should be the base average,
+    // divided between each skill.
+    const int to_train = max(train_total / (n_skills * n_skills), 1);
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_MELEE_WEAPON; ++sk)
+        if (!is_removed_skill(sk) && you.skills[sk] < MAX_SKILL_LEVEL)
+            you.training[sk] = to_train;
+}
+
 /**
  * Reset the training array. Disabled skills are skipped.
  * In automatic mode, we use values from the exercise queue.
@@ -922,10 +1001,14 @@ void reset_training()
 
     if (you.has_mutation(MUT_INNATE_CASTER))
         _balance_magic_training();
+    
+    if (you.has_mutation(MUT_INNATE_MAN))
+        _balance_martial_training();
 
     _scale_array(you.training, 100, !you.has_mutation(MUT_INNATE_CASTER));
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-        || you.has_mutation(MUT_INNATE_CASTER))
+    _scale_array(you.training, 100, !you.has_mutation(MUT_INNATE_MAN));
+
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING) || you.has_mutation(MUT_INNATE_CASTER) || you.has_mutation(MUT_INNATE_MAN))
     {
         // we use the full set of skills to calculate gnoll/dj percentages,
         // but they don't actually get to train sacrificed skills.
@@ -981,11 +1064,24 @@ bool is_magic_skill(skill_type sk)
     return sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC;
 }
 
+bool is_martial_skill(skill_type sk)
+{
+    return sk >= SK_FIRST_WEAPON && sk <= SK_LAST_WEAPON;
+}
+
 int _gnoll_total_skill_cost();
 
 static int _magic_training()
 {
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        if (you.training[sk])
+            return you.training[sk];
+    return 0;
+}
+
+static int _martial_training()
+{
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
         if (you.training[sk])
             return you.training[sk];
     return 0;
@@ -1021,7 +1117,7 @@ static int _min_points_to_raise_all(int min_training)
         for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
             if (_is_sacrificed_skill(sk))
                 points += magic_training / min_training;
-
+    
     return points;
 }
 
@@ -1101,6 +1197,49 @@ static void _train_with_innate_casting(bool simu)
     }
 }
 
+static void _train_with_innate_martial(bool simu)
+{
+    while (true) {
+        const int min = _min_training_level();
+        if (min == NO_TRAINING) // no skills set to train
+            return;
+
+        const int points = _min_points_to_raise_all(min);
+        if (!_xp_available_for_skill_points(points))
+            break;
+
+        // OK, we should be able to train everything.
+        for (int i = 0; i < NUM_SKILLS; ++i)
+        {
+            if (!you.training[i])
+                continue;
+            const int p = you.training[i] / min;
+            int xp = calc_skill_cost(you.skill_cost_level) * p;
+            // We don't want to disable training for magic skills midway.
+            // Finish training all skills and check targets afterward.
+            const auto sk = static_cast<skill_type>(i);
+            _train(sk, xp, simu, false);
+            _level_up_check(sk, simu);
+        }
+
+        const int martial_training = _martial_training();
+        if (martial_training)
+        {
+            for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            {
+                if (!_is_sacrificed_skill(sk))
+                    continue;
+                const int p = martial_training / min;
+                const int xp = calc_skill_cost(you.skill_cost_level) * p;
+                you.exp_available -= xp;
+                you.total_experience += xp;
+            }
+        }
+
+        check_training_targets();
+    }
+}
+
 void train_skills(bool simu)
 {
     int cost, exp;
@@ -1121,6 +1260,8 @@ void train_skills(bool simu)
     }
     else if (you.has_mutation(MUT_INNATE_CASTER))
         _train_with_innate_casting(simu);
+    else if (you.has_mutation(MUT_INNATE_MAN))
+        _train_with_innate_martial(simu);
     else
     {
         do
@@ -1178,7 +1319,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         if (you.training[i] > 0)
         {
             sk_exp[i] = you.training[i] * exp / 100;
-            if (sk_exp[i] < cost && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            if (sk_exp[i] < cost && (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)))
             {
                 // One skill has a too low training to be trained at all.
                 // We skip the first phase and go directly to the random
@@ -1340,6 +1481,8 @@ bool check_training_target(skill_type sk)
         you.training_targets[sk] = 0;
         if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(sk))
             set_magic_training(TRAINING_DISABLED);
+        else if (you.has_mutation(MUT_INNATE_MAN) && is_martial_skill(sk))
+            set_martial_training(TRAINING_DISABLED);
         else
             you.train_alt[sk] = you.train[sk] = TRAINING_DISABLED;
         mprf("%sraining target %d.%d for %s reached!",
@@ -2516,7 +2659,8 @@ void fixup_skills()
 
     if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level)
         && !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-        && !you.has_mutation(MUT_INNATE_CASTER))
+        && !you.has_mutation(MUT_INNATE_CASTER)
+        && !you.has_mutation(MUT_INNATE_MAN))
     {
         skill_menu(SKMF_EXPERIENCE);
     }
@@ -2544,6 +2688,8 @@ void set_training_status(skill_type sk, training_status st)
 {
     if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(sk))
         set_magic_training(st);
+    else if (you.has_mutation(MUT_INNATE_MAN) && is_martial_skill(sk))
+        set_martial_training(st);
     else
         you.train[sk] = st;
 }
@@ -2551,5 +2697,11 @@ void set_training_status(skill_type sk, training_status st)
 void set_magic_training(training_status st)
 {
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        you.train[sk] = you.train_alt[sk] = st;
+}
+
+void set_martial_training(training_status st)
+{
+    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
         you.train[sk] = you.train_alt[sk] = st;
 }

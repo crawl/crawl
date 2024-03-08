@@ -1038,10 +1038,7 @@ static void _get_randart_properties(const item_def &item,
 
     // Each point of quality lets us add or enhance a good property.
     const int max_quality = 7;
-    const int quality = 1 + binomial(max_quality - 1, 21);
-
-    if (lucky)
-        quality++;
+    const int quality = 1 + binomial(max_quality - 1, 21) + lucky;
 
     // We'll potentially add up to 2 bad properties, also considering any fixed
     // bad properties.
@@ -1163,7 +1160,7 @@ void setup_unrandart(item_def &item, bool creating)
     item.plus      = unrand->plus;
 }
 
-static bool _init_artefact_properties(item_def &item, lucky = false)
+static bool _init_artefact_properties(item_def &item, bool lucky = false)
 {
     ASSERT(is_artefact(item));
 
@@ -1181,7 +1178,7 @@ static bool _init_artefact_properties(item_def &item, lucky = false)
 
     artefact_properties_t prop;
     prop.init(0);
-    _get_randart_properties(item, prop, 0, 2, lucky);
+    _get_randart_properties(item, prop, lucky);
 
     for (int i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(prop[i]);
@@ -2159,7 +2156,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     item.flags |= ISFLAG_UNRANDART;
     _artefact_setup_prop_vectors(item);
-    _init_artefact_properties(item, lucky);
+    _init_artefact_properties(item);
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));

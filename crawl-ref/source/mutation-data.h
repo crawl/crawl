@@ -2436,6 +2436,14 @@ static const mutation_def mut_data[] =
   {"You feel a greater respect for book-learning."},
 },
 
+{ MUT_INNATE_MAN, 0, 1, mutflag::good, false,
+  "innate man",
+
+  {"Your weapon skills are trained simultaneously.", "", ""},
+  {"", "", ""},
+  {""},
+},
+
 { MUT_HP_CASTING, 0, 1, mutflag::good, false,
   "HP casting",
 
