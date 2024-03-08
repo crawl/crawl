@@ -308,6 +308,8 @@ w:2
 %%%%
 _west_european_male_name_
 
+Æschere
+
 Ælfric
 
 Æthelred
@@ -331,6 +333,8 @@ Esmond
 Florimund
 
 Gladwin
+
+Hondscioh
 
 Hrodulf
 
