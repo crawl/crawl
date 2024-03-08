@@ -945,7 +945,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
-    const int cost = spell_mana(spell);
+    const int cost = is_tabcasting() ? 0 : spell_mana(spell);
     pay_mp(cost);
 
     // Majin Bo HP cost taken at the same time

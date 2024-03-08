@@ -516,9 +516,6 @@ bool spell_is_direct_attack(spell_type spell)
 // not via an evocable or other odd source.
 int spell_mana(spell_type which_spell, bool real_spell)
 {
-    if (is_tabcasting())
-        return 0;
-
     const int level = _seekspell(which_spell)->level;
     if (real_spell && (you.duration[DUR_BRILLIANCE]
                        || player_equip_unrand(UNRAND_FOLLY)))
@@ -1134,7 +1131,8 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell_difficulty(spell) > you.experience_level)
             return "you aren't experienced enough to cast this spell.";
 
-        if (you.has_mutation(MUT_HP_CASTING))
+        if (is_tabcasting()){}
+        else if (you.has_mutation(MUT_HP_CASTING))
         {
             // TODO: deduplicate with enough_hp()
             if (you.duration[DUR_DEATHS_DOOR])
