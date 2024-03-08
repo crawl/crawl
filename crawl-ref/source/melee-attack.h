@@ -55,7 +55,7 @@ public:
                  int attack_num = 0, int effective_attack_num = 0);
     void set_weapon(item_def *weapon, bool offhand = false);
 
-    bool launch_attack_set();
+    bool launch_attack_set(bool allow_rev = true);
     bool attack();
     int calc_to_hit(bool random) override;
     int post_roll_to_hit_modifiers(int mhit, bool random) override;

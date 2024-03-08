@@ -2565,7 +2565,7 @@ void bolt::affect_endpoint()
         else
             mpr("You hear a splash.");
 
-        const bool is_player = agent() && agent()->is_player();
+        const bool is_player = agent(true) && agent(true)->is_player();
         const int num = is_player ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
                                   : random_range(3, 12, 2);
         const int dur = div_rand_round(ench_power * 4, 3) + 66;

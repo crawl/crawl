@@ -2613,9 +2613,9 @@ dump_message_count = 20
         The number of last messages to be displayed in character dump
         files.
 
-dump_order  = header,hiscore,stats,misc,inventory,
-dump_order += skills,spells,overview,mutations,messages,screenshot,
-dump_order += monlist,kills,notes,screenshots,skill_gains,action_counts
+dump_order  = header,hiscore,stats,misc,inventory,skills,spells,
+dump_order += overview,mutations,messages,screenshot,monlist,kills,
+dump_order += notes,screenshots,vaults,skill_gains,action_counts
         (Ordered list option)
         Controls the order of sections in the dump.
 
@@ -2625,13 +2625,16 @@ dump_order += monlist,kills,notes,screenshots,skill_gains,action_counts
         dump as:
              dump_order += turns_by_place, kills_by_place
 
-        Another optional dump section is "vaults", which will list the
-        locations and names of all the vaults that have been generated
-        in the game. This will only be included in the final dump
-        which happens when you die, quit or win (or in ordinary dumps
-        while in wizard mode). The "vaults" section is enabled by default
+        The "turns_by_place" section is enabled by default
         in trunk builds of Crawl (not releases or pre-release betas),
-        appearing between "notes" and "skill_gains".
+        appearing at the end of the dump.
+
+        For making your chardump prettier, you can add
+            dump_order += -
+        to place a separator between sections.
+
+        You can also add arbitrary section names; ones not mentioned here will
+        be interpreted as custom user-defined Lua functions with no arguments.
 
 4-c     Notes.
 --------------

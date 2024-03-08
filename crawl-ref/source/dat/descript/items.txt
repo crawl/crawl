@@ -706,9 +706,10 @@ A small axe.
 %%%%
 hand cannon
 
-A machine that fires bolts via applied thaumaturgy. Some enchant their projectiles
-to fall forward instead of down, others bewitch the bolts with a fatal attraction
-to their targets. All are slow, loud, and blast out thick smoke with each shot.
+A machine that fires metal slugs via applied thaumaturgy. Some enchant their
+projectiles to fall forward instead of down, others bewitch the slugs with a
+fatal attraction to their targets. All are slow, loud, and blast out thick
+smoke with each shot.
 %%%%
 hat
 
@@ -874,7 +875,7 @@ quest is complete.
 orcbow
 
 A recurved bow, crudely crafted from troll-bone and warg hair. The cave orcs'
-use of archery, so unlike their surface-dwelling cousins, shows the influence
+use of archery, so unlike their surface-dwelling ancestors, shows the influence
 of their elvish allies.
 %%%%
 pair of boots

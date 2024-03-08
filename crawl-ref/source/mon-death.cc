@@ -745,8 +745,16 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
     {
-        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::deathbed_follower :
-                                                    conv_t::deathbed);
+        const bool follower = MON_KILL(killer);
+        conv_t ctype = follower ? conv_t::deathbed_follower
+                                : conv_t::deathbed;
+        if (mons.has_ench(ENCH_VENGEANCE_TARGET))
+        {
+            ctype = follower ? conv_t::vengeance_follower
+                             : conv_t::vengeance;
+        }
+
+        beogh_convert_orc(&mons, ctype);
         return true;
     }
 

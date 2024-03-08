@@ -192,7 +192,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 #ifdef ASSERTS
     if (eq == slot)
         return;
-    if (eq == EQ_WEAPON && slot == EQ_OFFHAND) // hack for off-hand wielding
+    if (slot == EQ_OFFHAND && you.has_mutation(MUT_WIELD_OFFHAND)) // hack for off-hand wielding
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;

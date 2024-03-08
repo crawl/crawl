@@ -300,7 +300,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
 
     for (radius_iterator ri(moved->pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (!valid_blink_destination(moved, *ri, !allow_sanct)
+        if (!valid_blink_destination(*moved, *ri, !allow_sanct)
             || (keep_los && !target->see_cell_no_trans(*ri)))
         {
             continue;
@@ -366,36 +366,32 @@ bool blink_away(monster* mon, bool self_cast)
 }
 
 // Blink the monster within range but at distance to its foe.
-void blink_range(monster* mon)
+void blink_range(monster &mon)
 {
-    ASSERT(mon); // XXX: change to monster &mon
-
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(*foe))
+    actor* foe = mon.get_foe();
+    if (!foe || !mon.can_see(*foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, false, true);
+    coord_def dest = random_space_weighted(&mon, foe, false, true);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest);
-    ASSERT(success || mon->is_constricted());
+    bool success = mon.blink_to(dest);
+    ASSERT(success || mon.is_constricted());
 #ifndef ASSERTS
     UNUSED(success);
 #endif
 }
 
 // Blink the monster close to its foe.
-void blink_close(monster* mon)
+void blink_close(monster &mon)
 {
-    ASSERT(mon); // XXX: change to monster &mon
-
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(*foe))
+    actor* foe = mon.get_foe();
+    if (!foe || !mon.can_see(*foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, true, true, true);
+    coord_def dest = random_space_weighted(&mon, foe, true, true, true);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest, false);
-    ASSERT(success || mon->is_constricted());
+    bool success = mon.blink_to(dest, false);
+    ASSERT(success || mon.is_constricted());
 #ifndef ASSERTS
     UNUSED(success);
 #endif
@@ -404,26 +400,26 @@ void blink_close(monster* mon)
 // This only checks the contents of the tile - nothing in between.
 // Could compact most of this into a big boolean if you wanted to trade
 // readability for dubious speed improvements.
-bool valid_blink_destination(const actor* moved, const coord_def& target,
+bool valid_blink_destination(const actor &moved, const coord_def& target,
                              bool forbid_sanctuary,
-                             bool forbid_unhabitable)
+                             bool forbid_unhabitable,
+                             bool incl_unseen)
 {
-    ASSERT(moved);
-
     if (!in_bounds(target))
         return false;
-    if (actor_at(target))
+    actor *targ_act = actor_at(target);
+    if (targ_act && (incl_unseen || moved.can_see(*targ_act)))
         return false;
     if (forbid_unhabitable)
     {
-        if (!moved->is_habitable(target))
+        if (!moved.is_habitable(target))
             return false;
-        if (moved->is_player() && is_feat_dangerous(env.grid(target), true))
+        if (moved.is_player() && is_feat_dangerous(env.grid(target), true))
             return false;
     }
     if (forbid_sanctuary && is_sanctuary(target))
         return false;
-    if (!moved->see_cell_no_trans(target))
+    if (!moved.see_cell_no_trans(target))
         return false;
 
     return true;
@@ -433,7 +429,7 @@ vector<coord_def> find_blink_targets()
 {
     vector<coord_def> result;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-        if (valid_blink_destination(&you, *ri))
+        if (valid_blink_destination(you, *ri))
             result.push_back(*ri);
 
     return result;
@@ -464,7 +460,7 @@ bool random_near_space(const actor* victim,
 
         target = origin + (p - tried_o);
 
-        if (valid_blink_destination(victim, target,
+        if (valid_blink_destination(*victim, target,
                                     forbid_sanctuary, forbid_unhabitable)
             && (allow_adjacent || grid_distance(origin, target) > 1))
         {

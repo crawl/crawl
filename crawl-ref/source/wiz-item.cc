@@ -779,7 +779,7 @@ static void _debug_acquirement_stats()
     object_class_type list[] =
     {
         OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY, OBJ_BOOKS, OBJ_STAVES,
-        OBJ_MISCELLANY
+        OBJ_MISCELLANY, OBJ_TALISMANS
     };
     char c = 'a';
     for (auto typ : list)
@@ -882,7 +882,7 @@ static void _debug_acquirement_stats()
 
         destroy_item(item_index, true);
 
-        if ((i + 1) % (num_itrs / 10) == 0)
+        if (num_itrs >= 10 && (i + 1) % (num_itrs / 10) == 0)
         {
             clear_messages();
             mprf("%d%% done.", 100 * (i + 1) / num_itrs);
@@ -924,6 +924,10 @@ static void _debug_acquirement_stats()
     bool naked = true;
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
     {
+        // We can't acquire for the gizmo or preview ring slots. Skip them.
+        if (i == EQ_GIZMO || i == EQ_PREVIEW_RING)
+            continue;
+
         int eqslot = e_order[i];
 
         // Only output filled slots.
@@ -1287,7 +1291,7 @@ static void _debug_randart_stats()
 
         destroy_item(env.item[ind], true);
 
-        if ((i + 1) % (num_itrs / 10) == 0)
+        if (num_itrs >= 10 && (i + 1) % (num_itrs / 10) == 0)
         {
             clear_messages();
             mprf("%d%% done.", 100 * (i + 1) / num_itrs);

@@ -582,6 +582,10 @@ void ash_check_bondage()
         if (!you_can_wear(i))
             continue;
 
+        // Coglin gizmo isn't a normal slot, not cursable.
+        if (j == EQ_GIZMO)
+            continue;
+
         // transformed away slots are still considered to be possibly bound
         num_slots++;
         if (you.equip[i] != -1)
