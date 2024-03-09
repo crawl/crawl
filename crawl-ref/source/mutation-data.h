@@ -1066,7 +1066,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_ROLLPAGE, 0, 2, mutflag::good, false,
-  "roll",
+  "rollpage",
 
   {"You regenerate magic when rolling toward enemies. (Rampage MPRegen)",
    "You regenerate magic and health when rolling toward enemies. (Rampage Regen)",
