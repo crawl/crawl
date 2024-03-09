@@ -9,3 +9,5 @@ compflag.h
 *.sdf
 *.vcxproj.user
 *.csproj.user
+*.psess
+*.vspx

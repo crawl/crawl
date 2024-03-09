@@ -1321,7 +1321,7 @@ static void _protean_explosion(monster* mons)
         num_children += 2;
     else if (mons_class_hit_dice(target) < 11)
         ++num_children;
-    else if (mons_class_hit_dice(target) < 12 and coinflip())
+    else if (mons_class_hit_dice(target) < 12 && coinflip())
         ++num_children;
 
     // Then create and scatter the piles around
