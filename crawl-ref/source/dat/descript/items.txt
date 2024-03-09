@@ -333,7 +333,7 @@ book of the earth
 A guide to drawing immense power from the depths of the earth. The original was
 written as a collaboration between the hill dwarves and the mountain dwarves, but
 its compilation was cut short when a massive wave of earthquakes plunged the hill
-dwarves' civilization into ruin.
+dwarves' civilisation into ruin.
 %%%%
 book of the hunter
 
@@ -592,7 +592,7 @@ A long single-edged sword with a slightly curved blade.
 %%%%
 fen folio
 
-A collection of spells once used by the great swamp civilizations.
+A collection of spells once used by the great swamp civilisations.
 %%%%
 figurine of a ziggurat
 
