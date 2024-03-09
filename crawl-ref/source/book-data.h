@@ -372,6 +372,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
     SPELL_BOMBARD,
+    SPELL_PERMAFROST_ERUPTION,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -416,6 +417,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of the Tundra
     SPELL_HAILSTORM,
     SPELL_SUMMON_ICE_BEAST,
+    SPELL_PERMAFROST_ERUPTION,
     SPELL_SIMULACRUM,
 },
 

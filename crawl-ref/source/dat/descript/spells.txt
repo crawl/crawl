@@ -760,8 +760,8 @@ creatures.
 %%%%
 Iceblast spell
 
-Fires a large mass of ice, which explodes on impact. It affects even
-cold-resistant creatures somewhat, due to the strong impact and cutting edges.
+Fires a large mass of ice, which explodes on impact. Half of its damage
+bypasses cold resistance.
 %%%%
 Ignite Poison spell
 
@@ -1117,6 +1117,16 @@ Allows the caster to travel a short distance through an adjacent rock wall and
 emerge again on the other side. This spell takes an unusally long time to cast,
 during which the caster will be unable to act, but also gain increased armour
 from their attunement to the rock.
+%%%%
+Permafrost Eruption spell
+
+Calls on the ancient cold lurking within the earth to emerge - violently. The
+force of its emergence blasts rock from the ceiling, smashing into the target
+with unavoidable force. The cold itself is brief but unbearably bitter,
+bypassing armour entirely as it freezes the target and their neighbours.
+
+It will always attempt to blast the largest concentration of foes in sight, and
+never explodes next to the caster.
 %%%%
 Petrify spell
 

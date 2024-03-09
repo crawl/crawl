@@ -432,7 +432,7 @@ bool spell_harms_target(spell_type spell)
     if (flags & spflag::targeting_mask)
         return true;
 
-    // n.b. this excludes various untargeted attack spells like hailstorm, abs 0
+    // n.b. this excludes various untargeted attack spells like hailstorm, MCC
 
     return false;
 }
@@ -501,6 +501,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_IGNITION
         || spell == SPELL_STARBURST
         || spell == SPELL_HAILSTORM
+        || spell == SPELL_PERMAFROST_ERUPTION
         || spell == SPELL_MANIFOLD_ASSAULT
         || spell == SPELL_MAXWELLS_COUPLING) // n.b. not an area spell
     {
@@ -1610,6 +1611,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
         }
         return true; // TODO
+
+    case SPELL_PERMAFROST_ERUPTION:
+        return permafrost_targets(you, pow).empty();
 
     default:
         break;
