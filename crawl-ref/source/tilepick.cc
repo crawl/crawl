@@ -2793,7 +2793,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
     case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
     case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
-    case TALISMAN_CONDUIT:
+    case TALISMAN_CONDUIT:  return TILE_TALISMAN_CONDUIT;
     default: return TILE_ERROR;
     }
 }
