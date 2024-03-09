@@ -310,7 +310,7 @@ Movement
 ========================================
 
 You can make your character walk around with the numeric keypad (try both
-Numlock on and off) or the "Rogue" keys (hjklyubn). If this is too slow, you can
+NumLock on and off) or the "Rogue" keys (hjklyubn). If this is too slow, you can
 make your character walk repeatedly by pressing Shift and a direction;
 alternatively, press '/' followed by a direction. You will walk in that
 direction until any of a number of things happen: a hostile monster is visible
@@ -1210,7 +1210,7 @@ Crawl's homepage is at:
   http://crawl.develz.org
 
 Use this page for direct links to downloads of the most recent version. You can
-also submit bug reports on the Github issue tracker at:
+also submit bug reports on the GitHub issue tracker at:
 
   https://github.com/crawl/crawl/issues
 
@@ -2317,7 +2317,7 @@ Movement
 
 direction
   This moves one square. The direction is either one of the numpad cursor keys
-  (try both Numlock on and off) or one of the Rogue vi keys (hjklyubn).
+  (try both NumLock on and off) or one of the Rogue vi keys (hjklyubn).
 
 Shift-direction or / direction
   This moves straight until something interesting is found (like a monster). If
