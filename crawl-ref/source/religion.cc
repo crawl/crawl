@@ -3265,6 +3265,10 @@ bool player_can_join_god(god_type which_god, bool temp)
     if (you.has_mutation(MUT_FORLORN))
         return false;
 
+    // The one exception to good gods' refusing the undead and demonic.
+    if (which_god == GOD_ELYVILON && you.species == SP_DEMONSPAWN)
+        return true;
+
     if (is_good_god(which_god) && you.undead_or_demonic(temp))
         return false;
 
@@ -3702,6 +3706,10 @@ static void _join_cheibriados()
 static const map<god_type, function<void ()>> on_join = {
     { GOD_BEOGH, update_player_symbol },
     { GOD_CHEIBRIADOS, _join_cheibriados },
+    { GOD_ELYVILON, []() {
+        if (you.species == SP_DEMONSPAWN)
+            simple_god_message(" suppresses the evil in your demonic heritage.");
+    }},
     { GOD_FEDHAS, []() {
         mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon cease their "
              "hostilities.");
@@ -3785,13 +3793,18 @@ void join_religion(god_type which_god)
     if (join_effect != nullptr)
         (*join_effect)();
 
+    // We might have umbra from the foul shadow mutation. If we switched from a
+    // non-good god to Elyvilon, we need to turn it off; if we switched from
+    // Elyvilon to a non-good god, we need to turn it on.
     if (!is_good_god(old_god) && is_good_god(you.religion))
     {
+        invalidate_agrid(true);
         _print_good_god_brand_changes(you.weapon(), true);
         _print_good_god_brand_changes(you.offhand_weapon(), true);
     }
     else if (is_good_god(old_god) && !is_good_god(you.religion))
     {
+        invalidate_agrid(true);
         _print_good_god_brand_changes(you.weapon(), false);
         _print_good_god_brand_changes(you.offhand_weapon(), false);
     }
