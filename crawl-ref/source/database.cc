@@ -274,14 +274,14 @@ void TextDB::_regenerate_db()
     shutdown();
     if (_parent)
     {
-#ifdef DEBUG_DIAGNOSTICS
+#if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
 #endif
         mprf(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name);
     }
     else
     {
-#ifdef DEBUG_DIAGNOSTICS
+#if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         printf("Regenerating db: %s\n", _db_name);
 #endif
         mprf(MSGCH_PLAIN, "Regenerating db: %s", _db_name);
