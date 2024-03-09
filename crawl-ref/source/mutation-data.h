@@ -11,6 +11,7 @@ struct mutation_def
     mutflags    uses;       ///< Bitfield holding types of effects that grant
                             /// this mutation (mutflag::*)
     bool        form_based; ///< Mutation is suppressed when shapechanged.
+    bool        is_evil;    ///< Mutation has effects opposed by good gods.
     const char* short_desc; ///< What appears on the '%' screen.
     const char* have[3];    ///< What appears on the 'A' screen.
     const char* gain[3];    ///< Message when you gain the mutation.
@@ -27,7 +28,7 @@ struct mutation_category_def
 static const mutation_def mut_data[] =
 {
 
-{ MUT_TOUGH_SKIN, 0, 3, mutflag::good, true,
+{ MUT_TOUGH_SKIN, 0, 3, mutflag::good, true, false,
   "tough skin",
 
   {"You have tough skin. (AC +1)",
@@ -43,7 +44,7 @@ static const mutation_def mut_data[] =
    "Your skin feels delicate."},
 },
 
-{ MUT_STRONG, 7, 2, mutflag::good, false,
+{ MUT_STRONG, 7, 2, mutflag::good, false, false,
   "strong",
 
   {"Your muscles are strong. (Str +4, Int/Dex -1)",
@@ -53,7 +54,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_STRONG,
 },
 
-{ MUT_CLEVER, 7, 2, mutflag::good, false,
+{ MUT_CLEVER, 7, 2, mutflag::good, false, false,
   "clever",
 
   {"Your mind is acute. (Int +4, Str/Dex -1)",
@@ -63,7 +64,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_CLEVER,
 },
 
-{ MUT_AGILE, 7, 2, mutflag::good, false,
+{ MUT_AGILE, 7, 2, mutflag::good, false, false,
   "agile",
 
   {"You are agile. (Dex +4, Str/Int -1)",
@@ -73,7 +74,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_AGILE,
 },
 
-{ MUT_POISON_RESISTANCE, 4, 1, mutflag::good, true,
+{ MUT_POISON_RESISTANCE, 4, 1, mutflag::good, true, false,
   "poison resistance",
 
   {"Your system is resistant to poisons. (rPois)", "", ""},
@@ -83,7 +84,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_CARNIVOROUS, 0, 1, mutflag::good, false,
+{ MUT_CARNIVOROUS, 0, 1, mutflag::good, false, false,
   "carnivore",
 
   {"You are carnivorous and can eat meat at any time.", "", ""},
@@ -92,7 +93,7 @@ static const mutation_def mut_data[] =
 
   {"You feel able to eat a more balanced diet.", "", ""},
 },
-{ MUT_HERBIVOROUS, 0, 1, mutflag::bad, false,
+{ MUT_HERBIVOROUS, 0, 1, mutflag::bad, false, false,
   "herbivore",
 
   {"You are a herbivore.", "", ""},
@@ -103,7 +104,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_HEAT_RESISTANCE, 4, 3, mutflag::good, true,
+{ MUT_HEAT_RESISTANCE, 4, 3, mutflag::good, true, false,
   "fire resistance",
 
   {"Your flesh is heat resistant. (rF+)",
@@ -120,7 +121,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_HEAT_RESISTANCE,
 },
 
-{ MUT_COLD_RESISTANCE, 4, 3, mutflag::good, true,
+{ MUT_COLD_RESISTANCE, 4, 3, mutflag::good, true, false,
   "cold resistance",
 
   {"Your flesh is cold resistant. (rC+)",
@@ -137,7 +138,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_COLD_RESISTANCE,
 },
 
-{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal, true,
+{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal, true, false,
   "heat vulnerability",
 
   {"You are vulnerable to heat. (rF-)",
@@ -154,7 +155,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_HEAT_VULNERABILITY,
 },
 
-{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal, true,
+{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal, true, false,
 
   "cold vulnerability",
 
@@ -172,7 +173,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_COLD_VULNERABILITY,
 },
 
-{ MUT_DEMONIC_GUARDIAN, 0, 3, mutflag::good, false,
+{ MUT_DEMONIC_GUARDIAN, 0, 3, mutflag::good, false, false,
   "demonic guardian",
 
   {"A weak demonic guardian rushes to your aid.",
@@ -190,7 +191,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_DEMONIC_GUARDIAN,
 },
 
-{ MUT_SHOCK_RESISTANCE, 2, 1, mutflag::good, true,
+{ MUT_SHOCK_RESISTANCE, 2, 1, mutflag::good, true, false,
   "electricity resistance",
 
   {"You are resistant to electric shocks. (rElec)", "", ""},
@@ -199,7 +200,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_SHOCK_RESISTANCE,
 },
 
-{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::qazlal, true,
+{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::qazlal, true, false,
   "electricity vulnerability",
 
   {"You are vulnerable to electric shocks.", "", ""},
@@ -208,7 +209,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_SHOCK_VULNERABILITY,
 },
 
-{ MUT_REGENERATION, 2, 3, mutflag::good, false,
+{ MUT_REGENERATION, 2, 3, mutflag::good, false, false,
   "regeneration",
 
   {"Your natural rate of healing is unusually fast.",
@@ -226,7 +227,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_REGENERATION,
 },
 
-{ MUT_INHIBITED_REGENERATION, 3, 1, mutflag::bad, false,
+{ MUT_INHIBITED_REGENERATION, 3, 1, mutflag::bad, false, false,
   "inhibited regeneration",
 
   {"You do not regenerate when monsters are visible.", "", ""},
@@ -239,7 +240,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_FAST_METABOLISM, 0, 3, mutflag::bad, false,
+{ MUT_FAST_METABOLISM, 0, 3, mutflag::bad, false, false,
   "fast metabolism",
 
   {"You have a fast metabolism.",
@@ -255,7 +256,7 @@ static const mutation_def mut_data[] =
    "Your metabolism slows."},
 },
 
-{ MUT_SLOW_METABOLISM, 0, 2, mutflag::good, false,
+{ MUT_SLOW_METABOLISM, 0, 2, mutflag::good, false, false,
   "slow metabolism",
 
   {"You have a slow metabolism.",
@@ -272,7 +273,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_WEAK, 8, 2, mutflag::bad, false,
+{ MUT_WEAK, 8, 2, mutflag::bad, false, false,
   "weak",
 
   {"You are weak. (Str -2)",
@@ -282,7 +283,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_WEAK,
 },
 
-{ MUT_DOPEY, 8, 2, mutflag::bad, false,
+{ MUT_DOPEY, 8, 2, mutflag::bad, false, false,
   "dopey",
 
   {"You are dopey. (Int -2)",
@@ -292,7 +293,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_DOPEY,
 },
 
-{ MUT_CLUMSY, 8, 2, mutflag::bad, false,
+{ MUT_CLUMSY, 8, 2, mutflag::bad, false, false,
   "clumsy",
 
   {"You are clumsy. (Dex -2)",
@@ -303,7 +304,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_TELEPORT_CONTROL, 0, 1, mutflag::good, false,
+{ MUT_TELEPORT_CONTROL, 0, 1, mutflag::good, false, false,
   "teleport control",
 
   {"You can control translocations.", "", ""},
@@ -312,7 +313,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_TELEPORT, 3, 2, mutflag::bad, false,
+{ MUT_TELEPORT, 3, 2, mutflag::bad, false, false,
   "teleportitis",
 
   {"You are occasionally teleported next to monsters.",
@@ -328,7 +329,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_PERSISTENT_DRAIN, 5, 1, mutflag::bad, false,
+{ MUT_PERSISTENT_DRAIN, 5, 1, mutflag::bad, false, false,
   "persistent drain",
 
   {"Your health recovers twice as slowly from being drained.", "", ""},
@@ -338,7 +339,7 @@ static const mutation_def mut_data[] =
   {"You recover from draining at a normal speed again.", "", ""},
 },
 
-{ MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
+{ MUT_STRONG_WILLED, 5, 3, mutflag::good, false, false,
   "strong-willed",
 
   {"You are strong-willed. (Will+)",
@@ -354,7 +355,7 @@ static const mutation_def mut_data[] =
    "You feel less strong-willed."},
 },
 
-{ MUT_FAST, 0, 3, mutflag::good, true,
+{ MUT_FAST, 0, 3, mutflag::good, true, false,
   "speed",
 
   {"You cover ground quickly. (Speed+)",
@@ -370,7 +371,7 @@ static const mutation_def mut_data[] =
    "You feel sluggish."},
 },
 
-{ MUT_SLOW, 0, 3, mutflag::bad, true,
+{ MUT_SLOW, 0, 3, mutflag::bad, true, false,
   "slowness",
 
   {"You cover ground slowly.",
@@ -386,7 +387,7 @@ static const mutation_def mut_data[] =
    "You feel quick."},
 },
 
-{ MUT_ACUTE_VISION, 2, 1, mutflag::good, false,
+{ MUT_ACUTE_VISION, 2, 1, mutflag::good, false, false,
   "see invisible",
 
   {"You have supernaturally acute eyesight. (SInv)", "", ""},
@@ -396,7 +397,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ACUTE_VISION,
 },
 
-{ MUT_DEFORMED, 8, 1, mutflag::bad, true,
+{ MUT_DEFORMED, 8, 1, mutflag::bad, true, false,
   "deformed body",
 
   {"Armour fits poorly on your strangely shaped body.", "", ""},
@@ -405,7 +406,7 @@ static const mutation_def mut_data[] =
 },
 
 // Naga only
-{ MUT_SPIT_POISON, 8, 2, mutflag::good, false,
+{ MUT_SPIT_POISON, 8, 2, mutflag::good, false, false,
   "spit poison",
 
   {"You can spit poison.",
@@ -422,7 +423,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_BREATHE_FLAMES, 0, 3, mutflag::good, false,
+{ MUT_BREATHE_FLAMES, 0, 3, mutflag::good, false, false,
   "breathe flames",
 
   {"You can breathe flames.",
@@ -438,7 +439,7 @@ static const mutation_def mut_data[] =
    "A chill runs up and down your throat."},
 },
 
-{ MUT_JUMP, 0, 3, mutflag::good, false,
+{ MUT_JUMP, 0, 3, mutflag::good, false, false,
   "jump",
 
   {"You can jump attack at a short distance.",
@@ -454,7 +455,7 @@ static const mutation_def mut_data[] =
    "You feel less sure on your feet."},
 },
 
-{ MUT_BLINK, 0, 1, mutflag::good, false,
+{ MUT_BLINK, 0, 1, mutflag::good, false, false,
   "blink",
 
   {"You can translocate small distances at will.", "", ""},
@@ -462,7 +463,7 @@ static const mutation_def mut_data[] =
   {"You no longer feel jittery.", "", ""},
 },
 
-{ MUT_STRONG_STIFF, 0, 3, mutflag::good, false,
+{ MUT_STRONG_STIFF, 0, 3, mutflag::good, false, false,
   "stiff muscles",
 
   {"Your muscles are strong, but stiff. (Str +1, Dex -1)",
@@ -478,7 +479,7 @@ static const mutation_def mut_data[] =
    "Your muscles feel loose."},
 },
 
-{ MUT_FLEXIBLE_WEAK, 0, 3, mutflag::good, false,
+{ MUT_FLEXIBLE_WEAK, 0, 3, mutflag::good, false, false,
   "flexible muscles",
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
@@ -495,7 +496,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_SCREAM, 6, 2, mutflag::bad, false,
+{ MUT_SCREAM, 6, 2, mutflag::bad, false, false,
   "screaming",
 
   {"You occasionally shout uncontrollably at your foes.",
@@ -511,7 +512,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_NOISE_DAMPENING, 2, 1, mutflag::good, false,
+{ MUT_NOISE_DAMPENING, 2, 1, mutflag::good, false, false,
   "noise suppression",
 
   {"You passively dampen the noise of your surroundings.", "", ""},
@@ -521,7 +522,7 @@ static const mutation_def mut_data[] =
   {"You feel your surroundings grow louder.", "", ""},
 },
 
-{ MUT_CLARITY, 6, 1, mutflag::good, false,
+{ MUT_CLARITY, 6, 1, mutflag::good, false, false,
   "clarity",
 
   {"You possess an exceptional clarity of mind.", "", ""},
@@ -531,7 +532,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_CLARITY
 },
 
-{ MUT_BERSERK, 7, 2, mutflag::bad, false,
+{ MUT_BERSERK, 7, 2, mutflag::bad, false, false,
   "berserk",
 
   {"You sometimes lose your temper in combat.",
@@ -547,7 +548,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_DETERIORATION, 10, 2, mutflag::bad, false,
+{ MUT_DETERIORATION, 10, 2, mutflag::bad, false, false,
   "deterioration",
 
   {"Your body sometimes deteriorates upon taking damage.",
@@ -564,7 +565,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_BLURRY_VISION, 0, 3, mutflag::bad, false,
+{ MUT_BLURRY_VISION, 0, 3, mutflag::bad, false, false,
   "blurry vision",
 
   {"Scrolls take you a little longer to read.",
@@ -581,7 +582,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_MUTATION_RESISTANCE, 4, 3, mutflag::good, false,
+{ MUT_MUTATION_RESISTANCE, 4, 3, mutflag::good, false, false,
   "mutation resistance",
 
   {"You are somewhat resistant to further mutation.",
@@ -598,7 +599,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MUTATION_RESISTANCE,
 },
 
-{ MUT_EVOLUTION, 4, 2, mutflag::good, false,
+{ MUT_EVOLUTION, 4, 2, mutflag::good, false, false,
   "evolution",
 
   {"You have hidden genetic potential.",
@@ -614,7 +615,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_DEVOLUTION, 4, 2, mutflag::bad, false,
+{ MUT_DEVOLUTION, 4, 2, mutflag::bad, false, false,
   "devolution",
 
   {"You have hidden genetic defects.",
@@ -630,7 +631,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_FRAIL, 10, 3, mutflag::bad, false,
+{ MUT_FRAIL, 10, 3, mutflag::bad, false, false,
   "frail",
 
   {"You are frail. (-10% HP)",
@@ -646,7 +647,7 @@ static const mutation_def mut_data[] =
    "You feel robust."},
 },
 
-{ MUT_ROBUST, 5, 3, mutflag::good, false,
+{ MUT_ROBUST, 5, 3, mutflag::good, false, false,
   "robust",
 
   {"You are robust. (+10% HP)",
@@ -665,7 +666,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_UNBREATHING, 0, 2, mutflag::good, true,
+{ MUT_UNBREATHING, 0, 2, mutflag::good, true, false,
   "unbreathing",
 
   {"You can survive without breathing.",
@@ -675,7 +676,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_TORMENT_RESISTANCE, 0, 2, mutflag::good, false,
+{ MUT_TORMENT_RESISTANCE, 0, 2, mutflag::good, false, false,
   "torment resistance",
 
   {"You are resistant to unholy torment.",
@@ -685,7 +686,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3, mutflag::good, false,
+{ MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3, mutflag::good, false, false,
   "negative energy resistance",
 
   {"You resist negative energy. (rN+)",
@@ -701,7 +702,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_MUMMY_RESTORATION, 0, 1, mutflag::good, false,
+{ MUT_MUMMY_RESTORATION, 0, 1, mutflag::good, false, false,
   "restore body",
 
   {"You can restore your body by infusing magical energy.",
@@ -716,7 +717,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_NECRO_ENHANCER, 0, 2, mutflag::good, false,
+{ MUT_NECRO_ENHANCER, 0, 2, mutflag::good, false, false,
   "in touch with death",
 
   {"You are in touch with the powers of death.",
@@ -730,7 +731,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_TENGU_FLIGHT, 0, 1, mutflag::good, false,
+{ MUT_TENGU_FLIGHT, 0, 1, mutflag::good, false, false,
   "evasive flight",
 
   {"Your magical flight helps you evade attacks. (EV +4)",
@@ -740,7 +741,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ACROBATIC, 0, 1, mutflag::good, false,
+{ MUT_ACROBATIC, 0, 1, mutflag::good, false, false,
   "acrobatic",
 
   {"You can magically evade attacks while moving or waiting.",
@@ -749,7 +750,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_WIELD_OFFHAND, 0, 1, mutflag::good, true,
+{ MUT_WIELD_OFFHAND, 0, 1, mutflag::good, true, false,
   "off-hand wielding",
 
   {"You can wield a second weapon in your off-hand.",
@@ -758,7 +759,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_SLOW_WIELD, 0, 1, mutflag::bad, true,
+{ MUT_SLOW_WIELD, 0, 1, mutflag::bad, true, false,
   "slow wielding",
 
   {"It takes a long time for you to wield or remove held weapons.",
@@ -767,7 +768,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_INITIALLY_ATTRACTIVE, 0, 1, mutflag::bad, false,
+{ MUT_INITIALLY_ATTRACTIVE, 0, 1, mutflag::bad, false, false,
   "initially attractive",
 
   {"You sometimes attract newly seen creatures.",
@@ -776,7 +777,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_WARMUP_STRIKES, 0, 1, mutflag::bad, true,
+{ MUT_WARMUP_STRIKES, 0, 1, mutflag::bad, true, false,
   "warmup strikes",
 
   {"Your first few attacks do less damage.",
@@ -785,7 +786,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_NO_JEWELLERY, 0, 1, mutflag::bad, true,
+{ MUT_NO_JEWELLERY, 0, 1, mutflag::bad, true, false,
   "no jewellery",
 
   {"You cannot equip rings or amulets.",
@@ -794,7 +795,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_HURL_DAMNATION, 0, 1, mutflag::good, false,
+{ MUT_HURL_DAMNATION, 0, 1, mutflag::good, false, false,
   "hurl damnation",
 
   {"You can hurl damnation.", "", ""},
@@ -803,7 +804,7 @@ static const mutation_def mut_data[] =
 },
 
 // body-slot facets
-{ MUT_HORNS, 7, 3, mutflag::good, true,
+{ MUT_HORNS, 7, 3, mutflag::good, true, false,
   "horns",
 
   {"You have a pair of small horns on your head.",
@@ -821,7 +822,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_HORNS,
 },
 
-{ MUT_BEAK, 1, 1, mutflag::good, true,
+{ MUT_BEAK, 1, 1, mutflag::good, true, false,
   "beak",
 
   {"You have a beak for a mouth.", "", ""},
@@ -829,7 +830,7 @@ static const mutation_def mut_data[] =
   {"Your beak shortens and softens into a mouth.", "", ""},
 },
 
-{ MUT_CLAWS, 2, 3, mutflag::good, true,
+{ MUT_CLAWS, 2, 3, mutflag::good, true, false,
   "claws",
 
   {"You have sharp fingernails.",
@@ -845,7 +846,7 @@ static const mutation_def mut_data[] =
    "Your hands feel fleshier."},
 },
 
-{ MUT_FANGS, 1, 3, mutflag::good, true,
+{ MUT_FANGS, 1, 3, mutflag::good, true, false,
   "fangs",
 
   {"You have very sharp teeth.",
@@ -863,7 +864,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_FANGS
 },
 
-{ MUT_HOOVES, 5, 3, mutflag::good, true,
+{ MUT_HOOVES, 5, 3, mutflag::good, true, false,
   "hooves",
 
   {"You have large cloven feet.",
@@ -879,7 +880,7 @@ static const mutation_def mut_data[] =
    "Your hooves look more like feet."},
 },
 
-{ MUT_ANTENNAE, 4, 3, mutflag::good, true,
+{ MUT_ANTENNAE, 4, 3, mutflag::good, true, false,
   "antennae",
 
   {"You have a pair of small antennae on your head.",
@@ -897,7 +898,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ANTENNAE,
 },
 
-{ MUT_TALONS, 5, 3, mutflag::good, true,
+{ MUT_TALONS, 5, 3, mutflag::good, true, false,
   "talons",
 
   {"You have sharp toenails.",
@@ -914,7 +915,7 @@ static const mutation_def mut_data[] =
 },
 
 // Octopode only
-{ MUT_TENTACLE_SPIKE, 10, 3, mutflag::good, true,
+{ MUT_TENTACLE_SPIKE, 10, 3, mutflag::good, true, false,
   "tentacle spike",
 
   {"One of your tentacles bears a spike.",
@@ -931,7 +932,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_BREATHE_POISON, 0, 1, mutflag::good, false,
+{ MUT_BREATHE_POISON, 0, 1, mutflag::good, false, false,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
@@ -940,7 +941,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_CONSTRICTING_TAIL, 0, 2, mutflag::good, true,
+{ MUT_CONSTRICTING_TAIL, 0, 2, mutflag::good, true, false,
   "naga tail",
 
   {"You have a snake-like lower body.",
@@ -952,7 +953,7 @@ static const mutation_def mut_data[] =
 },
 
 // Naga and Draconian only
-{ MUT_STINGER, 8, 3, mutflag::good, true,
+{ MUT_STINGER, 8, 3, mutflag::good, true, false,
   "stinger",
 
   {"Your tail ends in a venomous barb.",
@@ -969,7 +970,7 @@ static const mutation_def mut_data[] =
 },
 
 // Draconian/gargoyle only
-{ MUT_BIG_WINGS, 4, 1, mutflag::good, true,
+{ MUT_BIG_WINGS, 4, 1, mutflag::good, true, false,
   "big wings",
 
   {"Your large and strong wings let you fly.", "", ""},
@@ -978,7 +979,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_SAPROVOROUS, 0, 3, mutflag::good, false,
+{ MUT_SAPROVOROUS, 0, 3, mutflag::good, false, false,
   "saprovore",
 
   {"You can tolerate rotten meat.",
@@ -992,7 +993,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MIASMA_IMMUNITY, 0, 1, mutflag::good, false,
+{ MUT_MIASMA_IMMUNITY, 0, 1, mutflag::good, false, false,
   "miasma immunity",
 
   {"You are immune to miasma.", "", ""},
@@ -1001,7 +1002,7 @@ static const mutation_def mut_data[] =
 },
 
 // species-dependent innate mutations
-{ MUT_GOURMAND, 0, 1, mutflag::good, false,
+{ MUT_GOURMAND, 0, 1, mutflag::good, false, false,
   "gourmand",
 
   {"You like to eat raw meat.", "", ""},
@@ -1010,7 +1011,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_HOP, 0, 2, mutflag::good, true,
+{ MUT_HOP, 0, 2, mutflag::good, true, false,
   "strong legs",
 
   {"You can hop short distances.",
@@ -1024,7 +1025,7 @@ static const mutation_def mut_data[] =
 #if TAG_MAJOR_VERSION == 34
 
 // Armataur only
-{ MUT_ROLL, 0, 3, mutflag::good, true,
+{ MUT_ROLL, 0, 3, mutflag::good, true, false,
   "roll",
 
   {"You can roll at nearby foes to attack.",
@@ -1040,7 +1041,7 @@ static const mutation_def mut_data[] =
    "You can no longer roll as far."},
 },
 
-{ MUT_CURL, 0, 1, mutflag::good, true,
+{ MUT_CURL, 0, 1, mutflag::good, true, false,
   "reflexive curl",
 
   {"You curl defensively after being hit. (AC +7*)", "", ""},
@@ -1048,7 +1049,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false,
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, false,
   "awkward tongue",
   {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
   {"Your tongue begins to flop around amusingly.", "", ""},
@@ -1056,7 +1057,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
+{ MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true, false,
   "armoured tail",
 
   {"You have a long armoured tail.", "", ""},
@@ -1064,7 +1065,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLLPAGE, 0, 2, mutflag::good, false,
+{ MUT_ROLLPAGE, 0, 2, mutflag::good, false, false,
   "rollpage",
 
   {"You regenerate magic when rolling toward enemies. (Rampage MPRegen)",
@@ -1080,7 +1081,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
+{ MUT_SHAGGY_FUR, 2, 3, mutflag::good, true, false,
   "shaggy fur",
 
   {"You are covered in fur. (AC +1)",
@@ -1096,7 +1097,7 @@ static const mutation_def mut_data[] =
    "Your shaggy fur recedes somewhat."},
 },
 
-{ MUT_HIGH_MAGIC, 2, 3, mutflag::good, false,
+{ MUT_HIGH_MAGIC, 2, 3, mutflag::good, false, false,
   "high MP",
 
   {"You have an increased reservoir of magic. (+10% MP)",
@@ -1112,7 +1113,7 @@ static const mutation_def mut_data[] =
    "You feel less energetic."},
 },
 
-{ MUT_LOW_MAGIC, 9, 3, mutflag::bad, false,
+{ MUT_LOW_MAGIC, 9, 3, mutflag::bad, false, false,
   "low MP",
 
   {"Your magical capacity is low. (-10% MP)",
@@ -1128,7 +1129,7 @@ static const mutation_def mut_data[] =
    "You feel more energetic."},
 },
 
-{ MUT_WILD_MAGIC, 6, 3, mutflag::good, false,
+{ MUT_WILD_MAGIC, 6, 3, mutflag::good, false, false,
   "wild magic",
 
   {"Your spells are a little harder to cast, but a little more powerful.",
@@ -1144,7 +1145,7 @@ static const mutation_def mut_data[] =
    "You feel more in control of your magic."},
 },
 
-{ MUT_SUBDUED_MAGIC, 6, 3, mutflag::bad, false,
+{ MUT_SUBDUED_MAGIC, 6, 3, mutflag::bad, false, false,
   "subdued magic",
 
   {"Your spells are a little easier to cast, but a little less powerful.",
@@ -1160,7 +1161,7 @@ static const mutation_def mut_data[] =
    "Your connection to magic feels less subdued."},
 },
 
-{ MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false,
+{ MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false, false,
   "demonic magic",
 
   {"Spells you cast may paralyse adjacent enemies.",
@@ -1177,7 +1178,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_DEMONIC_MAGIC,
 },
 
-{ MUT_FORLORN, 0, 1, mutflag::bad, false,
+{ MUT_FORLORN, 0, 1, mutflag::bad, false, false,
   "forlorn",
 
   {"You shall have no god before yourself.","",""},
@@ -1186,7 +1187,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
+{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false, false,
   "removed torment resistance",
 
   {"You are somewhat able to resist unholy torments.","",""},
@@ -1195,7 +1196,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_PASSIVE_MAPPING, 3, 3, mutflag::good, false,
+{ MUT_PASSIVE_MAPPING, 3, 3, mutflag::good, false, false,
   "sense surroundings",
 
   {"You passively map a small area around you.",
@@ -1213,7 +1214,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_PASSIVE_MAPPING,
 },
 
-{ MUT_ICEMAIL, 0, 2, mutflag::good, false,
+{ MUT_ICEMAIL, 0, 2, mutflag::good, false, false,
   "icemail",
 
   {"A meltable icy envelope protects you from harm. (AC +",
@@ -1225,7 +1226,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ICEMAIL,
 },
 
-{ MUT_CONDENSATION_SHIELD, 0, 1, mutflag::good, false,
+{ MUT_CONDENSATION_SHIELD, 0, 1, mutflag::good, false, false,
   "condensation shield",
 
   {"A meltable shield of frost defends you. (SH +", "", ""},
@@ -1236,7 +1237,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_CONSERVE_SCROLLS, 0, 1, mutflag::good, false,
+{ MUT_CONSERVE_SCROLLS, 0, 1, mutflag::good, false, false,
   "conserve scrolls",
 
   {"You are very good at protecting items from fire.", "", ""},
@@ -1244,7 +1245,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_CONSERVE_POTIONS, 0, 1, mutflag::good, false,
+{ MUT_CONSERVE_POTIONS, 0, 1, mutflag::good, false, false,
   "conserve potions",
 
   {"You are very good at protecting items from cold.", "", ""},
@@ -1253,7 +1254,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_PASSIVE_FREEZE, 1, 1, mutflag::good, false,
+{ MUT_PASSIVE_FREEZE, 1, 1, mutflag::good, false, false,
   "passive freeze",
 
   {"A frigid envelope surrounds you and freezes all who hurt you.", "", ""},
@@ -1263,7 +1264,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_PASSIVE_FREEZE,
 },
 
-{ MUT_NIGHTSTALKER, 0, 3, mutflag::good, false,
+{ MUT_NIGHTSTALKER, 0, 3, mutflag::good, false, false,
   "nightstalker",
 
   {"You are slightly more attuned to the shadows.",
@@ -1279,7 +1280,7 @@ static const mutation_def mut_data[] =
    "Your affinity for the darkness weakens."},
 },
 
-{ MUT_SPINY, 0, 3, mutflag::good, true,
+{ MUT_SPINY, 0, 3, mutflag::good, true, false,
   "spiny",
 
   {"You are partially covered in sharp spines.",
@@ -1295,7 +1296,7 @@ static const mutation_def mut_data[] =
    "Your sharp spines retract somewhat."},
 },
 
-{ MUT_POWERED_BY_DEATH, 0, 3, mutflag::good, false,
+{ MUT_POWERED_BY_DEATH, 0, 3, mutflag::good, false, false,
   "powered by death",
 
   {"You regenerate a little health from kills.",
@@ -1313,7 +1314,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_POWERED_BY_DEATH,
 },
 
-{ MUT_POWERED_BY_PAIN, 0, 3, mutflag::good, false,
+{ MUT_POWERED_BY_PAIN, 0, 3, mutflag::good, false, false,
   "powered by pain",
 
   {"You sometimes gain a little power by taking damage.",
@@ -1329,7 +1330,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_POWERED_BY_PAIN,
 },
 
-{ MUT_AUGMENTATION, 0, 3, mutflag::good, false,
+{ MUT_AUGMENTATION, 0, 3, mutflag::good, false, false,
   "augmentation",
 
   {"Your magical and physical power is slightly enhanced at high health.",
@@ -1343,7 +1344,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MANA_SHIELD, 0, 1, mutflag::good, false,
+{ MUT_MANA_SHIELD, 0, 1, mutflag::good, false, false,
   "magic shield",
 
   {"When hurt, damage is shared between your health and your magic reserves.", "", ""},
@@ -1353,7 +1354,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MANA_SHIELD,
 },
 
-{ MUT_MANA_REGENERATION, 0, 1, mutflag::good, false,
+{ MUT_MANA_REGENERATION, 0, 1, mutflag::good, false, false,
   "magic regeneration",
 
   {"You regenerate magic rapidly.", "", ""},
@@ -1363,7 +1364,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_MANA_REGENERATION,
 },
 
-{ MUT_MANA_LINK, 0, 1, mutflag::good, false,
+{ MUT_MANA_LINK, 0, 1, mutflag::good, false, false,
   "magic link",
 
   {"When low on magic, you restore magic in place of health.", "", ""},
@@ -1374,7 +1375,7 @@ static const mutation_def mut_data[] =
 },
 
 // Jiyva only mutations. (MUT_GELATINOUS_BODY is also used by Op)
-{ MUT_GELATINOUS_BODY, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_GELATINOUS_BODY, 0, 3, mutflag::good | mutflag::jiyva, true, false,
   "gelatinous body",
 
   {"Your rubbery body absorbs attacks. (AC +1, EV +1)",
@@ -1390,7 +1391,7 @@ static const mutation_def mut_data[] =
    "Your body becomes less viscous."},
 },
 
-{ MUT_EYEBALLS, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_EYEBALLS, 0, 3, mutflag::good | mutflag::jiyva, true, false,
   "eyeballs",
 
   {"Your body has grown eyes which may confuse attackers. (Acc +3)",
@@ -1406,7 +1407,7 @@ static const mutation_def mut_data[] =
    "The eyeballs on your body recede somewhat."},
 },
 
-{ MUT_TRANSLUCENT_SKIN, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_TRANSLUCENT_SKIN, 0, 3, mutflag::good | mutflag::jiyva, true, false,
   "translucent skin",
 
   {"Your translucent skin slightly reduces your foes' accuracy. (Stealth+)",
@@ -1422,7 +1423,7 @@ static const mutation_def mut_data[] =
    "Your skin's transparency fades."},
 },
 
-{ MUT_PSEUDOPODS, 0, 3, mutflag::good | mutflag::jiyva, true,
+{ MUT_PSEUDOPODS, 0, 3, mutflag::good | mutflag::jiyva, true, false,
   "pseudopods",
 
   {"Armour fits poorly on your pseudopods.",
@@ -1439,7 +1440,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_FOOD_JELLY, 0, 1, mutflag::good, false,
+{ MUT_FOOD_JELLY, 0, 1, mutflag::good, false, false,
   "spawn jellies when eating",
 
   {"You occasionally spawn a jelly by eating.", "", ""},
@@ -1448,7 +1449,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_ACIDIC_BITE, 0, 1, mutflag::good | mutflag::jiyva, true,
+{ MUT_ACIDIC_BITE, 0, 1, mutflag::good | mutflag::jiyva, true, false,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},
@@ -1456,7 +1457,7 @@ static const mutation_def mut_data[] =
   {"Your mouth feels dry.", "", ""},
 },
 
-{ MUT_ANTIMAGIC_BITE, 0, 1, mutflag::good, true,
+{ MUT_ANTIMAGIC_BITE, 0, 1, mutflag::good, true, false,
   "antimagic bite",
 
   {"Your bite disrupts and absorbs the magic of your enemies.", "", ""},
@@ -1464,7 +1465,7 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
 },
 
-{ MUT_NO_POTION_HEAL, 3, 2, mutflag::bad, false,
+{ MUT_NO_POTION_HEAL, 3, 2, mutflag::bad, false, false,
   "no potion heal",
 
   {"Potions are less effective at restoring your health.",
@@ -1481,7 +1482,7 @@ static const mutation_def mut_data[] =
 },
 
 // Scale mutations
-{ MUT_DISTORTION_FIELD, 0, 3, mutflag::good, false,
+{ MUT_DISTORTION_FIELD, 0, 3, mutflag::good, false, false,
   "repulsion field",
 
   {"You are surrounded by a mild repulsion field. (EV +2)",
@@ -1497,7 +1498,7 @@ static const mutation_def mut_data[] =
    "You feel less repulsive."},
 },
 
-{ MUT_ICY_BLUE_SCALES, 0, 3, mutflag::good, true,
+{ MUT_ICY_BLUE_SCALES, 0, 3, mutflag::good, true, false,
   "icy blue scales",
 
   {"You are partially covered in icy blue scales. (AC +2)",
@@ -1515,7 +1516,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_ICY_BLUE_SCALES
 },
 
-{ MUT_IRIDESCENT_SCALES, 10, 3, mutflag::good, true,
+{ MUT_IRIDESCENT_SCALES, 10, 3, mutflag::good, true, false,
   "iridescent scales",
 
   {"You are partially covered in iridescent scales. (AC +2)",
@@ -1533,7 +1534,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_IRIDESCENT_SCALES
 },
 
-{ MUT_LARGE_BONE_PLATES, 2, 3, mutflag::good, true,
+{ MUT_LARGE_BONE_PLATES, 2, 3, mutflag::good, true, false,
   "large bone plates",
 
   {"You are partially covered in large bone plates. (SH +4)",
@@ -1551,7 +1552,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_LARGE_BONE_PLATES,
 },
 
-{ MUT_MOLTEN_SCALES, 0, 3, mutflag::good, true,
+{ MUT_MOLTEN_SCALES, 0, 3, mutflag::good, true, false,
   "molten scales",
 
   {"You are partially covered in molten scales. (AC +2)",
@@ -1570,7 +1571,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_ROUGH_BLACK_SCALES, 0, 3, mutflag::good, true,
+{ MUT_ROUGH_BLACK_SCALES, 0, 3, mutflag::good, true, false,
   "rough black scales",
 
   {"You are partially covered in rough black scales. (AC +2, Dex -1)",
@@ -1587,7 +1588,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_RUGGED_BROWN_SCALES, 0, 3, mutflag::good, true,
+{ MUT_RUGGED_BROWN_SCALES, 0, 3, mutflag::good, true, false,
   "rugged brown scales",
 
   {"You are partially covered in rugged brown scales. (AC +1, +3% HP)",
@@ -1605,7 +1606,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_RUGGED_BROWN_SCALES,
 },
 
-{ MUT_SLIMY_GREEN_SCALES, 0, 3, mutflag::good, true,
+{ MUT_SLIMY_GREEN_SCALES, 0, 3, mutflag::good, true, false,
   "slimy green scales",
 
   {"You are partially covered in slimy green scales. (AC +2)",
@@ -1623,7 +1624,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_SLIMY_GREEN_SCALES
 },
 
-{ MUT_THIN_METALLIC_SCALES, 0, 3, mutflag::good, true,
+{ MUT_THIN_METALLIC_SCALES, 0, 3, mutflag::good, true, false,
   "thin metallic scales",
 
   {"You are partially covered in thin metallic scales. (AC +2)",
@@ -1641,7 +1642,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_THIN_METALLIC_SCALES
 },
 
-{ MUT_THIN_SKELETAL_STRUCTURE, 2, 3, mutflag::good, false,
+{ MUT_THIN_SKELETAL_STRUCTURE, 2, 3, mutflag::good, false, false,
   "thin skeletal structure",
 
   {"You have a somewhat thin skeletal structure. (Dex +2, Stealth+)",
@@ -1659,7 +1660,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_THIN_SKELETAL_STRUCTURE,
 },
 
-{ MUT_YELLOW_SCALES, 0, 3, mutflag::good, true,
+{ MUT_YELLOW_SCALES, 0, 3, mutflag::good, true, false,
   "yellow scales",
 
   {"You are partially covered in yellow scales. (AC +2)",
@@ -1677,7 +1678,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_YELLOW_SCALES
 },
 
-{ MUT_SHARP_SCALES, 0, 3, mutflag::good, true,
+{ MUT_SHARP_SCALES, 0, 3, mutflag::good, true, false,
   "sharp scales",
 
   {"You are partially covered in razor-sharp scales. (AC +1, Slay +1)",
@@ -1695,7 +1696,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_SHARP_SCALES,
 },
 
-{ MUT_STURDY_FRAME, 2, 3, mutflag::good, true,
+{ MUT_STURDY_FRAME, 2, 3, mutflag::good, true, false,
   "sturdy frame",
 
   {"Your movements are slightly less encumbered by armour. (ER -2)",
@@ -1711,7 +1712,7 @@ static const mutation_def mut_data[] =
    "You feel more encumbered by your armour."},
 },
 
-{ MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false,
+{ MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false, false,
   "sanguine armour",
 
   {"When seriously injured, your blood forms armour. (AC +",
@@ -1727,7 +1728,7 @@ static const mutation_def mut_data[] =
    "You feel your blood thin."},
 },
 
-{ MUT_BIG_BRAIN, 0, 3, mutflag::good, false,
+{ MUT_BIG_BRAIN, 0, 3, mutflag::good, false, false,
   "big brain",
 
   {"You have an unusually large brain. (Int +2)",
@@ -1745,7 +1746,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_BIG_BRAIN,
 },
 
-{ MUT_CAMOUFLAGE, 1, 3, mutflag::good, true,
+{ MUT_CAMOUFLAGE, 1, 3, mutflag::good, true, false,
   "camouflage",
 
   {"Your skin changes colour to match your surroundings (Stealth+).",
@@ -1761,7 +1762,7 @@ static const mutation_def mut_data[] =
    "Your natural camouflage becomes less effective."},
 },
 
-{ MUT_IGNITE_BLOOD, 0, 3, mutflag::good, false,
+{ MUT_IGNITE_BLOOD, 0, 3, mutflag::good, false, false,
   "ignite blood",
 
   {"Your demonic aura sometimes causes spilled blood to erupt in flames.",
@@ -1775,7 +1776,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_IGNITE_BLOOD,
 },
 
-{ MUT_FOUL_STENCH, 0, 3, mutflag::good, false,
+{ MUT_FOUL_STENCH, 0, 3, mutflag::good, false, false,
   "foul stench",
 
   {"You may rarely emit foul miasma when damaged in melee.",
@@ -1792,7 +1793,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_FOUL_STENCH,
 },
 
-{ MUT_TENDRILS, 0, 1, mutflag::good | mutflag::jiyva, true,
+{ MUT_TENDRILS, 0, 1, mutflag::good | mutflag::jiyva, true, false,
   "tendrils",
 
   {"You are covered in slimy tendrils that may disarm your opponents.", "", ""},
@@ -1800,7 +1801,7 @@ static const mutation_def mut_data[] =
   {"Your tendrils retract into your body.", "", ""},
 },
 
-{ MUT_JELLY_GROWTH, 0, 1, mutflag::good | mutflag::jiyva, true,
+{ MUT_JELLY_GROWTH, 0, 1, mutflag::good | mutflag::jiyva, true, false,
   "jelly sensing items",
 
   {"You have a small jelly attached to you that senses nearby items.", "", ""},
@@ -1808,7 +1809,7 @@ static const mutation_def mut_data[] =
   {"The jelly growth is reabsorbed into your body.", "", ""},
 },
 
-{ MUT_JELLY_MISSILE, 0, 1, mutflag::good | mutflag::jiyva, true,
+{ MUT_JELLY_MISSILE, 0, 1, mutflag::good | mutflag::jiyva, true, false,
   "jelly absorbing missiles",
 
   {"You have a small jelly attached to you that may absorb projectiles.", "", ""},
@@ -1816,7 +1817,7 @@ static const mutation_def mut_data[] =
   {"The jelly growth is reabsorbed into your body.", "", ""},
 },
 
-{ MUT_PETRIFICATION_RESISTANCE, 0, 1, mutflag::good, false,
+{ MUT_PETRIFICATION_RESISTANCE, 0, 1, mutflag::good, false, false,
   "petrification resistance",
 
   {"You are immune to petrification.", "", ""},
@@ -1825,7 +1826,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_TRAMPLE_RESISTANCE, 0, 1, mutflag::good, false,
+{ MUT_TRAMPLE_RESISTANCE, 0, 1, mutflag::good, false, false,
   "trample resistance",
 
   {"You are resistant to trampling.", "", ""},
@@ -1833,7 +1834,7 @@ static const mutation_def mut_data[] =
   {"You feel unsteady.", "", ""},
 },
 
-{ MUT_CLING, 0, 1, mutflag::good, true,
+{ MUT_CLING, 0, 1, mutflag::good, true, false,
   "cling",
 
   {"You can cling to walls.", "", ""},
@@ -1841,7 +1842,7 @@ static const mutation_def mut_data[] =
   {"You feel slippery.", "", ""},
 },
 
-{ MUT_EXOSKELETON, 0, 2, mutflag::good, true,
+{ MUT_EXOSKELETON, 0, 2, mutflag::good, true, false,
   "exoskeleton",
 
   {"Your body is surrounded by an exoskeleton. (buggy)",
@@ -1857,7 +1858,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_FUMES, 0, 2, mutflag::good, false,
+{ MUT_FUMES, 0, 2, mutflag::good, false, false,
   "fuming",
 
   {"You emit clouds of smoke.", "You frequently emit clouds of smoke.", ""},
@@ -1866,7 +1867,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_BLACK_MARK, 0, 1, mutflag::good, false,
+{ MUT_BLACK_MARK, 0, 1, mutflag::good, false, false,
   "black mark",
 
   {"Your melee attacks may debilitate your foes.", "", ""},
@@ -1874,7 +1875,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_SILENCE_AURA, 0, 1, mutflag::good, false,
+{ MUT_SILENCE_AURA, 0, 1, mutflag::good, false, false,
   "aura of silence",
 
   {"You are surrounded by an aura of silence.", "", ""},
@@ -1882,7 +1883,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_HEX_ENHANCER, 0, 1, mutflag::good, false,
+{ MUT_HEX_ENHANCER, 0, 1, mutflag::good, false, false,
   "bedeviling",
 
   {"Your hexes are more powerful.", "", ""},
@@ -1890,7 +1891,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_CORRUPTING_PRESENCE, 0, 2, mutflag::good, false,
+{ MUT_CORRUPTING_PRESENCE, 0, 2, mutflag::good, false, false,
   "corrupting presence",
 
   {"Your presence sometimes corrodes those you injure.",
@@ -1899,7 +1900,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_WORD_OF_CHAOS, 0, 1, mutflag::good, false,
+{ MUT_WORD_OF_CHAOS, 0, 1, mutflag::good, false, false,
   "word of chaos",
 
   {"You can speak a Word of Chaos.", "", ""},
@@ -1907,7 +1908,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_DEMONIC_WILL, 0, 1, mutflag::good, false,
+{ MUT_DEMONIC_WILL, 0, 1, mutflag::good, false, false,
   "demonic willpower",
 
   {"You punish those that try to bend your will. (Will+)", "", ""},
@@ -1915,7 +1916,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_WEAKNESS_STINGER, 0, 3, mutflag::good, true,
+{ MUT_WEAKNESS_STINGER, 0, 3, mutflag::good, true, false,
   "weakness stinger",
 
   {"You have a small tail.",
@@ -1929,7 +1930,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_DEMONIC_TOUCH, 0, 3, mutflag::good, true,
+{ MUT_DEMONIC_TOUCH, 0, 3, mutflag::good, true, false,
   "demonic touch",
 
   {"Your touch may inflict minor irresistible damage on your foes.",
@@ -1943,7 +1944,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_COLD_BLOODED, 0, 1, mutflag::bad, true,
+{ MUT_COLD_BLOODED, 0, 1, mutflag::bad, true, false,
   "cold-blooded",
 
   {"You are cold-blooded and may be slowed by cold attacks.", "", ""},
@@ -1952,7 +1953,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_FLAME_CLOUD_IMMUNITY, 0, 1, mutflag::good, false,
+{ MUT_FLAME_CLOUD_IMMUNITY, 0, 1, mutflag::good, false, false,
   "flame cloud immunity",
 
   {"You are immune to clouds of flame.", "", ""},
@@ -1960,7 +1961,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_FREEZING_CLOUD_IMMUNITY, 0, 1, mutflag::good, false,
+{ MUT_FREEZING_CLOUD_IMMUNITY, 0, 1, mutflag::good, false, false,
   "freezing cloud immunity",
 
   {"You are immune to freezing clouds.", "", ""},
@@ -1968,7 +1969,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_SUSTAIN_ATTRIBUTES, 0, 1, mutflag::good, false,
+{ MUT_SUSTAIN_ATTRIBUTES, 0, 1, mutflag::good, false, false,
     "sustain attributes",
 
     {"Your attributes are resistant to harm.", "", ""},
@@ -1977,7 +1978,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad, false,
+{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad, false, false,
   "inability to drink after injury",
 
   {"You occasionally lose the ability to drink potions when taking damage.",
@@ -1991,7 +1992,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_READ_SAFETY, 7, 2, mutflag::bad, false,
+{ MUT_READ_SAFETY, 7, 2, mutflag::bad, false, false,
   "inability to read after injury",
 
   {"You occasionally lose the ability to read scrolls when taking damage.",
@@ -2005,7 +2006,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_MISSING_HAND, 0, 1, mutflag::bad, false,
+{ MUT_MISSING_HAND, 0, 1, mutflag::bad, false, false,
   "missing a hand",
 
   {"You are missing a hand.", "", ""},
@@ -2013,7 +2014,7 @@ static const mutation_def mut_data[] =
   {"Your stump has regrown into a hand!", "", ""},
 },
 
-{ MUT_NO_STEALTH, 0, 1, mutflag::bad, false,
+{ MUT_NO_STEALTH, 0, 1, mutflag::bad, false, false,
   "no stealth",
 
   {"You cannot be stealthy.", "", ""},
@@ -2021,7 +2022,7 @@ static const mutation_def mut_data[] =
   {"You can once more be stealthy.", "", ""},
 },
 
-{ MUT_NO_ARTIFICE, 0, 1, mutflag::bad, false,
+{ MUT_NO_ARTIFICE, 0, 1, mutflag::bad, false, false,
   "inability to use devices",
 
   {"You cannot study or use magical devices.", "", ""},
@@ -2029,7 +2030,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and use magical devices.", "", ""},
 },
 
-{ MUT_NO_LOVE, 0, 1, mutflag::bad, false,
+{ MUT_NO_LOVE, 0, 1, mutflag::bad, false, false,
   "hated by all",
 
   {"You are hated by all.", "", ""},
@@ -2037,7 +2038,7 @@ static const mutation_def mut_data[] =
   {"You are no longer hated by all.", "", ""},
 },
 
-{ MUT_COWARDICE, 0, 1, mutflag::bad, false,
+{ MUT_COWARDICE, 0, 1, mutflag::bad, false, false,
   "cowardly",
 
   {"Your cowardice makes you less effective in combat with threatening foes.", "", ""},
@@ -2045,7 +2046,7 @@ static const mutation_def mut_data[] =
   {"You have regained your courage.", "", ""},
 },
 
-{ MUT_NO_DODGING, 0, 1, mutflag::bad, false,
+{ MUT_NO_DODGING, 0, 1, mutflag::bad, false, false,
   "inability to train dodging",
 
   {"You cannot train Dodging skill.", "", ""},
@@ -2053,7 +2054,7 @@ static const mutation_def mut_data[] =
   {"You can once more train Dodging skill.", "", ""},
 },
 
-{ MUT_NO_ARMOUR_SKILL, 0, 1, mutflag::bad, false,
+{ MUT_NO_ARMOUR_SKILL, 0, 1, mutflag::bad, false, false,
   "inability to train armour",
 
   {"You cannot train Armour skill.", "", ""},
@@ -2061,7 +2062,7 @@ static const mutation_def mut_data[] =
   {"You can once more train Armour skill.", "", ""},
 },
 
-{ MUT_NO_AIR_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_AIR_MAGIC, 0, 1, mutflag::bad, false, false,
   "no air magic",
 
   {"You cannot study or cast Air magic.", "", ""},
@@ -2070,7 +2071,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_NO_CHARM_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_CHARM_MAGIC, 0, 1, mutflag::bad, false, false,
   "no charms magic",
 
   {"You cannot study or cast removed Charms magic.", "", ""},
@@ -2079,7 +2080,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_NO_CONJURATION_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_CONJURATION_MAGIC, 0, 1, mutflag::bad, false, false,
   "no conjurations magic",
 
   {"You cannot study or cast Conjurations magic.", "", ""},
@@ -2087,7 +2088,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Conjurations magic.", "", ""},
 },
 
-{ MUT_NO_EARTH_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_EARTH_MAGIC, 0, 1, mutflag::bad, false, false,
   "no earth magic",
 
   {"You cannot study or cast Earth magic.", "", ""},
@@ -2095,7 +2096,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Earth magic.", "", ""},
 },
 
-{ MUT_NO_FIRE_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_FIRE_MAGIC, 0, 1, mutflag::bad, false, false,
   "no fire magic",
 
   {"You cannot study or cast Fire magic.", "", ""},
@@ -2103,7 +2104,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Fire magic.", "", ""},
 },
 
-{ MUT_NO_HEXES_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_HEXES_MAGIC, 0, 1, mutflag::bad, false, false,
   "no hexes magic",
 
   {"You cannot study or cast Hexes magic.", "", ""},
@@ -2111,7 +2112,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Hexes magic.", "", ""},
 },
 
-{ MUT_NO_ICE_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_ICE_MAGIC, 0, 1, mutflag::bad, false, false,
   "no ice magic",
 
   {"You cannot study or cast Ice magic.", "", ""},
@@ -2119,7 +2120,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Ice magic.", "", ""},
 },
 
-{ MUT_NO_NECROMANCY_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_NECROMANCY_MAGIC, 0, 1, mutflag::bad, false, false,
   "no necromancy magic",
 
   {"You cannot study or cast Necromancy magic.", "", ""},
@@ -2127,7 +2128,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Necromancy magic.", "", ""},
 },
 
-{ MUT_NO_ALCHEMY_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_ALCHEMY_MAGIC, 0, 1, mutflag::bad, false, false,
   "no alchemy magic",
 
   {"You cannot study or cast Alchemy magic.", "", ""},
@@ -2135,7 +2136,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Alchemy magic.", "", ""},
 },
 
-{ MUT_NO_SUMMONING_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_SUMMONING_MAGIC, 0, 1, mutflag::bad, false, false,
   "no summoning magic",
 
   {"You cannot study or cast Summoning magic.", "", ""},
@@ -2143,7 +2144,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Summoning magic.", "", ""},
 },
 
-{ MUT_NO_TRANSLOCATION_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_TRANSLOCATION_MAGIC, 0, 1, mutflag::bad, false, false,
   "no translocations magic",
 
   {"You cannot study or cast Translocations magic.", "", ""},
@@ -2152,7 +2153,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_NO_TRANSMUTATION_MAGIC, 0, 1, mutflag::bad, false,
+{ MUT_NO_TRANSMUTATION_MAGIC, 0, 1, mutflag::bad, false, false,
   "no transmutations magic",
 
   {"You cannot study or cast Transmutations magic.", "", ""},
@@ -2161,7 +2162,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::bad, false,
+{ MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::bad, false, false,
   "reduced AC",
 
   {"You take slightly more damage. (AC -5)",
@@ -2175,7 +2176,7 @@ static const mutation_def mut_data[] =
     "You feel less vulnerable to harm."},
 },
 
-{ MUT_SLOW_REFLEXES, 0, 3, mutflag::bad, false,
+{ MUT_SLOW_REFLEXES, 0, 3, mutflag::bad, false, false,
   "reduced EV",
 
   {"You have somewhat slow reflexes. (EV -5)",
@@ -2189,7 +2190,7 @@ static const mutation_def mut_data[] =
     "You reflexes speed back up."},
 },
 
-{ MUT_WEAK_WILLED, 0, 3, mutflag::bad, false,
+{ MUT_WEAK_WILLED, 0, 3, mutflag::bad, false, false,
   "weak-willed",
 
   {"You are slightly weak-willed. (Will-)",
@@ -2203,7 +2204,7 @@ static const mutation_def mut_data[] =
     "You feel less weak-willed."},
 },
 
-{ MUT_ANTI_WIZARDRY, 0, 3, mutflag::bad, false,
+{ MUT_ANTI_WIZARDRY, 0, 3, mutflag::bad, false, false,
   "disrupted magic",
 
   {"Your casting is slightly disrupted.",
@@ -2217,7 +2218,7 @@ static const mutation_def mut_data[] =
     "Your ability to control magic is less disrupted."},
 },
 
-{ MUT_MP_WANDS, 7, 1, mutflag::good, false,
+{ MUT_MP_WANDS, 7, 1, mutflag::good, false, false,
   "MP-powered wands",
 
   {"You expend magic power (3 MP) to strengthen your wands.", "", ""},
@@ -2225,7 +2226,7 @@ static const mutation_def mut_data[] =
   {"Your magical essence no longer links to wands of the dungeon.", "", ""},
 },
 
-{ MUT_UNSKILLED, 0, 3, mutflag::bad, false,
+{ MUT_UNSKILLED, 0, 3, mutflag::bad, false, false,
   "unskilled",
 
   {"You are somewhat unskilled. (-1 Apt)",
@@ -2239,7 +2240,7 @@ static const mutation_def mut_data[] =
     "You regain some skill."},
 },
 
-{ MUT_INEXPERIENCED, 0, 3, mutflag::bad, false,
+{ MUT_INEXPERIENCED, 0, 3, mutflag::bad, false, false,
     "inexperienced",
 
     {"You are somewhat inexperienced. (-1 XL)",
@@ -2253,7 +2254,7 @@ static const mutation_def mut_data[] =
      "You regain some potential."},
 },
 
-{ MUT_PAWS, 0, 1, mutflag::good, true,
+{ MUT_PAWS, 0, 1, mutflag::good, true, false,
   "stealthy paws",
 
   {"Your paws help you pounce on unaware monsters.", "", ""},
@@ -2261,7 +2262,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MISSING_EYE, 0, 1, mutflag::bad, false,
+{ MUT_MISSING_EYE, 0, 1, mutflag::bad, false, false,
   "missing an eye",
 
   {"You are missing an eye, making it more difficult to aim.", "", ""},
@@ -2269,7 +2270,7 @@ static const mutation_def mut_data[] =
   {"Your right eye suddenly reappears! The world regains its depth.", "", ""},
 },
 
-{ MUT_TEMPERATURE_SENSITIVITY, 0, 1, mutflag::bad, false,
+{ MUT_TEMPERATURE_SENSITIVITY, 0, 1, mutflag::bad, false, false,
   "temperature sensitive",
 
   {"You are sensitive to extremes of temperature. (rF-, rC-)", "", ""},
@@ -2278,7 +2279,7 @@ static const mutation_def mut_data[] =
 },
 
 
-{ MUT_NO_FORMS, 0, 1, mutflag::bad, false,
+{ MUT_NO_FORMS, 0, 1, mutflag::bad, false, false,
   "no forms",
 
   {"You cannot voluntarily change form.", "", ""},
@@ -2287,7 +2288,7 @@ static const mutation_def mut_data[] =
 },
 
 #if TAG_MAJOR_VERSION == 34
-{ MUT_NO_REGENERATION, 0, 1, mutflag::bad, false,
+{ MUT_NO_REGENERATION, 0, 1, mutflag::bad, false, false,
   "no regeneration",
 
   {"You do not regenerate.", "", ""},
@@ -2296,7 +2297,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_STRONG_NOSE, 0, 1, mutflag::good, false,
+{ MUT_STRONG_NOSE, 0, 1, mutflag::good, false, false,
   "strong nose",
 
   {"Your uncanny sense of smell can sniff out nearby items.", "", ""},
@@ -2304,7 +2305,7 @@ static const mutation_def mut_data[] =
   {"Your sense of smell gets weaker.", "", ""},
 },
 
-{ MUT_ACID_RESISTANCE, 0, 1, mutflag::good, true,
+{ MUT_ACID_RESISTANCE, 0, 1, mutflag::good, true, false,
   "acid resistance",
 
   {"You are resistant to acid. (rCorr)", "", ""},
@@ -2312,7 +2313,7 @@ static const mutation_def mut_data[] =
   {"You feel less resistant to acid.", "", ""},
 },
 
-{ MUT_QUADRUMANOUS, 0, 1, mutflag::good, false,
+{ MUT_QUADRUMANOUS, 0, 1, mutflag::good, false, false,
   "four strong arms",
 
   {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
@@ -2320,7 +2321,7 @@ static const mutation_def mut_data[] =
   {"You grow two extra arms.", "", ""},
 },
 
-{ MUT_NO_DRINK, 0, 1, mutflag::bad, false,
+{ MUT_NO_DRINK, 0, 1, mutflag::bad, false, false,
   "no potions",
 
   {"You do not drink.", "", ""},
@@ -2328,7 +2329,7 @@ static const mutation_def mut_data[] =
   {"You gain the ability to drink.", "", ""},
 },
 
-{ MUT_FAITH, 0, 1, mutflag::bad, false,
+{ MUT_FAITH, 0, 1, mutflag::bad, false, false,
   "faith",
 
   {"You have a special connection with the divine. (Faith)", "", ""},
@@ -2336,7 +2337,7 @@ static const mutation_def mut_data[] =
   {"You feel rebellious.", "", ""},
 },
 
-{ MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true,
+{ MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true, false,
   "retaliatory headbutt",
 
   {"You reflexively headbutt those who attack you in melee.", "", ""},
@@ -2344,7 +2345,7 @@ static const mutation_def mut_data[] =
   {"Your retaliatory reflexes feel dull.", "", ""},
 },
 
-{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, true,
+{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, true, false,
   "steam resistance",
 
   {"You are immune to the effects of steam.", "", ""},
@@ -2352,7 +2353,7 @@ static const mutation_def mut_data[] =
   {"You are no longer immune to the effects of steam.", "", ""},
 },
 
-{ MUT_NO_GRASPING, 0, 1, mutflag::bad, false,
+{ MUT_NO_GRASPING, 0, 1, mutflag::bad, false, false,
   "no weapons or thrown items",
 
   {"You are incapable of wielding weapons or throwing items.", "", ""},
@@ -2360,7 +2361,7 @@ static const mutation_def mut_data[] =
   {"You can now grasp objects.", "", ""},
 },
 
-{ MUT_NO_ARMOUR, 0, 1, mutflag::bad, false,
+{ MUT_NO_ARMOUR, 0, 1, mutflag::bad, false, false,
   "no armour",
 
   {"You cannot wear armour.", "", ""},
@@ -2368,7 +2369,7 @@ static const mutation_def mut_data[] =
   {"You can now wear armour.", "", ""},
 },
 
-{ MUT_MULTILIVED, 0, 1, mutflag::good, false,
+{ MUT_MULTILIVED, 0, 1, mutflag::good, false, false,
   "multi-lived",
 
   {"You gain extra lives every three experience levels.", "", ""},
@@ -2376,7 +2377,7 @@ static const mutation_def mut_data[] =
   {"You can now gain extra lives.", "", ""},
 },
 
-{ MUT_DISTRIBUTED_TRAINING, 0, 1, mutflag::good, false,
+{ MUT_DISTRIBUTED_TRAINING, 0, 1, mutflag::good, false, false,
   "distributed training",
 
   {"Your experience applies equally to all skills.", "", ""},
@@ -2384,7 +2385,7 @@ static const mutation_def mut_data[] =
   {"Your experience no longer applies equally to all skills.", "", ""},
 },
 
-{ MUT_NIMBLE_SWIMMER, 0, 2, mutflag::good, true,
+{ MUT_NIMBLE_SWIMMER, 0, 2, mutflag::good, true, false,
   "nimble swimmer",
 
   {"You are camouflaged when in or above water. (Stealth+)",
@@ -2395,7 +2396,7 @@ static const mutation_def mut_data[] =
    "You feel less comfortable near water.", ""},
 },
 
-{ MUT_TENTACLE_ARMS, 0, 1, mutflag::good, true,
+{ MUT_TENTACLE_ARMS, 0, 1, mutflag::good, true, false,
   "tentacles",
 
   {"You have tentacles for arms and can constrict enemies.", "", ""},
@@ -2403,7 +2404,7 @@ static const mutation_def mut_data[] =
   {"Your arms no longer feel tentacular.", "", ""},
 },
 
-{ MUT_VAMPIRISM, 0, 2, mutflag::good, false,
+{ MUT_VAMPIRISM, 0, 2, mutflag::good, false, false,
   "vampiric",
 
   {"You are afflicted with vampirism.", "You are afflicted with vampirism and can become a bat while bloodless.", ""},
@@ -2411,7 +2412,7 @@ static const mutation_def mut_data[] =
   {"Your craving for blood subsides.", "You can no longer turn into a bat.", ""},
 },
 
-{ MUT_MERTAIL, 0, 1, mutflag::good, true,
+{ MUT_MERTAIL, 0, 1, mutflag::good, true, false,
   "mertail",
 
   {"Your lower body shifts to a powerful aquatic tail in water.", "", ""},
@@ -2419,7 +2420,7 @@ static const mutation_def mut_data[] =
   {"Your legs no longer feel aquatic."},
 },
 
-{ MUT_FLOAT, 0, 1, mutflag::good, false,
+{ MUT_FLOAT, 0, 1, mutflag::good, false, false,
   "float",
 
   {"You float through the air rather than walking.", "", ""},
@@ -2427,7 +2428,7 @@ static const mutation_def mut_data[] =
   {"You feel dragged down by the weight of the world."},
 },
 
-{ MUT_INNATE_CASTER, 0, 1, mutflag::good, false,
+{ MUT_INNATE_CASTER, 0, 1, mutflag::good, false, false,
   "innate caster",
 
   {"You learn spells naturally, not from books.", "", ""},
@@ -2435,7 +2436,7 @@ static const mutation_def mut_data[] =
   {"You feel a greater respect for book-learning."},
 },
 
-{ MUT_HP_CASTING, 0, 1, mutflag::good, false,
+{ MUT_HP_CASTING, 0, 1, mutflag::good, false, false,
   "HP casting",
 
   {"Your magical power is your life essence.", "", ""},
@@ -2444,7 +2445,7 @@ static const mutation_def mut_data[] =
 },
 
 // XX why does this have 3 levels, only 1 is used
-{ MUT_FLAT_HP, 0, 3, mutflag::good, false,
+{ MUT_FLAT_HP, 0, 3, mutflag::good, false, false,
   "extra vitality",
 
     {"You have superior vitality. (+4 MHP)",
@@ -2458,7 +2459,7 @@ static const mutation_def mut_data[] =
      "You feel less vital."},
 },
 
-{ MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva, true,
+{ MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva, true, false,
   "engulf",
 
     {"Your melee attacks may engulf your foes in ooze.", "", ""},
@@ -2467,7 +2468,7 @@ static const mutation_def mut_data[] =
 },
 
 // Sadly console size restrictions prevent more than one level of this existing
-{ MUT_DAYSTALKER, 0, 1, mutflag::good, false,
+{ MUT_DAYSTALKER, 0, 1, mutflag::good, false, false,
   "+LOS",
 
     {"You have an extended range of vision and can be seen from far away.",
@@ -2476,28 +2477,28 @@ static const mutation_def mut_data[] =
     {"The shadows grow bolder once more.", "", ""},
 },
 
-{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false,
+{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false, false,
   "divine attributes",
   {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
   {"You feel more divine.", "", ""},
   {"You feel more mortal.", "", ""},
 },
 
-{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true,
+{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true, false,
   "devour on kill",
   {"You thrive by killing the living.", "", ""},
   {"You feel hungry for flesh.", "", ""},
   {"You feel less hungry for flesh.", "", ""},
 },
 
-{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false,
+{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, false,
   "otherworldly",
   {"You are easily found by Zot.", "", ""},
   {"You feel your time running out.", "", ""},
   {"You feel long-lived.", "", ""},
 },
 
-{ MUT_FOUL_SHADOW, 0, 3, mutflag::good, false,
+{ MUT_FOUL_SHADOW, 0, 3, mutflag::good, false, false,
   "foul shadow",
   {"You are faintly shadowed, very rarely releasing foul flame when damaged in melee.",
    "You are shadowed, sometimes releasing foul flame when damaged in melee.",
@@ -2512,35 +2513,35 @@ static const mutation_def mut_data[] =
   TILEG_MUT_FOUL_SHADOW,
 },
 
-{ MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false,
+{ MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false, false,
   "explore regen",
   {"You regain HP and MP as you explore.", "", ""},
   {"You feel a fierce wanderlust.", "", ""},
   {"You feel like a homebody.", "", ""},
 },
 
-{ MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false,
+{ MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false, false,
   "double potion healing",
   {"You gain doubled healing and magic from potions.", "", ""},
   {"You heal twice as much from potions.", "", ""},
   {"You no longer heal twice as much from potions.", "", ""},
 },
 
-{ MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good, false,
+{ MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good, false, false,
   "drunken brawling",
   {"Whenever you drink a healing potion, you attack all around you.", "", ""},
   {"You brawl whenever you drink a healing potion.", "", ""},
   {"You no longer brawl whenever you drink a healing potion.", "", ""},
 },
 
-{ MUT_ARTEFACT_ENCHANTING, 0, 1, mutflag::good, false,
+{ MUT_ARTEFACT_ENCHANTING, 0, 1, mutflag::good, false, false,
   "artefact enchanting",
   {"You can use scrolls of enchantment on lesser artefacts.", "", ""},
   {"You can now use scrolls of enchantment on lesser artefacts.", "", ""},
   {"You can no longer use scrolls of enchantment on lesser artefacts.", "", ""},
 },
 
-{ MUT_RUNIC_MAGIC, 0, 1, mutflag::good, false,
+{ MUT_RUNIC_MAGIC, 0, 1, mutflag::good, false, false,
   "runic magic",
   {"Your spellcasting is much less encumbered by armour.", "", ""},
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
