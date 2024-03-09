@@ -23,7 +23,7 @@ perl util/gen-apt.pl ../docs/aptitudes-wide.txt ../docs/template/apt-tmpl-wide.t
 :: pip install pyyaml
 python util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
 :: mon-data.h
-python util/species-gen.py dat/mons/ util/mon-gen/ mon-data.h
+python util/mon-gen.py dat/mons/ util/mon-gen/ mon-data.h
 :: mon-mst.h - must run after mon-data.h
 perl util/gen-mst.pl
 

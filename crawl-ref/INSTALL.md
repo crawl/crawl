@@ -380,7 +380,7 @@ These instructions have been successfully tested with Ubuntu only.
 This build process is currently unsupported, and unlikely to be straightforward
 in versions of MSVC besides those explicitly mentioned here.
 
-This build is tested on Visual Studio 2017 15.8.7 on Windows 8.1 and 10.
+This build is tested on Visual Studio 2017 15.9.60 on Windows 11.
 Tested configurations are `Debug/Release;Console/Tiles;Win32/x64`, Python and
 Lua support for editing are untested, and a webtiles build is not available.
 
@@ -395,13 +395,20 @@ Lua support for editing are untested, and a webtiles build is not available.
 2. Install a perl environment, [Perl provides links to several Windows
    binaries](http://www.perl.org/get.html).
 
-3. In the DCSS source, run `gen-all.cmd` inside `crawl-ref/source/util/`. This
+3. Install a python 3 environment.
+
+4. Install the python package PyYAML. This can be done with pip.
+    ```sh
+    pip install pyyaml
+    ```
+
+5. In the DCSS source, run `gen-all.cmd` inside `crawl-ref/source/util/`. This
    step must be executed any time you update to a new version of the source (or
    if you have modified tile data or unrandarts).
 
 4. The first time you compile, you need to build the `Contribs` solution. This
    compiles various libraries which DCSS itself needs to build. This
-   needs to be performed the first time you build, when changing to the `Debug`
+   needs to be performed the first time you build, when changing to between `Release` and `Debug`
    configuration, and when the contribs are
    updated. To do this open and compile `Contribs.sln` in
    `crawl-ref/source/contrib`. Make sure to set `Release` or `Debug` (not the
@@ -416,14 +423,8 @@ Lua support for editing are untested, and a webtiles build is not available.
 
 7. To build the `Debug` version:
 
-   1. First build `Release` following the instructions above
-   2. Set the `Debug` configuration
-   3. Re-build the `Contribs`
-   4. Re-build with the `Debug` configuration set
-
-   Building the `Debug` version without first building the `Release`
-   configuration will result in an error on startup. The `Release` build can
-   still be debugged using the Visual Studio debugger.
+   1. Re-build the `Contribs` with the `Debug` configuration set
+   2. Re-build with the `Debug` configuration set
 
 ### Maintenance notes:
 
@@ -433,6 +434,8 @@ MSVC solution files are finicky. Opening the "All Configurations" or
 Troubleshooting tips:
 
 - Make sure Windows Universal C Runtime is installed in MSVC.
+- Make sure the Windows 8.1 SDK is installed in Visual Studio. This this
+     doesn't appear to be available in the latest version of Visual Studio.
 - Build Release before rebuilding both solutions with Debug
 - Use "Rebuild Solution" to make sure all files are rewritten
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
