@@ -1,6 +1,6 @@
 name: "protean progenitor"
 glyph: {char: "C", colour: etc_random}
-flags: [see_invis, speaks, warm_blood, fast_regen, no_poly_to, no_zombie, no_gen_derived]
+flags: [speaks, warm_blood, fast_regen, no_poly_to, no_zombie, no_gen_derived]
 resists: {poison: 1}
 xp_mult: 12
 genus: giant
