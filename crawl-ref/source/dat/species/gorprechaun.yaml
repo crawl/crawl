@@ -1,0 +1,41 @@
+enum: SP_GORP
+monster: MONS_BOGGART
+name: Goprechaun
+difficulty: Intermediate
+difficulty_priority: 100
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  wl: 3
+  short_blades: 8
+  long_blades: 8
+  axes: 8
+  maces_and_flails: 8
+  polearms: 8
+  staves: 8
+  ranged weapons: 8
+  stealth: 1
+  spellcasting: -2
+  shapeshifting: -1
+  invocations: -2
+str: 9
+int: 6
+dex: 9
+levelup_stat_frequency: 4
+recommended_jobs:
+  - JOB_BERSERKER
+  - JOB_GLADIATOR
+  - JOB_HUNTER
+  - JOB_CINDER_ACOLYTE
+  - JOB_WANDERER
+mutations:
+  1:
+    MUT_EXPLORE_REGEN: 1
+    MUT_LUCKY: 1
+    MUT_INNATE_MAN: 1
+fake_mutations:
+  - long: You have a case of the dropsies! Woops!
+    short: fragile items
+child_name: Gorpling
+orc_name: Gorc

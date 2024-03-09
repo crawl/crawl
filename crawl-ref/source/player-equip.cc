@@ -255,9 +255,9 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
         _unequip_jewellery_effect(item, msg, meld, slot);
     
     
-    if (!meld && (item.cursed() || you.species == SP_HUMAN))
+    if (!meld && (item.cursed() || you.species == SP_GORP))
     {   
-        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
+        mprf("%s crumbles to dust! Oops!", item.name(DESC_THE).c_str());
         destroy_item(item);
         //dec_inv_item_quantity(item.link, 1);
     }

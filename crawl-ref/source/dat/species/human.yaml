@@ -2,7 +2,7 @@ enum: SP_HUMAN
 monster: MONS_BOGGART
 name: Human
 difficulty: Intermediate
-difficulty_priority: 100
+difficulty_priority: 110
 aptitudes:
   xp: 0
   hp: 0
@@ -17,7 +17,7 @@ int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
-  - JOB_BERSERKER
+  - JOB_FIGHTER
   - JOB_CINDER_ACOLYTE
   - JOB_CONJURER
   - JOB_NECROMANCER
@@ -25,8 +25,3 @@ recommended_jobs:
 mutations:
   1:
     MUT_EXPLORE_REGEN: 1
-    MUT_LUCKY: 1
-    MUT_INNATE_MAN: 1
-fake_mutations:
-  - long: You have a case of the dropsies! Woops!
-    short: fragile items
