@@ -3795,8 +3795,9 @@ void handle_flame_wave()
 
     //conduit form allows you to channel wait spells while attacking
     //maybe use something other than berserk penalty
-    if (!((is_tabcasting() && !you.apply_berserk_penalty) || crawl_state.prev_cmd == CMD_WAIT)
-        || !can_cast_spells(true))
+    if (!((is_tabcasting()
+        && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        || crawl_state.prev_cmd == CMD_WAIT))
     {
         end_flame_wave();
         return;
@@ -3902,7 +3903,9 @@ static bool _handle_player_searing_ray()
         return false;
     }
 
-    if (!((is_tabcasting() && !you.apply_berserk_penalty) || crawl_state.prev_cmd == CMD_WAIT))
+    if (!((is_tabcasting()
+        && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        || crawl_state.prev_cmd == CMD_WAIT))
     {
         end_searing_ray(you);
         return false;
@@ -4804,7 +4807,9 @@ void handle_maxwells_coupling()
         return;
     }
 
-    if (!((is_tabcasting() && !you.apply_berserk_penalty) || crawl_state.prev_cmd == CMD_WAIT))
+    if (!((is_tabcasting()
+        && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        || crawl_state.prev_cmd == CMD_WAIT))
     {
         end_maxwells_coupling();
         return;
