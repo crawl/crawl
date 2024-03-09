@@ -173,7 +173,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_COLD_VULNERABILITY,
 },
 
-{ MUT_DEMONIC_GUARDIAN, 0, 3, mutflag::good, false, false,
+{ MUT_DEMONIC_GUARDIAN, 0, 3, mutflag::good, false, true,
   "demonic guardian",
 
   {"A weak demonic guardian rushes to your aid.",
@@ -717,7 +717,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_NECRO_ENHANCER, 0, 2, mutflag::good, false, false,
+{ MUT_NECRO_ENHANCER, 0, 2, mutflag::good, false, true,
   "in touch with death",
 
   {"You are in touch with the powers of death.",
@@ -795,7 +795,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_HURL_DAMNATION, 0, 1, mutflag::good, false, false,
+{ MUT_HURL_DAMNATION, 0, 1, mutflag::good, false, true,
   "hurl damnation",
 
   {"You can hurl damnation.", "", ""},
@@ -1161,7 +1161,7 @@ static const mutation_def mut_data[] =
    "Your connection to magic feels less subdued."},
 },
 
-{ MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false, false,
+{ MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false, true,
   "demonic magic",
 
   {"Spells you cast may paralyse adjacent enemies.",
@@ -1296,7 +1296,7 @@ static const mutation_def mut_data[] =
    "Your sharp spines retract somewhat."},
 },
 
-{ MUT_POWERED_BY_DEATH, 0, 3, mutflag::good, false, false,
+{ MUT_POWERED_BY_DEATH, 0, 3, mutflag::good, false, true,
   "powered by death",
 
   {"You regenerate a little health from kills.",
@@ -1712,7 +1712,7 @@ static const mutation_def mut_data[] =
    "You feel more encumbered by your armour."},
 },
 
-{ MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false, false,
+{ MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false, true,
   "sanguine armour",
 
   {"When seriously injured, your blood forms armour. (AC +",
@@ -1762,7 +1762,7 @@ static const mutation_def mut_data[] =
    "Your natural camouflage becomes less effective."},
 },
 
-{ MUT_IGNITE_BLOOD, 0, 3, mutflag::good, false, false,
+{ MUT_IGNITE_BLOOD, 0, 3, mutflag::good, false, true,
   "ignite blood",
 
   {"Your demonic aura sometimes causes spilled blood to erupt in flames.",
@@ -1776,7 +1776,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_IGNITE_BLOOD,
 },
 
-{ MUT_FOUL_STENCH, 0, 3, mutflag::good, false, false,
+{ MUT_FOUL_STENCH, 0, 3, mutflag::good, false, true,
   "foul stench",
 
   {"You may rarely emit foul miasma when damaged in melee.",
@@ -1867,7 +1867,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_BLACK_MARK, 0, 1, mutflag::good, false, false,
+{ MUT_BLACK_MARK, 0, 1, mutflag::good, false, true,
   "black mark",
 
   {"Your melee attacks may debilitate your foes.", "", ""},
@@ -1930,7 +1930,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_DEMONIC_TOUCH, 0, 3, mutflag::good, true, false,
+{ MUT_DEMONIC_TOUCH, 0, 3, mutflag::good, true, true,
   "demonic touch",
 
   {"Your touch may inflict minor irresistible damage on your foes.",
@@ -2404,7 +2404,7 @@ static const mutation_def mut_data[] =
   {"Your arms no longer feel tentacular.", "", ""},
 },
 
-{ MUT_VAMPIRISM, 0, 2, mutflag::good, false, false,
+{ MUT_VAMPIRISM, 0, 2, mutflag::good, false, true,
   "vampiric",
 
   {"You are afflicted with vampirism.", "You are afflicted with vampirism and can become a bat while bloodless.", ""},
@@ -2484,7 +2484,7 @@ static const mutation_def mut_data[] =
   {"You feel more mortal.", "", ""},
 },
 
-{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true, false,
+{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true, true,
   "devour on kill",
   {"You thrive by killing the living.", "", ""},
   {"You feel hungry for flesh.", "", ""},
@@ -2498,7 +2498,7 @@ static const mutation_def mut_data[] =
   {"You feel long-lived.", "", ""},
 },
 
-{ MUT_FOUL_SHADOW, 0, 3, mutflag::good, false, false,
+{ MUT_FOUL_SHADOW, 0, 3, mutflag::good, false, true,
   "foul shadow",
   {"You are faintly shadowed, very rarely releasing foul flame when damaged in melee.",
    "You are shadowed, sometimes releasing foul flame when damaged in melee.",
