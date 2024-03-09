@@ -1184,6 +1184,9 @@ Orange
 
 Banana
 
+# fruit-adjacent
+Banana Bread
+
 Pear
 
 Apple
