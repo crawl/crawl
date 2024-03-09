@@ -41,8 +41,10 @@ Elyvilon
 
 Elyvilon the Healer welcomes all kind souls prepared to help others. Those
 individuals can expect to gain powerful healing abilities, by which they can
-avoid bloodshed. Elyvilon appreciates exploration of the dungeon. Elyvilon's
-followers can convert to the Shining One or Zin while keeping some piety.
+avoid bloodshed. Elyvilon appreciates exploration of the dungeon. Elyvilon,
+alone among the good gods, will take demonspawn worshippers and suppress the
+evil in their demonic heritage. Elyvilon's (non-demonspawn) followers can
+convert to the Shining One or Zin while keeping some piety.
 %%%%
 Fedhas
 

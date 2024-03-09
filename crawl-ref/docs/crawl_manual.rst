@@ -1138,7 +1138,7 @@ current game, press 'Ctrl-O'. You can also learn about all gods by pressing
 '?/G'.
 
 Note that some gods are picky about who can enter their service; for example,
-good gods will not accept demonic or undead devotees.
+Zin and the Shining One will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
 from Berserker, Chaos Knight, or Cinder Acolyte.
@@ -1695,8 +1695,8 @@ Demonspawn (Ds)
 
   Demonspawn advance slowly in experience and learn most skills slightly slower
   than Humans, although they are talented at some forms of magic. They learn
-  Invocations especially quickly, although the good gods will not accept their
-  worship due to their unholy nature.
+  Invocations especially quickly, although the good gods (other than Elyvilon)
+  will not accept their worship due to their unholy nature.
 
 Djinn (Dj)
   Djinn are beings of smokeless fire. They enter the world spontaneously and
