@@ -297,9 +297,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #define USE_SQLITE_DBM
 #endif
 
-// Uncomment these if you can't find these functions on your system
-// #define NEED_USLEEP
-
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC
 # include "msvc.h"
