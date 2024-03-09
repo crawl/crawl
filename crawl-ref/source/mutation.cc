@@ -204,6 +204,11 @@ static bool _mut_has_use(const mutation_def &mut, mutflag use)
     return bool(mut.uses & use);
 }
 
+static bool _mut_is_evil(const mutation_def &mut)
+{
+    return mut.is_evil;
+}
+
 static int _mut_weight(const mutation_def &mut, mutflag use)
 {
     switch (use)
@@ -291,6 +296,11 @@ bool is_bad_mutation(mutation_type mut)
 bool is_good_mutation(mutation_type mut)
 {
     return _mut_has_use(mut_data[mut_index[mut]], mutflag::good);
+}
+
+bool is_evil_mutation(mutation_type mut)
+{
+    return _mut_is_evil(mut_data[mut_index[mut]]);
 }
 
 static const mutation_type _ds_scales[] =
@@ -432,6 +442,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         else
             return mutation_activity_type::INACTIVE;
     }
+
+    if (is_evil_mutation(mut) && you.religion == GOD_ELYVILON)
+        return mutation_activity_type::INACTIVE;
 
     return mutation_activity_type::FULL;
 }
