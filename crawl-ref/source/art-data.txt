@@ -1252,6 +1252,7 @@ PLUS:     +4
 COLOUR:   ETC_HEAL
 BOOL:     nogen
 # We'd like to inscribe something here ('Wyrmscale'?), but that messes with Tiamat's announcement.
+INSCRIP:  Aegis
 DESCRIP:  Avatar's Aegis: It grants the wearer a chance to resist fire, cold,
  poison, electricity, acid, and negative energy.
 
