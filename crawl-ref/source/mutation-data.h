@@ -2444,6 +2444,14 @@ static const mutation_def mut_data[] =
   {""},
 },
 
+{ MUT_CROSSTRAIN, 0, 1, mutflag::good, false,
+  "crosstrain",
+
+  {"All weapon skills crosstrain.", "", ""},
+  {"", "", ""},
+  {""},
+},
+
 { MUT_HP_CASTING, 0, 1, mutflag::good, false,
   "HP casting",
 

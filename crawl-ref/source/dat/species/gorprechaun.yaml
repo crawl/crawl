@@ -4,17 +4,17 @@ name: Goprechaun
 difficulty: Intermediate
 difficulty_priority: 100
 aptitudes:
-  xp: 0
+  xp: -1
   hp: 0
   mp_mod: 0
   wl: 3
-  short_blades: 8
-  long_blades: 8
-  axes: 8
-  maces_and_flails: 8
-  polearms: 8
-  staves: 8
-  ranged weapons: 8
+  short_blades: 1
+  long_blades: 1
+  axes: 1
+  maces_and_flails: 1
+  polearms: 1
+  staves: 1
+  ranged weapons: -1
   stealth: 1
   spellcasting: -2
   shapeshifting: -1
@@ -33,9 +33,9 @@ mutations:
   1:
     MUT_EXPLORE_REGEN: 1
     MUT_LUCKY: 1
-    MUT_INNATE_MAN: 1
+    MUT_CROSSTRAIN: 1
 fake_mutations:
-  - long: You have a case of the dropsies! Woops!
-    short: fragile items
+  - long: You have a case of the dropsies
+    short: fragile weapons
 child_name: Gorpling
 orc_name: Gorc

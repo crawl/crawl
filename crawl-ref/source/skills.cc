@@ -255,7 +255,7 @@ void cleanup_innate_martial_skills()
 {
     unsigned int melee_xp = 0;
     unsigned int n_skills = 0;
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; sk++)
+    for (skill_type sk = SK_FIRST_WEAPON; sk < SK_LAST_WEAPON; sk++)
     {
         if (is_useless_skill(sk))
             continue;
@@ -269,7 +269,7 @@ void cleanup_innate_martial_skills()
     while (xp_per > skill_exp_needed(lvl + 1, SK_FIRST_WEAPON))
         ++lvl;
 
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; sk++)
+    for (skill_type sk = SK_FIRST_WEAPON; sk < SK_LAST_WEAPON; sk++)
     {
         if (is_useless_skill(sk))
             continue;
@@ -568,13 +568,13 @@ static void _check_innate_martial_skills()
         return;
 
     bool any_magic = false;
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON; sk < SK_LAST_WEAPON; ++sk)
         if (!is_removed_skill(sk) && !you.skills_to_hide.count(sk))
             any_magic = true;
     if (!any_magic)
         return;
 
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON; sk < SK_LAST_WEAPON; ++sk)
         you.skills_to_hide.erase(sk);
 }
 
@@ -1066,7 +1066,7 @@ bool is_magic_skill(skill_type sk)
 
 bool is_martial_skill(skill_type sk)
 {
-    return sk >= SK_FIRST_WEAPON && sk <= SK_LAST_WEAPON;
+    return sk >= SK_FIRST_WEAPON && sk < SK_LAST_WEAPON;
 }
 
 int _gnoll_total_skill_cost();
@@ -1081,7 +1081,7 @@ static int _magic_training()
 
 static int _martial_training()
 {
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON; sk < SK_LAST_WEAPON; ++sk)
         if (you.training[sk])
             return you.training[sk];
     return 0;
@@ -2478,8 +2478,29 @@ float species_apt_factor(skill_type sk, species_type sp)
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
     // Gnolls do not have crosstraining.
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING) || you.has_mutation(MUT_INNATE_MAN))
         return {};
+
+    if (you.has_mutation(MUT_CROSSTRAIN)) {
+       
+        switch (sk)
+        {
+        case SK_SHORT_BLADES:
+            return { SK_LONG_BLADES, SK_AXES, SK_STAVES, SK_MACES_FLAILS, SK_POLEARMS };
+        case SK_LONG_BLADES:
+            return { SK_SHORT_BLADES, SK_AXES, SK_STAVES, SK_MACES_FLAILS, SK_POLEARMS };
+        case SK_AXES:
+            return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_MACES_FLAILS, SK_POLEARMS };
+        case SK_STAVES:
+            return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS, SK_POLEARMS };
+        case SK_MACES_FLAILS:
+            return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_STAVES, SK_POLEARMS };
+        case SK_POLEARMS:
+            return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_STAVES, SK_MACES_FLAILS };
+        default:
+            return {};
+        }
+    }
 
     switch (sk)
     {
@@ -2702,6 +2723,6 @@ void set_magic_training(training_status st)
 
 void set_martial_training(training_status st)
 {
-    for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
+    for (skill_type sk = SK_FIRST_WEAPON; sk < SK_LAST_WEAPON; ++sk)
         you.train[sk] = you.train_alt[sk] = st;
 }

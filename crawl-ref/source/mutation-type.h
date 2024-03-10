@@ -267,6 +267,7 @@ enum mutation_type
     MUT_FLOAT,
     MUT_INNATE_CASTER,
     MUT_INNATE_MAN,
+    MUT_CROSSTRAIN,
     MUT_HP_CASTING,
     MUT_FLAT_HP,
     MUT_ENGULF,
