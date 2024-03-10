@@ -76,6 +76,5 @@ enum species_type
 #endif
     SP_MOUNTAIN_DWARF,
     SP_COGLIN,
-	SP_GORP,
 
     // Auto-generated enums start here
