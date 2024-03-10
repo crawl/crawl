@@ -689,7 +689,7 @@ devour on kill mutation
 
 当你杀死生物时，你有机会吞噬它们的生命力并恢复健康。
 %%%%
-roll mutation
+rollpage mutation
 
 当你移向敌人时会本能地翻滚，会向前再冲出一格。
 这个变异能在你滚动时提升魔力恢复速度；

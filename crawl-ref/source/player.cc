@@ -7378,7 +7378,8 @@ int player::has_talons(bool allow_tran) const
 
 bool player::has_usable_talons(bool allow_tran) const
 {
-    return !slot_item(EQ_BOOTS) && has_talons(allow_tran);
+    return has_talons(allow_tran)
+           && (!slot_item(EQ_BOOTS) || wearing(EQ_BOOTS, ARM_BARDING));
 }
 
 int player::has_hooves(bool allow_tran) const

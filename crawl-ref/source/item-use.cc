@@ -2564,6 +2564,8 @@ static afsz _abort_for_stat_zero(const item_def &item, int prop_str,
 static bool _safe_to_remove_or_wear(const item_def &item, const item_def
                                     *old_item, bool remove, bool quiet)
 {
+    // Check that removing item will not cause a dangerous loss of
+    // flight.
     if (remove && !safe_to_remove(item, quiet))
         return false;
 
@@ -2571,6 +2573,11 @@ static bool _safe_to_remove_or_wear(const item_def &item, const item_def
     afsz asked = afsz::noask;
     if (!remove && old_item)
     {
+        // Check that removing old item will not cause a dangerous
+        // loss of flight.
+        if (!safe_to_remove(*old_item, quiet))
+            return false;
+
         _item_stat_bonus(*old_item, str1, dex1, int1, true);
         asked = _abort_for_stat_zero(item, str1, dex1, int1, true, quiet);
         if (afsz::stop == asked)

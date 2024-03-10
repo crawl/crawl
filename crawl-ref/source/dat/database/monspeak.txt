@@ -7637,7 +7637,7 @@ _weeping_skull_common_
 @The_monster@ @_weeps_@ at its own [deplorable|decrepit] state.
 
 # Slime, Swamp, Desolation...
-@The_monster@ grieves for the multitudes of fallen [empires|civilizations].
+@The_monster@ grieves for the multitudes of fallen [empires|civilisations].
 
 # Itsumaden
 @The_monster@ begs for proper burials for the Dungeon's restless dead.
