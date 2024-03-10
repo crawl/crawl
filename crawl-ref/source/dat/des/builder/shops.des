@@ -1978,6 +1978,59 @@ m..S..m
 ...m...
 ENDMAP
 
+# Wiglaf has retired from adventuring and sells off his hat collection
+NAME:   mainiacjoe_wiglaf_hat_shop
+TAGS:   transparent float no_monster_gen no_item_gen no_trap_gen
+KFEAT:  O = altar_okawaru
+FTILE:  .@ = floor_cobble_blood
+{{
+local shopname = util.random_from({"type:Millinery",
+    "type:Haberdashery", "type:Hat suffix:Hut"})
+local kstr = "S = armour shop name:Wiglaf " .. shopname ..
+    " count:8 use_all no_mimic ; " ..
+    " hat any | hat any | hat any" ..
+    " | hat good_item tile:that_wizard_hat" ..
+    " | hat good_item tile:telven_leather_helm" ..
+    " | hat good_item tile:that_explorer_2" ..
+    " | hat randart tile:tcap_jester | "
+possible_unrands = {}
+if not you.unrands("hat of the Bear Spirit") then
+    table.insert(possible_unrands, "hat of the Bear Spirit")
+end
+if not you.unrands("crown of Dyrovepreva") then
+    table.insert(possible_unrands, "crown of Dyrovepreva")
+end
+if not you.unrands("mask of the Dragon") then
+    table.insert(possible_unrands, "mask of the Dragon")
+end
+if not you.unrands("hat of the Alchemist") then
+    table.insert(possible_unrands, "hat of the Alchemist")
+end
+if not you.unrands("hat of Pondering") then
+    table.insert(possible_unrands, "hat of Pondering")
+end
+if not you.unrands("hood of the Assassin") then
+    table.insert(possible_unrands, "hood of the Assassin")
+end
+if next(possible_unrands) == nil then
+    kstr = kstr .. "hat randart tile:tsanta_hat"
+else
+    kstr = kstr .. util.random_from(possible_unrands)
+end
+kfeat(kstr)
+}}
+MAP
+    xxxxx
+  xxx...xxx
+ xx.......xx
+ x....O....x
+xx.........xx
+x...x...x...x
+@.xxx.S.xxx.@
+xxx x...x xxx
+    xxxxx
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
