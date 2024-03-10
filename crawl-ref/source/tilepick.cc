@@ -2481,6 +2481,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         }
 
     case MI_SLUG:
+        return TILE_BOLT_IRON_SHOT;
     case MI_SLING_BULLET:
         switch (brand)
         {
@@ -3083,6 +3084,9 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
             case MI_THROWING_NET:
                 ch = TILE_MI_THROWING_NET0;
                 break;
+            case MI_SLUG:
+                ch = TILE_BOLT_IRON_SHOT;
+                break;
             default:
                 break;
         }
@@ -3095,7 +3099,6 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
             case MI_STONE:
                 ch = TILE_MI_STONE0;
                 break;
-            case MI_SLUG:
             case MI_SLING_BULLET:
                 switch (item.brand)
                 {
