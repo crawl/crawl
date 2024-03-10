@@ -1047,10 +1047,11 @@ interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
         run, shaft_self, travel. (These are derived from the `name()`
         functions in delay.h.)
 
-        Possible interrupt types are: ancestor_hp, force, full_hp, full_mp,
-        hp_loss, hit_monster, keypress, message, mimic, monster,
-        monster_attack, stat, sense_monster, teleport. (These are derived
-        from the `activity_interrupt_names` array in delay.cc.)
+        Possible interrupt types are: abyss_exit_spawned, ally_attacked,
+        ancestor_hp, force, full_hp, full_mp, hp_loss, hit_monster, keypress,
+        message, mimic, monster, monster_attack, stat, sense_monster, teleport.
+        (These are derived from the `activity_interrupt_names` array in
+        delay.cc.)
 
 
 delay_safe_poison = <% of hp>:<% of mhp>

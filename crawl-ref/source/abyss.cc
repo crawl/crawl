@@ -2385,4 +2385,5 @@ void abyss_maybe_spawn_xp_exit()
 
     you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;
+    interrupt_activity(activity_interrupt::abyss_exit_spawned);
 }
