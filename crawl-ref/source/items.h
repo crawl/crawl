@@ -187,6 +187,8 @@ void say_farewell_to_weapon(const item_def &item);
 
 bool valid_item_index(int i);
 
+void maybe_split_nets(item_def &item, const coord_def& where);
+
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.

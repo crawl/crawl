@@ -2660,10 +2660,12 @@ void bolt::drop_object()
     {
         monster* m = monster_at(pos());
         // Player or monster at position is caught in net.
-        if (you.pos() == pos() && you.attribute[ATTR_HELD]
-            || m && m->caught())
+        // Don't catch anything if the creature was already caught.
+        if (get_trapping_net(pos(), true) == NON_ITEM
+            && (you.pos() == pos() && you.attribute[ATTR_HELD]
+            || m && m->caught()))
         {
-            set_net_stationary(env.item[idx]);
+            maybe_split_nets(env.item[idx], pos());
         }
     }
 }
