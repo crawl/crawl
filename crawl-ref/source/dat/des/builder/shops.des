@@ -1981,6 +1981,7 @@ ENDMAP
 # Wiglaf has retired from adventuring and sells off his hat collection
 NAME:   mainiacjoe_wiglaf_hat_shop
 TAGS:   transparent float no_monster_gen no_item_gen no_trap_gen
+DEPTH:  Vaults, Crypt, Depths   
 KFEAT:  O = altar_okawaru
 FTILE:  .@O = floor_cobble_blood
 {{
