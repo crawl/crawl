@@ -1981,6 +1981,67 @@ m..S..m
 ...m...
 ENDMAP
 
+# Wiglaf says his gran stitched his ever-iconic hat, so.
+NAME:   mainiacjoe_granny_wiglaf_hat_shop
+TAGS:   transparent no_monster_gen no_item_gen no_trap_gen
+DEPTH:  Vaults, Crypt, Depths, Snake:$
+WEIGHT: 5
+KFEAT:  O = altar_okawaru
+{{
+local shopname = util.random_from({"type:Magnificent suffix:Millinery",
+    "type:Humble suffix:Haberdashery", "type:Hat suffix:Hut"})
+local cannon = crawl.coinflip()
+local count = 5
+if cannon then
+    count = count + 1
+end
+local kstr = "S = armour shop name:Granny_Wiglaf " .. shopname ..
+    " count:" .. count .. " greed:15 use_all no_mimic ; " ..
+    " | hat randart tile:thelm_cap_jester" ..
+    " | hat randart tile:thelm_hat_art_last"
+possible_ego_hats = {
+    " | hat ego:intelligence tile:thelm_cap" ..
+        " | hat ego:see_invisible tile:thelm_hat_explorer2",
+    " | hat ego:see_invisible tile:thelm_cap" ..
+        " | hat ego:willpower tile:thelm_hat_explorer2",
+    " | hat ego:willpower tile:thelm_cap" ..
+        " | hat ego:intelligence tile:thelm_hat_explorer2"}
+kstr = kstr .. util.random_from(possible_ego_hats)
+
+unrand_list = {"hat of the Bear Spirit", "crown of Dyrovepreva",
+               "mask of the Dragon", "hat of the Alchemist",
+               "hat of Pondering", "hood of the Assassin"}
+possible_unrands = {}
+for i, k in pairs(unrand_list) do
+    if not you.unrands(k) then
+        table.insert(possible_unrands, " | " .. k)
+    end
+end
+if next(possible_unrands) == nil then
+    kstr = kstr .. " | hat randart tile:thelm_hat_santa"
+else
+    kstr = kstr .. util.random_from(possible_unrands)
+end
+
+if cannon then
+    kstr = kstr .. " | randbook owner:Granny_Wiglaf title:Secret_Sauce" ..
+                   " numspells:1 spells:hellfire_mortar"
+end
+kfeat(kstr)
+}}
+FTILE:  .@O = floor_cobble_blood
+MAP
+    xxxxx
+  xxx...xxx
+ xx.......xx
+ x....O....x
+xx.........xx
+x...x...x...x
+@.xxx.S.xxx.@
+xxx x...x xxx
+    xxxxx
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
