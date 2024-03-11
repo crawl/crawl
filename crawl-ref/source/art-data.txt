@@ -137,7 +137,7 @@
 
 # PLUS: The pluses of the artefact.
 
-# FALLBACK: if an artifact has already generated, the builder instead usually
+# FALLBACK: if an artefact has already generated, the builder instead usually
 # creates a randart with the same base type. This field allows overriding the
 # base type for certain special cases (e.g. if a randart's special properties
 # put it on par with a much stronger base type).
