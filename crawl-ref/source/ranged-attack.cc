@@ -221,11 +221,10 @@ bool ranged_attack::handle_phase_dodged()
 
     if (needs_message)
     {
-        mprf("%s%s misses %s%s",
+        mprf("%s%s misses %s.",
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
-             defender_name(false).c_str(),
-             attack_strength_punctuation(damage_done).c_str());
+             defender_name(false).c_str());
     }
 
     maybe_trigger_jinxbite();
