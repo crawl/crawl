@@ -116,6 +116,8 @@ enum book_type
     BOOK_HUNTER,
     BOOK_SCORCHING,
     BOOK_MAXWELL,
+    BOOK_MOVEMENT,
+    BOOK_WICKED_CREATION,
     NUM_BOOKS
 };
 

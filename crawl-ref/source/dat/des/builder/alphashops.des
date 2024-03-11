@@ -130,7 +130,7 @@
        "book of minor magic", "book of misfortune", "maw talisman",
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
-       "potion of mutation", "book of the moon" }
+       "potion of mutation", "book of the moon", "book of movement" }
 
       elseif s == "N" then i = { "book of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }
@@ -180,7 +180,7 @@
 
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
        "war axe", "ring of willpower", "book of winter", "book of weapons",
-       "book of the wilderness" }
+       "book of the wilderness", "book of wicked creation" }
 
       elseif s == "X" then i = { "any" }
 
