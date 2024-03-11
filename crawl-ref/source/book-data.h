@@ -512,7 +512,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOMBARD,
 },
 
-{ // Book of Wicked Creations
+{ // Book of Wicked Creation
     SPELL_SIGIL_OF_BINDING,
     SPELL_SIMULACRUM,
     SPELL_DEATH_CHANNEL,
