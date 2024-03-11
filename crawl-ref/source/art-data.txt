@@ -549,17 +549,18 @@ BOOL:    evil
 DBRAND:  Damnation: Any ammunition fired from it explodes in a burst of
  damnation on striking a foe, dealing damage which bypasses armour.
 
-# start TAG_MAJOR_VERSION == 34
 NAME:    sword of the Doom Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +13
+INSCRIP: doom
 COLOUR:  BLUE
 TILE:    urand_doom_knight
 TILE_EQ: doom_knight
-BRAND:   SPWPN_PAIN
+FB_BRAND: SPWPN_PAIN
 WILL:    1
-BOOL:    nospell, nogen
-# end TAG_MAJOR_VERSION
+BOOL:    nospell, evil, drain
+DBRAND:  Doom: It inflicts additional damage proportional to its victim's
+ maximum health.
 
 NAME:    morningstar "Eos"
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
