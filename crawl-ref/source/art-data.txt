@@ -416,6 +416,7 @@ COLOUR:  ETC_FOUL_FLAME
 TILE:    urand_brilliance
 TILE_EQ: eveningstar_brilliance
 BRAND:   SPWPN_FOUL_FLAME
+FB_BRAND: SPWPN_PAIN
 DESCRIP: Umbra:     It surrounds you with an aura of shadow, increasing your
  stealth and reducing the accuracy of all others within it.
 

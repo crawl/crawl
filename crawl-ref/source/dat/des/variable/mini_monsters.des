@@ -8007,13 +8007,7 @@ NAME:    minmay_guarded_unrand_brilliance
 DEPTH:   D:13-, Depths
 MONS:    profane servitor
 SUBST:   1 = 1.
-: if you.unrands("brilliance") then
-ITEM:    eveningstar randart ego:draining ident:type no_pickup / \
-         eveningstar randart ego:pain ident:type no_pickup / \
-         eveningstar randart ego:vampirism ident:type no_pickup
-: else
 ITEM:    brilliance no_pickup
-: end
 MAP
          ...
          .c.
