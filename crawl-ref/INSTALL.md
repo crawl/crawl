@@ -406,25 +406,11 @@ Lua support for editing are untested, and a webtiles build is not available.
    step must be executed any time you update to a new version of the source (or
    if you have modified tile data or unrandarts).
 
-4. The first time you compile, you need to build the `Contribs` solution. This
-   compiles various libraries which DCSS itself needs to build. This
-   needs to be performed the first time you build, when changing to between `Release` and `Debug`
-   configuration, and when the contribs are
-   updated. To do this open and compile `Contribs.sln` in
-   `crawl-ref/source/contrib`. Make sure to set `Release` or `Debug` (not the
-   library versions), as well as the desired architecture (Win32 or x64). Then
-   build (or re-build) the solution.
+6. Open `crawl-ref.sln` in Visual Studio, this is in `crawl-ref/source/MSVC/`.
 
-5. Open `crawl-ref.sln` in Visual Studio, this is in `crawl-ref/source/MSVC/`.
-
-6. Select `Debug` or `Release` from the build configurations menu on the main
-   toolbar; `crawl.exe` is compiled by selecting "Build Solution" in the BUILD
-   menu.
-
-7. To build the `Debug` version:
-
-   1. Re-build the `Contribs` with the `Debug` configuration set
-   2. Re-build with the `Debug` configuration set
+7. Select the configuration you want such as `Release Tiles` from the build
+   configurations menu on the main toolbar; `crawl.exe` is compiled by
+   selecting "Build Solution" in the BUILD menu.
 
 ### Maintenance notes:
 
