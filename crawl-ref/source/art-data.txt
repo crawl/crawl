@@ -316,7 +316,6 @@ TILE:    spwpn_sceptre_of_torment
 TILE_EQ: sceptre_of_torment
 BRAND:   SPWPN_PAIN
 VALUE:   1200
-BOOL:    evil
 DBRAND:  Torment:   It occasionally torments all nearby living foes when it
  strikes in combat.
 
@@ -329,7 +328,6 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
-BOOL:    evil
 
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
@@ -1173,7 +1171,7 @@ TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_DRAINING
 FB_BRAND: SPWPN_PAIN
-BOOL:     evil, seeinv, fly, drain
+BOOL:     seeinv, fly, drain
 INSCRIP:  demonic, Mesm
 DBRAND:   Demonic:   It occasionally summons demons to assist the wielder when
  it strikes in combat.
