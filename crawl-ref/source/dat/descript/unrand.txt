@@ -634,12 +634,12 @@ contamination almost as effectively. Anyone reckless enough to place it on
 their head would find their magic regeneration dramatically increased, at the
 cost of multiplying any magical contamination received.
 %%%%
-# TAG_MAJOR_VERSION == 34
+
 crown of Eternal Torment
 
-A gold crown set with jet-black gems. It permanently afflicts its wearer with
-agonising pain, substantially reducing their resilience but rendering them
-immune to further torments.
+A gold crown set with jet-black gems. It frequently afflicts its wearer and
+surrounding living creatures with agonising pain. Over time, the wearer becomes
+numb to the pain, greatly reducing the effects of torment on them.
 %%%%
 robe of Vines
 

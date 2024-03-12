@@ -1099,6 +1099,8 @@ void torment_player(const actor *attacker, torment_source_type taux)
             hploss /= 2;
         if (you.has_mutation(MUT_TORMENT_RESISTANCE))
             hploss /= 2;
+        if (player_equip_unrand(UNRAND_ETERNAL_TORMENT))
+            hploss /= 2;
 #if TAG_MAJOR_VERSION == 34
         // Save compatibility for old demonspawn mutation -- now deterministic
         if (you.has_mutation(MUT_STOCHASTIC_TORMENT_RESISTANCE))
@@ -1136,12 +1138,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
 
     mpr("Your body is wracked with pain!");
 
-    kill_method_type type = KILLED_BY_BEAM;
-    if (crawl_state.is_god_acting())
-        type = KILLED_BY_DIVINE_WRATH;
-    else if (taux == TORMENT_MISCAST)
-        type = KILLED_BY_WILD_MAGIC;
-
     const char *aux = "";
 
     switch (taux)
@@ -1165,7 +1161,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_XOM:
-        type = KILLED_BY_XOM;
         aux = "Xom's torment";
         break;
 
@@ -1174,16 +1169,19 @@ void torment_player(const actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_LURKING_HORROR:
-        type = KILLED_BY_DEATH_EXPLOSION;
         aux = "an exploding lurking horror";
         break;
 
     case TORMENT_MISCAST:
         aux = "by torment";
         break;
+
+    case TORMENT_CROWN:
+        aux = "the Crown of Eternal Torment";
+        break;
     }
 
-    ouch(hploss, type, attacker ? attacker->mid : MID_NOBODY, aux);
+    ouch(hploss, KILLED_BY_TORMENT, attacker ? attacker->mid : MID_NOBODY, aux);
 
     return;
 }

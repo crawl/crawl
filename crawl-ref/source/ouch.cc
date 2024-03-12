@@ -799,6 +799,18 @@ static void _maybe_disable_potions()
     }
 }
 
+/**
+ * Maybe torment if the player is wearing a crown of eternal torment
+ **/
+static void _maybe_torment()
+{
+    if (player_equip_unrand(UNRAND_ETERNAL_TORMENT)
+        && x_chance_in_y(5, 100))
+    {
+        torment(&you, TORMENT_CROWN, you.pos());
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1165,6 +1177,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_slow();
                 _maybe_disable_scrolls();
                 _maybe_disable_potions();
+                if (death_type != KILLED_BY_TORMENT)
+                    _maybe_torment();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

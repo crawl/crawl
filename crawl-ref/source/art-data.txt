@@ -1449,7 +1449,6 @@ BOOL:    mutate, elec, chaotic, nogen
 VALUE:   400
 # end TAG_MAJOR_VERSION
 
-# start TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
 NAME:    crown of Eternal Torment
 OBJ:     OBJ_ARMOUR/ARM_HAT
@@ -1457,10 +1456,11 @@ PLUS:    +3
 COLOUR:  ETC_DARK
 TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
-INSCRIP: rTorment HP--
+INSCRIP: *Torment rTorment
 LIFE:    3
-BOOL:    evil, seeinv, nogen, drain
-# end TAG_MAJOR_VERSION
+BOOL:    evil, drain
+DBRAND:  *Torment:  It may torment nearby living creatures when you take damage.
++rTorment: It reduces the damage you take from torment.
 
 ENUM:    VINES
 NAME:    robe of Vines

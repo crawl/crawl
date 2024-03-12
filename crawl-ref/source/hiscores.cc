@@ -666,7 +666,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot", "constriction", "exploremode",
+    "collision", "zot", "constriction", "exploremode", "torment",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2722,6 +2722,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         else
             desc += "Constricted to death by " + death_source_desc();
         needs_damage = true;
+        break;
+
+    case KILLED_BY_TORMENT: // Should never happen
+        desc += terse? "torment" : "Tormented";
         break;
 
     default:
