@@ -3832,7 +3832,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
  */
 static bool _scroll_will_harm(const scroll_type scr, const actor &m)
 {
-    return m.alive() && scr == SCR_TORMENT && !m.res_torment();
+    return m.alive() && scr == SCR_TORMENT
+        && !m.res_torment() && !god_protects(&you, m.as_monster(), true);
 }
 
 static vector<string> _desc_finite_wl(const monster_info& mi)
@@ -4282,6 +4283,10 @@ bool read(item_def* scroll, dist *target)
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mons_invuln_will(**mi))
+                continue;
+
+            // Jiyva stops you from using jellies as bombs
+            if (have_passive(passive_t::neutral_slimes) && god_protects(*mi))
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))

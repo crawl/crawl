@@ -2712,6 +2712,19 @@ bool god_protects(const actor *agent, const monster *target, bool quiet)
             mprf("%s avoids your attack.", target->name(DESC_THE).c_str());
         return true;
     }
+
+    if (aligned && agent->is_player() && have_passive(passive_t::neutral_slimes)
+        && mons_is_slime(*target))
+    {
+        if (!quiet && you.can_see(*target))
+        {
+            simple_god_message(
+                    make_stringf(" protects %s slime from harm.",
+                        target->friendly() ? "your" : "a").c_str(),
+                        GOD_JIYVA);
+        }
+        return true;
+    }
     return false;
 }
 

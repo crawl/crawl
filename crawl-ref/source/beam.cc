@@ -1234,11 +1234,14 @@ void bolt::do_fire()
                 && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
                 && !cell_is_solid(target)
             // or visible firewood with a non-penetrating beam...
-                || !pierce
-                   && monster_at(pos())
+                || monster_at(pos())
                    && you.can_see(*monster_at(pos()))
+                   && (!pierce
                    && !ignores_monster(monster_at(pos()))
-                   && mons_is_firewood(*monster_at(pos())))
+                   && mons_is_firewood(*monster_at(pos()))
+            // or visible jelly with Jiyva
+                   || have_passive(passive_t::neutral_slimes)
+                   && god_protects(agent(), monster_at(pos()), true)))
             // and it's a player tracer...
             // (!is_targeting so you don't get prompted while adjusting the aim)
             && is_tracer && !is_targeting && YOU_KILL(thrower)
@@ -1786,10 +1789,9 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
-    // Placeholder for J offering full protection for slimes.
-    if (mons_is_slime(*mons)
-        && have_passive(passive_t::neutral_slimes)
-        && mons->wont_attack())
+    // Jiyva protects from mass enchantments
+    if (have_passive(passive_t::neutral_slimes)
+        && god_protects(mons))
     {
         return true;
     }
@@ -5201,6 +5203,23 @@ void bolt::affect_monster(monster* mon)
         return;
 
     hit_count[mon->mid]++;
+
+    // Jiyva absorbs attacks on slimes.
+    if (!is_tracer && agent()->is_player()
+        && have_passive(passive_t::neutral_slimes)
+        && god_protects(agent(), mon, true))
+    {
+        if (you.see_cell(mon->pos()))
+        {
+            simple_god_message(
+                        make_stringf(" absorbs the attack on %s slime.",
+                            mon->friendly() ? "your" : "a").c_str(),
+                        GOD_JIYVA);
+        }
+
+        finish_beam();
+        return;
+    }
 
     if (shoot_through_monster(*this, mon) && !is_tracer)
     {
