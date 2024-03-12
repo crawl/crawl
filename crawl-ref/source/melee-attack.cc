@@ -267,11 +267,10 @@ bool melee_attack::handle_phase_dodged()
             player_warn_miss();
         else
         {
-            mprf("%s%s misses %s%s",
+            mprf("%s%s misses %s.",
                  atk_name(DESC_THE).c_str(),
                  evasion_margin_adverb().c_str(),
-                 defender_name(true).c_str(),
-                 attack_strength_punctuation(damage_done).c_str());
+                 defender_name(true).c_str());
         }
     }
 

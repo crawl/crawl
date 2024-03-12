@@ -89,9 +89,9 @@ function crypt_loot_plus(e)
   e.kitem("g = " .. ring .. ", " .. ring .. " / " .. amulet .. " w:2, " ..
           ring .. " / " .. amulet .. " w:2 / nothing")
   -- and one drop-off of these.
-  e.kitem("h = vampires_tooth / leech / sword_of_zonguldrok / " ..
-          "finisher / scythe_of_curses / majin-bo / sceptre_of_torment / " ..
-          "undeadhunter")
+  e.kitem("h = vampires_tooth / sword_of_the_doom_knight / leech / " ..
+          "sword_of_zonguldrok / finisher / scythe_of_curses / majin-bo / " ..
+          "sceptre_of_torment / undeadhunter / brilliance")
   e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
           .. book .. "borgnjor's_revivification / " .. book .. "infestation")
   e.kitem("j = talisman of death / talisman of death randart w:1, " ..

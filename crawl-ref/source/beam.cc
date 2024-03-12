@@ -4330,6 +4330,10 @@ int bolt::apply_AC(const actor *victim, int hurted)
     {
     case BEAM_DAMNATION:
         ac_rule = ac_type::none; break;
+    case BEAM_COLD:
+        if (origin_spell == SPELL_PERMAFROST_ERUPTION)
+            ac_rule = ac_type::none;
+        break;
     case BEAM_ELECTRICITY:
     case BEAM_THUNDER:
         ac_rule = ac_type::half; break;
@@ -6425,6 +6429,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_ICEBLAST, {
         "The mass of ice explodes!",
         "an explosion",
+    } },
+    { SPELL_PERMAFROST_ERUPTION, {
+        "Piercing cold boils outward!",
+        "an explosion", // maybe?
     } },
     { SPELL_GHOSTLY_SACRIFICE, {
         "The ghostly flame explodes!",

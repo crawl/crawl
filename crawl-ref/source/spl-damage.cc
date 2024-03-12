@@ -1079,6 +1079,87 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     return spret::success;
 }
 
+set<coord_def> permafrost_targets(const actor &caster, int pow)
+{
+    set<coord_def> targets;
+
+    const int range = spell_range(SPELL_PERMAFROST_ERUPTION, pow);
+    vector<coord_def> all_hostiles = find_near_hostiles(range, true, caster);
+    if (all_hostiles.empty())
+        return targets;
+
+    set<coord_def> hostile_locs(all_hostiles.begin(), all_hostiles.end());
+    int best_foes = 0;
+    const coord_def src = caster.pos();
+
+    for (coord_def t : all_hostiles)
+    {
+        if (grid_distance(t, src) < 2) // don't blow up the caster
+            continue;
+
+        int foes = 0; // not counting the centre
+        for (adjacent_iterator ai(t); ai; ++ai)
+            foes += hostile_locs.count(*ai); // ie 1 if present
+        if (foes < best_foes)
+            continue;
+
+        if (foes > best_foes)
+        {
+            best_foes = foes;
+            targets.clear();
+        }
+        targets.insert(t);
+    }
+
+    return targets;
+}
+
+
+
+spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
+{
+    set<coord_def> maybe_targets = permafrost_targets(caster, pow);
+    if (caster.is_player())
+    {
+        set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
+        for (coord_def t : maybe_targets)
+            for (adjacent_iterator ai(t); ai; ++ai)
+                if (caster.see_cell(*ai))
+                    maybe_victims.insert(*ai);
+
+        vector<coord_def> mvv(maybe_victims.begin(), maybe_victims.end());
+        if (_warn_about_bad_targets(SPELL_PERMAFROST_ERUPTION, mvv))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    if (maybe_targets.empty())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+
+    const coord_def targ = *random_iterator(maybe_targets);
+    mpr("Bitter cold erupts, blasting rock from the ceiling!");
+
+    bolt beam;
+    zappy(ZAP_PERMAFROST_ERUPTION_EARTH, pow, false, beam);
+    beam.set_agent(&you);
+    beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
+    beam.source = beam.target = targ;
+    beam.fire();
+
+    zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, false, beam);
+    beam.ex_size       = 1;
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode();
+
+    return spret::success;
+}
+
 dice_def base_fragmentation_damage(int pow, bool random)
 {
     return dice_def(3, random ? 4 + div_rand_round(pow, 5)
@@ -2916,9 +2997,8 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.range        = range;
     beam.name         = "plasma beam";
     beam.source       = agent.pos();
-    beam.source_id    = agent.mid;
     beam.target       = target;
-    beam.thrower      = mon ? KILL_MON : KILL_YOU;
+    beam.set_agent(&agent);
     beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;

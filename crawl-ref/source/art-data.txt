@@ -137,7 +137,7 @@
 
 # PLUS: The pluses of the artefact.
 
-# FALLBACK: if an artifact has already generated, the builder instead usually
+# FALLBACK: if an artefact has already generated, the builder instead usually
 # creates a randart with the same base type. This field allows overriding the
 # base type for certain special cases (e.g. if a randart's special properties
 # put it on par with a much stronger base type).
@@ -300,7 +300,7 @@ PLUS:    +13
 INSCRIP: curses,
 COLOUR:  ETC_DEATH
 TILE:    spwpn_scythe_of_curses
-TILE_EQ: finisher
+TILE_EQ: scythe_of_curses
 BRAND:   SPWPN_DRAINING
 VALUE:   800
 BOOL:    drain
@@ -316,7 +316,6 @@ TILE:    spwpn_sceptre_of_torment
 TILE_EQ: sceptre_of_torment
 BRAND:   SPWPN_PAIN
 VALUE:   1200
-BOOL:    evil
 DBRAND:  Torment:   It occasionally torments all nearby living foes when it
  strikes in combat.
 
@@ -329,7 +328,6 @@ TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
-BOOL:    evil
 
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
@@ -416,6 +414,7 @@ COLOUR:  ETC_FOUL_FLAME
 TILE:    urand_brilliance
 TILE_EQ: eveningstar_brilliance
 BRAND:   SPWPN_FOUL_FLAME
+FB_BRAND: SPWPN_PAIN
 DESCRIP: Umbra:     It surrounds you with an aura of shadow, increasing your
  stealth and reducing the accuracy of all others within it.
 
@@ -549,17 +548,18 @@ BOOL:    evil
 DBRAND:  Damnation: Any ammunition fired from it explodes in a burst of
  damnation on striking a foe, dealing damage which bypasses armour.
 
-# start TAG_MAJOR_VERSION == 34
 NAME:    sword of the Doom Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +13
+INSCRIP: doom
 COLOUR:  BLUE
 TILE:    urand_doom_knight
 TILE_EQ: doom_knight
-BRAND:   SPWPN_PAIN
+FB_BRAND: SPWPN_PAIN
 WILL:    1
-BOOL:    nospell, nogen
-# end TAG_MAJOR_VERSION
+BOOL:    nospell, evil, drain
+DBRAND:  Doom: It inflicts additional damage proportional to its victim's
+ maximum health.
 
 NAME:    morningstar "Eos"
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
@@ -1172,7 +1172,7 @@ TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_DRAINING
 FB_BRAND: SPWPN_PAIN
-BOOL:     evil, seeinv, fly, drain
+BOOL:     seeinv, fly, drain
 INSCRIP:  demonic, Mesm
 DBRAND:   Demonic:   It occasionally summons demons to assist the wielder when
  it strikes in combat.
@@ -1252,6 +1252,7 @@ PLUS:     +4
 COLOUR:   ETC_HEAL
 BOOL:     nogen
 # We'd like to inscribe something here ('Wyrmscale'?), but that messes with Tiamat's announcement.
+INSCRIP:  Aegis
 DESCRIP:  Avatar's Aegis: It grants the wearer a chance to resist fire, cold,
  poison, electricity, acid, and negative energy.
 

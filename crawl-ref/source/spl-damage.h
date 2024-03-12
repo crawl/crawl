@@ -88,6 +88,8 @@ coord_def get_thunderbolt_last_aim(actor *caster);
 dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
+spret cast_permafrost_eruption(actor &caster, int pow, bool fail);
+set<coord_def> permafrost_targets(const actor &caster, int pow);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,

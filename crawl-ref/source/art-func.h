@@ -1476,7 +1476,8 @@ static int _harvest_corpses()
         for (stack_iterator si(*ri, true); si; ++si)
         {
             item_def &item = *si;
-            if (item.base_type != OBJ_CORPSES)
+            // Don't encourage hoarding old skeletons. Full corpses only.
+            if (!item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 continue;
 
             // forbid harvesting orcs under Beogh
@@ -1804,5 +1805,21 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
             mpr("The sceptre summons one of its terrible servants.");
             did_god_conduct(DID_EVIL, 3);
         }
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
+                                        actor* defender, bool mondied, int /*dam*/)
+{
+    if (!mondied)
+    {
+        int bonus_dam = random2avg((1 + defender->stat_maxhp() / 10), 3);
+        mprf("%s %s%s",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("convulse").c_str(),
+            attack_strength_punctuation(bonus_dam).c_str());
+        defender->hurt(attacker, bonus_dam);
     }
 }

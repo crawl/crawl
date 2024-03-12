@@ -259,6 +259,13 @@ foes. Superstitious wizards claim that the book itself actually absorbs ill
 fortune and carry it around as a good-luck charm, but the effects of this
 seem subtle at best.
 %%%%
+book of movement
+
+A spellbook that seems to leap open at the slightest touch. Its writing flits
+from description of one spell to another, giving enough information to truly
+understand only a few of them, though all seem to relate to movement in some
+way.
+%%%%
 book of necromancy
 
 A macabre book containing basic Necromancy spells. Readers are recommended to
@@ -398,6 +405,12 @@ A book of spells used by rebels against an ancient and evil empire. The rebels
 were crushed, but this book was rediscovered years later, found by paladins of
 the crusade that finally destroyed the empire and slew its immortal twin
 sovereigns.
+%%%%
+book of wicked creation
+
+A long-forbidden tome, describing spells for various unholy (or, at least,
+underhanded) creations. It would be unwise to bring such a book back to the
+surface world - better to read it and discard it in some well-hidden location.
 %%%%
 book of winter
 

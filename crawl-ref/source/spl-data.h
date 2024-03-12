@@ -149,6 +149,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PERMAFROST_ERUPTION, "Permafrost Eruption",
+    spschool::ice | spschool::earth,
+    spflag::destructive,
+    6,
+    200,
+    6, 6, // reduce cases of hitting something outside LOS
+    0,
+    TILEG_BOLT_OF_COLD,
+},
+
+{
     SPELL_BLINKBOLT, "Blinkbolt",
     spschool::air | spschool::translocation,
     spflag::dir_or_target | spflag::monster | spflag::noisy
