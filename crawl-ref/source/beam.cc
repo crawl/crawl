@@ -1233,12 +1233,8 @@ void bolt::do_fire()
             && (feat_is_solid(feat)
                 && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
                 && !cell_is_solid(target)
-            // or visible firewood with a non-penetrating beam...
-                || !pierce
-                   && monster_at(pos())
-                   && you.can_see(*monster_at(pos()))
-                   && !ignores_monster(monster_at(pos()))
-                   && mons_is_firewood(*monster_at(pos())))
+            // Or hit a monster that'll stop our beam...
+                || at_blocking_monster())
             // and it's a player tracer...
             // (!is_targeting so you don't get prompted while adjusting the aim)
             && is_tracer && !is_targeting && YOU_KILL(thrower)
@@ -1786,13 +1782,10 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
-    // Placeholder for J offering full protection for slimes.
-    if (mons_is_slime(*mons)
-        && have_passive(passive_t::neutral_slimes)
-        && mons->wont_attack())
-    {
+    // Jiyva protects from mass enchantments.
+    if (have_passive(passive_t::neutral_slimes) && god_protects(mons))
         return true;
-    }
+
     switch (wh_enchant)
     {
     case ENCH_FEAR:
@@ -5196,6 +5189,30 @@ bool bolt::bush_immune(const monster &mons) const
         && target != mons.pos();
 }
 
+// Is there a visible monster at this position which will keep the beam from
+// continuing onward? (And, if so, is it firewood or something else we'd never
+// actually want to bother hitting?)
+bool bolt::at_blocking_monster() const
+{
+    const monster *mon = monster_at(pos());
+    if (!mon || !you.can_see(*mon))
+        return false;
+
+    if (!pierce
+        && !ignores_monster(mon)
+        && mons_is_firewood(*mon))
+    {
+        return true;
+    }
+    if (have_passive(passive_t::neutral_slimes)
+        && god_protects(agent(), mon, true)
+        && flavour != BEAM_VILE_CLUTCH)
+    {
+        return true;
+    }
+    return false;
+}
+
 void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead or fake monsters.
@@ -5203,6 +5220,23 @@ void bolt::affect_monster(monster* mon)
         return;
 
     hit_count[mon->mid]++;
+
+    // Jiyva absorbs attacks on slimes.
+    if (agent()
+        && flavour != BEAM_VILE_CLUTCH
+        && have_passive(passive_t::neutral_slimes)
+        && god_protects(agent(), mon, true))
+    {
+        if (!is_tracer && you.see_cell(mon->pos()))
+        {
+            mprf(MSGCH_GOD, GOD_JIYVA,
+                 "%s absorbs the %s as it strikes your slime.",
+                 god_speaker(GOD_JIYVA).c_str(), name.c_str());
+        }
+
+        finish_beam();
+        return;
+    }
 
     if (shoot_through_monster(*this, mon) && !is_tracer)
     {
