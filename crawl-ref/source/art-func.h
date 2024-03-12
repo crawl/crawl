@@ -1815,9 +1815,10 @@ static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
     if (!mondied)
     {
         int bonus_dam = random2avg((1 + defender->stat_maxhp() / 10), 3);
-        mprf("%s convulses%s",
-              defender->name(DESC_THE).c_str(),
-              attack_strength_punctuation(bonus_dam).c_str());
+        mprf("%s %s%s",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("convulse").c_str(),
+            attack_strength_punctuation(bonus_dam).c_str());
         defender->hurt(attacker, bonus_dam);
     }
 }
