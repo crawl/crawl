@@ -1289,12 +1289,6 @@ perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\b
     <ClInclude Include="..\zap-type.h" />
     <ClInclude Include="..\zot.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="tilegen.vcxproj">
-      <Project>{dae92a45-087b-445b-8e94-ba864173a73f}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
