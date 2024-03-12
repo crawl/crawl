@@ -2190,7 +2190,7 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
 }
 
 // Total EV for player
-static int _player_evasion(bool ignore_temporary)
+static int _player_evasion(int final_scale, bool ignore_temporary)
 {
     const int size_factor = _player_evasion_size_factor();
     const int scale = 100;
@@ -2207,7 +2207,7 @@ static int _player_evasion(bool ignore_temporary)
 
     // Everything below this are transient modifiers
     if (ignore_temporary)
-        return unscale_round_up(natural_evasion, scale);
+        return (natural_evasion * final_scale) / scale;
 
     // Apply temporary bonuses, penalties, and multipliers
     int final_evasion =
@@ -2223,7 +2223,7 @@ static int _player_evasion(bool ignore_temporary)
                             final_evasion);
     }
 
-    return unscale_round_up(final_evasion, scale);
+    return (final_evasion * final_scale) / scale;
 }
 
 // Returns the spellcasting penalty (increase in spell failure) for the
@@ -2291,7 +2291,7 @@ static int _sh_from_shield(const item_def &item)
  * Exactly twice the value displayed to players, for legacy reasons.
  * @return      The player's current SH value.
  */
-int player_shield_class()
+int player_shield_class(int scale, bool random)
 {
     int shield = 0;
 
@@ -2319,7 +2319,7 @@ int player_shield_class()
     shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
-    return (shield + 50) / 100;
+    return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
 
 /**
@@ -2330,7 +2330,7 @@ int player_shield_class()
  */
 int player_displayed_shield_class()
 {
-    return player_shield_class() / 2;
+    return player_shield_class(1, false) / 2;
 }
 
 /**
@@ -6442,18 +6442,23 @@ int player::base_ac(int scale) const
 
 int player::armour_class() const
 {
-    return armour_class_with_specific_items(get_armour_items());
+    return div_rand_round(armour_class_scaled(100), 100);
 }
 
-int player::armour_class_with_one_sub(item_def sub) const
+int player::armour_class_scaled(int scale) const
 {
-    return armour_class_with_specific_items(
+    return armour_class_with_specific_items(scale, get_armour_items());
+}
+
+int player::armour_class_with_one_sub(int scale, item_def sub) const
+{
+    return armour_class_with_specific_items(scale,
                             get_armour_items_one_sub(sub));
 }
 
-int player::armour_class_with_one_removal(item_def removed) const
+int player::armour_class_with_one_removal(int scale, item_def removed) const
 {
-    return armour_class_with_specific_items(
+    return armour_class_with_specific_items(scale,
                             get_armour_items_one_removal(removed));
 }
 
@@ -6482,10 +6487,10 @@ static int _meek_bonus()
     return min(max(0, (scale_top - you.hp) / hp_per_ac), max_ac);
 }
 
-int player::armour_class_with_specific_items(vector<const item_def *> items) const
+int player::armour_class_with_specific_items(int scale,
+                                 vector<const item_def *> items) const
 {
-    const int scale = 100;
-    int AC = base_ac_with_specific_items(scale, items);
+    int AC = base_ac_with_specific_items(100, items);
 
     if (duration[DUR_ICY_ARMOUR])
     {
@@ -6497,7 +6502,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
         AC += 100 * player_icemail_armour_class();
 
     if (duration[DUR_FIERY_ARMOUR])
-        AC += 7 * scale;
+        AC += 700;
 
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
@@ -6506,7 +6511,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     {
         AC += 700;
         if (player_equip_unrand(UNRAND_MEEK))
-            AC += _meek_bonus() * scale;
+            AC += _meek_bonus() * 100;
     }
 
     if (you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
@@ -6516,13 +6521,13 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
-        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
 
     AC -= 100 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
 
-    return AC / scale;
+    return AC * scale / 100;
 }
 
 void player::refresh_rampage_hints()
@@ -6562,7 +6567,7 @@ int player::gdr_perc() const
  */
 int player::evasion(bool ignore_temporary, const actor* act) const
 {
-    int base_evasion = _player_evasion(ignore_temporary);
+    int base_evasion = div_rand_round(_player_evasion(100, ignore_temporary), 100);
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
@@ -6571,9 +6576,20 @@ int player::evasion(bool ignore_temporary, const actor* act) const
     return base_evasion - invis_penalty;
 }
 
+int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) const
+{
+    int base_evasion = _player_evasion(scale, ignore_temporary);
+
+    const bool attacker_invis = act && !act->visible_to(this);
+    const int invis_penalty
+        = attacker_invis && !ignore_temporary ? 10 : 0;
+
+    return base_evasion - invis_penalty * scale;
+}
+
 // What would our natural EV be if we wore a given piece of armour instead of
 // whatever might be in that slot currently (if anything)?
-int player::evasion_with_specific_item(const item_def& new_item) const
+int player::evasion_with_specific_item(int scale, const item_def& new_item) const
 {
     // Since there are a lot of things which can affect the calculation of EV,
     // including artifact properties on either the item we're equipped or the
@@ -6613,7 +6629,7 @@ int player::evasion_with_specific_item(const item_def& new_item) const
     }
 
     // Now, simply calculate evasion without temporary boosts.
-    int ret = evasion(true);
+    int ret = evasion_scaled(scale, true);
 
     // Restore old item and clear out any item copies, just in case.
     you.equip[slot] = old_item;
@@ -6622,7 +6638,7 @@ int player::evasion_with_specific_item(const item_def& new_item) const
     return ret;
 }
 
-int player::evasion_without_specific_item(const item_def& item_to_remove) const
+int player::evasion_without_specific_item(int scale, const item_def& item_to_remove) const
 {
     int slot = get_equip_slot(&item_to_remove);
 
@@ -6632,7 +6648,7 @@ int player::evasion_without_specific_item(const item_def& item_to_remove) const
 
     // Briefly remove item, calculate EV, then put it back on
     you.equip[slot] = -1;
-    int ret = evasion(true);
+    int ret = evasion_scaled(scale, true);
     you.equip[slot] = item_to_remove.link;
 
     return ret;
