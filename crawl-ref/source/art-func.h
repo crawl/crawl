@@ -1476,7 +1476,8 @@ static int _harvest_corpses()
         for (stack_iterator si(*ri, true); si; ++si)
         {
             item_def &item = *si;
-            if (item.base_type != OBJ_CORPSES)
+            // Don't encourage hoarding old skeletons. Full corpses only.
+            if (!item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 continue;
 
             // forbid harvesting orcs under Beogh
