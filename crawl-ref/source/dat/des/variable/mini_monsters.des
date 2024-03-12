@@ -7974,7 +7974,7 @@ ENDMAP
 
 # autumn katana
 # An autumnal forest, with warriors paying respect to the last wielder
-NAME:    wheals_unrand_guarded_autumn_katana
+NAME:    wheals_guarded_unrand_autumn_katana
 TAGS:    no_monster_gen no_item_gen patrolling
 DEPTH:   Depths
 WEIGHT:  3
