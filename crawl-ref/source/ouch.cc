@@ -807,6 +807,7 @@ static void _maybe_torment()
     if (player_equip_unrand(UNRAND_ETERNAL_TORMENT)
         && x_chance_in_y(5, 100))
     {
+        flash_view_delay(UA_PLAYER, DARKGREY, 300);
         torment(&you, TORMENT_CROWN, you.pos());
     }
 }
