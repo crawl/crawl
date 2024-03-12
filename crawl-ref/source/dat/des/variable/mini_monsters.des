@@ -7972,6 +7972,42 @@ MAP
  ...............
 ENDMAP
 
+# sword of the Doom Knight
+# A temple to Yredelemnul, with a champion wielding the blade designate.
+NAME:   grunt_guarded_unrand_doom_knight
+TAGS:   no_monster_gen no_item_gen patrolling
+DEPTH:  Depths, Crypt
+WEIGHT: 3
+MONS:   death knight ; \
+        sword_of_the_doom_knight . \
+        chain mail w:7 | \
+        plate armour w:1
+MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
+MONS:   freezing wraith / phantasmal warrior / \
+        jiangshi / flayed ghost / skeletal warrior
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  - = open_door
+MAP
+    ccccc
+    c2_3c
+    c.1.c
+    c465c
+ccccc+++ccccc
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+ccccc+++ccccc
+     .@.
+ENDMAP
+
 # autumn katana
 # An autumnal forest, with warriors paying respect to the last wielder
 NAME:    wheals_guarded_unrand_autumn_katana
