@@ -8408,7 +8408,6 @@ NAME:   wander_guarded_unrand_ratskin
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:5-8
 WEIGHT: 3
-ORIENT: float
 ITEM:   ratskin_cloak no_pickup
 MONS:   river rat, hell rat
 SUBST:  - = 1 .:50, ' = 112...
