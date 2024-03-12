@@ -1241,7 +1241,8 @@ void bolt::do_fire()
                    && mons_is_firewood(*monster_at(pos()))
             // or visible jelly with Jiyva
                    || have_passive(passive_t::neutral_slimes)
-                   && god_protects(agent(), monster_at(pos()), true)))
+                   && god_protects(agent(), monster_at(pos()), true)
+                   && flavour != BEAM_VILE_CLUTCH))
             // and it's a player tracer...
             // (!is_targeting so you don't get prompted while adjusting the aim)
             && is_tracer && !is_targeting && YOU_KILL(thrower)
@@ -5206,6 +5207,7 @@ void bolt::affect_monster(monster* mon)
 
     // Jiyva absorbs attacks on slimes.
     if (!is_tracer && agent()->is_player()
+        && flavour != BEAM_VILE_CLUTCH
         && have_passive(passive_t::neutral_slimes)
         && god_protects(agent(), mon, true))
     {
