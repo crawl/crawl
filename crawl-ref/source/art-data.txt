@@ -300,7 +300,7 @@ PLUS:    +13
 INSCRIP: curses,
 COLOUR:  ETC_DEATH
 TILE:    spwpn_scythe_of_curses
-TILE_EQ: finisher
+TILE_EQ: scythe_of_curses
 BRAND:   SPWPN_DRAINING
 VALUE:   800
 BOOL:    drain
