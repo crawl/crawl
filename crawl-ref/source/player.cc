@@ -2289,13 +2289,14 @@ static int _sh_from_shield(const item_def &item)
  * Calculate the SH value used internally.
  *
  * Exactly twice the value displayed to players, for legacy reasons.
+ * @param       Whether to include temporary effects like TSO's divine shield.
  * @return      The player's current SH value.
  */
-int player_shield_class(int scale, bool random)
+int player_shield_class(int scale, bool random, bool ignore_temporary)
 {
     int shield = 0;
 
-    if (you.incapacitated())
+    if (!ignore_temporary && you.incapacitated())
         return 0;
 
     const item_def *shield_item = you.shield();
@@ -2308,16 +2309,22 @@ int player_shield_class(int scale, bool random)
                ? you.get_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
                : 0);
 
-    if (you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
-            && !you.duration[DUR_ICEMAIL_DEPLETED])
+    // Icemail isn't active all of the time, so consider it temporary;
+    // this behaviour is consistent with how icemail's AC is dealt with.
+    if (!ignore_temporary
+        && you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
+        && !you.duration[DUR_ICEMAIL_DEPLETED])
     {
         shield += ICEMAIL_MAX * 100;
     }
 
     shield += qazlal_sh_boost() * 100;
-    shield += tso_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
+
+    // divine shield
+    if (!ignore_temporary)
+        shield += tso_sh_boost() * 100;
 
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
@@ -2326,11 +2333,15 @@ int player_shield_class(int scale, bool random)
  * Calculate the SH value that should be displayed to players.
  *
  * Exactly half the internal value, for legacy reasons.
- * @return      The SH value to be displayed.
+ * @param scale           How much to scale the value by (higher scale increases
+                          precision, as SH is a number with 2 decimal places)
+ * @param bool_temporary  Whether to include temporary effects like
+                          TSO's divine shield.
+ * @return                The SH value to be displayed.
  */
-int player_displayed_shield_class()
+int player_displayed_shield_class(int scale, bool ignore_temporary)
 {
-    return player_shield_class(1, false) / 2;
+    return player_shield_class(scale, false, ignore_temporary) / 2;
 }
 
 /**
@@ -6450,18 +6461,6 @@ int player::armour_class_scaled(int scale) const
     return armour_class_with_specific_items(scale, get_armour_items());
 }
 
-int player::armour_class_with_one_sub(int scale, item_def sub) const
-{
-    return armour_class_with_specific_items(scale,
-                            get_armour_items_one_sub(sub));
-}
-
-int player::armour_class_with_one_removal(int scale, item_def removed) const
-{
-    return armour_class_with_specific_items(scale,
-                            get_armour_items_one_removal(removed));
-}
-
 int player::corrosion_amount() const
 {
     int corrosion = 0;
@@ -6587,14 +6586,24 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
     return base_evasion - invis_penalty * scale;
 }
 
-// What would our natural EV be if we wore a given piece of armour instead of
-// whatever might be in that slot currently (if anything)?
-int player::evasion_with_specific_item(int scale, const item_def& new_item) const
+/**
+ * What would our natural AC/EV/SH be if we wore a given piece of equipment
+ * instead of whatever might be in that slot currently (if anything)?
+ * Note: non-artefact rings of evasion/protection and amulets of reflection
+ * are excepted from using this function.
+ *
+ * @param new_item  The equipment item in question.
+ * @param ac        The player's AC if this item were equipped.
+ * @param ev        The player's EV if this item were equipped.
+ * @param sh        The player's SH if this item were equipped.
+ */
+void player::ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
+                                         int *ac, int *ev, int *sh)
 {
-    // Since there are a lot of things which can affect the calculation of EV,
-    // including artifact properties on either the item we're equipped or the
-    // one we're swapping out for it, we check by very briefly 'putting on' the
-    // new item and calling the normal evasion calculation function.
+    // Since there are a lot of things which can affect the calculation of
+    // EV/SH, including artifact properties on either the item we're equipped or
+    // the one we're swapping out for it, we check by very briefly 'putting on'
+    // the new item and calling the normal evasion calculation function.
     //
     // As we edit the item links directly, this should be invisible to the
     // player, bypass normal equip/unequip routines, and have no side-effects.
@@ -6606,7 +6615,7 @@ int player::evasion_with_specific_item(int scale, const item_def& new_item) cons
     // Since it's not reasonable to automatically determine *which* ring a
     // previewed ring should replace, we opt to have it replace none instead,
     // and simply give the total EV that would be gained from this item in a
-    // vaccuum.
+    // vacuum.
     if (slot == EQ_RINGS)
         slot = EQ_PREVIEW_RING;
 
@@ -6628,17 +6637,19 @@ int player::evasion_with_specific_item(int scale, const item_def& new_item) cons
         you.equip[slot] = ENDOFPACK;
     }
 
-    // Now, simply calculate evasion without temporary boosts.
-    int ret = evasion_scaled(scale, true);
+    // Now, simply calculate AC/EV/SH without temporary boosts.
+    *ac = base_ac(scale);
+    *ev = evasion_scaled(scale, true);
+    *sh = player_displayed_shield_class(scale, true);
 
     // Restore old item and clear out any item copies, just in case.
     you.equip[slot] = old_item;
     you.inv[ENDOFPACK].clear();
-
-    return ret;
 }
 
-int player::evasion_without_specific_item(int scale, const item_def& item_to_remove) const
+void player::ac_ev_sh_without_specific_item(int scale,
+                                            const item_def& item_to_remove,
+                                            int *ac, int *ev, int *sh)
 {
     int slot = get_equip_slot(&item_to_remove);
 
@@ -6646,12 +6657,12 @@ int player::evasion_without_specific_item(int scale, const item_def& item_to_rem
     // (or this function will give bogus info)
     ASSERT(slot != -1);
 
-    // Briefly remove item, calculate EV, then put it back on
+    // Briefly remove item, calculate EV/SH, then put it back on
     you.equip[slot] = -1;
-    int ret = evasion_scaled(scale, true);
+    *ac = base_ac(scale);
+    *ev = evasion_scaled(scale, true);
+    *sh = player_displayed_shield_class(scale, true);
     you.equip[slot] = item_to_remove.link;
-
-    return ret;
 }
 
 bool player::heal(int amount)

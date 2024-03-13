@@ -1878,18 +1878,37 @@ static string _equipment_switchto_string(const item_def &item)
         return "wearing";
 }
 
-static string _equipment_ac_ev_change_description(const item_def &item, bool remove = false)
+/**
+ * Describe how (un)equipping a piece of equipment might change the player's
+ * AC/EV/SH stats. We don't include temporary buffs in this calculation.
+ *
+ * @param item    The item whose description we are writing.
+ * @param remove  Whether the item is already equipped, and thus whether to
+                  show the change solely from unequipping the item.
+ * @return        The description.
+ */
+static string _equipment_ac_ev_sh_change_description(const item_def &item,
+                                                     bool remove = false)
 {
-    // First, test if there is any EV change at all.
+    // First, test if there is any AC/EV/SH change at all.
+    const int cur_ac = you.base_ac(100);
     const int cur_ev = you.evasion_scaled(100, true);
-    const int new_ev = remove ? you.evasion_without_specific_item(100, item)
-                              : you.evasion_with_specific_item(100, item);
+    const int cur_sh = player_displayed_shield_class(100, true);
+    int new_ac, new_ev, new_sh;
 
-    // If we're previewing non-armour and there is no EV change, print no
+    if (remove)
+        you.ac_ev_sh_without_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+    else
+        you.ac_ev_sh_with_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+
+    // If we're previewing non-armour and there is no AC/EV/SH change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
-    if (cur_ev == new_ev && item.base_type != OBJ_ARMOUR)
+    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+        && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
+    {
         return "";
+    }
 
     string description;
     description.reserve(100);
@@ -1906,20 +1925,33 @@ static string _equipment_ac_ev_change_description(const item_def &item, bool rem
         description += "If you switch to wielding this weapon in your main hand:";
     else
     {
-        description += "If you switch to " + _equipment_switchto_string(item) + " this "
-                        + _equip_type_name(item) + ":";
+        description += "If you switch to " + _equipment_switchto_string(item)
+                         + " this " + _equip_type_name(item) + ":";
     }
 
-    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND)
+    // Always display AC line on proper armour, even if there is no change
+    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND
+        || cur_ac != new_ac)
     {
-        description += "\nYour AC would ";
-
-        const int new_ac = remove ? you.armour_class_with_one_removal(100, item)
-                                  : you.armour_class_with_one_sub(100, item);
-        description += _describe_point_diff(you.armour_class_scaled(100), new_ac) + ".";
+        description += "\nYour AC would "
+                       + _describe_point_diff(cur_ac, new_ac) + ".";
     }
 
-    description += "\nYour EV would " + _describe_point_diff(cur_ev, new_ev) + ".";
+    // Always display EV line on non-orb armour, even if there is no change
+    // XXX perhaps this shouldn't display on basic aux armour?
+    if (item.base_type == OBJ_ARMOUR && item.sub_type != ARM_ORB
+        || cur_ev != new_ev)
+    {
+        description += "\nYour EV would "
+                       + _describe_point_diff(cur_ev, new_ev) + ".";
+    }
+
+    // Always display SH line on shields, even if there is no change
+    if (is_shield(item) || cur_sh != new_sh)
+    {
+        description += "\nYour SH would "
+                       + _describe_point_diff(cur_sh, new_sh) + ".";
+    }
 
     return description;
 }
@@ -1929,14 +1961,14 @@ static bool _you_are_wearing_item(const item_def &item)
     return get_equip_slot(&item) != EQ_NONE;
 }
 
-static string _equipment_ac_ev_change(const item_def &item)
+static string _equipment_ac_ev_sh_change(const item_def &item)
 {
     string description;
 
     if (!_you_are_wearing_item(item))
-        description = _equipment_ac_ev_change_description(item);
+        description = _equipment_ac_ev_sh_change_description(item);
     else
-        description = _equipment_ac_ev_change_description(item, true);
+        description = _equipment_ac_ev_sh_change_description(item, true);
 
     return description;
 }
@@ -1974,7 +2006,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         description += "\n\n" + art_desc;
 
     if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-        description += _equipment_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
 
     if (verbose)
     {
@@ -2325,7 +2357,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && can_wear_armour(item, false, true)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _equipment_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2602,9 +2634,12 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         && crawl_state.need_save
         && !you.has_mutation(MUT_NO_JEWELLERY)
         && item_ident(item, ISFLAG_KNOW_PROPERTIES)
-        && (item.sub_type != RING_EVASION || is_artefact(item)))
+        && (is_artefact(item)
+            || item.sub_type != RING_PROTECTION
+               && item.sub_type != RING_EVASION
+               && item.sub_type != AMU_REFLECTION))
     {
-        description += _equipment_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
     }
 
     return description;
