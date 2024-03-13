@@ -216,7 +216,7 @@ int mon_beat_sh_pct(int bypass, int scaled_sh)
         }
     }
     const int denom_lower = sh * sh * bypass;
-    double hit_chance_lower = ((double)hits_lower * 100) / denom_lower;
+    double hit_chance_lower = ((double)hits_lower) / denom_lower;
 
     sh += 2; // since we already multiplied by 2
     int hits_upper = 0;
@@ -229,7 +229,7 @@ int mon_beat_sh_pct(int bypass, int scaled_sh)
         }
     }
     const int denom_upper = sh * sh * bypass;
-    double hit_chance_upper = ((double)hits_upper * 100) / denom_upper;
+    double hit_chance_upper = ((double)hits_upper) / denom_upper;
 
     double hit_chance = ((100 - (scaled_sh % 100)) * hit_chance_lower + (scaled_sh % 100) * hit_chance_upper) / 100;
 
