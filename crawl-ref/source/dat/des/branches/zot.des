@@ -3398,7 +3398,7 @@ KFEAT:   _ = altar_qazlal w:40 / altar_xom / altar_lugonu / \
 SUBST:   1 = 1., S : SSG
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
-KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike \
+KITEM: Z = randbook numspells:4 spells:summon_demon&ignition&fireball&animate_dead&airstrike \
            title:the_Zealot
 KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&flame_wave \
            title:Fire_and_Brimstone

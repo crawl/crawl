@@ -1051,14 +1051,15 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
                                  friendly, false);
 }
 
-spret cast_summon_demon(int pow)
+spret cast_summon_demon(int pow, god_type god, bool fail)
 {
     // Don't prompt here, since this is invoked automatically by the
     // obsidian axe. The player shouldn't have control.
 
+    fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!_summon_common_demon(pow, GOD_NO_GOD, SPELL_SUMMON_DEMON))
+    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -2238,6 +2239,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_HYDRA,             { 2, 3 } },
     { SPELL_SUMMON_MANA_VIPER,        { 1, 3 } },
     { SPELL_CALL_IMP,                 { 1, 3 } },
+    { SPELL_SUMMON_DEMON,             { 3, 2 } },
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
     { SPELL_SUMMON_LIGHTNING_SPIRE,   { 1, 1 } },

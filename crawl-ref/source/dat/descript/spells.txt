@@ -1513,7 +1513,8 @@ older, more robust warriors will answer the call.
 Summon Demon spell
 
 Opens a gate to the realm of Pandemonium and draws forth one of its inhabitants
-to serve the caster for a time.
+to serve the caster for a time. The demon's servitude is not guaranteed, but
+will be more likely with high power.
 %%%%
 Summon Dragon spell
 
