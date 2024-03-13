@@ -527,7 +527,7 @@ static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
             acqweight *= damage / property(item_considered, PWPN_SPEED);
         }
 
-        // Rarely give out two-handers to steel elves.
+        // Rarely give out two-handers to coglins.
         if (you.has_mutation(MUT_WIELD_OFFHAND))
         {
             if (two_handed)
