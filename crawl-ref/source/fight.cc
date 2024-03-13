@@ -233,7 +233,7 @@ int mon_beat_sh_pct(int bypass, int scaled_sh)
 
     double hit_chance = ((100 - (scaled_sh % 100)) * hit_chance_lower + (scaled_sh % 100) * hit_chance_upper) / 100;
 
-    return (int)(hit_chance*100);
+    return (int)hit_chance;
 }
 
 /**
