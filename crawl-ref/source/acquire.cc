@@ -748,16 +748,17 @@ static int _acquirement_book_subtype(int & /*quantity*/,
 static vector<pair<talisman_type, int>> _base_talisman_tiers()
 {
     vector<pair<talisman_type, int>> tiers = {
-        { TALISMAN_BEAST,   1 },
-        { TALISMAN_FLUX,    2 },
-        { TALISMAN_MAW,     3 },
-        { TALISMAN_SERPENT, 3 },
-        { TALISMAN_BLADE,   3 },
-        { TALISMAN_STATUE,  4 },
-        { TALISMAN_DRAGON,  4 },
-        { TALISMAN_STORM,   5 },
-        { TALISMAN_DEATH,   5 },
-        { NUM_TALISMANS,    5 },
+        { TALISMAN_BEAST,       1 },
+        { TALISMAN_FLUX,        2 },
+        { TALISMAN_MAW,         3 },
+        { TALISMAN_SERPENT,     3 },
+        { TALISMAN_BLADE,       3 },
+        { TALISMAN_SPELLFORGED, 3 },
+        { TALISMAN_STATUE,      4 },
+        { TALISMAN_DRAGON,      4 },
+        { TALISMAN_STORM,       5 },
+        { TALISMAN_DEATH,       5 },
+        { NUM_TALISMANS,        5 },
     };
     return tiers;
 }
