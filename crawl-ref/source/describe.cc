@@ -1829,7 +1829,7 @@ static string _describe_point_change(float points)
 {
     string point_diff_description;
 
-    point_diff_description += make_stringf("%s by %.2f",
+    point_diff_description += make_stringf("%s by %.1f",
                                            points > 0 ? "increase" : "decrease",
                                            abs(points));
 
@@ -1848,9 +1848,9 @@ static string _describe_point_diff(int original,
 
     description += _describe_point_change(difference);
     description += " (";
-    description += make_stringf("%.2f", ((float)(original)) / scale);
+    description += make_stringf("%.1f", ((float)(original)) / scale);
     description += " -> ";
-    description += make_stringf("%.2f", ((float)(changed)) / scale);
+    description += make_stringf("%.1f", ((float)(changed)) / scale);
     description += ")";
 
     return description;
@@ -1919,7 +1919,7 @@ static string _equipment_ac_ev_change_description(const item_def &item, bool rem
         description += _describe_point_diff(you.armour_class_scaled(100), new_ac) + ".";
     }
 
-    description += "\nYour EV would " + _describe_point_diff(cur_ev, new_ev, 100) + ".";
+    description += "\nYour EV would " + _describe_point_diff(cur_ev, new_ev) + ".";
 
     return description;
 }
