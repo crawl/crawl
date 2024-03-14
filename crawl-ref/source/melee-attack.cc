@@ -3963,11 +3963,13 @@ int melee_attack::cleave_damage_mod(int dam)
 // Martial strikes get modified by momentum and maneuver specific damage mods.
 int melee_attack::martial_damage_mod(int dam)
 {
+    const bool reaching = weapon && weapon_reach(*weapon) > REACH_NONE;
+
     if (wu_jian_has_momentum(wu_jian_attack))
         dam = div_rand_round(dam * 14, 10);
 
     if (wu_jian_attack == WU_JIAN_ATTACK_LUNGE)
-        dam = div_rand_round(dam * 12, 10);
+        dam = div_rand_round(dam * (reaching ? 14 : 12), 10);
 
     if (wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND)
         dam = div_rand_round(dam * 8, 10);
