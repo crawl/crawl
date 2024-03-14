@@ -5206,7 +5206,7 @@ void bolt::affect_monster(monster* mon)
     hit_count[mon->mid]++;
 
     // Jiyva absorbs attacks on slimes.
-    if (!is_tracer && agent()->is_player()
+    if (!is_tracer && agent() && agent()->is_player()
         && flavour != BEAM_VILE_CLUTCH
         && have_passive(passive_t::neutral_slimes)
         && god_protects(agent(), mon, true))
