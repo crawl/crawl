@@ -1,0 +1,30 @@
+enum: JOB_AIR_ELEMENTALIST
+name: "Air Elementalist"
+short_name: AE
+#category: Mage
+#category_priority: 40
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_SHOCK
+  - SPELL_DISCHARGE
+  - SPELL_SWIFTNESS
+  - SPELL_AIRSTRIKE
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_TENGU
+  - SP_BASE_DRACONIAN
+  - SP_NAGA
+  - SP_VINE_STALKER
+  - SP_DJINNI
+skills:
+  SK_DODGING: 2
+  SK_STEALTH: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 1
+  SK_AIR_MAGIC: 3
+create_enum: false

@@ -1,0 +1,32 @@
+enum: JOB_FIRE_ELEMENTALIST
+name: "Fire Elementalist"
+short_name: FE
+#category: Mage
+#category_priority: 60
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_FOXFIRE
+  - SPELL_SCORCH
+  - SPELL_BLASTMOTE
+  - SPELL_INNER_FLAME
+  - SPELL_FLAME_WAVE
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_MOUNTAIN_DWARF
+  - SP_NAGA
+  - SP_TENGU
+  - SP_DEMIGOD
+  - SP_GARGOYLE
+  - SP_DJINNI
+skills:
+  SK_DODGING: 2
+  SK_STEALTH: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 1
+  SK_FIRE_MAGIC: 3
+create_enum: false

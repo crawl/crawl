@@ -1,0 +1,28 @@
+enum: JOB_REAVER
+name: "Reaver"
+#category: Warrior-mage
+#category_priority: 70
+str: 4
+int: 5
+dex: 3
+spells:
+  - SPELL_KISS_OF_DEATH
+  - SPELL_MOMENTUM_STRIKE
+  - SPELL_HAILSTORM
+equipment:
+  - "leather armour"
+weapon_choice: WCHOICE_PLAIN
+recommended_species:
+  - SP_GNOLL
+  - SP_TENGU
+  - SP_BARACHI
+  - SP_DEMONSPAWN
+  - SP_BASE_DRACONIAN
+  - SP_MOUNTAIN_DWARF
+skills:
+  SK_FIGHTING: 2
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 3
+  SK_WEAPON: 3
+create_enum: false

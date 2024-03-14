@@ -1,0 +1,33 @@
+enum: JOB_HEXSLINGER
+name: "Hexslinger"
+short_name: Hs
+#category: Warrior-mage
+#category_priority: 90
+str: 0
+int: 5
+dex: 7
+spells:
+  - SPELL_JINXBITE
+  - SPELL_SIGIL_OF_BINDING
+  - SPELL_INNER_FLAME
+  - SPELL_CAUSE_FEAR
+  - SPELL_DIMENSIONAL_BULLSEYE
+equipment:
+  - "robe"
+  - "scroll of poison"
+  - "sling plus:1"
+weapon_choice: WCHOICE_NONE
+recommended_species:
+  - SP_FORMICID
+  - SP_DEEP_ELF
+  - SP_KOBOLD
+  - SP_SPRIGGAN
+  - SP_GNOLL
+skills:
+  SK_FIGHTING: 1
+  SK_DODGING: 2
+  SK_SPELLCASTING: 1
+  SK_HEXES: 3
+  SK_FIRE_MAGIC: 1
+  SK_WEAPON: 2
+create_enum: false
