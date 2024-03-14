@@ -9,7 +9,7 @@ dex: 4
 equipment:
   - "leather armour plus:2"
   - "scroll of butterflies no_exclude"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_SPRIGGAN
   - SP_TROLL

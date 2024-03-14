@@ -11,7 +11,7 @@ spells:
   - SPELL_HAILSTORM
 equipment:
   - "leather armour"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_GNOLL
   - SP_TENGU
