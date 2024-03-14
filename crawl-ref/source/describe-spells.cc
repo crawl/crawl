@@ -153,8 +153,6 @@ static void _monster_spellbooks(const monster_info &mi,
     if (book_slots.empty())
         return;
 
-    const string set_name = type == MON_SPELL_WIZARD ? "Book" : "Set";
-
     spellbook_contents output_book;
 
     output_book.label +=
