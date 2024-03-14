@@ -437,6 +437,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Blood
     SPELL_CALL_IMP,
+    SPELL_CALL_IMP_HORDE,
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_SUMMON_HYDRA,
 },
@@ -449,6 +450,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Dangerous Friends
     SPELL_SUMMON_BLAZEHEART_GOLEM,
+    SPELL_CALL_IMP_HORDE,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
 },

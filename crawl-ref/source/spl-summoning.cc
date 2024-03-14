@@ -974,6 +974,27 @@ spret cast_call_imp(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_call_imp_horde(int pow, god_type god, bool fail)
+{
+    if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+        return spret::abort;
+
+    fail_check();
+    mpr("You open a doggy door to Pandemonium!");
+
+    const int how_many = 3 + random2(pow) / 50;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+
+        if(!create_monster(_pal_data(random_choose(MONS_IRON_IMP, MONS_SHADOW_IMP, MONS_WHITE_IMP, MONS_CRIMSON_IMP, MONS_UFETUBUS), 3, god, SPELL_CALL_IMP_HORDE)))
+        {
+            return spret::abort;
+        }
+    }
+    return spret::success;
+}
+
 static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                                   monster_type mon, int dur, bool friendly,
                                   bool charmed)

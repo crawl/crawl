@@ -254,8 +254,11 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _unequip_jewellery_effect(item, msg, meld, slot);
     
-    
-    if ((slot == EQ_WEAPON) && (!meld && (item.cursed() || you.species == SP_HUMAN)))
+    if(!meld && item.cursed()){
+        mprf("%s shatters!", item.name(DESC_THE).c_str());
+        destroy_item(item);
+    } 
+    else if ((slot == EQ_WEAPON && you.species == SP_HUMAN))
     {   
         mprf("%s crumbles to dust! Oops!", item.name(DESC_THE).c_str());
         destroy_item(item);

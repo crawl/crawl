@@ -130,6 +130,7 @@ noxious_bog NOXIOUS_BOG
 animate_armour ANIMATE_ARMOUR
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
+call_imp_horde CALL_IMP_HORDE
 malign_gateway MALIGN_GATEWAY
 mass_abjuration MASS_ABJURATION
 monstrous_menagerie MONSTROUS_MENAGERIE

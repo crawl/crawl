@@ -840,6 +840,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CALL_IMP_HORDE, "Call Imp Horde",
+    spschool::summoning,
+    spflag::unholy | spflag::selfench | spflag::mons_abjure,
+    4,
+    150,
+    -1, -1,
+    0,
+    TILEG_CALL_IMP_HORDE,
+},
+
+{
     SPELL_SUMMON_DEMON, "Summon Demon",
     spschool::summoning,
     spflag::unholy | spflag::selfench | spflag::mons_abjure,

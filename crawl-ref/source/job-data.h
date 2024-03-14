@@ -308,6 +308,7 @@ static const map<job_type, job_def> job_data =
         SPELL_SUMMON_SMALL_MAMMAL,
         SPELL_CALL_IMP,
         SPELL_CALL_CANINE_FAMILIAR,
+        SPELL_CALL_IMP_HORDE,
         SPELL_SUMMON_BLAZEHEART_GOLEM,
         SPELL_SUMMON_LIGHTNING_SPIRE,
     },
