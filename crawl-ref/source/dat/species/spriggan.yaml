@@ -46,14 +46,14 @@ mutations:
     MUT_FAST: 3
     MUT_ACUTE_VISION: 1
 recommended_jobs:
-  - JOB_BRIGAND
-  - JOB_ARTIFICER
-  - JOB_WARPER
-  - JOB_ENCHANTER
-  - JOB_CONJURER
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - brigand
+  - artificer
+  - warper
+  - enchanter
+  - conjurer
+  - earth elementalist
+  - alchemist
 recommended_weapons:
-  - SK_SHORT_BLADES
+  - short blades
 
 orc_name: Spriggorc

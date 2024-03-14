@@ -13,16 +13,16 @@ equipment:
   - "leather armour"
 weapon_choice: plain
 recommended_species:
-  - SP_GNOLL
-  - SP_TENGU
-  - SP_BARACHI
-  - SP_DEMONSPAWN
-  - SP_BASE_DRACONIAN
-  - SP_MOUNTAIN_DWARF
+  - gnoll
+  - tengu
+  - barachi
+  - demonspawn
+  - draconian
+  - mountain dwarf
 skills:
-  SK_FIGHTING: 2
-  SK_DODGING: 2
-  SK_SPELLCASTING: 2
-  SK_CONJURATIONS: 3
-  SK_WEAPON: 3
+  fighting: 2
+  dodging: 2
+  spellcasting: 2
+  conjurations: 3
+  weapon: 3
 create_enum: false

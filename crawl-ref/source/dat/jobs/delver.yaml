@@ -14,14 +14,14 @@ equipment:
   - "wand of digging charges:3"
 weapon_choice: plain
 recommended_species:
-  - SP_FELID
-  - SP_SPRIGGAN
-  - SP_KOBOLD
-  - SP_VAMPIRE
-  - SP_GNOLL
+  - felid
+  - spriggan
+  - kobold
+  - vampire
+  - gnoll
 skills:
-  SK_FIGHTING: 3
-  SK_DODGING: 2
-  SK_STEALTH: 5
-  SK_WEAPON: 2
+  fighting: 3
+  dodging: 2
+  stealth: 5
+  weapon: 2
 create_enum: false

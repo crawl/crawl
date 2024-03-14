@@ -11,15 +11,15 @@ equipment:
   - "throwing net q:3"
 weapon_choice: good
 recommended_species:
-  - SP_MOUNTAIN_DWARF
-  - SP_MERFOLK
-  - SP_MINOTAUR
-  - SP_GARGOYLE
-  - SP_COGLIN
-  - SP_VINE_STALKER
+  - mountain dwarf
+  - merfolk
+  - minotaur
+  - gargoyle
+  - coglin
+  - vine stalker
 skills:
-  SK_FIGHTING: 2
-  SK_THROWING: 2
-  SK_DODGING: 3
-  SK_WEAPON: 3
+  fighting: 2
+  throwing: 2
+  dodging: 3
+  weapon: 3
 create_enum: false

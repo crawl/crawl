@@ -12,14 +12,14 @@ equipment:
   - "robe"
 weapon_choice: plain
 recommended_species:
-  - SP_MOUNTAIN_DWARF
-  - SP_BASE_DRACONIAN
-  - SP_ONI
-  - SP_DJINNI
-  - SP_GNOLL
+  - mountain dwarf
+  - draconian
+  - oni
+  - djinni
+  - gnoll
 skills:
-  SK_FIGHTING: 3
-  SK_WEAPON: 3
-  SK_SPELLCASTING: 1
-  SK_FIRE_MAGIC: 3
+  fighting: 3
+  weapon: 3
+  spellcasting: 1
+  fire magic: 3
 create_enum: false

@@ -120,20 +120,29 @@ JOB_GROUP_TEMPLATE = """
 """
 
 # SK_WEAPON is used when weapon is chosen by player
-ALL_SKILLS = ('SK_FIGHTING', 'SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
-    'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_RANGED_WEAPONS',
-    'SK_THROWING', 'SK_ARMOUR', 'SK_DODGING', 'SK_STEALTH',
-    'SK_SHIELDS', 'SK_UNARMED_COMBAT', 'SK_SPELLCASTING', 'SK_CONJURATIONS',
-    'SK_HEXES','SK_SUMMONINGS', 'SK_NECROMANCY', 'SK_TRANSLOCATIONS',
-    'SK_FIRE_MAGIC', 'SK_ICE_MAGIC', 'SK_AIR_MAGIC', 'SK_EARTH_MAGIC',
-    'SK_ALCHEMY', 'SK_INVOCATIONS', 'SK_EVOCATIONS', 'SK_SHAPESHIFTING',
-    'SK_WEAPON')
+ALL_SKILLS = ('fighting', 'short blades', 'long blades', 'axes',
+    'maces and flails', 'polearms', 'staves', 'ranged weapons',
+    'throwing', 'armour', 'dodging', 'stealth',
+    'shields', 'unarmed combat', 'spellcasting', 'conjurations',
+    'hexes', 'summonings', 'necromancy', 'translocations',
+    'fire magic', 'ice magic', 'air magic', 'earth magic',
+    'alchemy', 'invocations', 'evocations', 'shapeshifting',
+    'weapon')
 ALL_WCHOICES = ('none', 'plain', 'good')
 
+#SPELL_ENUM = 'SPELL'
+SKILL_ENUM = 'SK'
+SPECIES_ENUM = 'SP'
 
 def recommended_species(species):
-    return ', '.join(validate_string(race, 'Species', 'SP_[A-Z_]+')
-                            for race in species)
+     # Allow writing 'draconian' for SP_BASE_DRACONIAN
+    out = []
+    for race in species:
+        if race.lower() == "draconian":
+            race = "base draconian"
+        out.append(enumify(validate_string(race, 'Species',
+                                           '[A-Za-z_ ]+'), SPECIES_ENUM))
+    return make_list(', '.join(out))
 
 
 def skills(sk):
@@ -141,8 +150,12 @@ def skills(sk):
     for skill, val in sorted(sk.items()):
         if skill not in ALL_SKILLS:
             raise ValueError("Unknown skill (typo?): %s" % skill)
+        # Hack: allow "maces and flails" for SK_MACES_FLAILS
+        if skill.lower() == "maces and flails":
+            skill = "maces flails"
         validate_int_range(val, skill, 0, 10)
-        out.append("{{ {skill}, {val} }}".format(skill=skill, val=val))
+        out.append("{{ {skill}, {val} }}".format(
+                            skill=enumify(skill, SKILL_ENUM), val=val))
     return make_list(', '.join(out))
 
 

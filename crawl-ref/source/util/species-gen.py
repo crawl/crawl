@@ -65,11 +65,15 @@ class Species(MutableMapping):
             return
         if not weapons:
             weapons = list(ALL_WEAPON_SKILLS)
-            weapons.remove('SK_SHORT_BLADES')
-            weapons.remove('SK_UNARMED_COMBAT')
-        self.backing_dict['recommended_weapons'] = ', '.join(
-                        validate_string(weap, 'Weapon Skill', 'SK_[A-Z_]+')
-                                                        for weap in weapons)
+            weapons.remove('short blades')
+            weapons.remove('unarmed combat')
+        out = []
+        for weap in weapons:
+            if weap.lower() == "maces and flails":
+                weap = "maces flails"
+            out.append(enumify(validate_string(weap, 'Weapon Skill',
+                                          '[A-Za-z_ ]+'), SKILL_ENUM))
+        self.backing_dict['recommended_weapons'] = ", ".join(out)
 
     def print_unknown_warnings(self, s):
         for key in s:
@@ -123,7 +127,7 @@ class Species(MutableMapping):
         self['wl'] = validate_int_range(s['aptitudes']['wl'], 'wl', 0, 20)
         self['aptitudes'] = aptitudes(s['aptitudes'])
         self['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
-        self['undead'] = undead_type(s.get('undead_type', 'US_ALIVE'))
+        self['undead'] = undead_type(s.get('undead_type', 'alive'))
         self['size'] = size(s.get('size', 'medium'))
         self['str'] = validate_int_range(s['str'], 'str', 1, 100)
         self['int'] = validate_int_range(s['int'], 'int', 1, 100)
@@ -179,19 +183,25 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'necromancy', 'translocations', 'fire_magic',
     'ice_magic', 'air_magic', 'earth_magic', 'alchemy', 'invocations',
     'evocations', 'shapeshifting')
-UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
+UNDEAD_TYPES = ('alive', 'undead', 'semi_undead')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
     'SIZE_GIANT')
 ALL_STATS = ('str', 'int', 'dex')
-ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
-    'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_RANGED_WEAPONS', 'SK_UNARMED_COMBAT')
+ALL_WEAPON_SKILLS = ('short blades', 'long blades', 'axes',
+    'maces and flails', 'polearms', 'staves', 'unarmed combat')
 
-ALL_SPECIES_FLAGS = {'SPF_DRACONIAN', 'SPF_NO_HAIR', 'SPF_NO_BONES',
-    'SPF_SMALL_TORSO', 'SPF_BARDING', 'SPF_NO_FEET',
-    'SPF_NO_BLOOD', 'SPF_NO_EYES', 'SPF_NO_EARS'}
+ALL_SPECIES_FLAGS = {'draconian', 'no_hair', 'no_bones',
+    'small_torso', 'barding', 'no_feet',
+    'no_blood', 'no_eyes', 'no_ears'}
+
+JOB_ENUM = 'JOB'
+UNDEAD_TYPE_ENUM = 'US'
+SPECIES_FLAG_ENUM = 'SPF'
+SKILL_ENUM = 'SK'
 
 def recommended_jobs(jobs):
-    return ', '.join(validate_string(job, 'Job', 'JOB_[A-Z_]+') for job in jobs)
+    return ', '.join(enumify(validate_string(job, 'Job', '[A-Za-z_ ]+'),
+                             JOB_ENUM) for job in jobs)
 
 
 def size(size):
@@ -208,7 +218,7 @@ def species_flags(flags):
     for f in flags:
         if f not in ALL_SPECIES_FLAGS:
             raise ValueError("Unknown species flag %s" % f)
-        out.add(f)
+        out.add(enumify(f, SPECIES_FLAG_ENUM))
     if not out:
         out.add('SPF_NONE')
     return ' | '.join(out)
@@ -217,7 +227,7 @@ def species_flags(flags):
 def undead_type(type):
     if type not in UNDEAD_TYPES:
         raise ValueError('Unknown undead type %s' % type)
-    return type
+    return enumify(type, UNDEAD_TYPE_ENUM)
 
 
 def levelup_stats(stats):

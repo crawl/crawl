@@ -15,15 +15,15 @@ equipment:
   - "robe"
   - "potion of magic"
 recommended_species:
-  - SP_DEEP_ELF
-  - SP_NAGA
-  - SP_TENGU
-  - SP_BASE_DRACONIAN
-  - SP_DEMIGOD
-  - SP_DJINNI
+  - deep elf
+  - naga
+  - tengu
+  - draconian
+  - demigod
+  - djinni
 skills:
-  SK_DODGING: 2
-  SK_SPELLCASTING: 2
-  SK_CONJURATIONS: 4
-  SK_STEALTH: 2
+  dodging: 2
+  spellcasting: 2
+  conjurations: 4
+  stealth: 2
 create_enum: false
