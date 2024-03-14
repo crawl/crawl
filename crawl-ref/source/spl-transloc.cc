@@ -1641,7 +1641,7 @@ spret cast_dispersal(int pow, bool fail)
 
 int gravitas_range(int pow)
 {
-    return pow >= 80 ? 3 : 2;
+    return pow >= 60 ? 3 : 2;
 }
 
 
@@ -1742,8 +1742,7 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 
     for (actor * ai : victims)
     {
-        const int range = (pos - ai->pos()).rdist();
-        const int strength = ((pow + 100) / 20) / (range*range);
+        const int strength = div_rand_round(pow + 100, 80);
 
         _attract_actor(agent, ai, pos, pow, strength);
 
