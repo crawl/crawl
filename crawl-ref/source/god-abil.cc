@@ -5764,7 +5764,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(mon) || mons_is_firewood(*mon))
+        if (!mon || god_protects(*mon) || mons_is_firewood(*mon))
             continue;
 
         const int dur = random_range(60, 150);

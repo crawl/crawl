@@ -3834,7 +3834,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
 {
     return m.alive() && scr == SCR_TORMENT
         && !m.res_torment()
-        && (!m.is_monster() || !god_protects(&you, m.as_monster(), true));
+        && (!m.is_monster() || !god_protects(&you, *m.as_monster(), true));
 }
 
 static vector<string> _desc_finite_wl(const monster_info& mi)
@@ -4288,7 +4288,7 @@ bool read(item_def* scroll, dist *target)
 
             // Jivya is a killjoy when it comes to slime bombing.
             // TODO: consider extending this to all god_protects() effects.
-            if (have_passive(passive_t::neutral_slimes) && god_protects(*mi))
+            if (have_passive(passive_t::neutral_slimes) && god_protects(**mi))
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))

@@ -1016,13 +1016,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str(),
                  attack_strength_punctuation((dam + damother) / 2).c_str());
-            if (god_prot || god_prot_other)
-            {
-                // do messaging at the right time.
-                // TODO: a bit ugly
-                god_protects(agent, as_monster(), false);
-                god_protects(agent, other->as_monster(), false);
-            }
+            // OK, now do the messaging for god protection.
+            if (god_prot)
+                god_protects(agent, *as_monster(), false);
+            if (god_prot_other)
+                god_protects(agent, *other->as_monster(), false);
         }
 
         if (other->is_monster() && !god_prot_other)
@@ -1067,7 +1065,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         }
 
         if (god_prot)
-            god_protects(agent, as_monster(), false); // messaging
+            god_protects(agent, *as_monster(), false); // messaging
     }
 
     if (!god_prot)

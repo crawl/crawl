@@ -593,7 +593,7 @@ void explosion_fineff::fire()
             actor *act = actor_at(*ai);
             if (!act
                 || act->is_stationary()
-                || act->is_monster() && god_protects(act->as_monster()))
+                || act->is_monster() && god_protects(*act->as_monster()))
             {
                 continue;
             }

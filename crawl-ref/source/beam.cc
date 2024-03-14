@@ -1773,6 +1773,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     return hurted;
 }
 
+// XXX: change mons to a reference
 static bool _monster_resists_mass_enchantment(monster* mons,
                                               enchant_type wh_enchant,
                                               int pow,
@@ -1783,7 +1784,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     if (mons_is_firewood(*mons))
         return true;
     // Jiyva protects from mass enchantments.
-    if (have_passive(passive_t::neutral_slimes) && god_protects(mons))
+    if (have_passive(passive_t::neutral_slimes) && god_protects(*mons))
         return true;
 
     switch (wh_enchant)
@@ -4867,7 +4868,7 @@ void bolt::kill_monster(monster &mon)
     //
     // FIXME: Should be a better way of doing this. For now, we are
     // just falsifying the death report... -cao
-    if (flavour == BEAM_SPORE && god_protects(&mon) && fedhas_protects(&mon))
+    if (flavour == BEAM_SPORE && god_protects(mon) && fedhas_protects(mon))
     {
         if (mon.attitude == ATT_FRIENDLY)
             mon.attitude = ATT_HOSTILE;
@@ -5205,7 +5206,7 @@ bool bolt::at_blocking_monster() const
         return true;
     }
     if (have_passive(passive_t::neutral_slimes)
-        && god_protects(agent(), mon, true)
+        && god_protects(agent(), *mon, true)
         && flavour != BEAM_VILE_CLUTCH)
     {
         return true;
@@ -5225,7 +5226,7 @@ void bolt::affect_monster(monster* mon)
     if (agent()
         && flavour != BEAM_VILE_CLUTCH
         && have_passive(passive_t::neutral_slimes)
-        && god_protects(agent(), mon, true))
+        && god_protects(agent(), *mon, true))
     {
         if (!is_tracer && you.see_cell(mon->pos()))
         {
@@ -5245,7 +5246,7 @@ void bolt::affect_monster(monster* mon)
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
                 mpr("Your demonic guardian avoids your attack.");
             else
-                god_protects(agent(), mon, false); // messaging
+                god_protects(agent(), *mon, false); // messaging
         }
     }
 
@@ -5686,7 +5687,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     // These are special allies whose loyalty can't be so easily bent
     case BEAM_CHARM:
-        rc = !(god_protects(mon)
+        rc = !(god_protects(*mon)
                || testbits(mon->flags, MF_DEMONIC_GUARDIAN));
         break;
 
@@ -7361,7 +7362,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
     actor *originator = beam.agent();
     if (!victim || !originator)
         return false;
-    return god_protects(originator, victim)
+    return god_protects(originator, *victim)
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }
