@@ -182,6 +182,64 @@ MAP
     ......
 ENDMAP
 
+NAME:    regret_index_abyss_entry_already_here
+TAGS:    nolayout_encompass transparent no_monster_gen patrolling
+WEIGHT:  5
+MONS:    tentacled monstrosity / lich, glowing shapeshifter, glass eye
+NSUBST:  1 = 1:1 / 1:2 / 1:3 / *:., b = 1:O / *:b
+TILE:    b = bedeviled_crystal_abyss
+:   set_feature_name("crystal_wall", "bedeviled crystal wall")
+: abyss_entry(_G, 'O')
+MAP
+ ..xxx..
+x.x...x..
+.x..b..x.
+..x..1x...xxx...
+ ..xxx...x...x.x
+  ......x..b..x.
+  .......x1..x..
+ ..xxx....xxx..
+..x..1x.......
+.x..b..x......
+x.x...x...xxx..
+...xxx...x1..x..
+       .x..b..x.
+       ..x...x.x
+        ..xxx...
+ENDMAP
+
+NAME:    regret_index_abyss_entry_earlier_magic
+TAGS:    nolayout_encompass transparent
+MONS:    occultist, rakshasa, glowing orange brain
+KFEAT:   G = metal_statue
+SUBST:   - : xc++., 0 = 123, D : x.., E : x..
+SHUFFLE: AO
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+: set_feature_name("metal_statue", "dimensional conduit")
+: abyss_entry(_G, 'O')
+MAP
+    x...@..xx..
+   xxx....xx....@
+  xx.xx..cc......
+ xx...xx++........
+xx..D..+-+..E...xxx
+.x.....++xx....xxAx
+..x...cc..x...xx0.x
+ ..x.xx...xx.xx1..x
+ @..xx..G..xxx....x
+   .x2.....+.....3x.
+    x....xxx..G..xx..@
+    x..1xx.xx...xx.x..
+    x.0xx...x..cc...x..
+    xOxx....xx++.....x.
+    xxx...E..+-+..D..xx
+     ........++xx...xx
+      ......cc..xx.xx
+      @....xx....xxx
+        ..xx..@...x
+ENDMAP
+
 ###############################################################################
 # abyss random vaults
 ###############################################################################

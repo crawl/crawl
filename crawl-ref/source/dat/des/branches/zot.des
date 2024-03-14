@@ -4393,6 +4393,80 @@ vvv+vv....v...vv+vvv..x..xxxx7.x.....x..x.
      vvvvvvv...   .      ............
 ENDMAP
 
+NAME:    chapayev_index_zotdef_columnade
+TAGS:    no_monster_gen no_rotate no_pool_fixup
+ORIENT:  south
+DEPTH:   Zot, !Zot:$
+MONS:    0 band
+MONS:    red draconian / will-o-the-wisp w:2
+MONS:    red draconian scorcher, orb of fire / golden dragon
+MONS:    white draconian / blizzard demon w:2
+MONS:    white draconian knight, golden dragon
+KMONS:   8 = black draconian / spark wasp w:2
+KMONS:   9 = black draconian stormcaller
+KMONS:   0 = electric golem / storm dragon
+KMONS:   A = green draconian / green death w:2
+KMONS:   B = green draconian monk
+KMONS:   C = protean progenitor band
+KMONS:   d = purple draconian / ghost moth w:4
+KMONS:   e = purple draconian shifter
+KMONS:   f = quicksilver dragon
+KMONS:   g = death cob / storm dragon zombie w:4
+KMONS:   h = shadow dragon
+KMONS:   i = curse toe / ancient lich w:2
+KMONS:   z = 0 band
+KMONS:   W = withered plant
+KFEAT:   jk = m
+KFEAT:   s = metal_statue
+NSUBST:  D = 1:< / 2:x. / *:x, . = 3:1 / *:.
+SHUFFLE: 234j / 567k / 890s / ABCW / defU / ghiG
+SUBST:   j : jjl, k : kkw
+SHUFFLE: 369Beh / 369Beh / heB963 / Beh369, HIJKLMNO, }])
+SUBST:   HIJ = x, K : x., L : x., MNO = ., } = }:70, ] = ]:40 >
+MARKER:  U = lua:fog_machine { cloud_type = "purple smoke", \
+                               pow_min = 4, pow_max = 5, \
+                               delay_min = 85, delay_max = 95, size = 1, \
+                               walk_dist = 1, spread_rate = 10 }
+COLOUR:  s = electricity
+TILE:    j = dngn_transparent_wall_red
+TILE:    k = dngn_transparent_wall_blue
+TILE:    m = dngn_transparent_wall_magenta
+TILE:    G = dngn_gravestone
+TILE:    s = storm_conduit
+: set_feature_name("metal_statue", "storm conduit")
+: set_feature_name("granite_statue", "a gravestone")
+MAP
+                         xccccccccccccccx
+                 xxccccccccsccWcccWcckccccccccxx
+xc@.@xxxxxxxccccccccjccsc%.............%ckccjccccccccxxxxxxx@.@cx
+xc...xxxxxxxb.....+.............).............+.....bxxxxxxx...cx
+xc..1.......+..b..+......xx...........xx......+..b..+.......1..cx
+xc>.........b.....+.....xxx...........xxx.....+.....b.........>cx
+xcccxxxx....xxxxxxc...cxxxx...x...x...xxxxc...cxxxxxx....xxxxcccx
+xxxcxxxx....xxxxxxc..Hcxxxx...........xxxxc.O.cxxxxxx....xxxxcxxx
+  xc%..........%mmcH..cxxxj...x...x...jxxxc...cmm%..........%cx
+  xc..x......xk.ccc...cxxxx.3.......3.xxxxc...ccc.sx......x..cx
+  xc............mmc.I.cxxxj...x...x...jxxxc.N.cmm............cx
+  xc.kx......x..ccc...cxxxx2....2....2xxxxc...ccc..x......xs.cx
+  xc..5..xx7.5...mc...cxxxx...x...x...xxxxc..Mcm...8.0xx..8..cx
+  xc..x......xk.ccc.J.cxxxx%....4....%xxxxcM..ccc.sx......x..cx
+  xc.6........6.mmc...cxxxxxxxb+++bxxxxxxxc...cmm.9........9.cx
+  xc.kx......x..ccc.K.cxxxxxxx.....xxxxxxxc.L.ccc..x......xs.cx
+  xc%..........%mmc...cxxxxxxx..x..xxxxxxxc...cmm%..........%cx
+  xccccc....xxxxxxc..Kcxxxxxxx..D..xxxxxxxc...cxxxxxx....cccccx
+  xxxxxc.}..xxxxxxcK5.cxxxxxxx..D..xxxxxxxcK8Kcxxxxxx..].cxxxxx
+    xxxc....xxxxxxc...cxxxxxxx..D..xxxxxxxc...cxxxxxx....cxxx
+    xxcc.O...N......L.ccxxxxxx..D..xxxxxxcc......I.......ccxx
+    xcc......N.5.M.....ccxxxxx..D..xxxxxcc.....J.8.H......ccx
+    xc..O........M...L..ccxxx...x...xxxcc...............x..cx
+    xc....cccc++cccc.....ccx...xxx...xcc.....cccc++cccc....cx
+    xc<..ccxxc++cxxcc+++++c...x.x.x...c+++++ccxxc++cxxcc..<cx
+    xcccccxxxc$$cxxxccc......xB%A%Bx......cccxxxc$$cxxxcccccx
+    xxxxxxxxxc$$cxxxxxcc..A.W.%.C.%.W.A..ccxxxxxc$$cxxxxxxxxx
+    xxxxxxxxxccccxxxxxxcccccccccccccccccccxxxxxxccccxxxxxxxxx
+           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

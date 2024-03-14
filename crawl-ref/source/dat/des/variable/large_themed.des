@@ -3275,3 +3275,161 @@ xxx.7...p.p.....ccccP`c`......``cccp...p.vvvvv..
              xxxxxx......ppp...pP.Pp...
                  ....  ........pPPp..
 ENDMAP
+
+# The map for volcano_overflow, but without the raising / lowering lava.
+NAME:     regret_index_pyroclastic
+TAGS:     no_monster_gen patrolling depths_entry uniq_depths_entry
+TAGS:     chance_depths_entry zot_entry uniq_zot_entry
+DEPTH:    D:8-, !D:$, Lair, !Lair:$, Elf, !Elf:$
+DEPTH:    Crypt, !Crypt:$, Depths, !Depths:$, Zot, !Zot:$
+PLACE:    D:$, Depths:$
+ORIENT:   south
+WEIGHT:   1 (D:$, Depths:$), 5 (Elf, Crypt), 10
+SUBST:    A : AAABBCCC, A = llly'', B = lyy, C = ll'
+SUBST:    D : DDEEEFFF, D = yzz.., E = yz..., F = y..
+: if you.in_branch("D") then
+:   if you.depth() < 10 then
+MONS:     orc wizard, bombardier beetle, fire bat / basilisk w:4
+MONS:     acid dragon / red ugly thing w:4
+KMONS:    L = steam dragon
+NSUBST:   1 = 2:. / *:1, 4 = 1:4 / *:$, * = 1:d** / *:%
+NSUBST:   l = 1:LLl / *:l, . = 1:1 / 3:2 / 2:3 / 1:11223...
+:   elseif you.depth() < 12 then
+MONS:     fire bat, deep elf pyromancer / basilisk w:2
+MONS:     red ugly thing, fire elemental w:4 / cyclops
+KMONS:    L = lava snake / acid dragon w:2
+NSUBST:   . = 5:1 / 3:2 / 2:3 / 1:112.. / 1:223.
+NSUBST:   4 = 1:4 / *:$, * = 1:d* / 1:*% / 1:$ / *:*
+:   elseif you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
+MONS:     deep elf pyromancer / cyclops w:4 / gargoyle w:2 / red ugly thing w:2
+MONS:     fire elemental / boulder beetle w:4
+MONS:     molten gargoyle / ogre mage w:4, efreet / orc sorcerer w:2
+KMONS:    L = laughing skull band / lava snake w:2
+NSUBST:   . = 2:1 / 3:2 / 2:3 / 2 = 112.. / 1 = 2234.
+NSUBST:   l = 2:L / 1 = Ll / *:l, 4 = 2:4 / *:$, * = 1:d / 1:e / 1:% / *:*
+:   else
+MONS:     red ugly thing w:4 / tengu warrior ; ring mail . shortbow ego:flaming
+MONS:     occultist / salamander w:6 ; shortbow ego:flaming
+MONS:     hell knight / red very ugly thing w:6, fire dragon
+KMONS:    L = salamander mystic
+KITEM:    Y = smoky gem
+KFEAT:    Z = enter_depths
+NSUBST:   . = 1:1 / 2:2 / 2:3 / 1:112.. / 1:223.
+NSUBST:   l = 2:L / 1:Ll / *:l, 4 = 1:4 / *:*, * = 1:Y / 1:Z / 1:d / *:$
+:   end
+TILE:     y = wall_pebble_darkgray
+TILE:     z = dngn_stone_wall_darkgray
+: elseif you.in_branch("Lair") then
+MONS:     steam dragon w:6 / wyvern / basilisk w:15 / fire bat band w:2
+MONS:     lindwurm, boulder beetle, fire crab
+KMONS:    L = lava snake
+NSUBST:   . = 2:1 / 2:2 / 1:3 / 2 = 11223...
+NSUBST:   l = 2:L / 1 = Ll / *:l, 4 = 1:4 / *:$, * = 1:dde / 1:% / 1:$ / *:*
+TILE:     y = wall_pebble_darkgray
+TILE:     z = dngn_stone_wall_darkgray
+: elseif you.in_branch("Elf") then
+MONS:     deep elf pyromancer / fire elemental, thermic dynamo
+MONS:     dancing weapon ; long sword ego:flaming
+MONS:     deep elf elementalist ; robe . shortbow ego:flaming / \
+          deep elf high priest ; robe . shortbow ego:flaming
+KMONS:    L = sun moth perm_ench:shapeshifter / \
+              salamander perm_ench:shapeshifter / \
+              eye of devastation w:6 perm_ench:glowing_shapeshifter / \
+              glowing orange brain w:6 perm_ench:glowing_shapeshifter
+NSUBST:   l = 2:L / 2 = Ll / *:l, 4 = 1:3 / 1:4 / *:%
+NSUBST:   * = 1:d / 1:de / 1:| / *:*
+NSUBST:   . = 3:1 / 2:2 / 1:3 / 1:4 / 2 = 112234...... / *:.
+TILE:     y = wall_pebble_darkgray
+TILE:     z = wall_stone_dark
+: elseif you.in_branch("Crypt") then
+TAGS:     no_wall_fixup
+MONS:     laughing skull band / spectral fire dragon
+MONS:     eidolon / storm dragon skeleton
+MONS:     revenant / ancient champion ; plate armour . great sword ego:flaming
+MONS:     bone dragon / curse skull
+NSUBST:   . = 2:1 / 3:2 / 1:3 / 1:112.. / 1:223.
+NSUBST:   4 = 1:4 / 1:3 / 1:|, * = 1:d / 1:e / 1:| / *:*
+TILE:     y = wall_pebble_darkgray
+TILE:     z = wall_stone_dark
+: elseif you.in_branch("Depths") then
+:   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
+MONS:     hell knight / red very ugly thing w:2
+MONS:     stone giant / walking earthen tome w:4, fire giant
+MONS:     salamander tyrant / walking crystal tome w:2
+KMONS:    L = fire dragon / salamander mystic band w:6 / glass eye
+NSUBST:   . = 2:1 / 3:2 / 2:3 / 1:112.. / 1:223.
+NSUBST:   l = 2:L / 2 = Ll / *:l, * = 1:d / 1:e / * = *|
+:   else
+MONS:     fire dragon / red draconian w:15
+MONS:     stone giant / walking earthen tome w:5, fire giant
+MONS:     draconian scorcher / draconian annihilator / draconian shifter
+KMONS:    L = glowing orange brain / glass eye w:2
+KITEM:    Y = midnight gem
+KFEAT:    Z = enter_zot
+NSUBST:   . = 2:1 / 3:2 / 2:3 / 1:112.. / 1:4
+NSUBST:   l = 1:L / 1 = Ll / *:l, * = 1:Y / 1:Z / 1:d / *:$
+:   end
+: else -- Zot
+MONS:     red draconian, red draconian monk / golden dragon
+MONS:     red draconian annihilator w:5 / red draconian scorcher, orb of fire
+KMONS:    L = moth of wrath / ghost moth w:2
+NSUBST:   . = 3:1 / 2:2 / 2:3 / 2 = 233.
+NSUBST:   l = 2:L / 3 = Lll / *:l, 4 = 1:4 / *:23
+NSUBST:   * = 1:} / 1 = ):70 > / 1 = ]:40 > / 1:e / * = d
+SHUFFLE:  })]
+FTILE:    .1234})]>de$Gxy = floor_pebble_darkgray
+TILE:     y = wall_zot_darkgray
+TILE:     z = dngn_stone_wall_red
+: end
+ITEM:     chain mail ego:fire_resistance good_item / \
+          fire dragon scales good_item / scarf ego:resistance w:5 / \
+          great sword randart ego:flaming / \
+          staff of fire / staff of earth w:5 / book of fire / \
+          book of scorching / orb randart artprops:Fire&&rF / \
+          dragon-blood talisman / granite talisman w:5
+ITEM:     plate armour ego:fire_resistance good_item / \
+          fire dragon scales randart / kite shield ego:fire_resistance w:5 / \
+          double sword ego:flaming good_item w:5 ident:type / \
+          triple sword ego:flaming good_item ident:type / \
+          staff of fire randart / staff of earth randart w:5 / \
+          book of spectacle w:5 / everburning encyclopedia / \
+          book of spontaneous combustion / \
+          orb ego:channeling randart artprops:Fire&&rF / \
+          dragon-blood talisman randart / \
+          granite talisman randart artprops:rF w:5
+KFEAT:    G = metal_statue
+KFEAT:    L = l
+KFEAT:    y = x
+KFEAT:    z = c
+: if you.in_branch("Zot") then
+SUBST:    X = c
+: else
+SUBST:    X = x
+: end
+COLOUR:   G = fire
+TILE:     G = fiery_conduit
+TILE:     ' = floor_pebble_darkgray
+TILE:     v = dngn_metal_wall_darkgray
+: set_feature_name("metal_statue", "fiery conduit")
+MAP
+                XXXX         XXX XXX                   XXX
+        X@@XX  XX..XXX     XXX.XXX.XXXX XXXXX XXX     XX$XX
+      @XX...XXXX.DD..XXX XXX..D.1.D...XXXX..XXX.XXX XXX.D.XX
+    @X.X.D......D..DD..XXX..DD..DD..D.............XXX..D.D.XX
+  @X.X..D.A.DDDD.AA..D.....D..AA...A...DDD....G......DD...D$XXX
+ X.X..D.AAlA....AllAAAD...D.AAllAAAlAAA...DD......DDD.AA.D.XXXX
+XX.1D.AAllllAAAAllllllAAAAAAlllllllllllAAA..D....D.AAlA.D.xXXX
+XXx..D.AlllllllllllllllllllllllllllllllllA.D.vvv..D.All.D.xXXX
+ XXXx.D.AlllllllllllllllllAAAlllllllllllA.D.vv*vvv.D.lll.D.XXXX
+  XXXX.D.AlllAAllllllllAAA...AAAlllllllA.D.vv*..*vv.D.All.D.XXX
+   XXXx.D.AlA..AllllllA.DD...DD.AlllllllA.D.vv...*vv.DAllA.D.XX
+    XXX.D.AA.DD.AllllA.DD.xxx.D..AllllllA..D.vv*...4.D.llAA..XX
+   XXXx.D.A....D.AAAA.D..xxxxx.DD.AllllAAA.D..vv...x.D.AAA.D.XX
+  XXx..D....xxx..D...D1xxxxxxxx..D.AAAA..D.......*xxDD...D.1XXX
+ XXx..DD..xxxxxxx..D..xxxxxxxxxxx..D...D..xxx..xxxxx..DD.4xxxXX
+XXXXXx1.xxxxxxxxxxx.xxxxxxxxxxxxxxx..D.4xxxxxxxxxxxxxx$$xxxxxXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

@@ -2026,6 +2026,47 @@ xxc...cxx
    @@@
 ENDMAP
 
+# Layout modified from the long-gone evilmike_dwarf_pyromaniacs.
+NAME:    regret_index_elf_centigrade
+TAGS:    no_monster_gen no_pool_fixup misc_elf_vault
+DEPTH:   Elf
+MONS:    fire elemental, dancing weapon ; short sword ego:freezing
+MONS:    deep elf pyromancer, deep elf knight, thermic dynamo
+ITEM:    ring of fire, ring of ice
+ITEM:    staff of fire no_pickup, staff of cold no_pickup
+KFEAT:   - = closed_clear_door
+KFEAT:   G = metal_statue
+SUBST:   0 = 12, 9 = 33344455
+SHUFFLE: df, df / eg
+: if crawl.coinflip() then
+SUBST:   ! = l, ? = G, ~ = w
+TILE:    G = icy_conduit
+:   set_feature_name("metal_statue", "icy conduit")
+: else
+SUBST:   ! = G, ? = w, ~ = l
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+MAP
+   xxxxxxxx
+   x!x...$x
+   xx...x3xxxx
+   x....1.xxxx
+   x...1x---xxxxx
+   x...xxxx..x0dx
+xxxxx+xxb.xx..fxxxxx
+@......xx..x$.9xbbbx
+....0x.+..5x%5.5-~bx
+@......xx..x$.9xbbbx
+xxxxx+xxb.xx..dxxxxx
+   x...xxxx..x0fx
+   x...2x---xxxxx
+   x....2.xxx
+   xx...x4x
+   x?x...$x
+   xxxxxxxx
+ENDMAP
+
 ##############################################################################
 #
 # <<4>> Elf:2 Hall of Blades entry vaults.
