@@ -177,7 +177,7 @@ private:
 class targeter_gravitas : public targeter_smite
 {
 public:
-    targeter_gravitas(const actor *act, int ran, int radius);
+    targeter_gravitas(const actor *act, int ran);
     bool set_aim(coord_def a) override;
 };
 

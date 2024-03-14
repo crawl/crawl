@@ -791,8 +791,8 @@ bool targeter_unravelling::set_aim(coord_def a)
     return true;
 }
 
-targeter_gravitas::targeter_gravitas(const actor *act, int ran, int radius) :
-    targeter_smite(act, ran, radius, radius, true,
+targeter_gravitas::targeter_gravitas(const actor *act, int ran) :
+    targeter_smite(act, ran, GRAVITAS_RANGE, GRAVITAS_RANGE, true,
                    [](const coord_def& p) -> bool {
                       return you.pos() != p; })
 {

@@ -1216,7 +1216,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_GLACIATE:
         return make_unique<targeter_cone>(&you, range);
     case SPELL_GRAVITAS:
-        return make_unique<targeter_gravitas>(&you, range, gravitas_range(pow));
+        return make_unique<targeter_gravitas>(&you, range);
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:

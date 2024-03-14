@@ -1639,12 +1639,6 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
-int gravitas_range(int pow)
-{
-    return pow >= 60 ? 3 : 2;
-}
-
-
 #define GRAVITY "by gravitational forces"
 
 static void _attract_actor(const actor* agent, actor* victim,
@@ -1728,7 +1722,7 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
             continue;
 
         const int range = (pos - ai->pos()).rdist();
-        if (range > gravitas_range(pow))
+        if (range > GRAVITAS_RANGE)
             continue;
 
         victims.push_back(*ai);
