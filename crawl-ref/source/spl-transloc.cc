@@ -1746,6 +1746,10 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
         const int strength = ((pow + 100) / 20) / (range*range);
 
         _attract_actor(agent, ai, pos, pow, strength);
+
+        monster* mon = ai->as_monster();
+        if (!invalid_monster(mon) && coinflip())
+            mon->lose_energy(EUT_SPECIAL);
     }
 
     return true;
@@ -1753,12 +1757,6 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
 {
-    if (cell_is_solid(where))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
     fail_check();
 
     monster* mons = monster_at(where);

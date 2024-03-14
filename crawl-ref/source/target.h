@@ -174,6 +174,13 @@ private:
     int pow;
 };
 
+class targeter_gravitas : public targeter_smite
+{
+public:
+    targeter_gravitas(const actor *act, int ran, int radius);
+    bool set_aim(coord_def a) override;
+};
+
 class targeter_airstrike : public targeter
 {
 public:

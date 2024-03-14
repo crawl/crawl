@@ -791,6 +791,39 @@ bool targeter_unravelling::set_aim(coord_def a)
     return true;
 }
 
+targeter_gravitas::targeter_gravitas(const actor *act, int ran, int radius) :
+    targeter_smite(act, ran, radius, radius, true,
+                   [](const coord_def& p) -> bool {
+                      return you.pos() != p; })
+{
+}
+
+bool targeter_gravitas::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    if (exp_range_max > 0)
+    {
+        bolt beam;
+        beam.target = a;
+        beam.use_target_as_pos = true;
+        beam.origin_spell = SPELL_GRAVITAS;
+        exp_map_min.init(INT_MAX);
+        beam.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                      exp_range_min, true, true);
+        if (exp_range_min == exp_range_max)
+            exp_map_max = exp_map_min;
+        else
+        {
+            exp_map_max.init(INT_MAX);
+            beam.determine_affected_cells(exp_map_max, coord_def(), 0,
+                    exp_range_max, true, true);
+        }
+    }
+    return true;
+}
+
 targeter_airstrike::targeter_airstrike()
 {
     agent = &you;
