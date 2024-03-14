@@ -5,7 +5,7 @@
     {{ {recommended_species} }},
 {spells},
 {equipment},
-    {weapon_choice},
+    weapon_choice::{weapon_choice},
 {skills},
 }} }},
 {tag_major_version_closer}

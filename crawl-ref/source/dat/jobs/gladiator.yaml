@@ -9,7 +9,7 @@ equipment:
   - "leather armour"
   - "helmet"
   - "throwing net q:3"
-weapon_choice: WCHOICE_GOOD
+weapon_choice: good
 recommended_species:
   - SP_MOUNTAIN_DWARF
   - SP_MERFOLK

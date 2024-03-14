@@ -10,7 +10,7 @@ spells:
   - SPELL_SCORCH
 equipment:
   - "robe"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_MOUNTAIN_DWARF
   - SP_BASE_DRACONIAN

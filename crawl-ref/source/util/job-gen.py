@@ -89,7 +89,7 @@ class Job(MutableMapping):
         self['spells'] = spells(s.get('spells', []))
         self['equipment'] = equipment(s.get('equipment', []))
         self['weapon_choice'] = weapon_choice(
-                                        s.get('weapon_choice', 'WCHOICE_NONE'))
+                                        s.get('weapon_choice', 'none'))
         self['category'] = category(s.get('category'))
         self['category_priority'] = validate_int_range(category_priority(
             s.get('category_priority', 0)), 'category_priority', 0, 1000)
@@ -132,7 +132,7 @@ ALL_SKILLS = ('SK_FIGHTING', 'SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_FIRE_MAGIC', 'SK_ICE_MAGIC', 'SK_AIR_MAGIC', 'SK_EARTH_MAGIC',
     'SK_ALCHEMY', 'SK_INVOCATIONS', 'SK_EVOCATIONS', 'SK_SHAPESHIFTING',
     'SK_WEAPON')
-ALL_WCHOICES = ('WCHOICE_NONE', 'WCHOICE_PLAIN', 'WCHOICE_GOOD')
+ALL_WCHOICES = ('none', 'plain', 'good')
 
 
 def recommended_species(species):

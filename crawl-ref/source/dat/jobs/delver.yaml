@@ -12,7 +12,7 @@ equipment:
   - "scroll of fear"
   - "potion of haste"
   - "wand of digging charges:3"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_FELID
   - SP_SPRIGGAN
