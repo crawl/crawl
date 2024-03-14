@@ -1,8 +1,8 @@
 enum: JOB_AIR_ELEMENTALIST
 name: "Air Elementalist"
 short_name: AE
-#category: Mage
-#category_priority: 40
+category: Mage
+category_priority: 40
 str: 0
 int: 7
 dex: 5

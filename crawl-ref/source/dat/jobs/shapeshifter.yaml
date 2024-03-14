@@ -1,7 +1,7 @@
 enum: JOB_SHAPESHIFTER
 name: "Shapeshifter"
-#category: Adventurer
-#category_priority: 90
+category: Adventurer
+category_priority: 90
 str: 6
 int: 2
 dex: 4

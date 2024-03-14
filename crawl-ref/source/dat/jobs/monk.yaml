@@ -1,7 +1,7 @@
 enum: JOB_MONK
 name: "Monk"
-#category: Warrior
-#category_priority: 80
+category: Warrior
+category_priority: 80
 str: 3
 int: 2
 dex: 7

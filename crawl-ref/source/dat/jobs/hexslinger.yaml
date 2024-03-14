@@ -1,8 +1,8 @@
 enum: JOB_HEXSLINGER
 name: "Hexslinger"
 short_name: Hs
-#category: Warrior-mage
-#category_priority: 90
+category: Warrior-mage
+category_priority: 90
 str: 0
 int: 5
 dex: 7
@@ -16,7 +16,6 @@ equipment:
   - "robe"
   - "scroll of poison"
   - "sling plus:1"
-weapon_choice: WCHOICE_NONE
 recommended_species:
   - SP_FORMICID
   - SP_DEEP_ELF

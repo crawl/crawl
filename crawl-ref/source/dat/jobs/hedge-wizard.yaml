@@ -1,8 +1,8 @@
 enum: JOB_HEDGE_WIZARD
 name: "Hedge Wizard"
 short_name: HW
-#category: Mage
-#category_priority: 100
+category: Mage
+category_priority: 100
 str: 2
 int: 6
 dex: 4

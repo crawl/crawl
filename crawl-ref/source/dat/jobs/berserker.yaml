@@ -1,7 +1,7 @@
 enum: JOB_BERSERKER
 name: "Berserker"
-#category: Zealot
-#category_priority: 100
+category: Zealot
+category_priority: 100
 str: 9
 int: -1
 dex: 4

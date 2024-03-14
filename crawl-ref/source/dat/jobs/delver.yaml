@@ -1,7 +1,7 @@
 enum: JOB_DELVER
 name: "Delver"
-#category: Adventurer
-#category_priority: 70
+category: Adventurer
+category_priority: 70
 str: 4
 int: 2
 dex: 6

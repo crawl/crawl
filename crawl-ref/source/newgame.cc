@@ -17,6 +17,7 @@
 #include "initfile.h"
 #include "item-name.h" // make_name
 #include "item-prop.h"
+#include "job-groups.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"

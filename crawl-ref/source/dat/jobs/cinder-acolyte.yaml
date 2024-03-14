@@ -1,8 +1,8 @@
 enum: JOB_CINDER_ACOLYTE
 name: "Cinder Acolyte"
 short_name: CA
-#category: Zealot
-#category_priority: 90
+category: Zealot
+category_priority: 90
 str: 6
 int: 6
 dex: 0
