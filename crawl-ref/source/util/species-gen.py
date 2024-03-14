@@ -22,11 +22,7 @@ else:
 
 import yaml  # pip install pyyaml
 
-def quote_or_nullptr(key, d):
-    if key in d:
-        return quote(d[key])
-    else:
-        return 'nullptr'
+from genutil import *
 
 class Species(MutableMapping):
     """Parser for YAML definition files.
@@ -198,38 +194,6 @@ def recommended_jobs(jobs):
     return ', '.join(validate_string(job, 'Job', 'JOB_[A-Z_]+') for job in jobs)
 
 
-def validate_string(val, name, pattern):
-    '''
-    Validate a string.
-
-    Note that re.match anchors to the start of the string, so you don't need to
-    prefix the pattern with '^'. But it doesn't require matching to the end, so
-    you'll probably want to suffix '$'.
-    '''
-    if not isinstance(val, str):
-        raise ValueError('%s isn\'t a string' % name)
-    if re.match(pattern, val):
-        return val
-    else:
-        raise ValueError('%s doesn\'t match pattern %s' % (val, pattern))
-    return val
-
-
-def validate_bool(val, name):
-    '''Validate a boolean.'''
-    if not isinstance(val, bool):
-        raise ValueError('%s isn\'t a boolean' % name)
-    return val
-
-
-def validate_int_range(val, name, min, max):
-    if not isinstance(val, int):
-        raise ValueError('%s isn\'t an integer' % name)
-    if not min <= val <= max:
-        raise ValueError('%s isn\'t between %s and %s' % (name, min, max))
-    return val
-
-
 def size(size):
     val = "SIZE_%s" % size.upper()
     if val not in SIZES:
@@ -237,14 +201,6 @@ def size(size):
                                     'small, medium, large, big, or giant')
     return val
 
-
-def enumify(s):
-    return s.replace(' ', '_').upper()
-
-def quote(s):
-    if not isinstance(s, str):
-        raise ValueError('Expected a string but got %s' % repr(s))
-    return '"%s"' % s
 
 def species_flags(flags):
     global ALL_SPECIES_FLAGS
@@ -281,19 +237,6 @@ def levelup_stats(stats):
     else:
         return make_list(', '.join("STAT_%s" % s.upper() for s in stats))
 
-global LIST_TEMPLATE
-LIST_TEMPLATE = """    {{ {list} }}"""
-
-def empty_set(typ):
-    return "    set<%s>()" % typ
-
-def make_list(list_str):
-    global LIST_TEMPLATE
-    #TODO: add linebreaks + indents to obey 80 chars?
-    if len(list_str.strip()) == 0:
-        return "    {}"
-    else:
-        return LIST_TEMPLATE.format(list=list_str)
 
 def mutations(mut_def):
     out = []
@@ -392,10 +335,6 @@ def generate_species_type_data(s):
         return ''
     else:
         return '    %s,\n' % s['enum']
-
-
-def load_template(templatedir, name):
-    return open(os.path.join(templatedir, name)).read()
 
 
 def main():
