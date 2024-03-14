@@ -1,8 +1,8 @@
 enum: JOB_ICE_ELEMENTALIST
 name: "Ice Elementalist"
 short_name: IE
-#category: Mage
-#category_priority: 50
+category: Mage
+category_priority: 50
 str: 0
 int: 7
 dex: 5

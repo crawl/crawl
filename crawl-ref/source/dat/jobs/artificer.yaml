@@ -1,7 +1,7 @@
 enum: JOB_ARTIFICER
 name: "Artificer"
-#category: Adventurer
-#category_priority: 100
+category: Adventurer
+category_priority: 100
 str: 4
 int: 3
 dex: 5

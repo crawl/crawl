@@ -1,7 +1,7 @@
 enum: JOB_ALCHEMIST
 name: "Alchemist"
-#category: Mage
-#category_priority: 20
+category: Mage
+category_priority: 20
 str: 0
 int: 7
 dex: 5

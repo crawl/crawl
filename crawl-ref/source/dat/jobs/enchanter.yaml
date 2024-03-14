@@ -1,7 +1,7 @@
 enum: JOB_ENCHANTER
 name: "Enchanter"
-#category: Warrior-mage
-#category_priority: 80
+category: Warrior-mage
+category_priority: 80
 str: 0
 int: 7
 dex: 5
