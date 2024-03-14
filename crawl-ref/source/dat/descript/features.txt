@@ -1012,7 +1012,7 @@ A mystic cage
 
 A sturdy metal cage, inscribed with cryptic magics. Whatever it once held -
 whether person, beast, or experiment - was evidently already freed in response
-to intruders infiltrating the Dungeon.
+to intruders like you infiltrating the Dungeon.
 %%%%
 # Themed magic branches / portals / vaults.
 An arcane conduit

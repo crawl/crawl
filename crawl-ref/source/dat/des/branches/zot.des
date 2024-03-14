@@ -3984,7 +3984,7 @@ NSUBST:  - = 2 / 3 = 3.. / *:.
 NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >, G = 4:G / *:U
 SUBST:   1 = 1 0:30 .
 : else
-NSUBST:  G = 3={[( / *:G
+NSUBST:  G = 3 = {[( / 3:G / *:U
 NSUBST:  1 = 6 = 1. / *=0...
 NSUBST:  > = >. / *:.
 : end
