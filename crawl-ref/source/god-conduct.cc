@@ -81,7 +81,7 @@ static const char *conducts[] =
     "Desecrate Orcish Remains",
 #endif
     "Kill Slime", "Was Hasty", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Seen Monster",
+    "Kill Nonliving", "Exploration", "Seen Monster",
     "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
