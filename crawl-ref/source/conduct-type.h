@@ -29,8 +29,8 @@ enum conduct_type
     DID_CHAOS,                            // Zin (used chaotic weapon/magic)
 #if TAG_MAJOR_VERSION == 34
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
-#endif
     DID_KILL_SLIME,                       // Jiyva
+#endif
     DID_HASTY,                            // Cheibriados
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_NONLIVING,
