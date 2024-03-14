@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-
-# --- WORK IN PROGRESS --- #
-# Aim: to generate job-type.h and job-data.h in the same way as species,
-# from yaml files
-
-# NOTE Wanderers have empty skills and equipment sets
+"""
+Generate the files job-data.h, job-type.h and job-groups.h from the YAML files
+in ../dat/jobs/.
+"""
 
 from __future__ import print_function
 
@@ -36,7 +34,7 @@ class Job(MutableMapping):
     """
 
     # TODO: unify with processing in from_yaml
-    YAML_MAIN_FIELDS = {'TAG_MAJOR_VERSION', # 'category', 'category_priority'
+    YAML_MAIN_FIELDS = {'TAG_MAJOR_VERSION', 'category', 'category_priority',
             'recommended_species', 'enum', 'name', 'short_name', 'str', 'int',
             'dex', 'weapon_choice', 'create_enum', 'skills', 'equipment',
             'spells'}
@@ -71,11 +69,11 @@ class Job(MutableMapping):
         if s.get('TAG_MAJOR_VERSION', None) is not None:
             if not isinstance(s['TAG_MAJOR_VERSION'], int):
                 raise ValueError('TAG_MAJOR_VERSION must be an integer')
-    #    self.starting_species = s.get('difficulty') != False
-    #    has_recommended_species = bool(s.get('recommended_species'))
-    #    if self.starting_species != has_recommended_species:
-    #        raise ValueError('recommended_jobs must not be empty (or'
-    #                                            ' difficulty must be False)')
+        self.starting_job = s.get('difficulty') != False
+        has_recommended_species = bool(s.get('recommended_species'))
+        if self.starting_job != has_recommended_species:
+            raise ValueError('recommended_jobs must not be empty (or'
+                                                ' category must be False)')
 
         # Set attributes
         self['enum'] = validate_string(s['enum'], 'enum', 'JOB_[A-Z_]+$')
@@ -92,9 +90,9 @@ class Job(MutableMapping):
         self['equipment'] = equipment(s.get('equipment', []))
         self['weapon_choice'] = weapon_choice(
                                         s.get('weapon_choice', 'WCHOICE_NONE'))
-    #    self['difficulty'] = difficulty(s.get('difficulty'))
-    #    self['difficulty_priority'] = validate_int_range(difficulty_priority(
-    #        s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
+        self['category'] = category(s.get('category'))
+        self['category_priority'] = validate_int_range(category_priority(
+            s.get('category_priority', 0)), 'category_priority', 0, 1000)
         self['create_enum'] = validate_bool(
                                     s.get('create_enum', True), 'create_enum')
 
@@ -107,23 +105,23 @@ class Job(MutableMapping):
             self['tag_major_version_closer'] = ''
         self.print_unknown_warnings(s)
 
-# SpeciesGroup = collections.namedtuple('SpeciesGroup',
-#                                             ['position', 'width', 'species'])
-# SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
-#                                             ['priority', 'enum'])
-# SPECIES_GROUPS_TEMPLATE = {
-#     'Simple': SpeciesGroup('coord_def(0, 0)', '20', []),
-#     'Intermediate': SpeciesGroup('coord_def(25, 0)', '20', []),
-#     'Advanced': SpeciesGroup('coord_def(50, 0)', '20', []),
-# }
-# SPECIES_GROUP_TEMPLATE = """
-#     {{
-#         "{name}",
-#         {position},
-#         {width},
-#         {{ {species} }}
-#     }},
-# """
+JobGroup = collections.namedtuple('JobGroup', ['position', 'width', 'jobs'])
+JobGroupEntry = collections.namedtuple('JobGroupEntry', ['priority', 'enum'])
+JOB_GROUPS_TEMPLATE = {
+    'Warrior': JobGroup('coord_def(0, 0)', '15', []),
+    'Adventurer': JobGroup('coord_def(0, 7)', '15', []),
+    'Zealot': JobGroup('coord_def(15, 0)', '20', []),
+    'Warrior-mage': JobGroup('coord_def(35, 0)', '21', []),
+    'Mage': JobGroup('coord_def(56, 0)', '22', []),
+}
+JOB_GROUP_TEMPLATE = """
+    {{
+        "{name}",
+        {position},
+        {width},
+        {{ {jobs} }}
+    }},
+"""
 
 # SK_WEAPON is used when weapon is chosen by player
 ALL_SKILLS = ('SK_FIGHTING', 'SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
@@ -229,41 +227,41 @@ def spells(spell_list):
                                 for spell in spell_list), True)
 
 
-# def difficulty(d):
-#     if d not in SPECIES_GROUPS_TEMPLATE.keys() and d is not False:
-#         raise ValueError("Unknown difficulty: %s" % d)
-#     return d
+def category(c):
+    if c not in JOB_GROUPS_TEMPLATE.keys() and c is not False:
+        raise ValueError("Unknown category: %s" % c)
+    return c
 
 
-# def difficulty_priority(prio):
-#     try:
-#         return int(prio)
-#     except ValueError:
-#         raise ValueError('difficulty_priority value "%s" is not an integer' %
-#                                 prio)
+def category_priority(prio):
+    try:
+        return int(prio)
+    except ValueError:
+        raise ValueError('category_priority value "%s" is not an integer' %
+                                prio)
 
 
-# def update_species_group(sg, s):
-#     difficulty = s['difficulty']
-#     if difficulty is False:
-#         # Don't add this species to the species select screen
-#         return sg
-#     entry = SpeciesGroupEntry(s['difficulty_priority'], s['enum'])
-#     sg[difficulty].species.append(entry)
-#     return sg
+def update_job_group(sg, s):
+    category = s['category']
+    if category is False:
+        # Don't add this species to the species select screen
+        return sg
+    entry = JobGroupEntry(s['category_priority'], s['enum'])
+    sg[category].jobs.append(entry)
+    return sg
 
 
-# def generate_species_groups(sg):
-#     out = ''
-#     for name, group in sg.items():
-#         out += SPECIES_GROUP_TEMPLATE.format(
-#             name = name,
-#             position = group.position,
-#             width = group.width,
-#             species = ', '.join(
-#                 e.enum for e in reversed(sorted(group.species))),
-#         )
-#     return out
+def generate_job_groups(sg):
+    out = ''
+    for name, group in sg.items():
+        out += JOB_GROUP_TEMPLATE.format(
+            name = name,
+            position = group.position,
+            width = group.width,
+            jobs = ', '.join(
+                e.enum for e in reversed(sorted(group.jobs))),
+        )
+    return out
 
 
 def generate_job_type_data(s):
@@ -283,6 +281,7 @@ def main():
     parser.add_argument('templatedir',
                     help='util/job-gen template source dir')
     parser.add_argument('job_data', help='job-data.h output file path')
+    parser.add_argument('job_groups', help='job-groups.h output file path')
     parser.add_argument('job_type', help='job-type.h output file path')
     args = parser.parse_args()
 
@@ -323,14 +322,14 @@ def main():
     job_data_template = load_template(args.templatedir,
                                                 'job-data-jobs.txt')
 
-#    species_groups = SPECIES_GROUPS_TEMPLATE
+    job_groups = JOB_GROUPS_TEMPLATE
     for job in all_jobs:
-        # species-data.h
+        # job-data.h
         job_data_out_text += job_data_template.format(**job)
-        # species-type.h
+        # job-type.h
         job_type_out_text += generate_job_type_data(job)
-#        # species-groups.h
-#        species_groups = update_species_group(species_groups, species)
+        # job-groups.h
+        job_groups = update_job_group(job_groups, job)
 
     job_data_out_text += load_template(args.templatedir,
                                         'job-data-deprecated-jobs.txt')
@@ -344,14 +343,14 @@ def main():
     with open(args.job_type, 'w') as f:
         f.write(job_type_out_text)
 
-    # species_groups_out_text = ''
-    # species_groups_out_text += load_template(args.templatedir,
-    #                                     'species-groups-header.txt')
-    # species_groups_out_text += generate_species_groups(species_groups)
-    # species_groups_out_text += load_template(args.templatedir,
-    #                                     'species-groups-footer.txt')
-    # with open(args.species_groups, 'w') as f:
-    #     f.write(species_groups_out_text)
+    job_groups_out_text = ''
+    job_groups_out_text += load_template(args.templatedir,
+                                        'job-groups-header.txt')
+    job_groups_out_text += generate_job_groups(job_groups)
+    job_groups_out_text += load_template(args.templatedir,
+                                        'job-groups-footer.txt')
+    with open(args.job_groups, 'w') as f:
+        f.write(job_groups_out_text)
 
 
 if __name__ == '__main__':

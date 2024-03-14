@@ -1,7 +1,7 @@
 enum: JOB_FIGHTER
 name: "Fighter"
-#category: Warrior
-#category_priority: 100
+category: Warrior
+category_priority: 100
 str: 8
 int: 0
 dex: 4

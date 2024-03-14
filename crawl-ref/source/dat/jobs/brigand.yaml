@@ -1,7 +1,7 @@
 enum: JOB_BRIGAND
 name: "Brigand"
-#category: Warrior
-#category_priority: 60
+category: Warrior
+category_priority: 60
 str: 3
 int: 3
 dex: 6

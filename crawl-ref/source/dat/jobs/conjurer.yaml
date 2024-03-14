@@ -1,8 +1,8 @@
 enum: JOB_CONJURER
 name: "Conjurer"
 short_name: Cj
-#category: Mage
-#category_priority: 90
+category: Mage
+category_priority: 90
 str: -1
 int: 10
 dex: 3

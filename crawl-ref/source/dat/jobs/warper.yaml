@@ -1,8 +1,8 @@
 enum: JOB_WARPER
 name: "Warper"
 short_name: Wr
-#category: Warrior-mage
-#category_priority: 100
+category: Warrior-mage
+category_priority: 100
 str: 3
 int: 5
 dex: 4

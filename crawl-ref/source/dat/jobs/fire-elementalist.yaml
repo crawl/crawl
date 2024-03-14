@@ -1,8 +1,8 @@
 enum: JOB_FIRE_ELEMENTALIST
 name: "Fire Elementalist"
 short_name: FE
-#category: Mage
-#category_priority: 60
+category: Mage
+category_priority: 60
 str: 0
 int: 7
 dex: 5

@@ -1,7 +1,7 @@
 enum: JOB_GLADIATOR
 name: "Gladiator"
-#category: Warrior
-#category_priority: 90
+category: Warrior
+category_priority: 90
 str: 6
 int: 0
 dex: 6

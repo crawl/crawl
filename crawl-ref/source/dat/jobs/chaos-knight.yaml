@@ -1,8 +1,8 @@
 enum: JOB_CHAOS_KNIGHT
 name: "Chaos Knight"
 short_name: CK
-#category: Zealot
-#category_priority: 80
+category: Zealot
+category_priority: 80
 str: 4
 int: 4
 dex: 4
