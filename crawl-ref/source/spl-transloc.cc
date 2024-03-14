@@ -1737,7 +1737,7 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
     if (victims.empty())
         return false;
 
-    near_to_far_sorter sorter = {you.pos()};
+    near_to_far_sorter sorter = {pos};
     sort(victims.begin(), victims.end(), sorter);
 
     for (actor * ai : victims)
