@@ -4891,5 +4891,5 @@ dice_def collision_damage(int pow, bool random)
 
 string describe_collision_dam(dice_def dice)
 {
-    return make_stringf("%dd%d/collision", dice.num, dice.size);
+    return make_stringf("%dd%d/slam", dice.num, dice.size);
 }
