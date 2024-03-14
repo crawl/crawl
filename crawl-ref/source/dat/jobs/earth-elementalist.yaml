@@ -16,16 +16,16 @@ equipment:
   - "robe"
   - "potion of magic"
 recommended_species:
-  - SP_DEEP_ELF
-  - SP_SPRIGGAN
-  - SP_GARGOYLE
-  - SP_DEMIGOD
-  - SP_GHOUL
-  - SP_OCTOPODE
+  - deep elf
+  - spriggan
+  - gargoyle
+  - demigod
+  - ghoul
+  - octopode
 skills:
-  SK_DODGING: 2
-  SK_STEALTH: 2
-  SK_SPELLCASTING: 2
-  SK_CONJURATIONS: 1
-  SK_EARTH_MAGIC: 3
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  conjurations: 1
+  earth magic: 3
 create_enum: false

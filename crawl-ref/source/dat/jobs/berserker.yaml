@@ -9,14 +9,14 @@ equipment:
   - "animal skin"
 weapon_choice: plain
 recommended_species:
-  - SP_MOUNTAIN_DWARF
-  - SP_ONI
-  - SP_MERFOLK
-  - SP_MINOTAUR
-  - SP_GARGOYLE
-  - SP_ARMATAUR
+  - mountain dwarf
+  - oni
+  - merfolk
+  - minotaur
+  - gargoyle
+  - armataur
 skills:
-  SK_FIGHTING: 3
-  SK_DODGING: 2
-  SK_WEAPON: 3
+  fighting: 3
+  dodging: 2
+  weapon: 3
 create_enum: false

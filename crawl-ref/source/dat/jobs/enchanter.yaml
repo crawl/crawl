@@ -15,16 +15,16 @@ equipment:
   - "robe"
   - "potion of invisibility q:2"
 recommended_species:
-  - SP_DEEP_ELF
-  - SP_FELID
-  - SP_KOBOLD
-  - SP_SPRIGGAN
-  - SP_NAGA
-  - SP_VAMPIRE
+  - deep elf
+  - felid
+  - kobold
+  - spriggan
+  - naga
+  - vampire
 skills:
-  SK_DODGING: 2
-  SK_SPELLCASTING: 2
-  SK_HEXES: 3
-  SK_STEALTH: 3
-  SK_WEAPON: 1
+  dodging: 2
+  spellcasting: 2
+  hexes: 3
+  stealth: 3
+  weapon: 1
 create_enum: false

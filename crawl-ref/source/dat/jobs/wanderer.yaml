@@ -8,11 +8,11 @@ str: 0
 int: 0
 dex: 0
 recommended_species:
-  - SP_MOUNTAIN_DWARF
-  - SP_GNOLL
-  - SP_MERFOLK
-  - SP_BASE_DRACONIAN
-  - SP_HUMAN
-  - SP_DEMONSPAWN
-  - SP_BARACHI
+  - mountain dwarf
+  - gnoll
+  - merfolk
+  - draconian
+  - human
+  - demonspawn
+  - barachi
 create_enum: false

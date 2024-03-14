@@ -17,16 +17,16 @@ equipment:
   - "scroll of poison"
   - "sling plus:1"
 recommended_species:
-  - SP_FORMICID
-  - SP_DEEP_ELF
-  - SP_KOBOLD
-  - SP_SPRIGGAN
-  - SP_GNOLL
+  - formicid
+  - deep elf
+  - kobold
+  - spriggan
+  - gnoll
 skills:
-  SK_FIGHTING: 1
-  SK_DODGING: 2
-  SK_SPELLCASTING: 1
-  SK_HEXES: 3
-  SK_FIRE_MAGIC: 1
-  SK_WEAPON: 2
+  fighting: 1
+  dodging: 2
+  spellcasting: 1
+  hexes: 3
+  fire magic: 1
+  weapon: 2
 create_enum: false

@@ -18,17 +18,17 @@ equipment:
   - "dart ego:dispersal q:7"
 weapon_choice: plain
 recommended_species:
-  - SP_FELID
-  - SP_SPRIGGAN
-  - SP_ARMATAUR
-  - SP_BASE_DRACONIAN
-  - SP_COGLIN
+  - felid
+  - spriggan
+  - armataur
+  - draconian
+  - coglin
 skills:
-  SK_FIGHTING: 2
-  SK_THROWING: 1
-  SK_ARMOUR: 1
-  SK_DODGING: 2
-  SK_SPELLCASTING: 2
-  SK_TRANSLOCATIONS: 3
-  SK_WEAPON: 2
+  fighting: 2
+  throwing: 1
+  armour: 1
+  dodging: 2
+  spellcasting: 2
+  translocations: 3
+  weapon: 2
 create_enum: false

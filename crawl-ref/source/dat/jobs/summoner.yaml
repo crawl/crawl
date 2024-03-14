@@ -15,15 +15,15 @@ equipment:
   - "robe"
   - "potion of magic"
 recommended_species:
-  - SP_DEEP_ELF
-  - SP_MOUNTAIN_DWARF
-  - SP_VINE_STALKER
-  - SP_MERFOLK
-  - SP_TENGU
-  - SP_VAMPIRE
+  - deep elf
+  - mountain dwarf
+  - vine stalker
+  - merfolk
+  - tengu
+  - vampire
 skills:
-  SK_DODGING: 2
-  SK_STEALTH: 2
-  SK_SPELLCASTING: 2
-  SK_SUMMONINGS: 4
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  summonings: 4
 create_enum: false

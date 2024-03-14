@@ -37,8 +37,8 @@ mutations:
   1:
     MUT_MUTATION_RESISTANCE: 1
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_LONG_BLADES
-  - SK_AXES
+  - short blades
+  - long blades
+  - axes
 
 orc_name: Halflorc

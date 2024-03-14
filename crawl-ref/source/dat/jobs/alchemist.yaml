@@ -15,17 +15,17 @@ equipment:
   - "robe"
   - "potion of magic"
 recommended_species:
-  - SP_DEEP_ELF
-  - SP_SPRIGGAN
-  - SP_NAGA
-  - SP_MERFOLK
-  - SP_OCTOPODE
-  - SP_DJINNI
-  - SP_DEMONSPAWN
+  - deep elf
+  - spriggan
+  - naga
+  - merfolk
+  - octopode
+  - djinni
+  - demonspawn
 skills:
-  SK_DODGING: 2
-  SK_STEALTH: 2
-  SK_SPELLCASTING: 2
-  SK_CONJURATIONS: 1
-  SK_ALCHEMY: 3
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  conjurations: 1
+  alchemy: 3
 create_enum: false

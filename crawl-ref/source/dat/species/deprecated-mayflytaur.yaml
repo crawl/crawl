@@ -63,9 +63,9 @@ fake_mutations:
   - long: You are resistant to damage.
     short: damage resistance
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_POLEARMS
-  - SK_STAVES
-  - SK_LONG_BLADES
+  - maces and flails
+  - polearms
+  - staves
+  - long blades
 
 orc_name: Mayflyorc

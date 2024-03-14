@@ -11,15 +11,15 @@ equipment:
   - "beast talisman"
   - "flux talisman"
 recommended_species:
-  - SP_NAGA
-  - SP_MERFOLK
-  - SP_BASE_DRACONIAN
-  - SP_DEMIGOD
-  - SP_DEMONSPAWN
-  - SP_TROLL
+  - naga
+  - merfolk
+  - draconian
+  - demigod
+  - demonspawn
+  - troll
 skills:
-  SK_FIGHTING: 1
-  SK_UNARMED_COMBAT: 3
-  SK_DODGING: 2
-  SK_SHAPESHIFTING: 3
+  fighting: 1
+  unarmed combat: 3
+  dodging: 2
+  shapeshifting: 3
 create_enum: false

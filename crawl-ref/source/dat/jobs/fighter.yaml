@@ -11,15 +11,15 @@ equipment:
   - "potion of might"
 weapon_choice: good
 recommended_species:
-  - SP_MOUNTAIN_DWARF
-  - SP_TROLL
-  - SP_MINOTAUR
-  - SP_GARGOYLE
-  - SP_ARMATAUR
-  - SP_FORMICID
+  - mountain dwarf
+  - troll
+  - minotaur
+  - gargoyle
+  - armataur
+  - formicid
 skills:
-  SK_FIGHTING: 3
-  SK_ARMOUR: 3
-  SK_SHIELDS: 3
-  SK_WEAPON: 2
+  fighting: 3
+  armour: 3
+  shields: 3
+  weapon: 2
 create_enum: false
