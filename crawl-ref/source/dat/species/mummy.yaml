@@ -34,7 +34,7 @@ aptitudes:
   alchemy: -2
   invocations: -1
   evocations: -2
-undead_type: US_UNDEAD
+undead_type: undead
 str: 11
 int: 7
 dex: 7
@@ -51,11 +51,11 @@ mutations:
   13:
     MUT_NECRO_ENHANCER: 1
 recommended_jobs:
-  - JOB_CINDER_ACOLYTE
-  - JOB_HEDGE_WIZARD
-  - JOB_CONJURER
-  - JOB_NECROMANCER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_SUMMONER
+  - cinder acolyte
+  - hedge wizard
+  - conjurer
+  - necromancer
+  - ice elementalist
+  - summoner
 
 orc_name: Orcish Mummy

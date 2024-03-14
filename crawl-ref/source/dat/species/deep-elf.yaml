@@ -45,17 +45,17 @@ levelup_stats:
 # if you add any mutations here: you'll need to fix test/mut_species.lua, which
 # relies on DE having none.
 recommended_jobs:
-  - JOB_HEDGE_WIZARD
-  - JOB_CONJURER
-  - JOB_SUMMONER
-  - JOB_NECROMANCER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - hedge wizard
+  - conjurer
+  - summoner
+  - necromancer
+  - fire elementalist
+  - ice elementalist
+  - air elementalist
+  - earth elementalist
+  - alchemist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_STAVES
+  - short blades
+  - staves
 
 orc_name: Deep Orc

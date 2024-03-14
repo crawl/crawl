@@ -19,17 +19,17 @@ equipment:
   - "hat"
   - "potion of magic"
 recommended_species:
-  - SP_DEEP_ELF
-  - SP_NAGA
-  - SP_BASE_DRACONIAN
-  - SP_OCTOPODE
-  - SP_HUMAN
-  - SP_DJINNI
+  - deep elf
+  - naga
+  - draconian
+  - octopode
+  - human
+  - djinni
 skills:
-  SK_DODGING: 2
-  SK_STEALTH: 2
-  SK_SPELLCASTING: 3
-  SK_CONJURATIONS: 1
-  SK_TRANSLOCATIONS: 1
-  SK_SUMMONINGS: 1
+  dodging: 2
+  stealth: 2
+  spellcasting: 3
+  conjurations: 1
+  translocations: 1
+  summonings: 1
 create_enum: false

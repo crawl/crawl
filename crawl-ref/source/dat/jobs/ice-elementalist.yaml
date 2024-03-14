@@ -15,15 +15,15 @@ equipment:
   - "robe"
   - "potion of magic"
 recommended_species:
-  - SP_MERFOLK
-  - SP_BARACHI
-  - SP_BASE_DRACONIAN
-  - SP_DEMIGOD
-  - SP_GARGOYLE
-  - SP_DJINNI
+  - merfolk
+  - barachi
+  - draconian
+  - demigod
+  - gargoyle
+  - djinni
 skills:
-  SK_DODGING: 2
-  SK_STEALTH: 2
-  SK_SPELLCASTING: 2
-  SK_ICE_MAGIC: 4
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  ice magic: 4
 create_enum: false

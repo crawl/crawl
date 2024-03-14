@@ -12,16 +12,16 @@ equipment:
   - "dart ego:poisoned q:9"
   - "dart ego:curare q:3"
 recommended_species:
-  - SP_TROLL
-  - SP_SPRIGGAN
-  - SP_DEMONSPAWN
-  - SP_VAMPIRE
-  - SP_VINE_STALKER
-  - SP_GNOLL
+  - troll
+  - spriggan
+  - demonspawn
+  - vampire
+  - vine stalker
+  - gnoll
 skills:
-  SK_FIGHTING: 2
-  SK_DODGING: 1
-  SK_STEALTH: 4
-  SK_THROWING: 2
-  SK_WEAPON: 2
+  fighting: 2
+  dodging: 1
+  stealth: 4
+  throwing: 2
+  weapon: 2
 create_enum: false

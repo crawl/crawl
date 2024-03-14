@@ -52,8 +52,8 @@ def validate_int_range(val, name, min, max):
     return val
 
 
-def enumify(s):
-    return s.replace(' ', '_').upper()
+def enumify(name, enum):
+    return "{enum}_{name}".format(enum=enum, name=name).replace(' ', '_').upper()
 
 
 def quote(s):

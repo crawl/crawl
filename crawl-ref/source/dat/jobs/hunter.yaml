@@ -10,14 +10,14 @@ equipment:
   - "leather armour"
   - "scroll of butterflies no_exclude"
 recommended_species:
-  - SP_MINOTAUR
-  - SP_GNOLL
-  - SP_BARACHI
-  - SP_KOBOLD
-  - SP_SPRIGGAN
+  - minotaur
+  - gnoll
+  - barachi
+  - kobold
+  - spriggan
 skills:
-  SK_FIGHTING: 2
-  SK_DODGING: 2
-  SK_STEALTH: 1
-  SK_WEAPON: 4
+  fighting: 2
+  dodging: 2
+  stealth: 1
+  weapon: 4
 create_enum: false

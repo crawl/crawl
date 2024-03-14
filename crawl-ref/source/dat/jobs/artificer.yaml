@@ -12,15 +12,15 @@ equipment:
   - "wand of charming charges:15 no_exclude"
   - "wand of iceblast charges:5 no_exclude"
 recommended_species:
-  - SP_KOBOLD
-  - SP_SPRIGGAN
-  - SP_BASE_DRACONIAN
-  - SP_DEMONSPAWN
-  - SP_COGLIN
+  - kobold
+  - spriggan
+  - draconian
+  - demonspawn
+  - coglin
 skills:
-  SK_FIGHTING: 1
-  SK_ARMOUR: 1
-  SK_DODGING: 1
-  SK_STEALTH: 1
-  SK_EVOCATIONS: 3
+  fighting: 1
+  armour: 1
+  dodging: 1
+  stealth: 1
+  evocations: 3
 create_enum: false

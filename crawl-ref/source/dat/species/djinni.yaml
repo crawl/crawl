@@ -50,13 +50,13 @@ fake_mutations:
   - long: You are immune to sickness and miasma.
   - short: sickness immunity
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_SHAPESHIFTER
-  - JOB_HEDGE_WIZARD
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
+  - gladiator
+  - shapeshifter
+  - hedge wizard
+  - fire elementalist
+  - ice elementalist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_LONG_BLADES
+  - short blades
+  - long blades
 
 orc_name: Orcfreeti

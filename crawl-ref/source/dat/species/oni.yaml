@@ -46,16 +46,16 @@ mutations:
     MUT_DOUBLE_POTION_HEAL: 1
     MUT_DRUNKEN_BRAWLING: 1
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_BERSERKER
-  - JOB_CINDER_ACOLYTE
-  - JOB_HEDGE_WIZARD
-  - JOB_AIR_ELEMENTALIST
-  - JOB_FIRE_ELEMENTALIST
+  - gladiator
+  - berserker
+  - cinder acolyte
+  - hedge wizard
+  - air elementalist
+  - fire elementalist
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_POLEARMS
-  - SK_STAVES
-  - SK_AXES
+  - maces and flails
+  - polearms
+  - staves
+  - axes
 
 orc_name: Big Orc

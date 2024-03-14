@@ -49,11 +49,11 @@ mutations:
     MUT_FORLORN: 1
     MUT_DIVINE_ATTRS: 1
 recommended_jobs:
-  - JOB_SHAPESHIFTER
-  - JOB_CONJURER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
+  - shapeshifter
+  - conjurer
+  - fire elementalist
+  - ice elementalist
+  - air elementalist
+  - earth elementalist
 
 orc_name: Buggy Orc

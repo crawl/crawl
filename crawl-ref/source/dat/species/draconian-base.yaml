@@ -4,7 +4,7 @@ name: Draconian
 difficulty: Simple
 difficulty_priority: 60
 species_flags:
-  - SPF_DRACONIAN
+  - draconian
 aptitudes:
   xp: -1
   hp: 1
@@ -27,13 +27,13 @@ mutations:
   1:
     MUT_COLD_BLOODED: 1
 recommended_jobs:
-  - JOB_BERSERKER
-  - JOB_SHAPESHIFTER
-  - JOB_CONJURER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - berserker
+  - shapeshifter
+  - conjurer
+  - fire elementalist
+  - ice elementalist
+  - air elementalist
+  - earth elementalist
+  - alchemist
 
 orc_name: Orconian
