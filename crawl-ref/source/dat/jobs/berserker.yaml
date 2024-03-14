@@ -7,7 +7,7 @@ int: -1
 dex: 4
 equipment:
   - "animal skin"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_MOUNTAIN_DWARF
   - SP_ONI

@@ -16,7 +16,7 @@ equipment:
   - "leather armour"
   - "scroll of blinking"
   - "dart ego:dispersal q:7"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_FELID
   - SP_SPRIGGAN

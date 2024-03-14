@@ -9,7 +9,7 @@ equipment:
   - "robe"
   - "potion of ambrosia"
   - "orb ego:light"
-weapon_choice: WCHOICE_PLAIN
+weapon_choice: plain
 recommended_species:
   - SP_MOUNTAIN_DWARF
   - SP_TROLL

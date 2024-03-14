@@ -9,7 +9,7 @@
     { },
     { },
     { },
-    WCHOICE_NONE,
+    weapon_choice::none,
     { },
 } },
 
@@ -19,7 +19,7 @@
     { },
     { },
     { },
-    WCHOICE_NONE,
+    weapon_choice::none,
     { },
 } },
 
@@ -29,7 +29,7 @@
     { },
     { },
     { },
-    WCHOICE_NONE,
+    weapon_choice::none,
     { },
 } },
 
@@ -39,7 +39,7 @@
     { },
     { },
     { },
-    WCHOICE_NONE,
+    weapon_choice::none,
     { },
 } },
 
@@ -49,7 +49,7 @@
     { },
     { },
     { },
-    WCHOICE_NONE,
+    weapon_choice::none,
     { },
 } },
 
@@ -59,7 +59,7 @@
     { },
     { },
     { },
-    WCHOICE_NONE,
+    weapon_choice::none,
     { },
 } },
 #endif

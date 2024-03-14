@@ -9,7 +9,7 @@ equipment:
   - "scale mail"
   - "buckler"
   - "potion of might"
-weapon_choice: WCHOICE_GOOD
+weapon_choice: good
 recommended_species:
   - SP_MOUNTAIN_DWARF
   - SP_TROLL
