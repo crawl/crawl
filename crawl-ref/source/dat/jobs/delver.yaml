@@ -1,0 +1,27 @@
+enum: JOB_DELVER
+name: "Delver"
+#category: Adventurer
+#category_priority: 70
+str: 4
+int: 2
+dex: 6
+equipment:
+  - "leather armour"
+  - "scroll of fog"
+  - "scroll of revelation"
+  - "scroll of fear"
+  - "potion of haste"
+  - "wand of digging charges:3"
+weapon_choice: WCHOICE_PLAIN
+recommended_species:
+  - SP_FELID
+  - SP_SPRIGGAN
+  - SP_KOBOLD
+  - SP_VAMPIRE
+  - SP_GNOLL
+skills:
+  SK_FIGHTING: 3
+  SK_DODGING: 2
+  SK_STEALTH: 5
+  SK_WEAPON: 2
+create_enum: false

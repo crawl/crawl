@@ -1,0 +1,30 @@
+enum: JOB_ENCHANTER
+name: "Enchanter"
+#category: Warrior-mage
+#category_priority: 80
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_HIBERNATION
+  - SPELL_CONFUSING_TOUCH
+  - SPELL_TUKIMAS_DANCE
+  - SPELL_DAZZLING_FLASH
+equipment:
+  - "dagger plus:1"
+  - "robe"
+  - "potion of invisibility q:2"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_FELID
+  - SP_KOBOLD
+  - SP_SPRIGGAN
+  - SP_NAGA
+  - SP_VAMPIRE
+skills:
+  SK_DODGING: 2
+  SK_SPELLCASTING: 2
+  SK_HEXES: 3
+  SK_STEALTH: 3
+  SK_WEAPON: 1
+create_enum: false

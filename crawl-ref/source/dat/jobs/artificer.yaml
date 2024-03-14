@@ -1,0 +1,26 @@
+enum: JOB_ARTIFICER
+name: "Artificer"
+#category: Adventurer
+#category_priority: 100
+str: 4
+int: 3
+dex: 5
+equipment:
+  - "club"
+  - "leather armour"
+  - "wand of flame charges:15"
+  - "wand of charming charges:15 no_exclude"
+  - "wand of iceblast charges:5 no_exclude"
+recommended_species:
+  - SP_KOBOLD
+  - SP_SPRIGGAN
+  - SP_BASE_DRACONIAN
+  - SP_DEMONSPAWN
+  - SP_COGLIN
+skills:
+  SK_FIGHTING: 1
+  SK_ARMOUR: 1
+  SK_DODGING: 1
+  SK_STEALTH: 1
+  SK_EVOCATIONS: 3
+create_enum: false

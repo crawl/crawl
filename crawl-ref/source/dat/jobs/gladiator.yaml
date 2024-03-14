@@ -1,0 +1,25 @@
+enum: JOB_GLADIATOR
+name: "Gladiator"
+#category: Warrior
+#category_priority: 90
+str: 6
+int: 0
+dex: 6
+equipment:
+  - "leather armour"
+  - "helmet"
+  - "throwing net q:3"
+weapon_choice: WCHOICE_GOOD
+recommended_species:
+  - SP_MOUNTAIN_DWARF
+  - SP_MERFOLK
+  - SP_MINOTAUR
+  - SP_GARGOYLE
+  - SP_COGLIN
+  - SP_VINE_STALKER
+skills:
+  SK_FIGHTING: 2
+  SK_THROWING: 2
+  SK_DODGING: 3
+  SK_WEAPON: 3
+create_enum: false
