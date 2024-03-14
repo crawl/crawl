@@ -1748,8 +1748,8 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
         _attract_actor(agent, ai, pos, pow, strength);
 
         monster* mon = ai->as_monster();
-        if (!invalid_monster(mon) && coinflip())
-            mon->lose_energy(EUT_SPECIAL);
+        if (!invalid_monster(mon))
+            mon->speed_increment -= random2(6) + 4;
     }
 
     return true;
