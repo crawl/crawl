@@ -517,7 +517,7 @@ int calc_spell_power(spell_type spell)
         power = max(power + you.skill(SK_INVOCATIONS, 150) / 27,
             you.skill(SK_INVOCATIONS, 200) / 27);
     }
-    
+
     const int cap = spell_power_cap(spell);
     if (cap > 0)
         power = min(power, cap);
