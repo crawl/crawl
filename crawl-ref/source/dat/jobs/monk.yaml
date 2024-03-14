@@ -1,0 +1,24 @@
+enum: JOB_MONK
+name: "Monk"
+#category: Warrior
+#category_priority: 80
+str: 3
+int: 2
+dex: 7
+equipment:
+  - "robe"
+  - "potion of ambrosia"
+  - "orb ego:light"
+weapon_choice: WCHOICE_PLAIN
+recommended_species:
+  - SP_MOUNTAIN_DWARF
+  - SP_TROLL
+  - SP_ARMATAUR
+  - SP_MERFOLK
+  - SP_GARGOYLE
+  - SP_DEMONSPAWN
+skills:
+  SK_FIGHTING: 3
+  SK_DODGING: 3
+  SK_WEAPON: 3
+create_enum: false

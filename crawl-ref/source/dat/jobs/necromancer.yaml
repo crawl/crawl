@@ -1,0 +1,28 @@
+enum: JOB_NECROMANCER
+name: "Necromancer"
+#category: Mage
+#category_priority: 70
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_NECROTISE
+  - SPELL_VAMPIRIC_DRAINING
+  - SPELL_ANIMATE_DEAD
+  - SPELL_CURSE_OF_AGONY
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_DJINNI
+  - SP_MOUNTAIN_DWARF
+  - SP_DEMONSPAWN
+  - SP_MUMMY
+  - SP_VAMPIRE
+skills:
+  SK_DODGING: 2
+  SK_STEALTH: 2
+  SK_SPELLCASTING: 2
+  SK_NECROMANCY: 4
+create_enum: false

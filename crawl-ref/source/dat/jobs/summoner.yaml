@@ -1,0 +1,29 @@
+enum: JOB_SUMMONER
+name: "Summoner"
+#category: Mage
+#category_priority: 80
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_SUMMON_SMALL_MAMMAL
+  - SPELL_CALL_IMP
+  - SPELL_CALL_CANINE_FAMILIAR
+  - SPELL_SUMMON_BLAZEHEART_GOLEM
+  - SPELL_SUMMON_LIGHTNING_SPIRE
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_MOUNTAIN_DWARF
+  - SP_VINE_STALKER
+  - SP_MERFOLK
+  - SP_TENGU
+  - SP_VAMPIRE
+skills:
+  SK_DODGING: 2
+  SK_STEALTH: 2
+  SK_SPELLCASTING: 2
+  SK_SUMMONINGS: 4
+create_enum: false

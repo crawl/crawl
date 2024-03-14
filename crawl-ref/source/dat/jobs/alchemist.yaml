@@ -1,0 +1,31 @@
+enum: JOB_ALCHEMIST
+name: "Alchemist"
+#category: Mage
+#category_priority: 20
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_STING
+  - SPELL_MERCURY_VAPOURS
+  - SPELL_MEPHITIC_CLOUD
+  - SPELL_OLGREBS_TOXIC_RADIANCE
+  - SPELL_STICKY_FLAME
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - SP_DEEP_ELF
+  - SP_SPRIGGAN
+  - SP_NAGA
+  - SP_MERFOLK
+  - SP_OCTOPODE
+  - SP_DJINNI
+  - SP_DEMONSPAWN
+skills:
+  SK_DODGING: 2
+  SK_STEALTH: 2
+  SK_SPELLCASTING: 2
+  SK_CONJURATIONS: 1
+  SK_ALCHEMY: 3
+create_enum: false
