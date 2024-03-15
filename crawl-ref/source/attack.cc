@@ -209,6 +209,9 @@ int attack::calc_pre_roll_to_hit(bool random)
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
+
+            if (get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC)
+                mhit += 27;
         }
 
         // slaying bonus

@@ -1813,7 +1813,9 @@ static string _describe_weapon_brand(const item_def &item)
     case SPWPN_ANTIMAGIC:
         return "It reduces the magical energy of the wielder, and disrupts "
                "the spells and magical abilities of those it strikes. Natural "
-               "abilities and divine invocations are not affected.";
+               "abilities and divine invocations are not affected. Its "
+               "attraction to latent magical energy present in all beings "
+               "greatly increases its accuracy.";
     case SPWPN_SPECTRAL:
         return "When its wielder attacks, the weapon's spirit leaps out and "
                "launches a second, slightly weaker strike. The spirit shares "
