@@ -2773,6 +2773,10 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
             return slots;
     }
 
+    // Don't fail the assert if the only spell we have is from a wand
+    if (book == MST_NO_SPELLS)
+        return slots;
+
     if (book != MST_GHOST)
         ASSERT(msidx < ARRAYSZ(mspell_list));
     for (const mon_spell_slot &slot : (book == MST_GHOST

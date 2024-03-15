@@ -177,6 +177,10 @@ Bolt of Fire spell
 
 Fires a penetrating bolt of flames.
 %%%%
+Bolt of Light spell
+
+Fires a ray of searing light, injuring and blinding those struck.
+%%%%
 Bolt of Magma spell
 
 Fires a penetrating bolt of molten rock. Half of its damage bypasses fire
@@ -668,6 +672,12 @@ Gell's Gravitas spell
 Briefly redirects gravity around a target point, causing 'down' to be towards
 that point. All nearby creatures, save the caster, fall helplessly toward that
 point – typically colliding with each other, or with a victim standing there.
+%%%%
+Germinate Roots spell
+
+Fire a magical seed, entangling victims in quick-growing tree roots. Those
+entangled will be immobilized and take increasing damage over time until they
+escape or the roots wither away. The roots will only sprout from solid ground.
 %%%%
 Ghostly Fireball spell
 
@@ -1211,7 +1221,7 @@ next to or above lava will be burned.
 %%%%
 Quicksilver Bolt spell
 
-Breathes a bolt of dispelling energy at a targeted creature, possibly removing
+Fires a bolt of dispelling energy at a targeted creature, possibly removing
 some of its enchantments.
 %%%%
 Rebounding Blaze spell
@@ -1816,6 +1826,11 @@ brambles are sparse enough that almost any missile can pass through unhindered.
 Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
+%%%%
+Warp Space spell
+
+Create a brief but violent rift in space, damaging everything caught in its wake
+and sometimes blinking them a short distance away.
 %%%%
 Waterstrike spell
 
