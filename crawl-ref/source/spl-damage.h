@@ -89,7 +89,7 @@ dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail);
-set<coord_def> permafrost_targets(const actor &caster, int pow);
+set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual = true);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
