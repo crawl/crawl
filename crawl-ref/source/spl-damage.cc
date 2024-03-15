@@ -1079,12 +1079,12 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     return spret::success;
 }
 
-set<coord_def> permafrost_targets(const actor &caster, int pow)
+set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
 {
     set<coord_def> targets;
 
     const int range = spell_range(SPELL_PERMAFROST_ERUPTION, pow);
-    vector<coord_def> all_hostiles = find_near_hostiles(range, true, caster);
+    vector<coord_def> all_hostiles = find_near_hostiles(range, actual, caster);
     if (all_hostiles.empty())
         return targets;
 
@@ -1118,7 +1118,7 @@ set<coord_def> permafrost_targets(const actor &caster, int pow)
 
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
 {
-    set<coord_def> maybe_targets = permafrost_targets(caster, pow);
+    set<coord_def> maybe_targets = permafrost_targets(caster, pow, true);
     if (caster.is_player())
     {
         set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
