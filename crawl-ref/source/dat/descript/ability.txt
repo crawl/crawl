@@ -21,7 +21,7 @@ Nullifying Breath ability
 
 Breathes a large blast of pure antimagic that dispels magical effects from
 every creature it hits and also significantly interferes with their ability to
-cast spells for a while. It is harmless to its user.
+cast spells for a while.
 %%%%
 Steam Breath ability
 

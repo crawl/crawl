@@ -3097,11 +3097,8 @@ bool bolt::harmless_to_player() const
     if (you.cloud_immune() && is_big_cloud())
         return true;
 
-    if (origin_spell == SPELL_COMBUSTION_BREATH
-        || origin_spell == SPELL_NULLIFYING_BREATH)
-    {
+    if (origin_spell == SPELL_COMBUSTION_BREATH)
         return true;
-    }
 
     switch (flavour)
     {
@@ -4297,11 +4294,8 @@ bool bolt::ignores_player() const
     if (flavour == BEAM_DIGGING)
         return true;
 
-    if (origin_spell == SPELL_COMBUSTION_BREATH
-        || origin_spell == SPELL_NULLIFYING_BREATH)
-    {
+    if (origin_spell == SPELL_COMBUSTION_BREATH)
         return true;
-    }
 
     if (agent() && agent()->is_monster()
         && mons_is_hepliaklqana_ancestor(agent()->as_monster()->type))
