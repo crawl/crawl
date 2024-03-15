@@ -117,6 +117,12 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
  */
 static string _booktype_header(mon_spell_slot_flag type, bool pronoun_plural)
 {
+    if (type == MON_SPELL_EVOKE)
+    {
+        return make_stringf("%s the following wand spells:",
+                            conjugate_verb("possess", pronoun_plural).c_str());
+    }
+
     const string vulnerabilities = _ability_type_vulnerabilities(type);
 
     if (type == MON_SPELL_WIZARD)
@@ -133,6 +139,19 @@ static string _booktype_header(mon_spell_slot_flag type, bool pronoun_plural)
                         conjugate_verb("possess", pronoun_plural).c_str(),
                         descriptor.c_str(),
                         vulnerabilities.c_str());
+}
+
+static spell_type _get_wand_spell(const monster_info &mi)
+{
+    const item_def* wand = mi.inv[MSLOT_WAND].get();
+    if (wand)
+    {
+        const wand_type wandtype = static_cast<wand_type>(wand->sub_type);
+        // Newly spawned wands have an invalid wand type of NUM_WANDS
+        if (wandtype < NUM_WANDS)
+            return spell_in_wand(wandtype);
+    }
+    return SPELL_NO_SPELL;
 }
 
 /**
@@ -187,6 +206,29 @@ static void _monster_spellbooks(const monster_info &mi,
     all_books.emplace_back(output_book);
 }
 
+static void _monster_wand_spellbook(const monster_info &mi,
+                                spellset &all_books)
+{
+    if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
+        return;
+
+    const spell_type wandspell = _get_wand_spell(mi);
+    if (wandspell == SPELL_NO_SPELL)
+        return;
+
+    spellbook_contents output_book;
+
+    output_book.label +=
+        "\n" +
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
+        " " +
+        _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality());
+
+    output_book.spells.emplace_back(wandspell);
+
+    all_books.emplace_back(output_book);
+}
+
 /**
  * Return a spellset containing the spells potentially given by the given
  * monster information.
@@ -213,6 +255,8 @@ spellset monster_spellset(const monster_info &mi)
 
     for (auto book_flag : book_flags)
         _monster_spellbooks(mi, book_flag, books);
+
+    _monster_wand_spellbook(mi, books);
 
     ASSERT(books.size());
     return books;

@@ -2646,7 +2646,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_LIGHTNING_BOLT,
+    TILEG_BOLT_OF_LIGHT,
 },
 
 {
@@ -3220,7 +3220,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_FASTROOT, "Fastroot",
+    SPELL_FASTROOT, "Germinate Roots",
     spschool::hexes | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,
     5,
@@ -3238,7 +3238,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WARP_SPACE,
 },
 
 {
