@@ -100,6 +100,8 @@ brand_type get_weapon_brand(const item_def &item) PURE;
 special_armour_type get_armour_ego_type(const item_def &item) PURE;
 special_missile_type get_ammo_brand(const item_def &item) PURE;
 
+// staff functions:
+
 // armour functions:
 bool armour_is_enchantable(const item_def &item) PURE;
 int armour_max_enchant(const item_def &item) PURE;

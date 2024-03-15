@@ -1147,23 +1147,6 @@ static const char* staff_primary_string(uint32_t p)
     return primary_strings[p % ARRAYSZ(primary_strings)];
 }
 
-static const char* staff_type_name(int stafftype)
-{
-    switch ((stave_type)stafftype)
-    {
-    case STAFF_FIRE:        return "fire";
-    case STAFF_COLD:        return "cold";
-    case STAFF_ALCHEMY:     return "alchemy";
-    case STAFF_DEATH:       return "death";
-    case STAFF_CONJURATION: return "conjuration";
-    case STAFF_AIR:         return "air";
-    case STAFF_EARTH:       return "earth";
-    default:                return item_type_removed(OBJ_STAVES, stafftype)
-                                ? "removedness"
-                                : "bugginess";
-    }
-}
-
 const char *base_type_string(const item_def &item)
 {
     return base_type_string(item.base_type);
@@ -1206,6 +1189,7 @@ string sub_type_string(const item_def &item, bool known)
     {
     case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
     case OBJ_MISSILES: // variable to item-prop.cc.
+    case OBJ_STAVES:
     case OBJ_ARMOUR:
         return item_base_name(type, sub_type);
     case OBJ_WANDS: return _wand_type_name(sub_type);
@@ -1267,7 +1251,6 @@ string sub_type_string(const item_def &item, bool known)
             return string("book of ") + _book_type_name(sub_type);
         }
     }
-    case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
 #if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:   return "removed rod";
 #endif
@@ -1910,7 +1893,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "staff";
         }
         else
-            buff << "staff of " << staff_type_name(item_typ);
+            buff << "staff of " << item_base_name(OBJ_STAVES, item_typ);
 
         if (cursed() && terse && !dbname && !qualname)
             buff << " (curse)";

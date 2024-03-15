@@ -767,6 +767,40 @@ static const weapon_def Weapon_prop[] =
 
 };
 
+struct staff_def
+{
+    stave_type id;
+    const char* name;
+    skill_type skill;
+    beam_type resist;
+    int damage_mult;
+};
+static int Staff_index[NUM_STAVES];
+static const staff_def Staff_prop[] =
+{
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_WIZARDRY,    "wizardry" },
+    { STAFF_POWER,       "power" },
+#endif
+    { STAFF_FIRE,        "fire",        SK_FIRE_MAGIC,   BEAM_FIRE,        50 },
+    { STAFF_COLD,        "cold",        SK_ICE_MAGIC,    BEAM_COLD,        50 },
+    { STAFF_ALCHEMY,     "alchemy",     SK_ALCHEMY,      BEAM_POISON,      50 },
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_ENERGY,      "energy" },
+#endif
+    { STAFF_DEATH,       "death",       SK_NECROMANCY,   BEAM_NEG,         50 },
+    { STAFF_CONJURATION, "conjuration", SK_CONJURATIONS, BEAM_MMISSILE,    50 },
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_ENCHANTMENT, "enchantment" },
+    { STAFF_SUMMONING,   "summoning" },
+#endif
+    { STAFF_AIR,         "air",         SK_AIR_MAGIC,    BEAM_ELECTRICITY, 50 },
+    { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,  BEAM_MMISSILE,    67 },
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_CHANNELING,  "channeling" },
+#endif
+};
+
 struct missile_def
 {
     int         id;
@@ -890,6 +924,7 @@ void init_properties()
     // about too few, so we check this ourselves.
     COMPILE_CHECK(NUM_ARMOURS   == ARRAYSZ(Armour_prop));
     COMPILE_CHECK(NUM_WEAPONS   == ARRAYSZ(Weapon_prop));
+    COMPILE_CHECK(NUM_STAVES    == ARRAYSZ(Staff_prop));
     COMPILE_CHECK(NUM_MISSILES  == ARRAYSZ(Missile_prop));
     COMPILE_CHECK(NUM_GEM_TYPES == ARRAYSZ(Gem_prop));
 #if TAG_MAJOR_VERSION == 34
@@ -901,6 +936,9 @@ void init_properties()
 
     for (int i = 0; i < NUM_WEAPONS; i++)
         Weapon_index[ Weapon_prop[i].id ] = i;
+
+    for (int i = 0; i < NUM_STAVES; i++)
+        Staff_index[ Staff_prop[i].id ] = i;
 
     for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
@@ -3147,6 +3185,8 @@ string item_base_name(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
         return Weapon_prop[Weapon_index[sub_type]].name;
+    case OBJ_STAVES:
+        return Staff_prop[Staff_index[sub_type]].name;
     case OBJ_MISSILES:
         return Missile_prop[Missile_index[sub_type]].name;
     case OBJ_ARMOUR:
