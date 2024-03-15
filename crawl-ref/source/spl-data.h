@@ -3238,7 +3238,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_TELEPORT,
+    TILEG_WARP_SPACE,
 },
 
 {
