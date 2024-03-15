@@ -130,8 +130,10 @@ bool monster_habitable_grid(const monster* mon,
         : fixup_zombie_type(mon->type, mons_base_type(*mon));
 
     bool type_safe = monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN);
-    return type_safe ||
-                    _hab_requires_mon_flight(actual_grid) && mon->airborne();
+    return type_safe || ((_hab_requires_mon_flight(actual_grid)
+                     || actual_grid == DNGN_FLOOR
+                     || actual_grid == DNGN_SHALLOW_WATER)
+                     && mon->airborne());
 }
 
 /**
