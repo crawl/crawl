@@ -22,6 +22,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
+#include "spl-goditem.h"
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -830,6 +831,10 @@ void actor::constriction_damage_defender(actor &defender)
 #endif
              exclamations.c_str());
     }
+
+    // Spellvamp for bvc, assume that only players can use bvc
+    if (typ == CONSTRICT_BVC)
+        majin_bo_vampirism(*defender.as_monster(), min(damage, defender.stat_hp()));
 
     damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
                            "", false);
