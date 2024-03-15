@@ -1,0 +1,13 @@
+enum: SP_DEBUG_MAN
+monster: MONS_HUMAN
+name: Debug Man
+difficulty: False
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  wl: 3
+str: 8
+int: 8
+dex: 8
+levelup_stat_frequency: 4

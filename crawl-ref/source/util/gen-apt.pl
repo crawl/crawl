@@ -134,6 +134,7 @@ sub aptitude_table
         next if $sp eq 'Mayflytaur';
         next if $sp eq 'Deep Dwarf';
         next if $sp eq 'Meteoran';
+        next if $sp eq 'Debug Man';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);
