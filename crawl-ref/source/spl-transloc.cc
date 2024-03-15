@@ -1830,7 +1830,11 @@ bool beckon(actor &beckoned, const bolt &path)
 
     beckoned.apply_location_effects(old_pos); // traps, etc.
     if (beckoned.is_monster())
+    {
         mons_relocated(beckoned.as_monster()); // cleanup tentacle segments
+        // Ministun
+        beckoned.as_monster()->speed_increment -= random2(6) + 4;
+    }
 
     return true;
 }
