@@ -179,7 +179,8 @@ Fires a penetrating bolt of flames.
 %%%%
 Bolt of Light spell
 
-Fires a ray of searing light, injuring and blinding those struck.
+Fires a ray of searing light, injuring and blinding those struck. Confuses
+instead of blinding if the player is the victim.
 %%%%
 Bolt of Magma spell
 
@@ -305,6 +306,7 @@ The spell bypasses half of defenders' armour and resistance to electricity.
 Charm spell
 
 Causes an otherwise hostile creature to fight on the caster's side for a while.
+Confuses instead of charming if the player is the victim.
 %%%%
 Chaos Breath spell
 
@@ -676,8 +678,8 @@ point – typically colliding with each other, or with a victim standing there.
 Germinate Roots spell
 
 Fire a magical seed, entangling victims in quick-growing tree roots. Those
-entangled will be immobilized and take increasing damage over time until they
-escape or the roots wither away. The roots will only sprout from solid ground.
+entangled will be immobilized and take damage over time until they escape or
+the roots wither away. The roots will only sprout from solid ground.
 %%%%
 Ghostly Fireball spell
 
