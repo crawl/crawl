@@ -160,8 +160,12 @@ bool monster_habitable_grid(monster_type mt,
 #endif
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (actual_grid == DNGN_SHALLOW_WATER && mt == MONS_KRAKEN)
+    if ((actual_grid == DNGN_SHALLOW_WATER
+        || actual_grid == DNGN_TOXIC_BOG)
+        && mt == MONS_KRAKEN)
+    {
         return false;
+    }
 
     const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(mt));
