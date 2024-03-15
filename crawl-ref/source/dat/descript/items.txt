@@ -1353,27 +1353,25 @@ staff of air
 A staff that increases the power of air spells cast by its wielder, and
 insulates them from electricity. If the wielder is skilled in Evocations and
 Air Magic, they can shock those struck by it, dealing electricity damage which
-bypasses armour.
+bypasses of defenders' armour.
 %%%%
 staff of alchemy
 
 A staff that increases the power of alchemy spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
-Evocations and Alchemy, they can envenom those struck by it, dealing poison
-damage which bypasses armour.
+Evocations and Alchemy, they can envenom those struck by it.
 %%%%
 staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
-and Ice Magic, they can freeze those struck by it, dealing cold damage which
-bypasses armour.
+and Ice Magic, they can freeze those struck by it.
 %%%%
 staff of conjuration
 
 A staff that increases the power of conjurations cast by its wielder. If the
 wielder is skilled in Evocations and Conjurations, they can blast those they
-strike with pure energy, dealing irresistible damage.
+strike with pure energy.
 %%%%
 staff of death
 
@@ -1393,8 +1391,7 @@ staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
-and Fire Magic, they can burn those struck by it, dealing fire damage which
-bypasses armour.
+and Fire Magic, they can burn those struck by it.
 %%%%
 starry gem
 

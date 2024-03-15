@@ -785,16 +785,16 @@ static const staff_def Staff_prop[] =
     { STAFF_POWER,       "power" },
 #endif
     { STAFF_FIRE,        "fire",        SK_FIRE_MAGIC,
-        50, ac_type::none,   BEAM_FIRE },
+        63, ac_type::normal, BEAM_FIRE },
     { STAFF_COLD,        "cold",        SK_ICE_MAGIC,
-        50, ac_type::none,   BEAM_COLD },
+        63, ac_type::normal, BEAM_COLD },
     { STAFF_ALCHEMY,     "alchemy",     SK_ALCHEMY,
-        50, ac_type::none,   BEAM_POISON },
+        63, ac_type::normal, BEAM_POISON },
 #if TAG_MAJOR_VERSION == 34
     { STAFF_ENERGY,      "energy" },
 #endif
     { STAFF_DEATH,       "death",       SK_NECROMANCY,
-        50, ac_type::none,   BEAM_NEG },
+        63, ac_type::normal,   BEAM_NEG },
     { STAFF_CONJURATION, "conjuration", SK_CONJURATIONS,
         50, ac_type::normal, BEAM_MMISSILE },
 #if TAG_MAJOR_VERSION == 34
@@ -802,7 +802,7 @@ static const staff_def Staff_prop[] =
     { STAFF_SUMMONING,   "summoning" },
 #endif
     { STAFF_AIR,         "air",         SK_AIR_MAGIC,
-        50, ac_type::none,   BEAM_ELECTRICITY },
+        50, ac_type::half,   BEAM_ELECTRICITY },
     { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,
         63, ac_type::normal, BEAM_MMISSILE },
 #if TAG_MAJOR_VERSION == 34

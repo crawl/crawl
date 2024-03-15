@@ -2480,9 +2480,10 @@ string melee_attack::staff_message(stave_type staff, int dam) const
 
     case STAFF_DEATH:
         return make_stringf(
-                "%s %s in agony%s",
+                "%s %s as negative energy consumes %s%s",
                 defender->name(DESC_THE).c_str(),
-                defender->conj_verb("writhe").c_str(),
+                defender->conj_verb("shrivel").c_str(),
+                defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
                 attack_strength_punctuation(dam).c_str());
 
     case STAFF_CONJURATION:
