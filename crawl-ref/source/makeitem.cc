@@ -2070,7 +2070,7 @@ jewellery_type get_random_amulet_type()
     return *random_iterator(valid_types);
 }
 
-static jewellery_type _get_raw_random_ring_type()
+jewellery_type get_random_ring_type()
 {
     static vector<jewellery_type> valid_types;
     if (valid_types.empty())
@@ -2078,16 +2078,6 @@ static jewellery_type _get_raw_random_ring_type()
             if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
                 valid_types.push_back((jewellery_type)i);
     return *random_iterator(valid_types);
-}
-
-jewellery_type get_random_ring_type()
-{
-    const jewellery_type j = _get_raw_random_ring_type();
-    // Adjusted distribution here. - bwr
-    if (j == RING_SLAYING && !one_chance_in(3))
-        return _get_raw_random_ring_type();
-
-    return j;
 }
 
 // Sets item appearance to match brands, if any.
