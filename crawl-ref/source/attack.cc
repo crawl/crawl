@@ -306,7 +306,7 @@ int attack::calc_to_hit(bool random)
     // We already did this roll for players.
     if (!src.is_player())
         mhit = maybe_random2(mhit + 1, random);
-;
+
     dprf(DIAG_COMBAT, "%s: to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(), mhit);
 
