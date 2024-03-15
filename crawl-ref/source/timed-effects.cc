@@ -203,6 +203,9 @@ static void _jiyva_effects(int /*time_delta*/)
 
 static void _evolve(int /*time_delta*/)
 {
+    if (!you.can_safely_mutate())
+        return;
+
     const bool malignant = you.has_mutation(MUT_DEVOLUTION);
     if (!malignant && !you.has_mutation(MUT_EVOLUTION))
         return;
