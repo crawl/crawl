@@ -2634,7 +2634,7 @@ void apply_exp()
     _handle_god_wrath(exp_gained);
 
     // evolution mutation timer
-    if (you.attribute[ATTR_EVOL_XP] > 0)
+    if (you.attribute[ATTR_EVOL_XP] > 0 && you.can_safely_mutate(true))
         you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
