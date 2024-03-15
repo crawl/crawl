@@ -7,6 +7,8 @@
 
 #include <set>
 
+#include "ac-type.h"
+#include "beam-type.h"
 #include "branch-type.h"
 #include "equipment-type.h"
 #include "item-prop-enum.h"
@@ -101,6 +103,10 @@ special_armour_type get_armour_ego_type(const item_def &item) PURE;
 special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // staff functions:
+skill_type staff_skill(stave_type staff);
+beam_type staff_damage_type(stave_type staff);
+int staff_damage_mult(stave_type staff);
+ac_type staff_ac_check(stave_type staff);
 
 // armour functions:
 bool armour_is_enchantable(const item_def &item) PURE;
@@ -175,7 +181,6 @@ skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 bool staff_uses_evocations(const item_def &item);
-skill_type staff_skill(stave_type s);
 bool item_skills(const item_def &item, set<skill_type> &skills);
 
 // launcher and ammo functions:

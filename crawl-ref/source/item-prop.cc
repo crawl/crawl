@@ -772,8 +772,10 @@ struct staff_def
     stave_type id;
     const char* name;
     skill_type skill;
-    beam_type resist;
+
     int damage_mult;
+    ac_type ac_check;
+    beam_type damage_type;
 };
 static int Staff_index[NUM_STAVES];
 static const staff_def Staff_prop[] =
@@ -782,20 +784,27 @@ static const staff_def Staff_prop[] =
     { STAFF_WIZARDRY,    "wizardry" },
     { STAFF_POWER,       "power" },
 #endif
-    { STAFF_FIRE,        "fire",        SK_FIRE_MAGIC,   BEAM_FIRE,        50 },
-    { STAFF_COLD,        "cold",        SK_ICE_MAGIC,    BEAM_COLD,        50 },
-    { STAFF_ALCHEMY,     "alchemy",     SK_ALCHEMY,      BEAM_POISON,      50 },
+    { STAFF_FIRE,        "fire",        SK_FIRE_MAGIC,
+        50, ac_type::none,   BEAM_FIRE },
+    { STAFF_COLD,        "cold",        SK_ICE_MAGIC,
+        50, ac_type::none,   BEAM_COLD },
+    { STAFF_ALCHEMY,     "alchemy",     SK_ALCHEMY,
+        50, ac_type::none,   BEAM_POISON },
 #if TAG_MAJOR_VERSION == 34
     { STAFF_ENERGY,      "energy" },
 #endif
-    { STAFF_DEATH,       "death",       SK_NECROMANCY,   BEAM_NEG,         50 },
-    { STAFF_CONJURATION, "conjuration", SK_CONJURATIONS, BEAM_MMISSILE,    50 },
+    { STAFF_DEATH,       "death",       SK_NECROMANCY,
+        50, ac_type::none,   BEAM_NEG },
+    { STAFF_CONJURATION, "conjuration", SK_CONJURATIONS,
+        50, ac_type::normal, BEAM_MMISSILE },
 #if TAG_MAJOR_VERSION == 34
     { STAFF_ENCHANTMENT, "enchantment" },
     { STAFF_SUMMONING,   "summoning" },
 #endif
-    { STAFF_AIR,         "air",         SK_AIR_MAGIC,    BEAM_ELECTRICITY, 50 },
-    { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,  BEAM_MMISSILE,    67 },
+    { STAFF_AIR,         "air",         SK_AIR_MAGIC,
+        50, ac_type::none,   BEAM_ELECTRICITY },
+    { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,
+        63, ac_type::normal, BEAM_MMISSILE },
 #if TAG_MAJOR_VERSION == 34
     { STAFF_CHANNELING,  "channeling" },
 #endif
@@ -2084,25 +2093,26 @@ bool staff_uses_evocations(const item_def &item)
 
 skill_type staff_skill(stave_type s)
 {
-    switch (s)
-    {
-    case STAFF_AIR:
-        return SK_AIR_MAGIC;
-    case STAFF_COLD:
-        return SK_ICE_MAGIC;
-    case STAFF_EARTH:
-        return SK_EARTH_MAGIC;
-    case STAFF_FIRE:
-        return SK_FIRE_MAGIC;
-    case STAFF_ALCHEMY:
-        return SK_ALCHEMY;
-    case STAFF_DEATH:
-        return SK_NECROMANCY;
-    case STAFF_CONJURATION:
-        return SK_CONJURATIONS;
-    default:
-        return SK_NONE;
-    }
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].skill;
+}
+
+beam_type staff_damage_type(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].damage_type;
+}
+
+int staff_damage_mult(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].damage_mult;
+}
+
+ac_type staff_ac_check(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].ac_check;
 }
 
 bool item_skills(const item_def &item, set<skill_type> &skills)

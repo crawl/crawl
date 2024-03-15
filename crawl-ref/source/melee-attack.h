@@ -162,7 +162,8 @@ private:
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
-    int  staff_damage(skill_type skill);
+    int  staff_damage(stave_type staff) const;
+    string staff_message(stave_type staff, int damage) const;
     bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
