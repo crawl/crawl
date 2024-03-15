@@ -2249,8 +2249,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NORRIS,
       {
-       { SPELL_DRAINING_GAZE, 20, MON_SPELL_PRIEST },
-       { SPELL_PRIMAL_WAVE, 24, MON_SPELL_PRIEST },
+       { SPELL_DRAINING_GAZE, 36, MON_SPELL_PRIEST },
+       { SPELL_PRIMAL_WAVE, 30, MON_SPELL_PRIEST },
       }
     },
 
