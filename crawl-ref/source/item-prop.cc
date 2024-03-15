@@ -3268,7 +3268,8 @@ int evoker_max_charges(int evoker_type)
     const evoker_data* edata = map_find(xp_evoker_data,
                                    static_cast<misc_item_type>(evoker_type));
     ASSERT(edata);
-    return edata->max_charges;
+    return edata->max_charges +
+        (you.wearing_ego(EQ_GIZMO, SPGIZMO_OVERCLOCK) ? 1 : 0);
 }
 
 /**

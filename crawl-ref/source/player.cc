@@ -2451,11 +2451,8 @@ static void _recharge_xp_evokers(int exp)
     const int skill_denom = 3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
     const int xp_factor = max(xp_by_xl / 5, 100) / skill_denom;
 
-    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
-        || player_equip_unrand(UNRAND_GADGETEER))
-    {
+    if (player_equip_unrand(UNRAND_GADGETEER))
         exp = exp * 130 / 100;
-    }
 
     for (int i = 0; i < NUM_MISCELLANY; ++i)
     {

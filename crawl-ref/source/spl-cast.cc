@@ -2137,6 +2137,20 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             trigger_battlesphere(&you);
         }
 
+        // Rev up if you have manarev
+        // Rev amount reduced for low level spells to prevent abuse
+        // Some spells already rev through attacks so disable this for them
+        if (you.has_mutation(MUT_WARMUP_STRIKES)
+            && you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV)
+            && spell != SPELL_MANIFOLD_ASSAULT
+            && spell != SPELL_ELECTRIC_CHARGE)
+        {
+            int revamount = you.time_taken;
+            if (spell_difficulty(spell) < 3)
+                revamount = div_rand_round(revamount * spell_difficulty(spell), 3);
+            you.rev_up(revamount);
+        }
+
         const auto victim = monster_at(beam.target);
         if (will_have_passive(passive_t::shadow_spells)
             && actual_spell

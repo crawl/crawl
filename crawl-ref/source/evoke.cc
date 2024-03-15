@@ -231,8 +231,7 @@ void zap_wand(int slot, dist *_target)
         finalize_mp_cost();
 
     // Take off a charge (unless gadgeteer procs)
-    if ((you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
-        || player_equip_unrand(UNRAND_GADGETEER))
+    if (player_equip_unrand(UNRAND_GADGETEER)
         && x_chance_in_y(3, 10))
     {
         mpr("You conserve a charge of your wand.");
