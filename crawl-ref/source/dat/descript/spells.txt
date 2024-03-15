@@ -180,7 +180,7 @@ Fires a penetrating bolt of flames.
 Bolt of Light spell
 
 Fires a ray of searing light, injuring and blinding those struck. Confuses
-instead of blinding if the player is the victim.
+instead of blinding if you are hit.
 %%%%
 Bolt of Magma spell
 
@@ -306,7 +306,7 @@ The spell bypasses half of defenders' armour and resistance to electricity.
 Charm spell
 
 Causes an otherwise hostile creature to fight on the caster's side for a while.
-Confuses instead of charming if the player is the victim.
+Confuses instead of charming if you are affected.
 %%%%
 Chaos Breath spell
 
