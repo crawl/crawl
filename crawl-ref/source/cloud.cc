@@ -769,10 +769,10 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     const monster * const mons = monster_at(ctarget);
 
-    // Fedhas protects plants from damaging clouds.
+    // Fedhas et al protect their chosen ones from damaging clouds.
     // XX demonic guardians? This logic mostly doesn't apply because protected
     // monsters are also cloud immune, mostly
-    if (god_protects(agent, *mons)
+    if (god_protects(agent, mons)
         && !actor_cloud_immune(*mons, cl_type))
     {
         return;
