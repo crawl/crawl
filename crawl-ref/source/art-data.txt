@@ -1814,7 +1814,7 @@ DBRAND:   Backblast: When fired, it often launches its wielder backwards.
 
 ENUM:    GADGETEER
 NAME:    gloves of the gadgeteer
-INSCRIP: Gadgeteer Supercharge
+INSCRIP: Supercharge
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +0
 COLOUR:  MAGENTA
