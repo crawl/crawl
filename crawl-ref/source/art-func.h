@@ -1823,3 +1823,15 @@ static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
         defender->hurt(attacker, bonus_dam);
     }
 }
+
+///////////////////////////////////////////////////
+
+static void _GADGETEER_equip(item_def *item, bool *show_msgs, bool /*unmeld*/)
+{
+
+}
+
+static void _GADGETEER_unequip(item_def */*item*/, bool *show_msgs)
+{
+
+}

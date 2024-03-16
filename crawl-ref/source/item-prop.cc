@@ -3269,7 +3269,7 @@ int evoker_max_charges(int evoker_type)
                                    static_cast<misc_item_type>(evoker_type));
     ASSERT(edata);
     return edata->max_charges +
-        (you.wearing_ego(EQ_GIZMO, SPGIZMO_OVERCLOCK) ? 1 : 0);
+        (player_equip_unrand(UNRAND_GADGETEER) ? 1 : 0);
 }
 
 /**

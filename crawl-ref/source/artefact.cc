@@ -1955,7 +1955,7 @@ enum gizmo_prop_type
     GIZMO_REGEN,
     GIZMO_REPEL,
     GIZMO_RAMPAGE,
-    GIZMO_OVERCLOCK,
+    GIZMO_GADGETEER,
     GIZMO_PARRYREV,
     GIZMO_MANAREV,
     GIZMO_AUTODAZZLE,
@@ -2017,8 +2017,8 @@ static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
             artefact_set_property(gizmo, ARTP_ACROBAT, 1);
             break;
 
-        case GIZMO_OVERCLOCK:
-            gizmo.brand = SPGIZMO_OVERCLOCK;
+        case GIZMO_GADGETEER:
+            gizmo.brand = SPGIZMO_GADGETEER;
             break;
 
         case GIZMO_PARRYREV:

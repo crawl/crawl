@@ -2644,8 +2644,9 @@ static string _describe_gizmo(const item_def &item)
                        "Revved you are. Spellcasting Revs you up.\n";
                 break;
 
-            case SPGIZMO_OVERCLOCK:
-                ret += "Your evocable items hold an extra charge.\n";
+            case SPGIZMO_GADGETEER:
+                ret += "Your evocable items recharge 30% faster and wands have "
+                       "a 30% chance to not spend a charge and 30% more power.\n";
                 break;
 
             case SPGIZMO_PARRYREV:
