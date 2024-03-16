@@ -507,7 +507,7 @@ monster_type resolve_monster_type(monster_type mon_type,
 monster_type fixup_zombie_type(const monster_type cls,
                                const monster_type base_type)
 {
-    // Yredremnul's bound souls can fly - they aren't bound by their old flesh.
+    // Yredelemnul's bound souls can fly - they aren't bound by their old flesh.
     // Other zombies, regrettably, still are.
     // XXX: consider replacing the latter check with monster_class_flies(cls)
     // and adjusting vaults that use spectral krakens.
