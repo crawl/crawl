@@ -3164,7 +3164,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                               ZAP_LIGHTNING_BOLT,
                               ZAP_BOLT_OF_MAGMA,
                               ZAP_BOLT_OF_DRAINING,
-                              ZAP_BREATHE_ACID);
+                              ZAP_CORROSIVE_BOLT);
             zapping(ztype, power, beam);
         }
         break;
