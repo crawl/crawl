@@ -842,14 +842,18 @@ MAP
 ...............................
 ENDMAP
 
-NAME:  roderic_batcave
-TAGS:  no_monster_gen extra transparent
-DEPTH: D:3-, Lair, Orc
+NAME:   roderic_batcave
+TAGS:   no_monster_gen extra transparent
+DEPTH:  D:3-, Lair, Orc
 : local d = you.absdepth()
 : if d < 7 then d = 0 end
 : mons("bat w:60 / vampire bat w:" .. d .. " / nothing w:10")
-SUBST: ? : x@
-SUBST: 1 = 1:10 .:1
+MONS:  obsidian bat
+SUBST:  ? : x@
+SUBST:  1 = 1:10 .:1
+: if you.in_branch("Orc") then
+NSUBST: 1 = 1:2 / 1:* / *:1
+: end
 MAP
   xxxx?xx
  xxx1..xxxx
@@ -1991,9 +1995,10 @@ TAGS:    no_monster_gen transparent
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
-KMONS:   0 = orc ; robe . wand of charming | wand of flame . \
-                   potion of invisibility | potion of haste | nothing w:980
+KMONS:   0 = orc ; robe . wand of charming | wand of flame
 KMONS:   89 = deep elf pyromancer / deep elf zephyrmancer
+KMONS:   & = obsidian bat
+# FIXME: make these the wizard hat tiles only.
 KITEM:   8d = robe, hat w:40 / hat good_item, \
               hat w:20 / hat good_item
 KITEM:   9e = book of minor magic
@@ -2001,6 +2006,9 @@ SUBST:   - = +
 KMASK:   de89 = no_item_gen
 SHUFFLE: 1234
 COLOUR:  F = red
+: if you.in_branch("Orc") then
+SUBST:   7 = &
+: end
 FTILE:   F = floor_pebble_lightred
 {{
   local fog = chained_fog_machine {
@@ -2013,14 +2021,14 @@ MAP
 @@xxxxxxxxxxx
 ..xxxxxxxxxxx
 .5xx1xx2xxxxx
-.5xx+xx+xx9xx
+.5xx++++xx9xx
 ..x..60..xexx
 ..x.F..F.x+xx
 @.-...6..-7xx
 @.-...0..-'xx
 ..x.F..F.x+xx
 ..x..60..xdxx
-.5xx+xx+xx8xx
+.5xx++++xx8xx
 .5xx3xx4xxxxx
 ..xxxxxxxxxxx
 @@xxxxxxxxxxx

@@ -1153,6 +1153,9 @@ int main(int argc, char* argv[])
                 case AF_BARBS:
                     monsterattacks += colour(RED, "(barbs)");
                     break;
+                case AF_HELL_HUNT:
+                    monsterattacks += colour(YELLOW, "(summon h. hound / h. rat)");
+                    break;
                 case AF_SPIDER:
                     monsterattacks += colour(YELLOW, "(summon spider)");
                     break;

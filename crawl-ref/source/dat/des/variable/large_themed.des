@@ -764,6 +764,10 @@ ORIENT: southeast
 DEPTH:  D:8-12, Orc
 MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
 MONS:   two-headed ogre / troll / cyclops / wraith / shadow
+MONS:   deep troll w:5 / obsidian bat
+: if you.in_branch("Orc") then
+NSUBST: $ = 1:3 / *:$, 1 = 1:2 / 2:$ / *:1, . = 2:$ / *:.
+: end
 SUBST:  X = x:60 . $
 MAP
 xxxxxxxx    xxxxxx    xxx

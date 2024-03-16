@@ -267,7 +267,7 @@ function fiery_guardians (e, intelligent, village)
         else
             -- "Elemental" monster pack.
             e.mons("fire elemental w:12 / earth elemental / gargoyle w:8")
-            e.mons("efreet")
+            e.mons("efreet / obsidian bat w:4")
             e.mons("stone giant")
         end
     end
@@ -647,7 +647,7 @@ NAME:    vgs_dualism
 TAGS:    volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror unrand
 KFEAT:   BC = altar_makhleb / altar_trog / altar_vehumet
 :        fiery_guardians(_G)
-KMONS:   4 = obsidian statue / molten gargoyle
+KMONS:   4 = obsidian statue / obsidian bat w:5 / molten gargoyle w:5
 # Loot:  8 items, 2 gold piles.
 NSUBST:  X = 1:+ / *:c
 :        volcano_setup(_G)
@@ -1058,7 +1058,8 @@ TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 20
 MONS:   lindwurm, efreet
-MONS:   molten gargoyle w:20 / earth elemental w:18 / toenail golem w:2
+MONS:   molten gargoyle w:40 / earth elemental w:38 / \
+        toenail golem w:2 / obsidian bat w:2
 MONS:   fire elemental / nothing w:6
 KMONS:  B = boulder dbname:still_boulder
 KFEAT:  K = l

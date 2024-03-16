@@ -21,6 +21,7 @@ enum monster_type                      // env.mons[].type
     MONS_BAT,
     MONS_FIRE_BAT,
 #if TAG_MAJOR_VERSION > 34
+    MONS_OBSIDIAN_BAT,
     MONS_SNAKE,                // genus
 #endif
     MONS_BALL_PYTHON,
@@ -1239,6 +1240,7 @@ enum monster_type                      // env.mons[].type
     MONS_ORC_APOSTLE,
     MONS_SACRED_LOTUS,
     MONS_THERMIC_DYNAMO,
+    MONS_OBSIDIAN_BAT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

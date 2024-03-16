@@ -3372,6 +3372,19 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
     }
+    case AF_HELL_HUNT:
+    {
+        if (one_chance_in(3))
+            break;
+
+        if (summon_hell_out_of_bat(*attacker, defender->pos()))
+        {
+            mprf("Faint brimstone surges around %s!",
+                 defender_name(true).c_str());
+        }
+        break;
+    }
+
     case AF_BLOODZERK:
     {
         if (!defender->can_bleed() || !attacker->can_go_berserk())

@@ -1966,6 +1966,11 @@ neqoxec
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
 distended with the devoured brains of its victims.
 %%%%
+obsidian bat
+
+A faceless stone bat unearthed from infernal chasms. Devilish beasts hunt in its
+wake.
+%%%%
 obsidian statue
 
 A beautiful statue of an unknown creature, jet-black like a tear in reality.

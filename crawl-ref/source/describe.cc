@@ -4964,6 +4964,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_FLANK,             "slips behind the defender beforehand" },
         { AF_DRAG,              "drag the defender backwards"},
         { AF_FOUL_FLAME,        "extra damage, especially to the good" },
+        { AF_HELL_HUNT,         "summon demonic beasts" },
         { AF_PLAIN,             "" },
     };
 

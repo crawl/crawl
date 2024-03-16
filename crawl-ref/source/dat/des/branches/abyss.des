@@ -600,8 +600,8 @@ MAP
 ENDMAP
 
 NAME:    hangedman_abyss_batty_box
-MONS:    bat / fire bat / vampire bat, butterfly, hellwing
-MONS:    spatial vortex, sky beast, harpy, unseen horror
+MONS:    fire bat / vampire bat, butterfly, hellwing
+MONS:    spatial vortex, sky beast, obsidian bat, unseen horror
 KMONS:   8 = wind drake perm_ench:glowing_shapeshifter
 KITEM:   8 = rapier ego:electrocution randart / \
              staff of air / cloak good_item

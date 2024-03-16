@@ -365,7 +365,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ghoul / bog body w:20",
                 "shapeshifter",
                 -- Gimmicks
-                "neqoxec",
+                "neqoxec", "obsidian bat",
                 "moth of wrath / w:20 two-headed ogre",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
                 "shining eye"
