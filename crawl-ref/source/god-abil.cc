@@ -5150,6 +5150,7 @@ bool ru_power_leap()
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Power Leap</white>";
         args.self = confirm_prompt_type::cancel;
+        args.ignore_self = true;
         const int explosion_size = 1;
         targeter_smite tgt(&you, args.range, explosion_size, explosion_size);
         tgt.obeys_mesmerise = true;
@@ -5782,6 +5783,7 @@ static coord_def _get_transference_target()
     args.needs_path = false;
     args.self = confirm_prompt_type::none;
     args.show_floor_desc = true;
+    args.ignore_self = true;
     args.top_prompt = "Select a target.";
 
     direction(spd, args);
