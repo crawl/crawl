@@ -106,12 +106,15 @@ void surge_power(const int enhanced)
 
 void surge_power_wand(const int mp_cost)
 {
-    if (mp_cost)
+    const bool gadgeteer = you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER);
+    if (mp_cost || gadgeteer)
     {
-        const bool slight = mp_cost < 3;
+        int enhanced = 1;
+        if(mp_cost >= 3) enhanced++;
+        if(gadgeteer) enhanced++;
         mprf("You feel a %ssurge of power%s",
-             slight ? "slight " : "",
-             slight ? "."      : "!");
+             enhanced == 1 ? "slight " : enhanced == 3 ? "strong " : "",
+             enhanced == 1 ? "."      : "!");
     }
 }
 
@@ -2043,9 +2046,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         }
     }
 
-    if (evoked_wand)
-        surge_power_wand(wand_mp_cost());
-    else if (actual_spell)
+    if (actual_spell)
         surge_power(_spell_enhancement(spell));
 
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().

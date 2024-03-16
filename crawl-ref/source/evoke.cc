@@ -226,6 +226,8 @@ void zap_wand(int slot, dist *_target)
         return;
     }
 
+    surge_power_wand(mp_cost);
+
     // Spend MP.
     if (mp_cost)
         finalize_mp_cost();
