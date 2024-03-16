@@ -1826,12 +1826,17 @@ static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _GADGETEER_equip(item_def *item, bool *show_msgs, bool /*unmeld*/)
+static void _GADGETEER_equip(item_def */*item*/, bool */*show_msgs*/, bool /*unmeld*/)
 {
+    // Code taken from wizmode.cc
+    for (int i = 0; i < NUM_MISCELLANY; ++i)
+    {
+        item_def dummy;
+        dummy.base_type = OBJ_MISCELLANY;
+        dummy.sub_type = i;
 
-}
-
-static void _GADGETEER_unequip(item_def */*item*/, bool *show_msgs)
-{
-
+        if (!is_xp_evoker(dummy))
+            continue;
+        expend_xp_evoker(dummy.sub_type);
+    }
 }

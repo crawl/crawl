@@ -3298,8 +3298,8 @@ int evoker_charges(int evoker_type)
     const int max_charges = evoker_max_charges(evoker_type);
     const int charge_xp_debt = evoker_charge_xp_debt(evoker_type);
     const int debt = evoker_debt(evoker_type);
-    return min(max_charges,
-            max_charges - debt / charge_xp_debt - (debt % charge_xp_debt > 0));
+    return max(0, min(max_charges,
+            max_charges - debt / charge_xp_debt - (debt % charge_xp_debt > 0)));
 }
 
 void expend_xp_evoker(int evoker_type)
