@@ -828,7 +828,10 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
                 simple_god_message(" pulls their child back from the Abyss.", GOD_BEOGH);
 
             win_apostle_challenge(*mons);
-            mons->hit_points = mons->max_hit_points;
+            mons->heal(mons->max_hit_points);
+            // monster::banish sets damage_friendly and not resetting that could
+            // crash. monster::heal resets it but not if it was at full health.
+            mons->damage_total = mons->damage_friendly = 0;
             avoided_death_fineff::schedule(mons);
             return true;
         }
