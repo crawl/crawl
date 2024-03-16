@@ -111,7 +111,7 @@ void InventoryRegion::pack_buffers()
                 draw_number(x, y, item.quantity);
 
             if (item.special)
-                m_buf.add_main_tile(item.special, x, y, 0, 0);
+                m_buf.add_main_tile(item.special, x, y, 0, 0, true);
 
             if (item.flag & TILEI_FLAG_INVALID && !tiles.is_using_small_layout())
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
