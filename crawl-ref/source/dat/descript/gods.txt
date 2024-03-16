@@ -687,12 +687,10 @@ Wu Jian extra
   ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O..  140% damage if you're using a polearm, and 120%
   .......       .......  otherwise.
 
-
   .......       ...<lightred>@</lightred>...  (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to an
-  ...<lightred>@</lightred>O..  -->  ....O..  enemy to strike them lightly dealing 80% damage.
-  .......       .......  Multiple adjacent foes can be attacked simultaneously
-                         this way.
-
+  ...<lightred>@</lightred>O..  -->  ....O..  enemy to strike them dealing 80% damage. Multiple
+  .......       .......  adjacent foes can be attacked simultaneously this way.
+                    
   ..#....       ..#....  (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and strike
   ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>.  enemies adjacent to the landing spot. Vaulting takes
   ..#....       ..#....  two turns and strikes twice as many times. Activated
