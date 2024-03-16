@@ -1432,7 +1432,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     // get base type
     lookup += _get_artefact_type(item, appearance);
 
-    const string base_name = _base_name(item);
+    const string base_name = item.base_type == OBJ_STAVES ? "" : _base_name(item);
     if (appearance)
     {
         string appear = getRandNameString(lookup, " appearance");

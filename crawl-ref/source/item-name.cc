@@ -1876,7 +1876,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (is_artefact(*this) && !dbname)
         {
             if (know_type)
-                buff << "staff";
+                buff << item_base_name(OBJ_STAVES, item_typ) << " staff";
             // TODO: crop long artefact names when not controlled by webtiles
             buff << get_artefact_name(*this, ident);
             if (!know_type)
