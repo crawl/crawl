@@ -2790,7 +2790,8 @@ int property(const item_def &item, int prop_type)
     {
     case OBJ_ARMOUR:
         if (prop_type == PARM_AC
-            && is_unrandom_artefact(item, UNRAND_SLICK_SLIPPERS))
+            && (is_unrandom_artefact(item, UNRAND_SLICK_SLIPPERS)
+                || is_unrandom_artefact(item, UNRAND_GADGETEER)))
         {
             return 0;
         }
