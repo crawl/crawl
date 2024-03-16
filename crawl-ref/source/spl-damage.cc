@@ -3096,7 +3096,6 @@ static void _set_thunderbolt_last_aim(actor *caster, coord_def aim)
 dice_def thunderbolt_damage(int power, int arc)
 {
     const int &charges = you.props[THUNDERBOLT_CHARGES_KEY].get_int();
-    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
 
     int charge_boost = 0;
     if (in_bounds(get_thunderbolt_last_aim(&you)))
@@ -3112,7 +3111,6 @@ dice_def thunderbolt_damage(int power, int arc)
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 {
     int &charges = caster->props[THUNDERBOLT_CHARGES_KEY].get_int();
-    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
 
     coord_def prev = get_thunderbolt_last_aim(caster);
     if (!in_bounds(prev))
@@ -3186,8 +3184,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     _set_thunderbolt_last_aim(caster, aim);
 
-    if (charges < LIGHTNING_MAX_CHARGE)
-        charges++;
+    charges++;
 
     return spret::success;
 }
