@@ -6298,9 +6298,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!mon->antimagic_susceptible())
             break;
 
-        const int dur =
-            (1 + random2(div_rand_round(ench_power, mon->get_hit_dice()) + 1))
+        int dur = random2(div_rand_round(ench_power, mon->get_hit_dice()) + 1)
                     * BASELINE_DELAY;
+
+        // Cap antimagic duration
+        constexpr int cap = 5 * BASELINE_DELAY;
+        if (mon->has_ench(ENCH_ANTIMAGIC))
+            dur = min(dur, cap - mon->get_ench(ENCH_ANTIMAGIC).duration);
+
+        // Apply minimum duration
+        dur = max(BASELINE_DELAY, dur);
         mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                   agent(), // doesn't matter
                                   dur));
