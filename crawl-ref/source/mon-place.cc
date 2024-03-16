@@ -504,15 +504,20 @@ monster_type resolve_monster_type(monster_type mon_type,
     return mon_type;
 }
 
-// For generation purposes, don't treat simulacra of lava enemies as
-// being able to place on lava.
 monster_type fixup_zombie_type(const monster_type cls,
-                                         const monster_type base_type)
+                               const monster_type base_type)
 {
-    return (mons_class_is_zombified(cls)
-            && mons_class_secondary_habitat(base_type) != HT_LAVA)
-            ? base_type
-            : cls;
+    // Yredremnul's bound souls can fly - they aren't bound by their old flesh.
+    // Other zombies, regrettably, still are.
+    // XXX: consider replacing the latter check with monster_class_flies(cls)
+    // and adjusting vaults that use spectral krakens.
+    if (!mons_class_is_zombified(cls) || cls == MONS_BOUND_SOUL)
+        return cls;
+    // For generation purposes, don't treat simulacra of lava enemies as
+    // being able to place on lava.
+    if (mons_class_secondary_habitat(base_type) == HT_LAVA)
+        return cls;
+    return base_type;
 }
 
 // Checks if the monster is ok to place at mg_pos. If force_location
