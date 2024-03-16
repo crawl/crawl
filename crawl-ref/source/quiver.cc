@@ -1444,7 +1444,14 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
+            case ABIL_COMBUSTION_BREATH:
+            case ABIL_GLACIAL_BREATH:
+            case ABIL_GALVANIC_BREATH:
             case ABIL_CAUSTIC_BREATH:
+            case ABIL_NULLIFYING_BREATH:
+            case ABIL_STEAM_BREATH:
+            case ABIL_NOXIOUS_BREATH:
+            case ABIL_MUD_BREATH:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
