@@ -212,6 +212,7 @@ static void _monster_wand_spellbook(const monster_info &mi,
         _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality());
 
     const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
+    ASSERT(wandtyp < NUM_WANDS);
     book.spells.emplace_back(spell_in_wand(wandtyp));
 
     all_books.emplace_back(book);
