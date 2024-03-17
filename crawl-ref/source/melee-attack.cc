@@ -1679,6 +1679,10 @@ bool melee_attack::player_aux_unarmed()
         to_hit = random2(aux_to_hit());
         to_hit += post_roll_to_hit_modifiers(to_hit, false);
 
+        // Serpent's Lash does not miss
+        if (wu_jian_has_momentum(wu_jian_attack))
+            to_hit = AUTOMATIC_HIT;
+
         handle_noise(defender->pos());
         alert_nearby_monsters();
 

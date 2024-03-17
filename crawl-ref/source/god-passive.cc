@@ -1339,8 +1339,7 @@ void wu_jian_end_heavenly_storm()
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 {
     return you.attribute[ATTR_SERPENTS_LASH]
-           && attack_type != WU_JIAN_ATTACK_NONE
-           && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
+           && attack_type != WU_JIAN_ATTACK_NONE;
 }
 
 static bool _can_attack_martial(const monster* mons)
