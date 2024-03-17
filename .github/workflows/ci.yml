@@ -317,7 +317,7 @@ jobs:
       - name: Install Dependencies
         run: |
           brew install pkg-config libpng
-          sudo pip3 install PyYAML
+          sudo -H pip3 install PyYAML
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
