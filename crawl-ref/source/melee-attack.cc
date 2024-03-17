@@ -1639,8 +1639,11 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
-    if (to_hit >= evasion || auto_hit)
+    if (to_hit >= evasion || auto_hit
+        || wu_jian_has_momentum(wu_jian_attack))
+    {
         return true;
+    }
 
     mprf("Your %s misses %s.", aux_attack.c_str(),
          defender->name(DESC_THE).c_str());
@@ -1678,10 +1681,6 @@ bool melee_attack::player_aux_unarmed()
 
         to_hit = random2(aux_to_hit());
         to_hit += post_roll_to_hit_modifiers(to_hit, false);
-
-        // Serpent's Lash does not miss
-        if (wu_jian_has_momentum(wu_jian_attack))
-            to_hit = AUTOMATIC_HIT;
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
