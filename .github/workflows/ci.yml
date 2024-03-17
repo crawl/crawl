@@ -469,9 +469,10 @@ jobs:
     runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
     strategy:
       matrix:
-        # oldest non-eol security release + current bugfix versions
+        # oldest non-eol security release + current bugfix version
         #   https://devguide.python.org/versions/
-        python-version: [3.8, 3.11, 3.12]
+        # TODO: 3.12 is currently broken because of requirements.txt brittleness
+        python-version: [3.8, 3.11]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
