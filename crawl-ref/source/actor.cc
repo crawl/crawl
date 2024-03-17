@@ -581,7 +581,7 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
         if (_invalid_constricting_map_entry(constrictee)
             || constrictee->get_constrict_type() == CONSTRICT_MELEE)
         {
-            end_constriction(constrictee->mid, intentional, quiet);
+            end_constriction((*constricting)[i], intentional, quiet);
             constricting->erase(constricting->begin() + i);
         }
     }
@@ -664,7 +664,7 @@ void actor::clear_invalid_constrictions(bool move)
         if (_invalid_constricting_map_entry(constrictee)
             || constrictee->has_invalid_constrictor())
         {
-            stop_constricting(constrictee->mid, false, false);
+            stop_constricting((*constricting)[i], false, false);
         }
     }
 }
