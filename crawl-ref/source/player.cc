@@ -8973,6 +8973,7 @@ bool player::immune_to_hex(const spell_type hex) const
     case SPELL_PARALYSE:
     case SPELL_SLOW:
         return stasis();
+    case SPELL_CHARMING:
     case SPELL_CONFUSE:
     case SPELL_CONFUSION_GAZE:
     case SPELL_MASS_CONFUSION:
