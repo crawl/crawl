@@ -197,6 +197,9 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_HEALING:
         elem = ETC_HEAL;
         break;
+    case BEAM_BLOOD_DRAIN:
+        elem = ETC_BLOOD;
+        break;
     case BEAM_INFESTATION:
     case BEAM_PAIN:
     case BEAM_AGONY:
@@ -7242,6 +7245,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_INFESTATION:           return "infestation";
     case BEAM_VILE_CLUTCH:           return "vile clutch";
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
+    case BEAM_BLOOD_DRAIN:           return "blood drain";
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
     case BEAM_ENFEEBLE:              return "enfeeble";
     case BEAM_NECROTISE:             return "necrotise";

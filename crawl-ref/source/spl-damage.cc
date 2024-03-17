@@ -4309,8 +4309,8 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     }
 
     const int drain_amount = deadtarget ? damage :
-    victim.hurt(&you, damage,BEAM_VAMPIRIC_DRAINING,
-    KILLED_BY_BEAM, "","by vampiric draining");
+    victim.hurt(&you, damage, BEAM_BLOOD_DRAIN,
+    KILLED_BY_BEAM, "","by blood drain");
 
     beam.fire();
     viewwindow();
