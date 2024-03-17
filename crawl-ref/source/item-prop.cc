@@ -2091,6 +2091,12 @@ bool staff_uses_evocations(const item_def &item)
     return item.base_type == OBJ_STAVES;
 }
 
+const char* staff_type_name(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].name;
+}
+
 skill_type staff_skill(stave_type s)
 {
     ASSERT_RANGE(s, 0, NUM_STAVES);
@@ -3195,8 +3201,6 @@ string item_base_name(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
         return Weapon_prop[Weapon_index[sub_type]].name;
-    case OBJ_STAVES:
-        return Staff_prop[Staff_index[sub_type]].name;
     case OBJ_MISSILES:
         return Missile_prop[Missile_index[sub_type]].name;
     case OBJ_ARMOUR:

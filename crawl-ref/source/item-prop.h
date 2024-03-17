@@ -103,10 +103,11 @@ special_armour_type get_armour_ego_type(const item_def &item) PURE;
 special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // staff functions:
-skill_type staff_skill(stave_type staff);
-beam_type staff_damage_type(stave_type staff);
-int staff_damage_mult(stave_type staff);
-ac_type staff_ac_check(stave_type staff);
+const char* staff_type_name(stave_type staff) PURE;
+skill_type staff_skill(stave_type staff) PURE;
+beam_type staff_damage_type(stave_type staff) PURE;
+int staff_damage_mult(stave_type staff) PURE;
+ac_type staff_ac_check(stave_type staff) PURE;
 
 // armour functions:
 bool armour_is_enchantable(const item_def &item) PURE;

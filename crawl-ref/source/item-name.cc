@@ -1189,13 +1189,13 @@ string sub_type_string(const item_def &item, bool known)
     {
     case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
     case OBJ_MISSILES: // variable to item-prop.cc.
-    case OBJ_STAVES:
     case OBJ_ARMOUR:
         return item_base_name(type, sub_type);
     case OBJ_WANDS: return _wand_type_name(sub_type);
     case OBJ_SCROLLS: return scroll_type_name(sub_type);
     case OBJ_JEWELLERY: return jewellery_type_name(sub_type);
     case OBJ_POTIONS: return potion_type_name(sub_type);
+    case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
     case OBJ_BOOKS:
     {
         switch (sub_type)
@@ -1893,7 +1893,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "staff";
         }
         else
-            buff << "staff of " << item_base_name(OBJ_STAVES, item_typ);
+            buff << "staff of " << staff_type_name(static_cast<stave_type>(item_typ));
 
         if (cursed() && terse && !dbname && !qualname)
             buff << " (curse)";
