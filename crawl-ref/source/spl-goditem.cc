@@ -1322,7 +1322,7 @@ void majin_bo_vampirism(monster &mon, int damage)
 
     const bool include_demonic = you.has_mutation(MUT_VAMPIRISM);
 
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(mon, include_demonic)
+    if (damage < 1 || !actor_is_susceptible_to_vampirism(mon, false, include_demonic)
         || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR])
     {
         return;

@@ -2236,7 +2236,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (you.vampire_alive && you.attribute[ATTR_VAMP_LAST_TARGET] != monster_killed)
             attempt_blooddrain_hit(mons, true);
 
-        if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, true))
+        if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, false, true))
         {
             you.attribute[ATTR_VAMP_BLOOD] += 6 + random2(8);
             you.attribute[ATTR_VAMP_BLOOD] = min(100, you.attribute[ATTR_VAMP_BLOOD]);

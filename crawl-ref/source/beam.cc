@@ -2277,11 +2277,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
 
 static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 {
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(victim,
-                agent.is_player() && you.has_mutation(MUT_VAMPIRISM)))
-    {
+    if (damage < 1 || !actor_is_susceptible_to_vampirism(false, victim, agent))
         return;
-    }
 
     if (you.can_see(victim) || you.can_see(agent))
     {
@@ -5657,11 +5654,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     case BEAM_VAMPIRIC_DRAINING:
         ASSERT(agent);
-        {
-            const bool include_demonic = agent->is_player() && you.has_mutation(MUT_VAMPIRISM);
-            rc = actor_is_susceptible_to_vampirism(*mon, include_demonic)
-                    && (include_demonic || mon->res_negative_energy(intrinsic_only) < 3);
-        }
+        rc = actor_is_susceptible_to_vampirism(false, *mon, *agent);
         break;
 
     case BEAM_VIRULENCE:
@@ -5880,7 +5873,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!include_demonic)
             dam = resist_adjust_damage(mon, flavour, dam);
 
-        if (dam && actor_is_susceptible_to_vampirism(*mon, include_demonic))
+        if (dam && actor_is_susceptible_to_vampirism(*mon, false, include_demonic))
         {
             _vampiric_draining_effect(*mon, *agent(), dam);
             obvious_effect = true;

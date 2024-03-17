@@ -4131,7 +4131,7 @@ bool melee_attack::apply_damage_brand(const char *what)
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.has_mutation(MUT_VAMPIRISM)
-           && actor_is_susceptible_to_vampirism(*mon, true);
+           && actor_is_susceptible_to_vampirism(*mon, false, true);
 }
 
 string mut_aux_attack_desc(mutation_type mut)

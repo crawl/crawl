@@ -584,13 +584,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    const bool include_demonic = agent->is_player() && you.has_mutation(MUT_VAMPIRISM);
-
-    if (!actor_is_susceptible_to_vampirism(*act, include_demonic)
-        || (!include_demonic && act->res_negative_energy() >= 3))
-    {
+    if (!actor_is_susceptible_to_vampirism(false, *act, *agent))
         return false;
-    }
 
     if (!agent)
         return true;
@@ -4272,7 +4267,7 @@ void attempt_blooddrain_hit(actor& victim, bool deadtarget)
     if (invalid_monster(victim.as_monster())
         || !victim.is_monster()
         || victim.wont_attack()
-        || !actor_is_susceptible_to_vampirism(victim, true))
+        || !actor_is_susceptible_to_vampirism(victim, false, true))
     {
         return;
     }
