@@ -2466,6 +2466,12 @@ void direction_chooser::update_validity()
 
 bool direction_chooser::noninteractive()
 {
+    // If whatever target is given to us by autofight is useless,
+    // automatically try to find a better one.
+    const monster* mon = monster_at(moves.target);
+    if (hitfunc && !hitfunc->affects_monster(monster_info(mon)))
+        moves.find_target = true;
+
     // if target is unset, this will find previous or closest target; if
     // target is set this will adjust targeting depending on custom
     // behavior
