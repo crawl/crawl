@@ -3557,6 +3557,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
+        args.self = confirm_prompt_type::none;
         args.hitfunc = &tgt;
         if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
