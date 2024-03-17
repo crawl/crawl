@@ -2093,6 +2093,8 @@ bool staff_uses_evocations(const item_def &item)
 
 const char* staff_type_name(stave_type s)
 {
+    if (s == NUM_STAVES)
+        return "bugginess"; // used for known items
     ASSERT_RANGE(s, 0, NUM_STAVES);
     return Staff_prop[Staff_index[s]].name;
 }
