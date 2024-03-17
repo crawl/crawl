@@ -3220,7 +3220,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_FASTROOT, "Germinate Roots",
+    SPELL_FASTROOT, "Fastroot",
     spschool::hexes | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,
     5,

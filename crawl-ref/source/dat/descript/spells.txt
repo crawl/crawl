@@ -179,8 +179,9 @@ Fires a penetrating bolt of flames.
 %%%%
 Bolt of Light spell
 
-Fires a ray of searing light, injuring and blinding those struck. Confuses
-instead of blinding if you are hit.
+Fires a ray of searing light, injuring those struck. Inhabitants of the dungeon
+will also be blinded, while adventurers (more accustomed to light) will merely
+suffer momentary confusion.
 %%%%
 Bolt of Magma spell
 
@@ -306,7 +307,7 @@ The spell bypasses half of defenders' armour and resistance to electricity.
 Charm spell
 
 Causes an otherwise hostile creature to fight on the caster's side for a while.
-Confuses instead of charming if you are affected.
+Adventurers, set on their quest for the ORB, instead suffer momentary confusion.
 %%%%
 Chaos Breath spell
 
@@ -568,6 +569,12 @@ Eruption spell
 
 Splits the earth to draw up a localized, short-lived volcano under the target.
 %%%%
+Fastroot spell
+
+Fire a magical seed, entangling victims in quick-growing tree roots. Those
+entangled will be painfully constricted until they escape or the roots wither
+away. The roots will only sprout from solid ground.
+%%%%
 Flay spell
 
 Opens painful illusionary wounds on the target's body, which disappear after
@@ -674,12 +681,6 @@ Gell's Gravitas spell
 Briefly redirects gravity around a target point, causing 'down' to be towards
 that point. All nearby creatures, save the caster, fall helplessly toward that
 point – typically colliding with each other, or with a victim standing there.
-%%%%
-Germinate Roots spell
-
-Fire a magical seed, entangling victims in quick-growing tree roots. Those
-entangled will be immobilized and take damage over time until they escape or
-the roots wither away. The roots will only sprout from solid ground.
 %%%%
 Ghostly Fireball spell
 
