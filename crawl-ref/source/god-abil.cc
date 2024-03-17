@@ -3786,6 +3786,7 @@ spret qazlal_disaster_area(bool fail)
     vector<coord_def> targets;
     vector<int> weights;
     const int pow = you.skill(SK_INVOCATIONS, 6);
+    const int upheaval_radius = _upheaval_radius(pow);
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS, true);
          ri; ++ri)
     {
@@ -3806,6 +3807,10 @@ spret qazlal_disaster_area(bool fail)
         {
             friendlies = true;
         }
+
+        const int range = you.pos().distance_from(*ri);
+        if (range <= upheaval_radius)
+            continue;
 
         const int dist = grid_distance(you.pos(), *ri);
 
