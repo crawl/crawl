@@ -2547,16 +2547,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             you.props[KILLED_BORIS_KEY] = true;
         }
         if (mons.type == MONS_JORY && !in_transit)
-        {
             blood_spray(mons.pos(), MONS_JORY, 50);
-
-            // Killing Jory fully recharges your blood bar as a vampire
-            if (you.has_mutation(MUT_VAMPIRISM) && you.attribute[ATTR_VAMP_BLOOD] < 100)
-            {
-                you.attribute[ATTR_VAMP_BLOOD] = 100;
-                mpr("You are full to bursting with blood!");
-            }
-        }
         else if (mons_is_mons_class(&mons, MONS_KIRKE)
                  && !in_transit
                  && !testbits(mons.flags, MF_WAS_NEUTRAL))
