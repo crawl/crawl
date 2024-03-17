@@ -1,5 +1,5 @@
 lint:
-	flake8 --mypy-config=mypy.ini *.py
+	flake8 --mypy-config=mypy.ini *.py webtiles/*.py
 
 
 format:

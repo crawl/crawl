@@ -9,10 +9,14 @@ attrs==23.2.0
     #   flake8-bugbear
     #   flake8-eradicate
     #   flake8-mypy
+build==1.1.1
+    # via pip-tools
 cachetools==5.3.3
     # via tox
 chardet==5.2.0
     # via tox
+click==8.1.7
+    # via pip-tools
 colorama==0.4.6
     # via tox
 coverage==7.4.4
@@ -60,6 +64,8 @@ flake8-polyfill==1.0.2
     # via -r requirements.in/dev.txt
 flake8-print==5.0.0
     # via -r requirements.in/dev.txt
+importlib-metadata==7.0.2
+    # via build
 iniconfig==2.0.0
     # via pytest
 isort==5.13.2
@@ -74,9 +80,12 @@ mypy-extensions==1.0.0
     # via mypy
 packaging==24.0
     # via
+    #   build
     #   pyproject-api
     #   pytest
     #   tox
+pip-tools==7.4.1
+    # via -r requirements.in/dev.txt
 platformdirs==4.2.0
     # via
     #   tox
@@ -93,14 +102,21 @@ pyflakes==3.2.0
     # via flake8
 pyproject-api==1.6.1
     # via tox
+pyproject-hooks==1.0.0
+    # via
+    #   build
+    #   pip-tools
 pytest==8.1.1
     # via -r requirements.in/dev.txt
 pyyaml==6.0.1
     # via -r requirements.in/base.txt
 tomli==2.0.1
     # via
+    #   build
     #   mypy
+    #   pip-tools
     #   pyproject-api
+    #   pyproject-hooks
     #   pytest
     #   tox
 tornado==6.4
@@ -111,3 +127,11 @@ typing-extensions==4.10.0
     # via mypy
 virtualenv==20.25.1
     # via tox
+wheel==0.43.0
+    # via pip-tools
+zipp==3.18.1
+    # via importlib-metadata
+
+# The following packages are considered to be unsafe in a requirements file:
+# pip
+# setuptools
