@@ -4153,7 +4153,7 @@ command_type describe_item_popup(const item_def &item,
         else if (scroller->on_event(ev))
             return true;
 
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, &item);
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())
@@ -6484,7 +6484,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         }
         if (desc_sw->current_widget()->on_event(ev))
             return true;
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, nullptr);
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())

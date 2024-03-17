@@ -342,19 +342,6 @@ static string _spell_schools(spell_type spell)
 }
 
 /**
- * Should spells from the given source be listed in two columns instead of
- * one?
- *
- * @param source_item   The source of the spells; a book, or nullptr in the
- *                      case of monster spellbooks.
- * @return              source_item == nullptr
- */
-static bool _list_spells_doublecolumn(const item_def* const source_item)
-{
-    return !source_item;
-}
-
-/**
  * Produce a mapping from characters (used as indices) to spell types in
  * the given spellset.
  *
@@ -365,24 +352,13 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
  */
-vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
-                                       const item_def* const source_item)
+vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells)
 {
     char next_ch = 'a';
     const vector<spell_type> flat_spells = _spellset_contents(spells);
     vector<pair<spell_type,char>> ret;
-    if (!_list_spells_doublecolumn(source_item))
-    {
-        for (auto spell : flat_spells)
-            ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
-    }
-    else
-    {
-        for (size_t i = 0; i < flat_spells.size(); i += 2)
-            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
-        for (size_t i = 1; i < flat_spells.size(); i += 2)
-            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
-    }
+    for (auto spell : flat_spells)
+        ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
     return ret;
 }
 
@@ -606,7 +582,7 @@ static void _describe_book(const spellbook_contents &book,
     description.cprintf("\n");
 
     // list spells in two columns, instead of one? (monster books)
-    const bool doublecolumn = _list_spells_doublecolumn(source_item);
+    const bool doublecolumn = source_item == nullptr;
 
     bool first_line_element = true;
     const int hd = mon_owner ? mon_owner->spell_hd() : 0;
@@ -701,7 +677,7 @@ void describe_spellset(const spellset &spells,
                        formatted_string &description,
                        const monster_info *mon_owner)
 {
-    auto spell_map = map_chars_to_spells(spells, source_item);
+    auto spell_map = map_chars_to_spells(spells);
     for (auto book : spells)
         _describe_book(book, spell_map, source_item, description, mon_owner);
 }
@@ -757,7 +733,7 @@ void write_spellset(const spellset &spells,
                        const item_def* const source_item,
                        const monster_info *mon_owner)
 {
-    auto spell_map = map_chars_to_spells(spells, source_item);
+    auto spell_map = map_chars_to_spells(spells);
     tiles.json_open_array("spellset");
     for (auto book : spells)
         _write_book(book, spell_map, source_item, mon_owner);
