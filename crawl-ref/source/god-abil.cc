@@ -3526,6 +3526,31 @@ static int _upheaval_radius(int pow)
     return pow / 100 + 1;
 }
 
+static bool _qazlal_affected(coord_def pos)
+{
+    const actor *act = actor_at(pos);
+
+    if (act)
+    {
+        if (act->is_player())
+            return false;
+
+        if (act->is_monster())
+        {
+            const monster *mon = act->as_monster();
+            int summon_type = 0;
+            // Never fire at elemental forces.
+            if (mon && mon->is_summoned(nullptr, &summon_type)
+                && summon_type == MON_SUMM_AID)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_target)
 {
     const int pow = you.skill(SK_INVOCATIONS, 6);
@@ -3621,20 +3646,16 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     }
 
     vector<coord_def> affected;
-    affected.push_back(beam.target);
+    if (_qazlal_affected(beam.target))
+        affected.push_back(beam.target);
     for (radius_iterator ri(beam.target, max_radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || cell_is_solid(*ri) || you.pos() == *ri)
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
-        const monster *mon = monster_at(*ri);
-        int summon_type = 0;
-        if (mon && mon->is_summoned(nullptr, &summon_type)
-            && summon_type == MON_SUMM_AID)
-        {
+        if (!_qazlal_affected(*ri))
             continue;
-        }
 
         int chance = pow;
 
@@ -3794,15 +3815,10 @@ spret qazlal_disaster_area(bool fail)
         if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
-        const monster *mon = monster_at(*ri);
-        int summon_type = 0;
-        //Never fire at elemental forces
-        if (mon && mon->is_summoned(nullptr, &summon_type)
-            && summon_type == MON_SUMM_AID)
-        {
+        if (!_qazlal_affected(*ri))
             continue;
-        }
 
+        const monster *mon = monster_at(*ri);
         if (mon && mons_att_wont_attack(mon->attitude)
             && !mons_is_projectile(mon->type))
         {
