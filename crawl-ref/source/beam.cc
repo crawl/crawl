@@ -1752,7 +1752,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_WARPING:
         if (doFlavouredEffects
-            && x_chance_in_y(min(90, 35 + (pbolt.ench_power)), 100))
+            && x_chance_in_y(get_warp_space_chance(pbolt.ench_power), 100))
         {
             monster_blink(mons);
         }

@@ -1596,6 +1596,12 @@ static vector<string> _desc_vapor_weak_chance(const monster_info& mi, int pow)
                             get_mercury_weaken_chance(mi.hd, pow))};
 }
 
+static vector<string> _desc_warp_space_chance(int pow)
+{
+    return vector<string>{make_stringf("chance to blink: %d%%",
+                            get_warp_space_chance(pow))};
+}
+
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
     if (get_resist(mi.resists(), MR_RES_POISON) >= 1 || mi.is(MB_CLARITY))
@@ -1840,6 +1846,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
         case SPELL_MERCURY_VAPOURS:
             return bind(_desc_vapor_weak_chance, placeholders::_1, powc);
+        case SPELL_WARP_SPACE:
+            return bind(_desc_warp_space_chance, powc);
         default:
             break;
     }

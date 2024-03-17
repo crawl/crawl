@@ -4878,3 +4878,8 @@ dice_def electrolunge_damage(int pow)
 {
     return dice_def(2, pow / 6);
 }
+
+int get_warp_space_chance(int pow)
+{
+    return min(90, 35 + pow);
+}
