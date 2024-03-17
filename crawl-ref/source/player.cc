@@ -8990,6 +8990,7 @@ bool player::immune_to_hex(const spell_type hex) const
         return clarity() || !(holiness() & MH_NATURAL) || berserk();
     case SPELL_PETRIFY:
         return res_petrify();
+    case SPELL_POLYMORPH:
     case SPELL_PORKALATOR:
         return is_lifeless_undead();
     case SPELL_VIRULENCE:
