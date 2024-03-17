@@ -116,9 +116,9 @@ dungeon_char_type dchar_by_name(const string &name)
 #if TAG_MAJOR_VERSION == 34
         "item_rod",
 #endif
-        "item_talisman", "item_miscellany", "item_corpse", "item_skeleton", "item_gem", "item_gold",
-        "item_amulet", "cloud", "cloud_weak", "cloud_fading", "cloud_terminal",
-        "tree",
+        "item_talisman", "item_miscellany", "item_corpse", "item_skeleton",
+        "item_gold", "item_gem", "item_amulet", "cloud", "cloud_weak",
+        "cloud_fading", "cloud_terminal", "tree",
 #if TAG_MAJOR_VERSION == 34
         "teleporter",
 #endif
