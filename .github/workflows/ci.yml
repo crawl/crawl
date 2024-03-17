@@ -310,14 +310,14 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Install Dependencies
-        run: |
-          brew install pkg-config libpng
-          sudo pip3 install PyYAML
       - name: Python install bug workaround # https://github.com/actions/setup-python/issues/577
         run: |
           find /usr/local/bin -type l -exec sh -c 'readlink -f "$1" \
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
+      - name: Install Dependencies
+        run: |
+          brew install pkg-config libpng
+          sudo pip3 install PyYAML
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
