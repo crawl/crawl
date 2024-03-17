@@ -1236,7 +1236,9 @@ static inline bool _monster_warning(activity_interrupt ai,
             god_warning += "shapeshifter.";
         }
 
+        // Refresh our monster info cache, so xv shows the ID'd items.
         monster_info mi(mon);
+        env.map_knowledge(mon->pos()).set_monster(mi);
 
         const string mweap = get_monster_equipment_desc(mi, DESC_IDENTIFIED,
                                                         DESC_NONE);
