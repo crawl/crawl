@@ -316,8 +316,7 @@ jobs:
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
       - name: Install Dependencies
         run: |
-          brew install pkg-config libpng
-          sudo -H pip3 install PyYAML
+          brew install pkg-config libpng pyyaml
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
