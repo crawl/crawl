@@ -141,19 +141,6 @@ static string _booktype_header(mon_spell_slot_flag type, bool pronoun_plural)
                         vulnerabilities.c_str());
 }
 
-static spell_type _get_wand_spell(const monster_info &mi)
-{
-    const item_def* wand = mi.inv[MSLOT_WAND].get();
-    if (wand)
-    {
-        const wand_type wandtype = static_cast<wand_type>(wand->sub_type);
-        // Newly spawned wands have an invalid wand type of NUM_WANDS
-        if (wandtype < NUM_WANDS)
-            return spell_in_wand(wandtype);
-    }
-    return SPELL_NO_SPELL;
-}
-
 /**
  * Append all spells of a given type that a given monster may know to the
  * provided vector.
@@ -212,21 +199,22 @@ static void _monster_wand_spellbook(const monster_info &mi,
     if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
         return;
 
-    const spell_type wandspell = _get_wand_spell(mi);
-    if (wandspell == SPELL_NO_SPELL)
+    const item_def* wand = mi.inv[MSLOT_WAND].get();
+    if (!wand)
         return;
 
-    spellbook_contents output_book;
+    spellbook_contents book;
 
-    output_book.label +=
+    book.label +=
         "\n" +
         uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
         " " +
         _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality());
 
-    output_book.spells.emplace_back(wandspell);
+    const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
+    book.spells.emplace_back(spell_in_wand(wandtyp));
 
-    all_books.emplace_back(output_book);
+    all_books.emplace_back(book);
 }
 
 /**

@@ -1673,7 +1673,8 @@ bool monster_info::has_spells() const
     // Wand spells
     const item_def* wand = inv[MSLOT_WAND].get();
     if (itemuse() >= MONUSE_STARTING_EQUIPMENT && wand)
-        return static_cast<wand_type>(wand->sub_type) < NUM_WANDS;
+        return wand->sub_type < NUM_WANDS; // NUM_WANDS used for unknown wands
+                                           // XXX can this ever happen?
 
     const mon_spellbook_type book = get_spellbook(*this);
 

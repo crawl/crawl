@@ -2768,12 +2768,9 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
             drac_breath(mi.draconian_subspecies());
         if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
             slots.push_back(breath);
-        // No other spells; quit right away.
-        if (book == MST_NO_SPELLS)
-            return slots;
     }
 
-    // Don't fail the assert if the only spell we have is from a wand
+    // No other spells (e.g. drac and/or wand); quit right away.
     if (book == MST_NO_SPELLS)
         return slots;
 
