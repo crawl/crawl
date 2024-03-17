@@ -161,11 +161,9 @@ static void _monster_spellbooks(const monster_info &mi,
 
     spellbook_contents output_book;
 
-    output_book.label +=
-        "\n" +
-        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
-        " " +
-        _booktype_header(type, mi.pronoun_plurality());
+    output_book.label += make_stringf("\n%s %s",
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)).c_str(),
+        _booktype_header(type, mi.pronoun_plurality()).c_str());
 
     // Does the monster have a spell that allows them to cast Abjuration?
     bool mons_abjure = false;
@@ -205,11 +203,9 @@ static void _monster_wand_spellbook(const monster_info &mi,
 
     spellbook_contents book;
 
-    book.label +=
-        "\n" +
-        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
-        " " +
-        _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality());
+    book.label += make_stringf("\n%s %s",
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)).c_str(),
+        _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality()).c_str());
 
     const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
     ASSERT(wandtyp < NUM_WANDS);
