@@ -2811,7 +2811,7 @@ display_char = <dungeon_character_name : symbol>
            invis_exposed, item_detected, item_orb, item_rune, item_weapon,
            item_armour, item_wand, item_scroll, item_ring, item_potion,
            item_missile, item_book, item_staff, item_rod, item_miscellany,
-           item_corpse, item_skeleton, item_gold, item_amulet, cloud,
+           item_corpse, item_skeleton, item_gold, item_gem, item_amulet, cloud,
            cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
            transporter_landing, space, fired_bolt, fired_zap, fired_burst,
            fired_debug, fired_missile, fired_missile, explosion, frame_horiz,
