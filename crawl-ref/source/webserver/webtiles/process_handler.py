@@ -743,6 +743,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._purge_locks_and_start(True)
 
     def stop(self):
+        # n.b. the super call here is partly async
         super(CrawlProcessHandler, self).stop()
         self._stop_purging_stale_processes()
         self._stale_pid = None

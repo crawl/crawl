@@ -73,6 +73,8 @@ def describe_sockets(names=False):
 
     if names:
         # this is all a bit brute-force
+        if playing:
+            summary += "; Playing: %s" % list_of_names([s.username for s in playing])
         watchers = list_of_names([s.username for s in slist if s.watched_game and s.username])
         if watchers:
             summary += "; Watchers: %s" % watchers
@@ -1459,10 +1461,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if self.watched_game:
             self.watched_game.remove_watcher(self)
-
-        if shutting_down and len(sockets) == 0:
-            # The last crawl process has ended, now we can go
-            IOLoop.current().stop()
 
     def on_close(self):
         # at this point, self.client_closed is guaranteed to be true
