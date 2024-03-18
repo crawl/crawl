@@ -631,7 +631,7 @@ dealing enormous damage which increases with the user's Shapeshifting skill.
 
 However, this instability makes the user unable to use weapons, shields or body
 armour. They also glow, reducing stealth and preventing invisibility, and their
-melee damage is reduced, as their limbs sometimes destabilize mid-swing.
+melee damage is reduced, as their limbs sometimes destabilise mid-swing.
 %%%%
 gem
 

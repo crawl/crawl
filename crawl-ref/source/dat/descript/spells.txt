@@ -464,7 +464,7 @@ attack anything and everything nearby with great strength and speed.
 %%%%
 Disjunction spell
 
-Destabilizes the space in a sphere around the caster for a while, causing
+Destabilises the space in a sphere around the caster for a while, causing
 anyone nearby to blink away from the caster. The chance of blinking depends on
 the distance from the caster, being nearly certain when directly adjacent.
 %%%%
@@ -1078,7 +1078,7 @@ Orb of Destruction spell
 Conjures an orb made of pure destructive magic. Compared to most other
 projectiles, these orbs travel at a relatively slow pace. The orbs home onto
 their targets, yet because of their huge inertia, especially agile opponents
-may be able to outmanoeuvre them. The orbs need some time to stabilize, and a
+may be able to outmanoeuvre them. The orbs need some time to stabilise, and a
 nascent orb will deal reduced damage.
 
 Residents of the dungeon are able to maintain the orb until it impacts a
