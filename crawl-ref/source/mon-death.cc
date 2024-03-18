@@ -828,7 +828,10 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
                 simple_god_message(" pulls their child back from the Abyss.", GOD_BEOGH);
 
             win_apostle_challenge(*mons);
-            mons->hit_points = mons->max_hit_points;
+            mons->heal(mons->max_hit_points);
+            // monster::banish sets damage_friendly and not resetting that could
+            // crash. monster::heal resets it but not if it was at full health.
+            mons->damage_total = mons->damage_friendly = 0;
             avoided_death_fineff::schedule(mons);
             return true;
         }
@@ -1324,6 +1327,10 @@ static void _protean_explosion(monster* mons)
     else if (mons_class_hit_dice(target) < 12 && coinflip())
         ++num_children;
 
+    int summoned_duration = 0;
+    int summon_type = 0;
+    bool is_summoned = mons->is_summoned(&summoned_duration, &summon_type);
+
     // Then create and scatter the piles around
     int delay = random_range(2, 4) * BASELINE_DELAY;
     for (int i = 0; i < num_children; ++i)
@@ -1349,8 +1356,12 @@ static void _protean_explosion(monster* mons)
 
         mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, SAME_ATTITUDE(mons),
                                  spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH);
-
-        monster *child = create_monster(mg);
+        if (is_summoned)
+        {
+            const actor* const summoner = actor_by_mid(mons->summoner);
+            mg.set_summoned(summoner, 6 /* placeholder */, summon_type, mons->god);
+        }
+        monster *child = create_monster(std::move(mg));
 
         if (child)
         {
@@ -1362,7 +1373,14 @@ static void _protean_explosion(monster* mons)
             child->foe = mons->foe;
             child->behaviour = BEH_SEEK;
 
-            mons_add_blame(child, "spawned from " + mons->name(DESC_A, true));
+            mons_add_blame(child, "spawned from " + mons->name(DESC_A, true), true);
+
+            if (is_summoned)
+            {
+                // Match the original summoned progenitor's duration.
+                mon_enchant summon_duration_ench(ENCH_ABJ, 0, nullptr, summoned_duration);
+                child->update_ench(summon_duration_ench);
+            }
 
             // Make each one shift a little later than the last
             delay += random_range(1, 2) * BASELINE_DELAY;

@@ -511,7 +511,7 @@ causes a highly localized meltdown, dealing enormous damage.
 
 However, this instability makes you unable to use weapons, shields, or
 body armour. You also glow, reducing stealth and preventing invisibility,
-and you do less damage in melee, as your limbs sometimes destabilize mid-swing.
+and you do less damage in melee, as your limbs sometimes destabilise mid-swing.
 %%%%
 Blade status
 

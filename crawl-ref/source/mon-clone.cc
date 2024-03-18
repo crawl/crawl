@@ -332,6 +332,9 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
         mons->del_ench(ENCH_TOUCH_OF_BEOGH);
 
+    if (mons->has_ench(ENCH_VENGEANCE_TARGET))
+        you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {

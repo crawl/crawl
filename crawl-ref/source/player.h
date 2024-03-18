@@ -848,6 +848,8 @@ public:
     int gdr_perc() const override;
     int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;
+    int evasion_scaled(int scale, bool ignore_temporary = false,
+                const actor *attacker = nullptr) const;
 
     int stat_hp() const override     { return hp; }
     int stat_maxhp() const override  { return hp_max; }
@@ -864,9 +866,11 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
-    // Calculates total permanent EV if the player was/wasn't wearing a given item
-    int evasion_with_specific_item(const item_def& new_item) const;
-    int evasion_without_specific_item(const item_def& item_to_remove) const;
+    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
+    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
+                                     int *ac, int *ev, int *sh);
+    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
+                                        int *ac, int *ev, int *sh);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -942,9 +946,7 @@ public:
 
     bool clear_far_engulf(bool force = false, bool moved = false) override;
 
-    int armour_class_with_one_sub(item_def sub) const;
-
-    int armour_class_with_one_removal(item_def sub) const;
+    int armour_class_scaled(int scale) const;
 
     int ac_changes_from_mutations() const;
     vector<const item_def *> get_armour_items() const;
@@ -952,7 +954,7 @@ public:
     vector<const item_def *> get_armour_items_one_removal(const item_def& sub) const;
     int base_ac_with_specific_items(int scale,
                                     vector<const item_def *> armour_items) const;
-    int armour_class_with_specific_items(
+    int armour_class_with_specific_items(int scale,
                                 vector<const item_def *> items) const;
 
 protected:
@@ -1057,8 +1059,9 @@ int player_res_poison(bool allow_random = true, bool temp = true,
                       bool items = true);
 int player_willpower(bool temp = true);
 
-int player_shield_class();
-int player_displayed_shield_class();
+int player_shield_class(int scale = 1, bool random = true,
+                        bool ignore_temporary = false);
+int player_displayed_shield_class(int scale = 1, bool ignore_temporary = false);
 bool player_omnireflects();
 
 int player_spec_air();

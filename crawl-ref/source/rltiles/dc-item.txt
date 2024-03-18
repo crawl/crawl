@@ -353,6 +353,17 @@ rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
+%rim 0
+# slugs
+effect/slug0 MI_SLUG0
+effect/slug1 MI_SLUG1
+effect/slug2 MI_SLUG2
+effect/slug3 MI_SLUG3
+effect/slug4 MI_SLUG4
+effect/slug5 MI_SLUG5
+effect/slug6 MI_SLUG6
+effect/slug7 MI_SLUG7
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE ARM_ROBE_FIRST

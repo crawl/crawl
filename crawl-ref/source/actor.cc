@@ -582,7 +582,7 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
         if (_invalid_constricting_map_entry(constrictee)
             || constrictee->get_constrict_type() == CONSTRICT_MELEE)
         {
-            end_constriction(constrictee->mid, intentional, quiet);
+            end_constriction((*constricting)[i], intentional, quiet);
             constricting->erase(constricting->begin() + i);
         }
     }
@@ -665,7 +665,7 @@ void actor::clear_invalid_constrictions(bool move)
         if (_invalid_constricting_map_entry(constrictee)
             || constrictee->has_invalid_constrictor())
         {
-            stop_constricting(constrictee->mid, false, false);
+            stop_constricting((*constricting)[i], false, false);
         }
     }
 }
@@ -1017,13 +1017,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str(),
                  attack_strength_punctuation((dam + damother) / 2).c_str());
-            if (god_prot || god_prot_other)
-            {
-                // do messaging at the right time.
-                // TODO: a bit ugly
-                god_protects(agent, as_monster(), false);
-                god_protects(agent, other->as_monster(), false);
-            }
+            // OK, now do the messaging for god protection.
+            if (god_prot)
+                god_protects(agent, *as_monster(), false);
+            if (god_prot_other)
+                god_protects(agent, *other->as_monster(), false);
         }
 
         if (other->is_monster() && !god_prot_other)
@@ -1068,7 +1066,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         }
 
         if (god_prot)
-            god_protects(agent, as_monster(), false); // messaging
+            god_protects(agent, *as_monster(), false); // messaging
     }
 
     if (!god_prot)

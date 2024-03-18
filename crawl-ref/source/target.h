@@ -123,6 +123,7 @@ public:
     aff_type is_affected(coord_def loc) override;
 private:
     set<coord_def> targets;
+    set<coord_def> possible_centres;
     bool single_target;
 };
 

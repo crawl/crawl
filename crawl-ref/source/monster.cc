@@ -4951,7 +4951,7 @@ bool monster::can_go_frenzy() const
         return false;
 
     // These allies have a special loyalty
-    if (god_protects(this)
+    if (god_protects(*this)
         || testbits(flags, MF_DEMONIC_GUARDIAN))
     {
         return false;
@@ -6468,7 +6468,7 @@ bool monster::angered_by_attacks() const
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             // allied fed plants, hep ancestor:
-            && !god_protects(this);
+            && !god_protects(*this);
 }
 
 bool monster::is_band_follower_of(const monster& leader) const

@@ -171,6 +171,8 @@ cloud_cone CLOUD_CONE
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
+bolt_of_light BOLT_OF_LIGHT
+warp_space WARP_SPACE
 
 # spells normally only used by monsters
 %back gui/spells/bg

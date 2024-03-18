@@ -1233,12 +1233,8 @@ void bolt::do_fire()
             && (feat_is_solid(feat)
                 && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
                 && !cell_is_solid(target)
-            // or visible firewood with a non-penetrating beam...
-                || !pierce
-                   && monster_at(pos())
-                   && you.can_see(*monster_at(pos()))
-                   && !ignores_monster(monster_at(pos()))
-                   && mons_is_firewood(*monster_at(pos())))
+            // Or hit a monster that'll stop our beam...
+                || at_blocking_monster())
             // and it's a player tracer...
             // (!is_targeting so you don't get prompted while adjusting the aim)
             && is_tracer && !is_targeting && YOU_KILL(thrower)
@@ -1777,6 +1773,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     return hurted;
 }
 
+// XXX: change mons to a reference
 static bool _monster_resists_mass_enchantment(monster* mons,
                                               enchant_type wh_enchant,
                                               int pow,
@@ -1786,13 +1783,10 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
-    // Placeholder for J offering full protection for slimes.
-    if (mons_is_slime(*mons)
-        && have_passive(passive_t::neutral_slimes)
-        && mons->wont_attack())
-    {
+    // Jiyva protects from mass enchantments.
+    if (have_passive(passive_t::neutral_slimes) && god_protects(*mons))
         return true;
-    }
+
     switch (wh_enchant)
     {
     case ENCH_FEAR:
@@ -2660,10 +2654,12 @@ void bolt::drop_object()
     {
         monster* m = monster_at(pos());
         // Player or monster at position is caught in net.
-        if (you.pos() == pos() && you.attribute[ATTR_HELD]
-            || m && m->caught())
+        // Don't catch anything if the creature was already caught.
+        if (get_trapping_net(pos(), true) == NON_ITEM
+            && (you.pos() == pos() && you.attribute[ATTR_HELD]
+            || m && m->caught()))
         {
-            set_net_stationary(env.item[idx]);
+            maybe_split_nets(env.item[idx], pos());
         }
     }
 }
@@ -3161,6 +3157,9 @@ bool bolt::harmless_to_player() const
     case BEAM_UMBRAL_TORCHLIGHT:
         return agent(true)->is_player()
                || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+
+    case BEAM_QAZLAL:
+        return true;
 
     default:
         return false;
@@ -4321,6 +4320,9 @@ bool bolt::ignores_player() const
                                                                      : CONSTRICT_BVC);
     }
 
+    if (flavour == BEAM_QAZLAL)
+        return true;
+
     return false;
 }
 
@@ -4872,7 +4874,7 @@ void bolt::kill_monster(monster &mon)
     //
     // FIXME: Should be a better way of doing this. For now, we are
     // just falsifying the death report... -cao
-    if (flavour == BEAM_SPORE && god_protects(&mon) && fedhas_protects(&mon))
+    if (flavour == BEAM_SPORE && god_protects(mon) && fedhas_protects(mon))
     {
         if (mon.attitude == ATT_FRIENDLY)
             mon.attitude = ATT_HOSTILE;
@@ -5194,6 +5196,30 @@ bool bolt::bush_immune(const monster &mons) const
         && target != mons.pos();
 }
 
+// Is there a visible monster at this position which will keep the beam from
+// continuing onward? (And, if so, is it firewood or something else we'd never
+// actually want to bother hitting?)
+bool bolt::at_blocking_monster() const
+{
+    const monster *mon = monster_at(pos());
+    if (!mon || !you.can_see(*mon))
+        return false;
+
+    if (!pierce
+        && !ignores_monster(mon)
+        && mons_is_firewood(*mon))
+    {
+        return true;
+    }
+    if (have_passive(passive_t::neutral_slimes)
+        && god_protects(agent(), *mon, true)
+        && flavour != BEAM_VILE_CLUTCH)
+    {
+        return true;
+    }
+    return false;
+}
+
 void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead or fake monsters.
@@ -5202,6 +5228,23 @@ void bolt::affect_monster(monster* mon)
 
     hit_count[mon->mid]++;
 
+    // Jiyva absorbs attacks on slimes.
+    if (agent()
+        && flavour != BEAM_VILE_CLUTCH
+        && have_passive(passive_t::neutral_slimes)
+        && god_protects(agent(), *mon, true))
+    {
+        if (!is_tracer && you.see_cell(mon->pos()))
+        {
+            mprf(MSGCH_GOD, GOD_JIYVA,
+                 "%s absorbs the %s as it strikes your slime.",
+                 god_speaker(GOD_JIYVA).c_str(), name.c_str());
+        }
+
+        finish_beam();
+        return;
+    }
+
     if (shoot_through_monster(*this, mon) && !is_tracer)
     {
         if (you.see_cell(mon->pos()))
@@ -5209,7 +5252,7 @@ void bolt::affect_monster(monster* mon)
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
                 mpr("Your demonic guardian avoids your attack.");
             else
-                god_protects(agent(), mon, false); // messaging
+                god_protects(agent(), *mon, false); // messaging
         }
     }
 
@@ -5496,6 +5539,11 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
         return true;
 
+    int summon_type = 0;
+    mon->is_summoned(nullptr, &summon_type);
+    if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)
+        return true;
+
     return false;
 }
 
@@ -5650,7 +5698,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     // These are special allies whose loyalty can't be so easily bent
     case BEAM_CHARM:
-        rc = !(god_protects(mon)
+        rc = !(god_protects(*mon)
                || testbits(mon->flags, MF_DEMONIC_GUARDIAN));
         break;
 
@@ -6264,6 +6312,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         const int dur =
             random2(div_rand_round(ench_power, mon->get_hit_dice()) + 1)
                     * BASELINE_DELAY;
+
+        if (!dur)
+            break;
+
         mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                   agent(), // doesn't matter
                                   dur));
@@ -7203,6 +7255,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
     case BEAM_CRYSTALLIZING:         return "crystallizing";
     case BEAM_WARPING:               return "spatial disruption";
+    case BEAM_QAZLAL:                return "upheaval targetter";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
@@ -7325,7 +7378,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
     actor *originator = beam.agent();
     if (!victim || !originator)
         return false;
-    return god_protects(originator, victim)
+    return god_protects(originator, *victim)
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }

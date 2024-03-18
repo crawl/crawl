@@ -27,7 +27,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter
+                drop_filter, drop_disables_autopickup
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -676,6 +676,10 @@ drop_filter += <regex>, <regex>, ...
         set/clear selection of items that match the filter
         expression(s).
 
+drop_disables_autopickup = false
+        drop_disables_autopickup = true automatically removes dropped items
+        from autopickup.
+
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
 
@@ -1047,10 +1051,11 @@ interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
         run, shaft_self, travel. (These are derived from the `name()`
         functions in delay.h.)
 
-        Possible interrupt types are: ancestor_hp, force, full_hp, full_mp,
-        hp_loss, hit_monster, keypress, message, mimic, monster,
-        monster_attack, stat, sense_monster, teleport. (These are derived
-        from the `activity_interrupt_names` array in delay.cc.)
+        Possible interrupt types are: abyss_exit_spawned, ally_attacked,
+        ancestor_hp, force, full_hp, full_mp, hp_loss, hit_monster, keypress,
+        message, mimic, monster, monster_attack, stat, sense_monster, teleport.
+        (These are derived from the `activity_interrupt_names` array in
+        delay.cc.)
 
 
 delay_safe_poison = <% of hp>:<% of mhp>
@@ -2806,7 +2811,7 @@ display_char = <dungeon_character_name : symbol>
            invis_exposed, item_detected, item_orb, item_rune, item_weapon,
            item_armour, item_wand, item_scroll, item_ring, item_potion,
            item_missile, item_book, item_staff, item_rod, item_miscellany,
-           item_corpse, item_skeleton, item_gold, item_amulet, cloud,
+           item_corpse, item_skeleton, item_gold, item_gem, item_amulet, cloud,
            cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
            transporter_landing, space, fired_bolt, fired_zap, fired_burst,
            fired_debug, fired_missile, fired_missile, explosion, frame_horiz,

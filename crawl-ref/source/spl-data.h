@@ -2656,7 +2656,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_LIGHTNING_BOLT,
+    TILEG_BOLT_OF_LIGHT,
 },
 
 {
@@ -3248,7 +3248,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_WARP_SPACE,
 },
 
 {

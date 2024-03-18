@@ -1825,11 +1825,11 @@ static string _describe_weapon_brand(const item_def &item)
     }
 }
 
-static string _describe_point_change(int points)
+static string _describe_point_change(float points)
 {
     string point_diff_description;
 
-    point_diff_description += make_stringf("%s by %d",
+    point_diff_description += make_stringf("%s by %.1f",
                                            points > 0 ? "increase" : "decrease",
                                            abs(points));
 
@@ -1837,20 +1837,20 @@ static string _describe_point_change(int points)
 }
 
 static string _describe_point_diff(int original,
-                                   int changed)
+                                   int changed, int scale = 100)
 {
     string description;
 
-    int difference = changed - original;
-
-    if (difference == 0)
+    if (original == changed)
         return "remain unchanged";
+
+    float difference = ((float)(changed - original)) / scale;
 
     description += _describe_point_change(difference);
     description += " (";
-    description += to_string(original);
+    description += make_stringf("%.1f", ((float)(original)) / scale);
     description += " -> ";
-    description += to_string(changed);
+    description += make_stringf("%.1f", ((float)(changed)) / scale);
     description += ")";
 
     return description;
@@ -1878,18 +1878,37 @@ static string _equipment_switchto_string(const item_def &item)
         return "wearing";
 }
 
-static string _equipment_ac_ev_change_description(const item_def &item, bool remove = false)
+/**
+ * Describe how (un)equipping a piece of equipment might change the player's
+ * AC/EV/SH stats. We don't include temporary buffs in this calculation.
+ *
+ * @param item    The item whose description we are writing.
+ * @param remove  Whether the item is already equipped, and thus whether to
+                  show the change solely from unequipping the item.
+ * @return        The description.
+ */
+static string _equipment_ac_ev_sh_change_description(const item_def &item,
+                                                     bool remove = false)
 {
-    // First, test if there is any EV change at all.
-    const int cur_ev = you.evasion(true);
-    const int new_ev = remove ? you.evasion_without_specific_item(item)
-                              : you.evasion_with_specific_item(item);
+    // First, test if there is any AC/EV/SH change at all.
+    const int cur_ac = you.base_ac(100);
+    const int cur_ev = you.evasion_scaled(100, true);
+    const int cur_sh = player_displayed_shield_class(100, true);
+    int new_ac, new_ev, new_sh;
 
-    // If we're previewing non-armour and there is no EV change, print no
+    if (remove)
+        you.ac_ev_sh_without_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+    else
+        you.ac_ev_sh_with_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+
+    // If we're previewing non-armour and there is no AC/EV/SH change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
-    if (cur_ev == new_ev && item.base_type != OBJ_ARMOUR)
+    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+        && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
+    {
         return "";
+    }
 
     string description;
     description.reserve(100);
@@ -1906,20 +1925,33 @@ static string _equipment_ac_ev_change_description(const item_def &item, bool rem
         description += "If you switch to wielding this weapon in your main hand:";
     else
     {
-        description += "If you switch to " + _equipment_switchto_string(item) + " this "
-                        + _equip_type_name(item) + ":";
+        description += "If you switch to " + _equipment_switchto_string(item)
+                         + " this " + _equip_type_name(item) + ":";
     }
 
-    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND)
+    // Always display AC line on proper armour, even if there is no change
+    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND
+        || cur_ac != new_ac)
     {
-        description += "\nYour AC would ";
-
-        const int new_ac = remove ? you.armour_class_with_one_removal(item)
-                                  : you.armour_class_with_one_sub(item);
-        description += _describe_point_diff(you.armour_class(), new_ac) + ".";
+        description += "\nYour AC would "
+                       + _describe_point_diff(cur_ac, new_ac) + ".";
     }
 
-    description += "\nYour EV would " + _describe_point_diff(cur_ev, new_ev) + ".";
+    // Always display EV line on non-orb armour, even if there is no change
+    // XXX perhaps this shouldn't display on basic aux armour?
+    if (item.base_type == OBJ_ARMOUR && item.sub_type != ARM_ORB
+        || cur_ev != new_ev)
+    {
+        description += "\nYour EV would "
+                       + _describe_point_diff(cur_ev, new_ev) + ".";
+    }
+
+    // Always display SH line on shields, even if there is no change
+    if (is_shield(item) || cur_sh != new_sh)
+    {
+        description += "\nYour SH would "
+                       + _describe_point_diff(cur_sh, new_sh) + ".";
+    }
 
     return description;
 }
@@ -1929,14 +1961,14 @@ static bool _you_are_wearing_item(const item_def &item)
     return get_equip_slot(&item) != EQ_NONE;
 }
 
-static string _equipment_ac_ev_change(const item_def &item)
+static string _equipment_ac_ev_sh_change(const item_def &item)
 {
     string description;
 
     if (!_you_are_wearing_item(item))
-        description = _equipment_ac_ev_change_description(item);
+        description = _equipment_ac_ev_sh_change_description(item);
     else
-        description = _equipment_ac_ev_change_description(item, true);
+        description = _equipment_ac_ev_sh_change_description(item, true);
 
     return description;
 }
@@ -1974,7 +2006,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         description += "\n\n" + art_desc;
 
     if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-        description += _equipment_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
 
     if (verbose)
     {
@@ -2114,8 +2146,13 @@ static string _describe_ammo(const item_def &item)
 
 static string _warlock_mirror_reflect_desc()
 {
-    const int SH = crawl_state.need_save ? player_shield_class() : 0;
-    const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
+    const int scaled_SH = crawl_state.need_save ? player_shield_class(100, false) : 0;
+    const int SH = scaled_SH / 100;
+    // We use random-rounded SH, so take a weighted average of the
+    // chances with SH and SH+1.
+    const int reflect_chance_numer = (100 - (scaled_SH % 100)) * SH * omnireflect_chance_denom(SH+1) + (scaled_SH % 100) * (SH+1) * omnireflect_chance_denom(SH);
+    const int reflect_chance_denom = omnireflect_chance_denom(SH) * omnireflect_chance_denom(SH+1);
+    const int reflect_chance = reflect_chance_numer / reflect_chance_denom;
     return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
            "% chance to reflect attacks against your willpower and other "
            "normally unblockable effects.";
@@ -2320,7 +2357,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && can_wear_armour(item, false, true)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _equipment_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2597,9 +2634,12 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         && crawl_state.need_save
         && !you.has_mutation(MUT_NO_JEWELLERY)
         && item_ident(item, ISFLAG_KNOW_PROPERTIES)
-        && (item.sub_type != RING_EVASION || is_artefact(item)))
+        && (is_artefact(item)
+            || item.sub_type != RING_PROTECTION
+               && item.sub_type != RING_EVASION
+               && item.sub_type != AMU_REFLECTION))
     {
-        description += _equipment_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
     }
 
     return description;
@@ -4113,7 +4153,7 @@ command_type describe_item_popup(const item_def &item,
         else if (scroller->on_event(ev))
             return true;
 
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, &item);
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())
@@ -5283,16 +5323,16 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     // We ignore the EV penalty for not being able to see an enemy because, if you
     // can't see an enemy, you can't get a monster description for them. (Except through
     // ?/M, but let's neglect that for now.)
-    const int ev = you.evasion();
+    const int scaled_ev = you.evasion_scaled(100);
 
     const int to_land = weapon && is_unrandom_artefact(*weapon, UNRAND_SNIPER) ? AUTOMATIC_HIT :
                                                                 total_base_hit + post_roll_modifiers;
-    const int beat_ev_chance = mon_to_hit_pct(to_land, ev);
+    const int beat_ev_chance = mon_to_hit_pct(to_land, scaled_ev);
 
-    const int shield_class = player_shield_class();
+    const int scaled_sh = player_shield_class(100, false);
     const int shield_bypass = mon_shield_bypass(mi.hd);
     // ignore penalty for unseen attacker, as with EV above
-    const int beat_sh_chance = mon_beat_sh_pct(shield_bypass, shield_class);
+    const int beat_sh_chance = mon_beat_sh_pct(shield_bypass, scaled_sh);
 
     const int hit_chance = beat_ev_chance * beat_sh_chance / 100;
     result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
@@ -6444,7 +6484,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         }
         if (desc_sw->current_widget()->on_event(ev))
             return true;
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, nullptr);
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())

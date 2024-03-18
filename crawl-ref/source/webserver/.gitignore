@@ -6,3 +6,5 @@ debug-config.yml
 banned_players.yml
 banned_players.txt
 webtiles/version.txt
+Pipfile
+Pipfile.lock

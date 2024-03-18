@@ -914,12 +914,16 @@ static void _DAMNATION_launch(bolt* beam)
 static int _calc_elemental_staff_damage(beam_type flavour,
                                         actor* defender)
 {
-    const int base_bonus_dam = 10 + random2(15);
+    int preac = 10 + random2(15);
 
-    if (flavour == BEAM_NONE) // earth
-        return defender->apply_ac(base_bonus_dam);
+    if (flavour == BEAM_FIRE || flavour == BEAM_COLD)
+        preac = div_rand_round(preac * 5, 4);
 
-    return resist_adjust_damage(defender, flavour, base_bonus_dam);
+    const ac_type ac_check = flavour == BEAM_ELECTRICITY ? ac_type::half
+                                                         : ac_type::normal;
+    const int postac = defender->apply_ac(preac, 0, ac_check);
+
+    return resist_adjust_damage(defender, flavour, postac);
 }
 
 static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
@@ -948,10 +952,12 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
         flavour = BEAM_ELECTRICITY;
         break;
     default:
+        // XXX TODO removeme
         dprf("Bad damage type for elemental staff; defaulting to earth");
         // fallthrough to earth
     case 3:
         verb = "crush";
+        flavour = BEAM_MMISSILE;
         break;
     }
 

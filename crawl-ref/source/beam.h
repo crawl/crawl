@@ -254,6 +254,7 @@ private:
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool bush_immune(const monster &mons) const;
+    bool at_blocking_monster() const;
     int apply_lighting(int base_hit, const actor &target) const;
 
     set<string> message_cache;

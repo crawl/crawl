@@ -3083,6 +3083,9 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
             case MI_THROWING_NET:
                 ch = TILE_MI_THROWING_NET0;
                 break;
+            case MI_SLUG:
+                ch = TILE_MI_SLUG0;
+                break;
             default:
                 break;
         }
@@ -3095,7 +3098,6 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
             case MI_STONE:
                 ch = TILE_MI_STONE0;
                 break;
-            case MI_SLUG:
             case MI_SLING_BULLET:
                 switch (item.brand)
                 {
@@ -3763,6 +3765,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         return TILEG_ABILITY_KIKU_NECRONOMICON;
     // Yredelemnul
+    case ABIL_YRED_LIGHT_THE_TORCH:
+        return TILEG_ABILITY_YRED_LIGHT_THE_TORCH;
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
     case ABIL_YRED_HURL_TORCHLIGHT:

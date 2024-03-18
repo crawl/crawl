@@ -2645,6 +2645,9 @@ bool drop_item(int item_dropped, int quant_drop)
 
     ASSERT(item.defined());
 
+    if (Options.drop_disables_autopickup)
+        set_item_autopickup(item, AP_FORCE_OFF);
+
     if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
     {
         mpr("Too many items on this level, not dropping the item.");
@@ -4973,4 +4976,31 @@ void say_farewell_to_weapon(const item_def &item)
 
     // TODO: variant messages? (in the database?)
     mprf("You whisper farewell to %s.", name.c_str());
+}
+
+// If there are more than one net on this square
+// split off one of them for checking/setting values.
+void maybe_split_nets(item_def &item, const coord_def& where)
+{
+    if (item.quantity == 1)
+    {
+        set_net_stationary(item);
+        return;
+    }
+
+    item_def it;
+
+    it.base_type = item.base_type;
+    it.sub_type  = item.sub_type;
+    it.net_durability      = item.net_durability;
+    it.net_placed  = item.net_placed;
+    it.flags     = item.flags;
+    it.special   = item.special;
+    it.quantity  = --item.quantity;
+    item_colour(it);
+
+    item.quantity = 1;
+    set_net_stationary(item);
+
+    copy_item_to_grid(it, where);
 }

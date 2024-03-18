@@ -370,7 +370,7 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
-// Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
+// Uskayaw piety decays incredibly fast, but only to a baseline level of *.
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
 {

@@ -667,7 +667,7 @@ bool targeter_transference::valid_aim(coord_def a)
 targeter_permafrost::targeter_permafrost(const actor &act, int power) :
     targeter_smite(&act)
 {
-    set<coord_def> possible_centres = permafrost_targets(act, power);
+    possible_centres = permafrost_targets(act, power, false);
     for (coord_def t : possible_centres)
     {
         targets.insert(t);
@@ -680,9 +680,12 @@ targeter_permafrost::targeter_permafrost(const actor &act, int power) :
 
 aff_type targeter_permafrost::is_affected(coord_def loc)
 {
-    // TODO: consider displaying each centre differently from the AOEs.
     if (targets.count(loc))
+    {
+        if (possible_centres.count(loc))
+            return single_target ? AFF_MULTIPLE : AFF_YES;
         return single_target ? AFF_YES : AFF_MAYBE;
+    }
     return AFF_NO;
 }
 

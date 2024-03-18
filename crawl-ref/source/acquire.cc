@@ -527,7 +527,7 @@ static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
             acqweight *= damage / property(item_considered, PWPN_SPEED);
         }
 
-        // Rarely give out two-handers to steel elves.
+        // Rarely give out two-handers to coglins.
         if (you.has_mutation(MUT_WIELD_OFFHAND))
         {
             if (two_handed)
@@ -591,16 +591,15 @@ static int _acquirement_jewellery_subtype(int & /*quantity*/,
 
 static vector<pair<stave_type, int>> _base_staff_weights()
 {
-    vector<pair<stave_type, int>> weights = {
-        { STAFF_FIRE,        _skill_rdiv(SK_FIRE_MAGIC) },
-        { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
-        { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
-        { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
-        { STAFF_ALCHEMY,     _skill_rdiv(SK_ALCHEMY) },
-        { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
-        { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
-        { NUM_STAVES,        5 },
-    };
+    // Small chance to pick a totally random staff, independent of skill.
+    // For some reason.
+    vector<pair<stave_type, int>> weights = {{ NUM_STAVES, 5 }};
+    for (int i = 0; i < NUM_STAVES; i++)
+    {
+        stave_type staff = static_cast<stave_type>(i);
+        if (!item_type_removed(OBJ_STAVES, staff))
+            weights.push_back({staff, _skill_rdiv(staff_skill(staff))});
+    }
     return weights;
 }
 

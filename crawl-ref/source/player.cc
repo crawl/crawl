@@ -2200,7 +2200,7 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
 }
 
 // Total EV for player
-static int _player_evasion(bool ignore_temporary)
+static int _player_evasion(int final_scale, bool ignore_temporary)
 {
     const int size_factor = _player_evasion_size_factor();
     const int scale = 100;
@@ -2217,7 +2217,7 @@ static int _player_evasion(bool ignore_temporary)
 
     // Everything below this are transient modifiers
     if (ignore_temporary)
-        return unscale_round_up(natural_evasion, scale);
+        return (natural_evasion * final_scale) / scale;
 
     // Apply temporary bonuses, penalties, and multipliers
     int final_evasion =
@@ -2233,7 +2233,7 @@ static int _player_evasion(bool ignore_temporary)
                             final_evasion);
     }
 
-    return unscale_round_up(final_evasion, scale);
+    return (final_evasion * final_scale) / scale;
 }
 
 // Returns the spellcasting penalty (increase in spell failure) for the
@@ -2300,13 +2300,14 @@ static int _sh_from_shield(const item_def &item)
  * Calculate the SH value used internally.
  *
  * Exactly twice the value displayed to players, for legacy reasons.
+ * @param       Whether to include temporary effects like TSO's divine shield.
  * @return      The player's current SH value.
  */
-int player_shield_class()
+int player_shield_class(int scale, bool random, bool ignore_temporary)
 {
     int shield = 0;
 
-    if (you.incapacitated())
+    if (!ignore_temporary && you.incapacitated())
         return 0;
 
     const item_def *shield_item = you.shield();
@@ -2319,29 +2320,39 @@ int player_shield_class()
                ? you.get_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
                : 0);
 
-    if (you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
-            && !you.duration[DUR_ICEMAIL_DEPLETED])
+    // Icemail isn't active all of the time, so consider it temporary;
+    // this behaviour is consistent with how icemail's AC is dealt with.
+    if (!ignore_temporary
+        && you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
+        && !you.duration[DUR_ICEMAIL_DEPLETED])
     {
         shield += ICEMAIL_MAX * 100;
     }
 
     shield += qazlal_sh_boost() * 100;
-    shield += tso_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
-    return (shield + 50) / 100;
+    // divine shield
+    if (!ignore_temporary)
+        shield += tso_sh_boost() * 100;
+
+    return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
 
 /**
  * Calculate the SH value that should be displayed to players.
  *
  * Exactly half the internal value, for legacy reasons.
- * @return      The SH value to be displayed.
+ * @param scale           How much to scale the value by (higher scale increases
+                          precision, as SH is a number with 2 decimal places)
+ * @param bool_temporary  Whether to include temporary effects like
+                          TSO's divine shield.
+ * @return                The SH value to be displayed.
  */
-int player_displayed_shield_class()
+int player_displayed_shield_class(int scale, bool ignore_temporary)
 {
-    return player_shield_class() / 2;
+    return player_shield_class(scale, false, ignore_temporary) / 2;
 }
 
 /**
@@ -2645,7 +2656,7 @@ void apply_exp()
     _handle_god_wrath(exp_gained);
 
     // evolution mutation timer
-    if (you.attribute[ATTR_EVOL_XP] > 0)
+    if (you.attribute[ATTR_EVOL_XP] > 0 && you.can_safely_mutate())
         you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
@@ -3302,7 +3313,8 @@ int player_stealth()
                 umbra_mul = you.piety + MAX_PIETY;
                 umbra_div = MAX_PIETY;
             }
-            if ((player_equip_unrand(UNRAND_BRILLIANCE)
+            if ((you.has_mutation(MUT_FOUL_SHADOW)
+                 || player_equip_unrand(UNRAND_BRILLIANCE)
                  || player_equip_unrand(UNRAND_SHADOWS))
                 && 2 * umbra_mul < 3 * umbra_div)
             {
@@ -6216,7 +6228,7 @@ int player::racial_ac(bool temp) const
         && (!player_is_shapechanged() || form == transformation::dragon
             || !temp))
     {
-        int AC = 400 + 100 * (experience_level / 3);  // max 13
+        int AC = 400 + 100 * experience_level / 3;  // max 13
         if (species == SP_GREY_DRACONIAN) // no breath
             AC += 500;
         return AC;
@@ -6453,19 +6465,12 @@ int player::base_ac(int scale) const
 
 int player::armour_class() const
 {
-    return armour_class_with_specific_items(get_armour_items());
+    return div_rand_round(armour_class_scaled(100), 100);
 }
 
-int player::armour_class_with_one_sub(item_def sub) const
+int player::armour_class_scaled(int scale) const
 {
-    return armour_class_with_specific_items(
-                            get_armour_items_one_sub(sub));
-}
-
-int player::armour_class_with_one_removal(item_def removed) const
-{
-    return armour_class_with_specific_items(
-                            get_armour_items_one_removal(removed));
+    return armour_class_with_specific_items(scale, get_armour_items());
 }
 
 int player::corrosion_amount() const
@@ -6493,10 +6498,10 @@ static int _meek_bonus()
     return min(max(0, (scale_top - you.hp) / hp_per_ac), max_ac);
 }
 
-int player::armour_class_with_specific_items(vector<const item_def *> items) const
+int player::armour_class_with_specific_items(int scale,
+                                 vector<const item_def *> items) const
 {
-    const int scale = 100;
-    int AC = base_ac_with_specific_items(scale, items);
+    int AC = base_ac_with_specific_items(100, items);
 
     if (duration[DUR_ICY_ARMOUR])
     {
@@ -6508,7 +6513,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
         AC += 100 * player_icemail_armour_class();
 
     if (duration[DUR_FIERY_ARMOUR])
-        AC += 7 * scale;
+        AC += 700;
 
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
@@ -6517,7 +6522,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     {
         AC += 700;
         if (player_equip_unrand(UNRAND_MEEK))
-            AC += _meek_bonus() * scale;
+            AC += _meek_bonus() * 100;
     }
 
     if (you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
@@ -6527,13 +6532,13 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
-        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
 
     AC -= 100 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
 
-    return AC / scale;
+    return AC * scale / 100;
 }
 
 void player::refresh_rampage_hints()
@@ -6573,7 +6578,7 @@ int player::gdr_perc() const
  */
 int player::evasion(bool ignore_temporary, const actor* act) const
 {
-    int base_evasion = _player_evasion(ignore_temporary);
+    int base_evasion = div_rand_round(_player_evasion(100, ignore_temporary), 100);
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
@@ -6582,14 +6587,35 @@ int player::evasion(bool ignore_temporary, const actor* act) const
     return base_evasion - invis_penalty;
 }
 
-// What would our natural EV be if we wore a given piece of armour instead of
-// whatever might be in that slot currently (if anything)?
-int player::evasion_with_specific_item(const item_def& new_item) const
+int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) const
 {
-    // Since there are a lot of things which can affect the calculation of EV,
-    // including artifact properties on either the item we're equipped or the
-    // one we're swapping out for it, we check by very briefly 'putting on' the
-    // new item and calling the normal evasion calculation function.
+    int base_evasion = _player_evasion(scale, ignore_temporary);
+
+    const bool attacker_invis = act && !act->visible_to(this);
+    const int invis_penalty
+        = attacker_invis && !ignore_temporary ? 10 : 0;
+
+    return base_evasion - invis_penalty * scale;
+}
+
+/**
+ * What would our natural AC/EV/SH be if we wore a given piece of equipment
+ * instead of whatever might be in that slot currently (if anything)?
+ * Note: non-artefact rings of evasion/protection and amulets of reflection
+ * are excepted from using this function.
+ *
+ * @param new_item  The equipment item in question.
+ * @param ac        The player's AC if this item were equipped.
+ * @param ev        The player's EV if this item were equipped.
+ * @param sh        The player's SH if this item were equipped.
+ */
+void player::ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
+                                         int *ac, int *ev, int *sh)
+{
+    // Since there are a lot of things which can affect the calculation of
+    // EV/SH, including artifact properties on either the item we're equipped or
+    // the one we're swapping out for it, we check by very briefly 'putting on'
+    // the new item and calling the normal evasion calculation function.
     //
     // As we edit the item links directly, this should be invisible to the
     // player, bypass normal equip/unequip routines, and have no side-effects.
@@ -6601,7 +6627,7 @@ int player::evasion_with_specific_item(const item_def& new_item) const
     // Since it's not reasonable to automatically determine *which* ring a
     // previewed ring should replace, we opt to have it replace none instead,
     // and simply give the total EV that would be gained from this item in a
-    // vaccuum.
+    // vacuum.
     if (slot == EQ_RINGS)
         slot = EQ_PREVIEW_RING;
 
@@ -6623,17 +6649,19 @@ int player::evasion_with_specific_item(const item_def& new_item) const
         you.equip[slot] = ENDOFPACK;
     }
 
-    // Now, simply calculate evasion without temporary boosts.
-    int ret = evasion(true);
+    // Now, simply calculate AC/EV/SH without temporary boosts.
+    *ac = base_ac(scale);
+    *ev = evasion_scaled(scale, true);
+    *sh = player_displayed_shield_class(scale, true);
 
     // Restore old item and clear out any item copies, just in case.
     you.equip[slot] = old_item;
     you.inv[ENDOFPACK].clear();
-
-    return ret;
 }
 
-int player::evasion_without_specific_item(const item_def& item_to_remove) const
+void player::ac_ev_sh_without_specific_item(int scale,
+                                            const item_def& item_to_remove,
+                                            int *ac, int *ev, int *sh)
 {
     int slot = get_equip_slot(&item_to_remove);
 
@@ -6641,12 +6669,12 @@ int player::evasion_without_specific_item(const item_def& item_to_remove) const
     // (or this function will give bogus info)
     ASSERT(slot != -1);
 
-    // Briefly remove item, calculate EV, then put it back on
+    // Briefly remove item, calculate EV/SH, then put it back on
     you.equip[slot] = -1;
-    int ret = evasion(true);
+    *ac = base_ac(scale);
+    *ev = evasion_scaled(scale, true);
+    *sh = player_displayed_shield_class(scale, true);
     you.equip[slot] = item_to_remove.link;
-
-    return ret;
 }
 
 bool player::heal(int amount)
@@ -8956,6 +8984,7 @@ bool player::immune_to_hex(const spell_type hex) const
     case SPELL_PARALYSE:
     case SPELL_SLOW:
         return stasis();
+    case SPELL_CHARMING:
     case SPELL_CONFUSE:
     case SPELL_CONFUSION_GAZE:
     case SPELL_MASS_CONFUSION:
@@ -8972,6 +9001,7 @@ bool player::immune_to_hex(const spell_type hex) const
         return clarity() || !(holiness() & MH_NATURAL) || berserk();
     case SPELL_PETRIFY:
         return res_petrify();
+    case SPELL_POLYMORPH:
     case SPELL_PORKALATOR:
         return is_lifeless_undead();
     case SPELL_VIRULENCE:

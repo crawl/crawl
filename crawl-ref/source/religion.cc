@@ -1815,6 +1815,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
 
     const int old_mhp = ancestor->max_hit_points;
     ancestor->max_hit_points = hepliaklqana_ally_hp();
+    ancestor->props[KNOWN_MAX_HP_KEY] = ancestor->max_hit_points;
     ancestor->hit_points =
         div_rand_round(ancestor->hit_points * ancestor->max_hit_points,
                        old_mhp);
@@ -2659,9 +2660,9 @@ static bool _fedhas_protects_species(monster_type mc)
 }
 
 /// Whether fedhas would protect `target` from harm if called on to do so.
-bool fedhas_protects(const monster *target)
+bool fedhas_protects(const monster &target)
 {
-    return target && _fedhas_protects_species(mons_base_type(*target));
+    return _fedhas_protects_species(mons_base_type(target));
 }
 
 /**
@@ -2673,18 +2674,18 @@ bool fedhas_protects(const monster *target)
  *               damage.
  * @return       Whether target should escape damage.
  */
-bool god_protects(const actor *agent, const monster *target, bool quiet)
+bool god_protects(const actor *agent, const monster &target, bool quiet)
 {
     // The alignment check is to allow a penanced player to continue to fight
     // hostiles that would otherwise be protected, in case what they angered can
     // fight back
 
-    const bool aligned = agent && target
+    const bool aligned = agent
         && ((agent->is_player()
-                ? target->friendly()
-                : mons_atts_aligned(target->attitude,
-                                                agent->as_monster()->attitude))
-            || target->neutral());
+                ? target.friendly()
+                : mons_atts_aligned(target.attitude,
+                                    agent->as_monster()->attitude))
+            || target.neutral());
     // XX does it matter whether this just checks fedhas vs.
     // the shoot_through_plants passive
     if (aligned
@@ -2693,7 +2694,7 @@ bool god_protects(const actor *agent, const monster *target, bool quiet)
             || agent->is_monster() && agent->deity() == GOD_FEDHAS) // purely theoretical?
         && fedhas_protects(target))
     {
-        if (!quiet && you.can_see(*target))
+        if (!quiet && you.can_see(target))
         {
             simple_god_message(
                         make_stringf(" protects %s plant from harm.",
@@ -2703,13 +2704,23 @@ bool god_protects(const actor *agent, const monster *target, bool quiet)
         return true;
     }
 
-    if (agent && target && agent->is_player()
-        && mons_is_hepliaklqana_ancestor(target->type))
+    if (agent && agent->is_player()
+        && mons_is_hepliaklqana_ancestor(target.type))
     {
         // TODO: this message does not work very well for all sorts of attacks
         // should this be a god message?
-        if (!quiet && you.can_see(*target))
-            mprf("%s avoids your attack.", target->name(DESC_THE).c_str());
+        if (!quiet && you.can_see(target))
+            mprf("%s avoids your attack.", target.name(DESC_THE).c_str());
+        return true;
+    }
+
+    if (aligned
+        && agent->is_player()
+        && have_passive(passive_t::neutral_slimes)
+        && mons_is_slime(target))
+    {
+        if (!quiet && you.can_see(target))
+            simple_god_message(" protects your slime from harm.", GOD_JIYVA);
         return true;
     }
     return false;
@@ -2722,9 +2733,19 @@ bool god_protects(const actor *agent, const monster *target, bool quiet)
  *               damage.
  * @return       Whether target should escape damage.
  */
-bool god_protects(const monster *target, bool quiet)
+bool god_protects(const monster &target, bool quiet)
 {
     return god_protects(&you, target, quiet);
+}
+
+bool god_protects(const monster *target, bool quiet)
+{
+    return target && god_protects(&you, *target, quiet);
+}
+
+bool god_protects(const actor *agent, const monster *target, bool quiet)
+{
+    return target && god_protects(agent, *target, quiet);
 }
 
 /// Whether Fedhas would set `target` to a neutral attitude
@@ -4026,7 +4047,7 @@ bool god_hates_killing(god_type god, const monster& mon)
         retval = (god == GOD_ELYVILON);
 
     if (god == GOD_FEDHAS)
-        retval = (fedhas_protects(&mon));
+        retval = fedhas_protects(mon);
 
     return retval;
 }

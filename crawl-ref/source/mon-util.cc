@@ -2768,10 +2768,11 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
             drac_breath(mi.draconian_subspecies());
         if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
             slots.push_back(breath);
-        // No other spells; quit right away.
-        if (book == MST_NO_SPELLS)
-            return slots;
     }
+
+    // No other spells (e.g. drac and/or wand); quit right away.
+    if (book == MST_NO_SPELLS)
+        return slots;
 
     if (book != MST_GHOST)
         ASSERT(msidx < ARRAYSZ(mspell_list));

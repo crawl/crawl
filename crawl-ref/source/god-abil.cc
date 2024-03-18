@@ -3526,9 +3526,34 @@ static int _upheaval_radius(int pow)
     return pow / 100 + 1;
 }
 
+static bool _qazlal_affected(coord_def pos)
+{
+    const actor *act = actor_at(pos);
+
+    if (act)
+    {
+        if (act->is_player())
+            return false;
+
+        if (act->is_monster())
+        {
+            const monster *mon = act->as_monster();
+            int summon_type = 0;
+            // Never fire at elemental forces.
+            if (mon && mon->is_summoned(nullptr, &summon_type)
+                && summon_type == MON_SUMM_AID)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_target)
 {
-    int pow = you.skill(SK_INVOCATIONS, 6);
+    const int pow = you.skill(SK_INVOCATIONS, 6);
     const int max_radius = _upheaval_radius(pow);
 
     bolt beam;
@@ -3557,7 +3582,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
-        args.self = confirm_prompt_type::cancel;
+        args.self = confirm_prompt_type::none;
         args.hitfunc = &tgt;
         if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
@@ -3572,7 +3597,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         bolt tempbeam;
         tempbeam.source    = beam.target;
         tempbeam.target    = beam.target;
-        tempbeam.flavour   = BEAM_MISSILE;
+        tempbeam.flavour   = BEAM_QAZLAL;
         tempbeam.ex_size   = max_radius;
         tempbeam.hit       = AUTOMATIC_HIT;
         tempbeam.damage    = dice_def(AUTOMATIC_HIT, 1);
@@ -3621,11 +3646,15 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     }
 
     vector<coord_def> affected;
-    affected.push_back(beam.target);
+    if (_qazlal_affected(beam.target))
+        affected.push_back(beam.target);
     for (radius_iterator ri(beam.target, max_radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
         if (!in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+
+        if (!_qazlal_affected(*ri))
             continue;
 
         int chance = pow;
@@ -3786,17 +3815,21 @@ spret qazlal_disaster_area(bool fail)
         if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
-        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-        if (m && mons_att_wont_attack(m->attitude)
-            && !mons_is_projectile(m->type))
+        if (!_qazlal_affected(*ri))
+            continue;
+
+        const monster *mon = monster_at(*ri);
+        if (mon && mons_att_wont_attack(mon->attitude)
+            && !mons_is_projectile(mon->type))
         {
             friendlies = true;
         }
 
         const int range = you.pos().distance_from(*ri);
-        const int dist = grid_distance(you.pos(), *ri);
         if (range <= upheaval_radius)
             continue;
+
+        const int dist = grid_distance(you.pos(), *ri);
 
         targets.push_back(*ri);
         // We weight using the square of grid distance, so monsters fewer tiles
@@ -5764,7 +5797,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(mon) || mons_is_firewood(*mon))
+        if (!mon || god_protects(*mon) || mons_is_firewood(*mon))
             continue;
 
         const int dur = random_range(60, 150);

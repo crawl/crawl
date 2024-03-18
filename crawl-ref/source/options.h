@@ -511,6 +511,7 @@ public:
     bool        darken_beyond_range; // whether to darken squares out of range
     bool        show_blood; // whether to show blood or not
     bool        reduce_animations;   // if true, don't show interim steps for animations
+    bool        drop_disables_autopickup;   // if true, automatically remove drops from autopickup
 
     vector<text_pattern> unusual_monster_items; // which monster items to
                                                 // highlight as unusual

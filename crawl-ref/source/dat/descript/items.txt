@@ -631,7 +631,7 @@ dealing enormous damage which increases with the user's Shapeshifting skill.
 
 However, this instability makes the user unable to use weapons, shields or body
 armour. They also glow, reducing stealth and preventing invisibility, and their
-melee damage is reduced, as their limbs sometimes destabilize mid-swing.
+melee damage is reduced, as their limbs sometimes destabilise mid-swing.
 %%%%
 gem
 
@@ -1352,28 +1352,26 @@ staff of air
 
 A staff that increases the power of air spells cast by its wielder, and
 insulates them from electricity. If the wielder is skilled in Evocations and
-Air Magic, they can shock those struck by it, dealing electricity damage which
-bypasses armour.
+Air Magic, they can shock those struck by it, dealing electrical damage which
+bypasses half of defenders' armour.
 %%%%
 staff of alchemy
 
 A staff that increases the power of alchemy spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
-Evocations and Alchemy, they can envenom those struck by it, dealing poison
-damage which bypasses armour.
+Evocations and Alchemy, they can envenom those struck by it.
 %%%%
 staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
-and Ice Magic, they can freeze those struck by it, dealing cold damage which
-bypasses armour.
+and Ice Magic, they can freeze those struck by it.
 %%%%
 staff of conjuration
 
 A staff that increases the power of conjurations cast by its wielder. If the
 wielder is skilled in Evocations and Conjurations, they can blast those they
-strike with pure energy, dealing irresistible damage.
+strike with pure energy.
 %%%%
 staff of death
 
@@ -1393,8 +1391,7 @@ staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
-and Fire Magic, they can burn those struck by it, dealing fire damage which
-bypasses armour.
+and Fire Magic, they can burn those struck by it.
 %%%%
 starry gem
 
@@ -1579,8 +1576,8 @@ wand of roots
 
 A magical device which fires a magical seed, entangling its target and adjacent
 foes in quick-growing tree roots. Those entangled will be immobilized and take
-increasing damage over time until they escape or the roots wither away. The roots
-will only sprout from solid ground.
+damage over time until they escape or the roots wither away. The roots will only
+sprout from solid ground.
 %%%%
 wand of warping
 

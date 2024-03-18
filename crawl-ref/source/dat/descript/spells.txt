@@ -177,6 +177,12 @@ Bolt of Fire spell
 
 Fires a penetrating bolt of flames.
 %%%%
+Bolt of Light spell
+
+Fires a ray of searing light, injuring those struck. Inhabitants of the dungeon
+will also be blinded, while adventurers (more accustomed to light) will merely
+suffer momentary confusion.
+%%%%
 Bolt of Magma spell
 
 Fires a penetrating bolt of molten rock. Half of its damage bypasses fire
@@ -301,6 +307,7 @@ The spell bypasses half of defenders' armour and resistance to electricity.
 Charm spell
 
 Causes an otherwise hostile creature to fight on the caster's side for a while.
+Adventurers, set on their quest for the ORB, instead suffer momentary confusion.
 %%%%
 Chaos Breath spell
 
@@ -457,7 +464,7 @@ attack anything and everything nearby with great strength and speed.
 %%%%
 Disjunction spell
 
-Destabilizes the space in a sphere around the caster for a while, causing
+Destabilises the space in a sphere around the caster for a while, causing
 anyone nearby to blink away from the caster. The chance of blinking depends on
 the distance from the caster, being nearly certain when directly adjacent.
 %%%%
@@ -561,6 +568,12 @@ Spellpower will increase how long the bog lingers.
 Eruption spell
 
 Splits the earth to draw up a localized, short-lived volcano under the target.
+%%%%
+Fastroot spell
+
+Fire a magical seed, entangling victims in quick-growing tree roots. Those
+entangled will be painfully constricted until they escape or the roots wither
+away. The roots will only sprout from solid ground.
 %%%%
 Flay spell
 
@@ -1065,7 +1078,7 @@ Orb of Destruction spell
 Conjures an orb made of pure destructive magic. Compared to most other
 projectiles, these orbs travel at a relatively slow pace. The orbs home onto
 their targets, yet because of their huge inertia, especially agile opponents
-may be able to outmanoeuvre them. The orbs need some time to stabilize, and a
+may be able to outmanoeuvre them. The orbs need some time to stabilise, and a
 nascent orb will deal reduced damage.
 
 Residents of the dungeon are able to maintain the orb until it impacts a
@@ -1211,7 +1224,7 @@ next to or above lava will be burned.
 %%%%
 Quicksilver Bolt spell
 
-Breathes a bolt of dispelling energy at a targeted creature, possibly removing
+Fires a bolt of dispelling energy at a targeted creature, possibly removing
 some of its enchantments.
 %%%%
 Rebounding Blaze spell
@@ -1817,6 +1830,11 @@ brambles are sparse enough that almost any missile can pass through unhindered.
 Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
+%%%%
+Warp Space spell
+
+Create a brief but violent rift in space, damaging everything caught in its wake
+and sometimes blinking them a short distance away.
 %%%%
 Waterstrike spell
 
