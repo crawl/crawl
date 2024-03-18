@@ -9687,6 +9687,22 @@ wwwwwxxxxxxmxmxmx.....wwwwwwwwwwwwwwwwww
   ~~~~~~~wwwwwww~~~w~w~ww~~~wwwwwwww
 ENDMAP
 
+NAME:    orjb1_guarded_unrand_arga
+TAGS:    no_monster_gen no_trap_gen no_item_gen
+DEPTH:   Vaults, Depths
+WEIGHT:  3
+KITEM:   d = arga no_pickup
+MONS:    quicksilver dragon
+MAP
+ vv=====vv
+ v.......v
+ v...1...v
+ vv.....vv
+  v1...1v
+  vv.d.vv
+   vvvvv
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
