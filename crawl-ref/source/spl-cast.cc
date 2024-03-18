@@ -110,11 +110,11 @@ void surge_power_wand(const int mp_cost)
     if (mp_cost || gadgeteer)
     {
         int enhanced = 1;
-        if(mp_cost >= 3) enhanced++;
-        if(gadgeteer) enhanced++;
+        if (mp_cost >= 3) enhanced++;
+        if (gadgeteer) enhanced++;
         mprf("You feel a %ssurge of power%s",
              enhanced == 1 ? "slight " : enhanced == 3 ? "strong " : "",
-             enhanced == 1 ? "."      : "!");
+             enhanced == 1 ? "." : "!");
     }
 }
 
