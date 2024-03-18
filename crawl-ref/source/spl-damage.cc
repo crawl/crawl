@@ -3787,7 +3787,7 @@ void handle_flame_wave()
     bolt beam;
     if (!_prep_flame_wave(beam, pow, lvl))
     {
-        mpr("You stop channeling waves of flame.");
+        mpr("You stop channelling waves of flame.");
         end_flame_wave();
         return;
     }

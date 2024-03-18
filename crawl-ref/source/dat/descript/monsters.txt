@@ -899,11 +899,11 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skillfully.
+and able to use them skilfully.
 %%%%
 cerulean imp
 
-A small, willful minor demon. Its wings, far larger than its scrawny body, were
+A small, wilful minor demon. Its wings, far larger than its scrawny body, were
 made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
@@ -1158,7 +1158,7 @@ stand in its way.
 %%%%
 draconian knight
 
-A draconian protected by thick scales, skillful weapon use, and complementary
+A draconian protected by thick scales, skilful weapon use, and complementary
 magic.
 %%%%
 draconian monk
