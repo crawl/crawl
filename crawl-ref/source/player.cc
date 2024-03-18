@@ -6839,7 +6839,7 @@ bool player::res_torment() const
     // doesn't currently make you a plant, and I suspect changing that
     // would cause other bugs. (For example, being able to wield holy
     // weapons as a demonspawn & keep them while untransformed?)
-           || you.form == transformation::tree ;
+           || you.form == transformation::tree;
 }
 
 bool player::res_polar_vortex() const
