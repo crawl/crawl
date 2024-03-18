@@ -15,9 +15,9 @@ aptitudes:
   fighting: -1
   short_blades: -1
   long_blades: -1
-  axes: -1
+  axes: -2
   maces_and_flails: -1
-  polearms: -1
+  polearms: -2
   staves: -1
   unarmed_combat: -1
   ranged weapons: -3
@@ -64,6 +64,6 @@ recommended_weapons:
   - SK_AXES
   - SK_STAVES
 
-altar_action: loaf before
+altar_action: curl up in front of
 child_name: Pup
 orc_name: Orcataur

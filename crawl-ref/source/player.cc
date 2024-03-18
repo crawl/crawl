@@ -1724,8 +1724,6 @@ int player_spec_fire()
 
     sf += you.wearing(EQ_RINGS, RING_FIRE);
 
-    sf += you.get_mutation_level(MUT_FIRE_ENHANCER);
-
     sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
 
     if (player_equip_unrand(UNRAND_SALAMANDER))
@@ -1745,8 +1743,6 @@ int player_spec_cold()
 
     sc += you.wearing(EQ_RINGS, RING_ICE);
 
-    sc += you.get_mutation_level(MUT_ICE_ENHANCER);
-
     sc += you.scan_artefacts(ARTP_ENHANCE_ICE);
 
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
@@ -1762,8 +1758,6 @@ int player_spec_earth()
     // Staves
     se += you.wearing(EQ_STAFF, STAFF_EARTH);
 
-    se += you.get_mutation_level(MUT_EARTH_ENHANCER);
-    
     se += you.scan_artefacts(ARTP_ENHANCE_EARTH);
 
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
@@ -1778,8 +1772,6 @@ int player_spec_air()
 
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
-
-    sa += you.get_mutation_level(MUT_AIR_ENHANCER);
 
     sa += you.scan_artefacts(ARTP_ENHANCE_AIR);
 
@@ -1823,8 +1815,6 @@ int player_spec_alchemy()
     int sp = 0;
 
     sp += you.wearing(EQ_STAFF, STAFF_ALCHEMY);
-
-    sp += you.get_mutation_level(MUT_ALCHEMY_ENHANCER);
 
     sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
@@ -2264,7 +2254,6 @@ int player_armour_shield_spell_penalty()
 int player_wizardry()
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
-		   + (you.get_mutation_level(MUT_WIZARDRY))
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
 }
 

@@ -295,7 +295,6 @@ bool actor::faith(bool items) const
 int actor::archmagi(bool items) const
 {
     return items ? wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI)
-                   + you.get_mutation_level(MUT_ARCHMAGI)
                    + scan_artefacts(ARTP_ARCHMAGI) : 0;
 }
 

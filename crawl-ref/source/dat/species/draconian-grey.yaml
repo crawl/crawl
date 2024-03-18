@@ -37,9 +37,5 @@ fake_mutations:
 mutations:
   1:
     MUT_COLD_BLOODED: 1
-  7:
-    MUT_EARTH_ENHANCER: 1
-  14:
-    MUT_EARTH_ENHANCER: 1
 
 orc_name: Grey Orconian

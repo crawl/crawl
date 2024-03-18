@@ -31,13 +31,8 @@ mutations:
     MUT_COLD_BLOODED: 1
   7:
     MUT_ACID_RESISTANCE: 1
-    MUT_ACIDIC_BITE: 1
-    MUT_EVOLUTION: 1
   14:
-    MUT_EVOLUTION: 1
-  21:
-    MUT_MUTATION_RESISTANCE: 1
-
+    MUT_ACIDIC_BITE: 1
 fake_mutations:
   - long: You can breathe corrosive fumes.
     short: caustic breath

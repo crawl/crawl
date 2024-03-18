@@ -30,10 +30,6 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
-  7:
-    MUT_WIZARDRY: 1
-  14:
-    MUT_ARCHMAGI: 1
 fake_mutations:
   - long: You can breathe blasts of antimagic.
     short: nullifying breath
