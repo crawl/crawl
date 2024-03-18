@@ -157,9 +157,10 @@ void player::set_position(const coord_def &c)
         if (duration[DUR_QUAD_DAMAGE])
             invalidate_agrid(true);
 
-        if (player_has_orb())
+        if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
         {
-            env.orb_pos = c;
+            if (player_has_orb())
+                env.orb_pos = c;
             invalidate_agrid(true);
         }
 

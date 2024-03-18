@@ -194,7 +194,8 @@ static void _update_agrid()
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
 
-    if (player_has_orb() && !you.pos().origin())
+    if ((player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
+         && !you.pos().origin())
     {
         const int r = 2;
         _agrid_centres.emplace_back(area_centre_type::orb, you.pos(), r);
