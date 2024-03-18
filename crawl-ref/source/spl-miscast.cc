@@ -7,6 +7,7 @@
 
 #include "spl-miscast.h"
 
+#include "art-enum.h"
 #include "attack.h"
 #include "beam-type.h"
 #include "fight.h"
@@ -581,7 +582,8 @@ void miscast_effect(spell_type spell, int fail)
     miscast_effect(you, nullptr, {miscast_source::spell},
                    school,
                    spell_difficulty(spell),
-                   raw_spell_fail(spell), string("miscasting ") + spell_title(spell));
+                   raw_spell_fail(spell) + (player_equip_unrand(UNRAND_MISFORTUNE, false) ? 20 : 0),
+                   string("miscasting ") + spell_title(spell));
 }
 
 // Miscasts from other sources (god wrath, spellbinder melee, wild magic card,
