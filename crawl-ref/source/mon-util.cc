@@ -1060,9 +1060,6 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known, bool i
         return false;
     }
 
-    if (!include_demonic && act.res_negative_energy() >= 3)
-        return false;
-
     if (act.is_player())
         return true;
 

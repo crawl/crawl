@@ -5657,7 +5657,11 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     case BEAM_VAMPIRIC_DRAINING:
         ASSERT(agent);
-        rc = actor_is_susceptible_to_vampirism(false, *mon, *agent);
+        {
+            const bool include_demonic = agent->is_player() && you.has_mutation(MUT_VAMPIRISM);
+            rc = actor_is_susceptible_to_vampirism(*mon, false, include_demonic)
+                    && (include_demonic || mon->res_negative_energy(intrinsic_only) < 3);
+        }
         break;
 
     case BEAM_VIRULENCE:
