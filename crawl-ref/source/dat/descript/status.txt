@@ -596,7 +596,7 @@ Any equipped weapons and armour are melded.
 %%%%
 Death status
 
-You have been transformed into an undying offense against life itself.
+You have been transformed into an undying offence against life itself.
 
 Foes struck by your hands or melee weapons are weakened, slowed, and drained,
 and you can heal yourself by tormenting living foes nearby. You also resist

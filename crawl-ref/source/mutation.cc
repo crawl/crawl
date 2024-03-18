@@ -1195,7 +1195,7 @@ private:
         }
         if (!tfd.defenses.empty())
         {
-            add_entry(new MenuEntry("<w>Defense:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("<w>Defence:</w>", MEL_ITEM, 1, 0));
             add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
         }
         for (auto skinfo : tfd.defenses)
@@ -1205,7 +1205,7 @@ private:
         }
         if (!tfd.offenses.empty())
         {
-            add_entry(new MenuEntry("<w>Offense:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("<w>Offence:</w>", MEL_ITEM, 1, 0));
             add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
         }
         for (auto skinfo : tfd.offenses)
