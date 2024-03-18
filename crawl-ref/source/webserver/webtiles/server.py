@@ -195,7 +195,7 @@ def stop_everything(shutdown_event):
     def do_stop(tries=0):
         if len(ws_handler.sockets) == 0:
             shutdown_event.set()
-        elif tries > 10: # 60: # 30s
+        elif tries > 60: # 30s
             # try something a bit stronger
             logging.error("Stop failed after 30s, cancelling remaining tasks.")
             logging.error("Remaining sockets: %s", ws_handler.describe_sockets(names=True))
