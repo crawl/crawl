@@ -1831,10 +1831,10 @@ OBJ:      OBJ_ARMOUR/ARM_ORB
 TILE:     urand_charlatan
 TILE_EQ:  orb2
 COLOUR:   MAGENTA
-INSCRIP: orb
-DBRAND:  It boosts the power of your evoked items.
-+It massively reduces your stealth.
+INSCRIP: orb Evoboost
+DBRAND:  It massively reduces your stealth.
 +It interferes with translocations, delaying teleports.
++Evoboost:    It boosts the power of your evoked items.
 
 # This entry must always be last.
 ENUM:   DUMMY2
