@@ -812,7 +812,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_WIZARDRY, 0, 1, mutflag::good, false,
+{ MUT_ARCHMAGI, 0, 1, mutflag::good, false,
   "innate archmagi",
 
   {"Your spells are empowered",
