@@ -730,6 +730,100 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_ALCHEMY_ENHANCER, 0, 3, mutflag::good, false,
+  "empowered alchemy",
+
+  {"Your alchemy spells are empowered",
+   "Your alchemy spells are greatly empowered.",
+   "Your alchemy spells are more greatly empowered."},
+
+   {"You feel attuned to the powers of alchemy.",
+   "You feel more attuned to the powers of alchemy.",
+   "You feel more attuned to the powers of alchemy."},
+
+  {"", "", ""},
+},
+
+{ MUT_FIRE_ENHANCER, 0, 3, mutflag::good, false,
+  "empowered fire magic",
+
+  {"Your fire magic is empowered",
+   "Your fire magic is greatly empowered.",
+   "Your fire magic is more greatly empowered."},
+
+   {"Your hands burn with power.",
+   "Your hands blaze with power.",
+   "Your hands blaze with awesome power."},
+
+  {"", "", ""},
+},
+
+{ MUT_ICE_ENHANCER, 0, 3, mutflag::good, false,
+  "empowered ice magic",
+
+  {"Your ice magic are empowered",
+   "Your ice magic are greatly empowered.",
+   "Your ice magic are more greatly empowered."},
+
+   {"You feel attuned to the powers of ice.",
+   "You feel more attuned to the powers of ice.",
+   "You feel more attuned to the powers of ice."},
+
+  {"", "", ""},
+},
+
+{ MUT_AIR_ENHANCER, 0, 3, mutflag::good, false,
+  "empowered air magic",
+
+  {"Your air magic are empowered",
+   "Your air magic are greatly empowered.",
+   "Your air magic are more greatly empowered."},
+
+   {"Static arcs between your fingertips.",
+   "Crackling electricity arcs between your fingers.",
+   "Raging lightning courses through your blood."},
+
+  {"", "", ""},
+},
+
+{ MUT_EARTH_ENHANCER, 0, 3, mutflag::good, false,
+  "empowered earth magic",
+
+  {"Your earth magic are empowered",
+   "Your earth magic are greatly empowered.",
+   "Your earth magic are more greatly empowered."},
+
+   {"You feel attuned to the powers of stone.",
+   "You feel more attuned to the powers of stone.",
+   "You feel a mastery over the earth below."},
+
+  {"", "", ""},
+},
+
+{ MUT_WIZARDRY, 0, 1, mutflag::good, false,
+  "innate wizardry",
+
+  {"You have a natural knack for spellcasting",
+   "",""},
+
+   {"You feel an increased affinity for the arcane",
+   "", ""},
+
+  {"", "", ""},
+},
+
+{ MUT_ARCHMAGI, 0, 1, mutflag::good, false,
+  "innate archmagi",
+
+  {"Your spells are empowered",
+   "",""},
+
+   {"You feel an increased affinity for the arcane",
+   "", ""},
+
+  {"", "", ""},
+},
+
 { MUT_TENGU_FLIGHT, 0, 1, mutflag::good, false,
   "evasive flight",
 
