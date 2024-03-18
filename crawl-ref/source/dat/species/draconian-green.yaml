@@ -32,8 +32,12 @@ mutations:
     MUT_COLD_BLOODED: 1
   7:
     MUT_POISON_RESISTANCE: 1
+    MUT_ALCHEMY_ENHANCER: 1
   14:
     MUT_STINGER: 1
+    MUT_ALCHEMY_ENHANCER: 1
+  21:
+    MUT_ALCHEMY_ENHANCER: 1
 fake_mutations:
   - long: You can breathe blasts of noxious fumes.
     short: noxious breath

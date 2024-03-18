@@ -33,8 +33,10 @@ mutations:
     MUT_COLD_BLOODED: 1
   7:
     MUT_SHOCK_RESISTANCE: 1
+    MUT_AIR_ENHANCER: 1
   14:
     MUT_BIG_WINGS: 1
+    MUT_AIR_ENHANCER: 1
 fake_mutations:
   - long: You can breathe arcing electricity.
     short: galvanic breath

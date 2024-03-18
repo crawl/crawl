@@ -33,6 +33,9 @@ mutations:
     MUT_COLD_BLOODED: 1
   7:
     MUT_HEAT_RESISTANCE: 1
+    MUT_FIRE_ENHANCER: 1
+  14:
+    MUT_FIRE_ENHANCER: 1
 fake_mutations:
   - long: You can breathe blasts of explosive embers.
     short: combustion breath

@@ -33,6 +33,9 @@ mutations:
     MUT_COLD_BLOODED: 1
   7:
     MUT_COLD_RESISTANCE: 1
+    MUT_ICE_ENHANCER: 1
+  14:
+    MUT_ICE_ENHANCER: 1
 fake_mutations:
   - long: You can breathe waves of cold which freeze foes solid.
     short: glacial breath
