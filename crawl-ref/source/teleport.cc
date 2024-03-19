@@ -457,8 +457,12 @@ bool valid_blink_destination(const actor &moved, const coord_def& target,
     if (!in_bounds(target))
         return false;
     actor *targ_act = actor_at(target);
-    if (targ_act && (incl_unseen || moved.can_see(*targ_act)))
+    if (targ_act
+        && (incl_unseen || moved.can_see(*targ_act)
+            || env.map_knowledge(targ_act->pos()).invisible_monster()))
+    {
         return false;
+    }
     if (forbid_unhabitable)
     {
         if (!moved.is_habitable(target))
@@ -478,7 +482,7 @@ vector<coord_def> find_blink_targets()
 {
     vector<coord_def> result;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-        if (valid_blink_destination(you, *ri))
+        if (valid_blink_destination(you, *ri, false, true, false))
             result.push_back(*ri);
 
     return result;
