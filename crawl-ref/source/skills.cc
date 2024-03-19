@@ -26,7 +26,6 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
-#include "misc.h" // now_is_morning
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -1903,6 +1902,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             }
             break;
 
+        case SK_FIGHTING:
+            if (species == SP_HUMAN && skill_rank == 5 && is_evil_god(god))
+                result = "Hell Knight";
+            break;
+
         case SK_POLEARMS:
             if (species == SP_ARMATAUR && skill_rank == 5)
                 result = "Prickly Pangolin";
@@ -1913,6 +1917,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = claw_and_tooth_titles[skill_rank];
             else if (species == SP_MUMMY && skill_rank == 5)
                 result = "Pharaoh";
+            else if (species == SP_OCTOPODE && skill_rank == 5)
+                result = "Crusher";
+            else if (species == SP_VAMPIRE && skill_rank == 5)
+                result = "Jiangshi";
             else if (!dex_better && species == SP_DJINNI && skill_rank == 5)
                 result = "Weightless Champion";
             else
@@ -1941,6 +1949,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_ARMOUR:
             if (species == SP_COGLIN && skill_rank == 5)
                 result = "Iron Golem";
+            else if (species == SP_TROLL && skill_rank == 5)
+                result = "Iron Troll";
+            break;
+
+        case SK_SHIELDS:
+            if (species == SP_SPRIGGAN && skill_rank > 3)
+                result = "Defender";
             break;
 
         case SK_INVOCATIONS:
@@ -1962,6 +1977,14 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Rockslime";
             else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
                 result = "Cobgoblin"; // hm.
+            else if (species == SP_TENGU && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Raven";
+            else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_OKAWARU)
+                result = "War Gargoyle";
+            else if (species::is_draconian(species) && skill_rank == 5 && is_good_god(god))
+                result = "Pearl Dragon";
+            else if (species == SP_MOUNTAIN_DWARF && skill_rank == 5 && god == GOD_YREDELEMNUL)
+                result = "Unborn";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1974,6 +1997,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_RANGED_WEAPONS:
             if (species::is_elven(species) && skill_rank == 5)
                 result = "Master Archer";
+            else if (species == SP_NAGA && skill_rank == 5)
+                result = "Sharpshooter";
             break;
 
         case SK_SPELLCASTING:
@@ -2000,6 +2025,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Highly Combustible";
             else if (species == SP_GHOUL && skill_rank == 5)
                 result = "Searing Wretch";
+            else if (species == SP_GARGOYLE && skill_rank == 5)
+                result = "Molten Gargoyle";
+            else if (species == SP_NAGA && skill_rank == 5)
+                result = "Salamander";
             break;
 
         case SK_ICE_MAGIC:
@@ -2007,6 +2036,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Marid";
             else if (species::is_draconian(species) && skill_rank == 5)
                 result = "Ice Dragon";
+            else if (species == SP_TENGU && skill_rank == 5)
+                result = "Shard Shrike";
+            else if (species == SP_GHOUL && skill_rank == 5)
+                result = "Bog Body";
             break;
 
         case SK_EARTH_MAGIC:
@@ -2022,6 +2055,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_ALCHEMY:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Swamp Dragon";
+            else if (species == SP_BARACHI && skill_rank == 5)
+                result = "Cane Toad";
             break;
 
         case SK_HEXES:
@@ -2039,8 +2074,15 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Petite Mort";
             else if (species == SP_VINE_STALKER && skill_rank == 5)
                 result = "Corpseflower";
+            else if (species::is_draconian(species) && skill_rank == 5)
+                result = "Death Drake";
             else if (god == GOD_KIKUBAAQUDGHA)
                 result = god_title(god, species, piety);
+            break;
+
+        case SK_STEALTH:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Shadow Dragon";
             break;
 
 #if TAG_MAJOR_VERSION == 34
