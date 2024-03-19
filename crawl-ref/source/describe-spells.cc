@@ -499,6 +499,15 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
+
+        if (spell == SPELL_MINDBURST
+            || spell == SPELL_PAIN)
+        {
+            const dice_def dam = _spell_damage(spell, hd);
+            return make_stringf("(%dd%dx%d%%)", dam.num, dam.size,
+                hex_chance(spell, mon_owner));
+        }
+
         return make_stringf("(%d%%)", hex_chance(spell, mon_owner));
     }
 
