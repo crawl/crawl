@@ -1424,6 +1424,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot redirect your momentum while unable to move.";
         break;
 
+    case SPELL_PILEDRIVER:
+        if (you.stasis())
+            return "your stasis prevents you from slingshotting yourself.";
+        if (temp)
+        {
+            if (!you.is_motile())
+                return "you cannot slingshot yourself while unable to move.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+        }
+        if (possible_piledriver_targets().empty())
+            return "there is nothing nearby that you can slingshot.";
+        break;
+
     case SPELL_ELECTRIC_CHARGE:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess

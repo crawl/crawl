@@ -162,6 +162,7 @@ teleport_other TELEPORT_OTHER
 gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
 electric_charge ELECTRIC_CHARGE
+piledriver PILEDRIVER
 
 # item-based spells
 %sdir gui/spells/misc

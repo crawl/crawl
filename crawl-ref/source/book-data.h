@@ -199,7 +199,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
-    SPELL_MANIFOLD_ASSAULT
+    SPELL_PILEDRIVER,
 },
 
 {   // Book of Geomancy

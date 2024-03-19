@@ -984,6 +984,18 @@ focus (by waiting in place and not taking any other actions). When a threshold
 is reached, the charge couples with the nearest foe, vaporising them instantly.
 Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
+Maxwell's Portable Piledriver spell
+
+Compresses an envelope of space around the caster and an adjacent enemy, then
+allows it to decompress abruptly, propelling both of them forward until the
+former collides with something, inflicting damage proportional to the distance
+travelled. The recoil will leave the caster unable to move for a brief while,
+and recasting the spell is impossible until you regain your mobility.
+
+Originally designed for use in construction, it will automatically target the
+nearest mass with the longest clear path towards a wall or other solid object
+(such as another monster).
+%%%%
 Mephitic Cloud spell
 
 Conjures up a short-lived cloud of noxious fumes, which may cause confusion in

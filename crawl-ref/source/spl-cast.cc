@@ -1257,6 +1257,13 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         const aff_type a = plasma_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
         return make_unique<targeter_multiposition>(&you, plasma_paths, a);
     }
+    case SPELL_PILEDRIVER:
+    {
+        auto piledriver_targets = possible_piledriver_targets();
+        auto piledriver_paths = piledriver_beam_paths(piledriver_targets);
+        const aff_type a = piledriver_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
+        return make_unique<targeter_multiposition>(&you, piledriver_paths, a);
+    }
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -2528,6 +2535,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_PERMAFROST_ERUPTION:
         return cast_permafrost_eruption(you, powc, fail);
 
+    case SPELL_PILEDRIVER:
+        return cast_piledriver(powc, fail);
+
     // Just to do extra messaging; spell is handled by default zapping
     case SPELL_COMBUSTION_BREATH:
     case SPELL_GLACIAL_BREATH:
@@ -2889,6 +2899,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
             return describe_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_GRAVITAS:
             return describe_collision_dam(collision_damage(pow, false));
+        case SPELL_PILEDRIVER:
+            return make_stringf("2d(%d-%d)", 1 + (pow * 3 / 20), 1 + (pow * 6 / 20));
         default:
             break;
     }

@@ -1988,3 +1988,140 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
     return spret::success;
 }
+
+static bool _valid_piledriver_target(monster* targ)
+{
+    return targ && !targ->friendly() && !mons_is_firewood(*targ)
+           && !targ->is_stationary() && you.can_see(*targ);
+}
+
+vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets)
+{
+    const int max_range = 5;
+
+    vector<coord_def> path;
+    for (unsigned int j = 0; j < targets.size(); ++j)
+    {
+        monster* targ = monster_at(targets[j]);
+        coord_def delta = targ->pos() - you.pos();
+
+        // Iterate through all tiles in the appropriate direction, testing at each
+        // step whether the monster can occupy its new space and whether the player
+        // can occupy the space immediately before that. Stop as soon as this is not
+        // true or we reach our maximum range.
+        for (int i = 0; i <= max_range; ++i)
+        {
+            const coord_def new_pos = targ->pos() + (delta * i);
+
+            // Check if this is where our movement stops
+            if (i > 0
+                && (actor_at(new_pos)
+                    || !monster_habitable_grid(targ, env.grid(new_pos))
+                    || is_feat_dangerous(env.grid(new_pos - delta))))
+            {
+                path.push_back(new_pos);
+                break;
+            }
+
+            path.push_back(new_pos);
+        }
+    }
+
+    return path;
+}
+
+static int calc_piledriver_dist(const monster& targ)
+{
+    vector<coord_def> path = piledriver_beam_paths(vector<coord_def>{targ.pos()});
+
+    // Test if the final space of the path would hit something and only consider
+    // paths that would do so.
+    if (path.size() > 2)
+    {
+        if (actor_at(path.back()) || feat_is_solid(env.grid(path.back())))
+            return path.size();
+    }
+
+    return 0;
+}
+
+vector<coord_def> possible_piledriver_targets()
+{
+    vector<coord_def> targs;
+    int furthest_dist = 0;
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monster* targ = monster_at(*ai);
+        if (_valid_piledriver_target(targ))
+        {
+            int dist = calc_piledriver_dist(*targ);
+
+            // Skip targets that will not move the player at all.
+            // (This needs at least 3 tiles, since the target monster will be
+            // on the 1st, and a possible blocker on the 2nd)
+            if (dist < 3)
+                continue;
+
+            // Better than any target yet found
+            if (dist > furthest_dist)
+            {
+                targs.clear();
+                furthest_dist = dist;
+                targs.push_back(*ai);
+            }
+            // Tied with a target already found
+            else if (dist == furthest_dist)
+                targs.push_back(*ai);
+            // Otherwise, ignore it
+        }
+    }
+
+    return targs;
+}
+
+spret cast_piledriver(int pow, bool fail)
+{
+    fail_check();
+
+    vector<coord_def> targs = possible_piledriver_targets();
+    shuffle_array(targs);
+    targs.resize(1);
+
+    monster* mon = monster_at(targs[0]);
+
+    vector<coord_def> path = piledriver_beam_paths(targs);
+
+    mprf("Space contracts around you and %s and then re-expands violently!",
+            mon->name(DESC_THE).c_str());
+
+    // Animate the player and their victim flying forward together
+    bolt anim;
+    anim.source = you.pos();
+    anim.target = path.back();
+    anim.flavour = BEAM_VISUAL;
+    anim.range = path.size();
+    anim.fire();
+
+    // Move both the player and their target to their destination first
+    const coord_def old_pos = you.pos();
+    const coord_def old_targ_pos = mon->pos();
+
+    mon->move_to_pos(path[path.size() - 2]);
+    you.move_to_pos(path[path.size() - 3]);
+
+    // Apply collision damage (scaling with distance covered)
+    const int scaled_pow = pow * (2 + (path.size() - 2)) / 2;
+    mon->collide(path.back(), &you, scaled_pow);
+
+    // Now trigger location effects (to avoid dispersal traps causing all sorts
+    // of problems with keeping the two of us together in the middle)
+    mon->apply_location_effects(old_targ_pos);
+    you.apply_location_effects(old_pos);
+
+    // Lock player in place proportional to the distance they travelled
+    you.increase_duration(DUR_NO_MOMENTUM, path.size());
+    mpr("You are locked in place by the recoil.");
+
+    return spret::success;
+}
