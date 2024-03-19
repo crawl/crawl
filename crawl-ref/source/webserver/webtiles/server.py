@@ -334,7 +334,7 @@ def parse_args_main():
         description='Dungeon Crawl webtiles server',
         epilog='Command line options will override config settings. See wtutil.py for database commands.')
     parser.add_argument('-p', '--port', type=int, help='A port to bind; disables SSL.')
-    # TODO: --ssl-port or something?
+    parser.add_argument('--ssl-port', type=int, help='An SSL port to bind. Requires configured `ssl_options`.')
     parser.add_argument('--logfile',
                         help='A logfile to write to; use "-" for stdout.')
     parser.add_argument('--daemon', action='store_true', default=None,
@@ -369,6 +369,8 @@ def export_args_to_config(args):
                             config.get("server_path", ""), "debug-config.yml"))
         config.do_early_logging() # sigh
     if args.port:
+        if args.ssl_port:
+            err_exit("Can't combine --port and --ssl-port.")
         config.set('bind_nonsecure', True)
         config.set('bind_address', "")  # TODO: ??
         config.set('bind_port', args.port)
@@ -378,6 +380,12 @@ def export_args_to_config(args):
         if config.get('ssl_options'):
             logging.info("    (Overrides config-specified SSL settings.)")
             config.set('ssl_options', None)
+    elif args.ssl_port:
+        config.set('bind_nonsecure', False)
+        config.set('ssl_bind_pairs', ('', args.ssl_port))
+        if not config.get('ssl_options'):
+            err_exit("--ssl-port option requires configured `ssl_options`")
+        logging.info("Using command-line supplied ssl port: %d", args.ssl_port)
     if args.daemon is not None:
         logging.info("Command line override for daemonize: %r", args.daemon)
         config.set('daemon', args.daemon)
