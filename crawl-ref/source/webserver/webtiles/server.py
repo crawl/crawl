@@ -25,6 +25,17 @@ from webtiles import game_data_handler, util, ws_handler, status
 
 
 servers = None
+https_port = None
+
+
+# port should already be formatted with a ":"
+class HTTPSRedirectHandler(tornado.web.RequestHandler):
+    def get(self):
+        global https_port
+        if https_port is None:
+            # this will probably break unless 80/443 are in use
+            https_port = ""
+        self.redirect(f"https://{self.request.host_name}{https_port}{self.request.uri}", permanent=True)
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -239,8 +250,11 @@ def bind_server_sockets():
             listens = config.get('ssl_bind_pairs')
         else:
             listens = ( (config.get('ssl_address'), config.get('ssl_port')), )
+        global https_port
         for (addr, port) in listens:
             logging.info("Listening on https://%s:%d" % (addr, port))
+            if https_port is None:
+                https_port = f":{port}"
             secure.append(bind_sockets(port, addr))
     return nonsecure, secure
 
@@ -278,13 +292,17 @@ def bind_server(nonsecure_sockets, secure_sockets):
     global servers
     servers = []
 
-    if nonsecure_sockets and config.get('bind_nonsecure'):
-        server = tornado.httpserver.HTTPServer(application, **kwargs)
+    if nonsecure_sockets:
+        if config.get('bind_nonsecure') == "redirect":
+            http_app = tornado.web.Application([(r"/", HTTPSRedirectHandler)])
+        else:
+            http_app = application
+        server = tornado.httpserver.HTTPServer(http_app, **kwargs)
         for s in nonsecure_sockets:
             server.add_sockets(s)
         servers.append(server)
 
-    if secure_sockets and config.get('ssl_options'):
+    if secure_sockets:
         # TODO: allow different ssl_options per bind pair?
         server = tornado.httpserver.HTTPServer(application,
                             ssl_options=config.get('ssl_options'), **kwargs)
