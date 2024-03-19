@@ -231,7 +231,7 @@ def bind_server_sockets():
         else:
             listens = ( (config.get('bind_address'), config.get('bind_port')), )
         for (addr, port) in listens:
-            logging.info("Listening on %s:%d" % (addr, port))
+            logging.info("Listening on http://%s:%d" % (addr, port))
             nonsecure.append(bind_sockets(port, addr))
 
     if config.get('ssl_options'):
@@ -240,7 +240,7 @@ def bind_server_sockets():
         else:
             listens = ( (config.get('ssl_address'), config.get('ssl_port')), )
         for (addr, port) in listens:
-            logging.info("Listening on %s:%d" % (addr, port))
+            logging.info("Listening on https://%s:%d" % (addr, port))
             secure.append(bind_sockets(port, addr))
     return nonsecure, secure
 
@@ -382,7 +382,7 @@ def export_args_to_config(args):
             config.set('ssl_options', None)
     elif args.ssl_port:
         config.set('bind_nonsecure', False)
-        config.set('ssl_bind_pairs', ('', args.ssl_port))
+        config.set('ssl_bind_pairs', (('', args.ssl_port),))
         if not config.get('ssl_options'):
             err_exit("--ssl-port option requires configured `ssl_options`")
         logging.info("Using command-line supplied ssl port: %d", args.ssl_port)

@@ -225,12 +225,12 @@ dgl_status_file = "./rcs/status"
 init_player_program = "./util/webtiles-init-player.sh"
 
 ssl_options = None # No SSL
-#ssl_options = {
+# ssl_options = {
 #    "certfile": "./webserver/localhost.crt",
 #    "keyfile": "./webserver/localhost.key"
-#}
+# }
 ssl_address = ""
-ssl_port = 8081
+ssl_port = 8443
 # Or listen on multiple address/port pairs (overriding the above) with:
 # ssl_bind_pairs = (
 #     ("127.0.0.1", 8081),
