@@ -581,7 +581,9 @@ WEIGHT:   50
 SUBVAULT: B : volcano_grotto_subvault
 KMONS:    5 = lava snake
 KMONS:    6 = fire bat
+KMONS:    D = pile of debris
 KFEAT:    56 = lava
+SUBST:    z = Dccx.
 NSUBST:   l = 3:5 / 3 = 5l / 3:6 / 3 = 66lll / *:l
 : volcano_setup(_G)
 : place_tiny_volcano(_G)
@@ -592,14 +594,14 @@ MAP
                                     BBBBBBBBBBB
                          xxxx       BBBBBBBBBBB
                     xxxxxxyyxxxx    BBBBBBBBBBB
-                 xxxxy......yyyxx   BBBBBBBBBBB
-              xxxxyyy.LLLLL....yxxx BBBBBBBBBBB
+                 xxxxy......yzyxx   BBBBBBBBBBB
+              xxxxyyy.LLLLL....zxxx BBBBBBBBBBB
             xxxyyy...LlllllL.....GxxBBBBBBBBBBB
           xxxyy....LLlllllllL......BBBBBBBBBBBB
         xxxyy....LLlllllllllL....GxxBBBBBBBBBBB
-       xxyy.....LllllllllllllL..yxx BBBBBBBBBBB
+       xxyy.....LllllllllllllL..zxx BBBBBBBBBBB
       xxy......LlllllllllllllL..yxxxBBBBBBBBBBB
-     xxy......LlllllllllllllllL..yyxBBBBBBBBBBB
+     xxy......LlllllllllllllllL..zyxBBBBBBBBBBB
     xxy.....LllllllllllllllllllL..yyBBBBBBBBBBB
    xxy.....LllllllllllllllllllllL...BBBBBBBBBBB
   xxy....LllllllllllVlllllllllllL...BBBBBBBBBBB
@@ -838,27 +840,28 @@ MAP
                                              xxxxxxxxxxxx
 ENDMAP
 
-NAME:  vl_original
-TAGS:  volcano_lake_subvault no_item_gen no_monster_gen unrand
-:      fiery_guardians(_G)
-KMONS: 4 = molten gargoyle w:90 / gargoyle
-KMONS: B = boulder dbname:still_boulder
+NAME:   vl_original
+TAGS:   volcano_lake_subvault no_item_gen no_monster_gen unrand
+:       fiery_guardians(_G)
+KMONS:  4 = molten gargoyle w:90 / gargoyle
+KMONS:  B = pile of debris
+KITEM:  b = large rock q:1
 KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
 #      Loot: 10 items, 6 gold piles.
 : volcano_setup(_G)
-SUBST: B : B., b : B.
+SHUFFLE: bB / Bb / bb / '' / '' / ''
 MAP
 ccccccccccccccccc
-c....+.121.+....c
+cb...+.121.+...bc
 c.<1.c.G_G.c.3<.c
 cB...c..1..c...Bc
 ccc++ccc+ccc++ccc
 n......c.c......n
 cccccc.c.c.cccccc
-cb$f$c.c.c.cgd$bc
+cB$f$c.c.c.cgd$Bc
 c.$gec.c.c.c$e$.c
 c.4dgc.c.c.cfg4.c
-c......c.c......c
+cb.....c.c.....bc
 cccccccc+cccccccc
        ...
 ENDMAP
@@ -875,15 +878,13 @@ NAME:    volcano_pools
 TAGS:    no_item_gen no_monster_gen no_rotate
 ORIENT:  encompass
 WEIGHT:  50
-KMONS:   B = boulder dbname:still_boulder
 : fiery_guardians(_G)
 SHUFFLE: QRSTU
 # Two pools with loot (ten items, six gold) and bosses,
 # two nearly empty pools, and an empty entrance pool.
 NSUBST:  Q = 2:1 / 1:2 / 1:d / 1:e / 2:$ / 2:f / 2:g
 NSUBST:  R = 2 = 1. / 1:3 / 2:d / 2:e / 2:$ / 1:f / 1:g
-NSUBST:  S = 1:1 / 1:B.. / *:., T = 1 = 1. / 1:B.. / *:.
-NSUBST:  U = 1:A / *:.
+NSUBST:  S = 1:1 / *:., T = 1:1. / *:.,  U = 1:A / *:.
 : volcano_setup(_G)
 : place_tiny_volcano(_G)
 KFEAT:   J = l
@@ -982,20 +983,21 @@ MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
 MONS:    skeletal warrior ; halberd ego:flaming ident:type | \
                             dire flail ego:flaming ident:type | \
                             great sword ego:flaming ident:type
+KMONS:   D = pile of debris
 KFEAT:   ? = broken_door
 # Only one loot chamber. Scatter tomb residents.
 NSUBST:  4 = 1:l / 4:3 / *:4, ? = 1:? / 1:+? / *:+
 SHUFFLE: 23, a-| / b_*
-SUBST:   a = v, - = +, b_* = c
+SUBST:   a = v, - = +, b_* = c, D = Dyy
 NSUBST:  | = 2:d / 3:e / 2:f / 3:g
 # Loot: 3 gold, 8 items.
 : volcano_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxyyxxx
-xxxxxxxxxxxxxxxxxxy.y.$Lxx
-xxxxxxxxxcccccccxy.y.1Lllx
-xxxxxxxxxc..Y..cy.xxx.lllx
+xxxxxxxxxxxxxxxxxxD.y.$Lxx
+xxxxxxxxxcccccccx..y.1Lllx
+xxxxxxxxxc..Y..cD.xxx.lllx
 cccccccccc.....+.xxx.xllJx
 +...G....+..2..cccxxx.x.xx
 +...$....+.1<1.?4cxxxx.xxx
@@ -1061,7 +1063,6 @@ MONS:   lindwurm, efreet
 MONS:   molten gargoyle w:40 / earth elemental w:38 / \
         toenail golem w:2 / obsidian bat w:2
 MONS:   fire elemental / nothing w:6
-KMONS:  B = boulder dbname:still_boulder
 KFEAT:  K = l
 NSUBST: R = 2:1 / * = ll'
 NSUBST: Y = 2:2 / 1:24 / 6:4 / 6:J / *:.

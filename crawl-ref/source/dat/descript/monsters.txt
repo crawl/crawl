@@ -2147,6 +2147,10 @@ A royal ant returned to unlife through strange, probably horrifying means. It
 binds the souls of its allies when slain, allowing them to fight on after death
 as simulacra.
 %%%%
+pile of debris
+
+A heavily ruptured stonework, surrounded by rubble.
+%%%%
 pillar of salt
 
 A pillar of salt shaped like a statue, but worked by no living hands.
@@ -3325,9 +3329,11 @@ spriggan hatter
 
 A spriggan who is going slightly mad from the toxic fumes of their craft.
 %%%%
+#if TAG_MAJOR_VERSION > 34
 still boulder
 
 A gargantuan mass of stone at rest.
+#endif
 %%%%
 water elementalist statue
 

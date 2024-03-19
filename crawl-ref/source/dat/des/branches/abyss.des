@@ -486,7 +486,7 @@ ENDMAP
 
 NAME:    hangedman_abyss_feature_spike
 TAGS:    extra no_item_gen no_pool_fixup allow_dup
-MONS:    fungus, plant, bush
+MONS:    fungus, plant, bush, pile of debris
 ITEM:    stone q:1, large rock q:1, human skeleton
 KFEAT:   - = altar_lugonu
 KMASK:   wWl = no_monster_gen
@@ -497,7 +497,7 @@ SHUFFLE: JKLMN / JJJJJ / JJJJJ / JJJJJ / JJJJJ / JKLKJ / JKJKJ / JJLMM / JJLMM
 SHUFFLE: OPQRS / OOOOO / OOOOO / OOOOO / OOOOO / OPQPO / OPOPO / OOQRR / OOQRR
 SUBST:   g = C, h = T, i = U, j = V
 SUBST:   o = t, p = G, q = w, r = W, s = l
-SUBST:   J = x, K = c, L = v, MN = m, O = 1, P = 2, Q = 3, RS = b
+SUBST:   J = x, K = c, L = v, MN = m, O = 1, P = 2, Q = 3, R = 4, S = b
 CLEAR:   -
 SHUFFLE: AACCTTUUVYYdeefghi, tGGwWlI, xxccvvbbmm+123
 MAP

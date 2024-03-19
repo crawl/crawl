@@ -6179,6 +6179,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\nIt is quickly crumbling away.\n";
         else if (mi.is(MB_WITHERING))
             inf.body << "\nIt is quickly withering away.\n";
+        else if (mi.holi & (MH_NONLIVING))
+            inf.body << "\nIf struck, it will crumble away soon after.\n";
         else
             inf.body << "\nIf struck, it will die soon after.\n";
     }

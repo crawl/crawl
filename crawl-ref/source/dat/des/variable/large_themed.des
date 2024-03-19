@@ -2871,7 +2871,7 @@ DEPTH:   D:9-, Depths, Zot, !Zot:$
 PLACE:   Depths:$
 WEIGHT:  1 (Depths:$), 10
 ORIENT:  north
-KMONS:   s = boulder dbname:still_boulder
+KMONS:   s = pile of debris
 : if you.in_branch("D") then
 SUBST:   > = .
 NSUBST:  01 = 2:.

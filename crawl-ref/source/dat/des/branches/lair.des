@@ -2238,8 +2238,10 @@ NAME:   kennysheep_abandoned_house
 TAGS:   ruin transparent
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
+KMONS:  D = pile of debris
 KITEM:  d = gold
-NSUBST: d = 1:d / 1:* / 1:9 / 1:3 / * = d11223.......
+KFEAT:  C = cache of fruit
+NSUBST: d = 1:d / 1:C / 1:* / 1:9 / 1:3 / * = d11223......., c = 5:Dc / *:c
 MAP
       .......
 .......ccccc.........
@@ -2288,8 +2290,10 @@ ENDMAP
 NAME:   kennysheep_basilisk_garden
 TAGS:   transparent
 DEPTH:  Lair:3-
-MONS:   basilisk
-NSUBST: . = 2:1 / 3 = 111G / *:.
+MONS:   basilisk, pile of debris
+NSUBST: . = 2:1 / 3 = 11G / *:., G = 2:G2 / *:G
+TILE:   G = dngn_statue_axe / dngn_statue_cat / dngn_statue_centaur / \
+            dngn_statue_dwarf / dngn_statue_polearm / dngn_statue_tengu
 MAP
    .....
  ....G....
@@ -2504,10 +2508,10 @@ NAME:    minmay_guarded_unrand_snakebite
 TAGS:    ruin
 DEPTH:   Lair
 ORIENT:  southeast
-ITEM:    snakebite no_pickup
 KMONS:   A = adder
 KMONS:   B = water moccasin
 KMONS:   C = black mamba
+ITEM:    snakebite no_pickup
 SUBST:   1 = A B:2 .:48, 2 = A B:5 .:60, 3 = A B C:2 .:88, 4 = A:2 B C:4 .:64
 SUBST:   5 = A:1 B C .:84, 6 = B:5 C .:60, 7 = B.
 MAP
@@ -2708,8 +2712,8 @@ ENDMAP
 NAME:   nicolae_lair_lil_pond
 TAGS:   transparent ruin decor extra
 DEPTH:  Lair
-NSUBST: D = . / x
-SUBST:  - = . / W
+NSUBST: D = 1:. / *:x
+SUBST:  - = .W
 MAP
 ............
 ....xxxx....

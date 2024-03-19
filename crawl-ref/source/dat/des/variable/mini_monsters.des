@@ -2993,11 +2993,13 @@ NAME:   bh_circular_ruins
 TAGS:   transparent
 DEPTH:  D:7-12
 MONS:   human simulacrum
-ITEM:   stone q:1 no_pickup
+KMONS:  D = pile of debris
 : if you.absdepth() > 10 then
 KMONS:  O = fire elemental
 : end
+ITEM:   stone q:1 no_pickup
 KITEM:  O = book of dreams
+SUBST:  E : ddD, F : ddD
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 15, \
                               pow_max = 20, delay = 15, size = 2, \
                               walk_dist = 1, excl_rad = 1}
@@ -3006,15 +3008,15 @@ TILE:   c = wall_stone_smooth
 MAP
   ..
  .xxd  ...
-.xx1..dxxx.
+.xx1..Fxxx.
 .x.......xx.
  d...xx...x.
   ..xc....x.
-  d.x.O.x.d
+  E.x.O.x.E
  .x....cx..
  .x...xx...d
  .xx.......x.
-  .xxxd..1xx.
+  .xxxF..1xx.
    ...  dxx.
          ..
 ENDMAP
@@ -10253,7 +10255,6 @@ KMONS:   E = merfolk
 KMONS:   F = human
 KMONS:   G = vampire
 KMONS:   H = crimson imp
-KMONS:   1 = boulder dbname:still_boulder / nothing w:30
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
 KITEM:   b = gold / nothing w:12
