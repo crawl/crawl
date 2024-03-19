@@ -78,15 +78,16 @@ bolt_of_cold BOLT_OF_COLD
 ensorcelled_hibernation ENSORCELLED_HIBERNATION
 freeze FREEZE
 freezing_cloud FREEZING_CLOUD
-throw_icicle THROW_ICICLE
+frozen_ramparts FROZEN_RAMPARTS
+hailstorm HAILSTORM
 ice_form ICE_FORM
 ice_storm ICE_STORM
 metabolic_englaciation METABOLIC_ENGLACIATION
 ozocubus_armour OZOCUBUS_ARMOUR
 ozocubus_refrigeration OZOCUBUS_REFRIGERATION
+permafrost_eruption PERMAFROST_ERUPTION
 throw_frost THROW_FROST
-frozen_ramparts FROZEN_RAMPARTS
-hailstorm HAILSTORM
+throw_icicle THROW_ICICLE
 polar_vortex POLAR_VORTEX
 
 %sdir gui/spells/necromancy
