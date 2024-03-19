@@ -3007,6 +3007,7 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.draw_delay   = 5;
     beam.foe_ratio    = 80; // default
     beam.is_tracer    = tracer;
+    beam.no_actor_perm_lof = true;
     zappy(ZAP_PLASMA_LIGHTNING, pow, mon, beam);
     beam.fire();
     const ai_action::goodness fire_good = beam.good_to_fire();
