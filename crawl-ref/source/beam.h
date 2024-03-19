@@ -130,7 +130,7 @@ struct bolt
 
     bool   no_actor_perm_lof = false;   // Don't attempt to find a ray
                                         // without a blocking actor
-    
+
     // OUTPUT parameters (tracing, ID)
     bool obvious_effect = false; // is this a non-enchantment, or did it already
                                  // show some effect or message? (Otherwise, we'll
