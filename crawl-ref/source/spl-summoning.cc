@@ -2803,6 +2803,31 @@ spret foxfire_swarm()
     return spret::fail; // don't spend piety, do spend a turn
 }
 
+bool summon_hell_out_of_bat(const actor &agent, coord_def pos)
+{
+    // Since this isn't really used as for a spell: count how many creatures
+    // this has already summoned, and abort at our max defined here (three).
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+       if (mi->summoner == agent.mid)
+           ++count;
+
+        if (count > 2)
+           return false;
+    }
+
+    monster_type mon = coinflip() ? MONS_HELL_HOUND : MONS_HELL_RAT;
+
+    monster *mons = create_monster(
+            mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
+                      .set_summoned(&agent, 1, SPELL_NO_SPELL, GOD_NO_GOD));
+    if (mons)
+        return true;
+
+    return false;
+}
+
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow)
 {

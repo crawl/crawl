@@ -312,8 +312,9 @@ silver_statue_1
 silver_statue_2
 
 ## chaotic scintillating statues for Xom, Nem, and Klowns
-%weight 10
+%weight 60
 scintillating_statue_0 DNGN_SCINTILLATING_STATUE
+%weight 15
 scintillating_statue_1
 %weight 3
 scintillating_statue_2

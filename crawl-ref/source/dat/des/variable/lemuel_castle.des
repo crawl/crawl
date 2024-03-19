@@ -56,7 +56,7 @@ function castle_lemuel_setup(e)
            e.mons("orc knight / ogre mage / orc sorcerer / orc high priest"
                   .. " / deep elf knight / deep elf archer"
                   .. " / deep elf zephyrmancer")
-           e.mons("warg w:15 / hell hound / raiju w:5")
+           e.mons("warg w:15 / hell hound / raiju w:5 / obsidian bat w:1")
            e.mons("gnoll sergeant / orc warrior / troll")
            e.mons("howler monkey / warg w:50")
            e.subst("* = %*")
@@ -70,7 +70,7 @@ function castle_lemuel_setup(e)
            e.mons("orc warlord / deep troll earth mage / fire giant"
                   .. " / frost giant / tengu reaver / deep elf annihilator"
                   .. " / deep elf high priest")
-           e.mons("warg / hell hound / raiju")
+           e.mons("warg / hell hound / raiju / obsidian bat w:1")
            e.mons("two-headed ogre / troll / cyclops / tengu warrior")
            e.mons("warg / hell hound")
         end

@@ -1220,6 +1220,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     // there are so many of them, it seems wrong to have them be so harmful to
     // their own allies. This could be wrong!
     { MONS_SALTLING,          { "salt crystal", WHITE } },
+    { MONS_PILE_OF_DEBRIS,    { "stone", LIGHTGRAY } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
     { MONS_ROCKSLIME,         { "rock", BROWN } },
     { MONS_BOULDER,           { "rock", BROWN } },
@@ -1238,6 +1239,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_CRYSTAL_ECHIDNA,   { "crystal", GREEN,
                                 frag_damage_type::crystal } },
     { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
+                                frag_damage_type::crystal } },
+    { MONS_OBSIDIAN_BAT,      { "obsidian", MAGENTA,
                                 frag_damage_type::crystal } },
     { MONS_OBSIDIAN_STATUE,   { "obsidian", MAGENTA,
                                 frag_damage_type::crystal } },
@@ -4877,4 +4880,9 @@ void do_boulder_impact(monster& boulder, actor& victim)
 dice_def electrolunge_damage(int pow)
 {
     return dice_def(2, pow / 6);
+}
+
+int get_warp_space_chance(int pow)
+{
+    return min(90, 35 + pow);
 }

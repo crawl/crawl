@@ -1022,6 +1022,36 @@ Nxx......xx..xx......xxP
 .....MM..........LL.....
 ENDMAP
 
+
+NAME:    regret_index_snakedec_diamondback
+TAGS:    transparent extra decor
+DEPTH:   Snake
+KFEAT:   C = altar_cheibriados / altar_gozag w:5
+KFEAT:   F = cache of fruit / cache of meat
+SHUFFLE: '"yY`~zZ / yY'"zZ`~ / yY'"`~zZ / yY'"`~zZ / '"yYzZ`~ / '"yYzZ`~, ?!
+SUBST:   '` = ., yYzZ = x, ! : bb+, - : x:5 .
+NSUBST:  "~ = 1:{([])}}<<<<>>>>CCCFFTTUUVV
+SUBST:   " : bblG, ~ : bblG, ?b : ccx, ^ : ^x...
+TILE:    G = dngn_statue_naga / dngn_statue_archer w:6
+CLEAR:   ^
+MAP
+    .@.^^                  x
+   ..x..^x    ^^^^^      ..x..
+  ..xxx..^^  ^^...^^  ^^..xxx..    ^^...
+ ..x'.yx..^  ^..x..^  ^..x'.yx..   ^..x..
+..x''.yyx..  ..xxx..  ..x''.yyx..  ..xxx..
+.x'''Yyyyx....x`.zx....x'''Yyyyx....x`.zx..
+xx.."?"..xx..x``.zzx..xx.."?"..xx..x``.zzx..
+.xyyyY'''x--x```Zzzzx..xyyyY'''x--x```Zzzzx.
+..xyy.''x..xx..~!~..xx..xyy.''x..xx..~!~..xx
+ ..xy.'x....xzzzZ```x....xy.'x....xzzzZ```x.
+  ..xxx..  ..xzz.``x..  ..xxx..  ..xzz.``x..
+   ..x..^   ..xz.`x..^  ^..x..^  ^..xz.`x..
+    ...^^    ..xxx..^^  ^^...^^  ^^..xxx..
+              ..x..      ^^^^^    x^..x..
+                x                  ^^.@.
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.

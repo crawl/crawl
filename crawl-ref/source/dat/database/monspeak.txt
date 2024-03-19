@@ -7486,6 +7486,14 @@ moth of wrath
 
 VISUAL:@The_monster@ angrily waves @possessive@ antennae.
 %%%%
+################## Obsidian bat ############################
+obsidian bat
+
+VISUAL:@The_monster@ flits into the dungeon's darkness for a moment.
+
+w:40
+__NONE
+%%%%
 ################## Obsidian statue #########################
 default obsidian statue
 

@@ -743,6 +743,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._purge_locks_and_start(True)
 
     def stop(self):
+        # n.b. the super call here is partly async
         super(CrawlProcessHandler, self).stop()
         self._stop_purging_stale_processes()
         self._stale_pid = None
@@ -767,14 +768,18 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
                 if firsttime:
-                    hup_wait = 10
-                    self.send_to_all("stale_processes",
-                                     timeout=hup_wait,
-                                     # is name really correct here?
-                                     game=self.game_params.templated("name", username=self.username))
-                    to = IOLoop.current().add_timeout(time.time() + hup_wait,
-                                                      self._kill_stale_process)
-                    self._process_hup_timeout = to
+                    if self._kill_stale_process(check_pid_only=True):
+                        # if we get here, the pid is real
+                        hup_wait = 10
+                        self.send_to_all("stale_processes",
+                                         timeout=hup_wait,
+                                         # is name really correct here?
+                                         game=self.game_params.templated("name", username=self.username))
+                        to = IOLoop.current().add_timeout(time.time() + hup_wait,
+                                                          self._kill_stale_process)
+                        self._process_hup_timeout = to
+                    # else: _purge_stale_locks recurses to this function, so no
+                    # need to do anything more here
                 else:
                     self._kill_stale_process()
             except Exception:
@@ -807,32 +812,47 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     path)
         return None
 
-    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
+    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP, check_pid_only=False):
+        if check_pid_only:
+            signal = 0
         self._process_hup_timeout = None
-        if self._stale_pid == None: return
+        if self._stale_pid == None:
+            return
         if signal == subprocess.signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
         elif signal == subprocess.signal.SIGABRT:
             self.logger.warning("Terminating pid %s forcefully!",
                                 self._stale_pid)
+        # intentional missing `else`, don't message on 0
+
         try:
             os.kill(self._stale_pid, signal)
+        except ProcessLookupError as e:
+            # Process doesn't exist
+            self._purge_stale_lock()
+            if check_pid_only:
+                return False
+        except PermissionError as e:
+            # Process does exist, but we don't have permissions. Unlikely
+            # coincidence between an unrelated process + a stale lock?
+            self.logger.error("Clearing stale(?) lock on permission error for pid %i", self._stale_pid)
+            self._purge_stale_lock()
+            if check_pid_only:
+                return False
         except OSError as e:
-            if e.errno == errno.ESRCH:
-                # Process doesn't exist
-                self._purge_stale_lock()
-            else:
-                self.logger.error("Error while killing process %s.", self._stale_pid,
-                                  exc_info=True)
-                errmsg = ("Error while trying to terminate a stale process.\n" +
-                          "Please contact an administrator.")
-                self.exit_reason = "error"
-                self.exit_message = errmsg
-                self.exit_dump_url = None
-                self.handle_process_end()
-                return
+            self.logger.error("Error while killing process %s.", self._stale_pid,
+                              exc_info=True)
+            errmsg = ("Error while trying to terminate a stale process.\n" +
+                      "Please contact an administrator.")
+            self.exit_reason = "error"
+            self.exit_message = errmsg
+            self.exit_dump_url = None
+            self.handle_process_end()
+            return False
         else:
+            if check_pid_only:
+                return True
             if signal == subprocess.signal.SIGABRT:
                 self._purge_stale_lock()
             else:

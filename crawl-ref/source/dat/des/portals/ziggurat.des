@@ -259,14 +259,15 @@ z.y.z
 z'z'z
 ENDMAP
 
-NAME: ziggurat_pillar_centre_h
-TAGS: ziggurat_pillar centered no_dump unrand no_exits
-MONS: laughing skull w:1 / crimson imp w:31 / pandemonium lord w:1
+NAME:  ziggurat_pillar_centre_h
+TAGS:  ziggurat_pillar centered no_dump unrand no_exits
+MONS:  laughing skull w:1 / crimson imp w:31 / pandemonium lord w:1
+KFEAT: % : cache of meat / cache of fruit
 MAP
 ccncc
-c...c
+c%..c
 n.1.n
-c...c
+c..%c
 ccncc
 ENDMAP
 

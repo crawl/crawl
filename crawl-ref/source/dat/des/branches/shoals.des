@@ -861,18 +861,17 @@ ENDMAP
 #
 NAME:   overgrown_hall
 WEIGHT: 2
-MONS:   plant, fungus
+MONS:   plant, fungus, pile of debris
 MONS:   cyclops / stone giant w:2
-SUBST:  x = x:20 .
-SUBST:  G = G:40 .
+SUBST:  x = xx., G = GG33.
 SUBST:  . = .:90 1:19 x:1
-SUBST:  1 = 1 2:1
+SUBST:  1 = 1 2:1, ' = .
 MAP
 xxxxxxxxxxx
 x.........x
-x.G.G.G.G.x
-+....3....+
-x.G.G.G.G.x
+x.G'G.G'G.x
++''.'4'.'.+
+x.G'G.G'G.x
 x.........x
 xxxxxxxxxxx
 ENDMAP
@@ -986,9 +985,10 @@ TAGS:    no_pool_fixup
 MONS:    cyclops, frost giant, stone giant
 KMONS:   P = plant
 KMONS:   f = fungus
+KMONS:   D = pile of debris
 KFEAT:   Pfp = shallow_water
-KFEAT:   5 = deep_water
-SUBST:   p = ppWw, p = Pf, y = xxxxcccPPPfw, f = PPwW, x = x:10 c:1
+KFEAT:   D5 = deep_water
+SUBST:   p = ppWw, p = Pf, y = xxxcccPPfDDw, f = PPwW, x = x:10 c:1
 SHUFFLE: 23
 SUBST:   2 = 2:15 1:10, 3 = 3:15 1:10
 MAP
@@ -1050,13 +1050,15 @@ KMONS:   6 = cyclops
 KMONS:   7 = stone giant
 KMONS:   8 = frost giant
 KMONS:   9 = titan
-KFEAT:   123456789 = deep_water
+KMONS:   D = pile of debris
+KFEAT:   123456789D = deep_water
 KITEM:   | = |
 KITEM:   * = *
 KFEAT:   |* = shallow_water
 SHUFFLE: 12345 / 86769
 NSUBST:  Z = 1:w / *:c
-SUBST:   G = GGGwwW, 7 = 667, 8 = 688, 9 = 7899, x = c
+SUBST:   G = GGDwwW, 7 = 667, 8 = 688, 9 = 7899, x = c
+KPROP:   |* = no_tele_into
 MAP
    xxxxxxxxxxx
   xxGxGxGxGxGxx
@@ -1343,23 +1345,26 @@ xxr----WWmwW--rx
      xxxxxxxx
 ENDMAP
 
-NAME:  wheals_shoals_ruined_temple
-TAGS:  water_ok
-DEPTH: Shoals, !Shoals:$
-KPROP: c.GWuw1 = no_tide
-KMONS: 1 = kraken
-KFEAT: 1 = w
-SUBST: u = Ww
-SUBST: . = .:500 0
+NAME:   wheals_shoals_ruined_temple
+TAGS:   water_ok
+DEPTH:  Shoals, !Shoals:$
+KPROP:  c.GWuw1 = no_tide
+KMONS:  D = pile of debris
+KMONS:  1 = kraken
+KFEAT:  1D = w
+SUBST:  u = Ww, . = .:500 0
+TILE:   G = dngn_statue_centaur w:5 / dngn_statue_maw / dngn_statue_mermaid / \
+            dngn_statue_orb w:5 / dngn_statue_princess / \
+            dngn_statue_polearm / dngn_statue_tentacles
 MAP
 ccccccccccccccccccccccccccccccccc
+c...c................$WWWWWWuwwwc
+@.c...c..G....G...G...DWWWWWuwwwc
 c...c.................WWWWWWuwwwc
-@.c...c..G....G...G...GWWWWWuwwwc
+@.c...c..G....G...G...DWWCWWuw1wc
 c...c.................WWWWWWuwwwc
-@.c...c..G....G...G...GWWCWWuw1wc
-c...c.................WWWWWWuwwwc
-@.c...c..G....G...G...GWWWWWuwwwc
-c...c.................WWWWWWuwwwc
+@.c...c..G....G...G...DWWWWWuwwwc
+c...c................$WWWWWWuwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -2092,28 +2097,30 @@ DDDD       DDDDE.132...EDDD
                  DDDDD
 ENDMAP
 
-NAME:  nicolae_shoals_raging_river
-TAGS:  transparent no_tide patrolling
-KMONS: 1 = water elemental
-KMONS: 2 = elemental wellspring
-KITEM: L = * w:20 / |
-KFEAT: L = W / .
-KFEAT: 12 = w
-SUBST: M = Wx, w = W x 1:5 2:5 w:70, W = . W:70, ~ = w:90 1
-SUBST: ' = L', x = x:60 c
+NAME:   nicolae_shoals_raging_river
+TAGS:   transparent no_tide patrolling
+KMONS:  1 = water elemental
+KMONS:  2 = elemental wellspring
+KMONS:  D = pile of debris
+KITEM:  L = * w:20 / |
+KFEAT:  L = W / .
+KFEAT:  123 = w
+NSUBST: w = 1:2.. / 3:1 / 10 = W x w:70 / * = 1:5 W x w:70
+SUBST:  M = Wx, W = . W:70, ~ = w:90 1
+SUBST:  ' = L', x = x:60 c
 MAP
  xxxxxxxx xxxxxx
 xxccccccxxxMMMMxxx
 xccLW2wccxMWWWWWMxxx
-xcL''WWwcxWW~~~WWWMxx
+xcL''WWwcxWW1~~WWWMxx
 xc'...WwcxWwwWW~~WWMx
 xc'...WwcxWwWxxW~~WMx
 xcc..Ww2cxWwwWxWW~WMx
 xxccWwWccxxWwWxxW~WMx
- xxxWwWxxxWwwWxxW~WMx
+ xxxWDWxxxWwwWxxW~WMx
   xMWwWxxxWwWxxMW~Wxx
- xxWwwWxxxWwWxxW~WWx
-xxWwwWxxxWwwWxMW~W..
+ xxWwDWxxxWwWxxW~WWx
+xxWDwWxxxWwwWxMW~W..
 xWwwWxxxWwwWxxWW~W.@
 xWwWxxxWwwWxxxW~WW..
 xWwWxxxWwWMxxxx~xxxx
