@@ -1,0 +1,39 @@
+%%%%
+welcome
+
+<white>Bonvenon al Dungeon Crawl!</white>
+
+Via celo estas gvidi vian <w>{{ return you.race() }} {{ return you.class()
+}}</w> sekure tra la projundo de la ublieto, akiri la fabla sfero de Zot kaj 
+revenigi ĝin al la surfaco. Tamen en la komenco, lasu malkovro esti vian 
+celon. Provu plonĝi tiom profunda, kiom estas eblo, sed gardu vin; morto 
+sin kaŝas ĉirkaŭ ĉiu angulon.
+
+Por la momento, nur memoru la sekvaj klavojn kaj ties funkcioj:
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — montras la objektojn kaj 
+la funkciojn.
+  <input>$cmd[CMD_SAVE_GAME]</input>  — Savas ludon, por daŭriĝi poste 
+(sed notu, ke morto estas konstanta)
+  <input>$cmd[CMD_LOOK_AROUND]</input>  — ekzamenas ion, kio estas proksima al
+vi
+
+La aluda reĝimo helpos vin ludi Crawl sen dokumentado. Se vi ankoraŭ ne, vi 
+eble volus provi la lernilon. Ankaŭ se vi sentas vin fascinitan, tiam tio estas 
+pli informo en la sekvaj dosieroj de la docs/ dosierujo (ĉiuj ankaŭ povas esti 
+leginta ene la ludo):
+  <lightblue>quickstart.txt</lightblue>     — Tre mallonga gvidilo pri Crawl.
+  <lightblue>crawl_manual.txt</lightblue>   — Tiu enhavas ĉiujn detalojn pri 
+ magio, specioj, kapabloj, ktp.
+  <lightblue>options_guide.txt</lightblue>  — La fasado de Crawl estas tre 
+agordebla. Tiu dosiero priskribas ĉiujn la opciojn.
+
+Feliĉan Crawl-adon!
+%%%%
+death
+
+Kondolencojn! La antaŭtempa morto de vian personon estas malĝoja, tamen kutima 
+okazo. Estu trankvila, ĉar viaj personoj ja pli longe daŭros kun diligenteco 
+kaj sperto.
+
+Eble la sekva konsilo povas plibonigi vian ludstilon:
+%%%%
