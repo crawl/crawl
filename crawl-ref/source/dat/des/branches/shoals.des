@@ -42,7 +42,7 @@ function shoals_vault_is_mimic(e)
     return false
   end
 
-  local tag, tag2 = unpack(params)
+  local tag, tag2 = table.unpack(params)
   return tag2 ~= nil and string.find(tag2, "mimic")
 end
 

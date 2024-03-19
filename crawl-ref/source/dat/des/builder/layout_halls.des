@@ -498,7 +498,7 @@ TAGS:   overwritable layout allow_dup unrand central layout_type_open_caves
   -- If this is being placed to benefit a central vault, do the polar layout.
   local params = dgn.map_parameters()
   if params ~= nil then
-    local mode = unpack(params)
+    local mode = table.unpack(params)
     if mode == "central" then
       polarise = true
     end

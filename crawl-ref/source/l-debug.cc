@@ -474,7 +474,7 @@ LUAFN(debug_check_moncasts)
     return 1;
 }
 
-const struct luaL_reg debug_dlib[] =
+const struct luaL_Reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
 { "dungeon_setup", debug_dungeon_setup },

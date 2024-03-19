@@ -41,19 +41,19 @@ void cluaopen_globals(lua_State *ls);
  * TODO: Rename these to dluaopen_*?
  */
 
-extern const struct luaL_reg debug_dlib[];
-extern const struct luaL_reg dgn_dlib[];
-extern const struct luaL_reg dgn_build_dlib[];
-extern const struct luaL_reg dgn_event_dlib[];
-extern const struct luaL_reg dgn_grid_dlib[];
-extern const struct luaL_reg dgn_item_dlib[];
-extern const struct luaL_reg dgn_level_dlib[];
-extern const struct luaL_reg dgn_mons_dlib[];
-extern const struct luaL_reg dgn_subvault_dlib[];
-extern const struct luaL_reg dgn_tile_dlib[];
-extern const struct luaL_reg feat_dlib[];
-extern const struct luaL_reg los_dlib[];
-extern const struct luaL_reg mapmarker_dlib[];
+extern const struct luaL_Reg debug_dlib[];
+extern const struct luaL_Reg dgn_dlib[];
+extern const struct luaL_Reg dgn_build_dlib[];
+extern const struct luaL_Reg dgn_event_dlib[];
+extern const struct luaL_Reg dgn_grid_dlib[];
+extern const struct luaL_Reg dgn_item_dlib[];
+extern const struct luaL_Reg dgn_level_dlib[];
+extern const struct luaL_Reg dgn_mons_dlib[];
+extern const struct luaL_Reg dgn_subvault_dlib[];
+extern const struct luaL_Reg dgn_tile_dlib[];
+extern const struct luaL_Reg feat_dlib[];
+extern const struct luaL_Reg los_dlib[];
+extern const struct luaL_Reg mapmarker_dlib[];
 
 void luaopen_dgnevent(lua_State *ls);
 void luaopen_mapmarker(lua_State *ls);

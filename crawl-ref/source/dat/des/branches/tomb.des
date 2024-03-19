@@ -60,7 +60,7 @@ function tomb_guardian_set(e, include_nothing)
     }
   local nothing = " / nothing w:248"
   local which_set = 0
-  local mincount = math.min(unpack(dgn.persist.tomb_guardian_sets))
+  local mincount = math.min(table.unpack(dgn.persist.tomb_guardian_sets))
   local count = 0
   for i = 1, #sets do
     if dgn.persist.tomb_guardian_sets[i] == mincount then

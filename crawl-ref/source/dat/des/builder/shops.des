@@ -37,7 +37,7 @@ function ks_shop_vault(e, glyphs)
 
   local params = dgn.map_parameters()
   if params ~= nil then
-    local tag = unpack(params)
+    local tag = table.unpack(params)
     if tag ~= nil then
       if tag == "shop" then
         is_shop = true
