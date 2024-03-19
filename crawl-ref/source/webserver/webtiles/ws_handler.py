@@ -661,7 +661,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # warning: there is a somewhat painful interval at game start while
         # self.process is partly set up, but before self.process.process is
         # still unset. Don't call this function during that time...
-        time_limit = config.get('max_lobby_idle_time') > 0
+        time_limit = config.get('max_lobby_idle_time')
         if not self.is_in_lobby() or self.is_admin() or time_limit <= 0:
             # this can be triggered on callbacks; if the player is now playing,
             # leave things with this timeout no longer set at all
