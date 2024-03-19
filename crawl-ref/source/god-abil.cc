@@ -1690,7 +1690,7 @@ void yred_fathomless_shackles_effect(int delay)
 
 bool yred_can_bind_soul(monster* mon)
 {
-    return mons_can_be_spectralised(*mon, true)
+    return mons_can_be_spectralised(*mon, true, true)
            && !mon->has_ench(ENCH_SOUL_RIPE)
            && mon->attitude != ATT_FRIENDLY;
 }

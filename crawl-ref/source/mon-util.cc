@@ -1774,10 +1774,14 @@ bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
 // Does this monster have a soul that can be used for necromancy (Death
 // Channel, Simulacrum, Yredelemnul's Bind Soul)? For Bind Soul, allow
 // monsters with no attacks if they have some spells to use.
-bool mons_can_be_spectralised(const monster& mon, bool divine)
+// When called from Bind Soul's targeting interface, take into account only
+// known effects.
+bool mons_can_be_spectralised(const monster& mon, bool divine, bool only_known)
 {
     return mons_class_can_be_spectralised(mon.type, divine)
-           && !mon.is_summoned()
+           && (!mon.is_summoned()
+               || only_known && mon.has_ench(ENCH_PHANTOM_MIRROR)
+                    && mon.mons_species() != MONS_PLAYER_ILLUSION)
            && !mons_is_tentacle_or_tentacle_segment(mon.type)
            && (!testbits(mon.flags, MF_NO_REWARD)
                || mon.props.exists(KIKU_WRETCH_KEY))
