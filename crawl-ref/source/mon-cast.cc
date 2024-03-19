@@ -7440,7 +7440,7 @@ static coord_def _choose_throwing_target(const monster &thrower,
         ray_def ray;
         // Unusable landing sites.
         if (!_valid_throw_dest(thrower, victim, *di)
-            || !find_ray(thrower.pos(), *di, ray, opc_solid_see))
+            || !find_ray_priority(thrower.pos(), *di, ray, opc_no_actor, opc_solid_see))
         {
             continue;
         }

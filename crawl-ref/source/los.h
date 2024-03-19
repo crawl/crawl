@@ -25,6 +25,9 @@ int get_los_radius();
 bool find_ray(const coord_def& source, const coord_def& target,
               ray_def& ray, const opacity_func &opc,
               int range = LOS_MAX_RANGE, bool cycle = false);
+bool find_ray_priority(const coord_def& source, const coord_def& target,
+              ray_def& ray, const opacity_func &opc_priority, const opacity_func &opc,
+              int range = LOS_MAX_RANGE, bool cycle = false);
 bool exists_ray(const coord_def& source, const coord_def& target,
                 const opacity_func &opc, int range = LOS_MAX_RANGE);
 dungeon_feature_type ray_blocker(const coord_def& source, const coord_def& target);

@@ -652,6 +652,15 @@ bool find_ray(const coord_def& source, const coord_def& target,
     return true;
 }
 
+// Find a ray prioritizing opc_priority over opc
+bool find_ray_priority(const coord_def& source, const coord_def& target,
+              ray_def& ray, const opacity_func& opc_priority, const opacity_func& opc,
+              int range, bool cycle)
+{
+    return find_ray(source, target, ray, opc_priority, range, cycle)
+        || find_ray(source, target, ray, opc, range, cycle);
+}
+
 bool exists_ray(const coord_def& source, const coord_def& target,
                 const opacity_func& opc, int range)
 {

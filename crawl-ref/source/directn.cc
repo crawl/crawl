@@ -1782,8 +1782,8 @@ void direction_chooser::toggle_beam()
 
     if (show_beam)
     {
-        have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, you.current_vision);
+        have_beam = find_ray_priority(you.pos(), target(), beam,
+                             opc_no_actor, opc_solid_see, you.current_vision);
     }
 }
 
@@ -2309,8 +2309,8 @@ public:
                 m_dc.show_beam = !m_dc.just_looking && m_dc.needs_path;
                 // XX code duplication
                 m_dc.have_beam = m_dc.show_beam
-                                 && find_ray(you.pos(), m_dc.target(), m_dc.beam,
-                                             opc_solid_see, you.current_vision);
+                                 && find_ray_priority(you.pos(), m_dc.target(), m_dc.beam,
+                                    opc_no_actor, opc_solid_see, you.current_vision);
                 m_dc.need_text_redraw = true;
                 m_dc.need_viewport_redraw = true;
                 m_dc.need_cursor_redraw = true;
@@ -2365,8 +2365,8 @@ public:
         if (old_target != m_dc.target())
         {
             m_dc.have_beam = m_dc.show_beam
-                             && find_ray(you.pos(), m_dc.target(), m_dc.beam,
-                                         opc_solid_see, you.current_vision);
+                             && find_ray_priority(you.pos(), m_dc.target(), m_dc.beam,
+                                opc_no_actor, opc_solid_see, you.current_vision);
             m_dc.need_text_redraw = true;
             m_dc.need_viewport_redraw = true;
             m_dc.need_cursor_redraw = true;
@@ -2507,8 +2507,8 @@ bool direction_chooser::choose_direction()
     // If requested, show the beam on startup.
     if (show_beam)
     {
-        have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, you.current_vision);
+        have_beam = find_ray_priority(you.pos(), target(), beam,
+                        opc_no_actor, opc_solid_see, you.current_vision);
         need_viewport_redraw = have_beam;
     }
     if (hitfunc)
