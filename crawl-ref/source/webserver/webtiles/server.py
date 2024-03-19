@@ -287,7 +287,7 @@ def bind_server(nonsecure_sockets, secure_sockets):
     if secure_sockets and config.get('ssl_options'):
         # TODO: allow different ssl_options per bind pair?
         server = tornado.httpserver.HTTPServer(application,
-                            ssl_options=config.get('ssl_options') **kwargs)
+                            ssl_options=config.get('ssl_options'), **kwargs)
         for s in secure_sockets:
             server.add_sockets(s)
         servers.append(server)
