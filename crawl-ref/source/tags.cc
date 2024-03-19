@@ -7413,7 +7413,7 @@ void unmarshallMonster(reader &th, monster& m)
     {
         m.damage_total = m.damage_friendly = 0;
         mprf(MSGCH_ERROR, "apostle \"%s\" had incorrect damage tracking: %d > %d",
-            dup_m->full_name(DESC_PLAIN).c_str(), m.damage_friendly, m.damage_total);
+            m.full_name(DESC_PLAIN).c_str(), m.damage_friendly, m.damage_total);
     }
 #endif
 
