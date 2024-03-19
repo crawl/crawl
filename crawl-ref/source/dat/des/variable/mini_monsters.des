@@ -9728,8 +9728,8 @@ MONS:   dancing weapon ; demon trident ego:distortion
 KMONS:  B = pile of debris
 KMONS:  D = dancing weapon ; rift
 KMONS:  E = generate_awake occultist god:Lugonu name:mad_acolyte_of_Lugonu n_rpl n_des \
-		col:lightgreen tile:mons_mad_acolyte_of_lugonu; \
-		robe good_item . demon trident ego:distortion | demon trident ego:none \
+        col:lightgreen tile:mons_mad_acolyte_of_lugonu; \
+        robe good_item . demon trident ego:distortion | demon trident ego:none \
         spells:smiting.20.priest;banishment.10.priest;invisibility.10.priest;
 MAP
       c===c
