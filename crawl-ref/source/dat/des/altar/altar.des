@@ -197,7 +197,7 @@ KMASK:   x = no_wall_fixup
 COLOUR:  g = silver
 TILE:    G = dngn_statue_angel
 TILE:    g = dngn_silver_statue
-: set_feature_name("granite_statue", "silver statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
     '''''
     .....

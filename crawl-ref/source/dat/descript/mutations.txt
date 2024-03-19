@@ -474,7 +474,7 @@ demonic magic mutation
 
 When you cast spells, there's a chance that adjacent monsters will be
 paralysed. This effect is more powerful when casting higher-level spells, but
-monsters with greater Willpower can resist it. Each level of this mutation
+monsters with greater willpower can resist it. Each level of this mutation
 allows more distant monsters to be affected. The third level of this mutation
 also allows you to paralyse monsters in the same way while zapping wands.
 %%%%
@@ -548,7 +548,7 @@ You cast Hex spells with increased power.
 demonic willpower mutation
 
 Your willpower has a will of its own, sometimes injuring those who attempt to
-hex you. This mutation also bolsters your Willpower.
+hex you. This mutation also bolsters your willpower.
 %%%%
 hurl damnation mutation
 
@@ -799,7 +799,7 @@ devour on kill mutation
 When you kill living creatures you have a chance to devour their life force
 and restore health.
 %%%%
-roll mutation
+rollpage mutation
 
 You instinctively roll as you move toward enemies, rampaging forward an
 additional space. This mutation grants magic regeneration when rolling; the

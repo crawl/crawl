@@ -53,9 +53,16 @@ area and last longer.
 Breathe Fire ability
 
 Breathes a blast of fire at a targeted creature.
+%%%%
 Breathe Poison Gas ability
 
 Breathes a blast of poison gas at a targeted creature.
+%%%%
+Invent Gizmo ability
+
+Uses your peerless coglin ingenuity to invent and assemble a one-of-a-kind
+piece of equipment and permanently install it in yourself. Such inspiration
+does not strike twice, so choose wisely.
 %%%%
 Bat Form ability
 

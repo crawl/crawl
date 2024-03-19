@@ -107,7 +107,7 @@
     Alexander Beisig
     benadryl
     biasface
-    bjobae
+    Björn Bähre
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
@@ -216,6 +216,7 @@
     Iainuki
     ICC
     Icy Lich
+    Wizard Ike
     Ilyak
     Matthew Ince
     Mitsuhiro Itakura

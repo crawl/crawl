@@ -256,7 +256,6 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_HARM:                return "Harm";
     case AMU_THE_GOURMAND:        return "Gourm";
 #endif
-    case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_ACROBAT:             return "Acrobat";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:        return "Cons";
@@ -329,7 +328,7 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It insulates you from electricity.",
             prop_note::plain },
         { ARTP_POISON,
-            "It protects you from poison",
+            "It protects you from poison.",
             prop_note::plain },
         { ARTP_NEGATIVE_ENERGY,
             "negative energy",
@@ -442,6 +441,12 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_ALCHEMY,
             "It increases the power of your Alchemy spells.",
             prop_note::plain },
+        { ARTP_ACROBAT,
+            "It increases your evasion after moving or waiting.",
+            prop_note::plain },
+        { ARTP_MANA_REGENERATION,
+            "It increases your rate of magic regeneration.",
+            prop_note::symbolic },
     };
     return data;
 }
@@ -487,6 +492,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_NOISE,
         ARTP_HARM,
         ARTP_RAMPAGING,
+        ARTP_ACROBAT,
         ARTP_CORRODE,
         ARTP_DRAIN,
         ARTP_SLOW,
@@ -505,6 +511,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_NEGATIVE_ENERGY,
         ARTP_WILLPOWER,
         ARTP_REGENERATION,
+        ARTP_MANA_REGENERATION,
         ARTP_RMUT,
         ARTP_RCORR,
 
@@ -562,6 +569,8 @@ static vector<string> _randart_propnames(const item_def& item,
             ego = weapon_brand_name(item, true);
         else if (item.base_type == OBJ_ARMOUR)
             ego = armour_ego_name(item, true);
+        else if (item.base_type == OBJ_GIZMOS)
+            ego = gizmo_effect_name(item.brand);
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
@@ -768,7 +777,8 @@ void desc_randart_props(const item_def &item, vector<string> &lines)
             sdesc = replace_all(sdesc, "%d", make_stringf("%+d", stval));
 
         if (desc.display_type == prop_note::symbolic
-            && desc.property != ARTP_REGENERATION) // symbolic, but no text modification
+            && desc.property != ARTP_REGENERATION // symbolic, but no text modification
+            && desc.property != ARTP_MANA_REGENERATION)
         {
             // for symbolic props, desc.desc is just the resist name, need
             // to fill in to get a complete sentence
@@ -1750,7 +1760,8 @@ static string _describe_weapon_brand(const item_def &item)
         return "It has been infused with foul flame, dealing an additional "
                "three-quarters of damage to holy beings, an additional quarter "
                "damage to undead and demons, and an additional half damage to "
-               "all others. Holy beings cannot use this.";
+               "all others. Holy beings and good god worshippers cannot use "
+               "this.";
     case SPWPN_ELECTROCUTION:
         return "It sometimes electrocutes victims (1/4 chance, 8-20 damage).";
     case SPWPN_VENOM:
@@ -1814,6 +1825,154 @@ static string _describe_weapon_brand(const item_def &item)
     }
 }
 
+static string _describe_point_change(float points)
+{
+    string point_diff_description;
+
+    point_diff_description += make_stringf("%s by %.1f",
+                                           points > 0 ? "increase" : "decrease",
+                                           abs(points));
+
+    return point_diff_description;
+}
+
+static string _describe_point_diff(int original,
+                                   int changed, int scale = 100)
+{
+    string description;
+
+    if (original == changed)
+        return "remain unchanged";
+
+    float difference = ((float)(changed - original)) / scale;
+
+    description += _describe_point_change(difference);
+    description += " (";
+    description += make_stringf("%.1f", ((float)(original)) / scale);
+    description += " -> ";
+    description += make_stringf("%.1f", ((float)(changed)) / scale);
+    description += ")";
+
+    return description;
+}
+
+static string _equip_type_name(const item_def &item)
+{
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (jewellery_is_amulet(item))
+            return "amulet";
+        else
+            return "ring";
+    }
+
+    return base_type_string(item.base_type);
+}
+
+static string _equipment_switchto_string(const item_def &item)
+{
+    if (item.base_type == OBJ_WEAPONS)
+        return "wielding";
+    // Not always the same verb used elsewhere, but "switch putting on" sounds weird
+    else
+        return "wearing";
+}
+
+/**
+ * Describe how (un)equipping a piece of equipment might change the player's
+ * AC/EV/SH stats. We don't include temporary buffs in this calculation.
+ *
+ * @param item    The item whose description we are writing.
+ * @param remove  Whether the item is already equipped, and thus whether to
+                  show the change solely from unequipping the item.
+ * @return        The description.
+ */
+static string _equipment_ac_ev_sh_change_description(const item_def &item,
+                                                     bool remove = false)
+{
+    // First, test if there is any AC/EV/SH change at all.
+    const int cur_ac = you.base_ac(100);
+    const int cur_ev = you.evasion_scaled(100, true);
+    const int cur_sh = player_displayed_shield_class(100, true);
+    int new_ac, new_ev, new_sh;
+
+    if (remove)
+        you.ac_ev_sh_without_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+    else
+        you.ac_ev_sh_with_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+
+    // If we're previewing non-armour and there is no AC/EV/SH change, print no
+    // extra description at all (since almost all items of these types will
+    // change nothing)
+    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+        && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
+    {
+        return "";
+    }
+
+    string description;
+    description.reserve(100);
+    description = "\n\n";
+
+    if (remove)
+    {
+        description += "If you " + item_unequip_verb(item) + " this "
+                        + _equip_type_name(item) + ":";
+    }
+    else if (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item))
+        description += "If you were wearing this ring:";
+    else if (item.base_type == OBJ_WEAPONS && you.has_mutation(MUT_WIELD_OFFHAND))
+        description += "If you switch to wielding this weapon in your main hand:";
+    else
+    {
+        description += "If you switch to " + _equipment_switchto_string(item)
+                         + " this " + _equip_type_name(item) + ":";
+    }
+
+    // Always display AC line on proper armour, even if there is no change
+    if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != EQ_OFFHAND
+        || cur_ac != new_ac)
+    {
+        description += "\nYour AC would "
+                       + _describe_point_diff(cur_ac, new_ac) + ".";
+    }
+
+    // Always display EV line on non-orb armour, even if there is no change
+    // XXX perhaps this shouldn't display on basic aux armour?
+    if (item.base_type == OBJ_ARMOUR && item.sub_type != ARM_ORB
+        || cur_ev != new_ev)
+    {
+        description += "\nYour EV would "
+                       + _describe_point_diff(cur_ev, new_ev) + ".";
+    }
+
+    // Always display SH line on shields, even if there is no change
+    if (is_shield(item) || cur_sh != new_sh)
+    {
+        description += "\nYour SH would "
+                       + _describe_point_diff(cur_sh, new_sh) + ".";
+    }
+
+    return description;
+}
+
+static bool _you_are_wearing_item(const item_def &item)
+{
+    return get_equip_slot(&item) != EQ_NONE;
+}
+
+static string _equipment_ac_ev_sh_change(const item_def &item)
+{
+    string description;
+
+    if (!_you_are_wearing_item(item))
+        description = _equipment_ac_ev_sh_change_description(item);
+    else
+        description = _equipment_ac_ev_sh_change_description(item, true);
+
+    return description;
+}
+
 static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 {
     string description;
@@ -1845,6 +2004,9 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
+
+    if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
+        description += _equipment_ac_ev_sh_change(item);
 
     if (verbose)
     {
@@ -1984,105 +2146,16 @@ static string _describe_ammo(const item_def &item)
 
 static string _warlock_mirror_reflect_desc()
 {
-    const int SH = crawl_state.need_save ? player_shield_class() : 0;
-    const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
+    const int scaled_SH = crawl_state.need_save ? player_shield_class(100, false) : 0;
+    const int SH = scaled_SH / 100;
+    // We use random-rounded SH, so take a weighted average of the
+    // chances with SH and SH+1.
+    const int reflect_chance_numer = (100 - (scaled_SH % 100)) * SH * omnireflect_chance_denom(SH+1) + (scaled_SH % 100) * (SH+1) * omnireflect_chance_denom(SH);
+    const int reflect_chance_denom = omnireflect_chance_denom(SH) * omnireflect_chance_denom(SH+1);
+    const int reflect_chance = reflect_chance_numer / reflect_chance_denom;
     return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
            "% chance to reflect attacks against your willpower and other "
            "normally unblockable effects.";
-}
-
-static string _describe_point_change(int points)
-{
-    string point_diff_description;
-
-    point_diff_description += make_stringf("%s by %d",
-                                           points > 0 ? "increase" : "decrease",
-                                           abs(points));
-
-    return point_diff_description;
-}
-
-static string _describe_point_diff(int original,
-                                   int changed)
-{
-    string description;
-
-    int difference = changed - original;
-
-    if (difference == 0)
-        return "remain unchanged";
-
-    description += _describe_point_change(difference);
-    description += " (";
-    description += to_string(original);
-    description += " -> ";
-    description += to_string(changed);
-    description += ")";
-
-    return description;
-}
-
-static string _armour_ac_ev_sub_change_description(const item_def &item)
-{
-    string description;
-
-    description.reserve(100);
-
-    description += "\n\nIf you switch to wearing this armour,"
-                        " your AC would ";
-
-    int you_ac_with_this_item =
-                 you.armour_class_with_one_sub(item);
-
-    description += _describe_point_diff(you.armour_class(),
-                                        you_ac_with_this_item);
-
-    description += " and your EV would ";
-    description += _describe_point_diff(you.evasion(true),
-                                        you.evasion_with_specific_armour(item));
-
-    description += ".";
-
-    return description;
-}
-
-static string _armour_ac_ev_remove_change_description(const item_def &item)
-{
-    string description;
-
-    description += "\n\nIf you remove this armour,"
-                        " your AC would ";
-
-    int you_ac_without_item =
-                 you.armour_class_with_one_removal(item);
-
-    description += _describe_point_diff(you.armour_class(),
-                                        you_ac_without_item);
-
-    description += " and your EV would ";
-    description += _describe_point_diff(you.evasion(true),
-                                        you.evasion_without_specific_armour(item));
-
-    description += ".";
-
-    return description;
-}
-
-static bool _you_are_wearing_item(const item_def &item)
-{
-    return get_equip_slot(&item) != EQ_NONE;
-}
-
-static string _armour_ac_ev_change(const item_def &item)
-{
-    string description;
-
-    if (!_you_are_wearing_item(item))
-        description = _armour_ac_ev_sub_change_description(item);
-    else
-        description = _armour_ac_ev_remove_change_description(item);
-
-    return description;
 }
 
 static const char* _item_ego_desc(special_armour_type ego)
@@ -2282,10 +2355,9 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     if (verbose
         && crawl_state.need_save
         && can_wear_armour(item, false, true)
-        && item_ident(item, ISFLAG_KNOW_PLUSES)
-        && !is_offhand(item))
+        && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _armour_ac_ev_change(item);
+        description += _equipment_ac_ev_sh_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2401,7 +2473,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
     if (below_target || hp != 100 || ac || ev || loses_body_ac)
     {
         if (!monster)
-            description += "\n\nDefense:";
+            description += "\n\nDefence:";
         if (below_target || hp != 100)
         {
             description += make_stringf("\nHP:            %d%%", hp);
@@ -2427,7 +2499,7 @@ static string _describe_talisman_form(const item_def &item, bool monster)
 
     // offense
     if (!monster)
-        description += "\n\nOffense:";
+        description += "\n\nOffence:";
     const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
                                                          // folks don't know nudists have 3
     const int max_uc = form->get_base_unarmed_damage(false, true);
@@ -2558,6 +2630,18 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
 
+    if (verbose
+        && crawl_state.need_save
+        && !you.has_mutation(MUT_NO_JEWELLERY)
+        && item_ident(item, ISFLAG_KNOW_PROPERTIES)
+        && (is_artefact(item)
+            || item.sub_type != RING_PROTECTION
+               && item.sub_type != RING_EVASION
+               && item.sub_type != AMU_REFLECTION))
+    {
+        description += _equipment_ac_ev_sh_change(item);
+    }
+
     return description;
 }
 
@@ -2578,6 +2662,46 @@ static string _describe_item_curse(const item_def &item)
                                ".\n", ".\n") << ".";
 
     return desc.str();
+}
+
+static string _describe_gizmo(const item_def &item)
+{
+    string ret = "\n\n";
+
+    if (item.brand)
+    {
+        string name = string(gizmo_effect_name(item.brand)) + ":";
+        ret += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 2, name.c_str());
+        switch (item.brand)
+        {
+            case SPGIZMO_MANAREV:
+                ret += "Your magic regeneration increases greatly based on how "
+                       "Revved you are.\n";
+                break;
+
+            case SPGIZMO_GADGETEER:
+                ret += "Your evocable items recharge 30% faster and wands have "
+                       "a 30% chance to not spend a charge.\n";
+                break;
+
+            case SPGIZMO_PARRYREV:
+                ret += "Your AC increases as you Rev (up to +5) and while "
+                       "fully Revved, your attacks may disarm enemies.\n";
+                break;
+
+            case SPGIZMO_AUTODAZZLE:
+                ret += "It sometimes fires a blinding ray at enemies whose attacks "
+                       "you dodge.\n";
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    ret += _artefact_descrip(item);
+
+    return ret;
 }
 
 bool is_dumpable_artefact(const item_def &item)
@@ -2730,6 +2854,12 @@ string get_item_description(const item_def &item,
                  && item.base_type == OBJ_JEWELLERY)
         {
             description << "It is an ancient artefact.";
+            need_base_desc = false;
+        }
+        else if (item.base_type == OBJ_GIZMOS)
+        {
+            description << "It is a fabulous contraption, custom-made by your "
+                           "own hands.";
             need_base_desc = false;
         }
 
@@ -2937,6 +3067,10 @@ string get_item_description(const item_def &item,
             description << desc;
         break;
 
+    case OBJ_GIZMOS:
+        description << _describe_gizmo(item);
+        break;
+
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
@@ -2969,7 +3103,11 @@ string get_item_description(const item_def &item,
             {
                 if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
                 {
-                    if (is_unrandom_artefact(item))
+                    if (is_unrandom_artefact(item)
+                        || (item.base_type == OBJ_ARMOUR
+                            && item.plus >= armour_max_enchant(item))
+                        || (item.base_type == OBJ_WEAPONS
+                            && item.plus >= MAX_WPN_ENCHANT))
                     {
                         description << "\nEnchanting this artefact any further "
                             "is beyond even your skills.";
@@ -2982,7 +3120,8 @@ string get_item_description(const item_def &item,
                 }
             }
             // Randart jewellery has already displayed this line.
-            else if (item.base_type != OBJ_JEWELLERY
+            // And gizmos really shouldn't (you just made them!)
+            else if (item.base_type != OBJ_JEWELLERY && item.base_type != OBJ_GIZMOS
                      || (item_type_known(item) && is_unrandom_artefact(item)))
             {
                 description << "\nIt is an ancient artefact.";
@@ -4014,7 +4153,7 @@ command_type describe_item_popup(const item_def &item,
         else if (scroller->on_event(ev))
             return true;
 
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, &item);
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())
@@ -4824,7 +4963,8 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_SWOOP,             "swoops behind the defender beforehand" },
         { AF_FLANK,             "slips behind the defender beforehand" },
         { AF_DRAG,              "drag the defender backwards"},
-        { AF_FOUL_FLAME,        "extra damage to holies/good god worshippers" },
+        { AF_FOUL_FLAME,        "extra damage, especially to the good" },
+        { AF_HELL_HUNT,         "summon demonic beasts" },
         { AF_PLAIN,             "" },
     };
 
@@ -5184,16 +5324,16 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     // We ignore the EV penalty for not being able to see an enemy because, if you
     // can't see an enemy, you can't get a monster description for them. (Except through
     // ?/M, but let's neglect that for now.)
-    const int ev = you.evasion();
+    const int scaled_ev = you.evasion_scaled(100);
 
     const int to_land = weapon && is_unrandom_artefact(*weapon, UNRAND_SNIPER) ? AUTOMATIC_HIT :
                                                                 total_base_hit + post_roll_modifiers;
-    const int beat_ev_chance = mon_to_hit_pct(to_land, ev);
+    const int beat_ev_chance = mon_to_hit_pct(to_land, scaled_ev);
 
-    const int shield_class = player_shield_class();
+    const int scaled_sh = player_shield_class(100, false);
     const int shield_bypass = mon_shield_bypass(mi.hd);
     // ignore penalty for unseen attacker, as with EV above
-    const int beat_sh_chance = mon_beat_sh_pct(shield_bypass, shield_class);
+    const int beat_sh_chance = mon_beat_sh_pct(shield_bypass, scaled_sh);
 
     const int hit_chance = beat_ev_chance * beat_sh_chance / 100;
     result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
@@ -6039,6 +6179,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "\nIt is quickly crumbling away.\n";
         else if (mi.is(MB_WITHERING))
             inf.body << "\nIt is quickly withering away.\n";
+        else if (mi.holi & (MH_NONLIVING))
+            inf.body << "\nIf struck, it will crumble away soon after.\n";
         else
             inf.body << "\nIf struck, it will die soon after.\n";
     }
@@ -6345,7 +6487,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         }
         if (desc_sw->current_widget()->on_event(ev))
             return true;
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, nullptr);
+        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())

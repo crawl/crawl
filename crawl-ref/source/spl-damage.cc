@@ -78,7 +78,7 @@ static bool _act_worth_targeting(const actor &caster, const actor &a)
         return false;
     if (!caster.is_player())
         return true;
-    return !god_protects(&you, &m, true)
+    return !god_protects(&you, m, true)
            && !testbits(m.flags, MF_DEMONIC_GUARDIAN);
 }
 
@@ -299,7 +299,7 @@ static bool _warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
         const monster* mon = monster_at(p);
         // XXX: maybe check for ioods/bspheres instead of all conjured mons..?
         // feels a little bad to blow up a prism with a plasma beam, maybe?
-        if (!mon || god_protects(&you, mon) || mons_is_conjured(mon->type))
+        if (!mon || god_protects(&you, *mon) || mons_is_conjured(mon->type))
             continue;
         string adj, suffix;
         bool penance;
@@ -557,7 +557,7 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 {
     ASSERT(mon.alive() || !god_conducts);
 
-    if (god_conducts && god_protects(&mon, false))
+    if (god_conducts && god_protects(mon, false))
         return;
 
     god_conduct_trigger conducts[3];
@@ -978,7 +978,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
         return spret::success; // still losing a turn
     }
 
-    if (!god_protects(mons)
+    if (!god_protects(*mons)
         && stop_attack_prompt(mons, false, you.pos()))
     {
         return spret::abort;
@@ -1044,7 +1044,7 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
 
     monster* mons = monster_at(target);
     if (mons
-        && !god_protects(mons)
+        && !god_protects(*mons)
         && you.can_see(*mons)
         && stop_attack_prompt(mons, false, you.pos()))
     {
@@ -1075,6 +1075,87 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
         you.set_duration(DUR_NO_MOMENTUM, dur, dur,
                          "You are unable to move.");
     }
+
+    return spret::success;
+}
+
+set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
+{
+    set<coord_def> targets;
+
+    const int range = spell_range(SPELL_PERMAFROST_ERUPTION, pow);
+    vector<coord_def> all_hostiles = find_near_hostiles(range, actual, caster);
+    if (all_hostiles.empty())
+        return targets;
+
+    set<coord_def> hostile_locs(all_hostiles.begin(), all_hostiles.end());
+    int best_foes = 0;
+    const coord_def src = caster.pos();
+
+    for (coord_def t : all_hostiles)
+    {
+        if (grid_distance(t, src) < 2) // don't blow up the caster
+            continue;
+
+        int foes = 0; // not counting the centre
+        for (adjacent_iterator ai(t); ai; ++ai)
+            foes += hostile_locs.count(*ai); // ie 1 if present
+        if (foes < best_foes)
+            continue;
+
+        if (foes > best_foes)
+        {
+            best_foes = foes;
+            targets.clear();
+        }
+        targets.insert(t);
+    }
+
+    return targets;
+}
+
+
+
+spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
+{
+    set<coord_def> maybe_targets = permafrost_targets(caster, pow, true);
+    if (caster.is_player())
+    {
+        set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
+        for (coord_def t : maybe_targets)
+            for (adjacent_iterator ai(t); ai; ++ai)
+                if (caster.see_cell(*ai))
+                    maybe_victims.insert(*ai);
+
+        vector<coord_def> mvv(maybe_victims.begin(), maybe_victims.end());
+        if (_warn_about_bad_targets(SPELL_PERMAFROST_ERUPTION, mvv))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    if (maybe_targets.empty())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+
+    const coord_def targ = *random_iterator(maybe_targets);
+    mpr("Bitter cold erupts, blasting rock from the ceiling!");
+
+    bolt beam;
+    zappy(ZAP_PERMAFROST_ERUPTION_EARTH, pow, false, beam);
+    beam.set_agent(&you);
+    beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
+    beam.source = beam.target = targ;
+    beam.fire();
+
+    zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, false, beam);
+    beam.ex_size       = 1;
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode();
 
     return spret::success;
 }
@@ -1139,6 +1220,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     // there are so many of them, it seems wrong to have them be so harmful to
     // their own allies. This could be wrong!
     { MONS_SALTLING,          { "salt crystal", WHITE } },
+    { MONS_PILE_OF_DEBRIS,    { "stone", LIGHTGRAY } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
     { MONS_ROCKSLIME,         { "rock", BROWN } },
     { MONS_BOULDER,           { "rock", BROWN } },
@@ -1157,6 +1239,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_CRYSTAL_ECHIDNA,   { "crystal", GREEN,
                                 frag_damage_type::crystal } },
     { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
+                                frag_damage_type::crystal } },
+    { MONS_OBSIDIAN_BAT,      { "obsidian", MAGENTA,
                                 frag_damage_type::crystal } },
     { MONS_OBSIDIAN_STATUE,   { "obsidian", MAGENTA,
                                 frag_damage_type::crystal } },
@@ -1577,7 +1661,7 @@ spret cast_shatter(int pow, bool fail)
     auto vulnerable = [](const actor *act) -> bool
     {
         return !act->is_player()
-               && !god_protects(act->as_monster())
+               && !god_protects(*act->as_monster())
                && _shatterable(act);
     };
     if (stop_attack_prompt(hitfunc, "attack", vulnerable))
@@ -1943,7 +2027,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     {
         return !act->is_player()
                && !mons_is_conjured(act->as_monster()->type)
-               && !god_protects(&caster, act->as_monster());
+               && !god_protects(&caster, *act->as_monster());
     };
 
     if (caster.is_player() && stop_attack_prompt(hitfunc, "irradiate", vulnerable))
@@ -2125,7 +2209,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
-    if (god_protects(agent, mon, tracer))
+    if (god_protects(agent, *mon, tracer))
         return 0;
 
     mon->expose_to_element(BEAM_FIRE, damage);
@@ -2525,7 +2609,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
     // Elec immune monsters don't allow arcs to continue.
     else if (victim->res_elec() >= 3)
         return 0;
-    else if (god_protects(&agent, victim->as_monster(), false))
+    else if (god_protects(&agent, *victim->as_monster(), false))
         return 0;
     else
     {
@@ -2580,7 +2664,7 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_
             if (act->is_monster())
             {
                 // Harmless to these monsters, so don't prompt about them.
-                if (act->res_elec() >= 3 || god_protects(act->as_monster()))
+                if (act->res_elec() >= 3 || god_protects(*act->as_monster()))
                     continue;
 
                 if (stop_attack_prompt(act->as_monster(), false, where, nullptr,
@@ -2673,7 +2757,7 @@ static vector<coord_def> _get_chain_targets(const actor &agent,
             }
 
             const monster* mon = act->as_monster();
-            if (mon && (mons_is_projectile(*mon) || god_protects(&agent, mon)))
+            if (mon && (mons_is_projectile(*mon) || god_protects(&agent, *mon)))
                 continue;
 
             targets.push_back(p);
@@ -2916,9 +3000,8 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.range        = range;
     beam.name         = "plasma beam";
     beam.source       = agent.pos();
-    beam.source_id    = agent.mid;
     beam.target       = target;
-    beam.thrower      = mon ? KILL_MON : KILL_YOU;
+    beam.set_agent(&agent);
     beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
@@ -3496,7 +3579,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     hitfunc.set_aim(target);
     auto vulnerable = [](const actor *act) -> bool
     {
-        return !(act->is_monster() && god_protects(act->as_monster()));
+        return !god_protects(act->as_monster());
     };
 
     if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE
@@ -3584,7 +3667,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     }
 
     monster* mons = monster_at(target);
-    if (mons && you.can_see(*mons) && !god_protects(&you, mons)
+    if (mons && you.can_see(*mons) && !god_protects(&you, *mons)
         && mons->res_poison() <= 0
         && stop_attack_prompt(mons, false, you.pos()))
     {
@@ -3606,7 +3689,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
         mpr("Fumes of mercury billow through the air!");
 
     // Attempt to poison the central monster, if there is one.
-    if (mons && mons->res_poison() <= 0 && !god_protects(&you, mons))
+    if (mons && mons->res_poison() <= 0 && !god_protects(&you, *mons))
     {
         // Be a little more generous with poisoning unpoisoned monsters.
         int amount = max(1, div_rand_round(pow, 25));
@@ -3707,7 +3790,7 @@ void handle_flame_wave()
     bolt beam;
     if (!_prep_flame_wave(beam, pow, lvl))
     {
-        mpr("You stop channeling waves of flame.");
+        mpr("You stop channelling waves of flame.");
         end_flame_wave();
         return;
     }
@@ -4252,7 +4335,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
       // but we'll verify it as a matter of good hygiene.
         const monster* mon = act->as_monster();
         return mon && !mons_is_firewood(*mon)
-            && !god_protects(mon)
+            && !god_protects(*mon)
             && !mons_is_projectile(*mon)
             && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
             && !testbits(mon->flags, MF_DEMONIC_GUARDIAN);
@@ -4332,7 +4415,7 @@ spret cast_imb(int pow, bool fail)
     {
         return !(act->is_monster()
                  && (mons_is_conjured(act->as_monster()->type)
-                     || god_protects(act->as_monster())));
+                     || god_protects(*act->as_monster())));
     };
 
     if (stop_attack_prompt(*hitfunc, "blast", vulnerable))
@@ -4797,4 +4880,9 @@ void do_boulder_impact(monster& boulder, actor& victim)
 dice_def electrolunge_damage(int pow)
 {
     return dice_def(2, pow / 6);
+}
+
+int get_warp_space_chance(int pow)
+{
+    return min(90, 35 + pow);
 }

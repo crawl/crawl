@@ -1,0 +1,18 @@
+name: "obsidian bat"
+glyph: {char: "b", colour: lightmagenta}
+flags: [flies, see_invis, unblindable, batty, speaks]
+resists: {fire: 2}
+xp_mult: 7
+genus: bat
+holiness: [nonliving]
+will: 20
+attacks:
+ - {type: bite, flavour: hell_hunt, damage: 18}
+hd: 9
+hp_10x: 395
+ac: 12
+ev: 12
+intelligence: animal
+speed: 25
+size: tiny
+shape: bat

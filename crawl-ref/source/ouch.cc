@@ -61,6 +61,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-selfench.h"
 #include "state.h"
@@ -315,7 +316,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_WARPING:
         if (doEffects
-            && x_chance_in_y(min(90, 35 + (beam->ench_power)), 100))
+            && x_chance_in_y(get_warp_space_chance(beam->ench_power), 100))
         {
             you.blink();
         }
@@ -729,12 +730,6 @@ static void _maybe_fog(int dam)
     {
         mpr("You emit a cloud of dark smoke.");
         big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
-    }
-    else if (player_equip_unrand(UNRAND_THIEF)
-             && dam > you.hp_max / 10 && coinflip())
-    {
-        mpr("With a swish of your cloak, you release a cloud of fog.");
-        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
     }
     else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {

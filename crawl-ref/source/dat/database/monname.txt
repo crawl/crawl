@@ -308,6 +308,8 @@ w:2
 %%%%
 _west_european_male_name_
 
+Æschere
+
 Ælfric
 
 Æthelred
@@ -328,7 +330,11 @@ Eideard
 
 Esmond
 
+Florimund
+
 Gladwin
+
+Hondscioh
 
 Hrodulf
 
@@ -344,7 +350,11 @@ Leofsige
 
 Osbert
 
+Theodoric
+
 Ulric
+
+Vidar
 
 Wigmund
 
@@ -639,9 +649,15 @@ Friðuswiþ
 
 Kendra
 
+Saranna
+
+Solveig
+
 Sunngifu
 
 Synnove
+
+Walburga
 
 Wilfreda
 %%%%

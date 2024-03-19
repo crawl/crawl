@@ -150,12 +150,12 @@ LUARET1(you_base_mp, number, get_real_mp(false))
  * @treturn int
  * @function ac
  */
-LUARET1(you_ac, number, you.armour_class())
+LUARET1(you_ac, number, you.armour_class_scaled(1))
 /*** Evasion.
  * @treturn int
  * @function ev
  */
-LUARET1(you_ev, number, you.evasion())
+LUARET1(you_ev, number, you.evasion_scaled(1))
 /*** Shield class.
  * @treturn int
  * @function sh

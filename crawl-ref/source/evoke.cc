@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -154,7 +155,9 @@ int wand_power(spell_type wand_spell)
     if (cap == 0)
         return -1;
     const int mp_cost = wand_mp_cost();
-    const int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    if (player_equip_unrand(UNRAND_GADGETEER))
+        pow = pow * 130 / 100;
     return min(pow, cap);
 }
 
@@ -227,8 +230,15 @@ void zap_wand(int slot, dist *_target)
     if (mp_cost)
         finalize_mp_cost();
 
-    // Take off a charge.
-    wand.charges--;
+    // Take off a charge (unless gadgeteer procs)
+    if ((you.wearing_ego(EQ_GIZMO, SPGIZMO_GADGETEER)
+        || player_equip_unrand(UNRAND_GADGETEER))
+        && x_chance_in_y(3, 10))
+    {
+        mpr("You conserve a charge of your wand.");
+    }
+    else
+        wand.charges--;
 
     if (wand.charges == 0)
     {
@@ -695,7 +705,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !mons_is_firewood(m)
-        && !god_protects(&m)
+        && !god_protects(m)
         && !always_shoot_through_monster(&you, m);
 }
 

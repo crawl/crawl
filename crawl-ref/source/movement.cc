@@ -149,7 +149,7 @@ static void _apply_barbs_damage(bool rampaging)
 
         // Sometimes decrease duration even when we move.
         if (one_chance_in(3))
-            extract_manticore_spikes("The barbed spikes snap loose.");
+            extract_barbs("The barbed spikes snap loose.");
         // But if that failed to end the effect, duration stays the same.
         if (you.duration[DUR_BARBS])
             you.duration[DUR_BARBS] += (rampaging ? 0 : you.time_taken);

@@ -78,6 +78,8 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
     if (you.religion != GOD_BEOGH || crawl_state.game_is_arena())
         return;
 
+    const bool deathbed = orc_hit || !mons->alive();
+
     if (!will_have_passive(passive_t::convert_orcs)
         || mons_genus(mons->type) != MONS_ORC
         || mons->is_summoned()
@@ -85,7 +87,9 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         || testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
         || mons->friendly()
         || mons->has_ench(ENCH_FIRE_CHAMPION)
-        || mons->flags & MF_APOSTLE_BAND)
+        || mons->flags & MF_APOSTLE_BAND
+        // If marked for vengeance, only deathbed conversion.
+        || (mons->has_ench(ENCH_VENGEANCE_TARGET) && !deathbed))
     {
         return;
     }
@@ -98,8 +102,14 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
              > random2(hd) + hd + random2(5))
     {
-        beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
-                                                          : conv_t::sight);
+        conv_t ctype = conv_t::sight;
+        if (deathbed)
+        {
+            ctype = mons->has_ench(ENCH_VENGEANCE_TARGET) ? conv_t::vengeance
+                                                          : conv_t::deathbed;
+        }
+
+        beogh_convert_orc(mons, ctype);
         stop_running();
     }
 }
@@ -170,6 +180,18 @@ void beogh_convert_orc(monster* orc, conv_t conv)
 
     switch (conv)
     {
+    case conv_t::vengeance_follower:
+        _print_converted_orc_speech("reaction_battle_follower", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_vengeance_follower", orc,
+                                    MSGCH_TALK);
+        break;
+    case conv_t::vengeance:
+        _print_converted_orc_speech("reaction_battle", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_vengeance", orc,
+                                    MSGCH_TALK);
+        break;
     case conv_t::deathbed_follower:
         _print_converted_orc_speech("reaction_battle_follower", orc,
                                     MSGCH_FRIEND_ENCHANT);
@@ -194,6 +216,13 @@ void beogh_convert_orc(monster* orc, conv_t conv)
         break;
     }
 
+    // Count as having gotten vengeance.
+    if (orc->has_ench(ENCH_VENGEANCE_TARGET))
+    {
+        orc->del_ench(ENCH_VENGEANCE_TARGET);
+        beogh_progress_vengeance();
+    }
+
     if (!orc->alive())
     {
         orc->hit_points = max(1, random_range(orc->max_hit_points / 5,
@@ -206,7 +235,10 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     // put the actual revival at the end of the round
     // But first verify that the orc is still here! (They may have left the
     // floor immediately when pacified!)
-    if ((conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+    if ((conv == conv_t::deathbed
+         || conv == conv_t::deathbed_follower
+         || conv == conv_t::vengeance
+         || conv == conv_t::vengeance_follower)
         && orc->alive())
     {
         avoided_death_fineff::schedule(orc);

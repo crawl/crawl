@@ -1022,6 +1022,10 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     if (!force && item.cursed())
         return false;
 
+    // Get monster halo/umbra before we unequip this item.
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -1043,6 +1047,15 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     default:
         break;
     }
+
+    // Get monster halo/umbra after we unequip this item.
+    int new_halo = halo_radius();
+    int new_umbra = umbra_radius();
+
+    // If monster halo/umbra has changed after unequipping this item, update
+    // the halo/umbra.
+    if (old_halo != new_halo || old_umbra != new_umbra)
+        invalidate_agrid(true);
 
     return true;
 }
@@ -1155,6 +1168,10 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     if (item.flags & ISFLAG_MIMIC)
         return false;
 
+    // Get monster halo/umbra before we equip this item.
+    int old_halo = halo_radius();
+    int old_umbra = umbra_radius();
+
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
                   mindex()),
@@ -1173,6 +1190,16 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         equip_message(item);
     }
     lose_pickup_energy();
+
+    // Get monster halo/umbra after we equip this item.
+    int new_halo = halo_radius();
+    int new_umbra = umbra_radius();
+
+    // If monster halo/umbra has changed after equipping this item, update the
+    // halo/umbra.
+    if (old_halo != new_halo || old_umbra != new_umbra)
+        invalidate_agrid(true);
+
     return true;
 }
 
@@ -3401,8 +3428,12 @@ bool monster::evil() const
     // Assume that all unknown gods are evil.
     if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
         return true;
-    if (has_attack_flavour(AF_DRAIN) || has_attack_flavour(AF_VAMPIRIC))
+    if (has_attack_flavour(AF_DRAIN)
+        || has_attack_flavour(AF_VAMPIRIC)
+        || has_attack_flavour(AF_FOUL_FLAME))
+    {
         return true;
+    }
     if (testbits(flags, MF_SPECTRALISED))
         return true;
     for (auto slot : spells)
@@ -4373,6 +4404,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             {
                 if (type == MONS_WITHERED_PLANT)
                     mprf("%s begins to crumble.", this->name(DESC_THE).c_str());
+                if (type == MONS_PILE_OF_DEBRIS)
+                    mprf("%s begins to collapse.", this->name(DESC_THE).c_str());
                 else
                     mprf("%s begins to die.", this->name(DESC_THE).c_str());
             }
@@ -4920,7 +4953,7 @@ bool monster::can_go_frenzy() const
         return false;
 
     // These allies have a special loyalty
-    if (god_protects(this)
+    if (god_protects(*this)
         || testbits(flags, MF_DEMONIC_GUARDIAN))
     {
         return false;
@@ -6173,7 +6206,8 @@ item_def* monster::disarm()
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok
-        || mons_wpn->flags & ISFLAG_SUMMONED)
+        || mons_wpn->flags & ISFLAG_SUMMONED
+        || type == MONS_ORC_APOSTLE)
     {
         return nullptr;
     }
@@ -6436,7 +6470,7 @@ bool monster::angered_by_attacks() const
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             // allied fed plants, hep ancestor:
-            && !god_protects(this);
+            && !god_protects(*this);
 }
 
 bool monster::is_band_follower_of(const monster& leader) const

@@ -76,9 +76,12 @@ static const char *conducts[] =
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
-    "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
+    "Cause Glowing", "Use Unclean", "Use Chaos",
+#if TAG_MAJOR_VERSION == 34
+    "Desecrate Orcish Remains",
+#endif
     "Kill Slime", "Was Hasty", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Seen Monster",
+    "Kill Nonliving", "Exploration", "Seen Monster",
     "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

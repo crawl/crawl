@@ -842,14 +842,18 @@ MAP
 ...............................
 ENDMAP
 
-NAME:  roderic_batcave
-TAGS:  no_monster_gen extra transparent
-DEPTH: D:3-, Lair, Orc
+NAME:   roderic_batcave
+TAGS:   no_monster_gen extra transparent
+DEPTH:  D:3-, Lair, Orc
 : local d = you.absdepth()
 : if d < 7 then d = 0 end
 : mons("bat w:60 / vampire bat w:" .. d .. " / nothing w:10")
-SUBST: ? : x@
-SUBST: 1 = 1:10 .:1
+MONS:  obsidian bat
+SUBST:  ? : x@
+SUBST:  1 = 1:10 .:1
+: if you.in_branch("Orc") then
+NSUBST: 1 = 1:2 / 1:* / *:1
+: end
 MAP
   xxxx?xx
  xxx1..xxxx
@@ -1991,9 +1995,10 @@ TAGS:    no_monster_gen transparent
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
-KMONS:   0 = orc ; robe . wand of charming | wand of flame . \
-                   potion of invisibility | potion of haste | nothing w:980
+KMONS:   0 = orc ; robe . wand of charming | wand of flame
 KMONS:   89 = deep elf pyromancer / deep elf zephyrmancer
+KMONS:   & = obsidian bat
+# FIXME: make these the wizard hat tiles only.
 KITEM:   8d = robe, hat w:40 / hat good_item, \
               hat w:20 / hat good_item
 KITEM:   9e = book of minor magic
@@ -2001,6 +2006,9 @@ SUBST:   - = +
 KMASK:   de89 = no_item_gen
 SHUFFLE: 1234
 COLOUR:  F = red
+: if you.in_branch("Orc") then
+SUBST:   7 = &
+: end
 FTILE:   F = floor_pebble_lightred
 {{
   local fog = chained_fog_machine {
@@ -2013,14 +2021,14 @@ MAP
 @@xxxxxxxxxxx
 ..xxxxxxxxxxx
 .5xx1xx2xxxxx
-.5xx+xx+xx9xx
+.5xx++++xx9xx
 ..x..60..xexx
 ..x.F..F.x+xx
 @.-...6..-7xx
 @.-...0..-'xx
 ..x.F..F.x+xx
 ..x..60..xdxx
-.5xx+xx+xx8xx
+.5xx++++xx8xx
 .5xx3xx4xxxxx
 ..xxxxxxxxxxx
 @@xxxxxxxxxxx
@@ -2985,11 +2993,13 @@ NAME:   bh_circular_ruins
 TAGS:   transparent
 DEPTH:  D:7-12
 MONS:   human simulacrum
-ITEM:   stone q:1 no_pickup
+KMONS:  D = pile of debris
 : if you.absdepth() > 10 then
 KMONS:  O = fire elemental
 : end
+ITEM:   stone q:1 no_pickup
 KITEM:  O = book of dreams
+SUBST:  E : ddD, F : ddD
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 15, \
                               pow_max = 20, delay = 15, size = 2, \
                               walk_dist = 1, excl_rad = 1}
@@ -2998,15 +3008,15 @@ TILE:   c = wall_stone_smooth
 MAP
   ..
  .xxd  ...
-.xx1..dxxx.
+.xx1..Fxxx.
 .x.......xx.
  d...xx...x.
   ..xc....x.
-  d.x.O.x.d
+  E.x.O.x.E
  .x....cx..
  .x...xx...d
  .xx.......x.
-  .xxxd..1xx.
+  .xxxF..1xx.
    ...  dxx.
          ..
 ENDMAP
@@ -7972,9 +7982,45 @@ MAP
  ...............
 ENDMAP
 
+# sword of the Doom Knight
+# A temple to Yredelemnul, with a champion wielding the blade designate.
+NAME:   grunt_guarded_unrand_doom_knight
+TAGS:   no_monster_gen no_item_gen patrolling
+DEPTH:  Depths, Crypt
+WEIGHT: 3
+MONS:   death knight ; \
+        sword_of_the_doom_knight . \
+        chain mail w:7 | \
+        plate armour w:1
+MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
+MONS:   freezing wraith / phantasmal warrior / \
+        jiangshi / flayed ghost / skeletal warrior
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  - = open_door
+MAP
+    ccccc
+    c2_3c
+    c.1.c
+    c465c
+ccccc+++ccccc
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+c7-.G...G.-7c
+ccc.......ccc
+ccccc+++ccccc
+     .@.
+ENDMAP
+
 # autumn katana
 # An autumnal forest, with warriors paying respect to the last wielder
-NAME:    wheals_unrand_guarded_autumn_katana
+NAME:    wheals_guarded_unrand_autumn_katana
 TAGS:    no_monster_gen no_item_gen patrolling
 DEPTH:   Depths
 WEIGHT:  3
@@ -8007,13 +8053,7 @@ NAME:    minmay_guarded_unrand_brilliance
 DEPTH:   D:13-, Depths
 MONS:    profane servitor
 SUBST:   1 = 1.
-: if you.unrands("brilliance") then
-ITEM:    eveningstar randart ego:draining ident:type no_pickup / \
-         eveningstar randart ego:pain ident:type no_pickup / \
-         eveningstar randart ego:vampirism ident:type no_pickup
-: else
 ITEM:    brilliance no_pickup
-: end
 MAP
          ...
          .c.
@@ -8378,7 +8418,6 @@ NAME:   wander_guarded_unrand_ratskin
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:5-8
 WEIGHT: 3
-ORIENT: float
 ITEM:   ratskin_cloak no_pickup
 MONS:   river rat, hell rat
 SUBST:  - = 1 .:50, ' = 112...
@@ -9658,6 +9697,23 @@ wwwwwxxxxxxmxmxmx.....wwwwwwwwwwwwwwwwww
   ~~~~~~~wwwwwww~~~w~w~ww~~~wwwwwwww
 ENDMAP
 
+NAME:    orjb1_guarded_unrand_arga
+TAGS:    no_monster_gen no_trap_gen no_item_gen
+DEPTH:   Vaults, Depths
+WEIGHT:  3
+KITEM:   d = arga no_pickup
+MONS:    quicksilver dragon
+TILE:    v = dngn_metal_wall_lightblue
+MAP
+ vv=====vv
+ v.......v
+ v...1...v
+ vv.....vv
+  v1...1v
+  vv.d.vv
+   vvvvv
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
@@ -10216,7 +10272,6 @@ KMONS:   E = merfolk
 KMONS:   F = human
 KMONS:   G = vampire
 KMONS:   H = crimson imp
-KMONS:   1 = boulder dbname:still_boulder / nothing w:30
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
 KITEM:   b = gold / nothing w:12

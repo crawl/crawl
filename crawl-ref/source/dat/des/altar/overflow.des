@@ -2265,14 +2265,16 @@ ENDMAP
 NAME:    nicolae_qazlal_general_emergency
 TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:    no_monster_gen no_pool_fixup transparent decor no_descent
+KMONS:   1 = pile of debris
+KFEAT:   B = altar_qazlal
+KFEAT:   1 = w
 SHUFFLE: xXY / xXY / xXY / abc
 SHUFFLE: XY
-SUBST:   z = w.., X = +++w., Y = xxxxw., x = wxxx, a = w, b = w, c = w
+SUBST:   z = w.., X = +++w., Y = 11xxw., x = wxxx, a = w, b = w, c = w
 SHUFFLE: ABCD
 SUBST:   A = >, C = 'GTU, D = '
-KFEAT:   B = altar_qazlal
+SHUFFLE: 1w / ll / ll
 KMASK:   B>'GTU = opaque
-SHUFFLE: wll
 : interest_check(_G)
 MAP
 ...........z.
@@ -3565,12 +3567,13 @@ NAME:    regret_index_xom_buried_treasure
 TAGS:    transparent temple_overflow_1 temple_overflow_xom
 TAGS:    uniq_altar_xom extra decor
 ITEM:    stone q:1 no_pickup
-KMONS:   ! = boulder dbname:still_boulder
+KMONS:   ! = pile of debris
 KITEM:   ! = plate armour randart plus:-12 ident:all / \
              kite shield randart plus:-12 ident:all / mundane club w:9980
 KITEM:   ? = mundane club / gold q:1 w:9970, large rock q:1
 KFEAT:   _ = altar_xom
-SUBST:   b : bcc, y : xx., z : xx., Y : xxd, Z : xxd, ? = !
+SHUFFLE: ?" / ?" / !!
+SUBST:   b : bcc, y : xx., z : xx., Y : xxd, Z : xxd, " = .
 MAP
 xx@. ..xx
 xbx...zbx
@@ -3579,9 +3582,9 @@ xbx...zbx
  ..xxx..@
 ..xxYxx.xxxxx
 @xxx.xccccccx
-xbx...cxdd_cx
+xbx...cx"d_cx
 xx..Z.cdx?dcx
-    ..+ddxdcx@..xx
+    ..+ddx"cx@..xx
      .cdddxc...xbx
      .cc+cccx.xxx.
      @.....xxYxx..
@@ -4433,7 +4436,7 @@ COLOUR: G = white
 TILE:   G = dngn_silver_statue
 TILE:   x = wall_orc
 FTILE:  +._OG$ = floor_w_marble
-:   set_feature_name("metal_statue", "silver_statue")
+:   set_feature_name("metal_statue", "silver statue")
 : else
 COLOUR: G = yellow
 COLOUR: v = white
@@ -4456,12 +4459,12 @@ NAME:   grunt_temple_overflow_forces_of_nature
 TAGS:   temple_overflow_2 temple_overflow_fedhas temple_overflow_qazlal
 TAGS:   transparent
 MONS:   fungus / plant / bush
+KMONS:  D = pile of debris
 SUBST:  2 = 1.
 KFEAT:  _ = altar_fedhas
 KFEAT:  O = altar_qazlal
 KPROP:  12Ll = no_tele_into
-SUBST:  L = ll^.
-SUBST:  l = cll.
+SUBST:  L = ll^., l = cll., c : cD
 : if you.depth() ~= dgn.br_depth(you.branch()) then
 KFEAT:  ^ = shaft trap
 : end

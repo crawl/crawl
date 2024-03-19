@@ -379,6 +379,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
         case SPELL_PLASMA_BEAM:
             return "2x" + dice_def_string(zap_damage(ZAP_PLASMA, pow, true));
+        case SPELL_PERMAFROST_ERUPTION:
+            return "2x" + dice_def_string(zap_damage(ZAP_PERMAFROST_ERUPION_ICE, pow, true));
         case SPELL_WATERSTRIKE:
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
@@ -1098,7 +1100,7 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(YELLOW, "(holy)");
                     break;
                 case AF_FOUL_FLAME:
-                    monsterattacks += colour(YELLOW, "(foul flame)");
+                    monsterattacks += colour(LIGHTMAGENTA, "(foul flame)");
                     break;
                 case AF_PAIN:
                     monsterattacks += colour(RED, "(pain)");
@@ -1150,6 +1152,9 @@ int main(int argc, char* argv[])
                     break;
                 case AF_BARBS:
                     monsterattacks += colour(RED, "(barbs)");
+                    break;
+                case AF_HELL_HUNT:
+                    monsterattacks += colour(YELLOW, "(summon h. hound / h. rat)");
                     break;
                 case AF_SPIDER:
                     monsterattacks += colour(YELLOW, "(summon spider)");

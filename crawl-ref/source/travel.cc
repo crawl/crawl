@@ -336,7 +336,8 @@ static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 static bool _monster_blocks_travel(const monster_info *mons)
 {
     return mons
-           && mons_class_is_stationary(mons->type)
+           && (mons_class_is_stationary(mons->type)
+               || mons->type == MONS_BOULDER /* dubious */)
            && !fedhas_passthrough(mons);
 }
 
@@ -1030,7 +1031,7 @@ static command_type _get_non_move_command()
     return feat_stair_direction(env.grid(you.pos()));
 }
 
-// Top-level travel control (called from input() in main.cc).
+// Top-level travel control (called indirectly from TravelDelay::handle()).
 //
 // travel() is responsible for making the individual moves that constitute
 // (interlevel) travel and explore and deciding when travel and explore
@@ -1049,14 +1050,6 @@ command_type travel()
     if (Options.travel_key_stop && kbhit())
     {
         mprf("Key pressed, stopping %s.", you.running.runmode_name().c_str());
-        stop_running();
-        return CMD_NO_CMD;
-    }
-
-    if (you.confused())
-    {
-        mprf("You're confused, stopping %s.",
-             you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
     }

@@ -152,11 +152,10 @@ try to struggle free.
 %%%%
 Constr status
 
-You are being constricted by an enemy and will take an increasing amount of
-damage over time. You are unable to move (or blink) away from the enemy,
-although you can struggle to escape by attempting to do so, and will become
-increasingly more likely to succeed and break the constriction when doing so
-multiple times.
+You are being constricted by an enemy. Your evasion is impaired, and you will
+take damage over time. You are unable to move away from the enemy, although you
+can struggle to escape by attempting to do so, and will become increasingly more
+likely to succeed and break the constriction when doing so multiple times.
 %%%%
 Mesm status
 
@@ -512,7 +511,7 @@ causes a highly localized meltdown, dealing enormous damage.
 
 However, this instability makes you unable to use weapons, shields, or
 body armour. You also glow, reducing stealth and preventing invisibility,
-and you do less damage in melee, as your limbs sometimes destabilize mid-swing.
+and you do less damage in melee, as your limbs sometimes destabilise mid-swing.
 %%%%
 Blade status
 
@@ -597,7 +596,7 @@ Any equipped weapons and armour are melded.
 %%%%
 Death status
 
-You have been transformed into an undying offense against life itself.
+You have been transformed into an undying offence against life itself.
 
 Foes struck by your hands or melee weapons are weakened, slowed, and drained,
 and you can heal yourself by tormenting living foes nearby. You also resist
@@ -874,7 +873,7 @@ You cannot sustain this transformation in areas out of your line of sight.
 Enlightened status
 
 You are in touch with a greater truth, increasing your resistance to effects
-which target your Willpower. Tragically, this epiphany won't last.
+which target your willpower. Tragically, this epiphany won't last.
 %%%%
 Will+ status
 

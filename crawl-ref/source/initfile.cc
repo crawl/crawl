@@ -496,6 +496,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
+        new BoolGameOption(SIMPLE_NAME(drop_disables_autopickup), false),
         new MaybeBoolGameOption(SIMPLE_NAME(show_god_gift), maybe_bool::maybe,
             {"unid", "unident", "unidentified"}),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
@@ -1369,7 +1370,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_revivify = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked",
+        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp",
 

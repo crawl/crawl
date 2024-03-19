@@ -1,107 +1,151 @@
 <script>
   require.config({
-    paths: { "game-{{ version }}": "/gamedata/{{ version }}" }
+    paths: { "game-{{ version }}": "/gamedata/{{ version }}" },
   });
-  require(['jquery', 'client'], function ($, client) {
+  require(["jquery", "client"], function ($, client) {
     client.inhibit_messages();
     window.game_loading = true;
-    require(['game-{{ version }}/game'], function (game) {
+    require(["game-{{ version }}/game"], function (game) {
       $(document).trigger("game_preinit");
       $(document).trigger("game_init");
       client.uninhibit_messages();
     });
   });
 </script>
-<link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/style.css">
-<link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/simplebar.css">
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="/gamedata/{{ version }}/style.css"
+/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="/gamedata/{{ version }}/simplebar.css"
+/>
 
-<div id="crt" style="display: none;"></div>
+<div id="crt" style="display: none"></div>
 
-<div id="normal" style="display: none;">
+<div id="normal" style="display: none">
   <div id="left_column">
     <canvas id="dungeon"></canvas>
-    <div id="mobile_input" style="display: none;">
-      <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" placeholder="Tap here for keyboard input"></input>
+    <div id="mobile_input" style="display: none">
+      <input
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        type="text"
+        placeholder="Tap here for keyboard input"
+      />
     </div>
-    <canvas id="action-panel" class="action-panel hidden" style="display: none;"></canvas>
+    <canvas
+      id="action-panel"
+      class="action-panel hidden"
+      style="display: none"
+    ></canvas>
     <div id="message_pane">
       <div id="messages_container">
         <div id="messages"></div>
       </div>
-      <div id="more" style="display: none;">--more--</div>
+      <div id="more" style="display: none">--more--</div>
     </div>
   </div>
   <div id="right_column">
     <div id="stats">
-      <div id="stats_wizmode" style="float:right;" />
-      <div id="stats_titleline" />
+      <div id="stats_wizmode" style="float: right"></div>
+      <div id="stats_titleline"></div>
       <div>
-        <span id="stats_species_god" />
-        <span id="stats_piety" /><span id="stats_gozag_gold_label" class="stats_caption" /><span id="stats_gozag_gold" />
+        <span id="stats_species_god"></span>
+        <span id="stats_piety"></span>
+        <span id="stats_gozag_gold_label" class="stats_caption"></span>
+        <span id="stats_gozag_gold"></span>
       </div>
       <div id="stats_hpline">
-        <span id="stats_hp_bar" class="bar" style="float:right; width:55%; height:1em;"><!-- Whitespace...
-       --><span id="stats_hp_bar_full" /><!--
-       --><span id="stats_hp_bar_poison" /><!--
-       --><span id="stats_hp_bar_decrease" /><!--
-       --><span id="stats_hp_bar_increase" /><!--
-     --></span>
+        <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
+        <span id="stats_hp_bar" class="bar" style="float: right; width: 55%; height: 1em"><span id="stats_hp_bar_full"></span><span id="stats_hp_bar_poison"></span><span id="stats_hp_bar_decrease"></span><span id="stats_hp_bar_increase"></span></span>
         <span class="stats_caption">HP:</span>
-        <span id="stats_hp" /><span id="stats_hp_separator">/</span><span id="stats_hp_max" />
-        <span id="stats_real_hp_max" />
+        <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
+        <span id="stats_hp"></span><span id="stats_hp_separator">/</span><span id="stats_hp_max"></span>
+        <span id="stats_real_hp_max"></span>
       </div>
       <div id="stats_mpline">
-        <span id="stats_mp_bar" class="bar" style="float:right; width:55%; height:1em;"><!-- Whitespace...
-       --><span id="stats_mp_bar_full" /><!--
-       --><span id="stats_mp_bar_decrease" /><!--
-       --><span id="stats_mp_bar_increase" /><!--
-     --></span>
+        <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
+        <span id="stats_mp_bar" class="bar" style="float: right; width: 55%; height: 1em"><span id="stats_mp_bar_full"></span><span id="stats_mp_bar_decrease"></span><span id="stats_mp_bar_increase"></span></span>
         <span class="stats_caption">Magic:</span>
-        <span id="stats_mp" /><span id="stats_mp_separator">/</span><span id="stats_mp_max" />
-        <span id="stats_dd_real_mp_max" />
+        <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
+        <span id="stats_mp"></span><span id="stats_mp_separator">/</span><span id="stats_mp_max"></span>
+        <span id="stats_dd_real_mp_max"></span>
       </div>
       <div>
-        <div id="stats_leftcolumn" style="float:left;width:45%;">
-          <div><span class="stats_caption">AC:</span>
-            <span id="stats_ac" /></div>
-          <div><span class="stats_caption">EV:</span>
-            <span id="stats_ev" /></div>
-          <div><span class="stats_caption">SH:</span>
-            <span id="stats_sh" /></div>
-          <div><span class="stats_caption">XL:</span>
-            <span id="stats_xl" />
+        <div id="stats_leftcolumn" style="float: left; width: 45%">
+          <div>
+            <span class="stats_caption">AC:</span> <span id="stats_ac"></span>
+          </div>
+          <div>
+            <span class="stats_caption">EV:</span> <span id="stats_ev"></span>
+          </div>
+          <div>
+            <span class="stats_caption">SH:</span> <span id="stats_sh"></span>
+          </div>
+          <div>
+            <span class="stats_caption">XL:</span>
+            <span id="stats_xl"></span>
             <span class="stats_caption">Next:</span>
-            <span id="stats_progress" />%</div>
-          <div id="stats_noise" style="float:left;width:95%;">
-            <div id="stats_noise_inter" style="float:right;height:1em;"><!--
-           --><span id="stats_noise_bar" class="bar" style="float:left;height:1em;"><!-- Whitespace...
-             --><span id="stats_noise_bar_full" /><!--
-             --><span id="stats_noise_bar_decrease" /><!--
-           --></span><!--
-         --></div>
-           <span id="stats_noise_status" style="float:right;width:0%;"></span>
+            <span id="stats_progress"></span>%
+          </div>
+          <div id="stats_noise" style="float: left; width: 95%">
+            <div id="stats_noise_inter" style="float: right; height: 1em">
+              <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
+              <span
+                id="stats_noise_bar"
+                class="bar"
+                style="float: left; height: 1em"
+                ><span id="stats_noise_bar_full"></span
+                ><span id="stats_noise_bar_decrease"></span
+              ></span>
+            </div>
+            <span
+              id="stats_noise_status"
+              style="float: right; width: 0%"
+            ></span>
             <span class="stats_caption">Noise:</span>
             <span id="stats_noise_num"></span>
           </div>
         </div>
-        <div id="stats_rightcolumn" style="float:right;width:55%;">
-          <div><span class="stats_caption">Str:</span>
-            <span id="stats_str" /></div>
-          <div><span class="stats_caption">Int:</span>
-            <span id="stats_int" /></div>
-          <div><span class="stats_caption">Dex:</span>
-            <span id="stats_dex" /></div>
-          <div><span class="stats_caption">Place:</span>
-            <span id="stats_place" /></div>
-          <div><span class="stats_caption" id="stats_time_caption"></span>
-            <span id="stats_time" /></div>
+        <div id="stats_rightcolumn" style="float: right; width: 55%">
+          <div>
+            <span class="stats_caption">Str:</span> <span id="stats_str"></span>
+          </div>
+          <div>
+            <span class="stats_caption">Int:</span> <span id="stats_int"></span>
+          </div>
+          <div>
+            <span class="stats_caption">Dex:</span> <span id="stats_dex"></span>
+          </div>
+          <div>
+            <span class="stats_caption">Place:</span>
+            <span id="stats_place"></span>
+          </div>
+          <div>
+            <span class="stats_caption" id="stats_time_caption"></span>
+            <span id="stats_time"></span>
+          </div>
         </div>
-        <div style="float:left;width:100%;"><span class="stats_caption" id="stats_weapon_letter"></span>
-          <span id="stats_weapon_container"><span id="stats_weapon" /></span>
+        <div style="float: left; width: 100%">
+          <span class="stats_caption" id="stats_weapon_letter"></span>
+          <span id="stats_weapon_container"
+            ><span id="stats_weapon"></span
+          ></span>
         </div>
-        <div id="stats_quiver_line" style="float:left;width:100%;"><span class="stats_caption" id="stats_quiver_letter"></span>
-          <span id="stats_quiver" /></div>
-        <div id="stats_status_lights" style="float:left;width:100%;" />
+        <div id="stats_quiver_line" style="float: left; width: 100%">
+          <span class="stats_caption" id="stats_quiver_letter"></span>
+          <span id="stats_quiver"></span>
+        </div>
+        <div id="stats_quiver_line" style="float: left; width:100%;">
+          <span class="stats_caption" id="stats_quiver_letter"></span>
+          <span id="stats_quiver"></span>
+        </div>
+        <div id="stats_status_lights" style="float: left; width: 100%"></div>
         <div id="stats_status_lights_tooltip" class="fg7" style="display: none;"></div>
       </div>
     </div>
@@ -111,287 +155,419 @@
     </div>
     <div id="monster_list"></div>
   </div>
-  <div id="tooltip" style="display: none;"></div>
+  <div id="tooltip" style="display: none"></div>
 </div>
 
-<div class="templates" style="display: none;">
-    <div class="menu"></div>
-    <div id="input_dialog"></div>
-    <div class="ui-popup">
-        <div class=ui-popup-overlay></div>
-        <div class=ui-popup-outer>
-            <div class=ui-popup-inner>
-            </div>
-        </div>
+<div class="templates" style="display: none">
+  <div class="menu"></div>
+  <div id="input_dialog"></div>
+  <div class="ui-popup">
+    <div class="ui-popup-overlay"></div>
+    <div class="ui-popup-outer">
+      <div class="ui-popup-inner"></div>
     </div>
+  </div>
 
-    <div class="progress-bar">
-      <div class="header"><span></span></div>
-      <div class="bar-text"></div>
-      <div class="status"><span></span></div>
-    </div>
+  <div class="progress-bar">
+    <div class="header"><span></span></div>
+    <div class="bar-text"></div>
+    <div class="status"><span></span></div>
+  </div>
 
-    <div class="describe-generic">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
-        <div class="body fg7"></div>
+  <div class="describe-generic">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
     </div>
+    <div class="body fg7"></div>
+  </div>
 
-    <div class="describe-feature">
-    </div>
+  <div class="describe-feature"></div>
 
-    <div class="describe-item">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
-        <div class="body fg7"></div>
-        <div class=actions></div>
+  <div class="describe-item">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
     </div>
+    <div class="body fg7"></div>
+    <div class="actions"></div>
+  </div>
 
-    <div class="describe-spell">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
-        <div class="body fg7"></div>
-        <div class="actions hidden">(M)emorise this spell.</div>
+  <div class="describe-spell">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
     </div>
+    <div class="body fg7"></div>
+    <div class="actions hidden">(M)emorise this spell.</div>
+  </div>
 
-    <div class="describe-cards">
-    </div>
+  <div class="describe-cards"></div>
 
-    <div class="mutations">
-        <div class=header>Innate Abilities, Weirdnesses & Mutations</div>
-        <div class="body paneset">
-            <div class="pane">
-            </div>
-            <div class="pane">
-                <table class="vamp-attrs pane">
-                    <thead>
-                        <tr><td></td><th class=fg2>Alive</th><th class=fg12>Bloodless</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Regeneration</td><td>fast</td><td>none with monsters in sight</td></tr>
-                        <tr><td>HP Modifier</td><td>none</td><td>-20%</td></tr>
-                        <tr><td>Stealth boost</td><td>none</td><td>major</td></tr>
-                        <tr><td>Heal on bite</td><td>no</td><td>yes</td></tr>
-                        <tr class=group><th>Resistances</th><td></td><td></td></tr>
-                        <tr><td>Poison resistance</td><td></td><td>immune</td></tr>
-                        <tr><td>Cold resistance</td><td></td><td>++</td></tr>
-                        <tr><td>Negative resistance</td><td></td><td>+++</td></tr>
-                        <tr><td>Rot resistance</td><td></td><td>+</td></tr>
-                        <tr><td>Torment resistance</td><td></td><td>+</td></tr>
-                        <tr class=group><th>Transformations</th><td></td><td></td></tr>
-                        <tr><td>Bat form</td><td>no</td><td>yes</td></tr>
-                        <tr><td>Other forms / berserk</td><td>yes</td><td>no</td></tr>
-                    </tbody>
-                </table>
-                <style></style>
-            </div>
-        </div>
-        <div class="footer paneset">
-            <div class="pane">[!/^]: <b class=fg15>Mutations</b> | Blood properties</div>
-            <div class="pane">[!/^]: Mutations | <b class=fg15>Blood properties</b></div>
-        </div>
+  <div class="mutations">
+    <div class="header">Innate Abilities, Weirdnesses & Mutations</div>
+    <div class="body paneset">
+      <div class="pane"></div>
+      <div class="pane">
+        <table class="vamp-attrs pane">
+          <thead>
+            <tr>
+              <td></td>
+              <th class="fg2">Alive</th>
+              <th class="fg12">Bloodless</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Regeneration</td>
+              <td>fast</td>
+              <td>none with monsters in sight</td>
+            </tr>
+            <tr>
+              <td>HP Modifier</td>
+              <td>none</td>
+              <td>-20%</td>
+            </tr>
+            <tr>
+              <td>Stealth boost</td>
+              <td>none</td>
+              <td>major</td>
+            </tr>
+            <tr>
+              <td>Heal on bite</td>
+              <td>no</td>
+              <td>yes</td>
+            </tr>
+            <tr class="group">
+              <th>Resistances</th>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Poison resistance</td>
+              <td></td>
+              <td>immune</td>
+            </tr>
+            <tr>
+              <td>Cold resistance</td>
+              <td></td>
+              <td>++</td>
+            </tr>
+            <tr>
+              <td>Negative resistance</td>
+              <td></td>
+              <td>+++</td>
+            </tr>
+            <tr>
+              <td>Rot resistance</td>
+              <td></td>
+              <td>+</td>
+            </tr>
+            <tr>
+              <td>Torment resistance</td>
+              <td></td>
+              <td>+</td>
+            </tr>
+            <tr class="group">
+              <th>Transformations</th>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Bat form</td>
+              <td>no</td>
+              <td>yes</td>
+            </tr>
+            <tr>
+              <td>Other forms / berserk</td>
+              <td>yes</td>
+              <td>no</td>
+            </tr>
+          </tbody>
+        </table>
+        <style></style>
+      </div>
     </div>
-    <div id="describe-god-basic" class="describe-god fg7">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
-        <div class="body paneset">
-            <div class="pane">
-                <div class=desc></div>
-                <table class="god-favour">
-                    <tr><td>Title</td><td> - </td><td class=title></td></tr>
-                    <tr><td>Favour</td><td> - </td><td class=favour></td></tr>
-                </table>
-                <div class="god-powers">
-                    <div class=power><div>Granted powers</div><div>(Cost)</div></div>
-                </div>
-            </div>
-            <div class="pane">
-            </div>
-            <div class="pane">
-            </div>
-        </div>
-        <div class="footer">
-            <div><b class=fg3>!</b>/<b class=fg3>^</b>:&nbsp;</div>
-            <div class=paneset>
-                <div class=pane><b class=fg15>Overview</b> | Powers | Wrath
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-                <div class=pane>Overview | <b class=fg15>Powers</b> | Wrath
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-                <div class=pane>Overview | Powers | <b class=fg15>Wrath</b>
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-            </div>
-        </div>
+    <div class="footer paneset">
+      <div class="pane">
+        [!/^]: <b class="fg15">Mutations</b> | Blood properties
+      </div>
+      <div class="pane">
+        [!/^]: Mutations | <b class="fg15">Blood properties</b>
+      </div>
     </div>
-    <div id="describe-god-extra" class="describe-god fg7">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
-        <div class="body paneset">
-            <div class="pane">
-                <div class=desc></div>
-                <table class="god-favour">
-                    <tr><td>Title</td><td> - </td><td class=title></td></tr>
-                    <tr><td>Favour</td><td> - </td><td class=favour></td></tr>
-                </table>
-                <div class="god-powers">
-                    <div class=power><div>Granted powers</div><div>(Cost)</div></div>
-                </div>
-            </div>
-            <div class="pane">
-            </div>
-            <div class="pane">
-            </div>
-            <div class="pane">
-            </div>
-        </div>
-        <div class="footer">
-            <div><b class=fg3>!</b>/<b class=fg3>^</b>:&nbsp;</div>
-            <div class=paneset>
-                <div class=pane><b class=fg15>Overview</b> | Powers | Wrath | Extra
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-                <div class=pane>Overview | <b class=fg15>Powers</b> | Wrath | Extra
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-                <div class=pane>Overview | Powers | <b class=fg15>Wrath</b> | Extra
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-                <div class=pane>Overview | Powers | Wrath | <b class=fg15>Extra</b>
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
-                </div>
-            </div>
-        </div>
+  </div>
+  <div id="describe-god-basic" class="describe-god fg7">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
     </div>
-    <div class="describe-monster">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
+    <div class="body paneset">
+      <div class="pane">
+        <div class="desc"></div>
+        <table class="god-favour">
+          <tr>
+            <td>Title</td>
+            <td>-</td>
+            <td class="title"></td>
+          </tr>
+          <tr>
+            <td>Favour</td>
+            <td>-</td>
+            <td class="favour"></td>
+          </tr>
+        </table>
+        <div class="god-powers">
+          <div class="power">
+            <div>Granted powers</div>
+            <div>(Cost)</div>
+          </div>
         </div>
-        <div class="body paneset fg7">
-            <div class="pane"></div>
-            <div class="pane"></div>
-        </div>
-        <div class="footer">
-            <div>[<b class=fg3>!</b>]:&nbsp;</div>
-            <div class=paneset>
-                <div class=pane><b class=fg15>Description</b> | Quote</div>
-                <div class=pane>Description | <b class=fg15>Quote</b></div>
-            </div>
-        </div>
+      </div>
+      <div class="pane"></div>
+      <div class="pane"></div>
     </div>
+    <div class="footer">
+      <div><b class="fg3">!</b>/<b class="fg3">^</b>:&nbsp;</div>
+      <div class="paneset">
+        <div class="pane">
+          <b class="fg15">Overview</b> | Powers | Wrath
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+        <div class="pane">
+          Overview | <b class="fg15">Powers</b> | Wrath
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+        <div class="pane">
+          Overview | Powers | <b class="fg15">Wrath</b>
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="describe-god-extra" class="describe-god fg7">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
+    </div>
+    <div class="body paneset">
+      <div class="pane">
+        <div class="desc"></div>
+        <table class="god-favour">
+          <tr>
+            <td>Title</td>
+            <td>-</td>
+            <td class="title"></td>
+          </tr>
+          <tr>
+            <td>Favour</td>
+            <td>-</td>
+            <td class="favour"></td>
+          </tr>
+        </table>
+        <div class="god-powers">
+          <div class="power">
+            <div>Granted powers</div>
+            <div>(Cost)</div>
+          </div>
+        </div>
+      </div>
+      <div class="pane"></div>
+      <div class="pane"></div>
+      <div class="pane"></div>
+    </div>
+    <div class="footer">
+      <div><b class="fg3">!</b>/<b class="fg3">^</b>:&nbsp;</div>
+      <div class="paneset">
+        <div class="pane">
+          <b class="fg15">Overview</b> | Powers | Wrath | Extra
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+        <div class="pane">
+          Overview | <b class="fg15">Powers</b> | Wrath | Extra
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+        <div class="pane">
+          Overview | Powers | <b class="fg15">Wrath</b> | Extra
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+        <div class="pane">
+          Overview | Powers | Wrath | <b class="fg15">Extra</b>
+          <span class="join-keyhelp"
+            >&nbsp;&nbsp;<b class="fg3">J</b>/<b class="fg3">Enter</b>: join
+            religion</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="describe-monster">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
+    </div>
+    <div class="body paneset fg7">
+      <div class="pane"></div>
+      <div class="pane"></div>
+    </div>
+    <div class="footer">
+      <div>[<b class="fg3">!</b>]:&nbsp;</div>
+      <div class="paneset">
+        <div class="pane"><b class="fg15">Description</b> | Quote</div>
+        <div class="pane">Description | <b class="fg15">Quote</b></div>
+      </div>
+    </div>
+  </div>
 
-    <div class=formatted-scroller>
-        <div class="header"></div>
-        <div class="body fg7"></div>
-        <div class="more"></div>
+  <div class="formatted-scroller">
+    <div class="header"></div>
+    <div class="body fg7"></div>
+    <div class="more"></div>
+  </div>
+  <div class="msgwin-get-line">
+    <div class="header"></div>
+    <input type="text" data-sync-id="input" />
+    <div data-hotkey="Enter"></div>
+    <div data-hotkey="Escape"></div>
+  </div>
+  <div class="newgame-choice">
+    <div class="header"></div>
+    <div class="body fg7">
+      <div>
+        <div class="main-items grid"></div>
+      </div>
+      <div class="descriptions paneset"></div>
+      <div class="sub-items grid"></div>
     </div>
-    <div class=msgwin-get-line>
-        <div class=header></div>
-        <input type="text" data-sync-id="input">
-        <div data-hotkey="Enter"></div>
-        <div data-hotkey="Escape"></div>
+  </div>
+  <div class="game-over">
+    <div class="header">
+      <canvas class="glyph-mode-hidden"></canvas>
+      <span></span>
     </div>
-    <div class="newgame-choice">
-        <div class=header></div>
-        <div class="body fg7">
-            <div>
-                <div class="main-items grid">
-                </div>
-            </div>
-            <div class="descriptions paneset">
-            </div>
-            <div class="sub-items grid">
-            </div>
-        </div>
+    <div class="body fg7"></div>
+  </div>
+  <div class="seed-selection">
+    <div class="header fg3"></div>
+    <div class="body fg7">
+      <p class="body-text"></p>
+      <div class="seed-input">
+        <span>Enter seed: </span>
+        <input type="text" data-sync-id="seed" />
+        <button data-hotkey="-" data-sync-id="btn-clear">
+          <span>[-] Clear</span>
+        </button>
+        <button data-hotkey="d" data-sync-id="btn-daily">
+          <span>[d] Today's daily seed</span>
+        </button>
+      </div>
+      <p class="footer"></p>
+      <div class="pregen-toggle">
+        <label>
+          <input type="checkbox" data-sync-id="pregenerate" />
+          <span>Fully pregenerate the Dungeon</span>
+        </label>
+      </div>
     </div>
-    <div class="game-over">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
-        <div class="body fg7"></div>
+    <div class="button-bar">
+      <button data-hotkey="Enter" data-sync-id="btn-begin">
+        <span>[Enter] Begin!</span>
+      </button>
     </div>
-    <div class="seed-selection">
-        <div class="header fg3"></div>
-        <div class="body fg7">
-            <p class="body-text"></p>
-            <div class="seed-input">
-                <span>Enter seed: </span>
-                <input type="text" data-sync-id="seed">
-                <button data-hotkey="-" data-sync-id="btn-clear">
-                    <span>[-] Clear</span>
-                </button>
-                <button data-hotkey="d" data-sync-id="btn-daily">
-                    <span>[d] Today's daily seed</span>
-                </button>
-            </div>
-            <p class="footer"></p>
-            <div class="pregen-toggle">
-                <label>
-                    <input type=checkbox data-sync-id="pregenerate" />
-                    <span>Fully pregenerate the Dungeon</span>
-                </label>
-            </div>
-        </div>
-        <div class="button-bar">
-            <button data-hotkey="Enter" data-sync-id="btn-begin">
-                <span>[Enter] Begin!</span>
-            </button>
-        </div>
-    </div>
+  </div>
 </div>
 
-<div id="action-panel-tooltip" style="display: none;"></div>
-<div id="action-panel-settings" style="display: none;">
-    <fieldset>
-        <legend>Orientation:</legend>
-        <div>
-            <input type="radio" class="text" id="action-orient-horizontal" name="action_panel_orientation" value="horizontal">
-            <label for="action-orient-horizontal">horizontal</label>
-        </div>
-        <div>
-            <input type="radio" class="text" id="action-orient-vertical" name="action_panel_orientation" value="vertical">
-            <label for="action-orient-vertical">vertical</label>
-        </div>
-    </fieldset>
-    <fieldset id="scale-set" class="option">
-        <legend>Scale, %:</legend>
-        <input type="number" class="text" id="scale-val" min="50" max="500" name="action_panel_scale" required>
-        <button class="reset" type="button" tabindex="-1">reset</button>
-    </fieldset>
-    <fieldset id="font-size-set" class="option">
-        <legend>Font size, px:</legend>
-        <input type="number" class="text" id="font-size-val" min="1" max="40" name="action_panel_font_size" required>
-        <button class="reset" type="button" tabindex="-1">reset</button>
-    </fieldset>
-    <div class="settings-buttons">
-        <button id="minimize-panel" type="button" tabindex="-1">Minimize</button>
-        <button id="close-settings" type="button" tabindex="-1">Close</button>
+<div id="action-panel-tooltip" style="display: none"></div>
+<div id="action-panel-settings" style="display: none">
+  <fieldset>
+    <legend>Orientation:</legend>
+    <div>
+      <input
+        type="radio"
+        class="text"
+        id="action-orient-horizontal"
+        name="action_panel_orientation"
+        value="horizontal"
+      />
+      <label for="action-orient-horizontal">horizontal</label>
     </div>
+    <div>
+      <input
+        type="radio"
+        class="text"
+        id="action-orient-vertical"
+        name="action_panel_orientation"
+        value="vertical"
+      />
+      <label for="action-orient-vertical">vertical</label>
+    </div>
+  </fieldset>
+  <fieldset id="scale-set" class="option">
+    <legend>Scale, %:</legend>
+    <input
+      type="number"
+      class="text"
+      id="scale-val"
+      min="50"
+      max="500"
+      name="action_panel_scale"
+      required
+    />
+    <button class="reset" type="button" tabindex="-1">reset</button>
+  </fieldset>
+  <fieldset id="font-size-set" class="option">
+    <legend>Font size, px:</legend>
+    <input
+      type="number"
+      class="text"
+      id="font-size-val"
+      min="1"
+      max="40"
+      name="action_panel_font_size"
+      required
+    />
+    <button class="reset" type="button" tabindex="-1">reset</button>
+  </fieldset>
+  <div class="settings-buttons">
+    <button id="minimize-panel" type="button" tabindex="-1">Minimize</button>
+    <button id="close-settings" type="button" tabindex="-1">Close</button>
+  </div>
 </div>
-<div id="action-panel-placeholder" class="action-panel hidden" style="display: none;"><a href="javascript:">+</a></div>
+<div
+  id="action-panel-placeholder"
+  class="action-panel hidden"
+  style="display: none"
+>
+  <a href="javascript:">+</a>
+</div>
 
 <div id="ui-stack"></div>
 
 <!-- Tile images -->
-<div style="display: none;">
-  <img id="floor" src="/gamedata/{{ version }}/floor.png">
-  <img id="wall" src="/gamedata/{{ version }}/wall.png">
-  <img id="feat" src="/gamedata/{{ version }}/feat.png">
-  <img id="main" src="/gamedata/{{ version }}/main.png">
-  <img id="player" src="/gamedata/{{ version }}/player.png">
-  <img id="icons" src="/gamedata/{{ version }}/icons.png">
-  <img id="gui" src="/gamedata/{{ version }}/gui.png">
+<div style="display: none">
+  <img id="floor" src="/gamedata/{{ version }}/floor.png" />
+  <img id="wall" src="/gamedata/{{ version }}/wall.png" />
+  <img id="feat" src="/gamedata/{{ version }}/feat.png" />
+  <img id="main" src="/gamedata/{{ version }}/main.png" />
+  <img id="player" src="/gamedata/{{ version }}/player.png" />
+  <img id="icons" src="/gamedata/{{ version }}/icons.png" />
+  <img id="gui" src="/gamedata/{{ version }}/gui.png" />
 </div>

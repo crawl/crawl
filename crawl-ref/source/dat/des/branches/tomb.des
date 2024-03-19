@@ -341,7 +341,7 @@ ENDMAP
 NAME:   nicolae_tomb_entry_rubble_hallway
 TAGS:   tomb_entry no_monster_gen no_item_gen no_wall_fixup
 ORIENT: float
-MONS:   boulder dbname:still_boulder
+MONS:   pile of debris
 KITEM:  s = stone q:1 / large rock q:1 w:5
 KFEAT:  O = enter_tomb
 NSUBST: R = 7:r / *:.

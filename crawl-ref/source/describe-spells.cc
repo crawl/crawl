@@ -117,6 +117,12 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
  */
 static string _booktype_header(mon_spell_slot_flag type, bool pronoun_plural)
 {
+    if (type == MON_SPELL_EVOKE)
+    {
+        return make_stringf("%s the following wand spells:",
+                            conjugate_verb("possess", pronoun_plural).c_str());
+    }
+
     const string vulnerabilities = _ability_type_vulnerabilities(type);
 
     if (type == MON_SPELL_WIZARD)
@@ -153,15 +159,11 @@ static void _monster_spellbooks(const monster_info &mi,
     if (book_slots.empty())
         return;
 
-    const string set_name = type == MON_SPELL_WIZARD ? "Book" : "Set";
-
     spellbook_contents output_book;
 
-    output_book.label +=
-        "\n" +
-        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
-        " " +
-        _booktype_header(type, mi.pronoun_plurality());
+    output_book.label += make_stringf("\n%s %s",
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)).c_str(),
+        _booktype_header(type, mi.pronoun_plurality()).c_str());
 
     // Does the monster have a spell that allows them to cast Abjuration?
     bool mons_abjure = false;
@@ -187,6 +189,29 @@ static void _monster_spellbooks(const monster_info &mi,
         output_book.spells.emplace_back(SPELL_ABJURATION);
 
     all_books.emplace_back(output_book);
+}
+
+static void _monster_wand_spellbook(const monster_info &mi,
+                                spellset &all_books)
+{
+    if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
+        return;
+
+    const item_def* wand = mi.inv[MSLOT_WAND].get();
+    if (!wand)
+        return;
+
+    spellbook_contents book;
+
+    book.label += make_stringf("\n%s %s",
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)).c_str(),
+        _booktype_header(MON_SPELL_EVOKE, mi.pronoun_plurality()).c_str());
+
+    const wand_type wandtyp = static_cast<wand_type>(wand->sub_type);
+    ASSERT(wandtyp < NUM_WANDS);
+    book.spells.emplace_back(spell_in_wand(wandtyp));
+
+    all_books.emplace_back(book);
 }
 
 /**
@@ -215,6 +240,8 @@ spellset monster_spellset(const monster_info &mi)
 
     for (auto book_flag : book_flags)
         _monster_spellbooks(mi, book_flag, books);
+
+    _monster_wand_spellbook(mi, books);
 
     ASSERT(books.size());
     return books;
@@ -311,19 +338,6 @@ static string _spell_schools(spell_type spell)
 }
 
 /**
- * Should spells from the given source be listed in two columns instead of
- * one?
- *
- * @param source_item   The source of the spells; a book, or nullptr in the
- *                      case of monster spellbooks.
- * @return              source_item == nullptr
- */
-static bool _list_spells_doublecolumn(const item_def* const source_item)
-{
-    return !source_item;
-}
-
-/**
  * Produce a mapping from characters (used as indices) to spell types in
  * the given spellset.
  *
@@ -334,24 +348,13 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
  */
-vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
-                                       const item_def* const source_item)
+vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells)
 {
     char next_ch = 'a';
     const vector<spell_type> flat_spells = _spellset_contents(spells);
     vector<pair<spell_type,char>> ret;
-    if (!_list_spells_doublecolumn(source_item))
-    {
-        for (auto spell : flat_spells)
-            ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
-    }
-    else
-    {
-        for (size_t i = 0; i < flat_spells.size(); i += 2)
-            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
-        for (size_t i = 1; i < flat_spells.size(); i += 2)
-            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
-    }
+    for (auto spell : flat_spells)
+        ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
     return ret;
 }
 
@@ -527,8 +530,13 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     }
 
     string mult = "";
-    if (spell == SPELL_MARSHLIGHT || spell == SPELL_FOXFIRE || spell == SPELL_PLASMA_BEAM)
+    if (spell == SPELL_MARSHLIGHT
+        || spell == SPELL_FOXFIRE
+        || spell == SPELL_PLASMA_BEAM
+        || spell == SPELL_PERMAFROST_ERUPTION)
+    {
         mult = "2x";
+    }
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
     else if (spell == SPELL_ELECTROLUNGE)
@@ -570,7 +578,7 @@ static void _describe_book(const spellbook_contents &book,
     description.cprintf("\n");
 
     // list spells in two columns, instead of one? (monster books)
-    const bool doublecolumn = _list_spells_doublecolumn(source_item);
+    const bool doublecolumn = source_item == nullptr;
 
     bool first_line_element = true;
     const int hd = mon_owner ? mon_owner->spell_hd() : 0;
@@ -665,7 +673,7 @@ void describe_spellset(const spellset &spells,
                        formatted_string &description,
                        const monster_info *mon_owner)
 {
-    auto spell_map = map_chars_to_spells(spells, source_item);
+    auto spell_map = map_chars_to_spells(spells);
     for (auto book : spells)
         _describe_book(book, spell_map, source_item, description, mon_owner);
 }
@@ -721,7 +729,7 @@ void write_spellset(const spellset &spells,
                        const item_def* const source_item,
                        const monster_info *mon_owner)
 {
-    auto spell_map = map_chars_to_spells(spells, source_item);
+    auto spell_map = map_chars_to_spells(spells);
     tiles.json_open_array("spellset");
     for (auto book : spells)
         _write_book(book, spell_map, source_item, mon_owner);

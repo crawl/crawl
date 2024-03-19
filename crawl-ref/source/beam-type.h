@@ -40,6 +40,7 @@ enum beam_type                  // bolt::flavour
     BEAM_FOUL_FLAME,
     BEAM_CRYSTALLIZING,
     BEAM_WARPING,
+    BEAM_QAZLAL,
 
     // Enchantments
     BEAM_SLOW,

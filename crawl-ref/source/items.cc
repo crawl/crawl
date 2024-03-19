@@ -1294,6 +1294,9 @@ string origin_desc(const item_def &item)
             case AQ_SCROLL:
                 desc += "You acquired " + _article_it(item) + " ";
                 break;
+            case AQ_INVENTED:
+                desc += "You invented it yourself ";
+                break;
 #if TAG_MAJOR_VERSION == 34
             case AQ_CARD_GENIE:
                 desc += "You drew the Genie ";
@@ -1759,10 +1762,10 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 // Currently only used for moving shop items into inventory, since they are
 // not in env.item. This doesn't work with partial pickup, because that requires
 // an env.item slot...
-bool move_item_to_inv(item_def& item)
+bool move_item_to_inv(item_def& item, bool quiet)
 {
     bool junk;
-    return _put_item_in_inv(item, item.quantity, false, junk);
+    return _put_item_in_inv(item, item.quantity, quiet, junk);
 }
 
 /**
@@ -2545,6 +2548,12 @@ bool drop_item(int item_dropped, int quant_drop)
     if (!_check_dangerous_drop(item))
         return false;
 
+    if (item_dropped == you.equip[EQ_GIZMO])
+    {
+        mpr("That is permanently installed in your exoskeleton.");
+        return false;
+    }
+
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
      || item_dropped == you.equip[EQ_AMULET]
@@ -2635,6 +2644,9 @@ bool drop_item(int item_dropped, int quant_drop)
     }
 
     ASSERT(item.defined());
+
+    if (Options.drop_disables_autopickup)
+        set_item_autopickup(item, AP_FORCE_OFF);
 
     if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
     {
@@ -3351,6 +3363,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_RUNE_TYPES,
         NUM_TALISMANS,
         NUM_GEM_TYPES,
+        1,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3527,6 +3540,7 @@ colour_t item_def::missile_colour() const
         case MI_ARROW:         // removed as an item, but don't crash
         case MI_BOLT:          // removed as an item, but don't crash
         case MI_SLING_BULLET:  // removed as an item, but don't crash
+        case MI_SLUG:          // never existed as an item
         case MI_DART:
             return WHITE;
         case MI_JAVELIN:
@@ -4604,7 +4618,7 @@ item_def get_item_known_info(const item_def& item)
     ii.flags = item.flags & (0
             | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
-            | ISFLAG_COSMETIC_MASK);
+            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED);
 
     if (in_inventory(item))
     {
@@ -4906,8 +4920,6 @@ bool maybe_identify_base_type(item_def &item)
     return true;
 }
 
-#define WEAPON_NAME_KEY "weapon_name"
-
 void name_weapon(item_def &item)
 {
     string name = getRandMonNameString("steelspirit");
@@ -4920,39 +4932,75 @@ void name_weapon(item_def &item)
     item.inscription += name;
 }
 
-void maybe_name_weapon(item_def &item)
+string get_weapon_name(const item_def &item, bool full_name)
 {
     const string it_name = item.name(DESC_YOUR, false, false, false);
-    if (is_artefact(item))
-    {
-        // TODO: variant messages? (in the database?)
-        mprf("You welcome %s into your grasp.", it_name.c_str());
-        return;
-    }
 
-    const bool new_name = !item.props.exists(WEAPON_NAME_KEY);
-    if (new_name)
-        name_weapon(item);
+    // Artefacts have names already.
+    if (is_artefact(item))
+        return it_name;
+
+    ASSERT(item.props.exists(WEAPON_NAME_KEY));
 
     const string name = item.props[WEAPON_NAME_KEY].get_string();
+
+    // For non-artefacts, get the names we gave them.
+    if (!full_name)
+        return name;
+
+    return it_name + " \"" + name + "\"";
+}
+
+void maybe_name_weapon(item_def &item, bool silent)
+{
+    const bool has_own_name = is_artefact(item);
+    const bool new_name = has_own_name
+                          || !item.props.exists(WEAPON_NAME_KEY);
+
+    if (new_name && !has_own_name)
+        name_weapon(item);
+
+    if (silent)
+        return;
+
+    string full_name = get_weapon_name(item, true);
+
     // TODO: variant messages? (in the database?)
-    mprf("You welcome %s \"%s\"%s into your grasp.",
-         it_name.c_str(),
-         name.c_str(),
+    mprf("You welcome %s%s into your grasp.", full_name.c_str(),
          new_name ? "" : " back");
 }
 
 void say_farewell_to_weapon(const item_def &item)
 {
-    if (is_artefact(item))
+    string name = get_weapon_name(item, false);
+
+    // TODO: variant messages? (in the database?)
+    mprf("You whisper farewell to %s.", name.c_str());
+}
+
+// If there are more than one net on this square
+// split off one of them for checking/setting values.
+void maybe_split_nets(item_def &item, const coord_def& where)
+{
+    if (item.quantity == 1)
     {
-        // TODO: variant messages? (in the database?)
-        const string it_name = item.name(DESC_YOUR, false, false, false);
-        mprf("You whisper farewell to %s.", it_name.c_str());
+        set_net_stationary(item);
         return;
     }
 
-    const string name = item.props[WEAPON_NAME_KEY].get_string();
-    // TODO: variant messages? (in the database?)
-    mprf("You whisper farewell to %s.", name.c_str());
+    item_def it;
+
+    it.base_type = item.base_type;
+    it.sub_type  = item.sub_type;
+    it.net_durability      = item.net_durability;
+    it.net_placed  = item.net_placed;
+    it.flags     = item.flags;
+    it.special   = item.special;
+    it.quantity  = --item.quantity;
+    item_colour(it);
+
+    item.quantity = 1;
+    set_net_stationary(item);
+
+    copy_item_to_grid(it, where);
 }

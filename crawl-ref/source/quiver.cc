@@ -682,7 +682,7 @@ namespace quiver
                 bool success = true;
                 monster *midmons;
                 if ((midmons = monster_at(middle))
-                    && !god_protects(&you, midmons, true)
+                    && !god_protects(&you, *midmons, true)
                     && (midmons->type != MONS_SPECTRAL_WEAPON
                         || !midmons->wont_attack())
                     && coinflip())
@@ -1334,6 +1334,7 @@ namespace quiver
         case ABIL_CONVERT_TO_BEOGH:
         case ABIL_OKAWARU_GIFT_WEAPON:
         case ABIL_OKAWARU_GIFT_ARMOUR:
+        case ABIL_INVENT_GIZMO:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:

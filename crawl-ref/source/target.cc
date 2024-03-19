@@ -664,6 +664,31 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+targeter_permafrost::targeter_permafrost(const actor &act, int power) :
+    targeter_smite(&act)
+{
+    possible_centres = permafrost_targets(act, power, false);
+    for (coord_def t : possible_centres)
+    {
+        targets.insert(t);
+        for (adjacent_iterator ai(t); ai; ++ai)
+            if (!cell_is_solid(*ai))
+                targets.insert(*ai);
+    }
+    single_target = possible_centres.size() <= 1;
+}
+
+aff_type targeter_permafrost::is_affected(coord_def loc)
+{
+    if (targets.count(loc))
+    {
+        if (possible_centres.count(loc))
+            return single_target ? AFF_MULTIPLE : AFF_YES;
+        return single_target ? AFF_YES : AFF_MAYBE;
+    }
+    return AFF_NO;
+}
+
 targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
     targeter_smite(act, r, 0, 0, false, nullptr)
 {

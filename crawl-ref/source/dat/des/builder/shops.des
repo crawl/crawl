@@ -908,7 +908,7 @@ DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / boulder beetle / cyclops w:3
 KMONS:   2 = stone giant / catoblepas / deep troll earth mage / \
              iron dragon w:4
-KMONS:   B = boulder dbname:still_boulder
+KMONS:   D = pile of debris
 ITEM:    stone
 KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
              stone w:15 | large rock w:15 | sling w:8  | \
@@ -921,7 +921,7 @@ SUBST:   ? = 2dd
 : if you.absdepth() < 16 then
 SUBST:   2 = 1
 : end
-SUBST:   B : B., C : B.
+SUBST:   B : D., C : D.
 MAP
 B.....C
 .xx+xx.
@@ -1073,9 +1073,9 @@ ENDMAP
 NAME:    nicolae_elemental_shop
 TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent extra
 DEPTH:   D:4-, Depths
-KMONS:   b = boulder dbname:still_boulder
+KMONS:   D = pile of debris
 SHUFFLE: AB
-NSUBST:  A = 1:a / 1:l / 1:w / *:xxb
+NSUBST:  A = 1:a / 1:l / 1:w / *:xxD
 SUBST:   B = .
 KPROP:   l = no_cloud_gen
 MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
@@ -1641,9 +1641,15 @@ tt tt
  ttt
 ENDMAP
 
-# This shop sells only unique rings. At least one randart, and also ordinary
-# rings whose pluses have been set via vault syntax to something besides the
-# default pluses for that type of ring.
+# This shop sells only unique rings. At least one randart, which is guaranteed
+# to have an artefact property which doesn't normally generate, and also
+# ordinary rings whose pluses have been set via vault syntax to something
+# besides the default pluses for that type of ring.
+# For the special randart, the available artprops are those that can go on rings
+# and either have weight 0 for random generation (everything but MP), or have a
+# preset value (MP+/-9) which we can exceed. For HP and MP, the values go from
+# +10 to +15 -- the low end is to exceed the default MP bonus of +9, and the
+# high end is the HP bonus from the old version of the Amulet of Vitality.
 # For each of the six rings that can have pluses, there is the possibility of
 # a ring of that type whose pluses are worse than default (which makes it a bit
 # less useful, but cheaper, and so possibly more enticing to poor players),
@@ -1656,7 +1662,10 @@ TAGS:   transparent extra
 DEPTH:  D, Depths, Elf, Snake, Shoals
 WEIGHT: 5
 {{
-  local itemcount = crawl.roll_dice( 2, 3 ) + 1
+  local itemcount = crawl.roll_dice( 2, 3 ) + 2
+  local artprops = {"rMut", "Clar", "RMsl", "SH:5",
+     "HP:" .. (crawl.roll_dice(5, 2) + 5),
+     "MP:" .. (crawl.roll_dice(5, 2) + 5)}
   local rings = {
      -- Worse than usual:
      -- +1 to +5
@@ -1683,7 +1692,8 @@ WEIGHT: 5
   local inventory = table.concat( util.random_subset( rings, itemcount ), " | ")
   kfeat("P = jewellery shop type:One-of-a-Kind suffix:Rings count:" ..
              (itemcount + 1) .. " use_all ; " ..
-             inventory .. " | any ring randart" )
+             inventory .. " | any ring randart artprops:" ..
+             util.random_from(artprops))
 }}
 MAP
   vvv..

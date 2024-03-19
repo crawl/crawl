@@ -310,7 +310,7 @@ Movement
 ========================================
 
 You can make your character walk around with the numeric keypad (try both
-Numlock on and off) or the "Rogue" keys (hjklyubn). If this is too slow, you can
+NumLock on and off) or the "Rogue" keys (hjklyubn). If this is too slow, you can
 make your character walk repeatedly by pressing Shift and a direction;
 alternatively, press '/' followed by a direction. You will walk in that
 direction until any of a number of things happen: a hostile monster is visible
@@ -1210,7 +1210,7 @@ Crawl's homepage is at:
   http://crawl.develz.org
 
 Use this page for direct links to downloads of the most recent version. You can
-also submit bug reports on the Github issue tracker at:
+also submit bug reports on the GitHub issue tracker at:
 
   https://github.com/crawl/crawl/issues
 
@@ -1372,10 +1372,10 @@ Examples for this are the resistances: there are very few permanent sources,
 most involve a choice (like rings or specific armour) or are only semi-permanent
 (like mutations). Another example is the absence of clear-cut best items, which
 comes from the fact that most artefacts are randomly generated. Furthermore,
-even non-random artefacts cannot be wished for, as scrolls of acquirement
-produce random items in general. Likewise, there are no sure-fire means of life
-saving (the closest equivalents are scrolls of blinking, and good religious
-standings for some deities).
+scrolls of acquirement offer a random selection of items instead of a specific
+wish. Likewise, there are no sure-fire means of life saving (the closest
+equivalents are scrolls of blinking, and good religious standings for some
+deities).
 
 Anti-grinding
 ========================================
@@ -1791,13 +1791,14 @@ Coglins (Co)
    charm-wrought steel. Their exoskeletons, capable of wielding weapons
    independently in each arm, are begun with hand-me-downs from their sprawling
    families. By the time they come of age, they are inseparable from their
-   creations.
+   creations, and experienced individuals often further customise themselves
+   with uniquely powerful additions.
 
    Haphazard and jerry-rigged, Coglin exoskeletons lack the flexibility of
    natural bodies. Though their arms can fly in a whir of destruction, it
    takes quite a bit of swinging to rev them up to that speed. Further, with
-   their hands swallowed in the controls of their machine, they cannot wear
-   rings - the interference of multiple magical fields would be catastrophic!
+   their bodies swallowed in the controls of their machine, they cannot wear
+   jewelry - the interference of multiple magical fields would be catastrophic!
 
    Even so, a true Coglin would never criticise their creation. They believe
    that spirits of steel and sandalwood come to rest within every thing that
@@ -2316,7 +2317,7 @@ Movement
 
 direction
   This moves one square. The direction is either one of the numpad cursor keys
-  (try both Numlock on and off) or one of the Rogue vi keys (hjklyubn).
+  (try both NumLock on and off) or one of the Rogue vi keys (hjklyubn).
 
 Shift-direction or / direction
   This moves straight until something interesting is found (like a monster). If

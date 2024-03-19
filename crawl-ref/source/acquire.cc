@@ -19,8 +19,10 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "colour.h"
+#include "database.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "english.h"
 #include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -37,6 +39,7 @@
 #include "notes.h"
 #include "output.h"
 #include "options.h"
+#include "player-equip.h"
 #include "prompt.h"
 #include "randbook.h"
 #include "random.h"
@@ -524,7 +527,7 @@ static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
             acqweight *= damage / property(item_considered, PWPN_SPEED);
         }
 
-        // Rarely give out two-handers to steel elves.
+        // Rarely give out two-handers to coglins.
         if (you.has_mutation(MUT_WIELD_OFFHAND))
         {
             if (two_handed)
@@ -588,16 +591,15 @@ static int _acquirement_jewellery_subtype(int & /*quantity*/,
 
 static vector<pair<stave_type, int>> _base_staff_weights()
 {
-    vector<pair<stave_type, int>> weights = {
-        { STAFF_FIRE,        _skill_rdiv(SK_FIRE_MAGIC) },
-        { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
-        { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
-        { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
-        { STAFF_ALCHEMY,     _skill_rdiv(SK_ALCHEMY) },
-        { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
-        { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
-        { NUM_STAVES,        5 },
-    };
+    // Small chance to pick a totally random staff, independent of skill.
+    // For some reason.
+    vector<pair<stave_type, int>> weights = {{ NUM_STAVES, 5 }};
+    for (int i = 0; i < NUM_STAVES; i++)
+    {
+        stave_type staff = static_cast<stave_type>(i);
+        if (!item_type_removed(OBJ_STAVES, staff))
+            weights.push_back({staff, _skill_rdiv(staff_skill(staff))});
+    }
     return weights;
 }
 
@@ -619,12 +621,6 @@ static bool _remove_ided_staff_weights(vector<pair<stave_type, int>> &weights)
     return found;
 }
 
-static bool _unided_acq_staves()
-{
-    vector<pair<stave_type, int>> weights = _base_staff_weights();
-    return _remove_ided_staff_weights(weights);
-}
-
 static int _acquirement_staff_subtype(int & /*quantity*/,
                                       int /*agent*/)
 {
@@ -635,7 +631,6 @@ static int _acquirement_staff_subtype(int & /*quantity*/,
 
     // chance to choose randomly, goes to 100% if all staves are id'd or 0
     // skill. Just brute force it.
-    // should not be used in normal acquirement..
     if (staff == NUM_STAVES)
     {
         do
@@ -749,6 +744,92 @@ static int _acquirement_book_subtype(int & /*quantity*/,
     //or asserts will get set off
 }
 
+static vector<pair<talisman_type, int>> _base_talisman_tiers()
+{
+    vector<pair<talisman_type, int>> tiers = {
+        { TALISMAN_BEAST,   1 },
+        { TALISMAN_FLUX,    2 },
+        { TALISMAN_MAW,     3 },
+        { TALISMAN_SERPENT, 3 },
+        { TALISMAN_BLADE,   3 },
+        { TALISMAN_STATUE,  4 },
+        { TALISMAN_DRAGON,  4 },
+        { TALISMAN_STORM,   5 },
+        { TALISMAN_DEATH,   5 },
+        { NUM_TALISMANS,    5 },
+    };
+    return tiers;
+}
+
+// Scale talisman chances, strongly biased in favour of those we haven't
+// seen before, and also biased in favour of higher tier talismans when
+// we have more Shapeshifting skill.
+static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
+                                    int agent)
+{
+    // This will produce a target tier between 3 and 6 depending on skill.
+    // This is very roughly one tier higher than the tier of talisman you
+    // can use with your current skill, because you probably already have a
+    // talisman matching your current skill and are looking for an upgrade.
+    const int target_tier = min(6, div_rand_round(_skill_rdiv(SK_SHAPESHIFTING), 7) + 3);
+
+    // Change all the tier values, other than the random option, to weights.
+    // The random option will stay weight 5.
+    for (auto &tier : tiers)
+    {
+        // Skip the random option.
+        if (tier.first == NUM_TALISMANS)
+            continue;
+
+        // Xom will set all weights but the one for the random option to 0.
+        if (agent == GOD_XOM)
+        {
+            tier.second = 0;
+            continue;
+        }
+
+        int scale_value = 1;
+
+        if (!you.seen_talisman[tier.first])
+            scale_value *= 10;
+
+        if (tier.second == target_tier)
+            scale_value *= 30;
+        else if (abs(tier.second - target_tier) == 1)
+            scale_value *= 15;
+        else if (abs(tier.second - target_tier) == 2)
+            scale_value *= 5;
+
+        tier.second = scale_value;
+    }
+}
+
+/**
+ * Choose a random type of talisman to be generated via acquirement or god
+ * gifts.
+ *
+ * Heavily weighted toward talismans the player hasn't yet seen, and also
+ * weighted toward higher level talismans when the player has more
+ * shapeshifting skill.
+ *
+ * @return          A random talisman type.
+ */
+static int _acquirement_talisman_subtype(int & /*quantity*/,
+                                         int agent)
+{
+    vector<pair<talisman_type, int>> tiers = _base_talisman_tiers();
+    talisman_type talisman = NUM_TALISMANS;
+
+    _scale_talisman_weights(tiers, agent);
+    talisman = *random_choose_weighted(tiers);
+
+    // Choose randomly.
+    if (talisman == NUM_TALISMANS)
+        talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+
+    return talisman;
+}
+
 typedef int (*acquirement_subtype_finder)(int &quantity, int agent);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
@@ -772,8 +853,9 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no rods
 #endif
     0, // no runes either
-    0, // no talismans... for now. TODO: add talisman acquirement
+    _acquirement_talisman_subtype,
     0, // no gems either
+    0, // no gizmos (handled elsewhere)
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,
@@ -784,7 +866,8 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     ASSERT(class_wanted != OBJ_RANDOM);
 
     if (class_wanted == OBJ_ARMOUR && !player_can_use_armour()
-        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING))
+        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING)
+        || class_wanted == OBJ_JEWELLERY && you.has_mutation(MUT_NO_JEWELLERY))
     {
         return OBJ_RANDOM;
     }
@@ -937,11 +1020,9 @@ static bool _should_acquire_manual(int agent)
     if (you_worship(GOD_TROG))
         magic_weights = 0;
 
-    // If someone has 25% or more magic skills, never give manuals.
-    // Otherwise, count magic skills double to bias against manuals
-    // for magic users.
-    return magic_weights * 3 < other_weights
-           && x_chance_in_y(other_weights, 2*magic_weights + other_weights);
+    // Give magic skills double the weight of non-magic skills, since
+    // even a pure caster will be training various non-magic skills.
+    return x_chance_in_y(other_weights, 2*magic_weights + other_weights);
 }
 
 /**
@@ -1463,12 +1544,14 @@ class AcquireMenu : public InvMenu
     CrawlVector &acq_items;
     string items_key;
 
+    bool is_gizmo;
+
     void init_entries();
     string get_keyhelp(bool unused) const override;
     bool examine_index(int i) override;
     bool skip_process_command(int keyin) override;
 public:
-    AcquireMenu(CrawlVector &aitems, string ikey);
+    AcquireMenu(CrawlVector &aitems, string ikey, bool is_gizmo);
 };
 
 class AcquireEntry : public InvEntry
@@ -1499,11 +1582,13 @@ public:
     }
 };
 
-AcquireMenu::AcquireMenu(CrawlVector &aitems, string ikey)
+AcquireMenu::AcquireMenu(CrawlVector &aitems, string ikey,
+                         bool _is_gizmo = false)
     : InvMenu(MF_SINGLESELECT | MF_QUIET_SELECT
               | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
       acq_items(aitems),
-      items_key(ikey)
+      items_key(ikey),
+      is_gizmo(_is_gizmo)
 {
     menu_action = ACT_EXECUTE;
     action_cycle = CYCLE_TOGGLE;
@@ -1513,10 +1598,14 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems, string ikey)
 
     init_entries();
 
-    set_title("Choose an item to acquire.");
+    if (is_gizmo)
+        set_title("Choose a gizmo to assemble.");
+    else
+        set_title("Choose an item to acquire.");
 }
 
-static void _create_acquirement_item(item_def &item, string items_key)
+static void _create_acquirement_item(item_def &item, string items_key,
+                                     bool is_gizmo = false)
 {
     auto &acq_items = you.props[items_key].get_vector();
 
@@ -1540,10 +1629,30 @@ static void _create_acquirement_item(item_def &item, string items_key)
 
     set_ident_type(item, true);
 
-    if (copy_item_to_grid(item, you.pos()) != NON_ITEM)
-        canned_msg(MSG_SOMETHING_APPEARS);
+    if (is_gizmo)
+    {
+        move_item_to_inv(item, true);
+        // XXX: This is ugly and only works because there can never be another
+        //      gizmo in our inventory, but move_item_to_inv() doesn't actually
+        //      return an index or anything else we can use.
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (you.inv[i].base_type == OBJ_GIZMOS)
+            {
+                mprf("You assemble %s and install it in your exoskeleton!",
+                     item.name(DESC_A).c_str());
+                equip_item(EQ_GIZMO, i, false);
+                break;
+            }
+        }
+    }
     else
-        canned_msg(MSG_NOTHING_HAPPENS);
+    {
+        if (copy_item_to_grid(item, you.pos()) != NON_ITEM)
+            canned_msg(MSG_SOMETHING_APPEARS);
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     acq_items.clear();
     you.props.erase(items_key);
@@ -1574,7 +1683,7 @@ void AcquireMenu::init_entries()
         }
 
         item_def &acq_item = *static_cast<item_def*>(item.data);
-        _create_acquirement_item(acq_item, key);
+        _create_acquirement_item(acq_item, key, is_gizmo);
 
         return false;
     };
@@ -1589,8 +1698,9 @@ string AcquireMenu::get_keyhelp(bool) const
         auto& entry = *selected[0];
         const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
         help = make_stringf(
-               "<%s>Acquire %s? (%s/N)</%s>\n",
+               "<%s>%s %s? (%s/N)</%s>\n",
                col.c_str(),
+               is_gizmo ? "Assemble" : "Acquire",
                entry.text.c_str(),
                Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                col.c_str());
@@ -1600,16 +1710,32 @@ string AcquireMenu::get_keyhelp(bool) const
     // looks better with a margin:
     help += string(MIN_COLS, ' ') + '\n';
 
-    help += make_stringf(
-        //[!] acquire|examine item  [a-i] select item to acquire
+    if (is_gizmo)
+    {
+        help += make_stringf(
+        //[!] assemble|examine gizmo  [a-i] select gizmo to assemble
         //[Esc/R-Click] exit
         "<lightgrey>%s%s  %s %s</lightgrey>",
         menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
-        menu_action == ACT_EXECUTE ? " <w>acquire</w>|examine items" :
-                                     " acquire|<w>examine</w> items",
+        menu_action == ACT_EXECUTE ? " <w>assemble</w>|examine gizmo" :
+                                     " assemble|<w>examine</w> gizmo",
         hyphenated_hotkey_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "select item for acquirement"
-                                   : "examine item");
+        menu_action == ACT_EXECUTE ? "select gizmo to assemble"
+                                   : "examine gizmo");
+    }
+    else
+    {
+        help += make_stringf(
+            //[!] acquire|examine item  [a-i] select item to acquire
+            //[Esc/R-Click] exit
+            "<lightgrey>%s%s  %s %s</lightgrey>",
+            menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
+            menu_action == ACT_EXECUTE ? " <w>acquire</w>|examine items" :
+                                        " acquire|<w>examine</w> items",
+            hyphenated_hotkey_letters(item_count(), 'a').c_str(),
+            menu_action == ACT_EXECUTE ? "select item for acquirement"
+                                    : "examine item");
+    }
     return pad_more_with_esc(help);
 }
 
@@ -1666,13 +1792,25 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        // skip staves if player has already seen all the acquirable staves
-        if (_unided_acq_staves())
+        // Staves are often less interesting options one way or the
+        // other (either they are exactly what your pure caster wants
+        // or they are the wrong staff or you aren't interested in
+        // staves). So make this option a bit rarer.
+        if (!one_chance_in(3))
             rand_classes.emplace_back(OBJ_STAVES);
     }
 
-    rand_classes.emplace_back(OBJ_JEWELLERY);
+    if (!you.has_mutation(MUT_NO_JEWELLERY))
+        rand_classes.emplace_back(OBJ_JEWELLERY);
+
     rand_classes.emplace_back(OBJ_BOOKS);
+
+    if (!you_worship(GOD_ZIN) && !you.has_mutation(MUT_NO_FORMS))
+    {
+        // We want talisman acq to be fairly rare.
+        if (one_chance_in(3))
+            rand_classes.emplace_back(OBJ_TALISMANS);
+    }
 
     // dungeon generation
     if (!scroll)
@@ -1862,4 +2000,151 @@ bool okawaru_gift_armour()
     you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
 
     return true;
+}
+
+static string _generate_gizmo_serial_number(bool at_end = false)
+{
+    string serial;
+
+    // Short serial (but only at the end of names)
+    if (at_end && one_chance_in(3))
+    {
+        serial += (coinflip() ? "Mk." : "Ver.") + std::to_string(random2(10));
+        if (coinflip())
+            serial += std::to_string(random2(10));
+        return serial;
+    }
+
+    // 1 or 2 uppercase letters
+    int num_letters = coinflip() ? 2 : 1;
+    for (int i = 0; i < num_letters; ++i)
+        serial += rand() % 26 + 65;
+
+    serial += "-";
+
+    // Generate a numerical serial. Make it shorter if we have more letters,
+    // and give a chance to use trailing 0s instead of random numbers.
+    int num_numbers = random_range(1, 4 - num_letters);
+    int num_real_numbers = (num_numbers == 4 ? 1
+                                             : random_range(1, max(1, num_numbers - 1)));
+
+    for (int i = 0; i < num_real_numbers; ++i)
+        serial += std::to_string(random2(10));
+
+    for (int i = 0; i < num_real_numbers; ++i)
+        serial += "0";
+
+    return serial;
+}
+
+static string _generate_gizmo_name()
+{
+    string name;
+
+    string noun = getMiscString("gizmo_noun");
+    string modifier = getMiscString("gizmo_modifier");
+
+    // Chance of serial number name
+    if (one_chance_in(3))
+    {
+        // 50% chance to be first or second
+        if (coinflip())
+            name += modifier + noun + " " + _generate_gizmo_serial_number(true);
+        else
+            name += _generate_gizmo_serial_number() + " " + modifier + noun;
+    }
+    // Use adjective
+    else
+    {
+        string adj = getMiscString("gizmo_adjective");
+
+        // 50% chance of modifier, applied to either noun or adjective
+        if (coinflip())
+        {
+            if (coinflip())
+                adj = modifier + adj;
+            else
+                noun = modifier + noun;
+        }
+
+        name = adj + " " + noun;
+    }
+
+    return name;
+}
+
+static void _make_coglin_gizmos()
+{
+    CrawlVector &names = you.props[COGLIN_GIZMO_NAMES_KEY].get_vector();
+
+    CrawlVector &acq_items = you.props[COGLIN_GIZMO_KEY].get_vector();
+    acq_items.clear();
+
+    // Generate the given number of gizmos, using previously announced names for
+    // them, if they exist.
+    for (unsigned int i = 0; i < COGLIN_GIZMO_NUM; ++i)
+    {
+        auto item = _acquirement_item_def(OBJ_GIZMOS, AQ_INVENTED);
+        if (item.defined())
+        {
+            if (names.size() > i)
+                item.props[ARTEFACT_NAME_KEY].get_string() = names[i].get_string();
+            else
+                item.props[ARTEFACT_NAME_KEY].get_string() = _generate_gizmo_name();
+
+            acq_items.push_back(item);
+        }
+    }
+
+    fill_gizmo_properties(acq_items);
+}
+
+bool coglin_invent_gizmo()
+{
+    if (inv_count() >= ENDOFPACK)
+    {
+        mpr("You don't have room to hold a gizmo!");
+        return false;
+    }
+
+    if (!you.props.exists(COGLIN_GIZMO_KEY))
+        _make_coglin_gizmos();
+
+    auto &acq_items = you.props[COGLIN_GIZMO_KEY].get_vector();
+
+    int index = 0;
+    if (!clua.callfn("c_choose_coglin_gizmo", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], COGLIN_GIZMO_KEY, true);
+        you.props[INVENT_GIZMO_USED_KEY] = true;
+        return true;
+    }
+
+    AcquireMenu acq_menu(acq_items, COGLIN_GIZMO_KEY, true);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(COGLIN_GIZMO_KEY))
+        return false;
+
+    you.props[INVENT_GIZMO_USED_KEY] = true;
+
+    return true;
+}
+
+// We add names to this list as they are requested, and then will use the list
+// when making actual gizmos, up to however many names were already determined.
+void coglin_announce_gizmo_name()
+{
+    CrawlVector& names = you.props[COGLIN_GIZMO_NAMES_KEY].get_vector();
+    string name = _generate_gizmo_name();
+    names.push_back(name);
+
+    mprf("Your brain swirls with designs for %s. You just need some more time...",
+         article_a(name).c_str());
 }

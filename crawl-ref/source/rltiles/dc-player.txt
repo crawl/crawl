@@ -112,8 +112,10 @@ djinni_purple_m
 coglin COGLIN
 %rim 1
 formicid FORMICID
-vine_stalker_f VINE_STALKER
-vine_stalker_m
+vine_stalker_green_f VINE_STALKER
+vine_stalker_green_m
+vine_stalker_red_f
+vine_stalker_red_m
 
 # draconians
 draconian DRACONIAN DRACONIAN_FIRST
@@ -545,6 +547,7 @@ majin MAJIN
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
 finisher FINISHER
+scythe_of_curses SCYTHE_OF_CURSES
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
 wyrmbane WYRMBANE
 force_lance FORCE_LANCE

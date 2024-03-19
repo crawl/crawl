@@ -184,15 +184,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot);
 static void _equip_use_warning(const item_def& item);
-static void _equip_regeneration_item(const item_def& item);
-static void _deactivate_regeneration_item(const item_def& item, bool meld);
+static void _handle_regen_item_equip(const item_def& item);
+static void _deactivate_item(const item_def& item);
 
 static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 {
 #ifdef ASSERTS
     if (eq == slot)
         return;
-    if (eq == EQ_WEAPON && slot == EQ_OFFHAND) // hack for off-hand wielding
+    if (slot == EQ_OFFHAND && you.has_mutation(MUT_WIELD_OFFHAND)) // hack for off-hand wielding
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
@@ -230,6 +230,9 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
         _equip_armour_effect(item, unmeld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _equip_jewellery_effect(item, unmeld, slot);
+
+    if (!unmeld)
+        _handle_regen_item_equip(item);
 }
 
 void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
@@ -297,16 +300,6 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     {
         canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
                                                   : MSG_MANA_DECREASE);
-    }
-
-    if (proprt[ARTP_REGENERATION]
-        && !unmeld
-        // If regen is an intrinsic property too, don't double print messages.
-        && !item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
-        && (item.base_type != OBJ_ARMOUR
-            || !armour_type_prop(item.sub_type, ARMF_REGENERATION)))
-    {
-        _equip_regeneration_item(item);
     }
 
     // Modify ability scores.
@@ -412,8 +405,8 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
 
-    if (proprt[ARTP_REGENERATION])
-        _deactivate_regeneration_item(item, meld);
+    if (proprt[ARTP_REGENERATION] && !meld)
+        _deactivate_item(item);
 
     if (is_unrandom_artefact(item))
     {
@@ -895,9 +888,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
     }
 
-    if (armour_type_prop(arm.sub_type, ARMF_REGENERATION) && !unmeld)
-        _equip_regeneration_item(arm);
-
     if (is_artefact(arm))
     {
         bool show_msgs = true;
@@ -1028,8 +1018,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
     }
 
-    if (armour_type_prop(item.sub_type, ARMF_REGENERATION))
-        _deactivate_regeneration_item(item, meld);
+    if (armour_type_prop(item.sub_type, ARMF_REGENERATION) && !meld)
+        _deactivate_item(item);
 
     if (is_artefact(item))
         unequip_artefact_effect(item, nullptr, meld, slot, false);
@@ -1064,10 +1054,18 @@ static void _remove_amulet_of_faith(item_def &item)
     lose_piety(piety_loss);
 }
 
-static void _equip_regeneration_item(const item_def &item)
+static void _handle_regen_item_equip(const item_def& item)
 {
+    const bool regen_hp = is_regen_item(item);
+    const bool regen_mp = is_mana_regen_item(item);
+
+    if (!regen_hp && !regen_mp)
+        return;
+
+    // The item is providing at least one of these two things, so let's check
+    // attunement status.
+
     equipment_type eq_slot = item_equip_slot(item);
-    // currently regen is only on amulets and armour
     bool plural = (eq_slot == EQ_BOOTS && item.sub_type != ARM_BARDING)
                   || eq_slot == EQ_GLOVES;
     string item_name = is_artefact(item) ? get_artefact_name(item)
@@ -1078,22 +1076,46 @@ static void _equip_regeneration_item(const item_def &item)
                                          : item_slot_name(eq_slot);
 
 #if TAG_MAJOR_VERSION == 34
-    if (you.get_mutation_level(MUT_NO_REGENERATION))
+    if (regen_hp && !regen_mp && you.get_mutation_level(MUT_NO_REGENERATION))
     {
         mprf("The %s feel%s cold and inert.", item_name.c_str(),
              plural ? "" : "s");
         return;
     }
 #endif
-    if (you.hp == you.hp_max)
+    if (regen_mp && !regen_hp && !player_regenerates_mp())
     {
-        mprf("The %s throb%s to your uninjured body.", item_name.c_str(),
-             plural ? " as they attune themselves" : "s as it attunes itself");
+        mprf("The %s feel%s cold and inert.", item_name.c_str(),
+             plural ? "" : "s");
+
+        return;
+    }
+
+    bool activate = false;
+    if (regen_hp && you.hp == you.hp_max
+        && (!regen_mp || you.magic_points == you.max_magic_points))
+    {
+        activate = true;
+    }
+    else if (regen_mp && you.magic_points == you.max_magic_points
+             && (!regen_hp || you.hp == you.hp_max))
+    {
+        activate = true;
+    }
+
+    if (activate)
+    {
+        mprf("The %s throb%s to your%s body.", item_name.c_str(),
+             plural ? " as they attune themselves" : "s as it attunes itself",
+             regen_hp ? " uninjured" : "");
         you.activated.set(eq_slot);
         return;
     }
-    mprf("The %s cannot attune %s to your injured body.", item_name.c_str(),
-         plural ? "themselves" : "itself");
+
+    mprf("The %s cannot attune %s to your%s body.", item_name.c_str(),
+         plural ? "themselves" : "itself",
+         you.hp < you.hp_max ? " injured" : " exhausted");
+
     you.activated.set(eq_slot, false);
     return;
 }
@@ -1104,19 +1126,6 @@ bool acrobat_boost_active()
            && you.duration[DUR_ACROBAT]
            && (!you.caught())
            && (!you.is_constricted());
-}
-
-static void _equip_amulet_of_mana_regeneration()
-{
-    if (!player_regenerates_mp())
-        mpr("The amulet feels cold and inert.");
-    else if (you.magic_points == you.max_magic_points)
-        you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
-    else
-    {
-        mpr("The amulet cannot attune itself to your exhausted body.");
-        you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
-    }
 }
 
 static void _equip_amulet_of_reflection()
@@ -1204,21 +1213,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
         break;
 
-    case AMU_REGENERATION:
-        if (!unmeld)
-            _equip_regeneration_item(item);
-        break;
-
     case AMU_ACROBAT:
         if (you.has_mutation(MUT_TENGU_FLIGHT))
             mpr("You feel no more acrobatic than usual.");
         else
             mpr("You feel ready to tumble and roll out of harm's way.");
-        break;
-
-    case AMU_MANA_REGENERATION:
-        if (!unmeld)
-            _equip_amulet_of_mana_regeneration();
         break;
 
     case AMU_REFLECTION:
@@ -1228,6 +1227,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
         break;
+
+    // Regeneration and Magic Regeneration amulets handled elsewhere.
     }
 
     if (artefact)
@@ -1240,10 +1241,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-static void _deactivate_regeneration_item(const item_def &item, bool meld)
+static void _deactivate_item(const item_def& item)
 {
-    if (!meld)
-        you.activated.set(get_item_slot(item), false);
+    you.activated.set(get_item_slot(item), false);
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
@@ -1265,7 +1265,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case AMU_REGENERATION:
-        _deactivate_regeneration_item(item, meld);
+        if (!meld)
+            _deactivate_item(item);
         break;
 
     case RING_SEE_INVISIBLE:
@@ -1322,7 +1323,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case AMU_MANA_REGENERATION:
         if (!meld)
-            you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
+            _deactivate_item(item);
         break;
     }
 

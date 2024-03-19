@@ -116,6 +116,17 @@ private:
     bool (*affects_pos)(const coord_def &);
 };
 
+class targeter_permafrost : public targeter_smite
+{
+public:
+    targeter_permafrost(const actor &act, int power);
+    aff_type is_affected(coord_def loc) override;
+private:
+    set<coord_def> targets;
+    set<coord_def> possible_centres;
+    bool single_target;
+};
+
 class targeter_walljump : public targeter_smite
 {
 public:

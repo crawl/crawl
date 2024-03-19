@@ -154,29 +154,40 @@ int mon_shield_bypass(int hd)
 }
 
 /**
- * Return the odds of a monster attack with the given to-hit bonus hitting the given ev with the
- * given EV, rounded to the nearest percent.
+ * Return the odds of a monster attack with the given to-hit bonus hitting the given ev (scaled by 100),
+ * rounded to the nearest percent.
  *
  * TODO: deduplicate with to_hit_pct().
  *
  * @return                  To-hit percent between 0 and 100 (inclusive).
  */
-int mon_to_hit_pct(int to_land, int ev)
+int mon_to_hit_pct(int to_land, int scaled_ev)
 {
     if (to_land >= AUTOMATIC_HIT)
         return 100;
 
-    if (ev <= 0)
+    if (scaled_ev <= 0)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
 
     ++to_land; // per calc_to_hit()
 
-    int hits = 0;
+    const int ev = scaled_ev/100;
+
+    // EV is random-rounded, so the actual value might be either ev or ev+1.
+    // We repeat the calculation below once for each case
+    int hits_lower = 0;
     for (int ev1 = 0; ev1 < ev; ev1++)
         for (int ev2 = 0; ev2 < ev; ev2++)
-            hits += max(0, to_land - (ev1 + ev2));
+            hits_lower += max(0, to_land - (ev1 + ev2));
+    double hit_chance_lower = ((double)hits_lower) / (to_land * ev * ev);
 
-    double hit_chance = ((double)hits) / (to_land * ev * ev);
+    int hits_upper = 0;
+    for (int ev1 = 0; ev1 < ev+1; ev1++)
+        for (int ev2 = 0; ev2 < ev+1; ev2++)
+            hits_upper += max(0, to_land - (ev1 + ev2));
+    double hit_chance_upper = ((double)hits_upper) / (to_land * (ev+1) * (ev+1));
+
+    double hit_chance = ((100 - (scaled_ev % 100)) * hit_chance_lower + (scaled_ev % 100) * hit_chance_upper) / 100;
 
     // Apply Bayes Theorem to account for auto hit and miss.
     hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
@@ -185,24 +196,44 @@ int mon_to_hit_pct(int to_land, int ev)
     return (int)(hit_chance*100);
 }
 
-int mon_beat_sh_pct(int bypass, int sh)
+int mon_beat_sh_pct(int bypass, int scaled_sh)
 {
-    if (sh <= 0)
+    if (scaled_sh <= 0)
         return 100;
 
-    sh *= 2; // per shield_bonus()
+    int sh = scaled_sh/100;
 
-    int hits = 0;
+    // SH is random-rounded, so the actual value might be either sh or sh+1.
+    // We repeat the calculation below once for each case
+    sh *= 2; // per shield_bonus()
+    int hits_lower = 0;
     for (int sh1 = 0; sh1 < sh; sh1++)
     {
         for (int sh2 = 0; sh2 < sh; sh2++)
         {
             int adj_sh = (sh1 + sh2) / (3*2) - 1;
-            hits += max(0, bypass - adj_sh);
+            hits_lower += max(0, bypass - adj_sh);
         }
     }
-    const int denom = sh * sh * bypass;
-    return hits * 100 / denom;
+    const int denom_lower = sh * sh * bypass;
+    double hit_chance_lower = ((double)hits_lower * 100) / denom_lower;
+
+    sh += 2; // since we already multiplied by 2
+    int hits_upper = 0;
+    for (int sh1 = 0; sh1 < sh; sh1++)
+    {
+        for (int sh2 = 0; sh2 < sh; sh2++)
+        {
+            int adj_sh = (sh1 + sh2) / (3*2) - 1;
+            hits_upper += max(0, bypass - adj_sh);
+        }
+    }
+    const int denom_upper = sh * sh * bypass;
+    double hit_chance_upper = ((double)hits_upper * 100) / denom_upper;
+
+    double hit_chance = ((100 - (scaled_sh % 100)) * hit_chance_lower + (scaled_sh % 100) * hit_chance_upper) / 100;
+
+    return (int)hit_chance;
 }
 
 /**
@@ -1169,7 +1200,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             would_cause_penance = true;
 
         }
-        else if (mon->angered_by_attacks())
+        else
         {
             adj = "your ";
 

@@ -731,7 +731,7 @@ static const weapon_def Weapon_prop[] =
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
     { WPN_HAND_CANNON,       "hand cannon",      16,  3, 19,
-        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLUG,
         DAMV_NON_MELEE, 0, 10, 35, {
             // Hand cannons appear late, so encourage use by reducing
             // SPWPN_NORMAL weight relative to other ranged weapons.
@@ -767,6 +767,49 @@ static const weapon_def Weapon_prop[] =
 
 };
 
+struct staff_def
+{
+    stave_type id;
+    const char* name;
+    skill_type skill;
+
+    int damage_mult;
+    ac_type ac_check;
+    beam_type damage_type;
+};
+static int Staff_index[NUM_STAVES];
+static const staff_def Staff_prop[] =
+{
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_WIZARDRY,    "wizardry" },
+    { STAFF_POWER,       "power" },
+#endif
+    { STAFF_FIRE,        "fire",        SK_FIRE_MAGIC,
+        63, ac_type::normal, BEAM_FIRE },
+    { STAFF_COLD,        "cold",        SK_ICE_MAGIC,
+        63, ac_type::normal, BEAM_COLD },
+    { STAFF_ALCHEMY,     "alchemy",     SK_ALCHEMY,
+        63, ac_type::normal, BEAM_POISON },
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_ENERGY,      "energy" },
+#endif
+    { STAFF_DEATH,       "death",       SK_NECROMANCY,
+        63, ac_type::normal,   BEAM_NEG },
+    { STAFF_CONJURATION, "conjuration", SK_CONJURATIONS,
+        50, ac_type::normal, BEAM_MMISSILE },
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_ENCHANTMENT, "enchantment" },
+    { STAFF_SUMMONING,   "summoning" },
+#endif
+    { STAFF_AIR,         "air",         SK_AIR_MAGIC,
+        50, ac_type::half,   BEAM_ELECTRICITY },
+    { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,
+        63, ac_type::normal, BEAM_MMISSILE },
+#if TAG_MAJOR_VERSION == 34
+    { STAFF_CHANNELING,  "channeling" },
+#endif
+};
+
 struct missile_def
 {
     int         id;
@@ -786,6 +829,7 @@ static const missile_def Missile_prop[] =
     { MI_STONE,         "stone",         2, 8,  1  },
     { MI_ARROW,         "arrow",         0, 1,  2  },
     { MI_BOLT,          "bolt",          0, 1,  2  },
+    { MI_SLUG,          "slug",          0, 1,  2  },
     { MI_LARGE_ROCK,    "large rock",   20, 25, 15 },
     { MI_SLING_BULLET,  "sling bullet",  0, 1,  5  },
     { MI_JAVELIN,       "javelin",      10, 20, 30 },
@@ -889,6 +933,7 @@ void init_properties()
     // about too few, so we check this ourselves.
     COMPILE_CHECK(NUM_ARMOURS   == ARRAYSZ(Armour_prop));
     COMPILE_CHECK(NUM_WEAPONS   == ARRAYSZ(Weapon_prop));
+    COMPILE_CHECK(NUM_STAVES    == ARRAYSZ(Staff_prop));
     COMPILE_CHECK(NUM_MISSILES  == ARRAYSZ(Missile_prop));
     COMPILE_CHECK(NUM_GEM_TYPES == ARRAYSZ(Gem_prop));
 #if TAG_MAJOR_VERSION == 34
@@ -900,6 +945,9 @@ void init_properties()
 
     for (int i = 0; i < NUM_WEAPONS; i++)
         Weapon_index[ Weapon_prop[i].id ] = i;
+
+    for (int i = 0; i < NUM_STAVES; i++)
+        Staff_index[ Staff_prop[i].id ] = i;
 
     for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
@@ -1004,6 +1052,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_MISSILES,  MI_ARROW },
     { OBJ_MISSILES,  MI_BOLT },
     { OBJ_MISSILES,  MI_SLING_BULLET },
+    { OBJ_MISSILES,  MI_SLUG },
     { OBJ_GEMS,      GEM_ORC },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
@@ -1161,6 +1210,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
     {
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
+        if (item.base_type == OBJ_TALISMANS)
+            you.seen_talisman.set(item.sub_type);
     }
 }
 
@@ -1524,7 +1575,7 @@ int armour_acq_weight(const armour_type armour)
 
 equipment_type get_armour_slot(const item_def &item)
 {
-    if (you.has_mutation(MUT_WIELD_OFFHAND) && is_weapon(item))
+    if (you.has_mutation(MUT_WIELD_OFFHAND) && item.base_type != OBJ_ARMOUR)
         return EQ_OFFHAND;
 
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -2040,27 +2091,36 @@ bool staff_uses_evocations(const item_def &item)
     return item.base_type == OBJ_STAVES;
 }
 
+const char* staff_type_name(stave_type s)
+{
+    if (s == NUM_STAVES)
+        return "bugginess"; // used for known items
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].name;
+}
+
 skill_type staff_skill(stave_type s)
 {
-    switch (s)
-    {
-    case STAFF_AIR:
-        return SK_AIR_MAGIC;
-    case STAFF_COLD:
-        return SK_ICE_MAGIC;
-    case STAFF_EARTH:
-        return SK_EARTH_MAGIC;
-    case STAFF_FIRE:
-        return SK_FIRE_MAGIC;
-    case STAFF_ALCHEMY:
-        return SK_ALCHEMY;
-    case STAFF_DEATH:
-        return SK_NECROMANCY;
-    case STAFF_CONJURATION:
-        return SK_CONJURATIONS;
-    default:
-        return SK_NONE;
-    }
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].skill;
+}
+
+beam_type staff_damage_type(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].damage_type;
+}
+
+int staff_damage_mult(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].damage_mult;
+}
+
+ac_type staff_ac_check(stave_type s)
+{
+    ASSERT_RANGE(s, 0, NUM_STAVES);
+    return Staff_prop[Staff_index[s]].ac_check;
 }
 
 bool item_skills(const item_def &item, set<skill_type> &skills)
@@ -2177,6 +2237,7 @@ const char *ammo_name(missile_type ammo)
            : Missile_prop[ Missile_index[ammo] ].name;
 }
 
+// TODO: derive this from Weapon_prop (or remove the concept of launcher ammo)
 bool is_launcher_ammo(const item_def &wpn)
 {
     if (wpn.base_type != OBJ_MISSILES)
@@ -2187,6 +2248,7 @@ bool is_launcher_ammo(const item_def &wpn)
     case MI_ARROW:
     case MI_BOLT:
     case MI_SLING_BULLET:
+    case MI_SLUG:
         return true;
     default:
         return false;
@@ -3031,6 +3093,9 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     case OBJ_JEWELLERY:
         return jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS;
 
+    case OBJ_GIZMOS:
+        return EQ_GIZMO;
+
     default:
         break;
     }
@@ -3091,6 +3156,20 @@ int shield_block_limit(const item_def &shield)
 int guile_adjust_willpower(int wl)
 {
     return max(0, wl - 2 * WL_PIP);
+}
+
+bool is_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_REGENERATION)
+            || item.base_type == OBJ_ARMOUR
+              && armour_type_prop(item.sub_type, ARMF_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_REGENERATION);
+}
+
+bool is_mana_regen_item(const item_def& item)
+{
+    return is_artefact(item) && artefact_property(item, ARTP_MANA_REGENERATION)
+            || item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION);
 }
 
 string talisman_type_name(int type)
@@ -3182,6 +3261,8 @@ void seen_item(item_def &item)
             you.seen_armour[item.sub_type] = 1U;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
+        if (item.base_type == OBJ_TALISMANS)
+            you.seen_talisman.set(item.sub_type);
     }
 
     _maybe_note_found_unrand(item);

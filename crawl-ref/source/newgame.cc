@@ -266,15 +266,29 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
 
 static void _resolve_species_job(newgame_def& ng, const newgame_def& ng_choice)
 {
-    // Since recommendations are no longer bidirectional, pick one of
-    // species or job to start. If one but not the other was specified
-    // as "viable", always choose that one last; otherwise use a random
-    // order.
-    const bool spfirst  = ng_choice.species != SP_VIABLE
-                          && ng_choice.job == JOB_VIABLE;
-    const bool jobfirst = ng_choice.species == SP_VIABLE
-                          && ng_choice.job != JOB_VIABLE;
-    if (spfirst || !jobfirst && coinflip())
+    bool spfirst;
+    // If both are "viable" or both are "random" resolve them in a random order,
+    // to avoid bias.
+    if (ng_choice.species == SP_VIABLE && ng_choice.job == JOB_VIABLE
+        || ng_choice.species == SP_RANDOM && ng_choice.job == JOB_RANDOM)
+    {
+        spfirst = coinflip();
+    }
+    // If exactly one is "viable", resolve that second.
+    else if (ng_choice.species == SP_VIABLE)
+        spfirst = false;
+    else if (ng_choice.job == JOB_VIABLE)
+        spfirst = true;
+    // If one is fixed and the other is "random", resolve that second (to avoid
+    // picking a random choice that is banned for the fixed one).
+    else if (ng_choice.species == SP_RANDOM)
+        spfirst = false;
+    else if (ng_choice.job == JOB_RANDOM)
+        spfirst = true;
+    // If we're here then they're both fixed and the order doesn't matter.
+    else
+        spfirst = true;
+    if (spfirst)
     {
         _resolve_species(ng, ng_choice);
         _resolve_job(ng, ng_choice);

@@ -119,7 +119,7 @@ stolen holy weapon. A lesser, and more stable, version of it became
 Yredelemnul's umbra.
 
 This is that weapon: an eveningstar with its light long fled, despite its name,
-and a shadow that now repulses the ones it used to comfort...
+and a shadow that repulses those its light used to comfort...
 %%%%
 demon blade "Leech"
 
@@ -189,13 +189,15 @@ An unholy crossbow, forged in the fires of Gehenna. It imbues the bolts it
 fires with the raw power of its namesake. Thankfully, the blasts this weapon
 produces never harm the one firing.
 %%%%
-# TAG_MINOR_VERSION == 34
 sword of the Doom Knight
 
 An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
 who eschewed the use of magic in combat, preferring to destroy her enemies with
 brute force. Unfortunately for her, not all of her opponents shared her
 limitations.
+
+It has felled countless great warriors under her grip, and the souls of those
+who had their lives taken beckon it to take even more under its new owner.
 %%%%
 morningstar "Eos"
 
@@ -309,8 +311,8 @@ animals, each chosen for the unique strengths it could grant the robe's wearer.
 cloak of the Thief
 
 A pitch-black cloak which allows its wearer to excel in the arts of thievery.
-As a precaution in case of detection, it also bears enchantments allowing the
-wearer to make a hasty retreat under cover of fog.
+Even the clumsy will find their footsteps softer and the shouts of their
+adversaries less attention-getting.
 %%%%
 # TAG_MAJOR_VERSION == 34
 tower shield "Bullseye"
@@ -810,3 +812,10 @@ hand cannon "Mule"
 Hand cannons use magical dust to launch projectiles. The alchemists who craft
 them boast of their potency, but omit the smoke and noise blasted out with each
 shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.
+%%%%
+gloves of the gadgeteer
+
+A pair of suede gloves covered in a dizzying array of delicate sigils. While
+originally intended to aid in the crafting of magical devices, they are
+nonetheless useful for wringing every last drop of power out of someone else's
+work.

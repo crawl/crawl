@@ -11,6 +11,7 @@
 #include <functional>
 
 #include "abyss.h"
+#include "acquire.h"
 #include "dbg-util.h"
 #include "god-abil.h"
 #include "god-wrath.h"
@@ -243,6 +244,8 @@ void wizard_heal(bool super_heal)
         decr_zot_clock();
         you.redraw_stats = true;
         gain_draconian_breath_uses(3);
+
+        you.props.erase(COGLIN_GIZMO_KEY);
     }
     else
         mpr("Healing.");

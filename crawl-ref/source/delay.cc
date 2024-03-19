@@ -527,10 +527,15 @@ void BaseRunDelay::handle()
 
     command_type cmd = CMD_NO_CMD;
 
-    if ((want_move() && you.confused())
-        || !(unsafe_once && first_move) && !i_feel_safe(true, want_move())
-        || you.running.is_rest()
-           && (!can_rest_here(true) || regeneration_is_inhibited()))
+    if (want_move() && you.confused())
+    {
+        mprf("You're confused, stopping %s.",
+             you.running.runmode_name().c_str());
+        stop_running();
+    }
+    else if (!(unsafe_once && first_move) && !i_feel_safe(true, want_move())
+            || you.running.is_rest()
+               && (!can_rest_here(true) || regeneration_is_inhibited()))
     {
         stop_running();
     }
@@ -1231,7 +1236,9 @@ static inline bool _monster_warning(activity_interrupt ai,
             god_warning += "shapeshifter.";
         }
 
+        // Refresh our monster info cache, so xv shows the ID'd items.
         monster_info mi(mon);
+        env.map_knowledge(mon->pos()).set_monster(mi);
 
         const string mweap = get_monster_equipment_desc(mi, DESC_IDENTIFIED,
                                                         DESC_NONE);
@@ -1412,7 +1419,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
-    "sense_monster", MIMIC_KEY, "ally_attacked"
+    "sense_monster", MIMIC_KEY, "ally_attacked", "abyss_exit_spawned"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt ai)

@@ -28,11 +28,14 @@ enum equipment_type
     // Finger amulet provides an extra ring slot
     EQ_RING_AMULET,
     EQ_LAST_JEWELLERY = EQ_RING_AMULET,
+    EQ_GIZMO,
+    // Slot for 'equip preview' for rings - not a real equipment slot
+    EQ_PREVIEW_RING,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
     EQ_MAX_ARMOUR = EQ_BODY_ARMOUR,
-    EQ_MAX_WORN   = EQ_RING_AMULET,
+    EQ_MAX_WORN   = EQ_GIZMO,
     // these aren't actual equipment slots, they're categories for functions
     EQ_STAFF            = 100,         // weapon with base_type OBJ_STAVES
     EQ_RINGS,                          // check both rings

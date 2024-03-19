@@ -267,11 +267,10 @@ bool melee_attack::handle_phase_dodged()
             player_warn_miss();
         else
         {
-            mprf("%s%s misses %s%s",
+            mprf("%s%s misses %s.",
                  atk_name(DESC_THE).c_str(),
                  evasion_margin_adverb().c_str(),
-                 defender_name(true).c_str(),
-                 attack_strength_punctuation(damage_done).c_str());
+                 defender_name(true).c_str());
         }
     }
 
@@ -313,6 +312,8 @@ bool melee_attack::handle_phase_dodged()
             if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
                 do_starlight();
         }
+
+        maybe_trigger_autodazzler();
 
         maybe_riposte();
         // Retaliations can kill!
@@ -406,6 +407,26 @@ void melee_attack::do_ooze_engulf()
         mprf("You engulf %s in ooze!", defender->name(DESC_THE).c_str());
         // Smothers sticky flame.
         defender->expose_to_element(BEAM_WATER, 0);
+    }
+}
+
+void melee_attack::try_parry_disarm()
+{
+    if (attacker->is_player()
+        && defender->is_monster()
+        && defender->alive()
+        && you.rev_percent() > FULL_REV_PERCENT
+        && you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV)
+        && one_chance_in(50 + defender->get_experience_level() * 2
+                         - you.get_experience_level()))
+    {
+        item_def *wpn = defender->as_monster()->disarm();
+        if (wpn)
+        {
+            mprf("You knock the %s out of %s grip!",
+                wpn->name(DESC_THE).c_str(),
+                defender->name(DESC_ITS).c_str());
+        }
     }
 }
 
@@ -589,6 +610,7 @@ bool melee_attack::handle_phase_hit()
     {
         apply_black_mark_effects();
         do_ooze_engulf();
+        try_parry_disarm();
     }
 
     if (attacker->is_player())
@@ -971,13 +993,14 @@ void melee_attack::force_cleave(item_def &wpn, coord_def target_pos)
  *
  * Returns true iff either sub-attack succeeded.
  */
-bool melee_attack::launch_attack_set()
+bool melee_attack::launch_attack_set(bool allow_rev)
 {
     if (!attacker->is_player())
         return attack();
 
     // Calculate this first, in case the defender dies.
     const bool should_rev = you.has_mutation(MUT_WARMUP_STRIKES)
+                            && allow_rev
                             && defender && !defender->is_player()
                             && !defender->wont_attack()
                             && !mons_is_firewood(*defender->as_monster())
@@ -2400,15 +2423,80 @@ void melee_attack::attacker_sustain_passive_damage()
                    KILLED_BY_ACID);
 }
 
-int melee_attack::staff_damage(skill_type skill)
+int melee_attack::staff_damage(stave_type staff) const
 {
-    if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 200)
-                    + attacker->skill(skill, 100), 3000))
+    const skill_type skill = staff_skill(staff);
+    if (!x_chance_in_y(attacker->skill(SK_EVOCATIONS, 200)
+                     + attacker->skill(skill, 100), 3000))
     {
-        return random2((attacker->skill(skill, 100)
-                      + attacker->skill(SK_EVOCATIONS, 50)) / 80);
+        return 0;
     }
-    return 0;
+
+    const int mult = staff_damage_mult(staff);
+    const int preac = random2((attacker->skill(skill, mult * 2)
+                               + attacker->skill(SK_EVOCATIONS, mult))
+                              / 80);
+    return apply_defender_ac(preac, 0, staff_ac_check(staff));
+}
+
+string melee_attack::staff_message(stave_type staff, int dam) const
+{
+    switch (staff)
+    {
+    case STAFF_AIR:
+        return make_stringf(
+            "%s %s electrocuted%s",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("are").c_str(),
+                            attack_strength_punctuation(dam).c_str());
+    case STAFF_COLD:
+        return make_stringf(
+                "%s freeze%s %s%s",
+                attacker->name(DESC_THE).c_str(),
+                attacker->is_player() ? "" : "s",
+                defender->name(DESC_THE).c_str(),
+                attack_strength_punctuation(dam).c_str());
+
+    case STAFF_EARTH:
+        return make_stringf(
+                "The ground beneath %s fractures%s",
+                defender->name(DESC_THE).c_str(),
+                         attack_strength_punctuation(dam).c_str());;
+
+    case STAFF_FIRE:
+        return make_stringf(
+                    "%s burn%s %s%s",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->is_player() ? "" : "s",
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(dam).c_str());
+    case STAFF_ALCHEMY:
+        return make_stringf(
+                "%s envenom%s %s%s",
+                attacker->name(DESC_THE).c_str(),
+                attacker->is_player() ? "" : "s",
+                defender->name(DESC_THE).c_str(),
+                attack_strength_punctuation(dam).c_str());
+
+    case STAFF_DEATH:
+        return make_stringf(
+                "%s %s as negative energy consumes %s%s",
+                defender->name(DESC_THE).c_str(),
+                defender->conj_verb("shrivel").c_str(),
+                defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                attack_strength_punctuation(dam).c_str());
+
+    case STAFF_CONJURATION:
+        return make_stringf(
+                    "%s %s %s%s",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->conj_verb("blast").c_str(),
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(dam).c_str());
+
+    default:
+        return "Something buggy happens! Please report this.";
+    }
 }
 
 bool melee_attack::apply_staff_damage()
@@ -2419,164 +2507,39 @@ bool melee_attack::apply_staff_damage()
     if (attacker->is_player() && you.get_mutation_level(MUT_NO_ARTIFICE))
         return false;
 
-    if (weapon->base_type != OBJ_STAVES)
-        return false;
-
-    skill_type sk = staff_skill(static_cast<stave_type>(weapon->sub_type));
-
-    switch (weapon->sub_type)
+    if (weapon->base_type != OBJ_STAVES
+        || item_type_removed(weapon->base_type, weapon->sub_type))
     {
-    case STAFF_AIR:
-        special_damage =
-            resist_adjust_damage(defender, BEAM_ELECTRICITY, staff_damage(sk));
-
-        if (special_damage)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s %s electrocuted%s",
-                    defender->name(DESC_THE).c_str(),
-                    defender->conj_verb("are").c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-            special_damage_flavour = BEAM_ELECTRICITY;
-        }
-
-        break;
-
-    case STAFF_COLD:
-        special_damage =
-            resist_adjust_damage(defender, BEAM_COLD, staff_damage(sk));
-
-        if (special_damage)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s freeze%s %s%s",
-                    attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "s",
-                    defender->name(DESC_THE).c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-            special_damage_flavour = BEAM_COLD;
-        }
-        break;
-
-    case STAFF_EARTH:
-        special_damage = staff_damage(sk) * 5 / 4;
-        special_damage = apply_defender_ac(special_damage, 0);
-        if (defender->airborne())
-            special_damage /= 3;
-
-        if (special_damage > 0)
-        {
-            special_damage_message =
-                make_stringf(
-                    "The ground beneath %s fractures%s",
-                    defender->name(DESC_THE).c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-        }
-        break;
-
-    case STAFF_FIRE:
-        special_damage =
-            resist_adjust_damage(defender, BEAM_FIRE, staff_damage(sk));
-
-        if (special_damage)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s burn%s %s%s",
-                    attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "s",
-                    defender->name(DESC_THE).c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-            special_damage_flavour = BEAM_FIRE;
-
-            if (defender->is_player())
-                maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
-        }
-        break;
-
-    case STAFF_ALCHEMY:
-        special_damage =
-            resist_adjust_damage(defender, BEAM_POISON, staff_damage(sk));
-
-        if (special_damage)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s envenom%s %s%s",
-                    attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "s",
-                    defender->name(DESC_THE).c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-            special_damage_flavour = BEAM_POISON;
-        }
-        break;
-
-    case STAFF_DEATH:
-        special_damage =
-            resist_adjust_damage(defender, BEAM_NEG, staff_damage(sk));
-
-        if (special_damage)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s %s in agony%s",
-                    defender->name(DESC_THE).c_str(),
-                    defender->conj_verb("writhe").c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-
-            attacker->god_conduct(DID_EVIL, 4);
-        }
-        break;
-
-    case STAFF_CONJURATION:
-        special_damage = staff_damage(sk);
-        special_damage = apply_defender_ac(special_damage);
-
-        if (special_damage > 0)
-        {
-            special_damage_message =
-                make_stringf(
-                    "%s %s %s%s",
-                    attacker->name(DESC_THE).c_str(),
-                    attacker->conj_verb("blast").c_str(),
-                    defender->name(DESC_THE).c_str(),
-                    attack_strength_punctuation(special_damage).c_str());
-        }
-        break;
-
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_SUMMONING:
-    case STAFF_POWER:
-    case STAFF_ENCHANTMENT:
-    case STAFF_ENERGY:
-    case STAFF_WIZARDRY:
-#endif
-        break;
-
-    default:
-        die("Invalid staff type: %d", weapon->sub_type);
+        return false;
     }
 
-    if (special_damage || special_damage_flavour)
+    const stave_type staff = static_cast<stave_type>(weapon->sub_type);
+    int dam = staff_damage(staff);
+    const beam_type flavour = staff_damage_type(staff);
+    dam = resist_adjust_damage(defender, flavour, dam);
+    if (staff == STAFF_EARTH && defender->airborne())
+        dam /= 3;
+    if (dam > 0)
     {
-        dprf(DIAG_COMBAT, "Staff damage to %s: %d, flavour: %d",
-             defender->name(DESC_THE).c_str(),
-             special_damage, special_damage_flavour);
+        if (staff == STAFF_DEATH)
+            attacker->god_conduct(DID_EVIL, 4);
+        else if (staff == STAFF_FIRE && defender->is_player())
+            maybe_melt_player_enchantments(flavour, dam);
 
-        if (needs_message && !special_damage_message.empty())
-            mpr(special_damage_message);
+        if (needs_message)
+            mpr(staff_message(staff, dam));
+    }
 
-        inflict_damage(special_damage, special_damage_flavour);
-        if (special_damage > 0)
-        {
-            defender->expose_to_element(special_damage_flavour, 2);
-            // XXX: this is messy, but poisoning from the staff of poison
-            // should happen after damage.
-            if (defender->alive() && special_damage_flavour == BEAM_POISON)
-                defender->poison(attacker, 2);
-        }
+    dprf(DIAG_COMBAT, "Staff damage to %s: %d, flavour: %d",
+         defender->name(DESC_THE).c_str(), dam, flavour);
+
+    inflict_damage(dam, flavour);
+    if (dam > 0)
+    {
+        defender->expose_to_element(flavour, 2);
+        // Poisoning from the staff of alchemy should happen after damage.
+        if (defender->alive() && flavour == BEAM_POISON)
+            defender->poison(attacker, 2);
     }
 
     return true;
@@ -3064,23 +3027,9 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_BARBS:
+        // same duration/power as manticore barbs
         if (defender->is_player())
-        {
-            mpr("Barbed spikes become lodged in your body.");
-            // same duration as manticore barbs
-            if (!you.duration[DUR_BARBS])
-                you.set_duration(DUR_BARBS, random_range(4, 8));
-            else
-                you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
-
-            if (you.attribute[ATTR_BARBS_POW])
-            {
-                you.attribute[ATTR_BARBS_POW] =
-                    min(6, you.attribute[ATTR_BARBS_POW]++);
-            }
-            else
-                you.attribute[ATTR_BARBS_POW] = 4;
-        }
+            barb_player(random_range(4, 8), 4);
         // Insubstantial and jellies are immune
         else if (!(defender->is_insubstantial() &&
                     mons_genus(defender->type) != MONS_JELLY))
@@ -3423,6 +3372,19 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
     }
+    case AF_HELL_HUNT:
+    {
+        if (one_chance_in(3))
+            break;
+
+        if (summon_hell_out_of_bat(*attacker, defender->pos()))
+        {
+            mprf("Faint brimstone surges around %s!",
+                 defender_name(true).c_str());
+        }
+        break;
+    }
+
     case AF_BLOODZERK:
     {
         if (!defender->can_bleed() || !attacker->can_go_berserk())

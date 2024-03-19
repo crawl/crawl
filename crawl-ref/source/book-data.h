@@ -204,7 +204,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
-    SPELL_PASSWALL,
     SPELL_STONE_ARROW,
     SPELL_BOULDER
 },
@@ -249,7 +248,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Debilitation
     SPELL_SLOW,
-    SPELL_SIGIL_OF_BINDING,
     SPELL_VAMPIRIC_DRAINING,
     SPELL_CONFUSING_TOUCH,
 },
@@ -309,16 +307,15 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Spectacle
-    SPELL_BLASTMOTE,
     SPELL_DAZZLING_FLASH,
     SPELL_STARBURST,
     SPELL_MAXWELLS_COUPLING,
 },
 
 { // Book of Winter
+    SPELL_FROZEN_RAMPARTS,
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_ENGLACIATION,
-    SPELL_SIMULACRUM,
 },
 
 { // Book of Spheres
@@ -346,7 +343,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_ROT,
     SPELL_DISPEL_UNDEAD,
     SPELL_MARTYRS_KNELL,
-    SPELL_DEATH_CHANNEL,
 },
 
 { // Book of Displacement
@@ -371,7 +367,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Earth
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
-    SPELL_BOMBARD,
+    SPELL_PERMAFROST_ERUPTION,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -416,6 +412,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of the Tundra
     SPELL_HAILSTORM,
     SPELL_SUMMON_ICE_BEAST,
+    SPELL_PERMAFROST_ERUPTION,
     SPELL_SIMULACRUM,
 },
 
@@ -432,7 +429,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Sloth
-    SPELL_FROZEN_RAMPARTS,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
@@ -508,6 +504,18 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_ELECTRIC_CHARGE,
     SPELL_ARCJOLT,
     SPELL_MAXWELLS_COUPLING,
+},
+
+{ // Book of Movement
+    SPELL_PASSWALL,
+    SPELL_BLASTMOTE,
+    SPELL_BOMBARD,
+},
+
+{ // Book of Wicked Creation
+    SPELL_SIGIL_OF_BINDING,
+    SPELL_SIMULACRUM,
+    SPELL_DEATH_CHANNEL,
 },
 
 };

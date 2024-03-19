@@ -3270,6 +3270,32 @@ static void _gozag_place_shop(int index)
                     shop->shop_suffix_name.c_str());
 }
 
+static bool _shop_type_valid(shop_type type)
+{
+    switch (type)
+    {
+#if TAG_MAJOR_VERSION == 34
+    case SHOP_FOOD:
+    case SHOP_EVOKABLES:
+        return false;
+#endif
+    case SHOP_DISTILLERY:
+        return !you.has_mutation(MUT_NO_DRINK);
+    case SHOP_WEAPON:
+    case SHOP_WEAPON_ANTIQUE:
+        return !you.has_mutation(MUT_NO_GRASPING);
+    case SHOP_ARMOUR:
+    case SHOP_ARMOUR_ANTIQUE:
+        return !you.has_mutation(MUT_NO_ARMOUR);
+    case SHOP_JEWELLERY:
+        return !you.has_mutation(MUT_NO_JEWELLERY);
+    case SHOP_BOOK:
+        return !you.has_mutation(MUT_INNATE_CASTER);
+    default:
+        return true;
+    }
+}
+
 bool gozag_call_merchant()
 {
     // Only offer useful shops.
@@ -3277,25 +3303,8 @@ bool gozag_call_merchant()
     for (int i = 0; i < NUM_SHOPS; i++)
     {
         shop_type type = static_cast<shop_type>(i);
-#if TAG_MAJOR_VERSION == 34
-        if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
-            continue;
-#endif
-        if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
-            continue;
-
-        if (you.has_mutation(MUT_NO_ARMOUR) &&
-            (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE))
-        {
-            continue;
-        }
-        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
-            && you.has_mutation(MUT_NO_GRASPING))
-        {
-            continue;
-        }
-        valid_shops.push_back(type);
+        if (_shop_type_valid(type))
+            valid_shops.push_back(type);
     }
 
     // Set up some dummy shops.
@@ -3517,9 +3526,34 @@ static int _upheaval_radius(int pow)
     return pow / 100 + 1;
 }
 
+static bool _qazlal_affected(coord_def pos)
+{
+    const actor *act = actor_at(pos);
+
+    if (act)
+    {
+        if (act->is_player())
+            return false;
+
+        if (act->is_monster())
+        {
+            const monster *mon = act->as_monster();
+            int summon_type = 0;
+            // Never fire at elemental forces.
+            if (mon && mon->is_summoned(nullptr, &summon_type)
+                && summon_type == MON_SUMM_AID)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_target)
 {
-    int pow = you.skill(SK_INVOCATIONS, 6);
+    const int pow = you.skill(SK_INVOCATIONS, 6);
     const int max_radius = _upheaval_radius(pow);
 
     bolt beam;
@@ -3548,7 +3582,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
-        args.self = confirm_prompt_type::cancel;
+        args.self = confirm_prompt_type::none;
         args.hitfunc = &tgt;
         if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
@@ -3563,7 +3597,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         bolt tempbeam;
         tempbeam.source    = beam.target;
         tempbeam.target    = beam.target;
-        tempbeam.flavour   = BEAM_MISSILE;
+        tempbeam.flavour   = BEAM_QAZLAL;
         tempbeam.ex_size   = max_radius;
         tempbeam.hit       = AUTOMATIC_HIT;
         tempbeam.damage    = dice_def(AUTOMATIC_HIT, 1);
@@ -3612,11 +3646,15 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     }
 
     vector<coord_def> affected;
-    affected.push_back(beam.target);
+    if (_qazlal_affected(beam.target))
+        affected.push_back(beam.target);
     for (radius_iterator ri(beam.target, max_radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
         if (!in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+
+        if (!_qazlal_affected(*ri))
             continue;
 
         int chance = pow;
@@ -3777,17 +3815,21 @@ spret qazlal_disaster_area(bool fail)
         if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
-        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-        if (m && mons_att_wont_attack(m->attitude)
-            && !mons_is_projectile(m->type))
+        if (!_qazlal_affected(*ri))
+            continue;
+
+        const monster *mon = monster_at(*ri);
+        if (mon && mons_att_wont_attack(mon->attitude)
+            && !mons_is_projectile(mon->type))
         {
             friendlies = true;
         }
 
         const int range = you.pos().distance_from(*ri);
-        const int dist = grid_distance(you.pos(), *ri);
         if (range <= upheaval_radius)
             continue;
+
+        const int dist = grid_distance(you.pos(), *ri);
 
         targets.push_back(*ri);
         // We weight using the square of grid distance, so monsters fewer tiles
@@ -5755,7 +5797,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(mon) || mons_is_firewood(*mon))
+        if (!mon || god_protects(*mon) || mons_is_firewood(*mon))
             continue;
 
         const int dur = random_range(60, 150);

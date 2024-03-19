@@ -70,6 +70,7 @@ bewildered foes.
 Hunter
 
 Hunters carry a shortbow, light armour and a scroll of butterflies.
+# TODO: fix this for coglins
 %%%%
 Hexslinger
 

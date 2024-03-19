@@ -29,7 +29,6 @@
 #include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
-#include "religion-enum.h"
 #include "skill-menu-state.h"
 #include "species.h"
 #include "stat-type.h"
@@ -45,7 +44,6 @@
 #define POWERED_BY_DEATH_KEY "powered_by_death_strength"
 #define FUGUE_KEY "fugue_of_the_fallen_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
-#define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
 #define PARALYSED_BY_KEY "paralysed_by"
@@ -81,6 +79,9 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
+
+/// At this percent rev, Coglins' attacks do full damage.
+static const int FULL_REV_PERCENT = 66;
 
 class targeter;
 class Delay;
@@ -297,6 +298,7 @@ public:
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
+    FixedBitVector<NUM_TALISMANS>      seen_talisman;
 
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
@@ -846,6 +848,8 @@ public:
     int gdr_perc() const override;
     int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;
+    int evasion_scaled(int scale, bool ignore_temporary = false,
+                const actor *attacker = nullptr) const;
 
     int stat_hp() const override     { return hp; }
     int stat_maxhp() const override  { return hp_max; }
@@ -862,9 +866,11 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
-    // Calculates total permanent EV if the player was/wasn't wearing a given item
-    int evasion_with_specific_armour(const item_def& new_armour) const;
-    int evasion_without_specific_armour(const item_def& armour_to_remove) const;
+    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
+    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
+                                     int *ac, int *ev, int *sh);
+    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
+                                        int *ac, int *ev, int *sh);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -891,6 +897,7 @@ public:
     void be_agile(int pow);
 
     int rev_percent() const;
+    int rev_tier() const;
     void rev_up(int time_taken);
     void rev_down(int time_taken);
 
@@ -939,9 +946,7 @@ public:
 
     bool clear_far_engulf(bool force = false, bool moved = false) override;
 
-    int armour_class_with_one_sub(item_def sub) const;
-
-    int armour_class_with_one_removal(item_def sub) const;
+    int armour_class_scaled(int scale) const;
 
     int ac_changes_from_mutations() const;
     vector<const item_def *> get_armour_items() const;
@@ -949,7 +954,7 @@ public:
     vector<const item_def *> get_armour_items_one_removal(const item_def& sub) const;
     int base_ac_with_specific_items(int scale,
                                     vector<const item_def *> armour_items) const;
-    int armour_class_with_specific_items(
+    int armour_class_with_specific_items(int scale,
                                 vector<const item_def *> items) const;
 
 protected:
@@ -1054,8 +1059,9 @@ int player_res_poison(bool allow_random = true, bool temp = true,
                       bool items = true);
 int player_willpower(bool temp = true);
 
-int player_shield_class();
-int player_displayed_shield_class();
+int player_shield_class(int scale = 1, bool random = true,
+                        bool ignore_temporary = false);
+int player_displayed_shield_class(int scale = 1, bool ignore_temporary = false);
 bool player_omnireflects();
 
 int player_spec_air();
@@ -1177,6 +1183,7 @@ void end_sticky_flame_player();
 bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
+void barb_player(int turns, int pow);
 void dec_berserk_recovery_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);

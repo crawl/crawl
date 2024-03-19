@@ -720,6 +720,8 @@ void throw_it(quiver::action &a)
 
         bolt alt_pbolt;
         alt_pbolt.set_target(a.target);
+        if (pbolt.friendly_past_target)
+            alt_pbolt.aimed_at_spot = true;
         _setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
         _player_shoot(alt_pbolt, alt_fake_proj, alt_launcher);
     }

@@ -673,9 +673,9 @@ ENDMAP
 
 # A 'jewellery shoppe' or display cabinet.
 NAME:   trove_jewel_1
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
@@ -698,9 +698,9 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_jewel_2
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 COLOUR: x = blue
@@ -1072,7 +1072,7 @@ ENDMAP
 
 # 16 pieces of jewellery
 NAME:   trove_jewellery_lava
-TAGS:   no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 ORIENT: encompass
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
@@ -1338,7 +1338,7 @@ ENDMAP
 
 # Generates 18 items useful for an Octopode: hats, amulets, and of course rings.
 NAME:   nicolae_trove_octotrove
-TAGS:   no_item_gen no_monster_gen allow_dup no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup no_pool_fixup
 ORIENT: encompass
 KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
 KITEM:  E = useful hat good_item / hat randart / hat w:2

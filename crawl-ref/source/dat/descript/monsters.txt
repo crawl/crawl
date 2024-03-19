@@ -101,7 +101,7 @@ iron sword drank mortal blood. They despise mortal vanities, the pursuit of
 %%%%
 Dissolution
 
-The Pits of Slime used to be a thriving civilization, and Dissolution was the
+The Pits of Slime used to be a thriving civilisation, and Dissolution was the
 prophet of their god. When the city was overtaken by its current residents,
 only Dissolution survived, for they alone turned faithfully to the Slime God.
 Dissolution became a tremendous mass of acidic ooze, yet retained their
@@ -799,12 +799,6 @@ A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
-gnoll bouda
-
-A gnoll witch possessed by a spirit of spite which flashes out from behind
-their eyes. Its strange chants and ululations send other gnolls into a wild
-frenzy.
-%%%%
 boulder
 
 A mass of fast-rolling stone, crushing everything in its path.
@@ -905,11 +899,11 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skillfully.
+and able to use them skilfully.
 %%%%
 cerulean imp
 
-A small, willful minor demon. Its wings, far larger than its scrawny body, were
+A small, wilful minor demon. Its wings, far larger than its scrawny body, were
 made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
@@ -1164,7 +1158,7 @@ stand in its way.
 %%%%
 draconian knight
 
-A draconian protected by thick scales, skillful weapon use, and complementary
+A draconian protected by thick scales, skilful weapon use, and complementary
 magic.
 %%%%
 draconian monk
@@ -1435,6 +1429,12 @@ gnoll
 
 A taller and better-equipped relative of goblins, and ally of orcs. It is
 somewhat doglike in appearance.
+%%%%
+gnoll bouda
+
+A gnoll witch possessed by a spirit of spite which flashes out from behind
+their eyes. Its strange chants and ululations send other gnolls into a wild
+frenzy.
 %%%%
 gnoll sergeant
 
@@ -1966,6 +1966,11 @@ neqoxec
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
 distended with the devoured brains of its victims.
 %%%%
+obsidian bat
+
+A faceless stone bat unearthed from infernal chasms. Devilish beasts hunt in its
+wake.
+%%%%
 obsidian statue
 
 A beautiful statue of an unknown creature, jet-black like a tear in reality.
@@ -2141,6 +2146,10 @@ pharaoh ant
 A royal ant returned to unlife through strange, probably horrifying means. It
 binds the souls of its allies when slain, allowing them to fight on after death
 as simulacra.
+%%%%
+pile of debris
+
+A heavily ruptured stonework, surrounded by rubble.
 %%%%
 pillar of salt
 
@@ -2715,9 +2724,8 @@ powerful, even among giants.
 %%%%
 thermic dynamo
 
-A restlessly roaming, bejewelled engine. Its whirls of fire and ice attempt to
-produce boundless energy, which occasionally escapes and wildly ricochets off
-of walls.
+A clashing tempest of boundless energy, channelling into capacitor jewels. Its
+whirls of fire and ice occasionally escape and ricochet wildly off of walls.
 %%%%
 thorn hunter
 
@@ -3321,9 +3329,11 @@ spriggan hatter
 
 A spriggan who is going slightly mad from the toxic fumes of their craft.
 %%%%
+#if TAG_MAJOR_VERSION > 34
 still boulder
 
 A gargantuan mass of stone at rest.
+#endif
 %%%%
 water elementalist statue
 
@@ -3491,17 +3501,17 @@ His shield is emblazoned with images of infernal flames.
 %%%%
 The Meatlord
 
-You behold the embodiment of filth, corruption and depravity, the Meatlord. His
+You behold the embodiment of filth, corruption and depravity: the Meatlord. His
 foul body is bloated to the extreme, leaking viscous fluid and the stench of
 death. His head is that of a boar with bulging eyes and tusks split in two, his
-snout flares and oozes as he snorts and squeals at the sight of you, his mouth
-is a toothless rift which drools pools of blood and vomits forth disgusting
-remains. His neck is stretched and lops forward, its skin sagging downward. His
-immense gut writhes and distorts as the larvae within await their repugnant
-release. His legs are unrecognisable masses of flesh, covered in protrusions
-and throbbing boils. Your mind reels at the sight of this hideous form and your
-senses begin to shut down in an attempt to preserve your sanity as you choke on
-the oppressive stench.
+snout flares and oozes as he snorts and squeals at the sight of you, and his
+mouth is a toothless rift which drools pools of blood and vomits forth
+disgusting remains. His neck is stretched and lops forward, its skin sagging
+downward. His immense gut writhes and distorts as the larvae within await their
+repugnant release. His legs are unrecognisable masses of flesh, covered in
+protrusions and throbbing boils. Your mind reels at the sight of this hideous
+form, and your senses begin to shut down in an attempt to preserve your sanity
+as you choke on the oppressive stench.
 %%%%
 The Unspeakable
 

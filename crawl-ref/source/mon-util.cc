@@ -2768,10 +2768,11 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
             drac_breath(mi.draconian_subspecies());
         if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
             slots.push_back(breath);
-        // No other spells; quit right away.
-        if (book == MST_NO_SPELLS)
-            return slots;
     }
+
+    // No other spells (e.g. drac and/or wand); quit right away.
+    if (book == MST_NO_SPELLS)
+        return slots;
 
     if (book != MST_GHOST)
         ASSERT(msidx < ARRAYSZ(mspell_list));
@@ -2801,7 +2802,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
     switch (drac_type)
     {
     case MONS_BLACK_DRACONIAN:   sp = SPELL_LIGHTNING_BOLT; break;
-    case MONS_YELLOW_DRACONIAN:  sp = SPELL_CAUSTIC_BREATH; break;
+    case MONS_YELLOW_DRACONIAN:  sp = SPELL_SPIT_ACID; break;
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;
@@ -4416,7 +4417,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
 
-    if (you.see_cell(mons.pos()))
+    // XXX: Shouldn't be able to see 'fake' monsters
+    if (you.see_cell(mons.pos()) && mons.mid != MID_NOBODY)
     {
         dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)

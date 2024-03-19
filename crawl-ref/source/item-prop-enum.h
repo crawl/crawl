@@ -370,6 +370,8 @@ enum missile_type
     MI_THROWING_NET,
     MI_BOOMERANG,
 
+    MI_SLUG,
+
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
@@ -851,4 +853,13 @@ enum talisman_type
     TALISMAN_STORM,
     TALISMAN_FLUX,
     NUM_TALISMANS,
+};
+
+enum special_gizmo_type
+{
+    SPGIZMO_NORMAL,
+    SPGIZMO_MANAREV,
+    SPGIZMO_GADGETEER,
+    SPGIZMO_PARRYREV,
+    SPGIZMO_AUTODAZZLE,
 };

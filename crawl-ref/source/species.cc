@@ -6,6 +6,7 @@
 
 #include "branch.h"
 #include "item-prop.h"
+#include "items.h"
 #include "mutation.h"
 #include "output.h"
 #include "playable.h"
@@ -544,7 +545,7 @@ namespace species
     vector<equipment_type> ring_slots(species_type species, bool missing_hand)
     {
         vector<equipment_type> result;
-        if (you.has_mutation(MUT_NO_RINGS))
+        if (you.has_mutation(MUT_NO_JEWELLERY))
             return result;
 
         const equipment_type missing = missing_hand
@@ -811,16 +812,32 @@ void change_species_to(species_type sp)
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question. This is enough to make assertions happy, though.
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        if (bool(!you_can_wear(static_cast<equipment_type>(i)))
-            && you.equip[i] != -1)
+    {
+        if (you.equip[i] != -1)
         {
-            mprf("%s fall%s away.",
-                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
-                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
-            // Unwear items without the usual processing.
-            you.equip[i] = -1;
-            you.melded.set(i, false);
+            if (i == EQ_WEAPON && you.inv[you.equip[i]].base_type == OBJ_WEAPONS
+                && sp == SP_COGLIN)
+            {
+                // Coglins' wielded non-offhand weapons need names. Without
+                // them, wielding a non-offhand weapon, changing species to
+                // coglin, and then trying to unwield that weapon will assert.
+                maybe_name_weapon(you.inv[you.equip[i]], true);
+            }
+
+            if (bool(!you_can_wear(static_cast<equipment_type>(i)))
+                // XXX: This can't be caught by you_can_wear as everyone has offhand slots
+                || (i == EQ_OFFHAND && you.inv[you.equip[i]].base_type == OBJ_WEAPONS
+                    && !you.has_mutation(MUT_WIELD_OFFHAND)))
+            {
+                mprf("%s fall%s away.",
+                     you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
+                     you.inv[you.equip[i]].quantity > 1 ? "" : "s");
+                // Unwear items without the usual processing.
+                you.equip[i] = -1;
+                you.melded.set(i, false);
+            }
         }
+    }
 
     // Sanitize skills.
     fixup_skills();

@@ -581,7 +581,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BLINK_RANGE, {
         _mons_likes_blinking,
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            blink_range(&caster);
+            blink_range(caster);
         }
     } },
     { SPELL_BLINK_AWAY, {
@@ -599,15 +599,23 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return _mons_likes_blinking(caster);
         },
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            blink_close(&caster);
+            blink_close(caster);
         }
     } },
     { SPELL_ELECTROLUNGE, {
         [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
-            return ai_action::good_or_impossible(
-                                !get_electric_charge_landing_spot(caster, foe->pos()).origin());
+            const coord_def dest = get_electric_charge_landing_spot(caster, foe->pos());
+            if (dest.origin())
+                return ai_action::impossible();
+
+            // Prevent friendlies from forcibly displacing the player, which can
+            // be dangerous.
+            if (caster.friendly() && you.pos() == dest)
+                return ai_action::bad();
+
+            return ai_action::good();
         },
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             const int pow = mons_spellpower(caster, SPELL_ELECTROLUNGE);

@@ -160,8 +160,12 @@ bool monster_habitable_grid(monster_type mt,
 #endif
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (actual_grid == DNGN_SHALLOW_WATER && mt == MONS_KRAKEN)
+    if ((actual_grid == DNGN_SHALLOW_WATER
+        || actual_grid == DNGN_TOXIC_BOG)
+        && mt == MONS_KRAKEN)
+    {
         return false;
+    }
 
     const dungeon_feature_type feat_preferred =
         habitat2grid(mons_class_primary_habitat(mt));
@@ -500,15 +504,20 @@ monster_type resolve_monster_type(monster_type mon_type,
     return mon_type;
 }
 
-// For generation purposes, don't treat simulacra of lava enemies as
-// being able to place on lava.
 monster_type fixup_zombie_type(const monster_type cls,
-                                         const monster_type base_type)
+                               const monster_type base_type)
 {
-    return (mons_class_is_zombified(cls)
-            && mons_class_secondary_habitat(base_type) != HT_LAVA)
-            ? base_type
-            : cls;
+    // Yredelemnul's bound souls can fly - they aren't bound by their old flesh.
+    // Other zombies, regrettably, still are.
+    // XXX: consider replacing the latter check with monster_class_flies(cls)
+    // and adjusting vaults that use spectral krakens.
+    if (!mons_class_is_zombified(cls) || cls == MONS_BOUND_SOUL)
+        return cls;
+    // For generation purposes, don't treat simulacra of lava enemies as
+    // being able to place on lava.
+    if (mons_class_secondary_habitat(base_type) == HT_LAVA)
+        return cls;
+    return base_type;
 }
 
 // Checks if the monster is ok to place at mg_pos. If force_location
@@ -832,13 +841,17 @@ monster* get_free_monster()
     return nullptr;
 }
 
-void mons_add_blame(monster* mon, const string &blame_string)
+// TODO: make mon a reference
+void mons_add_blame(monster* mon, const string &blame_string, bool at_front)
 {
     const bool exists = mon->props.exists(BLAME_KEY);
     CrawlStoreValue& blame = mon->props[BLAME_KEY];
     if (!exists)
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
-    blame.get_vector().push_back(blame_string);
+    if (at_front)
+        blame.get_vector().insert(0, blame_string);
+    else
+        blame.get_vector().push_back(blame_string);
 }
 
 static void _place_twister_clouds(monster *mon)

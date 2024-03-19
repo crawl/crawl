@@ -306,7 +306,7 @@ int attack::calc_to_hit(bool random)
     // We already did this roll for players.
     if (!src.is_player())
         mhit = maybe_random2(mhit + 1, random);
-;
+
     dprf(DIAG_COMBAT, "%s: to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(), mhit);
 
@@ -390,14 +390,13 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     defender_shield = defender ? defender->shield() : defender_shield;
 
+    unrand_entry = nullptr;
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
         artefact_properties(*weapon, art_props);
         if (is_unrandom_artefact(*weapon))
             unrand_entry = get_unrand_entry(weapon->unrand_idx);
     }
-    else
-        unrand_entry = nullptr;
 
     attacker_visible   = attacker->observable();
     defender_visible   = defender && defender->observable();
@@ -916,13 +915,14 @@ int attack::apply_rev_penalty(int damage) const
 {
     if (!attacker->is_player()
         || !you.has_mutation(MUT_WARMUP_STRIKES)
-        || you.rev_percent() >= 66)
+        || you.rev_percent() >= FULL_REV_PERCENT)
     {
         return damage;
     }
-    // 2/3rds at 0 rev, 100% at 66+ rev
-    return div_rand_round(damage * 2 * 66 + damage * you.rev_percent(),
-                          3 * 66);
+    // 2/3rds at 0 rev, 100% at full rev
+    return div_rand_round(damage * 2 * FULL_REV_PERCENT
+                            + damage * you.rev_percent(),
+                          3 * FULL_REV_PERCENT);
 }
 
 int attack::player_apply_postac_multipliers(int damage)
@@ -1610,5 +1610,40 @@ void attack::maybe_trigger_fugue_wail(const coord_def pos)
         && (you.props[FUGUE_KEY].get_int() == FUGUE_MAX_STACKS))
     {
         do_fugue_wail(pos);
+    }
+}
+
+void attack::maybe_trigger_autodazzler()
+{
+    if (defender->is_player() && you.wearing_ego(EQ_GIZMO, SPGIZMO_AUTODAZZLE)
+        && one_chance_in(20))
+    {
+        bolt proj;
+        zappy(ZAP_AUTODAZZLE, you.get_experience_level(), false, proj);
+
+        proj.target = attacker->pos();
+        proj.source = you.pos();
+        proj.range = LOS_RADIUS;
+        proj.source_id = MID_PLAYER;
+        proj.draw_delay = 5;
+        proj.attitude = ATT_FRIENDLY;
+        proj.is_tracer = true;
+        proj.is_targeting = true;
+
+        // To suppress prompts for aiming at allies. We'll never fire in that
+        // situation anyway.
+        proj.thrower = KILL_MON_MISSILE;
+
+        // Make sure the beam path is clear
+        proj.fire();
+        if (proj.friend_info.count == 0)
+        {
+            mpr("Your autodazzler retaliates!");
+
+            proj.thrower = KILL_YOU_MISSILE;
+            proj.is_tracer = false;
+            proj.is_targeting = false;
+            proj.fire();
+        }
     }
 }

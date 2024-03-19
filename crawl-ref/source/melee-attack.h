@@ -55,7 +55,7 @@ public:
                  int attack_num = 0, int effective_attack_num = 0);
     void set_weapon(item_def *weapon, bool offhand = false);
 
-    bool launch_attack_set();
+    bool launch_attack_set(bool allow_rev = true);
     bool attack();
     int calc_to_hit(bool random) override;
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
@@ -145,6 +145,7 @@ private:
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
     void do_ooze_engulf();
+    void try_parry_disarm();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
@@ -161,7 +162,8 @@ private:
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
-    int  staff_damage(skill_type skill);
+    int  staff_damage(stave_type staff) const;
+    string staff_message(stave_type staff, int damage) const;
     bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;

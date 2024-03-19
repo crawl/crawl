@@ -24,6 +24,7 @@ enum class activity_interrupt
     mimic,
     ally_attacked,      // A permanent player ally was attacked by something
                         // out of the player's LoS
+    abyss_exit_spawned, // Abyss exit spawned
 
     // Always the last.
     COUNT

@@ -309,8 +309,13 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
 {
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
 
+    int row = -1;
+    // use just the index in an uninitialized menu
+    if (item_info.size() != m_menu->items.size())
+        row = index;
+    else
+        row = item_info[index].row;
 #ifdef USE_TILE_LOCAL
-    int row = item_info[index].row; // XX this seems unsafe before layout? but it doesn't crash...
     if (static_cast<size_t>(row + 1) >= row_heights.size())
     {
         // call before UIMenu has been laid out
@@ -325,12 +330,6 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     if (y2)
         *y2 = row_heights[row+1];
 #else
-    // for console, use just the index in an uninitialized menu
-    int row = -1;
-    if (item_info.size() != m_menu->items.size())
-        row = index;
-    else
-        row = item_info[index].row;
     if (y1)
         *y1 = row;
     if (y2)

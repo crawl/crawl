@@ -225,26 +225,31 @@ dgl_status_file = "./rcs/status"
 init_player_program = "./util/webtiles-init-player.sh"
 
 ssl_options = None # No SSL
-#ssl_options = {
+# ssl_options = {
 #    "certfile": "./webserver/localhost.crt",
 #    "keyfile": "./webserver/localhost.key"
-#}
+# }
 ssl_address = ""
-ssl_port = 8081
+ssl_port = 8443
 # Or listen on multiple address/port pairs (overriding the above) with:
 # ssl_bind_pairs = (
 #     ("127.0.0.1", 8081),
 #     ("localhost", 8083),
 # )
 
-# how often to check for an active connection while playing:
-# connection_timeout = 600
+# how often to check for an active connection while playing; this has an effect
+# on how often a connection is checked for basic life, as well as the following
+# two idle timer settings.
+# connection_timeout = 10 * 60
 
-# the maximum allowed idle time while playing:
+# the maximum allowed idle time while playing. This timer is checked in
+# intervals determined by `connection_timout`, so values will essentially be
+# rounded up to that setting
 # max_idle_time = 5 * 60 * 60
 
-# the maximum allowed idle time in the lobby. Values less than 10 minutes
-# (or negative) will disable lobby idle timeouts altogether.
+# the maximum allowed idle time in the lobby. Negative values will disable the
+# lobby idle timer. This timer is rounded up to the value of the
+# `connection_timeout` setting, similar to `max_idle_time`.
 # max_lobby_idle_time = 3 * 60 * 60
 
 # use_gzip = True

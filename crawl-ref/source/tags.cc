@@ -1838,6 +1838,7 @@ static void _tag_construct_you_items(writer &th)
         marshallInt(th,you.seen_armour[j]);
 
     _marshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
+    _marshallFixedBitVector<NUM_TALISMANS>(th, you.seen_talisman);
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
         for (int j = 0; j < MAX_SUBTYPES; j++)
@@ -4556,6 +4557,10 @@ static void _tag_read_you_items(reader &th)
     for (int j = NUM_ARMOURS; j < count; ++j)
         unmarshallInt(th);
     _unmarshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_TALISMANS_SEEN)
+#endif
+    _unmarshallFixedBitVector<NUM_TALISMANS>(th, you.seen_talisman);
 
     for (int i = 0; i < iclasses; i++)
         for (int j = 0; j < count2; j++)
@@ -4590,6 +4595,16 @@ static void _tag_read_you_items(reader &th)
     }
     if (you.species == SP_FORMICID)
         remove_one_equip(EQ_HELMET, false, true);
+
+    if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
+    {
+        if (you.has_mutation(MUT_NO_JEWELLERY))
+        {
+            remove_one_equip(EQ_AMULET, false, true);
+            remove_one_equip(EQ_RIGHT_RING, false, true);
+            remove_one_equip(EQ_LEFT_RING, false, true);
+        }
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
     {
@@ -7075,6 +7090,11 @@ void unmarshallMonster(reader &th, monster& m)
             slot.spell = SPELL_ELECTROLUNGE;
             m.spells.push_back(slot);
         }
+        else if (slot.spell == SPELL_CAUSTIC_BREATH)
+        {
+            slot.spell = SPELL_SPIT_ACID;
+            m.spells.push_back(slot);
+        }
 #if TAG_MAJOR_VERSION == 34
         else if (slot.spell != SPELL_DELAYED_FIREBALL
                  && slot.spell != SPELL_MELEE
@@ -7466,6 +7486,13 @@ static void _tag_read_level_monsters(reader &th)
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
+#if TAG_MAJOR_VERSION == 34
+            if (th.getMinorVersion() < TAG_MINOR_FIX_APOSTLE_DAMAGE
+                && m.damage_friendly > m.damage_total)
+            {
+                m.damage_total = m.damage_friendly = 0;
+            }
+#endif
             monster_die(m, KILL_RESET, -1, true, false);
             // avoid "mid cache bogosity" if there's an unhandled clone bug
             if (dup_m && dup_m->alive())

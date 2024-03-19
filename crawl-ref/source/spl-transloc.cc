@@ -309,9 +309,12 @@ static const int HOP_FUZZ_RADIUS = 2;
 
 class targeter_hop : public targeter_smite
 {
+private:
+    bool incl_unseen;
 public:
-    targeter_hop(actor *a, int hop_range)
-        : targeter_smite(a, hop_range, 0, HOP_FUZZ_RADIUS, false)
+    targeter_hop(int hop_range, bool include_unseen)
+        : targeter_smite(&you, hop_range, 0, HOP_FUZZ_RADIUS, false),
+          incl_unseen(include_unseen)
     {
         ASSERT(agent);
         obeys_mesmerise = true;
@@ -326,7 +329,7 @@ public:
             return AFF_NO; // XX is this handled by the valid blink check?
 
         const actor* p_act = actor_at(p);
-        if (p_act && agent && !agent->can_see(*p_act))
+        if (p_act && (incl_unseen || agent->can_see(*p_act)))
             return AFF_NO;
 
         // terrain details are cached in exp_map_max by set_aim
@@ -347,7 +350,7 @@ public:
         for (radius_iterator ri(a, exp_range_max, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
-            if (valid_blink_destination(agent, *ri))
+            if (valid_blink_destination(*agent, *ri, false, true, incl_unseen))
                 exp_map_max(*ri - a + centre) = 1;
         }
         return true;
@@ -365,7 +368,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
 {
     coord_def chosen;
     int seen = 0;
-    targeter_hop tgt(&you, frog_hop_range());
+    targeter_hop tgt(frog_hop_range(), true);
     tgt.set_aim(target); // XX could reuse tgt from the calling function?
     for (auto ti = tgt.affected_iterator(AFF_MAYBE); ti; ++ti)
         if (one_chance_in(++seen))
@@ -392,7 +395,7 @@ spret frog_hop(bool fail, dist *target)
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
     const int hop_range = frog_hop_range();
-    targeter_hop tgt(&you, hop_range);
+    targeter_hop tgt(hop_range, false);
 
     while (true)
     {
@@ -631,8 +634,11 @@ static bool _displace_charge_blocker(actor& agent, coord_def pos)
         const coord_def orig = blocker->pos();
         coord_def targ;
         if (random_near_space(blocker, blocker->pos(), targ, true)
-            && blocker->blink_to(targ, true)) // XXX: should ignore constrict
+            && blocker->blink_to(targ, true))
         {
+            if (blocker->is_player())
+                mpr("You are hurled out of the way!");
+
             continue;
         }
 
@@ -1362,7 +1368,16 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
 
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
-        atk.launch_attack_set();
+        if (katana_defender)
+        {
+            if (you.offhand_weapon() && is_unrandom_artefact(*you.offhand_weapon(), UNRAND_AUTUMN_KATANA))
+                atk.set_weapon(you.offhand_weapon(), true);
+            // Only the katana can attack through space!
+            atk.attack();
+        }
+        // Only rev up once, no matter how many targets you hit.
+        else
+            atk.launch_attack_set(i == 0);
 
         if (i == 0)
             you.time_taken = you.attack_delay().roll();

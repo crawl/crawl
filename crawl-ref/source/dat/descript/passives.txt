@@ -58,7 +58,7 @@ You take an additional free step when moving towards enemies.
 %%%%
 roll passive
 
-<roll mutation>
+<rollpage mutation>
 %%%%
 faith passive
 
