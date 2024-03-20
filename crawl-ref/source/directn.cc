@@ -1088,6 +1088,12 @@ static bool _blocked_ray(const coord_def &where)
     return !exists_ray(you.pos(), where, opc_solid_see);
 }
 
+// Same as above, but for shooting paths
+static bool _blocked_ray_shoot(const coord_def &where)
+{
+    return !exists_ray(you.pos(), where, opc_shoot_through);
+}
+
 // Try to find an enemy monster to target
 bool direction_chooser::find_default_monster_target(coord_def& result) const
 {
@@ -1095,7 +1101,8 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
         && _want_target_monster(mons_target, mode, hitfunc)
-        && in_range(mons_target->pos()))
+        && in_range(mons_target->pos())
+        && (!needs_path || _blocked_ray_shoot(mons_target->pos())))
     {
         result = mons_target->pos();
         return true;
@@ -1197,7 +1204,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // of the hitfunc, regardless of what's in the way, and it shouldn't.
         mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
             "All monsters which could be auto-targeted are covered by "
-            "a wall or statue which interrupts your line of fire, even "
+            "a wall, statue or monster which interrupts your line of fire, even "
             "though it doesn't interrupt your line of sight.");
 
         if (need_hint)
@@ -2466,11 +2473,15 @@ void direction_chooser::update_validity()
 
 bool direction_chooser::noninteractive()
 {
-    // If whatever target is given to us by autofight is useless,
+    // If whatever target is given to us by autofight is useless
+    // or our path is blocked by something we can't fire through,
     // automatically try to find a better one.
     const monster* mon = monster_at(moves.target);
-    if (hitfunc && !hitfunc->affects_monster(monster_info(mon)))
+    if (hitfunc && mon && !hitfunc->affects_monster(monster_info(mon))
+        || needs_path && _blocked_ray_shoot(moves.target))
+    {
         moves.find_target = true;
+    }
 
     // if target is unset, this will find previous or closest target; if
     // target is set this will adjust targeting depending on custom
@@ -2849,7 +2860,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
     if (!_mons_is_valid_target(mon, mode, range))
         return false;
 
-    if (need_path && _blocked_ray(mon->pos()))
+    if (need_path && _blocked_ray_shoot(mon->pos()))
         return false;
 
     return _want_target_monster(mon, mode, hitfunc);
@@ -2898,7 +2909,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
         return false;
 
     // Target is blocked by something
-    if (need_path && _blocked_ray(where))
+    if (need_path && _blocked_ray_shoot(where))
         return false;
 
     if (hitfunc->set_aim(where))
