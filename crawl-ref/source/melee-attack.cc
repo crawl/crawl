@@ -328,18 +328,16 @@ void melee_attack::maybe_riposte()
 {
     // only riposte via fencer's gloves, which (I take it from this code)
     // monsters can't use
+    const bool using_lbl = defender->weapon()
+                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
     const bool using_fencers =
                 defender->is_player()
                     && player_equip_unrand(UNRAND_FENCERS)
                     && (!defender->weapon()
                         || is_melee_weapon(*defender->weapon()));
-    if (using_fencers
-        && !is_riposte // no ping-pong!
-        && one_chance_in(3)
-        && you.reach_range() >= grid_distance(you.pos(), attack_position))
-    {
+    const int chance = using_lbl + using_fencers;
+    if (x_chance_in_y(chance,3) && !is_riposte && you.reach_range() >= grid_distance(you.pos(), attack_position))
         riposte();
-    }
 }
 
 void melee_attack::apply_black_mark_effects()
