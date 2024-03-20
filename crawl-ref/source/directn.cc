@@ -1102,7 +1102,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     if (mons_target != nullptr
         && _want_target_monster(mons_target, mode, hitfunc)
         && in_range(mons_target->pos())
-        && (!needs_path || _blocked_ray_shoot(mons_target->pos())))
+        && (!needs_path || !_blocked_ray_shoot(mons_target->pos())))
     {
         result = mons_target->pos();
         return true;
