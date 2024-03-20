@@ -1794,7 +1794,7 @@ void direction_chooser::toggle_beam()
     if (show_beam)
     {
         have_beam = find_ray_priority(you.pos(), target(), beam,
-                             opc_no_actor, opc_solid_see, you.current_vision);
+                             opc_shoot_through, opc_solid_see, you.current_vision);
     }
 }
 
@@ -2321,7 +2321,7 @@ public:
                 // XX code duplication
                 m_dc.have_beam = m_dc.show_beam
                                  && find_ray_priority(you.pos(), m_dc.target(), m_dc.beam,
-                                    opc_no_actor, opc_solid_see, you.current_vision);
+                                    opc_shoot_through, opc_solid_see, you.current_vision);
                 m_dc.need_text_redraw = true;
                 m_dc.need_viewport_redraw = true;
                 m_dc.need_cursor_redraw = true;
@@ -2377,7 +2377,7 @@ public:
         {
             m_dc.have_beam = m_dc.show_beam
                              && find_ray_priority(you.pos(), m_dc.target(), m_dc.beam,
-                                opc_no_actor, opc_solid_see, you.current_vision);
+                                opc_shoot_through, opc_solid_see, you.current_vision);
             m_dc.need_text_redraw = true;
             m_dc.need_viewport_redraw = true;
             m_dc.need_cursor_redraw = true;
@@ -2529,7 +2529,7 @@ bool direction_chooser::choose_direction()
     if (show_beam)
     {
         have_beam = find_ray_priority(you.pos(), target(), beam,
-                        opc_no_actor, opc_solid_see, you.current_vision);
+                        opc_shoot_through, opc_solid_see, you.current_vision);
         need_viewport_redraw = have_beam;
     }
     if (hitfunc)

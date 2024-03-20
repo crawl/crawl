@@ -818,7 +818,9 @@ void bolt::apply_beam_conducts()
 void bolt::choose_ray()
 {
     if ((!chose_ray || reflections > 0)
-        && (no_actor_perm_lof || !find_ray(source, target, ray, opc_no_actor))
+        && (no_actor_perm_lof || !(agent() && agent()->is_player()
+            ? find_ray(source, target, ray, opc_shoot_through)
+            : find_ray(source, target, ray, opc_no_actor)))
         && !find_ray(source, target, ray, opc_solid_see)
         // If fire is blocked, at least try a visible path so the
         // error message is better.
