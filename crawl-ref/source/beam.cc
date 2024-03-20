@@ -7375,10 +7375,15 @@ bool always_shoot_through_monster(const actor *originator, const monster &victim
 // and players can shoot through their demonic guardians.
 bool shoot_through_monster(const bolt& beam, const monster* victim)
 {
-    actor *originator = beam.agent();
+    return shoot_through_monster(beam.agent(), victim);
+}
+
+bool shoot_through_monster(const actor* originator, const monster* victim)
+{
     if (!victim || !originator)
         return false;
-    return god_protects(originator, *victim)
+    // Can't shoot through slimes
+    return (god_protects(originator, *victim) && !have_passive(passive_t::neutral_slimes))
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }
