@@ -7411,9 +7411,9 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.type == MONS_ORC_APOSTLE && m.damage_friendly > m.damage_total)
     {
-        m.damage_total = m.damage_friendly = 0;
         mprf(MSGCH_ERROR, "apostle \"%s\" had incorrect damage tracking: %d > %d",
             m.full_name(DESC_PLAIN).c_str(), m.damage_friendly, m.damage_total);
+        m.damage_total = m.damage_friendly = 0;
     }
 #endif
 
