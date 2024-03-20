@@ -392,9 +392,7 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack fellow slimes") },
     },
     // GOD_FEDHAS,
-    {
-        { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
-    },
+    peeve_map(),
     // GOD_CHEIBRIADOS,
     {
         { DID_HASTY, {
