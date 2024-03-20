@@ -3225,8 +3225,6 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
             return mons_genus(species) == MONS_ORC;
         case GOD_JIYVA:
             return mons_class_is_slime(species);
-        case GOD_FEDHAS:
-            return _fedhas_protects_species(species);
         default:
             return false;
     }
