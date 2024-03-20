@@ -156,7 +156,7 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6, // reduce cases of hitting something outside LOS
     0,
-    TILEG_BOLT_OF_COLD,
+    TILEG_PERMAFROST_ERUPTION,
 },
 
 {

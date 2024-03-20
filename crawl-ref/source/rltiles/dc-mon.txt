@@ -100,6 +100,7 @@ butterfly9
 butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
+obsidian_bat MONS_OBSIDIAN_BAT
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
 shard_shrike MONS_SHARD_SHRIKE
@@ -522,10 +523,12 @@ toenail_golem MONS_TOENAIL_GOLEM
 flesh_golem MONS_FLESH_GOLEM
 %rim 1
 
-## Statues and statue-like things ('8')
+## Statues and statue-like things ('I')
 %sdir mon/unique
 roxanne MONS_ROXANNE
 %sdir mon/statues
+pile_of_debris_00 MONS_PILE_OF_DEBRIS
+pile_of_debris_01
 pillar_of_salt MONS_PILLAR_OF_SALT
 block_of_ice3 MONS_BLOCK_OF_ICE
 training_dummy MONS_TRAINING_DUMMY

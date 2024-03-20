@@ -61,6 +61,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "spl-clouds.h"
+#include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-selfench.h"
 #include "state.h"
@@ -315,7 +316,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_WARPING:
         if (doEffects
-            && x_chance_in_y(min(90, 35 + (beam->ench_power)), 100))
+            && x_chance_in_y(get_warp_space_chance(beam->ench_power), 100))
         {
             you.blink();
         }

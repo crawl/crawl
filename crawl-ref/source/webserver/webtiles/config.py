@@ -71,7 +71,7 @@ defaults = {
     'lobby_update_rate': 2,
     'recording_term_size': (80, 24),
     'max_connections': 100,
-    'connection_timeout': 600,
+    'connection_timeout': 10 * 60,
     'max_idle_time': 5 * 60 * 60,
     'max_lobby_idle_time': 3 * 60 * 60,
     'use_gzip': True,

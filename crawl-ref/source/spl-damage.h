@@ -161,3 +161,5 @@ dice_def boulder_damage(int pow, bool random);
 void do_boulder_impact(monster& boulder, actor& victim);
 
 dice_def electrolunge_damage(int pow);
+
+int get_warp_space_chance(int pow);

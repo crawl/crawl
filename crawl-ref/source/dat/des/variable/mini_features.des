@@ -290,7 +290,7 @@ MAP
 ENDMAP
 
 NAME:  nrook_mini_vaults
-TAGS:  transparent extra decor
+TAGS:  transparent extra
 DEPTH: D, Depths
 MAP
 .........
@@ -459,7 +459,11 @@ ENDMAP
 NAME:  minmay_misc_feat_pillars
 TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf, Crypt
+: if you.absdepth() > 7 then
 SUBST: x : xxxxcvbmG
+: else
+SUBST: x : xxxxccmm
+: end
 MAP
 .............
 .x.x.x.x.x.x.
@@ -2737,6 +2741,9 @@ TAGS:    transparent extra decor luniq_nicocondashsquares
 DEPTH:   D, Depths, Elf
 SHUFFLE: DEFHJ/ZZZZZ
 SUBST:   D : cnbvx, E : cnbvx, F : cnbvx, H : cnbvx, J : cnbvx, Z : cnbvx
+: if you.absdepth() < 7 then
+SUBST:   b = c
+: end
 MAP
 JJ.JJJ.JJJ.JJJ.JJ
 J...............J
@@ -2763,6 +2770,9 @@ DEPTH: D, Depths, Elf
 SUBST: D : cnbvxtGTU, E : cnbvx, F : cnbvx, H : cnbvx, J : cnbvx, K : cnbvx, \
        L : cnbvx, M : cnbvx, N : cnbvx, O : cnbvx, P : cnbvx, Q : cnbvx, \
        R : cnbvx, S : cnbvx, Z : cnbvx, a : cnbvx, p : cnbvx
+: if you.absdepth() < 7 then
+SUBST:   b = c
+: end
 MAP
 FF.MMM.LLL.KKK.JJ
 F...............J

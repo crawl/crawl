@@ -69,8 +69,11 @@ function grunt_megastairs_setup(e)
   elseif not you.in_branch("Lair") then
     e.subst("x = c")
   end
-  if you.in_branch("Depths") or you.in_branch("Lair") or
-     you.in_branch("Snake") or you.in_branch("Elf") then
+  if you.in_branch("Lair") then
+    e.mons("pile of debris")
+    e.subst("G : GG11VVtt")
+  elseif you.in_branch("Depths") or you.in_branch("Snake") or
+         you.in_branch("Elf") then
     e.subst("G : GGGGTTVt")
   else
     e.subst("G : GGGGTTV")
@@ -1364,6 +1367,8 @@ TAGS:   transparent ruin
 DEPTH:  D:6-, Depths
 WEIGHT: 5
 ORIENT: float
+MONS:   pile of debris
+SUBST:  + : 1++++
 TILE:   c = wall_stone_smooth
 TILE:   G = dngn_crumbled_column
 MAP
@@ -1676,7 +1681,7 @@ TAGS:   no_descent
 DEPTH:  D:10-
 ORIENT: float
 WEIGHT: 5
-MONS:   boulder dbname:still_boulder
+MONS:   pile of debris
 KMONS:  2 = earth elemental
 KITEM:  2 = any scroll / any potion
 MAP
@@ -4626,12 +4631,12 @@ ORIENT: float
 MONS:   ogre / two-headed ogre
 KMONS:  2 = stone giant / frost giant w:3 / fire giant w:3
 KMONS:  PB = plant
-KMONS:  b = boulder dbname:still_boulder
+KMONS:  p = pile of debris
 KMONS:  C = cyclops
 KFEAT:  A = granite_statue
 KFEAT:  C = W
 KFEAT:  2 = cache of fruit / cache of meat / floor w:30
-SUBST:  b : bPP, P = PPP..
+SUBST:  p : pPP, P = PPP..
 NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
 NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
 FTILE:  2$|*%AB = floor_grass
@@ -4640,21 +4645,21 @@ MAP
    ....._.c.'.....
   @..c__c_G'c''c..@
  @..c__c_PWP'c''c..@
-....____bWWWb''''....
+....____pWWWp''''....
 ..c__c_GWW"WWG'c''c..
 .c__c_PWWWWWWWP'c''c.
 .____PWWWWWWWWWP''''.
 ._c_GWW"WWAWW"WWG'c'.
-_c_bWWWWWB-BWWWWWb'c'
-._PWWWWWB-$-BWWWWWP'.
+_c_pWWWWWB-BWWWWWb'c'
+._PWWWWWB-$-BWWWWWp'.
 cGWW"WWA-$2$-AWW"WWGc
-.;PWWWWWB-$-BWWWWWP`.
-;c;bWWWWWB-BWWWWWb`c`
+.;PWWWWWB-$-BWWWWWp`.
+;c;pWWWWWB-BWWWWWb`c`
 .;c;GWW"WWAWW"WWG`c`.
 .;;;;PWWWWWWWWWP````.
 .c;;c;PWWWWWWWP`c``c.
 ..c;;c;GWW"WWG`c``c..
-....;;;;bWWWb````....
+....;;;;pWWWp````....
  @..c;;c;PWP`c``c..@
   @..c;;c;G`c``c..@
    .....;.c.`.....
@@ -6488,7 +6493,6 @@ TAGS:    vaults_hard vaults_orient_s
 DEPTH:   D:9-, Vaults
 WEIGHT:  20 (Vaults), 10
 ORIENT:  float
-KMONS:   B = boulder dbname:still_boulder
 : if you.in_branch("D") then
 :   if you.depth() < 12 then
 MONS:    orc wizard, deep elf pyromancer, deep elf archer
@@ -6517,7 +6521,7 @@ KFEAT:   ^ = teleport trap
 KITEM:   | = any book w:5 / any magical staff / any ring / any amulet / \
              any misc / any wand w:5
 SUBST:   ! = 56
-SHUFFLE: wl / wl / wl / wB / lB
+SHUFFLE: wl
 MAP
  zzzzzzzzzzzzzzzzzzz   zzzzzzzzzzzzzzzzzzz
 zzcccccccccccccccccc   cccccccccccccccccczz

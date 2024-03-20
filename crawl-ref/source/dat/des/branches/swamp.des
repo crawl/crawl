@@ -40,6 +40,8 @@ function swamp_ruins(e)
     e.tags('serial_swamp_ruin extra transparent unrand')
     e.depth('Swamp')
     e.weight('6')
+    e.mons('pile of debris')
+    e.item('human skeleton')
     e.tile('x = wall_brick_vines')
     e.ftile('- = floor_sandstone')
     e.subst('- = .')
@@ -824,10 +826,9 @@ ENDMAP
 # and skeletons. These vaults are just to give swamp some variety...
 # There are no monsters or loot placed here.
 NAME:   evilmike_swamp_ruin_house_1
-NSUBST: x = 1:+ / *:x
+NSUBST: x = 1 = x:260 + / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 1:d / *:-
-ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
   ........
@@ -861,10 +862,9 @@ MAP
 ENDMAP
 
 NAME:   evilmike_swamp_ruin_house_3
-NSUBST: x = 1:+ / *:x
+NSUBST: x = 1 = x:260 + / *:x
 SUBST:  y = x, x = xxxxx-, - = ----.
 NSUBST: - = 1:d / *:-
-ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
     .....
@@ -899,7 +899,7 @@ MAP
 ENDMAP
 
 NAME:   evilmike_swamp_ruin_house_5
-NSUBST: x = 1:+ / *:x
+NSUBST: x = 1 = x:260 + / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 2:d / *:-
 ITEM:   human skeleton
@@ -1023,7 +1023,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_ruin_hall
 SHUFFLE: yYzZ / yYzZ / zZyY
-NSUBST:  - = 2:d- / *:-, z = 1:+ / *:X, Z = 1:. / *:X
+NSUBST:  - = 2:d- / *:-, z = 1 = x:260 + / *:X, Z = 1:. / *:X
 SUBST:   XyY = xxxx-, - = -----.
 : swamp_ruins(_G)
 WEIGHT:  2
@@ -1255,10 +1255,12 @@ ENDMAP
 
 NAME:   nicolae_swamp_well_well_well
 TAGS:   transparent extra decor
-NSUBST: x = . / xxxx.
-SUBST:  p = p..., x : xxxxt, . = ...W
 KMONS:  p = plant
-KFEAT:  p = . w:30 / W
+KMONS:  C = pile of debris
+KFEAT:  p = . / W
+KFEAT:  C = w
+NSUBST: w = 1 = w:130 C / *:w, x = 1 = .:130 C / * = xxxx.
+SUBST:  p = p..., x : xxxxt, . = ...W
 MAP
  ........
 ..pppppp..
@@ -1350,8 +1352,9 @@ ENDMAP
 # http://i.imgur.com/H7nvQFo.jpg
 NAME:   nicolae_swamp_little_tower
 TAGS:   transparent extra no_pool_fixup decor
+KMONS:  C = pile of debris
 KMONS:  P = plant
-NSUBST: X = - / x
+NSUBST: X = 1 = -:260 C / *:x
 SUBST:  T = t-, - = ....P, z = WWw, _ = __w
 CLEAR: _
 MAP
@@ -1432,8 +1435,10 @@ ENDMAP
 NAME:   nicolae_swamp_reclaimed_castle
 TAGS:   transparent decor extra
 DEPTH:  Swamp
+KMONS:  C = pile of debris
 NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x
 NSUBST: K = + / x, L = + / x, M = + / x, N = + / x, O = + / x
+NSUBST: + = 1 = +:260 C / *:+
 SUBST:  ` = .:20 _, ' = .:50 _, + = +:20 ., x = x:110 _, . = .:70 W
 CLEAR:  _
 MAP
@@ -1651,8 +1656,9 @@ DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
+KMONS:   D = pile of debris
 KFEAT:   123 = shallow_water
-SUBST:   . = wwwWWW...t, c = c:17 .:1 t:1 w:1 W:1, C:GC., G=GG., C=cc.
+SUBST:   . = wwwWWW...t, c = c:17 .:1 t:1 w:1 W:1, C:GC., G = GGGD..., C = cc.
 SUBST:   0:45, 4=1112...., 5=1222...., 6=3.
 MAP
 ...C.C.C.C...
@@ -1670,14 +1676,16 @@ C.cc.....cc.C
 ...C.C.C.C...
 ENDMAP
 
-NAME:    st_swamp_ruins_2
-DEPTH:   Swamp, !Swamp:$
-KMONS:   1 = hydra
-KMONS:   2 = swamp dragon
-KMONS:   3 = swamp drake
-KFEAT:   123 = shallow_water
-SUBST:   . = wwwWWW...t, c = c:15 .:1 t:1 w:1 W:1, C=c.
-SUBST:   0:45, 4=11123....., 5=12223.....
+NAME:   st_swamp_ruins_2
+DEPTH:  Swamp, !Swamp:$
+KMONS:  d = pile of debris
+KMONS:  1 = hydra
+KMONS:  2 = swamp dragon
+KMONS:  3 = swamp drake
+KFEAT:  123 = shallow_water
+NSUBST: C = 1 = .:120 d / *:C
+SUBST:  . = wwwWWW...t, c = c:15 .:1 t:1 w:1 W:1, C=c.
+SUBST:  0:45, 4=11123....., 5=12223.....
 MAP
     ......
   ..........
@@ -1841,15 +1849,17 @@ wwwww.wwwwwww
 ENDMAP
 
 NAME:   grunt_ruined_hall
+TAGS:   no_pool_fixup
 MONS:   swamp dragon, hydra, patrolling bog body
-NSUBST: : = 1:1 / 2:2 / 3:3 / 6:0 / *:-
-SUBST:  - = .W
-SUBST:  C = c:20 . W
-SUBST:  + = +.
-SUBST:  G = Gg
+KMONS:  d = pile of debris
 KITEM:  g = stone w:40 / large rock q:1
+KFEAT:  d = w
 KFEAT:  g = floor
 KFEAT:  _ = altar_yredelemnul / altar_kikubaaqudgha
+KFEAT:  d = w
+NSUBST: : = 1:1 / 2:2 / 3:3 / 6:0 / *:-, C = 1 = W:120 d / * = cc.W
+SUBST:  - = .W, + = +.
+SUBST:  G = Gg
 MAP
   --------------------
  -CCCCCCCCCCcccCCCcCCc-

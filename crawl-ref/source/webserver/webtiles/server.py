@@ -1,8 +1,7 @@
-from __future__ import absolute_import
-from __future__ import print_function
-
 import argparse
+import asyncio
 import errno
+import functools
 import logging
 import logging.handlers
 import os
@@ -13,14 +12,20 @@ import time
 
 import tornado.httpserver
 import tornado.ioloop
+import tornado.netutil
 import tornado.template
 import tornado.web
 from tornado.ioloop import IOLoop
+from tornado.netutil import bind_sockets
 # do not add tornado.platform here without changing do_chroot()
 
 import webtiles
 from webtiles import auth, load_games, process_handler, userdb, config
 from webtiles import game_data_handler, util, ws_handler, status
+
+
+servers = None
+
 
 class MainHandler(tornado.web.RequestHandler):
     # async def _execute(self, transforms, *args, **kwargs):
@@ -166,37 +171,80 @@ def shed_privileges():
     if config.get('uid') is not None:
         os.setuid(config.get('uid'))
 
-def stop_everything():
+
+def all_tasks_compat():
+    try:
+        # only present since py37; maybe safe to assume?
+        return asyncio.all_tasks()
+    except AttributeError:
+        # removed in py39
+        return asyncio.Task.all_tasks()
+
+
+def stop_everything(shutdown_event):
+    global servers
+    # shut down servers first -- stop accepting new connections
     for server in servers:
         server.stop()
+    # shut down ongoing games
     ws_handler.shutdown()
-    # TODO: shouldn't this actually wait for everything to close??
-    if len(ws_handler.sockets) == 0:
-        IOLoop.current().stop()
-    else:
-        IOLoop.current().add_timeout(time.time() + 2, IOLoop.current().stop)
 
-def signal_handler(signum, frame):
-    logging.info("Received signal %i, shutting down.", signum)
-    try:
-        IOLoop.current().add_callback_from_signal(stop_everything)
-    except AttributeError:
-        # This is for compatibility with ancient versions < Tornado 3. It
-        # probably won't shutdown correctly and is *definitely* incorrect for
-        # modern versions of Tornado; but this is how it was done on the
-        # original implementation of webtiles + Tornado 2.4 that was in use
-        # through about 2020.
-        stop_everything()
+    # an open question -- are there cases where even stronger measures might be
+    # needed for stuck processes? task.cancel() handled everything I could think
+    # of locally.
+    def do_stop(tries=0):
+        if len(ws_handler.sockets) == 0:
+            shutdown_event.set()
+        elif tries > 60: # 30s
+            # try something a bit stronger
+            logging.error("Stop failed after 30s, cancelling remaining tasks.")
+            logging.error("Remaining sockets: %s", ws_handler.describe_sockets(names=True))
+            for task in all_tasks_compat():
+                task.cancel()
+        else:
+            IOLoop.current().add_timeout(time.time() + 0.5,
+                functools.partial(do_stop, tries=tries + 1))
 
-def reload_signal_handler(signum, frame):
-    logging.info("Received signal %i, reloading config.", signum)
-    try:
-        IOLoop.current().add_callback_from_signal(config.reload)
-    except AttributeError:
-        logging.error("Incompatible Tornado version")
+    do_stop()
+
+def stop_handler(signum, shutdown_event):
+    logging.info("Received signal %i, beginning shutdown.", signum)
+    IOLoop.current().add_callback(functools.partial(stop_everything, shutdown_event))
 
 
-def bind_server():
+def reload_config_handler(signum):
+    logging.info("Received signal %i, reloading all config data.", signum)
+    IOLoop.current().add_callback(config.reload)
+
+
+def reload_games_handler(signum):
+    logging.info("Received signal %i, reloading game config data.", signum)
+    IOLoop.current().add_callback_from_signal(config.load_game_data)
+
+
+def bind_server_sockets():
+    nonsecure = []
+    secure = []
+    if config.get('bind_nonsecure'):
+        if config.get('bind_pairs'):
+            listens = config.get('bind_pairs')
+        else:
+            listens = ( (config.get('bind_address'), config.get('bind_port')), )
+        for (addr, port) in listens:
+            logging.info("Listening on %s:%d" % (addr, port))
+            nonsecure.append(bind_sockets(port, addr))
+
+    if config.get('ssl_options'):
+        if config.get('ssl_bind_pairs'):
+            listens = config.get('ssl_bind_pairs')
+        else:
+            listens = ( (config.get('ssl_address'), config.get('ssl_port')), )
+        for (addr, port) in listens:
+            logging.info("Listening on %s:%d" % (addr, port))
+            secure.append(bind_sockets(port, addr))
+    return nonsecure, secure
+
+def bind_server(nonsecure_sockets, secure_sockets):
     settings = {
         "static_path": config.get('static_path'),
         "template_loader": util.DynamicTemplateLoader.get(config.get('template_path')),
@@ -227,48 +275,26 @@ def bind_server():
     if config.get('http_xheaders', False):
         kwargs["xheaders"] = config.get('http_xheaders')
 
+    global servers
     servers = []
 
-    def server_wrap(**kwargs):
-        try:
-            return tornado.httpserver.HTTPServer(application, **kwargs)
-        except TypeError:
-            # Ugly backwards-compatibility hack. Removable once Tornado 3
-            # is out of the picture (if ever)
-            del kwargs["idle_connection_timeout"]
-            server = tornado.httpserver.HTTPServer(application, **kwargs)
-            logging.error(
-                    "Server configuration sets `idle_connection_timeout` "
-                    "but this is not available in your version of "
-                    "Tornado. Please upgrade to at least Tornado 4 for "
-                    "this to work.""")
-            return server
-
-    if config.get('bind_nonsecure'):
-        server = server_wrap(**kwargs)
-
-        if config.get('bind_pairs'):
-            listens = config.get('bind_pairs')
-        else:
-            listens = ( (config.get('bind_address'), config.get('bind_port')), )
-        for (addr, port) in listens:
-            logging.info("Listening on %s:%d" % (addr, port))
-            server.listen(port, addr)
+    if nonsecure_sockets and config.get('bind_nonsecure'):
+        server = tornado.httpserver.HTTPServer(application, **kwargs)
+        for s in nonsecure_sockets:
+            server.add_sockets(s)
         servers.append(server)
 
-    if config.get('ssl_options'):
-        # TODO: allow different ssl_options per bind pair
-        server = server_wrap(ssl_options=config.get('ssl_options'), **kwargs)
-
-        if config.get('ssl_bind_pairs'):
-            listens = config.get('ssl_bind_pairs')
-        else:
-            listens = ( (config.get('ssl_address'), config.get('ssl_port')), )
-        for (addr, port) in listens:
-            logging.info("Listening on %s:%d" % (addr, port))
-            server.listen(port, addr)
+    if secure_sockets and config.get('ssl_options'):
+        # TODO: allow different ssl_options per bind pair?
+        server = tornado.httpserver.HTTPServer(application,
+                            ssl_options=config.get('ssl_options') **kwargs)
+        for s in secure_sockets:
+            server.add_sockets(s)
         servers.append(server)
 
+    if not servers:
+        # config validation should preempt this, but it's here for robustness
+        raise ValueError("No ports succesfully configured!")
     return servers
 
 
@@ -301,41 +327,6 @@ def init_logging(logging_config):
         logging.getLogger().addFilter(util.TornadoFilter())
     logging.addLevelName(logging.DEBUG, "DEBG")
     logging.addLevelName(logging.WARNING, "WARN")
-
-
-def monkeypatch_tornado24():
-    # extremely ugly compatibility hack, to ease transition for servers running
-    # the ancient patched tornado 2.4.
-    IOLoop.current = staticmethod(IOLoop.instance)
-
-
-def ensure_tornado_current(exit=True):
-    try:
-        tornado.ioloop.IOLoop.current()
-    except AttributeError:
-        monkeypatch_tornado24()
-        tornado.ioloop.IOLoop.current()
-        err = ("You are running a deprecated version of tornado; please update"
-               " to a current version.")
-        if exit:
-            sys.err(err)
-        else:
-            logging.error(err)
-
-
-def usr1_handler(signum, frame):
-    assert signum == signal.SIGUSR1
-    logging.info("Received USR1, reloading config.")
-    try:
-        IOLoop.current().add_callback_from_signal(config.load_game_data)
-    except AttributeError:
-        # This is for compatibility with ancient versions < Tornado 3.
-        try:
-            config.load_game_data()
-        except Exception:
-            logging.exception("Failed to update games after USR1 signal.")
-    except Exception:
-        logging.exception("Failed to update games after USR1 signal.")
 
 
 def parse_args_main():
@@ -693,6 +684,52 @@ def run_util():
         sys.exit(1)
 
 
+def init_signals(shutdown_event):
+    # if we can ensure >=py37 (probably?) this should be get_running_loop
+    loop = asyncio.get_event_loop()
+    stop_sigs = [signal.SIGTERM, signal.SIGINT]
+    reload_sigs = []
+    reload_game_sigs = [signal.SIGUSR1]
+
+    if config.get('hup_reloads_config'):
+        reload_sigs.append(signal.SIGHUP)
+    else:
+        stop_sigs.append(signal.SIGHUP)
+
+    for s in stop_sigs:
+        loop.add_signal_handler(s, functools.partial(stop_handler, s, shutdown_event))
+    for s in reload_sigs:
+        loop.add_signal_handler(s, functools.partial(reload_config_handler, s))
+    for s in reload_game_sigs:
+        loop.add_signal_handler(s, functools.partial(reload_games_handler, s))
+
+
+async def async_run_server(nonsecure_sockets, secure_sockets):
+    # is this ever set to False by anyone in practice?
+    dgl_mode = config.get('dgl_mode')
+    # XX possibly some of this should move into async_run
+    if dgl_mode:
+        ws_handler.status_file_timeout() # note: tornado coroutine
+        auth.purge_login_tokens_timeout()
+        ws_handler.start_reading_milestones()
+
+        if config.get('watch_socket_dirs'):
+            process_handler.watch_socket_dirs()
+
+    # set up various timeout loops
+    ws_handler.do_periodic_lobby_updates()
+    webtiles.config.init_config_timeouts()
+
+    bind_server(nonsecure_sockets, secure_sockets)
+
+    shutdown_event = tornado.locks.Event()
+    init_signals(shutdown_event)
+
+    logging.info("DCSS Webtiles server started! (PID: %s)" % os.getpid())
+    logging.info(version())
+    await shutdown_event.wait()
+
+
 # before running, this needs to have its config source set up. See
 # ../server.py in the official repository for an example.
 def run():
@@ -735,16 +772,9 @@ def run():
         if config.get('daemon', False):
             daemonize()
 
-        signal.signal(signal.SIGTERM, signal_handler)
-        signal.signal(signal.SIGINT, signal_handler)
-        if (config.get('hup_reloads_config')):
-            signal.signal(signal.SIGHUP, reload_signal_handler)
-        else:
-            signal.signal(signal.SIGHUP, signal_handler)
-
         if config.get('umask') is not None:
             os.umask(config.get('umask'))
-    except SystemExit:
+    except SystemExit: # err_exit in the try blocks
         # logging already done, hopefully
         raise
     except:
@@ -753,48 +783,27 @@ def run():
     try:
         write_pidfile()
 
-        global servers
-        servers = bind_server()
-        ensure_tornado_current()
-
+        # bind sockets and shed privileges before starting up the ioloop
+        nonsecure_sockets, secure_sockets = bind_server_sockets()
         shed_privileges()
 
-        # is this ever set to False by anyone in practice?
-        dgl_mode = config.get('dgl_mode')
-
         userdb.init_db_connections()
-
-        signal.signal(signal.SIGUSR1, usr1_handler)
-
-        try:
-            IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
-            logging.info("Blocking call timeout: 500ms.")
-        except:
-            pass
-
-        if dgl_mode:
-            ws_handler.status_file_timeout() # note: tornado coroutine
-            auth.purge_login_tokens_timeout()
-            ws_handler.start_reading_milestones()
-
-            if config.get('watch_socket_dirs'):
-                process_handler.watch_socket_dirs()
-
-        # set up various timeout loops
-        ws_handler.do_periodic_lobby_updates()
-        webtiles.config.init_config_timeouts()
-
-        logging.info("DCSS Webtiles server started! (PID: %s)" % os.getpid())
-        logging.info(version())
-
-        IOLoop.current().start()
-
-        logging.info("Bye!")
     except SystemExit:
-        # logging already done, hopefully
         raise
     except:
         err_exit("Server startup failed!", exc_info=True)
+    finally:
+        remove_pidfile()
+
+    try:
+        # finally -- start things up for real
+        asyncio.run(async_run_server(nonsecure_sockets, secure_sockets))
+        logging.info("Bye!")
+    except asyncio.exceptions.CancelledError:
+        # triggered by the cancel case in stop_everything
+        err_exit("Normal server stop failed, some tasks were force-cancelled!")
+    except:
+        err_exit("Server exited with error!", exc_info=True)
     finally:
         # warning: need to be careful what appears in this finally block, since
         # it may be called by child processes on fork in terminal.py in the

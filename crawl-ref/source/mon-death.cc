@@ -2059,6 +2059,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
+    else if (mons.type == MONS_PILE_OF_DEBRIS)
+    {
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons.pos()))
+        {
+            place_cloud(CLOUD_DUST, mons.pos(), 2 + random2(4), &mons);
+        }
+    }
     else if (mons.type == MONS_DANCING_WEAPON)
     {
         // TODO: does any of the following ever need to happen for other
