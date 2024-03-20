@@ -559,7 +559,7 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 #endif
 
     // Fill
-    pbolt.name           = zinfo->name;
+    pbolt.name           = zinfo->name ? zinfo->name : _beam_type_name(zinfo->flavour);
     pbolt.flavour        = zinfo->flavour;
     pbolt.real_flavour   = zinfo->flavour;
     pbolt.colour         = zinfo->colour;
