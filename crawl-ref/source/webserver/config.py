@@ -278,7 +278,11 @@ init_player_program = "./util/webtiles-init-player.sh"
 # use_gzip = True
 
 # Seconds until stale HTTP connections are closed
-# This needs a patch currently not in mainline tornado.
+# This corresponds to the tornado parameter `idle_connection_timeout`, which
+# will automatically close idle http connections that do not respond after a
+# period of time. Setting this to `None` gives the tornado default (1 hour).
+# This setting usually does not affect websockets connections, which use the
+# above webtiles-internal timeouts.
 # http_connection_timeout = None
 
 # Set this to true if you are behind a reverse proxy
