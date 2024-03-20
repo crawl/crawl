@@ -9030,7 +9030,7 @@ bool player::allies_forbidden()
 /**
  * Calculate the attack delay value that should be displayed to players.
  * Currently only used for equipment swap preview.
-* 
+ *
  * @param ignore_temporary  Whether to include temporary effects like haste.
                           Currently counts stat drain / heroism skill boosts
                           even if enabled.
@@ -9040,4 +9040,3 @@ int player_displayed_attack_delay(bool ignore_temporary)
 {
     return _delay(you.weapon(), ignore_temporary);
 }
-
