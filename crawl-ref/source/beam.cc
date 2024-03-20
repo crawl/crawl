@@ -1570,7 +1570,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         else if (doFlavouredEffects)
-            poison_monster(mons, pbolt.agent(), stacks , true);
+            poison_monster(mons, pbolt.agent(), stacks, true);
 
         break;
     }
