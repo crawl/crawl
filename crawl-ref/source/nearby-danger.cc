@@ -20,6 +20,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "monster.h"
 #include "mon-pathfind.h"
@@ -207,7 +208,7 @@ static void _announce_monsters(string announcement, vector<monster*> &visible)
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognise as being monsters (i.e. no submerged creatures.)
+// is able to recognise as being monsters.
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
@@ -240,7 +241,6 @@ vector<monster* > get_nearby_monsters(bool want_move,
         {
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
-                && !mon->submerged()
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))
@@ -291,7 +291,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             return false;
         }
 
-        if (you.duration[DUR_LIQUID_FLAMES])
+        if (you.duration[DUR_STICKY_FLAME])
         {
             if (announce)
                 mprf(MSGCH_WARN, "You are on fire!");
@@ -486,10 +486,23 @@ void revive()
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+        yred_end_blasphemy();
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_end_blood_for_blood();
+
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
-        if (dur != DUR_PIETY_POOL && dur != DUR_TRANSFORMATION)
+    {
+        if (dur != DUR_PIETY_POOL
+            && dur != DUR_TRANSFORMATION
+            && dur != DUR_BEOGH_SEEKING_VENGEANCE
+            && dur != DUR_BEOGH_DIVINE_CHALLENGE)
+        {
             you.duration[dur] = 0;
+        }
+    }
 
     update_vision_range(); // in case you had darkness cast before
     you.props[CORROSION_KEY] = 0;

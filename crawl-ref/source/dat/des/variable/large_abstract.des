@@ -89,48 +89,60 @@ ENDMAP
 
 #############################################################################
 NAME:    vault_1
+TAGS:    depths_entry uniq_depths_entry chance_depths_entry
 ORIENT:  north
 DEPTH:   Depths, !Depths:$
-MONS:    shapeshifter, shapeshifter, glowing shapeshifter
-MONS:    orange crystal statue / obsidian statue
-SUBST:   E=E.
-SHUFFLE: abcd, $*, |ABCDE, nm, 4'
-SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
-SUBST:   a = + x:8, b = + x:30, c=x, d=x
-SUBST:   * = * |:1, ' = .
-SHUFFLE: opq
-SUBST:   o=+
-SHUFFLE: pqrs
-SUBST:   p=+, q=+, r=x, s=x
-SHUFFLE: xxxxc
+PLACE:   D:$
+WEIGHT:  1 (D:$), 10
+: if (you.where() == dgn.level_name(dgn.br_entrance("Depths"))) then
+MONS:    shapeshifter, ugly thing, glowing shapeshifter
+MONS:    obsidian statue, 0 band / 9 band
+KITEM:   R = smoky gem
+KITEM:   ? = stone no_pickup / gold q:1 no_pickup
+KFEAT:   O = enter_depths
+KFEAT:   S = stone_arch
+NSUBST:  O = 1:O / *:S, R = 1:R / *:?
+SUBST:   * = *%, | = |*, I = G
+TILE:    G = depths_column
+FTILE:   'ROS? = floor_depthstone
+: else
+MONS:    very ugly thing, glowing shapeshifter, glass eye band
+MONS:    orange crystal statue, 9 band / 8 band
+SUBST:   'ROG = ., I = x
+: end
+SHUFFLE: abcd, |ABCDE, n* / m$, or, pqs
+NSUBST:  a = 1:+ / * = + x:8
+SUBST:   b = + x:30, opq = +, cdrs = x, * = * |:1
+SUBST:   ABC = ., D = *, E = %., m = 0, n = 9, 4 = 4., x : x c:2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx....xE.......x........x.................................xxxx
-x%E+3...x........+........x......x....x1...x2...x2...x3...x..Dxx
-x%Ex....x........x.......Ex..................................DDx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx....xE.......x..G.'''.x.................................xxxx
+x%E+3...x........+....'O'.x......x....x1...x2...x2...I3...I..Dxx
+x%Ex....x........x..G.'''Ex..................................DDx
 xxxxxxxx+xxx+xxxxxxxxxxxxxx..................................xxx
-x.......x.................+.5................................8Dx
+x.......x.................+.0.............................5..8Dx
 x.......x.................x..................................xxx
-x.......+........8........xx+xx..............................DDx
-x.......x.................x...x..x....x1...x2...x2...x3...x..Dxx
-x.......x.................x...x.............................xxxx
+x.......+......5.8........xx+xx..............................DDx
+x.......x...............''x...x..x....x1...x1...x2...I3...I..Dxx
+x.......x...............'Rx...x.............................xxxx
 xx+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxaxaxaxbxbxbxcxcxcxxxxx
 x.........................x.4.x...xxxxxxEEE...............|||||x
 x...xxxxxxxxxxxxxxxxxxx...x...x......xxxxxx..................||x
-x...x....$$$$x****.mmmx...x...x.........xxxxxx.................x
-x...+....$$$$x****....x...x...+............xxxxxx.........8....x
-x...x....$$$$x****....+...x...x...............xxxxxx...........x
-x...xnnn.$$$$x****....x...x999x..................xxxxxx........x
+x...x....****x$$$$.mmmx...x...x.........xxxxxx......'''........x
+x...+....****x$$$$....x...x...+..........'Rxxxxxx...'O'.5.8....x
+x...x....****x$$$$....+...x...x..........'''..xxxxxx'''........x
+x...xnnn.****x$$$$....x...x999x..................xxxxxx........x
 x...xxxxxxxxxxxxxxxxxxx...x...xxx...................xxxxxx.....x
 x.........................x...xxxxxx...................xxxxxx..x
 xxxxxx+xxxxxxx+xxxxxxx+xxxx...xxxxxxoxxxxxxxxpxxxxxxxxqxxxxxdxdx
-xxx.......x.......x.......x...x.........xE.......x.............x
 xxx.......x.......x.......x...x.........x........x.............x
+xxx.......xG..2..Gx.......x...x.........xG......Gx.............x
 xxx.......x.......x.......x...x.........x........x.............x
-xxx...1...x...2...x...3...x...x....3....r....2...s......1......x
-xxx.......x.......x.......x...x.........x........x.............x
-xxxE.....ExE.....ExE.....Ex...x.........x........x.............x
-xxxAAAAAAAxBBBBBBBxCCCCCCCx...xE.......ExE.......x............Ex
+xxx...1...x..'''..x...3...x...x....3....r....2...s......1.5....x
+xxx.......x..'O'..x.......x...x.........x...'''..x.............x
+xxxE.....ExE.'''.ExE.....Ex...x.........x...'O'..x.............x
+xxxAAAAAAAxBBBBBBBxCCCCCCCx...xE.......ExE..'''.Ex............Ex
 xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -493,7 +505,7 @@ ENDMAP
 NAME:   mludivico_vault
 ORIENT: southwest
 DEPTH:  D:12-, !D:$
-MONS:   hell hound, necromancer, wizard, orange demon, rust devil
+MONS:   hell hound, necromancer, occultist / arcanist, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -787,13 +799,13 @@ MAP
 c+..ccccccccccccccx
 c...0cccccccccccccx
 c...9cccccccccccccx
-cc09.mccccccccccccx
-ccccm=...cccccccccx
+cc09.nccccccccccccx
+ccccn=...cccccccccx
 ccccc....0ccccccccx
 ccccc...09ccccccccx
 ccccc..098ccccccccx
-cccccc098.mcccccccx
-cccccccccm=....cccx
+cccccc098.ncccccccx
+cccccccccn=....cccx
 cccccccccc.....0ccx
 cccccccccc....09ccx
 cccccccccc...098ccx
@@ -1032,9 +1044,9 @@ NAME:   minmay_tri_stars
 ORIENT: north
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 SUBST:  x : xvb
-MONS:   wizard w:300 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
+MONS:   occultist w:150 / arcanist w:150 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
         orc wizard / orc sorcerer w:35 / tengu conjurer w:35 / nothing w:500
-MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
+MONS:   walking crystal tome / walking frostbound tome / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
         any randart armour w:3
@@ -1249,8 +1261,8 @@ ENDMAP
 NAME:   minmay_wizard_corner
 ORIENT: southeast
 DEPTH:  D:12-
-KMONS:  1 = wizard / nothing w:140
-KMONS:  * = wizard / nothing
+KMONS:  1 = occultist / arcanist / nothing w:280
+KMONS:  * = occultist / arcanist / nothing w:20
 KITEM:  * = *
 MAP
       .........x

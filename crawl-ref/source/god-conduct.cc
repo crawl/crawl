@@ -76,9 +76,12 @@ static const char *conducts[] =
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
-    "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
+    "Cause Glowing", "Use Unclean", "Use Chaos",
+#if TAG_MAJOR_VERSION == 34
+    "Desecrate Orcish Remains",
+#endif
     "Kill Slime", "Was Hasty", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Seen Monster",
+    "Kill Nonliving", "Exploration", "Seen Monster",
     "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
@@ -361,8 +364,15 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_BEOGH,
     {
-        { DID_DESECRATE_ORCISH_REMAINS, { "you desecrate orcish remains", true, 1 } },
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allied orcs") },
+        { DID_ATTACK_NEUTRAL, {
+            "you attack non-hostile orcs", true,
+            1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
+                return victim
+                    && mons_genus(victim->type) == MONS_ORC
+                    && !victim->is_shapeshifter();
+            }
+        } },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack your followers") },
     },
     // GOD_JIYVA,
     {
@@ -644,6 +654,38 @@ static const like_response _fedhas_kill_living_response()
     };
 }
 
+static const like_response _yred_kill_response()
+{
+    return
+    {
+        nullptr, false,
+        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        nullptr, [] (int &piety, int &, const monster* victim)
+        {
+            if (!yred_torch_is_raised())
+            {
+                piety = 0;
+                //Print a reminder if the torch isn't lit, but *could* be
+                if (yred_cannot_light_torch_reason().empty())
+                    mprf(MSGCH_GOD, "With your torch unlit, their soul goes wasted...");
+            }
+            else if (victim && !victim->has_ench(ENCH_SOUL_RIPE))
+            {
+                mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
+                                you.can_see(*victim) ? "Their" : "A",
+                                mons_is_unique(victim->type) ? "potent "
+                                : victim->holiness() & MH_HOLY ? "unsullied " : "");
+
+                if (mons_is_unique(victim->type))
+                    piety *= 3;
+
+                if (victim->holiness() & MH_HOLY)
+                    piety *= 2;
+            }
+        }
+    };
+}
+
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
@@ -695,7 +737,11 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_YREDELEMNUL,
-    like_map(),
+    {
+        { DID_KILL_LIVING, _yred_kill_response() },
+        { DID_KILL_DEMON, _yred_kill_response() },
+        { DID_KILL_HOLY, _yred_kill_response() },
+    },
     // GOD_XOM,
     like_map(),
     // GOD_VEHUMET,
@@ -805,17 +851,20 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            "you kill fast things, relative to your speed", false,
+            "you kill non-sluggish things", false,
             -6, 18, 2, nullptr,
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
-                const int speed_delta =
-                    cheibriados_monster_player_speed_delta(*victim);
-                dprf("Chei DID_KILL_FAST: %s speed delta: %d",
+                const int mons_speed = mons_base_speed(*victim);
+                dprf("Chei DID_KILL_FAST: %s base speed: %d",
                      victim->name(DESC_PLAIN, true).c_str(),
-                     speed_delta);
+                     mons_speed);
 
-                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
+                // Scale piety up a bit in general.
+                piety = div_rand_round(4 * piety, 3);
+
+                // Double piety for speedy monsters sometimes
+                if (mons_speed > 10 && x_chance_in_y(mons_speed - 10, 10))
                 {
                     simple_god_message(" thoroughly appreciates the change of pace.");
                     piety *= 2;
@@ -1052,7 +1101,8 @@ string get_god_likes(god_type which_god)
         likes.emplace_back("you make personal sacrifices");
         break;
     case GOD_YREDELEMNUL:
-        likes.emplace_back("you surround yourself with harvested souls");
+        likes.emplace_back("you kill living or demonic beings while their torch is lit");
+        really_likes.emplace_back("you kill holy or unique beings while their torch is lit");
         break;
     case GOD_ZIN:
         likes.emplace_back("you donate money");
@@ -1134,6 +1184,12 @@ void did_hurt_conduct(conduct_type thing_done,
 
         you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() += 1;
         you.props[USKAYAW_MONSTER_HURT_VALUE].get_int() += value;
+    }
+    else if (you_worship(GOD_BEOGH) && you.piety >= piety_breakpoint(2))
+    {
+        // Cap the damage we give points for by the target's max hp to reduce rat value
+        int bonus = min(victim.hit_points, min(damage_done, victim.max_hit_points / 2));
+        you.props[BEOGH_DAMAGE_DONE_KEY].get_int() += bonus;
     }
 }
 

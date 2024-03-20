@@ -353,6 +353,17 @@ rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
+%rim 0
+# slugs
+effect/slug0 MI_SLUG0
+effect/slug1 MI_SLUG1
+effect/slug2 MI_SLUG2
+effect/slug3 MI_SLUG3
+effect/slug4 MI_SLUG4
+effect/slug5 MI_SLUG5
+effect/slug6 MI_SLUG6
+effect/slug7 MI_SLUG7
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE ARM_ROBE_FIRST
@@ -606,14 +617,15 @@ i-acid WAND_ACID
 # start TAG_MAJOR_VERSION == 34
 i-random_effects WAND_REMOVEME14
 # end TAG_MAJOR_VERSION
-i-disintegration WAND_DISINTEGRATION
+i-mindburst WAND_MINDBURST
 # start TAG_MAJOR_VERSION == 34
 i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12
 # end TAG_MAJOR_VERSION
 i-light WAND_LIGHT
 i-quicksilver WAND_QUICKSILVER
-i-roots WAND_ROOTS WAND_ID_LAST
+i-roots WAND_ROOTS
+i-disruption WAND_WARPING WAND_ID_LAST
 
 ################# Skeletons
 %sdir item/food
@@ -975,6 +987,18 @@ i-attraction POT_REMOVEME10 POT_ID_LAST
 %back none
 %rim 1
 
+%sdir item/gizmo
+gizmo0 GIZMO
+gizmo1
+gizmo2
+gizmo3
+gizmo4
+gizmo5
+gizmo6
+gizmo7
+gizmo8
+gizmo9
+
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
 %sdir item/book
@@ -1165,6 +1189,40 @@ rune_demonic_4
 rune_demonic_5
 rune_demonic_6
 rune_elven RUNE_ELVEN
+
+#OBJ_GEMS
+%sdir item/gem
+dungeon_found_whole GEM_DUNGEON
+dungeon_found_broken
+orc_found_whole GEM_ORC
+orc_found_broken
+elf_found_whole GEM_ELF
+elf_found_broken
+lair_found_whole GEM_LAIR
+lair_found_broken
+swamp_found_whole GEM_SWAMP
+swamp_found_broken
+shoals_found_whole GEM_SHOALS
+shoals_found_broken
+snake_found_whole GEM_SNAKE
+snake_found_broken
+spider_found_whole GEM_SPIDER
+spider_found_broken
+slime_found_whole GEM_SLIME
+slime_found_broken
+vaults_found_whole GEM_VAULTS
+vaults_found_broken
+crypt_found_whole GEM_CRYPT
+crypt_found_broken
+tomb_found_whole GEM_TOMB
+tomb_found_broken
+depths_found_whole GEM_DEPTHS
+depths_found_broken
+zot_found_whole GEM_ZOT
+zot_found_broken
+
+generic_unfound GEM_GENERIC
+generic_unfound_broken
 
 #OBJ_TALISMANS
 %sdir item/talisman

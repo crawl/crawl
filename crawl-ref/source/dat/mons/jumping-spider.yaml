@@ -1,0 +1,21 @@
+name: "jumping spider"
+glyph: {char: "s", colour: lightblue}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+xp_mult: 6
+genus: spider
+will: 20
+attacks:
+ - {type: pounce, flavour: ensnare, damage: 20}
+ - {type: bite, damage: 8}
+hd: 8
+hp_10x: 320
+ac: 6
+ev: 12
+spells: jumping_spider
+has_corpse: true
+shout: faint_skitter
+intelligence: animal
+speed: 15
+size: small
+shape: arachnid

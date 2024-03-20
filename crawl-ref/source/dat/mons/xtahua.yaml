@@ -1,0 +1,22 @@
+name: "Xtahua"
+glyph: {char: "D", colour: red}
+flags: [crash_doors, flies, see_invis, speaks, warm_blood, unique, gender_neutral]
+resists: {poison: 1, fire: 2, cold: -1}
+xp_mult: 14
+species: fire_dragon
+genus: dragon
+will: 180
+attacks:
+ - {type: bite, damage: 44}
+ - {type: claw, damage: 20}
+ - {type: trample, flavour: trample, damage: 27}
+hd: 20
+hp_10x: 2350
+ac: 18
+ev: 7
+spells: xtahua
+has_corpse: true
+shout: loud_roar
+intelligence: human
+size: giant
+shape: quadruped_winged

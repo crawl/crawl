@@ -1,0 +1,17 @@
+name: "Roxanne"
+glyph: {char: "I", colour: blue}
+flags: [no_wand, speaks, stationary, unique, female]
+resists: {elec: 1, fire: 2, cold: 2, petrify: 1}
+species: statue
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 14
+hp_10x: 1820
+ac: 20
+ev: 0
+spells: roxanne
+intelligence: human
+uses: starting_equipment
+size: large
+shape: humanoid

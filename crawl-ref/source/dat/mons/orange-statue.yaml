@@ -1,0 +1,17 @@
+name: "orange crystal statue"
+enum: orange_statue
+glyph: {char: "I", colour: lightred}
+flags: [see_invis, speaks, stationary]
+resists: {elec: 1, fire: 2, cold: 2, petrify: 1}
+genus: statue
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 700
+ac: 12
+ev: 1
+spells: orange_crystal_statue
+intelligence: human
+size: large
+shape: humanoid

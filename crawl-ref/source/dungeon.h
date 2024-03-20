@@ -286,6 +286,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
 
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
+vault_placement *dgn_find_layout();
 
 string dump_vault_maps();
 

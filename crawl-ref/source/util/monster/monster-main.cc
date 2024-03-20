@@ -175,8 +175,7 @@ static string monster_speed(const monster& mon, int speed_min, int speed_max)
 
     bool skip_action = false;
     if (cost.attack != 10 && cost.attack == cost.missile
-        && cost.attack == cost.spell && cost.attack == cost.special
-        && cost.attack == cost.item)
+        && cost.attack == cost.spell)
     {
         monster_action_cost(qualifiers, cost.attack, "act");
         skip_action = true;
@@ -190,8 +189,6 @@ static string monster_speed(const monster& mon, int speed_min, int speed_max)
         monster_action_cost(qualifiers, cost.attack, "atk");
         monster_action_cost(qualifiers, cost.missile, "msl");
         monster_action_cost(qualifiers, cost.spell, "spell");
-        monster_action_cost(qualifiers, cost.special, "special");
-        monster_action_cost(qualifiers, cost.item, "item");
     }
     if (speed_max > 0 && mons_class_flag(mon.type, M_STATIONARY))
     {
@@ -261,6 +258,19 @@ static dice_def mi_calc_iood_damage(monster* mons)
 
 static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
 
+static string mi_calc_brain_bite_damage(monster* /*mons*/) { return "4-8*"; }
+
+static string mi_calc_pyre_arrow_damage(monster* mons)
+{
+    return make_stringf("2d%d*", 2 + mons->get_hit_dice() * 12 / 14);
+}
+
+static string mi_calc_draining_gaze_drain(monster* mons)
+{
+    const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, mons->get_hit_dice());
+    return make_stringf("0-%d MP", pow / 8);
+}
+
 static string mi_calc_airstrike_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_AIRSTRIKE, mons->get_hit_dice());
@@ -313,6 +323,12 @@ static string mi_calc_freeze_damage(monster* mons)
     return dice_def_string(freeze_damage(pow, false));
 }
 
+static string mi_calc_scorch_damage(monster* mons)
+{
+    const int pow = mons_power_for_hd(SPELL_SCORCH, mons->get_hit_dice());
+    return dice_def_string(scorch_damage(pow, false));
+}
+
 static string mi_calc_irradiate_damage(const monster &mon)
 {
     const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
@@ -341,8 +357,16 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return ""; // Fake damage beam
         case SPELL_FREEZE:
             return mi_calc_freeze_damage(monster);
+        case SPELL_SCORCH:
+            return mi_calc_scorch_damage(monster);
         case SPELL_SMITING:
             return mi_calc_smiting_damage(monster);
+        case SPELL_BRAIN_BITE:
+            return mi_calc_brain_bite_damage(monster);
+        case SPELL_PYRE_ARROW:
+            return mi_calc_pyre_arrow_damage(monster);
+        case SPELL_DRAINING_GAZE:
+            return mi_calc_draining_gaze_drain(monster);
         case SPELL_AIRSTRIKE:
             return mi_calc_airstrike_damage(monster);
         case SPELL_GLACIATE:
@@ -355,6 +379,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
         case SPELL_PLASMA_BEAM:
             return "2x" + dice_def_string(zap_damage(ZAP_PLASMA, pow, true));
+        case SPELL_PERMAFROST_ERUPTION:
+            return "2x" + dice_def_string(zap_damage(ZAP_PERMAFROST_ERUPION_ICE, pow, true));
         case SPELL_WATERSTRIKE:
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
@@ -567,7 +593,6 @@ static int _mi_create_monster(mons_spec spec)
         monster->behaviour = BEH_SEEK;
         monster->foe = MHITYOU;
         msg::suppress mx;
-        monster->del_ench(ENCH_SUBMERGED);
         return monster->mindex();
     }
     return NON_MONSTER;
@@ -1041,17 +1066,13 @@ int main(int argc, char* argv[])
                         colour(LIGHTRED, damage_flavour("pure fire", hd * 3 / 2,
                                                         hd * 5 / 2 - 1));
                     break;
-                case AF_STICKY_FLAME:
-                    monsterattacks += colour(LIGHTRED, "(napalm)");
-                    break;
-                case AF_MUTATE:
-                    monsterattacks += colour(LIGHTGREEN, "(mutation)");
-                    break;
                 case AF_MINIPARA:
-                    monsterattacks += colour(LIGHTRED, "(minipara)");
+                    monsterattacks += colour(LIGHTRED,
+                                             damage_flavour("(minipara)", hd, hd * 2));
                     break;
                 case AF_POISON_PARALYSE:
-                    monsterattacks += colour(LIGHTRED, "(paralyse)");
+                    monsterattacks += colour(LIGHTRED,
+                                             damage_flavour("(paralyse)", hd * 3/2, hd * 5/2));
                     break;
                 case AF_POISON:
                     monsterattacks += colour(
@@ -1078,6 +1099,9 @@ int main(int argc, char* argv[])
                 case AF_HOLY:
                     monsterattacks += colour(YELLOW, "(holy)");
                     break;
+                case AF_FOUL_FLAME:
+                    monsterattacks += colour(LIGHTMAGENTA, "(foul flame)");
+                    break;
                 case AF_PAIN:
                     monsterattacks += colour(RED, "(pain)");
                     break;
@@ -1097,7 +1121,10 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(WHITE, "(ensnare)");
                     break;
                 case AF_DROWN:
-                    monsterattacks += colour(LIGHTBLUE, "(drown)");
+                    monsterattacks += colour(LIGHTBLUE,
+                                             damage_flavour("(drown)",
+                                                            hd * 3 / 4,
+                                                            hd * 3 / 2));
                     break;
                 case AF_ENGULF:
                     monsterattacks += colour(LIGHTBLUE, "(engulf)");
@@ -1135,6 +1162,12 @@ int main(int argc, char* argv[])
                 case AF_SLEEP:
                     monsterattacks += colour(BLUE, "(sleep)");
                     break;
+                case AF_FLANK:
+                    monsterattacks += "(flank)";
+                    break;
+                case AF_DRAG:
+                    monsterattacks += colour(BROWN, "(drag)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:
@@ -1156,6 +1189,8 @@ int main(int argc, char* argv[])
                 case AF_ROT:
                 case AF_KLOWN:
                 case AF_KITE:
+                case AF_STICKY_FLAME:
+                case AF_MUTATE:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
@@ -1304,6 +1339,7 @@ int main(int argc, char* argv[])
         res2(LIGHTRED, miasma, mon.res_miasma());
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
         res2(YELLOW, holy, mon.res_holy_energy());
+        res2(YELLOW, foul_flame, mon.res_foul_flame());
         res2(LIGHTMAGENTA, torm, mon.res_torment());
         res2(LIGHTBLUE, vortex, mon.res_polar_vortex());
         res2(LIGHTRED, napalm, mon.res_sticky_flame());

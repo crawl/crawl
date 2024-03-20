@@ -420,10 +420,6 @@ Remove Curse ability
 
 현재 입고있는 장비에 걸린 모든 저주를 해제한다.
 %%%%
-Make burning bush ability
-
-해당 지역에 투명한 적들을 볼 수 있으며 불을 뿜는, 화염의 식물을 심는다.
-%%%%
 Make altar ability
 
 당신이 서있는 곳에, 선택한 신의 제단을 만든다.
@@ -602,11 +598,6 @@ Elemental Force ability
 
 주변의 원소구름을 합쳐 정령으로 부린다. 자신이 만든 구름은 아군 정령으로
 적대적인 구름은 적군 정령으로, 중립구름은 중립정령이 된다.
-%%%%
-Give Item to Named Follower ability
-
-1개의 무기 혹은 1개의 방어구를 이름있는 오크 추종자에게 하사한다.
-오크는 이런 선물을 딱 하나만 받을 수 있다.
 %%%%
 Greater Servant of Makhleb ability
 

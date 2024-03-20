@@ -310,24 +310,6 @@ void Stash::update()
               || current_size <= previous_size && visited;
 }
 
-static bool _is_rottable(const item_def &item)
-{
-    if (is_shop_item(item))
-        return false;
-    return item.base_type == OBJ_CORPSES;
-}
-
-static short _min_rot(const item_def &item)
-{
-    if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
-        return 0;
-
-    if (!mons_skeleton(item.mon_type))
-        return 0;
-    else
-        return -(FRESHEST_CORPSE);
-}
-
 // Returns the item name for a given item, with any appropriate
 // stash-tracking pre/suffixes.
 string Stash::stash_item_name(const item_def &item)
@@ -344,23 +326,12 @@ string Stash::stash_item_name(const item_def &item)
         name = item.name(DESC_A);
 
 
-    if (!_is_rottable(item))
+    if (!is_rottable(item) || item.stash_freshness > 0)
         return name;
 
-    if (item.stash_freshness <= _min_rot(item))
-    {
-        name += " (gone by now)";
-        return name;
-    }
-
-    // Skeletons show no signs of rotting before they're gone
-    if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
-        return name;
-
-    if (item.stash_freshness <= 0)
-        name += " (skeletalised by now)";
-
-    return name;
+    if (mons_skeleton(item.mon_type))
+        return name + " (skeletalised by now)";
+    return name + " (gone by now)";
 }
 
 string Stash::description() const
@@ -399,8 +370,10 @@ vector<stash_search_result> Stash::matches_search(
     {
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        if (search.matches(prefix + " " + ann + " " + s)
-            || is_dumpable_artefact(item) && search.matches(chardump_desc(item)))
+        string haystack = prefix + " " + ann + " " + s;
+        if (is_dumpable_artefact(item))
+            haystack += " " + chardump_desc(item);
+        if (search.matches(haystack))
         {
             stash_search_result res;
             res.match_type = MATCH_ITEM;
@@ -438,12 +411,12 @@ void Stash::_update_corpses(int rot_time)
     {
         item_def &item = items[i];
 
-        if (!_is_rottable(item))
+        if (!is_rottable(item) || item.stash_freshness <= 0)
             continue;
 
         int new_rot = static_cast<int>(item.stash_freshness) - rot_time;
 
-        if (new_rot <= _min_rot(item))
+        if (new_rot <= 0 && !mons_skeleton(item.mon_type))
         {
             items.erase(items.begin() + i);
             continue;
@@ -463,7 +436,7 @@ void Stash::_update_identification()
 
 void Stash::add_item(item_def &item, bool add_to_front)
 {
-    if (_is_rottable(item))
+    if (is_rottable(item))
         StashTrack.update_corpses();
 
     if (add_to_front)
@@ -473,7 +446,7 @@ void Stash::add_item(item_def &item, bool add_to_front)
 
     seen_item(item);
 
-    if (!_is_rottable(item))
+    if (!is_rottable(item))
         return;
 
     // item.freshness remains unchanged in the stash, to show how fresh it
@@ -661,9 +634,9 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item);
 
-        if (search.matches(prefix + " " + ann + " " + sname +
-                                                    " {" + shoptitle + "}")
-            || search.matches(shop_item_desc(item)))
+        string text = prefix + " " + ann + " " + sname + " {" + shoptitle + "}"
+                      + shop_item_desc(item);
+        if (search.matches(text))
         {
             stash_search_result res;
             res.match_type = MATCH_ITEM;
@@ -1288,9 +1261,10 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
 
         const string s   = Stash::stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        if (search.matches(ann + " " + s)
-            || is_dumpable_artefact(item)
-               && search.matches(chardump_desc(item)))
+        string haystack = ann + " " + s;
+        if (is_dumpable_artefact(item))
+            haystack += " " + chardump_desc(item);
+        if (search.matches(haystack))
         {
             stash_search_result res;
             res.match = s;
@@ -1407,9 +1381,7 @@ void StashTracker::search_stashes(string search_term)
     string csearch_literal = search_term.empty() ? (*buf? buf : lastsearch) : search_term;
     string csearch = csearch_literal;
 
-    // allowing offlevel stash searching is not useful in descent mode
-    bool curr_lev = (csearch[0] == '@' || csearch == "."
-                                       || crawl_state.game_is_descent());
+    bool curr_lev = (csearch[0] == '@' || csearch == ".");
     if (curr_lev)
     {
         csearch.erase(0, 1);
@@ -1453,7 +1425,9 @@ void StashTracker::search_stashes(string search_term)
     vector<stash_search_result> results;
     if (!curr_lev)
         results = _inventory_search(*search);
-    get_matching_stashes(*search, results, curr_lev);
+    // allowing offlevel stash searching is not useful in descent mode
+    get_matching_stashes(*search, results, curr_lev
+                                           || crawl_state.game_is_descent());
 
     if (results.empty())
     {

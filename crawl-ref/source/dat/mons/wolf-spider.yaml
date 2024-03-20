@@ -1,0 +1,20 @@
+name: "wolf spider"
+glyph: {char: "s", colour: white}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+xp_mult: 4
+genus: spider
+will: 20
+attacks:
+ - {type: hit, damage: 25}
+ - {type: bite, flavour: poison, damage: 15}
+hd: 11
+hp_10x: 550
+ac: 3
+ev: 10
+has_corpse: true
+shout: skitter
+intelligence: animal
+speed: 15
+size: medium
+shape: arachnid

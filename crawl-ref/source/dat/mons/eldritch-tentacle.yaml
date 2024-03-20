@@ -1,0 +1,19 @@
+name: "eldritch tentacle"
+glyph: {char: "w", colour: colour_undef}
+flags: [flies, see_invis, stationary, no_poly_to]
+resists: {elec: 3, fire: 3, cold: 3, acid: 3}
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: tentacle_slap, flavour: chaotic, damage: 30}
+ - {type: claw, flavour: chaotic, damage: 40}
+hd: 16
+hp_10x: 1200
+ac: 13
+ev: 0
+intelligence: animal
+habitat: amphibious
+speed: 12
+size: giant
+shape: snake
+tile: program_bug

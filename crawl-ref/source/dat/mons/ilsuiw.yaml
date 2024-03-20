@@ -1,0 +1,21 @@
+name: "Ilsuiw"
+glyph: {char: "m", colour: lightgreen}
+flags: [speaks, warm_blood, unique, female]
+species: merfolk
+will: 140
+attacks:
+ - {type: hit, damage: 10}
+hd: 16
+hp_10x: 1520
+ac: 5
+ev: 18
+spells: ilsuiw
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6}
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: water

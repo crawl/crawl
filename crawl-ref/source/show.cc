@@ -15,6 +15,7 @@
 #include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "god-companions.h" // Beogh Blood for Blood markers
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
@@ -146,6 +147,9 @@ static void _update_feat_at(const coord_def &gp)
             env.map_knowledge(gp).flags |= MAP_SANCTUARY_2;
     }
 
+    if (is_blasphemy(gp))
+        env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
+
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
@@ -177,6 +181,14 @@ static void _update_feat_at(const coord_def &gp)
                 && you.see_cell_no_trans(gp)))
     {
         env.map_knowledge(gp).flags |= MAP_ICY;
+    }
+
+    // XXX: This feels like is should be more separated somehow...
+    if (you.religion == GOD_BEOGH
+        && you.props.exists(BEOGH_RES_PIETY_NEEDED_KEY)
+        && tile_has_valid_bfb_corpse(gp))
+    {
+        env.map_knowledge(gp).flags |= MAP_BFB_CORPSE;
     }
 
     if (emphasise(gp))
@@ -220,6 +232,7 @@ static show_item_type _item_to_show_code(const item_def &item)
         else
             return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
+    case OBJ_GEMS:       return SHOW_ITEM_GEM;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
     case OBJ_RUNES:      return SHOW_ITEM_RUNE;
     default:             return SHOW_ITEM_ORB; // bad item character
@@ -449,10 +462,6 @@ static void _update_monster(monster* mons)
     // its invis indicator due to going unseen) will be erased.
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
-
-    // Being submerged is not the same as invisibility.
-    if (mons->submerged())
-        return;
 
     // Ripple effect?
     // Should match directn.cc's _mon_exposed

@@ -51,7 +51,7 @@ void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 int excom_xp_docked();
 
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
-void dock_piety(int pietyloss, int penance);
+void dock_piety(int pietyloss, int penance, bool no_lecture = false);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void set_piety(int piety);
@@ -110,7 +110,9 @@ bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool ignis_is_dead();
 void set_penance_xp_timeout();
-bool fedhas_protects(const monster* target);
+bool fedhas_protects(const monster &target);
+bool god_protects(const actor *agent, const monster &target, bool quiet=true);
+bool god_protects(const monster &target, bool quiet=true);
 bool god_protects(const actor *agent, const monster *target, bool quiet=true);
 bool god_protects(const monster *target, bool quiet=true);
 bool fedhas_neutralises(const monster& target);
@@ -122,13 +124,10 @@ bool faith_has_penalty();
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 
-bool yred_random_servant(unsigned int threshold, bool force_hostile = false);
-void give_yred_bonus_zombies(int stars);
+bool yred_random_servant(unsigned int threshold, bool force_hostile = false, int num = 1);
 bool yred_reap_chance();
-bool yred_reclaim_souls(bool all = false);
-bool pay_yred_souls(unsigned int how_many, bool just_check = false);
 bool is_yred_undead_follower(const monster& mon);
-bool is_orcish_follower(const monster& mon);
+bool is_apostle_follower(const monster& mon);
 bool is_fellow_slime(const monster& mon);
 bool is_follower(const monster& mon);
 

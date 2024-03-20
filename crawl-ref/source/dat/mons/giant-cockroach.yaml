@@ -1,0 +1,16 @@
+name: "giant cockroach"
+glyph: {char: "B", colour: brown}
+flags: [no_skeleton]
+resists: {poison: -1}
+will: 0
+attacks:
+ - {type: bite, damage: 2}
+hd: 1
+hp_10x: 50
+ac: 3
+ev: 10
+has_corpse: true
+intelligence: animal
+speed: 12
+size: little
+shape: insect

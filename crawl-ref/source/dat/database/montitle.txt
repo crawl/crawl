@@ -141,7 +141,7 @@ Ilsuiw, Witch of the Tides
 %%%%
 Ijyb title
 
-Ijyb the Twisted Goblin
+Ijyb the Inquisitive
 %%%%
 Jessica title
 
@@ -237,7 +237,7 @@ Nellie, Star of the Show
 %%%%
 Nergalle title
 
-Nergalle the Soulbinder
+Nergalle, Lorekeeper of the Fallen
 %%%%
 Nessos title
 

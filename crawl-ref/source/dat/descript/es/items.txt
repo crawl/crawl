@@ -40,10 +40,6 @@ bolt
 
 Un virote para ballesta.
 %%%%
-book of alchemy
-
-Un libro, algo chamuscado, con un orificio que atraviesa su tapa.
-%%%%
 book of annihilations
 
 Las andrajosas páginas de este libro rezuman sangre. Incluso un analfabeto

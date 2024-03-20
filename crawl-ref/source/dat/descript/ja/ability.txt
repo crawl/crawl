@@ -424,10 +424,6 @@ Remove Curse ability
 
 あなたの装備品全てを解呪する。
 %%%%
-Make burning bush ability
-
-指定した位置に火炎を投射し、透明視を備えた火吹き草を植え付ける。
-%%%%
 Make altar ability
 
 あなたのいる位置に選択した神の祭壇を生成する。

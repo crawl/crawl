@@ -80,7 +80,7 @@ Word of Chaos ability
 %%%%
 Heal Wounds ability
 
-显著恢复使用者的健康，使用过程中可能会永久减少1点魔法上限。
+显著恢复使用者的健康，使用过程中可能会永久减少1点魔力上限。
 %%%%
 Dig ability
 
@@ -97,8 +97,8 @@ Shaft Self ability
 %%%%
 Evoke Blink ability
 
-随机地将使用者转移一小段距离。以这种方式传送会让使用者暂时不稳定，
-短时间内不连续闪现的可能性取决于激活技能。
+随机地将使用者转移一小段距离。
+以这种方式移位后，短时间内无法再次激活该技能，其间隔时间取决于激活技能。
 %%%%
 Evoke Berserk Rage ability
 
@@ -191,8 +191,7 @@ Brand Weapon With Pain ability
 %%%%
 Receive Forbidden Knowledge ability
 
-赐予你最强大、最邪恶的死灵法术：
-作祟、博格尼尔的再生、侵扰、死灵变异和死亡之门。
+赐予你最强大、最邪恶的死灵法术：作祟、博格尼尔的再生、侵扰和死亡之门。
 你必须在这个礼物和痛楚武器印记之间二选一，而且任何一个礼物只能收到一次。
 %%%%
 # 伊莱德莱姆努尔
@@ -235,6 +234,14 @@ Duel ability
 让你和一个值得重视的敌人进行一对一博斗。
 成功使用这个能力，你和被挑战的敌人将被运送到奥卡瓦鲁的角斗场战斗至死，
 除非你取得胜利或被杀，否则无法逃脱。
+%%%%
+Receive Weapon ability
+
+从四把武器中选取其中一把。这个福泽只能承蒙一次。
+%%%%
+Receive Armour ability
+
+从四件防具中选取其中一件。这个福泽只能承蒙一次。
 %%%%
 # 马科列布
 Minor Destruction ability
@@ -315,8 +322,8 @@ Heal Self ability
 %%%%
 Divine Vigour ability
 
-根据祈祷技能，极大地提高你的最大生命和魔法值。
-你当前的生命和魔法值也会成比例增加。
+根据祈祷技能，极大地提高你的最大生命和魔力值。
+你当前的生命和魔力值也会成比例增加。
 %%%%
 # 卢格努
 Depart the Abyss ability
@@ -375,10 +382,6 @@ Recall Orcish Followers ability
 Stop Recall ability
 
 停止召回你的随从。
-%%%%
-Give Item to Named Follower ability
-
-给一位有名字的兽人随从一件武器或防具。一个兽人只能收到其中一件礼物。
 %%%%
 Resurrection ability
 
@@ -439,7 +442,7 @@ Slimify ability
 Oozemancy ability
 
 从你周围的地牢墙壁中召唤出酸性软泥，对敌人造成伤害，
-伤害取决于他们所相邻的黏性墙壁的数量。
+伤害取决于与其相邻的黏性墙壁的数量。
 %%%%
 # 艾申扎利
 Curse Item ability
@@ -521,11 +524,11 @@ Sacrifice Purity ability
 %%%%
 Sacrifice Words ability
 
-舍弃在受重伤时使用魔法卷轴的能力。
+舍弃在受伤时使用魔法卷轴的能力。
 %%%%
 Sacrifice Drink ability
 
-舍弃在受重伤时使用饮用药水的能力。
+舍弃在受伤时使用饮用药水的能力。
 %%%%
 Sacrifice Essence ability
 
@@ -546,6 +549,7 @@ Sacrifice Forms ability
 Sacrifice Artifice ability
 
 舍弃激活魔法物品的能力，并让你的激活技能无法达到任何等级。
+
 这包括魔杖和其他需要用到激活技能的物品——
 但这*不会*影响获得的武器、符咒和金字塔雕像。
 这也使得法杖在近战时的效果大大降低。
@@ -716,15 +720,21 @@ Hop ability
 %%%%
 Blinkbolt ability
 
-将使用者化成一道活的闪电并击向选定的怪物，
+将使用者化成一道活体闪电并击向选定的怪物，
 对其路径上的所有物体造成电击伤害并将使用者放置在它的终点。
+使用此能力后，短时间内无法再次使用它。
+%%%%
+Siphon Essence ability
+
+折磨附近的活物敌人，使其生命值减半。
+所造成的痛楚能治疗使用者，治愈量取决于变身技能。
 使用此能力后，短时间内无法再次使用它。
 %%%%
 Evoke the Sceptre of Asmodeus ability
 
-唤起阿斯莫德的力量，召唤地狱的火系恶魔。
+唤起阿斯蒙蒂斯的力量，召唤地狱的火系恶魔。
 被召唤的恶魔只会在有限的时间内保持友好，在最终消失之前会变得敌对。
-该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的节杖时可用。
+该能力的强度与激活技能成正比，并且该能力仅在使用阿斯蒙蒂斯的节杖时可用。
 %%%%
 Evoke Damnation ability
 
@@ -732,14 +742,6 @@ Evoke Damnation ability
 并且不被任何保护手段削弱，比如盔甲或抗性。
 但某些生物，通常是那些能够自己释放天遣的生物，完全不受天遣的伤害。
 该能力的强度与激活技能成正比。
-%%%%
-Siphon Essence ability
-
-猛烈地吸取附近敌人的生命精华，并将其剩余生命值的一半用来治疗使用者。
-提升变身技能可以增加治疗效果。
-
-它对任何生物、亡灵、恶魔或天使生效——任何曾经活着或试图活着的东西。
-友方不受此影响。
 %%%%
 Evoke the Staff of Olgreb ability
 

@@ -23,6 +23,7 @@
 #include "colour.h"
 #include "command.h"
 #include "coordit.h"
+#include "database.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "english.h"
@@ -422,14 +423,14 @@ static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
 static bool _mon_exposed_in_water(const monster* mon)
 {
     return env.grid(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
-           && !mon->submerged() && !cloud_at(mon->pos());
+           && !cloud_at(mon->pos());
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
 {
     return cloud_at(mon->pos())
            && is_opaque_cloud(cloud_at(mon->pos())->type)
-           && !mon->submerged() && !mon->is_insubstantial();
+           && !mon->is_insubstantial();
 }
 
 static bool _mon_exposed(const monster* mon)
@@ -1914,10 +1915,6 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_GIVE_ITEM:  wizard_give_monster_item(m); break;
     case CMD_TARGET_WIZARD_POLYMORPH:  wizard_polymorph_monster(m); break;
 
-    case CMD_TARGET_WIZARD_GAIN_LEVEL:
-        wizard_gain_monster_level(m);
-        break;
-
     case CMD_TARGET_WIZARD_BLESS_MONSTER:
         wizard_apply_monster_blessing(m);
         break;
@@ -2765,10 +2762,6 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
     if (!mons_is_threatening(*mon) && !mons_class_is_test(mon->type))
         return false;
 
-    // Don't target submerged monsters.
-    if (mon->submerged())
-        return false;
-
     // Don't usually target unseen monsters...
     if (!mon->visible_to(&you))
     {
@@ -2801,8 +2794,6 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
             return true;
         return !mon->wont_attack() && !mon->neutral()
             && unpacifiable_reason(*mon).empty();
-    case TARG_BEOGH_GIFTABLE:
-        return beogh_can_gift_items_to(mon);
     case TARG_MOVABLE_OBJECT:
         return false;
     case TARG_MOBILE_MONSTER:
@@ -3265,6 +3256,7 @@ void describe_floor()
     switch (grid)
     {
     case DNGN_FLOOR:
+    case DNGN_MUD:
         return;
 
     case DNGN_ENTER_SHOP:
@@ -3288,6 +3280,27 @@ void describe_floor()
     mprf(channel, "%s%s here.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_GAUNTLET)
         mprf(MSGCH_EXAMINE, "Beware, the minotaur awaits!");
+    else if (feat_is_fountain(grid) || feat_is_food(grid))
+        _walk_on_decor(grid);
+}
+
+void _walk_on_decor(dungeon_feature_type new_grid)
+{
+    string messageLookup = "";
+    string decorLine = "";
+
+    if (new_grid == DNGN_CACHE_OF_FRUIT)
+        messageLookup += "fruit cache";
+    else if (new_grid == DNGN_CACHE_OF_MEAT)
+       messageLookup += "meat cache";
+
+    if (messageLookup != "" && one_chance_in(3))
+    {
+        decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
+        if (decorLine == "")
+            decorLine = getMiscString(messageLookup);
+        mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
+    }
 }
 
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
@@ -3325,10 +3338,13 @@ string raw_feature_description(const coord_def &where)
 {
     dungeon_feature_type feat = env.grid(where);
 
-    int mapi = env.level_map_ids(where);
-    if (mapi != INVALID_MAP_INDEX)
+    vault_placement *lv = dgn_vault_at(where);
+    if (!lv)
+        lv = dgn_find_layout();
+
+    if (lv)
     {
-        const auto &renames = env.level_vaults[mapi]->map.feat_renames;
+        const auto &renames = lv->map.feat_renames;
         if (const string *rename = map_find(renames, feat))
             return *rename;
     }
@@ -3843,8 +3859,8 @@ string get_monster_equipment_desc(const monster_info& mi,
     item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
     item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
-#define uninteresting(x) (x && !item_is_branded(*x) && !is_artefact(*x))
-    // For "comes into view" msgs, only care about branded stuff and artefacts
+#define uninteresting(x) (x && !item_is_worth_listing(*x))
+    // For "comes into view" msgs, only list interesting items
     if (level == DESC_IDENTIFIED)
     {
         if (uninteresting(mon_arm))
@@ -3947,6 +3963,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("is covered in magical glow");
     if (disjunction_haloed(where))
         areas.emplace_back("is bathed in translocational energy");
+    if (is_blasphemy(where))
+        areas.emplace_back("within Yredelemnul's grip");
     if (!areas.empty())
     {
         mprf("This square %s.",

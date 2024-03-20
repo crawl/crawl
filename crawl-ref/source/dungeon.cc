@@ -779,6 +779,7 @@ void dgn_flush_map_memory()
     you.seen_weapon.init(0);
     you.seen_armour.init(0);
     you.seen_misc.reset();
+    you.seen_talisman.reset();
 }
 
 static void _dgn_load_colour_grid()
@@ -4432,6 +4433,19 @@ vault_placement *dgn_vault_at(coord_def p)
                                           : env.level_vaults[map_index].get();
 }
 
+vault_placement *dgn_find_layout()
+{
+    // n.b.: following placement code, this checks the tag "overwritable" to
+    // determine whether something is a layout. Weirdly, essentially no code
+    // checks the "layout" tag.
+    // Given these cases, it may be possible for there to be more than one
+    // layout, in which case, this will find the first.
+    for (const auto &vp : env.level_vaults)
+        if (vp && vp->map.is_overwritable_layout())
+            return vp.get();
+    return nullptr;
+}
+
 void dgn_seen_vault_at(coord_def p)
 {
     if (vault_placement *vp = dgn_vault_at(p))
@@ -4807,6 +4821,9 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_colour(item);
     }
 
+    if (item.base_type == OBJ_GEMS)
+        item_colour(item);
+
     if (props.exists(USEFUL_KEY) && is_useless_item(item, false)
         && !allow_useless)
     {
@@ -4952,9 +4969,13 @@ int dgn_place_item(const item_spec &spec,
                 item_made = _dgn_item_corpse(spec, where);
             else
             {
+                CrawlHashTable const *fixed_props = nullptr;
+                if (spec.props.exists(FIXED_PROPS_KEY))
+                    fixed_props = &spec.props[FIXED_PROPS_KEY].get_table();
+
                 item_made = items(spec.allow_uniques, base_type,
                                   spec.sub_type, level, spec.ego, NO_AGENT,
-                                  _get_custom_name(spec));
+                                  _get_custom_name(spec), fixed_props);
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);
@@ -5052,9 +5073,13 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 item_made = _dgn_item_corpse(spec, mon->pos());
             else
             {
+                CrawlHashTable const *fixed_props = nullptr;
+                if (spec.props.exists(FIXED_PROPS_KEY))
+                    fixed_props = &spec.props[FIXED_PROPS_KEY].get_table();
+
                 item_made = items(spec.allow_uniques, spec.base_type,
                                   spec.sub_type, item_level, spec.ego, NO_AGENT,
-                                  _get_custom_name(spec));
+                                  _get_custom_name(spec), fixed_props);
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);

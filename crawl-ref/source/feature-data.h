@@ -210,6 +210,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_METAL_STATUE, "metal statue", "metal_statue",
+    DCHAR_STATUE, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY),
+    FFT_SOLID, MF_WALL,
+},
+
+{
     DNGN_GRANITE_STATUE, "granite statue", "granite_statue",
     DCHAR_STATUE, NUM_DCHAR_TYPES,
     COLOUR_IS(DARKGREY),
@@ -641,6 +648,20 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
 #endif
 
 FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
+
+{
+    DNGN_CACHE_OF_FRUIT, "cache of fruit", "cache of fruit",
+    DCHAR_ITEM_SKELETON, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(GREEN),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
+    DNGN_CACHE_OF_MEAT, "cache of meat", "cache of meat",
+    DCHAR_ITEM_SKELETON, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(BROWN),
+    FFT_NONE, MF_FLOOR,
+},
 
 #if TAG_MAJOR_VERSION == 34
 {

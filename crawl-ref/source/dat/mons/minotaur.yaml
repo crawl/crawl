@@ -1,0 +1,17 @@
+name: "minotaur"
+glyph: {char: "H", colour: lightred}
+flags: [fighter, speaks, warm_blood]
+will: 100
+attacks:
+ - {type: hit, damage: 35}
+ - {type: gore, damage: 20}
+hd: 14
+hp_10x: 780
+ac: 6
+ev: 9
+has_corpse: true
+shout: bellow
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

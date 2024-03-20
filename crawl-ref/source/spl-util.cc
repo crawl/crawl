@@ -432,7 +432,7 @@ bool spell_harms_target(spell_type spell)
     if (flags & spflag::targeting_mask)
         return true;
 
-    // n.b. this excludes various untargeted attack spells like hailstorm, abs 0
+    // n.b. this excludes various untargeted attack spells like hailstorm, MCC
 
     return false;
 }
@@ -501,6 +501,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_IGNITION
         || spell == SPELL_STARBURST
         || spell == SPELL_HAILSTORM
+        || spell == SPELL_PERMAFROST_ERUPTION
         || spell == SPELL_MANIFOLD_ASSAULT
         || spell == SPELL_MAXWELLS_COUPLING) // n.b. not an area spell
     {
@@ -778,7 +779,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     if (number <= 0)
         return;
 
-    targeter_cloud place(agent, GDM, number, number);
+    targeter_cloud place(agent, ctype, GDM, number, number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
@@ -850,16 +851,14 @@ const char* spelltype_short_name(spschool which_spelltype)
         return "Fire";
     case spschool::ice:
         return "Ice";
-    case spschool::transmutation:
-        return "Tmut";
     case spschool::necromancy:
         return "Necr";
     case spschool::summoning:
         return "Summ";
     case spschool::translocation:
         return "Tloc";
-    case spschool::poison:
-        return "Pois";
+    case spschool::alchemy:
+        return "Alch";
     case spschool::earth:
         return "Erth";
     case spschool::air:
@@ -883,16 +882,14 @@ const char* spelltype_long_name(spschool which_spelltype)
         return "Fire";
     case spschool::ice:
         return "Ice";
-    case spschool::transmutation:
-        return "Transmutation";
     case spschool::necromancy:
         return "Necromancy";
     case spschool::summoning:
         return "Summoning";
     case spschool::translocation:
         return "Translocation";
-    case spschool::poison:
-        return "Poison";
+    case spschool::alchemy:
+        return "Alchemy";
     case spschool::earth:
         return "Earth";
     case spschool::air:
@@ -912,11 +909,10 @@ skill_type spell_type2skill(spschool spelltype)
     case spschool::hexes:          return SK_HEXES;
     case spschool::fire:           return SK_FIRE_MAGIC;
     case spschool::ice:            return SK_ICE_MAGIC;
-    case spschool::transmutation:  return SK_TRANSMUTATIONS;
     case spschool::necromancy:     return SK_NECROMANCY;
     case spschool::summoning:      return SK_SUMMONINGS;
     case spschool::translocation:  return SK_TRANSLOCATIONS;
-    case spschool::poison:         return SK_POISON_MAGIC;
+    case spschool::alchemy:        return SK_ALCHEMY;
     case spschool::earth:          return SK_EARTH_MAGIC;
     case spschool::air:            return SK_AIR_MAGIC;
 
@@ -936,11 +932,10 @@ spschool skill2spell_type(skill_type spell_skill)
     case SK_HEXES:           return spschool::hexes;
     case SK_FIRE_MAGIC:      return spschool::fire;
     case SK_ICE_MAGIC:       return spschool::ice;
-    case SK_TRANSMUTATIONS:  return spschool::transmutation;
     case SK_NECROMANCY:      return spschool::necromancy;
     case SK_SUMMONINGS:      return spschool::summoning;
     case SK_TRANSLOCATIONS:  return spschool::translocation;
-    case SK_POISON_MAGIC:    return spschool::poison;
+    case SK_ALCHEMY:         return spschool::alchemy;
     case SK_EARTH_MAGIC:     return spschool::earth;
     case SK_AIR_MAGIC:       return spschool::air;
 
@@ -1081,6 +1076,7 @@ int spell_effect_noise(spell_type spell)
 
     case SPELL_LRD: // Can reach 3 only with crystal walls, which are rare
     case SPELL_FULMINANT_PRISM: // Players usually want the full size explosion
+    case SPELL_TREMORSTONE:
         expl_size = 2;
         break;
 
@@ -1302,8 +1298,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (temp && you.form == transformation::statue)
-            return "the film of ice won't work on stone.";
         if (temp && player_equip_unrand(UNRAND_SALAMANDER))
             return "your ring of flames would instantly melt the ice.";
         break;
@@ -1355,7 +1349,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_DEAD:
-    case SPELL_SIMULACRUM:
         if (have_passive(passive_t::goldify_corpses))
             return "necromancy does not work on golden corpses.";
         if (have_passive(passive_t::reaping))
@@ -1405,14 +1398,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot sustain more frozen ramparts right now.";
         break;
 
-    case SPELL_WEREBLOOD:
-        if (you.undead_state(temp) == US_UNDEAD
-            || you.is_lifeless_undead(temp))
-        {
-            return "you lack blood to transform.";
-        }
-        break;
-
     case SPELL_NOXIOUS_BOG:
         if (temp && you.duration[DUR_NOXIOUS_BOG])
             return "you cannot sustain more bogs right now.";
@@ -1428,7 +1413,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_MANIFOLD_ASSAULT:
         if (temp)
         {
-            const string unproj_reason = weapon_unprojectability_reason();
+            const string unproj_reason = weapon_unprojectability_reason(you.weapon());
             if (unproj_reason != "")
                 return unproj_reason;
         }
@@ -1446,9 +1431,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your stasis prevents you from teleporting.";
         if (temp)
         {
-            const string no_move_reason = movement_impossible_reason();
-            if (!no_move_reason.empty())
-                return no_move_reason;
             if (you.no_tele(true))
                 return lowercase_first(you.no_tele_reason(true));
             const string no_charge_reason = electric_charge_impossible_reason(true);
@@ -1460,6 +1442,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SIGIL_OF_BINDING:
         if (temp && cast_sigil_of_binding(0, false, true) == spret::abort)
             return "there is no room nearby to place a sigil.";
+        break;
+
+    case SPELL_CALL_CANINE_FAMILIAR:
+        if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
+            return "your canine familiar is too injured to answer your call.";
 
     default:
         break;
@@ -1520,6 +1507,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
+    case SPELL_BOULDER:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
@@ -1530,34 +1518,12 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FROZEN_RAMPARTS:
         return minRange > you.current_vision;
 
-    case SPELL_POISONOUS_VAPOURS:
-    {
-        // can this just be turned into a zap at this point?
-        dist test_targ;
-        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
-             ri; ++ri)
-        {
-            test_targ.target = *ri;
-            const monster* mons = monster_at(*ri);
-            if (mons && !mons->wont_attack()
-                && cast_poisonous_vapours(0, test_targ, true, true)
-                                                            == spret::success)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     {
-        targeter_cloud tgt(&you, range);
-        // Accept monsters that are in clouds for the hostiles-in-range check
-        // (not for actual targeting).
-        tgt.avoid_clouds = false;
+        targeter_cloud tgt(&you, spell_to_cloud(spell), range);
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
@@ -1598,7 +1564,7 @@ bool spell_no_hostile_in_range(spell_type spell)
          return cast_intoxicate(-1, false, true) == spret::abort;
 
     case SPELL_MANIFOLD_ASSAULT:
-         return cast_manifold_assault(-1, false, false) == spret::abort;
+         return cast_manifold_assault(you, -1, false, false) == spret::abort;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
          return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
@@ -1622,8 +1588,13 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true;
 
+    // Check slightly beyond our target range, in case someone wants to catch
+    // something in the AoE at the edge of range.
+    case SPELL_MERCURY_VAPOURS:
+        return find_near_hostiles(range + 1, false, you).empty();
+
     case SPELL_SCORCH:
-        return find_near_hostiles(range, false).empty();
+        return find_near_hostiles(range, false, you).empty();
 
     case SPELL_ANGUISH:
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1640,6 +1611,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
         }
         return true; // TODO
+
+    case SPELL_PERMAFROST_ERUPTION:
+        return permafrost_targets(you, pow, false).empty();
 
     default:
         break;
@@ -1756,11 +1730,10 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_HEXES_MAGIC,
     MUT_NO_FIRE_MAGIC,
     MUT_NO_ICE_MAGIC,
-    MUT_NO_TRANSMUTATION_MAGIC,
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
     MUT_NO_TRANSLOCATION_MAGIC,
-    MUT_NO_POISON_MAGIC,
+    MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_EARTH_MAGIC,
     MUT_NO_AIR_MAGIC
 };
@@ -1911,7 +1884,6 @@ const set<spell_type> removed_spells =
     SPELL_SONG_OF_SHIELDING,
     SPELL_SPECTRAL_WEAPON,
     SPELL_STEAM_CLOUD,
-    SPELL_STICKS_TO_SNAKES,
     SPELL_STONESKIN,
     SPELL_STRIKING,
     SPELL_SUMMON_BUTTERFLIES,
@@ -1976,7 +1948,7 @@ bool spell_was_form(spell_type spell)
 
 void end_wait_spells(bool quiet)
 {
-    end_searing_ray();
+    end_searing_ray(you);
     end_maxwells_coupling(quiet);
     end_flame_wave();
 }

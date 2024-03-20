@@ -1,0 +1,19 @@
+name: "raiju"
+glyph: {char: "h", colour: lightcyan}
+flags: [see_invis, unblindable]
+resists: {elec: 3}
+xp_mult: 12
+genus: hound
+will: 20
+attacks:
+ - {type: bite, flavour: elec, damage: 11}
+hd: 7
+hp_10x: 385
+ac: 4
+ev: 14
+spells: raiju
+has_corpse: true
+shout: bark
+intelligence: animal
+size: medium
+shape: quadruped

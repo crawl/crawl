@@ -1,0 +1,18 @@
+name: "water nymph"
+glyph: {char: "m", colour: magenta}
+flags: [speaks, warm_blood]
+will: 100
+attacks:
+ - {type: touch, flavour: drown, damage: 12}
+hd: 10
+hp_10x: 400
+ac: 2
+ev: 13
+spells: water_nymph
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+uses: open_doors
+size: medium
+shape: humanoid

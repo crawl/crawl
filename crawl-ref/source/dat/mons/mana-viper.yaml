@@ -1,0 +1,17 @@
+name: "mana viper"
+glyph: {char: "S", colour: magenta}
+flags: [see_invis, cold_blood]
+resists: {poison: 1}
+genus: snake
+will: 100
+attacks:
+ - {type: bite, flavour: antimagic, damage: 23}
+hd: 10
+hp_10x: 495
+ac: 3
+ev: 14
+shout: hiss
+intelligence: animal
+speed: 14
+size: medium
+shape: snake

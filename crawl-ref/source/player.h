@@ -29,7 +29,6 @@
 #include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
-#include "religion-enum.h"
 #include "skill-menu-state.h"
 #include "species.h"
 #include "stat-type.h"
@@ -43,9 +42,8 @@
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"
 #define POWERED_BY_DEATH_KEY "powered_by_death_strength"
-#define WEREBLOOD_KEY "wereblood_bonus"
+#define FUGUE_KEY "fugue_of_the_fallen_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
-#define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
 #define EMERGENCY_FLIGHT_KEY "emergency_flight"
 #define PARALYSED_BY_KEY "paralysed_by"
@@ -55,6 +53,8 @@
 #define DESCENT_DEBT_KEY "descent_debt"
 #define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
+#define RAMPAGE_HEAL_KEY "rampage_heal_strength"
+#define RAMPAGE_HEAL_MAX 7
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -79,6 +79,9 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
+
+/// At this percent rev, Coglins' attacks do full damage.
+static const int FULL_REV_PERCENT = 66;
 
 class targeter;
 class Delay;
@@ -177,10 +180,21 @@ public:
     monster_type symbol;
     transformation form;
     transformation default_form;
+    item_def active_talisman;
 
-    FixedVector< item_def, ENDOFPACK > inv;
+    // XXX: ENDOFPACK marks the total size of the player inventory, but we add
+    //      a single extra slot after that for purposes of examining EV of
+    //      non-inventory items, since implementation-wise the player can only
+    //      ever equip items that are in this vector.
+    //
+    //      Most other places should never know this slot exists.
+    FixedVector< item_def, ENDOFPACK + 1 > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
     int obtainable_runes; // can be != 15 in Sprint
+
+    FixedBitVector<NUM_GEM_TYPES> gems_found;
+    FixedBitVector<NUM_GEM_TYPES> gems_shattered;
+    FixedVector<int, NUM_GEM_TYPES> gem_time_spent;
 
     FixedBitVector<NUM_SPELLS> spell_library;
     FixedBitVector<NUM_SPELLS> hidden_spells;
@@ -284,6 +298,7 @@ public:
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
+    FixedBitVector<NUM_TALISMANS>      seen_talisman;
 
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
@@ -361,9 +376,6 @@ public:
     // A stack -- back() is the first to go.
     vector<pair<uncancellable_type, int> > uncancel;
 
-    // A list of allies awaiting an active recall
-    vector<mid_t> recall_list;
-
     // Hash seed for deterministic stuff.
     uint64_t game_seed;
     bool fully_seeded; // true on all games started since 0.23 seeding changes
@@ -384,7 +396,6 @@ public:
     level_id travel_z;
 
     runrest running;                    // Nonzero if running/traveling.
-    bool travel_ally_pace;
 
     bool received_weapon_warning;
     bool received_noskill_warning;
@@ -513,6 +524,7 @@ public:
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
+    bool is_binding_sigil_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
     bool can_see_invisible() const override;
@@ -602,7 +614,6 @@ public:
     bool      is_perm_summoned() const override { return false; };
 
     bool        swimming() const override;
-    bool        submerged() const override;
     bool        floundering() const override;
     bool        extra_balanced() const override;
     bool        slow_in_water() const;
@@ -614,14 +625,12 @@ public:
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;
     brand_type  damage_brand(int which_attack = -1) override;
-    int         damage_type(int which_attack = -1) override;
+    vorpal_damage_type damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
                                   const item_def *weapon) const;
     int         constriction_damage(constrict_type typ) const override;
-    bool        constriction_does_damage(constrict_type /* typ */) const override
-                    { return true; };
 
     int       has_claws(bool allow_tran = true) const override;
     bool      has_usable_claws(bool allow_tran = true) const;
@@ -667,6 +676,7 @@ public:
 
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
+    item_def *offhand_weapon() const override;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
@@ -735,6 +745,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(actor *attacker, int pow) override;
+    bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
@@ -775,11 +786,12 @@ public:
     bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
+    int res_foul_flame() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
-    int res_constrict() const override;
+    bool res_constrict() const override;
     int willpower() const override;
     bool no_tele(bool blink = false, bool temp = true) const override;
     string no_tele_reason(bool blink = false, bool temp = true) const;
@@ -834,8 +846,10 @@ public:
     int base_ac(int scale) const;
     int armour_class() const override;
     int gdr_perc() const override;
-    int evasion(bool ignore_helpless = false,
+    int evasion(bool ignore_temporary = false,
                 const actor *attacker = nullptr) const override;
+    int evasion_scaled(int scale, bool ignore_temporary = false,
+                const actor *attacker = nullptr) const;
 
     int stat_hp() const override     { return hp; }
     int stat_maxhp() const override  { return hp_max; }
@@ -843,19 +857,26 @@ public:
 
     bool shielded() const override;
     int shield_bonus() const override;
-    int shield_block_penalty() const override;
     int shield_bypass_ability(int tohit) const override;
     void shield_block_succeeded(actor *attacker) override;
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
-    int unadjusted_body_armour_penalty() const override;
-    int adjusted_body_armour_penalty(int scale = 1) const override;
-    int adjusted_shield_penalty(int scale = 1) const override;
+    int unadjusted_body_armour_penalty() const;
+    int adjusted_body_armour_penalty(int scale = 1) const;
+    int adjusted_shield_penalty(int scale = 1) const;
+
+    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
+    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
+                                     int *ac, int *ev, int *sh);
+    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
+                                        int *ac, int *ev, int *sh);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
+
+    bool using_talisman(const item_def &talisman) const;
 
     bool do_shaft() override;
     bool shaftable() const;
@@ -865,12 +886,20 @@ public:
 
     bool can_potion_heal(bool temp=true);
     int scale_potion_healing(int healing_amount);
+    int scale_potion_mp_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
 
+    void did_deliberate_movement() override;
+
     void be_agile(int pow);
+
+    int rev_percent() const;
+    int rev_tier() const;
+    void rev_up(int time_taken);
+    void rev_down(int time_taken);
 
     bool allies_forbidden();
 
@@ -909,7 +938,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = nullptr);
 
-    bool attempt_escape(int attempts = 1);
+    bool attempt_escape() override;
     int usable_tentacles() const;
     bool has_usable_tentacle() const override;
 
@@ -917,9 +946,7 @@ public:
 
     bool clear_far_engulf(bool force = false, bool moved = false) override;
 
-    int armour_class_with_one_sub(item_def sub) const;
-
-    int armour_class_with_one_removal(item_def sub) const;
+    int armour_class_scaled(int scale) const;
 
     int ac_changes_from_mutations() const;
     vector<const item_def *> get_armour_items() const;
@@ -927,7 +954,7 @@ public:
     vector<const item_def *> get_armour_items_one_removal(const item_def& sub) const;
     int base_ac_with_specific_items(int scale,
                                     vector<const item_def *> armour_items) const;
-    int armour_class_with_specific_items(
+    int armour_class_with_specific_items(int scale,
                                 vector<const item_def *> items) const;
 
 protected:
@@ -998,7 +1025,7 @@ bool player_effectively_in_light_armour();
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 
-int player_movement_speed(bool check_terrain = true);
+int player_movement_speed(bool check_terrain = true, bool temp = true);
 
 int player_icemail_armour_class();
 int player_condensation_shield_class();
@@ -1032,8 +1059,9 @@ int player_res_poison(bool allow_random = true, bool temp = true,
                       bool items = true);
 int player_willpower(bool temp = true);
 
-int player_shield_class();
-int player_displayed_shield_class();
+int player_shield_class(int scale = 1, bool random = true,
+                        bool ignore_temporary = false);
+int player_displayed_shield_class(int scale = 1, bool ignore_temporary = false);
 bool player_omnireflects();
 
 int player_spec_air();
@@ -1043,10 +1071,9 @@ int player_spec_death();
 int player_spec_earth();
 int player_spec_fire();
 int player_spec_hex();
-int player_spec_poison();
+int player_spec_alchemy();
 int player_spec_summ();
 int player_spec_tloc();
-int player_spec_tmut();
 
 int player_speed();
 
@@ -1082,6 +1109,7 @@ void update_player_symbol();
 void update_vision_range();
 
 maybe_bool you_can_wear(equipment_type eq, bool temp = false);
+bool player_can_use_armour();
 bool player_has_feet(bool temp = true, bool include_mutations = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
@@ -1147,12 +1175,15 @@ int poison_survival();
 
 bool miasma_player(actor *who, string source_aux = "");
 
-bool napalm_player(int amount, string source, string source_aux = "");
-void dec_napalm_player(int delay);
+bool sticky_flame_player(int intensity, int duration, string source, string source_aux = "");
+void dec_sticky_flame_player(int delay);
+void shake_off_sticky_flame();
+void end_sticky_flame_player();
 
 bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
+void barb_player(int turns, int pow);
 void dec_berserk_recovery_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
@@ -1161,6 +1192,8 @@ void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
+void reset_rampage_heal_duration();
+void apply_rampage_heal();
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
                                                         bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);

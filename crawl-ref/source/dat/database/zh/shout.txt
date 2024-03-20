@@ -1,0 +1,376 @@
+############################################################
+# 从石头汤0.3版开始，已将先前硬编码的怪物语句外置。
+# 这会让修改现有信息和添加新消息变得非常容易。
+#
+# shout.txt保存着注意到你的怪物的话语（和对应的视觉信息）。
+#
+# 有关如何读取monspeak.txt以及如何添加新消息的内容，
+# 请参阅docs/develop/目录中的monster_speech.txt文件。
+############################################################
+%%%%
+__BUGGY
+
+# 即使shout.cc中的monster_shout()检测到了错误行为，也不会向用户显示此行，
+# 因此如果显示了此行，说明遇到了错误。
+SOUND:你听到双重错误行为！
+%%%%
+__SHOUT
+
+SOUND:你听到一声喊叫！
+%%%%
+__SHOUT seen
+
+SOUND:@The_monster@在喊叫！
+%%%%
+__BARK unseen
+
+SOUND:你听到一声吠叫！
+%%%%
+__BARK seen
+
+SOUND:@The_monster@在吠叫！
+%%%%
+__HOWL unseen
+
+SOUND:你听到一声嚎叫！
+%%%%
+__HOWL seen
+
+SOUND:@The_monster@在嚎叫！
+%%%%
+__TWO_SHOUTS unseen
+
+SOUND:你听到两声喊叫！
+%%%%
+__TWO_SHOUTS seen
+
+SOUND:@The_monster@发出立体声喊叫！
+%%%%
+__ROAR unseen
+
+SOUND:你听到一声咆哮！
+%%%%
+__ROAR seen
+
+SOUND:@The_monster@在咆哮！
+%%%%
+__SCREAM unseen
+
+SOUND:你听到一声可怕的尖叫！
+%%%%
+__SCREAM seen
+
+SOUND:@The_monster@发出可怕的尖叫！
+%%%%
+__BELLOW unseen
+
+SOUND:你听到一声吼叫！
+%%%%
+__BELLOW seen
+
+SOUND:@The_monster@在吼叫！
+%%%%
+__BLEAT unseen
+
+SOUND:你听到一声咩叫！
+%%%%
+__BLEAT seen
+
+SOUND:@The_monster@在咩叫！
+%%%%
+__TRUMPET unseen
+
+SOUND:你听到一声吼叫！
+%%%%
+__TRUMPET seen
+
+SOUND:@The_monster@在吼叫！
+%%%%
+__SCREECH unseen
+
+SOUND:你听到一声尖叫！
+%%%%
+__SCREECH seen
+
+SOUND:@The_monster@在尖叫！
+%%%%
+__BUZZ unseen
+
+SOUND:你听到一阵愤怒的嗡嗡声。
+%%%%
+__BUZZ seen
+
+SOUND:@The_monster@在愤怒地嗡嗡叫。
+%%%%
+__MOAN unseen
+
+SOUND:你听到一声凄凉的呻吟。
+%%%%
+__MOAN seen
+
+SOUND:@The_monster@发出凄凉的呻吟。
+%%%%
+__GURGLE unseen
+
+SOUND:你听到可怕的咯咯声！
+%%%%
+__GURGLE seen
+
+SOUND:@The_monster@发出可怕的咯咯声！
+%%%%
+__CROAK unseen
+
+SOUND:你听到一声响亮、低沉的呱呱叫！
+
+SOUND:你听到一声呱呱叫！
+%%%%
+__CROAK seen
+
+SOUND:@The_monster@发出响亮、低沉的呱呱叫！
+
+SOUND:@The_monster@在呱呱叫。
+%%%%
+__GROWL unseen
+
+SOUND:你听到一声愤怒的咆哮。
+%%%%
+__GROWL seen
+
+SOUND:@The_monster@在愤怒地咆哮。
+%%%%
+__HISS unseen
+
+SOUND:你听到一声愤怒的嘶嘶声。
+%%%%
+__HISS seen
+
+SOUND:@The_monster@愤怒地发出嘶嘶声。
+%%%%
+__SKITTER unseen
+
+SOUND:你听到窜行的声音。
+%%%%
+__SKITTER seen
+
+SOUND:@The_monster@的多条腿在窜行。
+%%%%
+__FAINT_SKITTER unseen
+
+SOUND:你听到微弱的窜行声音。
+%%%%
+__FAINT_SKITTER seen
+
+SOUND:@The_monster@的多条腿在微微窜行。
+%%%%
+__SQUEAL unseen
+
+SOUND:你听到一声愤怒的尖叫。
+%%%%
+__SQUEAL seen
+
+SOUND:@The_monster@在愤怒地尖叫。
+%%%%
+__DEMON_TAUNT
+
+@The_monster@ @says@：“@demon_taunt@”
+%%%%
+__CHERUB seen
+
+SOUND:@The_monster@的鹰头在尖叫！
+
+SOUND:@The_monster@的狮头在咆哮！
+
+SOUND:@The_monster@的牛头在哞叫！
+
+SOUND:@The_monster@的人头在喊叫！
+%%%%
+__CHERUB unseen
+
+SOUND:你听到一声喊叫。
+
+SOUND:你听到一声尖叫。
+
+SOUND:你听到一声咆哮。
+
+SOUND:你听到一声哞叫。
+%%%%
+__LOUD_ROAR unseen
+
+SOUND:你听到一声震耳欲聋的咆哮！
+%%%%
+__LOUD_ROAR seen
+
+SOUND:@The_monster@发出震耳欲聋的咆哮！
+%%%%
+__RUSTLE unseen
+
+SOUND:你听到响亮的沙沙声。
+%%%%
+__RUSTLE seen
+
+SOUND:@The_monster@的书页发出响亮的沙沙声。
+%%%%
+__SQUEAK unseen
+
+SOUND:你听到响亮的吱吱声。
+%%%%
+__SQUEAK seen
+
+SOUND:@The_monster@发出响亮的吱吱声。
+%%%%
+############################################
+# 默认喊叫语句的结束
+############################################
+############################################################
+# 玩家鬼魂喊叫。
+# 不同类型的鬼魂可能存在差异，但语句都是复制于默认的玩家鬼魂。
+############################################################
+%%%%
+player ghost
+
+VISUAL:@The_monster@恶毒地凝视着你。
+%%%%
+Fighter player ghost
+
+@player ghost@
+%%%%
+Hedge Wizard player ghost
+
+@player ghost@
+%%%%
+Gladiator player ghost
+
+@player ghost@
+%%%%
+Necromancer player ghost
+
+@player ghost@
+%%%%
+Brigand player ghost
+
+@player ghost@
+%%%%
+Berserker player ghost
+
+@player ghost@
+%%%%
+Hunter player ghost
+
+@player ghost@
+%%%%
+Conjurer player ghost
+
+@player ghost@
+%%%%
+Enchanter player ghost
+
+@player ghost@
+%%%%
+Fire Elementalist player ghost
+
+@player ghost@
+%%%%
+Ice Elementalist player ghost
+
+@player ghost@
+%%%%
+Summoner player ghost
+
+@player ghost@
+%%%%
+Air Elementalist player ghost
+
+@player ghost@
+%%%%
+Earth Elementalist player ghost
+
+@player ghost@
+%%%%
+Alchemist player ghost
+
+@player ghost@
+%%%%
+Chaos Knight player ghost
+
+@player ghost@
+%%%%
+Shapeshifter player ghost
+
+@player ghost@
+%%%%
+Monk player ghost
+
+@player ghost@
+%%%%
+Warper player ghost
+
+@player ghost@
+%%%%
+Wanderer player ghost
+
+@player ghost@
+########################################
+# 怪物符号的喊叫
+########################################
+%%%%
+'&'
+
+@__DEMON_TAUNT@
+%%%%
+'cap-G'
+
+VISUAL:@The_monster@凝视着你。
+%%%%
+'cap-J'
+
+VISUAL:@The_monster@颤抖着。
+########################################
+# 怪物种类的喊叫
+########################################
+%%%%
+giant slug
+
+VISUAL:@The_monster@将眼柄转向你。
+########################################
+# 某些怪物的喊叫
+########################################
+%%%%
+ballistomycete spore
+
+VISUAL:@The_monster@摆动着根茎。
+%%%%
+glowing orange brain
+
+VISUAL:@The_monster@将注意力转向你。
+%%%%
+# 钢铁小恶魔、暗影小恶魔和白色小恶魔都复制于小恶魔。
+imp
+
+# 一半时间喊叫，一半时间嘲讽。
+@__SHOUT@
+
+SOUND:@The_monster@ @says@：“@imp_taunt@”
+%%%%
+moth of wrath
+
+VISUAL:@The_monster@一注意到你，就愤怒地竖起了毛。
+%%%%
+iron imp
+
+@imp@
+%%%%
+shadow imp
+
+@imp@
+%%%%
+white imp
+
+@imp@
+####################################
+# 某些独特怪物的喊叫
+####################################
+%%%%
+Polyphemus
+
+# 这也适用于其他被友方包围的怪物。
+SOUND:@The_monster@喊道：“进攻，我的宠物！进攻！”

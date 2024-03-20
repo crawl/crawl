@@ -17,6 +17,8 @@ public:
     bool write_image(const char *filename);
 
     int find(const string &enumname) const;
+    int find_ctg_start(const string &ctgname) const;
+    int find_ctg_end(const string &ctgname) const;
     bool add_synonym(const string &enumname, const string &syn);
     bool add_synonym(int idx, const string &syn);
     void add_variation(int var_idx, int base_idx, int colour);

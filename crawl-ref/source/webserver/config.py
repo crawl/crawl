@@ -237,8 +237,15 @@ ssl_port = 8081
 #     ("localhost", 8083),
 # )
 
+# how often to check for an active connection while playing:
 # connection_timeout = 600
+
+# the maximum allowed idle time while playing:
 # max_idle_time = 5 * 60 * 60
+
+# the maximum allowed idle time in the lobby. Values less than 10 minutes
+# (or negative) will disable lobby idle timeouts altogether.
+# max_lobby_idle_time = 3 * 60 * 60
 
 # use_gzip = True
 

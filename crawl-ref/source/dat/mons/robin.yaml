@@ -1,0 +1,19 @@
+name: "Robin"
+glyph: {char: "g", colour: lightcyan}
+flags: [speaks, warm_blood, unique, gender_neutral]
+species: hobgoblin
+genus: goblin
+will: 10
+attacks:
+ - {type: hit, damage: 2}
+hd: 2
+hp_10x: 160
+ac: 1
+ev: 8
+spells: robin
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

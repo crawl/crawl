@@ -1,0 +1,19 @@
+name: "phantasmal warrior"
+glyph: {char: "W", colour: lightgreen}
+flags: [flies, fighter, see_invis, insubstantial]
+resists: {cold: 1}
+xp_mult: 13
+genus: wraith
+holiness: [undead]
+will: 80
+attacks:
+ - {type: hit, flavour: vuln, damage: 39}
+hd: 9
+hp_10x: 495
+ac: 12
+ev: 10
+spells: blink_close
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

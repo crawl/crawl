@@ -120,11 +120,6 @@ camouflage mutation
 Your skin changes colour to match your surroundings. Each level of this
 mutation provides Stealth+.
 %%%%
-noise suppression mutation
-
-You passively dampen all noise in your surroundings, making it easier to avoid
-drawing attention to your activities.
-%%%%
 # ------ Auxes -----
 horns mutation
 
@@ -418,6 +413,16 @@ Your system is resistant to potable panaceas, reducing the effectiveness of all
 kinds of healing potions. The second level of this mutation completely blocks
 potion-based healing. (Aid from the god Gozag is unaffected.)
 %%%%
+persistent drain mutation
+
+Your health recovers twice as slowly from being drained. (The total experience
+needed is doubled.)
+%%%%
+initially attractive mutation
+
+The first time you see a monster, it may be magically pulled toward you.
+This does not wake sleeping monsters.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 
@@ -469,11 +474,11 @@ demonic magic mutation
 
 When you cast spells, there's a chance that adjacent monsters will be
 paralysed. This effect is more powerful when casting higher-level spells, but
-monsters with greater Willpower can resist it. Each level of this mutation
+monsters with greater willpower can resist it. Each level of this mutation
 allows more distant monsters to be affected. The third level of this mutation
 also allows you to paralyse monsters in the same way while zapping wands.
 %%%%
-noise dampening mutation
+noise suppression mutation
 
 Your surroundings are quieter, reducing the distance that noise will travel
 from any place you can see.
@@ -497,7 +502,8 @@ level of this mutation increases the healing further.
 sturdy frame mutation
 
 Your movements are less encumbered by armour, mitigating penalties to spell
-success and accuracy. Each level of this mutation reduces armour ER by 2.
+success, evasion, and ranged weapon attack speed. Each level of this mutation
+reduces armour ER by 2.
 %%%%
 sanguine armour mutation
 
@@ -542,7 +548,7 @@ You cast Hex spells with increased power.
 demonic willpower mutation
 
 Your willpower has a will of its own, sometimes injuring those who attempt to
-hex you. This mutation also bolsters your Willpower.
+hex you. This mutation also bolsters your willpower.
 %%%%
 hurl damnation mutation
 
@@ -622,7 +628,7 @@ nightstalker mutation
 You are attuned to the shadows, reducing the distance that you can see or be
 seen from.
 %%%%
-daystalker mutation
++LOS mutation
 
 You are born to the light, increasing the distance that you can see and be seen
 from.
@@ -693,12 +699,9 @@ melee. Each tentacle can wear a ring, but you need four of them to move around,
 and either two or four tentacles to hold a weapon depending on its size, and
 two tentacles to hold a shield.
 
-A constriction attack has a 66% chance of automatically triggering on any
-melee attack. When triggered, it will attempt to begin or renew constriction
-of a targeted enemy; the maximum number of enemies that can be constricted is
-determined by the number of free tentacles. Whether a constriction attempt
-succeeds when triggered is determined primarily by Dexterity, Fighting skill,
-and any slaying bonuses.
+Your tentacles will try to constrict foes which you attack in melee. (You cannot
+constrict monsters larger than you.) Independently, you have a two-thirds chance
+of launching a damaging 'squeeze' attack whenever you attack in melee.
 %%%%
 mertail mutation
 
@@ -770,16 +773,20 @@ Those foes will be silenced and unable to breathe.
 otherworldly mutation
 
 You are foreign to this world, easily perceived by dark forces. You have only
-one-tenth the normal time on each dungeon floor before Zot finds and ends you.
+one-tenth the normal time on each dungeon floor before Zot finds you and
+permanently reduces your health.
 %%%%
-glowing mutation
+foul shadow mutation
 
-You glow in the dark. Foes hit you more often, your stealth is badly impaired,
-and your outline is easily seen even while you are otherwise invisible.
+Your body is shadowed by foul flame. Foes hit you less often, and your stealth
+is greatly enhanced. Foes who strike you in melee are sometimes seared by the
+foul flame; undead and demonic foes take less damage from it, while holy beings
+and good god worshippers take more.
 %%%%
 explore regen mutation
 
-As you explore the dungeon, your wounds will heal and your magic will replenish.
+You are invigorated by the discovery of the unknown. As you explore the dungeon,
+your wounds will heal and your magic will replenish.
 %%%%
 faith mutation
 
@@ -792,20 +799,62 @@ devour on kill mutation
 When you kill living creatures you have a chance to devour their life force
 and restore health.
 %%%%
-roll mutation
+rollpage mutation
 
-You instinctively roll as you move toward enemies, rampaging forward an additional
-space.
+You instinctively roll as you move toward enemies, rampaging forward an
+additional space. This mutation grants magic regeneration when rolling; the
+second level of this mutation regenerates both magic and health.
 %%%%
-long tongue mutation
+double potion healing mutation
 
-Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
-effects on you.
+Whenever a potion restores your health or magic, it restores twice as much.
 %%%%
-awkward tongue mutation
+drunken brawling mutation
 
-Your tongue is very floppy, giving you trouble when reading the arcane syllables
-encoded on magical scrolls. As such, scrolls take you half again as long to read.
+Whenever you drink a potion that restores health or magic, you perform an
+immediate attack against all enemies adjacent to you.
+
+(This includes potions of curing, heal wounds, magic, and ambrosia.)
+%%%%
+artefact enchanting mutation
+
+You can use scrolls of enchant weapon and armour upon random artefacts.
+
+This cannot raise their enchantment above what would normally be possible on a
+mundane item of the same type, and cannot affect especially unusual artefacts
+at all.
+%%%%
+runic magic mutation
+
+You cast spells with the assistance of glyphs marked upon your armour, greatly
+reducing the complex movements which would otherwise be required.
+
+(The encumbrance rating of all armour you wear is reduced by 1/2 for purposes
+of spell success.)
+%%%%
+off-hand wielding mutation
+
+You can wield a one-handed weapon in your off-hand, if not wielding a
+two-handed weapon or wearing a shield or orb. You will follow up attacks from
+your primary weapon with your off-hand weapon, with attack delay determined
+by the average of the two. Ranged weapons can only follow attacks by ranged
+weapons, and likewise melee weapons.
+%%%%
+slow wielding mutation
+
+You must recalibrate your grasping arms when wielding or unwielding weapons.
+This takes as long as donning armour.
+%%%%
+warmup strikes mutation
+
+Your grasping arms need time to limber up, making your first few attacks in
+each fight less effective. Slow, heavy attacks help more than fast attacks.
+Both weapon-based and unarmed attacks are affected.
+%%%%
+no rings mutation
+
+Your hands are embedded into the controls for your grasping arms, leaving you
+with no place to wear magical rings without disastrous magical interference.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
@@ -932,9 +981,9 @@ no necromancy magic mutation
 
 Your Necromancy skill is 0 and you cannot train the skill.
 %%%%
-no poison magic mutation
+no alchemy magic mutation
 
-Your Poison Magic skill is 0 and you cannot train the skill.
+Your Alchemy skill is 0 and you cannot train the skill.
 %%%%
 no summoning magic mutation
 
@@ -943,8 +992,4 @@ Your Summoning skill is 0 and you cannot train the skill.
 no translocations magic mutation
 
 Your Translocations skill is 0 and you cannot train the skill.
-%%%%
-no transmutations magic mutation
-
-Your Transmutations skill is 0 and you cannot train the skill.
 %%%%

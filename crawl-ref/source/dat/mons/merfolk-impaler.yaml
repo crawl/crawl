@@ -1,0 +1,21 @@
+name: "merfolk impaler"
+glyph: {char: "m", colour: yellow}
+flags: [speaks, warm_blood]
+xp_mult: 13
+species: merfolk
+will: 40
+attacks:
+ - {type: hit, damage: 22}
+hd: 12
+hp_10x: 780
+ac: 0
+ev: 18
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6, attack: 6}
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: water

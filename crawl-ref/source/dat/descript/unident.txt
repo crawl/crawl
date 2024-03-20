@@ -8,11 +8,6 @@ book
 
 An arcane textbook containing magical spells of unknown origin.
 %%%%
-deck of cards
-
-A deck of powerful magical cards painted in the ichor of demons. They may have
-any number of helpful or dangerous effects when drawn.
-%%%%
 potion
 
 An unlabelled flask containing a single dose of unknown liquid.

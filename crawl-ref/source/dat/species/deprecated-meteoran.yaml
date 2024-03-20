@@ -1,0 +1,59 @@
+TAG_MAJOR_VERSION: 34
+enum: SP_METEORAN
+monster: MONS_METEORAN
+name: Meteoran
+short_name: Me
+adjective: Meteoric
+difficulty: False
+aptitudes:
+  xp: 2
+  hp: 1
+  mp_mod: 1
+  wl: 5
+  fighting: 1
+  short_blades: 1
+  long_blades: 2
+  maces_and_flails: 3
+  axes: 2
+  polearms: 2
+  staves: 2
+  ranged weapons: 1
+  throwing: 2
+  armour: 1
+  dodging: 1
+  stealth: -2
+  shields: 1
+  unarmed_combat: 2
+  spellcasting: 2
+  conjurations: 2
+  hexes: 2
+  necromancy: 1
+  summoning: 2
+  translocations: 2
+  fire_magic: 2
+  ice_magic: 1
+  earth_magic: 2
+  air_magic: 2
+  alchemy: 2
+  invocations: 3
+  evocations: 2
+  shapeshifting: 1
+str: 9
+int: 9
+dex: 9
+levelup_stat_frequency: 3
+levelup_stats:
+  - str
+  - int
+  - dex
+mutations:
+  1:
+    MUT_SHORT_LIFESPAN: 1
+    MUT_EXPLORE_REGEN: 1
+    MUT_PASSIVE_MAPPING: 1
+  9:
+    MUT_PASSIVE_MAPPING: 1
+  18:
+    MUT_PASSIVE_MAPPING: 1
+
+orc_name: Meteorc

@@ -1,9 +1,9 @@
 enum: SP_BLACK_DRACONIAN
 monster: MONS_BLACK_DRACONIAN
-name: "Black Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Black Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN
@@ -11,7 +11,7 @@ aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -36,5 +36,7 @@ mutations:
   14:
     MUT_BIG_WINGS: 1
 fake_mutations:
-  - long: You can breathe wild blasts of lightning.
-    short: breathe lightning
+  - long: You can breathe arcing electricity.
+    short: galvanic breath
+
+orc_name: Black Orconian

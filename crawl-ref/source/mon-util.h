@@ -30,7 +30,7 @@ struct mon_attack_def
 
 // Amount of mons->speed_increment used by different actions; defaults
 // to 10.
-#define DEFAULT_ENERGY {10, 10, 10, 10, 10, 10, 10, 100}
+#define DEFAULT_ENERGY {10, 10, 10, 10, 10}
 struct mon_energy_usage
 {
     uint8_t move;
@@ -38,12 +38,6 @@ struct mon_energy_usage
     uint8_t attack;
     uint8_t missile; // Arrows/crossbows/etc
     uint8_t spell;
-    uint8_t special;
-    uint8_t item;    // Using an item (i.e., drinking a potion)
-
-    // Percent of mons->speed used when picking up an item; defaults
-    // to 100%
-    uint8_t pickup_percent;
 
     static mon_energy_usage attack_cost(int cost, int sw = 10)
     {
@@ -83,9 +77,6 @@ struct mon_energy_usage
         me.attack = combine(attack, o.attack);
         me.missile = combine(missile, o.missile);
         me.spell = combine(spell, o.spell);
-        me.special = combine(special, o.special);
-        me.item = combine(item, o.item);
-        me.pickup_percent = combine(pickup_percent, o.pickup_percent, 100);
         return me;
     }
 
@@ -95,10 +86,7 @@ struct mon_energy_usage
                && swim == rvalue.swim
                && attack == rvalue.attack
                && missile == rvalue.missile
-               && spell == rvalue.spell
-               && special == rvalue.special
-               && item == rvalue.item
-               && pickup_percent == rvalue.pickup_percent;
+               && spell == rvalue.spell;
     }
 private:
     static uint8_t combine(uint8_t a, uint8_t b, uint8_t def = 10)
@@ -210,7 +198,7 @@ monster *monster_at(const coord_def &pos);
 // this is the old moname()
 string mons_type_name(monster_type type, description_level_type desc);
 
-bool give_monster_proper_name(monster& mon, bool orcs_only = true);
+bool give_monster_proper_name(monster& mon);
 
 bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);
@@ -251,15 +239,18 @@ bool mons_invuln_will(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = true);
 string mon_attack_name(attack_type attack, bool with_object = true);
+string mon_attack_name_short(attack_type attack);
 bool is_plain_attack_type(attack_type attack);
 bool flavour_triggers_damageless(attack_flavour flavour);
 int flavour_damage(attack_flavour flavour, int HD, bool random = true);
 bool flavour_has_reach(attack_flavour flavour);
+bool flavour_has_mobility(attack_flavour flavour);
 
 bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
 mon_holy_type holiness_by_name(string name);
 const char * holiness_name(mon_holy_type_flags which_holiness);
+const char * single_holiness_description(mon_holy_type holiness);
 string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
@@ -282,6 +273,7 @@ bool mons_blows_up(const monster& m);
 bool mons_destroyed_on_impact(const monster& m);
 
 bool should_shout_at_mons(const monster &m);
+bool should_attract_mons(const monster &m);
 
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
@@ -311,6 +303,7 @@ bool monster_inherently_flies(const monster &mons);
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
+int mons_class_regen_amount(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
@@ -331,8 +324,6 @@ bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);
 bool mons_can_use_stairs(const monster& mon,
                          dungeon_feature_type stair = DNGN_UNSEEN);
-bool mons_bound_body_and_soul(const monster& mon);
-bool mons_bound_soul(const monster& mon);
 void name_zombie(monster& mon, monster_type mc, const string &mon_name);
 void name_zombie(monster& mon, const monster& orig);
 
@@ -429,8 +420,8 @@ bool mons_is_projectile(const monster& mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
-bool mons_allows_beogh(const monster& mon);
-bool mons_allows_beogh_now(const monster& mon);
+bool mons_offers_beogh_conversion(const monster& mon);
+bool mons_offers_beogh_conversion_now(const monster& mon);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
@@ -513,7 +504,6 @@ mon_threat_level_type mons_threat_level(const monster &mon,
                                         bool real = false);
 
 bool mons_foe_is_marked(const monster& mons);
-vector<monster* > get_on_level_followers();
 
 bool mons_stores_tracking_data(const monster& mons);
 
@@ -528,16 +518,12 @@ void debug_monspells();
 
 bool choose_any_monster(const monster& mon);
 monster *choose_random_nearby_monster(
-    int weight,
     bool (*suitable)(const monster& mon) =
-        choose_any_monster,
-    bool prefer_named_or_priest = false);
+        choose_any_monster);
 
 monster *choose_random_monster_on_level(
-    int weight,
     bool (*suitable)(const monster& mon) =
-        choose_any_monster,
-    bool prefer_named_or_priest = false);
+        choose_any_monster);
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);
@@ -575,3 +561,5 @@ bool apply_visible_monsters(monster_func mf,
                             los_type los = LOS_NO_TRANS);
 
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
+
+int touch_of_beogh_hp_mult(const monster& mon);

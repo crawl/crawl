@@ -265,7 +265,7 @@ shared_ptr<Widget> Bin::get_child_at_offset(int x, int y)
 void Bin::set_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_child = move(child);
+    m_child = std::move(child);
     _invalidate_sizereq();
 }
 
@@ -424,7 +424,7 @@ void Widget::set_visible(bool visible)
 void Widget::add_internal_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_internal_children.emplace_back(move(child));
+    m_internal_children.emplace_back(std::move(child));
 }
 
 void Widget::set_sync_id(string id)
@@ -463,7 +463,7 @@ void Widget::sync_state_changed()
 void Box::add_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_children.push_back(move(child));
+    m_children.push_back(std::move(child));
     _invalidate_sizereq();
 }
 
@@ -1112,7 +1112,7 @@ SizeReq Image::_get_preferred_size(Direction dim, int /*prosp_width*/)
 void Stack::add_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_children.push_back(move(child));
+    m_children.push_back(std::move(child));
     _invalidate_sizereq();
     _queue_allocation();
 }
@@ -1171,7 +1171,7 @@ void Switcher::add_child(shared_ptr<Widget> child)
     // - it must be in the current top child
     // - unfocus it before we
     child->_set_parent(this);
-    m_children.push_back(move(child));
+    m_children.push_back(std::move(child));
     _invalidate_sizereq();
     _queue_allocation();
 }
@@ -1296,7 +1296,7 @@ shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
 void Grid::add_child(shared_ptr<Widget> child, int x, int y, int w, int h)
 {
     child->_set_parent(this);
-    child_info ch = { {x, y}, {w, h}, move(child) };
+    child_info ch = { {x, y}, {w, h}, std::move(child) };
     m_child_info.push_back(ch);
     m_track_info_dirty = true;
     _invalidate_sizereq();
@@ -1641,7 +1641,7 @@ Layout::Layout(shared_ptr<Widget> child)
     m_depth = ui_root.num_children();
 #endif
     child->_set_parent(this);
-    m_child = move(child);
+    m_child = std::move(child);
     expand_h = expand_v = true;
 }
 
@@ -2405,50 +2405,7 @@ PlayerDoll::~PlayerDoll()
 void PlayerDoll::_pack_doll()
 {
     m_tiles.clear();
-    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
-    int p_order[TILEP_PART_MAX] =
-    {
-        TILEP_PART_SHADOW,  //  0
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        TILEP_PART_BASE,    //  5
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
-    };
-
-    int flags[TILEP_PART_MAX];
-    tilep_calc_flags(m_save_doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[6] = TILEP_PART_BOOTS;
-        p_order[7] = TILEP_PART_LEG;
-    }
-
-    reveal_bardings(m_save_doll.parts, flags);
-
-    for (int i = 0; i < TILEP_PART_MAX; ++i)
-    {
-        const int p   = p_order[i];
-        const tileidx_t idx = m_save_doll.parts[p];
-        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
-            continue;
-
-        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
-
-        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
-        m_tiles.emplace_back(idx, ymax);
-    }
+    pack_tilep_set(m_tiles, m_save_doll);
 }
 
 void PlayerDoll::_render()
@@ -2488,7 +2445,7 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
     state.default_focus = state.current_focus = focus;
     state.generation_id = next_generation_id++;
 
-    m_root.add_child(move(ch));
+    m_root.add_child(std::move(ch));
     m_needs_layout = true;
     m_changed_layout_since_click = true;
     update_focus_order();
@@ -2787,7 +2744,7 @@ void UIRoot::update_hover_path()
 
     send_mouse_enter_leave_events(hover_path, new_hover_path);
 
-    hover_path = move(new_hover_path);
+    hover_path = std::move(new_hover_path);
     hover_path.resize(new_hover_path_size);
 }
 
@@ -3150,7 +3107,7 @@ void pop_cutoff()
 
 void push_layout(shared_ptr<Widget> root, KeymapContext km)
 {
-    ui_root.push_child(move(root), km);
+    ui_root.push_child(std::move(root), km);
 #ifdef USE_TILE_WEB
     ui_root.sync_state();
 #endif
@@ -3506,7 +3463,7 @@ progress_popup::progress_popup(string title, int width)
     contents->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    push_layout(move(contents));
+    push_layout(std::move(contents));
     pump_events(0);
 }
 

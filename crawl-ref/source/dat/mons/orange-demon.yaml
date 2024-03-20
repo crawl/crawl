@@ -1,0 +1,17 @@
+name: "orange demon"
+glyph: {char: "4", colour: lightred}
+xp_mult: 12
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: sting, flavour: reach_sting, damage: 15}
+ - {type: hit, flavour: weakness, damage: 8}
+hd: 8
+hp_10x: 520
+ac: 3
+ev: 7
+shout: screech
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid_tailed

@@ -1,0 +1,20 @@
+name: "spriggan rider"
+glyph: {char: "i", colour: lightblue}
+flags: [flies, fighter, see_invis, speaks, warm_blood]
+resists: {poison: -1}
+xp_mult: 8
+species: spriggan
+will: 100
+attacks:
+ - {type: hit, damage: 27}
+hd: 11
+hp_10x: 605
+ac: 1
+ev: 18
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 6}
+uses: weapons_armour
+size: small
+shape: humanoid

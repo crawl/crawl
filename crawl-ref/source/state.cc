@@ -43,7 +43,7 @@ game_state::game_state()
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
       marked_as_won(false), arena_suspended(false),
       generating_level(false), dump_maps(false), test(false), script(false),
-      build_db(false), tests_selected(),
+      build_db(false), use_des_cache(true), tests_selected(),
 #ifdef DGAMELAUNCH
       throttle(true),
       bypassed_startup_menu(true),

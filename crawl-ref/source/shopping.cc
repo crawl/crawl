@@ -177,6 +177,11 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_ARCHMAGI])
         ret += 20;
 
+    // Yuck!
+    for (int i = ARTP_ENHANCE_CONJ; i <= ARTP_ENHANCE_ALCHEMY; ++i)
+        if (prop[i])
+            ret += 8;
+
     return (ret > 0) ? ret : 0;
 }
 
@@ -220,6 +225,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_ELECTROCUTION:
             case SPWPN_PAIN:
             case SPWPN_ACID: // Unrand-only.
+            case SPWPN_FOUL_FLAME: // Unrand only.
             case SPWPN_PENETRATION: // Unrand-only.
             case SPWPN_SPECTRAL:
                 valued *= 25;
@@ -399,6 +405,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case WAND_ICEBLAST:
             case WAND_ROOTS:
+            case WAND_WARPING:
             case WAND_CHARMING:
             case WAND_PARALYSIS:
                 valued += 24 * item.plus;
@@ -534,15 +541,13 @@ unsigned int item_value(item_def item, bool ident)
             // Variable-strength rings.
             if (jewellery_type_has_plusses(item.sub_type))
             {
-                // Formula: price = kn(n+1) / 2, where k is 40,
-                // n is the power. (The base variable is equal to 2n.)
+                // Formula: price = 5n(n+1)
+                // n is the power. (The base variable is equal to n.)
                 int base = 0;
 
                 switch (item.sub_type)
                 {
                 case RING_SLAYING:
-                    base = 3 * item.plus;
-                    break;
                 case RING_PROTECTION:
                     base = 2 * item.plus;
                     break;
@@ -654,22 +659,22 @@ unsigned int item_value(item_def item, bool ident)
         {
         case TALISMAN_DEATH:
         case TALISMAN_STORM:
-            valued += 1200;
+            valued += 800;
             break;
 
         case TALISMAN_DRAGON:
         case TALISMAN_STATUE:
-            valued += 800;
+            valued += 600;
             break;
 
         case TALISMAN_MAW:
         case TALISMAN_SERPENT:
         case TALISMAN_BLADE:
-            valued += 400;
+            valued += 300;
             break;
 
         case TALISMAN_FLUX:
-            valued += 300;
+            valued += 250;
             break;
 
         case TALISMAN_BEAST:
@@ -677,6 +682,15 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
         }
+        if (is_artefact(item))
+        {
+            // XXX placeholder
+            if (item_type_known(item))
+                valued += artefact_value(item) * (valued / 10);
+            else
+                valued += valued / 16;
+        }
+
         break;
 
     case OBJ_BOOKS:
@@ -700,6 +714,14 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_STAVES:
         valued = item_type_known(item) ? 250 : 120;
+        if (is_artefact(item))
+        {
+            // XX placeholder
+            if (item_type_known(item))
+                valued += (7 * artefact_value(item));
+            else
+                valued += 50;
+        }
         break;
 
     case OBJ_ORBS:
@@ -707,6 +729,7 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_RUNES:
+    case OBJ_GEMS:
         valued = 10000;
         break;
 
@@ -796,7 +819,8 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     origin_purchased(item);
 
     if (shoptype_identifies_stock(shop.type)
-        || item_type_is_equipment(item.base_type))
+        || item_type_is_equipment(item.base_type)
+        || item.base_type == OBJ_TALISMANS)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
@@ -843,6 +867,9 @@ class ShopMenu : public InvMenu
     shopping_order order = ORDER_DEFAULT;
     level_pos pos;
     bool can_purchase;
+
+    int outside_items;
+    vector<int> bought_indices;
 
     int selected_cost(bool use_shopping_list=false) const;
 
@@ -938,6 +965,8 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
     init_entries();
     resort();
 
+    outside_items = 0;
+    bought_indices = {};
     update_help();
 
     set_title("Welcome to " + shop_name(shop) + "! What would you "
@@ -952,7 +981,7 @@ void ShopMenu::init_entries()
         auto newentry = make_unique<ShopEntry>(item, *this);
         newentry->hotkeys.clear();
         newentry->add_hotkey(ckey++);
-        add_entry(move(newentry));
+        add_entry(std::move(newentry));
     }
 }
 
@@ -1052,7 +1081,22 @@ void ShopMenu::update_help()
 
     m = pad_more_with(m, hyphenated_hotkey_letters(item_count(), 'A')
                                   + " put item on shopping list");
-    set_more(formatted_string::parse_string(top_line + m));
+
+
+    const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+    if (outside_items)
+    {
+        const formatted_string outside = formatted_string::parse_string(make_stringf(
+            "<%s>I'll put %s outside for you.</%s>\n",
+            col.c_str(),
+            bought_indices.size() == 1             ? "it" :
+      (int) bought_indices.size() == outside_items ? "them"
+                                                   : "some of them",
+            col.c_str()));
+        set_more(outside + formatted_string::parse_string(top_line + m));
+    }
+    else
+        set_more(formatted_string::parse_string(top_line + m));
 
     // set_more(formatted_string::parse_string(top_line
     //     + make_stringf(
@@ -1145,8 +1189,8 @@ void ShopMenu::purchase_selected()
          {
              return a->data > b->data;
          });
-    vector<int> bought_indices;
-    int outside_items = 0;
+    bought_indices = {};
+    outside_items = 0;
 
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items purchased.
@@ -1185,23 +1229,7 @@ void ShopMenu::purchase_selected()
     init_entries();
     resort();
 
-    if (outside_items)
-    {
-        update_help();
-        const formatted_string next_more = more;
-        more = formatted_string::parse_string(make_stringf(
-            "<%s>I'll put %s outside for you.</%s>\n",
-            col.c_str(),
-            bought_indices.size() == 1             ? "it" :
-      (int) bought_indices.size() == outside_items ? "them"
-                                                   : "some of them",
-            col.c_str()));
-        more += next_more;
-        update_more();
-    }
-    else
-        update_help();
-
+    update_help();
     update_menu(true);
 }
 
@@ -1379,6 +1407,8 @@ bool ShopMenu::process_key(int keyin)
         // Update the footer to display the new $$$ info.
         update_help();
         update_menu(true);
+        // Next time, dismiss any message about leaving items outside.
+        outside_items = 0;
     }
     return ret;
 }
@@ -1617,13 +1647,6 @@ shop_type str_to_shoptype(const string &s)
 const char *shoptype_to_str(shop_type type)
 {
     return shop_types[type];
-}
-
-void list_shop_types()
-{
-    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
-    for (const char *type : shop_types)
-        mprf_nocap("%s", type);
 }
 
 ////////////////////////////////////////////////////////////////////////

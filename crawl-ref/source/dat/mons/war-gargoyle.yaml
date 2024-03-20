@@ -1,0 +1,20 @@
+name: "war gargoyle"
+glyph: {char: "9", colour: lightcyan}
+flags: [flies, fighter, see_invis]
+resists: {elec: 1, fire: 1, cold: 1, petrify: 1}
+xp_mult: 18
+genus: golem
+holiness: [nonliving]
+will: 100
+attacks:
+ - {type: hit, damage: 40}
+hd: 10
+hp_10x: 520
+ac: 25
+ev: 4
+spells: war_gargoyle
+intelligence: human
+speed: 14
+uses: starting_equipment
+size: medium
+shape: humanoid_winged_tailed

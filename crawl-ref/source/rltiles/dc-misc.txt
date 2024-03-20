@@ -100,6 +100,8 @@ searing_ray5
 
 damnation BOLT_DAMNATION
 
+umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+
 irradiate0 BOLT_IRRADIATE
 irradiate1
 irradiate2
@@ -205,9 +207,9 @@ cloud_acid2
 cloud_storm1 CLOUD_STORM
 cloud_storm2
 
-cloud_neg0 CLOUD_NEG
-cloud_neg1
-cloud_neg2
+cloud_misery0 CLOUD_MISERY
+cloud_misery1
+cloud_misery2
 
 cloud_gold_dust0 CLOUD_GOLD_DUST
 cloud_gold_dust1

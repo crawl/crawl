@@ -32,11 +32,14 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "god-passive.h"
 #include "items.h"
+#include "item-def.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -74,6 +77,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
 #include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-player.h"
 #endif
 #include "tileview.h"
 #include "timed-effects.h"
@@ -122,29 +126,34 @@ static ai_action::goodness _caster_sees_foe(const monster &caster);
 static ai_action::goodness _foe_polymorph_viable(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
-static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
+static ai_action::goodness _foe_wl_lower_goodness(const monster &caster);
+static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
+static ai_action::goodness _scorch_goodness(const monster& caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
 static ai_action::goodness _foe_near_lava(const monster &caster);
 static ai_action::goodness _mons_likes_blinking(const monster &caster);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
+static void _cast_brain_bite(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
-static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _flay(const monster &caster, actor &defender, int damage);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_dancing_weapons(monster &caster, mon_spell_slot, bolt&);
+static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&);
+static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
 static void _branch_summon_helper(monster* mons, spell_type spell_cast);
 static void _cast_marshlight(monster &caster, mon_spell_slot slot, bolt&);
+static void _cast_foxfire(monster &caster, mon_spell_slot slot, bolt&);
 static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
@@ -220,6 +229,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _setup_minor_healing,
     } },
     { SPELL_SLUG_DART, _conjuration_logic(SPELL_SLUG_DART) },
+    { SPELL_BECKONING, {
+        [](const monster &caster)
+        {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            return ai_action::good_or_impossible(
+                                !adjacent(caster.pos(), foe->pos())
+                                && !foe->is_stationary());
+        },
+        _fire_simple_beam,
+        _zap_setup(SPELL_BECKONING)
+    } },
     { SPELL_VAMPIRIC_DRAINING, {
         [](const monster &caster)
         {
@@ -309,7 +330,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             simple_monster_message(caster, msg.c_str(), MSGCH_MONSTER_SPELL);
             // Not spell_hd(spell_cast); this is an invocation
             const int dur = BASELINE_DELAY
-                * min(5 + roll_dice(2, (caster.get_hit_dice() * 10) / 3 + 1),
+                * min(4 + roll_dice(2, (caster.get_hit_dice() * 4) / 3 + 1),
                       100);
             caster.add_ench(mon_enchant(ENCH_STRONG_WILLED, 0, &caster, dur));
             caster.add_ench(mon_enchant(ENCH_REGENERATION, 0, &caster, dur));
@@ -353,6 +374,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        _always_worthwhile,
        _cast_marshlight,
     } },
+    { SPELL_FOXFIRE, {
+       _always_worthwhile,
+       _cast_foxfire,
+    } },
+    { SPELL_SEARING_RAY, {
+       _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            const int pow = mons_spellpower(caster, SPELL_SEARING_RAY);
+            cast_searing_ray(caster, pow, beam, false);
+        },
+        _zap_setup(SPELL_SEARING_RAY)
+    } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_ARCJOLT, { _arcjolt_goodness,
         [](monster &caster, mon_spell_slot, bolt&) {
@@ -360,7 +393,21 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_arcjolt(pow, caster, false);
         },
     } },
+    { SPELL_SCORCH, { _scorch_goodness,
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_SCORCH);
+            cast_scorch(caster, pow, false);
+        },
+    } },
+    { SPELL_KISS_OF_DEATH, { _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& beam) {
+            _fire_simple_beam(caster, slot, beam);
+            caster.add_ench(mon_enchant(ENCH_DRAINED, 3, &caster, random_range(100, 200)));
+        },
+        _zap_setup(SPELL_KISS_OF_DEATH)
+    } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
+    { SPELL_BRAIN_BITE, { _always_worthwhile, _cast_brain_bite, } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
     { SPELL_CREEPING_FROST, { _foe_near_wall, _cast_creeping_frost, _setup_creeping_frost } },
@@ -371,7 +418,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             ASSERT(foe);
             return ai_action::good_or_impossible(!!(foe->holiness() & MH_NATURAL));
         },
-        _cast_flay,
+        mons_cast_flay,
     } },
     { SPELL_PARALYSIS_GAZE, {
         _caster_sees_foe,
@@ -393,11 +440,21 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             caster.get_foe()->weaken(&caster, caster.get_hit_dice());
         },
     } },
+    { SPELL_VITRIFYING_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            enchant_actor_with_flavour(caster.get_foe(), &caster,
+                                       BEAM_VITRIFYING_GAZE,
+                                       mons_spellpower(caster, slot.spell));
+        },
+    } },
     { SPELL_WATER_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_EARTH_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_AIR_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_FIRE_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+    { SPELL_STICKS_TO_SNAKES, { _always_worthwhile, _mons_sticks_to_snakes } },
     { SPELL_SHEZAS_DANCE, { _always_worthwhile, _mons_summon_dancing_weapons } },
+    { SPELL_DIVINE_ARMAMENT, { _always_worthwhile, _cast_divine_armament } },
     { SPELL_HASTE_OTHER, {
         _always_worthwhile,
         _fire_simple_beam,
@@ -441,6 +498,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_CONFUSE, _hex_logic(SPELL_CONFUSE) },
     { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
     { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
+    { SPELL_VITRIFY, _hex_logic(SPELL_VITRIFY, _foe_vitrify_goodness) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
     { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
             const actor* foe = caster.get_foe();
@@ -460,20 +518,20 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_TELEPORT_OTHER, _hex_logic(SPELL_TELEPORT_OTHER,
                                          _foe_tele_goodness) },
     { SPELL_DIMENSION_ANCHOR, _hex_logic(SPELL_DIMENSION_ANCHOR, nullptr, 6)},
-    { SPELL_AGONY_RANGE, _hex_logic(SPELL_AGONY_RANGE, [](const monster &caster) {
-            const actor* foe = caster.get_foe();
-            ASSERT(foe);
-            return ai_action::good_or_impossible(_torment_vulnerable(foe));
-        }, 6)
-    },
     { SPELL_AGONY, _hex_logic(SPELL_AGONY, [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(_torment_vulnerable(foe));
         }, 6)
     },
+    { SPELL_AGONIZING_TOUCH, _hex_logic(SPELL_AGONIZING_TOUCH, [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            return ai_action::good_or_impossible(_torment_vulnerable(foe));
+        }, 6)
+    },
     { SPELL_STRIP_WILLPOWER,
-        _hex_logic(SPELL_STRIP_WILLPOWER, _foe_mr_lower_goodness, 6)
+        _hex_logic(SPELL_STRIP_WILLPOWER, _foe_wl_lower_goodness, 6)
     },
     { SPELL_SENTINEL_MARK, _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) },
     { SPELL_SAP_MAGIC, {
@@ -485,7 +543,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(foe->res_poison(false) < 3);
-    }, 6) },
+    }, 8) },
     { SPELL_GRASPING_ROOTS, {
         [](const monster &caster)
         {
@@ -523,7 +581,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BLINK_RANGE, {
         _mons_likes_blinking,
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            blink_range(&caster);
+            blink_range(caster);
         }
     } },
     { SPELL_BLINK_AWAY, {
@@ -541,7 +599,27 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return _mons_likes_blinking(caster);
         },
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            blink_close(&caster);
+            blink_close(caster);
+        }
+    } },
+    { SPELL_ELECTROLUNGE, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            const coord_def dest = get_electric_charge_landing_spot(caster, foe->pos());
+            if (dest.origin())
+                return ai_action::impossible();
+
+            // Prevent friendlies from forcibly displacing the player, which can
+            // be dangerous.
+            if (caster.friendly() && you.pos() == dest)
+                return ai_action::bad();
+
+            return ai_action::good();
+        },
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            const int pow = mons_spellpower(caster, SPELL_ELECTROLUNGE);
+            electric_charge(caster, pow, false, caster.get_foe()->pos());
         }
     } },
     { SPELL_CORRUPT_LOCALE, {
@@ -675,9 +753,14 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster)
     return _foe_effect_viable(caster, DUR_TELEPORT, ENCH_TP);
 }
 
-static ai_action::goodness _foe_mr_lower_goodness(const monster &caster)
+static ai_action::goodness _foe_wl_lower_goodness(const monster &caster)
 {
     return _foe_effect_viable(caster, DUR_LOWERED_WL, ENCH_LOWERED_WL);
+}
+
+static ai_action::goodness _foe_vitrify_goodness(const monster &caster)
+{
+    return _foe_effect_viable(caster, DUR_VITRIFIED, ENCH_VITRIFIED);
 }
 
 /**
@@ -816,17 +899,106 @@ static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
     _whack(caster, *foe);
 }
 
+static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
+{
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+
+    int dam_multiplier = 1;
+    int drain = 0;
+
+    if (foe->is_player())
+    {
+        if (you.magic_points <= you.max_magic_points / 5)
+        {
+            dam_multiplier = 2;
+            mprf("Something gnaws heavily on your mind!");
+            xom_is_stimulated(30);
+        }
+        else
+            mprf("Something gnaws on your mind!");
+
+    }
+    else
+    {
+        monster* mon_foe = foe->as_monster();
+        if (mon_foe->has_ench(ENCH_ANTIMAGIC))
+        {
+            dam_multiplier = 2;
+            simple_monster_message(*foe->as_monster(), "'s mind is heavily gnawed upon.");
+        }
+        else
+            simple_monster_message(*foe->as_monster(), "'s mind is gnawed upon.");
+    }
+
+    foe->hurt(&caster, (4 + random2avg(5, 2)) * dam_multiplier,
+              BEAM_MISSILE, KILLED_BY_BEAM, "", "by psychic fangs");
+    _whack(caster, *foe);
+
+    if (foe->is_player())
+    {
+        drain = min(you.magic_points, max(1, you.max_magic_points / 5));
+        if (drain > 0)
+        {
+            mprf(MSGCH_WARN, "You feel your power leaking away.");
+            drain_mp(drain);
+        }
+    }
+    else
+    {
+        enchant_actor_with_flavour(foe, &caster, BEAM_DRAIN_MAGIC,
+                                   mons_spellpower(caster, slot.spell));
+    }
+}
+
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
 {
     actor* foe = caster.get_foe();
     ASSERT(foe);
 
-    const int turns = 4 + random2avg(div_rand_round(
-                mons_spellpower(caster, SPELL_GRASPING_ROOTS), 10), 2);
+    const int pow = mons_spellpower(caster, SPELL_GRASPING_ROOTS);
+    const int turns = 1 + random_range(div_rand_round(pow, 20),
+                                       div_rand_round(pow, 12) + 1);
     dprf("Grasping roots turns: %d", turns);
     mpr("Roots burst forth from the earth!");
-    grasp_with_roots(caster, *foe, turns);
+    start_ranged_constriction(caster, *foe, turns, CONSTRICT_ROOTS);
 }
+
+static void _cast_regenerate_other(monster* caster)
+{
+    int seen = 0;
+    monster* targ = nullptr;
+    for (monster_near_iterator mi(caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(caster, *mi) && mi->hit_points < mi->max_hit_points
+            && !mi->has_ench(ENCH_REGENERATION))
+        {
+            if (one_chance_in(++seen))
+                targ = *mi;
+        }
+    }
+
+    if (targ != nullptr)
+    {
+        simple_monster_message(*targ, "'s wounds begin to rapidly close.");
+
+        const int pow = mons_spellpower(*caster, SPELL_REGENERATE_OTHER);
+        int dur = (4 + roll_dice(2, pow / 20)) * BASELINE_DELAY;
+        targ->add_ench(mon_enchant(ENCH_REGENERATION, 0, caster, dur));
+
+        // Animate visuals
+        bolt beam;
+        beam.source = targ->pos();
+        beam.target = targ->pos();
+        beam.colour = ETC_HOLY;
+        beam.range = LOS_RADIUS;
+        beam.aimed_at_spot = true;
+        beam.flavour = BEAM_VISUAL;
+        beam.draw_delay = 3;
+        beam.fire();
+    }
+}
+
 
 /// Is the given full-LOS attack spell worth casting for the given monster?
 static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
@@ -838,7 +1010,7 @@ static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
 /// Set up a fake beam, for noise-generating purposes (?)
 static void _setup_fake_beam(bolt& beam, const monster&, int)
 {
-    beam.flavour  = BEAM_DEVASTATION;
+    beam.flavour  = BEAM_DESTRUCTION;
     beam.pierce   = true;
     // Doesn't take distance into account, but this is just a tracer so
     // we'll ignore that. We need some damage on the tracer so the monster
@@ -966,7 +1138,7 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
 
     if (caster.type == MONS_IRONBOUND_CONVOKER
         || caster.type == MONS_AMAEMON
-        || mons_bound_soul(caster))
+        || caster.type == MONS_BOUND_SOUL)
     {
         return true; // will buff any ally
     }
@@ -1118,7 +1290,6 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_CALL_DOWN_LIGHTNING:
             return 16;
 
-        case SPELL_OLGREBS_TOXIC_RADIANCE:
         case SPELL_IOOD:
         case SPELL_FREEZE:
             return 8;
@@ -1127,13 +1298,17 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_BATTLESPHERE:
         case SPELL_IGNITE_POISON:
         case SPELL_IRRADIATE:
+        case SPELL_FOXFIRE:
+        case SPELL_MANIFOLD_ASSAULT:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
         case SPELL_SUMMON_HYDRA:
+        case SPELL_MARTYRS_KNELL:
             return 5;
 
         case SPELL_CHAIN_OF_CHAOS:
+        case SPELL_STICKS_TO_SNAKES:
             return 4;
 
         default:
@@ -1153,10 +1328,10 @@ bool mons_spell_is_spell(spell_type spell)
     {
         case SPELL_HOLY_BREATH:
         case SPELL_SPIT_ACID:
-        case SPELL_ACID_SPLASH:
+        case SPELL_CAUSTIC_BREATH:
         case SPELL_CHAOS_BREATH:
         case SPELL_COLD_BREATH:
-        case SPELL_CHILLING_BREATH:
+        case SPELL_GLACIAL_BREATH:
         case SPELL_FIRE_BREATH:
         case SPELL_SEARING_BREATH:
         case SPELL_ELECTRICAL_BOLT:
@@ -1345,12 +1520,12 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_FIREBALL:
     case SPELL_ICEBLAST:
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+    case SPELL_DISPEL_UNDEAD:
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_STICKY_FLAME:
-    case SPELL_STICKY_FLAME_RANGE:
     case SPELL_STING:
     case SPELL_IRON_SHOT:
-    case SPELL_UNMAKING:
+    case SPELL_BOMBARD:
     case SPELL_STONE_ARROW:
     case SPELL_FORCE_LANCE:
     case SPELL_CORROSIVE_BOLT:
@@ -1360,6 +1535,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_CHARMING:
     case SPELL_BOLT_OF_LIGHT:
     case SPELL_FASTROOT:
+    case SPELL_WARP_SPACE:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_PRIMAL_WAVE:
     case SPELL_BLINKBOLT:
@@ -1376,25 +1552,25 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_MIASMA_BREATH:      // death drake
     case SPELL_GHOSTLY_FIREBALL:
     case SPELL_FLASH_FREEZE:
-    case SPELL_CRYSTAL_BOLT:
+    case SPELL_REBOUNDING_BLAZE:
+    case SPELL_REBOUNDING_CHILL:
     case SPELL_SPIT_LAVA:
     case SPELL_HURL_SLUDGE:
     case SPELL_HOLY_BREATH:
     case SPELL_SPIT_ACID:
-    case SPELL_ACID_SPLASH:
+    case SPELL_CAUSTIC_BREATH:
     case SPELL_ELECTRICAL_BOLT:
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
+    case SPELL_MALIGN_OFFERING:
+    case SPELL_BOLT_OF_DEVASTATION:
+    case SPELL_BORGNJORS_VILE_CLUTCH:
+    case SPELL_CRYSTALLIZING_SHOT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
     case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
-        break;
-
-    case SPELL_ENERGY_BOLT:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.short_name = "energy";
         break;
 
     case SPELL_MALMUTATE:
@@ -1464,13 +1640,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.short_name = "frost";
         break;
 
-    case SPELL_CHILLING_BREATH:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.name = "chilling breath";
-        beam.aux_source  = "blast of chilling breath";
-        beam.short_name  = "frost";
-        break;
-
     case SPELL_PORKALATOR:
         beam.name     = "porkalator";
         beam.glyph    = 0;
@@ -1516,11 +1685,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_COLD;
         break;
 
-    case SPELL_MALIGN_OFFERING:
-        beam.flavour    = BEAM_MALIGN_OFFERING;
-        beam.damage     = dice_def(2, 7 + (power / 13));
-        break;
-
     case SPELL_SHADOW_BOLT:
         beam.name     = "shadow bolt";
         beam.pierce   = true;
@@ -1555,6 +1719,27 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_MOURNING_WAIL:
+        beam.name     = "wave of grief";
+        beam.hit_verb = "passes through";
+        beam.colour   = DARKGREY;
+        beam.damage   = dice_def(0, 0);
+        beam.hit      = AUTOMATIC_HIT;
+        beam.flavour  = BEAM_NEG;
+        beam.foe_ratio = 30;
+        beam.pierce   = true;
+        break;
+
+    case SPELL_MARCH_OF_SORROWS:
+        beam.name     = "howling sorrow";
+        beam.colour   = DARKGREY;
+        beam.damage   = dice_def(0, 0);
+        beam.hit      = AUTOMATIC_HIT;
+        beam.flavour  = BEAM_NEG;
+        beam.foe_ratio = 30;
+        beam.pierce   = true;
+        break;
+
     // Special behaviour handled in _mons_upheaval
     // Hack so beam.cc allows us to correctly use that function
     case SPELL_UPHEAVAL:
@@ -1571,6 +1756,16 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
         beam.ex_size     = 1;
+        break;
+
+    case SPELL_PYRE_ARROW:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+
+        // Purely flavor-based renames for less magical users
+        if (mons->type == MONS_BOMBARDIER_BEETLE)
+            beam.name = "burning spray";
+        else if (mons->type == MONS_SUN_MOTH)
+            beam.name = "flurry of pyrophoric scales";
         break;
 
     default:
@@ -1691,7 +1886,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BATTLESPHERE:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
-    case SPELL_CALL_LOST_SOUL:
+    case SPELL_CALL_LOST_SOULS:
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
@@ -1723,9 +1918,10 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CLEANSING_FLAME:
     case SPELL_DRAINING_GAZE:
     case SPELL_CONFUSION_GAZE:
+    case SPELL_MARTYRS_KNELL:
     case SPELL_HAUNT:
-    case SPELL_SUMMON_SPECTRAL_ORCS:
-    case SPELL_BRAIN_FEED:
+    case SPELL_VANQUISHED_VANGUARD:
+    case SPELL_BRAIN_BITE:
     case SPELL_HOLY_FLAMES:
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
@@ -1745,6 +1941,9 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HELL_SENTINEL:
     case SPELL_STOKE_FLAMES:
     case SPELL_IRRADIATE:
+    case SPELL_FUNERAL_DIRGE:
+    case SPELL_MANIFOLD_ASSAULT:
+    case SPELL_REGENERATE_OTHER:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -1767,8 +1966,29 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     }
     }
 
-    const int power = evoke ? 30 + mons->get_hit_dice()
-                            : mons_spellpower(*mons, spell_cast);
+    int power = evoke ? 30 + mons->get_hit_dice()
+                      : mons_spellpower(*mons, spell_cast);
+
+    // Laughing skulls get a power boost based on other nearby laughing skulls.
+    // (Doing it here feels a little hacky, but I'm not sure where else it
+    // should go, unless we duplicate bolt of draining just for their trick.)
+    if (mons->type == MONS_LAUGHING_SKULL)
+    {
+        int skull_count = 0;
+        for (distance_iterator di(mons->pos(), false, true, 5); di; ++di)
+        {
+            if (monster_at(*di) && monster_at(*di)->type == MONS_LAUGHING_SKULL
+                && mons_aligned(mons, monster_at(*di))
+                && mons->see_cell_no_trans(*di))
+            {
+                ++skull_count;
+            }
+        }
+
+        // Power boost is +25% for each nearby skull, to a maximum of +100%
+        int skull_mult = 100 + min(100, skull_count * 25);
+        power = power * skull_mult / 100;
+    }
 
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
@@ -2281,13 +2501,12 @@ static bool _should_force_door_shut(const coord_def& door)
          cur_tension, new_tension);
 
     // If closing the door would reduce player tension by too much, probably
-    // it is scarier for the player to leave it open and thus it should be left
-    // open
+    // it is scarier for the player to leave it open.
     //
     // Currently won't allow tension to be lowered by more than 33%.
     //
     // Also, if there's 0 tension, we require the door closure to create
-    // tensiion, otherwise we'll probably just lock the player away from the
+    // tension, otherwise we'll probably just lock the player away from the
     // warden.
     return 1 + cur_tension * 66 <= new_tension * 100;
 }
@@ -2310,6 +2529,10 @@ static bool _seal_doors_and_stairs(const monster* warden,
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
+        // No closing doors, etc, through grates - can softlock.
+        if (!cell_see_cell(warden->pos(), *ri, LOS_SOLID_SEE))
+            continue;
+
         if (feat_is_open_door(env.grid(*ri)))
         {
             if (!_can_force_door_shut(*ri))
@@ -2497,13 +2720,11 @@ static void _setup_creeping_frost(bolt &beam, const monster &, int pow)
     zappy(spell_to_zap(SPELL_CREEPING_FROST), pow, true, beam);
     beam.hit = AUTOMATIC_HIT;
     beam.name = "frost";
+    beam.hit_verb = "grips";
 }
 
 static bool _creeping_frost_freeze(coord_def p, bolt &beam)
 {
-    beam.hit_verb = "grips"; // We can't do this in _setup_creeping_frost,
-                             // since hit_verb isn't copied. XXX: think about
-                             // the consequences of copying it in bolt_parent_init
     beam.source = p;
     beam.target = p;
     beam.aux_source = "creeping frost";
@@ -2550,7 +2771,12 @@ static ai_action::goodness _mons_likes_blinking(const monster &caster)
     if (caster.no_tele())
         return ai_action::impossible();
     // Prefer to keep a polar vortex going rather than blink.
-    return ai_action::good_or_bad(!caster.has_ench(ENCH_POLAR_VORTEX));
+    if (caster.has_ench(ENCH_POLAR_VORTEX))
+        return ai_action::bad();
+
+    // Prefer not to blink if a friendly monster is targeting the player so that
+    // they won't constantly blink while resting/travelling
+    return ai_action::good_or_bad(caster.get_foe());
 }
 
 /// Can the caster see the given target's cell and lava next to (or under) them?
@@ -2644,6 +2870,18 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
     }
 
     return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
+}
+
+static ai_action::goodness _scorch_goodness(const monster& caster)
+{
+    auto targeter = make_unique<targeter_scorch>(caster, 3, true);
+    for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
+    {
+        if (actor_at(*ti)->res_fire() < 3)
+            return ai_action::good();
+    }
+
+    return ai_action::impossible();
 }
 
 /// Should the given monster cast Still Winds?
@@ -3041,9 +3279,6 @@ static bool _place_druids_call_beast(const monster* druid, monster* beast,
             }
         }
 
-        // Assign blame (for statistical purposes, mostly)
-        mons_add_blame(beast, "called by " + druid->name(DESC_A, true));
-
         return true;
     }
 
@@ -3228,7 +3463,8 @@ static void _corrupting_pulse(monster *mons)
 }
 
 // Returns the clone just created (null otherwise)
-monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ_type)
+monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
+                             int summ_type)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -3240,6 +3476,14 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     // Unentangle the real monster.
     if (targ->is_constricted())
         targ->stop_being_constricted();
+
+    if (you.props.exists(BULLSEYE_TARGET_KEY)
+        && (mid_t)you.props[BULLSEYE_TARGET_KEY].get_int() == targ->mid)
+    {
+        targ->del_ench(ENCH_BULLSEYE_TARGET);
+        you.duration[DUR_DIMENSIONAL_BULLSEYE] = 0;
+        you.props.erase(BULLSEYE_TARGET_KEY);
+    }
 
     mons_clear_trapping_net(targ);
 
@@ -3695,6 +3939,17 @@ static bool _mons_in_emergency(const monster &mons)
     return mons.hit_points < mons.max_hit_points / 3;
 }
 
+static bool _spell_flags_invalid_for_situation(const monster& mons,
+                                               const mon_spell_slot spell)
+{
+    return (spell.flags & MON_SPELL_EMERGENCY
+            && !_mons_in_emergency(mons))
+            || (spell.flags & MON_SPELL_SHORT_RANGE
+                && !_short_target_range(&mons))
+            || (spell.flags & MON_SPELL_LONG_RANGE
+                && !_long_target_range(&mons));
+}
+
 /**
  * Choose a spell for the given monster to consider casting.
  *
@@ -3724,15 +3979,8 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
     unsigned int i = 0;
     for (; i < hspell_pass.size(); i++)
     {
-        if ((hspell_pass[i].flags & MON_SPELL_EMERGENCY
-             && !_mons_in_emergency(mons))
-            || (hspell_pass[i].flags & MON_SPELL_SHORT_RANGE
-                && !_short_target_range(&mons))
-            || (hspell_pass[i].flags & MON_SPELL_LONG_RANGE
-                && !_long_target_range(&mons)))
-        {
+        if (_spell_flags_invalid_for_situation(mons, hspell_pass[i]))
             continue;
-        }
 
         if (hspell_pass[i].freq >= what)
             break;
@@ -3888,8 +4136,7 @@ static bool _target_and_justify_spell(monster &mons,
     if (victim
         && beem.can_knockback()
         && !victim->is_stationary()
-        && mons.is_constricting()
-        && mons.constricting->count(victim->mid))
+        && mons.is_constricting(*victim))
     {
         return false;
     }
@@ -3929,6 +4176,7 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     // Promote the casting of useful spells for low-HP monsters.
     // (kraken should always cast their escape spell of inky).
     if (_mons_in_emergency(mons)
+        && !mons_is_fleeing(mons)
         && one_chance_in(mons.type == MONS_KRAKEN ? 4 : 8))
     {
         // Note: There should always be at least some chance we don't
@@ -3940,8 +4188,9 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         for (const mon_spell_slot &slot : hspell_pass)
         {
             bolt targ_beam = orig_beem;
-            if (_target_and_justify_spell(mons, targ_beam, slot.spell,
-                                          ignore_good_idea)
+            if (!_spell_flags_invalid_for_situation(mons, slot)
+                && _target_and_justify_spell(mons, targ_beam, slot.spell,
+                                             ignore_good_idea)
                 && one_chance_in(++found_spell))
             {
                 chosen_slot = slot;
@@ -3958,7 +4207,8 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     if (mons.wont_attack() && !mon_enemies_around(&mons) && !one_chance_in(10))
         return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 
-    bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS);
+    bool reroll = mons.has_ench(ENCH_EMPOWERED_SPELLS)
+                  || mons.has_ench(ENCH_TOUCH_OF_BEOGH);
     for (int attempt = 0; attempt < 2; attempt++)
     {
         const bool prefer_selfench = attempt > 0 && coinflip();
@@ -3992,6 +4242,22 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 }
 
+static bool _valid_caution_spell(spell_type type)
+{
+    switch (type)
+    {
+        // Don't consider being able to blink a valid reason to wait in place.
+        // We might not be in range for anything else, and moving close is still
+        // often better than doing nothing here.
+        case SPELL_BLINK:
+        case SPELL_BLINK_CLOSE:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
 /**
  * Give a monster a chance to cast a spell.
  *
@@ -4009,7 +4275,6 @@ bool handle_mon_spell(monster* mons)
     // .. berserk check is necessary for out-of-sequence actions like emergency
     // slot spells {blue}
     if (mons->asleep()
-        || mons->submerged()
         || mons->berserk_or_frenzied()
         || mons_is_confused(*mons, false)
         || !mons->has_spells())
@@ -4080,7 +4345,30 @@ bool handle_mon_spell(monster* mons)
 
     // Should the monster *still* not have a spell, well, too bad {dlb}:
     if (spell_cast == SPELL_NO_SPELL)
+    {
+        // If we didn't choose to cast a spell this turn and we're cautious,
+        // let's see if there's an aggressive spell that we *could* have.
+        if (mons->flags & MF_CAUTIOUS)
+        {
+            mons->props.erase(MON_SPELL_USABLE_KEY);
+
+            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+            {
+                bolt test_beam = beem;
+
+                if (_valid_caution_spell(hspell_pass[i].spell)
+                    && !_spell_flags_invalid_for_situation(*mons, hspell_pass[i])
+                    && _target_and_justify_spell(*mons, test_beam, hspell_pass[i].spell,
+                                                ignore_good_idea))
+                {
+                    mons->props[MON_SPELL_USABLE_KEY] = true;
+                    break;
+                }
+            }
+        }
+
         return false;
+    }
 
     // Check for antimagic if casting a spell spell.
     if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_ANTIMAGIC_MASK
@@ -4104,10 +4392,8 @@ bool handle_mon_spell(monster* mons)
     if (!(get_spell_flags(spell_cast) & spflag::utility))
         make_mons_stop_fleeing(mons);
 
-    if (battlesphere)
-        aim_battlesphere(mons, spell_cast);
     mons_cast(mons, beem, spell_cast, flags);
-    if (battlesphere)
+    if (battlesphere && battlesphere_can_mirror(spell_cast))
         trigger_battlesphere(mons);
     if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
     {
@@ -4234,7 +4520,7 @@ static monster_type _pick_undead_summon()
     static monster_type undead[] =
     {
         MONS_NECROPHAGE, MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_ZOMBIE,
-        MONS_SKELETON, MONS_SIMULACRUM, MONS_SPECTRAL_THING, MONS_FLYING_SKULL,
+        MONS_SKELETON, MONS_SIMULACRUM, MONS_SPECTRAL_THING, MONS_LAUGHING_SKULL,
         MONS_MUMMY, MONS_VAMPIRE, MONS_WIGHT, MONS_WRAITH, MONS_SHADOW_WRAITH,
         MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SHADOW
     };
@@ -4244,8 +4530,9 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(8, MONS_HELL_RAT,
-                                  5, MONS_REDBACK,
+    return random_choose_weighted(6, MONS_HELL_RAT,
+                                  3, MONS_SWAMP_WORM,
+                                  2, MONS_GOLIATH_FROG,
                                   2, MONS_TARANTELLA,
                                   2, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER);
@@ -4254,11 +4541,10 @@ static monster_type _pick_vermin()
 static monster_type _pick_drake()
 {
     return random_choose_weighted(5, MONS_SWAMP_DRAKE,
-                                  5, MONS_KOMODO_DRAGON,
-                                  5, MONS_WIND_DRAKE,
-                                  6, MONS_RIME_DRAKE,
-                                  6, MONS_DEATH_DRAKE,
-                                  3, MONS_LINDWURM);
+                                  6, MONS_WIND_DRAKE,
+                                  8, MONS_RIME_DRAKE,
+                                  7, MONS_DEATH_DRAKE,
+                                  4, MONS_LINDWURM);
 }
 
 static void _do_high_level_summon(monster* mons, spell_type spell_cast,
@@ -4305,6 +4591,22 @@ static void _mons_summon_elemental(monster &mons, mon_spell_slot slot, bolt&)
         _summon(mons, *mtyp, 3, slot);
 }
 
+static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_STICKS_TO_SNAKES);
+    monster_type type = MONS_WATER_MOCCASIN;
+
+    // HD > 15
+    if (pow > 60)
+        type = MONS_ANACONDA;
+    // HD > 8
+    else if (pow > 32)
+        type = MONS_BLACK_MAMBA;
+
+    for (int i = 0; i < 2; ++i)
+        _summon(mons, type, 2, slot);
+}
+
 static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bolt&)
 {
     // TODO: scale by power?
@@ -4314,6 +4616,54 @@ static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bol
         monster* mon = _summon(mons, MONS_DANCING_WEAPON, 3, slot);
         if (mon)
             mon->add_ench(ENCH_HASTE);
+    }
+}
+
+static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&)
+{
+    monster* weapon = _summon(mons, MONS_DANCING_WEAPON, 2, slot);
+
+    // If we created a base weapon, adjust it to match the caster
+    if (weapon)
+    {
+        const int tier = mons.get_experience_level() > 17 ? 3
+                         : mons.get_experience_level() > 11 ? 2
+                         : 1;
+
+        int pow = min(100, mons.get_experience_level() * 5);
+
+        // Choose weapon type consistently based on the caster
+        item_def& wpn(*weapon->weapon());
+
+        switch (tier)
+        {
+            case 3:
+                wpn.sub_type = mons.mid % 2 == 0 ? WPN_EXECUTIONERS_AXE : WPN_BARDICHE;
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
+                wpn.plus = 0;
+                pow = 100;
+                break;
+
+            case 2:
+                wpn.sub_type = mons.mid % 2 == 0 ? WPN_BATTLEAXE : WPN_GLAIVE;
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+                wpn.plus = 0;
+                pow = 70 + mons.get_experience_level();
+                break;
+
+            default:
+            case 1:
+                wpn.sub_type = mons.mid % 2 == 0 ? WPN_WAR_AXE : WPN_TRIDENT;
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+                wpn.plus = 0;
+                pow = 50 + mons.get_experience_level() * 2;
+                break;
+        }
+
+        ghost_demon newstats;
+        newstats.init_dancing_weapon(wpn, pow);
+        weapon->set_ghost(newstats);
+        weapon->ghost_demon_init();
     }
 }
 
@@ -4335,47 +4685,51 @@ static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
     mons_summon_illusion_from(mons, foe, spell);
 }
 
-static void _mons_cast_spectral_orcs(monster* mons)
+static void _cast_vanquished_vanguard(monster* mons)
 {
     ASSERT(mons->get_foe());
     const coord_def fpos = mons->get_foe()->pos();
 
-    const int abj = 3;
+    int pow = mons->get_experience_level();
 
-    for (int i = random2(3) + 1; i > 0; --i)
+    for (int i = 0; i < 3; ++i)
     {
-        monster_type mon = MONS_ORC;
-        if (coinflip())
-            mon = MONS_ORC_WARRIOR;
-        else if (one_chance_in(3))
-            mon = MONS_ORC_KNIGHT;
-        else if (one_chance_in(10))
-            mon = MONS_ORC_WARLORD;
+        monster_type type = MONS_ORC_WARRIOR;
+        if (x_chance_in_y(max(0, pow - 10), 20))
+            type = MONS_ORC_WARLORD;
+        else if (x_chance_in_y(max(0, pow - 5), 20))
+            type = MONS_ORC_KNIGHT;
 
-        // Use the original monster type as the zombified type here, to
-        // get the proper stats from it.
         if (monster *orc = create_monster(
                 mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), fpos,
                           mons->foe)
-                .set_summoned(mons, abj, SPELL_SUMMON_SPECTRAL_ORCS, mons->god)
-                .set_base(mon)))
+                .set_summoned(mons, 3, SPELL_VANQUISHED_VANGUARD, mons->god)
+                .set_base(type)))
         {
-            // set which base type this orc is pretending to be for gear
-            // purposes
-            if (mon != MONS_ORC)
+            weapon_type wpn = WPN_TRIDENT;
+            armour_type arm = ARM_SCALE_MAIL;
+#ifdef USE_TILE
+            orc->props[MONSTER_TILE_KEY] = TILEP_MONS_FALLEN_ORC_WARRIOR;
+#endif
+            if (type == MONS_ORC_KNIGHT)
             {
-                orc->mname = mons_type_name(mon, DESC_PLAIN);
-                orc->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                wpn = WPN_HALBERD;
+                arm = ARM_CHAIN_MAIL;
+#ifdef USE_TILE
+                orc->props[MONSTER_TILE_KEY] = TILEP_MONS_FALLEN_ORC_KNIGHT;
+#endif
+            }
+            else if (type == MONS_ORC_WARLORD)
+            {
+                wpn = WPN_BARDICHE;
+                arm = ARM_PLATE_ARMOUR;
+#ifdef USE_TILE
+                orc->props[MONSTER_TILE_KEY] = TILEP_MONS_FALLEN_ORC_WARLORD;
+#endif
             }
 
-            // give gear using the base type
-            const int lvl = env.absdepth0;
-            give_specific_item(orc, make_mons_weapon(orc->base_monster, lvl));
-            give_specific_item(orc, make_mons_armour(orc->base_monster, lvl));
-            // XXX: and a shield, for warlords...? (wasn't included before)
-
-            // set gear as summoned
-            orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
+            give_specific_item(orc, items(false, OBJ_WEAPONS, wpn, 0, SPWPN_FORBID_BRAND));
+            give_specific_item(orc, items(false, OBJ_ARMOUR, arm, 0, SPARM_FORBID_EGO));
         }
     }
 }
@@ -4749,8 +5103,7 @@ static void _blink_allies_encircle(const monster* mon)
     }
     shuffle_array(allies);
 
-    int count = max(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
-                       + random2(mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 4));
+    int count = random_range(3, 6);
 
     for (monster *ally : allies)
     {
@@ -4770,7 +5123,9 @@ static void _blink_allies_encircle(const monster* mon)
         ally->behaviour = BEH_SEEK;
         ally->foe = mon->foe;
         ally->drain_action_energy();
-        count--;
+
+        if (!--count)
+            break;
     }
 }
 
@@ -4837,7 +5192,7 @@ static branch_summon_pair _invitation_summons[] =
   { BRANCH_VAULTS,
     { // Vaults enemies
       {  1,   1,   60, FLAT, MONS_VERY_UGLY_THING },
-      {  1,   1,   40, FLAT, MONS_IRONBOUND_THUNDERHULK },
+      {  1,   1,   40, FLAT, MONS_IRONBOUND_FROSTHEART },
       {  1,   1,   20, FLAT, MONS_VAULT_SENTINEL },
     }},
   { BRANCH_CRYPT,
@@ -4864,7 +5219,7 @@ static branch_summon_pair _planerend_summons[] =
     }},
   { BRANCH_VAULTS,
     { // Vaults enemies
-      {  1,   1,   80, FLAT, MONS_VAULT_SENTINEL },
+      {  1,   1,   80, FLAT, MONS_IRONBOUND_THUNDERHULK },
       {  1,   1,   40, FLAT, MONS_IRONBOUND_CONVOKER },
       {  1,   1,  100, FLAT, MONS_WAR_GARGOYLE },
     }},
@@ -4962,7 +5317,13 @@ static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
     cast_foxfire(mons, pow, GOD_NO_GOD, false, true);
 }
 
-static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
+static void _cast_foxfire(monster &mons, mon_spell_slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_FOXFIRE);
+    cast_foxfire(mons, pow, GOD_NO_GOD, false, false);
+}
+
+void mons_cast_flay(monster &caster, mon_spell_slot, bolt&)
 {
     actor* defender = caster.get_foe();
     ASSERT(defender);
@@ -5434,6 +5795,78 @@ static void _mons_vortex(monster *mons)
         mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, ench_dur));
 }
 
+static bool _cast_dirge(monster& caster, bool check_only = false)
+{
+    const actor *foe = caster.get_foe();
+
+    // Only use if the chanter has a visible enemy
+    if (!foe
+        || foe->is_player() && caster.friendly()
+        || !caster.see_cell_no_trans(foe->pos()))
+    {
+        return false;
+    }
+
+    // Don't try to make noise when silent.
+    if (caster.is_silenced())
+        return false;
+
+    vector<monster* > targs;
+    for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        monster *mons = *mi;
+
+        // Exclude various invalid targets
+        if (mons == &caster
+            || mons->holiness() != MH_UNDEAD
+            || !mons_aligned(&caster, mons)
+            || mons->confused()
+            || mons->cannot_act())
+        {
+            continue;
+        }
+
+        if (mons->has_ench(ENCH_MIGHT) && mons->has_ench(ENCH_SWIFT))
+            continue;
+
+        // We found at least one valid target; this is good enough.
+        if (check_only)
+            return true;
+
+        targs.push_back(mons);
+    }
+
+    if (targs.size() == 0)
+        return false;
+
+    // Randomize targets slightly, prioritizing allies close to one's foe
+    shuffle_array(targs);
+    near_to_far_sorter sorter = {foe->pos()};
+    sort(targs.begin(), targs.end(), sorter);
+
+    int num_affected = min((int)targs.size(), random_range(2, 4));
+    for (int i = 0; i < num_affected; ++i)
+    {
+        monster* mons = targs[i];
+
+        // Both the might and the swiftness have the same duration.
+        int buffRange = random_range(3, 5);
+        mons->add_ench(mon_enchant(ENCH_MIGHT, 1, &caster, buffRange
+                                                           * BASELINE_DELAY));
+        mons->add_ench(mon_enchant(ENCH_SWIFT, 1, &caster, buffRange
+                                                           * BASELINE_DELAY));
+
+        if (mons->asleep())
+            behaviour_event(mons, ME_DISTURB, 0, caster.pos());
+
+        if (you.can_see(*mons))
+            simple_monster_message(*mons, " is empowered.");
+    }
+
+    return true;
+}
+
+
 /**
  *  Make this monster cast a spell
  *
@@ -5601,26 +6034,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
         return;
-    case SPELL_BRAIN_FEED:
-        if (one_chance_in(3)
-            && lose_stat(STAT_INT, 1 + random2(3)))
-        {
-            mpr("Something feeds on your intellect!");
-            xom_is_stimulated(50);
-        }
-        else
-            mpr("Something tries to feed on your intellect!");
-        return;
 
-    case SPELL_SUMMON_SPECTRAL_ORCS:
+    case SPELL_VANQUISHED_VANGUARD:
         // Wizard mode creates a dummy friendly monster, with no foe.
         if (!foe)
             return;
         if (foe->is_player())
-            mpr("Orcish apparitions take form around you.");
-        else
-            simple_monster_message(*foe->as_monster(), " is surrounded by Orcish apparitions.");
-        _mons_cast_spectral_orcs(mons);
+            mpr("The long-dead rise up around you.");
+        else if (you.can_see(*foe))
+            mprf("The long-dead rise up around %s.", foe->name(DESC_THE).c_str());
+        _cast_vanquished_vanguard(mons);
         return;
 
     case SPELL_HAUNT:
@@ -5630,6 +6053,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
             mpr("You sense an evil presence.");
         _mons_cast_haunt(mons);
+        return;
+
+    case SPELL_MARTYRS_KNELL:
+        cast_martyrs_knell(mons, splpow, GOD_NO_GOD, false);
         return;
 
     // SPELL_SLEEP_GAZE ;)
@@ -5704,7 +6131,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_INK_CLOUD:
-        if (!feat_is_watery(env.grid(mons->pos())))
+        if (!feat_is_water(env.grid(mons->pos())))
             return;
 
         big_cloud(CLOUD_INK, mons, mons->pos(), 30, 30);
@@ -5767,9 +6194,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         if (you.can_see(*mons))
         {
-            mprf("%s shimmers and seems to become %s!", mons->name(DESC_THE).c_str(),
-                                                        sumcount2 == 1 ? "two"
-                                                                       : "three");
+            mprf("%s shimmers and seems to become %s!",
+                 mons->name(DESC_THE).c_str(),
+                 sumcount2 == 1 ? "two" : "three");
         }
 
         return;
@@ -6085,7 +6512,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             const monster_type mon = random_choose_weighted(
-                                       100, MONS_FLOATING_EYE,
+                                       100, MONS_GLASS_EYE,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
@@ -6112,7 +6539,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             return;
         }
 
-        duration = 50 + random2(mons->spell_hd(spell_cast) * 20);
+        duration = (8 + random2avg(mons->spell_hd(spell_cast) * 3 / 2, 2))
+                   * BASELINE_DELAY;
 
         mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, mons, duration));
         // Actually, it's a boolean marker... save for a sanity check.
@@ -6192,10 +6620,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_CALL_LOST_SOUL:
-        create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
-                                 mons->pos(), mons->foe)
-                       .set_summoned(mons, 2, spell_cast, god));
+    case SPELL_CALL_LOST_SOULS:
+        sumcount2 = x_chance_in_y(3, 4) ? 2 : 3;
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
+                                     mons->pos(), mons->foe)
+                           .set_summoned(mons, 2, spell_cast, god));
+        }
         return;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
@@ -6351,7 +6784,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SPELLFORGED_SERVITOR:
     {
-        const int pow = 6 * mons->spell_hd(spell_cast);
+        const int pow = 7 * mons->spell_hd(spell_cast);
         monster* servitor = _summon(*mons, MONS_SPELLFORGED_SERVITOR, 4, slot);
         if (servitor)
             init_servitor(servitor, mons, pow);
@@ -6487,6 +6920,35 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _summon(*mons, MONS_CREEPING_INFERNO, 2, slot);
         return;
 
+    case SPELL_BOMBARD:
+    {
+        const coord_def targ = pbolt.target;
+        _fire_simple_beam(*mons, slot, pbolt);
+        if (mons->alive())
+            mons->stumble_away_from(targ, "the blast");
+        return;
+    }
+
+    case SPELL_SANDBLAST:
+    {
+        _fire_simple_beam(*mons, slot, pbolt);
+        if (mons->alive())
+            mons->lose_energy(EUT_SPELL, 2);
+        return;
+    }
+
+    case SPELL_FUNERAL_DIRGE:
+        _cast_dirge(*mons);
+        return;
+
+    case SPELL_MANIFOLD_ASSAULT:
+        cast_manifold_assault(*mons, mons_spellpower(*mons, SPELL_MANIFOLD_ASSAULT), false);
+        return;
+
+    case SPELL_REGENERATE_OTHER:
+        _cast_regenerate_other(mons);
+        return;
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -6511,6 +6973,7 @@ spell_type living_spell_type_for(monster_type mtyp)
     case MONS_CRYSTAL_TOME:
         return SPELL_LEHUDIBS_CRYSTAL_SPEAR;
     case MONS_DIVINE_TOME:
+    case MONS_ORC_APOSTLE:
         return SPELL_SMITING;
     case MONS_FROSTBOUND_TOME:
         return SPELL_ICEBLAST;
@@ -7038,6 +7501,11 @@ static monster* _find_ally_to_throw(const monster &mons)
         if (throwee->is_constricted())
             continue;
 
+        // Don't try to throw tentacles or their parts.
+        // Both too big and too easy to disconnect.
+        if (mons_is_tentacle_or_tentacle_segment(throwee->type))
+            continue;
+
         // otherwise throw whoever's furthest from our target.
         const int dist = grid_distance(throwee->pos(), foe->pos());
         if (dist > furthest_dist)
@@ -7339,10 +7807,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         }
         else
             return ai_action::good();
-    case SPELL_BRAIN_FEED:
-        ASSERT(foe);
-        return ai_action::good_or_bad(foe->is_player());
 
+    case SPELL_MOURNING_WAIL:
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_MALIGN_OFFERING:
     case SPELL_GHOSTLY_FIREBALL:
@@ -7354,6 +7820,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         ASSERT(foe);
         return ai_action::good_or_bad(!foe->res_miasma() && !no_clouds);
 
+    case SPELL_DISPEL_UNDEAD:
     case SPELL_DISPEL_UNDEAD_RANGE:
         // [ds] How is dispel undead intended to interact with vampires?
         // Currently if the vampire's undead state returns MH_UNDEAD it
@@ -7418,7 +7885,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(forest_near_enemy(mon));
 
     case SPELL_BATTLESPHERE:
-        return ai_action::good_or_bad(!find_battlesphere(mon));
+        return ai_action::good_or_bad((!mon->friendly() || mon->get_foe())
+                                      && !find_battlesphere(mon));
 
     case SPELL_INJURY_BOND:
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
@@ -7444,7 +7912,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_WATERSTRIKE:
         ASSERT(foe);
-        return ai_action::good_or_impossible(feat_is_watery(env.grid(foe->pos())));
+        return ai_action::good_or_impossible(feat_is_water(env.grid(foe->pos())));
 
     // Don't use unless our foe is close to us and there are no allies already
     // between the two of us
@@ -7557,6 +8025,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_HUNTING_CALL:
         return ai_action::good_or_bad(_battle_cry(*mon, SPELL_HUNTING_CALL,
                                       true));
+
+    case SPELL_FUNERAL_DIRGE:
+        return ai_action::good_or_bad(_cast_dirge(*mon, true));
 
     case SPELL_CONJURE_BALL_LIGHTNING:
         if (!!(mon->holiness() & MH_DEMONIC))
@@ -7719,6 +8190,17 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                 return ai_action::good();
         return ai_action::bad();
 
+    case SPELL_REGENERATE_OTHER:
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons_aligned(mon, *mi) && mi->hit_points < mi->max_hit_points
+                && !mi->has_ench(ENCH_REGENERATION))
+            {
+                return ai_action::good();
+            }
+        }
+        return ai_action::bad();
+
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
@@ -7727,6 +8209,12 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_FLAMING_CLOUD:
     case SPELL_CHAOS_BREATH:
         return ai_action::good_or_impossible(!no_clouds);
+
+    case SPELL_MARCH_OF_SORROWS:
+        ASSERT(foe);
+        if (_negative_energy_spell_goodness(foe) == ai_action::good())
+            return ai_action::good_or_impossible(!no_clouds);
+        else return ai_action::bad();
 
     case SPELL_ROLL:
     {
@@ -7739,6 +8227,10 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                 && !delta.origin()
                 && mon_can_move_to_pos(mon, delta));
     }
+
+    case SPELL_MANIFOLD_ASSAULT:
+        return ai_action::good_or_impossible(
+                cast_manifold_assault(*mon, -1, false, false) != spret::abort);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:

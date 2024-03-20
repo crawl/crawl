@@ -1,0 +1,18 @@
+name: "iron elemental"
+glyph: {char: "E", colour: etc_iron}
+resists: {elec: 3, fire: 3, cold: 3}
+xp_mult: 13
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 40}
+hd: 12
+hp_10x: 1080
+ac: 20
+ev: 2
+spells: iron_elemental
+intelligence: brainless
+speed: 6
+size: large
+shape: misc

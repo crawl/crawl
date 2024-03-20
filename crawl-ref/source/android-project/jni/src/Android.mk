@@ -173,7 +173,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-ench.cc \
     $(CRAWL_PATH)/mon-explode.cc \
     $(CRAWL_PATH)/mon-gear.cc \
-    $(CRAWL_PATH)/mon-grow.cc \
     $(CRAWL_PATH)/mon-info.cc \
     $(CRAWL_PATH)/mon-movetarget.cc \
     $(CRAWL_PATH)/mon-pathfind.cc \
@@ -245,7 +244,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/spl-transloc.cc \
     $(CRAWL_PATH)/spl-util.cc \
     $(CRAWL_PATH)/spl-vortex.cc \
-    $(CRAWL_PATH)/spl-wpnench.cc \
     $(CRAWL_PATH)/spl-zap.cc \
     $(CRAWL_PATH)/sprint.cc \
     $(CRAWL_PATH)/sqldbm.cc \

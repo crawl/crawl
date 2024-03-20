@@ -1,0 +1,19 @@
+name: "vault warden"
+glyph: {char: "p", colour: lightred}
+flags: [fighter, see_invis, speaks, warm_blood]
+xp_mult: 12
+species: human
+will: 60
+attacks:
+ - {type: hit, damage: 36}
+hd: 16
+hp_10x: 880
+ac: 1
+ev: 13
+spells: vault_warden
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

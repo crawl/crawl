@@ -5,6 +5,8 @@
 #pragma once
 
 #include "act-iter.h"
+#include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h"
 #include "spl-selfench.h"
 #include "tag-version.h"
@@ -39,12 +41,6 @@ static void _end_death_channel()
     }
 }
 
-static void _end_sticky_flame()
-{
-    you.props.erase("sticky_flame_source");
-    you.props.erase("sticky_flame_aux");
-}
-
 static void _redraw_armour()
 {
     you.redraw_armour_class = true;
@@ -69,6 +65,12 @@ static void _maybe_expire_jinxbite()
         mprf(MSGCH_DURATION, "The sprites lose interest in your situation.");
         you.duration[DUR_JINXBITE] = 0;
     }
+}
+
+static void _post_shackles_effect()
+{
+    mprf(MSGCH_DURATION, "You lose your grip on the chains of life and death.");
+    yred_end_blasphemy();
 }
 
 // properties of the duration.
@@ -185,7 +187,7 @@ static const duration_def duration_data[] =
       "on berserk cooldown", "berserk cooldown",
       "You are unable to berserk.", D_NO_FLAGS},
     { DUR_BREATH_WEAPON,
-      YELLOW, "Breath",
+      YELLOW, "-Breath",
       "short of breath", "breath weapon",
       "You are short of breath.", D_NO_FLAGS,
       { { "You have got your breath back." }, {}, true }},
@@ -248,11 +250,10 @@ static const duration_def duration_data[] =
       {{ "Your fiery armour burns out.", [](){
           you.redraw_armour_class = true;
       }}}, 20},
-    { DUR_LIQUID_FLAMES,
+    { DUR_STICKY_FLAME,
       RED, "Fire",
-      "on fire", "liquid flames",
-      "You are covered in liquid flames.", D_DISPELLABLE /*but special-cased*/,
-      {{ "You are no longer on fire.", _end_sticky_flame }}},
+      "on fire", "liquid fire",
+      "You are covered in liquid fire.", D_DISPELLABLE /*but special-cased*/},
     { DUR_LOWERED_WL,
       RED, "Will/2",
       "weak-willed", "lowered wl",
@@ -276,6 +277,11 @@ static const duration_def duration_data[] =
       "petrifying", "",
       "You are turning to stone.", D_DISPELLABLE /*but special-cased*/ | D_EXPIRES,
         {}, 1},
+    { DUR_VITRIFIED,
+      RED, "Fragile",
+      "fragile (+50% incoming damage)", "vitrified",
+      "You are fragile as glass.", D_DISPELLABLE,
+      {{ "You feel less fragile." }}},
     { DUR_RESISTANCE,
       BLUE, "Resist",
       "resistant", "resistance",
@@ -349,6 +355,16 @@ static const duration_def duration_data[] =
       LIGHTGREY, "Vortex",
       "in a vortex", "vortex",
       "You are in the eye of a polar vortex.", D_EXPIRES},
+    { DUR_BLOOD_FOR_BLOOD,
+      LIGHTBLUE, "Pray",
+      "chanting a vengeful prayer", "blood for blood",
+      "You are chanting a vengeful prayer.", D_EXPIRES,
+      {{"", beogh_end_blood_for_blood}, { "Your prayer is nearing its end.", 1}}, 6},
+    { DUR_FATHOMLESS_SHACKLES,
+      WHITE, "Shackles",
+      "enshackling", "fathomless shackles",
+      "You are channelling the inexorable grasp of Yredelemnul.", D_NO_FLAGS,
+      {{"", _post_shackles_effect}}},
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",
@@ -385,12 +401,12 @@ static const duration_def duration_data[] =
       "marked", "sentinel's mark",
       "A sentinel's mark is revealing your location to enemies.", D_DISPELLABLE | D_EXPIRES,
       {{ "The sentinel's mark upon you fades away." }}},
-    { DUR_WEREBLOOD,
-      BLUE, "Slay",
-      "wereblooded", "wereblood",
-      "Your melee attacks are strengthened by your wereblood.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your primal bloodlust has ended." },
-        { "Your primal bloodlust is almost over." }}, 6},
+    { DUR_FUGUE,
+      BLUE, "Fugue",
+      "fugue", "fugue of the fallen",
+      "Your melee and ranged attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your fugue has ended." },
+        { "You are losing your grip on the fallen." }}, 6},
     { DUR_FLAYED,
       RED, "Flay",
       "flayed", "",
@@ -592,8 +608,8 @@ static const duration_def duration_data[] =
     { DUR_BLINK_COOLDOWN,
       YELLOW, "-Blink",
       "on blink cooldown", "blink cooldown",
-      "You are unable to blink.", D_DISPELLABLE,
-      {{ "You feel stable enough to blink again."}}},
+      "You are unable to blink.", D_NO_FLAGS,
+      {{ "You feel ready to blink again."}}},
     { DUR_ANIMATE_DEAD,
       MAGENTA, "Reap",
       "animating dead", "animating dead",
@@ -609,6 +625,12 @@ static const duration_def duration_data[] =
       "jinxed", "jinxbite",
       "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
       {{ "The jinxing sprites lose interest in you." }}},
+    { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
+      "You are unable to call your canine familiar.", "", D_EXPIRES, {{ "",
+        [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
+    { DUR_BEOGH_CAN_RECRUIT, LIGHTBLUE, "Recruit", "", "can recruit",
+      "You may recruit a defeated apostle into your service", D_EXPIRES,
+       {{ "", end_beogh_recruit_window}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -651,11 +673,13 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_GRASPING_ROOTS, 0, "", "grasped by roots", "grasping roots",
       "You are constricted by grasping roots.", D_NO_FLAGS},
+    { DUR_VILE_CLUTCH, 0, "", "grasped by zombie hands", "vile clutch",
+      "You are constricted by zombie hands.", D_NO_FLAGS},
     { DUR_NOXIOUS_BOG,
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
-      {{ "Your noxious spew wanes." }}},
+      {{ "Your noxious spew wanes.", end_toxic_bog }}},
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
@@ -673,8 +697,16 @@ static const duration_def duration_data[] =
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
-    { DUR_BINDING_SIGIL_WARNING, 0, "", "", "", "", D_EXPIRES, {{"", maybe_show_binding_sigil_duration_warning}}},
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
+    { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
+    { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
+    { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},
+    { DUR_BEOGH_DIVINE_CHALLENGE, WHITE, "Challenge", "", "apostle challenge",
+      "A servant of Beogh has come to challenge you.", D_NO_FLAGS},
+    { DUR_BEOGH_SEEKING_VENGEANCE, LIGHTRED, "Vengeance", "", "vengeance",
+      "You are seeking vengeance for the death of your brethren.", D_NO_FLAGS},
+    { DUR_CONSTRICTION_IMMUNITY, 0, "", "", "constrict immune", "", D_NO_FLAGS, {{""}}},
+
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -725,5 +757,6 @@ static const duration_def duration_data[] =
     { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "old excruciating wounds", "", D_NO_FLAGS },
     { DUR_CORPSE_ROT, 0, "", "", "old corpse rot", "", D_NO_FLAGS },
     { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
+    { DUR_BINDING_SIGIL_WARNING, 0, "", "", "old binding sigil", "", D_NO_FLAGS },
 #endif
 };

@@ -554,8 +554,26 @@ ITEM:     (list of items, separated by comma)
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
-          * "randart" will force a randart. Most of the above modifiers
-            will be ignored, except for "ego" (for weapons only).
+          * "randart" will force the item to be randart if it's of a type that
+            can be an artefact. Modifiers that affect item quality are ignored,
+            although "plus" works normally and "ego" works for weapons.
+          * "artprops:prop1:val1&prop2:val2..." will force randart and
+            make the specified properties always be fixed to the given levels,
+            while still potentially adding random additional properties.
+            Properties are referred to with the name used on artefact
+            inscriptions, (e.g. rPois, +Inv, ^Contam, *Slow), and the match is
+            case-insensitive. The value defaults to 1 level of the property, so
+            boolean values like rPois can omit the value entirely, otherwise
+            specify e.g. "rF:3" to give rF+++.
+
+            Note that certain artefact properties are only supported on
+            specific item classes. You can test your specification with the
+            "&%" wizmode command if you're unsure. Also note that any good
+            fixed properties use up quality points for adding additional good
+            properties. Hence the more good properties you fix, the fewer good
+            random properties will be added, on average. Additionally, fixed
+            bad properties count towards the limit of adding at most 2 random
+            bad properties.
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
           * "ident:" will make the item pre-identified. You need to specify
@@ -640,7 +658,7 @@ ITEM:     (list of items, separated by comma)
           If this unrand has already been placed, a randart of the same type
           will be created instead. Staff unrands, since they have no
           corresponding type that can be transformed into a randart, are
-          replaced by an appropriate magical staff. (E.g. a staff of poison.)
+          replaced by an appropriate magical staff. (E.g. a staff of alchemy.)
           You should not use `you.unrands` to check whether an unrand has been
           seen in normal levelgen scenarios, as it will impact seeding. Some
           details about default fallbacks can be specified in art-data.txt.
@@ -1284,7 +1302,7 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
 
           It's possible to customise shops further than simply specifying the
           type of shop to place. There are a number of options, which are
-          enumerated below. The `name`, `type`, and `suffix` fields all support
+          enumerated below. The "name", "type", and "suffix" fields all support
           substitution of underscores for spaces; see "suffix" below for an
           example.
 
@@ -1297,15 +1315,21 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
                         result in "Ploog's <X shop>".
             type:       If provided, this is used as the "type" name for the
                         shop. For example, `type:Wand` would result in "X's Wand
-                        shop". Please note: this is *not* the type of shop,
+                        Shop". Please note: this is *not* the type of shop,
                         simply the name. Setting this will not change the
                         content of the shop. You will still need to specify the
-                        type in the definition, i.e., `antique armour shop`.
+                        type in the definition, i.e., `antique armour shop`. It
+                        is possible to use a "type" without a "suffix" field.
             suffix:     If provided, this is used instead of "Emporium",
                         "Shop", etc, in the shop name. For example,
                         `suffix:Bazaar` results in "X's x Bazaar". An example
                         with underscores: `suffix: Thing_Parlour` would
-                        result in "X's x Thing Parlour".
+                        result in "X's x Thing Parlour". It is possible to use a
+                        "suffix" specification without a "type" field. For a
+                        general shop, antiques shop, or distillery shop, there
+                        is no suffix by default; if "suffix" is not specified,
+                        and the shop is one of those kinds of shop, then the
+                        "suffix" part of the name will be left blank.
             count:      If specified, this restricts the number of items placed
                         in the shop to this number. For example, `any shop
                         count:1` results in a single shop with a single item in

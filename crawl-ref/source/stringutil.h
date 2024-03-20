@@ -26,6 +26,8 @@ string uppercase_string(string s);
 string lowercase_first(string);
 string uppercase_first(string);
 
+int codepoints(string str);
+
 /**
  * Returns 1 + the index of the first suffix that matches the given string,
  * 0 if no suffixes match.
@@ -41,6 +43,7 @@ string vmake_stringf(const char *format, va_list args);
 string make_stringf(PRINTF(0, ));
 
 bool strip_suffix(string &s, const string &suffix);
+string padded_str(const string &s, int pad_to, bool prepend = false);
 
 string replace_all(string s, const string &tofind, const string &replacement);
 

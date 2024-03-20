@@ -1,0 +1,19 @@
+name: "antique champion"
+glyph: {char: "z", colour: blue}
+flags: [fighter, see_invis]
+resists: {cold: 1}
+xp_mult: 24
+species: ancient_champion
+holiness: [undead]
+will: 120
+attacks:
+ - {type: hit, damage: 35}
+hd: 20
+hp_10x: 980
+ac: 20
+ev: 15
+spells: antique_champion
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -1,0 +1,20 @@
+name: "ancient lich"
+glyph: {char: "L", colour: white}
+flags: [see_invis, speaks]
+resists: {elec: 1, fire: 1, cold: 2}
+xp_mult: 24
+species: lich
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: touch, flavour: drain, damage: 20}
+hd: 27
+hp_10x: 1080
+ac: 20
+ev: 10
+spells: ancient_lich
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

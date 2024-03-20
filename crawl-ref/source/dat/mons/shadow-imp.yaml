@@ -1,0 +1,19 @@
+name: "shadow imp"
+glyph: {char: "5", colour: magenta}
+flags: [speaks]
+resists: {poison: 1, cold: 2}
+xp_mult: 11
+holiness: [demonic]
+will: 10
+attacks:
+ - {type: hit, damage: 6}
+hd: 2
+hp_10x: 110
+ac: 3
+ev: 11
+spells: shadow_imp
+shout: shout
+intelligence: human
+uses: open_doors
+size: little
+shape: humanoid

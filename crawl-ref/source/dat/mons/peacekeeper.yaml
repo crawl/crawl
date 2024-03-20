@@ -1,0 +1,20 @@
+name: "peacekeeper"
+glyph: {char: "9", colour: yellow}
+flags: [see_invis]
+resists: {elec: 1, fire: 1, cold: 1}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: bite, damage: 25}
+ - {type: claw, damage: 15}
+hd: 12
+hp_10x: 450
+ac: 20
+ev: 3
+spells: peacekeeper
+shout: roar
+intelligence: brainless
+speed: 15
+size: medium
+shape: quadruped_tailless

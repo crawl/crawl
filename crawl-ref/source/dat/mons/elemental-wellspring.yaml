@@ -1,0 +1,17 @@
+name: "elemental wellspring"
+glyph: {char: "E", colour: lightcyan}
+resists: {elec: 1}
+xp_mult: 13
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 18
+hp_10x: 620
+ac: 8
+ev: 8
+spells: elemental_wellspring
+intelligence: brainless
+habitat: water
+size: large
+shape: misc

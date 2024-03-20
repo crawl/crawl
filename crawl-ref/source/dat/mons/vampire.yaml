@@ -1,0 +1,19 @@
+name: "vampire"
+glyph: {char: "V", colour: red}
+flags: [see_invis, speaks, warm_blood]
+resists: {cold: 1}
+xp_mult: 11
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, damage: 15}
+ - {type: bite, flavour: vampiric, damage: 15}
+hd: 6
+hp_10x: 330
+ac: 10
+ev: 10
+spells: vampire
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

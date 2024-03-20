@@ -392,14 +392,14 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
 
 static void _make_book_randart(item_def &book)
 {
-    if (!is_artefact(book))
+    if (is_artefact(book))
+        return;
+
+    book.flags |= ISFLAG_RANDART;
+    if (!book.props.exists(ARTEFACT_APPEAR_KEY))
     {
-        book.flags |= ISFLAG_RANDART;
-        if (!book.props.exists(ARTEFACT_APPEAR_KEY))
-        {
-            book.props[ARTEFACT_APPEAR_KEY].get_string() =
-            make_artefact_name(book, true);
-        }
+        const string name = make_artefact_name(book, true);
+        book.props[ARTEFACT_APPEAR_KEY].get_string() = name;
     }
 }
 
@@ -653,7 +653,7 @@ void init_book_theme_randart(item_def &book, vector<spell_type> spells)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);
-    _set_book_spell_list(book, move(spells));
+    _set_book_spell_list(book, std::move(spells));
 }
 
 /**

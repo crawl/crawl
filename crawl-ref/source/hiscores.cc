@@ -139,7 +139,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
             // Fixed a nasty overflow bug here -- Sharp
             if (i+1 < SCORE_FILE_ENTRIES)
             {
-                hs_list[i + 1] = move(hs_list[i]);
+                hs_list[i + 1] = std::move(hs_list[i]);
                 hs_list[i].reset(new scorefile_entry(ne));
                 i++;
             }
@@ -424,13 +424,13 @@ UIHiscoresMenu::UIHiscoresMenu()
 #ifdef USE_TILE
     auto tile = make_shared<Image>();
     tile->set_tile(tile_def(TILEG_STARTUP_HIGH_SCORES));
-    title_hbox->add_child(move(tile));
+    title_hbox->add_child(std::move(tile));
 #endif
 
     auto title = make_shared<Text>(formatted_string(
                 CRAWL ": High Scores", YELLOW));
     title->set_margin_for_sdl(0, 0, 0, 16);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_main_alignment(Widget::CENTER);
     title_hbox->set_cross_alignment(Widget::CENTER);
@@ -441,7 +441,7 @@ UIHiscoresMenu::UIHiscoresMenu()
     nhsr = 0;
     _construct_hiscore_table();
 
-    m_root->add_child(move(title_hbox));
+    m_root->add_child(std::move(title_hbox));
     if (initial_focus)
     {
         m_root->add_child(m_description);
@@ -488,7 +488,7 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     tmp->set_text(hiscores_format_single(se));
     auto btn = make_shared<MenuButton>();
     tmp->set_margin_for_sdl(2);
-    btn->set_child(move(tmp));
+    btn->set_child(std::move(tmp));
     btn->on_activate_event([id](const ActivateEvent&) {
         _show_morgue(*hs_list[id]);
         return true;
@@ -496,13 +496,13 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     btn->on_focusin_event([this, se](const FocusEvent&) {
         formatted_string desc(hiscores_format_single_long(se, true));
         desc.cprintf(string(max(0, 9-count_linebreaks(desc)), '\n'));
-        m_description->set_text(move(desc));
+        m_description->set_text(std::move(desc));
         return false;
     });
 
     if (!initial_focus)
         initial_focus = btn.get();
-    m_score_entries->add_button(move(btn), 0, nhsr++);
+    m_score_entries->add_button(std::move(btn), 0, nhsr++);
 }
 
 void UIHiscoresMenu::_render()
@@ -535,7 +535,7 @@ void show_hiscore_table()
     unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
     auto hiscore_ui = make_shared<UIHiscoresMenu>();
     auto popup = make_shared<ui::Popup>(hiscore_ui);
-    ui::run_layout(move(popup), hiscore_ui->done);
+    ui::run_layout(std::move(popup), hiscore_ui->done);
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
@@ -779,6 +779,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_aut            = se.num_aut;
     num_diff_runes     = se.num_diff_runes;
     num_runes          = se.num_runes;
+    gems_found         = se.gems_found;
+    gems_intact        = se.gems_intact;
     kills              = se.kills;
     maxed_skills       = se.maxed_skills;
     fifteen_skills     = se.fifteen_skills;
@@ -1093,6 +1095,8 @@ void scorefile_entry::init_with_fields()
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
+    gems_found     = fields->int_field("fgem");
+    gems_intact    = fields->int_field("igem");
 
     kills = fields->int_field("kills");
     maxed_skills = fields->str_field("maxskills");
@@ -1190,6 +1194,11 @@ void scorefile_entry::set_base_xlog_fields() const
 
     if (num_runes)
         fields->add_field("nrune", "%d", num_runes);
+
+    if (gems_found)
+        fields->add_field("fgem", "%d", gems_found);
+    if (gems_intact)
+        fields->add_field("igem", "%d", gems_intact);
 
     fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
@@ -1431,13 +1440,12 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
+            _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
 
-            killerpath = "";
-
+            vector<string> path_parts;
             for (const auto &bl : blame)
-                killerpath = killerpath + ":" + _xlog_escape(bl.get_string());
-
-            killerpath.erase(killerpath.begin());
+                path_parts.push_back(_xlog_escape(bl.get_string()));
+            killerpath = join_strings(path_parts.begin(), path_parts.end(), ":");
         }
         else
         {
@@ -1539,6 +1547,8 @@ void scorefile_entry::reset()
     num_aut              = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
+    gems_found           = 0;
+    gems_intact          = 0;
     kills                = 0;
     maxed_skills.clear();
     fifteen_skills.clear();
@@ -1649,15 +1659,17 @@ void scorefile_entry::init(time_t dt)
     if (dlua.callfn(nullptr, 1, 2))
         dlua.fnreturns(">db", &points, &base_score);
 
+    num_runes      = runes_in_pack();
+    num_diff_runes = num_runes;
+    gems_found     = ::gems_found();
+    gems_intact    = gems_found - gems_lost();
+
     // If calc_score didn't exist, or returned true as its second value,
     // use the default formula.
     if (base_score)
     {
         // sprint games could overflow a 32 bit value
         uint64_t pt = points + _award_modified_experience();
-
-        num_runes      = runes_in_pack();
-        num_diff_runes = num_runes;
 
         // There's no point in rewarding lugging artefacts. Thus, no points
         // for the value of the inventory. -- 1KB
@@ -1668,6 +1680,9 @@ void scorefile_entry::init(time_t dt)
             pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
                 / (1+you.num_turns);
         }
+        // Add a little score for gems so that newer players who find one
+        // feel rewarded, but not so much that it impacts high score play.
+        pt += gems_found * 10000 * ((death_type == KILLED_BY_WINNING) ? 10 : 1);
         pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;
 
@@ -1734,8 +1749,8 @@ void scorefile_entry::init(time_t dt)
     intel = you.stat(STAT_INT, false);
     dex   = you.stat(STAT_DEX, false);
 
-    ac    = you.armour_class();
-    ev    = you.evasion();
+    ac    = you.armour_class_scaled(1);
+    ev    = you.evasion_scaled(1);
     sh    = player_displayed_shield_class();
 
     god = you.religion;
@@ -1943,6 +1958,56 @@ static string _append_sentence_delimiter(const string &sentence,
         return sentence;
 
     return sentence + delimiter;
+}
+
+string scorefile_entry::runes_gems_desc(bool semiverbose) const
+{
+    if (num_runes < 1 && gems_found < 1)
+        return "";
+
+    string desc = "";
+
+    bool extra = (death_type == KILLED_BY_WINNING);
+    if (num_runes >= 1)
+    {
+        desc += _hiscore_newline_string();
+        desc += make_stringf("... %s %d rune%s",
+                             extra ? "and" : "with",
+                             num_runes,
+                             (num_runes > 1) ? "s" : "");
+        extra = true;
+    }
+    if (gems_found >= 1)
+    {
+        desc += _hiscore_newline_string();
+        desc += make_stringf("... %s %d gem%s",
+                             extra ? "and" : "with",
+                             gems_found,
+                             (gems_found > 1) ? "s" : "");
+        // semiverbose is true here only when making the vmsg logfile field,
+        // so we always display all gem info when it is true
+        if (Options.more_gem_info || semiverbose)
+        {
+            if (gems_intact == 1 && gems_found == 1)
+                desc += " (intact)";
+            else if (gems_intact == 2 && gems_found == 2)
+                desc += " (both intact)";
+            else if (gems_intact == gems_found)
+                desc += " (all intact)";
+            else
+                desc += make_stringf(" (%d intact)", gems_intact);
+        }
+    }
+    if (!semiverbose
+        && death_time > 0
+        && !_hiscore_same_day(birth_time, death_time))
+    {
+        desc += " on ";
+        desc += _hiscore_date_string(death_time);
+    }
+
+    desc = _append_sentence_delimiter(desc, "!");
+    return desc + _hiscore_newline_string();
 }
 
 string
@@ -2332,7 +2397,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "left";
         else
         {
-            if (num_runes > 0)
+            if (num_runes > 0 || gems_found > 0)
                 desc += "Got out of the dungeon";
             else if (species::is_undead(static_cast<species_type>(race)))
                 desc += "Safely got out of the dungeon";
@@ -2343,7 +2408,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_WINNING:
         desc += terse? "escaped" : "Escaped with the Orb";
-        if (num_runes < 1)
+        if (num_runes < 1 && gems_found < 1)
             desc += "!";
         break;
 
@@ -2725,27 +2790,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (death_type == KILLED_BY_LEAVING
             || death_type == KILLED_BY_WINNING)
         {
-            if (num_runes > 0)
-            {
-                desc += _hiscore_newline_string();
-
-                desc += make_stringf("... %s %d rune%s",
-                         (death_type == KILLED_BY_WINNING) ? "and" : "with",
-                          num_runes, (num_runes > 1) ? "s" : "");
-
-                if (!semiverbose
-                    && death_time > 0
-                    && !_hiscore_same_day(birth_time, death_time))
-                {
-                    desc += " on ";
-                    desc += _hiscore_date_string(death_time);
-                }
-
-                desc = _append_sentence_delimiter(desc, "!");
-                desc += _hiscore_newline_string();
-            }
-            else
+            if (num_runes < 1 && gems_found < 1)
                 desc = _append_sentence_delimiter(desc, ".");
+            else
+                desc += runes_gems_desc(semiverbose);
         }
         else if (!_very_boring_death_type(death_type))
         {
@@ -2784,7 +2832,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (needs_called_by_monster_line)
             {
                 desc += make_stringf("... %s by %s",
-                         death_type == KILLED_BY_COLLISION ? "caused" :
+                         death_type == KILLED_BY_COLLISION ? "after being knocked back" :
                          auxkilldata == "by angry trees"   ? "awakened" :
                          auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",
@@ -2853,8 +2901,9 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             // TODO: strcat "after reaching level %d"; for LEAVING
             if (verbosity == DDV_NORMAL)
             {
+                const bool cool = num_runes > 0 || gems_found > 0;
                 desc = _append_sentence_delimiter(desc,
-                                                  num_runes > 0? "!" : ".");
+                                                  cool ? "!" : ".");
             }
             desc += _hiscore_newline_string();
         }

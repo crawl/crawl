@@ -28,6 +28,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "corpse.h"
+#include "database.h" // getRandNameString
 #include "dbg-util.h"
 #include "defines.h"
 #include "delay.h"
@@ -82,7 +83,7 @@
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
-#include "zot.h" // bezotted
+#include "zot.h" // bezotted, print_gem_warnings
 
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
@@ -173,10 +174,9 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean misc items, Orbs, or runes.
+    // Never clean misc items, Orbs, gems, or runes.
     if (env.item[item].base_type == OBJ_MISCELLANY
-        || item_is_orb(env.item[item])
-        || env.item[item].base_type == OBJ_RUNES)
+        || item_is_collectible(env.item[item]))
     {
         return false;
     }
@@ -388,7 +388,7 @@ bool dec_inv_item_quantity(int obj, int amount)
             {
                 if (i == EQ_WEAPON)
                 {
-                    unwield_item();
+                    unwield_item(*you.weapon());
                     canned_msg(MSG_EMPTY_HANDED_NOW);
                 }
                 you.equip[i] = -1;
@@ -447,10 +447,7 @@ void inc_inv_item_quantity(int obj, int amount)
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
-
     you.inv[obj].quantity += amount;
-    if (you.inv[obj].quantity == amount) // not currently possible?
-        quiver::on_actions_changed();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -772,6 +769,34 @@ bool item_is_branded(const item_def& item)
     }
 }
 
+bool item_is_unusual(const item_def& item)
+{
+    const auto &patterns = Options.unusual_monster_items;
+    const string name = item.name(DESC_A, false, false, true, false);
+
+    return any_of(begin(patterns), end(patterns),
+                  [&](const text_pattern &p) -> bool
+                  { return p.matches(name); });
+}
+
+bool item_is_worth_listing(const item_def& item)
+{
+    if (item_is_unusual(item))
+        return true;
+
+    switch (item.base_type)
+    {
+    case OBJ_STAVES:
+    case OBJ_WANDS:
+        return true;
+    case OBJ_WEAPONS:
+        return is_unrandom_artefact(item)
+               || get_weapon_brand(item) != SPWPN_NORMAL;
+    default:
+        return item_is_branded(item) || is_artefact(item);
+    }
+}
+
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
 static int _item_name_specialness(const item_def& item)
 {
@@ -955,7 +980,8 @@ static bool _id_floor_item(item_def &item)
             return true;
         }
     }
-    else if (item_type_is_equipment(item.base_type))
+    else if (item_type_is_equipment(item.base_type)
+             || item.base_type == OBJ_TALISMANS)
     {
         if (fully_identified(item))
             return false;
@@ -1107,7 +1133,7 @@ void origin_acquired(item_def &item, int agent)
     item.orig_monnum = -agent;
 }
 
-static string _milestone_rune(const item_def &item)
+static string _milestone_collectible(const item_def &item)
 {
     return string("found ") + item.name(DESC_A) + ".";
 }
@@ -1115,7 +1141,9 @@ static string _milestone_rune(const item_def &item)
 static void _milestone_check(const item_def &item)
 {
     if (item.base_type == OBJ_RUNES)
-        mark_milestone("rune", _milestone_rune(item));
+        mark_milestone("rune", _milestone_collectible(item));
+    else if (item.base_type == OBJ_GEMS)
+        mark_milestone("gem.found", _milestone_collectible(item));
     else if (item_is_orb(item))
         mark_milestone("orb", "found the Orb of Zot!");
 }
@@ -1125,9 +1153,10 @@ static void _check_note_item(item_def &item)
     if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
         return;
 
-    if (item.base_type == OBJ_RUNES || item_is_orb(item) || is_artefact(item))
+    if (item_is_collectible(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
+        int v = item.base_type == OBJ_GEMS ? gem_time_left(item.sub_type) : 0;
+        take_note(Note(NOTE_GET_ITEM, v, 0, item.name(DESC_A),
                        origin_desc(item)));
         item.flags |= ISFLAG_NOTED_GET;
 
@@ -1264,6 +1293,9 @@ string origin_desc(const item_def &item)
                 break;
             case AQ_SCROLL:
                 desc += "You acquired " + _article_it(item) + " ";
+                break;
+            case AQ_INVENTED:
+                desc += "You invented it yourself ";
                 break;
 #if TAG_MAJOR_VERSION == 34
             case AQ_CARD_GENIE:
@@ -1520,7 +1552,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return false;
 
-    if (item1.base_type == OBJ_GOLD || item1.base_type == OBJ_RUNES)
+    if (item1.base_type == OBJ_GOLD || item_is_collectible(item1))
         return true;
 
     if (is_artefact(item1) != is_artefact(item2))
@@ -1730,10 +1762,10 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 // Currently only used for moving shop items into inventory, since they are
 // not in env.item. This doesn't work with partial pickup, because that requires
 // an env.item slot...
-bool move_item_to_inv(item_def& item)
+bool move_item_to_inv(item_def& item, bool quiet)
 {
     bool junk;
-    return _put_item_in_inv(item, item.quantity, false, junk);
+    return _put_item_in_inv(item, item.quantity, quiet, junk);
 }
 
 /**
@@ -1754,7 +1786,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     bool actually_went_in = false;
     const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
 
-    if ((it.base_type == OBJ_RUNES || item_is_orb(it) || in_bounds(old_item_pos))
+    if ((item_is_collectible(it) || in_bounds(old_item_pos))
         && actually_went_in)
     {
         dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
@@ -1786,6 +1818,8 @@ static void _get_book(item_def& it)
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+        if (is_artefact(it) && !item_ident(it, ISFLAG_KNOW_PROPERTIES))
+            mprf("It was %s.", it.name(DESC_A, false, true).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
@@ -1882,6 +1916,20 @@ static void _get_rune(const item_def& it, bool quiet)
         mpr("You feel the abyssal rune guiding you out of this place.");
 }
 
+static void _get_gem(const item_def& it, bool quiet)
+{
+    you.gems_found.set(it.sub_type);
+    if (quiet)
+        return;
+
+    flash_view_delay(UA_PICKUP, it.gem_colour(), 300);
+    // XXX: consider customizing this message per-gem
+    mprf("You pick up %s and feel its impossibly delicate weight in your %s.",
+         it.name(DESC_THE).c_str(), you.hand_name(true).c_str());
+    mpr("Press } and ! to see all the gems you have collected.");
+    print_gem_warnings(it.sub_type, 0);
+}
+
 /**
  * Place the Orb of Zot into the player's inventory.
  */
@@ -1900,8 +1948,10 @@ static void _get_orb()
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
                                     "of the dungeon!");
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 }
 
 /**
@@ -2095,6 +2145,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         taken_new_item(item.base_type);
 
     you.last_pickup[item.link] = quant_got;
+    quiver::on_item_pickup(freeslot);
     quiver::on_actions_changed();
     item_skills(item, you.skills_to_show);
 
@@ -2143,10 +2194,15 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         _get_book(it);
         return true;
     }
-    // Runes are also massless.
+    // Runes and gems are also massless.
     if (it.base_type == OBJ_RUNES)
     {
         _get_rune(it, quiet);
+        return true;
+    }
+    if (it.base_type == OBJ_GEMS)
+    {
+        _get_gem(it, quiet);
         return true;
     }
     // The Orb is also handled specially.
@@ -2332,14 +2388,15 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
     env.igrid(from) = NON_ITEM;
 }
 
-// Returns false if no items could be dropped.
-bool copy_item_to_grid(item_def &item, const coord_def& p,
+// Returns the mitm index of the item. If the item was copied but destroyed,
+// returns -1. If there was no space to copy it, returns NON_ITEM.
+int copy_item_to_grid(const item_def &item, const coord_def& p,
                         int quant_drop, bool mark_dropped, bool silent)
 {
     ASSERT_IN_BOUNDS(p);
 
     if (quant_drop == 0)
-        return false;
+        return NON_ITEM;
 
     if (!silenced(p) && !silent)
         feat_splash_noise(env.grid(p));
@@ -2347,7 +2404,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     if (feat_destroys_items(env.grid(p)))
     {
         item_was_destroyed(item);
-        return true;
+        return -1;
     }
 
     // default quant_drop == -1 => drop all
@@ -2374,7 +2431,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
                     si->flags |= ISFLAG_DROPPED;
                     si->flags &= ~ISFLAG_THROWN;
                 }
-                return true;
+                return si->index();
             }
         }
     }
@@ -2382,7 +2439,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     // Item not found in current stack, add new item to top.
     int new_item_idx = get_mitm_slot(10);
     if (new_item_idx == NON_ITEM)
-        return false;
+        return NON_ITEM;
     item_def& new_item = env.item[new_item_idx];
 
     // Copy item.
@@ -2403,7 +2460,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 
     move_item_to_grid(&new_item_idx, p, true);
 
-    return true;
+    return new_item_idx;
 }
 
 coord_def item_pos(const item_def &item)
@@ -2491,6 +2548,12 @@ bool drop_item(int item_dropped, int quant_drop)
     if (!_check_dangerous_drop(item))
         return false;
 
+    if (item_dropped == you.equip[EQ_GIZMO])
+    {
+        mpr("That is permanently installed in your exoskeleton.");
+        return false;
+    }
+
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
      || item_dropped == you.equip[EQ_AMULET]
@@ -2525,6 +2588,22 @@ bool drop_item(int item_dropped, int quant_drop)
         return false;
     }
 
+    if (you.has_mutation(MUT_SLOW_WIELD)
+        && is_weapon(item)
+        && (you.equip[EQ_WEAPON] == item_dropped
+            || you.equip[EQ_OFFHAND] == item_dropped))
+    {
+        if (!Options.easy_unequip)
+        {
+            mpr("You will have to unwield that first.");
+            return false;
+        }
+        if (!unwield_weapon(item))
+            return false;
+        start_delay<DropItemDelay>(1, item);
+        return true;
+    }
+
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
     {
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
@@ -2553,7 +2632,10 @@ bool drop_item(int item_dropped, int quant_drop)
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
-        if (!wield_weapon(SLOT_BARE_HANDS, false))
+        // Dropping a held weapon is not faster than dropping other items.
+        // Though I suppose it'd be fine if it was, really.
+        unwind_var<int> reset_speed(you.time_taken, you.time_taken);
+        if (!wield_weapon(SLOT_BARE_HANDS))
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
@@ -2563,7 +2645,10 @@ bool drop_item(int item_dropped, int quant_drop)
 
     ASSERT(item.defined());
 
-    if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
+    if (Options.drop_disables_autopickup)
+        set_item_autopickup(item, AP_FORCE_OFF);
+
+    if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
     {
         mpr("Too many items on this level, not dropping the item.");
         return false;
@@ -2890,6 +2975,7 @@ static int _autopickup_subtype(const item_def &item)
 #endif
     case OBJ_GOLD:
     case OBJ_RUNES:
+    case OBJ_GEMS:
         return max_type;
     default:
         return item.sub_type;
@@ -3129,12 +3215,10 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Books always start out unidentified.
         return true;
 
-    case OBJ_ORBS:
-        // Orb is always interesting.
-        return true;
-
     case OBJ_RUNES:
-        // Runes are always interesting.
+    case OBJ_GEMS:
+    case OBJ_ORBS:
+        // Always interesting.
         return true;
 
     default:
@@ -3278,6 +3362,8 @@ int get_max_subtype(object_class_type base_type)
 #endif
         NUM_RUNE_TYPES,
         NUM_TALISMANS,
+        NUM_GEM_TYPES,
+        1,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3454,6 +3540,7 @@ colour_t item_def::missile_colour() const
         case MI_ARROW:         // removed as an item, but don't crash
         case MI_BOLT:          // removed as an item, but don't crash
         case MI_SLING_BULLET:  // removed as an item, but don't crash
+        case MI_SLUG:          // never existed as an item
         case MI_DART:
             return WHITE;
         case MI_JAVELIN:
@@ -3769,9 +3856,6 @@ colour_t item_def::rune_colour() const
         case RUNE_SHOALS:                   // barnacled
             return ETC_WATER;
 
-            // This one is hardly unique, but colour isn't used for
-            // stacking, so we don't have to worry too much about this.
-            // - bwr
         case RUNE_DEMONIC:                  // random Pandemonium lords
         {
             static const element_type types[] =
@@ -3798,6 +3882,35 @@ colour_t item_def::rune_colour() const
         case RUNE_GLOORX_VLOQ:              // dark
         default:
             return ETC_DARK;
+    }
+}
+
+/**
+ * Assuming this item is a gem, what colour is it?
+ */
+colour_t item_def::gem_colour() const
+{
+    switch (sub_type)
+    {
+    default:
+    case GEM_DUNGEON: return LIGHTGREY;
+#if TAG_MAJOR_VERSION == 34
+    case GEM_ORC:     return ETC_GOLD;
+#endif
+    case GEM_ELF:     return ETC_ELVEN;
+    case GEM_LAIR:    return GREEN;
+
+    case GEM_SWAMP:   return ETC_DECAY;
+    case GEM_SHOALS:  return ETC_ENCHANT;
+    case GEM_SNAKE:   return ETC_POISON;
+    case GEM_SPIDER:  return WHITE;
+
+    case GEM_SLIME:   return ETC_AIR;
+    case GEM_VAULTS:  return ETC_STEEL;
+    case GEM_CRYPT:   return ETC_BONE;
+    case GEM_TOMB:    return ETC_AWOKEN_FOREST; // enh
+    case GEM_DEPTHS:  return ETC_DITHMENOS;
+    case GEM_ZOT:     return ETC_RANDOM; // dubious
     }
 }
 
@@ -3994,6 +4107,8 @@ colour_t item_def::get_colour() const
             return YELLOW;
         case OBJ_RUNES:
             return rune_colour();
+        case OBJ_GEMS:
+            return gem_colour();
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:
@@ -4252,13 +4367,12 @@ bool get_item_by_name(item_def *item, const char* specs,
             case OBJ_ARMOUR:
             case OBJ_JEWELLERY:
             {
-                // XXX: if we ever allow ?/ lookup of unrands, change this,
-                // since at present, it'll mark any matching unrands as
-                // created & prevent them from showing up in the game!
                 for (int unrand = 0; unrand < NUM_UNRANDARTS; ++unrand)
                 {
                     int index = unrand + UNRAND_START;
                     const unrandart_entry* entry = get_unrand_entry(index);
+                    unwind_var<unique_item_status_type> status(you.unique_items[unrand], UNIQ_NOT_EXISTS);
+                    unwind_var<uint8_t> octo(you.octopus_king_rings, 0x0); // easier to do unconditionally
 
                     size_t pos = lowercase_string(entry->name).find(specs);
                     if (pos != string::npos && entry->base_type == class_wanted)
@@ -4504,7 +4618,7 @@ item_def get_item_known_info(const item_def& item)
     ii.flags = item.flags & (0
             | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
-            | ISFLAG_COSMETIC_MASK);
+            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED);
 
     if (in_inventory(item))
     {
@@ -4611,6 +4725,7 @@ item_def get_item_known_info(const item_def& item)
     case OBJ_GOLD:
     case OBJ_ORBS:
     case OBJ_RUNES:
+    case OBJ_GEMS:
     default:
         ii.sub_type = item.sub_type;
         break;
@@ -4635,14 +4750,6 @@ item_def get_item_known_info(const item_def& item)
         if (item.props.exists(prop))
             ii.props[prop] = item.props[prop];
 
-    static const char* copy_ident_props[] = {"spell_list"};
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
-    {
-        for (const char *prop : copy_ident_props)
-            if (item.props.exists(prop))
-                ii.props[prop] = item.props[prop];
-    }
-
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
         CrawlVector props = item.props[ARTEFACT_PROPS_KEY].get_vector();
@@ -4666,6 +4773,26 @@ item_def get_item_known_info(const item_def& item)
 int runes_in_pack()
 {
     return static_cast<int>(you.runes.count());
+}
+
+/// Includes destroyed gems.
+int gems_found()
+{
+    return static_cast<int>(you.gems_found.count());
+}
+
+int gems_lost()
+{
+    int count = 0;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_found[i] && you.gems_shattered[i])
+            count += 1;
+    return count;
+}
+
+int gems_held_intact()
+{
+    return gems_found() - gems_lost();
 }
 
 object_class_type get_random_item_mimic_type()
@@ -4791,4 +4918,89 @@ bool maybe_identify_base_type(item_def &item)
 
     _identify_last_item(item);
     return true;
+}
+
+void name_weapon(item_def &item)
+{
+    string name = getRandMonNameString("steelspirit");
+    if (name == "RANDGEN")
+        name = make_name();
+    item.props[WEAPON_NAME_KEY] = name;
+
+    if (!item.inscription.empty())
+        item.inscription += ", ";
+    item.inscription += name;
+}
+
+string get_weapon_name(const item_def &item, bool full_name)
+{
+    const string it_name = item.name(DESC_YOUR, false, false, false);
+
+    // Artefacts have names already.
+    if (is_artefact(item))
+        return it_name;
+
+    ASSERT(item.props.exists(WEAPON_NAME_KEY));
+
+    const string name = item.props[WEAPON_NAME_KEY].get_string();
+
+    // For non-artefacts, get the names we gave them.
+    if (!full_name)
+        return name;
+
+    return it_name + " \"" + name + "\"";
+}
+
+void maybe_name_weapon(item_def &item, bool silent)
+{
+    const bool has_own_name = is_artefact(item);
+    const bool new_name = has_own_name
+                          || !item.props.exists(WEAPON_NAME_KEY);
+
+    if (new_name && !has_own_name)
+        name_weapon(item);
+
+    if (silent)
+        return;
+
+    string full_name = get_weapon_name(item, true);
+
+    // TODO: variant messages? (in the database?)
+    mprf("You welcome %s%s into your grasp.", full_name.c_str(),
+         new_name ? "" : " back");
+}
+
+void say_farewell_to_weapon(const item_def &item)
+{
+    string name = get_weapon_name(item, false);
+
+    // TODO: variant messages? (in the database?)
+    mprf("You whisper farewell to %s.", name.c_str());
+}
+
+// If there are more than one net on this square
+// split off one of them for checking/setting values.
+void maybe_split_nets(item_def &item, const coord_def& where)
+{
+    if (item.quantity == 1)
+    {
+        set_net_stationary(item);
+        return;
+    }
+
+    item_def it;
+
+    it.base_type = item.base_type;
+    it.sub_type  = item.sub_type;
+    it.net_durability      = item.net_durability;
+    it.net_placed  = item.net_placed;
+    it.flags     = item.flags;
+    it.special   = item.special;
+    it.quantity  = --item.quantity;
+    item_colour(it);
+
+    item.quantity = 1;
+    set_net_stationary(item);
+
+    copy_item_to_grid(it, where);
 }

@@ -1,0 +1,20 @@
+name: "walking crystal tome"
+enum: crystal_tome
+glyph: {char: ";", colour: cyan}
+xp_mult: 25
+species: earthen_tome
+genus: walking_tome
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 40}
+hd: 15
+hp_10x: 1000
+ac: 15
+ev: 5
+spells: walking_tome
+shout: rustle
+intelligence: brainless
+energy: {attack: 20}
+size: small
+shape: misc

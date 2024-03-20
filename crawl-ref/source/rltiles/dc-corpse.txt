@@ -45,13 +45,12 @@ frilled_lizard CORPSE_FRILLED_LIZARD
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
-skyshark CORPSE_SKYSHARK
 
 ## Rodents ('r')
 rat CORPSE_RAT
 quokka CORPSE_QUOKKA
-green_rat CORPSE_GREEN_RAT
-orange_rat CORPSE_ORANGE_RAT
+green_rat CORPSE_RIVER_RAT
+orange_rat CORPSE_HELL_RAT
 %sdir mon/animals
 
 ## Spiders and insects ('s')
@@ -71,6 +70,7 @@ demonic_crawler CORPSE_DEMONIC_CRAWLER
 ## Turtles and crabs ('t')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
@@ -82,7 +82,8 @@ apocalypse_crab CORPSE_APOCALYPSE_CRAB
 
 ## Worms and gastropods ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-worm CORPSE_WORM
+ribbon_worm CORPSE_RIBBON_WORM
+brain_worm CORPSE_BRAIN_WORM
 ../aquatic/swamp_worm CORPSE_SWAMP_WORM
 tyrant_leech CORPSE_TYRANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
@@ -112,17 +113,21 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 
 ## Beetles ('B')
 %sdir mon/animals
+bombardier_beetle CORPSE_BOMBARDIER_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
 
-## Frogs ('F')
+## Frogs and flying fish ('F')
+%sdir mon/demihumanoids
+barachi CORPSE_BARACHI
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 cane_toad CORPSE_CANE_TOAD
 goliath_frog CORPSE_GOLIATH_FROG
+skyshark CORPSE_SKYSHARK
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON
@@ -201,6 +206,7 @@ orcs/orc CORPSE_ORC
 ## Human shaped ('p')
 halfling CORPSE_HALFLING
 meteoran CORPSE_METEORAN
+demigod CORPSE_DEMIGOD
 %sdir mon/humanoids/humans
 human CORPSE_HUMAN
 killer_klown_blue CORPSE_KILLER_KLOWN
@@ -290,8 +296,9 @@ naga/naga CORPSE_NAGA
 guardian_serpent CORPSE_GUARDIAN_SERPENT
 salamander CORPSE_SALAMANDER
 
-## Ogres ('O')
+## Ogres and oni ('O')
 %sdir mon/humanoids
+oni CORPSE_ONI
 ogre CORPSE_OGRE
 two_headed_ogre CORPSE_TWO_HEADED_OGRE
 
@@ -312,47 +319,47 @@ bunyip CORPSE_BUNYIP
 %start
 %compose drcwing/drcwing_black
 %compose base/draconian_black
-%finish CORPSE_DRACONIAN_BLACK
+%finish CORPSE_BLACK_DRACONIAN
 
 %start
 %compose drcwing/drcwing_brown
 %compose base/draconian
-%finish CORPSE_DRACONIAN_BROWN
+%finish CORPSE_BROWN_DRACONIAN
 
 %start
 %compose drcwing/drcwing_green
 %compose base/draconian_green
-%finish CORPSE_DRACONIAN_GREEN
+%finish CORPSE_GREEN_DRACONIAN
 
 %start
 %compose drcwing/drcwing_grey
 %compose base/draconian_grey
-%finish CORPSE_DRACONIAN_GREY
+%finish CORPSE_GREY_DRACONIAN
 
 %start
 %compose drcwing/drcwing_pale
 %compose base/draconian_pale
-%finish CORPSE_DRACONIAN_PALE
+%finish CORPSE_PALE_DRACONIAN
 
 %start
 %compose drcwing/drcwing_purple
 %compose base/draconian_purple
-%finish CORPSE_DRACONIAN_PURPLE
+%finish CORPSE_PURPLE_DRACONIAN
 
 %start
 %compose drcwing/drcwing_red
 %compose base/draconian_red
-%finish CORPSE_DRACONIAN_RED
+%finish CORPSE_RED_DRACONIAN
 
 %start
 %compose drcwing/drcwing_white
 %compose base/draconian_white
-%finish CORPSE_DRACONIAN_WHITE
+%finish CORPSE_WHITE_DRACONIAN
 
 %start
 %compose drcwing/drcwing_yellow
 %compose base/draconian_yellow
-%finish CORPSE_DRACONIAN_YELLOW
+%finish CORPSE_YELLOW_DRACONIAN
 
 # Demonspawn ('6')
 %sdir mon/humanoids/demonspawn

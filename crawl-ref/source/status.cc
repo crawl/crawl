@@ -2,6 +2,7 @@
 
 #include "status.h"
 
+#include "ability.h"
 #include "areas.h"
 #include "art-enum.h" // bearserk
 #include "artefact.h"
@@ -169,6 +170,8 @@ static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
+static void _describe_gem(status_info& inf);
+static void _describe_rev(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -192,6 +195,53 @@ bool fill_status_info(int status, status_info& inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_DRACONIAN_BREATH:
+    {
+        if (!species::is_draconian(you.species) || you.experience_level < 7)
+            break;
+
+        inf.light_text = "Breath";
+
+        const int num = draconian_breath_uses_available();
+        if (num == 0)
+            inf.light_colour = DARKGREY;
+        else
+        {
+            inf.light_colour = LIGHTCYAN;
+            if (num == 2)
+                inf.light_text += "+";
+            else if (num == 3)
+                inf.light_text += "++";
+        }
+        break;
+    }
+
+    case STATUS_BLACK_TORCH:
+        if (!you_worship(GOD_YREDELEMNUL))
+            break;
+
+        if (!yred_torch_is_raised())
+        {
+            if (yred_cannot_light_torch_reason().empty())
+            {
+                inf.light_colour = DARKGRAY;
+                inf.light_text = "Torch";
+            }
+        }
+        else
+        {
+            inf.light_colour = MAGENTA;
+
+            if (player_has_ability(ABIL_YRED_HURL_TORCHLIGHT))
+            {
+                inf.light_text = make_stringf("Torch (%d)",
+                                    yred_get_torch_power());
+            }
+            else
+                inf.light_text = "Torch";
+        }
+    break;
+
     case STATUS_CORROSION:
         // No blank or double lights
         if (you.corrosion_amount() == 0 || you.duration[DUR_CORROSION])
@@ -200,7 +250,7 @@ bool fill_status_info(int status, status_info& inf)
         // Intentional fallthrough
     case DUR_CORROSION:
         inf.light_text = make_stringf("Corr (%d)",
-                          (-4 * you.corrosion_amount()));
+                          (-1 * you.corrosion_amount()));
         break;
 
     case DUR_FLAYED:
@@ -228,13 +278,21 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_text   = "-Swift";
             inf.light_colour = RED;
-            inf.short_text   = "sluggish";
-            inf.long_text    = "You are moving sluggishly.";
+            inf.short_text   = "unswift";
+            inf.long_text    = "You are covering ground slowly.";
         }
         break;
 
     case STATUS_ZOT:
         _describe_zot(inf);
+        break;
+
+    case STATUS_GEM:
+        _describe_gem(inf);
+        break;
+
+    case STATUS_REV:
+        _describe_rev(inf);
         break;
 
     case STATUS_AIRBORNE:
@@ -252,7 +310,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_PEEKING:
-        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY)
+            && you.elapsed_time > 0)
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Peek";
@@ -382,6 +441,19 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case DUR_RAMPAGE_HEAL:
+    {
+        const int rh_pwr = you.props[RAMPAGE_HEAL_KEY].get_int();
+        if (rh_pwr > 0)
+        {
+            const int rh_lvl = you.get_mutation_level(MUT_ROLLPAGE);
+            inf.light_colour = rh_lvl < 2 ? LIGHTBLUE : LIGHTMAGENTA;
+            inf.light_text   = make_stringf(rh_lvl < 2 ? "MPRegen (%d)"
+                                                       : "Regen (%d)", rh_pwr);
+        }
+        break;
+    }
+
     case STATUS_INVISIBLE:
         _describe_invisible(inf);
         break;
@@ -421,12 +493,9 @@ bool fill_status_info(int status, status_info& inf)
             const monster * const cstr = monster_by_mid(you.constricted_by);
             ASSERT(cstr);
 
-            const bool damage =
-                cstr->constriction_does_damage(you.get_constrict_type());
-
             inf.light_colour = YELLOW;
-            inf.light_text   = damage ? "Constr"      : "Held";
-            inf.short_text   = damage ? "constricted" : "held";
+            inf.light_text   = "Constr";
+            inf.short_text   = "constricted";
         }
         break;
 
@@ -476,27 +545,37 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case DUR_WEREBLOOD:
-        inf.light_text
-            = make_stringf("Slay (%u)",
-                           you.props[WEREBLOOD_KEY].get_int());
-        break;
+    case DUR_FUGUE:
+    {
+        int fugue_pow = you.props[FUGUE_KEY].get_int();
+        // Hey now / you're a damned star / get your fugue on / go slay
+        const char* fugue_star = fugue_pow == FUGUE_MAX_STACKS ? "*" : "";
+        inf.light_text = make_stringf("Fugue (%s%u%s)",
+                                      fugue_star, fugue_pow, fugue_star);
+    }
+    break;
+
+    case DUR_STICKY_FLAME:
+    {
+        int intensity = you.props[STICKY_FLAME_POWER_KEY].get_int();
+
+        // These thresholds are fairly arbitrary and likely could use adjusting.
+        if (intensity >= 13)
+        {
+            inf.light_colour = LIGHTRED;
+            inf.light_text = "Fire++";
+        }
+        else if (intensity > 7)
+            inf.light_text = "Fire+";
+        else
+            inf.light_text = "Fire";
+    }
 
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {
             inf.light_colour = WHITE;
             inf.light_text = "Beogh";
-        }
-        break;
-
-    case STATUS_RECALL:
-        if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
-        {
-            inf.light_colour = WHITE;
-            inf.light_text   = "Recall";
-            inf.short_text   = "recalling";
-            inf.long_text    = "You are recalling your allies.";
         }
         break;
 
@@ -672,13 +751,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_DIMENSIONAL_BULLSEYE:
-    {
-        if (!is_bullseye_active())
-            inf.light_colour = DARKGREY;
-        break;
-    }
-
     case STATUS_ORB:
     {
         if (player_has_orb())
@@ -724,6 +796,16 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text   = "Duel";
             inf.short_text   = "duelling";
             inf.long_text    = "You are engaged in single combat.";
+        }
+        break;
+
+    case STATUS_CANINE_FAMILIAR_ACTIVE:
+        if (canine_familiar_is_alive())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Dog";
+            inf.short_text   = "inugami summoned";
+            inf.long_text    = "Your inugami has been summoned.";
         }
         break;
 
@@ -774,6 +856,39 @@ bool fill_status_info(int status, status_info& inf)
             break;
     }
     return true;
+}
+
+static colour_t _gem_light_colour(int d_aut_left)
+{
+    if (d_aut_left < 100)
+        return LIGHTMAGENTA;
+    if (d_aut_left < 250)
+        return RED;
+    if (d_aut_left < 500)
+        return YELLOW;
+    return WHITE;
+}
+
+static void _describe_gem(status_info& inf)
+{
+    if (!Options.always_show_gems || !gem_clock_active())
+        return;
+
+    const gem_type gem = gem_for_branch(you.where_are_you);
+    if (gem == NUM_GEM_TYPES)
+        return;
+
+    if (!Options.more_gem_info && you.gems_found[gem])
+        return;
+
+    const int time_taken = you.gem_time_spent[gem];
+    const int limit = gem_time_limit(gem);
+    if (time_taken >= limit)
+        return; // already lost...
+
+    const int d_aut_left = (limit - time_taken + 9) / 10;
+    inf.light_text = make_stringf("Gem (%d)", d_aut_left);
+    inf.light_colour = _gem_light_colour(d_aut_left);
 }
 
 static void _describe_zot(status_info& inf)
@@ -845,6 +960,37 @@ static void _describe_glow(status_info& inf)
     const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
     inf.short_text = contam_adjectives[adj_i] + "contaminated";
     inf.long_text = describe_contamination(cont);
+}
+
+static void _describe_rev(status_info& inf)
+{
+    if (!you.has_mutation(MUT_WARMUP_STRIKES) || !you.rev_percent())
+        return;
+
+    const int tier = you.rev_tier();
+    switch (tier)
+    {
+        case 1:
+            inf.light_colour = BLUE;
+            inf.light_text   = "Rev";
+            inf.short_text   = "revving";
+            inf.long_text    = "You're starting to limber up.";
+            return;
+
+        case 2:
+            inf.light_colour = LIGHTBLUE;
+            inf.light_text   = "Rev+";
+            inf.short_text   = "revving";
+            inf.long_text    = "You're limbering up.";
+            return;
+
+        case 3:
+            inf.light_colour = WHITE;
+            inf.light_text   = "Rev*";
+            inf.short_text   = "revved";
+            inf.long_text    = "You're fully limbered up.";
+            return;
+    }
 }
 
 static void _describe_regen(status_info& inf)

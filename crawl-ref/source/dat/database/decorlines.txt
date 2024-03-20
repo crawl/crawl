@@ -1,0 +1,145 @@
+########################## TODO? ###############################################
+
+# Fountains? Seeing weird things in them?
+
+########################## Caches of food ######################################
+%%%%
+fruit cache
+
+You reach down and sample @_fruit_and_reaction_@
+%%%%
+meat cache
+
+You reach down and sample some @_meat_and_reaction_@
+%%%%
+_fruit_and_reaction_
+
+# Old fruits.
+
+an apple. Crisp.
+
+an apricot. Delicious.
+
+a choko. Bland.
+
+some grapes. Delicious.
+
+some lychee. Delicious.
+
+an orange. Delicious.
+
+some rambutans. Delicious.
+
+some strawberries. Delicious.
+
+a snozzcumber. Putrid!
+
+# Other fruits.
+
+a tomato. Savory.
+
+a cherimoya. Tangy!
+
+a mango. Yummy.
+
+a tamarind. Juicy!
+%%%%
+_meat_and_reaction_
+
+# Try to keep to dungeon animals.
+
+smoked eel. Savory!
+
+yak sausage. Delicious.
+
+cured ham hock. Salty.
+
+adder jerky. Delicious.
+
+magically-preserved pepperoni pizza. Delicious.
+
+w:6
+smoked snail. Delicious.
+
+w:6
+death yak sausage. Delicious.
+
+w:6
+alligator jerky. Delicious.
+
+w:6
+cured dream mutton. Ephemeral.
+
+w:6
+magically-preserved Pandemonium pizza. Delectable.
+
+w:2
+candy-coated scorpion. Crunchy.
+
+w:2
+pickled kraken tentacle. Astonishing!
+
+w:2
+cured hell ham hock. Spicy!
+
+w:2
+shrike confit. Tangy!
+
+w:2
+century hydra egg. An acquired taste.
+########################## Species diets ######################################
+%%%%
+felid fruit cache
+
+# Cats can't taste sweets and can only eat a few fruits safely.
+You dice up an apple and nibble upon it. Bland.
+
+You dice up a banana and nibble upon it. Bland.
+
+You pick out some berries and nibble upon them. Bland.
+%%%%
+felid meat cache
+
+You nibble upon some @_meat_and_reaction_@
+%%%%
+kobold fruit cache
+
+You peruse the fruit pile and shrug.
+%%%%
+ghoul fruit cache
+
+@kobold fruit cache@
+%%%%
+troll fruit cache
+
+You reach down and grab @_fruit_and_reaction_@ You go for seconds.
+%%%%
+oni fruit cache
+
+@troll fruit cache@
+%%%%
+vampire fruit cache
+
+You root around, looking for a blood orange, but fail to find any.
+
+w:4
+You reach down and find a blood orange. Delicious.
+%%%%
+mummy fruit cache
+
+You briefly stare at the fruit pile and sigh.
+%%%%
+mummy meat cache
+
+You briefly stare at the meat pile and sigh.
+%%%%
+spriggan fruit cache
+
+You root around and sample some @_fruit_and_reaction_@
+%%%%
+spriggan meat cache
+
+You root around, looking for pizza, but fail to find any.
+
+w:4
+You find a slice of magically-preserved pizza, and pick the meat off. Delicious!

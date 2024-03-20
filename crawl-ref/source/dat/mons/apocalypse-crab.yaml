@@ -1,0 +1,21 @@
+name: "apocalypse crab"
+glyph: {char: "t", colour: white}
+flags: [see_invis, no_skeleton]
+resists: {poison: -1, fire: 2, cold: 2}
+xp_mult: 14
+genus: crab
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: bite, flavour: chaotic, damage: 14}
+ - {type: claw, flavour: chaotic, damage: 14}
+hd: 8
+hp_10x: 480
+ac: 11
+ev: 5
+spells: apocalypse_crab
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+size: small
+shape: quadruped

@@ -1,0 +1,22 @@
+name: "entropy weaver"
+glyph: {char: "B", colour: lightcyan}
+flags: [fighter, see_invis, speaks, web_immune, warm_blood, no_skeleton]
+xp_mult: 25
+will: 60
+attacks:
+ - {type: hit, damage: 17}
+ - {type: hit, damage: 17}
+ - {type: hit, damage: 17}
+ - {type: hit, damage: 17}
+hd: 7
+hp_10x: 715
+ac: 7
+ev: 13
+spells: entropy_weaver
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 12
+uses: open_doors
+size: medium
+shape: humanoid

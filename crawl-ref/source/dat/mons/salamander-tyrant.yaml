@@ -1,0 +1,21 @@
+name: "salamander tyrant"
+glyph: {char: "N", colour: red}
+flags: [warm_blood]
+resists: {fire: 3, cold: -1}
+species: salamander
+genus: naga
+will: 60
+attacks:
+ - {type: hit, flavour: fire, damage: 15}
+hd: 15
+hp_10x: 675
+ac: 5
+ev: 7
+spells: salamander_tyrant
+has_corpse: true
+intelligence: human
+habitat: amphibious_lava
+energy: {swim: 7}
+uses: open_doors
+size: medium
+shape: naga

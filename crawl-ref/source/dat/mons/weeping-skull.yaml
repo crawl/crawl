@@ -1,0 +1,18 @@
+name: "weeping skull"
+glyph: {char: "z", colour: lightblue}
+flags: [flies]
+resists: {cold: 1}
+xp_mult: 9
+holiness: [undead]
+will: 20
+attacks:
+ - {type: touch, flavour: drain, damage: 10}
+hd: 5
+hp_10x: 280
+ac: 7
+ev: 3
+spells: weeping_skull
+shout: moan
+intelligence: human
+size: tiny
+shape: misc

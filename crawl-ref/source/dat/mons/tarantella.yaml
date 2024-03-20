@@ -1,0 +1,19 @@
+name: "tarantella"
+glyph: {char: "s", colour: lightmagenta}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+xp_mult: 8
+genus: spider
+will: 20
+attacks:
+ - {type: touch, flavour: confuse, damage: 19}
+hd: 8
+hp_10x: 280
+ac: 3
+ev: 14
+has_corpse: true
+shout: faint_skitter
+intelligence: animal
+speed: 15
+size: small
+shape: arachnid

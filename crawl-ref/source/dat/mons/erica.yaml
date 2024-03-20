@@ -1,0 +1,21 @@
+name: "Erica"
+glyph: {char: "x", colour: lightmagenta}
+flags: [speaks, warm_blood, unique, female, no_skeleton]
+xp_mult: 20
+species: octopode
+will: 40
+attacks:
+ - {type: hit, damage: 11}
+ - {type: constrict, flavour: crush, damage: 3}
+hd: 9
+hp_10x: 630
+ac: 0
+ev: 13
+spells: erica
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: medium
+shape: misc

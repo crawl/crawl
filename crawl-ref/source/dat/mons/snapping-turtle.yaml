@@ -1,0 +1,18 @@
+name: "snapping turtle"
+glyph: {char: "t", colour: green}
+flags: [cold_blood]
+will: 40
+attacks:
+ - {type: bite, flavour: reach, damage: 35}
+hd: 10
+hp_10x: 600
+ac: 16
+ev: 5
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+speed: 8
+energy: {swim: 6}
+size: medium
+shape: quadruped_tailless

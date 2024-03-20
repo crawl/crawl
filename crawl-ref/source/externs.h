@@ -170,7 +170,6 @@ public:
     bool notified_hp_full;
     bool notified_ancestor_hp_full;
     coord_def pos;
-    int travel_speed;
     int direction;
     int turns_passed;
 
@@ -179,7 +178,6 @@ public:
 public:
     runrest();
     void initialise(int rdir, int mode);
-    void init_travel_speed();
 
     // returns runmode
     operator int () const;

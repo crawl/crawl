@@ -11,7 +11,8 @@ public:
 
 // Public Methods
 public:
-    ranged_attack(actor *attacker, actor *defender, item_def *projectile,
+    ranged_attack(actor *attacker, actor *defender,
+                  const item_def *wpn, const item_def *projectile,
                   bool teleport, actor *blame = 0, bool mulched = false);
 
     // Applies attack damage and other effects.
@@ -32,6 +33,7 @@ private:
     int calc_base_unarmed_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
+    int player_apply_final_multipliers(int damage, bool aux = false) override;
     int player_apply_postac_multipliers(int damage) override;
     special_missile_type random_chaos_missile_brand();
     bool dart_check(special_missile_type type);
@@ -57,6 +59,5 @@ private:
 private:
     const item_def *projectile;
     bool teleport;
-    int orig_to_hit;
     bool mulched;
 };

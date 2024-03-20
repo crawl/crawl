@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "delay.h"
+#include "describe.h"
 #include "english.h"
 #include "env.h"
 #include "god-item.h"
@@ -43,7 +44,7 @@
 
 static const int EQF_NONE = 0;
 // "hand" slots (not rings)
-static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
+static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_OFFHAND)
                              | SLOTF(EQ_GLOVES);
 // auxen
 static const int EQF_AUXES = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
@@ -55,7 +56,7 @@ static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
 static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
 // everything you can (W)ear
 static const int EQF_WEAR = EQF_AUXES | SLOTF(EQ_BODY_ARMOUR)
-                            | SLOTF(EQ_SHIELD);
+                            | SLOTF(EQ_OFFHAND);
 // everything but jewellery
 static const int EQF_PHYSICAL = EQF_HANDS | EQF_WEAR;
 // all rings (except for the macabre finger amulet's)
@@ -120,6 +121,7 @@ Form::Form(const form_entry &fe)
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
       can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),
+      changes_physiology(fe.changes_physiology),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
@@ -179,7 +181,9 @@ bool Form::can_wear_item(const item_def& item) const
     if (is_unrandom_artefact(item, UNRAND_LEAR))
         return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
 
-    return slot_available(get_armour_slot(item));
+    const equipment_type slot = is_weapon(item) ? EQ_OFFHAND
+                                                : get_armour_slot(item);
+    return slot_available(slot);
 }
 
 /**
@@ -248,16 +252,22 @@ string Form::get_description(bool past_tense) const
  *
  * @return The message for turning into this form.
  */
-string Form::transform_message(transformation previous_trans) const
+string Form::transform_message(bool was_flying) const
 {
     // XXX: refactor this into a second function (and also rethink the logic)
     string start = "Buggily, y";
-    if (you.in_water() && player_can_fly())
+    if (!was_flying
+        && player_can_fly()
+        && feat_is_water(env.grid(you.pos())))
+    {
         start = "You fly out of the water as y";
-    else if (get_form(previous_trans)->player_can_fly()
+    }
+    else if (was_flying
              && player_can_swim()
              && feat_is_water(env.grid(you.pos())))
+    {
         start = "As you dive into the water, y";
+    }
     else
         start = "Y";
 
@@ -425,14 +435,6 @@ bool Form::res_acid() const
 }
 
 /**
- * Does this form provide resistance to sticky flame?
- */
-bool Form::res_sticky_flame() const
-{
-    return get_resist(resists, MR_RES_STICKY_FLAME);
-}
-
-/**
  * Does this form provide resistance to petrification?
  */
 bool Form::res_petrify() const
@@ -460,16 +462,6 @@ bool Form::enables_flight() const
 bool Form::forbids_flight() const
 {
     return can_fly == FC_FORBID;
-}
-
-/**
- * Does this form disable swimming?
- *
- * @return Whether swimming is always impossible while in this form.
- */
-bool Form::forbids_swimming() const
-{
-    return can_swim == FC_FORBID;
 }
 
 /**
@@ -501,25 +493,6 @@ bool Form::player_can_swim() const
            || species::can_swim(you.species)
               && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
-}
-
-/**
- * Can the player survive in deep water when in the given form?
- *
- * Doesn't count flight or beogh water-walking.
- *
- * @return          Whether the player won't be killed when entering deep water
- *                  in that form.
- */
-bool Form::player_likes_water() const
-{
-    // Grey dracs can't swim, so can't statue form merfolk/octopodes
-    // -- yet they can still survive in water.
-    if (species::likes_water(you.species) && permits_liking_water())
-        return true;
-
-    // otherwise, you gotta swim to survive!
-    return player_can_swim();
 }
 
 /**
@@ -604,10 +577,16 @@ private:
 public:
     static const FormFlux &instance() { static FormFlux inst; return inst; }
 
-    int contam_dam(bool random = true, bool max = false) const
+    int contam_dam(bool random = true, bool max = false) const override
     {
         return divided_scaling(FormScaling().Base(30).Scaling(20), random, max, 100);
     }
+
+    int ev_bonus(bool /*get_max*/) const override
+    {
+        return 4;
+    }
+
 };
 
 class FormBlade : public Form
@@ -639,7 +618,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation /*previous_trans*/) const override
+    string transform_message(bool /*was_flying*/) const override
     {
         const bool singular = you.arm_count() == 1;
 
@@ -698,7 +677,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation previous_trans) const override
+    string transform_message(bool was_flying) const override
     {
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
@@ -706,7 +685,7 @@ public:
 #endif
         if (you.species == SP_GARGOYLE)
             return "Your body stiffens and grows slower.";
-        return Form::transform_message(previous_trans);
+        return Form::transform_message(was_flying);
     }
 
     /**
@@ -738,22 +717,15 @@ public:
         string hand = you.base_hand_name(true, true);
         return make_stringf("Stone %s", hand.c_str());
     }
-
-    bool permits_liking_water() const override
-    {
-        // Statue form amphib species are still OK in water, despite
-        // not being able to swim.
-        return true;
-    }
 };
 
-class FormAnaconda : public Form
+class FormSerpent : public Form
 {
 private:
-    FormAnaconda() : Form(transformation::anaconda) { }
-    DISALLOW_COPY_AND_ASSIGN(FormAnaconda);
+    FormSerpent() : Form(transformation::serpent) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSerpent);
 public:
-    static const FormAnaconda &instance() { static FormAnaconda inst; return inst; }
+    static const FormSerpent &instance() { static FormSerpent inst; return inst; }
 };
 
 class FormDragon : public Form
@@ -844,7 +816,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation /*previous_trans*/) const override
+    string transform_message(bool /*was_flying*/) const override
     {
         return "Your flesh twists and warps into a mockery of life!";
     }
@@ -854,7 +826,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        if (you.undead_state() == US_ALIVE)
+        if (you.undead_state(false) == US_ALIVE)
             return "You feel yourself come back to life.";
         return "You feel your undeath return to normal.";
         // ^^^ vampires only, probably
@@ -1091,7 +1063,7 @@ static const Form* forms[] =
     &FormBlade::instance(),
     &FormStatue::instance(),
 
-    &FormAnaconda::instance(),
+    &FormSerpent::instance(),
     &FormDragon::instance(),
     &FormDeath::instance(),
     &FormBat::instance(),
@@ -1185,7 +1157,7 @@ bool form_can_fly(transformation form)
  * Can the player swim, if in this form?
  *
  * (Swimming = traversing deep & shallow water without penalties; includes
- * floating (ice form) and wading forms (giants - currently just dragon form,
+ * swimming (snake form) and wading forms (giants - currently just dragon form,
  * which normally flies anyway...))
  *
  * DOES consider player state besides form.
@@ -1197,29 +1169,10 @@ bool form_can_swim(transformation form)
     return get_form(form)->player_can_swim();
 }
 
-/**
- * Can the player survive in deep water when in the given form?
- *
- * Doesn't count flight or beogh water-walking.
- *
- * @param form      The form in question.
- * @return          Whether the player won't be killed when entering deep water
- *                  in that form.
- */
-bool form_likes_water(transformation form)
-{
-    return get_form(form)->player_likes_water();
-}
-
 // Used to mark transformations which override species intrinsics.
-// TODO: time to dataify this.
 bool form_changed_physiology(transformation form)
 {
-    return form != transformation::none
-        && form != transformation::beast
-        && form != transformation::flux
-        && form != transformation::maw
-        && form != transformation::blade_hands;
+    return get_form(form)->changes_physiology;
 }
 
 /**
@@ -1243,14 +1196,12 @@ static set<equipment_type>
 _init_equipment_removal(transformation form)
 {
     set<equipment_type> result;
-    if (!form_can_wield(form) && you.weapon() || you.melded[EQ_WEAPON])
-        result.insert(EQ_WEAPON);
-
-    // Liches can't wield holy weapons.
-    if (form == transformation::death && you.weapon()
-        && is_holy_item(*you.weapon()))
+    if (!form_can_wield(form))
     {
-        result.insert(EQ_WEAPON);
+        if (you.weapon() || you.melded[EQ_WEAPON])
+            result.insert(EQ_WEAPON);
+        if (you.offhand_weapon() || you.melded[EQ_OFFHAND])
+            result.insert(EQ_OFFHAND); // ^ dubious!
     }
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
@@ -1261,7 +1212,7 @@ _init_equipment_removal(transformation form)
         const item_def *pitem = you.slot_item(eq, true);
 
         if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
-                      || (i != EQ_RING_AMULET
+                      || (i != EQ_RING_AMULET && i != EQ_GIZMO
                           && !get_form(form)->can_wear_item(*pitem))))
         {
             result.insert(eq);
@@ -1307,7 +1258,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
         {
             if (e == EQ_WEAPON)
             {
-                unwield_item(!you.berserk());
+                unwield_item(*you.weapon(), !you.berserk());
                 canned_msg(MSG_EMPTY_HANDED_NOW);
             }
             else
@@ -1339,13 +1290,13 @@ static void _unmeld_equipment_type(equipment_type e)
 
     if (e == EQ_WEAPON)
     {
-        if (you.slot_item(EQ_SHIELD)
-            && is_shield_incompatible(item, you.slot_item(EQ_SHIELD)))
+        if (you.slot_item(EQ_OFFHAND)
+            && is_shield_incompatible(item, you.slot_item(EQ_OFFHAND)))
         {
             force_remove = true;
         }
     }
-    else if (item.base_type != OBJ_JEWELLERY)
+    else if (item.base_type == OBJ_ARMOUR)
     {
         // This could happen if the player was mutated during the form.
         if (!can_wear_armour(item, false, true))
@@ -1354,7 +1305,8 @@ static void _unmeld_equipment_type(equipment_type e)
         // If you switched weapons during the transformation, make
         // sure you can still wear your shield.
         // (This is only possible with Statue Form.)
-        if (e == EQ_SHIELD && you.weapon()
+        if (e == EQ_OFFHAND
+            && you.weapon()
             && is_shield_incompatible(*you.weapon(), &item))
         {
             force_remove = true;
@@ -1526,7 +1478,7 @@ bool feat_dangerous_for_form(transformation which_trans,
         return true;
 
     if (feat == DNGN_DEEP_WATER)
-        return !you.can_water_walk() && !form_likes_water(which_trans);
+        return !you.can_water_walk() && !form_can_swim(which_trans);
 
     return false;
 }
@@ -1659,24 +1611,27 @@ bool check_transform_into(transformation which_trans, bool involuntary)
             mpr(reason);
         return false;
     }
-
-    // if going into lichform causes us to drop a holy weapon with consequences
-    // for unwielding (e.g. contam), warn first.
-    if (which_trans == transformation::death
-        && !involuntary
-        && you.weapon()
-        && is_holy_item(*you.weapon()))
-    {
-        item_def nil_item;
-        nil_item.link = -1;
-        if (!check_old_item_warning(nil_item, OPER_WIELD, true))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-
     return true;
+}
+
+static void _print_death_brand_changes(item_def *weapon, bool entering_death)
+{
+    if (!weapon
+        || get_weapon_brand(*weapon) != SPWPN_HOLY_WRATH
+        || you.undead_or_demonic(false))
+    {
+        return;
+    }
+    if (entering_death)
+    {
+        mprf("%s goes dull and lifeless in your grasp.",
+             weapon->name(DESC_YOUR).c_str());
+    }
+    else
+    {
+        mprf("%s softly glows with a divine radiance!",
+             uppercase_first(weapon->name(DESC_YOUR)).c_str());
+    }
 }
 
 /// Form-specific special effects. Should be in a class?
@@ -1685,14 +1640,6 @@ static void _on_enter_form(transformation which_trans)
     // Extra effects
     switch (which_trans)
     {
-    case transformation::statue:
-        if (you.duration[DUR_ICY_ARMOUR])
-        {
-            mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
-            you.duration[DUR_ICY_ARMOUR] = 0;
-        }
-        break;
-
     case transformation::tree:
         mpr("Your roots penetrate the ground.");
         if (you.duration[DUR_TELEPORT])
@@ -1730,12 +1677,9 @@ static void _on_enter_form(transformation which_trans)
         break;
 
     case transformation::death:
-        if (you.duration[DUR_WEREBLOOD])
-        {
-            you.duration[DUR_WEREBLOOD] = 0;
-            mpr("Your lifeless body cannot sustain the wereblood!");
-        }
         you.redraw_status_lights = true;
+        _print_death_brand_changes(you.weapon(), true);
+        _print_death_brand_changes(you.offhand_weapon(), true);
         break;
 
     case transformation::shadow:
@@ -1797,18 +1741,15 @@ void set_form(transformation which_trans, int dur)
     quiver::set_needs_redraw();
 }
 
-static void _enter_form(int pow, transformation which_trans)
+static void _enter_form(int pow, transformation which_trans, bool was_flying)
 {
-    const transformation previous_trans = you.form;
-    const bool was_flying = you.airborne();
-
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
     // Give the transformation message.
-    mpr(get_form(which_trans)->transform_message(previous_trans));
+    mpr(get_form(which_trans)->transform_message(was_flying));
 
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
@@ -1906,12 +1847,6 @@ static void _enter_form(int pow, transformation which_trans)
  * @return                  If the player was transformed, or if they were
  *                          already in the given form, returns true.
  *                          Otherwise, false.
- *                          If just_check is set, returns true if the player
- *                          could enter the form (or is in it already) and
- *                          false otherwise.
- *                          N.b. that transform() can fail even when a
- *                          just_check run returns true; e.g. when Zin decides
- *                          to intervene. (That may be the only case.)
  */
 bool transform(int pow, transformation which_trans, bool involuntary)
 {
@@ -1954,16 +1889,18 @@ bool transform(int pow, transformation which_trans, bool involuntary)
         return true;
     }
 
+    const bool was_flying = you.airborne();
+
     if (you.form != transformation::none)
         untransform(true);
 
-    _enter_form(pow, which_trans);
+    _enter_form(pow, which_trans, was_flying);
 
     return true;
 }
 
 /**
- * End the player's transformation and return them to their normal
+ * End the player's transformation and return them to having no
  * form.
  * @param skip_move      If true, skip any move that was in progress before
  *                       the transformation ended.
@@ -2008,6 +1945,12 @@ void untransform(bool skip_move)
         }
     }
     _unmeld_equipment(melded);
+
+    if (old_form == transformation::death)
+    {
+        _print_death_brand_changes(you.weapon(), false);
+        _print_death_brand_changes(you.offhand_weapon(), false);
+    }
 
     // Update skill boosts for the current state of equipment melds
     // Must happen before the HP check!
@@ -2072,7 +2015,10 @@ void return_to_default_form()
         untransform();
     else
     {
-        if (you.form != transformation::none)
+        // Forcibly break out of forced forms at this point (since this should
+        // only be called in situations where those should end and transform()
+        // will refuse to do that on its own)
+        if (you.transform_uncancellable)
             untransform(true);
         transform(0, you.default_form, true);
     }
@@ -2151,6 +2097,31 @@ void merfolk_stop_swimming()
 #endif
 }
 
+void unset_default_form()
+{
+    if (is_artefact(you.active_talisman))
+        unequip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE, false);
+
+    you.default_form = transformation::none;
+    you.active_talisman.clear();
+}
+
+void set_default_form(transformation t, const item_def *source)
+{
+    if (is_artefact(you.active_talisman))
+        unequip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE, false);
+
+    you.default_form = t;
+    if (source)
+    {
+        you.active_talisman = *source; // iffy
+        if (is_artefact(you.active_talisman))
+            equip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE);
+    }
+    else
+        you.active_talisman.clear();
+}
+
 void vampire_update_transformations()
 {
     const undead_form_reason form_reason = lifeless_prevents_form();
@@ -2161,7 +2132,7 @@ void vampire_update_transformations()
         mprf(MSGCH_WARN,
              "Your blood-%s body can't sustain your transformation.",
              form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
-        you.default_form = transformation::none;
+        unset_default_form();
         untransform();
     }
 }
@@ -2191,4 +2162,130 @@ transformation form_for_talisman(const item_def &talisman)
         if (formdata[i].talisman == talisman.sub_type)
             return static_cast<transformation>(i);
     return transformation::none;
+}
+
+static void _pad_talisman_descs(vector<pair<string,string>> &descs)
+{
+    size_t max_len = 0;
+    for (const pair<string,string> &d : descs)
+        if (d.first.size() > max_len)
+            max_len = d.first.size();
+    for (pair<string,string> &d : descs)
+        d.second = string(max_len - d.first.size(), ' ') + d.second;
+}
+
+static string _int_with_plus(int i)
+{
+    if (i < 0)
+        return make_stringf("%d", i);
+    return make_stringf("+%d", i);
+}
+
+static string _maybe_desc_prop(int val, int max = -1)
+{
+    if (val == 0 && max <= 0)
+        return "";
+    const string base = _int_with_plus(val);
+    if (max == val || max == -1)
+        return base;
+    return base + make_stringf(" (%s at max skill)",
+                               _int_with_plus(max).c_str());
+}
+
+static void _maybe_add_prop(vector<pair<string, string>> &props, string name,
+                            int val, int max = -1)
+{
+    const string desc = _maybe_desc_prop(val, max);
+    if (!desc.empty())
+        props.push_back(pair<string, string>(name, desc));
+}
+
+void describe_talisman_form(transformation form_type, talisman_form_desc &d,
+                            bool incl_special /* hack - TODO REMOVEME */)
+{
+    const Form* form = get_form(form_type);
+    string minskill_desc = to_string(form->min_skill);
+    const int sk = you.skill(SK_SHAPESHIFTING, 10);
+    const bool below_min = sk/10 < form->min_skill;
+    if (below_min)
+        minskill_desc += " (insufficient skill lowers this form's max HP)";
+    d.skills.push_back(pair<string, string>("Minimum skill", minskill_desc));
+    d.skills.push_back(pair<string, string>("Maximum skill", to_string(form->max_skill)));
+    if (incl_special)
+    {
+        const string sk_desc = make_stringf("%d.%d", sk / 10, sk % 10);
+        d.skills.push_back(pair<string, string>("Your skill", sk_desc));
+    }
+
+    const int hp = form->mult_hp(100, true);
+    if (below_min || hp != 100)
+    {
+        string hp_desc = make_stringf("%d%%", hp);
+        if (below_min)
+            hp_desc += " (reduced by your low skill)";
+        d.defenses.push_back(pair<string,string>("HP", hp_desc));
+    }
+    _maybe_add_prop(d.defenses, "Bonus AC", form->get_ac_bonus() / 100,
+                                            form->get_ac_bonus(true) / 100);
+    _maybe_add_prop(d.defenses, "Bonus EV", form->ev_bonus(),
+                                            form->ev_bonus(true));
+
+    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    if (loses_body_ac)
+    {
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+        const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
+        const int ac_penalty = form->get_base_ac_penalty(base_ac);
+        const string body_loss = make_stringf("-%d (-%d%% of your body armour's %d base AC)",
+                                              ac_penalty, body_ac_loss_percent, base_ac);
+        d.defenses.push_back(pair<string,string>("AC", body_loss));
+    }
+    if (form->size != SIZE_CHARACTER)
+        d.defenses.push_back(pair<string,string>("Size", uppercase_first(get_size_adj(form->size))));
+
+    const int normal_uc = 3; // TODO: dedup this
+    const int uc = form->get_base_unarmed_damage(false) - normal_uc;
+    const int max_uc = form->get_base_unarmed_damage(false, true) - normal_uc;
+    _maybe_add_prop(d.offenses, "UC base dam+", uc, max_uc);
+    _maybe_add_prop(d.offenses, "Slay", form->slay_bonus(false),
+                                         form->slay_bonus(false, true));
+    switch (form_type) {
+    case transformation::statue:
+        d.offenses.push_back(pair<string, string>("Melee damage", "+50%"));
+        break;
+    case transformation::flux:
+    {
+        d.offenses.push_back(pair<string, string>("Melee damage", "-33%"));
+        const int contam_dam = form->contam_dam(false);
+        const int max_contam_dam = form->contam_dam(false, true);
+        _maybe_add_prop(d.offenses, "Contam damage", contam_dam, max_contam_dam);
+        break;
+    }
+    case transformation::maw:
+    {
+        if (!incl_special)
+            break;
+        const int aux_dam = form->get_aux_damage(false);
+        const int max_aux_dam = form->get_aux_damage(false, true);
+        _maybe_add_prop(d.offenses, "Maw damage", aux_dam, max_aux_dam);
+        break;
+    }
+    case transformation::dragon:
+    {
+        if (!incl_special)
+            break;
+        _maybe_add_prop(d.offenses, "Bite dam", 1 + DRAGON_FANGS * 2);
+        _maybe_add_prop(d.offenses, "Tail slap dam", 6); // big time hack alert
+        break;
+    }
+    default:
+        break;
+    }
+    _maybe_add_prop(d.offenses, "Str", form->str_mod);
+    _maybe_add_prop(d.offenses, "Dex", form->dex_mod);
+
+   _pad_talisman_descs(d.skills);
+   _pad_talisman_descs(d.defenses);
+   _pad_talisman_descs(d.offenses);
 }

@@ -105,12 +105,12 @@ void inspect_spells();
 bool can_cast_spells(bool quiet = false);
 void do_cast_spell_cmd(bool force);
 
-int hex_success_chance(const int mr, int powc, int scale,
+int hex_success_chance(const int wl, int powc, int scale,
                        bool round_up = false);
 class targeter;
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
 bool spell_has_targeter(spell_type spell);
-string target_desc(const monster_info& mi, spell_type spell);
+string target_spell_desc(const monster_info& mi, spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc);
 vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc);

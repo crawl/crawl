@@ -1093,7 +1093,7 @@ void TilesFramework::_send_player(bool force_full)
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
     _update_int(force_full, c.explore, you.explore, "explore");
-    _update_string(force_full, c.species, species::name(you.species),
+    _update_string(force_full, c.species, player_species_name(),
                    "species");
     string god = "";
     if (you_worship(GOD_JIYVA))
@@ -1135,8 +1135,8 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
 
-    _update_int(force_full, c.armour_class, you.armour_class(), "ac");
-    _update_int(force_full, c.evasion, you.evasion(), "ev");
+    _update_int(force_full, c.armour_class, you.armour_class_scaled(1), "ac");
+    _update_int(force_full, c.evasion, you.evasion_scaled(1), "ev");
     _update_int(force_full, c.shield_class, player_displayed_shield_class(),
                 "sh");
 
@@ -1236,7 +1236,7 @@ void TilesFramework::_send_player(bool force_full)
         json_open_object(to_string(i));
         item_def item = get_item_known_info(you.inv[i]);
         if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
-            item.plus -= 4 * you.corrosion_amount();
+            item.plus -= 1 * you.corrosion_amount();
         _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
         json_close_object(true);
     }
@@ -1421,51 +1421,10 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
 
 void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
-    // Ordered from back to front.
-    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
-    int p_order[TILEP_PART_MAX] =
-    {
-        // background
-        TILEP_PART_SHADOW,
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        // player
-        TILEP_PART_BASE,
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,
-        TILEP_PART_HAND2,
-    };
+    static int p_order[TILEP_PART_MAX];
+    static int flags[TILEP_PART_MAX];
 
-    int flags[TILEP_PART_MAX];
-    tilep_calc_flags(doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[7] = TILEP_PART_BOOTS;
-        p_order[6] = TILEP_PART_LEG;
-    }
-
-    // Draw scarves above other clothing.
-    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
-    {
-        p_order[4] = p_order[5];
-        p_order[5] = p_order[6];
-        p_order[6] = p_order[7];
-        p_order[7] = p_order[8];
-        p_order[8] = p_order[9];
-        p_order[9] = TILEP_PART_CLOAK;
-    }
-
-    reveal_bardings(doll.parts, flags);
+    tilep_fill_order_and_flags(doll, p_order, flags);
 
     tiles.json_open_array("doll");
 
@@ -1654,6 +1613,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.is_sanctuary != current_pc.is_sanctuary)
             json_write_bool("sanctuary", next_pc.is_sanctuary);
+        if (next_pc.is_blasphemy != current_pc.is_blasphemy)
+            json_write_bool("blasphemy", next_pc.is_blasphemy);
+
+        if (next_pc.has_bfb_corpse != current_pc.has_bfb_corpse)
+            json_write_bool("has_bfb_corpse", next_pc.has_bfb_corpse);
 
         if (next_pc.is_liquefied != current_pc.is_liquefied)
             json_write_bool("liquefied", next_pc.is_liquefied);
@@ -1732,10 +1696,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
                             get_item_known_info(*you.slot_item(EQ_WEAPON)));
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
-                    if (you.slot_item(EQ_SHIELD))
+                    if (you.slot_item(EQ_OFFHAND))
                     {
                         item = new item_def(
-                            get_item_known_info(*you.slot_item(EQ_SHIELD)));
+                            get_item_known_info(*you.slot_item(EQ_OFFHAND)));
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);

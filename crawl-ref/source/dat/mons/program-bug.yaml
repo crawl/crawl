@@ -1,0 +1,14 @@
+name: "program bug"
+glyph: {char: "B", colour: lightred}
+flags: [no_exp_gain, cant_spawn, no_threat]
+will: 10
+attacks:
+hd: 0
+hp_10x: 0
+ac: 0
+ev: 0
+has_corpse: true
+intelligence: brainless
+speed: 0
+size: giant
+shape: misc

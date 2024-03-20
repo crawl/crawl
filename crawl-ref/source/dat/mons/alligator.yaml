@@ -1,0 +1,20 @@
+name: "alligator"
+glyph: {char: "l", colour: lightblue}
+flags: [cold_blood]
+xp_mult: 9
+genus: giant_lizard
+will: 40
+attacks:
+ - {type: tail_slap, damage: 14}
+ - {type: bite, flavour: drag, damage: 27}
+hd: 12
+hp_10x: 620
+ac: 4
+ev: 9
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+speed: 12
+energy: {swim: 8}
+size: large
+shape: quadruped

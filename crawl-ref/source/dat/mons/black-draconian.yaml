@@ -1,0 +1,19 @@
+name: "black draconian"
+glyph: {char: "d", colour: blue}
+flags: [flies, speaks, cold_blood]
+resists: {elec: 3}
+genus: draconian
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+hd: 14
+hp_10x: 980
+ac: 9
+ev: 10
+has_corpse: true
+shout: roar
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_winged_tailed
+tile: program_bug

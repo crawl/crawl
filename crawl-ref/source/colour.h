@@ -15,7 +15,7 @@ enum element_type
     ETC_EARTH,          // earthy colours
     ETC_ELECTRICITY,    // electrical side of air
     ETC_AIR,            // non-electric and general air magic
-    ETC_POISON,         // used only for venom mage and stalker stuff
+    ETC_POISON,         // used for snakey things
     ETC_WATER,          // used only for the elemental
     ETC_MAGIC,          // general magical effect
     ETC_MUTAGENIC,      // transmute, poly, radiation effects
@@ -58,13 +58,12 @@ enum element_type
     ETC_DITHMENOS,      // Dithmenos altar colours
     ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
-#if TAG_MAJOR_VERSION == 34
-    ETC_SHINING,        // shining gold (Gozag)
-#endif
+    ETC_FOUL_FLAME,     // Foul flame
     ETC_MOUNTAIN,       // Mountain boots
     ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_CANDLES,        // Ignis flickering candles
+    ETC_STEEL,          // a brighter iron
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
@@ -83,12 +82,15 @@ struct base_colour_calc
     string name;
 
     virtual int get(const coord_def& loc = coord_def(),
-                    bool non_random = false) = 0;
+                    bool non_random = false) const = 0;
+    /// If this is a sequence of colours, get the nth one (modulo), ignoring
+    /// weights. Otherwise, pick a random colour for the player's position.
+    virtual int get_nth(int n) const = 0;
 
 protected:
     int rand_max {120}; // 0-119 is the range of randomness promised to
                         // Lua colour functions.
-    int rand(bool non_random);
+    int rand(bool non_random) const;
 };
 
 
@@ -100,7 +102,8 @@ struct element_colour_calc : public base_colour_calc
     virtual ~element_colour_calc() {}
 
     int get(const coord_def& loc = coord_def(),
-            bool non_random = false) override;
+            bool non_random = false) const override;
+    int get_nth(int n) const override;
 
 protected:
     element_colour_calculator calc;
@@ -128,3 +131,5 @@ colour_t rune_colour(int type);
 
 // Applies ETC_ colour substitutions
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
+
+string colourize_str(string base, colour_t col);

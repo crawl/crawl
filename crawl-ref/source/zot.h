@@ -23,3 +23,11 @@ int turns_until_zot_in(branch_type br);
 void decr_zot_clock(bool extra_life = false);
 void incr_zot_clock();
 void set_turns_until_zot(int turns_left);
+
+bool gem_clock_active();
+void incr_gem_clock();
+void print_gem_warnings(int gem, int old_time_taken);
+void maybe_break_floor_gem();
+void shatter_floor_gem(bool quiet = false);
+int gem_time_left(int gem);
+string gem_status();

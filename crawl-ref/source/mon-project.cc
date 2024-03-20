@@ -268,12 +268,12 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 // Alas, too much differs to reuse beam shield blocks :(
 static bool _iood_shielded(monster& mon, actor &victim)
 {
-    if (!victim.shielded() || victim.incapacitated())
+    if (!victim.shielded() || victim.incapacitated() || victim.shield_exhausted())
         return false;
 
     const int to_hit = 15 + (mons_is_projectile(mon.type) ?
         mon.props[IOOD_POW].get_short()/12 : mon.get_hit_dice()/2);
-    const int con_block = random2(to_hit + victim.shield_block_penalty());
+    const int con_block = random2(to_hit);
     const int pro_block = victim.shield_bonus();
     dprf("iood shield: pro %d, con %d", pro_block, con_block);
     return pro_block >= con_block;
@@ -297,7 +297,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
     beam.name = "orb of destruction";
-    beam.flavour = BEAM_DEVASTATION;
+    beam.flavour = BEAM_DESTRUCTION;
     beam.attitude = mon.attitude;
 
     actor *caster = actor_by_mid(mon.summoner);
@@ -375,9 +375,7 @@ bool iood_act(monster& mon, bool no_trail)
     const actor *foe = mon.get_foe();
     // If the target is gone, the orb continues on a ballistic course since
     // picking a new one would require intelligence.
-
-    // IOODs can't home in on a submerged creature.
-    if (foe && !foe->submerged())
+    if (foe)
     {
         const coord_def target = foe->pos();
         float dx = target.x - x;
@@ -505,20 +503,14 @@ move_again:
             }
         }
 
-        if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
+        // TODO remove this goto (and the other one)
+        if (mons && mons->type == MONS_BATTLESPHERE)
         {
-            // Try to swap with the submerged creature.
             if (mon.swap_with(mons))
-            {
-                dprf("iood: Swapping with a submerged monster.");
                 return false;
-            }
-            else // if swap fails, move ahead
-            {
-                dprf("iood: Boosting above a submerged monster (can't swap).");
-                mon.lose_energy(EUT_MOVE);
-                goto move_again;
-            }
+            // if swap fails, move ahead (but it shouldn't!)
+            mon.lose_energy(EUT_MOVE);
+            goto move_again;
         }
 
         if (victim && _iood_shielded(mon, *victim))

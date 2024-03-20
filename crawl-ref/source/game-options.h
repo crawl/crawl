@@ -467,7 +467,7 @@ public:
             if (ltyp == RCFILE_LINE_MINUS)
                 remove_matching(value, element);
             else
-                new_entries.push_back(move(element));
+                new_entries.push_back(std::move(element));
         }
         merge_lists(value, new_entries, ltyp == RCFILE_LINE_CARET);
         return GameOption::loadFromString(field, ltyp);

@@ -17,6 +17,7 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
+    m_mirror_horizontal(false),
     m_prefix("TILE"),
     m_start_value("0"),
     m_start_value_module(""),
@@ -267,6 +268,13 @@ void tile_list_processor::recolour(tile &img)
         }
 }
 
+void tile_list_processor::maybe_mirror(tile &img)
+{
+    if (!m_mirror_horizontal)
+        return;
+    img.flip_horizontal();
+}
+
 bool tile_list_processor::process_line(char *read_line, const char *list_file,
                                        int line)
 {
@@ -391,6 +399,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     img.add_rim(tile_colour::black);
 
                 recolour(img);
+                maybe_mirror(img);
 
                 if (!m_compose.compose(img))
                 {
@@ -410,6 +419,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 }
 
                 recolour(m_compose);
+                maybe_mirror(m_compose);
             }
         }
         else if (strcmp(arg, "corpse") == 0)
@@ -496,8 +506,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             CHECK_ARG(1);
             if (!process_list(m_args[1]))
             {
-                fprintf(stderr, "Error (%s:%d): include failed.\n",
-                        list_file, line);
+                fprintf(stderr, "Error (%s:%d): include of '%s' failed.\n",
+                        list_file, line, m_args[1]);
                 return false;
             }
         }
@@ -726,6 +736,16 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             m_variation_idx = idx;
             m_variation_col = colour;
         }
+        else if (strcmp(arg, "reset_mirror") == 0)
+        {
+            CHECK_NO_ARG(1);
+            m_mirror_horizontal = false;
+        }
+        else if (strcmp(arg, "mirror_horizontal") == 0)
+        {
+            CHECK_NO_ARG(1);
+            m_mirror_horizontal = true;
+        }
         else if (strcmp(arg, "repeat") == 0)
         {
             CHECK_ARG(1);
@@ -746,6 +766,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 tile img;
                 img.copy(*m_page.m_tiles[idx + i]);
                 recolour(img);
+                maybe_mirror(img);
                 m_weight = m_page.m_probs[idx + i] - old_w;
                 old_w    = m_page.m_probs[idx + i];
                 add_image(img, (i == 0 && m_args[2]) ? m_args[2] : nullptr);
@@ -758,6 +779,47 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     // Add enums for additional values.
                     m_page.add_synonym(m_args[2], m_args[i]);
                 }
+            }
+        }
+        else if (strcmp(arg, "repeat_ctg") == 0)
+        {
+            CHECK_ARG(1);
+
+            int start_idx = m_page.find_ctg_start(m_args[1]);
+            if (start_idx == -1)
+            {
+                fprintf(stderr, "Error (%s:%d): invalid ctg name '%s'\n",
+                        list_file, line, m_args[1]);
+                return false;
+            }
+            int end_idx = m_page.find_ctg_end(m_args[1]);
+            if (end_idx == -1)
+            {
+                fprintf(stderr, "Error (%s:%d): invalid ctg name '%s'\n",
+                        list_file, line, m_args[1]);
+                return false;
+            }
+
+            for (int idx = start_idx; idx <= end_idx; ++idx)
+            {
+                auto &old_tile = m_page.m_tiles[idx];
+                const int cnt = m_page.m_counts[idx];
+                const string enumname = old_tile->enumname(0);
+                int old_w = 0;
+                for (int i = 0; i < cnt; ++i)
+                {
+                    tile img;
+                    img.copy(*m_page.m_tiles[idx+i]);
+                    recolour(img);
+                    maybe_mirror(img);
+                    m_weight = m_page.m_probs[idx+i] - old_w;
+                    old_w    = m_page.m_probs[idx+i];
+                    add_image(img, i == 0 ? enumname.c_str() : nullptr);
+                }
+                const int enumcount = old_tile->enumcount();
+                for (int i = 1; i < enumcount; ++i)
+                    m_page.add_synonym(m_last_enum, old_tile->enumname(i));
+                idx += cnt - 1;
             }
         }
         else if (strcmp(arg, "syn") == 0)
@@ -830,6 +892,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
 
         recolour(img);
+        maybe_mirror(img);
 
         if (m_rim && !m_corpsify)
             img.add_rim(tile_colour::black);
@@ -1034,10 +1097,16 @@ bool tile_list_processor::write_data(bool image, bool code)
                     fprintf(fp, "    %s_%s_FILLER_%u%s,\n", m_prefix.c_str(),
                             ucname.c_str(), i, start_val.c_str());
                 }
-                else
+                else if (parts_ctg.empty())
                 {
                     fprintf(fp, "    %s_%s_%d%s,\n", m_prefix.c_str(),
                             old_enum_name.c_str(), ++count, start_val.c_str());
+                }
+                else
+                {
+                    fprintf(fp, "    %s_%s_%s_%d%s,\n", m_prefix.c_str(),
+                            parts_ctg.c_str(), old_enum_name.c_str(), ++count,
+                            start_val.c_str());
                 }
             }
             else if (parts_ctg.empty())

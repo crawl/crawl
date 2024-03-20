@@ -1,0 +1,19 @@
+name: "bennu"
+glyph: {char: "b", colour: yellow}
+flags: [flies, see_invis, speaks, warm_blood, no_poly_to]
+resists: {poison: 1, fire: 3, neg: 3, miasma: 1}
+xp_mult: 6
+will: 140
+attacks:
+ - {type: peck, flavour: holy, damage: 27}
+ - {type: claw, damage: 24}
+ - {type: claw, damage: 24}
+hd: 14
+hp_10x: 770
+ac: 6
+ev: 16
+shout: screech
+intelligence: human
+speed: 16
+size: medium
+shape: bird

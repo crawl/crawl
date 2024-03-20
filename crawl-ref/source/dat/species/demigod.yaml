@@ -1,15 +1,15 @@
 enum: SP_DEMIGOD
 monster: MONS_DEMIGOD
-name: "Demigod"
-short_name: "Dg"
-adjective: "Divine"
+name: Demigod
+short_name: Dg
+adjective: Divine
 difficulty: Advanced
 difficulty_priority: 80
 aptitudes:
   xp: -2
   hp: 1
   mp_mod: 2
-  mr: 4
+  wl: 4
   fighting: -1
   short_blades: -1
   long_blades: -1
@@ -29,13 +29,12 @@ aptitudes:
   summoning: -1
   necromancy: -1
   translocations: -1
-  transmutations: -1
   shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
-  poison_magic: -1
+  alchemy: -1
   invocations: False
   evocations: -1
 str: 9
@@ -56,3 +55,5 @@ recommended_jobs:
   - JOB_ICE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
+
+orc_name: Buggy Orc

@@ -411,7 +411,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 
     { BRANCH_ARENA, NUM_BRANCHES, -1, -1, 1, 0,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_ARENA, DNGN_EXIT_ARENA, NUM_FEATURES,
       "Arena", "the Arena", "Arena",
       "You enter Okawaru's Arena!",

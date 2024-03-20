@@ -1,0 +1,16 @@
+name: "ballistomycete"
+glyph: {char: "P", colour: magenta}
+flags: [stationary]
+resists: {poison: 1}
+genus: fungus
+holiness: [plant]
+will: invuln
+attacks:
+hd: 4
+hp_10x: 260
+ac: 1
+ev: 0
+spells: ballistomycete
+intelligence: brainless
+size: tiny
+shape: fungus

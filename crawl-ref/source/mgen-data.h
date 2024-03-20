@@ -4,6 +4,7 @@
 #include "coord.h"
 #include "god-type.h"
 #include "mgen-enum.h"
+#include "mon-enum.h"
 #include "mon-flags.h"
 #include "xp-tracking-type.h"
 
@@ -171,6 +172,7 @@ struct mgen_data
         ASSERT(summon_type == 0 || abjuration_dur >= 1 && abjuration_dur <= 6
                || cls == MONS_BALL_LIGHTNING || cls == MONS_ORB_OF_DESTRUCTION
                || cls == MONS_BATTLESPHERE || cls == MONS_BALLISTOMYCETE_SPORE
+               || cls == MONS_BOULDER
                || summon_type == SPELL_ANIMATE_DEAD
                || summon_type == SPELL_NECROTISE
                || summon_type == SPELL_DEATH_CHANNEL
@@ -180,7 +182,8 @@ struct mgen_data
                || summon_type == SPELL_FULMINANT_PRISM
                || summon_type == SPELL_INFESTATION
                || summon_type == SPELL_FOXFIRE
-               || summon_type == SPELL_MARSHLIGHT);
+               || summon_type == SPELL_MARSHLIGHT
+               || summon_type == MON_SUMM_AID);
         return *this;
     }
 

@@ -25,7 +25,6 @@ irradiate IRRADIATE
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
-ledas_unmaking LEDAS_UNMAKING
 dig DIG
 lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
 lehudibs_crystal_spear LEHUDIBS_CRYSTAL_SPEAR
@@ -36,6 +35,7 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
+boulder BOULDER
 
 %sdir gui/spells/enchantment
 anguish ANGUISH
@@ -53,6 +53,8 @@ mass_confusion MASS_CONFUSION
 slow SLOW
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
+sigil_of_binding SIGIL_OF_BINDING
+jinxbite JINXBITE
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
@@ -93,22 +95,24 @@ animate_dead ANIMATE_DEAD
 animate_skeleton ANIMATE_SKELETON
 bolt_of_draining BOLT_OF_DRAINING
 borgnjors_revivification BORGNJORS_REVIVIFICATION
+borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
 corpse_rot CORPSE_ROT
 death_channel DEATH_CHANNEL
 deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
+fugue_of_the_fallen FUGUE_OF_THE_FALLEN
 haunt HAUNT
+infestation INFESTATION
+kiss_of_death KISS_OF_DEATH
+martyrs_knell MARTYRS_KNELL
 necromutation NECROMUTATION
-pain PAIN
 necrotise NECROTISE
+pain PAIN
 simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
-infestation INFESTATION
-borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
-kiss_of_death KISS_OF_DEATH
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
@@ -123,27 +127,27 @@ poisonous_vapours POISONOUS_VAPOURS
 noxious_bog NOXIOUS_BOG
 
 %sdir gui/spells/summoning
-mass_abjuration MASS_ABJURATION
+animate_armour ANIMATE_ARMOUR
 call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 malign_gateway MALIGN_GATEWAY
+mass_abjuration MASS_ABJURATION
+monstrous_menagerie MONSTROUS_MENAGERIE
 recall RECALL
+spellforged_servitor SPELLFORGED_SERVITOR
+summon_blazeheart_golem SUMMON_BLAZEHEART_GOLEM
+summon_cactus_giant SUMMON_CACTUS_GIANT
 summon_demon SUMMON_DEMON
 summon_dragon SUMMON_DRAGON
+summon_forest SUMMON_FOREST
 summon_greater_demon SUMMON_GREATER_DEMON
 summon_horrible_things SUMMON_HORRIBLE_THINGS
 summon_hydra SUMMON_HYDRA
 summon_ice_beast SUMMON_ICE_BEAST
+summon_lightning_spire SUMMON_LIGHTNING_SPIRE
+summon_mana_viper SUMMON_MANA_VIPER
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
-summon_lightning_spire SUMMON_LIGHTNING_SPIRE
-summon_guardian_golem SUMMON_GUARDIAN_GOLEM
-animate_armour ANIMATE_ARMOUR
-summon_forest SUMMON_FOREST
-monstrous_menagerie MONSTROUS_MENAGERIE
-summon_mana_viper SUMMON_MANA_VIPER
-spellforged_servitor SPELLFORGED_SERVITOR
-summon_cactus_giant SUMMON_CACTUS_GIANT
 
 %sdir gui/spells/translocation
 apportation APPORTATION
@@ -166,45 +170,72 @@ cloud_cone CLOUD_CONE
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
-# and wereblood
-wereblood WEREBLOOD
+bolt_of_light BOLT_OF_LIGHT
+warp_space WARP_SPACE
 
 # spells normally only used by monsters
 %back gui/spells/bg
 %sdir gui/spells/monster
 generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
+awaken_forest AWAKEN_FOREST
 awaken_vines AWAKEN_VINES
+battlecry BATTLECRY
+berserk_other BERSERK_OTHER
 blink_other BLINK_OTHER
-brain_feed BRAIN_FEED
+brain_bite BRAIN_BITE
+call_of_chaos CALL_OF_CHAOS
 call_down_damnation CALL_DOWN_DAMNATION
+call_tide CALL_TIDE
 cantrip CANTRIP
 cold_breath COLD_BREATH
+concentrate_venom CONCENTRATE_VENOM
+confusion_gaze CONFUSION_GAZE
+corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
+crystallizing_shot CRYSTALLIZING_SHOT
+draining_gaze DRAINING_GAZE
+drain_magic DRAIN_MAGIC
+dream_dust DREAM_DUST
+divine_armament DIVINE_ARMAMENT
 earth_elementals EARTH_ELEMENTALS
+ensnare ENSNARE
+entropic_weave ENTROPIC_WEAVE
+eruption ERUPTION
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
+fire_summon FIRE_SUMMON
+forceful_invitation FORCEFUL_INVITATION
 ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
 ink_cloud INK_CLOUD
+injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
+legendary_destruction LEGENDARY_DESTRUCTION
 malmutate MALMUTATE
 metal_splinters METAL_SPLINTERS
 miasma_breath MIASMA_BREATH
 might MIGHT
+mindburst MINDBURST
 noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
 petrifying_cloud PETRIFYING_CLOUD
 phantom_mirror PHANTOM_MIRROR
+plane_rend PLANE_REND
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
+rebounding_blaze REBOUNDING_BLAZE
+rebounding_chill REBOUNDING_CHILL
+roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK
+shezas_dance SHEZAS_DANCE
 sleep SLEEP
+slug_dart SLUG_DART
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON
@@ -212,24 +243,51 @@ sporulate SPORULATE
 sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
+sticks_to_snakes STICKS_TO_SNAKES
 strip_willpower STRIP_WILLPOWER
+stunning_burst STUNNING_BURST
 summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
+summon_emperor_scorpions SUMMON_EMPEROR_SCORPIONS
+summon_executioners SUMMON_EXECUTIONERS
 summon_hell_beast SUMMON_HELL_BEAST
+summon_hell_sentinel SUMMON_HELL_SENTINEL
+summon_holies SUMMON_HOLIES
+summon_illusion SUMMON_ILLUSION
 summon_minor_demon SUMMON_MINOR_DEMON
 summon_mushrooms SUMMON_MUSHROOMS
+summon_scarabs SUMMON_SCARABS
 summon_scorpions SUMMON_SCORPIONS
 summon_spectral_orcs SUMMON_SPECTRAL_ORCS
+summon_spiders SUMMON_SPIDERS
 summon_ufetubus SUMMON_UFETUBUS
+summon_tzitzimitl SUMMON_TZITZIMITL
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
+throw_ally THROW_ALLY
+throw_klown_pie THROW_KLOWN_PIE
+virulence VIRULENCE
 wall_of_brambles WALL_OF_BRAMBLES
+warning_cry WARNING_CRY
 water_elementals WATER_ELEMENTALS
+weakening_gaze WEAKENING_GAZE
+woodweal WOODWEAL
 %back none
 
 # spells mimicking natural abilities
 %sdir gui/abilities
+blinkbolt BLINKBOLT
 hurl_damnation HURL_DAMNATION
+
+# spells flavoured as divine abilities
+%sdir gui/spells/monster
+aura_of_brilliance AURA_OF_BRILLIANCE
+drain_life DRAIN_LIFE
+druids_call DRUIDS_CALL
+injury_mirror INJURY_MIRROR
+malign_offering MALIGN_OFFERING
+regeneration REGENERATION
+sap_magic SAP_MAGIC
 
 # spells mimicking divine abilities
 %sdir gui/invocations
@@ -239,10 +297,13 @@ elyvilon_lesser_healing MINOR_HEALING
 elyvilon_heal_self MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
+lugonu_corrupt CORRUPT
 trog_hand TROGS_HAND
 trog_brothers_in_arms BROTHERS_IN_ARMS
-yred_drain_life DRAIN_LIFE
-yred_injury_mirror INJURY_MIRROR
+tso_cleansing_flame CLEANSING_FLAME
+
+%sdir gui/spells/misc
+debugging_ray DEBUGGING_RAY
 
 %sdir gui/spells
 memorise MEMORISE

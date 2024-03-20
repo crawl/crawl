@@ -148,7 +148,14 @@ static void _split_ench_durations(monster* initial_slime, monster* split_off)
     for (const auto &entry : initial_slime->enchantments)
     {
         if (_should_share_ench(entry.second.ench))
+        {
             split_off->add_ench(entry.second);
+
+            // The newly split slime will also be vengeance marked, so we need
+            // to increment the total number of monsters the player has to kill
+            if (entry.second.ench == ENCH_VENGEANCE_TARGET)
+                you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+        }
     }
 }
 
@@ -181,14 +188,7 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
             entry.second.duration = 1;
 
         if (no_initial)
-        {
             merge_to.add_ench(entry.second);
-
-            // XX: This is ugly special-casing. Is there a way to fold this into
-            //     gaining inner flame in general?
-            if (entry.second.ench == ENCH_INNER_FLAME)
-                merge_to.props[INNER_FLAME_POW_KEY] = initial.props[INNER_FLAME_POW_KEY].get_int();
-        }
         else
             merge_to.update_ench(entry.second);
     }
@@ -817,7 +817,7 @@ void treant_release_fauna(monster& mons)
 
         if (fauna)
         {
-            fauna->props[BAND_LEADER_KEY].get_int() = mons.mid;
+            fauna->set_band_leader(mons);
 
             // Give released fauna the same summon duration as their 'parent'
             if (abj.ench != ENCH_NONE)
@@ -873,6 +873,31 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
     return p;
 }
 
+static void _weeping_skull_cloud_aura(monster* mons)
+{
+    actor *foe = mons->get_foe();
+    if (!foe || !mons->can_see(*foe))
+        return;
+
+    // Generate list of valid cloud spots.
+    vector<coord_def> pos;
+
+    for (radius_iterator ri(mons->pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(mons->pos(), *ri) > 2)
+            continue;
+
+        if (!feat_is_solid(env.grid(*ri)) && !actor_at(*ri) && !cloud_at(*ri))
+            pos.push_back(*ri);
+    }
+
+    shuffle_array(pos);
+
+    int num_clouds = min((int)pos.size(), random_range(1, 3));
+    for (int i = 0; i < num_clouds; ++i)
+        place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -888,7 +913,7 @@ bool mon_special_ability(monster* mons)
                                   : mons->type;
 
     // Slime creatures can split while out of sight.
-    if ((!mons->near_foe() || mons->asleep() || mons->submerged())
+    if ((!mons->near_foe() || mons->asleep())
          && mons->type != MONS_SLIME_CREATURE
          && mons->type != MONS_LOST_SOUL)
     {
@@ -1117,20 +1142,12 @@ bool mon_special_ability(monster* mons)
     }
     break;
 
-    case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points
-             && !mons->has_ench(ENCH_INNER_FLAME))
-        {
-            simple_monster_message(*mons, " overheats!");
-            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
-                        mons->summoner;
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
-                                       INFINITE_DURATION));
+    case MONS_WEEPING_SKULL:
+        _weeping_skull_cloud_aura(mons);
+        break;
 
-            // Set guardian golem explosive power the same as old values.
-            // (Should it maybe be lower or scale with spellpower?)
-            mons->props[INNER_FLAME_POW_KEY] = 100;
-        }
+    case MONS_MARTYRED_SHADE:
+        martyr_injury_bond(*mons);
         break;
 
     default:
@@ -1143,7 +1160,7 @@ bool mon_special_ability(monster* mons)
     return used;
 }
 
-void guardian_golem_bond(monster& mons)
+void martyr_injury_bond(monster& mons)
 {
     for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
     {

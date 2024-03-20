@@ -1,0 +1,19 @@
+name: "green death"
+glyph: {char: "2", colour: green}
+flags: [see_invis]
+resists: {poison: 1}
+xp_mult: 14
+holiness: [demonic]
+will: 160
+attacks:
+ - {type: hit, damage: 32}
+hd: 13
+hp_10x: 715
+ac: 5
+ev: 7
+spells: green_death
+shout: roar
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

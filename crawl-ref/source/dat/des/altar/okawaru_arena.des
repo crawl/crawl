@@ -26,7 +26,7 @@ function callback.oka_monsters_death (data, triggerable, triggerer, marker, ev)
     end
 
     crawl.god_speaks("Okawaru",
-                     "Okawaru booms, \"Excellent! You may choose a reward.\"")
+                     "Okawaru booms: Excellent! You may choose a reward.")
     -- Open exit.
     for replica in iter.replica_iterator("iron_doors", 1) do
       dgn.terrain_changed(replica.x, replica.y, "floor", false)

@@ -1,0 +1,19 @@
+name: "Jessica"
+glyph: {char: "@", colour: lightgray}
+flags: [speaks, warm_blood, unique, female]
+xp_mult: 125
+species: human
+will: 10
+attacks:
+ - {type: hit, damage: 5}
+hd: 1
+hp_10x: 95
+ac: 0
+ev: 10
+spells: jessica
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

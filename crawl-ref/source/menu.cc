@@ -36,6 +36,7 @@
  #include "tilebuf.h"
 #endif
 #ifdef USE_TILE
+ #include "tiledoll.h"
  #include "tile-flags.h"
  #include "tile-player-flag-cut.h"
  #include "rltiles/tiledef-dngn.h"
@@ -308,8 +309,13 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
 {
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
 
+    int row = -1;
+    // use just the index in an uninitialized menu
+    if (item_info.size() != m_menu->items.size())
+        row = index;
+    else
+        row = item_info[index].row;
 #ifdef USE_TILE_LOCAL
-    int row = item_info[index].row; // XX this seems unsafe before layout? but it doesn't crash...
     if (static_cast<size_t>(row + 1) >= row_heights.size())
     {
         // call before UIMenu has been laid out
@@ -324,12 +330,6 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     if (y2)
         *y2 = row_heights[row+1];
 #else
-    // for console, use just the index in an uninitialized menu
-    int row = -1;
-    if (item_info.size() != m_menu->items.size())
-        row = index;
-    else
-        row = item_info[index].row;
     if (y1)
         *y1 = row;
     if (y2)
@@ -497,6 +497,7 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
     {
         auto& entry = item_info[i];
 
+        // headings occupy the entire row
         column = entry.heading ? 0 : (column+1) % num_columns;
         if (column == 0)
             row++;
@@ -509,7 +510,7 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
         entry.column = column;
 
         if (entry.heading)
-            column = num_columns-1; // occupy the entire row
+            column = num_columns-1; // headings occupy the entire row, skip the rest
         else
         {
             // TODO(?): tiles will wrap menu entries that don't fit in a single
@@ -587,14 +588,20 @@ void UIMenu::_render()
         {
             formatted_string s = formatted_string::parse_string(
                 me->get_text(), col);
-            // s.chop(m_region.width).display();
-            s.chop(m_nat_column_width).display();
+            // headings always occupy full width
+            if (item_info[i].heading)
+                s.chop(m_region.width).display();
+            else
+                s.chop(m_nat_column_width).display();
         }
         else
         {
             string text = me->get_text();
-            // text = chop_string(text, m_region.width);
-            text = chop_string(text, m_nat_column_width);
+            // headings always occupy full width
+            if (item_info[i].heading)
+                text = chop_string(text, m_region.width);
+            else
+                text = chop_string(text, m_nat_column_width);
             cprintf("%s", text.c_str());
         }
         textbackground(BLACK);
@@ -2552,52 +2559,8 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     MenuEntry::get_tiles(tileset);
 
     const player_save_info &player = *static_cast<player_save_info*>(data);
-    dolls_data equip_doll = player.doll;
 
-    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
-    int p_order[TILEP_PART_MAX] =
-    {
-        TILEP_PART_SHADOW,  //  0
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        TILEP_PART_BASE,    //  5
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
-    };
-
-    int flags[TILEP_PART_MAX];
-    tilep_calc_flags(equip_doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[6] = TILEP_PART_BOOTS;
-        p_order[7] = TILEP_PART_LEG;
-    }
-
-    reveal_bardings(equip_doll.parts, flags);
-
-    for (int i = 0; i < TILEP_PART_MAX; ++i)
-    {
-        const int p   = p_order[i];
-        const int idx = equip_doll.parts[p];
-        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
-            continue;
-
-        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
-
-        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
-        tileset.emplace_back(idx, ymax);
-    }
+    pack_tilep_set(tileset, player.doll);
 
     return true;
 }
@@ -3354,26 +3317,7 @@ void Menu::webtiles_update_items(int start, int end) const
     tiles.json_open_array("items");
 
     for (int i = start; i <= end; ++i)
-    {
-        // TODO: why is this different from Menu::webtiles_write_item?
-        tiles.json_open_object();
-        const MenuEntry* me = items[i];
-        tiles.json_write_string("text", me->get_text());
-        int col = item_colour(me);
-        // previous colour field is deleted by client if new one not sent
-        if (col != MENU_ITEM_STOCK_COLOUR)
-            tiles.json_write_int("colour", col);
-        webtiles_write_tiles(*me);
-        if (!me->hotkeys.empty())
-        {
-            tiles.json_open_array("hotkeys");
-            for (int hotkey : me->hotkeys)
-                tiles.json_write_int(hotkey);
-            tiles.json_close_array();
-        }
-
-        tiles.json_close_object();
-    }
+        webtiles_write_item(items[i]);
 
     tiles.json_close_array();
 

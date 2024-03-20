@@ -9,13 +9,18 @@
 
 #include "activity-interrupt-type.h" // for zot clock key
 #include "branch.h" // for zot clock key
+#include "coordit.h" // rectangle_iterator
 #include "database.h" // getSpeakString
 #include "delay.h" // interrupt_activity
 #include "god-passive.h"
+#include "items.h" // stack_iterator
+#include "item-prop.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
-#include "options.h" // fear_zot
+#include "options.h" // UA_PICKUP, more_gem_info
 #include "state.h"
+#include "stringutil.h" // make_stringf
+#include "view.h" // flash_view_delay
 
 #if TAG_MAJOR_VERSION == 34
 static int _old_zot_clock(const string& branch_name) {
@@ -131,10 +136,7 @@ bool bezotted()
 
 bool should_fear_zot()
 {
-    return bezotted()
-        || you.has_mutation(MUT_SHORT_LIFESPAN)
-           && zot_clock_active()
-           && Options.fear_zot;
+    return bezotted();
 }
 
 // Decrease the zot clock when the player enters a new level.
@@ -162,8 +164,10 @@ void decr_zot_clock(bool extra_life)
         }
         zot = max(0, zot - ZOT_CLOCK_PER_FLOOR / div);
     }
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 }
 
 static int _added_zot_time()
@@ -220,8 +224,10 @@ void incr_zot_clock()
             break;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
     interrupt_activity(activity_interrupt::force);
@@ -234,6 +240,159 @@ void set_turns_until_zot(int turns_left)
 
     int &clock = _zot_clock();
     clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
+}
+
+
+bool gem_clock_active()
+{
+    return !player_has_orb()
+           && !crawl_state.game_is_sprint()
+           && !crawl_state.game_is_descent();
+}
+
+static void _shatter_floor_gem(gem_type gem, bool quiet = false)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (!si->is_type(OBJ_GEMS, gem))
+                continue;
+
+            item_was_destroyed(*si);
+            destroy_item(si.index());
+            you.gems_shattered.set(gem);
+
+            if (!quiet && Options.more_gem_info && you.see_cell(*ri))
+            {
+                mprf("With a frightful flash, the power of Zot shatters the %s"
+                     " gem into ten thousand fragments!", gem_adj(gem));
+                // Using UA_PICKUP here is dubious.
+                flash_view_delay(UA_PICKUP, MAGENTA, 100);
+                flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
+            }
+
+            return;
+        }
+    }
+}
+
+int gem_time_left(int gem_int)
+{
+    gem_type gem = static_cast<gem_type>(gem_int);
+    ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
+    return gem_time_limit(gem) - you.gem_time_spent[gem];
+}
+
+void print_gem_warnings(int gem_int, int old_time_taken)
+{
+    if (!Options.more_gem_info)
+        return;
+
+    gem_type gem = static_cast<gem_type>(gem_int);
+    if (gem == NUM_GEM_TYPES)
+        return;
+
+    ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
+    if (!gem_clock_active() || !you.gems_found[gem] || you.gems_shattered[gem])
+        return;
+
+    const int time_taken = you.gem_time_spent[gem];
+    const int limit = gem_time_limit(gem);
+
+    if (old_time_taken + 2700 < limit && time_taken + 2700 >= limit)
+    {
+        mprf("If you linger in this branch much longer, the power of Zot will "
+             "shatter your %s gem.", gem_adj(gem));
+    }
+
+    if (old_time_taken + 1000 < limit && time_taken + 1000 >= limit)
+    {
+        mprf("Zot senses the otherworldly energies of your %s gem, and will "
+             "surely shatter it if you linger in this branch any longer!",
+             gem_adj(gem));
+    }
+}
+
+void incr_gem_clock()
+{
+    if (!gem_clock_active())
+        return;
+
+    const branch_type br = you.where_are_you;
+    const gem_type gem = gem_for_branch(br);
+    if (gem == NUM_GEM_TYPES || you.gems_shattered[gem])
+        return;
+
+    int &time_taken = you.gem_time_spent[gem];
+    const int limit = gem_time_limit(gem);
+    if (time_taken >= limit)
+        return; // already lost...
+
+    const int old_time_taken = time_taken;
+    time_taken += you.time_taken;
+
+    print_gem_warnings(gem, old_time_taken);
+
+    if (time_taken < limit)
+        return;
+
+    // lose it!
+    if (you.gems_found[gem])
+    {
+        take_note(Note(NOTE_GEM_LOST, gem));
+        mark_milestone("gem.lost", make_stringf("lost the %s gem!",
+                                                gem_adj(gem)));
+        you.gems_shattered.set(gem);
+
+        if (Options.more_gem_info)
+        {
+            mprf("With a frightful flash, the power of Zot shatters your %s gem "
+                 "into ten thousand fragments!", gem_adj(gem));
+            // Using UA_PICKUP here is dubious.
+            flash_view_delay(UA_PICKUP, MAGENTA, 100);
+            flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
+        }
+        return;
+    }
+
+    // OK, maybe it was on the level somewhere?
+    _shatter_floor_gem(gem);
+    // If not, we'll clean it up when we load the appropriate level.
+}
+
+void maybe_break_floor_gem()
+{
+    const gem_type gem = gem_for_branch(you.where_are_you);
+    if (gem != NUM_GEM_TYPES
+        && !you.gems_shattered[gem]
+        && (crawl_state.game_is_descent() // No descent gems :(
+            || gem_time_left(gem) <= 0))
+    {
+        _shatter_floor_gem(gem, true);
+    }
+}
+
+string gem_status()
+{
+    if (!Options.more_gem_info)
+        return "";
+
+    const gem_type gem = gem_for_branch(you.where_are_you);
+    if (gem == NUM_GEM_TYPES
+        || !you.gems_found[gem]
+        || you.gems_shattered[gem]
+        || !gem_clock_active())
+    {
+        return "";
+    }
+    const int time_left = gem_time_left(gem);
+    const int turns_left = (time_left + 9) / 10; // round up
+    return make_stringf("If you linger in this branch for another %d turns, "
+                        "the power of Zot will shatter your %s gem.\n",
+                        turns_left, gem_adj(gem));
 }

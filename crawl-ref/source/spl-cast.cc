@@ -38,6 +38,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -66,7 +67,6 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"
@@ -317,7 +317,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 }
 
 // Effects that happen after spells which are otherwise simple zaps.
-static void _apply_post_zap_effect(spell_type spell)
+static void _apply_post_zap_effect(spell_type spell, coord_def target)
 {
     switch (spell)
     {
@@ -326,6 +326,10 @@ static void _apply_post_zap_effect(spell_type spell)
         break;
     case SPELL_KISS_OF_DEATH:
         drain_player(100, true, true);
+        break;
+    case SPELL_BOMBARD:
+        if (coinflip())
+            you.stumble_away_from(target, "the blast");
         break;
     default:
         break;
@@ -347,10 +351,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 
     if (wizardry > 0)
       fail_reduce = fail_reduce * 6 / (7 + wizardry);
-
-    // Hard cap on fail rate reduction.
-    if (fail_reduce < 50)
-        fail_reduce = 50;
 
     return chance * fail_reduce / 100;
 }
@@ -533,17 +533,14 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::summoning)
         enhanced += player_spec_summ();
 
-    if (typeflags & spschool::poison)
-        enhanced += player_spec_poison();
+    if (typeflags & spschool::alchemy)
+        enhanced += player_spec_alchemy();
 
     if (typeflags & spschool::necromancy)
         enhanced += player_spec_death();
 
     if (typeflags & spschool::translocation)
         enhanced += player_spec_tloc();
-
-    if (typeflags & spschool::transmutation)
-        enhanced += player_spec_tmut();
 
     if (typeflags & spschool::fire)
         enhanced += player_spec_fire();
@@ -1186,10 +1183,14 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FIREBALL:
     case SPELL_ICEBLAST:
     case SPELL_FASTROOT:
+    case SPELL_WARP_SPACE:
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow,
                                           1, 1);
     case SPELL_HURL_DAMNATION:
         return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION, pow,
+                                          1, 1);
+    case SPELL_HURL_TORCHLIGHT:
+        return make_unique<targeter_beam>(&you, range, ZAP_HURL_TORCHLIGHT, pow,
                                           1, 1);
     case SPELL_MEPHITIC_CLOUD:
         return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
@@ -1199,7 +1200,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
-        return make_unique<targeter_cloud>(&you, range);
+        return make_unique<targeter_cloud>(&you, spell_to_cloud(spell), range);
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
                    get_thunderbolt_last_aim(&you));
@@ -1280,11 +1281,10 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             silence_max_range(pow),
                                             0, 0,
                                             silence_min_range(pow));
-    case SPELL_POISONOUS_VAPOURS:
-        return make_unique<targeter_poisonous_vapours>(&you, range);
+    case SPELL_MERCURY_VAPOURS:
+        return make_unique<targeter_smite>(&you, range, 0, 1);
 
-    // at player's position only but not a selfench (wait, why wereblood?)
-    case SPELL_WEREBLOOD:
+    // at player's position only but not a selfench
     case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
@@ -1324,7 +1324,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     // Summons. Most summons have a simple range 2 radius, see
     // find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:
-    case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_ANIMATE_ARMOUR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_MONSTROUS_MENAGERIE:
@@ -1333,13 +1332,21 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_MANA_VIPER:
     case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SHADOW_CREATURES: // used for ?summoning
-    case SPELL_SUMMON_GUARDIAN_GOLEM:
+    case SPELL_SUMMON_BLAZEHEART_GOLEM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+    case SPELL_CALL_CANINE_FAMILIAR:
+    {
+        const monster* dog = find_canine_familiar();
+        if (!dog)
+            return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+        vector<coord_def> targ = { dog->pos() };
+        return make_unique<targeter_multiposition>(&you, targ);
+    }
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass
@@ -1369,6 +1376,22 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SIGIL_OF_BINDING:
         return make_unique<targeter_multiposition>(&you,
                                                    find_sigil_locations(true));
+    case SPELL_BOULDER:
+        return make_unique<targeter_boulder>(&you);
+    case SPELL_PERMAFROST_ERUPTION:
+        return make_unique<targeter_permafrost>(you, pow);
+    case SPELL_PETRIFY:
+        return make_unique<targeter_petrify>(&you, range);
+    case SPELL_COMBUSTION_BREATH:
+        return make_unique<targeter_explosive_beam>(&you, pow, range);
+    case SPELL_NOXIOUS_BREATH:
+        // Note the threshold where it becomes possible to make clouds off the main beam
+        return make_unique<targeter_explosive_beam>(&you, pow, range, pow > 10);
+    case SPELL_GALVANIC_BREATH:
+        return make_unique<targeter_galvanic>(&you, pow, range);
+    case SPELL_NULLIFYING_BREATH:
+        return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH, pow,
+                                          2, 2);
 
     default:
         break;
@@ -1439,7 +1462,7 @@ int hex_success_chance(const int wl, int powc, int scale, bool round_up)
 }
 
 // approximates _test_beam_hit in a deterministic fashion.
-static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
+static int _to_hit_pct(const monster_info& mi, int acc)
 {
     if (acc == AUTOMATIC_HIT)
         return 100;
@@ -1448,10 +1471,11 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
 
+    const int base_ev = mi.ev + (mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
+
     int hits = 0;
     int iters = 0;
-    const bool rmsl = mi.is(MB_REPEL_MSL);
-    for (int outer_ev_roll = 0; outer_ev_roll < mi.ev; outer_ev_roll++)
+    for (int outer_ev_roll = 0; outer_ev_roll < base_ev; outer_ev_roll++)
     {
         for (int inner_ev_roll_a = 0; inner_ev_roll_a < outer_ev_roll; inner_ev_roll_a++)
         {
@@ -1460,20 +1484,10 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
                 const int ev = (inner_ev_roll_a + inner_ev_roll_b) / 2; // not right but close
                 for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
                 {
-                    int adjusted_mhit = rolled_mhit;
-                    if (rmsl)
-                    {
-                        // this is wrong - we should be re-rolling here.
-                        if (pierce)
-                            adjusted_mhit = adjusted_mhit * 3 /4;
-                        else
-                            adjusted_mhit /= 2;
-                    }
-
                     iters++;
                     if (iters >= 1000000)
                         return -1; // sanity breakout to not kill servers
-                    if (adjusted_mhit >= ev)
+                    if (rolled_mhit >= ev)
                         hits++;
                 }
             }
@@ -1486,11 +1500,11 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     return hits * 100 / iters;
 }
 
-static vector<string> _desc_hit_chance(const monster_info& mi, int acc, bool pierces)
+static vector<string> _desc_hit_chance(const monster_info& mi, int acc)
 {
     if (!acc)
         return vector<string>{};
-    const int hit_pct = _to_hit_pct(mi, acc, pierces);
+    const int hit_pct = _to_hit_pct(mi, acc);
     if (hit_pct == -1)
         return vector<string>{};
     return vector<string>{make_stringf("%d%% to hit", hit_pct)};
@@ -1501,14 +1515,14 @@ vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     if (!beam_hitf)
         return vector<string>{};
-    return _desc_hit_chance(mi, beam_hitf->beam.hit, beam_hitf->beam.pierce);
+    return _desc_hit_chance(mi, beam_hitf->beam.hit);
 }
 
 static vector<string> _desc_plasma_hit_chance(const monster_info& mi, int powc)
 {
     bolt beam;
     zappy(spell_to_zap(SPELL_PLASMA_BEAM), powc, false, beam);
-    const int hit_pct = _to_hit_pct(mi, beam.hit, beam.pierce);
+    const int hit_pct = _to_hit_pct(mi, beam.hit);
     if (hit_pct == -1)
         return vector<string>{};
     return vector<string>{make_stringf("2x%d%% to hit", hit_pct)};
@@ -1576,6 +1590,18 @@ static vector<string> _desc_airstrike_bonus(const monster_info& mi)
     return vector<string>{make_stringf("empty space bonus: %d/8", empty_spaces)};
 }
 
+static vector<string> _desc_vapor_weak_chance(const monster_info& mi, int pow)
+{
+    return vector<string>{make_stringf("chance to weaken: %d%%",
+                            get_mercury_weaken_chance(mi.hd, pow))};
+}
+
+static vector<string> _desc_warp_space_chance(int pow)
+{
+    return vector<string>{make_stringf("chance to blink: %d%%",
+                            get_warp_space_chance(pow))};
+}
+
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
     if (get_resist(mi.resists(), MR_RES_POISON) >= 1 || mi.is(MB_CLARITY))
@@ -1591,14 +1617,22 @@ static vector<string> _desc_hailstorm_hit_chance(const monster_info& mi, int pow
 {
     bolt beam;
     zappy(ZAP_HAILSTORM, pow, false, beam);
-    return _desc_hit_chance(mi, beam.hit, false);
+    return _desc_hit_chance(mi, beam.hit);
 }
 
 static vector<string> _desc_momentum_strike_hit_chance(const monster_info& mi, int pow)
 {
     bolt beam;
     zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
-    return _desc_hit_chance(mi, beam.hit, false);
+    return _desc_hit_chance(mi, beam.hit);
+}
+
+static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
+{
+    melee_attack attk(&you, nullptr);
+    attk.charge_pow = 1; // to give the accuracy bonus
+    const int acc_pct = to_hit_pct(mi, attk, true);
+    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
 }
 
 static vector<string> _desc_insubstantial(const monster_info& mi, string desc)
@@ -1667,6 +1701,14 @@ static string _mon_threat_string(const CrawlStoreValue &mon_store)
     int col;
     string desc;
     monster_info(&dummy).to_string(1, desc, col, true, nullptr, false);
+
+    // Ghost demons need their underlying monster name. Without this,
+    // we'll get e.g. a specific ugly thing colour based on what the
+    // dummy monster rolled, which may not match what the actual monster
+    // rolls.
+    if (mons_is_ghost_demon(dummy.type))
+        desc = get_monster_data(dummy.type)->name;
+
     const string col_name = colour_to_str(col);
 
     return "<" + col_name + ">" + article_a(desc) + "</" + col_name + ">";
@@ -1794,12 +1836,18 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_hailstorm_hit_chance, placeholders::_1, powc);
         case SPELL_MOMENTUM_STRIKE:
             return bind(_desc_momentum_strike_hit_chance, placeholders::_1, powc);
+        case SPELL_ELECTRIC_CHARGE:
+            return bind(_desc_electric_charge_hit_chance, placeholders::_1);
         case SPELL_FASTROOT:
             return bind(_desc_insubstantial, placeholders::_1, "immune to roots");
         case SPELL_STICKY_FLAME:
             return bind(_desc_insubstantial, placeholders::_1, "unstickable");
         case SPELL_PLASMA_BEAM:
             return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
+        case SPELL_MERCURY_VAPOURS:
+            return bind(_desc_vapor_weak_chance, placeholders::_1, powc);
+        case SPELL_WARP_SPACE:
+            return bind(_desc_warp_space_chance, powc);
         default:
             break;
     }
@@ -1810,14 +1858,14 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 }
 
 /**
- * Returns the description displayed if targeting a monster with a spell.
- * For the clua api
+ * For the clua api, return the description displayed if targeting a monster
+ * with a spell.
  *
  * @param mi     The targeted monster.
  * @param spell  The spell being cast.
  * @return       The displayed string.
  **/
-string target_desc(const monster_info& mi, spell_type spell)
+string target_spell_desc(const monster_info& mi, spell_type spell)
 {
     int powc = calc_spell_power(spell);
     const int range = calc_spell_range(spell, powc, false);
@@ -1906,19 +1954,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                || Options.always_use_static_spell_targeters
                || Options.force_spell_targeter.count(spell) > 0);
 
-    if (use_targeter && spell == SPELL_ELECTRIC_CHARGE)
-    {
-        // would be nice to do away with this special casing, can this be
-        // rolled into more generic code?
-        vector<coord_def> target_path; // unused here
-        if (!find_charge_target(target_path, range, hitfunc.get(), *target))
-            return spret::abort;
-        ASSERT(target->isValid);
-        // code dup with spell_direction...
-        beam.set_target(*target);
-        beam.source = you.pos();
-    }
-    else if (use_targeter)
+    if (use_targeter)
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :
@@ -2002,6 +2038,17 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
             return spret::abort;
         }
+
+        if (spell == SPELL_BOMBARD)
+        {
+            const coord_def back = you.stumble_pos(target->target);
+            if (!back.origin()
+                && back != you.pos()
+                && !check_moveto(back, "potentially stumble back", false))
+            {
+                return spret::abort;
+            }
+        }
     }
 
     if (evoked_wand)
@@ -2069,13 +2116,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
     dprf("Spell #%d, power=%d", spell, powc);
 
-    // Have to set aim first, in case the spellcast kills its first target
-    if (you.props.exists(BATTLESPHERE_KEY)
-        && (actual_spell || you.divine_exegesis))
-    {
-        aim_battlesphere(&you, spell);
-    }
-
+    const coord_def orig_target_pos = beam.target;
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;
     const bool had_tele = orig_target && orig_target->has_ench(ENCH_TP);
@@ -2087,7 +2128,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     {
     case spret::success:
     {
-        _apply_post_zap_effect(spell);
+        _apply_post_zap_effect(spell, orig_target_pos);
 
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
@@ -2247,7 +2288,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_shatter(powc, fail);
 
     case SPELL_SCORCH:
-        return cast_scorch(powc, fail);
+        return cast_scorch(you, powc, fail);
 
     case SPELL_IRRADIATE:
         return cast_irradiate(powc, you, fail);
@@ -2321,8 +2362,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_LIGHTNING_SPIRE:
         return cast_summon_lightning_spire(powc, god, fail);
 
-    case SPELL_SUMMON_GUARDIAN_GOLEM:
-        return cast_summon_guardian_golem(powc, god, fail);
+    case SPELL_SUMMON_BLAZEHEART_GOLEM:
+        return cast_summon_blazeheart_golem(powc, god, fail);
 
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
@@ -2338,6 +2379,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_ANIMATE_DEAD:
         return cast_animate_dead(powc, fail);
+
+    case SPELL_MARTYRS_KNELL:
+        return cast_martyrs_knell(&you, powc, god, fail);
 
     case SPELL_HAUNT:
         return cast_haunt(powc, beam.target, god, fail);
@@ -2395,8 +2439,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
 
-    case SPELL_WEREBLOOD:
-        return cast_wereblood(powc, fail);
+    case SPELL_FUGUE_OF_THE_FALLEN:
+        return cast_fugue_of_the_fallen(powc, fail);
 
     case SPELL_DIMENSIONAL_BULLSEYE:
         return cast_dimensional_bullseye(powc, monster_at(target), fail);
@@ -2428,7 +2472,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_disjunction(powc, fail);
 
     case SPELL_MANIFOLD_ASSAULT:
-        return cast_manifold_assault(powc, fail);
+        return cast_manifold_assault(you, powc, fail);
 
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(powc, beam.target, fail);
@@ -2437,7 +2481,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_fulminating_prism(&you, powc, beam.target, fail);
 
     case SPELL_SEARING_RAY:
-        return cast_searing_ray(powc, beam, fail);
+        return cast_searing_ray(you, powc, beam, fail);
 
     case SPELL_FLAME_WAVE:
         return cast_flame_wave(powc, fail);
@@ -2451,14 +2495,14 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
 
-    case SPELL_POISONOUS_VAPOURS:
-        return cast_poisonous_vapours(powc, spd, fail);
+    case SPELL_MERCURY_VAPOURS:
+        return cast_mercury_vapours(powc, spd.target, fail);
 
     case SPELL_BLINKBOLT:
         return blinkbolt(powc, beam, fail);
 
     case SPELL_ELECTRIC_CHARGE:
-        return electric_charge(powc, fail, beam.target); // hack - should take beam?
+        return electric_charge(you, powc, fail, beam.target);
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
@@ -2477,6 +2521,38 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SIGIL_OF_BINDING:
         return cast_sigil_of_binding(powc, fail, false);
+
+    case SPELL_BOULDER:
+        return cast_broms_barrelling_boulder(you, beam.target, powc, fail);
+
+    case SPELL_PERMAFROST_ERUPTION:
+        return cast_permafrost_eruption(you, powc, fail);
+
+    // Just to do extra messaging; spell is handled by default zapping
+    case SPELL_COMBUSTION_BREATH:
+    case SPELL_GLACIAL_BREATH:
+    case SPELL_STEAM_BREATH:
+    case SPELL_CAUSTIC_BREATH:
+    case SPELL_MUD_BREATH:
+    case SPELL_NULLIFYING_BREATH:
+    case SPELL_NOXIOUS_BREATH:
+    {
+        static map<spell_type, string> breath_message =
+        {
+            { SPELL_COMBUSTION_BREATH, "You breathe a blast of explosive embers." },
+            { SPELL_GLACIAL_BREATH, "You exhale a wave of glacial cold." },
+            { SPELL_STEAM_BREATH, "You exhale a blast of scalding steam." },
+            { SPELL_NULLIFYING_BREATH, "You breathe a sphere of nullifying energy." },
+            { SPELL_NOXIOUS_BREATH, "You exhale a blast of noxious fumes." },
+            { SPELL_CAUSTIC_BREATH, "You breathe a spray of caustic vapour." },
+            { SPELL_MUD_BREATH, "You spew a torrent of mud." },
+            { SPELL_GALVANIC_BREATH, "You breathe wild lightning."}
+        };
+        mpr(breath_message[spell].c_str());
+    }
+    break;
+
+
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
@@ -2761,6 +2837,10 @@ static dice_def _spell_damage(spell_type spell, int power)
             return polar_vortex_dice(power, false);
         case SPELL_NOXIOUS_BOG:
             return toxic_bog_damage();
+        case SPELL_BOULDER:
+            return boulder_damage(power, false);
+        case SPELL_THUNDERBOLT:
+            return thunderbolt_damage(power, 1);
         default:
             break;
     }
@@ -2818,17 +2898,25 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
     {
         case SPELL_FOXFIRE:
         case SPELL_PLASMA_BEAM:
+        case SPELL_PERMAFROST_ERUPTION:
             mult = "2x";
             break;
         case SPELL_CONJURE_BALL_LIGHTNING:
             mult = "3x";
             break;
+        case SPELL_TREMORSTONE:
+            mult = make_stringf("%dx", tremorstone_count(pow));
         default:
             break;
     }
-    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
-    if (spell == SPELL_LRD || spell == SPELL_SHATTER || spell == SPELL_POLAR_VORTEX)
+    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num,
+            dam.size);
+    if (spell == SPELL_LRD
+        || spell == SPELL_SHATTER
+        || spell == SPELL_POLAR_VORTEX)
+    {
         return dam_str + "*"; // many special cases of more/less damage
+    }
     return dam_str;
 }
 

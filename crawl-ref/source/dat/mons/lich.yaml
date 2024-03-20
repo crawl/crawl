@@ -1,0 +1,19 @@
+name: "lich"
+glyph: {char: "L", colour: lightgray}
+flags: [see_invis, speaks]
+resists: {cold: 2}
+xp_mult: 18
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: touch, flavour: drain, damage: 15}
+hd: 20
+hp_10x: 800
+ac: 10
+ev: 10
+spells: lich
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

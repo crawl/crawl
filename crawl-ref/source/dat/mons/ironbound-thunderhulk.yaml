@@ -1,0 +1,20 @@
+name: "ironbound thunderhulk"
+glyph: {char: "O", colour: lightcyan}
+flags: [speaks, warm_blood]
+xp_mult: 7
+species: ogre
+will: 40
+attacks:
+ - {type: hit, damage: 30}
+hd: 18
+hp_10x: 880
+ac: 1
+ev: 8
+spells: ironbound_thunderhulk
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {attack: 15}
+uses: weapons_armour
+size: large
+shape: humanoid

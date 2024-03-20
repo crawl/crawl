@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "adjust.h"
+#include "acquire.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "cluautil.h"
@@ -16,6 +17,7 @@
 #include "coord.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h" // evoke_damage_string()
 #include "invent.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -216,8 +218,8 @@ static int l_item_do_remove(lua_State *ls)
     }
 
     bool result = false;
-    if (eq == EQ_WEAPON)
-        result = wield_weapon(SLOT_BARE_HANDS);
+    if (is_weapon(*item))
+        result = unwield_weapon(*item);
     else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else
@@ -626,6 +628,19 @@ IDEF(is_throwable)
     return 1;
 }
 
+/*** Is this an elemental evoker?
+ * @field is_xp_evoker boolean
+ */
+IDEF(is_xp_evoker)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_xp_evoker(*item));
+
+    return 1;
+}
+
 /*** Did we drop this?
  * @field dropped boolean
  */
@@ -648,6 +663,19 @@ IDEF(is_melded)
         return 0;
 
     lua_pushboolean(ls, item_is_melded(*item));
+
+    return 1;
+}
+
+/*** Is this item a weapon?
+ * @field is_weapon boolean
+ */
+IDEF(is_weapon)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_weapon(*item));
 
     return 1;
 }
@@ -770,6 +798,30 @@ IDEF(plus)
     return 1;
 }
 
+/*** Is this item enchantable?
+ * @field is_enchantable boolean
+ */
+IDEF(is_enchantable)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (is_artefact(*item)
+        || item->base_type != OBJ_WEAPONS && item->base_type != OBJ_ARMOUR)
+    {
+        lua_pushboolean(ls, false);
+    }
+    // We assume unidentified non-artefact items are enchantable.
+    else if (!item_ident(*item, ISFLAG_KNOW_PLUSES))
+        lua_pushboolean(ls, true);
+    else if (item->base_type == OBJ_WEAPONS)
+        lua_pushboolean(ls, is_enchantable_weapon(*item));
+    else
+        lua_pushboolean(ls, is_enchantable_armour(*item));
+
+    return 1;
+}
+
 IDEF(plus2)
 {
     if (!item || !item->defined())
@@ -845,6 +897,51 @@ IDEF(damage)
     else
         lua_pushnil(ls);
 
+    return 1;
+}
+
+static int l_item_do_damage_rating(lua_State *ls)
+{
+    UDATA_ITEM(item);
+
+    if (!item || !item->defined())
+        return 0;
+
+
+    if (is_weapon(*item)
+        || item->base_type == OBJ_MISSILES)
+    {
+        int rating = 0;
+        string rating_desc = damage_rating(item, &rating);
+        lua_pushnumber(ls, rating);
+        lua_pushstring(ls, rating_desc.c_str());
+    }
+    else
+    {
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+
+    return 2;
+}
+
+/*** Item damage rating.
+ * @treturn number The item's damage rating.
+ * @treturn string The item's full damage rating string.
+ * @function damage_rating
+ */
+IDEFN(damage_rating, do_damage_rating)
+
+/*** Item evoke damage.
+ * @field evoke_damage string The evokable item's damage string.
+ */
+IDEF(evoke_damage)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    const string damage_str = evoke_damage_string(*item);
+    lua_pushstring(ls, damage_str.c_str());
     return 1;
 }
 
@@ -1505,15 +1602,34 @@ static int l_item_shopping_list(lua_State *ls)
 
 /*** See the items offered by acquirement.
  * Only works when the acquirement menu is active.
+ * @tparam int An integer indicating the type of acquirement:
+ *                 1: The normal acquirement menu.
+ *                 2: Okawaru weapon gift acquirement.
+ *                 3: Okawaru armour gift acquirement.
+ *                 4: Coglin gizmo acquirement.
  * @treturn array|nil An array of @{Item} objects or nil if not acquiring.
  * @function acquirement_items
  */
 static int l_item_acquirement_items(lua_State *ls)
 {
-    if (!you.props.exists(ACQUIRE_ITEMS_KEY))
+
+    const int acquire_type = luaL_safe_checkint(ls, 1);
+    string acquire_key;
+    if (acquire_type <= 1)
+        acquire_key = ACQUIRE_ITEMS_KEY;
+    else if (acquire_type == 2)
+        acquire_key = OKAWARU_WEAPONS_KEY;
+    else if (acquire_type == 3)
+        acquire_key = OKAWARU_ARMOUR_KEY;
+    else if (acquire_type == 4)
+        acquire_key = COGLIN_GIZMO_KEY;
+    else
         return 0;
 
-    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    if (!you.props.exists(acquire_key))
+        return 0;
+
+    auto &acq_items = you.props[acquire_key].get_vector();
 
     lua_newtable(ls);
 
@@ -1636,7 +1752,8 @@ static ItemAccessor item_attrs[] =
     { "branded",           l_item_branded },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
-    { PLUS_KEY,              l_item_plus },
+    { PLUS_KEY,            l_item_plus },
+    { "is_enchantable",    l_item_is_enchantable },
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
@@ -1660,13 +1777,17 @@ static ItemAccessor item_attrs[] =
     { "reach_range",       l_item_reach_range },
     { "is_ranged",         l_item_is_ranged },
     { "is_throwable",      l_item_is_throwable },
+    { "is_xp_evoker",      l_item_is_xp_evoker },
     { "dropped",           l_item_dropped },
+    { "is_weapon",         l_item_is_weapon },
     { "is_melded",         l_item_is_melded },
     { "is_corpse",         l_item_is_corpse },
     { "is_useless",        l_item_is_useless },
     { "spells",            l_item_spells },
     { "artprops",          l_item_artprops },
     { "damage",            l_item_damage },
+    { "damage_rating",     l_item_damage_rating },
+    { "evoke_damage",      l_item_evoke_damage },
     { "accuracy",          l_item_accuracy },
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },

@@ -113,6 +113,7 @@ bool is_evil_brand(int brand)
     case SPWPN_VAMPIRISM:
     case SPWPN_REAPING:
     case SPWPN_DISTORTION:
+    case SPWPN_FOUL_FLAME:
         return true;
     default:
         return false;
@@ -220,7 +221,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
                             && !have_passive(passive_t::cleanse_mut_potions))
                  || item.sub_type == POT_LIGNIFY;
     case OBJ_BOOKS:
-        return _is_book_type(item, is_chaotic_spell);
+        return item.sub_type == BOOK_MANUAL && item.plus == SK_SHAPESHIFTING
+               || _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:
@@ -405,12 +407,12 @@ bool god_hates_item(const item_def &item)
     return god_hates_item_handling(item) != DID_NOTHING;
 }
 
-bool god_despises_item(const item_def &item)
+bool god_despises_item(const item_def &item, god_type which_god)
 {
     if (item.base_type != OBJ_TALISMANS)
         return false;
-    return item.sub_type == TALISMAN_DEATH && is_good_god(you.religion)
-           || you.religion == GOD_ZIN;
+    return item.sub_type == TALISMAN_DEATH && is_good_god(which_god)
+           || which_god == GOD_ZIN;
 }
 
 /**
@@ -425,7 +427,12 @@ bool god_despises_item(const item_def &item)
  */
 bool god_likes_item_type(const item_def &item, god_type which_god)
 {
+    if (god_despises_item(item, which_god))
+        return false;
     // XXX: also check god_hates_item()?
+    // XXXX: if someone does this, make sure to generalize so that it doesn't
+    // use `you.religion`; this code is potentially called in item generation
+    // for artefact names
     switch (which_god)
     {
         case GOD_ELYVILON: // Peaceful healer god: no weapons.

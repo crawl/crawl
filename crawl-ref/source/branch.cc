@@ -243,6 +243,11 @@ bool is_connected_branch(level_id place)
     return is_connected_branch(place.branch);
 }
 
+bool branch_has_rune(branch_type branch)
+{
+    return !branches[branch].runes.empty();
+}
+
 branch_type branch_by_abbrevname(const string &branch, branch_type err)
 {
     for (branch_iterator it; it; ++it)

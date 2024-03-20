@@ -1,0 +1,23 @@
+name: "Bai Suzhen"
+enum: bai_suzhen_dragon
+glyph: {char: "D", colour: etc_electricity}
+flags: [flies, see_invis, speaks, cold_blood, unique, female, thunder_ring]
+resists: {elec: 3, poison: 1, cold: 1}
+xp_mult: 17
+species: storm_dragon
+genus: dragon
+will: 100
+attacks:
+ - {type: bite, damage: 30}
+ - {type: claw, damage: 16}
+ - {type: trample, flavour: trample, damage: 16}
+hd: 20
+hp_10x: 2050
+ac: 22
+ev: 4
+spells: bai_suzhen_dragon
+shout: loud_roar
+intelligence: human
+uses: open_doors
+size: giant
+shape: snake

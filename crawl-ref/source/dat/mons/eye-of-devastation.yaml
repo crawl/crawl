@@ -1,0 +1,16 @@
+name: "eye of devastation"
+glyph: {char: "G", colour: yellow}
+flags: [flies, see_invis, no_skeleton]
+xp_mult: 11
+genus: floating_eye
+will: 100
+attacks:
+hd: 10
+hp_10x: 550
+ac: 12
+ev: 1
+spells: eye_of_devastation
+intelligence: brainless
+speed: 7
+size: medium
+shape: orb

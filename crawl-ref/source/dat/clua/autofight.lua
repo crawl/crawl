@@ -84,17 +84,21 @@ local function vector_move(a, dx, dy)
   end
 end
 
-local function have_reaching()
-  local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range >= 2 and not wp.is_melded
-end
-
 local function reach_range()
+  local r = 1
   local wp = items.equipped_at("weapon")
   if wp and not wp.is_melded then
-      return wp.reach_range
+      r = wp.reach_range
   end
-  return 1
+  local o = items.equipped_at("shield")
+  if o and not o.is_melded and o.is_weapon and o.reach_range > r then
+      r = o.reach_range
+  end
+  return r
+end
+
+local function have_reaching()
+  return reach_range() > 1
 end
 
 local function have_ranged()
@@ -198,7 +202,11 @@ local function move_towards(dx, dy)
   if move == nil then
     crawl.mpr("Failed to move towards target.")
   else
-    crawl.do_commands({delta_to_cmd(move[1],move[2])})
+    if you.status("immotile") then
+      crawl.do_commands({"CMD_WAIT"})
+    else
+      crawl.do_commands({delta_to_cmd(move[1],move[2])})
+    end
   end
 end
 
@@ -401,7 +409,7 @@ function af_mp_is_low()
   return (100*mp <= AUTOMAGIC_STOP*mmp)
 end
 
-function autofight_check_preconditions()
+function autofight_check_preconditions(check_caught)
   local caught = you.caught()
   if af_hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
@@ -409,22 +417,20 @@ function autofight_check_preconditions()
   elseif you.confused() then
     crawl.mpr("You are too confused!")
     return false
-  elseif caught then
-    if not AUTOFIGHT_CAUGHT then
-      crawl.mpr("You are " .. caught .. "!")
-      return false
-    end
+  elseif caught and check_caught and not AUTOFIGHT_CAUGHT then
+    crawl.mpr("You are " .. caught .. "!")
+    return false
   end
   return true
 end
 
-function attack(allow_movement)
+function attack(allow_movement, check_caught)
   local x, y, info = get_target(not allow_movement)
-  if not autofight_check_preconditions() then
+  if not autofight_check_preconditions(check_caught) then
     return
   end
 
-  if you.caught() then
+  if check_caught and you.caught() then
     crawl.do_commands({delta_to_cmd(1, 0)}) -- Direction doesn't matter.
     return
   end
@@ -458,7 +464,7 @@ function hit_closest()
   if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(true)
   else
-    attack(true)
+    attack(true, true)
   end
 end
 
@@ -466,7 +472,7 @@ function hit_closest_nomove()
   if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(false)
   else
-    attack(false)
+    attack(false, true)
   end
 end
 
@@ -476,17 +482,17 @@ function fire_closest()
   else
     local old = AUTOFIGHT_FORCE_FIRE
     AUTOFIGHT_FORCE_FIRE = true
-    attack(false)
+    attack(false, false)
     AUTOFIGHT_FORCE_FIRE = old
   end
 end
 
 function hit_nonmagic()
-  attack(true)
+  attack(true, true)
 end
 
 function hit_nonmagic_nomove()
-  attack(false)
+  attack(false, true)
 end
 
 function hit_magic()

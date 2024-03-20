@@ -32,7 +32,7 @@ ENDMAP
 NAME:    chequers_ecumenical_altar_simple
 TAGS:    transparent
 SHUFFLE: GH
-SUBST: G : Gbt x:5
+SUBST:   G : Gbt x:5
 : ecumenical_altar_setup(_G)
 MAP
 .....
@@ -180,7 +180,7 @@ ENDMAP
 
 NAME:  ebering_ecumenical_altar_box
 TAGS:  transparent
-SUBST:  x : xcvb
+SUBST:  x : xcv
 : ecumenical_altar_setup(_G)
 MAP
 .......
@@ -281,7 +281,7 @@ ENDMAP
 NAME:    shapermc_ecumenical_altar_notcrosses
 TAGS:    transparent
 SHUFFLE: PQ
-SUBST:   P : cvb
+SUBST:   P : ccv
 SUBST:   Q : mmWWl
 : ecumenical_altar_setup(_G)
 MAP
@@ -323,8 +323,8 @@ MAP
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_totnotflames
-COLOUR: . = green / brown
 TAGS:   transparent
+COLOUR: . = green / brown
 FTILE:  A. = floor_grass:20 / floor_dirt
 SUBST:  A = ATUV
 : ecumenical_altar_setup(_G)
@@ -372,7 +372,9 @@ NAME:   shapermc_ecumenical_altar_hornbeckon
 TAGS:   transparent
 KMONS:  p = plant
 KMONS:  f = fungus
+KMONS:  B = boulder dbname:still_boulder
 NSUBST: ' = 8:pf / 12=ppf... / .
+SUBST:  G = GGB
 : ecumenical_altar_setup(_G)
 MAP
 ....@....
@@ -394,7 +396,7 @@ ENDMAP
 NAME:    shapermc_ecumenical_altar_venn
 TAGS:    transparent
 SHUFFLE: GV
-SUBST:   x : xxxxccvb
+SUBST:   x : xxxxccv
 : ecumenical_altar_setup(_G)
 MAP
  .xxx.
@@ -411,41 +413,35 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_flowoftime
 TAGS:   transparent
-MONS:   plant
-MONS:   withered plant
-MONS:   demonic plant
-SUBST: ' = P.....
-SUBST: - = PPPPP.
+MONS:   plant, withered plant, demonic plant
+KMONS:  0 = sacred lotus
+KFEAT:  0 = W
+SUBST:  ' = P....., - = ppppp.
 : if crawl.one_chance_in(20) then
-SUBST:  P : 2223
+SUBST:  Pp : 2223
+: elseif crawl.one_chance_in(10) then
+NSUBST: p = 1:0 / * = 1
+SUBST:  P = 2
 : else
-SUBST:  P = 11222
+SUBST:  p = 112, P = 122, b = c
 : end
 : ecumenical_altar_setup(_G)
 MAP
-xxb+bxx
-x'''''x
-x'''''x
-x'''''x
-x'''''x
-xb'''bx
-xbb'bbx
-xbb_bbx
-xbb-bbx
-xb---bx
-x-----x
-x-----x
-x-----x
-x-----x
-xxb+bxx
+xxxxxxxxxxxxxxx
+x''''bbbbb----x
+x'''''bbb-----x
++''''''_------+
+x'''''bbb-----x
+x''''bbbbb----x
+xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   dilly_ecumenical_altar_fadedgnrine
 TAGS:   transparent
 MONS:   plant
+KITEM:  E = gnoll bouda skeleton / gnoll skeleton
 SUBST:  z = t111
 SUBST:  1 = 11'
-KITEM:  E = never_decay gnoll bouda skeleton / never_decay gnoll skeleton
 KPROP:  E = no_tele_into
 KMASK:  E = opaque
 FTILE:  1Et'_  = floor_grass
@@ -649,6 +645,7 @@ ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_lost_god
 TAGS:   transparent
+WEIGHT: 1
 SUBST:  x : x:20 c m:1
 NSUBST: a = 1:_ / *.
 : ecumenical_altar_setup(_G)
@@ -684,7 +681,7 @@ ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_zigzags
 TAGS:  transparent
-SUBST: a : xcv, d : xcv, e : cvb
+SUBST: a : xcv, d : xcv, e : cvv
 : ecumenical_altar_setup(_G)
 MAP
                              ddddddd
@@ -701,8 +698,7 @@ ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_inner_sanctum
 TAGS:   transparent
-NSUBST: e = 1:+ / *:c
-NSUBST: f = 1:+ / *:v
+NSUBST: e = 1:+ / *:c,  f = 1:+ / *:v
 SUBST:  v : vbtm
 : ecumenical_altar_setup(_G)
 MAP
@@ -773,12 +769,13 @@ A..A..A..A..A
 A..A..A..A..A
 ENDMAP
 
-NAME:  hellmonk_ecumenical_altar_watching_god
-TAGS:  transparent
-KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
-            great orb of eyes
-KMASK: 1 = opaque
-KPROP: 1 = no_tele_into
+NAME:   hellmonk_ecumenical_altar_watching_god
+TAGS:   transparent
+WEIGHT: 5
+KMONS:  1 = glass eye / golden eye / shining eye / \
+            eye of devastation /  great orb of eyes
+KMASK:  1 = opaque
+KPROP:  1 = no_tele_into
 : ecumenical_altar_setup(_G)
 MAP
 ...........
@@ -795,11 +792,12 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_dog_temple
-TAGS:   transparent
+TAGS:   transparent no_monster_gen
 WEIGHT: 5
-TAGS:   no_monster_gen
 KMONS:  a = jackal band
+KMONS:  P = withered plant
 KFEAT:  a = T
+SUBST:  G = GGP
 : ecumenical_altar_setup(_G)
 MAP
 .......
@@ -812,9 +810,9 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_prayer_group
-WEIGHT: 5
 TAGS:   no_monster_gen transparent
-MONS: hobgoblin / goblin / kobold / nothing w:60
+WEIGHT: 5
+MONS:   hobgoblin / goblin / kobold / nothing w:60
 : ecumenical_altar_setup(_G)
 MAP
  ccccccc
@@ -833,8 +831,8 @@ ENDMAP
 
 # an ooze ate the god's name right off the altar
 NAME:   hellmonk_ecumenical_altar_slurped_away
-WEIGHT: 5
 TAGS:   no_monster_gen transparent
+WEIGHT: 5
 SUBST:  x : xc, g = G.
 KMONS:  _ = endoplasm
 : ecumenical_altar_setup(_G)
@@ -852,8 +850,18 @@ ENDMAP
 
 # some orcs have torn down the altar and replaced it with their own
 NAME:   hellmonk_ecumenical_altar_defaced_shrine
-WEIGHT: 5
 TAGS:   no_monster_gen transparent
+WEIGHT: 5
+: if you.absdepth() > 1 then
+MONS:   orc
+: else
+MONS:   rat / giant cockroach / dart slug
+: end
+KMONS:  d = boulder dbname:still_boulder / nothing w:30
+KITEM:  d = human skeleton / kobold skeleton / elf skeleton / gnoll skeleton / \
+            ogre skeleton / naga skeleton / minotaur skeleton / \
+            merfolk skeleton / tengu skeleton / draconian skeleton
+KITEM:  _ = stone q:1 / large rock q:1 w:3
 KFEAT:  B = altar_beogh
 KPROP:  B = no_tele_into
 KMASK:  B = opaque
@@ -863,19 +871,6 @@ SUBST:  x : xc
 SUBST:  . = .:90 '
 SUBST:  T = TV Y:1
 KPROP:  ' = bloody
-KITEM:  _ = stone q:1 / large rock q:1 w:3
-: if you.absdepth() > 1 then
-MONS: orc
-: else
-MONS: rat / giant cockroach / dart slug
-: end
-{{
-  dgn.delayed_decay(_G, 'd', "human skeleton / kobold skeleton / elf skeleton"
-                             .. " / gnoll skeleton / ogre skeleton"
-                             .. " / naga skeleton / minotaur skeleton"
-                             .. " / merfolk skeleton / tengu skeleton"
-                             .. " / draconian skeleton")
-}}
 : ecumenical_altar_setup(_G)
 MAP
        xxx
@@ -947,7 +942,7 @@ COLOUR: G = lightgrey
 TILE:   G = dngn_crumbled_column
 : set_feature_name("granite_statue", "ash-covered pillar")
 NSUBST: ' = 10=..C / 5=.C
-: dgn.delayed_decay(_G, "C", "human skeleton w:20 / minotaur skeleton w:1")
+KITEM:  C = human skeleton w:20 / minotaur skeleton w:1
 : ecumenical_altar_setup(_G)
 MAP
 xxxxxxx
@@ -1012,13 +1007,13 @@ ENDMAP
 NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
 TAGS:   transparent
 KMONS:  p = plant / fungus
-: dgn.delayed_decay_extra(_G, "!", "human skeleton", "robe mundane")
+KITEM:  h = human skeleton, robe mundane
 SUBST:  ? = pW
 : ecumenical_altar_setup(_G)
 MAP
    xxxxx
  xxxt_txxx
-xxp.!...pxx
+xxp.h...pxx
 xp..?W?..px
 xx..?W?..xx
  xxp...pxx
@@ -1227,6 +1222,10 @@ KMONS: 1_ = ball python / nothing
 : else
 KMONS: 1_ = ball python w:30 / adder / nothing
 : end
+KFEAT: G = metal_statue
+SUBST: G : Gx
+TILE:  G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 : ecumenical_altar_setup(_G)
 MAP
  x    x    x
@@ -1235,7 +1234,7 @@ xxx..xxx..xxx
  ..1.xxx.1..
  .x...x...x.
  xxx.....xxx
-xxxxx._.xxxxx
+xxxGx._.xGxxx
  xxx.....xxx
  .x...x...x.
  ..1.xxx.1..

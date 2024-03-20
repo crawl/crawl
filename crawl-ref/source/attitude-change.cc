@@ -75,8 +75,10 @@ static void _fedhas_neutralise_plant(monster* plant);
 /// For followers of Beogh, decide whether orcs will join you.
 void beogh_follower_convert(monster* mons, bool orc_hit)
 {
-    if (!species::is_orcish(you.species) || crawl_state.game_is_arena())
+    if (you.religion != GOD_BEOGH || crawl_state.game_is_arena())
         return;
+
+    const bool deathbed = orc_hit || !mons->alive();
 
     if (!will_have_passive(passive_t::convert_orcs)
         || mons_genus(mons->type) != MONS_ORC
@@ -84,7 +86,10 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         || mons->is_shapeshifter()
         || testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
         || mons->friendly()
-        || mons->has_ench(ENCH_FIRE_CHAMPION))
+        || mons->has_ench(ENCH_FIRE_CHAMPION)
+        || mons->flags & MF_APOSTLE_BAND
+        // If marked for vengeance, only deathbed conversion.
+        || (mons->has_ench(ENCH_VENGEANCE_TARGET) && !deathbed))
     {
         return;
     }
@@ -97,8 +102,14 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
              > random2(hd) + hd + random2(5))
     {
-        beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
-                                                          : conv_t::sight);
+        conv_t ctype = conv_t::sight;
+        if (deathbed)
+        {
+            ctype = mons->has_ench(ENCH_VENGEANCE_TARGET) ? conv_t::vengeance
+                                                          : conv_t::deathbed;
+        }
+
+        beogh_convert_orc(mons, ctype);
         stop_running();
     }
 }
@@ -132,13 +143,9 @@ void fedhas_neutralise(monster* mons)
     }
 }
 
-// Make summoned (temporary) god gifts disappear on penance or when
-// abandoning the god in question.
-void make_god_gifts_disappear()
+// Make divine summons disappear on penance or excommunication from the god in question
+void dismiss_god_summons(god_type god)
 {
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
     for (monster_iterator mi; mi; ++mi)
     {
         if (is_follower(**mi)
@@ -149,75 +156,6 @@ void make_god_gifts_disappear()
             monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
-}
-
-// When under penance, Beoghites can lose all nearby orcish followers,
-// subject to a few limitations.
-bool beogh_followers_abandon_you()
-{
-    bool reconvert = false;
-    int num_reconvert = 0;
-    int num_followers = 0;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-    {
-        monster* mons = monster_at(*ri);
-        if (mons == nullptr)
-            continue;
-
-        // Note that orc high priests' summons are gifts of Beogh,
-        // so we can't use is_orcish_follower(*) here.
-        if (mons_is_god_gift(*mons, GOD_BEOGH))
-        {
-            num_followers++;
-
-            if (you.visible_to(mons)
-                && !mons->asleep()
-                && !mons_is_confused(*mons)
-                && !mons->cannot_act())
-            {
-                const int hd = mons->get_experience_level();
-
-                // During penance, followers get a saving throw.
-                if (random2(20) > random2(hd))
-                    continue;
-
-                mons->attitude = ATT_HOSTILE;
-                behaviour_event(mons, ME_ALERT, &you);
-                // For now CREATED_FRIENDLY stays.
-                mons_att_changed(mons);
-
-                if (you.can_see(*mons))
-                    num_reconvert++; // Only visible ones.
-
-                reconvert = true;
-            }
-        }
-    }
-
-    if (reconvert) // Maybe all of them are invisible.
-    {
-        simple_god_message("'s voice booms out, \"Who do you think you "
-                           "are?\"", GOD_BEOGH);
-
-        ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
-
-        if (num_reconvert > 0)
-        {
-            if (num_reconvert == 1 && num_followers > 1)
-                chan << "One of your followers decides to abandon you.";
-            else if (num_reconvert == num_followers)
-                chan << "Your followers decide to abandon you.";
-            else
-                chan << "Some of your followers decide to abandon you.";
-        }
-
-        chan << endl;
-
-        return true;
-    }
-
-    return false;
 }
 
 static void _print_converted_orc_speech(const string& key,
@@ -234,8 +172,7 @@ static void _print_converted_orc_speech(const string& key,
     }
 }
 
-// Orcs may turn friendly when encountering followers of Beogh, and be
-// made gifts of Beogh.
+// Orcs may turn good neutral when encountering followers of Beogh and leave you alone
 void beogh_convert_orc(monster* orc, conv_t conv)
 {
     ASSERT(orc); // XXX: change to monster &orc
@@ -243,6 +180,18 @@ void beogh_convert_orc(monster* orc, conv_t conv)
 
     switch (conv)
     {
+    case conv_t::vengeance_follower:
+        _print_converted_orc_speech("reaction_battle_follower", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_vengeance_follower", orc,
+                                    MSGCH_TALK);
+        break;
+    case conv_t::vengeance:
+        _print_converted_orc_speech("reaction_battle", orc,
+                                    MSGCH_FRIEND_ENCHANT);
+        _print_converted_orc_speech("speech_vengeance", orc,
+                                    MSGCH_TALK);
+        break;
     case conv_t::deathbed_follower:
         _print_converted_orc_speech("reaction_battle_follower", orc,
                                     MSGCH_FRIEND_ENCHANT);
@@ -267,17 +216,11 @@ void beogh_convert_orc(monster* orc, conv_t conv)
         break;
     }
 
-    orc->attitude = ATT_FRIENDLY;
-
-    // The monster is not really *created* friendly, but should it
-    // become hostile later on, it won't count as a good kill.
-    orc->flags |= MF_NO_REWARD;
-
-    if (orc->is_patrolling())
+    // Count as having gotten vengeance.
+    if (orc->has_ench(ENCH_VENGEANCE_TARGET))
     {
-        // Make orcs stop patrolling and forget their patrol point,
-        // they're supposed to follow you now.
-        orc->patrol_point = coord_def(0, 0);
+        orc->del_ench(ENCH_VENGEANCE_TARGET);
+        beogh_progress_vengeance();
     }
 
     if (!orc->alive())
@@ -286,17 +229,20 @@ void beogh_convert_orc(monster* orc, conv_t conv)
                                               orc->max_hit_points * 2 / 5));
     }
 
-    mons_make_god_gift(*orc, GOD_BEOGH);
-    add_companion(orc);
-
-    // Avoid immobile "followers".
-    behaviour_event(orc, ME_ALERT);
-
-    mons_att_changed(orc);
+    record_monster_defeat(orc, KILL_PACIFIED);
+    mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
 
     // put the actual revival at the end of the round
-    if (conv == conv_t::deathbed || conv == conv_t::deathbed_follower)
+    // But first verify that the orc is still here! (They may have left the
+    // floor immediately when pacified!)
+    if ((conv == conv_t::deathbed
+         || conv == conv_t::deathbed_follower
+         || conv == conv_t::vengeance
+         || conv == conv_t::vengeance_follower)
+        && orc->alive())
+    {
         avoided_death_fineff::schedule(orc);
+    }
 }
 
 static void _fedhas_neutralise_plant(monster* plant)
@@ -353,11 +299,7 @@ void gozag_set_bribe(monster* traitor)
     if (bribability <= 0 || traitor->friendly() || traitor->is_summoned())
         return;
 
-    const monster* leader =
-        traitor->props.exists(BAND_LEADER_KEY)
-        ? monster_by_mid(traitor->props[BAND_LEADER_KEY].get_int())
-        : nullptr;
-
+    const monster* leader = traitor->get_band_leader();
     if (leader)
     {
         if (leader->has_ench(ENCH_FRIENDLY_BRIBED)

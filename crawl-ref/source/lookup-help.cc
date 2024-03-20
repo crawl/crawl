@@ -463,7 +463,9 @@ static bool _spell_filter(string key, string /*body*/)
 
 static bool _item_filter(string key, string /*body*/)
 {
-    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED
+    item_kind ik = item_kind_by_name(key);
+    return ik.base_type == OBJ_UNASSIGNED
+        && !item_type_removed(ik.base_type, ik.sub_type)
         && !extant_unrandart_by_exact_name(key);
 }
 
@@ -489,7 +491,12 @@ static bool _status_filter(string key, string /*body*/)
 
 static bool _mutation_filter(string key, string /*body*/)
 {
-    return !strip_suffix(lowercase(key), " mutation");
+    lowercase(key);
+
+    if (!strip_suffix(key, " mutation"))
+        return true;
+
+    return starts_with(key, "potion of"); // hack alert!
 }
 
 static bool _passive_filter(string key, string /*body*/)
@@ -547,7 +554,7 @@ static void _recap_ability_keys(vector<string> &keys)
     {
         strip_suffix(key, "ability");
         // get the real name
-        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)).c_str());
     }
 }
 
@@ -634,6 +641,7 @@ static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
     // use API rather than unwinds so that sanity checks don't need to be
     // duplicated
     const auto prior_status = get_unique_item_status(unrand_index);
+    unwind_var<uint8_t> octo(you.octopus_king_rings, 0x0); // easier to do unconditionally
     const bool r = make_item_unrandart(item, unrand_index);
     set_unique_item_status(item, prior_status);
     return r;
@@ -1284,6 +1292,11 @@ static int _describe_mutation(const string &key, const string &suffix,
     const string mutation_name = key.substr(0, key.size() - suffix.size());
     const mutation_type mutation = mutation_from_name(mutation_name.c_str(),
                                                       false);
+    if (mutation == NUM_MUTATIONS) // oops! someone messed up!
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
     describe_mutation(mutation);
     return 0;
 }

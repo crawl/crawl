@@ -427,21 +427,24 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, mgen_data mg, int xl,
-                         const string &agent, const string &msg)
+                         const string &agent, const string &msg,
+                         spell_type spell = SPELL_NO_SPELL)
     {
-        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg));
+        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg, spell));
     }
 protected:
     make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
-                               const string &_agent, const string &_msg)
+                               const string &_agent, const string &_msg,
+                               spell_type _spell)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
-          agent(_agent), message(_msg)
+          agent(_agent), message(_msg), spell(_spell)
     {
     }
     mgen_data mg;
     int experience_level;
     string agent;
     string message;
+    spell_type spell;
 };
 
 class mummy_death_curse_fineff : public final_effect
@@ -491,15 +494,19 @@ public:
     bool mergeable(const final_effect &) const override { return false; };
     void fire() override;
 
-    static void schedule(const actor &attack, const actor &defend)
+    static void schedule(const actor &attack, const actor &defend,
+                         const item_def *weapon)
     {
-        final_effect::schedule(new spectral_weapon_fineff(attack, defend));
+        final_effect::schedule(new spectral_weapon_fineff(attack, defend, weapon));
     }
 protected:
-    spectral_weapon_fineff(const actor &attack, const actor &defend)
-        : final_effect(&attack, &defend, coord_def())
+    spectral_weapon_fineff(const actor &attack, const actor &defend,
+                           const item_def *wpn)
+        : final_effect(&attack, &defend, coord_def()), weapon(wpn)
     {
     }
+
+    const item_def *weapon;
 };
 
 class lugonu_meddle_fineff : public final_effect
@@ -530,6 +537,42 @@ protected:
         : final_effect(nullptr, defend, coord_def())
     {
     }
+};
+
+class beogh_resurrection_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &a) const override;
+    void fire() override;
+
+    static void schedule(bool end_ostracism_only = false)
+    {
+        final_effect::schedule(new beogh_resurrection_fineff(end_ostracism_only));
+    }
+protected:
+    beogh_resurrection_fineff(bool end_ostracism_only)
+        : final_effect(nullptr, nullptr, coord_def()), ostracism_only(end_ostracism_only)
+    {
+    }
+    const bool ostracism_only;
+};
+
+class dismiss_divine_allies_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(const god_type god)
+    {
+        final_effect::schedule(new dismiss_divine_allies_fineff(god));
+    }
+protected:
+    dismiss_divine_allies_fineff(const god_type _god)
+        : final_effect(0, 0, coord_def()), god(_god)
+    {
+    }
+    const god_type god;
 };
 
 void fire_final_effects();

@@ -137,8 +137,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_COLD_RESISTANCE,
 },
 
-{ MUT_HEAT_VULNERABILITY, 3, 3,
-  mutflag::bad | mutflag::qazlal, true,
+{ MUT_HEAT_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal, true,
   "heat vulnerability",
 
   {"You are vulnerable to heat. (rF-)",
@@ -155,8 +154,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_HEAT_VULNERABILITY,
 },
 
-{ MUT_COLD_VULNERABILITY, 3, 3,
-  mutflag::bad | mutflag::qazlal, true,
+{ MUT_COLD_VULNERABILITY, 3, 3, mutflag::bad | mutflag::qazlal, true,
 
   "cold vulnerability",
 
@@ -328,6 +326,16 @@ static const mutation_def mut_data[] =
   {"You feel stable.",
    "You feel stable.",
    ""},
+},
+
+{ MUT_PERSISTENT_DRAIN, 5, 1, mutflag::bad, false,
+  "persistent drain",
+
+  {"Your health recovers twice as slowly from being drained.", "", ""},
+
+  {"You begin to recover more slowly from draining effects.", "", ""},
+
+  {"You recover from draining at a normal speed again.", "", ""},
 },
 
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
@@ -741,6 +749,51 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_WIELD_OFFHAND, 0, 1, mutflag::good, true,
+  "off-hand wielding",
+
+  {"You can wield a second weapon in your off-hand.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_SLOW_WIELD, 0, 1, mutflag::bad, true,
+  "slow wielding",
+
+  {"It takes a long time for you to wield or remove held weapons.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_INITIALLY_ATTRACTIVE, 0, 1, mutflag::bad, false,
+  "initially attractive",
+
+  {"You sometimes attract newly seen creatures.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_WARMUP_STRIKES, 0, 1, mutflag::bad, true,
+  "warmup strikes",
+
+  {"Your first few attacks do less damage.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_NO_JEWELLERY, 0, 1, mutflag::bad, true,
+  "no jewellery",
+
+  {"You cannot equip rings or amulets.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 { MUT_HURL_DAMNATION, 0, 1, mutflag::good, false,
   "hurl damnation",
 
@@ -994,6 +1047,13 @@ static const mutation_def mut_data[] =
   {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
+
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false,
+  "awkward tongue",
+  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
+  {"Your tongue begins to flop around amusingly.", "", ""},
+  {"Your tongue regains its customary placidity.", "", ""},
+},
 #endif
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
@@ -1004,12 +1064,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLLPAGE, 0, 1, mutflag::good, false,
-  "roll",
+{ MUT_ROLLPAGE, 0, 2, mutflag::good, false,
+  "rollpage",
 
-  {"You roll when moving toward enemies. (Rampage)", "", ""},
-  {"", "", ""},
-  {"", "", ""},
+  {"You regenerate magic when rolling toward enemies. (Rampage MPRegen)",
+   "You regenerate magic and health when rolling toward enemies. (Rampage Regen)",
+   ""},
+
+  {"You begin to regenerate magic when rolling toward enemies.",
+   "You begin to regenerate health when rolling toward enemies.",
+   ""},
+
+  {"You can no longer roll toward enemies.",
+   "You can no longer regenerate health when rolling toward enemies.",
+   ""},
 },
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
@@ -2059,12 +2127,12 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Necromancy magic.", "", ""},
 },
 
-{ MUT_NO_POISON_MAGIC, 0, 1, mutflag::bad, false,
-  "no poison magic",
+{ MUT_NO_ALCHEMY_MAGIC, 0, 1, mutflag::bad, false,
+  "no alchemy magic",
 
-  {"You cannot study or cast Poison magic.", "", ""},
-  {"You can no longer study or cast Poison magic.", "", ""},
-  {"You can once more study and cast Poison magic.", "", ""},
+  {"You cannot study or cast Alchemy magic.", "", ""},
+  {"You can no longer study or cast Alchemy magic.", "", ""},
+  {"You can once more study and cast Alchemy magic.", "", ""},
 },
 
 { MUT_NO_SUMMONING_MAGIC, 0, 1, mutflag::bad, false,
@@ -2083,6 +2151,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Translocations magic.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_NO_TRANSMUTATION_MAGIC, 0, 1, mutflag::bad, false,
   "no transmutations magic",
 
@@ -2090,6 +2159,7 @@ static const mutation_def mut_data[] =
   {"You can no longer study or cast Transmutations magic.", "", ""},
   {"You can once more study and cast Transmutations magic.", "", ""},
 },
+#endif
 
 { MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::bad, false,
   "reduced AC",
@@ -2380,12 +2450,12 @@ static const mutation_def mut_data[] =
     {"You have superior vitality. (+4 MHP)",
      "You have much superior vitality. (+8 MHP)",
      "You have exceptionally superior vitality. (+12 MHP)"},
-    {"You feel less vital.",
-     "You feel less vital.",
-     "You feel less vital."},
     {"You feel more vital.",
      "You feel more vital.",
      "You feel more vital."},
+    {"You feel less vital.",
+     "You feel less vital.",
+     "You feel less vital."},
 },
 
 { MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva, true,
@@ -2406,48 +2476,76 @@ static const mutation_def mut_data[] =
     {"The shadows grow bolder once more.", "", ""},
 },
 
-{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false, "divine attributes",
+{ MUT_DIVINE_ATTRS, 0, 1, mutflag::good, false,
+  "divine attributes",
   {"Your divine heritage dramatically boosts your attributes as you level up.", "", ""},
   {"You feel more divine.", "", ""},
   {"You feel more mortal.", "", ""},
 },
 
-{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true /* but irrelevant */, "devour on kill",
+{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true,
+  "devour on kill",
   {"You thrive by killing the living.", "", ""},
   {"You feel hungry for flesh.", "", ""},
   {"You feel less hungry for flesh.", "", ""},
 },
 
-{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, "otherworldly",
+{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false,
+  "otherworldly",
   {"You are easily found by Zot.", "", ""},
   {"You feel your time running out.", "", ""},
   {"You feel long-lived.", "", ""},
 },
 
-{ MUT_GLOWING, 0, 1, mutflag::bad, false, "glowing",
-  {"You glow in the dark.", "", ""},
-  {"Your body begins glowing.", "", ""},
-  {"You feel a bit dim.", "", ""},
+{ MUT_FOUL_SHADOW, 0, 3, mutflag::good, false,
+  "foul shadow",
+  {"You are faintly shadowed, very rarely releasing foul flame when damaged in melee.",
+   "You are shadowed, sometimes releasing foul flame when damaged in melee.",
+   "You are darkly shadowed, frequently releasing foul flame when damaged in melee."},
+  {"Your body darkens with foul flame.",
+   "Your body becomes darker with foul flame.",
+   "Your body becomes darker with foul flame."},
+  {"Your body's darkness fades completely.",
+   "Your body's darkness fades.",
+   "Your body's darkness fades."},
+
+  TILEG_MUT_FOUL_SHADOW,
 },
 
-{ MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false, "explore regen",
+{ MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false,
+  "explore regen",
   {"You regain HP and MP as you explore.", "", ""},
   {"You feel a fierce wanderlust.", "", ""},
   {"You feel like a homebody.", "", ""},
 },
 
-{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
-  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
-  {"Your tongue grows exceptionally long.", "", ""},
-  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
+{ MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false,
+  "double potion healing",
+  {"You gain doubled healing and magic from potions.", "", ""},
+  {"You heal twice as much from potions.", "", ""},
+  {"You no longer heal twice as much from potions.", "", ""},
 },
 
-{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
-  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
-  {"Your tongue begins to flop around amusingly.", "", ""},
-  {"Your tongue regains its customary placidity.", "", ""},
+{ MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good, false,
+  "drunken brawling",
+  {"Whenever you drink a healing potion, you attack all around you.", "", ""},
+  {"You brawl whenever you drink a healing potion.", "", ""},
+  {"You no longer brawl whenever you drink a healing potion.", "", ""},
 },
 
+{ MUT_ARTEFACT_ENCHANTING, 0, 1, mutflag::good, false,
+  "artefact enchanting",
+  {"You can use scrolls of enchantment on lesser artefacts.", "", ""},
+  {"You can now use scrolls of enchantment on lesser artefacts.", "", ""},
+  {"You can no longer use scrolls of enchantment on lesser artefacts.", "", ""},
+},
+
+{ MUT_RUNIC_MAGIC, 0, 1, mutflag::good, false,
+  "runic magic",
+  {"Your spellcasting is much less encumbered by armour.", "", ""},
+  {"Your spellcasting becomes less encumbered by armour.", "", ""},
+  {"Your spellcasting no longer less encumbered by armour.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

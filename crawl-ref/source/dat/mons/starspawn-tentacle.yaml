@@ -1,0 +1,16 @@
+name: "starspawn tentacle"
+glyph: {char: "w", colour: lightcyan}
+flags: [flies, stationary, no_exp_gain, no_poly_to]
+genus: tentacled_starspawn
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: constrict, flavour: crush, damage: 4}
+hd: 21
+hp_10x: 220
+ac: 8
+ev: 2
+intelligence: human
+size: large
+shape: snake
+tile: program_bug

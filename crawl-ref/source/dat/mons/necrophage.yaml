@@ -1,0 +1,19 @@
+name: "necrophage"
+glyph: {char: "n", colour: lightgray}
+flags: [no_zombie]
+resists: {cold: 1}
+xp_mult: 8
+genus: ghoul
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, flavour: drain, damage: 6}
+hd: 5
+hp_10x: 220
+ac: 2
+ev: 10
+has_corpse: true
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

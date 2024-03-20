@@ -12,11 +12,13 @@ all the same thing.
 %%%%
 Beogh
 
-Beogh is an evil deity, worshipped by the cave orcs native to the dungeon. Only
-orcs may devote their service to Beogh, and they must prove their devotion with
-bloodshed. Especially fervent devotees of Beogh will find orcish followers
-flocking to their banner: it is an age of signs and portents, and the orcs have
-become increasingly certain that the coming of their Messiah is nigh.
+A god of outcasts, pariahs, and the dispossessed, Beogh's altars are rarely
+found among those of other faiths, but their missionaries may always be sought
+by those looking for a place to belong. Worshippers will find many friends
+within the dungeon, and those who prove their strength to Beogh may gain
+lifelong companions the equal of any adventurer. To worship Beogh is to believe
+there is strength that transcends species and bloodline. To worship Beogh is to
+be an orc.
 %%%%
 Cheibriados
 
@@ -77,7 +79,7 @@ Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
 support the spread and satiation of their fellow slimes by allowing them to
-consume items, and are forbidden from harming any slimes. Especially favoured
+consume items, and are prevented from harming any slimes. Especially favoured
 followers will become as shapeless as their god, mutating wildly.
 %%%%
 Kikubaaqudgha
@@ -107,10 +109,10 @@ impure world and its false laws for their evil god's glory.
 %%%%
 Nemelex Xobeh
 
-Nemelex is a strange and unpredictable trickster god, whose powers are invoked
-through magical packs of cards painted in the ichor of demons. Followers will
-be granted decks of cards as they traverse the dungeon, and are encouraged to
-trust in the cards to provide them with divine assistance. However, the
+Nemelex is a strange and unpredictable chaotic trickster god, whose powers are
+invoked through magical packs of cards painted in the ichor of demons. Followers
+will be granted decks of cards as they traverse the dungeon, and are encouraged
+to trust in the cards to provide them with divine assistance. However, the
 Trickster can also ensure that fortune favours the bold.
 %%%%
 Okawaru
@@ -206,11 +208,11 @@ capricious. There is nothing a follower can do to influence Xom's mood.
 %%%%
 Yredelemnul
 
-Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the soul. Followers can reap legions of servile undead, and gain a
-number of other useful powers with which to make better use of the souls of
-the living. Yredelemnul especially favours those who would surround themselves
-with a bounty of collected souls.
+Cast down by the good gods eons ago, Yredelemnul seeks to despoil their
+creations and chain all living souls within their inexorable grip. Followers who
+would conquer in their name are granted the power to reap an army of the dead
+and bind powerful souls into eternal service - provided they can sweep across
+the land in a tide as inexorable as the god themself.
 %%%%
 Zin
 
@@ -233,21 +235,22 @@ protect worshippers from the Dungeon's malevolent forces.
 %%%%
 Beogh powers
 
-Followers of Beogh can smite their foes, and will even gain orcish followers of
-their own, who may be blessed by Beogh in battle and can be recalled as needed.
-Eventually, followers will gain the power to walk on water. Beogh will
-sometimes directly intervene to save a follower's life, and the chosen of
-Beogh will eventually be able to resurrect other fallen orcs.
+Worshippers will gain the power to call down Beogh's wrath upon their
+oppressors, and other orcs will start to see you as one of their own. Especially
+promising adherents will find themselves beset by rivals for Beogh's favor, but
+overcoming these trials without fleeing will gain you loyal companions whom
+Beogh will resurrect time and time again - just so long as you continue to fight
+and avenge in their name. A true chosen one may even rally an entire orcish army
+to avenge a wrongful death.
 %%%%
 Cheibriados powers
 
-Followers of Cheibriados move more slowly as they gain favour, and are rewarded
-for killing creatures who are faster than they are. As they move slower,
-worshippers of Cheibriados are granted increased attributes. Cheibriados
-rewards the faithful with the power to slow other creatures and the power to
-briefly distort the flow of time. Devout worshippers will gain the ability to
-inflict great harm on all those who move more quickly than they do, and finally
-the ability to step out of the flow of time entirely.
+Followers of Cheibriados move more slowly as they gain favour. As they move
+slower, worshippers of Cheibriados are granted increased attributes.
+Cheibriados rewards the faithful with the power to slow other creatures and the
+power to briefly distort the flow of time. Devout worshippers will gain the
+ability to inflict great harm on all those who move more quickly than they do,
+and finally the ability to step out of the flow of time entirely.
 %%%%
 Dithmenos powers
 
@@ -337,8 +340,8 @@ if any other god attempts to interfere with their followers. Later, followers
 will be able to corrupt the ordered world, opening a gate for creatures
 of the Abyss to pass through, and to gate themselves directly into this realm of
 chaos. Lugonu will protect followers who unwield weapons imbued with the
-distorting energies of the Abyss, and eventually will offer to corrupt a
-follower's weapon in that way. Lugonu expects followers to spread unceasing
+distorting energies of the Abyss, and eventually will offer to distort a
+follower's melee weapon. Lugonu expects followers to spread unceasing
 chaos in the overworld, and as such does not grant piety to worshippers while
 they remain in the Abyss itself.
 %%%%
@@ -466,12 +469,14 @@ playthings...
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives followers the power to raise slain foes from the dead and
-bind them into service. Followers also can recall undead followers to them,
-heal by draining life from the living, and exchange members of their undead
-army for Yredelemnul's more powerful servants. With a large and powerful enough
-mass of the dead, followers can fully bind a foe's soul and make it fight for
-them in death with the full capacities it held in life.
+Followers of Yredelemnul carry the Black Torch, allowing them to gather souls
+and surround themselves in darkness. They can raise foes who die in the light of
+the torch as mindless servants, hurl torchlight to scour the living and empower
+the dead, and bind especially noteworthy souls to fight for them in death with
+the full capacities they held in life. Especially devout worshippers can even
+call down the inescapable grip of the Fallen directly, binding foes helplessly
+in place as the very life is sucked from them. Yredelemnul will also dispatch
+undead servants to aid their followers at the start of each new conquest.
 %%%%
 Zin powers
 
@@ -666,10 +671,8 @@ remains; the unfaithful are rewarded just as the faithful are punished.
 Yredelemnul wrath
 
 Those who anger Yredelemnul find themselves beset by legions of the dead.
-Novice adventurers will be assaulted by zombies and skeletons; veterans by the
-strongest of Yredelemnul's undead servants. The victims' own undead servants
-desert them and crumble into dust. Yredelemnul's ire may instead drain the lives
-of the unfaithful.
+Sometimes, the god will also intervene directly, binding the unfaithful in
+inescapable chains as their dark army demonstrates the price of betrayal.
 %%%%
 Zin wrath
 
@@ -694,7 +697,4 @@ Wu Jian extra
 
 These prevent enemies from getting free attacks on you while you move away.
 You cannot launch martial attacks while digging.
-
-Worshipping the Council prevents you from rampaging or rolling: These martial
-attacks suppress such ungainly movement.
 %%%%

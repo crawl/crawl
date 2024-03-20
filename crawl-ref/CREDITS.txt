@@ -107,7 +107,7 @@
     Alexander Beisig
     benadryl
     biasface
-    bjobae
+    Björn Bähre
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
@@ -145,6 +145,7 @@
     Tom Conrad
     Vitor 'Baconkid' Costa
     RJ Cunningham
+    Cureja
     Aaron Curtis
     Simon Curtis
     cut1less
@@ -152,6 +153,7 @@
     David Damerell
     Paul Dejean
     Denzi
+    Sean Dewar
     Ed Dewey
     dicedlemming
     Lothar Dierkes
@@ -214,6 +216,7 @@
     Iainuki
     ICC
     Icy Lich
+    Wizard Ike
     Ilyak
     Matthew Ince
     Mitsuhiro Itakura
@@ -354,6 +357,7 @@
     Brett Scarborough
     Roderick Schertler
     sdynet
+    SentientSupper
     Roman Sêk
     Brennan Shacklett
     ShadyAmish
@@ -401,6 +405,7 @@
     Steven Wheeler
     WhiteShark
     Thomas Willem
+    Sam Willett
     Evan Williams
     Mara Williamson
     Jeremey Wilson

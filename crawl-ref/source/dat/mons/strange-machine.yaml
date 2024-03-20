@@ -1,0 +1,15 @@
+name: "strange machine"
+glyph: {char: "I", colour: etc_silver}
+flags: [stationary, no_poly_to]
+resists: {elec: 1, fire: 2, cold: 2, petrify: 1}
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 21
+hp_10x: 900
+ac: 12
+ev: 1
+spells: strange_machine
+intelligence: brainless
+size: small
+shape: misc

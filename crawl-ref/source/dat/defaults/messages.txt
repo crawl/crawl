@@ -27,6 +27,7 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
+msc += $danger:Your body becomes as fragile as glass
 
 # Less urgent, but still significant messages
 #
@@ -73,11 +74,13 @@ msc += $boring:dissolves? into (sparkling lights|shadows)
 msc += $boring:(crumbles|melts) away\.
 msc += $boring:returns to the deep
 msc += $boring:shimmers and vanishes
+msc += $boring:turns back into a lifeless stick
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
+msc += $boring:is recalled by Beogh
 
 # Ignore Uskayaw *** and **** power loss messages by default; they're spammy.
 msc += mute:Uskayaw will no longer force your foes to helplessly watch your dance\.
@@ -97,6 +100,7 @@ force_more_message += doesn't seem very happy
 force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
 force_more_message += This is a scroll of acquirement
+force_more_message += create your gizmo
 
 ## Zot is coming!
 force_more_message += You have lingered too long
@@ -154,6 +158,7 @@ force_more_message += watery aura .* (staircase|hatch)
 
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
+force_more_message += You pick up the .* gem and feel its .* weight
 
 # Rune unlock
 force_more_message += The lock glows eerily
@@ -164,14 +169,22 @@ force_more_message += With a soft hiss the gate opens wide
 # Rune lock
 force_more_message += The door slams shut behind you
 
+# Gems
+force_more_message += Zot will shatter your .* gem
+force_more_message += Zot senses .* your .* gem
+
 # God gifts
-force_more_message += grants you (a gift|throwing weapons|armour|a weapon)
-force_more_message += offers you knowledge of
+force_more_message += grants you (a gift|throwing weapons|a weapon)
+force_more_message += offers you (knowledge of|a choice of)
+force_more_message += will grant you a choice
 force_more_message += believes you are ready to make a new sacrifice
 force_more_message += may now remember your ancestor
 force_more_message += deals you some cards
 force_more_message += deal. but finds you have enough
 force_more_message += partake of a vision and a curse
+force_more_message += allow you to induct
+
+force_more_message += Beogh speaks to you:
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

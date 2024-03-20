@@ -583,6 +583,8 @@ static void _show_commandline_options_help()
 #endif
     puts("");
     puts("Miscellaneous options:");
+    puts("  -builddb         don't start the game; rebuild the .des cache and exit");
+    puts("  -reset-cache     force a full rebuild of the .des cache");
     puts("  -dump-maps       write map Lua to stderr when parsing .des files");
 #ifndef TARGET_OS_WINDOWS
     puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
@@ -840,12 +842,15 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MEMORISE_SPELL:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
+    case CMD_UNEQUIP:
+    case CMD_REMOVE_ARMOUR:
+    case CMD_EQUIP:
+    case CMD_WEAR_ARMOUR:
         mpr("You can't repeat multi-turn commands.");
         return false;
 
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
-    case CMD_TOGGLE_TRAVEL_SPEED:
     case CMD_TOGGLE_SOUND:
     case CMD_ADJUST_INVENTORY:
     case CMD_QUIVER_ITEM:
@@ -1518,6 +1523,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
+    if (ygrd != DNGN_TRANSPORTER && beogh_cancel_leaving_floor())
+        return false;
+
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))
@@ -1692,7 +1700,7 @@ static void _experience_check()
         you.lives < 2 ?
              mprf("You'll get an extra life in %d.%02d levels' worth of XP.", perc / 100, perc % 100) :
              mprf("If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
-             (perc / 100) + 1 , perc % 100);
+             perc / 100 , perc % 100);
     }
 
     handle_real_time();
@@ -1712,25 +1720,13 @@ static void _experience_check()
                         << " turns if you stay in this branch and explore no"
                         << " new floors.";
         }
-        msg::stream << endl;
+        msg::stream << endl << gem_status();
     }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
          env.turns_on_level);
 #endif
-}
-
-static void _toggle_travel_speed()
-{
-    you.travel_ally_pace = !you.travel_ally_pace;
-    if (you.travel_ally_pace)
-        mpr("You pace your travel speed to your slowest ally.");
-    else
-    {
-        mpr("You travel at normal speed.");
-        you.running.travel_speed = 0;
-    }
 }
 
 static void _do_rest()
@@ -2124,8 +2120,6 @@ void process_command(command_type cmd, command_type prev_cmd)
         mprf("Sound effects are now %s.", Options.sounds_on ? "on" : "off");
         break;
 #endif
-
-    case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
     case CMD_CLEAR_MAP:       clear_map_or_travel_trail(); break;
@@ -2824,7 +2818,7 @@ static void _do_berserk_no_combat_penalty()
  */
 static void _do_wait_spells()
 {
-    handle_searing_ray();
+    handle_searing_ray(you);
     handle_maxwells_coupling();
     handle_flame_wave();
 }

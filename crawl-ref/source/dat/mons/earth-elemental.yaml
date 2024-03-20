@@ -1,0 +1,17 @@
+name: "earth elemental"
+glyph: {char: "E", colour: etc_earth}
+resists: {elec: 3, fire: 3, cold: 3, petrify: 1}
+xp_mult: 13
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 40}
+hd: 6
+hp_10x: 450
+ac: 14
+ev: 4
+intelligence: brainless
+speed: 6
+size: large
+shape: misc

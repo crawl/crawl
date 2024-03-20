@@ -82,12 +82,6 @@ book of air
 Une introduction à la magie élémentaire de l'Air. Les pages projettent de
 brèves étincelles lorsqu'elles sont séparées.
 %%%%
-book of alchemy
-
-Un livre traitant des processus d’alchimie et leur utilisation dans la magie,
-rassemblant la sagesse des anciens alchimistes. Quand le livre est ouvert, le
-texte se révèle au fur et a mesure que l'encre se condense sur les pages.
-%%%%
 book of annihilations
 
 Du sang suinte des lambeaux de pages de ce livre, et même un analphabète peut
@@ -112,14 +106,6 @@ Un livre qui contient une petite sélection des sorts de base, spécialement
 sélectionné pour les débutants qui veulent apprendre les rudiments d'une des
 école de magie présentée. Néanmoins, même les mages les plus expérimentés
 peuvent trouver une utilité aux sorts contenus dans ce recueil.
-%%%%
-book of changes
-
-Un livre de base pour les étudiants des arts de la transmutation avec de
-nombreuses illustration des premières expérimentations de l'histoire de cette
-école : mi-mages-mi-araignées, mages aux Nez-Lames, ou tentacules coracoïde à
-la place des jambes. Le texte est rempli d’éléments assurant que ce genre de
-choses n'arrive plus.
 %%%%
 book of clouds
 

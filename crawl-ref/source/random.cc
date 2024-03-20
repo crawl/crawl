@@ -243,7 +243,7 @@ int maybe_random2(int x, bool random_factor)
 }
 
 // [0, ceil(nom/denom)]
-int maybe_random_div(int nom, int denom, bool random_factor)
+int maybe_random2_div(int nom, int denom, bool random_factor)
 {
     if (nom <= 0)
         return 0;

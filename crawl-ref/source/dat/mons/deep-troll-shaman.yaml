@@ -1,0 +1,22 @@
+name: "deep troll shaman"
+glyph: {char: "T", colour: white}
+flags: [see_invis, unblindable, speaks, warm_blood]
+xp_mult: 12
+species: deep_troll
+genus: troll
+will: 40
+attacks:
+ - {type: bite, damage: 27}
+ - {type: claw, damage: 20}
+ - {type: claw, damage: 20}
+hd: 12
+hp_10x: 480
+ac: 6
+ev: 10
+spells: deep_troll_shaman
+has_corpse: true
+shout: shout
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

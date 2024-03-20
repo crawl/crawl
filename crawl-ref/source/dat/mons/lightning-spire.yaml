@@ -1,0 +1,16 @@
+name: "lightning spire"
+glyph: {char: "I", colour: etc_electricity}
+flags: [stationary, no_poly_to]
+resists: {elec: 3, fire: 2, cold: 2, petrify: 1}
+xp_mult: 9
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 700
+ac: 13
+ev: 3
+spells: zapper
+intelligence: brainless
+size: small
+shape: misc

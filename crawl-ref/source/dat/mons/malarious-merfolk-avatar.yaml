@@ -1,0 +1,21 @@
+name: "malarious merfolk avatar"
+glyph: {char: "m", colour: lightblue}
+flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
+species: merfolk
+will: 120
+attacks:
+hd: 3
+hp_10x: 195
+ac: 4
+ev: 12
+spells: merfolk_avatar
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6}
+uses: open_doors
+size: medium
+shape: humanoid
+tile: merfolk_avatar
+tile_variance: water

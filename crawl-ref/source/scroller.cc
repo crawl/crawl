@@ -74,8 +74,8 @@ int formatted_scroller::show()
 #ifdef USE_TILE_LOCAL
         title_hbox->set_main_alignment(Widget::Align::CENTER);
 #endif
-        title_hbox->add_child(move(title));
-        vbox->add_child(move(title_hbox));
+        title_hbox->add_child(std::move(title));
+        vbox->add_child(std::move(title_hbox));
     }
 
 #ifdef USE_TILE_LOCAL
@@ -102,7 +102,7 @@ int formatted_scroller::show()
         more->set_text(m_more);
         more->set_margin_for_crt(1, 0, 0, 0);
         more->set_margin_for_sdl(20, 0, 0, 0);
-        vbox->add_child(move(more));
+        vbox->add_child(std::move(more));
     }
 
     auto popup = make_shared<ui::Popup>(vbox);
@@ -166,7 +166,7 @@ int formatted_scroller::show()
         m_scroller->set_scroll(m_scroll);
     }
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
     open_scrollers.pop_back();
 
     return m_lastch;

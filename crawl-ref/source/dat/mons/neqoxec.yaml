@@ -1,0 +1,19 @@
+name: "neqoxec"
+glyph: {char: "3", colour: lightmagenta}
+flags: [flies]
+resists: {poison: 1}
+xp_mult: 12
+holiness: [demonic]
+will: 40
+attacks:
+ - {type: hit, damage: 15}
+hd: 6
+hp_10x: 330
+ac: 4
+ev: 12
+spells: neqoxec
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

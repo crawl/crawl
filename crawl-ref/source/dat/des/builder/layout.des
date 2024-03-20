@@ -1307,8 +1307,10 @@ TAGS:   no_rotate no_vmirror no_hmirror
 validate {{
     return minimum_map_area.is_map_big_enough(_G, minimum_map_area.DIVISIONS)
 }}
+KFEAT:   G = metal_statue
 COLOUR:  G : cyan
 TILE:    G = dngn_statue_iron_golem
+: set_feature_name("metal_statue", "iron statue")
 MAP
 ENDMAP
 

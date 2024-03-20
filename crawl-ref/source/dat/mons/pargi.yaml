@@ -1,0 +1,19 @@
+name: "Pargi"
+glyph: {char: "T", colour: green}
+flags: [speaks, warm_blood, unique, fast_regen, male]
+species: troll
+will: 10
+attacks:
+ - {type: bite, damage: 9}
+ - {type: claw, damage: 4}
+ - {type: claw, damage: 4}
+hd: 5
+hp_10x: 350
+ac: 1
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

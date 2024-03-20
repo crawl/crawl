@@ -24,8 +24,9 @@
 #include "describe.h"
 #include "end.h"
 #include "god-conduct.h"
-#include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
+#include "invent.h"
 #include "libutil.h"
 #include "message.h"
 #include "output.h"
@@ -99,6 +100,7 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_QUICKSILVER, SPELL_QUICKSILVER_BOLT },
     { WAND_MINDBURST, SPELL_MINDBURST },
     { WAND_ROOTS, SPELL_FASTROOT },
+    { WAND_WARPING, SPELL_WARP_SPACE },
 };
 
 
@@ -231,15 +233,25 @@ static unordered_set<int> _player_nonbook_spells =
     // items
     SPELL_THUNDERBOLT,
     SPELL_PHANTOM_MIRROR, // this isn't cast directly, but the player code at
-                          // least uses the enum value
+                          // least uses the enum value.
+    SPELL_TREMORSTONE,    // not cast directly, but the spell type is used for
+                          // damage and noise display.
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,
     SPELL_MINOR_DESTRUCTION,
+    SPELL_HURL_TORCHLIGHT,
     // Ds powers
     SPELL_HURL_DAMNATION,
     // Green Draconian breath
-    SPELL_MEPHITIC_BREATH,
+    SPELL_NOXIOUS_BREATH,
+    SPELL_COMBUSTION_BREATH,
+    SPELL_GLACIAL_BREATH,
+    SPELL_NULLIFYING_BREATH,
+    SPELL_STEAM_BREATH,
+    SPELL_CAUSTIC_BREATH,
+    SPELL_GALVANIC_BREATH,
+    SPELL_MUD_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -1089,14 +1101,13 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     return true;
 }
 
-bool book_has_title(const item_def &book)
+bool book_has_title(const item_def &book, bool ident)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
     // No "A Great Wizards, Vol. II"
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
-        || book.sub_type == BOOK_OZOCUBU
         || book.sub_type == BOOK_MAXWELL
         || book.sub_type == BOOK_UNRESTRAINED)
     {
@@ -1107,7 +1118,8 @@ bool book_has_title(const item_def &book)
         return false;
 
     return book.props.exists(BOOK_TITLED_KEY)
-           && book.props[BOOK_TITLED_KEY].get_bool() == true;
+           && book.props[BOOK_TITLED_KEY].get_bool() == true
+           && (ident || item_ident(book, ISFLAG_KNOW_PROPERTIES));
 }
 
 spret divine_exegesis(bool fail)

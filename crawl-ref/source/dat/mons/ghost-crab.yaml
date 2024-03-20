@@ -1,0 +1,20 @@
+name: "ghost crab"
+glyph: {char: "t", colour: lightgray}
+flags: [no_skeleton, no_zombie]
+xp_mult: 25
+genus: crab
+holiness: [undead]
+will: 40
+attacks:
+ - {type: bite, flavour: drain, damage: 20}
+ - {type: claw, flavour: drain, damage: 15}
+hd: 9
+hp_10x: 585
+ac: 9
+ev: 6
+spells: ghost_crab
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+size: small
+shape: quadruped

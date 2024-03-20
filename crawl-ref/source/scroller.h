@@ -36,10 +36,10 @@ public:
     void set_tag(const string& tag) { m_tag = tag; }
 
     void set_more() { m_more.clear(); }
-    void set_more(formatted_string more) { m_more = move(more); }
+    void set_more(formatted_string more) { m_more = std::move(more); }
 
     void set_title() { m_title.clear(); };
-    void set_title(formatted_string title) { m_title = move(title); };
+    void set_title(formatted_string title) { m_title = std::move(title); };
 
     void scroll_to_end();
     void set_scroll(int y);

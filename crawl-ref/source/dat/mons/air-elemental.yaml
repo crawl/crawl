@@ -1,0 +1,19 @@
+name: "air elemental"
+glyph: {char: "E", colour: etc_air}
+flags: [flies, see_invis, insubstantial]
+resists: {elec: 3}
+xp_mult: 6
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 15}
+hd: 6
+hp_10x: 330
+ac: 2
+ev: 18
+spells: air_elemental
+intelligence: brainless
+speed: 25
+size: large
+shape: misc

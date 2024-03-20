@@ -10,6 +10,7 @@ function init_demonic(e)
   e.weight('2')
   e.kprop('_ = bloody')
 
+  e.nsubst('. = 1:$ / *:.')
   e.subst('S = ......S')
   e.lua_marker('S', fog_machine { pow_max = 10, delay_min = 10, delay_max = 10,
                                   size = 2, start_clouds = 1,
@@ -18,13 +19,20 @@ function init_demonic(e)
 
   if you.absdepth() <= 8 then
     e.kmons('._ = ufetubus / white imp / shadow imp / w:5 quasit / w:300 nothing')
+  elseif you.absdepth() <= 10 then
+    e.kmons('._ = quasit w:5 / rust devil / orange demon / ice devil / ' ..
+                 'red devil / hellwing w:5 / chaos spawn w:5 / ' ..
+                 'ynoxinul w:5 / w:460 nothing')
   elseif you.absdepth() <= 12 then
-    e.kmons('._ = w:10 quasit / w:30 any common demon /  w:300 nothing')
+    e.kmons('._ = rust devil / orange demon / ice devil w:5 / ' ..
+                 'red devil w:5 / hellwing w:5 / chaos spawn / ynoxinul / ' ..
+                 'smoke demon / soul eater w:5 / w:530 nothing')
   else
     e.kmons('._ = w:60 any common demon / w:300 nothing')
   end
   e.kmons('P = demonic plant')
   e.kfeat('t = demonic_tree')
+  e.ftile('._$YSPt = floor_pebble_lightred')
 end
 }}
 
@@ -97,6 +105,7 @@ MAP
 ENDMAP
 
 NAME:   serial_demonic_f
+WEIGHT: 5
 SUBST:  . = .......__ttPP
 SUBST:  w = .wwW
 : init_demonic(_G)

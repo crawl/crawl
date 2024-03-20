@@ -227,10 +227,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll bouda / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
-                "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
+                "zombie w:15 / skeleton / wight w:5 / phantom",
                 "scorpion / water moccasin w:2 / redback w:1 / killer bee w:2",
                 "endoplasm / w:5 jelly",
-                "giant cockroach w:20 / scorpion / worm"
+                "giant cockroach w:20 / scorpion / ribbon worm"
             }
         elseif round <= 5 then
             mon_set = {
@@ -252,9 +252,9 @@ function arena_sprint_get_monster_set(round, boss)
                     w:5 tarantella / w:5 redback / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
-                "jelly / w:5 endoplasm / floating eye / w:2 shining eye",
+                "jelly / w:5 endoplasm / glass eye / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
-                "zombie / skeleton / wight / necrophage /\
+                "zombie / skeleton / wight / weeping skull w:5 /\
                     phantom w:5 / w:1 josephine",
                 "w:7 ice devil / rust devil w:5 / orange demon / red devil w:5 /\
                     sixfirhy w:2 / hellwing",
@@ -274,7 +274,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "bullfrog w:20 / blink frog w:6 / cane toad w:6 / prince ribbit w:2",
                 "gnoll / gnoll bouda / gnoll sergeant / hound / wolf",
                 -- Gimmicks
-                "neqoxec", "orc priest", "vampire bat",
+                "brain worm", "orc priest", "vampire bat",
                 "kobold name:flame-cult_kobold n_rpl n_noc n_des perm_ench:inner_flame"
              }
         elseif round <= 10 then
@@ -292,10 +292,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Swamp",
                 "place:Spider",
                 "place:Snake",
-                "jelly / floating eye / w:2 shining eye /\
+                "jelly / glass eye / w:2 shining eye /\
                     w:2 golden eye / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
-                "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
+                "w:3 skeletal warrior / wight / weeping skull / zombie w:5 /\
                     skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
                     shadow w:3 / silent spectre / w:4 josephine",
                 "common demon",
@@ -312,16 +312,15 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:20 / centaur warrior w:2 / nessos w:1",
                 "ugly thing",
-                "tyrant leech / worm",
+                "tyrant leech / ribbon worm / brain worm w:5",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
                 "rime drake / swamp drake / steam dragon / swamp dragon /\
                  acid dragon / komodo dragon",
-                "necrophage / w:2 ghoul / bog body",
                 "shapeshifter hd:7",
                 "polar bear",
                 -- Gimmicks
-                "neqoxec",
+                "brain worm",
                 "kobold name:flame-cult_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion"
             }
@@ -363,7 +362,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "rime drake w:5 / swamp drake / swamp dragon /\
                     acid dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
                     fire dragon w:5 / ice dragon w:5 / storm dragon w:1",
-                "necrophage / ghoul / bog body",
+                "ghoul / bog body w:20",
                 "shapeshifter",
                 -- Gimmicks
                 "neqoxec",
@@ -425,10 +424,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "wraith / wight / phantasmal warrior / skeletal warrior /\
                     vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
                     profane servitor",
-                "vault guard / necromancer / hell knight / wizard /\
+                "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
                     killer klown",
                 "base draconian / w:1 nonbase draconian",
-                "golden eye / shining eye / floating eye / eye of devastation /\
+                "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
                 "vampire / vampire knight / vampire mage / w:1 jory",
                 -- Gimmicks
@@ -488,10 +487,10 @@ function arena_sprint_get_monster_set(round, boss)
                     golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
                 "glowing shapeshifter",
                 "hell knight w:20 / w:1 margery",
-                "vault guard / necromancer / hell knight / wizard /\
+                "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
                     killer klown",
                 "base draconian / w:5 nonbase draconian",
-                "golden eye / shining eye / floating eye / eye of devastation /\
+                "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
                 "vampire knight / vampire mage / w:1 jory",
                 "hellion / hell sentinel / hell beast / hell hog / hell knight /\
@@ -507,7 +506,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "curse toe / w:20 wandering mushroom / w:4 murray",
                 "reaper / hell beast / geryon w:1",
                 "ghost moth / w:30 lorocyproca / quicksilver ooze",
-                "floating eye w:5 / ettin",
+                "glass eye w:5 / ettin",
                 "executioner / w:1 ignacio",
                 "ghost moth / moth of wrath / w:30 vampire mosquito"
             }
@@ -530,7 +529,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Spider:$ w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
-                "place:Slime:$ / w:30 acid blob / azure jelly / floating eye /\
+                "place:Slime:$ / w:30 acid blob / azure jelly / glass eye /\
                     quicksilver ooze",
                 "dancing weapon ; bardiche",
                 "spriggan defender / spriggan air mage / spriggan druid /\
@@ -559,7 +558,7 @@ function arena_sprint_get_monster_set(round, boss)
                     golden dragon / quicksilver dragon / iron dragon",
                 "glowing shapeshifter hd:20",
                 "w:5 base draconian / nonbase draconian",
-                "golden eye / shining eye / floating eye / eye of devastation /\
+                "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
                 "w:20 hellion / hell sentinel / hell beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
@@ -572,7 +571,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
                 "ghost moth / w:30 lorocyproca / quicksilver ooze",
-                "floating eye w:5 / tentacled monstrosity",
+                "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 "ghost moth / moth of wrath / vampire mosquito",
                 -- Aaaarggghhhhh!
@@ -603,7 +602,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "green death / death drake w:15",
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "w:40 nagaraja / guardian serpent / w:5 anaconda",
-                "w:30 acid blob / azure jelly / floating eye / quicksilver ooze",
+                "w:30 acid blob / azure jelly / glass eye / quicksilver ooze",
                 "dancing weapon ; bardiche ego:speed",
                 "spriggan air mage",
                 "w:15 ancient lich / w:6 curse toe",
@@ -630,7 +629,7 @@ function arena_sprint_get_monster_set(round, boss)
                     quicksilver dragon w:15 / iron dragon",
                 "glowing shapeshifter hd:20",
                 "nonbase draconian",
-                "golden eye / shining eye / floating eye w:15 / eye of devastation /\
+                "golden eye / shining eye / glass eye w:15 / eye of devastation /\
                     great orb of eyes / w:5 ophan",
                 "w:30 hellion / hell sentinel / hell beast / hell hog / hell knight /\
                     hell hound / hellephant / w:2 nellie",
@@ -643,7 +642,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
                 "ghost moth / w:30 lorocyproca / quicksilver ooze",
-                "floating eye w:5 / tentacled monstrosity",
+                "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 -- Just die already!
                 "daeva",
@@ -692,7 +691,7 @@ function arena_sprint_init_boss_table()
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra / " ..
-                 "wizard name:witch n_rpl n_des n_noc col:green hp:130 " ..
+                 "arcanist name:witch n_rpl n_des n_noc col:green hp:130 " ..
                    "spells:mephitic_cloud.15.wizard;" ..
                           "summon_hydra.15.wizard;" ..
                           "invisibility.15.wizard;" ..
@@ -746,16 +745,17 @@ function arena_sprint_init_boss_table()
     bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
-    -- Pan sets are based on those in pan.des
-    bs[10] = {"neqoxec / cacodemon / tormentor / tentacled monstrosity / " ..
-              "floating eye / golden eye / eye of devastation / " ..
-              "shining eye", "mnoleg", "glowing rune of zot"}
+    -- Pan sets are very roughly based on those in pan.des
+    bs[10] = {"shadow demon / cacodemon / protean progenitor / " ..
+              "tentacled monstrosity / glass eye / golden eye / " ..
+              "eye of devastation / shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
-              "glowing orange brain / titan / lich / draconian annihilator / " ..
+              "nagaraja / merfolk aquamancer / jorogumo / " ..
+              "fenstrider witch / titan / lich / draconian annihilator / " ..
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
-    bs[12] = {"efreet / sun demon / ynoxinul / balrug / brimstone fiend",
+    bs[12] = {"efreet / sun moth / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"soul eater / lorocyproca / executioner / shadow wraith",
+    bs[13] = {"soul eater / reaper / executioner / curse skull",
               "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
                "khufu hp:500", "golden rune of zot"}
@@ -1032,7 +1032,7 @@ KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:17 use_all ; \
             book of death | book of displacement |\
             book of the earth | book of burglary | book of annihilations |\
             grand grimoire | necronomicon | book of power | book of chaos |\
-            book of the moon | book of blasting | ozocubu's autobiography
+            book of the moon | book of blasting
 KFEAT:  EP = scroll shop greed:10 use_all count:14 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
@@ -1080,7 +1080,7 @@ KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:8 greed:7 use_al
             dragon-blood talisman | granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
-            staff of poison | staff of death | staff of conjuration
+            staff of alchemy | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane quick blade | mundane demon blade |\
             mundane triple sword | mundane broad axe |\

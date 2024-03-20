@@ -1,0 +1,18 @@
+name: "white imp"
+glyph: {char: "5", colour: white}
+flags: [flies, speaks]
+resists: {poison: 1, fire: -1, cold: 2}
+holiness: [demonic]
+will: 10
+attacks:
+ - {type: hit, flavour: cold, damage: 4}
+hd: 2
+hp_10x: 110
+ac: 4
+ev: 10
+spells: white_imp
+shout: shout
+intelligence: human
+uses: open_doors
+size: little
+shape: humanoid_winged

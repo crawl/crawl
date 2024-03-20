@@ -471,7 +471,9 @@ bool cell_is_runed(const coord_def &p)
  */
 bool feat_is_statuelike(dungeon_feature_type feat)
 {
-    return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
+    return feat == DNGN_ORCISH_IDOL
+      || feat == DNGN_GRANITE_STATUE
+      || feat == DNGN_METAL_STATUE;
 }
 
 /** Is this feature permanent, unalterable rock?
@@ -520,13 +522,6 @@ bool feat_is_water(dungeon_feature_type feat)
            || feat == DNGN_OPEN_SEA
            || feat == DNGN_TOXIC_BOG
            || feat == DNGN_MANGROVE;
-}
-
-/** Does this feature have enough water to keep water-only monsters alive in it?
- */
-bool feat_is_watery(dungeon_feature_type feat)
-{
-    return feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE;
 }
 
 /** Is this feature a kind of lava?
@@ -675,6 +670,14 @@ bool feat_is_fountain(dungeon_feature_type feat)
            || feat == DNGN_FOUNTAIN_SPARKLING
            || feat == DNGN_FOUNTAIN_BLOOD
            || feat == DNGN_DRY_FOUNTAIN;
+}
+
+/** Is this feature a pile of food?
+ */
+bool feat_is_food(dungeon_feature_type feat)
+{
+    return feat == DNGN_CACHE_OF_FRUIT
+           || feat == DNGN_CACHE_OF_MEAT;
 }
 
 /** Is this feature non-solid enough that you can reach past it?
@@ -884,7 +887,7 @@ int slime_wall_corrosion(actor* act)
     if (actor_slime_wall_immune(act))
         return 0;
 
-    return count_adjacent_slime_walls(act->pos());
+    return count_adjacent_slime_walls(act->pos()) * 4;
 }
 
 // slime wall damage under Jiyva's oozemancy; this should only affect monsters
@@ -1684,7 +1687,7 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
 void fall_into_a_pool(dungeon_feature_type terrain)
 {
     if (terrain == DNGN_DEEP_WATER && (you.can_water_walk()
-                                       || form_likes_water()))
+                                       || form_can_swim()))
     {
         return;
     }

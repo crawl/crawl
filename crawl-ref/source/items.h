@@ -29,6 +29,7 @@ enum item_source_type
 #endif
     IT_SRC_START,
     IT_SRC_SHOP,
+    AQ_INVENTED,
 
     // Empty space for new non-wizmode acquisition methods
 
@@ -58,7 +59,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p,
                         bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
-bool move_item_to_inv(item_def& item);
+bool move_item_to_inv(item_def& item, bool quiet = false);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
 item_def* auto_assign_item_slot(item_def& item);
 void mark_items_non_pickup_at(const coord_def &pos);
@@ -97,13 +98,15 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
+bool item_is_unusual(const item_def& item);
+bool item_is_worth_listing(const item_def& item);
 vector<item_def*> item_list_on_square(int obj);
 vector<const item_def*> const_item_list_on_square(int obj);
 
-bool copy_item_to_grid(item_def &item, const coord_def& p,
-                       int quant_drop = -1,    // item.quantity by default
-                       bool mark_dropped = false,
-                       bool silent = false);
+int copy_item_to_grid(const item_def &item, const coord_def& p,
+                      int quant_drop = -1,    // item.quantity by default
+                      bool mark_dropped = false,
+                      bool silent = false);
 coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
@@ -115,6 +118,9 @@ void drop();
 
 int inv_count();
 int runes_in_pack();
+int gems_found();
+int gems_lost();
+int gems_held_intact();
 
 bool pickup_single_item(int link, int qty);
 
@@ -172,7 +178,16 @@ object_class_type get_random_item_mimic_type();
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);
 
+#define WEAPON_NAME_KEY "weapon_name"
+
+string get_weapon_name(const item_def &item, bool full_name);
+void name_weapon(item_def &item);
+void maybe_name_weapon(item_def &item, bool silent = false);
+void say_farewell_to_weapon(const item_def &item);
+
 bool valid_item_index(int i);
+
+void maybe_split_nets(item_def &item, const coord_def& where);
 
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're

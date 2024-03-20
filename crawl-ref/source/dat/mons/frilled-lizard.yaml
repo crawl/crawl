@@ -1,0 +1,17 @@
+name: "frilled lizard"
+glyph: {char: "l", colour: green}
+flags: [cold_blood]
+genus: giant_lizard
+will: 0
+attacks:
+ - {type: bite, damage: 3}
+hd: 1
+hp_10x: 20
+ac: 0
+ev: 15
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+size: tiny
+shape: quadruped

@@ -1,0 +1,20 @@
+name: "lava snake"
+glyph: {char: "S", colour: yellow}
+flags: [warm_blood]
+resists: {fire: 3, cold: -1}
+xp_mult: 17
+genus: snake
+will: 10
+attacks:
+ - {type: bite, flavour: fire, damage: 7}
+hd: 3
+hp_10x: 165
+ac: 2
+ev: 17
+spells: lava_snake
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: lava
+size: small
+shape: snake

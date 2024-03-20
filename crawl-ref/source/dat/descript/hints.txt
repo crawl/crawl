@@ -149,6 +149,7 @@ You've just converted to worshipping <w>Ashenzari</w>. Unlike other gods,
 Ashenzari only cares about curses. As you explore the dungeon, Ashenzari will
 offer curses, locking an item onto you. The more cursed items you wear, the more
 Ashenzari will enhance your skills and otherwise help you.
+%%%%
 HINT_CONVERT Gozag
 
 You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
@@ -158,11 +159,11 @@ death.
 HINT_CONVERT Ru
 
 You've just converted to worshipping <w>Ru</w>. Unlike other gods, Ru grants
-piety (divine favour) in exchange for permanent sacrifices, like giving up your
-ability to drink potions while endangered, or losing the ability to train
-certain skills. The more piety you have, the more abilities Ru will grant, and
-the more powerful those abilities will become. Ru will offer more sacrifices as
-you explore the depths of the dungeon.
+piety (divine favour) in exchange for permanent sacrifices, like losing the
+ability to train certain skills, or permanently losing a hand. The more piety
+you have, the more abilities Ru will grant, and the more powerful those
+abilities will become. Ru will offer more sacrifices as you explore the depths
+of the dungeon.
 %%%%
 HINT_CONVERT Uskayaw
 
@@ -873,7 +874,7 @@ HINT_YOU_RESIST
 
 Most attacks in Crawl are defended against by your AC. Some, like fire or
 draining attacks, can be further reduced by specific resistances. Other magical
-effects, such as Slow or Confusion hexes, are resisted by your Willpower.
+effects, such as Slow or Confusion hexes, are resisted by your willpower.
 You'll find items that increase both kinds of resistances.
 
 To view your current set of resistances, <localtiles><w>right-click</w> on the

@@ -153,6 +153,8 @@ static void _initialize()
     if (crawl_state.build_db)
         end(0);
 
+    crawl_state.use_des_cache = true;
+
 #ifdef USE_TILE_LOCAL
     loading_screen_close();
 #endif
@@ -446,6 +448,9 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
     for (size_t i = 0; i < entries.size(); ++i)
     {
         const auto& entry = entries[i];
+        if (entry.id == GAME_TYPE_DESCENT && Version::ReleaseType != VER_ALPHA)
+            continue;
+
         auto label = make_shared<Text>();
 
 #ifdef USE_TILE_LOCAL
@@ -454,7 +459,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto tile = make_shared<Image>();
         tile->set_tile(tile_def(tileidx_gametype(entry.id)));
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
         hbox->add_child(label);
 #endif
 
@@ -463,14 +468,14 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
         hbox->set_margin_for_sdl(2, 10, 2, 2);
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->id = entry.id;
         btn->description = entry.description;
         btn->highlight_colour = LIGHTGREY;
-        container->add_button(move(btn), 0, i);
+        container->add_button(std::move(btn), 0, i);
     }
 }
 
@@ -488,9 +493,9 @@ static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
 
     auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
-    btn->set_child(move(hbox));
+    btn->set_child(std::move(hbox));
 #else
-    btn->set_child(move(label));
+    btn->set_child(std::move(label));
 #endif
     btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
     btn->id = NUM_GAME_TYPE + num_chars;
@@ -509,7 +514,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 #ifdef USE_TILE_LOCAL
         auto tile = make_shared<ui::PlayerDoll>(chars.at(i).doll);
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
 #endif
 
         const COLOURS fg = chars.at(i).save_loadable ? WHITE : RED;
@@ -533,20 +538,20 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
         btn->id = NUM_GAME_TYPE + i;
         btn->highlight_colour = LIGHTGREY;
-        container->add_button(move(btn), 0, i);
+        container->add_button(std::move(btn), 0, i);
     }
 
     if (!chars.empty())
     {
         auto btn = _make_newgame_button(chars.size());
-        container->add_button(move(btn), 0, (int)chars.size());
+        container->add_button(std::move(btn), 0, (int)chars.size());
     }
 }
 
@@ -586,7 +591,7 @@ public:
         about->set_margin_for_crt(0, 0, 1, 0);
         about->set_margin_for_sdl(0, 0, 10, 0);
 
-        m_root->add_child(move(about));
+        m_root->add_child(std::move(about));
 
         auto grid = make_shared<Grid>();
         grid->set_margin_for_crt(0, 0, 1, 0);
@@ -602,7 +607,7 @@ public:
         input_text->set_margin_for_crt(0, 0, 1, 0);
         input_text->set_margin_for_sdl(0, 0, 10, 10);
 
-        grid->add_child(move(name_prompt), 0, 0);
+        grid->add_child(std::move(name_prompt), 0, 0);
         grid->add_child(input_text, 1, 0);
 
         descriptions = make_shared<Switcher>();
@@ -622,7 +627,7 @@ public:
         game_modes_menu->min_size().height = 2;
 #endif
 
-        grid->add_child(move(mode_prompt), 0, 1);
+        grid->add_child(std::move(mode_prompt), 0, 1);
         grid->add_child(game_modes_menu, 1, 1);
 
         save_games_menu = make_shared<OuterMenu>(num_saves > 1, 1, num_saves + 1);
@@ -641,7 +646,7 @@ public:
             save_games_menu->descriptions = descriptions;
 
             _construct_save_games_menu(save_games_menu, chars);
-            grid->add_child(move(save_prompt), 0, 2);
+            grid->add_child(std::move(save_prompt), 0, 2);
             grid->add_child(save_games_menu, 1, 2);
 
             game_modes_menu->linked_menus[2] = save_games_menu;
@@ -675,7 +680,7 @@ public:
         grid->column_flex_grow(0) = 1;
         grid->column_flex_grow(1) = 10;
 
-        m_root->add_child(move(grid));
+        m_root->add_child(std::move(grid));
 
         string instructions_text;
         // TODO: these can overflow on console 80x24 and won't line-wrap, is
@@ -979,7 +984,7 @@ static void _show_startup_menu(newgame_def& ng_choice,
     auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
     auto popup = make_shared<ui::Popup>(startup_ui);
 
-    ui::run_layout(move(popup), startup_ui->done);
+    ui::run_layout(std::move(popup), startup_ui->done);
 
     if (startup_ui->end_game || crawl_state.seen_hups)
     {
