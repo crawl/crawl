@@ -8,5 +8,6 @@ enum targ_mode_type
     TARG_HOSTILE,
     TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_MOBILE_MONSTER,    // Non-stationary monsters
+    TARG_NONE, // Non-targeted 
     TARG_NUM_MODES
 };

@@ -1957,6 +1957,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
+              !is_targeted                        ? TARG_NONE :
               testbits(flags, spflag::neutral)    ? TARG_ANY :
               testbits(flags, spflag::helpful)    ? TARG_FRIEND :
               testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
@@ -1972,7 +1973,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         // sure why
         const char *prompt = get_spell_target_prompt(spell);
 
-        const bool needs_path = !testbits(flags, spflag::target)
+        const bool needs_path = testbits(flags, spflag::dir_or_target)
                                 // Apportation must be spflag::target, since a
                                 // shift-direction makes no sense for it, but
                                 // it nevertheless requires line-of-fire.

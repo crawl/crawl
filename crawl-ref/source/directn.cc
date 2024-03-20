@@ -1238,7 +1238,7 @@ coord_def direction_chooser::find_default_target() const
                                        hitfunc,
                                        LS_FLIPVH);
     }
-    else if ((mode != TARG_ANY && mode != TARG_FRIEND)
+    else if ((mode != TARG_ANY && mode != TARG_FRIEND && mode != TARG_NONE)
              || self == confirm_prompt_type::cancel)
     {
         success = find_default_monster_target(result);
@@ -2805,6 +2805,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     {
     case TARG_ANY:
         return true;
+    case TARG_NONE:
+        return false;
     case TARG_HOSTILE:
         return mons_attitude(*mon) == ATT_HOSTILE
             || mon->has_ench(ENCH_FRENZIED);
@@ -2840,7 +2842,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
     }
 
     // Target the player for friendly and general spells.
-    if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
+    if ((mode == TARG_FRIEND || mode == TARG_ANY || mode == TARG_NONE) && where == you.pos())
         return true;
 
     // Don't target out of range
