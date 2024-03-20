@@ -70,6 +70,7 @@ bewildered foes.
 Hunter
 
 Hunters carry a shortbow, light armour and a scroll of butterflies.
+# TODO: fix this for coglins
 %%%%
 Hexslinger
 
@@ -106,10 +107,10 @@ Shapeshifter
 Shapeshifters use talismans to shift their form, making them powerful melee
 fighters (especially when unarmed) at the cost of armour.
 %%%%
-Venom Mage
+Alchemist
 
-Venom Mages start with the Sting spell, and their poison magic is very
-effective against susceptible foes.
+Alchemists start with the Sting spell, and their magic is very effective against
+foes susceptible to poison.
 %%%%
 Wanderer
 

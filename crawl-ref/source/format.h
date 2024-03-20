@@ -114,7 +114,7 @@ template<typename R>
 formatted_string&& operator+(formatted_string&& lhs, const R&& rhs)
 {
     lhs += rhs;
-    return move(lhs);
+    return std::move(lhs);
 }
 
 inline formatted_string operator+(const formatted_string& lhs, const char* rhs)
@@ -127,7 +127,7 @@ inline formatted_string operator+(const formatted_string& lhs, const char* rhs)
 inline formatted_string&& operator+(formatted_string&& lhs, const char* rhs)
 {
     lhs += rhs;
-    return move(lhs);
+    return std::move(lhs);
 }
 
 int count_linebreaks(const formatted_string& fs);

@@ -3,7 +3,7 @@
     "{short_name}",
     "{name}", {adjective}, {genus},
     {species_flags},
-    {xp}, {hp}, {mp}, {mr},
+    {xp}, {hp}, {mp}, {wl},
     {monster_name},
     {habitat}, {undead}, {size},
     {str}, {int}, {dex},
@@ -15,5 +15,7 @@
     {{ {recommended_weapons} }},
     {walking_verb},
     {altar_action},
+    {child_name},
+    {orc_name},
 }} }},
 {tag_major_version_closer}

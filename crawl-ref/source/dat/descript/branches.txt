@@ -74,7 +74,7 @@ away in secret chambers without any entrance.
 %%%%
 Vaults
 
-Possibly constructed by some powerful madman, the Vaults are said to be home to
+Possibly constructed by some powerful tyrant, the Vaults are said to be home to
 great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 %%%%
@@ -242,10 +242,12 @@ of well-armed humanoid warriors.
 %%%%
 Ice Cave
 
-The ice cave is a desolate cavern shaped from solid ice and filled with the
-echoes of bestial howls. The intricate carvings and statues which once lined
-its walls have been warped and obscured by centuries of slow melting and
-refreezing.
+The {{ if you.branch() == "Elf" or you.branch() == "Swamp" or
+you.branch() == "Snake" or you.branch() == "Shoals" or you.branch() == "Spider"
+then return "glacial chasm"; else return "ice cave"; end }} is a desolate cavern
+shaped from solid ice and filled with the echoes of bestial howls. The intricate
+carvings and statues which once lined its walls have been warped and obscured by
+centuries of slow melting and refreezing.
 %%%%
 Volcano
 

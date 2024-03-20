@@ -7,6 +7,7 @@
 
 %sdir gui/startup
 stonesoup STARTUP_STONESOUP
+ironsoup STARTUP_IRONSOUP
 tutorial STARTUP_TUTORIAL
 hints_mode STARTUP_HINTS
 dungeon_sprint STARTUP_SPRINT
@@ -227,7 +228,7 @@ FE JOB_FIRE_ELEMENTALIST
 IE JOB_ICE_ELEMENTALIST
 AE JOB_AIR_ELEMENTALIST
 EE JOB_EARTH_ELEMENTALIST
-VM JOB_VENOM_MAGE
+VM JOB_ALCHEMIST
 %syn LAST_JOB
 
 %sdir player
@@ -286,6 +287,12 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose body/animal_skin
 %finish SP_RECOMMENDED_KOBOLD
 %start
+%compose base/dwarf_m
+%compose body/animal_skin
+%compose hair/mountain_man
+%compose beard/garibaldi_red
+%finish SP_RECOMMENDED_MOUNTAIN_DWARF
+%start
 %compose base/merfolk_water_f
 %compose body/animal_skin
 %compose hair/green
@@ -303,14 +310,10 @@ base/mummy_m SP_RECOMMENDED_MUMMY
 %finish SP_RECOMMENDED_NAGA
 base/octopode1 SP_RECOMMENDED_OCTOPODE
 %start
-%compose base/ogre_m
+%compose base/oni_red_m
 %compose body/animal_skin
 %compose hair/short_black
-%finish SP_RECOMMENDED_OGRE
-%start
-%compose base/orc_f
-%compose body/animal_skin
-%finish SP_RECOMMENDED_HILL_ORC
+%finish SP_RECOMMENDED_ONI
 %start
 %compose base/spriggan_m
 %compose body/animal_skin
@@ -333,7 +336,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/arwen
 %finish SP_RECOMMENDED_VAMPIRE
 %start
-%compose base/vine_stalker_f
+%compose base/vine_stalker_green_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_VINE_STALKER
 %start
@@ -345,6 +348,11 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/meteoran_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_METEORAN
+%start
+%compose base/coglin
+%compose body/animal_skin
+%compose hair/short_brown
+%finish SP_RECOMMENDED_COGLIN
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -362,13 +370,13 @@ enum:SP_RECOMMENDED_GHOUL SP_GHOUL
 enum:SP_RECOMMENDED_GNOLL SP_GNOLL
 enum:SP_RECOMMENDED_HUMAN SP_HUMAN
 enum:SP_RECOMMENDED_KOBOLD SP_KOBOLD
+enum:SP_RECOMMENDED_MOUNTAIN_DWARF SP_MOUNTAIN_DWARF
 enum:SP_RECOMMENDED_MERFOLK SP_MERFOLK
 enum:SP_RECOMMENDED_MINOTAUR SP_MINOTAUR
 enum:SP_RECOMMENDED_MUMMY SP_MUMMY
 enum:SP_RECOMMENDED_NAGA SP_NAGA
 enum:SP_RECOMMENDED_OCTOPODE SP_OCTOPODE
-enum:SP_RECOMMENDED_OGRE SP_OGRE
-enum:SP_RECOMMENDED_HILL_ORC SP_HILL_ORC
+enum:SP_RECOMMENDED_ONI SP_ONI
 enum:SP_RECOMMENDED_SPRIGGAN SP_SPRIGGAN
 enum:SP_RECOMMENDED_TENGU SP_TENGU
 enum:SP_RECOMMENDED_TROLL SP_TROLL
@@ -376,4 +384,5 @@ enum:SP_RECOMMENDED_VAMPIRE SP_VAMPIRE
 enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
 enum:SP_RECOMMENDED_DJINNI SP_DJINNI
 enum:SP_RECOMMENDED_METEORAN SP_METEORAN
+enum:SP_RECOMMENDED_COGLIN SP_COGLIN
 %syn LAST_SPECIES

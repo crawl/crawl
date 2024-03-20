@@ -1184,6 +1184,9 @@ Orange
 
 Banana
 
+# fruit-adjacent
+Banana Bread
+
 Pear
 
 Apple
@@ -1211,6 +1214,14 @@ Breadfruit
 Eggfruit
 
 Dragonfruit
+
+Durian
+
+Jackfruit
+
+Longan
+
+Tamarind
 
 Guava
 

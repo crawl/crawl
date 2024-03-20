@@ -181,6 +181,7 @@ enum brand_type // item_def.special
 #endif
     SPWPN_WEAKNESS,
     SPWPN_VULNERABILITY,
+    SPWPN_FOUL_FLAME,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
@@ -369,6 +370,8 @@ enum missile_type
     MI_THROWING_NET,
     MI_BOOMERANG,
 
+    MI_SLUG,
+
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
@@ -401,6 +404,28 @@ enum rune_type
     RUNE_SPIDER,
     RUNE_FOREST, // only used in sprints
     NUM_RUNE_TYPES
+};
+
+// Order roughly matches branch_type.
+enum gem_type
+{
+    GEM_DUNGEON,
+#if TAG_MAJOR_VERSION == 34
+    GEM_ORC,
+#endif
+    GEM_ELF,
+    GEM_LAIR,
+    GEM_SWAMP,
+    GEM_SHOALS,
+    GEM_SNAKE,
+    GEM_SPIDER,
+    GEM_SLIME,
+    GEM_VAULTS,
+    GEM_CRYPT,
+    GEM_TOMB,
+    GEM_DEPTHS,
+    GEM_ZOT,
+    NUM_GEM_TYPES
 };
 
 enum scroll_type
@@ -543,7 +568,7 @@ enum stave_type
 #endif
     STAFF_FIRE,
     STAFF_COLD,
-    STAFF_POISON,
+    STAFF_ALCHEMY,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENERGY,
 #endif
@@ -622,7 +647,7 @@ enum weapon_type
 #endif
 
 #if TAG_MAJOR_VERSION > 34
-    WPN_HAND_CROSSBOW,
+    WPN_HAND_CANNON,
 #endif
     WPN_ARBALEST,
 #if TAG_MAJOR_VERSION > 34
@@ -674,7 +699,7 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION == 34
     WPN_FUSTIBALUS,
-    WPN_HAND_CROSSBOW,
+    WPN_HAND_CANNON,
     WPN_TRIPLE_CROSSBOW,
 
     WPN_CUTLASS,
@@ -771,6 +796,7 @@ enum wand_type
     WAND_LIGHT,
     WAND_QUICKSILVER,
     WAND_ROOTS,
+    WAND_WARPING,
     NUM_WANDS
 };
 
@@ -828,4 +854,13 @@ enum talisman_type
     TALISMAN_FLUX,
     TALISMAN_SPELLFORGED,
     NUM_TALISMANS,
+};
+
+enum special_gizmo_type
+{
+    SPGIZMO_NORMAL,
+    SPGIZMO_MANAREV,
+    SPGIZMO_GADGETEER,
+    SPGIZMO_PARRYREV,
+    SPGIZMO_AUTODAZZLE,
 };

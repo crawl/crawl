@@ -18,6 +18,10 @@ const int UMBRA_TO_HIT_MALUS = -3;
 const int CONFUSION_TO_HIT_MALUS = -5;
 const int TRANSLUCENT_SKIN_TO_HIT_MALUS = -2;
 
+const int BULLSEYE_TO_HIT_DIV = 6;
+
+const int REPEL_MISSILES_EV_BONUS = 15;
+
 class attack
 {
 // Public Properties
@@ -42,9 +46,6 @@ public:
     int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;     // TODO: And this too
 
-    int     min_delay;
-    int     final_attack_delay;
-
     beam_type special_damage_flavour;
 
     bool    stab_attempt;
@@ -61,7 +62,7 @@ public:
     attack_flavour  attk_flavour;
     int             attk_damage;
 
-    item_def        *weapon;
+    const item_def  *weapon;
     brand_type      damage_brand;
     skill_type      wpn_skill;
 
@@ -80,8 +81,6 @@ public:
     string     aux_attack, aux_verb;
 
     item_def        *defender_shield;
-
-    bool      fake_chaos_attack;
 
     bool simu;
 
@@ -131,6 +130,7 @@ protected:
     virtual int calc_base_unarmed_damage() const;
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
+    int apply_rev_penalty(int damage) const;
     virtual int calc_damage();
     int lighting_effects();
     int test_hit(int to_hit, int ev, bool randomise_ev);
@@ -157,10 +157,12 @@ protected:
     bool distortion_affects_defender();
     void antimagic_affects_defender(int pow);
     void pain_affects_defender();
-    void chaos_affects_defender();
     brand_type random_chaos_brand();
     void drain_defender();
     void drain_defender_speed();
+    void maybe_trigger_jinxbite();
+    void maybe_trigger_fugue_wail(const coord_def pos);
+    void maybe_trigger_autodazzler();
 
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);

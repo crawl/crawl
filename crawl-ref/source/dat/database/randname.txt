@@ -177,12 +177,10 @@ of @god_name@
 ######################################################
 # 2. ARMOUR
 ######################################################
-robe
-
-@armour@
 %%%%
-body armour
+talisman
 
+# TODO?
 @armour@
 %%%%
 armour
@@ -1211,6 +1209,8 @@ jade
 pearl
 
 tiger eye
+
+ametrine
 %%%%
 ######################################################
 # Jewellery appearance
@@ -1321,6 +1321,8 @@ lapis lazuli
 
 glass
 
+carnelian
+
 w:2
 gossamer
 %%%%
@@ -1365,8 +1367,6 @@ garnet
 ruby
 
 jade
-
-ruby
 
 crystal
 

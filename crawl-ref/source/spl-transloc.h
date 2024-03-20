@@ -5,6 +5,8 @@
 class actor;
 class dist;
 
+const int GOLUBRIA_FUZZ_RANGE = 2;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
@@ -17,10 +19,17 @@ int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
 
 string electric_charge_impossible_reason(bool allow_safe_monsters);
-spret electric_charge(int powc, bool fail, const coord_def &target);
+spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target);
 bool find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc, dist &target);
 string movement_impossible_reason();
+
+coord_def get_electric_charge_landing_spot(const actor& agent,
+                                           coord_def target,
+                                           string* fail_reason = nullptr);
+
+bool valid_electric_charge_target(const actor& agent, coord_def target,
+                                  string* fail_reason = nullptr);
 
 void you_teleport();
 void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,
@@ -30,14 +39,14 @@ bool you_teleport_to(const coord_def where,
 bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
                           bool wizard_tele = false);
 
-spret cast_portal_projectile(int pow, bool fail);
+spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
-spret cast_manifold_assault(int pow, bool fail, bool real = true);
-string weapon_unprojectability_reason();
+spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real = true,
+                            actor* katana_defender = nullptr);
+string weapon_unprojectability_reason(const item_def* wpn);
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
-int golubria_fuzz_range();
 bool golubria_valid_cell(coord_def p, bool just_check = false);
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
@@ -49,6 +58,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
 void attract_monsters(int delay);
+void attract_monster(monster &m, int max_move);
 vector<monster *> find_chaos_targets(bool just_check = false);
 spret word_of_chaos(int pow, bool fail);
 spret blinkbolt(int power, bolt &beam, bool fail);

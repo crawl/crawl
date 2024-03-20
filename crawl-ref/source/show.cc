@@ -15,6 +15,7 @@
 #include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "god-companions.h" // Beogh Blood for Blood markers
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
@@ -146,6 +147,9 @@ static void _update_feat_at(const coord_def &gp)
             env.map_knowledge(gp).flags |= MAP_SANCTUARY_2;
     }
 
+    if (is_blasphemy(gp))
+        env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
+
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
@@ -177,6 +181,14 @@ static void _update_feat_at(const coord_def &gp)
                 && you.see_cell_no_trans(gp)))
     {
         env.map_knowledge(gp).flags |= MAP_ICY;
+    }
+
+    // XXX: This feels like is should be more separated somehow...
+    if (you.religion == GOD_BEOGH
+        && you.props.exists(BEOGH_RES_PIETY_NEEDED_KEY)
+        && tile_has_valid_bfb_corpse(gp))
+    {
+        env.map_knowledge(gp).flags |= MAP_BFB_CORPSE;
     }
 
     if (emphasise(gp))
@@ -220,6 +232,7 @@ static show_item_type _item_to_show_code(const item_def &item)
         else
             return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
+    case OBJ_GEMS:       return SHOW_ITEM_GEM;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
     case OBJ_RUNES:      return SHOW_ITEM_RUNE;
     default:             return SHOW_ITEM_ORB; // bad item character
@@ -450,10 +463,6 @@ static void _update_monster(monster* mons)
     if (!you.turn_is_over)
         mons->went_unseen_this_turn = false;
 
-    // Being submerged is not the same as invisibility.
-    if (mons->submerged())
-        return;
-
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
     if (env.grid(gp) == DNGN_SHALLOW_WATER
@@ -499,28 +508,33 @@ void show_update_at(const coord_def &gp, layers_type layers)
         return;
     else
         env.map_knowledge(gp).clear_monster();
+
+    force_show_update_at(gp, layers);
+}
+
+void force_show_update_at(const coord_def &gp, layers_type layers)
+{
     // The sequence is grid, items, clouds, monsters.
     // XX it actually seems to be grid monsters clouds items??
     _update_feat_at(gp);
+    if (!in_bounds(gp))
+        return;
 
-    if (in_bounds(gp))
+    if (layers & LAYER_MONSTERS)
     {
-        if (layers & LAYER_MONSTERS)
-        {
-            monster* mons = monster_at(gp);
-            if (mons && mons->alive())
-                _update_monster(mons);
-            else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
-                _mark_invisible_at(gp);
-        }
-
-        if (layers & LAYER_CLOUDS)
-            if (cloud_struct* cloud = cloud_at(gp))
-                _update_cloud(*cloud);
-
-        if (layers & LAYER_ITEMS)
-            update_item_at(gp);
+        monster* mons = monster_at(gp);
+        if (mons && mons->alive())
+            _update_monster(mons);
+        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
+            _mark_invisible_at(gp);
     }
+
+    if (layers & LAYER_CLOUDS)
+        if (cloud_struct* cloud = cloud_at(gp))
+            _update_cloud(*cloud);
+
+    if (layers & LAYER_ITEMS)
+        update_item_at(gp);
 }
 
 void show_init(layers_type layers)

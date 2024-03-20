@@ -68,7 +68,8 @@ struct bolt
                                            // changes
     bool        drop_item = false;     // should drop an item when done
     bool        item_mulches = false;  // item will mulch on hit
-    item_def*   item = nullptr;        // item to drop
+    const item_def*   item = nullptr;  // item to drop
+    const item_def*   launcher = nullptr; // origin launcher, if any
     coord_def   source = {0,0};           // beam origin
     coord_def   target = {0,0};           // intended target
     dice_def    damage = dice_def(0,0);
@@ -105,6 +106,8 @@ struct bolt
     bool   effect_known = true;   // did we _know_ this would happen?
     bool   effect_wanton = false; // could we have guessed it would happen?
 
+    bool   no_saving_throw = false;   // whether to ignore any saving throw
+                                      // this beam might otherwise have
     int    draw_delay = 15;       // delay used when drawing beam.
     int    explode_delay = 50;    // delay when drawing explosions.
     bool   redraw_per_cell = true; // whether to force a redraw after every cell
@@ -175,6 +178,8 @@ struct bolt
 private:
     bool can_see_invis = false;
     bool nightvision = false;
+
+    bool can_trigger_bullseye = false;
 
 public:
     bool is_enchantment() const; // no block/dodge, use willpower
@@ -295,6 +300,7 @@ public:
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
+    void handle_petrify_chaining(coord_def centre);
     void monster_post_hit(monster* mon, int dmg);
     // for players
     void affect_player();
@@ -312,6 +318,7 @@ private:
     void tracer_affect_monster(monster* mon);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
+    bool has_relevant_side_effect(monster* mon);
 
     // methods to change the path
     void bounce();
@@ -340,10 +347,10 @@ int ench_power_stepdown(int pow);
 bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);
 bool miasma_monster(monster* mons, const actor* who);
-bool napalm_monster(monster* mons, const actor* who, int levels = 1,
+bool sticky_flame_monster(monster* mons, const actor* who, int dur,
                     bool verbose = true);
-bool curare_actor(actor* source, actor* target, int levels, string name,
-                  string source_name);
+bool curare_actor(actor* source, actor* target, string name,
+                  string source_name, int bonus_poison = 0);
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false, bool explosion_hole = false);
@@ -352,7 +359,8 @@ spret zapping(zap_type ztype, int power, bolt &pbolt,
                    bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
 
-set<coord_def> create_feat_splash(coord_def center, int radius, int num, int dur);
+set<coord_def> create_feat_splash(coord_def center, int radius, int num, int dur,
+                                  dungeon_feature_type new_feat = DNGN_SHALLOW_WATER);
 
 void init_zap_index();
 void clear_zap_info_on_exit();
@@ -377,5 +385,8 @@ int omnireflect_chance_denom(int SH);
 
 void glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex);
+
+void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
+                                vector<coord_def> &targs, bool random);
 
 bolt setup_targeting_beam(const monster &mons);

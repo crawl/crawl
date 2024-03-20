@@ -141,8 +141,6 @@ spret cast_polar_vortex(int powc, bool fail)
     you.props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
     you.props[VORTEX_POWER_KEY] = powc;
     _set_vortex_durations();
-    if (you.has_mutation(MUT_TENGU_FLIGHT))
-        you.redraw_evasion = true;
 
     return spret::success;
 }
@@ -329,8 +327,6 @@ void polar_vortex_damage(actor *caster, int dur)
             bool leda = false; // squares with ledaed enemies are no-go
             if (actor* victim = actor_at(*dam_i))
             {
-                if (victim->submerged())
-                    continue;
                 if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
@@ -501,8 +497,6 @@ void cancel_polar_vortex(bool tloc)
             // Vortex ended by using something stairslike, so the destination
             // is safe
             you.duration[DUR_FLIGHT] = 0;
-            if (you.has_mutation(MUT_TENGU_FLIGHT))
-                you.redraw_evasion = true;
         }
     }
     you.duration[DUR_VORTEX] = 0;

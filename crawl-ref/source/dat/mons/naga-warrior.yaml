@@ -1,0 +1,22 @@
+name: "naga warrior"
+glyph: {char: "N", colour: blue}
+flags: [fighter, see_invis, speaks, warm_blood]
+resists: {poison: 1}
+xp_mult: 11
+species: naga
+will: 80
+attacks:
+ - {type: hit, damage: 24}
+ - {type: constrict, flavour: crush, damage: 5}
+hd: 10
+hp_10x: 750
+ac: 6
+ev: 10
+spells: naga_warrior
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 14}
+uses: weapons_armour
+size: large
+shape: naga

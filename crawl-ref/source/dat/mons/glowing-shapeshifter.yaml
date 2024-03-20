@@ -1,0 +1,15 @@
+name: "glowing shapeshifter"
+glyph: {char: "p", colour: lightred}
+genus: shapeshifter
+will: 80
+attacks:
+ - {type: hit, damage: 15}
+hd: 10
+hp_10x: 550
+ac: 0
+ev: 10
+has_corpse: true
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

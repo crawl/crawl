@@ -40,14 +40,14 @@ weakness.
 %%%%
 staff of Olgreb
 
-A staff which was once wielded by the mighty wizard Olgreb.
+A staff which was once wielded by the great alchemist Olgreb.
 %%%%
 crystal ball of Wucad Mu
 
 A perfect sphere of crystal, overflowing with magical energies.
 {{
     if you.race() == "Djinni" then
-        return "It is utterly useless to Djinni."
+        return "It is utterly useless to Djinn."
     end
 }}
 %%%%
@@ -108,12 +108,18 @@ scimitar of Flaming Death
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
 covering opponents in magical flame.
 %%%%
-# TAG_MAJOR_VERSION == 34
 eveningstar "Brilliance"
 
-A brightly shining eveningstar. It illuminates the dungeon's recesses, but its
-halo may alert enemies to your presence. Its light is hated by the undead, and
-reveals the machinations of those who would prefer to stay invisible.
+Soon after their fall, Yredelemnul attempted to twist holy energy into a dark
+mockery of itself, turning it against its progenitors and weakening it against
+undead and demons. They found out too late that such a complete perversion was
+uncontrollable; the foul flame they produced destabilised or destroyed
+everything it was infused into, except for several demonic test subjects and one
+stolen holy weapon. A lesser, and more stable, version of it became
+Yredelemnul's umbra.
+
+This is that weapon: an eveningstar with its light long fled, despite its name,
+and a shadow that repulses those its light used to comfort...
 %%%%
 demon blade "Leech"
 
@@ -183,13 +189,15 @@ An unholy crossbow, forged in the fires of Gehenna. It imbues the bolts it
 fires with the raw power of its namesake. Thankfully, the blasts this weapon
 produces never harm the one firing.
 %%%%
-# TAG_MINOR_VERSION == 34
 sword of the Doom Knight
 
 An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
 who eschewed the use of magic in combat, preferring to destroy her enemies with
 brute force. Unfortunately for her, not all of her opponents shared her
 limitations.
+
+It has felled countless great warriors under her grip, and the souls of those
+who had their lives taken beckon it to take even more under its new owner.
 %%%%
 morningstar "Eos"
 
@@ -303,8 +311,8 @@ animals, each chosen for the unique strengths it could grant the robe's wearer.
 cloak of the Thief
 
 A pitch-black cloak which allows its wearer to excel in the arts of thievery.
-As a precaution in case of detection, it also bears enchantments allowing the
-wearer to make a hasty retreat under cover of fog.
+Even the clumsy will find their footsteps softer and the shouts of their
+adversaries less attention-getting.
 %%%%
 # TAG_MAJOR_VERSION == 34
 tower shield "Bullseye"
@@ -555,7 +563,9 @@ powers of regeneration and magical protection, however, are hard to dispute.
 %%%%
 macabre finger necklace
 
-An ugly dangling finger on a string. It would look better with a ring on it.
+An ugly dangling finger on a string. Everything about it reeks of malign
+influences... but it's hard to avoid thinking that it would look better with a
+ring on it.
 %%%%
 # TAG_MAJOR_VERSION == 34
 boots of the spider
@@ -802,3 +812,10 @@ hand cannon "Mule"
 Hand cannons use magical dust to launch projectiles. The alchemists who craft
 them boast of their potency, but omit the smoke and noise blasted out with each
 shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.
+%%%%
+gloves of the gadgeteer
+
+A pair of suede gloves covered in a dizzing array of delicate sigils. While
+originally intended to aid in the crafting of magical devices, they are
+nonetheless useful for wringing every last drop of power out of someone else's
+work.

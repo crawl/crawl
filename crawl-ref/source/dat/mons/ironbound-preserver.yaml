@@ -1,0 +1,19 @@
+name: "ironbound preserver"
+glyph: {char: "p", colour: lightgreen}
+flags: [speaks, warm_blood]
+xp_mult: 12
+species: human
+will: 40
+attacks:
+ - {type: hit, damage: 25}
+hd: 14
+hp_10x: 1120
+ac: 0
+ev: 6
+spells: ironbound_preserver
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

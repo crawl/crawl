@@ -1,15 +1,15 @@
 enum: SP_BASE_DRACONIAN
 monster: MONS_DRACONIAN
-name: "Draconian"
+name: Draconian
 difficulty: Simple
-difficulty_priority: 50
+difficulty_priority: 60
 species_flags:
   - SPF_DRACONIAN
 aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -34,4 +34,6 @@ recommended_jobs:
   - JOB_ICE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
+
+orc_name: Orconian

@@ -86,6 +86,7 @@ struct game_state
     bool test_list;         // Show available tests and exit.
     bool script;            // Set if we want to run a Lua script and exit.
     bool build_db;          // Set if we want to rebuild the db and exit.
+    bool use_des_cache;
     vector<string> tests_selected; // Tests to be run.
     vector<string> script_args;    // Arguments to scripts.
 
@@ -100,6 +101,8 @@ struct game_state
     uint64_t clua_max_memory_mb;
 
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
+
+    bool skip_autofight_check; // XXX EVIL HACK
 
     string sprint_map;      // Sprint map set on command line, if any.
 
@@ -220,7 +223,6 @@ public:
     void dump();
     bool player_is_dead() const;
 
-    bool game_standard_levelgen() const;
     bool game_is_valid_type() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
@@ -228,6 +230,10 @@ public:
     bool game_is_sprint() const;
     bool game_is_hints() const;
     bool game_is_hints_tutorial() const;
+    bool game_is_descent() const;
+
+    bool game_has_random_floors() const;
+    bool game_saves_prefs() const;
 
     bool seed_is_known() const;
 

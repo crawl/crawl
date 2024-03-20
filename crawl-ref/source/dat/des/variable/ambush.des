@@ -20,11 +20,42 @@ end
 }}
 
 NAME:     evilmike_ambush
+TAGS:     allow_dup transparent no_monster_gen no_descent
 DEPTH:    Lair, Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
           Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
           Zot, !Zot:$, Crypt, !Crypt:$
-TAGS:     allow_dup transparent
-KMONS:    P = bush / burning bush w:1
+KMONS:    P = bush / scrub nettle w:1
+: if you.in_branch("Snake") then
+KMONS:    0 = black mamba / naga / salamander
+KMONS:    9 = mana viper / anaconda / naga mage
+KMONS:    8 = naga ritualist / salamander mystic
+KMONS:    & = naga warrior / naga sharpshooter
+: elseif you.in_branch("Dis") then
+KMONS:    0 = war gargoyle / crystal echidna w:5 / iron dragon skeleton w:2
+KMONS:    9 = ancient champion / quicksilver elemental / iron dragon
+KMONS:    8 = iron giant / iron golem
+KMONS:    & = hellion / tormentor / ancient lich
+: elseif you.in_branch("Geh") then
+KMONS:    0 = hell hog / fire giant w:5 / fire dragon skeleton w:2
+KMONS:    9 = searing wretch / balrug
+KMONS:    8 = hellephant / salamander tyrant w:5
+KMONS:    & = hellion / tormentor / brimstone fiend w:5
+: elseif you.in_branch("Tar") then
+KMONS:    0 = shadow wraith / spectral thing / shadow dragon zombie w:2
+KMONS:    9 = eidolon / putrid mouth w:5
+KMONS:    8 = bone dragon / profane servitor / tainted leviathan w:5
+KMONS:    & = tormentor / ancient lich / dread lich
+: elseif you.in_branch("Coc") then
+KMONS:    0 = simulacrum / frost giant w:5 / ice dragon zombie w:2
+KMONS:    9 = azure jelly / wendigo / nargun
+KMONS:    8 = shard shrike / caustic shrike simulacrum w:5
+KMONS:    & = tormentor / titan
+: elseif you.in_branch("Zot") then
+KMONS:    0 = white draconian / green draconian / yellow draconian
+KMONS:    9 = shadow dragon / draconian monk
+KMONS:    8 = death cob / golden dragon / ghost moth w:5
+KMONS:    & = curse toe / moth of wrath
+: end
 SUBVAULT: = : evilmike_ambush_outer
 SUBVAULT: - : evilmike_ambush_inner
 SUBST:    =- : .
@@ -40,6 +71,7 @@ SUBST:    1 = 0., 2 = 9
 : else
 SUBST:    1 = 0.., 2 = 9.
 : end
+NSUBST:   8 = 1:&&8 / *:8
 MAP
   2...0...9
  ...1...1...
@@ -63,7 +95,8 @@ WEIGHT: 25
 SUBST:  G : Gx..
 SUBST:  x : xcbwnm
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:  G = metal_statue
+TILE:   G = dngn_statue_iron
 : end
 MAP
  ...G...
@@ -82,7 +115,8 @@ TAGS:    evilmike_ambush_outer allow_dup unrand
 SHUFFLE: x.
 SUBST:   x : xxxccvvbmG
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:  G = metal_statue
+TILE:   G = dngn_statue_iron
 : end
 MAP
  .x.x.x.
@@ -136,7 +170,8 @@ WEIGHT:  25
 SHUFFLE: <AB
 SUBST:   AB = .
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:   G = metal_statue
+TILE:    G = dngn_statue_iron
 : end
 : ambush_stairs(_G)
 MAP
@@ -197,7 +232,12 @@ TAGS:    evilmike_ambush_inner allow_dup
 SUBST:   w : wwwWWlm...
 SUBST:   > : >..
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:   G = metal_statue
+TILE:    G = dngn_statue_iron
+: elseif you.in_branch("Coc") or you.in_branch("Tar") then
+SUBST:   l = w
+: elseif you.in_branch("Geh") then
+SUBST:   wW = l
 : end
 : ambush_stairs(_G)
 MAP

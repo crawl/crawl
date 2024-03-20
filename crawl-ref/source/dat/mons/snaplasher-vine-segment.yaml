@@ -1,0 +1,17 @@
+name: "snaplasher vine segment"
+glyph: {char: "*", colour: lightgreen}
+flags: [stationary, no_exp_gain, no_poly_to, no_threat]
+resists: {poison: 1}
+species: snaplasher_vine
+genus: plant
+holiness: [plant]
+will: 40
+attacks:
+hd: 12
+hp_10x: 360
+ac: 6
+ev: 0
+intelligence: brainless
+size: large
+shape: misc
+tile: program_bug

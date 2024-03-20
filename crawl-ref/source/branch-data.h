@@ -14,6 +14,7 @@ const Branch branches[NUM_BRANCHES] =
     //  entry message
     //  floor colour, rock colour
     //  travel shortcut, runes, ambient noise level, mon_die_size
+    //  descent mode parent branches
 
     { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 15, 0,
       brflag::none,
@@ -21,7 +22,8 @@ const Branch branches[NUM_BRANCHES] =
       "Dungeon", "the Dungeon", "D",
       nullptr,
       LIGHTGREY, BROWN,
-      'D', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE /*unused*/ },
+      'D', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE, /*unused*/
+      {} },
 
     { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
       brflag::no_items | brflag::fully_map,
@@ -29,7 +31,8 @@ const Branch branches[NUM_BRANCHES] =
       "Temple", "the Ecumenical Temple", "Temple",
       nullptr,
       LIGHTGREY, BROWN,
-      'T', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'T', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 2, 10,
       brflag::spotty,
@@ -37,7 +40,8 @@ const Branch branches[NUM_BRANCHES] =
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
       BROWN, BROWN,
-      'O', {}, branch_noise::normal, 6 },
+      'O', {}, branch_noise::normal, 6,
+      {BRANCH_LAIR} },
 
     { BRANCH_ELF, BRANCH_ORC, 2, 2, 3, 15,
       brflag::dangerous_end,
@@ -45,7 +49,8 @@ const Branch branches[NUM_BRANCHES] =
       "Elven Halls", "the Elven Halls", "Elf",
       nullptr,
       WHITE, ETC_ELVEN_BRICK,
-      'E', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'E', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {BRANCH_SWAMP, BRANCH_SNAKE, BRANCH_SHOALS, BRANCH_SPIDER } },
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
@@ -54,7 +59,8 @@ const Branch branches[NUM_BRANCHES] =
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       nullptr,
       BROWN, BROWN,
-      'K', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'K', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {}},
 #endif
 
     { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 5, 10,
@@ -63,7 +69,8 @@ const Branch branches[NUM_BRANCHES] =
       "Lair", "the Lair of Beasts", "Lair",
       nullptr,
       GREEN, BROWN,
-      'L', {}, branch_noise::normal, 8 },
+      'L', {}, branch_noise::normal, 8,
+      {BRANCH_DUNGEON} },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end | brflag::spotty,
@@ -71,7 +78,8 @@ const Branch branches[NUM_BRANCHES] =
       "Swamp", "the Swamp", "Swamp",
       nullptr,
       BROWN, BROWN,
-      'S', { RUNE_SWAMP }, branch_noise::loud, 8 },
+      'S', { RUNE_SWAMP }, branch_noise::loud, 8,
+      {BRANCH_ORC} },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end,
@@ -79,7 +87,8 @@ const Branch branches[NUM_BRANCHES] =
       "Shoals", "the Shoals", "Shoals",
       nullptr,
       BROWN, BROWN,
-      'A', { RUNE_SHOALS }, branch_noise::loud, DEFAULT_MON_DIE_SIZE },
+      'A', { RUNE_SHOALS }, branch_noise::loud, DEFAULT_MON_DIE_SIZE,
+      {BRANCH_ORC} },
 
     { BRANCH_SNAKE, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end,
@@ -87,7 +96,8 @@ const Branch branches[NUM_BRANCHES] =
       "Snake Pit", "the Snake Pit", "Snake",
       nullptr,
       LIGHTGREEN, YELLOW,
-      'P', { RUNE_SNAKE }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'P', { RUNE_SNAKE }, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {BRANCH_ORC} },
 
     { BRANCH_SPIDER, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end,
@@ -95,7 +105,8 @@ const Branch branches[NUM_BRANCHES] =
       "Spider Nest", "the Spider Nest", "Spider",
       nullptr,
       BROWN, YELLOW,
-      'N', { RUNE_SPIDER }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'N', { RUNE_SPIDER }, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {BRANCH_ORC} },
 
     { BRANCH_SLIME, BRANCH_LAIR, 4, 5, 5, 17,
       brflag::no_items | brflag::dangerous_end | brflag::spotty,
@@ -103,7 +114,8 @@ const Branch branches[NUM_BRANCHES] =
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
       GREEN, BROWN,
-      'M', { RUNE_SLIME }, branch_noise::quiet, 7 },
+      'M', { RUNE_SLIME }, branch_noise::quiet, 7,
+      {BRANCH_LAIR, BRANCH_VAULTS } },
 
     { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
       brflag::dangerous_end,
@@ -111,7 +123,8 @@ const Branch branches[NUM_BRANCHES] =
       "Vaults", "the Vaults", "Vaults",
       nullptr,
       LIGHTGREY, BROWN,
-      'V', { RUNE_VAULTS }, branch_noise::normal, 9 },
+      'V', { RUNE_VAULTS }, branch_noise::normal, 9,
+      {BRANCH_ELF, BRANCH_CRYPT } },
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
@@ -120,7 +133,8 @@ const Branch branches[NUM_BRANCHES] =
       "Hall of Blades", "the Hall of Blades", "Blade",
       nullptr,
       LIGHTGREY, BROWN,
-      'B', {}, branch_noise::quiet, DEFAULT_MON_DIE_SIZE },
+      'B', {}, branch_noise::quiet, DEFAULT_MON_DIE_SIZE,
+      {}},
 #endif
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 2, 3, 3, 19,
@@ -129,7 +143,8 @@ const Branch branches[NUM_BRANCHES] =
       "Crypt", "the Crypt", "Crypt",
       nullptr,
       LIGHTGREY, BROWN,
-      'C', {}, branch_noise::quiet, 10 },
+      'C', {}, branch_noise::quiet, 10,
+      {BRANCH_SWAMP, BRANCH_SNAKE, BRANCH_SHOALS, BRANCH_SPIDER }},
 
     { BRANCH_TOMB, BRANCH_CRYPT, 3, 3, 3, 21,
       brflag::islanded | brflag::dangerous_end | brflag::no_shafts,
@@ -137,7 +152,8 @@ const Branch branches[NUM_BRANCHES] =
       "Tomb", "the Tomb of the Ancients", "Tomb",
       nullptr,
       BROWN, BROWN,
-      'W', { RUNE_TOMB }, branch_noise::quiet, DEFAULT_MON_DIE_SIZE },
+      'W', { RUNE_TOMB }, branch_noise::quiet, DEFAULT_MON_DIE_SIZE,
+      {} },
 #if TAG_MAJOR_VERSION > 34
 
     { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 4, 22,
@@ -146,7 +162,8 @@ const Branch branches[NUM_BRANCHES] =
       "Depths", "the Depths", "Depths",
       nullptr,
       LIGHTGREY, BROWN,
-      'U', {}, branch_noise::normal, 10 },
+      'U', {}, branch_noise::normal, 10,
+      {BRANCH_VAULTS, BRANCH_SLIME } },
 #endif
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
@@ -155,7 +172,8 @@ const Branch branches[NUM_BRANCHES] =
       "Hell", "the Vestibule of Hell", "Hell",
       "Welcome to Hell!\nPlease enjoy your stay.",
       LIGHTGREY, LIGHTRED,
-      'H', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'H', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
@@ -163,7 +181,8 @@ const Branch branches[NUM_BRANCHES] =
       "Dis", "the Iron City of Dis", "Dis",
       "An ancient malice corrodes your equipment.",
       CYAN, BROWN,
-      'I', { RUNE_DIS }, branch_noise::normal, HELL_MON_DIE_SIZE },
+      'I', { RUNE_DIS }, branch_noise::normal, HELL_MON_DIE_SIZE,
+      {BRANCH_VESTIBULE} },
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
@@ -171,7 +190,8 @@ const Branch branches[NUM_BRANCHES] =
       "Gehenna", "Gehenna", "Geh",
       "Your scrolls appear blurry in the acrid smoke.",
       BROWN, RED,
-      'G', { RUNE_GEHENNA }, branch_noise::normal, HELL_MON_DIE_SIZE },
+      'G', { RUNE_GEHENNA }, branch_noise::normal, HELL_MON_DIE_SIZE,
+      {BRANCH_VESTIBULE} },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
@@ -179,7 +199,8 @@ const Branch branches[NUM_BRANCHES] =
       "Cocytus", "Cocytus", "Coc",
       "Your potions freeze solid in the terrible cold.",
       LIGHTBLUE, LIGHTCYAN,
-      'X', { RUNE_COCYTUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
+      'X', { RUNE_COCYTUS }, branch_noise::normal, HELL_MON_DIE_SIZE,
+      {BRANCH_VESTIBULE}},
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
@@ -187,7 +208,8 @@ const Branch branches[NUM_BRANCHES] =
       "Tartarus", "Tartarus", "Tar",
       "This decaying realm drains your will.",
       MAGENTA, MAGENTA,
-      'Y', { RUNE_TARTARUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
+      'Y', { RUNE_TARTARUS }, branch_noise::normal, HELL_MON_DIE_SIZE,
+      {BRANCH_VESTIBULE} },
 
     { BRANCH_ZOT, BRANCH_DEPTHS, 4, 4, 5, 27,
       brflag::dangerous_end,
@@ -196,7 +218,8 @@ const Branch branches[NUM_BRANCHES] =
       "Welcome to the Realm of Zot!\n"
       "You feel the power of the Orb interfering with translocations here.",
       BLACK, BLACK, // set per-map
-      'Z', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'Z', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {BRANCH_DEPTHS} },
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_FOREST, BRANCH_VAULTS, 2, 3, 5, 19,
@@ -205,7 +228,8 @@ const Branch branches[NUM_BRANCHES] =
       "Forest", "the Enchanted Forest", "Forest",
       nullptr,
       BROWN, BROWN,
-      'F', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'F', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 
     { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 7, 24,
@@ -214,7 +238,8 @@ const Branch branches[NUM_BRANCHES] =
       "Abyss", "the Abyss", "Abyss",
       nullptr,
       BLACK, BLACK, // set specially
-      'J', { RUNE_ABYSSAL }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'J', { RUNE_ABYSSAL }, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_PANDEMONIUM, NUM_BRANCHES, -1, -1, 1, 24,
       brflag::no_x_level_travel,
@@ -224,7 +249,8 @@ const Branch branches[NUM_BRANCHES] =
       "To return, you must find a gate leading back.",
       BLACK, BLACK, // set specially
       'R', { RUNE_DEMONIC, RUNE_MNOLEG, RUNE_LOM_LOBON, RUNE_CEREBOV,
-             RUNE_GLOORX_VLOQ }, branch_noise::normal, 8 },
+             RUNE_GLOORX_VLOQ }, branch_noise::normal, 8,
+      {} },
 
     { BRANCH_ZIGGURAT, BRANCH_DEPTHS, 1, 4, 27, 27,
       brflag::no_x_level_travel | brflag::no_items,
@@ -232,7 +258,8 @@ const Branch branches[NUM_BRANCHES] =
       "Ziggurat", "a ziggurat", "Zig",
       "You land on top of a ziggurat so tall you cannot make out the ground.",
       BLACK, BLACK,
-      'Q', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'Q', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, 15,
@@ -241,7 +268,8 @@ const Branch branches[NUM_BRANCHES] =
       "Labyrinth", "a Labyrinth", "Lab",
       "You enter a labyrinth!",
       BLACK, BLACK,
-      '0', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '0', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 
     { BRANCH_BAZAAR, NUM_BRANCHES, -1, -1, 1, 18,
@@ -250,7 +278,8 @@ const Branch branches[NUM_BRANCHES] =
       "Bazaar", "a bazaar", "Bazaar",
       "You enter an inter-dimensional bazaar!",
       BLUE, YELLOW,
-      '1', {}, branch_noise::normal },
+      '1', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_TROVE, NUM_BRANCHES, -1, -1, 1, 18,
       brflag::no_x_level_travel | brflag::no_items,
@@ -258,7 +287,8 @@ const Branch branches[NUM_BRANCHES] =
       "Trove", "a treasure trove", "Trove",
       "You enter a treasure trove!",
       DARKGREY, BLUE,
-      '2', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '2', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_SEWER, NUM_BRANCHES, -1, -1, 1, 4,
       brflag::no_x_level_travel | brflag::no_items,
@@ -266,7 +296,8 @@ const Branch branches[NUM_BRANCHES] =
       "Sewer", "a sewer", "Sewer",
       "You enter a sewer!",
       LIGHTGREY, BLUE,
-      '3', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '3', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_OSSUARY, NUM_BRANCHES, -1, -1, 1, 6,
       brflag::no_x_level_travel | brflag::no_items,
@@ -274,7 +305,8 @@ const Branch branches[NUM_BRANCHES] =
       "Ossuary", "an ossuary", "Ossuary",
       "You enter an ossuary!",
       WHITE, YELLOW,
-      '4', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '4', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 
     { BRANCH_BAILEY, NUM_BRANCHES, -1, -1, 1, 11,
       brflag::no_x_level_travel | brflag::no_items,
@@ -282,7 +314,8 @@ const Branch branches[NUM_BRANCHES] =
       "Bailey", "a bailey", "Bailey",
       "You enter a bailey!",
       WHITE, LIGHTRED,
-      '5', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '5', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #if TAG_MAJOR_VERSION > 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
@@ -291,7 +324,8 @@ const Branch branches[NUM_BRANCHES] =
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
       BLACK, BLACK,
-      '6', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '6', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, 15,
@@ -301,10 +335,12 @@ const Branch branches[NUM_BRANCHES] =
       "You enter an ice cave!",
       BLUE, WHITE,
 #if TAG_MAJOR_VERSION == 34
-      '6', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '6', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 #if TAG_MAJOR_VERSION > 34
-      '7', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '7', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 
     { BRANCH_VOLCANO, NUM_BRANCHES, -1, -1, 1, 14,
@@ -314,10 +350,12 @@ const Branch branches[NUM_BRANCHES] =
       "You enter a volcano!",
       RED, RED,
 #if TAG_MAJOR_VERSION == 34
-      '7', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '7', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 #if TAG_MAJOR_VERSION > 34
-      '8', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '8', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 
     { BRANCH_WIZLAB, NUM_BRANCHES, -1, -1, 1, 24,
@@ -327,10 +365,12 @@ const Branch branches[NUM_BRANCHES] =
       "You enter a wizard's laboratory!",
       LIGHTGREY, BROWN, // set per-map
 #if TAG_MAJOR_VERSION == 34
-      '8', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '8', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 #if TAG_MAJOR_VERSION > 34
-      '9', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '9', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 #if TAG_MAJOR_VERSION == 34
 
@@ -340,7 +380,8 @@ const Branch branches[NUM_BRANCHES] =
       "Depths", "the Depths", "Depths",
       nullptr,
       LIGHTGREY, BROWN,
-      'U', {}, branch_noise::normal, 10 },
+      'U', {}, branch_noise::normal, 10,
+      {BRANCH_VAULTS, BRANCH_SLIME} },
 #endif
 
     { BRANCH_DESOLATION, NUM_BRANCHES, -1, -1, 1, 20,
@@ -350,10 +391,12 @@ const Branch branches[NUM_BRANCHES] =
       "You enter a great desolation of salt!",
       LIGHTGREY, BROWN, // TODO
 #if TAG_MAJOR_VERSION == 34
-      '9', {}, branch_noise::loud, DEFAULT_MON_DIE_SIZE },
+      '9', {}, branch_noise::loud, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 #if TAG_MAJOR_VERSION > 34
-      '0', {}, branch_noise::loud, DEFAULT_MON_DIE_SIZE },
+      '0', {}, branch_noise::loud, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 #if TAG_MAJOR_VERSION == 34
 
@@ -363,19 +406,22 @@ const Branch branches[NUM_BRANCHES] =
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
       BLACK, BLACK,
-      '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 
     { BRANCH_ARENA, NUM_BRANCHES, -1, -1, 1, 0,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_ARENA, DNGN_EXIT_ARENA, NUM_FEATURES,
       "Arena", "the Arena", "Arena",
       "You enter Okawaru's Arena!",
       BLACK, BLACK,
 #if TAG_MAJOR_VERSION == 34
-      '"', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '"', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #else
-      '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {} },
 #endif
 };
 

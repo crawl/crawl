@@ -1,0 +1,21 @@
+name: "Josephina"
+glyph: {char: "L", colour: lightblue}
+flags: [see_invis, speaks, unique, female]
+resists: {cold: 3}
+xp_mult: 20
+species: lich
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: hit, flavour: cold, damage: 27}
+ - {type: touch, flavour: drain, damage: 15}
+hd: 21
+hp_10x: 1500
+ac: 10
+ev: 21
+spells: josephina
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

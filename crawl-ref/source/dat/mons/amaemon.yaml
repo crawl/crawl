@@ -1,0 +1,22 @@
+name: "Amaemon"
+glyph: {char: "6", colour: green}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 15
+species: demonspawn
+holiness: [natural, demonic]
+will: 60
+attacks:
+ - {type: hit, damage: 12}
+ - {type: claw, damage: 12}
+ - {type: tail_slap, flavour: poison, damage: 8}
+hd: 7
+hp_10x: 875
+ac: 3
+ev: 12
+spells: amaemon
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

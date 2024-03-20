@@ -1,0 +1,15 @@
+name: "crystal echidna"
+glyph: {char: "r", colour: green}
+resists: {elec: 3, fire: 3, cold: 3}
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: bite, damage: 20}
+hd: 12
+hp_10x: 640
+ac: 10
+ev: 10
+spells: crystal_echidna
+intelligence: animal
+size: little
+shape: quadruped

@@ -14,17 +14,13 @@
 
 lua {{
 
-function place_bazaar_portal(e, perm)
+function place_bazaar_portal(e)
   e.tags("bzr_entry")
   e.kfeat("O = enter_bazaar")
-  if perm then
-     e.lua_marker('O', bazaar_portal(false))
-  else
-     e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
-  end
+  e.lua_marker('O', bazaar_portal)
 end
 
-function bazaar_portal(timed)
+function bazaar_portal()
   local messager =
     timed_msg {
       initmsg = { "You hear coins being counted.",
@@ -37,16 +33,13 @@ function bazaar_portal(timed)
     }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
-  if timed then
-    return timed_marker {
-                  low=blow, high=bhigh, msg=messager, single_timed=true,
-                  disappear='The gate to the bazaar disappears!',
-                  desc = "flickering gateway to a bazaar",
-                  floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
-              }
-  else
-    return one_way_stair { floor = 'stone_arch' }
-  end
+
+  return timed_marker {
+               low=blow, high=bhigh, msg=messager, single_timed=true,
+               disappear='The gate to the bazaar disappears!',
+               desc = "flickering gateway to a bazaar",
+               floor = 'stone_arch', feat_tile = 'dngn_portal_bazaar_gone'
+  }
 end
 
 local tilesets = {
@@ -86,9 +79,31 @@ function bazaar_setup(e, randomise_tileset, shop_halo)
     shop_halo = true
   end
 
-  e.tags('no_monster_gen')
+  -- No hostile monsters, but one to six weak friendly monsters
+  -- that won't follow you out of the portal. They're also customers!
+  e.tags("no_monster_gen")
+  local a = "att:good_neutral ; nothing"
+  local cust = "kobold " .. a .. " / orc " .. a .. " / spriggan " .. a ..
+               " / naga " .. a .. " / merfolk " .. a .. " / human " .. a
+  if you.god() ~= "Elyvilon" and you.god() ~= "Zin" and you.god() ~= "the Shining One" then
+      cust = cust .. " / lesser demon w:2 att:good_neutral " ..
+                     " / mummy w:2 att:good_neutral"
+  end
+  e.kmons("K = " .. cust)
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
+
+  -- Don't place any other customers if you'd hate them, or if they'd hate you.
+  if you.get_base_mutation_level("hated by all") == 1 then
+      crawl.mpr("Upon your arrival, your hatred by all makes the other customers disperse.")
+  elseif you.god() == "Okawaru" then
+      crawl.mpr("Upon your arrival, your lonesome duelist's vow makes the other customers flee.")
+  else
+      if you.silenced() == false then
+          crawl.mpr("You hear the chatter and bustle of other customers!")
+      end
+      e.nsubst(". = 1:K / 2 = K. / 3 : K .:260 / *:.")
+  end
 
   -- Note: (false, true) makes no sense because of how the floor halos work.
   -- In most cases, they would look out of place.
@@ -184,6 +199,7 @@ ENDMAP
 
 # Safe 2
 NAME:    bzr_entry_islet
+TAGS:    no_descent
 SHUFFLE: wwlW
 : place_bazaar_portal(_G)
 MAP
@@ -226,29 +242,28 @@ ENDMAP
 
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
-KPROP:  O = no_tele_into
-SUBST:  G = G111
 MONS:   orange crystal statue / obsidian statue / ice statue
-: place_bazaar_portal(_G, true)
+: place_bazaar_portal(_G)
 MAP
  @
-cGc
+c1c
 cOc
 ccc
 ENDMAP
 
 # Freezing bazaar (Lemuel)
 NAME:   freezing_bzr
-MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 1, pow_max = 5, delay_min = 20, delay_max = 30, \
-             size = 2, walk_dist = 3, spread_rate= 20 }
+TAGS:   no_pool_fixup
+MARKER: w = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 4, delay_min = 50, delay_max = 60, \
+             size = 1, excl_rad = 0 }
 : place_bazaar_portal(_G)
 MAP
-  W
- WWW
-WWOWW
- WWW
-  W
+  w
+ wWw
+wWOWw
+ wWw
+  w
 ENDMAP
 
 # Bazaar in the mist (Lemuel)
@@ -432,22 +447,21 @@ ENDMAP
 ########################################
 # bazaars in a row v2
 # ~4.5 shops
+# ~4.5 shops
 NAME:    bazaar_long_row
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  20
-SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
-SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk
-# two guaranteed shops, expected five shops
-SUBST:   B=A, C=A, D=A, E=A, F=A, G=A, H=A
-SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
-SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
-SUBST:   y=z, r=z, s=z, j=z, k=z, m=z
 KFEAT:   A = any shop
 KFEAT:   Z = abandoned_shop
-SUBST:   a=T, z=V
+SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
+SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Nn
+# two guaranteed shops, expected five shops
+SUBST:   BCDEFGH = A, bcdefgh = a
+SUBST:   ZYRSJN = Z, zyrsjn = z
+SUBST:   a = T, z = V
 SHUFFLE: lw
-SUBST:   w:wWx, l:lx
+SUBST:   w : wWx, l : lx
 : bazaar_setup(_G)
 : local colour = dgn.get_floor_colour()
 : if colour == "red" then
@@ -554,12 +568,13 @@ NAME:      bazaar_minmay_generic_island
 TAGS:      no_rotate
 ORIENT:    encompass
 WEIGHT:    20
-KPROP:     w = no_tele_into
+KITEM:     $ = $ no_pickup
+KFEAT:     ! = any shop
 SUBST:     w : wl
 SHUFFLE:   Aa/Bb/Cc/Dd, Cc/Ee, Dd/Ff
 COLOUR:    EeFf = yellow
 SUBST:     ab = !, AB = ., cd = !, CD = ., EeFf = $
-KFEAT:     ! = any shop
+KPROP:     wl = no_tele_into
 :          bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -703,8 +718,8 @@ SHUFFLE: ABC, de
 KFEAT:   A = weapon shop / armour shop
 KFEAT:   B = antique weapon shop / weapon shop
 KFEAT:   C = antique armour shop / armour shop
-ITEM:    any weapon / w:2 good_item any weapon
-ITEM:    any armour / w:2 good_item any armour
+ITEM:    any weapon no_pickup / any weapon good_item no_pickup w:2
+ITEM:    any armour no_pickup / any armour good_item no_pickup w:2
 :        bazaar_setup(_G)
 MAP
 xxxxxxxxx
@@ -743,10 +758,10 @@ WEIGHT:  5
 ORIENT:  encompass
 SUBST:   w : wlx
 SHUFFLE: AB, def
+ITEM:    any jewellery no_pickup / any jewellery good_item no_pickup
+ITEM:    any book / any book good_item, any magical staff no_pickup
 KFEAT:   A = scroll shop / book shop / book shop
 KFEAT:   B = jewellery shop
-ITEM:    any jewellery / good_item any jewellery
-ITEM:    any book / good_item any book, any magical staff
 SUBST:   d=.d, e=.e, f=.f
 : bazaar_setup(_G)
 : local colour = dgn.get_floor_colour()
@@ -774,7 +789,7 @@ WEIGHT:  5
 ORIENT:  encompass
 KFEAT:   A = scroll shop
 KFEAT:   B = distillery shop
-ITEM:    ring of flight ident:type
+ITEM:    ring of flight ident:type no_pickup
 SHUFFLE: lAB/wBA
 : bazaar_setup(_G)
 : local colour = dgn.get_floor_colour()
@@ -992,6 +1007,7 @@ WEIGHT:  10
 TAGS:    no_rotate
 ORIENT:  encompass
 MONS:    plant
+KITEM:   $ = $ no_pickup
 SHUFFLE: ABCDEF
 SUBST:   A = >, B = >
 SUBST:   . = .:1000 $
@@ -1479,7 +1495,8 @@ WEIGHT:     5
 ORIENT:     encompass
 MONS:       plant / bush w:5
 KFEAT:      ! = any shop
-SUBST:      " = ....111t
+SUBST:      " = """"111t
+KPROP:      "1t = no_tele_into
 LFLOORTILE: floor_grass
 LFLOORCOL:  green
 : bazaar_setup(_G, false, false)
@@ -1740,7 +1757,7 @@ TAGS:    no_rotate
 WEIGHT:  1
 ORIENT:  encompass
 SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
-KITEM:   ? = wand of digging ident:type
+KITEM:   ? = wand of digging ident:type no_pickup
 KFEAT:   ? = antiques shop
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1
@@ -1814,10 +1831,9 @@ TAGS:   no_rotate
 ORIENT: encompass
 WEIGHT: 1
 KFEAT:  ! = general shop
-MARKER: d = lua:fog_machine { cloud_type = "mutagenic fog", \
+MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", \
              pow_min = 1, pow_max = 3, delay_min = 5, delay_max = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }
-ITEM:   nothing
 NSUBST: < = 1:< / *:.
 :       bazaar_setup(_G)
 MAP
@@ -1832,7 +1848,7 @@ x.......x.xxx.x.......x
 xxxxxxxx.x.x.x.xxxxxxxx
       x.xx...xx.x
       xx.......xx
-       xx..d..xx
+       xx..F..xx
       xx.......xx
       x.xx...xx.x
 xxxxxxxx.x.x.x.xxxxxxxx

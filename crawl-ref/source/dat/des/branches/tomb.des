@@ -161,7 +161,8 @@ function tomb_3_rune_setup(e)
   tomb_guardian_set(e)
   tomb_mummy_priest_set(e)
 
-  e.kmask("O = no_item_gen")
+  e.kmask("OR = no_item_gen")
+  e.kitem("R = sanguine gem")
   e.kitem("O = golden rune of Zot")
 
   tomb_3_khufu(e, "K")
@@ -337,21 +338,22 @@ cccc.....cccc
 ccccccccccccc
 ENDMAP
 
-NAME: nicolae_tomb_entry_rubble_hallway
+NAME:   nicolae_tomb_entry_rubble_hallway
+TAGS:   tomb_entry no_monster_gen no_item_gen no_wall_fixup
 ORIENT: float
-TAGS: tomb_entry no_monster_gen no_item_gen no_wall_fixup
+MONS:   boulder dbname:still_boulder
+KITEM:  s = stone q:1 / large rock q:1 w:5
+KFEAT:  O = enter_tomb
 NSUBST: R = 7:r / *:.
-SUBST: r = xx..., . = ....s
-KITEM: s = stone q:1 / large rock q:1 w:5
-RTILE: x = wall_pebble_darkgray
-KFEAT: O = enter_tomb
+SUBST:  r = xx..., 1 = 1xx..., . = ....s
+RTILE:  x = wall_pebble_darkgray
 MAP
 ccccccccccccccccc
-cccccccccccr...rc
-c..rrr.rrr..RRR.c
-+.r.r.r.r.rrROR.c
-c.rr.rrr.rr.RRR.c
-cccccccccccr...rc
+ccccccccccc1...1c
+c..rrr.r1r..RRR.c
++.r.r.r.r.11ROR1c
+c.rr.r1r.rr.RRR.c
+ccccccccccc1...1c
 ccccccccccccccccc
 ENDMAP
 
@@ -1112,8 +1114,8 @@ ccccccccccccccccccccccccccccccccccccccccc
 cccccc.............................cccccc
 ccc...............cccccc..............ccc
 cc...............cccccccc..............cc
-cc.......3......ccccOKcccc......3......cc
-cc............cccc......cccc...........cc
+cc.......3......ccccKOcccc......3......cc
+cc............cccc..R...cccc...........cc
 c............cccc........cccc...........c
 c............cccc........cccc...........c
 c...........cccc..333333..cccc..........c
@@ -1140,7 +1142,7 @@ cccc................ccc...............ccc
 ccc...............3..c..3..............cc
 ccc.....2........3.......3.......2.....cc
 cc.........ccccc..........ccccc.........c
-cc..2.....cc..ccccc.....cccc..cc.....2..c
+cc..2.....cc..ccccc..R..cccc..cc.....2..c
 cc.....3.1......cccc...cccc.....1.3.....c
 cc..cc..1........ccccOcccc.......1..cc..c
 cc..cccc..........ccccccc.........cccc..c
@@ -1162,7 +1164,7 @@ TAGS: tomb_3_rune unrand
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc......ccccccc.KO.ccccccc......ccccc
-cccc.1......1.ccccc....ccccc.1......1.ccc
+cccc.1......1.ccccc.R..ccccc.1......1.ccc
 ccc.....3......cccc....cccc.....3......cc
 ccc....1..1....ccc......ccc....1..1....cc
 cc......cc......cc......cc......cc......c
@@ -1196,7 +1198,7 @@ cc...cc............................cc...c
 cc...c.....cccccccccccccccccccc.....c...c
 cc...c....cc........O.........cc....c...c
 cc.3.c1.21c3.1ccccccccccccc1.3.c12.1c.3.c
-cc...c....cc..................cc....c...c
+cc...c....cc........R.........cc....c...c
 cc...c.....cccccccc.K.ccccccccc.....c...c
 cc...cc.......1............1.......cc...c
 cc....cc......1............1......cc....c
@@ -1212,7 +1214,8 @@ NAME:   tomb_3_rune_grunt_doroklohe
 TAGS:   tomb_3_rune unrand
 : tomb_3_rune_setup(_G)
 : tomb_3_khufu(_G, "O")
-NSUBST: 3 = 1:O / *:3
+KMONS:  R = royal mummy
+NSUBST: 3 = 1:O / 1:R / *:3
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc..........1.......1...........ccccc
@@ -1406,14 +1409,15 @@ TAGS:  tomb_3_rune_stone_stairs unrand
 : tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
+KITEM: R = sanguine gem
 KMONS: K = Khufu w:3 / royal mummy, royal mummy
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc.............................cccccc
 ccc...............cccccc..............ccc
 cc...............cccccccc..............cc
-cc.......3......ccccOKcccc......3......cc
-cc............cccc......cccc...........cc
+cc.......3......ccccKOcccc......3......cc
+cc............cccc..R...cccc...........cc
 c............cccc........cccc...........c
 c............cccc........cccc...........c
 c...........cccc..333333..cccc..........c

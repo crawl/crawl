@@ -1,15 +1,15 @@
 enum: SP_FELID
 monster: MONS_FELID
-name: "Felid"
-adjective: "Feline"
-genus: "Cat"
+name: Felid
+adjective: Feline
+genus: Cat
 difficulty: Advanced
 difficulty_priority: 40
 aptitudes:
   xp: -1
-  hp: -4
+  hp: -3
   mp_mod: 1
-  mr: 6
+  wl: 6
   short_blades: False
   long_blades: False
   axes: False
@@ -26,19 +26,18 @@ aptitudes:
   conjurations: -1
   hexes: 4
   translocations: 4
-  transmutations: 1
-  shapeshifting: 0
+  shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
-  poison_magic: -1
+  alchemy: -1
   evocations: 1
 size: little
 str: 4
-int: 9
+int: 11
 dex: 11
-levelup_stat_frequency: 5
+levelup_stat_frequency: 4
 levelup_stats:
   - int
   - dex
@@ -47,7 +46,6 @@ mutations:
     MUT_NO_GRASPING: 1
     MUT_NO_ARMOUR: 1
     MUT_MULTILIVED: 1
-    MUT_FAST: 1
     MUT_FANGS: 3
     MUT_SHAGGY_FUR: 1
     MUT_ACUTE_VISION: 1
@@ -65,8 +63,9 @@ recommended_jobs:
   - JOB_AIR_ELEMENTALIST
   - JOB_CONJURER
   - JOB_SUMMONER
-  - JOB_VENOM_MAGE
 recommended_weapons:
   - SK_UNARMED_COMBAT
 
 altar_action: sit before
+child_name: Kitten
+orc_name: Orcat

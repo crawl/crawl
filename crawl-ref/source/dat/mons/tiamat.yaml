@@ -1,0 +1,18 @@
+name: "Tiamat"
+glyph: {char: "d", colour: colour_undef}
+flags: [flies, see_invis, speaks, cold_blood, unique, female]
+resists: {poison: 1}
+species: draconian
+will: 140
+attacks:
+ - {type: hit, damage: 60}
+ - {type: tail_slap, damage: 45}
+hd: 22
+hp_10x: 3850
+ac: 30
+ev: 10
+shout: roar
+intelligence: human
+uses: weapons_armour
+size: large
+shape: humanoid_winged_tailed

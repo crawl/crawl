@@ -70,11 +70,11 @@ void loading_screen_open()
     loading_text->set_margin_for_sdl(15, 0, 0, 0);
     auto vbox = make_shared<Box>(Widget::VERT);
     vbox->set_cross_alignment(Widget::CENTER);
-    vbox->add_child(move(splash));
+    vbox->add_child(std::move(splash));
     vbox->add_child(loading_text);
     FontWrapper *font = tiles.get_crt_font();
     vbox->min_size().width = font->string_width(load_complete_msg.c_str());
-    popup = make_shared<ui::Popup>(move(vbox));
+    popup = make_shared<ui::Popup>(std::move(vbox));
     ui::push_layout(popup);
 }
 

@@ -33,7 +33,6 @@ namespace species
                                                     bool initial_only = false);
 
     bool is_elven(species_type species);
-    bool is_orcish(species_type species);
     bool is_undead(species_type species);
     bool is_draconian(species_type species);
     undead_state_type undead_type(species_type species) PURE;
@@ -58,6 +57,8 @@ namespace species
 
     string walking_verb(species_type sp);
     string walking_title(species_type sp);
+    string child_name(species_type species);
+    string orc_name(species_type species);
     string prayer_action(species_type species);
     string shout_verb(species_type sp, int screaminess, bool directed);
     string skin_name(species_type sp, bool adj=false);
@@ -82,6 +83,13 @@ namespace species
     bool is_removed(species_type species);
     vector<species_type> get_all_species();
 }
+
+#define DRACONIAN_BREATH_USES_KEY "drac_breath_uses"
+#define DRACONIAN_BREATH_RECHARGE_KEY "drac_breath_recharge"
+const int MAX_DRACONIAN_BREATH = 3;
+
+int draconian_breath_uses_available();
+bool gain_draconian_breath_uses(int num);
 
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);

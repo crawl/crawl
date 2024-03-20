@@ -166,7 +166,7 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         {
             if (event.mod & TILES_MOD_SHIFT)
                 tile_item_drop(idx, (event.mod & TILES_MOD_CTRL));
-            else if (event.mod & TILES_MOD_CTRL)
+            if (event.mod & TILES_MOD_CTRL)
                 tile_item_use_secondary(idx);
             else
                 tile_item_use(idx);
@@ -198,8 +198,12 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
 static bool _is_true_equipped_item(const item_def &item)
 {
     // Weapons and staves are only truly equipped if wielded.
-    if (item.link == you.equip[EQ_WEAPON])
-        return is_weapon(item);
+    if (is_weapon(item))
+    {
+        return item.link == you.equip[EQ_WEAPON]
+               || you.has_mutation(MUT_WIELD_OFFHAND)
+               && item.link == you.equip[EQ_OFFHAND];
+    }
 
     // Cursed armour and rings are only truly equipped if *not* wielded.
     return item.link != you.equip[EQ_WEAPON];
@@ -216,32 +220,13 @@ static bool _can_use_item(const item_def &item, bool equipped)
 #endif
 
     if (equipped && item.cursed())
-    {
-        // Evocable items (e.g. dispater staff) are still evocable when cursed.
-        if (item_ever_evokable(item))
-            return true;
-
-        // You can't unwield/fire a wielded cursed weapon/staff
-        // but cursed armour and rings can be unwielded without problems.
-        return !_is_true_equipped_item(item);
-    }
+        return false; // stuck!
 
     if (!you.can_drink())
         return item.base_type != OBJ_POTIONS;
 
     // In all other cases you can use the item in some way.
     return true;
-}
-
-static void _handle_wield_tip(string &tip, vector<command_type> &cmd,
-                              const string prefix = "", bool unwield = false)
-{
-    tip += prefix;
-    if (unwield)
-        tip += "Unwield (%-)";
-    else
-        tip += "Wield (%)";
-    cmd.push_back(CMD_WIELD_WEAPON);
 }
 
 bool InventoryRegion::update_tab_tip_text(string &tip, bool active)
@@ -366,28 +351,24 @@ bool InventoryRegion::update_tip_text(string& tip)
             case OBJ_STAVES:
                 if (!you.has_mutation(MUT_NO_GRASPING))
                 {
-                    _handle_wield_tip(tmp, cmd);
-                    if (is_throwable(&you, item))
+                    tmp += "Wield (%)";
+                    cmd.push_back(CMD_WIELD_WEAPON);
+                    if (you.has_mutation(MUT_WIELD_OFFHAND)
+                        && you.hands_reqd(item) == HANDS_ONE)
                     {
-                        tmp += "\n[Ctrl + L-Click] Fire (f)";
-                        cmd.push_back(CMD_FIRE);
+                        tmp += "\n[Ctrl + L-Click] Offhand";
                     }
                 }
                 break;
             case OBJ_WEAPONS + EQUIP_OFFSET:
-                _handle_wield_tip(tmp, cmd, "", true);
-                if (is_throwable(&you, item))
-                {
-                    tmp += "\n[Ctrl + L-Click] Fire (f)";
-                    cmd.push_back(CMD_FIRE);
-                }
+                tmp += "Unwield (%-)";
+                cmd.push_back(CMD_WIELD_WEAPON);
                 break;
             case OBJ_MISCELLANY:
             case OBJ_WANDS:
+            case OBJ_TALISMANS:
                 tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
                 if (!you.has_mutation(MUT_NO_ARMOUR))
@@ -413,39 +394,18 @@ bool InventoryRegion::update_tip_text(string& tip)
                 {
                     tmp += "Fire (%)";
                     cmd.push_back(CMD_FIRE);
-
-                    if (wielded || you.can_wield(item))
-                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", wielded);
                 }
                 break;
-            case OBJ_BOOKS:
-                if (item_type_known(item) && item_is_spellbook(item)
-                    && can_learn_spell(true))
-                {
-                    tmp += "Memorise (%)";
-                    cmd.push_back(CMD_MEMORISE_SPELL);
-                    if (wielded)
-                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                    break;
-                }
-                if (item.sub_type == BOOK_MANUAL)
-                    break;
-                // else fall-through
             case OBJ_SCROLLS:
                 tmp += "Read (%)";
                 cmd.push_back(CMD_READ);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_POTIONS:
                 tmp += "Quaff (%)";
                 cmd.push_back(CMD_QUAFF);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_CORPSES:
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
+            case OBJ_BOOKS:
                 break;
             default:
                 tmp += "Use";

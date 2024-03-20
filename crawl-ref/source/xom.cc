@@ -94,11 +94,13 @@ static bool _action_is_bad(xom_event_type action)
 static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_SMALL_MAMMAL,
-    SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_SUMMON_ICE_BEAST,
+    SPELL_ANIMATE_ARMOUR,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
+    SPELL_BATTLESPHERE,
     SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SUMMON_CACTUS,
@@ -107,6 +109,7 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
     SPELL_MONSTROUS_MENAGERIE,
+    SPELL_MALIGN_GATEWAY,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -580,7 +583,7 @@ static void _try_brand_switch(const int item_index)
         return;
 
     // Only do it some of the time.
-    if (one_chance_in(3))
+    if (one_chance_in(2))
         return;
 
     if (get_weapon_brand(item) == SPWPN_NORMAL)
@@ -632,9 +635,9 @@ static void _xom_acquirement(int /*sever*/)
 
     const object_class_type types[] =
     {
-        OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
-        OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_GOLD,
-        OBJ_MISSILES
+        OBJ_WEAPONS,  OBJ_ARMOUR,   OBJ_JEWELLERY,  OBJ_BOOKS,
+        OBJ_STAVES,   OBJ_WANDS,    OBJ_MISCELLANY, OBJ_GOLD,
+        OBJ_MISSILES, OBJ_TALISMANS
     };
     const object_class_type force_class = RANDOM_ELEMENT(types);
 
@@ -666,8 +669,7 @@ static void _xom_random_item(int sever)
 
 static bool _choose_mutatable_monster(const monster& mon)
 {
-    return mon.alive() && mon.can_safely_mutate()
-           && !mon.submerged();
+    return mon.alive() && mon.can_safely_mutate();
 }
 
 static bool _choose_enchantable_monster(const monster& mon)
@@ -711,24 +713,11 @@ static bool _is_chaos_upgradeable(const item_def &item)
             return false;
     }
 
-    // Leave branded items alone, since this is supposed to be an
-    // upgrade.
+    // Don't stuff player inventory slots with chaos throwables.
     if (item.base_type == OBJ_MISSILES)
-    {
-        // Don't make boulders or throwing nets of chaos.
-        if (item.sub_type == MI_LARGE_ROCK
-            || item.sub_type == MI_THROWING_NET)
-        {
-            return false;
-        }
+        return false;
 
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            return true;
-    }
-    else if (get_weapon_brand(item) == SPWPN_NORMAL)
-        return true;
-
-    return false;
+    return true;
 }
 
 static bool _choose_chaos_upgrade(const monster& mon)
@@ -753,14 +742,6 @@ static bool _choose_chaos_upgrade(const monster& mon)
     // in their servants' killing the player.
     if (is_good_god(mon.god))
         return false;
-
-    // Beogh presumably doesn't want Xom messing with his orcs, even if
-    // it would give them a better weapon.
-    if (mons_genus(mon.type) == MONS_ORC
-        && (mon.is_priest() || coinflip()))
-    {
-        return false;
-    }
 
     mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON, MSLOT_MISSILE};
 
@@ -1113,10 +1094,6 @@ bool swap_monsters(monster* m1, monster* m2)
 
     const bool mon1_caught = mon1.caught();
     const bool mon2_caught = mon2.caught();
-
-    // Make submerged monsters unsubmerge.
-    mon1.del_ench(ENCH_SUBMERGED);
-    mon2.del_ench(ENCH_SUBMERGED);
 
     mon1.swap_with(m2);
 
@@ -1712,7 +1689,7 @@ static void _xom_fake_destruction(int sever) { _xom_destruction(sever, false); }
 
 static void _xom_enchant_monster(bool helpful)
 {
-    monster* mon = choose_random_nearby_monster(0, _choose_enchantable_monster);
+    monster* mon = choose_random_nearby_monster(_choose_enchantable_monster);
     if (!mon)
         return;
 
@@ -1983,7 +1960,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
-    if (item_def* item = you.slot_item(EQ_SHIELD))
+    if (item_def* item = you.slot_item(EQ_OFFHAND))
     {
         string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
@@ -2067,7 +2044,7 @@ static bool _miscast_is_nasty(int sever)
 
 static void _xom_chaos_upgrade(int /*sever*/)
 {
-    monster* mon = choose_random_nearby_monster(0, _choose_chaos_upgrade);
+    monster* mon = choose_random_nearby_monster(_choose_chaos_upgrade);
 
     if (!mon)
         return;
@@ -2375,11 +2352,17 @@ static void _xom_cloud_trail(int /*sever*/)
     you.props[XOM_CLOUD_TRAIL_TYPE_KEY] =
         // 80% chance of a useful trail
         random_choose_weighted(20, CLOUD_CHAOS,
-                               10, CLOUD_MAGIC_TRAIL,
+                               9,  CLOUD_MAGIC_TRAIL,
                                5,  CLOUD_MIASMA,
                                5,  CLOUD_PETRIFY,
                                5,  CLOUD_MUTAGENIC,
-                               5,  CLOUD_NEGATIVE_ENERGY);
+                               4,  CLOUD_MISERY,
+                               1,  CLOUD_SALT,
+                               1,  CLOUD_BLASTMOTES);
+
+    // Need to explicitly set as non-zero. Use a clean half of the power cap.
+    if (you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int() == CLOUD_BLASTMOTES)
+        you.props[BLASTMOTE_POWER_KEY] = 25;
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cloud trail"), true);
 
@@ -2560,7 +2543,7 @@ static void _xom_do_banishment(bool real)
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
     // Handles note taking, scales depth by XL
-    banished("Xom", you.experience_level);
+    banished("Xom", max(1, (you.experience_level * 5 / 4 - 13)));
     if (!real)
         _revert_banishment();
 }

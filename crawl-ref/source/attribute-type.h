@@ -47,9 +47,9 @@ enum attribute_type
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts
                                // will be removed
+#if TAG_MAJOR_VERSION == 34
     ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
     ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
-#if TAG_MAJOR_VERSION == 34
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
@@ -70,8 +70,8 @@ enum attribute_type
 #if TAG_MAJOR_VERSION == 34
     ATTR_REPEL_MISSILES,       // Repel missiles active
     ATTR_DEFLECT_MISSILES,     // Deflect missiles active
-#endif
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
+#endif
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another

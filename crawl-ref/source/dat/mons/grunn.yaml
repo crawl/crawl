@@ -1,0 +1,18 @@
+name: "Grunn"
+glyph: {char: "g", colour: lightgreen}
+flags: [speaks, unique, male]
+species: gnoll
+holiness: [undead]
+will: 100
+attacks:
+ - {type: hit, damage: 50}
+hd: 16
+hp_10x: 2000
+ac: 6
+ev: 6
+has_corpse: true
+shout: growl
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

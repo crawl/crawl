@@ -1,0 +1,21 @@
+name: "Sojobo"
+glyph: {char: "Q", colour: lightgreen}
+flags: [flies, fighter, see_invis, speaks, warm_blood, unique, female]
+xp_mult: 20
+species: tengu
+will: 140
+attacks:
+ - {type: hit, damage: 28}
+ - {type: peck, damage: 14}
+ - {type: claw, damage: 14}
+hd: 20
+hp_10x: 1500
+ac: 2
+ev: 24
+spells: sojobo
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

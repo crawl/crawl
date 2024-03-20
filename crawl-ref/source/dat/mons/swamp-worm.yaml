@@ -1,0 +1,21 @@
+name: "swamp worm"
+glyph: {char: "w", colour: brown}
+flags: [no_skeleton]
+xp_mult: 3
+genus: ribbon_worm
+will: 10
+attacks:
+ - {type: bite, damage: 26}
+hd: 10
+hp_10x: 350
+ac: 3
+ev: 12
+spells: swamp_worm
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+speed: 12
+energy: {move: 12}
+size: medium
+shape: snake
+tile_variance: water

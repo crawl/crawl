@@ -273,8 +273,6 @@ void debug_list_monsters()
         {
             continue;
         }
-        if (mi->flags & MF_PACIFIED)
-            exp /= 2;
 
         total_adj_exp += exp;
     }
@@ -365,11 +363,10 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
+         "HD=%d/%d HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
          mons.get_experience_level(),
-         mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
@@ -384,8 +381,8 @@ void debug_stethoscope(int mon)
     if (mons.damage_total)
     {
         mprf(MSGCH_DIAGNOSTICS,
-             "pdam=%1.1f/%d (%d%%)",
-             0.5 * mons.damage_friendly, mons.damage_total,
+             "pdam=%d/%d (%d%%)",
+             mons.damage_friendly, mons.damage_total,
              50 * mons.damage_friendly / mons.damage_total);
     }
 
@@ -604,36 +601,19 @@ void debug_make_monster_shout(monster* mon)
     mpr("== Done ==");
 }
 
-void wizard_gain_monster_level(monster* mon)
-{
-    // Give monster as much experience as it can hold,
-    // but cap the levels gained to just 1.
-    bool worked = mon->gain_exp(INT_MAX - mon->experience, 1);
-    if (!worked)
-        simple_monster_message(*mon, " seems unable to mature further.", MSGCH_WARN);
-
-    // (The gain_exp() method will chop the monster's experience down
-    // to half-way between its new level and the next, so we needn't
-    // worry about it being left with too much experience.)
-}
-
 void wizard_apply_monster_blessing(monster* mon)
 {
-    mprf(MSGCH_PROMPT, "Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? ");
+    mprf(MSGCH_PROMPT, "Apply blessing of the (S)hining One? ");
 
     char type = (char) getchm(KMC_DEFAULT);
     type = toalower(type);
 
-    if (type != 'b' && type != 's' && type != 'r')
+    if (type != 's')
     {
         canned_msg(MSG_OK);
         return;
     }
-    god_type god = GOD_NO_GOD;
-    if (type == 'b' || type == 'r' && coinflip())
-        god = GOD_BEOGH;
-    else
-        god = GOD_SHINING_ONE;
+    god_type god = GOD_SHINING_ONE;
 
     if (!bless_follower(mon, god, true))
         mprf("%s won't bless this monster for you!", god_name(god).c_str());
@@ -784,60 +764,41 @@ void wizard_make_monster_summoned(monster* mon)
         return;
     }
 
-    mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
-    mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
-
-    mprf(MSGCH_PROMPT, "Which summon type? ");
-
-    char choice = toalower(getchm());
-
-    if (!(choice >= 'a' && choice <= 'h') && choice != 'm' && choice != 's')
+    vector<WizardEntry> choices =
     {
-        canned_msg(MSG_OK);
+        {'a', "clone", MON_SUMM_CLONE}, {'b', "animated", MON_SUMM_ANIMATE},
+        {'c', "chaos", MON_SUMM_CHAOS}, {'d', "miscast", MON_SUMM_MISCAST},
+        {'e', "zot", MON_SUMM_ZOT}, {'f', "wrath", MON_SUMM_WRATH},
+        {'h', "aid", MON_SUMM_AID}, {'m', "misc", 0},
+        {'s', "spell", 's'},
+    };
+
+    auto menu = WizardMenu("Which summon type (ESC to exit)?", choices);
+    if (!menu.run(true))
         return;
-    }
 
-    int type = 0;
-
-    switch (choice)
+    int type = menu.result();
+    if ('s' == type)
     {
-        case 'a': type = MON_SUMM_CLONE; break;
-        case 'b': type = MON_SUMM_ANIMATE; break;
-        case 'c': type = MON_SUMM_CHAOS; break;
-        case 'd': type = MON_SUMM_MISCAST; break;
-        case 'e': type = MON_SUMM_ZOT; break;
-        case 'f': type = MON_SUMM_WRATH; break;
-        case 'h': type = MON_SUMM_AID; break;
-        case 'm': type = 0; break;
+        char specs[80];
 
-        case 's':
+        msgwin_get_line("Cast which spell by name? ",
+                        specs, sizeof(specs));
+
+        if (specs[0] == '\0')
         {
-            char specs[80];
-
-            msgwin_get_line("Cast which spell by name? ",
-                            specs, sizeof(specs));
-
-            if (specs[0] == '\0')
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
-
-            spell_type spell = spell_by_name(specs, true);
-            if (spell == SPELL_NO_SPELL)
-            {
-                mprf(MSGCH_PROMPT, "No such spell.");
-                return;
-            }
-            type = (int) spell;
-            break;
+            canned_msg(MSG_OK);
+            return;
         }
 
-        default:
-            die("Invalid summon type choice.");
-            break;
+        spell_type spell = spell_by_name(specs, true);
+        if (spell == SPELL_NO_SPELL)
+        {
+            mprf(MSGCH_PROMPT, "No such spell.");
+            return;
+        }
+        type = (int) spell;
     }
-
     mon->mark_summoned(dur, true, type);
     mpr("Monster is now summoned.");
 }

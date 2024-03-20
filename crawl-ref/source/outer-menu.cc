@@ -94,7 +94,7 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
         formatted_string new_contents;
         new_contents.textcolour(fg);
         new_contents.cprintf("%s", tw->get_text().tostring().c_str());
-        tw->set_text(move(new_contents));
+        tw->set_text(std::move(new_contents));
         tw->set_bg_colour(static_cast<COLOURS>(bg));
         return;
     }
@@ -215,7 +215,7 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     {
         auto scroller = make_shared<Scroller>();
         scroller->set_child(m_grid);
-        m_root = move(scroller);
+        m_root = std::move(scroller);
     }
     else
         m_root = m_grid;
@@ -275,7 +275,7 @@ void OuterMenu::add_label(shared_ptr<Text> label, int x, int y)
     ASSERT(y >= 0 && y < m_height);
     ASSERT(m_buttons[y*m_width + x] == nullptr);
     m_labels.emplace_back(label->get_text(), coord_def(x, y));
-    m_grid->add_child(move(label), x, y);
+    m_grid->add_child(std::move(label), x, y);
 }
 
 void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
@@ -307,7 +307,7 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     {
         auto desc_text = make_shared<Text>(formatted_string(btn->description, WHITE));
         desc_text->set_wrap_text(true);
-        descriptions->add_child(move(desc_text));
+        descriptions->add_child(std::move(desc_text));
         m_description_indexes[y*m_width + x] = descriptions->num_children()-1;
     }
 

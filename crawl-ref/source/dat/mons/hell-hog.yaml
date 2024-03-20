@@ -1,0 +1,19 @@
+name: "hell hog"
+glyph: {char: "h", colour: lightred}
+resists: {fire: 3}
+genus: hog
+holiness: [demonic]
+will: 40
+attacks:
+ - {type: bite, damage: 20}
+hd: 11
+hp_10x: 595
+ac: 2
+ev: 9
+spells: hell_hog
+has_corpse: true
+shout: squeal
+intelligence: animal
+speed: 14
+size: medium
+shape: quadruped

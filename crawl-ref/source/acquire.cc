@@ -19,8 +19,11 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "colour.h"
+#include "database.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "english.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -36,6 +39,7 @@
 #include "notes.h"
 #include "output.h"
 #include "options.h"
+#include "player-equip.h"
 #include "prompt.h"
 #include "randbook.h"
 #include "random.h"
@@ -51,10 +55,10 @@
 #include "unwind.h"
 #include "ui.h"
 
-static equipment_type _acquirement_armour_slot(bool);
-static armour_type _acquirement_armour_for_slot(equipment_type, bool);
+static equipment_type _acquirement_armour_slot(int);
+static armour_type _acquirement_armour_for_slot(equipment_type);
 static armour_type _acquirement_shield_type();
-static armour_type _acquirement_body_armour(bool);
+static armour_type _acquirement_body_armour();
 static armour_type _useless_armour_type();
 
 /**
@@ -79,14 +83,13 @@ static int _skill_rdiv(skill_type skill, int mult = 1)
  *
  * Guaranteed to be wearable, in principle.
  *
- * @param divine    Lowers the odds of high-tier body armours being chosen.
+ * @param agent     The source of the acquirement (e.g. a god)
  * @return          The armour_type of the armour to be generated.
  */
-static int _acquirement_armour_subtype(bool divine, int & /*quantity*/,
-                                       int /*agent*/)
+static int _acquirement_armour_subtype(int & /*quantity*/, int agent)
 {
-    const equipment_type slot_type = _acquirement_armour_slot(divine);
-    return _acquirement_armour_for_slot(slot_type, divine);
+    const equipment_type slot_type = _acquirement_armour_slot(agent);
+    return _acquirement_armour_for_slot(slot_type);
 }
 
 /**
@@ -125,20 +128,20 @@ M filtered_vector_select(vector<pair<M, int>> weights, function<bool(M)> filter)
  *
  * Guaranteed to be wearable, in principle.
  *
- * @param divine    Whether the item is a god gift.
- * @return          A random equipment slot; e.g. EQ_SHIELD, EQ_BODY_ARMOUR...
+ * @param agent     The source of the acquirement (e.g. a god)
+ * @return          A random equipment slot; e.g. EQ_OFFHAND, EQ_BODY_ARMOUR...
  */
-static equipment_type _acquirement_armour_slot(bool divine)
+static equipment_type _acquirement_armour_slot(int agent)
 {
     if (you.wear_barding()
         && one_chance_in(you.seen_armour[ARM_BARDING] ? 4 : 2))
     {
-            return EQ_BOOTS;
+        return EQ_BOOTS;
     }
 
     vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR,   divine ? 5 : 1 },
-        { EQ_SHIELD,        1 },
+        { EQ_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 5 : 1) },
+        { EQ_OFFHAND,       1 },
         { EQ_CLOAK,         1 },
         { EQ_HELMET,        1 },
         { EQ_GLOVES,        1 },
@@ -162,11 +165,9 @@ static equipment_type _acquirement_armour_slot(bool divine)
  * heavy investment in armour skill, relative to dodging & spellcasting, makes
  * heavier armours more likely to be generated.
  *
- * @param divine    Whether the armour is a god gift.
  * @return          The armour_type of the armour to be generated.
  */
-static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
-                                                bool divine)
+static armour_type _acquirement_armour_for_slot(equipment_type slot_type)
 {
     switch (slot_type)
     {
@@ -185,10 +186,10 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
             if (you_can_wear(EQ_HELMET))
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
-        case EQ_SHIELD:
+        case EQ_OFFHAND:
             return _acquirement_shield_type();
         case EQ_BODY_ARMOUR:
-            return _acquirement_body_armour(divine);
+            return _acquirement_body_armour();
         default:
             die("Unknown armour slot %d!", slot_type);
     }
@@ -212,6 +213,10 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  */
 static armour_type _acquirement_shield_type()
 {
+    // Fixed chance for an orb.
+    if (one_chance_in(4))
+        return ARM_ORB;
+
     const int scale = 256;
     vector<pair<armour_type, int>> weights = {
         { ARM_BUCKLER,       (5 + player_shield_racial_factor()) * 4 * scale
@@ -230,22 +235,17 @@ static armour_type _acquirement_shield_type()
 /**
  * Determine the weight (likelihood) to acquire a specific type of body armour.
  *
- * If divine is set, returns the base weight for the armour type.
- * Otherwise, if warrior is set, multiplies the base weight by the base ac^2.
+ * If warrior is set, multiplies the base weight by the base ac^2.
  * Otherwise, uses the player's Armour skill to crudely guess how likely they
  * are to want the armour, based on its EVP.
  *
  * @param armour    The type of armour in question. (E.g. ARM_ROBE.)
- * @param divine    Whether the 'acquirement' is actually a god gift.
  * @param warrior   Whether we think the player only cares about AC.
  * @return          A weight for the armour.
  */
-static int _body_acquirement_weight(armour_type armour,
-                                    bool divine, bool warrior)
+static int _body_acquirement_weight(armour_type armour, bool warrior)
 {
     const int base_weight = armour_acq_weight(armour);
-    if (divine)
-        return base_weight; // gods don't care about your skills, apparently
 
     if (warrior)
     {
@@ -256,7 +256,7 @@ static int _body_acquirement_weight(armour_type armour,
     // highest chance when armour skill = (displayed) evp - 3
     const int evp = armour_prop(armour, PARM_EVASION);
     const int skill = min(27, _skill_rdiv(SK_ARMOUR) + 3);
-    const int sk_diff = skill + evp / 10;
+    const int sk_diff = abs(skill + evp / 10);
     const int inv_diff = max(1, 27 - sk_diff);
     // armour closest to ideal evp is 27^3 times as likely as the furthest away
     return base_weight * inv_diff * inv_diff * inv_diff;
@@ -266,10 +266,9 @@ static int _body_acquirement_weight(armour_type armour,
  * Choose a random type of body armour to be generated via acquirement or
  * god gifts.
  *
- * @param divine      Whether the armour is a god gift.
- * @return A potentially wearable type of body armour..
+ * @return A potentially wearable type of body armour.
  */
-static armour_type _acquirement_body_armour(bool divine)
+static armour_type _acquirement_body_armour()
 {
     // Using an arbitrary legacy formula, do we think the player doesn't care
     // about armour EVP?
@@ -288,7 +287,7 @@ static armour_type _acquirement_body_armour(bool divine)
         if (!check_armour_size(armour, you.body_size(PSIZE_TORSO, true)))
             continue;
 
-        const int weight = _body_acquirement_weight(armour, divine, warrior);
+        const int weight = _body_acquirement_weight(armour, warrior);
 
         if (weight)
         {
@@ -311,7 +310,7 @@ static armour_type _acquirement_body_armour(bool divine)
 static armour_type _useless_armour_type()
 {
     vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR, 1 }, { EQ_SHIELD, 1 }, { EQ_CLOAK, 1 },
+        { EQ_BODY_ARMOUR, 1 }, { EQ_OFFHAND, 1 }, { EQ_CLOAK, 1 },
         { EQ_HELMET, 1 }, { EQ_GLOVES, 1 }, { EQ_BOOTS, 1 },
     };
 
@@ -339,7 +338,7 @@ static armour_type _useless_armour_type()
             return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
             return ARM_CLOAK;
-        case EQ_SHIELD:
+        case EQ_OFFHAND:
         {
             vector<pair<armour_type, int>> shield_weights = {
                 { ARM_BUCKLER,       1 },
@@ -388,7 +387,7 @@ static armour_type _pick_unseen_armour()
         if (!you_can_wear(slot))
             continue;
 
-        const armour_type sub_type = _acquirement_armour_for_slot(slot, false);
+        const armour_type sub_type = _acquirement_armour_for_slot(slot);
         ASSERT(sub_type != NUM_ARMOURS);
 
         if (!you.seen_armour[sub_type] && one_chance_in(++count))
@@ -433,11 +432,10 @@ static bool _regular_staves_useless()
  * Randomly choose a class of weapons (those using a specific weapon skill)
  * for acquirement to give the player. Weight toward the player's skills.
  *
- * @param divine    Whether this is a god gift, which are less strongly
- *                  tailored to the player's skills.
+ * @param agent     The source of the acquirement (e.g. a god)
  * @return          An appropriate weapon skill; e.g. SK_LONG_BLADES.
  */
-static skill_type _acquirement_weapon_skill(bool divine, int agent)
+static skill_type _acquirement_weapon_skill(int agent)
 {
     // reservoir sample.
     int count = 0;
@@ -456,8 +454,8 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
         int weight = _skill_rdiv(sk) + 1;
-        // Exaggerate the weighting if it's a scroll acquirement.
-        if (!divine)
+        // Exaggerate the weighting if it's not a Trog gift.
+        if (agent != GOD_TROG)
             weight = (weight + 1) * (weight + 2);
         count += weight;
 
@@ -468,9 +466,9 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
     return skill;
 }
 
-static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agent)
+static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
 {
-    const skill_type skill = _acquirement_weapon_skill(divine, agent);
+    const skill_type skill = _acquirement_weapon_skill(agent);
 
     int best_sk = 0;
     for (int i = SK_FIRST_WEAPON;
@@ -514,8 +512,8 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
         if (two_handed && you.get_mutation_level(MUT_MISSING_HAND))
             continue;
 
-        // For non-Trog/Okawaru acquirements, give a boost to high-end items.
-        if (!divine && !is_range_weapon(item_considered))
+        // For non-Trog acquirements, give a boost to high-end items.
+        if (agent != GOD_TROG && !is_range_weapon(item_considered))
         {
             if (acqweight < 500)
                 acqweight = 500;
@@ -529,7 +527,13 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
             acqweight *= damage / property(item_considered, PWPN_SPEED);
         }
 
-        if (two_handed)
+        // Rarely give out two-handers to steel elves.
+        if (you.has_mutation(MUT_WIELD_OFFHAND))
+        {
+            if (two_handed)
+                acqweight /= 10;
+        }
+        else if (two_handed)
             acqweight = acqweight * dont_shield / want_shield;
         else
             acqweight = acqweight * want_shield / dont_shield;
@@ -545,7 +549,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
     return result;
 }
 
-static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_missile_subtype(int & /*quantity*/,
                                         int /*agent*/)
 {
     // Choose from among all usable missile types.
@@ -563,7 +567,7 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/,
     return *random_choose_weighted(missile_weights);
 }
 
-static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_jewellery_subtype(int & /*quantity*/,
                                           int /*agent*/)
 {
     int result = 0;
@@ -592,7 +596,7 @@ static vector<pair<stave_type, int>> _base_staff_weights()
         { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
         { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
         { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
-        { STAFF_POISON,      _skill_rdiv(SK_POISON_MAGIC) },
+        { STAFF_ALCHEMY,     _skill_rdiv(SK_ALCHEMY) },
         { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
         { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
         { NUM_STAVES,        5 },
@@ -618,13 +622,7 @@ static bool _remove_ided_staff_weights(vector<pair<stave_type, int>> &weights)
     return found;
 }
 
-static bool _unided_acq_staves()
-{
-    vector<pair<stave_type, int>> weights = _base_staff_weights();
-    return _remove_ided_staff_weights(weights);
-}
-
-static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_staff_subtype(int & /*quantity*/,
                                       int /*agent*/)
 {
     vector<pair<stave_type, int>> weights = _base_staff_weights();
@@ -634,7 +632,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
 
     // chance to choose randomly, goes to 100% if all staves are id'd or 0
     // skill. Just brute force it.
-    // should not be used in normal acquirement..
     if (staff == NUM_STAVES)
     {
         do
@@ -682,7 +679,7 @@ static bool _unided_acq_misc()
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_misc_subtype(int & /*quantity*/,
                                      int /*agent*/)
 {
     const vector<pair<misc_item_type, int> > choices = _misc_base_weights();
@@ -712,7 +709,7 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
  *
  * @return          A random wand type.
  */
-static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_wand_subtype(int & /*quantity*/,
                                      int /*agent */)
 {
     const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
@@ -740,7 +737,7 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
     return *wand;
 }
 
-static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/,
+static int _acquirement_book_subtype(int & /*quantity*/,
                                      int /*agent*/)
 {
     return BOOK_MINOR_MAGIC;
@@ -748,7 +745,94 @@ static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/,
     //or asserts will get set off
 }
 
-typedef int (*acquirement_subtype_finder)(bool divine, int &quantity, int agent);
+static vector<pair<talisman_type, int>> _base_talisman_tiers()
+{
+    vector<pair<talisman_type, int>> tiers = {
+        { TALISMAN_BEAST,       1 },
+        { TALISMAN_FLUX,        2 },
+        { TALISMAN_MAW,         3 },
+        { TALISMAN_SERPENT,     3 },
+        { TALISMAN_BLADE,       3 },
+        { TALISMAN_SPELLFORGED, 3 },
+        { TALISMAN_STATUE,      4 },
+        { TALISMAN_DRAGON,      4 },
+        { TALISMAN_STORM,       5 },
+        { TALISMAN_DEATH,       5 },
+        { NUM_TALISMANS,        5 },
+    };
+    return tiers;
+}
+
+// Scale talisman chances, strongly biased in favour of those we haven't
+// seen before, and also biased in favour of higher tier talismans when
+// we have more Shapeshifting skill.
+static void _scale_talisman_weights(vector<pair<talisman_type, int>> &tiers,
+                                    int agent)
+{
+    // This will produce a target tier between 3 and 6 depending on skill.
+    // This is very roughly one tier higher than the tier of talisman you
+    // can use with your current skill, because you probably already have a
+    // talisman matching your current skill and are looking for an upgrade.
+    const int target_tier = min(6, div_rand_round(_skill_rdiv(SK_SHAPESHIFTING), 7) + 3);
+
+    // Change all the tier values, other than the random option, to weights.
+    // The random option will stay weight 5.
+    for (auto &tier : tiers)
+    {
+        // Skip the random option.
+        if (tier.first == NUM_TALISMANS)
+            continue;
+
+        // Xom will set all weights but the one for the random option to 0.
+        if (agent == GOD_XOM)
+        {
+            tier.second = 0;
+            continue;
+        }
+
+        int scale_value = 1;
+
+        if (!you.seen_talisman[tier.first])
+            scale_value *= 10;
+
+        if (tier.second == target_tier)
+            scale_value *= 30;
+        else if (abs(tier.second - target_tier) == 1)
+            scale_value *= 15;
+        else if (abs(tier.second - target_tier) == 2)
+            scale_value *= 5;
+
+        tier.second = scale_value;
+    }
+}
+
+/**
+ * Choose a random type of talisman to be generated via acquirement or god
+ * gifts.
+ *
+ * Heavily weighted toward talismans the player hasn't yet seen, and also
+ * weighted toward higher level talismans when the player has more
+ * shapeshifting skill.
+ *
+ * @return          A random talisman type.
+ */
+static int _acquirement_talisman_subtype(int & /*quantity*/,
+                                         int agent)
+{
+    vector<pair<talisman_type, int>> tiers = _base_talisman_tiers();
+    talisman_type talisman = NUM_TALISMANS;
+
+    _scale_talisman_weights(tiers, agent);
+    talisman = *random_choose_weighted(tiers);
+
+    // Choose randomly.
+    if (talisman == NUM_TALISMANS)
+        talisman = static_cast<talisman_type>(random2(NUM_TALISMANS));
+
+    return talisman;
+}
+
+typedef int (*acquirement_subtype_finder)(int &quantity, int agent);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
     _acquirement_weapon_subtype,
@@ -771,21 +855,21 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no rods
 #endif
     0, // no runes either
-    0, // no talismans... for now. TODO: add talisman acquirement
+    _acquirement_talisman_subtype,
+    0, // no gems either
+    0, // no gizmos (handled elsewhere)
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,
-                                     int &quantity, bool divine,
+                                     int &quantity,
                                      int agent)
 {
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR)
+    if (class_wanted == OBJ_ARMOUR && !player_can_use_armour()
         || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING)
-        || you.species == SP_OCTOPODE && class_wanted == OBJ_ARMOUR
-           && you.has_mutation(MUT_MISSING_HAND)
-           && bool(!you_can_wear(EQ_HELMET)))
+        || class_wanted == OBJ_JEWELLERY && you.has_mutation(MUT_NO_JEWELLERY))
     {
         return OBJ_RANDOM;
     }
@@ -803,7 +887,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         if (_subtype_finders[class_wanted])
         {
             type_wanted =
-                (*_subtype_finders[class_wanted])(divine, quantity, agent);
+                (*_subtype_finders[class_wanted])(quantity, agent);
         }
 
         // Double-check our subtype for weapons is valid
@@ -897,6 +981,9 @@ static bool _skill_useless_with_god(int skill)
     case GOD_TROG:
         return _is_magic_skill(skill);
     case GOD_ZIN:
+        if (skill == SK_SHAPESHIFTING)
+            return true;
+        // fallthrough to other good gods
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
         return skill == SK_NECROMANCY;
@@ -935,11 +1022,9 @@ static bool _should_acquire_manual(int agent)
     if (you_worship(GOD_TROG))
         magic_weights = 0;
 
-    // If someone has 25% or more magic skills, never give manuals.
-    // Otherwise, count magic skills double to bias against manuals
-    // for magic users.
-    return magic_weights * 3 < other_weights
-           && x_chance_in_y(other_weights, 2*magic_weights + other_weights);
+    // Give magic skills double the weight of non-magic skills, since
+    // even a pure caster will be training various non-magic skills.
+    return x_chance_in_y(other_weights, 2*magic_weights + other_weights);
 }
 
 /**
@@ -964,6 +1049,8 @@ static bool _acquire_manual(item_def &book)
 
         // Greatly reduce the chances of getting a manual for a skill
         // you couldn't use unless you switched your religion.
+        // Note: manuals that gods actively hate, e.g. spellcasting under
+        // Trog, will be mulched and replaced later. This is silly!
         if (_skill_useless_with_god(sk))
             w /= 2;
 
@@ -1044,10 +1131,11 @@ static bool _do_book_acquirement(item_def &book, int agent)
     }
     } // switch book choice
 
-    // If we couldn't make a useful book, try to make a manual instead.
-    // We have to temporarily identify the book for this.
+
     if (agent != GOD_XOM && agent != GOD_SIF_MUNA)
     {
+        // If we couldn't make a useful book, try to make a manual instead.
+        // We have to temporarily identify the book for this.
         bool useless = false;
         {
             unwind_var<iflags_t> oldflags{book.flags};
@@ -1138,9 +1226,6 @@ static bool _is_armour_plain(const item_def &item)
     return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
-// ugh
-#define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
-
 /**
  * Take a newly-generated acquirement item, and adjust its brand if we don't
  * like it.
@@ -1152,19 +1237,16 @@ static bool _is_armour_plain(const item_def &item)
  *
  * @param item      The item which may have its brand adjusted. Not necessarily
  *                  a weapon or piece of armour.
- * @param divine    Whether the item is a god gift, rather than from
- *                  acquirement proper.
  * @param agent     The source of the acquirement. For god gifts, it's equal to
  *                  the god.
  */
-static void _adjust_brand(item_def &item, bool divine, int agent)
+static void _adjust_brand(item_def &item, int agent)
 {
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR)
         return; // don't reroll missile brands, I guess
 
     if (is_artefact(item))
         return; // their own kettle of fish
-
 
     // Trog has a restricted brand table.
     if (agent == GOD_TROG && item.base_type == OBJ_WEAPONS)
@@ -1175,13 +1257,13 @@ static void _adjust_brand(item_def &item, bool divine, int agent)
         return;
     }
 
-    // Not from a god, so we should prefer better brands.
-    if (!divine && item.base_type == OBJ_WEAPONS)
+    // Not from Trog, so we should prefer better brands.
+    if (agent != GOD_TROG && item.base_type == OBJ_WEAPONS)
     {
         while (_weapon_brand_quality(get_weapon_brand(item),
                                      is_range_weapon(item)) < random2(6))
         {
-            reroll_brand(item, ITEM_LEVEL);
+            reroll_brand(item, ISPEC_GOOD_ITEM);
         }
     }
 }
@@ -1217,6 +1299,9 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying pain weapon after Necro sac!";
     }
 
+    if (you.undead_or_demonic(false) && is_holy_item(item))
+        return "Destroying holy weapon for evil player!";
+
     return ""; // all OK
 }
 
@@ -1226,12 +1311,9 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
-                         || agent == GOD_TROG
-#if TAG_MAJOR_VERSION == 34
-                         || agent == GOD_PAKELLAS
-#endif
-                        );
+    // Trog/Xom gifts are generally lower quality than scroll acquirement or
+    // Oka gifts. We also use lower quality for missile gifts.
+    const int item_level = ((agent == GOD_TROG || agent == GOD_XOM || class_wanted == OBJ_MISSILES) ? ISPEC_GIFT : ISPEC_GOOD_ITEM);
     int thing_created = NON_ITEM;
     int quant = 1;
 #define MAX_ACQ_TRIES 40
@@ -1244,7 +1326,7 @@ int acquirement_create_item(object_class_type class_wanted,
         {
             // This may clobber class_wanted (e.g. staves)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
-                                                    divine, agent);
+                                                    agent);
         }
         ASSERT(type_wanted != -1);
 
@@ -1255,7 +1337,7 @@ int acquirement_create_item(object_class_type class_wanted,
             want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted,
-                              ITEM_LEVEL, 0, agent);
+                              item_level, 0, agent);
 
         if (thing_created == NON_ITEM)
         {
@@ -1265,18 +1347,17 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(env.item[thing_created]);
-        _adjust_brand(acq_item, divine, agent);
+        _adjust_brand(acq_item, agent);
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
         if (acq_item.base_type == OBJ_ARMOUR && !is_artefact(acq_item))
         {
-            if (agent != GOD_XOM
-                && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
-                || !divine
-                && you.seen_armour[acq_item.sub_type]
+            if (agent != GOD_XOM &&
+                (x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
+                || you.seen_armour[acq_item.sub_type]
                 && !one_chance_in(3)
-                && item_tries < 20)
+                && item_tries < 20))
             {
                 // We have seen the exact item already, it's very unlikely
                 // extras will do any good.
@@ -1299,7 +1380,7 @@ int acquirement_create_item(object_class_type class_wanted,
                 {
                     destroy_item(thing_created, true);
                     thing_created = items(true, OBJ_ARMOUR, at,
-                                          ITEM_LEVEL, 0, agent);
+                                          item_level, 0, agent);
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
                 {
@@ -1334,7 +1415,7 @@ int acquirement_create_item(object_class_type class_wanted,
         {
             // TODO: consider doubling the gift timeout instead of adjusting
             // gift quantity. That'd be an Oka nerf, but maybe it's fine?
-            if (divine)
+            if (agent == GOD_OKAWARU || agent == GOD_XOM)
                 acq_item.quantity = max(1, acq_item.quantity / 2);
             else
                 acq_item.quantity *= 5;
@@ -1394,7 +1475,7 @@ int acquirement_create_item(object_class_type class_wanted,
             if (agent == GOD_TROG)
                 acq_item.plus += random2(3);
             // God gifts (except Xom's) never have a negative enchantment
-            if (divine && agent != GOD_XOM)
+            if (agent == GOD_OKAWARU || agent == GOD_TROG)
                 acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
         }
 
@@ -1463,13 +1544,16 @@ class AcquireMenu : public InvMenu
     friend class AcquireEntry;
 
     CrawlVector &acq_items;
+    string items_key;
+
+    bool is_gizmo;
 
     void init_entries();
     string get_keyhelp(bool unused) const override;
     bool examine_index(int i) override;
     bool skip_process_command(int keyin) override;
 public:
-    AcquireMenu(CrawlVector &aitems);
+    AcquireMenu(CrawlVector &aitems, string ikey, bool is_gizmo);
 };
 
 class AcquireEntry : public InvEntry
@@ -1500,10 +1584,13 @@ public:
     }
 };
 
-AcquireMenu::AcquireMenu(CrawlVector &aitems)
+AcquireMenu::AcquireMenu(CrawlVector &aitems, string ikey,
+                         bool _is_gizmo = false)
     : InvMenu(MF_SINGLESELECT | MF_QUIET_SELECT
               | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
-      acq_items(aitems)
+      acq_items(aitems),
+      items_key(ikey),
+      is_gizmo(_is_gizmo)
 {
     menu_action = ACT_EXECUTE;
     action_cycle = CYCLE_TOGGLE;
@@ -1513,12 +1600,16 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
 
     init_entries();
 
-    set_title("Choose an item to acquire.");
+    if (is_gizmo)
+        set_title("Choose a gizmo to assemble.");
+    else
+        set_title("Choose an item to acquire.");
 }
 
-static void _create_acquirement_item(item_def &item)
+static void _create_acquirement_item(item_def &item, string items_key,
+                                     bool is_gizmo = false)
 {
-    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    auto &acq_items = you.props[items_key].get_vector();
 
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
@@ -1540,27 +1631,48 @@ static void _create_acquirement_item(item_def &item)
 
     set_ident_type(item, true);
 
-    if (copy_item_to_grid(item, you.pos()))
-        canned_msg(MSG_SOMETHING_APPEARS);
+    if (is_gizmo)
+    {
+        move_item_to_inv(item, true);
+        // XXX: This is ugly and only works because there can never be another
+        //      gizmo in our inventory, but move_item_to_inv() doesn't actually
+        //      return an index or anything else we can use.
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (you.inv[i].base_type == OBJ_GIZMOS)
+            {
+                mprf("You assemble %s and install it in your exoskeleton!",
+                     item.name(DESC_A).c_str());
+                equip_item(EQ_GIZMO, i, false);
+                break;
+            }
+        }
+    }
     else
-        canned_msg(MSG_NOTHING_HAPPENS);
+    {
+        if (copy_item_to_grid(item, you.pos()) != NON_ITEM)
+            canned_msg(MSG_SOMETHING_APPEARS);
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     acq_items.clear();
-    you.props.erase(ACQUIRE_ITEMS_KEY);
+    you.props.erase(items_key);
 }
 
 void AcquireMenu::init_entries()
 {
     menu_letter ckey = 'a';
+    string key = items_key;
     for (item_def& item : acq_items)
     {
         auto newentry = make_unique<AcquireEntry>(item);
         newentry->hotkeys.clear();
         newentry->add_hotkey(ckey++);
-        add_entry(move(newentry));
+        add_entry(std::move(newentry));
     }
 
-    on_single_selection = [this](const MenuEntry& item)
+    on_single_selection = [this, key](const MenuEntry& item)
     {
         // update the more with a y/n prompt
         update_more();
@@ -1573,7 +1685,7 @@ void AcquireMenu::init_entries()
         }
 
         item_def &acq_item = *static_cast<item_def*>(item.data);
-        _create_acquirement_item(acq_item);
+        _create_acquirement_item(acq_item, key, is_gizmo);
 
         return false;
     };
@@ -1588,8 +1700,9 @@ string AcquireMenu::get_keyhelp(bool) const
         auto& entry = *selected[0];
         const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
         help = make_stringf(
-               "<%s>Acquire %s? (%s/N)</%s>\n",
+               "<%s>%s %s? (%s/N)</%s>\n",
                col.c_str(),
+               is_gizmo ? "Assemble" : "Acquire",
                entry.text.c_str(),
                Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                col.c_str());
@@ -1599,16 +1712,32 @@ string AcquireMenu::get_keyhelp(bool) const
     // looks better with a margin:
     help += string(MIN_COLS, ' ') + '\n';
 
-    help += make_stringf(
-        //[!] acquire|examine item  [a-i] select item to acquire
+    if (is_gizmo)
+    {
+        help += make_stringf(
+        //[!] assemble|examine gizmo  [a-i] select gizmo to assemble
         //[Esc/R-Click] exit
         "<lightgrey>%s%s  %s %s</lightgrey>",
         menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
-        menu_action == ACT_EXECUTE ? " <w>acquire</w>|examine items" :
-                                     " acquire|<w>examine</w> items",
+        menu_action == ACT_EXECUTE ? " <w>assemble</w>|examine gizmo" :
+                                     " assemble|<w>examine</w> gizmo",
         hyphenated_hotkey_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "select item for acquirement"
-                                   : "examine item");
+        menu_action == ACT_EXECUTE ? "select gizmo to assemble"
+                                   : "examine gizmo");
+    }
+    else
+    {
+        help += make_stringf(
+            //[!] acquire|examine item  [a-i] select item to acquire
+            //[Esc/R-Click] exit
+            "<lightgrey>%s%s  %s %s</lightgrey>",
+            menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
+            menu_action == ACT_EXECUTE ? " <w>acquire</w>|examine items" :
+                                        " acquire|<w>examine</w> items",
+            hyphenated_hotkey_letters(item_count(), 'a').c_str(),
+            menu_action == ACT_EXECUTE ? "select item for acquirement"
+                                    : "examine item");
+    }
     return pad_more_with_esc(help);
 }
 
@@ -1634,11 +1763,11 @@ bool AcquireMenu::skip_process_command(int keyin)
     return Menu::skip_process_command(keyin);
 }
 
-static item_def _acquirement_item_def(object_class_type item_type)
+static item_def _acquirement_item_def(object_class_type item_type, int agent)
 {
     item_def item;
 
-    const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
+    const int item_index = acquirement_create_item(item_type, agent, true);
 
     if (item_index != NON_ITEM)
     {
@@ -1665,13 +1794,25 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        // skip staves if player has already seen all the acquirable staves
-        if (_unided_acq_staves())
+        // Staves are often less interesting options one way or the
+        // other (either they are exactly what your pure caster wants
+        // or they are the wrong staff or you aren't interested in
+        // staves). So make this option a bit rarer.
+        if (!one_chance_in(3))
             rand_classes.emplace_back(OBJ_STAVES);
     }
 
-    rand_classes.emplace_back(OBJ_JEWELLERY);
+    if (!you.has_mutation(MUT_NO_JEWELLERY))
+        rand_classes.emplace_back(OBJ_JEWELLERY);
+
     rand_classes.emplace_back(OBJ_BOOKS);
+
+    if (!you_worship(GOD_ZIN) && !you.has_mutation(MUT_NO_FORMS))
+    {
+        // We want talisman acq to be fairly rare.
+        if (one_chance_in(3))
+            rand_classes.emplace_back(OBJ_TALISMANS);
+    }
 
     // dungeon generation
     if (!scroll)
@@ -1701,15 +1842,15 @@ void make_acquirement_items()
         if (acq_items.size() == num_wanted)
             break;
 
-        auto item = _acquirement_item_def(obj_type);
+        auto item = _acquirement_item_def(obj_type, AQ_SCROLL);
         if (item.defined())
             acq_items.push_back(item);
     }
 
     // Gold is guaranteed.
-    auto gold_item = _acquirement_item_def(OBJ_GOLD);
+    auto gold_item = _acquirement_item_def(OBJ_GOLD, AQ_SCROLL);
     if (gold_item.defined())
-            acq_items.push_back(gold_item);
+        acq_items.push_back(gold_item);
 }
 
 /*
@@ -1739,12 +1880,273 @@ bool acquirement_menu()
     }
     else if (index >= 1 && index <= acq_items.size())
     {
-        _create_acquirement_item(acq_items[index - 1]);
+        _create_acquirement_item(acq_items[index - 1], ACQUIRE_ITEMS_KEY);
         return true;
     }
 
-    AcquireMenu acq_menu(acq_items);
+    AcquireMenu acq_menu(acq_items, ACQUIRE_ITEMS_KEY);
     acq_menu.show();
 
     return !you.props.exists(ACQUIRE_ITEMS_KEY);
+}
+
+/// Does this item duplicate an already-generated item's base/subtype plus ego? (Ignore plus.)
+static bool _is_duplicate(const item_def &item, CrawlVector &acq_items)
+{
+    if (is_artefact(item))
+        return false;
+    for (item_def &aitem : acq_items)
+    {
+        if (!is_artefact(aitem)
+            && aitem.is_type(item.base_type, item.sub_type)
+            && item.brand == aitem.brand)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void _make_okawaru_gifts(object_class_type gift_type)
+{
+    ASSERT(gift_type == OBJ_WEAPONS || gift_type == OBJ_ARMOUR);
+
+    const string key = gift_type == OBJ_WEAPONS ? OKAWARU_WEAPONS_KEY
+                                                : OKAWARU_ARMOUR_KEY;
+    CrawlVector &acq_items = you.props[key].get_vector();
+    acq_items.clear();
+
+    while (acq_items.size() < 4)
+    {
+        auto item = _acquirement_item_def(gift_type, you.religion);
+        if (item.defined() && !_is_duplicate(item, acq_items))
+            acq_items.push_back(item);
+    }
+}
+
+bool okawaru_gift_weapon()
+{
+    ASSERT(!you.props.exists(OKAWARU_WEAPON_GIFTED_KEY));
+
+    if (!you.props.exists(OKAWARU_WEAPONS_KEY))
+        _make_okawaru_gifts(OBJ_WEAPONS);
+
+    auto &acq_items = you.props[OKAWARU_WEAPONS_KEY].get_vector();
+
+    simple_god_message(" offers you a choice of weapons!");
+
+    int index = 0;
+    if (!clua.callfn("c_choose_okawaru_weapon", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], OKAWARU_WEAPONS_KEY);
+
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        you.props[OKAWARU_WEAPON_GIFTED_KEY] = true;
+
+        return true;
+    }
+
+    AcquireMenu acq_menu(acq_items, OKAWARU_WEAPONS_KEY);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(OKAWARU_WEAPONS_KEY))
+        return false;
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    you.props[OKAWARU_WEAPON_GIFTED_KEY] = true;
+
+    return true;
+}
+
+bool okawaru_gift_armour()
+{
+    ASSERT(!you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY));
+
+    if (!you.props.exists(OKAWARU_ARMOUR_KEY))
+        _make_okawaru_gifts(OBJ_ARMOUR);
+
+    auto &acq_items = you.props[OKAWARU_ARMOUR_KEY].get_vector();
+
+    simple_god_message(" offers you a choice of armour!");
+
+    int index = 0;
+    if (!clua.callfn("c_choose_okawaru_armour", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], OKAWARU_ARMOUR_KEY);
+
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
+
+        return true;
+    }
+
+    AcquireMenu acq_menu(acq_items, OKAWARU_ARMOUR_KEY);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(OKAWARU_ARMOUR_KEY))
+        return false;
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
+
+    return true;
+}
+
+static string _generate_gizmo_serial_number(bool at_end = false)
+{
+    string serial;
+
+    // Short serial (but only at the end of names)
+    if (at_end && one_chance_in(3))
+    {
+        serial += (coinflip() ? "Mk." : "Ver.") + std::to_string(random2(10));
+        if (coinflip())
+            serial += std::to_string(random2(10));
+        return serial;
+    }
+
+    // 1 or 2 uppercase letters
+    int num_letters = coinflip() ? 2 : 1;
+    for (int i = 0; i < num_letters; ++i)
+        serial += rand() % 26 + 65;
+
+    serial += "-";
+
+    // Generate a numerical serial. Make it shorter if we have more letters,
+    // and give a chance to use trailing 0s instead of random numbers.
+    int num_numbers = random_range(1, 4 - num_letters);
+    int num_real_numbers = (num_numbers == 4 ? 1
+                                             : random_range(1, max(1, num_numbers - 1)));
+
+    for (int i = 0; i < num_real_numbers; ++i)
+        serial += std::to_string(random2(10));
+
+    for (int i = 0; i < num_real_numbers; ++i)
+        serial += "0";
+
+    return serial;
+}
+
+static string _generate_gizmo_name()
+{
+    string name;
+
+    string noun = getMiscString("gizmo_noun");
+    string modifier = getMiscString("gizmo_modifier");
+
+    // Chance of serial number name
+    if (one_chance_in(3))
+    {
+        // 50% chance to be first or second
+        if (coinflip())
+            name += modifier + noun + " " + _generate_gizmo_serial_number(true);
+        else
+            name += _generate_gizmo_serial_number() + " " + modifier + noun;
+    }
+    // Use adjective
+    else
+    {
+        string adj = getMiscString("gizmo_adjective");
+
+        // 50% chance of modifier, applied to either noun or adjective
+        if (coinflip())
+        {
+            if (coinflip())
+                adj = modifier + adj;
+            else
+                noun = modifier + noun;
+        }
+
+        name = adj + " " + noun;
+    }
+
+    return name;
+}
+
+static void _make_coglin_gizmos()
+{
+    CrawlVector &names = you.props[COGLIN_GIZMO_NAMES_KEY].get_vector();
+
+    CrawlVector &acq_items = you.props[COGLIN_GIZMO_KEY].get_vector();
+    acq_items.clear();
+
+    // Generate the given number of gizmos, using previously announced names for
+    // them, if they exist.
+    for (unsigned int i = 0; i < COGLIN_GIZMO_NUM; ++i)
+    {
+        auto item = _acquirement_item_def(OBJ_GIZMOS, AQ_INVENTED);
+        if (item.defined())
+        {
+            if (names.size() > i)
+                item.props[ARTEFACT_NAME_KEY].get_string() = names[i].get_string();
+            else
+                item.props[ARTEFACT_NAME_KEY].get_string() = _generate_gizmo_name();
+
+            acq_items.push_back(item);
+        }
+    }
+
+    fill_gizmo_properties(acq_items);
+}
+
+bool coglin_invent_gizmo()
+{
+    if (inv_count() >= ENDOFPACK)
+    {
+        mpr("You don't have room to hold a gizmo!");
+        return false;
+    }
+
+    if (!you.props.exists(COGLIN_GIZMO_KEY))
+        _make_coglin_gizmos();
+
+    auto &acq_items = you.props[COGLIN_GIZMO_KEY].get_vector();
+
+    int index = 0;
+    if (!clua.callfn("c_choose_coglin_gizmo", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], COGLIN_GIZMO_KEY, true);
+        you.props[INVENT_GIZMO_USED_KEY] = true;
+        return true;
+    }
+
+    AcquireMenu acq_menu(acq_items, COGLIN_GIZMO_KEY, true);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(COGLIN_GIZMO_KEY))
+        return false;
+
+    you.props[INVENT_GIZMO_USED_KEY] = true;
+
+    return true;
+}
+
+// We add names to this list as they are requested, and then will use the list
+// when making actual gizmos, up to however many names were already determined.
+void coglin_announce_gizmo_name()
+{
+    CrawlVector& names = you.props[COGLIN_GIZMO_NAMES_KEY].get_vector();
+    string name = _generate_gizmo_name();
+    names.push_back(name);
+
+    mprf("Your brain swirls with designs for %s. You just need some more time...",
+         article_a(name).c_str());
 }

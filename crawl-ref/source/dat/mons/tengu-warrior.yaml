@@ -1,0 +1,20 @@
+name: "tengu warrior"
+glyph: {char: "Q", colour: cyan}
+flags: [flies, fighter, speaks, warm_blood, archer]
+xp_mult: 13
+species: tengu
+will: 40
+attacks:
+ - {type: hit, flavour: flank, damage: 16}
+ - {type: peck, damage: 8}
+ - {type: claw, damage: 8}
+hd: 10
+hp_10x: 600
+ac: 2
+ev: 17
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -142,8 +142,7 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
             case SK_SUMMONINGS:
             case SK_NECROMANCY:
             case SK_TRANSLOCATIONS:
-            case SK_TRANSMUTATIONS:
-            case SK_POISON_MAGIC:
+            case SK_ALCHEMY:
             case SK_CONJURATIONS:
             case SK_HEXES:
             case SK_FIRE_MAGIC:
@@ -201,7 +200,7 @@ static skill_type _wanderer_role_skill_select(bool defense)
         { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
-          SK_TRANSMUTATIONS, SK_POISON_MAGIC, SK_CONJURATIONS,
+          SK_ALCHEMY, SK_CONJURATIONS,
           SK_HEXES, SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_SPELLCASTING,
           SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_FIGHTING };
 
@@ -643,12 +642,11 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:
-    case SK_TRANSMUTATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
-    case SK_POISON_MAGIC:
+    case SK_ALCHEMY:
     case SK_HEXES:
         return _give_wanderer_major_spells(skill, 3, 4);
 
@@ -739,12 +737,11 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:
-    case SK_TRANSMUTATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
-    case SK_POISON_MAGIC:
+    case SK_ALCHEMY:
     case SK_HEXES:
         return _give_wanderer_minor_spells(skill);
 

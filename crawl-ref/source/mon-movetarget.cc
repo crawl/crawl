@@ -237,26 +237,21 @@ static bool _is_level_exit(const coord_def& pos)
     if (feat_is_stair(env.grid(pos)))
         return true;
 
-    // Teleportation and shaft traps.
-    const trap_type tt = get_trap_type(pos);
-    if (tt == TRAP_TELEPORT || tt == TRAP_TELEPORT_PERMANENT
-        || tt == TRAP_SHAFT)
-    {
+    // Shaft traps.
+    if (get_trap_type(pos) == TRAP_SHAFT)
         return true;
-    }
 
     return false;
 }
 
 // Returns true if a monster left the level.
-bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
+bool pacified_leave_level(monster* mon)
 {
     // If a pacified monster is leaving the level, and has reached an
     // exit (whether that exit was its target or not), handle it here.
     // Likewise, if a pacified monster is far enough away from the
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
-        || (e_index != -1 && mon->pos() == e[e_index].target)
         || grid_distance(mon->pos(), you.pos()) >= LOS_DEFAULT_RANGE * 3)
     {
         make_mons_leave_level(mon);
@@ -537,8 +532,9 @@ static bool _handle_monster_travelling(monster* mon)
         }
     }
 
-    // Else, we can see the next waypoint and are making good progress.
-    // Carry on, then!
+    // We can see the next waypoint and should be able to walk there.
+    // (Reset our target to this, just in case)
+    mon->target = mon->travel_path[0];
     return false;
 }
 
@@ -726,7 +722,7 @@ void set_random_target(monster* mon)
         if (!in_bounds(newtarget))
             continue;
 
-        if (!summon_can_attack(mon, newtarget))
+        if (!monster_los_is_valid(mon, newtarget))
             continue;
 
         if (!mon->is_location_safe(newtarget))
@@ -737,25 +733,12 @@ void set_random_target(monster* mon)
     }
 }
 
-// Try to find a band leader for the given monster
-static monster * _active_band_leader(monster * mon)
-{
-    // Not a band member
-    if (!mon->props.exists(BAND_LEADER_KEY))
-        return nullptr;
-
-    // Try to find our fearless leader.
-    unsigned leader_mid = mon->props[BAND_LEADER_KEY].get_int();
-
-    return monster_by_mid(leader_mid);
-}
-
 // Return true if a target still needs to be set. If returns false, mon->target
 // was set.
 static bool _band_wander_target(monster * mon)
 {
     int dist_thresh = LOS_DEFAULT_RANGE + HERD_COMFORT_RANGE;
-    monster * band_leader = _active_band_leader(mon);
+    monster * band_leader = mon->get_band_leader();
     if (band_leader == nullptr)
         return true;
 
@@ -894,7 +877,7 @@ static bool _band_ok(monster * mon)
 {
     // Don't have to worry about being close to the leader if no leader can be
     // found.
-    monster * leader = _active_band_leader(mon);
+    monster * leader = mon->get_band_leader();
 
     if (!leader)
         return true;
@@ -914,7 +897,7 @@ static bool _band_ok(monster * mon)
 
 void check_wander_target(monster* mon, bool isPacified)
 {
-    const monster *band_leader = _active_band_leader(mon);
+    const monster *band_leader = mon->get_band_leader();
     // default wander behaviour
     if (mon->pos() == mon->target
             // for batty bands, we want the logic in _band_ok to take
@@ -954,9 +937,29 @@ void check_wander_target(monster* mon, bool isPacified)
     }
 }
 
-static void _find_all_level_exits(vector<level_exit> &e)
+struct cached_level_exit
 {
-    e.clear();
+    coord_def pos;
+    int dist;
+
+    cached_level_exit(coord_def p = coord_def(-1, -1), int d = 0)
+        : pos(p), dist(d)
+    {
+    }
+
+    bool operator<(const cached_level_exit& a) const
+    {
+        return dist < a.dist;
+    }
+};
+
+static vector<cached_level_exit> _level_exit_cache;
+static level_id _level_exit_cache_id;
+
+static void _build_level_exit_cache()
+{
+    _level_exit_cache.clear();
+    _level_exit_cache_id = level_id::current();
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -964,35 +967,50 @@ static void _find_all_level_exits(vector<level_exit> &e)
             continue;
 
         if (_is_level_exit(*ri))
-            e.push_back(level_exit(*ri, false));
+            _level_exit_cache.push_back(*ri);
     }
 }
 
-int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
-                                 bool reset)
+bool mons_path_to_nearest_level_exit(monster* mon)
 {
-    if (e.empty() || reset)
-        _find_all_level_exits(e);
+    mon->travel_path.clear();
 
-    int retval = -1;
-    int old_dist = -1;
+    // Rebuild list of level exits on the current floor, if needed.
+    if (_level_exit_cache.empty() || _level_exit_cache_id != level_id::current())
+        _build_level_exit_cache();
 
-    for (unsigned int i = 0; i < e.size(); ++i)
+    // Calculate distance to each exit from the current monster, then sort
+    for (unsigned int i = 0; i < _level_exit_cache.size(); ++i)
+        _level_exit_cache[i].dist = grid_distance(mon->pos(), _level_exit_cache[i].pos);
+    sort(_level_exit_cache.begin(), _level_exit_cache.end());
+
+    // Starting with the nearest exit, test reachability and go with the first
+    // we find.
+    for (unsigned int i = 0; i < _level_exit_cache.size(); ++i)
     {
-        if (e[i].unreachable)
-            continue;
-
-        int dist = grid_distance(mon->pos(), e[i].target);
-
-        if (old_dist == -1 || old_dist >= dist)
+        monster_pathfind mp;
+        // Set a short range to reduce pathological searches for nearby, but
+        // otherwise unreachable, exits.
+        mp.set_range(_level_exit_cache[i].dist * 3);
+        if (mp.init_pathfind(mon, _level_exit_cache[i].pos))
         {
-            retval = i;
-            old_dist = dist;
+            mon->travel_path = mp.calc_waypoints();
+
+            // Found a reachable exit, so let's go for it
+            if (!mon->travel_path.empty())
+            {
+                mon->target = mon->travel_path[0];
+                mon->patrol_point = mon->target;
+                mon->travel_target = MTRAV_PATROL;
+                return true;
+            }
         }
     }
 
-    return retval;
+    // Found no reachable exit at all
+    return false;
 }
+
 void set_random_slime_target(monster* mon)
 {
     // Strictly neutral slimes will go for the nearest item.

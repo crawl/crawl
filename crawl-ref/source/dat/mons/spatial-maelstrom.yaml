@@ -1,0 +1,19 @@
+name: "spatial maelstrom"
+glyph: {char: "v", colour: yellow}
+flags: [flies, batty, insubstantial]
+resists: {elec: 1, fire: 2, cold: 2}
+xp_mult: 5
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: distort, damage: 20}
+ - {type: hit, flavour: distort, damage: 20}
+hd: 10
+hp_10x: 750
+ac: 0
+ev: 5
+intelligence: brainless
+speed: 16
+size: giant
+shape: misc
+tile_variance: cycle

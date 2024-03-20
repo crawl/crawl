@@ -1,0 +1,21 @@
+name: "meliai"
+glyph: {char: "y", colour: green}
+flags: [flies, web_immune, no_skeleton]
+resists: {poison: -1}
+genus: killer_bee
+will: 20
+attacks:
+ - {type: hit, damage: 14}
+ - {type: sting, flavour: poison, damage: 12}
+hd: 7
+hp_10x: 245
+ac: 2
+ev: 14
+spells: meliai
+has_corpse: true
+shout: buzz
+intelligence: human
+speed: 20
+uses: weapons_armour
+size: small
+shape: insect_winged

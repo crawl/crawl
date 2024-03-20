@@ -46,6 +46,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{ego} {branded} "
   end
 
+  if it.is_xp_evoker then
+    annot = annot .. "{evoker} "
+  end
+
   if it.god_gift then
     annot = annot .. "{god gift} "
   end
@@ -113,7 +117,7 @@ function ch_stash_search_annotate_item(it)
       ["cold"] = "rC+",
       ["death"] = "rN+",
       ["fire"] = "rF+",
-      ["poison"] = "rPois"
+      ["alchemy"] = "rPois"
     }
     if props[it.subtype()] then
       annot = annot .. "{" .. props[it.subtype()] .. "} "
@@ -179,6 +183,11 @@ function ch_stash_search_annotate_item(it)
   -- Tag Willpower items as MR for back-compat.
   if annot:find("Will+", 1, true) then
     annot = annot .. " {MR} {resist magic} {magic resistance}"
+  end
+
+  -- Tag revelation as mapping for back-compat.
+  if it.class(true) == "scroll" and it.subtype() == "revelation" then
+    annot = annot .. " {magic mapping}"
   end
 
   return annot

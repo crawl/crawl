@@ -13,6 +13,8 @@
 #include "object-selector-type.h"
 #include "operation-types.h"
 
+const int ARMOUR_EQUIP_DELAY = 5;
+
 operation_types use_an_item_menu(item_def *&target, operation_types oper,
                 int item_type=OSEL_ANY,
                 const char* prompt=nullptr,
@@ -43,17 +45,22 @@ bool wear_armour(int slot);
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 
 bool can_wield(const item_def *weapon, bool say_why = false,
-               bool ignore_temporary_disability = false, bool unwield = false,
-               bool only_known = true);
+               bool ignore_temporary_disability = false, bool unwield = false);
 
-bool auto_wield(bool adjust_time_taken = true);
-bool wield_weapon(int slot, bool adjust_time_taken = true);
+bool auto_wield();
+bool wield_weapon(int slot);
+bool unwield_weapon(const item_def &wpn);
 
 bool use_an_item(operation_types oper, item_def *target=nullptr);
 
 bool item_is_worn(int inv_slot);
 
 bool enchant_weapon(item_def &wpn, bool quiet);
-bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
+bool enchant_armour(item_def &arm, bool quiet);
 
 void prompt_inscribe_item();
+
+bool has_drunken_brawl_targets();
+
+string item_equip_verb(const item_def& item);
+string item_unequip_verb(const item_def& item);

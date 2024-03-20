@@ -220,11 +220,11 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
 
 bool mons_clonable(const monster* mon, bool needs_adjacent)
 {
-    // No uniques or ghost demon monsters. Also, figuring out the name
-    // for the clone of a named monster isn't worth it, and duplicate
-    // battlespheres with the same owner cause problems with the spell
+    // No uniques or inugami. Also, figuring out the name for the clone
+    // of a named monster isn't worth it, and duplicate battlespheres
+    // with the same owner cause problems with the spell.
     if (mons_is_unique(mon->type)
-        || mons_is_ghost_demon(mon->type)
+        || mon->type == MONS_INUGAMI
         || mon->is_named()
         || mons_is_conjured(mon->type)
         || mons_is_tentacle_or_tentacle_segment(mon->type))
@@ -323,6 +323,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         mons->props.erase(OKAWARU_DUEL_CURRENT_KEY);
         mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
     }
+
+    // Don't display non-functional bullseye targets
+    if (mons->has_ench(ENCH_BULLSEYE_TARGET))
+        mons->del_ench(ENCH_BULLSEYE_TARGET);
+
+    // Remove Beogh's Touch from an apostle of Beogh may get very confused when they die
+    if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+        mons->del_ench(ENCH_TOUCH_OF_BEOGH);
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)

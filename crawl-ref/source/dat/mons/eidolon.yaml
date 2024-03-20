@@ -1,0 +1,21 @@
+name: "eidolon"
+glyph: {char: "W", colour: brown}
+flags: [flies, see_invis, insubstantial]
+resists: {cold: 1}
+xp_mult: 14
+genus: wraith
+holiness: [undead]
+will: 140
+attacks:
+ - {type: hit, flavour: drain_speed, damage: 27}
+ - {type: hit, flavour: drain_stat, damage: 17}
+hd: 13
+hp_10x: 715
+ac: 12
+ev: 10
+spells: eidolon
+shout: moan
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

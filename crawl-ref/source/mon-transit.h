@@ -24,6 +24,11 @@ struct follower
     monster* place(bool near_player = false);
     void load_mons_items();
     void restore_mons_items(monster& m);
+
+    // Reconstitutes the monster and their equipment, but does NOT place the
+    // monster onto the floor. Use to examine stats that include equipment,
+    // but may not be safe for other purposes.
+    monster* peek();
 };
 
 // Several erase() calls rely on this being a linked list (so erasing does not

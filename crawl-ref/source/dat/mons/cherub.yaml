@@ -1,0 +1,20 @@
+name: "cherub"
+glyph: {char: "A", colour: lightblue}
+flags: [flies, fighter, speaks, archer]
+resists: {elec: 1, poison: 1, fire: 1}
+genus: angel
+holiness: [holy]
+will: 100
+attacks:
+ - {type: hit, damage: 15}
+ - {type: cherub, damage: 8}
+hd: 9
+hp_10x: 765
+ac: 10
+ev: 20
+spells: battlecry
+shout: cherub
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_winged

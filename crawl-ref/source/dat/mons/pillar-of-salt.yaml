@@ -1,0 +1,14 @@
+name: "pillar of salt"
+glyph: {char: "I", colour: white}
+flags: [stationary, no_exp_gain, remnant, no_threat]
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 1
+hp_10x: 10
+ac: 1
+ev: 0
+intelligence: brainless
+uses: starting_equipment
+size: medium
+shape: misc

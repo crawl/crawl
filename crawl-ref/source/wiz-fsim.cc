@@ -200,7 +200,8 @@ static bool _equip_weapon(const string &weapon, bool &abort)
         {
             if (i != you.equip[EQ_WEAPON])
             {
-                wield_weapon(i, false);
+                unwind_var<int> reset_speed(you.time_taken, you.time_taken);
+                wield_weapon(i);
                 if (i != you.equip[EQ_WEAPON])
                 {
                     abort = true;
@@ -246,8 +247,8 @@ static bool _fsim_kit_equip(const string &kit, string &error)
             return false;
         }
     }
-    else if (you.weapon())
-        unwield_item(false);
+    else if (const item_def *wpn = you.weapon())
+        unwield_item(*wpn, false);
 
     you.wield_change = true;
 
@@ -394,7 +395,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
             && !iweap)
         {
-            ranged_attack attk(&you, &mon, &you.inv[missile], false);
+            ranged_attack attk(&you, &mon, nullptr, &you.inv[missile], false);
             attk.simu = true;
             attk.attack();
             if (attk.ev_margin >= 0)
@@ -410,7 +411,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         {
             item_def fake_proj;
             populate_fake_projectile(*iweap, fake_proj);
-            ranged_attack attk(&you, &mon, &fake_proj, false);
+            ranged_attack attk(&you, &mon, iweap, &fake_proj, false);
             attk.simu = true;
             attk.attack();
             if (attk.ev_margin >= 0)

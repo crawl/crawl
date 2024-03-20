@@ -36,6 +36,12 @@ function ice_cave_portal(e)
 
     dgn.persist.ice_cave_hard = hard_ice_cave_difficulty()
 
+    if dgn.persist.ice_cave_hard then
+        gone = "dngn_portal_glacial_chasm_gone"
+    else
+        gone = "dngn_portal_ice_cave_gone"
+    end
+
     e.lua_marker('O',
         timed_marker {
           disappear = "The archway melts and disappears.",
@@ -43,30 +49,36 @@ function ice_cave_portal(e)
           turns = timeout_turns,
           single_timed = true,
           floor = "expired_portal",
-          feat_tile = "dngn_portal_ice_cave_gone",
+          feat_tile = gone,
           msg = messager })
     e.tags("uniq_icecv chance_icecave")
     e.chance(500)
+
     e.kfeat("O = enter_ice_cave")
+    if dgn.persist.ice_cave_hard then
+        e.tile("O = dngn_portal_glacial_chasm")
+        e.set_feature_name("enter_ice_cave", "a glacial archway")
+    end
+
     e.colour("a = white")
     e.kfeat("a = x")
     e.rtile("a = wall_ice_block")
     e.colour(".1234 = blue")
-    e.ftile(".12345O+^ = floor_ice")
+    e.ftile(".12345O+^DEFH = floor_ice")
 end
 
 --[[
 Determine if we're placing a hard difficulty ice cave map. Possible depths for
-easy ice caves are D:11-13, Lair, Orc. Hard ice caves are placed in D:14-15,
-Elf and the Lair roulette branches. This function must be updated if the depth
-range of ice cave changes, which is set by the default-depth statement of the
-entry vault section or by the entry maps themselves.
+easy ice caves are D:11-13, Lair, Orc. Hard ice caves are placed in Elf and the
+Lair roulette branches. This function must be updated if the depth range of ice
+cave changes, which is set by the default-depth statement of the entry vault
+section or by the entry maps themselves.
 
 treturn bool True for hard difficulty, false for easy.
 ]]
 function hard_ice_cave_difficulty()
 
-    if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") or
+    if you.in_branch("D") or you.in_branch("Lair") or
        you.in_branch("Orc") then
         return false
     end
@@ -174,7 +186,8 @@ ratios 18:6:2:1.
 function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
     simul = simulacrum_monsters()
 
-    local reaper_equip = " ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:freezing"
+    local reaper_equip = " ; halberd plus:-4 itemname:scythe" ..
+                         " tile:wpn_scythe wtile:scythe ego:freezing"
     -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
     if reaper_glyphs ~= nil then
         reaper_equip = reaper_equip .. " . robe ego:cold_resistance" ..
@@ -353,7 +366,7 @@ function ice_cave_weapon_loot(e, glyphs)
         ["double sword"] = 5, ["maxwell's thermic engine"] = 2,
         ["great sword"] = 10, ["triple sword"] = 5, ["lajatang"] = 10,
         ["broad axe"] = 10, ["battleaxe"] = 10, ["frostbite"] = 2,
-        ["executioner's axe"] = 5, ["hand crossbow"] = 10, ["longbow"] = 10,
+        ["executioner's axe"] = 5, ["hand cannon"] = 10, ["longbow"] = 10,
         ["arbalest"] = 5, ["triple crossbow"] = 5
     }
     local quality = ""
@@ -383,7 +396,7 @@ function ice_cave_magic_loot(e, glyphs)
         quality = " good_item"
     end
     e.kitem(glyphs .. " = book of ice / book of the tundra" ..
-        " / ozocubu's autobiography / randbook disc:ice" ..
+        " / randbook disc:ice" ..
         " / manual of ice magic / staff of cold / ring of ice" .. quality ..
         " / ring of protection from cold" .. quality ..
         " / wand of iceblast / phial of floods / condenser vane")
@@ -439,11 +452,10 @@ end
 #
 ###############################################################################
 
-
 ###############################################################################
 # Entry vaults that place for both ice cave difficulties.
 
-default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
+default-depth: D:11-13, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
 NAME:   portal_ice_cave_entry_pillars_1
 TAGS:   transparent
@@ -529,7 +541,7 @@ DEPTH:  D:11-13, Lair:3-, Orc
 WEIGHT: 5
 : ice_cave_portal(_G)
 MONS:   wolf, yak, polar bear, rime drake, ice dragon
-SUBST:  D = 12 .:1, E = 2 3:5 .:1, F = 3 4:2, H = 4:2 5:8
+SUBST:  D = 12 .:1, E = 2 3:5 .:1, F = 3 4:2, H = 4:8 5:2
 MAP
 xx    xxxxxxx
 axxxxxxaaaaaxx
@@ -578,7 +590,7 @@ ENDMAP
 ###############################################################################
 # Entry vaults that only place hard ice cave entrances
 
-default-depth: D:14-, Elf, Swamp, Shoals, Snake, Spider
+default-depth: Elf, Swamp, Shoals, Snake, Spider
 
 NAME:   portal_ice_cave_entry_pillars_three
 TAGS:   transparent
@@ -610,7 +622,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   patrolling no_monster_gen transparent
-DEPTH:  D:14-, Elf, Snake, Swamp
+DEPTH:  Elf, Snake, Swamp
 WEIGHT: 5
 : ice_cave_portal(_G)
 MONS:   white ugly thing, freezing wraith, azure jelly / white very ugly thing
@@ -1050,8 +1062,10 @@ SUBST:   a = ., pq = w, z = x
 # Replace this glyph with floor so we can re-use it.
 SUBST:   ! = .
 SHUFFLE: rsu / rr! / zzz / zzz
-SUBST:   r = ., su = w, z = x
+SUBST:   r = ., su = w, z = x, b = bbccc
 : place_freezing_vapour_machine(_G, 8)
+TILE:    b = bedeviled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 : ice_cave_appearance(_G)
 MAP
                     xxxxxx
@@ -1082,7 +1096,7 @@ xx............xxxsssxxxxxxx...xx
  x-------xxxxxc...cccFccc...c
  xx--<--xxxxxxc.f...FEF...h.c
   xx---xxxxxxxc...cc*i*cc...c
-   xxxxxxxxxxxccccccccccccccc
+   xxxxxxxxxxxcccccccbccccccc
          xxxxx
 ENDMAP
 
@@ -1109,7 +1123,8 @@ KITEM:   D = any scroll
 # more. For ice fiend, minimum of one and 50% chance for another.
 : if dgn.persist.ice_cave_hard then
 : ice_cave_undead_demon_monster_set(_G)
-KMONS:   D7 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:freezing
+KMONS:   D7 = reaper ; halberd plus:-4 itemname:scythe \
+              tile:wpn_scythe wtile:scythe ego:freezing
 SHUFFLE: D7 / 88
 NSUBST:  7 = 7 / 7.., 8 = 8 / 8. / .
 NSUBST:  4 = 6 / 446, F = 122445
@@ -1124,6 +1139,12 @@ SUBST:   4 = 4:70 6, F = .12244
 # items to possibly be at other locations and to possibly include magical loot.
 SHUFFLE: fghi, defgh
 SUBST:   d = d*, e = e*, f = f*, g = g*, h = h*
+# A little extra decor opportunity...
+KFEAT:   S = metal_statue
+SUBST:   S : SSG
+COLOUR:  S = ice
+TILE:    S = icy_conduit
+:   set_feature_name("metal_statue", "icy conduit")
 : ice_cave_appearance(_G)
 MAP
       xxxxx
@@ -1167,7 +1188,7 @@ c.ccc.G...G.ccc.c
 c.c5+.......+5c.c
 c+cccccc+cccccc+c
 c...............c
-ccccG.ccccc.Gcccc
+ccccS.ccccc.Scccc
    cc.cfDgc.cc
     c.c7U7c.c
     c.ch7ic.c

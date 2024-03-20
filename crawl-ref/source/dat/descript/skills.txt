@@ -72,9 +72,9 @@ them.
 %%%%
 Throwing
 
-Training Throwing will make thrown weapons (such as javelins) more effective.
-In particular, it makes boomerangs more likely to return to their thrower,
-and makes certain magical darts more likely to have an effect.
+Training Throwing will make thrown weapons (such as javelins) more accurate
+and damaging. It also makes certain magical darts more likely to have an
+effect.
 %%%%
 Armour
 
@@ -86,7 +86,7 @@ Dodging
 
 The Dodging skill will affect your chance of dodging an attack, be it melee,
 ranged or magical. Certain types of attack cannot be dodged, however, such as
-enchantments (which must be resisted with Willpower) and explosions.
+enchantments (which must be resisted with willpower) and explosions.
 %%%%
 Stealth
 
@@ -108,9 +108,7 @@ evasion, attack speed and spellcasting success.
 Unarmed Combat
 
 Being skilled in Unarmed Combat increases your accuracy, damage and attack
-speed in melee combat when barehanded. It also allows you to occasionally punch
-with your off hand as an additional melee attack, provided your hand is free to
-do so.
+speed in melee combat when barehanded.
 %%%%
 Spellcasting
 
@@ -187,13 +185,13 @@ spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
 %%%%
-Transmutations
+Alchemy
 
-Transmutations reshape the world. Spells in this school can twist objects and
-creatures into different shapes, turn one material into another, or even
+Alchemy is the art of toxins and transmutation. Spells in this school can twist
+objects and creatures into different shapes, unleash powerful poisons, or even
 unweave the fabric of magic itself.
 
-Being skilled in Transmutations increases the success rate and spell power of
+Being skilled in Alchemy increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
@@ -234,20 +232,10 @@ Earth Magic
 
 Earth Magic contains spells able to deal large amounts of direct physical
 damage, which cannot be resisted like fire, cold and lightning damage can. It
-is also linked with some Transmutations, with spells to liquefy the earth
-around you, or to turn your enemies to stone.
+is also linked with Alchemy, with spells to liquefy the earth around you, or to
+turn your enemies to stone.
 
 Being skilled in Earth Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Poison Magic
-
-Poison Magic provides spells which are highly effective against many natural
-creatures.
-
-Being skilled in Poison Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.

@@ -287,9 +287,6 @@ static void _establish_connection(monster* tentacle,
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
-
-            if (monster_can_submerge(connect, env.grid(connect->pos())))
-                connect->add_ench(ENCH_SUBMERGED);
         }
         else
         {
@@ -330,7 +327,6 @@ struct tentacle_attack_constraints
     {
         shuffle_array(connect_idx);
 
-//        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
         for (int idx : connect_idx)
         {
             position_node temp;
@@ -405,7 +401,6 @@ struct tentacle_attack_constraints
             if (temp.departure)
                 temp.string_distance++;
 
-//            if (temp.string_distance > MAX_KRAKEN_TENTACLE_DIST)
             if (temp.string_distance > max_string_distance)
                 temp.path_distance = DISCONNECT_DIST;
 
@@ -454,7 +449,6 @@ struct tentacle_connect_constraints
             else
                 temp.path_distance = 1 + node.path_distance;
 
-            //temp.estimate = grid_distance(temp.pos, kraken->pos());
             // Don't bother with an estimate, the search is highly constrained
             // so it's not really going to help
             temp.estimate = 0;
@@ -483,20 +477,6 @@ struct target_position
         return pos == target;
     }
 };
-
-/*struct target_monster
-{
-    int target_mindex;
-
-    bool operator() (const coord_def & pos)
-    {
-        monster* temp = monster_at(pos);
-        if (!temp || temp->mindex() != target_mindex)
-            return false;
-        return true;
-
-    }
-};*/
 
 struct multi_target
 {
@@ -593,9 +573,6 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     // Find the tentacle -> head path
     target_position current_target;
     current_target.target = base_position;
-/*  target_monster current_target;
-    current_target.target_mindex = headnum;
-*/
 
     set<position_node> visited;
     vector<set<position_node>::iterator> candidates;
@@ -704,14 +681,10 @@ static int _collect_connection_data(monster* start_monster,
             }
         }
         else
-        {
             current_mon = nullptr;
-//            mprf("null at count %d", current_count);
-        }
         current_count++;
     }
 
-//    mprf("returned count %d", current_count);
     return current_count;
 }
 
@@ -792,7 +765,7 @@ void move_solo_tentacle(monster* tentacle)
     actor* constrictee = nullptr;
     if (tentacle->is_constricting())
     {
-        constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+        constrictee = actor_by_mid((*tentacle->constricting)[0]);
 
         // Don't drag things that cannot move
         if (!constrictee->is_stationary()
@@ -942,7 +915,6 @@ void move_solo_tentacle(monster* tentacle)
         return;
     }
 
-//  mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
     tentacle->check_redraw(old_pos);
     tentacle->apply_location_effects(old_pos);
 }
@@ -966,7 +938,6 @@ void move_child_tentacles(monster* mons)
                                return mons->can_see(*test);
                            });
 
-    //if (!kraken->near_foe())
     if (foe_positions.empty()
         || mons->behaviour == BEH_FLEE
         || mons->behaviour == BEH_WANDER)
@@ -1052,7 +1023,7 @@ void move_child_tentacles(monster* mons)
         actor* constrictee = nullptr;
         if (tentacle->is_constricting() && retract_found)
         {
-            constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+            constrictee = actor_by_mid((*tentacle->constricting)[0]);
             if (feat_has_solid_floor(env.grid(old_pos))
                 && constrictee->is_habitable(old_pos)
                 && !constrictee->resists_dislodge("being pulled by " + tentacle->name(DESC_THE)))
@@ -1169,7 +1140,6 @@ bool destroy_tentacle(monster* mons)
         if (mi->is_child_tentacle_of(head))
         {
             any = true;
-            //mi->hurt(*mi, INSTANT_DEATH);
             monster_die(**mi, KILL_MISC, NON_MONSTER, true);
         }
     }

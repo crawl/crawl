@@ -9,7 +9,7 @@ Agnes title
 %%%%
 Aizul title
 
-被忽视的守卫艾祖
+疏忽的守卫艾祖
 %%%%
 Amaemon title
 
@@ -25,7 +25,7 @@ Arachne title
 %%%%
 Asmodeus title
 
-阿斯莫德，欣嫩谷的王子
+阿斯蒙蒂斯，欣嫩谷的王子
 %%%%
 Asterion title
 
@@ -109,7 +109,7 @@ Frederick title
 %%%%
 Gastronok title
 
-沉重的加斯特罗克
+沉思的加斯特罗克
 %%%%
 Geryon title
 
@@ -141,11 +141,15 @@ Ilsuiw title
 %%%%
 Ijyb title
 
-扭曲的地精伊吉布
+爱钻研的伊吉布
 %%%%
 Jessica title
 
 见习女术师杰西卡
+%%%%
+Jeremiah title
+
+耶利米，蛙人神游者
 %%%%
 Jorgrun title
 
@@ -242,6 +246,10 @@ Nessos title
 Nikola title
 
 疯狂的发明家尼古拉
+%%%%
+Norris title
+
+哲人诺里斯
 %%%%
 Parghit title
 

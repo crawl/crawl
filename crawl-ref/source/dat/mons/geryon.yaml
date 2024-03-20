@@ -1,0 +1,19 @@
+name: "Geryon"
+glyph: {char: "&", colour: green}
+flags: [flies, fighter, see_invis, speaks, unique, male, tall_tile]
+xp_mult: 15
+genus: hell_lord
+holiness: [demonic]
+will: 120
+attacks:
+ - {type: tail_slap, flavour: reach, damage: 35}
+hd: 15
+hp_10x: 3000
+ac: 15
+ev: 6
+spells: geryon
+shout: roar
+intelligence: human
+uses: starting_equipment
+size: giant
+shape: humanoid_winged

@@ -1,0 +1,20 @@
+name: "Murray"
+glyph: {char: "z", colour: lightred}
+flags: [see_invis, speaks, unique, male]
+resists: {elec: 1, fire: 2, cold: 2}
+xp_mult: 15
+species: curse_skull
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: bite, damage: 20}
+ - {type: bite, damage: 20}
+hd: 14
+hp_10x: 1610
+ac: 30
+ev: 10
+spells: murray
+shout: moan
+intelligence: human
+size: tiny
+shape: misc

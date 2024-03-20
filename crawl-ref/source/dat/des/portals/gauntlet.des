@@ -1000,6 +1000,8 @@ local heavy_scales = "storm dragon scales / shadow dragon scales" ..
 local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50" ..
     " / plate armour good_item w:50 / crystal plate armour good_item"
 
+ -- TODO: turn all of the below delayed_decays into normal KITEMs
+
  -- Dwarven fighter. Maybe the minotaur got the last MD.
 dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
     "flail randart / morningstar good_item / eveningstar w:2" ..
@@ -1124,9 +1126,9 @@ dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "    / dart ego:dispersal" ..
     ", dagger good_item / short sword good_item / rapier good_item" ..
     "    / long sword good_item / double sword / demon blade" ..
-    "    / sling randart / hand crossbow good_item / shortbow randart" ..
-    "    / orcbow randart / arbalest good_item / triple crossbow" ..
-    "    / any armour good_item / nothing w:130" ..
+    "    / sling randart / hand cannon good_item / shortbow randart" ..
+    "    / orcbow randart / arbalest good_item / hand cannon good_item" ..
+    "    / triple crossbow / any armour good_item / nothing w:130" ..
     ", buckler good_item / kite shield good_item / " .. dgn.good_aux_armour ..
     "    / any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:140")

@@ -120,7 +120,11 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
        {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
-  if you.race() ~= "Felid" and you.race() ~= "Octopode" then
+  local is_armour_user = you.race() ~= "Felid"
+      and you.race() ~= "Octopode"
+      and you.genus() ~= "draconian"
+
+  if is_armour_user then
     for _, toll in ipairs(arm) do
       table.insert(prices, toll)
     end
@@ -244,37 +248,42 @@ function trove.place_fog(e, type, strength)
 end
 
 function trove.weapon_skills (e)
-  local weapon_skills = {"Short Blades", "Long Blades", "Axes", "Maces & Flails", "Polearms", "Staves"}
-  local skill_total = 0
-  local nonzero_skills = 0
-  for _, skill in ipairs(weapon_skills) do
-    skill_total = skill_total + you.base_skill(skill)
-    if you.base_skill(skill) > 0 then
-      nonzero_skills = nonzero_skills + 1
+    local weapon_skills = { "Short Blades", "Long Blades", "Axes",
+        "Maces & Flails", "Polearms", "Staves", "Ranged Weapons" }
+    local skill_total = 0
+    local nonzero_skills = 0
+    for _, skill in ipairs(weapon_skills) do
+        local base_skill = you.base_skill(skill)
+        skill_total = skill_total + base_skill
+        if base_skill > 0 then
+            nonzero_skills = nonzero_skills + 1
+        end
     end
-  end
-  if nonzero_skills > 0 then
-    return skill_total / nonzero_skills
-  else
-    return 0
-  end
+    if nonzero_skills > 0 then
+        return skill_total / nonzero_skills
+    else
+        return 0
+    end
 end
 
 function trove.spell_skills (e)
-  local spell_skills = {"Spellcasting", "Conjurations", "Hexes", "Summoning", "Necromancy", "Translocation", "Transmutation", "Fire Magic", "Ice Magic", "Air Magic", "Earth Magic", "Poison Magic"}
-  local skill_total = 0
-  local nonzero_skills = 0
-  for _, skill in ipairs(spell_skills) do
-    skill_total = skill_total + you.base_skill(skill)
-    if you.base_skill(skill) > 0 then
-      nonzero_skills = nonzero_skills + 1
+    local spell_skills = { "Spellcasting", "Conjurations", "Hexes", "Summonings",
+        "Necromancy", "Translocations", "Alchemy", "Fire Magic", "Ice Magic",
+        "Air Magic", "Earth Magic" }
+    local skill_total = 0
+    local nonzero_skills = 0
+    for _, skill in ipairs(spell_skills) do
+        local base_skill = you.base_skill(skill)
+        skill_total = skill_total + base_skill
+        if base_skill > 0 then
+            nonzero_skills = nonzero_skills + 1
+        end
     end
-  end
-  if nonzero_skills > 0 then
-    return skill_total / nonzero_skills
-  else
-    return 0
-  end
+    if nonzero_skills > 0 then
+        return skill_total / nonzero_skills
+    else
+        return 0
+    end
 end
 }}
 
@@ -287,7 +296,7 @@ default-depth: D:10-, Depths, Elf, Vaults
 ##############################################################################
 
 NAME:   enter_trove_0
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -295,7 +304,7 @@ O
 ENDMAP
 
 NAME:   enter_trove_1
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -305,7 +314,7 @@ MAP
 ENDMAP
 
 NAME:   enter_trove_2
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -317,7 +326,7 @@ G.O.G
 ENDMAP
 
 NAME:   enter_trove_3
-TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent
+TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: c = blue
@@ -331,7 +340,7 @@ ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: e = blue
@@ -359,7 +368,7 @@ ENDMAP
 
 # Someone left some gold behind for you!
 NAME:   enter_trove_6
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 KFEAT:  X = +
@@ -376,7 +385,7 @@ ccc+ccc
 ENDMAP
 
 NAME: nicolae_trove_entry_columns
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -391,7 +400,7 @@ ENDMAP
 
 
 NAME: nicolae_trove_entry_crossroad
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: @ = blue
@@ -405,7 +414,7 @@ cc@cc
 ENDMAP
 
 NAME: nicolae_trove_entry_crystal
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 FTILE: b = floor_marble
@@ -420,7 +429,7 @@ ccccccccccc
 ENDMAP
 
 NAME: nicolae_trove_entry_diagonal
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -439,7 +448,7 @@ cccO.cc
 ENDMAP
 
 NAME: nicolae_trove_entry_free_sample
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: % = blue
@@ -451,7 +460,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_isolated
-TAGS: no_pool_fixup transparent
+TAGS: no_pool_fixup transparent no_descent
 CHANCE: 5%
 KPROP: .O = no_tele_into
 KMASK: .O = opaque
@@ -468,7 +477,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_path_of_doom
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 KMONS: O = patrolling guardian mummy
 KMONS: m = patrolling guardian mummy / nothing w:20
@@ -488,7 +497,7 @@ cc.....cc
 ENDMAP
 
 NAME: trove_entry_hex_spiral
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -664,9 +673,9 @@ ENDMAP
 
 # A 'jewellery shoppe' or display cabinet.
 NAME:   trove_jewel_1
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
@@ -689,9 +698,9 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_jewel_2
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 COLOUR: x = blue
@@ -804,7 +813,8 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op \
+         no_species_dr
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie
@@ -941,12 +951,12 @@ ENDMAP
 # This can generate weapons that are out of character for Trog, e.g. pain.
 # Just say they were looted from unwilling arena participants.
 NAME:   trove_trog_arena
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ITEM:   acquire weapon w:5 / acquire:trog weapon w:5 / \
         any useful weapon good_item / any weapon w:2
 ITEM:   acquire:trog weapon
@@ -1033,11 +1043,11 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.
@@ -1062,7 +1072,7 @@ ENDMAP
 
 # 16 pieces of jewellery
 NAME:   trove_jewellery_lava
-TAGS:   no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 ORIENT: encompass
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
@@ -1098,8 +1108,11 @@ ENDMAP
 
 # 16 scrolls and books
 NAME:   trove_books_scrolls
-TAGS:   no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_dj
 ORIENT: encompass
+veto {{ return crawl.game_started()
+          and trove.spell_skills() < trove.weapon_skills()
+          and not crawl.one_chance_in(6) }}
 ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
 : trove.good_scroll(_G)
@@ -1244,24 +1257,30 @@ KITEM:   M = any weapon randart ego:vampirism / \
              any useful weapon good_item ego:vampirism / \
              any weapon ego:vampirism w:2
 KFEAT:   + = closed_clear_door
+KFEAT:   g = granite_statue
+KFEAT:   S = metal_statue
 SHUFFLE: apDE, apqrsyz, DEFHJKLM
+TILE:    g = dngn_scintillating_statue
+TILE:    S = dngn_golden_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "golden statue")
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxx
 x................x
 x.....mmmmmm.....x
-x..G..mDDDDm..G..x
+x..v..mDDDDm..v..x
 x.....m++++m.....x
 x................x
 x.mmm........mmm.x
-x.mp+..G..<..+Em.x
+x.mp+..g..<..+Em.x
 x.mp+........+Em.x
 x.mp+........+Em.x
-x.mp+..A..G..+Em.x
+x.mp+..A..S..+Em.x
 x.mmm........mmm.x
 x................x
 x.....m++++m.....x
-x..G..maaaam..G..x
+x..v..maaaam..v..x
 x.....mmmmmm.....x
 x................x
 xxxxxxxxxxxxxxxxxx
@@ -1319,7 +1338,7 @@ ENDMAP
 
 # Generates 18 items useful for an Octopode: hats, amulets, and of course rings.
 NAME:   nicolae_trove_octotrove
-TAGS:   no_item_gen no_monster_gen allow_dup no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_species_co allow_dup no_pool_fixup
 ORIENT: encompass
 KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
 KITEM:  E = useful hat good_item / hat randart / hat w:2

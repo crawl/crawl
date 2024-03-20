@@ -1,0 +1,18 @@
+name: "sacred lotus"
+glyph: {char: "P", colour: white}
+flags: [stationary, fast_regen, no_exp_gain, no_threat]
+resists: {poison: 3, neg: 3, miasma: 1}
+genus: plant
+holiness: [plant]
+will: invuln
+attacks:
+hd: 22
+hp_10x: 1600
+ac: 24
+ev: 0
+intelligence: brainless
+habitat: water
+speed: 0
+size: medium
+shape: plant
+tile_variance: mod

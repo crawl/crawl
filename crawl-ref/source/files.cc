@@ -1187,7 +1187,7 @@ static void _clear_env_map()
     env.map_forgotten.reset();
 }
 
-static bool _grab_follower_at(const coord_def &pos, bool can_follow)
+static bool _grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
         return false;
@@ -1196,9 +1196,12 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
     if (!fol || !fol->alive() || fol->incapacitated())
         return false;
 
-    // only H's ancestors can follow into portals & similar.
-    if (!can_follow && !mons_is_hepliaklqana_ancestor(fol->type))
+    // Only friendlies can follow the player through portals
+    if (!fol->friendly() && (!is_connected_branch(you.where_are_you)
+                            || you.where_are_you == BRANCH_PANDEMONIUM))
+    {
         return false;
+    }
 
     // The monster has to already be tagged in order to follow.
     if (!testbits(fol->flags, MF_TAKING_STAIRS))
@@ -1227,9 +1230,8 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
 
 static void _grab_followers()
 {
-    const bool can_follow = branch_allows_followers(you.where_are_you);
-
     int non_stair_using_allies = 0;
+    int non_stair_using_undead = 0;
     int non_stair_using_summons = 0;
 
     monster* dowan = nullptr;
@@ -1253,6 +1255,8 @@ static void _grab_followers()
             non_stair_using_allies++;
             if (fol->is_summoned() || mons_is_conjured(fol->type))
                 non_stair_using_summons++;
+            if (fol->holiness() & MH_UNDEAD)
+                non_stair_using_undead++;
         }
     }
 
@@ -1277,7 +1281,7 @@ static void _grab_followers()
             duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
-    if (can_follow && non_stair_using_allies > 0)
+    if (non_stair_using_allies > 0)
     {
         // Summons won't follow and will time out.
         if (non_stair_using_summons > 0)
@@ -1287,9 +1291,11 @@ static void _grab_followers()
         }
         else
         {
+            const bool all_dead = non_stair_using_undead == non_stair_using_allies;
             // Permanent undead are left behind but stay.
-            mprf("Your mindless puppet%s behind to rot.",
-                 non_stair_using_allies > 1 ? "s stay" : " stays");
+            mprf("Your mindless puppet%s behind%s.",
+                 non_stair_using_allies > 1 ? "s stay" : " stays",
+                 all_dead ? " to rot" : "");
         }
     }
 
@@ -1308,7 +1314,7 @@ static void _grab_followers()
                     continue;
 
                 visited[ai->x][ai->y] = true;
-                if (_grab_follower_at(*ai, can_follow))
+                if (_grab_follower_at(*ai))
                     places[!place_set].push_back(*ai);
             }
         }
@@ -1325,6 +1331,7 @@ static void _grab_followers()
             end_battlesphere(&mons, false);
         if (mons.type == MONS_SPECTRAL_WEAPON)
             end_spectral_weapon(&mons, false);
+        check_canid_farewell(mons, false);
         mons.flags &= ~MF_TAKING_STAIRS;
     }
 }
@@ -2095,7 +2102,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // games.
         if (old_level.depth != -1)
         {
-            _grab_followers();
+            if (!crawl_state.game_is_descent())
+                _grab_followers();
 
             if (env.level_state & LSTATE_DELETED)
                 delete_level(old_level), dprf("<lightmagenta>Deleting level.</lightmagenta>");
@@ -2195,7 +2203,15 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes || load_mode == LOAD_RESTART_GAME)
         env.markers.activate_all();
 
-    if (make_changes && env.elapsed_time && !just_created_level)
+    const bool descent_downclimb = crawl_state.game_is_descent()
+                                   && feat_stair_direction(stair_taken) == CMD_GO_DOWNSTAIRS
+                                   && !feat_is_descent_exitable(stair_taken);
+    const bool descent_peek = descent_downclimb
+                              && !feat_is_escape_hatch(stair_taken)
+                              && stair_taken != DNGN_TRAP_SHAFT
+                              && old_level.branch == you.where_are_you;
+
+    if (make_changes && env.elapsed_time && !just_created_level && !descent_peek)
         update_level(you.elapsed_time - env.elapsed_time);
 
     // Apply all delayed actions, if any. TODO: logic for marshalling this is
@@ -2229,6 +2245,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (just_created_level && make_changes)
         replace_boris();
 
+    if (descent_peek && just_created_level)
+        descent_reveal_stairs();
+
     if (make_changes)
     {
         // Tell stash-tracker and travel that we've changed levels.
@@ -2251,12 +2270,21 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        // new stairs have less wary monsters, and we don't
-        // want them to attack players quite as soon.
-        // (just_created_level only relevant if we crashed.)
-        you.time_taken *= fast || just_created_level ? 1 : 2;
-
-        you.time_taken = div_rand_round(you.time_taken * 3, 4);
+        if (descent_downclimb)
+        {
+            you.time_taken = 0; // free takebacks
+            if (!descent_peek)
+                descent_crumble_stairs(); // no sense waiting
+        }
+        else
+        {
+            // new stairs have less wary monsters, and we don't
+            // want them to attack players quite as soon.
+            // (just_created_level only relevant if we crashed.)
+            const bool fast_entry = fast || just_created_level;
+            you.time_taken *= fast_entry ? 1 : 2;
+            you.time_taken = div_rand_round(you.time_taken * 3, 4);
+        }
 
         if (just_created_level)
             run_map_epilogues();
@@ -2420,6 +2448,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // exited it, have monsters lose track of where they are
     if (make_changes && you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
+
+    if (make_changes)
+        maybe_break_floor_gem();
 
 #if TAG_MAJOR_VERSION == 34
     if (make_changes && you.props.exists("zig-fixup")
@@ -3299,6 +3330,15 @@ void delete_level(const level_id &level)
         save_abyss_uniques();
         destroy_abyss();
     }
+    // Since Pandemonium is internally all the same floor, we need to actually
+    // clean up our torch status whenever we leave a Pan floor so that the player
+    // will be able to use it on the next one.
+    else if (level.branch == BRANCH_PANDEMONIUM && you.religion == GOD_YREDELEMNUL)
+    {
+        CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
+        levels.erase(level.describe());
+    }
+
     _do_lost_monsters();
     _do_lost_items();
 }
@@ -3425,7 +3465,7 @@ static bool _convert_obsolete_species()
     {
         if (!yesno(
             "This Lava Orc save game cannot be loaded as-is. If you load it now,\n"
-            "your character will be converted to a Hill Orc. Continue?",
+            "your character will be converted to a Mountain Dwarf. Continue?",
                        false, 'N'))
         {
             you.save->abort(); // don't even rewrite the header
@@ -3435,7 +3475,7 @@ static bool _convert_obsolete_species()
                 "Please load the save in an earlier version "
                 "if you want to keep it as a Lava Orc.");
         }
-        change_species_to(SP_HILL_ORC);
+        change_species_to(SP_MOUNTAIN_DWARF);
         // No need for conservation
         you.innate_mutation[MUT_CONSERVE_SCROLLS]
                                 = you.mutation[MUT_CONSERVE_SCROLLS] = 0;

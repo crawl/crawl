@@ -1,0 +1,19 @@
+name: "small simulacrum"
+enum: simulacrum_small
+glyph: {char: "Z", colour: lightblue}
+flags: [no_regen]
+resists: {fire: -1, cold: 3}
+xp_mult: 9
+species: simulacrum
+holiness: [undead]
+will_per_hd: 1
+attacks:
+ - {type: hit, damage: 6}
+hd: 2
+hp_10x: 110
+ac: 10
+ev: 4
+intelligence: brainless
+speed: 7
+size: small
+shape: misc

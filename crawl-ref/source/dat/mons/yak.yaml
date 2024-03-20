@@ -1,0 +1,16 @@
+name: "yak"
+glyph: {char: "Y", colour: brown}
+flags: [warm_blood, herd]
+xp_mult: 9
+will: 20
+attacks:
+ - {type: gore, damage: 18}
+hd: 7
+hp_10x: 385
+ac: 4
+ev: 7
+has_corpse: true
+shout: bellow
+intelligence: animal
+size: large
+shape: quadruped

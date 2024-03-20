@@ -1210,6 +1210,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_BROKEN_CLEAR_DOOR:
             return CLOUD_MIST;
         case DNGN_ORCISH_IDOL:
+        case DNGN_METAL_STATUE:
         case DNGN_GRANITE_STATUE:
         case DNGN_LAVA:
             return CLOUD_BLACK_SMOKE;
@@ -2384,4 +2385,5 @@ void abyss_maybe_spawn_xp_exit()
 
     you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;
+    interrupt_activity(activity_interrupt::abyss_exit_spawned);
 }

@@ -1,0 +1,20 @@
+name: "tormentor"
+glyph: {char: "2", colour: lightmagenta}
+flags: [speaks]
+resists: {poison: 1, fire: 1}
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, flavour: pain, damage: 8}
+ - {type: hit, flavour: pain, damage: 8}
+hd: 7
+hp_10x: 385
+ac: 12
+ev: 12
+spells: tormentor
+shout: roar
+intelligence: human
+speed: 13
+uses: open_doors
+size: medium
+shape: humanoid

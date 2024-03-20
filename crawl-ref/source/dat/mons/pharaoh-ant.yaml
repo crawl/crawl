@@ -1,0 +1,16 @@
+name: "pharaoh ant"
+glyph: {char: "B", colour: yellow}
+flags: [web_immune, no_skeleton]
+holiness: [undead]
+will: 60
+attacks:
+ - {type: bite, flavour: drain, damage: 43}
+hd: 10
+hp_10x: 360
+ac: 4
+ev: 8
+shout: moan
+intelligence: animal
+speed: 14
+size: medium
+shape: insect

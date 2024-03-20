@@ -1,0 +1,19 @@
+name: "demonspawn"
+glyph: {char: "6", colour: brown}
+flags: [speaks, warm_blood, no_poly_to]
+holiness: [natural, demonic]
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+ - {type: claw, damage: 20}
+ - {type: gore, damage: 20}
+hd: 10
+hp_10x: 925
+ac: 3
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

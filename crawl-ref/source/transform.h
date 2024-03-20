@@ -131,7 +131,7 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(transformation previous_trans) const;
+    virtual string transform_message(bool was_flying) const;
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -141,7 +141,6 @@ public:
     int res_pois() const;
     bool res_rot() const;
     bool res_acid() const;
-    bool res_sticky_flame() const;
     bool res_miasma() const;
     bool res_petrify() const;
 
@@ -175,8 +174,6 @@ public:
 
     bool enables_flight() const;
     bool forbids_flight() const;
-    bool forbids_swimming() const;
-    virtual bool permits_liking_water() const { return !forbids_swimming(); }
 
     bool player_can_fly() const;
     bool player_can_swim() const;
@@ -333,6 +330,9 @@ bool transform(int pow, transformation which_trans, bool involuntary = false);
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
 
+void unset_default_form();
+void set_default_form(transformation t, const item_def *source);
+
 void set_form(transformation which_trans, int dur);
 void return_to_default_form();
 
@@ -353,3 +353,11 @@ int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);
+
+struct talisman_form_desc {
+    vector<pair<string, string>> skills;
+    vector<pair<string, string>> defenses;
+    vector<pair<string, string>> offenses; // heh
+};
+void describe_talisman_form(transformation form_type, talisman_form_desc &d,
+                            bool incl_special);

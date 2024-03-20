@@ -74,7 +74,6 @@ string feat_preposition(dungeon_feature_type feat, bool active = false,
 string stair_climb_verb(dungeon_feature_type feat);
 
 bool feat_is_water(dungeon_feature_type feat);
-bool feat_is_watery(dungeon_feature_type feat);
 bool feat_is_lava(dungeon_feature_type feat);
 god_type feat_altar_god(dungeon_feature_type feat);
 dungeon_feature_type altar_for_god(god_type god);
@@ -89,7 +88,9 @@ bool feat_is_portal_entrance(dungeon_feature_type feat);
 bool feat_is_portal_exit(dungeon_feature_type feat);
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
+bool feat_is_descent_exitable(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
+bool feat_is_food(dungeon_feature_type feat);
 bool feat_is_reachable_past(dungeon_feature_type feat);
 
 bool feat_is_critical(dungeon_feature_type feat);
@@ -174,3 +175,6 @@ void dgn_open_door(const coord_def &dest);
 void dgn_break_door(const coord_def &dest);
 
 void ice_wall_damage(monster &victim, int delay);
+
+void descent_crumble_stairs();
+void descent_reveal_stairs();

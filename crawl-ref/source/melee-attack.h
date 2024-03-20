@@ -4,6 +4,7 @@
 
 #include "attack.h"
 #include "fight.h"
+#include "item-prop-enum.h" // vorpal_damage_type
 #include "random-var.h"
 #include "tag-version.h"
 
@@ -29,7 +30,10 @@ enum unarmed_attack_type
 class melee_attack : public attack
 {
 public:
-    // mon_attack_def stuff
+    // For monsters, attack_number indicates which of their attacks is used.
+    // For players, attack_number is used when using off-hand weapons, and
+    // indicates whether this is their primary attack or their follow-up.
+    // Note that we randomize which hand is used for the primary attack.
     int       attack_number;
     int       effective_attack_number;
 
@@ -39,19 +43,24 @@ public:
     bool         is_riposte;      // fencers' retaliation attack
     bool         is_projected;    // projected weapon spell attack
     int          charge_pow;      // electric charge bonus damage
+    bool         never_cleave;    // if this attack shouldn't trigger cleave
+                                  // followups, but still do 100% damage
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
+    item_def *mutable_wpn;
 
 public:
     melee_attack(actor *attacker, actor *defender,
-                 int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false);
+                 int attack_num = 0, int effective_attack_num = 0);
+    void set_weapon(item_def *weapon, bool offhand = false);
 
-    // Applies attack damage and other effects.
+    bool launch_attack_set(bool allow_rev = true);
     bool attack();
     int calc_to_hit(bool random) override;
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
+
+    bool would_prompt_player();
 
     static void chaos_affect_actor(actor *victim);
 
@@ -79,9 +88,13 @@ private:
 
     void rot_defender(int amount);
 
-    bool consider_decapitation(int damage_done, int damage_type = -1);
-    bool attack_chops_heads(int damage_done, int damage_type);
-    void decapitate(int dam_type);
+    bool consider_decapitation(int damage_done);
+    bool attack_chops_heads(int damage_done);
+    void decapitate();
+
+    bool run_attack_set();
+    bool swing_with(item_def &weapon, bool offhand);
+    void force_cleave(item_def &weapon, coord_def target);
 
     /* Axe cleaving */
     void cleave_setup();
@@ -99,6 +112,7 @@ private:
 #if TAG_MAJOR_VERSION == 34
     void do_passive_heat();
 #endif
+    void do_foul_flame();
     void emit_foul_stench();
 
     /* Divine Effect */
@@ -113,6 +127,7 @@ private:
 
     /* Brand / Attack Effects */
     bool do_knockback(bool slippery);
+    bool do_drag();
 
     /* Output methods */
     void set_attack_verb(int damage) override;
@@ -130,6 +145,7 @@ private:
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
     void do_ooze_engulf();
+    void try_parry_disarm();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
@@ -152,11 +168,14 @@ private:
     bool player_good_stab() override;
     void player_announce_aux_hit();
     string charge_desc();
+    string weapon_desc();
     void player_warn_miss();
     void player_weapon_upsets_god();
     bool bad_attempt();
-    bool player_unrand_bad_attempt();
+    bool player_unrand_bad_attempt(const item_def *offhand,
+                                   bool check_only = false);
     void _defender_die();
+    void handle_spectral_brand();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
@@ -164,7 +183,14 @@ private:
                                      bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
-    bool can_reach();
+    bool can_reach(int dist);
+
+    item_def *offhand_weapon() const;
+
+    // XXX: set up a copy constructor instead?
+    void copy_to(melee_attack &other);
+
+    vorpal_damage_type damage_type;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);

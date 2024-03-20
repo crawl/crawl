@@ -73,6 +73,7 @@ defaults = {
     'max_connections': 100,
     'connection_timeout': 600,
     'max_idle_time': 5 * 60 * 60,
+    'max_lobby_idle_time': 3 * 60 * 60,
     'use_gzip': True,
     'kill_timeout': 10,
     'nick_regex': r"^[a-zA-Z0-9]{3,20}$",

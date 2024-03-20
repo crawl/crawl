@@ -1887,7 +1887,7 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_arrival_brainrot
 TAGS:    arrival no_monster_gen
-MONS:    jackal / worm
+MONS:    jackal / ribbon worm
 ORIENT:  float
 SUBST:   l = l.
 NSUBST:  { = 1:{ / *:.
@@ -2342,18 +2342,18 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    imperial myrmidon / servant of whispers / ragged hierophant
-MONS:    worm / tyrant leech
+MONS:    ribbon worm / tyrant leech / brain worm
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
-MONS:    frilled lizard / iguana / snapping turtle / komodo dragon
+MONS:    iguana / crocodile / snapping turtle / komodo dragon
 MONS:    hog / jackal / wolf / hound
-MONS:    giant cockroach / scorpion / butterfly / killer bee / redback
-MONS:    swamp worm / lindwurm / worm
+MONS:    scorpion / butterfly / killer bee / boulder beetle / redback
+MONS:    swamp worm / lindwurm / brain worm
 MONS:    swamp drake / hydra / wyvern / rime drake
 MONS:    polar bear / black bear
-MONS:    black mamba / water moccasin / anaconda / salamander
+MONS:    black mamba / anaconda / mana viper
 : end
 KMASK:   ' = no_monster_gen
 SUBST:   ' = .
@@ -2927,7 +2927,7 @@ KPROP:  q = no_tele_into
 SUBST:  p = Pw, q = Pw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
-xqwqqwqqqqqqwqqp.p.p...x
+xqwqqwqqqqqqwqqp.p.....x
 xwwwwwwqqqqqwwqpp..w...x
 xwwwwwwwqwqwwwwqpwwwwp.x
 xwwwwwwwwwwwwwwwwww..w.+
@@ -3349,9 +3349,8 @@ COLOUR:  .c = white
 : end
 :
 : local axis = util.random_from({"goblin", "gnoll", "kobold", "orc"})
-:
-: dgn.delayed_decay(_G, 'u', ally .. " skeleton")
-: dgn.delayed_decay(_G, 'v', axis .. " skeleton")
+: _G.kitem('u = ' .. ally .. " skeleton")
+: _G.kitem('v = ' .. axis .. " skeleton")
 MAP
 cc+ccc+cc
 cc-ccc-cc
@@ -3503,14 +3502,14 @@ NAME:     amcnicky_arrival_blooded_trapdoor
 TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:   float
 SHUFFLE:  pqr
-SUBST:    s:xxxtw, p:x, q:x, r:@
-SUBST:    ' = '..
-KPROP:    ' = bloody
+SUBST:    p : x, q : x, r:@, s : xxxtw
+NSUBST:   " = 1:" / * = ".., ' = 1:" / * = "..
+KPROP:    " = bloody
 MAP
    xpppx
    x'''x
-xxxx'>'xxxxxqqq
-x...'''.......q
+xxxx">'xxxxxqqq
+x...""".......q
 x.{........ss.q
 x.............x
 xxxxxxxxrrrrxxx
@@ -3544,7 +3543,7 @@ NAME:     amcnicky_arrival_wind_blow
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:p / 4=p:2 . / *=.
-: dgn.delayed_decay(_G, 'p', 'deep dwarf skeleton')
+KITEM:    p = deep dwarf skeleton
 MAP
       xxxxx
       x__{xxx
@@ -3566,7 +3565,7 @@ NAME:     amcnicky_arrival_abandoned_market
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:q / 4=q:2 . / *=.
-: dgn.delayed_decay(_G, 'q', 'deep dwarf skeleton')
+KITEM:    q = deep dwarf skeleton
 NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
 SUBST:    r = x.
 KFEAT:    p = abandoned_shop
@@ -3627,7 +3626,7 @@ KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
              formicid skeleton / ghoul skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \
              merfolk skeleton / minotaur skeleton / naga skeleton / \
-             octopode skeleton / ogre skeleton / spriggan skeleton / \
+             octopode skeleton / oni skeleton / spriggan skeleton / \
              tengu skeleton / troll skeleton
 MAP
    vvv
@@ -3788,7 +3787,7 @@ MAP
 ENDMAP
 
 NAME:    spicycebolla_arrival_ecumenical
-TAGS:    arrival uniq_ecumenical_altar transparent
+TAGS:    arrival uniq_ecumenical_altar transparent no_descent
 KMASK:   -_Tt)n = opaque
 ORIENT:  float
 KFEAT:   _ = altar_ecumenical
@@ -3856,4 +3855,113 @@ MAP
 ......Gl.lG......
 .......l.l.......
 .................
+ENDMAP
+
+##############################################################################
+NAME:    roadster_arrival_rocket_small
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+  t@.v.@t
+  t.vvv.t
+  tFm{mFt
+  tvv.vvt
+  vv...vv
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v..F..v
+  v.....v
+vvv+v+v+vvv
+ ...lFl...
+  @.....@
+ENDMAP
+
+NAME:    roadster_arrival_rocket_large
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+      v
+   t@vvv@t
+   t.m{m.t
+   tvv.vvt
+  Fvv...vvF
+  vv.....vv
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v...F...v
+ vv.......vv
+vvv+v+v+v+vvv
+...Fl.l.lF...
+ @.........@
+ENDMAP
+
+##############################################################################
+
+NAME:   mainiacjoe_arrival_oval_in_oval
+TAGS:   arrival transparent
+TAGS:   no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST:  m : m#lw
+KFEAT:  # = iron_grate
+SUBST:  T : TGbt123V
+MONS:   fungus, plant, bush
+MAP
+     .......
+   ...........
+ .....mmmmm.....
+....mmm...mmm....
+..mmm...T...mmm..
+..m...T...T...m..
+....T...{...T....
+..m...T...T...m..
+..mmm...T...mmm..
+....mmm...mmm....
+ .....mmmmm.....
+   ...........
+     .......
+ENDMAP
+
+NAME:   hellmonk_arrival_library
+TAGS:   arrival transparent
+ORIENT: float
+SHUFFLE: DE, FH
+SUBST:  E = ccc., H = ccc., G:Gc
+TILE:   c = wall_studio
+FTILE:  .+G>{ = floor_studio
+MAP
+cccccccccccc
+c{.........c
+c.ccccccccDc
+c.c........c
+c.c.>.cccccc
+c.c........c
+c.c.c.ccccHc
+c.c.c.c....c
+c.c.c.c.G.cc
+c.c.c.c....+@
+c.E.c.F.c..+@
+ccccccccc++c
+         @@
 ENDMAP

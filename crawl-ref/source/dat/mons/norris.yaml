@@ -1,0 +1,19 @@
+name: "Norris"
+glyph: {char: "@", colour: brown}
+flags: [fighter, see_invis, speaks, warm_blood, unique, male]
+species: human
+will: 140
+attacks:
+ - {type: hit, flavour: confuse, damage: 36}
+hd: 20
+hp_10x: 2100
+ac: 1
+ev: 9
+spells: norris
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: medium
+shape: humanoid

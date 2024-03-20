@@ -3,12 +3,12 @@ monster: MONS_TROLL
 name: Troll
 adjective: Trollish
 difficulty: Simple
-difficulty_priority: 40
+difficulty_priority: 50
 aptitudes:
   xp: -1
   hp: 3
   mp_mod: -1
-  mr: 3
+  wl: 3
   fighting: -2
   short_blades: -2
   long_blades: -2
@@ -28,12 +28,11 @@ aptitudes:
   summoning: -3
   necromancy: -2
   translocations: -3
-  transmutations: -3
   fire_magic: -3
   ice_magic: -3
   air_magic: -4
   earth_magic: -1
-  poison_magic: -3
+  alchemy: -3
   invocations: -1
   evocations: -3
   shapeshifting: -1
@@ -60,3 +59,5 @@ recommended_jobs:
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_UNARMED_COMBAT
+
+orc_name: Trorc

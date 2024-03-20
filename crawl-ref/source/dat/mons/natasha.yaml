@@ -1,0 +1,19 @@
+name: "Natasha"
+glyph: {char: "h", colour: magenta}
+flags: [see_invis, speaks, warm_blood, unique, female]
+species: felid
+will: 20
+attacks:
+ - {type: claw, damage: 10}
+hd: 3
+hp_10x: 150
+ac: 2
+ev: 12
+spells: natasha
+has_corpse: true
+shout: hiss
+intelligence: human
+energy: {move: 8}
+uses: starting_equipment
+size: little
+shape: quadruped

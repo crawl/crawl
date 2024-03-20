@@ -11,7 +11,7 @@ void yell(const actor* mon = nullptr);
 void issue_orders();
 
 void item_noise(const item_def& item, actor &act, string msg, int loudness = 25);
-void noisy_equipment();
+void noisy_equipment(const item_def &item);
 
 void monster_consider_shouting(monster &mon);
 bool monster_attempt_shout(monster &mon);

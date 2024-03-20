@@ -26,8 +26,9 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_small
 TAGS:   snake_entry transparent
 ORIENT: float
-MONS:   naga, naga / nothing w:3
+MONS:   naga
 KFEAT:  O = enter_snake_pit
+SUBST:  2 = 1 .:3
 MAP
 ccc.@.ccc
 c.......c
@@ -43,9 +44,9 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_medium
 TAGS:   snake_entry transparent
 WEIGHT: 5
-ORIENT: float
-MONS:   naga, naga / nothing
+MONS:   naga
 KFEAT:  O = enter_snake_pit
+SUBST:  2 = 1.
 MAP
    ccccccc
  ccc.....ccc
@@ -61,9 +62,9 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_large
 TAGS:   snake_entry transparent
 WEIGHT: 2
-ORIENT: float
-MONS:   naga, naga / nothing
+MONS:   naga
 KFEAT:  O = enter_snake_pit
+SUBST:  2 = 1.
 MAP
 c@ccccccc
 c.......cc
@@ -82,11 +83,12 @@ ENDMAP
 
 NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair transparent
-ORIENT: float
 MONS:   water moccasin, black mamba
-KMONS:  P = plant / fungus w:1 / nothing
-SUBST:  1 = 1 .:30, 2 = 122 .:30, D = 12 .:40
+KMONS:  P = plant / fungus w:1
 KFEAT:  O = enter_snake_pit
+NSUBST: 1 = 3:1 / 3 = 1... / *:., 2 = 1:1 / 1:2 / 1:11222 / *:.
+NSUBST: D = 2 = 112 / *:.
+SUBST:  P = P:11 .
 MAP
 xxxx.@1xxxxxxP@xxxxx
 xxxx1.PxxxxxP..xxxxx
@@ -112,30 +114,31 @@ ENDMAP
 
 NAME:   minmay_snake_entry_spellcaster
 TAGS:   snake_entry transparent
-ORIENT: float
 WEIGHT: 2
 MONS:   guardian serpent
 KFEAT:  O = enter_snake_pit
 MAP
-...
-.O1
-...
+xxxxxxxxx
+ .......
+ ...O...
+ ...1...
+xxxxxxxxx
 ENDMAP
 
 NAME:   guppyfry_snake_entry_island
 TAGS:   snake_entry patrolling no_monster_gen transparent
-ORIENT: float
-MONS:   naga / nothing, plant
+MONS:   naga, water moccasin, plant
 KFEAT:  O = enter_snake_pit
-SUBST:  - = . W:2 2:1
+NSUBST: 1 = 1:1 / 1:- / * = 1--, 2 = 1:2 / 2:- / * = 2-
+SUBST:  - = . W:2 3:1
 MAP
    -WWWWW-
   -WWWWWWW-
  -WWW---WWW-
 -WWW-----WWW-
--WW---1---WW-
+.WW--212--WW.
 @WW--1O1--WW@
--WW---1---WW-
+.WW--212--WW.
 -WWW-----WWW-
  -WWW---WWW-
   -WWWWWWW-
@@ -144,11 +147,10 @@ ENDMAP
 
 NAME:   guppyfry_snake_entry_garden
 TAGS:   snake_entry patrolling no_monster_gen transparent
-ORIENT: float
-MONS:  naga / nothing, plant
+MONS:   naga, black mamba, plant
 KFEAT:  O = enter_snake_pit
-SUBST:  - = wW2t.
-SUBST:  " = W2.
+NSUBST: 1 = 1:1 / 1:2. / * = 1.
+SUBST:  - = wW3t., " = 3.
 MAP
  xxxx@xxxx
 xx---.---xx
@@ -202,12 +204,11 @@ ENDMAP
 
 NAME:   alex1729_snake_entry_snake
 TAGS:   snake_entry patrolling no_monster_gen transparent
-ORIENT: float
-MONS:   naga / w:3 nothing, w:20 plant / bush
+MONS:   naga, plant w:20 / bush
+KMONS:  L = salamander ; longbow | shortbow
 KFEAT:  O = enter_snake_pit
 KFEAT:  L = l
-KMONS:  L = salamander ; longbow | shortbow
-SUBST:  - = W2..
+SUBST:  1 = 1 .:3, - = 2W..
 MAP
       xxxxxxx
     xxx-.---xx
@@ -558,17 +559,28 @@ xx.......xxx.......xx
        xxbbbxx
 ENDMAP
 
-NAME:  nicolae_snake_biting_tails
-TAGS:  transparent extra
-SUBST: G : GT
+NAME:   nicolae_snake_biting_tails
+TAGS:   transparent extra
+KFEAT:  g = metal_statue
+SUBST:  g : ggG, G : GT
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR: g = poison
+TILE:   g = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR: g = fire
+TILE:   g = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:   G = dngn_statue_naga
 MAP
 xxxxx     xxxxxxx     xxxxxxx     xxxxxxx
 @...xxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxxx
 xx....xx..........xxx.........xxx.........xx...x
  xxx.x......xxx....x....xxx....x....xxx..x.....x
-   xx.G....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
+   xx.g....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
    xx.....xxxxxxxx...xxxxxxxxx...xxxxxxxx.....xx
-   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....G.xx
+   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....g.xx
    x.....x..xxx....x....xxx....x....xxx......x.xxx
    x...xx.........xxx.........xxx..........xx....xx
    xxxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxx...@
@@ -613,9 +625,21 @@ MAP
     ............
 ENDMAP
 
-NAME:  nicolae_snake_slithery_corners
-TAGS:  extra transparent
-SUBST: D : TGG., E : TGG., F : TGG.
+NAME:    nicolae_snake_slithery_corners
+TAGS:    extra transparent
+KFEAT:   g = metal_statue
+SHUFFLE: DEF
+SUBST:   D : ggG., E : TG., F : T.
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:  G : dngn_statue_naga / dngn_statue_archer
 MAP
      ccc
 c@@@ccccc@@@cc
@@ -639,9 +663,21 @@ cc....ccc.......ccc
     ccccccccccccccc
 ENDMAP
 
-NAME:  nicolae_snake_slithery_hallway
-TAGS:  extra transparent
-SUBST: D : TGG., E : TGG., F : TGG.
+NAME:    nicolae_snake_slithery_hallway
+TAGS:    extra transparent
+KFEAT:   g = metal_statue
+SHUFFLE: DEF
+SUBST:   D : ggG., E : TG., F : T.
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:  G : dngn_statue_naga / dngn_statue_archer
 MAP
   cccccccccccccccccccccccccccccccccc
  cc..F..ccccc..D..ccccc..E..ccccc..@
@@ -1011,7 +1047,7 @@ wwwWwWww
 ENDMAP
 
 NAME:   minmay_snake_river
-TAGS:   no_monster_gen generate_awake
+TAGS:   no_monster_gen generate_awake no_descent
 ORIENT: south
 KITEM:  2 = * / nothing
 KITEM:  3 = |
@@ -1049,8 +1085,8 @@ MARKER: 3 = lua:fog_machine { cloud_type = "noxious fumes", pow_min = 5, \
 MAP
      ...
     .....
-   ..+++..
-  ..m+2+m..
+   ..===..
+  ..m=2=m..
   ..mm1mm..
  ..mm111mm..
 ..mm11111mm..
@@ -1360,7 +1396,7 @@ x..YY.xxx..YY.xxxxxxxxx.@.
 ENDMAP
 
 NAME:    nicolae_snake_salamander_stairs
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 DEPTH:   Snake, !Snake:$
 : if you.depth() < 2 then
 KMONS:   1 = salamander mystic / salamander tyrant w:5
@@ -1457,6 +1493,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_attic_fulla_snakes
+TAGS:    no_descent
 DEPTH:   Snake, !Snake:$
 ORIENT:  northeast
 KITEM:   2 = *
@@ -1924,7 +1961,7 @@ NAME:    nicolae_snake_shooting_gallery
 TAGS:    no_pool_fixup transparent
 DEPTH:   Snake, !Snake:$
 ORIENT:  float
-ITEM:    shortbow / orcbow / longbow w:4 / hand crossbow w:1 / \
+ITEM:    shortbow / orcbow / longbow w:4 / hand cannon w:1 / \
          arbalest w:6 / triple crossbow w:1
 MONS:    naga sharpshooter
 SUBST:   s = 1'
@@ -2105,7 +2142,6 @@ NAME:    snake_hunt
 TAGS:    no_rotate
 PLACE:   Snake:$
 ORIENT:  northwest
-KITEM:   O = serpentine rune of Zot
 MONS:    naga w:30 / salamander
 MONS:    nagaraja w:20 / salamander tyrant
 MONS:    guardian serpent
@@ -2113,7 +2149,10 @@ MONS:    naga warrior / naga sharpshooter w:5
 MONS:    naga mage w:30 / naga ritualist / naga sharpshooter \
          / salamander mystic
 MONS:    nagaraja / guardian serpent / salamander tyrant w:5
+KITEM:   R = jade gem
+KITEM:   O = serpentine rune of Zot
 SHUFFLE: 'D / "E, 'D / 'D / FH, "E / JK
+NSUBST:  DLE = 1:+
 SUBST:   FHJK = x, ' = ., " = .
 SUBST:   E = D, L=xc..++, D=xc++, T : T U V .:30 b, _ : ....!x, ! = x .:2
 SUBST:   1 = 1..., 2 = 2..., 3 = 3..., 4 = 44..., 5 = 55...
@@ -2122,15 +2161,15 @@ SUBST:   - = .
 SHUFFLE: 123, 45
 NSUBST:  { = { / .
 #
-validate {{ return glyphs_connected('{', 'O') }}
+validate {{ return glyphs_connected('@', 'O') }}
 #
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx'xxxcccccxxx"xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxcccxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx'xxxccRccxxx"xxxxxxxxxxxxx
 xxxxxxxxxxxxx'xx''''''c4O4c""""""xx"xxxxxxxx
 xxxxxxxxxxx''''''xxxx6646466xxxx""""""xxxxxx
 xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
@@ -2171,10 +2210,11 @@ NAME:   snake_pit
 TAGS:   no_rotate
 PLACE:  Snake:$
 ORIENT: southwest
-KITEM:  O = serpentine rune of Zot
 MONS:   nagaraja / salamander tyrant w:5, naga w:15 / salamander w:5
 MONS:   naga mage w:30 / naga ritualist / salamander mystic / naga sharpshooter
 MONS:   naga warrior / naga sharpshooter w:5
+KITEM:  O = serpentine rune of Zot
+KITEM:  R = jade gem
 SUBST:  D = c .:1, v = x .:1, 2 = 223, 4 = 4.
 NSUBST: 1 = 3:1 / *=1.., 3 = 5:3 / *=3...
 MAP
@@ -2197,7 +2237,7 @@ xxxxxxxc1..DD.........1...1......DD..1cx
 xxxxxxxcc..DD.....1.....1.....1.DDD..ccx
 xxxxxxxxc...DDD......3333333....DD...cxx
 xxxxxxxxc....DDDD....3333333....DD...cxx
-xxxxxxxxc.....DDDDDD...........DD....cxx
+xxxxxxxxc.....DDDDDD....R......DD....cxx
 xxxxxxxxc........DDDc...O....cDD.....cxx
 xxxxxxxxcc........Dc.DcccccDD.cD....ccxx
 xxxxxxxxxc..........DDDcccDDDD......cxxx
@@ -2221,25 +2261,26 @@ NAME:    minmay_snake_end_coiled
 TAGS:    no_rotate
 PLACE:   Snake:$
 ORIENT:  southwest
-KITEM:   O = serpentine rune of Zot
 MONS:    naga, naga warrior / naga sharpshooter w:5
-MONS:    naga mage w:30 / naga ritualist / naga sharpshooter \
-         / salamander mystic
+MONS:    naga mage w:30 / naga ritualist / naga sharpshooter / \
+         salamander mystic
 MONS:    nagaraja / salamander tyrant w:5
-SHUFFLE: ABC
-SUBST:   A = x, B : xx., C = ., c : c:20 v:5, 1 = 1., 2 = 23...
+KITEM:   O = serpentine rune of Zot
+KITEM:   R = jade gem
+SHUFFLE: ABC, {([
+SUBST:   A = x, B : xx., C = ., c : c:20 v:5, 1 = 1., 2 = 23..., ( = (., [ = [..
 NSUBST:  4 = 4=4 / *=432.., X = 4=x / 4=. / x..
 MAP
 xxxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxc....cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxcc....ccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxcc.{..ccxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc...2..cxxxccccccccxxxxxx
 xxxxxxxxxxxxcccccc......ccccc......cccxxxx
 xxxxxxxxccccc...2.......2.......1....ccccc
 xxxxxcccc.......A...4............1........
-xxxccc..........A2..X..2.........2.......@
+xxxccc..........A2..X..2.........2....(..@
 xxcc...............2.2..........1.........
 xxc....4.....ccccc......cccccc......cccccc
 xcc...1...ccccxxxc......cxxxxccccccccxxxxx
@@ -2270,7 +2311,7 @@ xxc....1.2...ccccc..2...ccccccxxxxxxxxxxxx
 xxcc.................1.....4.cccccxxxxxxxx
 xxxccc........1.C...4........1...ccccxxxxx
 xxxxxcccc..4.2X4C....1......12X4....cccxxx
-xxxxxxxxccccc.1.....2........1....4..Ocxxx
+xxxxxxxxccccc.1.....2........1....4.ROcxxx
 xxxxxxxxxxxxcccccccccccccccccccccccccccxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2283,19 +2324,21 @@ NAME:   snake_pit_salamanders_mu
 TAGS:   no_monster_gen no_rotate
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
 MONS:   naga / salamander w:15
 MONS:   naga mage / naga ritualist / naga sharpshooter \
         / salamander mystic w:30
 MONS:   naga warrior / naga sharpshooter w:5
 MONS:   nagaraja / salamander tyrant w:20, guardian serpent
 MONS:   anaconda w:20 / black mamba / shock serpent / mana viper w:15
-KMONS:  7 = salamander
+KMONS:  7 = salamander ; shortbow ego:flaming
 KMONS:  D = lindwurm
 KMONS:  OS = guardian serpent
+KITEM:  O = serpentine rune of Zot
+KITEM:  R = jade gem
 KFEAT:  7 = lava
 SUBST:  2 = 2..., 3 = 3..., 4 = 4..., D = Dll, S = SS6.
-NSUBST: l = 8=7l / *:l, . = 12 = 1.. / *:., 5 = 2:5 / *=5.., 6 = 6:6 / *=6..
+NSUBST: l = 8 = 7l / *:l, . = 12 = 1.. / *:.
+NSUBST: 5 = 2:5 / * = 5.., 6 = 7:6 / * = 6..
 MAP
               xxxxxx
               cccccc
@@ -2306,7 +2349,7 @@ MAP
    ccccc cc.llllllllll.cccc666cc
   cc...ccc..llllllllll..cc66666cc
  cc.222.cc.llllllllllll.+666S666c
- c..443..c3llllllllllll.+666O666c
+ c..443..c3llllllllllll.+66RO666c
  c.4243..+5llllllllllll.+666S666c
  c.4332..c3llllllllllll.cc66666cc
  cc.....cc..llllllllll..ccc666cc
@@ -2338,17 +2381,24 @@ ENDMAP
 
 ################################################################################
 
-NAME:   grunt_snake_rune_spirals
-PLACE:  Snake:$
-ORIENT: centre
-KITEM:  D = serpentine rune of Zot
-KITEM:  E = serpentine rune of Zot mimic / w:90 any good_item
-MONS:   naga w:30 / salamander, naga warrior / naga sharpshooter w:5
-MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
-        salamander mystic w:5
-MONS:   nagaraja / guardian serpent / salamander tyrant w:5, nagaraja
-SUBST:  1 = 1.., 2 = 2..., 3 = 3.
-NSUBST: O = D / 1=E, 4 = 4:4 / *=4., 5 = 6:5 / *=54.
+NAME:    grunt_snake_rune_spirals
+PLACE:   Snake:$
+ORIENT:  centre
+MONS:    naga w:30 / salamander, naga warrior / naga sharpshooter w:5
+MONS:    naga mage w:15 / naga ritualist / naga sharpshooter /\
+         salamander mystic w:5
+MONS:    nagaraja / guardian serpent / salamander tyrant w:5, nagaraja
+KITEM:   D = serpentine rune of Zot
+KITEM:   d = jade gem
+: if crawl.one_chance_in(10) then
+KITEM:   E = serpentine rune of Zot mimic
+KITEM:   e = jade gem mimic
+: else
+KITEM:   eE = any good_item
+: end
+SHUFFLE: Dd / Ee
+SUBST:   1 = 1.., 2 = 2..., 3 = 3.
+NSUBST:  4 = 4:4 / * = 4., 5 = 6:5 / * = 54.
 MAP
         cccccccc     c.@..c       cccccccc
      cccc..1...ccc   c....c    cccc..2...ccc
@@ -2358,12 +2408,12 @@ MAP
  cc.51ccc..2..cc..5..c....cxcc.2.ccc....cc12.cc
  c...cc...23...cc1........cxc.5.1c.......cc...c
 cc...c2....2....cc........cxc...cc.......4c...cc
-c...cc52..ccc..22cc....32.cxc232c......4..cc...c
-c...c...2ccccc25..cc......cxc...c.4.O.4c.2.c...c
+c...cc52..ccc..22cc....32.cxc232c..e...4..cc...c
+c...c...2ccccc25..cc......cxc...c.4.E.4c.2.c...c
 c232c...cc.5.cc...ccc..5..ccc...cc.....c323c...c
 c...c323c.....cc...ccc..5..ccc...cc.5.cc...c232c
-c...c.2.c4.O.4.c...cxc......cc..52ccccc2...c...c
-c...cc..4......c232cxc.23....cc22..ccc..25cc...c
+c...c.2.c4.D.4.c...cxc......cc..52ccccc2...c...c
+c...cc..4...d..c232cxc.23....cc22..ccc..25cc...c
 cc...c4.......cc...cxc........cc....2....2c...cc
  c...cc.......c1.5.cxc........1cc...32...cc...c
  cc.21cc....ccc.2.ccxc....c..5..cc..2..ccc15.cc
@@ -2380,7 +2430,6 @@ NAME:   grunt_snake_rune_pools
 TAGS:   no_trap_gen no_monster_gen
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of zot
 # I've added a fire theme, which places salamander monsters and lava instead of
 # deep water and sea snakes. --gammafunk
 : if crawl.one_chance_in(3) then
@@ -2403,6 +2452,8 @@ KMONS:  7 = sea snake
 KFEAT:  7 = w
 NSUBST: 7 = 2=7 / 7wwww
 : end
+KITEM:  R = jade gem
+KITEM:  O = serpentine rune of Zot
 SUBST:  4 = 45, 3 = 35, 1 = 113., 2 = 2211., 5 = 5.., 6 = 66.
 MAP
           xxxxxxxxx
@@ -2412,7 +2463,7 @@ MAP
       c4.www1.2.1www.4c
    ccccw.w7ww.O.ww7w.wccc
   cccwwwSww7w212w7wwSwwwccc
- cc...ww.wwwww.wwwww.ww...cc
+ cc...ww.wwwwwRwwwww.ww...cc
 cc......3.w7ww4ww7w.3......cc
 c..cccwww.ww7w4w7ww.wwwccc..c
 c..cxcc7w..2.5.5.2..w7ccxc..c
@@ -2441,7 +2492,6 @@ ENDMAP
 NAME:   grunt_snake_rune_serpentine_throne
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
 KMONS:  L = vashnia / nagaraja, nagaraja
 MONS:   nagaraja w:15 / naga sharpshooter / salamander tyrant w:5
 MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
@@ -2449,27 +2499,34 @@ MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
 MONS:   naga w:30 / salamander
 MONS:   anaconda / guardian serpent
 MONS:   naga warrior
-KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
+KITEM:  R = jade gem
+KITEM:  O = serpentine rune of Zot
+KFEAT:  A = altar_okawaru
+KFEAT:  S = metal_statue
 NSUBST: 1 = 4:1 / *=1., 2 = 2:2 / *=2., 5 = 2:5 / *=5..
-SUBST:  3 = 3.., 4 = 4.
+SUBST:  3 = 3.., 4 = 4., S : SG
+COLOUR: S = poison
+TILE:   G = dngn_statue_naga
+TILE:   S = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
 MAP
      xxxxxxx
      ccccccc
    ccc..O..ccc
   cc4.3...3.4cc
   c..1.ccc.1..c
- cc.3.cc.cc.3.cc
- c...cc._.cc...c
+ cc.3.ccRcc.3.cc
+ c...cc.A.cc...c
 cc......L......cc
 c..5..G...G..5..c
 c..T.2.1.1.2.T..c
-c...3.G...G.3...c
+c...3.S...G.3...c
 c..4.2.1.1.2.4..c
-c.4.3.G...G.3.4.c
+c.4.3.G...S.3.4.c
 c..4T2.1.1.2T4..c
-c.4.3.G...G.3.4.c
+c.4.3.S...G.3.4.c
 c..4.2.1.1.2.4..c
-c...3.G...G.3...c
+c...3.G...S.3...c
 cc.T.2.....2.T.cc
  c....G.5.G....c
  cc.5..5.5..5.cc
@@ -2495,7 +2552,6 @@ ENDMAP
 NAME:   johnstein_snake_rune_scales
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
 MONS:   naga w:30 / salamander, naga warrior / naga / salamander w:5
 MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
         salamander mystic
@@ -2504,9 +2560,11 @@ MONS:   nagaraja w:20 / naga sharpshooter / salamander tyrant
 MONS:   anaconda / black mamba / mana viper / shock serpent w:5
 KMONS:  Z = Vashnia w:30 / nagaraja w:20 / salamander tyrant \
             , nagaraja / salamander tyrant w:5
+KITEM:  R = jade gem
+KITEM:  O = serpentine rune of Zot
 SUBST:  1 = 1.., 2 = 2.., 3 = 33..., 6 = 6..
 NSUBST: 4 = 2:4 / *=4.., 5 = 1:ZZZ5 / 3:5 / *=5.
-NSUBST: O = 1:O / *:%.
+NSUBST: O = 1:O / 1:R / *:%.
 MAP
 cccccccccccccccccccccccccccccccccccccccc
 c4cO..4.4...OccO...44...OccO...4.4..Oc4c
@@ -2540,9 +2598,10 @@ ENDMAP
 NAME:   hellmonk_snake_rune_quicksilver_temple
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
 MONS:   naga sharpshooter / guardian serpent / nagaraja / salamander tyrant
 MONS:   quicksilver dragon
+KITEM:  R = jade gem
+KITEM:  O = serpentine rune of Zot
 # Ten high tier monsters and ten normal spawns on average.
 SUBST:  1 = ..1
 NSUBST: . = 20=0. / .
@@ -2555,7 +2614,7 @@ MAP
            cc...c...cc
            cc..ccc..cc
      ccccccc1.ccccc.1ccccccc
-    cccc.1cc...c.c...cc1.cccc
+    cccc.1cc...cRc...cc1.cccc
    cc......cc...1...cc......cc
   cc...cc...ccG...Gcc...cc...cc
  cc..ccccc.c+.......+c.ccccc..cc

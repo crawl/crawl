@@ -55,8 +55,6 @@ static string _net_immune_reason()
 {
     if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
         return "You slip through the net.";
-    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return "The net is torn apart by your bulk.";
     return "";
 }
 
@@ -92,8 +90,7 @@ void trap_def::prepare_ammo(int charges)
     {
     case TRAP_GOLUBRIA:
         // really, time until it vanishes
-        ammo_qty = (orb_limits_translocation() ? 10 + random2(10)
-                                               : 30 + random2(20));
+        ammo_qty = 10 + random2(10);
         break;
     case TRAP_TELEPORT:
         ammo_qty = 1;
@@ -213,33 +210,6 @@ const char* held_status(actor *act)
         return "caught in a web";
 }
 
-// If there are more than one net on this square
-// split off one of them for checking/setting values.
-static void _maybe_split_nets(item_def &item, const coord_def& where)
-{
-    if (item.quantity == 1)
-    {
-        set_net_stationary(item);
-        return;
-    }
-
-    item_def it;
-
-    it.base_type = item.base_type;
-    it.sub_type  = item.sub_type;
-    it.net_durability      = item.net_durability;
-    it.net_placed  = item.net_placed;
-    it.flags     = item.flags;
-    it.special   = item.special;
-    it.quantity  = --item.quantity;
-    item_colour(it);
-
-    item.quantity = 1;
-    set_net_stationary(item);
-
-    copy_item_to_grid(it, where);
-}
-
 static void _mark_net_trapping(const coord_def& where)
 {
     int net = get_trapping_net(where);
@@ -247,7 +217,7 @@ static void _mark_net_trapping(const coord_def& where)
     {
         net = get_trapping_net(where, false);
         if (net != NON_ITEM)
-            _maybe_split_nets(env.item[net], where);
+            maybe_split_nets(env.item[net], where);
     }
 }
 
@@ -259,24 +229,20 @@ static void _mark_net_trapping(const coord_def& where)
  */
 bool monster_caught_in_net(monster* mon)
 {
-    if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
-    {
-        if (you.see_cell(mon->pos()))
-        {
-            if (!mon->visible_to(&you))
-                mpr("The net bounces off something gigantic!");
-            else
-                simple_monster_message(*mon, " is too large for the net to hold!");
-        }
-        return false;
-    }
-
-    if (mon->is_insubstantial())
+    if (mon->is_insubstantial() || (mons_genus(mon->type) == MONS_JELLY))
     {
         if (you.can_see(*mon))
         {
-            mprf("The net passes right through %s!",
-                 mon->name(DESC_THE).c_str());
+            if (mon->is_insubstantial())
+            {
+                mprf("The net passes right through %s!",
+                     mon->name(DESC_THE).c_str());
+            }
+            else
+            {
+                mprf("%s effortlessly oozes through the net!",
+                     mon->name(DESC_THE).c_str());
+            }
         }
         return false;
     }
@@ -327,6 +293,7 @@ bool player_caught_in_net()
     // and we get a glimpse of a web because there isn't a trapping net
     // item yet
     you.attribute[ATTR_HELD] = 1;
+    you.redraw_evasion = true;
 
     stop_delay(true); // even stair delays
     return true;
@@ -335,31 +302,20 @@ bool player_caught_in_net()
 void check_net_will_hold_monster(monster* mons)
 {
     ASSERT(mons); // XXX: should be monster &mons
-    if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
-    {
-        int net = get_trapping_net(mons->pos());
-        if (net != NON_ITEM)
-            destroy_item(net);
-
-        if (you.see_cell(mons->pos()))
-        {
-            if (mons->visible_to(&you))
-            {
-                mprf("The net rips apart, and %s comes free!",
-                     mons->name(DESC_THE).c_str());
-            }
-            else
-                mpr("All of a sudden the net rips apart!");
-        }
-    }
-    else if (mons->is_insubstantial())
+    if (mons->is_insubstantial() || (mons_genus(mons->type) == MONS_JELLY))
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
             free_stationary_net(net);
 
-        simple_monster_message(*mons,
-                               " drifts right through the net!");
+        if (mons->is_insubstantial())
+        {
+            simple_monster_message(*mons,
+                                   " drifts right through the net!");
+        }
+        else
+            simple_monster_message(*mons,
+                                   " oozes right through the net!");
     }
     else
         mons->add_ench(ENCH_HELD);
@@ -550,7 +506,8 @@ void trap_def::trigger(actor& triggerer)
         if (!you_trigger && you.see_cell_no_trans(pos))
         {
             you.blink();
-            interrupt_activity(activity_interrupt::teleport);
+            if (!you.no_tele(true))
+                interrupt_activity(activity_interrupt::teleport);
         }
         // Don't chain disperse
         triggerer.blink();
@@ -746,6 +703,7 @@ void trap_def::trigger(actor& triggerer)
         {
         // keep this for messaging purposes
         const bool triggerer_seen = you.can_see(triggerer);
+        const bool triggerer_was_invisible_monster = m && m->has_ench(ENCH_INVIS) && !m->friendly();
 
         // Fire away!
         triggerer.do_shaft();
@@ -758,6 +716,15 @@ void trap_def::trigger(actor& triggerer)
                  triggerer_seen ? "The" : "A");
             know_trap_destroyed = true;
             trap_destroyed = true;
+
+            // If we shaft an invisible monster reactivate autopickup.
+            // We need to check for actual invisibility rather than
+            // whether we can see the monster. There are several edge
+            // cases where a monster is visible to the player but we
+            // still need to turn autopickup back on, such as
+            // TSO's halo or sticky flame.
+            if (triggerer_was_invisible_monster)
+                autotoggle_autopickup(false);
         }
         }
         break;
@@ -1106,7 +1073,7 @@ void roll_trap_effects()
 
 static string _malev_msg()
 {
-    return make_stringf("A sourceless malevolence fills %s...",
+    return make_stringf("A malevolent force fills %s...",
                         branches[you.where_are_you].longname);
 }
 
@@ -1121,6 +1088,9 @@ static void _print_malev()
  */
 void do_trap_effects()
 {
+    if (crawl_state.game_is_descent())
+        return;
+
     // Try to shaft, teleport, or alarm the player.
 
     // We figure out which possibilities are allowed before picking which happens
@@ -1201,6 +1171,10 @@ level_id generic_shaft_dest(level_id place)
     // Shafts drop you 1/2/3 levels with equal chance.
     // 33.3% for 1, 2, 3 from D:3, less before
     place.depth += 1 + random2(min(place.depth, 3));
+
+    // In descent, instead always drop one floor. Too brutal otherwise.
+    if (crawl_state.game_is_descent())
+        place.depth = curr_depth + 1;
 
     if (place.depth > max_depth)
         place.depth = max_depth;
@@ -1345,13 +1319,6 @@ bool ensnare(actor *fly)
         // currently webs are stateless so except for flavour it's a no-op
         if (fly->is_player())
             mpr("You are even more entangled.");
-        return false;
-    }
-
-    if (fly->body_size() >= SIZE_GIANT)
-    {
-        if (you.can_see(*fly))
-            mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
         return false;
     }
 

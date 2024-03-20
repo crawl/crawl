@@ -1319,9 +1319,16 @@ MAP
 ENDMAP
 
 NAME:   dpeg_vaults_monster_row
-TAGS:   vaults_room
-SUBST:  0 : 0000000z, z : z., 0 = 0009..
-KMONS:  z = human skeleton
+TAGS:   vaults_room allow_dup
+MONS:   vault guard skeleton, necromancer, phantasmal warrior
+: local d = you.depth()
+: mons("vault guard skeleton w:" .. 9 - d ..
+:      " / yaktaur captain skeleton w:" .. d)
+: mons("necromancer w:" .. 9 - d .. " / deep elf death mage w:" .. d)
+: mons("phantasmal warrior w:" .. 9 - d .. " / flayed ghost w:" .. d)
+SUBST:  0 : 0000z
+NSUBST: 0 = 1:0 / 2:. / * = 0009..
+NSUBST: z = 2:1 / 2:2 / 1:3 / 2:% / * = 11113...
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx00xx00xx00xx00xx00xx00xx
@@ -1634,7 +1641,8 @@ ENDMAP
 NAME: nicolae_vaults_yaktaur_gun_rack
 TAGS: vaults_room no_monster_gen no_item_gen
 MONS: yaktaur w:8 / yaktaur band w:4 / yaktaur captain w:2 / yaktaur captain band w:1
-KITEM: c = arbalest w:8 / arbalest good_item w:1 / triple crossbow w:1
+KITEM: c = arbalest w:7 / arbalest good_item w:1 / \
+           hand cannon w:1 / triple crossbow w:1
 MAP
 xxxxxxx
 xc.c.cx
@@ -1668,7 +1676,7 @@ ENDMAP
 
 NAME: nicolae_vaults_sealed_display
 WEIGHT: 5
-TAGS: vaults_room no_windows
+TAGS: vaults_room no_windows no_descent
 KMASK: >* = no_monster_gen
 KMONS: 0 = 0 band / 0
 MAP
@@ -2000,15 +2008,15 @@ KMONS:  L = 0 / nothing w:15
 NSUBST: p = + / x, q = + / x, r = + / x, s = + / x
 MAP
 ...........
-.(.xppx..(.
-...p..pL...
-..Lp.xxqqx.
-.xsxLpL..q.
-.s.xxxqx.q.
-.s..LrLxqx.
-.xssxx.rL..
-...Lr..r...
-.(..xrrx.(.
+.(.xpx...(.
+...p.pL....
+...p.xxqqx.
+..LxLpL..q.
+.xsxxxqxqx.
+.s..LrLxL..
+.xssxx.r...
+....Lr.r...
+.(...xrx.(.
 ...........
 ENDMAP
 

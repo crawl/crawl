@@ -16,7 +16,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     var defense_boosters = {
         "ac": "ice-armoured|protected from physical damage|sanguine armoured"
               + "|under a protective aura|curled up|fiery-armoured",
-        "ev": "agile|acrobatic|in a heavenly storm",
+        "ev": "^agile|acrobatic|in a heavenly storm",
         "sh": "divinely shielded",
     }
 
@@ -424,16 +424,24 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         if (player.depth) place_desc += ":" + player.depth;
         $("#stats_place").text(place_desc);
 
-        var status = "";
+        var tooltip = $("#stats_status_lights_tooltip");
+        $("#stats_status_lights").html("");
         for (var i = 0; i < player.status.length; ++i)
         {
-            var status_inf = player.status[i];
+            let status_inf = player.status[i];
             if (!status_inf.light) continue;
-            status += ("<span class='status_light fg" + status_inf.col + "' "
-                       + "data-desc=\"" + status_inf.desc + "\">"
-                       + status_inf.light + "</span> ");
+            let status = $("<span>");
+            status.addClass("status_light");
+            status.addClass("fg" + status_inf.col);
+            status.text(status_inf.light);
+            status.on("mouseenter mousemove", ev => {
+                tooltip.css({top: ev.pageY + "px"});
+                tooltip.html(util.formatted_string_to_html(status_inf.desc));
+                tooltip.show();
+            });
+            status.on("mouseleave", ev => tooltip.hide());
+            $("#stats_status_lights").append(status, " ");
         }
-        $("#stats_status_lights").html(status);
 
         $("#stats_weapon_letter").text(
             index_to_letter(player.equip[enums.equip.WEAPON]) + ")");

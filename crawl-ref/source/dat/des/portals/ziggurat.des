@@ -42,7 +42,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-TAGS:    zig_entry transparent
+TAGS:    zig_entry transparent no_descent
 KMASK:   O = opaque
 KFEAT:   O = enter_ziggurat no_mimic
 TAGS:    no_pool_fixup
@@ -65,11 +65,11 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
-TAGS:    zig_entry no_trap_gen transparent
+TAGS:    zig_entry no_trap_gen transparent no_descent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
-MONS:    eye of devastation / floating eye / \
+MONS:    eye of devastation / glass eye / \
          great orb of eyes / shining eye
 KPROP:   1Om = no_tele_into
 SHUFFLE: 123x
@@ -90,11 +90,11 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_d
-TAGS:    zig_entry no_trap_gen transparent
+TAGS:    zig_entry no_trap_gen transparent no_descent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
-MONS:    eye of devastation / floating eye / \
+MONS:    eye of devastation / glass eye / \
          great orb of eyes / shining eye
 KPROP:   1On; = no_tele_into
 SHUFFLE: 123x
@@ -134,7 +134,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ziggurat_f
-TAGS:   zig_entry no_trap_gen transparent
+TAGS:   zig_entry no_trap_gen transparent no_descent
 KFEAT:  O = enter_ziggurat no_mimic
 MONS:   angel / nothing w:20
 KPROP:  1Om; = no_tele_into
@@ -214,29 +214,31 @@ wwwww
  www
 ENDMAP
 
-NAME: ziggurat_pillar_centre_c
-TAGS: ziggurat_pillar centered unrand no_exits
-# This is evil. Monster sets are: summoners (1), smites (2), harmless (3).
-# This pillar has tactical implications: you will have to stay away from it,
-# and teleports are more risky.
-MONS: dread lich / shadow demon / curse skull / \
-      ironbound convoker / demonspawn corrupter / deep elf demonologist
-MONS: eye of devastation / floating eye / ghost moth / demonspawn black sun / \
-      torpor snail
-MONS: plant
-: if you.depth() > 21 then
-SUBST: 3 = 12222
-: elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
-SUBST: 3 = 12
-: end
+NAME:  ziggurat_pillar_centre_c
+TAGS:  ziggurat_pillar centered unrand no_exits
+# This is evil. Monster sets are: summoners (1), smiters (2), suppressors (3),
+# harmless (4). This pillar has tactical implications: you will have to stay
+# away from it, and teleports are more risky.
+MONS:  dread lich / shadow demon / curse skull / ironbound convoker / \
+       demonspawn corrupter / deep elf demonologist / \
+       mummy priest w:5 / royal mummy w:5 / deep elf death mage
+MONS:  titan / glass eye / ghost moth / glowing orange brain / tormentor
+MONS:  demonspawn black sun / torpor snail / \
+       servant of whispers / tainted leviathan
+MONS:  plant / demonic plant / butterfly
 KFEAT: m = iron_grate
+: if you.depth() > 21 then
+SUBST: 4 = 111233
+: elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
+SUBST: 4 = 123
+: end
 MAP
 mmm
-m3m
+m4m
 mmm
 ENDMAP
 
-NAME: ziggurat_pillar_centre_monster
+NAME: ziggurat_pillar_centre_statue
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
 MONS: ice statue / orange crystal statue / obsidian statue
 MAP
@@ -259,7 +261,7 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_h
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
-MONS: crimson imp
+MONS: laughing skull w:1 / crimson imp w:31 / pandemonium lord w:1
 MAP
 ccncc
 c...c
@@ -287,8 +289,15 @@ ENDMAP
 
 NAME:    ziggurat_pillar_centre_l
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
-SHUFFLE: X' / X' / 'X
-SUBST:   xX : bcmvxG, ' = .
+KFEAT:   g = metal_statue
+SHUFFLE: X' / X' / G' / 'X
+SUBST:   xX : bcmvx, ' = .
+NSUBST:  G = 1:g / *:G
+COLOUR:  G = mountain, g = silver
+TILE:    G = dngn_scintillating_statue
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
   x
  ...
@@ -300,23 +309,33 @@ ENDMAP
 NAME:    ziggurat_pillar_centre_m
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 DEPTH:   Zig:18-
+WEIGHT:  5
 SHUFFLE: X'" / X'" / 'X" / '"X
-SUBST:   x : bcmvxG, X : bcmvxG, '" = .
+SUBST:   x : bcmvx, X : bcmvx G:5, '" = .
+NSUBST:  G = 1:G / *:g
+COLOUR:  G = mountain, g = silver
+TILE:    G = dngn_scintillating_statue
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
-  x.x
- .....
+  x x
 x."...x
-..'X'..
+ .'X'.
 x...".x
- .....
   x.x
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_n
-TAGS:    ziggurat_pillar centered no_dump unrand no_exits
+TAGS:    ziggurat_pillar centered no_dump unrand no_exits no_pool_fixup
 DEPTH:   Zig:18-
-WEIGHT:  5
-SUBST:   x : w:40 bcmvxG
+SUBST:   x : w:40 bcmvx G:5
+NSUBST:  G = 1:g / *:G
+COLOUR:  G = mountain, g = silver
+TILE:    G = dngn_scintillating_statue
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
  ...
 .wxw.
@@ -390,15 +409,18 @@ NAME:    ziggurat_pillar_centre_more_plants
 TAGS:    ziggurat_pillar centered unrand no_exits
 DEPTH:   Zig:18-
 WEIGHT:  5
-MONS:    plant, bush, patrolling thorn hunter, patrolling shambling mangrove
-SHUFFLE: 1t
-SUBST:   1 : 12, 3 : 34..., x : bcmvxG
+MONS:    demonic plant, plant, bush
+MONS:    patrolling thorn hunter, patrolling shambling mangrove
+KMONS:   0 = sacred lotus
+SHUFFLE: 1t / 2t / t2
+NSUBST:  1 = 2 : 001 / 2:1
+SUBST:   2 : 23, 4 : 45..., x : bcmvxG
 MAP
   .t.
  ..t.1
-..1.3..
+..1.4..
 tt.x.tt
-..3.1..
+..4.1..
  1.t..
   .t.
 ENDMAP
@@ -425,15 +447,73 @@ xx9.9xx
   xax
 ENDMAP
 
-NAME:  ziggurat_pillar_centre_dispersal
-TAGS:  ziggurat_pillar centered generate_awake unrand no_exits
-KFEAT: ^ = dispersal trap
+NAME:   ziggurat_pillar_centre_dispersal
+TAGS:   ziggurat_pillar centered generate_awake unrand no_exits
+KFEAT:  ^ = dispersal trap
+KFEAT:  a = iron_grate
+COLOUR: G = mountain
+TILE:   G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
-^G.G^
-GG.GG
+^a.a^
+aG.Ga
 .....
-GG.GG
-^G.G^
+aG.Ga
+^a.a^
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_mark
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = alarm trap
+KFEAT:  G = metal_statue
+COLOUR: G = silver
+TILE:   G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
+MAP
+ G.G
+G^.^G
+..G..
+G^.^G
+ G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_what's_kraken
+TAGS:   ziggurat_pillar centered generate_awake unrand no_exits
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  Zig:10-
+WEIGHT: 5
+MONS:   kraken / kraken simulacrum / spectral kraken
+MAP
+  WW
+ WwwW
+Ww1wW
+WwwW
+ WW
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_armed
+TAGS:   ziggurat_pillar centered unrand no_exits
+DEPTH:  Zig:10-
+WEIGHT: 5
+MONS:   dancing weapon ; any weapon good_item | \
+        giant spiked club good_item ego:heavy w:5 | \
+        giant club good_item ego:heavy w:5
+MAP
+ 1
+1
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_bezotted
+TAGS:    ziggurat_pillar centered unrand no_exits
+WEIGHT:  1
+KFEAT:   ^ = zot trap
+SHUFFLE: .G
+TILE:    G = dngn_statue_orb_guardian
+MAP
+G.G
+.^.
+G.G
 ENDMAP
 
 #######################################################################

@@ -1,0 +1,20 @@
+name: "grey draconian"
+glyph: {char: "d", colour: lightgray}
+flags: [speaks, cold_blood, no_poly_to]
+genus: draconian
+will: 40
+attacks:
+ - {type: hit, damage: 25}
+ - {type: tail_slap, damage: 15}
+hd: 14
+hp_10x: 980
+ac: 16
+ev: 10
+has_corpse: true
+shout: roar
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: medium
+shape: humanoid_tailed
+tile: program_bug

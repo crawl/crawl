@@ -1,0 +1,19 @@
+name: "gargoyle"
+glyph: {char: "9", colour: lightgray}
+flags: [flies]
+resists: {elec: 1, petrify: 1}
+xp_mult: 26
+genus: golem
+holiness: [nonliving]
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+hd: 6
+hp_10x: 270
+ac: 18
+ev: 6
+spells: gargoyle
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid_winged_tailed

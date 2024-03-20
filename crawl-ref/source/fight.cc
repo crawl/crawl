@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "areas.h" // silenced
 #include "art-enum.h"
 #include "coord.h"
 #include "coordit.h"
@@ -42,6 +43,7 @@
 #include "random-var.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-damage.h" // safe_discharge
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -96,9 +98,10 @@ int aux_to_hit()
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
 {
     const int to_land = atk.calc_pre_roll_to_hit(false);
-    int ev = mi.ev;
     if (to_land >= AUTOMATIC_HIT)
         return 100;
+
+    int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
@@ -112,8 +115,14 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
         adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
 
         // Duplicates ranged_attack::post_roll_to_hit_modifiers().
-        if (!melee && mi.is(MB_REPEL_MSL))
-            adjusted_mhit -= (adjusted_mhit + 1) / 2;
+        if (!melee)
+        {
+            if (mi.is(MB_BULLSEYE_TARGET))
+            {
+                adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
+                                 / 2 / BULLSEYE_TO_HIT_DIV;
+            }
+        }
 
         if (adjusted_mhit >= ev)
             hits++;
@@ -145,29 +154,40 @@ int mon_shield_bypass(int hd)
 }
 
 /**
- * Return the odds of a monster attack with the given to-hit bonus hitting the given ev with the
- * given EV, rounded to the nearest percent.
+ * Return the odds of a monster attack with the given to-hit bonus hitting the given ev (scaled by 100),
+ * rounded to the nearest percent.
  *
  * TODO: deduplicate with to_hit_pct().
  *
  * @return                  To-hit percent between 0 and 100 (inclusive).
  */
-int mon_to_hit_pct(int to_land, int ev)
+int mon_to_hit_pct(int to_land, int scaled_ev)
 {
     if (to_land >= AUTOMATIC_HIT)
         return 100;
 
-    if (ev <= 0)
+    if (scaled_ev <= 0)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
 
     ++to_land; // per calc_to_hit()
 
-    int hits = 0;
+    const int ev = scaled_ev/100;
+
+    // EV is random-rounded, so the actual value might be either ev or ev+1.
+    // We repeat the calculation below once for each case
+    int hits_lower = 0;
     for (int ev1 = 0; ev1 < ev; ev1++)
         for (int ev2 = 0; ev2 < ev; ev2++)
-            hits += max(0, to_land - (ev1 + ev2));
+            hits_lower += max(0, to_land - (ev1 + ev2));
+    double hit_chance_lower = ((double)hits_lower) / (to_land * ev * ev);
 
-    double hit_chance = ((double)hits) / (to_land * ev * ev);
+    int hits_upper = 0;
+    for (int ev1 = 0; ev1 < ev+1; ev1++)
+        for (int ev2 = 0; ev2 < ev+1; ev2++)
+            hits_upper += max(0, to_land - (ev1 + ev2));
+    double hit_chance_upper = ((double)hits_upper) / (to_land * (ev+1) * (ev+1));
+
+    double hit_chance = ((100 - (scaled_ev % 100)) * hit_chance_lower + (scaled_ev % 100) * hit_chance_upper) / 100;
 
     // Apply Bayes Theorem to account for auto hit and miss.
     hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
@@ -176,24 +196,44 @@ int mon_to_hit_pct(int to_land, int ev)
     return (int)(hit_chance*100);
 }
 
-int mon_beat_sh_pct(int bypass, int sh)
+int mon_beat_sh_pct(int bypass, int scaled_sh)
 {
-    if (sh <= 0)
+    if (scaled_sh <= 0)
         return 100;
 
-    sh *= 2; // per shield_bonus()
+    int sh = scaled_sh/100;
 
-    int hits = 0;
+    // SH is random-rounded, so the actual value might be either sh or sh+1.
+    // We repeat the calculation below once for each case
+    sh *= 2; // per shield_bonus()
+    int hits_lower = 0;
     for (int sh1 = 0; sh1 < sh; sh1++)
     {
         for (int sh2 = 0; sh2 < sh; sh2++)
         {
             int adj_sh = (sh1 + sh2) / (3*2) - 1;
-            hits += max(0, bypass - adj_sh);
+            hits_lower += max(0, bypass - adj_sh);
         }
     }
-    const int denom = sh * sh * bypass;
-    return hits * 100 / denom;
+    const int denom_lower = sh * sh * bypass;
+    double hit_chance_lower = ((double)hits_lower * 100) / denom_lower;
+
+    sh += 2; // since we already multiplied by 2
+    int hits_upper = 0;
+    for (int sh1 = 0; sh1 < sh; sh1++)
+    {
+        for (int sh2 = 0; sh2 < sh; sh2++)
+        {
+            int adj_sh = (sh1 + sh2) / (3*2) - 1;
+            hits_upper += max(0, bypass - adj_sh);
+        }
+    }
+    const int denom_upper = sh * sh * bypass;
+    double hit_chance_upper = ((double)hits_upper * 100) / denom_upper;
+
+    double hit_chance = ((100 - (scaled_sh % 100)) * hit_chance_lower + (scaled_sh % 100) * hit_chance_upper) / 100;
+
+    return (int)(hit_chance*100);
 }
 
 /**
@@ -326,19 +366,20 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
         if (you.can_see(*defender) && !simu
-            && !wielded_weapon_check(attk.weapon))
+            && !wielded_weapon_check(you.weapon()))
         {
             you.turn_is_over = false;
             return false;
         }
 
-        if (!attk.attack())
-        {
-            // Attack was cancelled or unsuccessful...
-            if (attk.cancel_attack)
-                you.turn_is_over = false;
+        const bool success = attk.launch_attack_set();
+        if (attk.cancel_attack)
+            you.turn_is_over = false;
+        else
+            you.time_taken = you.attack_delay().roll();
+
+        if (!success)
             return !attk.cancel_attack;
-        }
 
         if (did_hit)
             *did_hit = attk.did_hit;
@@ -352,6 +393,17 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // If execution gets here, attacker != Player, so we can safely continue
     // with processing the number of attacks a monster has without worrying
     // about unpredictable or weird results from players.
+
+    // Spectral weapons should only attack when triggered by their summoner,
+    // which is handled via spectral_weapon_fineff. But if they bump into a
+    // valid attack target during their subsequent wanderings, they will still
+    // attempt to attack it via this method, which they should not.
+    if (attacker->as_monster()->type == MONS_SPECTRAL_WEAPON)
+    {
+        // Still consume energy so we don't cause an infinite loop
+        attacker->as_monster()->lose_energy(EUT_ATTACK);
+        return false;
+    }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
         ? attacker->heads() + MAX_NUM_ATTACKS - 1
@@ -607,6 +659,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
             return defender->res_poison();
         case BEAM_HOLY:
             return defender->res_holy_energy();
+        case BEAM_FOUL_FLAME:
+            return defender->res_foul_flame();
         default:
             return 0;
     }
@@ -651,6 +705,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                                      || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
+                                     || flavour == BEAM_FOUL_FLAME
                                      || flavour == BEAM_POISON
                                      // just the resistible part
                                      || flavour == BEAM_POISON_ARROW;
@@ -707,34 +762,74 @@ int apply_chunked_AC(int dam, int ac)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool wielded_weapon_check(const item_def *weapon, string attack_verb)
+static bool _weapon_is_bad(const item_def *weapon, bool &penance)
 {
-    bool penance = false;
-    if (you.received_weapon_warning
-        || weapon
-           && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
-           && (is_melee_weapon(*weapon) || _can_shoot_with(weapon))
-        || you.confused())
-    {
-        return true;
-    }
+    if (!weapon)
+        return false;
+    return needs_handle_warning(*weapon, OPER_ATTACK, penance)
+           || !is_melee_weapon(*weapon) && !_can_shoot_with(weapon);
+}
 
+/// If we have an off-hand weapon, will it attack when we fire/swing our main weapon?
+static bool _rangedness_matches(const item_def *weapon, const item_def *offhand)
+{
+    if (!offhand)
+        return true;
+    return (!weapon || is_melee_weapon(*weapon)) == is_melee_weapon(*offhand);
+}
+
+static string _describe_weapons(const item_def *weapon,
+                                const item_def *offhand)
+{
+    if (!weapon && !offhand)
+        return "nothing";
+    if (!weapon)
+        return offhand->name(DESC_YOUR).c_str();
+    if (!offhand)
+        return weapon->name(DESC_YOUR).c_str();
+    return make_stringf("%s and %s",
+                        weapon->name(DESC_YOUR).c_str(),
+                        offhand->name(DESC_YOUR).c_str());
+}
+
+static bool _missing_weapon(const item_def *weapon, const item_def *offhand)
+{
+    if (weapon || offhand) // TODO: maybe should warn for untrained UC here..?
+        return false;
+    // OK, we're unarmed. Is that... a bad thing?
     // Don't pester the player if they're using UC, in treeform,
     // or if they don't have any melee weapons yet.
-    if (!weapon
-        && (you.skill(SK_UNARMED_COMBAT) > 0
-            || you.form == transformation::tree
-            || !any_of(you.inv.begin(), you.inv.end(),
-                       [](item_def &it)
-                       { return is_melee_weapon(it) && can_wield(&it); })))
-    {
+    return !you.skill(SK_UNARMED_COMBAT)
+           && you.form != transformation::tree
+           && any_of(you.inv.begin(), you.inv.end(),
+                     [](item_def &it) {
+               return is_melee_weapon(it) && can_wield(&it);
+            });
+}
+
+bool wielded_weapon_check(const item_def *weapon, string attack_verb)
+{
+    const item_def *offhand = you.offhand_weapon();
+    if (you.received_weapon_warning || you.confused())
         return true;
-    }
+
+    bool penance = false;
+    const bool primary_bad = _weapon_is_bad(weapon, penance);
+    // Important: check rangedness_matches *before* checking weapon_is_bad
+    // for the offhand, so that we don't incorrectly claim you'll get penance
+    // for a weapon that won't even attack!
+    const bool offhand_bad = !_rangedness_matches(weapon, offhand)
+                             || _weapon_is_bad(offhand, penance);
+
+    if (!primary_bad && !offhand_bad && !_missing_weapon(weapon, offhand))
+        return true;
+
+    string wpn_desc = _describe_weapons(weapon, offhand);
 
     string prompt;
     prompt = make_stringf("Really %s while wielding %s?",
         attack_verb.size() ? attack_verb.c_str() : "attack",
-        weapon ? weapon->name(DESC_YOUR).c_str() : "nothing");
+        wpn_desc.c_str());
     if (penance)
         prompt += " This could place you under penance!";
 
@@ -752,6 +847,70 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
     return result;
 }
 
+bool player_unrand_bad_attempt(const item_def &weapon,
+                               const actor *defender,
+                               bool check_only)
+{
+    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
+    {
+
+        targeter_smite hitfunc(&you, 1, 1, 1, false);
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                                  [](const actor *act)
+                                  {
+                                      return !god_protects(act->as_monster());
+                                  }, nullptr, defender->as_monster(),
+                                  check_only);
+    }
+    else if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
+             || is_unrandom_artefact(weapon, UNRAND_SINGING_SWORD)
+                && !silenced(you.pos()))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_TORMENT))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [] (const actor *m)
+                               {
+                                   return !m->res_torment()
+                                       && !god_protects(m->as_monster());
+                               },
+                                  nullptr, defender->as_monster(),
+                                check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
+    {
+        vector<const actor *> exclude;
+        return !safe_discharge(defender->pos(), exclude, check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_POWER))
+    {
+        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.aimed_at_spot = false;
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
+    }
+    return false;
+}
+
 /**
  * Should the given attacker cleave into the given victim with an axe or axe-
  * like weapon?
@@ -761,7 +920,7 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
  * @return          True if the defender is an enemy of the defender; false
  *                  otherwise.
  */
-static bool _dont_harm(const actor &attacker, const actor &defender)
+bool dont_harm(const actor &attacker, const actor &defender)
 {
     if (mons_aligned(&attacker, &defender))
         return true;
@@ -807,15 +966,19 @@ bool force_player_cleave(coord_def target)
     return false;
 }
 
-bool attack_cleaves(const actor &attacker, int which_attack)
+bool attack_cleaves(const actor &attacker, const item_def *weap)
 {
     if (attacker.is_player()
         && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
     {
         return true;
     }
+    else if (attacker.is_monster()
+             && attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE))
+    {
+        return true;
+    }
 
-    const item_def* weap = attacker.weapon(which_attack);
     return weap && weapon_cleaves(*weap);
 }
 
@@ -849,7 +1012,8 @@ bool weapon_multihits(const item_def *weap)
  * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack)
+                        list<actor*> &targets, int which_attack,
+                        bool force_cleaving, const item_def *weapon)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -859,10 +1023,10 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    if (!attack_cleaves(attacker, which_attack))
+    const item_def* weap = weapon ? weapon : attacker.weapon(which_attack);
+    if (!force_cleaving && !attack_cleaves(attacker, weap))
         return;
 
-    const item_def* weap = attacker.weapon(which_attack);
     const coord_def atk = attacker.pos();
     //If someone adds a funky reach which isn't just a number
     //They will need to special case it here.
@@ -872,7 +1036,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     {
         if (*di == def) continue; // no double jeopardy
         actor *target = actor_at(*di);
-        if (!target || _dont_harm(attacker, *target))
+        if (!target || dont_harm(attacker, *target))
             continue;
         if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
             continue;
@@ -891,26 +1055,30 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 void attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number, int effective_attack_number,
                              wu_jian_attack_type wu_jian_attack,
-                             bool is_projected, bool is_cleaving)
+                             bool is_projected, bool is_cleaving,
+                             item_def *weapon)
 {
     if (!attacker.alive())
         return;
-    const item_def* weap = attacker.weapon(attack_number);
+    const item_def* weap = weapon ? weapon : attacker.weapon(attack_number);
     const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
 
-        if (def && def->alive() && !_dont_harm(attacker, *def)
+        if (def && def->alive() && !dont_harm(attacker, *def)
             && (is_projected
                 || adjacent(attacker.pos(), def->pos())
                 || reaching))
         {
             melee_attack attck(&attacker, def, attack_number,
-                               ++effective_attack_number, is_cleaving);
+                               ++effective_attack_number);
+            if (weapon && attacker.is_player())
+                attck.set_weapon(weapon, true);
 
             attck.wu_jian_attack = wu_jian_attack;
             attck.is_projected = is_projected;
+            attck.cleaving = is_cleaving;
             attck.is_multihit = !is_cleaving; // heh heh heh
             attck.attack();
         }
@@ -1044,11 +1212,17 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_FRENZIED))
+    if (mon->neutral()
+        && (is_good_god(you.religion)
+            || you_worship(GOD_BEOGH) && mons_genus(mon->type) == MONS_ORC)
+        && !mon->has_ench(ENCH_FRENZIED))
     {
         adj += "neutral ";
-        if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
+        if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON)
+            || you_worship(GOD_BEOGH))
+        {
             would_cause_penance = true;
+        }
     }
     else if (mon->wont_attack())
     {
@@ -1062,7 +1236,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted,
-                        coord_def attack_pos)
+                        coord_def attack_pos, bool check_only)
 {
     ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
@@ -1073,12 +1247,19 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
-    if (you.confused() || !you.can_see(*mon))
+    // The player is ordinarily given a different prompt before this if confused,
+    // but if we're merely testing if this attack *could* be bad, we should do
+    // the full check anyway.
+    if ((you.confused() && !check_only) || !you.can_see(*mon))
         return false;
 
     string adj, suffix;
     if (!bad_attack(mon, adj, suffix, penance, attack_pos))
         return false;
+
+    // We have already determined this attack *would* prompt, so stop here
+    if (check_only)
+        return true;
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = mon->name(DESC_PLAIN);
@@ -1120,7 +1301,8 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects,
-                        bool *prompted, const monster *defender)
+                        bool *prompted, const monster *defender,
+                        bool check_only)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
@@ -1128,7 +1310,10 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
-    if (you.confused())
+    // The player is ordinarily given a different prompt before this if confused,
+    // but if we're merely testing if this attack *could* be bad, we should do
+    // the full check anyway.
+    if (you.confused() && !check_only)
         return false;
 
     string adj, suffix;
@@ -1165,6 +1350,10 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 
     if (victims.empty())
         return false;
+
+    // We have already determined that this attack *would* prompt, so stop here
+    if (check_only)
+        return true;
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = victims.describe(DESC_PLAIN);
@@ -1349,15 +1538,18 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
     return base_dam * 9 / 5;
 }
 
-int unarmed_base_damage()
+int unarmed_base_damage(bool random)
 {
-    int damage = get_form()->get_base_unarmed_damage();
+    int damage = get_form()->get_base_unarmed_damage(random);
 
     if (you.has_usable_claws())
         damage += you.has_claws() * 2;
 
     if (you.form_uses_xl())
-        damage += div_rand_round(you.experience_level, 3);
+    {
+        damage += random ? div_rand_round(you.experience_level, 3)
+                         : you.experience_level / 3;
+    }
 
     return damage;
 }

@@ -247,3 +247,9 @@ static int clua_gentable(lua_State *ls, const list &strings, lpush push)
 
 int clua_pushcxxstring(lua_State *ls, const string &s);
 int clua_pushpoint(lua_State *ls, const coord_def &pos);
+
+#define LUA_PUSHBOOL(key, value) { lua_pushboolean(ls, value); lua_setfield(ls, -2, key); }
+
+#define LUA_PUSHINT(key, value) { lua_pushnumber(ls, value); lua_setfield(ls, -2, key); }
+
+#define LUA_PUSHSTRING(key, value) { lua_pushstring(ls, value); lua_setfield(ls, -2, key); }

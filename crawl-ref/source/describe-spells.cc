@@ -38,7 +38,7 @@
 static string _effect_string(spell_type spell, const monster_info *mon_owner);
 
 /**
- * Returns a spellset containing the spells for the given item.
+ * Returns a spellset containing the player-known spells for the given item.
  *
  * @param item      The item in question.
  * @return          A single-element vector, containing the list of all
@@ -382,6 +382,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
     {
         case SPELL_FREEZE:
             return freeze_damage(pow, false);
+        case SPELL_SCORCH:
+            return scorch_damage(pow, false);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -404,6 +406,15 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return resonance_strike_base_damage(hd);
         case SPELL_POLAR_VORTEX:
             return polar_vortex_dice(pow, false);
+        case SPELL_ELECTROLUNGE:
+            return electrolunge_damage(pow);
+
+        // This is the per-turn *sticky flame* damage against the player.
+        // The spell has no impact damage and otherwise uses different numbers
+        // against monsters. This is very unsatisfying, but surely we show the
+        // player *something*...
+        case SPELL_PYRE_ARROW:
+            return dice_def(2, 2 + hd * 12 / 14);
         default:
             break;
     }
@@ -435,8 +446,11 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTBLUE;
         case SPELL_IOOD:
             return LIGHTMAGENTA;
+        case SPELL_SCORCH:
         case SPELL_ERUPTION:
             return RED;
+        case SPELL_ELECTROLUNGE:
+            return LIGHTCYAN;
         default:
             break;
     }
@@ -444,27 +458,6 @@ static colour_t _spell_colour(spell_type spell)
     if (zap == NUM_ZAPS)
         return COL_UNKNOWN;
     return zap_colour(zap);
-}
-
-static string _colourize(string base, colour_t col)
-{
-    if (col < NUM_TERM_COLOURS)
-    {
-        if (col == BLACK)
-            col = DARKGRAY;
-        const string col_name = colour_to_str(col);
-        return make_stringf("<%s>%s</%s>",
-                            col_name.c_str(), base.c_str(), col_name.c_str());
-    }
-    string out = make_stringf("%c", base[0]);
-    for (int i = 1; i < (int)base.length() - 1; i++)
-    {
-        const int term_col = element_colour(col, false, you.pos());
-        const string col_name = colour_to_str(term_col);
-        out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
-    }
-    out += base[base.length() - 1];
-    return out;
 }
 
 static string _describe_living_spells(const monster_info &mon_owner)
@@ -509,6 +502,15 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_SMITING)
         return "7-17"; // sigh
 
+    if (spell == SPELL_BRAIN_BITE)
+        return "4-8*"; // >_>
+
+    if (spell == SPELL_DRAINING_GAZE)
+    {
+        const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, hd);
+        return make_stringf("0-%d MP", pow / 8); // >_> >_>
+    }
+
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
@@ -518,12 +520,25 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_RESONANCE_STRIKE)
         return describe_resonance_strike_dam(dam);
 
+    if (spell == SPELL_BOLT_OF_DRAINING && mon_owner->type == MONS_LAUGHING_SKULL)
+    {
+        return make_stringf("%dd(%d-%d)", dam.num, dam.size,
+                                          dam.size * 2);
+    }
+
     string mult = "";
-    if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)
+    if (spell == SPELL_MARSHLIGHT
+        || spell == SPELL_FOXFIRE
+        || spell == SPELL_PLASMA_BEAM
+        || spell == SPELL_PERMAFROST_ERUPTION)
+    {
         mult = "2x";
+    }
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
-    const char* asterisk = spell == SPELL_LRD ? "*" : "";
+    else if (spell == SPELL_ELECTROLUNGE)
+        mult = "+";
+    const char* asterisk = (spell == SPELL_LRD || spell == SPELL_PYRE_ARROW) ? "*" : "";
     return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
 }
 
@@ -589,7 +604,7 @@ static void _describe_book(const spellbook_contents &book,
         const int chop_len = 30 - effect_len - range_len - effect_range_space;
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
-            effect_str = _colourize(effect_str, _spell_colour(spell));
+            effect_str = colourize_str(effect_str, _spell_colour(spell));
 
         string spell_name = spell_title(spell);
         if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR
@@ -686,7 +701,7 @@ static void _write_book(const spellbook_contents &book,
 
         string effect_str = _effect_string(spell, mon_owner);
         if (!testbits(get_spell_flags(spell), spflag::WL_check))
-            effect_str = _colourize(effect_str, _spell_colour(spell));
+            effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);
 
         string range_str = _range_string(spell, mon_owner, hd);

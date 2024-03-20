@@ -1,0 +1,17 @@
+name: "bush"
+glyph: {char: "P", colour: brown}
+flags: [stationary, no_exp_gain, no_threat]
+resists: {poison: 1, fire: -1}
+genus: plant
+holiness: [plant]
+will: invuln
+attacks:
+hd: 20
+hp_10x: 1100
+ac: 15
+ev: 0
+intelligence: brainless
+speed: 0
+size: giant
+shape: plant
+tile_variance: mod

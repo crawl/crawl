@@ -22,6 +22,7 @@
 #include "env.h"
 #include "files.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
@@ -288,8 +289,6 @@ void leaving_level_now(dungeon_feature_type stair_used)
 
     _clear_golubria_traps();
     _clear_prisms();
-
-    end_recall();
 }
 
 static void _update_travel_cache(const level_id& old_level,
@@ -381,6 +380,7 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
     if (!you.airborne()
         && you.confused()
         && !feat_is_escape_hatch(ftype)
+        && !crawl_state.game_is_descent()
         && coinflip())
     {
         const char* fall_where = "down the stairs";
@@ -454,7 +454,7 @@ static void _maybe_use_runes(dungeon_feature_type ftype)
     switch (ftype)
     {
     case DNGN_ENTER_ZOT:
-        if (!you.level_visited(level_id(BRANCH_ZOT, 1)))
+        if (!you.level_visited(level_id(BRANCH_ZOT, 1)) && !crawl_state.game_is_descent())
             _rune_effect(ftype);
         break;
     case DNGN_EXIT_VAULTS:
@@ -705,6 +705,14 @@ level_id level_above()
 void rise_through_ceiling()
 {
     const level_id whither = level_above();
+    if (you.where_are_you == BRANCH_DUNGEON
+        && you.depth == 1
+        && player_has_orb())
+    {
+        mpr("With a burst of heat and light, you rocket upward!");
+        floor_transition(DNGN_EXIT_DUNGEON, DNGN_EXIT_DUNGEON,
+                         level_id(BRANCH_DUNGEON, 0), true, true, false, false);
+    }
     if (!whither.is_valid())
     {
         mpr("In a burst of heat and light, you rocket briefly upward... "
@@ -714,6 +722,7 @@ void rise_through_ceiling()
 
     mpr("With a burst of heat and light, you rocket upward!");
     untag_followers(); // XXX: is this needed?
+    stop_delay(true);
     floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
                      whither, true, true, false, false);
     you.clear_far_engulf();
@@ -748,7 +757,7 @@ void floor_transition(dungeon_feature_type how,
 
     // We "stepped".
     if (!forced)
-        apply_barbs_damage();
+        player_did_deliberate_movement();
 
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
@@ -762,6 +771,25 @@ void floor_transition(dungeon_feature_type how,
         jiyva_end_oozemancy();
     if (you.duration[DUR_NOXIOUS_BOG])
         you.duration[DUR_NOXIOUS_BOG] = 0;
+    if (you.duration[DUR_DIMENSIONAL_BULLSEYE])
+    {
+        monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        if (targ)
+            targ->del_ench(ENCH_BULLSEYE_TARGET);
+    }
+    if (yred_torch_is_raised())
+        yred_end_conquest();
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+    {
+        you.duration[DUR_FATHOMLESS_SHACKLES] = 0;
+        yred_end_blasphemy();
+    }
+
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+        flee_apostle_challenge();
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_end_blood_for_blood();
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -937,8 +965,10 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
                 mpr("Zot's attention fixes on you again. Descend or flee this branch!");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_METEORAN)
                 update_vision_range();
+#endif
         }
         else if (was_bezotted)
         {
@@ -946,9 +976,12 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot has no power in the Abyss.");
             else
                 mpr("You feel Zot lose track of you.");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_METEORAN)
                 update_vision_range();
+#endif
         }
+        print_gem_warnings(gem_for_branch(branch), 0);
 
         if (how == DNGN_ENTER_VAULTS && !runes_in_pack())
         {
@@ -1007,6 +1040,10 @@ void floor_transition(dungeon_feature_type how,
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
+
+        // scary hack!
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+            load_level(how, LOAD_RESTART_GAME, old_level);
     }
 
     // This should maybe go in load_level?
@@ -1217,6 +1254,8 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 
     case DNGN_EXIT_ABYSS:
 #if TAG_MAJOR_VERSION == 34
+        if (you.char_class == JOB_ABYSSAL_KNIGHT && you.level_stack.empty())
+            return level_id(BRANCH_DUNGEON, 1);
     case DNGN_EXIT_PORTAL_VAULT:
 #endif
     case DNGN_EXIT_PANDEMONIUM:
@@ -1267,7 +1306,7 @@ static void _update_level_state()
 
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
-        if (mons_allows_beogh(**mon_it))
+        if (mons_offers_beogh_conversion(**mon_it))
             env.level_state |= LSTATE_BEOGH;
         if (mon_it->has_ench(ENCH_STILL_WINDS))
             env.level_state |= LSTATE_STILL_WINDS;

@@ -1,0 +1,18 @@
+name: "quicksilver elemental"
+glyph: {char: "E", colour: lightcyan}
+flags: [see_invis, batty]
+resists: {elec: 3, fire: 3, cold: 3}
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: antimagic, damage: 30}
+hd: 16
+hp_10x: 800
+ac: 1
+ev: 20
+spells: quicksilver_dragon
+intelligence: brainless
+speed: 20
+size: large
+shape: misc

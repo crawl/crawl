@@ -1,0 +1,16 @@
+name: "golden eye"
+glyph: {char: "G", colour: etc_gold}
+flags: [flies, see_invis, batty, no_skeleton]
+xp_mult: 17
+genus: floating_eye
+will: 60
+attacks:
+hd: 6
+hp_10x: 120
+ac: 0
+ev: 20
+spells: golden_eye
+intelligence: brainless
+speed: 13
+size: tiny
+shape: orb

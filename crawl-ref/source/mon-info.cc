@@ -24,6 +24,7 @@
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "items.h" // item_is_unusual
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
@@ -55,7 +56,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SILVER_CORONA,   MB_GLOWING },
     { ENCH_SLOW,            MB_SLOWED },
     { ENCH_SICK,            MB_SICK },
-    { ENCH_FRENZIED,          MB_FRENZIED },
+    { ENCH_FRENZIED,        MB_FRENZIED },
     { ENCH_HASTE,           MB_HASTED },
     { ENCH_MIGHT,           MB_STRONG },
     { ENCH_CONFUSION,       MB_CONFUSED },
@@ -66,7 +67,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_PETRIFYING,      MB_PETRIFYING },
     { ENCH_LOWERED_WL,      MB_LOWERED_WL },
     { ENCH_SWIFT,           MB_SWIFT },
-    { ENCH_PURSUING,        MB_PURSUING },
     { ENCH_SILENCE,         MB_SILENCING },
     { ENCH_PARALYSIS,       MB_PARALYSED },
     { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
@@ -119,14 +119,19 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_MUTATION,MB_CLOUD_RING_MUTATION },
     { ENCH_RING_OF_FOG,     MB_CLOUD_RING_FOG },
     { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
-    { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
+    { ENCH_RING_OF_MISERY,  MB_CLOUD_RING_MISERY },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
     { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
     { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
     { ENCH_ANTIMAGIC,       MB_ANTIMAGIC },
     { ENCH_ANGUISH,         MB_ANGUISH },
-    { ENCH_SIMULACRUM,      MB_SIMULACRUM },
     { ENCH_TP,              MB_TELEPORTING },
+    { ENCH_BOUND,           MB_BOUND },
+    { ENCH_BULLSEYE_TARGET, MB_BULLSEYE_TARGET },
+    { ENCH_VITRIFIED,       MB_VITRIFIED },
+    { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
+    { ENCH_TOUCH_OF_BEOGH,  MB_TOUCH_OF_BEOGH },
+    { ENCH_VENGEANCE_TARGET, MB_VENGEANCE_TARGET },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -134,9 +139,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     // Suppress silly-looking combinations, even if they're
     // internally valid.
     if (mons.paralysed() && (ench == ENCH_SLOW || ench == ENCH_HASTE
-                      || ench == ENCH_SWIFT || ench == ENCH_PURSUING
-                      || ench == ENCH_PETRIFIED
-                      || ench == ENCH_PETRIFYING))
+                      || ench == ENCH_SWIFT
+                      || ench == ENCH_PETRIFIED || ench == ENCH_PETRIFYING))
     {
         return NUM_MB_FLAGS;
     }
@@ -240,66 +244,6 @@ static int quantise(int value, int stepsize)
     return value + stepsize - value % stepsize;
 }
 
-// Returns true if using a directional tentacle tile would leak
-// information the player doesn't have about a tentacle segment's
-// current position.
-static bool _tentacle_pos_unknown(const monster *tentacle,
-                                  const coord_def orig_pos)
-{
-    // We can see the segment, no guessing necessary.
-    if (!tentacle->submerged())
-        return false;
-
-    const coord_def t_pos = tentacle->pos();
-
-    // Checks whether there are any positions adjacent to the
-    // original tentacle that might also contain the segment.
-    for (adjacent_iterator ai(orig_pos); ai; ++ai)
-    {
-        if (*ai == t_pos)
-            continue;
-
-        if (!in_bounds(*ai))
-            continue;
-
-        if (you.pos() == *ai)
-            continue;
-
-        // If there's an adjacent deep water tile, the segment
-        // might be there instead.
-        if (env.grid(*ai) == DNGN_DEEP_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-            if (mon && you.can_see(*mon))
-            {
-                // Could originate from the kraken.
-                if (mon->type == MONS_KRAKEN)
-                    return true;
-
-                // Otherwise, we know the segment can't be there.
-                continue;
-            }
-            return true;
-        }
-
-        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-
-            // We know there's no segment there.
-            if (!mon)
-                continue;
-
-            // Disturbance in shallow water -> might be a tentacle.
-            if (mon->type == MONS_KRAKEN || mon->submerged())
-                return true;
-        }
-    }
-
-    // Using a directional tile leaks no information.
-    return false;
-}
-
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
                                     const string &key)
 {
@@ -313,8 +257,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(*other)
-            && !_tentacle_pos_unknown(other, m->pos()))
+            && !mons_is_zombified(*other))
         {
             mi.props[key] = h_pos - m->pos();
         }
@@ -357,6 +300,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     hd = mons_class_hit_dice(type);
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
+    sh = 0;
     mresists = get_mons_class_resists(type);
     mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
@@ -494,6 +438,9 @@ monster_info::monster_info(const monster* m, int milev)
     else
         number = 0;
 
+    if (type == MONS_BOULDER && m->props.exists(BOULDER_DIRECTION_KEY))
+        mb.set(MB_ROLLING);
+
     _colour = m->colour;
 
     if (m->is_summoned()
@@ -592,11 +539,12 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class();
     ev = m->evasion();
     base_ev = m->base_evasion();
+    sh = m->shield_class();
     mr = m->willpower();
     can_see_invis = m->can_see_invisible();
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
-    mresists = get_mons_resists(*m);
+    mresists = m->all_resists();
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
@@ -676,9 +624,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (!m->friendly())
     {
         const stab_type st = find_stab_type(&you, *m, false);
-        if (st == STAB_INVISIBLE && !mb[MB_BLIND])
+        if (!you.visible_to(m))
             mb.set(MB_CANT_SEE_YOU);
-        else if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
+        if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
             mb.set(MB_DISTRACTED_ONLY);
     }
 
@@ -696,9 +644,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->known_chaos())
         mb.set(MB_CHAOTIC);
-
-    if (m->submerged())
-        mb.set(MB_SUBMERGED);
 
     if (m->type == MONS_DOOM_HOUND
         && (!m->props.exists(DOOM_HOUND_HOWLED_KEY) || !m->props[DOOM_HOUND_HOWLED_KEY])
@@ -731,6 +676,16 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->props.exists(MIRRORED_GHOST_KEY))
             props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
     }
+    // Otherwise the description lies wildly about the average hp of melee pan
+    // lords, and an average player will have no idea how durable their canine
+    // familiar really is - which matters when you want to keep it alive.
+    else if (m->type == MONS_PANDEMONIUM_LORD
+             || m->type == MONS_INUGAMI
+             || m->type == MONS_ORC_APOSTLE)
+    {
+        props[KNOWN_MAX_HP_KEY] = (int)(m->max_hit_points);
+    }
+
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
 
@@ -742,7 +697,7 @@ monster_info::monster_info(const monster* m, int milev)
     // book loading for player ghost and vault monsters
     spells.clear();
     if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type)
-        || type == MONS_PANDEMONIUM_LORD)
+        || type == MONS_PANDEMONIUM_LORD || type == MONS_ORC_APOSTLE)
     {
         spells = m->spells;
     }
@@ -809,8 +764,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
-        constrictor_name = (constrictor->constriction_does_damage(constr_typ) ?
-                            "constricted by " : "held by ")
+        constrictor_name = "constricted by "
                            + constrictor->name(_article_for(constrictor),
                                                true);
     }
@@ -818,15 +772,13 @@ monster_info::monster_info(const monster* m, int milev)
     // Names of what this monster is directly constricting, if any
     if (m->constricting)
     {
-        const char *participle =
-            m->constriction_does_damage(CONSTRICT_MELEE) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
-            const actor* const constrictee = actor_by_mid(entry.first);
+            const actor* const constrictee = actor_by_mid(entry);
 
             if (constrictee && constrictee->get_constrict_type() == CONSTRICT_MELEE)
             {
-                constricting_name.push_back(participle
+                constricting_name.push_back("constricting "
                                             + constrictee->name(
                                                   _article_for(constrictee),
                                                   true));
@@ -842,6 +794,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (is_ally_target(*m))
         mb.set(MB_ALLY_TARGET);
+
+    if (m->behaviour == BEH_WITHDRAW)
+        mb.set(MB_RETREATING);
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
@@ -861,7 +816,15 @@ monster_info::monster_info(const monster* m, int milev)
 string monster_info::get_max_hp_desc() const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
-        return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
+    {
+        const int hp = props[KNOWN_MAX_HP_KEY].get_int();
+
+        // Indicate that this apostle's HP has been increased by Beogh
+        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
+            return make_stringf("*%d*", hp);
+
+        return std::to_string(hp);
+    }
 
     const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
@@ -879,7 +842,20 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     mhp /= scale;
-    return make_stringf("about %d", mhp);
+    return make_stringf("~%d", mhp);
+}
+
+/// HP regenerated every (scale) turns.
+int monster_info::regen_rate(int scale) const
+{
+    if (!can_regenerate() || is(MB_SICK) /* ? */)
+        return 0;
+    if (mons_class_fast_regen(type) || is(MB_REGENERATION) /* ? */)
+        return mons_class_regen_amount(type) * scale;
+
+    // Duplicates monster::natural_regen_rate.
+    const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
+    return min(scale, max(1, hd * scale / (divider * 25)));
 }
 
 /**
@@ -1074,9 +1050,6 @@ string monster_info::common_name(description_level_type desc) const
     if (props.exists(HELPLESS_KEY))
         ss << "helpless ";
 
-    if (is(MB_SUBMERGED))
-        ss << "submerged ";
-
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
 
@@ -1187,7 +1160,12 @@ string monster_info::common_name(description_level_type desc) const
 
 bool monster_info::has_proper_name() const
 {
-    return !mname.empty() && !mons_is_ghost_demon(type)
+    // Some ghost demon monsters (Pan lords, player ghosts, and player
+    // illusions) have name overrides.
+    return !mname.empty()
+            && type != MONS_PANDEMONIUM_LORD
+            && type != MONS_PLAYER_GHOST
+            && type != MONS_PLAYER_ILLUSION
             && !is(MB_NAME_REPLACE) && !is(MB_NAME_ADJECTIVE) && !is(MB_NAME_SUFFIX);
 }
 
@@ -1624,10 +1602,9 @@ size_type monster_info::body_size() const
 
 bool monster_info::net_immune() const
 {
-    // too big
-    return body_size() >= SIZE_GIANT
     // nets go right through (but weapons don't..?)
-        || mons_class_flag(type, M_INSUBSTANTIAL)
+    return mons_class_flag(type, M_INSUBSTANTIAL)
+        || mons_genus(type) == MONS_JELLY
     // tentacles are too weird. don't mess with em
         || mons_is_tentacle_or_tentacle_segment(type)
     // if you net something that doesn't move (positionally or attacking),
@@ -1660,24 +1637,15 @@ bool monster_info::fellow_slime() const {
 vector<string> monster_info::get_unusual_items() const
 {
     vector<string> names;
-    const auto &patterns = Options.unusual_monster_items;
-
-    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (!inv[i])
             continue;
 
         const item_def* item = inv[i].get();
-        const string name = item->name(DESC_A, false, false, true, false);
-
-        if (any_of(begin(patterns), end(patterns),
-                   [&](const text_pattern &p) -> bool
-                   { return p.matches(name); }))
-        {
-            names.push_back(name);
-        }
+        if (item_is_unusual(*item))
+            names.push_back(item->name(DESC_A, false, false, true, false));
     }
-
     return names;
 }
 
@@ -1708,7 +1676,7 @@ bool monster_info::has_spells() const
         return false;
 
     // Ghosts / pan lords may have custom spell lists, so check spells directly
-    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
+    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD || type == MONS_ORC_APOSTLE)
         return spells.size() > 0;
 
     return true;
@@ -1886,6 +1854,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         int reach_count = 0;
         int constrict_count = 0;
         int trample_count = 0;
+        int drag_count = 0;
 
         for (int j = start; j < start + count; ++j)
         {
@@ -1903,6 +1872,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 constrict_count++;
             if (_has_attack_flavour(mi[j], AF_TRAMPLE))
                 trample_count++;
+            if (_has_attack_flavour(mi[j], AF_DRAG))
+                drag_count++;
         }
 
         if (wand_count)
@@ -1953,6 +1924,13 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
             conditions.push_back(_condition_string(trample_count, count,
                                                    {MB_UNSAFE, "trample",
                                                     "trample", "trample"}));
+        }
+
+        if (drag_count)
+        {
+            conditions.push_back(_condition_string(drag_count, count,
+                                                   {MB_UNSAFE, "drag",
+                                                    "drag", "drag"}));
         }
     }
 

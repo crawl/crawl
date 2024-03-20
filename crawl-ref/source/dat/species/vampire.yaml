@@ -4,12 +4,12 @@ name: Vampire
 short_name: Vp
 adjective: Vampiric
 difficulty: Advanced
-difficulty_priority: 90
+difficulty_priority: 80
 aptitudes:
   xp: -1
   hp: 0
   mp_mod: 0
-  mr: 4
+  wl: 4
   fighting: -1
   short_blades: +1
   axes: -1
@@ -28,10 +28,9 @@ aptitudes:
   hexes: 4
   necromancy: 1
   translocations: -2
-  transmutations: 1
   shapeshifting: 0
   fire_magic: -2
-  poison_magic: -1
+  alchemy: 1
   invocations: -1
   evocations: -1
 undead_type: US_SEMI_UNDEAD
@@ -56,7 +55,10 @@ recommended_jobs:
   - JOB_NECROMANCER
   - JOB_EARTH_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
+  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_AXES
   - SK_LONG_BLADES
+
+orc_name: Orcula

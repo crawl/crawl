@@ -11,12 +11,12 @@
 # Bring rEverything!
 #
 # Note:
-# Schools covered: Fire, Ice, Air, Earth, Poison, Necromancy,
-# Transmutations, Translocations, Summonings, Hexes.
+# Schools covered: Fire, Ice, Air, Earth, Alchemy, Necromancy,
+# Translocations, Summonings, Hexes.
 # Schools not covered: Conjurations. Too little to work with right now.
 # Other magic concepts might be interesting; additions are always welcome!
 
-default-depth: Depths, Vaults:1-4, Elf:1-2
+default-depth: Depths:1, Vaults, !Vaults:$, Elf, !Elf:$
 
 {{
 function init_research(e, disc)
@@ -27,8 +27,9 @@ function init_research(e, disc)
   if you.in_branch("Elf") then
      e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / deep elf archer w:5')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
+     e.kmons('0 = arcanist w:5 / occultist w:5 / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
+  e.kfeat('G = metal_statue')
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
   e.subst('abcd = c')
@@ -37,11 +38,11 @@ function init_research(e, disc)
   e.colour('v = white')
   e.tile('n = DNGN_TRANSPARENT_STONE_WHITE')
   e.kitem('D = randbook disc:' .. disc .. ' numspells:' ..
-               5 + crawl.random2(2) .. ', star_item')
+               4 + crawl.random2(2) .. ', star_item')
 end
 }}
 
-NAME:   serial_hangedman_research
+NAME:   serial_magic_research
 TAGS:   extra luniq_serial nolayout_encompass
 CHANCE: 0.5%
 {{
@@ -53,8 +54,8 @@ CHANCE: 0.5%
 
 ################################################################################
 NAME:    hangedman_research_pyrotechnics
-MONS:    molten gargoyle, fire elemental, lava snake, lindwurm
-KMONS:   D = fire crab
+MONS:    molten gargoyle, fire crab, lava snake, sun moth
+KMONS:   D = will-o-the-wisp
 COLOUR:  .01234D = red
 FTILE:   .+01234D = floor_volcanic
 SHUFFLE: 34
@@ -73,10 +74,10 @@ ENDMAP
 
 NAME:   hangedman_research_thermodynamics
 TAGS:   no_pool_fixup
-MONS:   troll simulacrum / elephant simulacrum / \
-        black mamba simulacrum / naga simulacrum
 MONS:   hydra simulacrum / fire dragon simulacrum / \
-        harpy simulacrum / anaconda simulacrum
+        bunyip simulacrum / snapping turtle simulacrum
+MONS:   deep troll simulacrum / golden dragon simulacrum / \
+        caustic shrike simulacrum / alligator snapping turtle simulacrum
 MONS:   azure jelly
 KMONS:  4D = ice statue
 COLOUR: .01234D = white
@@ -95,8 +96,7 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_electronics
-MONS:   air elemental / raiju / sky beast
-MONS:   lightning spire, ball lightning / shock serpent
+MONS:   air elemental / raiju, lightning spire, spark wasp / shock serpent
 COLOUR: .v0123D = cyan
 FTILE:  .+v0123D = floor_rough_cyan
 TILE:   v = dngn_metal_wall_cyan
@@ -114,35 +114,38 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_geology
-MONS:    basilisk, earth elemental, boulder beetle / catoblepas
-KMONS:   D = iron dragon
-COLOUR:  .x012345D = brown
-FTILE:   .+x012345D = floor_pebble_brown
+MONS:    boulder beetle / catoblepas, crystal guardian, iron dragon
+KMONS:   D = caustic shrike
+KMONS:   B = boulder dbname:still_boulder
+KITEM:   B = large rock q:1
+COLOUR:  .xB012345D = brown
+FTILE:   .+xB012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown
+COLOUR:  G = earth
+TILE:    G = earthen_conduit
+: set_feature_name("metal_statue", "earthen conduit")
 : init_research(_G, 'earth')
 MAP
 @'''@'''@
 abcd+dcba
-b...x...b
-c0x1.1x0c
+bB..x..Bb
+c0B1.1B0c
 d.2xxx2.d
 a.xxDxx.a
 b.x3.3x.b
-cx..x..xc
+cx..G..xc
 dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_toxicology
-MONS:    cane toad / black mamba, redback
-MONS:    sea snake / redback, hornet
-MONS:    mana viper / tarantella
-KMONS:   D = death drake
+MONS:    sea snake, mana viper, tarantella, death drake
+KMONS:   5D = radroach
 KITEM:   E = potion of degeneration ident:type / \
              potion of mutation ident:type
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
 SHUFFLE: 12, 34
-: init_research(_G, 'poison')
+: init_research(_G, 'alchemy')
 MAP
 @'''@'''@
 abcd+dcba
@@ -156,15 +159,15 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_thanatology
-MONS:    small abomination
-MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
+MONS:    large abomination, place:Depths:$ skeleton
+MONS:    ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
                 pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
 COLOUR:  .012345D% = w:20 lightgrey / w:5 darkgrey
 FTILE:   .+n012345D% = floor_tomb
 SHUFFLE: 1234
-: dgn.delayed_decay(_G, '%', 'ugly thing skeleton')
+KITEM:   % = ugly thing skeleton
 : init_research(_G, 'necromancy')
 MAP
 @'''@'''@
@@ -176,25 +179,6 @@ a.n.%.n.a
 b3.n.n.4b
 c33nDn44c
 dcbadabcd
-ENDMAP
-
-NAME:    hangedman_research_metamorphosis
-MONS:    wolf spider, ice beast, vampire bat, hog
-KMONS:   D = fire dragon
-COLOUR:  .01234D = lightmagenta
-FTILE:   .n+01234D = floor_nerves
-SHUFFLE: 1234
-: init_research(_G, 'transmutation')
-MAP
-@'''@'''@
-abcd+dcba
-b.n...n.b
-c1n...n2c
-d3nn.nn4d
-a.0...0.a
-b.nnnnn.b
-c.0.D.0.c
-dcbadacbd
 ENDMAP
 
 NAME:   hangedman_research_quantum
@@ -234,17 +218,20 @@ b0.....0b
 c+nnnnn+c
 d...'...d
 a'.1.1.'a
-b..nnn..b
+b.1nnn2.b
 c2..D..2c
 dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_probablistics
-MONS:   eidolon, golden eye, great orb of eyes, sphinx
+MONS:   eidolon, glass eye, great orb of eyes, sphinx
 MARKER: V = lua:fog_machine { cloud_type = "seething chaos", pow_min = 3, \
                 pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
 COLOUR: .01234D = blue
 FTILE:  .Vn+01234D = floor_marble
+COLOUR:  G = shimmer_blue
+TILE:    G = misfortune_conduit
+: set_feature_name("metal_statue", "misfortune conduit")
 : init_research(_G, 'hexes')
 MAP
 @'''@'''@
@@ -253,7 +240,7 @@ b....n4Db
 c.V..n23c
 d....n12d
 a....n..a
-b.V..n..b
+b.V..G..b
 c.....00c
 dcbadabcd
 ENDMAP

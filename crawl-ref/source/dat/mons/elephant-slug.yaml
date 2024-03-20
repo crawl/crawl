@@ -1,0 +1,19 @@
+name: "elephant slug"
+glyph: {char: "w", colour: white}
+flags: [no_skeleton, cant_spawn]
+resists: {poison: -1}
+xp_mult: 2
+will: 80
+attacks:
+ - {type: bite, damage: 40}
+hd: 20
+hp_10x: 1300
+ac: 2
+ev: 1
+has_corpse: true
+intelligence: animal
+speed: 4
+size: giant
+shape: snail
+tile: dart_slug
+corpse_tile: elephant_slug

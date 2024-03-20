@@ -1,0 +1,17 @@
+name: "spriggan"
+glyph: {char: "i", colour: lightgray}
+flags: [see_invis, speaks, warm_blood]
+will: 60
+attacks:
+ - {type: hit, damage: 15}
+hd: 7
+hp_10x: 245
+ac: 1
+ev: 18
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 6}
+uses: weapons_armour
+size: little
+shape: humanoid

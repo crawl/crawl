@@ -1,0 +1,21 @@
+name: "Boris"
+glyph: {char: "L", colour: red}
+flags: [see_invis, speaks, unique, male]
+resists: {elec: 1, cold: 2}
+xp_mult: 14
+species: lich
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: hit, damage: 25}
+ - {type: touch, flavour: drain, damage: 15}
+hd: 22
+hp_10x: 1540
+ac: 12
+ev: 10
+spells: boris
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

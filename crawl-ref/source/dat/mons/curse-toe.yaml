@@ -1,0 +1,18 @@
+name: "curse toe"
+glyph: {char: "z", colour: lightgreen}
+flags: [flies, see_invis, speaks]
+resists: {elec: 1, fire: 3, cold: 1}
+xp_mult: 60
+holiness: [undead]
+will: invuln
+attacks:
+hd: 14
+hp_10x: 980
+ac: 25
+ev: 1
+spells: curse_toe
+shout: moan
+intelligence: human
+energy: {move: 14}
+size: tiny
+shape: misc

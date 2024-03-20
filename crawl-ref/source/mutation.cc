@@ -132,6 +132,7 @@ vector<mutation_type> get_removed_mutations()
         MUT_BLINK,
         MUT_UNBREATHING,
         MUT_GOURMAND,
+        MUT_AWKWARD_TONGUE,
 #endif
     };
 
@@ -351,6 +352,16 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         {
             return mutation_activity_type::FULL;
         }
+        // XXX EVIL HACK: we want to meld coglins' exoskeletons in 'full meld'
+        // forms like serpent and dragon, but treeform keeps using weapons and
+        // should really keep allowing dual wielding. I'm so sorry about this.
+        if (you.form == transformation::tree
+            && (mut == MUT_WIELD_OFFHAND
+                || mut == MUT_SLOW_WIELD
+                || mut == MUT_WARMUP_STRIKES))
+        {
+            return mutation_activity_type::FULL;
+        }
         // Dex and HP changes are kept in all forms.
 #if TAG_MAJOR_VERSION == 34
         if (mut == MUT_ROUGH_BLACK_SCALES)
@@ -393,9 +404,11 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         }
     }
 
-    //XXX: Should this make claws inactive too?
-    if (you.form == transformation::blade_hands && mut == MUT_PAWS)
+    if (you.form == transformation::blade_hands
+        && (mut == MUT_PAWS || mut == MUT_CLAWS))
+    {
         return mutation_activity_type::INACTIVE;
+    }
 
     if (mut == MUT_TELEPORT
         && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
@@ -410,9 +423,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
-        return mutation_activity_type::INACTIVE;
-
-    if (mut == MUT_ROLLPAGE && you_worship(GOD_WU_JIAN))
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_NIMBLE_SWIMMER)
@@ -817,6 +827,17 @@ static vector<string> _get_fakemuts(bool terse)
         }
     }
 
+    if (you.props.exists(ORCIFICATION_LEVEL_KEY))
+    {
+        if (!terse)
+        {
+            if (you.props[ORCIFICATION_LEVEL_KEY].get_int() == 1)
+                result.push_back(_formmut("Your facial features look somewhat orcish."));
+            else
+                result.push_back(_formmut("Your facial features are unmistakably orcish."));
+        }
+    }
+
     if (have_passive(passive_t::frail)
         || player_under_penance(GOD_HEPLIAKLQANA))
     {
@@ -871,7 +892,7 @@ static vector<string> _get_fakemuts(bool terse)
     {
         result.push_back(_annotate_form_based(
                     terse ? "amphibious" : "You are amphibious.",
-                    !form_likes_water(), terse));
+                    !form_can_swim(), terse));
     }
 
     if (species::arm_count(you.species) > 2)
@@ -1050,17 +1071,6 @@ string describe_mutations(bool drop_title)
     return result;
 }
 
-static string _vampire_Ascreen_footer(bool first_page)
-{
-    const char *text = first_page ? "<w>Mutations</w>|Blood properties"
-                                  : "Mutations|<w>Blood properties</w>";
-    return make_stringf("[<w>!</w>/<w>^</w>"
-#ifdef USE_TILE_LOCAL
-            "|<w>Right-click</w>"
-#endif
-            "]: %s", text);
-}
-
 static bool _has_partially_suppressed_muts()
 {
     for (int i = 0; i < NUM_MUTATIONS; ++i)
@@ -1095,19 +1105,33 @@ static bool _has_transient_muts()
     return false;
 }
 
+enum mut_menu_mode {
+    MENU_MUTS,
+    MENU_VAMP,
+    MENU_FORM,
+    NUM_MENU_MODES
+};
+
+const char *menu_mode_labels[] = {
+    "Mutations",
+    "Blood properties",
+    "Form properties"
+};
+COMPILE_CHECK(ARRAYSZ(menu_mode_labels) == NUM_MENU_MODES);
+
 class MutationMenu : public Menu
 {
 private:
     vector<string> fakemuts;
     vector<mutation_type> muts;
-    bool blood;
+    mut_menu_mode mode;
 public:
     MutationMenu()
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT),
           fakemuts(_get_fakemuts(false)),
           muts( _get_ordered_mutations()),
-          blood(false)
+          mode(MENU_MUTS)
     {
         set_highlighter(nullptr);
         set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
@@ -1121,10 +1145,74 @@ private:
     void update_entries()
     {
         clear();
-        if (blood)
-            update_blood();
-        else
+        switch (mode)
+        {
+        case MENU_MUTS:
             update_muts();
+            break;
+        case MENU_VAMP:
+            update_blood();
+            break;
+        case MENU_FORM:
+            update_form();
+            break;
+        default:
+            break;
+        }
+    }
+
+    void update_form()
+    {
+        if (you.active_talisman.defined())
+        {
+            const string tal_name = you.active_talisman.name(DESC_PLAIN, false, false, false);
+            const string head = make_stringf("<w>%s</w>:",
+                                             uppercase_first(tal_name).c_str());
+            add_entry(new MenuEntry(head, MEL_ITEM, 1, 0));
+
+            if (is_artefact(you.active_talisman))
+            {
+                vector<string> artps;
+                desc_randart_props(you.active_talisman, artps);
+                for (string desc : artps)
+                    add_entry(new MenuEntry(desc, MEL_ITEM, 1, 0));
+            }
+        }
+
+
+        talisman_form_desc tfd;
+        describe_talisman_form(you.default_form, tfd, true);
+        add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+        if (you.active_talisman.defined() && is_artefact(you.active_talisman))
+        {
+            add_entry(new MenuEntry("<w>Skill:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+        }
+        for (auto skinfo : tfd.skills)
+        {
+            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
+        if (!tfd.defenses.empty())
+        {
+            add_entry(new MenuEntry("<w>Defense:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
+        }
+        for (auto skinfo : tfd.defenses)
+        {
+            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
+        if (!tfd.offenses.empty())
+        {
+            add_entry(new MenuEntry("<w>Offense:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
+        }
+        for (auto skinfo : tfd.offenses)
+        {
+            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
     }
 
     void update_blood()
@@ -1227,7 +1315,7 @@ private:
     void update_more()
     {
         string extra = "";
-        if (!blood)
+        if (mode == MENU_MUTS)
         {
             if (_has_partially_suppressed_muts())
                 extra += "<brown>()</brown>  : Partially suppressed.\n";
@@ -1237,9 +1325,41 @@ private:
             if (_has_transient_muts())
                 extra += "<magenta>[]</magenta>   : Transient mutations.\n";
         }
-        if (you.has_mutation(MUT_VAMPIRISM))
-            extra += _vampire_Ascreen_footer(!blood);
+        extra += picker_footer();
         set_more(extra);
+    }
+
+    string picker_footer()
+    {
+        auto modes = valid_modes();
+        if (modes.size() <= 1)
+            return "";
+        string t = "";
+        for (auto m : modes)
+        {
+            if (t.size() > 0)
+                t += "|";
+            const char* label = menu_mode_labels[m];
+            if (m == mode)
+                t += make_stringf("<w>%s</w>", label);
+            else
+                t += string(label);
+        }
+        return make_stringf("[<w>!</w>/<w>^</w>"
+#ifdef USE_TILE_LOCAL
+                "|<w>Right-click</w>"
+#endif
+                "]: %s", t.c_str());
+    }
+
+    vector<mut_menu_mode> valid_modes()
+    {
+        vector<mut_menu_mode> modes = {MENU_MUTS};
+        if (you.has_mutation(MUT_VAMPIRISM))
+            modes.push_back(MENU_VAMP);
+        if (you.default_form != transformation::none)
+            modes.push_back(MENU_FORM);
+        return modes;
     }
 
     virtual bool process_key(int keyin) override
@@ -1249,17 +1369,33 @@ private:
         case '!':
         case '^':
         case CK_MOUSE_CMD:
-            if (you.has_mutation(MUT_VAMPIRISM))
+        {
+            auto modes = valid_modes();
+            if (modes.size() > 1)
             {
-                blood = !blood;
+                cycle_mut_mode(modes);
                 update_entries();
                 update_more();
                 update_menu(true);
             }
+        }
             return true;
         default:
             return Menu::process_key(keyin);
         }
+    }
+
+    void cycle_mut_mode(const vector<mut_menu_mode> &modes)
+    {
+        for (int i = 0; i < (int)modes.size(); i++)
+        {
+            if (modes[i] == mode)
+            {
+                mode = modes[(i + 1) % modes.size()];
+                return;
+            }
+        }
+        ASSERT(false);
     }
 
     bool examine_index(int i) override
@@ -1682,6 +1818,22 @@ static bool _body_facet_blocks(mutation_type mutat)
     return false;
 }
 
+static bool _exoskeleton_incompatible(mutation_type mutat)
+{
+    // Coglins attack with and wear aux armour on their exoskeleton-limbs,
+    // not their fleshy, mutatation-prone hands. Disable mutations that would
+    // make no sense in this scheme.
+    switch (mutat)
+    {
+    case MUT_HOOVES:
+    case MUT_CLAWS:
+    case MUT_TALONS:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool physiology_mutation_conflict(mutation_type mutat)
 {
     if (mutat == MUT_IRIDESCENT_SCALES)
@@ -1750,13 +1902,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Felid paws cap MUT_CLAWS at level 1. And octopodes have no hands.
-    if ((you.has_innate_mutation(MUT_PAWS)
-         || you.has_innate_mutation(MUT_TENTACLE_ARMS))
-        && mutat == MUT_CLAWS)
-    {
+    // Today's guru wisdom: octopodes have no hands.
+    if (you.has_innate_mutation(MUT_TENTACLE_ARMS) && mutat == MUT_CLAWS)
         return true;
-    }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
@@ -1787,6 +1935,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Mutations of the same slot conflict
     if (_body_facet_blocks(mutat))
+        return true;
+
+    if (you.species == SP_COGLIN && _exoskeleton_incompatible(mutat))
         return true;
 
     return false;
@@ -2117,6 +2268,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_SILENCE_AURA:
+        case MUT_FOUL_SHADOW:
             invalidate_agrid(true);
             break;
 
@@ -2268,6 +2420,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         break;
 
     case MUT_SILENCE_AURA:
+    case MUT_FOUL_SHADOW:
         invalidate_agrid(true);
         break;
 
@@ -2821,6 +2974,8 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_MANA_REGENERATION, MUT_MANA_SHIELD, MUT_MANA_LINK },
       { -33, 0, 0 } },
+    { 2, { MUT_FOUL_SHADOW, MUT_FOUL_SHADOW, MUT_FOUL_SHADOW },
+      { -33, 0, 0 } },
     // Tier 3 facets
     { 3, { MUT_DEMONIC_WILL, MUT_TORMENT_RESISTANCE, MUT_HURL_DAMNATION },
       { 50, 50, 50 } },
@@ -2883,6 +3038,7 @@ try_again:
     int absfacet = 0;
     int elemental = 0;
     int cloud_producing = 0;
+    int retaliation = 0;
 
     set<const facet_def *> facets_used;
 
@@ -2915,6 +3071,9 @@ try_again:
 
                     if (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD)
                         cloud_producing++;
+
+                    if (m == MUT_SPINY || m == MUT_FOUL_SHADOW)
+                        retaliation++;
                 }
             }
 
@@ -2926,6 +3085,9 @@ try_again:
         goto try_again;
 
     if (cloud_producing > 1)
+        goto try_again;
+
+    if (retaliation > 1)
         goto try_again;
 
     return ret;
@@ -3161,9 +3323,8 @@ void check_demonic_guardian()
                                MONS_SIXFIRHY, MONS_SUN_DEMON);
             break;
         case 4:
-            mt = random_choose(MONS_BALRUG, MONS_REAPER,
-                               MONS_LOROCYPROCA, MONS_CACODEMON,
-                               MONS_HELL_BEAST);
+            mt = random_choose(MONS_BALRUG, MONS_LOROCYPROCA,
+                               MONS_CACODEMON, MONS_HELL_BEAST);
             break;
         case 5:
             mt = random_choose(MONS_EXECUTIONER, MONS_HELL_SENTINEL,

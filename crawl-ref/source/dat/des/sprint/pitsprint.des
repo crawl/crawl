@@ -10,16 +10,16 @@
 
 function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
-           bat / kobold / rat / gnoll band /\
-           hobgoblin / jackal band / worm / adder / quokka /\
+           bat / kobold / rat / dart slug / gnoll band /\
+           hobgoblin / jackal band / ribbon worm / adder / quokka /\
            gnoll bouda band / orc band / orc priest band /\
-           floating eye / hound / iguana / ogre / orc wizard band /\
+           glass eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / zombie / sky beast /\
-           bullfrog / mummy / orc warrior band / wight band /\
+           quasit / zombie / sky beast / bullfrog /\
+           crocodile / brain worm / mummy / orc warrior band / wight band /\
            kobold brigand band / warg / wolf / black bear / river rat /\
-           flying skull / iron imp / white imp / ufetubus / fire bat")
+           weeping skull / iron imp / white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / killer bee band / hornet /\
            manticore / wyvern / troll / two-headed ogre / yak band /\
            komodo dragon / wraith / unseen horror /\
@@ -38,12 +38,12 @@ function base_monster_setup(e)
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
-           red devil / centaur band")
+           red devil / laughing skull / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
-           centaur warrior band w:5 / ugly thing w:5 / wizard /\
-           simulacrum / ogre mage band w:5 /\
+           centaur warrior band w:5 / ugly thing w:5 / arcanist w:5 /\
+           occultist w:5 / simulacrum / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
            great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
@@ -70,7 +70,7 @@ function base_monster_setup(e)
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / death knight / ettin /\
            nagaraja / dancing weapon / dire elephant band /\
-           floating eye / vault guard / ghoul band w:5 /\
+           glass eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
            base draconian band w:5 / lorocyproca / daeva / angel /\
@@ -96,7 +96,7 @@ function base_monster_setup(e)
            ball python /\
            bat / kobold / rat / gnoll /\
            hobgoblin / jackal band / adder / quokka /\
-           orc / scorpion / floating eye / skeleton /\
+           orc / scorpion / glass eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
@@ -139,7 +139,7 @@ function base_monster_setup(e)
            hell sentinel / executioner")
   e.kmons("U = place:Slime:$ / slime creature band /\
            rockslime / azure jelly / acid blob /\
-           floating eye w:3 / quicksilver ooze w:3 / eye of devastation /\
+           glass eye w:3 / quicksilver ooze w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / rockslime / acid blob")
   e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
@@ -458,8 +458,8 @@ end
 function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
         deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
-        sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
-        naga mage / nagaraja / base draconian w:20")
+        sphinx / lich / ancient lich w:3 / arcanist w:5 / occultist w:5 /\
+        ogre mage / vampire mage / naga mage / nagaraja / base draconian w:20")
   e.kmons("9 = Frederick / Margery band / Boris / Frances")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")
@@ -2032,7 +2032,8 @@ KMONS:  b = ogre / two-headed ogre / troll / deep troll /\
         iron troll w:5 / deep troll / ogre mage w:5 /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan
-KMONS:  c = human / wizard / hell knight / vault guard / necromancer
+KMONS:  c = human / arcanist w:5 / occultist w:5 / / hell knight /\
+        vault guard / necromancer
 KMONS:  C = Frederick, Louise, Rupert
 KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         vampire / vampire mage / vampire knight / ghoul w:5 /\

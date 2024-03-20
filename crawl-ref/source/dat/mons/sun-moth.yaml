@@ -1,0 +1,19 @@
+name: "sun moth"
+glyph: {char: "y", colour: etc_gold}
+flags: [flies, web_immune, no_skeleton]
+resists: {fire: 2}
+xp_mult: 11
+genus: moth
+will: 60
+attacks:
+ - {type: bite, flavour: swoop, damage: 27}
+hd: 9
+hp_10x: 605
+ac: 6
+ev: 12
+spells: sun_moth
+has_corpse: true
+intelligence: animal
+speed: 12
+size: small
+shape: insect_winged

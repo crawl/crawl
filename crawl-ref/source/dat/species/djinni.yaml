@@ -8,7 +8,7 @@ aptitudes:
   xp: 1
   hp: -1
   mp_mod: 0
-  mr: 4
+  wl: 4
   short_blades: -1
   long_blades: -1
   axes: -2
@@ -22,13 +22,12 @@ aptitudes:
   ice_magic: 11
   air_magic: 11
   earth_magic: 11
-  poison_magic: 11
+  alchemy: 11
   conjurations: 11
   hexes: 11
   summoning: 11
   necromancy: 11
   translocations: 11
-  transmutations: 11
   dodging: 1
   stealth: -1
   shapeshifting: -2
@@ -59,3 +58,5 @@ recommended_jobs:
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_LONG_BLADES
+
+orc_name: Orcfreeti

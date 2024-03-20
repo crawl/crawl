@@ -68,6 +68,8 @@ struct Branch
     vector<rune_type> runes;      // Contained rune(s) (if any).
     branch_noise ambient_noise; // affects noise loudness
     int mon_die_size;           // size of the dice to roll to determine mons/floor
+
+    vector<branch_type> descent_parents; // descent parent branches
 };
 
 enum class branch_iterator_type
@@ -110,6 +112,7 @@ bool is_random_subbranch(branch_type branch);
 bool is_connected_branch(const Branch *branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
+bool branch_has_rune(branch_type branch);
 level_id current_level_parent();
 
 branch_type branch_by_abbrevname(const string &branch, branch_type err = NUM_BRANCHES);
@@ -121,6 +124,7 @@ branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
 
 branch_type parent_branch(branch_type branch);
+vector<branch_type> descent_parents(branch_type branch);
 
 string branch_noise_desc(branch_type br);
 string branch_rune_desc(branch_type br, bool remaining_only);

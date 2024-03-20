@@ -7,8 +7,10 @@
 
 #include <set>
 
+#include "branch-type.h"
 #include "equipment-type.h"
 #include "item-prop-enum.h"
+#include "potion-type.h"
 #include "reach-type.h"
 #include "size-type.h"
 #include "tag-version.h"
@@ -124,15 +126,21 @@ int wand_charge_value(int type, int item_level = 1) PURE;
 bool is_known_empty_wand(const item_def &item) PURE;
 #endif
 bool is_offensive_wand(const item_def &item) PURE;
+bool is_enchantable_weapon(const item_def &weapon, bool unknown = false) PURE;
 bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
+bool is_shield(const item_def *item) PURE;
 bool is_shield(const item_def &item) PURE;
 bool is_offhand(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
+int shield_block_limit(const item_def &shield) PURE;
 
 int guile_adjust_willpower(int wl) PURE;
+
+bool is_regen_item(const item_def& item);
+bool is_mana_regen_item(const item_def& item);
 
 // Only works for armour/weapons/missiles
 // weapon functions:
@@ -155,7 +163,7 @@ bool is_blessed_convertible(const item_def &item) PURE;
 bool convert2good(item_def &item);
 bool convert2bad(item_def &item);
 
-int get_vorpal_type(const item_def &item) PURE;
+vorpal_damage_type get_vorpal_type(const item_def &item) PURE;
 int get_damage_type(const item_def &item) PURE;
 int single_damage_type(const item_def &item) PURE;
 
@@ -182,12 +190,18 @@ bool ammo_never_destroyed(const item_def &missile) PURE;
 int  ammo_type_destroy_chance(int missile_type) PURE;
 int  ammo_type_damage(int missile_type) PURE;
 
-
 reach_type weapon_reach(const item_def &item) PURE;
+
+// gem functions:
+int gem_time_limit(gem_type gem) PURE;
+const char *gem_adj(gem_type gem) IMMUTABLE;
+branch_type branch_for_gem(gem_type gem) PURE;
+gem_type gem_for_branch(branch_type br) PURE;
 
 // Macguffins
 bool item_is_unique_rune(const item_def &item) PURE;
 bool item_is_orb(const item_def &orb) PURE;
+bool item_is_collectible(const item_def &item) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;
 bool item_is_spellbook(const item_def &item) PURE;
 
@@ -206,6 +220,8 @@ bool ring_has_stackable_effect(const item_def &item) PURE;
 
 item_rarity_type consumable_rarity(const item_def &item);
 item_rarity_type consumable_rarity(object_class_type base_type, int sub_type);
+
+bool oni_likes_potion(potion_type type);
 
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
@@ -244,6 +260,7 @@ string item_base_name(const item_def &item);
 string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
+string talisman_type_name(int sub_type);
 
 void initialise_item_sets(bool reset = false);
 void force_item_set_choice(item_set_type typ, int sub_type);

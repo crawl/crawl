@@ -1,0 +1,19 @@
+name: "Eustachio"
+glyph: {char: "@", colour: blue}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 20
+species: human
+will: 20
+attacks:
+ - {type: hit, damage: 6}
+hd: 4
+hp_10x: 400
+ac: 0
+ev: 13
+spells: eustachio
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

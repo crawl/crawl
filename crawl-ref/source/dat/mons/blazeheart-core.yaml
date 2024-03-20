@@ -1,0 +1,14 @@
+name: "blazeheart core"
+glyph: {char: "*", colour: lightred}
+flags: [insubstantial, stationary, no_exp_gain]
+resists: {fire: 3}
+holiness: [nonliving]
+will: 10
+attacks:
+hd: 15
+hp_10x: 50000
+ac: 0
+ev: 99
+intelligence: brainless
+size: small
+shape: orb

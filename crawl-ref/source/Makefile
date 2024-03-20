@@ -1276,7 +1276,7 @@ GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h
 # All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   cmd-name.h species-data.h aptitudes.h species-groups.h
+                   cmd-name.h species-data.h aptitudes.h species-groups.h mon-data.h
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
@@ -1843,7 +1843,7 @@ art-data.h: art-data.txt util/art-data.pl art-func.h
 	util/art-data.pl
 art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
-mon-mst.h: mon-spell.h util/gen-mst.pl
+mon-mst.h: mon-spell.h util/gen-mst.pl mon-data.h
 	$(QUIET_GEN)util/gen-mst.pl
 
 cmd-name.h: command-type.h util/cmd-name.pl
@@ -1854,6 +1854,9 @@ dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 
 mi-enum.h: mon-info.h util/gen-mi-enum
 	$(QUIET_GEN)util/gen-mi-enum
+
+mon-data.h: dat/mons/*.yaml util/mon-gen.py util/species-gen/*.txt
+	$(QUIET_PYTHON)$(PYTHON) util/mon-gen.py dat/mons/ util/mon-gen/ mon-data.h
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
 # per target file by adding all the files into a single dependency chain.
@@ -2126,5 +2129,5 @@ util/fake_pty: util/fake_pty.c
 
 # Should be not needed, but the race condition in bug #6509 is hard to fix.
 builddb: $(GAME)
-	./$(GAME) --builddb
+	./$(GAME) --builddb --reset-cache
 .PHONY: builddb

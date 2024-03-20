@@ -288,6 +288,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.user_id = None
         self.user_email = None
         self.timeout = None
+        self.lobby_timeout = None
         self.watched_game = None
         self.process = None
         self.game_id = None
@@ -345,6 +346,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     @admin_required
     def admin_announce(self, text):
+        self.reset_lobby_timeout()
         global_announce(text)
         self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
@@ -352,11 +354,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     @admin_only
     def send_socket_stats(self):
         import webtiles.server
+        self.reset_lobby_timeout()
         self.send_message("admin_log", text=webtiles.server.version())
         self.send_message("admin_log", text=describe_sockets(True))
 
     @admin_required
     def admin_pw_reset(self, username):
+        self.reset_lobby_timeout()
         user_info = userdb.get_user_info(username)
         if not user_info:
             self.send_message("admin_pw_reset_done", error="Invalid user")
@@ -372,6 +376,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     @admin_required
     def admin_pw_reset_clear(self, username):
+        self.reset_lobby_timeout()
         ok, err = userdb.clear_password_token(username)
         if ok:
             self.logger.info("Admin user '%s' cleared the reset token on account '%s'", self.username, username)
@@ -441,7 +446,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return self.process.idle_time()
 
     def is_running(self):
-        return self.process is not None
+        return self.process is not None and self.process.process
 
     def is_in_lobby(self):
         return not self.is_running() and self.watched_game is None
@@ -465,7 +470,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def show_in_lobby(self):
         return (self.is_running()
-            and self.process.process
             and not self.account_restricted())
 
     def send_announcement(self, text):
@@ -637,9 +641,37 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             send_game_links()
         self.collect_save_info(send_game_links)
 
-    def reset_timeout(self):
+    def clear_timeouts(self, lobby=True):
         if self.timeout:
             IOLoop.current().remove_timeout(self.timeout)
+            self.timeout = None
+        if self.lobby_timeout:
+            IOLoop.current().remove_timeout(self.lobby_timeout)
+            self.lobby_timeout = None
+
+    def should_lobby_timeout(self):
+        return self.is_in_lobby() and not self.is_admin()
+
+    def reset_lobby_timeout(self):
+        self.clear_timeouts()
+        if not self.should_lobby_timeout():
+            return
+        min_lobby_idle = 60 * 10 # ignore values less than this
+        if config.get('max_lobby_idle_time') > min_lobby_idle:
+            self.lobby_timeout = IOLoop.current().add_timeout(
+                            time.time() + config.get('max_lobby_idle_time'),
+                            self.check_lobby_connection)
+
+    def check_lobby_connection(self):
+        if self.is_running(): # sanity check, but this shouldn't be possible
+            return
+        # unconditionally close if we reach the lobby idle time
+        # XX: possibly print a more informative message on the client side?
+        self.logger.info("Lobby connection timed out.")
+        self.close()
+
+    def reset_timeout(self):
+        self.clear_timeouts()
 
         self.received_pong = False
         self.send_message("ping")
@@ -671,7 +703,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         u = userdb.get_user_info(self.username)
         self.username = u.username # canonicalize
         self.user_id = u.id
-        self.email = u.email
+        self.user_email = u.email
         self.user_flags = u.flags
         self.logger.extra["username"] = self.username
         if userdb.dgl_is_banned(self.user_flags):
@@ -760,23 +792,27 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 update_global_status()
 
     def _on_crawl_end(self):
-        if config.get('dgl_mode'):
-            remove_in_lobbys(self.process)
+        if self.process:
+            if config.get('dgl_mode'):
+                remove_in_lobbys(self.process)
 
-        reason = self.process.exit_reason
-        message = self.process.exit_message
-        dump_url = self.process.exit_dump_url
+            reason = self.process.exit_reason
+            message = self.process.exit_message
+            dump_url = self.process.exit_dump_url
+        else:
+            # XX under what circumstance is this reachable?
+            reason = None
+
         self.process = None
 
-        if self.client_closed:
-            sockets.remove(self)
-        else:
+        if not self.client_closed:
             if shutting_down:
                 self.close()
             else:
                 # Go back to lobby
-                self.send_message("game_ended", reason = reason,
-                                  message = message, dump = dump_url)
+                if reason:
+                    self.send_message("game_ended", reason = reason,
+                                      message = message, dump = dump_url)
 
                 self.invalidate_saveslot_cache(self.game_id)
 
@@ -788,11 +824,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.start_crawl(None)
 
         if config.get('dgl_mode'):
+            # queues a callback to update the status list
             update_global_status()
 
-        if shutting_down and len(sockets) == 0:
-            # The last crawl process has ended, now we can go
-            IOLoop.current().stop()
+        self.try_cleanup()
 
     def init_user(self, callback):
         # this would be more cleanly implemented with wait_for_exit, but I
@@ -869,6 +904,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_lobby()
             else:
                 self.send_lobby_html()
+
+            self.reset_lobby_timeout()
 
         self.init_user(login_callback)
 
@@ -1058,9 +1095,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("register_fail", reason = error)
 
     def start_change_password(self):
+        self.reset_lobby_timeout()
         self.send_message("start_change_password")
 
     def change_password(self, cur_password, new_password):
+        self.reset_lobby_timeout()
+
         if not self.update_db_info():
             self.send_message("change_password_fail", reason="Account is disabled")
             return
@@ -1090,9 +1130,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
 
     def start_change_email(self):
+        self.reset_lobby_timeout()
         self.send_message("start_change_email", email = self.user_email)
 
     def change_email(self, email):
+        self.reset_lobby_timeout()
+
         if not self.update_db_info():
             self.send_message("change_email_fail", reason="Account is disabled")
             return
@@ -1117,6 +1160,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def forgot_password(self, email):
         if not config.get("allow_password_reset", False):
             return
+        self.reset_lobby_timeout()
+
         sent, error = userdb.send_forgot_password(email)
         if error is None:
             if sent:
@@ -1131,6 +1176,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("forgot_password_fail", reason = error)
 
     def reset_password(self, token, password):
+        self.reset_lobby_timeout()
+
         username, error = userdb.update_user_password_from_token(token,
                                                                  password)
         if error is None:
@@ -1157,6 +1204,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
+        self.reset_lobby_timeout()
+
         if self.username and userdb.dgl_is_banned(self.user_flags):
             # force a logout. Note that this doesn't check the db at this point
             # in order to reduce i/o a bit.
@@ -1182,6 +1231,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def get_rc(self, game_id):
         if game_id not in config.games: return
+
+        self.reset_lobby_timeout()
+
         path = self.rcfile_path(game_id)
         try:
             with util.SlowWarning("Slow IO: read rc '%s'" % path):
@@ -1194,6 +1246,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def set_rc(self, game_id, contents):
         rcfile_path = self.rcfile_path(game_id)
+
+        self.reset_lobby_timeout()
+
         try:
             with util.SlowWarning("Slow IO: write rc '%s'" % rcfile_path):
                 with open(rcfile_path, 'wb') as f:
@@ -1389,20 +1444,40 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         data["msg"] = msg
         return self.append_message(json_encode(data), False)
 
-    def on_close(self):
-        if self.process is None and self in sockets:
-            sockets.remove(self)
-            if shutting_down and len(sockets) == 0:
-                # The last socket has been closed, now we can go
-                IOLoop.current().stop()
-        elif self.is_running():
-            self.process.stop()
+    def try_cleanup(self):
+        global sockets
+        # try to do what cleanup can be done on game end or close at the
+        # current point in time.
+        # If there is a running process, some cleanup will need to be
+        # deferred, and if the client is not closed only the process will
+        # be cleaned up.
+        if not self.is_running():
+            self.process = None
+            self.clear_timeouts(lobby=self.client_closed)
+            if self.client_closed and self in sockets:
+                sockets.remove(self)
 
         if self.watched_game:
             self.watched_game.remove_watcher(self)
 
-        if self.timeout:
-            IOLoop.current().remove_timeout(self.timeout)
+        if shutting_down and len(sockets) == 0:
+            # The last crawl process has ended, now we can go
+            IOLoop.current().stop()
+
+    def on_close(self):
+        # at this point, self.client_closed is guaranteed to be true
+        extra = []
+        if self.is_running():
+            # this will (sooner or later) trigger _on_crawl_end, which will
+            # remove `self` from `sockets`
+            # XX would it be better to handle on_close messaging at that point?
+            self.process.stop()
+        elif self in sockets and self.process:
+            # buggy state (I think): `self.process` did not get set to
+            # None, but process is not actually running.
+            extra += ["stale process"]
+
+        self.try_cleanup()
 
         if self.total_message_bytes == 0:
             comp_ratio = "N/A"
@@ -1411,11 +1486,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = round(comp_ratio, 2)
 
         if self.failed_messages > 0 or self.failed_on_messages > 0:
-            failed_msg = ", %d (client) + %d (process) failed messages" % (self.failed_messages, self.failed_on_messages)
-        else:
-            failed_msg = ""
+            extra += ["%d (client) + %d (process) failed messages" % (self.failed_messages, self.failed_on_messages)]
+
+        extra_msg = ""
+        if len(extra):
+            extra_msg = ", " + ", ".join(extra)
 
         self.logger.info("Socket closed. (%s sent, compression ratio %s%%%s)",
                          util.humanise_bytes(self.total_message_bytes),
                          comp_ratio,
-                         failed_msg)
+                         extra_msg)

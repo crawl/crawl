@@ -1,0 +1,21 @@
+name: "naga"
+glyph: {char: "N", colour: green}
+flags: [see_invis, speaks, warm_blood]
+resists: {poison: 1}
+xp_mult: 13
+will: 40
+attacks:
+ - {type: hit, damage: 22}
+ - {type: constrict, flavour: crush, damage: 4}
+hd: 5
+hp_10x: 275
+ac: 6
+ev: 10
+spells: naga
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 14}
+uses: weapons_armour
+size: large
+shape: naga

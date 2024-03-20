@@ -31,6 +31,7 @@ enum show_item_type
     SHOW_ITEM_CORPSE,
     SHOW_ITEM_SKELETON,
     SHOW_ITEM_GOLD,
+    SHOW_ITEM_GEM,
     SHOW_ITEM_AMULET,
     NUM_SHOW_ITEMS
 };
@@ -92,4 +93,5 @@ constexpr layers_type LAYERS_ALL = LAYER_MONSTERS | LAYER_PLAYER
 void show_init(layers_type layers = LAYERS_ALL);
 void update_item_at(const coord_def &gp, bool wizard = false);
 void show_update_at(const coord_def &gp, layers_type layers = LAYERS_ALL);
+void force_show_update_at(const coord_def &gp, layers_type layers = LAYERS_ALL);
 void show_update_emphasis();

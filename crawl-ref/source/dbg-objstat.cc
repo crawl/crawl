@@ -65,6 +65,7 @@ enum item_base_type
     ITEM_MISCELLANY,
     ITEM_SPELLBOOKS,
     ITEM_MANUALS,
+    ITEM_GEMS,
     NUM_ITEM_BASE_TYPES,
     ITEM_IGNORE = 100,
 };
@@ -138,7 +139,7 @@ static map<item_base_type, vector<string> > item_fields = {
             "NumMax", "NumSD" },
     },
     { ITEM_TALISMANS,
-        { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
+        { "Num", "NumArte", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
     { ITEM_MISCELLANY,
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
@@ -147,6 +148,9 @@ static map<item_base_type, vector<string> > item_fields = {
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
     { ITEM_MANUALS,
+        { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
+    },
+    { ITEM_GEMS,
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
 };
@@ -240,6 +244,9 @@ static item_base_type _item_base_type(const item_def &item)
     case OBJ_JEWELLERY:
         type = ITEM_JEWELLERY;
         break;
+    case OBJ_GEMS:
+        type = ITEM_GEMS;
+        break;
     default:
         type = ITEM_IGNORE;
         break;
@@ -289,6 +296,9 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
     case ITEM_SPELLBOOKS:
         type = OBJ_BOOKS;
         break;
+    case ITEM_GEMS:
+        type = OBJ_GEMS;
+        break;
     default:
         type = OBJ_UNASSIGNED;
         break;
@@ -333,7 +343,7 @@ static bool _item_tracks_artefact(item_base_type base_type)
     case ITEM_ARMOUR:
     case ITEM_JEWELLERY:
     case ITEM_SPELLBOOKS:
-        // TODO: add talisman artefacts
+    case ITEM_TALISMANS:
         return true;
     default:
         return false;

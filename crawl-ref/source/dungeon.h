@@ -35,6 +35,8 @@ COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 #define TRANSPORTER_NAME_PROP "_transporter_name"
 #define TRANSPORTER_DEST_NAME_PROP "_transporter_dest_name"
 
+#define DESCENT_STAIRS_KEY "descent_stairs_gone"
+
 const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM
@@ -284,6 +286,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
 
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
+vault_placement *dgn_find_layout();
 
 string dump_vault_maps();
 

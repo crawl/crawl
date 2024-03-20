@@ -11,6 +11,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "database.h"
@@ -67,6 +68,7 @@ static const map<shout_type, string> default_msg_keys = {
     { S_SQUEAL,         "__SQUEAL" },
     { S_LOUD_ROAR,      "__LOUD_ROAR" },
     { S_RUSTLE,         "__RUSTLE" },
+    { S_SQUEAK,         "__SQUEAK" },
 };
 
 /**
@@ -221,25 +223,6 @@ void monster_shout(monster* mons, int shout)
             channel = MSGCH_TALK_VISUAL;
 
         strip_channel_prefix(message, channel);
-
-        // Monster must come up from being submerged if it wants to shout.
-        // XXX: this code is probably unreachable now?
-        if (mons->submerged())
-        {
-            if (!mons->del_ench(ENCH_SUBMERGED))
-            {
-                // Couldn't unsubmerge.
-                return;
-            }
-
-            if (you.can_see(*mons))
-            {
-                mons->seen_context = SC_FISH_SURFACES;
-
-                // Give interrupt message before shout message.
-                handle_seen_interrupt(mons);
-            }
-        }
 
         if (channel != MSGCH_TALK_VISUAL || you.can_see(*mons))
         {
@@ -418,21 +401,17 @@ void item_noise(const item_def &item, actor &act, string msg, int loudness)
 }
 
 // TODO: Let artefacts besides weapons generate noise.
-void noisy_equipment()
+void noisy_equipment(const item_def &weapon)
 {
     if (silenced(you.pos()) || !one_chance_in(20))
         return;
 
     string msg;
 
-    const item_def* weapon = you.weapon();
-    if (!weapon)
-        return;
-
-    if (is_unrandom_artefact(*weapon))
+    if (is_unrandom_artefact(weapon))
     {
-        string name = weapon->name(DESC_PLAIN, false, true, false, false,
-                                   ISFLAG_IDENT_MASK);
+        string name = weapon.name(DESC_PLAIN, false, true, false, false,
+                                  ISFLAG_IDENT_MASK);
         msg = getSpeakString(name);
         if (msg == "NONE")
             return;
@@ -441,7 +420,7 @@ void noisy_equipment()
     if (msg.empty())
         msg = getSpeakString("noisy weapon");
 
-    item_noise(*weapon, you, msg, 20);
+    item_noise(weapon, you, msg, 20);
 }
 
 // Berserking monsters cannot be ordered around.
@@ -483,13 +462,14 @@ static void _set_allies_patrol_point(bool clear = false)
             mi->behaviour = BEH_WANDER;
         else
             mi->behaviour = BEH_SEEK;
+        mi->travel_path.clear();
     }
 }
 
 static void _set_allies_withdraw(const coord_def &target)
 {
     coord_def delta = target - you.pos();
-    float mult = float(LOS_DEFAULT_RANGE * 2) / (float)max(abs(delta.x), abs(delta.y));
+    float mult = float(LOS_DEFAULT_RANGE * 3) / (float)max(abs(delta.x), abs(delta.y));
     coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
@@ -504,8 +484,6 @@ static void _set_allies_withdraw(const coord_def &target)
         mi->foe = MHITNOT;
 
         mi->props.erase(LAST_POS_KEY);
-        mi->props.erase(IDLE_POINT_KEY);
-        mi->props.erase(IDLE_DEADLINE_KEY);
         mi->props.erase(BLOCKED_DEADLINE_KEY);
     }
 }
@@ -812,9 +790,12 @@ void yell(const actor* mon)
     }
     else
     {
-        mprf(MSGCH_SOUND, "You %s%s!",
+        const char *fugue_suff = you.duration[DUR_FUGUE] ?
+            ", and the damned howl along" : "";
+        mprf(MSGCH_SOUND, "You %s%s%s!",
              shout_verb.c_str(),
-             you.berserk() ? " wildly" : " for attention");
+             you.berserk() ? " wildly" : " for attention",
+             fugue_suff);
     }
 
     noisy(noise_level, you.pos());
@@ -851,8 +832,9 @@ bool noisy(int original_loudness, const coord_def& where,
         ambient < 0 ? original_loudness + random2avg(abs(ambient), 3)
                     : original_loudness - random2avg(abs(ambient), 3);
 
-    const int adj_loudness = you.has_mutation(MUT_NOISE_DAMPENING)
-                && you.see_cell(where) ? div_rand_round(loudness, 2) : loudness;
+    const int adj_loudness = ((you.has_mutation(MUT_NOISE_DAMPENING)
+                               || player_equip_unrand(UNRAND_THIEF))
+                && you.see_cell(where)) ? div_rand_round(loudness, 2) : loudness;
 
     dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
          adj_loudness, original_loudness, ambient, where.x, where.y);

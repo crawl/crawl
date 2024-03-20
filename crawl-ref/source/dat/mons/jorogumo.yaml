@@ -1,0 +1,18 @@
+name: "jorogumo"
+glyph: {char: "H", colour: blue}
+flags: [see_invis, speaks, web_immune, warm_blood]
+will: 60
+attacks:
+ - {type: hit, flavour: poison_paralyse, damage: 28}
+hd: 12
+hp_10x: 850
+ac: 4
+ev: 14
+spells: jorogumo
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 12
+uses: open_doors
+size: medium
+shape: arachnid

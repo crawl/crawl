@@ -128,29 +128,6 @@ static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
     return mg;
 }
 
-static bool _yred_random_zombified_hostile()
-{
-    const bool skel = one_chance_in(4);
-
-    monster_type z_base;
-
-    do
-    {
-        // XXX: better zombie selection?
-        level_id place(BRANCH_DUNGEON,
-                       min(27, you.experience_level + 5));
-        z_base = pick_local_zombifiable_monster(place, RANDOM_MONSTER,
-                                                you.pos());
-    }
-    while (skel && !mons_skeleton(z_base));
-
-    mgen_data temp = _wrath_mon_data(skel ? MONS_SKELETON : MONS_ZOMBIE,
-                                     GOD_YREDELEMNUL)
-                     .set_base(z_base);
-
-    return create_monster(temp, false);
-}
-
 static const vector<pop_entry> _okawaru_servants =
 { // warriors
   {  1,  3,   3, FALL, MONS_ORC },
@@ -231,7 +208,7 @@ static void _tso_summon_warriors()
 static void _tso_shouts()
 {
     simple_god_message(" booms out: "
-                       "\"Take the path of righteousness! REPENT!\"",
+                       "Take the path of righteousness! REPENT!",
                        GOD_SHINING_ONE);
     noisy(25, you.pos()); // same as scroll of noise
 }
@@ -338,11 +315,18 @@ static bool _zin_retribution()
         }
         break;
     case 5: // noisiness
-        simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
+        simple_god_message(" booms out: Turn to the light! REPENT!", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
     }
     return true;
+}
+
+static bool _xom_retribution()
+{
+    const int severity = abs(you.piety - HALF_MAX_PIETY);
+    const bool good = one_chance_in(10);
+    return xom_acts(severity, good) != XOM_DID_NOTHING;
 }
 
 static bool _cheibriados_retribution()
@@ -685,83 +669,49 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (x_chance_in_y(you.experience_level, 27))
+    const bool sil = silenced(you.pos());
+    const bool rtorm = you.res_torment();
+    if (one_chance_in(3) && (!sil || !rtorm))
     {
-        // torment, or 3 death curses of maximum power
-        if (!you.res_torment())
+        if (!rtorm)
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
-        else
+        if (!sil)
         {
-            for (int i = 0; i < 3; ++i)
-            {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
-            }
+            mprf(MSGCH_GOD, god, "Wails of torment echo through the air!");
+            noisy(25, you.pos());
         }
-    }
-    else if (random2(you.experience_level) >= 4)
-    {
-        // death curse, 25% chance of additional curse
-        const int num_curses = one_chance_in(4) ? 2 : 1;
-        for (int i = 0; i < num_curses; i++)
-        {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
-        }
+        return true;
     }
 
+    if (coinflip())
+    {
+        lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
+        return true;
+    }
+    you.drain(nullptr, false, random_range(225, 375));
     return true;
 }
 
 static bool _yredelemnul_retribution()
 {
-    // undead theme
     const god_type god = GOD_YREDELEMNUL;
+
+    int how_many = random_range(2, 4);
+    int count = 0;
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (yred_random_servant(you.experience_level, true), true)
+            ++count;
+    }
+
+    simple_god_message(count > 1 ? " sends servants to punish you." :
+                        count > 0 ? " sends a servant to punish you."
+                                    : "'s servants fail to arrive.", god);
 
     if (coinflip())
     {
-        if (you_worship(god) && coinflip() && yred_reclaim_souls())
-            ;
-        else
-        {
-            int how_many = 1 + random2avg(1 + (you.experience_level / 5), 2);
-            int count = 0;
-
-            for (; how_many > 0; --how_many)
-            {
-                if (one_chance_in(you.experience_level))
-                {
-                    if (_yred_random_zombified_hostile())
-                        ++count;
-                }
-                else
-                {
-                    if (yred_random_servant(0, true))
-                        ++count;
-                    else
-                        ++how_many;
-                }
-            }
-
-            simple_god_message(count > 1 ? " sends servants to punish you." :
-                               count > 0 ? " sends a servant to punish you."
-                                         : "'s servants fail to arrive.", god);
-        }
-    }
-    else
-    {
-        monster* avatar = get_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", god);
-            return false;
-        }
-
-        _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
-                           "'s anger turns toward you for a moment.");
-        _reset_avatar(*avatar);
+        simple_god_message(" binds you in chains!", god);
+        you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 8));
     }
 
     return true;
@@ -808,7 +758,7 @@ static bool _trog_retribution()
     }
     else if (!one_chance_in(3))
     {
-        simple_god_message("'s voice booms out, \"Feel my wrath!\"", god);
+        simple_god_message("'s voice booms out: Feel my wrath!", god);
 
         // A collection of physical effects that might be better
         // suited to Trog than wild fire magic... messages could
@@ -924,11 +874,6 @@ static bool _beogh_retribution()
             break;
         } // else fall through
     }
-    case 3: // 25%, relatively harmless
-    case 4: // in effect, only for penance
-        if (you_worship(god) && beogh_followers_abandon_you())
-            break;
-        // else fall through
     default: // send orcs after you (3/8 to 5/8)
     {
         const int points = you.experience_level + 3
@@ -1143,22 +1088,22 @@ static spell_type _vehumet_wrath_type()
                                  SPELL_STONE_ARROW);
         case 4:
             return random_choose(SPELL_STICKY_FLAME,
-                                 SPELL_THROW_ICICLE,
-                                 SPELL_ENERGY_BOLT);
+                                 SPELL_THROW_ICICLE);
         case 5:
             return random_choose(SPELL_FIREBALL,
                                  SPELL_LIGHTNING_BOLT,
                                  SPELL_BOLT_OF_MAGMA,
                                  SPELL_VENOM_BOLT,
                                  SPELL_BOLT_OF_DRAINING,
+                                 SPELL_BOLT_OF_DEVASTATION,
                                  SPELL_QUICKSILVER_BOLT,
+                                 SPELL_FREEZING_CLOUD,
+                                 SPELL_POISONOUS_CLOUD,
                                  SPELL_METAL_SPLINTERS);
         case 6:
             return random_choose(SPELL_BOLT_OF_FIRE,
                                  SPELL_BOLT_OF_COLD,
                                  SPELL_CORROSIVE_BOLT,
-                                 SPELL_FREEZING_CLOUD,
-                                 SPELL_POISONOUS_CLOUD,
                                  SPELL_POISON_ARROW,
                                  SPELL_IRON_SHOT,
                                  SPELL_CONJURE_BALL_LIGHTNING);
@@ -1282,7 +1227,7 @@ static void _jiyva_summon_slimes()
 
     const monster_type slimes[] =
     {
-        MONS_FLOATING_EYE,
+        MONS_GLASS_EYE,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
@@ -2015,11 +1960,11 @@ static bool _wu_jian_retribution()
         {
         case 0:
             wu_jian_sifu_message(" says: Die by a thousand cuts!");
-            you.set_duration(DUR_BARBS, random_range(5, 10));
+            barb_player(random_range(5, 10), 5);
             break;
         case 1:
             wu_jian_sifu_message(" whispers: Nowhere to run...");
-            you.set_duration(DUR_SLOW, random_range(5, 10));
+            slow_player(random_range(5, 10));
             break;
         case 2:
             wu_jian_sifu_message(" whispers: These will loosen your tongue!");
@@ -2170,7 +2115,7 @@ static bool _uskayaw_retribution()
 
     // check if we have monsters around
     monster* mon = nullptr;
-    mon = choose_random_nearby_monster(0, _choose_hostile_monster);
+    mon = choose_random_nearby_monster(_choose_hostile_monster);
 
     switch (random2(5))
     {
@@ -2189,7 +2134,7 @@ static bool _uskayaw_retribution()
     case 3:
         if (mon)
         {
-            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+            simple_god_message(" booms out: Time for someone else to take a solo!",
                                     god);
             paralyse_player(_god_wrath_name(god));
             dec_penance(god, 1);
@@ -2198,7 +2143,7 @@ static bool _uskayaw_retribution()
         // else we intentionally fall through
 
     case 4:
-        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
+        simple_god_message(" booms out: Revellers, it's time to dance!", god);
         noisy(35, you.pos());
         break;
     }
@@ -2212,10 +2157,10 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     if (is_unavailable_god(god))
         return false;
 
-    // Good gods don't use divine retribution on their followers, and
-    // gods don't use divine retribution on followers of gods they don't
+    // Good gods (and Beogh) don't use divine retribution on their followers,
+    // and gods don't use divine retribution on followers of gods they don't
     // hate.
-    if (!force && ((god == you.religion && is_good_god(god))
+    if (!force && ((god == you.religion && (is_good_god(god) || god == GOD_BEOGH))
         || (god != you.religion && !god_hates_your_god(god))))
     {
         return false;
@@ -2226,10 +2171,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     bool do_more    = true;
     switch (god)
     {
-    // One in ten chance that Xom might do something good...
-    case GOD_XOM:
-        xom_acts(abs(you.piety - HALF_MAX_PIETY), one_chance_in(10));
-        break;
+    case GOD_XOM:           do_more = _xom_retribution(); break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
@@ -2289,7 +2231,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         else
         {
             mprf(MSGCH_WARN, "The divine experience drains your vigour!");
-            slow_player(random2(20));
+            slow_player(10 + random2(5));
         }
     }
 

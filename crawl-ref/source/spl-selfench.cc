@@ -9,6 +9,7 @@
 
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h" // radius_iterator
@@ -163,19 +164,49 @@ int cast_selective_amnesia(const string &pre_msg)
     return -1;
 }
 
-spret cast_wereblood(int pow, bool fail)
+spret cast_fugue_of_the_fallen(int pow, bool fail)
 {
     fail_check();
 
-    if (you.duration[DUR_WEREBLOOD])
-        mpr("Your blood is freshly infused with primal strength!");
+    if (you.duration[DUR_FUGUE])
+        mpr("You release your grip on the fallen and begin the cycle anew!");
     else
-        mpr("Your blood is infused with primal strength.");
+        mpr("You call out to the remnants of the fallen!");
 
-    you.set_duration(DUR_WEREBLOOD, 20 + random2avg(pow, 2));
+    you.set_duration(DUR_FUGUE, 25 + random2avg(pow, 2));
 
-    you.props[WEREBLOOD_KEY] = 0;
+    you.props[FUGUE_KEY] = 0;
     return spret::success;
+}
+
+void do_fugue_wail(const coord_def pos)
+{
+    // Do burst of negative energy damage around the spot that was hit by an
+    // attack with max fugue stacks. Hit anything which isn't friendly and
+    // immune to negative energy.
+    vector <monster*> affected;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (monster_at(*ai) && !mons_is_firewood(*monster_at(*ai))
+            && !monster_at(*ai)->wont_attack()
+            && monster_at(*ai)->res_negative_energy() < 3)
+        {
+            affected.push_back(monster_at(*ai));
+        }
+    }
+
+    int pow = calc_spell_power(SPELL_FUGUE_OF_THE_FALLEN);
+
+    if (!affected.empty())
+        mpr("The fallen lash out in pain!");
+    for (monster *m : affected)
+    {
+        if (m->alive())
+        {
+            m->hurt(&you, roll_dice(2, 3 + div_rand_round(pow, 25)),
+                    BEAM_NEG, KILLED_BY_BEAM);
+        }
+    }
 }
 
 int silence_min_range(int pow)
@@ -218,7 +249,62 @@ spret cast_liquefaction(int pow, bool fail)
 
     mpr("The ground around you becomes liquefied!");
 
-    you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
+    you.increase_duration(DUR_LIQUEFYING, 15 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
+    return spret::success;
+}
+
+// Is there at least one valid hostile thing in sight?
+bool jinxbite_targets_available()
+{
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_is_threatening(**mi) && !mi->wont_attack()
+            && mi->willpower() != WILL_INVULN)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+spret cast_jinxbite(int pow, bool fail)
+{
+    if (!jinxbite_targets_available())
+    {
+        mpr("There is nobody nearby that the sprites are interested in.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mprf("You beckon %s vexing sprites to accompany your attacks.",
+         you.duration[DUR_JINXBITE] ? "more" : "some");
+
+    const int base_dur = random_range(9, 15);
+    const int will_dur = random_range(base_dur, 15) +
+                         div_rand_round(spell_power_cap(SPELL_JINXBITE), 4);
+
+    you.increase_duration(DUR_JINXBITE, base_dur + div_rand_round(pow, 4), 28);
+    you.increase_duration(DUR_LOWERED_WL, will_dur, 28,
+                          "You feel your willpower being sapped.");
+
+    return spret::success;
+}
+
+spret cast_confusing_touch(int power, bool fail)
+{
+    fail_check();
+    msg::stream << you.hands_act("begin", "to glow ")
+                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
+                << "." << endl;
+
+    you.set_duration(DUR_CONFUSING_TOUCH,
+                     max(10 + div_rand_round(random2(1 + power), 5),
+                         you.duration[DUR_CONFUSING_TOUCH]),
+                     20, nullptr);
+    you.props[CONFUSING_TOUCH_KEY] = power;
+
     return spret::success;
 }

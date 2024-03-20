@@ -1,0 +1,17 @@
+name: "yaktaur"
+glyph: {char: "c", colour: red}
+flags: [speaks, warm_blood, archer]
+xp_mult: 9
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+hd: 8
+hp_10x: 440
+ac: 4
+ev: 4
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: large
+shape: centaur

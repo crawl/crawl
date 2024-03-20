@@ -665,7 +665,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\mon-cast.cc" />
     <ClCompile Include="..\mon-clone.cc" />
     <ClCompile Include="..\mon-gear.cc" />
-    <ClCompile Include="..\mon-grow.cc" />
     <ClCompile Include="..\mon-info.cc" />
     <ClCompile Include="..\mon-movetarget.cc" />
     <ClCompile Include="..\mon-pathfind.cc" />
@@ -730,7 +729,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\spl-tornado.cc" />
     <ClCompile Include="..\spl-transloc.cc" />
     <ClCompile Include="..\spl-util.cc" />
-    <ClCompile Include="..\spl-wpnench.cc" />
     <ClCompile Include="..\spl-zap.cc" />
     <ClCompile Include="..\sprint.cc" />
     <ClCompile Include="..\sqldbm.cc" />
@@ -1041,7 +1039,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-explode.h" />
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-gear.h" />
-    <ClInclude Include="..\mon-grow.h" />
     <ClInclude Include="..\mon-holy-type.h" />
     <ClInclude Include="..\mon-info.h" />
     <ClInclude Include="..\mon-inv-type.h" />
@@ -1169,7 +1166,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\spl-summoning.h" />
     <ClInclude Include="..\spl-transloc.h" />
     <ClInclude Include="..\spl-util.h" />
-    <ClInclude Include="..\spl-wpnench.h" />
     <ClInclude Include="..\spl-zap.h" />
     <ClInclude Include="..\sprint.h" />
     <ClInclude Include="..\sqldbm.h" />

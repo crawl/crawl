@@ -1,9 +1,9 @@
 enum: SP_GREY_DRACONIAN
 monster: MONS_GREY_DRACONIAN
-name: "Grey Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Grey Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
   - SPF_DRACONIAN
@@ -11,7 +11,7 @@ aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -29,6 +29,13 @@ str: 10
 int: 8
 dex: 6
 levelup_stat_frequency: 4
+fake_mutations:
+  - long: You can breathe torrents of mud.
+  - short: mud breath
+  - long: You are unimpeded by mud.
+    short: mud-swimmer
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+
+orc_name: Grey Orconian

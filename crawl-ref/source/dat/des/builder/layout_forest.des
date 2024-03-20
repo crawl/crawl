@@ -13,7 +13,7 @@
 #
 # A twisty turny forest maze.
 #
-# This layout needs a home.  See devwiki for possible ideas.
+# TODO: This layout needs some shrinking and a home. Lair? Crypt?
 #
 NAME:   layout_twisted_forest
 DEPTH:  D:1, Forest

@@ -159,17 +159,31 @@ item_def* newgame_make_item(object_class_type base,
         return nullptr;
     }
 
+    // Make sure branded and/or enchanted items appear as such.
+    item_set_appearance(item);
+
     if ((item.base_type == OBJ_WEAPONS && can_wield(&item, false, false)
         || item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, false))
         && you.equip[get_item_slot(item)] == -1)
     {
         you.equip[get_item_slot(item)] = slot;
     }
+    else if (item.base_type == OBJ_WEAPONS
+             && you.species == SP_COGLIN
+             && you.hands_reqd(item) == HANDS_ONE
+             && you.equip[EQ_OFFHAND] == -1
+             && you.weapon() // should always be true here
+             && you.hands_reqd(*you.weapon()) == HANDS_ONE)
+    {
+        you.equip[EQ_OFFHAND] = slot;
+    }
 
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
 
     origin_set_startequip(item);
+    if (item.base_type == OBJ_WEAPONS && you.species == SP_COGLIN)
+        name_weapon(item);
 
     return &item;
 }
@@ -206,6 +220,20 @@ static void _give_job_spells(job_type job)
     {
         add_spell_to_memory(first_spell);
     }
+}
+
+static void _give_offhand_weapon()
+{
+    const item_def *wpn = you.weapon();
+    if (!wpn || you.shield() || you.hands_reqd(*wpn) != HANDS_ONE)
+        return;
+    if (is_range_weapon(*wpn))
+    {
+        const int plus = you.char_class == JOB_HUNTER ? 0 : -2;
+        newgame_make_item(OBJ_WEAPONS, WPN_SLING, 1, plus);
+    }
+    else
+        newgame_make_item(OBJ_WEAPONS, WPN_DAGGER);
 }
 
 void give_items_skills(const newgame_def& ng)
@@ -273,11 +301,23 @@ void give_items_skills(const newgame_def& ng)
     if (you.char_class == JOB_GLADIATOR)
         _give_throwing_ammo();
 
-    if (you.has_mutation(MUT_NO_GRASPING))
+    if (you.has_mutation(MUT_NO_GRASPING)) // i.e. felids
         you.skills[SK_THROWING] = 0;
 
-    if (you.has_mutation(MUT_NO_ARMOUR))
-        you.skills[SK_SHIELDS] = 0;
+    if (you.has_mutation(MUT_NO_ARMOUR)) // i.e. felids
+        you.skills[SK_SHIELDS] = 0; // i.e. FeFi
+
+    if (you.has_mutation(MUT_WIELD_OFFHAND))
+    {
+        // Coglins would rather have two slings than one bow.
+        if (you.char_class == JOB_HUNTER)
+        {
+            item_def *wpn = you.weapon();
+            wpn->sub_type = WPN_SLING;
+            wpn->plus = 2;
+        }
+        _give_offhand_weapon();
+    }
 
     if (!you_worship(GOD_NO_GOD))
     {
@@ -349,6 +389,7 @@ void setup_game(const newgame_def& ng,
     switch (crawl_state.type)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_DESCENT:
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
@@ -539,7 +580,17 @@ static void _setup_generic(const newgame_def& ng,
 
     if (you.char_class == JOB_SHAPESHIFTER)
     {
-        you.default_form = transformation::beast;
+        const item_def* talisman = nullptr;
+        for (auto& item : you.inv)
+        {
+            if (item.is_type(OBJ_TALISMANS, TALISMAN_BEAST))
+            {
+                talisman = &item;
+                break;
+            }
+        }
+        ASSERT(talisman);
+        set_default_form(transformation::beast, talisman);
         set_form(transformation::beast, 1); // hacky...
     }
 
@@ -583,6 +634,7 @@ static void _setup_generic(const newgame_def& ng,
     // pregen temple -- it's quick and easy, and this prevents a popup from
     // happening. This needs to happen after you.save is created.
     if (normal_dungeon_setup && you.deterministic_levelgen &&
+        !crawl_state.game_is_descent() && // disables temple
         !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
     {
         die("Builder failure while trying to generate temple!");

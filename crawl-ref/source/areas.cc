@@ -623,7 +623,6 @@ static int _mons_class_halo_radius(monster_type type)
     case MONS_SERAPH:
         return 7; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
-    case MONS_SUN_MOTH:
         return 1;  // only notionally holy
     case MONS_MENNAS:
         return 2;  // ???  Low on grace or what?
@@ -634,14 +633,18 @@ static int _mons_class_halo_radius(monster_type type)
 
 int monster::halo_radius() const
 {
-    item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
-        size = 3;
+    item_def* wpn = mslot_item(MSLOT_WEAPON);
+    if (wpn && is_unrandom_artefact(*wpn, UNRAND_EOS))
+        size = max(size, 3);
+
+    item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
+    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_EOS))
+        size = max(size, 3);
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
-        size = 3;
+        size = max(size, 3);
 
     if (!(holiness() & MH_HOLY))
         return size;
@@ -759,28 +762,50 @@ int player::umbra_radius() const
 
     if (have_passive(passive_t::umbra))
     {
-        // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * you.normal_vision
-                                                    / piety_breakpoint(5);
+        if (piety >= piety_breakpoint(4))
+            size = 4;
+        else if (piety >= piety_breakpoint(3))
+            size = 3;
+        else
+            size = 2;
     }
 
-    if (player_equip_unrand(UNRAND_SHADOWS))
+    if (you.has_mutation(MUT_FOUL_SHADOW))
+        size = max(size, you.get_mutation_level(MUT_FOUL_SHADOW));
+
+    if ((player_equip_unrand(UNRAND_BRILLIANCE))
+         || player_equip_unrand(UNRAND_SHADOWS))
+    {
         size = max(size, 3);
+    }
 
     return size;
 }
 
 int monster::umbra_radius() const
 {
+    int size = -1;
+
+    if (mons_is_ghost_demon(type))
+        size = ghost_umbra_radius();
+
+    item_def* wpn = mslot_item(MSLOT_WEAPON);
+    if (wpn && is_unrandom_artefact(*wpn, UNRAND_BRILLIANCE))
+        size = max(size, 3);
+
+    item_def* alt_wpn = mslot_item(MSLOT_ALT_WEAPON);
+    if (alt_wpn && is_unrandom_artefact(*alt_wpn, UNRAND_BRILLIANCE))
+        size = max(size, 3);
+
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
-        return 3;
+        size = max(size, 3);
 
     if (!(holiness() & MH_UNDEAD))
-        return -1;
+        return size;
 
     // Bound holies get an umbra.
-    if (mons_bound_soul(*this))
+    if (type == MONS_BOUND_SOUL)
         return _mons_class_halo_radius(base_monster);
 
     switch (type)

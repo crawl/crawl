@@ -1,6 +1,6 @@
 ## Kraken head ('X') and tentacles ('w')
 %sdir mon/aquatic
-kraken_head MONS_KRAKEN_HEAD
+kraken_head MONS_KRAKEN
 
 ## Tentacles/segments emerging from water
 

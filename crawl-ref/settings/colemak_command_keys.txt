@@ -59,7 +59,6 @@ bindkey = [u] CMD_TARGET_EXCLUDE
 bindkey = [u] CMD_MAP_EXCLUDE_AREA
 bindkey = [U] CMD_EXPERIENCE_CHECK
 bindkey = [U] CMD_MAP_FIND_EXCLUDED
-bindkey = [^U] CMD_TOGGLE_TRAVEL_SPEED
 bindkey = [^U] CMD_MAP_CLEAR_EXCLUDES
 
 # fix overwrite on ^U

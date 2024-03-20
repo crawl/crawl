@@ -30,12 +30,11 @@ of Blades Elf:2 vault:
 2) deep elf knights or a small chance of (1)
 3) deep elf blademaster (use sparingly!)
 4) random dancing weapon
-5) and 6) two high quality dancing weapons of mutually exclusive weapons
+5), 6), 7) two or three high quality dancing weapons
+           of mutually exclusive weapons and brands
 
-The last two are defined by the hall_of_blades_weapon() function.
-
-@tab e The map environment.
-]]
+The last three are defined by the hall_of_blades_weapon() function.
+]]--
 function hall_of_blades_monsters(e)
     e.mons("deep elf pyromancer / deep elf zephyrmancer")
     e.mons("deep elf knight w:22 / deep elf pyromancer w:1 \
@@ -45,18 +44,28 @@ function hall_of_blades_monsters(e)
     hall_of_blades_weapon(e)
 end
 
+-- Some thematic, limited extra rewards for opening the Hall of Blades.
+function hall_of_blades_extra_rewards(e)
+    e.kitem("d = scroll of enchant weapon ident:type q:1")
+    e.kitem("e = scroll of brand weapon ident:type q:1")
+    e.kitem("f = blade talisman / blade talisman randart w:2")
+end
+
 -- Lua functions to simplify Elf:$
 function elf_setup(e)
   e.tags("no_rotate")
 end
 
 function elf_loot_randomisation(e)
-  e.kfeat("$ = $")
-  e.kfeat("* = *")
-  e.kfeat("| = |")
+  e.kitem("$ = $")
+  e.kitem("* = *")
+  e.kitem("| = |")
+  e.kitem("R = gold, shimmering gem")
   e.subst("| = | *:2")
+  e.nsubst("$ = 1:R / *:$")
   e.subst("$ = $:20 *:4 |:1")
   e.subst("* = * |:3")
+  e.nsubst("* = 2:$ / *:*")
 end
 
 -- The standard Elf:$ monster set
@@ -620,9 +629,19 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_2
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
+KFEAT:   G = metal_statue
 SHUFFLE: mlk/mkl/nnn, abcdefghij
 SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
-SUBST:   l : .v, m : .v, v : vbcx
+SUBST:   l : .v, m : GGGv., v : vbcx
+: if crawl.coinflip() then
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+:   set_feature_name("metal_statue", "dimensional conduit")
+: else
+COLOUR:  G = electricity
+TILE:    G = storm_conduit
+:   set_feature_name("metal_statue", "storm conduit")
+: end
 MAP
   ...........
   .abcd.dcba.
@@ -644,6 +663,7 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_3
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
+KFEAT:   G = metal_statue
 : if crawl.coinflip() then
 SHUFFLE: bcegh
 SUBST:   b = .
@@ -653,7 +673,16 @@ SUBST:   f = v
 SHUFFLE: abcdeghi
 : end
 SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
-SUBST:   j : .v, v : vbcx
+SUBST:   j : GGGv., v : vbcx
+: if crawl.coinflip() then
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+:   set_feature_name("metal_statue", "dimensional conduit")
+: else
+COLOUR:  G = vehumet
+TILE:    G = arcane_conduit
+:   set_feature_name("metal_statue", "arcane conduit")
+: end
 MAP
         .
        ...
@@ -740,7 +769,17 @@ ENDMAP
 NAME:    hangedman_elf_targeted_burst
 TAGS:    transparent extra
 DEPTH:   Elf
-SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
+KFEAT:   G = metal_statue
+SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvGG
+: if crawl.coinflip() then
+COLOUR:  G = vehumet
+TILE:    G = arcane_conduit
+:   set_feature_name("metal_statue", "arcane conduit")
+: else
+COLOUR:  G = fire
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
 MAP
         x
    .x...y...x
@@ -789,6 +828,7 @@ NAME:    nicolae_elf_glassroom_feature
 TAGS:    transparent
 DEPTH:   Elf
 KFEAT:   O = any shop
+KFEAT:   G = metal_statue
 SHUFFLE: x_/m-
 SUBST:   S = GTOSSS
 : if you.depth() == 1 then
@@ -799,6 +839,15 @@ SUBST:   S = (){}[]
 SUBST:   S = ({[
 : end
 CLEAR:   _
+: if crawl.coinflip() then
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+:   set_feature_name("metal_statue", "dimensional conduit")
+: else
+COLOUR:  G = fire
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
 MAP
 ---__.__---
 -mmxx.xxmm-
@@ -909,7 +958,9 @@ TAGS:   misc_elf_vault
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 6
-MONS:   deep elf zephyrmancer / deep elf pyromancer / nothing w:40
+MONS:   deep elf zephyrmancer / deep elf pyromancer / \
+        thermic dynamo w:2
+NSUBST: 1 = 2:1 / 3:. / * = 1..
 MAP
     +bbbbbbbbb+
     b...1b1...b
@@ -936,7 +987,8 @@ DEPTH:  Elf
 ORIENT: float
 WEIGHT: 4
 MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / \
-        deep elf death mage / nothing w:70
+        deep elf death mage / thermic dynamo w:5 / nothing w:70
+NSUBST: 1 = 2:1 / 4:. / * = 1:4 .:7
 MAP
     +bbbbbbb+
    bb.......bb
@@ -1002,16 +1054,20 @@ x11...1xxxx
 xxxxxxxxxxx
 ENDMAP
 
-NAME:  minmay_elf_sorcery
-TAGS:  misc_elf_vault transparent
-DEPTH: Elf
-MONS:  deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
-KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
-KITEM: 2 = randbook disc:conjuration disc2:summoning slevels:16
-SUBST: x : xxc, m : mmcxb
+NAME:   minmay_elf_sorcery
+TAGS:   misc_elf_vault transparent
+DEPTH:  Elf
+MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
+KMONS:  2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
+KITEM:  2 = randbook disc:conjuration disc2:summoning slevels:16
+SUBST:  x : xxc, G : Gm, m : mmcxb
+KFEAT:  G = metal_statue
+COLOUR: G = vehumet
+TILE:   G = arcane_conduit
+: set_feature_name("metal_statue", "arcane conduit")
 MAP
 ...........1............
-.mmm.x..x......x..x.mmm.
+.Gmm.x..x......x..x.mmG.
 .mmm...........1....mmm.
 .mmm1.x..x....x..x.1mmm.
 1mmmm.....1......1.mmmm.
@@ -1030,13 +1086,14 @@ MAP
        ...1......
 ENDMAP
 
-NAME:  minmay_elf_annihilation
-TAGS:  misc_elf_vault transparent
-DEPTH: Elf
-MONS:  deep elf pyromancer / deep elf zephyrmancer / nothing w:20
-KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
-KITEM: 2 = randbook disc:conjuration slevels:16
-SUBST: x : x c:1
+NAME:   minmay_elf_annihilation
+TAGS:   misc_elf_vault transparent
+DEPTH:  Elf
+MONS:   deep elf pyromancer / deep elf zephyrmancer w:8 / thermic dynamo w:4
+KMONS:  2 = deep elf annihilator / deep elf sorcerer w:2
+KITEM:  2 = randbook disc:conjuration slevels:16
+NSUBST: 1 = 1:1 / 2:. / * = 1.
+SUBST:  x : x c:1
 MAP
         ...
         .x1
@@ -1139,7 +1196,6 @@ ENDMAP
 # Some orcs on a diplomatic mission (Shiori)
 # They have brought some gold from their mines as a gift
 NAME:    orc_legates
-TAGS:    misc_elf_vault
 DEPTH:   Elf, !Elf:$
 SHUFFLE: AB , 34 , 12
 SUBST:   6 = 4
@@ -1262,7 +1318,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_altar
-DEPTH: Elf:2-
+TAGS:  misc_elf_vault
 MONS:  deep elf knight / deep elf archer / \
        deep elf pyromancer / deep elf zephyrmancer
 MONS:  deep elf high priest
@@ -1287,13 +1343,14 @@ ENDMAP
 NAME:  guppyfry_elf_lava
 TAGS:  transparent
 DEPTH: Elf:2-
-MONS:  deep elf pyromancer / deep elf zephyrmancer
-MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
+MONS:  deep elf pyromancer / deep elf zephyrmancer / thermic dynamo w:2
+MONS:  deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
-       w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
-       w:4 any weapon ego:flaming | w:4 shortbow ego:flaming | \
-       w:7 wand of flame | w:9 any armour ego:fire_resistance | \
-       w:4 staff of fire | w:17 randbook disc:fire | w:6 robe ego:fire_resistance
+           ring of fire w:10 | scroll of immolation w:5 | \
+           ring of protection from fire w:10 | \
+           any weapon ego:flaming w:4 | hand cannon ego:flaming w:4 | \
+           wand of flame w:4 | any armour ego:fire_resistance w:9 | \
+           staff of fire w:7 | randbook disc:fire w:20
 SUBST: ? = .l1
 SUBST: - = .l
 MAP
@@ -1317,16 +1374,17 @@ NAME:    hangedman_elf_power_crystal
 TAGS:    extra transparent
 DEPTH:   Elf
 KMONS:   1 = crystal guardian
+KMONS:   2 = thermic dynamo
 SHUFFLE: @ABC, QRST, n1' / n1' / xxx
 SUBST:   A : b:8 .:1 @:1, BC = b, x : b:8 x:1
 SUBST:   Q : b:8 .:1, R : b.., S : b:1 .:8, T = .
-KMASK:   1' = no_trap_gen
-KMASK:   1' = no_item_gen
-KMASK:   1' = no_monster_gen
-KMASK:   1' = opaque
-KPROP:   1' = no_tele_into
-TILE:    1' = floor_pebble_green
-COLOUR:  1' = green
+KMASK:   12' = no_trap_gen
+KMASK:   12' = no_item_gen
+KMASK:   12' = no_monster_gen
+KMASK:   12' = opaque
+KPROP:   12' = no_tele_into
+TILE:    12' = floor_pebble_green
+COLOUR:  12' = green
 MAP
           bbbbbbbbAb
          Bb.b..T..bA
@@ -1336,10 +1394,10 @@ MAP
     @b.....bb''bb..b
     b.b...bb'1'b.b.b
    bb..b.bb'''nb..bb
-  Cbb...bb'1'bb.Q..b
+  Cbb...bb'2'bb.Q..b
  Cb.b..bb'''nb.b..bb
 bb..b.bn'''bb..b.bC
-b..Q.bb'1'bb...bbC
+b..Q.bb'2'bb...bbC
 bb..bn'''bb.b..bb
 b.b.b'1'bb...b.b
 b..bb''bb.....b@
@@ -1353,7 +1411,7 @@ ENDMAP
 NAME:    hangedman_elven_crosses_minicolossus
 TAGS:    no_monster_gen transparent misc_elf_vault
 DEPTH:   Elf
-MONS:    deep elf pyromancer / deep elf zephyrmancer
+MONS:    deep elf pyromancer / deep elf zephyrmancer / thermic dynamo w:2
 MONS:    deep elf knight / deep elf pyromancer w:3 / deep elf zephyrmancer w:3
 MONS:    deep elf pyromancer / deep elf zephyrmancer
 MONS:    dancing weapon ; short sword ego:flaming | short sword ego:freezing | \
@@ -1391,28 +1449,33 @@ x+xx...xxxx.4.xxxxxx
 ENDMAP
 
 NAME:    hangedman_elf_represent
-TAGS:    no_monster_gen misc_elf_vault transparent
+TAGS:    no_monster_gen misc_elf_vault
 DEPTH:   Elf
-# Place two pairings of obvious descendents / ascendents.
-MONS:    deep elf pyromancer / deep elf zephyrmancer, deep elf sorcerer
-MONS:    deep elf pyromancer / deep elf zephyrmancer, deep elf high priest
-MONS:    deep elf annihilator, deep elf demonologist
+WEIGHT:  3
+# Place two pairings of lower and higher tier elves.
+MONS:    deep elf pyromancer, deep elf elementalist
+MONS:    deep elf zephyrmancer, deep elf annihilator
+MONS:    deep elf knight, deep elf blademaster, deep elf archer
+KMONS:   8 = deep elf master archer
+ITEM:    staff of fire ident:type / staff of air ident:type / \
+         ring of wizardry ident:type / ring of slaying ident:type / \
+         ring of dexterity ident:type / longbow good_item
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
-SHUFFLE: 12 / 34 / 15 / 16
-SUBST:   ' : x., " : x., - : x++
+SHUFFLE: 12 / 34, 56 / 78
+SUBST:   ' : x., " : x.
 MAP
-xxxxxxxxxxx'........
-xxx%.xxxxxx'x.x.x.x.
-xx2..1xx1...x.x.x.x.
-x%.....-............
-x......+.."...xxxxxx
-xx1..1xx....3xx..xxx
-xxx..xx.....xx3..3xx
-xxxxxx1.."..+......x
-............-.....%x
-.x.x.x.x...3xx3..4xx
-.x.x.x.x'xxxxxx.%xxx
-........'xxxxxxxxxxx
+xxxxxxxxxx''........
+xxx..xxxx"x.x.x.x.x@
+xx1..2xx1...x.x.x.x@
+x..xx..====.x.......
+x..xx..=$"===5xxxxxx
+xx1..1x=$%d$=xx..xxx
+xxx..xx=$d%$=x5...xx
+xxxxxx1==="$=..xx..x
+.......x.====..xx..x
+@x.x.x.x...3xx6..5xx
+@x.x.x.x.x"xxxx..xxx
+........''xxxxxxxxxx
 ENDMAP
 
 NAME:    hangedman_elf_disciples
@@ -1420,7 +1483,7 @@ TAGS:    no_monster_gen misc_elf_vault
 DEPTH:   Elf
 MONS:    deep elf pyromancer / deep elf zephyrmancer
 # Some other fledgling miscellaneous magic casters.
-MONS:    wizard, tengu conjurer, boggart, kobold demonologist
+MONS:    arcanist / occultist, tengu conjurer, boggart, kobold demonologist
 MONS:    deep elf sorcerer / deep elf annihilator w:2
 NSUBST:  2 = 1:2 / 1:4 / 1:. / * = 223445
 NSUBST:  - = 1:+ / *:c, _ = 1:+ / *:c
@@ -1490,18 +1553,19 @@ MAP
   xxxxxxxxx
 ENDMAP
 
-NAME:  nicolae_elf_altarnating
-TAGS:  transparent no_monster_gen no_item_gen
-DEPTH: Elf
+NAME:   nicolae_elf_altarnating
+TAGS:   transparent no_monster_gen no_item_gen misc_elf_vault
+DEPTH:  Elf
+WEIGHT: 5
 : if crawl.coinflip() then
-KMONS: 1 = dancing weapon ; any weapon
-KMONS: _ = dancing weapon ; any weapon good_item | any weapon randart w:5
-KFEAT: _ = altar_uskayaw
+KMONS:  1 = dancing weapon ; any weapon
+KMONS:  _ = dancing weapon ; any weapon good_item | any weapon randart w:5
+KFEAT:  _ = altar_uskayaw
 : else
-KMONS: 1_ = fire elemental / water elemental / air elemental / earth elemental
-KFEAT: _ = altar_qazlal
+KMONS:  1_ = fire elemental / water elemental / air elemental / earth elemental
+KFEAT:  _ = altar_qazlal
 : end
-SUBST: 1 = 111..
+SUBST:  1 = 111..
 MAP
 xxxxx
 x111x
@@ -1535,19 +1599,23 @@ xx..1....'x
 ENDMAP
 
 NAME:   nicolae_elf_blasts_and_bolts
-TAGS:   transparent
+TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   deep elf knight / deep elf pyromancer / deep elf zephyrmancer
-MONS:   deep elf annihilator, deep elf elementalist
+MONS:   deep elf annihilator, deep elf elementalist / thermic dynamo w:4
+KFEAT:  G = metal_statue
 NSUBST: D = 2 / 3 / * = 1:60 .:60 1 2
-SUBST:  E = 1:140 .:140 1 2, % = %%%*.
+SUBST:  E = 1:140 .:140 1 2, % = %%%*., G : GGx
+COLOUR: G = vehumet
+TILE:   G = arcane_conduit
+: set_feature_name("metal_statue", "arcane conduit")
 MAP
 ccc..............ccc
 ccc..cc..cc..cc..ccc
 ccc..cc..cc..cc..ccc
 ...E......E.....E...
 ....................
-.cc..xxx.D..xxx..cc.
+.cc..Gxx.D..xxx..cc.
 .cc..xxx....xxx..cc.
 .....xxxx%%xxxx.....
 .......xxxxxx.......
@@ -1556,7 +1624,7 @@ ccc..cc..cc..cc..ccc
 .......xxxxxx.......
 .....xxxx%%xxxx.....
 .cc..xxx....xxx..cc.
-.cc..xxx..D.xxx..cc.
+.cc..xxx..D.xxG..cc.
 ....................
 ...E.....E......E...
 ccc..cc..cc..cc..ccc
@@ -1565,7 +1633,7 @@ ccc..............ccc
 ENDMAP
 
 NAME:   nicolae_elf_crossing_hall
-TAGS:   transparent
+TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 : if crawl.coinflip() then
 KFEAT:  + = closed_clear_door
@@ -1618,6 +1686,7 @@ ENDMAP
 NAME:  nicolae_elf_deep_mausoleum
 TAGS:  transparent patrolling no_monster_gen
 DEPTH: Elf
+KMONS: B = boulder dbname:still_boulder
 KITEM: S = large rock q:1 / stone
 KITEM: % = % / * w:5
 KITEM: * = * / | w:5
@@ -1626,11 +1695,11 @@ KMONS: V = deep elf death mage / nothing
 KMONS: 2 = flayed ghost / shadow wraith / phantasmal warrior / curse skull / \
            eidolon / ghoul / skeletal warrior / ancient champion / \
            vampire / vampire mage / vampire knight / jiangshi
-KMONS: 3 = lost soul / flying skull / spectral deep elf blademaster / \
+KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf blademaster simulacrum / spectral deep elf knight / \
            deep elf knight simulacrum
 KFEAT: 1V = V
-SUBST: 2 = 22., 3 = 33., D = 32., G = G:90 S
+SUBST: 2 = 22., 3 = 33., D = 32., G = G:85 S B:5
 TILE:  G = dngn_gravestone
 : set_feature_name("granite_statue", "a gravestone")
 MAP
@@ -1638,7 +1707,7 @@ cccccccccccccccccccccc
 ccccG*GcccG%GcccG%Gccc
 ccc.2.2.c.D.D.c.3.3.cc
 ccG2...2GD...DG3...3Gc
-cc*..1.....V.....V...+
+cc|..1.....V.....V...+
 ccG2...2GD...DG3...3Gc
 ccc.2.2.c.D.D.c.3.3.cc
 ccccG*GcccG%GcccG%Gccc
@@ -1721,8 +1790,8 @@ KITEM:   S = randbook disc:air slevels:5
 MONS:    deep elf zephyrmancer / deep elf pyromancer
 MONS:    deep elf elementalist
 # A small chance of an elementalist transfer student:
-MONS:    spriggan air mage / deep troll earth mage / merfolk aquamancer \
-         / salamander tyrant
+MONS:    spriggan air mage / deep troll earth mage / \
+         merfolk aquamancer / salamander tyrant
 KMONS:   P = fire elemental
 KMONS:   Q = earth elemental
 KMONS:   R = water elemental
@@ -1807,9 +1876,9 @@ KITEM:   R = staff of cold / randbook disc:ice / wand of iceblast \
 KITEM:   S = staff of air / randbook disc:air / ring of flight \
          / ring of evasion / condenser vane / lightning rod \
          / any weapon ego:electrocution
-KMONS:   1P = fire elemental
+KMONS:   1P = fire elemental / thermic dynamo w:2
 KMONS:   2Q = earth elemental
-KMONS:   3R = water elemental
+KMONS:   3R = water elemental / thermic dynamo w:2
 KMONS:   4S = air elemental
 SHUFFLE: DE, FH, JKL, P1 / R3, Q2 / S4
 SUBST:   1 = 1., 2 = 2., 3 = 3., 4 = 4., DF = +, EHJ = m, KL = x
@@ -1846,10 +1915,10 @@ xx.T...T.xx
 ENDMAP
 
 NAME:   nicolae_elf_shapeshifter_party
-TAGS:   transparent patrolling no_monster_gen
+TAGS:   transparent patrolling misc_elf_vault no_monster_gen
 DEPTH:  Elf
 ITEM:   potion of mutation / potion of lignification / wand of polymorph \
-        / randbook disc:transmutation / any potion / any wand / randbook \
+        / randbook disc:alchemy / any potion / any wand / randbook \
         / any good_item w:30
 MONS:   shapeshifter / glowing shapeshifter w:5
 SUBST:  Z = x., z = ddFFx, E = Fx, . = 1 .:90
@@ -1872,27 +1941,30 @@ xxZ.......Zxx
     xxxxx
 ENDMAP
 
-NAME:  nicolae_elf_theology_debate
-TAGS:  transparent
-DEPTH: Elf
-MONS:  orc knight
-MONS:  deep elf knight
+NAME:   nicolae_elf_theology_debate
+TAGS:   transparent misc_elf_vault
+DEPTH:  Elf
+MONS:   orc knight, deep elf knight
 : if crawl.coinflip() then
-KMONS: 3 = orc high priest
-KMONS: 4 = deep elf high priest
-KFEAT: 4 = altar_vehumet / altar_makhleb / altar_sif_muna
+KMONS:  3 = orc high priest
+KMONS:  4 = deep elf high priest
+KFEAT:  4 = altar_vehumet / altar_makhleb / altar_sif_muna
+SUBST:  b = G
 : else
-KMONS: 3 = orc sorcerer
-KMONS: 4 = deep elf sorcerer
-KFEAT: 4 = altar_lugonu
+KMONS:  3 = orc sorcerer
+KMONS:  4 = deep elf sorcerer
+KFEAT:  4 = altar_lugonu
+SUBST:  b = GGb
+TILE:   b = bedeviled_crystal_abyss
+:   set_feature_name("crystal_wall", "bedeviled crystal wall")
 : end
-KFEAT: 3 = altar_beogh
-SUBST: % = %%*, * = **|, S = 12, 1 = 11., 2 = 22.
+KFEAT:  3 = altar_beogh
+SUBST:  % = %%*, * = **|, S = 12, 1 = 11., 2 = 22.
 MAP
 xxxxxxxxxxxxxxxxx
 xx...xx...xx...xx
 x..2....S....1..x
-x.2G2..SGS..1G1.x
+x.2b2..SGS..1G1.x
 x..2....S....1..x
 xx...xx+++xx...xx
 xx.2.xx...xx.1.xx
@@ -1924,6 +1996,34 @@ xxxG*%1'2'+...3.3Gxxx
       xxx$x3xxx.@
         xxxxx
           x
+ENDMAP
+
+NAME:   hellmonk_elf_help
+TAGS:   transparent no_item_gen
+DEPTH:  Elf
+KITEM:  ' = randbook title:Get_Rich_Quick! disc:alchemy /\
+            randbook title:Seven_Elven_Habits numspells:7 /\
+            randbook title:Passive_Income disc:Summoning \
+                disc2:Necromancy /\
+            randbook title:Big_Dreams_And_Success numspells:2 slevels:18 /\
+            randbook title:The_Trick_To_Life numspells:1 /\
+            manual of invocations w:3
+KMONS:  ' = deep elf death mage / deep elf sorcerer / deep elf annihilator /\
+            deep elf demonologist
+SUBST:  8 = 80, 0 = 0., A : GccT
+TILE:   c = wall_studio
+MAP
+  xxxxx
+ xxcccxx
+xxc.'.cxx
+xc8.A.8cx
+xc..0..cx
+xcA.A.Acx
+xc..0..cx
+xc0.A.0cx
+xxc...cxx
+ xx+++xx
+   @@@
 ENDMAP
 
 ##############################################################################
@@ -2264,7 +2364,7 @@ ENDMAP
 NAME:  nicolae_blade_bullseye
 TAGS:  no_item_gen
 KMONS: 2 = patrolling dancing weapon ; sling | shortbow | orcbow | \
-           longbow w:5 | hand crossbow w:5 | arbalest | triple crossbow w:5
+           longbow w:5 | hand cannon w:5 | arbalest | triple crossbow w:5
 : elven_blade_entry(_G)
 MAP
       =
@@ -2363,6 +2463,9 @@ TAGS:     no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
+: hall_of_blades_extra_rewards(_G)
+# Two enchant weapon scrolls, third or a brand weapon, coinflip for a talisman.
+SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 FTILE:    - = floor_vault
@@ -2380,7 +2483,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
 xcccc---cccc-cccc-cccc-cccc-F-ccccc-F-cccc-cccc-cccc-cccc---ccccx
 xccF-....cc-.-cc-.-cc-.-cc-...-ccc-...-cc-.-cc-.-cc-.-cc-...-Fccx
-xcc-.........................................................-ccx
+xcc-............................7............................-ccx
 xc-....c............--c--................-c--............c....-cx
 xc-...ccc...........-ccc-...............-ccc-...........ccc...-cx
 xcE..ccccc..........ccccc...............ccccc..........ccccc..Ecx
@@ -2390,7 +2493,7 @@ xcE...ccc...............................................ccc...Ecx
 xcE....c.................................................c....Ecx
 xc-............................D.D............................-cx
 xc-...........CC..............DDDDD..............CC...........-cx
-xcE5..2......CCCC.............DDDDD.............CCCC......2..6Ecx
+xcE5ed2......CCCC.............DDDDD.............CCCC......2df6Ecx
 xc-...........CC..............DDDDD..............CC...........-cx
 xc-............................D.D............................-cx
 xcE....c.................................................c....Ecx
@@ -2427,6 +2530,8 @@ PLACE:    Elf:2
 WEIGHT:   5
 ORIENT:   north
 : hall_of_blades_monsters(_G)
+: hall_of_blades_extra_rewards(_G)
+SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 FTILE:    - = floor_vault
@@ -2442,7 +2547,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
 xcccc-F-cccc-cccc-cccc-cccc--cccc-F-cccc--cccc-cccc-cccc-cccc-F-ccccx
-xccF-...-cc-.-cc-.-cc-.-cc-..-cc-...-cc-..-cc-.-cc-.-cc-.-cc-...-Fccx
+xccF-...-cc-.-cc-.-cc-.-cc-..-cc-.7.-cc-..-cc-.-cc-.-cc-.-cc-...-Fccx
 xcc-..............................D..............................-ccx
 xccc........................''''DDDDD''''........................cccx
 xcc-..--c--.......--c--....'''''''D'''''''....--c--.......--c--..-ccx
@@ -2462,8 +2567,8 @@ xccc...cc...........cc...cccAAAAAAAAAAAAAccc...cc...........cc...cccx
 xccc..ccccc.......ccccc..cccAAAAAAAAAAAAAccc..ccccc.......ccccc..cccx
 xcc-.ccccccc.....ccccccc.-ccAAAAAAAAAAAAAcc-.ccccccc.....ccccccc.-ccx
 xc-...ccccc...2...ccccc...-cAAAAAAAAAAAAAc-...ccccc...2...ccccc...-cx
-xc-....cc4.........4cc....-c     @@@     c-....cc4.........4cc....-cx
-xcc-.....................-cc             cc-.....................-ccx
+xc-....cc4....d....4cc....-c     @@@     c-....cc4....d....4cc....-cx
+xcc-..........e..........-cc             cc-..........f..........-ccx
 xccF-.........5.........-Fcc             ccF-.........6.........-Fccx
 xcccc--EE-EE--E--EE--EE-cccc             cccc-EE--EE--E--EE-EE--ccccx
 xccccccccccccccccccccccccccc             cccccccccccccccccccccccccccx
@@ -2477,7 +2582,9 @@ TAGS:     no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   northwest
 : hall_of_blades_monsters(_G)
-MONS:     patrolling dancing weapon ; dagger good_item | mundane falchion w:6
+KMONS:    8 = patrolling dancing weapon ; dagger good_item | mundane falchion w:6
+: hall_of_blades_extra_rewards(_G)
+SUBST:    e = ed, f = f.
 : if crawl.one_chance_in(4) then
 SUBST:    FJH = b
 : else
@@ -2485,7 +2592,7 @@ SHUFFLE:  FH
 SUBST:    FJ = ., H : bb.
 : end
 SHUFFLE:  DE
-SUBST:    D : bbbb-, E : ----b, K : b.., 7 = 7'
+SUBST:    D : bbbb-, E : ----b, K : b.., 8 = 8'
 FTILE:    -~ = floor_vault
 COLOUR:   -~ = lightgrey
 SUBST:    - = .
@@ -2498,9 +2605,9 @@ MAP
  xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbx
  xbbbb---bbbbb---bbbbb---bbbbb---bbbbb---bbbbx
  xbbb-....bbb.....bbb.....bbb.....bbb....-bbbx
- xbb-......K.......K.......K...2...K.....6-bbx
- xb-.......................................-bx
- xb-...4...................................-bx
+ xbb-7.....K.......K.......K...2...K.....6-bbx
+ xb-....................................f..-bx
+ xb-...4...............................d...-bx
  xb-.......................................-bx
  xbb......DDD.....EEE.........FFF..........bbx
  xbbb....DDDDD...EEEEE.......FFFFF..4.....bbbx
@@ -2525,15 +2632,15 @@ MAP
  xbb......FFFJbbbJFFF.....'''==xxxxxxxxxxxxxxx
  xb-.....FFFFbbbbbFFFF....'''=~~'''''xxxxxx
  xb-..2..FFFFbbbbbFFFF.....-bx~~~''T''xxxxx
- xb-.....FFFFbbbbbFFFF.....-bx'~~~''7''xxxx
- xbb......FFFJbbbJFFF......bbx''~~~''7''xxx
- xbbb.......JHHHHHJ.......bbbx'''~~~''7''xx
- xbbbK.......HHHHH.......Kbbbx'T''~~~''7''x
- xbbb.....4..HHHHH........bbbx''7''~~~''7'x
- xbb..........HHH..........bbxx''7''~~~''Tx
- xb-.......................-bxxx''7''~~~''x
- xb-.......................-bxxxx''7''~~~'x
- xb-...........2...........-bxxxxx''7''~~~x
+ xb-.....FFFFbbbbbFFFF.....-bx'~~~''8''xxxx
+ xbb......FFFJbbbJFFF......bbx''~~~''8''xxx
+ xbbb.......JHHHHHJ.......bbbx'''~~~''8''xx
+ xbbbK.......HHHHH.......Kbbbx'T''~~~''8''x
+ xbbb.....4..HHHHH........bbbx''8''~~~''8'x
+ xbb..........HHH..........bbxx''8''~~~''Tx
+ xb-.......................-bxxx''8''~~~''x
+ xb-...d...................-bxxxx''8''~~~'x
+ xb-..e........2...........-bxxxxx''8''~~~x
  xbb-5.....K.......K......-bbxxxxxx''T''~~~@
  xbbb-....bbb.....bbb....-bbbxxxxxxxxxxxx~~@
  xbbbb---bbbbb---bbbbb---bbbbx           @@@
@@ -2550,14 +2657,16 @@ PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 KMONS:    E = dancing weapon
-SUBVAULT: D : elf_blade_entry
+: hall_of_blades_extra_rewards(_G)
+SUBST:    e = ed, f = f.
 # 1/4 chance each of the scalloped edges being 0/1/2/3 tiles around.
 SUBST:    P : Q-, Q : RR-, R : ccc-
-FTILE:    E- = floor_vault
-COLOUR:   E- = lightgrey
+FTILE:    7E- = floor_vault
+COLOUR:   7E- = lightgrey
 SUBST:    - = .
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
 SHUFFLE:  MN
+SUBVAULT: D : elf_blade_entry
 SUBST:    D : x, M : b, N : cccb, v : vvvn
 CLEAR:    "
 MAP
@@ -2567,9 +2676,9 @@ xcccccccccccccccccccccccccccccccccccccccccccccccx
 xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
 xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
 xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
-xc---v.......v------v.......v------v.......v---cx
+xc---v.d.....v------v.......v------v.......v---cx
 xc--v.5.......v----v.........v----v.........v--cx
-xc-v...........v--v...........v--v...........v-cx
+xc-v.e.........v--v...........v--v...........v-cx
 xcN.....2....4..NN.............NN.............Ncx
 xcN.............NN.............NN.............Ncx
 xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
@@ -2578,7 +2687,7 @@ xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
 xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
 xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
 xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
-xcRQP---MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
+xcRQP-7-MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
 xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
 xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
 xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
@@ -2587,9 +2696,9 @@ xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
 xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
 xcN.............NN.............NN.............Ncx
 xcN.....2....4..NN.............NN.............Ncx
-xc-v...........v--v...........v--v...........v-cx
+xc-v.f.........v--v...........v--v...........v-cx
 xc--v.6.......v----v.........v----v.........v--cx
-xc---v.......v------v.......v------v.......v---cx
+xc---v.d.....v------v.......v------v.......v---cx
 xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
 xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
 xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
@@ -2671,15 +2780,17 @@ SUBST:   4=4., 2=2., 5=5., 3=3.
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
-KFEAT:   $ = $
-KFEAT:   * = *
+KITEM:   $ = $
+KITEM:   R = gold, shimmering gem
+NSUBST:  $ = 1:R / *:$
+KITEM:   * = *
 KFEAT:   | = |
 SUBST:   | = | *:2
 SUBST:   * = * |:3
 KMONS:   A = deep elf master archer
-KFEAT:   A = |
+KITEM:   A = |
 KMONS:   B = deep elf blademaster
-KFEAT:   B = |
+KITEM:   B = |
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xccccccccccccccccccccccccccx
@@ -2724,9 +2835,11 @@ SUBST:   N=@, n=., Z=c, z=c
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
-KFEAT:   $ = $
-KFEAT:   * = *
-KFEAT:   | = |
+KITEM:   R = gold, shimmering gem
+NSUBST:  $ = 1:R / *:$"
+KITEM:   $ = $
+KITEM:   * = *
+KITEM:   | = |
 SUBST:   | = | *:2
 SUBST:   * = * |:3
 KITEM:   6 = |
@@ -2762,8 +2875,7 @@ xxxxxxxxxxxNncnNxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-## minmay's Elf hall
-##
+
 NAME:    minmay_elf_hall
 TAGS:    nolayout_halls
 PLACE:   Elf:$
@@ -2813,8 +2925,6 @@ xcccccccccxxxxxxxxxxxxxxxxxxxcccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-## minmay's more circular hall
 ##
 NAME:    minmay_elf_hall_circle
 PLACE:   Elf:$
@@ -2860,8 +2970,6 @@ xxxxxxxxccc.........cccxxxxxxxxx
 xxxxxxxxxxccccc@cccccxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-## minmay
 # Before transforms: 32x$, 27x*, 29x|, 4x1, 13x2, 10x3, 6x4, 9x5, 4x6, 2x7
 #
 NAME:    minmay_elf_hall_hex
@@ -3050,21 +3158,19 @@ xxxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
 ENDMAP
 
-# The elves have created golems to guard their treasure.
-# XXX: Possibly too much of a outlier in the vault roster.
-# Lowered weight for now, should be addressed some time.
-#
+# The elves had created golems to guard their treasure.
+# Then those turned out to be too much, so we're using turbines instead.
 # Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
 NAME:    minmay_elf_hall_golems
 TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
-WEIGHT:  2
+WEIGHT:  5
 : elf_setup(_G)
 : elf_monsters(_G)
-KMONS:   8 = crystal guardian
+KMONS:   8 = thermic dynamo
 SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
-NSUBST:  8 = 2:. / 1:8 / * = 8.
+NSUBST:  8 = 1:8 / 2:. / * = 8.
 SHUFFLE: 12, 34, 67
 SUBST:   b : bc
 : elf_loot_defenders(_G)
@@ -3452,7 +3558,7 @@ xxxxxxxxcc...ccxxxxxxxxxx
 xxxxxxxxxcc@ccxxxxxxxxxxx
 ENDMAP
 
-# Before transforms: 27x*, 31x|, 6x1, 8x2, 8x3, 4x4, 8x5, 2x6, 2x7
+# Before transforms: 1x$, 27x*, 31x|, 6x1, 8x2, 8x3, 4x4, 8x5, 2x6, 2x7
 NAME:    minmay_elf_hall_curves
 PLACE:   Elf:$
 ORIENT:  northwest
@@ -3489,8 +3595,8 @@ xc.......cccc..3..bbbbbb...c|*|c
 xc...5.4....ccc...bbbbbb...c**|c
 xc....v.....5.cc..bbbbbb.2cc||*c
 xcc..vvv.......c.6.bbbb...c||*cc
-xxc...vvvv.2...cc........cc**|cx
-xxc....vvvvv....c.U...4.cc||*|cx
+xxc...vvvv.2...cc.......ccc**|cx
+xxc....vvvvv....c.U...4.c$||*|cx
 xxcc.....vvvv...c..3.7ccc***|ccx
 xxxc..5....vvv..cc+cccc|*||**cxx
 xxxcc.......v....c**||**|*|*ccxx
@@ -3537,7 +3643,7 @@ xxxxxxxxxcccc...ccccxxxxxxxxx
 xxxxxxxxxxxxcc@ccxxxxxxxxxxxx
 ENDMAP
 
-# Before transforms: 44x|, 4x1, 4x2, 4x3, 4x4, 12x5, 4x6, 4x7
+# Before transforms: 1x$, 44x|, 4x1, 4x2, 4x3, 4x4, 12x5, 4x6, 4x7
 NAME:    minmay_elf_hall_statues
 TAGS:    nolayout_halls
 PLACE:   Elf:$
@@ -3568,12 +3674,12 @@ xcnnncc...+..U.6b..1....vv..cc..5c
 xc...c..7.bb....bn.......v...c.G.c
 xc.v.c.....bb6...nnbbb.....G1c5..c
 xc...c......bbb.G.bb6bbb..1..c...c
-xc.v.+..vv....nn..|||||bb....+.G.c
+xc.v.+..vv....nn.||||||bb....+.G.c
 xc.4.c..2vv....nb|||||||b...4c..5c
 xc.v.c....vv...bb|||||||bb.G.c...c
 xc...c.....vv..b6|||U|||7b...c.G.c
 xc.v.cc......2.bb|||||||bb..cc...c
-xc....c...vv..3.b|||||||b...c5...c
+xc....c...vv..3.b|||||$|b...c5...c
 xc....cc...vv...bb|||||bb..cc....c
 xcc....c....vv...bbb7bbb...c...5.c
 xxc....cc....vv....bbb....cc.v...c

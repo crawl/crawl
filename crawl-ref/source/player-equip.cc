@@ -171,8 +171,10 @@ bool unmeld_slot(equipment_type slot)
     return false;
 }
 
-static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
-static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld,
+                                 equipment_type slot);
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld,
+                                   equipment_type slot);
 static void _equip_armour_effect(item_def& arm, bool unmeld,
                                  equipment_type slot);
 static void _unequip_armour_effect(item_def& item, bool meld,
@@ -182,13 +184,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot);
 static void _equip_use_warning(const item_def& item);
-static void _equip_regeneration_item(const item_def& item);
-static void _deactivate_regeneration_item(const item_def& item, bool meld);
+static void _handle_regen_item_equip(const item_def& item);
+static void _deactivate_item(const item_def& item);
 
 static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 {
 #ifdef ASSERTS
     if (eq == slot)
+        return;
+    if (slot == EQ_OFFHAND && you.has_mutation(MUT_WIELD_OFFHAND)) // hack for off-hand wielding
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
@@ -220,12 +224,15 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
 
     identify_item(item);
 
-    if (slot == EQ_WEAPON)
-        _equip_weapon_effect(item, msg, unmeld);
+    if (slot == EQ_WEAPON || (slot == EQ_OFFHAND && is_weapon(item)))
+        _equip_weapon_effect(item, msg, unmeld, slot);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _equip_jewellery_effect(item, unmeld, slot);
+
+    if (!unmeld)
+        _handle_regen_item_equip(item);
 }
 
 void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
@@ -240,8 +247,8 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 
     const interrupt_block block_meld_interrupts(meld);
 
-    if (slot == EQ_WEAPON)
-        _unequip_weapon_effect(item, msg, meld);
+    if (slot == EQ_WEAPON || (slot == EQ_OFFHAND && is_weapon(item)))
+        _unequip_weapon_effect(item, msg, meld, slot);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
@@ -255,8 +262,8 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 // Actual equip and unequip effect implementation below
 //
 
-static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
-                                   equipment_type slot)
+void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
+                           equipment_type slot)
 {
     ASSERT(is_artefact(item));
 
@@ -295,16 +302,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                                                   : MSG_MANA_DECREASE);
     }
 
-    if (proprt[ARTP_REGENERATION]
-        && !unmeld
-        // If regen is an intrinsic property too, don't double print messages.
-        && !item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
-        && (item.base_type != OBJ_ARMOUR
-            || !armour_type_prop(item.sub_type, ARMF_REGENERATION)))
-    {
-        _equip_regeneration_item(item);
-    }
-
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
                        !(msg && proprt[ARTP_STRENGTH] && !unmeld));
@@ -320,8 +317,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         mpr("You feel a build-up of mutagenic energy.");
 
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld
-        && !you.has_mutation(MUT_ROLLPAGE)
-        && !you_worship(GOD_WU_JIAN))
+        && !you.has_mutation(MUT_ROLLPAGE))
     {
         mpr("You feel ready to rampage towards enemies.");
     }
@@ -353,10 +349,8 @@ static void _unequip_fragile_artefact(item_def& item, bool meld)
     }
 }
 
-static void _unequip_artefact_effect(item_def &item,
-                                     bool *show_msgs, bool meld,
-                                     equipment_type slot,
-                                     bool weapon)
+void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
+                             equipment_type slot, bool weapon)
 {
     ASSERT(is_artefact(item));
 
@@ -397,8 +391,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_RAMPAGING] && msg && !meld
-        && !you.rampaging()
-        && !you_worship(GOD_WU_JIAN))
+        && !you.rampaging())
     {
         mpr("You no longer feel able to rampage towards enemies.");
     }
@@ -412,8 +405,8 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
 
-    if (proprt[ARTP_REGENERATION])
-        _deactivate_regeneration_item(item, meld);
+    if (proprt[ARTP_REGENERATION] && !meld)
+        _deactivate_item(item);
 
     if (is_unrandom_artefact(item))
     {
@@ -451,7 +444,8 @@ static void _equip_use_warning(const item_def& item)
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
-static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
+static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld,
+                                 equipment_type slot)
 {
     you.wield_change = true;
     quiver::on_weapon_changed();
@@ -465,7 +459,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     case OBJ_STAVES:
     {
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_STAFF);
+            equip_artefact_effect(item, &showMsgs, unmeld, slot);
         break;
     }
 
@@ -474,12 +468,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         // Note that if the unrand equip prints a message, it will
         // generally set showMsgs to false.
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
+            equip_artefact_effect(item, &showMsgs, unmeld, slot);
 
-        special = item.brand;
-
-        if (artefact)
-            special = artefact_property(item, ARTP_BRAND);
+        special = get_weapon_brand(item);
 
         if (special != SPWPN_NORMAL)
         {
@@ -501,8 +492,29 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_HOLY_WRATH:
-                    mprf("%s softly glows with a divine radiance!",
-                         item_name.c_str());
+                    if (you.undead_or_demonic())
+                    {
+                        mprf("%s sits dull and lifeless in your grasp.",
+                             item_name.c_str());
+                    }
+                    else
+                    {
+                        mprf("%s softly glows with a divine radiance!",
+                             item_name.c_str());
+                    }
+                    break;
+
+                case SPWPN_FOUL_FLAME:
+                    if (you.is_holy())
+                    {
+                        mprf("%s sits dull and lifeless in your grasp.",
+                             item_name.c_str());
+                    }
+                    else
+                    {
+                        mprf("%s glows horrifically with a foul blackness!",
+                             item_name.c_str());
+                    }
                     break;
 
                 case SPWPN_ELECTROCUTION:
@@ -623,7 +635,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 }
 
 static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
-                                   bool meld)
+                                   bool meld, equipment_type slot)
 {
     you.wield_change = true;
     quiver::on_weapon_changed();
@@ -634,10 +646,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
     if (is_artefact(item))
-    {
-        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
-                                 true);
-    }
+        unequip_artefact_effect(real_item, &showMsgs, meld, slot, true);
 
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -654,8 +663,17 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                     mprf("%s stops flaming.", msg.c_str());
                 break;
 
-            case SPWPN_FREEZING:
             case SPWPN_HOLY_WRATH:
+                if (showMsgs && !you.undead_or_demonic())
+                    mprf("%s stops glowing.", msg.c_str());
+                break;
+
+            case SPWPN_FOUL_FLAME:
+                if (showMsgs && !you.is_holy())
+                    mprf("%s stops glowing.", msg.c_str());
+                break;
+
+            case SPWPN_FREEZING:
                 if (showMsgs)
                     mprf("%s stops glowing.", msg.c_str());
                 break;
@@ -843,7 +861,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_RAMPAGING:
-            if (!you.has_mutation(MUT_ROLLPAGE) && !you_worship(GOD_WU_JIAN))
+            if (!you.has_mutation(MUT_ROLLPAGE))
                 mpr("You feel ready to rampage towards enemies.");
             break;
 
@@ -870,13 +888,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
     }
 
-    if (armour_type_prop(arm.sub_type, ARMF_REGENERATION) && !unmeld)
-        _equip_regeneration_item(arm);
-
     if (is_artefact(arm))
     {
         bool show_msgs = true;
-        _equip_artefact_effect(arm, &show_msgs, unmeld, slot);
+        equip_artefact_effect(arm, &show_msgs, unmeld, slot);
     }
 
     you.redraw_armour_class = true;
@@ -986,7 +1001,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_RAMPAGING:
-        if (!you.rampaging() && !you_worship(GOD_WU_JIAN))
+        if (!you.rampaging())
             mpr("You no longer feel able to rampage towards enemies.");
         break;
 
@@ -1003,11 +1018,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
     }
 
-    if (armour_type_prop(item.sub_type, ARMF_REGENERATION))
-        _deactivate_regeneration_item(item, meld);
+    if (armour_type_prop(item.sub_type, ARMF_REGENERATION) && !meld)
+        _deactivate_item(item);
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, nullptr, meld, slot, false);
+        unequip_artefact_effect(item, nullptr, meld, slot, false);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1030,13 +1045,6 @@ static void _remove_amulet_of_faith(item_def &item)
         return;
     }
 
-    if (you_worship(GOD_YREDELEMNUL))
-    {
-        mprf(MSGCH_GOD, "The black torch dims.");
-        yred_reclaim_souls();
-        return;
-    }
-
     simple_god_message(" seems less interested in you.");
 
     const int piety_loss = div_rand_round(you.piety, 3);
@@ -1046,10 +1054,18 @@ static void _remove_amulet_of_faith(item_def &item)
     lose_piety(piety_loss);
 }
 
-static void _equip_regeneration_item(const item_def &item)
+static void _handle_regen_item_equip(const item_def& item)
 {
+    const bool regen_hp = is_regen_item(item);
+    const bool regen_mp = is_mana_regen_item(item);
+
+    if (!regen_hp && !regen_mp)
+        return;
+
+    // The item is providing at least one of these two things, so let's check
+    // attunement status.
+
     equipment_type eq_slot = item_equip_slot(item);
-    // currently regen is only on amulets and armour
     bool plural = (eq_slot == EQ_BOOTS && item.sub_type != ARM_BARDING)
                   || eq_slot == EQ_GLOVES;
     string item_name = is_artefact(item) ? get_artefact_name(item)
@@ -1060,45 +1076,56 @@ static void _equip_regeneration_item(const item_def &item)
                                          : item_slot_name(eq_slot);
 
 #if TAG_MAJOR_VERSION == 34
-    if (you.get_mutation_level(MUT_NO_REGENERATION))
+    if (regen_hp && !regen_mp && you.get_mutation_level(MUT_NO_REGENERATION))
     {
         mprf("The %s feel%s cold and inert.", item_name.c_str(),
              plural ? "" : "s");
         return;
     }
 #endif
-    if (you.hp == you.hp_max)
+    if (regen_mp && !regen_hp && !player_regenerates_mp())
     {
-        mprf("The %s throb%s to your uninjured body.", item_name.c_str(),
-             plural ? " as they attune themselves" : "s as it attunes itself");
+        mprf("The %s feel%s cold and inert.", item_name.c_str(),
+             plural ? "" : "s");
+
+        return;
+    }
+
+    bool activate = false;
+    if (regen_hp && you.hp == you.hp_max
+        && (!regen_mp || you.magic_points == you.max_magic_points))
+    {
+        activate = true;
+    }
+    else if (regen_mp && you.magic_points == you.max_magic_points
+             && (!regen_hp || you.hp == you.hp_max))
+    {
+        activate = true;
+    }
+
+    if (activate)
+    {
+        mprf("The %s throb%s to your%s body.", item_name.c_str(),
+             plural ? " as they attune themselves" : "s as it attunes itself",
+             regen_hp ? " uninjured" : "");
         you.activated.set(eq_slot);
         return;
     }
-    mprf("The %s cannot attune %s to your injured body.", item_name.c_str(),
-         plural ? "themselves" : "itself");
+
+    mprf("The %s cannot attune %s to your%s body.", item_name.c_str(),
+         plural ? "themselves" : "itself",
+         you.hp < you.hp_max ? " injured" : " exhausted");
+
     you.activated.set(eq_slot, false);
     return;
 }
 
 bool acrobat_boost_active()
 {
-    return you.wearing(EQ_AMULET, AMU_ACROBAT)
+    return player_acrobatic()
            && you.duration[DUR_ACROBAT]
            && (!you.caught())
            && (!you.is_constricted());
-}
-
-static void _equip_amulet_of_mana_regeneration()
-{
-    if (!player_regenerates_mp())
-        mpr("The amulet feels cold and inert.");
-    else if (you.magic_points == you.max_magic_points)
-        you.props[MANA_REGEN_AMULET_ACTIVE] = 1;
-    else
-    {
-        mpr("The amulet cannot attune itself to your exhausted body.");
-        you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
-    }
 }
 
 static void _equip_amulet_of_reflection()
@@ -1178,11 +1205,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
             simple_god_message(ignore_reason.c_str());
-        else if (you_worship(GOD_YREDELEMNUL))
-        {
-            mprf(MSGCH_GOD, "The black torch glows! You feel the dead"
-                            " draw near.");
-        }
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
@@ -1192,18 +1214,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
         break;
 
-    case AMU_REGENERATION:
-        if (!unmeld)
-            _equip_regeneration_item(item);
-        break;
-
     case AMU_ACROBAT:
-        mpr("You feel ready to tumble and roll out of harm's way.");
-        break;
-
-    case AMU_MANA_REGENERATION:
-        if (!unmeld)
-            _equip_amulet_of_mana_regeneration();
+        if (you.has_mutation(MUT_TENGU_FLIGHT))
+            mpr("You feel no more acrobatic than usual.");
+        else
+            mpr("You feel ready to tumble and roll out of harm's way.");
         break;
 
     case AMU_REFLECTION:
@@ -1213,22 +1228,23 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
         break;
+
+    // Regeneration and Magic Regeneration amulets handled elsewhere.
     }
 
     if (artefact)
     {
         bool show_msgs = true;
-        _equip_artefact_effect(item, &show_msgs, unmeld, slot);
+        equip_artefact_effect(item, &show_msgs, unmeld, slot);
     }
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-static void _deactivate_regeneration_item(const item_def &item, bool meld)
+static void _deactivate_item(const item_def& item)
 {
-    if (!meld)
-        you.activated.set(get_item_slot(item), false);
+    you.activated.set(get_item_slot(item), false);
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
@@ -1250,7 +1266,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case AMU_REGENERATION:
-        _deactivate_regeneration_item(item, meld);
+        if (!meld)
+            _deactivate_item(item);
         break;
 
     case RING_SEE_INVISIBLE:
@@ -1308,31 +1325,30 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case AMU_MANA_REGENERATION:
         if (!meld)
-            you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
+            _deactivate_item(item);
         break;
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &mesg, meld, slot, false);
+        unequip_artefact_effect(item, &mesg, meld, slot, false);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
 }
 
-bool unwield_item(bool showMsgs)
+bool unwield_item(const item_def &item, bool showMsgs)
 {
-    if (!you.weapon())
+    if (is_weapon(item) && !safe_to_remove(item))
         return false;
 
-    item_def& item = *you.weapon();
-
-    const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
-
-    if (is_weapon && !safe_to_remove(item))
-        return false;
+    if (you.has_mutation(MUT_SLOW_WIELD))
+    {
+        start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY - 1, item,
+                                   you.weapon() == &item /*ew*/);
+        return true;
+    }
 
     unequip_item(EQ_WEAPON, showMsgs);
-
     you.wield_change     = true;
     quiver::set_needs_redraw();
 

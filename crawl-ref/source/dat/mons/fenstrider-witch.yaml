@@ -1,0 +1,20 @@
+name: "fenstrider witch"
+glyph: {char: "H", colour: lightmagenta}
+flags: [see_invis, speaks, warm_blood]
+resists: {poison: 1, neg: 1}
+will: 100
+attacks:
+ - {type: hit, damage: 25}
+ - {type: kick, damage: 25}
+hd: 16
+hp_10x: 666
+ac: 3
+ev: 15
+spells: fenstrider_witch
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 13
+uses: weapons_armour
+size: giant
+shape: humanoid

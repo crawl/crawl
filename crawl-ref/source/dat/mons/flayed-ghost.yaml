@@ -1,0 +1,17 @@
+name: "flayed ghost"
+glyph: {char: "W", colour: red}
+flags: [flies, speaks, insubstantial]
+genus: phantom
+holiness: [undead]
+will: 60
+attacks:
+ - {type: hit, damage: 30}
+hd: 11
+hp_10x: 605
+ac: 0
+ev: 14
+spells: flayed_ghost
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

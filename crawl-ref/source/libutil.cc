@@ -520,7 +520,7 @@ string unwrap_desc(string&& desc)
         string tag = desc.substr(1, pos - 1);
         desc.erase(0, pos + 1);
         if (tag == "nowrap")
-            return move(desc);
+            return std::move(desc);
         else if (desc.empty())
             return "";
     }

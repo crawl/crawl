@@ -1,0 +1,158 @@
+#pragma once
+
+#include "enum.h"
+#include "tag-version.h"
+
+/*
+ * This file is auto-generated. See util/mon-gen.py and dat/mons.
+ *
+ * !!! DO NOT EDIT! !!!
+ *
+ * (It'll just be blown away on the next compile.)
+ */
+
+static monsterentry mondata[] =
+{
+
+// Use this to replace removed monsters, to retain save compatibility.
+// Please put it in #if TAG_MAJOR_VERSION == X, so they will go away
+// after save compat is broken.
+#define AXED_MON(id, name) \
+{ \
+    id, 'X', LIGHTRED, "removed " name, \
+    M_NO_EXP_GAIN | M_CANT_SPAWN | M_UNFINISHED, \
+    MR_NO_FLAGS, \
+    10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, 0, \
+    { }, \
+    0, 0, \
+    0, 0, MST_NO_SPELLS, true, S_SILENT, \
+    I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY, \
+    MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC, \
+    {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR \
+},
+
+// Axed monsters.
+// AXED_MON(MONS_AXE_MURDERER, "Jason")
+#if TAG_MAJOR_VERSION == 34
+    AXED_MON(MONS_BUMBLEBEE, "bumblebee")
+    AXED_MON(MONS_WOOD_GOLEM, "wood golem")
+    AXED_MON(MONS_ANT_LARVA, "ant larva")
+    AXED_MON(MONS_LABORATORY_RAT, "laboratory rat")
+    AXED_MON(MONS_WAR_DOG, "war dog")
+    AXED_MON(MONS_SPIRIT, "spirit")
+    AXED_MON(MONS_PALADIN, "paladin")
+    AXED_MON(MONS_DEEP_ELF_SOLDIER, "deep elf soldier")
+    AXED_MON(MONS_PAN, "pan")
+    AXED_MON(MONS_LAMIA, "lamia")
+    AXED_MON(MONS_DEEP_DWARF_SCION, "deep dwarf scion")
+    AXED_MON(MONS_DEEP_DWARF_ARTIFICER, "deep dwarf artificer")
+    AXED_MON(MONS_DEEP_DWARF_NECROMANCER, "deep dwarf necromancer")
+    AXED_MON(MONS_CHAOS_BUTTERFLY, "chaos butterfly")
+    AXED_MON(MONS_POLYMOTH, "polymoth")
+    AXED_MON(MONS_MOTH_OF_SUPPRESSION, "moth of suppression")
+    AXED_MON(MONS_ROCK_WORM, "rock worm")
+    AXED_MON(MONS_FORMICID_DRONE, "formicid drone")
+    AXED_MON(MONS_SPIRIT_WOLF, "spirit wolf")
+    AXED_MON(MONS_LAVA_FISH, "lava fish")
+    AXED_MON(MONS_JELLYFISH, "jellyfish")
+    AXED_MON(MONS_GREY_RAT, "grey rat")
+    AXED_MON(MONS_SPINY_WORM, "spiny worm")
+    AXED_MON(MONS_ROCK_TROLL, "rock troll")
+    AXED_MON(MONS_MONSTROUS_ITEM_MIMIC, "monstrous item mimic")
+    AXED_MON(MONS_GIANT_AMOEBA, "giant amoeba")
+    AXED_MON(MONS_DEEP_DWARF_BERSERKER, "deep dwarf berserker")
+    AXED_MON(MONS_AGATE_SNAIL, "agate snail")
+    AXED_MON(MONS_GIANT_CENTIPEDE, "giant centipede")
+    AXED_MON(MONS_ANCIENT_BEAR, "ancient bear")
+    AXED_MON(MONS_ROTTING_DEVIL, "rotting devil")
+    AXED_MON(MONS_IGNIS, "ignis")
+    AXED_MON(MONS_RAKSHASA_FAKE, "rakshasa fake")
+    AXED_MON(MONS_MARA_FAKE, "mara fake")
+    // GNOME_NO_MORE
+    AXED_MON(MONS_GNOME, "gnome")
+    // GOLEM_NO_MORE
+    AXED_MON(MONS_CLAY_GOLEM, "clay golem")
+    AXED_MON(MONS_STONE_GOLEM, "stone golem")
+    AXED_MON(MONS_FORMICID_VENOM_MAGE, "formicid venom mage")
+    AXED_MON(MONS_SPRIGGAN_ASSASSIN, "spriggan assassin")
+    AXED_MON(MONS_VAPOUR, "vapour")
+    AXED_MON(MONS_THORN_LOTUS, "thorn lotus")
+    AXED_MON(MONS_GIANT_GOLDFISH, "giant goldfish")
+    AXED_MON(MONS_SILVER_STAR, "silver star")
+    AXED_MON(MONS_FLAMING_CORPSE, "flaming corpse")
+    AXED_MON(MONS_GRIZZLY_BEAR, "grizzly bear")
+    AXED_MON(MONS_SPRIGGAN_ENCHANTER, "spriggan enchanter")
+    AXED_MON(MONS_PHOENIX, "phoenix")
+    AXED_MON(MONS_SHEDU, "shedu")
+    AXED_MON(MONS_PLAGUE_SHAMBLER, "plague shambler")
+    AXED_MON(MONS_GIANT_SLUG, "giant slug")
+    AXED_MON(MONS_FIREFLY, "firefly")
+    AXED_MON(MONS_BROWN_OOZE, "brown ooze")
+    AXED_MON(MONS_PULSATING_LUMP, "pulsating lump")
+    AXED_MON(MONS_BIG_FISH, "big fish")
+    AXED_MON(MONS_LAVA_WORM, "lava worm")
+    AXED_MON(MONS_SHARK, "shark")
+    AXED_MON(MONS_INEPT_ITEM_MIMIC, "inept item mimic")
+    AXED_MON(MONS_ITEM_MIMIC, "item mimic")
+    AXED_MON(MONS_RAVENOUS_ITEM_MIMIC, "ravenous item mimic")
+    AXED_MON(MONS_INEPT_FEATURE_MIMIC, "inept feature mimic")
+    AXED_MON(MONS_FEATURE_MIMIC, "feature mimic")
+    AXED_MON(MONS_RAVENOUS_FEATURE_MIMIC, "ravenous feature mimic")
+    AXED_MON(MONS_MNOLEG_TENTACLE, "mnoleg tentacle")
+    AXED_MON(MONS_MNOLEG_TENTACLE_SEGMENT, "mnoleg tentacle segment")
+    AXED_MON(MONS_UNBORN, "unborn")
+    AXED_MON(MONS_GIANT_MITE, "giant mite")
+    AXED_MON(MONS_BABY_ALLIGATOR, "baby alligator")
+    AXED_MON(MONS_BORING_BEETLE, "boring beetle")
+    AXED_MON(MONS_CHIMERA, "chimera")
+    AXED_MON(MONS_RAVEN, "raven")
+    AXED_MON(MONS_SINGULARITY, "singularity")
+    AXED_MON(MONS_GRAND_AVATAR, "grand avatar")
+    AXED_MON(MONS_SALAMANDER_FIREBRAND, "salamander firebrand")
+    AXED_MON(MONS_OCTOPODE_CRUSHER, "octopode crusher")
+    AXED_MON(MONS_BLUE_DEVIL, "blue devil")
+    AXED_MON(MONS_DEEP_ELF_SUMMONER, "deep elf summoner")
+    AXED_MON(MONS_DEEP_ELF_CONJURER, "deep elf conjurer")
+    AXED_MON(MONS_DEEP_ELF_PRIEST, "deep elf priest")
+    AXED_MON(MONS_DEEP_ELF_FIGHTER, "deep elf fighter")
+    AXED_MON(MONS_TRAPDOOR_SPIDER, "trapdoor spider")
+    AXED_MON(MONS_SALAMANDER_STORMCALLER, "salamander stormcaller")
+    AXED_MON(MONS_MAUD, "maud")
+    AXED_MON(MONS_WIGLAF, "wiglaf")
+    AXED_MON(MONS_SHEEP, "sheep")
+    AXED_MON(MONS_ANUBIS_GUARD, "anubis guard")
+    AXED_MON(MONS_GRIFFON, "griffon")
+    AXED_MON(MONS_BEETLE, "beetle")
+    AXED_MON(MONS_PUTRID_DEMONSPAWN, "putrid demonspawn")
+    AXED_MON(MONS_CHAOS_CHAMPION, "chaos champion")
+    AXED_MON(MONS_WASP, "wasp")
+    AXED_MON(MONS_MOTTLED_DRACONIAN, "mottled draconian")
+    AXED_MON(MONS_DRACONIAN_ZEALOT, "draconian zealot")
+    AXED_MON(MONS_HILL_GIANT, "hill giant")
+    AXED_MON(MONS_BULTUNGIN, "bultungin")
+    AXED_MON(MONS_HYPERACTIVE_BALLISTOMYCETE, "hyperactive ballistomycete")
+    AXED_MON(MONS_HOMUNCULUS, "homunculus")
+    AXED_MON(MONS_SOUPLING, "soupling")
+    AXED_MON(MONS_BLESSED_TOE, "blessed toe")
+    AXED_MON(MONS_LAVA_ORC, "lava orc")
+    AXED_MON(MONS_MONSTROUS_FEATURE_MIMIC, "monstrous feature mimic")
+    AXED_MON(MONS_SLAVE, "slave")
+    AXED_MON(MONS_HUNGRY_GHOST, "hungry ghost")
+    AXED_MON(MONS_HIPPOGRIFF, "hippogriff")
+    AXED_MON(MONS_PORCUPINE, "porcupine")
+    AXED_MON(MONS_CRAWLING_CORPSE, "crawling corpse")
+    AXED_MON(MONS_MACABRE_MASS, "macabre mass")
+    AXED_MON(MONS_EYE_OF_DRAINING, "eye of draining")
+    AXED_MON(MONS_DEATH_OOZE, "death ooze")
+    AXED_MON(MONS_LEOPARD_GECKO, "leopard gecko")
+    AXED_MON(MONS_WORKER_ANT, "worker ant")
+    AXED_MON(MONS_QUEEN_ANT, "queen ant")
+    AXED_MON(MONS_SOLDIER_ANT, "soldier ant")
+    AXED_MON(MONS_IRONBOUND_BEASTMASTER, "ironbound beastmaster")
+    AXED_MON(MONS_MONSTROUS_DEMONSPAWN, "monstrous demonspawn")
+    AXED_MON(MONS_GELID_DEMONSPAWN, "gelid demonspawn")
+    AXED_MON(MONS_INFERNAL_DEMONSPAWN, "infernal demonspawn")
+    AXED_MON(MONS_TORTUROUS_DEMONSPAWN, "torturous demonspawn")
+#endif
+
+// Real monsters begin here {dlb}:

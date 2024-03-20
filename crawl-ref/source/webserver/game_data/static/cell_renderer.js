@@ -803,6 +803,10 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(dngn.SANCTUARY, x, y);
+                    if (cell.blasphemy)
+                        this.draw_dngn(dngn.BLASPHEMY, x, y);
+                    if (cell.has_bfb_corpse)
+                        this.draw_dngn(dngn.BLOOD_FOR_BLOOD, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
@@ -1065,10 +1069,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 //These icons are in the lower right, so status_shift doesn't need changing.
                 case icons.BERSERK:
                 case icons.IDEALISED:
+                case icons.TOUCH_OF_BEOGH:
                 // Anim. weap. and summoned might overlap, but that's okay
                 case icons.SUMMONED:
                 case icons.PERM_SUMMON:
                 case icons.ANIMATED_WEAPON:
+                case icons.VENGEANCE_TARGET:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:
@@ -1086,6 +1092,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.POSSESSABLE:
                 case icons.PARTIALLY_CHARGED:
                 case icons.FULLY_CHARGED:
+                case icons.VITRIFIED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
@@ -1098,7 +1105,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.ANGUISH:
                 case icons.FIRE_VULN:
                 case icons.RESISTANCE:
-                case icons.SIMULACRUM:
+                case icons.GHOSTLY:
                 case icons.MALMUTATED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 8;
@@ -1116,6 +1123,10 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.INJURY_BOND:
                 case icons.GLOW_LIGHT:
                 case icons.GLOW_HEAVY:
+                case icons.BULLSEYE:
+                case icons.CURSE_OF_AGONY:
+                case icons.REGENERATION:
+                case icons.RETREAT:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

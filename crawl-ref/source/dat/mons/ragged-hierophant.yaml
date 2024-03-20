@@ -1,0 +1,19 @@
+name: "ragged hierophant"
+glyph: {char: "a", colour: lightmagenta}
+flags: [speaks, warm_blood]
+xp_mult: 15
+species: human
+will: 40
+attacks:
+ - {type: hit, damage: 12}
+hd: 9
+hp_10x: 1200
+ac: 0
+ev: 10
+spells: ragged_hierophant
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

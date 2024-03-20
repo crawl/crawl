@@ -620,14 +620,12 @@ static bool _boosted_mp()
 
 static bool _boosted_ac()
 {
-    return you.armour_class() > you.base_ac(1);
+    return you.armour_class_scaled(100) > you.base_ac(100);
 }
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY]
-           || you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
-           || acrobat_boost_active();
+    return you.evasion_scaled(100) > you.evasion_scaled(100, true);
 }
 
 static bool _boosted_sh()
@@ -706,11 +704,11 @@ static int _count_digits(int val)
 
 static const equipment_type e_order[] =
 {
-    EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
+    EQ_WEAPON, EQ_OFFHAND, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
     EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-    EQ_RING_AMULET,
+    EQ_RING_AMULET, EQ_GIZMO
 };
 
 static void _print_stats_equip(int x, int y)
@@ -1033,7 +1031,7 @@ static void _print_stats_ac(int x, int y)
     else if (you.corrosion_amount())
         text_col = RED;
 
-    string ac = make_stringf("%2d ", you.armour_class());
+    string ac = make_stringf("%2d ", you.armour_class_scaled(1));
 #ifdef WIZARD
     if (you.wizard && !_is_using_small_layout())
         ac += make_stringf("(%d%%) ", you.gdr_perc());
@@ -1060,38 +1058,68 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolour(you.duration[DUR_PETRIFYING]
-               || you.cannot_act() ? RED
-                                   : _boosted_ev() ? LIGHTBLUE
-                                                    : HUD_VALUE_COLOUR);
-    CPRINTF("%2d ", you.evasion());
+
+    // Color EV based on whether temporary effects are raising or lowering it
+    const int bonus = you.evasion_scaled(100) - you.evasion_scaled(100, true);
+    textcolour(bonus < 0 ? RED
+                         : bonus > 0 ? LIGHTBLUE
+                                     : HUD_VALUE_COLOUR);
+    CPRINTF("%2d ", you.evasion_scaled(1));
 
     you.redraw_evasion = false;
 }
 
 /**
- * Get the appropriate colour for the UI text describing the player's weapon.
- * (Or hands/ice fists/etc, as appropriate.)
+ * Get the appropriate colour for the UI text describing the given weapon.
  *
- * @return     A colour enum for the player's weapon.
+ * @return     A colour enum for the given weapon.
  */
-static int _wpn_name_colour()
+static int _wpn_name_colour(const item_def &wpn)
 {
     if (you.corrosion_amount())
         return RED;
 
-    if (you.weapon())
-    {
-        const item_def& wpn = *you.weapon();
+    const string prefix = item_prefix(wpn);
+    const int prefcol = menu_colour(wpn.name(DESC_INVENTORY),
+                                    prefix, "stats", false);
+    if (prefcol != -1)
+        return prefcol;
+    return LIGHTGREY;
+}
 
-        const string prefix = item_prefix(wpn);
-        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats", false);
-        if (prefcol != -1)
-            return prefcol;
-        return LIGHTGREY;
-    }
+static string _wpn_name_corroded(const item_def &weapon)
+{
+    if (!you.corrosion_amount() || weapon.base_type != OBJ_WEAPONS)
+        return weapon.name(DESC_PLAIN, true);
 
-    return get_form()->uc_colour;
+    item_def wpn_copy = weapon;
+    wpn_copy.plus -= you.corrosion_amount();
+    return wpn_copy.name(DESC_PLAIN, true);
+}
+
+static void _print_unarmed_name()
+{
+    textcolour(HUD_CAPTION_COLOUR);
+    const string slot_name = "-) ";
+    CPRINTF("%s", slot_name.c_str());
+    textcolour(you.corrosion_amount() ? RED : get_form()->uc_colour);
+    const int max_name_width = crawl_view.hudsz.x - slot_name.size();
+    CPRINTF("%s", chop_string(you.unarmed_attack_name(),
+                              max_name_width).c_str());
+    textcolour(LIGHTGREY);
+}
+
+static void _print_weapon_name(const item_def &weapon, int width)
+{
+    textcolour(HUD_CAPTION_COLOUR);
+    const char slot_letter = index_to_letter(weapon.link);
+    const string slot_name = make_stringf("%c) ", slot_letter);
+    CPRINTF("%s", slot_name.c_str());
+    textcolour(_wpn_name_colour(weapon));
+    const int max_name_width = width - slot_name.size();
+    const string name = _wpn_name_corroded(weapon);
+    CPRINTF("%s", chop_string(name, max_name_width).c_str());
+    textcolour(LIGHTGREY);
 }
 
 /**
@@ -1101,7 +1129,6 @@ static int _wpn_name_colour()
  */
 static void _print_stats_wp(int y)
 {
-    string text;
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
     {
@@ -1110,27 +1137,18 @@ static void _print_stats_wp(int y)
 
     CGOTOXY(1, y, GOTO_STAT);
 
-    if (you.weapon())
+    const item_def *weapon = you.weapon();
+    const item_def *offhand = you.offhand_weapon();
+    if (weapon && offhand)
     {
-        item_def wpn = *you.weapon(); // copy
-
-        if (you.corrosion_amount() && wpn.base_type == OBJ_WEAPONS)
-            wpn.plus -= 4 * you.corrosion_amount();
-
-        text = wpn.name(DESC_PLAIN, true, false, true);
+        _print_weapon_name(*weapon, crawl_view.hudsz.x/2-1);
+        CPRINTF("  ");
+        _print_weapon_name(*offhand, crawl_view.hudsz.x/2-1);
     }
+    else if (weapon || offhand)
+        _print_weapon_name(weapon ? *weapon : *offhand, crawl_view.hudsz.x);
     else
-        text = you.unarmed_attack_name();
-
-    textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
-                                          : '-';
-    const string slot_name = make_stringf("%c) ", slot_letter);
-    CPRINTF("%s", slot_name.c_str());
-    textcolour(_wpn_name_colour());
-    const int max_name_width = crawl_view.hudsz.x - slot_name.size();
-    CPRINTF("%s", chop_string(text, max_name_width).c_str());
-    textcolour(LIGHTGREY);
+        _print_unarmed_name();
 
     you.wield_change  = false;
 }
@@ -1379,7 +1397,7 @@ static void _redraw_title()
     // Minotaur [of God] [Piety]
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
-    string species = species::name(you.species);
+    string species = player_species_name();
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
@@ -1924,53 +1942,13 @@ int update_monster_pane()
 }
 #endif
 
-// Converts a numeric resistance to its symbolic counterpart.
-// Can handle any maximum level. The default is for single level resistances
-// (the most common case). Negative resistances are allowed.
-// Resistances with a maximum of up to 4 are spaced (arbitrary choice), and
-// starting at 5 levels, they are continuous.
-// params:
-//  level : actual resistance level
-//  max : maximum number of levels of the resistance
-//  immune : overwrites normal pip display for full immunity
-static string _itosym(int level, int max = 1, bool immune = false)
-{
-    if (max < 1)
-        return "";
-
-    if (immune)
-        return Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
-
-    string sym;
-    bool spacing = (max >= 5) ? false : true;
-
-    while (max > 0)
-    {
-        if (level == 0)
-            sym += ".";
-        else if (level > 0)
-        {
-            sym += "+";
-            --level;
-        }
-        else // negative resistance
-        {
-            sym += "x";
-            ++level;
-        }
-        sym += (spacing) ? " " : "";
-        --max;
-    }
-    return sym;
-}
-
 static const char *s_equip_slot_names[] =
 {
     "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
     "Shield", "Body Armour", "Left Ring", "Right Ring", "Amulet",
     "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
     "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
-    "Amulet Ring"
+    "Amulet Ring", "Gizmo", "Preview Ring"
 };
 
 const char *equip_slot_to_name(int equip)
@@ -2087,6 +2065,9 @@ static void _print_overview_screen_equip(column_composer& cols,
         }
 
         if (eqslot == EQ_RING_AMULET && bool(!you_can_wear(eqslot)))
+            continue;
+
+        if (eqslot == EQ_GIZMO && bool(!you_can_wear(eqslot)))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
@@ -2351,7 +2332,7 @@ static vector<formatted_string> _get_overview_stats()
     else
         entry.textcolour(HUD_VALUE_COLOUR);
 
-    entry.cprintf("%2d", you.armour_class());
+    entry.cprintf("%2d", you.armour_class_scaled(1));
 
     cols.add_formatted(1, entry.to_colour_string(), false);
     entry.clear();
@@ -2364,7 +2345,7 @@ static vector<formatted_string> _get_overview_stats()
     else
         entry.textcolour(HUD_VALUE_COLOUR);
 
-    entry.cprintf("%2d", you.evasion());
+    entry.cprintf("%2d", you.evasion_scaled(1));
 
     cols.add_formatted(1, entry.to_colour_string(), false);
     entry.clear();
@@ -2502,7 +2483,7 @@ static string _resist_composer(const char * name, int spacing, int value,
     string out;
     out += _determine_colour_string(pos_resist ? value : -value, max, immune);
     out += chop_string(name, spacing);
-    out += _itosym(value, max, immune);
+    out += desc_resist(value, max, immune);
 
     return out;
 }
@@ -2702,7 +2683,7 @@ static string _extra_passive_effects()
     if (you.reflection())
         passives.emplace_back("reflection");
 
-    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
+    if (player_acrobatic())
         passives.emplace_back("acrobat");
 
     if (you.clarity())

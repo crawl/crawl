@@ -4,7 +4,7 @@ function callback.grunt_ashenzari_visionary_reveal(data,triggerable,triggerer,ma
         return
     end
     data.trig = true
-    crawl.god_speaks("Ashenzari", "Ashenzari says, \"See what I see, mortal...\"")
+    crawl.god_speaks("Ashenzari", "Ashenzari says: See what I see, mortal...")
     for replica in iter.replica_iterator("revealing_wall", 1) do
         dgn.terrain_changed(replica.x, replica.y, "clear_stone_wall", false)
     end
@@ -28,6 +28,7 @@ end
 
 NAME:     grunt_ashenzari_visionary
 TAGS:     temple_overflow_1 temple_overflow_ashenzari no_trap_gen no_monster_gen
+TAGS:     no_descent
 WEIGHT:   5
 SHUFFLE:  ef
 # The branches should be in reverse order here so we don't select the

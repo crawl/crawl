@@ -64,8 +64,8 @@ enum monster_info_flags
 #endif
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
-    MB_SUBMERGED,
 #if TAG_MAJOR_VERSION == 34
+    MB_SUBMERGED,
     MB_BLEEDING,
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -193,7 +193,7 @@ enum monster_info_flags
     MB_CLOUD_RING_MUTATION,
     MB_CLOUD_RING_FOG,
     MB_CLOUD_RING_ICE,
-    MB_CLOUD_RING_DRAINING,
+    MB_CLOUD_RING_MISERY,
     MB_CLOUD_RING_ACID,
     MB_CLOUD_RING_MIASMA,
     MB_WITHERING,
@@ -216,7 +216,17 @@ enum monster_info_flags
     MB_TELEPORTING,
     MB_CONTAM_LIGHT,
     MB_CONTAM_HEAVY,
+#if TAG_MAJOR_VERSION == 34
     MB_PURSUING,
+#endif
+    MB_BOUND,
+    MB_BULLSEYE_TARGET,
+    MB_VITRIFIED,
+    MB_CURSE_OF_AGONY,
+    MB_RETREATING,
+    MB_TOUCH_OF_BEOGH,
+    MB_AWAITING_RECRUITMENT,
+    MB_VENGEANCE_TARGET,
     NUM_MB_FLAGS
 };
 
@@ -250,6 +260,7 @@ struct monster_info_base
     int ac;
     int ev;
     int base_ev;
+    int sh;
     int mr;
     resists_t mresists;
     bool can_see_invis;
@@ -338,6 +349,7 @@ struct monster_info : public monster_info_base
         return get_damage_level_string(holi, dam);
     }
     string get_max_hp_desc() const;
+    int regen_rate(int scale) const;
 
     inline bool neutral() const
     {

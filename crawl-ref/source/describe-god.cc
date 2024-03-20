@@ -59,7 +59,8 @@ static int _gold_level()
            (you.gold >=  5000) ? 5 :
            (you.gold >=  1000) ? 4 :
            (you.gold >=   500) ? 3 :
-           (you.gold >=   100) ? 2
+           (you.gold >=   100) ? 2 :
+           (you.props.exists(DESCENT_DEBT_KEY)) ? 0
                                : 1;
 }
 
@@ -146,9 +147,9 @@ static const char *divine_title[][8] =
     {"Tormented",          "Purveyor of Pain",      "Scholar of Death",         "Merchant of Misery",
         "Artisan of Death",   "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
-    // Yredelemnul -- zombie death.
-    {"Traitor",            "Tainted",                "Torchbearer",             "Fey @Genus@",
-        "Black Crusader",     "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
+    // Yredelemnul
+    {"Traitor",            "Torchbearer",            "Despoiler",               "Black Crusader",
+     "Fallen @Genus@",     "Harbinger of Doom",      "Inexorable Tide",         "Bringer of Blasphemy"},
 
     // Xom.
     {"Toy",                "Toy",                   "Toy",                      "Toy",
@@ -187,8 +188,8 @@ static const char *divine_title[][8] =
         "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
     // Beogh -- messiah theme.
-    {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
-        "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
+    {"Apostate",           "Convert",               "Proselytiser",             "Priest",
+        "Missionary",         "Evangelist",            "Unifier",                  "Messiah"},
 
     // Jiyva -- slime and jelly theme.
     {"Scum",               "Squelcher",             "Ooze",                     "Jelly",
@@ -233,7 +234,7 @@ static const char *divine_title[][8] =
         "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
 
     // Hepliaklqana -- memory/ancestry theme
-    {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+    {"Damnatio Memoriae",       "Hazy",             "@Adj@ @Child@",              "Storyteller",
         "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 
     // Wu Jian -- animal/chinese martial arts monk theme
@@ -251,7 +252,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
+    else if (which_god == GOD_USKAYAW)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
@@ -264,6 +265,8 @@ string god_title(god_type which_god, species_type which_species, int piety)
         { "Genus", species::name(which_species, species::SPNAME_GENUS) },
         { "Walking", species::walking_title(which_species) + "ing" },
         { "Walker", species::walking_title(which_species) + "er" },
+        { "Child", species::child_name(which_species) },
+        { "Orc", species::orc_name(which_species) },
     };
 
     return replace_keys(title, replacements);
@@ -531,60 +534,14 @@ static formatted_string _beogh_extra_description()
 {
     formatted_string desc;
 
-    _add_par(desc, "Named Followers:");
+    for (int i = 1; i <= get_num_apostles(); ++i)
+        _add_par(desc, apostle_short_description(i));
 
-    vector<monster*> followers;
-
-    for (monster_iterator mi; mi; ++mi)
-        if (is_orcish_follower(**mi))
-            followers.push_back(*mi);
-    for (auto &entry : companion_list)
-        // if not elsewhere, follower already seen by monster_iterator
-        if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
-            followers.push_back(&entry.second.mons.mons);
-
-    sort(followers.begin(), followers.end(),
-        [] (monster* a, monster* b) { return a->experience > b->experience;});
-
-    bool has_named_followers = false;
-    for (auto mons : followers)
+    if (you.duration[DUR_BEOGH_CAN_RECRUIT])
     {
-        if (!mons->is_named())
-            continue;
-        has_named_followers = true;
-
-        desc += mons->full_name(DESC_PLAIN);
-        if (companion_is_elsewhere(mons->mid))
-        {
-            desc += formatted_string::parse_string(
-                            " (<blue>on another level</blue>)");
-        }
-        else if (given_gift(mons))
-        {
-            mon_inv_type slot =
-                mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
-                mons->props.exists(BEOGH_ARM_GIFT_KEY) ? MSLOT_ARMOUR :
-                mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
-                MSLOT_WEAPON;
-
-            // An orc can still lose its gift, e.g. by being turned into a
-            // shapeshifter via a chaos cloud. TODO: should the gift prop be
-            // deleted at that point?
-            if (mons->inv[slot] != NON_ITEM)
-            {
-                desc.cprintf(" (");
-
-                item_def &gift = env.item[mons->inv[slot]];
-                desc += formatted_string::parse_string(
-                                    menu_colour_item_name(gift,DESC_PLAIN));
-                desc.cprintf(")");
-            }
-        }
-        desc.cprintf("\n");
+        _add_par(desc, "-----------------------------------\n");
+        _add_par(desc, apostle_short_description(0));
     }
-
-    if (!has_named_followers)
-        _add_par(desc, "None");
 
     return desc;
 }
@@ -807,6 +764,18 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     switch (which_god)
     {
+    case GOD_BEOGH:
+    {
+        if (piety >= piety_breakpoint(5))
+            desc.cprintf("Orcs frequently recognize you as Beogh's chosen one.\n");
+        else if (piety >= piety_breakpoint(1))
+            desc.cprintf("Orcs sometimes recognize you as one of their own.\n");
+
+        if (piety >= piety_breakpoint(2))
+            desc.cprintf("Your orcish followers are sometimes invigorated when you deal damage.\n");
+    }
+    break;
+
     case GOD_ZIN:
     {
         have_any = true;
@@ -908,6 +877,11 @@ static formatted_string _describe_god_powers(god_type which_god)
         }
         break;
 
+    case GOD_YREDELEMNUL:
+        desc.cprintf("You are surrounded by an umbra.\n"
+                     "Foes that die within your umbra may be raised as undead servants.\n");
+        break;
+
     case GOD_DITHMENOS:
     {
         have_any = true;
@@ -991,6 +965,14 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(DARKGREY);
 
         string buf = power.general;
+
+        // Skip listing powers with no description (they are intended to be hidden)
+        if (buf.length() == 0)
+        {
+            have_any = false;
+            continue;
+        }
+
         if (!isupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
         const int desc_len = buf.size();
@@ -1060,16 +1042,16 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     auto icon = make_shared<Image>();
     const tileidx_t idx = tileidx_feature_base(altar_for_god(which_god));
     icon->set_tile(tile_def(idx));
-    title_hbox->add_child(move(icon));
+    title_hbox->add_child(std::move(icon));
 #endif
 
     auto title = make_shared<Text>(topline.trim());
     title->set_margin_for_sdl(0, 0, 0, 16);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_main_alignment(Widget::CENTER);
     title_hbox->set_cross_alignment(Widget::CENTER);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
 
     desc_sw = make_shared<Switcher>();
     more_sw = make_shared<Switcher>();
@@ -1110,7 +1092,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
         auto text = make_shared<Text>(desc.trim());
         text->set_wrap_text(true);
         scroller->set_child(text);
-        desc_sw->add_child(move(scroller));
+        desc_sw->add_child(std::move(scroller));
 
         more_sw->add_child(make_shared<Text>(
                 formatted_string::parse_string(mores[mores_index][i])));
@@ -1210,6 +1192,8 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
+        if (desc_sw->current_widget()->on_event(ev))
+            return true;
         return done = ui::key_exits_popup(key, false);
     });
 

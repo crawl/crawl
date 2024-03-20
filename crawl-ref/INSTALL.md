@@ -584,11 +584,11 @@ font](http://www.yohng.com/software/terminalvector.html)
 
 ## Troubleshooting
 
-When compiling, you may run into the following errors: 
+When compiling, you may run into the following errors:
 
     cat: util/release_ver: No such file or directory
-    
-    Can't get version information: `git describe` failed (no git, 
+
+    Can't get version information: `git describe` failed (no git,
     no repository, or shallow clone), and util/release_ver doesn't exist.
 
 To solve this, run:
