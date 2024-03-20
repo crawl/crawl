@@ -124,7 +124,9 @@ opacity_type opacity_shoot_through::operator()(const coord_def& p) const
 {
     if (feat_is_solid(env.grid(p))
         || monster_at(p) && !shoot_through_monster(&you, monster_at(p)))
+    {
         return OPC_OPAQUE;
+    }
 
     return OPC_CLEAR;
 }
