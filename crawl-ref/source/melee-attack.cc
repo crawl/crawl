@@ -3472,7 +3472,7 @@ void melee_attack::do_passive_freeze()
         monster* mon = attacker->as_monster();
 
         const int orig_hurted = random2(11);
-        int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
+        const int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
 
         if (!hurted)
             return;
