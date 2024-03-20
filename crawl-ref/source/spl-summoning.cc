@@ -168,10 +168,11 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
     fail_check();
 
+    constexpr int abj_dur = 5;
     // Summon our dog if one isn't already active
     if (!old_dog)
     {
-        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
+        mgen_data mg = _pal_data(MONS_INUGAMI, abj_dur, god, SPELL_CALL_CANINE_FAMILIAR);
 
         monster* dog = create_monster(mg);
         if (!dog)
@@ -201,6 +202,11 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
         old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
         old_dog->lose_ench_levels(ENCH_POISON, 1);
         old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+
+        // Reset duration so the dog doesn't disappear immediately after
+        mon_enchant en = old_dog->get_ench(ENCH_ABJ);
+        en.degree = abj_dur;
+        en.duration = en.calc_duration(old_dog, &en);
     }
 
     return spret::success;

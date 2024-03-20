@@ -55,10 +55,9 @@ public:
 
     mon_enchant &operator += (const mon_enchant &other);
     mon_enchant operator + (const mon_enchant &other) const;
-
+    int calc_duration(const monster* mons, const mon_enchant *added) const;
 private:
     int modded_speed(const monster* mons, int hdplus) const;
-    int calc_duration(const monster* mons, const mon_enchant *added) const;
 };
 
 enchant_type name_to_ench(const char *name);
