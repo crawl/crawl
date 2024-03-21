@@ -48,15 +48,15 @@ mutations:
     MUT_ARTEFACT_ENCHANTING: 1
     MUT_RUNIC_MAGIC: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_MONK
-  - JOB_BERSERKER
-  - JOB_CINDER_ACOLYTE
-  - JOB_REAVER
-  - JOB_FIRE_ELEMENTALIST
+  - fighter
+  - monk
+  - berserker
+  - cinder acolyte
+  - reaver
+  - fire elementalist
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_POLEARMS
+  - maces and flails
+  - axes
+  - polearms
 
 orc_name: Mountain Orc

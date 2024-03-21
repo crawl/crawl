@@ -1,0 +1,23 @@
+enum: JOB_HUNTER
+name: "Hunter"
+category: Warrior
+category_priority: 70
+str: 3
+int: 1
+dex: 8
+equipment:
+  - "shortbow"
+  - "leather armour"
+  - "scroll of butterflies no_exclude"
+recommended_species:
+  - minotaur
+  - gnoll
+  - barachi
+  - kobold
+  - spriggan
+skills:
+  fighting: 2
+  dodging: 2
+  stealth: 1
+  weapon: 4
+create_enum: false

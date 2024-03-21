@@ -12,6 +12,7 @@
 #include "spl-book.h"
 #include "stringutil.h"
 
+#include "job-def.h"
 #include "job-data.h"
 
 static const job_def& _job_def(job_type job)
@@ -80,12 +81,12 @@ void job_stat_init(job_type job)
 
 bool job_has_weapon_choice(job_type job)
 {
-    return _job_def(job).wchoice != WCHOICE_NONE;
+    return _job_def(job).wchoice != weapon_choice::none;
 }
 
 bool job_gets_good_weapons(job_type job)
 {
-    return _job_def(job).wchoice == WCHOICE_GOOD;
+    return _job_def(job).wchoice == weapon_choice::good;
 }
 
 void give_job_equipment(job_type job)

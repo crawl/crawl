@@ -1,0 +1,29 @@
+enum: JOB_ICE_ELEMENTALIST
+name: "Ice Elementalist"
+short_name: IE
+category: Mage
+category_priority: 50
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_FREEZE
+  - SPELL_FROZEN_RAMPARTS
+  - SPELL_OZOCUBUS_ARMOUR
+  - SPELL_SUMMON_ICE_BEAST
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - merfolk
+  - barachi
+  - draconian
+  - demigod
+  - gargoyle
+  - djinni
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  ice magic: 4
+create_enum: false

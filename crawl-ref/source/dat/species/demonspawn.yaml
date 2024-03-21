@@ -36,12 +36,12 @@ int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_BERSERKER
-  - JOB_HEDGE_WIZARD
-  - JOB_NECROMANCER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - gladiator
+  - berserker
+  - hedge wizard
+  - necromancer
+  - fire elementalist
+  - ice elementalist
+  - alchemist
 
 orc_name: Demon Orc

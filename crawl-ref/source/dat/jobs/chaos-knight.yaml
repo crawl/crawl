@@ -1,0 +1,26 @@
+enum: JOB_CHAOS_KNIGHT
+name: "Chaos Knight"
+short_name: CK
+category: Zealot
+category_priority: 80
+str: 4
+int: 4
+dex: 4
+equipment:
+  - "leather armour plus:2"
+  - "scroll of butterflies no_exclude"
+weapon_choice: plain
+recommended_species:
+  - spriggan
+  - troll
+  - gnoll
+  - merfolk
+  - minotaur
+  - draconian
+  - demonspawn
+skills:
+  fighting: 3
+  dodging: 1
+  armour: 1
+  weapon: 3
+create_enum: false
