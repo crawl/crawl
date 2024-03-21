@@ -1811,8 +1811,8 @@ endif
 icon.o: util/crawl.rc dat/tiles/stone_soup_icon.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
-config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
+config.h: util/configure.py .cflags
+	$(QUIET_PYTHON)$(PYTHON) util/configure.py "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
 # Header build tests.

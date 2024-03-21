@@ -247,7 +247,7 @@ int fdatasync(int fd)
 
 // The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
-#ifdef NEED_USLEEP
+#ifndef CRAWL_HAVE_USLEEP
 
 # ifdef TARGET_OS_WINDOWS
 void usleep(unsigned long time)
