@@ -2477,6 +2477,14 @@ static string _describe_talisman_form(const item_def &item, bool monster)
                                     form->slay_bonus(false, true));
     if (form_type == transformation::statue)
         description += "\nMelee damage:  +50%";
+    if (form_type == transformation::spellforged)
+    {
+        const int infuse_mult = form->infuse_boost(false, false);
+        const int infuse_max = form->infuse_boost(false, true);
+        description += make_stringf("\nDamage per mana:  %d", infuse_mult).c_str();
+        if (infuse_mult != infuse_max)
+            description += make_stringf(" (max %d)", infuse_max);
+    }
     if (form_type == transformation::flux)
     {
         description += "\nMelee damage:  -33%";

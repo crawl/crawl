@@ -644,9 +644,9 @@ public:
     }
 
     //TODO: properly describe infuse power
-    int infuse_boost() const
+    int infuse_boost(bool random, bool max) const
     {
-        return divided_scaling(FormScaling().Base(8).Scaling(12), true, false, 100);
+        return divided_scaling(FormScaling().Base(8).Scaling(12), random, max, 100);
     }
 };
 
