@@ -3297,10 +3297,10 @@ void _walk_on_decor(dungeon_feature_type new_grid)
 
     if (messageLookup != "" && one_chance_in(3))
     {
-        if (you.form == transformation::none)
+        decorLine = getMiscString(get_form(you.form)->wiz_name + " " + messageLookup);
+
+        if (decorLine == "")
             decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
-        else
-            decorLine = getMiscString(get_form(you.form)->wiz_name + " " + messageLookup);
 
         if (decorLine == "")
             decorLine = getMiscString(messageLookup);
