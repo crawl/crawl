@@ -240,6 +240,8 @@ bool melee_attack::handle_phase_attempted()
         to_hit = AUTOMATIC_HIT;
         needs_message = false;
     }
+    else if (is_projected)
+        to_hit = AUTOMATIC_HIT;
     else if (attacker->is_monster()
              && attacker->type == MONS_DROWNED_SOUL)
     {

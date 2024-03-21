@@ -941,11 +941,13 @@ Manifold Assault spell
 
 Warps space into paradoxical configurations to strike many visible foes with
 one melee attack. Power increases the number of foes attacked with one cast,
-but very high power is required to launch multiple unarmed attacks in this
-fashion, since great care must be taken when warping one's own limbs.
+though unarmed attacks strike only half as many targets at once, as additional
+care must be taken when warping one's own limbs.
 
 The time taken for the attack is exactly the same as a normal melee attack.
-It's imprecise, so it can't do extra damage against unsuspecting foes.
+Attacks performed this way never miss, but the exactly spot struck cannot be
+controlled precisely, making them unable to do extra damage against unsuspecting
+foes.
 %%%%
 Mara Summon spell
 
