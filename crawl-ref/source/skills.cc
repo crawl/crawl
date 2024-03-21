@@ -26,7 +26,6 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
-#include "misc.h" // now_is_morning
 #include "notes.h"
 #include "output.h"
 #include "random.h"
