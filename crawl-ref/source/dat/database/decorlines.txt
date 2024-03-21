@@ -203,3 +203,13 @@ You briefly stare at the fruit pile and sigh.
 bat fruit cache
 
 You slurp up @_fruit_and_reaction_@
+
+%%%%
+maw fruit cache
+
+You devour half the fruit pile! It's not enough.
+
+%%%%
+maw meat cache
+
+You devour half the meat pile! It's not enough.
