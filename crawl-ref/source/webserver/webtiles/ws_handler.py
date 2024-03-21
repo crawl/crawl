@@ -708,7 +708,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.process.stop()
         elif self.is_in_lobby():
             if not self.lobby_timeout:
-                reset_lobby_timeout()
+                self.reset_lobby_timeout()
         # XX none of these covers watchers
 
         if not self.client_closed:
