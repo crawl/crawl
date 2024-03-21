@@ -197,7 +197,7 @@ You briefly stare at the fruit pile and sigh.
 %%%%
 death meat cache
 
-You briefly stare at the fruit pile and sigh.
+You briefly stare at the meat pile and sigh.
 
 %%%%
 bat fruit cache
