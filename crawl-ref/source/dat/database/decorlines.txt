@@ -87,7 +87,35 @@ shrike confit. Tangy!
 
 w:2
 century hydra egg. An acquired taste.
+########################## Shared diets ######################################
+%%%%
+carnivore fruit cache
+
+You peruse the fruit pile and shrug.
+%%%%
+short fruit cache
+
+You root around and sample @_fruit_and_reaction_@
+%%%%
+short meat cache
+
+You root around and sample @_meat_and_reaction_@
+%%%%
+inediate fruit cache
+
+You briefly stare at the fruit pile and sigh.
+%%%%
+inediate meat cache
+
+You briefly stare at the meat pile and sigh.
 ########################## Species diets ######################################
+%%%%
+draconian fruit cache
+
+You reach down and sample @_fruit_and_reaction_@
+
+w:1
+You reach down and sample a dragonfruit. You feel vaguely uncomfortable.
 %%%%
 felid fruit cache
 
@@ -102,40 +130,33 @@ felid meat cache
 
 You nibble upon some @_meat_and_reaction_@
 %%%%
-kobold fruit cache
-
-You peruse the fruit pile and shrug.
-%%%%
 ghoul fruit cache
 
-@kobold fruit cache@
+@carnivore fruit cache@
 %%%%
-troll fruit cache
+kobold fruit cache
 
-You reach down and grab @_fruit_and_reaction_@ You go for seconds.
+@carnivore fruit cache@
 %%%%
-oni fruit cache
+kobold meat cache
 
-@troll fruit cache@
-%%%%
-vampire fruit cache
-
-You root around, looking for a blood orange, but fail to find any.
-
-w:4
-You reach down and find a blood orange. Delicious.
+@short meat cache@
 %%%%
 mummy fruit cache
 
-You briefly stare at the fruit pile and sigh.
+@inediate fruit cache@
 %%%%
 mummy meat cache
 
-You briefly stare at the meat pile and sigh.
+@inediate meat cache@
+%%%%
+oni fruit cache
+
+You reach down and grab @_fruit_and_reaction_@ You go for seconds.
 %%%%
 spriggan fruit cache
 
-You root around and sample some @_fruit_and_reaction_@
+@short fruit cache@
 %%%%
 spriggan meat cache
 
@@ -143,3 +164,90 @@ You root around, looking for pizza, but fail to find any.
 
 w:4
 You find a slice of magically-preserved pizza, and pick the meat off. Delicious!
+%%%%
+troll fruit cache
+
+@oni fruit cache@
+%%%%
+vampire fruit cache
+
+You root around, looking for a blood orange, but fail to find any.
+
+w:4
+You reach down and find a blood orange. Delicious.
+########################## Form diets ######################################
+# TODO: Statue, fungus, wisp messages?
+%%%%
+bat fruit cache
+
+You slurp up @_fruit_and_reaction_@
+%%%%
+blade fruit cache
+
+You try to grab some fruit with your blades, but fail!
+
+w:4
+You use your hands like chopsticks to delicately eat @_fruit_and_reaction_@
+%%%%
+blade meat cache
+
+You try to grab some meat with your blades, but fail!
+
+You skewer and sample some @_meat_and_reaction_@
+%%%%
+death fruit cache
+
+@inediate fruit cache@
+%%%%
+death meat cache
+
+@inediate meat cache@
+%%%%
+dragon fruit cache
+
+You devour @_fruit_and_reaction_@
+
+w:1
+You devour a dragonfruit. You feel vaguely uncomfortable.
+%%%%
+maw fruit cache
+
+# Zeno's dichtomy is probably fine, unless we decide to make food reliably
+# disappear after a few messages...
+You devour half the fruit pile! It's not enough.
+%%%%
+maw meat cache
+
+You devour half the meat pile! It's not enough.
+%%%%
+pig fruit cache
+
+@short fruit cache@
+%%%%
+pig meat cache
+
+@short meat cache@
+%%%%
+snake fruit cache
+
+You distend your jaw to swallow @_fruit_and_reaction_@
+%%%%
+snake meat cache
+
+You distend your jaw to swallow some @_meat_and_reaction_@
+%%%%
+storm fruit cache
+
+You reach down and electrolyze @_fruit_and_reaction_@
+%%%%
+storm meat cache
+
+You reach down and electrolyze @_meat_and_reaction_@
+%%%%
+tree fruit cache
+
+You root around and sample @_fruit_and_reaction_@
+%%%%
+tree meat cache
+
+You root around and sample some @_meat_and_reaction_@
