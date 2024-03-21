@@ -800,6 +800,13 @@ def run():
 
         if config.get('umask') is not None:
             os.umask(config.get('umask'))
+        # bind sockets and shed privileges before starting up the ioloop
+        nonsecure_sockets, secure_sockets = bind_server_sockets()
+        # note -- shed_privileges cannot move later, or various files end up
+        # owned by root, breaking dgl-config installs! Particularly pidfile,
+        # but it's not the only one.
+        shed_privileges()
+
     except SystemExit: # err_exit in the try blocks
         # logging already done, hopefully
         raise
@@ -808,11 +815,6 @@ def run():
 
     try:
         write_pidfile()
-
-        # bind sockets and shed privileges before starting up the ioloop
-        nonsecure_sockets, secure_sockets = bind_server_sockets()
-        shed_privileges()
-
         userdb.init_db_connections()
         try:
             # finally -- start things up for real
