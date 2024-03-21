@@ -747,7 +747,6 @@ async def async_run_server(nonsecure_sockets, secure_sockets):
     webtiles.config.init_config_timeouts()
 
     bind_server(nonsecure_sockets, secure_sockets)
-    shed_privileges()
 
     shutdown_event = tornado.locks.Event()
     init_signals(shutdown_event)
@@ -812,6 +811,7 @@ def run():
 
         # bind sockets and shed privileges before starting up the ioloop
         nonsecure_sockets, secure_sockets = bind_server_sockets()
+        shed_privileges()
 
         userdb.init_db_connections()
     except SystemExit:
