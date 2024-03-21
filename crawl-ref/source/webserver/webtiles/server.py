@@ -814,22 +814,20 @@ def run():
         shed_privileges()
 
         userdb.init_db_connections()
+        try:
+            # finally -- start things up for real
+            asyncio.run(async_run_server(nonsecure_sockets, secure_sockets))
+            logging.info("Bye!")
+        except asyncio.exceptions.CancelledError:
+            # triggered by the cancel case in stop_everything
+            err_exit("Normal server stop failed, some tasks were force-cancelled!")
+        except:
+            err_exit("Server exited with error!", exc_info=True)
+
     except SystemExit:
         raise
     except:
         err_exit("Server startup failed!", exc_info=True)
-    finally:
-        remove_pidfile()
-
-    try:
-        # finally -- start things up for real
-        asyncio.run(async_run_server(nonsecure_sockets, secure_sockets))
-        logging.info("Bye!")
-    except asyncio.exceptions.CancelledError:
-        # triggered by the cancel case in stop_everything
-        err_exit("Normal server stop failed, some tasks were force-cancelled!")
-    except:
-        err_exit("Server exited with error!", exc_info=True)
     finally:
         # warning: need to be careful what appears in this finally block, since
         # it may be called by child processes on fork in terminal.py in the
