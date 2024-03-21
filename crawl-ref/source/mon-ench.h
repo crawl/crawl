@@ -40,7 +40,8 @@ public:
     void merge_killer(kill_category who, mid_t whos);
     void cap_degree();
 
-    void set_duration(const monster* mons, const mon_enchant *exist);
+    void add_duration(const monster* mons, const mon_enchant *exist);
+    void set_duration(int dur);
 
     bool operator < (const mon_enchant &other) const
     {
@@ -55,9 +56,11 @@ public:
 
     mon_enchant &operator += (const mon_enchant &other);
     mon_enchant operator + (const mon_enchant &other) const;
-    int calc_duration(const monster* mons, const mon_enchant *added) const;
 private:
+    int calc_duration(const monster* mons, const mon_enchant *added) const;
     int modded_speed(const monster* mons, int hdplus) const;
 };
 
 enchant_type name_to_ench(const char *name);
+    
+int calc_abj_duration(const monster* mons, int degree);

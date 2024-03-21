@@ -197,7 +197,7 @@ bool monster::add_ench(const mon_enchant &ench)
     // If the duration is not set, we must calculate it (depending on the
     // enchantment).
     if (!ench.duration)
-        added->set_duration(this, new_enchantment ? nullptr : &ench);
+        added->add_duration(this, new_enchantment ? nullptr : &ench);
 
     if (new_enchantment)
         add_enchantment_effect(ench);
@@ -2332,20 +2332,7 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
-        // The duration is:
-        // deg = 1     90 aut
-        // deg = 2    180 aut
-        // deg = 3    270 aut
-        // deg = 4    360 aut
-        // deg = 5    810 aut
-        // deg = 6   1710 aut
-        // with a large fuzz
-        if (deg >= 6)
-            cturn = 1000 / _mod_speed(10, mons->speed);
-        if (deg >= 5)
-            cturn += 1000 / _mod_speed(20, mons->speed);
-        cturn += 1000 * min(4, deg) / _mod_speed(100, mons->speed);
-        break;
+        return calc_abj_duration(mons, deg);
     case ENCH_CHARM:
     case ENCH_HEXED:
         cturn = 500 / modded_speed(mons, 10);
@@ -2412,7 +2399,7 @@ int mon_enchant::calc_duration(const monster* mons,
 
 // Calculate the effective duration (in terms of normal player time - 10
 // duration units being one normal player action) of this enchantment.
-void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
+void mon_enchant::add_duration(const monster* mons, const mon_enchant *added)
 {
     if (duration && !added)
         return;
@@ -2424,4 +2411,34 @@ void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
 
     if (duration > maxduration)
         maxduration = duration;
+}
+
+void mon_enchant::set_duration(int dur)
+{
+    duration = dur;
+
+    if (duration > maxduration)
+        maxduration = duration;
+}
+
+int calc_abj_duration(const monster* mons, int degree)
+{
+    int cturn = 0;
+    // The duration is:
+    // deg = 1     90 aut
+    // deg = 2    180 aut
+    // deg = 3    270 aut
+    // deg = 4    360 aut
+    // deg = 5    810 aut
+    // deg = 6   1710 aut
+    // with a large fuzz
+    if (degree >= 6)
+        cturn = 1000 / _mod_speed(10, mons->speed);
+    if (degree >= 5)
+        cturn += 1000 / _mod_speed(20, mons->speed);
+    cturn += 1000 * min(4, degree) / _mod_speed(100, mons->speed);
+
+    int raw_duration = (cturn * speed_to_duration(mons->speed));
+    raw_duration = max(15, fuzz_value(raw_duration, 60, 40));
+    return raw_duration;
 }
