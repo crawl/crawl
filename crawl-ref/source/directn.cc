@@ -59,6 +59,7 @@
  #include "tileview.h"
  #include "tile-flags.h"
 #endif
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -3292,11 +3293,15 @@ void _walk_on_decor(dungeon_feature_type new_grid)
     if (new_grid == DNGN_CACHE_OF_FRUIT)
         messageLookup += "fruit cache";
     else if (new_grid == DNGN_CACHE_OF_MEAT)
-       messageLookup += "meat cache";
+        messageLookup += "meat cache";
 
     if (messageLookup != "" && one_chance_in(3))
     {
-        decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
+        if (you.form == transformation::none)
+            decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
+        else
+            decorLine = getMiscString(get_form(you.form)->wiz_name + " " + messageLookup);
+
         if (decorLine == "")
             decorLine = getMiscString(messageLookup);
         mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());

@@ -89,6 +89,14 @@ w:2
 century hydra egg. An acquired taste.
 ########################## Species diets ######################################
 %%%%
+draconian fruit cache
+
+You reach down and sample @_fruit_and_reaction_@
+
+w:1
+You reach down and sample a dragonfruit. You feel vaguely uncomfortable.
+
+%%%%
 felid fruit cache
 
 # Cats can't taste sweets and can only eat a few fruits safely.
@@ -135,7 +143,7 @@ You briefly stare at the meat pile and sigh.
 %%%%
 spriggan fruit cache
 
-You root around and sample some @_fruit_and_reaction_@
+You root around and sample @_fruit_and_reaction_@
 %%%%
 spriggan meat cache
 
@@ -143,3 +151,55 @@ You root around, looking for pizza, but fail to find any.
 
 w:4
 You find a slice of magically-preserved pizza, and pick the meat off. Delicious!
+
+########################## Form diets ######################################
+%%%%
+blade fruit cache
+
+You try to grab some fruit with your blades, but fail!
+
+w:4
+You use your hands like chopsticks to delicately eat @_fruit_and_reaction_@
+
+%%%%
+blade meat cache
+
+You try to grab some meat with your blades, but fail!
+
+w:4
+You use your hands like chopsticks to delicately eat some @_meat_and_reaction_@
+
+#Statue messages?
+
+%%%%
+snake fruit cache
+
+You distend your jaw to swallow @_fruit_and_reaction_@
+
+%%%%
+snake meat cache
+
+You distend your jaw to swallow some @_meat_and_reaction_@
+
+%%%%
+dragon fruit cache
+
+You devour @_fruit_and_reaction_@
+
+w:1
+You devour a dragonfruit. You feel vaguely uncomfortable.
+
+%%%%
+death fruit cache
+
+You briefly stare at the fruit pile and sigh.
+
+%%%%
+death meat cache
+
+You briefly stare at the fruit pile and sigh.
+
+%%%%
+bat fruit cache
+
+You slurp up @_fruit_and_reaction_@
