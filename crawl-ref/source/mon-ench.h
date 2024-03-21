@@ -62,5 +62,5 @@ private:
 };
 
 enchant_type name_to_ench(const char *name);
-    
+
 int calc_abj_duration(const monster* mons, int degree);
