@@ -227,9 +227,9 @@ Ashenzari powers
 
 Ashenzari exhorts followers to curse their possessions, periodically offering
 these curses to worshippers as they explore. These curses grant improvements
-to specific skills, but cursed equipment cannot be enchanted and can only be
-removed by shattering it forever. As worshippers equip more cursed equipment,
-Ashenzari will grant increasing knowledge of the surrounding dungeon.
+to specific skills, but cursed equipment cannot normally be enchanted and can
+only be removed by shattering it forever. As worshippers equip more cursed
+equipment, Ashenzari will grant increasing knowledge of the surrounding dungeon.
 Eventually, Ashenzari will reveal the invisible, grant clarity of mind, and
 protect worshippers from the Dungeon's malevolent forces.
 %%%%
