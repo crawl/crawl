@@ -24,7 +24,6 @@ aptitudes:
   # Grey Draconian specific
   earth_magic: 2
   air_magic: -2
-can_swim: true
 str: 10
 int: 8
 dex: 6

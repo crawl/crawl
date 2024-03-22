@@ -34,7 +34,6 @@ aptitudes:
   alchemy: 1
   invocations: -1
   evocations: 1
-can_swim: true
 str: 9
 int: 8
 dex: 7

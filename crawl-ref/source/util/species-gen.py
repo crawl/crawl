@@ -126,7 +126,6 @@ class Species(MutableMapping):
                                                                         -5, 20)
         self['wl'] = validate_int_range(s['aptitudes']['wl'], 'wl', 0, 20)
         self['aptitudes'] = aptitudes(s['aptitudes'])
-        self['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
         self['undead'] = undead_type(s.get('undead_type', 'US_ALIVE'))
         self['size'] = size(s.get('size', 'medium'))
         self['str'] = validate_int_range(s['str'], 'str', 1, 100)
@@ -134,6 +133,9 @@ class Species(MutableMapping):
         self['dex'] = validate_int_range(s['dex'], 'dex', 1, 100)
         self.levelup_stats_from_yaml(s)
         self['mutations'] = mutations(s.get('mutations', {}))
+        self['habitat'] = ('HT_WATER' if ('MUT_AMPHIBIOUS' in self['mutations']
+                                          or 'MUT_MERTAIL' in self['mutations'])
+                           else 'HT_LAND')
         self['fake_mutations_long'] = fake_mutations_long(
                                             s.get('fake_mutations', []))
         self['fake_mutations_short'] = fake_mutations_short(

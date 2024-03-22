@@ -18,7 +18,6 @@ aptitudes:
   shapeshifting: -1
   invocations: 1
   evocations: 1
-can_swim: true
 str: 7
 int: 10
 dex: 7

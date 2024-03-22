@@ -33,7 +33,6 @@ aptitudes:
   earth_magic: -2
   alchemy: 3
   invocations: 1
-can_swim: true
 str: 8
 int: 7
 dex: 9
