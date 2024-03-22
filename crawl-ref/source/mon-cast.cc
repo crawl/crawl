@@ -3464,7 +3464,7 @@ static void _corrupting_pulse(monster *mons)
 
 // Returns the clone just created (null otherwise)
 monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
-                             int summ_type)
+                             int summ_type, int clone_index)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -3502,8 +3502,9 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     mirror->max_hit_points = max(mirror->max_hit_points * hp_perc / 100, 1);
 
     // Sometimes swap the two monsters, so as to disguise the original and the
-    // copy.
-    if (coinflip())
+    // copy. Swap chance is 1/2, then 1/3, 1/4, etc. This gives the caster an
+    // even chance of ending up at any of the original or illusion positions.
+    if (one_chance_in(clone_index + 2))
         targ->swap_with(mirror);
 
     return mirror;
@@ -6182,22 +6183,24 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_FAKE_MARA_SUMMON:
+    {
         // We only want there to be two fakes, which, plus Mara, means
         // a total of three Maras; if we already have two, give up, otherwise
         // we want to summon either one more or two more.
-        sumcount2 = 2 - count_summons(mons, SPELL_FAKE_MARA_SUMMON);
-        if (sumcount2 <= 0)
+        const int n_wanted = 2 - count_summons(mons, SPELL_FAKE_MARA_SUMMON);
+        if (n_wanted <= 0)
             return;
 
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON);
+        for (int i = 0; i < n_wanted; i++)
+            cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON, i);
 
         if (you.can_see(*mons))
         {
             mprf("%s shimmers and seems to become %s!",
                  mons->name(DESC_THE).c_str(),
-                 sumcount2 == 1 ? "two" : "three");
+                 number_in_words(n_wanted + 1).c_str());
         }
+    }
 
         return;
 
