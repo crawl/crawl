@@ -3492,6 +3492,9 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_STONE_BODY, SP_GARGOYLE);
     SP_MUT_FIX(MUT_SERPENTINE_SKIN, SP_NAGA);
 
+    if (species::likes_water(you.species))
+        _fixup_species_mutations(MUT_AMPHIBIOUS);
+
     if (species::is_draconian(you.species))
         _fixup_species_mutations(MUT_NO_BODY_ARMOUR);
 

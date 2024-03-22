@@ -270,15 +270,10 @@ namespace species
         return species == SP_GARGOYLE || species == SP_DJINNI;
     }
 
-    bool can_swim(species_type species)
-    {
-        return get_species_def(species).habitat == HT_WATER;
-    }
-
     bool likes_water(species_type species)
     {
-        return can_swim(species)
-               || get_species_def(species).habitat == HT_AMPHIBIOUS;
+        const species_def& spdef = get_species_def(species);
+        return spdef.habitat == HT_AMPHIBIOUS || spdef.habitat == HT_WATER;
     }
 
     size_type size(species_type species, size_part_type psize)

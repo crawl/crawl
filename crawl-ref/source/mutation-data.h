@@ -2452,6 +2452,14 @@ static const mutation_def mut_data[] =
   {"Your legs no longer feel aquatic."},
 },
 
+{ MUT_AMPHIBIOUS, 0, 1, mutflag::good | mutflag::draconian, false,
+  "amphibious",
+
+  {"You are amphibious.", "", ""},
+  {"You develop the ability to swim.", "", ""},
+  {"You are no longer able to swim."},
+},
+
 { MUT_FLOAT, 0, 1, mutflag::good, false,
   "float",
 

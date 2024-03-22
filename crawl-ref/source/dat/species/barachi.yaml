@@ -44,6 +44,7 @@ mutations:
     MUT_SLOW: 1
     MUT_HOP: 1
     MUT_DAYSTALKER: 1
+    MUT_AMPHIBIOUS: 1
   13:
     MUT_HOP: 1
 recommended_jobs:

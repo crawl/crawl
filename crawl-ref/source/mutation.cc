@@ -861,16 +861,6 @@ static vector<string> _get_fakemuts(bool terse)
     for (const string& str : species::fake_mutations(you.species, terse))
         result.push_back(_innatemut(str, terse));
 
-    // player::can_swim includes other cases, e.g. extra-balanced species that
-    // are not truly amphibious. Mertail has its own description that implies
-    // amphibiousness.
-    if (species::can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
-    {
-        result.push_back(_annotate_form_based(
-                    terse ? "amphibious" : "You are amphibious.",
-                    !form_can_swim(), terse));
-    }
-
     if (species::arm_count(you.species) > 2)
     {
         const bool rings_melded = !get_form()->slot_available(EQ_RING_EIGHT);

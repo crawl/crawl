@@ -50,7 +50,6 @@ namespace species
     bool wears_barding(species_type species);
     bool has_claws(species_type species);
     bool is_nonliving(species_type species);
-    bool can_swim(species_type species);
     bool likes_water(species_type species);
     size_type size(species_type species, size_part_type psize = PSIZE_TORSO);
 

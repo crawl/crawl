@@ -6806,9 +6806,7 @@ int player::res_elec() const
 
 bool player::res_water_drowning() const
 {
-    return is_unbreathing()
-           || species::can_swim(species) && !form_changed_physiology()
-           || you.species == SP_GREY_DRACONIAN && draconian_dragon_exception();
+    return is_unbreathing() || can_swim();
 }
 
 int player::res_poison(bool temp) const

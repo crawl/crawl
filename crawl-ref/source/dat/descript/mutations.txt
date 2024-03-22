@@ -873,6 +873,11 @@ detect where treasures lay hidden. As you explore the dungeon, nearby item
 locations that you cannot directly see will gain a marker for
 as-yet-undiscovered items.
 %%%%
+amphibious mutation
+
+You can swim through shallow and deep water unimpeded, and without any
+movement or attack penalty.
+%%%%
 no potions mutation
 
 You are unable to quaff potions.

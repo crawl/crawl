@@ -490,8 +490,8 @@ bool Form::player_can_swim() const
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
     return can_swim == FC_ENABLE
-           || species::can_swim(you.species)
-              && can_swim != FC_FORBID
+           || (you.has_mutation(MUT_AMPHIBIOUS)
+               || you.has_mutation(MUT_MERTAIL)) && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
 }
 

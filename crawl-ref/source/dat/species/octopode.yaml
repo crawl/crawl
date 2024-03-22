@@ -28,6 +28,7 @@ species_flags:
   - SPF_NO_BONES
 mutations:
   1:
+    MUT_AMPHIBIOUS: 1
     MUT_ALMOST_NO_ARMOUR: 1
     MUT_CAMOUFLAGE: 1
     MUT_GELATINOUS_BODY: 1

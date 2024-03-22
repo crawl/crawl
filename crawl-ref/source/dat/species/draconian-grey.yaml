@@ -36,5 +36,6 @@ mutations:
   7:
     MUT_DRAC_GREY_SCALES: 1
     MUT_DRAC_MUD_BREATH: 1
+    MUT_AMPHIBIOUS: 1
 
 orc_name: Grey Orconian
