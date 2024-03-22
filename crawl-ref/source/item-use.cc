@@ -1942,15 +1942,23 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (species::bans_eq(you.species, slot))
+    if (you.has_mutation(MUT_ALMOST_NO_ARMOUR) // Octopodes
+        && slot != EQ_HELMET && slot != EQ_OFFHAND)
+    {
+        if (verbose)
+            mprf(MSGCH_PROMPT, "You can't wear that!");
+
+        return false;
+    }
+
+    if (slot == EQ_BODY_ARMOUR && you.has_mutation(MUT_NO_BODY_ARMOUR))
     {
         if (verbose)
         {
             // *if* the species bans body armour, then blame it on wings.
             // (But don't unconditionally ban armour with this mut.)
             // XX turn this mut into a two-level mutation?
-            if (slot == EQ_BODY_ARMOUR
-                && species::mutation_level(you.species, MUT_BIG_WINGS))
+            if (species::mutation_level(you.species, MUT_BIG_WINGS))
             {
                 mprf(MSGCH_PROMPT, "Your wings%s won't fit in that.",
                     you.has_mutation(MUT_BIG_WINGS)
@@ -1959,6 +1967,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             else
                 mprf(MSGCH_PROMPT, "You can't wear that!");
         }
+        return false;
+    }
+
+    // Now used only for jewellery slots
+    if (species::bans_eq(you.species, slot))
+    {
+        if (verbose)
+            mprf(MSGCH_PROMPT, "You can't wear that!");
         return false;
     }
 
@@ -2125,7 +2141,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_OCTOPODE)
+        if (you.has_mutation(MUT_ALMOST_NO_ARMOUR)) // Octopodes
         {
             if (verbose)
                 mprf(MSGCH_PROMPT, "You can't wear that!");

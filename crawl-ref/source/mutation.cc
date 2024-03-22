@@ -945,13 +945,6 @@ static vector<string> _get_fakemuts(bool terse)
     default: // no giant species
         break;
     }
-    // Could move this into species-data, but then the hack that assumes
-    // _dragon_abil should get called on all draconian fake muts would break.
-    if (species::is_draconian(you.species))
-    {
-        armour_mut = terse ? "unfitting armour"
-            : "You cannot fit into any form of body armour.";
-    }
     if (!weapon_mut.empty() && !you.has_mutation(MUT_NO_GRASPING))
         result.push_back(_innatemut(weapon_mut, terse));
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))

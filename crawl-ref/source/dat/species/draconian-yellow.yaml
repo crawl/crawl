@@ -29,6 +29,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_NO_BODY_ARMOUR: 1
   7:
     MUT_ACID_RESISTANCE: 1
   14:

@@ -525,11 +525,6 @@ namespace species
             break;
         }
         // remaining should be armour only
-        if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_OFFHAND)
-            return true;
-
-        if (is_draconian(species) && eq == EQ_BODY_ARMOUR)
-            return true;
 
         // for everything else that is handled by mutations, including felid
         // restrictions, see item-use.cc::can_wear_armour. (TODO: move more of the

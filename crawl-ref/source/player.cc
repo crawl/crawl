@@ -3579,12 +3579,12 @@ bool player::faith(bool items) const
 /// Does the player have permastasis?
 bool player::stasis() const
 {
-    return species == SP_FORMICID;
+    return you.has_mutation(MUT_STASIS);
 }
 
 bool player::can_burrow() const
 {
-    return species == SP_FORMICID;
+    return you.has_mutation(MUT_DIGGING);
 }
 
 bool player::cloud_immune(bool items) const

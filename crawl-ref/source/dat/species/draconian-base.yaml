@@ -26,6 +26,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_NO_BODY_ARMOUR: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_SHAPESHIFTER

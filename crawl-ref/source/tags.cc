@@ -3468,6 +3468,12 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
     SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
     SP_MUT_FIX(MUT_DRUNKEN_BRAWLING, SP_ONI);
+    SP_MUT_FIX(MUT_DIGGING, SP_FORMICID);
+    SP_MUT_FIX(MUT_STASIS, SP_FORMICID);
+    SP_MUT_FIX(MUT_ALMOST_NO_ARMOUR, SP_OCTOPODE);
+
+    if (species::is_draconian(you.species))
+        _fixup_species_mutations(MUT_NO_BODY_ARMOUR);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)

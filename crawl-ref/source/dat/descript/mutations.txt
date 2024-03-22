@@ -312,6 +312,12 @@ Your mind is exceptionally clear, preventing you from becoming confused,
 mesmerised, or supernaturally afraid. You also cannot become involuntarily
 enraged.
 %%%%
+permanent stasis mutation
+
+You live in a state of permanent stasis. You can never be hasted, swift, slow,
+berserk or paralysed, and you cannot teleport or blink. (Most divine abilities
+are unaffected.)
+%%%%
 sense surroundings mutation
 
 You have a second sense for the dungeon, allowing you to sense terrain you
@@ -646,6 +652,15 @@ stealthy paws mutation
 When launching attacks on unaware or incapacitated enemies, you inflict extra
 damage in the same way as a human with a short blade might.
 %%%%
+dig shafts and tunnels mutation
+
+You have strong, extendible mandibles, allowing you to dig through rock walls
+with <input>$cmd[CMD_USE_ABILITY]</input> at the cost of temporarily draining
+your max HP by a small amount per wall. You can even dig through the floor,
+landing in a random position one to three floors deeper, though this takes
+some time. Your tunneller's instincts prevent you from accidentally falling into
+natural shafts.
+%%%%
 four strong arms mutation
 
 You have two pairs of two arms, allowing you to wield two-handed weapons with
@@ -731,6 +746,28 @@ You have a powerful nose adapted to the Dungeon's scents, allowing you to
 detect where treasures lay hidden. As you explore the dungeon, nearby item
 locations that you cannot directly see will gain a marker for
 as-yet-undiscovered items.
+%%%%
+no potions mutation
+
+You are unable to quaff potions.
+%%%%
+no weapons or thrown items mutation
+
+You are incapable of wielding weapons or throwing items.
+%%%%
+no armour mutation
+
+You cannot wear armour.
+%%%%
+almost no armour mutation
+
+You are unable to wear most types of armour. You can still wear hats on your
+mantle, and your tentacles are able to hold shields and orbs.
+%%%%
+no body armour mutation
+
+You cannot wear body armour over your wings and scales, and you cannot wear
+helmets over your reptilian head.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
@@ -929,18 +966,6 @@ missing an eye mutation
 
 You are missing an eye, reducing the accuracy of your physical and magical
 attacks.
-%%%%
-no potions mutation
-
-You are unable to quaff potions.
-%%%%
-no weapons or thrown items mutation
-
-You are incapable of wielding weapons or throwing items.
-%%%%
-no armour mutation
-
-You cannot wear armour.
 %%%%
 # ------ Skill suppression ------
 # skills go in, skills go out. Can't explain that!

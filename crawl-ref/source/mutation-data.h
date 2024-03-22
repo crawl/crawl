@@ -1823,6 +1823,14 @@ static const mutation_def mut_data[] =
   {"Your body vibrates.", "", ""},
   {"You briefly stop moving.", "", ""},
 },
+
+{ MUT_STASIS, 0, 1, mutflag::good, false,
+  "permanent stasis",
+
+  {"You cannot be hasted, slowed, berserked, paralysed, or teleported.", "", ""},
+  {"You feel strangely static.", "", ""},
+  {"You feel less static.", "", ""},
+},
 #if TAG_MAJOR_VERSION == 34
 
 { MUT_TRAMPLE_RESISTANCE, 0, 1, mutflag::good, false,
@@ -2320,6 +2328,14 @@ static const mutation_def mut_data[] =
   {"You grow two extra arms.", "", ""},
 },
 
+{ MUT_DIGGING, 0, 1, mutflag::good, false,
+  "dig shafts and tunnels",
+
+  {"You can dig through walls and to a lower floor.", "", ""},
+  {"Your mandibles grow strong enough to dig through rock.", "", ""},
+  {"Your mandibles return to normal strength.", "", ""},
+},
+
 { MUT_NO_DRINK, 0, 1, mutflag::bad, false,
   "no potions",
 
@@ -2366,6 +2382,14 @@ static const mutation_def mut_data[] =
   {"You cannot wear armour.", "", ""},
   {"You can no longer wear armour.", "", ""},
   {"You can now wear armour.", "", ""},
+},
+
+{ MUT_ALMOST_NO_ARMOUR, 0, 1, mutflag::bad, false,
+  "almost no armour",
+
+  {"You cannot wear most types of armour.", "", ""},
+  {"You can no longer wear most types of armour.", "", ""},
+  {"You can now wear all armour.", "", ""},
 },
 
 { MUT_MULTILIVED, 0, 1, mutflag::good, false,
@@ -2545,6 +2569,13 @@ static const mutation_def mut_data[] =
   {"Your spellcasting is much less encumbered by armour.", "", ""},
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
+},
+
+{ MUT_NO_BODY_ARMOUR, 0, 1, mutflag::bad, false,
+  "no body armour",
+  {"You cannot fit into any form of body armour.", "", ""},
+  {"You can no longer wear body armour.", "", ""},
+  {"You can now wear body armour.", "", ""},
 },
 };
 
