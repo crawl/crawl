@@ -31,6 +31,8 @@ mutations:
   1:
     MUT_COLD_BLOODED: 1
     MUT_NO_BODY_ARMOUR: 1
+    # Use base draconian's scales for this deprecated species
+    MUT_DRAC_BROWN_SCALES: 1
 fake_mutations:
   - long: You can spit globs of burning liquid.
     short: breathe sticky flame splash

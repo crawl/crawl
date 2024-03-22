@@ -27,6 +27,7 @@ mutations:
   1:
     MUT_COLD_BLOODED: 1
     MUT_NO_BODY_ARMOUR: 1
+    MUT_DRAC_BROWN_SCALES: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_SHAPESHIFTER

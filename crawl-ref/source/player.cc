@@ -2968,6 +2968,10 @@ void level_change(bool skip_attribute_increase)
                     // XX make seed stable by choosing at birth
                     you.species = species::random_draconian_colour();
 
+                    // Hack - remove base draconian's plain brown scales
+                    you.mutation[MUT_DRAC_BROWN_SCALES]
+                            = you.innate_mutation[MUT_DRAC_BROWN_SCALES] = 0;
+
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
                     // print anything in this condition, we might trigger a
@@ -2990,10 +2994,6 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your scales start taking on %s colour.",
-                         article_a(species::scale_type(you.species)).c_str());
-
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
                     // skill being checked is at the wrong level.
@@ -3017,10 +3017,6 @@ void level_change(bool skip_attribute_increase)
                     // skills being rescaled to new aptitudes. Thus, we must
                     // check the training targets.
                     check_training_targets();
-
-                    // Tell the player about their new species
-                    for (auto &mut : species::fake_mutations(you.species, false))
-                        mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
 
                     gain_draconian_breath_uses(2);
 
@@ -6206,36 +6202,50 @@ int player::base_ac_from(const item_def &armour, int scale) const
 /**
  * What bonus AC are you getting from your species?
  *
- * Does not account for any real mutations, such as scales or thick skin, that
- * you may have as a result of your species.
+ * Used only for draconians, nagas and gargoyles, whose AC increases with XL.
+ * Does not include other scales mutations.
  * @param temp Whether to account for transformations.
- * @returns how much AC you are getting from your species "fake mutations" * 100
+ * @returns how much AC you are getting from your species' mutation * 100
  */
 int player::racial_ac(bool temp) const
 {
-    // drac scales suppressed in all serious forms, except dragon
-    if (species::is_draconian(species)
-        && (!player_is_shapechanged() || form == transformation::dragon
-            || !temp))
+    const mutation_type racial_ac_mut = you.get_racial_ac_mutation(temp);
+
+    if (racial_ac_mut == NUM_MUTATIONS)
+        return 0;
+
+    int ac = 0;
+
+    switch (racial_ac_mut)
     {
-        int AC = 400 + 100 * experience_level / 3;  // max 13
-        if (species == SP_GREY_DRACONIAN) // no breath
-            AC += 500;
-        return AC;
+        // Draconians
+        case MUT_DRAC_GREY_SCALES: // Grey draconians get AC+5 but no resistance
+            ac += 500;
+            // fall-through
+        case MUT_DRAC_BROWN_SCALES:
+        case MUT_DRAC_RED_SCALES:
+        case MUT_DRAC_WHITE_SCALES:
+        case MUT_DRAC_BLACK_SCALES:
+        case MUT_DRAC_GREEN_SCALES:
+        case MUT_DRAC_PURPLE_SCALES:
+        case MUT_DRAC_PALE_SCALES:
+        case MUT_DRAC_YELLOW_SCALES:
+            ac += 400 + 100 * experience_level / 3;             // max 13
+            break;
+        // Gargoyle
+        case MUT_STONE_BODY:
+            ac += 200 + 100 * experience_level * 2 / 5          // max 20
+                  + 100 * max(0, experience_level - 7) * 2 / 5;
+            break;
+        // Naga
+        case MUT_SERPENTINE_SKIN:
+            ac += 100 * experience_level / 3;                   // max 9
+            break;
+        default:
+            die("Bad racial AC mutation.");
     }
 
-    if (!(player_is_shapechanged() && temp))
-    {
-        if (species == SP_NAGA)
-            return 100 * experience_level / 3;              // max 9
-        else if (species == SP_GARGOYLE)
-        {
-            return 200 + 100 * experience_level * 2 / 5     // max 20
-                       + 100 * max(0, experience_level - 7) * 2 / 5;
-        }
-    }
-
-    return 0;
+    return ac;
 }
 
 // Each instance of this class stores a mutation which might change a

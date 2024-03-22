@@ -174,34 +174,6 @@ namespace species
         return get_species_def(species).monster_species;
     }
 
-    // XX non-draconians, unify with skin names?
-    const char* scale_type(species_type species)
-    {
-        switch (species)
-        {
-            case SP_RED_DRACONIAN:
-                return "fiery red";
-            case SP_WHITE_DRACONIAN:
-                return "icy white";
-            case SP_GREEN_DRACONIAN:
-                return "lurid green";
-            case SP_YELLOW_DRACONIAN:
-                return "golden yellow";
-            case SP_GREY_DRACONIAN:
-                return "dull iron-grey";
-            case SP_BLACK_DRACONIAN:
-                return "glossy black";
-            case SP_PURPLE_DRACONIAN:
-                return "rich purple";
-            case SP_PALE_DRACONIAN:
-                return "pale cyan-grey";
-            case SP_BASE_DRACONIAN:
-                return "plain brown";
-            default:
-                return "";
-        }
-    }
-
     monster_type dragon_form(species_type s)
     {
         switch (s)

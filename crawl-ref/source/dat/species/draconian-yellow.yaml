@@ -32,10 +32,9 @@ mutations:
     MUT_NO_BODY_ARMOUR: 1
   7:
     MUT_ACID_RESISTANCE: 1
+    MUT_DRAC_YELLOW_SCALES: 1
+    MUT_DRAC_CAUSTIC_BREATH: 1
   14:
     MUT_ACIDIC_BITE: 1
-fake_mutations:
-  - long: You can breathe corrosive fumes.
-    short: caustic breath
 
 orc_name: Yellow Orconian

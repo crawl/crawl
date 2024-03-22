@@ -34,6 +34,7 @@ mutations:
     MUT_DEFORMED: 1
     MUT_SPIT_POISON: 1
     MUT_POISON_RESISTANCE: 1
+    MUT_SERPENTINE_SKIN: 1
   13:
     MUT_CONSTRICTING_TAIL: 1
 recommended_jobs:

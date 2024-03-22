@@ -39,7 +39,6 @@ namespace species
     monster_type to_mons_species(species_type species);
 
     monster_type dragon_form(species_type s);
-    const char* scale_type(species_type species);
     ability_type draconian_breath(species_type species);
     species_type random_draconian_colour();
 

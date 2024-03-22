@@ -578,7 +578,127 @@ flame cloud immunity mutation
 
 You are immune to clouds of flame.
 %%%%
+# ------ Draconian scales and breath mutations -----
+plain brown scales mutation
+
+You are covered in plain brown scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels. Upon gaining experience level 7, your scales
+and aptitudes will take on a colour, dependent on your genetic ancestry alone,
+and you will gain the ability to breathe at your enemies.
+%%%%
+fiery red scales mutation
+
+You are covered in fiery red scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+icy white scales mutation
+
+You are covered in icy white scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+glossy black scales mutation
+
+You are covered in glossy black scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+dull iron-grey scales mutation
+
+You are covered in dull iron-grey scales, providing you with protection
+which increases as you level up. You begin with 4 AC, and gain an additional
+1 AC for every three experience levels. Your scales are particularly hard,
+giving you a further 5 AC.
+%%%%
+lurid green scales mutation
+
+You are covered in lurid green scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+rich purple scales mutation
+
+You are covered in rich purple scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels. Your innate willpower is doubled.
+%%%%
+pale cyan-grey scales mutation
+
+You are covered in pale cyan-grey scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+golden yellow scales mutation
+
+You are covered in golden yellow scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+combustion breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe blasts of volatile
+embers that explode violently around each creature they touch. Your breath
+recharges as you gain experience, up to a maximum of three charges.
+%%%%
+glacial breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to exhale a powerful wave of
+frost which encases anything it kills in a solid block of durable ice. Your
+breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
+nullifying breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a large blast of
+pure antimagic that will dispel magical effects and significantly interfere with
+the spellcasting ability of anything it touches. Your breath recharges as you
+gain experience, up to a maximum of three charges.
+%%%%
+steam breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a powerful blast of
+steam, scalding a target and leaving sight-obscuring steam clouds in its wake.
+Your breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
+galvanic breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to exhale a charged burst of
+electricity that will arc through a target and every other creature that is
+connected to it. Your breath recharges as you gain experience, up to a maximum
+of three charges.
+%%%%
+mud breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to spits an enormous ball of
+mud that knocks back whatever it hits and drenches the surrounding area in mud,
+impeding enemy movement and causing them to sometimes fumble their attacks.
+Your breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
+caustic breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a spray of
+concentrated acid which leaves corrosive clouds on any unoccupied tiles it
+passes over and corrodes whatever it hits. Your breath recharges as you gain
+experience, up to a maximum of three charges.
+%%%%
+noxious breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a line of noxious
+vapour which can confuse anything standing in it which does not resist poison.
+Your breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
 # ------ Other species-specific mutations -----
+tough serpentine skin mutation
+
+Your serpentine skin is tough, providing you with protection which increases as
+you level up. You gain 1 AC for every three experience levels.
+%%%%
+resilient stone body mutation
+
+Your stone body is highly resilient, providing you with protection which
+increases dramatically as you gain experience, up to a maximum of 20 AC.
+%%%%
 spit poison mutation
 
 You can spit poison with <input>$cmd[CMD_USE_ABILITY]</input>. The second level

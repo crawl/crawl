@@ -34,10 +34,9 @@ mutations:
     MUT_NO_BODY_ARMOUR: 1
   7:
     MUT_SHOCK_RESISTANCE: 1
+    MUT_DRAC_GALVANIC_BREATH: 1
+    MUT_DRAC_BLACK_SCALES: 1
   14:
     MUT_BIG_WINGS: 1
-fake_mutations:
-  - long: You can breathe arcing electricity.
-    short: galvanic breath
 
 orc_name: Black Orconian
