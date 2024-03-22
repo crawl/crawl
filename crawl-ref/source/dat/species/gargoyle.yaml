@@ -46,11 +46,9 @@ mutations:
     MUT_PETRIFICATION_RESISTANCE: 1
     MUT_SHOCK_RESISTANCE: 1
     MUT_TORMENT_RESISTANCE: 1
+    MUT_POISON_IMMUNITY: 1
   14:
     MUT_BIG_WINGS: 1
-fake_mutations:
-  - long: You are immune to sickness and miasma.
-  - short: sickness immunity
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR

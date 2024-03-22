@@ -249,6 +249,12 @@ You resist poisons, toxins and other contaminants. This does not confer
 full immunity, but reduces your chances of being affected to roughly
 one-third what it would be otherwise.
 %%%%
+poison immunity mutation
+
+You are immune to poisons, toxins and other contaminants, including sickness,
+curare, clouds of foul pestilence, and the slowing and paralysing attacks of
+certain poisonous creatures.
+%%%%
 fire resistance mutation
 
 You resist heat. Each level of this mutation reduces the amount of damage taken

@@ -3481,11 +3481,12 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
     }
     if (you.species == SP_GARGOYLE || you.species == SP_MUMMY
-        || you.species == SP_GHOUL)
+        || you.species == SP_GHOUL || you.species == SP_DJINNI)
     {
         // not safe for SP_MUT_FIX because demonspawn use this and it doesn't
         // handle ds muts
         _fixup_species_mutations(MUT_TORMENT_RESISTANCE);
+        _fixup_species_mutations(MUT_POISON_IMMUNITY);
     }
     if (you.species == SP_MUMMY)
     {

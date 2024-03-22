@@ -764,7 +764,7 @@ static vector<string> _get_form_fakemuts(bool terse)
 
     // immunity comes from form
     if (!terse && player_res_poison(false, true, false) == 3
-        && !player_res_poison(false, false, false))
+        && player_res_poison(false, false, false) != 3)
     {
         // wispform has a fakemut that prints something more general
         if (you.form != transformation::wisp)
@@ -967,13 +967,11 @@ static vector<string> _get_fakemuts(bool terse)
                 _formmut("You are frail without blood (-20% HP)."));
             result.push_back(
                 _formmut("You can heal yourself when you bite living creatures."));
-            // XX automatically color this green somehow? Handled below more
-            // generally for non-vampires
+            // XX automatically color this green somehow?
+            // Non-vampires get a mutation.
             result.push_back(_formmut("You are immune to poison."));
         }
     }
-    else if (!terse && player_res_poison(false, false, false) == 3)
-        result.push_back(_innatemut("You are immune to poison."));
 
     return result;
 }

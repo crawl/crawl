@@ -81,6 +81,15 @@ static const mutation_def mut_data[] =
   {"You feel less resistant to poisons.", "", ""},
   TILEG_MUT_POISON_RESISTANCE,
 },
+
+{ MUT_POISON_IMMUNITY, 0, 1, mutflag::good, false,
+  "poison immunity",
+
+  {"You are immune to poison, sickness, and miasma.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 #if TAG_MAJOR_VERSION == 34
 
 { MUT_CARNIVOROUS, 0, 1, mutflag::good, false,

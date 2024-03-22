@@ -1634,8 +1634,9 @@ bool player_kiku_res_torment()
 int player_res_poison(bool allow_random, bool temp, bool items)
 {
     const int form_rp = cur_form(temp)->res_pois();
-    if (you.is_nonliving(temp)
-        || you.is_lifeless_undead(temp)
+    if (you.has_mutation(MUT_POISON_IMMUNITY)
+        || you.is_nonliving(temp)
+        || you.is_lifeless_undead(temp) // bloodless Vp
         || form_rp == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -6808,6 +6809,7 @@ int player::res_poison(bool temp) const
 bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
+        || has_mutation(MUT_POISON_IMMUNITY)
         || is_nonliving(temp)
         || cur_form(temp)->res_miasma()
         || temp && you.props.exists(MIASMA_IMMUNE_KEY))
