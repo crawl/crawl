@@ -3464,7 +3464,7 @@ static void _corrupting_pulse(monster *mons)
 
 // Returns the clone just created (null otherwise)
 monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
-                             int summ_type)
+                             int summ_type, int swap_chance_reciprocal)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -3503,7 +3503,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
 
     // Sometimes swap the two monsters, so as to disguise the original and the
     // copy.
-    if (coinflip())
+    if (x_chance_in_y(1, swap_chance_reciprocal))
         targ->swap_with(mirror);
 
     return mirror;
@@ -6189,8 +6189,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (sumcount2 <= 0)
             return;
 
+        // Swap chance is 1/2, then 1/3, 1/4, etc. This gives Mara an equal
+        // chance of ending up at any of the original or illusion positions.
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON);
+            cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON,
+                                sumcount + 2);
 
         if (you.can_see(*mons))
         {
