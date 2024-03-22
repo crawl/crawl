@@ -2102,7 +2102,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     you.attribute[ATTR_TEMP_MUT_XP] = 0;
             }
             you.mutation[mutat]--;
-            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
+            mprf(MSGCH_INTRINSIC_GAIN, "Your mutations feel more permanent.");
             take_note(Note(NOTE_PERM_MUTATION, mutat,
                     you.get_base_mutation_level(mutat), reason.c_str()));
             gain_msg = false;
@@ -2199,7 +2199,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         notify_stat_change();
 
         if (gain_msg)
-            mprf(MSGCH_MUTATION, "%s", mdef.gain[cur_base_level - 1]);
+        {
+            mprf(mutclass == MUTCLASS_INNATE ? MSGCH_INTRINSIC_GAIN
+                                             : MSGCH_MUTATION,
+                 "%s", mdef.gain[cur_base_level - 1]);
+        }
 
         // Do post-mutation effects.
         switch (mutat)
