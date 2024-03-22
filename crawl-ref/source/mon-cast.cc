@@ -6192,8 +6192,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         // Swap chance is 1/2, then 1/3, 1/4, etc. This gives Mara an equal
         // chance of ending up at any of the original or illusion positions.
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
             cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON,
                                 sumcount + 2);
+        }
 
         if (you.can_see(*mons))
         {
