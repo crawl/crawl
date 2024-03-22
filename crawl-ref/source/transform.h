@@ -349,7 +349,6 @@ void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
-bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);
 
