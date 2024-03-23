@@ -557,8 +557,10 @@ void trap_def::trigger(actor& triggerer)
         }
         else if (you_trigger)
         {
-            mprf("This passage %s!", search_result == passage_type::blocked ?
-                 "seems to be blocked by something" : "doesn't lead anywhere");
+            if (search_result == passage_type::blocked)
+                mpr("This passage seems to be blocked by something!");
+            else
+                mpr("This passage doesn't lead anywhere!");
         }
         break;
     }
@@ -605,9 +607,10 @@ void trap_def::trigger(actor& triggerer)
         trap_destroyed = true;
         if (you_trigger)
             mprf("You set off the alarm!");
+        else if (mons_intel(*m) >= I_HUMAN)
+            mprf("%s pulls the alarm!", triggerer.name(DESC_THE).c_str());
         else
-            mprf("%s %s the alarm!", triggerer.name(DESC_THE).c_str(),
-                 mons_intel(*m) >= I_HUMAN ? "pulls" : "sets off");
+            mprf("%s sets off the alarm!", triggerer.name(DESC_THE).c_str());
 
         if (silenced(pos))
         {
@@ -659,14 +662,13 @@ void trap_def::trigger(actor& triggerer)
             }
             else
             {
-                string msg = "A huge blade swings out";
                 if (m->visible_to(&you))
                 {
-                    msg += " and slices into ";
-                    msg += m->name(DESC_THE);
+                    mprf("A huge blade swings out and slices into %s!",
+                         m->name(DESC_THE).c_str());
                 }
-                msg += "!";
-                mpr(msg);
+                else
+                    mpr("A huge blade swings out!");
 
                 int damage_taken = m->apply_ac(10 + random2avg(29, 2));
 
@@ -705,8 +707,7 @@ void trap_def::trigger(actor& triggerer)
                 // Triggered, net the player.
                 triggered = true;
 
-                if (!simple_monster_message(*m,
-                                            "%s drops a net on you."))
+                if (!simple_monster_message(*m, " drops a net on you."))
                 {
                     mpr("Something launches a net on you.");
                 }
@@ -827,8 +828,10 @@ void trap_def::trigger(actor& triggerer)
         // after one use in down_stairs()
         if (!you_trigger)
         {
-            mprf("%s shaft crumbles and collapses.",
-                 triggerer_seen ? "The" : "A");
+            if (triggerer_seen)
+                mpr("The shaft crumbles and collapses.");
+            else
+                mpr("A shaft crumbles and collapses.");
             know_trap_destroyed = true;
             trap_destroyed = true;
         }
@@ -1018,7 +1021,10 @@ void free_self_from_net()
 
     if (hold < NET_MIN_DURABILITY)
     {
-        mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
+        if (damage > 3)
+            mpr("You shred the net and break free!");
+        else
+            mpr("You rip the net and break free!");
 
         destroy_item(net);
         stop_being_held();
@@ -1206,15 +1212,17 @@ void trap_def::shoot_ammo(actor& act, bool trig_smart)
     else if (pro_block >= con_block
              && you.see_cell(act.pos()))
     {
-        string owner;
+        string a_shot = shot.name(DESC_A).c_str();
         if (act.is_player())
-            owner = "your";
+            mprf("%s shoots out and hits your shield.", a_shot.c_str());
         else if (you.can_see(act))
-            owner = apostrophise(act.name(DESC_THE));
+        {
+            string owner = apostrophise(act.name(DESC_THE));
+            mprf("%s shoots out and hits %s shield.",
+                 a_shot.c_str(), owner.c_str());
+        }
         else // "its" sounds abysmal; animals don't use shields
-            owner = "someone's";
-        mprf("%s shoots out and hits %s shield.", shot.name(DESC_A).c_str(),
-             owner.c_str());
+            mprf("%s shoots out and hits someone's shield.", a_shot.c_str());
 
         act.shield_block_succeeded();
     }
@@ -1241,11 +1249,10 @@ void trap_def::shoot_ammo(actor& act, bool trig_smart)
         {
             if (you.see_cell(act.pos()))
             {
-                mprf("%s hits %s%s!",
+                mprf((damage_taken == 0 && !poison) ?
+                     "%s hits %s but does no damage!" : "%s hits %s!",
                      shot.name(DESC_A).c_str(),
-                     act.name(DESC_THE).c_str(),
-                     (damage_taken == 0 && !poison) ?
-                         " but does no damage" : "");
+                     act.name(DESC_THE).c_str());
             }
 
             if (poison)

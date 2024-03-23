@@ -16386,7 +16386,7 @@ Ihr wacht auf.
 %%%%
 # note: %s = "held in a net/web"
 You can't shaft yourself while %s.
-Ihr könnt Euch nicht bewegen, während Ihr %s seid.
+Ihr könnt Euch nicht bewegen, solange Ihr %s seid.
 %%%%
 You can't shaft yourself on this level.
 Ihr könnt Euch auf dieser Ebene nicht bewegen.
@@ -21612,25 +21612,25 @@ The net bounces off something gigantic!
 Das Netz prallt von etwas Gigantischem ab!
 %%%%
 %s is too large for the net to hold!
-
+%s ist zu groß für das Netz!
 %%%%
 The net is caught on %s!
-Das Netz ist auf%s gefangen!
+Das Netz verfängt sich an {dat}%s!
 %%%%
 The net is caught on something unseen!
-Das Netz ist auf etwas Unsichtbares gefangen!
+Das Netz verfängt sich an etwas Unsichtbarem.
 %%%%
 The net passes right through %s!
-Das Netz geht durch%s!
+Das Netz geht klar durch {acc}%s!
 %%%%
 Something gets caught in the net!
 Etwas bleibt im Netz hängen!
 %%%%
 %s is caught in the net!
-
+%s bleibt im Netz hängen!
 %%%%
 %s drifts right through the net!
-
+%s driftet klar durch das Netz!
 %%%%
 A huge vortex of air appears!
 Ein riesiger Luftwirbel erscheint!
@@ -21639,19 +21639,16 @@ The power of Zot is invoked against you!
 Die Macht von Zot wird gegen Euch angerufen!
 %%%%
 You enter the passage of Golubria.
-Ihr betrittt den Durchgang von Golubria.
+Ihr betretet die Passage von Golubria.
 %%%%
 %s enters the passage of Golubria.
-
+%s betritt die Passage von Golubria.
 %%%%
-This passage %s!
-Diese Passage %s!
+This passage seems to be blocked by something!
+Diese Passage scheint durch etwas blockiert zu sein!
 %%%%
-seems to be blocked by something
-
-%%%%
-doesn't lead anywhere
-
+This passage doesn't lead anywhere!
+Diese Passage führt nirgendwo hin!
 %%%%
 You enter %s!
 Ihr tretet in {acc}%s ein!
@@ -21663,22 +21660,19 @@ Ihr tretet in {acc}%s ein!
 %s verschwindet.
 %%%%
 You set off the alarm!
-Ihr habt den Alarm ausgelöst!
+Ihr löst den Alarm aus!
 %%%%
-%s %s the alarm!
-%s %s den Alarm!
+%s pulls the alarm!
+%s zieht den Alarm!
 %%%%
-pulls
-
-%%%%
-sets off
-
+%s sets off the alarm!
+%s löst den Alarm aus!
 %%%%
 %s vibrates slightly, failing to make a sound.
 %s vibriert leicht und macht kein Geräusch.
 %%%%
 %s emits a blaring wail!
-
+%s ertönt mit einem schrillen Heulen!
 %%%%
 You avoid triggering a blade trap.
 Ihr vermeidet es, eine Klingenfalle auszulösen.
@@ -21690,79 +21684,73 @@ A huge blade swings out and slices into you!
 Eine riesige Klinge schwingt heraus und schneidet in Euch!
 %%%%
 %s fails to trigger a blade trap.
-
+%s vermeidet das Auslösen einer Klingenfalle.
 %%%%
 %s avoids a huge, swinging blade.
-
+%s weicht einer riesigen, schwingenden Klinge aus.
 %%%%
 A huge blade swings out!
 Eine riesige Klinge schwingt heraus!
 %%%%
-A huge blade swings out
-
-%%%%
-" and slices into "
-
+A huge blade swings out and slices into %s!
+Eine riesige Klinge schwingt aus und schneidet in {acc}%s!
 %%%%
 %s fails to trigger a net trap.
-
+%s vermeidet das Auslösen einer Netzfalle.
 %%%%
 %s drops a net on you.
-
+%s lässt ein Netz auf Euch fallen.
 %%%%
 Something launches a net on you.
 Etwas wirft ein Netz auf Euch.
 %%%%
 You avoid being caught in a net.
-
+Ihr vermeidet es, Euch in einem Netz zu verfangen.
 %%%%
 The net is torn apart by your bulk.
-
+Das Netz wird durch Eure Masse zerrissen.
 %%%%
 %s passes through a web.
-
+%s geht durch ein Spinnennetz.
 %%%%
 %s oozes through a web.
-
+%s sickert durch ein Spinnennetz.
 %%%%
 You pick your way through the web.
-Ihr sucht Euch Euren Weg durch das Netz.
+Ihr sucht Euch Euren Weg durch das Spinnennetz.
 %%%%
 You are caught in the web!
-Ihr seid im Netz gefangen!
+Ihr seid im Spinnennetz gefangen!
 %%%%
 %s evades a web.
-
+%s vermeidet ein Spinnennetz.
 %%%%
 A web moves frantically as something is caught in it!
 Ein Web bewegt sich rasend schnell, während sich etwas darin verfängt!
 %%%%
 You enter the Zot trap.
-Ihr betrittt die Zot-Falle.
+Ihr betretet die Zot-Falle.
 %%%%
 You hear a loud "Zot"!
 Ihr hört ein lautes "Zot"!
 %%%%
-%s shaft crumbles and collapses.
-%s Welle bröckelt und bricht zusammen.
+A shaft crumbles and collapses.
+Ein Schacht bröckelt und stürzt ein.
 %%%%
 The web tears apart.
-Das Netz zerreißt.
+Das Spinnennetz zerreißt.
 %%%%
 You disentangle yourself.
 Ihr entwirrt Euch.
 %%%%
 You struggle to detach yourself from the web.
-Ihr kämpft darum, Euch vom Netz zu lösen.
+Ihr kämpft darum, Euch vom Spinnennetz zu lösen.
 %%%%
-You %s the net and break free!
-Ihr %s das Netz und befreist Euch!
+You shred the net and break free!
+Ihr zerfetzt das Netz und brecht aus!
 %%%%
-shred
-
-%%%%
-rip
-
+You rip the net and break free!
+Ihr zerreißt das Netz und brecht aus!
 %%%%
 You tear a large gash into the net.
 Ihr reißt einen großen Schnitt ins Netz.
@@ -21771,10 +21759,10 @@ You struggle against the net.
 Ihr kämpft gegen das Netz.
 %%%%
 %s tears the web.
-
+%s zerreißt das Netz.
 %%%%
 %s pulls away from the web.
-
+%s zieht sich vom Netz zurück.
 %%%%
 The trap is out of ammunition!
 Die Falle hat keine Munition mehr!
@@ -21783,40 +21771,43 @@ You hear a soft click.
 Ihr hört ein leises Klicken.
 %%%%
 You avoid triggering %s.
-Ihr vermeidet es,%s auszulösen.
+Ihr vermeidet es, {acc}%s auszulösen.
 %%%%
 %s avoids triggering %s.
-%s vermeidet das Auslösen von%s.
+%s vermeidet das Auslösen von {dat}%s.
 %%%%
 %s shoots out and misses you.
 %s schießt heraus und vermisst Euch.
 %%%%
-someone's
-
+%s shoots out and hits your shield.
+%s schießt heraus und trifft Euren Schild.
 %%%%
 %s shoots out and hits %s shield.
-%s schießt heraus und trifft%s Schild.
+%s schießt heraus und trifft %s Schild.
+%%%%
+%s shoots out and hits someone's shield.
+%s schießt heraus und trifft den Schild von jemandem.
 %%%%
 %s shoots out and hits you!
-%s schießt raus und trifft Euch!
+%s schießt heraus und trifft Euch!
 %%%%
-%s hits %s%s!
-%s trifft%s%s!
+%s hits %s but does no damage!
+%s trifft %s, verursacht aber keinen Schaden!
 %%%%
-" but does no damage"
-, richtet aber keinen Schaden an.
+%s hits %s!
+%s trifft %s!
 %%%%
 You stumble into a teleport trap!
-
+Ihr stolpert in eine Teleportfalle!
 %%%%
 You are even more entangled.
 Ihr seid noch mehr verwickelt.
 %%%%
 A web harmlessly splats on %s.
-Ein Web spritzt harmlos auf%s.
+Ein Spinnennetz platscht harmlos auf {acc}%s.
 %%%%
 You are caught in a web!
-Ihr seid in einem Netz gefangen!
+Ihr seid in einem Spinnennetz gefangen!
 %%%%
 
 ##################
