@@ -21275,7 +21275,7 @@ Couldn't find font '%s', falling back on '%s'
 Die Schriftart '%s' konnte nicht gefunden werden, da auf '%s' zurückgegriffen wurde.
 %%%%
 Failed to find a valid window layout: screen too small or game_scale too large?
-
+Es konnte kein gültiges Fensterlayout gefunden werden: Bildschirm zu klein oder game_scale zu groß?
 %%%%
 
 ##################
