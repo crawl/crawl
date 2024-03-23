@@ -21349,16 +21349,16 @@ Zot hat Euch fast gefunden. Der Tod naht. Steigt hinab oder flieht aus diesem Zw
 ##################
 %%%%
 Your equipment is entirely melded.
-
+Eure Ausrüstung ist vollständig verschmolzen.
 %%%%
 Your armour is entirely melded.
-
+Eure Rüstung ist vollständig verschmolzen.
 %%%%
 Your equipment is almost entirely melded.
-
+Eure Ausrüstung ist fast vollständig verschmolzen.
 %%%%
 Your equipment is partially melded.
-
+Eure Ausrüstung ist teilweise verschmolzen.
 %%%%
 You were %s.
 Ihr wart %s.
@@ -21367,10 +21367,10 @@ You are %s.
 Ihr seid %s.
 %%%%
 You fly out of the water as you turn into %s.
-Ihr fliegt aus dem Wasser, als Ihr Euch verwandelt in {acc}%s.
+Ihr fliegt aus dem Wasser, als Ihr Euch in {acc}%s verwandelt.
 %%%%
 As you dive into the water, you turn into %s.
-Als Ihr ins Wasser eintaucht, Ihr verwandelt Euch in {acc}%s.
+Als Ihr ins Wasser eintaucht, verwandelt Ihr Euch in {acc}%s.
 %%%%
 You turn into %s.
 Ihr verwandelt Euch in {acc}%s.
@@ -21384,8 +21384,8 @@ Ihr schwebt feierlich vor dem Altar von {dat}%s.
 You had blades for front paws.
 Ihr hattet Klingen für Vorderpfoten.
 %%%%
-You had blades for tentacles.
-Ihr hattet Klingen für Tentakel.
+You had blades for main tentacles.
+Ihr hattet Klingen für Haupttentakel.
 %%%%
 You had blades for hands.
 Ihr hattet Klingen für Hände.
@@ -21393,8 +21393,8 @@ Ihr hattet Klingen für Hände.
 You have blades for front paws.
 Ihr habt Klingen für Vorderpfoten.
 %%%%
-You have blades for tentacles.
-Ihr habt Klingen für Tentakel.
+You have blades for main tentacles.
+Ihr habt Klingen für Haupttentakel.
 %%%%
 You have blades for hands.
 Ihr habt Klingen für Hände.
@@ -21402,17 +21402,14 @@ Ihr habt Klingen für Hände.
 Your front paw turns into a razor-sharp scythe blade.
 Eure Vorderpfote verwandelt sich in eine rasiermesserscharfe Sensenklinge.
 %%%%
-Your tentacle turns into a razor-sharp scythe blade.
-Euer Tentakel verwandelt sich in eine rasiermesserscharfe Sensenklinge.
-%%%%
 Your hand turns into a razor-sharp scythe blade.
 Eure Hand verwandelt sich in eine rasiermesserscharfe Sensenklinge.
 %%%%
 Your front paws turn into razor-sharp scythe blades.
 Eure Vorderpfoten verwandeln sich in eine rasiermesserscharfe Sensenklinge.
 %%%%
-Your tentacles turn into razor-sharp scythe blades.
-Eure Tentakel verwandeln sich in rasiermesserscharfe Sensenklingen.
+Your main tentacles turn into razor-sharp scythe blades.
+Eure Haupttentakel verwandeln sich in rasiermesserscharfe Sensenklingen.
 %%%%
 Your hands turn into razor-sharp scythe blades.
 Eure Hände verwandeln sich in rasiermesserscharfe Sensenklingen.
@@ -21420,23 +21417,20 @@ Eure Hände verwandeln sich in rasiermesserscharfe Sensenklingen.
 Your front paw reverts to its normal proportions.
 Eure Vorderpfote kehrt zu ihren normalen Proportionen zurück.
 %%%%
-Your tentacle reverts to its normal proportions.
-Euer Tentakel kehrt zu seinen normalen Proportionen zurück.
-%%%%
 Your hand reverts to its normal proportions.
 Eure Hand kehrt zu ihren normalen Proportionen zurück.
 %%%%
 Your front paws revert to their normal proportions.
 Eure Vorderpfoten kehren zu ihren normalen Proportionen zurück.
 %%%%
-Your tentacles revert to their normal proportions.
-Eure Tentakel kehren zu ihren normalen Proportionen zurück.
+Your main tentacles revert to their normal proportions.
+Eure Haupttentakel kehren zu ihren normalen Proportionen zurück.
 %%%%
 Your hands revert to their normal proportions.
 Eure Hände kehren zu ihren normalen Proportionen zurück.
 %%%%
 You inwardly fear your resemblance to a lawn ornament.
-Ihr fürchtet Euch innerlich vor Eurer Ähnlichkeit mit einem Rasenzierapparat.
+Ihr fürchtet Euch innerlich vor Eurer Ähnlichkeit mit einer Gartendekoration.
 %%%%
 Your body stiffens and grows slower.
 Euer Körper versteift sich und wird langsamer.
@@ -21450,15 +21444,6 @@ Ihr nehmt wieder Eure normale fleischige Form an.
 You warm up again.
 Ihr wärmt Euch wieder auf.
 %%%%
-Ice paw
-
-%%%%
-Ice paws
-
-%%%%
-a fearsome %s!
-
-%%%%
 Your body is suffused with negative energy!
 Euer Körper wird von negativer Energie durchflutet!
 %%%%
@@ -21469,10 +21454,10 @@ You feel your undeath return to normal.
 Ihr spürt, wie Euer Untod wieder normal wird.
 %%%%
 You were in vampire-bat-form.
-Ihr wart in Vampir-Fledermaus-Form.
+Ihr wart in Vampirfledermaus-Form.
 %%%%
 You are in vampire-bat-form.
-Ihr seid in Vampir-Fledermaus-Form.
+Ihr seid in Vampirfledermaus-Form.
 %%%%
 You were in bat-form.
 Ihr wart in Fledermaus-Form.
@@ -21481,16 +21466,16 @@ You are in bat-form.
 Ihr seid in Fledermaus-Form.
 %%%%
 One of your tentacles had grown a beastly spike.
-
+Einem Eurer Tentakel war ein bestialischer Stachel gewachsen.
 %%%%
 One of your tentacles has grown a beastly spike.
-
+Einem Eurer Tentakel ist ein bestialischer Stachel gewachsen.
 %%%%
 You had temporarily grown %s.
-
+Euch war %s vorübergehend gewachsen.
 %%%%
 You have temporarily grown %s.
-
+Euch ist %s vorübergehend gewachsen.
 %%%%
 You grow a pair of large bovine horns.
 Euch wächst ein Paar großer Rinderhörner.
@@ -21514,10 +21499,10 @@ You emerge from the shadows.
 Ihr tretet aus den Schatten hervor.
 %%%%
 %s falls away, shattering the curse!
-
+%s fällt weg und zerbricht den Fluch!
 %%%%
 %s fall away, shattering the curse!
-
+%s fallen weg und zerbrechen den Fluch!
 %%%%
 %s fall away!
 %s fallen weg!
@@ -21533,12 +21518,6 @@ Ihr tretet aus den Schatten hervor.
 %%%%
 %s unmelds from your body.
 %s löst sich von Eurem Körper.
-%%%%
-"front "
-
-%%%%
-"main "
-
 %%%%
 You would drown in your new form.
 Ihr würdet in Eurer neuen Form ertrinken.
@@ -21568,7 +21547,7 @@ You extend your transformation's duration.
 Ihr verlängert die Dauer Eurer Transformation.
 %%%%
 You fail to extend your transformation any further.
-Ihr könnt Eure Verwandlung nicht weiter ausdehnen.
+Ihr könnt die Dauer Eurer Verwandlung nicht weiter ausdehnen.
 %%%%
 Your unliving flesh cannot be transformed in this way.
 Euer unbelebtes Fleisch kann nicht auf diese Weise transformiert werden.
@@ -21613,7 +21592,7 @@ Eure Beine werden zu einem Schwanz, als Ihr ins Wasser taucht.
 ... aber erwartet nicht, unentdeckt zu bleiben.
 %%%%
 Your blood-deprived body can't sustain your transformation.
-Euer blutarmer Körper kann Eure Verwandlung nicht durchhalten.
+Euer blutarmer Körper kann Eure Verwandlung nicht aufrechterhalten.
 %%%%
 Your blood-filled body can't sustain your transformation.
 Euer blutgefüllter Körper kann Eure Verwandlung nicht aufrechterhalten.

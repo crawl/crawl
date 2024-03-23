@@ -188,6 +188,9 @@ your paws
 tentacles
 Tentakel
 %%%%
+main tentacles
+Haupttentakeln
+%%%%
 # duplicate: also a monster
 #your tentacle
 #Euer Tentakel
@@ -441,12 +444,12 @@ a creature of crystalline ice
 eine Kreatur aus kristallinem Eis
 %%%%
 # unarmed attack
-Ice fists
-Eisfäuste
+Ice paws
+Eispfoten
 %%%%
 # unarmed attack (missing hand)
-Ice fist
-Eisfaust
+Ice paw
+Eispfote
 %%%%
 # hand-equivalent
 front paw
@@ -544,6 +547,33 @@ Drachenschuppen
 %%%%
 Your giant scaled body is strong and resiliant, but less evasive.
 Euer riesiger, geschuppter Körper ist stark und widerstandsfähig, aber weniger wendig.
+%%%%
+
+# draconians transform into specific types of dragon based on their colour
+%%%%
+a fearsome fire dragon
+ein furchterregender Feuerdrache
+%%%%
+a fearsome ice dragon
+ein furchterregender Eisdrache
+%%%%
+a fearsome swamp dragon
+ein furchterregender Sumpfdrache
+%%%%
+a fearsome golden dragon
+ein furchterregender Golddrache
+%%%%
+a fearsome iron dragon
+ein furchterregender Eisendrache
+%%%%
+a fearsome storm dragon
+ein furchterregender Sturmdrache
+%%%%
+a fearsome quicksilver dragon
+ein furchterregender Quecksilberdrache
+%%%%
+a fearsome steam dragon
+ein furchterregender Dampfdrache
 %%%%
 
 ################################

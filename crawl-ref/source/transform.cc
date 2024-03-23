@@ -540,19 +540,19 @@ public:
     {
         if (past_tense)
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_PAWS, false))
                 return localise("You had blades for front paws.");
-            else if (you.species == SP_OCTOPODE)
-                return localise("You had blades for tentacles.");
+            else if (you.arm_count() > 2)
+                return localise("You had blades for main tentacles.");
             else
                 return localise("You had blades for hands.");
         }
         else
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_PAWS, false))
                 return localise("You have blades for front paws.");
-            else if (you.species == SP_OCTOPODE)
-                return localise("You have blades for tentacles.");
+            else if (you.arm_count() > 2)
+                return localise("You have blades for main tentacles.");
             else
                 return localise("You have blades for hands.");
         }
@@ -567,19 +567,17 @@ public:
 
         if (singular)
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_PAWS, false))
                 mpr("Your front paw turns into a razor-sharp scythe blade.");
-            else if (you.species == SP_OCTOPODE)
-                mpr("Your tentacle turns into a razor-sharp scythe blade.");
             else
                 mpr("Your hand turns into a razor-sharp scythe blade.");
         }
         else
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_PAWS, false))
                 mpr("Your front paws turn into razor-sharp scythe blades.");
-            else if (you.species == SP_OCTOPODE)
-                mpr("Your tentacles turn into razor-sharp scythe blades.");
+            else if (you.arm_count() > 2)
+                mpr("Your main tentacles turn into razor-sharp scythe blades.");
             else
                 mpr("Your hands turn into razor-sharp scythe blades.");
         }
@@ -594,19 +592,17 @@ public:
 
         if (singular)
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_PAWS, false))
                 mpr(MSGCH_DURATION, "Your front paw reverts to its normal proportions.");
-            else if (you.species == SP_OCTOPODE)
-                mpr(MSGCH_DURATION, "Your tentacle reverts to its normal proportions.");
             else
                 mpr(MSGCH_DURATION, "Your hand reverts to its normal proportions.");
         }
         else
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_PAWS, false))
                 mpr(MSGCH_DURATION, "Your front paws revert to their normal proportions.");
-            else if (you.species == SP_OCTOPODE)
-                mpr(MSGCH_DURATION, "Your tentacles revert to their normal proportions.");
+            else if (you.arm_count() > 2)
+                mpr(MSGCH_DURATION, "Your main tentacles revert to their normal proportions.");
             else
                 mpr(MSGCH_DURATION, "Your hands revert to their normal proportions.");
         }
@@ -728,8 +724,10 @@ public:
     {
         if (species::is_draconian(you.species))
         {
+            // @noloc section start (we translate the full string (e.g. "a fearsome fire dragon")
             return make_stringf("a fearsome %s!",
                           mons_class_name(get_equivalent_mons()));
+            // @noloc section end
         }
         else
             return description;
@@ -1521,9 +1519,9 @@ string blade_parts(bool terse)
     // creatures with paws (aka felids) have four paws, but only two of them
     // turn into blades.
     if (!terse && you.has_mutation(MUT_PAWS, false))
-        str = "front " + str;
+        str = (you.arm_count() == 1 ? "front paw" : "front paws");
     else if (!terse && you.arm_count() > 2)
-        str = "main " + str; // Op have four main tentacles
+        str = "main tentacles"; // Op have four main tentacles
 
     return str;
 }
