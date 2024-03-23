@@ -8332,7 +8332,7 @@ orc_apostle_unbanished
 
 VISUAL:@The_monster@ pulls a severed tentacle out of their boot and sighs heavily.
 
-@The_monster@ grins, "Not even The Unformed can stop the chosen ones of Beogh!"
+@The_monster@ grins, "Not even the Unformed can stop the chosen ones of Beogh!"
 
 @The_monster@ shouts triumpantly, "Who's laughing NOW?"
 
