@@ -50,6 +50,9 @@ Gruft
 Depths
 Tiefen
 %%%%
+Hells
+Höllen
+%%%%
 Hell
 Hölle
 %%%%
@@ -169,6 +172,9 @@ die Gruft der Antiker
 %%%%
 the Depths
 die Tiefen
+%%%%
+the Hells
+die Höllen
 %%%%
 the Vestibule of Hell
 das Vestibül der Hölle

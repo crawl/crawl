@@ -356,11 +356,13 @@ static void _jiyva_effects(int /*time_delta*/)
                     simple_god_message(" gurgles merrily.");
                     break;
                 case 1:
-                    mprf(MSGCH_SOUND, "You hear %s splatter%s.",
-                         total_jellies > 1 ? "a series of" : "a",
-                         total_jellies > 1 ? "s" : "");
+                    if (total_jellies > 1)
+                        mpr(MSGCH_SOUND, "You hear a series of splatters.");
+                    else
+                        mpr(MSGCH_SOUND, "You hear a splatter.");
                     break;
                 case 2:
+                    // @locnote: Xom's command to slimes/jellies (they reproduce by dividing)
                     simple_god_message(" says: Divide and consume!");
                     break;
             }
@@ -396,10 +398,12 @@ static void _evolve(int /*time_delta*/)
                 && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
+                // @noloc section start (just used for note)
                 const string reason = (you.get_mutation_level(MUT_EVOLUTION) == 1)
                                     ? "end of evolution"
                                     : "decline of evolution";
                 evol |= delete_mutation(MUT_EVOLUTION, reason, false);
+                // @noloc section end
             }
             // interrupt the player only if something actually happened
             if (evol)
@@ -955,17 +959,23 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
     if (count)
     {
         if (seen_change && !zin)
-            mprf("The walls disappear%s!", premature ? " prematurely" : "");
+        {
+            if (premature)
+                mprf("The walls disappear prematurely!");
+            else
+                mprf("The walls disappear!");
+        }
         else if (seen_change && zin)
         {
-            mprf("Zin %s %s %s.",
-                 (mon) ? "releases"
-                       : "dismisses",
-                 (mon) ? mon->name(DESC_THE).c_str()
-                       : "the silver walls,",
-                 (mon) ? make_stringf("from %s prison",
-                             mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str()
-                       : "but there is nothing inside them");
+            if (mon)
+            {
+                mprf("Zin releases %s from prison.",
+                     mon->name(DESC_THE).c_str());
+            }
+            else
+            {
+                mpr("Zin dismisses the silver walls, but there is nothing inside them.");
+            }
         }
         else
         {

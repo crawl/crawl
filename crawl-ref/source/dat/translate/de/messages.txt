@@ -6765,9 +6765,6 @@ You can't bribe the denizens of %s.
 Do you want to bribe the denizens of %s?
 
 %%%%
-the Hells
-
-%%%%
 Gozag spreads your bribe to %s!
 
 %%%%
@@ -21282,65 +21279,42 @@ Es konnte kein gültiges Fensterlayout gefunden werden: Bildschirm zu klein oder
 # timed-effects.cc
 ##################
 %%%%
-the effects of Hell
-
-%%%%
 %s's power protects you from the chaos of Hell!
-
+{gen}%s Macht schützt Euch vor dem Chaos der Hölle!
 %%%%
 Your body shudders with the violent release of wild energies!
-
-%%%%
-magical storm
-
+Euer Körper zittert unter der heftigen Freisetzung von wilden Energien!
 %%%%
 Your body momentarily shudders from a surge of wild energies until Zin's power calms it.
-
+Euer Körper zittert kurzzeitig vor einer Welle wilder Energien, bis Zins Macht sie beruhigt.
 %%%%
 %s gurgles merrily.
-
+%s gurgelt fröhlich.
 %%%%
-You hear %s splatter%s.
-Ihr hört%s Splatter%s.
+You hear a series of splatters.
+Ihr hört eine Reihe von Platschen.
 %%%%
-a series of
-
+You hear a splatter.
+Ihr hört einen Platsch.
 %%%%
+# note: Xom's command to slimes/jellies (they reproduce by dividing)
 %s says: Divide and consume!
-
+%s sagt: Scheidet euch und fresst!
 %%%%
 You feel a genetic drift.
 Ihr fühlt eine genetische Drift.
 %%%%
-end of evolution
-
+The walls disappear prematurely!
+Die Wände verschwinden vorzeitig!
 %%%%
-decline of evolution
-
+The walls disappear!
+Die Wände verschwinden!
 %%%%
-The walls disappear%s!
-Die Wände verschwinden%s!
+Zin releases %s from prison.
+Zin befreit {acc}%s aus dem Gefängnis.
 %%%%
-" prematurely"
-
-%%%%
-Zin %s %s %s.
-Zin %s %s %s.
-%%%%
-releases
-
-%%%%
-dismisses
-
-%%%%
-the silver walls,
-
-%%%%
-from %s prison
-
-%%%%
-but there is nothing inside them
-
+Zin dismisses the silver walls, but there is nothing inside them.
+Zin weist die silbernen Wände zurück, aber im Inneren ist nichts zu finden.
 %%%%
 You hear a deep rumble.
 Ihr hört ein tiefes Grollen.
@@ -21354,23 +21328,20 @@ Die Runensiegel verschwinden.
 The runic seal fades away.
 Das Runensiegel verschwindet.
 %%%%
-Hells
-
-%%%%
 As you enter the new level, Zot loses track of you.
-
+Als Ihr die neue Ebene betretet, verliert Zot Euch aus den Augen.
 %%%%
 Zot has found you!
-
+Zot hat Euch gefunden!
 %%%%
 You have lingered too long. Zot senses you. Dive deeper or flee this branch before you perish!
-
+Ihr habt zu lange gezögert. Zot spürt Euch. Taucht tiefer oder flieht diesen Zweig, bevor Ihr umkommt!
 %%%%
 Zot draws nearer. Dive deeper or flee this branch before you perish!
-
+Zot rückt näher. Taucht tiefer oder flieht aus diesem Zweig, bevor Ihr umkommt!
 %%%%
 Zot has nearly found you. Death is approaching. Descend or flee this branch!
-
+Zot hat Euch fast gefunden. Der Tod naht. Steigt hinab oder flieht aus diesem Zweig!
 %%%%
 
 ##################
