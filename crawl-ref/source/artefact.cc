@@ -2039,7 +2039,7 @@ static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
 }
 
 // Takes a list of existing gizmos in a CrawlVector (having been created by
-// acquiement) and fills out their properties.
+// acquirement) and fills out their properties.
 void fill_gizmo_properties(CrawlVector& gizmos)
 {
     // Shuffle all props
