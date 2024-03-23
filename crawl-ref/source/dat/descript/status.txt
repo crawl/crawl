@@ -680,8 +680,7 @@ maximum health is further drained when taking damage.
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer, and Passage of Golubria
-portals will be less accurately positioned and expire more quickly.
+translocation magic. Teleportation will take longer.
 %%%%
 -Hop status
 
