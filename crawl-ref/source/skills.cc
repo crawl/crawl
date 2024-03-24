@@ -1891,15 +1891,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
-        case SK_SUMMONINGS:
-            if (is_evil_god(god))
-            {
-                // retro goody-bag for decidedly non-goodies
-                if (skill_rank == 4)
-                    result = "Demonologist";
-                else if (skill_rank == 5)
-                    result = "Hellbinder";
-            }
+        case SK_FIGHTING:
+            if (species == SP_HUMAN && skill_rank == 5 && god == GOD_MAKHLEB)
+                result = "Hell Knight";
             break;
 
         case SK_POLEARMS:
@@ -1908,10 +1902,12 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_UNARMED_COMBAT:
-            if (species == SP_FELID)
-                result = claw_and_tooth_titles[skill_rank];
-            else if (species == SP_MUMMY && skill_rank == 5)
+            if (species == SP_MUMMY && skill_rank == 5)
                 result = "Pharaoh";
+            else if (species == SP_FELID)
+                result = claw_and_tooth_titles[skill_rank];
+            else if (species == SP_OCTOPODE && skill_rank == 5)
+                result = "Crusher";
             else if (!dex_better && species == SP_DJINNI && skill_rank == 5)
                 result = "Weightless Champion";
             else
@@ -1938,36 +1934,15 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_ARMOUR:
-            if (species == SP_COGLIN && skill_rank == 5)
+            if (species == SP_TROLL && skill_rank == 5)
+                result = "Iron Troll";
+            else if (species == SP_COGLIN && skill_rank == 5)
                 result = "Iron Golem";
             break;
 
-        case SK_INVOCATIONS:
-            if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
-                result = "Blood Saint";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
-                result = "Rolling Thunder";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
-                result = "Holy Roller";
-            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
-                result = "Royal Mummy";
-            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
-                result = "Forbidden One";
-            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_USKAYAW)
-                result = "Necrodancer";
-            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
-                result = "Black Lotus";
-            else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
-                result = "Rockslime";
-            else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
-                result = "Cobgoblin"; // hm.
-            else if (god != GOD_NO_GOD)
-                result = god_title(god, species, piety);
-            else if (species == SP_BARACHI)
-            {
-                // C.f. the barachi species lore, true believers!
-                result = "God-Hated";
-            }
+        case SK_SHIELDS:
+            if (species == SP_SPRIGGAN && skill_rank > 3)
+                result = "Defender";
             break;
 
         case SK_RANGED_WEAPONS:
@@ -1988,49 +1963,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Wallbreaker";
             break;
 
-        // For the below draconian titles, intentionally don't restrict
-        // by drac colour to avoid frustrating players trying for these
-        case SK_FIRE_MAGIC:
-            if (species == SP_DJINNI && skill_rank == 5)
-                result = "Smokeless Flame";
-            else if (species::is_draconian(species) && skill_rank == 5)
-                result = "Fire Dragon";
-            else if (species == SP_MUMMY && skill_rank == 5)
-                result = "Highly Combustible";
-            else if (species == SP_GHOUL && skill_rank == 5)
-                result = "Searing Wretch";
-            break;
-
-        case SK_ICE_MAGIC:
-            if (species == SP_DJINNI && skill_rank == 5)
-                result = "Marid";
-            else if (species::is_draconian(species) && skill_rank == 5)
-                result = "Ice Dragon";
-            break;
-
-        case SK_EARTH_MAGIC:
-            if (species::is_draconian(species) && skill_rank == 5)
-                result = "Iron Dragon";
-            break;
-
-        case SK_AIR_MAGIC:
-            if (species::is_draconian(species) && skill_rank == 5)
-                result = "Storm Dragon";
-            break;
-
-        case SK_ALCHEMY:
-            if (species::is_draconian(species) && skill_rank == 5)
-                result = "Swamp Dragon";
-            break;
-
+        // For all draconian titles, intentionally don't restrict by drac
+        // colour to avoid frustrating players deliberately trying for these
         case SK_HEXES:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Faerie Dragon";
-            break;
-
-        case SK_TRANSLOCATIONS:
-            if (species == SP_FORMICID && skill_rank == 5)
-                result = "Teletunneler";
             break;
 
         case SK_NECROMANCY:
@@ -2040,6 +1977,87 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Corpseflower";
             else if (god == GOD_KIKUBAAQUDGHA)
                 result = god_title(god, species, piety);
+            break;
+
+        case SK_SUMMONINGS:
+            if (is_evil_god(god))
+            {
+                // retro goody-bag for decidedly non-goodies
+                if (skill_rank == 4)
+                    result = "Demonologist";
+                else if (skill_rank == 5)
+                    result = "Hellbinder";
+            }
+            break;
+
+        case SK_TRANSLOCATIONS:
+            if (species == SP_FORMICID && skill_rank == 5)
+                result = "Teletunneler";
+            break;
+
+        case SK_ALCHEMY:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Swamp Dragon";
+            break;
+
+        case SK_FIRE_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Fire Dragon";
+            else if (species == SP_MUMMY && skill_rank == 5)
+                result = "Highly Combustible";
+            else if (species == SP_GHOUL && skill_rank == 5)
+                result = "Searing Wretch";
+            else if (species == SP_GARGOYLE && skill_rank == 5)
+                result = "Molten";
+            else if (species == SP_DJINNI && skill_rank == 5)
+                result = "Smokeless Flame";
+            break;
+
+        case SK_ICE_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Ice Dragon";
+            else if (species == SP_DJINNI && skill_rank == 5)
+                result = "Marid";
+            break;
+
+        case SK_AIR_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Storm Dragon";
+            break;
+
+        case SK_EARTH_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Iron Dragon";
+            break;
+
+        case SK_INVOCATIONS:
+            if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
+                result = "Royal Mummy";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Forbidden One";
+            else if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
+                result = "Blood Saint";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_USKAYAW)
+                result = "Necrodancer";
+            else if (species::is_draconian(species) && skill_rank == 5 && is_good_god(god))
+                result = "Pearl Dragon";
+            else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
+                result = "Rockslime";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Black Lotus";
+            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
+                result = "Rolling Thunder";
+            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
+                result = "Holy Roller";
+            else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
+                result = "Cobgoblin"; // hm.
+            else if (god != GOD_NO_GOD)
+                result = god_title(god, species, piety);
+            else if (species == SP_BARACHI)
+            {
+                // C.f. the barachi species lore, true believers!
+                result = "God-Hated";
+            }
             break;
 
 #if TAG_MAJOR_VERSION == 34
