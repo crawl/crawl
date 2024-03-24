@@ -58,7 +58,7 @@ define(function () {
     exports.equip.HELMET = val++;
     exports.equip.GLOVES = val++;
     exports.equip.BOOTS = val++;
-    exports.equip.SHIELD = val++;
+    exports.equip.OFFHAND = val++;
     exports.equip.BODY_ARMOUR = val++;
     exports.equip.LEFT_RING = val++;
     exports.equip.RIGHT_RING = val++;
