@@ -1256,19 +1256,6 @@ string weapon_unprojectability_reason(const item_def* wpn)
     return "";
 }
 
-static void _animate_manass_hit(const coord_def p)
-{
-    if (!in_los_bounds_v(grid2view(p)))
-        return; // needed..?
-
-    const colour_t colour = LIGHTMAGENTA;
-#ifdef USE_TILE
-    view_add_tile_overlay(p, tileidx_zap(colour));
-#endif
-    view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
-                                static_cast<unsigned short>(colour)});
-}
-
 // Mildly hacky: If this was triggered via Autumn Katana, katana_defender is the
 //               target it first triggered on. If nullptr, this is a normal cast.
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
@@ -1364,7 +1351,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
         if (animate)
-            _animate_manass_hit(targets[i]->pos());
+            flash_tile(targets[i]->pos(), LIGHTMAGENTA, 0);
 
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
