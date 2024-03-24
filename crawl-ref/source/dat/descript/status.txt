@@ -682,6 +682,11 @@ Orb status
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
 translocation magic. Teleportation will take longer.
 %%%%
+Orb? status
+
+You are holding the Charlatan's Orb, whose energies disrupt translocation
+magic. Teleportation will take longer.
+%%%%
 -Hop status
 
 Your legs are tired, and you are unable to hop. This status will only recover
