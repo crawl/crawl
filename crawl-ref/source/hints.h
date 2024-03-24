@@ -138,6 +138,7 @@ enum hints_event_type
     HINT_SEEN_WEB,
     HINT_MALEVOLENCE,
     HINT_OPPORTUNITY_ATTACK,
+    HINT_ON_FIRE,
     HINT_EVENTS_NUM
 };
 

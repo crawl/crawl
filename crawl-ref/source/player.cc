@@ -4765,6 +4765,7 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
     }
 
     you.increase_duration(DUR_STICKY_FLAME, duration, 35);
+    learned_something_new(HINT_ON_FIRE);
 
     return true;
 }
