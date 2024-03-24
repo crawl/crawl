@@ -84,6 +84,7 @@ struct player_info
     FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<bool, ENDOFPACK> inv_uselessness;
     FixedVector<int8_t, NUM_EQUIP> equip;
+    bool offhand_weapon;
     int8_t quiver_item;
     string quiver_desc;
     string unarmed_attack;
