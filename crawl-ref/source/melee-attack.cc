@@ -3443,12 +3443,16 @@ void melee_attack::do_fiery_armour_burn()
 
     const int pre_ac = roll_dice(2, 4);
     const int post_ac = attacker->apply_ac(pre_ac);
-    const int hurted = mons_adjust_flavoured(mon, beam, post_ac);
+    // Don't display the adjusted messages...
+    const int hurted = mons_adjust_flavoured(mon, beam, post_ac, false);
 
     if (!hurted)
         return;
 
     simple_monster_message(*mon, " is burned by your cloak of flames.");
+
+    // ...until now, since we know damage was done.
+    mons_adjust_flavoured(mon, beam, post_ac);
 
     mon->hurt(&you, hurted);
 
@@ -3472,12 +3476,16 @@ void melee_attack::do_passive_freeze()
         monster* mon = attacker->as_monster();
 
         const int orig_hurted = random2(11);
-        int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
+        // Don't display the adjusted messages...
+        const int hurted = mons_adjust_flavoured(mon, beam, orig_hurted, false);
 
         if (!hurted)
             return;
 
         simple_monster_message(*mon, " is very cold.");
+
+        // ...until now, since we know damage was done.
+        mons_adjust_flavoured(mon, beam, orig_hurted);
 
         mon->hurt(&you, hurted);
 
@@ -3612,7 +3620,8 @@ void melee_attack::do_foul_flame()
             bolt beam;
             beam.flavour = BEAM_FOUL_FLAME;
             beam.thrower = KILL_YOU;
-            const int dmg = mons_adjust_flavoured(mon, beam, raw_dmg);
+            // Don't display the adjusted messages...
+            const int dmg = mons_adjust_flavoured(mon, beam, raw_dmg, false);
 
             if (!dmg)
                 return;
@@ -3622,6 +3631,10 @@ void melee_attack::do_foul_flame()
             mprf("%s is seared by the foul flame within you%s",
                  attacker->name(DESC_THE).c_str(),
                  attack_strength_punctuation(dmg).c_str());
+
+            // ...until now, since we know damage was done.
+            mons_adjust_flavoured(mon, beam, raw_dmg);
+
             mon->hurt(&you, dmg);
 
             if (mon->alive())

@@ -131,7 +131,8 @@ bool trap_def::is_bad_for_player() const
     return type == TRAP_ALARM
            || type == TRAP_DISPERSAL
            || type == TRAP_ZOT
-           || type == TRAP_NET;
+           || type == TRAP_NET
+           || type == TRAP_PLATE;
 }
 
 bool trap_def::is_safe(actor* act) const

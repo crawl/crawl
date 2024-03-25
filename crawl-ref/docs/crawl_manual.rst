@@ -1814,14 +1814,14 @@ Vine Stalkers (VS)
 
   Magic courses freely through their bodies, and any damage they take is split
   between their health and magical reserves. They also physically regenerate
-  at an alarming rate. However these traits come at a price: the dual nature of
+  at an alarming rate. However, these traits come at a price: the dual nature of
   their bodies makes them extremely frail, and they cannot benefit from potions
   to heal their wounds.
 
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey
   and then their regenerating capabilities to power through the wounds they may
-  sustain in battle. Many members of the species however, are seen wielding
+  sustain in battle. Many members of the species, however, are seen wielding
   magic quite competently and then switching to a hybrid style when their
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.

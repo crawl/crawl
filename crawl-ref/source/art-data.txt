@@ -1826,6 +1826,16 @@ DESCRIP: Gadgeteer:   Your evocable items recharge 30% faster and wands have a 3
  chance to not spend a charge.
 +Wandboost:   Your wands are more powerful.
 
+NAME:     Charlatan's Orb
+OBJ:      OBJ_ARMOUR/ARM_ORB
+TILE:     urand_charlatan
+TILE_EQ:  charlatans_orb
+COLOUR:   MAGENTA
+INSCRIP: orb Evoboost
+DBRAND:  It massively reduces your stealth.
++It interferes with translocations, delaying teleports.
++Evoboost:    It boosts the power of your evoked items.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

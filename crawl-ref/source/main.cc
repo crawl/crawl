@@ -2764,6 +2764,9 @@ static void _swing_at_target(coord_def move)
     dist target;
     target.target = you.pos() + move;
 
+    if (god_protects(monster_at(target.target), false))
+        return;
+
     // Don't warn the player "too injured to fight recklessly" when they
     // explicitly request an attack.
     unwind_bool autofight_ok(crawl_state.skip_autofight_check, true);

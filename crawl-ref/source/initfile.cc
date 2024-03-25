@@ -194,6 +194,7 @@ const vector<GameOption*> base_game_options::build_options_list()
     return options; // ignored by subclass...
 }
 
+#ifndef DGAMELAUNCH
 static map<string, game_type> _game_modes()
 {
     map<string, game_type> modes = {
@@ -208,6 +209,7 @@ static map<string, game_type> _game_modes()
         modes["descent"] = GAME_TYPE_DESCENT;
     return modes;
 }
+#endif
 
 // **Adding new options**
 //

@@ -41,15 +41,51 @@ server_path = os.path.dirname(os.path.abspath(__file__))
 # to enable ttyrec writing at the server level:
 # enable_ttyrecs = False
 
-bind_nonsecure = True # Set to false to only use SSL
+# set `bind_nonsecure` to False to use only SSL. Set to `"redirect"` to bind
+# the nonsecure ports as indicated, but redirect them to an SSL port.
+bind_nonsecure = True
 bind_address = ""
 bind_port = 8080
+
 # Or listen on multiple address/port pairs (overriding the above) with:
 # bind_pairs = (
 #     ("127.0.0.1", 8080),
 #     ("localhost", 8082),
 #     ("", 8180), # All addresses
 # )
+
+# set `ssl_options` to Tornado ssl options in order to use ssl on the specified
+# port. For a real deployment, in addition to certfile/keyfile as below, you
+# will probably need to provide "ca_certs" with your full CA cert chain.
+# The server needs read access to keyfile when accepting new connections, so
+# it should be readable by the user running the server (not just root).
+#
+# For local testing, you can generate a self-signed cert with a command like:
+# ```
+# openssl req -x509 -out localhost.crt -keyout localhost.key \
+#   -newkey rsa:2048 -nodes -sha256 \
+#   -subj '/CN=localhost' -extensions EXT -config <( \
+#    printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+# ```
+# (this sort of cert will generate security warnings in modern browsers, so it
+# is appropriate only for development use)
+
+ssl_options = None # No SSL
+# ssl_options = {
+#    "certfile": "./webserver/localhost.crt",
+#    "keyfile": "./webserver/localhost.key"
+# }
+
+ssl_address = ""
+ssl_port = 8443
+
+# Or listen on multiple address/port pairs (overriding the above) with:
+# ssl_bind_pairs = (
+#     ("127.0.0.1", 8081),
+#     ("localhost", 8083),
+# )
+
+
 
 # to log to a file directly, uncomment and add something like:
 #    "filename": "webtiles.log",
@@ -224,19 +260,6 @@ dgl_status_file = "./rcs/status"
 # at the moment. This value
 init_player_program = "./util/webtiles-init-player.sh"
 
-ssl_options = None # No SSL
-# ssl_options = {
-#    "certfile": "./webserver/localhost.crt",
-#    "keyfile": "./webserver/localhost.key"
-# }
-ssl_address = ""
-ssl_port = 8443
-# Or listen on multiple address/port pairs (overriding the above) with:
-# ssl_bind_pairs = (
-#     ("127.0.0.1", 8081),
-#     ("localhost", 8083),
-# )
-
 # how often to check for an active connection while playing; this has an effect
 # on how often a connection is checked for basic life, as well as the following
 # two idle timer settings.
@@ -255,7 +278,11 @@ ssl_port = 8443
 # use_gzip = True
 
 # Seconds until stale HTTP connections are closed
-# This needs a patch currently not in mainline tornado.
+# This corresponds to the tornado parameter `idle_connection_timeout`, which
+# will automatically close idle http connections that do not respond after a
+# period of time. Setting this to `None` gives the tornado default (1 hour).
+# This setting usually does not affect websockets connections, which use the
+# above webtiles-internal timeouts.
 # http_connection_timeout = None
 
 # Set this to true if you are behind a reverse proxy
