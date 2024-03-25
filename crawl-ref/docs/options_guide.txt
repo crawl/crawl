@@ -677,8 +677,8 @@ drop_filter += <regex>, <regex>, ...
         expression(s).
 
 drop_disables_autopickup = false
-        drop_disables_autopickup = true automatically removes dropped items
-        from autopickup.
+        drop_disables_autopickup = true automatically removes dropped
+        non-missile items from autopickup.
 
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
