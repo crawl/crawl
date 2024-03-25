@@ -441,7 +441,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // There-And-Back Book
-    SPELL_GRAVITAS,
+    SPELL_GELLS_GAVOTTE,
     SPELL_TELEPORT_OTHER,
     SPELL_DISPERSAL,
 },

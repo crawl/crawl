@@ -2125,3 +2125,169 @@ spret cast_piledriver(int pow, bool fail)
 
     return spret::success;
 }
+
+int gavotte_impact_power(int pow, int dist)
+{
+    return (pow * 3 / 4 + 35) * (dist + 5) / 2;
+}
+
+static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
+{
+    const bool god_prot = victim.is_monster()
+                                && god_protects(&you, victim.as_monster());
+
+    if (victim.is_monster() && victim.alive())
+    {
+        //potentially penance
+        if (!mons_is_conjured(victim.as_monster()->type))
+        {
+            god_conduct_trigger conducts[3];
+            set_attack_conducts(conducts, *victim.as_monster(),
+                you.can_see(*victim.as_monster()));
+        }
+    }
+
+    if (victim.is_monster() && !god_prot)
+    {
+        behaviour_event(victim.as_monster(), ME_ANNOY, &you, you.pos());
+        victim.as_monster()->speed_increment -= 10;
+    }
+
+    const coord_def starting_pos = victim.pos();
+    for (int i = 1; i <= dist; ++i)
+    {
+        const coord_def next_pos = starting_pos + (dir * i);
+
+        if (!victim.can_pass_through_feat(env.grid(next_pos)) && i > 1
+            && !victim.is_player())
+        {
+            victim.collide(next_pos, &you, gavotte_impact_power(pow, i));
+            break;
+        }
+        else if (actor* act_at_space = actor_at(next_pos))
+        {
+            if (i > 1 && &victim != act_at_space && !victim.is_player()
+                && !act_at_space->is_player())
+            {
+                victim.collide(next_pos, &you, gavotte_impact_power(pow, i));
+            }
+            break;
+        }
+        else if (!victim.is_habitable(next_pos))
+            break;
+        else
+            victim.move_to_pos(next_pos);
+    }
+
+    if (starting_pos != victim.pos())
+    {
+        victim.apply_location_effects(starting_pos);
+        if (victim.is_monster())
+            mons_relocated(victim.as_monster());
+    }
+}
+
+spret cast_gavotte(int pow, const coord_def dir, bool fail)
+{
+    fail_check();
+
+    // XXX: Surely there's a better way to do this
+    string dir_msg = "???";
+    if (dir.x == 0 && dir.y == -1)
+        dir_msg = "north";
+    else if (dir.x == 0 && dir.y == 1)
+        dir_msg = "south";
+    else if (dir.x == -1 && dir.y == 0)
+        dir_msg = "west";
+    else if (dir.x == 1 && dir.y == 0)
+        dir_msg = "east";
+    else if (dir.x == -1 && dir.y == -1)
+        dir_msg = "northwest";
+    else if (dir.x == 1 && dir.y == -1)
+        dir_msg = "northeast";
+    else if (dir.x == -1 && dir.y == 1)
+        dir_msg = "southwest";
+    else if (dir.x == 1 && dir.y == 1)
+        dir_msg = "southeast";
+
+    mprf("Gravity reorients to the %s!", dir_msg.c_str());
+
+    // Gather all monsters we will be moving
+    vector<actor*> targs;
+    targs.push_back(&you);
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_stationary())
+            targs.push_back(*mi);
+    }
+
+    // Sort by closest to the pull direction
+    sort(targs.begin( ), targs.end( ), [dir](actor* a, actor* b)
+    {
+        return (a->pos().x * dir.x) + (a->pos().y * dir.y)
+               > (b->pos().x * dir.x) + (b->pos().y * dir.y);
+    });
+
+    // Push all monsters, in order
+    for (unsigned int i = 0; i < targs.size(); ++i)
+        _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow);
+
+    you.increase_duration(DUR_GAVOTTE_COOLDOWN, random_range(5, 9) - div_rand_round(pow, 50));
+
+    return spret::success;
+}
+
+static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
+{
+    // Scan in our push direction. We want to find at least one tile of open
+    // space before the nearest solid feature or stationary monster. Non-stationary
+    // monsters are 'free'
+    int steps = GAVOTTE_DISTANCE;
+    coord_def pos = mon->pos();
+    while (steps)
+    {
+        pos += dir;
+
+        // They may actually be able to hit something here, but we shouldn't
+        // leak the presence of immediately off-screen walls to the targeter
+        if (!you.see_cell(pos))
+            return false;
+
+        // Can never collide with the player (for the player's sake)
+        if (pos == you.pos())
+            return false;
+
+        // If we're about to hit a blocker, check whether we will have moved at
+        // least one space before doing so.
+        monster* mon_at_pos = monster_at(pos);
+        if (!mon->can_pass_through_feat(env.grid(pos))
+            ||mon_at_pos && mon_at_pos->is_stationary())
+        {
+            return steps < GAVOTTE_DISTANCE;
+        }
+        // Skip over mobile monsters as 'free' spaces (since we can all pile up
+        // against a wall)
+        else if (mon_at_pos && !mon_at_pos->is_stationary())
+            steps++;
+
+        steps--;
+    }
+
+    return false;
+}
+
+vector<monster*> gavotte_affected_monsters(const coord_def dir)
+{
+    vector<monster*> affected;
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_stationary())
+        {
+            if (_gavotte_will_wall_slam(*mi, dir))
+                affected.push_back(*mi);
+        }
+    }
+
+    return affected;
+}

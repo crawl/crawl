@@ -1399,6 +1399,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_NULLIFYING_BREATH:
         return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH, pow,
                                           2, 2);
+    case SPELL_GELLS_GAVOTTE:
+        return make_unique<targeter_gavotte>(&you);
 
     default:
         break;
@@ -2562,7 +2564,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     }
     break;
 
-
+    case SPELL_GELLS_GAVOTTE:
+        return cast_gavotte(powc, beam.target - you.pos(), fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
@@ -2901,6 +2904,10 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
             return describe_collision_dam(collision_damage(pow, false));
         case SPELL_PILEDRIVER:
             return make_stringf("2d(%d-%d)", 1 + (pow * 3 / 20), 1 + (pow * 6 / 20));
+        case SPELL_GELLS_GAVOTTE:
+            return make_stringf("2d(%d-%d)",
+                        collision_damage(gavotte_impact_power(pow, 1), false).size,
+                        collision_damage(gavotte_impact_power(pow, 4), false).size);
         default:
             break;
     }

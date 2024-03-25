@@ -1462,6 +1462,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
             return "your canine familiar is too injured to answer your call.";
 
+    case SPELL_GELLS_GAVOTTE:
+        if (temp && you.duration[DUR_GAVOTTE_COOLDOWN])
+            return "local gravity is still too unstable to reorient.";
+
     default:
         break;
     }
@@ -1522,6 +1526,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
     case SPELL_BOULDER:
+    case SPELL_GELLS_GAVOTTE:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

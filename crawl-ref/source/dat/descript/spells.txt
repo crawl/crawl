@@ -676,6 +676,20 @@ Galvanic Breath spell
 
 <Galvanic Breath ability>
 %%%%
+Gell's Gavotte spell
+
+Briefly reorients local gravity to be in a cardinal direction of the caster's
+choosing, causing all creatures in sight to tumble a short distance in that
+direction.
+
+The caster is not immune to the gravitational effects of this spell, but will
+be cushioned so they take no collision damage. Other creatures are not so
+fortunate, and the abrupt impact will batter anything which was not already
+standing beside its new 'floor'.
+
+It takes a short time for gravity to stabilize enough to recast this spell,
+though more powerful mages are able to do so more frequently.
+%%%%
 Gell's Gravitas spell
 
 Briefly redirects gravity around a target point, causing 'down' to be towards

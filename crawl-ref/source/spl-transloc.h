@@ -6,6 +6,7 @@ class actor;
 class dist;
 
 const int GOLUBRIA_FUZZ_RANGE = 2;
+const int GAVOTTE_DISTANCE = 4;
 
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
@@ -66,3 +67,7 @@ spret blinkbolt(int power, bolt &beam, bool fail);
 vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets);
 vector<coord_def> possible_piledriver_targets();
 spret cast_piledriver(int pow, bool fail);
+
+int gavotte_impact_power(int pow, int dist);
+spret cast_gavotte(int pow, const coord_def dir, bool fail);
+vector<monster*> gavotte_affected_monsters(const coord_def dir);

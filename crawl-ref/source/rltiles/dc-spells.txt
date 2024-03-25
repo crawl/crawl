@@ -163,6 +163,7 @@ gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
 electric_charge ELECTRIC_CHARGE
 piledriver PILEDRIVER
+gavotte GAVOTTE
 
 # item-based spells
 %sdir gui/spells/misc
