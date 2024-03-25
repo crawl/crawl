@@ -1829,7 +1829,7 @@ DESCRIP: Gadgeteer:   Your evocable items recharge 30% faster and wands have a 3
 NAME:     Charlatan's Orb
 OBJ:      OBJ_ARMOUR/ARM_ORB
 TILE:     urand_charlatan
-TILE_EQ:  orb2
+TILE_EQ:  charlatans_orb
 COLOUR:   MAGENTA
 INSCRIP: orb Evoboost
 DBRAND:  It massively reduces your stealth.
