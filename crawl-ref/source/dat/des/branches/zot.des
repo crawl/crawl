@@ -3778,7 +3778,8 @@ MONS:    guardian serpent / deep elf annihilator / balrug / \
          deep elf high priest / will-o-the-wisp / acid blob
 MONS:    halazid warlock / revenant / apocalypse crab
 MONS:    butterfly
-ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup, orb randart no_pickup
+ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
+KITEM:   O = charlatans_orb no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   C = altar_ecumenical
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / altar_ignis w:5
@@ -3789,9 +3790,9 @@ NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
 SUBST:   X : X Y Z:4, X = bbbbvvc, Y = bvvvvc, Z = bvvcccc
 SUBST:   az = bbvc
 NSUBST:  2 = 4 = 2223 / 2 = 122 / 1 = 1.. / *:1
-NSUBST:  . = 1:3 / 4:4 / 4:% / *:.
+NSUBST:  . = 1:3 / 4:4 / 12:% / *:.
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])defG, fGHCD~
+SHUFFLE: ])deOG, OGUCD~
 # Invert the normal Zot colours.
 : local wallc = "darkgray"
 : local floorc = "white"
@@ -3809,8 +3810,7 @@ SHUFFLE: ])defG, fGHCD~
 : tile("b = dngn_crystal_" .. wallc)
 : tile("v = dngn_metal_wall_" .. wallc)
 : tile("c = dngn_stone_wall_" .. wallc)
-# : tile("n = dngn_transparent_stone_" .. wallc)
-: ftile(".123409def%CDG~+ = floor_rough_" .. floorc)
+: ftile(".`123409deO%CDG~+ = floor_rough_" .. floorc)
 COLOUR: G = mountain
 TILE:   G = dngn_scintillating_statue
 : set_feature_name("granite_statue", "scintillating statue")
@@ -3825,22 +3825,22 @@ xyyXX.....XXyxxxxxxxyXX.....XXyyxxxxxxxxxxyyXX'''
 xxyyXX.....XyxxxxxxxyX1....XXyyxxxxxxxxxxxxyyXX''
 xxxyyX....1zzxxxxxxxzz.....XyyxxxxxxxxxxxxxxyyX''
 xxxxyX.....zyyyyyyyyyyz1....XyxxxxxxxxxxxxxxxxyX'
-xxxxyX....Xzy...2...yzX....XyxxxxxxxxxxxxxxxxyX'
-xxxyyX....Xzy1y.].y1yzX....XyyxxxxxxxxxxxxxxxyX''
+xxxxyX....Xzy..`2`..yzX....XyxxxxxxxxxxxxxxxxyX'
+xxxyyX....Xzy1y`]`y1yzX....XyyxxxxxxxxxxxxxxxyX''
 xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxyyyyyyyyyyzzX''
-xxyXX...zzz1....2....1zzz...XXyxxyyd......2zzX'''
+xxyXX...zzz1....2....1zzz...XXyxxyyd``....2zzX'''
 xxyX...zzX1...........1Xzz...Xyyyyyyyy1..1zzX''''
 xxXX+++z.................z+++XXXXXXXzzzz+zzX''''
 xx1....................................112z1'''
 xxXX.........................XXXXXXXzzzz+zzX''''
 xxyXXXX...................XXXXyyyyyyy1...1zzX''''
-xxxyyyXXX...............XXXyyyyyyye.......2zzX'''
+xxxyyyXXX...............XXXyyyyyyye``.....2zzX'''
 xxxxxyyyXX.............XXyyyxxxxyyyyyyyyyyyyzzX'
 xxxxxxxyyX...zzz1zzz...XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxxxxyX..Xz1z+z1zX..XyxxxxxxxxxxxxxxxxxxyXX'''
-xxxxxxxxyX.2zzX%%%Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
-xxxxxxxxyzzzz1.%)%.1zzzzyxxxxxxxxxxxxxxxxxyX1''
-xxxxxxxxyX''zzX%%%Xzz''XyxxxxxxxxxxxxxxxxxyyX'''
+xxxxxxxxyX.2zzX$$$Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
+xxxxxxxxyzzzz1.$)$.1zzzzyxxxxxxxxxxxxxxxxxyX1''
+xxxxxxxxyX''zzX$$$Xzz''XyxxxxxxxxxxxxxxxxxyyX'''
 xxxxxxxxyX''Xz2zzz2zX''XyxxxxxxxxxxxxxxxxxxyXX'''
 xxxxxxxyyX'''zzz'zzz'''XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxyyyXX'''''''''''''XXyyyxxxxxxxxxxxxxxxyyXX'
