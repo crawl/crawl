@@ -45,7 +45,7 @@ bool wear_armour(int slot);
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 
 bool can_wield(const item_def *weapon, bool say_why = false,
-               bool ignore_temporary_disability = false, bool unwield = false);
+               bool ignore_temporary_disability = false, bool unwield = false, bool offhand = false);
 
 bool auto_wield();
 bool wield_weapon(int slot);
