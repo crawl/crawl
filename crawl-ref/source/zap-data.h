@@ -31,7 +31,7 @@ static zap_info _mon_hex_zap(zap_type ztype, beam_type beam,
 {
     return {
         ztype,
-        "",
+        nullptr,
         player_pow_cap,
         nullptr,
         nullptr,
