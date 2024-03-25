@@ -3792,7 +3792,7 @@ SUBST:   az = bbvc
 NSUBST:  2 = 4 = 2223 / 2 = 122 / 1 = 1.. / *:1
 NSUBST:  . = 1:3 / 4:4 / 4:% / *:.
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])deOG, fGHCD~
+SHUFFLE: ])deOG, OGHCD~
 # Invert the normal Zot colours.
 : local wallc = "darkgray"
 : local floorc = "white"
