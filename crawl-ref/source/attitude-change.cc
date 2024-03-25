@@ -123,11 +123,8 @@ void slime_convert(monster* mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
-        if (!player_under_penance())
-        {
-            _jiyva_convert_slime(mons);
-            stop_running();
-        }
+        _jiyva_convert_slime(mons);
+        stop_running();
     }
 }
 
