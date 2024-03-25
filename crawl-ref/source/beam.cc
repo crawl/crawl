@@ -2744,8 +2744,8 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
     if (can_burn_trees())
         return feat_is_flammable(wall);
 
-    // Lee's Rapid Deconstruction
-    if (flavour == BEAM_FRAG)
+    // Lee's Rapid Deconstruction / Gravitas
+    if (flavour == BEAM_FRAG || origin_spell == SPELL_GRAVITAS)
         return true; // smite targeting, we don't care
 
     return false;

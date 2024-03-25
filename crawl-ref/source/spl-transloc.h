@@ -52,7 +52,7 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);
 
-int gravitas_range(int pow);
+constexpr int GRAVITAS_RANGE = 3;
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 

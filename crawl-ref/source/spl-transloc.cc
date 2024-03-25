@@ -57,6 +57,7 @@
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif
+#include "god-conduct.h"
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
@@ -1639,20 +1640,28 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
-int gravitas_range(int pow)
-{
-    return pow >= 80 ? 3 : 2;
-}
-
-
 #define GRAVITY "by gravitational forces"
 
 static void _attract_actor(const actor* agent, actor* victim,
                            const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = victim->is_monster()
+    const bool god_prot = victim->is_monster()
                                 && god_protects(agent, victim->as_monster());
+
+    if (victim->is_monster())
+    {
+        //ministun attracted monsters
+        victim->as_monster()->speed_increment -= random2(6) + 4;
+
+        //potentially penance
+        if (!mons_is_conjured(victim->as_monster()->type))
+        {
+            god_conduct_trigger conducts[3];
+            set_attack_conducts(conducts, *victim->as_monster(),
+                you.can_see(*victim->as_monster()));
+        }
+    }
 
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
@@ -1664,11 +1673,11 @@ static void _attract_actor(const actor* agent, actor* victim,
                  victim->name(DESC_THE).c_str(),
                  victim->conj_verb("stop").c_str());
         }
-        if (fedhas_prot)
+        if (god_prot)
         {
             simple_god_message(
                 make_stringf(" protects %s from harm.",
-                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
+                    agent->is_player() ? "your" : "a").c_str());
         }
         else
         {
@@ -1700,7 +1709,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         else
             victim->move_to_pos(newpos);
 
-        if (victim->is_monster() && !fedhas_prot)
+        if (victim->is_monster() && !god_prot)
         {
             behaviour_event(victim->as_monster(),
                             ME_ANNOY, agent, agent ? agent->pos()
@@ -1728,7 +1737,7 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
             continue;
 
         const int range = (pos - ai->pos()).rdist();
-        if (range > gravitas_range(pow))
+        if (range > GRAVITAS_RANGE)
             continue;
 
         victims.push_back(*ai);
@@ -1737,13 +1746,12 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
     if (victims.empty())
         return false;
 
-    near_to_far_sorter sorter = {you.pos()};
+    near_to_far_sorter sorter = {pos};
     sort(victims.begin(), victims.end(), sorter);
 
     for (actor * ai : victims)
     {
-        const int range = (pos - ai->pos()).rdist();
-        const int strength = ((pow + 100) / 20) / (range*range);
+        const int strength = div_rand_round(pow + 100, 80);
 
         _attract_actor(agent, ai, pos, pow, strength);
     }
@@ -1753,11 +1761,19 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
 {
-    if (cell_is_solid(where))
+    auto hitfunc = find_spell_targeter(SPELL_GRAVITAS, pow, LOS_RADIUS);
+    hitfunc->set_aim(where);
+
+    bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
-        canned_msg(MSG_UNTHINKING_ACT);
+        const monster* mon = act->as_monster();
+        return mon && !mons_is_firewood(*mon)
+            && !god_protects(mon)
+            && !mons_is_conjured(mon->type);
+    };
+
+    if (stop_attack_prompt(*hitfunc, "attract", vulnerable))
         return spret::abort;
-    }
 
     fail_check();
 

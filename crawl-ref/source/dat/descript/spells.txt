@@ -681,6 +681,7 @@ Gell's Gravitas spell
 Briefly redirects gravity around a target point, causing 'down' to be towards
 that point. All nearby creatures, save the caster, fall helplessly toward that
 point – typically colliding with each other, or with a victim standing there.
+Spellpower increases attraction distance and collision damage.
 %%%%
 Ghostly Fireball spell
 
@@ -847,6 +848,7 @@ Iskenderun's Mystic Blast spell
 
 Detonates a crackling sphere of destructive energy. The explosion will hit all
 nearby monsters with physical force, knocking them back if damage is done.
+Spellpower increases damage and knockback distance.
 %%%%
 Jinxbite spell
 

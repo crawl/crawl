@@ -1216,12 +1216,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_GLACIATE:
         return make_unique<targeter_cone>(&you, range);
     case SPELL_GRAVITAS:
-        return make_unique<targeter_smite>(&you, range,
-                                           gravitas_range(pow),
-                                           gravitas_range(pow),
-                                           false,
-                                           [](const coord_def& p) -> bool {
-                                              return you.pos() != p; });
+        return make_unique<targeter_gravitas>(&you, range);
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:
@@ -2887,6 +2882,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
         }
         case SPELL_AIRSTRIKE:
             return describe_airstrike_dam(base_airstrike_damage(pow));
+        case SPELL_GRAVITAS:
+            return describe_collision_dam(collision_damage(pow, false));
         default:
             break;
     }
@@ -2911,6 +2908,13 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
     }
     const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num,
             dam.size);
+
+    if (spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
+    {
+        return dam_str + make_stringf(" + %s",
+            describe_collision_dam(collision_damage(pow, false)).c_str());
+    }
+
     if (spell == SPELL_LRD
         || spell == SPELL_SHATTER
         || spell == SPELL_POLAR_VORTEX)
