@@ -213,3 +213,23 @@ You devour half the fruit pile! It's not enough.
 maw meat cache
 
 You devour half the meat pile! It's not enough.
+
+%%%%
+pig fruit cache
+
+You root around and sample @_fruit_and_reaction_@
+
+%%%%
+pig meat cache
+
+You root around and sample some @_meat_and_reaction_@
+
+%%%%
+tree fruit cache
+
+You root around and sample @_fruit_and_reaction_@
+
+%%%%
+tree meat cache
+
+You root around and sample some @_meat_and_reaction_@
