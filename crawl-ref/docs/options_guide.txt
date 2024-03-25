@@ -631,9 +631,8 @@ default_autopickup = true
         You can still toggle autopickup in-game with Ctrl-A.
 
 pickup_thrown = true
-        pickup_thrown = true causes autopickup to pick up thrown/fired
-        missiles, which can make life much easier for hunter types. Be
-        aware that autopickup uses a turn, though it won't trigger if
+        pickup_thrown = true causes autopickup to pick up thrown missiles,
+        Be aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
 
 assign_item_slot = (forward | backward)
