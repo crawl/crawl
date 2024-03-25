@@ -119,6 +119,7 @@ void slime_convert(monster* mons)
     if (have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
         && !mons->neutral()
         && !mons->friendly()
+        && !mons->is_shapeshifter()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
