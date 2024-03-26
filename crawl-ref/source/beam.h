@@ -226,6 +226,7 @@ public:
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
+    void special_explode();
 
     bool self_targeted() const;
 
