@@ -22001,26 +22001,6 @@ Ansichtsebenen wiederherstellt.
 %%%%
 
 ##################
-# viewchar.cc
-##################
-%%%%
-permawall
-
-%%%%
-arch
-
-%%%%
-wavy
-
-%%%%
-space
-
-%%%%
-explosion
-
-%%%%
-
-##################
 # viewgeom.cc
 ##################
 %%%%
