@@ -2380,7 +2380,7 @@ string localise_player_title(const string& text)
         if (param_start == string::npos || param_start == param_end)
             continue;
 
-        string param = vtitle.substr(param_start, param_end - param_start);
+        string param = vtitle.substr(param_start, param_end - param_start + 1);
 
         string rest;
         if (param_start == 0)
