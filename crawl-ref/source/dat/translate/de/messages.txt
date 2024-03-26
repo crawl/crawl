@@ -2819,11 +2819,11 @@ Ihr spürt ein Monster in der Nähe.
 %s warns you: It is a foul shapeshifter.
 
 %%%%
-are
-
+%s is %s.
+%s ist %s.
 %%%%
 Gozag incites %s against you.
-Gozag verhetzt %s gegen Euch.
+Gozag verhetzt {acc}%s gegen Euch.
 %%%%
 Deactivating autopickup; reactivate with <w>%s</w>.
 Autopickup deaktiviert. Reaktivieren mit <w>%s</w>.
@@ -4751,6 +4751,9 @@ It can can be affected by reciting Zin's laws.
 " (Recite power: %d, Hit Dice: %d)"
 
 %%%%
+are
+
+%%%%
 The apparition of %s.
 Eine Erscheinung (%s).
 %%%%
@@ -5128,11 +5131,11 @@ wall of the weird stuff which makes up Pandemonium
 , spattered with blood
 , mit Blut bespritzt
 %%%%
-" armed with %s"
-" mit {dat}%s bewaffnet"
+armed with %s
+mit {dat}%s bewaffnet
 %%%%
-" wielding %s"
-" {acc}%s führend"
+wielding %s
+{acc}%s führend
 %%%%
 This monster is %s.
 Dieses Monster ist %s.
@@ -12004,9 +12007,6 @@ flüstert
 %%%%
 the ground
 der Boden
-%%%%
-%s is %s.
-%s ist %s.
 %%%%
 %s is hit by a flying piece of %s!
 %s wird von einem fliegenden Stück {gen}%s getroffen!
@@ -21948,56 +21948,56 @@ Found %s
 # view.cc
 ##################
 %%%%
-There
-
+%s is a foul glowing shapeshifter.
+%s ist ein übler glühender Gestaltenwandler.
 %%%%
-is
-
+%s is a foul shapeshifter.
+%s ist ein übler Gestaltenwandler.
 %%%%
-" a foul "
-
+There is %s.
+Da ist %s.
 %%%%
 %s warns you: %s
-
+%s warnt Euch: %s
 %%%%
 %s come into view.
 %s kommen in Sicht.
 %%%%
-%s incites %s against you.
-
-%%%%
-%s incites your enemies against you.
-
+Gozag incites your enemies against you.
+Gozag hetzt Eure Feinde gegen Euch auf.
 %%%%
 You feel aware of your surroundings.
 Ihr fühlt Euch Eurer Umgebung bewusst.
 %%%%
-%d altar%s
-
+1 altar
+1 Altar
 %%%%
-%d shop%s/portal%s
-
+%d altars
+%d Altäre
+%%%%
+1 shop/portal
+1 Laden/Portal
+%%%%
+%d shops/portals
+%d Läden/Portale
 %%%%
 You sensed %s.
-
+Ihr habt {acc}%s gespürt.
 %%%%
 Select layers to display:
-
+Anzuzeigende Ansichtsebenen auswählen:
 %%%%
 <%s>(m)onsters</%s>|<%s>(p)layer</%s>|<%s>(i)tems</%s>|<%s>(c)louds</%s>
-
+<%s>(m)Monster</%s>|<%s>(p)Spieler</%s>|<%s>(i)Gegenstände</%s>|<%s>(c)Wolken</%s>
 %%%%
 |<%s>monster (w)eapons</%s>|<%s>monster (h)ealth</%s>
-
-%%%%
-darkgrey
-
+|<%s>(w)Waffen der Monster</%s>|<%s>(h)Gesundheit der Monster</%s>
 %%%%
 Press 'a' to toggle all layers. Press any other key to exit.
-
+'a' drücken, um alle Ebenen umzuschalten. Eine beliebige andere Taste drücken zum Beenden.
 %%%%
 Restoring view layers.
-Wiederherstellen von Ansichtsebenen.
+Ansichtsebenen wiederherstellt.
 %%%%
 
 ##################

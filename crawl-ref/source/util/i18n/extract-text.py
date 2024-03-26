@@ -188,6 +188,7 @@ IGNORE_STRINGS = [
     'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ',
+    'lightgrey', 'darkgrey',
     'bug', 'null'
 ]
 

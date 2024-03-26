@@ -323,52 +323,53 @@ static string _monster_headsup(const vector<monster*> &monsters,
             continue; // don't give redundant warnings for enemies
 
         if (warning_msg.size())
-            warning_msg += " ";
+            warning_msg += localise(" ");
 
         string monname;
         if (monsters.size() == 1)
-            monname = mon->pronoun(PRONOUN_SUBJECTIVE);
+            monname = mon->full_name(DESC_THE);
         else if (mon->type == MONS_DANCING_WEAPON)
-            monname = "There";
+            monname = "";
         else if (types.at(mon->type) == 1)
             monname = mon->full_name(DESC_THE);
         else
             monname = mon->full_name(DESC_A);
-        warning_msg += uppercase_first(monname);
+        monname = uppercase_first(localise(monname));
 
-        warning_msg += " ";
-        if (monsters.size() == 1)
-            warning_msg += conjugate_verb("are", mon->pronoun_plurality());
-        else
-            warning_msg += "is";
+        string fmt;
+        string warning;
 
         mons_equip_desc_level_type level = mon->type != MONS_DANCING_WEAPON
             ? DESC_IDENTIFIED : DESC_WEAPON_WARNING;
 
-        if (!divine)
+        if (divine && you_worship(GOD_ZIN))
         {
-            if (mon->type != MONS_DANCING_WEAPON)
-                warning_msg += " ";
-            warning_msg += get_monster_equipment_desc(mi, level, DESC_NONE);
-            warning_msg += ".";
-            continue;
-        }
-
-        if (you_worship(GOD_ZIN))
-        {
-            warning_msg += " a foul ";
             if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-                warning_msg += "glowing ";
-            warning_msg += "shapeshifter";
+            {
+                fmt = localise("%s is a foul glowing shapeshifter.");
+                warning = make_stringf(fmt.c_str(), monname.c_str());
+            }
+            else
+            {
+                fmt = localise("%s is a foul shapeshifter.");
+                warning = make_stringf(fmt.c_str(), monname.c_str());
+            }
         }
         else
         {
-            // TODO: deduplicate
-            if (mon->type != MONS_DANCING_WEAPON)
-                warning_msg += " ";
-            warning_msg += get_monster_equipment_desc(mi, level, DESC_NONE);
+            string equip = get_monster_equipment_desc(mi, level, DESC_NONE);
+            if (mon->type == MONS_DANCING_WEAPON)
+            {
+                fmt = localise("There is %s.");
+                warning = make_stringf(fmt.c_str(), equip.c_str());
+            }
+            else
+            {
+                fmt = localise("%s is %s.");
+                warning = make_stringf(fmt.c_str(), monname.c_str(), equip.c_str());
+            }
         }
-        warning_msg += ".";
+        warning_msg += warning;
     }
 
     return warning_msg;
@@ -382,9 +383,9 @@ static void _divine_headsup(const vector<monster*> &monsters,
     if (!warnings.size())
         return;
 
-    string msg = localise("%s warns you: %s", god_speaker(you.religion),
-                          warnings);
-    god_speaks(you.religion, msg.c_str());
+    string msg = localise("%s warns you: %s", god_speaker(you.religion));
+    msg = replace_last(msg, "%s", warnings); // warnings already localised
+    mpr_nolocalise(MSGCH_GOD, msg);
 
 #ifndef USE_TILE_LOCAL
     // XXX: should this really be here...?
@@ -399,7 +400,7 @@ static void _secular_headsup(const vector<monster*> &monsters,
     const string warnings = _monster_headsup(monsters, types, false);
     if (!warnings.size())
         return;
-    mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
+    mpr_nolocalise(MSGCH_MONSTER_WARNING, warnings);
 }
 
 static map<monster_type, int> _count_monster_types(const vector<monster*>& monsters,
@@ -502,15 +503,14 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
     if (incited.empty())
         return;
 
-    string msg = make_stringf("%s incites %s against you.",
-                              god_name(GOD_GOZAG).c_str(),
-                              mon_count.describe().c_str());
+    string msg = localise("Gozag incites %s against you.",
+                          mon_count.describe());
+
     if (strwidth(msg) >= get_number_of_cols() - 2)
     {
-        msg = make_stringf("%s incites your enemies against you.",
-                           god_name(GOD_GOZAG).c_str());
+        msg = localise("Gozag incites your enemies against you.");
     }
-    mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+    mpr_nolocalise(MSGCH_GOD, GOD_GOZAG, msg);
 
     for (monster *mon : incited)
         gozag_incite(mon);
@@ -786,17 +786,17 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         vector<string> sensed;
 
-        if (num_altars > 0)
-        {
-            sensed.push_back(make_stringf("%d altar%s", num_altars,
-                                          num_altars > 1 ? "s" : ""));
-        }
+        if (num_altars == 1)
+            sensed.push_back("1 altar");
+        else if (num_altars > 1)
+            sensed.push_back(make_stringf("%d altars", num_altars));
 
-        if (num_shops_portals > 0)
+        if (num_shops_portals == 1)
+            sensed.push_back("1 shop/portal");
+        else if (num_shops_portals > 1)
         {
-            const char* plur = num_shops_portals > 1 ? "s" : "";
-            sensed.push_back(make_stringf("%d shop%s/portal%s",
-                                          num_shops_portals, plur, plur));
+            sensed.push_back(make_stringf("%d shops/portals", 
+                                          num_shops_portals));
         }
 
         if (!sensed.empty())
@@ -1755,17 +1755,21 @@ static void _config_layers_menu()
     {
         viewwindow();
         update_screen();
-        mprf(MSGCH_PROMPT, "Select layers to display:\n"
+        string fmt = localise("Select layers to display:") + "\n";
+        fmt += localise(
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
                            "<%s>(c)louds</%s>"
+                       );
 #ifndef USE_TILE_LOCAL
+        fmt += localise(
                            "|"
                            "<%s>monster (w)eapons</%s>|"
                            "<%s>monster (h)ealth</%s>"
+                       );
 #endif
-                           ,
+        mprf_nolocalise(MSGCH_PROMPT, fmt.c_str(),
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
            _layers & LAYER_MONSTERS        ? "lightgrey" : "darkgrey",
            _layers & LAYER_PLAYER          ? "lightgrey" : "darkgrey",

@@ -3393,11 +3393,11 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
         names += " and " + name2;    
 
     if (mi.type == MONS_PANDEMONIUM_LORD)
-        desc += localise(" armed with %s", names);
+        desc = localise("armed with %s", names);
     else if (mons_class_is_animated_weapon(mi.type))
-        desc += localise(" %s", names);
+        desc = localise(names);
     else
-        desc += localise(" wielding %s", names);
+        desc = localise("wielding %s", names);
 
 
     return desc;
@@ -3684,7 +3684,12 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     // Print the rest of the equipment only for full descriptions.
     if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
-        return desc + weap;
+    {
+        if (desc.empty() || weap.empty())
+            return desc + weap;
+        else
+            return desc + " " + weap;
+    }
 
     item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
     item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
@@ -3722,7 +3727,7 @@ string get_monster_equipment_desc(const monster_info& mi,
     // Dancing weapons have all their weapon information in their full_name, so
     // we don't need to add another weapon description here (see Mantis 11887).
     if (!weap.empty() && !mons_class_is_animated_weapon(mi.type))
-        item_descriptions.push_back(weap.substr(1)); // strip leading space
+        item_descriptions.push_back(weap);
 
     // as with dancing weapons, don't claim animated armours 'wear' their armour
     if (mon_arm && mi.type != MONS_ANIMATED_ARMOUR)

@@ -1077,11 +1077,10 @@ static inline bool _monster_warning(activity_interrupt ai,
 
         if (!mweap.empty())
         {
-            // i18n: TODO: Fix this
-            text += " "+ uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
-                + " " + conjugate_verb("are", mi.pronoun_plurality())
-                + (mweap[0] != ' ' ? " " : "")
-                + mweap + ".";
+            text += localise(" ");
+            string text2 = localise("%s is %s.", mon->full_name(DESC_THE));
+            replace_last(text2, "%s", mweap); // mweap already localised
+            text += text2;
         }
 
         if (msgs_buf)
