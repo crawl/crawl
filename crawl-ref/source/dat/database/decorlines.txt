@@ -212,7 +212,7 @@ You devour a dragonfruit. You feel vaguely uncomfortable.
 %%%%
 maw fruit cache
 
-# Zeno's dichtomy is probably fine, unless we decide to make food reliably
+# Zeno's dichotomy is probably fine, unless we decide to make food reliably
 # disappear after a few messages...
 You devour half the fruit pile! It's not enough.
 %%%%
