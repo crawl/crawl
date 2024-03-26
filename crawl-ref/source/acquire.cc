@@ -657,6 +657,7 @@ static const vector<pair<misc_item_type, int> > _misc_base_weights()
         {MISC_LIGHTNING_ROD,       20},
         {MISC_PHIAL_OF_FLOODS,     20},
         {MISC_CONDENSER_VANE,      20},
+        {MISC_GRAVITAMBOURINE,     20},
     };
     // The player never needs more than one of any of these.
     for (auto &p : choices)
@@ -694,7 +695,8 @@ static int _acquirement_misc_subtype(int & /*quantity*/,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
                              MISC_PHIAL_OF_FLOODS,
-                             MISC_CONDENSER_VANE);
+                             MISC_CONDENSER_VANE,
+                             MISC_GRAVITAMBOURINE);
     }
 
     return *choice;

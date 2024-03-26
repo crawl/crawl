@@ -1610,7 +1610,7 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     if (exclude)
     {
         choices = {
-            MISC_PHIAL_OF_FLOODS,
+            (misc_item_type)item_for_set(ITEM_SET_CONTROL_MISCELLANY),
             MISC_LIGHTNING_ROD,
             (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY),
             MISC_PHANTOM_MIRROR,
@@ -1655,6 +1655,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
     case MISC_PHANTOM_MIRROR:
     case MISC_TIN_OF_TREMORSTONES:
     case MISC_CONDENSER_VANE:
+    case MISC_GRAVITAMBOURINE:
         you.generated_misc.insert(typ);
         break;
     default:

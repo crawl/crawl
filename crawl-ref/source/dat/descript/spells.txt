@@ -690,13 +690,6 @@ standing beside its new 'floor'.
 It takes a short time for gravity to stabilize enough to recast this spell,
 though more powerful mages are able to do so more frequently.
 %%%%
-Gell's Gravitas spell
-
-Briefly redirects gravity around a target point, causing 'down' to be towards
-that point. All nearby creatures, save the caster, fall helplessly toward that
-point – typically colliding with each other, or with a victim standing there.
-Spellpower increases attraction distance and collision damage.
-%%%%
 Ghostly Fireball spell
 
 Hurls an exploding ball of negative energy which drains any living creature

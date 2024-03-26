@@ -2849,6 +2849,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
 
+    case MISC_GRAVITAMBOURINE:
+        return TILE_MISC_TAMBOURINE;
+
     // Default for summary menus
     case NUM_MISCELLANY:
     case MISC_PHANTOM_MIRROR:

@@ -347,7 +347,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Displacement
     SPELL_BECKONING,
-    SPELL_GRAVITAS,
     SPELL_TELEPORT_OTHER,
 },
 

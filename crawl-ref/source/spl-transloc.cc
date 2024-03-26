@@ -23,6 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "god-abil.h" // fedhas_passthrough for armataur charge
+#include "god-conduct.h"
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -1626,138 +1627,122 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
-int gravitas_range(int pow)
+int gravitas_radius(int pow)
 {
-    return pow >= 80 ? 3 : 2;
-}
-
-
-#define GRAVITY "by gravitational forces"
-
-static void _attract_actor(const actor* agent, actor* victim,
-                           const coord_def pos, int pow, int strength)
-{
-    ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = victim->is_monster()
-                                && god_protects(agent, victim->as_monster());
-
-    ray_def ray;
-    if (!find_ray(victim->pos(), pos, ray, opc_solid))
-    {
-        // This probably shouldn't ever happen, but just in case:
-        if (you.can_see(*victim))
-        {
-            mprf("%s violently %s moving!",
-                 victim->name(DESC_THE).c_str(),
-                 victim->conj_verb("stop").c_str());
-        }
-        if (fedhas_prot)
-        {
-            simple_god_message(
-                make_stringf(" protects %s from harm.",
-                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
-        }
-        else
-        {
-            victim->hurt(agent, roll_dice(strength / 2, pow / 20),
-                         BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
-        }
-        return;
-    }
-
-    const coord_def starting_pos = victim->pos();
-    for (int i = 0; i < strength; i++)
-    {
-        ray.advance();
-        const coord_def newpos = ray.pos();
-
-        if (!victim->can_pass_through_feat(env.grid(newpos)))
-        {
-            victim->collide(newpos, agent, pow);
-            break;
-        }
-        else if (actor* act_at_space = actor_at(newpos))
-        {
-            if (victim != act_at_space)
-                victim->collide(newpos, agent, pow);
-            break;
-        }
-        else if (!victim->is_habitable(newpos))
-            break;
-        else
-            victim->move_to_pos(newpos);
-
-        if (victim->is_monster() && !fedhas_prot)
-        {
-            behaviour_event(victim->as_monster(),
-                            ME_ANNOY, agent, agent ? agent->pos()
-                                                   : coord_def(0, 0));
-        }
-
-        if (victim->pos() == pos)
-            break;
-    }
-    if (starting_pos != victim->pos())
-    {
-        victim->apply_location_effects(starting_pos);
-        if (victim->is_monster())
-            mons_relocated(victim->as_monster());
-    }
-}
-
-bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
-{
-    vector <actor *> victims;
-
-    for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
-    {
-        if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
-            continue;
-
-        const int range = (pos - ai->pos()).rdist();
-        if (range > gravitas_range(pow))
-            continue;
-
-        victims.push_back(*ai);
-    }
-
-    if (victims.empty())
-        return false;
-
-    near_to_far_sorter sorter = {you.pos()};
-    sort(victims.begin(), victims.end(), sorter);
-
-    for (actor * ai : victims)
-    {
-        const int range = (pos - ai->pos()).rdist();
-        const int strength = ((pow + 100) / 20) / (range*range);
-
-        _attract_actor(agent, ai, pos, pow, strength);
-    }
-
-    return true;
+    return 2 + (pow / 45);
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
 {
-    if (cell_is_solid(where))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
     fail_check();
 
     monster* mons = monster_at(where);
+    const int radius = gravitas_radius(pow);
 
-    mprf("Gravity reorients around %s.",
-         mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
-                                                         NUM_TRAPS, "",
-                                                         DESC_THE)
-                                                         .c_str()
-                                   : "empty space");
-    fatal_attraction(where, &you, pow);
+    // XXX: If this is ever usable from elsewhere than the item, change this.
+    mpr("You rattle the tambourine.");
+
+    mprf("Waves of gravity draw inward%s%s.",
+         mons || feat_is_solid(env.grid(where)) ? " around " : "",
+         mons ? mons->name(DESC_THE).c_str() :
+                feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
+                                                                     NUM_TRAPS, "",
+                                                                     DESC_THE)
+                                                                    .c_str() : "");
+
+    // Show animation
+    for (int i = radius; i >= 0; --i)
+    {
+        for (distance_iterator di(where, false, false, i); di; ++di)
+        {
+            if (grid_distance(where, *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                flash_tile(*di, LIGHTMAGENTA, 0);
+            }
+        }
+
+        animation_delay(50, true);
+        view_clear_overlays();
+    }
+
+    vector<coord_def> empty[LOS_RADIUS];
+    vector<monster*> targ;
+
+    // Build lists of valid monsters and empty spaces, sorted in order of distance
+    for (distance_iterator di(where, true, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        const int dist = grid_distance(where, *di);
+        monster* mon = monster_at(*di);
+        if (mon && !mon->is_stationary())
+            targ.push_back(mon);
+        else if (!mon && !feat_is_solid(env.grid(*di)))
+            empty[dist].push_back(*di);
+    }
+
+    // Move each monster to a nearer space, if we can
+    for (monster* mon : targ)
+    {
+        bool moved = false;
+        for (int dist = 0; dist <= radius; ++dist)
+        {
+            if (grid_distance(mon->pos(), where) <= dist)
+                break;
+
+            for (unsigned int i = 0; i < empty[dist].size(); ++i)
+            {
+                const coord_def new_pos = empty[dist][i];
+
+                if (monster_habitable_grid(mon, env.grid(new_pos)))
+                {
+                    const coord_def old_pos = mon->pos();
+                    mon->move_to_pos(new_pos);
+                    mon->apply_location_effects(old_pos);
+                    mons_relocated(mon);
+
+                    empty[dist].erase(empty[dist].begin() + i);
+
+                    if (grid_distance(where, old_pos) < 2)
+                        empty[grid_distance(where, old_pos) - 1].push_back(old_pos);
+
+                    moved = true;
+
+                    break;
+                }
+            }
+
+            if (moved)
+                break;
+        }
+    }
+
+    // Bind all hostile monsters in place and damage them
+    // (friendlies are exempt from this part)
+    int dur = (random_range(2, 5) + div_rand_round(pow, 30)) * BASELINE_DELAY;
+    for (distance_iterator di(where, false, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        if (monster* mon = monster_at(*di))
+        {
+            if (mon->wont_attack())
+                continue;
+
+            int dmg = zap_damage(ZAP_GRAVITAS, pow, false).roll();
+            dmg = mon->apply_ac(dmg);
+
+            if (you.can_see(*mon))
+                mprf("%s is pinned by gravity.", mon->name(DESC_THE).c_str());
+            mon->hurt(&you, dmg);
+            mon->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur));
+            behaviour_event(mon, ME_WHACK, &you, you.pos());
+        }
+    }
+
     return spret::success;
 }
 

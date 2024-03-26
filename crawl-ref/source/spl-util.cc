@@ -462,7 +462,6 @@ bool spell_is_direct_attack(spell_type spell)
         // spell school exceptions
         if (spell == SPELL_VIOLENT_UNRAVELLING  // hex
             || spell == SPELL_FORCE_LANCE // transloc
-            || spell == SPELL_GRAVITAS
             || spell == SPELL_BLINKBOLT
             || spell == SPELL_BANISHMENT)
         {

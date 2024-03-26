@@ -633,6 +633,17 @@ However, this instability makes the user unable to use weapons, shields or body
 armour. They also glow, reducing stealth and preventing invisibility, and their
 melee damage is reduced, as their limbs sometimes destabilise mid-swing.
 %%%%
+gell's gravitambourine
+
+A copper and tungsten tambourine that vibrates excitedly in your hands, as if
+eager to be used.
+
+Just as music brings people together, shaking it with the proper rhythm will
+draw a large group of monsters into a narrow space and hold any hostile ones in
+place for a short time with inescapable waves of crushing gravity.
+
+The area of effect and duration increases with Evocations skill.
+%%%%
 gem
 
 A stone of unearthly beauty and almost immeasurable value outside the dungeon.

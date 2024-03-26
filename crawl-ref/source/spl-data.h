@@ -2987,10 +2987,11 @@ static const struct spell_desc spelldata[] =
     TILEG_CLEANSING_FLAME,
 },
 
+// Evoker-only now
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
     spschool::translocation,
-    spflag::target | spflag::not_self | spflag::needs_tracer,
+    spflag::target | spflag::needs_tracer,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,

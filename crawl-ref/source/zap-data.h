@@ -2034,4 +2034,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_GRAVITAS,
+    "crushing gravity",
+    100,
+    new dicedef_calculator<3, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+}
+
 };
