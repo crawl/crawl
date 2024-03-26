@@ -391,6 +391,7 @@ for filename in files:
                    re.search(r'dprintf *\(', line) or \
                    re.search(r'debug_dump_item *\(', line) or \
                    re.search(r'dump_test_fails *\(', line) or \
+                   re.search(r'bad_level_id', line) or \
                    re.search(r'ASSERTM? *\(', line) or \
                    'DEBUG' in line or \
                    'log_print' in line or \

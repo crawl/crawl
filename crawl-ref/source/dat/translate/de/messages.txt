@@ -5105,7 +5105,7 @@ What do you want to remember?
 
 %%%%
 There is %s here.
-Es gibt {acc}%s hier.
+Hier gibt es {acc}%s.
 %%%%
 There is an entrance to %s here.
 Hier gibt es einen Eingang zu {dat}%s.
@@ -20816,9 +20816,6 @@ Zu viele Übereinstimmungen; verwende eine spezifischere Suche.
 only useless items found; press <w>=</w> to show.
 nur nutzlose Gegenstände gefunden; <w>=</w> zu zeigen.
 %%%%
-travel
-reisen
-%%%%
 view
 schauen
 %%%%
@@ -21815,100 +21812,79 @@ Ihr seid in einem Spinnennetz gefangen!
 ##################
 %%%%
 Have to go through %s. Continue?
-
-%%%%
-intertravel
-
-%%%%
-explore
-
+Muss durch {acc}%s. Fortfahren?
 %%%%
 unopened runed door
-
+ungeöffnete runenverzierte Tür
 %%%%
 unopened door
-
+ungeöffnete Tür
 %%%%
 Done exploring.
-Fertig erforscht.
+Erkundung fertig.
 %%%%
 unvisited transporter
-
+unbesuchter Transporter
 %%%%
-items
-
+can't reach some items
+einige Gegenstände nicht erreichbar
 %%%%
-places
-
-%%%%
-can't reach some %s
-
+can't reach some places
+einige Orte nicht errecihbar
 %%%%
 Partly explored, %s.
-Teilweise erforscht,%s.
+Teilweise erkundet, %s.
 %%%%
-Could not pick up %s here; shall I ignore %s?
-
+Could not pick up an item here; shall I ignore it?
+Hier konnte ein Gegenstand nicht abgeholt werden; soll ich ihn ignorieren?
 %%%%
-an item
-
+Could not pick up some items here; shall I ignore them?
+Hier konnten einige Gegenstände nicht abgeholt werden; soll ich ihnen ignorieren?
 %%%%
-some items
-
-%%%%
-it
-
-%%%%
-them
-
-%%%%
-"Could not "
-
+Could not %s, %s.
+Konnte nicht %s, %s.
 %%%%
 Key pressed, stopping %s.
 Taste gedrückt,%s gestoppt.
 %%%%
 You're confused, stopping %s.
-Ihr seid verwirrt und hörst%s auf.
+Ihr seid verwirrt, %s gestoppt.
 %%%%
 You're in a travel-excluded area, stopping %s.
-Ihr seid in einem von Reisen ausgeschlossenen Gebiet und hältst%s an.
+Ihr seid in einem von Reisen ausgeschlossenen Gebiet, %s gestoppt.
 %%%%
 " @ (x,y)"
-
+" @ (x,y)"
 %%%%
 * - list branches
-
+* - Zweige auflisten
 %%%%
 * - list waypoints
-
+* - Wegpunkte auflisten
 %%%%
 Enter - %s
-
+Enter - %s
 %%%%
 ? - help
-
+? - Hilfe
 %%%%
-Where to? %s
-Wohin? %s
+Where to? (%s)
+Wohin? (%s)
 %%%%
 "Branch not generated this game. "
-
+"Zweig in diesem Spiel nicht generiert. "
 %%%%
 "Branch has no entry stairs. "
-
+"Zweig hat keinen Eingang. "
 %%%%
 Go there anyway?
-
-%%%%
-TSO
-
+Reisen trotzdem?
 %%%%
 "Go to which altar? (? - help) "
 "Zu welchem Altar gehen? (? - Hilfe) "
 %%%%
 "What level of %s? (default %s, ? - help) "
-
+"Welche Ebene von {dat}%s? (defaultmäßig %s, ? - Hilfe) "
 %%%%
 You're already at the bottom of this branch!
 Ihr seid schon am Ende dieses Zweigs!
@@ -21920,28 +21896,16 @@ Sorry, I don't know how to get there.
 Entschuldigung, ich weiß nicht, wie ich dorthin komme.
 %%%%
 Level memory is imperfect, aborting.
-Level-Speicher ist unvollkommen und bricht ab.
+Erinnerung der Ebene ist unvollkommen, abbrechen.
 %%%%
 Sorry, I don't know how to traverse that place.
-Entschuldigung, ich weiß nicht, wie ich diesen Ort durchqueren soll.
+Entschuldigung, ich weiß nicht, wie diesen Ort durchzuqueren ist.
 %%%%
 Calm down first, please.
 Beruhige Euch bitte zuerst.
 %%%%
 Level %d of %s
-
-%%%%
-Invalid branch "%s" in spec "%s"
-
-%%%%
-Invalid depth for %s in spec "%s"
-
-%%%%
-" guess"
-
-%%%%
-" placeholder"
-
+Ebene %d von {dat}%s
 %%%%
 Existing waypoints:
 Bestehende Wegpunkte:
@@ -21953,61 +21917,31 @@ All waypoints deleted. Have a nice day!
 Alle Wegpunkte gelöscht. Einen schönen Tag noch!
 %%%%
 Sorry, you can't set a waypoint here.
-Entschuldigung, Ihr könnt hier keinen Wegpunkt setzen.
+Sorry, Ihr könnt hier keinen Wegpunkt setzen.
 %%%%
 "Assign waypoint to what number? (0-9%s) "
-Welcher Zahl einen Wegpunkt zuweisen? (0-9%s)
+" Welcher Zahl einen Wegpunkt zuweisen? (0-9%s) "
 %%%%
 , D - delete waypoint
-
+, D - Wegpunkt löschen
 %%%%
 Waypoint %d re-assigned to %s.
-Wegpunkt%d wurde%s neu zugewiesen.
+Wegpunkt %d wurde {dat}%s neu zugewiesen.
 %%%%
 Waypoint %d re-assigned from %s to %s.
-Wegpunkt%d von%s auf%s neu zugewiesen.
+Wegpunkt %d von {dat}%s auf {dat}%s neu zugewiesen.
 %%%%
 Waypoint %d assigned to %s.
-Wegpunkt %d %s zugewiesen.
+Wegpunkt %d {dat}%s zugewiesen.
 %%%%
 Stopped running for exclusion.
-Zum Ausschluss nicht mehr ausgeführt.
-%%%%
-rest
-
-%%%%
-" (under bush)"
-
-%%%%
-" (under plant)"
-
+Gehaltet wegen Reiseausschluss.
 %%%%
 Found %s.
-Ihr habt {acc}%s gefunden.
-%%%%
-" leading "
-
-%%%%
-" back to "
-
-%%%%
-" to "
-
-%%%%
-" in "
-
-%%%%
-" out of"
-
-%%%%
-" from "
-
-%%%%
-" back into "
-
+{acc}%s gefunden.
 %%%%
 Found %s
-Ihr habt {acc}%s gefunden
+{acc}%s gefunden
 %%%%
 
 ##################

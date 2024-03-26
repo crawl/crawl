@@ -253,9 +253,6 @@ Drak töten
 
 # armour egos
 %%%%
-run
-laufen
-%%%%
 ponderous
 Schwerfäll
 %%%%
@@ -343,4 +340,14 @@ Item in an invalid slot
 Gegenstand in falscher Position
 %%%%
 
+#################################
+# Other Locations
+#################################
+%%%%
+" (under bush)"
+" (unter Busch)"
+%%%%
+" (under plant)"
+" (unter Pflanze)"
+%%%%
 

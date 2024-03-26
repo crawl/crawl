@@ -86,6 +86,21 @@ wall jump
 wandspringen
 %%%%
 
+# These used in "Could not %s" (travel.cc). Some also used as commands in find menu.
+%%%%
+explore
+erkunden
+%%%%
+travel
+reisen
+%%%%
+rest
+rasten
+%%%%
+run
+laufen
+%%%%
+
 #################################
 # Movement verbs - finite (you)
 #################################

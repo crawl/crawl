@@ -91,6 +91,11 @@ Zin
 the Shining One
 der Glänzende
 %%%%
+# The Shining One short form (for "travel to altar" menu, must be 14 chars or less)
+#             |<-
+TSO
+der Glänzende
+%%%%
 the Wu Jian Council
 der Wu-Jian-Rat
 %%%%

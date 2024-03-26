@@ -173,7 +173,7 @@ bool deviant_route_warning::warn_continue_travel(
         return true;
 
     target = dest;
-    const string prompt = make_stringf("Have to go through %s. Continue?",
+    const string prompt = localise("Have to go through %s. Continue?",
                                        deviant.describe().c_str());
     // If the user says "Yes, shut up and take me there", we won't ask
     // again for that destination. If the user says "No", we will
@@ -308,6 +308,7 @@ bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
         return false;
 }
 
+// @noloc section start (only used in Lua code)
 static const char *_run_mode_name(int runmode)
 {
     return runmode == RMODE_TRAVEL         ? "travel" :
@@ -317,6 +318,7 @@ static const char *_run_mode_name(int runmode)
            runmode > 0                     ? "run"
                                            : "";
 }
+// @noloc section end
 
 uint8_t is_waypoint(const coord_def &p)
 {
@@ -806,8 +808,6 @@ static void _explore_find_target_square()
         else
         {
             vector<const char *> reasons;
-            vector<const char *> inacc;
-            string inacc_desc = "";
 
             if (runed_door_pause)
                 reasons.push_back("unopened runed door");
@@ -819,21 +819,14 @@ static void _explore_find_target_square()
                 reasons.push_back("unopened door");
 
             if (estatus & EST_GREED_UNFULFILLED)
-                inacc.push_back("items");
+                reasons.push_back("can't reach some items");
             // A runed door already implies an unexplored place.
             if (!runed_door_pause && !closed_door_pause &&
                 estatus & EST_PARTLY_EXPLORED)
             {
-                inacc.push_back("places");
+                reasons.push_back("can't reach some places");
             }
 
-            if (!inacc.empty())
-            {
-                inacc_desc = make_stringf("can't reach some %s",
-                                 comma_separated_line(inacc.begin(),
-                                                      inacc.end()).c_str());
-                reasons.push_back(inacc_desc.c_str());
-            }
             mprf("Partly explored, %s.",
                  comma_separated_line(reasons.begin(), reasons.end()).c_str());
         }
@@ -865,10 +858,11 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     {
         if (explore_stopped_pos == you.pos())
         {
-            const string prompt =
-                make_stringf("Could not pick up %s here; shall I ignore %s?",
-                             tried_pickup == 1? "an item" : "some items",
-                             tried_pickup == 1? "it" : "them");
+            string prompt;
+            if (tried_pickup == 1)
+                prompt = "Could not pick up an item here; shall I ignore it?";
+            else
+                prompt = "Could not pick up some items here; shall I ignore them?";
 
             // Make Escape => 'n' and stop run.
             explicit_keymap map;
@@ -927,8 +921,8 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
         *move_y = 0;
         if (!barrier.second.empty())
         {
-            mpr("Could not " + you.running.runmode_name() + ", "
-                + barrier.second + ".");
+            mprf("Could not %s, %s.", you.running.runmode_name().c_str(),
+                 barrier.second.c_str());
         }
         return;
     }
@@ -2138,19 +2132,19 @@ static int _prompt_travel_branch(int prompt_flags)
                 if (linec == 4)
                 {
                     linec = 0;
-                    mpr(line);
+                    mpr_nolocalise(line);
                     line = "";
                 }
-                line += make_stringf("(%c) %-14s ",
+                line += localise("(%c) %-14s ",
                                      branches[br].travel_shortcut,
                                      branches[br].shortname);
                 ++linec;
             }
             if (!line.empty())
-                mpr(line);
+                mpr_nolocalise(line);
         }
 
-        string shortcuts = "(";
+        string shortcuts;
         {
             vector<string> segs;
             if (allow_waypoints)
@@ -2164,16 +2158,15 @@ static int _prompt_travel_branch(int prompt_flags)
             if (!trans_travel_dest.empty() && remember_targ)
             {
                 segs.push_back(
-                    make_stringf("Enter - %s", trans_travel_dest.c_str()));
+                    localise("Enter - %s", trans_travel_dest.c_str()));
             }
 
             segs.emplace_back("? - help");
 
             shortcuts += comma_separated_line(segs.begin(), segs.end(),
                                               ", ", ", ");
-            shortcuts += ") ";
         }
-        mprf(MSGCH_PROMPT, "Where to? %s",
+        mprf(MSGCH_PROMPT, "Where to? (%s)",
              shortcuts.c_str());
 
         int keyin = get_ch();
@@ -2221,18 +2214,18 @@ static int _prompt_travel_branch(int prompt_flags)
                         && is_random_subbranch(br)
                         && you.wizard) // don't leak mimics
                     {
-                        msg += "Branch not generated this game. ";
+                        msg += localise("Branch not generated this game. ");
                     }
 
                     if (target.entry_stairs == NUM_FEATURES
                         && br != BRANCH_DUNGEON)
                     {
-                        msg += "Branch has no entry stairs. ";
+                        msg += localise("Branch has no entry stairs. ");
                     }
 
                     if (!msg.empty())
                     {
-                        msg += "Go there anyway?";
+                        msg += localise("Go there anyway?");
                         if (!yesno(msg.c_str(), true, 'n'))
                             return ID_CANCEL;
                     }
@@ -2340,14 +2333,14 @@ static level_pos _prompt_travel_altar()
             if (col == 4)
             {
                 col = 0;
-                mpr(line);
+                mpr_nolocalise(line);
                 line = "";
             }
-            line += make_stringf("(%c) %-14s ", god_initial, altar_name.c_str());
+            line += localise("(%c) %-14s ", god_initial, altar_name.c_str());
             ++col;
         }
         if (!line.empty())
-            mpr(line);
+            mpr_nolocalise(line);
 
         mprf(MSGCH_PROMPT, "Go to which altar? (? - help) ");
 
@@ -3396,6 +3389,7 @@ void stair_info::load(reader& inf)
 
 string stair_info::describe() const
 {
+    // @noloc section start (debug stuff)
     if (destination.is_valid())
     {
         const level_pos &lp(destination);
@@ -3408,6 +3402,7 @@ string stair_info::describe() const
         return make_stringf(" (->%s (?))", destination.id.describe().c_str());
 
     return " (?)";
+    // @noloc section end (debug stuff)
 }
 
 void LevelInfo::set_level_excludes()
@@ -4015,7 +4010,7 @@ void TravelCache::list_waypoints() const
 {
     string line;
     string dest;
-    char choice[50];
+    string choice;
     int count = 0;
 
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
@@ -4025,16 +4020,16 @@ void TravelCache::list_waypoints() const
 
         dest = _get_trans_travel_dest(waypoints[i], false, true);
 
-        snprintf(choice, sizeof choice, "(%d) %-9s", i, dest.c_str());
+        choice = localise("(%d) %-9s", i, dest);
         line += choice;
         if (!(++count % 5))
         {
-            mpr(line);
+            mpr_nolocalise(line);
             line = "";
         }
     }
     if (!line.empty())
-        mpr(line);
+        mpr_nolocalise(line);
 }
 
 uint8_t TravelCache::is_waypoint(const level_pos &lp) const
@@ -4842,11 +4837,13 @@ template <class C> void explore_discoveries::say_any(
 vector<string> explore_discoveries::apply_quantities(
     const vector< named_thing<int> > &v) const
 {
+    // @noloc section start (these are just used as search terms)
     static const char *feature_plural_qualifiers[] =
     {
         " leading ", " back to ", " to ", " of ", " in ", " out of",
         " from ", " back into ", nullptr
     };
+    // @noloc section end
 
     vector<string> things;
     for (const named_thing<int> &nt : v)
