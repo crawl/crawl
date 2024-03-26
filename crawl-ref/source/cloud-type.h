@@ -45,6 +45,7 @@ enum cloud_type
     CLOUD_DEGENERATION,
     CLOUD_BLASTMOTES,
     CLOUD_ELECTRICITY,
+    CLOUD_ROUGH_DUST,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

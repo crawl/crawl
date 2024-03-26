@@ -190,3 +190,7 @@ The explosion is concussive, knocking adjacent creatures away.
 sparks cloud
 
 A trail of electric sparks. Atmospheric, but harmless.
+%%%%
+rough dust cloud
+
+A rough clouds of dust. Sharply polished dust are violence hard.
