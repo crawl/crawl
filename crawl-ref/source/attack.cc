@@ -890,8 +890,9 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     damage_plus += slaying_bonus(throwing);
     damage_plus -= you.corrosion_amount();
 
-    // XXX: should this also trigger on auxes?
-    if (!aux && !ranged)
+    if (you.form == transformation::spellforged)
+        damage_plus += you.infusion_amount() * get_form()->infuse_boost();
+    else if (!aux && !ranged)
         damage_plus += you.infusion_amount() * 4;
 
     return _core_apply_slaying(damage, damage_plus);
