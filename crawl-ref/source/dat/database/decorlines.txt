@@ -238,11 +238,11 @@ You distend your jaw to swallow some @_meat_and_reaction_@
 %%%%
 storm fruit cache
 
-You reach down and electrolyze @_fruit_and_reaction_@
+You reach down and electrolyse @_fruit_and_reaction_@
 %%%%
 storm meat cache
 
-You reach down and electrolyze @_meat_and_reaction_@
+You reach down and electrolyse @_meat_and_reaction_@
 %%%%
 tree fruit cache
 
