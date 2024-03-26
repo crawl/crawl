@@ -127,7 +127,7 @@ static void _update_feat_at(const coord_def &gp)
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 
-    if (liquefied(gp, false))
+    if (liquefied(gp, true))
         env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
 
     if (orb_haloed(gp))

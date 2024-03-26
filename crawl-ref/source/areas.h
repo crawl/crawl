@@ -39,7 +39,8 @@ bool silenced(const coord_def& p);
 bool haloed(const coord_def& p);
 
 // or is the ground there liquefied?
-bool liquefied(const coord_def& p, bool check_actual = true);
+// @param check_actual If true, only return true if leda is responsible
+bool liquefied(const coord_def& p, bool check_actual = false);
 
 // Is it enlightened by the orb?
 bool orb_haloed(const coord_def& p);
