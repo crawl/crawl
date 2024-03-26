@@ -151,9 +151,7 @@ static void _actor_areas(actor *a)
             dungeon_feature_type f = env.grid(*ri);
 
             if (feat_has_solid_floor(f) && !feat_is_water(f))
-            {
                 _set_agrid_flag(*ri, areaprop::liquid);
-            }
         }
         no_areas = false;
     }
