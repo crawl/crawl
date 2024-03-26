@@ -22005,10 +22005,10 @@ Ansichtsebenen wiederherstellt.
 ##################
 %%%%
 Terminal too small (%d,%d); need at least (%d,%d)
-
+Terminal zu klein (%d,%d); mindestens (%d,%d) nötig
 %%%%
 Terminal too small (%d,%d); layout needs (%d,%d)
-
+Terminal zu klein (%d,%d); Layout braucht (%d,%d)
 %%%%
 
 ##################
