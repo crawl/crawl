@@ -185,7 +185,7 @@ able to keep their balance, move at a normal speed, and avoid fumbling.
 %%%%
 Some mud
 
-A thick layer of gritty mud.
+A thick layer of gritty mud. [[liquefied]]
 %%%%
 The open sea
 
