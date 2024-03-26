@@ -21,6 +21,9 @@
 #include "format.h"
 #include "fprop.h"
 #include "libutil.h"
+#ifndef USE_TILE_LOCAL
+#include "localise.h"
+#endif
 #include "macro.h"
 #include "map-knowledge.h"
 #include "message.h"
@@ -458,7 +461,7 @@ public:
 static void _draw_title(const coord_def& cpos, const feature_list& feats, const int columns)
 {
     const formatted_string help =
-        formatted_string::parse_string("(Press <w>?</w> for help)");
+        formatted_string::parse_string(localise("(Press <w>?</w> for help)"));
     const int helplen = help.width();
 
     if (columns < helplen)

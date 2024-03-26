@@ -22016,13 +22016,13 @@ Terminal zu klein (%d,%d); Layout braucht (%d,%d)
 ##################
 %%%%
 (Press <w>?</w> for help)
-
+(<w>?</w> drücken für Hilfe)
 %%%%
 Level map wiped.
 Level Map gelöscht.
 %%%%
 Level map cleared.
-Level Map gelöscht.
+Level Map geleert.
 %%%%
 Remembered map restored.
 Erinnerte Karte wiederhergestellt.
@@ -22031,7 +22031,7 @@ No remembered map.
 Keine erinnerte Karte.
 %%%%
 You can't annotate this level.
-Ihr könnt dieses Level nicht kommentieren.
+Ihr könnt dieses Level nicht annotieren.
 %%%%
 
 ##################
