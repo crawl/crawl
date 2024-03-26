@@ -160,7 +160,7 @@ SKIP_FILES = [
     'tilepick.cc', 'viewchar.h', 'viewchar.cc',
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
-    'libw32c.h', 'libw32c.cc', 'package.cc',
+    'libw32c.h', 'libw32c.cc', 'package.cc', 'windowmanager-sdl.cc',
     # utils
     'stringutil.cc', 'syscalls.h', 'syscalls.cc', 'ui.h', 'ui.cc',
     'unicode.h', 'unicode.cc',

@@ -22035,38 +22035,6 @@ Ihr könnt dieses Level nicht annotieren.
 %%%%
 
 ##################
-# windowmanager-sdl.cc
-##################
-%%%%
-Failed to initialise SDL: %s
-
-%%%%
-Failed to create window: %s
-
-%%%%
-Failed to create GL context: %s
-
-%%%%
-Failed to load icon '%s': %s
-
-%%%%
-SDL_VIDEO_WINDOW_POS=%d,%d
-
-%%%%
-SDL_VIDEO_WINDOW_POS=center
-
-%%%%
-SDL_VIDEO_CENTERED=1
-
-%%%%
-Failed to create cursor: %s
-
-%%%%
-Warning: unsupported format, bpp = %d for '%s'
-
-%%%%
-
-##################
 # wiz-dgn.cc
 ##################
 %%%%
