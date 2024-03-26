@@ -68,7 +68,7 @@ her husband dead. Adventurers may wish they were so lucky!
 Blork the orc
 
 A particularly fat and ugly orc. He's scavenged a pair of rainbow-coloured
-suspenders from somewhere. They're not helping.
+suspenders from somewhere. Strangely, they seem to be glowing.
 %%%%
 Boris
 
@@ -899,11 +899,11 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skillfully.
+and able to use them skilfully.
 %%%%
 cerulean imp
 
-A small, willful minor demon. Its wings, far larger than its scrawny body, were
+A small, wilful minor demon. Its wings, far larger than its scrawny body, were
 made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
@@ -1158,7 +1158,7 @@ stand in its way.
 %%%%
 draconian knight
 
-A draconian protected by thick scales, skillful weapon use, and complementary
+A draconian protected by thick scales, skilful weapon use, and complementary
 magic.
 %%%%
 draconian monk
@@ -3501,17 +3501,17 @@ His shield is emblazoned with images of infernal flames.
 %%%%
 The Meatlord
 
-You behold the embodiment of filth, corruption and depravity, the Meatlord. His
+You behold the embodiment of filth, corruption and depravity: the Meatlord. His
 foul body is bloated to the extreme, leaking viscous fluid and the stench of
 death. His head is that of a boar with bulging eyes and tusks split in two, his
-snout flares and oozes as he snorts and squeals at the sight of you, his mouth
-is a toothless rift which drools pools of blood and vomits forth disgusting
-remains. His neck is stretched and lops forward, its skin sagging downward. His
-immense gut writhes and distorts as the larvae within await their repugnant
-release. His legs are unrecognisable masses of flesh, covered in protrusions
-and throbbing boils. Your mind reels at the sight of this hideous form and your
-senses begin to shut down in an attempt to preserve your sanity as you choke on
-the oppressive stench.
+snout flares and oozes as he snorts and squeals at the sight of you, and his
+mouth is a toothless rift which drools pools of blood and vomits forth
+disgusting remains. His neck is stretched and lops forward, its skin sagging
+downward. His immense gut writhes and distorts as the larvae within await their
+repugnant release. His legs are unrecognisable masses of flesh, covered in
+protrusions and throbbing boils. Your mind reels at the sight of this hideous
+form, and your senses begin to shut down in an attempt to preserve your sanity
+as you choke on the oppressive stench.
 %%%%
 The Unspeakable
 

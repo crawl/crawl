@@ -7408,6 +7408,13 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (th.getMinorVersion() < TAG_MINOR_SETPOLY || _need_poly_refresh(m))
         init_poly_set(&m);
+
+    if (m.type == MONS_ORC_APOSTLE && m.damage_friendly > m.damage_total)
+    {
+        mprf(MSGCH_ERROR, "apostle \"%s\" had incorrect damage tracking: %d > %d",
+            m.full_name(DESC_PLAIN).c_str(), m.damage_friendly, m.damage_total);
+        m.damage_total = m.damage_friendly = 0;
+    }
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
@@ -7486,13 +7493,6 @@ static void _tag_read_level_monsters(reader &th)
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
-#if TAG_MAJOR_VERSION == 34
-            if (th.getMinorVersion() < TAG_MINOR_FIX_APOSTLE_DAMAGE
-                && m.damage_friendly > m.damage_total)
-            {
-                m.damage_total = m.damage_friendly = 0;
-            }
-#endif
             monster_die(m, KILL_RESET, -1, true, false);
             // avoid "mid cache bogosity" if there's an unhandled clone bug
             if (dup_m && dup_m->alive())

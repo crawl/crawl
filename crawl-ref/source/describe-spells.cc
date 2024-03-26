@@ -499,7 +499,13 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
-        return make_stringf("(%d%%)", hex_chance(spell, mon_owner));
+
+        const string hex_str = make_stringf("%d%%", hex_chance(spell, mon_owner));
+
+        const dice_def dam = _spell_damage(spell, hd);
+        if (!dam.size || !dam.num)
+            return make_stringf("(%s)", hex_str.c_str());
+        return make_stringf("(%s,%dd%d)", hex_str.c_str(), dam.num, dam.size);
     }
 
     if (spell == SPELL_SMITING)

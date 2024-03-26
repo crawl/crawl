@@ -74,7 +74,7 @@ def handle_new_socket(path, event):
             del processes[abspath]
             return
 
-        process.logger.info("Found a %s game.", game_info["id"])
+        process.logger.info("Found a %s game for user %s.", game_info["id"], username)
 
         # Notify lobbys
         if config.get('dgl_mode'):

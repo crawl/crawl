@@ -1175,13 +1175,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
         suffix = ", despite your sanctuary";
 
-    if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
-        && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
-    {
-        would_cause_penance = true;
-        return true;
-    }
-
     if (mon->friendly())
     {
         // There's not really any harm in attacking your own spectral weapon.

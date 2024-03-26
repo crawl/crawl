@@ -25,6 +25,17 @@ from webtiles import game_data_handler, util, ws_handler, status
 
 
 servers = None
+https_port = None
+
+
+# port should already be formatted with a ":"
+class HTTPSRedirectHandler(tornado.web.RequestHandler):
+    def get(self):
+        global https_port
+        if https_port is None:
+            # this will probably break unless 80/443 are in use
+            https_port = ""
+        self.redirect(f"https://{self.request.host_name}{https_port}{self.request.uri}", permanent=True)
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -231,7 +242,7 @@ def bind_server_sockets():
         else:
             listens = ( (config.get('bind_address'), config.get('bind_port')), )
         for (addr, port) in listens:
-            logging.info("Listening on %s:%d" % (addr, port))
+            logging.info("Listening on http://%s:%d" % (addr, port))
             nonsecure.append(bind_sockets(port, addr))
 
     if config.get('ssl_options'):
@@ -239,8 +250,11 @@ def bind_server_sockets():
             listens = config.get('ssl_bind_pairs')
         else:
             listens = ( (config.get('ssl_address'), config.get('ssl_port')), )
+        global https_port
         for (addr, port) in listens:
-            logging.info("Listening on %s:%d" % (addr, port))
+            logging.info("Listening on https://%s:%d" % (addr, port))
+            if https_port is None:
+                https_port = f":{port}"
             secure.append(bind_sockets(port, addr))
     return nonsecure, secure
 
@@ -278,16 +292,20 @@ def bind_server(nonsecure_sockets, secure_sockets):
     global servers
     servers = []
 
-    if nonsecure_sockets and config.get('bind_nonsecure'):
-        server = tornado.httpserver.HTTPServer(application, **kwargs)
+    if nonsecure_sockets:
+        if config.get('bind_nonsecure') == "redirect":
+            http_app = tornado.web.Application([(r"/", HTTPSRedirectHandler)])
+        else:
+            http_app = application
+        server = tornado.httpserver.HTTPServer(http_app, **kwargs)
         for s in nonsecure_sockets:
             server.add_sockets(s)
         servers.append(server)
 
-    if secure_sockets and config.get('ssl_options'):
+    if secure_sockets:
         # TODO: allow different ssl_options per bind pair?
         server = tornado.httpserver.HTTPServer(application,
-                            ssl_options=config.get('ssl_options') **kwargs)
+                            ssl_options=config.get('ssl_options'), **kwargs)
         for s in secure_sockets:
             server.add_sockets(s)
         servers.append(server)
@@ -334,7 +352,7 @@ def parse_args_main():
         description='Dungeon Crawl webtiles server',
         epilog='Command line options will override config settings. See wtutil.py for database commands.')
     parser.add_argument('-p', '--port', type=int, help='A port to bind; disables SSL.')
-    # TODO: --ssl-port or something?
+    parser.add_argument('--ssl-port', type=int, help='An SSL port to bind. Requires configured `ssl_options`.')
     parser.add_argument('--logfile',
                         help='A logfile to write to; use "-" for stdout.')
     parser.add_argument('--daemon', action='store_true', default=None,
@@ -369,6 +387,8 @@ def export_args_to_config(args):
                             config.get("server_path", ""), "debug-config.yml"))
         config.do_early_logging() # sigh
     if args.port:
+        if args.ssl_port:
+            err_exit("Can't combine --port and --ssl-port.")
         config.set('bind_nonsecure', True)
         config.set('bind_address', "")  # TODO: ??
         config.set('bind_port', args.port)
@@ -378,6 +398,12 @@ def export_args_to_config(args):
         if config.get('ssl_options'):
             logging.info("    (Overrides config-specified SSL settings.)")
             config.set('ssl_options', None)
+    elif args.ssl_port:
+        config.set('bind_nonsecure', False)
+        config.set('ssl_bind_pairs', (('', args.ssl_port),))
+        if not config.get('ssl_options'):
+            err_exit("--ssl-port option requires configured `ssl_options`")
+        logging.info("Using command-line supplied ssl port: %d", args.ssl_port)
     if args.daemon is not None:
         logging.info("Command line override for daemonize: %r", args.daemon)
         config.set('daemon', args.daemon)
@@ -774,6 +800,13 @@ def run():
 
         if config.get('umask') is not None:
             os.umask(config.get('umask'))
+        # bind sockets and shed privileges before starting up the ioloop
+        nonsecure_sockets, secure_sockets = bind_server_sockets()
+        # note -- shed_privileges cannot move later, or various files end up
+        # owned by root, breaking dgl-config installs! Particularly pidfile,
+        # but it's not the only one.
+        shed_privileges()
+
     except SystemExit: # err_exit in the try blocks
         # logging already done, hopefully
         raise
@@ -782,28 +815,21 @@ def run():
 
     try:
         write_pidfile()
-
-        # bind sockets and shed privileges before starting up the ioloop
-        nonsecure_sockets, secure_sockets = bind_server_sockets()
-        shed_privileges()
-
         userdb.init_db_connections()
+        try:
+            # finally -- start things up for real
+            asyncio.run(async_run_server(nonsecure_sockets, secure_sockets))
+            logging.info("Bye!")
+        except asyncio.exceptions.CancelledError:
+            # triggered by the cancel case in stop_everything
+            err_exit("Normal server stop failed, some tasks were force-cancelled!")
+        except:
+            err_exit("Server exited with error!", exc_info=True)
+
     except SystemExit:
         raise
     except:
         err_exit("Server startup failed!", exc_info=True)
-    finally:
-        remove_pidfile()
-
-    try:
-        # finally -- start things up for real
-        asyncio.run(async_run_server(nonsecure_sockets, secure_sockets))
-        logging.info("Bye!")
-    except asyncio.exceptions.CancelledError:
-        # triggered by the cancel case in stop_everything
-        err_exit("Normal server stop failed, some tasks were force-cancelled!")
-    except:
-        err_exit("Server exited with error!", exc_info=True)
     finally:
         # warning: need to be careful what appears in this finally block, since
         # it may be called by child processes on fork in terminal.py in the

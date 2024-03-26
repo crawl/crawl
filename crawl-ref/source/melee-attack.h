@@ -109,9 +109,6 @@ private:
     /* Mutation Effects */
     void do_spines();
     void do_passive_freeze();
-#if TAG_MAJOR_VERSION == 34
-    void do_passive_heat();
-#endif
     void do_foul_flame();
     void emit_foul_stench();
 

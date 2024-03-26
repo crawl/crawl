@@ -630,6 +630,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
         case ENCH_HELD:
+        case ENCH_BULLSEYE_TARGET:
             del_ench(entry.first);
             break;
 

@@ -559,6 +559,9 @@ def validate():
         check_keys_any(['bind_pairs', ['bind_address', 'bind_port']], True)
     if has_key('ssl_options') and get('ssl_options'):
         check_keys_any(['ssl_bind_pairs', ['ssl_address', 'ssl_port']], True)
+    if has_key('bind_nonsecure') and get('bind_nonsecure') == "redirect":
+        if not check_keys_any(['ssl_options']):
+            raise ValueError("bind_nonsecure='redirect' requires ssl ports to redirect to")
 
     required = ['static_path', 'template_path', 'server_id',
         'dgl_status_file', 'init_player_program',]

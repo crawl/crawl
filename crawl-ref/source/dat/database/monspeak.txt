@@ -1986,6 +1986,14 @@ Blork
 
 @Blork the orc@
 %%%%
+Blork triumphant
+
+@Blork the orc triumphant@
+%%%%
+Blork killed
+
+@Blork the orc killed@
+%%%%
 Blork the orc
 
 @_Blork_common_@
@@ -1993,48 +2001,77 @@ Blork the orc
 w:5
 @_Blork_rare_@
 %%%%
+Blork the orc triumphant
+
+# Rainbow Raider winning against Batman
+@The_monster@ shouts, "I believe in me!"
+%%%%
+_rainbow_colour_
+
+red
+
+orange
+
+yellow
+
+green
+
+blue
+
+indigo
+
+violet
+%%%%
 _Blork_common_
 
 # some chance of generic orc speech
 w:20
 @_generic_orc_speech_@
 
-VISUAL:@The_monster@ grins evilly.
+VISUAL:@The_monster@ grins serenely.
 
-VISUAL:@The_monster@ frowns.
+VISUAL:@The_monster@ is briefly surrounded by a halo of @_rainbow_colour_@ light.
 
-VISUAL:@The_monster@ looks angry.
+VISUAL:@The_monster@'s eyes glow @_rainbow_colour_@.
 
-@The_monster@ screams @at_foe@, "I don't like you!"
+@The_monster@ says @to_foe@, "You need a new perspective."
 
-@The_monster@ screams @at_foe@, "I'm going to kill you!"
+@The_monster@ screams @at_foe@, "Let me show you how many colours things can be!"
 
-@The_monster@ screams @at_foe@, "I'm much stronger than you!"
+@The_monster@ screams @at_foe@, "It's all true! You just have to believe!"
 
-@The_monster@ screams @at_foe@, "I'll eat your brain! And then I'll vomit it back up!"
+@The_monster@ says, "I was weak, but now I'm strong. And I'll get stronger."
 
-@The_monster@ screams @at_foe@, "You are the ugliest creature I've ever seen!"
+@The_monster@ says, "I had no talent until I found my suspenders."
 
-@The_monster@ screams @at_foe@, "Die!"
+@The_monster@ says, "Everything's been so different since I wore my suspenders."
 
-@The_monster@ screams @at_foe@, "I'll cover the dungeon with your blood!"
+@The_monster@ mutters, "Such pretty colours everywhere..."
 
+@The_monster@ screams, "What are you staring at, @player_name@? I'm stylish!" @player_only@
 %%%%
 _Blork_rare_
 
-@The_monster@ screams @at_foe@, "I'll rip your head off!"
+@The_monster@ screams @at_foe@, "What are you like inside? I'll break you open and find out!"
 
-@The_monster@ screams @at_foe@, "I'll break your legs!"
+@The_monster@ screams @at_foe@, "Look beyond the surface! Nothing is what it seems!"
 
-@The_monster@ screams @at_foe@, "I'll break your arms!"
+@The_monster@ screams @at_foe@, "I'll make you see things how they really are!"
 
-@The_monster@ screams @at_foe@, "I'll crush all your ribs! One by one!"
+@The_monster@ screams @at_foe@, "I can see the energies behind everything! Can't you?"
 
-@The_monster@ screams @at_foe@, "I'll make a cloak from your skin!"
+@The_monster@ says @to_foe@, "There's so much colour in the world. Let me show it to you."
 
-@The_monster@ screams @at_foe@, "I'll decorate my home with your organs!"
+# Calvin and Hobbes
+@The_monster@ says @to_foe@, "The problem is, you see everything in terms of black and white."
 
-@The_monster@ screams @at_foe@, "I'll drink your blood! Soon!"
+@The_monster@ mutters, "Why is everything @_rainbow_colour_@ all of a sudden?"
+
+@The_monster@ says, "Things are no longer grey! Not since my great insight!"
+%%%%
+Blork the orc killed
+
+@The_monster@'s eyes stop glowing, and @subjective@ collapses.
 ## END Blork the orc ##
 %%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
@@ -8295,7 +8332,7 @@ orc_apostle_unbanished
 
 VISUAL:@The_monster@ pulls a severed tentacle out of their boot and sighs heavily.
 
-@The_monster@ grins, "Not even The Unformed can stop the chosen ones of Beogh!"
+@The_monster@ grins, "Not even the Unformed can stop the chosen ones of Beogh!"
 
 @The_monster@ shouts triumpantly, "Who's laughing NOW?"
 

@@ -1009,6 +1009,7 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_CAUGHT_IN_NET:
     case HINT_YOU_SILENCE:
     case HINT_NEED_POISON_HEALING:
+    case HINT_ON_FIRE:
     case HINT_INVISIBLE_DANGER:
     case HINT_NEED_HEALING_INVIS:
     case HINT_ABYSS:
@@ -1329,6 +1330,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             Hints.hints_just_triggered = true;
         }
         print_hint("HINT_YOU_POISON");
+        break;
+
+    case HINT_ON_FIRE:
+        print_hint("HINT_ON_FIRE");
         break;
 
     case HINT_MULTI_PICKUP:

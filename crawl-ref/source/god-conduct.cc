@@ -78,11 +78,10 @@ static const char *conducts[] =
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos",
 #if TAG_MAJOR_VERSION == 34
-    "Desecrate Orcish Remains",
+    "Desecrate Orcish Remains", "Kill Slime",
 #endif
-    "Kill Slime", "Was Hasty", "Attack In Sanctuary",
-    "Kill Nonliving", "Exploration", "Seen Monster",
-    "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
+    "Was Hasty", "Attack In Sanctuary", "Kill Nonliving", "Exploration",
+    "Seen Monster", "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -375,26 +374,9 @@ static peeve_map divine_peeves[] =
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack your followers") },
     },
     // GOD_JIYVA,
-    {
-        { DID_KILL_SLIME, {
-            "you kill slimes", true,
-            1, 2, nullptr, nullptr, [] (const monster* victim) -> bool {
-                return victim && !victim->is_shapeshifter();
-            }
-        } },
-        { DID_ATTACK_NEUTRAL, {
-            nullptr, true,
-            1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
-                return victim
-                    && mons_is_slime(*victim) && !victim->is_shapeshifter();
-            }
-        } },
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack fellow slimes") },
-    },
+    peeve_map(),
     // GOD_FEDHAS,
-    {
-        { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
-    },
+    peeve_map(),
     // GOD_CHEIBRIADOS,
     {
         { DID_HASTY, {

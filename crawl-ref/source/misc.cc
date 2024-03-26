@@ -211,12 +211,3 @@ bool today_is_serious()
     // As ever, note that tm_mon is 0-based.
     return date->tm_mon == 3 && date->tm_mday == 1;
 }
-
-bool now_is_morning()
-{
-    const time_t curr_time = time(nullptr);
-    const tm *date = TIME_FN(&curr_time);
-    // Assume 'morning' starts at 6 AM and ends at 6 PM.
-    dprf("hr %d", date->tm_hour);
-    return date->tm_hour >= 6 && date->tm_hour < 18;
-}
