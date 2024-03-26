@@ -6,6 +6,16 @@ You can reread all messages at any time with
 <localtiles> or <input>left click</input> with mouse</localtiles> to clear the
 <cyan>--more--</cyan> prompts.
 %%%%
+tutorial death
+
+You die...
+
+In Crawl, death is a sad but common occurrence. Note that there's usually
+something you could have done to survive, for example by using some kind of
+item, running away, resting between fights, or by avoiding combat entirely.
+Keep trying, eventually you'll prevail!
+
+%%%%
 ##############################################
 # Tutorial map 1: Movement and exploration   #
 ##############################################

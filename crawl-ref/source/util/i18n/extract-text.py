@@ -461,7 +461,7 @@ for filename in files:
                     continue
                 if 'show_specific_help' in line:
                     continue
-                if 'print_hint' in line:
+                if 'print_hint' in line or 'tutorial_msg' in line:
                     continue
                 if re.search('^[^"]*property[A-Za-z_]* *\(', line):
                     continue

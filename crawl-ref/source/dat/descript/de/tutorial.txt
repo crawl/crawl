@@ -4,6 +4,18 @@ tutorial intro
 Alle Meldungen könnt Ihr jederzeit noch mal mit
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> lesen. Um die <cyan>--more--</cyan>
 Meldung zu löschen drücke die <input>Leertaste</input>.
+
+%%%%
+tutorial death
+
+Ihr sterbt...
+
+In Crawl ist der Tod ein trauriges, aber alltägliches Ereignis. Beachtet, dass
+es normalerweise etwas gibt, was Ihr hättet tun können, um zu überleben, z.B.
+indem Ihr einen Gegenstand benutzt, weglauft, Euch zwischen den Kämpfen ausruht
+oder den Kampf ganz vermeidet. Versucht es weiter, dann werdet Ihr schließlich
+siegen!
+
 %%%%
 tutorial1 start
 

@@ -49,12 +49,9 @@ void tutorial_init_hint(const char* hintstr)
 
 void tutorial_death_message()
 {
-    canned_msg(MSG_YOU_DIE);
-    mpr_nojoin(MSGCH_TUTORIAL,
-               "In Crawl, death is a sad but common occurrence. "
-               "Note that there's usually something you could have done to "
-               "survive, for example by using some kind of item, running away, "
-               "resting between fights, or by avoiding combat entirely. "
-               "Keep trying, eventually you'll prevail!");
+    // NOTE: This will conflict if merged with 0.31 or later. If that happens, take the other version.
+    // (Couldn't do in 0.27 what was done in 0.31 because other changes were not there.)
+    //canned_msg(MSG_YOU_DIE);
+    tutorial_msg("tutorial death", false);
     more();
 }
