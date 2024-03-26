@@ -163,6 +163,7 @@ SKIP_FILES = [
     'libw32c.h', 'libw32c.cc', 'package.cc',
     # utils
     'stringutil.cc', 'syscalls.h', 'syscalls.cc', 'ui.h', 'ui.cc',
+    'unicode.h', 'unicode.cc',
     # nonsense
     'lang-fake.h', 'lang-fake.cc'
 ]
