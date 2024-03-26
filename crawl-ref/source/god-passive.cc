@@ -886,7 +886,7 @@ void qazlal_storm_clouds()
             if (!cell_is_solid(*ai))
                 count++;
 
-        if (count >= 5)
+        if (count >= 3)
             candidates.push_back(*ri);
     }
     const int count =
