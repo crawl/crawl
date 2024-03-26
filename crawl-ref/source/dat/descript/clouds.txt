@@ -191,6 +191,7 @@ sparks cloud
 
 A trail of electric sparks. Atmospheric, but harmless.
 %%%%
-rough dust cloud
+sand storm cloud
 
-A rough clouds of dust. Sharply polished dust are violence hard.
+A cloud of violently whirling sand. Creatures within will be injured, though its
+damage is sharply reduced by armor.

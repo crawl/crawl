@@ -321,11 +321,11 @@ static const cloud_data clouds[] = {
       ETC_ELECTRICITY,                                   // colour
       { TILE_CLOUD_ELECTRICITY, CTVARY_RANDOM },        // tile
     },
-    // CLOUD_ROUGH_DUST,
-    { "rough dust",  nullptr,                     // terse, verbose name
+    // CLOUD_SAND_STORM,
+    { "sand storm",  nullptr,                     // terse, verbose name
       ETC_EARTH,                                  // colour
       { TILE_CLOUD_DUST, CTVARY_DUR },            // tile
-      BEAM_NONE,                                  // beam_effect
+      BEAM_FRAG,                                  // beam_effect
       NORMAL_CLOUD_DAM,                           // base, random damage
     },
 };
