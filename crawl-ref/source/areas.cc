@@ -37,7 +37,7 @@ enum class areaprop
     silence       = (1 << 2),
     halo          = (1 << 3),
     liquid        = (1 << 4),
-    actual_liquid = (1 << 5),
+    //actual_liquid = (1 << 5), liquids are actual liquids now
     orb           = (1 << 6), ///< The glow of the Orb of Zot
     umbra         = (1 << 7),
     quad          = (1 << 8),
@@ -150,10 +150,10 @@ static void _actor_areas(actor *a)
         {
             dungeon_feature_type f = env.grid(*ri);
 
-            _set_agrid_flag(*ri, areaprop::liquid);
-
             if (feat_has_solid_floor(f) && !feat_is_water(f))
-                _set_agrid_flag(*ri, areaprop::actual_liquid);
+            {
+                _set_agrid_flag(*ri, areaprop::liquid);
+            }
         }
         no_areas = false;
     }
@@ -687,12 +687,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (feat_is_water(env.grid(p)) || feat_is_lava(env.grid(p)))
         return false;
 
-    // "actually" liquefied (ie, check for movement)
-    if (check_actual)
-        return _check_agrid_flag(p, areaprop::actual_liquid);
-    // just recoloured for consistency
-    else
-        return _check_agrid_flag(p, areaprop::liquid);
+    return _check_agrid_flag(p, areaprop::liquid);
 }
 
 /////////////
