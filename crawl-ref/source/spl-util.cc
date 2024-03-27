@@ -1432,9 +1432,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "you cannot slingshot yourself while unable to move.";
             if (you.no_tele(true))
                 return lowercase_first(you.no_tele_reason(true));
+            if (possible_piledriver_targets().empty())
+                return "there is nothing nearby that you can slingshot.";
         }
-        if (possible_piledriver_targets().empty())
-            return "there is nothing nearby that you can slingshot.";
         break;
 
     case SPELL_ELECTRIC_CHARGE:
