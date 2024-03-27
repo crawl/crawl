@@ -20,6 +20,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "makeitem.h"
 #include "message.h"
 #include "religion.h"
@@ -484,13 +485,17 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
             const species_type sp = species::from_str_loose(race);
             if (sp == SP_UNKNOWN)
             {
-                mprf("Unknown species: %s", race.c_str());
+                string msg = localise("Unknown species: %s");
+                msg = replace_first(msg, "%s", race); // do not try to translate input
+                mpr_nolocalise(msg);
                 return false;
             }
             const job_type job = find_job_from_string(role);
             if (job == JOB_UNKNOWN)
             {
-                mprf("Unknown job: %s", role.c_str());
+                string msg = localise("Unknown job: %s");
+                msg = replace_first(msg, "%s", role); // do not try to translate input
+                mpr_nolocalise(msg);
                 return false;
             }
             change_species_to(sp);
@@ -629,7 +634,8 @@ bool chardump_parser::parse()
 void wizard_load_dump_file()
 {
     char filename[80];
-    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
+    string prompt = localise("Which dump file?") + " ";
+    msgwin_get_line_autohist(prompt, filename, sizeof(filename));
 
     if (filename[0] == '\0')
         canned_msg(MSG_OK);

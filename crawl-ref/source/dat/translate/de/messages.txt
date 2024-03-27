@@ -22167,16 +22167,16 @@ Tempo im Abgrund auf %i eingestellt.
 ##################
 %%%%
 Unknown species: %s
-
+Unbekannte Spezies: %s
 %%%%
 Unknown job: %s
-
+Unkekannter Job: %s
 %%%%
 unknown item: %s
-
+Unbekkanter Gegenstand: %s
 %%%%
-"Which dump file? "
-
+Which dump file?
+Welche Dump-Datei?
 %%%%
 
 ##################
