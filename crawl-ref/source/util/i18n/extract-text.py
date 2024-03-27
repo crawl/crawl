@@ -477,6 +477,8 @@ for filename in files:
                     continue
                 if 'GetModuleHandle' in line:
                     continue
+                if re.search(r'\bcreate_item_named *\(', line):
+                    continue
 
                 # find or compare
                 if re.search(r'\bstrstr\s*\(', line):
@@ -641,7 +643,7 @@ for filename in files:
 
         # ignore format strings without any actual text
         temp = re.sub(r'%[\-\+ #0]?[\*0-9]*(\.[\*0-9]*)?(hh|h|l|ll|j|z|t|L)?[diuoxXfFeEgGaAcspn]', '', string)
-        if not re.search('[a-zA-Z]', temp):
+        if not re.search(r'(?<!\\)[a-zA-Z]', temp):
             continue
 
         # ignore punctuation

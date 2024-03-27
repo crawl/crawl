@@ -21,6 +21,7 @@
 #include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "localise.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -39,6 +40,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "throw.h"
+#include "unicode.h"
 #include "unwind.h"
 #include "version.h"
 #include "wiz-you.h"
@@ -47,22 +49,30 @@
 
 typedef map<skill_type, int8_t> skill_map;
 
+// @locnote: column widths must be preserved
 static const char* _title_line =
-    "Source | AvHitDam | MaxDam |  Acc | AvDam | AvTime | AvSpd | AvEffDam"; // 69 columns
+    "  Source | AvHitDam | MaxDam |  Acc | AvDam | AvTime | AvSpd | AvEffDam";
 static const char* _tsv_title_line =
     "Damage source\tAvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam";
 
 string fight_damage_stats::summary(const string prefix, bool tsv)
 {
+    string result = localise(tsv ? "%s%s" : "%s%8.8s", prefix, attacker);
+
     if (hits == 0 && !tsv)
-        return make_stringf("%s%6s | No hits", prefix.c_str(), attacker.c_str());
-    return make_stringf(tsv ? "%s%s\t%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f"
-                            : "%s%6s |    %5.1f |    %3d | %3d%% |"
+    {
+        result += " | ";
+        result += localise("No hits");
+        return result;
+    }
+
+    result += localise(tsv ? "\t%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f"
+                            : " |    %5.1f |    %3d | %3d%% |"
                               " %5.1f |   %3d  | %5.2f |    %5.1f",
-                        prefix.c_str(), attacker.c_str(),
                         av_hit_dam, max_dam, accuracy,
                         av_dam, av_time, av_speed,
                         av_eff_dam);
+    return result;
 }
 
 string fight_data::header(bool tsv)
@@ -105,20 +115,20 @@ static string _equipped_weapon_name()
 
     if (iweap)
     {
-        string item_buf = iweap->name(DESC_PLAIN);
+        string item_buf = localise(iweap->name(DESC_PLAIN));
         // If it's a ranged weapon, add the description of the missile
         if (is_range_weapon(*iweap) && missile < ENDOFPACK && missile >= 0)
-            item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
-        return "Wielding: " + item_buf;
+            item_buf += localise(" with %s", you.inv[missile].name(DESC_PLAIN));
+        return localise("Wielding: ") + item_buf;
     }
 
     if (missile != -1 && you.inv[missile].defined()
                 && you.inv[missile].base_type == OBJ_MISSILES)
     {
-        return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
+        return localise("Quivering: ") + localise(you.inv[missile].name(DESC_PLAIN));
     }
 
-    return "Unarmed";
+    return localise("Unarmed");
 }
 
 static string _time_string()
@@ -145,40 +155,45 @@ static void _write_version(FILE * o)
 
 static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
-    fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
+
+    string text = localise("%s: %s %s vs. %s (%d rounds) (%s)",
             defend ? "Defense" : "Attack",
             species::name(you.species).c_str(),
             get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
             iter_limit,
             _time_string().c_str());
+    fprintf(o, "%s\n", text.c_str());
 }
 
 static void _write_you(FILE * o)
 {
-    fprintf(o, "%s %s: XL %d   Str %d   Int %d   Dex %d\n",
+    string text = localise("%s %s: XL %d   Str %d   Int %d   Dex %d",
             species::name(you.species).c_str(),
             get_job_name(you.char_class),
             you.experience_level,
             you.strength(),
             you.intel(),
             you.dex());
+    fprintf(o, "%s\n", text.c_str());
 }
 
 static void _write_weapon(FILE * o)
 {
-    fprintf(o, "%s, Skill: %s\n",
+    string text = localise("%s, Skill: %s",
             _equipped_weapon_name().c_str(),
             skill_name(_equipped_skill()));
+    fprintf(o, "%s\n", text.c_str());
 }
 
 static void _write_mon(FILE * o, monster &mon)
 {
-    fprintf(o, "%s: HD %d   AC %d   EV %d\n",
+    string text = localise("%s: HD %d   AC %d   EV %d",
             mon.name(DESC_PLAIN, true).c_str(),
             mon.get_experience_level(),
             mon.armour_class(),
             mon.evasion());
+    fprintf(o, "%s\n", text.c_str());
 }
 
 static bool _equip_weapon(const string &weapon, bool &abort)
@@ -276,7 +291,7 @@ static monster* _init_fsim()
         dist moves;
         direction_chooser_args args;
         args.needs_path = false;
-        args.top_prompt = "Select a monster, or hit Escape to use default.";
+        args.top_prompt = localise("Select a monster, or hit Escape to use default.");
         direction(moves, args);
         if (monster_at(moves.target))
         {
@@ -506,13 +521,19 @@ void wizard_quick_fsim()
     if (!mon)
         return;
 
+    string attack_prefix = localise("Attack: ");
+    string defend_prefix = localise("Defend: ");
+    int width = max(strwidth(attack_prefix), strwidth(defend_prefix));
+    attack_prefix = pad_string(attack_prefix, width, true);
+    defend_prefix = pad_string(defend_prefix, width, true);
+
     const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
-    mprf("%8s%s", "", fdata.header(false).c_str());
-    mpr(fdata.summary("Attack: ", false));
+    mprf("%s%s", pad_string("", width).c_str(), fdata.header(false).c_str());
+    mpr_nolocalise(fdata.summary(attack_prefix, false));
 
     fdata = _get_fight_data(*mon, iter_limit, true);
-    mpr(fdata.summary("Defend: ", false));
+    mpr_nolocalise(fdata.summary(defend_prefix, false));
 
     _uninit_fsim(mon);
     return;
@@ -581,15 +602,15 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     else
         col_name = _init_scale(scale, xl_mode);
 
-    const string text_title = make_stringf("%s\n   | %s", col_name.c_str(),
+    const string text_title = localise("%s\n   | %s", col_name.c_str(),
                                       fight_data::header(false).c_str());
     const string file_title = Options.fsim_csv ?
-            make_stringf("%s\t%s\n", col_name.c_str(),
+            localise("%s\t%s\n", col_name.c_str(),
                             fight_data::header(true).c_str()) :
             text_title;
 
     fprintf(o, "%s\n", file_title.c_str());
-    mpr(text_title);
+    mpr_nolocalise(text_title);
 
     vector<pair<int, fight_data>> results;
     const int iter_limit = Options.fsim_rounds;
@@ -612,7 +633,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         const string file_line = Options.fsim_csv ?
                 fstats.summary(make_stringf("%d\t", i), true) :
                 line;
-        mpr(line);
+        mpr_nolocalise(line);
         fprintf(o, "%s\n", file_line.c_str());
         fflush(o);
 
@@ -637,7 +658,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
             const string file_line = Options.fsim_csv ?
                     fstats.summary(make_stringf("%d\t", i), true) :
                     line;
-            mpr(line);
+            mpr_nolocalise(line);
             fprintf(o, "%s\n", file_line.c_str());
             fflush(o);
         }

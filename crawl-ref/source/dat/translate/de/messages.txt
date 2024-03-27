@@ -22184,48 +22184,55 @@ Welche Dump-Datei?
 ##################
 %%%%
 Player
-
+Spieler
 %%%%
 Mons
-
+Monster
 %%%%
 
 ##################
 # wiz-fsim.cc
 ##################
 %%%%
-Source | AvHitDam | MaxDam |  Acc | AvDam | AvTime | AvSpd | AvEffDam
-
+# note: column widths must be preserved
+"  Source | AvHitDam | MaxDam |  Acc | AvDam | AvTime | AvSpd | AvEffDam"
+"  Quelle | ØTrefSch | MaxSch |  Gen | ØScha | ØZeit  | ØTempo| ØEffScha"
 %%%%
 Damage source\tAvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam
-
+Schadenquelle\tØTrefSch\tMaxSch\tGenauigk.\tØScha\tØZeit\tØTempo\tØEffScha
 %%%%
-%s%6s | No hits
-
-%%%%
-%s%s\t%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f
-
-%%%%
-" with "
-
+No hits
+Keine Treffer
 %%%%
 "Wielding: "
-
+"Waffe: "
 %%%%
 "Quivering: "
-
+"Köcher: "
 %%%%
-"mundane ident:all "
-
+%s: %s %s vs. %s (%d rounds) (%s)
+%s: %s %s vs. %s (%d Runde) (%s)
+%%%%
+Defense
+Verteidigung
+%%%%
+%s %s: XL %d   Str %d   Int %d   Dex %d
+%s %s: XL %d   Stä %d   Int %d   Ges %d
+%%%%
+%s, Skill: %s
+%s, Fertigkeit: %s
+%%%%
+%s: HD %d   AC %d   EV %d
+%s: HD %d   RK %d   EV %d
 %%%%
 Cannot wield weapon
-
+Ihr könnt die Waffe nicht handhaben
 %%%%
 Select a monster, or hit Escape to use default.
-
+Ein Monster wählen, oder Escape drücken um das Default zu benutzen
 %%%%
 "Enter monster name (or MONS spec): "
-Gib den Monsternamen (oder die MONS-Spezifikation) ein:
+"Den Monsternamen (oder die MONS-Spezifikation) eingeben: "
 %%%%
 Failed to create monster.
 Monster konnte nicht erstellt werden.
@@ -22234,25 +22241,19 @@ Could not put monster adjacent to player.
 Das Monster konnte nicht neben den Spieler gestellt werden.
 %%%%
 "Defend: "
-Verteidigen:
-%%%%
-%s\t%s
-
-%%%%
-%d\t
-
+"Verteidigen: "
 %%%%
 Cancelling simulation.
-
+Simulation abgebrochen.
 %%%%
 Can't write %s: %s
 %s kann nicht geschrieben werden: %s
 %%%%
 (A)ttack or (D)efense?
-(A)ttack oder (D)efense?
+(A)ngriff oder Vertei(D)igung?
 %%%%
 Aborting sim on %s
-Sim auf %s abbrechen
+Sim auf %s abgebrochen
 %%%%
 
 ##################
@@ -23025,7 +23026,7 @@ Can't repeat entering wizard mode.
 
 %%%%
 "Enter Wizard Command (? - help): "
-Gebt den Assistentenbefehl ein (? - Hilfe):
+"Den Assistentenbefehl eingeben (? - Hilfe): "
 %%%%
 You cannot repeat that wizard command.
 
