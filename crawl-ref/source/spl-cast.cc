@@ -157,7 +157,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 
     // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
-    const string damagestring = spell_damage_string(spell);
+    const string damagestring = spell_damage_string(spell, false, -1, true);
 
     desc << chop_string(spell_power_string(spell), 10)
          << chop_string(damagestring.length() ? damagestring : "N/A", 10)
@@ -2879,7 +2879,7 @@ string spell_max_damage_string(spell_type spell)
     return spell_damage_string(spell, false, max_pow);
 }
 
-string spell_damage_string(spell_type spell, bool evoked, int pow)
+string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
 {
     if (pow == -1)
         pow = evoked ? wand_power(spell) : calc_spell_power(spell);
@@ -2929,8 +2929,12 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
 
     if (spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
     {
-        return dam_str + make_stringf(" + %s",
-            describe_collision_dam(collision_damage(pow, false)).c_str());
+        if (terse)
+            return dam_str + "+";
+        else
+            return make_stringf("%s (+%s)",
+                dam_str.c_str(),
+                describe_collision_dam(collision_damage(pow, false)).c_str());
     }
 
     if (spell == SPELL_LRD

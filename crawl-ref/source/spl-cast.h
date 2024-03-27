@@ -134,7 +134,8 @@ int power_to_barcount(int power);
 
 int spell_power_percent(spell_type spell);
 string spell_power_string(spell_type spell);
-string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1);
+string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
+                           bool terse = false);
 string spell_max_damage_string(spell_type spell);
 int spell_acc(spell_type spell);
 string spell_range_string(spell_type spell);
