@@ -1912,7 +1912,6 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
         return "";
     }
 
-    bool success = false;
     _context = "";
 
     // first argument is the format string
@@ -1923,7 +1922,6 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
     if (fmt_arg.translate && translate)
     {
         fmt_xlated = _localise_string("", fmt_arg);
-        success = (fmt_xlated != fmt_arg.stringVal);
     }
     else
     {
@@ -1985,8 +1983,6 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                     {
                         string argx = _localise_string(_context, arg);
                         ss << _format_utf8_string(fmt_spec, argx);
-                        if (argx != arg.stringVal)
-                            success = true;
                     }
                     else
                     {
@@ -2029,12 +2025,6 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
     }
 
     string result = ss.str();
-
-    if (translate && args.size() > 1 && fmt_arg.translate && !success)
-    {
-        // there may be a translation for the completed string
-        result = _localise_string("", result);
-    }
 
     return result;
 
