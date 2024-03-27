@@ -2897,7 +2897,9 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
         case SPELL_AIRSTRIKE:
             return describe_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_PILEDRIVER:
-            return make_stringf("2d(%d-%d)", 1 + (pow * 3 / 20), 1 + (pow * 6 / 20));
+            return make_stringf("2d(%d-%d)",
+                        collision_damage(piledriver_collision_power(pow, 1), false).size,
+                        collision_damage(piledriver_collision_power(pow, 4), false).size);
         case SPELL_GELLS_GAVOTTE:
             return make_stringf("2d(%d-%d)",
                         collision_damage(gavotte_impact_power(pow, 1), false).size,

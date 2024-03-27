@@ -63,6 +63,7 @@ vector<monster *> find_chaos_targets(bool just_check = false);
 spret word_of_chaos(int pow, bool fail);
 spret blinkbolt(int power, bolt &beam, bool fail);
 
+int piledriver_collision_power(int pow, int dist);
 vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets);
 vector<coord_def> possible_piledriver_targets();
 spret cast_piledriver(int pow, bool fail);
