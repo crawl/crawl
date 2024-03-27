@@ -583,6 +583,7 @@ static void _try_to_respawn_ancestor()
     add_companion(ancestor);
     check_place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2),
                       ancestor); // ;)
+    ancestor->behaviour = BEH_STICK;
 }
 
 static void _decrement_transform_duration(int delay)
