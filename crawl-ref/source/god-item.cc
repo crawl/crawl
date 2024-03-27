@@ -411,8 +411,9 @@ bool god_despises_item(const item_def &item, god_type which_god)
 {
     if (item.base_type != OBJ_TALISMANS)
         return false;
-    return item.sub_type == TALISMAN_DEATH && is_good_god(which_god)
-           || which_god == GOD_ZIN;
+    return (item.sub_type == TALISMAN_DEATH)
+            && is_good_god(which_god)
+            || which_god == GOD_ZIN;
 }
 
 /**

@@ -167,7 +167,7 @@ void player_did_deliberate_movement(bool rampaging)
 static bool _cancel_ice_move()
 {
     vector<string> effects;
-    if (i_feel_safe(false, true, true))
+    if (i_feel_safe(false, true, true) || is_tabcasting())
         return false;
 
     if (you.duration[DUR_ICY_ARMOUR])

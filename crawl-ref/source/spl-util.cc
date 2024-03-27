@@ -1130,7 +1130,8 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell_difficulty(spell) > you.experience_level)
             return "you aren't experienced enough to cast this spell.";
 
-        if (you.has_mutation(MUT_HP_CASTING))
+        if (is_tabcasting()){}
+        else if (you.has_mutation(MUT_HP_CASTING))
         {
             // TODO: deduplicate with enough_hp()
             if (you.duration[DUR_DEATHS_DOOR])

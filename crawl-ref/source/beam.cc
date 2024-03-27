@@ -3094,6 +3094,13 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
+    if (agent() && agent()->is_player()
+        && you.form == transformation::conduit
+        && is_player_book_spell(origin_spell))
+    {
+        return true;
+    }
+
     if (you.cloud_immune() && is_big_cloud())
         return true;
 
@@ -4300,6 +4307,13 @@ bool bolt::ignores_player() const
     if (flavour == BEAM_DIGGING)
         return true;
 
+    if (agent() && agent()->is_player()
+        && you.form == transformation::conduit
+        && is_player_book_spell(origin_spell))
+    {
+        return true;
+    }
+
     if (origin_spell == SPELL_COMBUSTION_BREATH
         || origin_spell == SPELL_NULLIFYING_BREATH)
     {
@@ -4512,7 +4526,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
 
     bool prompted = false;
 
-    if (stop_attack_prompt(mon, true, target, &prompted)
+    if (stop_attack_prompt(mon, true, target, &prompted,
+        you.pos(), is_tabcasting() && is_player_book_spell(origin_spell))
         || _stop_because_god_hates_target_prompt(mon, origin_spell))
     {
         beam_cancelled = true;

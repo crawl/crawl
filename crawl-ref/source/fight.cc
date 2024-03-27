@@ -474,7 +474,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         else if (did_hit && !(*did_hit))
             *did_hit = melee_attk.did_hit;
 
-        fire_final_effects();
+        if (attacker->type != MONS_PLAYER_SHADOW)
+            fire_final_effects();
     }
 
     return true;
@@ -1411,6 +1412,10 @@ bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
     const string noun = stop_summoning_reason(resists, flags);
     if (noun.empty())
         return false;
+
+    //if tabcasting, abort silently
+    if (is_tabcasting())
+        return true;
 
     string prompt = make_stringf("Really %s while emitting a %s?",
                                  verb.c_str(), noun.c_str());

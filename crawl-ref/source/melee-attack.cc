@@ -287,6 +287,7 @@ bool melee_attack::handle_phase_dodged()
         count_action(CACT_DODGE, DODGE_EVASION);
 
     maybe_trigger_jinxbite();
+    maybe_trigger_tabcast();
 
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
@@ -581,6 +582,8 @@ bool melee_attack::handle_phase_hit()
         _apply_flux_contam(*(defender->as_monster()));
     }
 
+    maybe_trigger_tabcast();
+
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
         && defender->as_monster()->can_bleed()
@@ -841,6 +844,137 @@ void melee_attack::handle_spectral_brand()
         return;
     attacker->triggered_spectral = true;
     spectral_weapon_fineff::schedule(*attacker, *defender, weapon);
+}
+
+void melee_attack::maybe_trigger_tabcast()
+{
+    if (!attacker->is_player() || you.form != transformation::conduit || !defender->is_monster() || is_projected)
+        return;
+
+    const spell_type spell = you.tabcast_spell;
+    const monster* m = defender->as_monster();
+
+    if (spell == SPELL_NO_SPELL || invalid_monster(m)
+        || !you.attribute[ATTR_TABCAST_LIMIT]
+        || mons_is_firewood(*m))
+    {
+        return;
+    }
+
+    if (wait_spell_active(SPELL_SEARING_RAY))
+    {
+        //change target
+        you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
+        you.props[SEARING_RAY_TARGET_KEY] = m->pos();
+        return;
+    }
+
+    if (wait_spell_active(SPELL_FLAME_WAVE))
+        return;
+    if (wait_spell_active(SPELL_MAXWELLS_COUPLING))
+        return;
+
+    //some spells do nothing if the target is killed
+    //might even crash through an assert
+    switch (spell)
+    {
+    //this just doesn't work at all
+    case SPELL_PASSWALL:
+        return;
+    case SPELL_AIRSTRIKE:
+    case SPELL_FREEZE:
+    case SPELL_VAMPIRIC_DRAINING:
+    case SPELL_DISPEL_UNDEAD:
+    case SPELL_KISS_OF_DEATH:
+    case SPELL_MOMENTUM_STRIKE:
+    case SPELL_STICKY_FLAME:
+    //single target hexes
+    case SPELL_DIMENSIONAL_BULLSEYE:
+    case SPELL_SLOW:
+    case SPELL_HIBERNATION:
+    case SPELL_INNER_FLAME:
+    case SPELL_TUKIMAS_DANCE:
+    case SPELL_VIOLENT_UNRAVELLING:
+    case SPELL_ENFEEBLE:
+    case SPELL_CURSE_OF_AGONY:
+    case SPELL_PETRIFY:
+    case SPELL_NECROTISE:
+        if (!m->alive())
+            return;
+        break;
+    case SPELL_TELEPORT_OTHER:
+        //don't tabcast teleport other on teleporting monsters
+        if (!m->alive() || m->has_ench(ENCH_TP))
+            return;
+        break;
+    case SPELL_SILENCE:
+        if (you.duration[DUR_SILENCE])
+            return;
+        break;
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (you.duration[DUR_ICY_ARMOUR])
+            return;
+        break;
+    case SPELL_JINXBITE:
+        if (you.duration[DUR_JINXBITE])
+            return;
+        break;
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        if (you.duration[DUR_TOXIC_RADIANCE])
+            return;
+        break;
+    case SPELL_FUGUE_OF_THE_FALLEN:
+        if (you.duration[DUR_FUGUE])
+            return;
+        break;
+    case SPELL_ANIMATE_DEAD:
+        if (you.duration[DUR_ANIMATE_DEAD])
+            return;
+        break;
+    case SPELL_CONFUSING_TOUCH:
+        if (you.duration[DUR_CONFUSING_TOUCH] || m->has_ench(ENCH_CONFUSION))
+            return;
+        break;
+    case SPELL_ELECTRIC_CHARGE:
+    case SPELL_BECKONING:
+        if (!m->alive() || adjacent(you.pos(), m->pos()))
+            return;
+        break;
+    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_CALL_IMP:
+    case SPELL_SUMMON_ICE_BEAST:
+    case SPELL_ANIMATE_ARMOUR:
+    case SPELL_MONSTROUS_MENAGERIE:
+    case SPELL_SUMMON_CACTUS:
+    case SPELL_SUMMON_HYDRA:
+    case SPELL_SUMMON_MANA_VIPER:
+    case SPELL_SUMMON_BLAZEHEART_GOLEM:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_MARTYRS_KNELL:
+        if (count_summons(&you, spell) >= summons_limit(spell, true))
+            return;
+        break;
+    case SPELL_HAUNT:
+        if (!m->alive() || count_summons(&you, spell) >= summons_limit(spell, true))
+            return;
+        break;
+    case SPELL_SIMULACRUM:
+        if (!m->alive() || count_expire_player_simulacra(false, true) >= summons_limit(spell, true))
+            return;
+        break;
+    default:
+        break;
+    }
+
+    you.attribute[ATTR_TABCAST_LIMIT]--;
+
+    const auto form = get_form(transformation::conduit);
+    if (!x_chance_in_y(form->get_tabcast_chance(), 100))
+        return;
+
+    tabcast_fineff::schedule(m->pos());
 }
 
 item_def *melee_attack::offhand_weapon() const
@@ -1190,6 +1324,7 @@ bool melee_attack::attack()
     if (shield_blocked)
     {
         handle_phase_blocked();
+        maybe_trigger_tabcast();
         maybe_riposte();
         if (!attacker->alive())
         {

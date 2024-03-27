@@ -62,11 +62,6 @@
 #include "view.h"
 #include "xp-evoker-data.h" // for thunderbolt
 
-#define SEARING_RAY_AIM_SPOT_KEY "searing_ray_aimed_at_spot"
-#define SEARING_RAY_TARGET_KEY "searing_ray_target"
-#define SEARING_RAY_MID_KEY "searing_ray_mid"
-#define SEARING_RAY_POWER_KEY "searing_ray_power"
-
 static bool _act_worth_targeting(const actor &caster, const actor &a)
 {
     if (!caster.see_cell_no_trans(a.pos()))
@@ -309,6 +304,10 @@ static bool _warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
 
     if (bad_targets.empty())
         return false;
+
+    //if tabcasting, abort silently if you can hit a friendly target
+    if (is_tabcasting())
+        return true;
 
     const monster* ex_mon = bad_targets.back();
     string adj, suffix;
@@ -776,14 +775,18 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             // Singing Sword's spell shouldn't give a prompt at this time.
             if (spell != SPELL_SONIC_WAVE)
             {
-                if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc))
+                if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc,
+                        nullptr, nullptr, is_tabcasting()))
+                {
                     return spret::abort;
+                }
 
                 fail_check();
             }
 
             mpr(player_msg);
-            flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
+            flash_view_delay(UA_PLAYER, beam.colour,
+                is_tabcasting() ? 150 : 300, &hitfunc);
         }
         else
         {
@@ -1664,8 +1667,11 @@ spret cast_shatter(int pow, bool fail)
                && !god_protects(*act->as_monster())
                && _shatterable(act);
     };
-    if (stop_attack_prompt(hitfunc, "attack", vulnerable))
+    if (stop_attack_prompt(hitfunc, "attack", vulnerable,
+        nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
     const bool silence = silenced(you.pos());
@@ -2582,15 +2588,18 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
     if (victim->is_player())
     {
-        dprf("You: static discharge damage: %d", damage);
-        damage = check_your_resists(damage, BEAM_ELECTRICITY,
-                                    "static discharge");
-        mprf("You are struck by an arc of lightning%s",
-             attack_strength_punctuation(damage).c_str());
-        ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
-             agent.is_player() ? "you" : agent.name(DESC_A).c_str());
-        if (damage > 0)
-            victim->expose_to_element(BEAM_ELECTRICITY, 2);
+        if (!(agent.is_player() && you.form == transformation::conduit))
+        {
+            dprf("You: static discharge damage: %d", damage);
+            damage = check_your_resists(damage, BEAM_ELECTRICITY,
+                                        "static discharge");
+            mprf("You are struck by an arc of lightning%s",
+                 attack_strength_punctuation(damage).c_str());
+            ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
+                 agent.is_player() ? "you" : agent.name(DESC_A).c_str());
+            if (damage > 0)
+                victim->expose_to_element(BEAM_ELECTRICITY, 2);
+        }
     }
     // Elec immune monsters don't allow arcs to continue.
     else if (victim->res_elec() >= 3)
@@ -3349,8 +3358,11 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
 
     // [eb] the simulationist in me wants to use LOS_DEFAULT
     // and let this blind through glass
-    if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -3392,8 +3404,11 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     if (agent->is_player())
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
-        if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+        if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect,
+                nullptr, nullptr, is_tabcasting()))
+        {
             return spret::abort;
+        }
 
         fail_check();
 
@@ -3407,7 +3422,8 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
         you.props[TOXIC_RADIANCE_POWER_KEY].get_int() = pow;
         toxic_radiance_effect(&you, 10, true);
 
-        flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
+        flash_view_delay(UA_PLAYER, GREEN,
+            is_tabcasting() ? 150 : 300, &hitfunc);
 
         return spret::success;
     }
@@ -3544,7 +3560,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     }
 
     const actor* victim = actor_at(target);
-    if ((!victim || !you.can_see(*victim))
+    if ((!victim || !you.can_see(*victim)) && !is_tabcasting()
         && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -3568,7 +3584,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return !god_protects(act->as_monster());
     };
 
-    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE
+    if (hitfunc.is_affected(you.pos()) >= AFF_MAYBE && !is_tabcasting()
         && !yesno("The unravelling is likely to hit you. Continue anyway?",
                   false, 'n'))
     {
@@ -3576,8 +3592,11 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
-    if (stop_attack_prompt(hitfunc, "unravel", vulnerable))
+    if (stop_attack_prompt(hitfunc, "unravel", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -3739,12 +3758,16 @@ spret cast_flame_wave(int pow, bool fail)
     beam.refine_for_explosion();
     beam.explode(true, true);
 
-    you.props[FLAME_WAVE_KEY] = 0;
+    //usually this is 0, but tabcasting casts in a fineff
+    you.props[FLAME_WAVE_KEY] = is_tabcasting() ? 1 : 0;
     you.props[FLAME_WAVE_POWER_KEY].get_int() = pow;
 
-    string msg = "(Press <w>%</w> to intensify the flame waves.)";
-    insert_commands(msg, { CMD_WAIT });
-    mpr(msg);
+    if (!is_tabcasting())
+    {
+        string msg = "(Press <w>%</w> to intensify the flame waves.)";
+        insert_commands(msg, { CMD_WAIT });
+        mpr(msg);
+    }
 
     return spret::success;
 }
@@ -3759,13 +3782,17 @@ void handle_flame_wave()
     if (lvl == 1) // just cast it this turn
         return;
 
-    if (crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
+    //conduit form allows you to channel wait spells while attacking
+    //maybe use something other than berserk penalty
+    if (!((is_tabcasting()
+        && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        || crawl_state.prev_cmd == CMD_WAIT))
     {
         end_flame_wave();
         return;
     }
 
-    if (!enough_mp(1, true))
+    if (!is_tabcasting() && !enough_mp(1, true))
     {
         mpr("Without enough magic to sustain them, the waves of flame dissipate.");
         end_flame_wave();
@@ -3786,8 +3813,11 @@ void handle_flame_wave()
     beam.explode(true, true);
     trigger_battlesphere(&you);
 
-    pay_mp(1);
-    finalize_mp_cost();
+    if (!is_tabcasting())
+    {
+        pay_mp(1);
+        finalize_mp_cost();
+    }
 
     if (lvl >= spell_range(SPELL_FLAME_WAVE, pow))
     {
@@ -3828,11 +3858,16 @@ spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
         {
             // Special value, used to avoid terminating ray immediately, since we
             // took a non-wait action on this turn (ie: casting it)
-            you.attribute[ATTR_SEARING_RAY] = -1;
+            // Unless we are tabcasting because in that case this is called
+            // in a fineff
+            you.attribute[ATTR_SEARING_RAY] = is_tabcasting()? 1 : -1;
 
-            string msg = "(Press <w>%</w> to maintain the ray.)";
-            insert_commands(msg, { CMD_WAIT });
-            mpr(msg);
+            if (!is_tabcasting())
+            {
+                string msg = "(Press <w>%</w> to maintain the ray.)";
+                insert_commands(msg, { CMD_WAIT });
+                mpr(msg);
+            }
         }
         else
         {
@@ -3857,7 +3892,9 @@ static bool _handle_player_searing_ray()
         return false;
     }
 
-    if (crawl_state.prev_cmd != CMD_WAIT)
+    if (!((is_tabcasting()
+        && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        || crawl_state.prev_cmd == CMD_WAIT))
     {
         end_searing_ray(you);
         return false;
@@ -3871,7 +3908,7 @@ static bool _handle_player_searing_ray()
         return false;
     }
 
-    if (!enough_mp(1, true))
+    if (!is_tabcasting() && !enough_mp(1, true))
     {
         mpr("Without enough magic to sustain it, your searing ray dissipates.");
         end_searing_ray(you);
@@ -3937,8 +3974,11 @@ bool handle_searing_ray(actor& agent)
 
     if (agent.is_player())
     {
-        pay_mp(1);
-        finalize_mp_cost();
+        if (!is_tabcasting())
+        {
+            pay_mp(1);
+            finalize_mp_cost();
+        }
 
         if (++you.attribute[ATTR_SEARING_RAY] > 3)
         {
@@ -4339,8 +4379,11 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
         return spret::abort;
     }
 
-    if (stop_attack_prompt(*hitfunc, "hailstorm", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "hailstorm", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -4396,8 +4439,11 @@ spret cast_imb(int pow, bool fail)
                      || god_protects(*act->as_monster())));
     };
 
-    if (stop_attack_prompt(*hitfunc, "blast", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "blast", vulnerable,
+            nullptr, nullptr, is_tabcasting()))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
@@ -4659,9 +4705,12 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
     fail_check();
 
     mpr("You begin accumulating electric charge.");
-    string msg = "(Press <w>%</w> to continue charging.)";
-    insert_commands(msg, { CMD_WAIT });
-    mpr(msg);
+    if (!is_tabcasting())
+    {
+        string msg = "(Press <w>%</w> to continue charging.)";
+        insert_commands(msg, { CMD_WAIT });
+        mpr(msg);
+    }
 
     you.props[COUPLING_TIME_KEY] =
         - (30 + div_rand_round(random2((200 - pow) * 40), 200));
@@ -4739,7 +4788,9 @@ void handle_maxwells_coupling()
         return;
     }
 
-    if (crawl_state.prev_cmd != CMD_WAIT)
+    if (!((is_tabcasting()
+        && (!you.apply_berserk_penalty || crawl_state.prev_cmd == CMD_AUTOFIGHT_NOMOVE))
+        || crawl_state.prev_cmd == CMD_WAIT))
     {
         end_maxwells_coupling();
         return;

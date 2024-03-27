@@ -23,6 +23,10 @@ const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 #define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
 #define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
 #define VORTEX_POWER_KEY "vortex_power"
+#define SEARING_RAY_AIM_SPOT_KEY "searing_ray_aimed_at_spot"
+#define SEARING_RAY_TARGET_KEY "searing_ray_target"
+#define SEARING_RAY_MID_KEY "searing_ray_mid"
+#define SEARING_RAY_POWER_KEY "searing_ray_power"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);

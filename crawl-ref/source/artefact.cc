@@ -566,6 +566,7 @@ static bool _talisman_conflicts(const item_def &it, artefact_prop_type prop)
     case TALISMAN_FLUX:
     case TALISMAN_MAW:
     case TALISMAN_BLADE:
+    case TALISMAN_CONDUIT:
     default:
         return false;
     }

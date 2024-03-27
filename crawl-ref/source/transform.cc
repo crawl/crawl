@@ -115,7 +115,7 @@ Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       duration(fe.duration),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
-      str_mod(fe.str_mod), dex_mod(fe.dex_mod),
+      str_mod(fe.str_mod), int_mod(fe.int_mod), dex_mod(fe.dex_mod),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
@@ -1042,6 +1042,72 @@ public:
     }
 };
 
+class FormConduit : public Form
+{
+private:
+    FormConduit() : Form(transformation::conduit) { }
+    DISALLOW_COPY_AND_ASSIGN(FormConduit);
+public:
+    static const FormConduit &instance() { static FormConduit inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your arm %s replaced by magic cables.",
+                            past_tense ? "was" : "is");
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(bool /*was_flying*/) const override
+    {
+        return "Cables sprout from where your arm used to be!";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your arm returns to normal as the cables withdraw.";
+    }
+
+    bool can_offhand_punch() const override { return true; }
+
+    /**
+     * Chance to cast a spell on melee?
+     * Returns an int from 0-100
+     */
+    int get_tabcast_chance(bool get_max, spell_type spell) const override
+    {
+        spell = spell == SPELL_NO_SPELL ? you.tabcast_spell : spell;
+        int diff = spell_difficulty(spell);
+        //reduce cast chance of sandblast to compensate for the fact
+        //that its increased cast time is now instant
+        if (spell == SPELL_SANDBLAST)
+            diff++;
+
+        //base chance of 200, scaling up to 400 at max skill
+        //divided by 3 + spell level, capped at 100
+        constexpr int scale = 100;
+        constexpr int base = 200;
+        constexpr int scaling = 200;
+        const int div = (3 + diff);
+        const int lvl = get_level(scale);
+
+        if (get_max)
+            return min(100, (base + scaling) / div);
+        if (lvl < min_skill * scale)
+            return min(100, base * lvl / (min_skill * scale) / div);
+
+        const int prop = scaling * (lvl - min_skill * scale) / ((max_skill - min_skill) * scale);
+        return min(100, (base + prop) / div);
+    }
+};
+
 #if TAG_MAJOR_VERSION == 34
 
 class FormHydra : public Form
@@ -1090,6 +1156,7 @@ static const Form* forms[] =
     &FormBeast::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
+    &FormConduit::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1496,11 +1563,13 @@ bool feat_dangerous_for_form(transformation which_trans,
 bool check_form_stat_safety(transformation new_form, bool quiet)
 {
     const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
+    const int int_mod = get_form(new_form)->int_mod - get_form()->int_mod;
     const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
 
     const bool bad_str = you.strength() > 0 && str_mod + you.strength() <= 0;
+    const bool bad_int = you.intel() > 0 && int_mod + you.intel() <= 0;
     const bool bad_dex = you.dex() > 0 && dex_mod + you.dex() <= 0;
-    if (!bad_str && !bad_dex)
+    if (!bad_str && !bad_int && !bad_dex)
         return true;
     if (quiet)
         return false;
@@ -1509,7 +1578,7 @@ bool check_form_stat_safety(transformation new_form, bool quiet)
                                  new_form == transformation::none
                                      ? "Turning back"
                                      : "Transforming",
-                                 bad_str ? "strength" : "dexterity");
+                                 bad_int ? "intelligence" : bad_str ? "strength" : "dexterity");
     if (yesno(prompt.c_str(), false, 'n'))
         return true;
 
@@ -1704,6 +1773,20 @@ static void _on_enter_form(transformation which_trans)
     default:
         break;
     }
+
+    if (which_trans == transformation::conduit)
+    {
+        item_def* const weapon = you.slot_item(EQ_WEAPON, true);
+        if (weapon != nullptr)
+        {
+            if (you.hands_reqd(*weapon) == HANDS_TWO)
+            {
+                mprf("You can no longer hold %s!",
+                     weapon->name(DESC_YOUR).c_str());
+                unequip_item(EQ_WEAPON);
+            }
+        }
+    }
 }
 
 void set_form(transformation which_trans, int dur)
@@ -1714,10 +1797,14 @@ void set_form(transformation which_trans, int dur)
     update_player_symbol();
 
     const int str_mod = get_form(which_trans)->str_mod;
+    const int int_mod = get_form(which_trans)->int_mod;
     const int dex_mod = get_form(which_trans)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
@@ -1734,6 +1821,7 @@ void set_form(transformation which_trans, int dur)
                                  && old_form == transformation::none;
     const bool scale_hp = !entering_default && !leaving_default;
     calc_hp(scale_hp);
+    calc_mp();
 
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
@@ -1923,10 +2011,14 @@ void untransform(bool skip_move)
     set_form(transformation::none, 0);
 
     const int str_mod = get_form(old_form)->str_mod;
+    const int int_mod = get_form(old_form)->int_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, -str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, -int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
@@ -2283,6 +2375,7 @@ void describe_talisman_form(transformation form_type, talisman_form_desc &d,
         break;
     }
     _maybe_add_prop(d.offenses, "Str", form->str_mod);
+    _maybe_add_prop(d.offenses, "Int", form->int_mod);
     _maybe_add_prop(d.offenses, "Dex", form->dex_mod);
 
    _pad_talisman_descs(d.skills);
