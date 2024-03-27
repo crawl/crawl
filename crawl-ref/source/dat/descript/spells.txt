@@ -567,7 +567,7 @@ Spellpower will increase how long the bog lingers.
 %%%%
 Eruption spell
 
-Splits the earth to draw up a localized, short-lived volcano under the target.
+Splits the earth to draw up a localised, short-lived volcano under the target.
 %%%%
 Fastroot spell
 
@@ -687,7 +687,7 @@ be cushioned so they take no collision damage. Other creatures are not so
 fortunate, and the abrupt impact will batter anything which was not already
 standing beside its new 'floor'.
 
-It takes a short time for gravity to stabilize enough to recast this spell,
+It takes a short time for gravity to stabilise enough to recast this spell,
 though more powerful mages are able to do so more frequently.
 %%%%
 Ghostly Fireball spell
@@ -1190,7 +1190,7 @@ specific branch varies with each cast of the spell.
 Plasma Beam spell
 
 Fires a penetrating beam of plasma at one of the caster's most distant foes.
-The ionized beam bypasses half of defenders' armour, and a second beam of fire
+The ionised beam bypasses half of defenders' armour, and a second beam of fire
 follows in its wake.
 %%%%
 Poison Arrow spell
