@@ -149,6 +149,17 @@ public:
 };
 extern const opacity_no_actor opc_no_actor;
 
+// Make any actor (as well as solid features) block.
+// Note that the blocking actors are still "visible".
+class opacity_shoot_through : public opacity_func
+{
+public:
+    CLONE(opacity_shoot_through)
+
+    opacity_type operator()(const coord_def& p) const override;
+};
+extern const opacity_shoot_through opc_shoot_through;
+
 // A cell is considered clear unless the player knows it's
 // opaque.
 class opacity_excl : public opacity_func

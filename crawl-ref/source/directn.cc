@@ -482,6 +482,7 @@ direction_chooser::direction_chooser(dist& moves_,
     show_boring_feats(args.show_boring_feats),
     hitfunc(args.hitfunc),
     default_place(args.default_place),
+    ignore_self(args.ignore_self),
     renderer(*this),
     unrestricted(args.unrestricted),
     force_cancel(false),
@@ -1088,6 +1089,12 @@ static bool _blocked_ray(const coord_def &where)
     return !exists_ray(you.pos(), where, opc_solid_see);
 }
 
+// Same as above, but for shooting paths
+static bool _blocked_ray_shoot(const coord_def &where)
+{
+    return !exists_ray(you.pos(), where, opc_shoot_through);
+}
+
 // Try to find an enemy monster to target
 bool direction_chooser::find_default_monster_target(coord_def& result) const
 {
@@ -1095,7 +1102,8 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
         && _want_target_monster(mons_target, mode, hitfunc)
-        && in_range(mons_target->pos()))
+        && in_range(mons_target->pos())
+        && (!needs_path || !_blocked_ray_shoot(mons_target->pos())))
     {
         result = mons_target->pos();
         return true;
@@ -1146,7 +1154,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         && hitfunc->can_affect_outside_range()
         && (!hitfunc->set_aim(result)
             || hitfunc->is_affected(result) < AFF_YES
-            || hitfunc->is_affected(you.pos()) > AFF_NO))
+            || (!ignore_self && hitfunc->is_affected(you.pos()) > AFF_NO)))
     {
         coord_def old_result;
         if (success)
@@ -1155,6 +1163,9 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         {
             for (aff_type allowed_self_aff : { AFF_NO, AFF_MAYBE, AFF_YES })
             {
+                if (ignore_self && allowed_self_aff != AFF_YES)
+                    continue;
+
                 success = _find_square_wrapper(result, 1,
                                        bind(_find_monster_expl,
                                             placeholders::_1, mode,
@@ -1194,7 +1205,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // of the hitfunc, regardless of what's in the way, and it shouldn't.
         mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
             "All monsters which could be auto-targeted are covered by "
-            "a wall or statue which interrupts your line of fire, even "
+            "a wall, statue or monster which interrupts your line of fire, even "
             "though it doesn't interrupt your line of sight.");
 
         if (need_hint)
@@ -1228,7 +1239,7 @@ coord_def direction_chooser::find_default_target() const
                                        hitfunc,
                                        LS_FLIPVH);
     }
-    else if ((mode != TARG_ANY && mode != TARG_FRIEND)
+    else if ((mode != TARG_ANY && mode != TARG_FRIEND && mode != TARG_NONE)
              || self == confirm_prompt_type::cancel)
     {
         success = find_default_monster_target(result);
@@ -1783,8 +1794,8 @@ void direction_chooser::toggle_beam()
 
     if (show_beam)
     {
-        have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, you.current_vision);
+        have_beam = find_ray_priority(you.pos(), target(), beam,
+                             opc_shoot_through, opc_solid_see, you.current_vision);
     }
 }
 
@@ -2310,8 +2321,8 @@ public:
                 m_dc.show_beam = !m_dc.just_looking && m_dc.needs_path;
                 // XX code duplication
                 m_dc.have_beam = m_dc.show_beam
-                                 && find_ray(you.pos(), m_dc.target(), m_dc.beam,
-                                             opc_solid_see, you.current_vision);
+                                 && find_ray_priority(you.pos(), m_dc.target(), m_dc.beam,
+                                    opc_shoot_through, opc_solid_see, you.current_vision);
                 m_dc.need_text_redraw = true;
                 m_dc.need_viewport_redraw = true;
                 m_dc.need_cursor_redraw = true;
@@ -2366,8 +2377,8 @@ public:
         if (old_target != m_dc.target())
         {
             m_dc.have_beam = m_dc.show_beam
-                             && find_ray(you.pos(), m_dc.target(), m_dc.beam,
-                                         opc_solid_see, you.current_vision);
+                             && find_ray_priority(you.pos(), m_dc.target(), m_dc.beam,
+                                opc_shoot_through, opc_solid_see, you.current_vision);
             m_dc.need_text_redraw = true;
             m_dc.need_viewport_redraw = true;
             m_dc.need_cursor_redraw = true;
@@ -2463,6 +2474,16 @@ void direction_chooser::update_validity()
 
 bool direction_chooser::noninteractive()
 {
+    // If whatever target is given to us by autofight is useless
+    // or our path is blocked by something we can't fire through,
+    // automatically try to find a better one.
+    const monster* mon = monster_at(moves.target);
+    if (hitfunc && mon && !hitfunc->affects_monster(monster_info(mon))
+        || needs_path && _blocked_ray_shoot(moves.target))
+    {
+        moves.find_target = true;
+    }
+
     // if target is unset, this will find previous or closest target; if
     // target is set this will adjust targeting depending on custom
     // behavior
@@ -2508,8 +2529,8 @@ bool direction_chooser::choose_direction()
     // If requested, show the beam on startup.
     if (show_beam)
     {
-        have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, you.current_vision);
+        have_beam = find_ray_priority(you.pos(), target(), beam,
+                        opc_shoot_through, opc_solid_see, you.current_vision);
         need_viewport_redraw = have_beam;
     }
     if (hitfunc)
@@ -2785,6 +2806,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     {
     case TARG_ANY:
         return true;
+    case TARG_NONE:
+        return false;
     case TARG_HOSTILE:
         return mons_attitude(*mon) == ATT_HOSTILE
             || mon->has_ench(ENCH_FRENZIED);
@@ -2820,7 +2843,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
     }
 
     // Target the player for friendly and general spells.
-    if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
+    if ((mode == TARG_FRIEND || mode == TARG_ANY || mode == TARG_NONE) && where == you.pos())
         return true;
 
     // Don't target out of range
@@ -2840,7 +2863,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
     if (!_mons_is_valid_target(mon, mode, range))
         return false;
 
-    if (need_path && _blocked_ray(mon->pos()))
+    if (need_path && _blocked_ray_shoot(mon->pos()))
         return false;
 
     return _want_target_monster(mon, mode, hitfunc);
@@ -2889,7 +2912,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
         return false;
 
     // Target is blocked by something
-    if (need_path && _blocked_ray(where))
+    if (need_path && _blocked_ray_shoot(where))
         return false;
 
     if (hitfunc->set_aim(where))

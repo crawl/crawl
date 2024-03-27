@@ -2450,9 +2450,9 @@ bool activate_talent(const talent& tal, dist *target)
         args.hitfunc = hitfunc.get();
         args.restricts = testbits(abil.flags, abflag::target) ? DIR_TARGET
                                                               : DIR_NONE;
-        args.mode = TARG_HOSTILE;
+        args.mode = is_targeted ? TARG_HOSTILE : TARG_NONE;
         args.range = range;
-        args.needs_path = !testbits(abil.flags, abflag::target);
+        args.needs_path = testbits(abil.flags, abflag::dir_or_target);
         args.top_prompt = make_stringf("%s: <w>%s</w>",
                                        is_targeted ? "Aiming" : "Activating",
                                        ability_name(abil.ability).c_str());

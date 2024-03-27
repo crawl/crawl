@@ -128,6 +128,9 @@ struct bolt
     bool   quiet_debug = false;    // Disable any debug spam.
 #endif
 
+    bool   no_actor_perm_lof = false;   // Don't attempt to find a ray
+                                        // without a blocking actor
+
     // OUTPUT parameters (tracing, ID)
     bool obvious_effect = false; // is this a non-enchantment, or did it already
                                  // show some effect or message? (Otherwise, we'll
@@ -381,6 +384,7 @@ int explosion_noise(int rad);
 
 bool always_shoot_through_monster(const actor *agent, const monster &mon);
 bool shoot_through_monster(const bolt& beam, const monster* victim);
+bool shoot_through_monster(const actor* originator, const monster* victim);
 
 int omnireflect_chance_denom(int SH);
 

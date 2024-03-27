@@ -1962,6 +1962,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
+              !is_targeted                        ? TARG_NONE :
               testbits(flags, spflag::neutral)    ? TARG_ANY :
               testbits(flags, spflag::helpful)    ? TARG_FRIEND :
               testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
@@ -1977,7 +1978,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         // sure why
         const char *prompt = get_spell_target_prompt(spell);
 
-        const bool needs_path = !testbits(flags, spflag::target)
+        const bool needs_path = testbits(flags, spflag::dir_or_target)
                                 // Apportation must be spflag::target, since a
                                 // shift-direction makes no sense for it, but
                                 // it nevertheless requires line-of-fire.
@@ -2012,6 +2013,16 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         args.target_prefix = prompt;
         args.top_prompt = title;
         args.behaviour = &beh;
+
+        zap_type zap = spell_to_zap(spell);
+        if (zap != NUM_ZAPS)
+        {
+            bolt tempbeam;
+            tempbeam.thrower = KILL_YOU_MISSILE;
+            tempbeam.origin_spell = spell;
+            zappy(zap, 0, false, tempbeam);
+            args.ignore_self = tempbeam.ignores_player();
+        }
 
         // if the spell is useless and we have somehow gotten this far, it's
         // a forced cast. Setting this prevents the direction chooser from

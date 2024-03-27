@@ -84,6 +84,7 @@ struct direction_chooser_args
     bool show_boring_feats;
     desc_filter get_desc_func;
     coord_def default_place;
+    bool ignore_self;
 
     direction_chooser_args() :
         hitfunc(nullptr),
@@ -101,7 +102,8 @@ struct direction_chooser_args
         show_floor_desc(false),
         show_boring_feats(true),
         get_desc_func(nullptr),
-        default_place(0, 0)
+        default_place(0, 0),
+        ignore_self(false)
     { }
 
 };
@@ -268,6 +270,7 @@ private:
     bool show_boring_feats;
     targeter *hitfunc;         // Determine what would be hit.
     coord_def default_place;    // Start somewhere other than you.pos()?
+    bool ignore_self;
 
     // Internal data.
     ray_def beam;               // The (possibly invalid) beam.

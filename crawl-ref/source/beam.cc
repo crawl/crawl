@@ -818,6 +818,9 @@ void bolt::apply_beam_conducts()
 void bolt::choose_ray()
 {
     if ((!chose_ray || reflections > 0)
+        && (no_actor_perm_lof || !(agent() && agent()->is_player()
+            ? find_ray(source, target, ray, opc_shoot_through)
+            : find_ray(source, target, ray, opc_no_actor)))
         && !find_ray(source, target, ray, opc_solid_see)
         // If fire is blocked, at least try a visible path so the
         // error message is better.
@@ -7375,10 +7378,15 @@ bool always_shoot_through_monster(const actor *originator, const monster &victim
 // and players can shoot through their demonic guardians.
 bool shoot_through_monster(const bolt& beam, const monster* victim)
 {
-    actor *originator = beam.agent();
+    return shoot_through_monster(beam.agent(), victim);
+}
+
+bool shoot_through_monster(const actor* originator, const monster* victim)
+{
     if (!victim || !originator)
         return false;
-    return god_protects(originator, *victim)
+    // Can't shoot through slimes
+    return (god_protects(originator, *victim) && !have_passive(passive_t::neutral_slimes))
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }
