@@ -172,8 +172,9 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 {   // Book of the Warp
-    SPELL_MANIFOLD_ASSAULT,
+    SPELL_GELLS_GAVOTTE,
     SPELL_DISPERSAL,
+    SPELL_MANIFOLD_ASSAULT,
     SPELL_DISJUNCTION,
 },
 
@@ -199,7 +200,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
-    SPELL_PILEDRIVER,
+    SPELL_MANIFOLD_ASSAULT,
 },
 
 {   // Book of Geomancy
@@ -348,6 +349,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Displacement
     SPELL_BECKONING,
     SPELL_TELEPORT_OTHER,
+    SPELL_PILEDRIVER,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -440,8 +442,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // There-And-Back Book
-    SPELL_GELLS_GAVOTTE,
     SPELL_TELEPORT_OTHER,
+    SPELL_GELLS_GAVOTTE,
     SPELL_DISPERSAL,
 },
 
@@ -500,7 +502,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Maxwell's Memoranda
-    SPELL_ELECTRIC_CHARGE,
+    SPELL_PILEDRIVER,
     SPELL_ARCJOLT,
     SPELL_MAXWELLS_COUPLING,
 },
@@ -508,6 +510,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Movement
     SPELL_PASSWALL,
     SPELL_BLASTMOTE,
+    SPELL_ELECTRIC_CHARGE,
     SPELL_BOMBARD,
 },
 
