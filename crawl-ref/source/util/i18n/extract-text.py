@@ -343,7 +343,7 @@ for filename in files:
                        and ' save' not in line and 'open' not in line:
                         continue
                 extract = True
-            elif re.search(r'prompt[a-zA-Z_]* *\(', line) or 'yesno' in line \
+            elif re.search(r'(prompt|msgwin_get_line)[a-zA-Z_]* *\(', line) or 'yesno' in line \
                  or 'yes_or_no' in line:
                 # extract prompts
                 extract = True
