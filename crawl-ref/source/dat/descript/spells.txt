@@ -952,7 +952,7 @@ though unarmed attacks strike only half as many targets at once, as additional
 care must be taken when warping one's own limbs.
 
 The time taken for the attack is exactly the same as a normal melee attack.
-Attacks performed this way never miss, but the exactly spot struck cannot be
+Attacks performed this way never miss, but the exact spot struck cannot be
 controlled precisely, making them unable to do extra damage against unsuspecting
 foes.
 %%%%
