@@ -1534,7 +1534,7 @@ void flash_tile(coord_def p, colour_t colour, int delay)
     if (!in_los_bounds_v(grid2view(p)))
         return;
 
-    #ifdef USE_TILE
+#ifdef USE_TILE
         view_add_tile_overlay(p, tileidx_zap(colour));
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
