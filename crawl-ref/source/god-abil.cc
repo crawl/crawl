@@ -78,6 +78,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "skill-menu.h"
@@ -1895,6 +1896,17 @@ void cheibriados_time_bend(int pow)
     }
 }
 
+// So that we can display a damage number for slouch to the player
+// TODO Add slouch damage to the targeter
+int slouch_damage_formula(int mon_speed, int mon_action_energy, int jerk_num,
+                          int jerk_denom)
+{
+    const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
+    return 4 * (mon_speed * BASELINE_DELAY * jerk_num
+                           / mon_action_energy / jerk_denom
+                - player_number / player_movement_speed() / player_speed());
+}
+
 static int _slouch_damage(monster *mon)
 {
     // Please change handle_monster_move in mon-act.cc to match.
@@ -1906,10 +1918,8 @@ static int _slouch_damage(monster *mon)
                          : mon->type == MONS_JIANGSHI ? 90
                                                       : 1;
 
-    const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
-    return 4 * (mon->speed * BASELINE_DELAY * jerk_num
-                           / mon->action_energy(EUT_MOVE) / jerk_denom
-                - player_number / player_movement_speed() / player_speed());
+    return slouch_damage_formula(mon->speed, mon->action_energy(EUT_MOVE),
+                                 jerk_num, jerk_denom);
 }
 
 static bool _slouchable(coord_def where)
@@ -3554,9 +3564,23 @@ static bool _qazlal_affected(coord_def pos)
     return true;
 }
 
+static int _qazlal_upheaval_power()
+{
+    return you.skill(SK_INVOCATIONS, 6);
+}
+
+dice_def qazlal_upheaval_damage(bool allow_random)
+{
+    const int pow = _qazlal_upheaval_power();
+    if (allow_random)
+        return calc_dice(3, 27 + div_rand_round(2 * pow, 5));
+    else // used for the ability description
+        return calc_dice(3, 27 + 2 * pow / 5, false);
+}
+
 spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_target)
 {
-    const int pow = you.skill(SK_INVOCATIONS, 6);
+    const int pow = _qazlal_upheaval_power();
     const int max_radius = _upheaval_radius(pow);
 
     bolt beam;
@@ -3565,7 +3589,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     beam.source_name = "you";
     beam.thrower     = KILL_YOU;
     beam.range       = LOS_RADIUS;
-    beam.damage      = calc_dice(3, 27 + div_rand_round(2 * pow, 5));
+    beam.damage      = qazlal_upheaval_damage();
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
@@ -5126,6 +5150,18 @@ void ru_draw_out_power()
     drain_player(30, false, true);
 }
 
+// Damage scales with XL amd piety.
+dice_def ru_power_leap_damage(bool allow_random)
+{
+    if (allow_random)
+    {
+        return dice_def(1 + div_rand_round(you.piety *
+            (54 + you.experience_level), 777), 3);
+    }
+    else
+        return dice_def(1 + you.piety * (54 + you.experience_level) / 777, 3);
+}
+
 bool ru_power_leap()
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -5270,9 +5306,9 @@ bool ru_power_leap()
             continue;
         ASSERT(mon);
 
-        //damage scales with XL amd piety
-        mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
-            (54 + you.experience_level), 777), 3),
+        const dice_def dam = ru_power_leap_damage();
+
+        mon->hurt((actor*)&you, dam.roll(),
             BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
     }
 
@@ -5285,6 +5321,14 @@ int cell_has_valid_target(coord_def where)
     if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
         return 0;
     return 1;
+}
+
+int apocalypse_die_size(bool allow_random)
+{
+    if (allow_random)
+        return 1 + div_rand_round(you.piety * (54 + you.experience_level), 584);
+    else
+        return 1 + you.piety * (54 + you.experience_level) / 584;
 }
 
 static int _apply_apocalypse(coord_def where)
@@ -5335,8 +5379,7 @@ static int _apply_apocalypse(coord_def where)
     }
 
     //damage scales with XL and piety
-    const int pow = you.piety;
-    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 584);
+    int die_size = apocalypse_die_size();
     int dmg = 10 + roll_dice(num_dice, die_size);
 
     mons->hurt(&you, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
@@ -5374,6 +5417,14 @@ static bool _mons_stompable(const monster &mons)
     return !testbits(mons.flags, MF_DEMONIC_GUARDIAN) || !mons.friendly();
 }
 
+dice_def uskayaw_stomp_extra_damage(bool allow_random)
+{
+    if (allow_random)
+        return dice_def(2, 2 + div_rand_round(you.skill(SK_INVOCATIONS), 2));
+    else
+        return dice_def(2, 2 + you.skill(SK_INVOCATIONS) / 2);
+}
+
 static bool _get_stomped(monster& mons)
 {
     if (!_mons_stompable(mons))
@@ -5384,8 +5435,8 @@ static bool _get_stomped(monster& mons)
     // Damage starts at 1/6th of monster current HP, then gets some damage
     // scaling off Invo power.
     int damage = div_rand_round(mons.hit_points, 6);
-    int die_size = 2 + div_rand_round(you.skill(SK_INVOCATIONS), 2);
-    damage += roll_dice(2, die_size);
+    dice_def extra = uskayaw_stomp_extra_damage();
+    damage += extra.roll();
 
     mons.hurt(&you, damage, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
