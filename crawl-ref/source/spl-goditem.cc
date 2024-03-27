@@ -37,6 +37,7 @@
 #include "mon-tentacle.h"
 #include "notes.h" // NOTE_DREAMSHARD
 #include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
@@ -945,6 +946,16 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
     return spret::success;
 }
 
+// Add 6 to this. Damage ranges from 9-12 (avg 10) at 0 invo,
+// to 9-78 at 27 invo.
+dice_def beogh_smiting_dice(int pow, bool allow_random)
+{
+    if (allow_random)
+        return dice_def(3, div_rand_round(pow, 8));
+    else
+        return dice_def(3, pow / 8);
+}
+
 spret cast_smiting(int pow, monster* mons, bool fail)
 {
     if (mons == nullptr)
@@ -979,7 +990,7 @@ spret cast_smiting(int pow, monster* mons, bool fail)
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-    int damage = 6 + roll_dice(3, div_rand_round(pow, 8));
+    int damage = 6 + beogh_smiting_dice(pow).roll();
 
     mprf("You smite %s%s",
          mons->name(DESC_THE).c_str(),

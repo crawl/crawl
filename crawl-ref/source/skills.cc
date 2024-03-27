@@ -2276,9 +2276,11 @@ bool trainable_skills(bool check_all)
     return false;
 }
 
-int skill_bump(skill_type skill, int scale)
+// Currently only for ABIL_BEOGH_SMITING, see ability.cc::_beogh_smiting_power
+int skill_bump(skill_type skill, int scale, bool allow_random)
 {
-    const int sk = you.skill_rdiv(skill, scale);
+    const int sk = allow_random ? you.skill_rdiv(skill, scale)
+                                : you.skill(skill, scale);
     return sk + min(sk, 3 * scale);
 }
 

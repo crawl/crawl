@@ -3,6 +3,7 @@
 #include "cleansing-flame-source-type.h"
 #include "enchant-type.h"
 #include "holy-word-source-type.h"
+#include "random.h"
 #include "spell-type.h"
 #include "spl-cast.h"
 #include "tag-version.h"
@@ -82,6 +83,7 @@ int detect_creatures(int pow, bool telepathic = false);
 
 spret cast_tomb(int pow, actor* victim, int source, bool fail);
 
+dice_def beogh_smiting_dice(int pow, bool allow_random = true);
 spret cast_smiting(int pow, monster* mons, bool fail);
 
 string unpacifiable_reason(const monster& mon);

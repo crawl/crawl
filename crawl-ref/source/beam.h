@@ -373,6 +373,8 @@ int zap_to_hit(zap_type z_type, int power, bool is_monster);
 dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
 colour_t zap_colour(zap_type z_type);
 
+dice_def combustion_breath_damage(int pow, bool allow_random = true);
+
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 
