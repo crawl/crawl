@@ -398,7 +398,7 @@ bool debug_make_trap(const coord_def& pos)
         return false;
     }
 
-    msgwin_get_line(localise("What kind of trap?") + " ",
+    msgwin_get_line("What kind of trap? ",
                     requested_trap, sizeof(requested_trap));
     if (!*requested_trap)
     {
@@ -478,7 +478,7 @@ bool debug_make_shop(const coord_def& pos)
     }
 
     char requested_shop[80];
-    msgwin_get_line(localise("What kind of shop?") + " ",
+    msgwin_get_line("What kind of shop? ",
                     requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
     {

@@ -3105,7 +3105,6 @@ void inscribe_item(item_def &item)
     const bool is_inscribed = !item.inscription.empty();
     string prompt = is_inscribed ? "Replace inscription with what? "
                                  : "Inscribe with what? ";
-    prompt = localise(prompt);
 
     char buf[79];
     int ret = msgwin_get_line(prompt, buf, sizeof buf, nullptr,

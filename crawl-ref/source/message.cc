@@ -1710,6 +1710,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
     {
         mouse_control mc(MOUSE_MODE_PROMPT);
 
+        prompt = localise(prompt);
         linebreak_string(prompt, 79);
         msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
         const auto colour_prompt = formatted_string(prompt, colour_msg(colour));

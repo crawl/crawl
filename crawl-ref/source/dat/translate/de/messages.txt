@@ -22074,8 +22074,8 @@ Ebene kartiert.
 You need to be on a floor square to make a trap.
 Ihr müsst auf einem Bodenfeld sein, um eine Falle zu stellen.
 %%%%
-What kind of trap?
-Was für eine Falle?
+"What kind of trap? "
+"Was für eine Falle? "
 %%%%
 I know no traps named "%s".
 Ich kenne keine Fallen mit dem Namen "%s".
@@ -22095,8 +22095,8 @@ HINWEIS: Schachtfallen sind auf dieser Ebene nicht gültig.
 Insufficient floor-space for new Wal-Mart.
 Unzureichende Bodenfläche für den neuen Wal-Mart.
 %%%%
-What kind of shop?
-Was für einen Laden?
+"What kind of shop? "
+"Was für einen Laden? "
 %%%%
 Bad shop type: "%s"
 Falsche Laden-Art: "%s"
