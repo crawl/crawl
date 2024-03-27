@@ -272,15 +272,16 @@ brand_type player::damage_brand(int)
  *
  * @param projectile  The projectile to be thrown, if any.
  * @param rescale         Whether to re-scale the time to account for the fact that
- *                   finesse doesn't stack with haste.
+*                   finesse doesn't stack with haste.
+ * @param ignore_temporary  Whether to ignore temp modifiers like haste.
  * @return           A random_var representing the range of possible values of
  *                   attack delay. It can be casted to an int, in which case
  *                   its value is determined by the appropriate rolls.
  */
-random_var player::attack_delay(const item_def *projectile, bool rescale) const
+random_var player::attack_delay(const item_def *projectile, bool rescale, bool ignore_temporary) const
 {
     const item_def *primary = weapon();
-    const random_var primary_delay = attack_delay_with(projectile, rescale, primary);
+    const random_var primary_delay = attack_delay_with(projectile, rescale, primary, ignore_temporary);
     if (projectile && !is_launcher_ammo(*projectile))
         return primary_delay; // throwing doesn't use the offhand
 
@@ -293,12 +294,12 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     }
 
     // re-use of projectile is very dubious here
-    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
+    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand, ignore_temporary);
     return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
-                                     const item_def *weap) const
+                                     const item_def *weap, bool ignore_temporary) const
 {
     // The delay for swinging non-weapons and tossing non-missiles.
     random_var attk_delay(15);
@@ -370,7 +371,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
     }
 
-    if (you.duration[DUR_FINESSE])
+    if (you.duration[DUR_FINESSE] && !ignore_temporary)
     {
         ASSERT(!you.duration[DUR_BERSERK]);
         // Finesse shouldn't stack with Haste, so we make this attack take
@@ -380,8 +381,8 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    return rv::max(div_rand_round(attk_delay * player_speed(), BASELINE_DELAY),
-                   random_var(1));
+    return rv::max(ignore_temporary ? attk_delay : div_rand_round(attk_delay * player_speed(),
+                     BASELINE_DELAY),random_var(1));
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.
