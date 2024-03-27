@@ -18,6 +18,7 @@
 #include "tile-env.h"
 #include "files.h"
 #include "libutil.h"
+#include "localise.h"
 #include "maps.h"
 #include "message.h"
 #include "place.h"
@@ -83,7 +84,7 @@ void wizard_place_stairs(bool down)
     if (stairs == DNGN_UNSEEN)
         return;
 
-    mprf("Creating %sstairs.", down ? "down" : "up");
+    mpr(down ? "Creating downstairs." : "Creating upstairs.");
     dungeon_terrain_changed(you.pos(), stairs);
 }
 
@@ -235,8 +236,8 @@ bool wizard_create_feature(const coord_def& pos)
             // Multiple matches, list them to wizard
             else
             {
-                string prefix = "No exact match for feature '" +
-                                name +  "', possible matches are: ";
+                string prefix = localise("No exact match for feature '%s', possible matches are: ");
+                prefix = replace_first(prefix, "%s", name); // do not localise user input
 
                 // Use mpr_comma_separated_list() because the list
                 // might be *LONG*.
@@ -397,7 +398,7 @@ bool debug_make_trap(const coord_def& pos)
         return false;
     }
 
-    msgwin_get_line("What kind of trap? ",
+    msgwin_get_line(localise("What kind of trap?") + " ",
                     requested_trap, sizeof(requested_trap));
     if (!*requested_trap)
     {
@@ -446,19 +447,21 @@ bool debug_make_trap(const coord_def& pos)
             trap = matches[0];
         else
         {
-            string prefix = "No exact match for trap '";
-            prefix += spec;
-            prefix += "', possible matches are: ";
+            string prefix = localise("No exact match for trap '%s', possible matches are: ");
+            prefix = replace_first(prefix, "%s", spec);
             mpr_comma_separated_list(prefix, match_names);
             return false;
         }
     }
 
     place_specific_trap(you.pos(), trap);
-    mprf("Created %s, marked it undiscovered.",
-         (trap == TRAP_RANDOM)
-            ? "a random trap"
-            : trap_at(you.pos())->name(DESC_A).c_str());
+    if (trap == TRAP_RANDOM)
+        mpr("Created a random trap, marked it undiscovered.");
+    else
+    {
+        mprf("Created %s, marked it undiscovered.",
+             trap_at(you.pos())->name(DESC_A).c_str());
+    }
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");
@@ -475,7 +478,7 @@ bool debug_make_shop(const coord_def& pos)
     }
 
     char requested_shop[80];
-    msgwin_get_line("What kind of shop? ",
+    msgwin_get_line(localise("What kind of shop?") + " ",
                     requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
     {
@@ -528,9 +531,8 @@ static void debug_load_map_by_name(string name, bool primary)
         }
         else if (matches.size() == 1)
         {
-            string prompt = "Only match is '";
-            prompt += matches[0];
-            prompt += "', use that?";
+            string prompt = localise("Only match is '%s', use that?");
+            prompt = replace_first(prompt, "%s", matches[0]); // do not localise user input
             if (!yesno(prompt.c_str(), true, 'y'))
             {
                 canned_msg(MSG_OK);
@@ -541,9 +543,8 @@ static void debug_load_map_by_name(string name, bool primary)
         }
         else
         {
-            string prompt = "No exact matches for '";
-            prompt += name;
-            prompt += "', possible matches are: ";
+            string prompt = localise("No exact matches for '%s', possible matches are: ");
+            prompt = replace_first(name, "%s", matches[0]); // do not localise user input
             mpr_comma_separated_list(prompt, matches);
             return;
         }

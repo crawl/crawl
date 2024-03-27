@@ -22039,136 +22039,127 @@ Ihr könnt dieses Level nicht annotieren.
 ##################
 %%%%
 Can't go down from the bottom of a branch.
-Kann nicht vom Boden eines Astes runter gehen.
+Kann nicht vom Boden eines Zweiges runter gehen.
 %%%%
 Bug in determining level exit.
-Fehler beim Bestimmen des Level-Exits.
+Fehler beim Bestimmen des Ebene-Ausgangs.
 %%%%
-Creating %sstairs.
-%streppen erstellen.
+Creating downstairs.
+Treppen nach unten erschafft.
 %%%%
-down
-
-%%%%
-up
-
+Creating upstairs.
+Treppen nach oben erschafft.
 %%%%
 "Create what kind of feature mimic? "
 Welche Art von Feature-Mimik erstellen?
 %%%%
 "Create which feature? "
-Welche Funktion erstellen?
+"Welche Feature erstellen? "
 %%%%
 Set fprops "%s" at (%d,%d)
-Setzen fprops "%s" auf (%d,%d)
+Fprops "%s" auf (%d,%d) eingesetzt
 %%%%
-No exact match for feature '
-
-%%%%
-"', possible matches are: "
-
+"No exact match for feature '%s', possible matches are: "
+"Keine Feature passt exakt zu '%s'. Möglichkeiten sind: "
 %%%%
 "This isn't a valid feature mimic. Create it anyway? "
-
+"Das ist keine gültige Feature-Mimik. Trotzdem erstellen? "
 %%%%
 Force level to be mappable?
-
+Erzwingen, dass die Ebene kartierbar ist?
 %%%%
 Mapping level.
-Mapping Level.
+Ebene kartiert.
 %%%%
 You need to be on a floor square to make a trap.
-Ihr müsst auf einem Boden sein, um eine Falle zu stellen.
+Ihr müsst auf einem Bodenfeld sein, um eine Falle zu stellen.
 %%%%
-"What kind of trap? "
-
+What kind of trap?
+Was für eine Falle?
 %%%%
 I know no traps named "%s".
 Ich kenne keine Fallen mit dem Namen "%s".
 %%%%
-No exact match for trap '
-
+"No exact match for trap '%s', possible matches are: "
+"Keine Falle passt exakt zu '%s'. Möglichkeiten sind: "
+%%%%
+Created a random trap, marked it undiscovered.
+Eine zufällige Falle erstellt, und als unentdeckt markiert.
 %%%%
 Created %s, marked it undiscovered.
-%s erstellt, als unentdeckt markiert.
-%%%%
-a random trap
-
+%s erstellt, und als unentdeckt markiert.
 %%%%
 NOTE: Shaft traps aren't valid on this level.
-HINWEIS: Wellenfallen sind auf dieser Ebene nicht gültig.
+HINWEIS: Schachtfallen sind auf dieser Ebene nicht gültig.
 %%%%
 Insufficient floor-space for new Wal-Mart.
-Unzureichende Stellfläche für den neuen Wal-Mart.
+Unzureichende Bodenfläche für den neuen Wal-Mart.
 %%%%
-"What kind of shop? "
-
+What kind of shop?
+Was für einen Laden?
 %%%%
 Bad shop type: "%s"
-Schlechter Shop-Art: "%s"
+Falsche Laden-Art: "%s"
 %%%%
 Done.
-Getan.
+Fertig.
 %%%%
 Can't find map named '%s'.
 Karte mit dem Namen '%s' nicht gefunden.
 %%%%
-Only match is '
-
+Only match is '%s', use that?
+Einzige Treffer ist '%s'. Benutzen?
 %%%%
-', use that?
-
-%%%%
-No exact matches for '
-
+"No exact matches for '%s', possible matches are: "
+"Keine exakte Treffer für '%s'. Möglichkeiten sind: "
 %%%%
 Placing %s on top of you would put part of the map outside of the level, cancelling.
-
+%s auf Euch zu platzieren, würde ein Teil der Karte außerhalb der Ebene stellen. Abgebrochen.
 %%%%
 %s decides where it goes, can't place where you are.
-%s entscheidet, wohin es geht, kann nicht platzieren, wo Ihr seid.
+%s entscheidet, wohin es geht, kann nicht platziert werden, wo Ihr seid.
 %%%%
 Warning: this is an encompass vault not designed for this location; placing it with &P may result in crashes and save corruption. Continue?
-
+Warnung: Das ist ein umfassender Vault, das nicht für diesen Ort gedacht ist; es mit &P zu platzieren, kann zu Crashes und Speicherfehlern führen. Weitermachen?
 %%%%
 Ok; try placing with &L or go to the relevant location to safely place with &P.
-
+OK; versucht mit &L zu platzieren oder geht zu der entsprechenden Stelle, um mit &P sicher zu platzieren.
 %%%%
 Successfully placed %s.
 %s erfolgreich platziert.
 %%%%
 Failed to place %s; last builder error: %s
-
+Fehler beim Platzieren von %s; letzte Builder-Fehler: %s
 %%%%
 "Enter map name: "
-Kartennamen eingeben:
+"Kartennamen eingeben: "
 %%%%
 "Enter map name (prefix it with * for local placement): "
-
+"Kartennamen eingeben (* voranstellen für eine lokale Platzierung): "
 %%%%
 Explore took %d turns.
-Explore hat%d Runden gebraucht.
+Erkundung hat %d Runden gebraucht.
 %%%%
 Level stack:
-Level Stack:
+Ebene-Stack:
 %%%%
 Known levels:
-Bekannte Level:
+Bekannte Ebenen:
 %%%%
 `- total
-
+`- Total
 %%%%
 Regenerating level.
-Regenerierendes Level.
+Ebene neu generiert.
 %%%%
 All vaults are now eligible for [re]use.
-Alle Tresore können jetzt [wieder] verwendet werden.
+Alle Vaults können jetzt [wieder] verwendet werden.
 %%%%
 "Set Abyss speed to what? (now %d, higher value = higher speed) "
-
+"Tempo im Abgrund auf was einstellen? (jetzt %d, höhere Nummer = höherer Tempo) "
 %%%%
 Setting Abyss speed to %i.
-Abyss-Geschwindigkeit auf%i setzen.
+Tempo im Abgrund auf %i eingestellt.
 %%%%
 
 ##################
@@ -22918,6 +22909,9 @@ No durations matching '%s'.
 Keine Dauer, die mit '%s' übereinstimmt.
 %%%%
 No exact match for duration '
+
+%%%%
+"', possible matches are: "
 
 %%%%
 "Set '%s' to: "
