@@ -25,6 +25,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "mapdef.h"
@@ -194,7 +195,7 @@ void wizard_create_spec_object()
     {
         string prompt = "What type of item? ";
         if (class_wanted == OBJ_BOOKS)
-            prompt += "(\"all\" for all) ";
+            prompt = "What type of item? (\"all\" for all) ";
         msgwin_get_line_autohist(prompt, specs, sizeof(specs));
 
         string temp = specs;
@@ -268,7 +269,6 @@ static void _tweak_randart(item_def &item)
             prompt.back() = '\n'; // Replace the space
 
         char choice;
-        char buf[80];
 
         if (choice_num < 26)
             choice = 'a' + choice_num;
@@ -282,10 +282,13 @@ static void _tweak_randart(item_def &item)
         else
             choice = '-'; // Too many choices!
 
-        snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
+        string artprop = artp_name((artefact_prop_type)choice_to_prop[choice_num]);
+        artprop = localise("%-6s", artprop); // i18n: truncation that works for UTF-8
+
+        string buf = make_stringf("%s) %s%s%s ",
                 choice == '<' ? "<<" : string(1, choice).c_str(),
                  props[i] ? "<w>" : "",
-                 artp_name((artefact_prop_type)choice_to_prop[choice_num]),
+                 artprop.c_str(),
                  props[i] ? "</w>" : "");
 
         prompt += buf;
@@ -321,8 +324,10 @@ static void _tweak_randart(item_def &item)
     switch (artp_potential_value_types(prop))
     {
     case ARTP_VAL_BOOL:
-        mprf(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
-             props[prop] ? "off" : "on");
+        if (props[prop])
+            mprf(MSGCH_PROMPT, "Toggling %s to off.", artp_name(prop));
+        else
+            mprf(MSGCH_PROMPT, "Toggling %s to on.", artp_name(prop));
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              !props[prop]);
         break;
@@ -446,9 +451,17 @@ void wizard_tweak_object()
         }
 
         if (keyin != 'e')
-            mprf("Old value: %" PRId64" (0x%04" PRIx64")", old_val, old_val);
+        {
+            string msg = localise("Old value: ");
+            msg += make_stringf("%" PRId64 " (0x%04" PRIx64 ")", old_val, old_val);
+            mpr_nolocalise(msg);
+        }
         else
-            mprf("Old value: 0x%08" PRIx64, old_val);
+        {
+            string msg = localise("Old value: ");
+            msg += make_stringf("0x%08" PRIx64, old_val);
+            mpr_nolocalise(msg);
+        }
 
         msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')
@@ -598,9 +611,8 @@ void wizard_create_all_artefacts(bool override_unique)
         }
         else
         {
-            msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
-                                            << " (" << debug_art_val_str(item)
-                                            << ")" << endl;
+            mprf(MSGCH_DIAGNOSTICS, "Made %s (%s)", item.name(DESC_A).c_str(),
+                                    debug_art_val_str(item).c_str());
         }
         move_item_to_grid(&islot, you.pos());
 
@@ -827,6 +839,8 @@ static void _fill_item_from_subtype(object_class_type acq_type, int subtype,
     item.base_type = acq_type;
     item.sub_type = subtype;
 }
+
+// @noloc section start (debugging stuff)
 
 static void _debug_acquirement_stats(FILE *ostat)
 {
@@ -1581,9 +1595,11 @@ void debug_item_statistics()
     fclose(ostat);
 }
 
+// @noloc section end (debugging stuff)
+
 void wizard_draw_card()
 {
-    msg::streams(MSGCH_PROMPT) << "Which card? " << endl;
+    mpr(MSGCH_PROMPT, "Which card? ");
     char buf[80];
     if (cancellable_get_line_autohist(buf, sizeof buf))
     {

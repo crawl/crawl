@@ -643,6 +643,7 @@ for filename in files:
 
         # ignore format strings without any actual text
         temp = re.sub(r'%[\-\+ #0]?[\*0-9]*(\.[\*0-9]*)?(hh|h|l|ll|j|z|t|L)?[diuoxXfFeEgGaAcspn]', '', string)
+        temp = re.sub('0x', '', temp); # Hexadecimal number indicator
         if not re.search(r'(?<!\\)[a-zA-Z]', temp):
             continue
 

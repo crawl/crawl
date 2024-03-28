@@ -22261,7 +22261,7 @@ Sim auf %s abgebrochen
 ##################
 %%%%
 "Enter name of item (or ITEM spec): "
-"Namen des Objekts (oder die Objekt-Spezifikation): "
+"Namen des Gegenstands (oder die Gegenstand-Spezifikation) eingeben: "
 %%%%
 ) - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls
 ) - Waffen    ( - Geschosse   [ - Rüstung   / - Zauberstäbe   ? - Schriftrollen
@@ -22273,16 +22273,16 @@ X - corpses     $ - gold    0  - the Orb
 X - Leichen   $ - Gold        0 - die Kugel
 %%%%
 ESC - exit
-ESC - exit
+ESC - abbrechen
 %%%%
 "What class of item? "
-
+"Welche Art von Gegenstand? "
 %%%%
 Could not allocate item.
 Artikel konnte nicht zugeordnet werden.
 %%%%
 "How much gold? "
-
+"Wie viel Gold? "
 %%%%
 No such monster.
 Kein solches Monster.
@@ -22294,16 +22294,16 @@ You can't make a draconian corpse by its background.
 Ihr könnt keine drakonische Leiche durch ihren Hintergrund machen.
 %%%%
 "How many heads? "
-
+"Wie viele Köfpe? "
 %%%%
 Failed to create corpse.
-Leiche konnte nicht erstellt werden.
+Fehler beim Erstellen der Leiche.
 %%%%
 "What type of item? "
-
+"Was für einen Gegestand? "
 %%%%
-"(\"all\" for all) "
-
+"What type of item? (\"all\" for all) "
+"Weleche Art Gegestand? (\"all\" for alle) "
 %%%%
 No such item.
 Kein solcher Gegenstand.
@@ -22312,79 +22312,70 @@ You can't tweak the randart properties of an equipped item.
 Ihr könnt die Randart-Eigenschaften eines ausgerüsteten Gegenstands nicht optimieren.
 %%%%
 "Change which field? "
-Welches Feld ändern?
+"Welches Eigenschaft ändern? "
 %%%%
-Toggling %s to %s.
-%s auf %s umschalten.
+Toggling %s to off.
+%s wird ausgeschaltet.
 %%%%
-off
-
-%%%%
-on
-
+Toggling %s to on.
+%s wird angeschaltet.
 %%%%
 %s was %d.
 %s war %d.
 %%%%
 "New value? "
-
+"Neuer wert? "
 %%%%
 Value for %s must be non-negative
-Wert für%s darf nicht negativ sein
+Wert für {acc}%s darf nicht negativ sein
 %%%%
 %s was %s.
 %s war %s.
 %%%%
 normal
-
+normal
 %%%%
 "New ego? "
-
+"Neues Ego? "
 %%%%
 No such ego as: %s
 Kein Ego wie: %s
 %%%%
 Ego '%s' is invalid for %s.
-Ego '%s' ist für %s ungültig.
+Ego '%s' ist für {acc}%s ungültig.
 %%%%
 "Tweak which item? "
-
+"wlechen Gegenstand ändern? "
 %%%%
 a - plus  b - plus2  c - %s  d - quantity  e - flags  ESC - exit
-
+a - Plus  b - Plus2  c - %s  d - Menge  e - Flags  ESC - abbrechen
 %%%%
 art props
-
+Artefakt-Eigenschaften
 %%%%
 "Which field? "
-"Welches Feld? "
+"Welche Eigenschaft? "
 %%%%
-Old value: %
-
-%%%%
-" (0x%04"
-
-%%%%
-Old value: 0x%08
-Alter Wert: 0x%08
+"Old value: "
+"Alter Wert: "
 %%%%
 You can't set this flag on a non-artefact.
-Ihr könnt dieses Flag nicht auf ein Nicht-Artefakt setzen.
+Ihr könnt dieses Flag nicht bei einem Nicht-Artefakt einstellen.
 %%%%
 "Make book fixed [t]heme or fixed [l]evel? "
-Buch fest [t] heme oder fest [l] evel machen?
+"[t]Thema oder [l]Level des Buches stimmen? "
 %%%%
 Value of which item?
-
+Wert welches Gegenstands?
 %%%%
 Real value: %d (known: %d)
-Realer Wert: %d (bekannt:%d)
+Echter Wert: %d (bekannt: %d)
 %%%%
 Value: %d
 Wert: %d
 %%%%
 Make an artefact out of which item?
-
+Welchen Gegenstand in ein Artefakt verwandeln?
 %%%%
 That item is already an unrandom artefact.
 Dieser Gegenstand ist bereits ein zufälliges Artefakt.
@@ -22393,139 +22384,49 @@ That item cannot be turned into an artefact.
 Dieser Gegenstand kann nicht in ein Artefakt verwandelt werden.
 %%%%
 Is already a randart; wipe and re-use?
-
+Ist schon ein zufälliges Artefakt; löschen und wider benutzen?
 %%%%
 "Fake item as gift from which god (ENTER to leave alone): "
-Gefälschter Gegenstand als Geschenk von welchem ​​Gott (ENTER, um in Ruhe zu lassen):
+"Gefälschter Gegenstand als Geschenk von welchem ​​Gott (ENTER, um in Ruhe zu lassen): "
 %%%%
 No such god, leaving item origin alone.
-Kein solcher Gott, der den Ursprung des Gegenstands in Ruhe lässt.
+Kein solcher Gott. Ursprung des Gegenstands in Ruhe gelassen.
 %%%%
 God gift of %s.
-Gottes Geschenk von%s.
+Gottes Geschenk von {dat}%s.
 %%%%
 Failed to turn book into randart.
-Buch konnte nicht in Randart verwandelt werden.
+Buch konnte nicht in zufälliges Artefakt verwandelt werden.
 %%%%
 Failed to turn item into randart.
-Fehler beim Verwandeln des Elements in einen Randart.
+Fehler beim Verwandeln des Gegenstands in zufälliges Artefakt.
 %%%%
 You feel a rush of knowledge.
-Ihr fühlt einen Ansturm von Wissen.
+Ihr fühlt eine Welle von Wissen.
 %%%%
 You feel a rush of antiknowledge.
-Ihr fühlt einen Ansturm von Wissen.
+Ihr fühlt eine Welle von Nicht-Wissen.
 %%%%
 Item stacks (by location and top item):
 Gegenstandsstapel (nach Standort und oberstem Gegenstand):
 %%%%
 " mimic"
-
+"-Mimik"
 %%%%
 Floor items (stacks only show top item):
-Bodenartikel (Stapel zeigen nur den obersten Artikel):
+Gegenstände auf dem Boden (Stapel zeigen nur den obersten Gegenstand):
 %%%%
 %3d at (%2d,%2d): %s%s
 %3d bei (%2d,%2d): %s%s
 %%%%
-Too many items on level.
-Zu viele Gegenstände auf Stufe.
-%%%%
-[a] Weapons [b] Armours   [c] Jewellery [d] Books
-[a] Waffen [b] Rüstungen [c] Schmuck [d] Bücher
-%%%%
-[e] Staves  [f] Evocables
-
-%%%%
-"What kind of item would you like to get acquirement stats on? "
-"Auf was für einen Gegenstand möchtet Ihr Erwerbsstatistiken setzen? "
-%%%%
-"How many iterations? "
-
-%%%%
-Stopping early due to keyboard input.
-Aufgrund von Tastatureingaben vorzeitig anhalten.
-%%%%
-Acquirement failed, stopping early.
-Die Akquisition ist fehlgeschlagen und hat vorzeitig aufgehört.
-%%%%
-%2d%% done.
-%2d%% fertig.
-%%%%
-No items generated.
-Keine Elemente generiert.
-%%%%
-Skills:
-
-%%%%
-debug randart
-
-%%%%
-running
-
-%%%%
-see invis
-
-%%%%
-archmagi
-
-%%%%
-hexes
-
-%%%%
-fire magic
-
-%%%%
-ice magic
-
-%%%%
-transmutation
-
-%%%%
-necromancy
-
-%%%%
-translocation
-
-%%%%
-poison magic
-
-%%%%
-earth magic
-
-%%%%
-air magic
-
-%%%%
-%%%ds: %%6.2f
-
-%%%%
-Results written into 'items.stat'.
-Ergebnisse in 'items.stat' geschrieben.
-%%%%
-Generate randart stats on which item?
-
-%%%%
-Can't make a randart out of that type of item.
-Ich kann aus dieser Art von Gegenständen keinen Randart machen.
-%%%%
-%4.1f%% done.
-%4.1f%% erledigt.
-%%%%
-Can't write items.stat: %s
-Artikel.stat:%s kann nicht geschrieben werden
-%%%%
-Generate stats for: [a] acquirement [b] randart properties
-Statistiken generieren für: [a] Erwerb [b] Randart-Eigenschaften
-%%%%
 "Which card? "
-
+"Welche Karte? "
 %%%%
 Unknown card.
 Unbekannte Karte.
 %%%%
 Evokers recharged.
-Evokers aufgeladen.
+Evokers wiederaufgeladen.
 %%%%
 
 ##################
