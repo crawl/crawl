@@ -3962,7 +3962,7 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("is lit by a halo");
     if (umbraed(where) && !haloed(where))
         areas.emplace_back("is wreathed by an umbra");
-    if (liquefied(where))
+    if (liquefied(where, true))
         areas.emplace_back("is liquefied");
     if (orb_haloed(where) || quad_haloed(where))
         areas.emplace_back("is covered in magical glow");
