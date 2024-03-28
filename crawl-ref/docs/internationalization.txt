@@ -1,0 +1,42 @@
+Internationalisation (i18n) Notes
+=================================
+
+Strings are localised by calling the localise() functions (localise.h/localise.cc).
+
+There is an overload that allows localistion of a fixed string:
+    localise("Zin will disapprove.");
+
+There is also an overload that takes printf-style arguments, and allows the the localisation of parameterised strings:
+    localise("%s hits you.", monster_name);
+
+There is another overload that handles embedded parameters of the form @foo@ (which some pre-existing Crawl code uses).
+Param values are passed in a map.
+    string localise(const string& text, const map<string, string>& params, bool localise_text = true);
+
+Many commonly called functions call localise() internally, in order to avoid the need to insert thousands of explicit calls to localise() all through the code.
+These include:
+- mprf, mprf_nojoin, mprf_nocap
+- mpr, mpr_nojoin, mpr_comma_separated_list (but not formatted_mpr)
+- functions that call mpr/mprf:
+    - show_prompt
+    - msgwin_prompt
+    - god_speaks
+    - direction_chooser::print_top_prompt (so no need to explictly localise the top_prompt data member unless it's a parameterised string)
+- simple_god_message
+- simple_monster_message
+- msgwin_get_line, and by extension, functions that call it: 
+    - msgwin_get_line_autohist
+    - prompt_for_int
+    - prompt_for_float
+- yesno
+- prompt_invent_item
+
+The mprf* functions take printf-style arguments, which will be passed down to the printf-style localise, so they are capable of localising parameterised strings.
+(However, that parameterisation has to be done in a way that will work for all languages, not just English).
+
+mpr_comma_separated_list also handles a limited form of parameterisation.
+
+The other functions only take a single string, and therefore can only localise fixed strings. If the string is built at runtime, it will
+likely be necessary to replace that string-building with an explicit call to localise.
+
+The functions mprf_nolocalise and mpr_nolocalise have been created for cases where localisation is not wanted.
