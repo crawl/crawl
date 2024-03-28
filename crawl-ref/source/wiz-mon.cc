@@ -159,7 +159,7 @@ void wizard_create_spec_monster_name()
         monster    &mon = env.mons[idx];
         ghost_demon ghost;
 
-        ghost.name = "John Doe";
+        ghost.name = "John Doe"; // @noloc
 
         char input_str[80];
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",
@@ -357,7 +357,10 @@ void wizard_spawn_control()
             const int num = min(atoi(specs), max_spawn);
             if (num > 0)
             {
-                mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
+                if (num == 1)
+                    mprf("Spawning 1 monster.");
+                else
+                    mprf("Spawning %i monsters.", num);
                 int curr_rate = env.spawn_random_rate;
                 // Each call to spawn_random_monsters() will spawn one with
                 // the rate at 5 or less.
@@ -537,6 +540,7 @@ void debug_stethoscope(int mon)
             if (!(hspell_pass[k].flags & flag))
                 continue;
 
+            // @noloc section start
             // this is arguably redundant with mons_list::parse_mons_spells
             // specificially the bit that turns names into flags
             static const map<mon_spell_slot_flag, string> flagnames = {
@@ -551,6 +555,7 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_NOISY,      "noi" },
             };
             spl << "." << lookup(flagnames, flag, "bug");
+            // @noloc section end
         }
 
         spl << " (#" << static_cast<int>(hspell_pass[k].spell) << ")";
@@ -622,7 +627,10 @@ void wizard_dismiss_all_monsters(bool force_all)
     }
 
     int count = dismiss_monsters(buf);
-    mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
+    if (count == 1)
+        mprf("Dismissed 1 monster.");
+    else
+        mprf("Dismissed %i monsters.", count);
     // If it was turned off turn autopickup back on if all monsters went away.
     if (!*buf)
         autotoggle_autopickup(false);
@@ -851,6 +859,7 @@ void wizard_make_monster_summoned(monster* mon)
         return;
     }
 
+    // @locnote: summon type
     mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
     mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
 

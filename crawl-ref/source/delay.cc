@@ -1079,8 +1079,8 @@ static inline bool _monster_warning(activity_interrupt ai,
         {
             text += localise(" ");
             string text2 = localise("%s is %s.", mon->full_name(DESC_THE));
-            replace_last(text2, "%s", mweap); // mweap already localised
-            text += text2;
+            text2 = replace_last(text2, "%s", mweap); // mweap already localised
+            text += uppercase_first(text2);
         }
 
         if (msgs_buf)

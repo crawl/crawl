@@ -22411,7 +22411,7 @@ Item stacks (by location and top item):
 Gegenstandsstapel (nach Standort und oberstem Gegenstand):
 %%%%
 " mimic"
-"-Mimik"
+-Mimik
 %%%%
 Floor items (stacks only show top item):
 Gegenstände auf dem Boden (Stapel zeigen nur den obersten Gegenstand):
@@ -22434,157 +22434,143 @@ Evokers wiederaufgeladen.
 ##################
 %%%%
 "Enter monster name (or MONS spec) (? for help): "
-
+"Monster-Namen (oder MONS-Spezifikation) eingeben (? für Hilfe): "
 %%%%
 Couldn't find player ghost, probably going to crash.
-Spielergeist konnte nicht gefunden werden und wird wahrscheinlich abstürzen.
-%%%%
-John Doe
-
+Spielergeist konnte nicht gefunden werden. Programm wird wahrscheinlich crashen.
 %%%%
 "Make player ghost which species? (case-sensitive) "
-
+"Welche Spezies für den Spieler-Geist? (schreibungsabhängig) "
 %%%%
 No such species, making it Human.
-Keine solche Spezies, die es menschlich macht.
+Keine solche Spezies. Mensch wird benutzt.
 %%%%
 "Give player ghost which background? "
-
+"Welchen Hintergrund für den Spieler-Ghost? "
 %%%%
 No such background, making it a Fighter.
-Kein solcher Hintergrund, was es zu einem Kämpfer macht.
+Kein solcher Hintergrund. Kämpfer wird benutzt.
 %%%%
 "Monsters: "
-
+"Monster: "
 %%%%
 %d monsters, %d total exp value (%d non-uniq)
-%d Monster,%d Gesamt-Exp-Wert (%d nicht eindeutig)
+%d Monster, %d Gesamt-XP-Wert (%d nicht eindeutig)
 %%%%
 %d monsters, %d total exp value (%d non-uniq, %d adjusted)
-%d Monster,%d Gesamt-Exp-Wert (%d nicht eindeutig,%d angepasst)
+%d Monster, %d Gesamt-XP-Wert (%d nicht eindeutig, %d angepasst)
 %%%%
 "(c)hange spawn rate or (s)pawn monsters? "
-(c) Hange Spawn Rate oder (s) Bauernmonster?
+"(c)Spawn-Frequenz ändern oder Monster (s)pawnen? "
 %%%%
 "Set monster spawn rate to what? (now %d, lower value = higher rate) "
-Monster-Spawn-Rate auf was setzen? (Jetzt%d, niedrigerer Wert = höhere Rate)
+"Monster-Spawn-Frequenz auf was setzen? (jetzt %d, niedrigerer Wert = höhere Frequenz)
 %%%%
 Setting monster spawn rate to %i.
-Monster-Spawn-Rate auf%i setzen.
+Monster-Spawn-Frequenz auf %i eingestellt.
 %%%%
 Level already filled with monsters, get rid of some of them first.
-
+Ebene ist schon mit Monstern gefüllt. Einige zuerst wegschaffen.
 %%%%
 "Spawn how many random monsters (max %d)? "
-Spawn wie viele zufällige Monster (max%d)?
+"Wie viele zufällige Monster spawnen (max %d)?
 %%%%
-Spawning %i monster%s.
-Laichen %i Monster%s.
+Spawning 1 monster.
+1 Monster wird gespawnt.
+%%%%
+Spawning %i monsters.
+%i Monster wird gespawnt.
 %%%%
 land
-
+Land
 %%%%
 Which monster?
 Welches Monster?
-%%%%
-M
-
-%%%%
-P
-
-%%%%
-V
-
-%%%%
-br
-
-%%%%
-in
-
-%%%%
-noi
-
 %%%%
 Detected %i monster%s.
 %i Monster%s erkannt.
 %%%%
 "What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)? "
-
+"Welche Monster entlassen (ENTER für alle, \"harmful\", \"mobile\", \"los\" oder ein regex, \"keepitem\" um Gegenstände zurückzulassen)? "
 %%%%
-Dismissed %i monster%s.
-%i Monster%s entlassen.
+Dismissed 1 monster.
+1 Monster entlassen.
+%%%%
+Dismissed %i monsters.
+%i Monster entlassen.
 %%%%
 "Make the monster (S)hout or (T)alk? "
-Mache das Monster (S) hout oder (T) alk?
+"Zwinge das Monster zum (S)chreien oder Reden(T)? "
 %%%%
 "How many times? "
-
+"Wie vieleMmal? "
 %%%%
 The monster is invisible and likely won't speak.
 Das Monster ist unsichtbar und wird wahrscheinlich nicht sprechen.
 %%%%
 You are silenced but the monster isn't; you will probably hear/see nothing.
-
+Ihr befindet Euch in Stille, aber das Monster ist nicht; Ihr werdet wahrscheinlich nichts hören/sehen.
 %%%%
 The monster is silenced and likely won't say anything.
-Das Monster wird zum Schweigen gebracht und wird wahrscheinlich nichts sagen.
+Das Monster befindet sich in Stille und wird wahrscheinlich nichts sagen.
 %%%%
 Both you and the monster are silenced, so you likely won't hear anything.
-
+Ihr and das Monster befindet euch in Stille. Also, Ihr werdet wahrscheinlich nichts hören.
 %%%%
 == Done ==
 == Fertig ==
 %%%%
 %s seems unable to mature further.
-
+%s scheint unfähig weiter to erwachsen.
 %%%%
 "Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? "
-Segen von (B) eogh, The (S) hining One oder (R) andomly anwenden?
+"Segen von (B)eogh, (S) dem Glänzenden oder (R)andom anwenden?
 %%%%
 %s won't bless this monster for you!
-%s wird dieses Monster nicht für Euch segnen!
+%s wird dieses Monster für Euch nicht segnen!
 %%%%
 That type of monster can't use any items.
-Diese Art von Monster kann keine Gegenstände benutzen.
+Diese Art Monster kann keine Gegenstände benutzen.
 %%%%
 Give which item to monster?
-
+Welchen Gegenstand zu Monster geben?
 %%%%
 Can't give equipped items to a monster.
 Kann einem Monster keine ausgerüsteten Gegenstände geben.
 %%%%
 You can't give that type of item to a monster.
-Ihr könnt einem Monster diese Art von Gegenständen nicht geben.
+Ihr könnt einem Monster diese Art Gegenstand nicht geben.
 %%%%
 Error: monster failed to take item.
-Fehler: Monster konnte keinen Gegenstand nehmen.
+Fehler: Monster konnte Gegenstand nicht nehmen.
 %%%%
 Move monster to where?
-
+Monster wohin bewegen?
 %%%%
 Already doing a move command.
-Bereits einen Bewegungsbefehl ausführen.
+Einen Bewegungsbefehl wird schon ausgeführt.
 %%%%
 You can't move yourself into the arena.
 Ihr könnt Euch nicht in die Arena bewegen.
 %%%%
 Monster is already summoned.
-Monster ist bereits gerufen.
+Monster ist schon gerufen.
 %%%%
 "What summon longevity (1 to 6)? "
-
+"Welche Ruf-Dauer (1 to 6)? "
 %%%%
+# note: summon type
 [a] clone [b] animated [c] chaos [d] miscast [e] zot
-[a] Klon [b] animiertes [c] Chaos [d] Fehlbesetzung [e] zot
+[a] Klon [b] animiertes [c] Chaos [d] Fehlzauber [e] Zot
 %%%%
 [f] wrath [h] aid   [m] misc    [s] spell
-[f] Zorn [h] hilft [m] verschiedenen Zaubersprüchen
+[f] Zorn [h] Hilfe [m] Verschiedenes [s] Zauberspruch
 %%%%
 "Which summon type? "
-Welcher Beschwörungstyp?
+"Welcher Herbeirufungstyp? "
 %%%%
 "Cast which spell by name? "
-
+"Welchen Spruch zaubern (Name)? "
 %%%%
 No such spell.
 Kein solcher Zauber.
@@ -22596,13 +22582,13 @@ Invalid monster type.
 Ungültiger Monstertyp.
 %%%%
 Old type and new type are the same, not polymorphing.
-Alter Typ und neuer Typ sind gleich, nicht polymorph.
+Alter Typ und neuer Typ sind gleich. Wird nich verwandelt.
 %%%%
 Target species must be different from current species.
-Zielarten müssen sich von aktuellen Arten unterscheiden.
+Ziel-Spezies muss sich von aktueller Spezies unterscheiden.
 %%%%
 Trying harder
-Härter versuchen
+Es wird härter versuchen
 %%%%
 Polymorph failed.
 Polymorph fehlgeschlagen.
@@ -22614,58 +22600,58 @@ Choose a destination!
 Wähle eine Destination!
 %%%%
 Attempting to calculate a path from (%d, %d) to (%d, %d)...
-Versuch, einen Pfad von (%d,%d) nach (%d,%d) zu berechnen ...
+Versuche einen Pfad von (%d,%d) nach (%d,%d) zu berechnen...
 %%%%
 "Here's the shortest path: "
-Hier ist der kürzeste Weg:
+"Hier ist der kürzeste Pfad: "
 %%%%
 -> path length: %u
 -> Pfadlänge: %u
 %%%%
 "And here are the needed waypoints: "
-Und hier sind die benötigten Wegpunkte:
+"Und hier sind die benötigten Wegpunkte: "
 %%%%
 -> #waypoints: %u
--> #waypoints: %u
+-> #Wegpunkte: %u
 %%%%
 Can't make already dead target miscast.
-Kann nicht schon tote Zielfehlbesetzung machen.
+Kann nicht tote Ziel fehlzuzaubern zwingen.
 %%%%
 "Miscast which school or spell, by name? "
-Welche Schule oder welchen Spruch namentlich falsch?
+"Welche Schule oder welchen Spruch, namentlich? "
 %%%%
 No matching spell or spell school.
 Kein passender Zauber oder Zauberschule.
 %%%%
 Ambiguous: can be spell '%s' or school '%s'.
-Mehrdeutig: Kann '%s' oder '%s' der Schule sein.
+Mehrdeutig: Kann Zauber '%s' oder Schule '%s' sein.
 %%%%
 Spell '%s' has no disciplines.
-Zauber '%s' hat keine Disziplinen.
+Zauber '%s' hat keine Schulen.
 %%%%
 Miscasting spell %s.
-Fehlzauber%s.
+%s wird fehlgezaubert.
 %%%%
 Miscasting school %s.
-Fehlbesetzung der Schule%s.
+Schule %s wird fehlgezaubert.
 %%%%
 "Enter fail: "
-Enter fail:
+"Fehler-Wert eingeben: "
 %%%%
 "Enter level, fail: "
-Level eingeben, fehlschlagen:
+"Stufe, Fehler_wert eingeben: "
 %%%%
 Can only enter spell level for schools, not spells.
 Kann nur die Zauberstufe für Schulen eingeben, keine Zauber.
 %%%%
 Spell level can be at most 9.
-Die Zauberstufe kann höchstens 9 betragen.
+Die Zauberstufe kann höchstens 9 sein.
 %%%%
 "Number of repetitions? "
-
+"Wieviele Wiederholungen? "
 %%%%
 Key pressed, interrupting miscast testing.
-Taste gedrückt, um Fehlbesetzungstests zu unterbrechen.
+Taste gedrückt. Fehlzauber-Test wird abgebrochen.
 %%%%
 
 ##################
