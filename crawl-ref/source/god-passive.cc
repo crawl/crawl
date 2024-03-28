@@ -886,13 +886,13 @@ void qazlal_storm_clouds()
             if (!cell_is_solid(*ai))
                 count++;
 
-        if (count >= 5)
+        if (count >= 3)
             candidates.push_back(*ri);
     }
     const int count =
         div_rand_round(min((int)you.piety, piety_breakpoint(5))
                        * candidates.size() * you.time_taken,
-                       piety_breakpoint(5) * 7 * BASELINE_DELAY);
+                       piety_breakpoint(5) * 5 * BASELINE_DELAY);
     if (count < 0)
         return;
     shuffle_array(candidates);
@@ -911,7 +911,7 @@ void qazlal_storm_clouds()
         do
         {
             ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
-                                  CLOUD_DUST);
+                                  CLOUD_SAND_STORM);
         } while (water && ctype == CLOUD_FIRE);
 
         place_cloud(ctype, candidates[i], random_range(3, 5), &you);
