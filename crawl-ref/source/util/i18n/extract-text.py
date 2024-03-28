@@ -427,7 +427,7 @@ for filename in files:
                 # Leave notes/milsones in English
                 if re.search('take_note', line) or re.search('mark_milestone', line):
                     continue
-                if re.search(r'mutate\s*\(', line):
+                if re.search(r'(mutate|delete_mutation|delete_all_temp_mutations)\s*\(', line):
                     continue
                 if re.search(r'\bbanish\s*\(', line):
                     continue

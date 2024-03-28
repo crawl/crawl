@@ -17,6 +17,7 @@
 #include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h" // frombool
@@ -287,8 +288,7 @@ void wizard_set_piety_to(int newpiety, bool force)
         mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
 
         const string new_xom_favour = describe_xom_favour();
-        const string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
+        mprf(MSGCH_GOD, you.religion, "You are now %s", new_xom_favour.c_str());
         return;
     }
 
@@ -329,7 +329,10 @@ void wizard_set_gold()
     else
         you.set_gold(max(atoi(buf), 0));
 
-    mprf("You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
+    if (you.gold == 1)
+        mpr("You now have 1 gold piece.");
+    else
+        mprf("You now have %d gold pieces.", you.gold);
 }
 
 void wizard_set_piety()
@@ -406,10 +409,12 @@ void wizard_set_skill_level(skill_type skill)
 
     redraw_skill(skill);
 
-    mprf("%s %s to skill level %.1f.", (old_amount < amount ? "Increased" :
-                                      old_amount > amount ? "Lowered"
-                                                          : "Reset"),
-         skill_name(skill), amount);
+    if (old_amount < amount)
+        mprf("Increased %s to skill level %.1f.", skill_name(skill), amount);
+    else if (old_amount > amount)
+        mprf("Decreased %s to skill level %.1f.", skill_name(skill), amount);
+    else
+        mprf("Reset %s to skill level %.1f.", skill_name(skill), amount);
 }
 
 void wizard_set_all_skills()
@@ -663,9 +668,8 @@ void wizard_edit_durations()
         }
         else
         {
-            string prefix = "No exact match for duration '";
-            prefix += buf;
-            prefix += "', possible matches are: ";
+            string prefix = localise("No exact match for duration '%s'", buf);
+            prefix += ", possible matches are: ";
 
             mpr_comma_separated_list(prefix, match_names, " and ", ", ",
                                      MSGCH_DIAGNOSTICS);
@@ -673,8 +677,8 @@ void wizard_edit_durations()
         }
     }
 
-    snprintf(buf, sizeof(buf), "Set '%s' to: ", duration_name(choice));
-    int num = prompt_for_int(buf, false);
+    string prompt = localise("Set '%s' to: ", duration_name(choice));
+    int num = prompt_for_int(prompt.c_str(), false);
 
     if (num == 0)
     {
@@ -840,7 +844,7 @@ void wizard_get_god_gift()
 void wizard_toggle_xray_vision()
 {
     you.wizard_vision = !you.wizard_vision;
-    mprf("X-ray vision %s.", you.wizard_vision ? "enabled" : "disabled");
+    mpr(you.wizard_vision ? "X-ray vision enabled." : "X-ray vision disabled.");
     viewwindow(true);
     update_screen();
 }
@@ -1003,7 +1007,7 @@ void wizard_set_zot_clock()
 {
     const int max_zot_clock = MAX_ZOT_CLOCK / BASELINE_DELAY;
 
-    string prompt = make_stringf("Enter new Zot clock value "
+    string prompt =     localise("Enter new Zot clock value "
                                  "(current = %d, from 0 to %d): ",
                                  turns_until_zot(), max_zot_clock);
     int turns_left = prompt_for_int(prompt.c_str(), true);

@@ -6555,9 +6555,6 @@ Es ist kein Platz!
 You have no bad mutations to be cured!
 Ihr habt keine schlechten Mutationen, die geheilt werden müssen!
 %%%%
-Jiyva's power
-
-%%%%
 You feel cleansed.
 Ihr fühlt Euch gereinigt.
 %%%%
@@ -22659,133 +22656,121 @@ Taste gedrückt. Fehlzauber-Test wird abgebrochen.
 ##################
 %%%%
 "What species would you like to be now? "
-
+"Welche Spezies möchtet Ihr jetzt sein? "
 %%%%
 That species isn't available.
-Diese Art ist nicht verfügbar.
+Diese Spezies ist nicht verfügbar.
 %%%%
 "Cast which spell? "
-Welchen Zauber wirken?
+"Welchen Zauber wirken? "
 %%%%
 Cannot find that spell.
 Kann diesen Zauber nicht finden.
 %%%%
 "Memorise which spell? "
-Merke sich welchen Zauber?
+"Welchen Zauber memorieren? "
 %%%%
 Spell is monster-only - unpredictable behaviour may result.
-Zauber sind nur Monster - unvorhersehbares Verhalten kann die Folge sein.
+Zauber ist nur für Monster - unvorhersehbares Verhalten kann die Folge sein.
 %%%%
 Super healing.
-Super Heilung.
-%%%%
-Super heal
-
+Super-Heilung.
 %%%%
 Healing.
 Heilung.
 %%%%
 Piety needs to be between 0 and %d.
-Die Frömmigkeit muss zwischen 0 und%d liegen.
+Frömmigkeit muss zwischen 0 und %d liegen.
 %%%%
 Ru piety can't be greater than %d.
-Die Frömmigkeit kann nicht größer als%d sein.
+Ru-Frömmigkeit kann nicht größer als %d sein.
 %%%%
 "Enter new interest (current = %d, Enter for 0): "
-
+"Neue Interesse eingeben (aktuell = %d, Enter für 0): "
 %%%%
 Interest must be between 0 and 255.
-Die Zinsen müssen zwischen 0 und 255 liegen.
+Interesse muss zwischen 0 und 255 liegen.
 %%%%
 Set piety to %d, interest to %d.
-Setze Frömmigkeit auf %d, Interesse auf %d.
+Frömmigkeit auf %d, Interesse auf %d eingestellt.
 %%%%
-"You are now "
-
+You are now %s
+Ihr seid jetzt %s
 %%%%
 Are you sure you want to be excommunicated?
-
+Seid Ihr sicher, dass Ihr exkommuniziert werden wollt?
 %%%%
 Setting piety to %d.
-Frömmigkeit wird auf %d gesetzt.
+Frömmigkeit wird auf %d eingestellt.
 %%%%
 "Enter new gold value (current = %d, Enter for %d): "
-Neuen Goldwert eingeben (aktuell =%d, Eingabe für%d):
-%%%%
-You now have %d gold piece%s.
-Ihr habt jetzt%d Goldstück%s.
+"Neuen Goldwert eingeben (aktuell = %d, Enter für %d): "
 %%%%
 You are not religious!
 Ihr seid nicht religiös!
 %%%%
 Current progress to next sacrifice: %d  Progress needed: %d
-Aktueller Fortschritt bis zum nächsten Opfer:%d Erforderlicher Fortschritt:%d
+Aktueller Fortschritt bis zum nächsten Opfer: %d   Erforderlicher Fortschritt: %d
 %%%%
 "Enter new piety value (current = %d, Enter for 0): "
-Gib einen neuen Frömmigkeitswert ein (aktuell = %d, Enter-Taste für 0):
+"Einen neuen Frömmigkeitswert eingeben (aktuell = %d, Enter für 0): "
 %%%%
 "Which skill (by name)? "
-
+"Welche Fertigkeit (Name)? "
 %%%%
 That skill doesn't seem to exist.
-Diese Fruchtbarkeit scheint nicht zu existieren.
+Diese Fertigkeit scheint nicht zu existieren.
 %%%%
 Exercising...
 Trainieren ...
 %%%%
 "To what level? "
-
+"Auf welches Niveau? "
 %%%%
-%s %s to skill level %.1f.
-%s %s bis Skill-Level %.1f.
+Increased %s to skill level %.1f.
+Fertigkeit %s aufs Niveau %.1f erhöht.
 %%%%
-Increased
-
+Decreased %s to skill level %.1f.
+Fertigkeit %s aufs Niveau %.1f vermindert.
 %%%%
-Lowered
-
-%%%%
-Reset
-
+Reset %s to skill level %.1f.
+Fertigkeit %s wieder aufs Niveau %.1f eingestellt.
 %%%%
 "Set all skills to what level? "
-
+"Alle Fertigkeiten auf welches Niveau einstellen? "
 %%%%
 Ignoring mut resistance to apply mutation.
-Mut-Resistenz ignorieren, um Mutation anzuwenden.
+Mutation-Resistenz ignoriert, um Mutation anzuwenden.
 %%%%
 "Which mutation (name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')? "
-
+"Welche mutation (Name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')? "
 %%%%
 No matching mutation names.
 Keine passenden Mutationsnamen.
 %%%%
 "No exact match for mutation '%s', possible matches are: "
-
+"Keine exakte Treffer für Mutation '%s'. Mögliche Treffer sind: "
 %%%%
 Found #%d: %s ("%s")
-Gefunden #%d: %s ("%s")
+Fand #%d: %s ('%s')
 %%%%
 "How many levels to increase or decrease? "
-
-%%%%
-wizard power
-
+"Wie viele Stufe zu erhöhen oder vermindern? "
 %%%%
 "Enter values for X, Y, Z (space separated) or return: "
-Gib Werte für X, Y, Z (durch Leerzeichen getrennt) oder Entertaste ein:
+"Werte für X, Y, Z eingeben (durch Leerzeichen getrennt) oder Entertaste:
 %%%%
 "Enter values for Str, Int, Dex (space separated): "
-Gib Werte für Str, Int, Dex (durch Leerzeichen getrennt) ein:
+"Werte für Stä, Int, Ges eingeben (durch Leerzeichen getrennt): "
 %%%%
 Setting attributes (Str, Int, Dex) to: %i, %i, %i
-Setzen von Attributen (Str, Int, Dex) auf: %i,%i,%i
+Attributen (Stä, Int, Ges) eingestellt auf: %i, %i, %i
 %%%%
 "Edit which duration (letter or name)? "
-
+"Welche Dauer bearbeiten (Buchstabe oder Name)? "
 %%%%
 "Edit which duration (name)? "
-Welche Dauer (Name) bearbeiten?
+"Welche Dauer bearbeiten (Name)? "
 %%%%
 No existing durations to choose from.
 Keine vorhandene Dauer zur Auswahl.
@@ -22796,23 +22781,20 @@ Ungültige Wahl.
 No durations matching '%s'.
 Keine Dauer, die mit '%s' übereinstimmt.
 %%%%
-No exact match for duration '
-
+No exact match for duration '%s'
+Keine exakte Treffer für Duaer '%s'
 %%%%
-"', possible matches are: "
-
+", possible matches are: "
+". Möglishe Treffer sind: "
 %%%%
 "Set '%s' to: "
-
+"'%s' eingestellt auf: "
 %%%%
 Can't set duration directly to 0, setting it to 1 instead.
-Die Dauer kann nicht direkt auf 0 gesetzt werden, sondern auf 1.
-%%%%
-level change
-
+Die Dauer kann nicht direkt auf 0 eingestellt werden, wird auf 1 eingestellt.
 %%%%
 "Enter new experience level: "
-Neue Erfahrungsstufe eingeben:
+"Neue Erfahrungsstufe eingeben: "
 %%%%
 Experience level set to %d.
 Erfahrungsstufe auf %d eingestellt.
@@ -22820,14 +22802,11 @@ Erfahrungsstufe auf %d eingestellt.
 Nothing happens.
 Nichts passiert.
 %%%%
-X-ray vision %s.
-Röntgenblick %s.
+X-ray vision enabled.
+Röntgenblick aktiviert
 %%%%
-enabled
-
-%%%%
-disabled
-
+X-ray vision disabled.
+Röntgenblick deaktiviert
 %%%%
 You allow the flow of time to resume.
 Ihr lasst den Zeitfluss wieder aufnehmen.
@@ -22839,7 +22818,7 @@ That god doesn't seem to exist!
 Dieser Gott scheint nicht zu existieren!
 %%%%
 You suffer the terrible wrath of No God.
-Ihr leidet den schrecklichen Zorn von No God.
+Ihr leidet den schrecklichen Zorn von 'Keinem Gott'.
 %%%%
 %s is not feeling wrathful today.
 %s fühlt sich heute nicht zornig.
@@ -22848,13 +22827,13 @@ You are not under penance.
 Ihr seid nicht unter Buße.
 %%%%
 "Which form (ESC to exit)? "
-Welches Formular (ESC zum Beenden)?
+"Welche Form (ESC zum Beenden)?
 %%%%
 Transformation failed.
-Transformation fehlgeschlagen.
+Verwandlung fehlgeschlagen.
 %%%%
 Not even in wizmode may divine creatures worship a god!
-
+Nicht einmal im Zauberer-Modus dürfen göttliche Wesen einen Gott anbeten!
 %%%%
 You already have no god!
 Ihr habt schon keinen Gott!
@@ -22863,13 +22842,13 @@ You already worship that god!
 Ihr verehrt diesen Gott schon!
 %%%%
 "What action should Xom take? (Blank = any) "
-
+"Welche Maßnahmen sollte Xom ergreifen? (Leer = beliebig) "
 %%%%
 "Enter new Zot clock value (current = %d, from 0 to %d): "
-
+"Neuen Wert für die Zot-Uhr eingeben (aktuell = %d, von 0 bis %d): "
 %%%%
 Zot clock should be between 0 and %d
-
+Zot-Uhr soll zwischen 0 und %d liegen
 %%%%
 
 ##################
@@ -23260,6 +23239,9 @@ a BORING thing.
 
 %%%%
 Xom makes something happen.
+
+%%%%
+"You are now "
 
 %%%%
 %s is getting BORED.
@@ -23671,9 +23653,6 @@ weird death
 
 %%%%
 resurrection
-
-%%%%
-Xom's lifesaving
 
 %%%%
 boring death

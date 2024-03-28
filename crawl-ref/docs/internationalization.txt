@@ -25,9 +25,10 @@ These include:
 - simple_god_message
 - simple_monster_message
 - msgwin_get_line, and by extension, functions that call it: 
-    - msgwin_get_line_autohist
     - prompt_for_int
     - prompt_for_float
+    - msgwin_get_line_autohist
+        - debug_prompt_for_skill
 - yesno
 - prompt_invent_item
 
