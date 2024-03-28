@@ -2220,7 +2220,12 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
 
     // Push all monsters, in order
     for (unsigned int i = 0; i < targs.size(); ++i)
-        _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow);
+    {
+        // Some circumstances, such as lost souls sacrificing themselves, can
+        // result in monsters dying before it even comes time to push them.
+        if (targs[i]->alive())
+            _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow);
+    }
 
     you.increase_duration(DUR_GAVOTTE_COOLDOWN, random_range(5, 9) - div_rand_round(pow, 50));
 
