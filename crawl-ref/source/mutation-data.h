@@ -81,6 +81,15 @@ static const mutation_def mut_data[] =
   {"You feel less resistant to poisons.", "", ""},
   TILEG_MUT_POISON_RESISTANCE,
 },
+
+{ MUT_POISON_IMMUNITY, 0, 1, mutflag::good, false,
+  "poison immunity",
+
+  {"You are immune to poison, sickness, and miasma.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 #if TAG_MAJOR_VERSION == 34
 
 { MUT_CARNIVOROUS, 0, 1, mutflag::good, false,
@@ -190,7 +199,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_DEMONIC_GUARDIAN,
 },
 
-{ MUT_SHOCK_RESISTANCE, 2, 1, mutflag::good, true,
+{ MUT_SHOCK_RESISTANCE, 2, 1, mutflag::good | mutflag::draconian, true,
   "electricity resistance",
 
   {"You are resistant to electric shocks. (rElec)", "", ""},
@@ -952,7 +961,7 @@ static const mutation_def mut_data[] =
 },
 
 // Naga and Draconian only
-{ MUT_STINGER, 8, 3, mutflag::good, true,
+{ MUT_STINGER, 8, 3, mutflag::good | mutflag::draconian, true,
   "stinger",
 
   {"Your tail ends in a venomous barb.",
@@ -1448,7 +1457,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_ACIDIC_BITE, 0, 1, mutflag::good | mutflag::jiyva, true,
+{ MUT_ACIDIC_BITE, 0, 1, mutflag::good | mutflag::jiyva | mutflag::draconian, true,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},
@@ -1822,6 +1831,14 @@ static const mutation_def mut_data[] =
   {"You are immune to petrification.", "", ""},
   {"Your body vibrates.", "", ""},
   {"You briefly stop moving.", "", ""},
+},
+
+{ MUT_STASIS, 0, 1, mutflag::good, false,
+  "permanent stasis",
+
+  {"You cannot be hasted, slowed, berserked, paralysed, or teleported.", "", ""},
+  {"You feel strangely static.", "", ""},
+  {"You feel less static.", "", ""},
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -2304,7 +2321,7 @@ static const mutation_def mut_data[] =
   {"Your sense of smell gets weaker.", "", ""},
 },
 
-{ MUT_ACID_RESISTANCE, 0, 1, mutflag::good, true,
+{ MUT_ACID_RESISTANCE, 0, 1, mutflag::good | mutflag::draconian, true,
   "acid resistance",
 
   {"You are resistant to acid. (rCorr)", "", ""},
@@ -2318,6 +2335,14 @@ static const mutation_def mut_data[] =
   {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
   {"Two of your arms shrink away.", "", ""},
   {"You grow two extra arms.", "", ""},
+},
+
+{ MUT_DIGGING, 0, 1, mutflag::good, false,
+  "dig shafts and tunnels",
+
+  {"You can dig through walls and to a lower floor.", "", ""},
+  {"Your mandibles grow strong enough to dig through rock.", "", ""},
+  {"Your mandibles return to normal strength.", "", ""},
 },
 
 { MUT_NO_DRINK, 0, 1, mutflag::bad, false,
@@ -2344,7 +2369,7 @@ static const mutation_def mut_data[] =
   {"Your retaliatory reflexes feel dull.", "", ""},
 },
 
-{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, true,
+{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good | mutflag::draconian, true,
   "steam resistance",
 
   {"You are immune to the effects of steam.", "", ""},
@@ -2366,6 +2391,14 @@ static const mutation_def mut_data[] =
   {"You cannot wear armour.", "", ""},
   {"You can no longer wear armour.", "", ""},
   {"You can now wear armour.", "", ""},
+},
+
+{ MUT_ALMOST_NO_ARMOUR, 0, 1, mutflag::bad, false,
+  "almost no armour",
+
+  {"You cannot wear most types of armour.", "", ""},
+  {"You can no longer wear most types of armour.", "", ""},
+  {"You can now wear all armour.", "", ""},
 },
 
 { MUT_MULTILIVED, 0, 1, mutflag::good, false,
@@ -2417,6 +2450,14 @@ static const mutation_def mut_data[] =
   {"Your lower body shifts to a powerful aquatic tail in water.", "", ""},
   {"Your legs feel aquatic.", "", ""},
   {"Your legs no longer feel aquatic."},
+},
+
+{ MUT_AMPHIBIOUS, 0, 1, mutflag::good | mutflag::draconian, false,
+  "amphibious",
+
+  {"You are amphibious.", "", ""},
+  {"You develop the ability to swim.", "", ""},
+  {"You are no longer able to swim."},
 },
 
 { MUT_FLOAT, 0, 1, mutflag::good, false,
@@ -2546,6 +2587,147 @@ static const mutation_def mut_data[] =
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
 },
+
+{ MUT_SERPENTINE_SKIN, 0, 1, mutflag::good | mutflag::racial_ac, true,
+  "tough serpentine skin",
+  {"Your serpentine skin is tough. (AC +", "", ""},
+  {"Your skin becomes tougher and more scaly.", "", ""},
+  {"Your skin softens.", "", ""},
+},
+
+{ MUT_STONE_BODY, 0, 1, mutflag::good | mutflag::racial_ac, true,
+  "resilient stone body",
+  {"Your stone body is resilient. (AC +", "", ""},
+  {"Your body turns to a hard and resilient stone.", "", ""},
+  {"Your body feels fleshier.", "", ""},
+},
+
+{ MUT_NO_BODY_ARMOUR, 0, 1, mutflag::bad | mutflag::draconian, false,
+  "no body armour",
+  {"You cannot fit into any form of body armour.", "", ""},
+  {"You can no longer wear body armour.", "", ""},
+  {"You can now wear body armour.", "", ""},
+},
+
+{ MUT_DRAC_BROWN_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "plain brown scales",
+  {"Your plain brown scales are hard. (AC +", "", ""},
+  {"Plain brown scales grow over your body.", "", ""},
+  {"Your plain brown scales disappear.", "", ""}, // Draconians silently lose this mut at XL 7.
+},
+
+{ MUT_DRAC_RED_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "fiery red scales",
+  {"Your fiery red scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on a fiery red colour.", "", ""},
+  {"Your fiery red scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_WHITE_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "icy white scales",
+  {"Your icy white scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on an icy white colour.", "", ""},
+  {"Your icy white scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_BLACK_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "glossy black scales",
+  {"Your glossy black scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on a glossy black colour.", "", ""},
+  {"Your glossy black scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_GREY_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "dull iron-grey scales",
+  {"Your dull iron-grey scales are very hard. (AC +", "", ""},
+  {"Your scales begin taking on a dull iron-grey colour.", "", ""},
+  {"Your dull iron-grey scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_GREEN_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "lurid green scales",
+  {"Your lurid green scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on a lurid green colour.", "", ""},
+  {"Your lurid green scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_PURPLE_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "rich purple scales",
+  {"Your rich purple scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on a rich purple colour.", "", ""},
+  {"Your rich purple scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_PALE_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "pale cyan-grey scales",
+  {"Your pale cyan-grey scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on a pale cyan-grey colour.", "", ""},
+  {"Your pale cyan-grey scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_YELLOW_SCALES, 0, 1, mutflag::good | mutflag::draconian | mutflag::racial_ac, true,
+  "golden yellow scales",
+  {"Your golden yellow scales are hard. (AC +", "", ""},
+  {"Your scales begin taking on a golden yellow colour.", "", ""},
+  {"Your golden yellow scales disappear.", "", ""},
+},
+
+{ MUT_DRAC_COMBUSTION_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "combustion breath",
+  {"You can breathe blasts of explosive embers.", "", ""},
+  {"You can now breathe blasts of explosive embers.", "", ""},
+  {"You can no longer breathe blasts of explosive embers.", "", ""},
+},
+
+{ MUT_DRAC_GLACIAL_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "glacial breath",
+  {"You can breathe waves of cold which freeze foes solid.", "", ""},
+  {"You can now breathe waves of cold which freeze foes solid.", "", ""},
+  {"You can no longer breathe waves of cold which freeze foes solid.", "", ""},
+},
+
+{ MUT_DRAC_GALVANIC_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "galvanic breath",
+  {"You can breathe arcing electricity.", "", ""},
+  {"You can now breathe arcing electricity.", "", ""},
+  {"You can no longer breathe arcing electricity.", "", ""},
+},
+
+{ MUT_DRAC_MUD_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "mud breath",
+  {"You can breathe torrents of mud, and are unimpeded by mud.", "", ""},
+  {"You can now breathe torrents of mud.", "", ""},
+  {"You can no longer breathe torrents of mud.", "", ""},
+},
+
+{ MUT_DRAC_NOXIOUS_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "noxious breath",
+  {"You can breathe blasts of noxious fumes.", "", ""},
+  {"You can now breathe blasts of noxious fumes.", "", ""},
+  {"You can no longer breathe blasts of noxious fumes.", "", ""},
+},
+
+{ MUT_DRAC_NULLIFYING_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "nullifying breath",
+  {"You can breathe blasts of antimagic.", "", ""},
+  {"You can now breathe blasts of antimagic.", "", ""},
+  {"You can no longer breathe blasts of antimagic.", "", ""},
+},
+
+{ MUT_DRAC_STEAM_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "steam breath",
+  {"You can breathe blasts of scalding, opaque steam.", "", ""},
+  {"You can now breathe blasts of scalding, opaque steam.", "", ""},
+  {"You can no longer breathe blasts of scalding, opaque steam.", "", ""},
+},
+
+{ MUT_DRAC_CAUSTIC_BREATH, 0, 1, mutflag::good | mutflag::draconian, true,
+  "caustic breath",
+  {"You can breathe corrosive fumes.", "", ""},
+  {"You can now breathe corrosive fumes.", "", ""},
+  {"You can no longer breathe corrosive fumes.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

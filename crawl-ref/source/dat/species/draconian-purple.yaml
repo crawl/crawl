@@ -30,8 +30,9 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
-fake_mutations:
-  - long: You can breathe blasts of antimagic.
-    short: nullifying breath
+    MUT_NO_BODY_ARMOUR: 1
+  7:
+    MUT_DRAC_PURPLE_SCALES: 1
+    MUT_DRAC_NULLIFYING_BREATH: 1
 
 orc_name: Purple Orconian

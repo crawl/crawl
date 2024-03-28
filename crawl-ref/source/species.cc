@@ -174,34 +174,6 @@ namespace species
         return get_species_def(species).monster_species;
     }
 
-    // XX non-draconians, unify with skin names?
-    const char* scale_type(species_type species)
-    {
-        switch (species)
-        {
-            case SP_RED_DRACONIAN:
-                return "fiery red";
-            case SP_WHITE_DRACONIAN:
-                return "icy white";
-            case SP_GREEN_DRACONIAN:
-                return "lurid green";
-            case SP_YELLOW_DRACONIAN:
-                return "golden yellow";
-            case SP_GREY_DRACONIAN:
-                return "dull iron-grey";
-            case SP_BLACK_DRACONIAN:
-                return "glossy black";
-            case SP_PURPLE_DRACONIAN:
-                return "rich purple";
-            case SP_PALE_DRACONIAN:
-                return "pale cyan-grey";
-            case SP_BASE_DRACONIAN:
-                return "plain brown";
-            default:
-                return "";
-        }
-    }
-
     monster_type dragon_form(species_type s)
     {
         switch (s)
@@ -298,15 +270,10 @@ namespace species
         return species == SP_GARGOYLE || species == SP_DJINNI;
     }
 
-    bool can_swim(species_type species)
-    {
-        return get_species_def(species).habitat == HT_WATER;
-    }
-
     bool likes_water(species_type species)
     {
-        return can_swim(species)
-               || get_species_def(species).habitat == HT_AMPHIBIOUS;
+        const species_def& spdef = get_species_def(species);
+        return spdef.habitat == HT_AMPHIBIOUS || spdef.habitat == HT_WATER;
     }
 
     size_type size(species_type species, size_part_type psize)
@@ -525,11 +492,6 @@ namespace species
             break;
         }
         // remaining should be armour only
-        if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_OFFHAND)
-            return true;
-
-        if (is_draconian(species) && eq == EQ_BODY_ARMOUR)
-            return true;
 
         // for everything else that is handled by mutations, including felid
         // restrictions, see item-use.cc::can_wear_armour. (TODO: move more of the

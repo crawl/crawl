@@ -77,14 +77,16 @@ struct demon_mutation_info
 
 enum class mutflag
 {
-    good    = 1 << 0, // used by benemut etc
-    bad     = 1 << 1, // used by malmut etc
-    jiyva   = 1 << 2, // jiyva-only muts
-    qazlal  = 1 << 3, // qazlal wrath
+    good      = 1 << 0, // good muts given by potions/Xom etc
+    bad       = 1 << 1, // used by malmutate etc
+    draconian = 1 << 2, // draconian muts not suppressed by dragon form
+    racial_ac = 1 << 3, // gives racial AC that increases with XL
+    jiyva     = 1 << 4, // jiyva-only muts
+    qazlal    = 1 << 5, // qazlal wrath
 
-    last    = qazlal
+    last      = qazlal
 };
-DEF_BITFIELD(mutflags, mutflag, 3);
+DEF_BITFIELD(mutflags, mutflag, 5);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
@@ -330,20 +332,15 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     // First make sure the player's form permits the mutation.
     if (!form_keeps_mutations())
     {
-        if (you.form == transformation::dragon)
+        // Draconians' innate muts get special treatment in dragon form.
+        // XXX: Green draconians get to keep any level of MUT_STINGER
+        // but other draconians don't keep this mut if they got it randomly.
+        if (you.form == transformation::dragon
+            && species::is_draconian(you.species)
+            && _mut_has_use(_get_mutation_def(mut), mutflag::draconian)
+            && you.has_innate_mutation(mut))
         {
-            monster_type drag = species::dragon_form(you.species);
-            if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
-                return mutation_activity_type::FULL;
-            if ((mut == MUT_ACIDIC_BITE || mut == MUT_ACID_RESISTANCE)
-                && drag == MONS_GOLDEN_DRAGON)
-            {
-                return mutation_activity_type::FULL;
-            }
-            if (mut == MUT_STINGER && drag == MONS_SWAMP_DRAGON)
-                return mutation_activity_type::FULL;
-            if (mut == MUT_STEAM_RESISTANCE && drag == MONS_STEAM_DRAGON)
-                return mutation_activity_type::FULL;
+            return mutation_activity_type::FULL;
         }
         // Vampire bats keep their fangs.
         if (you.form == transformation::bat
@@ -463,13 +460,6 @@ static string _annotate_form_based(string desc, bool suppressed, bool terse=fals
     return _innatemut(desc, terse);
 }
 
-static string _dragon_abil(string desc, bool terse=false)
-{
-    const bool supp = form_changed_physiology()
-                            && you.form != transformation::dragon;
-    return _annotate_form_based(desc, supp, terse);
-}
-
 tileidx_t get_mutation_tile(mutation_type mut)
 {
     return _get_mutation_def(mut).tile;
@@ -579,6 +569,23 @@ int player::get_mutation_level(mutation_type mut, bool check_form) const
 bool player::has_mutation(mutation_type mut, bool check_form) const
 {
     return get_mutation_level(mut, check_form) > 0;
+}
+
+/*
+ * Does the player have a mutation that gives them AC increasing with XL?
+ * Returns NUM_MUTATIONS if not.
+ */
+mutation_type player::get_racial_ac_mutation(bool check_form) const
+{
+    for (const mutation_def& mdef : mut_data)
+    {
+        if (_mut_has_use(mdef, mutflag::racial_ac)
+            && you.has_mutation(mdef.mutation, check_form))
+        {
+            return mdef.mutation;
+        }
+    }
+    return NUM_MUTATIONS;
 }
 
 /*
@@ -732,8 +739,7 @@ static vector<string> _get_form_fakemuts(bool terse)
             result.push_back(terse
                 ? "breathe fire" : _formmut("You can breathe fire."));
         }
-        else if (!terse
-            && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
+        else if (!terse) // all non-base draconians
         {
             result.push_back(
                 _formmut("Your breath weapon is enhanced in this form."));
@@ -764,7 +770,7 @@ static vector<string> _get_form_fakemuts(bool terse)
 
     // immunity comes from form
     if (!terse && player_res_poison(false, true, false) == 3
-        && !player_res_poison(false, false, false))
+        && player_res_poison(false, false, false) != 3)
     {
         // wispform has a fakemut that prints something more general
         if (you.form != transformation::wisp)
@@ -853,47 +859,7 @@ static vector<string> _get_fakemuts(bool terse)
 
     // Innate abilities which haven't been implemented as mutations yet.
     for (const string& str : species::fake_mutations(you.species, terse))
-    {
-        if (species::is_draconian(you.species))
-            result.push_back(_dragon_abil(str, terse));
-        else
-            result.push_back(_innatemut(str, terse));
-    }
-
-    if (you.racial_ac(false) > 0)
-    {
-        const int ac = you.racial_ac(false) / 100;
-        if (terse)
-            result.push_back("AC +" + to_string(ac));
-        else
-        {
-            // XX generalize this code somehow?
-            const string scale_clause = string(species::scale_type(you.species))
-                  + " scales are "
-                  + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
-
-            result.push_back(_annotate_form_based(
-                        make_stringf("Your %s. (AC +%d)", you.species == SP_NAGA
-                                            ? "serpentine skin is tough"
-                                            : you.species == SP_GARGOYLE
-                                            ? "stone body is resilient"
-                                            : scale_clause.c_str(),
-                           ac),
-                        player_is_shapechanged()
-                        && !(species::is_draconian(you.species)
-                             && you.form == transformation::dragon)));
-        }
-    }
-
-    // player::can_swim includes other cases, e.g. extra-balanced species that
-    // are not truly amphibious. Mertail has its own description that implies
-    // amphibiousness.
-    if (species::can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
-    {
-        result.push_back(_annotate_form_based(
-                    terse ? "amphibious" : "You are amphibious.",
-                    !form_can_swim(), terse));
-    }
+        result.push_back(_innatemut(str, terse));
 
     if (species::arm_count(you.species) > 2)
     {
@@ -945,13 +911,6 @@ static vector<string> _get_fakemuts(bool terse)
     default: // no giant species
         break;
     }
-    // Could move this into species-data, but then the hack that assumes
-    // _dragon_abil should get called on all draconian fake muts would break.
-    if (species::is_draconian(you.species))
-    {
-        armour_mut = terse ? "unfitting armour"
-            : "You cannot fit into any form of body armour.";
-    }
     if (!weapon_mut.empty() && !you.has_mutation(MUT_NO_GRASPING))
         result.push_back(_innatemut(weapon_mut, terse));
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
@@ -974,13 +933,11 @@ static vector<string> _get_fakemuts(bool terse)
                 _formmut("You are frail without blood (-20% HP)."));
             result.push_back(
                 _formmut("You can heal yourself when you bite living creatures."));
-            // XX automatically color this green somehow? Handled below more
-            // generally for non-vampires
+            // XX automatically color this green somehow?
+            // Non-vampires get a mutation.
             result.push_back(_formmut("You are immune to poison."));
         }
     }
-    else if (!terse && player_res_poison(false, false, false) == 3)
-        result.push_back(_innatemut("You are immune to poison."));
 
     return result;
 }
@@ -2135,7 +2092,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     you.attribute[ATTR_TEMP_MUT_XP] = 0;
             }
             you.mutation[mutat]--;
-            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
+            mprf(MSGCH_INTRINSIC_GAIN, "Your mutations feel more permanent.");
             take_note(Note(NOTE_PERM_MUTATION, mutat,
                     you.get_base_mutation_level(mutat), reason.c_str()));
             gain_msg = false;
@@ -2232,7 +2189,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         notify_stat_change();
 
         if (gain_msg)
-            mprf(MSGCH_MUTATION, "%s", mdef.gain[cur_base_level - 1]);
+        {
+            mprf(mutclass == MUTCLASS_INNATE ? MSGCH_INTRINSIC_GAIN
+                                             : MSGCH_MUTATION,
+                 "%s", mdef.gain[cur_base_level - 1]);
+        }
 
         // Do post-mutation effects.
         switch (mutat)
@@ -2817,7 +2778,13 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     {
         level = min(level, 2);
     }
-    if (mut == MUT_ICEMAIL)
+    if (_mut_has_use(mdef, mutflag::racial_ac))
+    {
+        ostringstream ostr;
+        ostr << mdef.have[0] << you.racial_ac(false) / 100 << ")";
+        result = ostr.str();
+    }
+    else if (mut == MUT_ICEMAIL)
     {
         ostringstream ostr;
         ostr << mdef.have[0] << player_icemail_armour_class() << ")";

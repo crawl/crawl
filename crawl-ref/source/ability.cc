@@ -3874,9 +3874,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return count(god_abils.begin(), god_abils.end(), abil);
     }
 
-    if (species::draconian_breath(you.species) == abil)
-        return draconian_dragon_exception();
-
     switch (abil)
     {
 #if TAG_MAJOR_VERSION == 34
@@ -3892,10 +3889,34 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
+    // Breath weapons - note player::has_mutation already accounts for
+    // dragon form draconians
+    case ABIL_COMBUSTION_BREATH:
+        return you.has_mutation(MUT_DRAC_COMBUSTION_BREATH);
+    case ABIL_GLACIAL_BREATH:
+        return you.has_mutation(MUT_DRAC_GLACIAL_BREATH);
+    case ABIL_GALVANIC_BREATH:
+        return you.has_mutation(MUT_DRAC_GALVANIC_BREATH);
+    case ABIL_MUD_BREATH:
+        return you.has_mutation(MUT_DRAC_MUD_BREATH);
+    case ABIL_NOXIOUS_BREATH:
+        return you.has_mutation(MUT_DRAC_NOXIOUS_BREATH);
+    case ABIL_NULLIFYING_BREATH:
+        return you.has_mutation(MUT_DRAC_NULLIFYING_BREATH);
+    case ABIL_STEAM_BREATH:
+        return you.has_mutation(MUT_DRAC_STEAM_BREATH);
+    case ABIL_CAUSTIC_BREATH:
+        return you.has_mutation(MUT_DRAC_CAUSTIC_BREATH);
     case ABIL_BREATHE_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
+    case ABIL_BREATHE_FIRE:
+        // non-base draconians keep their special breaths above instead
+        return you.form == transformation::dragon
+               && (!species::is_draconian(you.species)
+                   || you.species == SP_BASE_DRACONIAN);
+    // Vampires
     case ABIL_REVIVIFY:
         return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
     case ABIL_EXSANGUINATE:
@@ -3904,10 +3925,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
                && !you.vampire_alive
                && you.form != transformation::bat;
-    case ABIL_BREATHE_FIRE:
-        // red draconian handled before the switch
-        return you.form == transformation::dragon
-               && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+    // Other innate abilities
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:

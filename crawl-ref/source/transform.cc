@@ -490,8 +490,8 @@ bool Form::player_can_swim() const
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
     return can_swim == FC_ENABLE
-           || species::can_swim(you.species)
-              && can_swim != FC_FORBID
+           || (you.has_mutation(MUT_AMPHIBIOUS)
+               || you.has_mutation(MUT_MERTAIL)) && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
 }
 
@@ -2147,13 +2147,6 @@ int form_base_movespeed(transformation tran)
         return 7;
     else
         return 10;
-}
-
-bool draconian_dragon_exception()
-{
-    return species::is_draconian(you.species)
-           && (you.form == transformation::dragon
-               || !form_changed_physiology());
 }
 
 transformation form_for_talisman(const item_def &talisman)

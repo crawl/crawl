@@ -39,7 +39,6 @@ namespace species
     monster_type to_mons_species(species_type species);
 
     monster_type dragon_form(species_type s);
-    const char* scale_type(species_type species);
     ability_type draconian_breath(species_type species);
     species_type random_draconian_colour();
 
@@ -51,7 +50,6 @@ namespace species
     bool wears_barding(species_type species);
     bool has_claws(species_type species);
     bool is_nonliving(species_type species);
-    bool can_swim(species_type species);
     bool likes_water(species_type species);
     size_type size(species_type species, size_part_type psize = PSIZE_TORSO);
 

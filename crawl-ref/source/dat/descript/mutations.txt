@@ -249,6 +249,12 @@ You resist poisons, toxins and other contaminants. This does not confer
 full immunity, but reduces your chances of being affected to roughly
 one-third what it would be otherwise.
 %%%%
+poison immunity mutation
+
+You are immune to poisons, toxins and other contaminants, including sickness,
+curare, clouds of foul pestilence, and the slowing and paralysing attacks of
+certain poisonous creatures.
+%%%%
 fire resistance mutation
 
 You resist heat. Each level of this mutation reduces the amount of damage taken
@@ -311,6 +317,12 @@ clarity mutation
 Your mind is exceptionally clear, preventing you from becoming confused,
 mesmerised, or supernaturally afraid. You also cannot become involuntarily
 enraged.
+%%%%
+permanent stasis mutation
+
+You live in a state of permanent stasis. You can never be hasted, swift, slow,
+berserk or paralysed, and you cannot teleport or blink. (Most divine abilities
+are unaffected.)
 %%%%
 sense surroundings mutation
 
@@ -566,7 +578,127 @@ flame cloud immunity mutation
 
 You are immune to clouds of flame.
 %%%%
+# ------ Draconian scales and breath mutations -----
+plain brown scales mutation
+
+You are covered in plain brown scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels. Upon gaining experience level 7, your scales
+and aptitudes will take on a colour, dependent on your genetic ancestry alone,
+and you will gain the ability to breathe at your enemies.
+%%%%
+fiery red scales mutation
+
+You are covered in fiery red scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+icy white scales mutation
+
+You are covered in icy white scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+glossy black scales mutation
+
+You are covered in glossy black scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+dull iron-grey scales mutation
+
+You are covered in dull iron-grey scales, providing you with protection
+which increases as you level up. You begin with 4 AC, and gain an additional
+1 AC for every three experience levels. Your scales are particularly hard,
+giving you a further 5 AC.
+%%%%
+lurid green scales mutation
+
+You are covered in lurid green scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+rich purple scales mutation
+
+You are covered in rich purple scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels. Your innate willpower is doubled.
+%%%%
+pale cyan-grey scales mutation
+
+You are covered in pale cyan-grey scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+golden yellow scales mutation
+
+You are covered in golden yellow scales, providing you with protection which
+increases as you level up. You begin with 4 AC, and gain an additional 1 AC for
+every three experience levels.
+%%%%
+combustion breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe blasts of volatile
+embers that explode violently around each creature they touch. Your breath
+recharges as you gain experience, up to a maximum of three charges.
+%%%%
+glacial breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to exhale a powerful wave of
+frost which encases anything it kills in a solid block of durable ice. Your
+breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
+nullifying breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a large blast of
+pure antimagic that will dispel magical effects and significantly interfere with
+the spellcasting ability of anything it touches. Your breath recharges as you
+gain experience, up to a maximum of three charges.
+%%%%
+steam breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a powerful blast of
+steam, scalding a target and leaving sight-obscuring steam clouds in its wake.
+Your breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
+galvanic breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to exhale a charged burst of
+electricity that will arc through a target and every other creature that is
+connected to it. Your breath recharges as you gain experience, up to a maximum
+of three charges.
+%%%%
+mud breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to spits an enormous ball of
+mud that knocks back whatever it hits and drenches the surrounding area in mud,
+impeding enemy movement and causing them to sometimes fumble their attacks.
+Your breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
+caustic breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a spray of
+concentrated acid which leaves corrosive clouds on any unoccupied tiles it
+passes over and corrodes whatever it hits. Your breath recharges as you gain
+experience, up to a maximum of three charges.
+%%%%
+noxious breath mutation
+
+You can use <input>$cmd[CMD_USE_ABILITY]</input> to breathe a line of noxious
+vapour which can confuse anything standing in it which does not resist poison.
+Your breath recharges as you gain experience, up to a maximum of three charges.
+%%%%
 # ------ Other species-specific mutations -----
+tough serpentine skin mutation
+
+Your serpentine skin is tough, providing you with protection which increases as
+you level up. You gain 1 AC for every three experience levels.
+%%%%
+resilient stone body mutation
+
+Your stone body is highly resilient, providing you with protection which
+increases dramatically as you gain experience, up to a maximum of 20 AC.
+%%%%
 spit poison mutation
 
 You can spit poison with <input>$cmd[CMD_USE_ABILITY]</input>. The second level
@@ -645,6 +777,15 @@ stealthy paws mutation
 
 When launching attacks on unaware or incapacitated enemies, you inflict extra
 damage in the same way as a human with a short blade might.
+%%%%
+dig shafts and tunnels mutation
+
+You have strong, extendible mandibles, allowing you to dig through rock walls
+with <input>$cmd[CMD_USE_ABILITY]</input> at the cost of temporarily draining
+your max HP by a small amount per wall. You can even dig through the floor,
+landing in a random position one to three floors deeper, though this takes
+some time. Your tunneller's instincts prevent you from accidentally falling into
+natural shafts.
 %%%%
 four strong arms mutation
 
@@ -731,6 +872,33 @@ You have a powerful nose adapted to the Dungeon's scents, allowing you to
 detect where treasures lay hidden. As you explore the dungeon, nearby item
 locations that you cannot directly see will gain a marker for
 as-yet-undiscovered items.
+%%%%
+amphibious mutation
+
+You can swim through shallow and deep water unimpeded, and without any
+movement or attack penalty.
+%%%%
+no potions mutation
+
+You are unable to quaff potions.
+%%%%
+no weapons or thrown items mutation
+
+You are incapable of wielding weapons or throwing items.
+%%%%
+no armour mutation
+
+You cannot wear armour.
+%%%%
+almost no armour mutation
+
+You are unable to wear most types of armour. You can still wear hats on your
+mantle, and your tentacles are able to hold shields and orbs.
+%%%%
+no body armour mutation
+
+You cannot wear body armour over your wings and scales, and you cannot wear
+helmets over your reptilian head.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
@@ -929,18 +1097,6 @@ missing an eye mutation
 
 You are missing an eye, reducing the accuracy of your physical and magical
 attacks.
-%%%%
-no potions mutation
-
-You are unable to quaff potions.
-%%%%
-no weapons or thrown items mutation
-
-You are incapable of wielding weapons or throwing items.
-%%%%
-no armour mutation
-
-You cannot wear armour.
 %%%%
 # ------ Skill suppression ------
 # skills go in, skills go out. Can't explain that!

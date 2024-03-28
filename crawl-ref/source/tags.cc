@@ -3484,6 +3484,35 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
     SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
     SP_MUT_FIX(MUT_DRUNKEN_BRAWLING, SP_ONI);
+    SP_MUT_FIX(MUT_DIGGING, SP_FORMICID);
+    SP_MUT_FIX(MUT_STASIS, SP_FORMICID);
+    SP_MUT_FIX(MUT_ALMOST_NO_ARMOUR, SP_OCTOPODE);
+    SP_MUT_FIX(MUT_DRAC_BROWN_SCALES, SP_BASE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_BROWN_SCALES, SP_MOTTLED_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_RED_SCALES, SP_RED_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_WHITE_SCALES, SP_WHITE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_BLACK_SCALES, SP_BLACK_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_GREY_SCALES, SP_GREY_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_GREEN_SCALES, SP_GREEN_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_PURPLE_SCALES, SP_PURPLE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_PALE_SCALES, SP_PALE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_YELLOW_SCALES, SP_YELLOW_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_COMBUSTION_BREATH, SP_RED_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_GLACIAL_BREATH, SP_WHITE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_GALVANIC_BREATH, SP_BLACK_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_MUD_BREATH, SP_GREY_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_NOXIOUS_BREATH, SP_GREEN_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_NULLIFYING_BREATH, SP_PURPLE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_STEAM_BREATH, SP_PALE_DRACONIAN);
+    SP_MUT_FIX(MUT_DRAC_CAUSTIC_BREATH, SP_YELLOW_DRACONIAN);
+    SP_MUT_FIX(MUT_STONE_BODY, SP_GARGOYLE);
+    SP_MUT_FIX(MUT_SERPENTINE_SKIN, SP_NAGA);
+
+    if (species::likes_water(you.species))
+        _fixup_species_mutations(MUT_AMPHIBIOUS);
+
+    if (species::is_draconian(you.species))
+        _fixup_species_mutations(MUT_NO_BODY_ARMOUR);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
@@ -3491,11 +3520,12 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
     }
     if (you.species == SP_GARGOYLE || you.species == SP_MUMMY
-        || you.species == SP_GHOUL)
+        || you.species == SP_GHOUL || you.species == SP_DJINNI)
     {
         // not safe for SP_MUT_FIX because demonspawn use this and it doesn't
         // handle ds muts
         _fixup_species_mutations(MUT_TORMENT_RESISTANCE);
+        _fixup_species_mutations(MUT_POISON_IMMUNITY);
     }
     if (you.species == SP_MUMMY)
     {
