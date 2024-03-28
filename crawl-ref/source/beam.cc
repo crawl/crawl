@@ -659,6 +659,14 @@ static beam_type _chaos_beam_flavour(bolt* beam)
     return flavour;
 }
 
+dice_def combustion_breath_damage(int pow, bool allow_random)
+{
+    if (allow_random)
+        return dice_def(3, 3 + div_rand_round(pow * 2, 3));
+    else
+        return dice_def(3, 3 + pow * 2 / 3);
+}
+
 static void _combustion_breath_explode(bolt *parent, coord_def pos)
 {
     bolt beam;
@@ -666,7 +674,7 @@ static void _combustion_breath_explode(bolt *parent, coord_def pos)
     bolt_parent_init(*parent, beam);
     beam.name         = "fiery explosion";
     beam.aux_source   = "combustion breath";
-    beam.damage       = dice_def(3, 3 + div_rand_round(parent->ench_power * 2, 3));
+    beam.damage       = combustion_breath_damage(parent->ench_power);
     beam.colour       = RED;
     beam.flavour      = BEAM_FIRE;
     beam.is_explosion = true;

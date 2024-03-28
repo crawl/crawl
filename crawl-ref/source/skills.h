@@ -129,7 +129,7 @@ int elemental_preference(spell_type spell, int scale = 1);
 
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);
-int skill_bump(skill_type skill, int scale = 1);
+int skill_bump(skill_type skill, int scale = 1, bool allow_random = true);
 void fixup_skills();
 
 bool target_met(skill_type sk);

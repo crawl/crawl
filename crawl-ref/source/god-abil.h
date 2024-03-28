@@ -11,6 +11,7 @@
 #include "god-type.h"
 #include "item-prop-enum.h" // brand_type
 #include "los-type.h"
+#include "random.h"
 #include "recite-eligibility.h"
 #include "recite-type.h"
 #include "spl-cast.h"
@@ -134,6 +135,8 @@ void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
+int slouch_damage_formula(int mon_speed = 10, int mon_energy_usage = 10,
+                          int jerk_num = 1, int jerk_denom = 1);
 spret cheibriados_slouch(bool fail);
 void cheibriados_time_step(int pow);
 
@@ -170,6 +173,7 @@ void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
+dice_def qazlal_upheaval_damage(bool allow_random = true);
 spret qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false, dist *player_target=nullptr);
 vector<coord_def> find_elemental_targets();
@@ -188,11 +192,14 @@ void ru_reset_sacrifice_timer(bool clear_timer = false,
 bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
+dice_def ru_power_leap_damage(bool allow_random = true);
 bool ru_power_leap();
 int cell_has_valid_target(coord_def where);
+int apocalypse_die_size(bool allow_random = true);
 bool ru_apocalypse();
 string ru_sacrifice_vector(ability_type sac);
 
+dice_def uskayaw_stomp_extra_damage(bool allow_random = true);
 bool uskayaw_stomp();
 bool uskayaw_line_pass();
 spret uskayaw_grand_finale(bool fail);

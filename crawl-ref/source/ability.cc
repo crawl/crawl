@@ -724,6 +724,18 @@ static vector<ability_def> &_get_ability_list()
     return Ability_List;
 }
 
+static map<ability_type, spell_type> breath_to_spell =
+    {
+        { ABIL_COMBUSTION_BREATH, SPELL_COMBUSTION_BREATH },
+        { ABIL_GLACIAL_BREATH, SPELL_GLACIAL_BREATH },
+        { ABIL_NULLIFYING_BREATH, SPELL_NULLIFYING_BREATH },
+        { ABIL_STEAM_BREATH, SPELL_STEAM_BREATH },
+        { ABIL_NOXIOUS_BREATH, SPELL_NOXIOUS_BREATH },
+        { ABIL_CAUSTIC_BREATH, SPELL_CAUSTIC_BREATH },
+        { ABIL_MUD_BREATH, SPELL_MUD_BREATH },
+        { ABIL_GALVANIC_BREATH, SPELL_GALVANIC_BREATH },
+    };
+
 static const ability_def& get_ability_def(ability_type abil)
 {
     for (const ability_def &ab_def : _get_ability_list())
@@ -772,12 +784,8 @@ static int _ability_zap_pow(ability_type abil)
     {
         case ABIL_SPIT_POISON:
             return 10 + you.experience_level;
-        case ABIL_CAUSTIC_BREATH:
         case ABIL_BREATHE_FIRE:
-        case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
-        case ABIL_NULLIFYING_BREATH:
-        case ABIL_NOXIOUS_BREATH:
             return you.form == transformation::dragon
                                  ? 2 * you.experience_level
                                  : you.experience_level;
@@ -1349,6 +1357,125 @@ static string _nemelex_desc(ability_type ability)
     return desc.str();
 }
 
+static int _tso_cleansing_flame_power(bool allow_random = true)
+{
+    return allow_random ? 10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6)
+                        : 10 + you.skill(SK_INVOCATIONS, 7) / 6;
+}
+
+static int _yred_hurl_torchlight_power()
+{
+    return 12 + you.skill(SK_INVOCATIONS, 4);
+}
+
+static int _beogh_smiting_power(bool allow_random = true)
+{
+    return 12 + skill_bump(SK_INVOCATIONS, 6, allow_random);
+}
+
+static int _hurl_damnation_power()
+{
+    return 40 + you.experience_level * 6;
+}
+
+static int _blinkbolt_power()
+{
+    return get_form()->get_level(200) / 27;
+}
+
+static int _orb_of_dispater_power();
+
+// XXX This is a mess, caused by abilities doing damage via various
+// different in-house and outsourced methods.
+static string _ability_damage_string(ability_type ability)
+{
+    // TODO The following abilities have effects that would be nice to show
+    //      but which don't fit neatly into the "Damage: dice" format.
+    // Chei: temporal distortion, step from time
+    // Elyvilon: heal other, heal self, divine vigour
+    // Fedhas: ballistomycete, oklob
+    // Hep: idealise
+    // Ignis: fiery armour
+    // Kiku: unearth wretches
+    // Makhleb: minor destruction, major destruction
+    // Ru: draw out power
+    // Yred: fathomless shackles
+    // Zin: vitalisation
+    // TSO: divine shield
+
+    dice_def dam;
+
+    switch (ability)
+    {
+        case ABIL_YRED_HURL_TORCHLIGHT:
+            return spell_damage_string(SPELL_HURL_TORCHLIGHT, false,
+                                       _yred_hurl_torchlight_power());
+        case ABIL_BEOGH_SMITING:
+            dam = beogh_smiting_dice(_beogh_smiting_power(false), false);
+            return make_stringf("6 + %dd%d", dam.num, dam.size);
+        case ABIL_TSO_CLEANSING_FLAME:
+            return make_stringf("2d%d*", _tso_cleansing_flame_power(false));
+        case ABIL_CHEIBRIADOS_SLOUCH:
+            // Display damage against normal-speed monsters
+            // Perhaps "about %d" would be better?
+            return make_stringf("%dd3/2*", slouch_damage_formula());
+        case ABIL_IGNIS_FOXFIRE:
+            return "1d8/foxfire"; // constant
+        case ABIL_QAZLAL_UPHEAVAL:
+            dam = qazlal_upheaval_damage(false);
+            break;
+        case ABIL_QAZLAL_DISASTER_AREA:
+            dam = qazlal_upheaval_damage(false);
+            return make_stringf("%dd%d/upheaval", dam.num, dam.size);
+        case ABIL_RU_POWER_LEAP:
+            dam = ru_power_leap_damage(false);
+            break;
+        case ABIL_RU_APOCALYPSE:
+            // Apocalypse uses 4 dice, 6 dice or 8 dice depending on the effect.
+            return make_stringf("10 + (4-8)d%d", apocalypse_die_size(false));
+        case ABIL_JIYVA_OOZEMANCY:
+            // per turn damage is 2d(3*#walls)
+            return "2d(3-24)";
+        case ABIL_USKAYAW_STOMP:
+            dam = uskayaw_stomp_extra_damage(false);
+            return make_stringf("%dd%d + 1/6 of current HP",
+                                dam.num, dam.size);
+        case ABIL_USKAYAW_GRAND_FINALE: // infinity
+            return Options.char_set == CSET_ASCII ? "death" : "\u221e";
+        case ABIL_DAMNATION:
+            return spell_damage_string(SPELL_HURL_DAMNATION, false,
+                                       _hurl_damnation_power());
+        case ABIL_EVOKE_DISPATER:
+            return spell_damage_string(SPELL_HURL_DAMNATION, true,
+                                       _orb_of_dispater_power());
+        case ABIL_SPIT_POISON:
+        case ABIL_BREATHE_POISON:
+        case ABIL_BREATHE_FIRE:
+            dam = zap_damage(ability_to_zap(ability), _ability_zap_pow(ability),
+                             false, false);
+            break;
+        case ABIL_BLINKBOLT:
+            return spell_damage_string(SPELL_BLINKBOLT, false,
+                                       _blinkbolt_power());
+        case ABIL_COMBUSTION_BREATH:
+            dam = combustion_breath_damage(you.experience_level, false);
+            break;
+        case ABIL_MUD_BREATH:
+        case ABIL_GALVANIC_BREATH:
+        case ABIL_STEAM_BREATH:
+        case ABIL_GLACIAL_BREATH:
+        case ABIL_NULLIFYING_BREATH:
+        case ABIL_NOXIOUS_BREATH:
+        case ABIL_CAUSTIC_BREATH:
+            return spell_damage_string(breath_to_spell[ability], false,
+                                       you.experience_level);
+        default:
+            return "";
+    }
+
+    return make_stringf("%dd%d", dam.num, dam.size);
+}
+
 // XXX: should this be in describe.cc?
 string get_ability_desc(const ability_type ability, bool need_title)
 {
@@ -1377,10 +1504,16 @@ string get_ability_desc(const ability_type ability, bool need_title)
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
 
-    lookup += make_stringf("\nRange: %s\n",
-                           range_string(ability_range(ability),
-                                        ability_range(ability),
-                                        '@').c_str());
+    const string damage_str = _ability_damage_string(ability);
+
+    const string range_str = range_string(ability_range(ability),
+                                          ability_range(ability), '@');
+
+    lookup += "\n";
+
+    if (damage_str != "")
+        lookup += make_stringf("Damage: %s\n ", damage_str.c_str());
+    lookup += make_stringf("Range: %s\n", range_str.c_str());
 
     ostringstream res;
     if (need_title)
@@ -2630,9 +2763,14 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
+static int _orb_of_dispater_power()
+{
+    return you.skill(SK_EVOCATIONS, 8);
+}
+
 static bool _evoke_orb_of_dispater(dist *target)
 {
-    int power = you.skill(SK_EVOCATIONS, 8);
+    int power = _orb_of_dispater_power();
 
     if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
         == spret::abort)
@@ -2726,17 +2864,6 @@ static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fa
 {
     spret result = spret::abort;
 
-    static map<ability_type, spell_type> breath_to_spell =
-        {
-            { ABIL_COMBUSTION_BREATH, SPELL_COMBUSTION_BREATH },
-            { ABIL_GLACIAL_BREATH, SPELL_GLACIAL_BREATH },
-            { ABIL_NULLIFYING_BREATH, SPELL_NULLIFYING_BREATH },
-            { ABIL_STEAM_BREATH, SPELL_STEAM_BREATH },
-            { ABIL_NOXIOUS_BREATH, SPELL_NOXIOUS_BREATH },
-            { ABIL_CAUSTIC_BREATH, SPELL_CAUSTIC_BREATH },
-            { ABIL_MUD_BREATH, SPELL_MUD_BREATH },
-            { ABIL_GALVANIC_BREATH, SPELL_GALVANIC_BREATH },
-        };
     result = your_spells(breath_to_spell[abil.ability], you.experience_level,
                             false, nullptr, target, fail);
 
@@ -2887,7 +3014,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     // DEMONIC POWERS:
     case ABIL_DAMNATION:
-        return your_spells(SPELL_HURL_DAMNATION, 40 + you.experience_level * 6,
+        return your_spells(SPELL_HURL_DAMNATION, _hurl_damnation_power(),
                            false, nullptr, target, fail);
 
     case ABIL_WORD_OF_CHAOS:
@@ -2974,7 +3101,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             }
         }
         fail_check();
-        cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
+        cleansing_flame(_tso_cleansing_flame_power(),
                         cleansing_flame_source::invocation, you.pos(), &you);
         break;
     }
@@ -3027,7 +3154,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         int charges = yred_get_torch_power();
         spret result = your_spells(SPELL_HURL_TORCHLIGHT,
-                                   12 + you.skill(SK_INVOCATIONS, 4),
+                                   _yred_hurl_torchlight_power(),
                                    false, nullptr, target, fail);
 
         if (result == spret::success)
@@ -3328,7 +3455,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return deck_stack(fail);
 
     case ABIL_BEOGH_SMITING:
-        return your_spells(SPELL_SMITING, 12 + skill_bump(SK_INVOCATIONS, 6),
+        return your_spells(SPELL_SMITING, _beogh_smiting_power(),
                            false, nullptr, target, fail);
 
     case ABIL_BEOGH_RECALL_APOSTLES:
