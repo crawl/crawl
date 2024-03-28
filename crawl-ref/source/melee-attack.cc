@@ -298,6 +298,8 @@ bool melee_attack::handle_phase_dodged()
 
     maybe_trigger_jinxbite();
 
+    trigger_blooddrain();
+
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
@@ -583,6 +585,8 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    trigger_blooddrain();
 
     // Apply flux form's sfx.
     if (attacker->is_player() && you.form == transformation::flux
@@ -1200,6 +1204,9 @@ bool melee_attack::attack()
     if (shield_blocked)
     {
         handle_phase_blocked();
+        // don't put the following in handle_phase_blocked unless
+        // you want them to trigger on ranged blocks too
+        trigger_blooddrain();
         maybe_riposte();
         if (!attacker->alive())
         {
@@ -4112,8 +4119,9 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 {
     ASSERT(you.has_mutation(MUT_VAMPIRISM));
 
-    if (!_vamp_wants_blood_from_monster(mon) ||
-        (!adjacent(defender->pos(), attack_position) && needs_bite_msg))
+    if (!_vamp_wants_blood_from_monster(mon)
+        || (!adjacent(defender->pos(), attack_position) && needs_bite_msg)
+        || !you.has_fangs())
     {
         return false;
     }
@@ -4121,13 +4129,13 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && you.form != transformation::bat)
     {
-        mprf("You bite %s, and draw %s blood!",
+        mprf("You bite %s, and draw %s life force!",
              mon->name(DESC_THE, true).c_str(),
              mon->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
     else
     {
-        mprf("You draw %s blood!",
+        mprf("You draw %s life force!",
              apostrophise(mon->name(DESC_THE, true)).c_str());
     }
 
@@ -4146,6 +4154,9 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         }
     }
 
+    // Don't lose blood this turn
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+
     return true;
 }
 
@@ -4158,9 +4169,7 @@ bool melee_attack::apply_damage_brand(const char *what)
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     return you.has_mutation(MUT_VAMPIRISM)
-           && !you.vampire_alive
-           && actor_is_susceptible_to_vampirism(*mon)
-           && mons_has_blood(mon->type);
+           && actor_is_susceptible_to_vampirism(*mon, false, true);
 }
 
 string mut_aux_attack_desc(mutation_type mut)

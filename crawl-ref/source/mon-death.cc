@@ -2228,6 +2228,25 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Apply unrand effects.
     unrand_death_effects(&mons, killer);
 
+    // Vampire blood gaining
+    if (gives_player_xp && you.has_mutation(MUT_VAMPIRISM)
+        && (killer == KILL_YOU
+            || killer == KILL_YOU_MISSILE
+            || killer == KILL_YOU_CONF
+            || pet_kill))
+    {
+        // blooddrain if target wasn't already drained from this turn
+        if (you.vampire_alive && you.attribute[ATTR_VAMP_LAST_TARGET] != monster_killed)
+            attempt_blooddrain_hit(mons, true);
+
+        if (you.vampire_alive && actor_is_susceptible_to_vampirism(mons, false, true))
+        {
+            you.attribute[ATTR_VAMP_BLOOD] += 6 + random2(8);
+            you.attribute[ATTR_VAMP_BLOOD] = min(100, you.attribute[ATTR_VAMP_BLOOD]);
+            you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+        }
+    }
+
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.

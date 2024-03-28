@@ -161,6 +161,7 @@ protected:
     void drain_defender();
     void drain_defender_speed();
     void maybe_trigger_jinxbite();
+    void trigger_blooddrain();
     void maybe_trigger_fugue_wail(const coord_def pos);
     void maybe_trigger_autodazzler();
 

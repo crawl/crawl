@@ -1273,9 +1273,11 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_VAMPIRISM:
     {
+        const bool include_demonic = attacker->is_player() && you.has_mutation(MUT_VAMPIRISM);
+
         if (!weapon
             || damage_done < 1
-            || !actor_is_susceptible_to_vampirism(*defender)
+            || !actor_is_susceptible_to_vampirism(*defender, false, include_demonic)
             || attacker->stat_hp() == attacker->stat_maxhp()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || x_chance_in_y(2, 5)
@@ -1286,7 +1288,9 @@ bool attack::apply_damage_brand(const char *what)
 
         int hp_boost = is_unrandom_artefact(*weapon, UNRAND_VAMPIRES_TOOTH)
                        ? damage_done : 1 + random2(damage_done);
-        hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
+
+        if (!include_demonic)
+            hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
 
         if (hp_boost)
         {
@@ -1600,6 +1604,15 @@ void attack::maybe_trigger_jinxbite()
 {
     if (attacker->is_player() && you.duration[DUR_JINXBITE])
         jinxbite_fineff::schedule(defender);
+}
+
+void attack::trigger_blooddrain()
+{
+    if (attacker->is_player() && you.has_mutation(MUT_VAMPIRISM)
+        && you.vampire_alive)
+    {
+        attempt_blooddrain_hit(*defender);
+    }
 }
 
 void attack::maybe_trigger_fugue_wail(const coord_def pos)

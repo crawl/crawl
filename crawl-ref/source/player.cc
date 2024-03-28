@@ -1254,8 +1254,7 @@ bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || you.duration[DUR_COLLAPSE]
-        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
+        || you.duration[DUR_COLLAPSE])
     {
         if (m)
             return _mons_inhibits_regen(*m);
@@ -1268,7 +1267,8 @@ bool regeneration_is_inhibited(const monster *m)
     return false;
 }
 
-int player_regen()
+// Regeneration before anti regen / divine effects
+int player_normal_regen()
 {
     // Note: if some condition can set rr = 0, can't be rested off, and
     // would allow travel, please update is_sufficiently_rested.
@@ -1282,9 +1282,15 @@ int player_regen()
     // to heal.
     rr = max(1, rr);
 
-    // Bonus regeneration for alive vampires.
-    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
-        rr += 20;
+    return rr;
+}
+
+int player_regen()
+{
+    // Note: if some condition can set rr = 0, can't be rested off, and
+    // would allow travel, please update is_sufficiently_rested.
+
+    int rr = player_normal_regen();
 
     if (you.duration[DUR_SICKNESS]
         || !player_regenerates_hp())
@@ -1343,6 +1349,12 @@ int player_mp_regen()
     {
         // We use piety rank to avoid leaking piety info to the player.
         regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
+    }
+
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+    {
+        // Bloodcrazed vampires gain part of their health regen as mp regen
+        regen_amount += player_normal_regen() / 2;
     }
 
     return regen_amount;
@@ -1483,7 +1495,7 @@ int player_res_cold(bool allow_random, bool temp, bool items)
 
         // XX temp?
         if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-            rc += 2;
+            rc++;
     }
 
     rc += cur_form(temp)->res_cold();
@@ -1925,6 +1937,9 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
+    //vampire alive makes you faster if not suppressed by chei
+    else if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+        mv -= 3;
 
     if (temp && you.duration[DUR_FROZEN])
         mv += 3;
@@ -2616,6 +2631,40 @@ static void _handle_god_wrath(int exp)
     }
 }
 
+/// update vampire blood
+static void _handle_vamp_blood(int exp)
+{
+    // blood gain while alive doesn't use xp
+    if (you.attribute[ATTR_VAMP_BLOOD] >= 100 || you.vampire_alive
+        || !you.has_mutation(MUT_VAMPIRISM))
+    {
+        return;
+    }
+
+    you.attribute[ATTR_VAMP_BLOOD_XP] -= exp;
+
+    const int xpreq = (exp_needed(you.experience_level + 1)
+             - exp_needed(you.experience_level)) / 200;
+
+    // gain a maximum of x blood per kill to make revivify
+    // not immediately available at low xl
+    int max_gain = 4;
+    while (max_gain > 0 && you.attribute[ATTR_VAMP_BLOOD] < 100
+        && you.attribute[ATTR_VAMP_BLOOD_XP] <= 0)
+    {
+        max_gain --;
+        you.attribute[ATTR_VAMP_BLOOD]++;
+        you.attribute[ATTR_VAMP_BLOOD_XP] += xpreq;
+
+        if (you.attribute[ATTR_VAMP_BLOOD] == 100)
+            mpr("You have enough blood to revivify.");
+    }
+
+    //excess exp is stored up to the amount needed for 1 blood
+    you.attribute[ATTR_VAMP_BLOOD_XP] = max(-xpreq,
+        you.attribute[ATTR_VAMP_BLOOD_XP]);
+}
+
 unsigned int gain_exp(unsigned int exp_gained)
 {
     if (crawl_state.game_is_arena())
@@ -2660,6 +2709,7 @@ void apply_exp()
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
     _handle_breath_recharge(skill_xp);
+    _handle_vamp_blood(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -3275,7 +3325,7 @@ int player_stealth()
 
     // Bloodless vampires are stealthier.
     if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-        stealth += STEALTH_PIP * 2;
+        stealth += STEALTH_PIP;
 
     if (feat_is_water(env.grid(you.pos())))
     {
@@ -3373,13 +3423,19 @@ static void _display_vampire_status()
     if (!you.vampire_alive)
     {
         attrib.push_back("are immune to poison");
-        attrib.push_back("significantly resist cold");
+        attrib.push_back("resist cold");
         attrib.push_back("are immune to negative energy");
         attrib.push_back("resist torment");
-        attrib.push_back("do not heal with monsters in sight.");
     }
     else
-        attrib.push_back("heal quickly.");
+    {
+        attrib.push_back("do not regenerate");
+        attrib.push_back("drain life from creatures you attack");
+        attrib.push_back("sense creatures from afar");
+
+        if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
+            attrib.push_back("cover ground very quickly");
+    }
 
     if (!attrib.empty())
     {
@@ -4125,8 +4181,7 @@ int get_real_hp(bool trans, bool drained)
                 + (you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (you.get_mutation_level(MUT_FRAIL) * 10)
-                - (hep_frail ? 10 : 0)
-                - (!you.vampire_alive ? 20 : 0);
+                - (hep_frail ? 10 : 0);
 
     hitp /= 100;
 
@@ -4205,6 +4260,7 @@ int get_real_mp(bool include_items)
 bool player_regenerates_hp()
 {
     return !regeneration_is_inhibited()
+    && !(you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
 #if TAG_MAJOR_VERSION == 34
     && !you.has_mutation(MUT_NO_REGENERATION)
 #endif
@@ -5437,7 +5493,7 @@ player::player()
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;
-    vampire_alive = true;
+    vampire_alive = false;
 
     pet_target      = MHITNOT;
 
@@ -7702,7 +7758,7 @@ bool player::is_lifeless_undead(bool temp) const
 
 bool player::can_polymorph() const
 {
-    return !(transform_uncancellable || is_lifeless_undead());
+    return !(transform_uncancellable || undead_state() == US_UNDEAD);
 }
 
 bool player::can_bleed(bool temp) const
@@ -8327,6 +8383,9 @@ static string _constriction_description()
 **/
 int player_monster_detect_radius()
 {
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+        return 12;
+
     int radius = you.get_mutation_level(MUT_ANTENNAE) * 2;
 
     if (player_equip_unrand(UNRAND_HOOD_ASSASSIN))
@@ -8996,7 +9055,7 @@ bool player::immune_to_hex(const spell_type hex) const
         return res_petrify();
     case SPELL_POLYMORPH:
     case SPELL_PORKALATOR:
-        return is_lifeless_undead();
+        return undead_state() == US_UNDEAD;
     case SPELL_VIRULENCE:
         return res_poison() == 3;
     // don't include the hidden "sleep immunity" duration

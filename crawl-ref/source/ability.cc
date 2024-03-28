@@ -20,6 +20,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cleansing-flame-source-type.h"
@@ -356,7 +357,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_TRAN_BAT, "Bat Form",
             2, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
         { ABIL_EXSANGUINATE, "Exsanguinate",
-            0, 0, 0, -1, {}, abflag::delay},
+            0, 0, 0, -1, {}, abflag::none},
         { ABIL_REVIVIFY, "Revivify",
             0, 0, 0, -1, {}, abflag::delay},
         { ABIL_DAMNATION, "Hurl Damnation",
@@ -909,9 +910,6 @@ const string make_cost_description(ability_type ability)
                             VAMPIRE_BAT_FORM_STAT_DRAIN);
     }
 
-    if (ability == ABIL_REVIVIFY)
-        ret += ", Frailty";
-
     if (ability == ABIL_ASHENZARI_CURSE
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
     {
@@ -1401,21 +1399,7 @@ static void _print_talent_description(const talent& tal)
 
 void no_ability_msg()
 {
-    // Give messages if the character cannot use innate talents right now.
-    // * Vampires can't turn into bats when full of blood.
-    // * Tengu can't start to fly if already flying.
-    if (you.get_mutation_level(MUT_VAMPIRISM) >= 2)
-    {
-        if (you.transform_uncancellable)
-            mpr("You can't untransform!");
-        else
-        {
-            ASSERT(you.vampire_alive);
-            mpr("Sorry, you cannot become a bat while alive.");
-        }
-    }
-    else
-        mpr("Sorry, you're not good enough to have a special ability.");
+    mpr("Sorry, you're not good enough to have a special ability.");
 }
 
 // Prompts the user for an ability to use, first checking the lua hook
@@ -1723,6 +1707,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     switch (abil.ability)
     {
+    case ABIL_REVIVIFY:
+    {
+        if (you.attribute[ATTR_VAMP_BLOOD] < 100)
+        {
+            if (!quiet)
+                mpr("You don't have enough blood.");
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_ZIN_RECITE:
     {
         if (!zin_check_able_to_recite(quiet))
@@ -2630,6 +2625,99 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
+void vampire_exsanguinate(bool force_end)
+{
+    if (force_end)
+        blood_spray(you.pos(), MONS_JORY, you.attribute[ATTR_VAMP_BLOOD] / 2);
+
+    you.vampire_alive = false;
+    you.redraw_status_lights = true;
+    mpr("You feel anemic as the last of your blood leaves you.");
+
+    you.attribute[ATTR_VAMP_BLOOD] = 0;
+
+    you.increase_duration(DUR_WEAK,roll_dice(2, 12) + 12, 50);
+
+    //expel poison
+    you.duration[DUR_POISONING] = 0;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+}
+
+void vampire_revivify()
+{
+    you.vampire_alive = true;
+    you.redraw_status_lights = true;
+    mpr("Life gushes and overflows. You are reborn with a terrible thirst!");
+
+    //heal you for 20%-30% of your max health
+    const int healing = you.hp_max / 5 + random2(you.hp_max / 10);
+    inc_hp(healing);
+
+    you.props.erase(REVIVIFY_TURNS_KEY);
+
+    blood_spray(you.pos(), MONS_JORY, 20);
+
+    //don't lose blood the turn you transform
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+}
+
+void interrupt_revivify()
+{
+    if (you.props.exists(REVIVIFY_TURNS_KEY))
+    {
+        you.props.erase(REVIVIFY_TURNS_KEY);
+        mpr("You barely contain your bloodthirst.");
+    }
+}
+
+void vampire_revivify_progress()
+{
+    if (!you.has_mutation(MUT_VAMPIRISM))
+        return;
+
+    if (!you.props.exists(REVIVIFY_TURNS_KEY))
+        return;
+
+    const int revivify_turns_left = you.props[REVIVIFY_TURNS_KEY].get_int();
+
+    //interrupt the transformation if you do anything other than wait
+    //but not right after you start transforming
+    if (revivify_turns_left < 2 && crawl_state.prev_cmd != CMD_WAIT)
+    {
+        interrupt_revivify();
+        return;
+    }
+
+    switch (revivify_turns_left)
+    {
+    case 2:
+        {
+            mpr("A pulse ripples across your motionless veins.");
+            string msg = "(Press <w>%</w> to complete your transformation.)";
+            insert_commands(msg, { CMD_WAIT });
+            mpr(msg);
+            break;
+        }
+    case 1:
+        mpr("Warmth returns to your vessel as blood surges within.");
+        break;
+    case 0:
+        vampire_revivify();
+        return;
+    default:
+        break;
+    }
+
+    you.props[REVIVIFY_TURNS_KEY] = revivify_turns_left - 1;
+}
+
 static bool _evoke_orb_of_dispater(dist *target)
 {
     int power = you.skill(SK_EVOCATIONS, 8);
@@ -3380,11 +3468,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_EXSANGUINATE:
-        start_delay<ExsanguinateDelay>(5);
+        vampire_exsanguinate(true);
         break;
 
     case ABIL_REVIVIFY:
-        start_delay<RevivifyDelay>(5);
+        you.props[REVIVIFY_TURNS_KEY] = 2;
         break;
 
     case ABIL_JIYVA_SLIMIFY:
@@ -3900,10 +3988,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
     case ABIL_EXSANGUINATE:
         return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
-    case ABIL_TRAN_BAT:
-        return you.get_mutation_level(MUT_VAMPIRISM) >= 2
-               && !you.vampire_alive
-               && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon

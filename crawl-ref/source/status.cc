@@ -2,7 +2,7 @@
 
 #include "status.h"
 
-#include "ability.h"
+#include "ability.h" // REVIVIFY_TURNS_KEY
 #include "areas.h"
 #include "art-enum.h" // bearserk
 #include "artefact.h"
@@ -364,16 +364,24 @@ bool fill_status_info(int status, status_info& inf)
     case STATUS_ALIVE_STATE:
         if (you.has_mutation(MUT_VAMPIRISM))
         {
-            if (!you.vampire_alive)
+            const int vamp_blood = you.attribute[ATTR_VAMP_BLOOD];
+
+            if (you.props.exists(REVIVIFY_TURNS_KEY))
             {
                 inf.light_colour = LIGHTRED;
-                inf.light_text = "Bloodless";
-                inf.short_text = "bloodless";
+                inf.light_text   = make_stringf("Turning (%d%%)",
+                    you.props[REVIVIFY_TURNS_KEY].get_int() > 0 ? 33 : 66);
+            }
+            else if (!you.vampire_alive)
+            {
+                inf.light_colour = vamp_blood == 100 ? WHITE : LIGHTGRAY;
+                inf.light_text   = make_stringf("Bloodless (%d)", vamp_blood);
+                inf.short_text   = "bloodless";
             }
             else
             {
-                inf.light_colour = GREEN;
-                inf.light_text = "Alive";
+                inf.light_colour = RED;
+                inf.light_text   = make_stringf("Bloodcraze (%d)", vamp_blood);
             }
         }
         break;
@@ -1096,7 +1104,7 @@ static void _describe_transform(status_info& inf)
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description();
 
-    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
+    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 1
                           && you.form == transformation::bat);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 

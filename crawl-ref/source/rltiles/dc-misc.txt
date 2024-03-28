@@ -116,6 +116,8 @@ pie5
 pie6
 pie7
 
+bloodbolt BOLT_BLOOD
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

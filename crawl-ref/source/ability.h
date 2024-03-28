@@ -51,6 +51,8 @@ DEF_BITFIELD(ability_flags, abflag);
 
 class dist;
 
+#define REVIVIFY_TURNS_KEY "revivify_turns"
+
 vector<ability_type> get_defined_abilities();
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
@@ -90,3 +92,8 @@ vector<ability_type> get_god_abilities(bool ignore_silence = true,
                                        bool ignore_piety = true,
                                        bool ignore_penance = true);
 void swap_ability_slots(int index1, int index2, bool silent = false);
+
+void interrupt_revivify();
+void vampire_exsanguinate(bool force_end = false);
+void vampire_revivify();
+void vampire_revivify_progress();

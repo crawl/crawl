@@ -584,8 +584,10 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    if (!actor_is_susceptible_to_vampirism(*act)
-        || act->res_negative_energy() >= 3)
+    const bool include_demonic = agent->is_player() && you.has_mutation(MUT_VAMPIRISM);
+
+    if (!actor_is_susceptible_to_vampirism(*act, false, include_demonic)
+        || (!include_demonic && act->res_negative_energy() >= 3))
     {
         return false;
     }
@@ -4244,6 +4246,76 @@ void attempt_jinxbite_hit(actor& victim)
     you.duration[DUR_JINXBITE] -= 40;
     if (you.duration[DUR_JINXBITE] < 1)
         you.duration[DUR_JINXBITE] = 1;
+}
+
+void attempt_blooddrain_hit(actor& victim, bool deadtarget)
+{
+    if (invalid_monster(victim.as_monster())
+        || !victim.is_monster()
+        || victim.wont_attack()
+        || !actor_is_susceptible_to_vampirism(victim, false, true))
+    {
+        return;
+    }
+
+    you.attribute[ATTR_VAMP_LAST_TARGET] = victim.mindex();
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 0;
+
+    //get the victim's position before dealing damage and potentially
+    //disappearing the victim
+    bolt beam;
+    beam.source = victim.pos();
+    beam.target = you.pos();
+    beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour = RED;
+    beam.name = "blood";
+    beam.range = INFINITE_DISTANCE;
+    beam.aimed_at_spot = true;
+    beam.flavour = BEAM_VISUAL;
+    beam.draw_delay = 5;
+
+    //1-3 base, 1-7 at xl 27
+    const int damage = roll_dice(1, 3 + div_rand_round(you.experience_level * 4, 27));
+
+    if (you.can_see(victim))
+    {
+        mprf("You draw life force from %s%s",
+             victim.name(DESC_THE).c_str(),
+             attack_strength_punctuation(damage).c_str());
+    }
+
+    if ((Options.use_animations & UA_BEAM))
+    {
+#ifdef USE_TILE
+        view_add_tile_overlay(victim.pos(), tileidx_bolt(beam));
+#endif
+        view_add_glyph_overlay(victim.pos(), {dchar_glyph(DCHAR_FIRED_ZAP),
+                                static_cast<unsigned short>(RED)});
+        animation_delay(25, true);
+    }
+
+    const int drain_amount = deadtarget ? damage :
+    victim.hurt(&you, damage, BEAM_BLOOD_DRAIN,
+    KILLED_BY_BEAM, "","by blood drain");
+
+    beam.fire();
+    viewwindow();
+    update_screen();
+
+    if (you.duration[DUR_DEATHS_DOOR] || you.hp == you.hp_max)
+        return;
+
+    int hp_gain = drain_amount;
+
+    //cap healing per turn if the source was a regular attack
+    if (!deadtarget)
+    {
+        hp_gain = min(you.attribute[ATTR_VAMP_HEAL_POOL], hp_gain);
+        you.attribute[ATTR_VAMP_HEAL_POOL] -= hp_gain;
+    }
+
+    if (hp_gain)
+        inc_hp(hp_gain);
 }
 
 void foxfire_attack(const monster *foxfire, const actor *target)

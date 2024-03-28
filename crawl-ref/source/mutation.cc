@@ -345,8 +345,10 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_STEAM_RESISTANCE && drag == MONS_STEAM_DRAGON)
                 return mutation_activity_type::FULL;
         }
-        // Vampire bats keep their fangs.
-        if (you.form == transformation::bat
+        // Vampire bats and serpents keep their fangs.
+        // Vampire dragons have their own bite which overrides this.
+        if ((you.form == transformation::bat
+            || you.form == transformation::serpent)
             && you.has_innate_mutation(MUT_VAMPIRISM)
             && mut == MUT_FANGS)
         {
@@ -763,8 +765,10 @@ static vector<string> _get_form_fakemuts(bool terse)
                     : "")));
 
     // immunity comes from form
+    // bloodless vampires already print their own message
     if (!terse && player_res_poison(false, true, false) == 3
-        && !player_res_poison(false, false, false))
+        && !player_res_poison(false, false, false)
+        && !(you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         // wispform has a fakemut that prints something more general
         if (you.form != transformation::wisp)
@@ -959,25 +963,26 @@ static vector<string> _get_fakemuts(bool terse)
 
     if (you.has_mutation(MUT_VAMPIRISM))
     {
-        if (you.vampire_alive)
+        if (terse)
+            result.push_back(you.vampire_alive ? "bloodcraze" : "bloodless");
+        else if (you.vampire_alive)
         {
-            result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is accelerated."));
+            result.push_back(_formmut("You do not regenerate."));
+            result.push_back(_formmut("You drain life from creatures you attack."));
+            result.push_back(_formmut("You sense creatures from afar."));
+
+            if (!(have_passive(passive_t::slowed) || player_under_penance(GOD_CHEIBRIADOS)))
+                result.push_back(_formmut("You cover ground very quickly."));
         }
-        else if (terse)
-            result.push_back("bloodless");
         else
         {
-            result.push_back(
-                _formmut("You do not regenerate when monsters are visible."));
-            result.push_back(
-                _formmut("You are frail without blood (-20% HP)."));
-            result.push_back(
-                _formmut("You can heal yourself when you bite living creatures."));
             // XX automatically color this green somehow? Handled below more
             // generally for non-vampires
             result.push_back(_formmut("You are immune to poison."));
         }
+
+        if (!terse)
+            result.push_back(_formmut("Your bite is vampiric."));
     }
     else if (!terse && player_res_poison(false, false, false) == 3)
         result.push_back(_innatemut("You are immune to poison."));
@@ -1221,41 +1226,43 @@ private:
 
         string result;
 
-        const int lines = 17;
+        const int lines = 18;
         string columns[lines][3] =
         {
-            {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
-                                     //Full       Bloodless
-            {"Regeneration         ", "fast       ", "none with monsters in sight"},
+            {"                     ", "<lightgray>Bloodless</lightgray>   ", "<lightred>Bloodcraze</lightred>"},
+                                     //Bloodless     Bloodcraze
+            {"Regeneration         ", "normal      ", "none  "},
 
-            {"HP modifier          ", "none       ", "-20%"},
+            {"MP Regeneration      ", "normal      ", "raised"},
 
-            {"Stealth boost        ", "none       ", "major "},
+            {"Stealth boost        ", "minor       ", "none  "},
 
-            {"Heal on bite         ", "no         ", "yes "},
+            {"Movement speed       ", "normal      ", "fast  "},
+
+            {"Life drain           ", "no          ", "yes   "},
+
+            {"Sense creatures      ", "no          ", "yes   "},
 
             {"", "", ""},
             {"<w>Resistances</w>", "", ""},
-            {"Poison resistance    ", "           ", "immune"},
+            {"Poison resistance    ", "immune      ", ".     "},
 
-            {"Cold resistance      ", "           ", "++    "},
+            {"Cold resistance      ", "+           ", ".     "},
 
-            {"Negative resistance  ", "           ", "+++   "},
+            {"Negative resistance  ", "+++         ", ".     "},
 
-            {"Miasma resistance    ", "           ", "immune"},
+            {"Miasma resistance    ", "immune      ", ".     "},
 
-            {"Torment resistance   ", "           ", "immune"},
+            {"Torment resistance   ", "immune      ", ".     "},
 
             {"", "", ""},
-            {"<w>Transformations</w>", "", ""},
-            {"Bat form (XL 3+)     ", "no         ", "yes   "},
+            {"<w>Other</w>", "", ""},
+            {"Berserk              ", "no          ", "yes   "},
 
-            {"Other forms          ", "yes        ", "no    "},
-
-            {"Berserk              ", "yes        ", "no    "}
+            {"Sleep                ", "no          ", "yes   "}
         };
 
-        const int highlight_col = you.vampire_alive ? 1 : 2;
+        const int highlight_col = you.vampire_alive ? 2 : 1;
 
         for (int y = 0; y < lines; y++)  // lines   (properties)
         {
@@ -1891,13 +1898,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Only Draconians (and gargoyles) can get wings.
     if (!species::is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
-    {
-        return true;
-    }
-
-    // Vampires' healing rates depend on their blood level.
-    if (you.has_mutation(MUT_VAMPIRISM)
-        && (mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION))
     {
         return true;
     }

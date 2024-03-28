@@ -1292,6 +1292,8 @@ static void _input()
 
         _do_wait_spells();
 
+        vampire_revivify_progress();
+
         world_reacts();
     }
     else

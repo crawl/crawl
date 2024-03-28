@@ -681,8 +681,11 @@ evasion and increases your movement speed when in or above water.
 vampiric mutation
 
 You are cursed with vampirism, torn between false life and a bloodless,
-dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to
-exsanguinate yourself or to fill once more with blood.
+dessicated undeath. You can use <input>$cmd[CMD_USE_ABILITY]</input> to revive
+yourself temporarily, gaining powerful abilities in exchange for a large amount
+of blood or to exsanguinate yourself and end its effects early. Furthermore,
+your unholy affinity allows vampiric effects originating from you to affect
+demons.
 %%%%
 divine attributes mutation
 

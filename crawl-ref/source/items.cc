@@ -3061,6 +3061,10 @@ bool can_autopickup()
     if (!i_feel_safe())
         return false;
 
+    // don't waste blood picking things up
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+        return false;
+
     return true;
 }
 

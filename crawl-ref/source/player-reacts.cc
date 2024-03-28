@@ -90,6 +90,8 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "ability.h"
+#include "bloodspatter.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -596,11 +598,8 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
+
+    if (you.transform_uncancellable)
     {
         if (form_can_fly()
             || form_can_swim() && feat_is_water(env.grid(you.pos())))
@@ -1045,6 +1044,31 @@ static void _handle_fugue(int delay)
     }
 }
 
+static void _handle_vampire_alive()
+{
+    if (!you.has_mutation(MUT_VAMPIRISM))
+        return;
+
+    if (you.vampire_alive)
+    {
+        blood_spray(you.pos(), MONS_JORY, 1);
+        //blood goes down when you fail to drail anything
+        if (you.attribute[ATTR_VAMP_LOSE_BLOOD])
+        {
+            you.attribute[ATTR_VAMP_BLOOD] -= you.attribute[ATTR_VAMP_LOSE_BLOOD];
+            if (you.attribute[ATTR_VAMP_BLOOD] <= 0)
+                vampire_exsanguinate();
+        }
+    }
+
+    you.attribute[ATTR_VAMP_LOSE_BLOOD] = 2;
+    //cap for healing each turn, scales from 4-8 depending on xl
+    you.attribute[ATTR_VAMP_HEAL_POOL] = 4 + you.experience_level / 6;
+
+    //reset last blooddrain target
+    you.attribute[ATTR_VAMP_LAST_TARGET] = NON_MONSTER;
+}
+
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1069,6 +1093,8 @@ void player_reacts()
     _handle_fugue(you.time_taken);
     if (you.has_mutation(MUT_WARMUP_STRIKES))
         you.rev_down(you.time_taken);
+
+    _handle_vampire_alive();
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {

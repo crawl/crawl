@@ -1049,12 +1049,16 @@ bool mons_eats_items(const monster& mon)
  * susceptible.
  * @param act The actor.
  * @param only_known Only include information known to the player.
+ * @param include_demonic Should we affect demons and ignore rN?
  * @returns True if the actor is susceptible to vampirism, false otherwise.
  */
-bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
+bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known, bool include_demonic)
 {
-    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)))
+    if (!(act.holiness() & (MH_NATURAL | MH_PLANT) ||
+        (include_demonic && act.holiness() == MH_DEMONIC)))
+    {
         return false;
+    }
 
     if (act.is_player())
         return true;
@@ -1073,6 +1077,12 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
     return !mon->has_ench(ENCH_FAKE_ABJURATION)
            && !testbits(mon->flags, MF_SPECTRALISED)
            && !mons_is_firewood(*mon);
+}
+
+bool actor_is_susceptible_to_vampirism(bool only_known, const actor& act, const actor& agent)
+{
+    return actor_is_susceptible_to_vampirism(act, only_known,
+        agent.is_player() && you.has_mutation(MUT_VAMPIRISM));
 }
 
 bool invalid_monster(const monster* mon)
