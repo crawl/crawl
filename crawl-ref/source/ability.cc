@@ -2620,8 +2620,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         if (you.duration[DUR_FINESSE])
         {
             // "Your [hand(s)] get{s} new energy."
-            mprf(MSGCH_DURATION, "%s",
-                 you.hand_act("%s gets new energy.", "%s get new energy.").c_str());
+            mpr_nolocalise(MSGCH_DURATION,
+                 you.hand_act("%s gets new energy.", "%s get new energy."));
         }
         else
             mprf(MSGCH_DURATION, "You can now deal lightning-fast blows.");

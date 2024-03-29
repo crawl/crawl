@@ -670,7 +670,7 @@ static bool _check_tukima_validity(const actor *target)
         if (target_is_player)
         {
             // @locnote: Tukima's dance fail messages
-            mpr(you.hand_act("%s twitches.", "%s twitch."));
+            mpr_nolocalise(you.hand_act("%s twitches.", "%s twitch."));
         }
         else
         {

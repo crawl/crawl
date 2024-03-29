@@ -186,8 +186,8 @@ static const duration_def duration_data[] =
       "confusing by touch", "confusing touch",
       "" , D_DISPELLABLE,
       {{ "", []() {
-          mprf(MSGCH_DURATION, "%s",
-               you.hand_act("%s stops glowing.", "%s stop glowing.").c_str());
+          mpr_nolocalise(MSGCH_DURATION,
+                         you.hand_act("%s stops glowing.", "%s stop glowing."));
       }}}, 20},
     { DUR_CORONA, // Has custom long_text
       YELLOW, "Corona",

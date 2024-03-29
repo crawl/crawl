@@ -2698,8 +2698,8 @@ static void _xom_cleaving(int sever)
     }
     else
     {
-        mprf(MSGCH_DURATION, "%s",
-             you.hand_act("%s looks sharp.", "%s look sharp.").c_str());
+        mpr_nolocalise(MSGCH_DURATION,
+                       you.hand_act("%s looks sharp.", "%s look sharp."));
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cleaving"), true);
