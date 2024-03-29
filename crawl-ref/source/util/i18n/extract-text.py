@@ -425,7 +425,7 @@ for filename in files:
                     continue
 
                 # Leave notes/milsones in English
-                if re.search('take_note', line) or re.search('mark_milestone', line):
+                if re.search('take_note', line) or re.search('mark_milestone', line) or re.search('note *=', line):
                     continue
                 if re.search(r'(mutate|delete_mutation|delete_all_temp_mutations)\s*\(', line):
                     continue
@@ -460,6 +460,8 @@ for filename in files:
                 if re.search(r'\bprops\.erase *\(', line):
                     continue
                 if '_print_converted_orc_speech' in line:
+                    continue
+                if '_get_xom_speech' in line or 'XOM_SPEECH' in line:
                     continue
                 if 'show_specific_help' in line:
                     continue

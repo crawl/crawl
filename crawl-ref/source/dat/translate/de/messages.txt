@@ -23186,608 +23186,302 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 ##################
 %%%%
 Xom is interested.
-
+Xom ist interessiert.
 %%%%
 Xom is mildly amused.
-
+Xom ist leicht amüsiert.
 %%%%
 Xom is amused.
-
+Xom ist amüsiert.
 %%%%
 Xom is highly amused!
-
+Xom ist höchst amüsiert.
 %%%%
 Xom thinks this is hilarious!
-
+Xom findet das urkomisch!
 %%%%
 Xom roars with laughter!
-
+Xom brüllt vor Lachen!
 %%%%
 Xom is very interested.
-
+Xom ist sehr interessiert.
 %%%%
 Xom is extremely interested.
-
+Xom ist extrem interessiert.
 %%%%
 Xom is intrigued!
-
+Xom ist neugierig!
 %%%%
 Xom is very intrigued!
-
+Xom ist sehr neugierig!
 %%%%
 Xom is fascinated!
-
+Xom ist fasziniert!
 %%%%
 a very special plaything of Xom.
-
+ein ganz besonderer Spielball von Xom.
 %%%%
 a special plaything of Xom.
-
+ein besonderer Spielball von Xom.
 %%%%
 a plaything of Xom.
-
+ein Spielball von Xom.
 %%%%
 a toy of Xom.
-
+ein Spielzeug von Xom.
 %%%%
 a favourite toy of Xom.
-
+ein Spielzeug von Xom.
 %%%%
 a beloved toy of Xom.
-
+ein Lieblingsspielzeug von Xom.
 %%%%
 Xom's teddy bear.
-
+Xoms Teddybär.
 %%%%
 a BORING thing.
-
+eine LANGWEILIGE Sache.
 %%%%
 Xom makes something happen.
-
-%%%%
-"You are now "
-
+Xom lässt etwas geschehen.
 %%%%
 %s is getting BORED.
-
+%s LANGWEILT sich langsam.
 %%%%
 %s is interested.
-
+%s ist interessiert.
 %%%%
 %s is intrigued.
-
-%%%%
-spell effect
-
-%%%%
-cast spell '%s'
-
-%%%%
-divination
-
+%s ist neugierig.
 %%%%
 You detect items!
-Ihr entdeckt Gegenstände!
+Ihr nehmt Gegenstände wahr!
 %%%%
 You detect no further creatures.
-Ihr entdeckt keine weiteren Kreaturen.
+Ihr nehmt keine weiteren Kreaturen wahr.
 %%%%
 You detect creatures!
-Ihr entdeckt Kreaturen!
+Ihr nehmt Kreaturen wahr!
 %%%%
 \"No, never mind.\"
-
-%%%%
-god gift: %s
-
+\"Nein, schon gut.\"
 %%%%
 %s snickers.
-
-%%%%
-general gift
-
+%s kichert.
 %%%%
 %s %s erupts in a glittering mayhem of colour.
-
-%%%%
-"potion effect "
-
-%%%%
-potion effect
-
+%s %s bricht in ein glitzerndes Farbenchaos aus.
 %%%%
 %s looks rather more confused.
-
-%%%%
-multiple summons
-
-%%%%
-summons %d friendly demon%s
-
-%%%%
-single summon
-
-%%%%
-summons friendly %s
-
-%%%%
-good monster polymorph
-
-%%%%
-bad monster polymorph
-
-%%%%
-something unseen
-
-%%%%
-polymorph %s -> %s
-
-%%%%
-rearrange the pieces
-
+%s sieht etwas verwirrter aus.
 %%%%
 Some monsters swap places.
 Einige Monster tauschen Plätze.
 %%%%
-snakes to sticks
-
-%%%%
 %s reforms as %s.
-%s Reformen als%s.
-%%%%
-animate monster weapon
-
+%s wird zu {dat}%s.
 %%%%
 %s %s dances into the air!
-%s%s tanzt in die Luft!
-%%%%
-good mutations
-
-%%%%
-random mutations
-
-%%%%
-give %smutation%s
-
+%s %s tanzt in die Luft!
 %%%%
 Your body is suffused with distortional energy.
-Euer Körper ist voller Verzerrungsenergie.
+Euer Körper wird von verzerrter Energie durchdrungen.
 %%%%
 The area is suffused with divine lightning!
-
+Das Gebiet wird von göttlichen Blitzen durchzogen!
 %%%%
-scenery
-
+a fountain starts gushing blood
+ein Brunnen beginnt Blut zu sprudeln
 %%%%
-%s fountain%s start%s gushing blood
-
+some fountains start gushing blood
+einige Brunnen beginnen Blut zu sprudeln
 %%%%
-some
-
+a door bursts open
+eine Tür fliegt auf
 %%%%
-%d fountains blood
-
+two doors burst open
+zwei Türen fliegen auf
 %%%%
-%s door%s burst%s open
-
+several doors burst open
+mehrere Türen fliegen auf
 %%%%
-Two
-
+a door slams shut
+eine Tür knallt zu
 %%%%
-Several
-
+two doors slam shut
+zwei Türen knallen zu
 %%%%
-%d doors open
-
+several doors slam shut
+mehrere Türen knallen zu
 %%%%
-%s%s door%s slam%s shut
-
+another door slams shut
+eine andere Tür knallt zu
 %%%%
-two
-
+two other doors slam shut
+zwei andere Türen knallen zu
 %%%%
-several
-
-%%%%
-nother
-
-%%%%
-" other"
-
-%%%%
-%d doors close
-
-%%%%
-fake destruction
-
-%%%%
-good enchant monster
-
-%%%%
-bad enchant monster
-
-%%%%
-enchant monster %s
-
-%%%%
-(good)
-
-%%%%
-(bad)
-
-%%%%
-zero miscast effect
-
+several other doors slam shut
+mehrere andere Türen knallen zu
 %%%%
 Nothing appears to happen... Ominous!
-Nichts scheint zu passieren ... Ominös!
+Nichts scheint zu passieren... Ominös!
 %%%%
 The lava spits out sparks!
-
+Die Lava spuckt Funken!
 %%%%
 The water briefly bubbles.
-
+Das Wasser sprudelt kurz.
 %%%%
 The water briefly swirls.
-
+Das Wasser wirbelt kurz.
 %%%%
 The water briefly glows.
-
+Das Wasser leuchtet kurz.
 %%%%
 From the corner of your eye you spot something lurking in the deep water.
-
+Aus den Augenwinkeln seht Ihr etwas im tiefen Wasser lauern.
 %%%%
 The idol of Beogh turns to glare at you.
-
+Das Idol von Beogh dreht sich um und starrt Euch an.
 %%%%
 The granite statue turns to stare at you.
-
+Die Granitstatue dreht sich um und starrt Euch an.
 %%%%
 Dim shapes swim through the translucent wall.
-
+Unscharfe Gestalten schwimmen durch die durchsichtige Wand.
 %%%%
 Dim shapes swim through the crystal wall.
-
+Unscharfe Gestalten schwimmen durch die Kristallwand.
 %%%%
 Tendrils of electricity crawl over the metal wall!
-
+Ranken aus Elektrizität krabbeln über die Metallwand!
 %%%%
 The water in the fountain briefly bubbles.
-
+Das Wasser im Brunnen sprudelt kurz.
 %%%%
 The water in the fountain briefly swirls.
-
+Das Wasser im Brunnen wirbelt kurz auf.
 %%%%
 The water in the fountain briefly glows.
-
+Das Wasser im Brunnen leuchtet kurz auf.
 %%%%
 Water briefly sprays from the dry fountain.
-
+Wasser spritzt kurz aus der trockenen Brunnen.
 %%%%
 Dust puffs up from the dry fountain.
-
+Staub wirbelt aus dem trockenen Brunnen auf.
 %%%%
 The stone arch briefly shows a sunny meadow on the other side.
-
+Der Steinbogen zeigt kurz eine sonnige Wiese auf der anderen Seite.
 %%%%
-" seems to fall away from under you!"
-
+%s seems to fall away from under you!
+%s scheint unter Euch wegzufallen!
 %%%%
-" seems to rush up at you!"
-
+%s seems to rush up at you!
+%s scheint sich auf Euch zu stürzen!
 %%%%
 Something invisible splashes into the water beneath you!
-
+Etwas Unsichtbares plätschert ins Wasser unter Euch!
 %%%%
 The water briefly recedes away from you.
-
+Das Wasser weicht kurz von Euch zurück.
 %%%%
 Something invisible splashes into the water beside you!
-
+Etwas Unsichtbares plätschert neben Euch ins Wasser!
 %%%%
-"One of "
-
-%%%%
-" falls out of your pack, then immediately jumps back in!"
-
+%s falls out of your pack, then immediately jumps back in!
+%s fällt aus Eurem Rucksack, springt dann aber sofort wieder hinein!
 %%%%
 You briefly get tangled in your bandages.
-
+Ihr verheddert Euch kurz in deinen Bandagen.
 %%%%
 You trip over your bandages.
-
+Ihr stolpert über Eure Bandagen.
 %%%%
-"A monocle briefly appears over your "
-
+A monocle briefly appears over one of your many eyes.
+Ein Monokel erscheint kurz in einem Eurer vielen Augen.
 %%%%
-" primary"
-
+A monocle briefly appears over your right eye.
+Ein Monokel erscheint kurz in Eurem rechten Auge.
 %%%%
-" front"
-
-%%%%
-" middle"
-
-%%%%
-" rear"
-
-%%%%
-" secondary"
-
-%%%%
-" eye."
-
+A monocle briefly appears over your left eye.
+Ein Monokel erscheint kurz in Eurem linken Auge.
 %%%%
 Your eyebrows briefly feel incredibly bushy.
-
+Eure Augenbrauen fühlen sich kurz unglaublich buschig an.
 %%%%
 Your eyebrows wriggle.
-
+Eure Augenbrauen wackeln.
 %%%%
 You do an impromptu tapdance.
-
+Ihr macht einen improvisierten Stepptanz.
 %%%%
-"A fancy cane briefly appears in your "
-
+A fancy cane briefly appears in %s.
+Ein ausgefallener Stock erscheint kurz in {dat}%s.
 %%%%
 Your cloak billows in an unfelt wind.
-
+Euer Mantel weht in einem ungefühlten Wind.
 %%%%
 Your scarf briefly wraps itself around your head!
-
+Euer Schal wickelt sich kurz um Eurem Kopf!
 %%%%
-" leaps into the air, briefly spins, then lands back on your head!"
-
+%s leaps into the air, briefly spins, then lands back on your head!
+%s springt in die Luft, dreht sich kurz und landet dann wieder auf Eurem Kopf!
 %%%%
-"You compulsively click the heels of your "
-
+You compulsively click the heels of your boots together three times.
+Ihr klickt die Absätze Eurer Stiefel dreimal zwanghaft zusammen.
 %%%%
-" together three times."
-
+%s spins!
+%s dreht sich!
 %%%%
-" spins!"
-
+%s briefly flashes a lurid colour!
+%s leuchtet kurz in einer grellen Farbe auf!
 %%%%
-" briefly flashes a lurid colour!"
-
+The scales on %s wiggle briefly.
+Die Schuppen von {dat}%s wackeln kurz.
 %%%%
-"The scales on your "
-
+The fur on %s grows longer at an alarming rate, then retracts back to normal.
+Das Fell von {dat}%s wächst in beängstigendem Tempo und zieht sich dann wieder in den Normalzustand zurück.
 %%%%
-" wiggle briefly."
-
+%s briefly grows fur, then returns to normal.
+Fell wächst kurz auf {dat}%s und kehrt dann zurück.
 %%%%
-"The fur on your "
-
+You briefly become tangled in %s.
+Ihr verheddert Euch kurz in {dat}%s.
 %%%%
-" grows longer at an alarming rate, then retracts back to normal."
-
+%s briefly appears rusty.
+%s erscheint kurzzeitig rostig.
 %%%%
-" briefly grows fur, then returns to normal."
-
+%s briefly glows.
+%s leuchtet kurz auf.
 %%%%
-"You briefly become tangled in your "
-
+%s briefly vibrates.
+%s vibriert kurz.
 %%%%
-" briefly appears rusty."
-
+%s briefly glow.
+%s leuchten kurz auf.
 %%%%
-glow
-glühen
+%s briefly vibrate.
+%s vibrieren kurz.
 %%%%
-vibrate
-
+%s slides away from you!
+%s rutscht von Euch weg!
 %%%%
-" briefly "
-
+%s slides towards you!
+%s rutscht auf Euch zu!
 %%%%
-chaos upgrade
-
-%%%%
-You are %sconfused.
-Ihr seid %sconfused.
-%%%%
-" (+ monsters)"
-
-%%%%
-%s slides %s you!
-%s schiebt%s Euch!
-%%%%
-away from
-
-%%%%
-towards
-
-%%%%
-STAIR BEAM
-
-%%%%
-repel stairs
-
-%%%%
-draining or torment
-
-%%%%
-stat loss: -%d %s (%d/%d)
-
-%%%%
-torment (%d/%d hp)
-
-%%%%
-summons %d hostile %s%s
-
-%%%%
-shadow creature
-
-%%%%
-demon
-
-%%%%
-hostile monster
-
-%%%%
-revert own banishment
-
-%%%%
-revert other banishment
-
-%%%%
-blink monsters
-
-%%%%
-%s %s sharp%s
-
-%%%%
-look
-
-%%%%
-" (like it always does)."
-
+%s looks sharp (like it always does).
+%s sieht scharf aus (wie immer).
 %%%%
 %s looks sharp.
-
+%s sieht scharf aus.
 %%%%
 %s look sharp.
-
-%%%%
-accidental homicide
-
-%%%%
-weird death
-
-%%%%
-resurrection
-
-%%%%
-boring death
-
-%%%%
-laughter
-
-%%%%
-actor
-
-%%%%
-"life saving "
-
+%s sehen scharf aus.
 %%%%
 Xom revives you!
-
-%%%%
-stealth player
-
+Xom belebt Euch wieder!
 %%%%
 You feel more catlike.
-Ihr fühlt Euch eher wie eine Katze.
-%%%%
-teleportation journey
-
-%%%%
-%d-stop teleportation journey%s
-
-%%%%
-detect creatures
-
-%%%%
-detect items
-
-%%%%
-tension spell
-
-%%%%
-confuse monsters
-
-%%%%
-single ally
-
-%%%%
-random item gift
-
-%%%%
-summon allies
-
-%%%%
-good polymorph
-
-%%%%
-good teleportation
-
-%%%%
-change scenery
-
-%%%%
-mass fireball
-
-%%%%
-fake fireball
-
-%%%%
-pseudo-miscast
-
-%%%%
-confuse player
-
-%%%%
-swap monsters
-
-%%%%
-bad teleportation
-
-%%%%
-bad polymorph
-
-%%%%
-moving stairs
-
-%%%%
-unclimbable stairs
-
-%%%%
-bad mutations
-
-%%%%
-summon hostiles
-
-%%%%
-statloss
-
-%%%%
-chaos cloud
-
-%%%%
-psuedo-banishment
-
-%%%%
-Xom event %d has no associated data!
-
-%%%%
-Duplicate name '%s'!
-
-%%%%
-'%s' badness %d outside 10-50 range.
-
-%%%%
-'%s' is not bad, but has badness!
-
-%%%%
-No action for '%s'!
-
-%%%%
-mapping estimate: %d%%
-
-%%%%
-exploration estimate: %d%%
-
-%%%%
-"How many iterations over the entire piety range? "
-
-%%%%
-Can't write 'xom_debug.stat'. Aborting.
-Ich kann 'xom_debug.stat' nicht schreiben. Abbruch.
-%%%%
-total
-
-%%%%
-Results written into 'xom_debug.stat'.
-Ergebnisse in 'xom_debug.stat' geschrieben.
+Ihr fühlt Euch mehr wie eine Katze.
 %%%%
