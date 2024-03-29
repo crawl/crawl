@@ -23231,10 +23231,10 @@ a toy of Xom
 ein Spielzeug von Xom
 %%%%
 a favourite toy of Xom
-ein Spielzeug von Xom
+ein Lieblingsspielzeug von Xom
 %%%%
 a beloved toy of Xom
-ein Lieblingsspielzeug von Xom
+ein geliebtes spielzeug von Xom
 %%%%
 Xom's teddy bear
 Xoms Teddybär
