@@ -243,7 +243,7 @@ for filename in files:
         for line in lines_raw:
 
             # ignore strings explicitly marked as not to be extracted
-            if 'noloc' in line:
+            if 'noloc' in line and not 'you.hand_act' in line:
                 if 'noloc section start' in line:
                     ignoring = True
                 if 'noloc section end' in line:

@@ -15497,6 +15497,12 @@ Ihr seht Funken fliegen.
 %s hums with potential!
 %s summt vor Potenzial!
 %%%%
+%s tingles!
+%s prickelt!
+%%%%
+%s tingle!
+%s prickeln!
+%%%%
 You feel a bloodthirsty glee!
 Ihr fühlt eine blutrünstige Freude!
 %%%%
@@ -23137,7 +23143,6 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 %%%%
 <w>Ctrl-F</w> double scale fsim
 <w>Ctrl-F</w> doppelstäbliche Kampfsimulation
-
 %%%%
 <w>Ctrl-I</w> item generation stats
 <w>Ctrl-I</w> Gegenstand-Generation-Statisken
