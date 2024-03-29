@@ -156,13 +156,13 @@ int xom_favour_rank()
 }
 
 static const char* xom_moods[] = {
-    "a very special plaything of Xom.",
-    "a special plaything of Xom.",
-    "a plaything of Xom.",
-    "a toy of Xom.",
-    "a favourite toy of Xom.",
-    "a beloved toy of Xom.",
-    "Xom's teddy bear."
+    "a very special plaything of Xom",
+    "a special plaything of Xom",
+    "a plaything of Xom",
+    "a toy of Xom",
+    "a favourite toy of Xom",
+    "a beloved toy of Xom",
+    "Xom's teddy bear"
 };
 
 static const char *describe_xom_mood()
@@ -177,9 +177,9 @@ const string describe_xom_favour()
 {
     string favour;
     if (!you_worship(GOD_XOM))
-        favour = "a very buggy toy of Xom.";
+        favour = "a very buggy toy of Xom";
     else if (you.gift_timeout < 1)
-        favour = "a BORING thing.";
+        favour = "a BORING thing";
     else
         favour = describe_xom_mood();
 
@@ -358,7 +358,7 @@ void xom_tick()
         new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
         {
-            mprf(MSGCH_GOD, you.religion, "You are now %s",
+            mprf(MSGCH_GOD, you.religion, "You are now %s.",
                  new_xom_favour.c_str());
         }
 
@@ -3165,7 +3165,7 @@ void xom_take_action(xom_event_type action, int sever)
         const string new_xom_favour = describe_xom_favour();
         if (was_bored || old_xom_favour != new_xom_favour)
         {
-            mprf(MSGCH_GOD, you.religion, "You are now %s",
+            mprf(MSGCH_GOD, you.religion, "You are now %s.",
                  new_xom_favour.c_str());
         }
 #ifdef NOTE_DEBUG_XOM
@@ -3178,7 +3178,7 @@ void xom_take_action(xom_event_type action, int sever)
         // If we didn't reroll at least mention the new favour
         // now that it's not "BORING thing" anymore.
         const string new_xom_favour = describe_xom_favour();
-        mprf(MSGCH_GOD, you.religion, "You are now %s",
+        mprf(MSGCH_GOD, you.religion, "You are now %s.",
              new_xom_favour.c_str());
     }
 }
@@ -3761,7 +3761,7 @@ void debug_xom_effects()
         if (i == 0)
             fprintf(ostat, "\nTotal effects (all piety ranges)\n");
         else
-            fprintf(ostat, "\nMood: You are %s\n", moods[i].c_str());
+            fprintf(ostat, "\nMood: You are %s.\n", moods[i].c_str());
 
         fprintf(ostat, "GOOD%7.2f%%\n",
                 (100.0 * (float) mood_good_acts[i] / (float) total));

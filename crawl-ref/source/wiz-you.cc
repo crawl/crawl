@@ -288,7 +288,7 @@ void wizard_set_piety_to(int newpiety, bool force)
         mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
 
         const string new_xom_favour = describe_xom_favour();
-        mprf(MSGCH_GOD, you.religion, "You are now %s", new_xom_favour.c_str());
+        mprf(MSGCH_GOD, you.religion, "You are now %s.", new_xom_favour.c_str());
         return;
     }
 

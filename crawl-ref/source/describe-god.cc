@@ -100,7 +100,7 @@ static string _describe_favour(god_type which_god)
     }
 
     if (which_god == GOD_XOM)
-        return uppercase_first(localise(describe_xom_favour()));
+        return uppercase_first(localise("%s.", describe_xom_favour()));
 
 
     const string godname = god_name(which_god);

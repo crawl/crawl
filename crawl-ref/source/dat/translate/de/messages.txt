@@ -22700,8 +22700,8 @@ Interesse muss zwischen 0 und 255 liegen.
 Set piety to %d, interest to %d.
 Frömmigkeit auf %d, Interesse auf %d eingestellt.
 %%%%
-You are now %s
-Ihr seid jetzt %s
+You are now %s.
+Ihr seid jetzt %s.
 %%%%
 Are you sure you want to be excommunicated?
 Seid Ihr sicher, dass Ihr exkommuniziert werden wollt?
@@ -23218,29 +23218,29 @@ Xom ist sehr neugierig!
 Xom is fascinated!
 Xom ist fasziniert!
 %%%%
-a very special plaything of Xom.
-ein ganz besonderer Spielball von Xom.
+a very special plaything of Xom
+ein ganz besonderer Spielball von Xom
 %%%%
-a special plaything of Xom.
-ein besonderer Spielball von Xom.
+a special plaything of Xom
+ein besonderer Spielball von Xom
 %%%%
-a plaything of Xom.
-ein Spielball von Xom.
+a plaything of Xom
+ein Spielball von Xom
 %%%%
-a toy of Xom.
-ein Spielzeug von Xom.
+a toy of Xom
+ein Spielzeug von Xom
 %%%%
-a favourite toy of Xom.
-ein Spielzeug von Xom.
+a favourite toy of Xom
+ein Spielzeug von Xom
 %%%%
-a beloved toy of Xom.
-ein Lieblingsspielzeug von Xom.
+a beloved toy of Xom
+ein Lieblingsspielzeug von Xom
 %%%%
-Xom's teddy bear.
-Xoms Teddybär.
+Xom's teddy bear
+Xoms Teddybär
 %%%%
-a BORING thing.
-eine LANGWEILIGE Sache.
+a BORING thing
+eine LANGWEILIGE Sache
 %%%%
 Xom makes something happen.
 Xom lässt etwas geschehen.
