@@ -3195,7 +3195,7 @@ static const struct spell_desc spelldata[] =
     50,
     3, 3,
     0,
-    TILEG_POISONOUS_VAPOURS,
+    TILEG_MERCURY_VAPOURS,
 },
 
 {

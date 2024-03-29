@@ -124,7 +124,7 @@ poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
-poisonous_vapours POISONOUS_VAPOURS
+mercury_vapours MERCURY_VAPOURS
 noxious_bog NOXIOUS_BOG
 
 %sdir gui/spells/summoning
