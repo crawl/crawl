@@ -429,7 +429,7 @@ for filename in files:
                     continue
                 if re.search(r'(mutate|delete_mutation|delete_all_temp_mutations)\s*\(', line):
                     continue
-                if re.search(r'\bbanish\s*\(', line):
+                if re.search(r'\bbanish(ed)?\s*\(', line):
                     continue
 
                 # score file stuff

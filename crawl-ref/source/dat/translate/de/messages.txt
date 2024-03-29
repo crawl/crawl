@@ -22153,10 +22153,10 @@ All vaults are now eligible for [re]use.
 Alle Vaults können jetzt [wieder] verwendet werden.
 %%%%
 "Set Abyss speed to what? (now %d, higher value = higher speed) "
-"Tempo im Abgrund auf was einstellen? (jetzt %d, höhere Nummer = höherer Tempo) "
+"Tempo der Zeit im Abgrund auf was einstellen? (jetzt %d, höhere Nummer = höherer Tempo) "
 %%%%
 Setting Abyss speed to %i.
-Tempo im Abgrund auf %i eingestellt.
+Tempo der Zeit im Abgrund auf %i eingestellt.
 %%%%
 
 ##################
@@ -22856,325 +22856,324 @@ Zot-Uhr soll zwischen 0 und %d liegen
 ##################
 %%%%
 You can only abyss_teleport() inside the Abyss.
-Ihr könnt nur abyss_teleport () im Abyss.
-%%%%
-wizard command
-
+Ihr könnt abyss_teleport() nur im Abgrund.
 %%%%
 Running Jiyva off-level sacrifice.
-Jiyva Opfer außerhalb des Levels bringen.
+Jiyva Opfer außerhalb dieser Ebene bringen.
 %%%%
 Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d
-Kostenstufe:%d Gesamterfahrung:%d Nächste Kostenstufe:%d Fähigkeitskosten:%d
+Kostenstufe:%d  Gesamterfahrung:%d  Nächste Kostenstufe:%d  Fertigkeitskosten: %d
 %%%%
 Failure to give mutation.
-Keine Mutation.
+Mutation fehlgeschlagt.
 %%%%
 Not a <magenta>Wizard</magenta> Command.
-
+Kein <magenta>Zauberer-</magenta>Befehl.
 %%%%
 Re-activating wizard mode.
-Assistentenmodus erneut aktivieren.
+Zauberer-Modus reaktiviert.
 %%%%
 Can't repeat re-activating wizard mode.
-
+Kann Zauberer-Modus nicht nochmal reaktivieren.
 %%%%
 WARNING: ABOUT TO ENTER WIZARD MODE!
-WARNUNG: EINTRITT IN DEN WIZARD-MODUS!
+WARNUNG: EINTRITT IN DEN ZAUBERER-MODUS!
 %%%%
 If you continue, your game will not be scored!
-Wenn Ihr weitermacht, wird Euer Spiel nicht gewertet!
+Wenn Ihr weitermacht, wird Euer Spiel nicht bewertet!
 %%%%
 Do you really want to enter wizard mode?
-
+Wirklich Zauberer-Modus eintreten?
 %%%%
 Can't repeat entering wizard mode.
-
+Kann nicht nochmal in den Zauberer-Modus eintreten.
 %%%%
 "Enter Wizard Command (? - help): "
-"Den Assistentenbefehl eingeben (? - Hilfe): "
+"Zauberer-Befehl eingeben (? - Hilfe): "
 %%%%
 You cannot repeat that wizard command.
-
+Dieser Zauberer-Befehl ist nich wiederholbar.
 %%%%
 WARNING: ABOUT TO ENTER EXPLORE MODE!
 WARNUNG: EINTRITT IN DEN ERKUNDUNGSMODUS!
 %%%%
 Do you really want to enter explore mode?
-
+Wirklich Erkundungsmodus eintreten?
 %%%%
 Can't repeat entering explore mode
-
+Kann nicht nochmal in den Erkundungsmodus eintreten.
 %%%%
+# note: Max width for these menu options is 42 chars (exluding formatting tags)
 <yellow>Player stats</yellow>
-
+<yellow>Spielerstatistiken</yellow>
 %%%%
 <w>A</w>      set all skills to level
-
+<w>A</w>      alle Fertigkeiten auf Stufe setzen
 %%%%
 <w>Ctrl-D</w> change enchantments/durations
-
+<w>Ctrl-D</w> Verzauberungen/Dauer ändern
 %%%%
 <w>g</w>      exercise a skill
-
+<w>g</w>      eine Fertigkeit trainieren
 %%%%
 <w>k</w>      change experience level and skills
-
+<w>k</w>      Erfahrungsstufe/Fertigkeiten ändern
 %%%%
 <w>l</w>      change experience level
-
+<w>l</w>      Erfahrungsstufe ändern
 %%%%
 <w>Ctrl-P</w> list props
-
+<w>Ctrl-P</w> Eigenschaften auslisten
 %%%%
 <w>r</w>      change character's species
-
+<w>r</w>      Spezies ändern
 %%%%
 <w>s</w>      set skill to level
-
+<w>s</w>      Fertigkeit auf eine Stufe setzen
 %%%%
 <w>x</w>      gain an experience level
-
+<w>x</w>      eine Erfahrungsstufe erhalten
 %%%%
 <w>$</w>      set gold to a specified value
-
+<w>$</w>      Gold einstellen
 %%%%
 <w>]</w>      get a mutation
-
+<w>]</w>      eine Mutation bekommen
 %%%%
 <w>_</w>      gain religion
-
+<w>_</w>      eine Religion bekommen
 %%%%
 <w>^</w>      set piety to a value
-
+<w>^</w>      Frommigkeit einstellen
 %%%%
 <w>@</w>      set Str Int Dex
-
+<w>@</w>      Stä Int Ges einstellen
 %%%%
 <w>#</w>      load character from a dump file
-
+<w>#</w>      Charakter von Dump-Datei laden
 %%%%
 <w>&</w>      list all divine followers
-
+<w>&</w>      alle göttliche Folger auflisten
 %%%%
 <w>=</w>      show info about skill points
-
+<w>=</w>      Fertigkeitspunkten zeigen
 %%%%
 <w>n</w>      set Zot clock to a value
-
+<w>n</w>      Zot-Uhr einstellen
 %%%%
 <yellow>Dungeon features</yellow>
-
+<yellow>Dungeon-Strukturen</yellow>
 %%%%
 <w>T</w>      make a trap
-
+<w>T</w>      eine Falle schaffen
 %%%%
 <w>,</w>/<w>.</w>    create up/down staircase
-
+<w>,</w>/<w>.</w>    Treppe nach oben/unten schaffen
 %%%%
 <w>(</w>      turn cell into feature
-
+<w>(</w>      Feld in Struktur verwandeln
 %%%%
 <w>\</w>      make a shop
-
+<w>\</w>      Laden schaffen
 %%%%
 <yellow>Builder debugging</yellow>
-
+<yellow>Bau-Debug</yellow>
 %%%%
 <w>L</w>      place a vault by name
-
+<w>L</w>      ein Vault nach Name einrichten
 %%%%
 <w>P</w>      create a level based on a vault
-
+<w>P</w>      Ebene basierend auf Vault schaffen
 %%%%
 <w>Ctrl-R</w> regenerate current level
-
+<w>Ctrl-R</w> aktuelle Ebene neu generieren
 %%%%
 <w>Ctrl-A</w> generate new Abyss area
-
+<w>Ctrl-A</w> neuen Abrundbereich generieren
 %%%%
 <w>K</w>      mark all vaults as unused
-
+<w>K</w>      alle Vaults als unbenutzt markieren
 %%%%
 <w>:</w>      find branches and overflow
-
+<w>:</w>      Zweige und Überlaufs-
 %%%%
 "       temples in the dungeon"
-
+"       Tempel im Dungeon finden"
 %%%%
 <w>;</w>      list known levels and counters
-
+<w>;</w>      bekannte Ebenen und Zähler listen
 %%%%
 <w>Ctrl-E</w> dump level builder information
-
+<w>Ctrl-E</w> Ebene-Bauer-Infos anzeigen
 %%%%
 <yellow>Other level related commands</yellow>
-
+<yellow>Andere Ebenenbezogene Befehle</yellow>
 %%%%
 <w>{</w>      magic mapping
-
+<w>{</w>      magische Kartierung
 %%%%
 <w>b</w>      controlled blink
-
+<w>b</w>      kontrolliertes Blinzeln
 %%%%
 <w>B</w>      controlled teleport
-
+<w>B</w>      controlliertes Teleportieren
 %%%%
 <w>~</w>      go to a specific level
-
+<w>~</w>      zu bestimmte Ebene reisen
 %%%%
 <w>u</w>/<w>d</w>    shift up/down one level
-
+<w>u</w>/<w>d</w>    Ebene nach oben/unten gehen
 %%%%
 <w>Ctrl-B</w> banish yourself to the Abyss
-
+<w>Ctrl-B</w> Euch in den Abgrund verbannen
 %%%%
 <w>Ctrl-S</w> change Abyss speed
-
+<w>Ctrl-S</w> Tempo der Zeit im Angrund ändern
 %%%%
 <w>R</w>      change monster spawn rate
-
+<w>R</w>      Monster-Spawn-Frequenz ändern
 %%%%
 <w>Ctrl-W</w> change Shoals' tide speed
-
+<w>Ctrl-W</w> Tempo der Untiefen-Gezeit ändern
 %%%%
 <yellow>Other player related effects</yellow>
-
+<yellow>Andere spielerbezogene Effekte</yellow>
 %%%%
 <w>c</w>      card effect
-
+<w>c</w>      Karte-Effekt
 %%%%
 <w>h</w>/<w>H</w>    heal yourself (super-Heal)
-
+<w>h</w>/<w>H</w>    Euch heilen (super-Heal)
 %%%%
 <w>X</w>      make Xom do something now
-
+<w>X</w>      Xom erzwingen etwas zu tun
 %%%%
 <w>z</w>      cast spell by number/name
-
+<w>z</w>      Zauber nach Zahl oder Name wirken
 %%%%
 <w>!</w>      memorise spell
-
+<w>!</w>      Zauber memorieren
 %%%%
 <w>W</w>      god wrath
-
+<w>W</w>      Gott-Zorn
 %%%%
 <w>w</w>      god mollification
-
+<w>w</w>      Gott-Besänftigung
 %%%%
 <w>p</w>      polymorph into a form
-
+<w>p</w>      in eine Form verwandeln
 %%%%
 <w>V</w>      toggle xray vision
-
+<w>V</w>      Röntgenblick umschalten
 %%%%
 <w>E</w>      (un)freeze time
-
+<w>E</w>      die Ziet (un)frieren
 %%%%
 <yellow>Monster related commands</yellow>
-
+<yellow>Monsterbezogene Befehle</yellow>
 %%%%
 <w>m</w>/<w>M</w>    create specified monster
-
+<w>m</w>/<w>M</w>    betstimmte Monster schaffen
 %%%%
 <w>D</w>      detect all monsters
-
+<w>D</w>      alle Monster aufspüren
 %%%%
 <w>G</w>      dismiss all monsters
-
+<w>G</w>      alle Monster wegschicken
 %%%%
 <w>"</w>      list monsters
-
+<w>"</w>      Monster auflisten
 %%%%
 <yellow>Item related commands</yellow>
-
+<yellow>Gegenstandbezogene Befehle</yellow>
 %%%%
 <w>a</w>      acquirement
-
+<w>a</w>      Erwerbung
 %%%%
 <w>i</w>/<w>I</w>    identify/unidentify inventory
-
+<w>i</w>/<w>I</w>    Inventar (un)identifizieren
 %%%%
 <w>y</w>/<w>Y</w>    id/unid item types+level items
-
+<w>y</w>/<w>Y</w>    Itemarte+Ebene-Items (un)ident.
 %%%%
 <w>o</w>/<w>%</w>    create an object
-
+<w>o</w>/<w>%</w>    Gegenstand schaffen
 %%%%
 <w>t</w>      tweak object properties
-
+<w>t</w>      Gegenstand-Eigenschaften bearbeiten
 %%%%
 <w>v</w>      recharge all XP evokers
-
+<w>v</w>      alle XP-Evoker wiederaufladen
 %%%%
 <w>Ctrl-V</w> show gold value of an item
-
+<w>Ctrl-V</w> Goldwert eines Gegenstands zeigen
 %%%%
 <w>-</w>      get a god gift
-
+<w>-</w>      ein Gottesgeschenk bekommen
 %%%%
 <w>|</w>      create all unrand artefacts
-
+<w>|</w>      alle vorgegebene Artefakte schaffen
 %%%%
 <w>Ctrl-\</w> create all unrands / fallbacks
-
+<w>Ctrl-\</w> alle vorgeg. Artefakte/Rückfälle schaffen
 %%%%
 <w>+</w>      make randart from item
-
+<w>+</w>      Objekt in zufälliges Artefakt verwandeln
 %%%%
 <w>'</w>      list items
-
+<w>'</w>      Gegenstände auflisten
 %%%%
 <w>J</w>      Jiyva off-level sacrifice
-
+<w>J</w>      Jiyva Opfer außerhalb die Ebene bringen
 %%%%
 <yellow>Debugging commands</yellow>
-
+<yellow>Debug-Befehle</yellow>
 %%%%
 <w>f</w>      quick fight simulation
-
+<w>f</w>      schnelle Kampfsimulation
 %%%%
 <w>F</w>      single scale fsim
-
+<w>F</w>      einzelstäbliche Kampfsimulation
 %%%%
 <w>Ctrl-F</w> double scale fsim
+<w>Ctrl-F</w> doppelstäbliche Kampfsimulation
 
 %%%%
 <w>Ctrl-I</w> item generation stats
-
+<w>Ctrl-I</w> Gegenstand-Generation-Statisken
 %%%%
 <w>O</w>      measure exploration time
-
+<w>O</w>      Erkundungszeit messen
 %%%%
 <w>Ctrl-T</w> dungeon (D)Lua interpreter
-
+<w>Ctrl-T</w> Dungeon-Lua-Interpreter
 %%%%
 <w>Ctrl-U</w> client (C)Lua interpreter
-
+<w>Ctrl-U</w> Client-Lua-Interpreter
 %%%%
 <w>Ctrl-X</w> Xom effect stats
-
+<w>Ctrl-X</w> Xom-Effekte-Statistiken
 %%%%
 <w>Ctrl-Y</w> temporarily suppress wizmode
-
+<w>Ctrl-Y</w> Zauberer-Modus zeitweilig abstellen
 %%%%
 <w>Ctrl-C</w> force a crash
-
+<w>Ctrl-C</w> einen Crash erzwingen
 %%%%
 <w>`</w>      list unassigned command keys
-
+<w>`</w>      unbenutzte Befehlstasten auflisten
 %%%%
 <yellow>Other wizard commands</yellow>
-
+<yellow>Andere Zauberer-Befehle</yellow>
 %%%%
 (not prefixed with <w>&</w>!)
-
+(nicht mit <w>&</w> vorangestellt!)
 %%%%
 <w>x?</w>     list targeted commands
-
+<w>x?</w>     gezielte Befehle auflisten
 %%%%
 <w>X?</w>     list map-mode commands
-
+<w>X?</w>     Karten-Modus-Befehle auflisten
 %%%%
 
 ##################

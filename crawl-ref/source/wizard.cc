@@ -21,6 +21,7 @@
 #include "god-passive.h" // jiyva_eat_offlevel_items
 #include "hiscores.h"
 #include "items.h"
+#include "localise.h"
 #include "luaterp.h" // debug_terp_lua
 #include "macro.h"
 #include "menu.h" // column_composer
@@ -406,9 +407,10 @@ void enter_explore_mode()
 
 int list_wizard_commands(bool do_redraw_screen)
 {
+    // @locnote: Max width for these menu options is 42 chars (exluding formatting tags)
     // 2 columns
     column_composer cols(2, 44);
-    cols.add_formatted(0,
+    cols.add_formatted(0, localise(
                        "<yellow>Player stats</yellow>\n"
                        "<w>A</w>      set all skills to level\n"
                        "<w>Ctrl-D</w> change enchantments/durations\n"
@@ -461,10 +463,10 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-B</w> banish yourself to the Abyss\n"
                        "<w>Ctrl-S</w> change Abyss speed\n"
                        "<w>R</w>      change monster spawn rate\n"
-                       "<w>Ctrl-W</w> change Shoals' tide speed\n",
+                       "<w>Ctrl-W</w> change Shoals' tide speed\n"),
                        true);
 
-    cols.add_formatted(1,
+    cols.add_formatted(1, localise(
                        "<yellow>Other player related effects</yellow>\n"
                        "<w>c</w>      card effect\n"
 #ifdef DEBUG_BONES
@@ -520,7 +522,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<yellow>Other wizard commands</yellow>\n"
                        "(not prefixed with <w>&</w>!)\n"
                        "<w>x?</w>     list targeted commands\n"
-                       "<w>X?</w>     list map-mode commands\n",
+                       "<w>X?</w>     list map-mode commands\n"),
                        true);
 
     int key = show_keyhelp_menu(cols.formatted_lines());
