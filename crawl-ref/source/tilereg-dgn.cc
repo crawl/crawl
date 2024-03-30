@@ -701,8 +701,8 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     {
         tip = you.your_name;
         tip += " (";
-        tip += species::get_abbrev(you.species);
-        tip += get_job_abbrev(you.char_class);
+        tip += localise(species::get_abbrev(you.species));
+        tip += localise(get_job_abbrev(you.char_class));
         tip += ")";
     }
     else // non-player squares

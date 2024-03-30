@@ -232,3 +232,215 @@ Gleitendes
 Pirschendes
 %%%%
 
+##############################################
+# Species abbreviations
+##############################################
+
+%%%%
+# Barachi
+Ba
+Ba
+%%%%
+# Deep Dwarf
+DD
+TZ
+%%%%
+# Deep Elf
+DE
+TE
+%%%%
+# Demigod
+Dg
+Hg
+%%%%
+# Demonspawn
+Ds
+Db
+%%%%
+# Djinni
+Dj
+Dj
+%%%%
+# Draconian
+Dr
+Dr
+%%%%
+# Felid
+Fe
+Fe
+%%%%
+# Formicid
+Fo
+Fo
+%%%%
+# Gargoyle
+Gr
+Gr
+%%%%
+# Ghoul
+Gh
+Gh
+%%%%
+# Gnoll
+Gn
+Gn
+%%%%
+# Hill Orc
+HO
+HO
+%%%%
+# Human
+Hu
+Mn
+%%%%
+# Kobold
+Ko
+Ko
+%%%%
+# Merfolk
+Mf
+Mv
+%%%%
+# Minotaur
+Mi
+Mi
+%%%%
+# Mummy
+Mu
+Mu
+%%%%
+# Naga
+Na
+Na
+%%%%
+# Octopode
+Op
+Op
+%%%%
+# Ogre
+Og
+Og
+%%%%
+# Palentonga
+Pa
+Pa
+%%%%
+# Spriggan
+Sp
+Sp
+%%%%
+# Tengu
+Te
+Te
+%%%%
+# Troll
+Tr
+Tr
+%%%%
+# Vampire
+Vp
+Vp
+%%%%
+# Vine Stalker
+VS
+Rp
+%%%%
+
+##############################################
+# Background (aka job) abbreviations
+##############################################
+
+%%%%
+# Abyssal Knight
+AK
+AR
+%%%%
+# Air Elementalist
+AE
+LM
+%%%%
+# Arcane Marksman
+AM
+AS
+%%%%
+# Artificer
+Ar
+Ar
+%%%%
+# Berserker
+Be
+Be
+%%%%
+# Brigand
+Br
+Br
+%%%%
+# Chaos Knight
+CK
+CR
+%%%%
+# Conjurer
+Cj
+Bs
+%%%%
+# Earth Elementalist
+EE
+Er
+%%%%
+# Enchanter
+En
+Vz
+%%%%
+# Fighter
+Fi
+Kä
+%%%%
+# Fire Elementalist
+FE
+FM
+%%%%
+# Gladiator
+Gl
+Gl
+%%%%
+# Ice Elementalist
+IE
+Ei
+%%%%
+# Delver
+De
+Gr
+%%%%
+# Monk
+Mo
+Mö
+%%%%
+# Necromancer
+Ne
+Ne
+%%%%
+# Summoner
+Su
+Hb
+%%%%
+# Transmuter
+Tm
+Vw
+%%%%
+# Venom Mage
+VM
+GM
+%%%%
+# Wanderer
+Wn
+Wn
+%%%%
+# Warper
+Wr
+Wr
+%%%%
+# (Hedge) Wizard
+Wz
+Zb
+%%%%
+
