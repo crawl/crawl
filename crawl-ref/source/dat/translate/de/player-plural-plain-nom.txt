@@ -1,6 +1,9 @@
 ###############################################################################
 #
-# Player species & genus - plural, plain, nominative
+# Player - plural, plain, nominative
+#
+# The parameter @player_genus_plural@ is included in some messages in 
+# monspeak.txt and wpnnoise.txt. Species is used for genus in many cases.
 #
 ###############################################################################
 
@@ -112,6 +115,7 @@ Lava-Orks
 
 ##############################################
 # Draconian subspecies
+# Do we need plurals of these?
 ##############################################
 %%%%
 Mottled Draconians

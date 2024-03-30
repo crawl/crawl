@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Player species & genus - definite, nominative
+# Player - definite, nominative
 #
 ###############################################################################
 
@@ -90,7 +90,7 @@ the Vine Stalker
 der Rebpirscher
 %%%%
 
-# obsolete (can you still get player ghosts of these species?)
+# obsolete (can still appear in highscores list, and maybe as ghosts)
 %%%%
 the Halfling
 der Halbling
@@ -216,5 +216,83 @@ der Oktopus
 # duplicate of monster
 #the orc
 #der Ork
+%%%%
+
+##############################################
+# "the <species> <background>"
+# (as in "Welcome, Bob the Minotaur Berserker")
+##############################################
+%%%%
+the %s Fighter
+der %s Kämpfer
+%%%%
+the %s Gladiator
+der %s Gladiator
+%%%%
+the %s Monk
+der %s Mönch
+%%%%
+the %s Hunter
+der %s Jäger
+%%%%
+the %s Berserker
+der %s Berserker
+%%%%
+the %s Brigand
+der %s Brigant
+%%%%
+the %s Abyssal Knight
+der %s Abgrundritter
+%%%%
+the %s Chaos Knight
+der %s Chaosritter
+%%%%
+the %s Enchanter
+der %s Verzauberer
+%%%%
+the %s Transmuter
+der %s Verwandler
+%%%%
+the %s Arcane Marksman
+der %s Arkane Scharfschütze
+%%%%
+the %s Warper
+der %s Warper
+%%%%
+the %s Hedge Wizard
+der %s Heckenzauberer
+%%%%
+the %s Conjurer
+der %s Beschwörer
+%%%%
+the %s Summoner
+der %s Herbeirufer
+%%%%
+the %s Necromancer
+der %s Nekromant
+%%%%
+the %s Fire Elementalist
+der %s Feuermagier
+%%%%
+the %s Ice Elementalist
+der %s Eismagier
+%%%%
+the %s Air Elementalist
+der %s Luftmagier
+%%%%
+the %s Earth Elementalist
+der %s Erdmagier
+%%%%
+the %s Venom Mage
+der %s Giftmagier
+%%%%
+the %s Artificer
+der %s Artificer
+%%%%
+the %s Delver
+der %s Gräber
+%%%%
+the %s Wanderer
+der %s Wanderer
 %%%%
 

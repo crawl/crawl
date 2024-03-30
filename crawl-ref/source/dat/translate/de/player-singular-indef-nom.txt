@@ -1,0 +1,161 @@
+###############################################################################
+#
+# Player - indefinite, nominative
+#
+###############################################################################
+
+##############################################
+# "a <species> <background>"
+##############################################
+%%%%
+a %s Fighter
+ein %s Kämpfer
+%%%%
+a %s Gladiator
+ein %s Gladiator
+%%%%
+a %s Monk
+ein %s Mönch
+%%%%
+a %s Hunter
+ein %s Jäger
+%%%%
+a %s Berserker
+ein %s Berserker
+%%%%
+a %s Brigand
+ein %s Brigant
+%%%%
+a %s Abyssal Knight
+ein %s Abgrundritter
+%%%%
+a %s Chaos Knight
+ein %s Chaosritter
+%%%%
+a %s Enchanter
+ein %s Verzauberer
+%%%%
+a %s Transmuter
+ein %s Verwandler
+%%%%
+a %s Arcane Marksman
+ein %s Arkane Scharfschütze
+%%%%
+a %s Warper
+ein %s Warper
+%%%%
+a %s Hedge Wizard
+ein %s Heckenzauberer
+%%%%
+a %s Conjurer
+ein %s Beschwörer
+%%%%
+a %s Summoner
+ein %s Herbeirufer
+%%%%
+a %s Necromancer
+ein %s Nekromant
+%%%%
+a %s Fire Elementalist
+ein %s Feuermagier
+%%%%
+a %s Ice Elementalist
+ein %s Eismagier
+%%%%
+a %s Air Elementalist
+ein %s Luftmagier
+%%%%
+a %s Earth Elementalist
+ein %s Erdmagier
+%%%%
+a %s Venom Mage
+ein %s Giftmagier
+%%%%
+a %s Artificer
+ein %s Artificer
+%%%%
+a %s Delver
+ein %s Gräber
+%%%%
+a %s Wanderer
+ein %s Wanderer
+%%%%
+
+##############################################
+# "a <rank> <species> <background>"
+# Normally used for player ghosts
+##############################################
+%%%%
+a %s%s Fighter
+ein {adj-er}%s%s Kämpfer
+%%%%
+a %s%s Gladiator
+ein {adj-er}%s%s Gladiator
+%%%%
+a %s%s Monk
+ein {adj-er}%s%s Mönch
+%%%%
+a %s%s Hunter
+ein {adj-er}%s%s Jäger
+%%%%
+a %s%s Berserker
+ein {adj-er}%s%s Berserker
+%%%%
+a %s%s Brigand
+ein {adj-er}%s%s Brigant
+%%%%
+a %s%s Abyssal Knight
+ein {adj-er}%s%s Abgrundritter
+%%%%
+a %s%s Chaos Knight
+ein {adj-er}%s%s Chaosritter
+%%%%
+a %s%s Enchanter
+ein {adj-er}%s%s Verzauberer
+%%%%
+a %s%s Transmuter
+ein {adj-er}%s%s Verwandler
+%%%%
+a %s%s Arcane Marksman
+ein {adj-er}%s%s Arkane Scharfschütze
+%%%%
+a %s%s Warper
+ein {adj-er}%s%s Warper
+%%%%
+a %s%s Hedge Wizard
+ein {adj-er}%s%s Heckenzauberer
+%%%%
+a %s%s Conjurer
+ein {adj-er}%s%s Beschwörer
+%%%%
+a %s%s Summoner
+ein {adj-er}%s%s Herbeirufer
+%%%%
+a %s%s Necromancer
+ein {adj-er}%s%s Nekromant
+%%%%
+a %s%s Fire Elementalist
+ein {adj-er}%s%s Feuermagier
+%%%%
+a %s%s Ice Elementalist
+ein {adj-er}%s%s Eismagier
+%%%%
+a %s%s Air Elementalist
+ein {adj-er}%s%s Luftmagier
+%%%%
+a %s%s Earth Elementalist
+ein {adj-er}%s%s Erdmagier
+%%%%
+a %s%s Venom Mage
+ein {adj-er}%s%s Giftmagier
+%%%%
+a %s%s Artificer
+ein {adj-er}%s%s Artificer
+%%%%
+a %s%s Delver
+ein {adj-er}%s%s Gräber
+%%%%
+a %s%s Wanderer
+ein {adj-er}%s%s Wanderer
+%%%%
+
