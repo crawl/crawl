@@ -554,7 +554,7 @@ einfarbig braune
 "seven-headed "
 "siebenköpfige "
 %%%%
-an eight-headed "
+"eight-headed "
 "achtköpfige "
 %%%%
 "nine-headed "
