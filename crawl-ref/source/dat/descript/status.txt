@@ -380,7 +380,7 @@ if you are victorious.
 %%%%
 Disjoin status
 
-You are destabilizing space around yourself, causing nearby monsters to be
+You are destabilising space around yourself, causing nearby monsters to be
 randomly blinked away from you.
 %%%%
 Fugue status

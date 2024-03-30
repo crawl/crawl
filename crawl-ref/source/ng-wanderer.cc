@@ -483,8 +483,10 @@ static void _wanderer_random_evokable()
             (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY);
         const auto ally_evoker_type =
             (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY);
+        const auto control_evoker_type =
+            (misc_item_type)item_for_set(ITEM_SET_CONTROL_MISCELLANY);
         misc_item_type selected_evoker =
-              random_choose(ally_evoker_type, MISC_PHIAL_OF_FLOODS,
+              random_choose(ally_evoker_type, control_evoker_type,
                             MISC_PHANTOM_MIRROR, area_evoker_type,
                             MISC_LIGHTNING_ROD);
 

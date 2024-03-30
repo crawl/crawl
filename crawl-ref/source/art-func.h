@@ -1686,7 +1686,7 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 
     // If attempting to cast manifold assault would abort (likely because of no
     // valid targets in range), do nothing
-    if (cast_manifold_assault(*attacker, 100, false, false, defender) == spret::abort)
+    if (cast_manifold_assault(*attacker, 0, false, false, defender) == spret::abort)
         return;
 
     mprf("%s slice%s through the folds of space itself!",

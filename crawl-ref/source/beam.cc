@@ -635,6 +635,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
          80, BEAM_NEG,
          40, BEAM_HOLY,
          40, BEAM_DRAIN_MAGIC,
+         16, BEAM_FOUL_FLAME,
          // From here are beam effects analogous to effects that happen when
          // SPWPN_CHAOS chooses itself again as the ego (roughly 1/7 chance).
          // Weights similar to those from chaos_effects in attack.cc

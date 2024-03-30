@@ -1032,7 +1032,6 @@ namespace quiver
         switch (s)
         {
         case SPELL_FULMINANT_PRISM:
-        case SPELL_GRAVITAS: // will autotarget to a monster if allowed, should we allow?
         case SPELL_PASSWALL: // targeted, but doesn't make sense with autotarget
         case SPELL_GOLUBRIAS_PASSAGE: // targeted, but doesn't make sense with autotarget
             return true;
@@ -1445,7 +1444,14 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
+            case ABIL_COMBUSTION_BREATH:
+            case ABIL_GLACIAL_BREATH:
+            case ABIL_GALVANIC_BREATH:
             case ABIL_CAUSTIC_BREATH:
+            case ABIL_NULLIFYING_BREATH:
+            case ABIL_STEAM_BREATH:
+            case ABIL_NOXIOUS_BREATH:
+            case ABIL_MUD_BREATH:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
@@ -1842,6 +1848,7 @@ namespace quiver
             case MISC_HORN_OF_GERYON:
             case MISC_QUAD_DAMAGE:
             case MISC_PHANTOM_MIRROR:
+            case MISC_GRAVITAMBOURINE:
                 return false;
             default:
                 return true;

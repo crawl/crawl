@@ -22,6 +22,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
+#include "spl-damage.h"
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -1003,7 +1004,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     if (is_monster() && !god_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
-    dice_def damage(2, 1 + div_rand_round(pow, 10));
+    const dice_def damage = collision_damage(pow, true);
     const int dam = apply_ac(damage.roll());
 
     if (other && other->alive())

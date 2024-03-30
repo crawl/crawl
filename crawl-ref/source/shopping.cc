@@ -645,6 +645,7 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_CONDENSER_VANE:
         case MISC_PHANTOM_MIRROR:
         case MISC_LIGHTNING_ROD:
+        case MISC_GRAVITAMBOURINE:
             valued += 400;
             break;
 

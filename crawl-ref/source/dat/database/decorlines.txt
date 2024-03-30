@@ -10,7 +10,7 @@ You reach down and sample @_fruit_and_reaction_@
 %%%%
 meat cache
 
-You reach down and sample some @_meat_and_reaction_@
+You reach down and sample @_meat_and_reaction_@
 %%%%
 _fruit_and_reaction_
 
@@ -48,45 +48,45 @@ _meat_and_reaction_
 
 # Try to keep to dungeon animals.
 
-smoked eel. Savory!
+a smoked eel. Savory!
 
-yak sausage. Delicious.
+a yak sausage. Delicious.
 
-cured ham hock. Salty.
+a cured ham hock. Salty.
 
-adder jerky. Delicious.
+some adder jerky. Delicious.
 
-magically-preserved pepperoni pizza. Delicious.
-
-w:6
-smoked snail. Delicious.
+a slice of magically-preserved pepperoni pizza. Delicious.
 
 w:6
-death yak sausage. Delicious.
+some smoked snail. Delicious.
 
 w:6
-alligator jerky. Delicious.
+some death yak haggis. Delicious.
 
 w:6
-cured dream mutton. Ephemeral.
+some alligator jerky. Delicious.
 
 w:6
-magically-preserved Pandemonium pizza. Delectable.
+some cured dream mutton. Ephemeral.
+
+w:6
+a slice of magically-preserved Pandemonium pizza. Delectable.
 
 w:2
-candy-coated scorpion. Crunchy.
+a candy-coated scorpion. Crunchy.
 
 w:2
-pickled kraken tentacle. Astonishing!
+a pickled kraken tentacle. Astonishing!
 
 w:2
-cured hell ham hock. Spicy!
+a cured hell ham hock. Spicy!
 
 w:2
-shrike confit. Tangy!
+some shrike confit. Tangy!
 
 w:2
-century hydra egg. An acquired taste.
+a century hydra egg. An acquired taste.
 ########################## Shared diets ######################################
 %%%%
 carnivore fruit cache
@@ -128,7 +128,7 @@ You pick out some berries and nibble upon them. Bland.
 %%%%
 felid meat cache
 
-You nibble upon some @_meat_and_reaction_@
+You nibble upon @_meat_and_reaction_@
 %%%%
 ghoul fruit cache
 
@@ -193,7 +193,7 @@ blade meat cache
 
 You try to grab some meat with your blades, but fail!
 
-You skewer and sample some @_meat_and_reaction_@
+You skewer and sample @_meat_and_reaction_@
 %%%%
 death fruit cache
 
@@ -234,7 +234,7 @@ You distend your jaw to swallow @_fruit_and_reaction_@
 %%%%
 snake meat cache
 
-You distend your jaw to swallow some @_meat_and_reaction_@
+You distend your jaw to swallow @_meat_and_reaction_@
 %%%%
 storm fruit cache
 
@@ -246,8 +246,8 @@ You reach down and electrolyse @_meat_and_reaction_@
 %%%%
 tree fruit cache
 
-You root around and sample @_fruit_and_reaction_@
+@short fruit cache@
 %%%%
 tree meat cache
 
-You root around and sample some @_meat_and_reaction_@
+@short meat cache@

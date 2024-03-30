@@ -1619,7 +1619,7 @@ void game_options::reset_options()
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
           SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
-          SPELL_PLASMA_BEAM };
+          SPELL_PLASMA_BEAM, SPELL_PILEDRIVER };
     always_use_static_spell_targeters = false;
 
     force_ability_targeter =

@@ -236,6 +236,7 @@ static unordered_set<int> _player_nonbook_spells =
                           // least uses the enum value.
     SPELL_TREMORSTONE,    // not cast directly, but the spell type is used for
                           // damage and noise display.
+    SPELL_GRAVITAS,
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,

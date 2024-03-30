@@ -75,6 +75,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define YRED_TORCH_USED_KEY "yred_torch_used"
 #define YRED_KILLS_LOGGED_KEY "yred_souls_scoured"
 #define YRED_BLASPHEMY_CENTER_KEY "blasphemy_center"
+#define YRED_SHACKLES_KEY "shackles_bound"
 
 struct bolt;
 class stack_iterator;

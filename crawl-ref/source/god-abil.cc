@@ -1662,7 +1662,10 @@ void yred_fathomless_shackles_effect(int delay)
         }
 
         if (!mi->has_ench(ENCH_BOUND))
+        {
             mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, INFINITE_DURATION));
+            mi->props[YRED_SHACKLES_KEY] = true;
+        }
 
         // Cache this first, since damage might kill them
         bool can_drain = actor_is_susceptible_to_vampirism(**mi, false);

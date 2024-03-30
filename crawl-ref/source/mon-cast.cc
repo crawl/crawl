@@ -1926,7 +1926,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
-    case SPELL_GRAVITAS:
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_SUMMON_EXECUTIONERS:
     case SPELL_DOOM_HOWL:
@@ -6831,11 +6830,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                         cleansing_flame_source::spell, mons->pos(), mons);
         return;
 
-    case SPELL_GRAVITAS:
-        ASSERT(foe);
-        fatal_attraction(foe->pos(), mons, splpow);
-        return;
-
     case SPELL_ENTROPIC_WEAVE:
         ASSERT(foe);
         foe->corrode_equipment("the entropic weave");
@@ -8148,19 +8142,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         fire_tracer(mon, tracer, true);
         return ai_action::good_or_bad(mons_should_fire(tracer));
     }
-
-    case SPELL_GRAVITAS:
-        if (!foe)
-            return ai_action::bad();
-
-        for (actor_near_iterator ai(foe->pos(), LOS_SOLID); ai; ++ai)
-            if (*ai != mon && *ai != foe && !ai->is_stationary()
-                && mon->can_see(**ai))
-            {
-                return ai_action::good();
-            }
-
-        return ai_action::bad();
 
     case SPELL_DOOM_HOWL:
         ASSERT(foe);

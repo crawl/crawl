@@ -80,6 +80,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_MOMENTUM_STRIKE, ZAP_MOMENTUM_STRIKE },
     { SPELL_TREMORSTONE, ZAP_TREMORSTONE },
     { SPELL_CURSE_OF_AGONY, ZAP_CURSE_OF_AGONY },
+    { SPELL_GRAVITAS, ZAP_GRAVITAS },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
@@ -159,7 +160,6 @@ static pair<ability_type, zap_type> _abil_zaps[] =
     { ABIL_SPIT_POISON, ZAP_SPIT_POISON },
     { ABIL_BREATHE_FIRE, ZAP_BREATHE_FIRE },
     { ABIL_BREATHE_POISON, ZAP_BREATHE_POISON },
-    { ABIL_NOXIOUS_BREATH, ZAP_NOXIOUS_BREATH },
 };
 
 zap_type spell_to_zap(spell_type spell)
