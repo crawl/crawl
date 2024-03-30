@@ -5,6 +5,8 @@
 
 #pragma once
 
+struct item_def;
+
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status();
 #endif
@@ -16,6 +18,9 @@ void update_turn_count();
 void print_stats();
 void print_stats_level();
 void draw_border();
+
+int wielded_weapon_colour(const item_def &weapon);
+int unarmed_attack_colour();
 
 #ifndef USE_TILE_LOCAL
 void smallterm_warning();

@@ -154,7 +154,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     }
     player.index_to_letter = index_to_letter;
 
-    function inventory_item_desc(index, parens=false)
+    function inventory_item_desc(index, parens=false, colour=-1)
     {
         var item = player.inv[index];
         var elem = $("<span>");
@@ -162,7 +162,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             elem.text("(" + item.name + ")");
         else
             elem.text(item.name);
-        if (item.col != -1 && item.col != null)
+
+        if (colour != -1)
+            elem.addClass("fg" + colour);
+        else if (item.col != -1 && item.col != null)
             elem.addClass("fg" + item.col);
         return elem;
     }
@@ -172,17 +175,16 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     {
         var elem;
         var wielded = offhand ? player.offhand_index : player.weapon_index;
+        var colour = offhand ? player.offhand_weapon_colour
+                             : player.weapon_colour;
         if (wielded == -1)
         {
             elem = $("<span>");
             elem.text(player.unarmed_attack);
-            elem.addClass("fg" + player.unarmed_attack_colour);
+            elem.addClass("fg" + colour);
         }
         else
-            elem = inventory_item_desc(wielded);
-
-        if (player.has_status("corroded"))
-            elem.addClass("corroded_weapon");
+            elem = inventory_item_desc(wielded, false, colour);
 
         return elem;
     }
@@ -621,6 +623,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
                 inv: {},
                 weapon_index: -1,
                 offhand_index: -1,
+                weapon_colour: 0,
+                offhand_weapon_colour: 0,
                 quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},

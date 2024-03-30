@@ -1144,7 +1144,7 @@ static void _print_stats_ev(int x, int y)
  *
  * @return     A colour enum for the given weapon.
  */
-static int _wpn_name_colour(const item_def &wpn)
+int wielded_weapon_colour(const item_def &wpn)
 {
     if (you.corrosion_amount())
         return RED;
@@ -1167,12 +1167,17 @@ static string _wpn_name_corroded(const item_def &weapon)
     return wpn_copy.name(DESC_PLAIN, true);
 }
 
+int unarmed_attack_colour()
+{
+    return you.corrosion_amount() ? RED : get_form()->uc_colour;
+}
+
 static void _print_unarmed_name()
 {
     textcolour(HUD_CAPTION_COLOUR);
     const string slot_name = "-) ";
     CPRINTF("%s", slot_name.c_str());
-    textcolour(you.corrosion_amount() ? RED : get_form()->uc_colour);
+    textcolour(unarmed_attack_colour());
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
     CPRINTF("%s", chop_string(you.unarmed_attack_name(),
                               max_name_width).c_str());
@@ -1185,7 +1190,7 @@ static void _print_weapon_name(const item_def &weapon, int width)
     const char slot_letter = weapon.slot;
     const string slot_name = make_stringf("%c) ", slot_letter);
     CPRINTF("%s", slot_name.c_str());
-    textcolour(_wpn_name_colour(weapon));
+    textcolour(wielded_weapon_colour(weapon));
     const int max_name_width = width - slot_name.size();
     const string name = _wpn_name_corroded(weapon);
     CPRINTF("%s", chop_string(name, max_name_width).c_str());

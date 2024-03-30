@@ -96,7 +96,8 @@ struct player_info
     int8_t quiver_item;
     string quiver_desc;
     string unarmed_attack;
-    uint8_t unarmed_attack_colour;
+    uint8_t weapon_colour;
+    uint8_t offhand_weapon_colour;
     bool quiver_available;
 
     int8_t weapon_index;
