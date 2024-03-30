@@ -178,8 +178,12 @@ Walker
 Wanderer
 %%%%
 # Naga (snake-like)
-Slider
+Slitherer
 Kriecher
+%%%%
+# Octopode (octopus-like)
+Wriggler
+Schlängler
 %%%%
 # Tengu (bird-like)
 Glider
@@ -194,8 +198,11 @@ Pirscher
 Walking
 Wandernde
 %%%%
-Sliding
+Slithering
 Kriechende
+%%%%
+Wriggling
+Schlängelnde
 %%%%
 Gliding
 Gleitende
@@ -208,8 +215,11 @@ Pirschende
 {adj-er}Walking
 Wandernder
 %%%%
-{adj-er}Sliding
+{adj-er}Slithering
 Kriechender
+%%%%
+{adj-er}Wriggling
+Schlängelnder
 %%%%
 {adj-er}Gliding
 Gleitender
@@ -222,8 +232,11 @@ Pirschender
 {adj-es}Walking
 Wanderndes
 %%%%
-{adj-es}Sliding
+{adj-es}Slithering
 Kriechendes
+%%%%
+{adj-es}Wriggling
+Schlängelndes
 %%%%
 {adj-es}Gliding
 Gleitendes
