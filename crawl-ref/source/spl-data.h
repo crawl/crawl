@@ -2997,10 +2997,11 @@ static const struct spell_desc spelldata[] =
     TILEG_CLEANSING_FLAME,
 },
 
+// Evoker-only now
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
     spschool::translocation,
-    spflag::target | spflag::not_self | spflag::needs_tracer,
+    spflag::target | spflag::needs_tracer,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,
@@ -3204,7 +3205,7 @@ static const struct spell_desc spelldata[] =
     50,
     3, 3,
     0,
-    TILEG_POISONOUS_VAPOURS,
+    TILEG_MERCURY_VAPOURS,
 },
 
 {
@@ -3465,8 +3466,8 @@ static const struct spell_desc spelldata[] =
     SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
     spflag::none,
-    4,
-    100,
+    7,
+    200,
     -1, -1,
     0,
     TILEG_MANIFOLD_ASSAULT,
@@ -3858,6 +3859,28 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     10,
     TILEG_ERROR,
+},
+
+{
+    SPELL_PILEDRIVER, "Maxwell's Portable Piledriver",
+    spschool::translocation,
+    spflag::none,
+    4,
+    100,
+    5, 5,
+    0,
+    TILEG_PILEDRIVER,
+},
+
+{
+    SPELL_GELLS_GAVOTTE, "Gell's Gavotte",
+    spschool::translocation,
+    spflag::target,
+    6,
+    200,
+    1, 1,
+    0,
+    TILEG_GAVOTTE,
 },
 
 {

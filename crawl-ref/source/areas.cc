@@ -36,8 +36,8 @@ enum class areaprop
     sanctuary_2   = (1 << 1),
     silence       = (1 << 2),
     halo          = (1 << 3),
-    liquid        = (1 << 4),
-    actual_liquid = (1 << 5),
+    liquified     = (1 << 4),
+    // (1 << 5) was actual_liquid, now unused
     orb           = (1 << 6), ///< The glow of the Orb of Zot
     umbra         = (1 << 7),
     quad          = (1 << 8),
@@ -150,10 +150,8 @@ static void _actor_areas(actor *a)
         {
             dungeon_feature_type f = env.grid(*ri);
 
-            _set_agrid_flag(*ri, areaprop::liquid);
-
             if (feat_has_solid_floor(f) && !feat_is_water(f))
-                _set_agrid_flag(*ri, areaprop::actual_liquid);
+                _set_agrid_flag(*ri, areaprop::liquified);
         }
         no_areas = false;
     }
@@ -249,10 +247,7 @@ static area_centre_type _get_first_area(const coord_def& f)
         return area_centre_type::halo;
     if (a & areaprop::umbra)
         return area_centre_type::umbra;
-    // liquid is always applied; actual_liquid is on top
-    // of this. If we find the first, we don't care about
-    // the second.
-    if (a & areaprop::liquid)
+    if (a & areaprop::liquified)
         return area_centre_type::liquid;
 
     return area_centre_type::none;
@@ -673,12 +668,12 @@ int monster::liquefying_radius() const
     return shrinking_aoe_range(moddur);
 }
 
-bool liquefied(const coord_def& p, bool check_actual)
+bool liquefied(const coord_def& p, bool ledas_only)
 {
     if (!map_bounds(p))
         return false;
 
-    if (env.grid(p) == DNGN_MUD)
+    if (env.grid(p) == DNGN_MUD && !ledas_only)
         return true;
 
     if (!_agrid_valid)
@@ -687,12 +682,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (feat_is_water(env.grid(p)) || feat_is_lava(env.grid(p)))
         return false;
 
-    // "actually" liquefied (ie, check for movement)
-    if (check_actual)
-        return _check_agrid_flag(p, areaprop::actual_liquid);
-    // just recoloured for consistency
-    else
-        return _check_agrid_flag(p, areaprop::liquid);
+    return _check_agrid_flag(p, areaprop::liquified);
 }
 
 /////////////

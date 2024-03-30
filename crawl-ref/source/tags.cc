@@ -1424,6 +1424,22 @@ void tag_read(reader &inf, tag_type tag_id)
                     dec_mitm_item_quantity(si.index(), si->quantity);
                 }
             }
+
+        // These you-related changes have to be after terrain is loaded,
+        // because they might cause you to lose flight. That will check
+        // the terrain below you and crash if the map hasn't loaded yet.
+        if (you.species == SP_FORMICID)
+            remove_one_equip(EQ_HELMET, false, true);
+
+        if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
+        {
+            if (you.has_mutation(MUT_NO_JEWELLERY))
+            {
+                remove_one_equip(EQ_AMULET, false, true);
+                remove_one_equip(EQ_RIGHT_RING, false, true);
+                remove_one_equip(EQ_LEFT_RING, false, true);
+            }
+        }
 #endif
         break;
     case TAG_GHOST:
@@ -2453,6 +2469,7 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_RING_OF_FLAMES:
         case SPELL_HASTE:
         case SPELL_STICKS_TO_SNAKES:
+        case SPELL_GRAVITAS:
             return SPELL_NO_SPELL;
 
         case SPELL_FLAME_TONGUE:
@@ -4592,18 +4609,6 @@ static void _tag_read_you_items(reader &th)
         // FOOD_PURGE and FOOD_PURGE_AP_FIX, copy the old exemplar FOOD_PEAR.
         if (food_pickups[FOOD_FRUIT] == AP_FORCE_NONE)
             food_pickups[FOOD_FRUIT] = food_pickups[FOOD_PEAR];
-    }
-    if (you.species == SP_FORMICID)
-        remove_one_equip(EQ_HELMET, false, true);
-
-    if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
-    {
-        if (you.has_mutation(MUT_NO_JEWELLERY))
-        {
-            remove_one_equip(EQ_AMULET, false, true);
-            remove_one_equip(EQ_RIGHT_RING, false, true);
-            remove_one_equip(EQ_LEFT_RING, false, true);
-        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
@@ -7097,6 +7102,7 @@ void unmarshallMonster(reader &th, monster& m)
         }
 #if TAG_MAJOR_VERSION == 34
         else if (slot.spell != SPELL_DELAYED_FIREBALL
+                 && slot.spell != SPELL_GRAVITAS
                  && slot.spell != SPELL_MELEE
                  && slot.spell != SPELL_NO_SPELL)
         {

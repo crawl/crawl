@@ -2361,3 +2361,66 @@ aff_type targeter_galvanic::is_affected(coord_def loc)
 
     return AFF_NO;
 }
+
+targeter_gavotte::targeter_gavotte(const actor* caster)
+    : targeter_beam(caster, 1, ZAP_IOOD, 0, 0, 0)
+{
+}
+
+bool targeter_gavotte::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    affected_monsters.clear();
+    path_taken.clear();
+
+    if (!valid_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.range = GAVOTTE_DISTANCE;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    vector<monster*> affected = gavotte_affected_monsters(a - you.pos());
+    for (monster* mon : affected)
+        affected_monsters.push_back(mon->pos());
+
+    return true;
+}
+
+bool targeter_gavotte::valid_aim(coord_def a)
+{
+    if (!targeter_beam::valid_aim(a))
+        return false;
+
+    if (!in_bounds(a) || grid_distance(a, you.pos()) > 1 || a == you.pos())
+        return false;
+
+    if (a == agent->pos())
+        return notify_fail("Gravity is already pointing downward.");
+
+    // make sure it's a true cardinal
+    const coord_def delta = a - agent->pos();
+    if (delta.x && delta.y && abs(delta.x) != abs(delta.y))
+        return notify_fail("You can only reorient gravity in a cardinal direction.");
+
+    return true;
+}
+
+aff_type targeter_gavotte::is_affected(coord_def loc)
+{
+    for (auto pc : path_taken)
+        if (pc == loc)
+            return cell_is_solid(pc) ? AFF_NO : AFF_MAYBE;
+
+    for (coord_def pos : affected_monsters)
+        if (pos == loc)
+            return AFF_YES;
+
+    return AFF_NO;
+}

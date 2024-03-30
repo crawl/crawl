@@ -1918,6 +1918,9 @@ end
 if not you.unrands("crystal ball of Wucad Mu") then
       kstr = kstr .. " | crystal ball of Wucad Mu w:2"
 end
+if not you.unrands("Charlatan's Orb") then
+      kstr = kstr .. " | Charlatan's Orb w:2"
+end
 
 kfeat(kstr)
 }}

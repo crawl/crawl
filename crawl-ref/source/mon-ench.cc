@@ -23,6 +23,7 @@
 #include "env.h"
 #include "fight.h"
 #include "hints.h"
+#include "god-abil.h"
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
@@ -1819,10 +1820,11 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_BOUND:
         // Remove Yred binding as soon as we're not in the effect area
-        if (!props.exists(BINDING_SIGIL_DURATION_KEY)
+        if (props.exists(YRED_SHACKLES_KEY)
             && (!is_blasphemy(pos()) || !is_blasphemy(you.pos())
                 || !you.duration[DUR_FATHOMLESS_SHACKLES]))
         {
+            props.erase(YRED_SHACKLES_KEY);
             del_ench(en, true, true);
         }
         else

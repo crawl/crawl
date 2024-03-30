@@ -922,6 +922,8 @@ static const item_set_def item_sets[] =
                                               MISC_TIN_OF_TREMORSTONES } },
     { "ally misc",          OBJ_MISCELLANY, { MISC_BOX_OF_BEASTS,
                                               MISC_SACK_OF_SPIDERS } },
+    { "control misc",       OBJ_MISCELLANY, { MISC_PHIAL_OF_FLOODS,
+                                              MISC_GRAVITAMBOURINE } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 

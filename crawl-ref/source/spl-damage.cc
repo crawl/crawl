@@ -1846,20 +1846,6 @@ dice_def scorch_damage(int pow, bool random)
     return dice_def(2, (10 + pow / 6) / 2);
 }
 
-static void _animate_scorch(coord_def p)
-{
-    if (!(Options.use_animations & UA_BEAM))
-        return;
-
-#ifdef USE_TILE
-        view_add_tile_overlay(p, tileidx_zap(RED));
-#endif
-        view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
-                                   static_cast<unsigned short>(RED)});
-
-    animation_delay(50, true);
-}
-
 spret cast_scorch(const actor& agent, int pow, bool fail)
 {
     fail_check();
@@ -1905,7 +1891,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
 
     if (!targ->alive())
     {
-        _animate_scorch(p);
+        flash_tile(p, RED);
         return spret::success;
     }
 
@@ -1933,7 +1919,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
         }
     }
 
-    _animate_scorch(targ->pos());
+    flash_tile(targ->pos(), RED);
     return spret::success;
 }
 
@@ -4237,15 +4223,7 @@ void attempt_jinxbite_hit(actor& victim)
 
     // Show brief animation when we successfully trigger. (Helps sell to the
     // player that this is a Will check, also.)
-    if ((Options.use_animations & UA_BEAM))
-    {
-#ifdef USE_TILE
-        view_add_tile_overlay(victim.pos(), tileidx_zap(LIGHTBLUE));
-#endif
-        view_add_glyph_overlay(victim.pos(), {dchar_glyph(DCHAR_FIRED_ZAP),
-                                static_cast<unsigned short>(LIGHTBLUE)});
-        animation_delay(50, true);
-    }
+    flash_tile(victim.pos(), LIGHTBLUE);
 
     // XXX TODO: move this out and display it
     const int dmg = roll_dice(2, 2 + div_rand_round(pow, 25));
@@ -4885,4 +4863,14 @@ dice_def electrolunge_damage(int pow)
 int get_warp_space_chance(int pow)
 {
     return min(90, 35 + pow);
+}
+
+dice_def collision_damage(int pow, bool random)
+{
+    return dice_def(2, random ? 1 + div_rand_round(pow, 10) : 1 + pow / 10);
+}
+
+string describe_collision_dam(dice_def dice)
+{
+    return make_stringf("%dd%d / collision", dice.num, dice.size);
 }

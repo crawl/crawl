@@ -1019,6 +1019,7 @@ static string misc_type_name(int type)
 #endif
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
+    case MISC_GRAVITAMBOURINE:           return "Gell's gravitambourine";
 
     default:
         return "buggy miscellaneous item";

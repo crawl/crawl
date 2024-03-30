@@ -955,6 +955,22 @@ static spret _condenser()
     return spret::success;
 }
 
+static int _gravitambourine_power()
+{
+    return 15 + you.skill(SK_EVOCATIONS, 7) / 2;
+}
+
+static bool _gravitambourine(dist *target)
+{
+    const spret ret = your_spells(SPELL_GRAVITAS, _gravitambourine_power(),
+            false, nullptr, target);
+
+    if (ret == spret::abort)
+        return false;
+
+    return true;
+}
+
 static transformation _form_for_talisman(const item_def &talisman)
 {
     if (you.using_talisman(talisman))
@@ -1144,6 +1160,16 @@ bool evoke_item(item_def& item, dist *preselect)
 
         case MISC_PHIAL_OF_FLOODS:
             if (_phial_of_floods(preselect))
+            {
+                expend_xp_evoker(item.sub_type);
+                practise_evoking(3);
+            }
+            else
+                return false;
+            break;
+
+        case MISC_GRAVITAMBOURINE:
+            if (_gravitambourine(preselect))
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
@@ -1345,6 +1371,11 @@ string evoke_damage_string(const item_def& item)
             return spell_damage_string(SPELL_TREMORSTONE, true,
                 _tremorstone_power());
         }
+        else if (item.sub_type == MISC_GRAVITAMBOURINE)
+        {
+            return spell_damage_string(SPELL_GRAVITAS, true,
+                _gravitambourine_power());
+        }
         else
             return "";
     }
@@ -1367,6 +1398,8 @@ string evoke_noise_string(const item_def& item)
             return spell_noise_string(SPELL_THUNDERBOLT);
         else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
             return spell_noise_string(SPELL_TREMORSTONE);
+        else if (item.sub_type == MISC_GRAVITAMBOURINE)
+            return spell_noise_string(SPELL_GRAVITAS);
         else
             return "";
     }

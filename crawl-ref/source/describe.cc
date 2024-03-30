@@ -3211,7 +3211,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
                 tile_def(TILE_UMBRA)
             });
         }
-        if (liquefied(pos))
+        if (liquefied(pos, true))
         {
             ret.push_back({
                 "Liquefied ground.",

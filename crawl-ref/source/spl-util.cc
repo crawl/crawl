@@ -462,7 +462,6 @@ bool spell_is_direct_attack(spell_type spell)
         // spell school exceptions
         if (spell == SPELL_VIOLENT_UNRAVELLING  // hex
             || spell == SPELL_FORCE_LANCE // transloc
-            || spell == SPELL_GRAVITAS
             || spell == SPELL_BLINKBOLT
             || spell == SPELL_BANISHMENT)
         {
@@ -1424,6 +1423,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot redirect your momentum while unable to move.";
         break;
 
+    case SPELL_PILEDRIVER:
+        if (you.stasis())
+            return "your stasis prevents you from slingshotting yourself.";
+        if (temp)
+        {
+            if (!you.is_motile())
+                return "you cannot slingshot yourself while unable to move.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+            if (possible_piledriver_targets().empty())
+                return "there is nothing nearby that you can slingshot.";
+        }
+        break;
+
     case SPELL_ELECTRIC_CHARGE:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
@@ -1447,6 +1460,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_CALL_CANINE_FAMILIAR:
         if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
             return "your canine familiar is too injured to answer your call.";
+
+    case SPELL_GELLS_GAVOTTE:
+        if (temp && you.duration[DUR_GAVOTTE_COOLDOWN])
+            return "local gravity is still too unstable to reorient.";
 
     default:
         break;
@@ -1508,6 +1525,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
     case SPELL_BOULDER:
+    case SPELL_GELLS_GAVOTTE:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

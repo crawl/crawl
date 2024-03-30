@@ -567,7 +567,7 @@ Spellpower will increase how long the bog lingers.
 %%%%
 Eruption spell
 
-Splits the earth to draw up a localized, short-lived volcano under the target.
+Splits the earth to draw up a localised, short-lived volcano under the target.
 %%%%
 Fastroot spell
 
@@ -676,11 +676,19 @@ Galvanic Breath spell
 
 <Galvanic Breath ability>
 %%%%
-Gell's Gravitas spell
+Gell's Gavotte spell
 
-Briefly redirects gravity around a target point, causing 'down' to be towards
-that point. All nearby creatures, save the caster, fall helplessly toward that
-point – typically colliding with each other, or with a victim standing there.
+Briefly reorients local gravity to be in a cardinal direction of the caster's
+choosing, causing all creatures in sight to tumble a short distance in that
+direction.
+
+The caster is not immune to the gravitational effects of this spell, but will
+be cushioned so they take no collision damage. Other creatures are not so
+fortunate, and the abrupt impact will batter anything which was not already
+standing beside its new 'floor'.
+
+It takes a short time for gravity to stabilise enough to recast this spell,
+though more powerful mages are able to do so more frequently.
 %%%%
 Ghostly Fireball spell
 
@@ -847,6 +855,7 @@ Iskenderun's Mystic Blast spell
 
 Detonates a crackling sphere of destructive energy. The explosion will hit all
 nearby monsters with physical force, knocking them back if damage is done.
+Spellpower increases damage and knockback distance.
 %%%%
 Jinxbite spell
 
@@ -939,11 +948,13 @@ Manifold Assault spell
 
 Warps space into paradoxical configurations to strike many visible foes with
 one melee attack. Power increases the number of foes attacked with one cast,
-but very high power is required to launch multiple unarmed attacks in this
-fashion, since great care must be taken when warping one's own limbs.
+though unarmed attacks strike only half as many targets at once, as additional
+care must be taken when warping one's own limbs.
 
 The time taken for the attack is exactly the same as a normal melee attack.
-It's imprecise, so it can't do extra damage against unsuspecting foes.
+Attacks performed this way never miss, but the exact spot struck cannot be
+controlled precisely, making them unable to do extra damage against unsuspecting
+foes.
 %%%%
 Mara Summon spell
 
@@ -981,6 +992,18 @@ Gradually builds up electric charge in the caster, so long as they maintain
 focus (by waiting in place and not taking any other actions). When a threshold
 is reached, the charge couples with the nearest foe, vaporising them instantly.
 Higher spell power will allow the caster to accumulate charge more rapidly.
+%%%%
+Maxwell's Portable Piledriver spell
+
+Compresses an envelope of space around the caster and an adjacent enemy, then
+allows it to decompress abruptly, propelling both of them forward until the
+latter collides with something, inflicting damage proportional to the distance
+travelled. The recoil will leave the caster unable to move for a brief while,
+and unable to recast the spell until they regain mobility.
+
+Originally designed for use in construction, it will automatically target the
+nearest mass with the longest clear path towards a wall or other solid object
+(such as another monster).
 %%%%
 Mephitic Cloud spell
 
@@ -1167,7 +1190,7 @@ specific branch varies with each cast of the spell.
 Plasma Beam spell
 
 Fires a penetrating beam of plasma at one of the caster's most distant foes.
-The ionized beam bypasses half of defenders' armour, and a second beam of fire
+The ionised beam bypasses half of defenders' armour, and a second beam of fire
 follows in its wake.
 %%%%
 Poison Arrow spell

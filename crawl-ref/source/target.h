@@ -627,3 +627,14 @@ public:
 private:
     vector<coord_def> jolt_targets;
 };
+
+class targeter_gavotte : public targeter_beam
+{
+public:
+    targeter_gavotte(const actor* caster);
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<coord_def> affected_monsters;
+};

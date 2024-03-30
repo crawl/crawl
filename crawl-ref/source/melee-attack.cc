@@ -240,6 +240,8 @@ bool melee_attack::handle_phase_attempted()
         to_hit = AUTOMATIC_HIT;
         needs_message = false;
     }
+    else if (is_projected)
+        to_hit = AUTOMATIC_HIT;
     else if (attacker->is_monster()
              && attacker->type == MONS_DROWNED_SOUL)
     {
@@ -253,6 +255,16 @@ bool melee_attack::handle_phase_attempted()
         practise_being_attacked();
 
     return true;
+}
+
+bool melee_attack::handle_phase_blocked()
+{
+    //We need to handle jinxbite here instead of in
+    //attack::handle_phase_blocked as some attacks
+    //such as darts don't trigger it
+    maybe_trigger_jinxbite();
+
+    return attack::handle_phase_blocked();
 }
 
 bool melee_attack::handle_phase_dodged()
