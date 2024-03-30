@@ -247,13 +247,13 @@ static const map<job_type, job_def> job_data =
 
 { JOB_DELVER, {
     "De", "Delver",
-    4, 2, 6,
+    4, 4, 4,
     { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, SP_GNOLL },
     { },
-    { "leather armour", "scroll of fog no_exclude", "scroll of revelation",
-      "scroll of fear", "potion of haste", "wand of digging charges:3" },
+    { "leather armour", "scroll of revelation",
+      "potion of experience q:3" },
     WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_STEALTH, 5 }, { SK_WEAPON, 2 }, },
+    { { SK_FIGHTING, 1 } },
 } },
 
 { JOB_MONK, {
