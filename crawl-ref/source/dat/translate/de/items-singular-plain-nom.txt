@@ -284,11 +284,8 @@ Silberbumerang
 %spair of %sboots
 {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
-%scentaur barding
-{adj-er}%sZentaurenharnisch
-%%%%
-%snaga barding
-{adj-er}%sNagaharnisch
+%sbarding
+{adj-es}%sGelieger
 %%%%
 %sbuckler
 {adj-er}%sBuckler

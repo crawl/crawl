@@ -680,11 +680,25 @@ for filename in files:
         if 'gdb' in string or 'Git' in string:
             continue
 
-        # these monster names have adjectives added for display
-        if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
-            string = '%s' + string
-        elif string == 'the Lernaean hydra':
-            string = 'the %sLernaean hydra'
+        # some names have adjectives added for display
+        if filename == 'mon-data.h':
+            if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
+                string = '%s' + string
+            elif string == 'the Lernaean hydra':
+                string = 'the %sLernaean hydra'
+        elif filename == 'item-prop.cc':
+            if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
+                string = '%s' + string + ' dragon scales'
+            elif string == ' dragon scales':
+                continue
+            elif string in ['gloves', 'boots']:
+                string = '%spair of %s' + string
+            elif string in ['javelin', 'boomerang']:
+                filtered_strings.append(string)
+                filtered_strings.append('silver ' + string)
+                continue
+            elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
+                string = '%s' + string
 
         filtered_strings.append(string)
 
@@ -714,7 +728,7 @@ for filename in files:
                 output.append(string)
 
         # we need to add extra strings for names of things
-        if filename in ['mon-data.h', 'feature.h']:
+        if filename in ['mon-data.h', 'feature.h', 'item-prop.cc']:
 
             # separate uniques from the rest because they will be treated differently
             names = []

@@ -114,6 +114,19 @@ manual = Handbuch
 potion = Trank
 breath weapon = Odemwaffe
 
+#Barding
+In DCSS, barding is used to mean the piece of armour that covers the hindquarters of Nagas and Palentongas (and previously, the horsey part of a centaur).
+This is taken from the word for horse armour, but it's kind of a misnomer because barding refers to the entire suit of horse armour, not just the back part.
+The specific piece of the barding that protects the horse's hindquarters is called the croupiere (because croup means hindquarters/rump).
+It's also called croupiere bacul or crupper.
+https://en.wikipedia.org/wiki/Barding
+
+In German, armour for a horse is called der Rossharnisch or das Gelieger. Again, this refers to the entire thing, not just the back part.
+We can't really use the word Rossharnisch because Ross is a warhorse. Nor can we use Harnisch by itself, because that just means armour.
+The part that covers the hindquarters of the horse is called der Auflieger or die Krupper (Kruppe being the hindquarters).
+https://de.wikipedia.org/wiki/Europ%C3%A4ischer_Rossharnisch
+https://de.wikipedia.org/wiki/Krupper
+
 ## Adjectives
 
 DCSS dynamically adds adjectives to things (unidentified items in particular).

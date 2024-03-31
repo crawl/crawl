@@ -284,11 +284,8 @@ der {adj-e}%sHut
 the %spair of %sboots
 das {adj-e}%sPaar {adj-e}%sStiefel
 %%%%
-the %scentaur barding
-der {adj-e}%sZentaurenharnisch
-%%%%
-the %snaga barding
-der {adj-e}%sNagaharnisch
+the %sbarding
+das {adj-e}%sGelieger
 %%%%
 the %sbuckler
 der {adj-e}%sBuckler

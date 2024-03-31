@@ -284,11 +284,8 @@ Euer {adj-er}%sHut
 your %spair of %sboots
 Euer {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
-your %scentaur barding
-Euer {adj-er}%sZentaurenharnisch
-%%%%
-your %snaga barding
-Euer {adj-er}%sNagaharnisch
+your %sbarding
+Euer {adj-es}%sGelieger
 %%%%
 your %sbuckler
 Euer {adj-er}%sBuckler

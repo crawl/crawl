@@ -284,11 +284,8 @@ ein {adj-er}%sHut
 a %spair of %sboots
 ein {adj-es}%sPaar {adj-e}%sStiefel
 %%%%
-a %scentaur barding
-ein {adj-er}%sZentaurenharnisch
-%%%%
-a %snaga barding
-ein {adj-er}%sNagaharnisch
+a %sbarding
+ein {adj-es}%sGelieger
 %%%%
 a %sbuckler
 ein {adj-er}%sBuckler
