@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Translations for adjectives (-en form)
+# Translations for adjectives (-e form)
 #
 # This is treated as the default form.
 #

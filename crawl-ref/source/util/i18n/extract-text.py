@@ -126,6 +126,14 @@ def article_a(string):
     else:
         return "a " + string
 
+def is_unique_monster(string):
+    if not re.search('[A-Z]', string):
+        return False
+    elif string in ['Killer Klown', 'Orb Guardian', 'Brimstone Fiend', 'Ice Fiend', 'Tzitzimitl', 'Hell Sentinel', 'Executioner', 'Hellbinder', 'Cloud Mage']:
+        return False
+    else:
+        return True
+
 
 SKIP_FILES = [ 
     # covered in a way that doesn't use the literal strings from the file
@@ -645,6 +653,8 @@ for filename in files:
             continue
         if 'Gozag bribe' in string or 'Gozag permabribe' in string:
             continue
+        if string == 'passage of golubria': # display name has uppercase G
+            continue
 
         # ignore filenames and file extensions
         if re.match(r'^[A-Za-z0-9_\-\/]*\.[A-Za-z]{1,4}$', string):
@@ -676,20 +686,6 @@ for filename in files:
         elif string == 'the Lernaean hydra':
             string = 'the %sLernaean hydra'
 
-        if filename == 'mon-data.h' and string != 'removed ':
-            unique = re.search('[A-Z]', string) \
-                and string not in ['Killer Klown', 'Orb Guardian', 'Brimstone Fiend', 'Ice Fiend', 'Tzitzimitl', 'Hell Sentinel', 'Executioner', 'Hellbinder', 'Cloud Mage']
-            possessive = string + "'s"
-            if unique:
-                filtered_strings.append(possessive)
-            else:
-                filtered_strings.append(article_a(string))
-                filtered_strings.append("the " + string)
-                filtered_strings.append("your " + string)
-                filtered_strings.append(article_a(possessive))
-                filtered_strings.append("the " + possessive)
-                filtered_strings.append("your " + possessive)
-
         filtered_strings.append(string)
 
     if len(filtered_strings) > 0:
@@ -716,6 +712,50 @@ for filename in files:
                 output.append('# duplicate: ' + string)
             else:
                 output.append(string)
+
+        # we need to add extra strings for names of things
+        if filename in ['mon-data.h', 'feature.h']:
+
+            # separate uniques from the rest because they will be treated differently
+            names = []
+            unique_names = []
+            for string in filtered_strings:
+                if string == 'removed ':
+                    continue
+                elif (filename == 'mon-data.h' and is_unique_monster(string)):
+                    unique_names.append(string)
+                else:
+                    names.append(string)
+
+            # names prefixed with definite article (the)
+            for string in names:
+                output.append("the " + string)
+
+            # names prefixed with indefinite article (a/an)
+            for string in names:
+                output.append(article_a(string))
+
+            # names prefixed with "your"
+            for string in names:
+                output.append("your " + string)
+
+            # possessives
+            if filename == 'mon-data.h':
+                # possessives with definite article (the)
+                for string in names:
+                    output.append("the " + string + "'s")
+
+                # possessives with indefinite article (a/an)
+                for string in names:
+                    output.append(article_a(string) + "'s")
+
+                # possessives with "your"
+                for string in names:
+                    output.append("your " + string + "'s")
+
+                # possessives for unique monsters
+                for string in unique_names:
+                    output.append(string + "'s")
 
 for line in output:
     print(line)

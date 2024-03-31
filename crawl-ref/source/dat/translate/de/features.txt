@@ -38,6 +38,15 @@ Baum
 awoken tree
 geweckter Baum
 %%%%
+demonic tree
+dämonischer Baum
+%%%%
+petrified tree
+versteinerter Baum
+%%%%
+mangrove
+Mangrovebaum
+%%%%
 metal wall
 Metallwand
 %%%%
@@ -278,6 +287,9 @@ magisches Portal
 ruined gateway
 zerstörtes Tor
 %%%%
+crumbling gateway
+bröckelndes Tor
+%%%%
 ice covered gate leading back out of this place
 eisbedecktes Tor, das wieder aus diesem Ort herausführt
 %%%%
@@ -504,6 +516,15 @@ der Baum
 %%%%
 the awoken tree
 der geweckte Baum
+%%%%
+the demonic tree
+der dämonische Baum
+%%%%
+the petrified tree
+der versteinerte Baum
+%%%%
+the mangrove
+der Mangrovebaum
 %%%%
 the metal wall
 die Metallwand
@@ -745,6 +766,9 @@ das magische Portal
 the ruined gateway
 das zerstörte Tor
 %%%%
+the crumbling gateway
+das bröckelnde Tor
+%%%%
 the ice covered gate leading back out of this place
 das eisbedeckte Tor, das wieder aus diesem Ort herausführt
 %%%%
@@ -968,6 +992,15 @@ ein Baum
 %%%%
 an awoken tree
 ein geweckter Baum
+%%%%
+a demonic tree
+ein dämonischer Baum
+%%%%
+a petrified tree
+ein versteinerter Baum
+%%%%
+a mangrove
+ein Mangrovebaum
 %%%%
 a floor
 ein Boden
@@ -1202,6 +1235,9 @@ ein magisches Portal
 %%%%
 a ruined gateway
 ein zerstörtes Tor
+%%%%
+a crumbling gateway
+ein bröckelndes Tor
 %%%%
 an ice covered gate leading back out of this place
 ein eisbedecktes Tor, das wieder aus diesem Ort herausführt
