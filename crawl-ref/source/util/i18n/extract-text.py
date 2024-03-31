@@ -120,6 +120,13 @@ def strip_uncompiled(lines):
 
     return result
 
+def article_a(string):
+    if re.search('^[aeiouAEIOU]', string):
+        return "an " + string
+    else:
+        return "a " + string
+
+
 SKIP_FILES = [ 
     # covered in a way that doesn't use the literal strings from the file
     'mutant-beast.h',
@@ -188,8 +195,8 @@ IGNORE_STRINGS = [
     'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ',
-    'lightgrey', 'darkgrey',
-    'bug', 'null'
+    'lightgrey', 'darkgrey', # colour tags
+    'bug', 'null', 'debugging ray',
 ]
 
 files = []
@@ -662,6 +669,26 @@ for filename in files:
         # ignore debug stuff
         if 'gdb' in string or 'Git' in string:
             continue
+
+        # these monster names have adjectives added for display
+        if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
+            string = '%s' + string
+        elif string == 'the Lernaean hydra':
+            string = 'the %sLernaean hydra'
+
+        if filename == 'mon-data.h' and string != 'removed ':
+            unique = re.search('[A-Z]', string) \
+                and string not in ['Killer Klown', 'Orb Guardian', 'Brimstone Fiend', 'Ice Fiend', 'Tzitzimitl', 'Hell Sentinel', 'Executioner', 'Hellbinder', 'Cloud Mage']
+            possessive = string + "'s"
+            if unique:
+                filtered_strings.append(possessive)
+            else:
+                filtered_strings.append(article_a(string))
+                filtered_strings.append("the " + string)
+                filtered_strings.append("your " + string)
+                filtered_strings.append(article_a(possessive))
+                filtered_strings.append("the " + possessive)
+                filtered_strings.append("your " + possessive)
 
         filtered_strings.append(string)
 

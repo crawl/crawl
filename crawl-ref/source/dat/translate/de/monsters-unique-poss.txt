@@ -242,6 +242,9 @@ des Gelée Royale
 the Serpent of Hell's
 der Höllenschlange
 %%%%
+the %sLernaean hydra's
+der {adj-en}%sLernäischen Hydra
+%%%%
 
 # not really uniques, but gramatically similar
 
