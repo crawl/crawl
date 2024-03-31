@@ -5580,7 +5580,7 @@ VISUAL:@The_monster@ practices a pose.
 
 VISUAL:@The_monster@ smiles, but it's obviously fake.
 
-@The_monster@ says @to_foe@, "Leave now, and tell all of Margery's mercy!"
+@The_monster@ says @to_foe@, "Leave now, and tell all of Maggie's mercy!"
 
 @The_monster@ says @to_foe@, "Fear not. I will immortalise you in the tale of my first kill."
 
