@@ -1386,7 +1386,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= _update_string(force_full, current.inscription,
                               next.inscription, "inscription", false);
 
-    // TODO: props?
+    // TODO: props? Hopefully covered by the name check below
 
     changed |= (current.special != next.special);
 
@@ -1394,19 +1394,20 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= _update_int(force_full, current_uselessness,
                            is_useless_item(next, true), "useless");
 
+    // This hopefully includes all other properties we care about...
+    const string current_name = current.name(DESC_A, true, false, true);
+    const string next_name = next.name(DESC_A, true, false, true);
+    changed |= (current_name != next_name);
+
     if (changed && defined)
     {
-        string name = next.name(DESC_A, true, false, true);
-        if (force_full || current.name(DESC_A, true, false, true) != name
-            || xp_evoker_changed)
-        {
-            json_write_string("name", name);
-        }
+        if (force_full || current_name != next_name || xp_evoker_changed)
+            json_write_string("name", next_name);
 
         // -1 in this field means don't show. *note*: showing in the action
         // panel has undefined behavior for item types that don't have a
         // quiver::action implementation...
-        json_write_int("action_panel_order", _useful_consumable_order(next, name));
+        json_write_int("action_panel_order", _useful_consumable_order(next, next_name));
         json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
