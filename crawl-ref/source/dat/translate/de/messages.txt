@@ -20838,7 +20838,7 @@ nach <w>Distanz</w>
 Nutzlose und Duplikate <w>zeigen</w>
 %%%%
 <w>hide</w> useless & duplicates
-Nutzlose und Duplikate <w>verstecken</w>
+Nutzlose und Duplikate <w>ausblenden</w>
 %%%%
 1 further duplicate
 1 weiteres Duplikat
