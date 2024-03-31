@@ -697,7 +697,14 @@ for filename in files:
                 filtered_strings.append(string)
                 filtered_strings.append('silver ' + string)
                 continue
-            elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
+            elif string == 'dart':
+                filtered_strings.append(string)
+                filtered_strings.append('poisoned ' + string)
+                filtered_strings.append('curare-tipped ' + string)
+                filtered_strings.append('datura-tipped ' + string)
+                filtered_strings.append('atropa-tipped ' + string)
+                continue
+            elif string not in ['stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
                 string = '%s' + string
 
         filtered_strings.append(string)
