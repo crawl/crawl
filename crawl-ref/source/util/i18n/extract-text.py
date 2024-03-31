@@ -121,7 +121,7 @@ def strip_uncompiled(lines):
     return result
 
 def article_a(string):
-    if re.search('^[aeiouAEIOU]', string):
+    if re.search('^[aeiouAEIOU]', string) and not string.startswith('one-'):
         return "an " + string
     else:
         return "a " + string
@@ -686,6 +686,22 @@ for filename in files:
                 string = '%s' + string
             elif string == 'the Lernaean hydra':
                 string = 'the %sLernaean hydra'
+        elif filename == 'feature-data.h':
+            # we handle door adjectives as separate strings
+            if string.endswith(' door'):
+                words = string.split()
+                for word in words:
+                    if word == 'door':
+                        word = '%s' + word
+                    else:
+                        word = word + ' '
+                    if not word in filtered_strings:
+                        filtered_strings.append(word);
+                continue
+            elif string.startswith('some '):
+                string2 = re.sub('^some ', '', string)
+                if string2 not in filtered_strings:
+                    filtered_strings.append(string2)
         elif filename == 'item-prop.cc':
             if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
                 string = '%s' + string + ' dragon scales'
@@ -706,8 +722,13 @@ for filename in files:
                 continue
             elif string not in ['stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
                 string = '%s' + string
+        else:
+            # this should be already covered above (feature-data.h)
+            if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
+                continue
 
-        filtered_strings.append(string)
+        if string not in filtered_strings:
+            filtered_strings.append(string)
 
     if len(filtered_strings) > 0:
         output.append("")
@@ -735,17 +756,18 @@ for filename in files:
                 output.append(string)
 
         # we need to add extra strings for names of things
-        if filename in ['mon-data.h', 'feature.h', 'item-prop.cc']:
+        if filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc']:
 
-            # separate uniques from the rest because they will be treated differently
+            # separate unique and non-unique names because they will be treated differently
             names = []
             unique_names = []
+            adjectives = []
             for string in filtered_strings:
-                if string == 'removed ':
-                    continue
+                if string.endswith(' '):
+                    adjectives.append(string)
                 elif (filename == 'mon-data.h' and is_unique_monster(string)):
                     unique_names.append(string)
-                else:
+                elif not re.search('^(a|an|the|some) ', string) and string not in ['explore horizon', 'unseen']:
                     names.append(string)
 
             # names prefixed with definite article (the)
@@ -754,11 +776,13 @@ for filename in files:
 
             # names prefixed with indefinite article (a/an)
             for string in names:
-                output.append(article_a(string))
+                if string not in ['lava', 'shallow water', 'deep water']:
+                    output.append(article_a(string))
 
             # names prefixed with "your"
-            for string in names:
-                output.append("your " + string)
+            if filename in ['mon-data.h', 'item-prop.cc']:
+                for string in names:
+                    output.append("your " + string)
 
             # possessives
             if filename == 'mon-data.h':
