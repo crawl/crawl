@@ -4307,6 +4307,12 @@ Keep in mind, though, that Trog would greatly disapprove of this.
 irresistible
 
 %%%%
+draining
+
+%%%%
+electric
+
+%%%%
 fragmentation
 
 %%%%
@@ -6193,6 +6199,9 @@ servants of Hell
 
 %%%%
 forces of darkness
+
+%%%%
+chaotic
 
 %%%%
 discordant
@@ -12427,6 +12436,9 @@ Ihr fühlt Euch resistent gegen Gifte.
 You feel less resistant to poisons.
 Ihr fühlt Euch weniger resistent gegen Gifte.
 %%%%
+fire resistance
+Feuerresistenz
+%%%%
 Your flesh is heat resistant. (rF+)
 Euer Fleisch ist hitzebeständig. (rF+)
 %%%%
@@ -12447,6 +12459,9 @@ Ihr fühlt Euch nicht mehr hitzebeständig.
 %%%%
 You feel less heat resistant.
 Ihr fühlt Euch weniger hitzebeständig.
+%%%%
+cold resistance
+Kälteresistenz
 %%%%
 Your flesh is cold resistant. (rC+)
 Euer Fleisch ist kälteresistent. (rC+)
@@ -14811,6 +14826,9 @@ Eure Arme fühlen Euch tentakulär an.
 %%%%
 Your arms no longer feel tentacular.
 Eure Arme fühlen Euch nicht mehr tentakulär an.
+%%%%
+vampiric
+vampirisch
 %%%%
 You are afflicted with vampirism.
 Ihr seid mit Vampirismus behaftet.
@@ -19124,6 +19142,9 @@ Ihr schlagt {acc}%s!
 %%%%
 You are blasted by holy energy!
 Ihr werdet von heiliger Energie gestoßen!
+%%%%
+holy word
+heiliges Wort
 %%%%
 Zin's holy word
 Zins heiliges Wort

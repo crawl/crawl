@@ -120,6 +120,94 @@ def strip_uncompiled(lines):
 
     return result
 
+# special handling for strings in item-name.cc
+def special_handling_for_item_name_cc(context, line, string, strings):
+    if context in ['_random_vowel', '_random_cons', '_random_consonant_set']:
+        # ignore
+        return
+    elif context.endswith('_secondary_string'):
+        # adjective furthest from the noun
+        if not string.endswith(' '):
+            string += ' '
+    elif context.endswith('_primary_string'):
+        # adjective closest to the noun
+        noun = re.sub('_.*', '', context)
+        if not string.endswith(' '):
+            string += ' '
+        string = '%s' + string + noun
+    elif context == 'item_def::name':
+        if string == ' (in ':
+            strings.append(' (in hand)')
+            strings.append(' (in claw)')
+            strings.append(' (in tentacle)')
+            return
+        elif string in ['right', 'left']:
+            strings.append(' (' + string + ' hand)');
+            strings.append(' (' + string + ' claw)');
+            strings.append(' (' + string + ' paw)');
+            strings.append(' (' + string + ' tentacle)');
+            strings.append(' (' + string + ' branch)');
+            strings.append(' (' + string + ' front leg)');
+            strings.append(' (' + string + ' blade hand)');
+            return
+    elif context == 'missile_brand_name':
+        if string == 'poisoned' or string.endswith('-tipped'):
+            # hard code dart types
+            string = string + ' dart'
+        elif string == 'dispersal':
+            string = ' of ' + string
+        elif 'MBN_NAME' in line:
+            # first string is long name, second is terse
+            if not line.endswith('"' + string + '";'):
+                string += ' '
+        elif 'MBN_TERSE' in line:
+            # first string is terse name, second is long name
+            if line.endswith('"' + string + '";'):
+                string += ' '
+        else:
+            # string acts as both long and terse name
+            if string == 'silver':
+                strings.append(string + ' ')
+            else:
+                strings.append(' of ' + string)
+    elif context == 'weapon_brands_terse':
+        if string == 'confuse':
+            # not a real weapon brand - used on hands for the confuse monster spell
+            return
+        elif string == 'flame':
+            # terse version also used after "of" (see _item_ego_name in religion.cc)
+            strings.append(' of ' + string)
+    elif context == 'weapon_brands_verbose':
+        if string == 'confusion':
+            # not a real weapon brand - used on hands for the confuse monster spell
+            return
+        elif string in ['vampirism', 'antimagic', 'vorpality', 'spectralizing']:
+            # verbose name is never used (see brand_prefers_adj)
+            return
+        string = ' of ' + string
+    elif context == 'weapon_brands_adj':
+        # adjectives defined for all, but only used for some (see brand_prefers_adj)
+        if string not in ['vampiric', 'antimagic', 'vorpal', 'spectral']:
+            return
+        string = string + ' '
+    elif context == 'armour_ego_name':
+        string = ' of ' + string
+    elif context == 'armour_ego_name_terse':
+        if string == 'rC+ rF+':
+            # handled as two separate strings
+            return
+        # the plus is handled separately
+        string = re.sub(r'\+.*', '', string)
+    elif context == '_wand_type_name':
+        string = 'wand of ' + string
+    elif context == 'potion_type_name':
+        string = 'potion of ' + string
+    elif context == 'scroll_type_name':
+        string = 'scroll of ' + string
+
+    strings.append(string)
+
+
 def article_a(string):
     if re.search('^[aeiouAEIOU]', string) and not string.startswith('one-'):
         return "an " + string
@@ -200,11 +288,11 @@ LAZY_FILES = [
 ]
 
 IGNORE_STRINGS = [
-    'the', 'the ', ' the ',
+    'the', 'the ', ' the ', 'its ',
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ',
     'lightgrey', 'darkgrey', # colour tags
-    'bug', 'null', 'debugging ray',
+    'bug', 'null', 'debugging ray', 'debug'
 ]
 
 files = []
@@ -272,6 +360,19 @@ for filename in files:
             if '//' in line and not re.search(r'// *@?(localise|locnote)', line):
                 line = strip_line_comment(line)
 
+            context = None
+            if '(' in line and re.search('^[a-zA-Z]', line):
+                # function/method
+                context = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
+            elif line.startswith('class '):
+                # class
+                context = re.sub('[ :].*', '', re.sub('^class *', '', line))
+            elif line.startswith('static ') and re.search('\[\] *=', line):
+                # static data
+                context = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
+            if context is not None:
+                lines.append('// @loccontext: ' + context)
+
             line = line.strip()
             if line == '':
                 continue
@@ -324,6 +425,7 @@ for filename in files:
             else:
                 lines.append(line)
 
+        context = ''
         for line in lines:
             #sys.stderr.write(line + "\n")
 
@@ -332,6 +434,15 @@ for filename in files:
                 strings.append(note)
                 line = strip_line_comment(line)
                 line = line.strip()
+            elif '@loccontext' in line:
+                context = re.sub(r'^.*loccontext:? *', '', line)
+                if filename == 'item-name.cc':
+                    strings.append('# context: ' + context)
+                continue
+
+            # Ewwwwww!
+            if filename == 'item-name.cc' and context == 'armour_ego_name' and 'else' in line:
+                context = 'armour_ego_name_terse'
 
             if '"' not in line:
                 continue
@@ -594,6 +705,10 @@ for filename in files:
                     if string != "" and (string[0] == " " or string[0] == "'"):
                         string = '%s' + string
 
+                if filename == 'item-name.cc':
+                    special_handling_for_item_name_cc(context, line, string, strings)
+                    continue
+
                 # strip channel information
                 string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
 
@@ -763,7 +878,9 @@ for filename in files:
             unique_names = []
             adjectives = []
             for string in filtered_strings:
-                if string.endswith(' '):
+                if string.startswith('# note:') or string.startswith('# context:'):
+                    continue
+                elif string.endswith(' '):
                     adjectives.append(string)
                 elif (filename == 'mon-data.h' and is_unique_monster(string)):
                     unique_names.append(string)

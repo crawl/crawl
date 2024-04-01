@@ -218,6 +218,10 @@ penet
 reap
 ernten
 %%%%
+# spectral
+spect
+geist
+%%%%
 acid
 Säure
 %%%%
@@ -278,6 +282,9 @@ Abstoßung
 harm
 Schaden
 %%%%
+shadows
+Schatten
+%%%%
 
 #################################
 # Item slots
@@ -289,15 +296,51 @@ Schaden
 " (weapon)"
 " (Waffe)"
 %%%%
-" (in mouth)"
-" (im Mund)"
-%%%%
 " (worn)"
 " (angehabt)"
 %%%%
 # yes, this is supposed to have leading AND trailing space
 " (carried) "
 " (im Gepäck) "
+%%%%
+" (quivered)"
+" (im Köcher)"
+%%%%
+" (quivered ammo)"
+" (Munition im Köcher)"
+%%%%
+Item in an invalid slot
+Gegenstand in falscher Position
+%%%%
+
+# holding something that isn't a weapon
+%%%%
+" (in hand)"
+" (in der Hand)"
+%%%%
+" (in claw)"
+" (in der Kralle)"
+%%%%
+" (in tentacle)"
+" (im Tentakel)"
+%%%%
+# ...and can't grasp things
+# (I don't think it's actually possible to hold something in this situation, but the eventuality is handled in the code)
+" (in mouth)"
+" (im Mund)"
+%%%%
+
+# amulet slots
+%%%%
+" (around neck)"
+" (um den Hals)"
+%%%%
+# octopodes have a mantle rather than a neck
+" (around mantle)"
+" (um den Mantel)"
+%%%%
+
+# ring slots
 %%%%
 " (left hand)"
 " (linke Hand)"
@@ -317,27 +360,40 @@ Schaden
 " (right claw)"
 " (rechte Kralle)"
 %%%%
-# NOTE: This is mantle in the zoological sense (octopode)
+" (left tentacle)"
+" (linker Tentakel)"
 %%%%
-" (around mantle)"
-" (um den Mantel)"
+" (right tentacle)"
+" (rechter Tentakel)"
 %%%%
-" (around neck)"
-" (um den Hals)"
-%%%%
+# octopode rings after the first two
 " (on tentacle)"
 " (am Tentakel)"
 %%%%
-# finger amulet can wear a ring
-%%%%
+# the macabre finger amulet can wear a ring
 " (on amulet)"
 " (am Amulett)"
 %%%%
-" (quivered)"
-" (im Köcher)"
+# tree form
+" (left branch)"
+" (linker Zweig)"
 %%%%
-Item in an invalid slot
-Gegenstand in falscher Position
+" (right branch)"
+" (rechter Zweig)"
+%%%%
+# spider form
+" (left front leg)"
+" (linkes Vorderbein)"
+%%%%
+" (right front leg)"
+" (rechtes Vorderbein)"
+%%%%
+# blade hands
+" (left blade hand)"
+" (linke Klingenhand)"
+%%%%
+" (right blade hand)"
+" (rechte Klingenhand)"
 %%%%
 
 #################################

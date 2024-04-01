@@ -94,6 +94,10 @@ Rune
 " of flaming"
 " des Flammens"
 %%%%
+# this version also used by Hep ancestor (see _item_ego_name in religion.cc)
+" of flame"
+" des Flammens"
+%%%%
 " of freezing"
 " des Einfrierens"
 %%%%
@@ -201,6 +205,12 @@ Rune
 %%%%
 " of harm"
 " des Schadens"
+%%%%
+" of shadows"
+" der Schatten"
+%%%%
+" of rampaging"
+" des Randelierens"
 %%%%
 
 #################################

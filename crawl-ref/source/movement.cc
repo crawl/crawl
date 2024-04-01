@@ -587,7 +587,7 @@ static spret _rampage_forward(coord_def move)
     beam.range           = LOS_RADIUS;
     beam.aimed_at_spot   = true;
     beam.target          = tracer_target;
-    beam.name            = "rampaging";
+    beam.name            = "rampaging"; // @noloc
     beam.source_name     = "you";
     beam.source          = you.pos();
     beam.source_id       = MID_PLAYER;
