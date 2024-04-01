@@ -1710,7 +1710,8 @@ never directly lethal.
 %%%%
 Teleport Other spell
 
-Randomly translocates a targeted creature.
+Attempts to teleport a targeted creature out of the caster's sight, after a
+short delay.
 %%%%
 Throw Ally spell
 

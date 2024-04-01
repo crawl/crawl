@@ -182,14 +182,17 @@ bool monster_space_valid(const monster* mons, coord_def target,
 }
 
 static bool _monster_random_space(const monster* mons, coord_def& target,
-                                  bool forbid_sanctuary)
+                                  bool forbid_sanctuary, bool away_from_player)
 {
     int tries = 0;
     while (tries++ < 1000)
     {
         target = random_in_bounds();
-        if (monster_space_valid(mons, target, forbid_sanctuary))
+        if (monster_space_valid(mons, target, forbid_sanctuary)
+            && (!away_from_player || !you.see_cell_no_trans(target)))
+        {
             return true;
+        }
     }
 
     return false;
@@ -213,7 +216,7 @@ void mons_relocated(monster* mons)
     }
 }
 
-void monster_teleport(monster* mons, bool instan, bool silent)
+void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_player)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool was_seen = !silent && you.can_see(*mons);
@@ -239,10 +242,16 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
-    if (!_monster_random_space(mons, newpos, !mons->wont_attack()))
+    if (!_monster_random_space(mons, newpos, !mons->wont_attack(), away_from_player))
     {
-        simple_monster_message(*mons, " flickers for a moment.");
-        return;
+        // If we're trying to teleport away from the player and failed, try once
+        // more without that restriction before giving up.
+        if (!away_from_player
+            || !_monster_random_space(mons, newpos, !mons->wont_attack(), false))
+        {
+            simple_monster_message(*mons, " flickers for a moment.");
+            return;
+        }
     }
 
     if (!silent)

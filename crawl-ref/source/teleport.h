@@ -13,7 +13,8 @@ void mons_relocated(monster* mons);
 bool monster_blink(monster* mons, bool quiet = false);
 bool monster_space_valid(const monster* mons, coord_def target,
                          bool forbid_sanctuary);
-void monster_teleport(monster* mons, bool instan, bool silent = false);
+void monster_teleport(monster* mons, bool instan, bool silent = false,
+                      bool away_from_player = false);
 
 vector<coord_def> find_blink_targets();
 bool valid_blink_destination(const actor &moved, const coord_def& target,
