@@ -2204,7 +2204,7 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
     targs.push_back(&you);
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->is_stationary())
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
             targs.push_back(*mi);
     }
 
@@ -2274,7 +2274,7 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->is_stationary())
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
         {
             if (_gavotte_will_wall_slam(*mi, dir))
                 affected.push_back(*mi);
