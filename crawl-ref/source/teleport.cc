@@ -298,6 +298,19 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     vector<coord_weight> dests;
     const coord_def tpos = target->pos();
 
+    int max_weight = 0;
+
+    // Calculate weight of our starting pos, so we can compare if the weights of
+    // other positions will improve it.
+    int stay_weight;
+    int stay_dist = (tpos - moved->pos()).rdist();
+    if (close)
+        stay_weight = (LOS_RADIUS - stay_dist) * (LOS_RADIUS - stay_dist);
+    else
+        stay_weight = stay_dist;
+    if (stay_weight < 0)
+        stay_weight = 0;
+
     for (radius_iterator ri(moved->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (!valid_blink_destination(*moved, *ri, !allow_sanct)
@@ -314,7 +327,23 @@ static coord_def random_space_weighted(actor* moved, actor* target,
             weight = dist;
         if (weight < 0)
             weight = 0;
+
+        if (weight > max_weight)
+            max_weight = weight;
+
         dests.emplace_back(*ri, weight);
+    }
+
+    // Prevent choosing spots below a minimum weight threshold, so long as at
+    // least one spot exists above that threshold. (Mostly to make sure that
+    // blink away does actually move things away, if it's possible to do so)
+    if (max_weight > stay_weight)
+    {
+        for (unsigned int i = 0; i < dests.size(); ++i)
+        {
+            if (dests[i].second <= stay_weight)
+                dests[i].second = 0;
+        }
     }
 
     coord_def* choice = random_choose_weighted(dests);
@@ -337,6 +366,17 @@ void blink_other_close(actor* victim, const coord_def &target)
         victim->as_monster()->blink_to(dest, false, false);
     else
         victim->blink_to(dest);
+}
+
+// Blink the player away from a given monster
+bool blink_player_away(monster* caster)
+{
+    coord_def dest = random_space_weighted(&you, caster, false, false, true);
+    if (dest.origin())
+        return false;
+    bool success = you.blink_to(dest, false);
+    ASSERT(success || you.is_constricted());
+    return success;
 }
 
 // Blink a monster away from the caster.
