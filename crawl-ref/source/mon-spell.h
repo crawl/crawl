@@ -1204,7 +1204,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_IRONBOUND_THUNDERHULK,
       {
        { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
-       { SPELL_BLINK_RANGE, 25, MON_SPELL_MAGICAL },
+       { SPELL_BLINK_RANGE, 20, MON_SPELL_MAGICAL },
       }
     },
 
