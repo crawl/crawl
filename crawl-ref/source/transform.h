@@ -182,6 +182,7 @@ public:
     string melding_description() const;
 
     virtual vector<string> get_fakemuts(bool terse) const;
+    virtual vector<string> get_bad_fakemuts(bool terse) const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -292,6 +293,7 @@ private:
     const int hp_mod;
 
     vector<pair<string,string>> fakemuts;
+    vector<pair<string,string>> badmuts;
 };
 const Form* get_form(transformation form = you.form);
 const Form* cur_form(bool temp);

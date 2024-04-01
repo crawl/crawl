@@ -132,7 +132,7 @@ Form::Form(const form_entry &fe)
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
-      hp_mod(fe.hp_mod), fakemuts(fe.fakemuts)
+      hp_mod(fe.hp_mod), fakemuts(fe.fakemuts), badmuts(fe.badmuts)
 { }
 
 Form::Form(transformation tran)
@@ -538,6 +538,14 @@ vector<string> Form::get_fakemuts(bool terse) const
 {
     vector<string> result;
     for (const auto &p : fakemuts)
+        result.push_back(terse ? p.first : p.second);
+    return result;
+}
+
+vector<string> Form::get_bad_fakemuts(bool terse) const
+{
+    vector<string> result;
+    for (const auto &p : badmuts)
         result.push_back(terse ? p.first : p.second);
     return result;
 }

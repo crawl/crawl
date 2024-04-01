@@ -1631,10 +1631,10 @@ bool player_kiku_res_torment()
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
-int player_res_poison(bool allow_random, bool temp, bool items)
+int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
 {
-    const int form_rp = cur_form(temp)->res_pois();
-    if (you.is_nonliving(temp)
+    const int form_rp = forms ? cur_form(temp)->res_pois() : 0;
+    if (you.is_nonliving(temp, forms)
         || you.is_lifeless_undead(temp)
         || form_rp == 3
         || items && player_equip_unrand(UNRAND_OLGREB)

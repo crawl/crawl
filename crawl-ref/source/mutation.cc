@@ -740,13 +740,11 @@ static vector<string> _get_form_fakemuts(bool terse)
         }
     }
 
-    if (form_base_movespeed(you.form) < 10)
-        result.push_back(terse ? "fast" : _formmut("You move quickly."));
-
     // form-based flying can't be stopped, so don't print amphibiousness
     if (form->player_can_fly())
         result.push_back(terse ? "flying" : _formmut("You are flying."));
-    else if (form->player_can_swim() && !you.can_swim(true)) // n.b. this could cause issues for non-dragon giant forms if they exist
+    // n.b. this could cause issues for non-dragon giant forms if they exist
+    else if (form->player_can_swim() && !species::can_swim(you.species))
         result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
 
     const int hp_mod = form->mult_hp(10);
@@ -755,28 +753,140 @@ static vector<string> _get_form_fakemuts(bool terse)
         result.push_back(terse ? "boosted hp"
             : _formmut(make_stringf("Your maximum health is %sincreased.",
                 hp_mod < 13 ? "" : "greatly ")));
+    } // see badmuts section below for max health reduction
+
+    // Form resistances
+    // We don't want to display the resistance on the A screen if the player
+    // already has a mutation/innate property that supersedes this resistance.
+    // Wisp form has a general text which displays all resistances except
+    // poison immunity.
+
+    if (player_res_poison(false, true, false, true) == 3
+        && player_res_poison(false, false, false, false) != 3)
+    {
+        result.push_back(terse ? "poison immunity"
+                               : _formmut("You are immune to poison."));
     }
-    else if (hp_mod < 10)
+    else if (form->res_pois() > 0 && !you.has_mutation(MUT_POISON_RESISTANCE))
+    {
+        result.push_back(terse ? "poison resistance"
+                           : _formmut("You are resistant to poisons. (rPois)"));
+    }
+
+    if (you.get_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE) != 3
+        && you.form != transformation::wisp)
+    {
+        if (form->res_neg() == 3)
+        {
+            // Gargoyles have innate rN+ so let's not have
+            // "negative energy resistance" appear twice in their terse lists.
+            result.push_back(terse ? "negative energy immunity"
+                      : _formmut("You are immune to negative energy. (rN+++)"));
+        }
+        else if (form->res_neg() == 1) // statue form
+        {
+            result.push_back(terse ? "statue negative energy resistance"
+                  : _formmut("Your stone body resists negative energy. (rN+)"));
+        }
+    }
+
+    if (form->res_elec()
+        && !you.has_mutation(MUT_SHOCK_RESISTANCE)
+        && you.form != transformation::wisp)
+    {
+        result.push_back(terse ? "electricity resistance"
+                   : _formmut("You are resistant to electric shocks. (rElec)"));
+    }
+
+    if (you.form == transformation::dragon)
+    {
+        // Dragon form (except for some draconians) suppresses other resistance
+        // mutations so we don't worry about overlapping other mutations.
+        switch (species::dragon_form(you.species))
+        {
+            case MONS_FIRE_DRAGON:
+                result.push_back(terse ? "fire resistance 2"
+                             : _formmut("You are very heat resistant. (rF++)"));
+                result.push_back(terse ? "cold vulnerability 1"
+                                : _badmut("You are vulnerable to cold. (rC-)"));
+                break;
+            case MONS_ICE_DRAGON:
+                result.push_back(terse ? "cold resistance 2"
+                          : _formmut("You are very resistant to cold. (rC++)"));
+                result.push_back(terse ? "heat vulnerability 1"
+                                : _badmut("You are vulnerable to heat. (rF-)"));
+                break;
+            default:
+                // all other draconian colours keep their innate resistance
+                // and simply add rPois (dealt with further up)
+                break;
+        }
+    }
+    else if (you.form != transformation::wisp
+             && form->res_cold() // death form only
+             && you.get_mutation_level(MUT_COLD_RESISTANCE) != 3)
+    {
+        result.push_back(terse ? "undead cold resistance"
+                    : _formmut("Your undead body is resistant to cold. (rC+)"));
+    }
+
+    // Bad effects
+    // Try to put all `_badmut`s together.
+
+    if (hp_mod < 10)
+    {
         result.push_back(terse ? "reduced hp"
             : _badmut(make_stringf("Your maximum health is decreased%s.",
                 form->underskilled() ? ", since you lack skill for your form"
                     : "")));
-
-    // immunity comes from form
-    if (!terse && player_res_poison(false, true, false) == 3
-        && !player_res_poison(false, false, false))
-    {
-        // wispform has a fakemut that prints something more general
-        if (you.form != transformation::wisp)
-            result.push_back(_formmut("You are immune to poison."));
     }
 
-    // bad stuff
-    if (!terse && you.form == transformation::shadow) // hard-coded effect
-        result.push_back(_badmut("Your spellcasting is less reliable in this form."));
+    for (const auto &p : form->get_bad_fakemuts(terse))
+        if (!p.empty())
+            result.push_back(_badmut(p, terse));
+
+    // Note: serpent form suppresses any innate cold-bloodedness
+    if (you.form == transformation::serpent)
+    {
+        // XXX Hacky suppression with rC+
+        if (you.res_cold())
+        {
+            result.push_back(terse ? "(cold-blooded)"
+                : "<darkgray>((You are cold-blooded and may be slowed by cold attacks.))</darkgray>");
+        }
+        else
+        {
+            result.push_back(terse ? "cold-blooded"
+                : _badmut("You are cold-blooded and may be slowed by cold attacks."));
+        }
+    }
+
+    if (you.form == transformation::blade_hands
+        && you_can_wear(EQ_BODY_ARMOUR, false) != false)
+    {
+        const int penalty_percent = form->get_base_ac_penalty(100);
+        if (penalty_percent)
+        {
+            result.push_back(terse ? "blade armour"
+                : _badmut(make_stringf("Your body armour is %s at protecting you.",
+                          penalty_percent == 100 ? "completely ineffective"
+                        : penalty_percent >=  70 ? "much less effective"
+                        : penalty_percent >=  30 ? "less effective"
+                                                 : "slightly less effective"
+            )));
+        }
+    }
+
+    if (!terse && !form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
+    {
+        // same as MUT_NO_GRASPING
+        result.push_back(_badmut(
+            "You are incapable of wielding weapons or throwing items."));
+    }
 
     // XX say something about AC? Best would be to compare it to AC without
     // the form, but I'm not sure if that's possible
+    // AC is currently dealt with via the `A!` "form properties" screen.
 
     // XX better synchronizing with various base armour/eq possibilities
     if (!terse && !you.has_mutation(MUT_NO_ARMOUR))
@@ -785,15 +895,7 @@ static vector<string> _get_form_fakemuts(bool terse)
         if (!melding_desc.empty())
             result.push_back(_badmut(melding_desc));
     }
-    if (!terse && !form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
-    {
-        // same as MUT_NO_GRASPING
-        result.push_back(_badmut(
-            "You are incapable of wielding weapons or throwing items."));
-    }
 
-    if (!form->can_cast)
-        result.push_back(terse ? "no casting" : _badmut("You cannot cast spells."));
     return result;
 }
 
@@ -962,7 +1064,7 @@ static vector<string> _get_fakemuts(bool terse)
         if (you.vampire_alive)
         {
             result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is accelerated."));
+                _formmut("Your natural rate of healing is slightly increased."));
         }
         else if (terse)
             result.push_back("bloodless");
@@ -979,7 +1081,7 @@ static vector<string> _get_fakemuts(bool terse)
             result.push_back(_formmut("You are immune to poison."));
         }
     }
-    else if (!terse && player_res_poison(false, false, false) == 3)
+    else if (!terse && player_res_poison(false, false, false, false) == 3)
         result.push_back(_innatemut("You are immune to poison."));
 
     return result;

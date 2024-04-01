@@ -58,7 +58,10 @@ struct form_entry
 
     // pairs of the form {terse_description, full_description} for display in
     // `A` and `%`. Either can be empty.
+    // Resistances (except rTorm), flight, amphibious, no grasping,
+    // melded equipment are added separately in mutation.cc:_get_form_badmuts
     vector<pair<string,string>> fakemuts;
+    vector<pair<string,string>> badmuts;
 };
 
 static const form_entry formdata[] =
@@ -73,6 +76,7 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
+    {},
     {}
 },
 #if TAG_MAJOR_VERSION == 34
@@ -88,7 +92,8 @@ static const form_entry formdata[] =
     "hiss", -4, "front pincers", "", "crawl onto", "flesh",
     { {"venomous fangs", "You have venomous fangs."},
       {"", "You are tiny and dextrous."} // short-form "tiny" is automatically added
-    }
+    },
+    { {"poison vulnerability", "You are susceptible to poisons. (rPois-)"}}
 },
 #endif
 {
@@ -101,6 +106,7 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
+    {},
     {}
 },
 {
@@ -113,9 +119,10 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, true, true,
     "", 0, "", "", "place yourself before", "stone",
-    { { "slow and powerful", "Your actions are slow, but your melee attacks are powerful." },
+    { { "powerful", "Your melee attacks are powerful." },
       { "torment resistance 1", "You are resistant to unholy torment." } // same as MUT_TORMENT_RESISTANCE
-    }
+    }, // rElec, rN+, poison immunity are added separately
+    { { "slow", "All of your actions are slow." } }
 },
 {
     transformation::serpent, MONS_ANACONDA, "Serpent", "snake-form", "snake",
@@ -127,7 +134,9 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, false, true,
     "hiss", -2, "", "", "coil in front of", "flesh",
-    { { "constrict", "You have a powerful constriction melee attack."} }
+    { { "constrict", "You have a powerful constriction melee attack."} },
+    // cold-blooded and amphibious are added separately
+    {}
 },
 
 {
@@ -142,7 +151,8 @@ static const form_entry formdata[] =
     "roar", 6, "foreclaw", "", "bow your head before", "flesh",
     { { "dragon claw", "You have a powerful clawing attack." },
       { "dragon scales", "Your giant scaled body is strong and resilient, but less evasive." },
-    }
+    }, // resistances, breath, flying added separately
+    {}
 },
 
 {
@@ -155,10 +165,11 @@ static const form_entry formdata[] =
     SPWPN_DRAINING, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, true, true,
     "", 0, "", "", "", "bone",
-    { { "vile attack", "Your melee and unarmed attacks drain, slow and weaken victims."},
-      { "torment immunity", "You are immune to unholy pain and torment."},
-      { "no potions", "<lightred>You cannot drink.</lightred>" },
-    }
+    { { "vile attack", "Your melee attacks drain, slow and weaken victims." },
+      { "siphon essence", "You can torment nearby foes to heal from their wounds." },
+      { "torment immunity", "You are immune to unholy pain and torment." },
+    }, // rC+, rN+++, poison immunity added separately
+    { { "no potions", "You cannot drink." } }
 },
 
 {
@@ -171,8 +182,11 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, false, true,
     "squeak", -8, "foreclaw", "", "perch on", "flesh",
-    {
-      {"", "You are tiny and dextrous."} // short-form "tiny" is automatically added
+    { { "extremely fast", "You cover ground extremely quickly." },
+      { "", "You are tiny, dextrous, and very evasive." } // short-form "tiny" is automatically added
+    },
+    { { "weak attacks", "Your unarmed attacks are very weak." },
+      { "no casting", "You cannot cast spells." },
     }
 },
 
@@ -186,7 +200,10 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, false, true,
     "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh",
-    {} // XX UC penalty?
+    { { "very fast", "You cover ground very quickly." } },
+    { { "weak attacks", "Your unarmed attacks are very weak." },
+      { "no casting", "You cannot cast spells." },
+    }
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -200,6 +217,7 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
+    {},
     {}
 },
 #endif
@@ -214,10 +232,14 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, BROWN, "Branches", { "hit", "smack", "pummel", "thrash" },
     FC_FORBID, FC_FORBID, FC_FORBID, false, true,
     "creak", 0, "branch", "root", "sway towards", "wood",
-    {
-        { "stationary", "Your roots penetrate the ground, keeping you stationary." },
-        { "stasis", "You cannot be teleported."},
-        { "torment immunity", "You are immune to unholy pain and torment."},
+    { { "resilient", "Your bark is very hard, but your evasion is minimal." },
+      { "branches", "Your unarmed attacks smack enemies forcefully with your branches." },
+      { "torment immunity", "You are immune to unholy torment." },
+    }, // rPois added separately
+    // Technically these can have marginal benefits in some situations
+    // but they're mostly bad so let's mark them as bad.
+    { { "stationary", "Your roots penetrate the ground, keeping you stationary." },
+      { "-Tele", "You cannot be teleported." },
     }
 },
 
@@ -232,7 +254,8 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, false, true,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh",
-    {}
+    {},
+    { { "no casting", "You cannot cast spells." }, }
 },
 #endif
 
@@ -249,9 +272,12 @@ static const form_entry formdata[] =
                                                  "engulf", "engulf" },
     FC_ENABLE, FC_FORBID, FC_FORBID, false, true,
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour",
-    {
-        {"insubstantial", "Your tiny insubstantial body is highly resistant to most damage types." },
-    }
+    { { "", "You are tiny and evasive." },
+      { "insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire." },
+      { "torment immunity", "You are immune to unholy pain and torment." },
+      { "highly resistant", "You are highly resistant to most damage types. (rF++, rC++, rN+++, rElec, rCorr)" },
+    },
+    { { "no casting", "You cannot cast spells." }, }
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -265,7 +291,9 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
     "", 0, "", "", "", "",
-    {}
+    {},
+    { { "no casting", "You cannot cast spells." },
+    }
 },
 #endif
 
@@ -273,16 +301,17 @@ static const form_entry formdata[] =
     transformation::fungus, MONS_WANDERING_MUSHROOM, "Fungus", "fungus-form", "fungus",
     "a sentient fungus.",
     0, 0, NUM_TALISMANS,
-    EQF_PHYSICAL, MR_RES_POISON | mrd(MR_RES_NEG, 3),
+    EQF_PHYSICAL, MR_RES_POISON,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     FormScaling().Base(12), false, FormScaling().Base(9).XLBased(),
     SPWPN_CONFUSE, BROWN, "Spores", FormAttackVerbs("release spores at"),
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
     "sporulate", -8, "hypha", "", "release spores on", "flesh",
-    {
-        {"", "You are tiny and evasive." },
-        {"melee confuse", "Your melee attack releases spores that confuse breathing creatures."},
-        {"terrified", "<lightred>You become terrified and freeze when enemies are visible.</lightred>"} // XX coloring is really hacky here
+    { { "", "You are tiny and evasive." },
+      { "spores", "Your melee attacks release spores that confuse breathing creatures." },
+    }, // rPois, no grasping added separately
+    { { "terrified", "You become terrified and freeze when enemies are visible." },
+      { "no casting", "You cannot cast spells." },
     }
 },
 
@@ -297,12 +326,14 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, true, true,
     "", 0, "", "", "", "shadow",
-    {
-        {"shadow resist", "You are immune to unholy torment and to willpower attacks."},
-        {"half damage", "Damage taken is halved, but you are drained when taking damage."},
-        {"", "Your attacks are insubstantial and do half damage."}, // XX mark as badmut
-        {"bleed smoke", "You bleed smoke when taking damage."},
-        {"invisible", "You are invisible."},
+    { { "half damage", "Damage taken is halved, but you are drained when taking damage."},
+      { "bleed smoke", "You bleed smoke when taking damage." },
+      { "invisible", "You are invisible." },
+      { "unshakeable will", "Your willpower is unshakeable." },
+      { "torment immunity", "You are immune to unholy pain and torment."},
+    },
+    { { "weak attacks", "Your attacks do half damage." },
+      { "weak spells", "Your spells are much less powerful." }, // two de-enhancers
     }
 },
 
@@ -319,7 +350,8 @@ static const form_entry formdata[] =
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh",
     { { "fast swimmer", "You swim very quickly." },
       { "devour", "You can devour living enemies to heal." }
-    }
+    },
+    {}
 },
 #endif
 
@@ -333,10 +365,12 @@ static const form_entry formdata[] =
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
     FC_ENABLE, FC_DEFAULT, FC_FORBID, false, true,
     "bellow", 0, "", "", "place yourself before", "air",
-    { { "cleaving", "Your electrical attacks strike out in all directions at once." },
-      { "", "You are incredibly evasive." },
-      { "insubstantial", "Your insubstantial body is immune to petrification, constriction, and being set on fire"}
-    }
+    { { "electrical cleaving", "Your electrical attacks strike out in all directions at once." },
+      { "evasive", "You are incredibly evasive." },
+      { "blinkbolt", "You can turn into living lightning." },
+      { "insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire." },
+    }, // rElec added separately
+    {}
 },
 
 {
@@ -349,7 +383,8 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
-    { }
+    {}, // slaying bonus added separately
+    {}
 },
 
 {
@@ -362,7 +397,10 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, GREEN, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "shout twice", 0, "", "", "", "",
-    { { "devouring maw", "Your midsection houses a second, enormous mouth." },}
+    { { "devouring maw", "Your midsection houses a second, enormous mouth." },
+      { "", "You can devour living enemies to heal." }
+    },
+    {}
 },
 
 {
@@ -375,8 +413,8 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
-    { { "glow", "You glow with magical radiation, making you easy to see and hit." },
-      { "contaminating", "Foes you strike become dangerously contaminated with magical radiation." } }
+    { { "contaminating", "Foes you strike become dangerously contaminated with magical radiation." }, },
+    { { "glow", "You glow with magical radiation, making you easy to see and hit." } }
 },
 
 };
