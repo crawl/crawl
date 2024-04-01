@@ -2067,7 +2067,7 @@ vector<coord_def> possible_piledriver_targets()
 
 int piledriver_collision_power(int pow, int dist)
 {
-    return (pow + 30) * (2 + dist) / 2;
+    return (pow + 42) * (1 + (dist * 2)) / 3;
 }
 
 spret cast_piledriver(int pow, bool fail)
@@ -2106,12 +2106,9 @@ spret cast_piledriver(int pow, bool fail)
 
     // Now trigger location effects (to avoid dispersal traps causing all sorts
     // of problems with keeping the two of us together in the middle)
-    mon->apply_location_effects(old_targ_pos);
+    if (mon->alive())
+        mon->apply_location_effects(old_targ_pos);
     you.apply_location_effects(old_pos);
-
-    // Lock player in place proportional to the distance they travelled
-    you.increase_duration(DUR_NO_MOMENTUM, path.size());
-    mpr("You are locked in place by the recoil.");
 
     return spret::success;
 }
