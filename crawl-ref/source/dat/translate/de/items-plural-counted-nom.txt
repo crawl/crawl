@@ -247,32 +247,6 @@
 # Miscellaneous Items
 #################################
 
-%%%%
-%d boxes of beasts
-%d Kisten der Bestien
-%%%%
-%d lightning rods
-%d Blitzstangen
-%%%%
-%d phials of floods
-%d Phiolen der Fluten
-%%%%
-%d phantom mirrors
-%d Phantomspiegel
-%%%%
-%d figurines of a ziggurat
-%d Figuren einer Zikkurat
-%%%%
-%d condenser vanes
-%d Kondensationsfahnen
-%%%%
-%d pieces from Xom's chessboard
-%d Figuren von Xoms Schachbrett
-%%%%
-%d tins of tremorstones
-%d Dosen Bebensteine
-%%%%
-
 #################################
 # Gold
 #################################

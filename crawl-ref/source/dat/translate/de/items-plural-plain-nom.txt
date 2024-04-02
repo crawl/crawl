@@ -247,29 +247,3 @@ potions of resistance
 # Miscellaneous Items
 #################################
 
-%%%%
-boxes of beasts
-Kisten der Bestien
-%%%%
-lightning rods
-Blitzstangen
-%%%%
-phials of floods
-Phiolen der Fluten
-%%%%
-phantom mirrors
-{pl}Phantomspiegel
-%%%%
-figurines of a ziggurat
-Figuren einer Zikkurat
-%%%%
-condenser vanes
-Kondensationsfahnen
-%%%%
-pieces from Xom's chessboard
-Figuren von Xoms Schachbrett
-%%%%
-tins of tremorstones
-Dosen Bebensteine
-%%%%
-
