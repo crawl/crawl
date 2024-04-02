@@ -12427,6 +12427,9 @@ Ihr seid wendig. (Dex +2)
 You are very agile. (Dex +4)
 Ihr seid sehr wendig. (Dex +4)
 %%%%
+poison resistance
+Giftresistenz
+%%%%
 Your system is resistant to poisons. (rPois)
 Euer System ist resistent gegen Gifte. (rPois)
 %%%%
@@ -12571,6 +12574,9 @@ Ihr fühlt Euch durch Elektrizität verwundbar.
 You feel less vulnerable to electricity.
 Ihr fühlt Euch weniger anfällig für Elektrizität.
 %%%%
+regeneration
+Regeneration
+%%%%
 Your natural rate of healing is unusually fast.
 Eure natürliche Heilungsrate ist ungewöhnlich schnell.
 %%%%
@@ -12687,6 +12693,9 @@ Ihr kommt sehr langsam voran.
 %%%%
 You cover ground extremely slowly.
 Ihr kommt extrem langsam voran.
+%%%%
+see invisible
+Unsichtbares sehen
 %%%%
 You have supernaturally acute eyesight. (SInv)
 Ihr habt ein übernatürlich scharfes Sehvermögen. (SUns)
@@ -13560,6 +13569,9 @@ Wenn Ihr verletzt werdet, wird der Schaden zwischen Eurer Gesundheit und Euren M
 %%%%
 You feel your magical essence form a protective shroud around your flesh.
 Ihr spürt, wie Euch Eure magische Essenz wie ein Schutzmantel um Euer Fleisch legt.
+%%%%
+magic regeneration
+Magie-Regeneration
 %%%%
 You regenerate magic rapidly.
 Ihr regeneriert Eure Magie schnell.

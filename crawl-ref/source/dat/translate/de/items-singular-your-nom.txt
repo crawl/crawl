@@ -498,7 +498,7 @@ your %samulet
 Euer {adj-es}%sAmulett
 %%%%
 your %samulet of magic regeneration
-Euer {adj-es}%sAmulett der magischen Regeneration
+Euer {adj-es}%sAmulett der Magie-Regeneration
 %%%%
 your %samulet of the acrobat
 Euer {adj-es}%sAmulett des Akrobaten
@@ -1090,7 +1090,7 @@ Eure Spinnfäden-Rune
 your serpentine rune
 Eure Schlangen-Rune
 %%%%
-your slimy runne
+your slimy rune
 Eure schleimige Rune
 %%%%
 your abyssal rune

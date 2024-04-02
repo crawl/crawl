@@ -498,7 +498,7 @@ Silberbumerang
 {adj-es}%sAmulett
 %%%%
 %samulet of magic regeneration
-{adj-es}%sAmulett der magischen Regeneration
+{adj-es}%sAmulett der Magie-Regeneration
 %%%%
 %samulet of the acrobat
 {adj-es}%sAmulett des Akrobaten
@@ -1131,7 +1131,7 @@ Spinnfäden-Rune
 serpentine rune
 Schlangen-Rune
 %%%%
-slimy runne
+slimy rune
 schleimige Rune
 %%%%
 abyssal rune

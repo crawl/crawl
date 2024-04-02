@@ -192,7 +192,7 @@ def special_handling_for_item_name_cc(context, line, string, strings):
         string = string + ' '
     elif context == 'armour_ego_name':
         string = ' of ' + string
-    elif context == 'armour_ego_name_terse':
+    elif context == 'armour_ego_name(terse)':
         if string == 'rC+ rF+':
             # handled as two separate strings
             return
@@ -204,9 +204,41 @@ def special_handling_for_item_name_cc(context, line, string, strings):
         string = 'potion of ' + string
     elif context == 'scroll_type_name':
         string = 'scroll of ' + string
+    elif context == 'jewellery_effect_name':
+        if 'AMU_' in line:
+            string = '%samulet of ' + string
+        else:
+            string = '%sring of ' + string
+    elif context == 'jewellery_effect_name(terse)':
+        # the plus is handled separately
+        string = re.sub(r'\+.*', '', string)
+    elif context == 'rune_type_name':
+        if string in ['mossy', 'elven']:
+            # obsolete
+            return
+        else:
+            strings.append(string + ' rune')
+    else:
+        if string in ['wand of ', 'potion of ', 'scroll of ', 'ring of', 'amulet of', ' wand', ' rune']:
+            # all specific subtypes already covered above
+            return
 
     strings.append(string)
 
+# get rid of unnecessary context markers
+def remove_unnecessary_context_markers(strings):
+    context = None
+    strings_temp = []
+    for string in strings:
+        if string.startswith('# context:'):
+            context = string
+        else:
+            if context is not None:
+                strings_temp.append(context)
+                context = None
+            strings_temp.append(string)
+    strings.clear()
+    strings.extend(strings_temp)
 
 def article_a(string):
     if re.search('^[aeiouAEIOU]', string) and not string.startswith('one-'):
@@ -426,6 +458,7 @@ for filename in files:
                 lines.append(line)
 
         context = ''
+        last_context = ''
         for line in lines:
             #sys.stderr.write(line + "\n")
 
@@ -436,13 +469,11 @@ for filename in files:
                 line = line.strip()
             elif '@loccontext' in line:
                 context = re.sub(r'^.*loccontext:? *', '', line)
-                if filename == 'item-name.cc':
-                    strings.append('# context: ' + context)
                 continue
 
             # Ewwwwww!
-            if filename == 'item-name.cc' and context == 'armour_ego_name' and 'else' in line:
-                context = 'armour_ego_name_terse'
+            if filename == 'item-name.cc' and context in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
+                context += '(terse)'
 
             if '"' not in line:
                 continue
@@ -705,6 +736,10 @@ for filename in files:
                     if string != "" and (string[0] == " " or string[0] == "'"):
                         string = '%s' + string
 
+                if context != last_context:
+                    strings.append('# context: ' + context)
+                    last_context = context
+
                 if filename == 'item-name.cc':
                     special_handling_for_item_name_cc(context, line, string, strings)
                     continue
@@ -796,54 +831,50 @@ for filename in files:
             continue
 
         # some names have adjectives added for display
-        if filename == 'mon-data.h':
-            if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
-                string = '%s' + string
-            elif string == 'the Lernaean hydra':
-                string = 'the %sLernaean hydra'
-        elif filename == 'feature-data.h':
-            # we handle door adjectives as separate strings
-            if string.endswith(' door'):
-                words = string.split()
-                for word in words:
-                    if word == 'door':
-                        word = '%s' + word
-                    else:
-                        word = word + ' '
-                    if not word in filtered_strings:
-                        filtered_strings.append(word);
-                continue
-            elif string.startswith('some '):
-                string2 = re.sub('^some ', '', string)
-                if string2 not in filtered_strings:
-                    filtered_strings.append(string2)
-        elif filename == 'item-prop.cc':
-            if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
-                string = '%s' + string + ' dragon scales'
-            elif string == ' dragon scales':
-                continue
-            elif string in ['gloves', 'boots']:
-                string = '%spair of %s' + string
-            elif string in ['javelin', 'boomerang']:
-                filtered_strings.append(string)
-                filtered_strings.append('silver ' + string)
-                continue
-            elif string == 'dart':
-                filtered_strings.append(string)
-                filtered_strings.append('poisoned ' + string)
-                filtered_strings.append('curare-tipped ' + string)
-                filtered_strings.append('datura-tipped ' + string)
-                filtered_strings.append('atropa-tipped ' + string)
-                continue
-            elif string not in ['stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
-                string = '%s' + string
-        else:
-            # this should be already covered above (feature-data.h)
-            if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
-                continue
+        if not string.startswith('# note:') and not string.startswith('# context:'):
+            if filename == 'mon-data.h':
+                if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
+                    string = '%s' + string
+                elif string == 'the Lernaean hydra':
+                    string = 'the %sLernaean hydra'
+            elif filename == 'feature-data.h':
+                # we handle door adjectives as separate strings
+                if string.endswith(' door'):
+                    words = string.split()
+                    for word in words:
+                        if word == 'door':
+                            word = '%s' + word
+                        else:
+                            word = word + ' '
+                        if not word in filtered_strings:
+                            filtered_strings.append(word);
+                    continue
+                elif string.startswith('some '):
+                    string2 = re.sub('^some ', '', string)
+                    if string2 not in filtered_strings:
+                        filtered_strings.append(string2)
+            elif filename == 'item-prop.cc':
+                if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
+                    string = '%s' + string + ' dragon scales'
+                elif string == ' dragon scales':
+                    continue
+                elif string in ['gloves', 'boots']:
+                    string = '%spair of %s' + string
+                elif string in ['javelin', 'boomerang']:
+                    filtered_strings.append(string)
+                    filtered_strings.append('silver ' + string)
+                    continue
+                elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
+                    string = '%s' + string
+            else:
+                # this should be already covered above (feature-data.h)
+                if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
+                    continue
 
         if string not in filtered_strings:
             filtered_strings.append(string)
+
+    remove_unnecessary_context_markers(filtered_strings)
 
     if len(filtered_strings) > 0:
         output.append("")
@@ -855,7 +886,11 @@ for filename in files:
             #   - if it has leading or trailing whitespace
             #   - if it starts with # (because otherwise it looks like a comment)
             #   - if it starts and ends with double-quotes
-            if '# locnote' in string:
+            if string.startswith('# context:'):
+                if filename == 'item-name.cc':
+                    output.append(string)
+                continue
+            elif '# locnote' in string:
                 output.append(string)
                 continue
             elif re.search('^(\s|#)', string) or  re.search('\s$', string) \
@@ -870,8 +905,10 @@ for filename in files:
             else:
                 output.append(string)
 
-        # we need to add extra strings for names of things
-        if filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc']:
+        # we need to add extra strings for names of monsters/features/items
+        # in addition to "foo", we need "the foo", "a foo", "your foo"
+        # for monsters, we also need possessives ("the foo's", "a foo's", "your foo's")
+        if filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc', 'item-name.cc']:
 
             # separate unique and non-unique names because they will be treated differently
             names = []
@@ -882,6 +919,9 @@ for filename in files:
                     continue
                 elif string.endswith(' '):
                     adjectives.append(string)
+                elif filename == 'item-name.cc':
+                    if re.search('\b(scroll|potion|wand|ring|amulet|rune)\b', string):
+                        names.append(string)
                 elif (filename == 'mon-data.h' and is_unique_monster(string)):
                     unique_names.append(string)
                 elif not re.search('^(a|an|the|some) ', string) and string not in ['explore horizon', 'unseen']:

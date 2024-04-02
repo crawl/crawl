@@ -508,7 +508,7 @@ Ringe des Eises
 
 %%%%
 amulets of magic regeneration
-Amulette der magischen Regeneration
+Amulette der Magie-Regeneration
 %%%%
 amulets of the acrobat
 Amulette des Akrobaten

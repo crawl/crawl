@@ -121,6 +121,10 @@ Zaub
 SInv
 UnsS
 %%%%
+# alternative abbreviation for see invisible
+sInv
+UnsS
+%%%%
 # regeneration
 Regen
 Regen

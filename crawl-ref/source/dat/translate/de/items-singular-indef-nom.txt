@@ -498,7 +498,7 @@ a %samulet
 ein {adj-es}%sAmulett
 %%%%
 a %samulet of magic regeneration
-ein {adj-es}%sAmulett der magischen Regeneration
+ein {adj-es}%sAmulett der Magie-Regeneration
 %%%%
 a %samulet of the acrobat
 ein {adj-es}%sAmulett des Akrobaten
@@ -1118,7 +1118,7 @@ eine Spinnfäden-Rune
 a serpentine rune
 eine Schlangen-Rune
 %%%%
-a slimy runne
+a slimy rune
 eine schleimige Rune
 %%%%
 an abyssal rune
