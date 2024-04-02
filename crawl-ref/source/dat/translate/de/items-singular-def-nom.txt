@@ -1068,8 +1068,8 @@ die Phiole der Fluten
 the phantom mirror
 der Phantomspiegel
 %%%%
-the figurine of a ziggurat
-die Figur einer Zikkurat
+the %sfigurine of a ziggurat
+die %sFigur einer Zikkurat
 %%%%
 the condenser vane
 die Kondensationsfahne

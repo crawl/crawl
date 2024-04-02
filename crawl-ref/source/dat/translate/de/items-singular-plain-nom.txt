@@ -1101,8 +1101,8 @@ Phiole der Fluten
 phantom mirror
 Phantomspiegel
 %%%%
-figurine of a ziggurat
-Figur einer Zikkurat
+%sfigurine of a ziggurat
+%sFigur einer Zikkurat
 %%%%
 condenser vane
 Kondensationsfahne

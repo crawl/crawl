@@ -253,6 +253,8 @@ def special_handling_for_item_name_cc(section, line, string, strings):
     elif string in ['manual of ', '%s of %s', ' of ', 'of '] or (string.endswith(' of Zot') and string != "The Orb of Zot"):
         # other "of <foo>" suffixes are handled separately
         return
+    elif string == 'figurine of a ziggurat':
+        string = '%s' + string
     elif string == 'enchanted %s':
         # will be handled the other way round, with "enchanted" as added adjective
         string = 'enchanted '

@@ -1060,8 +1060,8 @@ Eure Phiole der Fluten
 your phantom mirror
 Euer Phantomspiegel
 %%%%
-your figurine of a ziggurat
-Eure Figur einer Zikkurat
+your %sfigurine of a ziggurat
+Eure %sFigur einer Zikkurat
 %%%%
 your condenser vane
 Eure Kondensationsfahne
