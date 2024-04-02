@@ -194,6 +194,10 @@ ein Pfeil
 a bolt
 ein Bolzen
 %%%%
+# the artefact arbalest "Damnation" shoots these
+a damnation bolt
+ein Verdammnis-Bolzen
+%%%%
 a dart
 ein Wurfpfeil
 %%%%
@@ -1095,6 +1099,9 @@ eine Figur von Xoms Schachbrett
 %%%%
 a tin of tremorstones
 eine Dose Bebensteine
+%%%%
+a quad damage
+ein Vierfach-Schaden
 %%%%
 
 #################################

@@ -194,6 +194,10 @@ Euer Pfeil
 your bolt
 Euer Bolzen
 %%%%
+# the artefact arbalest "Damnation" shoots these
+your damnation bolt
+Euer Verdammnis-Bolzen
+%%%%
 your dart
 Euer Wurfpfeil
 %%%%
@@ -1067,6 +1071,9 @@ Eure Figur von Xoms Schachbrett
 %%%%
 your tin of tremorstones
 Eure Dose Bebensteine
+%%%%
+your quad damage
+Euer Vierfach-Schaden
 %%%%
 
 #################################

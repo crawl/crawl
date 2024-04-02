@@ -121,21 +121,24 @@ def strip_uncompiled(lines):
     return result
 
 # special handling for strings in item-name.cc
-def special_handling_for_item_name_cc(context, line, string, strings):
-    if context in ['_random_vowel', '_random_cons', '_random_consonant_set']:
-        # ignore
+def special_handling_for_item_name_cc(section, line, string, strings):
+    if section in ['_random_vowel', '_random_cons', '_random_consonant_set', 'make_name']:
+        # random-name generation - ignore
         return
-    elif context.endswith('_secondary_string'):
-        # adjective furthest from the noun
+    elif '_test' in section:
+        # test stuff
+        return
+    elif section.endswith('_secondary_string') or section == 'staff_primary_string':
+        # extract adjective as separate word
         if not string.endswith(' '):
             string += ' '
-    elif context.endswith('_primary_string'):
-        # adjective closest to the noun
-        noun = re.sub('_.*', '', context)
+    elif section.endswith('_primary_string'):
+        # extract as adjective + noun
+        noun = re.sub('_.*', '', section)
         if not string.endswith(' '):
             string += ' '
         string = '%s' + string + noun
-    elif context == 'item_def::name':
+    elif section == 'item_def::name':
         if string == ' (in ':
             strings.append(' (in hand)')
             strings.append(' (in claw)')
@@ -150,7 +153,7 @@ def special_handling_for_item_name_cc(context, line, string, strings):
             strings.append(' (' + string + ' front leg)');
             strings.append(' (' + string + ' blade hand)');
             return
-    elif context == 'missile_brand_name':
+    elif section == 'missile_brand_name':
         if string == 'poisoned' or string.endswith('-tipped'):
             # hard code dart types
             string = string + ' dart'
@@ -170,72 +173,121 @@ def special_handling_for_item_name_cc(context, line, string, strings):
                 strings.append(string + ' ')
             else:
                 strings.append(' of ' + string)
-    elif context == 'weapon_brands_terse':
+    elif section == 'weapon_brands_terse':
         if string == 'confuse':
-            # not a real weapon brand - used on hands for the confuse monster spell
+            # not a real weapon brand - used on hands for confusing touch
             return
         elif string == 'flame':
             # terse version also used after "of" (see _item_ego_name in religion.cc)
             strings.append(' of ' + string)
-    elif context == 'weapon_brands_verbose':
+    elif section == 'weapon_brands_verbose':
         if string == 'confusion':
-            # not a real weapon brand - used on hands for the confuse monster spell
+            # not a real weapon brand - used on hands for confusing touch
             return
         elif string in ['vampirism', 'antimagic', 'vorpality', 'spectralizing']:
             # verbose name is never used (see brand_prefers_adj)
             return
         string = ' of ' + string
-    elif context == 'weapon_brands_adj':
+    elif section == 'weapon_brands_adj':
         # adjectives defined for all, but only used for some (see brand_prefers_adj)
-        if string not in ['vampiric', 'antimagic', 'vorpal', 'spectral']:
+        if string in ['vampiric', 'antimagic', 'vorpal', 'spectral']:
+            string = string + ' '
+        else:
             return
-        string = string + ' '
-    elif context == 'armour_ego_name':
+    elif section == 'armour_ego_name':
         string = ' of ' + string
-    elif context == 'armour_ego_name(terse)':
+    elif section == 'armour_ego_name(terse)':
         if string == 'rC+ rF+':
             # handled as two separate strings
             return
         # the plus is handled separately
         string = re.sub(r'\+.*', '', string)
-    elif context == '_wand_type_name':
+    elif section == '_wand_type_name':
         string = 'wand of ' + string
-    elif context == 'potion_type_name':
+    elif section == 'potion_type_name':
         string = 'potion of ' + string
-    elif context == 'scroll_type_name':
+    elif section == 'scroll_type_name':
         string = 'scroll of ' + string
-    elif context == 'jewellery_effect_name':
+    elif section == 'jewellery_effect_name':
         if 'AMU_' in line:
             string = '%samulet of ' + string
         else:
             string = '%sring of ' + string
-    elif context == 'jewellery_effect_name(terse)':
+    elif section == 'jewellery_effect_name(terse)':
         # the plus is handled separately
         string = re.sub(r'\+.*', '', string)
-    elif context == 'rune_type_name':
+    elif section == 'rune_type_name':
         if string in ['mossy', 'elven']:
             # obsolete
             return
         else:
             strings.append(string + ' rune')
-    else:
-        if string in ['wand of ', 'potion of ', 'scroll of ', 'ring of', 'amulet of', ' wand', ' rune']:
-            # all specific subtypes already covered above
+    elif section == 'staff_type_name':
+        string = '%sstaff of ' + string
+    elif section == 'ghost_brand_name':
+        if string == '%s weapon':
+            string = '%sweapon'
+        elif string == 'weapon of %s':
             return
+        elif string == '%s touch':
+            # there's only one possibility
+            string = 'confusing touch'
+    elif section == 'potion_colours':
+        if not string.endswith(' '):
+            string += ' '
+    elif section == 'display_runes':
+        if string == "green":
+            # text colour tag
+            return
+    elif section == 'item_prefix':
+        # undisplayed, but (supposedly) searchable prefixes
+        # many of these don't even work in English
+        return
+
+    if string in ['wand of ', 'potion of ', 'scroll of ', 'ring of', 'amulet of', 'staff of ']:
+        # all subtypes already covered above
+        return
+    elif string in [' wand', ' potion', ' ring', ' amulet', ' rune']:
+        # all subtypes already covered above
+        return
+    elif string in ['manual of ', '%s of %s', ' of ', 'of '] or (string.endswith(' of Zot') and string != "The Orb of Zot"):
+        # other "of <foo>" suffixes are handled separately
+        return
+    elif string == 'enchanted %s':
+        # will be handled the other way round, with "enchanted" as added adjective
+        string = 'enchanted '
+    elif string == "damnation ":
+        # there's only one possibility
+        string = "damnation bolt"
+    elif string == "labelled ":
+        string = "scroll labelled %s"
+    elif string == "x) ":
+        # ignore - just used for size
+        return
+    elif string == "pair of ":
+        # handled in item-prop.cc
+        return
+    elif string == "decaying skeleton":
+        # dbname (just used as a lookup key, not displayed)
+        return
+    elif "bug" in string or "bad item" in string or "bogus" in string:
+        # case that should never happen - ignore
+        return
 
     strings.append(string)
 
-# get rid of unnecessary context markers
-def remove_unnecessary_context_markers(strings):
-    context = None
+
+# get rid of unnecessary section markers
+def remove_unnecessary_section_markers(strings):
+    section = None
     strings_temp = []
     for string in strings:
-        if string.startswith('# context:'):
-            context = string
+        if string.startswith('# section:'):
+            section = string
         else:
-            if context is not None:
-                strings_temp.append(context)
-                context = None
+            if section is not None:
+                strings_temp.append(section)
+                section = None
             strings_temp.append(string)
     strings.clear()
     strings.extend(strings_temp)
@@ -323,8 +375,11 @@ IGNORE_STRINGS = [
     'the', 'the ', ' the ', 'its ',
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ',
-    'lightgrey', 'darkgrey', # colour tags
-    'bug', 'null', 'debugging ray', 'debug'
+    'debugging ray', 'debug',
+    'bug', 'null',
+    #text colour tags
+    'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
+    'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'
 ]
 
 files = []
@@ -392,18 +447,18 @@ for filename in files:
             if '//' in line and not re.search(r'// *@?(localise|locnote)', line):
                 line = strip_line_comment(line)
 
-            context = None
+            new_section = None
             if '(' in line and re.search('^[a-zA-Z]', line):
                 # function/method
-                context = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
+                new_section = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
             elif line.startswith('class '):
                 # class
-                context = re.sub('[ :].*', '', re.sub('^class *', '', line))
+                new_section = re.sub('[ :].*', '', re.sub('^class *', '', line))
             elif line.startswith('static ') and re.search('\[\] *=', line):
                 # static data
-                context = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
-            if context is not None:
-                lines.append('// @loccontext: ' + context)
+                new_section = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
+            if new_section is not None:
+                lines.append('// @locsection: ' + new_section)
 
             line = line.strip()
             if line == '':
@@ -457,8 +512,8 @@ for filename in files:
             else:
                 lines.append(line)
 
-        context = ''
-        last_context = ''
+        section = ''
+        last_section = ''
         for line in lines:
             #sys.stderr.write(line + "\n")
 
@@ -467,13 +522,19 @@ for filename in files:
                 strings.append(note)
                 line = strip_line_comment(line)
                 line = line.strip()
-            elif '@loccontext' in line:
-                context = re.sub(r'^.*loccontext:? *', '', line)
+            elif '@locsection' in line:
+                section = re.sub(r'^.*locsection:? *', '', line)
                 continue
 
             # Ewwwwww!
-            if filename == 'item-name.cc' and context in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
-                context += '(terse)'
+            if filename == 'item-name.cc':
+                if section in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
+                    section += '(terse)'
+                elif section == 'item_def::name_aux' and 'potion_colours[]' in line:
+                    section = 'potion_colours'
+                    #strings.append('# section: ' + section)
+                elif section == 'potion_colours' and 'COMPILE_CHECK' in line:
+                    section = 'item_def::name_aux'
 
             if '"' not in line:
                 continue
@@ -736,13 +797,16 @@ for filename in files:
                     if string != "" and (string[0] == " " or string[0] == "'"):
                         string = '%s' + string
 
-                if context != last_context:
-                    strings.append('# context: ' + context)
-                    last_context = context
+                if section != last_section:
+                    strings.append('# section: ' + section)
+                    last_section = section
 
                 if filename == 'item-name.cc':
-                    special_handling_for_item_name_cc(context, line, string, strings)
+                    special_handling_for_item_name_cc(section, line, string, strings)
                     continue
+                elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
+                    # adjectives
+                    string += ' '
 
                 # strip channel information
                 string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
@@ -774,7 +838,7 @@ for filename in files:
         if string == '':
             continue
 
-        if 'locnote' in string:
+        if string.startswith('# locnote:') or string.startswith('# section:'):
             filtered_strings.append(string)
             continue
 
@@ -831,7 +895,7 @@ for filename in files:
             continue
 
         # some names have adjectives added for display
-        if not string.startswith('# note:') and not string.startswith('# context:'):
+        if not string.startswith('# note:') and not string.startswith('# section:'):
             if filename == 'mon-data.h':
                 if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
                     string = '%s' + string
@@ -874,7 +938,7 @@ for filename in files:
         if string not in filtered_strings:
             filtered_strings.append(string)
 
-    remove_unnecessary_context_markers(filtered_strings)
+    remove_unnecessary_section_markers(filtered_strings)
 
     if len(filtered_strings) > 0:
         output.append("")
@@ -886,9 +950,9 @@ for filename in files:
             #   - if it has leading or trailing whitespace
             #   - if it starts with # (because otherwise it looks like a comment)
             #   - if it starts and ends with double-quotes
-            if string.startswith('# context:'):
-                if filename == 'item-name.cc':
-                    output.append(string)
+            if string.startswith('# section:'):
+                #if filename == 'mon-util.cc':
+                #    output.append(string)
                 continue
             elif '# locnote' in string:
                 output.append(string)
@@ -915,12 +979,16 @@ for filename in files:
             unique_names = []
             adjectives = []
             for string in filtered_strings:
-                if string.startswith('# note:') or string.startswith('# context:'):
+                if string.startswith('# note:') or string.startswith('# section:'):
                     continue
                 elif string.endswith(' '):
                     adjectives.append(string)
                 elif filename == 'item-name.cc':
-                    if re.search('\b(scroll|potion|wand|ring|amulet|rune)\b', string):
+                    if ' of ' in string and re.search('^[a-z]', string) and 'Geryon' not in string:
+                        names.append(string)
+                    elif string.startswith('%s') or re.search(' (dart|bolt|rune)$', string):
+                        names.append(string)
+                    elif string in ['lightning rod', 'quad damage', 'phantom mirror', 'condenser vane', "piece from Xom's chessboard"]:
                         names.append(string)
                 elif (filename == 'mon-data.h' and is_unique_monster(string)):
                     unique_names.append(string)

@@ -17,6 +17,15 @@
 " (unknown)"
 " (unbekannt)"
 %%%%
+" (inert)"
+" (inert)"
+%%%%
+" (damnation)"
+" (Verdammnis)"
+%%%%
+" (the Realm of Zot)"
+" (im Reich von Zot)"
+%%%%
 god gift
 Gottesgeschenk
 %%%%

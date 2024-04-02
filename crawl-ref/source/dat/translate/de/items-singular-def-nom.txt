@@ -194,6 +194,10 @@ der Pfeil
 the bolt
 der Bolzen
 %%%%
+# the artefact arbalest "Damnation" shoots these
+the damnation bolt
+der Verdammnis-Bolzen
+%%%%
 the dart
 der Wurfpfeil
 %%%%
@@ -1075,6 +1079,9 @@ die Figur von Xoms Schachbrett
 %%%%
 the tin of tremorstones
 die Dose Bebensteine
+%%%%
+the quad damage
+der Vierfach-Schaden
 %%%%
 
 #################################

@@ -1142,7 +1142,7 @@ string sub_type_string(const item_def &item, bool known)
             {
             if (!known)
                 return "manual";
-            string bookname = "manual of "; // @noloc
+            string bookname = "manual of ";
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
             }
@@ -1867,6 +1867,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     if (need_plural && quantity > 1 && !basename && !qualname)
         buff.str(pluralise(buff.str()));
 
+    // @noloc section start
     // debugging output -- oops, I probably block it above ... dang! {dlb}
     if (buff.str().length() < 3)
     {
@@ -1875,6 +1876,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
              << ",pl2:" << plus2 << ",sp:" << special
              << ",qu:" << quantity << ")";
     }
+    // @noloc section end
 
     return buff.str();
 }

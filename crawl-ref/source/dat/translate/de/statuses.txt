@@ -1118,8 +1118,9 @@ Ihr tretet zurück von der Pforte des Todes.
 Quad
 4fach
 %%%%
-quad damage
-Vierfach-Schaden
+# duplicate of the item name
+#quad damage
+#Vierfach-Schaden
 %%%%
 Quad Damage is wearing off.
 Der Vierfach-Schaden lässt nach.

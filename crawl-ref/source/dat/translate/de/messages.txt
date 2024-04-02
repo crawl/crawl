@@ -1193,12 +1193,6 @@ You slaughter yourself joyfully.
 %s is cloven in twain.
 
 %%%%
-damnation bolt
-
-%%%%
-a damnation bolt
-
-%%%%
 The arc blade crackles to life.
 Die Lichtbogenklinge knistert zum Leben.
 %%%%
@@ -1319,6 +1313,9 @@ robe
 
 %%%%
 body armour
+
+%%%%
+artefact
 
 %%%%
 non-descript
@@ -6678,6 +6675,9 @@ Cunning
 Cun
 
 %%%%
+" of "
+
+%%%%
 Ashenzari invites you to partake of a vision and a curse%s.
 
 %%%%
@@ -11873,9 +11873,6 @@ Der %s-Mimiker verschwindet!
 %%%%
 Lernaean
 Lernäisch
-%%%%
-pale
-blass
 %%%%
 monstrous
 monströs
