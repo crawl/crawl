@@ -120,6 +120,27 @@ def strip_uncompiled(lines):
 
     return result
 
+# get file contents as list of lines
+# uncompiled sections are stripped out, as are comments, apart from ones that have localisation directives
+def get_cleaned_file_contents(filename):
+    infile = open(filename)
+    data = infile.read()
+    infile.close()
+
+    data = strip_multiline_comments(data)
+    raw_lines = strip_uncompiled(data.splitlines())
+    del data
+
+    # strip single-line comments, expect ones that have localisation directives
+    lines = []
+    for line in raw_lines:
+        if '//' in line and not re.search(r'//.*(localise|locnote|noloc)', line):
+            line = strip_line_comment(line)
+        lines.append(line.rstrip())
+
+    return lines
+
+
 # special handling for strings in item-name.cc
 def special_handling_for_item_name_cc(section, line, string, strings):
     if section in ['_random_vowel', '_random_cons', '_random_consonant_set', 'make_name']:
@@ -421,417 +442,411 @@ for filename in files:
 
     strings = []
 
-    with open(filename) as infile:
-        data = infile.read()
+    lines_raw = get_cleaned_file_contents(filename)
+    lines = []
 
-        data = strip_multiline_comments(data)
+    # join split lines
+    ignoring = False
+    in_map = False
+    for line in lines_raw:
 
-        lines_raw = strip_uncompiled(data.splitlines())
-        lines = []
+        # ignore strings explicitly marked as not to be extracted
+        if 'noloc' in line and not 'you.hand_act' in line:
+            if 'noloc section start' in line:
+                ignoring = True
+            if 'noloc section end' in line:
+                ignoring = False
+            continue
 
-        # join split lines and remove comments
-        ignoring = False
-        in_map = False
-        for line in lines_raw:
+        if ignoring and not 'localise' in line:
+            continue
 
-            # ignore strings explicitly marked as not to be extracted
-            if 'noloc' in line and not 'you.hand_act' in line:
-                if 'noloc section start' in line:
-                    ignoring = True
-                if 'noloc section end' in line:
-                    ignoring = False
-                continue
+        # remove comment
+        if '//' in line and not re.search(r'// *@?(localise|locnote)', line):
+            line = strip_line_comment(line)
 
-            if ignoring and not 'localise' in line:
-                continue
+        new_section = None
+        if '(' in line and re.search('^[a-zA-Z]', line):
+            # function/method
+            new_section = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
+        elif line.startswith('class '):
+            # class
+            new_section = re.sub('[ :].*', '', re.sub('^class *', '', line))
+        elif line.startswith('static ') and re.search('\[\] *=', line):
+            # static data
+            new_section = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
+        if new_section is not None:
+            lines.append('// @locsection: ' + new_section)
 
-            # remove comment
-            if '//' in line and not re.search(r'// *@?(localise|locnote)', line):
-                line = strip_line_comment(line)
+        line = line.strip()
+        if line == '':
+            continue
 
-            new_section = None
-            if '(' in line and re.search('^[a-zA-Z]', line):
-                # function/method
-                new_section = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
-            elif line.startswith('class '):
-                # class
-                new_section = re.sub('[ :].*', '', re.sub('^class *', '', line))
-            elif line.startswith('static ') and re.search('\[\] *=', line):
-                # static data
-                new_section = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
-            if new_section is not None:
-                lines.append('// @locsection: ' + new_section)
+        # avoid false string delimiter
+        line = line.replace("'\"'", "'\\\"'")
 
-            line = line.strip()
-            if line == '':
-                continue
-
-            # avoid false string delimiter
-            line = line.replace("'\"'", "'\\\"'")
-
-            if filename == 'job-data.h':
-                # special handling - only take the line with the job abbreviation and name
-                if re.search(r'"[A-Z][a-zA-Z]"', line):
-                    lines.append(line)
-                continue
-
-            # ignore keys (but not values) in map initialisation
-            if re.search(r'map<string,[^>]+> +[A-Za-z0-9_]+\s+=', line):
-                in_map = True
-            if in_map:
-                # surround with @'s so it looks like a param name (later code will skip it)
-                line = re.sub(r'\{\s*"([^"]+)"\s*,', r'{"@\1@",', line)
-                #sys.stderr.write("NERFED MAP KEY: " + line + "\n")
-            # NOTE: map end could be same line as map start
-            if re.search(r'}\s*;', line):
-                in_map = False
-
-            if len(lines) == 0 or line.startswith('#') or line == "{" or line == "}":
-               lines.append(line)
-               continue
-
-            last = lines[-1]
-
-            # join strings distributed over several lines
-            if line[0] == '"' and last[-1] == '"':
-                lines[-1] = last[0:-1] + line[1:]
-                continue
-
-            join = False
-            if last.endswith(';') or last == "{" or last == "}":
-                join = False
-            elif last.endswith(':') and re.match(r'^(case|public|protected|private)\b', last):
-                join = False
-            elif '(' in last and last.count('(') > last.count(')'):
-                # join function calls split over multiple lines (because we want to filter out some function calls)
-                join = True
-            elif last[-1] == '?' or line[0] == '?' or last[-1] == ':' or line[0] == ':':
-                # join ternary operator split over multiple lines
-                join = True
-
-            if join:
-                lines[-1] = last + line
-            else:
+        if filename == 'job-data.h':
+            # special handling - only take the line with the job abbreviation and name
+            if re.search(r'"[A-Z][a-zA-Z]"', line):
                 lines.append(line)
+            continue
 
-        section = ''
-        last_section = ''
-        for line in lines:
-            #sys.stderr.write(line + "\n")
+        # ignore keys (but not values) in map initialisation
+        if re.search(r'map<string,[^>]+> +[A-Za-z0-9_]+\s+=', line):
+            in_map = True
+        if in_map:
+            # surround with @'s so it looks like a param name (later code will skip it)
+            line = re.sub(r'\{\s*"([^"]+)"\s*,', r'{"@\1@",', line)
+            #sys.stderr.write("NERFED MAP KEY: " + line + "\n")
+        # NOTE: map end could be same line as map start
+        if re.search(r'}\s*;', line):
+            in_map = False
 
-            if 'locnote' in line:
-                note = re.sub(r'^.*locnote: *', '# locnote: ', line)
-                strings.append(note)
-                line = strip_line_comment(line)
-                line = line.strip()
-            elif '@locsection' in line:
-                section = re.sub(r'^.*locsection:? *', '', line)
-                continue
+        if len(lines) == 0 or line.startswith('#') or line == "{" or line == "}":
+           lines.append(line)
+           continue
 
-            # Ewwwwww!
-            if filename == 'item-name.cc':
-                if section in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
-                    section += '(terse)'
-                elif section == 'item_def::name_aux' and 'potion_colours[]' in line:
-                    section = 'potion_colours'
-                    #strings.append('# section: ' + section)
-                elif section == 'potion_colours' and 'COMPILE_CHECK' in line:
-                    section = 'item_def::name_aux'
+        last = lines[-1]
 
-            if '"' not in line:
-                continue
+        # join strings distributed over several lines
+        if line[0] == '"' and last[-1] == '"':
+            lines[-1] = last[0:-1] + line[1:]
+            continue
 
-            extract = False
+        join = False
+        if last.endswith(';') or last == "{" or last == "}":
+            join = False
+        elif last.endswith(':') and re.match(r'^(case|public|protected|private)\b', last):
+            join = False
+        elif '(' in last and last.count('(') > last.count(')'):
+            # join function calls split over multiple lines (because we want to filter out some function calls)
+            join = True
+        elif last[-1] == '?' or line[0] == '?' or last[-1] == ':' or line[0] == ':':
+            # join ternary operator split over multiple lines
+            join = True
 
-            if 'localise' in line:
-                extract = True
-            elif 'simple_monster_message' in line or 'simple_god_message' in line:
-                extract = True
-            elif 'MSGCH_DIAGNOSTICS' in line:
-                # ignore diagnostic messages - these are for devs
-                continue
-            elif re.search(r'mpr[a-zA-Z_]* *\(', line):
-                # extract mpr, mprf, etc. messages
-                if 'MSGCH_ERROR' in line:
-                    # Error messages mostly relate to programming errors, so we
-                    # keep the original English for the user to report to the devs.
-                    # The only exception is file system-related messages, which
-                    # relate to the user's own environment.
-                    if 'file' not in line and 'directory' not in line \
-                       and 'writ' not in line and ' read ' not in line \
-                       and 'lock' not in line and 'load' not in line \
-                       and ' save' not in line and 'open' not in line:
-                        continue
-                extract = True
-            elif re.search(r'(prompt|msgwin_get_line)[a-zA-Z_]* *\(', line) or 'yesno' in line \
-                 or 'yes_or_no' in line:
-                # extract prompts
-                extract = True
-            elif re.match(r'\s*end *\(', line) and not 'DEBUG' in line:
-                extract = True
-            elif re.search(r'\bsave_game *\(', line):
-                extract = True
-            elif re.search(r'\bhand_act *\(', line):
-                extract = True
-            elif 'cant_cmd_' in line:
-                extract = True
-            elif 'get_num_and_char' in line:
-                extract = True
-                
-            if lazy:
-                # ignore strings unless we have a specific reason to extract them
-                if not extract:
-                    continue 
+        if join:
+            lines[-1] = last + line
+        else:
+            lines.append(line)
 
-            # we don't want to extract the db key used with getSpeakString(), etc.,
-            # but we don't necessarily want to ignore the whole line because
-            # sometimes there are other strings present that we do want to extract
-            if re.search(r'\bget[a-zA-Z]*String', line):
-                line = re.sub(r'\b(get[a-zA-Z]*String) *\(.*\)', r'\1()', line)
+    section = ''
+    last_section = ''
+    for line in lines:
+        #sys.stderr.write(line + "\n")
 
-            # we don't want to extract the context key used with localise_contextual()
-            if 'localise_contextual' in line:
-                line = re.sub(r'localise_contextual *\(.*,', 'localise_contextual(dummy,', line)
+        if 'locnote' in line:
+            note = re.sub(r'^.*locnote: *', '# locnote: ', line)
+            strings.append(note)
+            line = strip_line_comment(line)
+            line = line.strip()
+        elif '@locsection' in line:
+            section = re.sub(r'^.*locsection:? *', '', line)
+            continue
 
-            if '"' not in line:
-                continue
+        # Ewwwwww!
+        if filename == 'item-name.cc':
+            if section in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
+                section += '(terse)'
+            elif section == 'item_def::name_aux' and 'potion_colours[]' in line:
+                section = 'potion_colours'
+                #strings.append('# section: ' + section)
+            elif section == 'potion_colours' and 'COMPILE_CHECK' in line:
+                section = 'item_def::name_aux'
 
-            if not extract:
-                # if we get here then we are not in lazy mode
-                # extract strings unless we have reason to ignore them
+        if '"' not in line:
+            continue
 
-                # ignore precompiler directives, except #define
-                if line[0] == '#' and not re.match(r'^#\s*define', line):
-                    continue
+        extract = False
 
-                if re.search('extern +"C"', line):
-                    continue
-
-                # ignore debug messages
-                if re.search(r'\bdie(_noline)? *\(', line) or \
-                   re.search(r'dprf? *\(', line) or \
-                   re.search(r'dprintf *\(', line) or \
-                   re.search(r'debug_dump_item *\(', line) or \
-                   re.search(r'dump_test_fails *\(', line) or \
-                   re.search(r'bad_level_id', line) or \
-                   re.search(r'ASSERTM? *\(', line) or \
-                   'DEBUG' in line or \
-                   'log_print' in line or \
-                   re.search(r'fprintf *\(', line):
-                    continue
-
-                # ignore axed stuff
-                if 'AXED' in line:
-                    continue
-
-                # ignore file operations (any strings will be paths/filenames/modes)
-                if 'fopen' in line or 'freopen' in line:
-                    continue
-                if '_hs_open' in line or 'lk_open' in line:
-                    continue
-                if 'catpath' in line or 'sscanf' in line:
-                    continue
-
-                # internal scorefile stuff that is never displayed
-                if 'add_field' in line or 'str_field' in line or 'int_field' in line:
-                    continue
-                if 'death_source_flags' in line:
-                    continue
-
-                # ignore lua code
-                if 'execfile' in line:
-                    continue
-                if re.search(r'^[^"]*lua[^"]*\(', line):
-                    continue
-
-                # Leave notes/milsones in English
-                if re.search('take_note', line) or re.search('mark_milestone', line) or re.search('note *=', line):
-                    continue
-                if re.search(r'(mutate|delete_mutation|delete_all_temp_mutations)\s*\(', line):
-                    continue
-                if re.search(r'\bbanish(ed)?\s*\(', line):
-                    continue
-
-                # score file stuff
-                if re.search(r'\bouch\s*\(', line) or re.search(r'\bhurt\s*\(', line) \
-                   or re.search(r'\bparalyse\s*\(', line) \
-                   or re.search(r'\bpetrify\s*\(', line) \
-                   or re.search(r'\bmiscast_effect\s*\(', line) \
-                   or 'aux_source' in line:
-                    continue
-
-                # skip tags/keys
-                if re.search(r'^[^"]*_tag\(', line) and not re.search('text_tag', line):
-                    continue
-                if re.search(r'strip_tag_prefix *\(', line):
-                    continue
-                if 'annotate_string' in line:
-                    continue
-                if 'json_' in line:
-                    continue
-                if 'serialize' in line:
-                    continue
-                if '_id =' in line:
-                    continue
-                if 'push_ui_layout' in line or 'ui_state_change' in line:
-                    continue
-                if re.search(r'\bmenu_colour *\(', line):
-                    continue
-                if re.search(r'\bprops\.erase *\(', line):
-                    continue
-                if '_print_converted_orc_speech' in line:
-                    continue
-                if '_get_xom_speech' in line or 'XOM_SPEECH' in line:
-                    continue
-                if 'show_specific_help' in line:
-                    continue
-                if 'print_hint' in line or 'tutorial_msg' in line:
-                    continue
-                if re.search('^[^"]*property[A-Za-z_]* *\(', line):
-                    continue
-                if re.match(r'^\s*key[A-Za-z_]*\.[A-Za-z_]*\(', line):
-                    continue
-                if re.search(r'set_sync_id\s*\(', line):
-                    continue
-                if re.search(r'compare_item', line):
-                    continue
-                if re.search(r'^# *define.*KEY', line):
-                    continue
-                if 'GetModuleHandle' in line:
-                    continue
-                if re.search(r'\bcreate_item_named *\(', line):
-                    continue
-
-                # find or compare
-                if re.search(r'\bstrstr\s*\(', line):
-                    continue
-                if 'search_stashes' in line:
-                    continue
-                if re.search(r'\bstrn?i?cmp\b', line):
-                    continue
-                if '_strip_to' in line:
-                    continue
-
-                if re.search(r'\bstrlen\s*\(', line):
-                    continue
-
+        if 'localise' in line:
             extract = True
-
-            # tokenize line into string and non-string
-            tokens = []
-            token = ""
-            escaped = False
-            in_string = False
-            for i in range(len(line)):
-                ch = line[i]
-                if ch == '"' and not escaped:
-                    if in_string:
-                        token += ch
-                        tokens.append(token)
-                        token = ""
-                        in_string = False
-                    else:
-                        if token != "":
-                            tokens.append(token)
-                        token = ch
-                        in_string = True
+        elif 'simple_monster_message' in line or 'simple_god_message' in line:
+            extract = True
+        elif 'MSGCH_DIAGNOSTICS' in line:
+            # ignore diagnostic messages - these are for devs
+            continue
+        elif re.search(r'mpr[a-zA-Z_]* *\(', line):
+            # extract mpr, mprf, etc. messages
+            if 'MSGCH_ERROR' in line:
+                # Error messages mostly relate to programming errors, so we
+                # keep the original English for the user to report to the devs.
+                # The only exception is file system-related messages, which
+                # relate to the user's own environment.
+                if 'file' not in line and 'directory' not in line \
+                   and 'writ' not in line and ' read ' not in line \
+                   and 'lock' not in line and 'load' not in line \
+                   and ' save' not in line and 'open' not in line:
                     continue
-                
-                if ch == '\\' and not escaped:
-                    escaped = True
-                else:
-                    escaped = False
-                
-                token += ch
-
-            if token != "":
-                tokens.append(token)
-                        
-            for i in range(len(tokens)):
-                token = tokens[i]
-                if len(token) < 3 or token[0] != '"' or token[-1] != '"':
-                    continue;
-
-                string = token[1:-1]
-                if string in strings:
-                    continue
-
-                if i != 0:
-                    last = tokens[i-1]
-
-                    # skip (in)equality tests (assume string is defined elsewhere)
-                    if re.search(r'[=!]=\s*$', last):
-                        continue
-                    if re.search(r'\bstr(case)?cmp\b', last):
-                        continue
-
-
-                    # skip map keys
-                    if re.search(r'\[\s*$', last):
-                        continue
-
-                    if '(' in last:
-                        # another type of equality test
-                        if re.search(r'\bstarts_with\s*\([^,"]+,\s*$', last):
-                            continue
-                        if re.search(r'\bends_with\s*\([^,"]+,\s*$', last):
-                            continue
-                        if re.search(r'\bfind\s*\(\s*(string\()?$', last):
-                            continue
-                        if re.search(r'\bexists\s*\(\s*$', last):
-                            continue
-                        if re.search(r'\bcontains\s*\(', last):
-                            continue
-
-                        if re.search(r'\bstrip_suffix\s*\(', last):
-                            continue
-                        if re.search(r'\bsend_exit_reason\s*\(', last):
-                            continue
-                        if re.search(r'\bsend_dump_info\s*\(', last):
-                            continue
-                        if re.search(r'\bmons_add_blame\s*\(', last):
-                            continue
-                        if re.search(r'\breplace[a-zA-Z_]*\s*\(', last):
-                            continue
-
-                # simple_god/monster_message may contain an implied %s
-                if 'simple_god_message' in line or 'simple_monster_message' in line:
-                    if string != "" and (string[0] == " " or string[0] == "'"):
-                        string = '%s' + string
-
-                if section != last_section:
-                    strings.append('# section: ' + section)
-                    last_section = section
-
-                if filename == 'item-name.cc':
-                    special_handling_for_item_name_cc(section, line, string, strings)
-                    continue
-                elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
-                    # adjectives
-                    string += ' '
-
-                # strip channel information
-                string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
-
-                if "\\n" in string:
-                    # split lines
-                    substrings = string.split("\\n")
-                    for ss in substrings:
-                        strings.append(ss)
-                else:
-                    if 'our @hand' in string:
-                        # create strings for one and two hands (coz Ru)
-                        string = string.replace('your @hand', '@your_hand')
-                        string = string.replace('Your @hand', '@Your_hand')
-                        string2 = string.replace('hands@', 'hand@')
-                        string2 = string2.replace('@hand_conj@', 's')
-                        string = string.replace('@hand_conj@', '')
-                        strings.append(string2)
-                    strings.append(string)
-                    if filename == 'spl-miscast.cc' and "'s body" in string:
-                        # string is also used with that substring for monsters that don't have a body
-                        strings.append(string.replace("'s body", ""))
+            extract = True
+        elif re.search(r'(prompt|msgwin_get_line)[a-zA-Z_]* *\(', line) or 'yesno' in line \
+             or 'yes_or_no' in line:
+            # extract prompts
+            extract = True
+        elif re.match(r'\s*end *\(', line) and not 'DEBUG' in line:
+            extract = True
+        elif re.search(r'\bsave_game *\(', line):
+            extract = True
+        elif re.search(r'\bhand_act *\(', line):
+            extract = True
+        elif 'cant_cmd_' in line:
+            extract = True
+        elif 'get_num_and_char' in line:
+            extract = True
             
+        if lazy:
+            # ignore strings unless we have a specific reason to extract them
+            if not extract:
+                continue 
+
+        # we don't want to extract the db key used with getSpeakString(), etc.,
+        # but we don't necessarily want to ignore the whole line because
+        # sometimes there are other strings present that we do want to extract
+        if re.search(r'\bget[a-zA-Z]*String', line):
+            line = re.sub(r'\b(get[a-zA-Z]*String) *\(.*\)', r'\1()', line)
+
+        # we don't want to extract the context key used with localise_contextual()
+        if 'localise_contextual' in line:
+            line = re.sub(r'localise_contextual *\(.*,', 'localise_contextual(dummy,', line)
+
+        if '"' not in line:
+            continue
+
+        if not extract:
+            # if we get here then we are not in lazy mode
+            # extract strings unless we have reason to ignore them
+
+            # ignore precompiler directives, except #define
+            if line[0] == '#' and not re.match(r'^#\s*define', line):
+                continue
+
+            if re.search('extern +"C"', line):
+                continue
+
+            # ignore debug messages
+            if re.search(r'\bdie(_noline)? *\(', line) or \
+               re.search(r'dprf? *\(', line) or \
+               re.search(r'dprintf *\(', line) or \
+               re.search(r'debug_dump_item *\(', line) or \
+               re.search(r'dump_test_fails *\(', line) or \
+               re.search(r'bad_level_id', line) or \
+               re.search(r'ASSERTM? *\(', line) or \
+               'DEBUG' in line or \
+               'log_print' in line or \
+               re.search(r'fprintf *\(', line):
+                continue
+
+            # ignore axed stuff
+            if 'AXED' in line:
+                continue
+
+            # ignore file operations (any strings will be paths/filenames/modes)
+            if 'fopen' in line or 'freopen' in line:
+                continue
+            if '_hs_open' in line or 'lk_open' in line:
+                continue
+            if 'catpath' in line or 'sscanf' in line:
+                continue
+
+            # internal scorefile stuff that is never displayed
+            if 'add_field' in line or 'str_field' in line or 'int_field' in line:
+                continue
+            if 'death_source_flags' in line:
+                continue
+
+            # ignore lua code
+            if 'execfile' in line:
+                continue
+            if re.search(r'^[^"]*lua[^"]*\(', line):
+                continue
+
+            # Leave notes/milsones in English
+            if re.search('take_note', line) or re.search('mark_milestone', line) or re.search('note *=', line):
+                continue
+            if re.search(r'(mutate|delete_mutation|delete_all_temp_mutations)\s*\(', line):
+                continue
+            if re.search(r'\bbanish(ed)?\s*\(', line):
+                continue
+
+            # score file stuff
+            if re.search(r'\bouch\s*\(', line) or re.search(r'\bhurt\s*\(', line) \
+               or re.search(r'\bparalyse\s*\(', line) \
+               or re.search(r'\bpetrify\s*\(', line) \
+               or re.search(r'\bmiscast_effect\s*\(', line) \
+               or 'aux_source' in line:
+                continue
+
+            # skip tags/keys
+            if re.search(r'^[^"]*_tag\(', line) and not re.search('text_tag', line):
+                continue
+            if re.search(r'strip_tag_prefix *\(', line):
+                continue
+            if 'annotate_string' in line:
+                continue
+            if 'json_' in line:
+                continue
+            if 'serialize' in line:
+                continue
+            if '_id =' in line:
+                continue
+            if 'push_ui_layout' in line or 'ui_state_change' in line:
+                continue
+            if re.search(r'\bmenu_colour *\(', line):
+                continue
+            if re.search(r'\bprops\.erase *\(', line):
+                continue
+            if '_print_converted_orc_speech' in line:
+                continue
+            if '_get_xom_speech' in line or 'XOM_SPEECH' in line:
+                continue
+            if 'show_specific_help' in line:
+                continue
+            if 'print_hint' in line or 'tutorial_msg' in line:
+                continue
+            if re.search('^[^"]*property[A-Za-z_]* *\(', line):
+                continue
+            if re.match(r'^\s*key[A-Za-z_]*\.[A-Za-z_]*\(', line):
+                continue
+            if re.search(r'set_sync_id\s*\(', line):
+                continue
+            if re.search(r'compare_item', line):
+                continue
+            if re.search(r'^# *define.*KEY', line):
+                continue
+            if 'GetModuleHandle' in line:
+                continue
+            if re.search(r'\bcreate_item_named *\(', line):
+                continue
+
+            # find or compare
+            if re.search(r'\bstrstr\s*\(', line):
+                continue
+            if 'search_stashes' in line:
+                continue
+            if re.search(r'\bstrn?i?cmp\b', line):
+                continue
+            if '_strip_to' in line:
+                continue
+
+            if re.search(r'\bstrlen\s*\(', line):
+                continue
+
+        extract = True
+
+        # tokenize line into string and non-string
+        tokens = []
+        token = ""
+        escaped = False
+        in_string = False
+        for i in range(len(line)):
+            ch = line[i]
+            if ch == '"' and not escaped:
+                if in_string:
+                    token += ch
+                    tokens.append(token)
+                    token = ""
+                    in_string = False
+                else:
+                    if token != "":
+                        tokens.append(token)
+                    token = ch
+                    in_string = True
+                continue
+            
+            if ch == '\\' and not escaped:
+                escaped = True
+            else:
+                escaped = False
+            
+            token += ch
+
+        if token != "":
+            tokens.append(token)
+                    
+        for i in range(len(tokens)):
+            token = tokens[i]
+            if len(token) < 3 or token[0] != '"' or token[-1] != '"':
+                continue;
+
+            string = token[1:-1]
+            if string in strings:
+                continue
+
+            if i != 0:
+                last = tokens[i-1]
+
+                # skip (in)equality tests (assume string is defined elsewhere)
+                if re.search(r'[=!]=\s*$', last):
+                    continue
+                if re.search(r'\bstr(case)?cmp\b', last):
+                    continue
+
+
+                # skip map keys
+                if re.search(r'\[\s*$', last):
+                    continue
+
+                if '(' in last:
+                    # another type of equality test
+                    if re.search(r'\bstarts_with\s*\([^,"]+,\s*$', last):
+                        continue
+                    if re.search(r'\bends_with\s*\([^,"]+,\s*$', last):
+                        continue
+                    if re.search(r'\bfind\s*\(\s*(string\()?$', last):
+                        continue
+                    if re.search(r'\bexists\s*\(\s*$', last):
+                        continue
+                    if re.search(r'\bcontains\s*\(', last):
+                        continue
+
+                    if re.search(r'\bstrip_suffix\s*\(', last):
+                        continue
+                    if re.search(r'\bsend_exit_reason\s*\(', last):
+                        continue
+                    if re.search(r'\bsend_dump_info\s*\(', last):
+                        continue
+                    if re.search(r'\bmons_add_blame\s*\(', last):
+                        continue
+                    if re.search(r'\breplace[a-zA-Z_]*\s*\(', last):
+                        continue
+
+            # simple_god/monster_message may contain an implied %s
+            if 'simple_god_message' in line or 'simple_monster_message' in line:
+                if string != "" and (string[0] == " " or string[0] == "'"):
+                    string = '%s' + string
+
+            if section != last_section:
+                strings.append('# section: ' + section)
+                last_section = section
+
+            if filename == 'item-name.cc':
+                special_handling_for_item_name_cc(section, line, string, strings)
+                continue
+            elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
+                # adjectives
+                string += ' '
+
+            # strip channel information
+            string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
+
+            if "\\n" in string:
+                # split lines
+                substrings = string.split("\\n")
+                for ss in substrings:
+                    strings.append(ss)
+            else:
+                if 'our @hand' in string:
+                    # create strings for one and two hands (coz Ru)
+                    string = string.replace('your @hand', '@your_hand')
+                    string = string.replace('Your @hand', '@Your_hand')
+                    string2 = string.replace('hands@', 'hand@')
+                    string2 = string2.replace('@hand_conj@', 's')
+                    string = string.replace('@hand_conj@', '')
+                    strings.append(string2)
+                strings.append(string)
+                if filename == 'spl-miscast.cc' and "'s body" in string:
+                    # string is also used with that substring for monsters that don't have a body
+                    strings.append(string.replace("'s body", ""))
 
     # filter out strings we want to ignore
     filtered_strings = []
