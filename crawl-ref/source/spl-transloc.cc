@@ -2072,15 +2072,20 @@ int piledriver_collision_power(int pow, int dist)
 
 spret cast_piledriver(int pow, bool fail)
 {
+    // Calculate all possible valid targets first, so we can prompt the player
+    // about anything they *might* hit.
+    vector<coord_def> targs = possible_piledriver_targets();
+    vector<coord_def> path = piledriver_beam_paths(targs);
+    if (warn_about_bad_targets(SPELL_PILEDRIVER, path))
+        return spret::abort;
+
     fail_check();
 
-    vector<coord_def> targs = possible_piledriver_targets();
+    // Now that they've confirmed, pick the *real* target
     shuffle_array(targs);
     targs.resize(1);
-
     monster* mon = monster_at(targs[0]);
-
-    vector<coord_def> path = piledriver_beam_paths(targs);
+    path = piledriver_beam_paths(targs);
 
     mprf("Space contracts around you and %s and then re-expands violently!",
             mon->name(DESC_THE).c_str());
