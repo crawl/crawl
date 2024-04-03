@@ -3905,9 +3905,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && !you.vampire_alive
                && you.form != transformation::bat;
     case ABIL_BREATHE_FIRE:
-        // red draconian handled before the switch
         return you.form == transformation::dragon
-               && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+               && !species::is_draconian(you.species);
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
     case ABIL_SIPHON_ESSENCE:
