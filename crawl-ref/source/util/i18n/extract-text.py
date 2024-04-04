@@ -30,6 +30,18 @@ import sys
 # handles escaped double-quotes
 STRING_PATTERN = r'"(\\|\"|[^"])*"'
 
+IGNORE_STRINGS = [
+    'the', 'the ', ' the ', 'its ',
+    'a', 'a ', 'an', 'an ',
+    'you', 'you ', 'your', 'your ',
+    'debugging ray', 'debug',
+    'bug', 'null',
+    #text colour tags
+    'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
+    'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'
+]
+
+
 # strip (potentially) multi-line comments (i.e. /*...*/)
 def strip_multiline_comments(data):
     result = ""
@@ -345,6 +357,68 @@ def get_relevant_lines(filename, lines):
 
     return result
 
+
+# should string be ignored?
+def ignore_string(string):
+    # ignore empty string
+    if string == '':
+        return True
+
+    # ignore articles, pronouns, etc.
+    if string.lower() in IGNORE_STRINGS:
+        return True
+
+    # ignore strings that are just whitespace
+    if re.match(r'^\s*$', string):
+        return True
+
+    # ignore opengl functions
+    if re.match(r'^gl[A-Z]', string):
+        return True
+    
+    # ignore HTML and formatted text tags
+    if re.match(r'^(\s|\[|\]|\(|\))*</?[^<>/]+>(\s|\[|\]|\(|\))*$', string):
+        return True
+
+    # ignore variable names
+    if re.match(r'^\s*@[A-Za-z0-9_]+@?\s*$', string):
+        return True
+
+    # ignore identifiers
+    if '_' in string and re.match(r"^[A-Za-z0-9_\- ']+$", string):
+        return True
+    if 'Gozag bribe' in string or 'Gozag permabribe' in string:
+        return True
+    if string == 'passage of golubria': # display name has uppercase G
+        return True
+
+    # ignore bug-catching stuff
+    if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
+       'DUMMY' in string or 'eggplant' in string or \
+       re.search(r'bugginess', string, re.I):
+        return True
+
+    # ignore debug stuff
+    if 'gdb' in string or 'Git' in string:
+        return True
+
+    # ignore filenames and file extensions
+    if re.match(r'^[A-Za-z0-9_\-\/]*\.[A-Za-z]{1,4}$', string):
+        return True
+
+    # ignore format strings without any actual text
+    temp = re.sub(r'%[\-\+ #0]?[\*0-9]*(\.[\*0-9]*)?(hh|h|l|ll|j|z|t|L)?[diuoxXfFeEgGaAcspn]', '', string)
+    temp = re.sub('0x', '', temp); # Hexadecimal number indicator
+    if not re.search(r'(?<!\\)[a-zA-Z]', temp):
+        return True
+
+    # ignore punctuation
+    #if re.match(r'^[!\.\?]+$', string):
+    #    return True
+
+    return False
+
+
 # special handling for strings in item-name.cc
 def special_handling_for_item_name_cc(section, line, string, strings):
     if section in ['_random_vowel', '_random_cons', '_random_consonant_set', 'make_name']:
@@ -598,17 +672,6 @@ LAZY_FILES = [
     'god-prayer.cc', 'macro.cc', 'main.cc', 'tilereg-dgn.cc'
 ]
 
-IGNORE_STRINGS = [
-    'the', 'the ', ' the ', 'its ',
-    'a', 'a ', 'an', 'an ',
-    'you', 'you ', 'your', 'your ',
-    'debugging ray', 'debug',
-    'bug', 'null',
-    #text colour tags
-    'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
-    'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'
-]
-
 files = []
 if len(sys.argv) > 1:
     # use list of files specified on command line
@@ -660,14 +723,15 @@ for filename in files:
     for line in lines:
         #sys.stderr.write(line + "\n")
 
-        if 'locnote' in line:
-            note = re.sub(r'^.*locnote: *', '# locnote: ', line)
-            strings.append(note)
-            line = strip_line_comment(line)
-            line = line.strip()
-        elif '@locsection' in line:
-            section = re.sub(r'^.*locsection:? *', '', line)
-            continue
+        if '//' in line:
+            if 'locnote' in line:
+                note = re.sub(r'^.*locnote: *', '# locnote: ', line)
+                strings.append(note)
+                line = strip_line_comment(line)
+                line = line.strip()
+            elif '@locsection' in line:
+                section = re.sub(r'^.*locsection:? *', '', line)
+                continue
 
         if '"' not in line:
             continue
@@ -966,106 +1030,53 @@ for filename in files:
     # filter out strings we want to ignore
     filtered_strings = []
     for string in strings:
-        # ignore empty string
-        if string == '':
-            continue
 
         if string.startswith('# locnote:') or string.startswith('# section:'):
             filtered_strings.append(string)
             continue
 
-        # ignore articles, pronouns, etc.
-        if string.lower() in IGNORE_STRINGS:
-            continue
-
-        # ignore strings that are just whitespace
-        if re.match(r'^(\\t|\\n|\s)*$', string):
-            continue
-
-        # ignore opengl functions
-        if re.match(r'^gl[A-Z]', string):
-            continue
-        
-        # ignore HTML and formatted text tags
-        if re.match(r'^(\\n|\s|\[|\]|\(|\))*</?[^<>/]+>(\\n|\s|\[|\]|\(|\))*$', string):
-            continue
-
-        # ignore variable names
-        if re.match(r'^(\\n|\s)*@[A-Za-z0-9_]+@?(\\n|\s)*$', string):
-            continue
-
-        # ignore identifiers
-        if '_' in string and re.match(r"^[A-Za-z0-9_\- ']+$", string):
-            continue
-        if 'Gozag bribe' in string or 'Gozag permabribe' in string:
-            continue
-        if string == 'passage of golubria': # display name has uppercase G
-            continue
-
-        # ignore filenames and file extensions
-        if re.match(r'^[A-Za-z0-9_\-\/]*\.[A-Za-z]{1,4}$', string):
-            continue
-
-        # ignore format strings without any actual text
-        temp = re.sub(r'%[\-\+ #0]?[\*0-9]*(\.[\*0-9]*)?(hh|h|l|ll|j|z|t|L)?[diuoxXfFeEgGaAcspn]', '', string)
-        temp = re.sub('0x', '', temp); # Hexadecimal number indicator
-        if not re.search(r'(?<!\\)[a-zA-Z]', temp):
-            continue
-
-        # ignore punctuation
-        if re.match(r'^[!\.\?]+$', string):
-            continue
-
-        # ignore bug-catching stuff
-        if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
-           'DUMMY' in string or 'eggplant' in string or \
-           re.search(r'bugginess', string, re.I):
-            continue
-
-        # ignore debug stuff
-        if 'gdb' in string or 'Git' in string:
+        if ignore_string(string):
             continue
 
         # some names have adjectives added for display
-        if not string.startswith('# note:') and not string.startswith('# section:'):
-            if filename == 'mon-data.h':
-                if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
-                    string = '%s' + string
-                elif string == 'the Lernaean hydra':
-                    string = 'the %sLernaean hydra'
-            elif filename == 'feature-data.h':
-                # we handle door adjectives as separate strings
-                if string.endswith(' door'):
-                    words = string.split()
-                    for word in words:
-                        if word == 'door':
-                            word = '%s' + word
-                        else:
-                            word = word + ' '
-                        if not word in filtered_strings:
-                            filtered_strings.append(word);
-                    continue
-                elif string.startswith('some '):
-                    string2 = re.sub('^some ', '', string)
-                    if string2 not in filtered_strings:
-                        filtered_strings.append(string2)
-            elif filename == 'item-prop.cc':
-                if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
-                    string = '%s' + string + ' dragon scales'
-                elif string == ' dragon scales':
-                    continue
-                elif string in ['gloves', 'boots']:
-                    string = '%spair of %s' + string
-                elif string in ['javelin', 'boomerang']:
-                    filtered_strings.append(string)
-                    filtered_strings.append('silver ' + string)
-                    continue
-                elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
-                    string = '%s' + string
-            else:
-                # this should be already covered above (feature-data.h)
-                if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
-                    continue
+        if filename == 'mon-data.h':
+            if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
+                string = '%s' + string
+            elif string == 'the Lernaean hydra':
+                string = 'the %sLernaean hydra'
+        elif filename == 'feature-data.h':
+            # we handle door adjectives as separate strings
+            if string.endswith(' door'):
+                words = string.split()
+                for word in words:
+                    if word == 'door':
+                        word = '%s' + word
+                    else:
+                        word = word + ' '
+                    if not word in filtered_strings:
+                        filtered_strings.append(word);
+                continue
+            elif string.startswith('some '):
+                string2 = re.sub('^some ', '', string)
+                if string2 not in filtered_strings:
+                    filtered_strings.append(string2)
+        elif filename == 'item-prop.cc':
+            if string in ['steam', 'acid', 'quicksilver', 'swamp', 'fire', 'ice', 'pearl', 'storm', 'shadow', 'gold']:
+                string = '%s' + string + ' dragon scales'
+            elif string == ' dragon scales':
+                continue
+            elif string in ['gloves', 'boots']:
+                string = '%spair of %s' + string
+            elif string in ['javelin', 'boomerang']:
+                filtered_strings.append(string)
+                filtered_strings.append('silver ' + string)
+                continue
+            elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
+                string = '%s' + string
+        else:
+            # this should be already covered above (feature-data.h)
+            if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
+                continue
 
         if string not in filtered_strings:
             filtered_strings.append(string)
@@ -1111,7 +1122,7 @@ for filename in files:
             unique_names = []
             adjectives = []
             for string in filtered_strings:
-                if string.startswith('# note:') or string.startswith('# section:'):
+                if string.startswith('# locnote:') or string.startswith('# section:'):
                     continue
                 elif string.endswith(' '):
                     adjectives.append(string)
