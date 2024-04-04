@@ -725,7 +725,7 @@ for filename in files:
 
         if '//' in line:
             if 'locnote' in line:
-                note = re.sub(r'^.*locnote: *', '# locnote: ', line)
+                note = re.sub(r'^.*locnote: *', '# note: ', line)
                 strings.append(note)
                 line = strip_line_comment(line)
                 line = line.strip()
@@ -1031,7 +1031,7 @@ for filename in files:
     filtered_strings = []
     for string in strings:
 
-        if string.startswith('# locnote:') or string.startswith('# section:'):
+        if string.startswith('# note:') or string.startswith('# section:'):
             filtered_strings.append(string)
             continue
 
@@ -1097,7 +1097,7 @@ for filename in files:
                 #if filename == 'mon-util.cc':
                 #    output.append(string)
                 continue
-            elif '# locnote' in string:
+            elif '# note' in string:
                 output.append(string)
                 continue
             elif re.search('^(\s|#)', string) or  re.search('\s$', string) \
@@ -1122,7 +1122,7 @@ for filename in files:
             unique_names = []
             adjectives = []
             for string in filtered_strings:
-                if string.startswith('# locnote:') or string.startswith('# section:'):
+                if string.startswith('# note:') or string.startswith('# section:'):
                     continue
                 elif string.endswith(' '):
                     adjectives.append(string)

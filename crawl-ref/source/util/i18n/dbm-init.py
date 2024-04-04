@@ -82,8 +82,8 @@ for line in keyfile:
     if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
         # blank line or comment
         if not re.match('^# duplicate', line):
-            if 'locnote:' in line:
-                locnote = re.sub(r'.*locnote: *', '# note: ', line)
+            if 'note:' in line:
+                locnote = line
                 continue
             if in_entry:
                 outfile.write("%%%%\n");
