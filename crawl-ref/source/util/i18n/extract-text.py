@@ -1,6 +1,34 @@
+################################################################################
+#
+# This script extracts strings from C++ source code
+#
+# By default, all strings are extracted, unless there's a reason to ignore them.
+# However for files named in LAZY_FILES, strings are only extracted if 
+# there's an explicit reason to do so.
+#
+# It understands certain directives placed in single-line comments:
+#   @locnote: blah = include a comment for the translators with the extracted strings
+#   @noloc = do not extract strings on this line
+#   @noloc section start = stop extracting strings from this line onwards
+#   @noloc section end = resume extracting strings
+#   @localise = DO extract strings on this line, even if in a noloc section or lazy
+#               file (not required if there's a call to the localise() function)
+#
+# These strings are always ignored:
+#   - map keys (but not values)
+#   - anything that looks like a key or identifier
+#   - tags of the form "<foo>" (on their own)
+#   - file names
+#
+################################################################################
+
 import glob
 import re
 import sys
+
+# pattern for recognising strings
+# handles escaped double-quotes
+STRING_PATTERN = r'"(\\|\"|[^"])*"'
 
 # strip (potentially) multi-line comments (i.e. /*...*/)
 def strip_multiline_comments(data):
@@ -63,7 +91,7 @@ def strip_line_comment(line):
         elif ch == '/' and not in_string:
             if i > 0 and line[i-1] == '/':
                 # comment
-                return line[0:i-1]
+                return line[0:i-1].rstrip()
     # no comment - return whole line
     return line
 
@@ -120,26 +148,202 @@ def strip_uncompiled(lines):
 
     return result
 
+def dump_lines(filename, lines):
+    with open(filename, 'w') as f:
+        for line in lines:
+            f.write(f"{line}\n")
+
 # get file contents as list of lines
-# uncompiled sections are stripped out, as are comments, apart from ones that have localisation directives
+# uncompiled sections are stripped out
+# comments are stripped out, apart from those containing directives for this script
 def get_cleaned_file_contents(filename):
     infile = open(filename)
     data = infile.read()
     infile.close()
 
     data = strip_multiline_comments(data)
-    raw_lines = strip_uncompiled(data.splitlines())
-    del data
+    lines = strip_uncompiled(data.splitlines())
 
-    # strip single-line comments, expect ones that have localisation directives
-    lines = []
-    for line in raw_lines:
-        if '//' in line and not re.search(r'//.*(localise|locnote|noloc)', line):
+    result = []
+    for line in lines:
+
+        # strip single-line comments, apart from those that have directives for this script
+        if '//' in line:
+            if not re.search(r'//.*(locnote|noloc)', line) and not re.search(r'//[ @]*localise\b', line):
+                line = strip_line_comment(line)
+                if line == '':
+                    continue
+
+        result.append(line)
+
+    return result
+
+
+# replace strings that should not be extracted with dummies
+def do_dummy_string_replacements(lines):
+    result = []
+    in_map = False
+    for line in lines:
+        if '//' in line and re.search('//.*noloc(?! *section)', line):
+            # line marked as not to be localised - replace strings with dummies
+            line = re.sub(STRING_PATTERN, '"_dummy_"', line);
+            # noloc comment no longer needed, and might be in the way
             line = strip_line_comment(line)
-        lines.append(line.rstrip())
 
-    return lines
+        # ignore keys (but not values) in map initialisation
+        if re.search(r'map<string,[^>]+> +[A-Za-z0-9_]+\s+=', line):
+            in_map = True
+        if in_map:
+            # surround with @'s so it looks like a param name (later code will skip it)
+            line = re.sub(r'\{\s*"([^"]+)"\s*,', r'{"@\1@",', line)
+            #sys.stderr.write("NERFED MAP KEY: " + line + "\n")
+        # NOTE: map end could be same line as map start
+        if re.search(r'}\s*;', line):
+            in_map = False
 
+        result.append(line)
+
+    return result
+
+
+# First-stage line processing:
+#   replace strings that should not be extracted with dummies (outside noloc sections)
+#   join statements that are split over multiple lines
+#   strip trailing whitespace
+#   strip out blank lines
+def do_first_stage_line_processing(lines):
+    result = []
+
+    # this must be done before joining multi-line statements,
+    # because it's possible for only part of the statement to be marked with @noloc
+    lines = do_dummy_string_replacements(lines)
+
+    for line in lines:
+
+        line = line.rstrip()
+
+        # skip blank lines (might get in the way of statement-joining)
+        if line == '':
+            continue
+
+        if len(result) > 0:
+            last = result[-1]
+            if not (last.endswith(';') or last.endswith('}') or last.endswith('{')):
+                # check for statements split over multiple lines
+                curr = line.lstrip()
+
+                # join strings distributed over several lines
+                if last.endswith('"') and curr.startswith('"'):
+                    result[-1] = last[0:-1] + curr[1:]
+                    continue
+
+                join = False
+                if '(' in last and last.count('(') > last.count(')'):
+                    # join function calls split over multiple lines
+                    join = True
+                elif last.endswith('?') or curr.startswith('?') or last.endswith(':') or curr.startswith(':'):
+                    # join ternary operator split over multiple lines
+                    if last.endswith(':') and re.search('\bcase\b', last) or re.search(r'(public|protected|private|default)\s*:$', last):
+                        # false positive
+                        pass
+                    else:
+                        join = True
+                #elif last.endswith('&&') or curr.startswith('&&') or last.endswith('||') or curr.startswith('||'):
+                #    join = True
+                elif last.endswith('=') and not curr.startswith('{'):
+                    # assignment
+                    join = True
+
+                if join:
+                    result[-1] = last + ' ' + curr
+                    continue
+
+        result.append(line)
+
+    return result
+
+
+# insert section markers
+# inserts a comment like "// @locsestion: foo"
+# recognised sections are classes, functions, and static array initialisations
+def insert_section_markers(filename, lines):
+    result = []
+    section = None
+    last_section = None
+    for line in lines:
+        if '(' in line and not line.endswith(';') and re.search('^[a-zA-Z]', line):
+            # function/method
+            section = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
+        elif line.startswith('class '):
+            # class
+            section = re.sub('[ :].*', '', re.sub('^class *', '', line))
+        elif line.startswith('static ') and re.search('\[\] *=', line):
+            # static data
+            section = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
+
+        # Ewwwwww!
+        if filename == 'item-name.cc':
+            if section in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
+                section += '(terse)'
+            elif section == 'item_def::name_aux' and 'potion_colours[]' in line:
+                section = 'potion_colours'
+            elif section == 'potion_colours' and 'COMPILE_CHECK' in line:
+                section = 'item_def::name_aux'
+
+        if section != last_section:
+            result.append('// @locsection: ' + section)
+            last_section = section
+
+        result.append(line)
+
+    return result
+
+# return only lines that have
+#   a) strings that might need to be extracted
+#   b) directives for this script
+# any leading or trailing whitespace is removed
+def get_relevant_lines(filename, lines):
+    result = []
+    ignoring = False
+    for line in lines:
+        # ignore sections explicitly marked as not to be extracted
+        if 'noloc section' in line:
+            if 'noloc section start' in line:
+                ignoring = True
+            if 'noloc section end' in line:
+                ignoring = False
+            continue
+
+        if ignoring and not re.search(r'//[ @]*(localise|locsection)\b', line):
+            continue
+
+        # calls to mpr_nolocalise(), etc.
+        if '_nolocalise' in line and not 'you.hand_act' in line:
+            continue
+
+        line = line.strip()
+        if line == '':
+            continue
+
+        # avoid false string delimiter
+        #line = line.replace("'\"'", "'\\\"'")
+
+        if filename == 'job-data.h':
+            # special handling - only take the line with the job abbreviation and name
+            if re.search(r'"[A-Z][a-zA-Z]"', line):
+                result.append(line)
+            continue
+
+        if not '"' in line and not '//' in line:
+            continue
+
+        # ignore compiler directives, apart from #define
+        if re.match(r'\s*#', line) and not re.match(r'\s*#\s*define', line):
+            continue
+
+        result.append(line)
+
+    return result
 
 # special handling for strings in item-name.cc
 def special_handling_for_item_name_cc(section, line, string, strings):
@@ -442,93 +646,14 @@ for filename in files:
 
     strings = []
 
-    lines_raw = get_cleaned_file_contents(filename)
-    lines = []
+    lines = get_cleaned_file_contents(filename)
+    lines = do_first_stage_line_processing(lines)
+    lines = insert_section_markers(filename, lines)
 
-    # join split lines
-    ignoring = False
-    in_map = False
-    for line in lines_raw:
+    #if filename == 'item-name.cc':
+    #    dump_lines('extract-text.1.dump', lines)
 
-        # ignore strings explicitly marked as not to be extracted
-        if 'noloc' in line and not 'you.hand_act' in line:
-            if 'noloc section start' in line:
-                ignoring = True
-            if 'noloc section end' in line:
-                ignoring = False
-            continue
-
-        if ignoring and not 'localise' in line:
-            continue
-
-        # remove comment
-        if '//' in line and not re.search(r'// *@?(localise|locnote)', line):
-            line = strip_line_comment(line)
-
-        new_section = None
-        if '(' in line and re.search('^[a-zA-Z]', line):
-            # function/method
-            new_section = re.sub('^.*[ *]', '', re.sub(' *\(.*', '', line))
-        elif line.startswith('class '):
-            # class
-            new_section = re.sub('[ :].*', '', re.sub('^class *', '', line))
-        elif line.startswith('static ') and re.search('\[\] *=', line):
-            # static data
-            new_section = re.sub('^.*[ *]', '', re.sub('\[\] *=.*', '', line))
-        if new_section is not None:
-            lines.append('// @locsection: ' + new_section)
-
-        line = line.strip()
-        if line == '':
-            continue
-
-        # avoid false string delimiter
-        line = line.replace("'\"'", "'\\\"'")
-
-        if filename == 'job-data.h':
-            # special handling - only take the line with the job abbreviation and name
-            if re.search(r'"[A-Z][a-zA-Z]"', line):
-                lines.append(line)
-            continue
-
-        # ignore keys (but not values) in map initialisation
-        if re.search(r'map<string,[^>]+> +[A-Za-z0-9_]+\s+=', line):
-            in_map = True
-        if in_map:
-            # surround with @'s so it looks like a param name (later code will skip it)
-            line = re.sub(r'\{\s*"([^"]+)"\s*,', r'{"@\1@",', line)
-            #sys.stderr.write("NERFED MAP KEY: " + line + "\n")
-        # NOTE: map end could be same line as map start
-        if re.search(r'}\s*;', line):
-            in_map = False
-
-        if len(lines) == 0 or line.startswith('#') or line == "{" or line == "}":
-           lines.append(line)
-           continue
-
-        last = lines[-1]
-
-        # join strings distributed over several lines
-        if line[0] == '"' and last[-1] == '"':
-            lines[-1] = last[0:-1] + line[1:]
-            continue
-
-        join = False
-        if last.endswith(';') or last == "{" or last == "}":
-            join = False
-        elif last.endswith(':') and re.match(r'^(case|public|protected|private)\b', last):
-            join = False
-        elif '(' in last and last.count('(') > last.count(')'):
-            # join function calls split over multiple lines (because we want to filter out some function calls)
-            join = True
-        elif last[-1] == '?' or line[0] == '?' or last[-1] == ':' or line[0] == ':':
-            # join ternary operator split over multiple lines
-            join = True
-
-        if join:
-            lines[-1] = last + line
-        else:
-            lines.append(line)
+    lines = get_relevant_lines(filename, lines)
 
     section = ''
     last_section = ''
@@ -543,16 +668,6 @@ for filename in files:
         elif '@locsection' in line:
             section = re.sub(r'^.*locsection:? *', '', line)
             continue
-
-        # Ewwwwww!
-        if filename == 'item-name.cc':
-            if section in ['armour_ego_name', 'jewellery_effect_name'] and 'else' in line:
-                section += '(terse)'
-            elif section == 'item_def::name_aux' and 'potion_colours[]' in line:
-                section = 'potion_colours'
-                #strings.append('# section: ' + section)
-            elif section == 'potion_colours' and 'COMPILE_CHECK' in line:
-                section = 'item_def::name_aux'
 
         if '"' not in line:
             continue
