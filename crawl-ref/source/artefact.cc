@@ -82,7 +82,10 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     switch (which_god)
     {
     case GOD_ZIN:
-        // Lawful god: no mutagenics.
+        // Lawful god: no chaos or mutagenics.
+        if (brand == SPWPN_CHAOS)
+            return false;
+
         if (artefact_property(item, ARTP_CONTAM))
             return false;
         break;
@@ -147,6 +150,12 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_DITHMENOS:
         // No reducing stealth.
         if (artefact_property(item, ARTP_STEALTH) < 0)
+            return false;
+        break;
+
+    case GOD_IGNIS:
+        // Fire god.
+        if (item.base_type == OBJ_WEAPONS && brand != SPWPN_FLAMING)
             return false;
         break;
 
