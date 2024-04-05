@@ -1053,6 +1053,12 @@ function (exports, $, key_conversion, chat, comm) {
         imgs.hide();
         var count = imgs.length;
         var rand_index = Math.floor(Math.random() * count);
+        // the image will load if we don't do this, but removing the lazy
+        // attribute now forces it to load before any uncached tilesheets.
+        // Otherwise, in my testing, it gets pushed to the end, so defeats
+        // the point of the loading screen.
+        if ($(imgs[rand_index]).attr("loading"))
+            $(imgs[rand_index]).removeAttr("loading")
         $(imgs[rand_index]).show();
         set_layer("loader");
     }
