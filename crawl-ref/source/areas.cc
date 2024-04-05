@@ -41,7 +41,7 @@ enum class areaprop
     umbra         = (1 << 7),
     quad          = (1 << 8),
     disjunction   = (1 << 9),
-    // 10 was soul aura, whatever that was, now unused
+    // 10 was lost soul aura, now unused
 };
 /// Bit field for the area properties
 DEF_BITFIELD(areaprops, areaprop);
