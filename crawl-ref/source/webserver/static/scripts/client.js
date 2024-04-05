@@ -1066,7 +1066,7 @@ function (exports, $, key_conversion, chat, comm) {
         if (current_layer == "loader")
             return;
         var imgs = $("#loader img");
-        next_loading_img = Math.min(imgs.length, next_loading_img); // sanity check
+        next_loading_img = Math.min(imgs.length - 1, next_loading_img); // sanity check
         imgs.hide();
         $(imgs[next_loading_img]).show();
         set_layer("loader");
