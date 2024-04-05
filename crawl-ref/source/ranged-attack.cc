@@ -186,7 +186,7 @@ bool ranged_attack::handle_phase_blocked()
                     }
                     else {
                         string shld = defender_shield->name(DESC_PLAIN);
-                        mprf("%s reflects off %s %s!", proj.c_str(), 
+                        mprf("%s reflects off %s %s!", proj.c_str(),
                              def_name(DESC_ITS).c_str(), shld.c_str());
                     }
                 }

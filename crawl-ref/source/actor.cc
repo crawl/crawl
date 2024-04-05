@@ -787,7 +787,7 @@ void actor::constriction_damage_defender(actor &defender, int duration)
             attacker_desc = name(DESC_THE);
 
         string msg;
-        if (direct_player_attack) 
+        if (direct_player_attack)
             msg = localise("You constrict %s", target);
         else if (defender.is_player())
         {

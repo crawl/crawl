@@ -157,7 +157,7 @@ struct monster_explosion {
 static const map<monster_type, monster_explosion> explosions {
     { MONS_BALLISTOMYCETE_SPORE, { setup_spore_explosion } },
     { MONS_BALL_LIGHTNING, { _setup_lightning_explosion } },
-    { MONS_LURKING_HORROR, { nullptr, 
+    { MONS_LURKING_HORROR, { nullptr,
                              "By Zin's power, %s torment is averted." } },
     { MONS_FULMINANT_PRISM, { _setup_prism_explosion } },
     { MONS_BENNU, { _setup_bennu_explosion,

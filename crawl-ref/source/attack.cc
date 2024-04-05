@@ -951,7 +951,7 @@ void attack::stab_message()
     case 6:     // big melee, monster surrounded/not paying attention
         if (coinflip())
         {
-            mprf(you.has_mutation(MUT_PAWS) 
+            mprf(you.has_mutation(MUT_PAWS)
                  ? "You pounce on %s from a blind spot!"
                  : "You strike %s from a blind spot!",
                  defender->name(DESC_THE).c_str());

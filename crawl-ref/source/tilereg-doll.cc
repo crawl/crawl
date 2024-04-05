@@ -322,7 +322,7 @@ void DollEditRegion::render()
         m_font_buf.add(
             chop_string(localise("Save menu"), 18) + " "
             + chop_string(localise("Escape") + localise(", ") + localise("Ctrl-S"), 23)
-            + " " 
+            + " "
             + chop_string(localise("Toggle equipment"), 19) + " "
             + toggle_cmd,
             VColour::white, start_x, start_y + height * 4);

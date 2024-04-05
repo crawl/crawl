@@ -779,7 +779,7 @@ static vector<string> _get_mutations(bool terse)
         }
         else if (form->hp_mod < 10)
         {
-            result.push_back(terse ? localise("reduced hp") 
+            result.push_back(terse ? localise("reduced hp")
                                    : _badmut("Your maximum health is decreased."));
         }
 
@@ -820,7 +820,7 @@ static vector<string> _get_mutations(bool terse)
 
         if (!form->can_cast)
         {
-            result.push_back(terse ? localise("no casting") 
+            result.push_back(terse ? localise("no casting")
                                    : _badmut("You cannot cast spells."));
         }
 

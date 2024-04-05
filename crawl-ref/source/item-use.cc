@@ -3564,7 +3564,7 @@ void read(item_def* scroll, dist *target)
     {
         // can't use DESC_A becaue we will get the stack count
         string a_scroll = "a " + scroll->name(DESC_QUALNAME); // @noloc
-        
+
         if (scroll->quantity < prev_quantity)
             mprf("It was %s.", a_scroll.c_str());
         else

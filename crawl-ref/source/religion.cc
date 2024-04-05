@@ -4777,7 +4777,7 @@ static void _place_delayed_monsters()
                              ? lastmon->name(DESC_A)
                              : pluralise(lastmon->name(DESC_PLAIN));
 
-                map<string, string> params = 
+                map<string, string> params =
                     {{"God", god}, {"servant", mon_name}}; // @noloc
                 msg = localise(msg, params);
             }

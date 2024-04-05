@@ -2051,7 +2051,7 @@ static string _describe_item_curse(const item_def &item)
 
     ostringstream desc;
 
-    desc << "\n" 
+    desc << "\n"
          << localise("It has a curse which improves the following skills:");
     for (auto curse: curses)
     {

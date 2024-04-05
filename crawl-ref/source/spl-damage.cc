@@ -1099,7 +1099,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_GARGOYLE,          { "blast of rock fragments", BROWN } },
     { MONS_IRON_ELEMENTAL,    { "blast of metal fragments", CYAN,
                                 frag_damage_type::metal } },
-    { MONS_IRON_GOLEM,        { "blast of metal fragments", CYAN, 
+    { MONS_IRON_GOLEM,        { "blast of metal fragments", CYAN,
                                 frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "blast of metal fragments", CYAN,
                                 frag_damage_type::metal } },
@@ -2733,7 +2733,7 @@ void forest_damage(const actor *mon)
                             "A tree reaches out and hits you",
                             "A root smacks you from below");
                     }
-                    else 
+                    else
                     {
                         msg = random_choose(
                             "@foe@ is hit by a branch",

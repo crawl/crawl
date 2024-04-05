@@ -1512,7 +1512,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
                                  branches[root_branch].longname);
         if (crawl_state.game_is_tutorial())
             prompt += localise(" This will make you lose the game!");
-        
+
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             mpr("Alright, then stay!");

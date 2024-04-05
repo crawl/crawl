@@ -1247,7 +1247,7 @@ static void _redraw_title()
                                            name_len - (in_len - WIDTH) - 1);
             }
 
-            title = trimmed_name + ", " + 
+            title = trimmed_name + ", " +
                     filtered_lang(localise_player_title(player_title(false)));
         }
     }

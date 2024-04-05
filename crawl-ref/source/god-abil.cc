@@ -2291,7 +2291,7 @@ string desc_curse_skills(const CrawlStoreValue& curse)
 
     string skills = comma_separated_fn(trainable.begin(), trainable.end(),
                                        skill_name);
-    return localise("%s: %s", c.name, skills);                   
+    return localise("%s: %s", c.name, skills);
 }
 
 /**

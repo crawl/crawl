@@ -1382,14 +1382,14 @@ void SkillMenu::refresh_button_row()
         if (is_set(SKMF_SET_TARGET))
         {
             midlegend = azstring + localise("set skill target");
-            clearlegend = "[<yellow>-</yellow>] "; // @noloc 
+            clearlegend = "[<yellow>-</yellow>] "; // @noloc
             clearlegend += localise("clear selected target");
         }
         else
         {
             midlegend = "[<yellow>=</yellow>] "; // @noloc
             midlegend += localise("set a skill target");
-            clearlegend = "[<yellow>-</yellow>] "; // @noloc 
+            clearlegend = "[<yellow>-</yellow>] "; // @noloc
             clearlegend += localise("clear all targets");
         }
     }

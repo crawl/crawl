@@ -2233,11 +2233,11 @@ string localise(const string& text_in, const map<string, string>& params_in, boo
 
     if (text_in.empty())
         return "";
-    
+
     string english = replace_keys(text_in, params_in);
     if (!localisation_active())
         return english;
-    
+
     // check if there's a translation for the completed English string
     string result = xlate(english, false);
     if (!result.empty())

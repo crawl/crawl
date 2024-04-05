@@ -1254,7 +1254,7 @@ public:
             set_more(string(""));
 
             add_entry(new MenuEntry(localise("redefine"), MEL_ITEM, 1, 'r'));
-            add_entry(new MenuEntry(localise("redefine with raw key entry"), 
+            add_entry(new MenuEntry(localise("redefine with raw key entry"),
                                     MEL_ITEM, 1, 'R'));
             if (!action.empty())
                 add_entry(new MenuEntry(localise("clear"), MEL_ITEM, 1, 'c'));

@@ -795,7 +795,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             sensed.push_back("1 shop/portal");
         else if (num_shops_portals > 1)
         {
-            sensed.push_back(make_stringf("%d shops/portals", 
+            sensed.push_back(make_stringf("%d shops/portals",
                                           num_shops_portals));
         }
 

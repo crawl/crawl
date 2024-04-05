@@ -196,7 +196,7 @@ string cnxlate(const string &context,
            return result;
         }
 
-        // Pass in the value of n to the experssion. 
+        // Pass in the value of n to the experssion.
         // Surely there's a better way to do this.
         string lua_prefix = make_stringf("n=%ld\nreturn ", n);
 

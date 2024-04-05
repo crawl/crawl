@@ -877,22 +877,22 @@ static void _describe_poison(status_info& inf)
                          ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf.light_text   = "Pois";
     if (pois_perc >= 100)
-    { 
+    {
         inf.short_text = "lethally poisoned";
         inf.long_text = "You are lethally poisoned.";
     }
     else if (pois_perc > 65)
-    { 
+    {
         inf.short_text = "seriously poisoned";
         inf.long_text = "You are seriously poisoned.";
     }
     else if (pois_perc > 35)
-    { 
+    {
         inf.short_text = "quite poisoned";
         inf.long_text = "You are quite poisoned.";
     }
     else
-    { 
+    {
         inf.short_text = "mildly poisoned";
         inf.long_text = "You are mildly poisoned.";
     }

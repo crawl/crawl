@@ -1366,7 +1366,7 @@ static void _deconstruct_summoner_phrase(const string &s, string& phrase, string
     if (pos != string::npos)
         pos += strlen(" by the rage of ");
     else
-    {   
+    {
         pos = s.find(" by ");
         if (pos == string::npos)
             pos = s.find(" to ");
@@ -1385,9 +1385,9 @@ static void _deconstruct_summoner_phrase(const string &s, string& phrase, string
 
 /**
  * @brief Deconstruct a shooter string
- * 
+ *
  * Examples:
- * 
+ *
  * Input: "Hit by a javelin thrown by a merfolk"
  * phrase = "Hit by %s thrown by %s"
  * missile = "a javelin"
@@ -1412,7 +1412,7 @@ static void _deconstruct_shooter_phrase(const string &s, string& phrase, string 
         size_t pos = s.find(thrown_by);
         if (pos == string::npos)
             return;
-        
+
         missile = s.substr(hit_by.length(), pos - hit_by.length());
         shooter = s.substr(pos + thrown_by.length());
 
@@ -1422,7 +1422,7 @@ static void _deconstruct_shooter_phrase(const string &s, string& phrase, string 
         size_t pos = s.find("by");
         if (pos == string::npos)
             return;
-        
+
         missile = s.substr(shot_with.length(), pos - shot_with.length());
         shooter = s.substr(pos + by.length());
     }

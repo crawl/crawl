@@ -1560,7 +1560,7 @@ formatted_string StashSearchMenu::calc_title()
     fs.textcolour(title->colour);
     string prefixes[] = {
         num_alt_matches == 1 ? localise("1 match")
-                             : localise("%d matches", num_alt_matches), 
+                             : localise("%d matches", num_alt_matches),
         num_matches == 1 ? localise("1 match")
                          : localise("%d matches", num_matches)
     };
@@ -1584,7 +1584,7 @@ formatted_string StashSearchMenu::calc_title()
                            " %s [<w>=</w>]"
                            "</lightgrey>";
         // @noloc section end
-        
+
         const string travel = localise("travel");
         const string view = localise("view");
 
@@ -1599,7 +1599,7 @@ formatted_string StashSearchMenu::calc_title()
             sort = localise("by <w>name</w>");
         else
             sort = localise("by <w>dist</w>");
-        
+
         string filter;
         if (filtered && strcmp(filtered, "show") == 0)
             filter = localise("<w>show</w> useless & duplicates");

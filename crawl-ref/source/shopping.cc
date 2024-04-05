@@ -2103,7 +2103,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
                 desc = "buy %s";
             }
 
-            desc = make_stringf(desc.c_str(), 
+            desc = make_stringf(desc.c_str(),
                                 describe_thing(thing, DESC_A).c_str());
 
             descs.push_back(desc);

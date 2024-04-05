@@ -5168,20 +5168,20 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
     if (!foe.is_player() && you.see_cell(foe.pos()))
     {
         const string foe_name = foe.name(DESC_THE);
-        msg_channel_type channel = foe.as_monster()->friendly() 
+        msg_channel_type channel = foe.as_monster()->friendly()
                                    ? MSGCH_FRIEND_SPELL
                                    : MSGCH_MONSTER_SPELL;
         if (sleep_pow)
         {
             if (num_sheep == 1)
             {
-                mprf(channel, 
+                mprf(channel,
                      "As the sheep sparkles and sways, %s falls asleep.",
                      foe_name.c_str());
             }
             else
             {
-                mprf(channel, 
+                mprf(channel,
                      "As the sheep sparkle and sway, %s falls asleep.",
                      foe_name.c_str());
             }
@@ -5754,7 +5754,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             {
                 mprf("%s shimmers and seems to become three!",
                      mons->name(DESC_THE).c_str());
-            } 
+            }
         }
 
         return;
@@ -7108,7 +7108,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
 
     if (thrower_seen || throwee_seen)
     {
-        string thrower_name = thrower_seen ? thrower.name(DESC_THE) 
+        string thrower_name = thrower_seen ? thrower.name(DESC_THE)
                                            : "something";
         string throwee_name = throwee_seen ? throwee.name(DESC_THE, true)
                                            : "something";

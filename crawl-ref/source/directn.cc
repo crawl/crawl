@@ -3390,7 +3390,7 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
 
     string names = name1;
     if (!name2.empty())
-        names += " and " + name2;    
+        names += " and " + name2;
 
     if (mi.type == MONS_PANDEMONIUM_LORD)
         desc = localise("armed with %s", names);

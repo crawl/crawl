@@ -533,7 +533,7 @@ protected:
             action_name = "Hide";
         else
             action_name = "Show";
-        
+
         string text = localise("Spells");
         text += make_stringf(" (%s)", localise(action_name).c_str());
         text = chop_string(text, 34, true);
@@ -589,7 +589,7 @@ private:
         desc << "[<yellow>?</yellow>] " // @noloc
              << chop_string(localise("help"), 20)
              << "[<yellow>" // @noloc
-             << localise("Ctrl-F") 
+             << localise("Ctrl-F")
              << "</yellow>] " // @noloc
              << chop_string(localise("search"), 12)
              << "[<yellow>!</yellow>] "; // @noloc
@@ -793,7 +793,7 @@ public:
                 spell_levels_str += localise("1 spell level left");
             else
             {
-                spell_levels_str += 
+                spell_levels_str +=
                     localise("%d spell levels left", player_spell_levels());
             }
             spell_levels_str += "</lightgreen>"; // @noloc
