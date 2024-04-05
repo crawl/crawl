@@ -333,15 +333,16 @@ def get_relevant_lines(filename, lines):
         if ignoring and not re.search(r'//[ @]*(localise|locsection)\b', line):
             continue
 
+        if '//' in line:
+            result.append(line.strip())
+            continue
+
+        if not '"' in line:
+            continue
+
         # calls to mpr_nolocalise(), etc.
         if '_nolocalise' in line and not 'you.hand_act' in line:
             continue
-
-        if not '"' in line and not '//' in line:
-            continue
-
-        # avoid false string delimiter
-        #line = line.replace("'\"'", "'\\\"'")
 
         if filename == 'job-data.h':
             # special handling - only take the line with the job abbreviation and name
@@ -350,8 +351,12 @@ def get_relevant_lines(filename, lines):
 
         line = line.strip()
 
-        # ignore compiler directives, apart from #define
+        # ignore pre-compiler directives, apart from #define
         if line.startswith('#') and not re.match(r'#\s*define', line):
+            continue
+
+        # ignore extern "C"
+        if line.startswith('extern'):
             continue
 
         result.append(line)
@@ -713,11 +718,10 @@ for filename in files:
     lines = get_cleaned_file_contents(filename)
     lines = do_first_stage_line_processing(lines)
     lines = insert_section_markers(filename, lines)
+    lines = get_relevant_lines(filename, lines)
 
     #if filename == 'item-name.cc':
     #    dump_lines('extract-text.1.dump', lines)
-
-    lines = get_relevant_lines(filename, lines)
 
     section = ''
     last_section = ''
@@ -795,13 +799,6 @@ for filename in files:
         if not extract:
             # if we get here then we are not in lazy mode
             # extract strings unless we have reason to ignore them
-
-            # ignore precompiler directives, except #define
-            if line[0] == '#' and not re.match(r'^#\s*define', line):
-                continue
-
-            if re.search('extern +"C"', line):
-                continue
 
             # ignore debug messages
             if re.search(r'\bdie(_noline)? *\(', line) or \
