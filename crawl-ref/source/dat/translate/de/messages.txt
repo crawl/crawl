@@ -7999,6 +7999,9 @@ Jewellery can be <w>%</w>ut on or <w>%</w>emoved again
 Press <w>%</w> to quaff this potion
 
 %%%%
+" or simply click on it with your <w>left mouse button</w>"
+
+%%%%
 A manual can greatly help you in training a skill. After you pick one up, the skill in question will be trained more efficiently and will level up faster until you exhaust the manual's contents.
 
 %%%%

@@ -2183,10 +2183,10 @@ string hints_describe_item(const item_def &item)
                             "certain sources. For an overview of your "
                             "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
-                            " or click on your avatar with the <w>right mouse "
+                         << " or click on your avatar with the <w>right mouse "
                             "button</w>"
 #endif
-                            ".";
+                         << ".";
                     cmd.push_back(CMD_RESISTS_SCREEN);
                     break;
                 }
@@ -2337,10 +2337,10 @@ string hints_describe_item(const item_def &item)
                 ostr << "You can wear pieces of armour with <w>%</w> and take "
                         "them off again with <w>%</w>"
 #ifdef USE_TILE
-                        ", or, alternatively, simply click on their tiles to "
+                     << ", or, alternatively, simply click on their tiles to "
                         "perform either action"
 #endif
-                        ".";
+                     << ".";
                 cmd.push_back(CMD_WEAR_ARMOUR);
                 cmd.push_back(CMD_REMOVE_ARMOUR);
             }
@@ -2386,10 +2386,10 @@ string hints_describe_item(const item_def &item)
                             "certain sources. For an overview of your"
                             " resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
-                            " or click on your avatar with the <w>right mouse "
+                         << " or click on your avatar with the <w>right mouse "
                             "button</w>"
 #endif
-                            ".";
+                         << ".";
                     cmd.push_back(CMD_RESISTS_SCREEN);
                 }
                 if (gives_ability(item))
@@ -2432,9 +2432,9 @@ string hints_describe_item(const item_def &item)
         case OBJ_SCROLLS:
             ostr << "Press <w>%</w> to read this scroll"
 #ifdef USE_TILE
-                    "or simply click on it with your <w>left mouse button</w>"
+                 << "or simply click on it with your <w>left mouse button</w>"
 #endif
-                    ".";
+                 << ".";
             cmd.push_back(CMD_READ);
 
             Hints.hints_events[HINT_SEEN_SCROLL] = false;
@@ -2445,10 +2445,10 @@ string hints_describe_item(const item_def &item)
             ostr << "Jewellery can be <w>%</w>ut on or <w>%</w>emoved "
                     "again"
 #ifdef USE_TILE
-                    ", though in Tiles, either can be done by clicking on the "
+                 << ", though in Tiles, either can be done by clicking on the "
                     "item in your inventory"
 #endif
-                    ".";
+                 << ".";
             cmd.push_back(CMD_WEAR_JEWELLERY);
             cmd.push_back(CMD_REMOVE_JEWELLERY);
 
@@ -2460,10 +2460,10 @@ string hints_describe_item(const item_def &item)
                         "from certain sources. For an overview of your "
                         "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
-                        " or click on your avatar with the <w>right mouse "
+                     << " or click on your avatar with the <w>right mouse "
                         "button</w>"
 #endif
-                        ".";
+                     << ".";
                 cmd.push_back(CMD_RESISTS_SCREEN);
             }
             if (gives_ability(item))
@@ -2479,9 +2479,9 @@ string hints_describe_item(const item_def &item)
         case OBJ_POTIONS:
             ostr << "Press <w>%</w> to quaff this potion"
 #ifdef USE_TILE
-                    "or simply click on it with your <w>left mouse button</w>"
+                 << " or simply click on it with your <w>left mouse button</w>"
 #endif
-                    ".";
+                 << ".";
             cmd.push_back(CMD_QUAFF);
             Hints.hints_events[HINT_SEEN_POTION] = false;
             break;
@@ -2523,10 +2523,10 @@ string hints_describe_item(const item_def &item)
                         "certain sources. For an overview of your "
                         "resistances (among other things) press <w>%</w>"
 #ifdef USE_TILE
-                        " or click on your avatar with the <w>right mouse "
+                     << " or click on your avatar with the <w>right mouse "
                         "button</w>"
 #endif
-                        ".";
+                     << ".";
 
                 cmd.push_back(CMD_RESISTS_SCREEN);
             }
@@ -2791,10 +2791,10 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
                      << god_name(you.religion)
                      << " press <w>^</w>"
 #ifdef USE_TILE
-                        ", or click with your <w>right mouse button</w> "
+                     << ", or click with your <w>right mouse button</w> "
                         "on your avatar while pressing <w>Shift</w>"
 #endif
-                        ".";
+                     << ".";
             }
             Hints.hints_events[HINT_SEEN_ALTAR] = false;
             break;
