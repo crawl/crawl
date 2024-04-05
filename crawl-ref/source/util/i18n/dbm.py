@@ -50,5 +50,5 @@ def read_dbm(filename, data = {}):
     if key != "":
         add_entry(data, key, value)
 
-    return data             
+    return data
 

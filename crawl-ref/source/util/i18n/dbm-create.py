@@ -1,7 +1,7 @@
 ###############################################################################
 # make-dbm.py
 # Make a dbm file from 2 input files, where the first file contains
-# strings in the source language and the 2nd contains strings 
+# strings in the source language and the 2nd contains strings
 # in the target language
 ###############################################################################
 

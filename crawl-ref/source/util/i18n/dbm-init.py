@@ -51,8 +51,8 @@ def read_dbm(filename):
 
     if key != "":
         add_entry(dbm, key, value)
-                
-    return dbm;         
+
+    return dbm;
 
 
 #####################################
@@ -105,7 +105,7 @@ for line in keyfile:
             outfile.write(old[0:-2])
         outfile.write("\n");
         in_entry = True
-    
+
 if in_entry:
     outfile.write("%%%%\n");
 

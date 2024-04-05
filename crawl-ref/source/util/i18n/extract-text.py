@@ -3,7 +3,7 @@
 # This script extracts strings from C++ source code
 #
 # By default, all strings are extracted, unless there's a reason to ignore them.
-# However for files named in LAZY_FILES, strings are only extracted if 
+# However for files named in LAZY_FILES, strings are only extracted if
 # there's an explicit reason to do so.
 #
 # It understands certain directives placed in single-line comments:
@@ -381,7 +381,7 @@ def ignore_string(string):
     # ignore opengl functions
     if re.match(r'^gl[A-Z]', string):
         return True
-    
+
     # ignore HTML and formatted text tags
     if re.match(r'^(\s|\[|\]|\(|\))*</?[^<>/]+>(\s|\[|\]|\(|\))*$', string):
         return True
@@ -614,7 +614,7 @@ def is_unique_monster(string):
         return True
 
 
-SKIP_FILES = [ 
+SKIP_FILES = [
     # covered in a way that doesn't use the literal strings from the file
     'mutant-beast.h',
     # these just contain a bunch of compile flags, etc.
@@ -638,7 +638,7 @@ SKIP_FILES = [
     # English grammar
     'english.h', 'english.cc',
     # files related to the translation process itself
-    'xlate.h', 'xlate.cc', 
+    'xlate.h', 'xlate.cc',
     'localise.h', 'localise.cc',
     'database.h', 'database.cc', 'sqldbm.cc',
     # stuff related to morgue file is not translated
@@ -667,14 +667,14 @@ SKIP_FILES = [
 SPECIAL_FILES = [
     'stringutil.h', 'mon-data.h',
     'spl-data.h', 'zap-data.h', 'feature-data.h',
-    'item-prop.cc', 'item-name.cc', 'art-data.h', 
+    'item-prop.cc', 'item-name.cc', 'art-data.h',
     'species-data.h', 'job-data.h', 'form-data.h', 'variant-msg.cc'
 ]
 
 # These files are evaluated differently. We ignore all strings unless we have a reason to extract them,
 # as opposed to extracting all strings unless we have a reason to ignore them.
 LAZY_FILES = [
-    'dgn-overview.cc', 'end.cc', 'files.cc','fineff.cc', 'god-passive.cc', 
+    'dgn-overview.cc', 'end.cc', 'files.cc','fineff.cc', 'god-passive.cc',
     'god-prayer.cc', 'macro.cc', 'main.cc', 'tilereg-dgn.cc'
 ]
 
@@ -706,7 +706,7 @@ else:
            not re.match('l-', fname) and \
            not re.match('dbg-', fname):
             files.append(fname)
-    
+
 output = []
 
 for filename in files:
@@ -777,11 +777,11 @@ for filename in files:
             extract = True
         elif 'get_num_and_char' in line:
             extract = True
-            
+
         if lazy:
             # ignore strings unless we have a specific reason to extract them
             if not extract:
-                continue 
+                continue
 
         # we don't want to extract the db key used with getSpeakString(), etc.,
         # but we don't necessarily want to ignore the whole line because
@@ -929,17 +929,17 @@ for filename in files:
                     token = ch
                     in_string = True
                 continue
-            
+
             if ch == '\\' and not escaped:
                 escaped = True
             else:
                 escaped = False
-            
+
             token += ch
 
         if token != "":
             tokens.append(token)
-                    
+
         for i in range(len(tokens)):
             token = tokens[i]
             if len(token) < 3 or token[0] != '"' or token[-1] != '"':

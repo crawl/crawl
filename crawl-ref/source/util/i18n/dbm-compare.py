@@ -28,7 +28,7 @@ keys1 = extract_keys(file1)
 keys2 = extract_keys(file2)
 
 print "Missing from", file2
-print keys1.difference(keys2) 
+print keys1.difference(keys2)
 
 print "Extra in", file2
 print keys2.difference(keys1)

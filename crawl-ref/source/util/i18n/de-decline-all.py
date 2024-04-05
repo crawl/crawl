@@ -273,7 +273,7 @@ def decline(english, german, determiner, target_case):
             suffix = ""
         elif suffix != "":
             german = german.replace(suffix, '')
-    
+
     # determine declension
     declension = Declension.STRONG
     if determiner == "the":
@@ -375,7 +375,7 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
     elif determiner == "":
         outfile_name = outfile_name.replace("-def", "-plain")
         outfile_name = outfile_name.replace("-counted", "-plain")
-    
+
     print("Reading from {} and writing to {}".format(infile_name, outfile_name))
 
     if outfile_name == infile_name:
@@ -471,7 +471,7 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
                 writeline(outfile, english)
                 writeline(outfile, german)
                 last_written = german
-            
+
             english = ""
 
 

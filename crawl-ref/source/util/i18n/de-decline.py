@@ -144,7 +144,7 @@ def decline_noun(word, gender, target_case, proper):
 
     if gender in [Gender.FEMININE, Gender.PLURAL]:
         return word
- 
+
     # masculine, neuter or unknown
     result = word
     if gender != Gender.NEUTER:
@@ -267,7 +267,7 @@ def decline(german, english):
             suffix = ""
         elif suffix != "":
             german = german.replace(suffix, '')
-    
+
     # split german up into individual words
     words = german.split()
 
@@ -461,7 +461,7 @@ for line in lines:
     else:
         # Now we have the German and the English strings, so we can process
         german = line
-        
+
         german = decline(german, english)
 
         if german != line or target_case == Case.NOMINATIVE:
@@ -474,5 +474,5 @@ for line in lines:
             writeline(outfile, english)
             writeline(outfile, german)
             last_written = german
-        
+
         english = ""
