@@ -3101,7 +3101,9 @@ string get_item_description(const item_def &item,
             if (item.base_type == OBJ_ARMOUR
                 || item.base_type == OBJ_WEAPONS)
             {
-                if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
+                if (!item_ident(item, ISFLAG_KNOW_PLUSES))
+                    description << "\nIt is an ancient artefact.";
+                else if (you.has_mutation(MUT_ARTEFACT_ENCHANTING))
                 {
                     if (is_unrandom_artefact(item)
                         || (item.base_type == OBJ_ARMOUR
