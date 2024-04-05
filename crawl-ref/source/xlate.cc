@@ -38,7 +38,6 @@ string cnxlate(const string &context,
 //// compile with translation logic ////
 
 #include <clocale>
-#include <libintl.h>
 #include <codecvt>
 #include <regex>
 
