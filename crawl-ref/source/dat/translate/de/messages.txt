@@ -3133,10 +3133,10 @@ None.
 "Favour - "
 
 %%%%
-[<w>!</w>/<w>^</w>
+"[<w>!</w>/<w>^</w>|<w>Right-click</w>]: "
 
 %%%%
-|<w>Right-click</w>
+"[<w>!</w>/<w>^</w>]: "
 
 %%%%
 <w>Overview</w>|Powers|Wrath
@@ -3248,7 +3248,10 @@ Krystalspeer
 # describe.cc
 ##################
 %%%%
-[<w>!</w>
+"[<w>!</w>|<w>Right-click</w>]: "
+
+%%%%
+"[<w>!</w>]: "
 
 %%%%
 <w>Description</w>|Quote

@@ -109,8 +109,7 @@ def strip_line_comment(line):
 
 # start of conditionally compiled section that can be skipped (debug or obsolete code)?
 def is_skippable_if(line):
-    return re.search(r'^\s*#\s*ifdef .*DEBUG', line) or \
-       re.search(r'^\s*#\s*ifdef .*VERBOSE', line) or \
+    return re.search(r'^\s*#\s*ifdef .*(DEBUG|VERBOSE)', line) or \
        re.search(r'^\s*#\s*if +defined *\(DEBUG', line) or \
        re.search(r'^\s*#\s*if\s*TAG_MAJOR_VERSION\s*==\s*34', line)
 
@@ -221,6 +220,7 @@ def do_dummy_string_replacements(lines):
 # First-stage line processing:
 #   replace strings that should not be extracted with dummies (outside noloc sections)
 #   join statements that are split over multiple lines
+#   join consecutive strings (in C++, "foo" "bar" is the same as "foobar")
 #   strip trailing whitespace
 #   strip out blank lines
 def do_first_stage_line_processing(lines):
@@ -255,7 +255,7 @@ def do_first_stage_line_processing(lines):
                     join = True
                 elif last.endswith('?') or curr.startswith('?') or last.endswith(':') or curr.startswith(':'):
                     # join ternary operator split over multiple lines
-                    if last.endswith(':') and re.search('\bcase\b', last) or re.search(r'(public|protected|private|default)\s*:$', last):
+                    if last.endswith(':') and (re.search('\bcase\b', last) or re.search(r'(public|protected|private|default)\s*:$', last)):
                         # false positive
                         pass
                     else:
@@ -269,6 +269,10 @@ def do_first_stage_line_processing(lines):
                 if join:
                     result[-1] = last + ' ' + curr
                     continue
+
+        # join consecutive strings on same line (this is what the C++ compiler will do)
+        if '"' in line:
+            line = re.sub(r'(?!\\)"\s+"', '', line)
 
         result.append(line)
 
