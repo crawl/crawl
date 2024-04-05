@@ -333,8 +333,7 @@ def get_relevant_lines(filename, lines):
         if '_nolocalise' in line and not 'you.hand_act' in line:
             continue
 
-        line = line.strip()
-        if line == '':
+        if not '"' in line and not '//' in line:
             continue
 
         # avoid false string delimiter
@@ -342,15 +341,13 @@ def get_relevant_lines(filename, lines):
 
         if filename == 'job-data.h':
             # special handling - only take the line with the job abbreviation and name
-            if re.search(r'"[A-Z][a-zA-Z]"', line):
-                result.append(line)
-            continue
+            if not re.search(r'"[A-Z][a-zA-Z]"', line):
+                continue
 
-        if not '"' in line and not '//' in line:
-            continue
+        line = line.strip()
 
         # ignore compiler directives, apart from #define
-        if re.match(r'\s*#', line) and not re.match(r'\s*#\s*define', line):
+        if line.startswith('#') and not re.match(r'#\s*define', line):
             continue
 
         result.append(line)
