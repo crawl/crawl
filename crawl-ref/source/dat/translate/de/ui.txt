@@ -1240,7 +1240,7 @@ View
 Ansehen
 %%%%
 Autoexplore
-Automatisch erkunden 
+Automatisch erkunden
 %%%%
 1 spell slot
 1 Zauberstelle

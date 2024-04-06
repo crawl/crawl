@@ -17,7 +17,7 @@ Dungeon Crawl Stone Soup: Highscores
 #             Was an Elder of Trog.
 #             Escaped with the Orb
 #             ... and 3 runes!
-#             
+#
 #             The game lasted 02:00:23 (50312 turns).
 #
 # 16.  292913 Ziggy the Fighter (level 20, -5/159 HPs)

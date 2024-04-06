@@ -471,7 +471,7 @@ Setze diesen Ring auf, mit <input>$cmd[CMD_WEAR_JEWELLERY]</input>
 tutorial4 undead
 
 Im Gegensatz zu den meisten Monstern regenerieren Zombies und Skelette keine Gesundheit.
-<localtiles> Ihr könnt auch versuchen, den zuletzt verwendeten Zauberspruch 
+<localtiles> Ihr könnt auch versuchen, den zuletzt verwendeten Zauberspruch
 erneut zu wirken, indem Ihr <input>Strg + Linksklick</input> auf das
 Monster drückt.</localtiles>
 %%%%

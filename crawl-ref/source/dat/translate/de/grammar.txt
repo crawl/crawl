@@ -2,7 +2,7 @@
 #
 # German grammar
 #
-# Entries named GENERATE:<context> are used to transform a string from the 
+# Entries named GENERATE:<context> are used to transform a string from the
 # default (null) context into the version for <context>. These are only applied
 # if there is no hardcoded definition of the string for <context>.
 #
@@ -14,7 +14,7 @@
 # /substring-pattern/pattern/replacement/
 #
 # The first type replaces all instances of pattern in the string with replacement.
-# The second type only does the replacement within the first substring matching 
+# The second type only does the replacement within the first substring matching
 # substring-pattern.
 #
 # Expressions are applied in order. Each expression is applied to the result of
@@ -55,7 +55,7 @@ GENERATE:adj-em
 GENERATE:acc
 
 # Only masculine is declined in accusative.
-# Masculine and neuter can be difficult to distinguish. Since masculine nouns 
+# Masculine and neuter can be difficult to distinguish. Since masculine nouns
 # are more numerous, we assume masculine unless we see proof of neuter.
 
 # Neuter strings can be marked with the prefix {n} in the input file.

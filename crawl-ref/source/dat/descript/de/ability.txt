@@ -13,7 +13,7 @@ Teleportiere über eine zufällige, kurze Distanz.
 %%%%
 Breathe Dispelling Energy ability
 
-Haucht einen Bolzen aus vertreibender Energie auf ein anvisiertes Wesen, 
+Haucht einen Bolzen aus vertreibender Energie auf ein anvisiertes Wesen,
 wodurch möglicherweise einige seiner Verzauberungen entfernt werden.
 Die Reichweite des Bolzens wird für jedes getroffene Wesen um eins verringert.
 %%%%
@@ -425,7 +425,7 @@ Convert to Beogh ability
 Schwöre Beogh Eure Treue, dem Gott der Höhlen Orks. Dieser Gott verlangt, dass
 alle Nicht-Gläubigen sterben müssen, aber neue Gläubige müssen geschont und in
 die Gemeinschaft aufgenommen werden. Vorsicht! Für Orks, die nicht gesehen
-haben dass Ihr konvertiertet, sind sie eventuell noch feindlich bis Ihr Euren 
+haben dass Ihr konvertiertet, sind sie eventuell noch feindlich bis Ihr Euren
 Ruf aufgebaut habt!
 
 Alle anderen Götter hassen Beogh, und nehmen Fahnenfluch nicht auf die

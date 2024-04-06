@@ -126,7 +126,7 @@ Charakter-Dump schreiben und zeigen
 CMD_SHOW_CHARACTER_DUMP verbose
 
 Speichert detaillierte Informationen über den Charakter in die Datei
-'playername.txt' im Verzeichnis 'morgue' und zeigt die Datei im Spiel an. Das 
+'playername.txt' im Verzeichnis 'morgue' und zeigt die Datei im Spiel an. Das
 enthält die Hauptstatistiken, Ausrüstung, Zaubersprüche, Fertigkeiten, Notizen,
 etc.
 %%%%

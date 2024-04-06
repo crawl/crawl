@@ -122,7 +122,7 @@ Gib dich der Verzweiflung hin
 
 Verzichte auf dich selbst
 
-Umarme Unterwerfung 
+Umarme Unterwerfung
 
 Nimm deine Hingabe an
 
@@ -1105,7 +1105,7 @@ insult general
 
 @insult_adjective1@er @insult_adjective2@er Aasfresser
 
-@insult_adjective1@er @insult_adjective2@er Stummelschwanz 
+@insult_adjective1@er @insult_adjective2@er Stummelschwanz
 
 @insult_adjective1@er @insult_adjective2@er Leibeigener
 

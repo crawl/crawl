@@ -250,7 +250,7 @@ picked up. Use <w>$cmd[CMD_WIELD_WEAPON]</w><localtiles> or
 <w>left-click</w> on it</localtiles> to wield it, but be aware that this
 weapon might train a different skill from your current one. You can view the
 weapon's properties from your
-<w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory<localtiles> or by 
+<w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory<localtiles> or by
 <w>right-clicking</w> on it</localtiles>.
 
 {{
@@ -319,7 +319,7 @@ Ah, a corpse!
 HINT_SEEN_JEWELLERY
 
 You have picked up a piece of jewellery, either a ring
-<console>('<w>$item[jewellery]</w>') </console>or an 
+<console>('<w>$item[jewellery]</w>') </console>or an
 amulet<console> ('<w>$item[amulet]</w>')</console>.
 <nomouse>Press <w>$cmd[CMD_WEAR_JEWELLERY]</w> to put it on and
 <w>$cmd[CMD_REMOVE_JEWELLERY]</w> to remove it. You can view its properties
@@ -362,7 +362,7 @@ HINT_SEEN_ESCAPE_HATCH
 This<console> '$1'</console> is an escape hatch. You can use it to leave a
 level with <w>$cmd[CMD_GO_UPSTAIRS]</w> and <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
 respectively<localtiles> (or by<w>left-clicking</w>)</localtiles>, like stairs;
-unlike stairs, however, hatches are a one-way trip, so be careful when 
+unlike stairs, however, hatches are a one-way trip, so be careful when
 descending!
 %%%%
 HINT_SEEN_BRANCH
@@ -382,7 +382,7 @@ HINT_SEEN_PORTAL
 This<console> '$1'</console> is a portal to an optional level, offering extra
 loot in exchange for extra danger. There's no penalty for skipping it, but the
 portal will disappear if you wait, so you have to decide now if you want to risk
-it. 
+it.
 %%%%
 HINT_SEEN_BAZAAR_PORTAL
 
@@ -415,7 +415,7 @@ highlighted, and the symbol for the item on the top of the heap will be shown.
 %%%%
 HINT_TRAP_BRAND
 
-<console>If any items are covering a trap, then that will be indicated by 
+<console>If any items are covering a trap, then that will be indicated by
 highlighting the <w>^</w> symbol, instead of hiding the trap symbol with an item
 glyph.</console>
 %%%%
@@ -454,7 +454,7 @@ confirmation.
 %%%%
 HINT_SEEN_SHOP
 
-That<console> $1</console> is a shop. You can enter it by typing 
+That<console> $1</console> is a shop. You can enter it by typing
 <w>$cmd[CMD_GO_UPSTAIRS]</w> or <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
 <tiles>, or by <w>left-clicking</w> on it<tiles>
 while standing on the square.
@@ -466,7 +466,7 @@ The game will then remind you when you gather enough gold to buy it.
 HINT_SEEN_DOOR
 
 That<console> $1</console> is a closed door. You can open it by walking into it.
-Sometimes it is useful to close a door. Do so by <nomouse>pressing 
+Sometimes it is useful to close a door. Do so by <nomouse>pressing
 <w>$cmd[CMD_CLOSE_DOOR]</w> while next to it. If there are several doors, you
 will then be prompted for a direction.</nomouse><localtiles>clicking on the door
 while next to it.</localtiles>
@@ -533,7 +533,7 @@ backup for fighting weak enemies.
 %%%%
 HINT_CHOOSE_STAT
 
-Every third level, you get to choose an attribute to raise: strength, 
+Every third level, you get to choose an attribute to raise: strength,
 intelligence, or dexterity.
 
 <w>Strength</w> makes heavy armour less cumbersome and slightly increases weapon damage.
@@ -558,7 +558,7 @@ probably want to quaff a potion of curing.
 HINT_MULTI_PICKUP
 
 There are a lot of items here. You choose what to pick up from a menu:
-press <w>$cmd[CMD_PICKUP]</w><localtiles> or <w>click</w> on the player 
+press <w>$cmd[CMD_PICKUP]</w><localtiles> or <w>click</w> on the player
 doll</localtiles> to enter the pickup menu. To leave the menu, confirm your
 selection with <w>Enter</w>.
 %%%%
@@ -597,7 +597,7 @@ pick up interesting items, and stop if a monster or interesting dungeon feature
 %%%%
 HINT_DONE_EXPLORE
 
-Hey, you've finished exploring the dungeon on this level! You can search for 
+Hey, you've finished exploring the dungeon on this level! You can search for
 stairs from the level map (<w>$cmd[CMD_DISPLAY_MAP]</w>) by pressing <w>></w>.
 The cursor will jump to the nearest staircase, and by pressing <w>.</w> or
 <w>Enter</w> your character can move there, too. Each level of Crawl has three
@@ -613,7 +613,7 @@ To make this easier, some immobile monsters listed in the <w>auto_exclude</w>
 option (such as this one) are considered dangerous enough to warrant an
 automatic setting of an exclusion. It will be automatically cleared if you
 manage to kill the monster. You could also manually remove the exclusion with
-<w>$cmd[CMD_DISPLAY_MAP]ee</w> but unless you remove this monster from the 
+<w>$cmd[CMD_DISPLAY_MAP]ee</w> but unless you remove this monster from the
 auto_exclude list, the exclusion will be reset the next turn.
 %%%%
 HINT_HEALING_POTIONS
@@ -881,7 +881,7 @@ There are many dangers in Crawl. Luckily, there are ways to (at least partially)
 resist some of them, if you are fortunate enough to find them. There are two
 basic variants of resistances: the innate willpower that depends on your
 species, grows with experience level, and protects against many magical effects;
-and the specific resistances against certain other effects, e.g. fire or 
+and the specific resistances against certain other effects, e.g. fire or
 draining.
 
 You can find items in the dungeon or gain mutations that will increase (or

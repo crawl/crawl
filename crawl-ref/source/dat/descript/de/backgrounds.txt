@@ -11,7 +11,7 @@ der Winde, im Überlebenskampf zu bestehen.
 %%%%
 Arcane Marksman
 
-Arkane Scharfschützen sind für den Fernkampf bewaffnet und verwenden Magie, um ihre 
+Arkane Scharfschützen sind für den Fernkampf bewaffnet und verwenden Magie, um ihre
 Feinde anfälliger für derartige Angriffe zu machen.
 %%%%
 Artificer
@@ -51,7 +51,7 @@ Gegner kampfunfähig zu machen. Sie starten zusätzlich mit guten Wurfpfeilen.
 %%%%
 Fighter
 
-Kämpfer sind mit Rüstung und Schild ausgrüstet, und auch mit einer Waffe ihrer 
+Kämpfer sind mit Rüstung und Schild ausgrüstet, und auch mit einer Waffe ihrer
 Wahl und einem Trank der Macht.
 %%%%
 Fire Elementalist
