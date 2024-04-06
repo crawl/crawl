@@ -1047,9 +1047,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_TOUCH:                  return "Touch";
     case BOOK_CHAOS:                  return "Chaos";
     case BOOK_HUNTER:                 return "the Hunter";
-    case BOOK_RANDART_LEVEL:          return "Fixed Level"; // @noloc
-    case BOOK_RANDART_THEME:          return "Fixed Theme"; // @noloc
-    default:                          return "Bugginess"; // @noloc
+    case BOOK_RANDART_LEVEL:          return "Fixed Level";
+    case BOOK_RANDART_THEME:          return "Fixed Theme";
+    default:                          return "Bugginess";
     }
 }
 

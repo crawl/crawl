@@ -594,6 +594,8 @@ def special_handling_for_item_name_cc(section, line, string, strings):
         else:
             strings.append(string + ' rune')
     elif section == '_book_type_name':
+        if string == 'Fixed Level' or string == 'Fixed Theme':
+            return
         string = 'book of ' + string
     elif section == 'staff_type_name':
         string = '%sstaff of ' + string
