@@ -979,77 +979,77 @@ static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
-    case BOOK_MINOR_MAGIC:            return "book of Minor Magic";
-    case BOOK_CONJURATIONS:           return "book of Conjurations";
-    case BOOK_FLAMES:                 return "book of Flames";
-    case BOOK_FROST:                  return "book of Frost";
-    case BOOK_DRYADS:                 return "book of the Dryads";
-    case BOOK_FIRE:                   return "book of Fire";
-    case BOOK_ICE:                    return "book of Ice";
-    case BOOK_SPATIAL_TRANSLOCATIONS: return "book of Spatial Translocations";
-    case BOOK_HEXES:                  return "book of Hexes";
-    case BOOK_LIGHTNING:              return "book of Lightning";
-    case BOOK_DEATH:                  return "book of Death";
-    case BOOK_MISFORTUNE:             return "book of Misfortune";
-    case BOOK_CHANGES:                return "book of Changes";
-    case BOOK_TRANSFIGURATIONS:       return "book of Transfigurations";
+    case BOOK_MINOR_MAGIC:            return "Minor Magic";
+    case BOOK_CONJURATIONS:           return "Conjurations";
+    case BOOK_FLAMES:                 return "Flames";
+    case BOOK_FROST:                  return "Frost";
+    case BOOK_DRYADS:                 return "the Dryads";
+    case BOOK_FIRE:                   return "Fire";
+    case BOOK_ICE:                    return "Ice";
+    case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
+    case BOOK_HEXES:                  return "Hexes";
+    case BOOK_LIGHTNING:              return "Lightning";
+    case BOOK_DEATH:                  return "Death";
+    case BOOK_MISFORTUNE:             return "Misfortune";
+    case BOOK_CHANGES:                return "Changes";
+    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_BATTLE:                 return "book of Battle";
+    case BOOK_BATTLE:                 return "Battle";
 #endif
-    case BOOK_VAPOURS:                return "book of Vapours";
-    case BOOK_NECROMANCY:             return "book of Necromancy";
-    case BOOK_CALLINGS:               return "book of Callings";
-    case BOOK_MALEDICT:               return "book of Maledictions";
-    case BOOK_AIR:                    return "book of Air";
-    case BOOK_SKY:                    return "book of the Sky";
-    case BOOK_WARP:                   return "book of the Warp";
+    case BOOK_VAPOURS:                return "Vapours";
+    case BOOK_NECROMANCY:             return "Necromancy";
+    case BOOK_CALLINGS:               return "Callings";
+    case BOOK_MALEDICT:               return "Maledictions";
+    case BOOK_AIR:                    return "Air";
+    case BOOK_SKY:                    return "the Sky";
+    case BOOK_WARP:                   return "the Warp";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_ENVENOMATIONS:          return "book of Envenomations";
+    case BOOK_ENVENOMATIONS:          return "Envenomations";
 #endif
-    case BOOK_ANNIHILATIONS:          return "book of Annihilations";
-    case BOOK_UNLIFE:                 return "book of Unlife";
+    case BOOK_ANNIHILATIONS:          return "Annihilations";
+    case BOOK_UNLIFE:                 return "Unlife";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_CONTROL:                return "book of Control";
+    case BOOK_CONTROL:                return "Control";
 #endif
-    case BOOK_GEOMANCY:               return "book of Geomancy";
-    case BOOK_EARTH:                  return "book of the Earth";
+    case BOOK_GEOMANCY:               return "Geomancy";
+    case BOOK_EARTH:                  return "the Earth";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_WIZARDRY:               return "book of Wizardry";
+    case BOOK_WIZARDRY:               return "Wizardry";
 #endif
-    case BOOK_POWER:                  return "book of Power";
-    case BOOK_CANTRIPS:               return "book of Cantrips";
-    case BOOK_PARTY_TRICKS:           return "book of Party Tricks";
-    case BOOK_DEBILITATION:           return "book of Debilitation";
-    case BOOK_DRAGON:                 return "book of the Dragon";
-    case BOOK_BURGLARY:               return "book of Burglary";
-    case BOOK_DREAMS:                 return "book of Dreams";
-    case BOOK_ALCHEMY:                return "book of Alchemy";
-    case BOOK_BEASTS:                 return "book of Beasts";
-    case BOOK_SPECTACLE:              return "book of Spectacle";
-    case BOOK_WINTER:                 return "book of Winter";
-    case BOOK_SPHERES:                return "book of the Spheres";
-    case BOOK_ARMAMENTS:              return "book of Armaments";
-    case BOOK_PAIN:                   return "book of Pain";
-    case BOOK_DECAY:                  return "book of Decay";
-    case BOOK_DISPLACEMENT:           return "book of Displacement";
-    case BOOK_RIME:                   return "book of Rime";
-    case BOOK_STONE:                  return "book of Stone";
-    case BOOK_SENSES:                 return "book of the Senses";
-    case BOOK_BLASTING:               return "book of Blasting";
-    case BOOK_IRON:                   return "book of Iron";
-    case BOOK_TUNDRA:                 return "book of the Tundra";
-    case BOOK_MOON:                   return "book of the Moon";
-    case BOOK_STORMS:                 return "book of Storms";
-    case BOOK_WEAPONS:                return "book of Weapons";
-    case BOOK_SLOTH:                  return "book of Sloth";
-    case BOOK_BLOOD:                  return "book of Blood";
-    case BOOK_DANGEROUS_FRIENDS:      return "book of Dangerous Friends";
-    case BOOK_TOUCH:                  return "book of Touch";
-    case BOOK_CHAOS:                  return "book of Chaos";
-    case BOOK_HUNTER:                 return "book of the Hunter";
-    case BOOK_RANDART_LEVEL:          return "book of Fixed Level"; // @noloc
-    case BOOK_RANDART_THEME:          return "book of Fixed Theme"; // @noloc
-    default:                          return "book of Bugginess"; // @noloc
+    case BOOK_POWER:                  return "Power";
+    case BOOK_CANTRIPS:               return "Cantrips";
+    case BOOK_PARTY_TRICKS:           return "Party Tricks";
+    case BOOK_DEBILITATION:           return "Debilitation";
+    case BOOK_DRAGON:                 return "the Dragon";
+    case BOOK_BURGLARY:               return "Burglary";
+    case BOOK_DREAMS:                 return "Dreams";
+    case BOOK_ALCHEMY:                return "Alchemy";
+    case BOOK_BEASTS:                 return "Beasts";
+    case BOOK_SPECTACLE:              return "Spectacle";
+    case BOOK_WINTER:                 return "Winter";
+    case BOOK_SPHERES:                return "the Spheres";
+    case BOOK_ARMAMENTS:              return "Armaments";
+    case BOOK_PAIN:                   return "Pain";
+    case BOOK_DECAY:                  return "Decay";
+    case BOOK_DISPLACEMENT:           return "Displacement";
+    case BOOK_RIME:                   return "Rime";
+    case BOOK_STONE:                  return "Stone";
+    case BOOK_SENSES:                 return "the Senses";
+    case BOOK_BLASTING:               return "Blasting";
+    case BOOK_IRON:                   return "Iron";
+    case BOOK_TUNDRA:                 return "the Tundra";
+    case BOOK_MOON:                   return "the Moon";
+    case BOOK_STORMS:                 return "Storms";
+    case BOOK_WEAPONS:                return "Weapons";
+    case BOOK_SLOTH:                  return "Sloth";
+    case BOOK_BLOOD:                  return "Blood";
+    case BOOK_DANGEROUS_FRIENDS:      return "Dangerous Friends";
+    case BOOK_TOUCH:                  return "Touch";
+    case BOOK_CHAOS:                  return "Chaos";
+    case BOOK_HUNTER:                 return "the Hunter";
+    case BOOK_RANDART_LEVEL:          return "Fixed Level"; // @noloc
+    case BOOK_RANDART_THEME:          return "Fixed Theme"; // @noloc
+    default:                          return "Bugginess"; // @noloc
     }
 }
 
@@ -1180,7 +1180,7 @@ string sub_type_string(const item_def &item, bool known)
             return "Akashic Record";
 #endif
         default:
-            return _book_type_name(sub_type);
+            return string("book of ") + _book_type_name(sub_type);
         }
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));

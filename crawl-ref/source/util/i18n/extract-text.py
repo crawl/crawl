@@ -593,6 +593,8 @@ def special_handling_for_item_name_cc(section, line, string, strings):
             return
         else:
             strings.append(string + ' rune')
+    elif section == '_book_type_name':
+        string = 'book of ' + string
     elif section == 'staff_type_name':
         string = '%sstaff of ' + string
     elif section == 'ghost_brand_name':
@@ -615,7 +617,7 @@ def special_handling_for_item_name_cc(section, line, string, strings):
         # many of these don't even work in English
         return
 
-    if string in ['wand of ', 'potion of ', 'scroll of ', 'ring of', 'amulet of', 'staff of ']:
+    if string in ['wand of ', 'potion of ', 'scroll of ', 'ring of', 'amulet of', 'staff of ', 'book of ']:
         # all subtypes already covered above
         return
     elif string in [' wand', ' potion', ' ring', ' amulet', ' rune']:
