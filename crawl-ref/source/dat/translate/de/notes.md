@@ -41,32 +41,35 @@ Many words have a very specific meaning in the context of DCSS that may not matc
 
 The German word Stab means both staff and wand. One can distinguish Zauberstab (magic wand/staff) from Kampfstab (fighting staff), but how do you distinguish a magical staff from a magic wand? Seems like Harry Potter's wand is a Zauberstab, but so is Gandalf's staff. [5] uses Stecken for magical staves.
 
-[5] has might = Stärke, but that means strength, so I went for Macht.  
+- [5] has might = Stärke, but that means strength, so I went for Macht.
+- heroism = Heldenmut [5]
+- transmutation = Verwandlung [5]
+- experience points = Erfahrungspunkte [5]
+- rage = Kampfrausch (lit. battle frenzy) [5]
+- abjuration = Bannmagie [5]
+- banishment = Verbannung [5]
+- melee = Nahkampf [12]
 
-heroism = Heldenmut [5]  
-transmutation = Verwandlung [5]  
-experience points = Erfahrungspunkte [5]  
-rage = Kampfrausch (lit. battle frenzy) [5]  
-abjuration = Bannmagie [5]  
-banishment = Verbannung [5]  
-melee = Nahkampf [12]  
+Conjuration/Summoning/Evocation are problematic. They can be used interchangably in English, and there are also overalapping meanings of the corresponding words in German. [5] has:
 
-Conjuration/Summoning/Evocation are problematic. They can be used interchangably in English, and there are also overalapping meanings of the corresponding words in German.  
-[5] has:
 - Evocation -> Hervorrufung (Seems to correspond to DCSS Conjuration)
 - Conjuration -> Beschwörung (Seems to be a combination DCSS Conjuration and Summoning)
 
-Comparing http://www.baldurs-gate.ch/bg2/ to https://baldursgate.fandom.com/wiki/Spells_(Baldur%27s_Gate_II)#Schools_of_magic:  
+Comparing http://www.baldurs-gate.ch/bg2/ to https://baldursgate.fandom.com/wiki/Spells_%28Baldur%27s_Gate_II%29#Schools_of_magic:
+
 - Conjuration/Summoning -> Herbeirufung/Beschwörung
 - Evocation/Invocation -> Anrufung/Hervorrufung
 
-Herbeirufen clearly means summon: https://de.thefreedictionary.com/herbeirufen  
-Beschwören seems to also mean summon: https://de.thefreedictionary.com/beschw%c3%b6ren
-Anrufen means to call someone, including a god, for help (i.e. invoke): https://de.thefreedictionary.com/anrufen  
-Hervorrufen seems to mean evoke: https://de.thefreedictionary.com/hervorrufen  
-Hervorzaubern seems to unambiguously mean conjure: https://de.pons.com/%C3%BCbersetzung/deutsch-englisch/hervorzaubern
+Looking in the dictionary:
 
-It's difficult to choose translations for the different types of magic users. I've gone with:  
+- Herbeirufen clearly means summon: https://de.thefreedictionary.com/herbeirufen
+- Beschwören seems to also mean summon: https://de.thefreedictionary.com/beschw%c3%b6ren
+- Anrufen means to call someone, including a god, for help (i.e. invoke): https://de.thefreedictionary.com/anrufen
+- Hervorrufen seems to mean evoke: https://de.thefreedictionary.com/hervorrufen
+- Hervorzaubern seems to unambiguously mean conjure: https://de.pons.com/%C3%BCbersetzung/deutsch-englisch/hervorzaubern
+
+It's difficult to choose translations for the different types of magic users. I've gone with:
+
 - Wizard -> Zauberer (because that's what they used for Harry Potter)
 - the Enchantress -> die Hexenmeisterin (Google Translate and leo.org both gave me "die Zauberin", but I think this sounds better)
 - Sorcerer -> Hexenmeister
@@ -97,22 +100,23 @@ Blink - in [5] translated as Flimmern.
       - in [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
 
 Some specific terms from the German D&D System Reference Document [17]:
-spell = Zauber
-cantrip = Zaubertick (simple spell)
-spell level = Zaubergrad
-spell slot = Zauberplatz (in D&D, these are used up when you cast spells, and are replenished by resting)
-cast spell = einen Zauber wirken
-(spell) range = Reichweite
-casting time = Zeitaufwand
-(spell) duration = Wirkungsdauer
-area of effect = Wirkungsbereich
-abjuration = Bannzauber
-skill = fertigkeit
-experience points = Erfahrungspunkte
-hit dice = Trefferwürfel
-manual = Handbuch
-potion = Trank
-breath weapon = Odemwaffe
+
+- spell = Zauber
+- cantrip (simple spell) = Zaubertick
+- spell level = Zaubergrad
+- spell slot = Zauberplatz (in D&D, these are used up when you cast spells, and are replenished by resting)
+- cast spell = einen Zauber wirken
+- (spell) range = Reichweite
+- casting time = Zeitaufwand
+- (spell) duration = Wirkungsdauer
+- area of effect = Wirkungsbereich
+- abjuration = Bannzauber
+- skill = fertigkeit
+- experience points = Erfahrungspunkte
+- hit dice = Trefferwürfel
+- manual = Handbuch
+- potion = Trank
+- breath weapon = Odemwaffe
 
 #Barding
 In DCSS, barding is used to mean the piece of armour that covers the hindquarters of Nagas and Palentongas (and previously, the horsey part of a centaur).
