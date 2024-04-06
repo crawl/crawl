@@ -1160,4 +1160,3 @@ die dunkle Rune
 the %sring of the Octopus King
 der {adj-e}%sRing des Krakenkönigs
 %%%%
-

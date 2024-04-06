@@ -141,4 +141,3 @@ bandage-wrapped arms
 bony arms
 {pl}knochige Arme
 %%%%
-

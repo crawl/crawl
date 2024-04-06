@@ -60,4 +60,3 @@ for line in infile:
 if key != "":
     write_entry(key, "")
     outfile.write("%%%%\n");
-

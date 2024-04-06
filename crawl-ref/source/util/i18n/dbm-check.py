@@ -24,5 +24,3 @@ for file_name in sys.argv[1:]:
     if len(empties) < 100:
         for key in empties:
             print("  " + key)
-
-

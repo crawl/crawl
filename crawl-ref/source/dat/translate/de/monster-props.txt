@@ -659,4 +659,3 @@ holding %s
 %d ally target
 %d Ziele Verbündeter
 %%%%
-

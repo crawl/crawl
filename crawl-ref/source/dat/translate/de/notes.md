@@ -213,4 +213,3 @@ To do list:
 - generate toggle list like "Cast|<w>Describe</w>|Hide|Show", so we don't have to give translations for every possible state
 - remove add_attack_strength_punct/attack_strength_message - this can be handled within localise()
 - revisit attack_stop_prompt - currently we are ignoring the verb parameter
-

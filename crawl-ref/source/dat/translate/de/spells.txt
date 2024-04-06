@@ -952,4 +952,3 @@ Betäubende Explosion
 nonexistent spell
 nicht vorhandener Zauber
 %%%%
-

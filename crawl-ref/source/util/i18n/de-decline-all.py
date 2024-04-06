@@ -517,6 +517,3 @@ else:
         decline_file(infile_name, Case.GENITIVE, "the", False)
         decline_file(infile_name, Case.GENITIVE, "a", False)
         decline_file(infile_name, Case.GENITIVE, "your", False)
-
-
-

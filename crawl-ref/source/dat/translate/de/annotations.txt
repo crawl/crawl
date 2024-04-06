@@ -419,4 +419,3 @@ Gegenstand in falscher Position
 " (under plant)"
 " (unter Pflanze)"
 %%%%
-

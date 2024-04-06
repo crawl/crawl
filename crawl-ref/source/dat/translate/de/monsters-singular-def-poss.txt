@@ -1548,4 +1548,3 @@ der %s-förmigen Lernäischen Hydra
 the %s shaped Serpent of Hell's
 der %s-förmigen Höllenschlange
 %%%%
-

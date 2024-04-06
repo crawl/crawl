@@ -1170,4 +1170,3 @@ for filename in files:
 
 for line in output:
     print(line)
-

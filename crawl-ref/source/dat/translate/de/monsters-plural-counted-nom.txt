@@ -1508,4 +1508,3 @@
 %d shaped blocks of ice
 %d geformte Eisblöcke
 %%%%
-

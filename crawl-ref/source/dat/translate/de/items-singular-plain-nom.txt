@@ -1201,4 +1201,3 @@ dunkle Rune
 gold piece
 Goldmünze
 %%%%
-

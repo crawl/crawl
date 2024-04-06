@@ -1549,4 +1549,3 @@ Eure %s-förmige Lernäische Hydra
 your %s shaped Serpent of Hell
 Eure %s-förmige Höllenschlange
 %%%%
-

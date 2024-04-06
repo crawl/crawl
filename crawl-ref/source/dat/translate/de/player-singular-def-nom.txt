@@ -295,4 +295,3 @@ der %s Gräber
 the %s Wanderer
 der %s Wanderer
 %%%%
-

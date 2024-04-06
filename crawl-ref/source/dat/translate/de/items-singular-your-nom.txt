@@ -1152,4 +1152,3 @@ Eure dunkle Rune
 your %sring of the Octopus King
 Euer {adj-er}%sRing des Krakenkönigs
 %%%%
-

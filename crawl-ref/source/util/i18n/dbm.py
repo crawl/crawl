@@ -51,4 +51,3 @@ def read_dbm(filename, data = {}):
         add_entry(data, key, value)
 
     return data
-

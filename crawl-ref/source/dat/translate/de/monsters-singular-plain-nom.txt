@@ -1548,4 +1548,3 @@ geformter Eisblock
 %s shaped Serpent of Hell
 %s-förmige Höllenschlange
 %%%%
-

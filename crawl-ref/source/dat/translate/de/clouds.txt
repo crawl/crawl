@@ -123,4 +123,3 @@ Glut
 wisps of flame
 Flammensträhnen
 %%%%
-

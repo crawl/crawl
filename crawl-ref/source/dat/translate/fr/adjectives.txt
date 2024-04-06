@@ -54,5 +54,3 @@
 "{f}sealed "
 " scellée"
 %%%%
-
-

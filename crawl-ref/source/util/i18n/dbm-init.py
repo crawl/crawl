@@ -108,4 +108,3 @@ for line in keyfile:
 
 if in_entry:
     outfile.write("%%%%\n");
-

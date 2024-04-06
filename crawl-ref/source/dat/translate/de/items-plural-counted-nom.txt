@@ -254,4 +254,3 @@
 %d gold pieces
 %d Goldmünzen
 %%%%
-

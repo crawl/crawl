@@ -32,5 +32,3 @@ print keys1.difference(keys2)
 
 print "Extra in", file2
 print keys2.difference(keys1)
-
-

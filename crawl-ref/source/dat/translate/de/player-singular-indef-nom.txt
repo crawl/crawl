@@ -158,4 +158,3 @@ ein {adj-er}%s%s Gräber
 a %s%s Wanderer
 ein {adj-er}%s%s Wanderer
 %%%%
-
