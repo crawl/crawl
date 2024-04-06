@@ -28,7 +28,7 @@ import sys
 
 # pattern for recognising strings
 # handles escaped double-quotes
-STRING_PATTERN = r'"(\\|\"|[^"])*"'
+STRING_PATTERN = r'"(\\\\|\\"|[^"])*"'
 
 # strings to ignore
 IGNORE_STRINGS = [
