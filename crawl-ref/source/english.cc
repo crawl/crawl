@@ -252,7 +252,7 @@ string singularise(const string& str)
     }
     else if (ends_with(plural,"i"))
     {
-        if(ends_with(plural, "jiangshi") || ends_with(plural, "meliai"))
+        if (ends_with(plural, "jiangshi") || ends_with(plural, "meliai"))
         {
             singular = plural;
         }

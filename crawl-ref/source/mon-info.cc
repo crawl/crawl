@@ -1460,14 +1460,14 @@ string monster_info::constriction_description() const
     {
         if (constrictor_name == "you")
             cinfo = localise("constricted by you");
-        else if(!constrictor_name.empty())
+        else if (!constrictor_name.empty())
             cinfo = localise("constricted by %s", constrictor_name);
     }
     else
     {
         if (constrictor_name == "you")
             cinfo = localise("held by you");
-        else if(!constrictor_name.empty())
+        else if (!constrictor_name.empty())
             cinfo = localise("held by %s", constrictor_name);
     }
 

@@ -461,7 +461,7 @@ static bool is_determiner(const string& word)
 static void _replace_all(std::string& str, const std::string& patt, const std::string& replace)
 {
     std::string::size_type pos = 0u;
-    while((pos = str.find(patt, pos)) != std::string::npos){
+    while ((pos = str.find(patt, pos)) != std::string::npos){
         str.replace(pos, patt.length(), replace);
         pos += replace.length();
     }
@@ -768,7 +768,7 @@ static string _strip_annotations(const string& s, list<string>& annotations)
             break;
 
         // get the leading whitespace as well
-        while(pos > 0 && rest[pos-1] == ' ')
+        while (pos > 0 && rest[pos-1] == ' ')
             pos--;
 
         annotations.push_front(rest.substr(pos));
