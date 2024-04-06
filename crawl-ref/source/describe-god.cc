@@ -1135,7 +1135,7 @@ static formatted_string _god_overview_description(god_type which_god)
         desc.cprintf("\n" + localise("Title  - "));
         desc.textcolour(god_colour(which_god));
 
-        string title = god_title(which_god, you.species, you.piety, false);
+        string title = god_title(which_god, you.species, you.piety);
         desc.cprintf("%s", title.c_str());
     }
 
