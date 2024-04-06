@@ -48,7 +48,8 @@ IGNORE_STRINGS = [
 SPECIAL_FILES = [
     'stringutil.h', 'mon-data.h',
     'spl-data.h', 'zap-data.h', 'feature-data.h',
-    'item-prop.cc', 'item-name.cc', 'art-data.h',
+    'item-prop.cc', 'item-name.cc',
+    'art-data.txt', # art-data.h generated from art-data.txt
     'species-data.h', 'job-data.h', 'form-data.h', 'variant-msg.cc'
 ]
 
@@ -60,6 +61,8 @@ LAZY_FILES = [
 ]
 
 SKIP_FILES = [
+    # art-data.h generated from art-data.txt
+    'art-data.h',
     # covered in a way that doesn't use the literal strings from the file
     'mutant-beast.h',
     # these just contain a bunch of compile flags, etc.
@@ -106,6 +109,86 @@ SKIP_FILES = [
     # nonsense
     'lang-fake.h', 'lang-fake.cc'
 ]
+
+
+# process art-data.txt
+def process_art_data_txt():
+    infile = open('art-data.txt')
+    data = infile.read()
+    infile.close()
+
+    result = []
+    lines = data.splitlines()
+    name = ''
+    desc = None
+    brand_desc = None
+    has_appearance = False
+    for line in lines:
+        if line.startswith('#'):
+            continue
+        elif line.startswith(' '):
+            if desc is not None:
+                desc += line
+            elif brand_desc is not None:
+                brand_desc += line
+            continue
+
+        if desc is not None:
+            result.append('# note: description for ' + name)
+            result.append(desc)
+            desc = '' if line.startswith('+') else None
+
+        if brand_desc is not None:
+            result.append('# note: brand description for ' + name)
+            result.append(brand_desc)
+            brand_desc = '' if line.startswith('+') else None
+
+        if line.startswith('+'):
+            if desc is not None:
+                desc += line[1:].strip()
+            elif brand_desc is not None:
+                brand_desc += line[1:].strip()
+        elif line.startswith('NAME:'):
+            if not has_appearance and name != '' and 'DUMMY' not in name:
+                if name == 'ring of the Octopus King':
+                    result.append('# note: unlike other unrands, ' + name + " is not unique")
+                    result.append(article_a('%s' + name))
+                else:
+                    result.append('# note: appearance of ' + name + " before it's identified")
+                    result.append(article_a(name))
+            has_appearance = False
+            name = line.replace('NAME:', '').strip()
+            if 'DUMMY' in name:
+                continue
+            #result.append('# note: ' + name)
+            if re.search('(boots|gloves|gauntlets|quick blades)', name):
+                if not 'pair of ' in name:
+                    name = 'pair of ' + name
+            result.append('%s' + name)
+            result.append('the %s' + name)
+        elif 'DUMMY' in name:
+            continue
+        elif line.startswith('APPEAR:'):
+            string = line.replace('APPEAR:', '').strip()
+            result.append('# note: appearance of ' + name + " before it's identified")
+            result.append(string)
+            result.append(article_a(string))
+        elif line.startswith('TYPE:'):
+            string = line.replace('TYPE:', '').strip()
+            result.append('# note: base type of ' + name)
+            result.append(string)
+        elif line.startswith('INSCRIP:'):
+            string = line.replace('INSCRIP:', '').strip()
+            if string.endswith(','):
+                string = string[0:-1]
+            result.append('# note: annotation for ' + name)
+            result.append(string)
+        elif line.startswith('DESCRIP:'):
+            desc = line.replace('DESCRIP:', '').strip()
+        elif line.startswith('DBRAND:'):
+            brand_desc = line.replace('DBRAND:', '').strip()
+
+    return result
 
 
 # strip (potentially) multi-line comments (i.e. /*...*/)
@@ -684,6 +767,101 @@ def is_unique_monster(string):
         return True
 
 
+def add_strings_to_output(filename, strings, output):
+    if len(strings) == 0:
+        return
+
+    output.append("")
+    output.append("##################")
+    output.append("# " + filename)
+    output.append("##################")
+    for string in strings:
+        # in some cases, string needs to be quoted
+        #   - if it has leading or trailing whitespace
+        #   - if it starts with # (because otherwise it looks like a comment)
+        #   - if it starts and ends with double-quotes
+        if string.startswith('# section:'):
+            #if filename == 'mon-util.cc':
+            #    output.append(string)
+            continue
+        elif '# note' in string:
+            output.append(string)
+            continue
+        elif re.search('^(\s|#)', string) or  re.search('\s$', string) \
+           or (string.startswith(r'\"') and string.endswith('"')):
+            string = '"' + string + '"'
+        else:
+            string = string.replace(r'\"', '"')
+        string = string.replace(r'\\', '\\')
+
+        if string in output:
+            output.append('# duplicate: ' + string)
+        else:
+            output.append(string)
+
+    # we need to add extra strings for names of monsters/features/items
+    # in addition to "foo", we need "the foo", "a foo", "your foo"
+    # for monsters, we also need possessives ("the foo's", "a foo's", "your foo's")
+    if filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc', 'item-name.cc']:
+
+        # separate unique and non-unique names because they will be treated differently
+        names = []
+        unique_names = []
+        adjectives = []
+        for string in strings:
+            if string.startswith('# note:') or string.startswith('# section:'):
+                continue
+            elif string.endswith(' '):
+                adjectives.append(string)
+            elif filename == 'item-name.cc':
+                if ' of ' in string and re.search('^[a-z]', string) and 'Geryon' not in string:
+                    names.append(string)
+                elif string.startswith('%s') or re.search(' (dart|bolt|rune)$', string):
+                    names.append(string)
+                elif string in ['lightning rod', 'quad damage', 'phantom mirror', 'condenser vane', "piece from Xom's chessboard"]:
+                    names.append(string)
+            elif (filename == 'mon-data.h' and is_unique_monster(string)):
+                unique_names.append(string)
+            elif not re.search('^(a|an|the|some) ', string) and string not in ['explore horizon', 'unseen']:
+                names.append(string)
+
+        # names prefixed with definite article (the)
+        for string in names:
+            output.append("the " + string)
+
+        # names prefixed with indefinite article (a/an)
+        for string in names:
+            if string not in ['lava', 'shallow water', 'deep water']:
+                output.append(article_a(string))
+
+        # names prefixed with "your"
+        if filename in ['mon-data.h', 'item-prop.cc']:
+            for string in names:
+                output.append("your " + string)
+
+        # possessives
+        if filename == 'mon-data.h':
+            # possessives with definite article (the)
+            for string in names:
+                output.append("the " + string + "'s")
+
+            # possessives with indefinite article (a/an)
+            for string in names:
+                output.append(article_a(string) + "'s")
+
+            # possessives with "your"
+            for string in names:
+                output.append("your " + string + "'s")
+
+            # possessives for unique monsters
+            for string in unique_names:
+                output.append(string + "'s")
+
+
+#################
+# Main
+#################
+
 files = []
 if len(sys.argv) > 1:
     # use list of files specified on command line
@@ -716,6 +894,11 @@ else:
 output = []
 
 for filename in files:
+
+    if filename == 'art-data.txt':
+        strings = process_art_data_txt()
+        add_strings_to_output(filename, strings, output)
+        continue
 
     lazy = (filename in LAZY_FILES)
 
@@ -1087,92 +1270,7 @@ for filename in files:
 
     remove_unnecessary_section_markers(filtered_strings)
 
-    if len(filtered_strings) > 0:
-        output.append("")
-        output.append("##################")
-        output.append("# " + filename)
-        output.append("##################")
-        for string in filtered_strings:
-            # in some cases, string needs to be quoted
-            #   - if it has leading or trailing whitespace
-            #   - if it starts with # (because otherwise it looks like a comment)
-            #   - if it starts and ends with double-quotes
-            if string.startswith('# section:'):
-                #if filename == 'mon-util.cc':
-                #    output.append(string)
-                continue
-            elif '# note' in string:
-                output.append(string)
-                continue
-            elif re.search('^(\s|#)', string) or  re.search('\s$', string) \
-               or (string.startswith(r'\"') and string.endswith('"')):
-                string = '"' + string + '"'
-            else:
-                string = string.replace(r'\"', '"')
-            string = string.replace(r'\\', '\\')
-
-            if string in output:
-                output.append('# duplicate: ' + string)
-            else:
-                output.append(string)
-
-        # we need to add extra strings for names of monsters/features/items
-        # in addition to "foo", we need "the foo", "a foo", "your foo"
-        # for monsters, we also need possessives ("the foo's", "a foo's", "your foo's")
-        if filename in ['mon-data.h', 'feature-data.h', 'item-prop.cc', 'item-name.cc']:
-
-            # separate unique and non-unique names because they will be treated differently
-            names = []
-            unique_names = []
-            adjectives = []
-            for string in filtered_strings:
-                if string.startswith('# note:') or string.startswith('# section:'):
-                    continue
-                elif string.endswith(' '):
-                    adjectives.append(string)
-                elif filename == 'item-name.cc':
-                    if ' of ' in string and re.search('^[a-z]', string) and 'Geryon' not in string:
-                        names.append(string)
-                    elif string.startswith('%s') or re.search(' (dart|bolt|rune)$', string):
-                        names.append(string)
-                    elif string in ['lightning rod', 'quad damage', 'phantom mirror', 'condenser vane', "piece from Xom's chessboard"]:
-                        names.append(string)
-                elif (filename == 'mon-data.h' and is_unique_monster(string)):
-                    unique_names.append(string)
-                elif not re.search('^(a|an|the|some) ', string) and string not in ['explore horizon', 'unseen']:
-                    names.append(string)
-
-            # names prefixed with definite article (the)
-            for string in names:
-                output.append("the " + string)
-
-            # names prefixed with indefinite article (a/an)
-            for string in names:
-                if string not in ['lava', 'shallow water', 'deep water']:
-                    output.append(article_a(string))
-
-            # names prefixed with "your"
-            if filename in ['mon-data.h', 'item-prop.cc']:
-                for string in names:
-                    output.append("your " + string)
-
-            # possessives
-            if filename == 'mon-data.h':
-                # possessives with definite article (the)
-                for string in names:
-                    output.append("the " + string + "'s")
-
-                # possessives with indefinite article (a/an)
-                for string in names:
-                    output.append(article_a(string) + "'s")
-
-                # possessives with "your"
-                for string in names:
-                    output.append("your " + string + "'s")
-
-                # possessives for unique monsters
-                for string in unique_names:
-                    output.append(string + "'s")
+    add_strings_to_output(filename, filtered_strings, output)
 
 for line in output:
     print(line)

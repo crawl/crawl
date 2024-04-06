@@ -89,6 +89,8 @@ for line in keyfile:
                 outfile.write("%%%%\n");
                 in_entry = False
             outfile.write(line)
+            if '##################' in line:
+                locnote = ''
     else:
         key = strip_quotes_if_allowed(line.strip())
         if key in ignore_vals:

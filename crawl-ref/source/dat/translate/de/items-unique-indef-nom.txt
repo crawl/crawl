@@ -1,0 +1,436 @@
+###############################################################################
+#
+# Items - unique, indefinite article, nominative
+#
+# Note that  is a placeholder for any adjectives
+#
+###############################################################################
+
+#################################
+# Appearance when unidientified
+#################################
+
+# a few have a special appearance
+%%%%
+# sword of Cerebov
+# the English description says serpentine, but in the tile, the blade is shaped like flames
+a great serpentine sword
+{n}ein großes, flammenförmiges Schwert
+%%%%
+# staff of Dispater
+a golden staff
+{m}ein goldener Stecken
+%%%%
+# sceptre of Asmodeus
+a ruby sceptre
+{n}ein Rubin-Zepter
+%%%%
+# dragonskin cloak
+an opalescent scaly cloak
+{m}ein schillernder schuppiger Umhang
+%%%%
+
+# the rest just look like what they are,
+# except they have an indefinite article instead of a definite article
+%%%%
+a Singing Sword
+{n}ein singende Schwert
+%%%%
+# alternative name for the Singing Sword
+a Screaming Sword
+{n}ein schreiende Schwert
+%%%%
+# alternative name for the Singing Sword
+a Sulking Sword
+{n}ein schmollende Schwert
+%%%%
+a pair of quick blades "Gyre" and "Gimble"
+{n}ein Paar Schnellklingen "Gyre" und "Gimble"
+%%%%
+a Wrath of Trog
+{m}ein Zorn von Trog
+%%%%
+a mace of Variability
+{m}ein Streitkolben der Variabilität
+%%%%
+a glaive of Prune
+eine Gleve der Prünelle
+%%%%
+a sword of Power
+{n}ein Schwert der Macht
+%%%%
+a staff of Olgreb
+{m}ein Stecken von Olgreb
+%%%%
+a staff of Wucad Mu
+{m}ein Stecken von Wucad Mu
+%%%%
+a Vampire's Tooth
+{m}ein Zahn des Vampirs
+%%%%
+a scythe of Curses
+eine Sense der Flüche
+%%%%
+a sceptre of Torment
+{n}ein Zepter der Qual
+%%%%
+a sword of Zonguldrok
+{n}ein Schwert von Zonguldrok
+%%%%
+a sword of Cerebov
+{n}ein Schwert von Cerebov
+%%%%
+a staff of Dispater
+{m}ein Stecken von Dispater
+%%%%
+a sceptre of Asmodeus
+{n}ein Zepter von Asmodeus
+%%%%
+a faerie dragon scales
+eine Feen-Drachenschuppen
+%%%%
+a demon blade "Bloodbane"
+eine Dämonenklinge "Blutfluch"
+%%%%
+a scimitar of Flaming Death
+{m}ein Krummsäbel des flammenden Todes
+%%%%
+an eveningstar "Brilliance"
+{m}ein Abendstern "Brillanz"
+%%%%
+a demon blade "Leech"
+eine Dämonenklinge "Egel"
+%%%%
+a dagger of Chilly Death
+{m}ein Dolch des kühlen Todes
+%%%%
+a dagger "Morg"
+{m}ein Dolch "Morg"
+%%%%
+a scythe "Finisher"
+eine Sense "Beender"
+%%%%
+a sling "Punk"
+eine Schleuder "Punk"
+%%%%
+a longbow "Zephyr"
+{m}ein Langbogen "Zephyr"
+%%%%
+a giant club "Skullcrusher"
+eine Riesenkeule "Schädelbrecher"
+%%%%
+a glaive of the Guard
+eine Gleve der Wache
+%%%%
+a zealot's sword
+{n}ein Schwert des Zeloten
+%%%%
+an arbalest "Damnation"
+eine Armbrust "Verdammnis"
+%%%%
+a sword of the Doom Knight
+{n}ein Schwert des Verhängnis-Ritters
+%%%%
+a morningstar "Eos"
+{m}ein Morgenstern "Eos"
+%%%%
+a spear of the Botono
+{m}ein Speer des Botonos
+%%%%
+a trident of the Octopus King
+{m}ein Dreizack des Krakenkönigs
+%%%%
+a mithril axe "Arga"
+eine Mithrilaxt "Arga"
+%%%%
+an Elemental Staff
+{m}ein Elementarstecken
+%%%%
+a heavy crossbow "Sniper"
+eine schwere Armbrust "Scharfschütze"
+%%%%
+a longbow "Piercer"
+{m}ein Langbogen "Stecher"
+%%%%
+a blowgun of the Assassin
+{n}ein Blasrohr des Assassinen
+%%%%
+a lance "Wyrmbane"
+eine Lanze "Wyrmbane"
+%%%%
+a Spriggan's Knife
+{n}ein Messer des Spriggans
+%%%%
+a plutonium sword
+{n}ein Plutoniumschwert
+%%%%
+a great mace "Undeadhunter"
+{m}ein große Streitkolben "Untotenjäger"
+%%%%
+a whip "Snakebite"
+eine Peitsche "Schlangenbiss"
+%%%%
+a knife of Accuracy
+{n}ein Messer der Genauigkeit
+%%%%
+a Lehudib's crystal spear
+{m}ein Kristallspeer Lehudibs
+%%%%
+a captain's cutlass
+{n}ein Entermesser des Kapitäns
+%%%%
+a storm bow
+{m}ein Sturmbogen
+%%%%
+a tower shield of Ignorance
+{m}ein Turmschild des Nichtwissens
+%%%%
+a robe of Augmentation
+{n}ein Gewand der Augmentation
+%%%%
+a cloak of the Thief
+{m}ein Umhang des Diebes
+%%%%
+a tower shield "Bullseye"
+{m}ein Turmschild "Volltreffer"
+%%%%
+a crown of Dyrovepreva
+eine Krone von Dyrovepreva
+%%%%
+a hat of the Bear Spirit
+{m}ein Hut des Bärengeistes
+%%%%
+a robe of Misfortune
+eine Robe des Unglücks
+%%%%
+a cloak of Flash
+{m}ein Umhang von Flash
+%%%%
+a hood of the Assassin
+eine Kapuze des Assassinen
+%%%%
+a Lear's hauberk
+eine Halsberge Lears
+%%%%
+a skin of Zhor
+eine Haut von Zhor
+%%%%
+a salamander hide armour
+eine Salamanderhaut-Rüstung
+%%%%
+a pair of gauntlets of War
+{n}ein Paar Gantelets des Krieges
+%%%%
+a shield of Resistance
+{m}ein Schild der Resistenz
+%%%%
+a robe of Folly
+{n}ein Gewand der Torheit
+%%%%
+a Maxwell's patent armour
+eine patentierte Rüstung Maxwells
+%%%%
+a mask of the Dragon
+eine Maske des Drachens
+%%%%
+a robe of Night
+eine Robe der Nacht
+%%%%
+a scales of the Dragon King
+eine Schuppen des Drachenkönigs
+%%%%
+a hat of the Alchemist
+{m}ein Hut des Alchemisten
+%%%%
+a pair of fencer's gloves
+{n}ein Paar Handschuhe des Fechters
+%%%%
+a cloak of Starlight
+{m}ein Umhang des Sternenlichts
+%%%%
+a ratskin cloak
+{m}ein Rattenfellumhang
+%%%%
+a shield of the Gong
+{m}ein Schild des Gongs
+%%%%
+an amulet of the Air
+{n}ein Amulett der Luft
+%%%%
+a ring of Shadows
+{m}ein Ring der Schatten
+%%%%
+an amulet of Cekugob
+{n}ein Amulett von Cekugob
+%%%%
+an amulet of the Four Winds
+{n}ein Amulett der vier Winde
+%%%%
+a necklace of Bloodlust
+eine Kette des Blutrausches
+%%%%
+a ring of Phasing
+{m}ein Ring der Phase
+%%%%
+a ring of Robustness
+{m}ein Ring der Robustheit
+%%%%
+a ring of the Mage
+{m}ein Ring des Magiers
+%%%%
+a ring of the Hare
+{m}ein Ring des Hasen
+%%%%
+a ring of the Tortoise
+{m}ein Ring der Schildkröte
+%%%%
+a brooch of Shielding
+eine Brosche der Abschirmung
+%%%%
+a robe of Clouds
+eine Robe der Wolken
+%%%%
+a hat of Pondering
+{m}ein Hut der Schwerfälligkeit
+%%%%
+an obsidian axe
+eine Obsidianaxt
+%%%%
+a lightning scales
+eine Blitzschuppen
+%%%%
+a Black Knight's barding
+{n}ein Gelieger des schwarzen Ritters
+%%%%
+an amulet of Vitality
+{n}ein Amulett der Vitalität
+%%%%
+an autumn katana
+{n}ein Herbstkatana
+%%%%
+a shillelagh "Devastator"
+{m}ein Shillelagh "Verwüster"
+%%%%
+a dragonskin cloak
+{m}ein Drachenhautumhang
+%%%%
+an Axe of Woe
+eine Axt des Wehs
+%%%%
+a moon troll leather armour
+eine Mondtroll-lederrüstung
+%%%%
+a macabre finger necklace
+eine makabere Fingerhalskette
+%%%%
+a pair of boots of the spider
+{n}ein Paar Stiefel der Spinne
+%%%%
+a dark maul
+{m}ein dunkle Kriegshammer
+%%%%
+a hat of the High Council
+{m}ein Hut des Hohen Rates
+%%%%
+an arc blade
+eine Lichtbogenklinge
+%%%%
+a demon whip "Spellbinder"
+eine Dämonenpeitsche "Verzauberer"
+%%%%
+a lajatang of Order
+{m}ein Lajatang der Ordnung
+%%%%
+a great mace "Firestarter"
+{m}ein große Streitkolben "Brandstifter"
+%%%%
+an orange crystal plate armour
+{m}ein orange Kristallplattenpanzer
+%%%%
+a Majin-Bo
+{m}ein Majin-Bo
+%%%%
+a Maxwell's etheric cage
+{m}ein Ätherkäfig von Maxwell
+%%%%
+a crown of Eternal Torment
+eine Krone der ewigen Qual
+%%%%
+a robe of Vines
+{n}ein Gewand der Reben
+%%%%
+a Kryia's mail coat
+{m}ein Schuppenpanzer von Kryia
+%%%%
+a frozen axe "Frostbite"
+eine gefrorene Axt "Erfrierungen"
+%%%%
+an armour of Talos
+eine Rüstung von Talos
+%%%%
+a warlock's mirror
+{m}ein Spiegel des Hexenmeisters
+%%%%
+an amulet of invisibility
+{n}ein Amulett der Unsichtbarkeit
+%%%%
+a Maxwell's thermic engine
+{n}ein thermische Gerät von Maxwell
+%%%%
+a demon trident "Rift"
+{m}ein Dämonendreizack "Riss"
+%%%%
+a staff of Battle
+{m}ein Stecken der Schlacht
+%%%%
+a Cigotuvi's embrace
+eine Umarmung von Cigotuvi
+%%%%
+a pair of seven-league boots
+{n}ein Paar Siebenmeilenstiefel
+%%%%
+a horn of Geryon
+{n}ein Horn von Geryon
+%%%%
+
+#################################
+# Special base types for some unrands
+#################################
+
+%%%%
+# sword of Cerebov
+a flamberge
+{m}ein Flamberg
+%%%%
+# heavy crossbow "Sniper"
+a heavy crossbow
+eine schwere Armbrust
+%%%%
+# lance "Wyrmbane"
+a lance
+eine Lanze
+%%%%
+# Spriggan's Knife
+a knife
+{n}ein Messer
+%%%%
+# captain's cutlass
+a cutlass
+{n}ein Entermesser
+%%%%
+# autumn katana
+a katana
+{n}ein Katana
+%%%%
+# shillelagh "Devastator"
+a shillelagh
+{m}ein Shillelagh
+%%%%
+# dark maul
+a maul
+{m}ein Kriegshammer
+%%%%
+# "Gyre" and "Gimble"
+a pair of quick blades
+{n}ein Paar Schnellklingen
+%%%%

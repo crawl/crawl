@@ -117,6 +117,7 @@ Some specific terms from the German D&D System Reference Document [17]:
 - manual = Handbuch
 - potion = Trank
 - breath weapon = Odemwaffe
+- disruption (affects undead) - Zusammenbruch
 
 #Barding
 In DCSS, barding is used to mean the piece of armour that covers the hindquarters of Nagas and Palentongas (and previously, the horsey part of a centaur).

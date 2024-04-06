@@ -264,6 +264,12 @@ der {adj-e}%sRing der Robustheit
 the %sring of the Mage
 der {adj-e}%sRing des Magiers
 %%%%
+the %sring of the Hare
+der {adj-e}%sRing des Hasen
+%%%%
+the %sring of the Tortoise
+der {adj-e}%sRing der Schildkröte
+%%%%
 the %sbrooch of Shielding
 die {adj-e}%sBrosche der Abschirmung
 %%%%
@@ -279,7 +285,7 @@ die {adj-e}%sObsidianaxt
 the %slightning scales
 die {adj-en}%sBlitzschuppen
 %%%%
-the %sBlack Knight's horse barding
+the %sBlack Knight's barding
 das {adj-e}%sGelieger des schwarzen Ritters
 %%%%
 the %samulet of Vitality
@@ -365,6 +371,9 @@ der {adj-e}%sStecken der Schlacht
 %%%%
 the %sCigotuvi's embrace
 die {adj-e}%sUmarmung von Cigotuvi
+%%%%
+the %spair of seven-league boots
+das {adj-es}%sPaar Siebenmeilenstiefel
 %%%%
 the horn of Geryon
 das Horn von Geryon

@@ -4,7 +4,6 @@
 #
 ###############################################################################
 
-
 ##################
 # stringutil.h
 ##################
@@ -38,492 +37,458 @@
 %%%%
 
 ##################
-# art-data.h
+# art-data.txt
 ##################
 %%%%
-# note: Singing Sword
+# note: brand description for Singing Sword
 It radiates damaging sonic waves as it strikes, especially in combat involving dangerous or numerous foes.
 
 %%%%
-# note: Wrath of Trog
+# note: description for Wrath of Trog
 It causes slowness and exhaustion when equipped.
 
 %%%%
+# note: description for Wrath of Trog
 It extends the wielder's berserk rage when killing foes.
 
 %%%%
-# note: mace of Variability
+# note: annotation for mace of Variability
 chain chaos
-
+Kettenchaos
 %%%%
+# note: brand description for mace of Variability
 Each time it hits an enemy it has a different, random effect.
 
 %%%%
+# note: brand description for mace of Variability
 It occasionally unleashes arcs of chaos on nearby creatures upon striking a foe.
 
 %%%%
-# note: sword of Power
+# note: brand description for sword of Power
 It occasionally discharges a powerful but inaccurate bolt of energy upon striking a foe, with increased chance the greater the wielder's current health.
 
 %%%%
-# note: staff of Olgreb
+# note: annotation for staff of Olgreb
 rPois∞
-
+rGift∞
 %%%%
-If the wielder is skilled in Evocations, they can envenom those struck by it, dealing poison damage which bypasses armour.
-
-%%%%
+# note: description for staff of Olgreb
 It enhances your poison magic.
 
 %%%%
+# note: description for staff of Olgreb
 It grants immunity to poison.
 
 %%%%
+# note: description for staff of Olgreb
 It can be evoked to radiate toxic energy, with effectiveness depending on Evocations skill.
 
 %%%%
-# note: staff of Wucad Mu
-*channel
+# note: brand description for staff of Olgreb
+If the wielder is skilled in Evocations, they can envenom those struck by it, dealing poison damage which bypasses armour.
 
 %%%%
+# note: annotation for staff of Wucad Mu
+*channel
+*leiten
+%%%%
+# note: description for staff of Wucad Mu
 It occasionally powers its wielder's spells, but with a chance of causing confusion or draining the wielder's intelligence.
 
 %%%%
+# note: description for staff of Wucad Mu
 It becomes more likely to activate and less likely to backfire with increased Evocations skill.
 
 %%%%
-# note: Vampire's Tooth
+# note: brand description for Vampire's Tooth
 It occasionally heals its wielder for the full amount of damage dealt when it wounds a living foe.
 
 %%%%
-# note: scythe of Curses
+# note: brand description for scythe of Curses
 It inflicts powerful necromantic curses on any living foe it strikes.
 
 %%%%
-# note: sceptre of Torment
+# note: annotation for sceptre of Torment
 torment
-
+Qual
 %%%%
+# note: brand description for sceptre of Torment
 It occasionally torments all nearby living foes when it strikes in combat.
 
 %%%%
-# note: sword of Cerebov
-great serpentine sword
-
-%%%%
-flamberge
-
-%%%%
+# note: brand description for sword of Cerebov
 It temporarily reduces the fire resistance of those it strikes.
 
 %%%%
-# note: staff of Dispater
-golden staff
-
-%%%%
+# note: description for staff of Dispater
 It can be evoked to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
 
 %%%%
-# note: sceptre of Asmodeus
-ruby sceptre
-
-%%%%
+# note: description for sceptre of Asmodeus
 It can be evoked to summon fiery demons, with success rate depending on Evocations skill. Those summoned this way will remain friendly only for a limited time.
 
 %%%%
-# note: scimitar of Flaming Death
-sticky flame,
-
-%%%%
-# note: demon blade "Leech"
-vamp,
-
-%%%%
+# note: brand description for demon blade "Leech"
 It heals its wielder for a portion of the damage dealt every time it strikes a living foe.
 
 %%%%
-# note: dagger of Chilly Death
-flash freeze,
-
-%%%%
-# note: scythe "Finisher"
+# note: annotation for scythe "Finisher"
 eviscerate
-
+ausweiden
 %%%%
+# note: brand description for scythe "Finisher"
 It may eviscerate those it strikes, slaying them instantly, with a decreasing chance against stronger foes.
 
 %%%%
-# note: glaive of the Guard
-spectral,
-
+# note: annotation for glaive of the Guard
+spectral
+spektral
 %%%%
+# note: brand description for glaive of the Guard
 When it strikes, its spirit leaps out and fights alongside the wielder.
 
 %%%%
-# note: zealot's sword
+# note: description for zealot's sword
 Whenever the wielder enters a berserk rage, their allies are berserked alongside them.
 
 %%%%
-# note: arbalest "Damnation"
-damnation,
-
-%%%%
+# note: brand description for arbalest "Damnation"
 Any ammunition fired from it explodes in a burst of damnation on striking a foe, dealing damage which bypasses armour.
 
 %%%%
-# note: morningstar "Eos"
+# note: description for morningstar "Eos"
 It grants its wielder a halo, increasing accuracy against those within it.
 
 %%%%
-# note: spear of the Botono
+# note: annotation for spear of the Botono
 Hex
-
+Verhex
 %%%%
-# note: Elemental Staff
+# note: brand description for Elemental Staff
 If the wielder is skilled in Evocations, they can discharge powerful blasts of elemental energy when striking with it.
 
 %%%%
+# note: description for Elemental Staff
 It enhances your fire, ice, earth and air magic.
 
 %%%%
-# note: heavy crossbow "Sniper"
-heavy crossbow
-
-%%%%
+# note: annotation for heavy crossbow "Sniper"
 Acc+∞
-
+Gen+∞
 %%%%
+# note: description for heavy crossbow "Sniper"
 Any ammunition fired from it never misses its target.
 
 %%%%
-# note: blowgun of the Assassin
-stab,
-
+# note: annotation for blowgun of the Assassin
+stab
+stechen
 %%%%
-# note: lance "Wyrmbane"
-lance
-
-%%%%
-slay drac,
-
-%%%%
+# note: brand description for lance "Wyrmbane"
 It inflicts extra damage against dragons and draconians.
 
 %%%%
-# note: Spriggan's Knife
-knife
-
-%%%%
+# note: description for Spriggan's Knife
 It is more effective when stabbing unaware enemies, treating them as though they were completely helpless.
 
 %%%%
-# note: plutonium sword
+# note: brand description for plutonium sword
 It occasionally inflicts wild transmutation effects on those it strikes, inflicting malmutation or extra damage, or polymorphing them into a new form.
 
 %%%%
-# note: great mace "Undeadhunter"
-disrupt,
-
+# note: annotation for great mace "Undeadhunter"
+disrupt
+Zusammenbruch
 %%%%
+# note: brand description for great mace "Undeadhunter"
 It inflicts significantly more damage against the undead.
 
 %%%%
-# note: whip "Snakebite"
-curare,
-
-%%%%
+# note: brand description for whip "Snakebite"
 It occasionally inflicts asphyxiating poison on those it strikes, dealing poison damage and causing slowness.
 
 %%%%
-# note: captain's cutlass
-cutlass
-
-%%%%
+# note: annotation for captain's cutlass
 disarm
-
+entwaffnen
 %%%%
+# note: brand description for captain's cutlass
 It may disarm weapon-wielding foes when striking them, dealing extra damage in the process.
 
 %%%%
-# note: storm bow
+# note: brand description for storm bow
 Any ammunition fired by it passes through the targets it hits, potentially hitting all targets in its path until it reaches maximum range.
 
 %%%%
-# note: cloak of the Thief
+# note: annotation for cloak of the Thief
 *Fog
-
+*Nebel
 %%%%
+# note: description for cloak of the Thief
 It may release a thick cloud of smoke when the wearer is hurt.
 
 %%%%
-# note: hood of the Assassin
+# note: annotation for hood of the Assassin
 Detection Stab+
-
+Aufspüren Stich+
 %%%%
+# note: description for hood of the Assassin
 It allows the wearer to sense nearby creatures.
 
 %%%%
+# note: description for hood of the Assassin
 It allows the wearer to make particularly effective stabbing attacks against helpless or unaware enemies with any weapon.
 
 %%%%
-# note: skin of Zhor
+# note: annotation for skin of Zhor
 *Englaciate
-
+*Vereisung
 %%%%
+# note: description for skin of Zhor
 It radiates cold, occasionally slowing all nearby creatures who are not resistant to cold.
 
 %%%%
-# note: salamander hide armour
+# note: annotation for salamander hide armour
 Flames
-
+Flammen
 %%%%
+# note: description for salamander hide armour
 It surrounds you with a cloud of flames.
 
 %%%%
+# note: description for salamander hide armour
 It grants immunity to clouds of flame.
 
 %%%%
+# note: description for salamander hide armour
 It enhances your fire magic.
 
 %%%%
-# note: robe of Folly
+# note: annotation for robe of Folly
 Brilliance Will-∞
-
+Brillianz Wille-∞
 %%%%
+# note: description for robe of Folly
 It increases the power of your magical spells.
 
 %%%%
+# note: description for robe of Folly
 It halves the magic cost of your spells (rounding up).
 
 %%%%
+# note: description for robe of Folly
 It reduces your willpower to zero.
 
 %%%%
-# note: robe of Night
+# note: annotation for robe of Night
 Dark
-
+dunkel
 %%%%
+# note: description for robe of Night
 It shrouds the wearer in darkness, reducing the range at which they can see and be seen by others.
 
 %%%%
-# note: fencer's gloves
+# note: annotation for pair of fencer's gloves
 Riposte
-
+Riposte
 %%%%
+# note: description for pair of fencer's gloves
 It allows the wearer to riposte with any weapon, or to riposte more often with a long blade, swiftly retaliating against a missed attack.
 
 %%%%
-# note: cloak of Starlight
+# note: annotation for cloak of Starlight
 *Dazzle
-
+*blenden
 %%%%
+# note: description for cloak of Starlight
 It may blind those who miss an attack against the wearer in melee combat.
 
 %%%%
-# note: ratskin cloak
+# note: description for ratskin cloak
 When the wearer is hurt, rats may emerge from it to assist them.
 
 %%%%
-# note: shield of the Gong
+# note: description for shield of the Gong
 It is deafeningly noisy when blocking attacks.
 
 %%%%
-# note: amulet of the Air
+# note: annotation for amulet of the Air
 Inacc Air
-
+Ungenau Luft
 %%%%
+# note: description for amulet of the Air
 It reduces the accuracy of all your attacks.
 
 %%%%
+# note: description for amulet of the Air
 It enhances your air magic.
 
 %%%%
-# note: ring of Shadows
+# note: annotation for ring of Shadows
 Umbra
-
+Umbra
 %%%%
+# note: description for ring of Shadows
 It surrounds you with an aura of shadow, increasing your stealth and reducing the accuracy of all within it (including the wearer).
 
 %%%%
-# note: necklace of Bloodlust
+# note: description for necklace of Bloodlust
 It extends the wearer's berserk rage when killing foes.
 
 %%%%
-# note: ring of the Hare
-%sring of the Hare
-
-%%%%
-# note: ring of the Tortoise
-%sring of the Tortoise
-
-%%%%
-# note: robe of Clouds
+# note: annotation for robe of Clouds
 +Thunder rCloud
-
++Donner rWolke
 %%%%
+# note: description for robe of Clouds
 It can be evoked to surround the wearer with storm clouds, with success rate depending on Evocations skill.
 
 %%%%
-# note: obsidian axe
+# note: brand description for obsidian axe
 It occasionally summons demons to assist the wielder when it strikes in combat.
 
 %%%%
+# note: description for obsidian axe
 Its wielder is mesmerised by any visible foes.
 
 %%%%
+# note: description for obsidian axe
 It cannot be unequipped while any foes are visible.
 
 %%%%
-# note: lightning scales
-swift,
-
-%%%%
+# note: description for lightning scales
 It allows the wearer to cover ground more swiftly.
 
 %%%%
-# note: autumn katana
-katana
-
-%%%%
-# note: shillelagh "Devastator"
-shillelagh
-
-%%%%
+# note: annotation for shillelagh "Devastator"
 shatter
-
+zerschmettern
 %%%%
+# note: brand description for shillelagh "Devastator"
 It releases a powerful concussive burst when it strikes, dealing extra damage to the target and all other foes adjacent to them.
 
 %%%%
-# note: dragonskin cloak
-opalescent scaly cloak
-
-%%%%
+# note: description for dragonskin cloak
 It grants the wearer a chance to resist fire, cold, poison, electricity, acid, and negative energy.
 
 %%%%
-# note: macabre finger necklace
+# note: description for macabre finger necklace
 It enables you to equip an extra ring.
 
 %%%%
-# note: dark maul
-maul
-
-%%%%
-# note: hat of the High Council
+# note: annotation for hat of the High Council
 Wiz-
-
+Zaub-
 %%%%
-# note: arc blade
-discharge,
-
+# note: annotation for arc blade
+discharge
+Entladung
 %%%%
+# note: brand description for arc blade
 It occasionally unleashes powerful arcs of lightning upon striking a foe. These may arc to other adjacent creatures (including the wielder, but dealing reduced damage to them) before grounding out.
 
 %%%%
-# note: demon whip "Spellbinder"
+# note: brand description for demon whip "Spellbinder"
 It unleashes wild and unpredictable magical effects upon striking a wizard or a creature with magical abilities.
 
 %%%%
-# note: lajatang of Order
-silver,
-
-%%%%
+# note: brand description for lajatang of Order
 It inflicts extra damage upon those it strikes, and deals substantially increased damage to chaotic, mutated and magically transformed beings.
 
 %%%%
-# note: great mace "Firestarter"
-inner flame,
-
-%%%%
+# note: brand description for great mace "Firestarter"
 It burns those it strikes, dealing additional fire damage.
 
 %%%%
+# note: brand description for great mace "Firestarter"
 It fills those it strikes with an explosive inner flame.
 
 %%%%
-# note: Majin-Bo
+# note: brand description for Majin-Bo
 It occasionally heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell.
 
 %%%%
+# note: description for Majin-Bo
 Its wielder's spells cost health as well as magical power.
 
 %%%%
-# note: pair of quick blades "Gyre" and "Gimble"
-pair of quick blades
-
-%%%%
-# note: Maxwell's etheric cage
+# note: annotation for Maxwell's etheric cage
 RegenMP+
-
+RegenMP+
 %%%%
-# note: crown of Eternal Torment
+# note: annotation for crown of Eternal Torment
 rTorment HP--
-
+rQual TP--
 %%%%
-# note: robe of Vines
+# note: annotation for robe of Vines
 NoPotionHeal
-
+KeinHeiltrank
 %%%%
+# note: description for robe of Vines
 Its wearer cannot be healed by potions.
 
 %%%%
-# note: Kryia's mail coat
+# note: annotation for Kryia's mail coat
 PotionHeal*2
-
+Heiltrank*2
 %%%%
+# note: description for Kryia's mail coat
 Potions are twice as effective at healing its wearer.
 
 %%%%
-# note: frozen axe "Frostbite"
-freezing cloud,
-
+# note: annotation for frozen axe "Frostbite"
+freezing cloud
+frierende Wolke
 %%%%
+# note: brand description for frozen axe "Frostbite"
 It freezes those it strikes, dealing additional cold damage. It can also slow down cold-blooded creatures.
 
 %%%%
+# note: brand description for frozen axe "Frostbite"
 It occasionally leaves clouds of freezing vapour upon striking a foe.
 
 %%%%
+# note: description for frozen axe "Frostbite"
 It grants immunity to clouds of freezing vapour.
 
 %%%%
-# note: warlock's mirror
+# note: description for warlock's mirror
 It can block and reflect piercing ranged attacks and magical attacks against the wielder's willpower.
 
 %%%%
-# note: Maxwell's thermic engine
-freeze,
-
-%%%%
+# note: description for Maxwell's thermic engine
 It becomes more effective when it hits something. This effect fades over time.
 
 %%%%
-# note: demon trident "Rift"
+# note: annotation for demon trident "Rift"
 reach+
-
+reichen+
 %%%%
+# note: brand description for demon trident "Rift"
 It can reach especially far, and its reaching attacks ignore other creatures in the way.
 
 %%%%
-# note: staff of Battle
+# note: description for staff of Battle
 It enhances your conjuration magic.
 
 %%%%
+# note: description for staff of Battle
 It summons a battlesphere in combat, with strength depending on Conjurations skill.
 
 %%%%
-# note: Cigotuvi's embrace
+# note: description for Cigotuvi's embrace
 It gathers nearby corpses to temporarily increase the armour it provides.
 
 %%%%
+# note: description for Cigotuvi's embrace
 It protects you from foul pestilence.
 
 %%%%
-# note: seven-league boots
+# note: annotation for pair of seven-league boots
 Rampage+∞
-
+Randale+∞
 %%%%
+# note: description for pair of seven-league boots
 Its wearer moves as far as possible in that direction when moving towards enemies.
 
 %%%%

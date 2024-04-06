@@ -264,6 +264,12 @@ Kugel von Zot
 %sring of the Mage
 {adj-er}%sRing des Magiers
 %%%%
+%sring of the Hare
+{adj-er}%sRing des Hasen
+%%%%
+%sring of the Tortoise
+{adj-er}%sRing der Schildkröte
+%%%%
 %sbrooch of Shielding
 {adj-e}%sBrosche der Abschirmung
 %%%%
@@ -279,7 +285,7 @@ Kugel von Zot
 %slightning scales
 {adj-e}%sBlitzschuppen
 %%%%
-%sBlack Knight's horse barding
+%sBlack Knight's barding
 {adj-es}%sGelieger des schwarzen Ritters
 %%%%
 %samulet of Vitality
@@ -366,6 +372,76 @@ Kugel von Zot
 %sCigotuvi's embrace
 {adj-e}%sUmarmung von Cigotuvi
 %%%%
+%spair of seven-league boots
+{adj-es}%sPaar Siebenmeilenstiefel
+%%%%
 horn of Geryon
 Horn von Geryon
+%%%%
+
+#################################
+# Appearance when unidientified
+#################################
+
+# a few have a special appearance
+%%%%
+# sword of Cerebov
+# the English description says serpentine, but in the tile, the blade is shaped like flames
+great serpentine sword
+großes, flammenförmiges Schwert
+%%%%
+# staff of Dispater
+golden staff
+goldener Stecken
+%%%%
+# sceptre of Asmodeus
+ruby sceptre
+Rubin-Zepter
+%%%%
+# dragonskin cloak
+opalescent scaly cloak
+schillernder schuppiger Umhang
+%%%%
+
+# the rest just look like what they are
+
+#################################
+# Special base types for some unrands
+#################################
+%%%%
+# sword of Cerebov
+flamberge
+Flamberg
+%%%%
+# heavy crossbow "Sniper"
+heavy crossbow
+schwere Armbrust
+%%%%
+# lance "Wyrmbane"
+lance
+Lanze
+%%%%
+# Spriggan's Knife
+knife
+Messer
+%%%%
+# captain's cutlass
+cutlass
+Entermesser
+%%%%
+# autumn katana
+katana
+Katana
+%%%%
+# shillelagh "Devastator"
+shillelagh
+Shillelagh
+%%%%
+# dark maul
+maul
+Kriegshammer
+%%%%
+# "Gyre" and "Gimble"
+pair of quick blades
+Paar Schnellklingen
 %%%%
