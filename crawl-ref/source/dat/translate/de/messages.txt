@@ -18918,10 +18918,10 @@ A blue arc grounds itself harmlessly.
 Ein blauer Lichtbogen erdet sich harmlos.
 %%%%
 You don't have any stones to cast with.
-Ihr habt keine Steine ​​zum Werfen.
+Ihr habt keine Steine zum Werfen.
 %%%%
 You now have no stones remaining.
-Ihr habt jetzt keine Steine ​​mehr.
+Ihr habt jetzt keine Steine mehr.
 %%%%
 The trees move their gnarly branches around.
 Die Bäume bewegen ihre knorrigen Äste hin und her.
@@ -22429,7 +22429,7 @@ Is already a randart; wipe and re-use?
 Ist schon ein zufälliges Artefakt; löschen und wider benutzen?
 %%%%
 "Fake item as gift from which god (ENTER to leave alone): "
-"Gefälschter Gegenstand als Geschenk von welchem ​​Gott (ENTER, um in Ruhe zu lassen): "
+"Gefälschter Gegenstand als Geschenk von welchem Gott (ENTER, um in Ruhe zu lassen): "
 %%%%
 No such god, leaving item origin alone.
 Kein solcher Gott. Ursprung des Gegenstands in Ruhe gelassen.
