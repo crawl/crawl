@@ -345,9 +345,7 @@ static void test(const string& context, const string& item, const string& expect
 {
     string actual;
     if (context == "" || context == "nom")
-    {
         actual = localise(item);
-    }
     else
     {
         string fmt = "{" + context + "}%s";
@@ -392,15 +390,11 @@ int main()
     const int num_items = test_items.size();
 
     for (int j = 0; j < num_items; j++)
-    {
         test("nom", test_items[j], expected[j]);
-    }
 
     cout << endl << "ARMOUR:" << endl;
     for (size_t j = 0; j < armour_en.size(); j++)
-    {
         test("nom", armour_en[j], armour_de[j]);
-    }
 
     for (int i = 0; i < num_cases; i++)
     {

@@ -6583,9 +6583,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
                                 post_res_dam, false);
     }
     else
-    {
         mpr("You are splashed with acid but take no damage.");
-    }
 
     if (post_res_dam > 0)
     {
@@ -7539,9 +7537,7 @@ static string _constriction_description()
 
     const int num_free_tentacles = you.usable_tentacles();
     if (num_free_tentacles == 1)
-    {
         cinfo += localise("You have 1 tentacle available for constriction.");
-    }
     else if (num_free_tentacles > 1)
     {
         cinfo += localise("You have %d tentacles available for constriction.",

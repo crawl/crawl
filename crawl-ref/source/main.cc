@@ -2371,9 +2371,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         else
             prompt = "Are you sure you want to abandon this character and quit the game?"; // localise
         if (crawl_state.disables[DIS_CONFIRMATIONS] || yes_or_no("%s", prompt.c_str()))
-        {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
-        }
         else
             canned_msg(MSG_OK);
         break;

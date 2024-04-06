@@ -1133,17 +1133,11 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
              name.c_str(), cackle.c_str());
     }
     else if (can_cackle)
-    {
         mprf("The %s mimic %s and vanishes!", name.c_str(), cackle.c_str());
-    }
     else if (can_place_smoke)
-    {
         mprf("The %s mimic vanishes in a puff of smoke!", name.c_str());
-    }
     else
-    {
         mprf("The %s mimic vanishes!", name.c_str());
-    }
 
     interrupt_activity(activity_interrupt::mimic);
 }
@@ -5415,18 +5409,18 @@ string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam)
     switch (mdam)
     {
     case MDAM_ALMOST_DEAD:
-        return (wounded_damaged(holi) ? "almost destroyed" : "almost dead");
+        return wounded_damaged(holi) ? "almost destroyed" : "almost dead";
     case MDAM_SEVERELY_DAMAGED:
-        return (wounded_damaged(holi) ? "severely damaged" : "severely wounded");
+        return wounded_damaged(holi) ? "severely damaged" : "severely wounded";
     case MDAM_HEAVILY_DAMAGED:
-        return (wounded_damaged(holi) ? "heavily damaged" : "heavily wounded");
+        return wounded_damaged(holi) ? "heavily damaged" : "heavily wounded";
     case MDAM_MODERATELY_DAMAGED:
-        return (wounded_damaged(holi) ? "moderately damaged" : "moderately wounded");
+        return wounded_damaged(holi) ? "moderately damaged" : "moderately wounded";
     case MDAM_LIGHTLY_DAMAGED:
-        return (wounded_damaged(holi) ? "lightly damaged" : "lightly wounded");
+        return wounded_damaged(holi) ? "lightly damaged" : "lightly wounded";
     case MDAM_OKAY:
     default:
-        return (wounded_damaged(holi) ? "not damaged" : "not wounded");
+        return wounded_damaged(holi) ? "not damaged" : "not wounded";
     }
 }
 

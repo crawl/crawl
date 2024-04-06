@@ -133,9 +133,7 @@ static void _initialize()
 #endif
 
     if (Options.lang_name != nullptr && strlen(Options.lang_name) > 0)
-    {
         mprf_nolocalise("Language: %s", Options.lang_name);
-    }
 
     // Initialise internal databases.
     _loading_message("Loading databases...");

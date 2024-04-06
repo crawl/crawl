@@ -1352,13 +1352,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 if (!have_passive(passive_t::no_mp_regen))
                 {
                     if (spell_user)
-                    {
                         mprf("You drain %s magic.", apostrophise(mon_name).c_str());
-                    }
                     else
-                    {
                         mprf("You drain %s power.", apostrophise(mon_name).c_str());
-                    }
                 }
                 else if (spell_user)
                 {
@@ -1571,17 +1567,11 @@ string melee_attack::player_attack_message(int damage)
         else if (damage < HIT_STRONG)
             return "You slice %s";
         else if (defender_genus == MONS_OGRE)
-        {
             return "You dice %s like an onion";
-        }
         else if (defender_genus == MONS_SKELETON)
-        {
             return "You fracture %s into splinters";
-        }
         else if (defender_genus == MONS_HOG)
-        {
             return "You carve %s like the proverbial ham";
-        }
         else if ((defender_genus == MONS_TENGU
                   || get_mon_shape(defender_genus) == MON_SHAPE_BIRD)
                  && one_chance_in(3))
@@ -1613,13 +1603,9 @@ string melee_attack::player_attack_message(int damage)
         else if (damage < HIT_STRONG)
             return "You bludgeon %s";
         else if (defender_genus == MONS_SKELETON)
-        {
             return "You shatter %s into splinters";
-        }
         else if (defender->type == MONS_GREAT_ORB_OF_EYES)
-        {
             return "You splatter %s into a gooey mess";
-        }
         else
         {
             static const char * const bludgeon_desc[] =
@@ -1642,9 +1628,7 @@ string melee_attack::player_attack_message(int damage)
         else
         {
             if (defender->holiness() & (MH_HOLY | MH_NATURAL | MH_DEMONIC))
-            {
                 return "You punish %s, causing immense pain";
-            }
             else
                 return "You devastate %s";
         }
@@ -1740,9 +1724,7 @@ string melee_attack::player_attack_message(int damage)
                     return "You beat %s into a bloody pulp";
                 }
                 else
-                {
                     return punch_desc[choice];
-                }
             }
         }
     }
@@ -2388,9 +2370,7 @@ string melee_attack::mons_attack_desc()
         }
     }
     else
-    {
         ret = mons_attack_message();
-    }
 
     ret = localise(ret, atk_name(DESC_THE), def_name(DESC_THE));
 
@@ -2406,9 +2386,7 @@ void melee_attack::announce_hit()
         return;
 
     if (attacker->is_monster())
-    {
         mpr_nolocalise(mons_attack_desc());
-    }
     else
     {
         string msg = localise(player_attack_message(damage_done),
@@ -2446,9 +2424,7 @@ bool melee_attack::mons_do_poison()
     if (needs_message)
     {
         if (defender->is_player())
-        {
             mprf("%s poisons you!", atk_name(DESC_THE).c_str());
-        }
         else
         {
             mprf("%s poisons %s!", atk_name(DESC_THE).c_str(),
@@ -2470,9 +2446,7 @@ void melee_attack::mons_do_napalm()
         {
             string msg;
             if (defender->is_player())
-            {
                 msg = localise("You are covered in liquid flames");
-            }
             else
             {
                 msg = localise("%s is covered in liquid flames",
@@ -2630,9 +2604,7 @@ void melee_attack::mons_apply_attack_flavour()
         {
             string msg;
             if (defender->is_player())
-            {
                 msg = localise("You are engulfed in flames");
-            }
             else
             {
                 msg = localise("%s is engulfed in flames",
@@ -2763,9 +2735,7 @@ void melee_attack::mons_apply_attack_flavour()
             {
                 string msg;
                 if (defender->is_player())
-                {
                     msg = localise("You are engulfed in a cloud of spores!");
-                }
                 else
                 {
                     msg = localise("%s is engulfed in a cloud of spores!",
@@ -3220,8 +3190,10 @@ void melee_attack::do_spines()
                 else
                 {
                     if (defender->type == MONS_BRIAR_PATCH)
+                    {
                         mprf("%s is struck by %s thorns.",
                              attacker->name(DESC_THE).c_str(), owner.c_str());
+                    }
                     else
                         mprf("%s is struck by %s spines.",
                              attacker->name(DESC_THE).c_str(), owner.c_str());

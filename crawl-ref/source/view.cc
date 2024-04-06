@@ -507,9 +507,7 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
                           mon_count.describe());
 
     if (strwidth(msg) >= get_number_of_cols() - 2)
-    {
         msg = localise("Gozag incites your enemies against you.");
-    }
     mpr_nolocalise(MSGCH_GOD, GOD_GOZAG, msg);
 
     for (monster *mon : incited)
@@ -800,9 +798,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         }
 
         if (!sensed.empty())
-        {
             mprf("You sensed %s.", comma_separated_line(sensed).c_str());
-        }
     }
 
     return did_map;

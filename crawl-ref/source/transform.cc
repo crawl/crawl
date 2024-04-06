@@ -253,9 +253,7 @@ void Form::do_transform_message(transformation previous_trans) const
              get_transform_description().c_str());
     }
     else
-    {
         mprf("You turn into %s.", get_transform_description().c_str());
-    }
 }
 
 /**

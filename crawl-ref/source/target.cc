@@ -726,9 +726,7 @@ bool targeter_transference::valid_aim(coord_def a)
     if (victim && you.can_see(*victim))
     {
         if (mons_is_hepliaklqana_ancestor(victim->type))
-        {
             return notify_fail("You can't swap your ancestor with themself.");
-        }
         if (mons_is_tentacle_or_tentacle_segment(victim->type)
             || victim->is_stationary())
         {

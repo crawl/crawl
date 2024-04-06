@@ -708,9 +708,7 @@ void trap_def::trigger(actor& triggerer)
                 triggered = true;
 
                 if (!simple_monster_message(*m, " drops a net on you."))
-                {
                     mpr("Something launches a net on you.");
-                }
             }
         }
 

@@ -1428,9 +1428,7 @@ static void _deconstruct_shooter_phrase(const string &s, string& phrase, string 
     }
 
     if (missile.empty() && shooter.empty())
-    {
         phrase = s;
-    }
     else
     {
         // it worked!
@@ -2079,9 +2077,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     string desc = make_stringf("%8d %s ", points, name.c_str()); // @noloc
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
-    {
         desc += localise_player_title("the " + title);
-    }
     else
     {
         string character = string("the %s ") + _job_name(job); // @noloc
@@ -2233,9 +2229,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         else if (oneline)
             desc += localise("slain by %s", death_source_desc());
         else
-        {
             desc += localise("%s by %s", damage_verb(), death_source_desc());
-        }
 
         // put the damage on the weapon line if there is one
         if (auxkilldata.empty())

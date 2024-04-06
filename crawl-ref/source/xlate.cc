@@ -31,7 +31,7 @@ string cxlate(const string &context, const string &text_en)
 string cnxlate(const string &context,
         const string &singular_en, const string &plural_en, unsigned long n)
 {
-    return (n == 1 ? singular_en : plural_en);
+    return n == 1 ? singular_en : plural_en;
 }
 
 #else
@@ -76,9 +76,7 @@ static string apply_regex_rule(const string& s, const string& rule)
         wstring swide = conv.from_bytes(s);
         wstring result;
         if (condition.empty())
-        {
             result = regex_replace(swide, re, replacement);
-        }
         else
         {
             wregex re_cond(condition);
@@ -102,9 +100,7 @@ static string apply_regex_rules(string s, const string& rulesStr)
 {
     vector<string> rules = split_string("\n", rulesStr, true, false);
     for (string rule: rules)
-    {
         s = apply_regex_rule(s, rule);
-    }
     return s;
 }
 
@@ -119,9 +115,7 @@ static string apply_regex_rules(string s, const string& rulesStr)
 string cxlate(const string &context, const string &text_en, bool fallback_en)
 {
     if (text_en.empty())
-    {
         return text_en;
-    }
 
     string translation;
 

@@ -916,9 +916,7 @@ static string _describe_demon(const string& name, bool flying)
     description << HRANDOM_ELEMENT(body_types, 2);
 
     if (flying)
-    {
         description << HRANDOM_ELEMENT(wing_names, 3);
-    }
 
     description << HRANDOM_ELEMENT(head_names, 1) << ".";
 
@@ -1455,9 +1453,11 @@ static string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_ACID:
              if (is_range_weapon(item))
+             {
                 description += localise("Any ammunition fired from it "
                     "is coated in acid, damaging and corroding those it "
                     "strikes.");
+             }
             else
                 description += localise("It is coated in acid, damaging and "
                     "corroding those it strikes.");
@@ -1521,9 +1521,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     {
         description += "\n";
         if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
-        {
             description += localise("It cannot be enchanted further.");
-        }
         else
         {
             description += localise("It can be maximally enchanted to +%d.",
@@ -4254,9 +4252,7 @@ static void _print_bar(int value, int scale, string name,
         base_value = value;
 
     if (name.size())
-    {
         result << chop_string(localise(name), 7, true, true) << " ";
-    }
 
     const int display_max = value ? value : base_value;
     const bool currently_disabled = !value && base_value;
@@ -4503,14 +4499,10 @@ static string _monster_stat_description(const monster_info& mi)
     }
 
     if (mi.threat != MTHRT_UNDEF)
-    {
         result << localise(_get_threat_desc(mi.threat)) << "\n";
-    }
 
     for (string rdesc: resist_descriptions)
-    {
         result << rdesc << "\n";
-    }
 
     // Is monster susceptible to anything? (On a new line.)
     if (!suscept.empty())
@@ -4546,9 +4538,7 @@ static string _monster_stat_description(const monster_info& mi)
 
     // Echolocation, wolf noses, jellies, etc
     if (!mons_can_be_blinded(mi.type))
-    {
         result << localise("It is immune to blinding.") << "\n";
-    }
     // XXX: could mention "immune to dazzling" here, but that's spammy, since
     // it's true of such a huge number of monsters. (undead, statues, plants).
     // Might be better to have some place where players can see holiness &
@@ -4568,9 +4558,7 @@ static string _monster_stat_description(const monster_info& mi)
     // Unusual monster speed.
     const int speed = mi.base_speed();
     if (speed != 10 && speed != 0)
-    {
         result << localise("It is %s.", mi.speed_description()) << "\n";
-    }
     const mon_energy_usage def = DEFAULT_ENERGY;
     if (!(mi.menergy == def))
     {
@@ -4644,9 +4632,7 @@ static string _monster_stat_description(const monster_info& mi)
 
     const char* mon_size = get_size_adj(mi.body_size(), true);
     if (mon_size)
-    {
         result << localise("It is %s.", mon_size) << "\n";
-    }
 
     if (in_good_standing(GOD_ZIN, 0) && !mi.pos.origin() && monster_at(mi.pos))
     {
@@ -4654,17 +4640,11 @@ static string _monster_stat_description(const monster_info& mi)
         monster *m = monster_at(mi.pos);
         auto eligibility = zin_check_recite_to_single_monster(m, retval);
         if (eligibility == RE_INELIGIBLE)
-        {
             result << localise("It cannot be affected by reciting Zin's laws.");
-        }
         else if (eligibility == RE_TOO_STRONG)
-        {
             result << localise("It is too strong to be affected by reciting Zin's laws.");
-        }
         else // RE_ELIGIBLE || RE_RECITE_TIMER
-        {
             result << localise("It can can be affected by reciting Zin's laws.");
-        }
 
         if (you.wizard)
         {
@@ -5295,9 +5275,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
     }
 
     if (mi.i_ghost.religion != GOD_NO_GOD)
-    {
         gstr << localise(" of %s", god_name(mi.i_ghost.religion));
-    }
 
     return gstr.str();
 }

@@ -1290,9 +1290,7 @@ void do_message_print(msg_channel_type channel, int param, bool cap,
         text = vlocalise(format, argp); // target language
     }
     else
-    {
         text = vmake_stringf(format, argp); // english
-    }
 
     _mpr(text, text_orig, channel, param, nojoin, cap);
 }

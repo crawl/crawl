@@ -1108,9 +1108,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (beam_attack)
     {
         if (beam_target == mon->pos())
-        {
             fmt = "Really fire at %s";
-        }
         else
         {
             fmt = "Really fire in %s direction";
@@ -1118,22 +1116,16 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         }
     }
     else
-    {
         fmt = "Really attack %s";
-    }
 
     if (!suffix.empty())
-    {
         fmt += suffix;
-    }
     fmt += "?";
 
     string prompt = localise(fmt, mon_name);
 
     if (penance)
-    {
         prompt += " " + localise("This attack would place you under penance!");
-    }
 
     if (prompted)
         *prompted = true;
@@ -1198,9 +1190,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                     mon_name = mon_name.replace(0, 4, "the " + adjn);
                 }
                 else
-                {
                     mon_name = adjn + mon_name;
-                }
             }
 
             victim_names.push_back(mon_name);
@@ -1224,26 +1214,18 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     string fmt;
     string prompt;
     if (!suffix.empty())
-    {
         fmt = "Really attack %s" + suffix + "?";
-    }
     else
     {
         if (!defender_ok)
-        {
             fmt = "Really attack %s?";
-        }
         else
-        {
             fmt = "Really do that near %s?";
-        }
     }
     prompt = localise(fmt, mon_names);
 
     if (penance)
-    {
         prompt += " " + localise("This attack would place you under penance!");
-    }
 
     if (prompted)
         *prompted = true;

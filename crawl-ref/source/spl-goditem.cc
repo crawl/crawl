@@ -102,9 +102,7 @@ string unpacifiable_reason(const monster_info& mi)
         return generic_reason;
 
     if (mi.is(MB_SLEEPING)) // not aware of what is happening
-    {
         return "You cannot pacify this monster while it is sleeping!";
-    }
 
     // pacifiable, maybe!
     return "";

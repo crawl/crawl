@@ -294,9 +294,7 @@ string replace_first(const string &s, const string &tofind, const string &replac
     string result = s;
     size_t pos = s.find(tofind);
     if (pos != string::npos)
-    {
         result.replace(pos, tofind.length(), replacement);
-    }
     return result;
 }
 
@@ -306,9 +304,7 @@ string replace_last(const string &s, const string &tofind, const string &replace
     string result = s;
     size_t pos = s.rfind(tofind);
     if (pos != string::npos)
-    {
         result.replace(pos, tofind.length(), replacement);
-    }
     return result;
 }
 

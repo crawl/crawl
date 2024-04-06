@@ -2059,9 +2059,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         name = "your " + name;
 
         if (name.find("dragon") != string::npos)
-        {
             str  = localise("The scales on %s wiggle briefly.", name);
-        }
         else if (item->sub_type == ARM_ANIMAL_SKIN)
         {
             str  = localise("The fur on %s grows longer at an alarming rate, "

@@ -185,9 +185,7 @@ static string _you_are_character(const string& species, const string& background
         return localise(fmt.c_str(), background.c_str());
     }
     else
-    {
         return "";
-    }
 }
 
 
@@ -196,22 +194,16 @@ static string _welcome(const newgame_def& ng)
     string text;
 
     if (ng.name.empty())
-    {
         text = localise("Welcome. ");
-    }
     else
-    {
         text = localise("Welcome, %s. ", ng.name.c_str());
-    }
 
     // get English species and background names
     string species = (ng.species == SP_UNKNOWN ? "" : species::name(ng.species));
     string background = (ng.job == JOB_UNKNOWN ? "" : get_job_name(ng.job));
 
     if (!species.empty() || !background.empty())
-    {
         text += _you_are_character(species, background) + " ";
-    }
 
     return text;
 }
@@ -443,9 +435,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
             "Trunk games don't count for the tournament, you want %s."
             " Play trunk anyway? (Y/N)", TOURNEY);
         if (!yesno(text, false, 'n'))
-        {
             game_ended(game_exit::abort);
-        }
     }
 #endif
 
@@ -1177,13 +1167,9 @@ public:
         welcome.cprintf("%s", _welcome(m_ng).c_str());
         welcome.textcolour(YELLOW);
         if (m_choice_type == C_JOB)
-        {
             welcome.cprintf(localise("Please select your background."));
-        }
         else
-        {
             welcome.cprintf(localise("Please select your species."));
-        }
         m_vbox->add_child(make_shared<Text>(welcome));
 
         descriptions = make_shared<Switcher>();

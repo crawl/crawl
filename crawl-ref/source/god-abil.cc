@@ -1291,9 +1291,7 @@ void tso_divine_shield()
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
         if (you.shield())
-        {
             mprf("Your shield is strengthened by the Shining One's divine power.");
-        }
         else
             mpr("A divine shield forms around you!");
     }
@@ -4639,9 +4637,7 @@ bool ru_do_sacrifice(ability_type sac)
             offer_text = localise(sac_def.sacrifice_text, handtxt);
         }
         else
-        {
             offer_text = localise(sac_def.sacrifice_text);
-        }
 
         mile_text = make_stringf("%s.", sac_def.milestone_text);
     }

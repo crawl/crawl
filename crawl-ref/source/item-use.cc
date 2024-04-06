@@ -424,12 +424,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
         if (unwield)
         {
             SAY(mpr("You can't unwield your weapon!"));
+            return false;
         }
         else
         {
             SAY(mpr("You can't unwield your weapon to draw a new one!"));
+            return false;
         }
-        return false;
     }
 
     // If we don't have an actual weapon to check, return now.
@@ -447,12 +448,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
         if (arm_name == "tentacle")
         {
             SAY(mpr("You can't wield that without your missing tentacle."));
+            return false;
         }
         else
         {
             SAY(mpr("You can't wield that without your missing arm."));
+            return false;
         }
-        return false;
     }
 
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)

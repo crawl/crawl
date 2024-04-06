@@ -252,9 +252,7 @@ vector<string> TextDB::_expand_file_list() const
             vector<string> matched = get_dir_files_ext(dir, file.substr(1));
             dir = canonicalise_file_separator(dir + "/");
             for (const string& file_name: matched)
-            {
                 input_files.push_back(dir + file_name);
-            }
         }
         else
         {
@@ -585,9 +583,7 @@ static void _trim_leading_newlines(string &s)
 static void _trim_quotes(string &s)
 {
     if (s.length() >= 2 && s[0] == '"' && s[s.length()-1] == '"')
-    {
         s = s.substr(1, s.length()-2);
-    }
 }
 
 static void _add_entry(DBM *db, const string &k, string &v)

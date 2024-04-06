@@ -136,26 +136,16 @@ string get_any_person_message(variant_msg_type msg_id,
     if (subj == "you")
     {
         if (obj == "you" || obj == "yourself")
-        {
             variant = MV_YOURSELF;
-        }
         else
-        {
             variant = MV_YOU_SUBJECT;
-        }
     }
     else if (obj == "you")
-    {
         variant = MV_YOU_OBJECT;
-    }
     else if (obj == "itself" || obj == "himself" || obj == "herself")
-    {
         variant = MV_ITSELF;
-    }
     else
-    {
         variant = MV_THIRD_PARTIES;
-    }
 
     const string& temp = get_variant_template(msg_id, variant);
 
@@ -261,21 +251,15 @@ string get_3rd_person_message(const string& subject, const string& object,
 {
     string msg;
     if (object == "you")
-    {
         msg = localise(you_obj_msg, subject);
-    }
     else
-    {
         msg = localise(other_msg, subject, object);
-    }
 
     if (!punctuation.empty())
         msg = add_punctuation(msg, punctuation, false);
 
     if (subject == "you")
-    {
         msg += " (bug: 2nd person subject unexpected here)"; // @noloc
-    }
 
     return msg;
 }

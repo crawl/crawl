@@ -1102,9 +1102,7 @@ string get_god_likes(god_type which_god)
         if (!really_likes.empty())
         {
             if (!text.empty())
-            {
                 text += localise(" ");
-            }
             string likes_str = comma_separated_line(really_likes.begin(),
                                                     really_likes.end());
             text += localise("%s especially likes it when %s.", god, likes_str);

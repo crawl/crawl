@@ -3960,9 +3960,7 @@ void bolt::affect_player()
     {
         string obj = you.hp > 0 ? "you" : "your lifeless body";
         if (final_dam)
-        {
             do_hit_message(obj, attack_strength_punctuation(final_dam));
-        }
         else
         {
             string msg = get_hit_message(obj);
@@ -4902,8 +4900,10 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer)
     {
         if (you.see_cell(mon->pos()))
+        {
             mprf("%s passes through %s.", get_the_name().c_str(),
                  mon->name(DESC_THE).c_str());
+        }
     }
 
     if (ignores_monster(mon))
@@ -4967,9 +4967,7 @@ void bolt::affect_monster(monster* mon)
             if (hit_verb == BHV_NONE)
                 hit_verb = engulfs ? BHV_ENGULF : BHV_HIT;
             if (you.see_cell(mon->pos()))
-            {
                 do_hit_message(mon->name(DESC_THE), ".");
-            }
             else if (heard && !hit_noise_msg.empty())
                 mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
         }
@@ -5050,13 +5048,9 @@ void bolt::affect_monster(monster* mon)
             // if it would have hit otherwise...
             string message;
             if (_test_beam_hit(beam_hit, rand_ev, pierce, 0, r))
-            {
                 message = localise("%s repels %s!", mon->name(DESC_THE), get_the_name());
-            }
             else
-            {
                 message = localise("%s misses %s!", get_the_name(), mon->name(DESC_THE));
-            }
 
             msg::stream << message << endl;
         }

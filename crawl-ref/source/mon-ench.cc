@@ -587,9 +587,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             msg = "%s stops retreating.";
         }
         else if (!mons_is_tentacle_or_tentacle_segment(type))
-        {
             msg = "%s seems to regain courage.";
-        }
 
         if (!quiet)
             simple_monster_message(*this, msg.c_str());

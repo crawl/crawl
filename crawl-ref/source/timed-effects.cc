@@ -973,9 +973,7 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
                      mon->name(DESC_THE).c_str());
             }
             else
-            {
                 mpr("Zin dismisses the silver walls, but there is nothing inside them.");
-            }
         }
         else
         {

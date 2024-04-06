@@ -902,7 +902,7 @@ string attack::debug_damage_number(bool special)
         return make_stringf(" for %d", damage_done);
 #else
     // use param to avoid compiler warning
-    return (special ? "" : "");
+    return special ? "" : "";
 #endif
 }
 
@@ -1318,13 +1318,9 @@ bool attack::attack_shield_blocked(bool verbose)
         if (needs_message && verbose)
         {
             if (defender->is_player())
-            {
                 mprf("You block %s attack.", atk_name(DESC_ITS).c_str());
-            }
             else if (attacker->is_player())
-            {
                 mprf("%s blocks your attack.", defender_name(false).c_str());
-            }
             else
             {
                 mprf("%s blocks %s attack.",

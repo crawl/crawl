@@ -775,9 +775,7 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
         // "Enchant" the player.
         const string slugform = getSpeakString("gastronok_debuff");
         if (!slugform.empty())
-        {
             mpr(slugform);
-        }
     }
     else
     {
@@ -2403,9 +2401,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
                  warden->name(DESC_THE, true).c_str());
         }
         else
-        {
            mpr(MSGCH_MONSTER_SPELL, "Someone activates a sealing rune.");
-        }
 
         if (num_closed > 1)
             mpr("The doors slam shut!");

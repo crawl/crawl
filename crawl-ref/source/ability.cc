@@ -1546,8 +1546,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             if (!quiet)
             {
                 if (you.duration[DUR_WATER_HOLD])
+                {
                     mprf("You cannot call out to %s while unable to breath.",
                          god_name(you.religion).c_str());
+                }
                 else
                     mprf("You cannot call out to %s while silenced.",
                          god_name(you.religion).c_str());

@@ -43,7 +43,7 @@ static string _localise_list(const string context, const string& value);
 // check if string contains the char
 static inline bool _contains(const std::string& s, char c)
 {
-    return (s.find(c) != string::npos);
+    return s.find(c) != string::npos;
 }
 
 // format UTF-8 string using printf-style format specifier
@@ -94,7 +94,7 @@ static string _format_utf8_string(const string& fmt, const string& arg)
 static inline bool _is_type_spec(char c)
 {
     static const string type_specs = "diufFeEgGxXoscpaAn";
-    return (type_specs.find(c) != string::npos);
+    return type_specs.find(c) != string::npos;
 }
 
 // Extract arg id from format specifier
@@ -104,21 +104,15 @@ static int _get_arg_id(const string& fmt)
 {
     size_t dollar_pos = fmt.find('$');
     if (dollar_pos == string::npos)
-    {
         return 0;
-    }
     size_t pos_len = dollar_pos-1;
     if (pos_len < 1)
-    {
         return 0;
-    }
     string pos_str = fmt.substr(1, pos_len);
     errno = 0;
     int result = atoi(pos_str.c_str());
     if (errno != 0)
-    {
         return 0;
-    }
     return result;
 }
 
@@ -128,14 +122,10 @@ static string _remove_arg_id(const string& fmt)
 {
     size_t dollar_pos = fmt.find('$');
     if (dollar_pos == string::npos)
-    {
         return fmt;
-    }
     string result("%");
     if (dollar_pos < fmt.length()-1)
-    {
         result += fmt.substr(dollar_pos+1, string::npos);
-    }
     return result;
 }
 
@@ -143,97 +133,61 @@ static string _remove_arg_id(const string& fmt)
 static const type_info* _format_spec_to_type(const string& fmt)
 {
     if (fmt.length() < 2 || fmt.at(0) != '%')
-    {
         return NULL;
-    }
 
     char last_char = fmt.back();
     if (last_char == 'p')
-    {
         return &typeid(void*);
-    }
     else if (last_char == 's')
-    {
         return &typeid(char*);
-    }
     else if (last_char == 'n')
-    {
         return &typeid(int*);
-    }
     else if (_contains("aAeEfFgG", last_char))
     {
         if (fmt.at(fmt.length()-2) == 'L')
-        {
             return &typeid(long double);
-        }
         else
-        {
             return &typeid(double);
-        }
     }
     else if (_contains("uoxX", last_char))
     {
         // unsigned
         char penultimate = fmt.at(fmt.length()-2);
         if (penultimate == 'p')
-        {
             return &typeid(ptrdiff_t);
-        }
         else if (penultimate == 'z')
-        {
             return &typeid(size_t);
-        }
         else if (penultimate == 'j')
-        {
             return &typeid(uintmax_t);
-        }
         else if (penultimate == 'l')
         {
             if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
-            {
                 return &typeid(unsigned long long);
-            }
             else
-            {
                 return &typeid(unsigned long);
-            }
         }
         else
-        {
             return &typeid(unsigned);
-        }
     }
     else if (_contains("cid", last_char))
     {
         // signed int
         char penultimate = fmt.at(fmt.length()-2);
         if (penultimate == 'p')
-        {
             return &typeid(ptrdiff_t);
-        }
         else if (penultimate == 'z')
-        {
             return &typeid(size_t);
-        }
         else if (penultimate == 'j')
-        {
             return &typeid(intmax_t);
-        }
         else if (penultimate == 'l')
         {
             if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
-            {
                 return &typeid(long long);
-            }
             else
-            {
                 return &typeid(long);
-            }
         }
         else
-        {
             return &typeid(int);
-        }
     }
 
     return NULL;
@@ -337,9 +291,7 @@ static vector<string> _split_format(const string& fmt_str)
                 bool escaped = (*ch == '\\' || (*ch == '%' && *(ch+1) == '%'));
                 ++ch;
                 if (*ch == '\0')
-                {
                     finished = true;
-                }
                 else if (escaped)
                 {
                     // ignore character
@@ -350,9 +302,7 @@ static vector<string> _split_format(const string& fmt_str)
                 {
                     finished = (*ch == '%' || *ch == '{');
                     if (!finished)
-                    {
                         ++token_len;
-                    }
                 }
             }
         }
@@ -397,9 +347,7 @@ static string _shift_context(const string& str)
 {
     // Must keep context for parameters
     if (!starts_with(str, "{"))
-    {
         return str;
-    }
 
     bool first = true;
     string result;
@@ -431,9 +379,7 @@ static map<int, const type_info*> _get_arg_types(const string& fmt)
             const type_info* ti = _format_spec_to_type(*it);
             int arg_id = _get_arg_id(*it);
             if (arg_id == 0)
-            {
                 arg_id = arg_count;
-            }
             results[arg_id] = ti;
         }
     }
@@ -482,7 +428,7 @@ static bool _starts_with_menu_id(const string& s)
     if (s.length() < 4)
         return false;
 
-    return (isalpha(s[0]) && s.substr(1,3) == " - ");
+    return isalpha(s[0]) && s.substr(1,3) == " - ";
 }
 
 static string _strip_menu_id(const string& s, string& id)
@@ -523,9 +469,7 @@ static bool _starts_with_count(const string& s)
 static string _strip_count(const string& s, int& count)
 {
     if (s.empty() || !_starts_with_count(s))
-    {
         return s;
-    }
 
     size_t pos;
     count = stoi(s, &pos);
@@ -554,9 +498,7 @@ static string _localise_counted_string(const string& context, const string& sing
 static string _localise_counted_string(const string& context, const string& value)
 {
     if (value.empty() || !_starts_with_count(value))
-    {
         return value;
-    }
 
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
@@ -590,12 +532,10 @@ static string _localise_possibly_counted_string(const string& context, const str
     if (_starts_with_count(value))
     {
         string result = _localise_counted_string(context, value);
-        return (result == value ? "" : result);
+        return result == value ? "" : result;
     }
     else
-    {
         return cxlate(context, value, false);
-    }
 }
 
 static string _localise_annotation_element(const string& s)
@@ -660,9 +600,7 @@ static string _localise_annotation_element(const string& s)
 
         string ltok = xlate(tok, false);
         if (!ltok.empty())
-        {
             result += ltok;
-        }
         else if (last_alpha_pos < (int)tok.length() - 1)
         {
             string tok_suffix = tok.substr(last_alpha_pos+1);
@@ -670,9 +608,7 @@ static string _localise_annotation_element(const string& s)
             result += xlate(tok, true) + tok_suffix;
         }
         else
-        {
             result += tok;
-        }
     }
 
     return result;
@@ -738,9 +674,7 @@ static list<string> _localise_annotations(const list<string>& input)
 
     list<string>::const_iterator iter;
     for (iter = input.begin(); iter != input.end(); ++iter)
-    {
         output.push_back(_localise_annotation(*iter));
-    }
 
     return output;
 }
@@ -788,9 +722,7 @@ static string _add_annotations(const string& s, const list<string>& annotations)
 
     list<string>::const_iterator iter;
     for (iter = annotations.begin(); iter != annotations.end(); ++iter)
-    {
         result += *iter;
-    }
 
     return result;
 }
@@ -856,9 +788,7 @@ static string _strip_suffix(const string& s, string& suffix)
     }
 
     if (quote_pos == string::npos && of_pos == string::npos)
-    {
         return s;
-    }
     else if (of_pos != string::npos
              && (quote_pos == string::npos || of_pos < quote_pos))
     {
@@ -934,9 +864,7 @@ static string _localise_item_suffix(const string& s)
         fmt = " \"%s\"";
         arg = s;
         if (s.length() > 3 && starts_with(s, " \"") && ends_with(s, "\""))
-        {
             arg = s.substr(2, s.length()-3);
-        }
     }
 
     fmt = xlate(fmt);
@@ -1069,9 +997,7 @@ static string _localise_pair(const string& context, const string& name)
     {
         result = cxlate(context, base + suffix, false);
         if (result.empty())
-        {
             result = cxlate(context, base) + cxlate(context, suffix);
-        }
     }
 
     DEBUG("before inserting adjectives: result='%s'", result.c_str());
@@ -1130,13 +1056,9 @@ static string _localise_item_name(const string& context, const string& item)
     // change his/her/its/their to a/an for ease of translation
     // (owner may not have the same gender in other languages)
     if (determiner == "his" || determiner == "her" || determiner == "its" || determiner == "their")
-    {
         determiner = "a";
-    }
     else if (determiner == "an")
-    {
         determiner = "a";
-    }
 
     // try to construct a string that can be translated
 
@@ -1150,13 +1072,9 @@ static string _localise_item_name(const string& context, const string& item)
         string item_en;
 
         if (!determiner.empty())
-        {
             item_en = determiner + " ";
-        }
         if (count > 0)
-        {
             item_en += to_string(count) + " ";
-        }
         // placeholder for adjectives
         item_en += "%s";
 
@@ -1235,9 +1153,7 @@ static string _localise_item_name(const string& context, const string& item)
                     }
                 }
                 if (count_occurrences(result, "%s") == 1)
-                {
                     result = replace_first(result, "%s", prefix_adjs + postfix_adjs);
-                }
                 else
                 {
                     result = replace_first(result, "%s", prefix_adjs);
@@ -1324,7 +1240,9 @@ static void _split_list(string s, vector<string>& result)
         if (s[i] == '(' || s[i] == '{' || s[i] == '[')
             bracket_depth++;
         else if (s[i] == ')' || s[i] == '}' || s[i] == ']')
+        {
             bracket_depth--;
+        }
         else if (bracket_depth == 0)
         {
             for (const string& sep: seps)
@@ -1407,9 +1325,7 @@ static string _localise_multiple_sentences(const string& context, const string& 
     for (pos = 0; pos < s.length(); pos++)
     {
         if (pos == s.length() - 1)
-        {
             sentences.push_back(s.substr(last, pos - last + 1));
-        }
         else
         {
             char c = s[pos];
@@ -1445,9 +1361,7 @@ static string _localise_multiple_sentences(const string& context, const string& 
             result += translated;
         }
         else
-        {
             result += translated;
-        }
         count++;
     }
     return result;
@@ -1651,9 +1565,7 @@ static string _localise_string(const string context, const string& value)
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
     if (value.empty() || !localisation_active())
-    {
         return value;
-    }
 
     if (contains(value, "\n"))
     {
@@ -1673,9 +1585,7 @@ static string _localise_string(const string context, const string& value)
     string result;
     result = cxlate(context, value, false);
     if (!result.empty())
-    {
         return _shift_context(result);
-    }
 
     if (_starts_with_menu_id(value))
     {
@@ -1830,9 +1740,7 @@ LocalisationArg::LocalisationArg(const char* value, bool translat)
 {
     init();
     if (value != nullptr)
-    {
         stringVal = value;
-    }
 }
 
 LocalisationArg::LocalisationArg(const int value, bool translat)
@@ -1902,15 +1810,13 @@ const string& get_localisation_language()
 
 bool localisation_active()
 {
-    return (!_paused && !_language.empty() && _language != "en");
+    return !_paused && !_language.empty() && _language != "en";
 }
 
 static string _build_string(const vector<LocalisationArg>& args, bool translate)
 {
     if (args.empty())
-    {
         return "";
-    }
 
     _context = "";
 
@@ -1920,13 +1826,9 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
     // translate format string
     string fmt_xlated;
     if (fmt_arg.translate && translate)
-    {
         fmt_xlated = _localise_string("", fmt_arg);
-    }
     else
-    {
         fmt_xlated = fmt_arg.stringVal;
-    }
 
     // get arg types for original English string
     map<int, const type_info*> arg_types = _get_arg_types(fmt_arg.stringVal);
@@ -1985,9 +1887,7 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                         ss << _format_utf8_string(fmt_spec, argx);
                     }
                     else
-                    {
                         ss << make_stringf(fmt_spec.c_str(), arg.stringVal.c_str());
-                    }
                 }
                 else {
                     if (*type == typeid(long double))
@@ -2001,17 +1901,11 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                         ss << _localise_float(val);
                     }
                     else if (*type == typeid(long long) || *type == typeid(unsigned long long))
-                    {
                         ss << make_stringf(fmt_spec.c_str(), arg.longLongVal);
-                    }
                     else if (*type == typeid(long) || *type == typeid(unsigned long))
-                    {
                         ss << make_stringf(fmt_spec.c_str(), arg.longVal);
-                    }
                     else if (*type == typeid(int) || *type == typeid(unsigned int))
-                    {
                         ss << make_stringf(fmt_spec.c_str(), arg.intVal);
-                    }
                 }
             }
          }
@@ -2036,9 +1930,7 @@ string localise(const vector<LocalisationArg>& args)
 
     // trivial cases
     if (args.empty())
-    {
         return "";
-    }
     else if (args.size() == 1)
     {
         if (localisation_active())
@@ -2054,9 +1946,7 @@ string localise(const vector<LocalisationArg>& args)
     // check for translation of completed english string
     string result = xlate(english, false);
     if (!result.empty())
-    {
         return _shift_context(result);
-    }
 
     // translate piecemeal
     return _build_string(args, true);
@@ -2065,9 +1955,7 @@ string localise(const vector<LocalisationArg>& args)
 string vlocalise(const string& fmt_str, va_list argp)
 {
     if (!localisation_active())
-    {
         return vmake_stringf(fmt_str.c_str(), argp);
-    }
 
     va_list args;
     va_copy(args, argp);
@@ -2093,29 +1981,17 @@ string vlocalise(const string& fmt_str, va_list argp)
         }
 
         if (arg_type == typeid(char*))
-        {
             niceArgs.push_back(LocalisationArg(va_arg(args, char*)));
-        }
         else if (arg_type == typeid(long double))
-        {
             niceArgs.push_back(LocalisationArg(va_arg(args, long double)));
-        }
         else if (arg_type == typeid(double))
-        {
             niceArgs.push_back(LocalisationArg(va_arg(args, double)));
-        }
         else if (arg_type == typeid(long long) || arg_type == typeid(unsigned long long))
-        {
             niceArgs.push_back(LocalisationArg(va_arg(args, long long)));
-        }
         else if (arg_type == typeid(long) || arg_type == typeid(unsigned long))
-        {
             niceArgs.push_back(LocalisationArg(va_arg(args, long)));
-        }
         else if (arg_type == typeid(int) || arg_type == typeid(unsigned int))
-        {
             niceArgs.push_back(LocalisationArg(va_arg(args, int)));
-        }
         else if (arg_type == typeid(ptrdiff_t))
         {
             va_arg(args, ptrdiff_t);
@@ -2160,9 +2036,7 @@ int localise_char(char ch)
 
     char32_t res;
     if (utf8towc(&res, loc.c_str()))
-    {
         return (int)res;
-    }
     else
     {
         // failed

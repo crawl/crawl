@@ -2612,17 +2612,11 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         level = min(level, 2);
     }
     if (mut == MUT_ICEMAIL)
-    {
         result = localise(mdef.have[0], player_icemail_armour_class());
-    }
     else if (mut == MUT_CONDENSATION_SHIELD)
-    {
         result = localise(mdef.have[0], player_condensation_shield_class());
-    }
     else if (mut == MUT_SANGUINE_ARMOUR)
-    {
         result = localise(mdef.have[level - 1], sanguine_armour_bonus() / 100);
-    }
     else if (mut == MUT_MP_WANDS && you.has_mutation(MUT_HP_CASTING))
         result = localise("You expend health (3 HP) to strengthen your wands.");
     else if (!ignore_player && mut == MUT_TENTACLE_ARMS)

@@ -51,17 +51,13 @@ const string& get_variant_template(variant_msg_type msg_id, msg_variant_type var
     {
        const vector<string>& v = it->second;
        if (v.size() > variant && !v.at(variant).empty())
-       {
            return v.at(variant);
-       }
     }
 
     // something went wrong
     ostringstream os;
     if (msg_id == VMSG_NONE)
-    {
         os << "ERROR: Attempt to use VMSG_NONE"; // @noloc
-    }
     else
     {
         os << "ERROR: Undefined variant message (" // @noloc

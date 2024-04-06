@@ -576,9 +576,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         }
     }
     else
-    {
         title = localise(title);
-    }
 
     desc_menu.set_tag("pickup");
     // necessary for sorting of the item submenu
@@ -3504,9 +3502,7 @@ static string _get_monster_desc(const monster_info& mi)
     string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
     if (mi.is(MB_MESMERIZING))
-    {
         text += localise("You are mesmerised by this monster's song.") + "\n";
-    }
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
     {
@@ -3518,9 +3514,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
     // Applies to both friendlies and hostiles
     else if (mi.is(MB_FLEEING))
-    {
         text += localise("This monster is fleeing.") + "\n";
-    }
     // hostile with target != you
     else if (mi.attitude == ATT_HOSTILE
              && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
@@ -3529,13 +3523,9 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     if (mi.attitude == ATT_FRIENDLY)
-    {
         text += localise("This monster is friendly.") + "\n";
-    }
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
-    {
         text += localise("This monster seems to be peaceful towards you.") + "\n";
-    }
     else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
     {
         // don't differentiate between permanent or not
@@ -3555,33 +3545,21 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     if (mi.is(MB_HALOED))
-    {
         text += localise("This monster is illuminated by a divine halo.") + "\n";
-    }
 
     if (mi.is(MB_UMBRAED))
-    {
         text += localise("This monster is wreathed by an umbra.") + "\n";
-    }
 
     if (mi.intel() <= I_BRAINLESS)
-    {
         text += localise("This monster is mindless.") + "\n";
-    }
 
     if (mi.is(MB_CHAOTIC))
-    {
         text += localise("This monster is chaotic.") + "\n";
-    }
 
     if (mi.is(MB_POSSESSABLE))
-    {
         text += localise("This monster's soul is ripe for the taking.") + "\n";
-    }
     else if (mi.is(MB_ENSLAVED))
-    {
         text += localise("This monster is a disembodied soul.") + "\n";
-    }
 
     if (mi.is(MB_MIRROR_DAMAGE))
     {
@@ -3590,9 +3568,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     if (mi.is(MB_INNER_FLAME))
-    {
         text += localise("This monster is filled with an inner flame.") + "\n";
-    }
 
     if (mi.fire_blocker)
     {
@@ -3769,13 +3745,9 @@ string get_monster_equipment_desc(const monster_info& mi,
                                     mon_wnd->name(DESC_A));
         }
         else if (mon_alt)
-        {
             carried_desc = localise("carrying %s", mon_alt->name(DESC_A));
-        }
         else if (mon_has_wand)
-        {
             carried_desc = localise("carrying %s", mon_wnd->name(DESC_A));
-        }
 
         item_descriptions.push_back(carried_desc);
     }
@@ -3810,9 +3782,7 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("This square is bathed in translocational energy.");
 
     for (string area: areas)
-    {
         mpr(area);
-    }
 
     if (cloud_struct* cloud = cloud_at(where))
     {
@@ -3921,9 +3891,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         _describe_monster(mi);
 
         if (!in_range)
-        {
             mpr(MSGCH_EXAMINE_FILTER, "This monster is out of range.");
-        }
 #ifndef DEBUG_DIAGNOSTICS
         monster_described = true;
 #endif

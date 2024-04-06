@@ -6058,9 +6058,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 }
             }
             else if (fly_died && observable())
-            {
                 mpr("The spriggan falls from its now dead mount.");
-            }
         }
     }
     else if (type == MONS_STARCURSED_MASS)
@@ -6263,9 +6261,7 @@ void monster::steal_item_from_player()
             new_item.set_holding_monster(*this);
         }
         if (stolen_amount == 1)
-        {
             mprf("%s steals 1 gold piece!", name(DESC_THE).c_str());
-        }
         else
         {
             mprf("%s steals %d gold pieces!", name(DESC_THE).c_str(),

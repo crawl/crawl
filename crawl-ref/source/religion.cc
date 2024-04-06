@@ -2612,9 +2612,7 @@ static void _gain_piety_point()
                   "as your movement slows.";
         }
         else
-        {
             msg = "%s raises the support of your attributes.";
-        }
         simple_god_message(msg.c_str());
         notify_stat_change();
     }
@@ -2775,9 +2773,7 @@ void lose_piety(int pgn)
                                " as your movement quickens.");
         }
         else
-        {
             simple_god_message(" lowers the support of your attributes.");
-        }
         notify_stat_change();
     }
 

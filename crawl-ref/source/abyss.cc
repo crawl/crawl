@@ -2202,9 +2202,11 @@ void abyss_maybe_spawn_xp_exit()
     redraw_screen(); // before the force-more
     update_screen();
     if (stairs)
+    {
         mprf(MSGCH_BANISHMENT,
              "The substance of the Abyss twists violently,"
              " and a gateway leading down appears!");
+    }
     else
         mprf(MSGCH_BANISHMENT,
              "The substance of the Abyss twists violently,"

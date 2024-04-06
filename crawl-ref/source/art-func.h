@@ -691,9 +691,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
         if (defender->is_player())
             msg = localise("You convulse");
         else
-        {
             msg = localise("%s convulses", defender->name(DESC_THE));
-        }
         attack_strength_message(msg, bonus_dam, false);
 
         defender->hurt(attacker, bonus_dam);
@@ -1054,21 +1052,13 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
 
     string msg;
     if (flavour == BEAM_FIRE)
-    {
         do_any_person_message(VMSG_BURN, attacker, defender, punct);
-    }
     else if (flavour == BEAM_COLD)
-    {
         do_any_person_message(VMSG_FREEZE, attacker, defender, punct);
-    }
     else if (flavour == BEAM_ELECTRICITY)
-    {
         do_any_person_message(VMSG_ELECTROCUTE, attacker, defender, punct);
-    }
     else
-    {
         do_any_person_message(VMSG_CRUSH, attacker, defender, punct);
-    }
 
     defender->hurt(attacker, bonus_dam, flavour);
 

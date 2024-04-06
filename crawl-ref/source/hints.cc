@@ -1016,14 +1016,10 @@ static void _describe_portal(const coord_def &gc)
     // For the sake of completeness, though it's very unlikely that a
     // player will find a bazaar entrance before reaching XL 7.
     if (feat == DNGN_ENTER_BAZAAR)
-    {
         print_hint("HINT_SEEN_BAZAAR_PORTAL", glyph_tagstr);
-    }
     // Sewers can appear on D:3-6, ossuaries D:4-8.
     else
-    {
         print_hint("HINT_SEEN_PORTAL", glyph_tagstr);
-    }
 
     print_hint("HINT_SEEN_PORTAL_2", glyph_tagstr);
 }
@@ -1498,9 +1494,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         print_hint("HINT_RETREAT_CASTER");
 
         if (_advise_use_wand())
-        {
             print_hint("HINT_ADVISE_USE_WAND");
-        }
         break;
 
     case HINT_YOU_MUTATED:

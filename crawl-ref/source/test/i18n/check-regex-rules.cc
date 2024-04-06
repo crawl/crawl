@@ -18,9 +18,7 @@ using namespace std;
 static bool is_changed(const string& old_value, const string& new_value)
 {
     if (new_value == old_value)
-    {
         return false;
-    }
     else if (starts_with(old_value, "{"))
     {
         // remove gender hint from old value
@@ -69,24 +67,18 @@ static void _process_input_file(const string& context, const string& filename, b
                 cout << "%%%%" << endl;
             }
             else if (last != line)
-            {
                 cout << line << endl;
-            }
             key.clear();
             value.clear();
             old_value.clear();
             last = line;
         }
         else if (key.empty())
-        {
             key = line;
-        }
         else
         {
             if (!old_value.empty())
-            {
                 old_value += "\n";
-            }
             old_value += line;
         }
     }
