@@ -1,8 +1,33 @@
 ###############################################################################
 #
-# German translations for general messages
+# Translations for general messages
 #
 ###############################################################################
+
+
+##################
+# stringutil.h
+##################
+
+##################
+# mon-data.h
+##################
+
+##################
+# spl-data.h
+##################
+
+##################
+# zap-data.h
+##################
+
+##################
+# feature-data.h
+##################
+
+##################
+# item-prop.cc
+##################
 
 ##################
 # item-name.cc
@@ -10,6 +35,610 @@
 %%%%
 <white>Runes of Zot (</white><%s>%d</%s><white> collected) & Orbs of Power</white>
 <white>Runen von Zot (</white><%s>%d</%s><white> gesammelt) & Kugeln der Macht</white>
+%%%%
+
+##################
+# art-data.h
+##################
+%%%%
+# note: Singing Sword
+It radiates damaging sonic waves as it strikes, especially in combat involving dangerous or numerous foes.
+
+%%%%
+# note: Wrath of Trog
+It causes slowness and exhaustion when equipped.
+
+%%%%
+It extends the wielder's berserk rage when killing foes.
+
+%%%%
+# note: mace of Variability
+chain chaos
+
+%%%%
+Each time it hits an enemy it has a different, random effect.
+
+%%%%
+It occasionally unleashes arcs of chaos on nearby creatures upon striking a foe.
+
+%%%%
+# note: sword of Power
+It occasionally discharges a powerful but inaccurate bolt of energy upon striking a foe, with increased chance the greater the wielder's current health.
+
+%%%%
+# note: staff of Olgreb
+rPois∞
+
+%%%%
+If the wielder is skilled in Evocations, they can envenom those struck by it, dealing poison damage which bypasses armour.
+
+%%%%
+It enhances your poison magic.
+
+%%%%
+It grants immunity to poison.
+
+%%%%
+It can be evoked to radiate toxic energy, with effectiveness depending on Evocations skill.
+
+%%%%
+# note: staff of Wucad Mu
+*channel
+
+%%%%
+It occasionally powers its wielder's spells, but with a chance of causing confusion or draining the wielder's intelligence.
+
+%%%%
+It becomes more likely to activate and less likely to backfire with increased Evocations skill.
+
+%%%%
+# note: Vampire's Tooth
+It occasionally heals its wielder for the full amount of damage dealt when it wounds a living foe.
+
+%%%%
+# note: scythe of Curses
+It inflicts powerful necromantic curses on any living foe it strikes.
+
+%%%%
+# note: sceptre of Torment
+torment
+
+%%%%
+It occasionally torments all nearby living foes when it strikes in combat.
+
+%%%%
+# note: sword of Cerebov
+great serpentine sword
+
+%%%%
+flamberge
+
+%%%%
+It temporarily reduces the fire resistance of those it strikes.
+
+%%%%
+# note: staff of Dispater
+golden staff
+
+%%%%
+It can be evoked to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
+
+%%%%
+# note: sceptre of Asmodeus
+ruby sceptre
+
+%%%%
+It can be evoked to summon fiery demons, with success rate depending on Evocations skill. Those summoned this way will remain friendly only for a limited time.
+
+%%%%
+# note: scimitar of Flaming Death
+sticky flame,
+
+%%%%
+# note: demon blade "Leech"
+vamp,
+
+%%%%
+It heals its wielder for a portion of the damage dealt every time it strikes a living foe.
+
+%%%%
+# note: dagger of Chilly Death
+flash freeze,
+
+%%%%
+# note: scythe "Finisher"
+eviscerate
+
+%%%%
+It may eviscerate those it strikes, slaying them instantly, with a decreasing chance against stronger foes.
+
+%%%%
+# note: glaive of the Guard
+spectral,
+
+%%%%
+When it strikes, its spirit leaps out and fights alongside the wielder.
+
+%%%%
+# note: zealot's sword
+Whenever the wielder enters a berserk rage, their allies are berserked alongside them.
+
+%%%%
+# note: arbalest "Damnation"
+damnation,
+
+%%%%
+Any ammunition fired from it explodes in a burst of damnation on striking a foe, dealing damage which bypasses armour.
+
+%%%%
+# note: morningstar "Eos"
+It grants its wielder a halo, increasing accuracy against those within it.
+
+%%%%
+# note: spear of the Botono
+Hex
+
+%%%%
+# note: Elemental Staff
+If the wielder is skilled in Evocations, they can discharge powerful blasts of elemental energy when striking with it.
+
+%%%%
+It enhances your fire, ice, earth and air magic.
+
+%%%%
+# note: heavy crossbow "Sniper"
+heavy crossbow
+
+%%%%
+Acc+∞
+
+%%%%
+Any ammunition fired from it never misses its target.
+
+%%%%
+# note: blowgun of the Assassin
+stab,
+
+%%%%
+# note: lance "Wyrmbane"
+lance
+
+%%%%
+slay drac,
+
+%%%%
+It inflicts extra damage against dragons and draconians.
+
+%%%%
+# note: Spriggan's Knife
+knife
+
+%%%%
+It is more effective when stabbing unaware enemies, treating them as though they were completely helpless.
+
+%%%%
+# note: plutonium sword
+It occasionally inflicts wild transmutation effects on those it strikes, inflicting malmutation or extra damage, or polymorphing them into a new form.
+
+%%%%
+# note: great mace "Undeadhunter"
+disrupt,
+
+%%%%
+It inflicts significantly more damage against the undead.
+
+%%%%
+# note: whip "Snakebite"
+curare,
+
+%%%%
+It occasionally inflicts asphyxiating poison on those it strikes, dealing poison damage and causing slowness.
+
+%%%%
+# note: captain's cutlass
+cutlass
+
+%%%%
+disarm
+
+%%%%
+It may disarm weapon-wielding foes when striking them, dealing extra damage in the process.
+
+%%%%
+# note: storm bow
+Any ammunition fired by it passes through the targets it hits, potentially hitting all targets in its path until it reaches maximum range.
+
+%%%%
+# note: cloak of the Thief
+*Fog
+
+%%%%
+It may release a thick cloud of smoke when the wearer is hurt.
+
+%%%%
+# note: hood of the Assassin
+Detection Stab+
+
+%%%%
+It allows the wearer to sense nearby creatures.
+
+%%%%
+It allows the wearer to make particularly effective stabbing attacks against helpless or unaware enemies with any weapon.
+
+%%%%
+# note: skin of Zhor
+*Englaciate
+
+%%%%
+It radiates cold, occasionally slowing all nearby creatures who are not resistant to cold.
+
+%%%%
+# note: salamander hide armour
+Flames
+
+%%%%
+It surrounds you with a cloud of flames.
+
+%%%%
+It grants immunity to clouds of flame.
+
+%%%%
+It enhances your fire magic.
+
+%%%%
+# note: robe of Folly
+Brilliance Will-∞
+
+%%%%
+It increases the power of your magical spells.
+
+%%%%
+It halves the magic cost of your spells (rounding up).
+
+%%%%
+It reduces your willpower to zero.
+
+%%%%
+# note: robe of Night
+Dark
+
+%%%%
+It shrouds the wearer in darkness, reducing the range at which they can see and be seen by others.
+
+%%%%
+# note: fencer's gloves
+Riposte
+
+%%%%
+It allows the wearer to riposte with any weapon, or to riposte more often with a long blade, swiftly retaliating against a missed attack.
+
+%%%%
+# note: cloak of Starlight
+*Dazzle
+
+%%%%
+It may blind those who miss an attack against the wearer in melee combat.
+
+%%%%
+# note: ratskin cloak
+When the wearer is hurt, rats may emerge from it to assist them.
+
+%%%%
+# note: shield of the Gong
+It is deafeningly noisy when blocking attacks.
+
+%%%%
+# note: amulet of the Air
+Inacc Air
+
+%%%%
+It reduces the accuracy of all your attacks.
+
+%%%%
+It enhances your air magic.
+
+%%%%
+# note: ring of Shadows
+Umbra
+
+%%%%
+It surrounds you with an aura of shadow, increasing your stealth and reducing the accuracy of all within it (including the wearer).
+
+%%%%
+# note: necklace of Bloodlust
+It extends the wearer's berserk rage when killing foes.
+
+%%%%
+# note: ring of the Hare
+%sring of the Hare
+
+%%%%
+# note: ring of the Tortoise
+%sring of the Tortoise
+
+%%%%
+# note: robe of Clouds
++Thunder rCloud
+
+%%%%
+It can be evoked to surround the wearer with storm clouds, with success rate depending on Evocations skill.
+
+%%%%
+# note: obsidian axe
+It occasionally summons demons to assist the wielder when it strikes in combat.
+
+%%%%
+Its wielder is mesmerised by any visible foes.
+
+%%%%
+It cannot be unequipped while any foes are visible.
+
+%%%%
+# note: lightning scales
+swift,
+
+%%%%
+It allows the wearer to cover ground more swiftly.
+
+%%%%
+# note: autumn katana
+katana
+
+%%%%
+# note: shillelagh "Devastator"
+shillelagh
+
+%%%%
+shatter
+
+%%%%
+It releases a powerful concussive burst when it strikes, dealing extra damage to the target and all other foes adjacent to them.
+
+%%%%
+# note: dragonskin cloak
+opalescent scaly cloak
+
+%%%%
+It grants the wearer a chance to resist fire, cold, poison, electricity, acid, and negative energy.
+
+%%%%
+# note: macabre finger necklace
+It enables you to equip an extra ring.
+
+%%%%
+# note: dark maul
+maul
+
+%%%%
+# note: hat of the High Council
+Wiz-
+
+%%%%
+# note: arc blade
+discharge,
+
+%%%%
+It occasionally unleashes powerful arcs of lightning upon striking a foe. These may arc to other adjacent creatures (including the wielder, but dealing reduced damage to them) before grounding out.
+
+%%%%
+# note: demon whip "Spellbinder"
+It unleashes wild and unpredictable magical effects upon striking a wizard or a creature with magical abilities.
+
+%%%%
+# note: lajatang of Order
+silver,
+
+%%%%
+It inflicts extra damage upon those it strikes, and deals substantially increased damage to chaotic, mutated and magically transformed beings.
+
+%%%%
+# note: great mace "Firestarter"
+inner flame,
+
+%%%%
+It burns those it strikes, dealing additional fire damage.
+
+%%%%
+It fills those it strikes with an explosive inner flame.
+
+%%%%
+# note: Majin-Bo
+It occasionally heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell.
+
+%%%%
+Its wielder's spells cost health as well as magical power.
+
+%%%%
+# note: pair of quick blades "Gyre" and "Gimble"
+pair of quick blades
+
+%%%%
+# note: Maxwell's etheric cage
+RegenMP+
+
+%%%%
+# note: crown of Eternal Torment
+rTorment HP--
+
+%%%%
+# note: robe of Vines
+NoPotionHeal
+
+%%%%
+Its wearer cannot be healed by potions.
+
+%%%%
+# note: Kryia's mail coat
+PotionHeal*2
+
+%%%%
+Potions are twice as effective at healing its wearer.
+
+%%%%
+# note: frozen axe "Frostbite"
+freezing cloud,
+
+%%%%
+It freezes those it strikes, dealing additional cold damage. It can also slow down cold-blooded creatures.
+
+%%%%
+It occasionally leaves clouds of freezing vapour upon striking a foe.
+
+%%%%
+It grants immunity to clouds of freezing vapour.
+
+%%%%
+# note: warlock's mirror
+It can block and reflect piercing ranged attacks and magical attacks against the wielder's willpower.
+
+%%%%
+# note: Maxwell's thermic engine
+freeze,
+
+%%%%
+It becomes more effective when it hits something. This effect fades over time.
+
+%%%%
+# note: demon trident "Rift"
+reach+
+
+%%%%
+It can reach especially far, and its reaching attacks ignore other creatures in the way.
+
+%%%%
+# note: staff of Battle
+It enhances your conjuration magic.
+
+%%%%
+It summons a battlesphere in combat, with strength depending on Conjurations skill.
+
+%%%%
+# note: Cigotuvi's embrace
+It gathers nearby corpses to temporarily increase the armour it provides.
+
+%%%%
+It protects you from foul pestilence.
+
+%%%%
+# note: seven-league boots
+Rampage+∞
+
+%%%%
+Its wearer moves as far as possible in that direction when moving towards enemies.
+
+%%%%
+
+##################
+# species-data.h
+##################
+%%%%
+You are resistant to damage.
+
+%%%%
+You can heal yourself by infusing magical energy.
+
+%%%%
+damage resistance
+
+%%%%
+heal wounds
+
+%%%%
+You are immune to sickness and miasma.
+
+%%%%
+sickness immunity
+
+%%%%
+You can breathe wild blasts of lightning.
+
+%%%%
+breathe lightning
+
+%%%%
+You can breathe blasts of noxious fumes.
+
+%%%%
+breathe noxious fumes
+
+%%%%
+You can breathe blasts of scalding, opaque steam.
+
+%%%%
+breathe steam
+
+%%%%
+You can breathe bolts of dispelling energy.
+
+%%%%
+breathe power
+
+%%%%
+You can breathe blasts of fire.
+
+%%%%
+breathe fire
+
+%%%%
+You can breathe waves of freezing cold which knock back foes.
+
+%%%%
+breathe frost
+
+%%%%
+You can spit globs of acid.
+
+%%%%
+spit acid
+
+%%%%
+You sit before the altar of %s.
+
+%%%%
+You cannot be hasted, slowed, berserked, paralysed or teleported.
+
+%%%%
+You can dig through walls and to a lower floor.
+
+%%%%
+permanent stasis
+
+%%%%
+dig shafts and tunnels
+
+%%%%
+You thrive by killing the living.
+
+%%%%
+You coil in front of the altar of %s.
+
+%%%%
+You cannot wear most types of armour.
+
+%%%%
+almost no armour
+
+%%%%
+You curl up in front of the altar of %s.
+
+%%%%
+Yak
+
+%%%%
+
+##################
+# job-data.h
+##################
+
+##################
+# form-data.h
+##################
+%%%%
+stationary
+
+%%%%
+storm
+
 %%%%
 
 ##################
@@ -968,6 +1597,9 @@ Das Schwert sagt: "Hallo! Ich bin das singende Schwert!"
 %%%%
 The Singing Sword hums in delight!
 Das singende Schwert summt vor Freude!
+%%%%
+Singing Sword
+
 %%%%
 The Singing Sword sighs.
 Das singende Schwert seufzt.
@@ -19179,6 +19811,9 @@ Ihr fühlt eine Welle unheiliger Energie.
 %%%%
 Your body is wracked with pain!
 Euer Körper ist von Schmerz geplagt!
+%%%%
+sceptre of Torment
+
 %%%%
 Xom's torment
 Xoms Qual
