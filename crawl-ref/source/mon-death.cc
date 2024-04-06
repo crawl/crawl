@@ -2005,7 +2005,15 @@ item_def* monster_die(monster& mons, killer_type killer,
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
                  "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
         }
-        rime_pillar_fineff::schedule(mons.pos(), random_range(3, 11) * BASELINE_DELAY);
+        death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
+                                     mons.pos(),
+                                     random_range(3, 11) * BASELINE_DELAY);
+    }
+    else if (mons.has_ench(ENCH_MAGNETISED) && mons.type != MONS_ELECTROFERRIC_VORTEX)
+    {
+        death_spawn_fineff::schedule(MONS_ELECTROFERRIC_VORTEX,
+                                     mons.pos(),
+                                     random_range(3, 5) * BASELINE_DELAY);
     }
 
     if (monster_explodes(mons))
@@ -2025,6 +2033,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_FIRE_VORTEX
              || mons.type == MONS_SPATIAL_VORTEX
              || mons.type == MONS_TWISTER
+             || mons.type == MONS_ELECTROFERRIC_VORTEX
              || (mons.type == MONS_FOXFIRE && mons.steps_remaining == 0))
     {
         if (!silent && !mons_reset && !was_banished)

@@ -3348,8 +3348,11 @@ int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
     if (ignore_temporary)
         return max(ev, 0);
 
-    if (paralysed() || petrified() || petrifying() || asleep())
+    if (paralysed() || petrified() || petrifying() || asleep()
+        || has_ench(ENCH_MAGNETISED))
+    {
         return 0;
+    }
 
     if (caught())
         ev /= 5;

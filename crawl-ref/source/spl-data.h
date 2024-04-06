@@ -3874,6 +3874,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MAGNAVOLT, "Magnavolt",
+    spschool::air | spschool::earth,
+    spflag::target | spflag::needs_tracer | spflag::destructive,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_MAGNAVOLT,
+},
+
+{
     SPELL_FULSOME_FUSILLADE, "Fulsome Fusillade",
     spschool::alchemy | spschool::conjuration,
     spflag::area | spflag::destructive,

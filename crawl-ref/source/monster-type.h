@@ -338,6 +338,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_THERMIC_DYNAMO,
     MONS_WILL_O_THE_WISP,
+    MONS_ELECTROFERRIC_VORTEX,
 #else
     MONS_VAPOUR,
 
@@ -1247,6 +1248,7 @@ enum monster_type                      // env.mons[].type
     MONS_PILE_OF_DEBRIS,
     MONS_PILLAR_OF_RIME,
     MONS_SEISMIC_CANNON,
+    MONS_ELECTROFERRIC_VORTEX,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

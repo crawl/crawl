@@ -1370,6 +1370,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INSTANT_CLEAVE:
     case ENCH_PROTEAN_SHAPESHIFTING:
     case ENCH_CURSE_OF_AGONY:
+    case ENCH_MAGNETISED:
         decay_enchantment(en);
         break;
 
@@ -1498,6 +1499,9 @@ void monster::apply_enchantment(const mon_enchant &me)
 
                 switch (type)
                 {
+                    case MONS_ELECTROFERRIC_VORTEX:
+                        mprf("%s dissipates.", name(DESC_THE, false).c_str());
+                        break;
                     case MONS_PILE_OF_DEBRIS:
                         mprf("%s collapses into dust.", name(DESC_THE, false).c_str());
                         break;
@@ -2128,6 +2132,7 @@ static const char *enchant_names[] =
     "channel_searing_ray",
     "touch_of_beogh", "vengeance_target",
     "rimeblight",
+    "magnetised",
     "buggy", // NUM_ENCHANTMENTS
 };
 

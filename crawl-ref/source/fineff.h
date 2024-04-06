@@ -575,21 +575,22 @@ protected:
     const god_type god;
 };
 
-class rime_pillar_fineff : public final_effect
+class death_spawn_fineff : public final_effect
 {
 public:
     bool mergeable(const final_effect &) const override { return false; }
     void fire() override;
 
-    static void schedule(coord_def pos, int dur)
+    static void schedule(monster_type mon_type, coord_def pos, int dur)
     {
-        final_effect::schedule(new rime_pillar_fineff(pos, dur));
+        final_effect::schedule(new death_spawn_fineff(mon_type, pos, dur));
     }
 protected:
-    rime_pillar_fineff(coord_def pos, int dur)
-        : final_effect(0, 0, pos), duration(dur)
+    death_spawn_fineff(monster_type type, coord_def pos, int dur)
+        : final_effect(0, 0, pos), mon_type(type), duration(dur)
     {
     }
+    const monster_type mon_type;
     const int duration;
 };
 

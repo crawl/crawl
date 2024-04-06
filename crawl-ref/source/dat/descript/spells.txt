@@ -933,6 +933,16 @@ Magic Dart spell
 
 Fires a small bolt of magical energy which never misses.
 %%%%
+Magnavolt spell
+
+Envelops a target in a thin layer of magnetically charged metal fragments, then
+unleashes a powerful surge of electricity that arcs unerringly towards every
+visible target coated in these fragments.
+
+Magnetised creatures are additionally unable to evade attacks and will leave
+behind a short-lived vortex of electrified metal upon death that will continues
+to serve as a lightning rod for this spell.
+%%%%
 Major Destruction spell
 
 Shoots a random harmful beam or explosion at the targeted creature.

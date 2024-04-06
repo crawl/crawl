@@ -507,6 +507,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Maxwell's Memoranda
     SPELL_PILEDRIVER,
     SPELL_ARCJOLT,
+    SPELL_MAGNAVOLT,
     SPELL_MAXWELLS_COUPLING,
 },
 

@@ -2284,6 +2284,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_RETREATING, TILEI_RETREAT  },
     { MB_TOUCH_OF_BEOGH, TILEI_TOUCH_OF_BEOGH },
     { MB_VENGEANCE_TARGET, TILEI_VENGEANCE_TARGET },
+    { MB_MAGNETISED, TILEI_BULLSEYE },  // Placeholder
     { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
 };
 

@@ -2051,6 +2051,22 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 },
 
 {
+    ZAP_MAGNAVOLT,
+    "arc of electricity",
+    200,
+    new dicedef_calculator<3, 9, 1, 8>,
+    new tohit_calculator<11, 1, 20>,
+    nullptr,
+    nullptr,
+    LIGHTCYAN,
+    false,
+    BEAM_ELECTRICITY,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
+{
     ZAP_FULSOME_FUSILLADE,
     "volatile concoction",
     200,

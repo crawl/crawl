@@ -967,9 +967,9 @@ void dismiss_divine_allies_fineff::fire()
         dismiss_god_summons(god);
 }
 
-void rime_pillar_fineff::fire()
+void death_spawn_fineff::fire()
 {
-    if (monster *pillar = create_monster(mgen_data(MONS_PILLAR_OF_RIME,
+    if (monster *pillar = create_monster(mgen_data(mon_type,
                                                    BEH_HOSTILE, posn,
                                                    MHITNOT, MG_FORCE_PLACE),
                                          false))

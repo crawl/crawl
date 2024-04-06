@@ -168,6 +168,10 @@ int get_warp_space_chance(int pow);
 dice_def collision_damage(int pow, bool random);
 string describe_collision_dam(dice_def dice);
 
+vector<coord_def> get_magnavolt_targets();
+vector<coord_def> get_magnavolt_beam_paths(vector<coord_def>& targets);
+spret cast_magnavolt(coord_def target, int pow, bool fail);
+
 spret cast_fulsome_fusillade(int pow, bool fail);
 void fire_fusillade();
 

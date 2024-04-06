@@ -1398,6 +1398,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_GELLS_GAVOTTE:
         return make_unique<targeter_gavotte>(&you);
 
+    case SPELL_MAGNAVOLT:
+        return make_unique<targeter_magnavolt>(&you, range);
+
     case SPELL_SEISMIC_SHOCKWAVE:
         return make_unique<targeter_seismic_shockwave>(&you, range);
 
@@ -2577,6 +2580,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_GELLS_GAVOTTE:
         return cast_gavotte(powc, beam.target - you.pos(), fail);
+
+    case SPELL_MAGNAVOLT:
+        return cast_magnavolt(beam.target, powc, fail);
 
     case SPELL_FULSOME_FUSILLADE:
         return cast_fulsome_fusillade(powc, fail);

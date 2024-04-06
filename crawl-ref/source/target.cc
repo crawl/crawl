@@ -2425,6 +2425,54 @@ aff_type targeter_gavotte::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
+    targeter_smite(act, _range, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_magnavolt::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    if (!monster_at(a) || !you.can_see(*monster_at(a)))
+        return notify_fail("You don't see a valid target there.");
+
+    return true;
+}
+
+bool targeter_magnavolt::set_aim(coord_def a)
+{
+    beam_targets.clear();
+    beam_paths.clear();
+
+    if (!targeter_smite::set_aim(a))
+        return false;
+
+    beam_targets = get_magnavolt_targets();
+    beam_targets.push_back(a);
+    beam_paths = get_magnavolt_beam_paths(beam_targets);
+
+    return true;
+}
+
+aff_type targeter_magnavolt::is_affected(coord_def loc)
+{
+    for (coord_def pos : beam_targets)
+    {
+        if (loc == pos)
+            return AFF_YES;
+    }
+
+    for (coord_def pos : beam_paths)
+    {
+        if (loc == pos)
+            return AFF_MAYBE;
+    }
+
+    return AFF_NO;
+}
+
 targeter_seismic_shockwave::targeter_seismic_shockwave(const actor* act, int _cannon_range) :
     targeter_smite(act, LOS_RADIUS, 2, 2, true, nullptr), cannon_range(_cannon_range)
 {

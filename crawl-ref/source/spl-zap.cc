@@ -142,6 +142,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_GLACIAL_BREATH, ZAP_GLACIAL_BREATH },
     { SPELL_MUD_BREATH, ZAP_MUD_BREATH },
     { SPELL_GALVANIC_BREATH, ZAP_GALVANIC_BREATH },
+    { SPELL_MAGNAVOLT, ZAP_MAGNAVOLT },
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },

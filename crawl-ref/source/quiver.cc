@@ -1071,6 +1071,7 @@ namespace quiver
                                           // that are clutched, and spell
                                           // targeting handles this case.
         case SPELL_APPORTATION: // Apport doesn't target monsters at all
+        case SPELL_MAGNAVOLT:
             return true;
         default:
             return _spell_needs_manual_targeting(s);

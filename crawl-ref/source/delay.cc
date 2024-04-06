@@ -56,6 +56,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "sound.h"
+#include "spl-damage.h"
 #include "spl-selfench.h"
 #include "spl-transloc.h" // attract_monster
 #include "spl-util.h"
