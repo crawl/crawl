@@ -3022,7 +3022,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (one_chance_in(3))
         {
-            if (attk_type != AT_SPORE)
+            if (attk_type != AT_SPORE && defender_visible)
             {
                 mprf("%s %s afflicted by dizzying energies!",
                      defender->name(DESC_THE).c_str(),
