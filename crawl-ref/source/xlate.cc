@@ -37,7 +37,6 @@ string cnxlate(const string &context,
 #else
 //// compile with translation logic ////
 
-#include <clocale>
 #include <codecvt>
 #include <regex>
 
