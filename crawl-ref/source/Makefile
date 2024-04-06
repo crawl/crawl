@@ -1522,7 +1522,7 @@ endif
 		do $(COPY) dat/descript/$$LANG/*.txt $(datadir_fp)/dat/descript/$$LANG; \
 	done
 	for LANG in $(LANGS); \
-		$(COPY) dat/translate/$$LANG/*.txt $(datadir_fp)/dat/translate/$$LANG; \
+		do $(COPY) dat/translate/$$LANG/*.txt $(datadir_fp)/dat/translate/$$LANG; \
 	done
 	mkdir -p $(datadir_fp)/dat/dist_bones
 	$(COPY) dat/dist_bones/* $(datadir_fp)/dat/dist_bones/
