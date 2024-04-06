@@ -21,7 +21,7 @@ static bool is_changed(const string& old_value, const string& new_value)
     {
         return false;
     }
-    else if (starts_with(old_value, "{")) 
+    else if (starts_with(old_value, "{"))
     {
         // remove gender hint from old value
         size_t pos = old_value.find('}');
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 
     if (infile_name.empty())
         arg_error = true;
-    
+
     if (arg_error)
     {
         cerr << "Usage: check-regex-rules <context> <infile> [--show-all]" << endl;
