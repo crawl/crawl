@@ -5,25 +5,11 @@
 ###############################################################################
 
 ##################
-# item-prop.cc
-##################
-%%%%
-The curse is absorbed by %s.
-Der Fluch wird von {dat}%s absorbiert.
-%%%%
-%s glows black for a moment.
-%s leuchtet für einen Moment schwarz.
-%%%%
-
-##################
 # item-name.cc
 ##################
 %%%%
 <white>Runes of Zot (</white><%s>%d</%s><white> collected) & Orbs of Power</white>
 <white>Runen von Zot (</white><%s>%d</%s><white> gesammelt) & Kugeln der Macht</white>
-%%%%
-Bad name for item name cache: %s
-Ungültiger Name für Elementnamen-Cache: %s
 %%%%
 
 ##################
