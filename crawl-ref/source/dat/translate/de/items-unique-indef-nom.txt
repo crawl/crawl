@@ -7,31 +7,9 @@
 ###############################################################################
 
 #################################
-# Appearance when unidientified
+# Unrand Artefacts
 #################################
-
-# a few have a special appearance
-%%%%
-# sword of Cerebov
-# the English description says serpentine, but in the tile, the blade is shaped like flames
-a great serpentine sword
-{n}ein großes, flammenförmiges Schwert
-%%%%
-# staff of Dispater
-a golden staff
-{m}ein goldener Stecken
-%%%%
-# sceptre of Asmodeus
-a ruby sceptre
-{n}ein Rubin-Zepter
-%%%%
-# dragonskin cloak
-an opalescent scaly cloak
-{m}ein schillernder schuppiger Umhang
-%%%%
-
-# the rest just look like what they are,
-# except they have an indefinite article instead of a definite article
+# note: Adjectives not needed, since this form only used when unidentified
 %%%%
 a Singing Sword
 {n}ein singende Schwert
@@ -392,6 +370,32 @@ a pair of seven-league boots
 a horn of Geryon
 {n}ein Horn von Geryon
 %%%%
+
+#################################
+# Appearance when unidentified
+#################################
+
+# a few have a special appearance when unidentified
+%%%%
+# sword of Cerebov
+# the English description says serpentine, but in the tile, the blade is shaped like flames
+a great serpentine sword
+{n}ein großes, flammenförmiges Schwert
+%%%%
+# staff of Dispater
+a golden staff
+{m}ein goldener Stecken
+%%%%
+# sceptre of Asmodeus
+a ruby sceptre
+{n}ein Rubin-Zepter
+%%%%
+# dragonskin cloak
+an opalescent scaly cloak
+{m}ein schillernder schuppiger Umhang
+%%%%
+
+# the rest just look like what they are
 
 #################################
 # Special base types for some unrands

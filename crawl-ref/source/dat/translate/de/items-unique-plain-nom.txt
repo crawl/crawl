@@ -380,10 +380,10 @@ Horn von Geryon
 %%%%
 
 #################################
-# Appearance when unidientified
+# Appearance when unidentified
 #################################
 
-# a few have a special appearance
+# a few have a special appearance when unidentified
 %%%%
 # sword of Cerebov
 # the English description says serpentine, but in the tile, the blade is shaped like flames
