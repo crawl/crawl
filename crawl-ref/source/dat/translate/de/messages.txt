@@ -42,15 +42,15 @@
 %%%%
 # note: brand description for Singing Sword
 It radiates damaging sonic waves as it strikes, especially in combat involving dangerous or numerous foes.
-
+Es strahlt schädliche Schallwellen aus, wenn es zuschlägt, vor allem im Kampf mit gefährlichen oder zahlreichen Gegnern.
 %%%%
 # note: description for Wrath of Trog
 It causes slowness and exhaustion when equipped.
-
+Sie verursacht Langsamkeit und Erschöpfung, wenn sie handgehabt ist.
 %%%%
 # note: description for Wrath of Trog
 It extends the wielder's berserk rage when killing foes.
-
+Sie verlängert die Berserkerwut des Anwenders beim Töten von Gegnern.
 %%%%
 # note: annotation for mace of Variability
 chain chaos
@@ -58,15 +58,15 @@ Kettenchaos
 %%%%
 # note: brand description for mace of Variability
 Each time it hits an enemy it has a different, random effect.
-
+Jedes Mal, wenn er einen Gegner trifft, hat er eine andere, zufällige Wirkung.
 %%%%
 # note: brand description for mace of Variability
 It occasionally unleashes arcs of chaos on nearby creatures upon striking a foe.
-
+Wenn er einen Feind trifft, entfesselt er gelegentlich Bögen des Chaos auf Kreaturen in der Nähe.
 %%%%
 # note: brand description for sword of Power
 It occasionally discharges a powerful but inaccurate bolt of energy upon striking a foe, with increased chance the greater the wielder's current health.
-
+Es entlädt gelegentlich einen mächtigen, aber ungenauen Energieblitz, wenn es einen Feind trifft, wobei die Wahrscheinlichkeit steigt, je höher die aktuelle Gesundheit des Anwenders ist.
 %%%%
 # note: annotation for staff of Olgreb
 rPois∞
@@ -74,19 +74,19 @@ rGift∞
 %%%%
 # note: description for staff of Olgreb
 It enhances your poison magic.
-
+Er verstärkt Eure Giftmagie.
 %%%%
 # note: description for staff of Olgreb
 It grants immunity to poison.
-
+Er verleiht Immunität gegen Gift.
 %%%%
 # note: description for staff of Olgreb
 It can be evoked to radiate toxic energy, with effectiveness depending on Evocations skill.
-
+Er kann evoziert werden, um giftige Energie auszustrahlen, wobei die Wirksamkeit von der Evokationsfertigkeit abhängt.
 %%%%
 # note: brand description for staff of Olgreb
 If the wielder is skilled in Evocations, they can envenom those struck by it, dealing poison damage which bypasses armour.
-
+Wenn der Träger in Evokationen geübt ist, kann er diejenigen, die von ihm getroffen werden, mit einem Giftschaden belegen, der die Rüstung umgeht.
 %%%%
 # note: annotation for staff of Wucad Mu
 *channel
@@ -94,19 +94,19 @@ If the wielder is skilled in Evocations, they can envenom those struck by it, de
 %%%%
 # note: description for staff of Wucad Mu
 It occasionally powers its wielder's spells, but with a chance of causing confusion or draining the wielder's intelligence.
-
+Gelegentlich verleiht er den Zaubern seines Anwenders Kraft, kann aber auch Verwirrung stiften oder die Intelligenz des Anwenders schwächen.
 %%%%
 # note: description for staff of Wucad Mu
 It becomes more likely to activate and less likely to backfire with increased Evocations skill.
-
+Mit zunehmender Evokationsfertigkeit wird es wahrscheinlicher, dass er aktiviert wird und weniger wahrscheinlich, dass er zurückschlägt.
 %%%%
 # note: brand description for Vampire's Tooth
 It occasionally heals its wielder for the full amount of damage dealt when it wounds a living foe.
-
+Wenn er einen lebenden Feind verwundet, heilt er seinen Träger gelegentlich für den gesamten verursachten Schaden.
 %%%%
 # note: brand description for scythe of Curses
 It inflicts powerful necromantic curses on any living foe it strikes.
-
+Sie fügt jedem lebenden Feind, den sie trifft, mächtige nekromantische Flüche zu.
 %%%%
 # note: annotation for sceptre of Torment
 torment
@@ -114,23 +114,23 @@ Qual
 %%%%
 # note: brand description for sceptre of Torment
 It occasionally torments all nearby living foes when it strikes in combat.
-
+Es quält gelegentlich alle lebenden Feinde in der Nähe, wenn es im Kampf zuschlägt.
 %%%%
 # note: brand description for sword of Cerebov
 It temporarily reduces the fire resistance of those it strikes.
-
+Es reduziert vorübergehend die Feuerresistenz derjenigen, die es trifft.
 %%%%
 # note: description for staff of Dispater
 It can be evoked to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
-
+Er kann evoziert werden, um Verdammnis auf Kosten von Gesundheit und Magie zu schleudern, wobei die Stärke von der Evokationsfertigkeit abhängt.
 %%%%
 # note: description for sceptre of Asmodeus
 It can be evoked to summon fiery demons, with success rate depending on Evocations skill. Those summoned this way will remain friendly only for a limited time.
-
+Er kann evoziert werden, um feurige Dämonen herbeizurufen, wobei die Erfolgsquote von der Evokationsfertigkeit abhängt. Die Dämonen bleiben nur für eine begrenzte Zeit freundlich.
 %%%%
 # note: brand description for demon blade "Leech"
 It heals its wielder for a portion of the damage dealt every time it strikes a living foe.
-
+Jedes Mal, wenn sie einen lebenden Feind trifft, heilt sie ihren Träger für einen Teil des verursachten Schadens.
 %%%%
 # note: annotation for scythe "Finisher"
 eviscerate
@@ -138,7 +138,7 @@ ausweiden
 %%%%
 # note: brand description for scythe "Finisher"
 It may eviscerate those it strikes, slaying them instantly, with a decreasing chance against stronger foes.
-
+Sie kann diejenigen, die sie trifft, ausweiden und sofort töten, wobei die Chance gegen stärkere Feinde sinkt.
 %%%%
 # note: annotation for glaive of the Guard
 spectral
@@ -146,19 +146,19 @@ spektral
 %%%%
 # note: brand description for glaive of the Guard
 When it strikes, its spirit leaps out and fights alongside the wielder.
-
+Wenn sie zuschlägt, springt ihr Geist hervor und kämpft an der Seite des Anwenders.
 %%%%
 # note: description for zealot's sword
 Whenever the wielder enters a berserk rage, their allies are berserked alongside them.
-
+Wenn der Anwender in einen Berserkerwutanfall gerät, werden auch seine Verbündeten vom Berserker angegriffen.
 %%%%
 # note: brand description for arbalest "Damnation"
 Any ammunition fired from it explodes in a burst of damnation on striking a foe, dealing damage which bypasses armour.
-
+Jede Munition, die aus der Waffe abgefeuert wird, wenn sie einen Feind trifft, erzeugt eine Explosion der Verdammnis, die Schaden verursacht, der Rüstungen umgeht.
 %%%%
 # note: description for morningstar "Eos"
 It grants its wielder a halo, increasing accuracy against those within it.
-
+Er verleiht seinem Handhaber einen Heiligenschein, der die Treffergenauigkeit gegen diejenigen erhöht, die sich innerhalb des Heiligenscheins befinden.
 %%%%
 # note: annotation for spear of the Botono
 Hex
@@ -166,11 +166,11 @@ Verhex
 %%%%
 # note: brand description for Elemental Staff
 If the wielder is skilled in Evocations, they can discharge powerful blasts of elemental energy when striking with it.
-
+Wenn der Handhaber damit zuschlägt, und in Evokation geübt ist, kann er mächtige Stöße elementarer Energie entladen.
 %%%%
 # note: description for Elemental Staff
 It enhances your fire, ice, earth and air magic.
-
+Er verstärkt Eure Feuer-, Eis-, Erd- und Luftmagie.
 %%%%
 # note: annotation for heavy crossbow "Sniper"
 Acc+∞
@@ -178,7 +178,7 @@ Gen+∞
 %%%%
 # note: description for heavy crossbow "Sniper"
 Any ammunition fired from it never misses its target.
-
+Munition, die damit verschossen wird, verfehlt nie ihr Ziel.
 %%%%
 # note: annotation for blowgun of the Assassin
 stab
@@ -186,15 +186,15 @@ stechen
 %%%%
 # note: brand description for lance "Wyrmbane"
 It inflicts extra damage against dragons and draconians.
-
+Sie fügt Drachen und Drakoniern zusätzlichen Schaden zu.
 %%%%
 # note: description for Spriggan's Knife
 It is more effective when stabbing unaware enemies, treating them as though they were completely helpless.
-
+Wenn es auf ahnungslose Feinde einsticht ist es effektiver, und sie so behandelt, als wären sie völlig hilflos.
 %%%%
 # note: brand description for plutonium sword
 It occasionally inflicts wild transmutation effects on those it strikes, inflicting malmutation or extra damage, or polymorphing them into a new form.
-
+Gelegentlich fügt es ihren Gegnern wilde Transmutationseffekte zu, indem sie ihnen Missmutation oder zusätzlichen Schaden zufügt oder sie in eine neue Form polymorphisiert.
 %%%%
 # note: annotation for great mace "Undeadhunter"
 disrupt
@@ -202,11 +202,11 @@ Zusammenbruch
 %%%%
 # note: brand description for great mace "Undeadhunter"
 It inflicts significantly more damage against the undead.
-
+Untoten fügt er deutlich mehr Schaden zu.
 %%%%
 # note: brand description for whip "Snakebite"
 It occasionally inflicts asphyxiating poison on those it strikes, dealing poison damage and causing slowness.
-
+Gelegentlich fügt sie Gegenern erstickendes Gift zu, das Giftschaden verursacht und sie verlangsamt.
 %%%%
 # note: annotation for captain's cutlass
 disarm
@@ -214,11 +214,11 @@ entwaffnen
 %%%%
 # note: brand description for captain's cutlass
 It may disarm weapon-wielding foes when striking them, dealing extra damage in the process.
-
+Es kann waffenführende Gegner entwaffnen, wenn es sie trifft, und dabei zusätzlichen Schaden verursachen.
 %%%%
 # note: brand description for storm bow
 Any ammunition fired by it passes through the targets it hits, potentially hitting all targets in its path until it reaches maximum range.
-
+Jede Pfeil, die er abfeuert, geht durch die getroffenen Ziele hindurch und trifft möglicherweise alle Ziele in seinem Weg, bis er seine maximale Reichweite erreicht.
 %%%%
 # note: annotation for cloak of the Thief
 *Fog
@@ -226,7 +226,7 @@ Any ammunition fired by it passes through the targets it hits, potentially hitti
 %%%%
 # note: description for cloak of the Thief
 It may release a thick cloud of smoke when the wearer is hurt.
-
+Er kann eine dicke Rauchwolke freisetzen, wenn der Träger verletzt wird.
 %%%%
 # note: annotation for hood of the Assassin
 Detection Stab+
@@ -234,11 +234,11 @@ Aufspüren Stich+
 %%%%
 # note: description for hood of the Assassin
 It allows the wearer to sense nearby creatures.
-
+Sie ermöglicht es dem Träger, Kreaturen in der Nähe zu spüren.
 %%%%
 # note: description for hood of the Assassin
 It allows the wearer to make particularly effective stabbing attacks against helpless or unaware enemies with any weapon.
-
+Sie erlaubt es dem Träger, besonders effektive Stichangriffe gegen hilflose oder ahnungslose Feinde mit jeder Waffe durchzuführen.
 %%%%
 # note: annotation for skin of Zhor
 *Englaciate
@@ -246,7 +246,7 @@ It allows the wearer to make particularly effective stabbing attacks against hel
 %%%%
 # note: description for skin of Zhor
 It radiates cold, occasionally slowing all nearby creatures who are not resistant to cold.
-
+Sie strahlt Kälte aus und verlangsamt gelegentlich alle Kreaturen in der Nähe, die nicht gegen Kälte resistent sind.
 %%%%
 # note: annotation for salamander hide armour
 Flames
@@ -254,15 +254,15 @@ Flammen
 %%%%
 # note: description for salamander hide armour
 It surrounds you with a cloud of flames.
-
+Sie umgibt Euch mit einer Flammenwolke.
 %%%%
 # note: description for salamander hide armour
 It grants immunity to clouds of flame.
-
+Sie gewährt Immunität gegen Flammenwolken.
 %%%%
 # note: description for salamander hide armour
 It enhances your fire magic.
-
+Sie verstärkt Eure Feuermagie.
 %%%%
 # note: annotation for robe of Folly
 Brilliance Will-∞
@@ -270,15 +270,15 @@ Brillianz Wille-∞
 %%%%
 # note: description for robe of Folly
 It increases the power of your magical spells.
-
+Sie erhöht die Macht Eurer magischen Zaubersprüche.
 %%%%
 # note: description for robe of Folly
 It halves the magic cost of your spells (rounding up).
-
+Sie halbiert die Magiekosten Eurer Zauber (aufgerundet).
 %%%%
 # note: description for robe of Folly
 It reduces your willpower to zero.
-
+Sie reduziert deine Willenskraft auf Null.
 %%%%
 # note: annotation for robe of Night
 Dark
@@ -286,7 +286,7 @@ dunkel
 %%%%
 # note: description for robe of Night
 It shrouds the wearer in darkness, reducing the range at which they can see and be seen by others.
-
+Sie hüllt den Träger in Dunkelheit und verringert die Reichweite, in der er sehen und von anderen gesehen werden kann.
 %%%%
 # note: annotation for pair of fencer's gloves
 Riposte
@@ -294,7 +294,7 @@ Riposte
 %%%%
 # note: description for pair of fencer's gloves
 It allows the wearer to riposte with any weapon, or to riposte more often with a long blade, swiftly retaliating against a missed attack.
-
+Es erlaubt es dem Träger, mit jeder Waffe zu ripostieren oder häufiger mit einer Langklinge zu ripostieren und einen verfehlten Angriff schnell zu vergelten.
 %%%%
 # note: annotation for cloak of Starlight
 *Dazzle
@@ -302,15 +302,15 @@ It allows the wearer to riposte with any weapon, or to riposte more often with a
 %%%%
 # note: description for cloak of Starlight
 It may blind those who miss an attack against the wearer in melee combat.
-
+Er kann diejenigen blenden, die einen Angriff gegen den Träger im Nahkampf verpassen.
 %%%%
 # note: description for ratskin cloak
 When the wearer is hurt, rats may emerge from it to assist them.
-
+Wenn der Träger verletzt ist, können Ratten aus ihm hervorkommen, um ihm zu helfen.
 %%%%
 # note: description for shield of the Gong
 It is deafeningly noisy when blocking attacks.
-
+Er ist ohrenbetäubend laut, wenn er Angriffe abblockt.
 %%%%
 # note: annotation for amulet of the Air
 Inacc Air
@@ -318,11 +318,11 @@ Ungenau Luft
 %%%%
 # note: description for amulet of the Air
 It reduces the accuracy of all your attacks.
-
+Es verringert die Genauigkeit all Eurer Angriffe.
 %%%%
 # note: description for amulet of the Air
 It enhances your air magic.
-
+Es verstärkt Eure Luftmagie.
 %%%%
 # note: annotation for ring of Shadows
 Umbra
@@ -330,11 +330,11 @@ Umbra
 %%%%
 # note: description for ring of Shadows
 It surrounds you with an aura of shadow, increasing your stealth and reducing the accuracy of all within it (including the wearer).
-
+Er umgibt Euch mit einer Aura des Schattens, die Eure Heimlichkeit erhöht und die Treffsicherheit aller in ihr befindlichen Personen (einschließlich des Trägers) verringert.
 %%%%
 # note: description for necklace of Bloodlust
 It extends the wearer's berserk rage when killing foes.
-
+Sie verlängert die Berserkerwut des Trägers beim Töten von Feinden.
 %%%%
 # note: annotation for robe of Clouds
 +Thunder rCloud
@@ -342,23 +342,23 @@ It extends the wearer's berserk rage when killing foes.
 %%%%
 # note: description for robe of Clouds
 It can be evoked to surround the wearer with storm clouds, with success rate depending on Evocations skill.
-
+Er kann evoziert werden, um den Träger mit Sturmwolken zu umgeben, wobei die Erfolgsrate von der Evokationsfertigkeit abhängt.
 %%%%
 # note: brand description for obsidian axe
 It occasionally summons demons to assist the wielder when it strikes in combat.
-
+Gelegentlich ruft sie Dämonen herbei, die dem Träger im Kampf beistehen.
 %%%%
 # note: description for obsidian axe
 Its wielder is mesmerised by any visible foes.
-
+Ihr Träger wird von allen sichtbaren Gegnern hypnotisiert.
 %%%%
 # note: description for obsidian axe
 It cannot be unequipped while any foes are visible.
-
+Sie kann nicht abgelegt werden, solange Feinde sichtbar sind.
 %%%%
 # note: description for lightning scales
 It allows the wearer to cover ground more swiftly.
-
+Sie ermöglicht es dem Träger, schneller Boden zu gewinnen.
 %%%%
 # note: annotation for shillelagh "Devastator"
 shatter
@@ -366,15 +366,15 @@ zerschmettern
 %%%%
 # note: brand description for shillelagh "Devastator"
 It releases a powerful concussive burst when it strikes, dealing extra damage to the target and all other foes adjacent to them.
-
+Er setzt bei einem Treffer eine mächtige Erschütterung frei, die dem Ziel und allen anderen Feinden in seiner Nähe zusätzlichen Schaden zufügt.
 %%%%
 # note: description for dragonskin cloak
 It grants the wearer a chance to resist fire, cold, poison, electricity, acid, and negative energy.
-
+Er gewährt dem Träger eine Chance, Feuer, Kälte, Gift, Elektrizität, Säure und negativer Energie zu widerstehen.
 %%%%
 # note: description for macabre finger necklace
 It enables you to equip an extra ring.
-
+Sie ermöglicht die Ausrüstung mit einem zusätzlichen Ring.
 %%%%
 # note: annotation for hat of the High Council
 Wiz-
@@ -386,31 +386,31 @@ Entladung
 %%%%
 # note: brand description for arc blade
 It occasionally unleashes powerful arcs of lightning upon striking a foe. These may arc to other adjacent creatures (including the wielder, but dealing reduced damage to them) before grounding out.
-
+Sie entfesselt gelegentlich mächtige Blitzbogen, wenn sie einen Feind trifft. Diese Bogen können auf andere Kreaturen in der Nähe übergreifen (einschließlich des Anwenders, wobei die jedoch weniger Schaden verursachen), bevor sie sich auflösen.
 %%%%
 # note: brand description for demon whip "Spellbinder"
 It unleashes wild and unpredictable magical effects upon striking a wizard or a creature with magical abilities.
-
+Sie entfesselt wilde und unvorhersehbare magische Effekte, wenn sie einen Zauberer oder eine Kreatur mit magischen Fähigkeiten trifft.
 %%%%
 # note: brand description for lajatang of Order
 It inflicts extra damage upon those it strikes, and deals substantially increased damage to chaotic, mutated and magically transformed beings.
-
+Er fügt den Getroffenen zusätzlichen Schaden zu und fügt chaotischen, mutierten und magisch verwandelten Wesen erheblich mehr Schaden zu.
 %%%%
 # note: brand description for great mace "Firestarter"
 It burns those it strikes, dealing additional fire damage.
-
+Er verbrennt die Getroffenen und verursacht zusätzlichen Feuerschaden.
 %%%%
 # note: brand description for great mace "Firestarter"
 It fills those it strikes with an explosive inner flame.
-
+Er füllt die Getroffenen mit einer explosiven inneren Flamme.
 %%%%
 # note: brand description for Majin-Bo
 It occasionally heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell.
-
+Gelegentlich heilt diese Waffe seinem Träger für einen Teil des verursachten Schadens, wenn er einen lebenden Feind mit ihr oder einem Zauber verwundet.
 %%%%
 # note: description for Majin-Bo
 Its wielder's spells cost health as well as magical power.
-
+Die Zauber des Trägers kosten sowohl Gesundheit als auch magische Kraft.
 %%%%
 # note: annotation for Maxwell's etheric cage
 RegenMP+
@@ -426,7 +426,7 @@ KeinHeiltrank
 %%%%
 # note: description for robe of Vines
 Its wearer cannot be healed by potions.
-
+Der Träger kann nicht durch Tränke geheilt werden.
 %%%%
 # note: annotation for Kryia's mail coat
 PotionHeal*2
@@ -434,7 +434,7 @@ Heiltrank*2
 %%%%
 # note: description for Kryia's mail coat
 Potions are twice as effective at healing its wearer.
-
+Tränke sind doppelt so wirksam bei der Heilung des Trägers.
 %%%%
 # note: annotation for frozen axe "Frostbite"
 freezing cloud
@@ -442,23 +442,23 @@ frierende Wolke
 %%%%
 # note: brand description for frozen axe "Frostbite"
 It freezes those it strikes, dealing additional cold damage. It can also slow down cold-blooded creatures.
-
+Sie friert diejenigen ein, die sie trifft, und fügt ihnen zusätzlichen Kälteschaden zu. Sie kann auch kaltblütige Kreaturen verlangsamen.
 %%%%
 # note: brand description for frozen axe "Frostbite"
 It occasionally leaves clouds of freezing vapour upon striking a foe.
-
+Gelegentlich hinterlässt sie Wolken aus gefrierendem Dampf, wenn sie einen Feind trifft.
 %%%%
 # note: description for frozen axe "Frostbite"
 It grants immunity to clouds of freezing vapour.
-
+Sie gewährt Immunität gegen Wolken aus gefrierendem Dampf.
 %%%%
 # note: description for warlock's mirror
 It can block and reflect piercing ranged attacks and magical attacks against the wielder's willpower.
-
+Er kann durchdringende Fernkampfangriffe und magische Angriffe gegen die Willenskraft des Anwenders blockieren und reflektieren.
 %%%%
 # note: description for Maxwell's thermic engine
 It becomes more effective when it hits something. This effect fades over time.
-
+Es wird effektiver, wenn es etwas trifft. Dieser Effekt lässt mit der Zeit nach.
 %%%%
 # note: annotation for demon trident "Rift"
 reach+
@@ -466,23 +466,23 @@ reichen+
 %%%%
 # note: brand description for demon trident "Rift"
 It can reach especially far, and its reaching attacks ignore other creatures in the way.
-
+Er kann besonders weit reichen, und seine weitreichenden Angriffe ignorieren andere Kreaturen, die im Weg stehen.
 %%%%
 # note: description for staff of Battle
 It enhances your conjuration magic.
-
+Er verstärkt Eure Hervorrufungsmagie.
 %%%%
 # note: description for staff of Battle
 It summons a battlesphere in combat, with strength depending on Conjurations skill.
-
+Er ruft im Kampf eine Kampfkugel hervor, deren Stärke von der Hervorrufungsfertigkeit abhängt.
 %%%%
 # note: description for Cigotuvi's embrace
 It gathers nearby corpses to temporarily increase the armour it provides.
-
+Sie sammelt Leichen in der Nähe ein, um ihre Beschützung vorübergehend zu erhöhen.
 %%%%
 # note: description for Cigotuvi's embrace
 It protects you from foul pestilence.
-
+Sie schützt Euch vor der Pestilenz.
 %%%%
 # note: annotation for pair of seven-league boots
 Rampage+∞
@@ -490,7 +490,7 @@ Randale+∞
 %%%%
 # note: description for pair of seven-league boots
 Its wearer moves as far as possible in that direction when moving towards enemies.
-
+Wenn der Träger sich auf Feinde zubewegt, bewegt er sich so weit wie möglich in diese Richtung.
 %%%%
 
 ##################
