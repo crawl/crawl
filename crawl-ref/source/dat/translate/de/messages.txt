@@ -278,7 +278,7 @@ Sie halbiert die Magiekosten Eurer Zauber (aufgerundet).
 %%%%
 # note: description for robe of Folly
 It reduces your willpower to zero.
-Sie reduziert deine Willenskraft auf Null.
+Sie reduziert Eure Willenskraft auf Null.
 %%%%
 # note: annotation for robe of Night
 Dark
@@ -2011,7 +2011,7 @@ Blitzen fließt durch {acc}%s
 
 %%%%
 %s's voice booms out, "Who do you think you are?"
-Die Stimme von {dat}%s donnert: "Für wen hältst du dich?"
+Die Stimme {gen}%s donnert: "Für wen hältst du dich?"
 %%%%
 One of your followers decides to abandon you.
 
@@ -7893,7 +7893,7 @@ You repeatedly attack %s from above, with incredible momentum.
 Ihr greift {acc}%s wiederholt von oben an, mit unglaublichem Schwung.
 %%%%
 %s prepares the audience for your solo!
-%s bereitet das Publikum auf dein Solo vor!
+%s bereitet das Publikum auf Euer Solo vor!
 %%%%
 %s links your audience in an emotional bond!
 %s fesselt das Publikum mit einem emotionalen Band!
@@ -9291,7 +9291,7 @@ Das könnt Ihr nicht trinken!
 " Diese Handlung würde Euch unter Strafe bringen!
 %%%%
 %s petitions for your drink to fail.
-%s bittet darum, dass dein Trank nicht wirkt.
+%s bittet darum, dass Euer Trank nicht wirkt.
 %%%%
 %s emits a brilliant flash of light!
 %s strahlt einen brillanten Lichtblitz aus!
@@ -19199,7 +19199,7 @@ will change colour
 wird die Farbe ändern
 %%%%
 will change shape
-wird dir Form ändern
+wird Eure Form ändern
 %%%%
 will probably split
 wird wahrscheinlich spalten
@@ -19324,7 +19324,7 @@ The monsters around %s are %s!
 Die Monster um {acc}%s herum werden %s!
 %%%%
 The monsters around you are %s!
-Die Monster um dich herum werden %s!
+Die Monster um Euch herum werden %s!
 %%%%
 The heat is drained from your surroundings.
 Die Wärme wird der Umgebung entzogen.
@@ -24018,7 +24018,7 @@ Etwas Unsichtbares plätschert neben Euch ins Wasser!
 %s fällt aus Eurem Rucksack, springt dann aber sofort wieder hinein!
 %%%%
 You briefly get tangled in your bandages.
-Ihr verheddert Euch kurz in deinen Bandagen.
+Ihr verheddert Euch kurz in Euren Bandagen.
 %%%%
 You trip over your bandages.
 Ihr stolpert über Eure Bandagen.
