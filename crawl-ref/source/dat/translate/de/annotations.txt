@@ -271,7 +271,7 @@ Drak töten
 # armour egos
 %%%%
 ponderous
-Schwerfäll
+schwerfällig
 %%%%
 # duplicate of spell name
 #Fly
