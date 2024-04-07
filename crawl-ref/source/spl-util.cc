@@ -1465,6 +1465,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.duration[DUR_GAVOTTE_COOLDOWN])
             return "local gravity is still too unstable to reorient.";
 
+    case SPELL_FULSOME_FUSILLADE:
+        if (temp && you.duration[DUR_FUSILLADE])
+            return "you are already unleashing a barrage of alchemical concoctions!";
+
     default:
         break;
     }

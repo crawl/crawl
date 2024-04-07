@@ -667,6 +667,21 @@ Fulminant Prism spell
 Conjures a prism which unleashes a violent explosion of arcane force after a
 short duration. If destroyed prematurely, its blast will be much weaker.
 %%%%
+Fulsome Fusillade spell
+
+A magnum opus of reckless chemistry, this spell conjures up a surfeit of
+volatile reagents to rain down upon your enemies. For the next several turns, up
+to 3 random enemies in sight will be struck by an exploding beaker that inflicts
+either fire, cold, electric, or poison damage. If any of these explosions
+overlap each other, the resulting reaction will inflict even greater
+irresistible damage and sometimes apply a random deliterious statuses on whoever
+is caught in the blast.
+
+This spell costs a small amount of the caster's magical energy each turn to
+maintain, and while it will never aim an explosion where it could hurt the
+caster, the caster's allies (and anything else in the general vacinity) are not
+so fortunate.
+%%%%
 Funeral Dirge spell
 
 A ritual chant that briefly rouses several nearby undead allies to move more

@@ -2050,4 +2050,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     true,
 }
 
+{
+    ZAP_FULSOME_FUSILLADE,
+    "volatile concoction",
+    200,
+    new dicedef_calculator<3, 4, 1, 9>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

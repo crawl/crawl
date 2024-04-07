@@ -987,3 +987,7 @@ Stiff status
 Your legs have stiffened up from lack of motion, making your next move twice as
 slow as usual. This only affects movement actions.
 %%%%
+Fusillade status
+
+You are hurling conjured alchemical reagents at nearby monsters.
+%%%%

@@ -2563,6 +2563,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_GELLS_GAVOTTE:
         return cast_gavotte(powc, beam.target - you.pos(), fail);
 
+    case SPELL_FULSOME_FUSILLADE:
+        return cast_fulsome_fusillade(powc, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:
@@ -2904,6 +2907,9 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("2d(%d-%d)",
                         collision_damage(gavotte_impact_power(pow, 1), false).size,
                         collision_damage(gavotte_impact_power(pow, 4), false).size);
+
+        case SPELL_FULSOME_FUSILLADE:
+            return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
         default:
             break;
     }
