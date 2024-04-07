@@ -20074,7 +20074,7 @@ Your limbs ache and wobble like jelly
 Eure Glieder schmerzen und wackeln wie Gelee
 %%%%
 Your body is flooded with distortional energies
-Euer Körper wird von verzerrten Energien durchflutet
+Euer Körper wird von verzerrenden Energien durchflutet
 %%%%
 You feel very strange
 Ihr fühlt Euch sehr seltsam
@@ -20095,10 +20095,10 @@ Der Körper {gen}@the_monster@ verdreht und windet sich
 @The_monster@ windet und krümmt sich
 %%%%
 @The_monster@'s body is flooded with distortional energies
-Der Körper {gen}@the_monster@ wird von verzerrten Energien durchflutet
+Der Körper {gen}@the_monster@ wird von verzerrenden Energien durchflutet
 %%%%
 @The_monster@ is flooded with distortional energies
-@The_monster@ wird von verzerrten Energien durchflutet
+@The_monster@ wird von verzerrenden Energien durchflutet
 %%%%
 The thin air crackles with energy
 Die dünne Luft knistert vor Energie
@@ -23910,7 +23910,7 @@ Einige Monster tauschen Plätze.
 %s %s tanzt in die Luft!
 %%%%
 Your body is suffused with distortional energy.
-Euer Körper wird von verzerrter Energie durchdrungen.
+Euer Körper wird von verzerrender Energie durchdrungen.
 %%%%
 The area is suffused with divine lightning!
 Das Gebiet wird von göttlichen Blitzen durchzogen!

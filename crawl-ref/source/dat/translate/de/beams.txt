@@ -1205,7 +1205,7 @@ visual effects
 Visuelle Effekte
 %%%%
 torment damage
-Folter-Schaden
+Qual-Schaden
 %%%%
 air
 Luft

@@ -24,6 +24,30 @@
 
 ## Specific Terms
 
+Choosing translations is not always easy. I have chosen the following translations (explanations below):
+
+- intelligence = Intelligenz
+- dexterity = Geschicklichkeit
+- strength = Stärke
+- might = Macht
+- power = Kraft
+- distortion = Verzerrung
+- pain = Schmerzen
+- agony = Agonie
+- torment = Qual
+- magic wand = Zauberstab
+- magic staff = magischer Stecken
+- evoke = evozieren
+- invoke (call on a god) = anrufen
+- summon/summoning = herbeirufen/Herbeirufung
+- conjure/conjuration = hervorrufen/Hervorrufung
+- transmutation = Verwandlung
+- mage = Magier
+- wizard = Zauberer
+- barding = Gelieger
+- blink (short-range teleport) - blinzeln
+- resistance - Resistenz
+
 Many words have a very specific meaning in the context of DCSS that may not match common usage, or at least not include all possible meanings in common usage:
 
 - invoke - use a god-given ability (i.e. call forth divine power or call on a god to do something)

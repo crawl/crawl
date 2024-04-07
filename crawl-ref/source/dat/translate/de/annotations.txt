@@ -102,7 +102,7 @@ Klar
 %%%%
 # torment
 rTorment
-rFolter
+rQual
 %%%%
 # mutation
 rMut
@@ -220,7 +220,7 @@ antimagic
 antimagie
 %%%%
 distort
-verwind
+Verzerr
 %%%%
 chaos
 Chaos

@@ -65,7 +65,7 @@ Bringer des Lichtes
 # Kiku
 %%%%
 Tormented
-Gepeinigter
+Gequälter
 %%%%
 Purveyor of Pain
 Schmerzensbringer
@@ -326,7 +326,7 @@ Unweaver
 Unweber
 %%%%
 Distorting @Genus@
-Entstellender
+Verzerrender
 %%%%
 Agent of Entropy
 Agent der Entropie

@@ -261,7 +261,7 @@ Death Channel
 Todeskanal
 %%%%
 Symbol of Torment
-Symbol der Quälerei
+Symbol der Qual
 %%%%
 Throw Icicle
 Eiszapfen werfen

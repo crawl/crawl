@@ -1242,7 +1242,7 @@ the lorocyproca
 die Lorocyproca
 %%%%
 the tormentor
-der Peiniger
+der Quäler
 %%%%
 the Brimstone Fiend
 der Schwefelunterweltler

@@ -79,7 +79,7 @@ Rune
 " des Chaos"
 %%%%
 " of distortion"
-" der Verwindung"
+" der Verzerrung
 %%%%
 # only on artefact "Wyrmbane"
 " of dragon slaying"

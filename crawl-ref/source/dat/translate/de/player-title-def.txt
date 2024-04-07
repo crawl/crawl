@@ -66,7 +66,7 @@ der Bringer des Lichtes
 # Kiku
 %%%%
 the Tormented
-der Gepeinigte
+der Gequälte
 %%%%
 the Purveyor of Pain
 der Schmerzensbringer
@@ -331,7 +331,7 @@ der Unweber
 %%%%
 the Distorting @Genus@
 # discard genus to avoid gender issues
-der Entstellende
+der Verzerrende
 %%%%
 the Agent of Entropy
 der Agent der Entropie
