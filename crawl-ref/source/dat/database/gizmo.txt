@@ -26,6 +26,8 @@ emergency
 
 secondary
 
+tertiary
+
 tungsten
 
 bismuth
@@ -76,6 +78,8 @@ subsystem
 assembler
 
 capacitor
+
+inducer
 
 encabulator
 
