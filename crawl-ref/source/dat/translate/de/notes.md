@@ -24,7 +24,14 @@
 
 ## Specific Terms
 
-Choosing translations is not always easy. I have chosen the following translations (explanations below):
+Choosing translations is not always easy for several reasons:
+
+- Word meanings in the context of DCSS may not match common usage
+- Many words have overlapping meaning in general usage, but specific distinct meanings in DCSS (e.g. pain, agony and torment are all distinct things in DCSS)
+- Sometimes there is no direct translation for an English word
+- Sometimes multiple words with distinct meaning in English translate to a single word in the other language (and vice versa)
+
+I have chosen the following translations (explanations below):
 
 - intelligence = Intelligenz
 - dexterity = Geschicklichkeit
@@ -52,8 +59,17 @@ Choosing translations is not always easy. I have chosen the following translatio
 - remove (jewellery) = ablegen
 - take off (armour) = ablegen
 - drop - hinlegen/absetzen (TODO: standardise)
+- ability = Fähigkeit
+- skill = Fertigkeit
+- dodging (skill) = Ausweichen
+- evasion (attribute) = Umgehung
+- drain/draining = entleeren/Entleerung (probably entziehen would be better)
+- Lair (dungeon branch) = Versteck
+- stash (pile of items) = Versteck (one of these will need to be changed)
+- The Shining One (god) = der Glänzende (would der Leuchtende be better?)
+- sling bullet = Schleuderkugel (would Schleudergeschoss be better?)
 
-Many words have a very specific meaning in the context of DCSS that may not match common usage, or at least not include all possible meanings in common usage:
+Words that have a very specific meaning in the context of DCSS that may not match common usage, or at least not include all possible meanings in common usage:
 
 - invoke - use a god-given ability (i.e. call forth divine power or call on a god to do something)
 - evoke - use an ability granted by an item (i.e call forth the power of an item)
@@ -148,18 +164,12 @@ Some specific terms from the German D&D System Reference Document [17]:
 - breath weapon = Odemwaffe
 - disruption (affects undead) - Zusammenbruch
 
-#Barding
-In DCSS, barding is used to mean the piece of armour that covers the hindquarters of Nagas and Palentongas (and previously, the horsey part of a centaur).
-This is taken from the word for horse armour, but it's kind of a misnomer because barding refers to the entire suit of horse armour, not just the back part.
-The specific piece of the barding that protects the horse's hindquarters is called the croupiere (because croup means hindquarters/rump).
-It's also called croupiere bacul or crupper.
-https://en.wikipedia.org/wiki/Barding
+In DCSS, barding is used to mean the piece of armour that covers the midsection of Nagas and Palentongas (and previously, the horsey part of a centaur).
+This is taken from the word for horse armour, but it's kind of a misnomer because barding refers to the entire suit of horse armour, not just the middle part.
 
-In German, armour for a horse is called der Rossharnisch or das Gelieger. Again, this refers to the entire thing, not just the back part.
+In German, armour for a horse is called der Rossharnisch or das Gelieger. Again, this refers to the entire thing, not just the middle part.
 We can't really use the word Rossharnisch because Ross is a warhorse. Nor can we use Harnisch by itself, because that just means armour.
-The part that covers the hindquarters of the horse is called der Auflieger or die Krupper (Kruppe being the hindquarters).
 https://de.wikipedia.org/wiki/Europ%C3%A4ischer_Rossharnisch
-https://de.wikipedia.org/wiki/Krupper
 
 ## Adjectives
 

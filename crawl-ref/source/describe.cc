@@ -562,7 +562,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_STRENGTH, "It affects your strength (%+d).", false},
         { ARTP_INTELLIGENCE, "It affects your intelligence (%+d).", false},
         { ARTP_DEXTERITY, "It affects your dexterity (%+d).", false},
-        { ARTP_SLAYING, "It affects your accuracy & damage with ranged "
+        { ARTP_SLAYING, "It affects your accuracy and damage with ranged "
                         "weapons and melee (%+d).", false},
         { ARTP_FIRE, "fire", true},
         { ARTP_COLD, "cold", true},
@@ -652,13 +652,18 @@ static string _randart_descrip(const item_def &item)
     if (known_proprt(ARTP_WILLPOWER))
     {
         const int stval = proprt[ARTP_WILLPOWER];
-        char buf[80];
-        snprintf(buf, sizeof buf, "%s%s It %s%s your willpower.",
-                 need_newline ? "\n" : "",
-                 _padded_artp_name(ARTP_WILLPOWER).c_str(),
-                 (stval < -1 || stval > 1) ? "greatly " : "",
-                 (stval < 0) ? "decreases" : "increases");
-        description += buf;
+        if (need_newline)
+            description += "\n";
+        description += _padded_artp_name(ARTP_WILLPOWER);
+        description += " ";
+        if (stval < -1)
+            description += localise("It greatly decreases your willpower.");
+        else if (stval > 1)
+            description += localise("It greatly increases your willpower.");
+        else if (stval < 0)
+            description += localise("It decreases your willpower.");
+        else
+            description += localise("It increases your willpower.");
         need_newline = true;
     }
 
@@ -1329,7 +1334,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             if (!is_range_weapon(item) &&
                 (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
             {
-                description += localise(" Big, fiery blades are also staple "
+                description += localise(" ");
+                description += localise("Big, fiery blades are also staple "
                                         "armaments of hydra-hunters.");
             }
             break;
@@ -1345,7 +1351,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 description += localise("It freezes those it strikes, dealing "
                                         "additional cold damage.");
             }
-            description += localise(" It can also slow down cold-blooded creatures.");
+            description += localise(" ");
+            description += localise("It can also slow down cold-blooded creatures.");
             break;
         case SPWPN_HOLY_WRATH:
             if (is_range_weapon(item))
@@ -1501,7 +1508,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
         if (is_unrandom_artefact(item))
         {
             string base = article_a(get_artefact_base_name(item));
-            description += localise("This is %s. ", base);
+            description += localise("This is %s.", base);
+            description += localise(" ");
         }
         description += localise("This weapon falls into the '%s' category.",
                          skill == SK_FIGHTING ? "buggy" : skill_name(skill));
@@ -1887,7 +1895,7 @@ static string _describe_armour(const item_def &item, bool verbose)
             // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
             string name = localise(string(armour_ego_name(item, true)));
             name = chop_string(name, MAX_ARTP_NAME_LEN - 1, false) + ":";
-            name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
+            name.append(MAX_ARTP_NAME_LEN - strwidth(name), ' ');
             description += name;
         }
         else
@@ -2228,7 +2236,8 @@ string get_item_description(const item_def &item, bool verbose,
             description << stats;
         }
         description << "\n\n";
-        description << localise("It falls into the 'Staves' category. ");
+        description << localise("It falls into the 'Staves' category.");
+        description << localise(" ");
         description << _handedness_string(item);
         break;
 

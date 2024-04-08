@@ -103,7 +103,7 @@ a thunderstorm
 {n}ein Gewitter
 %%%%
 negative energy
-Negativenergie
+Negativ-Energie
 %%%%
 white fluffiness
 weiße Flaumigkeit
