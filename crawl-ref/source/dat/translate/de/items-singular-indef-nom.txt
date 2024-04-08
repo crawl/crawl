@@ -1098,7 +1098,7 @@ a piece from Xom's chessboard
 eine Figur von Xoms Schachbrett
 %%%%
 a tin of tremorstones
-eine Dose Bebensteine
+eine Dose Zittersteine
 %%%%
 a quad damage
 ein Vierfach-Schaden

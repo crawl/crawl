@@ -6008,7 +6008,7 @@ You can't see anything, release a tremorstone anyway?
 
 %%%%
 The tremorstone explodes into fragments!
-Der Tremorstein explodiert in Fragmente!
+Der Zitterstein explodiert in Fragmente!
 %%%%
 The air is too still to form clouds.
 Die Luft ist zu still, um Wolken zu bilden.

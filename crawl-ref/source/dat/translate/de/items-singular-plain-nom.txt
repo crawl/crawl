@@ -1111,7 +1111,7 @@ piece from Xom's chessboard
 Figur von Xoms Schachbrett
 %%%%
 tin of tremorstones
-Dose Bebensteine
+Dose Zittersteine
 %%%%
 quad damage
 Vierfach-Schaden

@@ -1070,7 +1070,7 @@ your piece from Xom's chessboard
 Eure Figur von Xoms Schachbrett
 %%%%
 your tin of tremorstones
-Eure Dose Bebensteine
+Eure Dose Zittersteine
 %%%%
 your quad damage
 Euer Vierfach-Schaden
