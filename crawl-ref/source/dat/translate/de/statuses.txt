@@ -1551,16 +1551,16 @@ PProj
 PProj
 %%%%
 portalling projectiles
-Portal-Projektil
+Portal-Geschoss
 %%%%
 portal projectile
-Portal-Projektil
+Portal-Geschoss
 %%%%
 You are teleporting projectiles to their destination.
-Ihr teleportiert Projektile an ihren Bestimmungsort.
+Ihr teleportiert Geschosse an ihren Bestimmungsort.
 %%%%
 You are no longer teleporting projectiles to their destination.
-Ihr teleportiert keine Projektile mehr an ihren Bestimmungsort.
+Ihr teleportiert keine Geschosse mehr an ihren Bestimmungsort.
 %%%%
 
 # Summon Forrest spell

@@ -20340,7 +20340,7 @@ Your surroundings suddenly seem different.
 Eure Umgebung scheint plötzlich anders zu sein.
 %%%%
 You begin teleporting projectiles to their destination.
-Ihr fangt an, Projektile an ihr Ziel zu teleportieren.
+Ihr fangt an, Geschosse an ihr Ziel zu teleportieren.
 %%%%
 You renew your portal.
 Ihr erneuert Euer Portal.

@@ -333,7 +333,7 @@ Excruciating Wounds
 Quälende Wunden
 %%%%
 Portal Projectile
-Portal-Projektil
+Portal-Geschoss
 %%%%
 Monstrous Menagerie
 Monströse Menagerie

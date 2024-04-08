@@ -84,7 +84,7 @@ It causes magical contamination when unequipped.
 Dieser Gegenstand verursacht magische Kontamination, wenn er abgelegt wird.
 %%%%
 It protects you from missiles.
-Dieser Gegenstand schützt Euch vor Projektilen
+Dieser Gegenstand schützt Euch vor Geschossen
 %%%%
 It increases your rate of health regeneration.
 Dieser Gegenstand erhöht die Geschwindigkeit Eurer Gesundheitsregeneration.
@@ -299,7 +299,7 @@ It inflicts extra damage upon your enemies.
 Diese Waffe fügt Euren Feinden zusätzlichen Schaden zu.
 %%%%
 Each projectile launched from it has a different, random effect.
-Jedes von dieser Waffe abgefeuerte Projektil hat einen anderen, zufälligen Effekt.
+Jedes von dieser Waffe abgefeuerte Geschoss hat einen anderen, zufälligen Effekt.
 %%%%
 It occasionally heals its wielder for a portion of the damage dealt when it wounds a living foe.
 Diese Waffe heilt ihren Träger gelegentlich für einen Teil des verursachten Schadens, wenn sie einen lebenden Feind verwundet.
@@ -366,38 +366,38 @@ Eine so große Waffe könnt Ihr nicht führen.
 # projectiles (ammo + thrown weapons)
 %%%%
 It has a random effect on any target it hits.
-Dieses Projektil hat eine zufällige Wirkung auf jedes Ziel, das es trifft.
+Dieses Geschoss hat eine zufällige Wirkung auf jedes Ziel, das es trifft.
 %%%%
 It is coated with poison.
-Dieses Projektil ist mit Gift überzogen.
+Dieses Geschoss ist mit Gift überzogen.
 %%%%
 It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.
-Dieses Projektil ist mit einer erstickenden Substanz bestückt, die direkten Schaden verursacht und die Getroffenen vergiftet und verlangsamt.
+Dieses Geschoss ist mit einer erstickenden Substanz bestückt, die direkten Schaden verursacht und die Getroffenen vergiftet und verlangsamt.
 %%%%
 It is twice as likely to be destroyed on impact as other darts.
-Die Wahrscheinlichkeit, dass dieses Projektil beim Aufprall zerstört wird, ist doppelt so hoch wie bei anderen.
+Die Wahrscheinlichkeit, dass dieses Geschoss beim Aufprall zerstört wird, ist doppelt so hoch wie bei anderen.
 %%%%
 It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.
-Dieses Projektil ist mit einer Substanz bestückt, die den Getroffenen in eine geistlose Wut versetzt, wobei sie Freund und Feind gleichermaßen angreifen.
+Dieses Geschoss ist mit einer Substanz bestückt, die den Getroffenen in eine geistlose Wut versetzt, wobei sie Freund und Feind gleichermaßen angreifen.
 %%%%
 The chance of successfully applying its effect increases with Throwing and Stealth skill.
 Die Chance, den Effekt erfolgreich anzuwenden, erhöht sich mit den Fertigkeiten "Werfen" und "Heimlichkeit".
 %%%%
 It is tipped with a substance that causes blindness and brief confusion.
-Dieses Projektil ist mit einer Substanz bestückt, die Blindheit und kurzzeitige Verwirrung verursacht.
+Dieses Geschoss ist mit einer Substanz bestückt, die Blindheit und kurzzeitige Verwirrung verursacht.
 %%%%
 It causes any target it hits to blink, with a tendency towards blinking further away from the attacker.
-Dieses Projektil lässt jedes Ziel, das es trifft, blinzeln, wobei die Tendenz besteht, dass es weiter vom Angreifer entfernt blinzelt.
+Dieses Geschoss lässt jedes Ziel, das es trifft, blinzeln, wobei die Tendenz besteht, dass es weiter vom Angreifer entfernt blinzelt.
 %%%%
 # silver
 It deals increased damage compared to normal ammo and substantially increased damage to chaotic and magically transformed beings. It also inflicts extra damage against mutated beings, according to how mutated they are.
-Dieses Projektil verursacht im Vergleich zu normaler Munition einen erhöhten Schaden und einen deutlich erhöhten Schaden an chaotischen und magisch verwandelten Wesen. Es fügt auch mutierten Wesen zusätzlichen Schaden zu, je nachdem, wie mutiert sie sind.
+Dieses Geschoss verursacht im Vergleich zu normaler Munition einen erhöhten Schaden und einen deutlich erhöhten Schaden an chaotischen und magisch verwandelten Wesen. Es fügt auch mutierten Wesen zusätzlichen Schaden zu, je nachdem, wie mutiert sie sind.
 %%%%
 It is always destroyed on impact.
-Dieses Projektil wird beim Aufprall immer zerstört.
+Dieses Geschoss wird beim Aufprall immer zerstört.
 %%%%
 It may be destroyed on impact.
-Dieses Projektil kann beim Aufprall zerstört werden.
+Dieses Geschoss kann beim Aufprall zerstört werden.
 %%%%
 
 #################################
@@ -496,7 +496,7 @@ it improves its wearer's accuracy and damage with ranged weapons, such as bows a
 diese Rüstung verbessert die Treffsicherheit und den Schaden des Trägers mit Fernkampfwaffen wie Bögen und Speeren (Töten +4).
 %%%%
 it protects its wearer by repelling missiles.
-diese Rüstung schützt den Träger, indem sie Projektile abwehrt.
+diese Rüstung schützt den Träger, indem sie Geschosse abwehrt.
 %%%%
 it increases damage dealt and taken.
 diese Rüstung erhöht den zugefügten und erlittenen Schaden.
@@ -521,7 +521,7 @@ This weapon's minimum attack delay (%.1f) is reached at skill level %d.
 Die minimale Angriffsverzögerung dieser Waffe (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
 %%%%
 This projectile's minimum attack delay (%.1f) is reached at skill level %d.
-Die minimale Angriffsverzögerung dieses Projektils (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
+Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
 %%%%
 # shield penalty
 Skill to remove penalty: %d.%d
@@ -571,7 +571,7 @@ It allows you to gain divine favour quickly.
 Dieser Gegenstand ermöglicht Euch, schnell göttliche Gunst zu erlangen.
 %%%%
 It reflects blocked missile attacks.
-Dieser Gegenstand kann Projektile reflektieren wenn sie blockiert werden.
+Dieser Gegenstand kann Geschosse reflektieren wenn sie blockiert werden.
 %%%%
 
 #################################
