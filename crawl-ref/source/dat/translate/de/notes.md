@@ -45,8 +45,13 @@ Choosing translations is not always easy. I have chosen the following translatio
 - mage = Magier
 - wizard = Zauberer
 - barding = Gelieger
-- blink (short-range teleport) - blinzeln
-- resistance - Resistenz
+- blink (short-range teleport) = blinzeln
+- resistance = Resistenz
+- put on (jewellery) - anlegen
+- wear (armour) - anlegen
+- remove (jewellery) = ablegen
+- take off (armour) = ablegen
+- drop - hinlegen/absetzen (TODO: standardise)
 
 Many words have a very specific meaning in the context of DCSS that may not match common usage, or at least not include all possible meanings in common usage:
 
