@@ -39,6 +39,7 @@ static const unordered_map<misc_item_type, evoker_data, std::hash<int>> xp_evoke
     }},
     { MISC_CONDENSER_VANE, { "condenser_debt", 10, 1 } },
     { MISC_GRAVITAMBOURINE, { "tambourine_debt", 10, 2,
-        { "%s jingles faintly as it regains its power." },
+        { "%s jingles faintly as it regains its power.",
+          "%s shakes itself petulantly as it silently regains its power." },
     }},
 };
