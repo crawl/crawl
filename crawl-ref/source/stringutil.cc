@@ -248,24 +248,452 @@ string strip_filename_unsafe_chars(const string &s)
     return replace_all_of(s, " .&`\"\'|;{}()[]<>*%$#@!~?", "");
 }
 
+// characters that end a printf format specifier
+static const char* type_specs = "%diufFeEgGxXoscpaAn";
+
+// split format string into plain strings and format specifiers
+static void _split_format_string(const char* s, vector<string>& tokens)
+{
+    if (!s)
+        return;
+
+    const char* starttok = s;
+    const char* endtok;
+    while (*starttok != '\0')
+    {
+        if (*starttok != '%')
+        {
+            // plain string
+            endtok = starttok;
+            while (*(endtok+1) != '\0' && *(endtok+1) != '%')
+                ++endtok;
+        }
+        else
+        {
+            endtok = starttok+1;
+            while (*endtok != '\0' && !strchr(type_specs, *endtok))
+                ++endtok;
+            if (*endtok == '\0')
+            {
+                // malformed
+                --endtok;
+            }
+        }
+        tokens.push_back(string(starttok, endtok - starttok + 1));
+        starttok = endtok + 1;
+    }
+}
+
+// translate a format spec like %d to a type like int
+static const type_info* _format_spec_to_type(const string& fmt)
+{
+    if (fmt.length() < 2 || fmt.at(0) != '%')
+        return NULL;
+
+    char last_char = fmt.back();
+    if (last_char == 's')
+        return &typeid(char*);
+    else if (contains("id", last_char))
+    {
+        // signed int
+        char penultimate = fmt.at(fmt.length()-2);
+        if (penultimate == 'l')
+        {
+            if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
+                return &typeid(long long);
+            else
+                return &typeid(long);
+        }
+        else if (penultimate == 't')
+            return &typeid(ptrdiff_t);
+        else if (penultimate == 'z')
+            return &typeid(size_t);
+        else if (penultimate == 'j')
+            return &typeid(intmax_t);
+        else if (penultimate == 'I')
+            return &typeid(ptrdiff_t);
+        else if (penultimate == 'q')
+            return &typeid(int64_t);
+        else if (contains(fmt, "I32"))
+            return &typeid(int32_t);
+        else if (contains(fmt, "I64"))
+            return &typeid(int64_t);
+        else
+            return &typeid(int);
+    }
+    else if (contains("uoxX", last_char))
+    {
+        // unsigned
+        char penultimate = fmt.at(fmt.length()-2);
+        if (penultimate == 'l')
+        {
+            if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
+                return &typeid(unsigned long long);
+            else
+                return &typeid(unsigned long);
+        }
+        else if (penultimate == 't')
+            return &typeid(ptrdiff_t);
+        else if (penultimate == 'z')
+            return &typeid(size_t);
+        else if (penultimate == 'j')
+            return &typeid(uintmax_t);
+        else if (penultimate == 'I')
+            return &typeid(size_t);
+        else if (penultimate == 'q')
+            return &typeid(uint64_t);
+        else if (contains(fmt, "I32"))
+            return &typeid(uint32_t);
+        else if (contains(fmt, "I64"))
+            return &typeid(uint64_t);
+        else
+            return &typeid(unsigned);
+    }
+    else if (contains("aAeEfFgG", last_char))
+    {
+        // floating point
+        if (fmt.at(fmt.length()-2) == 'L')
+            return &typeid(long double);
+        else
+            return &typeid(double);
+    }
+    else if (last_char == 'c')
+    {
+        // char is promoted to int
+        char penultimate = fmt.at(fmt.length()-2);
+        if (penultimate == 'l')
+            return &typeid(wint_t);
+        else
+            return &typeid(int);
+    }
+    else if (last_char == 'p' || last_char == 'n')
+        return &typeid(void*);
+
+    return NULL;
+}
+
+typedef map<int, const type_info*> arg_type_map_t;
+
+static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results)
+{
+    int arg_count = 0;
+    int arg_id;
+    vector<string>::const_iterator it;
+    for (it = tokens.begin(); it != tokens.end(); ++it)
+    {
+        const string &s = *it;
+        if (s.length() < 2 || s.at(0) != '%' || ends_with(s, "%"))
+            continue;
+
+        // explictly numbered arguments?
+        bool explicit_arg_ids = contains(s, "$");
+
+        // handle dynamic width/precision
+        size_t pos = 0;
+        while ((pos = s.find('*', pos)) != string::npos)
+        {
+            ++pos;
+            ++arg_count;
+            arg_id = 0;
+            if (explicit_arg_ids)
+                arg_id = atoi(s.substr(pos).c_str());
+            if (arg_id == 0)
+                arg_id = arg_count;
+            results.insert(std::make_pair(arg_id, &typeid(int)));
+        }
+
+        // now the arg itself
+        ++arg_count;
+        arg_id = 0;
+        if (explicit_arg_ids)
+            arg_id = atoi(s.substr(1).c_str());
+        if (arg_id == 0)
+            arg_id = arg_count;
+        const type_info* ti = _format_spec_to_type(*it);
+        results[arg_id] = ti;
+    }
+}
+
+typedef union {
+    int i;
+    long l;
+    long long ll;
+    intmax_t im;
+    unsigned u;
+    unsigned long ul;
+    unsigned long long ull;
+    uintmax_t um;
+    double d;
+    long double ld;
+    void* pv;
+    char* s;
+    ptrdiff_t ptrdiff;
+    size_t sz;
+    wint_t wi;
+    int32_t i32;
+    int64_t i64;
+    uint32_t ui32;
+    uint64_t ui64;
+} arg_t;
+
+typedef map<int, arg_t> arg_map_t;
+
+static void _pop_va_args(va_list args, const arg_type_map_t &types, arg_map_t &results)
+{
+    arg_type_map_t::const_iterator iter;
+    for (iter = types.begin(); iter != types.end(); ++iter)
+    {
+        int arg_id = iter->first;
+        arg_t arg;
+        if (iter->second == &typeid(int))
+            arg.i = va_arg(args, int);
+        else if (iter->second == &typeid(long))
+            arg.l = va_arg(args, long);
+        else if (iter->second == &typeid(long long))
+            arg.ll = va_arg(args, long long);
+        else if (iter->second == &typeid(intmax_t))
+            arg.im = va_arg(args, intmax_t);
+        else if (iter->second == &typeid(unsigned))
+            arg.u = va_arg(args, unsigned);
+        else if (iter->second == &typeid(unsigned long))
+            arg.ul = va_arg(args, unsigned long);
+        else if (iter->second == &typeid(unsigned long long))
+            arg.ull = va_arg(args, unsigned long long);
+        else if (iter->second == &typeid(uintmax_t))
+            arg.um = va_arg(args, uintmax_t);
+        else if (iter->second == &typeid(double))
+            arg.d = va_arg(args, double);
+        else if (iter->second == &typeid(long double))
+            arg.ld = va_arg(args, long double);
+        else if (iter->second == &typeid(char*))
+            arg.s = va_arg(args, char*);
+        else if (iter->second == &typeid(void*))
+            arg.pv = va_arg(args, void*);
+        else if (iter->second == &typeid(ptrdiff_t))
+            arg.ptrdiff = va_arg(args, ptrdiff_t);
+        else if (iter->second == &typeid(size_t))
+            arg.sz = va_arg(args, size_t);
+        else if (iter->second == &typeid(wint_t))
+            arg.wi = va_arg(args, wint_t);
+        else if (iter->second == &typeid(int32_t))
+            arg.i32 = va_arg(args, int32_t);
+        else if (iter->second == &typeid(int64_t))
+            arg.i64 = va_arg(args, int64_t);
+        else if (iter->second == &typeid(uint32_t))
+            arg.ui32 = va_arg(args, uint32_t);
+        else if (iter->second == &typeid(uint64_t))
+            arg.ui64 = va_arg(args, uint64_t);
+        else
+            arg.i = va_arg(args, int);
+
+        results[arg_id] = arg;
+    }
+}
+
+// format UTF-8 string using printf-style format specifier
+static string _format_utf8_string(const string& fmt, const string& arg)
+{
+    if (fmt == "%s")
+    {
+        // trivial case
+        return arg;
+    }
+
+    // if there are width/precision args, then sprintf won't handle it correctly
+    // (it will count bytes), so we have to handle it in a unicode-aware way
+    int width = -1;
+    int precision = -1;
+    bool right_justify = true; // default for %s
+
+    for (size_t i = 1; i < fmt.length(); i++)
+    {
+        char ch = fmt[i];
+        if (ch == '-')
+            right_justify = false;
+        else if (ch == '.')
+            precision = 0;
+        else if (ch >= '0' && ch <= '9')
+            if (precision >= 0)
+                precision = (precision * 10) + (int)(ch - '0');
+            else
+            {
+                if (width < 0)
+                    width = (int)(ch - '0');
+                else
+                    width = (width * 10) + (int)(ch - '0');
+            }
+    }
+
+    string result = arg;
+
+    if (precision >= 0)
+        result = chop_string(result, precision, false);
+
+    if (width > 0)
+        result = pad_string(result, width, right_justify);
+
+    return result;
+}
+
 string vmake_stringf(const char* s, va_list args)
 {
-    char buf1[8000];
-    va_list orig_args;
-    va_copy(orig_args, args);
-    size_t len = vsnprintf(buf1, sizeof buf1, s, orig_args);
-    va_end(orig_args);
-    if (len < sizeof buf1)
-        return buf1;
+    if (!s || *s == '\0')
+        return "";
 
-    char *buf2 = (char*)malloc(len + 1);
-    va_copy(orig_args, args);
-    vsnprintf(buf2, len + 1, s, orig_args);
-    va_end(orig_args);
-    string ret(buf2);
-    free(buf2);
+    vector<string> tokens;
+    arg_type_map_t arg_types;
+    arg_map_t arg_values;
 
-    return ret;
+    _split_format_string(s, tokens);
+    _get_arg_types(tokens, arg_types);
+
+    va_list args_copy;
+    va_copy(args_copy, args);
+    _pop_va_args(args_copy, arg_types, arg_values);
+    va_end(args_copy);
+
+    // Only used for non-strings. However, there is no upper limit on the bytes
+    // required because the caller could specify an arbitrarily large width.
+    char buf[1000];
+
+    stringstream ss;
+
+    int arg_count = 0;
+    for (string tok: tokens)
+    {
+        if (!starts_with(tok, "%"))
+        {
+            // plain string
+            ss << tok;
+        }
+        else if (ends_with(tok, "%"))
+        {
+            // escaped percent sign
+            ss << '%';
+        }
+        else {
+            string fmt(tok);
+
+            // explictly numbered arguments?
+            bool explicit_arg_ids = contains(fmt, "$");
+
+            // handle dynamic width/precision
+            size_t pos = 0;
+            while ((pos = fmt.find('*')) != string::npos)
+            {
+                ++arg_count;
+                int arg_id = 0;
+                if (explicit_arg_ids)
+                    arg_id = atoi(fmt.substr(pos+1).c_str());
+                if (arg_id == 0)
+                    arg_id = arg_count;
+
+                int num = arg_values[arg_id].i;
+                sprintf(buf, "%d", num);
+
+                // replace "*" or "*<num>$" with actual width/precision value
+                size_t end = fmt.find('$', pos);
+                if (end == string::npos)
+                    end = pos;
+                fmt.replace(pos, end - pos + 1, buf);
+                //cout << "DEBUG: Handled dynamic width/precision arg #" << arg_id << " with value: " << arg_values[arg_id].i << endl;
+            }
+            
+            arg_count++;
+            int arg_id = 0;
+            if (explicit_arg_ids)
+                arg_id = atoi(fmt.substr(1).c_str());
+            if (arg_id == 0)
+                arg_id = arg_count;
+
+            // remove arg id
+            pos = fmt.find('$', pos);
+            if (pos != string::npos)
+                fmt.replace(1, pos, buf);
+
+            arg_t arg = arg_values[arg_id];
+            const type_info* arg_type = arg_types[arg_id];
+            //cout << "DEBUG: Handling " << (arg_type == &typeid(char*) ? "string" : "non-string") << " arg #" << arg_id << " with value: " << arg.pv << endl;
+
+
+            if (arg_type == &typeid(char*))
+            {
+                // string
+                if (fmt == "%s")
+                    ss << (arg.s ? arg.s : ""); // trivial case
+                else
+                    ss << _format_utf8_string(fmt, arg.s ? arg.s : "");
+            }
+            else if (ends_with(fmt, "n"))
+            {
+                // output the number of characters printed so far to the arg
+                if (!arg.pv)
+                    continue;
+                size_t count = strwidth(ss.str());
+                if (ends_with(fmt, "lln"))
+                    *(long long*)arg.pv = (long long)count;
+                else if (ends_with(fmt, "ln"))
+                    *(long*)arg.pv = (long)count;
+                else if (ends_with(fmt, "hhn"))
+                    *(char*)arg.pv = (char)count;
+                else if (ends_with(fmt, "hn"))
+                    *(short*)arg.pv = (short)count;
+                else if (ends_with(fmt, "jn"))
+                    *(intmax_t*)arg.pv = (intmax_t)count;
+                else if (ends_with(fmt, "zn"))
+                    *(size_t*)arg.pv = (size_t)count;
+                else if (ends_with(fmt, "tn"))
+                    *(ptrdiff_t*)arg.pv = (ptrdiff_t)count;
+                else
+                    *(int*)arg.pv = (int)count;
+            }
+            else
+            {
+                // numeric
+                buf[0] = '\0';
+                if (arg_type == &typeid(int))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.i);
+                else if (arg_type == &typeid(long))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.l);
+                else if (arg_type == &typeid(long long))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ll);
+                else if (arg_type == &typeid(intmax_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.im);
+                else if (arg_type == &typeid(unsigned))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.u);
+                else if (arg_type == &typeid(unsigned long))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ul);
+                else if (arg_type == &typeid(unsigned long long))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ull);
+                else if (arg_type == &typeid(uintmax_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.um);
+                else if (arg_type == &typeid(double))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.d);
+                else if (arg_type == &typeid(long double))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ld);
+                else if (arg_type == &typeid(void*))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.pv);
+                else if (arg_type == &typeid(ptrdiff_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ptrdiff);
+                else if (arg_type == &typeid(size_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.sz);
+                else if (arg_type == &typeid(wint_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.wi);
+                else if (arg_type == &typeid(int32_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.i32);
+                else if (arg_type == &typeid(int64_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.i64);
+                else if (arg_type == &typeid(uint32_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ui32);
+                else if (arg_type == &typeid(uint64_t))
+                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ui64);
+
+                ss << buf;
+            }
+        }
+    }
+
+    return ss.str();
 }
 
 string make_stringf(const char *s, ...)
@@ -461,6 +889,16 @@ int count_occurrences(const string &text, const string &s)
 bool contains(const string &text, const string &s)
 {
     return !s.empty() && text.find(s) != string::npos;
+}
+
+bool contains(const string &text, char c)
+{
+    return text.find(c) != string::npos;
+}
+
+bool contains(const char* text, char c)
+{
+    return text && strchr(text, c);
 }
 
 bool is_all_digits(const string& s)
