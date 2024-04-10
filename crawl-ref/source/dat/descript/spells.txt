@@ -1291,6 +1291,19 @@ Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
 %%%%
+Rimeblight spell
+
+Afflicts a living, demonic, or holy creature with a magical plague that slowly
+freezes them from the inside out. Victims take AC-ignoring cold damage each
+turn, and as their disease progresses, shards of crystaline ice may erupt
+violently from their flesh, damaging nearby enemies and even spreading the
+affliction to others.
+
+The disease feeds off the necromantic energies released by its host's suffering,
+and as they near death, it may accellerate rapidly, devouring the last
+vestigates of their body and leaving nothing behind but a twisted pillar of
+stygian ice.
+%%%%
 Roll spell
 
 Roll into a ball, granting the boulder beetle tremendous speed as well as

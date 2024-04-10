@@ -58,6 +58,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-selfench.h"
@@ -1850,9 +1851,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
                                 || killer == KILL_DISMISSED);
-    const bool leaves_corpse = !summoned && !fake_abjure && !timeout
-                               && !mons_reset
-                               && !mons_is_tentacle_segment(mons.type);
+    bool leaves_corpse = !summoned && !fake_abjure && !timeout
+                            && !mons_reset
+                            && !mons_is_tentacle_segment(mons.type);
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
@@ -1992,6 +1993,19 @@ item_def* monster_die(monster& mons, killer_type killer,
                                              SPELL_SIMULACRUM);
 
         silent = true;
+    }
+    else if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
+             && !silent && !was_banished && !wizard && !mons_reset && !mons_reset
+             && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
+    {
+        leaves_corpse = false;
+        did_death_message = true;
+        if (you.see_cell(mons.pos()))
+        {
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
+                 "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
+        }
+        rime_pillar_fineff::schedule(mons.pos(), random_range(3, 11) * BASELINE_DELAY);
     }
 
     if (monster_explodes(mons))

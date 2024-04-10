@@ -132,6 +132,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
     { ENCH_TOUCH_OF_BEOGH,  MB_TOUCH_OF_BEOGH },
     { ENCH_VENGEANCE_TARGET, MB_VENGEANCE_TARGET },
+    { ENCH_RIMEBLIGHT,      MB_RIMEBLIGHT },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

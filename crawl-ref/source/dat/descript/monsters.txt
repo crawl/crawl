@@ -2151,6 +2151,18 @@ pile of debris
 
 A heavily ruptured stonework, surrounded by rubble.
 %%%%
+pillar of rime
+
+A spire of strangely tenebrous ice, its brittle tendrils reaching skyward like
+the fingers of an outstretched hand. {{
+    if spells.memorised("rimeblight") then
+        return "If only the dying breath of every soul could create such art."
+    else
+        return "It might even be beautiful if you didn't know the gruesome " ..
+               "way it formed."
+    end
+}}
+%%%%
 pillar of salt
 
 A pillar of salt shaped like a statue, but worked by no living hands.

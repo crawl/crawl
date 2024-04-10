@@ -3099,7 +3099,8 @@ bool bolt::harmless_to_player() const
         return true;
 
     if (origin_spell == SPELL_COMBUSTION_BREATH
-        || origin_spell == SPELL_NULLIFYING_BREATH)
+        || origin_spell == SPELL_NULLIFYING_BREATH
+        || origin_spell == SPELL_RIMEBLIGHT)
     {
         return true;
     }
@@ -4302,7 +4303,8 @@ bool bolt::ignores_player() const
         return true;
 
     if (origin_spell == SPELL_COMBUSTION_BREATH
-        || origin_spell == SPELL_NULLIFYING_BREATH)
+        || origin_spell == SPELL_NULLIFYING_BREATH
+        || origin_spell == SPELL_RIMEBLIGHT)
     {
         return true;
     }
@@ -5046,6 +5048,16 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->speed_increment += 10;
         simple_monster_message(*mon, " is empowered.");
     }
+
+    if (origin_spell == SPELL_RIMEBLIGHT)
+    {
+        if (mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+            && !mon->has_ench(ENCH_RIMEBLIGHT)
+            && one_chance_in(2))
+        {
+            apply_rimeblight(*mon, ench_power);
+        }
+    }
 }
 
 static int _knockback_dist(spell_type origin, int pow)
@@ -5540,6 +5552,10 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
         return true;
 
+    // Rimeblight explosions won't hurt allies OR the monster that is exploding
+    if (origin_spell == SPELL_RIMEBLIGHT)
+        return mon->friendly() || mon->pos() == source;
+
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);
     if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)
@@ -5591,6 +5607,7 @@ bool bolt::has_saving_throw() const
     case BEAM_CONCENTRATE_VENOM:
     case BEAM_ENFEEBLE:
     case BEAM_VITRIFYING_GAZE:
+    case BEAM_RIMEBLIGHT:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -5711,6 +5728,11 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         rc = mons_has_attacks(*mon)
              || mon->antimagic_susceptible()
              || !mons_invuln_will(*mon);
+        break;
+
+    case BEAM_RIMEBLIGHT:
+        rc = !mon->has_ench(ENCH_RIMEBLIGHT)
+             && mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY);
         break;
 
     default:
@@ -6401,6 +6423,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         return MON_AFFECTED;
 
+    case BEAM_RIMEBLIGHT:
+        if (apply_rimeblight(*mon, ench_power, true))
+        {
+            mprf("A stygian plague fills %s body.", mon->name(DESC_THE).c_str());
+            obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
     default:
         break;
     }
@@ -6962,6 +6992,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_MINDBURST:
         case BEAM_VAMPIRIC_DRAINING:
         case BEAM_ENFEEBLE:
+        case BEAM_RIMEBLIGHT:
             return ench_flavour_affects_monster(agent(), flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
@@ -7257,6 +7288,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_CRYSTALLIZING:         return "crystallizing";
     case BEAM_WARPING:               return "spatial disruption";
     case BEAM_QAZLAL:                return "upheaval targetter";
+    case BEAM_RIMEBLIGHT:            return "rimeblight";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

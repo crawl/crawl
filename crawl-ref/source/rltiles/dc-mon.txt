@@ -531,6 +531,7 @@ pile_of_debris_00 MONS_PILE_OF_DEBRIS
 pile_of_debris_01
 pillar_of_salt MONS_PILLAR_OF_SALT
 block_of_ice3 MONS_BLOCK_OF_ICE
+rime_pillar MONS_PILLAR_OF_RIME
 training_dummy MONS_TRAINING_DUMMY
 ice_statue MONS_ICE_STATUE
 obsidian_statue MONS_OBSIDIAN_STATUE

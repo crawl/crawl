@@ -1656,6 +1656,16 @@ static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
     return vector<string>{};
 }
 
+static vector<string> _desc_rimeblight_valid(const monster_info& mi)
+{
+    if (mi.is(MB_RIMEBLIGHT))
+        return vector<string>{"already infected"};
+    else if (!(mi.holi & (MH_NATURAL | MH_DEMONIC | MH_HOLY)))
+        return vector<string>{"not susceptible"};
+
+    return vector<string>{};
+}
+
 static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
 {
     const int wl = mi.willpower();
@@ -1824,6 +1834,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_meph_chance, placeholders::_1);
         case SPELL_VAMPIRIC_DRAINING:
             return bind(_desc_vampiric_draining_valid, placeholders::_1);
+        case SPELL_RIMEBLIGHT:
+            return bind(_desc_rimeblight_valid, placeholders::_1);
         case SPELL_STARBURST:
         {
             targeter_starburst* burst_hitf =
@@ -2910,6 +2922,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
 
         case SPELL_FULSOME_FUSILLADE:
             return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
+        case SPELL_RIMEBLIGHT:
+            return describe_rimeblight_damage(pow, terse);
         default:
             break;
     }
