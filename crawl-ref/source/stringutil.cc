@@ -565,8 +565,13 @@ string vmake_stringf(const char* s, va_list args)
                 if (arg_id == 0)
                     arg_id = arg_count;
 
-                int num = arg_values[arg_id].i;
-                sprintf(buf, "%d", num);
+                auto arg_it = arg_values.find(arg_id);
+                if (arg_it == arg_values.end())
+                {
+                    ss << "(missing arg #" << arg_id << ")";
+                    continue;
+                }
+                sprintf(buf, "%d", arg_it->second.i);
 
                 // replace "*" or "*<num>$" with actual width/precision value
                 size_t end = fmt.find('$', pos);
@@ -587,8 +592,14 @@ string vmake_stringf(const char* s, va_list args)
             if (pos != string::npos)
                 fmt.replace(1, pos, buf);
 
-            arg_t arg = arg_values[arg_id];
             const type_info* arg_type = arg_types[arg_id];
+            auto arg_it = arg_values.find(arg_id);
+            if (arg_type == nullptr || arg_it == arg_values.end())
+            {
+                ss << "(missing arg #" << arg_id << ")";
+                continue;
+            }
+            arg_t arg = arg_it->second;
 
             if (arg_type == &typeid(char*))
             {
