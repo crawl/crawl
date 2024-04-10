@@ -852,7 +852,7 @@ citrine
 bone
 platinum
 jade
-flourescent
+fluorescent
 amethyst
 cameo
 pearl
