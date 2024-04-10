@@ -288,15 +288,23 @@ static void _split_format_string(const char* s, vector<string>& tokens)
 static const type_info* _format_spec_to_type(const string& fmt)
 {
     if (fmt.length() < 2 || fmt.at(0) != '%')
-        return NULL;
+        return nullptr;
 
     char last_char = fmt.back();
+    char penultimate = fmt.at(fmt.length()-2);
+
     if (last_char == 's')
-        return &typeid(char*);
-    else if (contains("id", last_char))
     {
-        // signed int
-        char penultimate = fmt.at(fmt.length()-2);
+        // string
+        if (penultimate == 'l')
+            return &typeid(wchar_t*);
+        else
+            return &typeid(char*);
+    }
+    else if (strchr("iduoxX", last_char))
+    {
+        // integer
+        // signed or unsigned doesn't matter - the size is the same
         if (penultimate == 'l')
         {
             if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
@@ -311,7 +319,10 @@ static const type_info* _format_spec_to_type(const string& fmt)
         else if (penultimate == 'j')
             return &typeid(intmax_t);
         else if (penultimate == 'I')
-            return &typeid(ptrdiff_t);
+            if (strchr("id", last_char))
+                return &typeid(ptrdiff_t);
+            else
+                return &typeid(size_t);
         else if (penultimate == 'q')
             return &typeid(int64_t);
         else if (contains(fmt, "I32"))
@@ -321,35 +332,7 @@ static const type_info* _format_spec_to_type(const string& fmt)
         else
             return &typeid(int);
     }
-    else if (contains("uoxX", last_char))
-    {
-        // unsigned
-        char penultimate = fmt.at(fmt.length()-2);
-        if (penultimate == 'l')
-        {
-            if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
-                return &typeid(unsigned long long);
-            else
-                return &typeid(unsigned long);
-        }
-        else if (penultimate == 't')
-            return &typeid(ptrdiff_t);
-        else if (penultimate == 'z')
-            return &typeid(size_t);
-        else if (penultimate == 'j')
-            return &typeid(uintmax_t);
-        else if (penultimate == 'I')
-            return &typeid(size_t);
-        else if (penultimate == 'q')
-            return &typeid(uint64_t);
-        else if (contains(fmt, "I32"))
-            return &typeid(uint32_t);
-        else if (contains(fmt, "I64"))
-            return &typeid(uint64_t);
-        else
-            return &typeid(unsigned);
-    }
-    else if (contains("aAeEfFgG", last_char))
+    else if (strchr("aAeEfFgG", last_char))
     {
         // floating point
         if (fmt.at(fmt.length()-2) == 'L')
@@ -360,24 +343,29 @@ static const type_info* _format_spec_to_type(const string& fmt)
     else if (last_char == 'c')
     {
         // char is promoted to int
-        char penultimate = fmt.at(fmt.length()-2);
         if (penultimate == 'l')
             return &typeid(wint_t);
         else
             return &typeid(int);
     }
-    else if (last_char == 'p' || last_char == 'n')
+    else if (last_char == 'p')
         return &typeid(void*);
+    else if (last_char == 'n')
+    {
+        // actually a pointer to some type of int,
+        // but we store as void* and work it out later
+        return &typeid(void*);
+    }
 
-    return NULL;
+    return nullptr;
 }
 
 typedef map<int, const type_info*> arg_type_map_t;
 
+// get arg types from a tokenised format string
 static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results)
 {
     int arg_count = 0;
-    int arg_id;
     vector<string>::const_iterator it;
     for (it = tokens.begin(); it != tokens.end(); ++it)
     {
@@ -394,7 +382,7 @@ static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results
         {
             ++pos;
             ++arg_count;
-            arg_id = 0;
+            int arg_id = 0;
             if (explicit_arg_ids)
                 arg_id = atoi(s.substr(pos).c_str());
             if (arg_id == 0)
@@ -404,7 +392,7 @@ static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results
 
         // now the arg itself
         ++arg_count;
-        arg_id = 0;
+        int arg_id = 0;
         if (explicit_arg_ids)
             arg_id = atoi(s.substr(1).c_str());
         if (arg_id == 0)
@@ -415,18 +403,15 @@ static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results
 }
 
 typedef union {
+    char* s;
+    wchar_t* ws;
     int i;
     long l;
     long long ll;
     intmax_t im;
-    unsigned u;
-    unsigned long ul;
-    unsigned long long ull;
-    uintmax_t um;
     double d;
     long double ld;
     void* pv;
-    char* s;
     ptrdiff_t ptrdiff;
     size_t sz;
     wint_t wi;
@@ -445,7 +430,11 @@ static void _pop_va_args(va_list args, const arg_type_map_t &types, arg_map_t &r
     {
         int arg_id = iter->first;
         arg_t arg;
-        if (iter->second == &typeid(int))
+        if (iter->second == &typeid(char*))
+            arg.s = va_arg(args, char*);
+        else if (iter->second == &typeid(wchar_t*))
+            arg.ws = va_arg(args, wchar_t*);
+        else if (iter->second == &typeid(int))
             arg.i = va_arg(args, int);
         else if (iter->second == &typeid(long))
             arg.l = va_arg(args, long);
@@ -453,20 +442,10 @@ static void _pop_va_args(va_list args, const arg_type_map_t &types, arg_map_t &r
             arg.ll = va_arg(args, long long);
         else if (iter->second == &typeid(intmax_t))
             arg.im = va_arg(args, intmax_t);
-        else if (iter->second == &typeid(unsigned))
-            arg.u = va_arg(args, unsigned);
-        else if (iter->second == &typeid(unsigned long))
-            arg.ul = va_arg(args, unsigned long);
-        else if (iter->second == &typeid(unsigned long long))
-            arg.ull = va_arg(args, unsigned long long);
-        else if (iter->second == &typeid(uintmax_t))
-            arg.um = va_arg(args, uintmax_t);
         else if (iter->second == &typeid(double))
             arg.d = va_arg(args, double);
         else if (iter->second == &typeid(long double))
             arg.ld = va_arg(args, long double);
-        else if (iter->second == &typeid(char*))
-            arg.s = va_arg(args, char*);
         else if (iter->second == &typeid(void*))
             arg.pv = va_arg(args, void*);
         else if (iter->second == &typeid(ptrdiff_t))
@@ -552,8 +531,6 @@ string vmake_stringf(const char* s, va_list args)
     _pop_va_args(args_copy, arg_types, arg_values);
     va_end(args_copy);
 
-    // Only used for non-strings. However, there is no upper limit on the bytes
-    // required because the caller could specify an arbitrarily large width.
     char buf[1000];
 
     stringstream ss;
@@ -596,9 +573,8 @@ string vmake_stringf(const char* s, va_list args)
                 if (end == string::npos)
                     end = pos;
                 fmt.replace(pos, end - pos + 1, buf);
-                //cout << "DEBUG: Handled dynamic width/precision arg #" << arg_id << " with value: " << arg_values[arg_id].i << endl;
             }
-            
+
             arg_count++;
             int arg_id = 0;
             if (explicit_arg_ids)
@@ -613,8 +589,6 @@ string vmake_stringf(const char* s, va_list args)
 
             arg_t arg = arg_values[arg_id];
             const type_info* arg_type = arg_types[arg_id];
-            //cout << "DEBUG: Handling " << (arg_type == &typeid(char*) ? "string" : "non-string") << " arg #" << arg_id << " with value: " << arg.pv << endl;
-
 
             if (arg_type == &typeid(char*))
             {
@@ -623,6 +597,21 @@ string vmake_stringf(const char* s, va_list args)
                     ss << (arg.s ? arg.s : ""); // trivial case
                 else
                     ss << _format_utf8_string(fmt, arg.s ? arg.s : "");
+            }
+            else if (arg_type == &typeid(wchar_t*))
+            {
+                // wide char string (shouldn't happen, but just in case)
+                size_t len = snprintf(buf, sizeof buf, fmt.c_str(), arg.ws);
+                if (len >= sizeof buf)
+                {
+                    // too big for buf
+                    char* buf2 = new char[len + 1];
+                    snprintf(buf2, len + 1, fmt.c_str(), arg.ws);
+                    ss << buf2;
+                    delete buf2;
+                }
+                else if (len > 0)
+                    ss << buf;
             }
             else if (ends_with(fmt, "n"))
             {
@@ -649,7 +638,7 @@ string vmake_stringf(const char* s, va_list args)
             }
             else
             {
-                // numeric
+                // numeric or char
                 buf[0] = '\0';
                 if (arg_type == &typeid(int))
                     snprintf(buf, sizeof buf, fmt.c_str(), arg.i);
@@ -659,14 +648,6 @@ string vmake_stringf(const char* s, va_list args)
                     snprintf(buf, sizeof buf, fmt.c_str(), arg.ll);
                 else if (arg_type == &typeid(intmax_t))
                     snprintf(buf, sizeof buf, fmt.c_str(), arg.im);
-                else if (arg_type == &typeid(unsigned))
-                    snprintf(buf, sizeof buf, fmt.c_str(), arg.u);
-                else if (arg_type == &typeid(unsigned long))
-                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ul);
-                else if (arg_type == &typeid(unsigned long long))
-                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ull);
-                else if (arg_type == &typeid(uintmax_t))
-                    snprintf(buf, sizeof buf, fmt.c_str(), arg.um);
                 else if (arg_type == &typeid(double))
                     snprintf(buf, sizeof buf, fmt.c_str(), arg.d);
                 else if (arg_type == &typeid(long double))
@@ -683,10 +664,6 @@ string vmake_stringf(const char* s, va_list args)
                     snprintf(buf, sizeof buf, fmt.c_str(), arg.i32);
                 else if (arg_type == &typeid(int64_t))
                     snprintf(buf, sizeof buf, fmt.c_str(), arg.i64);
-                else if (arg_type == &typeid(uint32_t))
-                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ui32);
-                else if (arg_type == &typeid(uint64_t))
-                    snprintf(buf, sizeof buf, fmt.c_str(), arg.ui64);
 
                 ss << buf;
             }
