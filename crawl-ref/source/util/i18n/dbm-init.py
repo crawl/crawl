@@ -78,26 +78,36 @@ outfile = open("dbm.txt", "w")
 
 in_entry = False
 locnote = ""
+source_heading = ""
 for line in keyfile:
     if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
         # blank line or comment
-        if not re.match('^# duplicate', line):
-            if 'note:' in line:
-                locnote = line
-                continue
-            elif line.startswith('# section:'):
-                # skip
-                continue
-            if in_entry:
-                outfile.write("%%%%\n");
-                in_entry = False
-            outfile.write(line)
-            if '##################' in line:
-                locnote = ''
+        if line.startswith('# duplicate:') or line.startswith('# section:'):
+            continue
+        elif line.startswith('# note:'):
+            locnote = line
+            continue
+        if in_entry:
+            outfile.write("%%%%\n");
+            in_entry = False
+        if '##################' in line:
+            locnote = ''
+            if source_heading.count('##################') > 1:
+                # don't output the source file name if no strings from file in output
+                source_heading = ""
+            source_heading += line
+            continue
+        elif source_heading != "":
+            source_heading += line
+            continue
+        outfile.write(line)
     else:
         key = strip_quotes_if_allowed(line.strip())
         if key in ignore_vals:
             continue
+        if source_heading != "":
+            outfile.write(source_heading)
+            source_heading = ""
         outfile.write("%%%%\n");
         if locnote != "":
             outfile.write(locnote)
