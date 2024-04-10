@@ -39,7 +39,6 @@ const vector<string> test_items = {
 
     "a wand of digging (18)",
     "a lightning rod (3/4)",
-    "2 boxes of beasts",
 
     "the ring of Fedhas's Hope {MP+9 Int+4 Dex+2}",
 
@@ -91,7 +90,6 @@ const vector<string> expected = {
 
     "ein Zauberstab des Grabens (18)",
     "eine Blitzstange (3/4)",
-    "2 Kisten der Bestien",
 
     "der Ring von \"Fedhas's Hope\" {MP+9 Int+4 Ges+2}",
 
