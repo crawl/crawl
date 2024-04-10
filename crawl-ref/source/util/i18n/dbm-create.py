@@ -35,6 +35,9 @@ while line1 and line2:
 
     if re.match('^ *$', line1) or re.match('^ *#', line1):
         # blank line or comment
+        if line1.startswith('# section:'):
+            # skip
+            continue
         outfile.write(line1)
     else:
         outfile.write("%%%%\n");

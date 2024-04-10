@@ -781,7 +781,7 @@ def add_strings_to_output(filename, strings, output):
         #   - if it starts with # (because otherwise it looks like a comment)
         #   - if it starts and ends with double-quotes
         if string.startswith('# section:'):
-            #output.append(string)
+            output.append(string)
             continue
         elif '# note' in string:
             output.append(string)

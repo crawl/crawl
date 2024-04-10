@@ -85,6 +85,9 @@ for line in keyfile:
             if 'note:' in line:
                 locnote = line
                 continue
+            elif line.startswith('# section:'):
+                # skip
+                continue
             if in_entry:
                 outfile.write("%%%%\n");
                 in_entry = False
