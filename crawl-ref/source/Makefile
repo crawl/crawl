@@ -1643,11 +1643,16 @@ catch2-tests-executable: $(CATCH2_TEST_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lu
 CATCH2_PNP_OBJECTS = $(OBJECTS) catch2-tests/test_plug_and_play.o \
                      catch2-tests/test_main.o $(EXTRA_OBJECTS)
 
+MAKE_STRINGF_TEST_OBJS = test/i18n/make-stringf-test.o stringutil.o unicode.o syscalls.o
+
 plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CATCH2_PNP_OBJECTS) -o $@ $(LIBS)
 
 catch2-tests: catch2-tests-executable
 	./catch2-tests-executable
+
+make-stringf-test: $(MAKE_STRINGF_TEST_OBJS) $(CONTRIB_LIBS) all
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(MAKE_STRINGF_TEST_OBJS) -o $@ $(LIBS)
 
 check-regex-rules: test/i18n/check-regex-rules.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
@@ -1664,7 +1669,8 @@ fr-misc-test: test/i18n/fr/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIB
 ru-misc-test: test/i18n/ru/misc-test.o $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) all
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(OBJECTS) $< $(EXTRA_OBJECTS) -o $@ $(LIBS)
 
-i18n-tests: $(GAME) check-regex-rules de-item-test de-misc-test fr-misc-test ru-misc-test
+i18n-tests: $(GAME) make-stringf-test check-regex-rules de-item-test de-misc-test fr-misc-test ru-misc-test
+	./make-stringf-test
 	./de-item-test
 	./de-misc-test
 	./fr-misc-test
@@ -1685,7 +1691,7 @@ clean-plug-and-play-tests:
 	$(RM) plug-and-play-tests plug-and-play-tests.exe
 
 clean-i18n-tests:
-	$(RM) de-item-test de-misc-test fr-misc-test test/i18n/*/*.o
+	$(RM) make-stringf-test de-item-test de-misc-test fr-misc-test test/i18n/*/*.o
 
 debug: all
 debug-lite: all

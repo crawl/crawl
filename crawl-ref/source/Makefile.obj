@@ -590,6 +590,7 @@ zap-type.h.o \
 
 I18N_TEST_OBJECTS = \
 test/i18n/check-regex-rules.o \
+test/i18n/make-stringf-test.o \
 test/i18n/de/item-test.o \
 test/i18n/de/misc-test.o \
 test/i18n/fr/misc-test.o \
