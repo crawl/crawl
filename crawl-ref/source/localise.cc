@@ -46,50 +46,6 @@ static inline bool _contains(const std::string& s, char c)
     return s.find(c) != string::npos;
 }
 
-// format UTF-8 string using printf-style format specifier
-static string _format_utf8_string(const string& fmt, const string& arg)
-{
-    if (fmt == "%s")
-    {
-        // trivial case
-        return arg;
-    }
-
-    // if there are width/precision args, then make_stringf won't handle it correctly
-    // (it will count bytes), so we have to handle it in a unicode-aware way
-    int width = -1;
-    int precision = -1;
-    bool right_justify = true; // default for %s
-
-    for (size_t i = 1; i < fmt.length(); i++)
-    {
-        char ch = fmt[i];
-        if (ch == '-')
-            right_justify = false;
-        else if (ch == '.')
-            precision = 0;
-        else if (ch >= '0' && ch <= '9')
-            if (precision >= 0)
-                precision = (precision * 10) + (int)(ch - '0');
-            else
-            {
-                if (width < 0)
-                    width = (int)(ch - '0');
-                else
-                    width = (width * 10) + (int)(ch - '0');
-            }
-    }
-
-    string result = arg;
-    if (precision >= 0)
-        result = chop_string(result, precision, false);
-
-    if (width > 0)
-        result = pad_string(result, width, right_justify);
-
-    return result;
-}
-
 // is this char a printf typespec (i.e. the end of %<something><char>)?
 static inline bool _is_type_spec(char c)
 {
@@ -127,70 +83,6 @@ static string _remove_arg_id(const string& fmt)
     if (dollar_pos < fmt.length()-1)
         result += fmt.substr(dollar_pos+1, string::npos);
     return result;
-}
-
-// translate a format spec like %d to a type like int
-static const type_info* _format_spec_to_type(const string& fmt)
-{
-    if (fmt.length() < 2 || fmt.at(0) != '%')
-        return NULL;
-
-    char last_char = fmt.back();
-    if (last_char == 'p')
-        return &typeid(void*);
-    else if (last_char == 's')
-        return &typeid(char*);
-    else if (last_char == 'n')
-        return &typeid(int*);
-    else if (_contains("aAeEfFgG", last_char))
-    {
-        if (fmt.at(fmt.length()-2) == 'L')
-            return &typeid(long double);
-        else
-            return &typeid(double);
-    }
-    else if (_contains("uoxX", last_char))
-    {
-        // unsigned
-        char penultimate = fmt.at(fmt.length()-2);
-        if (penultimate == 'p')
-            return &typeid(ptrdiff_t);
-        else if (penultimate == 'z')
-            return &typeid(size_t);
-        else if (penultimate == 'j')
-            return &typeid(uintmax_t);
-        else if (penultimate == 'l')
-        {
-            if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
-                return &typeid(unsigned long long);
-            else
-                return &typeid(unsigned long);
-        }
-        else
-            return &typeid(unsigned);
-    }
-    else if (_contains("cid", last_char))
-    {
-        // signed int
-        char penultimate = fmt.at(fmt.length()-2);
-        if (penultimate == 'p')
-            return &typeid(ptrdiff_t);
-        else if (penultimate == 'z')
-            return &typeid(size_t);
-        else if (penultimate == 'j')
-            return &typeid(intmax_t);
-        else if (penultimate == 'l')
-        {
-            if (fmt.length() > 2 && fmt.at(fmt.length()-3) == 'l')
-                return &typeid(long long);
-            else
-                return &typeid(long);
-        }
-        else
-            return &typeid(int);
-    }
-
-    return NULL;
 }
 
 // find the nth occurrence of a char in a string
@@ -240,7 +132,7 @@ static void _split_after_nth_occurrence(const string &s, const char c, size_t n,
     }
 }
 
-// split format string into constants and format specifiers
+// split format string into constants, format specifiers, and context specifiers
 static vector<string> _split_format(const string& fmt_str)
 {
     vector<string> results;
@@ -360,30 +252,6 @@ static string _shift_context(const string& str)
         first = false;
     }
     return result;
-}
-
-/**
- * Get arg types from format string.
- * Returns a map indexed by argument id, beginning with 1.
- */
-static map<int, const type_info*> _get_arg_types(const string& fmt)
-{
-    map<int, const type_info*> results;
-    vector<string> strings = _split_format(fmt);
-    int arg_count = 0;
-    for (vector<string>::iterator it = strings.begin() ; it != strings.end(); ++it)
-    {
-        if (it->at(0) == '%' && it->length() > 1 && it->at(1) != '%')
-        {
-            ++arg_count;
-            const type_info* ti = _format_spec_to_type(*it);
-            int arg_id = _get_arg_id(*it);
-            if (arg_id == 0)
-                arg_id = arg_count;
-            results[arg_id] = ti;
-        }
-    }
-    return results;
 }
 
 static bool is_determiner(const string& word)
@@ -1831,7 +1699,8 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
         fmt_xlated = fmt_arg.stringVal;
 
     // get arg types for original English string
-    map<int, const type_info*> arg_types = _get_arg_types(fmt_arg.stringVal);
+    arg_type_map_t arg_types;
+    get_arg_types(fmt_arg.stringVal, arg_types);
 
     // now tokenize the translated string
     vector<string> strings = _split_format(fmt_xlated);
@@ -1858,7 +1727,7 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
             int arg_id = _get_arg_id(*it);
             arg_id = (arg_id == 0 ? arg_count : arg_id);
 
-            map<int, const type_info*>::iterator type_entry = arg_types.find(arg_id);
+            arg_type_map_t::iterator type_entry = arg_types.find(arg_id);
 
             // range check arg id
             if (type_entry == arg_types.end() || (size_t)arg_id >= args.size())
@@ -1871,7 +1740,7 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                 const LocalisationArg& arg = args.at(arg_id);
 
                 string fmt_spec = _remove_arg_id(*it);
-                const type_info* type = _format_spec_to_type(fmt_spec);
+                const type_info* type = format_spec_to_type(fmt_spec);
                 const type_info* expected_type = type_entry->second;
 
                 if (expected_type == NULL || type == NULL || *type != *expected_type)
@@ -1884,7 +1753,7 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                     if (arg.translate && translate)
                     {
                         string argx = _localise_string(_context, arg);
-                        ss << _format_utf8_string(fmt_spec, argx);
+                        ss << format_utf8_string(fmt_spec, argx);
                     }
                     else
                         ss << make_stringf(fmt_spec.c_str(), arg.stringVal.c_str());
@@ -1965,10 +1834,11 @@ string vlocalise(const string& fmt_str, va_list argp)
     niceArgs.push_back(LocalisationArg(fmt_str));
 
     // get arg types for original English string
-    map<int, const type_info*> arg_types = _get_arg_types(fmt_str);
+    arg_type_map_t arg_types;
+    get_arg_types(fmt_str, arg_types);
 
     int last_arg_id = 0;
-    map<int, const type_info*>::iterator it;
+    arg_type_map_t::iterator it;
     for (it = arg_types.begin(); it != arg_types.end(); ++it)
     {
         const int arg_id = it->first;

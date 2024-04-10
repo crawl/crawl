@@ -251,8 +251,8 @@ string strip_filename_unsafe_chars(const string &s)
 // characters that end a printf format specifier
 static const char* type_specs = "%diufFeEgGxXoscpaAn";
 
-// split format string into plain strings and format specifiers
-static void _split_format_string(const char* s, vector<string>& tokens)
+// split printf-style format string into plain strings and format specifiers
+void split_format_string(const char* s, vector<string>& tokens)
 {
     if (!s)
         return;
@@ -284,8 +284,13 @@ static void _split_format_string(const char* s, vector<string>& tokens)
     }
 }
 
-// translate a format spec like %d to a type like int
-static const type_info* _format_spec_to_type(const string& fmt)
+void split_format_string(const string &s, vector<string>& tokens)
+{
+    split_format_string(s.c_str(), tokens);
+}
+
+// translate a printf format spec like "%d" to a type like int
+const type_info* format_spec_to_type(const string& fmt)
 {
     if (fmt.length() < 2 || fmt.at(0) != '%')
         return nullptr;
@@ -362,8 +367,8 @@ static const type_info* _format_spec_to_type(const string& fmt)
 
 typedef map<int, const type_info*> arg_type_map_t;
 
-// get arg types from a tokenised format string
-static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results)
+// get arg types from a tokenised printf format string
+void get_arg_types(const vector<string>& tokens, arg_type_map_t &results)
 {
     int arg_count = 0;
     vector<string>::const_iterator it;
@@ -397,9 +402,17 @@ static void _get_arg_types(const vector<string>& tokens, arg_type_map_t &results
             arg_id = atoi(s.substr(1).c_str());
         if (arg_id == 0)
             arg_id = arg_count;
-        const type_info* ti = _format_spec_to_type(*it);
+        const type_info* ti = format_spec_to_type(*it);
         results[arg_id] = ti;
     }
+}
+
+// get arg types from an untokenised printf format string
+void get_arg_types(const string& s, arg_type_map_t &results)
+{
+    vector<string> tokens;
+    split_format_string(s.c_str(), tokens);
+    get_arg_types(tokens, results);
 }
 
 typedef union {
@@ -470,7 +483,7 @@ static void _pop_va_args(va_list args, const arg_type_map_t &types, arg_map_t &r
 }
 
 // format UTF-8 string using printf-style format specifier
-static string _format_utf8_string(const string& fmt, const string& arg)
+string format_utf8_string(const string& fmt, const string& arg)
 {
     if (fmt == "%s")
     {
@@ -523,8 +536,8 @@ string vmake_stringf(const char* s, va_list args)
     arg_type_map_t arg_types;
     arg_map_t arg_values;
 
-    _split_format_string(s, tokens);
-    _get_arg_types(tokens, arg_types);
+    split_format_string(s, tokens);
+    get_arg_types(tokens, arg_types);
 
     va_list args_copy;
     va_copy(args_copy, args);
@@ -607,7 +620,7 @@ string vmake_stringf(const char* s, va_list args)
                 if (fmt == "%s")
                     ss << (arg.s ? arg.s : ""); // trivial case
                 else
-                    ss << _format_utf8_string(fmt, arg.s ? arg.s : "");
+                    ss << format_utf8_string(fmt, arg.s ? arg.s : "");
             }
             else if (arg_type == &typeid(wchar_t*))
             {

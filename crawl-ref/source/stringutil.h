@@ -318,3 +318,24 @@ namespace std
     }
 }
 #endif
+
+/*
+ * Funtions for manipulating printf-style format strings
+ */
+
+// split printf-style format string into plain strings and format specifiers
+void split_format_string(const char* s, vector<string>& tokens);
+void split_format_string(const string &s, vector<string>& tokens);
+
+// translate a printf format spec like "%d" to a type like int
+const type_info* format_spec_to_type(const string& fmt);
+
+typedef map<int, const type_info*> arg_type_map_t;
+// get arg types from a tokenised printf-style format string
+void get_arg_types(const vector<string>& tokens, arg_type_map_t &results);
+
+// get arg types from an untokenised printf-style format string
+void get_arg_types(const string& s, arg_type_map_t &results);
+
+// format UTF-8 string using printf-style format specifier
+string format_utf8_string(const string& fmt, const string& arg);
