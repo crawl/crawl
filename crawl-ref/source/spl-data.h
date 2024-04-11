@@ -3599,7 +3599,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_SPIDERS, "Summon Spiders",
     spschool::summoning | spschool::alchemy,
-    spflag::mons_abjure | spflag::monster,
+    spflag::monster,
     6,
     200,
     -1, -1,
