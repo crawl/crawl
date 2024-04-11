@@ -572,8 +572,7 @@ static string _hiscore_date_string(time_t time)
 {
     struct tm *date = TIME_FN(&time);
 
-    // @noloc section start
-    const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
+     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
 
     int day = date->tm_mday;
@@ -589,7 +588,6 @@ static string _hiscore_date_string(time_t time)
         { "yy", make_stringf("%02d", year % 100) },
         { "yyyy", make_stringf("%d", year) },
     };
-    // @noloc section end
 
     return localise(" on @mon@ @d@, @yyyy@", params);
 }
@@ -2074,16 +2072,18 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     bool verbose = verbosity == DDV_VERBOSE;
 
-    string desc = make_stringf("%8d %s ", points, name.c_str()); // @noloc
+    // @noloc section start
+    string desc = make_stringf("%8d %s ", points, name.c_str());
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
         desc += localise_player_title("the " + title);
     else
     {
-        string character = string("the %s ") + _job_name(job); // @noloc
+        string character = string("the %s ") + _job_name(job);
         desc += localise(character, _species_name(race));
     }
     desc += " ";
+    // @noloc section end
 
     if (final_max_max_hp > 0)  // as the other two may be negative
     {
@@ -2551,7 +2551,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (auxkilldata.empty())
         {
             if (terse)
-                desc += localise("wild magic"); // @noloc (duplicate of mutation name)
+                desc += localise("wild magic");
             else
                 desc += localise("Killed by wild magic");
         }

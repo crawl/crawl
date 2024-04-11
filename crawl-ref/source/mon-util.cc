@@ -4597,8 +4597,9 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     params["hand"] = part_str;
 
+    // @noloc section start (debug messages)
     if (!can_plural)
-        part_str = "NO PLURAL HANDS"; // @noloc
+        part_str = "NO PLURAL HANDS";
     else
         part_str = mons.hand_name(true);
 
@@ -4610,7 +4611,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["arm"] = part_str;
 
     if (!can_plural)
-        part_str = "NO PLURAL ARMS"; // @noloc
+        part_str = "NO PLURAL ARMS";
     else
         part_str = mons.arm_name(true);
 
@@ -4622,11 +4623,12 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["foot"] = part_str;
 
     if (!can_plural)
-        part_str = "NO PLURAL FEET"; // @noloc
+        part_str = "NO PLURAL FEET";
     else
         part_str = mons.foot_name(true);
 
     params["feet"] = part_str;
+    // @noloc section end
 
     if (foe != nullptr)
     {
@@ -4643,14 +4645,16 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     // if it gets one, it should be used for the last two entries.
     if (mons.god == GOD_NO_GOD)
     {
-        params["a_God"] = "NO GOD"; // @noloc
-        params["possessive_God"] = "NO GOD"; // @noloc
-        params["my_God"] = "NO GOD"; // @noloc
+        // @noloc section start
+        params["a_God"] = "NO GOD";
+        params["possessive_God"] = "NO GOD";
+        params["my_God"] = "NO GOD";
+        // @noloc section end
     }
     else if (mons.god == GOD_NAMELESS)
     {
         params["a_God"] = "a god";
-        const string possessive = mons.pronoun(PRONOUN_POSSESSIVE) + " god"; // @noloc
+        const string possessive = mons.pronoun(PRONOUN_POSSESSIVE) + " god";
         params["possessive_God"] = possessive;
         params["my_God"] = "my god";
     }
@@ -4662,7 +4666,6 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         params["my_God"] = godname;
     }
 
-    // @noloc section start
     // Replace with species specific insults.
     if (msg.find("@species_insult@") != string::npos)
     {
@@ -4678,7 +4681,6 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@species_insult_noun@",
                                _get_species_insult(foe_genus, "noun"));
     }
-    // @noloc section end
 
     // monster-specific sounds
     params["speaks"] = _get_sound_string(s_type, true);

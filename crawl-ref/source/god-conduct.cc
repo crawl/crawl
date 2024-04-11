@@ -69,20 +69,22 @@ god_conduct_trigger::~god_conduct_trigger()
         did_god_conduct(conduct, pgain, known, victim.get());
 }
 
+// @noloc section start (only used for debug message)
 static const char *conducts[] =
 {
     "",
-    "Evil", "Holy", "Attack Holy", "Attack Neutral", "Attack Friend", // @noloc
-    "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil", // @noloc
-    "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy", // @noloc
-    "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast", // @noloc
-    "Spell Practise", "Cannibalism", "Deliberate Mutation", // @noloc
-    "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains", // @noloc
-    "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary", // @noloc
-    "Kill Artificial", "Exploration", "Seen Monster", // @noloc
-    "Sacrificed Love", "Channel", "Hurt Foe", "Use Wizardly Item", // @noloc
+    "Evil", "Holy", "Attack Holy", "Attack Neutral", "Attack Friend",
+    "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
+    "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
+    "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
+    "Spell Practise", "Cannibalism", "Deliberate Mutation",
+    "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
+    "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
+    "Kill Artificial", "Exploration", "Seen Monster",
+    "Sacrificed Love", "Channel", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
+// @noloc section end
 
 /**
  * Change piety & add penance in response to a conduct.

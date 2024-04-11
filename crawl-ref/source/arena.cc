@@ -49,6 +49,7 @@ using namespace ui;
 
 #define ARENA_VERBOSE
 
+// @noloc section start (dumpfile stuff)
 namespace msg
 {
     // wrap a message tee around a file ptr, which can be null.
@@ -76,7 +77,7 @@ namespace msg
                 switch (ch)
                 {
                     case MSGCH_DIAGNOSTICS:
-                        prefix = "DIAG: "; // @noloc
+                        prefix = "DIAG: ";
                         if (Options.arena_dump_msgs_all)
                             break;
                         return;
@@ -98,16 +99,16 @@ namespace msg
                             return;
                         break;
 
-                    case MSGCH_ERROR: prefix = "ERROR: "; break; // @noloc
-                    case MSGCH_WARN: prefix = "WARN: "; break; // @noloc
-                    case MSGCH_SOUND: prefix = "SOUND: "; break; // @noloc
+                    case MSGCH_ERROR: prefix = "ERROR: "; break;
+                    case MSGCH_WARN: prefix = "WARN: "; break;
+                    case MSGCH_SOUND: prefix = "SOUND: "; break;
 
                     case MSGCH_TALK_VISUAL:
-                    case MSGCH_TALK: prefix = "TALK: "; break; // @noloc
+                    case MSGCH_TALK: prefix = "TALK: "; break;
                     default: break;
                 }
                 formatted_string fs = formatted_string::parse_string(s);
-                fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str()); // @noloc
+                fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str());
                 fflush(*file);
             }
         }
@@ -116,6 +117,7 @@ namespace msg
         FILE **file;
     };
 }
+// @noloc section end (dumpfile stuff)
 
 extern void world_reacts();
 
@@ -344,14 +346,16 @@ namespace arena
 
     static void center_print(unsigned sz, string text, int number = -1)
     {
+        // @noloc section start
         if (number >= 0)
-            text = make_stringf("(%d) %s", number, text.c_str()); // @noloc
+            text = make_stringf("(%d) %s", number, text.c_str());
 
         unsigned len = strwidth(text);
         if (len > sz)
             text = chop_string(text, len = sz);
 
-        cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str()); // @noloc
+        cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str());
+        // @noloc section end
     }
 
     static void setup_level()
@@ -433,7 +437,7 @@ namespace arena
         fact.clear();
         fact.desc = spec;
 
-        for (const string &monster : split_string(",", spec)) // @noloc
+        for (const string &monster : split_string(",", spec))
         {
             const string err = fact.members.add_mons(monster, false);
             if (!err.empty())
@@ -510,10 +514,10 @@ namespace arena
             if (gly < ARRAYSZ(banned_glyphs))
                 banned_glyphs[gly] = true;
 
-        vector<string> factions = split_string(" v ", spec); // @noloc
+        vector<string> factions = split_string(" v ", spec);
 
         if (factions.size() == 1)
-            factions = split_string(" vs ", spec); // @noloc
+            factions = split_string(" vs ", spec);
 
         if (factions.size() != 2)
         {
@@ -580,7 +584,7 @@ namespace arena
 
         cgotoxy(1, line++, GOTO_STAT);
         textcolour(WHITE);
-        center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long); // @noloc
+        center_print(crawl_view.hudsz.x, string("Crawl ") + Version::Long);
         line++;
 
         cgotoxy(1, line++, GOTO_STAT);
@@ -625,7 +629,7 @@ namespace arena
 
         you.mutation[MUT_ACUTE_VISION] = 3;
 
-        you.your_name = "Arena"; // @noloc
+        you.your_name = "Arena";
 
         you.hp = you.hp_max = 99;
 
@@ -1517,10 +1521,12 @@ static void _choose_arena_teams(newgame_def& choice,
     prompt.cprintf("\n");
     prompt.cprintf("%s", localise("Examples:").c_str());
     prompt.cprintf("\n");
-    prompt.cprintf("  Sigmund v Jessica\n"); // @noloc
-    prompt.cprintf("  99 orc v the Royal Jelly\n"); // @noloc
-    prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming"); // @noloc
+    // @noloc section start
+    prompt.cprintf("  Sigmund v Jessica\n");
+    prompt.cprintf("  99 orc v the Royal Jelly\n");
+    prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
     vbox->add_child(make_shared<Text>(move(prompt)));
+    // @noloc section end
 
     auto popup = make_shared<ui::Popup>(move(vbox));
 

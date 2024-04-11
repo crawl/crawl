@@ -8189,6 +8189,9 @@ Keine Spielstände.
 No high scores yet...
 Noch keine Highscores...
 %%%%
+wild magic
+wilde Magie
+%%%%
 
 ##################
 # invent.cc
@@ -11982,6 +11985,9 @@ flüstert
 the ground
 der Boden
 %%%%
+" god"
+
+%%%%
 %s is hit by a flying piece of %s!
 %s wird von einem fliegenden Stück {gen}%s getroffen!
 %%%%
@@ -13264,9 +13270,6 @@ Eure magische Kapazität ist sehr niedrig. (-20% MP)
 %%%%
 Your magical capacity is extremely low. (-30% MP)
 Eure magische Kapazität ist extrem niedrig. (-30% MP)
-%%%%
-wild magic
-wilde Magie
 %%%%
 Your spells are a little harder to cast, but a little more powerful.
 Eure Zaubersprüche sind etwas schwieriger zu wirken, aber auch etwas mächtiger.

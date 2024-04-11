@@ -64,39 +64,41 @@ static void _tso_blasts_cleansing_flame(const char *message = nullptr);
 // i18n: Currently, most of these don't need to be localised as they're only
 // used in notes. The exception is Wu Jian wrath which is used for a message
 // in player::corrode_equipment()
+// @noloc section start
 static const char *_god_wrath[] =
 {
-    "the bugginess of No God",      // @noloc (should't happen)
-    "the wrath of Zin",             // @noloc
-    "the wrath of the Shining One", // @noloc
-    "the malice of Kikubaaqudgha",  // @noloc
-    "the anger of Yredelemnul",     // @noloc
-    "the capriciousness of Xom",    // @noloc
-    "the wrath of Vehumet",         // @noloc
-    "the fury of Okawaru",          // @noloc
-    "the fury of Makhleb",          // @noloc
-    "the will of Sif Muna",         // @noloc
-    "the fiery rage of Trog",       // @noloc
-    "the wrath of Nemelex",         // @noloc
-    "the displeasure of Elyvilon",  // @noloc
-    "the touch of Lugonu",          // @noloc
-    "the wrath of Beogh",           // @noloc
-    "the vengeance of %s",          // Jiyva name is variable - @noloc
-    "the enmity of Fedhas Madhash", // @noloc
-    "the meddling of Cheibriados",  // @noloc
-    "the doom of Ashenzari",        // @noloc (unused)
-    "the darkness of Dithmenos",    // @noloc
-    "the greed of Gozag",           // @noloc (unused)
-    "the adversity of Qazlal",      // @noloc
-    "the disappointment of Ru",     // @noloc
+    "the bugginess of No God",
+    "the wrath of Zin",
+    "the wrath of the Shining One",
+    "the malice of Kikubaaqudgha",
+    "the anger of Yredelemnul",
+    "the capriciousness of Xom",
+    "the wrath of Vehumet",
+    "the fury of Okawaru",
+    "the fury of Makhleb",
+    "the will of Sif Muna",
+    "the fiery rage of Trog",
+    "the wrath of Nemelex",
+    "the displeasure of Elyvilon",
+    "the touch of Lugonu",
+    "the wrath of Beogh",
+    "the vengeance of %s",          // Jiyva name is variable
+    "the enmity of Fedhas Madhash",
+    "the meddling of Cheibriados",
+    "the doom of Ashenzari",
+    "the darkness of Dithmenos",
+    "the greed of Gozag",
+    "the adversity of Qazlal",
+    "the disappointment of Ru",
 #if TAG_MAJOR_VERSION == 34
-    "the progress of Pakellas",     // @noloc (obsolete)
+    "the progress of Pakellas",
 #endif
-    "the fury of Uskayaw",          // @noloc
-    "the memory of Hepliaklqana",   // @noloc (unused)
+    "the fury of Uskayaw",
+    "the memory of Hepliaklqana",
     "the rancour of the Wu Jian Council", // localise (used in corrode msg)
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath) == NUM_GODS);
+// @noloc section end
 
 /**
  * Return a name associated with the given god's wrath.
@@ -2192,7 +2194,7 @@ static void _god_smites_you(god_type god, const char *message,
     if (death_type != KILLED_BY_BEOGH_SMITING
         && death_type != KILLED_BY_TSO_SMITING)
     {
-        aux = "smitten by " + god_name(god); // @noloc
+        aux = "smitten by " + god_name(god); // @noloc (note)
     }
 
     // If there's a message, display it before smiting.

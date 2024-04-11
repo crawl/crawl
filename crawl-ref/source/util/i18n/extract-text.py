@@ -37,7 +37,7 @@ IGNORE_STRINGS = [
     'you', 'you ', 'your', 'your ',
     'debugging ray', 'debug',
     'bug', 'null',
-    #text colour tags
+    # text colour tags
     'lightgrey', 'darkgrey', 'lightgreen', 'darkgreen', 'lightcyan', 'darkcyan',
     'lightred', 'darkred', 'lightmagenta', 'darkmagenta', 'lightyellow', 'darkyellow'
 ]
@@ -521,6 +521,10 @@ def ignore_string(string):
 
     # ignore articles, pronouns, etc.
     if string.lower() in IGNORE_STRINGS:
+        return True
+    
+    # the name of the game
+    if string.startswith('Crawl'):
         return True
 
     # ignore strings that are just whitespace
@@ -1044,6 +1048,8 @@ for filename in files:
             # skip tags/keys
             if re.search(r'^[^"]*_tag\(', line) and not re.search('text_tag', line):
                 continue
+            if re.search('tag\s*=\s*"', line):
+                continue
             if re.search(r'strip_tag_prefix *\(', line):
                 continue
             if 'annotate_string' in line:
@@ -1063,6 +1069,8 @@ for filename in files:
             if '_print_converted_orc_speech' in line:
                 continue
             if '_get_xom_speech' in line or 'XOM_SPEECH' in line:
+                continue
+            if '_get_species_insult' in line:
                 continue
             if 'show_specific_help' in line:
                 continue
@@ -1164,6 +1172,8 @@ for filename in files:
                     if re.search(r'\bcontains\s*\(', last):
                         continue
 
+                    if re.search(r'\bsplit_string\s*\(', last):
+                        continue
                     if re.search(r'\bstrip_suffix\s*\(', last):
                         continue
                     if re.search(r'\bsend_exit_reason\s*\(', last):
