@@ -642,7 +642,8 @@ Es ist von einem sanften Leuchten umgeben.
 # Artefact weapons
 #################################
 
-# Note: These are shown after any text from dat/descript/unrand.txt
+# Note: These are shown after any text from dat/descript/unrand.txt, and any
+# generic text related to their properties.
 
 # Arc Blade
 %%%%
@@ -746,7 +747,7 @@ Jedes Mal, wenn sie einen lebenden Feind trifft, heilt sie ihren Träger für ei
 # Majin-Bo (qurterstaff)
 %%%%
 It occasionally heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell.
-Gelegentlich heilt diese Waffe seinem Träger für einen Teil des verursachten Schadens, wenn er einen lebenden Feind mit ihr oder einem Zauber verwundet.
+Gelegentlich heilt diese Waffe ihrem Träger für einen Teil des verursachten Schadens, wenn er einen lebenden Feind mit ihr oder einem Zauber verwundet.
 %%%%
 Its wielder's spells cost health as well as magical power.
 Die Zauber des Trägers kosten sowohl Gesundheit als auch magische Kraft.

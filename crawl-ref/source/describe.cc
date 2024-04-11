@@ -673,6 +673,7 @@ static string _randart_descrip(const item_def &item)
         if (need_newline)
             description += '\n';
         description += _padded_artp_name(ARTP_STEALTH);
+        description += " ";
         if (stval < -1)
             description += localise("It makes you much less stealthy.");
         else if (stval > 1)
