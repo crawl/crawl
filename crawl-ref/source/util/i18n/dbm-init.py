@@ -82,7 +82,11 @@ source_heading = ""
 for line in keyfile:
     if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
         # blank line or comment
-        if line.startswith('# duplicate:') or line.startswith('# section:'):
+        if line.startswith('# section:'):
+            locnote = ''
+            continue
+        elif line.startswith('# duplicate:'):
+            #locnote = ''
             continue
         elif line.startswith('# note:'):
             locnote = line
@@ -104,6 +108,7 @@ for line in keyfile:
     else:
         key = strip_quotes_if_allowed(line.strip())
         if key in ignore_vals:
+            locnote = ''
             continue
         if source_heading != "":
             outfile.write(source_heading)

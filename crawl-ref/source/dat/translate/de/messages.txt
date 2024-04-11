@@ -11985,9 +11985,6 @@ flüstert
 the ground
 der Boden
 %%%%
-" god"
-
-%%%%
 %s is hit by a flying piece of %s!
 %s wird von einem fliegenden Stück {gen}%s getroffen!
 %%%%

@@ -456,7 +456,11 @@ def insert_section_markers(filename, lines):
                 section = 'item_def::name_aux'
 
         if section != last_section:
-            result.append('// @locsection: ' + section)
+            if len(result) > 0 and '@locnote' in result[-1]:
+                # make sure note is within the section
+                result.insert(-1, '// @locsection: ' + section)
+            else:
+                result.append('// @locsection: ' + section)
             last_section = section
 
         result.append(line)
@@ -922,6 +926,9 @@ for filename in files:
 
         if '//' in line:
             if 'locnote' in line:
+                if section != last_section:
+                    strings.append('# section: ' + section)
+                    last_section = section
                 note = re.sub(r'^.*locnote: *', '# note: ', line)
                 strings.append(note)
                 line = strip_line_comment(line)
@@ -1203,6 +1210,14 @@ for filename in files:
 
             # strip channel information
             string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
+
+            if string == " god" and "PRONOUN_POSSESSIVE" in line:
+                strings.append("his god")
+                strings.append("her god")
+                strings.append("its god")
+                strings.append('# note: singular "their"')
+                strings.append("their god")
+                continue
 
             if "\\n" in string:
                 # split lines

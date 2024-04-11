@@ -119,14 +119,24 @@ mein Gott
 your god
 Euer Gott
 %%%%
-its god
-sein Gott
+
+# These are used in messages like "@The_monster@ calls down the wrath of @possessive_God@ upon @target@.",
+# where @possessive_God@ is replaced with "its god", etc.
+# This is tricky because English uses the monster's actual gender, but German uses grammatical gender.
+# Therefore, we use "a god" instead of "his/her/its god"
 %%%%
 his god
-sein Gott
+ein Gott
 %%%%
 her god
-ihr Gott
+ein Gott
+%%%%
+its god
+ein Gott
+%%%%
+# note: singular "their"
+their god
+ein Gott
 %%%%
 
 # Sifus (individual members of the Wu Jian Council)
@@ -252,14 +262,22 @@ meines Gottes
 {gen}your god
 Eures Gottes
 %%%%
-{gen}its god
-seines Gottes
+
+# We use "a god" instead of "his/her/its/their god"
+# see note in nominative section
 %%%%
 {gen}his god
-seines Gottes
+eines Gottes
 %%%%
 {gen}her god
-ihres Gottes
+eines Gottes
+%%%%
+{gen}its god
+eines Gottes
+%%%%
+# note: singular "their"
+{gen}their god
+eines Gottes
 %%%%
 
 ########################
@@ -365,14 +383,22 @@ meinen Gott
 {acc}your god
 Euren Gott
 %%%%
-{acc}its god
-seinen Gott
+
+# We use "a god" instead of "his/her/its/their god"
+# see note in nominative section
 %%%%
 {acc}his god
-seinen Gott
+einen Gott
 %%%%
 {acc}her god
-ihren Gott
+einen Gott
+%%%%
+{acc}its god
+einen Gott
+%%%%
+# note: singular "their"
+{acc}their god
+einen Gott
 %%%%
 
 ########################
@@ -397,14 +423,22 @@ meinem Gott
 {dat}your god
 Eurem Gott
 %%%%
-{dat}its god
-seinem Gott
+
+# We use "a god" instead of "his/her/its/their god"
+# see note in nominative section
 %%%%
 {dat}his god
-seinem Gott
+einem Gott
 %%%%
 {dat}her god
-ihrem Gott
+einem Gott
+%%%%
+{dat}its god
+einem Gott
+%%%%
+# note: singular "their"
+{dat}their god
+einem Gott
 %%%%
 
 ########################
