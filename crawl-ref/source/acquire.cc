@@ -1172,18 +1172,18 @@ static string _why_reject(const item_def &item, int agent)
             || item.base_type == OBJ_ARMOUR
                 && !can_wear_armour(item, false, true)))
     {
-        return "Destroying unusable weapon or armour!"; // @noloc (debug msg)
+        return "Destroying unusable weapon or armour!";
     }
 
     // Trog does not gift the Wrath of Trog.
     if (agent == GOD_TROG && is_unrandom_artefact(item, UNRAND_TROG))
-        return "Destroying Trog-gifted Wrath of Trog!"; // @noloc (debug msg)
+        return "Destroying Trog-gifted Wrath of Trog!";
 
     // Pain brand is useless if you've sacrificed Necromacy.
     if (you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC)
         && get_weapon_brand(item) == SPWPN_PAIN)
     {
-        return "Destroying pain weapon after Necro sac!"; // @noloc (debug msg)
+        return "Destroying pain weapon after Necro sac!";
     }
 
     return ""; // all OK
@@ -1518,7 +1518,7 @@ void AcquireMenu::update_help()
     set_more(formatted_string::parse_string(top_line + localise(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "%s  [%s] %s\n%s", // @noloc
+        "%s  [%s] %s\n%s",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
                                      "[<w>!</w>] acquire|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
@@ -1573,7 +1573,7 @@ bool AcquireMenu::acquire_selected()
                            Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                            "N");
     more = formatted_string::parse_string(make_stringf(
-               "<%s>%s</%s>\n", // @noloc
+               "<%s>%s</%s>\n",
                col.c_str(),
                text.c_str(),
                col.c_str()));

@@ -373,7 +373,7 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
 
 static string _who_banished(const string &who)
 {
-    return who.empty() ? who : " (" + who + ")"; // @noloc
+    return who.empty() ? who : " (" + who + ")";
 }
 
 static int _banished_depth(const int power)
@@ -427,8 +427,8 @@ void banished(const string &who, const int power)
         "was cast into the Abyss!" + _who_banished(who), "parent");
 
     // Xom just might decide to interfere.
-    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command" //@noloc
-        && who != "a distortion unwield") // @noloc
+    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
+        && who != "a distortion unwield")
     {
         xom_maybe_reverts_banishment(false, false);
     }

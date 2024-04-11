@@ -32,9 +32,10 @@ STRING_PATTERN = r'"(\\\\|\\"|[^"])*"'
 
 # strings to ignore
 IGNORE_STRINGS = [
-    'the', 'the ', ' the ', 'its ',
+    'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
-    'you', 'you ', 'your', 'your ',
+    'you', 'you ', 'your', 'your ', 'its ',
+    ' of ',
     'debugging ray', 'debug',
     'bug', 'null',
     # text colour tags
@@ -477,6 +478,7 @@ def insert_section_markers(filename, lines):
 def get_relevant_lines(filename, lines):
     result = []
     ignoring = False
+    section = ''
     for line in lines:
         # ignore sections explicitly marked as not to be extracted
         if 'noloc section' in line:
@@ -488,6 +490,25 @@ def get_relevant_lines(filename, lines):
 
         if ignoring and not re.search(r'//[ @]*(localise|locsection)\b', line):
             continue
+
+        if '@locsection' in line:
+            section = re.sub('.*@locsection: *', '', line);
+
+        if filename == 'acquire.cc':
+            # ignore - debug messages
+            if section == '_why_reject':
+                continue
+        elif filename == 'artefact.cc':
+            if section in ['replace_name_parts']:
+                continue
+        elif filename == 'delay.cc':
+            # ignore - internal identifiers
+            if section == 'activity_interrupt_names':
+                continue
+        elif filename == 'lookup-help.cc':
+            # ignore - db keys
+            if re.match(r'^_(get|recap)[a-z_]*keys?$', section):
+                continue
 
         if '//' in line:
             result.append(line.strip())
@@ -943,15 +964,6 @@ for filename in files:
         if '"' not in line:
             continue
 
-        if filename == 'delay.cc':
-            # ignore internal identifiers
-            if section == 'activity_interrupt_names':
-                continue
-        elif filename == 'lookup-help.cc':
-            # ignore db keys
-            if re.match(r'^_(get|recap)[a-z_]*keys?$', section):
-                continue
-
         extract = False
 
         if 'localise' in line:
@@ -1018,6 +1030,7 @@ for filename in files:
                re.search(r'debug_dump_item *\(', line) or \
                re.search(r'dump_test_fails *\(', line) or \
                re.search(r'bad_level_id', line) or \
+               'game_ended_with_error' in line or \
                re.search(r'ASSERTM? *\(', line) or \
                'DEBUG' in line or \
                'log_print' in line or \

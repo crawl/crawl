@@ -335,7 +335,7 @@ namespace arena
                 {
                     game_ended_with_error(
                         make_stringf(
-                            "Failed to create monster at (%d,%d) env.grid: %s", // @noloc
+                            "Failed to create monster at (%d,%d) env.grid: %s",
                             loc.x, loc.y, dungeon_feature_name(env.grid(loc))));
                 }
                 list_eq(mon);

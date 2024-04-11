@@ -1902,7 +1902,7 @@ static string _describe_armour(const item_def &item, bool verbose)
         {
             // i18n: need space in front of "of" for translation (because
             // normally it's in the context of "<thing> of <ego>").
-            string ego_name = " of " + string(armour_ego_name(item, false)); // @noloc
+            string ego_name = " of " + string(armour_ego_name(item, false));
             ego_name = localise(ego_name);
             // now remove that space
             if (starts_with(ego_name, " "))

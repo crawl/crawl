@@ -1444,9 +1444,6 @@ Winner: %s!
 Final score: %s (%d); %s (%d) [%d ties]
 
 %%%%
-No random monsters for place '%s'
-
-%%%%
 Last arena monster was dismissed.
 Das letzte Arena-Monster wurde entlassen.
 %%%%
@@ -6658,9 +6655,6 @@ Cunning
 
 %%%%
 Cun
-
-%%%%
-" of "
 
 %%%%
 Ashenzari invites you to partake of a vision and a curse%s.
