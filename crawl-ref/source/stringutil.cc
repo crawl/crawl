@@ -632,7 +632,7 @@ string vmake_stringf(const char* s, va_list args)
                     char* buf2 = new char[len + 1];
                     snprintf(buf2, len + 1, fmt.c_str(), arg.ws);
                     ss << buf2;
-                    delete buf2;
+                    delete[] buf2;
                 }
                 else if (len > 0)
                     ss << buf;
