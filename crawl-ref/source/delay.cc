@@ -1253,9 +1253,9 @@ bool interrupt_activity(activity_interrupt ai,
 // Must match the order of activity_interrupt.h!
 static const char *activity_interrupt_names[] =
 {
-    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message", // @noloc
-    "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster", // @noloc
-    "sense_monster", "mimic" // @noloc
+    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
+    "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
+    "sense_monster", "mimic"
 };
 
 static const char *_activity_interrupt_name(activity_interrupt ai)

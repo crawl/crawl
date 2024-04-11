@@ -414,6 +414,9 @@ def do_first_stage_line_processing(lines):
                 elif last.endswith('=') and not curr.startswith('{'):
                     # assignment
                     join = True
+                elif curr.startswith('='):
+                    # assignment
+                    join = True
 
                 if join:
                     result[-1] = last + ' ' + curr
@@ -940,6 +943,15 @@ for filename in files:
         if '"' not in line:
             continue
 
+        if filename == 'delay.cc':
+            # ignore internal identifiers
+            if section == 'activity_interrupt_names':
+                continue
+        elif filename == 'lookup-help.cc':
+            # ignore db keys
+            if re.match(r'^_(get|recap)[a-z_]*keys?$', section):
+                continue
+
         extract = False
 
         if 'localise' in line:
@@ -1208,10 +1220,6 @@ for filename in files:
             if filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue
-            elif filename == 'lookup-help.cc':
-                # ignore db keys
-                if re.match(r'^_(get|recap)[a-z_]*keys?$', section):
-                    continue
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
                 string += ' '

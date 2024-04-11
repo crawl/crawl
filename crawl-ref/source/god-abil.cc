@@ -3024,11 +3024,11 @@ static string _gozag_shop_spec(int index)
                                                        index)]
                                 .get_string(), " ", "_");
     if (!suffix.empty())
-        suffix = " suffix:" + suffix; // @noloc
+        suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s gozag", // @noloc
+    return make_stringf("%s shop name:%s%s gozag",
                         shoptype_to_str(type),
-                        replace_all(name, " ", "_").c_str(), // @noloc
+                        replace_all(name, " ", "_").c_str(),
                         suffix.c_str());
     // @noloc section end
 }
@@ -5472,7 +5472,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     god_speaks(you.religion, "It is so.");
     take_note(Note(NOTE_ANCESTOR_TYPE, 0, 0, ancestor_type_name));
     const string mile_text
-        = make_stringf("remembered their ancestor %s as %s.", //@noloc
+        = make_stringf("remembered their ancestor %s as %s.",
                        hepliaklqana_ally_name().c_str(),
                        ancestor_type_name.c_str());
     mark_milestone("ancestor.class", mile_text);
