@@ -335,29 +335,29 @@ It is temporarily rebranded; it is actually %s.
 Diese Waffe ist vorübergehend mit einer neuen Brandmarke versehen; sie ist eigentlich %s.
 %%%%
 This is %s.
-Dieser Gegenstand ist %s.
+Dies ist %s.
 %%%%
 This weapon falls into the '%s' category.
-Diese ist eine Waffe der Art '%s'.
+Diese Waffe gehört zur Kategorie '%s'.
 %%%%
 # magical staves can also be used as weapons
 It falls into the 'Staves' category.
-Diese ist eine Waffe der Art 'Stecken'.
+Diese Waffe gehört zur Kategorie 'Stecken'.
 %%%%
 Your inability to study %s prevents you from drawing on the full power of this staff in melee.
 Eure Unfähigkeit, %s zu studieren, hindert Euch daran, die volle Kraft dieses Steckens im Nahkampf zu nutzen.
 %%%%
 It is a one-handed weapon.
-Diese ist eine Einhandwaffe.
+Sie ist eine Einhandwaffe.
 %%%%
 It is a two-handed weapon.
-Diese ist eine Zweihandwaffe.
+Sie ist eine Zweihandwaffe.
 %%%%
 It is a weapon for one hand-pair.
-Diese Waffe braucht ein Handpaar.
+Sie ist eine Waffe für ein Handpaar.
 %%%%
 It is a weapon for two hand-pairs.
-Diese Waffe braucht zwei Handpaare.
+Sie ist eine Waffe für zwei Handpaare.
 %%%%
 It is too large for you to wield.
 Eine so große Waffe könnt Ihr nicht führen.

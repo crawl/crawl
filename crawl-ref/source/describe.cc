@@ -700,12 +700,12 @@ static string _artefact_descrip(const item_def &item)
         auto entry = get_unrand_entry(item.unrand_idx);
         if (entry->dbrand)
         {
-            out << entry->dbrand;
+            out << localise(entry->dbrand);
             need_newline = true;
         }
         if (entry->descrip)
         {
-            out << (need_newline ? "\n\n" : "") << entry->descrip;
+            out << (need_newline ? "\n\n" : "") << localise(entry->descrip);
             need_newline = true;
         }
         if (!_randart_descrip(item).empty())

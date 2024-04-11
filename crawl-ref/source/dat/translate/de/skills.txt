@@ -28,7 +28,7 @@ Polearms
 Stangenwaffen
 %%%%
 Staves
-Stäbe
+Stecken
 %%%%
 Slings
 Schleuder

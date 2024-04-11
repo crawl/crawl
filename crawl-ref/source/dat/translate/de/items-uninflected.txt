@@ -263,7 +263,7 @@ Rune
 " der Stangenwaffen"
 %%%%
 " of staves"
-" der Stäbe"
+" der Stecken"
 %%%%
 " of slings"
 " der Schleuder"
