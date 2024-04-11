@@ -529,7 +529,7 @@ def ignore_string(string):
     # ignore articles, pronouns, etc.
     if string.lower() in IGNORE_STRINGS:
         return True
-    
+
     # the name of the game
     if string.startswith('Crawl'):
         return True
