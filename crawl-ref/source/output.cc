@@ -1864,8 +1864,8 @@ static string _itosym(int level, int max = 1, bool immune = false)
     return sym;
 }
 
-// @noloc section start
-// (only translated in lowercase form, and the specific ring slots aren't translated at all)
+// i18n: only displayed in lowercase form, and all the ring slots are displayed
+// as just "ring"
 static const char *s_equip_slot_names[] =
 {
     "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
@@ -1893,7 +1893,6 @@ const char *equip_slot_to_name(int equip)
 
     return s_equip_slot_names[equip];
 }
-// @noloc section end
 
 int equip_name_to_slot(const char *s)
 {
@@ -2008,7 +2007,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
-            string colname = melded ? "darkgrey" : colour_to_str(col); // @noloc
+            string colname = melded ? "darkgrey" : colour_to_str(col);
 
             const int item_idx   = you.equip[eqslot];
             const char equip_char = index_to_letter(item_idx);

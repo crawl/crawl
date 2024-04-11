@@ -109,17 +109,19 @@ bool can_do_capstone_ability(god_type god)
 
 static const char *_god_blessing_description(god_type god)
 {
+    // @noloc section start (milestones)
     switch (god)
     {
     case GOD_SHINING_ONE:
-        return "blessed by the Shining One"; // @noloc (milestone)
+        return "blessed by the Shining One";
     case GOD_LUGONU:
-        return "corrupted by Lugonu"; // @noloc (milestone)
+        return "corrupted by Lugonu";
     case GOD_KIKUBAAQUDGHA:
-        return "bloodied by Kikubaaqudgha"; // @noloc (milestone)
+        return "bloodied by Kikubaaqudgha";
     default:
-        return "touched by the gods"; // @noloc (milestone)
+        return "touched by the gods";
     }
+    // @noloc section end
 }
 
 /**
@@ -1257,7 +1259,7 @@ bool zin_remove_all_mutations()
     you.one_time_ability_used.set(GOD_ZIN);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations("Zin's power"); // @noloc
+    delete_all_mutations("Zin's power");
     return true;
 }
 
@@ -3012,6 +3014,7 @@ static int _gozag_choose_shop()
  */
 static string _gozag_shop_spec(int index)
 {
+    // @noloc section start (internal identifiers)
     const shop_type type = _gozag_shop_type(index);
     const string name =
         you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
@@ -3019,7 +3022,7 @@ static string _gozag_shop_spec(int index)
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
                                                        index)]
-                                .get_string(), " ", "_"); // @noloc
+                                .get_string(), " ", "_");
     if (!suffix.empty())
         suffix = " suffix:" + suffix; // @noloc
 
@@ -3027,7 +3030,7 @@ static string _gozag_shop_spec(int index)
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(), // @noloc
                         suffix.c_str());
-
+    // @noloc section end
 }
 
 /**

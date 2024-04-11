@@ -44,34 +44,36 @@ using namespace ui;
  #include "rltiles/tiledef-gui.h"
 #endif
 
+// @noloc section start (diagnostic stuff)
+
 static const char *features[] =
 {
 #ifdef CLUA_BINDINGS
-    "Lua user scripts", // @noloc
+    "Lua user scripts",
 #endif
 
 #ifdef USE_TILE_LOCAL
-    "Tile support", // @noloc
+    "Tile support",
 #endif
 
 #ifdef USE_TILE_WEB
-    "Web Tile support", // @noloc
+    "Web Tile support",
 #endif
 
 #ifdef WIZARD
-    "Wizard mode", // @noloc
+    "Wizard mode",
 #endif
 
 #ifdef DEBUG
-    "Debug mode", // @noloc
+    "Debug mode",
 #endif
 
 #if defined(REGEX_POSIX)
-    "POSIX regexps", // @noloc
+    "POSIX regexps",
 #elif defined(REGEX_PCRE)
-    "PCRE regexps", // @noloc
+    "PCRE regexps",
 #else
-    "Glob patterns", // @noloc
+    "Glob patterns",
 #endif
 
 #if defined(USE_SOUND) && defined(SOUND_BACKEND)
@@ -79,13 +81,13 @@ static const char *features[] =
 #endif
 
 #ifdef DGL_MILESTONES
-    "Milestones", // @noloc
+    "Milestones",
 #endif
 };
 
 static string _get_version_information()
 {
-    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>"; // @noloc
+    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
     return result;
 }
 
@@ -102,25 +104,25 @@ static string _get_version_features()
         {
             result += seed_description();
             if (Version::history_size() > 1)
-                result += " (seed may be affected by game upgrades)"; // @noloc
+                result += " (seed may be affected by game upgrades)";
         }
         else
-            result += "Game is not seeded."; // @noloc
+            result += "Game is not seeded.";
         result += "\n\n";
     }
     if (Version::history_size() > 1)
     {
-        result += "Version history for your current game:\n"; // @noloc
+        result += "Version history for your current game:\n";
         result += Version::history();
         result += "\n\n";
     }
 
-    result += "<w>Features</w>\n" // @noloc
-                 "--------\n"; // @noloc
+    result += "<w>Features</w>\n"
+                 "--------\n";
 
     for (const char *feature : features)
     {
-        result += " * "; // @noloc
+        result += " * ";
         result += feature;
         result += "\n";
     }
@@ -165,7 +167,7 @@ static string _get_version_changes()
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            result += "<w>" + help + "</w>\n"; // @noloc
+            result += "<w>" + help + "</w>\n";
             // And start printing from now on.
             start = true;
         }
@@ -184,17 +186,18 @@ static string _get_version_changes()
     {
         result.erase(1+result.find_last_not_of('\n'));
         result += "\n\n";
-        result += "For earlier changes, see changelog.txt " // @noloc
-                  "in the docs/ directory."; // @noloc
+        result += "For earlier changes, see changelog.txt "
+                  "in the docs/ directory.";
     }
     else
     {
-        result += "For a list of changes, see changelog.txt " // @noloc
-                  "in the docs/ directory."; // @noloc
+        result += "For a list of changes, see changelog.txt in the docs/ "
+                  "directory.";
     }
 
     return result;
 }
+// @noloc section end (diagnostic stuff)
 
 //#define DEBUG_FILES
 static void _print_version()
@@ -276,7 +279,7 @@ void list_armour()
                                              : "Boots")
                                              : "unknown");
 
-        estr << setw(8) << left << localise(slot) << ": "; // @noloc
+        estr << setw(8) << left << localise(slot) << ": ";
 
         if (you_can_wear(i) == MB_FALSE)
             estr << _indent << localise("(unavailable)");
@@ -346,7 +349,7 @@ void list_jewellery()
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(item, "", "equip");
 
-        item = chop_string(make_stringf("%-*s: %s", // @noloc
+        item = chop_string(make_stringf("%-*s: %s",
                                         split ? cols > 96 ? 9 : 8 : 11,
                                         slot.c_str(), item.c_str()),
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
@@ -550,17 +553,19 @@ static void _add_formatted_help_menu(column_composer &cols)
 static void _add_movement_diagram(column_composer &cols)
 {
     // i18n: This should be the same regardless of language
-    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %", // @noloc
+    // @noloc section start
+    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
                          { CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT });
-    _add_insert_commands(cols, 0, "                  \\|/        \\|/", {}); // @noloc
-    _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>" // @noloc
-                                  "      <w>%</w>-<w>%</w>-<w>%</w>", // @noloc
+    _add_insert_commands(cols, 0, "                  \\|/        \\|/", {});
+    _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>"
+                                  "      <w>%</w>-<w>%</w>-<w>%</w>",
                          { CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT });
-    _add_insert_commands(cols, 0, "                  /|\\        /|\\", {}); // @noloc
-    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %", // @noloc
+    _add_insert_commands(cols, 0, "                  /|\\        /|\\", {});
+    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          { CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN,
                            CMD_MOVE_DOWN_RIGHT });
-}
+    // @noloc section end
+ }
 
 static void _add_formatted_keyhelp(column_composer &cols)
 {
@@ -841,11 +846,13 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
 {
     static map<int, int> hotkeys;
     static map<int, formatted_string> page_text;
+    // @noloc section start
     static map<int, string> headers = {
-        {'*', "Manual"}, {'%', "Aptitudes"}, {'^', "Quickstart"}, // @noloc
-        {'~', "Macros"}, {'&', "Options"}, {'t', "Tiles"}, // @noloc
-        {'?', "Key help"} // @noloc
+        {'*', "Manual"}, {'%', "Aptitudes"}, {'^', "Quickstart"},
+        {'~', "Macros"}, {'&', "Options"}, {'t', "Tiles"},
+        {'?', "Key help"}
     };
+    // @noloc section end
 
     if (!page_text.size())
     {

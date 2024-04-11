@@ -2438,7 +2438,7 @@ bool delete_temp_mutation()
                                         you.attribute[ATTR_TEMP_MUTATIONS]);
 #endif
 
-        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true)) // @noloc
+        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true))
             return true;
     }
 

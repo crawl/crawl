@@ -56,8 +56,8 @@ SPECIAL_FILES = [
 # These files are evaluated differently. We ignore all strings unless we have a reason to extract them,
 # as opposed to extracting all strings unless we have a reason to ignore them.
 LAZY_FILES = [
-    'dgn-overview.cc', 'end.cc', 'files.cc','fineff.cc', 'god-passive.cc',
-    'god-prayer.cc', 'macro.cc', 'main.cc', 'tilereg-dgn.cc'
+    'dgn-overview.cc', 'delay.h', 'end.cc', 'files.cc','fineff.cc',
+    'god-passive.cc', 'god-prayer.cc', 'macro.cc', 'main.cc', 'tilereg-dgn.cc'
 ]
 
 SKIP_FILES = [
@@ -1037,9 +1037,13 @@ for filename in files:
                 continue
 
             # Leave notes/milsones in English
-            if re.search('take_note', line) or re.search('mark_milestone', line) or re.search('note *=', line):
+            if 'milestone' in line or 'mile_text' in line:
                 continue
-            if re.search(r'(mutate|delete_mutation|delete_all_temp_mutations)\s*\(', line):
+            if re.search('take_note', line) or re.search('note *=', line):
+                continue
+            if re.search('delete[a-z_]*mutation', line):
+                continue
+            if re.search(r'mutate\s*\(', line):
                 continue
             if re.search(r'\bbanish(ed)?\s*\(', line):
                 continue
@@ -1204,9 +1208,21 @@ for filename in files:
             if filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue
+            elif filename == 'lookup-help.cc':
+                # ignore db keys
+                if re.match(r'^_(get|recap)[a-z_]*keys?$', section):
+                    continue
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
                 # adjectives
                 string += ' '
+            elif filename == 'output.cc':
+                if section == 's_equip_slot_names' or section == 'equip_slot_to_name':
+                    # equipment slots are only ever displayed in lowercase form
+                    # and the specific ring slots are all just displayed as "ring"
+                    if string.endswith(" Ring"):
+                        string = "ring"
+                    else:
+                        string = string.lower()
 
             # strip channel information
             string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
