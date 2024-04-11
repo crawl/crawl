@@ -544,7 +544,7 @@ string vmake_stringf(const char* s, va_list args)
     _pop_va_args(args_copy, arg_types, arg_values);
     va_end(args_copy);
 
-    char buf[1000];
+    char buf[200];
 
     stringstream ss;
 
