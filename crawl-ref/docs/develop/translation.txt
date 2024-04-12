@@ -256,3 +256,93 @@ default context, but if there's no translation in the default context, it falls
 back to English. Having a word in the wrong case is probably preferable to
 having a word in the wrong language.
 
+
+Defining grammatical rules
+--------------------------
+
+Manually defining translations for each context can be tedious. Gendered
+adjectives are not too bad since there's not that many of them, but declining
+nouns in all the cases is a lot of work. For that reason, it's possible to
+define rules for transforming strings from the default context into another
+context. These rules use something called "regular expressions". Regular
+expressions are very powerful, but also very complex. If you're not familiar
+with them, you will probably want to google for an explanation of how they
+work. However, some simple examples are given below.
+
+Here is a simple example for the declension of German nouns in accusative:
+
+%%%%
+GENERATE:acc
+/^der\b/den/
+%%%%
+
+The expression in this rule contains two elements bounded by the forward-slashes.
+The first element is the pattern to be replaced, and the second element is the
+replacement. ^ matches the start of the string, \b matches a word boundary. So,
+this rule says if the string starts with the word "der", replace it with the
+word "den". Another commonly-used special character is $, which matches the end
+of the string.
+
+All substrings matching the pattern are replaced (although in this example,
+since we are matching on the start of the string, there can only be at most one
+match).
+
+A rule can contain multiple expressions. For example, for German dative, you
+might have:
+
+%%%%
+GENERATE:dat
+/^der\b/dem/
+/^das\b/dem/
+/^die\b/der/
+%%%%
+
+Note that the expressions are applied sequentially, so order is important. In
+this example, if we put the "die" to "der" replacement first, the "der" would
+subsequently be replaced with "dem", which is not what we want.
+
+There is another expression format with three elements. In this format, the
+first element says "only apply the replacement to the substring that matches
+this pattern".
+
+For example, suppose we wanted to add adjective declension to our German
+accusative example. Since we know that German nouns always start with an
+uppercase letter, but adjectives do not, we could do:
+
+%%%%
+GENERATE:acc
+/^der\b/den/
+/^den [a-zäöüß\- ]+/e /en /
+%%%%
+
+The part in square brackets matches any characters within them. A hyphen
+specifies a range of characters, so a-z means any character from a to z. Since
+the hyphen is used to specify a range, we must use \- to match an actual hyphen.
+The space matches space.
+
+The + means "one or more". To match zero or more, use *. To match zero or one,
+use ?.
+
+Instead of [a-zäöüß\- ], we could've used [^A-ZÄÖÜ]. The ^ in this context,
+means "not", so this matches anything that is not an uppercase letter.
+
+Putting it all together, this expression will apply to the part of the string
+that is the word "den" followed by words that are in all lowercase (note that
+this is applied after the "der" to "den" replacement). The replacement itself
+is straightforward. It says, wherever a word ends with e, change it to en.
+
+You can explicitly define exceptions to these rules. For example, the above
+rules would not work for the string "Blork der Ork", because the article "der"
+is not at the start, so we would decline that particular string explicitly:
+
+%%%%
+Blork the orc
+Blork der Ork
+%%%%
+{acc}Blork the orc
+Blork den Ork
+%%%%
+{dat}Blork the orc
+Blork dem Ork
+%%%%
+
