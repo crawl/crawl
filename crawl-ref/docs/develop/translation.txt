@@ -73,6 +73,9 @@ If the string includes leading or trailing whitespace, it must be surrounded
 with double-quotes ("). Generally, you will want to keep any such whitespace
 the same as in the English version.
 
+
+The following sections apply to crawl-ref/source/dat/strings only...
+
 printf-style placeholders (%s, etc.)
 ------------------------------------
 
