@@ -8,15 +8,6 @@
 the program bug
 der Programmfehler
 %%%%
-the worker ant
-die Ameisenarbeiterin
-%%%%
-the queen ant
-die Ameisenkönigin
-%%%%
-the soldier ant
-die Ameisensoldatin
-%%%%
 the formicid
 der Formicid
 %%%%
@@ -272,9 +263,6 @@ die Rieseneidechse
 the frilled lizard
 die gekräuselte Eidechse
 %%%%
-the leopard gecko
-der Leopardgecko
-%%%%
 the iguana
 der Leguan
 %%%%
@@ -344,14 +332,8 @@ der Ork-Hexenmeister
 the orc high priest
 der Ork-Hohepriester
 %%%%
-the lava orc
-der Lava-Ork
-%%%%
 the human
 der Mensch
-%%%%
-the slave
-der Sklave
 %%%%
 the hell knight
 der Höllenritter
@@ -425,9 +407,6 @@ die Flussratte
 the hell rat
 die Höllenratte
 %%%%
-the porcupine
-das Stachelschwein
-%%%%
 the giant cockroach
 die Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ der dämonische Kriecher
 %%%%
 the orb spider
 die Kugelspinne
-%%%%
-the crocodile
-das Krokodil
 %%%%
 the alligator
 der Alligator
@@ -529,12 +505,6 @@ das unsichtbare Grauen
 %%%%
 the small abomination
 der kleine Greuel
-%%%%
-the crawling corpse
-die kriechende Leiche
-%%%%
-the macabre mass
-die makabere Masse
 %%%%
 the ancient zyme
 das uralte Zym
@@ -710,9 +680,6 @@ die Barachi
 the floating eye
 das schwebende Auge
 %%%%
-the eye of draining
-das Auge des Schwächens
-%%%%
 the glowing orange brain
 das orange leuchtende Gehirn
 %%%%
@@ -730,9 +697,6 @@ das goldene Auge
 %%%%
 the ophan
 der Ophan
-%%%%
-the hippogriff
-der Hippogriff
 %%%%
 the manticore
 der Mantikor
@@ -761,9 +725,6 @@ der Kampfmagier
 the hexer
 der Hexer
 %%%%
-the ooze
-der Schlamm
-%%%%
 the jelly
 das Gelee
 %%%%
@@ -775,9 +736,6 @@ die verschmolzene Schleimkreatur
 %%%%
 the azure jelly
 das azurblaue Gelee
-%%%%
-the death ooze
-der Todesschlamm
 %%%%
 the acid blob
 der Säureklumpen

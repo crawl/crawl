@@ -8,15 +8,6 @@
 the program bug's
 des Programmfehlers
 %%%%
-the worker ant's
-der Ameisenarbeiterin
-%%%%
-the queen ant's
-der Ameisenkönigin
-%%%%
-the soldier ant's
-der Ameisensoldatin
-%%%%
 the formicid's
 des Formicids
 %%%%
@@ -272,9 +263,6 @@ der Rieseneidechse
 the frilled lizard's
 der gekräuselten Eidechse
 %%%%
-the leopard gecko's
-des Leopardgeckos
-%%%%
 the iguana's
 des Leguans
 %%%%
@@ -344,14 +332,8 @@ des Ork-Hexenmeisters
 the orc high priest's
 des Ork-Hohepriesters
 %%%%
-the lava orc's
-des Lava-Orks
-%%%%
 the human's
 des Menschen
-%%%%
-the slave's
-des Sklaven
 %%%%
 the hell knight's
 des Höllenritters
@@ -425,9 +407,6 @@ der Flussratte
 the hell rat's
 der Höllenratte
 %%%%
-the porcupine's
-des Stachelschweins
-%%%%
 the giant cockroach's
 der Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ des dämonischen Kriechers
 %%%%
 the orb spider's
 der Kugelspinne
-%%%%
-the crocodile's
-des Krokodils
 %%%%
 the alligator's
 des Alligators
@@ -529,12 +505,6 @@ des unsichtbaren Grauens
 %%%%
 the small abomination's
 des kleinen Greuels
-%%%%
-the crawling corpse's
-der kriechenden Leiche
-%%%%
-the macabre mass's
-der makaberen Masse
 %%%%
 the ancient zyme's
 des uralten Zyms
@@ -710,9 +680,6 @@ der Barachi
 the floating eye's
 des schwebenden Auges
 %%%%
-the eye of draining's
-des Auges des Schwächens
-%%%%
 the glowing orange brain's
 des orangen leuchtenden Gehirns
 %%%%
@@ -730,9 +697,6 @@ des goldenen Auges
 %%%%
 the ophan's
 des Ophans
-%%%%
-the hippogriff's
-des Hippogriffs
 %%%%
 the manticore's
 des Mantikors
@@ -761,9 +725,6 @@ des Kampfmagiers
 the hexer's
 des Hexers
 %%%%
-the ooze's
-des Schlamms
-%%%%
 the jelly's
 des Gelees
 %%%%
@@ -775,9 +736,6 @@ der verschmolzenen Schleimkreatur
 %%%%
 the azure jelly's
 des azurblauen Gelees
-%%%%
-the death ooze's
-des Todesschlamms
 %%%%
 the acid blob's
 des Säureklumpens

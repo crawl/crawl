@@ -8,15 +8,6 @@
 program bug
 Programmfehler
 %%%%
-worker ant
-Ameisenarbeiterin
-%%%%
-queen ant
-Ameisenkönigin
-%%%%
-soldier ant
-Ameisensoldatin
-%%%%
 formicid
 Formicid
 %%%%
@@ -272,9 +263,6 @@ Rieseneidechse
 frilled lizard
 gekräuselte Eidechse
 %%%%
-leopard gecko
-Leopardgecko
-%%%%
 iguana
 Leguan
 %%%%
@@ -344,14 +332,8 @@ Ork-Hexenmeister
 orc high priest
 Ork-Hohepriester
 %%%%
-lava orc
-Lava-Ork
-%%%%
 human
 Mensch
-%%%%
-slave
-Sklave
 %%%%
 hell knight
 Höllenritter
@@ -425,9 +407,6 @@ Flussratte
 hell rat
 Höllenratte
 %%%%
-porcupine
-Stachelschwein
-%%%%
 giant cockroach
 Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ dämonischer Kriecher
 %%%%
 orb spider
 Kugelspinne
-%%%%
-crocodile
-Krokodil
 %%%%
 alligator
 Alligator
@@ -529,12 +505,6 @@ unsichtbares Grauen
 %%%%
 small abomination
 kleiner Greuel
-%%%%
-crawling corpse
-kriechende Leiche
-%%%%
-macabre mass
-makabere Masse
 %%%%
 ancient zyme
 uraltes Zym
@@ -710,9 +680,6 @@ Barachi
 floating eye
 schwebendes Auge
 %%%%
-eye of draining
-Auge des Schwächens
-%%%%
 glowing orange brain
 oranges leuchtendes Gehirn
 %%%%
@@ -730,9 +697,6 @@ goldenes Auge
 %%%%
 ophan
 Ophan
-%%%%
-hippogriff
-Hippogriff
 %%%%
 manticore
 Mantikor
@@ -761,9 +725,6 @@ Kampfmagier
 hexer
 Hexer
 %%%%
-ooze
-Schlamm
-%%%%
 jelly
 Gelee
 %%%%
@@ -775,9 +736,6 @@ verschmolzene Schleimkreatur
 %%%%
 azure jelly
 azurblaues Gelee
-%%%%
-death ooze
-Todesschlamm
 %%%%
 acid blob
 Säureklumpen

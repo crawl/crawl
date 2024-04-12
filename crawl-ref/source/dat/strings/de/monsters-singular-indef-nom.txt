@@ -8,15 +8,6 @@
 a program bug
 ein Programmfehler
 %%%%
-a worker ant
-eine Ameisenarbeiterin
-%%%%
-a queen ant
-eine Ameisenkönigin
-%%%%
-a soldier ant
-eine Ameisensoldatin
-%%%%
 a formicid
 ein Formicid
 %%%%
@@ -272,9 +263,6 @@ eine Rieseneidechse
 a frilled lizard
 eine gekräuselte Eidechse
 %%%%
-a leopard gecko
-ein Leopardgecko
-%%%%
 an iguana
 ein Leguan
 %%%%
@@ -344,14 +332,8 @@ ein Ork-Hexenmeister
 an orc high priest
 ein Ork-Hohepriester
 %%%%
-a lava orc
-ein Lava-Ork
-%%%%
 a human
 ein Mensch
-%%%%
-a slave
-ein Sklave
 %%%%
 a hell knight
 ein Höllenritter
@@ -425,9 +407,6 @@ eine Flussratte
 a hell rat
 eine Höllenratte
 %%%%
-a porcupine
-{n}ein Stachelschwein
-%%%%
 a giant cockroach
 eine Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ ein dämonischer Kriecher
 %%%%
 an orb spider
 eine Kugelspinne
-%%%%
-a crocodile
-{n}ein Krokodil
 %%%%
 an alligator
 ein Alligator
@@ -529,12 +505,6 @@ ein unsichtbares Grauen
 %%%%
 a small abomination
 ein kleiner Greuel
-%%%%
-a crawling corpse
-eine kriechende Leiche
-%%%%
-a macabre mass
-eine makabere Masse
 %%%%
 an ancient zyme
 ein uraltes Zym
@@ -710,9 +680,6 @@ eine Barachi
 a floating eye
 {n}ein schwebendes Auge
 %%%%
-an eye of draining
-{n}ein Auge des Schwächens
-%%%%
 a glowing orange brain
 {n}ein oranges leuchtendes Gehirn
 %%%%
@@ -730,9 +697,6 @@ a golden eye
 %%%%
 an ophan
 ein Ophan
-%%%%
-a hippogriff
-ein Hippogriff
 %%%%
 a manticore
 ein Mantikor
@@ -761,9 +725,6 @@ ein Kampfmagier
 a hexer
 ein Hexer
 %%%%
-an ooze
-ein Schlamm
-%%%%
 a jelly
 {n}ein Gelee
 %%%%
@@ -775,9 +736,6 @@ eine verschmolzene Schleimkreatur
 %%%%
 an azure jelly
 {n}ein azurblaues Gelee
-%%%%
-a death ooze
-ein Todesschlamm
 %%%%
 an acid blob
 ein Säureklumpen

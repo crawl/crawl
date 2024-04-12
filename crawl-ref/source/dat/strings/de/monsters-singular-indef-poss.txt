@@ -8,15 +8,6 @@
 a program bug's
 eines Programmfehlers
 %%%%
-a worker ant's
-einer Ameisenarbeiterin
-%%%%
-a queen ant's
-einer Ameisenkönigin
-%%%%
-a soldier ant's
-einer Ameisensoldatin
-%%%%
 a formicid's
 eines Formicids
 %%%%
@@ -272,9 +263,6 @@ einer Rieseneidechse
 a frilled lizard's
 einer gekräuselten Eidechse
 %%%%
-a leopard gecko's
-eines Leopardgeckos
-%%%%
 an iguana's
 eines Leguans
 %%%%
@@ -344,14 +332,8 @@ eines Ork-Hexenmeisters
 an orc high priest's
 eines Ork-Hohepriesters
 %%%%
-a lava orc's
-eines Lava-Orks
-%%%%
 a human's
 eines Menschen
-%%%%
-a slave's
-eines Sklaven
 %%%%
 a hell knight's
 eines Höllenritters
@@ -425,9 +407,6 @@ einer Flussratte
 a hell rat's
 einer Höllenratte
 %%%%
-a porcupine's
-eines Stachelschweins
-%%%%
 a giant cockroach's
 einer Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ eines dämonischen Kriechers
 %%%%
 an orb spider's
 einer Kugelspinne
-%%%%
-a crocodile's
-eines Krokodils
 %%%%
 an alligator's
 eines Alligators
@@ -529,12 +505,6 @@ eines unsichtbaren Grauens
 %%%%
 a small abomination's
 eines kleinen Greuels
-%%%%
-a crawling corpse's
-einer kriechenden Leiche
-%%%%
-a macabre mass's
-einer makaberen Masse
 %%%%
 an ancient zyme's
 eines uralten Zyms
@@ -711,9 +681,6 @@ einer Barachi
 a floating eye's
 eines schwebenden Auges
 %%%%
-an eye of draining's
-eines Auges des Schwächens
-%%%%
 a glowing orange brain's
 eines orangen leuchtenden Gehirns
 %%%%
@@ -731,9 +698,6 @@ eines goldenen Auges
 %%%%
 an ophan's
 eines Ophans
-%%%%
-a hippogriff's
-eines Hippogriffs
 %%%%
 a manticore's
 eines Mantikors
@@ -762,9 +726,6 @@ eines Kampfmagiers
 a hexer's
 eines Hexers
 %%%%
-an ooze's
-eines Schlamms
-%%%%
 a jelly's
 eines Gelees
 %%%%
@@ -776,9 +737,6 @@ einer verschmolzenen Schleimkreatur
 %%%%
 an azure jelly's
 eines azurblauen Gelees
-%%%%
-a death ooze's
-eines Todesschlamms
 %%%%
 an acid blob's
 eines Säureklumpens

@@ -8,15 +8,6 @@
 %d program bugs
 %d Programmfehler
 %%%%
-%d worker ants
-%d Ameisenarbeiterinnen
-%%%%
-%d queen ants
-%d Ameisenköniginnen
-%%%%
-%d soldier ants
-%d Ameisensoldatinnen
-%%%%
 %d formicids
 %d Formicide
 %%%%
@@ -272,9 +263,6 @@
 %d frilled lizards
 %d gekräuselte Eidechsen
 %%%%
-%d leopard geckos
-%d Leopardgeckos
-%%%%
 %d iguanas
 %d Leguane
 %%%%
@@ -344,14 +332,8 @@
 %d orc high priests
 %d Ork-Hohepriester
 %%%%
-%d lava orcs
-%d Lava-Orke
-%%%%
 %d humans
 %d Menschen
-%%%%
-%d slaves
-%d Sklaven
 %%%%
 %d hell knights
 %d Höllenritter
@@ -425,9 +407,6 @@
 %d hell rats
 %d Höllenratten
 %%%%
-%d porcupines
-%d Stachelschweine
-%%%%
 %d giant cockroaches
 %d Riesenkakerlaken
 %%%%
@@ -460,9 +439,6 @@
 %%%%
 %d orb spiders
 %d Kugelspinnen
-%%%%
-%d crocodiles
-%d Krokodile
 %%%%
 %d alligators
 %d Alligatore
@@ -529,12 +505,6 @@
 %%%%
 %d small abominations
 %d kleine Greuel
-%%%%
-%d crawling corpses
-%d kriechende Leichen
-%%%%
-%d macabre masses
-%d makabere Massen
 %%%%
 %d ancient zymes
 %d uralte Zyme
@@ -710,9 +680,6 @@
 %d floating eyes
 %d schwebende Augen
 %%%%
-%d eyes of draining
-%d Augen des Schwächens
-%%%%
 %d glowing orange brains
 %d orange leuchtende Gehirne
 %%%%
@@ -730,9 +697,6 @@
 %%%%
 %d ophanim
 %d Ophane
-%%%%
-%d hippogriffs
-%d Hippogriffe
 %%%%
 %d manticores
 %d Mantikore
@@ -761,9 +725,6 @@
 %d hexers
 %d Hexer
 %%%%
-%d oozes
-%d Schlamme
-%%%%
 %d jellies
 %d Geleen
 %%%%
@@ -775,9 +736,6 @@
 %%%%
 %d azure jellies
 %d azurblaue Geleen
-%%%%
-%d death oozes
-%d Todesschlamme
 %%%%
 %d acid blobs
 %d Säureklumpene

@@ -9750,6 +9750,9 @@ Eure göttliche Ausdauer schützt Euch vor Gift!
 the water
 das Wasser
 %%%%
+the ooze
+
+%%%%
 %s engulfs you in water!
 %s überflutet Euch!
 %%%%

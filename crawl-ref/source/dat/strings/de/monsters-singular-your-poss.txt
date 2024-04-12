@@ -8,15 +8,6 @@
 your program bug's
 Eures Programmfehlers
 %%%%
-your worker ant's
-Eurer Ameisenarbeiterin
-%%%%
-your queen ant's
-Eurer Ameisenkönigin
-%%%%
-your soldier ant's
-Eurer Ameisensoldatin
-%%%%
 your formicid's
 Eures Formicids
 %%%%
@@ -272,9 +263,6 @@ Eurer Rieseneidechse
 your frilled lizard's
 Eurer gekräuselten Eidechse
 %%%%
-your leopard gecko's
-Eures Leopardgeckos
-%%%%
 your iguana's
 Eures Leguans
 %%%%
@@ -344,14 +332,8 @@ Eures Ork-Hexenmeisters
 your orc high priest's
 Eures Ork-Hohepriesters
 %%%%
-your lava orc's
-Eures Lava-Orks
-%%%%
 your human's
 Eures Menschen
-%%%%
-your slave's
-Eures Sklaven
 %%%%
 your hell knight's
 Eures Höllenritters
@@ -425,9 +407,6 @@ Eurer Flussratte
 your hell rat's
 Eurer Höllenratte
 %%%%
-your porcupine's
-Eures Stachelschweins
-%%%%
 your giant cockroach's
 Eurer Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ Eures dämonischen Kriechers
 %%%%
 your orb spider's
 Eurer Kugelspinne
-%%%%
-your crocodile's
-Eures Krokodils
 %%%%
 your alligator's
 Eures Alligators
@@ -529,12 +505,6 @@ Eures unsichtbaren Grauens
 %%%%
 your small abomination's
 Eures kleinen Greuels
-%%%%
-your crawling corpse's
-Eurer kriechenden Leiche
-%%%%
-your macabre mass's
-Eurer makaberen Masse
 %%%%
 your ancient zyme's
 Eures uralten Zyms
@@ -711,9 +681,6 @@ Eurer Barachi
 your floating eye's
 Eures schwebenden Auges
 %%%%
-your eye of draining's
-Eures Auges des Schwächens
-%%%%
 your glowing orange brain's
 Eures orangen leuchtenden Gehirns
 %%%%
@@ -731,9 +698,6 @@ Eures goldenen Auges
 %%%%
 your ophan's
 Eures Ophans
-%%%%
-your hippogriff's
-Eures Hippogriffs
 %%%%
 your manticore's
 Eures Mantikors
@@ -762,9 +726,6 @@ Eures Kampfmagiers
 your hexer's
 Eures Hexers
 %%%%
-your ooze's
-Eures Schlamms
-%%%%
 your jelly's
 Eures Gelees
 %%%%
@@ -776,9 +737,6 @@ Eurer verschmolzenen Schleimkreatur
 %%%%
 your azure jelly's
 Eures azurblauen Gelees
-%%%%
-your death ooze's
-Eures Todesschlamms
 %%%%
 your acid blob's
 Eures Säureklumpens

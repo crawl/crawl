@@ -8,15 +8,6 @@
 your program bug
 Euer Programmfehler
 %%%%
-your worker ant
-Eure Ameisenarbeiterin
-%%%%
-your queen ant
-Eure Ameisenkönigin
-%%%%
-your soldier ant
-Eure Ameisensoldatin
-%%%%
 your formicid
 Euer Formicid
 %%%%
@@ -272,9 +263,6 @@ Eure Rieseneidechse
 your frilled lizard
 Eure gekräuselte Eidechse
 %%%%
-your leopard gecko
-Euer Leopardgecko
-%%%%
 your iguana
 Euer Leguan
 %%%%
@@ -344,14 +332,8 @@ Euer Ork-Hexenmeister
 your orc high priest
 Euer Ork-Hohepriester
 %%%%
-your lava orc
-Euer Lava-Ork
-%%%%
 your human
 Euer Mensch
-%%%%
-your slave
-Euer Sklave
 %%%%
 your hell knight
 Euer Höllenritter
@@ -425,9 +407,6 @@ Eure Flussratte
 your hell rat
 Eure Höllenratte
 %%%%
-your porcupine
-{n}Euer Stachelschwein
-%%%%
 your giant cockroach
 Eure Riesenkakerlake
 %%%%
@@ -460,9 +439,6 @@ Euer dämonischer Kriecher
 %%%%
 your orb spider
 Eure Kugelspinne
-%%%%
-your crocodile
-{n}Euer Krokodil
 %%%%
 your alligator
 Euer Alligator
@@ -529,12 +505,6 @@ Euer unsichtbares Grauen
 %%%%
 your small abomination
 Euer kleiner Greuel
-%%%%
-your crawling corpse
-Eure kriechende Leiche
-%%%%
-your macabre mass
-Eure makabere Masse
 %%%%
 your ancient zyme
 Euer uraltes Zym
@@ -711,9 +681,6 @@ Eure Barachi
 your floating eye
 {n}Euer schwebendes Auge
 %%%%
-your eye of draining
-{n}Euer Auge des Schwächens
-%%%%
 your glowing orange brain
 {n}Euer oranges leuchtendes Gehirn
 %%%%
@@ -731,9 +698,6 @@ your golden eye
 %%%%
 your ophan
 Euer Ophan
-%%%%
-your hippogriff
-Euer Hippogriff
 %%%%
 your manticore
 Euer Mantikor
@@ -762,9 +726,6 @@ Euer Kampfmagier
 your hexer
 Euer Hexer
 %%%%
-your ooze
-Euer Schlamm
-%%%%
 your jelly
 {n}Euer Gelee
 %%%%
@@ -776,9 +737,6 @@ Eure verschmolzene Schleimkreatur
 %%%%
 your azure jelly
 {n}Euer azurblaues Gelee
-%%%%
-your death ooze
-Euer Todesschlamm
 %%%%
 your acid blob
 Euer Säureklumpen
