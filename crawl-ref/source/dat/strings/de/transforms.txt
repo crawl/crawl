@@ -296,15 +296,6 @@ Euer Schildvorderbein
 flesh
 Fleisch
 %%%%
-venomous fangs
-Giftzähne
-%%%%
-You have poisonous fangs.
-Ihr habt Giftzähne.
-%%%%
-You are tiny and dextrous.
-Ihr seid klein und wendig.
-%%%%
 
 ################################
 # Blade hands
@@ -404,18 +395,6 @@ Steintentakeln
 # flesh type
 # duplicate: stone
 %%%%
-slow and powerful
-langsam und mächtig
-%%%%
-Your actions are slow, but your melee attacks are powerful.
-Eure Aktionen sind langsam, aber Eure Nahkampfangriffe sind mächtig.
-%%%%
-torment resistance 1
-Qualresistenz 1
-%%%%
-You are resistant to unholy torment.
-Ihr seid resistent gegen unheilige Qualen.
-%%%%
 
 ################################
 # Ice-form
@@ -466,12 +445,6 @@ Eure Schildvorderpfote
 # duplicate: felids also have paws
 #paw
 #Pfote
-%%%%
-freezing attack
-Einfrier-Angriff
-%%%%
-You have a powerful freezing melee attack.
-Ihr habt einen mächtigen Einfrier-Nahkampfangriff.
 %%%%
 
 ################################
@@ -524,18 +497,6 @@ Eure Waffenvorderkralle
 your shield foreclaw
 Eure Schildvorderkralle
 %%%%
-dragon claw
-Drachenkralle
-%%%%
-You have a powerful clawing attack.
-Ihr habt einen mächtigen Klauenangriff.
-%%%%
-dragon scales
-Drachenschuppen
-%%%%
-Your giant scaled body is strong and resiliant, but less evasive.
-Euer riesiger, geschuppter Körper ist stark und widerstandsfähig, aber weniger wendig.
-%%%%
 
 # draconians transform into specific types of dragon based on their colour
 %%%%
@@ -585,21 +546,6 @@ ein untoter Lich
 %%%%
 # flesh type
 # duplicate: bone
-%%%%
-draining attack
-entleerender Angriff
-%%%%
-Your unarmed attacks are suffused with negative energy.
-Eure unbewaffneten Angriffe sind von negativer Energie durchdrungen.
-%%%%
-torment immunity
-Qualimmunität
-%%%%
-You are immune to unholy pain and torment.
-Ihr seid immun gegen unheilige Schmerzen und Qualen.
-%%%%
-Your necromantic spells are more powerful.
-Eure nekromantischen Zaubersprüche sind mächtiger.
 %%%%
 
 ################################
@@ -789,18 +735,6 @@ Wurzel
 wood
 Holz
 %%%%
-Your roots penetrate the ground, keeping you stationary.
-Eure Wurzeln dringen in den Boden ein und halten Euch fest.
-%%%%
-stationary
-stationär
-%%%%
-stasis
-Stasis
-%%%%
-You cannot be teleported.
-Ihr könnt nicht teleportiert werden.
-%%%%
 
 ################################
 # Porcupine-form
@@ -882,13 +816,6 @@ Strähne
 vapour
 Dunst
 %%%%
-# Code literally says "insubstial". Not sure if this is an abbreviation or just a typo.
-insubstial
-substanzlos
-%%%%
-Your tiny insubstantial body is highly resistant to most damage types.
-Euer winziger, substanzloser Körper ist sehr resistent gegen die meisten Schadensarten.
-%%%%
 
 ################################
 # Jelly-form
@@ -960,21 +887,6 @@ Eure Waffenhyphe
 your shield hypha
 Eure Schildhyphe
 %%%%
-You are tiny and evasive.
-Ihr seid winzig und ausweichend.
-%%%%
-melee confuse
-Nahkampfverwirrung
-%%%%
-Your melee attack releases spores that confuse breathing creatures.
-Euer Nahkampfangriff setzt Sporen frei, die atmende Kreaturen verwirren.
-%%%%
-terrified
-erschreckt
-%%%%
-<lightred>You become terrified and freeze when enemies are visible.</lightred>
-<lightred>Ihr erschreckt und erstarrt, wenn Feinde in Sicht sind.</lightred>
-%%%%
 
 ################################
 # Shadow-form
@@ -994,27 +906,6 @@ Schatten-Form
 # description
 a swirling mass of dark shadows
 eine wirbelnde Masse aus dunklen Schatten
-%%%%
-shadow resist
-Schattenresistenz
-%%%%
-You are immune to unholy torment and to willpower attacks.
-Ihr seid immun gegen unheilige Qualen und Angriffe gegen Willenskraft.
-%%%%
-half damage
-Halbschaden
-%%%%
-Damage taken is halved, but you are drained when taking damage.
-Der erlittene Schaden wird halbiert, aber Ihr werdet entleert, wenn Ihr Schaden nehmt.
-%%%%
-Your attacks are insubstantial and do half damage.
-Eure Angriffe sind substanzlos und richten nur halben Schaden an.
-%%%%
-bleed smoke
-Rauch bluten
-%%%%
-You bleed smoke when taking damage.
-Ihr blutet Rauch, wenn ihr Schaden nehmt.
 %%%%
 
 ################################
@@ -1062,12 +953,6 @@ Sturmfäuste
 # duplicate of barachi
 #bellow
 #brüllt
-%%%%
-Your stormy fists strike out in all directions at once.
-Eure Blitzfäuste schlagen in alle Richtungen gleichzeitig aus.
-%%%%
-You are incredibly evasive.
-Ihr seid unglaublich ausweichend.
 %%%%
 
 ################################

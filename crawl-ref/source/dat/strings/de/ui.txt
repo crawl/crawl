@@ -817,35 +817,6 @@ NoCast
 KeinZauber
 %%%%
 
-#######################
-# Mutations
-#######################
-%%%%
-unfitting armour
-unpassende Rüstung
-%%%%
-amphibious
-amphibisch
-%%%%
-# The number here will only ever be 7 or 8
-%%%%
-%d rings
-%d Ringe
-%%%%
-constrict %d
-verengen %d
-%%%%
-walk on water
-auf dem Wasser gehen
-%%%%
-reduced essence
-reduzierte Essenz
-%%%%
-AC +%d
-RK +%d
-%%%%
-no striking features
-keine auffälligen Merkmale
 %%%%
 very quick
 sehr schnell
@@ -886,8 +857,6 @@ Unbewaffnet
 %%%%
 Blade Hand
 Klingenhand
-%%%%
-# Note: The maximum is 2, even for an octopode
 %%%%
 # duplicate of the spell name
 #Blade Hands

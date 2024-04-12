@@ -1,0 +1,2993 @@
+###############################################################################
+#
+# Translations for mutations
+#
+###############################################################################
+
+########################################
+# Mutation categories
+########################################
+
+%%%%
+any
+jede
+%%%%
+good
+gut
+%%%%
+bad
+schlecht
+%%%%
+slime
+schleim
+%%%%
+nonslime
+nicht-schleim
+%%%%
+corrupt
+korrupt
+%%%%
+qazlal
+qazlal
+%%%%
+
+########################################
+# Innate mutations for player species
+########################################
+
+%%%%
+damage resistance
+Schadensresistenz
+%%%%
+You are resistant to damage.
+Ihr seid resistent gegen Schaden.
+%%%%
+heal wounds
+Wunde heilen
+%%%%
+You can heal yourself by infusing magical energy.
+Ihr könnt euch selbst heilen, indem ihr magische Energie zuführt.
+%%%%
+sickness immunity
+Krankheitsimmunität
+%%%%
+You are immune to sickness and miasma.
+Ihr seid immun gegen Krankheit und Miasma.
+%%%%
+breathe lightning
+Blitzodem
+%%%%
+You can breathe wild blasts of lightning.
+Ihr könnt wilde Blitze spucken.
+%%%%
+breathe noxious fumes
+schädliche Dämpfe spucken
+%%%%
+You can breathe blasts of noxious fumes.
+Ihr könnt schädliche Dämpfe spucken.
+%%%%
+breathe steam
+Dampfodem
+%%%%
+You can breathe blasts of scalding, opaque steam.
+Ihr könnt brühende, undurchsichtige Dampfstöße spucken.
+%%%%
+breathe power
+Energieodem
+%%%%
+You can breathe bolts of dispelling energy.
+Ihr könnt Strahlen vertreibender Energie spucken.
+%%%%
+breathe fire
+Feuerodem
+%%%%
+You can breathe blasts of fire.
+Ihr könnt Feuer spucken.
+%%%%
+breathe frost
+Frostodem
+%%%%
+You can breathe waves of freezing cold which knock back foes.
+Ihr könnt Wellen von eisiger Kälte spucken, die Feinde zurückwerfen.
+%%%%
+spit acid
+Säure spucken
+%%%%
+You can spit globs of acid.
+Ihr könnt Säureklumpen spucken.
+%%%%
+permanent stasis
+permanente Stasis
+%%%%
+You cannot be hasted, slowed, berserked, paralysed or teleported.
+Ihr könnt nicht geeilt, verlangsamt, berserkert, gelähmt oder teleportiert werden.
+%%%%
+dig shafts and tunnels
+Schächte und Tunnel graben
+%%%%
+You can dig through walls and to a lower floor.
+Ihr könnt durch Wände und eine Ebene tiefer graben.
+%%%%
+almost no armour
+fast keine Rüstung
+%%%%
+You cannot wear most types of armour.
+Ihr könnt die meisten Arten von Rüstungen nicht tragen.
+%%%%
+# unnamed ghoul mutation
+You thrive by killing the living.
+Ihr gedeiht, indem Ihr die Lebenden tötet.
+%%%%
+
+########################################
+# Mutations from being transformed
+########################################
+
+# unnamed mutation for spider/bat form
+%%%%
+You are tiny and dextrous.
+Ihr seid klein und wendig.
+%%%%
+
+# spider form
+%%%%
+venomous fangs
+Giftzähne
+%%%%
+You have poisonous fangs.
+Ihr habt Giftzähne.
+%%%%
+
+# statue form
+%%%%
+slow and powerful
+langsam und mächtig
+%%%%
+Your actions are slow, but your melee attacks are powerful.
+Eure Aktionen sind langsam, aber Eure Nahkampfangriffe sind mächtig.
+%%%%
+torment resistance 1
+Qualresistenz 1
+%%%%
+You are resistant to unholy torment.
+Ihr seid resistent gegen unheilige Qualen.
+%%%%
+
+# ice form
+%%%%
+freezing attack
+Einfrier-Angriff
+%%%%
+You have a powerful freezing melee attack.
+Ihr habt einen mächtigen Einfrier-Nahkampfangriff.
+%%%%
+
+# dragon form
+%%%%
+dragon claw
+Drachenkralle
+%%%%
+You have a powerful clawing attack.
+Ihr habt einen mächtigen Klauenangriff.
+%%%%
+dragon scales
+Drachenschuppen
+%%%%
+Your giant scaled body is strong and resiliant, but less evasive.
+Euer riesiger, geschuppter Körper ist stark und widerstandsfähig, aber weniger wendig.
+%%%%
+# breathe fire (same as red draconian mutation)
+%%%%
+You can breathe fire.
+Ihr könnt Feuer spucken.
+%%%%
+# red draconian gets a special message
+Your breath weapon is enhanced in this form.
+Eure Atemwaffe ist in dieser Form verbessert.
+%%%%
+
+# lich form
+%%%%
+draining attack
+entleerender Angriff
+%%%%
+Your unarmed attacks are suffused with negative energy.
+Eure unbewaffneten Angriffe sind von negativer Energie durchdrungen.
+%%%%
+# unnamed mutation
+Your necromantic spells are more powerful.
+Eure nekromantischen Zaubersprüche sind mächtiger.
+%%%%
+
+# tree form
+%%%%
+stationary
+stationär
+%%%%
+Your roots penetrate the ground, keeping you stationary.
+Eure Wurzeln dringen in den Boden ein und halten Euch fest.
+%%%%
+stasis
+Stasis
+%%%%
+You cannot be teleported.
+Ihr könnt nicht teleportiert werden.
+%%%%
+
+# lich form and tree form
+%%%%
+torment immunity
+Qualimmunität
+%%%%
+You are immune to unholy pain and torment.
+Ihr seid immun gegen unheilige Schmerzen und Qualen.
+%%%%
+
+# wisp form
+%%%%
+# Code literally says "insubstial".
+insubstial
+substanzlos
+%%%%
+Your tiny insubstantial body is highly resistant to most damage types.
+Euer winziger, substanzloser Körper ist sehr resistent gegen die meisten Schadensarten.
+%%%%
+
+# fungus form
+%%%%
+melee confuse
+Nahkampfverwirrung
+%%%%
+Your melee attack releases spores that confuse breathing creatures.
+Euer Nahkampfangriff setzt Sporen frei, die atmende Kreaturen verwirren.
+%%%%
+terrified
+erschreckt
+%%%%
+<lightred>You become terrified and freeze when enemies are visible.</lightred>
+<lightred>Ihr erschreckt und erstarrt, wenn Feinde in Sicht sind.</lightred>
+%%%%
+# unnamed mutation
+You are tiny and evasive.
+Ihr seid winzig und ausweichend.
+%%%%
+
+# shadow form
+%%%%
+shadow resist
+Schattenresistenz
+%%%%
+You are immune to unholy torment and to willpower attacks.
+Ihr seid immun gegen unheilige Qualen und Angriffe gegen Willenskraft.
+%%%%
+half damage
+Halbschaden
+%%%%
+Damage taken is halved, but you are drained when taking damage.
+Der erlittene Schaden wird halbiert, aber Ihr werdet entleert, wenn Ihr Schaden nehmt.
+%%%%
+bleed smoke
+Rauch bluten
+%%%%
+You bleed smoke when taking damage.
+Ihr blutet Rauch, wenn ihr Schaden nehmt.
+%%%%
+# unnamed mutation
+Your attacks are insubstantial and do half damage.
+Eure Angriffe sind substanzlos und richten nur halben Schaden an.
+%%%%
+
+# storm form
+%%%%
+cleaving
+spalten
+%%%%
+Your stormy fists strike out in all directions at once.
+Eure Blitzfäuste schlagen in alle Richtungen gleichzeitig aus.
+%%%%
+# unnamed mutation
+You are incredibly evasive.
+Ihr seid unglaublich ausweichend.
+%%%%
+
+########################################
+# Others defined in mutation.cc
+# These are mostly also from species or transformation
+########################################
+
+%%%%
+You move quickly.
+Ihr bewegt euch schnell.
+%%%%
+amphibious
+amphibisch
+%%%%
+You are amphibious.
+Ihr seid amphibisch.
+%%%%
+boosted hp
+Erhöhte TP
+%%%%
+Your maximum health is increased.
+Eure maximale Gesundheit ist erhöht.
+%%%%
+Your maximum health is greatly increased.
+Eure maximale Gesundheit ist stark erhöht.
+%%%%
+reduced hp
+reduzierte TP
+%%%%
+Your maximum health is decreased.
+Eure maximale Gesundheit ist verringert.
+%%%%
+You are immune to poison.
+Ihr seid immun gegen Gift.
+%%%%
+Your spellcasting is less reliable in this form.
+Euer Zaubern ist in dieser Form weniger zuverlässig.
+%%%%
+no casting
+keine Zaubersprüche
+%%%%
+You cannot cast spells.
+Ihr könnt keine Zaubersprüche wirken.
+%%%%
+You cannot drink.
+Ihr könnt nicht trinken.
+%%%%
+alive
+lebendig
+%%%%
+Your natural rate of healing is accelerated.
+Eure natürliche Heilungsrate ist beschleunigt.
+%%%%
+You are frail without blood (-20% HP).
+Ohne Blut seid ihr geschwächt (-20% TP).
+%%%%
+You can heal yourself when you bite living creatures.
+Ihr könnt Euch selbst heilen, wenn ihr lebende Kreaturen beißt.
+%%%%
+walk on water
+auf dem Wasser gehen
+%%%%
+You can walk on water.
+Ihr könnt auf dem Wasser gehen.
+%%%%
+You can walk on water until reaching land.
+Ihr könnt auf dem Wasser gehen, bis ihr Land erreicht.
+%%%%
+reduced essence
+reduzierte Essenz
+%%%%
+Your life essence is reduced to manifest your ancestor. (-10% HP)
+Eure Lebensessenz ist reduziert, um Euren Ahnen zu manifestieren. (-10% HP)
+%%%%
+AC +%d
+RK +%d
+%%%%
+Your serpentine skin is tough. (AC +%d)
+Eure schlangenartige Haut ist zäh. (RK +%d)
+%%%%
+Your stone body is resilient. (AC +%d)
+Euer Steinkörper ist widerstandsfähig. (RK +%d)
+%%%%
+Your %s scales are very hard. (AC +%d)
+Eure %s Schuppen sind sehr hart. (RK +%d)
+%%%%
+Your %s scales are hard. (AC +%d)
+Eure %s Schuppen sind hart. (RK +%d)
+%%%%
+%d rings
+%d Ringe
+%%%%
+You can wear up to %d rings at the same time.
+Ihr könnt bis zu %d Ringe zur gleichen Zeit tragen.
+%%%%
+unfitting armour
+unpassende Rüstung
+%%%%
+You are too small for most types of armour.
+Ihr seid zu klein für die meisten Rüstungstypen.
+%%%%
+no large weapons
+keine großen Waffen
+%%%%
+You are very small and have problems with some larger weapons.
+Ihr seid sehr klein und habt Probleme mit einigen größeren Waffen.
+%%%%
+You are small and have problems with some larger weapons.
+Ihr seid klein und habt Probleme mit einigen größeren Waffen.
+%%%%
+You are too large for most types of armour.
+Ihr seid zu groß für die meisten Arten von Rüstungen.
+%%%%
+You cannot fit into any form of body armour.
+Ihr könnt in keine Art Rüstung passen.
+%%%%
+Your attributes grow dramatically as you level up.
+Eure Attribute steigen mit dem Stufenaufstieg dramatisch an.
+%%%%
+You expend health (3 HP) to strengthen your wands.
+Ihr verbraucht Gesundheit (3 HP), um Eure Zauberstäbe zu stärken.
+%%%%
+You have tentacles for arms and can constrict up to %d enemies at once.
+Ihr habt Tentakel als Arme und könnt bis zu %d Feinde auf einmal erwürgen.
+%%%%
+You have sharp claws.
+Ihr habt scharfe Krallen.
+%%%%
+Your bite disrupts the magic of your enemies.
+Euer Biss unterbricht die Magie eurer Feinde.
+%%%%
+
+%%%%
+no striking features
+keine auffälligen Merkmale
+%%%%
+You are rather mundane.
+Ihr seid ziemlich fade.
+%%%%
+
+########################################
+# Others defined in mutation-data.h
+# These mostly have 3 levels
+########################################
+
+%%%%
+tough skin
+zähe Haut
+%%%%
+You have tough skin. (AC +1)
+Ihr habt eine zähe Haut. (RK +1)
+%%%%
+You have very tough skin. (AC +2)
+Ihr habt eine sehr zähe Haut. (RK +2)
+%%%%
+You have extremely tough skin. (AC +3)
+Ihr habt eine extrem zähe Haut. (RK +3)
+%%%%
+Your skin toughens.
+Eure Haut stählt.
+%%%%
+Your skin feels delicate.
+Eure Haut fühlt sich zart an.
+%%%%
+Your muscles are strong. (Str +2)
+Eure Muskeln sind stark. (Str +2)
+%%%%
+Your muscles are very strong. (Str +4)
+Eure Muskeln sind sehr stark. (Str +4)
+%%%%
+clever
+schlau
+%%%%
+Your mind is acute. (Int +2)
+Euer Verstand ist scharfsinnig. (Int +2)
+%%%%
+Your mind is very acute. (Int +4)
+Euer Verstand ist sehr scharfsinnig. (Int +4)
+%%%%
+You are agile. (Dex +2)
+Ihr seid wendig. (Dex +2)
+%%%%
+You are very agile. (Dex +4)
+Ihr seid sehr wendig. (Dex +4)
+%%%%
+poison resistance
+Giftresistenz
+%%%%
+Your system is resistant to poisons. (rPois)
+Euer System ist resistent gegen Gifte. (rPois)
+%%%%
+You feel resistant to poisons.
+Ihr fühlt Euch resistent gegen Gifte.
+%%%%
+You feel less resistant to poisons.
+Ihr fühlt Euch weniger resistent gegen Gifte.
+%%%%
+fire resistance
+Feuerresistenz
+%%%%
+Your flesh is heat resistant. (rF+)
+Euer Fleisch ist hitzebeständig. (rF+)
+%%%%
+Your flesh is very heat resistant. (rF++)
+Euer Fleisch ist sehr hitzebeständig. (rF++)
+%%%%
+Your flesh is almost immune to the effects of heat. (rF+++)
+Euer Fleisch ist fast immun gegen die Auswirkungen von Hitze (rF+++).
+%%%%
+You feel resistant to heat.
+Ihr fühlt Euch hitzeresistent.
+%%%%
+You feel more resistant to heat.
+Ihr fühlt Euch mehr hitzeresistent.
+%%%%
+You no longer feel heat resistant.
+Ihr fühlt Euch nicht mehr hitzebeständig.
+%%%%
+You feel less heat resistant.
+Ihr fühlt Euch weniger hitzebeständig.
+%%%%
+cold resistance
+Kälteresistenz
+%%%%
+Your flesh is cold resistant. (rC+)
+Euer Fleisch ist kälteresistent. (rC+)
+%%%%
+Your flesh is very cold resistant. (rC++)
+Euer Fleisch ist sehr kälteresistent. (rC++)
+%%%%
+Your flesh is almost immune to the effects of cold. (rC+++)
+Euer Fleisch ist fast immun gegen die Auswirkungen von Kälte (rC+++).
+%%%%
+You feel resistant to cold.
+Ihr fühlt Euch kälteresistent.
+%%%%
+You feel more resistant to cold.
+Ihr fühlt Euch mehr resistent gegen Kälte.
+%%%%
+You no longer feel cold resistant.
+Ihr fühlt Euch nicht mehr kälteresistent.
+%%%%
+You feel less cold resistant.
+Ihr fühlt Euch weniger kälteresistent.
+%%%%
+heat vulnerability
+Hitzeanfälligkeit
+%%%%
+You are vulnerable to heat. (rF-)
+Ihr seid anfällig für Hitze (rF-).
+%%%%
+You are very vulnerable to heat. (rF--)
+Ihr seid sehr hitzeempfindlich. (rF--)
+%%%%
+You are extremely vulnerable to heat. (rF---)
+Ihr seid extrem hitzeempfindlich. (rF---)
+%%%%
+You feel vulnerable to heat.
+Ihr fühlt Euch anfällig für Hitze.
+%%%%
+You no longer feel vulnerable to heat.
+Ihr fühlt Euch nicht mehr anfällig für Hitze.
+%%%%
+You feel less vulnerable to heat.
+Ihr fühlt Euch weniger anfällig für Hitze.
+%%%%
+cold vulnerability
+kalte Anfälligkeit
+%%%%
+You are vulnerable to cold. (rC-)
+Ihr seid anfällig für Kälte. (rC-)
+%%%%
+You are very vulnerable to cold. (rC--)
+Ihr seid sehr kälteempfindlich. (rC--)
+%%%%
+You are extremely vulnerable to cold. (rC---)
+Ihr seid extrem kälteempfindlich. (rC---)
+%%%%
+You feel vulnerable to cold.
+Ihr fühlt Euch anfällig für Kälte.
+%%%%
+You no longer feel vulnerable to cold.
+Ihr fühlt Euch nicht mehr anfällig für Kälte.
+%%%%
+You feel less vulnerable to cold.
+Ihr fühlt Euch weniger anfällig für Kälte.
+%%%%
+A weak demonic guardian rushes to your aid.
+Ein schwacher dämonischer Wächter eilt Euch zu Hilfe.
+%%%%
+A demonic guardian rushes to your aid.
+Ein dämonischer Wächter eilt Euch zu Hilfe.
+%%%%
+A powerful demonic guardian rushes to your aid.
+Ein mächtiger dämonischer Wächter eilt Euch zu Hilfe.
+%%%%
+You feel the presence of a demonic guardian.
+Ihr spürt die Anwesenheit eines dämonischen Wächters.
+%%%%
+Your guardian grows in power.
+Euer Wächter gewinnt an Macht.
+%%%%
+Your demonic guardian is gone.
+Euer dämonischer Wächter ist weg.
+%%%%
+Your demonic guardian is weakened.
+Euer dämonischer Wächter ist geschwächt.
+%%%%
+electricity resistance
+Elektrizitätsresistenz
+%%%%
+You are resistant to electric shocks. (rElec)
+Ihr seid resistent gegen elektrische Schläge. (rElec)
+%%%%
+You feel insulated.
+Ihr fühlt Euch isoliert.
+%%%%
+You feel conductive.
+Ihr fühlt Euch leitfähig.
+%%%%
+electricity vulnerability
+Anfälligkeit für Elektrizität
+%%%%
+You are vulnerable to electric shocks.
+Ihr seid anfällig für elektrische Schläge.
+%%%%
+You feel vulnerable to electricity.
+Ihr fühlt Euch durch Elektrizität verwundbar.
+%%%%
+You feel less vulnerable to electricity.
+Ihr fühlt Euch weniger anfällig für Elektrizität.
+%%%%
+regeneration
+Regeneration
+%%%%
+Your natural rate of healing is unusually fast.
+Eure natürliche Heilungsrate ist ungewöhnlich schnell.
+%%%%
+You heal very quickly.
+Ihr heilt sehr schnell.
+%%%%
+You regenerate.
+Ihr regeneriert Euch.
+%%%%
+You begin to heal more quickly.
+Ihr beginnt schneller zu heilen.
+%%%%
+You begin to regenerate.
+Ihr beginnt Euch zu regenerieren.
+%%%%
+Your rate of healing slows.
+Eure Heilungsrate verlangsamt sich.
+%%%%
+inhibited regeneration
+gehemmte Regeneration
+%%%%
+You do not regenerate when monsters are visible.
+Ihr regeneriert Euch nicht, wenn Monster sichtbar sind.
+%%%%
+Your regeneration stops near monsters.
+Eure Regeneration stoppt in der Nähe von Monstern.
+%%%%
+You begin to regenerate regardless of the presence of monsters.
+Ihr beginnt Euch zu regenerieren, unabhängig von der Anwesenheit von Monstern.
+%%%%
+You are weak. (Str -2)
+Ihr seid schwach (Str -2).
+%%%%
+You are very weak. (Str -4)
+Ihr seid sehr schwach (Str -4).
+%%%%
+dopey
+dämlich
+%%%%
+You are dopey. (Int -2)
+Ihr seid dämlich (Int -2).
+%%%%
+You are very dopey. (Int -4)
+Ihr seid sehr dämlich. (Int -4)
+%%%%
+You are clumsy. (Dex -2)
+Ihr seid ungeschickt (Dex -2).
+%%%%
+You are very clumsy. (Dex -4)
+Ihr seid sehr ungeschickt (Dex -4).
+%%%%
+teleportitis
+Teleportitis
+%%%%
+You are occasionally teleported next to monsters.
+Gelegentlich werdet Ihr neben Monster teleportiert.
+%%%%
+You are sometimes teleported next to monsters.
+Ihr werdet manchmal neben Monster teleportiert.
+%%%%
+You are often teleported next to monsters.
+Ihr werdet oft neben Monster teleportiert.
+%%%%
+You feel weirdly uncertain.
+Ihr fühlt Euch seltsam unsicher.
+%%%%
+You feel even more weirdly uncertain.
+Ihr fühlt Euch noch unsicherer.
+%%%%
+You feel stable.
+Ihr fühlt Euch stabil.
+%%%%
+You are strong-willed. (Will+)
+Ihr seid willensstark. (Wille+)
+%%%%
+You are highly strong-willed. (Will++)
+Ihr seid sehr willensstark. (Wille++)
+%%%%
+You are extremely strong-willed. (Will+++)
+Ihr seid extrem willensstark. (Wille+++)
+%%%%
+You feel more strong-willed.
+Ihr fühlt Euch willensstärker.
+%%%%
+You feel your will become almost unbreakable.
+Ihr spürt, dass Euer Wille fast unzerbrechlich wird.
+%%%%
+You no longer feel strong-willed.
+Ihr fühlt Euch nicht mehr willensstark.
+%%%%
+You cover ground quickly. (Speed+)
+Ihr legt den Boden schnell zurück. (Geschwindigkeit+)
+%%%%
+You cover ground very quickly. (Speed++)
+Ihr legt den Boden sehr schnell zurück. (Geschwindigkeit++)
+%%%%
+You cover ground extremely quickly. (Speed+++)
+Ihr legt den Boden extrem schnell zurück. (Geschwindigkeit+++)
+%%%%
+You feel quick.
+Ihr fühlt Euch schnell.
+%%%%
+You feel sluggish.
+Ihr fühlt Euch träge.
+%%%%
+slowness
+Langsamkeit
+%%%%
+You cover ground slowly.
+Ihr kommt langsam voran.
+%%%%
+You cover ground very slowly.
+Ihr kommt sehr langsam voran.
+%%%%
+You cover ground extremely slowly.
+Ihr kommt extrem langsam voran.
+%%%%
+see invisible
+Unsichtbares sehen
+%%%%
+You have supernaturally acute eyesight. (SInv)
+Ihr habt ein übernatürlich scharfes Sehvermögen. (SUns)
+%%%%
+Your vision sharpens.
+Eure Sicht wird schärfer.
+%%%%
+Your vision seems duller.
+Eure Sicht scheint trüber zu werden.
+%%%%
+deformed body
+deformierter Körper
+%%%%
+Armour fits poorly on your strangely shaped body.
+Rüstung passt schlecht zu Eurem seltsam geformten Körper.
+%%%%
+Your body twists and deforms.
+Euer Körper verdreht und verformt sich.
+%%%%
+Your body's shape seems more normal.
+Die Form Eures Körpers scheint normaler zu sein.
+%%%%
+spit poison
+Gift spucken
+%%%%
+You can spit poison.
+Ihr könnt Gift spucken.
+%%%%
+You can exhale a cloud of poison.
+Ihr könnt eine Giftwolke ausatmen.
+%%%%
+There is a nasty taste in your mouth for a moment.
+Einen Moment lang habt Ihr einen üblen Geschmack im Mund.
+%%%%
+You feel an ache in your throat.
+Ihr spürt einen Schmerz in Eurem Hals.
+%%%%
+screaming
+schreiend
+%%%%
+You occasionally shout uncontrollably at your foes.
+Gelegentlich schreit Ihr Eure Feinde unkontrolliert an.
+%%%%
+You frequently scream uncontrollably at your foes.
+Ihr schreit Eure Feinde häufig unkontrolliert an.
+%%%%
+You feel the urge to shout.
+Ihr verspürt den Drang zu schreien.
+%%%%
+You feel a strong urge to scream.
+Ihr verspürt einen starken Drang zu schreien.
+%%%%
+Your urge to shout disappears.
+Euer Drang zu schreien verschwindet.
+%%%%
+Your urge to scream lessens.
+Euer Drang zu schreien lässt nach.
+%%%%
+noise suppression
+Rauschunterdrückung
+%%%%
+You passively dampen the noise of your surroundings.
+Ihr dämpft passiv den Lärm in Eurer Umgebung.
+%%%%
+You feel your surroundings grow quieter.
+Ihr spürt, wie Eure Umgebung ruhiger wird.
+%%%%
+You feel your surroundings grow louder
+Ihr spürt, wie Eure Umgebung lauter wird
+%%%%
+clarity
+Klarheit
+%%%%
+You possess an exceptional clarity of mind.
+Ihr besitzt eine außergewöhnliche Klarheit des Geistes.
+%%%%
+Your thoughts seem clearer.
+Eure Gedanken scheinen klarer zu sein.
+%%%%
+Your thinking seems confused.
+Euer Denken scheint verwirrt zu sein.
+%%%%
+You tend to lose your temper in combat.
+Ihr neigt dazu, im Kampf die Beherrschung zu verlieren.
+%%%%
+You often lose your temper in combat.
+Ihr verliert im Kampf oft die Beherrschung.
+%%%%
+You have an uncontrollable temper.
+Ihr habt eine unkontrollierbare Wut.
+%%%%
+You feel a little pissed off.
+Ihr fühlt Euch ein wenig verärgert.
+%%%%
+You feel angry.
+Ihr seid wütend.
+%%%%
+You feel extremely angry at everything!
+Ihr fühlt Euch extrem wütend über alles!
+%%%%
+You feel a little more calm.
+Ihr fühlt Euch ein wenig ruhiger.
+%%%%
+You feel a little less angry.
+Ihr fühlt Euch etwas weniger wütend.
+%%%%
+deterioration
+Verschlechterung
+%%%%
+Your body sometimes deteriorates upon taking damage.
+Euer Körper verschlechtert sich manchmal, wenn er Schaden nimmt.
+%%%%
+Your body often deteriorates upon taking damage.
+Euer Körper verschlechtert sich oft, wenn er Schaden nimmt.
+%%%%
+You feel yourself wasting away.
+Ihr spürt, wie Euer Körper versiecht.
+%%%%
+You feel your body start to fall apart.
+Ihr spürt, wie Euer Körper zu zerfallen beginnt.
+%%%%
+You feel healthier.
+Ihr fühlt Euch gesünder.
+%%%%
+You feel a little healthier.
+Ihr fühlt Euch ein wenig gesünder.
+%%%%
+mutation resistance
+Mutationsresistenz
+%%%%
+You are somewhat resistant to further mutation.
+Ihr seid einigermaßen resistent gegen weitere Mutationen.
+%%%%
+You are somewhat resistant to both further mutation and mutation removal.
+Ihr seid sowohl gegen weitere Mutationen als auch gegen die Entfernung von Mutationen einigermaßen resistent.
+%%%%
+You are almost entirely resistant to further mutation and mutation removal.
+Ihr seid fast vollständig resistent gegen weitere Mutation und Mutationsentfernung.
+%%%%
+You feel genetically stable.
+Ihr fühlt Euch genetisch stabil.
+%%%%
+You feel genetically immutable.
+Ihr fühlt Euch genetisch unveränderlich.
+%%%%
+You feel genetically unstable.
+Ihr fühlt Euch genetisch instabil.
+%%%%
+evolution
+Evolution
+%%%%
+You evolve.
+Ihr evolviert.
+%%%%
+You rapidly evolve.
+Ihr evolviert schnell.
+%%%%
+You feel nature experimenting on you. Don't worry, failures die fast.
+Ihr habt das Gefühl, die Natur experimentiert mit Euch. Keine Sorge, Misserfolge sterben früh.
+%%%%
+Your genes go into a fast flux.
+Eure Gene gehen in einen schnellen Fluss über.
+%%%%
+Nature stops experimenting on you.
+Die Natur experimentiert nicht mehr mit Euch.
+%%%%
+Your wild genetic ride slows down.
+Euer wilder genetischer Ritt verlangsamt sich.
+%%%%
+frail
+gebrechlich
+%%%%
+You are frail. (-10% HP)
+Ihr seid gebrechlich. (-10% HP)
+%%%%
+You are very frail. (-20% HP)
+Ihr seid sehr gebrechlich. (-20% HP)
+%%%%
+You are extremely frail. (-30% HP)
+Ihr seid extrem gebrechlich. (-30% HP)
+%%%%
+You feel frail.
+Ihr fühlt Euch gebrechlich.
+%%%%
+You feel robust.
+Ihr fühlt Euch robust.
+%%%%
+robust
+robust
+%%%%
+You are robust. (+10% HP)
+Ihr seid robust. (+10% HP)
+%%%%
+You are very robust. (+20% HP)
+Ihr seid sehr robust. (+20% HP)
+%%%%
+You are extremely robust. (+30% HP)
+Ihr seid extrem robust. (+30% HP)
+%%%%
+torment resistance
+Qualresiztenz
+%%%%
+You feel a strange anaesthesia.
+Ihr spürt eine merkwürdige Anästhesie.
+%%%%
+You feel a very strange anaesthesia.
+Ihr spürt eine sehr merkwürdige Anästhesie.
+%%%%
+negative energy resistance
+Negative-Energie-Resistenz
+%%%%
+You resist negative energy. (rN+)
+Ihr widersteht negativer Energie. (rN+)
+%%%%
+You are quite resistant to negative energy. (rN++)
+Ihr seid ziemlich resistent gegen negative Energie. (rN++)
+%%%%
+You are immune to negative energy. (rN+++)
+Ihr seid immun gegen negative Energie. (rN+++)
+%%%%
+You feel resistant to negative energy.
+Ihr fühlt Euch resistent gegen negative Energie.
+%%%%
+You feel more resistant to negative energy.
+Ihr fühlt Euch mehr resistent gegen negative Energie.
+%%%%
+in touch with death
+in Kontakt mit dem Tod
+%%%%
+You are in touch with the powers of death.
+Ihr seid in Kontakt mit den Mächten des Todes.
+%%%%
+You are strongly in touch with the powers of death.
+Ihr steht in enger Verbindung mit den Mächten des Todes.
+%%%%
+You feel more in touch with the powers of death.
+Ihr fühlt Euch den Mächten des Todes näher.
+%%%%
+nimble flight
+wendiger Flug
+%%%%
+Your magical nature lets you fly swiftly and evasively.
+Eure magische Natur lässt Euch schnell und ausweichend fliegen.
+%%%%
+Your magical nature develops, letting you fly swiftly and evasively.
+Eure magische Natur entwickelt sich und lässt Euch schnell und ausweichend fliegen.
+%%%%
+hurl damnation
+Verdammnis schleudern
+%%%%
+You can hurl damnation.
+Ihr könnt Verdammnis schleudern.
+%%%%
+You smell a hint of brimstone.
+Ihr riecht einen Hauch von Schwefel.
+%%%%
+horns
+Hörner
+%%%%
+You have a pair of small horns on your head.
+Ihr habt ein Paar kleine Hörner auf dem Kopf.
+%%%%
+You have a pair of horns on your head.
+Ihr habt ein Paar Hörner auf dem Kopf.
+%%%%
+You have a pair of large horns on your head.
+Ihr habt ein Paar große Hörner auf dem Kopf.
+%%%%
+A pair of horns grows on your head!
+Ein Paar Hörner wächst auf Eurem Kopf!
+%%%%
+The horns on your head grow some more.
+Die Hörner auf Eurem Kopf wachsen weiter.
+%%%%
+The horns on your head shrink away.
+Die Hörner auf Eurem Kopf schrumpfen weg.
+%%%%
+The horns on your head shrink a bit.
+Die Hörner auf Eurem Kopf schrumpfen ein wenig.
+%%%%
+beak
+Schnabel
+%%%%
+You have a beak for a mouth.
+Ihr habt einen Schnabel als Mund.
+%%%%
+Your mouth lengthens and hardens into a beak!
+Euer Mund wird länger und verhärtet Euch zu einem Schnabel!
+%%%%
+Your beak shortens and softens into a mouth.
+Euer Schnabel wird kürzer und wird zu einem Mund.
+%%%%
+You have sharp fingernails.
+Ihr habt scharfe Fingernägel.
+%%%%
+You have very sharp fingernails.
+Ihr habt sehr scharfe Fingernägel.
+%%%%
+You have claws for hands.
+Ihr habt Krallen als Hände.
+%%%%
+Your fingernails lengthen.
+Eure Fingernägel werden länger.
+%%%%
+Your fingernails sharpen.
+Eure Fingernägel werden schärfer.
+%%%%
+Your hands twist into claws.
+Eure Hände werden zu Krallen.
+%%%%
+Your fingernails shrink to normal size.
+Eure Fingernägel schrumpfen auf normale Größe.
+%%%%
+Your fingernails look duller.
+Eure Fingernägel sehen stumpfer aus.
+%%%%
+Your hands feel fleshier.
+Eure Hände fühlen Euch fleischiger an.
+%%%%
+fangs
+Fangzähne
+%%%%
+You have very sharp teeth.
+Ihr habt sehr scharfe Zähne.
+%%%%
+You have extremely sharp teeth.
+Ihr habt extrem scharfe Zähne.
+%%%%
+You have razor-sharp teeth.
+Ihr habt rasiermesserscharfe Zähne.
+%%%%
+Your teeth lengthen and sharpen.
+Eure Zähne werden länger und schärfer.
+%%%%
+Your teeth lengthen and sharpen some more.
+Eure Zähne werden länger und schärfen sich weiter.
+%%%%
+Your teeth grow very long and razor-sharp.
+Eure Zähne werden sehr lang und rasiermesserscharf.
+%%%%
+Your teeth shrink to normal size.
+Eure Zähne schrumpfen auf normale Größe.
+%%%%
+Your teeth shrink and become duller.
+Eure Zähne schrumpfen und werden stumpfer.
+%%%%
+You have large cloven feet.
+Ihr habt große gespaltene Füße.
+%%%%
+You have hoof-like feet.
+Ihr habt hufähnliche Füße.
+%%%%
+You have hooves in place of feet.
+Ihr habt Hufe anstelle von Füßen.
+%%%%
+Your feet thicken and deform.
+Eure Füße verdicken und verformen sich.
+%%%%
+Your feet have mutated into hooves.
+Eure Füße sind zu Hufen mutiert.
+%%%%
+Your hooves expand and flesh out into feet!
+Eure Hufe wachsen und werden zu Füßen!
+%%%%
+Your hooves look more like feet.
+Eure Hufe sehen eher wie Füße aus.
+%%%%
+You have a pair of small antennae on your head.
+Ihr habt ein Paar kleine Antennen auf Eurem Kopf.
+%%%%
+You have a pair of antennae on your head.
+Ihr habt ein Paar Antennen auf Eurem Kopf.
+%%%%
+You have a pair of large antennae on your head. (SInv)
+Ihr habt ein Paar große Antennen auf Eurem Kopf. (SUns)
+%%%%
+A pair of antennae grows on your head!
+Ein Paar Antennen wächst auf Eurem Kopf!
+%%%%
+The antennae on your head grow some more.
+Die Antennen auf Eurem Kopf wachsen weiter.
+%%%%
+The antennae on your head shrink away.
+Die Antennen auf Eurem Kopf schrumpfen.
+%%%%
+The antennae on your head shrink a bit.
+Die Antennen auf Eurem Kopf schrumpfen ein wenig.
+%%%%
+You have sharp toenails.
+Ihr habt scharfe Zehennägel.
+%%%%
+You have razor-sharp toenails.
+Ihr habt rasiermesserscharfe Zehennägel.
+%%%%
+You have claws for feet.
+Ihr habt Krallen als Füße.
+%%%%
+Your toenails lengthen and sharpen.
+Eure Zehennägel werden länger und schärfer.
+%%%%
+Your feet stretch into talons.
+Eure Füße werden zu Krallen.
+%%%%
+Your talons dull and shrink into feet.
+Eure Krallen werden stumpf und schrumpfen zu Füßen.
+%%%%
+Your talons look more like feet.
+Eure Krallen sehen eher wie Füße aus.
+%%%%
+tentacle spike
+Tentakelstachel
+%%%%
+One of your tentacles bears a spike.
+Einer Eurer Tentakel trägt einen Stachel.
+%%%%
+One of your tentacles bears a nasty spike.
+Einer Eurer Tentakel trägt einen bösen Stachel.
+%%%%
+One of your tentacles bears a large vicious spike.
+Einer Eurer Tentakel trägt einen großen, bösartigen Stachel.
+%%%%
+One of your lower tentacles grows a sharp spike.
+An einem Eurer unteren Tentakel wächst ein scharfer Stachel.
+%%%%
+Your tentacle spike grows bigger.
+Euer Tentakelstachel wird größer.
+%%%%
+Your tentacle spike grows even bigger.
+Euer Tentakelstachel wird noch größer.
+%%%%
+Your tentacle spike becomes smaller.
+Euer Tentakel-Stachel wird kleiner.
+%%%%
+Your tentacle spike recedes somewhat.
+Euer Tentakelstachel wird etwas kleiner.
+%%%%
+naga tail
+Naga-Schwanz
+%%%%
+You have a snake-like lower body.
+Ihr habt einen schlangenartigen Unterkörper.
+%%%%
+You can use your snake-like lower body to constrict enemies.
+Ihr könnt Euren schlangenartigen Unterkörper einsetzen, um Feinde zu erwürgen.
+%%%%
+Your lower body turns into a snake tail.
+Euer Unterkörper verwandelt Euch in einen Schlangenschwanz.
+%%%%
+Your tail grows strong enough to constrict your enemies.
+Euer Schwanz wird stark genug, um Eure Feinde zu erwürgen.
+%%%%
+Your lower body returns to normal.
+Euer unterer Körper kehrt in den Normalzustand zurück.
+%%%%
+Your snake tail weakens and can no longer constrict your enemies.
+Euer Schlangenschwanz wird schwächer und kann Eure Feinde nicht mehr erwürgen.
+%%%%
+stinger
+Giftstachel
+%%%%
+Your tail ends in a poisonous barb.
+Euer Schwanz endet in einem giftigen Widerhaken.
+%%%%
+Your tail ends in a sharp poisonous barb.
+Euer Schwanz endet in einem scharfen, giftigen Widerhaken.
+%%%%
+Your tail ends in a wickedly sharp and poisonous barb.
+Euer Schwanz endet in einem bösartigen, scharfen und giftigen Widerhaken.
+%%%%
+A poisonous barb forms on the end of your tail.
+Am Ende Eures Schwanzes bildet sich ein giftiger Widerhaken.
+%%%%
+The barb on your tail looks sharper.
+Der Widerhaken an Eurem Schwanz sieht schärfer aus.
+%%%%
+The barb on your tail looks very sharp.
+Der Widerhaken an Eurem Schwanz sieht sehr scharf aus.
+%%%%
+The barb on your tail disappears.
+Der Widerhaken an Eurem Schwanz verschwindet.
+%%%%
+The barb on your tail seems less sharp.
+Der Widerhaken an Eurem Schwanz scheint weniger scharf zu sein.
+%%%%
+big wings
+große Flügel
+%%%%
+Your large and strong wings let you fly.
+Eure großen und starken Flügel lassen Euch fliegen.
+%%%%
+Your wings grow larger and stronger.
+Eure Flügel werden größer und stärker.
+%%%%
+Your wings shrivel and weaken.
+Eure Flügel schrumpfen und werden schwach.
+%%%%
+strong legs
+kräftige Beine
+%%%%
+You can hop short distances.
+Ihr könnt kurze Strecken hüpfen.
+%%%%
+You can hop long distances.
+Ihr könnt über weite Strecken hüpfen.
+%%%%
+Your legs feel stronger.
+Eure Beine fühlen Euch stärker an.
+%%%%
+roll
+rollen
+%%%%
+You can roll at nearby foes to attack.
+Ihr könnt auf Feinde in der Nähe zurollen, um sie anzugreifen.
+%%%%
+You can roll at foes to attack.
+Ihr könnt auf Feinde zurollen, um sie anzugreifen.
+%%%%
+You can roll a great distance at foes to attack.
+Ihr könnt über eine große Entfernung auf Feinde zurollen, um sie anzugreifen.
+%%%%
+You feel you can roll further.
+Ihr habt das Gefühl, dass Ihr weiter rollen könnt.
+%%%%
+You feel you can roll even further.
+Ihr habt das Gefühl, dass Ihr noch weiter gehen könnt.
+%%%%
+You can no longer roll as far.
+Ihr könnt nicht mehr so weit rollen.
+%%%%
+armoured tail
+gepanzerter Schwanz
+%%%%
+You have a long armoured tail.
+Ihr habt einen langen gepanzerten Schwanz.
+%%%%
+reflexive curl
+einrollen
+%%%%
+You curl defensively after being hit.
+Ihr rollt Euch in der Defensive ein, wenn Ihr getroffen werdet.
+%%%%
+You now curl defensively after being hit.
+Ihr rollt Euch jetzt defensiv ein, wenn Ihr getroffen werdet.
+%%%%
+shaggy fur
+zotteliges Fell
+%%%%
+You are covered in fur. (AC +1)
+Ihr seid mit Fell bedeckt (RK +1).
+%%%%
+You are covered in thick fur. (AC +2)
+Ihr seid mit einem dicken Fell bedeckt (RK +2).
+%%%%
+Your thick and shaggy fur keeps you warm. (AC +3, rC+)
+Euer dickes, zotteliges Fell hält Euch warm. (RK +3, rC+)
+%%%%
+Fur sprouts all over your body.
+Das Fell sprießt überall auf Eurem Körper.
+%%%%
+Your fur grows into a thick mane.
+Euer Fell wächst zu einer dichten Mähne heran.
+%%%%
+Your thick fur grows shaggy and warm.
+Euer dickes Fell wird zottelig und warm.
+%%%%
+You shed all your fur.
+Ihr habt Euer ganzes Fell verloren.
+%%%%
+Your thick fur recedes somewhat.
+Euer dichtes Fell weicht etwas zurück.
+%%%%
+Your shaggy fur recedes somewhat.
+Euer zotteliges Fell weicht etwas zurück.
+%%%%
+high mp
+hohes mp
+%%%%
+You have an increased reservoir of magic. (+10% MP)
+Ihr habt ein vergrößertes Reservoir an Magie. (+10% MP)
+%%%%
+You have a considerably increased reservoir of magic. (+20% MP)
+Ihr habt ein erheblich vergrößertes Reservoir an Magie. (+20% MP)
+%%%%
+You have a greatly increased reservoir of magic. (+30% MP)
+Ihr habt ein stark vergrößertes Reservoir an Magie. (+30% MP)
+%%%%
+You feel more energetic.
+Ihr fühlt Euch energiegeladener.
+%%%%
+You feel less energetic.
+Ihr fühlt Euch weniger energiegeladen.
+%%%%
+low mp
+niedrige mp
+%%%%
+Your magical capacity is low. (-10% MP)
+Eure magische Kapazität ist niedrig. (-10% MP)
+%%%%
+Your magical capacity is very low. (-20% MP)
+Eure magische Kapazität ist sehr niedrig. (-20% MP)
+%%%%
+Your magical capacity is extremely low. (-30% MP)
+Eure magische Kapazität ist extrem niedrig. (-30% MP)
+%%%%
+Your spells are a little harder to cast, but a little more powerful.
+Eure Zaubersprüche sind etwas schwieriger zu wirken, aber auch etwas mächtiger.
+%%%%
+Your spells are harder to cast, but more powerful.
+Eure Zaubersprüche sind schwieriger zu wirken, aber mächtiger.
+%%%%
+Your spells are much harder to cast, but much more powerful.
+Eure Zaubersprüche sind viel schwieriger zu wirken, aber auch viel mächtiger.
+%%%%
+You feel less in control of your magic.
+Ihr habt das Gefühl, weniger Kontrolle über Eure Magie zu haben.
+%%%%
+You feel your magical power running wild!
+Ihr spürt, wie Eure Magie frei läuft!
+%%%%
+You regain control of your magic.
+Ihr gewinnt die Kontrolle über Eure Magie zurück.
+%%%%
+You feel more in control of your magic.
+Ihr habt das Gefühl, Eure Magie besser unter Kontrolle zu haben.
+%%%%
+subdued magic
+gedämpfte Magie
+%%%%
+Your spells are a little easier to cast, but a little less powerful.
+Eure Zaubersprüche sind etwas leichter zu wirken, aber auch etwas weniger mächtig.
+%%%%
+Your spells are easier to cast, but less powerful.
+Eure Zaubersprüche sind leichter zu wirken, aber weniger mächtig.
+%%%%
+Your spells are much easier to cast, but much less powerful.
+Eure Zaubersprüche sind viel leichter zu wirken, aber viel weniger mächtig.
+%%%%
+Your connection to magic feels subdued.
+Eure Verbindung zur Magie fühlt sich gedämpft an.
+%%%%
+Your connection to magic feels more subdued.
+Eure Verbindung zur Magie fühlt sich gedämpfter an.
+%%%%
+Your connection to magic feels nearly dormant.
+Eure Verbindung zur Magie ist fast ruhend.
+%%%%
+Your magic regains its normal vibrancy.
+Eure Magie erhält ihre normale Kraft zurück.
+%%%%
+Your connection to magic feels less subdued.
+Eure Verbindung zur Magie fühlt sich weniger gedämpft an.
+%%%%
+demonic magic
+dämonische Magie
+%%%%
+Spells you cast may paralyse adjacent enemies.
+Von Euch gewirkte Zauber können benachbarte Feinde lähmen.
+%%%%
+Spells you cast may paralyse nearby enemies.
+Von euch gewirkte Zauber können Feinde in der Nähe lähmen.
+%%%%
+Spells you cast and wands you use may paralyse nearby enemies.
+Zaubersprüche und Zauberstäbe, die Ihr verwendet, können Feinde in der Nähe lähmen.
+%%%%
+A menacing aura infuses your magic.
+Eine bedrohliche Aura durchdringt Eure Magie.
+%%%%
+Your magic grows more menacing.
+Eure Magie wird immer bedrohlicher.
+%%%%
+Your wands become infused with your menacing aura.
+Eure Zauberstäbe werden von eurer bedrohlichen Aura durchdrungen.
+%%%%
+forlorn
+verlassen
+%%%%
+You shall have no god before yourself.
+Ihr sollt keinen Gott vor Euch selbst haben.
+%%%%
+You feel forlorn.
+Ihr fühlt Euch verlassen.
+%%%%
+You feel more spiritual.
+Ihr fühlt Euch spiritueller.
+%%%%
+sense surroundings
+Umgebung wahrnehmen
+%%%%
+You passively map a small area around you.
+Ihr kartiert passiv einen kleinen Bereich um Euch herum.
+%%%%
+You passively map the area around you.
+Ihr kartiert passiv den Bereich um Euch herum.
+%%%%
+You passively map a large area around you.
+Ihr kartiert passiv einen großen Bereich um Euch herum.
+%%%%
+You feel a strange attunement to the structure of the dungeons.
+Ihr fühlt eine seltsame Einstimmung auf die Struktur des Dungeons.
+%%%%
+Your attunement to dungeon structure grows.
+Euer Gespür für die Struktur des Dungeons wächst.
+%%%%
+Your attunement to dungeon structure grows further.
+Euer Gespür für die Struktur des Dungeons wächst weiter.
+%%%%
+You feel slightly disoriented.
+Ihr fühlt Euch leicht desorientiert.
+%%%%
+A meltable icy envelope protects you from harm. (AC +%d)
+Eine schmelzbare Eishülle schützt Euch vor Schaden. (RK +%d)
+%%%%
+A thick, meltable icy envelope protects you from harm. (AC +%d)
+Eine dicke, schmelzbare Eishülle schützt Euch vor Schaden. (RK +%d)
+%%%%
+An icy envelope takes form around you.
+Eine eisige Hülle bildet sich um Euch herum.
+%%%%
+Your icy envelope grows thicker.
+Euer Eishülle wird dicker.
+%%%%
+condensation shield
+Kondensationsschild
+%%%%
+A meltable shield of frost defends you. (SH +%d)
+Ein schmelzbarer Schild aus Frost verteidigt Euch. (SCH +%d)
+%%%%
+Frost condenses into a shield before you.
+Der Frost verdichtet sich vor Euch zu einem Schild.
+%%%%
+passive freeze
+passives Einfrieren
+%%%%
+A frigid envelope surrounds you and freezes all who hurt you.
+Eine eisige Hülle umgibt Euch und lässt alle einfrieren, die Euch verletzen.
+%%%%
+Your skin feels very cold.
+Eure Haut fühlt sich sehr kalt an.
+%%%%
+Your skin warms up.
+Eure Haut erwärmt sich.
+%%%%
+nightstalker
+Nachtschrat
+%%%%
+You are slightly more attuned to the shadows.
+Ihr seid etwas mehr auf die Schatten eingestellt.
+%%%%
+You are significantly more attuned to the shadows.
+Ihr seid wesentlich besser auf die Schatten eingestellt.
+%%%%
+You are completely attuned to the shadows.
+Ihr seid ganz auf die Schatten eingestellt.
+%%%%
+You slip into the darkness of the dungeon.
+Ihr schlüpft in die Dunkelheit des Kerkers.
+%%%%
+You slip further into the darkness.
+Ihr schlüpft weiter in die Dunkelheit.
+%%%%
+You are surrounded by darkness.
+Ihr seid von Dunkelheit umgeben.
+%%%%
+Your affinity for the darkness vanishes.
+Eure Affinität für die Dunkelheit verschwindet.
+%%%%
+Your affinity for the darkness weakens.
+Eure Affinität für die Dunkelheit lässt nach.
+%%%%
+spiny
+Stacheln
+%%%%
+You are partially covered in sharp spines.
+Ihr seid teilweise mit scharfen Stacheln bedeckt.
+%%%%
+You are mostly covered in sharp spines.
+Ihr seid größtenteils mit scharfen Stacheln bedeckt.
+%%%%
+You are completely covered in sharp spines.
+Ihr seid vollständig mit scharfen Stacheln bedeckt.
+%%%%
+Sharp spines emerge from parts of your body.
+Scharfe Stacheln ragen aus Teilen Eures Körpers heraus.
+%%%%
+Sharp spines emerge from more of your body.
+Scharfe Stacheln ragen aus einem größeren Teil Eures Körpers heraus.
+%%%%
+Sharp spines emerge from your entire body.
+Aus Eurem gesamten Körper ragen scharfe Stacheln heraus.
+%%%%
+Your sharp spines disappear entirely.
+Eure scharfen Stacheln verschwinden vollständig.
+%%%%
+Your sharp spines retract somewhat.
+Eure scharfen Stacheln ziehen sich etwas zurück.
+%%%%
+powered by death
+angetrieben vom Tod
+%%%%
+You regenerate a little health from kills.
+Ihr regeneriert ein wenig Gesundheit durch Töten.
+%%%%
+You regenerate health from kills.
+Ihr regeneriert Eure Gesundheit durch Töten.
+%%%%
+You regenerate a lot of health from kills.
+Ihr regeneriert eine Menge Gesundheit durch Töten.
+%%%%
+A wave of death washes over you.
+Eine Todeswelle schwappt über Euch hinweg.
+%%%%
+The wave of death grows in power.
+Die Todeswelle gewinnt an Kraft.
+%%%%
+Your control of surrounding life forces is gone.
+Ihr habt keine Kontrolle mehr über die euch umgebenden Lebenskräfte.
+%%%%
+Your control of surrounding life forces weakens.
+Eure Kontrolle über die Euch umgebenden Lebenskräfte lässt nach.
+%%%%
+powered by pain
+angetrieben vom Schmerz
+%%%%
+You sometimes gain a little power by taking damage.
+Manchmal gewinnt Ihr ein wenig Kraft, wenn Ihr Schaden nehmt.
+%%%%
+You sometimes gain power by taking damage.
+Manchmal gewinnt Ihr Kraft, indem Ihr Schaden nehmt.
+%%%%
+You are powered by pain.
+Ihr werdet vom Schmerz angetrieben.
+%%%%
+You feel energised by your suffering.
+Ihr fühlt Euch durch Euer Leiden gestärkt.
+%%%%
+You feel even more energised by your suffering.
+Ihr fühlt Euch durch Euer Leiden noch mehr gestärkt.
+%%%%
+You feel completely energised by your suffering.
+Ihr fühlt Euch durch Euer Leiden völlig energetisiert.
+%%%%
+augmentation
+Augmentation
+%%%%
+Your magical and physical power is slightly enhanced at high health.
+Eure magischen und physischen Kräfte werden bei hoher Gesundheit leicht verstärkt.
+%%%%
+Your magical and physical power is enhanced at high health.
+Eure magischen und physischen Kräfte werden bei hoher Gesundheit verstärkt.
+%%%%
+Your magical and physical power is greatly enhanced at high health.
+Eure magischen und physischen Kräfte werden bei hoher Gesundheit sehr verstärkt.
+%%%%
+You feel power flowing into your body.
+Ihr spürt, wie Kraft in Euren Körper fließt.
+%%%%
+You feel power rushing into your body.
+Ihr spürt, wie Kraft in Euren Körper strömt.
+%%%%
+You feel saturated with power.
+Ihr fühlt Euch gesättigt mit Macht.
+%%%%
+magic shield
+magischer Schild
+%%%%
+When hurt, damage is shared between your health and your magic reserves.
+Wenn Ihr verletzt werdet, wird der Schaden zwischen Eurer Gesundheit und Euren Magiereserven aufgeteilt.
+%%%%
+You feel your magical essence form a protective shroud around your flesh.
+Ihr spürt, wie Euch Eure magische Essenz wie ein Schutzmantel um Euer Fleisch legt.
+%%%%
+magic regeneration
+Magie-Regeneration
+%%%%
+You regenerate magic rapidly.
+Ihr regeneriert Eure Magie schnell.
+%%%%
+Your magic begins to regenerate rapidly.
+Eure Magie beginnt sich schnell zu regenerieren.
+%%%%
+magic link
+magische Verbindung
+%%%%
+When low on magic, you restore magic in place of health.
+Wenn Ihr wenig Magie habt, stellt Ihr Magie anstelle von Gesundheit wieder her.
+%%%%
+You feel your life force and your magical essence meld.
+Ihr spürt, wie Eure Lebenskraft und Eure magische Essenz verschmelzen.
+%%%%
+gelatinous body
+Gallertkörper
+%%%%
+Your rubbery body absorbs attacks. (AC +1, EV +1)
+Euer gummiartiger Körper absorbiert Angriffe. (RK +1, EV +1)
+%%%%
+Your pliable body absorbs attacks. (AC +2, EV +2)
+Euer biegsamer Körper absorbiert Angriffe. (RK +2, EV +2)
+%%%%
+Your gelatinous body deflects attacks. (AC +3, EV +3)
+Euer gallertartiger Körper wehrt Angriffe ab. (RK +3, EV +3)
+%%%%
+Your body becomes stretchy.
+Euer Körper wird dehnbar.
+%%%%
+Your body becomes more malleable.
+Euer Körper wird formbar.
+%%%%
+Your body becomes viscous.
+Euer Körper wird zähflüssig.
+%%%%
+Your body returns to its normal consistency.
+Euer Körper kehrt zu seiner normalen Konsistenz zurück.
+%%%%
+Your body becomes less malleable.
+Euer Körper wird weniger formbar.
+%%%%
+Your body becomes less viscous.
+Euer Körper wird weniger zähflüssig.
+%%%%
+eyeballs
+Augäpfel
+%%%%
+Your body has grown golden eyes which may confuse attackers. (Acc +3)
+Eurem Körper sind goldene Augen gewachsen, die Angreifer verwirren können. (Gen +3)
+%%%%
+Your body has grown many golden eyes which may confuse attackers. (Acc +5)
+Eurem Körper sind viele goldene Augen gewachsen, die Angreifer verwirren können. (Gen +5)
+%%%%
+Your body is covered in golden eyes which may confuse attackers. (Acc +7, SInv)
+Euer Körper ist mit goldenen Augen bedeckt, die Angreifer verwirren können. (Gen +7, SInv)
+%%%%
+Eyeballs grow over part of your body.
+Augäpfel wachsen über einen Teil Eures Körpers.
+%%%%
+Eyeballs cover a large portion of your body.
+Augäpfel bedecken einen großen Teil Eures Körpers.
+%%%%
+Eyeballs cover you completely.
+Augäpfel verdecken Euch vollständig.
+%%%%
+The eyeballs on your body disappear.
+Die Augäpfel an Eurem Körper verschwinden.
+%%%%
+The eyeballs on your body recede somewhat.
+Die Augäpfel an Eurem Körper lassen etwas nach.
+%%%%
+translucent skin
+durchsichtige Haut
+%%%%
+Your translucent skin slightly reduces your foes' accuracy. (Stealth+)
+Eure durchsichtige Haut verringert die Genauigkeit Eurer Feinde leicht. (Tarnung+)
+%%%%
+Your translucent skin reduces your foes' accuracy. (Stealth+)
+Eure durchsichtige Haut verringert die Genauigkeit Eurer Feinde. (Tarnung+)
+%%%%
+Your transparent skin significantly reduces your foes' accuracy. (Stealth+)
+Eure transparente Haut verringert die Genauigkeit Eurer Feinde erheblich. (Stealth+)
+%%%%
+Your skin becomes partially translucent.
+Eure Haut wird teilweise durchsichtig.
+%%%%
+Your skin becomes more translucent.
+Eure Haut wird durchsichtiger.
+%%%%
+Your skin becomes completely transparent.
+Eure Haut wird völlig durchsichtig.
+%%%%
+Your skin returns to its normal opacity.
+Eure Haut kehrt zu ihrer normalen Opazität zurück.
+%%%%
+Your skin's translucency fades.
+Die Durchsichtigkeit Eurer Haut nimmt ab.
+%%%%
+Your skin's transparency fades.
+Die Transparenz Eurer Haut nimmt ab.
+%%%%
+Armour fits poorly on your pseudopods.
+Die Rüstung passt schlecht auf Eure Pseudopoden.
+%%%%
+Armour fits poorly on your large pseudopods.
+Die Rüstung passt schlecht auf Eure großen Pseudopoden.
+%%%%
+Armour fits poorly on your massive pseudopods.
+Die Rüstung passt schlecht zu Euren massiven Pseudopods.
+%%%%
+Pseudopods emerge from your body.
+Pseudopoden kommen aus Eurem Körper hervor.
+%%%%
+Your pseudopods grow in size.
+Eure Pseudopoden werden größer.
+%%%%
+Your pseudopods retract into your body.
+Eure Pseudopoden ziehen Euch in Euren Körper zurück.
+%%%%
+Your pseudopods become smaller.
+Eure Pseudopoden werden kleiner.
+%%%%
+acidic bite
+Säurebiss
+%%%%
+You have acidic saliva.
+Ihr habt sauren Speichel.
+%%%%
+Acid begins to drip from your mouth.
+Die Säure beginnt aus Eurem Mund zu tropfen.
+%%%%
+Your mouth feels dry.
+Euer Mund fühlt sich trocken an.
+%%%%
+antimagic bite
+antimagischer Biss
+%%%%
+Your bite disrupts and absorbs the magic of your enemies.
+Euer Biss unterbricht und absorbiert die Magie Eurer Feinde.
+%%%%
+You feel a sudden thirst for magic.
+Ihr spürt plötzlich einen Durst nach Magie.
+%%%%
+Your magical appetite wanes.
+Euer magischer Appetit lässt nach.
+%%%%
+no potion heal
+keine Heiltränke
+%%%%
+Potions are less effective at restoring your health.
+Tränke sind weniger wirksam bei der Wiederherstellung Eurer Gesundheit.
+%%%%
+Potions cannot restore your health.
+Tränke können Eure Gesundheit nicht wiederherstellen.
+%%%%
+Your system partially rejects the healing effects of potions.
+Euer System lehnt die heilende Wirkung von Tränken teilweise ab.
+%%%%
+Your system completely rejects the healing effects of potions.
+Euer System lehnt die heilende Wirkung von Tränken vollständig ab.
+%%%%
+Your system completely accepts the healing effects of potions.
+Euer System akzeptiert die heilende Wirkung von Tränken vollständig.
+%%%%
+Your system partly accepts the healing effects of potions.
+Euer System akzeptiert teilweise die heilende Wirkung von Tränken.
+%%%%
+repulsion field
+Abstoßungsfeld
+%%%%
+You are surrounded by a mild repulsion field. (EV +2)
+Ihr seid von einem leichten Abstoßungsfeld umgeben. (EV +2)
+%%%%
+You are surrounded by a moderate repulsion field. (EV +3)
+Ihr seid von einem mäßigen Abstoßungsfeld umgeben. (EV +3)
+%%%%
+You are surrounded by a strong repulsion field. (EV +4, RMsl)
+Ihr seid von einem starken Abstoßungsfeld umgeben. (EV +4, RMsl)
+%%%%
+You begin to radiate repulsive energy.
+Ihr beginnt, abstoßende Energie auszustrahlen.
+%%%%
+Your repulsive radiation grows stronger.
+Eure abstoßende Strahlung wird stärker.
+%%%%
+You feel less repulsive.
+Ihr fühlt Euch weniger abstoßend.
+%%%%
+icy blue scales
+eisblaue Schuppen
+%%%%
+You are partially covered in icy blue scales. (AC +2)
+Ihr seid teilweise mit eisblauen Schuppen bedeckt. (RK +2)
+%%%%
+You are mostly covered in icy blue scales. (AC +3)
+Ihr seid größtenteils mit eisblauen Schuppen bedeckt. (RK +3)
+%%%%
+You are completely covered in icy blue scales. (AC +4, rC+)
+Ihr seid vollständig mit eisblauen Schuppen bedeckt. (RK +4, rC+)
+%%%%
+Icy blue scales grow over part of your body.
+Eiskalte blaue Schuppen bedecken einen Teil Eures Körpers.
+%%%%
+Icy blue scales spread over more of your body.
+Eisblaue Schuppen breiten sich auf einem größeren Teil Eures Körpers aus.
+%%%%
+Icy blue scales cover your body completely.
+Eiskalte blaue Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your icy blue scales disappear.
+Eure eisblauen Schuppen verschwinden.
+%%%%
+Your icy blue scales recede somewhat.
+Eure eisblauen Schuppen bilden sich etwas zurück.
+%%%%
+iridescent scales
+schillernde Schuppen
+%%%%
+You are partially covered in iridescent scales. (AC +2)
+Ihr seid teilweise mit schillernden Schuppen bedeckt. (RK +2)
+%%%%
+You are mostly covered in iridescent scales. (AC +4)
+Ihr seid größtenteils mit schillernden Schuppen bedeckt. (RK +4)
+%%%%
+You are completely covered in iridescent scales. (AC +6)
+Ihr seid vollständig mit schillernden Schuppen bedeckt. (RK +6)
+%%%%
+Iridescent scales grow over part of your body.
+Schillernde Schuppen bedecken einen Teil Eures Körpers.
+%%%%
+Iridescent scales spread over more of your body.
+Schillernde Schuppen breiten sich über einen größeren Teil Eures Körpers aus.
+%%%%
+Iridescent scales cover your body completely.
+Schillernde Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your iridescent scales disappear.
+Eure schillernden Schuppen verschwinden.
+%%%%
+Your iridescent scales recede somewhat.
+Eure schillernden Schuppen bilden sich etwas zurück.
+%%%%
+large bone plates
+große Knochenplatten
+%%%%
+You are partially covered in large bone plates. (SH +4)
+Ihr seid teilweise mit großen Knochenplatten bedeckt. (SCH +4)
+%%%%
+You are mostly covered in large bone plates. (SH +6)
+Ihr seid größtenteils mit großen Knochenplatten bedeckt. (SCH +6)
+%%%%
+You are completely covered in large bone plates. (SH +8)
+Ihr seid vollständig mit großen Knochenplatten bedeckt. (SCH +8)
+%%%%
+Large bone plates grow over parts of your arms.
+Große Knochenplatten wachsen über Teile Eurer Arme.
+%%%%
+Large bone plates spread over more of your arms.
+Große Knochenplatten erstrecken sich über einen größeren Teil Eurer Arme.
+%%%%
+Large bone plates cover your arms completely.
+Große Knochenplatten bedecken Eure Arme vollständig.
+%%%%
+Your large bone plates disappear.
+Eure großen Knochenplatten verschwinden.
+%%%%
+Your large bone plates recede somewhat.
+Eure großen Knochenplatten bilden sich etwas zurück.
+%%%%
+molten scales
+geschmolzene Schuppen
+%%%%
+You are partially covered in molten scales. (AC +2)
+Ihr seid teilweise mit geschmolzenen Schuppen bedeckt. (RK +2)
+%%%%
+You are mostly covered in molten scales. (AC +3)
+Ihr seid größtenteils mit geschmolzenen Schuppen bedeckt. (RK +3)
+%%%%
+You are completely covered in molten scales. (AC +4, rF+)
+Ihr seid vollständig mit geschmolzenen Schuppen bedeckt. (RK +4, rF+)
+%%%%
+Molten scales grow over part of your body.
+Geschmolzene Schuppen bedecken einen Teil Eures Körpers.
+%%%%
+Molten scales spread over more of your body.
+Geschmolzene Schuppen breiten sich über einen größeren Teil Eures Körpers aus.
+%%%%
+Molten scales cover your body completely.
+Geschmolzene Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your molten scales disappear.
+Eure geschmolzenen Schuppen verschwinden.
+%%%%
+Your molten scales recede somewhat.
+Eure geschmolzenen Schuppen bilden sich etwas zurück.
+%%%%
+rugged brown scales
+raue braune Schuppen
+%%%%
+You are partially covered in rugged brown scales. (AC +1, +3% HP)
+Ihr seid teilweise mit rauen braunen Schuppen bedeckt. (RK +1, +3% HP)
+%%%%
+You are mostly covered in rugged brown scales. (AC +2, +5% HP)
+Ihr seid größtenteils mit rauen braunen Schuppen bedeckt. (RK +2, +5% HP)
+%%%%
+You are completely covered in rugged brown scales. (AC +3, +7% HP)
+Ihr seid vollständig mit rauen braunen Schuppen bedeckt. (RK +3, +7% HP)
+%%%%
+Rugged brown scales grow over part of your body.
+Raue braune Schuppen bedecken einen Teil Eures Körpers.
+%%%%
+Rugged brown scales spread over more of your body.
+Raue braune Schuppen breiten sich über einen größeren Teil Eures Körpers aus.
+%%%%
+Rugged brown scales cover your body completely.
+Raue braune Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your rugged brown scales disappear.
+Eure rauen braunen Schuppen verschwinden.
+%%%%
+Your rugged brown scales recede somewhat.
+Eure rauen braunen Schuppen bilden sich etwas zurück.
+%%%%
+slimy green scales
+schleimige grüne Schuppen
+%%%%
+You are partially covered in slimy green scales. (AC +2)
+Ihr seid teilweise mit schleimigen grünen Schuppen bedeckt. (RK +2)
+%%%%
+You are mostly covered in slimy green scales. (AC +3)
+Ihr seid größtenteils mit schleimigen grünen Schuppen bedeckt. (RK +3)
+%%%%
+You are completely covered in slimy green scales. (AC +4, rPois)
+Ihr seid vollständig mit schleimigen grünen Schuppen bedeckt. (RK +4, rPois)
+%%%%
+Slimy green scales grow over part of your body.
+Schleimige grüne Schuppen bedecken einen Teil Eures Körpers.
+%%%%
+Slimy green scales spread over more of your body.
+Schleimige grüne Schuppen breiten sich über einen Großteil Eures Körpers aus.
+%%%%
+Slimy green scales cover your body completely.
+Schleimige grüne Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your slimy green scales disappear.
+Eure schleimigen grünen Schuppen verschwinden.
+%%%%
+Your slimy green scales recede somewhat.
+Eure schleimigen grünen Schuppen bilden sich etwas zurück.
+%%%%
+thin metallic scales
+dünne Metallschuppen
+%%%%
+You are partially covered in thin metallic scales. (AC +2)
+Ihr seid teilweise mit dünnen Metallschuppen bedeckt. (RK +2)
+%%%%
+You are mostly covered in thin metallic scales. (AC +3)
+Ihr seid größtenteils mit dünnen Metallschuppen bedeckt. (RK +3)
+%%%%
+You are completely covered in thin metallic scales. (AC +4, rElec)
+Ihr seid vollständig mit dünnen Metallschuppen bedeckt. (RK +4, rElek)
+%%%%
+Thin metallic scales grow over part of your body.
+Dünne Metallschuppen bedecken einen Teil des Körpers.
+%%%%
+Thin metallic scales spread over more of your body.
+Dünne Metallschuppen bedecken einen größeren Teil Eures Körpers.
+%%%%
+Thin metallic scales cover your body completely.
+Dünne Metallschuppen bedecken Euren Körper vollständig.
+%%%%
+Your thin metallic scales disappear.
+Eure dünnen Metallschuppen verschwinden.
+%%%%
+Your thin metallic scales recede somewhat.
+Eure dünnen Metallschuppen bilden sich etwas zurück.
+%%%%
+thin skeletal structure
+dünne Skelettstruktur
+%%%%
+You have a somewhat thin skeletal structure. (Dex +2, Stealth+)
+Ihr habt eine etwas dünne Skelettstruktur. (Dex +2, Schleichen+)
+%%%%
+You have a moderately thin skeletal structure. (Dex +4, Stealth++)
+Ihr habt eine mäßig dünne Skelettstruktur. (Dex +4, Schleichen++)
+%%%%
+You have an unnaturally thin skeletal structure. (Dex +6, Stealth+++)
+Ihr habt eine unnatürlich dünne Skelettstruktur. (Dex +6, Schleichen+++)
+%%%%
+Your bones become slightly less dense.
+Eure Knochen werden ein bisschen weniger dicht.
+%%%%
+Your bones become somewhat less dense.
+Eure Knochen werden etwas weniger dicht.
+%%%%
+Your bones become less dense.
+Eure Knochen werden weniger dicht.
+%%%%
+Your skeletal structure returns to normal.
+Eure Skelettstruktur kehrt in den Normalzustand zurück.
+%%%%
+Your skeletal structure densifies.
+Eure Skelettstruktur verdichtet sich.
+%%%%
+yellow scales
+gelbe Schuppen
+%%%%
+You are partially covered in yellow scales. (AC +2)
+Ihr seid teilweise mit gelben Schuppen bedeckt. (RK +2)
+%%%%
+You are mostly covered in yellow scales. (AC +3)
+Ihr seid größtenteils mit gelben Schuppen bedeckt. (RK +3)
+%%%%
+You are completely covered in yellow scales. (AC +4, rCorr)
+Ihr seid vollständig mit gelben Schuppen bedeckt. (RK +4, rCorr)
+%%%%
+Yellow scales grow over part of your body.
+Gelbe Schuppen bedecken einen Teil Eures Körpers.
+%%%%
+Yellow scales spread over more of your body.
+Gelbe Schuppen breiten sich über einen größeren Teil Eures Körpers aus.
+%%%%
+Yellow scales cover your body completely.
+Gelbe Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your yellow scales disappear.
+Eure gelben Schuppen verschwinden.
+%%%%
+Your yellow scales recede somewhat.
+Eure gelben Schuppen bilden sich etwas zurück.
+%%%%
+sharp scales
+scharfe Schuppen
+%%%%
+You are partially covered in razor-sharp scales. (AC +1, Slay +1)
+Ihr seid teilweise mit rasiermesserscharfen Schuppen bedeckt. (RK +1, Schaden +1)
+%%%%
+You are mostly covered in razor-sharp scales. (AC +2, Slay +2)
+Ihr seid größtenteils mit rasiermesserscharfen Schuppen bedeckt. (RK +2, Schaden +2)
+%%%%
+You are completely covered in razor-sharp scales. (AC +3, Slay +3)
+Ihr seid vollständig mit rasiermesserscharfen Schuppen bedeckt. (RK +3, Schaden +3)
+%%%%
+Sharp scales grow over part of your body.
+Scharfe Schuppen wachsen über einen Teil Eures Körpers.
+%%%%
+Sharp scales spread over more of your body.
+Scharfe Schuppen breiten sich über einen größeren Teil Eures Körpers aus.
+%%%%
+Sharp scales cover your body completely.
+Scharfe Schuppen bedecken Euren Körper vollständig.
+%%%%
+Your sharp scales disappear.
+Eure scharfen Schuppen verschwinden.
+%%%%
+Your sharp scales recede somewhat.
+Eure scharfen Schuppen bilden sich etwas zurück.
+%%%%
+sturdy frame
+stabiler Rahmen
+%%%%
+Your movements are slightly less encumbered by armour. (ER -2)
+Eure Bewegungen sind durch die Rüstung etwas weniger beeinträchtigt. (ER -2)
+%%%%
+Your movements are less encumbered by armour. (ER -4)
+Eure Bewegungen werden durch Rüstungen weniger beeinträchtigt. (ER -4)
+%%%%
+Your movements are significantly less encumbered by armour. (ER -6)
+Eure Bewegungen werden durch Rüstungen deutlich weniger beeinträchtigt. (ER -6)
+%%%%
+You feel less encumbered by your armour.
+Ihr fühlt Euch durch Eure Rüstung weniger belastet.
+%%%%
+You feel more encumbered by your armour.
+Ihr fühlt Euch durch Eure Rüstung mehr belastet.
+%%%%
+When seriously injured, your bleeding wounds create armour. (AC +%d)
+Wenn Ihr schwer verletzt seid, erzeugen Eure blutenden Wunden eine Rüstung. (RK +%d)
+%%%%
+When seriously injured, your bleeding wounds create thick armour. (AC +%d)
+Wenn Ihr schwer verletzt seid, erzeugen Eure blutenden Wunden eine dicke Rüstung. (RK +%d)
+%%%%
+When seriously injured, your bleeding wounds create very thick armour. (AC +%d)
+Wenn Ihr schwer verletzt seid, erzeugen Eure blutenden Wunden eine sehr dicke Rüstung. (RK +%d)
+%%%%
+You feel your blood ready itself to protect you.
+Ihr spürt, wie Euch Euer Blut bereit macht, Euch zu schützen.
+%%%%
+You feel your blood thicken.
+Ihr spürt, wie Euch Euer Blut verdickt.
+%%%%
+You feel your blood become entirely quiescent.
+Ihr spürt, wie Euer Blut völlig zur Ruhe kommt.
+%%%%
+You feel your blood thin.
+Ihr spürt, wie Euer Blut dünner wird.
+%%%%
+big brain
+großes Gehirn
+%%%%
+You have an unusually large brain. (Int +2)
+Ihr habt ein ungewöhnlich großes Gehirn. (Int +2)
+%%%%
+You have an extremely huge brain. (Int +4)
+Ihr habt ein extrem großes Gehirn. (Int +4)
+%%%%
+You have an absolutely massive brain. (Int +6, Wiz)
+Ihr habt ein absolut riesiges Gehirn. (Int +6, Zaub)
+%%%%
+Your brain expands.
+Euer Gehirn vergrößert sich.
+%%%%
+Your brain expands to incredible size.
+Euer Gehirn vergrößert sich zu unglaublicher Größe.
+%%%%
+Your brain returns to normal size.
+Euer Gehirn nimmt wieder seine normale Größe an.
+%%%%
+Your brain shrinks.
+Euer Gehirn schrumpft.
+%%%%
+camouflage
+Tarnung
+%%%%
+Your skin changes colour to match your surroundings (Stealth+).
+Eure Haut ändert ihre Farbe, um sich Eurer Umgebung anzupassen (Heimlich+).
+%%%%
+Your skin blends seamlessly with your surroundings (Stealth++).
+Eure Haut verschmilzt nahtlos mit Eurer Umgebung (Heimlich++).
+%%%%
+Your skin perfectly mimics your surroundings (Stealth+++).
+Eure Haut ahmt Eure Umgebung perfekt nach (Heimlich+++).
+%%%%
+Your skin functions as natural camouflage.
+Eure Haut dient als natürliche Tarnung.
+%%%%
+Your natural camouflage becomes more effective.
+Eure natürliche Tarnung wird effektiver.
+%%%%
+Your skin no longer functions as natural camouflage.
+Eure Haut funktioniert nicht mehr als natürliche Tarnung.
+%%%%
+Your natural camouflage becomes less effective.
+Eure natürliche Tarnung wird weniger wirksam.
+%%%%
+ignite blood
+Blut entzünden
+%%%%
+Your demonic aura sometimes causes spilled blood to erupt in flames.
+Eure dämonische Aura lässt vergossenes Blut manchmal in Flammen aufgehen.
+%%%%
+Your demonic aura often causes spilled blood to erupt in flames.
+Eure dämonische Aura lässt vergossenes Blut oft in Flammen aufgehen.
+%%%%
+Your demonic aura causes all spilled blood to erupt in flames.
+Eure dämonische Aura lässt alles vergossene Blut in Flammen aufgehen.
+%%%%
+Your blood heats up.
+Euer Blut erhitzt Euch.
+%%%%
+Your blood runs red-hot!
+Euer Blut fließt rotglühend!
+%%%%
+Your blood burns even hotter!
+Euer Blut brennt noch heißer!
+%%%%
+foul stench
+fauliger Gestank
+%%%%
+You may rarely emit foul miasma when damaged in melee.
+Wenn Ihr im Nahkampf beschädigt werdet, könnt Ihr selten einen üblen Miasma ausstoßen.
+%%%%
+You sometimes emit foul miasma when damaged in melee.
+Ihr stößt manchmal einen üblen Miasma aus, wenn Ihr im Nahkampf verletzt werdet.
+%%%%
+You frequently emit foul miasma when damaged in melee.
+Ihr stößt häufig einen üblen Miasma aus, wenn Ihr im Nahkampf verletzt werdet.
+%%%%
+You begin to emit a foul stench of rot and decay.
+Ihr beginnt, einen üblen Gestank von Fäulnis und Verwesung auszustrahlen.
+%%%%
+Your foul stench grows more powerful.
+Euer fauliger Gestank wird immer stärker.
+%%%%
+You begin to radiate miasma.
+Ihr beginnt, Miasma auszustrahlen.
+%%%%
+tendrils
+Ranken
+%%%%
+You are covered in slimy tendrils that may disarm your opponents.
+Ihr seid mit schleimigen Ranken bedeckt, die Eure Gegner entwaffnen können.
+%%%%
+Thin, slimy tendrils emerge from your body.
+Dünne, schleimige Ranken ragen aus Eurem Körper.
+%%%%
+Your tendrils retract into your body.
+Eure Ranken ziehen Euch in Euren Körper zurück.
+%%%%
+jelly sensing items
+Gegenstand-spürende Gelee
+%%%%
+You have a small jelly attached to you that senses nearby items.
+Ihr tragt ein kleines Gelee an Euch, das Gegenstände in der Nähe aufspürt.
+%%%%
+Your body partially splits into a small jelly.
+Euer Körper spaltet Euch teilweise in ein kleines Gelee.
+%%%%
+The jelly growth is reabsorbed into your body.
+Das Gelee-Wachstum wird vom Körper wieder aufgenommen.
+%%%%
+jelly absorbing missiles
+Geschoss-absorbierende Gelee
+%%%%
+You have a small jelly attached to you that may absorb incoming projectiles.
+Ihr tragt ein kleines Gelee an Euch, das ankommende Geschosse absorbieren kann.
+%%%%
+petrification resistance
+Versteinerungsresistenz
+%%%%
+You are immune to petrification.
+Ihr seid immun gegen Versteinerung.
+%%%%
+Your body vibrates.
+Euer Körper vibriert.
+%%%%
+You briefly stop moving.
+Ihr haltet kurz inne.
+%%%%
+Your melee attacks may debilitate your foes.
+Eure Nahkampfangriffe können Eure Feinde schwächen.
+%%%%
+An ominous black mark forms on your body.
+Ein unheilvoller schwarzer Fleck bildet Euch auf Eurem Körper.
+%%%%
+aura of silence
+Aura der Stille
+%%%%
+You are surrounded by an aura of silence.
+Ihr seid von einer Aura der Stille umgeben.
+%%%%
+An unnatural silence shrouds you.
+Eine unnatürliche Stille umhüllt Euch.
+%%%%
+bedeviling
+teuflische Verhexung
+%%%%
+Your hexes are more powerful.
+Eure Verhexungen sind mächtiger.
+%%%%
+You feel devilish.
+Ihr fühlt Euch teuflisch.
+%%%%
+corrupting presence
+verderbliche Präsenz
+%%%%
+Your presence sometimes corrodes those you injure.
+Eure Anwesenheit korrodiert manchmal diejenigen, die Ihr verletzt.
+%%%%
+Your presence sometimes corrodes or deforms those you injure.
+Eure Anwesenheit korrodiert oder verformt manchmal diejenigen, die Ihr verletzt.
+%%%%
+You feel corrupt.
+Ihr fühlt Euch verdorben.
+%%%%
+Your corrupting presence intensifies.
+Eure verderbliche Präsenz verstärkt Euch.
+%%%%
+word of chaos
+Wort des Chaos
+%%%%
+You can speak a Word of Chaos.
+Ihr könnt ein Wort des Chaos sprechen.
+%%%%
+Your tongue twists.
+Eure Zunge verdreht sich.
+%%%%
+demonic willpower
+dämonische Willenskraft
+%%%%
+You punish those that try to bend your will. (Will+)
+Ihr bestraft diejenigen, die versuchen, Euren Willen zu beugen. (Wille+)
+%%%%
+You feel willful.
+Ihr fühlt Euch eigenwillig.
+%%%%
+cold-blooded
+kaltblütig
+%%%%
+You are cold-blooded and may be slowed by cold attacks.
+Ihr seid kaltblütig und könnt durch Kälteangriffe verlangsamt werden.
+%%%%
+You feel cold-blooded.
+Ihr fühlt Euch kaltblütig.
+%%%%
+You feel warm-blooded.
+Ihr fühlt Euch warmblütig.
+%%%%
+inability to drink while threatened
+Unfähigkeit bei Bedrohung zu trinken
+%%%%
+You sometimes lose the ability to drink potions when taking damage.
+Manchmal verliert Ihr die Fähigkeit, Tränke zu trinken, wenn Ihr Schaden nehmt.
+%%%%
+You lose the ability to drink potions when threatened.
+Ihr verliert die Fähigkeit, Tränke zu trinken, wenn Ihr bedroht werdet.
+%%%%
+You can once more drink potions while threatened.
+Ihr könnt wieder Tränke trinken, wenn Ihr bedroht werdet.
+%%%%
+inability to read while threatened
+Unfähigkeit bei Bedrohung zu lesen
+%%%%
+You sometimes lose the ability to read scrolls when taking damage.
+Manchmal verliert Ihr die Fähigkeit, Schriftrollen zu lesen, wenn Ihr Schaden nehmt.
+%%%%
+You lose the ability to read scrolls when threatened.
+Ihr verliert die Fähigkeit, Schriftrollen zu lesen, wenn Ihr bedroht werdet.
+%%%%
+You can once more read scrolls while threatened.
+Ihr könnt wieder Schriftrollen lesen, während Ihr bedroht werdet.
+%%%%
+missing a hand
+eine Hand fehlt
+%%%%
+You are missing a hand.
+Euch fehlt eine Hand.
+%%%%
+One of your hands has vanished, leaving only a stump!
+Eine Eurer Hände ist verschwunden und hat nur einen Stumpf hinterlassen!
+%%%%
+Your stump has regrown into a hand!
+Euer Stumpf ist zu einer Hand nachgewachsen!
+%%%%
+no stealth
+keine Tarnung
+%%%%
+You cannot be stealthy.
+Ihr könnt nicht unauffällig sein.
+%%%%
+You can no longer be stealthy.
+Ihr könnt nicht mehr unauffällig sein.
+%%%%
+You can once more be stealthy.
+Ihr könnt wieder unauffällig sein.
+%%%%
+inability to use devices
+Unfähigkeit Geräte zu benutzen
+%%%%
+You cannot study or use magical devices.
+Ihr könnt keine magischen Geräte studieren oder benutzen.
+%%%%
+You can no longer study or use magical devices.
+Ihr könnt nicht mehr magische Geräte studieren oder benutzen.
+%%%%
+You can once more study and use magical devices.
+Ihr könnt wieder magische Geräte studieren und benutzen.
+%%%%
+hated by all
+von allen gehasst
+%%%%
+You are hated by all.
+Ihr werdet von allen gehasst.
+%%%%
+You are now hated by all.
+Ihr werdet jetzt von allen gehasst.
+%%%%
+You are no longer hated by all.
+Ihr werdet nicht mehr von allen gehasst.
+%%%%
+cowardly
+feige
+%%%%
+Your cowardice makes you less effective in combat with threatening monsters.
+Eure Feigheit macht Euch im Kampf mit bedrohlichen Monstern weniger effektiv.
+%%%%
+You have lost your courage.
+Ihr habt Euren Mut verloren.
+%%%%
+You have regained your courage.
+Ihr habt Euren Mut wiedergefunden.
+%%%%
+inability to train dodging
+Unfähigkeit das Ausweichen zu trainieren
+%%%%
+You cannot train Dodging skill.
+Ihr könnt die Fertigkeit Ausweichen nicht trainieren.
+%%%%
+You can no longer train Dodging skill.
+Ihr könnt die Fertigkeit Ausweichen nicht mehr trainieren.
+%%%%
+You can once more train Dodging skill.
+Ihr könnt noch einmal die Fertigkeit Ausweichen trainieren.
+%%%%
+inability to train armour
+Unfähigkeit Rüstung zu trainieren
+%%%%
+You cannot train Armour skill.
+Ihr könnt keine Rüstungsfertigkeit trainieren.
+%%%%
+You can no longer train Armour skill.
+Ihr könnt die Rüstungsfertigkeit nicht mehr trainieren.
+%%%%
+You can once more train Armour skill.
+Ihr könnt erneut die Rüstungsfertigkeit trainieren.
+%%%%
+no air magic
+keine Luftzauberei
+%%%%
+You cannot study or cast Air magic.
+Ihr könnt keine Luftmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Air magic.
+Ihr könnt keine Luftmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Air magic.
+Ihr könnt wieder Luftmagie lernen und wirken.
+%%%%
+no conjurations magic
+keine Hervorrufungsmagie
+%%%%
+You cannot study or cast Conjurations magic.
+Ihr könnt keine Hervorrufungsmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Conjurations magic.
+Ihr könnt keine Hervorrufungsmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Conjurations magic.
+Ihr könnt wieder Hervorrufungszauber studieren und wirken.
+%%%%
+no earth magic
+keine Erdmagie
+%%%%
+You cannot study or cast Earth magic.
+Ihr könnt keine Erdmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Earth magic.
+Ihr könnt keine Erdmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Earth magic.
+Ihr könnt wieder Erdmagie studieren und wirken.
+%%%%
+no fire magic
+keine Feuermagie
+%%%%
+You cannot study or cast Fire magic.
+Ihr könnt keine Feuermagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Fire magic.
+Ihr könnt keine Feuermagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Fire magic.
+Ihr könnt wieder Feuermagie lernen und wirken.
+%%%%
+no hexes magic
+keine Verhexungsmagie
+%%%%
+You cannot study or cast Hexes magic.
+Ihr könnt keine Verhexungsmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Hexes magic.
+Ihr könnt keine Verhexungsmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Hexes magic.
+Ihr könnt wieder Verhexungsmagie studieren und wirken.
+%%%%
+no ice magic
+keine Eismagie
+%%%%
+You cannot study or cast Ice magic.
+Ihr könnt keine Eismagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Ice magic.
+Ihr könnt keine Eismagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Ice magic.
+Ihr könnt wieder Eismagie lernen und wirken.
+%%%%
+no necromancy magic
+keine Nekromantie-Magie
+%%%%
+You cannot study or cast Necromancy magic.
+Ihr könnt keine Nekromantie-Magie erlernen oder wirken.
+%%%%
+You can no longer study or cast Necromancy magic.
+Ihr könnt keine Nekromantie-Magie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Necromancy magic.
+Ihr könnt wieder Nekromantie-Magie studieren und wirken.
+%%%%
+no poison magic
+keine Giftmagie
+%%%%
+You cannot study or cast Poison magic.
+Ihr könnt keine Giftmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Poison magic.
+Ihr könnt keine Giftmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Poison magic.
+Ihr könnt wieder Giftmagie lernen und wirken.
+%%%%
+no summoning magic
+keine Beschwörungsmagie
+%%%%
+You cannot study or cast Summoning magic.
+Ihr könnt keine Beschwörungsmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Summoning magic.
+Ihr könnt keine Beschwörungsmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Summoning magic.
+Ihr könnt wieder Beschwörungsmagie lernen und wirken.
+%%%%
+no translocations magic
+keine Translokationsmagie
+%%%%
+You cannot study or cast Translocations magic.
+Ihr könnt keine Translokationsmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Translocations magic.
+Ihr könnt keine Translokationsmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Translocations magic.
+Ihr könnt wieder Translocations-Zauber studieren und wirken.
+%%%%
+no transmutations magic
+keine Verwandlungsmagie
+%%%%
+You cannot study or cast Transmutations magic.
+Ihr könnt keine Verwandlungsmagie erlernen oder wirken.
+%%%%
+You can no longer study or cast Transmutations magic.
+Ihr könnt keine Verwandlungsmagie mehr erlernen oder wirken.
+%%%%
+You can once more study and cast Transmutations magic.
+Ihr könnt wieder Verwandlungsmagie studieren und wirken.
+%%%%
+reduced AC
+reduzierte RK
+%%%%
+You take slightly more damage. (AC -5)
+Ihr nimmt etwas mehr Schaden. (RK -5)
+%%%%
+You take more damage. (AC -10)
+Ihr nimmt mehr Schaden. (RK -10)
+%%%%
+You take considerably more damage. (AC -15)
+Ihr erleidet erheblich mehr Schaden. (RK -15)
+%%%%
+You feel more vulnerable to harm.
+Ihr fühlt Euch anfälliger für Schaden.
+%%%%
+You no longer feel extra vulnerable to harm.
+Ihr fühlt Euch nicht mehr besonders anfällig für Schäden.
+%%%%
+You feel less vulnerable to harm.
+Ihr fühlt Euch weniger anfällig für Schäden.
+%%%%
+reduced EV
+reduzierte EV
+%%%%
+You have somewhat slow reflexes. (EV -5)
+Ihr habt etwas langsame Reflexe. (EV -5)
+%%%%
+You have slow reflexes. (EV -10)
+Ihr habt langsame Reflexe. (EV -10)
+%%%%
+You have very slow reflexes. (EV -15)
+Ihr habt sehr langsame Reflexe. (EV -15)
+%%%%
+Your reflexes slow.
+Eure Reflexe werden langsamer.
+%%%%
+Your reflexes slow further.
+Eure Reflexe verlangsamen sich weiter.
+%%%%
+You reflexes return to normal.
+Eure Reflexe werden wieder normal.
+%%%%
+You reflexes speed back up.
+Eure Reflexe werden wieder schneller.
+%%%%
+You are slightly weak-willed. (Will-)
+Ihr seid leicht willensschwach. (Wille-)
+%%%%
+You are weak-willed. (Will--)
+Ihr seid willensschwach. (Wille--)
+%%%%
+You are extremely weak-willed. (Will---)
+Ihr seid extrem willensschwach. (Wille---)
+%%%%
+You feel weak-willed.
+Ihr fühlt Euch willensschwach.
+%%%%
+You feel more weak-willed.
+Ihr fühlt Euch willensschwächer.
+%%%%
+You no longer feel weak-willed.
+Ihr fühlt Euch nicht mehr willensschwach.
+%%%%
+You feel less weak-willed.
+Ihr fühlt Euch weniger willensschwach.
+%%%%
+disrupted magic
+unterbrochene Magie
+%%%%
+Your casting is slightly disrupted.
+Eure Zauberei ist leicht gestört.
+%%%%
+Your casting is disrupted.
+Eure Zauberei ist gestört.
+%%%%
+Your casting is seriously disrupted.
+Eure Zauberei ist ernsthaft gestört.
+%%%%
+Your ability to control magic is disrupted.
+Eure Fähigkeit, Magie zu kontrollieren, ist gestört.
+%%%%
+Your ability to control magic is more disrupted.
+Eure Fähigkeit, Magie zu kontrollieren, ist stärker gestört.
+%%%%
+Your ability to control magic is no longer disrupted.
+Eure Fähigkeit, Magie zu kontrollieren, ist nicht mehr gestört.
+%%%%
+Your ability to control magic is less disrupted.
+Eure Fähigkeit, Magie zu kontrollieren, ist weniger gestört.
+%%%%
+MP-powered wands
+MP-betriebene Zauberstäbe
+%%%%
+You expend magic power (3 MP) to strengthen your wands.
+Ihr verbraucht magische Kraft (3 MP), um Eure Zauberstäbe zu stärken.
+%%%%
+You feel your magical essence link to the dungeon's wands.
+Ihr spürt, wie Euch Eure magische Essenz mit den Stäben des Dungeons verbindet.
+%%%%
+Your magical essence no longer links to wands of the dungeon.
+Eure magische Essenz ist nicht mehr mit den Zauberstäben des Dungeons verbunden.
+%%%%
+unskilled
+ungelernt
+%%%%
+You are somewhat unskilled. (-1 Apt)
+Ihr seid etwas ungelernt. (-1 Apt)
+%%%%
+You are unskilled. (-2 Apt)
+Ihr seid ungelernt. (-2 Apt)
+%%%%
+You are extremely unskilled. (-3 Apt)
+Ihr seid extrem ungelernt. (-3 Apt)
+%%%%
+You feel less skilled.
+Ihr fühlt Euch weniger kompetent.
+%%%%
+You regain all your skill.
+Ihr erhältt alle Eure Fertigkeiten zurück.
+%%%%
+You regain some skill.
+Ihr erlangt einige Fertigkeiten zurück.
+%%%%
+inexperienced
+unerfahrene
+%%%%
+You are somewhat inexperienced. (-2 XL)
+Ihr seid etwas unerfahren. (-2 XL)
+%%%%
+You are inexperienced. (-4 XL)
+Ihr seid unerfahren. (-4 XL)
+%%%%
+You are extremely inexperienced. (-6 XL)
+Ihr seid extrem unerfahren. (-6 XL)
+%%%%
+You feel less experienced.
+Ihr fühlt Euch weniger erfahren.
+%%%%
+You regain all your potential.
+Ihr gewinnt Euer gesamtes Potenzial zurück.
+%%%%
+You regain some potential.
+Ihr gewinnt ein gewisses Potenzial zurück.
+%%%%
+stealthy paws
+verstohlende Pfoten
+%%%%
+Your paws help you pounce on unaware monsters.
+Eure Pfoten helfen Euch, Euch auf ahnungslose Monster zu stürzen.
+%%%%
+missing an eye
+ein Auge fehlt
+%%%%
+You are missing an eye, making it more difficult to aim.
+Euch fehlt ein Auge, was das Zielen erschwert.
+%%%%
+Your right eye vanishes! The world loses its depth.
+Euer rechtes Auge verschwindet! Die Welt verliert ihre Tiefe.
+%%%%
+Your right eye suddenly reappears! The world regains its depth.
+Euer rechtes Auge taucht plötzlich wieder auf! Die Welt gewinnt ihre Tiefe zurück.
+%%%%
+temperature sensitive
+temperaturempfindlich
+%%%%
+You are sensitive to extremes of temperature. (rF-, rC-)
+Ihr seid empfindlich gegen extremen Temperaturen. (rF-, rC-)
+%%%%
+You feel sensitive to extremes of temperature.
+Ihr seid empfindlich gegen extreme Temperaturen.
+%%%%
+You no longer feel sensitive to extremes of temperature
+Ihr seid nicht mehr empfindlich gegen extremen Temperaturen
+%%%%
+no regeneration
+keine Regenerierung
+%%%%
+You do not regenerate.
+Ihr regeneriert Euch nicht.
+%%%%
+You stop regenerating.
+Ihr hört auf, Euch zu regenerieren.
+%%%%
+You start regenerating.
+Ihr beginnt Euch zu regenerieren.
+%%%%
+strong nose
+starke Nase
+%%%%
+Your uncanny sense of smell can sniff out nearby items.
+Euer unheimlicher Geruchssinn kann Gegenstände in der Nähe aufspüren.
+%%%%
+Your sense of smell grows stronger.
+Euer Geruchssinn wird stärker.
+%%%%
+Your sense of smell gets weaker.
+Euer Geruchssinn wird schwächer.
+%%%%
+acid resistance
+Säureresistenz
+%%%%
+You are resistant to acid. (rCorr)
+Ihr seid resistent gegen Säure. (rCorr)
+%%%%
+You feel resistant to acid.
+Ihr fühlt Euch resistent gegen Säure.
+%%%%
+You feel less resistant to acid.
+Ihr fühlt Euch weniger resistent gegen Säure.
+%%%%
+four strong arms
+vier starke Arme
+%%%%
+Your four strong arms can wield two-handed weapons with a shield.
+Eure vier starken Arme können Zweihandwaffen und einen Schild führen.
+%%%%
+Two of your arms shrink away.
+Zwei Eurer Arme schrumpfen weg.
+%%%%
+You grow two extra arms.
+Euch wachsen zwei zusätzliche Arme.
+%%%%
+You do not drink.
+Ihr trinkt nicht.
+%%%%
+Your mouth dries to ashes.
+Euer Mund trocknet zu Asche aus.
+%%%%
+You gain the ability to drink.
+Ihr erhältt die Fähigkeit zu trinken.
+%%%%
+retaliatory headbutt
+Vergeltungskopfstoß
+%%%%
+You reflexively headbutt those who attack you in melee.
+Ihr verpasst denen, die Euch im Nahkampf angreifen, reflexartig einen Kopfstoß.
+%%%%
+Your retaliatory reflexes feel sharp.
+Eure Vergeltungsreflexe fühlen Euch scharf an.
+%%%%
+Your retaliatory reflexes feel dull.
+Eure Vergeltungsreflexe fühlen Euch dumpf an.
+%%%%
+steam resistance
+Dampfresistenz
+%%%%
+You are immune to the effects of steam.
+Ihr seid immun gegen die Auswirkungen von Dampf.
+%%%%
+You are now immune to the effects of steam.
+Ihr seid jetzt immun gegen die Auswirkungen von Dampf.
+%%%%
+You are no longer immune to the effects of steam.
+Ihr seid nicht mehr immun gegen die Auswirkungen von Dampf.
+%%%%
+no weapons or thrown items
+keine Waffen oder Wurfgegenstände
+%%%%
+You are incapable of wielding weapons or throwing items.
+Ihr seid nicht in der Lage, Waffen zu schwingen oder Gegenstände zu werfen.
+%%%%
+You can no longer grasp objects.
+Ihr könnt nicht mehr Gegenständen greifen.
+%%%%
+You can now grasp objects.
+Ihr könnt jetzt Gegenstände greifen.
+%%%%
+You cannot wear armour.
+Ihr könnt keine Rüstung tragen.
+%%%%
+You can no longer wear armour.
+Ihr könnt keine Rüstung mehr tragen.
+%%%%
+You can now wear armour.
+Ihr könnt jetzt eine Rüstung tragen.
+%%%%
+multi-lived
+mehrlebend
+%%%%
+You gain extra lives every three experience levels.
+Ihr erhaltet alle drei Erfahrungsstufen zusätzliche Leben.
+%%%%
+You are no longer multi-lived.
+Ihr seid nicht mehr mehrlebend.
+%%%%
+You can now gain extra lives.
+Ihr könnt jetzt zusätzliche Leben erhalten.
+%%%%
+distributed training
+verteilte Ausbildung
+%%%%
+Your experience applies equally to all skills.
+Eure Erfahrung gilt für alle Fertigkeiten gleichermaßen.
+%%%%
+Your experience now applies equally to all skills.
+Eure Erfahrung gilt nun für alle Fertigkeiten gleichermaßen.
+%%%%
+Your experience no longer applies equally to all skills.
+Eure Erfahrung gilt nicht mehr für alle Fertigkeiten gleichermaßen.
+%%%%
+nimble swimmer
+wendiger Schwimmer
+%%%%
+You are camouflaged near water. (Stealth+)
+Ihr seid in der Nähe von Wasser gut getarnt. (Heimlich+)
+%%%%
+You are quick and stealthy near water. (Stealth+, EV+, Speed+++)
+In der Nähe von Wasser seid Ihr schnell und unauffällig. (Heimlich+, EV+, Geschwindigkeit+++)
+%%%%
+You feel comfortable near water.
+Ihr fühlt Euch in der Nähe von Wasser wohl.
+%%%%
+You feel very comfortable near water.
+Ihr fühlt Euch in der Nähe von Wasser sehr wohl.
+%%%%
+You feel less comfortable near water.
+Ihr fühlt Euch in der Nähe von Wasser weniger wohl.
+%%%%
+You have tentacles for arms and can constrict enemies.
+Ihr habt Tentakel als Arme und könnt Feinde erwürgen.
+%%%%
+Your arms feel tentacular.
+Eure Arme fühlen Euch tentakulär an.
+%%%%
+Your arms no longer feel tentacular.
+Eure Arme fühlen Euch nicht mehr tentakulär an.
+%%%%
+vampiric
+vampirisch
+%%%%
+You are afflicted with vampirism.
+Ihr seid mit Vampirismus behaftet.
+%%%%
+You are afflicted with vampirism and can become a bat while bloodless.
+Ihr seid mit Vampirismus behaftet und könnt Euch in eine Fledermaus verwandeln, solange Ihr blutleer seid.
+%%%%
+You feel a craving for blood.
+Ihr verspürt ein Verlangen nach Blut.
+%%%%
+You can now turn into a vampire bat when bloodless.
+Ihr könnt Euch jetzt in eine Vampirfledermaus verwandeln, wenn Ihr blutleer seid.
+%%%%
+Your craving for blood subsides.
+Euer Verlangen nach Blut lässt nach.
+%%%%
+You can no longer turn into a bat.
+Ihr könnt Euch nicht mehr in eine Fledermaus verwandeln.
+%%%%
+mertail
+Wasserschwanz
+%%%%
+Your lower body shifts to a powerful aquatic tail in water.
+Euer Unterkörper verwandelt sich in einen kräftigen Wasserschwanz im Wasser.
+%%%%
+Your legs feel aquatic.
+Eure Beine fühlen Euch aquatisch an.
+%%%%
+Your legs no longer feel aquatic.
+Eure Beine fühlen Euch nicht mehr aquatisch an.
+%%%%
+float
+schweben
+%%%%
+You float through the air rather than walking.
+Man schwebt durch die Luft, anstatt zu laufen.
+%%%%
+You feel both weightless and legless.
+Ihr fühlt Euch sowohl schwerelos als auch beinlos.
+%%%%
+You feel dragged down by the weight of the world.
+Ihr fühlt Euch von der Last der Welt erdrückt.
+%%%%
+innate caster
+angeborener Zauberer
+%%%%
+You learn spells naturally, not from books.
+Zaubersprüche lernt man auf natürliche Weise, nicht aus Büchern.
+%%%%
+You feel mystic power welling inside you.
+Ihr spürt, wie mystische Kraft in Euch aufsteigt.
+%%%%
+You feel a greater respect for book-learning.
+Ihr empfindet mehr Respekt vor dem Lernen mit Büchern.
+%%%%
+hp casting
+HP-Zauberei
+%%%%
+Your magical power is your life essence.
+Eure magische Kraft ist Eure Lebensessenz.
+%%%%
+Your magical power and health merge together.
+Eure magische Kraft und Eure Gesundheit verschmelzen miteinander.
+%%%%
+Your life and magic unlink.
+Euer Leben und die Magie entkoppeln Euch.
+%%%%
+extra vitality
+zusätzliche Vitalität
+%%%%
+You have superior vitality. (+4 HP)
+Ihr habt eine überlegene Vitalität. (+4 HP)
+%%%%
+You have much superior vitality. (+8 MHP)
+Ihr habt eine viel bessere Vitalität. (+8 MHP)
+%%%%
+You have exceptionally superior vitality. (+12 MHP)
+Ihr habt eine außergewöhnlich hohe Vitalität. (+12 MHP)
+%%%%
+You feel less vital.
+Ihr fühlt Euch weniger vital.
+%%%%
+You feel more vital.
+Ihr fühlt Euch vitaler.
+%%%%
+Your melee attacks may engulf your foes in ooze.
+Eure Nahkampfangriffe können Eure Feinde in Schlamm verschlingen.
+%%%%
+You begin exuding ooze.
+Ihr fangt an, Schlamm auszuscheiden.
+%%%%
+You stop exuding ooze.
+Ihr hört auf, Schleim auszustoßen.
+%%%%
++LOS
++LOS
+%%%%
+You have an extended range of vision and can be seen from far away.
+Ihr habt ein erweitertes Sichtfeld und können schon von weitem gesehen werden.
+%%%%
+The darkness flees at your approach.
+Die Dunkelheit flieht, wenn Ihr Euch ihr nähert.
+%%%%
+The shadows grow bolder once more.
+Die Schatten werden wieder mutiger.
+%%%%
+

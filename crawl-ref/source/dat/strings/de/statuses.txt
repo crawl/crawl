@@ -1783,7 +1783,8 @@ Ihr seid durch die Macht des Glänzenden geschirmt.
 Cleave
 Spalt
 %%%%
-cleaving
+# disambiguate from mutation
+{status}cleaving
 spalten
 %%%%
 cleave
