@@ -123,8 +123,8 @@ Handling grammatical gender
 Suppose I defined this adjective in French:
 
 %%%%
-"small "
-"petit "
+"large "
+"grand "
 %%%%
 
 If I then do:
@@ -134,22 +134,22 @@ If I then do:
 %sportail
 %%%%
 
-I would get "petit portail", as required. However, if I do this:
+I would get "grand portail", as required. However, if I do this:
 
 %%%%
 %sdoor
 %sporte
 %%%%
 
-I would get "petit porte", which is incorrect, since porte is feminine. It should
-be "petite porte".
+I would get "grand porte", which is incorrect, since porte is feminine. It should
+be "grande porte".
 
-To get around this, I can define a specific translation for "small" in the feminine
+To get around this, I can define a specific translation for "large" in the feminine
 context, like this:
 
 %%%%
-"{f}small "
-"petite "
+"{f}large "
+"grande "
 %%%%
 
 (I have chosen {f} for brevity, but you could use {fem} or whatever you want.)
@@ -161,27 +161,27 @@ Then for "door", I do:
 {f}%sporte
 %%%%
 
-This will give "petite porte".
+This will give "grande porte".
 
 You could define specific contexts for each gender, like this:
 
 %%%%
-"{m}small "
-"petit "
+"{m}large "
+"grand "
 %%%%
-"{f}small "
-"petite "
+"{f}large "
+"grande "
 %%%%
 
 However, it's recommended to make one of them the default, by defining the
 strings without a specific context, like this:
 
 %%%%
-"small "
-"petit "
+"large "
+"grand "
 %%%%
-"{f}small "
-"petite "
+"{f}large "
+"grande "
 %%%%
 
 The reason being that the program will fall back to the default context if it
@@ -252,14 +252,16 @@ having a word in the wrong language.
 Defining grammatical rules
 --------------------------
 
-Manually defining translations for each context can be tedious. Gendered
-adjectives are not too bad since there's not that many of them, but declining
-nouns in all the cases is a lot of work. For that reason, it's possible to
-define rules for transforming strings from the default context into another
-context. These rules use something called "regular expressions". Regular
-expressions are very powerful, but also very complex. If you're not familiar
-with them, you will probably want to google for an explanation of how they
-work. However, some simple examples are given below.
+Manually defining translations for each context can be tedious. Declining
+nouns in all the cases is especially hard work, since in addition to
+"the mace", you have to translate "a mace", "your mace", and "%d maces".
+Multiply that by four or five grammatical cases, and you have a lot of strings
+to translate. For that reason, it's possible to define rules for transforming
+strings from the default context into another context. These rules use something
+called "regular expressions". Regular expressions are very powerful, but also
+very complex. If you're not familiar with them, you will probably want to google
+for an explanation of how they work. However, some simple examples are given
+below.
 
 Here is a simple example for the declension of German nouns in accusative:
 
