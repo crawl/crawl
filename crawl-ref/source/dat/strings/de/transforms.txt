@@ -292,10 +292,6 @@ Euer Waffenvorderbein
 your shield front leg
 Euer Schildvorderbein
 %%%%
-# altar action
-You crawl onto the altar of %s.
-Ihr kriecht auf den Altar von {dat}%s.
-%%%%
 # flesh type
 flesh
 Fleisch
@@ -405,10 +401,6 @@ Steinkrallen
 Stone tentacles
 Steintentakeln
 %%%%
-# altar action
-You place yourself before the altar of %s.
-Ihr stellt Euch vor dem Altar von {dat}%s.
-%%%%
 # flesh type
 # duplicate: stone
 %%%%
@@ -474,10 +466,6 @@ Eure Schildvorderpfote
 # duplicate: felids also have paws
 #paw
 #Pfote
-%%%%
-# altar action
-You bow your head before the altar of %s.
-Ihr verneigt Euer Kopf vor dem Altar von {dat}%s.
 %%%%
 freezing attack
 Einfrier-Angriff
@@ -653,10 +641,6 @@ quietscht
 a squeak
 {n}ein Quietschen
 %%%%
-# altar action
-You perch on the altar of %s.
-Ihr hockt Euch auf dem Altar von {acc}%s.
-%%%%
 
 ################################
 # Pig-form
@@ -801,16 +785,15 @@ Euer Schildzweig
 root
 Wurzel
 %%%%
-# altar action
-You sway towards the altar of %s.
-Ihr schwankt zum Altar von {dat}%s.
-%%%%
 # flesh type
 wood
 Holz
 %%%%
 Your roots penetrate the ground, keeping you stationary.
 Eure Wurzeln dringen in den Boden ein und halten Euch fest.
+%%%%
+stationary
+stationär
 %%%%
 stasis
 Stasis
@@ -838,10 +821,6 @@ Stachelschwein-Form
 # description
 a spiny porcupine
 ein stacheliges Stachelschwein
-%%%%
-# altar action
-You curl into a sanctuary of spikes before the altar of %s.
-Ihr rollt Euch zu einem Heiligtum aus Stacheln vor dem Altar von {dat}%s zusammen.
 %%%%
 
 ################################
@@ -898,10 +877,6 @@ Eure Schildnebelranke
 # foot
 strand
 Strähne
-%%%%
-# altar action
-You swirl around the altar of %s.
-Ihr wirbelt um den Altar von {dat}%s.
 %%%%
 # flesh
 vapour
@@ -985,10 +960,6 @@ Eure Waffenhyphe
 your shield hypha
 Eure Schildhyphe
 %%%%
-# altar action
-You release spores on the altar of %s.
-Ihr setzt Sporen auf dem Altar von {dat}%s frei.
-%%%%
 You are tiny and evasive.
 Ihr seid winzig und ausweichend.
 %%%%
@@ -1065,10 +1036,6 @@ Hydra-Form
 Bite (x%d)
 Biss (x%d)
 %%%%
-# altar action
-You bow your heads before the altar of %s.
-Ihr verneigt Eure Köpfe vor dem Altar von {dat}%s.
-%%%%
 
 ################################
 # Storm-form
@@ -1076,16 +1043,20 @@ Ihr verneigt Eure Köpfe vor dem Altar von {dat}%s.
 %%%%
 # abbreviation for HUD
 Storm
-Gewitter
+Sturm
+%%%%
+# abbreviation for wiz mode
+storm
+Sturm
 %%%%
 storm-form
-Gewitter-Form
+Sturm-Form
 %%%%
 a lightning-filled tempest!
 ein blitzvolles Unwetter!
 %%%%
 Storm fists
-Blitzfäuste
+Sturmfäuste
 %%%%
 # shout-equivalent
 # duplicate of barachi
@@ -1107,3 +1078,66 @@ Ihr seid unglaublich ausweichend.
 your old self
 Euer altes Ich
 %%%%
+
+################################
+# Pray actions
+################################
+
+%%%%
+# default for most species
+You kneel at the altar of %s.
+Ihr kniet vor dem Altar von {dat}%s.
+%%%%
+# default for felid
+You sit before the altar of %s.
+Ihr sitzt vor dem Altar von {dat}%s.
+%%%%
+# default for octopode
+You curl up in front of the altar of %s.
+Ihr rollt Euch vor dem Altar von {dat}%s zusammen.
+%%%%
+# default for naga (snakelike)
+You coil in front of the altar of %s.
+Ihr windet Euch vor dem Altar von {dat}%s.
+%%%%
+# flying
+You hover solemnly before the altar of %s.
+Ihr schwebt feierlich vor dem Altar von {dat}%s.
+%%%%
+# porcupine form
+You curl into a sanctuary of spikes before the altar of %s.
+Ihr rollt Euch zu einem Heiligtum aus Stacheln vor dem Altar von {dat}%s zusammen.
+%%%%
+# spider form
+You crawl onto the altar of %s.
+Ihr kriecht auf den Altar von {dat}%s.
+%%%%
+# tree form
+You sway towards the altar of %s.
+Ihr schwankt zum Altar von {dat}%s.
+%%%%
+# bat form
+You perch on the altar of %s.
+Ihr hockt Euch auf den Altar von {acc}%s.
+%%%%
+# ice/pig/dragon form
+You bow your head before the altar of %s.
+Ihr verneigt Euer Kopf vor dem Altar von {dat}%s.
+%%%%
+# hydra form
+You bow your heads before the altar of %s.
+Ihr verneigt Eure Köpfe vor dem Altar von {dat}%s.
+%%%%
+# statue/storm form
+You place yourself before the altar of %s.
+Ihr stellt Euch vor dem Altar von {dat}%s.
+%%%%
+# fungus form
+You release spores on the altar of %s.
+Ihr setzt Sporen auf den Altar von {dat}%s frei.
+%%%%
+# wisp form
+You swirl around the altar of %s.
+Ihr wirbelt um den Altar von {dat}%s.
+%%%%
+

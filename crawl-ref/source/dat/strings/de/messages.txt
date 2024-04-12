@@ -17,108 +17,85 @@
 ##################
 %%%%
 You are resistant to damage.
-
+Ihr seid resistent gegen Schaden.
 %%%%
 You can heal yourself by infusing magical energy.
-
+Ihr könnt euch selbst heilen, indem ihr magische Energie zuführt.
 %%%%
 damage resistance
-
+Schadensresistenz
 %%%%
 heal wounds
-
+Wunde heilen
 %%%%
 You are immune to sickness and miasma.
-
+Ihr seid immun gegen Krankheit und Miasma.
 %%%%
 sickness immunity
-
+Krankheitsimmunität
 %%%%
 You can breathe wild blasts of lightning.
-
+Ihr könnt wilde Blitze spucken.
 %%%%
 breathe lightning
-
+Blitzodem
 %%%%
 You can breathe blasts of noxious fumes.
-
+Ihr könnt schädliche Dämpfe spucken.
 %%%%
 breathe noxious fumes
-
+schädliche Dämpfe spucken
 %%%%
 You can breathe blasts of scalding, opaque steam.
-
+Ihr könnt brühende, undurchsichtige Dampfstöße spucken.
 %%%%
 breathe steam
-
+Dampfodem
 %%%%
 You can breathe bolts of dispelling energy.
-
+Ihr könnt Strahlen vertreibender Energie spucken.
 %%%%
 breathe power
-
+Energieodem
 %%%%
 You can breathe blasts of fire.
-
+Ihr könnt Feuer spucken.
 %%%%
 breathe fire
-
+Feuerodem
 %%%%
 You can breathe waves of freezing cold which knock back foes.
-
+Ihr könnt Wellen von eisiger Kälte spucken, die Feinde zurückwerfen.
 %%%%
 breathe frost
-
+Frostodem
 %%%%
 You can spit globs of acid.
-
+Ihr könnt Säureklumpen spucken.
 %%%%
 spit acid
-
-%%%%
-You sit before the altar of %s.
-
+Säure spucken
 %%%%
 You cannot be hasted, slowed, berserked, paralysed or teleported.
-
+Ihr könnt nicht geeilt, verlangsamt, berserkert, gelähmt oder teleportiert werden.
 %%%%
 You can dig through walls and to a lower floor.
-
+Ihr könnt durch Wände und eine Ebene tiefer graben.
 %%%%
 permanent stasis
-
+permanente Stasis
 %%%%
 dig shafts and tunnels
-
+Schächte und Tunnel graben
 %%%%
 You thrive by killing the living.
-
-%%%%
-You coil in front of the altar of %s.
-
+Ihr gedeiht, indem Ihr die Lebenden tötet.
 %%%%
 You cannot wear most types of armour.
-
+Ihr könnt die meisten Arten von Rüstungen nicht tragen.
 %%%%
 almost no armour
-
-%%%%
-You curl up in front of the altar of %s.
-
-%%%%
-Yak
-
-%%%%
-
-##################
-# form-data.h
-##################
-%%%%
-stationary
-
-%%%%
-storm
-
+fast keine Rüstung
 %%%%
 
 ##################
@@ -17896,9 +17873,6 @@ Trainingsziel für {acc}%s auf %d,%d festgelegt.
 # species.cc
 ##################
 %%%%
-You kneel at the altar of %s.
-Ihr kniet vor dem Altar von {dat}%s.
-%%%%
 %s fall away.
 %s fallen weg.
 %%%%
@@ -20850,9 +20824,6 @@ Ihr verwandelt Euch in {acc}%s.
 %%%%
 Your transformation has ended.
 Eure Verwandlung ist beendet.
-%%%%
-You hover solemnly before the altar of %s.
-Ihr schwebt feierlich vor dem Altar von {dat}%s.
 %%%%
 You had blades for front paws.
 Ihr hattet Klingen für Vorderpfoten.

@@ -1321,6 +1321,10 @@ for filename in files:
                 continue
             elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
                 string = '%s' + string
+        elif filename == 'species-data.h':
+                # error condition
+                if string == 'Yak':
+                    continue
         else:
             # this should be already covered above (feature-data.h)
             if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
