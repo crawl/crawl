@@ -157,7 +157,7 @@ Circus Animal
 
 Monkey's Uncle
 
-#classical mythical animals
+# classical mythical animals
 Centaur
 
 Cockatrice
