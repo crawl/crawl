@@ -1,111 +1,258 @@
-Guide to translating and improving Crawl's text
-===============================================
+Guide to translating Crawl's text
+=================================
 
-First, you need to create an account on Transifex: https://www.transifex.net.
-Then go to the DCSS project: https://www.transifex.net/projects/p/dcss/, select
-your language, and click "Join the team". If your language isn't present, you
-can request its addition by clicking the "Request language" button. Both of
-those actions will require a maintainer or a coordinator to approve it, so it
-may take some time.
+There are three sets of text files. They are in the following directories:
 
-Text Improvement
-================
+1. crawl-ref/source/dat/descript
+2. crawl-ref/source/dat/database
+3. crawl-ref/source/dat/strings
 
-If you want to submit changes to the English text, you need to join the English
-team. "English (Australian)" is for the source strings, they are not editable.
-Once submitted text has been reviewed and approved, the source text will be
-updated, so English will have entries with identical text to the source strings.
-This is useful to differentiate text which has already been improved. It is
-possible to change it again and improve it further.
+The English files (if applicable) are in the directory itself.
 
-Review
-======
+The equivalent files for other languages go in a subdirectory named with the
+2-letter ISO code for that language (e.g. de for German, fr for French, es for
+Spanish, etc.)
 
-Each translating team has one or more coordinators. Their task is to review
-translators' contribution and approve them by checking the "reviewed" checkbox
-in the translating interface. Only reviewed text is included in the game, so
-it's important that coordinators check the reviewed checkbox when they approve a
-contribution.
+Entries in the files are separated by %%%%. The first line in each entry is the
+lookup key. Do NOT translate the key, only the rest of the text.
 
-Formatting
-==========
+Sometimes, there are placeholders for named parameters like @the_monster@.
+Do not translate the parameter name. If you wish the parameter value to be
+capitalised (for example, if you've moved it to the start of a sentence) then
+capitalise the first letter: @The_monster@.
 
-Line breaks are automatically removed when the text is imported, except for
-lines starting with empty spaces and empty lines. There's also an exception for
-lines starting with {{ or }} (to include lua code). Quotes use smart quote
-unicode characters (U+8220 and U+8221).
+You will also sometimes see embedded Lua code. In general, you don't want to
+change the code, just the text strings contained within it. Although, there
+may be cases where you need to change the logic.
 
-Quotes
-======
+Do not put whitespace at the end of lines.
 
-Don't translate quotes; instead, submit quotes in their original language. It's
-allowed to submit translated text, especially for things like biblical
-references, but don't forget to include information about the translator.
-Quotes have keys ending with ':quote'. Not all entries have a quote associated
-with it. To submit a new quote from the transifex interface, edit the
-description and add a line with :quote at the end. Then, below it, you can add
-a quote. On the next synchronization, it will be moved to its own key.
 
-Aliases
-=======
+A description of the different file sets:
 
-If you want to use the same text for several keys, you can use <key_name> to
-avoid duplicating the string. This should be done in the source files because
-key with links are not pushed to transifex.
 
-Translating online
-==================
+1. crawl-ref/source/dat/descript
+--------------------------------
 
-Transifex has a web based interface to submit translations. Simply click on a
-language, then on a resource and click "Translate Now". The web interface
-evolves quickly, so just read the online documentation if you need help.
+These hold description text for various things in the game (items, monsters, etc.).
 
-Translating offline
-===================
+By convention, the max line length is 80 characters. However, the lines will be
+concatenated by the program. Do not put whitespace at the end of lines (when the
+program joins the lines, it will add a space where the line break was.) If you
+want the program to include a line break then leave a blank line. Generally, you
+will want to follow the English text in this regard.
 
-If you're more comfortable with your text editor than with a web interface, it's
-possible to edit text locally and then push it to transifex using their command
-line client. When working offline, it's not possible to set translations to the
-reviewed state, and you won't have access to comments, suggestions, history and
-glossary features.
-First, you need to get the source of the game; instructions on how to get it
-can be found in README.txt. You also need to install the transifex client
-(http://support.transifex.com/customer/portal/topics/440187-transifex-client/articles).
-Since it's easier to overwrite other people's contributions when working
-offline, it might be safer to lock the resource from the web interface before
-you do anything else.
-Edit the txt files you want to change, then run the txc python program in utils
-to push your work to transifex. The simplest way to do that is to select
-your language and the resources you've edited (either with command line
-options or interactively), then press i to generate ini files, w to write them
-and finally u to push them to transifex.
+The translation of the quotes.txt file is optional since it's just flavour text
+(quotes from books, etc.) without any game-relevant information.
 
-Developers
-==========
 
-The transifex-crawl interface is a python script named txc in utils. When
-started without argument, it runs in interactive mode, showing a menu of
-available commands and the current state of working files. The 3 main commands
-are: t to rewrap txt files, m to merge ini files and i to update the ini files.
+2. crawl-ref/source/dat/database
+--------------------------------
 
-When you do any of those commands, the files are not immediately modified. You
-can review the changes first by looking at a diff or even editing the changes.
-When you're done, press w to write the files. For convenience, there's also
-access to a few basic git commands and transifex pull/push.
+There are a couple of different kinds of files in here.
 
-At any moment you can change the languages and resources. All commands only
-apply to what is currently selected. When there are pending changes of
-different types, you can also "select changes" which allows you to review
-independently new entries, changed ones, quotes and deleted entries.
+Some are used for random monster/item name generation. I recommend against
+translating these. They are monname.txt and rand*.txt.
 
-Here is the process to do a full sync (hotkey commands are uppercased):
-start with only the english language (txc -s).
-Pull from transifex
-Merge ini
-review changes, edit if necessary and commit
-update Ini and pUsh the source.
-If you previously pulled some english contributions (fake translations), you
-will be prompted to reset them. It is recommended to do so.
-Now, select all languages (or just all translation by restarting txc with -t)
-Pull, Merge, review and edit, Write, git Add, git Commit.
-update Ini then pUsh
+The rest contain sets of messages that are randomly selected from when some event
+happens. For example, when a monster speaks or casts a spell. Translate these.
+
+There are a lot of placeholders in here that reference other entries.
+The way they are used for English may not work for the target language, so you
+may need to re-work that aspect.
+
+
+3. crawl-ref/source/dat/strings
+--------------------------------
+
+These hold translations for English strings hardcoded in the game code.
+Therefore, there are no files for English itself, only for other languages.
+The keys are the actual English strings that are displayed to the user.
+
+If the string includes leading or trailing whitespace, it must be surrounded
+with double-quotes ("). Generally, you will want to keep any such whitespace
+the same as in the English version.
+
+printf-style placeholders (%s, etc.)
+------------------------------------
+
+In addition to placeholders like @the monster@, you will also see printf-style
+placeholders that start with a percent sign:
+%s = string (i.e. text)
+%c = single character
+%d, %i = integer
+%u = unsigned integer
+%f, %g = floating-point number
+%% = percent sign
+
+Sometimes, these placeholders will have extra qualifiers in them. For example:
+%.1f = floating-point number with one (and only one) digit after the decimal point
+%2d = integer with a field width of 2 (if it's a single-digit number, it will be padded with a leading space)
+
+There are more complicated examples as well. See here for a full explanation of the format:
+https://cplusplus.com/reference/cstdio/printf
+
+Generally, you will want to leave these placeholders alone. However, if you need
+to use them in a different order than in the English string, you must include
+the parameter number directly after the %, and followed by $, for **every**
+parameter. For example:
+
+%%%%
+%s %d times for up to %d damage each
+%2$d Mal %1$s für bis zu %3$d Schaden pro Mal
+%%%%
+
+context modifiers
+-----------------
+
+You can define specific translation contexts at will. They are specifed with
+curly braces.
+
+These can be used to handle gender and/or grammatical case. This is best
+explained by example. See below.
+
+
+Handling grammatical gender
+---------------------------
+
+Suppose I defined this adjective in French:
+
+%%%%
+"small "
+"petit "
+%%%%
+
+If I then do:
+
+%%%%
+%sgate
+%sportail
+%%%%
+
+I would get "petit portail", as required. However, if I do this:
+
+%%%%
+%sdoor
+%sporte
+%%%%
+
+I would get "petit porte", which is incorrect, since porte is feminine. It should
+be "petite porte".
+
+To get around this, I can define a specific translation for "small" in the feminine
+context, like this:
+
+%%%%
+"{f}small "
+"petite "
+%%%%
+
+(I have chosen {f} for brevity, but you could use {fem} or whatever you want.)
+
+Then for "door", I do:
+
+%%%%
+%sdoor
+{f}%sporte
+%%%%
+
+This will give "petite porte".
+
+You could define specific contexts for each gender, but I recommend making one
+of them the default by defining it without a specific context.
+
+The reason being that the program will fall back to the default context if it
+can't find a translation in the specific context or if no context is specified,
+but if it can't find a default translation, it will fall back to English.
+Getting a word with the wrong gender is probably preferable to getting a word in
+the wrong language.
+
+For example, suppose I defined both forms of the adjective with a gender context:
+
+%%%%
+"{m}small "
+"petit "
+%%%%
+%%%%
+"{f}small "
+"petite "
+%%%%
+
+And then I forget to specify the gender where they're used:
+
+%%%%
+%sdoor
+%sporte
+%%%%
+
+Then the program would look for a default, not find one, and fall back to
+English, resulting in "small porte".
+
+However, if I define the masculine form as default, like this:
+
+%%%%
+"small "
+"petit "
+%%%%
+
+Then the fallback in this case would be "petit porte", which has the wrong
+gendered adjective, but that's preferable to getting "small porte".
+
+You can choose any gender as the default one, but you must be consistent.
+
+
+Handling grammatical case
+---------------------------
+
+Suppose I had this entry for German:
+
+%%%%
+the orc
+der Ork
+%%%%
+
+This works fine in the following sentence:
+
+%%%%
+%s hits you.
+%s trifft Euch.
+%%%%
+
+It would be rendered as "Der Ork trifft Euch."
+
+However, it won't work with the following sentence:
+
+%%%%
+You hit %s.
+Ihr trefft %s.
+%%%%
+
+It would be rendered as "Ihr trefft der Ork.", which is grammatically incorrect.
+It should use the accusative case: "Ihr trefft den Ork."
+
+To get around this, we use a context modifier to define "the orc" in accusative:
+
+%%%%
+{acc}the orc
+den Ork
+%%%%
+
+(I have used {acc} here, but you can use whatever you want.)
+
+Then we define our sentence as:
+
+%%%%
+You hit %s.
+Ihr trefft {acc}%s.
+%%%%
+
+This will render a grammatically-correct sentence.
+
+As with gender, you could define a specific context for every case, but I
+recommend making one case (normally nominative) the default. This saves a lot
+of work, since the nominative is used in most instances. Also, if the program
+can't find a translation in the specific context, it will fall back to the
+default context, but if there's no translation in the default context, it falls
+back to English. Having a word in the wrong case is probably preferable to
+having a word in the wrong language.
+

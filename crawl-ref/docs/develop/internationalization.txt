@@ -1,6 +1,8 @@
 Internationalisation (i18n) Notes
 =================================
 
+Note: This is for programmers. Translators should look at translation.txt.
+
 Strings are localised by calling the localise() functions (localise.h/localise.cc).
 
 There is an overload that allows localistion of a fixed string:
