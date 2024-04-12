@@ -1025,4 +1025,3 @@ Ihr setzt Sporen auf den Altar von {dat}%s frei.
 You swirl around the altar of %s.
 Ihr wirbelt um den Altar von {dat}%s.
 %%%%
-

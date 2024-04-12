@@ -2990,4 +2990,3 @@ Die Dunkelheit flieht, wenn Ihr Euch ihr nähert.
 The shadows grow bolder once more.
 Die Schatten werden wieder mutiger.
 %%%%
-

@@ -1178,4 +1178,3 @@ Sie verlängert die Berserkerwut des Trägers beim Töten von Feinden.
 It enables you to equip an extra ring.
 Sie ermöglicht die Ausrüstung mit einem zusätzlichen Ring.
 %%%%
-
