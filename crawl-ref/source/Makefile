@@ -1230,7 +1230,7 @@ GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    cmd-name.h species-data.h aptitudes.h species-groups.h
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
-LANGS = $(filter-out en, $(notdir $(wildcard dat/translate/??)))
+LANGS = $(filter-out en, $(notdir $(wildcard dat/strings/??)))
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|$(SED) -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
@@ -1500,7 +1500,7 @@ endif
 		do mkdir -p $(datadir_fp)/dat/descript/$$LANG; \
 	done
 	for LANG in $(LANGS); \
-		do mkdir -p $(datadir_fp)/dat/translate/$$LANG; \
+		do mkdir -p $(datadir_fp)/dat/strings/$$LANG; \
 	done
 	mkdir -p $(datadir_fp)/docs/develop
 	mkdir -p $(datadir_fp)/docs/develop/levels
@@ -1522,7 +1522,7 @@ endif
 		do $(COPY) dat/descript/$$LANG/*.txt $(datadir_fp)/dat/descript/$$LANG; \
 	done
 	for LANG in $(LANGS); \
-		do $(COPY) dat/translate/$$LANG/*.txt $(datadir_fp)/dat/translate/$$LANG; \
+		do $(COPY) dat/strings/$$LANG/*.txt $(datadir_fp)/dat/strings/$$LANG; \
 	done
 	mkdir -p $(datadir_fp)/dat/dist_bones
 	$(COPY) dat/dist_bones/* $(datadir_fp)/dat/dist_bones/

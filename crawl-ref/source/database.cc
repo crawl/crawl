@@ -139,7 +139,7 @@ static TextDB AllDBs[] =
             "tutorial.txt", // tutorial mode
             }),
 
-    TextDB("translate", "translate/",
+    TextDB("strings", "strings/",
           { "*.txt" },
           false),
 };
@@ -210,7 +210,7 @@ void TextDB::init()
         translation->init();
     }
 
-    if (string(_db_name) == "translate" && !_parent)
+    if (string(_db_name) == "strings" && !_parent)
     {
         // this db has no english version
         return;
@@ -262,7 +262,7 @@ vector<string> TextDB::_expand_file_list() const
         }
     }
 
-    if (_test_mode && string(_db_name) == "translate")
+    if (_test_mode && string(_db_name) == "strings")
     {
         string test_file = string("./test/i18n/") + Options.lang_name + "/test.txt";
         test_file = canonicalise_file_separator(test_file);
