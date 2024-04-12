@@ -76,6 +76,7 @@ the same as in the English version.
 
 The following sections apply to crawl-ref/source/dat/strings only...
 
+
 printf-style placeholders (%s, etc.)
 ------------------------------------
 
@@ -104,6 +105,7 @@ parameter. For example:
 %s %d times for up to %d damage each
 %2$d Mal %1$s für bis zu %3$d Schaden pro Mal
 %%%%
+
 
 context modifiers
 -----------------
@@ -161,8 +163,26 @@ Then for "door", I do:
 
 This will give "petite porte".
 
-You could define specific contexts for each gender, but I recommend making one
-of them the default by defining it without a specific context.
+You could define specific contexts for each gender, like this:
+
+%%%%
+"{m}small "
+"petit "
+%%%%
+"{f}small "
+"petite "
+%%%%
+
+However, it's recommended to make one of them the default, by defining the
+strings without a specific context, like this:
+
+%%%%
+"small "
+"petit "
+%%%%
+"{f}small "
+"petite "
+%%%%
 
 The reason being that the program will fall back to the default context if it
 can't find a translation in the specific context or if no context is specified,
@@ -170,38 +190,7 @@ but if it can't find a default translation, it will fall back to English.
 Getting a word with the wrong gender is probably preferable to getting a word in
 the wrong language.
 
-For example, suppose I defined both forms of the adjective with a gender context:
-
-%%%%
-"{m}small "
-"petit "
-%%%%
-%%%%
-"{f}small "
-"petite "
-%%%%
-
-And then I forget to specify the gender where they're used:
-
-%%%%
-%sdoor
-%sporte
-%%%%
-
-Then the program would look for a default, not find one, and fall back to
-English, resulting in "small porte".
-
-However, if I define the masculine form as default, like this:
-
-%%%%
-"small "
-"petit "
-%%%%
-
-Then the fallback in this case would be "petit porte", which has the wrong
-gendered adjective, but that's preferable to getting "small porte".
-
-You can choose any gender as the default one, but you must be consistent.
+You can choose any gender as the default one, but you must be consistent throughout.
 
 
 Handling grammatical case
