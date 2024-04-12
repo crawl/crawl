@@ -25,13 +25,13 @@ aptitudes:
   spellcasting: -2
   conjurations: -1
   hexes: -1
-  alchemy: +1
-  fire_magic: -1
+  alchemy: 1
+  fire_magic: 1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
   invocations: -2
-  evocations: +3
+  evocations: 3
   shapeshifting: -2
   stealth: -1
 str: 8

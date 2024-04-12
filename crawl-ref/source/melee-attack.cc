@@ -1061,9 +1061,10 @@ bool melee_attack::run_attack_set()
             && attacker->pos() != target
             && !is_projected
             // WJC AOEs mayn't cleave.
-            && wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
-            && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
-            && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX
+            // Nuh Uh
+            //&& wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
+            //&& wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+            //&& wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX
             && attack_cleaves(*attacker, second_weapon))
         {
             force_cleave(*second_weapon, target);

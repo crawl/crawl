@@ -674,9 +674,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ENHANCE_ALCHEMY:
             // Maybe we should allow these for robes, too?
             // And hats? And gloves and cloaks and scarves?
-            return !extant_props[ARTP_PREVENT_SPELLCASTING]
-                   && (item.base_type == OBJ_STAVES
-                       || item.is_type(OBJ_ARMOUR, ARM_ORB));
+            return !extant_props[ARTP_PREVENT_SPELLCASTING];
+                   //&& (item.base_type == OBJ_STAVES
+                   //    || item.is_type(OBJ_ARMOUR, ARM_ORB));
 
         default:
             return true;

@@ -25,7 +25,7 @@ aptitudes:
   spellcasting: -1
   necromancy: 1
   translocations: -1
-  shapeshifting: -2
+  shapeshifting: 0
   fire_magic: -1
   ice_magic: -1
   air_magic: -1

@@ -10,9 +10,9 @@ aptitudes:
   wl: 3
   fighting: 1
   short_blades: 3
-  long_blades: -2
-  axes: -2
-  maces_and_flails: -1
+  long_blades: 0
+  axes: 0
+  maces_and_flails: 0
   polearms: -2
   staves: -1
   ranged weapons: 3
@@ -33,6 +33,8 @@ levelup_stat_frequency: 5
 mutations:
   1:
     MUT_NIGHTSTALKER: 3
+    MUT_STRONG_NOSE: 1
+    MUT_FANGS: 1
 recommended_jobs:
   - JOB_BRIGAND
   - JOB_BERSERKER
