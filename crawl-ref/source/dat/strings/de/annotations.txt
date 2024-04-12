@@ -273,9 +273,8 @@ Drak töten
 ponderous
 schwerfällig
 %%%%
-# duplicate of spell name
-#Fly
-#fliegen
+Fly
+fliegen
 %%%%
 Archmagi
 Erzmagier

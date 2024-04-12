@@ -212,17 +212,8 @@ Ihr sprengt {acc}%s
 # ability.cc
 ##################
 %%%%
-Word of Chaos
-
-%%%%
-Receive Forbidden Knowledge
-
-%%%%
-Shatter the Chains
-
-%%%%
 no special abilities
-
+keine besonderen Fähigkeiten
 %%%%
 (next: %s)
 

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# German translations - abilities
+# Translations for abilities
 # NOTE: The abilities menu will truncate these to 32 characters if they are longer than that
 #
 ###############################################################################
@@ -8,11 +8,20 @@
 No ability
 Keine Fähigkeit
 %%%%
+Blink
+Blinzeln
+%%%%
+End Transformation
+Verwandlung beenden
+%%%%
+
+# Naga breath weapon
+%%%%
 Spit Poison
 Gift spucken
 %%%%
-Blink
-Blinzeln
+
+# Draconian breath weapons
 %%%%
 Breathe Fire
 Feuer spucken
@@ -38,6 +47,9 @@ Dampf spucken
 Breathe Acid
 Säure spucken
 %%%%
+
+# Vampire
+%%%%
 Bat Form
 Fledermaus-Form
 %%%%
@@ -47,17 +59,17 @@ Ausbluten
 Revivify
 Wiederbeleben
 %%%%
-Fly
-Fliegen
-%%%%
-Stop Flying
-Fliegen stoppen
+
+# Demonspawn
 %%%%
 Hurl Damnation
 Verdammnis schleudern
 %%%%
-Cancel Portal Projectile
-Portal-Geschoss abbrechen
+Word of Chaos
+Wort des Chaos
+%%%%
+
+# Formicid
 %%%%
 Dig
 Graben
@@ -65,12 +77,19 @@ Graben
 Shaft Self
 Selbst schächten
 %%%%
+
+# Barachi
+%%%%
 Hop
 Hüpfen
+%%%%
+
+# Palentonga
 %%%%
 Rolling Charge
 Rollender Ansturm
 %%%%
+
 # NOTE: "Evoke" abilities come from items and use the Evocations skill,
 # so we need to distinguish between these and similar god-given or intrinsic abilities
 # Example: "Evoke Berserk Rage" (item ability) vs "Berserk" (god-given ability)
@@ -102,8 +121,8 @@ Rattenhaut evozieren
 Evoke Thunderclouds
 Gewitterwolken evozieren
 %%%%
-End Transformation
-Verwandlung beenden
+
+# Zin
 %%%%
 Recite
 Rezitieren
@@ -120,6 +139,9 @@ Heiligtum
 Donate Gold
 Gold spenden
 %%%%
+
+# The Shining One
+%%%%
 Divine Shield
 Göttliches Schutzschild
 %%%%
@@ -132,17 +154,23 @@ Göttlichen Krieger herbeirufen
 Brand Weapon With Holy Wrath
 Waffe mit heiligem Zorn segnen
 %%%%
+
+# Kiku
+%%%%
 Receive Corpses
 Leichen empfangen
 %%%%
 Torment
 Quälen
 %%%%
-Receive Necronomicon
-Necronomicon erhalten
+Receive Forbidden Knowledge
+Verbotenes Wissen erhalten
 %%%%
 Brand Weapon With Pain
 Waffe mit Schmerz branden
+%%%%
+
+# Yred
 %%%%
 Injury Mirror
 Verletzungs-Spiegel
@@ -162,11 +190,17 @@ Leben entziehen
 Enslave Soul
 Seele versklaven
 %%%%
+
+# Okawaru
+%%%%
 Heroism
 Heldentum
 %%%%
 Finesse
 Finesse
+%%%%
+
+# Makhleb
 %%%%
 Minor Destruction
 Geringe Zerstörung
@@ -180,6 +214,9 @@ Große Zerstörung
 Greater Servant of Makhleb
 Großerer Diener Makhlebs
 %%%%
+
+# Sif Muna
+%%%%
 Channel Magic
 Magie leiten
 %%%%
@@ -189,7 +226,9 @@ Zauber vergessen
 Divine Exegesis
 Göttliche Exegese
 %%%%
-# Go berserk (Trog ability)
+
+# Trog
+%%%%
 Berserk
 Berserkerwut
 %%%%
@@ -198,6 +237,9 @@ Trogs Hand
 %%%%
 Brothers in Arms
 Waffenbrüder
+%%%%
+
+# Elyvilon
 %%%%
 Divine Protection
 Göttlicher Schutz
@@ -216,6 +258,9 @@ Größere Heilung
 %%%%
 Divine Vigour
 Göttliche Lebenskraft
+%%%%
+
+# Lugonu
 %%%%
 Depart the Abyss
 Den Abgrund verlassen
@@ -260,6 +305,10 @@ Stack Five
 Fünf vorsortieren
 %%%%
 
+# Beogh
+%%%%
+Convert to Beogh
+Zu Beogh konvertieren
 %%%%
 Smiting
 Zerschlagen
@@ -273,6 +322,9 @@ Benanntem Anhänger Gegenstand geben
 Resurrection
 Auferstehung
 %%%%
+
+# Jiyva
+%%%%
 Request Jelly
 Gelee anfordern
 %%%%
@@ -282,6 +334,9 @@ Verschleimen
 %%%%
 Cure Bad Mutation
 Schlimme Mutation heilen
+%%%%
+
+# Fedhas
 %%%%
 Wall of Briars
 Dornbusch-Mauer
@@ -295,6 +350,9 @@ Overgrow
 Grow Oklob
 Oklob wachsen lassen
 %%%%
+
+# Cheibriados
+%%%%
 Bend Time
 Zeit verbiegen
 %%%%
@@ -307,23 +365,26 @@ Latschen
 Step From Time
 Aus der Zeit treten
 %%%%
+
+# Ashenzari
+%%%%
 Curse Item
 Gegenstand verfluchen
 %%%%
-Scrying
-Wahrsagen
+Shatter the Chains
+Die Ketten zerreißen
 %%%%
-Transfer Knowledge
-Wissen übertragen
-%%%%
-End Transfer Knowledge
-Wissenstransfer beenden
+
+# Dithmenos
 %%%%
 Shadow Step
 Schattenschritt
 %%%%
 Shadow Form
 Schattenform
+%%%%
+
+# Ru
 %%%%
 Draw Out Power
 Macht entziehen
@@ -389,6 +450,9 @@ Resistanz opfern
 Reject Sacrifices
 Opferungen ablehnen
 %%%%
+
+# Gozag
+%%%%
 Potion Petition
 Zaubertrank erbitten
 %%%%
@@ -397,6 +461,9 @@ Händler rufen
 %%%%
 Bribe Branch
 Zweig bestechen
+%%%%
+
+# Qazlal
 %%%%
 Upheaval
 Umwälzung
@@ -407,8 +474,8 @@ Elementare Kraft
 Disaster Area
 Katastrophengebiet
 %%%%
-Device Surge
-Geräteschwemme
+
+# Uskayaw
 %%%%
 Stomp
 Stampfen
@@ -418,6 +485,9 @@ Linienpass
 %%%%
 Grand Finale
 Großes Finale
+%%%%
+
+# Hepliaklqana
 %%%%
 Recall Ancestor
 Ahne zurückrufen
@@ -440,6 +510,9 @@ Ahne-Leben: Verzauberer
 Ancestor Identity
 Ahne-Identität
 %%%%
+
+# Wu Jian
+%%%%
 Serpent's Lash
 Schlangenpeitsche
 %%%%
@@ -455,12 +528,12 @@ Wirbelwind
 Wall Jump
 Wandsprung
 %%%%
+
+%%%%
 Stop Recall
 Rückruf stoppen
 %%%%
 Renounce Religion
 Religion abschwören
 %%%%
-Convert to Beogh
-Zu Beogh konvertieren
-%%%%
+

@@ -555,7 +555,7 @@ Ihr bewegt Euch sehr langsam.
 %%%%
 
 # Flying
-# NOTE: have to disambiguate from spell called Fly
+# NOTE: have to disambiguate from item annotation Fly
 %%%%
 {status}Fly
 Fliegen
