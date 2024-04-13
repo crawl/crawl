@@ -66,7 +66,7 @@ Evokation
 %%%%
 # calling on a god for help
 Invocations
-Anrufung
+Anrufungen
 %%%%
 Spellcasting
 Zaubern

@@ -766,10 +766,9 @@ static const int VAMPIRE_BAT_FORM_STAT_DRAIN = 2;
 static string _ashenzari_curse_text()
 {
     const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
-    return "(Boost: "
-           + comma_separated_fn(curses.begin(), curses.end(),
-                                curse_abbr, "/", "/")
-           + ")";
+    return localise("(Boost: %s)",
+                    comma_separated_fn(curses.begin(), curses.end(),
+                                       curse_abbr, "/", "/"));
 }
 
 const string make_cost_description(ability_type ability)
@@ -893,7 +892,7 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::sacrifice)
     {
         ret += localise(", ");
-        const string prefix = "Sacrifice "; // @noloc
+        const string prefix = "Sacrifice ";
         ret += string(ability_name(ability)).substr(prefix.size());
         ret += ru_sac_text(ability);
     }
@@ -933,7 +932,7 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\n";
-        ret << left << setw(7) << localise("MP");
+        ret << localise("MP");
         ret << ": ";
         ret << abil.get_mp_cost();
     }
@@ -941,7 +940,7 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\n";
-        ret << left << setw(7) << localise("HP");
+        ret << localise("HP");
         ret << ": ";
         ret << abil.get_hp_cost();
     }
@@ -950,8 +949,8 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\n";
-        ret << left << setw(7) << localise("Piety");
-        ret << ": ";
+        ret << localise("Piety");
+        ret << localise(": ");
         if (abil.flags & abflag::piety)
             ret << localise("variable");
         else
@@ -965,7 +964,7 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\n";
-        ret << left << setw(7) << localise("Gold");
+        ret << localise("Gold");
         ret << ": ";
         int gold_amount = get_gold_cost(ability);
         if (gold_amount)
@@ -999,7 +998,7 @@ static const string _detailed_cost_description(ability_type ability)
     }
 
     if (abil.flags & abflag::pain)
-        ret << "\nUsing this ability will hurt you.";
+        ret << localise("\nUsing this ability will hurt you.");
 
     if (abil.flags & abflag::exhaustion)
     {
@@ -1221,6 +1220,7 @@ static string _sacrifice_desc(const ability_type ability)
     ASSERT(you.props.exists(sac_vec_key));
     const CrawlVector &sacrifice_muts = you.props[sac_vec_key].get_vector();
     return "\n"
+            // @locnote: %s is a mutation description like "you are clumsy"
             + localise("After this sacrifice, you will find that %s.",
                        comma_separated_fn(sacrifice_muts.begin(),
                                           sacrifice_muts.end(),
@@ -1560,9 +1560,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
             {
-                mprf("You cannot speak a word of chaos while %s.",
-                     you.duration[DUR_WATER_HOLD] ? "unable to breathe"
-                                                  : "silenced");
+                if (you.duration[DUR_WATER_HOLD])
+                    mpr("You cannot speak a word of chaos while unable to breath.");
+                else
+                    mpr("You cannot speak a word of chaos while silenced.");
             }
             return false;
         }
@@ -1808,8 +1809,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
             {
-                mprf("%s is still trapped in memory!",
-                     hepliaklqana_ally_name().c_str());
+                string msg = localise("@Ancestor@ is still trapped in memory!");
+                msg = replace_keys(msg, {{"Ancestor", hepliaklqana_ally_name()}});
+                mpr_nolocalise(msg);
             }
             return false;
         }

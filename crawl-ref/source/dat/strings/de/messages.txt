@@ -129,137 +129,51 @@ Ihr sprengt {acc}%s
 no special abilities
 keine besonderen Fähigkeiten
 %%%%
-(next: %s)
-
-%%%%
-(%d in deck)
-
-%%%%
-"(Boost: "
-
-%%%%
-%d MP
-
-%%%%
-Permanent MP (%d left)
-
-%%%%
-Stat Drain (%d each)
-
-%%%%
-Frailty
-
-%%%%
-%d HP
-
-%%%%
-Piety
-
-%%%%
-Breath
-Atem
-%%%%
-Delay
-
-%%%%
-Exhaustion
-
-%%%%
-Instant
-
-%%%%
-Max HP drain
-
-%%%%
-Cursed item
-
-%%%%
-Free
-
-%%%%
-Gold
-
-%%%%
-A Card
-
-%%%%
-None
-
-%%%%
-extremely large
-
-%%%%
-large
-
-%%%%
-moderate
-
-%%%%
-small
-
-%%%%
-"This ability costs: "
-
-%%%%
-variable
-
-%%%%
-free
-
-%%%%
-One cursed item
-
-%%%%
-nothing.
-
-%%%%
 You must catch your breath between uses of this ability.
-
+Zwischen den Einsätzen dieser Fähigkeit müsst Ihr zu Atem kommen.
 %%%%
 This ability takes some time before being effective.
-
+Es dauert einige Zeit, bis diese Fähigkeit wirksam wird.
 %%%%
 Using this ability will hurt you.
-
+Der Einsatz dieser Fähigkeit wird Euch schaden.
 %%%%
 This ability causes exhaustion, and cannot be used when exhausted.
-
+Diese Fähigkeit verursacht Erschöpfung und kann nicht eingesetzt werden, wenn Ihr erschöpft seid.
 %%%%
 This ability is instantaneous.
-
+Diese Fähigkeit tritt sofort ein.
 %%%%
 You can use this ability even if confused.
-
+Ihr könnt diese Fähigkeit auch einsetzen, wenn Ihr verwirrt seid.
 %%%%
 This ability will temporarily drain your maximum hit points when used, even unsuccessfully.
-
+Diese Fähigkeit entzieht Euch vorübergehend die maximalen Trefferpunkte, wenn sie eingesetzt wird, auch wenn dies erfolglos bleibt.
 %%%%
 This ability will temporarily drain your maximum hit points when used.
-
+Diese Fähigkeit entzieht Euch vorübergehend die maximalen Trefferpunkte, wenn Ihr sie einsetzt.
 %%%%
 This ability has a chance of reducing your maximum magic capacity when used.
-
+Diese Fähigkeit hat eine Chance, Eure maximale Magiekapazität zu verringern, wenn sie eingesetzt wird.
 %%%%
 If you bind an item with this curse Ashenzari will enhance the following skills:
-
+Wenn Ihr einen Gegenstand mit diesem Fluch bindet, verbessert Ashenzari die folgenden Fertigkeiten:
 %%%%
 If you make this sacrifice, your powers granted by Ru will become stronger in proportion to the value of the sacrifice, and you may gain new powers as well.
-
+Wenn Ihr dieses Opfer erbringt, werden Eure von Ru verliehenen Kräfte proportional zum Wert des Opfers stärker, und Ihr könnt auch neue Kräfte erhalten.
 %%%%
 Sacrifices cannot be taken back.
-
+Opfer können nicht zurückgenommen werden.
 %%%%
+# note: %s is a mutation description like "you are clumsy"
 After this sacrifice, you will find that %s.
-
+Effekt dieses Opfers: %s.
 %%%%
 "Draw a card from %s; "
 "Eine Karte aus {dat}%s ziehen; "
 %%%%
-" ability"
-
-%%%%
 No description found.
-
+Keine Beschreibung gefunden.
 %%%%
 %s frowns upon the use of this ability.
 %s missbilligt den Gebrauch dieser Fähigkeit.
@@ -277,7 +191,7 @@ Sorry, you're not good enough to have a special ability.
 Sorry, Ihr seid nicht gut genug, um eine besondere Fähigkeit zu haben.
 %%%%
 "Use which ability? (? or * to list) "
-
+"Welche Fähigkeit verwenden? (? oder * aufzulisten) "
 %%%%
 You can't do that.
 Das könnt Ihr nicht.
@@ -289,7 +203,7 @@ Your legs are too worn out to hop.
 Ihre Beine sind zu abgenutzt, zu hüpfen.
 %%%%
 You aren't ready to blinkbolt again yet.
-
+Ihr seid noch nicht bereit, Blinzelbolzen wieder zu verwenden.
 %%%%
 Turning back right now would cause you to burn!
 Wenn Ihr jetzt unverwandeln würdet, würdet Ihr brennen!
@@ -298,7 +212,7 @@ Turning back right now would cause you to drown!
 Wenn Ihr jetzt unverwandeln würdet, würdet Ihr ertrinken!
 %%%%
 Becoming bloodless right now would cause you to burn!
-Wenn Ihr jetzt blutlos werden würdet, würdet Ihr brenned!
+Wenn Ihr jetzt blutlos werden würdet, würdet Ihr brennen!
 %%%%
 Becoming bloodless right now would cause you to drown!
 Wenn Ihr jetzt blutlos werden würdet, würdet Ihr ertrinken!
@@ -310,16 +224,16 @@ Becoming alive right now would cause you to drown!
 Wenn Ihr jetzt lebendig werden würdet, würdet Ihr ertrinken!
 %%%%
 You cannot call out to %s while unable to breath.
-Ihr könnt {acc}%s nicht anrufen, während Ihr nicht atmen könnt.
+Ihr könnt {acc}%s nicht anrufen, solange Ihr nicht atmen könnt.
 %%%%
 You cannot call out to %s while silenced.
-Ihr könnt {acc}%s nicht anrufen, während Ihr schweigend seid.
+Ihr könnt {acc}%s nicht anrufen, solange Ihr schweigend seid.
 %%%%
-You cannot speak a word of chaos while %s.
-
+You cannot speak a word of chaos while unable to breath.
+Ihr könnt kein Wort des Chaos sprechen, solange Ihr nicht atmen könnt.
 %%%%
-unable to breathe
-
+You cannot speak a word of chaos while silenced.
+Ihr könnt kein Wort des Chaos sprechen, solange Ihr schweigend sind.
 %%%%
 That deck is empty!
 Der Stapel ist leer!
@@ -357,8 +271,8 @@ Ihr seid bereits unsichtbar!
 You don't have enough experience to sacrifice.
 Ihr habt nicht genügend Erfahrung, zu opfern.
 %%%%
-%s is still trapped in memory!
-%s wird immer noch im Gedächtnis gefangen!
+@Ancestor@ is still trapped in memory!
+@Ancestor@ ist immer noch im Gedächtnis gefangen!
 %%%%
 You are too terrified to wall jump!
 Ihr habt zu viel Angst, gegen die Wand zu springen!
@@ -376,58 +290,58 @@ You fail to use your ability.
 Ihr versagt, Eure Fähigkeit einzusetzen.
 %%%%
 "This will reduce your strength and intelligence to zero. "
-
+"Dies wird Eure Stärke und Intelligenz auf Null reduzieren. "
 %%%%
 "This will reduce your strength to zero. "
-
+"Dies wird Eure Stärke auf Null reduzieren. "
 %%%%
 "This will reduce your intelligence to zero. "
-
+"Dies wird Eure Intelligenz auf Null reduzieren. "
 %%%%
 "This will reduce your dexterity to zero once you untransform. "
-
+"Dadurch wird Eure Geschicklichkeit auf Null reduziert, sobald Ihr Euch zurückverwandelt. "
 %%%%
 Continue?
 Weitermachen?
 %%%%
 Your magical essence is drained by the effort!
-Eure magische Essenz wird durch die Anstrengung erschöpft!
+Eure magische Essenz wird durch die Anstrengung verzehrt!
 %%%%
 You extend your mandibles.
-Ihr verlängert Eure Mandibeln.
+Ihr fährt Eure Mandibeln aus.
 %%%%
 You retract your mandibles.
 Ihr zieht Eure Mandibeln zurück.
 %%%%
 Are you sure you want to shaft yourself?
-
+Seid Ihr sicher, dass Ihr Euch selbst schächten wollt?
 %%%%
 You spit a glob of acid.
-
+Ihr spuckt einen Klumpen Säure.
 %%%%
 You breathe a blast of fire.
-
+Ihr spuckt einen Feuerstoß aus.
 %%%%
 You breathe a blast of fire!
-
+Ihr spuckt einen Feuerstoß aus!
 %%%%
 You exhale a wave of freezing cold.
-
+Ihr atmet eine Welle eisiger Kälte aus.
 %%%%
 You exhale a blast of poison gas.
-
+Ihr atmet einen Schwall von Giftgas aus.
 %%%%
 You breathe a wild blast of lightning!
 Ihr spuckt einen wilden Blitzschlag!
 %%%%
 You breathe a bolt of dispelling energy.
-
+Ihr spuckt einen Stoß vertreibender Energie.
 %%%%
 You exhale a blast of scalding steam.
-
+Ihr atmet einen Stoß brühenden Dampfes aus.
 %%%%
 You exhale a blast of noxious fumes.
-
+Ihr atmet einen Stoß schädlicher Dämpfe aus.
 %%%%
 The folds of your robe billow into a mighty storm.
 Die Falten Eures Gewandes bauschen sich zu einem mächtigen Sturm.
@@ -448,16 +362,16 @@ You cannot imprison a law-abiding creature!
 Ihr könnt keine gesetzestreue Kreatur einsperren!
 %%%%
 %s will bless one of your weapons.
-
+%s wird eine Eurer Waffen segnen.
 %%%%
 There are no corpses to sacrifice!
 Es gibt keine Leichen zu opfern!
 %%%%
 %s torments the living!
-
+%s quält die Lebenden!
 %%%%
 %s will bloody one of your weapons with pain.
-
+%s wird eine Eurer Waffen mit Schmerz erfüllen.
 %%%%
 Another wave of unholy energy enters you.
 Noch eine Welle unheiliger Energie tritt in Euch ein.
@@ -475,28 +389,28 @@ Your soul already belongs to Yredelemnul.
 Eure Seele gehört schon zu Yredelemnul.
 %%%%
 %s's clone doesn't have a soul to enslave!
-
+Der Klon von {dat}%s hat keine Seele zum Versklaven!
 %%%%
 You see nothing there you can enslave the soul of!
 Ihr seht dort nichts, von dem Ihr die Seele versklaven könnt!
 %%%%
 %s's soul is too badly injured.
-
+Die Seele {gen}%s ist zu schwer verletzt.
 %%%%
 %s's soul is now ripe for the taking.
-
+Die Seele {gen}%s ist jetzt reif für die Übernahme.
 %%%%
 You feel more confident with your borrowed prowess.
-
+Ihr habt mehr Selbstvertrauen in Eure geliehenen Fähigkeiten.
 %%%%
 You gain the combat prowess of a mighty hero.
-
+Ihr erhaltet die Kampffähigkeit eines mächtigen Helden.
 %%%%
 %s gets new energy.
-
+%s erhält neue Energie.
 %%%%
 %s get new energy.
-
+%s erhalten neue Energie.
 %%%%
 You can now deal lightning-fast blows.
 Ihr könnt jetzt blitzschnelle Schläge ausführen.
@@ -514,7 +428,7 @@ You cannot banish yourself!
 Ihr könnt Euch selbst nicht verbannen!
 %%%%
 %s will brand one of your weapons with the corruption of the Abyss.
-
+%s wird eine eurer Waffen mit der Verderbnis des Abgrunds erfüllen.
 %%%%
 You stop recalling your allies.
 Ihr hört auf, Eure Verbündeten rückzurufen.
@@ -541,22 +455,22 @@ You are too exhausted to lash out.
 Ihr seid zu erschöpft auszuschlagen.
 %%%%
 Your muscles tense, ready for explosive movement...
-Eure Muskeln wird angespannt, bereit für explosive Bewegungen...
+Eure Muskeln wird angespannt, bereit für explosive Bewegung...
 %%%%
 You are already engulfed in a heavenly storm!
 Ihr seid schon in einen himmlischen Sturm versunken!
 %%%%
 Really renounce your faith, foregoing its fabulous benefits?
-
+Eurem Glauben wirklich abschwören und auf seine fabelhaften Vorteile verzichten?
 %%%%
 Are you sure?
-
+Seid Ihr sicher?
 %%%%
 Sorry, you can't do that.
 Sorry, das könnt Ihr nicht.
 %%%%
 Ability - do what?
-
+Welche Fähigkeit anwenden?
 %%%%
 Cost
 Preis
@@ -565,13 +479,10 @@ Failure
 Versagen
 %%%%
 Ability - describe what?
-
+Welche Fähigkeit beschreiben?
 %%%%
 Press '<w>!</w>' or '<w>?</w>' to toggle between ability selection and description.
-
-%%%%
-%d%% hostile
-%d%% feindlich
+'<w>!</w>' oder '<w>?</w>' drücken um zwischen Anwendung und Beschreibung zu schalten
 %%%%
 
 ##################
@@ -2386,9 +2297,6 @@ It is only found in Nemelex Xobeh's deck of punishment.
 It is normally not part of any deck.
 
 %%%%
-" card"
-
-%%%%
 "It currently has %d cards "
 
 %%%%
@@ -2924,9 +2832,6 @@ not bribed
 
 %%%%
 %s does not appreciate abandonment, and will call down fearful punishments on disloyal followers!
-
-%%%%
-" wrath"
 
 %%%%
 %s's wrath lasts for a relatively long duration.
@@ -3584,22 +3489,13 @@ it flickers and crackles with electricity
 it is covered in dense fur and muscle
 
 %%%%
-" cloud"
-
-%%%%
 A cloud of %s.
 
 %%%%
 Awoken.
 
 %%%%
-awoken
-
-%%%%
 A covering of ice.
-
-%%%%
-ice covered
 
 %%%%
 A halo.
@@ -3608,19 +3504,10 @@ A halo.
 An umbra.
 
 %%%%
-umbraed
-
-%%%%
 Liquefied ground.
 
 %%%%
-liquefied
-
-%%%%
 Translocational energy.
-
-%%%%
-disjunction haloed
 
 %%%%
 "You have not yet explored it and cannot tell "
@@ -3633,15 +3520,6 @@ You can view the location it leads to by examining it with <w>%s</w> and pressin
 
 %%%%
 (Pray here with <w>'%s'</w> to learn more.)
-
-%%%%
-tree burning
-
-%%%%
-mangrove burning
-
-%%%%
-demonic tree burning
 
 %%%%
 It can be dug through.
@@ -3790,9 +3668,6 @@ You cannot memorise this spell because %s
 %%%%
 This spell would have no effect right now because %s
 Dieser Zauber würde im Moment keine Wirkung haben, denn %s
-%%%%
-" spell"
-
 %%%%
 This spell has no description. Casting it may therefore be unwise. Please file a bug report.
 
@@ -6252,19 +6127,19 @@ Die Natur wirbelt heftig um Euch herum!
 %s glaubt, dass Ihr bereit seid, ein neues Opfer zu bringen.
 %%%%
 This is an incredible sacrifice.
-Dies ist ein unglaubliches Opfer.
+Das ist ein unglaubliches Opfer.
 %%%%
 This is a major sacrifice.
-Dies ist ein großes Opfer.
+Das ist ein großes Opfer.
 %%%%
 This is a significant sacrifice.
-Dies ist ein bedeutendes Opfer.
+Das ist ein bedeutendes Opfer.
 %%%%
 This is a modest sacrifice.
-Dies ist ein bescheidenes Opfer.
+Das ist ein bescheidenes Opfer.
 %%%%
 This is a trivial sacrifice.
-Dies ist ein unbedeutendes Opfer.
+Das ist ein unbedeutendes Opfer.
 %%%%
 Do you really want to make this sacrifice?
 Wollt Ihr dieses Opfer wirklich bringen?

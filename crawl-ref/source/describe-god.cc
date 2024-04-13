@@ -710,7 +710,7 @@ static string _get_god_misc_info(god_type which_god)
 static formatted_string _detailed_god_description(god_type which_god)
 {
     formatted_string desc;
-    _add_par(desc, getLongDescription(god_name(which_god) + " powers")); // @noloc
+    _add_par(desc, getLongDescription(god_name(which_god) + " powers"));
     _add_par(desc, get_god_likes(which_god));
     _add_par(desc, _get_god_misc_info(which_god));
     return desc;

@@ -1102,6 +1102,8 @@ for filename in files:
                 continue
             if re.search(r'\bprops\.erase *\(', line):
                 continue
+            if 'getLongDescription' in line:
+                continue
             if '_print_converted_orc_speech' in line:
                 continue
             if '_get_xom_speech' in line or 'XOM_SPEECH' in line:
@@ -1230,7 +1232,13 @@ for filename in files:
                 strings.append('# section: ' + section)
                 last_section = section
 
-            if filename == 'item-name.cc':
+            if filename == 'ability.cc':
+                if string.startswith('Sacrifice '):
+                    if string == 'Sacrifice ':
+                        continue
+                    # also used with 'Sacrifice ' removed for the cost
+                    strings.append(string.replace('Sacrifice ', ''))
+            elif filename == 'item-name.cc':
                 special_handling_for_item_name_cc(section, line, string, strings)
                 continue
             elif filename == 'mon-util.cc' and section in ['ugly_colour_names', 'drac_colour_names']:
@@ -1322,9 +1330,9 @@ for filename in files:
             elif string not in ['dart', 'stone', 'arrow', 'bolt', 'large rock', 'sling bullet', 'throwing net']:
                 string = '%s' + string
         elif filename == 'species-data.h':
-                # error condition
-                if string == 'Yak':
-                    continue
+            # error condition
+            if string == 'Yak':
+                continue
         else:
             # this should be already covered above (feature-data.h)
             if string == 'runed door' and '"runed "' in output and '%sdoor' in output:

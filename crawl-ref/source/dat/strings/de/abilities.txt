@@ -4,6 +4,12 @@
 # NOTE: The abilities menu will truncate these to 32 characters if they are longer than that
 #
 ###############################################################################
+
+#################################
+# Ability names
+# Note: max chars in ability menu column is 30
+#################################
+
 %%%%
 No ability
 Keine Fähigkeit
@@ -214,6 +220,9 @@ Große Zerstörung
 Greater Servant of Makhleb
 Großerer Diener Makhlebs
 %%%%
+%d%% hostile
+%d%% feindlich
+%%%%
 
 # Sif Muna
 %%%%
@@ -278,7 +287,7 @@ Enter the Abyss
 Den Abgrund betreten
 %%%%
 Brand Weapon With Distortion
-Waffe mit Verzerrung brandmarken
+Waffe mit Verzerrung marken
 %%%%
 
 # Nemelex card/deck abilities
@@ -304,6 +313,12 @@ Vier ausgeben
 Stack Five
 Fünf vorsortieren
 %%%%
+(next: %s)
+(Nächste: %s)
+%%%%
+(%d in deck)
+(%d im Deck)
+%%%%
 
 # Beogh
 %%%%
@@ -314,10 +329,10 @@ Smiting
 Zerschlagen
 %%%%
 Recall Orcish Followers
-Orkische Gefolgsleute zurückrufen
+Orkische Anhänger zurückrufen
 %%%%
 Give Item to Named Follower
-Benanntem Anhänger Gegenstand geben
+Anhänger Gegenstand geben
 %%%%
 Resurrection
 Auferstehung
@@ -373,6 +388,9 @@ Gegenstand verfluchen
 %%%%
 Shatter the Chains
 Die Ketten zerreißen
+%%%%
+(Boost: %s)
+(Erhöhen: %s)
 %%%%
 
 # Dithmenos
@@ -535,4 +553,155 @@ Rückruf stoppen
 %%%%
 Renounce Religion
 Religion abschwören
+%%%%
+
+#################################
+# Ability costs
+#################################
+
+# these go in the "COST" column on the ability screen
+%%%%
+%d MP
+%d MP
+%%%%
+Permanent MP (%d left)
+Permanente MP (%d übrig)
+%%%%
+Stat Drain (%d each)
+Attrib.-Verzehrung (jedes %d)
+%%%%
+Frailty
+Gebrechlichkeit
+%%%%
+%d HP
+%d TP
+%%%%
+Piety
+Frommigkeit
+%%%%
+Breath
+Atem
+%%%%
+Delay
+Verzögerung
+%%%%
+# duplicate of spell name
+#Pain
+%%%%
+Exhaustion
+Erschöpfung
+%%%%
+Instant
+Sofortig
+%%%%
+Max HP drain
+Max TP Verzehren
+%%%%
+Cursed item
+Verfluchter Gegenstand
+%%%%
+Gold
+Gold
+%%%%
+A Card
+Eine Karte
+%%%%
+None
+Nichts
+%%%%
+Free
+Kostenlos
+%%%%
+Purity
+Reinheit
+%%%%
+Words
+Worte
+%%%%
+Drink
+Trinken
+%%%%
+Essence
+Essenz
+%%%%
+Health
+Gesundheit
+%%%%
+Artifice
+Verwendung
+%%%%
+Love
+Liebe
+%%%%
+Courage
+Mut
+%%%%
+Arcana
+Arkana
+%%%%
+Nimbleness
+Flinkheit
+%%%%
+Durability
+Ausdauer
+%%%%
+a Hand
+eine Hand
+%%%%
+Experience
+Erfahrung
+%%%%
+an Eye
+ein Auge
+%%%%
+Resistance
+Resistenz
+%%%%
+
+# detailed description screen for individual ability
+# this uses the string above, with some substitutions and additions
+
+%%%%
+"This ability costs: "
+"Diese Fähigkeit kostet: "
+%%%%
+
+# substitutions
+%%%%
+nothing.
+nichts.
+%%%%
+One cursed item
+Einen verfluchten Gegenstand
+%%%%
+
+# additions...
+
+# piety amounts
+# Used like this "Piety: <amount>"
+%%%%
+extremely large
+extrem viel
+%%%%
+large
+viel
+%%%%
+moderate
+moderat
+%%%%
+small
+wenig
+%%%%
+
+# gold amount
+# Used like this: "Gold: <amount>
+%%%%
+free
+kostenlos
+%%%%
+
+# used for both piety and gold
+%%%%
+variable
+variabel
 %%%%
