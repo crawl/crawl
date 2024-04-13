@@ -6557,7 +6557,7 @@ void player::refresh_rampage_hints()
   **/
 int player::gdr_perc() const
 {
-    return max(0, (int)(16 * sqrt(sqrt(you.armour_class()))));
+    return (int)(16 * sqrt(sqrt(max(0, you.armour_class()))));
 }
 
 /**
