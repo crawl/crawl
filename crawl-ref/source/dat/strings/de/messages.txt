@@ -20030,3 +20030,183 @@ Xom belebt Euch wieder!
 You feel more catlike.
 Ihr fühlt Euch mehr wie eine Katze.
 %%%%
+
+##################
+# dat/clua/autofight.lua
+##################
+%%%%
+Failed to move towards target.
+
+%%%%
+You are held in a net!
+
+%%%%
+No target in view!
+
+%%%%
+No reachable target in view!
+
+%%%%
+No target in range!
+
+%%%%
+No spell in slot @slot@!
+
+%%%%
+Enabling autothrow.
+
+%%%%
+Disabling autothrow.
+
+%%%%
+
+##################
+# dat/clua/automagic.lua
+##################
+%%%%
+You don't have enough magic to cast @spell_name@!
+
+%%%%
+You are too depleted to cast spells recklessly!
+
+%%%%
+Which spell slot to assign to automagic? (Enter to disable, Esc to cancel)
+
+%%%%
+Cancelled.
+
+%%%%
+Deactivated automagic.
+
+%%%%
+Invalid spell slot.
+
+%%%%
+" enabled,"
+
+%%%%
+no spell currently
+
+%%%%
+Automagic@message@ will cast spell in slot @slot@ (@spell_name@).
+
+%%%%
+
+##################
+# dat/clua/stash.lua
+##################
+%%%%
+two-handed
+
+%%%%
+one-handed
+
+%%%%
+death
+
+%%%%
+rN+
+
+%%%%
+Regen+
+
+%%%%
+rSteam
+
+%%%%
+quicksilver
+
+%%%%
+Will+
+
+%%%%
+swamp
+
+%%%%
+rF++ rC-
+
+%%%%
+rC++ rF-
+
+%%%%
+pearl
+
+%%%%
+Stlth++++
+
+%%%%
+rF+ rC+ rPois
+
+%%%%
+%w+
+
+%%%%
+willpower
+
+%%%%
+mutation
+
+%%%%
+
+##################
+# dat/dlua/lm_timed.lua
+##################
+%%%%
+The walls and floor vibrate strangely for a moment.
+
+%%%%
+
+##################
+# dat/dlua/lm_tmsg.lua
+##################
+%%%%
+You hear the @adverb@@verb@ of @noisemaker@.
+
+%%%%
+
+##################
+# dat/dlua/lm_trove.lua
+##################
+%%%%
+This portal requires the presence of @item_name@ to function.
+
+%%%%
+This portal needs @item_name@ to function.
+
+%%%%
+The portal is engraved with runes symbolizing the primacy of the material over the divine. Those who enter it may find riches, but when they return, they will find that whatever gods they held dear have forgotten them in their absence.
+
+%%%%
+lose all piety
+
+%%%%
+The portal requires @item_name@ for entry.
+
+%%%%
+Entrants to this portal lose all standing with their god.
+
+%%%%
+The portal draws power from the presence of the item@plural@ and buzzes to life!
+
+%%%%
+You don't have @item_name@ with you.
+
+%%%%
+You don't have the item@plural@ to give! Perhaps you haven't completely identified the item yet?
+
+%%%%
+You must unequip the item@plural@ first!
+
+%%%%
+The portal accepts the item@plural@ and buzzes to life!
+
+%%%%
+The portal is unable to unshackle you from Ashenzari's curse; you must abandon your deity entirely to enter!
+
+%%%%
+This portal proclaims the superiority of the material over the divine; those who enter it will find they have lost all favour with their chosen deity. Enter anyway?
+
+%%%%
+You feel utterly alone.
+
+%%%%
