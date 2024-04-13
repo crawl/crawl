@@ -2006,6 +2006,14 @@ Blork the orc triumphant
 # Rainbow Raider winning against Batman
 @The_monster@ shouts, "I believe in me!"
 %%%%
+_blork_colour_
+
+w:20
+@_rainbow_colour_@
+
+w:1
+@_misc_colour_@
+%%%%
 _rainbow_colour_
 
 red
@@ -2022,6 +2030,69 @@ indigo
 
 violet
 %%%%
+# No black, white, or grey here.
+_misc_colour_
+
+alizarin crimson
+
+aubergine
+
+azure
+
+beige
+
+bronze
+
+brown
+
+charcoal
+
+chartreuse
+
+cobalt blue
+
+copper
+
+cyan
+
+dun
+
+gold
+
+gridelin
+
+lavender
+
+leaf green
+
+lime green
+
+magenta
+
+marigold
+
+mauve
+
+ochre
+
+pink
+
+purple
+
+rubric
+
+saffron
+
+scarlet
+
+silver
+
+umber
+
+vermilion
+
+viridian
+%%%%
 _Blork_common_
 
 # some chance of generic orc speech
@@ -2030,9 +2101,9 @@ w:20
 
 VISUAL:@The_monster@ grins serenely.
 
-VISUAL:@The_monster@ is briefly surrounded by a halo of @_rainbow_colour_@ light.
+VISUAL:@The_monster@ is briefly surrounded by a halo of @_blork_colour_@ light.
 
-VISUAL:@The_monster@'s eyes glow @_rainbow_colour_@.
+VISUAL:@The_monster@'s eyes glow @_blork_colour_@.
 
 @The_monster@ says @to_foe@, "You need a new perspective."
 
@@ -2065,7 +2136,7 @@ _Blork_rare_
 # Calvin and Hobbes
 @The_monster@ says @to_foe@, "The problem is, you see everything in terms of black and white."
 
-@The_monster@ mutters, "Why is everything @_rainbow_colour_@ all of a sudden?"
+@The_monster@ mutters, "Why is everything @_blork_colour_@ all of a sudden?"
 
 @The_monster@ says, "Things are no longer grey! Not since my great insight!"
 %%%%
@@ -5580,7 +5651,7 @@ VISUAL:@The_monster@ practices a pose.
 
 VISUAL:@The_monster@ smiles, but it's obviously fake.
 
-@The_monster@ says @to_foe@, "Leave now, and tell all of Margery's mercy!"
+@The_monster@ says @to_foe@, "Leave now, and tell all of Maggie's mercy!"
 
 @The_monster@ says @to_foe@, "Fear not. I will immortalise you in the tale of my first kill."
 

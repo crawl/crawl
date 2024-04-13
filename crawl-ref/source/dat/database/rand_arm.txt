@@ -157,7 +157,7 @@ Circus Animal
 
 Monkey's Uncle
 
-#classical mythical animals
+# classical mythical animals
 Centaur
 
 Cockatrice
@@ -208,7 +208,9 @@ Mpinguari
 
 # Unlikely hybrids
 
-Giraffatuar
+Giraffataur
+
+Elephantaur
 
 Mertaur
 
@@ -233,6 +235,10 @@ Dropbear
 
 Jackalope
 
+Jersey Devil
+
+Snallygaster
+
 Wild Haggis
 
 Yeti
@@ -246,6 +252,8 @@ Daisies
 Lilacs
 
 Periwinkles
+
+Purple Dead-Nettles
 
 Tulips
 

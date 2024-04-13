@@ -310,13 +310,39 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Python install bug workaround # https://github.com/actions/setup-python/issues/577
+      # Some extremely messy interactions between default runner setup and what
+      # brew may or may not do here. Many closed issues around this, here's one
+      # where a github actions contributor more or less says they won't fix it:
+      # https://github.com/actions/runner-images/issues/9471. The issues comes
+      # and goes depending on runner image versions. I believe I originally
+      # found the workaround step below somewhere in:
+      #   https://github.com/actions/setup-python/issues/577
+      # We have the problem because libpng has python as a dep.
+      # * Scenario 1: libpng forces brew to install python in `/usr/local/bin`.
+      #   Then we need to clear out the pre-provided symlinks or brew will fail.
+      #   Further steps use newly installed python.
+      # * Scenario 2: libpng is up-to-date in the current runner. For this case,
+      #   clearing out the links is safe because the runner's default path
+      #   should still include
+      #   `/Library/Frameworks/Python.framework/Versions/Current/bin/python`
+      #   (with a lower priority than `/usr/local/bin`) and pre-installed
+      #   python remains available.
+      # * For both scenarios, we should install pyyaml via pip, not brew, so
+      #   that it is installed for the correct python version. Installing it
+      #   via `brew` doesn't work right in scenario 2.
+      - name: Python install bug workaround
         run: |
           find /usr/local/bin -type l -exec sh -c 'readlink -f "$1" \
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
       - name: Install Dependencies
         run: |
-          brew install pkg-config libpng pyyaml
+          brew install pkg-config libpng
+      - name: Install pyyaml
+        run: pip3 install pyyaml
+      - name: diagnostic
+        run: |
+          echo $PATH
+          which python
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:

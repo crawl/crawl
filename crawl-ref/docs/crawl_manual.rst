@@ -1634,7 +1634,7 @@ Deep Elves (DE)
 Armataurs (At)
   The Armataurs are a large, scaled mammalian species, walking on four feet
   and swinging a powerful tail behind them. Their elephant-back armies
-  terrorize the lands outside the Dungeon.
+  terrorise the lands outside the Dungeon.
 
   Armataurs instinctively roll when moving toward foes, getting a free move and
   regenerating magic. They have great aptitudes with armour and shields, though

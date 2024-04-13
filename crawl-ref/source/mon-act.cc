@@ -1283,7 +1283,11 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (prefer_ranged_attack)
     {
         // Master archers are always quite likely to shoot you, if they can.
-        if (one_chance_in(10))
+        //
+        // (They always fire when in melee, to keep them from rarely swapping
+        // their launchers away when they inevitably bump attack their target
+        // anyway)
+        if (one_chance_in(10) && !adjacent(beem.target, mons->pos()))
             return false;
     }
     else if (launcher)

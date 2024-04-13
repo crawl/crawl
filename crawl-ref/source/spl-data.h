@@ -3001,11 +3001,11 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
     spschool::translocation,
-    spflag::target | spflag::needs_tracer,
+    spflag::target | spflag::needs_tracer | spflag::no_ghost,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,
-    0,
+    8,
     TILEG_GRAVITAS,
 },
 
@@ -3609,7 +3609,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_SPIDERS, "Summon Spiders",
     spschool::summoning | spschool::alchemy,
-    spflag::mons_abjure | spflag::monster,
+    spflag::monster,
     6,
     200,
     -1, -1,
@@ -3865,7 +3865,7 @@ static const struct spell_desc spelldata[] =
     SPELL_PILEDRIVER, "Maxwell's Portable Piledriver",
     spschool::translocation,
     spflag::none,
-    4,
+    3,
     100,
     5, 5,
     0,

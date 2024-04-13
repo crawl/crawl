@@ -167,19 +167,15 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
 
 void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y)
 {
-    tileidx_t base = tileidx_known_base_item(tileidx);
+    const tileidx_t base = tileidx_known_base_item(tileidx);
     if (base)
         m_buf_main.add(base, x, y);
 
     m_buf_main.add(tileidx, x, y);
 }
 
-void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y, int ox, int oy)
+void DungeonCellBuffer::add_special_tile(int tileidx, int x, int y, int ox, int oy)
 {
-    tileidx_t base = tileidx_known_base_item(tileidx);
-    if (base)
-        m_buf_main.add(base, x, y, ox, oy, false);
-
     m_buf_main.add(tileidx, x, y, ox, oy, false);
 }
 

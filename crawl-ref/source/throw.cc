@@ -637,6 +637,7 @@ void throw_it(quiver::action &a)
         direction_chooser_args args;
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
+        args.self = confirm_prompt_type::cancel;
         direction(a.target, args);
     }
     if (!a.target.isValid || a.target.isCancel)

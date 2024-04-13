@@ -1531,7 +1531,7 @@ DBRAND:   Omnireflect: It can block and reflect piercing ranged attacks and
 NAME:     amulet of invisibility
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
-TILE:     urand_cekugob
+TILE:     urand_amulet_invisibility
 BOOL:     inv, nogen
 
 ENUM:     THERMIC_ENGINE
