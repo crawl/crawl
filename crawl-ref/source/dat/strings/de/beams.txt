@@ -253,7 +253,7 @@ the porkalator
 der Verschweiner
 %%%%
 the stream of webbing
-der Strom Spinnennetz
+der Strom Gewebe
 %%%%
 # duplicate of cloud
 #the spectral mist
@@ -592,7 +592,7 @@ a porkalator
 ein Verschweiner
 %%%%
 a stream of webbing
-ein Strom Spinnennetz
+ein Strom Gewebe
 %%%%
 # duplicate of cloud
 #the spectral mist
@@ -929,7 +929,7 @@ porkalator
 Verschweiner
 %%%%
 stream of webbing
-Strom Spinnennetz
+Strom Gewebe
 %%%%
 # duplicate of cloud
 #the spectral mist
@@ -1218,7 +1218,7 @@ innere Flamme
 #verkalkender Staub
 %%%%
 magic web
-magisches Netz
+magisches Gewebe
 %%%%
 sentinel's mark
 Zeichen des Wächters

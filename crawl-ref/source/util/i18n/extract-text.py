@@ -1228,6 +1228,12 @@ for filename in files:
                 if string != "" and (string[0] == " " or string[0] == "'"):
                     string = '%s' + string
 
+            if 'held_status' in line and 'while %s' in string:
+                # there are only two possibilities
+                strings.append(string.replace('while %s', 'while held in a net'))
+                strings.append(string.replace('while %s', 'while caught in a web'))
+                continue
+
             if section != last_section:
                 strings.append('# section: ' + section)
                 last_section = section

@@ -342,8 +342,10 @@ bool fire_warn_if_impossible(bool silent, item_def *weapon)
             if (!silent)
             {
                 string weapon_str = "your " + weapon->name(DESC_BASENAME);
-                mprf("You cannot shoot with %s while %s.",
-                     weapon_str.c_str(), held_status());
+                bool net = (strcmp(held_status(), "held in a net") == 0);
+                mprf(net ? "You cannot shoot with %s while held in a net."
+                         : "You cannot shoot with %s while caught in a web.",
+                     weapon_str.c_str());
             }
             return true;
         }

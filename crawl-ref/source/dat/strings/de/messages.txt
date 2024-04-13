@@ -196,8 +196,11 @@ Sorry, Ihr seid nicht gut genug, um eine besondere Fähigkeit zu haben.
 You can't do that.
 Das könnt Ihr nicht.
 %%%%
-You cannot do that while %s.
-
+You cannot do that while held in a net.
+Das könnt Ihr nicht, solange Ihr in einem Netz gefangen seid.
+%%%%
+You cannot do that while caught in a web.
+Das könnt Ihr nicht, solange Ihr in einem Gewebe gefangen seid.
 %%%%
 Your legs are too worn out to hop.
 Ihre Beine sind zu abgenutzt, zu hüpfen.
@@ -278,10 +281,10 @@ You are too terrified to wall jump!
 Ihr habt zu viel Angst, gegen die Wand zu springen!
 %%%%
 You cannot wall jump while caught in a web.
-Ihr könnt nicht gegen die Wand springen, während Ihr in einem Gewebe gefangen seid.
+Ihr könnt nicht gegen die Wand springen, solange Ihr in einem Gewebe gefangen seid.
 %%%%
 You cannot wall jump while caught in a net.
-Ihr könnt nicht gegen die Wand springen, während Ihr in einem Netz gefangen seid.
+Ihr könnt nicht gegen die Wand springen, solange Ihr in einem Netz gefangen seid.
 %%%%
 There is nothing to wall jump against here.
 Hier gibt es nichts, entgegen zu springen.
@@ -6196,7 +6199,7 @@ You are restored by drawing out deep reserves of power within.
 Ihr werdet wiederhergestellt, indem Ihr tiefe Kraftreserven aus Euch zieht.
 %%%%
 You burst free from the webs!
-Ihr seid aus den Netzen geplatzt!
+Ihr seid aus dem Gewebe geplatzt!
 %%%%
 You burst free from the net!
 Ihr seid aus dem Netz geplatzt!
@@ -9920,7 +9923,7 @@ You become entangled in the net!
 Ihr werdet in das Netz verwickelt!
 %%%%
 You get stuck in the web!
-Ihr steckt im Spinnennetz fest!
+Ihr steckt im Gewebe fest!
 %%%%
 
 ##################
@@ -10038,10 +10041,10 @@ Ihr hört ein lautes Knistern.
 %s wird durch Eure schillernde goldene Aura abgelenkt.
 %%%%
 Something you can't see is thrashing in a web.
-Etwas, das Ihr nicht sehen könnt, schlägt in einem Netz um sich.
+Etwas, das Ihr nicht sehen könnt, schlägt in einem Gewebe um sich.
 %%%%
 %s struggles to get unstuck from the web.
-%s kämpft, um sich aus dem Spinnennetz zu befreien.
+%s kämpft, um sich aus dem Gewebe zu befreien.
 %%%%
 Something wriggles in the net.
 Etwas zappelt im Netz.
@@ -11579,8 +11582,11 @@ Diese Tür ist verschlossen!
 There isn't anything that you can open there!
 Es gibt nichts, was Ihr dort öffnen könnt!
 %%%%
-You can't close doors while %s.
-Ihr könnt keine Türen schließen, solange Ihr %s seid.
+You can't close doors while held in a net.
+Ihr könnt keine Türen schließen, solange Ihr in einem Netz gefangen seid.
+%%%%
+You can't close doors while caught in a web.
+Ihr könnt keine Türen schließen, solange Ihr in einem Gewebe gefangen seid.
 %%%%
 There's nothing to close nearby.
 In der Nähe gibt es nichts zu schließen.
@@ -12564,7 +12570,7 @@ Es ist unklug, darauf einzugehen.
 %s ist in einem Netz festgehalten!
 %%%%
 %s is caught in a web!
-%s ist in einem Spinnennetz festgehalten!
+%s ist in einem Gewebe festgehalten!
 %%%%
 %s is being constricted!
 %s wird abgeschnürt!
@@ -12998,9 +13004,11 @@ Ihr schlaft ein.
 You wake up.
 Ihr wacht auf.
 %%%%
-# note: %s = "held in a net/web"
-You can't shaft yourself while %s.
-Ihr könnt Euch nicht bewegen, solange Ihr %s seid.
+You can't shaft yourself while held in a net.
+Ihr könnt Euch nicht schächten, solange Ihr in einem Netz gefangen seid.
+%%%%
+You can't shaft yourself while caught in a web.
+Ihr könnt Euch nicht schächten, solange Ihr in einem Gewebe gefangen seid.
 %%%%
 You can't shaft yourself on this level.
 Ihr könnt Euch auf dieser Ebene nicht bewegen.
@@ -13446,10 +13454,10 @@ You're too confused to attack without stumbling around!
 Ihr seid zu verwirrt, um anzugreifen, ohne herumzustolpern!
 %%%%
 You cannot attack while held in a net.
-Ihr könnt nicht angreifen, wenn ihr in einem Netz gefangen seid.
+Ihr könnt nicht angreifen, solange Ihr in einem Netz gefangen seid.
 %%%%
 You cannot attack while caught in a web.
-Ihr könnt nicht angreifen, wenn ihr in einem Spinnennetz gefangen seid.
+Ihr könnt nicht angreifen, solange Ihr in einem Gewebe gefangen seid.
 %%%%
 Your weapon can't reach that far!
 Ihre Waffe kann nicht so weit reichen!
@@ -17706,11 +17714,17 @@ Welchen Gegenstand abfeuern/werfen? (Vollständiger Bestand wird angezeigt)
 That weapon is stuck to %s!
 Diese Waffe klebt an {dat}%s!
 %%%%
-You cannot throw anything while %s.
-Ihr könnt nichts werfen, solange Ihr %s seid.
+You cannot throw anything while held in a net.
+Ihr könnt nichts werfen, solange Ihr in einem Netz gefangen seid.
 %%%%
-You cannot shoot with %s while %s.
-Ihr könnt nicht mit {dat}%s schießen, solange Ihr %s seid.
+You cannot throw anything while caught in a web.
+Ihr könnt nichts werfen, solange Ihr in einem Gewebe gefangen seid.
+%%%%
+You cannot shoot with %s while held in a net.
+Ihr könnt mit {dat}%s nicht schießen, solange Ihr in einem Netz gefangen seid.
+%%%%
+You cannot shoot with %s while caught in a web.
+Ihr könnt mit {dat}%s nicht schießen, solange Ihr in einem Gewebe gefangen seid.
 %%%%
 " fragments"
 
@@ -18099,7 +18113,7 @@ Your roots penetrate the ground.
 Eure Wurzeln dringen in den Boden ein.
 %%%%
 You shred the web into pieces!
-Ihr zerreißt das Netz in Stücke!
+Ihr zerreißt das Gewebe in Stücke!
 %%%%
 Your lifeless body cannot sustain the wereblood!
 Euer lebloser Körper kann das Werwolfsblut nicht aushalten!
@@ -18137,7 +18151,7 @@ held in a net
 in einem Netz festgehalten
 %%%%
 caught in a web
-in einem Spinnennetz festgehalten
+in einem Gewebe festgehalten
 %%%%
 The net bounces off something gigantic!
 Das Netz prallt von etwas Gigantischem ab!
@@ -18242,22 +18256,22 @@ The net is torn apart by your bulk.
 Das Netz wird durch Eure Masse zerrissen.
 %%%%
 %s passes through a web.
-%s geht durch ein Spinnennetz.
+%s geht durch ein Gewebe.
 %%%%
 %s oozes through a web.
-%s sickert durch ein Spinnennetz.
+%s sickert durch ein Gewebe.
 %%%%
 You pick your way through the web.
-Ihr sucht Euch Euren Weg durch das Spinnennetz.
+Ihr sucht Euch Euren Weg durch das Gewebe.
 %%%%
 You are caught in the web!
-Ihr seid im Spinnennetz gefangen!
+Ihr seid im Gewebe gefangen!
 %%%%
 %s evades a web.
-%s vermeidet ein Spinnennetz.
+%s vermeidet ein Gewebe.
 %%%%
 A web moves frantically as something is caught in it!
-Ein Web bewegt sich rasend schnell, während sich etwas darin verfängt!
+Ein Gewebe bewegt sich rasend schnell, während sich etwas darin verfängt!
 %%%%
 You enter the Zot trap.
 Ihr betretet die Zot-Falle.
@@ -18269,13 +18283,13 @@ A shaft crumbles and collapses.
 Ein Schacht bröckelt und stürzt ein.
 %%%%
 The web tears apart.
-Das Spinnennetz zerreißt.
+Das Gewebe zerreißt.
 %%%%
 You disentangle yourself.
 Ihr entwirrt Euch.
 %%%%
 You struggle to detach yourself from the web.
-Ihr kämpft darum, Euch vom Spinnennetz zu lösen.
+Ihr kämpft darum, Euch vom Gewebe zu lösen.
 %%%%
 You shred the net and break free!
 Ihr zerfetzt das Netz und brecht aus!
@@ -18290,10 +18304,10 @@ You struggle against the net.
 Ihr kämpft gegen das Netz.
 %%%%
 %s tears the web.
-%s zerreißt das Netz.
+%s zerreißt das Gewebe.
 %%%%
 %s pulls away from the web.
-%s zieht sich vom Netz zurück.
+%s zieht sich vom Gewebe zurück.
 %%%%
 The trap is out of ammunition!
 Die Falle hat keine Munition mehr!
@@ -18335,10 +18349,10 @@ You are even more entangled.
 Ihr seid noch mehr verwickelt.
 %%%%
 A web harmlessly splats on %s.
-Ein Spinnennetz platscht harmlos auf {acc}%s.
+Ein Gewebe platscht harmlos auf {acc}%s.
 %%%%
 You are caught in a web!
-Ihr seid in einem Spinnennetz gefangen!
+Ihr seid in einem Gewebe gefangen!
 %%%%
 
 ##################

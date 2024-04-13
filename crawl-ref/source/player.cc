@@ -7261,10 +7261,9 @@ bool player::can_do_shaft_ability(bool quiet) const
 {
     if (attribute[ATTR_HELD])
     {
-        if (!quiet) {
-            // @locnote: %s = "held in a net/web"
+        if (!quiet)
             mprf("You can't shaft yourself while %s.", held_status());
-        }
+
         return false;
     }
 

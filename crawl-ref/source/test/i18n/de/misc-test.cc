@@ -200,6 +200,12 @@ int main()
     msg = localise("Sparks fly from your @hands@", {{"hands", "hand"}});
     show_result (msg, "Funken fliegen aus Eurer Hand");
 
+    msg = localise("You cannot do that while held in a net.");
+    show_result (msg, "Das könnt Ihr nicht, solange Ihr in einem Netz gefangen seid.");
+
+    msg = localise("You cannot do that while caught in a web.");
+    show_result (msg, "Das könnt Ihr nicht, solange Ihr in einem Spinngewebe gefangen seid.");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

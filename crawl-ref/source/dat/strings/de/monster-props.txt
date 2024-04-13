@@ -326,7 +326,7 @@ caught
 gefangen
 %%%%
 entangled in a web
-in einem Netz verstrickt
+in einem Gewebe verstrickt
 %%%%
 # short form
 webbed

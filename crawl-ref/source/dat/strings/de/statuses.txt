@@ -117,7 +117,7 @@ You are held in a net.
 Ihr seid in einem Netz gefangen.
 %%%%
 You are caught in a web.
-Ihr seid in einem Spinnenetz gefangen.
+Ihr seid in einem Gewebe gefangen.
 %%%%
 
 # Vampire bloodless status

@@ -171,7 +171,7 @@ shaft
 Schacht
 %%%%
 web
-Spinnwebe
+Gewebe
 %%%%
 shop
 Laden
@@ -650,7 +650,7 @@ the shaft
 der Schacht
 %%%%
 the web
-die Spinnwebe
+das Gewebe
 %%%%
 the shop
 der Laden
@@ -1120,7 +1120,7 @@ a shaft
 ein Schacht
 %%%%
 a web
-eine Spinnwebe
+{n}ein Gewebe
 %%%%
 a shop
 ein Laden
