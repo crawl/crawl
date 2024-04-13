@@ -3346,7 +3346,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case LIGHTGREY:
-        if (bolt.name == "stone arrow")
+        if (bolt.name == "stone arrow" || bolt.name == "stone bullet")
             return TILE_BOLT_STONE_ARROW + dir;
         break;
 

@@ -2966,3 +2966,133 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
 
     return spret::success;
 }
+
+spret cast_seismic_cannonade(const actor& agent, int pow, bool fail)
+{
+    if (cannonade_is_active(agent))
+    {
+        if (cannonade_is_fully_charged(agent))
+            return your_spells(SPELL_SEISMIC_SHOCKWAVE, pow);
+        else
+        {
+            mpr("None of your cannons are fully assembled yet.");
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+
+    mgen_data cannon = _pal_data(MONS_SEISMIC_CANNON, 0, GOD_NO_GOD,
+                                SPELL_SEISMIC_CANNONADE);
+    cannon.flags |= MG_FORCE_PLACE;
+    cannon.hd = 5 + div_rand_round(pow, 30);
+
+    // Make all cannons share the same duration
+    const int dur = random_range(20, 30) * BASELINE_DELAY;
+
+    int num_created = 0;
+    for (int i = 0; i < 3; ++i)
+    {
+        // Find a spot for each cannon (at a somewhat larger distance than
+        // normal summons)
+        find_habitable_spot_near(you.pos(), MONS_SEISMIC_CANNON, 3, false,
+                                 cannon.pos);
+
+        monster* mons = create_monster(cannon);
+        if (mons)
+        {
+            mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
+            mons->hit_points = mons->max_hit_points / 2;
+            ++num_created;
+        }
+    }
+
+    if (num_created > 1)
+        mpr("You sculpt cannons from the earth!");
+    else if (num_created == 1)
+        mpr("You sculpt a cannon from the earth!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+bool cannonade_is_active(const actor& agent)
+{
+    if (!agent.has_spell(SPELL_SEISMIC_CANNONADE))
+        return false;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid)
+            return true;
+    }
+
+    return false;
+}
+
+bool cannonade_is_fully_charged(const actor& agent)
+{
+    if (!agent.has_spell(SPELL_SEISMIC_CANNONADE))
+        return false;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid
+            && mi->has_ench(ENCH_SPELL_CHARGED))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+vector<coord_def> get_charged_cannon_pos(const actor& agent)
+{
+    vector<coord_def> pos;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid
+            && mi->has_ench(ENCH_SPELL_CHARGED))
+        {
+            pos.push_back(mi->pos());
+        }
+    }
+
+    return pos;
+}
+
+
+spret cast_seismic_shockwave(const actor& agent, coord_def target, int pow, bool fail)
+{
+    bolt beam;
+    zappy(ZAP_SEISMIC_SHOCKWAVE, pow, agent.is_monster(), beam);
+    beam.source_id    = agent.mid;
+    beam.thrower      = agent.is_player() ? KILL_YOU_MISSILE : KILL_MON;
+    beam.is_tracer    = false;
+    beam.origin_spell = SPELL_SEISMIC_SHOCKWAVE;
+    beam.ex_size = 2;
+    beam.source = target;
+    beam.target = target;
+    beam.aimed_at_spot = true;
+
+    bolt tracer = beam;
+    tracer.is_tracer = true;
+    tracer.explode(false);
+    if (tracer.beam_cancelled)
+        return spret::abort;
+
+    fail_check();
+
+    mpr("Your cannons unleash a shockwave through the ground and break into pieces!");
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid)
+            monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true);
+    }
+
+    beam.explode();
+
+    return spret::success;
+}

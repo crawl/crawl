@@ -1360,6 +1360,18 @@ Searing Breath spell
 Breathes a blast of fire at a targeted creature, leaving a cloud of flames at
 the endpoint.
 %%%%
+Seismic Cannonade spell
+
+Shapes a trio of alchemical cannons around the caster that drill into the earth
+beneath them, transmuting the rocky minerals they find there into razor-sharp
+projectiles. Initially created in an incomplete state, each salvo they fire
+crystalizes more material into their frame, healing them.
+
+Once a cannon has fully assembled itself, recasting this spell will allow you to
+direct its full power into the ground, unleashing a powerful seismic shockwave
+that devastates a targeted area at the cost of sacrificing every cannon in the
+process.
+%%%%
 Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
@@ -1545,6 +1557,10 @@ Adds malice to hellish fires, binding it with flame into a creeping inferno.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
+%%%%
+Stone Bullet spell
+
+Fires a hardened shard of rock over a long distance.
 %%%%
 Strip Willpower spell
 

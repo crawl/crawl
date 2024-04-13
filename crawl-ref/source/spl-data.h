@@ -3896,6 +3896,39 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SEISMIC_CANNONADE, "Seismic Cannonade",
+    spschool::alchemy | spschool::earth,
+    spflag::none,
+    7,
+    200,
+    -1, -1,
+    0,
+    TILEG_SEISMIC_CANNONADE,
+},
+
+{
+    SPELL_SEISMIC_SHOCKWAVE, "Seismic Shockwave",
+    spschool::alchemy | spschool::earth,
+    spflag::target,
+    7,
+    200,
+    6, 6,
+    0,
+    TILEG_SUMMON_LIGHTNING_SPIRE,
+},
+
+{
+    SPELL_STONE_BULLET, "Stone Bullet",
+    spschool::conjuration | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_STONE_ARROW,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

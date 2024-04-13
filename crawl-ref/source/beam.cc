@@ -5556,6 +5556,11 @@ bool bolt::ignores_monster(const monster* mon) const
     if (origin_spell == SPELL_RIMEBLIGHT)
         return mon->friendly() || mon->pos() == source;
 
+    // Casting this destroys the cannon anyway, but this prevents misleading
+    // targeter prompts.
+    if (origin_spell == SPELL_SEISMIC_SHOCKWAVE && mon->type == MONS_SEISMIC_CANNON)
+        return true;
+
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);
     if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)

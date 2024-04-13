@@ -2427,7 +2427,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                     // Necrotise/Animate Dead/Infestation
                     else if (mons.type == MONS_ZOMBIE
                              || mons.type == MONS_SKELETON
-                             || mons.type == MONS_DEATH_SCARAB)
+                             || mons.type == MONS_DEATH_SCARAB
+                             || mons.type == MONS_SEISMIC_CANNON)
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }

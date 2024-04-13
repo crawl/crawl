@@ -2048,7 +2048,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     false,
     true,
-}
+},
 
 {
     ZAP_FULSOME_FUSILLADE,
@@ -2096,6 +2096,38 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_BURST,
     false,
     true,
+},
+
+{
+    ZAP_SEISMIC_SHOCKWAVE,
+    "seismic shockwave",
+    200,
+    new dicedef_calculator<6, 4, 1, 8>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    ETC_EARTH,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_BURST,
+    false,
+    true,
+},
+
+{
+    ZAP_STONE_BULLET,
+    "stone bullet",
+    50,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 3, 1, 25>,
+    new tohit_calculator<13, 1, 35>,
+    LIGHTGREY,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
 },
 
 };

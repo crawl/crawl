@@ -1035,6 +1035,10 @@ bombardier beetle cast
 sun moth cast
 
 @The_monster@'s wings beat fiercely.
+%%%%
+seismic cannon cast
+
+@The_monster@ launches a salvo of rock.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

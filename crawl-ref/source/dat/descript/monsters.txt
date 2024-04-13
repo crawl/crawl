@@ -2394,6 +2394,17 @@ A member of an order of monks who abandoned their former faith. It now serves
 a minor god of wind and whispers, who allows it to calm the air and, when
 in great need, to break the stillness with divine thunder.
 %%%%
+seismic cannon
+
+A bulky seige weapon, magically hewn from rock and metal, forever drilling into
+the ground beneath itself to replenish ammunition. Every shot it fires draws a
+portion of the minerals used to fabricate it into its own frame, strengthening
+it if damaged.
+
+When fully assembled, it can turn its stockpiled ammunition to an even more
+destructive purpose, unleashing a devastating seismic shockwave that destroys
+the cannon in the process.
+%%%%
 shadow
 
 A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.

@@ -429,6 +429,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_TUKIMAS_DANCE,
     SPELL_DIMENSIONAL_BULLSEYE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_SEISMIC_CANNONADE,
 },
 
 { // Book of Sloth

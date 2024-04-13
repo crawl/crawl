@@ -83,6 +83,8 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_TREMORSTONE, ZAP_TREMORSTONE },
     { SPELL_CURSE_OF_AGONY, ZAP_CURSE_OF_AGONY },
     { SPELL_GRAVITAS, ZAP_GRAVITAS },
+    { SPELL_SEISMIC_CANNONADE, ZAP_SEISMIC_SHOCKWAVE },
+    { SPELL_STONE_BULLET, ZAP_STONE_BULLET },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },

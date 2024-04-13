@@ -641,6 +641,7 @@ enum monster_type                      // env.mons[].type
     MONS_LIGHTNING_SPIRE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DIAMOND_OBELISK,
+    MONS_SEISMIC_CANNON,
 #endif
 
     // Demons:
@@ -1245,6 +1246,7 @@ enum monster_type                      // env.mons[].type
     MONS_OBSIDIAN_BAT,
     MONS_PILE_OF_DEBRIS,
     MONS_PILLAR_OF_RIME,
+    MONS_SEISMIC_CANNON,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

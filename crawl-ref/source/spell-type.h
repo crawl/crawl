@@ -580,5 +580,8 @@ enum spell_type : int
     SPELL_GELLS_GAVOTTE,
     SPELL_FULSOME_FUSILLADE,
     SPELL_RIMEBLIGHT,
+    SPELL_SEISMIC_CANNONADE,
+    SPELL_SEISMIC_SHOCKWAVE,    // Activated component of Seismic Cannonade
+    SPELL_STONE_BULLET,
     NUM_SPELLS
 };

@@ -2424,3 +2424,26 @@ aff_type targeter_gavotte::is_affected(coord_def loc)
 
     return AFF_NO;
 }
+
+targeter_seismic_shockwave::targeter_seismic_shockwave(const actor* act, int _cannon_range) :
+    targeter_smite(act, LOS_RADIUS, 2, 2, true, nullptr), cannon_range(_cannon_range)
+{
+    cannon_pos = get_charged_cannon_pos(*act);
+}
+
+bool targeter_seismic_shockwave::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    for (coord_def cannon : cannon_pos)
+    {
+        if (grid_distance(a, cannon) <= cannon_range
+            && cell_see_cell(a, cannon, LOS_NO_TRANS))
+        {
+            return true;
+        }
+    }
+
+    return notify_fail("Not in range of any cannon.");
+}

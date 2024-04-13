@@ -7660,6 +7660,15 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
+################## Seismic cannon ##########################
+default seismic cannon
+
+@The_monster@ rumbles loudly.
+
+VISUAL:The ground beneath @The_monster@ churns.
+
+@The_monster@ makes a grinding noise.
+%%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A
 # speech.
