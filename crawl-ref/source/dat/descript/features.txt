@@ -928,6 +928,10 @@ The damp floor
 The floor. It remains forever damp, perhaps due to the humidity or the constant
 flow of clouds.
 %%%%
+A wall of orange crystal
+
+<A crystal wall>
+%%%%
 A wall of white crystal
 
 A wall made from low-grade crystal with an opalescent gleam.
