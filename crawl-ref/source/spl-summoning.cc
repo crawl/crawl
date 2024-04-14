@@ -1556,6 +1556,7 @@ static spell_type servitor_spells[] =
     SPELL_IOOD,
     SPELL_BOMBARD,
     SPELL_PLASMA_BEAM, // maybe should be higher?
+    SPELL_PERMAFROST_ERUPTION,
     SPELL_FIREBALL,
     SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
