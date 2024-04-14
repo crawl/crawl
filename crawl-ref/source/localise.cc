@@ -1439,11 +1439,15 @@ static string _localise_thing_in_location(const string& context, const string& v
  */
 static string _reverse_engineer_parameterised_string(const string& s)
 {
+    // avoid infinite loop
+    if (contains(s, '@'))
+        return "";
+
     // autofight.lua
 
     static const string no_spell_in_slot = "No spell in slot @slot@!";
     size_t pos = no_spell_in_slot.find('@');
-    if (strncmp(s.c_str(), no_spell_in_slot.c_str(), pos) == 0 && s != no_spell_in_slot)
+    if (strncmp(s.c_str(), no_spell_in_slot.c_str(), pos) == 0)
     {
         string slot = s.substr(pos, 1);
         return localise(no_spell_in_slot, {{"slot", slot}});
@@ -1453,7 +1457,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
 
     static const string not_enough_magic = "You don't have enough magic to cast @spell_name@!";
     pos = not_enough_magic.find('@');
-    if (strncmp(s.c_str(), not_enough_magic.c_str(), pos) == 0 && s != not_enough_magic)
+    if (strncmp(s.c_str(), not_enough_magic.c_str(), pos) == 0)
     {
         size_t pos2 = s.find("!", pos);
         if (pos2 == string::npos)
@@ -1465,7 +1469,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
 
     static const string automagic_will_cast = "Automagic will cast spell in slot @slot@ (@spell_name@).";
     pos = automagic_will_cast.find('@');
-    if (strncmp(s.c_str(), automagic_will_cast.c_str(), pos) == 0 && s != automagic_will_cast)
+    if (strncmp(s.c_str(), automagic_will_cast.c_str(), pos) == 0)
     {
         size_t pos2 = s.find(" (", pos);
         size_t pos3 = pos2 + strlen(" (");
@@ -1482,7 +1486,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
 
     static const string automagic_enabled = "Automagic enabled, will cast spell in slot @slot@ (@spell_name@).";
     pos = automagic_enabled.find('@');
-    if (strncmp(s.c_str(), automagic_enabled.c_str(), pos) == 0 && s != automagic_enabled)
+    if (strncmp(s.c_str(), automagic_enabled.c_str(), pos) == 0)
     {
         size_t pos2 = s.find(" (", pos);
         size_t pos3 = pos2 + strlen(" (");
@@ -1495,6 +1499,35 @@ static string _reverse_engineer_parameterised_string(const string& s)
 
         map<string, string> params = {{"slot", slot}, {"spell_name", spell_name}};
         return localise(automagic_enabled, params);
+    }
+
+    // lm_tmsg.lua
+
+    if (starts_with(s, "You hear the ")
+        and (contains(s, "avalanche of sand")
+             or contains(s, "avalanche of rocks")
+             or contains(s, "melting archway")
+             or contains(s, "magical portal")
+             or (contains(s, "tolling") && contains(s, "bell"))
+             or (contains(s, "whistling") && contains(s, "wind"))
+             or (contains(s, "rusting") && contains(s, "drain"))
+             or (contains(s, "creaking") && contains(s, "portcullis"))
+             or (contains(s, "beating") && contains(s, "drum"))))
+    {
+        string msg;
+        string adjective;
+        for (const string adj: {"stately ", "brisk ", "urgent ", "frantic "})
+            if (contains(s, adj))
+            {
+                adjective = adj;
+                msg = replace_first(s, adj, "@adjective@");
+                break;
+            }
+
+        if (msg == "")
+            msg = replace_first(s, "the ", "the @adjective@");
+
+        return localise(msg, {{"adjective", adjective}});
     }
 
     return "";

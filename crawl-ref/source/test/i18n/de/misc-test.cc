@@ -32,7 +32,8 @@ static void show_result(const string& actual, const string& expected)
     }
 
     cout << status << "got: \"" << actual << "\"" << endl;
-    cout << "   expected: \"" << expected << "\"" << endl;
+    if (actual != expected)
+        cout << "   expected: \"" << expected << "\"" << endl;
 }
 
 int main()
@@ -217,6 +218,15 @@ int main()
 
     msg = localise("Automagic enabled, will cast spell in slot c (Ice Form).");
     show_result(msg, "Automagie aktiviert, wird den Zauber im Platz c (Eisform) wirken.");
+
+    msg = localise("You hear the whistling of a wind.");
+    show_result(msg, "Ihr hört das Pfeifen eines Windes.");
+
+    msg = localise("You hear the brisk rumble of a very distant avalanche of rocks.");
+    show_result(msg, "Ihr hört das stramme Grollen einer Steinlawine weit in der Ferne.");
+
+    msg = localise("You hear the stately tolling of a bell very nearby.");
+    show_result(msg, "Ihr hört das langsame Läuten einer Glocke ganz in der Nähe.");
 
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
