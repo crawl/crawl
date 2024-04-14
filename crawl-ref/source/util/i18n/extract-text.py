@@ -786,6 +786,8 @@ def process_lua_file(filename):
             alternatives = expand_param(string, "@spawn_dir@", ["north", "south", "east", "west"])
         elif '@wizlab_desc@' in string:
             alternatives = expand_param(string, "@wizlab_desc@", wizlab_descs)
+        elif filename.endswith('pan.des') and '@name@ resides here' in string:
+            alternatives = expand_param(string, "@name@", ["Cerebov", "Mnoleg", "Lom Lobon", "Gloorx Vloq"])
         elif filename.endswith('pan.des') and '@runes_name@' in string:
             alternatives = expand_param(string, "@runes_name@", ["fiery", "glowing", "magical", "dark"])
         elif '@noise@ of @noisemaker@' in string:

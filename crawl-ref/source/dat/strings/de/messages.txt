@@ -20466,7 +20466,16 @@ You hear the creaking of ancient metal!
 # dat/des/branches/pan.des
 ##################
 %%%%
-The mighty Pandemonium lord @name@ resides here.
+The mighty Pandemonium lord Cerebov resides here.
+
+%%%%
+The mighty Pandemonium lord Mnoleg resides here.
+
+%%%%
+The mighty Pandemonium lord Lom Lobon resides here.
+
+%%%%
+The mighty Pandemonium lord Gloorx Vloq resides here.
 
 %%%%
 They guard the fiery rune of Zot.
