@@ -20036,28 +20036,28 @@ Ihr fühlt Euch mehr wie eine Katze.
 ##################
 %%%%
 Failed to move towards target.
-
+Bewegung in Richtung Ziel gescheitert.
 %%%%
 You are held in a net!
-
+Ihr seid in einem Netz gefangen!
 %%%%
 No target in view!
-
+Kein Ziel in Sicht!
 %%%%
 No reachable target in view!
-
+Kein erreichbares Ziel in Sicht!
 %%%%
 No target in range!
-
+Kein Ziel in Reichweite!
 %%%%
 No spell in slot @slot@!
-
+Kein Zauber im Platz @slot@!
 %%%%
 Enabling autothrow.
-
+Auto-Werfen aktiviert.
 %%%%
 Disabling autothrow.
-
+Auto-Werfen deaktiviert.
 %%%%
 
 ##################
@@ -20065,32 +20065,32 @@ Disabling autothrow.
 ##################
 %%%%
 You don't have enough magic to cast @spell_name@!
-
+Ihr habt nicht genug Magie, um @spell_name@ zu wirken!
 %%%%
 You are too depleted to cast spells recklessly!
-
+Ihr habt zu wenig Magie, um leichtsinnig zu zaubern!
 %%%%
 Which spell slot to assign to automagic? (Enter to disable, Esc to cancel)
-
+Welcher Zauberplatz soll der Automagie zugewiesen werden? (Enter zum Deaktivieren, Esc zum Abbrechen)
 %%%%
 Cancelled.
-
+Abgegrochen.
 %%%%
 Deactivated automagic.
-
+Automagie deaktiviert.
 %%%%
 Invalid spell slot.
-
+Ungültiger Zauberplatz.
 %%%%
 # note: @spell_name@ when no spell in chosen slot
 no spell currently
 kein Zauber im Moment
 %%%%
 Automagic will cast spell in slot @slot@ (@spell_name@).
-
+Automagie wird den Zauber im Platz @slot@ (@spell_name@) wirken.
 %%%%
 Automagic enabled, will cast spell in slot @slot@ (@spell_name@).
-
+Automagie aktiviert, wird den Zauber im Platz @slot@ (@spell_name@) wirken.
 %%%%
 
 ##################

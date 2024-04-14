@@ -192,19 +192,31 @@ int main()
     show_result (msg, "Ihr habt diesen Gegenstand auf Ebene 3 des Dungeons gefunden");
 
     msg = localise("You found it @in_location@", {{"in_location", "in a volcano"}});
-    show_result (msg, "Ihr habt diesen Gegenstand in einem Vulkan gefunden");
+    show_result(msg, "Ihr habt diesen Gegenstand in einem Vulkan gefunden");
 
     msg = localise("Sparks fly from your @hands@", {{"hands", "hands"}});
-    show_result (msg, "Funken fliegen aus Euren Händen");
+    show_result(msg, "Funken fliegen aus Euren Händen");
 
     msg = localise("Sparks fly from your @hands@", {{"hands", "hand"}});
-    show_result (msg, "Funken fliegen aus Eurer Hand");
+    show_result(msg, "Funken fliegen aus Eurer Hand");
 
     msg = localise("You cannot do that while held in a net.");
-    show_result (msg, "Das könnt Ihr nicht, solange Ihr in einem Netz gefangen seid.");
+    show_result(msg, "Das könnt Ihr nicht, solange Ihr in einem Netz gefangen seid.");
 
     msg = localise("You cannot do that while caught in a web.");
-    show_result (msg, "Das könnt Ihr nicht, solange Ihr in einem Spinngewebe gefangen seid.");
+    show_result(msg, "Das könnt Ihr nicht, solange Ihr in einem Gewebe gefangen seid.");
+
+    msg = localise("No spell in slot a!");
+    show_result(msg, "Kein Zauber im Platz a!");
+
+    msg = localise("You don't have enough magic to cast Fireball!");
+    show_result(msg, "Ihr habt nicht genug Magie, um Feuerball zu wirken!");
+
+    msg = localise("Automagic will cast spell in slot b (Blade Hands).");
+    show_result(msg, "Automagie wird den Zauber im Platz b (Klingenhände) wirken.");
+
+    msg = localise("Automagic enabled, will cast spell in slot c (Ice Form).");
+    show_result(msg, "Automagie aktiviert, wird den Zauber im Platz c (Eisform) wirken.");
 
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);

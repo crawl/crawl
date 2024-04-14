@@ -1427,6 +1427,79 @@ static string _localise_thing_in_location(const string& context, const string& v
     return thing + location;
 }
 
+/*
+ * Lua code can only pass a single string to mpr(), so any parameterisation has
+ * to be handled on the Lua code, and all we see is the completed string. If the
+ * number of possible permutations is small, we can just provide a translation
+ * for ech one, but in some cases, the number of permutations is to great for
+ * that to be feasible, so we're forced to reverse engineer.
+ *
+ * This is extremely hack-tastic! Like, really gross. It's very tightly coupled
+ * to the corresponding lua code.
+ */
+static string _reverse_engineer_parameterised_string(const string& s)
+{
+    // autofight.lua
+
+    static const string no_spell_in_slot = "No spell in slot @slot@!";
+    size_t pos = no_spell_in_slot.find('@');
+    if (strncmp(s.c_str(), no_spell_in_slot.c_str(), pos) == 0 && s != no_spell_in_slot)
+    {
+        string slot = s.substr(pos, 1);
+        return localise(no_spell_in_slot, {{"slot", slot}});
+    }
+
+    // automagic.lua
+
+    static const string not_enough_magic = "You don't have enough magic to cast @spell_name@!";
+    pos = not_enough_magic.find('@');
+    if (strncmp(s.c_str(), not_enough_magic.c_str(), pos) == 0 && s != not_enough_magic)
+    {
+        size_t pos2 = s.find("!", pos);
+        if (pos2 == string::npos)
+            return "";
+
+        string spell_name = s.substr(pos, pos2 - pos);
+        return localise(not_enough_magic, {{"spell_name", spell_name}});
+    }
+
+    static const string automagic_will_cast = "Automagic will cast spell in slot @slot@ (@spell_name@).";
+    pos = automagic_will_cast.find('@');
+    if (strncmp(s.c_str(), automagic_will_cast.c_str(), pos) == 0 && s != automagic_will_cast)
+    {
+        size_t pos2 = s.find(" (", pos);
+        size_t pos3 = pos2 + strlen(" (");
+        size_t pos4 = s.find(").", pos3);
+        if (pos2 == string::npos || pos4 == string::npos)
+            return "";
+
+        string slot = s.substr(pos, pos2 - pos);
+        string spell_name = s.substr(pos3, pos4 - pos3);
+
+        map<string, string> params = {{"slot", slot}, {"spell_name", spell_name}};
+        return localise(automagic_will_cast, params);
+    }
+
+    static const string automagic_enabled = "Automagic enabled, will cast spell in slot @slot@ (@spell_name@).";
+    pos = automagic_enabled.find('@');
+    if (strncmp(s.c_str(), automagic_enabled.c_str(), pos) == 0 && s != automagic_enabled)
+    {
+        size_t pos2 = s.find(" (", pos);
+        size_t pos3 = pos2 + strlen(" (");
+        size_t pos4 = s.find(").", pos3);
+        if (pos2 == string::npos || pos4 == string::npos)
+            return "";
+
+        string slot = s.substr(pos, pos2 - pos);
+        string spell_name = s.substr(pos3, pos4 - pos3);
+
+        map<string, string> params = {{"slot", slot}, {"spell_name", spell_name}};
+        return localise(automagic_enabled, params);
+    }
+
+    return "";
+}
+
 // localise a string
 static string _localise_string(const string context, const string& value)
 {
@@ -1454,6 +1527,11 @@ static string _localise_string(const string context, const string& value)
     result = cxlate(context, value, false);
     if (!result.empty())
         return _shift_context(result);
+
+    // do the gross stuff
+    result = _reverse_engineer_parameterised_string(value);
+    if (result != "")
+        return result;
 
     if (_starts_with_menu_id(value))
     {
