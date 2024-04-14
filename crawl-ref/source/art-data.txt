@@ -1836,6 +1836,28 @@ DBRAND:  It massively reduces your stealth.
 +It interferes with translocations, delaying teleports.
 +Evoboost:    It boosts the power of your evoked items.
 
+NAME:    ring of the Frog
+OBJ:     OBJ_JEWELLERY/RING_FIRST_RING
+PLUS:    +10
+COLOUR:  ETC_POISON
+TILE:    urand_frog
+
+NAME:    ring of the Scorpion
+OBJ:     OBJ_JEWELLERY/RING_SLAYING
+PLUS:    +8
+COLOUR:  ETC_POISON
+TILE:    urand_scorpion
+
+NAME:     prototype "ExtendoBlade"
+OBJ:      OBJ_WEAPONS/WPN_SHORT_SWORD
+TILE:     spwpn_extendo
+TILE_EQ:  extendo
+PLUS:     5
+COLOUR:   ETC_INCARNADINE
+BRAND:    SPWPN_FLAMING
+INSCRIP:  reach,
+DBRAND:   Reach: Can attack from an additional tile away.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

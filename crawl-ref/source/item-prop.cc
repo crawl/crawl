@@ -440,7 +440,9 @@ static const vector<brand_weight_tuple> RANGED_BRANDS = {
     { SPWPN_NORMAL,        58 },
     { SPWPN_FLAMING,       11 },
     { SPWPN_FREEZING,      11 },
+    { SPWPN_PENETRATION,   7 },
     { SPWPN_HEAVY,         7 },
+    { SPWPN_SPEED,         7 },
     { SPWPN_DRAINING,      7 },
     { SPWPN_ELECTROCUTION, 4 },
     { SPWPN_ANTIMAGIC,     2 },
@@ -562,17 +564,16 @@ static const weapon_def Weapon_prop[] =
     { WPN_QUICK_BLADE,       "quick blade",         4,  6, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 0, 2, 150, {
-            { SPWPN_NORMAL,         43 },
-            { SPWPN_VENOM,          17 },
+            { SPWPN_NORMAL,         18 },
+            { SPWPN_VENOM,          18 },
             { SPWPN_DRAINING,        9 },
-            { SPWPN_PROTECTION,      6 },
+            { SPWPN_VAMPIRISM,       9 },
             { SPWPN_ELECTROCUTION,   6 },
             { SPWPN_HOLY_WRATH,      5 },
-            { SPWPN_VAMPIRISM,       4 },
             { SPWPN_FLAMING,         4 },
             { SPWPN_FREEZING,        4 },
-            { SPWPN_DISTORTION,      1 },
-            { SPWPN_ANTIMAGIC,       1 },
+            { SPWPN_DISTORTION,      4 },
+            { SPWPN_ANTIMAGIC,       4 },
         }},
     { WPN_SHORT_SWORD,       "short sword",         5,  4, 10,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
@@ -739,6 +740,8 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_FLAMING,       11 },
             { SPWPN_FREEZING,      11 },
             { SPWPN_HEAVY,         7 },
+            { SPWPN_PENETRATION,   7 },
+            { SPWPN_SPEED,         7 },
             { SPWPN_DRAINING,      7 },
             { SPWPN_ELECTROCUTION, 4 },
             { SPWPN_ANTIMAGIC,     2 },
@@ -2380,7 +2383,8 @@ reach_type weapon_reach(const item_def &item)
     if (is_unrandom_artefact(item, UNRAND_RIFT))
         return REACH_THREE;
     if (item_attack_skill(item) == SK_POLEARMS
-        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE)
+        || is_unrandom_artefact(item, UNRAND_EXTENDO))
     {
         return REACH_TWO;
     }
