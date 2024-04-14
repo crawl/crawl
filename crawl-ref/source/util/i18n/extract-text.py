@@ -370,6 +370,19 @@ def do_dummy_string_replacements(lines):
     return result
 
 
+# convert a string containing a parameter into a list of strings for every
+# possible value of the param
+def expand_param(string, param, values):
+    if param not in string:
+        return [string]
+
+    result = []
+    for value in values:
+        result.append(string.replace(param, value))
+
+    return result
+
+
 # First-stage line processing:
 #   replace strings that should not be extracted with dummies (outside noloc sections)
 #   join statements that are split over multiple lines
@@ -712,7 +725,8 @@ def process_lua_file(filename):
             line = re.sub('@[^@]*AUTOMAGIC_SPELL_SLOT[^@]*@', '@spell_name@', line)
             line = re.sub(r'@self[:\.]', '@', line)
             line = line.replace('()@', '@')
-            line = line.replace('@chk[2]@@verb@', '@adverb@@verb@')
+            # verb is actually a noun
+            line = line.replace('@chk[2]@@verb@', '@adjective@@noise@')
 
         if 'crawl.mpr' in line:
             # we don't want to extract the second parameter - it's the channel
@@ -730,12 +744,62 @@ def process_lua_file(filename):
             if '_' in string and not '@' in string:
                 # identifier
                 continue
+            if filename.endswith('automagic.lua') and string == " enabled,":
+                continue
+
+            if string == "no spell currently":
+                strings.append("# note: @spell_name@ when no spell in chosen slot")
             
             # split on newlines
             substrings = string.split("\\n")
             for ss in substrings:
                 if ss != '':
                     strings.append(ss)
+
+
+    # expand params
+    raw_strings = strings
+    strings = []
+    for string in raw_strings:
+        if '@' not in string:
+            strings.append(string)
+            continue
+
+        alternatives = [string]
+        if '@plural@' in string:
+            alternatives = expand_param(string, "@plural@", ["", "s"])
+        elif '@message@' in string:
+            alternatives = expand_param(string, "@message@", ["", " enabled,"])
+        elif '@noise@ of @noisemaker@' in string:
+            alternatives = expand_param(string, '@noise@ of @noisemaker@', \
+                                                [ \
+                                                "whistling of a @distant@wind@nearby@", \
+                                                "rumble of a @distant@avalanche of rocks@nearby@", \
+                                                "hiss of a @distant@avalanche of sand@nearby@", \
+                                                "tolling of a @distant@bell@nearby@", \
+                                                "rusting of a @distant@drain@nearby@", \
+                                                "crackling of a @distant@melting archway@nearby@", \
+                                                "creaking of a @distant@portcullis@nearby@", \
+                                                "beating of a @distant@drum@nearby@", \
+                                                "crackle of a @distant@magical portal@nearby@", \
+                                                ])
+
+            alts_old = alternatives
+            alternatives = []
+            for alt in alts_old:
+                nearby = alt.replace('@distant@', '').replace(' a a', ' an a')
+                distant = alt.replace('@nearby@', '')
+                alternatives.append(nearby.replace('@nearby@', '')) # neither
+                alternatives.extend(expand_param(distant, '@distant@', ["distant ", "very distant "]))
+                alternatives.extend(expand_param(nearby, '@nearby@', [" nearby", " very nearby"]))
+
+            strings.append('# note: adjectives (null also possible)')
+            strings.append('stately ')
+            strings.append('brisk ')
+            strings.append('urgent ')
+            strings.append('frantic ')
+
+        strings.extend(alternatives)
 
     return strings
 

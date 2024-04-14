@@ -20082,13 +20082,14 @@ Deactivated automagic.
 Invalid spell slot.
 
 %%%%
-" enabled,"
-
-%%%%
+# note: @spell_name@ when no spell in chosen slot
 no spell currently
+kein Zauber im Moment
+%%%%
+Automagic will cast spell in slot @slot@ (@spell_name@).
 
 %%%%
-Automagic@message@ will cast spell in slot @slot@ (@spell_name@).
+Automagic enabled, will cast spell in slot @slot@ (@spell_name@).
 
 %%%%
 
@@ -20160,8 +20161,153 @@ The walls and floor vibrate strangely for a moment.
 # dat/dlua/lm_tmsg.lua
 ##################
 %%%%
-You hear the @adverb@@verb@ of @noisemaker@.
-
+# note: adjectives (null also possible)
+"stately "
+"langsame "
+%%%%
+"brisk "
+"stramme "
+%%%%
+"urgent "
+"dringende "
+%%%%
+"frantic "
+"hektische "
+%%%%
+You hear the @adjective@whistling of a wind.
+Ihr hört das @adjective@Pfeifen eines Windes.
+%%%%
+You hear the @adjective@whistling of a distant wind.
+Ihr hört das @adjective@Pfeifen eines Windes in der Ferne.
+%%%%
+You hear the @adjective@whistling of a very distant wind.
+Ihr hört das @adjective@Pfeifen eines Windes weit in der Ferne.
+%%%%
+You hear the @adjective@whistling of a wind nearby.
+Ihr hört das @adjective@Pfeifen eines Windes in der Nähe.
+%%%%
+You hear the @adjective@whistling of a wind very nearby.
+Ihr hört das @adjective@Pfeifen eines Windes ganz in der Nähe.
+%%%%
+You hear the @adjective@rumble of an avalanche of rocks.
+Ihr hört das @adjective@Grollen einer Steinlawine.
+%%%%
+You hear the @adjective@rumble of a distant avalanche of rocks.
+Ihr hört das @adjective@Grollen einer Steinlawine in der Ferne.
+%%%%
+You hear the @adjective@rumble of a very distant avalanche of rocks.
+Ihr hört das @adjective@Grollen einer Steinlawine weit in der Ferne.
+%%%%
+You hear the @adjective@rumble of an avalanche of rocks nearby.
+Ihr hört das @adjective@Grollen einer Steinlawine in der Nähe.
+%%%%
+You hear the @adjective@rumble of an avalanche of rocks very nearby.
+Ihr hört das @adjective@Grollen einer Steinlawine ganz in der Nähe.
+%%%%
+You hear the @adjective@hiss of an avalanche of sand.
+Ihr hört das @adjective@Zischen einer Sandlawine.
+%%%%
+You hear the @adjective@hiss of a distant avalanche of sand.
+Ihr hört das @adjective@Zischen einer Sandlawine in der Ferne.
+%%%%
+You hear the @adjective@hiss of a very distant avalanche of sand.
+Ihr hört das @adjective@Zischen einer Sandlawine weit in der Ferne.
+%%%%
+You hear the @adjective@hiss of an avalanche of sand nearby.
+Ihr hört das @adjective@Zischen einer Sandlawine in der Nähe.
+%%%%
+You hear the @adjective@hiss of an avalanche of sand very nearby.
+Ihr hört das @adjective@Zischen einer Sandlawine ganz in der Nähe.
+%%%%
+You hear the @adjective@tolling of a bell.
+Ihr hört das @adjective@Läuten einer Glocke.
+%%%%
+You hear the @adjective@tolling of a distant bell.
+Ihr hört das @adjective@Läuten einer Glocke in der Ferne.
+%%%%
+You hear the @adjective@tolling of a very distant bell.
+Ihr hört das @adjective@Läuten einer Glocke weit in der Ferne.
+%%%%
+You hear the @adjective@tolling of a bell nearby.
+Ihr hört das @adjective@Läuten einer Glocke in der Nähe.
+%%%%
+You hear the @adjective@tolling of a bell very nearby.
+Ihr hört das @adjective@Läuten einer Glocke ganz in der Nähe.
+%%%%
+You hear the @adjective@rusting of a drain.
+Ihr hört das @adjective@Rosten eines Abflusses.
+%%%%
+You hear the @adjective@rusting of a distant drain.
+Ihr hört das @adjective@Rosten eines Abflusses in der Ferne.
+%%%%
+You hear the @adjective@rusting of a very distant drain.
+Ihr hört das @adjective@Rosten eines Abflusses weit in der Ferne.
+%%%%
+You hear the @adjective@rusting of a drain nearby.
+Ihr hört das @adjective@Rosten eines Abflusses in der Nähe.
+%%%%
+You hear the @adjective@rusting of a drain very nearby.
+Ihr hört das @adjective@Rosten eines Abflusses ganz in der Nähe.
+%%%%
+You hear the @adjective@crackling of a melting archway.
+Ihr hört das @adjective@Knacken eines schmelzenden Torbogens.
+%%%%
+You hear the @adjective@crackling of a distant melting archway.
+Ihr hört das @adjective@Knacken eines schmelzenden Torbogens in der Ferne.
+%%%%
+You hear the @adjective@crackling of a very distant melting archway.
+Ihr hört das @adjective@Knacken eines schmelzenden Torbogens weit in der Ferne.
+%%%%
+You hear the @adjective@crackling of a melting archway nearby.
+Ihr hört das @adjective@Knacken eines schmelzenden Torbogens in der Nähe.
+%%%%
+You hear the @adjective@crackling of a melting archway very nearby.
+Ihr hört das @adjective@Knacken eines schmelzenden Torbogens ganz in der Nähe.
+%%%%
+You hear the @adjective@creaking of a portcullis.
+Ihr hört das @adjective@Knarren eines Fallgatters.
+%%%%
+You hear the @adjective@creaking of a distant portcullis.
+Ihr hört das @adjective@Knarren eines Fallgatters in der Ferne.
+%%%%
+You hear the @adjective@creaking of a very distant portcullis.
+Ihr hört das @adjective@Knarren eines Fallgatters weit in der Ferne.
+%%%%
+You hear the @adjective@creaking of a portcullis nearby.
+Ihr hört das @adjective@Knarren eines Fallgatters in der Nähe.
+%%%%
+You hear the @adjective@creaking of a portcullis very nearby.
+Ihr hört das @adjective@Knarren eines Fallgatters ganz in der Nähe.
+%%%%
+You hear the @adjective@beating of a drum.
+Ihr hört @adjective@Paukenschläge.
+%%%%
+You hear the @adjective@beating of a distant drum.
+Ihr hört @adjective@Paukenschläge in der Ferne.
+%%%%
+You hear the @adjective@beating of a very distant drum.
+Ihr hört @adjective@Paukenschläge weit in der Ferne.
+%%%%
+You hear the @adjective@beating of a drum nearby.
+Ihr hört @adjective@Paukenschläge in der Nähe.
+%%%%
+You hear the @adjective@beating of a drum very nearby.
+Ihr hört @adjective@Paukenschläge ganz in der Nähe.
+%%%%
+You hear the @adjective@crackle of a magical portal.
+Ihr hört das @adjective@Knistern eines magischen Portals.
+%%%%
+You hear the @adjective@crackle of a distant magical portal.
+Ihr hört das @adjective@Knistern eines magischen Portals in der Ferne.
+%%%%
+You hear the @adjective@crackle of a very distant magical portal.
+Ihr hört das @adjective@Knistern eines magischen Portals weit in der Ferne.
+%%%%
+You hear the @adjective@crackle of a magical portal nearby.
+Ihr hört das @adjective@Knistern eines magischen Portals in der Nähe.
+%%%%
+You hear the @adjective@crackle of a magical portal very nearby.
+Ihr hört das @adjective@Knistern eines magischen Portals ganz in der Nähe.
 %%%%
 
 ##################
@@ -20186,19 +20332,31 @@ The portal requires @item_name@ for entry.
 Entrants to this portal lose all standing with their god.
 
 %%%%
-The portal draws power from the presence of the item@plural@ and buzzes to life!
+The portal draws power from the presence of the item and buzzes to life!
+
+%%%%
+The portal draws power from the presence of the items and buzzes to life!
 
 %%%%
 You don't have @item_name@ with you.
 
 %%%%
-You don't have the item@plural@ to give! Perhaps you haven't completely identified the item yet?
+You don't have the item to give! Perhaps you haven't completely identified the item yet?
 
 %%%%
-You must unequip the item@plural@ first!
+You don't have the items to give! Perhaps you haven't completely identified the item yet?
 
 %%%%
-The portal accepts the item@plural@ and buzzes to life!
+You must unequip the item first!
+
+%%%%
+You must unequip the items first!
+
+%%%%
+The portal accepts the item and buzzes to life!
+
+%%%%
+The portal accepts the items and buzzes to life!
 
 %%%%
 The portal is unable to unshackle you from Ashenzari's curse; you must abandon your deity entirely to enter!
