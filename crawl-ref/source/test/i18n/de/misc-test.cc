@@ -228,6 +228,15 @@ int main()
     msg = localise("You hear the stately tolling of a bell very nearby.");
     show_result(msg, "Ihr hört das langsame Läuten einer Glocke ganz in der Nähe.");
 
+    msg = localise("This portal requires the presence of the gossamer rune to function.");
+    show_result(msg, "Dieses Portal erfordert das Vorhandensein der Spinnfäden-Rune, um zu funktionieren.");
+
+    msg = localise("This portal needs a +8 mace to function.");
+    show_result(msg, "Dieses Portal benötigt einen +8 Streitkolben, um zu funktionieren.");
+
+    msg = localise("You don't have 10 scrolls of teleportation with you.");
+    show_result(msg, "Ihr habt 10 Schriftrollen der Teleportation nicht dabei.");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

@@ -1530,6 +1530,56 @@ static string _reverse_engineer_parameterised_string(const string& s)
         return localise(msg, {{"adjective", adjective}});
     }
 
+    // lm_trove.lua
+
+    static const string portal_requires = "This portal requires the presence of @item_name@ to function.";
+    pos = portal_requires.find('@');
+    if (strncmp(s.c_str(), portal_requires.c_str(), pos) == 0)
+    {
+        size_t pos2 = s.find(" to function.", pos);
+        if (pos2 == string::npos)
+            return "";
+
+        string item_name = s.substr(pos, pos2 - pos);
+        return localise(portal_requires, {{"item_name", item_name}});
+    }
+
+    static const string portal_requires2 = "The portal requires @item_name@ for entry.";
+    pos = portal_requires2.find('@');
+    if (strncmp(s.c_str(), portal_requires2.c_str(), pos) == 0)
+    {
+        size_t pos2 = s.find(" for entry.", pos);
+        if (pos2 == string::npos)
+            return "";
+
+        string item_name = s.substr(pos, pos2 - pos);
+        return localise(portal_requires2, {{"item_name", item_name}});
+    }
+
+    static const string portal_needs = "This portal needs @item_name@ to function.";
+    pos = portal_needs.find('@');
+    if (strncmp(s.c_str(), portal_needs.c_str(), pos) == 0)
+    {
+        size_t pos2 = s.find(" to function.", pos);
+        if (pos2 == string::npos)
+            return "";
+
+        string item_name = s.substr(pos, pos2 - pos);
+        return localise(portal_needs, {{"item_name", item_name}});
+    }
+
+    static const string dont_have = "You don't have @item_name@ with you.";
+    pos = dont_have.find('@');
+    if (strncmp(s.c_str(), dont_have.c_str(), pos) == 0)
+    {
+        size_t pos2 = s.find(" with you.", pos);
+        if (pos2 == string::npos)
+            return "";
+
+        string item_name = s.substr(pos, pos2 - pos);
+        return localise(dont_have, {{"item_name", item_name}});
+    }
+
     return "";
 }
 

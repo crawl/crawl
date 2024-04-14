@@ -20312,58 +20312,58 @@ Ihr hört das @adjective@Knistern eines magischen Portals ganz in der Nähe.
 ##################
 %%%%
 This portal requires the presence of @item_name@ to function.
-
+Dieses Portal erfordert das Vorhandensein {gen}@item_name@, um zu funktionieren.
 %%%%
 This portal needs @item_name@ to function.
-
+Dieses Portal benötigt {acc}@item_name@, um zu funktionieren.
 %%%%
 The portal is engraved with runes symbolizing the primacy of the material over the divine. Those who enter it may find riches, but when they return, they will find that whatever gods they held dear have forgotten them in their absence.
-
+Ans Portal sind Runen eingraviert, die den Vorrang des Materiellen gegenüber dem Göttlichen symbolisieren. Diejenigen, die es betreten, mögen Reichtümer finden, aber wenn sie zurückkehren, werden sie feststellen, dass die Götter, die ihnen teuer waren, sie in ihrer Abwesenheit vergessen haben.
 %%%%
 lose all piety
-
+alle Frömmigkeit verlieren
 %%%%
 The portal requires @item_name@ for entry.
-
+Das Portal erfordert {acc}@item_name@ für den Eintritt.
 %%%%
 Entrants to this portal lose all standing with their god.
-
+Wer dieses Portal betritt, verliert jedes Ansehen bei seinem Gott.
 %%%%
 The portal draws power from the presence of the item and buzzes to life!
-
+Das Portal bezieht Energie aus der Anwesenheit des Gegenstandes und erwacht zum Leben!
 %%%%
 The portal draws power from the presence of the items and buzzes to life!
-
+Das Portal bezieht Energie aus der Anwesenheit der Gegenstände und erwacht zum Leben!
 %%%%
 You don't have @item_name@ with you.
-
+Ihr habt {acc}@item_name@ nicht dabei.
 %%%%
 You don't have the item to give! Perhaps you haven't completely identified the item yet?
-
+Den Gegenstand habt Ihr nicht zu verschenken! Vielleicht habt Ihr ihn noch nicht vollständig identifiziert?
 %%%%
 You don't have the items to give! Perhaps you haven't completely identified the item yet?
-
+Die Gegenstände habt Ihr nicht zu verschenken! Vielleicht habt Ihr einen Gegenstand noch nicht vollständig identifiziert?
 %%%%
 You must unequip the item first!
-
+Ihr müsst den Gegenstand zuerst ausrüsten!
 %%%%
 You must unequip the items first!
-
+Ihr müsst die Gegenstände zuerst ausrüsten!
 %%%%
 The portal accepts the item and buzzes to life!
-
+Das Portal nimmt den Gegenstand an und erwacht zum Leben!
 %%%%
 The portal accepts the items and buzzes to life!
-
+Das Portal nimmt die Gegenstände an und erwacht zum Leben!
 %%%%
 The portal is unable to unshackle you from Ashenzari's curse; you must abandon your deity entirely to enter!
-
+Das Portal kann Euch nicht von Aschenzaris Fluch befreien; Ihr müsst Eure Gottheit aufgeben, um einzutreten!
 %%%%
 This portal proclaims the superiority of the material over the divine; those who enter it will find they have lost all favour with their chosen deity. Enter anyway?
-
+Dieses Portal verkündet die Überlegenheit des Materiellen gegenüber dem Göttlichen; wer es betritt, wird feststellen, dass er jede Gunst bei seiner gewählten Gottheit verloren hat. Trotzdem eintreten?
 %%%%
 You feel utterly alone.
-
+Ihr fühlt Euch völlig allein.
 %%%%
 
 ##################
