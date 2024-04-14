@@ -20497,7 +20497,7 @@ The demonic rune of Zot may be found here.
 Die dämonische Rune von Zot ist hier zu finden.
 %%%%
 A powerful Pandemonium lord resides here.
-Hier residiert ein mächtiger Pandemonium-Lord.
+Hier residiert ein mächtiger Pandämoniumsfürst.
 %%%%
 It guards the demonic rune of Zot.
 Er bewacht die dämonische Rune von Zot.
