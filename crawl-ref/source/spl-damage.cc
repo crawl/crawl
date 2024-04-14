@@ -1084,6 +1084,51 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     return spret::success;
 }
 
+static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
+                                               coord_def target, bool tracer)
+{
+    const bool mon = agent.is_monster();
+
+    bolt beam;
+    beam.is_tracer    = tracer;
+    beam.set_agent(&agent);
+    beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
+    beam.foe_ratio    = 80; // default
+    beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
+    beam.source = beam.target = target;
+    zappy(ZAP_PERMAFROST_ERUPTION_EARTH, pow, mon, beam);
+    beam.fire();
+    const ai_action::goodness earth_good = beam.good_to_fire();
+
+    zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, mon, beam);
+    beam.ex_size       = 1;
+    beam.apply_beam_conducts();
+    beam.refine_for_explosion();
+    beam.explode();
+    const ai_action::goodness ice_good = beam.good_to_fire();
+
+    if (earth_good == ai_action::bad() || ice_good == ai_action::bad())
+        return ai_action::bad();
+    if (earth_good == ai_action::good() || ice_good == ai_action::good())
+        return ai_action::good();
+    return ai_action::neutral();
+}
+
+bool mons_should_fire_permafrost(int pow, const actor &agent)
+{
+    set<coord_def> targets = permafrost_targets(agent, pow, false);
+    bool ever_good = false;
+    for (auto target : targets)
+    {
+        const ai_action::goodness result = _fire_permafrost_at(agent, pow, target, true);
+        if (result == ai_action::bad())
+            return false; // be very careful!
+        if (result == ai_action::good())
+            ever_good = true;
+    }
+    return ever_good;
+}
+
 set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
 {
     set<coord_def> targets;
@@ -1119,8 +1164,6 @@ set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual)
     return targets;
 }
 
-
-
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
 {
     set<coord_def> maybe_targets = permafrost_targets(caster, pow, true);
@@ -1149,18 +1192,7 @@ spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
     const coord_def targ = *random_iterator(maybe_targets);
     mpr("Bitter cold erupts, blasting rock from the ceiling!");
 
-    bolt beam;
-    zappy(ZAP_PERMAFROST_ERUPTION_EARTH, pow, false, beam);
-    beam.set_agent(&you);
-    beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
-    beam.source = beam.target = targ;
-    beam.fire();
-
-    zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, false, beam);
-    beam.ex_size       = 1;
-    beam.apply_beam_conducts();
-    beam.refine_for_explosion();
-    beam.explode();
+    _fire_permafrost_at(caster, pow, targ, false);
 
     return spret::success;
 }

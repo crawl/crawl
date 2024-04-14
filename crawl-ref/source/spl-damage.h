@@ -89,6 +89,7 @@ coord_def get_thunderbolt_last_aim(actor *caster);
 dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
+bool mons_should_fire_permafrost(int pow, const actor &agent);
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail);
 set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual = true);
 

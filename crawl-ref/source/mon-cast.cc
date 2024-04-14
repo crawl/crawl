@@ -611,6 +611,16 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_plasma_beam(pow, caster, false);
         }
     } },
+    { SPELL_PERMAFROST_ERUPTION, {
+        [](const monster &caster) {
+            const int pow = mons_spellpower(caster, SPELL_PLASMA_BEAM);
+            return ai_action::good_or_bad(mons_should_fire_permafrost(pow, caster));
+        },
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_PERMAFROST_ERUPTION);
+            cast_permafrost_eruption(caster, pow, false);
+        }
+    } },
     { SPELL_BLINK, {
         _mons_likes_blinking,
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
