@@ -115,7 +115,7 @@ sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
 
-%sdir gui/spells/poison
+%sdir gui/spells/alchemy
 alistairs_intoxication ALISTAIRS_INTOXICATION
 mephitic_cloud MEPHITIC_CLOUD
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE

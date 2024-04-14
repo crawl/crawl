@@ -134,7 +134,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 12, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
        { SPELL_REPEL_MISSILES, 12, MON_SPELL_WIZARD },
-       { SPELL_BLINK_AWAY, 36, MON_SPELL_WIZARD | MON_SPELL_SHORT_RANGE },
+       { SPELL_BLINK_RANGE, 36, MON_SPELL_WIZARD | MON_SPELL_SHORT_RANGE },
       }
     },
 
@@ -575,7 +575,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_JUMPING_SPIDER,
       {
        { SPELL_BLINK_CLOSE, 29, MON_SPELL_NATURAL },
-       { SPELL_BLINK_AWAY, 29, MON_SPELL_NATURAL },
+       { SPELL_BLINK_RANGE, 29, MON_SPELL_NATURAL },
       }
     },
 
@@ -1204,7 +1204,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_IRONBOUND_THUNDERHULK,
       {
        { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
-       { SPELL_BLINK_RANGE, 25, MON_SPELL_MAGICAL },
+       { SPELL_BLINK_RANGE, 20, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1984,7 +1984,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PORTAL_PROJECTILE, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
-       { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
+       { SPELL_BLINK_RANGE, 11, MON_SPELL_WIZARD },
       }
     },
 

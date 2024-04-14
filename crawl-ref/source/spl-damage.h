@@ -166,3 +166,5 @@ int get_warp_space_chance(int pow);
 
 dice_def collision_damage(int pow, bool random);
 string describe_collision_dam(dice_def dice);
+
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets);

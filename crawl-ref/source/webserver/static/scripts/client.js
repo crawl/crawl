@@ -23,6 +23,7 @@ function (exports, $, key_conversion, chat, comm) {
     var current_hash;
     var exit_reason, exit_message, exit_dump;
     var normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
+    next_loading_img = 0;
 
     var send_message = comm.send_message;
 
@@ -1046,14 +1047,28 @@ function (exports, $, key_conversion, chat, comm) {
         });
     }
 
+    function select_next_loading_img()
+    {
+        var imgs = $("#loader img");
+        next_loading_img = Math.floor(Math.random() * imgs.length);
+        // remove the lazy loading attribute, causing the image to load.
+        // (N.b. I didn't find standards-level documentation indicating that
+        // this must do anything, but it does have the desired behavior on
+        // firefox/chrome at the time of testing.)
+        // This never bothers to add back the lazy loading attribute, under
+        // the assumption that all images will be cached.
+        if ($(imgs[next_loading_img]).attr("loading"))
+            $(imgs[next_loading_img]).removeAttr("loading");
+    }
+
     function show_loading_screen()
     {
-        if (current_layer == "loader") return;
+        if (current_layer == "loader")
+            return;
         var imgs = $("#loader img");
+        next_loading_img = Math.min(imgs.length - 1, next_loading_img); // sanity check
         imgs.hide();
-        var count = imgs.length;
-        var rand_index = Math.floor(Math.random() * count);
-        $(imgs[rand_index]).show();
+        $(imgs[next_loading_img]).show();
         set_layer("loader");
     }
 
@@ -1094,6 +1109,8 @@ function (exports, $, key_conversion, chat, comm) {
         exit_reason = null;
         exit_message = null;
         exit_dump = null;
+        if (current_user)
+            select_next_loading_img();
 
         if ( $("#reset_pw").length )
         {

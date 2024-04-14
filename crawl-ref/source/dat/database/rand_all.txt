@@ -144,6 +144,7 @@ _xom_esteem_
 # chosen 20% of the time
 w:40
 @divine_esteem@
+
 Absentmindedness
 
 Amusement
@@ -177,6 +178,8 @@ Sleight of Hands
 Wantonness
 
 Whimsicality
+
+Temerity
 
 %%%%
 _time_name_

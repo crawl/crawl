@@ -291,7 +291,7 @@ vector<coord_def> chain_lightning_targets()
     return targets;
 }
 
-static bool _warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
 {
     vector<const monster*> bad_targets;
     for (coord_def p : targets)
@@ -332,8 +332,8 @@ static bool _warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
 spret cast_chain_lightning(int pow, const actor &caster, bool fail)
 {
     if (caster.is_player()
-        && _warn_about_bad_targets(SPELL_CHAIN_LIGHTNING,
-                                   chain_lightning_targets()))
+        && warn_about_bad_targets(SPELL_CHAIN_LIGHTNING,
+                                  chain_lightning_targets()))
     {
         return spret::abort;
     }
@@ -1128,7 +1128,7 @@ spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
                     maybe_victims.insert(*ai);
 
         vector<coord_def> mvv(maybe_victims.begin(), maybe_victims.end());
-        if (_warn_about_bad_targets(SPELL_PERMAFROST_ERUPTION, mvv))
+        if (warn_about_bad_targets(SPELL_PERMAFROST_ERUPTION, mvv))
             return spret::abort;
     }
 
@@ -2845,7 +2845,7 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
 spret cast_arcjolt(int pow, const actor &agent, bool fail)
 {
     if (agent.is_player()
-        && _warn_about_bad_targets(SPELL_ARCJOLT,
+        && warn_about_bad_targets(SPELL_ARCJOLT,
                                    arcjolt_targets(agent, false)))
     {
             return spret::abort;
@@ -3032,7 +3032,7 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail)
     if (agent.is_player())
     {
         vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
-        if (_warn_about_bad_targets(SPELL_PLASMA_BEAM,
+        if (warn_about_bad_targets(SPELL_PLASMA_BEAM,
                                     plasma_beam_paths(you.pos(), known_targs)))
         {
             return spret::abort;

@@ -1,7 +1,7 @@
 ######################################################
 # Gizmo Names
 # -------------
-# rand_gizmo.txt: keywords for Coglin gizmos
+# gizmo.txt: keywords for Coglin gizmos
 #
 # This file contains the lists of keywords (and their
 # weights) that are used to generate the names of
@@ -25,6 +25,8 @@ dynamic
 emergency
 
 secondary
+
+tertiary
 
 tungsten
 
@@ -76,6 +78,8 @@ subsystem
 assembler
 
 capacitor
+
+inducer
 
 encabulator
 

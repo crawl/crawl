@@ -1643,7 +1643,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_TP:
         if (decay_enchantment(en, true) && !no_tele())
-            monster_teleport(this, true);
+            monster_teleport(this, true, false, true);
         break;
 
     case ENCH_AWAKEN_FOREST:

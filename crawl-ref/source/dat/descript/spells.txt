@@ -998,8 +998,7 @@ Maxwell's Portable Piledriver spell
 Compresses an envelope of space around the caster and an adjacent enemy, then
 allows it to decompress abruptly, propelling both of them forward until the
 latter collides with something, inflicting damage proportional to the distance
-travelled. The recoil will leave the caster unable to move for a brief while,
-and unable to recast the spell until they regain mobility.
+travelled.
 
 Originally designed for use in construction, it will automatically target the
 nearest mass with the longest clear path towards a wall or other solid object
@@ -1712,7 +1711,8 @@ never directly lethal.
 %%%%
 Teleport Other spell
 
-Randomly translocates a targeted creature.
+Attempts to teleport a targeted creature out of the caster's sight, after a
+short delay.
 %%%%
 Throw Ally spell
 

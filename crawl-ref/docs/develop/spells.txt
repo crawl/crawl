@@ -110,8 +110,8 @@ via portals.
 This includes partial or complete movement of the caster's body, usually in
 short distances compared to consumables (Blink, Vhi's Electric Charge); the
 creation of loose or controlled portals (Malign Gateway, Passage of Golubria);
-and moving others entirely, whether short distances (Gell's Gravitas) or far
-(Teleport Other).
+and moving others entirely, whether short distances (Maxwell's Portable
+Piledriver) or far (Teleport Other).
 
 This also includes spells which cause items to be moved from one location to
 another, such as Apportation or Dimensional Bullseye.
