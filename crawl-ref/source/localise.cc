@@ -1427,6 +1427,77 @@ static string _localise_thing_in_location(const string& context, const string& v
     return thing + location;
 }
 
+// tokenise a trsing with @foo@ parameters into params and plain strings
+static void tokenise_string_with_params(const string &s, vector<string>& results)
+{
+    results.clear();
+    bool param = false;
+    size_t pos = 0;
+    size_t prev = 0;
+    while ((pos = s.find('@', pos)) != string::npos)
+    {
+        string tok;
+        // include closing @ if param
+        if (param)
+            pos++;
+        tok = s.substr(prev, pos - prev);
+        if (!tok.empty())
+            results.push_back(tok);
+        param = !param;
+        prev = pos;
+        // move past opening @
+        if (param)
+            pos++;
+    }
+
+    // get the last bit
+    string tok = s.substr(prev, s.length() - prev);
+    if (!tok.empty())
+        results.push_back(tok);
+}
+
+static string _reverse_engineer_parameterised_string(const string& s, const string& candidate)
+{
+    vector<string> tokens;
+    map<string, string> params;
+    tokenise_string_with_params(candidate, tokens);
+    size_t pos = 0;
+    string param_name;
+    for (const string &tok: tokens)
+    {
+        if (starts_with(tok, "@") && ends_with(tok, "@"))
+        {
+            // param
+            param_name = tok.substr(1, tok.length() - 2);
+        }
+        else
+        {
+            // not param
+            if (pos == 0)
+            {
+                if (!starts_with(s, tok))
+                    return "";
+            }
+            else
+            {
+                size_t prev = pos;
+                pos = s.find(tok, pos);
+                if (pos == string::npos)
+                    return "";
+                if (!param_name.empty())
+                {
+                    string param_value = s.substr(prev, pos - prev);
+                    params[param_name] = param_value;
+                    param_name = "";
+                }
+            }
+            pos += tok.length();
+        }
+    }
+
+    return localise(candidate, params);
+}
+
 /*
  * Lua code can only pass a single string to mpr(), so any parameterisation has
  * to be handled on the Lua code, and all we see is the completed string. If the
@@ -1434,75 +1505,38 @@ static string _localise_thing_in_location(const string& context, const string& v
  * for ech one, but in some cases, the number of permutations is to great for
  * that to be feasible, so we're forced to reverse engineer.
  *
- * This is extremely hack-tastic! Like, really gross. It's very tightly coupled
- * to the corresponding lua code.
+ * Unfortunately, this is tightly coupled to the Lua code (yuk).
  */
 static string _reverse_engineer_parameterised_string(const string& s)
 {
+    static const string candidates[] = {
+        // autofight.lua
+        "No spell in slot @slot@!",
+        // automagic.lua
+        "You don't have enough magic to cast @spell_name@!",
+        "Automagic will cast spell in slot @slot@ (@spell_name@).",
+        "Automagic enabled, will cast spell in slot @slot@ (@spell_name@).",
+        // lm_trove.lua
+        "This portal requires the presence of @item_name@ to function.",
+        "The portal requires @item_name@ for entry.",
+        "This portal needs @item_name@ to function.",
+        "You don't have @item_name@ with you."
+    };
+
+    string result;
+
     // avoid infinite loop
     if (contains(s, '@'))
         return "";
 
-    // autofight.lua
-
-    static const string no_spell_in_slot = "No spell in slot @slot@!";
-    size_t pos = no_spell_in_slot.find('@');
-    if (strncmp(s.c_str(), no_spell_in_slot.c_str(), pos) == 0)
+    for (const string c: candidates)
     {
-        string slot = s.substr(pos, 1);
-        return localise(no_spell_in_slot, {{"slot", slot}});
+        result = _reverse_engineer_parameterised_string(s, c);
+        if (!result.empty())
+            return result;
     }
 
-    // automagic.lua
-
-    static const string not_enough_magic = "You don't have enough magic to cast @spell_name@!";
-    pos = not_enough_magic.find('@');
-    if (strncmp(s.c_str(), not_enough_magic.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find("!", pos);
-        if (pos2 == string::npos)
-            return "";
-
-        string spell_name = s.substr(pos, pos2 - pos);
-        return localise(not_enough_magic, {{"spell_name", spell_name}});
-    }
-
-    static const string automagic_will_cast = "Automagic will cast spell in slot @slot@ (@spell_name@).";
-    pos = automagic_will_cast.find('@');
-    if (strncmp(s.c_str(), automagic_will_cast.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find(" (", pos);
-        size_t pos3 = pos2 + strlen(" (");
-        size_t pos4 = s.find(").", pos3);
-        if (pos2 == string::npos || pos4 == string::npos)
-            return "";
-
-        string slot = s.substr(pos, pos2 - pos);
-        string spell_name = s.substr(pos3, pos4 - pos3);
-
-        map<string, string> params = {{"slot", slot}, {"spell_name", spell_name}};
-        return localise(automagic_will_cast, params);
-    }
-
-    static const string automagic_enabled = "Automagic enabled, will cast spell in slot @slot@ (@spell_name@).";
-    pos = automagic_enabled.find('@');
-    if (strncmp(s.c_str(), automagic_enabled.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find(" (", pos);
-        size_t pos3 = pos2 + strlen(" (");
-        size_t pos4 = s.find(").", pos3);
-        if (pos2 == string::npos || pos4 == string::npos)
-            return "";
-
-        string slot = s.substr(pos, pos2 - pos);
-        string spell_name = s.substr(pos3, pos4 - pos3);
-
-        map<string, string> params = {{"slot", slot}, {"spell_name", spell_name}};
-        return localise(automagic_enabled, params);
-    }
-
-    // lm_tmsg.lua
-
+    // timed portal noise (lm_tmsg.lua)
     if (starts_with(s, "You hear the ")
         and (contains(s, "avalanche of sand")
              or contains(s, "avalanche of rocks")
@@ -1528,56 +1562,6 @@ static string _reverse_engineer_parameterised_string(const string& s)
             msg = replace_first(s, "the ", "the @adjective@");
 
         return localise(msg, {{"adjective", adjective}});
-    }
-
-    // lm_trove.lua
-
-    static const string portal_requires = "This portal requires the presence of @item_name@ to function.";
-    pos = portal_requires.find('@');
-    if (strncmp(s.c_str(), portal_requires.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find(" to function.", pos);
-        if (pos2 == string::npos)
-            return "";
-
-        string item_name = s.substr(pos, pos2 - pos);
-        return localise(portal_requires, {{"item_name", item_name}});
-    }
-
-    static const string portal_requires2 = "The portal requires @item_name@ for entry.";
-    pos = portal_requires2.find('@');
-    if (strncmp(s.c_str(), portal_requires2.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find(" for entry.", pos);
-        if (pos2 == string::npos)
-            return "";
-
-        string item_name = s.substr(pos, pos2 - pos);
-        return localise(portal_requires2, {{"item_name", item_name}});
-    }
-
-    static const string portal_needs = "This portal needs @item_name@ to function.";
-    pos = portal_needs.find('@');
-    if (strncmp(s.c_str(), portal_needs.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find(" to function.", pos);
-        if (pos2 == string::npos)
-            return "";
-
-        string item_name = s.substr(pos, pos2 - pos);
-        return localise(portal_needs, {{"item_name", item_name}});
-    }
-
-    static const string dont_have = "You don't have @item_name@ with you.";
-    pos = dont_have.find('@');
-    if (strncmp(s.c_str(), dont_have.c_str(), pos) == 0)
-    {
-        size_t pos2 = s.find(" with you.", pos);
-        if (pos2 == string::npos)
-            return "";
-
-        string item_name = s.substr(pos, pos2 - pos);
-        return localise(dont_have, {{"item_name", item_name}});
     }
 
     return "";
