@@ -632,7 +632,7 @@ dangerous.
 the Shining One wrath
 
 The Shining One's wrath is straightforward and unmistakable. Its victims find
-themselves smote with holy fire and beset with holy warriors. Sinners will be
+themselves smitten with holy fire and beset with holy warriors. Sinners will be
 silenced, and the Shining One will also shout to alert the victim's foes.
 %%%%
 Trog wrath
