@@ -1758,7 +1758,7 @@ static string _describe_weapon_brand(const item_def &item)
                "armour. Undead and demons cannot use this.";
     case SPWPN_FOUL_FLAME:
         return "It has been infused with foul flame, dealing an additional "
-               "three-quarters of damage to holy beings, an additional quarter "
+               "three-quarters damage to holy beings, an additional quarter "
                "damage to undead and demons, and an additional half damage to "
                "all others. Holy beings and good god worshippers cannot use "
                "this.";
