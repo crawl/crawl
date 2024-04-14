@@ -361,14 +361,12 @@ Okawaru powers
 %%%%
 Pakellas powers
 
-Followers of Pakellas do not regenerate their magic power naturally, and are
-forbidden from using external means to do so; instead, they are granted
-magical energy on killing beings. They may use increasing amounts of magical
-energy to strengthen their devices, temporarily granting them additional
-power, and can also use their magical energy to recharge their devices.
-Sufficiently devout followers will receive new devices from Pakellas, and may
-eventually petition Pakellas to personally charge one of their devices beyond
-its normal limits.
+파켈라스의 추종자들은 자연적으로 마법력을 회복하지 않으며, 외부 수단을 사용해 
+회복하는 것도 금지되어 있다. 대신, 그들은 생명체를 죽였을 때 마법 에너지를 부여받는다. 
+그들은 기기를 강화하기 위해 점점 더 많은 양의 마법 에너지를 사용할 수 있고, 
+일시적으로 추가적인 힘을 부여할 수 있으며, 그들의 마법 에너지를 사용하여 기기를 
+충전할 수 있다. 헌신적인 추종자들은 파켈라스로부터 새로운 기기를 받게 될 것이며,
+자신의 기기 중 하나를 오버차지할 것을 파켈라스에게 요청할 수 있다.
 %%%%
 Qazlal powers
 
@@ -589,10 +587,8 @@ Okawaru wrath
 %%%%
 Pakellas wrath
 
-Those that offend Pakellas will find themselves completely unable to make use
-of their devices for the duration of Pakellas's displeasure. Those who abandon
-Pakellas altogether will also continue to be unable to regenerate their magical
-power so long as Pakellas' attention remains on them.
+파켈라스를 모욕해 그를 기분 나쁘게 만드는 자들은 완전히 자신의 기기를 사용할 수 없게 될 것이다. 
+파켈라스 신앙을 완전히 저버리는 사람들도 파켈라스의 관심이 그들에게 계속 유지되는 한 마법력을 회복할 수 없게 될 것이다.
 %%%%
 Qazlal wrath
 
