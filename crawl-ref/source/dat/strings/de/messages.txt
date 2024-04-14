@@ -11859,7 +11859,7 @@ The Orb lets out a furious burst of light!
 Die Kugel stößt einen wilden Lichtblitz aus!
 %%%%
 The lords of Pandemonium are not amused. Beware!
-Die Herren von Pandemonium sind nicht amüsiert. Vorsicht!
+Die Herren von Pandämonium sind nicht amüsiert. Vorsicht!
 %%%%
 %s tells them not to hurry.
 %s sagt ihnen, sie sollen sich nicht beeilen.
@@ -16600,7 +16600,7 @@ It doesn't seem very happy.
 Er scheint nicht sehr glücklich zu sein.
 %%%%
 You open a gate to Pandemonium!
-Ihr öffnet ein Tor zu Pandemonium!
+Ihr öffnet ein Tor zu Pandämonium!
 %%%%
 Wisps of shadow whirl around you...
 Schattenfetzen wirbeln um Euch herum...
@@ -17361,7 +17361,7 @@ You feel %s slowing down the madness of this place.
 Ihr spürt, dass %s den Wahnsinn in diesem Ort verlangsamt.
 %%%%
 You pass into a different region of Pandemonium.
-Ihr passiert in eine andere Region von Pandemonium.
+Ihr passiert in eine andere Region von Pandämonium.
 %%%%
 Welcome back to %s!
 Willkommen zurück bei {dat}%s!

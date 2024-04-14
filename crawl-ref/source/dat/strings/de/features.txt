@@ -237,10 +237,10 @@ one-way gate leading to the halls of Pandemonium
 Einwegtor, das in die Hallen des Pandämoniums führt
 %%%%
 gate leading to another region of Pandemonium
-Tor, das in eine andere Region von Pandemonium führt
+Tor, das in eine andere Region von Pandämonium führt
 %%%%
 gate leading out of Pandemonium
-Tor, das aus Pandemonium herausführt
+Tor, das aus Pandämonium herausführt
 %%%%
 gate to the Vaults
 Tor zu den Gewölben
@@ -716,10 +716,10 @@ the one-way gate leading to the halls of Pandemonium
 das Einwegtor, das in die Hallen des Pandämoniums führt
 %%%%
 the gate leading to another region of Pandemonium
-das Tor, das in eine andere Region von Pandemonium führt
+das Tor, das in eine andere Region von Pandämonium führt
 %%%%
 the gate leading out of Pandemonium
-das Tor, das aus Pandemonium herausführt
+das Tor, das aus Pandämonium herausführt
 %%%%
 the gate to the Vaults
 das Tor zu den Gewölben
@@ -1186,10 +1186,10 @@ a one-way gate leading to the halls of Pandemonium
 {n}ein Einwegtor, das in die Hallen des Pandämoniums führt
 %%%%
 a gate leading to another region of Pandemonium
-{n}ein Tor, das in eine andere Region von Pandemonium führt
+{n}ein Tor, das in eine andere Region von Pandämonium führt
 %%%%
 a gate leading out of Pandemonium
-{n}ein Tor, das aus Pandemonium herausführt
+{n}ein Tor, das aus Pandämonium herausführt
 %%%%
 a gate to the Vaults
 {n}ein Tor zu den Gewölben
