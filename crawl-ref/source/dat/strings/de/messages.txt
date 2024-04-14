@@ -20467,46 +20467,46 @@ You hear the creaking of ancient metal!
 ##################
 %%%%
 The mighty Pandemonium lord Cerebov resides here.
-
+Der mächtige Pandämonium-Lord Cerebov residiert hier.
 %%%%
 The mighty Pandemonium lord Mnoleg resides here.
-
+Der mächtige Pandämonium-Lord Mnoleg residiert hier.
 %%%%
 The mighty Pandemonium lord Lom Lobon resides here.
-
+Der mächtige Pandämonium-Lord Lom Lobon residiert hier.
 %%%%
 The mighty Pandemonium lord Gloorx Vloq resides here.
-
+Der mächtige Pandämonium-Lord Gloorx Vloq residiert hier.
 %%%%
 They guard the fiery rune of Zot.
-
+Er bewacht die feurige Rune von Zot.
 %%%%
 They guard the glowing rune of Zot.
-
+Er bewacht die leuchtende Rune von Zot.
 %%%%
 They guard the magical rune of Zot.
-
+Er bewacht die magische Rune von Zot.
 %%%%
 They guard the dark rune of Zot.
-
+Er bewacht die dunkle Rune von Zot.
 %%%%
 The tension of great conflict fills the air!
-
+Die Spannung eines großen Konflikts liegt in der Luft!
 %%%%
 The demonic rune of Zot may be found here.
-
+Die dämonische Rune von Zot ist hier zu finden.
 %%%%
 A powerful Pandemonium lord resides here.
-
+Hier residiert ein mächtiger Pandemonium-Lord.
 %%%%
 It guards the demonic rune of Zot.
-
+Er bewacht die dämonische Rune von Zot.
 %%%%
 The grate goes up!
-
+Das Gitter geht hoch!
 %%%%
 You hear a sound of rusty metal sliding.
-
+Ihr hört ein Geräusch von rostigem Metall, das gleitet.
 %%%%
 
 ##################
