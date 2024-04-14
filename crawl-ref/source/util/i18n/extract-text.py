@@ -634,7 +634,7 @@ def process_lua_file(filename):
         if line.startswith('--'):
             # skip comments
             continue
-        
+
         concatenate = False
         if len(lines) > 0:
             if line.startswith('..') or lines[-1].endswith('..'):
@@ -645,12 +645,12 @@ def process_lua_file(filename):
                 concatenate = True
             elif line.startswith('or ') or lines[-1].endswith(' or'):
                 concatenate = True
-        
+
         if concatenate:
             lines[-1] += ' '  + line
         else:
             lines.append(line)
-    
+
     raw_lines = lines
     lines = []
     for line in raw_lines:
@@ -762,7 +762,7 @@ def process_lua_file(filename):
 
             if string == "no spell currently":
                 strings.append("# note: @spell_name@ when no spell in chosen slot")
-            
+
             # split on newlines
             substrings = string.split("\\n")
             for ss in substrings:
