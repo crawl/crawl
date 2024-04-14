@@ -1287,7 +1287,7 @@ molten gargoyle
 geschmolzener Gargoyle
 %%%%
 pandemonium lord
-Pandemoniumsherr
+Pandämoniumsfürst
 %%%%
 hell lord
 Höllenherr

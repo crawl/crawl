@@ -1288,7 +1288,7 @@ your molten gargoyle
 Euer geschmolzener Gargoyle
 %%%%
 your pandemonium lord
-Euer Pandemoniumsherr
+Euer Pandämoniumsfürst
 %%%%
 your hell lord
 Euer Höllenherr

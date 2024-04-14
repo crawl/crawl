@@ -20467,16 +20467,16 @@ You hear the creaking of ancient metal!
 ##################
 %%%%
 The mighty Pandemonium lord Cerebov resides here.
-Der mächtige Pandämonium-Lord Cerebov residiert hier.
+Der mächtige Pandämoniumsfürst Cerebov residiert hier.
 %%%%
 The mighty Pandemonium lord Mnoleg resides here.
-Der mächtige Pandämonium-Lord Mnoleg residiert hier.
+Der mächtige Pandämoniumsfürst Mnoleg residiert hier.
 %%%%
 The mighty Pandemonium lord Lom Lobon resides here.
-Der mächtige Pandämonium-Lord Lom Lobon residiert hier.
+Der mächtige Pandämoniumsfürst Lom Lobon residiert hier.
 %%%%
 The mighty Pandemonium lord Gloorx Vloq resides here.
-Der mächtige Pandämonium-Lord Gloorx Vloq residiert hier.
+Der mächtige Pandämoniumsfürst Gloorx Vloq residiert hier.
 %%%%
 They guard the fiery rune of Zot.
 Er bewacht die feurige Rune von Zot.

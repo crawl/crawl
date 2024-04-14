@@ -82,7 +82,7 @@ GENERATE:acc
 
 # weak nouns
 /Prinz\b/Prinzen/
-/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet)$/$1en/
+/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)$/$1en/
 /[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
 # match Affe but not Waffe
@@ -153,7 +153,7 @@ GENERATE:dat
 
 # weak nouns
 /Prinz\b/Prinzen/
-/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|herz)$/$1en/
+/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst|herz)$/$1en/
 /[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
 # match Affe but not Waffe
@@ -222,7 +222,7 @@ GENERATE:gen
 
 # fixup weak nouns
 /herzs\b/herzens/
-/^.*?(?=(#|$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet)s$/$1en/
+/^.*?(?=(#|$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)s$/$1en/
 /^.*?(?=(#|$))/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
 /^.*?(?=(#|$))/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
 # match Affe but not Waffe

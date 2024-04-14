@@ -750,13 +750,13 @@ seinem eigenen Schatten
 %%%%
 # must decline manually because article is not at the start
 %s the pandemonium lord
-%s der Pandemoniumsherr
+%s der Pandämoniumsfürst
 %%%%
 {acc}%s the pandemonium lord
-%s den Pandemoniumsherrn
+%s den Pandämoniumsfürsten
 %%%%
 {dat}%s the pandemonium lord
-%s dem Pandemoniumsherrn
+%s dem Pandämoniumsfürsten
 %%%%
 unknown source
 unbekannte Quelle

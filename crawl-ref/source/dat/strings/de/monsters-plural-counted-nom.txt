@@ -1287,7 +1287,7 @@
 %d geschmolzene Gargoyles
 %%%%
 %d pandemonium lords
-%d Pandemoniumsherre
+%d Pandämoniumsfürsten
 %%%%
 %d hell lords
 %d Höllenherre
