@@ -1520,7 +1520,14 @@ static string _reverse_engineer_parameterised_string(const string& s)
         "This portal requires the presence of @item_name@ to function.",
         "The portal requires @item_name@ for entry.",
         "This portal needs @item_name@ to function.",
-        "You don't have @item_name@ with you."
+        "You don't have @item_name@ with you.",
+        // arena_sprint.des
+        "Score multiplier: @style_mult@x",
+        "You now have @style_points@ arena points (gained @style_gain@).",
+        "ROUND @round_id@!",
+        // zigsprint.des
+        "Welcome to arena @teleport_spot@.",
+        "Welcome to arena @arena_number@.",
     };
 
     string result;
