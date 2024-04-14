@@ -661,6 +661,7 @@ def process_lua_file(filename):
                 line = line.replace('held in a net', 'caught in a web')
         lines.append(line)
 
+    wizlab_descs = []
 
     strings = []
     section = ''
@@ -669,6 +670,15 @@ def process_lua_file(filename):
             section = re.sub(r'^function\s*', '', line)
             section = re.sub(r'\s*\(.*', '', section)
             strings.append('# section: ' + section)
+            continue
+
+        # extract wizlab descriptions
+        if filename.endswith('wizlab.des') and 'wizlab_milestone' in line and '"' in line:
+            m = re.search('(?<=")[^"]+(?=")', line)
+            if m and m.group(0):
+                wizlab_descs.append(m.group(0))
+
+        if filename.endswith('.des') and 'crawl.mpr' not in line:
             continue
 
         if '"' not in line:
@@ -703,6 +713,7 @@ def process_lua_file(filename):
         line = re.sub(r'==\s*\"[^"]*\"', '== dummy', line)
         line = re.sub(r'~=\s*\"[^"]*\"', '~= dummy', line)
         line = re.sub(r'find\s*\([^\)]+\)', 'find(dummy)', line)
+        line = re.sub(r'match\s*\([^\)]+\)', 'match(dummy)', line)
 
         if re.search(r'\.\.\s*caught\s*\.\.', line):
             line = re.sub(r'"\s*\.\.\s*caught\s*\.\.\s*"', 'held in a net', line)
@@ -720,24 +731,26 @@ def process_lua_file(filename):
             #line = re.sub(r'"\s*\.\.[^"]*"', '%s', line)
             line = re.sub(r'"\s*\.\.\s*', '@', line)
             line = re.sub(r'\s*\.\.\s*"', '@', line)
-            line = re.sub(r'\s*\.\.\s*', '@@', line)
+            line = re.sub(r'\s+\.\.\s+', '@@', line)
             line = line.replace('@AUTOMAGIC_SPELL_SLOT@', '@slot@')
             line = re.sub('@[^@]*AUTOMAGIC_SPELL_SLOT[^@]*@', '@spell_name@', line)
-            line = re.sub(r'@self[:\.]', '@', line)
+            line = re.sub(r'@[^@]+[\.:]([^@]+)@', r'@\1@', line)
+            line = re.sub(r'\[([a-zA-Z0-9_]+)\]@', r'_\1@', line)
             line = line.replace('()@', '@')
+            line = re.sub('\s*[\-\+]\s*[0-9]\s*@', '@', line)
             # verb is actually a noun
-            line = line.replace('@chk[2]@@verb@', '@adjective@@noise@')
+            line = line.replace('@chk_2@@verb@', '@adjective@@noise@')
 
         if 'crawl.mpr' in line:
             # we don't want to extract the second parameter - it's the channel
-            line = re.sub(r',\s*"[^"]*"\s*\)$', ', channel)', line)
+            line = re.sub(r',\s*"[^"]*"\s*\);?$', ', channel)', line)
 
         matches = re.findall('"[^"]*"', line)
         for match in matches:
             string = match[1:-1] # remove quotes
             if string == '':
                 continue
-            if 'ERROR' in string or 'buggy' in string:
+            if 'ERROR' in string or 'Error' in string or 'buggy' in string:
                 continue
             if 'marker' in string or 'Marker' in string:
                 continue
@@ -756,7 +769,6 @@ def process_lua_file(filename):
                 if ss != '':
                     strings.append(ss)
 
-
     # expand params
     raw_strings = strings
     strings = []
@@ -768,8 +780,14 @@ def process_lua_file(filename):
         alternatives = [string]
         if '@plural@' in string:
             alternatives = expand_param(string, "@plural@", ["", "s"])
-        elif '@message@' in string:
+        elif filename.endswith('automagic.lua') and '@message@' in string:
             alternatives = expand_param(string, "@message@", ["", " enabled,"])
+        elif '@spawn_dir@' in string:
+            alternatives = expand_param(string, "@spawn_dir@", ["north", "south", "east", "west"])
+        elif '@wizlab_desc@' in string:
+            alternatives = expand_param(string, "@wizlab_desc@", wizlab_descs)
+        elif filename.endswith('pan.des') and '@runes_name@' in string:
+            alternatives = expand_param(string, "@runes_name@", ["fiery", "glowing", "magical", "dark"])
         elif '@noise@ of @noisemaker@' in string:
             alternatives = expand_param(string, '@noise@ of @noisemaker@', \
                                                 [ \
@@ -1477,6 +1495,14 @@ else:
     lua_files.sort()
     source_files.extend(lua_files)
 
+    des_files_raw = glob.glob("dat/des/*/*.des")
+    des_files = []
+    for filename in des_files_raw:
+        if not '/builder/' in filename:
+            des_files.append(filename)
+    des_files.sort()
+    source_files.extend(des_files)
+
     # put some important files first
     # (because if there are duplicate strings, we want them put under these files)
     files = SPECIAL_FILES.copy()
@@ -1496,7 +1522,7 @@ for filename in files:
     strings = []
     if filename == 'art-data.txt':
         strings = process_art_data_txt()
-    elif filename.endswith('.lua'):
+    elif filename.endswith('.lua') or filename.endswith('.des'):
         strings = process_lua_file(filename)
     else:
         strings = process_cplusplus_file(filename)

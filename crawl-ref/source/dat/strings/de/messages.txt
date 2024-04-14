@@ -20139,9 +20139,6 @@ Stlth++++
 rF+ rC+ rPois
 
 %%%%
-%w+
-
-%%%%
 willpower
 
 %%%%
@@ -20366,5 +20363,638 @@ This portal proclaims the superiority of the material over the divine; those who
 
 %%%%
 You feel utterly alone.
+
+%%%%
+
+##################
+# dat/des/altar/nemelex_the_gamble.des
+##################
+%%%%
+A transporter appears.
+
+%%%%
+<white>The transporter glows with a rainbow of weird colours and disappears.</white>
+
+%%%%
+
+##################
+# dat/des/altar/okawaru_arena.des
+##################
+%%%%
+The portcullises are lifted away, releasing the combatants.
+
+%%%%
+The doors seal shut behind you!
+
+%%%%
+The gates behind the altar rise, and the entry reopens.
+
+%%%%
+
+##################
+# dat/des/altar/vehumet_trees.des
+##################
+%%%%
+Suddenly, the trees start to burn!
+
+%%%%
+
+##################
+# dat/des/altar/xom_monty_hall.des
+##################
+%%%%
+Suddenly, the walls become transparent!
+
+%%%%
+
+##################
+# dat/des/altar/xom_sheep.des
+##################
+%%%%
+The walls suddenly crumble!
+
+%%%%
+A dream sheep catches fire!
+
+%%%%
+
+##################
+# dat/des/altar/yredelemnul_ordeal.des
+##################
+%%%%
+You hear a strange fizzling.
+
+%%%%
+
+##################
+# dat/des/arrival/twisted.des
+##################
+%%%%
+(@x@,@y@)
+
+%%%%
+
+##################
+# dat/des/branches/crypt.des
+##################
+%%%%
+There is a click. Suddenly, the grates are dropped!
+
+%%%%
+There is a click. Nothing appears to happen.
+
+%%%%
+Something awakens from inside the sarcophagi!
+
+%%%%
+The ground shakes!
+
+%%%%
+You hear grinding stone!
+
+%%%%
+
+##################
+# dat/des/branches/dis.des
+##################
+%%%%
+You hear the creaking of ancient metal!
+
+%%%%
+
+##################
+# dat/des/branches/pan.des
+##################
+%%%%
+The mighty Pandemonium lord @name@ resides here.
+
+%%%%
+They guard the fiery rune of Zot.
+
+%%%%
+They guard the glowing rune of Zot.
+
+%%%%
+They guard the magical rune of Zot.
+
+%%%%
+They guard the dark rune of Zot.
+
+%%%%
+The tension of great conflict fills the air!
+
+%%%%
+The demonic rune of Zot may be found here.
+
+%%%%
+A powerful Pandemonium lord resides here.
+
+%%%%
+It guards the demonic rune of Zot.
+
+%%%%
+The grate goes up!
+
+%%%%
+You hear a sound of rusty metal sliding.
+
+%%%%
+
+##################
+# dat/des/branches/shoals.des
+##################
+%%%%
+The surface of the water froths suddenly, and then rushes away.
+
+%%%%
+
+##################
+# dat/des/branches/slime.des
+##################
+%%%%
+You feel a strange vibration for a moment.
+
+%%%%
+You hear the sound of toppling stones.
+
+%%%%
+The stone walls suddenly crumble and collapse.
+
+%%%%
+You feel a great sense of loss, and a brush of the Abyss.
+
+%%%%
+
+##################
+# dat/des/branches/spider.des
+##################
+%%%%
+A basket of spiders falls from above!
+
+%%%%
+You notice webbing strewn about the room and hear a chittering noise in the background.
+
+%%%%
+
+##################
+# dat/des/branches/swamp.des
+##################
+%%%%
+A figure emerges from the depths of the water!
+
+%%%%
+The water ripples visibly.
+
+%%%%
+
+##################
+# dat/des/branches/tar.des
+##################
+%%%%
+You hear an unearthly scream, and the grinding of stone!
+
+%%%%
+The path is suddenly blocked!
+
+%%%%
+
+##################
+# dat/des/branches/zot.des
+##################
+%%%%
+You have a sense of imminent foreboding.
+
+%%%%
+One of the plants suddenly grows acid sacs!
+
+%%%%
+Another plant grows acid sacs!
+
+%%%%
+
+##################
+# dat/des/portals/ossuary.des
+##################
+%%%%
+There is a click, and some walls slide away!
+
+%%%%
+
+##################
+# dat/des/portals/volcano.des
+##################
+%%%%
+There is a rumble as the volcano erupts. The roof shakes.
+
+%%%%
+The volcano erupts! Nearby, a roof collapses.
+
+%%%%
+The ground shudders ominously.
+
+%%%%
+In the distance, the volcano explodes with a roar! Lava spreads onto the path.
+
+%%%%
+The air is thick with the scent of sulphur.
+
+%%%%
+There is another distant roar. More lava overflows!
+
+%%%%
+The ground moves violently!
+
+%%%%
+The volcano erupts again! A thin layer of lava overflows to fill the cavern.
+
+%%%%
+The ground shudders. Some of the lava has hardened enough to walk over!
+
+%%%%
+
+##################
+# dat/des/portals/wizlab.des
+##################
+%%%%
+Welcome to Doroklohe's Tomb!
+
+%%%%
+Welcome to Cigotuvi's Fleshworks!
+
+%%%%
+Welcome to Iskenderun's Mystic Tower!
+
+%%%%
+Welcome to Zonguldrok's Shrine!
+
+%%%%
+Welcome to Wucad Mu's Monastery!
+
+%%%%
+Welcome to The Roulette of Golubria!
+
+%%%%
+Welcome to The Chambers of the Cloud Mage!
+
+%%%%
+Welcome to The Hall of the Hellbinder!
+
+%%%%
+Welcome to Lehudib's Moon Base!
+
+%%%%
+The ground shakes.
+
+%%%%
+There is a faint hissing noise.
+
+%%%%
+There is a loud grinding noise.
+
+%%%%
+The walls fall away. The entombed are set free!
+
+%%%%
+A door appears!
+
+%%%%
+The walls vibrate.
+
+%%%%
+Strange, shadowy figures dance through the air in front of you.
+
+%%%%
+This room is filled with shadowy figures, quietly meditating.
+
+%%%%
+Here, spectral monks perform complicated, martial routines; they fade quickly.
+
+%%%%
+Faint laughter comes from somewhere. Too faint to be real.
+
+%%%%
+There is a faint scream of pain from a crouched figure. This too fades quickly.
+
+%%%%
+Grey monks gather around the fountain. They do not speak, nor look at each other.
+
+%%%%
+A figure sits in silent meditation. It spots you, gestures wildly, and disappears.
+
+%%%%
+One of the shadowy figures appears more solid!
+
+%%%%
+Shadows coalesce into solid form.
+
+%%%%
+The shadows inhabiting this place fade forever.
+
+%%%%
+
+##################
+# dat/des/sprint/arena_sprint.des
+##################
+%%%%
+A rune of Zot has appeared.
+
+%%%%
+The exit has re-opened... for now.
+
+%%%%
+The exit has re-opened.
+
+%%%%
+The Orb of Zot has appeared in the centre of the arena!
+
+%%%%
+<yellow>You have won a prize for killing the boss!</yellow>
+
+%%%%
+<yellow>Victory!</yellow>
+
+%%%%
+Score multiplier: @style_mult@x
+
+%%%%
+Score multiplier reset to 27x
+
+%%%%
+You lost your score multiplier.
+
+%%%%
+You now have @style_points@ arena points (gained @style_gain@).
+
+%%%%
+You now have 1 arena point.
+
+%%%%
+<white>The arena falls silent. Everyone but you is dead.</white>
+
+%%%%
+<white>There is nothing to do now but take the Orb and leave.</white>
+
+%%%%
+<white>Congratulations, champion.</white>
+
+%%%%
+Time's up!
+
+%%%%
+The arena falls silent.
+
+%%%%
+<yellow>Get ready!</yellow>
+
+%%%%
+ROUND @round_id@!
+
+%%%%
+FINAL BOSS!
+
+%%%%
+BOSS ROUND!
+
+%%%%
+ZOT ROUND!
+
+%%%%
+FIGHT!
+
+%%%%
+LIGHTNING ROUND!
+
+%%%%
+The exit has been sealed! It will re-open when you get the next rune.
+
+%%%%
+You sense a tension in the north.
+
+%%%%
+You sense a tension in the south.
+
+%%%%
+You sense a tension in the east.
+
+%%%%
+You sense a tension in the west.
+
+%%%%
+<cyan>You have entered the arena!
+
+%%%%
+You will win if you kill everything that spawns (including allies).
+
+%%%%
+If it is a boss round, you only need to kill the boss in order to win.
+
+%%%%
+If it is a lightning round, you only need to survive!</cyan>
+
+%%%%
+
+##################
+# dat/des/sprint/meat.des
+##################
+%%%%
+<red>@border_top@</lightred><red>                      --
+
+%%%%
+@border_bottom@</red>
+
+%%%%
+<red>@border_top@</lightred><red>                          --
+
+%%%%
+The Orb of Zot has appeared underneath you.
+
+%%%%
+<red>@border_top@</lightred><red>                   --
+
+%%%%
+<lightgreen>The slimy rune of Zot has appeared underneath you.</lightgreen>
+
+%%%%
+<red>@border_top@</lightred><red>                       --
+
+%%%%
+<red>------------------------------------------------------------------------------
+
+%%%%
+--                            The Arena Of Blood                            --
+
+%%%%
+--                                                                          --</red>
+
+%%%%
+<red>--                                                                          --
+
+%%%%
+--                You descend into the pit of gibs and meat,                --
+
+%%%%
+--                    The sunken abyss of the depraved,                     --
+
+%%%%
+--                       The mill of turgid gutspawn.                       --
+
+%%%%
+--                The writhen instruments serve in adoration,               --
+
+%%%%
+--                     Immured beneath a rotten throne.                     --</red>
+
+%%%%
+--                  Before you lies the servitor of chaos,                  --
+
+%%%%
+--                           The cleaver,                                   --
+
+%%%%
+--                             The blasphemer,                              --
+
+%%%%
+--                              The destroyer,                              --
+
+%%%%
+--                               The Axe of Woe.                            --</red>
+
+%%%%
+--                            Vessel of Makhleb,                            --
+
+%%%%
+--                           You are the unmaker,                           --
+
+%%%%
+--                          You bring the rapture,                          --
+
+%%%%
+--                     The murmurs of the thralls rise...                   --
+
+%%%%
+--                       The theatre of blood begins.                       --
+
+%%%%
+------------------------------------------------------------------------------</red>
+
+%%%%
+
+##################
+# dat/des/sprint/menkaure.des
+##################
+%%%%
+Murray drops in to check on your progress.
+
+%%%%
+
+##################
+# dat/des/sprint/sprint_mu.des
+##################
+%%%%
+You hear a whooshing noise from somewhere close by.
+
+%%%%
+
+##################
+# dat/des/sprint/zigsprint.des
+##################
+%%%%
+Your surroundings seem different!
+
+%%%%
+Welcome to arena @teleport_spot@.
+
+%%%%
+Welcome to arena @arena_number@.
+
+%%%%
+<magenta>An exit appears before you!</magenta>
+
+%%%%
+
+##################
+# dat/des/traps/rats_trap.des
+##################
+%%%%
+You hear a faint click.
+
+%%%%
+You hear a click.
+
+%%%%
+You step on to a pressure plate.
+
+%%%%
+Suddenly a wall slides open!
+
+%%%%
+
+##################
+# dat/des/tutorial/lesson3.des
+##################
+%%%%
+Nothing continues to happen.
+
+%%%%
+Luckily, nothing happens.
+
+%%%%
+
+##################
+# dat/des/variable/cathedral_bats.des
+##################
+%%%%
+A bat flies out of a crevice!
+
+%%%%
+
+##################
+# dat/des/variable/compat.des
+##################
+%%%%
+Several panes of glass retract into the floor.
+
+%%%%
+There is a strange hissing noise.
+
+%%%%
+Your surroundings suddenly seem different!
+
+%%%%
+Couldn't find a slave!
+
+%%%%
+As the champion is destroyed, a metal wall slides away!
+
+%%%%
+As the champion is destroyed, you hear a distant grinding noise.
+
+%%%%
+<white>The teleporter glows with a rainbow of weird colours and disappears.</white>
+
+%%%%
+
+##################
+# dat/des/variable/geyser.des
+##################
+%%%%
+A fountain of clear blue water erupts!
+
+%%%%
+A fountain of sparkling water erupts!
+
+%%%%
+You hear a distant splash.
+
+%%%%
+The fountain becomes smaller until it vanishes.
+
+%%%%
+
+##################
+# dat/des/variable/large_themed.des
+##################
+%%%%
+You hear a hidden mechanism click...the prison walls lower!
 
 %%%%
