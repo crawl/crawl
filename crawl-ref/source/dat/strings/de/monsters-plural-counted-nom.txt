@@ -1290,7 +1290,7 @@
 %d Pandämoniumsfürsten
 %%%%
 %d hell lords
-%d Höllenherre
+%d Höllenfürsten
 %%%%
 %d ball lightnings
 %d Kugelblitze
