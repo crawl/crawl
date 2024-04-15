@@ -1914,12 +1914,18 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                     if (*type == typeid(long double))
                     {
                         string val = make_stringf(fmt_spec.c_str(), arg.longDoubleVal);
-                        ss << _localise_float(val);
+                        if (arg.translate && translate)
+                            ss << _localise_float(val);
+                        else
+                            ss << val;
                     }
                     else if (*type == typeid(double))
                     {
                         string val = make_stringf(fmt_spec.c_str(), arg.doubleVal);
-                        ss << _localise_float(val);
+                        if (arg.translate && translate)
+                            ss << _localise_float(val);
+                        else
+                            ss << val;
                     }
                     else if (*type == typeid(long long) || *type == typeid(unsigned long long))
                         ss << make_stringf(fmt_spec.c_str(), arg.longLongVal);
