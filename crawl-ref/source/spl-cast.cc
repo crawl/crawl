@@ -2031,6 +2031,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         args.top_prompt = title;
         args.behaviour = &beh;
 
+        if (testbits(flags, spflag::prefer_farthest))
+            args.prefer_farthest = true;
+
         // if the spell is useless and we have somehow gotten this far, it's
         // a forced cast. Setting this prevents the direction chooser from
         // looking for selecting a default target (which doesn't factor in

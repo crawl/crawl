@@ -51,6 +51,11 @@ bool targeter::set_aim(coord_def a)
     return true;
 }
 
+bool targeter::preferred_aim(coord_def a)
+{
+    return valid_aim(a);
+}
+
 bool targeter::can_affect_outside_range()
 {
     return false;
@@ -2439,6 +2444,11 @@ bool targeter_magnavolt::valid_aim(coord_def a)
         return notify_fail("You don't see a valid target there.");
 
     return true;
+}
+
+bool targeter_magnavolt::preferred_aim(coord_def a)
+{
+    return valid_aim(a) && !monster_at(a)->has_ench(ENCH_MAGNETISED);
 }
 
 bool targeter_magnavolt::set_aim(coord_def a)

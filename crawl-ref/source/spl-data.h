@@ -3876,7 +3876,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MAGNAVOLT, "Magnavolt",
     spschool::air | spschool::earth,
-    spflag::target | spflag::needs_tracer | spflag::destructive,
+    spflag::target | spflag::needs_tracer | spflag::destructive
+    | spflag::prefer_farthest,
     7,
     200,
     LOS_RADIUS, LOS_RADIUS,

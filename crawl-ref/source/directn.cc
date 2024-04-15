@@ -104,13 +104,14 @@ static bool _blocked_ray(const coord_def &where);
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
                                  targeter* hitfunc);
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
-                          bool need_path, int range, targeter *hitfunc);
+                          bool need_path, int range, targeter *hitfunc,
+                          bool find_preferred = false);
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
                                bool need_path, int range, targeter *hitfunc,
                                aff_type mon_aff, aff_type allowed_self_aff);
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    bool need_path, int range,
-                                   targeter *hitfunc);
+                                   targeter *hitfunc, bool find_preferred = false);
 static bool _find_object(const coord_def& where, bool need_path, int range,
                          targeter *hitfunc);
 static bool _find_autopickup_object(const coord_def& where, bool need_path,
@@ -443,10 +444,13 @@ static bool _mon_exposed(const monster* mon)
 }
 
 static bool _is_target_in_range(const coord_def& where, int range,
-                                targeter *hitfunc)
+                                targeter *hitfunc, bool find_preferred = false)
 {
     if (hitfunc)
-        return hitfunc->valid_aim(where);
+    {
+        return find_preferred ? hitfunc->preferred_aim(where)
+                              : hitfunc->valid_aim(where);
+    }
     // range == -1 means that range doesn't matter.
     return range == -1 || grid_distance(you.pos(), where) <= range;
 }
@@ -1095,7 +1099,9 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     const monster* mons_target = _get_current_target();
     if (mons_target != nullptr
         && _want_target_monster(mons_target, mode, hitfunc)
-        && in_range(mons_target->pos()))
+        && in_range(mons_target->pos())
+        && (!hitfunc || hitfunc->preferred_aim(mons_target->pos()))
+        && !prefer_farthest)
     {
         result = mons_target->pos();
         return true;
@@ -1111,16 +1117,26 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     // The previous target is no good. Try to find one from scratch.
     bool success = false;
 
+    // Start our search from the player's position most of the time, unless we're
+    // looking for the farthest target, in which case start from max LoS away
+    // from the player, since we will be spiraling inward.
+    // (_find_square already defaulted to starting at the player's left)
+    result = prefer_farthest ? clamp_in_bounds(you.pos() - coord_def(LOS_RADIUS, 0))
+                             : you.pos();
+
     if (Options.simple_targeting)
     {
-        success = _find_square_wrapper(result, 1,
+        success = _find_square_wrapper(result, prefer_farthest ? -1 : 1,
                                        bind(_find_monster, placeholders::_1,
-                                            mode, needs_path, range, hitfunc),
+                                            mode, needs_path, range, hitfunc,
+                                            false),
                                        hitfunc);
     }
     else
     {
-        success = hitfunc && _find_square_wrapper(result, 1,
+        // Search for a new default target, first looking for a 'preferred' target,
+        // if applicable, and then falling back to any valid target if none are preferred.
+        success = hitfunc && _find_square_wrapper(result, prefer_farthest ? -1 : 1,
                                                   bind(_find_monster_expl,
                                                        placeholders::_1, mode,
                                                        needs_path, range,
@@ -1128,12 +1144,21 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
                                                        // First try to bizap
                                                        AFF_MULTIPLE, AFF_YES),
                                                   hitfunc)
-                  || _find_square_wrapper(result, 1,
+                  || _find_square_wrapper(result, prefer_farthest ? -1 : 1,
                                           bind(restricts == DIR_SHADOW_STEP ?
                                                _find_shadow_step_mons :
                                                _find_monster,
                                                placeholders::_1, mode,
-                                               needs_path, range, hitfunc),
+                                               needs_path, range, hitfunc,
+                                               true),
+                                          hitfunc)
+                  || _find_square_wrapper(result, prefer_farthest ? -1 : 1,
+                                          bind(restricts == DIR_SHADOW_STEP ?
+                                               _find_shadow_step_mons :
+                                               _find_monster,
+                                               placeholders::_1, mode,
+                                               needs_path, range, hitfunc,
+                                               false),
                                           hitfunc);
     }
 
@@ -1185,7 +1210,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
                                 bind(restricts == DIR_SHADOW_STEP ?
                                      _find_shadow_step_mons : _find_monster,
                                      placeholders::_1, mode, false,
-                                     range, hitfunc),
+                                     range, hitfunc, false),
                                hitfunc))
     {
         // Special colouring in tutorial or hints mode.
@@ -1399,11 +1424,9 @@ void direction_chooser::object_cycle(int dir)
 
 void direction_chooser::monster_cycle(int dir)
 {
-    if (prefer_farthest)
-        dir = -dir; // cycle from furthest to closest
     if (_find_square_wrapper(monsfind_pos, dir,
                              bind(_find_monster, placeholders::_1, mode,
-                                  needs_path, range, hitfunc),
+                                  needs_path, range, hitfunc, false),
                              hitfunc))
     {
         set_target(monsfind_pos);
@@ -2502,8 +2525,6 @@ bool direction_chooser::choose_direction()
                                        : find_default_target());
 
     objfind_pos = monsfind_pos = target();
-    if (prefer_farthest && moves.target != you.pos())
-        monster_cycle(1);
 
     // If requested, show the beam on startup.
     if (show_beam)
@@ -2808,7 +2829,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
 }
 
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
-                          bool need_path, int range, targeter *hitfunc)
+                          bool need_path, int range, targeter *hitfunc,
+                          bool find_preferred)
 {
     {
         coord_def dp = grid2player(where);
@@ -2824,7 +2846,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
         return true;
 
     // Don't target out of range
-    if (!_is_target_in_range(where, range, hitfunc))
+    if (!_is_target_in_range(where, range, hitfunc, find_preferred))
         return false;
 
     const monster* mon = monster_at(where);
@@ -2848,7 +2870,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
 
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    bool need_path, int range,
-                                   targeter *hitfunc)
+                                   targeter *hitfunc, bool find_preferred)
 {
     {
         coord_def dp = grid2player(where);
@@ -2860,7 +2882,7 @@ static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
     }
 
     // Need a monster to attack; this checks that the monster is a valid target.
-    if (!_find_monster(where, mode, need_path, range, hitfunc))
+    if (!_find_monster(where, mode, need_path, range, hitfunc, find_preferred))
         return false;
     // Can't step on yourself
     if (where == you.pos())
