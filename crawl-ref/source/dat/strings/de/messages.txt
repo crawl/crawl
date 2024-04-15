@@ -20722,6 +20722,12 @@ An interdimensional caravan has stopped on this level and set up a bazaar. Hurry
 You hear the last, dying notes of the bell.
 
 %%%%
+The gate to the bazaar disappears!
+
+%%%%
+flickering gateway to a bazaar
+
+%%%%
 
 ##################
 # dat/des/portals/desolation.des
@@ -21161,6 +21167,17 @@ Welcome to arena @arena_number@.
 
 %%%%
 <magenta>An exit appears before you!</magenta>
+
+%%%%
+
+##################
+# dat/des/traps/monster_drop.des
+##################
+%%%%
+With a honk a tiny klown kar falls from above, and Killer Klowns tumble out!
+
+%%%%
+A basket of snakes falls from above!
 
 %%%%
 

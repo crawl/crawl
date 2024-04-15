@@ -685,10 +685,10 @@ def process_lua_file(filename):
 
         if is_des:
             skip = True
-            for tok in ['crawl.mpr', 'crawl.god_speaks', 'msg =']:
-                if tok in line:
-                    skip = False
-                    break
+            if 'crawl.mpr' in line or 'crawl.god_speaks' in line:
+                skip = False
+            if re.search('(?:msg|prompt)\s*=', line):
+                skip = False
             if skip:
                 continue
 
