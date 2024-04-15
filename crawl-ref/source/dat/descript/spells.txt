@@ -674,12 +674,12 @@ volatile reagents to rain down upon your enemies. For the next several turns, up
 to 3 random enemies in sight will be struck by an exploding beaker that inflicts
 either fire, cold, electric, or poison damage. If any of these explosions
 overlap each other, the resulting reaction will inflict even greater
-irresistible damage and sometimes apply a random deliterious statuses on whoever
+irresistible damage and sometimes apply a random deleterious status on whoever
 is caught in the blast.
 
 This spell costs a small amount of the caster's magical energy each turn to
 maintain, and while it will never aim an explosion where it could hurt the
-caster, the caster's allies (and anything else in the general vacinity) are not
+caster, the caster's allies (and anything else in the general vicinity) are not
 so fortunate.
 %%%%
 Funeral Dirge spell
@@ -940,7 +940,7 @@ unleashes a powerful surge of electricity that arcs unerringly towards every
 visible target coated in these fragments.
 
 Magnetised creatures are additionally unable to evade attacks and will leave
-behind a short-lived vortex of electrified metal upon death that will continues
+behind a short-lived vortex of electrified metal upon death that will continue
 to serve as a lightning rod for this spell.
 %%%%
 Major Destruction spell
@@ -1305,13 +1305,13 @@ Rimeblight spell
 
 Afflicts a living, demonic, or holy creature with a magical plague that slowly
 freezes them from the inside out. Victims take AC-ignoring cold damage each
-turn, and as their disease progresses, shards of crystaline ice may erupt
+turn, and as their disease progresses, shards of crystalline ice may erupt
 violently from their flesh, damaging nearby enemies and even spreading the
 affliction to others.
 
 The disease feeds off the necromantic energies released by its host's suffering,
 and as they near death, it may accellerate rapidly, devouring the last
-vestigates of their body and leaving nothing behind but a twisted pillar of
+vestiges of their body and leaving nothing behind but a twisted pillar of
 stygian ice.
 %%%%
 Roll spell
@@ -1375,7 +1375,7 @@ Seismic Cannonade spell
 Shapes a trio of alchemical cannons around the caster that drill into the earth
 beneath them, transmuting the rocky minerals they find there into razor-sharp
 projectiles. Initially created in an incomplete state, each salvo they fire
-crystalizes more material into their frame, healing them.
+crystallizes more material into their frame, healing them.
 
 Once a cannon has fully assembled itself, recasting this spell will allow you to
 direct its full power into the ground, unleashing a powerful seismic shockwave

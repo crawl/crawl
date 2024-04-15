@@ -4959,7 +4959,7 @@ spret cast_fulsome_fusillade(int pow, bool fail)
 
     fail_check();
 
-    mpr("You conjure up a array of volatile reagents!");
+    mpr("You conjure up an array of volatile reagents!");
 
     you.duration[DUR_FUSILLADE] = 5;
     you.props[FUSILLADE_POWER_KEY] = pow;
