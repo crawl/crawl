@@ -629,11 +629,23 @@ def process_lua_file(filename):
 
     raw_lines = data.splitlines()
     lines = []
+    is_des = filename.endswith('.des')
+    ignore = is_des
     for line in raw_lines:
         line = line.strip()
-        if line.startswith('--'):
+        if line.startswith('--') or line.startswith('#'):
             # skip comments
             continue
+
+        if is_des:
+            # lua code is surroned by double curlies
+            if '{{' in line and '}}' in line:
+                lines.append(line)
+            elif '{{' in line:
+                ignore = False
+            elif '}}' in line:
+                lines.append(line)
+                ignore = True
 
         concatenate = False
         if len(lines) > 0:
@@ -671,7 +683,7 @@ def process_lua_file(filename):
         if '"' not in line and "'" not in line:
             continue
 
-        if filename.endswith('.des'):
+        if is_des:
             skip = True
             for tok in ['crawl.mpr', 'crawl.god_speaks', 'msg =']:
                 if tok in line:
