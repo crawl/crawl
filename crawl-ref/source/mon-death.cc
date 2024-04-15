@@ -1033,7 +1033,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         return;
 
     // Chaos spawn always leave behind a cloud of chaos.
-    if (mons->type == MONS_CHAOS_SPAWN)
+    if (mons->type == MONS_CHAOS_SPAWN || mons->type == MONS_BALLOON_YAK)
     {
         summoned = true;
         corpse   = false;
@@ -3204,6 +3204,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->type == MONS_LIVING_SPELL)
             msg = "disperses";
+
+        if (mons->type == MONS_BALLOON_YAK)
+            msg = "expunges chaos gasses as it pops";
     }
 
     // Conjugate.

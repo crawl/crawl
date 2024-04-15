@@ -1437,6 +1437,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+
+    {  MST_BALLOON_YAK,
+      {
+       { SPELL_WIND_BLAST, 45, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+      }
+    },
+
     // ('5') Minor demons.
     {  MST_WHITE_IMP,
       {

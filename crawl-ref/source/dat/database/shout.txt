@@ -222,6 +222,14 @@ __SQUEAK seen
 
 SOUND:@The_monster@ squeaks loudly.
 %%%%
+__RASPBERRY unseen
+
+SOUND:You hear a loud raspberry.
+%%%%
+__RASPBERRY seen
+
+SOUND:@The_monster@ blows a very loud wet raspberry.
+%%%%
 ############################################
 # End of default shouts
 ############################################

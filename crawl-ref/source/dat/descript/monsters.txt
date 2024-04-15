@@ -699,6 +699,13 @@ A fast, gas-filled floating spore released by a ballistomycete when it senses a
 threat. After seeking out its foe, the spore will explode, damaging anything
 caught in the blast and further confusing living creatures.
 %%%%
+balloon yak
+
+A twisted mockery of a living beast, constructed by an insane performance
+magician from the inflated intestines and bladder of some unfortunate creature.
+Can expel blasts of wind, and leaves only seething chaotic air behind when
+it perishes.
+%%%%
 balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.

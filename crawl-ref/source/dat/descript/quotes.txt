@@ -2569,6 +2569,14 @@ arcanist
 
 <occultist>
 %%%%
+balloon yak
+
+“I suppose even a simple slogan can be twisted into whatever shape we want,
+ like a balloon animal – we can even make it loop back around on itself,
+ becoming a noose. In the end, the measure of who we are can be seen in
+ the shapes of our balloon animals.”
+    -Neal Shusterman
+%%%%
 basilisk
 
 “Be thou like the imperial Basilisk

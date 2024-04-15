@@ -9,6 +9,7 @@
 
 #include "beam.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coordit.h"
 #include "dungeon-char-type.h"
 #include "english.h"
@@ -207,7 +208,22 @@ static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
     beam.explode_noise_msg = "You hear an high-pitched explosion!";
     beam.colour  = GREEN;
     beam.ex_size = 2;
+}
 
+static dice_def _balloon_yak_damage(int hd)
+{
+    return dice_def(4, hd);
+}
+
+static void _setup_balloon_yak_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_CHAOS;
+    beam.damage  = _balloon_yak_damage(origin.get_hit_dice());
+    beam.name    = "expulsion of chaotic wind";
+    beam.explode_noise_msg = "You hear a loud pop!";
+    beam.colour  = ETC_RANDOM;
+    beam.ex_size = 1;
 }
 
 struct monster_explosion {
@@ -250,7 +266,11 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_BLAZEHEART_CORE, {
         _setup_blazeheart_core_explosion,
         _blazeheart_damage,
-    } }
+    } },
+    { MONS_BALLOON_YAK, {
+        _setup_balloon_yak_explosion,
+        _balloon_yak_damage,
+    } },
 };
 
 // When this monster dies, does it explode?
