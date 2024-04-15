@@ -20452,13 +20452,13 @@ As you approach the altar, the fountains begin to flow with blood!
 Let the past return from memory!
 
 %%%%
-WORSHIP ME, MORTAL,
+\"WORSHIP ME, MORTAL,\" Xom booms, \"AND I SHALL GRANT YOU THE GREATEST GIFT OF ALL.\"
 
 %%%%
-AND I SHALL GRANT YOU THE GREATEST GIFT OF ALL.
+A goblin pops into existence! It looks at you with admiration.
 
 %%%%
-Friendship. The greatest gift is friendship!
+\"Friendship. The greatest gift is friendship!\"
 
 %%%%
 For a moment, you catch a glimpse of warriors who walked this path long ago.

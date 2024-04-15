@@ -668,7 +668,7 @@ def process_lua_file(filename):
             if m and m.group(0):
                 wizlab_descs.append(m.group(0))
 
-        if '"' not in line:
+        if '"' not in line and "'" not in line:
             continue
 
         if filename.endswith('.des'):
@@ -688,6 +688,9 @@ def process_lua_file(filename):
             # note
             continue
 
+        if filename.endswith('lm_tmsg.lua') and section == 'TimedMessaging:init':
+            continue
+
         if section.startswith('TroveMarker:search'):
             continue
 
@@ -705,6 +708,9 @@ def process_lua_file(filename):
         if 'CLASS =' in line or '__index =' in line:
             continue
 
+        if 'dgn_event_type' in line:
+            continue
+
         # don't extract strings that are just used for comparison/search
         line = re.sub(r'==\s*\"[^"]*\"', '== dummy', line)
         line = re.sub(r'~=\s*\"[^"]*\"', '~= dummy', line)
@@ -712,6 +718,11 @@ def process_lua_file(filename):
         line = re.sub(r'match\s*\([^\)]+\)', 'match(dummy)', line)
 
         line = line.replace('dgn.feature_desc_at(x, y, "The")', 'the_feature')
+
+        if '/portals/' in filename:
+            line = re.sub(r'(?:entity|dstname)\s*=\s*["\'][^"\']+["\']', '', line)
+            # TODO: somehow save these and use when processing lm_tmgs.lua
+            line = re.sub(r'(?:noisemaker|verb)\s*=\s*["\'][^"\']+["\']', '', line)
 
         # join strings that are joined at runtime
         if '..' in line:
@@ -739,11 +750,12 @@ def process_lua_file(filename):
         if 'crawl.mpr' in line:
             # we don't want to extract the second parameter - it's the channel
             line = re.sub(r',\s*"[^"]*"\s*\);?$', ', channel)', line)
+            line = re.sub(r",\s*'[^']*'\s*\);?$", ', channel)', line)
 
-        matches = re.findall(r'"(?:[^"\\]|\\.)+"', line)
+        matches = re.findall(r'(?:"(?:[^"\\]|\\.)+"|\'(?:[^\'\\]|\\.)+\')', line)
         for match in matches:
             string = match[1:-1] # remove quotes
-            if string == '':
+            if len(string) < 2:
                 continue
             if 'ERROR' in string or 'Error' in string or 'buggy' in string:
                 continue
@@ -755,13 +767,16 @@ def process_lua_file(filename):
             if filename.endswith('automagic.lua') and string == " enabled,":
                 continue
 
+            # make sure double quotes are escaped
+            string = re.sub(r'(?<!\\)"', r'\"', string)
+
             if string == "no spell currently":
                 strings.append("# note: @spell_name@ when no spell in chosen slot")
 
             # split on newlines
             substrings = string.split("\\n")
             for ss in substrings:
-                if ss != '':
+                if ss != "":
                     strings.append(ss)
 
     # expand params
