@@ -165,7 +165,7 @@
        "manual of spellcasting", "manual of summonings", "stone",
        "book of storms", "book of sloth", "book of the senses",
        "book of spectacle", "book of the spheres", "book of scorching",
-       "book of spontaneous combustion", "compendium of seigecraft" }
+       "book of spontaneous combustion", "compendium of siegecraft" }
 
       elseif s == "T" then i = { "scroll of torment",
        "scroll of teleportation", "triple sword", "talisman of death",
