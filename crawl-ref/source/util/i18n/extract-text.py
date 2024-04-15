@@ -644,13 +644,20 @@ def process_lua_file(filename):
 
         if is_des:
             # lua code is surroned by double curlies
+            if line.startswith(':'):
+                lines.append(line)
+                continue
             if '{{' in line and '}}' in line:
                 lines.append(line)
+                continue
             elif '{{' in line:
                 ignore = False
             elif '}}' in line:
                 lines.append(line)
                 ignore = True
+
+        if ignore:
+            continue
 
         concatenate = False
         if len(lines) > 0:
