@@ -207,6 +207,9 @@ int main()
     msg = localise("You cannot do that while caught in a web.");
     show_result(msg, "Das könnt Ihr nicht, solange Ihr in einem Gewebe gefangen seid.");
 
+    msg = localise("\"You will pay for your transgression, mortal!\"");
+    show_result(msg, "\"Du wirst für deine Übertretung bezahlen, Sterblicher!\"");
+
     msg = localise("No spell in slot a!");
     show_result(msg, "Kein Zauber im Platz a!");
 

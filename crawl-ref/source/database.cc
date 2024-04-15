@@ -586,6 +586,11 @@ static void _trim_quotes(string &s)
         s = s.substr(1, s.length()-2);
 }
 
+static void _unescape_quotes(string &s)
+{
+    s = replace_all(s, "\\\"", "\"");
+}
+
 static void _add_entry(DBM *db, const string &k, string &v)
 {
     _trim_leading_newlines(v);
@@ -624,6 +629,8 @@ static void _parse_text_db(LineInput &inf, DBM *db, bool canonicalise_key, bool 
                     trim_string(value);
                     _trim_quotes(value);
                 }
+                _unescape_quotes(key);
+                _unescape_quotes(value);
                 _add_entry(db, key, value);
             }
             key.clear();
@@ -662,6 +669,8 @@ static void _parse_text_db(LineInput &inf, DBM *db, bool canonicalise_key, bool 
             trim_string(value);
             _trim_quotes(value);
         }
+        _unescape_quotes(key);
+        _unescape_quotes(value);
         _add_entry(db, key, value);
     }
 }
