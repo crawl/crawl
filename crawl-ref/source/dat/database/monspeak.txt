@@ -2045,6 +2045,12 @@ bronze
 
 brown
 
+burgundy
+
+cerise
+
+caerulean
+
 charcoal
 
 chartreuse
@@ -2057,13 +2063,33 @@ cyan
 
 dun
 
+erin
+
+fuchsia
+
+fulvous
+
+gamboge
+
+glaucous
+
+goblin blue
+
 gold
 
 gridelin
 
+haint blue
+
+heliotrope
+
+indanthrone blue
+
 lavender
 
 leaf green
+
+lilac
 
 lime green
 
@@ -2073,7 +2099,13 @@ marigold
 
 mauve
 
+mulberry
+
 ochre
+
+periwinkle
+
+phlox
 
 pink
 
@@ -2083,15 +2115,29 @@ rubric
 
 saffron
 
+sepia
+
 scarlet
 
 silver
+
+sinopia
+
+taupe
+
+teal
+
+turquoise
+
+ultramarine
 
 umber
 
 vermilion
 
 viridian
+
+zaffre
 %%%%
 _Blork_common_
 
