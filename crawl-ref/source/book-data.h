@@ -86,6 +86,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Hexes
+    SPELL_SIGIL_OF_BINDING,
     SPELL_ANGUISH,
     SPELL_CAUSE_FEAR,
     SPELL_ENFEEBLE,
@@ -206,7 +207,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Geomancy
     SPELL_SANDBLAST,
     SPELL_STONE_ARROW,
-    SPELL_BOULDER
+    SPELL_PASSWALL,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -272,7 +273,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Transmutation
-    SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
     SPELL_FULSOME_FUSILLADE,
@@ -296,7 +296,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Necronomicon
-    SPELL_RIMEBLIGHT,
     SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_DEATHS_DOOR,
@@ -312,7 +311,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Spectacle
     SPELL_DAZZLING_FLASH,
     SPELL_STARBURST,
-    SPELL_MAXWELLS_COUPLING,
+    SPELL_FULSOME_FUSILLADE,
 },
 
 { // Book of Winter
@@ -332,6 +331,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Armaments
     SPELL_STONE_ARROW,
     SPELL_ANIMATE_ARMOUR,
+    SPELL_SEISMIC_CANNONADE,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
@@ -383,7 +383,6 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of the Senses
     SPELL_DAZZLING_FLASH,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_CURSE_OF_AGONY,
     SPELL_SILENCE,
 },
 
@@ -400,9 +399,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Iron
-    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_ANIMATE_ARMOUR,
     SPELL_LRD,
+    SPELL_MAGNAVOLT,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -429,7 +428,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_TUKIMAS_DANCE,
     SPELL_DIMENSIONAL_BULLSEYE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_SEISMIC_CANNONADE,
 },
 
 { // Book of Sloth
@@ -506,22 +504,38 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Maxwell's Memoranda
     SPELL_PILEDRIVER,
-    SPELL_ARCJOLT,
     SPELL_MAGNAVOLT,
     SPELL_MAXWELLS_COUPLING,
 },
 
 { // Book of Movement
-    SPELL_PASSWALL,
     SPELL_BLASTMOTE,
     SPELL_ELECTRIC_CHARGE,
-    SPELL_BOMBARD,
+    SPELL_GELLS_GAVOTTE,
 },
 
 { // Book of Wicked Creation
-    SPELL_SIGIL_OF_BINDING,
     SPELL_SIMULACRUM,
     SPELL_DEATH_CHANNEL,
+    SPELL_RIMEBLIGHT,
+},
+
+{ // Compendium of Siegecraft
+    SPELL_BOULDER,
+    SPELL_BOMBARD,
+    SPELL_SEISMIC_CANNONADE,
+},
+
+{ // Book of Maladies
+    SPELL_SUBLIMATION_OF_BLOOD,
+    SPELL_CURSE_OF_AGONY,
+    SPELL_RIMEBLIGHT,
+},
+
+{ // Codex of Conductivity
+    SPELL_SUMMON_LIGHTNING_SPIRE,
+    SPELL_ARCJOLT,
+    SPELL_MAXWELLS_COUPLING,
 },
 
 };
