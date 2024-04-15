@@ -4,7 +4,7 @@ xp_mult: 12
 holiness: [demonic]
 will: 60
 attacks:
- - {type: random, flavour: chaotic, damage: 19}
+ - {type: random, flavour: chaos, damage: 19}
 hd: 6
 hp_10x: 300
 ac: 4

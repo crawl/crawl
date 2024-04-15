@@ -574,7 +574,7 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_POISON,    SPWPN_VENOM,         10,
       [](const actor &d) {
           return !(d.holiness() & (MH_UNDEAD | MH_NONLIVING)); } },
-    { AF_CHAOTIC,   SPWPN_CHAOS,         13,
+    { AF_CHAOS,     SPWPN_CHAOS,         13,
       nullptr },
     { AF_DRAIN,  SPWPN_DRAINING,         5,
       [](const actor &d) { return d.res_negative_energy() < 3; } },

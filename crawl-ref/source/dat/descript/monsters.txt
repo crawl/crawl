@@ -611,6 +611,12 @@ alligator snapping turtle
 A particularly large and nasty snapping turtle. Like its smaller relative, it
 can reach out and bite from afar.
 %%%%
+anachrobat
+
+Running on two hands or crawling on all four, or soaring on its wings...
+Sometimes on the walls or the ceiling; is it a bat become human, or a human
+become bat?
+%%%%
 anaconda
 
 A very large snake that moves with startling swiftness. It kills not by poison

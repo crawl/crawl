@@ -5,8 +5,8 @@ resists: {elec: 3, fire: 3, cold: 3, acid: 3}
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: tentacle_slap, flavour: chaotic, damage: 30}
- - {type: claw, flavour: chaotic, damage: 40}
+ - {type: tentacle_slap, flavour: chaos, damage: 30}
+ - {type: claw, flavour: chaos, damage: 40}
 hd: 16
 hp_10x: 1200
 ac: 13

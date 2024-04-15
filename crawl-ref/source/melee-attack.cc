@@ -2861,7 +2861,7 @@ void melee_attack::mons_apply_attack_flavour()
     // Most of this is from BWR 4.1.2.
 
     attack_flavour flavour = attk_flavour;
-    if (flavour == AF_CHAOTIC)
+    if (flavour == AF_CHAOS)
         flavour = random_chaos_attack_flavour();
 
     const int base_damage = flavour_damage(flavour, attacker->get_hit_dice());
@@ -3136,7 +3136,7 @@ void melee_attack::mons_apply_attack_flavour()
         defender->go_berserk(false);
         break;
 
-    case AF_CHAOTIC:
+    case AF_CHAOS:
         obvious_effect = chaos_affects_actor(defender, attacker);
         break;
 

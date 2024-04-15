@@ -7,7 +7,7 @@ genus: pandemonium_lord
 holiness: [demonic]
 will: invuln
 attacks:
- - {type: random, flavour: chaotic, damage: 47}
+ - {type: random, flavour: chaos, damage: 47}
  - {type: random, damage: 41}
  - {type: random, flavour: blink, damage: 37}
 hd: 17

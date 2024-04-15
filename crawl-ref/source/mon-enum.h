@@ -102,7 +102,7 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_STICKY_FLAME,
 #endif
-    AF_CHAOTIC,
+    AF_CHAOS,
     AF_STEAL,
 #if TAG_MAJOR_VERSION == 34
     AF_STEAL_FOOD,

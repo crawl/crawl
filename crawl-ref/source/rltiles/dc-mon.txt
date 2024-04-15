@@ -665,6 +665,7 @@ killer_klown_green
 killer_klown_purple
 killer_klown_red
 killer_klown_yellow
+anachrobat MONS_ANACHROBAT
 %sdir mon/vault
 ## From an Abyss rune vault
 %rim 0

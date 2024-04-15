@@ -4943,7 +4943,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DISTORT,           "distortion" },
         { AF_RIFT,              "distortion" },
         { AF_RAGE,              "drive defenders berserk" },
-        { AF_CHAOTIC,           "chaos" },
+        { AF_CHAOS,             "chaos" },
         { AF_STEAL,             "steal items" },
         { AF_CRUSH,             "begin ongoing constriction" },
         { AF_REACH,             "" },

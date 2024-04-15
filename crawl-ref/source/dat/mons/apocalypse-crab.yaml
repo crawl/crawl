@@ -7,8 +7,8 @@ genus: crab
 holiness: [demonic]
 will: 60
 attacks:
- - {type: bite, flavour: chaotic, damage: 14}
- - {type: claw, flavour: chaotic, damage: 14}
+ - {type: bite, flavour: chaos, damage: 14}
+ - {type: claw, flavour: chaos, damage: 14}
 hd: 8
 hp_10x: 480
 ac: 11
