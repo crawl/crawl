@@ -623,18 +623,23 @@ def ignore_string(string):
 
 
 def process_lua_file(filename):
+
+    is_des = filename.endswith('.des')
+    is_portal = '/portals/' in filename
+
     infile = open(filename)
     data = infile.read()
     infile.close()
 
     raw_lines = data.splitlines()
     lines = []
-    is_des = filename.endswith('.des')
     ignore = is_des
     for line in raw_lines:
         line = line.strip()
         if line.startswith('--') or line.startswith('#'):
             # skip comments
+            continue
+        elif line == '':
             continue
 
         if is_des:
@@ -667,6 +672,10 @@ def process_lua_file(filename):
 
     wizlab_descs = []
 
+    # for portals
+    noise = None
+    noisemaker = None
+
     strings = []
     section = ''
     for line in lines:
@@ -685,13 +694,35 @@ def process_lua_file(filename):
         if '"' not in line and "'" not in line:
             continue
 
+        if is_portal:
+            match = re.search(r'(?<=verb)\s*=\s*[\'"][^\'"]+(?=[\'"])', line)
+            if match and match.group(0):
+                noise = re.sub(r'\s*=\s*[\'"]', '', match.group(0))
+
+            match = re.search(r'(?<=noisemaker)\s*=\s*[\'"][^\'"]+(?=[\'"])', line)
+            if match and match.group(0):
+                noisemaker = re.sub(r'\s*=\s*[\'"]', '', match.group(0))
+
+            line = re.sub(r'(?:entity|dstname)\s*=\s*["\'][^"\']+["\']', '', line)
+            line = re.sub(r'(?:noisemaker|verb)\s*=\s*["\'][^"\']+["\']', '', line)
+
+            if noise is not None and noisemaker is not None:
+                prefix = "You hear the @adjective@"
+                strings.append(prefix + noise + " of " + article_a(noisemaker) + ".")
+                strings.append(prefix + noise + " of a distant " + noisemaker + ".")
+                strings.append(prefix + noise + " of a very distant " + noisemaker + ".")
+                strings.append(prefix + noise + " of " + article_a(noisemaker) + " nearby.")
+                strings.append(prefix + noise + " of " + article_a(noisemaker) + " very nearby.")
+                noise = None
+                noisemaker = None
+
         if is_des:
             skip = True
             if 'crawl.mpr' in line or 'crawl.god_speaks' in line:
                 skip = False
             elif re.search('(?:msg|prompt)\s*=', line):
                 skip = False
-            elif '/portals/' in filename and re.search(r'ranges\s*=', line):
+            elif is_portal and re.search(r'ranges\s*=', line):
                 skip = False
             if skip:
                 continue
@@ -734,11 +765,6 @@ def process_lua_file(filename):
         line = re.sub(r'match\s*\([^\)]+\)', 'match(dummy)', line)
 
         line = line.replace('dgn.feature_desc_at(x, y, "The")', 'the_feature')
-
-        if '/portals/' in filename:
-            line = re.sub(r'(?:entity|dstname)\s*=\s*["\'][^"\']+["\']', '', line)
-            # TODO: somehow save these and use when processing lm_tmgs.lua
-            line = re.sub(r'(?:noisemaker|verb)\s*=\s*["\'][^"\']+["\']', '', line)
 
         # join strings that are joined at runtime
         if '..' in line:
@@ -829,27 +855,8 @@ def process_lua_file(filename):
         elif filename.endswith('pan.des') and '@runes_name@' in string:
             alternatives = expand_param(string, "@runes_name@", ["fiery", "glowing", "magical", "dark"])
         elif '@noise@ of @noisemaker@' in string:
-            alternatives = expand_param(string, '@noise@ of @noisemaker@', \
-                                                [ \
-                                                "whistling of a @distant@wind@nearby@", \
-                                                "rumble of a @distant@avalanche of rocks@nearby@", \
-                                                "hiss of a @distant@avalanche of sand@nearby@", \
-                                                "tolling of a @distant@bell@nearby@", \
-                                                "rusting of a @distant@drain@nearby@", \
-                                                "crackling of a @distant@melting archway@nearby@", \
-                                                "creaking of a @distant@portcullis@nearby@", \
-                                                "beating of a @distant@drum@nearby@", \
-                                                "crackle of a @distant@magical portal@nearby@", \
-                                                ])
-
-            alts_old = alternatives
+            # will be covered under each specific portal
             alternatives = []
-            for alt in alts_old:
-                nearby = alt.replace('@distant@', '').replace(' a a', ' an a')
-                distant = alt.replace('@nearby@', '')
-                alternatives.append(nearby.replace('@nearby@', '')) # neither
-                alternatives.extend(expand_param(distant, '@distant@', ["distant ", "very distant "]))
-                alternatives.extend(expand_param(nearby, '@nearby@', [" nearby", " very nearby"]))
 
             strings.append('# note: adjectives for portal noises (null also possible)')
             strings.append('stately ')
