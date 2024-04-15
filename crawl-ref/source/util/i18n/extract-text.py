@@ -651,16 +651,6 @@ def process_lua_file(filename):
         else:
             lines.append(line)
 
-    raw_lines = lines
-    lines = []
-    for line in raw_lines:
-        if 'crawl.mpr' in line:
-            if re.search(r'\.\.\s*caught\s*\.\.', line):
-                line = re.sub(r'"\s*\.\.\s*caught\s*\.\.\s*"', 'held in a net', line)
-                lines.append(line)
-                line = line.replace('held in a net', 'caught in a web')
-        lines.append(line)
-
     wizlab_descs = []
 
     strings = []
@@ -715,12 +705,7 @@ def process_lua_file(filename):
         line = re.sub(r'find\s*\([^\)]+\)', 'find(dummy)', line)
         line = re.sub(r'match\s*\([^\)]+\)', 'match(dummy)', line)
 
-        if re.search(r'\.\.\s*caught\s*\.\.', line):
-            line = re.sub(r'"\s*\.\.\s*caught\s*\.\.\s*"', 'held in a net', line)
-            line += ' ' + line.replace('held in a net', 'caught in a web')
-
         line = line.replace('dgn.feature_desc_at(x, y, "The")', 'the_feature')
-
 
         # join strings that are joined at runtime
         if '..' in line:
@@ -780,6 +765,8 @@ def process_lua_file(filename):
         alternatives = [string]
         if '@plural@' in string:
             alternatives = expand_param(string, "@plural@", ["", "s"])
+        elif '@caught@' in string:
+            alternatives = expand_param(string, "@caught@", ['held in a net', 'caught in a web'])
         elif filename.endswith('automagic.lua') and '@message@' in string:
             alternatives = expand_param(string, "@message@", ["", " enabled,"])
         elif '@spawn_dir@' in string:
