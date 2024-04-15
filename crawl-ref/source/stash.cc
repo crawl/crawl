@@ -380,6 +380,7 @@ vector<stash_search_result> Stash::matches_search(
 
     for (const item_def &item : items)
     {
+        // i18n: stash_item_name() returns localise string
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + " " + s)
@@ -396,7 +397,8 @@ vector<stash_search_result> Stash::matches_search(
 
     if (feat != DNGN_FLOOR)
     {
-        const string fdesc = feature_description();
+        string fdesc = feature_description();
+        fdesc = localise(fdesc);
         if (!fdesc.empty() && search.matches(prefix + " " + fdesc))
         {
             stash_search_result res;
