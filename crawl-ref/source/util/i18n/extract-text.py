@@ -689,7 +689,9 @@ def process_lua_file(filename):
             skip = True
             if 'crawl.mpr' in line or 'crawl.god_speaks' in line:
                 skip = False
-            if re.search('(?:msg|prompt)\s*=', line):
+            elif re.search('(?:msg|prompt)\s*=', line):
+                skip = False
+            elif '/portals/' in filename and re.search(r'ranges\s*=', line):
                 skip = False
             if skip:
                 continue
@@ -849,11 +851,14 @@ def process_lua_file(filename):
                 alternatives.extend(expand_param(distant, '@distant@', ["distant ", "very distant "]))
                 alternatives.extend(expand_param(nearby, '@nearby@', [" nearby", " very nearby"]))
 
-            strings.append('# note: adjectives (null also possible)')
+            strings.append('# note: adjectives for portal noises (null also possible)')
             strings.append('stately ')
             strings.append('brisk ')
             strings.append('urgent ')
             strings.append('frantic ')
+            strings.append('faint ')
+            strings.append('quiet ')
+            strings.append('slow ')
 
         strings.extend(alternatives)
 

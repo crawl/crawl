@@ -20158,7 +20158,7 @@ The walls and floor vibrate strangely for a moment.
 # dat/dlua/lm_tmsg.lua
 ##################
 %%%%
-# note: adjectives (null also possible)
+# note: adjectives for portal noises (null also possible)
 "stately "
 "langsame "
 %%%%
@@ -20170,6 +20170,15 @@ The walls and floor vibrate strangely for a moment.
 %%%%
 "frantic "
 "hektische "
+%%%%
+"faint "
+"schwache "
+%%%%
+"quiet "
+"leise "
+%%%%
+"slow "
+"langsame "
 %%%%
 You hear the @adjective@whistling of a wind.
 Ihr hört das @adjective@Pfeifen eines Windes.
@@ -20769,9 +20778,6 @@ Hark! There is a gateway to a gauntlet on this level. Find the entrance quickly 
 
 %%%%
 After a thunderous strike, the drumbeats cease.
-
-%%%%
-"faint "
 
 %%%%
 
