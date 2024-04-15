@@ -35,7 +35,7 @@ IGNORE_STRINGS = [
     'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
     'you', 'you ', 'your', 'your ', 'its ',
-    ' of ',
+    ' of ', ' of', 'of ',
     'debugging ray', 'debug',
     'bug', 'null', 'invalid',
     'true', 'false', 'veto',
@@ -668,11 +668,17 @@ def process_lua_file(filename):
             if m and m.group(0):
                 wizlab_descs.append(m.group(0))
 
-        if filename.endswith('.des') and 'crawl.mpr' not in line:
-            continue
-
         if '"' not in line:
             continue
+
+        if filename.endswith('.des'):
+            skip = True
+            for tok in ['crawl.mpr', 'crawl.god_speaks', 'msg =']:
+                if tok in line:
+                    skip = False
+                    break
+            if skip:
+                continue
 
         if 'debug' in section or 'dry_run ~= nil' in line or line.startswith('assert'):
             # debug stuff
@@ -710,9 +716,13 @@ def process_lua_file(filename):
         # join strings that are joined at runtime
         if '..' in line:
             line = re.sub(r'"\s*\.\.\s*"', '', line)
+            line = re.sub(r"'\s*\.\.\s*'", '', line)
 
         # turn joins of variables, etc. into embedded params
         if '..' in line:
+            # embedded conditional
+            line = re.sub(r'\.\.\s*\([^\)]+\)', '.. param', line)
+
             #line = re.sub(r'"\s*\.\.[^"]*"', '%s', line)
             line = re.sub(r'"\s*\.\.\s*', '@', line)
             line = re.sub(r'\s*\.\.\s*"', '@', line)
@@ -730,7 +740,7 @@ def process_lua_file(filename):
             # we don't want to extract the second parameter - it's the channel
             line = re.sub(r',\s*"[^"]*"\s*\);?$', ', channel)', line)
 
-        matches = re.findall('"[^"]*"', line)
+        matches = re.findall(r'"(?:[^"\\]|\\.)+"', line)
         for match in matches:
             string = match[1:-1] # remove quotes
             if string == '':
@@ -758,7 +768,7 @@ def process_lua_file(filename):
     raw_strings = strings
     strings = []
     for string in raw_strings:
-        if '@' not in string:
+        if "@" not in string and "$F" not in string:
             strings.append(string)
             continue
 
@@ -769,8 +779,18 @@ def process_lua_file(filename):
             alternatives = expand_param(string, "@caught@", ['held in a net', 'caught in a web'])
         elif filename.endswith('automagic.lua') and '@message@' in string:
             alternatives = expand_param(string, "@message@", ["", " enabled,"])
+        elif filename.endswith('bailey.des') and "$F{The}" in string:
+            alternatives = expand_param(string, "$F{The}", ["The portcullis"])
+        elif "the wizard's @param@cell" in string:
+            alternatives = expand_param(string, "@param@", ["", "empty "])
         elif '@spawn_dir@' in string:
             alternatives = expand_param(string, "@spawn_dir@", ["north", "south", "east", "west"])
+        elif 'sudden vision@msg@' in string:
+            alternatives = expand_param(string, "@msg@", [" of the Swamp and the Snake Pit", \
+                                                          " of the Swamp and the Spider Nest", \
+                                                          " of the Shoals and the Snake Pit", \
+                                                          " of the Shoals and the Spider Nest" \
+                                                         ])
         elif '@wizlab_desc@' in string:
             alternatives = expand_param(string, "@wizlab_desc@", wizlab_descs)
         elif filename.endswith('pan.des') and '@name@ resides here' in string:

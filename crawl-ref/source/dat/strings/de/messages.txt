@@ -20367,13 +20367,61 @@ Ihr fühlt Euch völlig allein.
 %%%%
 
 ##################
+# dat/des/altar/ashenzari_visionary.des
+##################
+%%%%
+Ashenzari says, "See what I see, mortal..."
+
+%%%%
+You have a sudden vision of the Swamp and the Snake Pit!
+
+%%%%
+You have a sudden vision of the Swamp and the Spider Nest!
+
+%%%%
+You have a sudden vision of the Shoals and the Snake Pit!
+
+%%%%
+You have a sudden vision of the Shoals and the Spider Nest!
+
+%%%%
+
+##################
+# dat/des/altar/kiku_cage.des
+##################
+%%%%
+Miasma emanates from the human's flesh.
+
+%%%%
+The human rises from the dead!
+
+%%%%
+
+##################
+# dat/des/altar/lugonu_bribe.des
+##################
+%%%%
+An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?
+
+%%%%
+
+##################
 # dat/des/altar/nemelex_the_gamble.des
 ##################
+%%%%
+\"Beware! This is a limited time offer!\"
+
 %%%%
 A transporter appears.
 
 %%%%
 <white>The transporter glows with a rainbow of weird colours and disappears.</white>
+
+%%%%
+Nemelex Xobeh says, "You win!"
+
+%%%%
+Nemelex Xobeh says, "You lose!"
 
 %%%%
 
@@ -20387,13 +20435,64 @@ The portcullises are lifted away, releasing the combatants.
 The doors seal shut behind you!
 
 %%%%
+Okawaru booms, "Excellent! You may choose a reward."
+
+%%%%
 The gates behind the altar rise, and the entry reopens.
+
+%%%%
+
+##################
+# dat/des/altar/overflow.des
+##################
+%%%%
+As you approach the altar, the fountains begin to flow with blood!
+
+%%%%
+Let the past return from memory!
+
+%%%%
+WORSHIP ME, MORTAL,
+
+%%%%
+AND I SHALL GRANT YOU THE GREATEST GIFT OF ALL.
+
+%%%%
+Friendship. The greatest gift is friendship!
+
+%%%%
+For a moment, you catch a glimpse of warriors who walked this path long ago.
+
+%%%%
+
+##################
+# dat/des/altar/trog_burn_book.des
+##################
+%%%%
+The spellbook bursts into flames! Trog roars with delight!
+
+%%%%
+
+##################
+# dat/des/altar/trog_wizard.des
+##################
+%%%%
+Flames erupt from the bowels of the wizard! Trog roars with satisfaction!
+
+%%%%
+Flames erupt from the wizard's cell! Trog roars with frustration!
+
+%%%%
+Flames erupt from the wizard's empty cell! Trog roars with frustration!
 
 %%%%
 
 ##################
 # dat/des/altar/vehumet_trees.des
 ##################
+%%%%
+Vehumet offers to free you in exchange for your devotion to destruction.
+
 %%%%
 Suddenly, the trees start to burn!
 
@@ -20402,6 +20501,9 @@ Suddenly, the trees start to burn!
 ##################
 # dat/des/altar/xom_monty_hall.des
 ##################
+%%%%
+You feel as though Xom is toying with you.
+
 %%%%
 Suddenly, the walls become transparent!
 
@@ -20417,10 +20519,19 @@ The walls suddenly crumble!
 A dream sheep catches fire!
 
 %%%%
+You hear mad divine giggling.
+
+%%%%
 
 ##################
 # dat/des/altar/yredelemnul_ordeal.des
 ##################
+%%%%
+You sense Yredelemnul urging you to kill the trapped human.
+
+%%%%
+Yredelemnul welcomes your deed!
+
 %%%%
 You hear a strange fizzling.
 
@@ -20582,16 +20693,136 @@ Another plant grows acid sacs!
 %%%%
 
 ##################
+# dat/des/portals/bailey.des
+##################
+%%%%
+You hear the roar of battle.
+
+%%%%
+There is an entrance to a bailey on this level. Hurry and find it before the portal closes forever!
+
+%%%%
+The portcullis has been lowered almost to the ground.
+
+%%%%
+The portal closes with a thud.
+
+%%%%
+
+##################
+# dat/des/portals/bazaar.des
+##################
+%%%%
+You hear coins being counted.
+
+%%%%
+An interdimensional caravan has stopped on this level and set up a bazaar. Hurry and find its entrance before they move on!
+
+%%%%
+You hear the last, dying notes of the bell.
+
+%%%%
+
+##################
+# dat/des/portals/desolation.des
+##################
+%%%%
+You hear a distant wind.
+
+%%%%
+There is a portal to the Desolation of Salt on this level. Hurry and find it before the gateway collapses!
+
+%%%%
+The wind is rapidly growing quiet.
+
+%%%%
+The gateway collapses.
+
+%%%%
+
+##################
+# dat/des/portals/gauntlet.des
+##################
+%%%%
+You hear a distant snort.
+
+%%%%
+Hark! There is a gateway to a gauntlet on this level. Find the entrance quickly before the gate is sealed!
+
+%%%%
+After a thunderous strike, the drumbeats cease.
+
+%%%%
+
+##################
+# dat/des/portals/icecave.des
+##################
+%%%%
+You feel a wave of frost pass over you.
+
+%%%%
+There is an entrance to an ice cave on this level. Hurry and find it before the portal melts!
+
+%%%%
+The crackling of melting ice is subsiding rapidly.
+
+%%%%
+The archway melts and disappears.
+
+%%%%
+
+##################
 # dat/des/portals/ossuary.des
 ##################
+%%%%
+You hear the hiss of flowing sand.
+
+%%%%
+There is an entrance to an ossuary on this level. Hurry and find it before the portal is buried!
+
+%%%%
+The hiss of flowing sand is almost imperceptible now.
+
+%%%%
+The hiss of flowing sand is gone.
+
 %%%%
 There is a click, and some walls slide away!
 
 %%%%
 
 ##################
+# dat/des/portals/sewer.des
+##################
+%%%%
+You hear the sound of rushing water.
+
+%%%%
+There is an entrance to a sewer on this level. Hurry and find it before the portal rusts away!
+
+%%%%
+You hear the drain falling apart.
+
+%%%%
+The drain falls to bits.
+
+%%%%
+
+##################
 # dat/des/portals/volcano.des
 ##################
+%%%%
+You feel an oppressive heat about you.
+
+%%%%
+There is an entrance to a volcano on this level. Hurry and find it before the entrance collapses!
+
+%%%%
+The sound of falling rocks suddenly begins to subside.
+
+%%%%
+There is a deep roar from within the tunnel. Moments later, a river of lava pours forth, sealing it permanently.
+
 %%%%
 There is a rumble as the volcano erupts. The roof shakes.
 
@@ -20624,6 +20855,18 @@ The ground shudders. Some of the lava has hardened enough to walk over!
 ##################
 # dat/des/portals/wizlab.des
 ##################
+%%%%
+You hear the crackle of arcane power.
+
+%%%%
+There is an entrance to a wizard's laboratory on this level! Hurry and find it before the portal closes forever!
+
+%%%%
+The crackle of the magical portal is almost imperceptible now.
+
+%%%%
+The flow of magic halts.
+
 %%%%
 Welcome to Doroklohe's Tomb!
 
@@ -20977,6 +21220,18 @@ As the champion is destroyed, a metal wall slides away!
 
 %%%%
 As the champion is destroyed, you hear a distant grinding noise.
+
+%%%%
+Your presence is welcomed at the altar of Beogh.
+
+%%%%
+The orc god booms: Stay away, heretic!
+
+%%%%
+The orc god booms: Stay away, mortal!
+
+%%%%
+Beogh's servants are called upon to defend the altar!
 
 %%%%
 <white>The teleporter glows with a rainbow of weird colours and disappears.</white>
