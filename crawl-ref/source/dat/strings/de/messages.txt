@@ -20409,6 +20409,18 @@ An item emerges from the Abyss! Perhaps it is an incitement to worship... or eve
 # dat/des/altar/nemelex_the_gamble.des
 ##################
 %%%%
+\"Care to risk it all for some fabulous prizes, mortal?\"
+
+%%%%
+\"Through this portal lies a prize... or peril!\"
+
+%%%%
+\"The prize could be yours... at the risk of your life!\"
+
+%%%%
+\"Care for a little wager, mortal?\"
+
+%%%%
 \"Beware! This is a limited time offer!\"
 
 %%%%
@@ -20757,6 +20769,9 @@ Hark! There is a gateway to a gauntlet on this level. Find the entrance quickly 
 
 %%%%
 After a thunderous strike, the drumbeats cease.
+
+%%%%
+"faint "
 
 %%%%
 

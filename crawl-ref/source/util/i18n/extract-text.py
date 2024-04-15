@@ -657,6 +657,8 @@ def process_lua_file(filename):
                 concatenate = True
             elif line.startswith('or ') or lines[-1].endswith(' or'):
                 concatenate = True
+            elif re.search(r'=\s*\{$', lines[-1]):
+                concatenate = True
 
         if concatenate:
             lines[-1] += ' '  + line
