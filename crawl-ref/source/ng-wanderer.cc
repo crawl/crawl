@@ -465,7 +465,7 @@ static void _decent_potion_or_scroll()
         { { OBJ_POTIONS, POT_LIGNIFY },
             you.is_lifeless_undead(false) ? 0 : 5 },
         { { OBJ_POTIONS, POT_ATTRACTION },
-            you.is_lifeless_undead(false) ? 0 : 5 },
+            you.has_mutation(MUT_NO_DRINK) ? 0 : 5 },
         { { OBJ_POTIONS, POT_MUTATION },
             you.is_lifeless_undead(false) ? 0 : 1 },
     };
@@ -511,6 +511,7 @@ static void _wanderer_random_evokable()
         case WAND_QUICKSILVER:
         case WAND_ICEBLAST:
         case WAND_ROOTS:
+        case WAND_WARPING:
             charges = 2 + random2(3);
         break;
 
@@ -599,17 +600,13 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
         break;
 
     case SK_ARMOUR:
-    {
-        item_def * arm;
-        if (coinflip())
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL, 1, 2);
-        else
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_CHAIN_MAIL, 1, 0);
-        // weird body shape, give scales
-        if (!arm)
+        if (you_can_wear(EQ_BODY_ARMOUR) != true)
             newgame_make_item(OBJ_ARMOUR, ARM_ACID_DRAGON_ARMOUR);
+        else if (coinflip())
+            newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL, 1, 2);
+        else
+            newgame_make_item(OBJ_ARMOUR, ARM_CHAIN_MAIL, 1, 0);
         break;
-    }
 
     case SK_DODGING:
         // +2 leather armour or +0 leather armour and also 2-4 nets
@@ -695,14 +692,18 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
                                                      set<skill_type> & gift_skills)
 {
     // don't give a shield if we filled our hands already
-    if (skill == SK_SHIELDS && (!you.has_usable_offhand()
-                                || gift_skills.count(SK_RANGED_WEAPONS)))
+    // or if we got a sling (likely to upgrade to a bow later)
+    // (except for formicids, obviously)
+    if (!you.has_mutation(MUT_QUADRUMANOUS)
+        && skill == SK_SHIELDS
+        && (!you.has_usable_offhand() || gift_skills.count(SK_RANGED_WEAPONS)))
     {
         skill = random_choose(SK_DODGING, SK_ARMOUR);
     }
 
     // or two handers if we have a shield (getting a 2h and a bow is ok)
-    if (gift_skills.count(SK_SHIELDS)
+    if (!you.has_mutation(MUT_QUADRUMANOUS)
+        && gift_skills.count(SK_SHIELDS)
         && (skill == SK_STAVES || skill == SK_RANGED_WEAPONS))
     {
         skill = SK_FIGHTING;
@@ -736,15 +737,15 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         break;
 
     case SK_ARMOUR:
-        item_def * arm;
-        if (coinflip())
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
-        else
-            arm = newgame_make_item(OBJ_ARMOUR, ARM_RING_MAIL);
-        // can train but weird shape, skins and scales are too good for decent
-        // give a plain aux
-        if (!arm)
+        // Dragon scales/tla is too good for "decent" quality
+        // Just give an aux piece to On/Tr/Sp. Note: armour skill will later be
+        // converted to dodging skill by reassess_starting_skills in this case.
+        if (you_can_wear(EQ_BODY_ARMOUR) != true)
             _give_wanderer_aux_armour();
+        else if (coinflip())
+            newgame_make_item(OBJ_ARMOUR, ARM_RING_MAIL);
+        else
+            newgame_make_item(OBJ_ARMOUR, ARM_SCALE_MAIL);
         break;
 
     case SK_SHIELDS:
@@ -807,7 +808,8 @@ static void _wanderer_cover_equip_holes()
                           you.strength() > you.intel() ? ARM_LEATHER_ARMOUR : ARM_ROBE);
     }
 
-    if (you.equip[EQ_WEAPON] == -1)
+    // Give weapon, unless we started with some unarmed skill
+    if (you.equip[EQ_WEAPON] == -1 && you.skills[SK_UNARMED_COMBAT] == 0)
     {
         newgame_make_item(OBJ_WEAPONS,
                           you.dex() > you.strength() ? WPN_DAGGER : WPN_CLUB);
