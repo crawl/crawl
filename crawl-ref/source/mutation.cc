@@ -3072,8 +3072,12 @@ try_again:
                     if (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD)
                         cloud_producing++;
 
-                    if (m == MUT_SPINY || m == MUT_FOUL_SHADOW)
+                    if (m == MUT_SPINY
+                        || m == MUT_FOUL_STENCH
+                        || m == MUT_FOUL_SHADOW)
+                    {
                         retaliation++;
+                    }
                 }
             }
 
