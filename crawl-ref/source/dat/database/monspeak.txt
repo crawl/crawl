@@ -7554,6 +7554,7 @@ Killer Klown
 
 @_Killer_Klown_common_@
 
+w:5
 @_Killer_Klown_rare_@
 %%%%
 _Killer_Klown_common_
