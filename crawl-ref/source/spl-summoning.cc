@@ -2985,7 +2985,7 @@ spret cast_seismic_cannonade(const actor& agent, int pow, bool fail)
     mgen_data cannon = _pal_data(MONS_SEISMIC_CANNON, 0, GOD_NO_GOD,
                                 SPELL_SEISMIC_CANNONADE);
     cannon.flags |= MG_FORCE_PLACE;
-    cannon.hd = 5 + div_rand_round(pow, 30);
+    cannon.hd = 4 + div_rand_round(pow, 20);
 
     // Make all cannons share the same duration
     const int dur = random_range(20, 30) * BASELINE_DELAY;
