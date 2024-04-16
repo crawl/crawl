@@ -309,6 +309,10 @@ fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
 fire_vortex4
+electroferric_vortex1 MONS_ELECTROFERRIC_VORTEX /*'v'*/
+electroferric_vortex2
+electroferric_vortex3
+electroferric_vortex4
 thermic_dynamo1 MONS_THERMIC_DYNAMO /*'v'*/
 thermic_dynamo2
 thermic_dynamo3
@@ -531,12 +535,14 @@ pile_of_debris_00 MONS_PILE_OF_DEBRIS
 pile_of_debris_01
 pillar_of_salt MONS_PILLAR_OF_SALT
 block_of_ice3 MONS_BLOCK_OF_ICE
+rime_pillar MONS_PILLAR_OF_RIME
 training_dummy MONS_TRAINING_DUMMY
 ice_statue MONS_ICE_STATUE
 obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 machine_tukima MONS_STRANGE_MACHINE
+seismic_cannon MONS_SEISMIC_CANNON
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE

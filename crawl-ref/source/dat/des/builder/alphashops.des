@@ -80,7 +80,7 @@
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "staff of cold", "staff of conjuration", "book of callings",
        "book of chaos", "manual of conjurations",
-       "potion of curing", "wand of charming" }
+       "potion of curing", "wand of charming", "codex of conductivity" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "dragon-blood talisman",
@@ -130,7 +130,8 @@
        "book of minor magic", "book of misfortune", "maw talisman",
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
-       "potion of mutation", "book of the moon", "book of movement" }
+       "potion of mutation", "book of the moon", "book of movement",
+       "book of maladies" }
 
       elseif s == "N" then i = { "book of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }
@@ -164,7 +165,7 @@
        "manual of spellcasting", "manual of summonings", "stone",
        "book of storms", "book of sloth", "book of the senses",
        "book of spectacle", "book of the spheres", "book of scorching",
-       "book of spontaneous combustion" }
+       "book of spontaneous combustion", "compendium of siegecraft" }
 
       elseif s == "T" then i = { "scroll of torment",
        "scroll of teleportation", "triple sword", "talisman of death",

@@ -19,6 +19,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "delay.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -57,6 +58,7 @@
 #include "terrain.h"
 #include "tilepick.h"
 #include "transform.h"
+#include "traps.h"
 #include "unicode.h"
 #include "viewchar.h"
 #include "view.h"
@@ -4873,4 +4875,307 @@ dice_def collision_damage(int pow, bool random)
 string describe_collision_dam(dice_def dice)
 {
     return make_stringf("%dd%d / collision", dice.num, dice.size);
+}
+
+vector<coord_def> get_magnavolt_targets()
+{
+    vector<coord_def> targets;
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_MAGNETISED))
+            targets.push_back(mi->pos());
+    }
+
+    return targets;
+}
+
+vector<coord_def> get_magnavolt_beam_paths(vector<coord_def>& targets)
+{
+    vector<coord_def> paths;
+    for (coord_def target : targets)
+    {
+        ray_def ray;
+        if (find_ray(you.pos(), target, ray, opc_solid))
+        {
+            while (ray.advance() && ray.pos() != target)
+                paths.push_back(ray.pos());
+        }
+    }
+
+    return paths;
+}
+
+spret cast_magnavolt(coord_def target, int pow, bool fail)
+{
+    // Calculate paths for all existing magnetized enemies and the one we plan
+    // to magnetize now.
+    vector<coord_def> targets = get_magnavolt_targets();
+    // Add the new target only if it isn't already here, or we'll zap it twice.
+    if (find(targets.begin(), targets.end(), target) == targets.end())
+        targets.push_back(target);
+    vector<coord_def> paths = get_magnavolt_beam_paths(targets);
+
+    if (warn_about_bad_targets(SPELL_MAGNAVOLT, paths))
+        return spret::abort;
+
+    fail_check();
+
+    // First apply the debuff to the targeted enemy.
+    monster* mon = monster_at(target);
+
+    if (!mon->has_ench(ENCH_MAGNETISED))
+        mprf("Magnetic shrapnel attaches itself to %s", mon->name(DESC_THE).c_str());
+
+    mon->add_ench(mon_enchant(ENCH_MAGNETISED, 1, &you,
+                              random_range(5, 8) * BASELINE_DELAY));
+
+    // Then zap all magnetized enemies.
+    mpr("Electricity arcs towards the magnetite!");
+    for (unsigned int i = 0; i < targets.size(); ++i)
+    {
+        bolt volt;
+        zappy(ZAP_MAGNAVOLT, pow, false, volt);
+        volt.source = you.pos();
+        volt.target = targets[i];
+        volt.aimed_at_spot = true;
+        volt.range = LOS_RADIUS;
+        volt.thrower = KILL_YOU_MISSILE;
+        volt.fire();
+    }
+
+    return spret::success;
+}
+
+spret cast_fulsome_fusillade(int pow, bool fail)
+{
+    targeter_radius hitfunc(&you, LOS_ARENA);
+    auto vulnerable = [](const actor *act) -> bool
+    {
+        return !act->is_player()
+               && !god_protects(*act->as_monster());
+    };
+    if (stop_attack_prompt(hitfunc, "hurl reagents", vulnerable))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("You conjure up an array of volatile reagents!");
+
+    you.duration[DUR_FUSILLADE] = 5;
+    you.props[FUSILLADE_POWER_KEY] = pow;
+
+    return spret::success;
+}
+
+static vector<beam_type> concoction_flavours =
+{
+    BEAM_FIRE,
+    BEAM_COLD,
+    BEAM_POISON_ARROW,
+    BEAM_ELECTRICITY,
+};
+
+static map<beam_type, string> concoction_description =
+{
+    { BEAM_FIRE, "fiery phlogiston" },
+    { BEAM_COLD, "frigid brine" },
+    { BEAM_POISON_ARROW, "noxious sulfur" },
+    { BEAM_ELECTRICITY, "flickering plasma" },
+    { BEAM_MMISSILE, "unstable reaction" },
+};
+
+static map<beam_type, colour_t> concoction_colour =
+{
+    { BEAM_FIRE, RED },
+    { BEAM_COLD, BLUE },
+    { BEAM_POISON_ARROW, GREEN },
+    { BEAM_ELECTRICITY, LIGHTCYAN },
+    // This is for the multi-element reaction
+    { BEAM_MMISSILE, YELLOW },
+};
+
+static vector<pair<beam_type, int>> reaction_effects =
+{
+    { BEAM_NONE, 200 },
+    { BEAM_MALMUTATE, 30 },
+    { BEAM_SLOW, 30 },
+    { BEAM_WEAKNESS, 30 },
+    { BEAM_CONFUSION, 20 },
+    { BEAM_ENSNARE, 20 },
+    { BEAM_PETRIFY, 10 },
+};
+
+static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
+                                      vector<coord_def>& exp_map,
+                                      bool quick_anim)
+{
+    for (unsigned int j = 0; j < exp_map.size(); ++j)
+    {
+        const coord_def pos = exp_map[j];
+        if (you.see_cell(pos))
+        {
+#ifdef USE_TILE
+            view_add_tile_overlay(pos, concoction_colour[hit_map[pos]] == YELLOW
+                                       ? (tileidx_t)TILE_BOLT_IRRADIATE
+                                       : tileidx_zap(concoction_colour[hit_map[pos]]));
+#else
+            flash_tile(pos, concoction_colour[hit_map[pos]], 0);
+#endif
+        }
+    }
+
+    animation_delay(quick_anim ? 50 : 150, true);
+}
+
+static void _do_fusillade_hit(monster* mon, int power, beam_type flavour)
+{
+    bolt exp;
+
+    zappy(ZAP_FULSOME_FUSILLADE, power, false, exp);
+
+    // Unstable reactions do more damage
+    if (flavour == BEAM_MMISSILE)
+        exp.damage.num = 5;
+
+    exp.source_id     = MID_PLAYER;
+    exp.thrower       = KILL_YOU_MISSILE;
+    exp.origin_spell  = SPELL_FULSOME_FUSILLADE;
+    exp.target        = mon->pos();
+    exp.source        = mon->pos();
+    exp.hit_verb      = "engulfs";
+    exp.aimed_at_spot = true;
+    exp.flavour       = flavour;
+    exp.name          = concoction_description[flavour];
+    exp.aux_source    = concoction_description[flavour];
+    exp.colour        = concoction_colour[flavour];
+    exp.fire();
+
+    if (flavour == BEAM_MMISSILE && mon && mon->alive())
+    {
+        // Do reaction here
+        beam_type effect = *random_choose_weighted(reaction_effects);
+
+        switch (flavour)
+        {
+            // Do nothing
+            case BEAM_NONE:
+                break;
+
+            case BEAM_ENSNARE:
+                ensnare(mon);
+                break;
+
+            default:
+                enchant_actor_with_flavour(mon, &you, effect, power / 20);
+        }
+    }
+}
+
+static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
+                                      map<coord_def, beam_type>& hit_map,
+                                      vector<coord_def>& exp_map,
+                                      bool quick_anim = false)
+{
+    for (adjacent_iterator ai(center, false); ai; ++ai)
+    {
+        if (feat_is_solid(env.grid(*ai)))
+            continue;
+
+        exp_map.push_back(*ai);
+
+        // Apply the explosion flavour at all affected tiles, but an unstable
+        // reaction at any tile which has already been hit this turn.
+        if (hit_map.count(*ai))
+            hit_map[*ai] = BEAM_MMISSILE;
+        else
+            hit_map[*ai] = flavour;
+    }
+
+    noisy(15, center, MID_PLAYER);
+
+    _show_fusillade_explosion(hit_map, exp_map, quick_anim);
+}
+
+void fire_fusillade()
+{
+    if (!enough_mp(2, true))
+    {
+        mpr("Your magical reserves are too exhausted to conjure more reagents.");
+        return;
+    }
+
+    mpr("Flasks of reagents rain from above!");
+
+    drain_mp(2);
+
+    int pow = you.props[FUSILLADE_POWER_KEY].get_int();
+
+    map<coord_def, beam_type> hit_map; // Map of which flavour to apply on which tile
+    vector<coord_def> exp_map[3];      // Individual explosions, for animation
+
+    // Determine which monster's we're hitting
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi) && you.can_see(**mi)
+            && grid_distance(mi->pos(), you.pos()) > 1)
+        {
+            targs.push_back(*mi);
+        }
+    }
+
+    shuffle_array(targs);
+    shuffle_array(concoction_flavours);
+
+    // Aim up to 3 shots at random valid enemies
+    int num_shots = 3;
+    for (unsigned int i = 0; i < targs.size() && num_shots > 0; ++i)
+    {
+        _calc_fusillade_explosion(targs[i]->pos(), concoction_flavours[3 - num_shots],
+                                  hit_map, exp_map[3 - num_shots]);
+        num_shots--;
+    }
+
+    // Animate more quickly if nothing is around
+    bool quick_anim = num_shots == 3;
+
+    // If we still have shots left, aim them at random empty spaces
+    if (num_shots > 0)
+    {
+        vector<coord_def> empty_spot;
+        for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+        {
+            if (grid_distance(you.pos(), *ri) > 1 && !feat_is_solid(env.grid(*ri))
+                && !monster_at(*ri))
+            {
+                empty_spot.push_back(*ri);
+            }
+        }
+
+        shuffle_array(empty_spot);
+
+        for (unsigned int i = 0; i < empty_spot.size() && num_shots > 0; ++i)
+        {
+            _calc_fusillade_explosion(empty_spot[i], concoction_flavours[3 - num_shots],
+                                      hit_map, exp_map[3 - num_shots], quick_anim);
+            num_shots--;
+        }
+    }
+
+    if (!quick_anim)
+        animation_delay(200, false);
+
+    // Finally, actually apply damage to enemies
+    map<coord_def, beam_type>::iterator it;
+    for (it = hit_map.begin(); it != hit_map.end(); it++)
+    {
+        monster* mon = monster_at(it->first);
+        if (mon)
+            _do_fusillade_hit(mon, pow, it->second);
+    }
+
+    you.duration[DUR_FUSILLADE] -= 1;
+
+    if (!you.duration[DUR_FUSILLADE])
+        mprf(MSGCH_DURATION, "Your rain of reagents ends.");
 }

@@ -23,6 +23,7 @@ const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 #define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
 #define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
 #define VORTEX_POWER_KEY "vortex_power"
+#define FUSILLADE_POWER_KEY "fusillade_power"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -166,5 +167,12 @@ int get_warp_space_chance(int pow);
 
 dice_def collision_damage(int pow, bool random);
 string describe_collision_dam(dice_def dice);
+
+vector<coord_def> get_magnavolt_targets();
+vector<coord_def> get_magnavolt_beam_paths(vector<coord_def>& targets);
+spret cast_magnavolt(coord_def target, int pow, bool fail);
+
+spret cast_fulsome_fusillade(int pow, bool fail);
+void fire_fusillade();
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets);

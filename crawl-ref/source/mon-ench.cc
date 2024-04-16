@@ -40,6 +40,7 @@
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stepdown.h"
@@ -1369,6 +1370,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INSTANT_CLEAVE:
     case ENCH_PROTEAN_SHAPESHIFTING:
     case ENCH_CURSE_OF_AGONY:
+    case ENCH_MAGNETISED:
         decay_enchantment(en);
         break;
 
@@ -1497,6 +1499,9 @@ void monster::apply_enchantment(const mon_enchant &me)
 
                 switch (type)
                 {
+                    case MONS_ELECTROFERRIC_VORTEX:
+                        mprf("%s dissipates.", name(DESC_THE, false).c_str());
+                        break;
                     case MONS_PILE_OF_DEBRIS:
                         mprf("%s collapses into dust.", name(DESC_THE, false).c_str());
                         break;
@@ -1866,6 +1871,18 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_RIMEBLIGHT:
+        tick_rimeblight(*this);
+        // Instakill at <=20% max hp
+        if (hit_points * 5 <= max_hit_points)
+        {
+            props[RIMEBLIGHT_DEATH_KEY] = true;
+            monster_die(*this, KILL_YOU, NON_MONSTER);
+        }
+        else if (decay_enchantment(en))
+            simple_monster_message(*this, " recovers from rimeblight.");
+        break;
+
     default:
         break;
     }
@@ -2114,6 +2131,8 @@ static const char *enchant_names[] =
     "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
     "channel_searing_ray",
     "touch_of_beogh", "vengeance_target",
+    "rimeblight",
+    "magnetised",
     "buggy", // NUM_ENCHANTMENTS
 };
 

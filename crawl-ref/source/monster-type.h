@@ -338,6 +338,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_THERMIC_DYNAMO,
     MONS_WILL_O_THE_WISP,
+    MONS_ELECTROFERRIC_VORTEX,
 #else
     MONS_VAPOUR,
 
@@ -641,6 +642,7 @@ enum monster_type                      // env.mons[].type
     MONS_LIGHTNING_SPIRE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DIAMOND_OBELISK,
+    MONS_SEISMIC_CANNON,
 #endif
 
     // Demons:
@@ -963,6 +965,7 @@ enum monster_type                      // env.mons[].type
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
     MONS_BLOCK_OF_ICE,
+    MONS_PILLAR_OF_RIME,
 #endif
     MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
@@ -1243,6 +1246,9 @@ enum monster_type                      // env.mons[].type
     MONS_THERMIC_DYNAMO,
     MONS_OBSIDIAN_BAT,
     MONS_PILE_OF_DEBRIS,
+    MONS_PILLAR_OF_RIME,
+    MONS_SEISMIC_CANNON,
+    MONS_ELECTROFERRIC_VORTEX,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

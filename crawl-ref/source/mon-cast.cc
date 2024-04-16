@@ -1566,6 +1566,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLIZING_SHOT:
+    case SPELL_STONE_BULLET:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -4411,6 +4412,29 @@ bool handle_mon_spell(monster* mons)
     {
         monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
         return true;
+    }
+
+    // Seismic cannons heal themselves with each shot and will be eliable to
+    // fire a shockwave attack once they reach full health in this way.
+    if (mons->type == MONS_SEISMIC_CANNON)
+    {
+        if (mons->hit_points < mons->max_hit_points)
+        {
+            mons->heal(mons->max_hit_points / 10);
+            if (mons->hit_points == mons->max_hit_points
+                && !mons->has_ench(ENCH_SPELL_CHARGED))
+            {
+                mons->add_ench(ENCH_SPELL_CHARGED);
+                simple_monster_message(*mons, " finishes assembling itself.");
+
+                // Give charged cannons a little more duration, to avoid the
+                // bad-feeling situation of having them immediately vanish once
+                // shockwave becomes available, but before it can be used.
+                mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0,
+                                           actor_by_mid(mons->summoner),
+                                           random_range(3, 5) * BASELINE_DELAY));
+            }
+        }
     }
 
     if (!(flags & MON_SPELL_INSTANT))

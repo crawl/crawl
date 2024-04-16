@@ -247,6 +247,12 @@ book of lightning
 
 A book that fairly crackles with arcane power.
 %%%%
+book of maladies
+
+A concise catalogue of afflictions, both magical and mundane, often described
+with a disquieting degree of cheerfulness. Most of them operate on timescales
+too slow to be useful to an adventurer, but a few sound remarkably efficacious.
+%%%%
 book of minor magic
 
 A spellbook containing a variety of simple but useful magical incantations.
@@ -461,6 +467,21 @@ club
 A heavy piece of wood. While clubs are rather primitive weapons, bashing
 someone's skull in with one remains a very popular and effective means of
 dispute resolution.
+%%%%
+codex of conductivity
+
+An exhaustive collection of research notes on the effects of electricity upon
+everything from sawdust to snozzcumbers, interspersed with spell formulae and
+usable technical schematics. The author's handwriting deteriorates shockingly in
+the middle of the chapter on spriggan electrophysiology, leading to much
+speculation about both their identity and their sense of self-preservation.
+%%%%
+compendium of siegecraft
+
+An analytical treatise on siege warfare, written in a clear and readable manner.
+A majority of its chapters are concerned with logistics and the maintenance of
+supply lines, but several detail spells useful for breaching fortifications
+(and also other, softer, things).
 %%%%
 condenser vane
 

@@ -24,7 +24,8 @@ enum class spflag
     none               = 0x00000000,
     dir_or_target      = 0x00000001,      // use DIR_NONE targeting
     target             = 0x00000002,      // use DIR_TARGET targeting
-                     //  0x00000004,
+    prefer_farthest    = 0x00000004,      // targets the most distant target
+                                          // by default
                      //  0x00000008,
                                           // used to test for targeting
     targeting_mask     = spflag::dir_or_target | spflag::target,

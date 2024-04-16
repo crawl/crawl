@@ -667,6 +667,21 @@ Fulminant Prism spell
 Conjures a prism which unleashes a violent explosion of arcane force after a
 short duration. If destroyed prematurely, its blast will be much weaker.
 %%%%
+Fulsome Fusillade spell
+
+A magnum opus of reckless chemistry, this spell conjures up a surfeit of
+volatile reagents to rain down upon your enemies. For the next several turns, up
+to 3 random enemies in sight will be struck by an exploding beaker that inflicts
+either fire, cold, electric, or poison damage. If any of these explosions
+overlap each other, the resulting reaction will inflict even greater
+irresistible damage and sometimes apply a random deleterious status on whoever
+is caught in the blast.
+
+This spell costs a small amount of the caster's magical energy each turn to
+maintain, and while it will never aim an explosion where it could hurt the
+caster, the caster's allies (and anything else in the general vicinity) are not
+so fortunate.
+%%%%
 Funeral Dirge spell
 
 A ritual chant that briefly rouses several nearby undead allies to move more
@@ -917,6 +932,16 @@ armour, and it can be bounced off walls to hit targets twice.
 Magic Dart spell
 
 Fires a small bolt of magical energy which never misses.
+%%%%
+Magnavolt spell
+
+Envelops a target in a thin layer of magnetically charged metal fragments, then
+unleashes a powerful surge of electricity that arcs unerringly towards every
+visible target coated in these fragments.
+
+Magnetised creatures are additionally unable to evade attacks and will leave
+behind a short-lived vortex of electrified metal upon death that will continue
+to serve as a lightning rod for this spell.
 %%%%
 Major Destruction spell
 
@@ -1276,6 +1301,19 @@ Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
 %%%%
+Rimeblight spell
+
+Afflicts a living, demonic, or holy creature with a magical plague that slowly
+freezes them from the inside out. Victims take AC-ignoring cold damage each
+turn, and as their disease progresses, shards of crystalline ice may erupt
+violently from their flesh, damaging nearby enemies and even spreading the
+affliction to others.
+
+The disease feeds off the necromantic energies released by its host's suffering,
+and as they near death, it may accellerate rapidly, devouring the last
+vestiges of their body and leaving nothing behind but a twisted pillar of
+stygian ice.
+%%%%
 Roll spell
 
 Roll into a ball, granting the boulder beetle tremendous speed as well as
@@ -1331,6 +1369,18 @@ Searing Breath spell
 
 Breathes a blast of fire at a targeted creature, leaving a cloud of flames at
 the endpoint.
+%%%%
+Seismic Cannonade spell
+
+Shapes a trio of alchemical cannons around the caster that drill into the earth
+beneath them, transmuting the rocky minerals they find there into razor-sharp
+projectiles. Initially created in an incomplete state, each salvo they fire
+crystallizes more material into their frame, healing them.
+
+Once a cannon has fully assembled itself, recasting this spell will allow you to
+direct its full power into the ground, unleashing a powerful seismic shockwave
+that devastates a targeted area at the cost of sacrificing every cannon in the
+process.
 %%%%
 Sentinel's Mark spell
 
@@ -1517,6 +1567,10 @@ Adds malice to hellish fires, binding it with flame into a creeping inferno.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
+%%%%
+Stone Bullet spell
+
+Fires a hardened shard of rock over a long distance.
 %%%%
 Strip Willpower spell
 

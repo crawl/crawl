@@ -37,6 +37,7 @@
 #include "ouch.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -964,6 +965,17 @@ void dismiss_divine_allies_fineff::fire()
         beogh_do_ostracism();
     else
         dismiss_god_summons(god);
+}
+
+void death_spawn_fineff::fire()
+{
+    if (monster *pillar = create_monster(mgen_data(mon_type,
+                                                   BEH_HOSTILE, posn,
+                                                   MHITNOT, MG_FORCE_PLACE),
+                                         false))
+    {
+        pillar->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, &you, duration));
+    }
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

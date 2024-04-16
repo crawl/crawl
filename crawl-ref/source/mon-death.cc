@@ -58,6 +58,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-selfench.h"
@@ -1850,9 +1851,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
                                 || killer == KILL_DISMISSED);
-    const bool leaves_corpse = !summoned && !fake_abjure && !timeout
-                               && !mons_reset
-                               && !mons_is_tentacle_segment(mons.type);
+    bool leaves_corpse = !summoned && !fake_abjure && !timeout
+                            && !mons_reset
+                            && !mons_is_tentacle_segment(mons.type);
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
@@ -1993,6 +1994,27 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         silent = true;
     }
+    else if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
+             && !silent && !was_banished && !wizard && !mons_reset && !mons_reset
+             && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
+    {
+        leaves_corpse = false;
+        did_death_message = true;
+        if (you.see_cell(mons.pos()))
+        {
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
+                 "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
+        }
+        death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
+                                     mons.pos(),
+                                     random_range(3, 11) * BASELINE_DELAY);
+    }
+    else if (mons.has_ench(ENCH_MAGNETISED) && mons.type != MONS_ELECTROFERRIC_VORTEX)
+    {
+        death_spawn_fineff::schedule(MONS_ELECTROFERRIC_VORTEX,
+                                     mons.pos(),
+                                     random_range(3, 5) * BASELINE_DELAY);
+    }
 
     if (monster_explodes(mons))
     {
@@ -2011,6 +2033,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_FIRE_VORTEX
              || mons.type == MONS_SPATIAL_VORTEX
              || mons.type == MONS_TWISTER
+             || mons.type == MONS_ELECTROFERRIC_VORTEX
              || (mons.type == MONS_FOXFIRE && mons.steps_remaining == 0))
     {
         if (!silent && !mons_reset && !was_banished)
@@ -2413,7 +2436,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                     // Necrotise/Animate Dead/Infestation
                     else if (mons.type == MONS_ZOMBIE
                              || mons.type == MONS_SKELETON
-                             || mons.type == MONS_DEATH_SCARAB)
+                             || mons.type == MONS_DEATH_SCARAB
+                             || mons.type == MONS_SEISMIC_CANNON)
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }

@@ -1400,6 +1400,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_GELLS_GAVOTTE:
         return make_unique<targeter_gavotte>(&you);
 
+    case SPELL_MAGNAVOLT:
+        return make_unique<targeter_magnavolt>(&you, range);
+
+    case SPELL_SEISMIC_SHOCKWAVE:
+        return make_unique<targeter_seismic_shockwave>(&you, range);
+
     default:
         break;
     }
@@ -1658,6 +1664,16 @@ static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
     return vector<string>{};
 }
 
+static vector<string> _desc_rimeblight_valid(const monster_info& mi)
+{
+    if (mi.is(MB_RIMEBLIGHT))
+        return vector<string>{"already infected"};
+    else if (!(mi.holi & (MH_NATURAL | MH_DEMONIC | MH_HOLY)))
+        return vector<string>{"not susceptible"};
+
+    return vector<string>{};
+}
+
 static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
 {
     const int wl = mi.willpower();
@@ -1826,6 +1842,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_meph_chance, placeholders::_1);
         case SPELL_VAMPIRIC_DRAINING:
             return bind(_desc_vampiric_draining_valid, placeholders::_1);
+        case SPELL_RIMEBLIGHT:
+            return bind(_desc_rimeblight_valid, placeholders::_1);
         case SPELL_STARBURST:
         {
             targeter_starburst* burst_hitf =
@@ -2014,6 +2032,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         args.target_prefix = prompt;
         args.top_prompt = title;
         args.behaviour = &beh;
+
+        if (testbits(flags, spflag::prefer_farthest))
+            args.prefer_farthest = true;
 
         // if the spell is useless and we have somehow gotten this far, it's
         // a forced cast. Setting this prevents the direction chooser from
@@ -2571,6 +2592,18 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_GELLS_GAVOTTE:
         return cast_gavotte(powc, beam.target - you.pos(), fail);
 
+    case SPELL_MAGNAVOLT:
+        return cast_magnavolt(beam.target, powc, fail);
+
+    case SPELL_FULSOME_FUSILLADE:
+        return cast_fulsome_fusillade(powc, fail);
+
+    case SPELL_SEISMIC_CANNONADE:
+        return cast_seismic_cannonade(you, powc, fail);
+
+    case SPELL_SEISMIC_SHOCKWAVE:
+        return cast_seismic_shockwave(you, beam.target, powc, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:
@@ -2912,6 +2945,11 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("2d(%d-%d)",
                         collision_damage(gavotte_impact_power(pow, 1), false).size,
                         collision_damage(gavotte_impact_power(pow, 4), false).size);
+
+        case SPELL_FULSOME_FUSILLADE:
+            return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
+        case SPELL_RIMEBLIGHT:
+            return describe_rimeblight_damage(pow, terse);
         default:
             break;
     }

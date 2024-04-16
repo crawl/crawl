@@ -227,6 +227,8 @@ enum monster_info_flags
     MB_TOUCH_OF_BEOGH,
     MB_AWAITING_RECRUITMENT,
     MB_VENGEANCE_TARGET,
+    MB_MAGNETISED,
+    MB_RIMEBLIGHT,
     NUM_MB_FLAGS
 };
 

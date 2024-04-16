@@ -2284,6 +2284,8 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_RETREATING, TILEI_RETREAT  },
     { MB_TOUCH_OF_BEOGH, TILEI_TOUCH_OF_BEOGH },
     { MB_VENGEANCE_TARGET, TILEI_VENGEANCE_TARGET },
+    { MB_MAGNETISED, TILEI_BULLSEYE },  // Placeholder
+    { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3345,7 +3347,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case LIGHTGREY:
-        if (bolt.name == "stone arrow")
+        if (bolt.name == "stone arrow" || bolt.name == "stone bullet")
             return TILE_BOLT_STONE_ARROW + dir;
         break;
 
@@ -3365,8 +3367,11 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case ETC_MUTAGENIC:
-        if (bolt.name == "irradiate" || bolt.name == "unravelling")
+        if (bolt.name == "irradiate" || bolt.name == "unravelling"
+            || bolt.name == "burst of quintessence")
+        {
             return TILE_BOLT_IRRADIATE;
+        }
         break;
     }
 

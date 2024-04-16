@@ -2045,6 +2045,12 @@ bronze
 
 brown
 
+burgundy
+
+caerulean
+
+cerise
+
 charcoal
 
 chartreuse
@@ -2057,13 +2063,33 @@ cyan
 
 dun
 
+erin
+
+fuchsia
+
+fulvous
+
+gamboge
+
+glaucous
+
+goblin blue
+
 gold
 
 gridelin
 
+haint blue
+
+heliotrope
+
+indanthrone blue
+
 lavender
 
 leaf green
+
+lilac
 
 lime green
 
@@ -2073,7 +2099,13 @@ marigold
 
 mauve
 
+mulberry
+
 ochre
+
+periwinkle
+
+phlox
 
 pink
 
@@ -2083,15 +2115,31 @@ rubric
 
 saffron
 
+sepia
+
 scarlet
 
 silver
+
+sinopia
+
+sorcerer's violet
+
+taupe
+
+teal
+
+turquoise
+
+ultramarine
 
 umber
 
 vermilion
 
 viridian
+
+zaffre
 %%%%
 _Blork_common_
 
@@ -2760,6 +2808,7 @@ _dissolution_speech_
 
 @The_monster@ says, "Acid to acid, slime to slime."
 
+w:5
 @_dissolution_rare_@
 %%%%
 _dissolution_rare_
@@ -7506,6 +7555,7 @@ Killer Klown
 
 @_Killer_Klown_common_@
 
+w:5
 @_Killer_Klown_rare_@
 %%%%
 _Killer_Klown_common_
@@ -7612,6 +7662,15 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
+################## Seismic cannon ##########################
+default seismic cannon
+
+@The_monster@ rumbles loudly.
+
+VISUAL:The ground beneath @The_monster@ churns.
+
+@The_monster@ makes a grinding noise.
+%%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A
 # speech.
@@ -7692,6 +7751,7 @@ _tormentor_
 
 @_tormentor_common_@
 
+w:5
 @_tormentor_rare_@
 %%%%
 _tormentor_common_

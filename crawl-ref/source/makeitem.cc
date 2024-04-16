@@ -1668,6 +1668,7 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     return NUM_MISCELLANY;
 }
 
+<<<<<<< HEAD
 static void _generate_misc_item(item_def& item, int force_type, int item_level, bool lucky)
 {
     const auto typ = get_misc_item_type(force_type);
@@ -1678,6 +1679,11 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level, 
         return;
     }
     item.sub_type = typ;
+=======
+// May also be called when a wanderer gets assigned a misc evoker at start
+void handle_generated_misc(misc_item_type typ)
+{
+>>>>>>> 002fc65269b9280295cc5f233498368bc3010422
     switch (typ)
     {
     case MISC_SACK_OF_SPIDERS:
@@ -1693,6 +1699,19 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level, 
     default:
         break;
     }
+}
+
+static void _generate_misc_item(item_def& item, int force_type, int item_level)
+{
+    const auto typ = get_misc_item_type(force_type);
+    if (typ == NUM_MISCELLANY)
+    {
+        item.base_type = OBJ_WANDS;
+        generate_wand_item(item, OBJ_RANDOM, item_level);
+        return;
+    }
+    item.sub_type = typ;
+    handle_generated_misc(typ);
 }
 
 /**
