@@ -210,7 +210,8 @@ function arena_sprint_get_monster_set(round, boss)
         if round == 27 then
             return {"place:Zot:$ / orb guardian w:70 / tiamat / " ..
                        "orb of fire / electric golem / killer klown / " ..
-                       "ancient lich / moth of wrath"}
+                       "anachrobat / balloon yak band / ancient lich / " ..
+                       "moth of wrath"}
         end
 
         local mon_set = {}
@@ -425,7 +426,7 @@ function arena_sprint_get_monster_set(round, boss)
                     vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
                     profane servitor",
                 "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
-                    killer klown",
+                    killer klown / anachrobat / balloon yak band w:5",
                 "base draconian / w:1 nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
@@ -488,7 +489,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "glowing shapeshifter",
                 "hell knight w:20 / w:1 margery",
                 "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
-                    killer klown",
+                    killer klown / anachrobat / balloon yak band w:5",
                 "base draconian / w:5 nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",

@@ -908,7 +908,8 @@ KMONS:    3 = orb of fire
 KMONS:    4 = ancient lich
 KMONS:    5 = electric golem
 KMONS:    6 = shadow dragon / golden dragon / nonbase draconian /\
-              killer klown / moth of wrath / place:Zot:$
+              killer klown / anachrobat / moth of wrath /\
+              balloon yak band / place:Zot:$
 KMONS:    7 = moth of wrath
 KITEM:    7 = orb of zot
 KMONS:    8 = moth of wrath

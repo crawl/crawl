@@ -79,9 +79,9 @@ function base_monster_setup(e)
            deep elf master archer / war gargoyle")
   e.kmons("E = lich / tentacled monstrosity / golden dragon /\
            iron dragon / quicksilver dragon / titan / acid blob /\
-           azure jelly / golden eye / ancient lich w:5 /\
-           rockslime / reaper / royal mummy w:3 / curse toe / ghost moth /\
-           killer klown / nonbase draconian w:15 /\
+           azure jelly / golden eye / ancient lich w:5 / rockslime / reaper /\
+           royal mummy w:3 / curse toe / ghost moth / killer klown /\
+           anachrobat / balloon yak band w:5 / nonbase draconian w:15 /\
            nonbase draconian band w:15 / storm dragon / shadow dragon /\
            hellephant / balrug w:5 / deep elf blademaster / cacodemon /\
            deep elf master archer / blizzard demon / executioner /\

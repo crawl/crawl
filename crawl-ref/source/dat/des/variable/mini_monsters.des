@@ -712,7 +712,7 @@ NSUBST:  2 = 3=23 / 3, 1 = 2 / 3=12 / 1
 # Chaos zoos.
 KMONS:   1 = very ugly thing / apocalypse crab w:5 / shapeshifter hd:14 / \
              glowing shapeshifter / protean progenitor / killer klown
-KMONS:   2 = killer klown
+KMONS:   2 = killer klown / anachrobat / balloon yak band
 NSUBST:  2 = 2=23 / 3
 : elseif you.in_branch("Geh") or you.in_branch("Dis") then
 KMONS:   1 = hell knight / hellion / balrug
@@ -10032,7 +10032,8 @@ KMONS:  1 = shard shrike w:15 / titan / blizzard demon / tormentor / \
 : elseif you.in_branch("Zot") then
 KMONS:  1 = nonbase draconian / orb of fire / electric golem / \
             killer klown / ancient lich / dread lich / curse toe / \
-            protean progenitor / place:Zot:$ w:20
+            protean progenitor / anachrobat / balloon yak band / \
+            place:Zot:$ w:20
 # Dungeon, Vaults, and Depths get 8 spawns.
 : else
 KMONS:  1 = 8

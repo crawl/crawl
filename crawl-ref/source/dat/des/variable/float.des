@@ -8103,7 +8103,8 @@ KMONS:  8 = bone dragon / lich / ancient lich / dread lich / w:5 death cob / \
 : elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             killer klown / death cob / w:5 curse toe / w:5 ancient lich / \
-            w:5 dread lich / protean progenitor w:15
+            w:5 dread lich / protean progenitor w:15 / anachrobat / \
+            w:5 balloon yak band
 SUBST:  *% = .
 :else
 KMONS:  8 = 8 band
