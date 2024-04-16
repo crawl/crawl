@@ -5506,7 +5506,7 @@ _Josephina_rare_
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL:One of @The_monster@'s icy fingers falls off.
+VISUAL:One of @the_monster@'s icy fingers falls off.
 
 @The_monster@ says @to_foe@, "I'll make a rug of your skin."
 
@@ -6946,7 +6946,7 @@ VISUAL:@The_monster@ beckons gently.
 
 VISUAL:@The_monster@ smiles kindly.
 
-VISUAL:A flash of anger passes briefly over @The_monster@'s face.
+VISUAL:A flash of anger passes briefly over @the_monster@'s face.
 
 VISUAL:@The_monster@ draws @possessive@ long claws delicately across @possessive@ gut.
 %%%%

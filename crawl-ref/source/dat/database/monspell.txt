@@ -542,7 +542,7 @@ Primal Wave Norris cast
 %%%%
 Draining Gaze Norris cast
 
-Something numinous underneath @The_monster@'s waves suddenly gazes at @target@.
+Something numinous underneath @the_monster@'s waves suddenly gazes at @target@.
 
 @The_monster@'s eyes shimmer, overwhelming @target@ with visions from beyond.
 %%%%
@@ -722,13 +722,13 @@ Crystallizing Shot crystal guardian cast
 %%%%
 Rebounding Blaze thermic dynamo cast
 
-A wild whirl of fire shoots out from @The_monster@ @at@ @target@.
+A wild whirl of fire shoots out from @the_monster@ @at@ @target@.
 
 @The_monster@ overcharges itself and releases excess heat @at@ @target@.
 %%%%
 Rebounding Chill thermic dynamo cast
 
-A wild whirl of ice shoots out from @The_monster@ @at@ @target@.
+A wild whirl of ice shoots out from @the_monster@ @at@ @target@.
 
 @The_monster@ overflows with ice and vents excess cold @at@ @target@.
 %%%%
