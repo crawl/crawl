@@ -1280,7 +1280,7 @@ Ihr stürzt Euch unversehens auf {acc}%s!
 %s versagt bei der Verteidigung gegen Euer Angriff.
 %%%%
 You block %s attack.
-Ihr blockiert den Angriff {gen}%s.
+Ihr blockiert den Angriff %s.
 %%%%
 %s blocks your attack.
 %s blockiert Euren Angriff.
