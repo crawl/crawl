@@ -5115,7 +5115,7 @@ void fire_fusillade()
 
     // Determine which monster's we're hitting
     vector<monster*> targs;
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mi->wont_attack() && !mons_is_firewood(**mi) && you.can_see(**mi)
             && grid_distance(mi->pos(), you.pos()) > 1)
