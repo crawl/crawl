@@ -81,6 +81,10 @@ capacitor
 
 inducer
 
+widget
+
+tensor
+
 encabulator
 
 # Calvin and Hobbes
@@ -98,6 +102,8 @@ mega
 giga
 
 super
+
+ultra
 
 hydro
 
