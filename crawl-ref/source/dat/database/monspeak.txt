@@ -7667,7 +7667,7 @@ default seismic cannon
 
 @The_monster@ rumbles loudly.
 
-VISUAL:The ground beneath @The_monster@ churns.
+VISUAL:The ground beneath @the_monster@ churns.
 
 @The_monster@ makes a grinding noise.
 %%%%
