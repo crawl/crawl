@@ -2808,6 +2808,7 @@ _dissolution_speech_
 
 @The_monster@ says, "Acid to acid, slime to slime."
 
+w:5
 @_dissolution_rare_@
 %%%%
 _dissolution_rare_
@@ -7750,6 +7751,7 @@ _tormentor_
 
 @_tormentor_common_@
 
+w:5
 @_tormentor_rare_@
 %%%%
 _tormentor_common_
