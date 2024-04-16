@@ -826,3 +826,22 @@ This orb is the work of a master artificer, contracted to retrieve the orb, who
 valued their life more than their professional integrity. While this fake
 faithfully recreates the eerie glow and space-warping properties of the true
 orb, it has no powers but a boost to Evocations.
+%%%%
+ring of the Frog
+
+A bizarre, warty ring carved from mottled jade, it is one of a pair, and 
+deceptively contemporary. Its wearer becomes substantially more robust,
+proportionally to their experience.
+%%%%
+ring of the Scorpion
+
+A peculiar ring, carved from prehistoric amber into the segmented form of
+a scorpion's tail. Its wearer is imbued with the vicious instinct of an
+ancient scorpion.
+%%%
+prototype "ExtendoBlade"
+
+A flimsy-looking short sword with an eccentric hidden mechanism. 
+This weapon extends dramatically with a hidden switch, and is capable of 
+striking from a tile’s reach. Its haphazard construction is hallmark of 
+Coglin engineering.

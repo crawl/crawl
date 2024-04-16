@@ -1466,10 +1466,13 @@ int archer_bonus_damage(int hd)
 bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon)
 {
     if (!using_weapon)
-        return true;
+        if(you.dex() > you.strength()) return false;
+        else return true;
     switch (wpn_skill)
     {
     case SK_LONG_BLADES:
+        if(you.dex() > you.strength()) return false;
+        else return true;
     case SK_SHORT_BLADES:
     case SK_RANGED_WEAPONS:
         return false;

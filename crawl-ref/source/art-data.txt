@@ -1838,7 +1838,6 @@ DBRAND:  It massively reduces your stealth.
 
 NAME:    ring of the Frog
 OBJ:     OBJ_JEWELLERY/RING_FIRST_RING
-PLUS:    +10
 COLOUR:  ETC_POISON
 TILE:    urand_frog
 
