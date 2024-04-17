@@ -5106,7 +5106,8 @@ void fire_fusillade()
 
     mpr("Flasks of reagents rain from above!");
 
-    drain_mp(2);
+    pay_mp(2);
+    finalize_mp_cost();
 
     int pow = you.props[FUSILLADE_POWER_KEY].get_int();
 
