@@ -2971,13 +2971,10 @@ spret cast_seismic_cannonade(const actor& agent, int pow, bool fail)
 {
     if (cannonade_is_active(agent))
     {
-        if (cannonade_is_fully_charged(agent))
-            return your_spells(SPELL_SEISMIC_SHOCKWAVE, pow);
-        else
-        {
-            mpr("None of your cannons are fully assembled yet.");
-            return spret::abort;
-        }
+        // Note that it is impossible to reach this point if a cannon is fully
+        // charged, as cast_seismic_shockwave will be called instead.
+        mpr("None of your cannons are fully assembled yet.");
+        return spret::abort;
     }
 
     fail_check();
