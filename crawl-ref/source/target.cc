@@ -2386,7 +2386,7 @@ bool targeter_gavotte::set_aim(coord_def a)
     bolt tempbeam = beam;
     tempbeam.target = a;
     tempbeam.aimed_at_spot = false;
-    tempbeam.range = !you.is_motile() || you.stasis() ? 0 : GAVOTTE_DISTANCE;
+    tempbeam.range = you.is_stationary() || you.stasis() ? 0 : GAVOTTE_DISTANCE;
     tempbeam.path_taken.clear();
     tempbeam.fire();
     path_taken = tempbeam.path_taken;

@@ -2228,8 +2228,8 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
     // Gather all actors we will be moving
     vector<actor*> targs;
 
-    // Don't move players with -move (or formicids)
-    if (you.is_motile() && !you.stasis())
+    // Don't move stationary players (or formicids)
+    if (!you.is_stationary() && !you.stasis())
         targs.push_back(&you);
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
