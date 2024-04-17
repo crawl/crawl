@@ -5009,6 +5009,9 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
                                       vector<coord_def>& exp_map,
                                       bool quick_anim)
 {
+    if (!(Options.use_animations & UA_BEAM))
+        return;
+
     for (unsigned int j = 0; j < exp_map.size(); ++j)
     {
         const coord_def pos = exp_map[j];
@@ -5024,7 +5027,7 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
         }
     }
 
-    animation_delay(quick_anim ? 50 : 150, true);
+    animation_delay(quick_anim ? 0 : 50, true);
 }
 
 static void _do_fusillade_hit(monster* mon, int power, beam_type flavour)
@@ -5163,8 +5166,8 @@ void fire_fusillade()
         }
     }
 
-    if (!quick_anim)
-        animation_delay(200, false);
+    if (Options.use_animations & UA_BEAM)
+        animation_delay(quick_anim ? 50 : 100, false);
 
     // Finally, actually apply damage to enemies
     map<coord_def, beam_type>::iterator it;
