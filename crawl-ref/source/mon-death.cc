@@ -672,6 +672,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         return false;
     }
 
+    actor *act = &you;
+
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
         monster* mon = &env.mons[i];
@@ -680,6 +682,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
         if (!you.see_cell(mons->pos()))
             return false;
+
+        act = mon;
     }
     else if (!YOU_KILL(killer))
         return false;
@@ -698,7 +702,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     god_speaks(god, msg.c_str());
 
-    behaviour_event(mons, ME_WHACK, &you);
+    behaviour_event(mons, ME_WHACK, act);
 
     lugonu_meddle_fineff::schedule();
 
