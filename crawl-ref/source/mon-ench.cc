@@ -1873,6 +1873,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_RIMEBLIGHT:
         tick_rimeblight(*this);
+        if (!alive())
+            return;
         // Instakill at <=20% max hp
         if (hit_points * 5 <= max_hit_points)
         {
