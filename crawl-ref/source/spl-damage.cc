@@ -665,8 +665,8 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
 }
 
 /**
- * Returns the number of monsters adjacent to the given position which other
- * monsters can huddle against. (Reducing damage taken from Refrigeration.)
+ * Returns the number of allied monsters adjacent to the given position which
+ * other monsters can huddle against. (Reducing damage taken from Refrigeration.)
  */
 int adjacent_huddlers(coord_def pos)
 {
@@ -678,8 +678,11 @@ int adjacent_huddlers(coord_def pos)
             continue;
 
         const monster* mon = act->as_monster();
-        if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type))
+        if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type)
+            && mons_aligned(act, mon))
+        {
             ++adj_count;
+        }
     }
     return adj_count;
 }
