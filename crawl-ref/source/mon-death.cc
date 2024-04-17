@@ -698,6 +698,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     god_speaks(god, msg.c_str());
 
+    behaviour_event(mons, ME_WHACK, &you);
+
     lugonu_meddle_fineff::schedule();
 
     return true;
