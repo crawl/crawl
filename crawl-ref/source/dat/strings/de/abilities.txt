@@ -577,7 +577,7 @@ Gebrechlichkeit
 %d TP
 %%%%
 Piety
-Frommigkeit
+Frömmigkeit
 %%%%
 Breath
 Atem

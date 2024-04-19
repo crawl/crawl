@@ -6169,7 +6169,7 @@ You put %s back on the other side!
 
 %%%%
 Piety after sacrifice: %s
-Frommigkeit nach dem Opfer: %s
+Frömmigkeit nach dem Opfer: %s
 %%%%
 %s indicates that your awakening is complete.
 
@@ -19495,7 +19495,7 @@ Kann nicht nochmal in den Erkundungsmodus eintreten.
 <w>_</w>      eine Religion bekommen
 %%%%
 <w>^</w>      set piety to a value
-<w>^</w>      Frommigkeit einstellen
+<w>^</w>      Frömmigkeit einstellen
 %%%%
 <w>@</w>      set Str Int Dex
 <w>@</w>      Stä Int Ges einstellen
