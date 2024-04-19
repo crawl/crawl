@@ -351,7 +351,7 @@ dwarves' civilisation into ruin.
 book of the hunter
 
 A mundane book on hunting. Someone has gone through and covered the book in
-corrections and scathing criticisms, crossing out entire sections in favor of
+corrections and scathing criticisms, crossing out entire sections in favour of
 spells that accomplish the same task.
 %%%%
 book of the moon
