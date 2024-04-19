@@ -14526,7 +14526,7 @@ sacrificed arcana
 opferte Arkana
 %%%%
 Ru asks you to sacrifice your Dodging skill.
-Ru fordert Euch auf, Eure Ausweichensfähigkeit, zu opfern.
+Ru fordert Euch auf, Eure Ausweichensfertigkeit, zu opfern.
 %%%%
 sacrificed dodging
 opferte Ausweichen
