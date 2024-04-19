@@ -1487,7 +1487,8 @@ static bool _give_kiku_gift(bool forced)
                          SPELL_DISPEL_UNDEAD,
                          SPELL_CURSE_OF_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
-                         SPELL_DEATH_CHANNEL};
+                         SPELL_DEATH_CHANNEL,
+                         SPELL_RIMEBLIGHT};
     }
 
     shuffle_array(spell_options);
