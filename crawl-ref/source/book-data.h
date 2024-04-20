@@ -279,6 +279,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
     SPELL_FULSOME_FUSILLADE,
+    SPELL_GASTRONOMIC_EXPANSE,
 },
 
 {   // Book of Beasts

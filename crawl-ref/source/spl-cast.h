@@ -35,13 +35,13 @@ enum class spflag
                                           // monster. Defaults to aiming at self
     not_self           = 0x00000080,      // aborts on isMe
     unholy             = 0x00000100,      // counts as "unholy"
-    unclean            = 0x00000200,      // counts as "unclean"
-    chaotic            = 0x00000400,      // counts as "chaotic"
-    hasty              = 0x00000800,      // counts as "hasty"
+    unclean            = 0x00000200,      // counts as "unclean" (zin hates it)
+    chaotic            = 0x00000400,      // counts as "chaotic" (zin hates it)
+    hasty              = 0x00000800,      // counts as "hasty" (chei hates it)
     silent             = 0x00001000,      // makes no noise on cast
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
-    area               = 0x00008000,      // area affect
+    area               = 0x00008000,      // area affect; does not use a zap
     destructive        = 0x00010000,      // not a conjuration, but still
                                           // supported by Vehumet/Battlesphere
     selfench           = 0x00020000,      // monsters use as selfench
