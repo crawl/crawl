@@ -6,8 +6,8 @@ Chaos zu verbreiten.
 %%%%
 Air Elementalist
 
-Luftmagier kennen den Spruch Stromschlag. Später erlaubt ihnen das breitgefächerte Buch
-der Winde, im Überlebenskampf zu bestehen.
+Luftmagier haben den Zauber Schock erlernt. Später verschafft ihnen ihre Auswahl
+an Luftmagie-Zaubern die nötige Flexibilität, um zu überleben.
 %%%%
 Arcane Marksman
 
@@ -16,17 +16,19 @@ Feinde anfälliger für derartige Angriffe zu machen.
 %%%%
 Artificer
 
-Artificer beginnen mit einigen magischen Gerätschaften und können mit solchen Werkzeugen
-kompetent umgehen.
-%%%%
-Assassin
-
-Assassinen tragen giftige Wurfpfeile und auch fiese Curare-Wurfpfeile.
+Artificer beginnen mit zwei Zauberstäben, einer magischen Schachfigur und einer
+Keule. Sie müssen bessere Waffen und Rüstungen finden, bevor ihre Zauberstäbe
+aufgebraucht sind.
 %%%%
 Berserker
 
 Berserker glauben an Trog, den Magiehassenden Gott der Raserei. Nicht viel kann
 einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris.
+%%%%
+Brigand
+
+Briganten tragen vergiftete Wurfpfeile und eine kleine Anzahl bösartiger
+Curare-Wurfpfeile.
 %%%%
 Chaos Knight
 
@@ -35,8 +37,13 @@ wechselnden Gefühlen des Gottes ausgesetzt.
 %%%%
 Conjurer
 
-Beschwörer konfrontieren Probleme mit schädlichen Zaubersprüchen aus dem
-Buch der Elementbeschwörungen.
+Hervorrufer begegnen Probleme mit schädlichen Zaubersprüchen.
+%%%%
+Delver
+
+Gräber beginnen ihre Suche fünf Ebenen unter der Oberfläche. Eine Reihe von
+mächtigen magischen Gegenstände helfen ihnen, die gefährliche Reise nach oben
+zu überleben.
 %%%%
 Earth Elementalist
 
@@ -46,8 +53,8 @@ Buch der Geomantie.
 %%%%
 Enchanter
 
-Verzauberer benutzen Zaubersprüche, um sich selbst im Kampf zu stärken oder
-Gegner kampfunfähig zu machen. Sie starten zusätzlich mit guten Wurfpfeilen.
+Verzauberer kennen eine Vielzahl von Verhexungen, die ihre Feinde außer Gefecht
+setzen können, und sind mit einem verzauberten Dolch ausgerüstet.
 %%%%
 Fighter
 
@@ -56,29 +63,33 @@ Wahl und einem Trank der Macht.
 %%%%
 Fire Elementalist
 
-Feuermagier starten mit dem Buch der Flammen und kennen den
-Flammenzungen-Zauber. Die anderen Zauber in ihrem Buch befassen sich ebenfalls
-mit Zerstörung.
+Feuermagier haben den Zauber Fuchsfeuer gelernt. Ihre anderen Startzauber sind
+ebenfalls auf feurige Zerstörung ausgerichtet.
 %%%%
 Gladiator
 
-Gladiatoren sind bereit für die Arena mit leichter Rüstung, Schild, Netzen und
-einer Waffe ihrer Wahl.
+Gladiatoren sind bereit für die Arena mit leichter Rüstung, Netzen und einer
+Waffe ihrer Wahl.
+%%%%
+Hedge Wizard
+
+Heckenzauberer erlernen viele einfache Zauber, mit denen sie ihren verwirrten
+Feinden in den Rücken fallen oder ihnen entkommen können.
 %%%%
 Hunter
 
-Jäger können aus der Ferne angreifen ohne auf nervtötende Magie zurückgreifen
-zu müssen.
+Jäger tragen eine Fernkampfwaffe ihrer Wahl und sind außerdem mit einer leichten
+Rüstung und einem Kurzschwert ausgestattet.
 %%%%
 Ice Elementalist
 
-Eismagier starten mit dem Buch des Frosts und dem Gefrierzauber. Die
-anderen Zauber in ihrem Buch sind recht vielseitig.
+Eismagier starten mit dem Gefrierzauber. Die anderen Zauber in ihrer
+Startsammlung sind recht vielseitig.
 %%%%
 Monk
 
-Mönche sind bereit, allen im Verlies lauernden Gefahren nur mit einem Gewand
-und ihrem unbewaffneten Körper entgegenzutreten.
+Mönche beginnen mit einer einfachen Waffe ihrer Wahl und gewinnen zusätzliche
+Frömmigkeit bei dem ersten Gott, den sie verehren.
 %%%%
 Necromancer
 
@@ -87,30 +98,25 @@ mit dem Schmerzfluch.
 %%%%
 Summoner
 
-Herbeirufer können am Anfang kleine Säugetiere herbeirufen, und haben andere Herbeirufung-Zauberspruche in ihrer Sammlung.
+Herbeirufer können am Anfang kleine Säugetiere herbeirufen, und haben andere
+Herbeirufungen in ihrer Sammlung.
 %%%%
 Transmuter
 
-Verwandler ändern ihre Form in die eines Monsters.
+Verwandler erlernen Zauber, mit denen sie ihre Form verändern können, was sie
+zu mächtigen unbewaffneten Kämpfern macht.
 %%%%
 Venom Mage
 
-Giftmagier starten mit dem Handbuch des jungen Giftmörders und dem
-Stich-Zauberspruch. Sie haben es am Anfang ziemlich leicht.
+Giftmagier beginnen mit dem Zauber Stachel, und ihre Giftmagie ist sehr effektiv
+gegen anfällige Feinde.
 %%%%
 Wanderer
 
-Wanderer beginnen mit zufälliger Ausrüstung und Fertigkeiten.
+Wanderer beginnen mit zufälligen Ausrüstung und Fertigkeiten.
 %%%%
 Warper
 
-Warper starten mit einer Waffe ihrer Wahl und einer
-Kurzstreckenteleport-Schriftrolle(?). Sie können Zaubersprüche aus dem Buch der
-räumlichen Bewegungen lernen.
-%%%%
-Wizard
-
-Zauberer starten mit einem Buch der kleinen Magie, das eine breite Auswahl an
-Zaubersprüchen enthält. Sie haben mehr magische Reserven als irgendein anderer
-Beruf(?).
+Warper beginnen mit einer Waffe ihrer Wahl und einer Schriftrolle des Blinzelns.
+Sie beginnen mit einer Reihe von Translokationszaubern in ihrer Sammlung.
 %%%%
