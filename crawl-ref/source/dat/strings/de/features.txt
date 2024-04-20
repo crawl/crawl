@@ -213,7 +213,7 @@ gateway to the ashen valley of Gehenna
 Tor zum aschfahlen Tal von Gehenna
 %%%%
 gateway to the freezing wastes of Cocytus
-Tor zu den eisigen Wüsten von Cocytus
+Tor zur Eiswüste von Kokytus
 %%%%
 gateway to the decaying netherworld of Tartarus
 Tor zur verwesenden Unterwelt von Tartarus
@@ -692,7 +692,7 @@ the gateway to the ashen valley of Gehenna
 das Tor zum aschfahlen Tal von Gehenna
 %%%%
 the gateway to the freezing wastes of Cocytus
-das Tor zu den eisigen Wüsten von Cocytus
+das Tor zur Eiswüste von Kokytus
 %%%%
 the gateway to the decaying netherworld of Tartarus
 das Tor zur verwesenden Unterwelt von Tartarus
@@ -1162,7 +1162,7 @@ a gateway to the ashen valley of Gehenna
 {n}ein Tor zum aschfahlen Tal von Gehenna
 %%%%
 a gateway to the freezing wastes of Cocytus
-{n}ein Tor zu den eisigen Wüsten von Cocytus
+{n}ein Tor zur Eiswüste von Kokytus
 %%%%
 a gateway to the decaying netherworld of Tartarus
 {n}ein Tor zur verwesenden Unterwelt von Tartarus

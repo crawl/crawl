@@ -82,7 +82,7 @@ the Stairs
 die Treppe
 %%%%
 the Tomb
-das Grabmal
+die Gruft
 %%%%
 Wild Magic
 Wilde Magie

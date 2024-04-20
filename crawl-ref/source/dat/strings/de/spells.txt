@@ -446,7 +446,7 @@ Spawn Tentacles
 Tentakeln ergeben
 %%%%
 Tomb of Doroklohe
-Grabmal von Doroklohe
+Gruft von Doroklohe
 %%%%
 Summon Eyeballs
 Augäpfel beschwören
@@ -707,7 +707,7 @@ gehenna serpent of hell breath
 Gehenna Schlange der Hölle Odem
 %%%%
 cocytus serpent of hell breath
-Cocytus Schlange der Hölle Odem
+Kokytus Schlange der Hölle Odem
 %%%%
 dis serpent of hell breath
 Dis Schlange der Hölle Odem
