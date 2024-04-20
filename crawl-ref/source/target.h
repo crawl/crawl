@@ -499,6 +499,13 @@ public:
     targeter_bog(const actor *a, int pow);
 };
 
+class targeter_gastronomic : public targeter_smite
+{
+public:
+    targeter_gastronomic(const actor *a, int pow);
+};
+
+
 class targeter_ignite_poison : public targeter_multiposition
 {
 public:

@@ -812,6 +812,10 @@ Galvanic Breath spell
 
 <Galvanic Breath ability>
 %%%%
+Gastronomic Expanse spell
+
+summon stomach
+%%%%
 Gell's Gavotte spell
 
 Briefly reorients local gravity to be in a cardinal direction of the caster's

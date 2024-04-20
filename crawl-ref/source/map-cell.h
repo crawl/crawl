@@ -37,6 +37,7 @@
 #define MAP_DISJUNCT       0X8000000
 #define MAP_BLASPHEMY     0X10000000
 #define MAP_BFB_CORPSE    0X20000000
+#define MAP_GASTRONOMIC   0x40000000
 
 struct cloud_info
 {

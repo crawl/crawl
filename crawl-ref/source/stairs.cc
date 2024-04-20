@@ -808,6 +808,12 @@ void floor_transition(dungeon_feature_type how,
         yred_end_blasphemy();
     }
 
+    if (you.duration[DUR_GASTRONOMIC])
+    {
+        you.duration[DUR_GASTRONOMIC] = 0;
+        end_gastronomic_expanse();
+    }
+
     if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
         flee_apostle_challenge();
 

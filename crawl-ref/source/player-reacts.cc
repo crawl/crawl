@@ -627,6 +627,30 @@ static void _decrement_rampage_heal_duration(int delay)
     }
 }
 
+static void _handle_gastronomic_expanse_duration(int delay)
+{
+    if(you.props[GASTRONOMIC_RETRACTING_KEY].get_bool())
+    {
+        if(_decrement_a_duration(DUR_GASTRONOMIC, delay))
+        {
+            end_gastronomic_expanse();
+            return;
+        }
+    }
+    else
+    {
+        //Manually increase duration since we don't want decaaut increments.
+        you.duration[DUR_GASTRONOMIC] += delay;
+        if(you.duration[DUR_GASTRONOMIC] >= GASTRONOMIC_MAX_DUR)
+            you.duration[DUR_GASTRONOMIC] = GASTRONOMIC_MAX_DUR;
+    }
+    //TODO: fiddle with ratios here
+    
+    int radius = you.duration[DUR_GASTRONOMIC] / GASTRONOMIC_RATE;
+    mprf("%d", radius);
+    set_gastronomic_radius(radius);
+}
+
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
  * when it hits 50% and 0% remaining.
@@ -839,6 +863,12 @@ static void _decrement_durations()
 
     if (you.duration[DUR_FATHOMLESS_SHACKLES])
         yred_fathomless_shackles_effect(min(delay, you.duration[DUR_FATHOMLESS_SHACKLES]));
+
+    if (you.duration[DUR_GASTRONOMIC])
+    {
+        gastronomic_expanse_effect(min(delay, you.duration[DUR_GASTRONOMIC]));
+        _handle_gastronomic_expanse_duration(delay);
+    }
 
     if (you.duration[DUR_RECITE] && _check_recite())
     {

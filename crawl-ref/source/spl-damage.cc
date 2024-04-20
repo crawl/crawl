@@ -4851,6 +4851,87 @@ spret cast_noxious_bog(int pow, bool fail)
     return spret::success;
 }
 
+static coord_def _get_gastronomic_center()
+{
+    //TODO: deduplicate radius code
+    int radius = you.duration[DUR_GASTRONOMIC] / GASTRONOMIC_RATE;
+    coord_def center = you.props[GASTRONOMIC_ORIGIN_KEY].get_coord();
+    center += you.props[GASTRONOMIC_DIRECTION_KEY].get_coord() * radius;
+    return center;
+}
+
+void gastronomic_expanse_effect(int delay)
+{
+    coord_def center = _get_gastronomic_center();
+
+    for (monster_near_iterator mi(center); mi; ++mi)
+    {
+        if (!is_gastronomic(mi->pos())
+            || mi->wont_attack() || mons_is_firewood(**mi))
+        {
+            continue;
+        }
+
+        mi->corrode_equipment();
+    
+        int pow = you.props[GASTRONOMIC_POWER_KEY].get_int() * delay;
+        int dam = resist_adjust_damage(*mi, BEAM_ACID, random2avg(pow, 2));
+
+        mi->hurt(&you, dam, BEAM_NEG, KILLED_BY_BEAM);
+        behaviour_event(*mi, ME_WHACK, &you);
+    }
+
+    if(is_gastronomic(you.pos()))
+    {
+        you.corrode_equipment("the gastric acid");
+    }
+    else
+        you.props[GASTRONOMIC_RETRACTING_KEY] = true;
+
+}
+
+//Set 
+void set_gastronomic_radius(int radius)
+{
+    int max_radius = GASTRONOMIC_MAX_DUR / GASTRONOMIC_RATE;
+    coord_def center = _get_gastronomic_center();
+
+    for (distance_iterator di(center, false, false, max_radius); di; ++di)
+        env.pgrid(*di) &= ~FPROP_GASTRONOMY;
+
+    for (distance_iterator di(center, false, false, radius); di; ++di)
+        env.pgrid(*di) |= FPROP_GASTRONOMY;
+}
+
+spret cast_gastronomic_expanse(int pow, const coord_def &target, bool fail)
+{
+    //TODO: handle repeat casts
+
+    fail_check();
+
+    coord_def delta = target - you.pos(); 
+    
+
+    you.props[GASTRONOMIC_DIRECTION_KEY] = delta.sgn();
+    you.props[GASTRONOMIC_ORIGIN_KEY] = you.pos();
+    you.props[GASTRONOMIC_RETRACTING_KEY] = false;
+    you.props[GASTRONOMIC_POWER_KEY] = pow;
+    you.duration[DUR_GASTRONOMIC] = 11;
+
+    set_gastronomic_radius(1);
+
+    return spret::success;
+}
+
+void end_gastronomic_expanse()
+{
+    if (!you.props.exists(GASTRONOMIC_ORIGIN_KEY))
+        return;
+
+    mpr("AAAAAAAAAAAA");
+    set_gastronomic_radius(-1);
+}
+
 int siphon_essence_range() { return 2; }
 
 bool siphon_essence_affects(const monster &m)
