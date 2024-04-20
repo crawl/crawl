@@ -203,7 +203,7 @@ void cast_iood_burst(int pow, coord_def target)
 
     const int n_orbs = random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
-    // 2097152 = 2^21. 21 is the greatest n s.t. `(2 ** 21) * PI * 2` does not
+    // 2097152 = 2^21. 21 is the greatest n s.t. `(2 ** n) * PI * 2` does not
     // exceed 2 ** 24; 24 bits is where `float` (`PI` is a float constant)
     // starts to lose precision.
     const double angle0 = random2(2097152) * PI * 2 / 2097152;
