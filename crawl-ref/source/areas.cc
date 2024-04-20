@@ -29,10 +29,11 @@
 #include "traps.h"
 #include "travel.h"
 
-/// Bitmasks for area properties that center on actors
+/// Bitmasks for area properties
 enum class areaprop
 {
-    // 0 and 1 were sanctuary, now unused
+    sanctuary_1   = (1 << 0),
+    sanctuary_2   = (1 << 1),
     silence       = (1 << 2),
     halo          = (1 << 3),
     liquified     = (1 << 4),
@@ -41,7 +42,7 @@ enum class areaprop
     umbra         = (1 << 7),
     quad          = (1 << 8),
     disjunction   = (1 << 9),
-    // 10 was lost soul aura, now unused
+    soul_aura     = (1 << 10),
 };
 /// Bit field for the area properties
 DEF_BITFIELD(areaprops, areaprop);
@@ -236,6 +237,10 @@ static void _update_agrid()
 static area_centre_type _get_first_area(const coord_def& f)
 {
     areaprops a = _agrid(f);
+    if (a & areaprop::sanctuary_1)
+        return area_centre_type::sanctuary;
+    if (a & areaprop::sanctuary_2)
+        return area_centre_type::sanctuary;
     if (a & areaprop::silence)
         return area_centre_type::silence;
     if (a & areaprop::halo)
