@@ -779,7 +779,7 @@ static int l_you_memorise(lua_State *ls)
 
 /*** Available abilities
  * @treturn array An array of ability names.
- * @function abils
+ * @function abilities
  */
 static int l_you_abils(lua_State *ls)
 {
@@ -796,7 +796,7 @@ static int l_you_abils(lua_State *ls)
 
 /*** Ability letters in use.
  * @treturn array An array of ability letters
- * @function abil_letters
+ * @function ability_letters
  */
 static int l_you_abil_letters(lua_State *ls)
 {
@@ -817,7 +817,7 @@ static int l_you_abil_letters(lua_State *ls)
 
 /*** Ability table.
  * @treturn table A map of letters to ability names
- * @function abil_table
+ * @function ability_table
  */
 static int l_you_abil_table(lua_State *ls)
 {
