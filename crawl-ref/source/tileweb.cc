@@ -92,8 +92,6 @@ TilesFramework::TilesFramework() :
       m_next_view(coord_def(GXM, GYM)),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
-      m_current_flash_colour(BLACK),
-      m_next_flash_colour(BLACK),
       m_need_full_map(true),
       m_text_menu("menu_txt"),
       m_print_fg(15)
@@ -1565,6 +1563,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
         col = (_get_highlight(col) << 4) | macro_colour(col & 0xF);
         json_write_int("col", col);
     }
+    if (current_sc.flash_colour != next_sc.flash_colour)
+        json_write_int("flc", next_sc.flash_colour);
 
     json_open_object("t");
     {
@@ -1855,6 +1855,10 @@ void TilesFramework::_send_map(bool force_full)
     coord_def last_gc(0, 0);
     bool send_gc = true;
 
+    int flash_colour = you.flash_colour;
+    if (flash_colour == BLACK)
+        flash_colour = viewmap_flash_colour();
+
     json_open_array("cells");
     for (int y = 0; y < GYM; y++)
         for (int x = 0; x < GXM; x++)
@@ -1868,7 +1872,11 @@ void TilesFramework::_send_map(bool force_full)
             {
                 screen_cell_t *cell = &m_next_view(gc);
 
-                draw_cell(cell, gc, false, m_current_flash_colour);
+                if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
+                    draw_cell(cell, gc, false, 0);
+                else
+                    draw_cell(cell, gc, false, flash_colour);
+
                 pack_cell_overlays(gc, m_next_view);
             }
 
@@ -2002,10 +2010,6 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     if (m_ui_state == UI_CRT)
         set_ui_state(UI_NORMAL);
 
-    m_next_flash_colour = you.flash_colour;
-    if (m_next_flash_colour == BLACK)
-        m_next_flash_colour = viewmap_flash_colour();
-
     // First re-render the area that was covered by vbuf the last time
     for (int y = m_next_view_tl.y; y <= m_next_view_br.y; y++)
         for (int x = m_next_view_tl.x; x <= m_next_view_br.x; x++)
@@ -2097,8 +2101,6 @@ void TilesFramework::_send_everything()
     // UI State
     _send_ui_state(m_ui_state);
     m_last_ui_state = m_ui_state;
-
-    send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
     _send_cursor(CURSOR_MOUSE);
     _send_cursor(CURSOR_TUTORIAL);
@@ -2213,15 +2215,7 @@ void TilesFramework::redraw()
     _send_messages();
 
     if (m_need_redraw && m_view_loaded)
-    {
-        if (m_current_flash_colour != m_next_flash_colour)
-        {
-            send_message("{\"msg\":\"flash\",\"col\":%d}",
-                         m_next_flash_colour);
-            m_current_flash_colour = m_next_flash_colour;
-        }
         _send_map(false);
-    }
 
     m_need_redraw = false;
     m_last_tick_redraw = get_milliseconds();

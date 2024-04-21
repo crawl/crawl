@@ -286,9 +286,6 @@ protected:
     bool is_dirty(const coord_def& gc);
     bool cell_needs_redraw(const coord_def& gc);
 
-    int m_current_flash_colour;
-    int m_next_flash_colour;
-
     FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
     map<uint32_t, coord_def> m_monster_locs;
     bool m_need_full_map;

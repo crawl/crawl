@@ -31,14 +31,7 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         var t1 = new Date();
 
         if (map_knowledge.reset_bounds_changed())
-        {
             minimap.center();
-        }
-
-        if (view_data.flash_changed())
-        {
-            invalidate();
-        }
 
         var dirty_locs = map_knowledge.dirty();
         for (var i = 0; i < dirty_locs.length; i++)
