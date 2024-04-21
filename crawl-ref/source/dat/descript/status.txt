@@ -507,7 +507,7 @@ Flux status
 
 You are unstable at a fundamental level. You inflict dangerous levels of
 magical contamination on foes with each touch. Sufficient contamination
-causes a highly localized meltdown, dealing enormous damage.
+causes a highly localised meltdown, dealing enormous damage.
 
 However, this instability makes you unable to use weapons, shields, or
 body armour. You also glow, reducing stealth and preventing invisibility,

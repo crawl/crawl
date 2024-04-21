@@ -438,7 +438,7 @@ ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
-Permanently corrupts a weapon of your choice with a localized field of
+Permanently corrupts a weapon of your choice with a localised field of
 distortion. This blessing may only be used once, and it cannot be used on
 artefact weapons.
 %%%%
