@@ -678,7 +678,8 @@ Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
 their enemies alerted, and their senses confounded by the
-axioms of Law; confusion, fainting and complete paralysis will be their lot.
+axioms of Law; confusion, fainting, blindness and complete paralysis will
+be their lot.
 %%%%
 Wu Jian extra
 # any god extra screens need :nowrap
