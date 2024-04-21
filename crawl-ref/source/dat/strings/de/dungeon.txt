@@ -21,7 +21,7 @@ Elven Halls
 Elfenhallen
 %%%%
 Lair
-Versteck
+Höhle
 %%%%
 Swamp
 Sumpf
@@ -144,7 +144,7 @@ the Elven Halls
 die Elfenhallen
 %%%%
 the Lair of Beasts
-das Versteck der Bestien
+die Höhle der Bestien
 %%%%
 the Swamp
 der Sumpf
@@ -265,7 +265,7 @@ Ork
 Elf
 %%%%
 {branch_abbrev}Lair
-Versteck
+Höhle
 %%%%
 {branch_abbrev}Swamp
 Sumpf
@@ -379,7 +379,7 @@ on level %d of the Elven Halls
 auf Ebene %d der Elfenhallen
 %%%%
 on level %d of the Lair of Beasts
-auf Ebene %d des Verstecks der Bestien
+auf Ebene %d der Höhle der Bestien
 %%%%
 on level %d of the Swamp
 auf Ebene %d des Sumpfes
@@ -454,7 +454,7 @@ between levels %d and %d of the Elven Halls
 zwischen Ebenen %d und %d der Elfenhallen
 %%%%
 between levels %d and %d of the Lair of Beasts
-zwischen Ebenen %d und %d des Verstecks der Bestien
+zwischen Ebenen %d und %d der Höhle der Bestien
 %%%%
 between levels %d and %d of the Swamp
 zwischen Ebenen %d und %d des Sumpfes

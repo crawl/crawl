@@ -306,7 +306,7 @@ staircase to the Slime Pits
 Treppe zu den Schleimgruben
 %%%%
 staircase back to the Lair
-Treppe zurück zum Versteck
+Treppe zurück zur Höhle
 %%%%
 staircase to the Orcish Mines
 Treppe zu den Orkischen Minen
@@ -327,7 +327,7 @@ staircase back to the Vaults
 Treppe zurück zu den Gewölben
 %%%%
 staircase to the Lair
-Treppe zum Versteck
+Treppe zur Höhle
 %%%%
 staircase to the Crypt
 Treppe zur Krypta
@@ -360,7 +360,7 @@ hole to the Spider Nest
 Loch zum Spinnennest
 %%%%
 crawl-hole back to the Lair
-Krabbelloch zurück zum Versteck
+Krabbelloch zurück zur Höhle
 %%%%
 staircase to the Depths
 Treppe zu den Tiefen
@@ -785,7 +785,7 @@ the staircase to the Slime Pits
 die Treppe zu den Schleimgruben
 %%%%
 the staircase back to the Lair
-die Treppe zurück zum Versteck
+die Treppe zurück zur Höhle
 %%%%
 the staircase to the Orcish Mines
 die Treppe zu den Orkischen Minen
@@ -806,7 +806,7 @@ the staircase back to the Vaults
 die Treppe zurück zu den Gewölben
 %%%%
 the staircase to the Lair
-die Treppe zum Versteck
+die Treppe zur Höhle
 %%%%
 the staircase to the Crypt
 die Treppe zur Krypta
@@ -839,7 +839,7 @@ the hole to the Spider Nest
 das Loch zum Spinnennest
 %%%%
 the crawl-hole back to the Lair
-das Krabbelloch zurück zum Versteck
+das Krabbelloch zurück zur Höhle
 %%%%
 the staircase to the Depths
 die Treppe zu den Tiefen
@@ -1255,7 +1255,7 @@ a staircase to the Slime Pits
 eine Treppe zu den Schleimgruben
 %%%%
 a staircase back to the Lair
-eine Treppe zurück zum Versteck
+eine Treppe zurück zur Höhle
 %%%%
 a staircase to the Orcish Mines
 eine Treppe zu den Orkischen Minen
@@ -1276,7 +1276,7 @@ a staircase back to the Vaults
 eine Treppe zurück zu den Gewölben
 %%%%
 a staircase to the Lair
-eine Treppe zum Versteck
+eine Treppe zur Höhle
 %%%%
 a staircase to the Crypt
 eine Treppe zur Krypta
@@ -1309,7 +1309,7 @@ a hole to the Spider Nest
 {n}ein Loch zum Spinnennest
 %%%%
 a crawl-hole back to the Lair
-{n}ein Krabbelloch zurück zum Versteck
+{n}ein Krabbelloch zurück zur Höhle
 %%%%
 a staircase to the Depths
 eine Treppe zu den Tiefen

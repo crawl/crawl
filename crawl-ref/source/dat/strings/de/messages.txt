@@ -4959,10 +4959,10 @@ Generating dungeon...
 Dungeon wird generiert...
 %%%%
 building a lair branch
-Ein Versteck-Zweig wird generiert
+Ein Höhle-Zweig wird generiert
 %%%%
 building another lair branch
-Noch ein Versteck-Zweig wird generiert
+Noch ein Höhle-Zweig wird generiert
 %%%%
 building %s
 %s wird generiert
