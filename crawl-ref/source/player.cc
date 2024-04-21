@@ -8686,7 +8686,7 @@ void player_close_door(coord_def doorpos)
         if (monster* mon = monster_at(dc))
         {
             const bool mons_unseen = !you.can_see(*mon);
-            if (mons_unseen || mons_is_object(mon->type))
+            if (mons_unseen || (mon->holiness() & MH_NONLIVING))
             {
                 mprf("Something is blocking the %s!", waynoun);
                 // No free detection!
