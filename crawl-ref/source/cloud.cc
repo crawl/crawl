@@ -628,29 +628,15 @@ static void _maybe_leave_water(const coord_def pos)
 {
     ASSERT_IN_BOUNDS(pos);
 
-    // Rain clouds can occasionally leave shallow water or deepen it.
-    if (!one_chance_in(5))
+    // Rain clouds can occasionally leave shallow water.
+    if (env.grid(pos) != DNGN_FLOOR || !one_chance_in(5))
         return;
 
-    dungeon_feature_type feat = env.grid(pos);
-
-    if (env.grid(pos) == DNGN_FLOOR)
-        feat = DNGN_SHALLOW_WATER;
-    else if (env.grid(pos) == DNGN_SHALLOW_WATER
-             && you.pos() != pos
-             && one_chance_in(3)))
-    {
-        // Don't drown the player!
-        feat = DNGN_DEEP_WATER;
-    }
-
-    if (env.grid(pos) != feat)
-    {
-        if (you.pos() == pos && you.ground_level())
-            mpr("The rain has left you waist-deep in water!");
-        temp_change_terrain(pos, feat, random_range(500, 1000),
-                            TERRAIN_CHANGE_FLOOD);
-    }
+    if (you.pos() == pos && you.ground_level())
+        mpr("The rain has left you waist-deep in water!");
+    temp_change_terrain(pos, DNGN_SHALLOW_WATER,
+                        random_range(500, 1000),
+                        TERRAIN_CHANGE_FLOOD);
 }
 
 void delete_cloud(coord_def p)
@@ -1461,25 +1447,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             || mons->attitude == ATT_GOOD_NEUTRAL;
 
     case CLOUD_RAIN:
-        // Fiery monsters dislike the rain.
-        if (mons->is_fiery() && extra_careful)
-            return true;
-
-        // We don't care about what's underneath the rain cloud if we can fly.
-        if (mons->airborne())
-            return false;
-
-        // These don't care about deep water.
-        if (monster_habitable_grid(mons, DNGN_DEEP_WATER))
-            return false;
-
-        // This position could become deep water, and they might drown.
-        if (env.grid(cloud.pos) == DNGN_SHALLOW_WATER
-            && mons_intel(*mons) > I_BRAINLESS)
-        {
-            return true;
-        }
-        break;
+        return !mons->is_fiery() || !extra_careful;
 
     default:
     {
