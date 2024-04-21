@@ -471,7 +471,7 @@ Smiting ability
 Beogh will not allow you to use this directly against another apostle during a
 divine trial.
 %%%%
-Recall Orcish Apostles ability
+Recall Apostles ability
 
 Recalls your apostles from anywhere in the dungeon to your immediate
 surroundings.
