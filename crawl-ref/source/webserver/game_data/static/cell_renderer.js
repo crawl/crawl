@@ -589,7 +589,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
         {
             if (map_cell.flc)
             {
-                var col = view_data.get_flash_colour(map_cell.flc);
+                var col = view_data.get_flash_colour(map_cell.flc, map_cell.fla);
                 this.ctx.save();
                 try
                 {

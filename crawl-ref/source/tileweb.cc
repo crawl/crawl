@@ -1565,6 +1565,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
     }
     if (current_sc.flash_colour != next_sc.flash_colour)
         json_write_int("flc", next_sc.flash_colour);
+    if (current_sc.flash_alpha != next_sc.flash_alpha)
+        json_write_int("fla", next_sc.flash_alpha);
 
     json_open_object("t");
     {

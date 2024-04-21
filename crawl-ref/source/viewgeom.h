@@ -11,6 +11,7 @@ struct screen_cell_t
     // Tiles output part.
 #ifdef USE_TILE
     unsigned short flash_colour;
+    unsigned short flash_alpha;
     packed_cell tile;
 #endif
 };
