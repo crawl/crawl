@@ -1866,8 +1866,8 @@ Throw Klown Pie spell
 
 Throws a harmful yet strangely delicious pie that can inflict its victim with a
 number of irresistible and debilitating temporary effects. These include
-inducing vertigo, silence, fire vulnerability, stat drain, fragility, or an
-aversion to drinking potions.
+inducing vertigo, silence, fire vulnerability, stat drain, fragility, blindness,
+or an aversion to drinking potions.
 %%%%
 Thunderbolt spell
 

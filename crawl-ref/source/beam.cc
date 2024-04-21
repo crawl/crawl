@@ -4084,6 +4084,19 @@ static const vector<pie_effect> pie_effects = {
         },
         4
     },
+    {
+        "glitter",
+        [](const actor &defender) {
+            // For now it's a player-only pie as there are enough ways to blind monsters anyway
+            // and dazzle_monster assymes
+            return defender.is_player();
+        },
+        [](actor &defender, const bolt &/*beam*/) {
+            ASSERT(defender.is_player());
+            blind_player(random_range(16, 36), ETC_GLITTER);
+        },
+        5
+    },
 };
 
 static pie_effect _random_pie_effect(const actor &defender)
