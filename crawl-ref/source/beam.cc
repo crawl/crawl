@@ -6435,7 +6435,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_RIMEBLIGHT:
         if (apply_rimeblight(*mon, ench_power, true))
         {
-            mprf("A stygian plague fills %s body.", mon->name(DESC_THE).c_str());
+            mprf("A stygian plague fills %s body.",
+                 apostrophise(mon->name(DESC_THE)).c_str());
             obvious_effect = true;
         }
         return MON_AFFECTED;
