@@ -660,7 +660,8 @@ static beam_type _chaos_beam_flavour(bolt* beam)
           3, BEAM_PETRIFY,
           3, BEAM_SLEEP,
          // Combined weight for poly and clone effects.
-          4, BEAM_POLYMORPH);
+          4, BEAM_POLYMORPH,
+          5, BEAM_LIGHT);
 
     return flavour;
 }
