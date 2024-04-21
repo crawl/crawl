@@ -547,7 +547,7 @@ Gozag's intervention shut their doors forever. The disloyal are advised to
 finish their shopping before they launch their betrayal. For as long as Gozag
 remains angered, potions will have a chance to fail when quaffed, and any
 foes that are encountered may be granted potions of their own to assist them
-against the ex-worshipper.
+against the ex-worshipper. You may sometimes be bedazzled by the glint of coin.
 %%%%
 Ignis wrath
 
