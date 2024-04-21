@@ -64,6 +64,7 @@ enum element_type
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_CANDLES,        // Ignis flickering candles
     ETC_STEEL,          // a brighter iron
+    ETC_GLITTER,        // Klown pie decoration, all the bright colours
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
