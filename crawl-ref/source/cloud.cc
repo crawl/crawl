@@ -636,8 +636,9 @@ static void _maybe_leave_water(const coord_def pos)
 
     if (env.grid(pos) == DNGN_FLOOR)
         feat = DNGN_SHALLOW_WATER;
-    else if (env.grid(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
-             && one_chance_in(3) && !crawl_state.game_is_sprint())
+    else if (env.grid(pos) == DNGN_SHALLOW_WATER
+             && you.pos() != pos
+             && one_chance_in(3)))
     {
         // Don't drown the player!
         feat = DNGN_DEEP_WATER;
