@@ -224,9 +224,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
             if (!cell)
             {
-                if (options.get("tile_display_mode") != "glyphs")
-                    this.render_flash(x, y);
-
                 this.render_cursors(cx, cy, x, y);
                 return;
             }
@@ -436,7 +433,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         });
             }
 
-            this.render_flash(x, y);
+            this.render_flash(x, y, map_cell);
 
             this.render_cursors(cx, cy, x, y);
 
@@ -588,11 +585,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_flash: function(x, y)
+        render_flash: function(x, y, map_cell)
         {
-            if (view_data.flash) // Flash
+            if (map_cell.flc)
             {
-                var col = view_data.flash_colour;
+                var col = view_data.get_flash_colour(map_cell.flc);
                 this.ctx.save();
                 try
                 {
