@@ -1,14 +1,190 @@
 %%%%
+# Escape
+Velocity card
+
+Auf der Karte ist ein leeres, abgenutztes Paar Stiefel abgebildet. Sand, Asche
+und Grasnarbe bedecken die Sohlen der Stiefel.
+
+Das Ziehen dieser Karte kann Verbündeten große Geschwindigkeit oder Feinden
+schreckliche Langsamkeit verleihen.
+%%%%
+the Tomb card
+
+Die Karte stellt eine königliche Gruft dar, deren Eingang durch eine schwere
+Steinplatte versiegelt ist.
+
+Wenn man diese Karte zieht, wird der Benutzer von schützenden, temporären
+Wänden aus festem Gestein umschlossen. Auf niedrigeren Machtstufen oder mit
+benachbarten Kreaturen kann die Gruft unvollkommen sein.
+
+Die Gruft wird durch die Anwesenheit ihres Schöpfers in ihr aufrechterhalten,
+und wenn man sich aus der Mitte der Gruft entfernt, bröckeln die Wände weg.
+%%%%
+Exile card
+
+Die Karte zeigt unaufhörliche Hände aus einem gähnenden Portal, die eine in
+Panik geratene Gestalt überwältigen.
+
+Das Ziehen dieser Karte kann Kreaturen in der Nähe in den Abgrund verbannen,
+wobei bei höheren Machtstufen noch mehr verbannt werden. Sie verbannt niemals
+den Benutzer.
+%%%%
+the Shaft card
+
+Die Karte stellt einen Reisenden dar, der in eine Kluft stürzt, die sich unter
+ihm aufgetan hat.
+
+Wird diese Karte gezogen, entsteht ein Schacht unter dem Benutzer und
+möglicherweise auch unter seinen Feinden.
+%%%%
+the Elixir card
+
+Die Karte zeigt ein selbstgefälliges Lächeln, das aus neun Kelchen besteht.
+
+Das Ziehen dieser Karte stellt die Gesundheit und die Magie des Benutzers
+schnell wieder her.
+%%%%
+the Cloud card
+
+Die Karte zeigt ein von Nebel umhülltes Eisentor.
+
+Das Ziehen dieser Karte hüllt die Feinde des Anwenders in Ringe aus
+sichtbehindernden Wolken ein. Die Dauer der erzeugten Wolken verbessert sich
+mit der Kraft der Karte.
+%%%%
+# Destruction
+Vitriol card
+
+Auf der Karte ist eine Oklob-Pflanze abgebildet, die mit ihrem
+charakteristischen ätzenden Saft trieft.
+
+Das Ziehen dieser Karte löst einen ätzenden Angriffszauber aus.
+%%%%
+the Storm card
+
+Die Karte zeigt ein Schiff auf See, das in einem Gewitter untergeht.
+
+Das Ziehen dieser Karte entfesselt ein Gewitter mit Wind und elektrischen
+Entladungen. Je stärker die Karte ist, desto stärker ist der Wind und desto
+zahlreicher sind die Entladungen.
+%%%%
+Pain card
+
+Die Karte zeigt ein eisernes Rad, bedrohlich mit Stacheln und verrostet mit
+Blut.
+
+Das Ziehen dieser Karte entfesselt einen nekromantischen Angriffszauber.
+%%%%
+the Orb card
+
+Die Karte zeigt eine Figur, die von schwebenden, glühenden Energiekugeln
+umgeben ist.
+
+Das Ziehen dieser Karte entfesselt eine oder möglicherweise mehrere
+zerstörerische Kugeln aus reiner Magie.
+%%%%
+Degeneration card
+
+Die Karte zeigt einen Drachen, dessen Schuppen sich ablösen und darunter ein
+Schaf zum Vorschein kommt.
+
+Das Ziehen dieser Karte versucht, Feinde in der Nähe in schwächere Formen zu
+polymorphisieren und zu malmutieren, und betäubt kurz diejenigen, die nicht
+polymorphisiert werden können.
+%%%%
+Wild Magic card
+
+Die Karte zeigt einen spitzen Zaubererhut, der verbrannt ist und auf einem
+Haufen Asche ruht.
+
+Das Ziehen dieser Karte bewirkt, dass wilde Magie (wie bei einem falsch
+gewirkten Zauber) auf die Feinde des Anwenders wirkt. Jede betroffene Kreatur
+stellt einen Teil der Magie des Anwenders wieder her.
+# Summoning
+%%%%
+the Elements card
+
+Die Karte zeigt die Figuren von großen Bestien, die in einem Sandsturm lauern.
+
+Das Ziehen dieser Karte ruft drei Bestien der vier Elemente herbei.
+%%%%
+the Pentagram card
+
+Auf der Karte sind Kultisten abgebildet, die ein rituelles Pentagramm auf dem
+Boden zeichnen.
+
+Das Ziehen dieser Karte ruft ein Dämonenpaar, den Benutzer zu unterstützen.
+%%%%
+the Dance card
+
+Die Karte zeigt eine extravagant gekleidete, maskierte Gestalt, die allein in
+einem großen Raum tanzt.
+
+Das Ziehen dieser Karte beschwört eine tanzende Waffe. Die Qualität, die
+Marke und die Freundlichkeit der Waffe werden von der Kartenstärke beeinflusst.
+%%%%
+the Swarm card
+
+Auf der Karte ist ein Bär abgebildet, der von einem Bienenschwarm umgeben ist.
+Er brummt unheilvoll.
+
+Das Ziehen dieser Karte ruft Bienen herbei.
+%%%%
+the Rangers card
+
+Die Karte zeigt einen Pfeil in einer Zielscheibe, die durch einen zweiten Pfeil
+geteilt wurde.
+
+Das Ziehen dieser Karte ruft mehrere Bogenschützen herbei.
+%%%%
+the Illusion card
+
+Die Karte zeigt eine Person, die in einem Spiegelsaal steht, umgeben von ihrem
+eigenen Spiegelbild.
+
+Das Ziehen dieser Karte beschwört eine Illusion des Benutzers. Ihre Macht
+hängt von der eigenen ab.
+%%%%
+# Punishment
+Wrath card
+
+Die Karte stellt die Hand des Göttlichen dar, die vom Himmel herabreicht, um
+wütende Blitze zu schleudern.
+
+Das Ziehen dieser Karte zieht den Zorn eines Gottes gegen den Benutzer auf sich.
+%%%%
+Famine card
+
+Die Karte zeigt eine hagere Gestalt, die über eine Fläche trockener, rissiger
+Erde kriecht.
+
+Das Ziehen dieser Karte bringt ihren Benutzer an den Rand des Verhungerns.
+%%%%
+the Wraith card
+
+Die Karte stellt absolut nichts dar.
+
+Das Ziehen dieser Karte wird den Benutzer aufzehren.
+%%%%
+the Swine card
+
+Auf der Karte sind mehrere wilde Schweine abgebildet, die sich in einer
+Schlammgrube suhlen.
+
+Das Ziehen dieser Karte lässt den Benutzer rosa werden und nach Trüffeln
+suchen.
+%%%%
+Torment card
+
+Die Karte zeigt eine schreiende Figur, die auf der Folterbank gequält wird.
+
+Das Ziehen dieser Karte führt zu quälenden Verletzungen des Benutzers.
+%%%%
+# cards for wizmode testing (&c)
 the Stairs card
 
-Diese Karte lässt Treppen zu Euch, oder von Euch weggleiten. (Wenn Ihr diese Karte
-bekommt, ist es ein Fehler.)
-%%%%
-a buggy card
+Auf der Karte ist Wasser abgebildet, das eine Treppe hinunterfließt.
 
-Fehlerhaft (Wenn Ihr das seht, ist es ein Fehler.)
-%%%%
-a very buggy card
-
-Fehlerhaft (Wenn Ihr das seht, ist es ein Fehler.)
+Wenn man diese Karte zieht, rutschen die Treppen zum Benutzer hin oder von ihm
+weg. Es ist ein Fehler, wenn man sie jemals in einem Deck findet.
 %%%%
