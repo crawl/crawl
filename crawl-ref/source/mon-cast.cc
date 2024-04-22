@@ -1090,7 +1090,8 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
         return !monster.has_ench(ENCH_HASTE);
 
     case BEAM_MIGHT:
-        return !monster.has_ench(ENCH_MIGHT);
+        return !monster.has_ench(ENCH_MIGHT)
+               && mons_has_attacks(monster);
 
     case BEAM_INVISIBILITY:
         return !monster.has_ench(ENCH_INVIS);
