@@ -41,6 +41,7 @@
 #include "mgen-data.h"
 #include "mon-abil.h"
 #include "mon-act.h"
+#include "mon-aura.h"
 #include "mon-behv.h"
 #include "mon-book.h" // MON_SPELL_WIZARD
 #include "mon-cast.h"
@@ -1541,7 +1542,7 @@ spret cast_martyrs_knell(const actor* caster, int pow, god_type god, bool fail)
                  caster->name(DESC_THE).c_str());
         }
 
-        martyr_injury_bond(*shade);
+        mons_update_aura(*shade);
     }
     else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);

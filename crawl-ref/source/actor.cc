@@ -935,33 +935,6 @@ string actor::describe_props() const
     return oss.str();
 }
 
-/**
- * Is the actor currently being slowed by a torpor snail?
- */
-bool actor::torpor_slowed() const
-{
-    if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
-        || is_stationary()
-        || stasis())
-    {
-        return false;
-    }
-
-    for (monster_near_iterator ri(pos(), LOS_SOLID_SEE); ri; ++ri)
-    {
-        const monster *mons = *ri;
-        if (mons && mons->type == MONS_TORPOR_SNAIL
-            && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this)
-            && !mons->props.exists(KIKU_WRETCH_KEY))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 string actor::resist_margin_phrase(int margin) const
 {
     if (willpower() == WILL_INVULN)

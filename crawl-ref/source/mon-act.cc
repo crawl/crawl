@@ -2178,48 +2178,6 @@ static void _ancient_zyme_sicken(monster* mons)
     }
 }
 
-/**
- * Apply the torpor snail slowing effect.
- *
- * @param mons      The snail applying the effect.
- */
-static void _torpor_snail_slow(monster* mons)
-{
-    // XXX: might be nice to refactor together with _ancient_zyme_sicken().
-    // XXX: also with torpor_slowed().... so many duplicated checks :(
-
-    if (is_sanctuary(mons->pos()) || mons->props.exists(KIKU_WRETCH_KEY))
-        return;
-
-    if (!is_sanctuary(you.pos())
-        && !you.stasis()
-        && !mons->wont_attack()
-        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
-    {
-        if (!you.duration[DUR_SLOW])
-        {
-            mprf("Being near %s leaves you feeling lethargic.",
-                 mons->name(DESC_THE).c_str());
-        }
-
-        if (you.duration[DUR_SLOW] <= 1)
-            you.set_duration(DUR_SLOW, 1);
-        you.props[TORPOR_SLOWED_KEY] = true;
-    }
-
-    for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
-    {
-        monster *m = *ri;
-        if (m && !mons_aligned(mons, m) && !m->stasis()
-            && !mons_is_conjured(m->type) && !m->is_stationary()
-            && !is_sanctuary(m->pos()))
-        {
-            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));
-            m->props[TORPOR_SLOWED_KEY] = true;
-        }
-    }
-}
-
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
@@ -2236,8 +2194,7 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_ANCIENT_ZYME)
         _ancient_zyme_sicken(mons);
 
-    if (mons->type == MONS_TORPOR_SNAIL)
-        _torpor_snail_slow(mons);
+    mons_update_aura(*mons);
 
     // Check golem distance again at the END of its move (so that it won't go
     // dormant if it is following a player who was adjacent to it at the start

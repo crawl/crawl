@@ -71,7 +71,8 @@ enum monclass_flag_type : uint64_t
     /// monster digs through rock
     M_BURROWS           = BIT(19),
 
-                         //BIT(20),
+    /// monster passively applies an enchantment in LoS of itself
+    M_HAS_AURA          = BIT(20),
 
     /// monster is a unique
     M_UNIQUE            = BIT(21),

@@ -601,21 +601,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
         case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
-            lose_ench_levels(entry.second, levels);
-            break;
-
         case ENCH_SLOW:
-            if (torpor_slowed())
-            {
-                lose_ench_levels(entry.second,
-                                 min(levels, entry.second.degree - 1));
-            }
-            else
-            {
-                lose_ench_levels(entry.second, levels);
-                if (props.exists(TORPOR_SLOWED_KEY))
-                    props.erase(TORPOR_SLOWED_KEY);
-            }
+            lose_ench_levels(entry.second, levels);
             break;
 
         case ENCH_INVIS:

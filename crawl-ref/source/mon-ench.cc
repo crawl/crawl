@@ -30,6 +30,7 @@
 #include "losglobal.h"
 #include "message.h"
 #include "mon-abil.h"
+#include "mon-aura.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
@@ -976,6 +977,11 @@ bool monster::lose_ench_levels(const mon_enchant &e, int lev, bool infinite)
     if (!lev)
         return false;
 
+    // Check if this enchantment is being sustained by someone, and don't decay
+    // in that case.
+    if (e.ench_is_aura && aura_is_active(*this, e.ench))
+        return false;
+
     if (e.duration >= INFINITE_DURATION && !infinite)
         return false;
     if (e.degree <= lev)
@@ -995,6 +1001,11 @@ bool monster::lose_ench_levels(const mon_enchant &e, int lev, bool infinite)
 bool monster::lose_ench_duration(const mon_enchant &e, int dur)
 {
     if (!dur)
+        return false;
+
+    // Check if this enchantment is being sustained by someone, and don't decay
+    // in that case.
+    if (e.ench_is_aura && aura_is_active(*this, e.ench))
         return false;
 
     if (e.duration >= INFINITE_DURATION)
@@ -1046,15 +1057,6 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     const int spd = (me.ench == ENCH_HELD) ? speed :
                                              10;
     int actdur = speed_to_duration(spd);
-
-    // Don't let ENCH_SLOW time out while a torpor snail is around.
-    if (en == ENCH_SLOW)
-    {
-        if (torpor_slowed())
-            actdur = min(actdur, me.duration - 1);
-        else
-            props.erase(TORPOR_SLOWED_KEY);
-    }
 
     if (lose_ench_duration(me, actdur))
         return true;
@@ -1708,10 +1710,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
-            || me.agent()->mid == MID_ANON_FRIEND
-            // XXX: A bit of a hack to end injury bond on allies of a martyred
-            //      shade that became a flayed ghost.
-            || me.agent()->type == MONS_FLAYED_GHOST)
+            || me.agent()->mid == MID_ANON_FRIEND)
         {
             del_ench(ENCH_INJURY_BOND, true, false);
         }
@@ -2157,8 +2156,8 @@ enchant_type name_to_ench(const char *name)
 }
 
 mon_enchant::mon_enchant(enchant_type e, int deg, const actor* a,
-                         int dur)
-    : ench(e), degree(deg), duration(dur), maxduration(0)
+                         int dur, ench_aura_type is_aura)
+    : ench(e), degree(deg), duration(dur), maxduration(0), ench_is_aura(is_aura)
 {
     if (a)
     {

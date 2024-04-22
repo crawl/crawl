@@ -4880,13 +4880,11 @@ void dec_slow_player(int delay)
             ? haste_mul(delay) : delay;
     }
 
-    if (you.torpor_slowed())
+    if (aura_is_active_on_player(TORPOR_SLOWED_KEY))
     {
         you.duration[DUR_SLOW] = max(1, you.duration[DUR_SLOW]);
         return;
     }
-    if (you.props.exists(TORPOR_SLOWED_KEY))
-        you.props.erase(TORPOR_SLOWED_KEY);
 
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
