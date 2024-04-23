@@ -10,7 +10,6 @@
 
 #include "enum.h"
 #include "gender-type.h"
-#include "ghost.h"
 #include "los-type.h"
 #include "mon-dam-level-type.h"
 #include "mon-enum.h"
@@ -200,7 +199,6 @@ monster *monster_at(const coord_def &pos);
 string mons_type_name(monster_type type, description_level_type desc);
 
 bool give_monster_proper_name(monster& mon);
-bool give_apostle_proper_name(monster& mon, apostle_type type);
 
 bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);

@@ -95,6 +95,7 @@ static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
 #define MONDATASIZE ARRAYSZ(mondata)
 
+static bool _give_apostle_proper_name(monster& mon, apostle_type type);
 static int _mons_exp_mod(monster_type mclass);
 
 // Macro that saves some typing, nothing more.
@@ -3015,13 +3016,13 @@ void define_monster(monster& mons, bool friendly)
         else
             mons.props[TILE_NUM_KEY].get_short() = 200;
 
-        give_apostle_proper_name(mons, type);
+        _give_apostle_proper_name(mons, type);
 
         // Reroll our name until it is different from all player apostle names,
         // to try and lessen possible confusion if they end up with two that
         // have identical names.
         while (!apostle_has_unique_name(mons))
-            give_apostle_proper_name(mons, type);
+            _give_apostle_proper_name(mons, type);
 
         break;
     }
@@ -3269,7 +3270,7 @@ bool give_monster_proper_name(monster& mon)
 }
 
 // Names an orc apostle (will rename it if it already had a name)
-bool give_apostle_proper_name(monster& mon, apostle_type type)
+static bool _give_apostle_proper_name(monster& mon, apostle_type type)
 {
     string apostle_key = "orc apostle " + apostle_type_names[type] + " name";
     mon.mname = getRandMonNameString(apostle_key);
