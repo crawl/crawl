@@ -15,6 +15,7 @@
 #include "fight.h"
 #include "losglobal.h"
 #include "message.h"
+#include "mon-tentacle.h"
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf
 #include "terrain.h"
@@ -32,12 +33,18 @@ int englaciate(coord_def where, int pow, actor *agent)
 
     monster* mons = victim->as_monster();
 
-    if (victim->res_cold() > 0
-        || victim->is_stationary())
+    // Skip some ineligable monster categories
+    if (mons_is_conjured(mons->type) || mons_is_firewood(*mons)
+        || mons_is_tentacle_segment(mons->type))
+    {
+        return 0;
+    }
+
+    if (victim->res_cold() > 0)
     {
         if (!mons)
             canned_msg(MSG_YOU_UNAFFECTED);
-        else if (!mons_is_firewood(*mons))
+        else
             simple_monster_message(*mons, " is unaffected.");
         return 0;
     }
@@ -107,8 +114,7 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
     if (mon.stasis())
         return true;
 
-    if (!mon.is_stationary()
-        && mon.add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
+    if (mon.add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
         if (!mon.paralysed() && !mon.petrified()
             && simple_monster_message(mon, " seems to slow down."))

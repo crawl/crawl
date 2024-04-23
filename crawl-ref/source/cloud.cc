@@ -1902,8 +1902,7 @@ static bool _is_chaos_slowable(const actor &defender)
     if (!mon)
         return true;
 
-    // What, no hasting oklobs? Boo.
-    return !mons_is_firewood(*mon) && !mon->is_stationary();
+    return !mons_is_firewood(*mon);
 }
 
 struct chaos_effect

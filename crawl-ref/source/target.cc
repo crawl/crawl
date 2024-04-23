@@ -2086,7 +2086,7 @@ targeter_englaciate::targeter_englaciate()
 bool targeter_englaciate::affects_monster(const monster_info& mon)
 {
     return get_resist(mon.resists(), MR_RES_COLD) <= 0
-           && !mons_class_flag(mon.type, M_STATIONARY);
+           && !mons_is_conjured(mon.type) && !mons_class_is_firewood(mon.type);
 }
 
 targeter_fear::targeter_fear()
