@@ -631,6 +631,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_POLTERGUARDIAN,
+      {
+       { SPELL_FORCE_LANCE, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {

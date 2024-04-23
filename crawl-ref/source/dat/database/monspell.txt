@@ -937,6 +937,10 @@ Vanquished Vanguard Nergalle cast
 @The_monster@ cries out, "Spectres! Fight for the home you helped make!"
 
 %%%%
+force lance polterguardian cast
+
+@The_monster@ focuses its will @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

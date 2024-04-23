@@ -558,6 +558,7 @@ enum monster_type                      // env.mons[].type
     MONS_HALAZID_WARLOCK,
     MONS_SPECTATOR,
     MONS_METEORAN,
+    MONS_POLTERGUARDIAN,
 #endif
     MONS_KILLER_KLOWN,
     MONS_SHAPESHIFTER,
@@ -1249,6 +1250,7 @@ enum monster_type                      // env.mons[].type
     MONS_PILLAR_OF_RIME,
     MONS_SEISMIC_CANNON,
     MONS_ELECTROFERRIC_VORTEX,
+    MONS_POLTERGUARDIAN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -1935,7 +1935,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_TARANTELLA,      { {2}, {{ BAND_TARANTELLA, {1, 5} }}}},
     { MONS_VAULT_WARDEN,    { {}, {{ BAND_YAKTAURS, {2, 6}, true },
                                    { BAND_VAULT_WARDEN, {2, 5}, true }}}},
-    { MONS_IRONBOUND_PRESERVER, { {}, {{ BAND_DEEP_TROLLS, {3, 6}, true }}}},
+    { MONS_IRONBOUND_PRESERVER, { {}, {{ BAND_PRESERVER, {3, 6}, true }}}},
     { MONS_TENGU_CONJURER,  { {2}, {{ BAND_TENGU, {1, 2} }}}},
     { MONS_TENGU_WARRIOR,   { {2}, {{ BAND_TENGU, {1, 2} }}}},
     { MONS_SOJOBO,          { {}, {{ BAND_SOJOBO, {2, 3}, true }}}},
@@ -1958,6 +1958,10 @@ static const map<monster_type, band_set> bands_by_leader = {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
+    { MONS_POLTERGUARDIAN,  { {2, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_RANDOM_SINGLE, {1, 3} }}}},
     { MONS_CEREBOV,         { {}, {{ BAND_CEREBOV, {5, 8}, true }}}},
     { MONS_GLOORX_VLOQ,     { {}, {{ BAND_GLOORX_VLOQ, {5, 8}, true }}}},
     { MONS_MNOLEG,          { {}, {{ BAND_MNOLEG, {5, 8}, true }}}},
@@ -2244,7 +2248,9 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
-    { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
+    { BAND_PRESERVER,           {{{MONS_DEEP_TROLL, 10},
+                                  {MONS_POLTERGUARDIAN, 2}},
+                                {{MONS_DEEP_TROLL, 1}}}},
     { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
@@ -2392,6 +2398,10 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                  {MONS_IRONBOUND_FROSTHEART, 3},
                                  {MONS_IRONBOUND_THUNDERHULK, 2},
                                  {MONS_VAULT_GUARD, 20}},
+
+        // 25% chance of a polterguardian
+                                {{MONS_POLTERGUARDIAN, 1},
+                                 {MONS_VAULT_GUARD, 4}},
 
                                 {{MONS_VAULT_GUARD, 1}}}},
 

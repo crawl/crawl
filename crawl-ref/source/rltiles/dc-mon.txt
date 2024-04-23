@@ -345,6 +345,8 @@ living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno MONS_CREEPING_INFERNO
+%sdir mon/undead
+polterguardian MONS_POLTERGUARDIAN
 
 ### Abyssal horrors ('*')
 %sdir mon/abyss

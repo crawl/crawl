@@ -44,6 +44,9 @@ static const vector<mon_aura_data> aura_map =
 
     {MONS_MARTYRED_SHADE,
         ENCH_INJURY_BOND, 30, false},
+
+    {MONS_POLTERGUARDIAN,
+        ENCH_REPEL_MISSILES, 1, false},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)

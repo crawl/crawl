@@ -1367,6 +1367,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PROTEAN_SHAPESHIFTING:
     case ENCH_CURSE_OF_AGONY:
     case ENCH_MAGNETISED:
+    case ENCH_REPEL_MISSILES:
         decay_enchantment(en);
         break;
 

@@ -483,6 +483,7 @@ static const vector<pop_entry> population[] =
   // Harder enemies:
   {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   {  1,  4,  150, FLAT, MONS_ENTROPY_WEAVER },
+  {  1,  4,  100, FLAT, MONS_POLTERGUARDIAN },
   {  1,  4, 1200, FLAT, MONS_IRONBOUND_CONVOKER },
   {  1,  4, 1200, FLAT, MONS_IRONBOUND_PRESERVER },
   {  1,  4,  725, FLAT, MONS_IRONBOUND_FROSTHEART },
@@ -545,6 +546,7 @@ static const vector<pop_entry> population[] =
   {  5, 12,  330, FALL, MONS_VERY_UGLY_THING },
   {  5, 12,  260, FALL, MONS_SPHINX },
   {  5, 12,  260, FALL, MONS_WAR_GARGOYLE },
+  {  5, 12,  300, FALL, MONS_POLTERGUARDIAN },
   // V:5 chaff we should really get rid of
   {  5,  5,  650, FLAT, MONS_ORC_KNIGHT },
   {  5,  5,   60, FLAT, MONS_REDBACK },
