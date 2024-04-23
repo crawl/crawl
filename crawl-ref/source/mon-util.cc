@@ -3015,13 +3015,13 @@ void define_monster(monster& mons, bool friendly)
         else
             mons.props[TILE_NUM_KEY].get_short() = 200;
 
-        give_monster_proper_name(mons);
+        give_apostle_proper_name(mons, type);
 
         // Reroll our name until it is different from all player apostle names,
         // to try and lessen possible confusion if they end up with two that
         // have identical names.
         while (!apostle_has_unique_name(mons))
-            give_monster_proper_name(mons);
+            give_apostle_proper_name(mons, type);
 
         break;
     }
@@ -3262,6 +3262,19 @@ static string _get_proper_monster_name(const monster& mon)
 bool give_monster_proper_name(monster& mon)
 {
     mon.mname = _get_proper_monster_name(mon);
+    if (!mon.props.exists(DBNAME_KEY))
+        mon.props[DBNAME_KEY] = mons_class_name(mon.type);
+
+    return mon.is_named();
+}
+
+// Names an orc apostle (will rename it if it already had a name)
+bool give_apostle_proper_name(monster& mon, apostle_type type)
+{
+    string apostle_key = "orc apostle " + apostle_type_names[type] + " name";
+    mon.mname = getRandMonNameString(apostle_key);
+
+    // XXX: The rest of this is duplicated from give_monster_proper_name().
     if (!mon.props.exists(DBNAME_KEY))
         mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 
