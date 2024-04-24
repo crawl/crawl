@@ -3858,8 +3858,8 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
     }
     else if (key == "fire_items_start")
     {
-        if (isaalpha(state.raw_field[0]))
-            fire_items_start = letter_to_index(state.raw_field[0]);
+        if (isalnum(state.raw_field[0]))
+            fire_items_start = alphanumeric_to_index(state.raw_field[0]);
         else
             report_error("Bad fire item start index: %s\n", state.raw_field.c_str());
         return true;

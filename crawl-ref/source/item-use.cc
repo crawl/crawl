@@ -1583,12 +1583,12 @@ static bool _pick_wield_weapon(item_def &wpn,
                 clear_messages();
                 return false;
             }
-            if (c == index_to_letter(old_wpn->link))
+            if (c == index_to_alphanumeric(old_wpn->link))
             {
                 clear_messages();
                 return _do_wield_weapon(wpn, old_wpn);
             }
-            if (c == index_to_letter(old_offhand->link))
+            if (c == index_to_alphanumeric(old_offhand->link))
             {
                 clear_messages();
                 return _do_wield_weapon(wpn, old_offhand, false);
@@ -1676,12 +1676,12 @@ static bool _pick_unwield_weapon(const item_def *wpn, const item_def *offhand)
                 clear_messages();
                 return false;
             }
-            if (wpn && c == index_to_letter(wpn->link))
+            if (wpn && c == index_to_alphanumeric(wpn->link))
             {
                 clear_messages();
                 return unwield_weapon(*wpn);
             }
-            if (offhand && c == index_to_letter(offhand->link))
+            if (offhand && c == index_to_alphanumeric(offhand->link))
             {
                 clear_messages();
                 return unwield_weapon(*offhand);
@@ -2374,7 +2374,7 @@ static int _prompt_ring_to_remove()
     {
         rings.push_back(you.slot_item(eq, true));
         ASSERT(rings.back());
-        slot_chars.push_back(index_to_letter(rings.back()->link));
+        slot_chars.push_back(index_to_alphanumeric(rings.back()->link));
     }
 
     if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
@@ -2780,7 +2780,7 @@ static equipment_type _choose_ring_slot()
         {
             if (c == _ring_slot_key(eq)
                 || (you.slot_item(eq, true)
-                    && c == index_to_letter(you.slot_item(eq, true)->link)))
+                    && c == index_to_alphanumeric(you.slot_item(eq, true)->link)))
             {
                 eqslot = eq;
                 c = ' ';
@@ -3561,9 +3561,9 @@ static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalnum(letter.c_str()[0]))
     {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        item_def &item = you.inv[alphanumeric_to_index(letter.c_str()[0])];
         if (item.defined() && is_brandable_weapon(item, true))
             weapon = &item;
     }
@@ -3627,9 +3627,9 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalnum(letter.c_str()[0]))
     {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        item_def &item = you.inv[alphanumeric_to_index(letter.c_str()[0])];
         if (item.defined() && !fully_identified(item))
             itemp = &item;
     }
@@ -3681,9 +3681,9 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalnum(letter.c_str()[0]))
     {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        item_def &item = you.inv[alphanumeric_to_index(letter.c_str()[0])];
         if (item.defined() && is_enchantable_weapon(item, true))
             weapon = &item;
     }
@@ -3745,9 +3745,9 @@ static bool _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalnum(letter.c_str()[0]))
     {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        item_def &item = you.inv[alphanumeric_to_index(letter.c_str()[0])];
         if (item.defined() && is_enchantable_armour(item, true))
             target = &item;
     }

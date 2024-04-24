@@ -363,8 +363,13 @@ double prompt_for_float(const char* prompt)
     return ret;
 }
 
-
 char index_to_letter(int the_index)
+{
+    ASSERT_RANGE(the_index, 0, ENDOFLETTERS);
+    return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
+}
+
+char index_to_alphanumeric(int the_index)
 {
     ASSERT_RANGE(the_index, 0, ENDOFPACK);
     return the_index + ((the_index < 26) ? 'a' :
@@ -372,7 +377,18 @@ char index_to_letter(int the_index)
                                          : ('0' - 52));
 }
 
-int letter_to_index(int the_character)
+int letter_to_index(int the_letter)
+{
+    if (the_letter >= 'a' && the_letter <= 'z')
+        return the_letter - 'a'; // returns range [0-25] {dlb}
+    else if (the_letter >= 'A' && the_letter <= 'Z')
+        return the_letter - 'A' + 26; // returns range [26-51] {dlb}
+
+    die("slot not a letter: %s (%d)", the_letter ?
+        stringize_glyph(the_letter).c_str() : "null", the_letter);
+}
+
+int alphanumeric_to_index(int the_character)
 {
     if (the_character >= 'a' && the_character <= 'z')
         return the_character - 'a'; // returns range [0-25] {dlb}

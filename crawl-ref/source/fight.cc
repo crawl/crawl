@@ -255,10 +255,10 @@ static bool _autoswitch_to_melee()
 
     // don't autoswitch if a or b is not selected
     int item_slot;
-    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
-        item_slot = letter_to_index('b');
-    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
-        item_slot = letter_to_index('a');
+    if (you.equip[EQ_WEAPON] == alphanumeric_to_index('a'))
+        item_slot = alphanumeric_to_index('b');
+    else if (you.equip[EQ_WEAPON] == alphanumeric_to_index('b'))
+        item_slot = alphanumeric_to_index('a');
     else
         return false;
 

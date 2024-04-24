@@ -1112,7 +1112,7 @@ static void _print_unarmed_name()
 static void _print_weapon_name(const item_def &weapon, int width)
 {
     textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = index_to_letter(weapon.link);
+    const char slot_letter = index_to_alphanumeric(weapon.link);
     const string slot_name = make_stringf("%c) ", slot_letter);
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour(weapon));
@@ -2087,7 +2087,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             string colname = melded ? "darkgrey" : colour_to_str(col);
 
             const int item_idx   = you.equip[eqslot];
-            const char equip_char = index_to_letter(item_idx);
+            const char equip_char = index_to_alphanumeric(item_idx);
 
             str = make_stringf(
                      "<w>%c</w> - <%s>%s%s</%s>",
@@ -2562,7 +2562,7 @@ private:
     {
         if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
         {
-            item_def& item = you.inv[letter_to_index(ch)];
+            item_def& item = you.inv[alphanumeric_to_index(ch)];
             return describe_item(item);
         }
         return formatted_scroller::process_key(ch);

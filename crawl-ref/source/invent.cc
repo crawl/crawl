@@ -97,7 +97,7 @@ InvEntry::InvEntry(const item_def &i)
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter(i.link));
+        add_hotkey(index_to_alphanumeric(i.link));
     else
         add_hotkey(' ');        // dummy hotkey
 
@@ -382,7 +382,7 @@ int InvMenu::pre_process(int key)
              && you.last_unequip != -1
              && (type == menu_type::drop || type == menu_type::invlist))
     {
-        key = index_to_letter(you.last_unequip);
+        key = index_to_alphanumeric(you.last_unequip);
     }
     else if (key == '-')
         _mode_special_drop = false;
@@ -445,7 +445,7 @@ bool InvMenu::examine_index(int i)
         // default behavior: examine inv item. You must override or use on_examine
         // if your items come from somewhere else, or this will cause crashes!
         unsigned char select = ie->hotkeys[0];
-        const int invidx = letter_to_index(select);
+        const int invidx = alphanumeric_to_index(select);
         ASSERT(you.inv[invidx].defined());
         return describe_item(you.inv[invidx], nullptr, do_actions);
     }
@@ -1383,7 +1383,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       &preselected_items);
 
     for (SelItem &sel : items)
-        sel.slot = letter_to_index(sel.slot);
+        sel.slot = alphanumeric_to_index(sel.slot);
 
     return items;
 }
@@ -1935,7 +1935,7 @@ int prompt_invent_item(const char *prompt,
         }
         else if (isaalnum(keyin))
         {
-            ret = letter_to_index(keyin);
+            ret = alphanumeric_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
