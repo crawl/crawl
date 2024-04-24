@@ -59,7 +59,7 @@ void adjust_item(int from_slot)
         mprf_nocap("%s", you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
-    const int to_slot = prompt_invent_item("Adjust to which letter? ",
+    const int to_slot = prompt_invent_item("Adjust to which letter or number? ",
                                            menu_type::invlist,
                                            OSEL_ANY, OPER_ANY,
                                            invprompt_flag::unthings_ok

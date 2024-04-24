@@ -1992,16 +1992,7 @@ bool Menu::process_key(int keyin)
     }
 
     command_type cmd = CMD_NO_CMD;
-    if (is_set(MF_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
-    {
-        // override cmd bindings for quantity digits
-        if (num > 999)
-            num = -1;
-        num = (num == -1) ? keyin - '0' :
-                            num * 10 + keyin - '0';
-    }
-    else
-        cmd = get_command(keyin);
+    cmd = get_command(keyin);
 
     if (cmd != CMD_NO_CMD)
     {
@@ -2059,22 +2050,14 @@ bool Menu::process_key(int keyin)
             return process_selection();
         }
 
-        if (is_set(MF_ANYPRINTABLE)
-            && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
-        {
-            // TODO: should this behavior be made to coexist with multiselect?
-            return false;
-        }
-
         update_title();
         update_more();
 
         break;
     }
 
-    // reset number state if anything other than setting a digit happened
-    if (!isadigit(keyin))
-        num = -1;
+    // reset number state
+    num = -1;
 
 #ifdef USE_TILE_WEB
     // XX is handling this in process_command enough?

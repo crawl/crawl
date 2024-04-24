@@ -30,7 +30,7 @@ double prompt_for_float(const char* prompt);
 
 char index_to_letter(int the_index);
 
-int letter_to_index(int the_letter);
+int letter_to_index(int the_character);
 
 
 // PromptMenu is an implementation of Menu for use in the message pane. The
