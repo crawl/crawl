@@ -3163,12 +3163,6 @@ int monster::base_armour_class() const
         return _zombie_ac_modifier(type) + base_ac;
     }
 
-    // abominations are weird.
-    if (type == MONS_ABOMINATION_LARGE)
-        return min(20, 7 + get_hit_dice() / 2);
-    if (type == MONS_ABOMINATION_SMALL)
-        return min(10, 3 + get_hit_dice() * 2 / 3);
-
     // Hepliaklqana ancestors scale with xl.
     if (mons_is_hepliaklqana_ancestor(type))
     {
@@ -3298,12 +3292,6 @@ int monster::base_evasion() const
 
         return _zombie_ev_modifier(type) + base_ev;
     }
-
-    // abominations are weird.
-    if (type == MONS_ABOMINATION_LARGE)
-        return min(20, 2 * get_hit_dice() / 3);
-    if (type == MONS_ABOMINATION_SMALL)
-        return min(10, 4 + get_hit_dice());
 
     const int base_ev = get_monster_data(type)->ev;
 

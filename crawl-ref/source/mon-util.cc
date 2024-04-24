@@ -2883,15 +2883,6 @@ void define_monster(monster& mons, bool friendly)
 
     switch (mcls)
     {
-    // Please keep describe.cc in sync if you change abominations.
-    case MONS_ABOMINATION_SMALL:
-        hd = 4 + random2(4);
-        break;
-
-    case MONS_ABOMINATION_LARGE:
-        hd = 8 + random2(4);
-        break;
-
     case MONS_SLIME_CREATURE:
         // Slime creatures start off as only single un-merged blobs.
         mons.blob_size = 1;
