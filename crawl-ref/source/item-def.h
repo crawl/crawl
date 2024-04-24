@@ -92,7 +92,7 @@ public:
     string name(description_level_type descrip, bool terse = false,
                 bool ident = false, bool with_inscription = true,
                 bool quantity_in_words = false,
-                iflags_t ignore_flags = 0x0) const;
+                iflags_t ignore_flags = 0x0, bool show_index = true) const;
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;

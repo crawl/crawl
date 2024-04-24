@@ -838,9 +838,7 @@ string UseItemMenu::get_keyhelp(bool) const
 
 bool UseItemMenu::process_key(int key)
 {
-    // TODO: should check inscriptions here
-    if (isadigit(key)
-        || key == '-' && show_unarmed())
+    if (key == '-' && show_unarmed())
     {
         lastch = key;
         return false;
@@ -2365,6 +2363,19 @@ static char _ring_slot_key(equipment_type slot)
     }
 }
 
+static char _ring_remove_slot_key(equipment_type slot)
+{
+    switch (slot)
+    {
+    case EQ_LEFT_RING:      return '<';
+    case EQ_RIGHT_RING:     return '>';
+    case EQ_RING_AMULET:    return '^';
+    default:
+        die("Invalid ring slot");
+    }
+}
+
+
 static int _prompt_ring_to_remove()
 {
     const vector<equipment_type> ring_types = _current_ring_types();
@@ -2391,13 +2402,28 @@ static int _prompt_ring_to_remove()
 
     for (size_t i = 0; i < rings.size(); i++)
     {
-        string m = "<w>";
-        const char key = _ring_slot_key(ring_types[i]);
-        m += key;
-        if (key == '<')
-            m += '<';
+        string m = "";
+        switch (ring_types[i])
+        {
+        case EQ_LEFT_RING:
+        case EQ_RIGHT_RING:
+        case EQ_RING_AMULET:
+            {
+                m += "<w>";
+                const char key = _ring_remove_slot_key(ring_types[i]);
+                m += key;
+                if (key == '<')
+                m += '<';
 
-        m += "</w> or " + rings[i]->name(DESC_INVENTORY);
+                m += "</w> or " + rings[i]->name(DESC_INVENTORY);
+                break;
+            }
+        default:
+            //octopode rings overlap 62 inventory, so only allow selecting by item key
+            m = rings[i]->name(DESC_INVENTORY);
+            break;
+        }
+
         mprf_nocap("%s", m.c_str());
     }
     flush_prev_message();
@@ -2415,7 +2441,7 @@ static int _prompt_ring_to_remove()
         for (size_t i = 0; i < slot_chars.size(); i++)
         {
             if (c == slot_chars[i]
-                || c == _ring_slot_key(ring_types[i]))
+                || c == _ring_remove_slot_key(ring_types[i]))
             {
                 eqslot = ring_types[i];
                 c = ' ';
@@ -2756,7 +2782,7 @@ static equipment_type _choose_ring_slot()
 
         item_def* ring = you.slot_item(eq, true);
         if (ring)
-            msg += "</w> or " + ring->name(DESC_INVENTORY);
+            msg += "</w> - " + ring->name(DESC_INVENTORY, false, false, true, false, 0, false);
         else
             msg += "</w> - no ring";
 
@@ -2778,9 +2804,7 @@ static equipment_type _choose_ring_slot()
         c = getchm();
         for (auto eq : slots)
         {
-            if (c == _ring_slot_key(eq)
-                || (you.slot_item(eq, true)
-                    && c == index_to_alphanumeric(you.slot_item(eq, true)->link)))
+            if (c == _ring_slot_key(eq))
             {
                 eqslot = eq;
                 c = ' ';

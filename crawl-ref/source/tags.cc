@@ -4357,8 +4357,8 @@ static void _tag_read_you_items(reader &th)
     int inventory_size = th.getMinorVersion() < TAG_MINOR_INVENTORY_EXPANSION
                             ? ENDOFLETTERS
                             : ENDOFPACK;
-    ASSERT(count == inventory_size); 
-    
+    ASSERT(count == inventory_size);
+
 #if TAG_MAJOR_VERSION == 34
     string bad_slots;
 #endif

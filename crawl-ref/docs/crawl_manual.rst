@@ -472,7 +472,7 @@ auto-explore will usually save real time.
 Stashes and Searching
 ========================================
 
-Since you can only carry 52 items, you will occasionally want to stash things
+Since you can only carry 62 items, you will occasionally want to stash things
 away (by dropping them with the 'd' command). When you want to search for
 something in your stashes, you can do this with the Find command 'Ctrl-F'. The
 parser even accepts regular expressions, although you will mostly just need
@@ -756,7 +756,7 @@ unusual. When the inventory screen shows "-more-", to show you that there is
 another page of items, you can type the letter of the item you want, even if it
 is not visible, instead of pressing Space or Enter to see the next page.
 
-You can carry at most 52 items at once, and your item slot usage is printed at
+You can carry at most 62 items at once, and your item slot usage is printed at
 the top of the inventory screen.
 
 You can use the adjust command (the '=' key) to change the letters to which your
@@ -2651,9 +2651,6 @@ d
   Drop an item. Within the drop list, you can select slots based on a regular
   expression by pressing Ctrl-F, followed by the regex.
 
-d#
-  Drop exact number of items, where # is a number.
-
 D
   Drop item(s) picked up last.
 
@@ -2918,16 +2915,6 @@ also inscribe when viewing items from the inventory (done by pressing the item's
 letter). This adds a note in curly braces to the item description. Besides
 simply allowing you to make comments about items, there are several further
 uses.
-
-Inscriptions as shortcuts
-========================================
-
-You can use inscriptions to define shortcuts for easy access to items,
-regardless of their actual inventory letter. For example, if an item's
-inscription contains "@w9", you can type 'w9' in order to wield it. Instead of
-the 9, any other digit works as well. And instead of 'w'ield, any other command
-used for handling items can be used: 'r'ead, 'q'uaff, e'v'oke, 'f'ire, etc.
-Using "@*9" will make any action command followed by '9' use this item.
 
 Safety inscriptions
 ========================================

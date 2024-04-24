@@ -1112,8 +1112,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             false);
 
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
-                         { CMD_DROP });
     _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
 
     cols.add_formatted(

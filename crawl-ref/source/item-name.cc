@@ -134,7 +134,7 @@ static string _item_inscription(const item_def &item)
 
 string item_def::name(description_level_type descrip, bool terse, bool ident,
                       bool with_inscription, bool quantity_in_words,
-                      iflags_t ignore_flags) const
+                      iflags_t ignore_flags, bool show_index) const
 {
     if (crawl_state.game_is_arena())
         ignore_flags |= ISFLAG_KNOW_PLUSES | ISFLAG_COSMETIC_MASK;
@@ -154,11 +154,13 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     {
         if (in_inventory(*this)) // actually in inventory
         {
-            buff << index_to_alphanumeric(link);
-            if (terse)
-                buff << ") ";
-            else
-                buff << " - ";
+            if (show_index){
+                buff << index_to_alphanumeric(link);
+                if (terse)
+                    buff << ") ";
+                else
+                    buff << " - ";
+            }
         }
         else
             descrip = DESC_A;
