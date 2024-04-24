@@ -105,6 +105,7 @@ static const vector<pop_entry> population[] =
   {  5,  9,  400, PEAK, MONS_WATER_MOCCASIN },
   {  5, 13,  600, PEAK, MONS_CENTAUR },
   {  5, 13,  200, PEAK, MONS_GNOLL_SERGEANT },
+  {  5,  9,  100, PEAK, MONS_MARROWCUDA },
 
   {  6,  8,  500, PEAK, MONS_SKY_BEAST },
   {  6,  9, 1000, PEAK, MONS_BULLFROG },
@@ -1209,10 +1210,11 @@ static const vector<pop_entry> pop_generic_late_zombie =
 static const vector<pop_entry> population_water[] =
 {
     { // Dungeon water monsters
+      {  5,  13,   90, SEMI, MONS_MARROWCUDA },
       {  5,  16,   60, FLAT, MONS_ELECTRIC_EEL },
       {  7,  16,  185, PEAK, MONS_ELECTRIC_EEL },
       {  11, 27,  600, RISE, MONS_WATER_ELEMENTAL },
-      {  5,  22,  130, FLAT, MONS_NO_MONSTER },
+      {  5,  22,  110, FLAT, MONS_NO_MONSTER },
       {  9,  32,  250, SEMI, MONS_NO_MONSTER },
     },
     GENERIC_WATER_POP, // Temple

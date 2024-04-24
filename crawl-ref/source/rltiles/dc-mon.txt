@@ -259,8 +259,11 @@ blinking_frog MONS_BLINK_FROG_BLINKING
 cane_toad MONS_CANE_TOAD
 goliath_frog MONS_GOLIATH_FROG
 skyshark MONS_SKYSHARK
+%sdir mon/undead
+marrowcuda MONS_MARROWCUDA
 
 ## Snakes ('S')
+%sdir mon/animals
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA

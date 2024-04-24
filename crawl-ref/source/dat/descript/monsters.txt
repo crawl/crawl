@@ -1842,6 +1842,16 @@ A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
 %%%%
+marrowcuda
+
+The flame-wreathed skeleton of a carnivorous fish, darting through air as easily
+as it once parted water. It burns with a hunger it could not satisfy in life and
+is singularly driven by in death.
+
+While a single one may be only a nuissance, the swarm is never far behind, and
+every bite it lands will summon more and more of them until every scrap of flesh
+on its prey has been devoured.
+%%%%
 martyred shade
 
 The wandering shade of a long-dead soul who died for a forgotten cause. Though

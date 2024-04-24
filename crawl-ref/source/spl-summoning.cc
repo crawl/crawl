@@ -2806,6 +2806,40 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos)
     return false;
 }
 
+bool summon_swarm_clone(const monster& agent, coord_def target_pos)
+{
+    // Go up the summon chain to find the highest-level version of ourselves
+    const monster* parent = &agent;
+    while (parent->summoner && monster_by_mid(parent->summoner)
+           && monster_by_mid(parent->summoner)->type == agent.type)
+    {
+        parent = monster_by_mid(parent->summoner);
+    }
+
+    // Apply pseudo-summon cap
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+       if (mi->summoner == parent->mid)
+           ++count;
+
+        if (count > 8)
+           return false;
+    }
+
+    mgen_data mg(agent.type, BEH_COPY, target_pos, _auto_autofoe(parent), MG_AUTOFOE);
+    mg.set_summoned(parent, 2, SPELL_NO_SPELL, GOD_NO_GOD);
+
+    if (monster* spawn = create_monster(mg))
+    {
+        if (you.can_see(*spawn))
+            mprf("Another %s is drawn to the feast!", spawn->name(DESC_PLAIN).c_str());
+        return true;
+    }
+
+    return false;
+}
+
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow)
 {

@@ -3400,6 +3400,12 @@ void melee_attack::mons_apply_attack_flavour()
         break;
     }
 
+    case AF_SWARM:
+    {
+        summon_swarm_clone(*attacker->as_monster(), defender->pos());
+        break;
+    }
+
     case AF_BLOODZERK:
     {
         if (!defender->can_bleed() || !attacker->can_go_berserk())

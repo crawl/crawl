@@ -116,6 +116,7 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos);
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow);
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
+bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
 
