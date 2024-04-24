@@ -2853,20 +2853,6 @@ namespace quiver
                 mprf("Clearing quiver.");
                 return false;
             }
-            else if (isadigit(key))
-            {
-                item_def *item = digit_inscription_to_item(key, OPER_QUIVER);
-                if (item && in_inventory(*item))
-                {
-                    auto a = slot_to_action(item->link, true);
-                    // XX would be better to show an error if a is invalid?
-                    if (a->is_valid())
-                    {
-                        set_to_quiver(a);
-                        return false;
-                    }
-                }
-            }
             else if ((key == '*' || key == '%') && any_items)
                 return _choose_from_inv();
             else if (key == '&' && any_spells)

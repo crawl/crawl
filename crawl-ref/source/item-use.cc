@@ -1215,17 +1215,6 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
             choice_made = true;
             tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
         }
-        else if (isadigit(keyin))
-        {
-            // select by inscription
-            // This allows you to select stuff by inscription that is not on the
-            // screen, but only if you couldn't by default use it for that
-            // operation anyway. It's a bit weird, but it does save a '*'
-            // keypress for bread-swingers.
-            tmp_tgt = digit_inscription_to_item(keyin, oper);
-            if (tmp_tgt)
-                choice_made = true;
-        }
         else if (keyin == '-' && menu.show_unarmed())
         {
             choice_made = true;

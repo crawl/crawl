@@ -236,5 +236,4 @@ bool item_is_wieldable(const item_def &item);
 bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
-item_def *digit_inscription_to_item(char digit, operation_types oper);
 operation_types generalize_oper(operation_types oper);
