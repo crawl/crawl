@@ -814,18 +814,10 @@ monster_info::monster_info(const monster* m, int milev)
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
-string monster_info::get_max_hp_desc() const
+int monster_info::get_known_max_hp() const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
-    {
-        const int hp = props[KNOWN_MAX_HP_KEY].get_int();
-
-        // Indicate that this apostle's HP has been increased by Beogh
-        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
-            return make_stringf("*%d*", hp);
-
-        return std::to_string(hp);
-    }
+        return props[KNOWN_MAX_HP_KEY].get_int();
 
     const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
@@ -843,20 +835,49 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     mhp /= scale;
-    return make_stringf("~%d", mhp);
+
+    return mhp;
+}
+
+/// Player-known max HP information for a monster: "about 55", "243".
+string monster_info::get_max_hp_desc() const
+{
+    int hp = get_known_max_hp();
+    if (props.exists(KNOWN_MAX_HP_KEY))
+    {
+        // Indicate that this apostle's HP has been increased by Beogh
+        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
+            return make_stringf("*%d*", hp);
+
+        return std::to_string(hp);
+    }
+
+    return make_stringf("~%d", hp);
 }
 
 /// HP regenerated every (scale) turns.
 int monster_info::regen_rate(int scale) const
 {
+    int rate = 0;
     if (!can_regenerate() || is(MB_SICK) /* ? */)
         return 0;
-    if (mons_class_fast_regen(type) || is(MB_REGENERATION) /* ? */)
-        return mons_class_regen_amount(type) * scale;
 
-    // Duplicates monster::natural_regen_rate.
-    const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
-    return min(scale, max(1, hd * scale / (divider * 25)));
+    if (mons_class_fast_regen(type))
+        rate = mons_class_regen_amount(type) * scale;
+    else
+    {
+        // Duplicates monster::natural_regen_rate.
+        const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
+        rate = min(scale, max(1, hd * scale / (divider * 25)));
+    }
+
+    // XXX: This rounds slightly inaccurately, and also doesn't say that it's
+    //      an approximation when monster hp isn't known for sure. Still, it's
+    //      probably close enough?
+    if (is(MB_REGENERATION))
+        rate += 3 + get_known_max_hp() / 20;
+
+    return rate;
 }
 
 /**
