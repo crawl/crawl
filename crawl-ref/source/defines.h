@@ -40,6 +40,9 @@
 // max size of inventory array {dlb}:
 #define ENDOFPACK 62
 
+// max size of letter indexed array:
+#define ENDOFLETTERS 52
+
 // Max ghosts in a bones file.
 const int MAX_GHOSTS = 127;
 

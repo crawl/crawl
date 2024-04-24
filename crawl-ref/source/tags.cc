@@ -2788,10 +2788,13 @@ static void _tag_read_you(reader &th)
     // How many you.equip?
     count = unmarshallByte(th);
     ASSERT(count <= NUM_EQUIP);
+    int inventory_size = th.getMinorVersion() < TAG_MINOR_INVENTORY_EXPANSION
+                            ? ENDOFLETTERS
+                            : ENDOFPACK;
     for (int i = EQ_FIRST_EQUIP; i < count; ++i)
     {
         you.equip[i] = unmarshallByte(th);
-        ASSERT_RANGE(you.equip[i], -1, ENDOFPACK);
+        ASSERT_RANGE(you.equip[i], -1, inventory_size);
     }
     for (int i = count; i < NUM_EQUIP; ++i)
         you.equip[i] = -1;
@@ -4350,7 +4353,12 @@ static void _tag_read_you_items(reader &th)
 
     // how many inventory slots?
     count = unmarshallByte(th);
-    ASSERT(count == ENDOFPACK); // not supposed to change
+    // did not change previously, is being expanded to 62 after the tag.
+    int inventory_size = th.getMinorVersion() < TAG_MINOR_INVENTORY_EXPANSION
+                            ? ENDOFLETTERS
+                            : ENDOFPACK;
+    ASSERT(count == inventory_size); 
+    
 #if TAG_MAJOR_VERSION == 34
     string bad_slots;
 #endif
@@ -4640,7 +4648,7 @@ static void _tag_read_you_items(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_MANUALS)
         add_held_books_to_library();
 
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (int i = 0; i < inventory_size; ++i)
         if (you.inv[i].defined())
             god_id_item(you.inv[i], true);
 

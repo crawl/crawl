@@ -304,6 +304,7 @@ enum tag_minor_version
     TAG_MINOR_COGLIN_NO_JEWELLERY, // Remove all jewellery from Coglins
     TAG_MINOR_TALISMANS_SEEN,      // Keep track of seen talismans
     TAG_MINOR_FIX_APOSTLE_DAMAGE,  // Fix damage tracking of banished apostles
+    TAG_MINOR_INVENTORY_EXPANSION, // Expand the inventory to 62 slots by allowing numbers as index.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
