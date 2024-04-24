@@ -9,6 +9,7 @@
 #include "enchant-type.h"
 
 #define TORPOR_SLOWED_KEY "torpor_slowed"
+#define OPHAN_MARK_KEY "ophan_mark"
 
 class mon_enchant;
 

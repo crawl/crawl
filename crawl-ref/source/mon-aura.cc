@@ -42,6 +42,14 @@ static const vector<mon_aura_data> aura_map =
                         source.name(DESC_THE).c_str());
             }},
 
+    {MONS_OPHAN,
+        ENCH_NONE, 1, true, DUR_SENTINEL_MARK, OPHAN_MARK_KEY,
+         nullptr,
+         [](const monster& source)
+            {  mprf("%s gaze reveals you to all!",
+                        source.name(DESC_ITS).c_str());
+            }},
+
     {MONS_MARTYRED_SHADE,
         ENCH_INJURY_BOND, 30, false},
 
