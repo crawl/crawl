@@ -407,6 +407,14 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         {
             continue;
         }
+        // XXX: Handle special-cases with regard to monster auras.
+        //      (It would be nice if this could be handled automatically, but
+        //      there aren't yet enough of these effects to bother doing such)
+        if (i == DUR_SLOW && aura_is_active_on_player(TORPOR_SLOWED_KEY))
+            continue;
+        else if (i == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
+            continue;
+
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut
