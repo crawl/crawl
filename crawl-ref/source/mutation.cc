@@ -2217,7 +2217,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         case MUT_SPIT_POISON:
             // Breathe poison replaces spit poison (so it takes the slot).
             if (cur_base_level >= 2)
-                for (int i = 0; i < 52; ++i)
+                for (int i = 0; i < ENDOFLETTERS; ++i)
                     if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
                         you.ability_letter_table[i] = ABIL_BREATHE_POISON;
             break;
@@ -2396,7 +2396,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     case MUT_SPIT_POISON:
         // Breathe poison replaces spit poison (so it takes the slot).
         if (you.mutation[mutat] < 2)
-            for (int i = 0; i < 52; ++i)
+            for (int i = 0; i < ENDOFLETTERS; ++i)
                 if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
                     you.ability_letter_table[i] = ABIL_BREATHE_POISON;
         break;

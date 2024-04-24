@@ -1277,7 +1277,7 @@ namespace quiver
         {
             // goes by letter order
             vector<shared_ptr<action>> result;
-            for (int i = 0; i < 52; i++)
+            for (int i = 0; i < ENDOFLETTERS; i++)
             {
                 auto a = make_shared<spell_action>(
                                 get_spell_by_letter(index_to_letter(i)));

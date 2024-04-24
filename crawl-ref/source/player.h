@@ -321,8 +321,8 @@ public:
     //
     // In other words, the spell table contains hard links and the ability
     // table contains soft links.
-    FixedVector<int, 52>           spell_letter_table;   // ref to spell by slot
-    FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
+    FixedVector<int, ENDOFLETTERS>           spell_letter_table;   // ref to spell by slot
+    FixedVector<ability_type, ENDOFLETTERS>  ability_letter_table; // ref to abil by enum
 
     // Maps without allow_dup that have been already used.
     set<string> uniq_map_tags;

@@ -338,7 +338,7 @@ bool add_spell_to_memory(spell_type spell)
     }
     // If we didn't find a label above, choose the first available one.
     if (letter_j == -1)
-        for (letter_j = 0; letter_j < 52; letter_j++)
+        for (letter_j = 0; letter_j < ENDOFLETTERS; letter_j++)
         {
             if (you.spell_letter_table[letter_j] == -1)
                 break;
@@ -351,7 +351,7 @@ bool add_spell_to_memory(spell_type spell)
     if (you.spell_letter_table[letter_j] != -1)
     {
         // Find a spot for the spell being moved. Assumes there will be one.
-        for (int free_letter = 0; free_letter < 52; free_letter++)
+        for (int free_letter = 0; free_letter < ENDOFLETTERS; free_letter++)
             if (you.spell_letter_table[free_letter] == -1)
             {
                 you.spell_letter_table[free_letter] = you.spell_letter_table[letter_j];
@@ -389,7 +389,7 @@ bool del_spell_from_memory_by_slot(int slot)
 
     you.spells[slot] = SPELL_NO_SPELL;
 
-    for (int j = 0; j < 52; j++)
+    for (int j = 0; j < ENDOFLETTERS; j++)
         if (you.spell_letter_table[j] == slot)
             you.spell_letter_table[j] = -1;
 

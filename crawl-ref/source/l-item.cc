@@ -1483,7 +1483,7 @@ static int l_item_fired_item(lua_State *ls)
 static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_safe_checkint(ls, 1);
-    if (index >= 0 && index < 52 && you.inv[index].defined())
+    if (index >= 0 && index < ENDOFPACK && you.inv[index].defined())
         clua_push_item(ls, &you.inv[index]);
     else
         lua_pushnil(ls);

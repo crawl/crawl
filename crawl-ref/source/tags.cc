@@ -1570,12 +1570,12 @@ static void _tag_construct_you(writer &th)
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         marshallShort(th, you.spells[i]);
 
-    marshallByte(th, 52);
-    for (int i = 0; i < 52; i++)
+    marshallByte(th, ENDOFLETTERS);
+    for (int i = 0; i < ENDOFLETTERS; i++)
         marshallByte(th, you.spell_letter_table[i]);
 
-    marshallByte(th, 52);
-    for (int i = 0; i < 52; i++)
+    marshallByte(th, ENDOFLETTERS);
+    for (int i = 0; i < ENDOFLETTERS; i++)
         marshallShort(th, you.ability_letter_table[i]);
 
     marshallUByte(th, you.old_vehumet_gifts.size());
@@ -2608,9 +2608,9 @@ FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
     return spells;
 }
 
-FixedVector<int, 52> unmarshall_player_spell_letter_table(reader &th)
+FixedVector<int, ENDOFLETTERS> unmarshall_player_spell_letter_table(reader &th)
 {
-    FixedVector<int, 52> spell_letter_table;
+    FixedVector<int, ENDOFLETTERS> spell_letter_table;
 
     const auto count = unmarshallByte(th);
     ASSERT(count == (int)spell_letter_table.size());

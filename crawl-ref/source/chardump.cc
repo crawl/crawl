@@ -896,7 +896,7 @@ static void _sdump_spells(dump_params &par)
 
         text += " Your Spells              Type           Power      Damage    Failure   Level" "\n";
 
-        for (int j = 0; j < 52; j++)
+        for (int j = 0; j < ENDOFLETTERS; j++)
         {
             const char letter = index_to_letter(j);
             const spell_type spell  = get_spell_by_letter(letter);

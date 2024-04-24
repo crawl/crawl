@@ -288,7 +288,7 @@ namespace
 
             for (unsigned int i = 0, size = items.size(); i < size; i++)
             {
-                const char letter = index_to_letter(i % 52);
+                const char letter = index_to_letter(i % ENDOFLETTERS);
 
                 items[i]->hotkeys.clear();
                 items[i]->add_hotkey(letter);
@@ -882,7 +882,7 @@ void LookupType::display_keys(vector<string> &key_list) const
     int letter_i = 0;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
-        const char letter = index_to_letter(letter_i % 52);
+        const char letter = index_to_letter(letter_i % ENDOFLETTERS);
         string &key = key_list[i];
         // XXX: double ugh
         auto *entry = doing_mons

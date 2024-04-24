@@ -590,10 +590,10 @@ void WizardMenu::run_aux()
 
 int WizardMenu::index_to_symbol(int index) const
 {
-    if (index < 52)
+    if (index < ENDOFLETTERS)
         return index_to_letter(index);
     else if (last_symbol_index < 69)
-        return '0'+last_symbol_index-52;
+        return '0'+last_symbol_index-ENDOFLETTERS;
     else
         return 0; // 0 no hotkey, cursor keys only.
 }

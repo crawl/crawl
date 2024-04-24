@@ -676,7 +676,7 @@ static int l_you_spells(lua_State *ls)
 {
     lua_newtable(ls);
     int index = 0;
-    for (int i = 0; i < 52; ++i)
+    for (int i = 0; i < ENDOFLETTERS; ++i)
     {
         const spell_type spell = get_spell_by_letter(index_to_letter(i));
         if (spell == SPELL_NO_SPELL)
@@ -701,7 +701,7 @@ static int l_you_spell_letters(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    for (int i = 0; i < 52; ++i)
+    for (int i = 0; i < ENDOFLETTERS; ++i)
     {
         buf[0] = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(buf[0]);
@@ -726,7 +726,7 @@ static int l_you_spell_table(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    for (int i = 0; i < 52; ++i)
+    for (int i = 0; i < ENDOFLETTERS; ++i)
     {
         buf[0] = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(buf[0]);

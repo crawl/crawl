@@ -3732,8 +3732,8 @@ int choose_ability_menu(const vector<talent>& talents)
                        "between ability selection and description."));
     }
 
-    int numbers[52];
-    for (int i = 0; i < 52; ++i)
+    int numbers[ENDOFLETTERS];
+    for (int i = 0; i < ENDOFLETTERS; ++i)
         numbers[i] = i;
 
     bool found_invocations = false;
@@ -4123,7 +4123,7 @@ static int _lookup_ability_slot(const ability_type abil)
     // table will contain that placeholder. Convert the latter to
     // its corresponding ability before comparing the two, so that
     // we'll find the placeholder's index properly.
-    for (int slot = 0; slot < 52; slot++)
+    for (int slot = 0; slot < ENDOFLETTERS; slot++)
         if (fixup_ability(you.ability_letter_table[slot]) == abil)
             return slot;
     return -1;
@@ -4147,7 +4147,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     if (you.species == SP_BASE_DRACONIAN && first_slot >= letter_to_index('f'))
         first_slot += 1;
 
-    ASSERT(first_slot < 52);
+    ASSERT(first_slot < ENDOFLETTERS);
 
     switch (abil)
     {
@@ -4220,7 +4220,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
         break;
     }
 
-    for (int slot = first_slot; slot < 52; ++slot)
+    for (int slot = first_slot; slot < ENDOFLETTERS; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {

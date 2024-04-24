@@ -527,14 +527,14 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
 #ifdef USE_TILE_LOCAL
 int UIMenu::get_max_viewport_height()
 {
-    // Limit page size to ensure <= 52 items visible
+    // Limit page size to ensure <= 62 items visible
     int max_viewport_height = INT_MAX;
     size_t a = 0, b = 0, num_items = 0;
     while (b < item_info.size())
     {
-        if (num_items < 52)
+        if (num_items < ENDOFPACK)
             num_items += !item_info[b++].heading;
-        else if (num_items == 52)
+        else if (num_items == ENDOFPACK)
         {
             int item_h = row_heights[item_info[b].row] - row_heights[item_info[b-1].row];
             int delta = item_h + item_info[b-1].y - item_info[a].y;
@@ -852,7 +852,7 @@ void UIMenuPopup::_allocate_region()
 #ifdef USE_TILE_LOCAL
     const int max_viewport_height = m_menu->m_ui.menu->get_max_viewport_height();
 #else
-    const int max_viewport_height = 52;
+    const int max_viewport_height = ENDOFPACK;
 #endif
     m_menu->m_ui.scroller->max_size().height = max_viewport_height;
     if (max_viewport_height < viewport_height)
@@ -1298,7 +1298,7 @@ formatted_string pad_more_with(formatted_string s,
 // assumes contiguous lettering
 string hyphenated_hotkey_letters(int how_many, char first)
 {
-    how_many = min(how_many, 52);
+    how_many = min(how_many, ENDOFLETTERS);
     string s;
     if (how_many > 1)
     {
@@ -2576,6 +2576,7 @@ void Menu::select_item_index(int idx, int qty)
 //    qty = -1 (MENU_SELECT_INVERT): invert selection
 //    qty = -2 (MENU_SELECT_ALL): select all or apply filter
 // TODO: refactor in a better way
+// With removing selecting parts of stack, refactoring seems easier to do
 void Menu::select_index(int index, int qty)
 {
     int first_vis = get_first_visible();
