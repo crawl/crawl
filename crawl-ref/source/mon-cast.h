@@ -48,10 +48,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool evoke = false,
                      bool check_validity = false);
 
-void mons_cast_haunt(monster* mons);
 void mons_cast_flay(monster &caster, mon_spell_slot, bolt&);
 bool mons_word_of_recall(monster* mons, int recall_target);
-void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
 bool mons_can_bind_soul(monster* binder, monster* bound);
 
