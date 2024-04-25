@@ -168,6 +168,7 @@ spret cast_gastronomic_expanse(int pow, const coord_def &target, bool fail);
 void gastronomic_expanse_effect(int delay);
 void set_gastronomic_radius(int radius);
 void end_gastronomic_expanse();
+dice_def gastronomic_damage(int pow, bool random);
 
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
