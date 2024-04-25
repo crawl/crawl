@@ -4875,15 +4875,23 @@ void gastronomic_expanse_effect(int delay)
 
         mi->corrode();
 
-        int pow = you.props[GASTRONOMIC_POWER_KEY].get_int() * delay;
-        int dam = resist_adjust_damage(*mi, BEAM_ACID, random2avg(pow, 2));
+        int pow = you.props[GASTRONOMIC_POWER_KEY].get_int();
+        int unadjusted = gastronomic_damage(pow, true).roll();
+        int ac_adjusted = mi->apply_ac(unadjusted);
+        int delay_adjusted = div_rand_round(ac_adjusted * delay, BASELINE_DELAY);
 
-        mi->hurt(&you, dam, BEAM_NEG, KILLED_BY_BEAM);
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        beam.thrower = KILL_YOU;
+        int dam = mons_adjust_flavoured(*mi, beam, delay_adjusted);
+
+        mi->hurt(&you, dam, BEAM_ACID, KILLED_BY_BEAM);
         behaviour_event(*mi, ME_WHACK, &you);
     }
 
     if(is_gastronomic(you.pos()))
     {
+        //TODO delay scale this somehow
         you.corrode(nullptr, "The gastric acid");
     }
     else
@@ -4931,6 +4939,14 @@ void end_gastronomic_expanse()
 
     mpr("AAAAAAAAAAAA");
     set_gastronomic_radius(-1);
+}
+
+dice_def gastronomic_damage(int pow, bool random)
+{
+    int size = 6 + pow * 3 / 8;
+    if (random)
+        size = 6 + div_rand_round(pow * 3, 8);
+    return dice_def(2, size);
 }
 
 int siphon_essence_range() { return 2; }
