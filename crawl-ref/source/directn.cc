@@ -3565,6 +3565,9 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
         desc += " wielding ";
     desc += name1;
 
+    if (mi.is(MB_ARMED))
+        desc += " (from an undying armoury)";
+
     if (!name2.empty())
     {
         desc += " and ";

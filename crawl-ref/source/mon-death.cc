@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "attitude-change.h"
+#include "beam.h"
 #include "bloodspatter.h"
 #include "cloud.h"
 #include "cluautil.h"
@@ -1062,6 +1063,27 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         cloud = random_smoke_type();
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
+    else if (msg.find("armoury") != string::npos)
+    {
+        cloud = CLOUD_NONE;
+
+        // XXX: This doesn't feel like quite the right place for this code, but
+        //      it *is* about the visual after-effects of a summon going poof...
+        if (monster* armoury = monster_by_mid(mons->summoner))
+        {
+            if (!silent && armoury->alive()
+                && armoury->see_cell_no_trans(mons->pos()))
+            {
+                bolt visual;
+                visual.source = mons->pos();
+                visual.target = armoury->pos();
+                visual.flavour = BEAM_VISUAL;
+                visual.range = LOS_RADIUS;
+                visual.aimed_at_spot = true;
+                visual.fire();
+            }
+        }
+    }
 
     if (!silent)
         simple_monster_message(*mons, (prefix + msg).c_str());
@@ -1826,6 +1848,9 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Lose our bullseye target
     mons.del_ench(ENCH_BULLSEYE_TARGET, true);
+
+    // Restore old items, if appropriate
+    mons.del_ench(ENCH_ARMED, true);
 
     // Clean up any blood from the flayed effect
     if (mons.has_ench(ENCH_FLAYED))
@@ -3178,6 +3203,10 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
     case SPELL_STICKS_TO_SNAKES:
         msg = "turns back into a lifeless stick";
+        break;
+
+    case SPELL_FLASHING_BALESTRA:
+        msg = "returns to the armoury";
         break;
     }
 

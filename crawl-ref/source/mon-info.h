@@ -231,6 +231,7 @@ enum monster_info_flags
     MB_VENGEANCE_TARGET,
     MB_MAGNETISED,
     MB_RIMEBLIGHT,
+    MB_ARMED,
     NUM_MB_FLAGS
 };
 

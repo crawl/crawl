@@ -1532,6 +1532,10 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
 
 bool monster::wants_weapon(const item_def &weap) const
 {
+    // Don't swap out undying armoury weapons for anything else.
+    if (has_ench(ENCH_ARMED))
+        return false;
+
     if (!could_wield(weap))
         return false;
 

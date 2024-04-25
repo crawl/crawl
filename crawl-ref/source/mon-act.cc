@@ -1214,7 +1214,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
         || mons->caught()
-        || mons_is_confused(*mons))
+        || mons_is_confused(*mons)
+        || (mons->has_ench(ENCH_ARMED)
+            && mons->weapon()
+            && !is_range_weapon(*mons->weapon())))
     {
         return false;
     }
@@ -1227,7 +1230,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     const bool prefer_ranged_attack
-        = mons_class_flag(mons->type, M_PREFER_RANGED);
+        = mons_class_flag(mons->type, M_PREFER_RANGED)
+          || (mons->has_ench(ENCH_ARMED)
+              && mons->weapon()
+              && is_range_weapon(*mons->weapon()));
 
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))

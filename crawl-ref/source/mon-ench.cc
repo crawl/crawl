@@ -35,6 +35,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-explode.h"
+#include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
@@ -962,6 +963,21 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         scale_hp(100, touch_of_beogh_hp_mult(*this));
         break;
 
+    case ENCH_ARMED:
+        // Restore our previous weapon(s)
+        drop_item(MSLOT_WEAPON, false);
+        if (props.exists(OLD_ARMS_KEY))
+        {
+            give_specific_item(this, props[OLD_ARMS_KEY].get_item());
+            props.erase(OLD_ARMS_KEY);
+        }
+        if (props.exists(OLD_ARMS_ALT_KEY))
+        {
+            give_specific_item(this, props[OLD_ARMS_ALT_KEY].get_item());
+            props.erase(OLD_ARMS_ALT_KEY);
+        }
+        break;
+
     default:
         break;
     }
@@ -1879,6 +1895,13 @@ void monster::apply_enchantment(const mon_enchant &me)
             simple_monster_message(*this, " recovers from rimeblight.");
         break;
 
+    case ENCH_ARMED:
+        // Remove this whenever the armoury stops being around;
+        if (!me.agent())
+            del_ench(en);
+        decay_enchantment(en);
+        break;
+
     default:
         break;
     }
@@ -2129,6 +2152,7 @@ static const char *enchant_names[] =
     "touch_of_beogh", "vengeance_target",
     "rimeblight",
     "magnetised",
+    "armed",
     "buggy", // NUM_ENCHANTMENTS
 };
 

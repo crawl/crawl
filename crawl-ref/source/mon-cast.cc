@@ -454,6 +454,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_FIRE_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_STICKS_TO_SNAKES, { _always_worthwhile, _mons_sticks_to_snakes } },
     { SPELL_SHEZAS_DANCE, { _always_worthwhile, _mons_summon_dancing_weapons } },
+    { SPELL_FLASHING_BALESTRA, { _foe_not_nearby, _fire_simple_beam,
+                                 _zap_setup(SPELL_FLASHING_BALESTRA)
+    } },
     { SPELL_DIVINE_ARMAMENT, { _always_worthwhile, _cast_divine_armament } },
     { SPELL_HASTE_OTHER, {
         _always_worthwhile,
@@ -1945,6 +1948,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FUNERAL_DIRGE:
     case SPELL_MANIFOLD_ASSAULT:
     case SPELL_REGENERATE_OTHER:
+    case SPELL_BESTOW_ARMS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -5878,6 +5882,99 @@ static bool _cast_dirge(monster& caster, bool check_only = false)
     return true;
 }
 
+static void _cast_bestow_arms(monster& caster)
+{
+    vector<monster*> targs;
+
+    // Compile list of eligable targets (and check if there are viable targets
+    // for two-handers and ranged weapons while we're at it)
+    bool two_hand_eligable = false;
+    bool ranged_eligable = false;
+    for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_ARMED)
+            && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
+        {
+            targs.push_back(*mi);
+
+            if (!mi->shield())
+                two_hand_eligable = true;
+
+            // Attempting to give a ranged weapon to a dual-wielder is strange
+            // and somewhat buggy, so let's not.
+            if (!mons_wields_two_weapons(**mi))
+                ranged_eligable = true;
+        }
+    }
+
+    // Pick a weapon to give everyone
+    item_def wpn;
+    wpn.base_type = OBJ_WEAPONS;
+    wpn.sub_type = random_choose_weighted(
+                        two_hand_eligable ? 14 : 0, WPN_BARDICHE,
+                        two_hand_eligable ? 14 : 0, WPN_GLAIVE,
+                        11, WPN_DEMON_TRIDENT,
+                        15, WPN_EVENINGSTAR,
+                        15, WPN_DOUBLE_SWORD,
+                        6, WPN_QUICK_BLADE,
+                        ranged_eligable && two_hand_eligable ? 8 : 0, WPN_LONGBOW,
+                        ranged_eligable && two_hand_eligable ? 7 : 0, WPN_TRIPLE_CROSSBOW,
+                        ranged_eligable ? 5 : 0, WPN_HAND_CANNON);
+
+    wpn.brand = random_choose_weighted(11, SPWPN_FLAME,
+                                       11, SPWPN_FREEZING,
+                                       7,  SPWPN_SPEED,
+                                       7,  SPWPN_VAMPIRISM,
+                                       4,  SPWPN_CHAOS,
+                                       1,  SPWPN_DISTORTION);
+
+    wpn.plus = random_range(4, 9);
+    wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_IDENT_MASK);
+    wpn.quantity = 1;
+
+    if (you.can_see(caster))
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s arms its allies with %s.", caster.name(DESC_THE).c_str(),
+                                    pluralise(wpn.name(DESC_PLAIN, false, true)).c_str());
+    }
+
+    int dur = random_range(12, 26) * BASELINE_DELAY;
+
+    shuffle_array(targs);
+    int count = random_range(5, 7);
+
+    for (monster* mon : targs)
+    {
+        // Skip if this monster is not a valid recipient of this weapon
+        if (mon->hands_reqd(wpn) == HANDS_TWO && mon->shield())
+            continue;
+        if (mons_wields_two_weapons(*mon) && is_ranged_weapon_type(wpn.sub_type))
+            continue;
+
+        item_def clone = wpn;
+
+        // Save their previous weapons, if they were using any
+        if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+        {
+            mon->props[OLD_ARMS_KEY] = env.item[mon->inv[MSLOT_WEAPON]];
+            destroy_item(mon->inv[MSLOT_WEAPON]);
+        }
+        if (mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
+        {
+            mon->props[OLD_ARMS_ALT_KEY] = env.item[mon->inv[MSLOT_ALT_WEAPON]];
+            destroy_item(mon->inv[MSLOT_ALT_WEAPON]);
+        }
+
+        give_specific_item(mon, clone);
+        mon->add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
+        flash_tile(mon->pos(), MAGENTA, 50);
+
+        if (--count == 0)
+            break;
+    }
+
+    caster.add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
+}
 
 /**
  *  Make this monster cast a spell
@@ -6956,6 +7053,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _cast_regenerate_other(mons);
         return;
 
+    case SPELL_BESTOW_ARMS:
+        _cast_bestow_arms(*mons);
+        return;
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -8225,6 +8325,24 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_MANIFOLD_ASSAULT:
         return ai_action::good_or_impossible(
                 cast_manifold_assault(*mon, -1, false, false) != spret::abort);
+
+    case SPELL_BESTOW_ARMS:
+    {
+        // The self-buff acts as a sort of cooldown, also.
+        if (mon->has_ench(ENCH_ARMED))
+            return ai_action::impossible();
+
+        for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_ARMED)
+                && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
+            {
+                return ai_action::good();
+            }
+        }
+
+        return ai_action::impossible();
+    }
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:

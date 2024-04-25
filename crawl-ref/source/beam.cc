@@ -2629,6 +2629,31 @@ void bolt::affect_endpoint()
     }
     break;
 
+    case SPELL_FLASHING_BALESTRA:
+    {
+        coord_def spot;
+        int num_found = 0;
+        for (adjacent_iterator ai(pos()); ai; ++ai)
+        {
+            if (feat_is_solid(env.grid(*ai)) || actor_at(*ai))
+                continue;
+
+            if (one_chance_in(++num_found))
+                spot = *ai;
+        }
+
+        if (!spot.origin())
+        {
+            create_monster(mgen_data(MONS_DANCING_WEAPON,
+                                SAME_ATTITUDE(agent(true)->as_monster()),
+                                spot,
+                                agent(true)->as_monster()->foe,
+                                MG_FORCE_PLACE)
+                        .set_summoned(agent(true), 1, SPELL_FLASHING_BALESTRA, GOD_NO_GOD));
+        }
+    }
+    break;
+
     default:
         break;
     }

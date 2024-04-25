@@ -584,5 +584,7 @@ enum spell_type : int
     SPELL_SEISMIC_CANNONADE,
     SPELL_SEISMIC_SHOCKWAVE,    // Activated component of Seismic Cannonade
     SPELL_STONE_BULLET,
+    SPELL_BESTOW_ARMS,
+    SPELL_FLASHING_BALESTRA,
     NUM_SPELLS
 };

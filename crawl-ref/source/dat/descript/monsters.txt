@@ -2837,6 +2837,12 @@ ufetubus
 A chattering and shrieking minor demon. They delight in sneaking past and
 backstabbing their prey.
 %%%%
+undying armoury
+
+A swirling tempest of souls and steel: knights and blacksmiths and
+weaponmasters, all bound to weapons they once held in life. To fight one is like
+fighting an entire army.
+%%%%
 ugly thing
 
 An ugly thing. According to legend, it is the otherworldly spawn of a wizard's

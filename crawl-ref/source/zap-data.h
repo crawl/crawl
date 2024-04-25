@@ -2146,4 +2146,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_FLASHING_BALESTRA,
+    "flashing steel",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 7, 1, 12>,
+    new tohit_calculator<20, 1, 25>,
+    LIGHTCYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+},
+
 };

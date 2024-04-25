@@ -2286,6 +2286,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_VENGEANCE_TARGET, TILEI_VENGEANCE_TARGET },
     { MB_MAGNETISED, TILEI_BULLSEYE },  // Placeholder
     { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
+    { MB_ARMED, TILEI_UNDYING_ARMS },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

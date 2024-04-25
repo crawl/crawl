@@ -101,6 +101,11 @@ Berserk Other spell
 Causes a nearby ally to fly into a berserk rage. Going berserk temporarily
 increases health, speed, and damage dealt in melee.
 %%%%
+Bestow Arms spell
+
+Temporarily grants numerous nearby allies a magical weapon from within the
+armoury, so long as the souls holding it together remain intact.
+%%%%
 Bind Souls spell
 
 Bestows an enchantment on other nearby living creatures that causes them to
@@ -609,6 +614,12 @@ Flash Freeze spell
 Freezes the air around a target, causing significant harm and slowing the
 target's movement. Half of its damage bypasses cold resistance. It has no
 effect on targets that are already frozen.
+%%%%
+Flashing Balestra spell
+
+A single soul from within the armoury leaps out, striking with their weapon and
+then duelling independently for a short time before returning to the maelstrom
+once more.
 %%%%
 Force Lance spell
 

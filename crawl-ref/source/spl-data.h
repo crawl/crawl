@@ -3941,6 +3941,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FLASHING_BALESTRA, "Flashing Balestra",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_TUKIMAS_DANCE,
+},
+
+{
+    SPELL_BESTOW_ARMS, "Bestow Arms",
+    spschool::hexes,
+    spflag::area | spflag::utility | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_SHEZAS_DANCE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

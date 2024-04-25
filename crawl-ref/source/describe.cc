@@ -4599,6 +4599,8 @@ static void _get_spell_description(const spell_type spell,
         description += "\nRange : ";
         if (spell == SPELL_CALL_DOWN_LIGHTNING)
             description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
+        else if (spell == SPELL_FLASHING_BALESTRA)
+            description += stringize_glyph(mons_char(mon_owner->type)) + "..-->";
         else
             description += range_string(range, range, mons_char(mon_owner->type));
         description += "\n";

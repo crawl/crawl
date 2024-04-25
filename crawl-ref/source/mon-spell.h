@@ -637,6 +637,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_UNDYING_ARMOURY,
+      {
+       { SPELL_BESTOW_ARMS, 40, MON_SPELL_NATURAL },
+       { SPELL_FLASHING_BALESTRA, 35, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {

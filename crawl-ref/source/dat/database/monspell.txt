@@ -941,6 +941,10 @@ force lance polterguardian cast
 
 @The_monster@ focuses its will @at@ @target@.
 %%%%
+flashing balestra undying armoury cast
+
+A weapon leaps out from @the_monster@ and lunges @at@ @target@!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

@@ -350,6 +350,7 @@ ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno MONS_CREEPING_INFERNO
 %sdir mon/undead
 polterguardian MONS_POLTERGUARDIAN
+undying_armoury MONS_UNDYING_ARMOURY
 
 ### Abyssal horrors ('*')
 %sdir mon/abyss

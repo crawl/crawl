@@ -562,7 +562,7 @@ static const vector<pop_entry> population[] =
   // relative to the 'normal' enemies.
   {  5, 12,  190, RISE, MONS_TITAN },
   {  5, 12,  170, RISE, MONS_SHADOW_DRAGON },
-  {  5, 12,  120, RISE, MONS_TENTACLED_MONSTROSITY },
+  {  5, 12,  120, RISE, MONS_UNDYING_ARMOURY },
   {  5, 12,  110, RISE, MONS_STORM_DRAGON },
   {  5, 12,   70, RISE, MONS_GOLDEN_DRAGON },
   {  5, 12,   50, RISE, MONS_QUICKSILVER_DRAGON },
