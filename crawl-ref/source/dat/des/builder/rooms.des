@@ -341,7 +341,6 @@ function sroom_demon_pit(e)
         {"hell_beast", weight_a},
         {"green_death", weight_a},
         {"reaper", weight_b},
-        {"lorocyproca", weight_b},
         {"balrug", weight_c},
         {"blizzard_demon", weight_c},
         {"hellion", weight_d},

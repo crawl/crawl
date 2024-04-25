@@ -1032,13 +1032,12 @@ NAME:    hangedman_abyss_town
 TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
-         guardian serpent w:1 / vampire w:3 / necromancer w:3
+         guardian serpent w:1 / vampire w:3 / necromancer w:3 / death knight w:3
 MONS:    thrashing horror / blink frog / weeping skull band / \
          large abomination / unseen horror / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
-         profane servitor w:5 / lorocyproca / deep elf demonologist / \
-         deep elf sorcerer / death knight
+         profane servitor w:5 / deep elf demonologist / deep elf sorcerer
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
@@ -1430,8 +1429,8 @@ TAGS:    abyss_rune unrand
 MONS:    draconian, nonbase draconian
 MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror / \
          very ugly thing / storm dragon / shadow dragon
-MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper / \
-         blizzard demon / hellephant / angel / daeva
+MONS:    balrug w:12 / hellion / tormentor / cacodemon w:12 / reaper w:12 / \
+         blizzard demon w:12 / hellephant / angel / daeva
 KMONS:   R = hellephant / ancient lich / dread lich / \
              hell sentinel / profane servitor / executioner
 KITEM:   O = abyssal rune of Zot
@@ -2099,9 +2098,9 @@ ENDMAP
 
 NAME:  evilmike_abyss_exit_15
 TAGS:  abyss_exit
-KMONS: O = unseen horror / lorocyproca / nothing
-MONS:  small abomination / nothing
-SUBST: X = x., x=xxc
+MONS:  small abomination
+KMONS: O = unseen horror
+SUBST: 1 = 1., X = x., x=xxc
 : init_abyss_exit(_G, "O")
 MAP
  X X X

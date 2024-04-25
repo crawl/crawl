@@ -3122,17 +3122,17 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Kobold demonologist guarded by invisible demons. (nrook)
+# Kobold demonologist guarded by shadows.
 # Added "evil rite" looking colours, so players expect some nastiness.
 #
 NAME:   nrook_kobold_shadow_demons
 TAGS:   patrolling transparent
 DEPTH:  Depths
 KMONS:  1 = kobold demonologist
-KMONS:  2 = w:5 shadow demon / lorocyproca
+KMONS:  2 = shadow demon / shadow dragon w:5
 KITEM:  1 = | / *, * / %
 KFEAT:  G = metal_statue
-NSUBST: 2 = 1:2 / 4 = 2""" / *:"
+NSUBST: 2 = 1:2 / 3 = 2""" / *:"
 COLOUR: ' = white
 COLOUR: "12 = darkgrey
 FTILE:  'G = floor_pebble_lightgray
@@ -3319,7 +3319,7 @@ WEIGHT:  5
 MONS:    obsidian statue, lesser demon, common demon
 MONS:    efreet / large abomination / rakshasa
 MONS:    shadow demon / green death / blizzard demon / balrug / cacodemon / \
-         hell beast / hellion / reaper / lorocyproca / tormentor
+         hell beast / hellion / reaper / tormentor
 KITEM:   | = superb_item / any good_item / randbook disc:summoning w:5
 : if you.in_branch("Depths") then
 SUBST:   2 = 3, 4 = 5

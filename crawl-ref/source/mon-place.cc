@@ -2523,7 +2523,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
 
     { BAND_WARMONGER,           {{{MONS_EXECUTIONER, 1},
-                                  {MONS_REAPER, 3}},
+                                  {MONS_HELL_BEAST, 3}},
 
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
@@ -2538,7 +2538,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
 
-    { BAND_BLACK_SUN,           {{{MONS_LOROCYPROCA, 1},
+    { BAND_BLACK_SUN,           {{{MONS_REAPER, 1},
                                   {MONS_SOUL_EATER, 1}},
 
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},

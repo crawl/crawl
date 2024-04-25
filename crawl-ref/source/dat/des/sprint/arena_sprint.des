@@ -502,10 +502,11 @@ function arena_sprint_get_monster_set(round, boss)
                 "boulder beetle",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; dart ego:atropa",
-                "unseen horror / lorocyproca / shadow wraith / ghost moth",
+                "unseen horror / shadow wraith w:15 / ghost moth",
                 "curse toe / w:20 wandering mushroom / w:4 murray",
                 "reaper / hell beast / geryon w:1",
-                "ghost moth / w:30 lorocyproca / quicksilver ooze",
+                "mana viper / spriggan berserker ; war axe ego:antimagic . animal skin /\
+                   w:20 quicksilver ooze / ghost moth",
                 "glass eye w:5 / ettin",
                 "executioner / w:1 ignacio",
                 "ghost moth / moth of wrath / w:30 vampire mosquito"
@@ -568,9 +569,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "boulder beetle",
                 "shining eye", "tormentor",
-                "unseen horror / lorocyproca / shadow wraith / ghost moth",
+                "unseen horror / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
-                "ghost moth / w:30 lorocyproca / quicksilver ooze",
+                "spriggan berserker ; war axe ego:antimagic . animal skin /\
+                   w:20 quicksilver ooze / ghost moth / w:5 demonspawn warmonger",
                 "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 "ghost moth / moth of wrath / vampire mosquito",
@@ -639,9 +641,9 @@ function arena_sprint_get_monster_set(round, boss)
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "boulder beetle",
                 "shining eye", "tormentor",
-                "unseen horror / lorocyproca / shadow wraith / ghost moth",
+                "unseen horror / shadow wraith / ghost moth w:15",
                 "reaper / hell beast / geryon w:1",
-                "ghost moth / w:30 lorocyproca / quicksilver ooze",
+                "ghost moth / quicksilver ooze / demonspawn warmonger",
                 "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 -- Just die already!
