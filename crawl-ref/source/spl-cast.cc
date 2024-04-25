@@ -1735,6 +1735,13 @@ static string _mon_threat_string(const CrawlStoreValue &mon_store)
     return "<" + col_name + ">" + article_a(desc) + "</" + col_name + ">";
 }
 
+static int _apply_misfortune_miscast_potency(int fail_value)
+{
+    if (player_equip_unrand(UNRAND_MISFORTUNE, false))
+        return fail_value + 20;
+    return fail_value;
+}
+
 // Include success chance in targeter for spells checking monster WL.
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       targeter* hitfunc)
@@ -2144,7 +2151,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         const int spfail_chance = raw_spell_fail(spell);
 
         if (spfl < spfail_chance)
-            fail = spfail_chance - spfl;
+            fail = _apply_misfortune_miscast_potency(spfail_chance - spfl);
     }
 
     dprf("Spell #%d, power=%d", spell, powc);
@@ -2684,14 +2691,14 @@ const double fail_hp_fraction[] =
  */
 int max_miscast_damage(spell_type spell)
 {
-    int raw_fail = raw_spell_fail(spell);
+    int adjusted_fail = _apply_misfortune_miscast_potency(raw_spell_fail(spell));
     int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
-    if (level * level * raw_fail <= MISCAST_THRESHOLD)
+    if (level * level * adjusted_fail <= MISCAST_THRESHOLD)
         return 0;
 
-    return div_round_up(level * (raw_fail + level), MISCAST_DIVISOR);
+    return div_round_up(level * (adjusted_fail + level), MISCAST_DIVISOR);
 }
 
 
@@ -2711,11 +2718,11 @@ int max_miscast_damage(spell_type spell)
  */
 int fail_severity(spell_type spell)
 {
-    const int raw_fail = raw_spell_fail(spell);
+    const int adjusted_fail = _apply_misfortune_miscast_potency(raw_spell_fail(spell));
     const int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
-    if (level * level * raw_fail <= MISCAST_THRESHOLD)
+    if (level * level * adjusted_fail <= MISCAST_THRESHOLD)
         return 0;
 
     const int max_damage = max_miscast_damage(spell);

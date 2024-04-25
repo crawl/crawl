@@ -856,11 +856,14 @@ OBJ:      OBJ_ARMOUR/ARM_ROBE
 # try to make it bad, this is the only bad SPARM:
 FB_BRAND: SPARM_PONDEROUSNESS
 PLUS:     5
+INSCRIP:  fortune,
 COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       5
 BOOL:     harm, slow, corrode
+DBRAND:   fortune:   It increases the success rate of its wearer's spells and
+ the severity of miscasts.
 
 # start TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
