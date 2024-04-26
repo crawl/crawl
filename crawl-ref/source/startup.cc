@@ -1055,7 +1055,8 @@ bool startup_step()
     // If language not specified in init file then choose one now.
     // We can't do this until after the call to cio_init() inside
     // _initialize(), otherwise console-mode will crash.
-    if (Options.lang_name.empty())
+    // Options.no_save indicates a test, so don't show the language menu.
+    if (!Options.no_save && Options.lang_name.empty())
         _do_language_selection();
 
     newgame_def choice   = Options.game;
