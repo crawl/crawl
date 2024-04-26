@@ -2127,9 +2127,9 @@ static const char *enchant_names[] =
     "resistant", "hexed",
 #if TAG_MAJOR_VERSION == 34
     "corpse_armour",
-    "chanting_fire_storm", "chanting_word_of_entropy",
+    "chanting_fire_storm", "chanting_word_of_entropy", "aura_of_brilliance",
 #endif
-    "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
+    "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed",
 #if TAG_MAJOR_VERSION == 34
