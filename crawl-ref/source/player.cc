@@ -7211,7 +7211,7 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
         if (!x_chance_in_y(prev_corr, prev_corr + 28))
         {
             props[CORROSION_KEY].get_int() += res_corr() ? 2 : 4;
-            prev_corr++;
+            prev_corr = props[CORROSION_KEY].get_int();
             did_corrode = true;
         }
 
