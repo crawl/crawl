@@ -57,7 +57,12 @@ public:
     DBM* _db;
     string timestamp;
     TextDB *_parent;
-    const char* lang() { return _parent ? Options.lang_name : 0; }
+    const char* lang()
+    {
+        const string& lng = Options.lang_name;
+        // Use null, not "en", for English so we don't try to look up translations.
+        return _parent && lng != "" && lng != "en" ? lng.c_str() : nullptr;
+    }
 public:
     TextDB *translation;
 };
@@ -204,7 +209,7 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
-    if (Options.lang_name && !_parent)
+    if (Options.lang_name != "" && Options.lang_name != "en" && !_parent)
     {
         translation = new TextDB(this);
         translation->init();
@@ -312,9 +317,9 @@ void TextDB::_regenerate_db()
     if (_parent)
     {
 #ifdef DEBUG_DIAGNOSTICS
-        printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
+        printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name.c_str());
 #endif
-        mprf(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name);
+        mprf(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name.c_str());
     }
     else
     {

@@ -1957,7 +1957,7 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), language(lang_t::EN), lang_name(nullptr)
+    no_save(false), language(lang_t::EN)
 {
     reset_options();
 }
@@ -2847,9 +2847,11 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             report_error("Bad character set, using default: %s\n", field.c_str());
     }
+    else if (key == "lang_menu")
+        lang_menu = field;
     else if (key == "language")
     {
-        if (!set_lang(field.c_str()))
+        if (!field.empty() && !set_lang(field.c_str()))
         {
             report_error("No translations for language '%s'.\n"
                          "Languages with at least partial translation: %s",
@@ -3763,7 +3765,6 @@ static const map<string, flang_t> fake_lang_names = {
 
     // Due to a historical conflict with actual german, slang names are
     // supported. Not the really rude ones, though.
-    { "de", flang_t::kraut },
     { "german", flang_t::kraut },
     { "kraut", flang_t::kraut },
     { "jerry", flang_t::kraut },
@@ -3795,8 +3796,7 @@ struct language_def
 
 static const language_def lang_data[] =
 {
-    // Use null, not "en", for English so we don't try to look up translations.
-    { lang_t::EN, nullptr, { "english", "en", "c" } },
+    { lang_t::EN, "en", { "english", "en", "c" } },
     { lang_t::CS, "cs", { "czech", "český", "cesky" } },
     { lang_t::DA, "da", { "danish", "dansk" } },
     { lang_t::DE, "de", { "german", "deutsch" } },

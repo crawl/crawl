@@ -479,8 +479,9 @@ public:
     bool        autopickup_search; // whether to annotate stash items with
                                    // autopickup status
 
+    string              lang_menu;        // Options on language menu
     lang_t              language;         // Translation to use.
-    const char*         lang_name;        // Database name of the language.
+    string              lang_name;        // Database name of the language.
     vector<flang_entry> fake_langs;       // The fake language(s) in use.
     bool has_fake_lang(flang_t flang)
     {
@@ -621,6 +622,7 @@ private:
 public:
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
+    bool set_lang(const char *s);
 
 private:
     string unalias(const string &key) const;
@@ -665,7 +667,6 @@ private:
     void add_item_glyph_override(const string &, bool prepend);
     void remove_item_glyph_override(const string &, bool prepend);
     void set_option_fragment(const string &s, bool prepend);
-    bool set_lang(const char *s);
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
