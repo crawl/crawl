@@ -426,7 +426,6 @@ kill-category.h.o \
 killer-type.h.o \
 kill-method-type.h.o \
 known-items.h.o \
-lang-t.h.o \
 level-id.h.o \
 level-state-type.h.o \
 lev-pand.h.o \

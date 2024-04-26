@@ -12,7 +12,6 @@
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
-#include "lang-t.h"
 #include "maybe-bool.h"
 #include "mpr.h"
 #include "newgame-def.h"
@@ -480,8 +479,7 @@ public:
                                    // autopickup status
 
     string              lang_menu;        // Options on language menu
-    lang_t              language;         // Translation to use.
-    string              lang_name;        // Database name of the language.
+    string              lang_name;        // Code of the language to use.
     vector<flang_entry> fake_langs;       // The fake language(s) in use.
     bool has_fake_lang(flang_t flang)
     {

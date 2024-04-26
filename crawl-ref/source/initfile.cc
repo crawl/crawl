@@ -1956,8 +1956,7 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
-    : seed(0), seed_from_rc(0),
-    no_save(false), language(lang_t::EN)
+    : seed(0), seed_from_rc(0), no_save(false)
 {
     reset_options();
 }
@@ -3787,44 +3786,43 @@ static const map<string, flang_t> fake_lang_names = {
     { "tef", flang_t::butt },
 };
 
-struct language_def
+static const vector<string>& _get_supported_languages()
 {
-    lang_t lang;
-    const char *code;
-    set<string> names;
-};
+    static const string data_dirs[] = {"descript", "database", "strings"};
+    static vector<string> results;
 
-static const language_def lang_data[] =
-{
-    { lang_t::EN, "en", { "english", "en", "c" } },
-    { lang_t::CS, "cs", { "czech", "český", "cesky" } },
-    { lang_t::DA, "da", { "danish", "dansk" } },
-    { lang_t::DE, "de", { "german", "deutsch" } },
-    { lang_t::EL, "el", { "greek", "ελληνικά", "ελληνικα" } },
-    { lang_t::ES, "es", { "spanish", "español", "espanol" } },
-    { lang_t::FI, "fi", { "finnish", "suomi" } },
-    { lang_t::FR, "fr", { "french", "français", "francais" } },
-    { lang_t::HU, "hu", { "hungarian", "magyar" } },
-    { lang_t::IT, "it", { "italian", "italiano" } },
-    { lang_t::JA, "ja", { "japanese", "日本人" } },
-    { lang_t::KO, "ko", { "korean", "한국의" } },
-    { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
-    { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
-                          "latvieshu", "latviesu" } },
-    { lang_t::NL, "nl", { "dutch", "nederlands" } },
-    { lang_t::PL, "pl", { "polish", "polski" } },
-    { lang_t::PT, "pt", { "portuguese", "português", "portugues" } },
-    { lang_t::RU, "ru", { "russian", "русский", "русскии" } },
-    { lang_t::SV, "sv", { "swedish", "svenska" } },
-    { lang_t::ZH, "zh", { "chinese", "中国的", "中國的" } },
-};
+    // already populated?
+    if (!results.empty())
+        return results;
+
+    results.push_back("en");
+
+    for (const string& data_dir: data_dirs)
+    {
+        string path = datafile_path(data_dir, false, true, dir_exists);
+        if (path.empty())
+            continue;
+
+        vector<string> files = get_dir_files(path);
+        for (string f: files)
+        {
+            if (std::find(results.begin(), results.end(), f) != results.end())
+                continue;
+
+            if (dir_exists(catpath(path, f)))
+                results.push_back(f);
+        }
+    }
+
+    // leave English as first, but sort the rest
+    std::sort(results.begin()+1, results.end());
+    return results;
+}
+
 
 static string _supported_language_listing()
 {
-    return comma_separated_fn(&lang_data[0], &lang_data[ARRAYSZ(lang_data)],
-                              [](language_def ld){return ld.code ? ld.code : "en";},
-                              ",", ",",
-                              [](language_def){return true;});
+    return comma_separated_line(_get_supported_languages(), ",", ",");
 }
 
 bool game_options::set_lang(const char *lc)
@@ -3836,13 +3834,12 @@ bool game_options::set_lang(const char *lc)
         return set_lang(string(lc, 2).c_str());
 
     const string l = lowercase_string(lc); // Windows returns it capitalized.
-    for (const auto &ldef : lang_data)
+    for (const auto lang : _get_supported_languages())
     {
-        if ((ldef.code && l == ldef.code) || ldef.names.count(l))
+        if (l == lang)
         {
-            language = ldef.lang;
-            lang_name = ldef.code;
-            init_localisation(ldef.code? ldef.code : "");
+            lang_name = l;
+            init_localisation(l);
             return true;
         }
     }
