@@ -217,7 +217,6 @@ static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
-static void _do_language_selection();
 
 static void _startup_asserts()
 {
@@ -337,10 +336,6 @@ int main(int argc, char *argv[])
     if (!tiles.initialise())
         return -1;
 #endif
-
-    // if language not specified in init file then choose one now
-    if (Options.lang_name.empty())
-        _do_language_selection();
 
     _launch_game_loop();
     if (crawl_state.last_game_exit.message.size())
@@ -3042,45 +3037,4 @@ static void _update_replay_state()
     }
 
     repeat_again_rec.clear();
-}
-
-static void _do_language_selection()
-{
-    Menu menu(MF_SINGLESELECT|MF_ARROWS_SELECT|MF_ALLOW_FORMATTING|MF_WRAP);
-    menu.set_tag("lang_menu");
-    menu.action_cycle = Menu::CYCLE_NONE;
-    menu.menu_action  = Menu::ACT_EXECUTE;
-    menu.clear();
-
-    // Get languages from options
-    vector<string> langs = split_string(",", Options.lang_menu);
-    if (langs.empty())
-        return;
-
-    char letter = 'a';
-
-    for (string lang: langs)
-    {
-        // split language code and name
-        vector<string> toks = split_string(":", lang);
-        if (toks.size() != 2)
-            continue;
-        string lang_name = uppercase_first(toks[1]);
-        MenuEntry* me = new MenuEntry(lang_name, MEL_ITEM, 1, letter);
-        me->data = new string(toks[0]); // language code (e.g. "de", "fr")
-        menu.add_entry(me);
-        letter++;
-    }
-
-    menu.cycle_hover();
-    menu.show();
-
-    vector<MenuEntry*> selected;
-    menu.get_selected(&selected);
-    if (!selected.empty())
-    {
-        string lang_code = *(string*)(selected[0]->data);
-        if (lang_code != "" && lang_code != "en")
-            Options.set_lang(lang_code.c_str());
-    }
 }
