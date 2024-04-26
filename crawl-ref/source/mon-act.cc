@@ -3616,7 +3616,11 @@ static bool _monster_move(monster* mons, coord_def& delta)
             }
             // Dissolution dissolves walls.
             else if (player_can_hear(mons->pos() + delta))
-                mprf(MSGCH_SOUND, "You hear a sizzling sound.");
+            {
+                mprf(MSGCH_SOUND, mons->type == MONS_DISSOLUTION
+                                    ? "You hear a sizzling sound."
+                                    : "You hear a grinding noise.");
+            }
         }
     }
 

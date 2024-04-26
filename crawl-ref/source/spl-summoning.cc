@@ -2150,6 +2150,14 @@ spret cast_fulminating_prism(actor* caster, int pow,
         }
         else if (you.can_see(*prism))
             mprf("A prism of explosive energy appears from nowhere!");
+
+        // This looks silly, but prevents the even sillier-looking situation of
+        // monster-cast prisms displaying as 'unaware of you'.
+        if (caster->is_monster())
+        {
+            prism->foe = caster->as_monster()->foe;
+            prism->behaviour = BEH_SEEK;
+        }
     }
     else if (you.can_see(*caster))
         canned_msg(MSG_NOTHING_HAPPENS);

@@ -5115,7 +5115,8 @@ bool monster::is_stationary() const
 
 bool monster::can_burrow() const
 {
-    return mons_class_flag(type, M_BURROWS);
+    return mons_class_flag(type, M_BURROWS)
+           && (type == MONS_DISSOLUTION || behaviour != BEH_WANDER);
 }
 
 /**

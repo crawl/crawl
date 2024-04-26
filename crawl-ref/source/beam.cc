@@ -600,6 +600,12 @@ bool bolt::can_affect_actor(const actor *act) const
     {
         return false;
     }
+    // Xak'krixis' prisms are smart enough not to affect friendlies
+    else if (origin_spell == SPELL_FULMINANT_PRISM && thrower == KILL_MON
+        && act->temp_attitude() == attitude)
+    {
+        return false;
+    }
     auto cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {

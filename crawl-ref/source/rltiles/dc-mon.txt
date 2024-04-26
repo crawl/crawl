@@ -243,6 +243,8 @@ boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
 boulder_beetle_rolling2
+%sdir mon/unique
+xakkrixis MONS_XAKKRIXIS
 
 ## Frogs and flying fish ('F')
 %sdir mon/demihumanoids

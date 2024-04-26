@@ -537,7 +537,7 @@ SUBST:   L = ':60 9 0 %, % = %*, * = **e|
 SUBST:   y = G:70 1
 : elseif you.in_branch("Spider") then
 MONS:    orange crystal statue / oklob plant
-KMONS:   2 = arachne / spark wasp, spark wasp
+KMONS:   2 = spark wasp / jorogumo
 NSUBST:  M = O / 2 / * = * O:5 8:5
 SUBST:   L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
 SUBST:   y = G:70 1, ' = ':80 W:20

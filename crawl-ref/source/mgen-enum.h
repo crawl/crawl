@@ -131,6 +131,7 @@ enum band_type
     BAND_LATE_ROKA,
     BAND_WEEPING_SKULLS,
     BAND_THERMIC_DYNAMOS,
+    BAND_ORB_SPIDERS,
     NUM_BANDS                   // always last
 };
 

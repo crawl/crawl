@@ -169,6 +169,7 @@ static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
 static ai_action::goodness _should_irradiate(const monster& mons);
 static void _whack(const actor &caster, actor &victim);
+static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only);
 
 enum spell_logic_flag
 {
@@ -1296,11 +1297,12 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_IOOD:
         case SPELL_FREEZE:
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_IGNITE_POISON:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
         case SPELL_BATTLESPHERE:
-        case SPELL_IGNITE_POISON:
         case SPELL_IRRADIATE:
         case SPELL_FOXFIRE:
         case SPELL_MANIFOLD_ASSAULT:
@@ -1949,6 +1951,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MANIFOLD_ASSAULT:
     case SPELL_REGENERATE_OTHER:
     case SPELL_BESTOW_ARMS:
+    case SPELL_FULMINANT_PRISM:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -5976,6 +5979,49 @@ static void _cast_bestow_arms(monster& caster)
     caster.add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
 }
 
+static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only)
+{
+    // Determine which pair of locations to summon prisms on. The spots must
+    // both be within 2 tiles of our foe, and also inside our spell range.
+    // (And ideally not adjacent!)
+
+    vector<coord_def> pos;
+    for (radius_iterator ri(foe.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(caster.pos(), *ri) <= spell_range(SPELL_FULMINANT_PRISM, pow)
+            && !actor_at(*ri) && !feat_is_solid(env.grid(*ri)))
+        {
+            // If we're just looking for a valid position, we found one.
+            if (check_only)
+                return true;
+
+            pos.push_back(*ri);
+        }
+    }
+
+    // Didn't find any empty space to place it
+    if (pos.empty())
+        return false;
+
+    // Place the first prism
+    int index = random2(pos.size());
+    cast_fulminating_prism(&caster, pow, pos[index], false);
+
+    // Then look at all valid locations that are non-adjacent to the prism we
+    // placed and pick one of those for the second prism
+    vector<coord_def> pos2;
+    for (coord_def p : pos)
+    {
+        if (grid_distance(p, pos[index]) > 1)
+            pos2.push_back(p);
+    }
+
+    if (!pos2.empty())
+        cast_fulminating_prism(&caster, pow, pos2[random2(pos2.size())], false);
+
+    return true;
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -7055,6 +7101,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_BESTOW_ARMS:
         _cast_bestow_arms(*mons);
+        return;
+
+    case SPELL_FULMINANT_PRISM:
+        _mons_cast_prisms(*mons, *mons->get_foe(),
+                          mons_spellpower(*mons, SPELL_FULMINANT_PRISM), false);
         return;
     }
 
@@ -8344,13 +8395,25 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::impossible();
     }
 
+    case SPELL_FULMINANT_PRISM:
+    {
+        // Only place prisms if none are already out
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_FULMINANT_PRISM && mi->summoner == mon->mid)
+                return ai_action::bad();
+        }
+
+        return ai_action::good_or_impossible(
+            _mons_cast_prisms(*mon, *mon->get_foe(), 100, true));
+    }
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
     case SPELL_DEATHS_DOOR:
-    case SPELL_FULMINANT_PRISM:
     case SPELL_DAZZLING_FLASH:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_TELEPORT_SELF:

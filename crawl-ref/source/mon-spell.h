@@ -804,6 +804,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_XAKKRIXIS,
+      {
+       { SPELL_VENOM_BOLT, 24, MON_SPELL_WIZARD},
+       { SPELL_IGNITE_POISON, 35, MON_SPELL_WIZARD},
+       { SPELL_FULMINANT_PRISM, 21, MON_SPELL_WIZARD},
+      }
+    },
+
     // ('C') Giants.
     {  MST_FIRE_GIANT,
       {

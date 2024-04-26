@@ -1234,7 +1234,7 @@ NAME:   nicolae_arachne_temple
 TAGS:   no_item_gen no_monster_gen no_trap_gen
 DEPTH:  Spider:2-
 MONS:   tarantella, wolf spider, redback, jumping spider
-KMONS:  A = Arachne, orb spider
+KMONS:  A = Xak'krixis, orb spider
 KFEAT:  -' = web / floor w:40
 COLOUR: -2 = brown
 COLOUR: 'A435 = yellow
@@ -2516,7 +2516,7 @@ KMONS:   3 = emperor scorpion / spark wasp w:5 / jorogumo
 KMONS:   4 = moth of wrath / ghost moth w:40 / sun moth
 KMONS:   5 = orb spider w:40 / demonic crawler
 KMONS:   6 = torpor snail / entropy weaver
-KMONS:   Z = Arachne, jorogumo
+KMONS:   Z = jorogumo
 KITEM:   O = gossamer rune of Zot
 KITEM:   o = milky-white gem
 KFEAT:   Y = web / floor w:40

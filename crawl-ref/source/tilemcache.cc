@@ -483,6 +483,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_3:
     case TILEP_MONS_FORMICID:
+    case TILEP_MONS_XAKKRIXIS:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -912,6 +913,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_TENGU_REAVER:
     case TILEP_MONS_SOJOBO:
     case TILEP_MONS_FORMICID:
+    case TILEP_MONS_XAKKRIXIS:
     case TILEP_MONS_VINE_STALKER:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_CHERUB:

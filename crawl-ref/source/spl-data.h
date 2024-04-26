@@ -1282,7 +1282,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
     spschool::conjuration | spschool::alchemy,
-    spflag::target | spflag::area | spflag::not_self,
+    spflag::target | spflag::area | spflag::not_self | spflag::no_ghost,
     4,
     200,
     4, 4,

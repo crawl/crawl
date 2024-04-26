@@ -1801,17 +1801,23 @@ _Amaemon_rare_
 ############ ARACHNE ### Half-human half-spider
 Arachne
 
-@The_monster@ says @to_foe@, "Come to my web."
+@The_monster@ says, "Follow my lead, little ones."
+
+@The_monster@ says, "I resented this body once, but could any human make what I've made?"
+
+@The_monster@ snarls, "I will not be driven out again."
 
 @The_monster@ says @to_foe@, "Come closer, little fly."
 
-@The_monster@ says @to_foe@, "You'll find yourself a bit attached to my weave."
+@The_monster@ says @to_foe@, "I'm done suffering for art; you can suffer instead."
 
-@The_monster@ says @to_foe@, "No one escapes my webs."
+@The_monster@ says @to_foe@, "My silk is a match for both steel and spell."
+
+@The_monster@ says @to_foe@, "I will spin a new home for us all."
 %%%%
 Arachne triumphant
 
-@The_monster@ says, "All wrapped up."
+@The_monster@ shouts, "This is my domain now; anyone trespasses at their own peril!"
 %%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
@@ -7261,6 +7267,52 @@ Vashnia triumphant
 
 @The_monster@ says, "All clear. Let's check for more."
 ## END Vashnia ##
+%%%%
+############ Xak'krixis ### A formicid expeditionary alchemist
+Xak'krixis
+
+@The_monster@ ponders what role @player_genus_plural@ plays in the local ecosystem.
+
+@The_monster@ says, "I'll be sure to include this battle in my report!"
+
+@The_monster@ says, "We all must contribute to the advancement of science."
+
+@The_monster@ shouts @to_foe@, "You're giving me such wonderful data!"
+
+VISUAL:@The_monster@ furiously scribbles notes with a free limb.
+
+VISUAL:@The_monster@'s mandibles click thoughtfully.
+
+@The_monster@ says, "{{
+    if you.skill("Alchemy") >= 10 then
+      return "Ah, a fellow alchemist! Surely you'll appreciate what I've learned here."
+    else
+      return "Allow me to demonstrate my discoveries."
+    end }}" @player_only@
+
+w:20
+@_Xak'krixis_monster_thoughts_@
+
+%%%%
+_Xak'krixis_monster_thoughts_
+
+@The_monster@ muses, "Oh, to leap as freely as a jumping spider..."
+
+@The_monster@ muses, "Oh, to fly as furtive as a ghost moth..."
+
+@The_monster@ muses, "Oh, to shine as brightly as a sun moth..."
+
+@The_monster@ muses, "Oh, to be as impervious as an emperor scorpion..."
+
+@The_monster@ muses, "Oh, to inspire such passion as a moth of wrath..."
+
+@The_monster@ grumbles, "Oh, to ruin all my specimens like a blasted pharaoh ant..."
+
+%%%%
+Xak'krixis triumphant
+
+@The_monster@ says, "I'll be sure to list you as a co-author when my work is published!"
+## END Xak'krixis ##
 %%%%
 ############ XTAHUA ### An ancient fire dragon
 Xtahua

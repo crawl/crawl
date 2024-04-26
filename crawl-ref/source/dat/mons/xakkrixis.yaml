@@ -1,0 +1,21 @@
+name: "Xak'krixis"
+enum: xakkrixis
+glyph: {char: "B", colour: lightgreen}
+flags: [see_invis, speaks, unique, warm_blood, no_skeleton, gender_neutral, burrows]
+genus: formicid
+will: 80
+attacks:
+ - {type: hit, damage: 24}
+hd: 17
+hp_10x: 1650
+ac: 3
+ev: 10
+spells: xakkrixis
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 10
+uses: weapons_armour
+size: medium
+shape: humanoid
+corpse_tile: formicid

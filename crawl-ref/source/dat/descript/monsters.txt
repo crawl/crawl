@@ -34,10 +34,14 @@ frozen spite.
 %%%%
 Arachne
 
-Once a talented human weaver, Arachne was cursed by being transformed into her
-present form: half-human, half-spider. Her sympathies now lie with the inhuman
-residents of her new home, and she's eager to dispose of any who would threaten
-them.
+Once a talented human weaver, Arachne was transformed into a monstrous
+half-spider by a jealous rival's curse. Driven out of her village, she found
+sanctuary for a time among the jorogumo before a bitter feued forced her to
+flee once more.
+
+Now she wanders other corners of the dungeon with a small retinue of loyal
+students in tow, seeking a new domain in which they can spin their peerless
+tapestries in peace.
 %%%%
 Asmodeus
 
@@ -549,6 +553,18 @@ One of the Stoneborn, formed untold aeons ago with supreme command over rock.
 Her people shelter deep within the living earth, so whatever has forced Vv
 into the oppressive openness of the Dungeon must be dire indeed. But whatever
 it is, she's not talking...
+%%%%
+Xak'krixis
+
+It has been centuries since outsiders were last allowed access to the cavernous
+libraries of the formicids, but their emissaries are still seen from time to
+time - surveying other lands for resources or scientific discoveries that might
+aid the colony.
+
+This one's study of the magical fibres excreted by orb spiders has already lead
+to an alchemical breakthrough, allowing them to shape fulminant prisms such that
+their explosions are directed at enemies alone. Alas, their enthusiasm to
+conduct a field test bodes poorly for your health.
 %%%%
 Xtahua
 
