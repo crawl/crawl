@@ -5898,6 +5898,11 @@ static void _cast_bestow_arms(monster& caster)
         if (mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_ARMED)
             && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
         {
+            // Skip enemies with unrandarts, which are special enough to not
+            // replace.
+            if (mi->weapon() && is_unrandom_artefact(*mi->weapon()))
+                continue;
+
             targs.push_back(*mi);
 
             if (!mi->shield())
