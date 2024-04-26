@@ -2549,7 +2549,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
     // for Norris
     { BAND_SKYSHARKS,           {{{MONS_SKYSHARK, 1}}}},
-    // for Aracne
+    // for Arachne
     { BAND_ORB_SPIDERS,         {{{MONS_ORB_SPIDER, 1}}}},
 };
 
