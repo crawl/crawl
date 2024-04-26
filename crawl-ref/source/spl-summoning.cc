@@ -2260,7 +2260,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
-    { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
+    { SPELL_SUMMON_SIN_BEAST,         { 0, 5 } },
     { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
     { SPELL_SUMMON_DRAKES,            { 0, 4 } },
     { SPELL_SUMMON_MUSHROOMS,         { 0, 8 } },

@@ -1991,7 +1991,7 @@ MONS:    vampire knight
 :    end
 : elseif you.in_branch("Crypt") then
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
-MONS:    jiangshi / hell beast / spectral caustic shrike w:2
+MONS:    jiangshi / sin beast / spectral caustic shrike w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
 MONS:    vampire mage / deep elf death mage w:5
@@ -2001,7 +2001,7 @@ MONS:    revenant / eidolon / lich w:5
 # Depths
 : else
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
-MONS:    jiangshi / hell beast / caustic shrike simulacrum w:2
+MONS:    jiangshi / sin beast / caustic shrike simulacrum w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectral golden dragon / golden dragon simulacrum \
          / spectral caustic shrike / caustic shrike simulacrum \
@@ -2992,7 +2992,7 @@ MONS:    spark wasp w:5 / catoblepas / bunyip / emperor scorpion
 MONS:    12-headed hydra / anaconda / torpor snail w:5 / \
          demonic crawler w:5 / skyshark / bunyip w:5
 MONS:    spriggan druid, spriggan berserker / spriggan defender
-MONS:    sphinx / hell beast w:5 / caustic shrike
+MONS:    sphinx / sin beast w:5 / caustic shrike
 KFEAT:   d = cache of fruit
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
 NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
@@ -3063,7 +3063,7 @@ KMONS:   M = ancient champion / vampire mage / vampire knight / \
 KMONS:   N = tengu warrior / tengu conjurer / tengu reaver
 KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
 KMONS:   P = balrug w:12 / blizzard demon w:12 / shadow demon w:12 / \
-             hell beast w:12 / hellion / reaper / tormentor
+             sin beast w:12 / hellion / reaper / tormentor
 SHUFFLE: DEFHJKLMNOP
 MAP
 xxvvvvvvvvvvvvvxx

@@ -493,7 +493,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
                 "vampire knight / vampire mage / w:1 jory",
-                "hellion / hell sentinel / hell beast / hell hog / hell knight /\
+                "hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:20 / angel / daeva / cherub / seraph w:5",
                 -- Gimmicks
@@ -504,7 +504,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "skeletal warrior / skeletal warrior ; dart ego:atropa",
                 "unseen horror / shadow wraith w:15 / ghost moth",
                 "curse toe / w:20 wandering mushroom / w:4 murray",
-                "reaper / hell beast / geryon w:1",
+                "reaper / sin beast / geryon w:1",
                 "mana viper / spriggan berserker ; war axe ego:antimagic . animal skin /\
                    w:20 quicksilver ooze / ghost moth",
                 "glass eye w:5 / ettin",
@@ -561,7 +561,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:5 base draconian / nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
                     great orb of eyes / w:5 ophan",
-                "w:20 hellion / hell sentinel / hell beast / hell hog / hell knight /\
+                "w:20 hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:25 / angel / daeva / cherub / seraph",
                 -- Gimmicks
@@ -570,7 +570,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / shadow wraith / ghost moth",
-                "reaper / hell beast / geryon w:1",
+                "reaper / sin beast / geryon w:1",
                 "spriggan berserker ; war axe ego:antimagic . animal skin /\
                    w:20 quicksilver ooze / ghost moth / w:5 demonspawn warmonger",
                 "glass eye w:5 / tentacled monstrosity",
@@ -633,7 +633,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "nonbase draconian",
                 "golden eye / shining eye / glass eye w:15 / eye of devastation /\
                     great orb of eyes / w:5 ophan",
-                "w:30 hellion / hell sentinel / hell beast / hell hog / hell knight /\
+                "w:30 hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / w:2 nellie",
                 "profane servitor w:25 / angel w:5 / daeva / cherub w:5 / seraph w:15",
                 -- Gimmicks
@@ -642,7 +642,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / shadow wraith / ghost moth w:15",
-                "reaper / hell beast / geryon w:1",
+                "reaper / sin beast / geryon w:1",
                 "ghost moth / quicksilver ooze / demonspawn warmonger",
                 "glass eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",

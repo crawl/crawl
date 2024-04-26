@@ -924,7 +924,7 @@ MARKER:     h = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "flame", \
                 excl_rad = 0 }
 KMONS:      1 = orange demon / hellwing / red devil / rust devil / \
-                sixfirhy / sun demon / soul eater / smoke demon / hell beast
+                sixfirhy / sun demon / soul eater / smoke demon / sin beast
 KMONS:      2 = balrug / blizzard demon / cacodemon / green death / \
                 hellion / shadow demon / tormentor
 KMONS:      3 = hellephant / dread lich w:4 / tentacled monstrosity w:1
@@ -991,7 +991,7 @@ LFLOORCOL:  red
 LROCKCOL:   red
 {{
 set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
-                     cacodemon / green death / hell beast / hellion / \
+                     cacodemon / green death / sin beast / hellion / \
                      shadow demon / tormentor / \
                      hellephant w:5 / dread lich w:5")
 wizlab_setup(_G)

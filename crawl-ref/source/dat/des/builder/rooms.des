@@ -274,9 +274,9 @@ function sroom_mythical_zoo(e)
     end
 
     if Z >= 21 then
-       lord_mon = "catoblepas / sphinx w:60 / hell beast w:20"
+       lord_mon = "catoblepas / sphinx w:60 / sin beast w:20"
     elseif Z >= 16 then
-       lord_mon = "catoblepas / hydra w:40 / hell beast w:40"
+       lord_mon = "catoblepas / hydra w:40 / sin beast w:40"
     else
        lord_mon = "catoblepas / manticore w:40 / hydra w:40"
     end
@@ -338,7 +338,7 @@ function sroom_demon_pit(e)
     local weight_d = 5 + runes
 
     local tier_twos = {
-        {"hell_beast", weight_a},
+        {"sin_beast", weight_a},
         {"green_death", weight_a},
         {"reaper", weight_b},
         {"balrug", weight_c},

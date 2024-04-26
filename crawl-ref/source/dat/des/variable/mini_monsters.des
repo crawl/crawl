@@ -3319,7 +3319,7 @@ WEIGHT:  5
 MONS:    obsidian statue, lesser demon, common demon
 MONS:    efreet / large abomination / rakshasa
 MONS:    shadow demon / green death / blizzard demon / balrug / cacodemon / \
-         hell beast / hellion / reaper / tormentor
+         sin beast / hellion / reaper / tormentor
 KITEM:   | = superb_item / any good_item / randbook disc:summoning w:5
 : if you.in_branch("Depths") then
 SUBST:   2 = 3, 4 = 5

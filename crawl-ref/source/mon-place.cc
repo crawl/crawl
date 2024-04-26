@@ -2523,7 +2523,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
 
     { BAND_WARMONGER,           {{{MONS_EXECUTIONER, 1},
-                                  {MONS_HELL_BEAST, 3}},
+                                  {MONS_SIN_BEAST, 3}},
 
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
@@ -3078,10 +3078,9 @@ monster_type random_demon_by_tier(int tier)
                              MONS_BLIZZARD_DEMON,
                              MONS_BALRUG,
                              MONS_CACODEMON,
-                             MONS_HELL_BEAST,
+                             MONS_SIN_BEAST,
                              MONS_HELLION,
                              MONS_REAPER,
-                             MONS_LOROCYPROCA,
                              MONS_TORMENTOR,
                              MONS_SHADOW_DEMON);
     case 1:

@@ -257,7 +257,7 @@ summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
 summon_emperor_scorpions SUMMON_EMPEROR_SCORPIONS
 summon_executioners SUMMON_EXECUTIONERS
-summon_hell_beast SUMMON_HELL_BEAST
+summon_sin_beast SUMMON_SIN_BEAST
 summon_hell_sentinel SUMMON_HELL_SENTINEL
 summon_holies SUMMON_HOLIES
 summon_illusion SUMMON_ILLUSION

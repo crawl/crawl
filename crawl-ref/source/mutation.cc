@@ -3327,7 +3327,7 @@ void check_demonic_guardian()
                                MONS_SIXFIRHY, MONS_SUN_DEMON);
             break;
         case 4:
-            mt = random_choose(MONS_BALRUG, MONS_CACODEMON, MONS_HELL_BEAST);
+            mt = random_choose(MONS_BALRUG, MONS_CACODEMON, MONS_SIN_BEAST);
             break;
         case 5:
             mt = random_choose(MONS_EXECUTIONER, MONS_HELL_SENTINEL,

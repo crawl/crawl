@@ -54,7 +54,7 @@ void init_pandemonium()
                                                     2, MONS_NEQOXEC,
                                                     5, MONS_CHAOS_SPAWN,
                                                     1, MONS_SHADOW_DEMON,
-                                                    2, MONS_HELL_BEAST,
+                                                    2, MONS_SIN_BEAST,
                                                     1, MONS_HELLION,
                                                     1, MONS_TORMENTOR,
                                                     1, MONS_REAPER);

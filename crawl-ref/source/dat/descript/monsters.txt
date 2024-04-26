@@ -1522,9 +1522,10 @@ harpy
 A bird-like creature with a human face that roams the coasts endlessly, feared
 for its sharp claws and harrying strikes.
 %%%%
-hell beast
+sin beast
 
-An abominable crossbreed of beast and man that makes horrible barking noises.
+An ravenous brute of a demon - as much animal as person. Born from the residue
+of mortal depravity, it gorges itself on malice and magic alike.
 %%%%
 hell hog
 
@@ -1826,11 +1827,6 @@ living spell
 
 A spell, waiting to cast itself at the first foe that enters its range. Once
 it does, it'll dissipate into the ether.
-%%%%
-lorocyproca
-
-A tall and gaunt figure, draped in long robes which flow as if alive. It
-thirsts for magical energies.
 %%%%
 lost soul
 

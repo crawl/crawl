@@ -683,7 +683,7 @@ Summon Fire Elementals spell
 
 이 마법은 하나 이상의 화염 정령을 소환시킨다.
 %%%%
-Summon Hell Beast spell
+Summon Sin Beast spell
 
 자신의 뿔을 사용해, 게리욘은 극도로 위험한 지옥의 짐승들을 소환해낼 수 있다.
 %%%%

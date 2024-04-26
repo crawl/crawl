@@ -505,7 +505,7 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
   local g = 0 + you.zigs_completed() * 2
   return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
          "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
-         "place:Hell w:100 / hell beast w:" .. e .. " / " ..
+         "place:Hell w:100 / sin beast w:" .. e .. " / " ..
          "hellion w:5 / tormentor w:5 / greater demon w:" .. f .. " / " ..
          "shard shrike w:" .. g .. " / quicksilver elemental w:" .. g .. " / " ..
          "searing wretch w:" .. g .. " / silent spectre w:" .. g

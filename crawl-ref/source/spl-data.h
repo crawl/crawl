@@ -1397,14 +1397,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_HELL_BEAST, "Summon Hell Beast",
+    SPELL_SUMMON_SIN_BEAST, "Summon Sin Beast",
     spschool::summoning,
     spflag::unholy | spflag::monster | spflag::selfench,
     4,
     0,
     -1, -1,
     0,
-    TILEG_SUMMON_HELL_BEAST,
+    TILEG_SUMMON_SIN_BEAST,
 },
 
 {

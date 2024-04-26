@@ -73,7 +73,7 @@
     "spells:smiting.90.wizard"
 
   local meat_beast =
-    "hell beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe " ..
+    "sin beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe " ..
     "col:red generate_awake perm_ench:haste"
 
   local wretched_soul =

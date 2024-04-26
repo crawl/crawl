@@ -1519,7 +1519,7 @@ TAGS:   no_monster_gen
 DEPTH:  Depths:2-
 MONS:   common demon, hell knight
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon w:8 / \
-        hell beast / hellion w:8 / reaper / tormentor w:8
+        sin beast / hellion w:8 / reaper / tormentor w:8
 SUBST:  b : bv
 NSUBST: . = 7:1 / 7:2 / *:.
 FTILE:  .|#+G123 = floor_pebble_darkgray

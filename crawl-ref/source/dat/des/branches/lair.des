@@ -3246,7 +3246,7 @@ ORIENT:  southeast
 WEIGHT:  5
 MONS:    rime drake, hydra w:15 / dire elephant, arcanist / occultist
 MONS:    red devil / ice devil w:15 / orange demon w:15
-MONS:    hellwing / smoke demon, sun demon / sixfirhy / hell beast w:4
+MONS:    hellwing / smoke demon, sun demon / sixfirhy / sin beast w:4
 KMONS:   hH = hell hound
 KMONS:   F = fungus
 KITEM:   A = superb_item no_pickup, any good_item no_pickup \

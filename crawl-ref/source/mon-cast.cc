@@ -1852,7 +1852,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
     case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_HELL_BEAST:  // Geryon
+    case SPELL_SUMMON_SIN_BEAST:  // Geryon
     case SPELL_SUMMON_UNDEAD:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
@@ -6415,10 +6415,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_HELL_BEAST:  // Geryon
+    case SPELL_SUMMON_SIN_BEAST:  // Geryon
         create_monster(
-            mgen_data(MONS_HELL_BEAST, SAME_ATTITUDE(mons), mons->pos(),
-                      mons->foe).set_summoned(mons, 4, spell_cast, god));
+            mgen_data(MONS_SIN_BEAST, SAME_ATTITUDE(mons), mons->pos(),
+                      mons->foe).set_summoned(mons, 3, spell_cast, god));
         return;
 
     case SPELL_SUMMON_ICE_BEAST:

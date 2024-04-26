@@ -1163,7 +1163,7 @@ KITEM:  O = wand of polymorph ident:type
 KMONS:  O = player ghost
 MONS:   any common demon
 MONS:   balrug / blizzard demon / cacodemon / \
-        hell beast / shadow demon / green death
+        sin beast / shadow demon / green death
 MONS:   brimstone fiend / tzitzimitl / ice fiend / hell sentinel
 : ghost_good_loot(_G)
 SUBST:  f = |*

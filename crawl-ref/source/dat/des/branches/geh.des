@@ -760,7 +760,7 @@ KMONS:   Q = fire crab
 # The hellephants kept blinking out of their enclosure, they get to roam around
 KMONS:   1} = balrug w:8 / fire giant w:8 / hellephant w:4 / nothing w:5
 KMONS:   2 = salamander tyrant
-KMONS:   3 = hell beast / nothing w:5
+KMONS:   3 = sin beast / nothing w:5
 KFEAT:   } = }
 KMASK:   JKLMNOPQ- = opaque
 KMASK:   JKLMNOPQ- = no_monster_gen

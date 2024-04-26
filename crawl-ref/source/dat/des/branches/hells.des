@@ -191,17 +191,17 @@ DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 ORIENT: centre
 : if you.in_branch("Dis") then
 KMONS:  1 = hell sentinel
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / cacodemon
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / cacodemon
 : elseif you.in_branch("Geh") then
 KMONS:  1 = brimstone fiend
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / balrug
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / balrug
 : elseif you.in_branch("Coc") then
 KMONS:  1 = ice fiend
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             blizzard demon
 : else
 KMONS:  1 = tzitzimitl
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             green death
 : end
 SUBST:  D = c.

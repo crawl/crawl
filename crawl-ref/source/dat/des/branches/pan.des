@@ -253,7 +253,7 @@ function pan_entry_vault_contents(e, glyph)
     local tierthree = "rust devil w:5 / sixfirhy / smoke demon / " ..
                       "soul eater / sun demon / ynoxinul w:5"
     local tiertwo = "balrug / blizzard demon / cacodemon w:5 / " ..
-                    "green death / hell beast / hellion / " ..
+                    "green death / sin beast / hellion / " ..
                     "reaper / shadow demon / tormentor"
 
     if e.is_validating() then return end
@@ -2695,7 +2695,7 @@ NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
-MONS:   demonspawn black sun, hell beast, any demon
+MONS:   demonspawn black sun, sin beast, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic

@@ -74,7 +74,7 @@ function base_monster_setup(e)
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
            base draconian band w:5 / daeva / angel /\
-           profane servitor / soul eater / hell beast / cherub / apis / ophan /\
+           profane servitor / soul eater / sin beast / cherub / apis / ophan /\
            balrug / green death / blizzard demon / deep elf blademaster /\
            deep elf master archer / war gargoyle")
   e.kmons("E = lich / tentacled monstrosity / golden dragon /\
@@ -132,7 +132,7 @@ function base_monster_setup(e)
   e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul /\
            red devil / sixfirhy / chaos spawn / ice devil w:20 / sun demon /\
            rust devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
-           balrug w:5 / cacodemon w:5 / hell beast / reaper w:5 / soul eater")
+           balrug w:5 / cacodemon w:5 / sin beast / reaper w:5 / soul eater")
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
            brimstone fiend / ice fiend / tzitzimitl /\
            hell sentinel / executioner")

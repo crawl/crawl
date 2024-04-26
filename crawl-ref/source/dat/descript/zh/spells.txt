@@ -1324,7 +1324,7 @@ Summon Blazeheart Golem spell
 
 能量越高，它的爆炸威力就越强。
 %%%%
-Summon Hell Beast spell
+Summon Sin Beast spell
 
 召唤一个致命的地狱兽。
 %%%%

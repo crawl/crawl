@@ -1670,9 +1670,9 @@ while still active, the exposed core will violently detonate a moment later.
 
 It gains greater explosive damage at higher power.
 %%%%
-Summon Hell Beast spell
+Summon Sin Beast spell
 
-Summons a deadly hell beast.
+Summons a deadly sin beast.
 %%%%
 Summon Hell Sentinel spell
 

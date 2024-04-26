@@ -2300,7 +2300,7 @@ static const mon_spellbook mspell_list[] =
     // ('&', mostly) Demon lords.
     {  MST_GERYON,
       {
-       { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_VOCAL },
+       { SPELL_SUMMON_SIN_BEAST, 55, MON_SPELL_VOCAL },
       }
     },
 

@@ -670,7 +670,9 @@ enum monster_type                      // env.mons[].type
     MONS_YNOXINUL,
     MONS_CHAOS_SPAWN,
     MONS_HELLION,
+#if TAG_MAJOR_VERSION == 34
     MONS_LOROCYPROCA,
+#endif
     MONS_TORMENTOR,
     MONS_REAPER,
     MONS_SOUL_EATER,
@@ -678,7 +680,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_BLUE_DEVIL,
 #endif
-    MONS_HELL_BEAST,
+    MONS_SIN_BEAST,
     MONS_RUST_DEVIL,
     MONS_EXECUTIONER,
     MONS_GREEN_DEATH,

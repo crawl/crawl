@@ -74,7 +74,7 @@ NAME:   hellmouth_1
 ORIENT: float
 TAGS:   no_rotate
 MONS:   sun demon / smoke demon / soul eater / hell hog
-MONS:   hellion / balrug / reaper / hell beast / hell knight
+MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
 ITEM:   ring of fire ident:type / Necronomicon / \
@@ -110,7 +110,7 @@ WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen
 MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
-MONS:   hellion / balrug / reaper / hell beast / hell knight
+MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
 ITEM:   ring of fire ident:type / Necronomicon / \
@@ -151,7 +151,7 @@ NAME:   hellmouth_3
 TAGS:   transparent
 ORIENT: float
 MONS:   sun demon / hell knight / hell hog / soul eater / smoke demon
-MONS:   hellion / balrug w:20 / hell beast
+MONS:   hellion / balrug w:20 / sin beast
 ITEM:   demon blade / demon whip / demon trident
 NSUBST: 1 = 1:l / 1:1l / *:1
 KMASK:  12Ad = opaque
@@ -187,7 +187,7 @@ ORIENT: float
 TAGS:   no_monster_gen no_tele_into
 MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy \
         / neqoxec w:5 / w:50 nothing
-MONS:   blizzard demon / hell beast / cacodemon / green death / reaper \
+MONS:   blizzard demon / sin beast / cacodemon / green death / reaper \
         / balrug / hellion w:5 / tormentor w:5 / nothing w:30
 ITEM:   skeleton
 KFEAT:  b = .
@@ -307,7 +307,7 @@ ENDMAP
 NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high transparent
 : hell_entry_feature(_G, 'O')
-KMONS: O = hell beast
+KMONS: O = sin beast
 MONS: frost giant / quicksilver dragon simulacrum / freezing wraith
 MONS: iron dragon / war gargoyle / ancient champion
 MONS: salamander tyrant / hell hog / balrug
@@ -770,7 +770,7 @@ ORIENT: float
 WEIGHT: 5
 KMONS:  1 = sun demon
 KMONS:  2 = shining eye / eye of devastation / great orb of eyes
-KMONS:  3 = hell hound / hell hog / hell beast / hellion
+KMONS:  3 = hell hound / hell hog / sin beast / hellion
 NSUBST: - = 4=1 / 8=1. / 2=2 / 4=2. / 1=3 / 2=3. / .
 SUBST:  b = bc
 KMASK:  O = opaque
@@ -1120,7 +1120,7 @@ KFEAT:  G=enter_gehenna
 SUBST:  L = l.
 KMONS:  2 = hellion
 KMONS:  3 = sun demon / smoke demon
-KMONS:  2 = reaper / balrug / hell beast
+KMONS:  2 = reaper / balrug / sin beast
 FTILE:  x'5a2V+ = floor_infernal_blank
 : hell_lava_spawns(_G)
 MAP
@@ -1153,7 +1153,7 @@ SUBST:   ce = x, d : xlllLX., f : xlllLX., gi = ....m, m = mm.
 SUBST:   L = l., X = xl
 KMONS:   H = hellion
 KMONS:   m = sun demon / smoke demon
-KMONS:   ' = hell beast / hell hog / nothing w:140
+KMONS:   ' = sin beast / hell hog / nothing w:140
 FTILE:   AH' = floor_infernal_blank
 : hell_lava_spawns(_G)
 MAP
@@ -1178,7 +1178,7 @@ ENDMAP
 NAME: vestibule_geh_grunt_obsidian_fortress
 TAGS: vestibule_geh
 KFEAT: G = enter_gehenna
-MONS: balrug / hellion, hell beast / hell hog
+MONS: balrug / hellion, sin beast / hell hog
 MONS: sun demon / smoke demon / hell knight
 NSUBST: 2 = 3:2 / *:.
 NSUBST: 3 = 3:3 / *:.
@@ -1232,7 +1232,7 @@ ENDMAP
 
 NAME:    vestibule_geh_nicolae_lone_tower
 TAGS:    vestibule_geh
-KMONS:   D = balrug band / hell beast band / hell hog band / \
+KMONS:   D = balrug band / sin beast band / hell hog band / \
              hell knight band w:5
 KFEAT:   D = enter_gehenna
 SHUFFLE: Pp/Qq/Rr/Ss

@@ -508,7 +508,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first  = {mons = "hell beast", min = 1, max = 1},
+    first  = {mons = "sin beast", min = 1, max = 1},
     second = {mons = "hell hound", min = 0, max = 2},
     liquid = "lava",
     plant  = "demonic",

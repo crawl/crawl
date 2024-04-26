@@ -391,9 +391,8 @@ ignacio MONS_IGNACIO
 %sdir mon/demons
 
 # type '2' demons
-hell_beast MONS_HELL_BEAST
+sin_beast MONS_SIN_BEAST
 ice_devil MONS_ICE_DEVIL
-lorocyproca MONS_LOROCYPROCA
 reaper MONS_REAPER
 soul_eater MONS_SOUL_EATER
 sun_demon MONS_SUN_DEMON

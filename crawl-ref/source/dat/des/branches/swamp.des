@@ -3406,7 +3406,7 @@ PLACE:   Swamp:$
 ORIENT:  southeast
 MONS:    bog body / ugly thing, shadow / orange demon / small abomination w:2
 MONS:    large abomination / very ugly thing / thrashing horror w:6
-MONS:    green death, hell beast, great orb of eyes, titanic slime creature
+MONS:    green death, sin beast, great orb of eyes, titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KMONS:   & = the Lernaean hydra
@@ -3616,7 +3616,7 @@ NAME:   nzn_swamp_witches_coven
 PLACE:  Swamp:$
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-MONS:   fenstrider witch, green death / hell beast / blizzard demon
+MONS:   fenstrider witch, green death / sin beast / blizzard demon
 MONS:   smoke demon / soul eater / sixfirhy
 MONS:   orange demon / hellwing / chaos spawn
 MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \

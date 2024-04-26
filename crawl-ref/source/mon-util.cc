@@ -1398,7 +1398,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 
     // For Pandemonium lords, almost everything is fair game. It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
-    if (mc != MONS_HELL_BEAST && mc != MONS_MUTANT_BEAST)
+    if (mc != MONS_SIN_BEAST && mc != MONS_MUTANT_BEAST)
         return true;
 
     switch (shout)
@@ -3965,7 +3965,7 @@ bool monster_shover(const monster& m)
     if (!mons_can_use_stairs(m) && !m.is_summoned())
         return false;
 
-    // Geryon really profits from *not* pushing past hell beasts.
+    // Geryon really profits from *not* pushing past sin beasts.
     if (m.type == MONS_GERYON)
         return false;
     // Likewise, Robin and her mob.
