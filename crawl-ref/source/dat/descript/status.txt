@@ -934,7 +934,7 @@ will blast you into the level above.
 %%%%
 Challenge status
 
-You have been challenged by a chosen Apostle of Beogh, who will know your
+You have been challenged by a chosen apostle of Beogh, who will know your
 location no matter where on the floor you are. Defeat them, and you may recruit
 them to join you. If you flee the floor, Beogh will punish you by temporarily
 depriving you of allies.
