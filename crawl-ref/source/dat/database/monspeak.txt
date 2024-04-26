@@ -8880,3 +8880,57 @@ VISUAL:@The_monster@'s armour gleams in the torchlight.
 w:1
 VISUAL:@The_monster@, chosen of Okawaru, glows resplendent with favour.
 %%%%
+#################################
+# Monsters who worship Nemelex Xobeh
+#################################
+goblin sharper
+
+VISUAL:@The_monster@ fiddles with @possessive@ portable altar.
+
+VISUAL:@The_monster@ shuffles one of @possessive@ decks.
+
+VISUAL:@The_monster@ fans some cards from one of @possessive@ decks.
+
+VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
+
+# Kenny Rogers, "The Gambler"
+@The_monster@ chants, "Know when to hold 'em, know when to fold 'em..."
+
+@The_monster@ praises @possessive_God@.
+
+@The_monster@ grins. "So many cards! Brought to you by @my_God@!"
+
+@The_monster@ draws Degeneration. "So many ways to mutate things!"
+
+@The_monster@ draws Wild Magic. "So many ways magic can go wrong!"
+
+@The_monster@ draws Exile. "The Abyss is a horrible place!"
+
+@The_monster@ draws the Tomb. "I don't want to be sealed in with no windows!"
+
+@The_monster@ draws the Dance. "Hope the weapon's aim is true!"
+
+@The_monster@ draws the Pentagram. "Hope the demon is friendly!"
+
+@The_monster@ fumbles a card and drops it. "Whoops!"
+
+w:1
+@The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
+%%%%
+_misplaced_card_
+
+the Ace of Spades
+
+the Old Maid
+
+# Tarot
+the Hanged Man
+
+# Tarot via the Simpsons
+the Happy Squirrel
+
+# Uno
+Wild Draw Four
+
+# Nemelex's old Deck of Oddities
+Xom

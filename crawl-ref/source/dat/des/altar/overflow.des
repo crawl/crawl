@@ -4331,6 +4331,33 @@ xxxXXX+CCCxxx
     x.@.x
 ENDMAP
 
+NAME:   dolorous_temple_overflow_order_and_chaos_3
+TAGS:   temple_overflow_2 temple_overflow_nemelex_xobeh temple_overflow_zin
+TAGS:   no_item_gen no_monster_gen no_trap_gen transparent decor
+KPROP:  12 = no_tele_into
+MONS:   generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
+MONS:   generate_awake angel god:zin dbname:zin_angel
+KFEAT:  A = altar_nemelex_xobeh
+KFEAT:  B = altar_zin
+KFEAT:  _ = floor
+TILE:   b = dngn_crystal_lightmagenta
+FTILE:  _ = floor_limestone
+COLOUR: b = lightmagenta
+COLOUR: _ = brown
+: set_feature_name("crystal_wall", "wall of pink crystal")
+: interest_check(_G)
+MAP
+ ....bbbb+vvvv....
+..bbbb..._...vvvv..
+.bb....U._.T....vv.
+.bmm....._.....mmv.
+.b1m..A.._..B..m2v.
+.bmm....._.....mmv.
+.bb....U._.T....vv.
+..bbbb..._...vvvv..
+ ....bbbb+vvvv....
+ENDMAP
+
 NAME:    grunt_temple_overflow_magic_moments
 TAGS:    temple_overflow_3 temple_overflow_kikubaaqudgha
 TAGS:    temple_overflow_sif_muna temple_overflow_vehumet
