@@ -5924,7 +5924,7 @@ static void _cast_bestow_arms(monster& caster)
                         ranged_eligable && two_hand_eligable ? 7 : 0, WPN_TRIPLE_CROSSBOW,
                         ranged_eligable ? 5 : 0, WPN_HAND_CANNON);
 
-    wpn.brand = random_choose_weighted(11, SPWPN_FLAME,
+    wpn.brand = random_choose_weighted(11, SPWPN_FLAMING,
                                        11, SPWPN_FREEZING,
                                        7,  SPWPN_SPEED,
                                        7,  SPWPN_VAMPIRISM,
