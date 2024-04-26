@@ -3402,7 +3402,8 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_SWARM:
     {
-        summon_swarm_clone(*attacker->as_monster(), defender->pos());
+        if (!defender->is_monster() || !mons_is_firewood(*defender->as_monster()))
+            summon_swarm_clone(*attacker->as_monster(), defender->pos());
         break;
     }
 
