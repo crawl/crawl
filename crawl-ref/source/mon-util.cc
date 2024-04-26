@@ -1938,7 +1938,7 @@ static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
         case BF_OX:
             return { AT_TRAMPLE, AF_TRAMPLE, dam };
         case BF_WEIRD:
-            return { AT_CONSTRICT, AF_CRUSH, dam };
+            return { AT_CONSTRICT, AF_CRUSH, dam * 2 / 5};
         default:
             return { };
     }
