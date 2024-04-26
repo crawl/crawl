@@ -3081,8 +3081,8 @@ ENDMAP
 
 ##### Orange demons (4), manticores, scorpions.
 NAME:  einodemon_barbed_minivault
-DEPTH: D:12-, Orc
 TAGS:  patrolling transparent
+DEPTH: D:12-, Orc
 MONS:  orange demon, scorpion, manticore
 NSUBST: 1 = 2:1 / * = 1.., 2 = 2:2 / * = 2..
 MAP
@@ -3595,7 +3595,7 @@ MONS:   killer bee zombie / elephant zombie / ogre zombie
 MONS:   wolf zombie / killer bee zombie / spriggan zombie / centaur zombie
 MONS:   small abomination / meliai zombie / \
         elephant zombie / two-headed ogre zombie
-MONS:   large abomination / harpy zombie / laughing skull / hydra zombie
+MONS:   harpy zombie / laughing skull / hydra zombie
 :   end
 : else
 MONS:   large abomination / jiangshi / laughing skull / ettin zombie
@@ -4608,8 +4608,8 @@ MAP
 ENDMAP
 
 NAME:    pandoras_box_mu
-DEPTH:   Depths, Crypt:1-4
 TAGS:    no_monster_gen no_item_gen transparent
+DEPTH:   Depths, Crypt:1-4
 MARKER:  a = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -9955,19 +9955,24 @@ ENDMAP
 
 # Wizard's laboratory
 NAME:  laboratory
+DEPTH: D:12-, Depths, Elf
 MONS:  arcanist, occultist, small abomination, large abomination
-KFEAT:   G = metal_statue
+KFEAT: G = metal_statue
+KFEAT: T = permanent teleport trap
 : if you.branch() ~= "D" then
 SUBST: 1 = 2
-: elseif you.depth() > 12 then
+: else
+SUBST: * = %, | = *
+:   if you.depth() > 12 then
 SUBST: 1 = 12
+:   end
 : end
 COLOUR:  G = mist
 TILE:    G = dngn_mystic_cage
 : set_feature_name("metal_statue", "mystic cage")
 MAP
 ccc+cccccc
-c.......Gc
+cT......Gc
 c........c
 c......1.c
 cG.......c

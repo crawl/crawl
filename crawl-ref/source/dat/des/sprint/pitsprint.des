@@ -26,7 +26,7 @@ function base_monster_setup(e)
            basilisk / cyclops band / efreet /\
            acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
-           kobold demonologist band / deep troll /\
+           kobold demonologist band / kobold blastminer band / deep troll /\
            deep elf pyromancer / deep elf zephyrmancer / boulder beetle /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
@@ -34,9 +34,9 @@ function base_monster_setup(e)
            black mamba / rime drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / dream sheep band /\
            swamp drake / bog body / tyrant leech / swamp dragon w:3 /\
-           merfolk band w:5 / merfolk siren w:3 / sea snake / snapping turtle /\
-           tarantella / jumping spider / demonic crawler /\
-           small abomination / guardian mummy / spriggan /\
+           merfolk band w:5 / merfolk siren w:3 / sea snake / \
+           snapping turtle / tarantella / jumping spider / \
+           demonic crawler / small abomination / guardian mummy / spriggan / \
            orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
            red devil / laughing skull / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\

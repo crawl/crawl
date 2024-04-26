@@ -5085,17 +5085,17 @@ ENDMAP
 
 NAME:   gammafunk_corrupted_shrine
 TAGS:   no_monster_gen no_trap_gen no_descent
-DEPTH:  D:7-, Depths, Abyss
+DEPTH:  D:8-, Depths, Abyss
 ORIENT: float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:    any jewellery good_item, any jewellery randart
 SUBST:  p = b.
 NSUBST: ' = R / '
 : if you.in_branch("D") then
-:   if you.depth() < 10 then
+:   if you.depth() < 11 then
 MONS:   small abomination, unseen horror / ancient zyme, ugly thing
 MONS:   raiju / large abomination / shapeshifter
-NSUBST: ' = de / 2=|* / *% / -, - = 3=1 / 3=1. / 2. / 2=3 / 2=3. / 4... / .
+NSUBST: ' = de / 2=|* / *% / -, - = 2=1 / 3=1. / 2. / 2=3 / 2=3. / 4... / .
 :   elseif you.depth() < 13 then
 MONS:   small abomination / ugly thing
 MONS:   unseen horror / ancient zyme / worldbinder

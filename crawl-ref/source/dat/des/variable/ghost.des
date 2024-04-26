@@ -2394,7 +2394,7 @@ kmons("y = orc warrior ; " .. disto_weapon("warrior",
 kmons("z = skeletal warrior ; " .. disto_weapon("warrior", "randart"))
 }}
 :     if you.depth() < 6 then
-MONS:   any lesser demon / small abomination
+MONS:   any lesser demon
 MONS:   toenail golem / ancient zyme
 SUBST:  d = *%, e = %$, fghij= -
 NSUBST: - = qrs / 2=1 / 2=1- / 2--- / -

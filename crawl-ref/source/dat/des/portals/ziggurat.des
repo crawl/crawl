@@ -220,7 +220,7 @@ TAGS:  ziggurat_pillar centered unrand no_exits
 # harmless (4). This pillar has tactical implications: you will have to stay
 # away from it, and teleports are more risky.
 MONS:  dread lich / shadow demon / curse skull / ironbound convoker / \
-       demonspawn corrupter / deep elf demonologist / \
+       demonspawn corrupter / undying armoury w:5 / deep elf demonologist / \
        mummy priest w:5 / royal mummy w:5 / deep elf death mage
 MONS:  titan / glass eye / ghost moth / glowing orange brain / tormentor
 MONS:  demonspawn black sun / torpor snail / \
