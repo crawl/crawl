@@ -3044,7 +3044,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AURA_OF_BRILLIANCE, "Aura of Brilliance",
+    SPELL_PRAYER_OF_BRILLIANCE, "Prayer of Brilliance",
     spschool::conjuration,
     spflag::area | spflag::monster,
     5,

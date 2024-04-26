@@ -846,11 +846,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer unusually resistant.");
         break;
 
-    case ENCH_BRILLIANCE_AURA:
-        if (!quiet)
-            simple_monster_message(*this, " is no longer giving off an aura.");
-        break;
-
     case ENCH_EMPOWERED_SPELLS:
         if (!quiet)
             simple_monster_message(*this, " seems less brilliant.");
@@ -1357,7 +1352,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GOLD_LUST:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
-    case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
@@ -2396,11 +2390,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_FROZEN:
         cturn = 3 * 10 / _mod_speed(10, mons->speed);
         break;
-    case ENCH_BRILLIANCE_AURA:
-        cturn = 20 * 10 / _mod_speed(10, mons->speed);
-        break;
     case ENCH_EMPOWERED_SPELLS:
-        cturn = 20 * 10 / _mod_speed(10, mons->speed);
+        cturn = 35 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_NECROTISE:
         return 10;

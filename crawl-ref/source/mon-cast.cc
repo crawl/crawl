@@ -1930,7 +1930,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_SUMMON_EXECUTIONERS:
     case SPELL_DOOM_HOWL:
-    case SPELL_AURA_OF_BRILLIANCE:
+    case SPELL_PRAYER_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
@@ -2096,7 +2096,7 @@ static bool _mirrorable(const monster* agent, const monster* mon)
            && !mons_is_unique(mon->type);
 }
 
-static bool _valid_aura_of_brilliance_ally(const monster* caster,
+static bool _valid_prayer_of_brilliance_ally(const monster* caster,
                                            const monster* target)
 {
     return mons_aligned(caster, target) && caster != target
@@ -3575,35 +3575,22 @@ static void _cast_black_mark(monster* agent)
     }
 }
 
-void aura_of_brilliance(monster* agent)
+static void _prayer_of_brilliance(monster* agent)
 {
-    bool did_something = false;
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    for (monster_near_iterator mi(agent, LOS_NO_TRANS); mi; ++mi)
     {
-        if (ai->is_player() || !mons_aligned(*ai, agent))
+        if (!mons_aligned(*mi, agent))
             continue;
-        monster* mon = ai->as_monster();
-        if (_valid_aura_of_brilliance_ally(agent, mon))
+        if (_valid_prayer_of_brilliance_ally(agent, *mi))
         {
-            if (!mon->has_ench(ENCH_EMPOWERED_SPELLS) && you.can_see(*mon))
+            if (!mi->has_ench(ENCH_EMPOWERED_SPELLS) && you.can_see(**mi))
             {
-               mprf("%s is empowered by %s aura!",
-                    mon->name(DESC_THE).c_str(),
-                    apostrophise(agent->name(DESC_THE)).c_str());
+               mprf("%s spells are empowered by the prayer of brilliance!",
+                    mi->name(DESC_ITS).c_str());
             }
-
-            mon_enchant ench = mon->get_ench(ENCH_EMPOWERED_SPELLS);
-            if (ench.ench != ENCH_NONE)
-                mon->update_ench(ench);
-            else
-                mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, agent));
-
-            did_something = true;
+            mi->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, agent));
         }
     }
-
-    if (!did_something)
-        agent->del_ench(ENCH_BRILLIANCE_AURA);
 }
 
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
@@ -6876,10 +6863,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_call_of_chaos(*mons);
         return;
 
-    case SPELL_AURA_OF_BRILLIANCE:
-        simple_monster_message(*mons, " begins emitting a brilliant aura!");
-        mons->add_ench(ENCH_BRILLIANCE_AURA);
-        aura_of_brilliance(mons);
+    case SPELL_PRAYER_OF_BRILLIANCE:
+        _prayer_of_brilliance(mons);
         return;
 
     case SPELL_BIND_SOULS:
@@ -8180,16 +8165,16 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_CALL_OF_CHAOS:
         return ai_action::good_or_bad(_mons_call_of_chaos(*mon, true));
 
-    case SPELL_AURA_OF_BRILLIANCE:
+    case SPELL_PRAYER_OF_BRILLIANCE:
         if (!foe || !mon->can_see(*foe))
             return ai_action::bad();
 
-        if (mon->has_ench(ENCH_BRILLIANCE_AURA))
-            return ai_action::impossible();
-
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-            if (_valid_aura_of_brilliance_ally(mon, *mi))
+            if (_valid_prayer_of_brilliance_ally(mon, *mi)
+                && !mi->has_ench(ENCH_EMPOWERED_SPELLS))
+            {
                 return ai_action::good();
+            }
         return ai_action::bad();
 
     case SPELL_BIND_SOULS:

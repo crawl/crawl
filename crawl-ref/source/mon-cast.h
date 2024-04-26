@@ -18,7 +18,7 @@ struct dice_def;
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
 
-void aura_of_brilliance(monster* agent);
+void prayer_of_brilliance(monster* agent);
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 

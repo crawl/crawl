@@ -66,11 +66,6 @@ the caster. The electricity continues to arc through everything in a connected
 chain, though the caster themself is unaffected. The damage dealt bypasses half
 of defenders' armour.
 %%%%
-Aura of Brilliance spell
-
-Empowers the magic of nearby wizard allies of the caster, allowing them to
-cast their magic more powerfully and more often.
-%%%%
 Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
@@ -1250,6 +1245,11 @@ spells. The caster's demise will cause the transformation to end.
 Portal Projectile spell
 
 Teleports a fired or thrown missile at a targeted enemy.
+%%%%
+Prayer of Brilliance spell
+
+Empowers the magic of nearby wizard allies of the caster, allowing them to
+cast their magic more powerfully and more often.
 %%%%
 Primal Wave spell
 

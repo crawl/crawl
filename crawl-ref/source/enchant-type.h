@@ -175,8 +175,8 @@ enum enchant_type
     ENCH_BONE_ARMOUR,
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
-#endif
     ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
+#endif
     ENCH_EMPOWERED_SPELLS, // affected by above
     ENCH_GOZAG_INCITE,
     ENCH_PAIN_BOND, // affected by above

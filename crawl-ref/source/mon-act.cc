@@ -1840,9 +1840,6 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->has_ench(ENCH_BRILLIANCE_AURA))
-        aura_of_brilliance(mons);
-
     if (you.duration[DUR_GOZAG_GOLD_AURA]
         && have_passive(passive_t::gold_aura)
         && you.see_cell(mons->pos())

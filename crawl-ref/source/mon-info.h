@@ -169,7 +169,9 @@ enum monster_info_flags
     MB_CHANT_WORD_OF_ENTROPY,
 #endif
     MB_AIRBORNE,
+#if TAG_MAJOR_VERSION == 34
     MB_BRILLIANCE_AURA,
+#endif
     MB_EMPOWERED_SPELLS,
     MB_READY_TO_HOWL,
     MB_PARTIALLY_CHARGED,
