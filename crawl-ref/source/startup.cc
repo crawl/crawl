@@ -953,6 +953,52 @@ void UIStartupMenu::menu_item_activated(int id)
     }
 }
 
+/**
+ * Saves game mode and player name to ng_choice.
+ */
+static void _show_startup_menu(newgame_def& ng_choice,
+                               const newgame_def& defaults)
+{
+    unwind_bool no_more(crawl_state.show_more_prompt, false);
+
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+    wm->show_keyboard();
+#elif defined(USE_TILE_WEB)
+    tiles_crt_popup show_as_popup;
+#endif
+
+
+    auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
+    auto popup = make_shared<ui::Popup>(startup_ui);
+
+    ui::run_layout(move(popup), startup_ui->done);
+
+    if (startup_ui->end_game || crawl_state.seen_hups)
+    {
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
+        end(0);
+    }
+}
+#endif
+
+#ifndef DGAMELAUNCH
+static bool _exit_type_allows_menu_bypass(game_exit exit)
+{
+    // restart with last game saved, crashed, or aborted: don't bypass
+    // restart with last game died, won, or left: bypass if other settings allow
+    // it. If quit, bypass only if the relevant option is set.
+    // unknown corresponds to no previous game in this crawl
+    // session.
+    return exit == game_exit::death
+        || exit == game_exit::win
+        || exit == game_exit::unknown
+        || exit == game_exit::leave
+        || (exit == game_exit::quit && Options.newgame_after_quit);
+}
+#endif
+
 static void _do_language_selection()
 {
     Menu menu(MF_SINGLESELECT|MF_ARROWS_SELECT|MF_ALLOW_FORMATTING|MF_WRAP);
@@ -1001,52 +1047,6 @@ static void _do_language_selection()
         }
     }
 }
-
-/**
- * Saves game mode and player name to ng_choice.
- */
-static void _show_startup_menu(newgame_def& ng_choice,
-                               const newgame_def& defaults)
-{
-    unwind_bool no_more(crawl_state.show_more_prompt, false);
-
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    wm->show_keyboard();
-#elif defined(USE_TILE_WEB)
-    tiles_crt_popup show_as_popup;
-#endif
-
-
-    auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
-    auto popup = make_shared<ui::Popup>(startup_ui);
-
-    ui::run_layout(move(popup), startup_ui->done);
-
-    if (startup_ui->end_game || crawl_state.seen_hups)
-    {
-#ifdef USE_TILE_WEB
-        tiles.send_exit_reason("cancel");
-#endif
-        end(0);
-    }
-}
-#endif
-
-#ifndef DGAMELAUNCH
-static bool _exit_type_allows_menu_bypass(game_exit exit)
-{
-    // restart with last game saved, crashed, or aborted: don't bypass
-    // restart with last game died, won, or left: bypass if other settings allow
-    // it. If quit, bypass only if the relevant option is set.
-    // unknown corresponds to no previous game in this crawl
-    // session.
-    return exit == game_exit::death
-        || exit == game_exit::win
-        || exit == game_exit::unknown
-        || exit == game_exit::leave
-        || (exit == game_exit::quit && Options.newgame_after_quit);
-}
-#endif
 
 bool startup_step()
 {
