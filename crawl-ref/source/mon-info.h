@@ -14,6 +14,7 @@ using std::vector;
 #define CLOUD_IMMUNE_MB_KEY "cloud_immune"
 #define PRIEST_KEY "priest"
 #define ACTUAL_SPELLCASTER_KEY "actual_spellcaster"
+#define NECROMANCER_KEY "necromancer"
 
 enum monster_info_flags
 {
@@ -436,6 +437,11 @@ struct monster_info : public monster_info_base
     bool is_priest() const
     {
         return props.exists(PRIEST_KEY);
+    }
+
+    bool has_necromancy_spell() const
+    {
+        return props.exists(NECROMANCER_KEY);
     }
 
     bool fellow_slime() const;
