@@ -104,8 +104,8 @@ Wu Jian
 Wu Jian
 %%%%
 # Wu Jian Council - another short form
-The Council
-Der Rat
+the Council
+der Rat
 %%%%
 an unknown god
 ein unbekannter Gott

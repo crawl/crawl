@@ -2200,10 +2200,13 @@ bool simple_monster_message(const monster& mons, const char *event,
 
 string god_speaker(god_type which_deity)
 {
+    // i18n: Avoid capitalising here to avoid the necessity for yet another
+    // transation for "The Shining One".
+    // First letter of the message will be automatically capitalised by mpr.
     if (which_deity == GOD_WU_JIAN)
-       return "The Council";
+       return "the Council";
     else
-       return uppercase_first(god_name(which_deity));
+       return god_name(which_deity);
 }
 
 // yet another wrapper for mpr() {dlb}:
@@ -2219,8 +2222,7 @@ void simple_god_message(const char *event, god_type which_deity)
     }
 
     msg = localise(msg, god_speaker(which_deity));
-
-    god_speaks(which_deity, msg.c_str());
+    mpr_nolocalise(MSGCH_GOD, which_deity, msg);
 }
 
 void wu_jian_sifu_message(const char *event)
