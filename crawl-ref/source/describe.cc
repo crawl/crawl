@@ -4953,7 +4953,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_PAIN,              "extra pain damage to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
         { AF_ENGULF,            "engulf" },
-        { AF_PURE_FIRE,         "fire damage" },
+        { AF_PURE_FIRE,         "" },
         { AF_VULN,              "reduce willpower" },
         { AF_SHADOWSTAB,        "increased damage when unseen" },
         { AF_DROWN,             "drowning damage" },
@@ -5109,7 +5109,7 @@ static string _monster_attacks_description(const monster_info& mi)
         if (i > 0)
             plural = true;
 
-        if (attack.flavour == AF_PLAIN)
+        if (attack.flavour == AF_PLAIN || attack.flavour == AF_PURE_FIRE)
             continue;
 
         has_any_flavour = true;
@@ -5178,9 +5178,11 @@ static string _monster_attacks_description(const monster_info& mi)
             dam = 0;
         else if (info.weapon)
         {
+            // From attack::calc_damage
+            // damage = 1 + random2(monster attack damage)
+            //          + random2(weapon damage) + random2(1 + enchant + slay)
             const int base_dam = property(*info.weapon, PWPN_DAMAGE);
-            dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*info.weapon), false);
-            // Enchant is rolled separately, so doesn't change the max.
+            dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*info.weapon), false) - 1;
             if (info.weapon->plus > 0)
                 dam += info.weapon->plus;
         }
@@ -5201,6 +5203,9 @@ static string _monster_attacks_description(const monster_info& mi)
             dam_str = make_stringf("%d (base %d)", real_dam, dam);
         else
             dam_str = make_stringf("%d", dam);
+
+        if (attack.flavour == AF_PURE_FIRE)
+            dam_str += " fire";
 
         string brand_str;
         if (info.weapon)
@@ -5232,6 +5237,8 @@ static string _monster_attacks_description(const monster_info& mi)
                                        flav_dam,
                                        attk_mult > 1 ? " each" : "");
         }
+        else if (attack.flavour == AF_DRAIN)
+            bonus_desc += make_stringf(" (max %d damage)", real_dam / 2);
         else if (attack.flavour == AF_CRUSH)
         {
             bonus_desc += make_stringf(" (%d-%d dam)", attack.damage,
