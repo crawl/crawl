@@ -5442,23 +5442,6 @@ static string _monster_attacks_description(const monster_info& mi)
     return result.str();
 }
 
-static string _monster_missiles_description(const monster_info& mi)
-{
-    item_def *missile = mi.inv[MSLOT_MISSILE].get();
-    if (!missile)
-        return "";
-
-    string desc;
-    desc += uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-    desc += mi.pronoun_plurality() ? " are quivering " : " is quivering ";
-    if (missile->is_type(OBJ_MISSILES, MI_THROWING_NET))
-        desc += missile->name(DESC_A, false, false, true, false);
-    else
-        desc += pluralise(missile->name(DESC_PLAIN, false, false, true, false));
-    desc += ".\n";
-    return desc;
-}
-
 #define SPELL_LIST_BEGIN "[SPELL_LIST_BEGIN]"
 #define SPELL_LIST_END "[SPELL_LIST_END]"
 
@@ -6250,7 +6233,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
 
-    result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);
     result << _monster_spells_description(mi, mark_spells);
 
