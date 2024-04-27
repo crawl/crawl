@@ -82,6 +82,8 @@ Barracuda
 
 Catfish
 
+Cichlid
+
 Mackerel
 
 Marlin
