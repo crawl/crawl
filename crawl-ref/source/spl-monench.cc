@@ -34,8 +34,9 @@ int englaciate(coord_def where, int pow, actor *agent)
     monster* mons = victim->as_monster();
 
     // Skip some ineligable monster categories
-    if (mons_is_conjured(mons->type) || mons_is_firewood(*mons)
-        || mons_is_tentacle_segment(mons->type))
+    if (mons &&
+        (mons_is_conjured(mons->type) || mons_is_firewood(*mons)
+        || mons_is_tentacle_segment(mons->type)))
     {
         return 0;
     }
