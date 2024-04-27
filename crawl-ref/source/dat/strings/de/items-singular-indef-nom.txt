@@ -295,10 +295,10 @@ a %sbuckler
 ein {adj-er}%sBuckler
 %%%%
 a %skite shield
-ein {adj-es}%sKiteschild
+ein {adj-er}%sKiteschild
 %%%%
 a %stower shield
-ein {adj-es}%sTurmschild
+ein {adj-er}%sTurmschild
 %%%%
 a %ssteam dragon scales
 {adj-en}%sDampfdrachenschuppen

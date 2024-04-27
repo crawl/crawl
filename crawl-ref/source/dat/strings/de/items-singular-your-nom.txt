@@ -295,10 +295,10 @@ your %sbuckler
 Euer {adj-er}%sBuckler
 %%%%
 your %skite shield
-Euer {adj-es}%sKiteschild
+Euer {adj-er}%sKiteschild
 %%%%
 your %stower shield
-Euer {adj-es}%sTurmschild
+Euer {adj-er}%sTurmschild
 %%%%
 your %ssteam dragon scales
 Eure {adj-en}%sDampfdrachenschuppen

@@ -295,10 +295,10 @@ Silberbumerang
 {adj-er}%sBuckler
 %%%%
 %skite shield
-{adj-es}%sKiteschild
+{adj-er}%sKiteschild
 %%%%
 %stower shield
-{adj-es}%sTurmschild
+{adj-er}%sTurmschild
 %%%%
 %ssteam dragon scales
 {adj-e}%sDampfdrachenschuppen

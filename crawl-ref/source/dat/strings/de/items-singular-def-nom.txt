@@ -295,10 +295,10 @@ the %sbuckler
 der {adj-e}%sBuckler
 %%%%
 the %skite shield
-das {adj-e}%sKiteschild
+der {adj-e}%sKiteschild
 %%%%
 the %stower shield
-das {adj-e}%sTurmschild
+der {adj-e}%sTurmschild
 %%%%
 the %ssteam dragon scales
 die {adj-en}%sDampfdrachenschuppen
