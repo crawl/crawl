@@ -5025,6 +5025,48 @@ static mon_attack_info _atk_info(const monster_info& mi, int i)
     return attack_info;
 }
 
+// Return a string describing the maximum damage from a monster's weapon brand
+static string _brand_damage_string(const monster_info &mi, brand_type brand,
+                                   int dam)
+{
+    const char * name = brand_type_name(brand, true);
+    int brand_dam;
+    // Only include damaging brands
+    // Heavy is included in base damage calculations instead
+    switch (brand)
+    {
+        case SPWPN_FLAMING:
+        case SPWPN_FREEZING:
+        case SPWPN_DRAINING:
+            brand_dam = dam / 2;
+            break;
+        case SPWPN_ELECTROCUTION:
+            brand_dam = 20;
+            break;
+        case SPWPN_DISTORTION:
+            brand_dam = 26;
+            break;
+        case SPWPN_HOLY_WRATH:
+            // Hopefully this isn't too confusing for non-holy-vuln players
+            brand_dam = dam * 15 / 10;
+            break;
+        case SPWPN_FOUL_FLAME:
+            brand_dam = dam * 0.75;
+            break;
+        case SPWPN_PAIN:
+            brand_dam = mi.has_necromancy_spell() ? mi.hd : mi.hd / 2;
+            break;
+        case SPWPN_VENOM:
+        case SPWPN_ANTIMAGIC:
+        case SPWPN_CHAOS:
+            return make_stringf(" + %s", name);
+        default:
+            return "";
+    }
+
+    return make_stringf(" + %d (%s)", brand_dam, name);
+}
+
 static string _monster_attacks_description(const monster_info& mi)
 {
     // Spectral weapons use the wielder's stats to attack, so displaying
@@ -5083,13 +5125,17 @@ static string _monster_attacks_description(const monster_info& mi)
 
     _describe_mons_to_hit(mi, result);
 
-    // Table header.
-    result << padded_str(plural ? "Attacks" : "Attack", 12)
-           << padded_str("Max Damage", 20);
-    if (has_any_flavour)
-        result << (flavour_without_dam ? "Bonus" : "After Damaging Hits");
-    result << "\n";
+    size_t attk_desc_width = 7;                    // length of "Attacks"
+    size_t damage_width   = 10;                    // length of "Max Damage"
+    size_t bonus_width = !has_any_flavour ? 0      // no bonus column
+                       : flavour_without_dam ? 5   // length of "Bonus"
+                                             : 19; //  of "After Damaging Hits"
+    vector<string> attack_descriptions;
+    vector<string> damage_descriptions;
+    vector<string> bonus_descriptions;
 
+    // Get all the info that will form the table of attacks
+    // TODO Throwing/ranged
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const mon_attack_info info = _atk_info(mi, i);
@@ -5100,13 +5146,28 @@ static string _monster_attacks_description(const monster_info& mi)
             continue;
         attack_counts[info] = 0;
 
+        // Part 1: The "Attacks" column
+        // Display the name of the attack, along with any weapon used with it
+
         if (weapon_multihits(info.weapon))
             attk_mult *= weapon_hits_per_swing(*info.weapon);
         const string attk_name = uppercase_first(mon_attack_name_short(attack.type));
-        string attk_desc = attk_name;
+        string weapon_descriptor = "";
+        if (info.weapon)
+            weapon_descriptor = ": " + info.weapon->name(DESC_PLAIN, true, true, false);
+        string attk_desc = make_stringf("%s%s", attk_name.c_str(),
+                                        weapon_descriptor.c_str());
         if (attk_mult > 1)
-            attk_desc = make_stringf("%dx %s", attk_mult, attk_desc.c_str());
-        result << padded_str(attk_desc, 12);
+        {
+            attk_desc = make_stringf("%dx %s%s", attk_mult, attk_name.c_str(),
+                                     weapon_descriptor.c_str());
+        }
+        attack_descriptions.emplace_back(attk_desc);
+        attk_desc_width = max(attk_desc_width, attk_desc.length());
+
+        // Part 2: The "Max Damage" column
+        // Display the max damage from the attack (including any weapon)
+        // and additionally display max brand damage separately
 
         const int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
 
@@ -5141,44 +5202,95 @@ static string _monster_attacks_description(const monster_info& mi)
         else
             dam_str = make_stringf("%d", dam);
 
-        result << padded_str(make_stringf("%s%s%s", dam_str.c_str(),
-                                          attk_mult > 1 ? " each" : "",
-                                          info.weapon ? " (w/weapon)" : ""),
-                             20);
+        string brand_str;
+        if (info.weapon)
+        {
+            brand_str = _brand_damage_string(mi, get_weapon_brand(*info.weapon),
+                                             dam);
+        }
+
+        string final_dam_str = make_stringf("%s%s%s", dam_str.c_str(),
+                                            brand_str.c_str(),
+                                            attk_mult > 1 ? " each" : "");
+        damage_descriptions.emplace_back(final_dam_str);
+        damage_width = max(damage_width, final_dam_str.size());
+
+        // Part 3: The "Bonus" column
+        // Describe any additional effects from a monster's attack flavour
 
         if (special_flavour != SPWPN_NORMAL)
         {
-            result << _desc_ghost_brand(special_flavour) << "\n";
+            // TODO Merge this with weapon brand handling above
+            bonus_descriptions.emplace_back(_desc_ghost_brand(special_flavour));
             continue;
         }
 
-        const string base_desc = uppercase_first(_flavour_base_desc(attack.flavour));
-        result << base_desc;
+        string bonus_desc = uppercase_first(_flavour_base_desc(attack.flavour));
         if (flav_dam && attack.flavour != AF_PURE_FIRE)
         {
-            result << " (max " << flav_dam;
-            if (attk_mult > 1)
-                result << " each";
-            result << ")";
+            bonus_desc += make_stringf(" (max %d%s)",
+                                       flav_dam,
+                                       attk_mult > 1 ? " each" : "");
         }
         else if (attack.flavour == AF_CRUSH)
-            result << " (" << attack.damage << "-" <<  (attack.damage*2) << " dam)";
+        {
+            bonus_desc += make_stringf(" (%d-%d dam)", attack.damage,
+                                       attack.damage*2);
+        }
 
         if (flavour_without_dam
-            && !base_desc.empty()
+            && !bonus_desc.empty()
             && !flavour_triggers_damageless(attack.flavour)
             && !flavour_has_mobility(attack.flavour))
         {
-            result << " (if damage dealt)";
+            bonus_desc += " (if damage dealt)";
         }
 
         if (flavour_has_reach(attack.flavour))
         {
-            result << (base_desc.empty() ? "Reaches" : "; reaches");
-            result << (attack.flavour == AF_RIFT ? " very far" : " from afar");
+            bonus_desc += (bonus_desc.empty() ? "Reaches" : "; reaches");
+            bonus_desc += (attack.flavour == AF_RIFT ? " very far" : " from afar");
         }
 
-        result << "\n";
+        bonus_descriptions.emplace_back(bonus_desc);
+        bonus_width = max(bonus_width, bonus_desc.size());
+    }
+
+    // Hopefully enough for every possibility
+    damage_width    = min(damage_width, (size_t) 31);
+    bonus_width     = min(bonus_width, 69 - damage_width);
+
+    // Table lines can't be longer than 80 chars wide (incl 4 spaces)
+    // so cut off the attack description if it's too long.
+    // Note: minimum 7 (length of "Attacks")
+    attk_desc_width = min(attk_desc_width, 76 - damage_width - bonus_width);
+
+    // Now we can actually build the table of attacks
+    // Note: columns are separated by (a minimum of) 2 spaces
+
+    // First, the table header
+    result << padded_str(plural ? "Attacks" : "Attack", attk_desc_width + 2)
+           << padded_str("Max Damage", damage_width + 2);
+    if (has_any_flavour)
+    {
+        result << padded_str(flavour_without_dam ? "Bonus"
+                                                 : "After Damaging Hits",
+                             bonus_width);
+    }
+    result << "\n";
+
+    // Table body
+    for (unsigned int i = 0; i < attack_descriptions.size(); ++i)
+    {
+        if (attack_descriptions[i] == "")
+            break;
+
+        result << chop_string(attack_descriptions[i], attk_desc_width)
+               << "  "
+               << chop_string(damage_descriptions[i], damage_width)
+               << "  "
+               << chop_string(bonus_descriptions[i], bonus_width)
+               << "\n";
     }
 
     if (mons_class_flag(mi.type, M_ARCHER))

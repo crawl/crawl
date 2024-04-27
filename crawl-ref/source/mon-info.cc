@@ -709,6 +709,9 @@ monster_info::monster_info(const monster* m, int milev)
     else if (m->is_actual_spellcaster())
         props[ACTUAL_SPELLCASTER_KEY] = true;
 
+    if (m->has_spell_of_type(spschool::necromancy))
+        props[NECROMANCER_KEY] = true;
+
     // assumes spell hd modifying effects are always public
     const int spellhd = m->spell_hd();
     if (spellhd != hd)
