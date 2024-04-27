@@ -222,9 +222,10 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
         dprf("Success");
 
         if (corpse.base_type == OBJ_GOLD)
-            corpse.quantity = div_rand_round(total_gold, nchunks);
-        if (corpse.quantity)
+        {
+            corpse.quantity = max(1, div_rand_round(total_gold, nchunks));
             copy_item_to_grid(corpse, cp);
+        }
     }
 
     return true;
