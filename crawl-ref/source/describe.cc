@@ -5149,6 +5149,17 @@ static string _monster_attacks_description(const monster_info& mi)
         if (i > 0)
             plural = true;
 
+        const item_def *quiv = mi.inv[MSLOT_MISSILE].get();
+        if (quiv && quiv->base_type == OBJ_MISSILES)
+        {
+            plural = true;
+            if (quiv->sub_type == MI_DART || quiv->sub_type == MI_THROWING_NET)
+            {
+                has_any_flavour = true;
+                flavour_without_dam = true;
+            }
+        }
+
         if (attack.flavour == AF_PLAIN || attack.flavour == AF_PURE_FIRE)
             continue;
 
@@ -5174,16 +5185,89 @@ static string _monster_attacks_description(const monster_info& mi)
     vector<string> damage_descriptions;
     vector<string> bonus_descriptions;
 
+    // First, check for throwing weapons
+    item_def *quiv = mi.inv[MSLOT_MISSILE].get();
+    if (quiv && quiv->base_type == OBJ_MISSILES)
+    {
+        string throw_str = "Throw: ";
+        if (quiv->is_type(OBJ_MISSILES, MI_THROWING_NET))
+            throw_str += quiv->name(DESC_A, false, false, true, false);
+        else
+            throw_str += pluralise(quiv->name(DESC_PLAIN, false, false,
+                                              true, false));
+        attack_descriptions.emplace_back(throw_str);
+        attk_desc_width = max(attk_desc_width, throw_str.size());
+
+        string dam_desc = "0";
+        string bonus_desc = "";
+        if (quiv->sub_type == MI_THROWING_NET)
+        {
+            bonus_desc = "Ensnare in a net";
+            has_any_flavour = true;
+            flavour_without_dam = true;
+        }
+        else if (quiv->sub_type == MI_DART)
+        {
+            has_any_flavour = true;
+            flavour_without_dam = true;
+            switch (quiv->brand)
+            {
+            case SPMSL_CURARE:
+                dam_desc = "12 (curare)"; // direct curare damage is 2d6
+                bonus_desc = "Poison and slowing";
+                break;
+            case SPMSL_POISONED:
+                bonus_desc = "Poison";
+                break;
+            case SPMSL_BLINDING:
+                bonus_desc = "Blinding and confusion";
+                break;
+            case SPMSL_FRENZY:
+                bonus_desc = "Drive defenders into a frenzy";
+                break;
+            case SPMSL_DISPERSAL:
+                bonus_desc = "Blink the defender away";
+                break;
+            default:
+                break;
+            }
+        }
+        else // ordinary missiles
+        {
+            // Missile attacks use the damage number of a monster's first attack
+            const mon_attack_info info = _atk_info(mi, 0);
+            const mon_attack_def &attack = info.definition;
+            int dam = attack.damage;
+            dam += property(*quiv, PWPN_DAMAGE) - 1;
+            dam += max(_monster_slaying(mi), 0);
+            if (mons_class_flag(mi.type, M_ARCHER))
+                dam += archer_bonus_damage(mi.hd);
+            string silver_str;
+            if (quiv->brand == SPMSL_SILVER)
+            {
+                string dmg_msg;
+                int silver_dam = max(dam / 3,
+                                     silver_damages_victim(&you, dam, dmg_msg));
+                silver_str = make_stringf(" + %d (silver)", silver_dam);
+            }
+            dam_desc = make_stringf("%d%s", dam, silver_str.c_str());
+        }
+
+        damage_descriptions.emplace_back(dam_desc);
+        bonus_descriptions.emplace_back(bonus_desc);
+        damage_width = max(damage_width, dam_desc.size());
+        bonus_width = max(bonus_width, bonus_desc.size());
+    }
+
     // Get all the info that will form the table of attacks
-    // TODO Throwing/ranged
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const mon_attack_info info = _atk_info(mi, i);
         const mon_attack_def &attack = info.definition;
 
         int attk_mult = attack_counts[info];
-        if (!attk_mult) // already printed
-            continue;
+        if (!attk_mult) // we're done
+            break;
         attack_counts[info] = 0;
 
         // Part 1: The "Attacks" column
@@ -5191,7 +5275,9 @@ static string _monster_attacks_description(const monster_info& mi)
 
         if (weapon_multihits(info.weapon))
             attk_mult *= weapon_hits_per_swing(*info.weapon);
-        const string attk_name = uppercase_first(mon_attack_name_short(attack.type));
+        string attk_name = uppercase_first(mon_attack_name_short(attack.type));
+        if (info.weapon && is_range_weapon(*info.weapon))
+            attk_name = "Shoot";
         string weapon_descriptor = "";
         if (info.weapon)
             weapon_descriptor = ": " + info.weapon->name(DESC_PLAIN, true, true, false);
@@ -5225,6 +5311,8 @@ static string _monster_attacks_description(const monster_info& mi)
             //          + random2(weapon damage) + random2(1 + enchant + slay)
             const int base_dam = property(*info.weapon, PWPN_DAMAGE);
             dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*info.weapon), false) - 1;
+            if (is_range_weapon(*info.weapon) && mons_class_flag(mi.type, M_ARCHER))
+                dam += archer_bonus_damage(mi.hd);
             slaying += info.weapon->plus;
         }
         dam += max(slaying, 0);
@@ -5295,6 +5383,15 @@ static string _monster_attacks_description(const monster_info& mi)
             bonus_desc += " (if damage dealt)";
         }
 
+        // Nessos' ranged weapon attacks apply venom as a special effect
+        if (mi.type == MONS_NESSOS
+            && info.weapon && is_range_weapon(*info.weapon))
+        {
+            bonus_desc += make_stringf("Poison");
+            has_any_flavour = true;
+            flavour_without_dam = true;
+        }
+
         if (flavour_has_reach(attack.flavour))
         {
             bonus_desc += (bonus_desc.empty() ? "Reaches" : "; reaches");
@@ -5327,7 +5424,6 @@ static string _monster_attacks_description(const monster_info& mi)
                              bonus_width);
     }
     result << "\n";
-
     // Table body
     for (unsigned int i = 0; i < attack_descriptions.size(); ++i)
     {
@@ -5340,22 +5436,6 @@ static string _monster_attacks_description(const monster_info& mi)
                << "  "
                << chop_string(bonus_descriptions[i], bonus_width)
                << "\n";
-    }
-
-    if (mons_class_flag(mi.type, M_ARCHER))
-    {
-        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << make_stringf(" can deal up to %d extra damage when attacking"
-                               " with ranged weaponry.\n",
-                               archer_bonus_damage(mi.hd));
-    }
-
-    if (mi.type == MONS_NESSOS)
-    {
-        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << make_stringf(" can cause poisoning in addition to any other"
-                               " weapon effects if any damage is dealt when"
-                               " attacking with ranged weaponry.\n");
     }
 
     result << "\n";
