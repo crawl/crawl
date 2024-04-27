@@ -5067,6 +5067,46 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
     return make_stringf(" + %d (%s)", brand_dam, name);
 }
 
+// Return a monster's slaying bonus (not including weapon enchantment)
+static int _monster_slaying(const monster_info& mi)
+{
+    int slaying = 0;
+    const artefact_prop_type artp = ARTP_SLAYING;
+
+    // Largely a duplication of monster::scan_artefacts,
+    // but there's no equivalent for monster_info :(
+    const item_def *weapon       = mi.inv[MSLOT_WEAPON].get();
+    const item_def *other_weapon = mi.inv[MSLOT_ALT_WEAPON].get();
+    const item_def *armour       = mi.inv[MSLOT_ARMOUR].get();
+    const item_def *shield       = mi.inv[MSLOT_SHIELD].get();
+    const item_def *jewellery    = mi.inv[MSLOT_JEWELLERY].get();
+
+    if (jewellery && jewellery->base_type == OBJ_JEWELLERY)
+    {
+        if (jewellery->is_type(OBJ_JEWELLERY, RING_SLAYING))
+            slaying += jewellery->plus;
+        if (is_artefact(*jewellery))
+            slaying += artefact_property(*jewellery, artp);
+    }
+
+    if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
+        slaying += artefact_property(*weapon, artp);
+
+    if (other_weapon && other_weapon->base_type == OBJ_WEAPONS
+        && is_artefact(*other_weapon) && mi.wields_two_weapons())
+    {
+        slaying += artefact_property(*other_weapon, artp);
+    }
+
+    if (armour && armour->base_type == OBJ_ARMOUR && is_artefact(*armour))
+        slaying += artefact_property(*armour, artp);
+
+    if (shield && shield->base_type == OBJ_ARMOUR && is_artefact(*shield))
+        slaying += artefact_property(*shield, artp);
+
+    return slaying;
+}
+
 static string _monster_attacks_description(const monster_info& mi)
 {
     // Spectral weapons use the wielder's stats to attack, so displaying
@@ -5172,6 +5212,8 @@ static string _monster_attacks_description(const monster_info& mi)
         const int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
 
         int dam = attack.damage;
+        int slaying = _monster_slaying(mi);
+
         if (attack.flavour == AF_PURE_FIRE)
             dam = flav_dam;
         else if (attack.flavour == AF_CRUSH)
@@ -5183,9 +5225,9 @@ static string _monster_attacks_description(const monster_info& mi)
             //          + random2(weapon damage) + random2(1 + enchant + slay)
             const int base_dam = property(*info.weapon, PWPN_DAMAGE);
             dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*info.weapon), false) - 1;
-            if (info.weapon->plus > 0)
-                dam += info.weapon->plus;
+            slaying += info.weapon->plus;
         }
+        dam += max(slaying, 0);
 
         // Show damage modified by effects, if applicable
         int real_dam = dam;
