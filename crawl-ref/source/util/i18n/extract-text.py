@@ -727,6 +727,10 @@ def process_lua_file(filename):
             skip = True
             if 'crawl.mpr' in line or 'crawl.god_speaks' in line:
                 skip = False
+            elif re.search(r'\bset_feature_name', line):
+                # first param is a key
+                line = re.sub('"[^"]",', 'dummy,', line)
+                skip = False
             elif re.search('(?:msg|prompt)\s*=', line):
                 skip = False
             elif is_portal and re.search(r'ranges\s*=', line):
@@ -827,6 +831,13 @@ def process_lua_file(filename):
             for ss in substrings:
                 if ss != "":
                     strings.append(ss)
+                    if re.search(r'\bset_feature_name', line):
+                        if ss.startswith('a '):
+                            strings.append(ss[2:]);
+                        elif ss.startswith('an '):
+                            strings.append(ss[3:]);
+                        elif not re.match('^([A-Z]|the |some )', ss):
+                            strings.append(article_a(ss));
 
     # expand params
     raw_strings = strings

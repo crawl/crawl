@@ -489,6 +489,165 @@ gateway leading deeper into the Abyss
 Tor, das tiefer in den Abgrund führt
 %%%%
 
+# extras from .des files
+%%%%
+Ashen ground
+Aschiger Boden
+%%%%
+Frost-covered floor
+Frostbedeckter Boden
+%%%%
+Viscous fluid
+Viskose Flüssigkeit
+%%%%
+adventurer's gravestone
+Grabstein eines Abenteurers
+%%%%
+ash-covered pillar
+aschebedeckte Säule
+%%%%
+autumnal tree
+herbstlicher Baum
+%%%%
+black wall
+schwarze Wand
+%%%%
+broken pillar
+zerbrochene Säule
+%%%%
+broken wreckage
+zerbrochenes Wrack
+%%%%
+carved rock wall
+gemeißelte Felswand
+%%%%
+crumbled stone wall
+zerbröckelte Steinmauer
+%%%%
+damp floor
+feuchter Boden
+%%%%
+dead mangrove
+toter Mangrovenbaum
+%%%%
+dead tree
+toter Baum
+%%%%
+glass window
+Glasfenster
+%%%%
+golden statue
+goldene Statue
+%%%%
+golden wall
+goldene Wand
+%%%%
+granite statue wielding a fearsome trident
+Granitstatue, die einen furchterregenden Dreizack schwingt
+%%%%
+granite statue wielding a mighty axe
+Granitstatue, die eine mächtige Axt schwingt
+%%%%
+gravestone
+{m}Grabstein
+%%%%
+heavily etched crystal wall
+stark geätzte Kristallwand
+%%%%
+heavily etched metal wall
+stark geätzte Metallwand
+%%%%
+highly decorated stone wall
+stark verzierte Steinwand
+%%%%
+ice choked empty arch of ancient stone
+eisverstopfter leerer Bogen aus altem Stein
+%%%%
+ice covered rock wall
+eisbedeckte Felswand
+%%%%
+ice-covered rock wall
+eisbedeckte Felswand
+%%%%
+ice-covered stone wall
+eisbedeckte Steinmauer
+%%%%
+iron statue
+Eisenstatue
+%%%%
+large window
+großes Fenster
+%%%%
+merfolk statue
+Meervolk-Statue
+%%%%
+one-way staircase leading down
+Einbahntreppe, die nach unten führt
+%%%%
+one-way staircase leading up
+Einbahntreppe, die nach oben führt
+%%%%
+otherworldly statue
+jenseitige Statue
+%%%%
+pulsating floor
+pulsierender Boden
+%%%%
+rock-blocked tunnel
+felsengesperrter Tunnel
+%%%%
+rough-hewn floor
+grob behauener Boden
+%%%%
+ruined idol
+zerstörtes Götzenbild
+%%%%
+rune-carved clear stone wall
+in Runen gemeißelte Wand aus klarem Stein
+%%%%
+rune-carved stone wall
+in Runen gemeißelte Steinmauer
+%%%%
+sarcophagus
+{m}Sarkophag
+%%%%
+sealed sarcophagus
+versiegelter Sarkophag
+%%%%
+silver wall
+silberne Wand
+%%%%
+sinewy wall
+sehnige Wand
+%%%%
+spawn point
+{m}Spawn-Punkt
+%%%%
+statue of a hideous four-limbed creature
+Statue einer abscheulichen vierbeinigen Kreatur
+%%%%
+strange rock wall
+seltsame Felswand
+%%%%
+strange statue
+seltsame Statue
+%%%%
+tempered metal wall
+Wand aus gehärtetem Metall
+%%%%
+thin membrane
+dünne Membran
+%%%%
+wall of crystal
+Wand aus Kristall
+%%%%
+wall of white crystal
+Wand aus weißem Kristall
+%%%%
+weirdly glowing ball
+seltsam leuchtende Kugel
+%%%%
+
 ################################
 # Definite article
 ################################
@@ -968,6 +1127,12 @@ the gateway leading deeper into the Abyss
 das Tor, das tiefer in den Abgrund führt
 %%%%
 
+# from .des files
+%%%%
+The dimension's edge
+Der Rand der Dimension
+%%%%
+
 ################################
 # Indefinite article
 ################################
@@ -1436,6 +1601,162 @@ ein versiegelter Gang, der nach unten führt
 %%%%
 a gateway leading deeper into the Abyss
 {n}ein Tor, das tiefer in den Abgrund führt
+%%%%
+
+# extras from .des files
+%%%%
+Some ice crusted deep water
+Tiefes Wasser mit Eiskruste
+%%%%
+Some ice crusted shallow water
+Seiches Wasser mit Eiskruste
+%%%%
+an adventurer's gravestone
+der Grabstein eines Abenteurers
+%%%%
+an ash-covered pillar
+eine aschebedeckte Säule
+%%%%
+an autumnal tree
+ein herbstlicher Baum
+%%%%
+a black wall
+eine schwarze Wand
+%%%%
+a broken pillar
+eine zerbrochene Säule
+%%%%
+a broken wreckage
+ein zerbrochenes Wrack
+%%%%
+a carved rock wall
+eine gemeißelte Felswand
+%%%%
+a crumbled stone wall
+eine zerbröckelte Steinmauer
+%%%%
+a damp floor
+ein feuchter Boden
+%%%%
+a dead mangrove
+ein toter Mangrovenbaum
+%%%%
+a dead tree
+ein toter Baum
+%%%%
+a glass window
+ein Glasfenster
+%%%%
+a golden statue
+eine goldene Statue
+%%%%
+a golden wall
+eine goldene Wand
+%%%%
+a granite statue wielding a fearsome trident
+eine Granitstatue, die einen furchterregenden Dreizack schwingt
+%%%%
+a granite statue wielding a mighty axe
+eine Granitstatue, die eine mächtige Axt schwingt
+%%%%
+a gravestone
+{m}ein Grabstein
+%%%%
+a heavily etched crystal wall
+eine stark geätzte Kristallwand
+%%%%
+a heavily etched metal wall
+eine stark geätzte Metallwand
+%%%%
+a highly decorated stone wall
+eine stark verzierte Steinwand
+%%%%
+an ice choked empty arch of ancient stone
+ein eisverstopfter leerer Bogen aus altem Stein
+%%%%
+an ice covered rock wall
+eine eisbedeckte Felswand
+%%%%
+an ice-covered rock wall
+eine eisbedeckte Felswand
+%%%%
+an ice-covered stone wall
+eine eisbedeckte Steinmauer
+%%%%
+an iron statue
+eine Eisenstatue
+%%%%
+a large window
+ein großes Fenster
+%%%%
+a merfolk statue
+eine Meervolk-Statue
+%%%%
+a one-way staircase leading down
+eine Einbahntreppe, die nach unten führt
+%%%%
+a one-way staircase leading up
+eine Einbahntreppe, die nach oben führt
+%%%%
+an otherworldly statue
+eine jenseitige Statue
+%%%%
+a pulsating floor
+ein pulsierender Boden
+%%%%
+a rock-blocked tunnel
+ein felsengesperrter Tunnel
+%%%%
+a rough-hewn floor
+ein grob behauener Boden
+%%%%
+a ruined idol
+ein zerstörtes Götzenbild
+%%%%
+a rune-carved clear stone wall
+eine in Runen gemeißelte Wand aus klarem Stein
+%%%%
+a rune-carved stone wall
+eine in Runen gemeißelte Steinmauer
+%%%%
+a sarcophagus
+ein Sarkophag
+%%%%
+a sealed sarcophagus
+ein versiegelter Sarkophag
+%%%%
+a silver wall
+eine silberne Wand
+%%%%
+a sinewy wall
+eine sehnige Wand
+%%%%
+a spawn point
+{m}ein Spawn-Punkt
+%%%%
+a statue of a hideous four-limbed creature
+eine Statue einer abscheulichen vierbeinigen Kreatur
+%%%%
+a strange rock wall
+eine seltsame Felswand
+%%%%
+a strange statue
+eine seltsame Statue
+%%%%
+a tempered metal wall
+eine Wand aus gehärtetem Metall
+%%%%
+a thin membrane
+eine dünne Membran
+%%%%
+a wall of crystal
+eine Wand aus Kristall
+%%%%
+a wall of white crystal
+eine Wand aus weißem Kristall
+%%%%
+a weirdly glowing ball
+eine seltsam leuchtende Kugel
 %%%%
 
 ################################
