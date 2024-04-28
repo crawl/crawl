@@ -4476,10 +4476,10 @@ This monster is friendly.
 Dieses Monster ist freundlich.
 %%%%
 This monster seems to be peaceful towards you.
-Dieses Ungeheuer scheint Euch gegenüber friedlich zu sein.
+Dieses Monster scheint Euch gegenüber friedlich zu sein.
 %%%%
 This monster is indifferent to you.
-Dieses Ungeheuer ist Euch gleichgültig.
+Dieses Monster ist Euch gleichgültig.
 %%%%
 This monster has been summoned and is expiring.
 Dieses Monster wurde beschworen und läuft ab.
@@ -4512,7 +4512,7 @@ This monster is reflecting injuries back at attackers.
 Dieses Monster wirft Verletzungen auf die Angreifer zurück.
 %%%%
 This monster is filled with an inner flame.
-Dieses Ungeheuer ist von einer inneren Flamme erfüllt.
+Dieses Monster ist von einer inneren Flamme erfüllt.
 %%%%
 Your line of fire to this monster is blocked by %s.
 Eure Schusslinie zu diesem Monster ist von {dat}%s blockiert.
