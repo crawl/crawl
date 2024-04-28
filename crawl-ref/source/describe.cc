@@ -5107,6 +5107,40 @@ static int _monster_slaying(const monster_info& mi)
     return slaying;
 }
 
+// Max damage from a magical staff with a given amount of staff & evo skill
+static int _staff_max_damage(stave_type staff, int staff_skill, int evo_skill)
+{
+    return (2 * staff_skill + evo_skill) * staff_damage_mult(staff) / 80 - 1;
+}
+
+// Describe the damage from a monster's magical staff
+static string _monster_staff_damage_string(const monster_info &mi,
+                                           stave_type staff)
+{
+    // From monster::skill
+    const int evo_skill = mi.hd;
+    int staff_skill;
+    if (staff == STAFF_DEATH)
+        staff_skill = mi.has_necromancy_spell() ? mi.hd : mi.hd / 2;
+    else
+        staff_skill = mi.is_actual_spellcaster() ? mi.hd : mi.hd / 3;
+
+    // "earth" tries to communicate the damage reduction when flying
+    // XXX "conj" isn't a damage type, but we want to communicate
+    // that the damage is flat staff bonus damage somehow.
+    string dam_type_string = staff == STAFF_FIRE          ? "fire"
+                           : staff == STAFF_COLD          ? "cold"
+                           : staff == STAFF_AIR           ? "elec"
+                           : staff == STAFF_EARTH         ? "earth"
+                           : staff == STAFF_DEATH         ? "drain"
+                           : staff == STAFF_ALCHEMY       ? "poison"
+                           /*staff == STAFF_CONJURATION*/ : "conj";
+
+    return make_stringf(" + %d (%s)",
+                        _staff_max_damage(staff, staff_skill, evo_skill),
+                        dam_type_string.c_str());
+}
+
 static string _monster_attacks_description(const monster_info& mi)
 {
     // Spectral weapons use the wielder's stats to attack, so displaying
@@ -5340,8 +5374,15 @@ static string _monster_attacks_description(const monster_info& mi)
         string brand_str;
         if (info.weapon)
         {
-            brand_str = _brand_damage_string(mi, get_weapon_brand(*info.weapon),
-                                             dam);
+            if (info.weapon->base_type == OBJ_WEAPONS)
+            {
+                brand_str = _brand_damage_string(mi,
+                                                 get_weapon_brand(*info.weapon),
+                                                 dam);
+            }
+            else if (info.weapon->base_type == OBJ_STAVES)
+                brand_str = _monster_staff_damage_string(mi,
+                                static_cast<stave_type>(info.weapon->sub_type));
         }
 
         string final_dam_str = make_stringf("%s%s%s", dam_str.c_str(),
