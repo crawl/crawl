@@ -1047,8 +1047,8 @@ the Unrestrained Analects
 #################################
 
 %%%%
-the %s corpse
-die {nom}%s-Leiche
+the %s@monster@ corpse
+die {adj-e}%s@monster@-Leiche
 %%%%
 
 #################################

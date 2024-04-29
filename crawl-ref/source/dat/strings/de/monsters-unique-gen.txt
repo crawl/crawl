@@ -12,7 +12,7 @@ Prinzen Ribbits
 Verrückten Yiufs
 %%%%
 {gen}Blork the orc
-Blorks des Orks
+Blork des Orks
 %%%%
 
 # not really uniques, but grammatically similar

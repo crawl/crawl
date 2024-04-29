@@ -1067,8 +1067,8 @@ ein Trismegistus-Codex
 #################################
 
 %%%%
-a %s corpse
-eine {nom}%s-Leiche
+a %s@monster@ corpse
+eine {adj-e}%s@monster@-Leiche
 %%%%
 
 #################################

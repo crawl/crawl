@@ -27,8 +27,10 @@ string cxlate(const string &context, const string &text_en, bool fallback_en = t
 // singular_en = English singular text
 // plural_en = English plural text
 // n = the count of whatever it is
+// fallback_en = fall back to English if no translation is found?
 string cnxlate(const string &context,
-        const string &singular_en, const string &plural_en, unsigned long n);
+               const string &singular_en, const string &plural_en,
+               unsigned long n, bool fallback_en = true);
 
 // translate with no context
 static inline string xlate(const string &text_en, bool fallback_en = true)
@@ -37,7 +39,8 @@ static inline string xlate(const string &text_en, bool fallback_en = true)
 }
 
 // translate with number (no context)
-static inline string nxlate(const string &singular_en, const string &plural_en, unsigned long n)
+static inline string nxlate(const string &singular_en, const string &plural_en,
+                            unsigned long n, bool fallback_en = true)
 {
-    return cnxlate("", singular_en, plural_en, n);
+    return cnxlate("", singular_en, plural_en, n, fallback_en);
 }

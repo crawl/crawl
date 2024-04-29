@@ -564,6 +564,8 @@ def ignore_string(string):
         return True
 
     # ignore articles, pronouns, etc.
+    if string in IGNORE_STRINGS:
+        return True
     if string.lower() in IGNORE_STRINGS:
         return True
 
@@ -1430,6 +1432,12 @@ def remove_unnecessary_section_markers(strings):
     strings.clear()
     strings.extend(strings_temp)
 
+def article_the(string):
+    if string.startswith("the "):
+        return string
+    else:
+        return "the " + string
+
 def article_a(string):
     if re.search('^[aeiouAEIOU]', string) and not string.startswith('one-'):
         return "an " + string
@@ -1437,12 +1445,20 @@ def article_a(string):
         return "a " + string
 
 def is_unique_monster(string):
+    # non-uniques with uppercase letters in them
+    specials = [
+        'Killer Klown', 'Orb Guardian', 'Brimstone Fiend', 'Ice Fiend',
+        'Tzitzimitl', 'Hell Sentinel', 'Executioner', 'Hellbinder', 'Cloud Mage'
+    ]
+
     if not re.search('[A-Z]', string):
         return False
-    elif string in ['Killer Klown', 'Orb Guardian', 'Brimstone Fiend', 'Ice Fiend', 'Tzitzimitl', 'Hell Sentinel', 'Executioner', 'Hellbinder', 'Cloud Mage']:
-        return False
-    else:
-        return True
+
+    for special in specials:
+        if special in string:
+            return False;
+
+    return True
 
 
 def add_strings_to_output(filename, strings, output):
@@ -1505,6 +1521,14 @@ def add_strings_to_output(filename, strings, output):
         # names prefixed with definite article (the)
         for string in names:
             output.append("the " + string)
+        if filename ==  'mon-data.h':
+            for string in unique_names:
+                if "Lernaean" in string:
+                    output.append(string.replace("the ", ""))
+                elif string.startswith("the %s"):
+                    output.append(string.replace("the %s", ""))
+                else:
+                    output.append("the %s" + string)
 
         # names prefixed with indefinite article (a/an)
         for string in names:
@@ -1532,7 +1556,18 @@ def add_strings_to_output(filename, strings, output):
 
             # possessives for unique monsters
             for string in unique_names:
-                output.append(string + "'s")
+                poss = string + "'s"
+                if poss.startswith("the %s") and "Lernaean" not in poss:
+                    poss = poss.replace("the %s", "the ")
+                output.append(poss)
+
+
+def append_monster_permutations(list, string):
+    list.append(string)
+    list.append("the " + string)
+    list.append("a " + string)
+    list.append("the " + string + "'s")
+    list.append("a " + string + "'s")
 
 
 #################
@@ -1608,10 +1643,19 @@ for filename in files:
 
         # some names have adjectives added for display
         if filename == 'mon-data.h':
-            if string in ['ugly thing', 'very ugly thing', 'slime creature', 'hydra']:
-                string = '%s' + string
-            elif string == 'the Lernaean hydra':
-                string = 'the %sLernaean hydra'
+            # put in a placeholder for adjective and make sure version without
+            # placeholder is not picked up elsewhere
+            if is_unique_monster(string):
+                if string.startswith("the "):
+                    IGNORE_STRINGS.append(string)
+                    IGNORE_STRINGS.append(string.replace("the ", ""))
+                    string = string.replace('the ', 'the %s')
+            elif not string.endswith(" "):
+                if (string != "player"):
+                    IGNORE_STRINGS.append(string)
+                    IGNORE_STRINGS.append(article_a(string))
+                    IGNORE_STRINGS.append(article_the(string))
+                string = "%s" + string
         elif filename == 'feature-data.h':
             # we handle door adjectives as separate strings
             if string.endswith(' door'):
@@ -1648,6 +1692,14 @@ for filename in files:
         else:
             # this should be already covered above (feature-data.h)
             if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
+                continue
+            elif string.startswith("shaped "):
+                append_monster_permutations(filtered_strings, "%s@monster@ " + string)
+                append_monster_permutations(filtered_strings, "%s" + string)
+                continue
+            elif string in ["spectre", "wavering orb of destruction"]:
+                # treat like monsters in mon-data.h
+                append_monster_permutations(filtered_strings, "%s" + string)
                 continue
 
         if string not in filtered_strings:

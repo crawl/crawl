@@ -4857,12 +4857,6 @@ Dies könnte Euch unter Buße stellen!
 " while asking for your life to be spared"
 
 %%%%
-"neutral "
-
-%%%%
-"non-hostile "
-
-%%%%
 Really fire at %s
 
 %%%%

@@ -769,9 +769,8 @@ der Spalter
 the Severer
 der Henker
 %%%%
-# duplicate (monster)
-#the Executioner
-#der Scharfrichter
+the Executioner
+der Scharfrichter
 %%%%
 the Axe Maniac
 der Axt-Maniac
@@ -1047,9 +1046,8 @@ der Einbeirufer
 the Demonologist
 der Dämonologe
 %%%%
-# duplicate (monster)
-#the Hellbinder
-#der Höllenbinder
+the Hellbinder
+der Höllenbinder
 %%%%
 
 # Necromancy
@@ -1153,9 +1151,8 @@ der Zephyrmant
 the Stormcaller
 der Sturmrufer
 %%%%
-# duplicate (also a monster, apparently)
-#the Cloud Mage
-#der Wolkenmagier
+the Cloud Mage
+der Wolkenmagier
 %%%%
 the Meteorologist
 der Meteorologe

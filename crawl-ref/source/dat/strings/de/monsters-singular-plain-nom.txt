@@ -5,461 +5,461 @@
 ###############################################################################
 
 %%%%
-program bug
-Programmfehler
+%sprogram bug
+{adj-er}%sProgrammfehler
 %%%%
-formicid
-Formicid
+%sformicid
+{adj-er}%sFormicid
 %%%%
-entropy weaver
-Entropieweber
+%sentropy weaver
+{adj-er}%sEntropieweber
 %%%%
-bat
-Fledermaus
+%sbat
+{adj-e}%sFledermaus
 %%%%
-butterfly
-Schmetterling
+%sbutterfly
+{adj-er}%sSchmetterling
 %%%%
-vampire bat
-Vampirfledermaus
+%svampire bat
+{adj-e}%sVampirfledermaus
 %%%%
-fire bat
-Feuerfledermaus
+%sfire bat
+{adj-e}%sFeuerfledermaus
 %%%%
-bennu
-Bennu
+%sbennu
+{adj-es}%sBennu
 %%%%
-caustic shrike
-ätzender Würger
+%scaustic shrike
+{adj-er}%sätzender Würger
 %%%%
-shard shrike
-Scherbenwürger
+%sshard shrike
+{adj-er}%sScherbenwürger
 %%%%
-centaur
-Zentaur
+%scentaur
+{adj-er}%sZentaur
 %%%%
-centaur warrior
-Zentaur-Krieger
+%scentaur warrior
+{adj-er}%sZentaur-Krieger
 %%%%
-yaktaur
-Yaktaur
+%syaktaur
+{adj-er}%sYaktaur
 %%%%
-yaktaur captain
-Yaktaur-Kapitän
+%syaktaur captain
+{adj-er}%sYaktaur-Kapitän
 %%%%
-faun
-Faun
+%sfaun
+{adj-er}%sFaun
 %%%%
-satyr
-Satyr
+%ssatyr
+{adj-er}%sSatyr
 %%%%
-draconian
-Drakonier
+%sdraconian
+{adj-er}%sDrakonier
 %%%%
-black draconian
-schwarzer Drakonier
+%sblack draconian
+{adj-er}%sschwarzer Drakonier
 %%%%
-yellow draconian
-gelber Drakonier
+%syellow draconian
+{adj-er}%sgelber Drakonier
 %%%%
-pale draconian
-blasser Drakonier
+%spale draconian
+{adj-er}%sblasser Drakonier
 %%%%
-green draconian
-grüner Drakonier
+%sgreen draconian
+{adj-er}%sgrüner Drakonier
 %%%%
-purple draconian
-purpurner Drakonier
+%spurple draconian
+{adj-er}%spurpurner Drakonier
 %%%%
-red draconian
-roter Drakonier
+%sred draconian
+{adj-er}%sroter Drakonier
 %%%%
-white draconian
-weißer Drakonier
+%swhite draconian
+{adj-er}%sweißer Drakonier
 %%%%
-grey draconian
-grauer Drakonier
+%sgrey draconian
+{adj-er}%sgrauer Drakonier
 %%%%
-draconian stormcaller
-Drakonier-Sturmrufer
+%sdraconian stormcaller
+{adj-er}%sDrakonier-Sturmrufer
 %%%%
-draconian monk
-Drakonier-Mönch
+%sdraconian monk
+{adj-er}%sDrakonier-Mönch
 %%%%
-draconian shifter
-Drakonier-Verschieber
+%sdraconian shifter
+{adj-er}%sDrakonier-Verschieber
 %%%%
-draconian annihilator
-Drakonier-Vernichter
+%sdraconian annihilator
+{adj-er}%sDrakonier-Vernichter
 %%%%
-draconian knight
-Drakonier-Ritter
+%sdraconian knight
+{adj-er}%sDrakonier-Ritter
 %%%%
-draconian scorcher
-Drakonier-Verschmorer
+%sdraconian scorcher
+{adj-er}%sDrakonier-Verschmorer
 %%%%
-elf
-Elf
+%self
+{adj-er}%sElf
 %%%%
-deep elf knight
-Tiefenelf-Ritter
+%sdeep elf knight
+{adj-er}%sTiefenelf-Ritter
 %%%%
-deep elf archer
-Tiefenelf-Bogenschütze
+%sdeep elf archer
+{adj-er}%sTiefenelf-Bogenschütze
 %%%%
-deep elf blademaster
-Tiefenelf-Klingenmeister
+%sdeep elf blademaster
+{adj-er}%sTiefenelf-Klingenmeister
 %%%%
-deep elf master archer
-Tiefenelf-Bogenmeister
+%sdeep elf master archer
+{adj-er}%sTiefenelf-Bogenmeister
 %%%%
-deep elf zephyrmancer
-Tiefenelf-Zephyrmant
+%sdeep elf zephyrmancer
+{adj-er}%sTiefenelf-Zephyrmant
 %%%%
-deep elf pyromancer
-Tiefenelf-Pyromant
+%sdeep elf pyromancer
+{adj-er}%sTiefenelf-Pyromant
 %%%%
-deep elf high priest
-Tiefenelf-Hohepriester
+%sdeep elf high priest
+{adj-er}%sTiefenelf-Hohepriester
 %%%%
-deep elf demonologist
-Tiefenelf-Dämonologe
+%sdeep elf demonologist
+{adj-er}%sTiefenelf-Dämonologe
 %%%%
-deep elf annihilator
-Tiefenelf-Vernichter
+%sdeep elf annihilator
+{adj-er}%sTiefenelf-Vernichter
 %%%%
-deep elf sorcerer
-Tiefenelf-Zauberer
+%sdeep elf sorcerer
+{adj-er}%sTiefenelf-Zauberer
 %%%%
-deep elf death mage
-Tiefenelf-Todesmagier
+%sdeep elf death mage
+{adj-er}%sTiefenelf-Todesmagier
 %%%%
-deep elf elementalist
-Tiefenelf-Elementalist
+%sdeep elf elementalist
+{adj-er}%sTiefenelf-Elementalist
 %%%%
-wandering mushroom
-wandernder Pilz
+%swandering mushroom
+{adj-er}%swandernder Pilz
 %%%%
-deathcap
-Todesmütze
+%sdeathcap
+{adj-e}%sTodesmütze
 %%%%
-thorn hunter
-Dornenjäger
+%sthorn hunter
+{adj-er}%sDornenjäger
 %%%%
-shambling mangrove
-watschelnde Mangrove
+%sshambling mangrove
+{adj-e}%swatschelnde Mangrove
 %%%%
-vine stalker
-Rebjäger
+%svine stalker
+{adj-er}%sRebjäger
 %%%%
-goblin
-Goblin
+%sgoblin
+{adj-er}%sGoblin
 %%%%
-hobgoblin
-Hobgoblin
+%shobgoblin
+{adj-er}%sHobgoblin
 %%%%
-gnoll
-Gnoll
+%sgnoll
+{adj-er}%sGnoll
 %%%%
-gnoll shaman
-Gnoll-Schamane
+%sgnoll shaman
+{adj-er}%sGnoll-Schamane
 %%%%
-gnoll sergeant
-Gnoll-Wachtmeister
+%sgnoll sergeant
+{adj-er}%sGnoll-Wachtmeister
 %%%%
-boggart
-Boggart
+%sboggart
+{adj-er}%sBoggart
 %%%%
-dwarf
-Zwerg
+%sdwarf
+{adj-er}%sZwerg
 %%%%
-deep dwarf
-Tiefenzwerg
+%sdeep dwarf
+{adj-er}%sTiefenzwerg
 %%%%
-jackal
-Schakal
+%sjackal
+{adj-er}%sSchakal
 %%%%
-hound
-Hund
+%shound
+{adj-er}%sHund
 %%%%
-howler monkey
-Brüllaffe
+%showler monkey
+{adj-er}%sBrüllaffe
 %%%%
-warg
-Warg
+%swarg
+{adj-er}%sWarg
 %%%%
-wolf
-Wolf
+%swolf
+{adj-er}%sWolf
 %%%%
-hog
-Schwein
+%shog
+{adj-es}%sSchwein
 %%%%
-hell hound
-Höllenhund
+%shell hound
+{adj-er}%sHöllenhund
 %%%%
-doom hound
-Untergangshund
+%sdoom hound
+{adj-er}%sUntergangshund
 %%%%
-raiju
-Raiju
+%sraiju
+{adj-er}%sRaiju
 %%%%
-hell hog
-höllisches Schwein
+%shell hog
+{adj-er}%shöllisches Schwein
 %%%%
-holy swine
-heiliges Schwein
+%sholy swine
+{adj-er}%sheiliges Schwein
 %%%%
-felid
-Felid
+%sfelid
+{adj-es}%sFelid
 %%%%
-bear
-Bär
+%sbear
+{adj-er}%sBär
 %%%%
-polar bear
-Eisbär
+%spolar bear
+{adj-er}%sEisbär
 %%%%
-black bear
-Schwarzbär
+%sblack bear
+{adj-er}%sSchwarzbär
 %%%%
-spriggan
-Spriggan
+%sspriggan
+{adj-er}%sSpriggan
 %%%%
-spriggan rider
-Spriggan-Reiter
+%sspriggan rider
+{adj-er}%sSpriggan-Reiter
 %%%%
-spriggan druid
-Spriggan-Druide
+%sspriggan druid
+{adj-er}%sSpriggan-Druide
 %%%%
-spriggan berserker
-Spriggan-Berserker
+%sspriggan berserker
+{adj-er}%sSpriggan-Berserker
 %%%%
-spriggan air mage
-Spriggan-Luftmagier
+%sspriggan air mage
+{adj-er}%sSpriggan-Luftmagier
 %%%%
-spriggan defender
-Spriggan-Verteidiger
+%sspriggan defender
+{adj-er}%sSpriggan-Verteidiger
 %%%%
-drake
-Drachling
+%sdrake
+{adj-er}%sDrachling
 %%%%
-swamp drake
-Sumpfdrachling
+%sswamp drake
+{adj-er}%sSumpfdrachling
 %%%%
-rime drake
-Reifsdrachling
+%srime drake
+{adj-er}%sReifsdrachling
 %%%%
-wind drake
-Winddrachling
+%swind drake
+{adj-er}%sWinddrachling
 %%%%
-lindwurm
-Lindwurm
+%slindwurm
+{adj-er}%sLindwurm
 %%%%
-death drake
-Todesdrachling
+%sdeath drake
+{adj-er}%sTodesdrachling
 %%%%
-giant lizard
-Rieseneidechse
+%sgiant lizard
+{adj-e}%sRieseneidechse
 %%%%
-frilled lizard
-gekräuselte Eidechse
+%sfrilled lizard
+{adj-e}%sgekräuselte Eidechse
 %%%%
-iguana
-Leguan
+%siguana
+{adj-er}%sLeguan
 %%%%
-basilisk
-Basilisk
+%sbasilisk
+{adj-er}%sBasilisk
 %%%%
-wyvern
-Wyvern
+%swyvern
+{adj-er}%sWyvern
 %%%%
-komodo dragon
-Komododrache
+%skomodo dragon
+{adj-er}%sKomododrache
 %%%%
-merfolk
-Meervolk
+%smerfolk
+{adj-es}%sMeervolk
 %%%%
-merfolk impaler
-Meervolk-Impaler
+%smerfolk impaler
+{adj-er}%sMeervolk-Impaler
 %%%%
-merfolk javelineer
-Meervolk-Speerführer
+%smerfolk javelineer
+{adj-er}%sMeervolk-Speerführer
 %%%%
-merfolk aquamancer
-Meervolk-Aquamancer
+%smerfolk aquamancer
+{adj-er}%sMeervolk-Aquamancer
 %%%%
-merfolk siren
-Meervolk-Sirene
+%smerfolk siren
+{adj-e}%sMeervolk-Sirene
 %%%%
-merfolk avatar
-Meervolk-Avatar
+%smerfolk avatar
+{adj-er}%sMeervolk-Avatar
 %%%%
-water nymph
-Wassernymphe
+%swater nymph
+{adj-e}%sWassernymphe
 %%%%
-bog body
-Moorleiche
+%sbog body
+{adj-e}%sMoorleiche
 %%%%
-necrophage
-Nekrophagen
+%snecrophage
+{adj-er}%sNekrophagen
 %%%%
-bloated husk
-aufgeblähte Hülle
+%sbloated husk
+{adj-e}%saufgeblähte Hülle
 %%%%
-ghoul
-Ghul
+%sghoul
+{adj-er}%sGhul
 %%%%
-orc
-Ork
+%sorc
+{adj-er}%sOrk
 %%%%
-orc wizard
-Ork-Zauberer
+%sorc wizard
+{adj-er}%sOrk-Zauberer
 %%%%
-orc priest
-Ork-Priester
+%sorc priest
+{adj-er}%sOrk-Priester
 %%%%
-orc warrior
-Ork-Krieger
+%sorc warrior
+{adj-er}%sOrk-Krieger
 %%%%
-orc knight
-Ork-Ritter
+%sorc knight
+{adj-er}%sOrk-Ritter
 %%%%
-orc warlord
-Ork-Warlord
+%sorc warlord
+{adj-er}%sOrk-Warlord
 %%%%
-orc sorcerer
-Ork-Hexenmeister
+%sorc sorcerer
+{adj-er}%sOrk-Hexenmeister
 %%%%
-orc high priest
-Ork-Hohepriester
+%sorc high priest
+{adj-er}%sOrk-Hohepriester
 %%%%
-human
-Mensch
+%shuman
+{adj-er}%sMensch
 %%%%
-hell knight
-Höllenritter
+%shell knight
+{adj-er}%sHöllenritter
 %%%%
-death knight
-Todesritter
+%sdeath knight
+{adj-er}%sTodesritter
 %%%%
-necromancer
-Nekromant
+%snecromancer
+{adj-er}%sNekromant
 %%%%
-wizard
-Zauberer
+%swizard
+{adj-er}%sZauberer
 %%%%
-vault guard
-Tresorwächter
+%svault guard
+{adj-er}%sTresorwächter
 %%%%
-vault sentinel
-Tresorwache
+%svault sentinel
+{adj-e}%sTresorwache
 %%%%
-vault warden
-Tresorwärter
+%svault warden
+{adj-er}%sTresorwärter
 %%%%
-ironbound convoker
-eisenbeschlagener Einberufer
+%sironbound convoker
+{adj-er}%seisenbeschlagener Einberufer
 %%%%
-ironbound frostheart
-eisengebundenes Frostherz
+%sironbound frostheart
+{adj-er}%seisengebundenes Frostherz
 %%%%
-ironbound preserver
-eisenbeschlagener Bewahrer
+%sironbound preserver
+{adj-er}%seisenbeschlagener Bewahrer
 %%%%
-ironbound beastmaster
-eisenbeschlagener Bestienmeister
+%sironbound beastmaster
+{adj-er}%seisenbeschlagener Bestienmeister
 %%%%
-ironbound thunderhulk
-eisenbeschlagener Donnerkoloss
+%sironbound thunderhulk
+{adj-er}%seisenbeschlagener Donnerkoloss
 %%%%
-imperial myrmidon
-kaiserlicher Myrmidon
+%simperial myrmidon
+{adj-er}%skaiserlicher Myrmidon
 %%%%
-servant of whispers
-Diener des Flüsterns
+%sservant of whispers
+{adj-er}%sDiener des Flüsterns
 %%%%
-ragged hierophant
-zerlumpter Hierophant
+%sragged hierophant
+{adj-er}%szerlumpter Hierophant
 %%%%
-shapeshifter
-Gestaltwandler
+%sshapeshifter
+{adj-er}%sGestaltwandler
 %%%%
-glowing shapeshifter
-leuchtender Gestaltwandler
+%sglowing shapeshifter
+{adj-er}%sleuchtender Gestaltwandler
 %%%%
-Killer Klown
-Killer-Klown
+%sKiller Klown
+{adj-er}%sKiller-Klown
 %%%%
-demigod
-Halbgott
+%sdemigod
+{adj-er}%sHalbgott
 %%%%
-halfling
-Halbling
+%shalfling
+{adj-er}%sHalbling
 %%%%
-rat
-Ratte
+%srat
+{adj-e}%sRatte
 %%%%
-quokka
-Quokka
+%squokka
+{adj-es}%sQuokka
 %%%%
-river rat
-Flussratte
+%sriver rat
+{adj-e}%sFlussratte
 %%%%
-hell rat
-Höllenratte
+%shell rat
+{adj-e}%sHöllenratte
 %%%%
-giant cockroach
-Riesenkakerlake
+%sgiant cockroach
+{adj-e}%sRiesenkakerlake
 %%%%
-scorpion
-Skorpion
+%sscorpion
+{adj-er}%sSkorpion
 %%%%
-emperor scorpion
-Kaiserskorpion
+%semperor scorpion
+{adj-er}%sKaiserskorpion
 %%%%
-death scarab
-Todesskarabäus
+%sdeath scarab
+{adj-er}%sTodesskarabäus
 %%%%
-spider
-Spinne
+%sspider
+{adj-e}%sSpinne
 %%%%
-tarantella
-Tarantella
+%starantella
+{adj-e}%sTarantella
 %%%%
-jumping spider
-springende Spinne
+%sjumping spider
+{adj-e}%sspringende Spinne
 %%%%
-wolf spider
-Wolfsspinne
+%swolf spider
+{adj-e}%sWolfsspinne
 %%%%
-redback
-Rotrückenspinne
+%sredback
+{adj-e}%sRotrückenspinne
 %%%%
-demonic crawler
-dämonischer Kriecher
+%sdemonic crawler
+{adj-er}%sdämonischer Kriecher
 %%%%
-orb spider
-Kugelspinne
+%sorb spider
+{adj-e}%sKugelspinne
 %%%%
-alligator
-Alligator
+%salligator
+{adj-er}%sAlligator
 %%%%
-snapping turtle
-Schnappschildkröte
+%ssnapping turtle
+{adj-e}%sSchnappschildkröte
 %%%%
-alligator snapping turtle
-Alligatorschnappschildkröte
+%salligator snapping turtle
+{adj-e}%sAlligatorschnappschildkröte
 %%%%
-crab
-Krabbe
+%scrab
+{adj-e}%sKrabbe
 %%%%
-fire crab
-Feuerkrabbe
+%sfire crab
+{adj-e}%sFeuerkrabbe
 %%%%
-ghost crab
-Geisterkrabbe
+%sghost crab
+{adj-e}%sGeisterkrabbe
 %%%%
-apocalypse crab
-Apokalypse-Krabbe
+%sapocalypse crab
+{adj-e}%sApokalypse-Krabbe
 %%%%
 %sugly thing
 {adj-es}%shässliches Ding
@@ -467,955 +467,955 @@ Apokalypse-Krabbe
 %svery ugly thing
 {adj-es}%ssehr hässliches Ding
 %%%%
-fire vortex
-Feuerwirbel
+%sfire vortex
+{adj-er}%sFeuerwirbel
 %%%%
-spatial vortex
-räumlicher Wirbel
+%sspatial vortex
+{adj-er}%sräumlicher Wirbel
 %%%%
-spatial maelstrom
-räumlicher Mahlstrom
+%sspatial maelstrom
+{adj-er}%sräumlicher Mahlstrom
 %%%%
-insubstantial wisp
-unwesentliches Irrlicht
+%sinsubstantial wisp
+{adj-er}%sunwesentliches Irrlicht
 %%%%
-twister
-Twister
+%stwister
+{adj-er}%sTwister
 %%%%
-worm
-Wurm
+%sworm
+{adj-er}%sWurm
 %%%%
-swamp worm
-Sumpfwurm
+%sswamp worm
+{adj-er}%sSumpfwurm
 %%%%
-tyrant leech
-Tyrannblutegel
+%styrant leech
+{adj-er}%sTyrannblutegel
 %%%%
-dart slug
-Pfeilschnecke
+%sdart slug
+{adj-e}%sPfeilschnecke
 %%%%
-torpor snail
-Erstarrungsschnecke
+%storpor snail
+{adj-e}%sErstarrungsschnecke
 %%%%
-elephant slug
-Elefantenschnecke
+%selephant slug
+{adj-e}%sElefantenschnecke
 %%%%
-unseen horror
-unsichtbares Grauen
+%sunseen horror
+{adj-er}%sunsichtbares Grauen
 %%%%
-small abomination
-kleiner Greuel
+%ssmall abomination
+{adj-er}%skleiner Greuel
 %%%%
-ancient zyme
-uraltes Zym
+%sancient zyme
+{adj-er}%suraltes Zym
 %%%%
-worldbinder
-Weltbinder
+%sworldbinder
+{adj-er}%sWeltbinder
 %%%%
-killer bee
-Killerbiene
+%skiller bee
+{adj-e}%sKillerbiene
 %%%%
-queen bee
-Bienenkönigin
+%squeen bee
+{adj-e}%sBienenkönigin
 %%%%
-vampire mosquito
-Vampir-Mücke
+%svampire mosquito
+{adj-e}%sVampir-Mücke
 %%%%
-hornet
-Hornisse
+%shornet
+{adj-e}%sHornisse
 %%%%
-meliai
-Meliai
+%smeliai
+{adj-e}%sMeliai
 %%%%
-spark wasp
-Funkenwespe
+%sspark wasp
+{adj-e}%sFunkenwespe
 %%%%
-moth
-Motte
+%smoth
+{adj-e}%sMotte
 %%%%
-ghost moth
-Geistermotte
+%sghost moth
+{adj-e}%sGeistermotte
 %%%%
-moth of wrath
-Motte des Zorns
+%smoth of wrath
+{adj-e}%sMotte des Zorns
 %%%%
-wight
-Wight
+%swight
+{adj-er}%sWight
 %%%%
-skeletal warrior
-Skelettkrieger
+%sskeletal warrior
+{adj-er}%sSkelettkrieger
 %%%%
-ancient champion
-alter Champion
+%sancient champion
+{adj-er}%salter Champion
 %%%%
-flying skull
-fliegender Schädel
+%sflying skull
+{adj-er}%sfliegender Schädel
 %%%%
-curse skull
-Fluchschädel
+%scurse skull
+{adj-er}%sFluchschädel
 %%%%
-curse toe
-Fluchzeh
+%scurse toe
+{adj-er}%sFluchzeh
 %%%%
-angel
-Engel
+%sangel
+{adj-er}%sEngel
 %%%%
-cherub
-Cherub
+%scherub
+{adj-er}%sCherub
 %%%%
-seraph
-Seraph
+%sseraph
+{adj-er}%sSeraph
 %%%%
-daeva
-Daeva
+%sdaeva
+{adj-er}%sDaeva
 %%%%
-profane servitor
-profaner Diener
+%sprofane servitor
+{adj-er}%sprofaner Diener
 %%%%
-giant
-Riese
+%sgiant
+{adj-er}%sRiese
 %%%%
-cyclops
-Zyklop
+%scyclops
+{adj-er}%sZyklop
 %%%%
-ettin
-Ettin
+%settin
+{adj-er}%sEttin
 %%%%
-fire giant
-Feuerriese
+%sfire giant
+{adj-er}%sFeuerriese
 %%%%
-frost giant
-Frostriese
+%sfrost giant
+{adj-er}%sFrostriese
 %%%%
-stone giant
-Steinriese
+%sstone giant
+{adj-er}%sSteinriese
 %%%%
-titan
-Titan
+%stitan
+{adj-er}%sTitan
 %%%%
-juggernaut
-Juggernaut
+%sjuggernaut
+{adj-er}%sJuggernaut
 %%%%
-iron giant
-Eisenriese
+%siron giant
+{adj-er}%sEisenriese
 %%%%
-dragon
-Drache
+%sdragon
+{adj-er}%sDrache
 %%%%
-fire dragon
-Feuerdrache
+%sfire dragon
+{adj-er}%sFeuerdrache
 %%%%
 %shydra
 {adj-e}%sHydra
 %%%%
-ice dragon
-Eisdrache
+%sice dragon
+{adj-er}%sEisdrache
 %%%%
-steam dragon
-Dampfdrache
+%ssteam dragon
+{adj-er}%sDampfdrache
 %%%%
-swamp dragon
-Sumpfdrache
+%sswamp dragon
+{adj-er}%sSumpfdrache
 %%%%
-acid dragon
-Säuredrache
+%sacid dragon
+{adj-er}%sSäuredrache
 %%%%
-quicksilver dragon
-Quecksilberdrache
+%squicksilver dragon
+{adj-er}%sQuecksilberdrache
 %%%%
-iron dragon
-Eisendrache
+%siron dragon
+{adj-er}%sEisendrache
 %%%%
-storm dragon
-Sturmdrache
+%sstorm dragon
+{adj-er}%sSturmdrache
 %%%%
-golden dragon
-Golddrache
+%sgolden dragon
+{adj-er}%sGolddrache
 %%%%
-shadow dragon
-Schattendrache
+%sshadow dragon
+{adj-er}%sSchattendrache
 %%%%
-bone dragon
-Knochendrache
+%sbone dragon
+{adj-er}%sKnochendrache
 %%%%
-pearl dragon
-Perlendrache
+%spearl dragon
+{adj-er}%sPerlendrache
 %%%%
-elemental
-Elementar
+%selemental
+{adj-es}%sElementar
 %%%%
-earth elemental
-Erdelementar
+%searth elemental
+{adj-es}%sErdelementar
 %%%%
-fire elemental
-Feuerelementar
+%sfire elemental
+{adj-es}%sFeuerelementar
 %%%%
-water elemental
-Wasserelementar
+%swater elemental
+{adj-es}%sWasserelementar
 %%%%
-air elemental
-Luftelementar
+%sair elemental
+{adj-es}%sLuftelementar
 %%%%
-iron elemental
-Eisenelementar
+%siron elemental
+{adj-es}%sEisenelementar
 %%%%
-elemental wellspring
-elementare Quelle
+%selemental wellspring
+{adj-e}%selementare Quelle
 %%%%
-giant frog
-Riesenfrosch
+%sgiant frog
+{adj-er}%sRiesenfrosch
 %%%%
-bullfrog
-Ochsenfrosch
+%sbullfrog
+{adj-er}%sOchsenfrosch
 %%%%
-spiny frog
-Stachelfrosch
+%sspiny frog
+{adj-er}%sStachelfrosch
 %%%%
-blink frog
-Blinzelfrosch
+%sblink frog
+{adj-er}%sBlinzelfrosch
 %%%%
-barachi
-Barachi
+%sbarachi
+{adj-e}%sBarachi
 %%%%
-floating eye
-schwebendes Auge
+%sfloating eye
+{adj-es}%sschwebendes Auge
 %%%%
-glowing orange brain
-oranges leuchtendes Gehirn
+%sglowing orange brain
+{adj-es}%soranges leuchtendes Gehirn
 %%%%
-great orb of eyes
-große Augenkugel
+%sgreat orb of eyes
+{adj-e}%sgroße Augenkugel
 %%%%
-shining eye
-leuchtendes Auge
+%sshining eye
+{adj-es}%sleuchtendes Auge
 %%%%
-eye of devastation
-Auge der Verwüstung
+%seye of devastation
+{adj-es}%sAuge der Verwüstung
 %%%%
-golden eye
-goldenes Auge
+%sgolden eye
+{adj-es}%sgoldenes Auge
 %%%%
-ophan
-Ophan
+%sophan
+{adj-er}%sOphan
 %%%%
-manticore
-Mantikor
+%smanticore
+{adj-er}%sMantikor
 %%%%
-minotaur
-Minotaur
+%sminotaur
+{adj-er}%sMinotaur
 %%%%
-sphinx
-Sphinx
+%ssphinx
+{adj-e}%sSphinx
 %%%%
-harpy
-Harpyie
+%sharpy
+{adj-e}%sHarpyie
 %%%%
-mutant beast
-mutierte Bestie
+%smutant beast
+{adj-e}%smutierte Bestie
 %%%%
-ancestor
-Ahne
+%sancestor
+{adj-er}%sAhne
 %%%%
-knight
-Ritter
+%sknight
+{adj-er}%sRitter
 %%%%
-battlemage
-Kampfmagier
+%sbattlemage
+{adj-er}%sKampfmagier
 %%%%
-hexer
-Hexer
+%shexer
+{adj-er}%sHexer
 %%%%
-jelly
-Gelee
+%sjelly
+{adj-es}%sGelee
 %%%%
 %sslime creature
 {adj-es}%sSchleimwesen
 %%%%
-merged slime creature
-verschmolzene Schleimkreatur
+%smerged slime creature
+{adj-e}%sverschmolzene Schleimkreatur
 %%%%
-azure jelly
-azurblaues Gelee
+%sazure jelly
+{adj-es}%sazurblaues Gelee
 %%%%
-acid blob
-Säureklumpen
+%sacid blob
+{adj-er}%sSäureklumpen
 %%%%
-kobold
-Kobold
+%skobold
+{adj-er}%sKobold
 %%%%
-big kobold
-großer Kobold
+%sbig kobold
+{adj-er}%sgroßer Kobold
 %%%%
-kobold demonologist
-Kobold-Dämonologe
+%skobold demonologist
+{adj-er}%sKobold-Dämonologe
 %%%%
-lich
-Lich
+%slich
+{adj-er}%sLich
 %%%%
-ancient lich
-alter Lich
+%sancient lich
+{adj-er}%salter Lich
 %%%%
-revenant
-Wiedergänger
+%srevenant
+{adj-er}%sWiedergänger
 %%%%
-halazid warlock
-halazidischer Hexenmeister
+%shalazid warlock
+{adj-er}%shalazidischer Hexenmeister
 %%%%
-mummy
-Mumie
+%smummy
+{adj-e}%sMumie
 %%%%
-guardian mummy
-Wächtermumie
+%sguardian mummy
+{adj-e}%sWächtermumie
 %%%%
-greater mummy
-größere Mumie
+%sgreater mummy
+{adj-e}%sgrößere Mumie
 %%%%
-mummy priest
-Mumie-Priester
+%smummy priest
+{adj-er}%sMumie-Priester
 %%%%
-naga
-Naga
+%snaga
+{adj-er}%sNaga
 %%%%
-naga mage
-Naga-Magier
+%snaga mage
+{adj-er}%sNaga-Magier
 %%%%
-naga sharpshooter
-Naga-Scharfschütze
+%snaga sharpshooter
+{adj-er}%sNaga-Scharfschütze
 %%%%
-naga ritualist
-Naga-Ritualist
+%snaga ritualist
+{adj-er}%sNaga-Ritualist
 %%%%
-naga warrior
-Naga-Krieger
+%snaga warrior
+{adj-er}%sNaga-Krieger
 %%%%
-nagaraja
-Nagaraja
+%snagaraja
+{adj-er}%sNagaraja
 %%%%
-ogre
-Oger
+%sogre
+{adj-er}%sOger
 %%%%
-two-headed ogre
-zweiköpfiger Oger
+%stwo-headed ogre
+{adj-er}%szweiköpfiger Oger
 %%%%
-ogre mage
-Oger-Magier
+%sogre mage
+{adj-er}%sOger-Magier
 %%%%
-plant
-Pflanze
+%splant
+{adj-e}%sPflanze
 %%%%
-demonic plant
-dämonische Pflanze
+%sdemonic plant
+{adj-e}%sdämonische Pflanze
 %%%%
-withered plant
-verwelkte Pflanze
+%swithered plant
+{adj-e}%sverwelkte Pflanze
 %%%%
-oklob sapling
-Oklob-Setzling
+%soklob sapling
+{adj-er}%sOklob-Setzling
 %%%%
-oklob plant
-Oklob-Pflanze
+%soklob plant
+{adj-e}%sOklob-Pflanze
 %%%%
-bush
-Busch
+%sbush
+{adj-er}%sBusch
 %%%%
-burning bush
-brennender Busch
+%sburning bush
+{adj-er}%sbrennender Busch
 %%%%
-toadstool
-Giftpilz
+%stoadstool
+{adj-er}%sGiftpilz
 %%%%
-fungus
-Pilz
+%sfungus
+{adj-er}%sPilz
 %%%%
-ballistomycete
-Ballistomycete
+%sballistomycete
+{adj-er}%sBallistomycete
 %%%%
-hyperactive ballistomycete
-hyperaktiver Ballistomycete
+%shyperactive ballistomycete
+{adj-er}%shyperaktiver Ballistomycete
 %%%%
-briar patch
-Dornstrauch
+%sbriar patch
+{adj-er}%sDornstrauch
 %%%%
-tengu
-Tengu
+%stengu
+{adj-er}%sTengu
 %%%%
-tengu conjurer
-Tengu-Zauberer
+%stengu conjurer
+{adj-er}%sTengu-Zauberer
 %%%%
-tengu warrior
-Tengu-Krieger
+%stengu warrior
+{adj-er}%sTengu-Krieger
 %%%%
-tengu reaver
-Tengu-Häscher
+%stengu reaver
+{adj-er}%sTengu-Häscher
 %%%%
-efreet
-Efreet
+%sefreet
+{adj-es}%sEfreet
 %%%%
-rakshasa
-Rakshasa
+%srakshasa
+{adj-er}%sRakshasa
 %%%%
-dryad
-Dryade
+%sdryad
+{adj-e}%sDryade
 %%%%
-snaplasher vine
-Peitscherrebe
+%ssnaplasher vine
+{adj-e}%sPeitscherrebe
 %%%%
-snaplasher vine segment
-Peitscherrebesegment
+%ssnaplasher vine segment
+{adj-es}%sPeitscherrebesegment
 %%%%
-snake
-Schlange
+%ssnake
+{adj-e}%sSchlange
 %%%%
-ball python
-Kugelpython
+%sball python
+{adj-e}%sKugelpython
 %%%%
-adder
-Kreuzotter
+%sadder
+{adj-e}%sKreuzotter
 %%%%
-water moccasin
-Wassermokassin
+%swater moccasin
+{adj-er}%sWassermokassin
 %%%%
-black mamba
-schwarze Mamba
+%sblack mamba
+{adj-e}%sschwarze Mamba
 %%%%
-sea snake
-Seeschlange
+%ssea snake
+{adj-e}%sSeeschlange
 %%%%
-anaconda
-Anakonda
+%sanaconda
+{adj-e}%sAnakonda
 %%%%
-guardian serpent
-Wächter-Schlange
+%sguardian serpent
+{adj-e}%sWächter-Schlange
 %%%%
-shock serpent
-Schockschlange
+%sshock serpent
+{adj-e}%sSchockschlange
 %%%%
-mana viper
-Manaviper
+%smana viper
+{adj-e}%sManaviper
 %%%%
-troll
-Troll
+%stroll
+{adj-er}%sTroll
 %%%%
-iron troll
-Eisentroll
+%siron troll
+{adj-er}%sEisentroll
 %%%%
-deep troll
-Tiefentroll
+%sdeep troll
+{adj-er}%sTiefentroll
 %%%%
-deep troll earth mage
-Tiefentroll-Erdmagier
+%sdeep troll earth mage
+{adj-er}%sTiefentroll-Erdmagier
 %%%%
-deep troll shaman
-Tiefentroll-Schamane
+%sdeep troll shaman
+{adj-er}%sTiefentroll-Schamane
 %%%%
-vampire
-Vampir
+%svampire
+{adj-er}%sVampir
 %%%%
-vampire knight
-Vampir-Ritter
+%svampire knight
+{adj-er}%sVampir-Ritter
 %%%%
-vampire mage
-Vampir-Magier
+%svampire mage
+{adj-er}%sVampir-Magier
 %%%%
-jiangshi
-Jiangshi
+%sjiangshi
+{adj-es}%sJiangshi
 %%%%
-ghost
-Gespenst
+%sghost
+{adj-es}%sGespenst
 %%%%
-phantom
-Phantom
+%sphantom
+{adj-es}%sPhantom
 %%%%
-hungry ghost
-hungriger Geist
+%shungry ghost
+{adj-er}%shungriger Geist
 %%%%
-flayed ghost
-enthäuteter Geist
+%sflayed ghost
+{adj-er}%senthäuteter Geist
 %%%%
-player ghost
-Spielergeist
+%splayer ghost
+{adj-er}%sSpielergeist
 %%%%
-shadow
-Schatten
+%sshadow
+{adj-er}%sSchatten
 %%%%
-silent spectre
-stilles Gespenst
+%ssilent spectre
+{adj-er}%sstilles Gespenst
 %%%%
-drowned soul
-ertrunkene Seele
+%sdrowned soul
+{adj-e}%sertrunkene Seele
 %%%%
-wraith
-Geist
+%swraith
+{adj-er}%sGeist
 %%%%
-shadow wraith
-Schattengeist
+%sshadow wraith
+{adj-er}%sSchattengeist
 %%%%
-freezing wraith
-Frostgeist
+%sfreezing wraith
+{adj-er}%sFrostgeist
 %%%%
-eidolon
-Eidolon
+%seidolon
+{adj-er}%sEidolon
 %%%%
-phantasmal warrior
-phantastischer Krieger
+%sphantasmal warrior
+{adj-er}%sphantastischer Krieger
 %%%%
-large abomination
-großer Greuel
+%slarge abomination
+{adj-er}%sgroßer Greuel
 %%%%
-thrashing horror
-verprügelndes Grauen
+%sthrashing horror
+{adj-er}%sverprügelndes Grauen
 %%%%
-tentacled monstrosity
-Tentakel-Monstrosität
+%stentacled monstrosity
+{adj-e}%sTentakel-Monstrosität
 %%%%
-Orb Guardian
-Kugelwächter
+%sOrb Guardian
+{adj-er}%sKugelwächter
 %%%%
-tentacled starspawn
-Tentakelsternbrut
+%stentacled starspawn
+{adj-er}%sTentakelsternbrut
 %%%%
-starspawn tentacle
-Sternbruttentakel
+%sstarspawn tentacle
+{adj-er}%sSternbruttentakel
 %%%%
-starspawn tentacle segment
-Sternbruttentakelsegment
+%sstarspawn tentacle segment
+{adj-es}%sSternbruttentakelsegment
 %%%%
-starcursed mass
-sternverfluchte Masse
+%sstarcursed mass
+{adj-e}%ssternverfluchte Masse
 %%%%
-dream sheep
-Traumschaf
+%sdream sheep
+{adj-es}%sTraumschaf
 %%%%
-yak
-Yak
+%syak
+{adj-es}%sYak
 %%%%
-death yak
-Todesyak
+%sdeath yak
+{adj-es}%sTodesyak
 %%%%
-catoblepas
-Catoblepas
+%scatoblepas
+{adj-e}%sCatoblepas
 %%%%
-elephant
-Elefant
+%selephant
+{adj-er}%sElefant
 %%%%
-dire elephant
-Schreckenselefant
+%sdire elephant
+{adj-er}%sSchreckenselefant
 %%%%
-hellephant
-Höllefant
+%shellephant
+{adj-er}%sHöllefant
 %%%%
-apis
-Apis
+%sapis
+{adj-e}%sApis
 %%%%
-ice beast
-Eisbestie
+%sice beast
+{adj-e}%sEisbestie
 %%%%
-sky beast
-Himmelstier
+%ssky beast
+{adj-es}%sHimmelstier
 %%%%
-zombie
-Zombie
+%szombie
+{adj-er}%sZombie
 %%%%
-skeleton
-Skelett
+%sskeleton
+{adj-es}%sSkelett
 %%%%
-simulacrum
-Simulacrum
+%ssimulacrum
+{adj-es}%sSimulacrum
 %%%%
-small zombie
-kleiner Zombie
+%ssmall zombie
+{adj-er}%skleiner Zombie
 %%%%
-small skeleton
-kleines Skelett
+%ssmall skeleton
+{adj-er}%skleines Skelett
 %%%%
-small simulacrum
-kleines Simulacrum
+%ssmall simulacrum
+{adj-er}%skleines Simulacrum
 %%%%
-large zombie
-großer Zombie
+%slarge zombie
+{adj-er}%sgroßer Zombie
 %%%%
-large skeleton
-großes Skelett
+%slarge skeleton
+{adj-er}%sgroßes Skelett
 %%%%
-large simulacrum
-großes Simulacrum
+%slarge simulacrum
+{adj-er}%sgroßes Simulacrum
 %%%%
-spectral thing
-spektrale Sache
+%sspectral thing
+{adj-e}%sspektrale Sache
 %%%%
-electric eel
-Zitteraal
+%selectric eel
+{adj-er}%sZitteraal
 %%%%
-kraken
-Kraken
+%skraken
+{adj-er}%sKraken
 %%%%
-tentacle
-Tentakel
+%stentacle
+{adj-er}%sTentakel
 %%%%
-tentacle segment
-Tentakelsegment
+%stentacle segment
+{adj-es}%sTentakelsegment
 %%%%
-octopode
-Oktopod
+%soctopode
+{adj-er}%sOktopod
 %%%%
-lava snake
-Lavaschlange
+%slava snake
+{adj-e}%sLavaschlange
 %%%%
-salamander
-Salamander
+%ssalamander
+{adj-er}%sSalamander
 %%%%
-salamander mystic
-Salamander-Mystiker
+%ssalamander mystic
+{adj-er}%sSalamander-Mystiker
 %%%%
-Hellbinder
-Höllenbinder
+%sHellbinder
+{adj-er}%sHöllenbinder
 %%%%
-Cloud Mage
-Wolkenmagier
+%sCloud Mage
+{adj-er}%sWolkenmagier
 %%%%
-player
-Spieler
+%splayer
+{adj-er}%sSpieler
 %%%%
-player illusion
-Spieler-Illusion
+%splayer illusion
+{adj-e}%sSpieler-Illusion
 %%%%
-dancing weapon
-tanzende Waffe
+%sdancing weapon
+{adj-e}%stanzende Waffe
 %%%%
-spectral weapon
-Spektralwaffe
+%sspectral weapon
+{adj-e}%sSpektralwaffe
 %%%%
-eldritch tentacle
-unheimlicher Tentakel
+%seldritch tentacle
+{adj-er}%sunheimlicher Tentakel
 %%%%
-eldritch tentacle segment
-unheimliches Tentakelsegment
+%seldritch tentacle segment
+{adj-er}%sunheimliches Tentakelsegment
 %%%%
-demonspawn
-Dämonenbrut
+%sdemonspawn
+{adj-e}%sDämonenbrut
 %%%%
-monstrous demonspawn
-monströse Dämonenbrut
+%smonstrous demonspawn
+{adj-e}%smonströse Dämonenbrut
 %%%%
-gelid demonspawn
-gelider Dämonenbrut
+%sgelid demonspawn
+{adj-er}%sgelider Dämonenbrut
 %%%%
-infernal demonspawn
-höllische Dämonenbrut
+%sinfernal demonspawn
+{adj-e}%shöllische Dämonenbrut
 %%%%
-torturous demonspawn
-quälende Dämonenbrut
+%storturous demonspawn
+{adj-e}%squälende Dämonenbrut
 %%%%
-blood saint
-Blutheilige
+%sblood saint
+{adj-er}%sBlutheilige
 %%%%
-warmonger
-Kriegstreiber
+%swarmonger
+{adj-er}%sKriegstreiber
 %%%%
-corrupter
-Korruptor
+%scorrupter
+{adj-er}%sKorruptor
 %%%%
-black sun
-schwarze Sonne
+%sblack sun
+{adj-e}%sschwarze Sonne
 %%%%
-crimson imp
-karminrotes Teufelchen
+%scrimson imp
+{adj-es}%skarminrotes Teufelchen
 %%%%
-quasit
-Quasit
+%squasit
+{adj-es}%sQuasit
 %%%%
-white imp
-weißes Teufelchen
+%swhite imp
+{adj-es}%sweißes Teufelchen
 %%%%
-ufetubus
-Ufetubus
+%sufetubus
+{adj-er}%sUfetubus
 %%%%
-iron imp
-Eisenteufelchen
+%siron imp
+{adj-es}%sEisenteufelchen
 %%%%
-shadow imp
-Schattenteufelchen
+%sshadow imp
+{adj-es}%sSchattenteufelchen
 %%%%
-rust devil
-Rostteufel
+%srust devil
+{adj-er}%sRostteufel
 %%%%
-orange demon
-oranger Dämon
+%sorange demon
+{adj-er}%soranger Dämon
 %%%%
-red devil
-roter Teufel
+%sred devil
+{adj-er}%sroter Teufel
 %%%%
-hellwing
-Höllenflügel
+%shellwing
+{adj-er}%sHöllenflügel
 %%%%
-ice devil
-Eisteufel
+%sice devil
+{adj-er}%sEisteufel
 %%%%
-chaos spawn
-Chaosbrut
+%schaos spawn
+{adj-e}%sChaosbrut
 %%%%
-sun demon
-Sonnendämon
+%ssun demon
+{adj-er}%sSonnendämon
 %%%%
-soul eater
-Seelenfresser
+%ssoul eater
+{adj-er}%sSeelenfresser
 %%%%
-smoke demon
-Rauchdämon
+%ssmoke demon
+{adj-er}%sRauchdämon
 %%%%
-neqoxec
-Neqoxec
+%sneqoxec
+{adj-e}%sNeqoxec
 %%%%
-ynoxinul
-Ynoxinul
+%synoxinul
+{adj-es}%sYnoxinul
 %%%%
-sixfirhy
-Sixfirhy
+%ssixfirhy
+{adj-er}%sSixfirhy
 %%%%
-shadow demon
-Schattendämon
+%sshadow demon
+{adj-er}%sSchattendämon
 %%%%
-green death
-grüner Tod
+%sgreen death
+{adj-er}%sgrüner Tod
 %%%%
-blizzard demon
-Blizzarddämon
+%sblizzard demon
+{adj-er}%sBlizzarddämon
 %%%%
-balrug
-Balrug
+%sbalrug
+{adj-er}%sBalrug
 %%%%
-cacodemon
-Cacodaemon
+%scacodemon
+{adj-er}%sCacodaemon
 %%%%
-hell beast
-Höllentier
+%shell beast
+{adj-es}%sHöllentier
 %%%%
-hellion
-Teufelsbraten
+%shellion
+{adj-er}%sTeufelsbraten
 %%%%
-reaper
-Schnitter
+%sreaper
+{adj-er}%sSchnitter
 %%%%
-lorocyproca
-Lorocyproca
+%slorocyproca
+{adj-e}%sLorocyproca
 %%%%
-tormentor
-Quäler
+%stormentor
+{adj-er}%sQuäler
 %%%%
-Brimstone Fiend
-Schwefelunterweltler
+%sBrimstone Fiend
+{adj-er}%sSchwefelunterweltler
 %%%%
-Ice Fiend
-Eisunterweltler
+%sIce Fiend
+{adj-er}%sEisunterweltler
 %%%%
-Tzitzimitl
-Tzitzimitl
+%sTzitzimitl
+{adj-es}%sTzitzimitl
 %%%%
-Hell Sentinel
-Höllenwächter
+%sHell Sentinel
+{adj-er}%sHöllenwächter
 %%%%
-Executioner
-Scharfrichter
+%sExecutioner
+{adj-er}%sScharfrichter
 %%%%
-animated tree
-animierter Baum
+%sanimated tree
+{adj-er}%sanimierter Baum
 %%%%
-golem
-Golem
+%sgolem
+{adj-er}%sGolem
 %%%%
-saltling
-Salzling
+%ssaltling
+{adj-er}%sSalzling
 %%%%
-peacekeeper
-Friedenshüter
+%speacekeeper
+{adj-er}%sFriedenshüter
 %%%%
-iron golem
-Eisengolem
+%siron golem
+{adj-er}%sEisengolem
 %%%%
-crystal guardian
-Kristallwächter
+%scrystal guardian
+{adj-er}%sKristallwächter
 %%%%
-toenail golem
-Zehennagelgolem
+%stoenail golem
+{adj-er}%sZehennagelgolem
 %%%%
-electric golem
-Blitzgolem
+%selectric golem
+{adj-er}%sBlitzgolem
 %%%%
-ushabti
-Uschabti
+%sushabti
+{adj-e}%sUschabti
 %%%%
-guardian golem
-Wächtergolem
+%sguardian golem
+{adj-er}%sWächtergolem
 %%%%
-spellforged servitor
-zaubergeschmeideter Diener
+%sspellforged servitor
+{adj-er}%szaubergeschmeideter Diener
 %%%%
-ice statue
-Eisstatue
+%sice statue
+{adj-e}%sEisstatue
 %%%%
-obsidian statue
-Obsidianstatue
+%sobsidian statue
+{adj-e}%sObsidianstatue
 %%%%
-orange crystal statue
-orange Kristallstatue
+%sorange crystal statue
+{adj-e}%sorange Kristallstatue
 %%%%
-statue
-Statue
+%sstatue
+{adj-e}%sStatue
 %%%%
-training dummy
-Trainingspuppe
+%straining dummy
+{adj-e}%sTrainingspuppe
 %%%%
-pillar of salt
-Säule des Salzes
+%spillar of salt
+{adj-e}%sSäule des Salzes
 %%%%
-block of ice
-Eisblock
+%sblock of ice
+{adj-er}%sEisblock
 %%%%
-diamond obelisk
-Diamantobelisk
+%sdiamond obelisk
+{adj-er}%sDiamantobelisk
 %%%%
-lightning spire
-Blitzturm
+%slightning spire
+{adj-er}%sBlitzturm
 %%%%
-gargoyle
-Gargoyle
+%sgargoyle
+{adj-er}%sGargoyle
 %%%%
-war gargoyle
-Kriegsgargoyle
+%swar gargoyle
+{adj-er}%sKriegsgargoyle
 %%%%
-molten gargoyle
-geschmolzener Gargoyle
+%smolten gargoyle
+{adj-er}%sgeschmolzener Gargoyle
 %%%%
-pandemonium lord
-Pandämoniumsfürst
+%spandemonium lord
+{adj-er}%sPandämoniumsfürst
 %%%%
-hell lord
-Höllenfürst
+%shell lord
+{adj-er}%sHöllenfürst
 %%%%
-ball lightning
-Kugelblitz
+%sball lightning
+{adj-er}%sKugelblitz
 %%%%
-ballistomycete spore
-Ballistomycetenspore
+%sballistomycete spore
+{adj-e}%sBallistomycetenspore
 %%%%
-lost soul
-verlorene Seele
+%slost soul
+{adj-e}%sverlorene Seele
 %%%%
-lurking horror
-lauerndes Grauen
+%slurking horror
+{adj-er}%slauerndes Grauen
 %%%%
-orb of fire
-Feuerkugel
+%sorb of fire
+{adj-e}%sFeuerkugel
 %%%%
-orb of destruction
-Kugel der Zerstörung
+%sorb of destruction
+{adj-e}%sKugel der Zerstörung
 %%%%
-wavering orb of destruction
-schwankende Kugel der Zerstörung
+%swavering orb of destruction
+{adj-e}%sschwankende Kugel der Zerstörung
 %%%%
-fulminant prism
-fulminantes Prisma
+%sfulminant prism
+{adj-er}%sfulminantes Prisma
 %%%%
-wretched star
-elender Stern
+%swretched star
+{adj-er}%selender Stern
 %%%%
-battlesphere
-Kampfsphäre
+%sbattlesphere
+{adj-e}%sKampfsphäre
 %%%%
-death cob
-Todeskolben
+%sdeath cob
+{adj-er}%sTodeskolben
 %%%%
-moon troll
-Mondtroll
+%smoon troll
+{adj-er}%sMondtroll
 %%%%
-foxfire
-Fuchsfeuer
+%sfoxfire
+{adj-es}%sFuchsfeuer
 %%%%
-nameless horror
-namenloser Horror
+%snameless horror
+{adj-er}%snamenloser Horror
 %%%%
-will-o-the-wisp
-Irrlicht
+%swill-o-the-wisp
+{adj-es}%sIrrlicht
 %%%%
-bunyip
-Bunyip
+%sbunyip
+{adj-er}%sBunyip
 %%%%
-boulder beetle
-Rollsteinkäfer
+%sboulder beetle
+{adj-er}%sRollsteinkäfer
 %%%%
-cane toad
-Aga-Kröte
+%scane toad
+{adj-e}%sAga-Kröte
 %%%%
-goliath frog
-Goliathfrosch
+%sgoliath frog
+{adj-er}%sGoliathfrosch
 %%%%
-fenstrider witch
-Fennläuferhexe
+%sfenstrider witch
+{adj-e}%sFennläuferhexe
 %%%%
-palentonga
-Palentonga
+%spalentonga
+{adj-er}%sPalentonga
 %%%%
-royal mummy
-königliche Mumie
+%sroyal mummy
+{adj-e}%skönigliche Mumie
 %%%%
-eleionoma
-Eleionoma
+%seleionoma
+{adj-e}%sEleionoma
 %%%%
-lemure
-Lemure
+%slemure
+{adj-e}%sLemure
 %%%%
-endoplasm
-Endoplasma
+%sendoplasm
+{adj-es}%sEndoplasma
 %%%%
-rockslime
-Felsenschleim
+%srockslime
+{adj-er}%sFelsenschleim
 %%%%
-quicksilver ooze
-Quecksilber-Schlamm
+%squicksilver ooze
+{adj-er}%sQuecksilber-Schlamm
 %%%%
-kobold brigand
-Kobold-Brigant
+%skobold brigand
+{adj-er}%sKobold-Brigant
 %%%%
-dread lich
-Grauenlich
+%sdread lich
+{adj-er}%sGrauenlich
 %%%%
-djinni
-Dschinn
+%sdjinni
+{adj-er}%sDschinn
 %%%%
-salamander tyrant
-Salamander-Tyrann
+%ssalamander tyrant
+{adj-er}%sSalamander-Tyrann
 %%%%
-animated armour
-animierte Rüstung
+%sanimated armour
+{adj-e}%sanimierte Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%
-test spawner
-Test-Erzeuger
+%stest spawner
+{adj-er}%sTest-Erzeuger
 %%%%
-test statue
-Test-Statue
+%stest statue
+{adj-e}%sTest-Statue
 %%%%
-test blob
-Test-Klumpen
+%stest blob
+{adj-er}%sTest-Klumpen
 %%%%
-sensed monster
-gespürtes Monster
+%ssensed monster
+{adj-er}%sgespürtes Monster
 %%%%
-friendly sensed monster
-freundliches gespürtes Monster
+%sfriendly sensed monster
+{adj-er}%sfreundliches gespürtes Monster
 %%%%
-trivial sensed monster
-triviales gespürtes Monster
+%strivial sensed monster
+{adj-er}%striviales gespürtes Monster
 %%%%
-easy sensed monster
-leichtes gespürtes Monster
+%seasy sensed monster
+{adj-er}%sleichtes gespürtes Monster
 %%%%
-tough sensed monster
-hartes gespürtes Monster
+%stough sensed monster
+{adj-er}%shartes gespürtes Monster
 %%%%
-nasty sensed monster
-furchtbares gespürtes Monster
+%snasty sensed monster
+{adj-er}%sfurchtbares gespürtes Monster
 %%%%
 %ssting beast
 {adj-es}%sStichbiest
@@ -1439,25 +1439,25 @@ furchtbares gespürtes Monster
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
-%s zombie
-%s-Zombie
+%s@monster@ zombie
+{adj-er}%s@monster@-Zombie
 %%%%
-%s skeleton
-%s-Skelett
+%s@monster@ skeleton
+{adj-es}%s@monster@-Skelett
 %%%%
-%s simulacrum
-%s-Simulacrum
+%s@monster@ simulacrum
+{adj-es}%s@monster@-Simulacrum
 %%%%
 # can result from Zin's Recite
-%s shaped pillar of salt
-%s-förmige Salzsäule
+%s@monster@ shaped pillar of salt
+{adj-e}%s@monster@-förmige Salzsäule
 %%%%
 # can result from Glaciate
-%s shaped block of ice
-%s-förmiger Eisblock
+%s@monster@ shaped block of ice
+{adj-er}%s@monster@-förmiger Eisblock
 %%%%
-%s shaped shifter
-%s-förmiger Gestaltwandler
+%s@monster@ shaped shifter
+{adj-er}%s@monster@-förmiger Gestaltwandler
 %%%%
 
 # irregular derived monsters
@@ -1485,24 +1485,24 @@ furchtbares gespürtes Monster
 # (and not already covered above)
 # "zombie", "skeleton", etc.
 %%%%
-spectre
-Spukgestalt
+%sspectre
+{adj-e}%sSpukgestalt
 %%%%
-shaped pillar of salt
-geformte Salzsäule
+%sshaped pillar of salt
+{adj-e}%sgeformte Salzsäule
 %%%%
-shaped block of ice
-geformter Eisblock
+%sshaped block of ice
+{adj-er}%sgeformter Eisblock
 %%%%
 
 # polymorphed uniques
 %%%%
-%s shaped Royal Jelly
-%s-förmiges Gelée Royale
+%s@monster@ shaped Royal Jelly
+{adj-es}%s@monster@-förmiges Gelée Royale
 %%%%
-%s shaped Lernaean hydra
-%s-förmige Lernäische Hydra
+%s@monster@ shaped Lernaean hydra
+{adj-e}%s@monster@-förmige Lernäische Hydra
 %%%%
-%s shaped Serpent of Hell
-%s-förmige Höllenschlange
+%s@monster@ shaped Serpent of Hell
+{adj-e}%s@monster@-förmige Höllenschlange
 %%%%

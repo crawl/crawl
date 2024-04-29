@@ -1039,8 +1039,8 @@ your book of the Hunter
 #################################
 
 %%%%
-your %s corpse
-Eure {nom}%s-Leiche
+your %s@monster@ corpse
+Eure {adj-e}%s@monster@-Leiche
 %%%%
 
 #################################

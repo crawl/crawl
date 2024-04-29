@@ -1080,8 +1080,8 @@ Große Zauberer, Band VII
 #################################
 
 %%%%
-%s corpse
-{nom}%s-Leiche
+%s@monster@ corpse
+{adj-e}%s@monster@-Leiche
 %%%%
 
 #################################

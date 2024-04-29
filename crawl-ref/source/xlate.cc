@@ -168,17 +168,19 @@ string cxlate(const string &context, const string &text_en, bool fallback_en)
 // plural_en = English plural text
 // n = the count of whatever it is
 string cnxlate(const string &context,
-        const string &singular_en, const string &plural_en, unsigned long n)
+        const string &singular_en, const string &plural_en, unsigned long n, bool fallback_en)
 {
     if (n == 1)
     {
         // translate English singular form
-        return cxlate(context, singular_en);
+        return cxlate(context, singular_en, fallback_en);
     }
     else
     {
         // translate English plural form
-        string result = cxlate(context, plural_en);
+        string result = cxlate(context, plural_en, fallback_en);
+        if (result.empty())
+            return "";
 
         // if the target language has multiple plural forms,
         // there will be an embedded expression for choosing the right one

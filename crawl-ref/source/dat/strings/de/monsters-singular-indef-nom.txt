@@ -5,461 +5,461 @@
 ###############################################################################
 
 %%%%
-a program bug
-ein Programmfehler
+a %sprogram bug
+ein {adj-er}%sProgrammfehler
 %%%%
-a formicid
-ein Formicid
+a %sformicid
+ein {adj-er}%sFormicid
 %%%%
-an entropy weaver
-ein Entropieweber
+a %sentropy weaver
+ein {adj-er}%sEntropieweber
 %%%%
-a bat
-eine Fledermaus
+a %sbat
+eine {adj-e}%sFledermaus
 %%%%
-a butterfly
-ein Schmetterling
+a %sbutterfly
+ein {adj-er}%sSchmetterling
 %%%%
-a vampire bat
-eine Vampirfledermaus
+a %svampire bat
+eine {adj-e}%sVampirfledermaus
 %%%%
-a fire bat
-eine Feuerfledermaus
+a %sfire bat
+eine {adj-e}%sFeuerfledermaus
 %%%%
-a bennu
-{n}ein Bennu
+a %sbennu
+ein {adj-es}%sBennu
 %%%%
-a caustic shrike
-ein ätzender Würger
+a %scaustic shrike
+ein {adj-er}%sätzender Würger
 %%%%
-a shard shrike
-ein Scherbenwürger
+a %sshard shrike
+ein {adj-er}%sScherbenwürger
 %%%%
-a centaur
-ein Zentaur
+a %scentaur
+ein {adj-er}%sZentaur
 %%%%
-a centaur warrior
-ein Zentaur-Krieger
+a %scentaur warrior
+ein {adj-er}%sZentaur-Krieger
 %%%%
-a yaktaur
-ein Yaktaur
+a %syaktaur
+ein {adj-er}%sYaktaur
 %%%%
-a yaktaur captain
-ein Yaktaur-Kapitän
+a %syaktaur captain
+ein {adj-er}%sYaktaur-Kapitän
 %%%%
-a faun
-ein Faun
+a %sfaun
+ein {adj-er}%sFaun
 %%%%
-a satyr
-ein Satyr
+a %ssatyr
+ein {adj-er}%sSatyr
 %%%%
-a draconian
-ein Drakonier
+a %sdraconian
+ein {adj-er}%sDrakonier
 %%%%
-a black draconian
-ein schwarzer Drakonier
+a %sblack draconian
+ein {adj-er}%sschwarzer Drakonier
 %%%%
-a yellow draconian
-ein gelber Drakonier
+a %syellow draconian
+ein {adj-er}%sgelber Drakonier
 %%%%
-a pale draconian
-ein blasser Drakonier
+a %spale draconian
+ein {adj-er}%sblasser Drakonier
 %%%%
-a green draconian
-ein grüner Drakonier
+a %sgreen draconian
+ein {adj-er}%sgrüner Drakonier
 %%%%
-a purple draconian
-ein purpurner Drakonier
+a %spurple draconian
+ein {adj-er}%spurpurner Drakonier
 %%%%
-a red draconian
-ein roter Drakonier
+a %sred draconian
+ein {adj-er}%sroter Drakonier
 %%%%
-a white draconian
-ein weißer Drakonier
+a %swhite draconian
+ein {adj-er}%sweißer Drakonier
 %%%%
-a grey draconian
-ein grauer Drakonier
+a %sgrey draconian
+ein {adj-er}%sgrauer Drakonier
 %%%%
-a draconian stormcaller
-ein Drakonier-Sturmrufer
+a %sdraconian stormcaller
+ein {adj-er}%sDrakonier-Sturmrufer
 %%%%
-a draconian monk
-ein Drakonier-Mönch
+a %sdraconian monk
+ein {adj-er}%sDrakonier-Mönch
 %%%%
-a draconian shifter
-ein Drakonier-Verschieber
+a %sdraconian shifter
+ein {adj-er}%sDrakonier-Verschieber
 %%%%
-a draconian annihilator
-ein Drakonier-Vernichter
+a %sdraconian annihilator
+ein {adj-er}%sDrakonier-Vernichter
 %%%%
-a draconian knight
-ein Drakonier-Ritter
+a %sdraconian knight
+ein {adj-er}%sDrakonier-Ritter
 %%%%
-a draconian scorcher
-ein Drakonier-Verschmorer
+a %sdraconian scorcher
+ein {adj-er}%sDrakonier-Verschmorer
 %%%%
-an elf
-ein Elf
+a %self
+ein {adj-er}%sElf
 %%%%
-a deep elf knight
-ein Tiefenelf-Ritter
+a %sdeep elf knight
+ein {adj-er}%sTiefenelf-Ritter
 %%%%
-a deep elf archer
-ein Tiefenelf-Bogenschütze
+a %sdeep elf archer
+ein {adj-er}%sTiefenelf-Bogenschütze
 %%%%
-a deep elf blademaster
-ein Tiefenelf-Klingenmeister
+a %sdeep elf blademaster
+ein {adj-er}%sTiefenelf-Klingenmeister
 %%%%
-a deep elf master archer
-ein Tiefenelf-Bogenmeister
+a %sdeep elf master archer
+ein {adj-er}%sTiefenelf-Bogenmeister
 %%%%
-a deep elf zephyrmancer
-ein Tiefenelf-Zephyrmant
+a %sdeep elf zephyrmancer
+ein {adj-er}%sTiefenelf-Zephyrmant
 %%%%
-a deep elf pyromancer
-ein Tiefenelf-Pyromant
+a %sdeep elf pyromancer
+ein {adj-er}%sTiefenelf-Pyromant
 %%%%
-a deep elf high priest
-ein Tiefenelf-Hohepriester
+a %sdeep elf high priest
+ein {adj-er}%sTiefenelf-Hohepriester
 %%%%
-a deep elf demonologist
-ein Tiefenelf-Dämonologe
+a %sdeep elf demonologist
+ein {adj-er}%sTiefenelf-Dämonologe
 %%%%
-a deep elf annihilator
-ein Tiefenelf-Vernichter
+a %sdeep elf annihilator
+ein {adj-er}%sTiefenelf-Vernichter
 %%%%
-a deep elf sorcerer
-ein Tiefenelf-Zauberer
+a %sdeep elf sorcerer
+ein {adj-er}%sTiefenelf-Zauberer
 %%%%
-a deep elf death mage
-ein Tiefenelf-Todesmagier
+a %sdeep elf death mage
+ein {adj-er}%sTiefenelf-Todesmagier
 %%%%
-a deep elf elementalist
-ein Tiefenelf-Elementalist
+a %sdeep elf elementalist
+ein {adj-er}%sTiefenelf-Elementalist
 %%%%
-a wandering mushroom
-ein wandernder Pilz
+a %swandering mushroom
+ein {adj-er}%swandernder Pilz
 %%%%
-a deathcap
-eine Todesmütze
+a %sdeathcap
+eine {adj-e}%sTodesmütze
 %%%%
-a thorn hunter
-ein Dornenjäger
+a %sthorn hunter
+ein {adj-er}%sDornenjäger
 %%%%
-a shambling mangrove
-eine watschelnde Mangrove
+a %sshambling mangrove
+eine {adj-e}%swatschelnde Mangrove
 %%%%
-a vine stalker
-ein Rebjäger
+a %svine stalker
+ein {adj-er}%sRebjäger
 %%%%
-a goblin
-ein Goblin
+a %sgoblin
+ein {adj-er}%sGoblin
 %%%%
-a hobgoblin
-ein Hobgoblin
+a %shobgoblin
+ein {adj-er}%sHobgoblin
 %%%%
-a gnoll
-ein Gnoll
+a %sgnoll
+ein {adj-er}%sGnoll
 %%%%
-a gnoll shaman
-ein Gnoll-Schamane
+a %sgnoll shaman
+ein {adj-er}%sGnoll-Schamane
 %%%%
-a gnoll sergeant
-ein Gnoll-Wachtmeister
+a %sgnoll sergeant
+ein {adj-er}%sGnoll-Wachtmeister
 %%%%
-a boggart
-ein Boggart
+a %sboggart
+ein {adj-er}%sBoggart
 %%%%
-a dwarf
-ein Zwerg
+a %sdwarf
+ein {adj-er}%sZwerg
 %%%%
-a deep dwarf
-ein Tiefenzwerg
+a %sdeep dwarf
+ein {adj-er}%sTiefenzwerg
 %%%%
-a jackal
-ein Schakal
+a %sjackal
+ein {adj-er}%sSchakal
 %%%%
-a hound
-ein Hund
+a %shound
+ein {adj-er}%sHund
 %%%%
-a howler monkey
-ein Brüllaffe
+a %showler monkey
+ein {adj-er}%sBrüllaffe
 %%%%
-a warg
-ein Warg
+a %swarg
+ein {adj-er}%sWarg
 %%%%
-a wolf
-ein Wolf
+a %swolf
+ein {adj-er}%sWolf
 %%%%
-a hog
-{n}ein Schwein
+a %shog
+ein {adj-es}%sSchwein
 %%%%
-a hell hound
-ein Höllenhund
+a %shell hound
+ein {adj-er}%sHöllenhund
 %%%%
-a doom hound
-ein Untergangshund
+a %sdoom hound
+ein {adj-er}%sUntergangshund
 %%%%
-a raiju
-ein Raiju
+a %sraiju
+ein {adj-er}%sRaiju
 %%%%
-a hell hog
-ein höllisches Schwein
+a %shell hog
+ein {adj-er}%shöllisches Schwein
 %%%%
-a holy swine
-ein heiliges Schwein
+a %sholy swine
+ein {adj-er}%sheiliges Schwein
 %%%%
-a felid
-{n}ein Felid
+a %sfelid
+ein {adj-es}%sFelid
 %%%%
-a bear
-ein Bär
+a %sbear
+ein {adj-er}%sBär
 %%%%
-a polar bear
-ein Eisbär
+a %spolar bear
+ein {adj-er}%sEisbär
 %%%%
-a black bear
-ein Schwarzbär
+a %sblack bear
+ein {adj-er}%sSchwarzbär
 %%%%
-a spriggan
-ein Spriggan
+a %sspriggan
+ein {adj-er}%sSpriggan
 %%%%
-a spriggan rider
-ein Spriggan-Reiter
+a %sspriggan rider
+ein {adj-er}%sSpriggan-Reiter
 %%%%
-a spriggan druid
-ein Spriggan-Druide
+a %sspriggan druid
+ein {adj-er}%sSpriggan-Druide
 %%%%
-a spriggan berserker
-ein Spriggan-Berserker
+a %sspriggan berserker
+ein {adj-er}%sSpriggan-Berserker
 %%%%
-a spriggan air mage
-ein Spriggan-Luftmagier
+a %sspriggan air mage
+ein {adj-er}%sSpriggan-Luftmagier
 %%%%
-a spriggan defender
-ein Spriggan-Verteidiger
+a %sspriggan defender
+ein {adj-er}%sSpriggan-Verteidiger
 %%%%
-a drake
-ein Drachling
+a %sdrake
+ein {adj-er}%sDrachling
 %%%%
-a swamp drake
-ein Sumpfdrachling
+a %sswamp drake
+ein {adj-er}%sSumpfdrachling
 %%%%
-a rime drake
-ein Reifsdrachling
+a %srime drake
+ein {adj-er}%sReifsdrachling
 %%%%
-a wind drake
-ein Winddrachling
+a %swind drake
+ein {adj-er}%sWinddrachling
 %%%%
-a lindwurm
-ein Lindwurm
+a %slindwurm
+ein {adj-er}%sLindwurm
 %%%%
-a death drake
-ein Todesdrachling
+a %sdeath drake
+ein {adj-er}%sTodesdrachling
 %%%%
-a giant lizard
-eine Rieseneidechse
+a %sgiant lizard
+eine {adj-e}%sRieseneidechse
 %%%%
-a frilled lizard
-eine gekräuselte Eidechse
+a %sfrilled lizard
+eine {adj-e}%sgekräuselte Eidechse
 %%%%
-an iguana
-ein Leguan
+a %siguana
+ein {adj-er}%sLeguan
 %%%%
-a basilisk
-ein Basilisk
+a %sbasilisk
+ein {adj-er}%sBasilisk
 %%%%
-a wyvern
-ein Wyvern
+a %swyvern
+ein {adj-er}%sWyvern
 %%%%
-a komodo dragon
-ein Komododrache
+a %skomodo dragon
+ein {adj-er}%sKomododrache
 %%%%
-a merfolk
-{n}ein Meervolk
+a %smerfolk
+ein {adj-es}%sMeervolk
 %%%%
-a merfolk impaler
-ein Meervolk-Impaler
+a %smerfolk impaler
+ein {adj-er}%sMeervolk-Impaler
 %%%%
-a merfolk javelineer
-ein Meervolk-Speerführer
+a %smerfolk javelineer
+ein {adj-er}%sMeervolk-Speerführer
 %%%%
-a merfolk aquamancer
-ein Meervolk-Aquamancer
+a %smerfolk aquamancer
+ein {adj-er}%sMeervolk-Aquamancer
 %%%%
-a merfolk siren
-eine Meervolk-Sirene
+a %smerfolk siren
+eine {adj-e}%sMeervolk-Sirene
 %%%%
-a merfolk avatar
-ein Meervolk-Avatar
+a %smerfolk avatar
+ein {adj-er}%sMeervolk-Avatar
 %%%%
-a water nymph
-eine Wassernymphe
+a %swater nymph
+eine {adj-e}%sWassernymphe
 %%%%
-a bog body
-eine Moorleiche
+a %sbog body
+eine {adj-e}%sMoorleiche
 %%%%
-a necrophage
-ein Nekrophagen
+a %snecrophage
+ein {adj-er}%sNekrophagen
 %%%%
-a bloated husk
-eine aufgeblähte Hülle
+a %sbloated husk
+eine {adj-e}%saufgeblähte Hülle
 %%%%
-a ghoul
-ein Ghul
+a %sghoul
+ein {adj-er}%sGhul
 %%%%
-an orc
-ein Ork
+a %sorc
+ein {adj-er}%sOrk
 %%%%
-an orc wizard
-ein Ork-Zauberer
+a %sorc wizard
+ein {adj-er}%sOrk-Zauberer
 %%%%
-an orc priest
-ein Ork-Priester
+a %sorc priest
+ein {adj-er}%sOrk-Priester
 %%%%
-an orc warrior
-ein Ork-Krieger
+a %sorc warrior
+ein {adj-er}%sOrk-Krieger
 %%%%
-an orc knight
-ein Ork-Ritter
+a %sorc knight
+ein {adj-er}%sOrk-Ritter
 %%%%
-an orc warlord
-ein Ork-Warlord
+a %sorc warlord
+ein {adj-er}%sOrk-Warlord
 %%%%
-an orc sorcerer
-ein Ork-Hexenmeister
+a %sorc sorcerer
+ein {adj-er}%sOrk-Hexenmeister
 %%%%
-an orc high priest
-ein Ork-Hohepriester
+a %sorc high priest
+ein {adj-er}%sOrk-Hohepriester
 %%%%
-a human
-ein Mensch
+a %shuman
+ein {adj-er}%sMensch
 %%%%
-a hell knight
-ein Höllenritter
+a %shell knight
+ein {adj-er}%sHöllenritter
 %%%%
-a death knight
-ein Todesritter
+a %sdeath knight
+ein {adj-er}%sTodesritter
 %%%%
-a necromancer
-ein Nekromant
+a %snecromancer
+ein {adj-er}%sNekromant
 %%%%
-a wizard
-ein Zauberer
+a %swizard
+ein {adj-er}%sZauberer
 %%%%
-a vault guard
-ein Tresorwächter
+a %svault guard
+ein {adj-er}%sTresorwächter
 %%%%
-a vault sentinel
-eine Tresorwache
+a %svault sentinel
+eine {adj-e}%sTresorwache
 %%%%
-a vault warden
-ein Tresorwärter
+a %svault warden
+ein {adj-er}%sTresorwärter
 %%%%
-an ironbound convoker
-ein eisenbeschlagener Einberufer
+a %sironbound convoker
+ein {adj-er}%seisenbeschlagener Einberufer
 %%%%
-an ironbound frostheart
-ein eisengebundenes Frostherz
+a %sironbound frostheart
+ein {adj-er}%seisengebundenes Frostherz
 %%%%
-an ironbound preserver
-ein eisenbeschlagener Bewahrer
+a %sironbound preserver
+ein {adj-er}%seisenbeschlagener Bewahrer
 %%%%
-an ironbound beastmaster
-ein eisenbeschlagener Bestienmeister
+a %sironbound beastmaster
+ein {adj-er}%seisenbeschlagener Bestienmeister
 %%%%
-an ironbound thunderhulk
-ein eisenbeschlagener Donnerkoloss
+a %sironbound thunderhulk
+ein {adj-er}%seisenbeschlagener Donnerkoloss
 %%%%
-an imperial myrmidon
-ein kaiserlicher Myrmidon
+a %simperial myrmidon
+ein {adj-er}%skaiserlicher Myrmidon
 %%%%
-a servant of whispers
-ein Diener des Flüsterns
+a %sservant of whispers
+ein {adj-er}%sDiener des Flüsterns
 %%%%
-a ragged hierophant
-ein zerlumpter Hierophant
+a %sragged hierophant
+ein {adj-er}%szerlumpter Hierophant
 %%%%
-a shapeshifter
-ein Gestaltwandler
+a %sshapeshifter
+ein {adj-er}%sGestaltwandler
 %%%%
-a glowing shapeshifter
-ein leuchtender Gestaltwandler
+a %sglowing shapeshifter
+ein {adj-er}%sleuchtender Gestaltwandler
 %%%%
-a Killer Klown
-ein Killer-Klown
+a %sKiller Klown
+ein {adj-er}%sKiller-Klown
 %%%%
-a demigod
-ein Halbgott
+a %sdemigod
+ein {adj-er}%sHalbgott
 %%%%
-a halfling
-ein Halbling
+a %shalfling
+ein {adj-er}%sHalbling
 %%%%
-a rat
-eine Ratte
+a %srat
+eine {adj-e}%sRatte
 %%%%
-a quokka
-{n}ein Quokka
+a %squokka
+ein {adj-es}%sQuokka
 %%%%
-a river rat
-eine Flussratte
+a %sriver rat
+eine {adj-e}%sFlussratte
 %%%%
-a hell rat
-eine Höllenratte
+a %shell rat
+eine {adj-e}%sHöllenratte
 %%%%
-a giant cockroach
-eine Riesenkakerlake
+a %sgiant cockroach
+eine {adj-e}%sRiesenkakerlake
 %%%%
-a scorpion
-ein Skorpion
+a %sscorpion
+ein {adj-er}%sSkorpion
 %%%%
-an emperor scorpion
-ein Kaiserskorpion
+a %semperor scorpion
+ein {adj-er}%sKaiserskorpion
 %%%%
-a death scarab
-ein Todesskarabäus
+a %sdeath scarab
+ein {adj-er}%sTodesskarabäus
 %%%%
-a spider
-eine Spinne
+a %sspider
+eine {adj-e}%sSpinne
 %%%%
-a tarantella
-eine Tarantella
+a %starantella
+eine {adj-e}%sTarantella
 %%%%
-a jumping spider
-eine springende Spinne
+a %sjumping spider
+eine {adj-e}%sspringende Spinne
 %%%%
-a wolf spider
-eine Wolfsspinne
+a %swolf spider
+eine {adj-e}%sWolfsspinne
 %%%%
-a redback
-eine Rotrückenspinne
+a %sredback
+eine {adj-e}%sRotrückenspinne
 %%%%
-a demonic crawler
-ein dämonischer Kriecher
+a %sdemonic crawler
+ein {adj-er}%sdämonischer Kriecher
 %%%%
-an orb spider
-eine Kugelspinne
+a %sorb spider
+eine {adj-e}%sKugelspinne
 %%%%
-an alligator
-ein Alligator
+a %salligator
+ein {adj-er}%sAlligator
 %%%%
-a snapping turtle
-eine Schnappschildkröte
+a %ssnapping turtle
+eine {adj-e}%sSchnappschildkröte
 %%%%
-an alligator snapping turtle
-eine Alligatorschnappschildkröte
+a %salligator snapping turtle
+eine {adj-e}%sAlligatorschnappschildkröte
 %%%%
-a crab
-eine Krabbe
+a %scrab
+eine {adj-e}%sKrabbe
 %%%%
-a fire crab
-eine Feuerkrabbe
+a %sfire crab
+eine {adj-e}%sFeuerkrabbe
 %%%%
-a ghost crab
-eine Geisterkrabbe
+a %sghost crab
+eine {adj-e}%sGeisterkrabbe
 %%%%
-an apocalypse crab
-eine Apokalypse-Krabbe
+a %sapocalypse crab
+eine {adj-e}%sApokalypse-Krabbe
 %%%%
 a %sugly thing
 ein {adj-es}%shässliches Ding
@@ -467,955 +467,955 @@ ein {adj-es}%shässliches Ding
 a %svery ugly thing
 ein {adj-es}%ssehr hässliches Ding
 %%%%
-a fire vortex
-ein Feuerwirbel
+a %sfire vortex
+ein {adj-er}%sFeuerwirbel
 %%%%
-a spatial vortex
-ein räumlicher Wirbel
+a %sspatial vortex
+ein {adj-er}%sräumlicher Wirbel
 %%%%
-a spatial maelstrom
-ein räumlicher Mahlstrom
+a %sspatial maelstrom
+ein {adj-er}%sräumlicher Mahlstrom
 %%%%
-an insubstantial wisp
-ein unwesentliches Irrlicht
+a %sinsubstantial wisp
+ein {adj-er}%sunwesentliches Irrlicht
 %%%%
-a twister
-ein Twister
+a %stwister
+ein {adj-er}%sTwister
 %%%%
-a worm
-ein Wurm
+a %sworm
+ein {adj-er}%sWurm
 %%%%
-a swamp worm
-ein Sumpfwurm
+a %sswamp worm
+ein {adj-er}%sSumpfwurm
 %%%%
-a tyrant leech
-ein Tyrannblutegel
+a %styrant leech
+ein {adj-er}%sTyrannblutegel
 %%%%
-a dart slug
-eine Pfeilschnecke
+a %sdart slug
+eine {adj-e}%sPfeilschnecke
 %%%%
-a torpor snail
-eine Erstarrungsschnecke
+a %storpor snail
+eine {adj-e}%sErstarrungsschnecke
 %%%%
-an elephant slug
-eine Elefantenschnecke
+a %selephant slug
+eine {adj-e}%sElefantenschnecke
 %%%%
-an unseen horror
-ein unsichtbares Grauen
+a %sunseen horror
+ein {adj-er}%sunsichtbares Grauen
 %%%%
-a small abomination
-ein kleiner Greuel
+a %ssmall abomination
+ein {adj-er}%skleiner Greuel
 %%%%
-an ancient zyme
-ein uraltes Zym
+a %sancient zyme
+ein {adj-er}%suraltes Zym
 %%%%
-a worldbinder
-ein Weltbinder
+a %sworldbinder
+ein {adj-er}%sWeltbinder
 %%%%
-a killer bee
-eine Killerbiene
+a %skiller bee
+eine {adj-e}%sKillerbiene
 %%%%
-a queen bee
-eine Bienenkönigin
+a %squeen bee
+eine {adj-e}%sBienenkönigin
 %%%%
-a vampire mosquito
-eine Vampir-Mücke
+a %svampire mosquito
+eine {adj-e}%sVampir-Mücke
 %%%%
-a hornet
-eine Hornisse
+a %shornet
+eine {adj-e}%sHornisse
 %%%%
-a meliai
-eine Meliai
+a %smeliai
+eine {adj-e}%sMeliai
 %%%%
-a spark wasp
-eine Funkenwespe
+a %sspark wasp
+eine {adj-e}%sFunkenwespe
 %%%%
-a moth
-eine Motte
+a %smoth
+eine {adj-e}%sMotte
 %%%%
-a ghost moth
-eine Geistermotte
+a %sghost moth
+eine {adj-e}%sGeistermotte
 %%%%
-a moth of wrath
-eine Motte des Zorns
+a %smoth of wrath
+eine {adj-e}%sMotte des Zorns
 %%%%
-a wight
-ein Wight
+a %swight
+ein {adj-er}%sWight
 %%%%
-a skeletal warrior
-ein Skelettkrieger
+a %sskeletal warrior
+ein {adj-er}%sSkelettkrieger
 %%%%
-an ancient champion
-ein alter Champion
+a %sancient champion
+ein {adj-er}%salter Champion
 %%%%
-a flying skull
-ein fliegender Schädel
+a %sflying skull
+ein {adj-er}%sfliegender Schädel
 %%%%
-a curse skull
-ein Fluchschädel
+a %scurse skull
+ein {adj-er}%sFluchschädel
 %%%%
-a curse toe
-ein Fluchzeh
+a %scurse toe
+ein {adj-er}%sFluchzeh
 %%%%
-an angel
-ein Engel
+a %sangel
+ein {adj-er}%sEngel
 %%%%
-a cherub
-ein Cherub
+a %scherub
+ein {adj-er}%sCherub
 %%%%
-a seraph
-ein Seraph
+a %sseraph
+ein {adj-er}%sSeraph
 %%%%
-a daeva
-ein Daeva
+a %sdaeva
+ein {adj-er}%sDaeva
 %%%%
-a profane servitor
-ein profaner Diener
+a %sprofane servitor
+ein {adj-er}%sprofaner Diener
 %%%%
-a giant
-ein Riese
+a %sgiant
+ein {adj-er}%sRiese
 %%%%
-a cyclops
-ein Zyklop
+a %scyclops
+ein {adj-er}%sZyklop
 %%%%
-an ettin
-ein Ettin
+a %settin
+ein {adj-er}%sEttin
 %%%%
-a fire giant
-ein Feuerriese
+a %sfire giant
+ein {adj-er}%sFeuerriese
 %%%%
-a frost giant
-ein Frostriese
+a %sfrost giant
+ein {adj-er}%sFrostriese
 %%%%
-a stone giant
-ein Steinriese
+a %sstone giant
+ein {adj-er}%sSteinriese
 %%%%
-a titan
-ein Titan
+a %stitan
+ein {adj-er}%sTitan
 %%%%
-a juggernaut
-ein Juggernaut
+a %sjuggernaut
+ein {adj-er}%sJuggernaut
 %%%%
-an iron giant
-ein Eisenriese
+a %siron giant
+ein {adj-er}%sEisenriese
 %%%%
-a dragon
-ein Drache
+a %sdragon
+ein {adj-er}%sDrache
 %%%%
-a fire dragon
-ein Feuerdrache
+a %sfire dragon
+ein {adj-er}%sFeuerdrache
 %%%%
 a %shydra
 eine {adj-e}%sHydra
 %%%%
-an ice dragon
-ein Eisdrache
+a %sice dragon
+ein {adj-er}%sEisdrache
 %%%%
-a steam dragon
-ein Dampfdrache
+a %ssteam dragon
+ein {adj-er}%sDampfdrache
 %%%%
-a swamp dragon
-ein Sumpfdrache
+a %sswamp dragon
+ein {adj-er}%sSumpfdrache
 %%%%
-an acid dragon
-ein Säuredrache
+a %sacid dragon
+ein {adj-er}%sSäuredrache
 %%%%
-a quicksilver dragon
-ein Quecksilberdrache
+a %squicksilver dragon
+ein {adj-er}%sQuecksilberdrache
 %%%%
-an iron dragon
-ein Eisendrache
+a %siron dragon
+ein {adj-er}%sEisendrache
 %%%%
-a storm dragon
-ein Sturmdrache
+a %sstorm dragon
+ein {adj-er}%sSturmdrache
 %%%%
-a golden dragon
-ein Golddrache
+a %sgolden dragon
+ein {adj-er}%sGolddrache
 %%%%
-a shadow dragon
-ein Schattendrache
+a %sshadow dragon
+ein {adj-er}%sSchattendrache
 %%%%
-a bone dragon
-ein Knochendrache
+a %sbone dragon
+ein {adj-er}%sKnochendrache
 %%%%
-a pearl dragon
-ein Perlendrache
+a %spearl dragon
+ein {adj-er}%sPerlendrache
 %%%%
-an elemental
-{n}ein Elementar
+a %selemental
+ein {adj-es}%sElementar
 %%%%
-an earth elemental
-{n}ein Erdelementar
+a %searth elemental
+ein {adj-es}%sErdelementar
 %%%%
-a fire elemental
-{n}ein Feuerelementar
+a %sfire elemental
+ein {adj-es}%sFeuerelementar
 %%%%
-a water elemental
-{n}ein Wasserelementar
+a %swater elemental
+ein {adj-es}%sWasserelementar
 %%%%
-an air elemental
-{n}ein Luftelementar
+a %sair elemental
+ein {adj-es}%sLuftelementar
 %%%%
-an iron elemental
-{n}ein Eisenelementar
+a %siron elemental
+ein {adj-es}%sEisenelementar
 %%%%
-an elemental wellspring
-eine elementare Quelle
+a %selemental wellspring
+eine {adj-e}%selementare Quelle
 %%%%
-a giant frog
-ein Riesenfrosch
+a %sgiant frog
+ein {adj-er}%sRiesenfrosch
 %%%%
-a bullfrog
-ein Ochsenfrosch
+a %sbullfrog
+ein {adj-er}%sOchsenfrosch
 %%%%
-a spiny frog
-ein Stachelfrosch
+a %sspiny frog
+ein {adj-er}%sStachelfrosch
 %%%%
-a blink frog
-ein Blinzelfrosch
+a %sblink frog
+ein {adj-er}%sBlinzelfrosch
 %%%%
-a barachi
-eine Barachi
+a %sbarachi
+eine {adj-e}%sBarachi
 %%%%
-a floating eye
-{n}ein schwebendes Auge
+a %sfloating eye
+ein {adj-es}%sschwebendes Auge
 %%%%
-a glowing orange brain
-{n}ein oranges leuchtendes Gehirn
+a %sglowing orange brain
+ein {adj-es}%soranges leuchtendes Gehirn
 %%%%
-a great orb of eyes
-eine große Augenkugel
+a %sgreat orb of eyes
+eine {adj-e}%sgroße Augenkugel
 %%%%
-a shining eye
-{n}ein leuchtendes Auge
+a %sshining eye
+ein {adj-es}%sleuchtendes Auge
 %%%%
-an eye of devastation
-{n}ein Auge der Verwüstung
+a %seye of devastation
+ein {adj-es}%sAuge der Verwüstung
 %%%%
-a golden eye
-{n}ein goldenes Auge
+a %sgolden eye
+ein {adj-es}%sgoldenes Auge
 %%%%
-an ophan
-ein Ophan
+a %sophan
+ein {adj-er}%sOphan
 %%%%
-a manticore
-ein Mantikor
+a %smanticore
+ein {adj-er}%sMantikor
 %%%%
-a minotaur
-ein Minotaur
+a %sminotaur
+ein {adj-er}%sMinotaur
 %%%%
-a sphinx
-eine Sphinx
+a %ssphinx
+eine {adj-e}%sSphinx
 %%%%
-a harpy
-eine Harpyie
+a %sharpy
+eine {adj-e}%sHarpyie
 %%%%
-a mutant beast
-eine mutierte Bestie
+a %smutant beast
+eine {adj-e}%smutierte Bestie
 %%%%
-an ancestor
-ein Ahne
+a %sancestor
+ein {adj-er}%sAhne
 %%%%
-a knight
-ein Ritter
+a %sknight
+ein {adj-er}%sRitter
 %%%%
-a battlemage
-ein Kampfmagier
+a %sbattlemage
+ein {adj-er}%sKampfmagier
 %%%%
-a hexer
-ein Hexer
+a %shexer
+ein {adj-er}%sHexer
 %%%%
-a jelly
-{n}ein Gelee
+a %sjelly
+ein {adj-es}%sGelee
 %%%%
 a %sslime creature
 ein {adj-es}%sSchleimwesen
 %%%%
-a merged slime creature
-eine verschmolzene Schleimkreatur
+a %smerged slime creature
+eine {adj-e}%sverschmolzene Schleimkreatur
 %%%%
-an azure jelly
-{n}ein azurblaues Gelee
+a %sazure jelly
+ein {adj-es}%sazurblaues Gelee
 %%%%
-an acid blob
-ein Säureklumpen
+a %sacid blob
+ein {adj-er}%sSäureklumpen
 %%%%
-a kobold
-ein Kobold
+a %skobold
+ein {adj-er}%sKobold
 %%%%
-a big kobold
-ein großer Kobold
+a %sbig kobold
+ein {adj-er}%sgroßer Kobold
 %%%%
-a kobold demonologist
-ein Kobold-Dämonologe
+a %skobold demonologist
+ein {adj-er}%sKobold-Dämonologe
 %%%%
-a lich
-ein Lich
+a %slich
+ein {adj-er}%sLich
 %%%%
-an ancient lich
-ein alter Lich
+a %sancient lich
+ein {adj-er}%salter Lich
 %%%%
-a revenant
-ein Wiedergänger
+a %srevenant
+ein {adj-er}%sWiedergänger
 %%%%
-a halazid warlock
-ein halazidischer Hexenmeister
+a %shalazid warlock
+ein {adj-er}%shalazidischer Hexenmeister
 %%%%
-a mummy
-eine Mumie
+a %smummy
+eine {adj-e}%sMumie
 %%%%
-a guardian mummy
-eine Wächtermumie
+a %sguardian mummy
+eine {adj-e}%sWächtermumie
 %%%%
-a greater mummy
-eine größere Mumie
+a %sgreater mummy
+eine {adj-e}%sgrößere Mumie
 %%%%
-a mummy priest
-ein Mumie-Priester
+a %smummy priest
+ein {adj-er}%sMumie-Priester
 %%%%
-a naga
-ein Naga
+a %snaga
+ein {adj-er}%sNaga
 %%%%
-a naga mage
-ein Naga-Magier
+a %snaga mage
+ein {adj-er}%sNaga-Magier
 %%%%
-a naga sharpshooter
-ein Naga-Scharfschütze
+a %snaga sharpshooter
+ein {adj-er}%sNaga-Scharfschütze
 %%%%
-a naga ritualist
-ein Naga-Ritualist
+a %snaga ritualist
+ein {adj-er}%sNaga-Ritualist
 %%%%
-a naga warrior
-ein Naga-Krieger
+a %snaga warrior
+ein {adj-er}%sNaga-Krieger
 %%%%
-a nagaraja
-ein Nagaraja
+a %snagaraja
+ein {adj-er}%sNagaraja
 %%%%
-an ogre
-ein Oger
+a %sogre
+ein {adj-er}%sOger
 %%%%
-a two-headed ogre
-ein zweiköpfiger Oger
+a %stwo-headed ogre
+ein {adj-er}%szweiköpfiger Oger
 %%%%
-an ogre mage
-ein Oger-Magier
+a %sogre mage
+ein {adj-er}%sOger-Magier
 %%%%
-a plant
-eine Pflanze
+a %splant
+eine {adj-e}%sPflanze
 %%%%
-a demonic plant
-eine dämonische Pflanze
+a %sdemonic plant
+eine {adj-e}%sdämonische Pflanze
 %%%%
-a withered plant
-eine verwelkte Pflanze
+a %swithered plant
+eine {adj-e}%sverwelkte Pflanze
 %%%%
-an oklob sapling
-ein Oklob-Setzling
+a %soklob sapling
+ein {adj-er}%sOklob-Setzling
 %%%%
-an oklob plant
-eine Oklob-Pflanze
+a %soklob plant
+eine {adj-e}%sOklob-Pflanze
 %%%%
-a bush
-ein Busch
+a %sbush
+ein {adj-er}%sBusch
 %%%%
-a burning bush
-ein brennender Busch
+a %sburning bush
+ein {adj-er}%sbrennender Busch
 %%%%
-a toadstool
-ein Giftpilz
+a %stoadstool
+ein {adj-er}%sGiftpilz
 %%%%
-a fungus
-ein Pilz
+a %sfungus
+ein {adj-er}%sPilz
 %%%%
-a ballistomycete
-ein Ballistomycete
+a %sballistomycete
+ein {adj-er}%sBallistomycete
 %%%%
-a hyperactive ballistomycete
-ein hyperaktiver Ballistomycete
+a %shyperactive ballistomycete
+ein {adj-er}%shyperaktiver Ballistomycete
 %%%%
-a briar patch
-ein Dornstrauch
+a %sbriar patch
+ein {adj-er}%sDornstrauch
 %%%%
-a tengu
-ein Tengu
+a %stengu
+ein {adj-er}%sTengu
 %%%%
-a tengu conjurer
-ein Tengu-Zauberer
+a %stengu conjurer
+ein {adj-er}%sTengu-Zauberer
 %%%%
-a tengu warrior
-ein Tengu-Krieger
+a %stengu warrior
+ein {adj-er}%sTengu-Krieger
 %%%%
-a tengu reaver
-ein Tengu-Häscher
+a %stengu reaver
+ein {adj-er}%sTengu-Häscher
 %%%%
-an efreet
-{n}ein Efreet
+a %sefreet
+ein {adj-es}%sEfreet
 %%%%
-a rakshasa
-ein Rakshasa
+a %srakshasa
+ein {adj-er}%sRakshasa
 %%%%
-a dryad
-eine Dryade
+a %sdryad
+eine {adj-e}%sDryade
 %%%%
-a snaplasher vine
-eine Peitscherrebe
+a %ssnaplasher vine
+eine {adj-e}%sPeitscherrebe
 %%%%
-a snaplasher vine segment
-{n}ein Peitscherrebesegment
+a %ssnaplasher vine segment
+ein {adj-es}%sPeitscherrebesegment
 %%%%
-a snake
-eine Schlange
+a %ssnake
+eine {adj-e}%sSchlange
 %%%%
-a ball python
-eine Kugelpython
+a %sball python
+eine {adj-e}%sKugelpython
 %%%%
-an adder
-eine Kreuzotter
+a %sadder
+eine {adj-e}%sKreuzotter
 %%%%
-a water moccasin
-ein Wassermokassin
+a %swater moccasin
+ein {adj-er}%sWassermokassin
 %%%%
-a black mamba
-eine schwarze Mamba
+a %sblack mamba
+eine {adj-e}%sschwarze Mamba
 %%%%
-a sea snake
-eine Seeschlange
+a %ssea snake
+eine {adj-e}%sSeeschlange
 %%%%
-an anaconda
-eine Anakonda
+a %sanaconda
+eine {adj-e}%sAnakonda
 %%%%
-a guardian serpent
-eine Wächter-Schlange
+a %sguardian serpent
+eine {adj-e}%sWächter-Schlange
 %%%%
-a shock serpent
-eine Schockschlange
+a %sshock serpent
+eine {adj-e}%sSchockschlange
 %%%%
-a mana viper
-eine Manaviper
+a %smana viper
+eine {adj-e}%sManaviper
 %%%%
-a troll
-ein Troll
+a %stroll
+ein {adj-er}%sTroll
 %%%%
-an iron troll
-ein Eisentroll
+a %siron troll
+ein {adj-er}%sEisentroll
 %%%%
-a deep troll
-ein Tiefentroll
+a %sdeep troll
+ein {adj-er}%sTiefentroll
 %%%%
-a deep troll earth mage
-ein Tiefentroll-Erdmagier
+a %sdeep troll earth mage
+ein {adj-er}%sTiefentroll-Erdmagier
 %%%%
-a deep troll shaman
-ein Tiefentroll-Schamane
+a %sdeep troll shaman
+ein {adj-er}%sTiefentroll-Schamane
 %%%%
-a vampire
-ein Vampir
+a %svampire
+ein {adj-er}%sVampir
 %%%%
-a vampire knight
-ein Vampir-Ritter
+a %svampire knight
+ein {adj-er}%sVampir-Ritter
 %%%%
-a vampire mage
-ein Vampir-Magier
+a %svampire mage
+ein {adj-er}%sVampir-Magier
 %%%%
-a jiangshi
-{n}ein Jiangshi
+a %sjiangshi
+ein {adj-es}%sJiangshi
 %%%%
-a ghost
-{n}ein Gespenst
+a %sghost
+ein {adj-es}%sGespenst
 %%%%
-a phantom
-{n}ein Phantom
+a %sphantom
+ein {adj-es}%sPhantom
 %%%%
-a hungry ghost
-ein hungriger Geist
+a %shungry ghost
+ein {adj-er}%shungriger Geist
 %%%%
-a flayed ghost
-ein enthäuteter Geist
+a %sflayed ghost
+ein {adj-er}%senthäuteter Geist
 %%%%
-a player ghost
-ein Spielergeist
+a %splayer ghost
+ein {adj-er}%sSpielergeist
 %%%%
-a shadow
-ein Schatten
+a %sshadow
+ein {adj-er}%sSchatten
 %%%%
-a silent spectre
-ein stilles Gespenst
+a %ssilent spectre
+ein {adj-er}%sstilles Gespenst
 %%%%
-a drowned soul
-eine ertrunkene Seele
+a %sdrowned soul
+eine {adj-e}%sertrunkene Seele
 %%%%
-a wraith
-ein Geist
+a %swraith
+ein {adj-er}%sGeist
 %%%%
-a shadow wraith
-ein Schattengeist
+a %sshadow wraith
+ein {adj-er}%sSchattengeist
 %%%%
-a freezing wraith
-ein Frostgeist
+a %sfreezing wraith
+ein {adj-er}%sFrostgeist
 %%%%
-an eidolon
-ein Eidolon
+a %seidolon
+ein {adj-er}%sEidolon
 %%%%
-a phantasmal warrior
-ein phantastischer Krieger
+a %sphantasmal warrior
+ein {adj-er}%sphantastischer Krieger
 %%%%
-a large abomination
-ein großer Greuel
+a %slarge abomination
+ein {adj-er}%sgroßer Greuel
 %%%%
-a thrashing horror
-ein verprügelndes Grauen
+a %sthrashing horror
+ein {adj-er}%sverprügelndes Grauen
 %%%%
-a tentacled monstrosity
-eine Tentakel-Monstrosität
+a %stentacled monstrosity
+eine {adj-e}%sTentakel-Monstrosität
 %%%%
-an Orb Guardian
-ein Kugelwächter
+a %sOrb Guardian
+ein {adj-er}%sKugelwächter
 %%%%
-a tentacled starspawn
-ein Tentakelsternbrut
+a %stentacled starspawn
+ein {adj-er}%sTentakelsternbrut
 %%%%
-a starspawn tentacle
-ein Sternbruttentakel
+a %sstarspawn tentacle
+ein {adj-er}%sSternbruttentakel
 %%%%
-a starspawn tentacle segment
-{n}ein Sternbruttentakelsegment
+a %sstarspawn tentacle segment
+ein {adj-es}%sSternbruttentakelsegment
 %%%%
-a starcursed mass
-eine sternverfluchte Masse
+a %sstarcursed mass
+eine {adj-e}%ssternverfluchte Masse
 %%%%
-a dream sheep
-{n}ein Traumschaf
+a %sdream sheep
+ein {adj-es}%sTraumschaf
 %%%%
-a yak
-{n}ein Yak
+a %syak
+ein {adj-es}%sYak
 %%%%
-a death yak
-{n}ein Todesyak
+a %sdeath yak
+ein {adj-es}%sTodesyak
 %%%%
-a catoblepas
-eine Catoblepas
+a %scatoblepas
+eine {adj-e}%sCatoblepas
 %%%%
-an elephant
-ein Elefant
+a %selephant
+ein {adj-er}%sElefant
 %%%%
-a dire elephant
-ein Schreckenselefant
+a %sdire elephant
+ein {adj-er}%sSchreckenselefant
 %%%%
-a hellephant
-ein Höllefant
+a %shellephant
+ein {adj-er}%sHöllefant
 %%%%
-an apis
-eine Apis
+a %sapis
+eine {adj-e}%sApis
 %%%%
-an ice beast
-eine Eisbestie
+a %sice beast
+eine {adj-e}%sEisbestie
 %%%%
-a sky beast
-{n}ein Himmelstier
+a %ssky beast
+ein {adj-es}%sHimmelstier
 %%%%
-a zombie
-ein Zombie
+a %szombie
+ein {adj-er}%sZombie
 %%%%
-a skeleton
-{n}ein Skelett
+a %sskeleton
+ein {adj-es}%sSkelett
 %%%%
-a simulacrum
-{n}ein Simulacrum
+a %ssimulacrum
+ein {adj-es}%sSimulacrum
 %%%%
-a small zombie
-ein kleiner Zombie
+a %ssmall zombie
+ein {adj-er}%skleiner Zombie
 %%%%
-a small skeleton
-ein kleines Skelett
+a %ssmall skeleton
+ein {adj-er}%skleines Skelett
 %%%%
-a small simulacrum
-ein kleines Simulacrum
+a %ssmall simulacrum
+ein {adj-er}%skleines Simulacrum
 %%%%
-a large zombie
-ein großer Zombie
+a %slarge zombie
+ein {adj-er}%sgroßer Zombie
 %%%%
-a large skeleton
-ein großes Skelett
+a %slarge skeleton
+ein {adj-er}%sgroßes Skelett
 %%%%
-a large simulacrum
-ein großes Simulacrum
+a %slarge simulacrum
+ein {adj-er}%sgroßes Simulacrum
 %%%%
-a spectral thing
-eine spektrale Sache
+a %sspectral thing
+eine {adj-e}%sspektrale Sache
 %%%%
-an electric eel
-ein Zitteraal
+a %selectric eel
+ein {adj-er}%sZitteraal
 %%%%
-a kraken
-ein Kraken
+a %skraken
+ein {adj-er}%sKraken
 %%%%
-a tentacle
-ein Tentakel
+a %stentacle
+ein {adj-er}%sTentakel
 %%%%
-a tentacle segment
-{n}ein Tentakelsegment
+a %stentacle segment
+ein {adj-es}%sTentakelsegment
 %%%%
-an octopode
-ein Oktopod
+a %soctopode
+ein {adj-er}%sOktopod
 %%%%
-a lava snake
-eine Lavaschlange
+a %slava snake
+eine {adj-e}%sLavaschlange
 %%%%
-a salamander
-ein Salamander
+a %ssalamander
+ein {adj-er}%sSalamander
 %%%%
-a salamander mystic
-ein Salamander-Mystiker
+a %ssalamander mystic
+ein {adj-er}%sSalamander-Mystiker
 %%%%
-a Hellbinder
-ein Höllenbinder
+a %sHellbinder
+ein {adj-er}%sHöllenbinder
 %%%%
-a Cloud Mage
-ein Wolkenmagier
+a %sCloud Mage
+ein {adj-er}%sWolkenmagier
 %%%%
-a player
-ein Spieler
+a %splayer
+ein {adj-er}%sSpieler
 %%%%
-a player illusion
-eine Spieler-Illusion
+a %splayer illusion
+eine {adj-e}%sSpieler-Illusion
 %%%%
-a dancing weapon
-eine tanzende Waffe
+a %sdancing weapon
+eine {adj-e}%stanzende Waffe
 %%%%
-a spectral weapon
-eine Spektralwaffe
+a %sspectral weapon
+eine {adj-e}%sSpektralwaffe
 %%%%
-an eldritch tentacle
-ein unheimlicher Tentakel
+a %seldritch tentacle
+ein {adj-er}%sunheimlicher Tentakel
 %%%%
-an eldritch tentacle segment
-ein unheimliches Tentakelsegment
+a %seldritch tentacle segment
+ein {adj-er}%sunheimliches Tentakelsegment
 %%%%
-a demonspawn
-eine Dämonenbrut
+a %sdemonspawn
+eine {adj-e}%sDämonenbrut
 %%%%
-a monstrous demonspawn
-eine monströse Dämonenbrut
+a %smonstrous demonspawn
+eine {adj-e}%smonströse Dämonenbrut
 %%%%
-a gelid demonspawn
-ein gelider Dämonenbrut
+a %sgelid demonspawn
+ein {adj-er}%sgelider Dämonenbrut
 %%%%
-an infernal demonspawn
-eine höllische Dämonenbrut
+a %sinfernal demonspawn
+eine {adj-e}%shöllische Dämonenbrut
 %%%%
-a torturous demonspawn
-eine quälende Dämonenbrut
+a %storturous demonspawn
+eine {adj-e}%squälende Dämonenbrut
 %%%%
-a blood saint
-ein Blutheilige
+a %sblood saint
+ein {adj-er}%sBlutheilige
 %%%%
-a warmonger
-ein Kriegstreiber
+a %swarmonger
+ein {adj-er}%sKriegstreiber
 %%%%
-a corrupter
-ein Korruptor
+a %scorrupter
+ein {adj-er}%sKorruptor
 %%%%
-a black sun
-eine schwarze Sonne
+a %sblack sun
+eine {adj-e}%sschwarze Sonne
 %%%%
-a crimson imp
-{n}ein karminrotes Teufelchen
+a %scrimson imp
+ein {adj-es}%skarminrotes Teufelchen
 %%%%
-a quasit
-{n}ein Quasit
+a %squasit
+ein {adj-es}%sQuasit
 %%%%
-a white imp
-{n}ein weißes Teufelchen
+a %swhite imp
+ein {adj-es}%sweißes Teufelchen
 %%%%
-an ufetubus
-ein Ufetubus
+a %sufetubus
+ein {adj-er}%sUfetubus
 %%%%
-an iron imp
-{n}ein Eisenteufelchen
+a %siron imp
+ein {adj-es}%sEisenteufelchen
 %%%%
-a shadow imp
-{n}ein Schattenteufelchen
+a %sshadow imp
+ein {adj-es}%sSchattenteufelchen
 %%%%
-a rust devil
-ein Rostteufel
+a %srust devil
+ein {adj-er}%sRostteufel
 %%%%
-an orange demon
-ein oranger Dämon
+a %sorange demon
+ein {adj-er}%soranger Dämon
 %%%%
-a red devil
-ein roter Teufel
+a %sred devil
+ein {adj-er}%sroter Teufel
 %%%%
-a hellwing
-ein Höllenflügel
+a %shellwing
+ein {adj-er}%sHöllenflügel
 %%%%
-an ice devil
-ein Eisteufel
+a %sice devil
+ein {adj-er}%sEisteufel
 %%%%
-a chaos spawn
-eine Chaosbrut
+a %schaos spawn
+eine {adj-e}%sChaosbrut
 %%%%
-a sun demon
-ein Sonnendämon
+a %ssun demon
+ein {adj-er}%sSonnendämon
 %%%%
-a soul eater
-ein Seelenfresser
+a %ssoul eater
+ein {adj-er}%sSeelenfresser
 %%%%
-a smoke demon
-ein Rauchdämon
+a %ssmoke demon
+ein {adj-er}%sRauchdämon
 %%%%
-a neqoxec
-eine Neqoxec
+a %sneqoxec
+eine {adj-e}%sNeqoxec
 %%%%
-a ynoxinul
-{n}ein Ynoxinul
+a %synoxinul
+ein {adj-es}%sYnoxinul
 %%%%
-a sixfirhy
-ein Sixfirhy
+a %ssixfirhy
+ein {adj-er}%sSixfirhy
 %%%%
-a shadow demon
-ein Schattendämon
+a %sshadow demon
+ein {adj-er}%sSchattendämon
 %%%%
-a green death
-ein grüner Tod
+a %sgreen death
+ein {adj-er}%sgrüner Tod
 %%%%
-a blizzard demon
-ein Blizzarddämon
+a %sblizzard demon
+ein {adj-er}%sBlizzarddämon
 %%%%
-a balrug
-ein Balrug
+a %sbalrug
+ein {adj-er}%sBalrug
 %%%%
-a cacodemon
-ein Cacodaemon
+a %scacodemon
+ein {adj-er}%sCacodaemon
 %%%%
-a hell beast
-{n}ein Höllentier
+a %shell beast
+ein {adj-es}%sHöllentier
 %%%%
-a hellion
-ein Teufelsbraten
+a %shellion
+ein {adj-er}%sTeufelsbraten
 %%%%
-a reaper
-ein Schnitter
+a %sreaper
+ein {adj-er}%sSchnitter
 %%%%
-a lorocyproca
-eine Lorocyproca
+a %slorocyproca
+eine {adj-e}%sLorocyproca
 %%%%
-a tormentor
-ein Quäler
+a %stormentor
+ein {adj-er}%sQuäler
 %%%%
-a Brimstone Fiend
-ein Schwefelunterweltler
+a %sBrimstone Fiend
+ein {adj-er}%sSchwefelunterweltler
 %%%%
-an Ice Fiend
-ein Eisunterweltler
+a %sIce Fiend
+ein {adj-er}%sEisunterweltler
 %%%%
-a Tzitzimitl
-{n}ein Tzitzimitl
+a %sTzitzimitl
+ein {adj-es}%sTzitzimitl
 %%%%
-a Hell Sentinel
-ein Höllenwächter
+a %sHell Sentinel
+ein {adj-er}%sHöllenwächter
 %%%%
-an Executioner
-ein Scharfrichter
+a %sExecutioner
+ein {adj-er}%sScharfrichter
 %%%%
-an animated tree
-ein animierter Baum
+a %sanimated tree
+ein {adj-er}%sanimierter Baum
 %%%%
-a golem
-ein Golem
+a %sgolem
+ein {adj-er}%sGolem
 %%%%
-a saltling
-ein Salzling
+a %ssaltling
+ein {adj-er}%sSalzling
 %%%%
-a peacekeeper
-ein Friedenshüter
+a %speacekeeper
+ein {adj-er}%sFriedenshüter
 %%%%
-an iron golem
-ein Eisengolem
+a %siron golem
+ein {adj-er}%sEisengolem
 %%%%
-a crystal guardian
-ein Kristallwächter
+a %scrystal guardian
+ein {adj-er}%sKristallwächter
 %%%%
-a toenail golem
-ein Zehennagelgolem
+a %stoenail golem
+ein {adj-er}%sZehennagelgolem
 %%%%
-an electric golem
-ein Blitzgolem
+a %selectric golem
+ein {adj-er}%sBlitzgolem
 %%%%
-an ushabti
-eine Uschabti
+a %sushabti
+eine {adj-e}%sUschabti
 %%%%
-a guardian golem
-ein Wächtergolem
+a %sguardian golem
+ein {adj-er}%sWächtergolem
 %%%%
-a spellforged servitor
-ein zaubergeschmeideter Diener
+a %sspellforged servitor
+ein {adj-er}%szaubergeschmeideter Diener
 %%%%
-an ice statue
-eine Eisstatue
+a %sice statue
+eine {adj-e}%sEisstatue
 %%%%
-an obsidian statue
-eine Obsidianstatue
+a %sobsidian statue
+eine {adj-e}%sObsidianstatue
 %%%%
-an orange crystal statue
-eine orange Kristallstatue
+a %sorange crystal statue
+eine {adj-e}%sorange Kristallstatue
 %%%%
-a statue
-eine Statue
+a %sstatue
+eine {adj-e}%sStatue
 %%%%
-a training dummy
-eine Trainingspuppe
+a %straining dummy
+eine {adj-e}%sTrainingspuppe
 %%%%
-a pillar of salt
-eine Säule des Salzes
+a %spillar of salt
+eine {adj-e}%sSäule des Salzes
 %%%%
-a block of ice
-ein Eisblock
+a %sblock of ice
+ein {adj-er}%sEisblock
 %%%%
-a diamond obelisk
-ein Diamantobelisk
+a %sdiamond obelisk
+ein {adj-er}%sDiamantobelisk
 %%%%
-a lightning spire
-ein Blitzturm
+a %slightning spire
+ein {adj-er}%sBlitzturm
 %%%%
-a gargoyle
-ein Gargoyle
+a %sgargoyle
+ein {adj-er}%sGargoyle
 %%%%
-a war gargoyle
-ein Kriegsgargoyle
+a %swar gargoyle
+ein {adj-er}%sKriegsgargoyle
 %%%%
-a molten gargoyle
-ein geschmolzener Gargoyle
+a %smolten gargoyle
+ein {adj-er}%sgeschmolzener Gargoyle
 %%%%
-a pandemonium lord
-ein Pandämoniumsfürst
+a %spandemonium lord
+ein {adj-er}%sPandämoniumsfürst
 %%%%
-a hell lord
-ein Höllenfürst
+a %shell lord
+ein {adj-er}%sHöllenfürst
 %%%%
-a ball lightning
-ein Kugelblitz
+a %sball lightning
+ein {adj-er}%sKugelblitz
 %%%%
-a ballistomycete spore
-eine Ballistomycetenspore
+a %sballistomycete spore
+eine {adj-e}%sBallistomycetenspore
 %%%%
-a lost soul
-eine verlorene Seele
+a %slost soul
+eine {adj-e}%sverlorene Seele
 %%%%
-a lurking horror
-ein lauerndes Grauen
+a %slurking horror
+ein {adj-er}%slauerndes Grauen
 %%%%
-an orb of fire
-eine Feuerkugel
+a %sorb of fire
+eine {adj-e}%sFeuerkugel
 %%%%
-an orb of destruction
-eine Kugel der Zerstörung
+a %sorb of destruction
+eine {adj-e}%sKugel der Zerstörung
 %%%%
-a wavering orb of destruction
-eine schwankende Kugel der Zerstörung
+a %swavering orb of destruction
+eine {adj-e}%sschwankende Kugel der Zerstörung
 %%%%
-a fulminant prism
-ein fulminantes Prisma
+a %sfulminant prism
+ein {adj-er}%sfulminantes Prisma
 %%%%
-a wretched star
-ein elender Stern
+a %swretched star
+ein {adj-er}%selender Stern
 %%%%
-a battlesphere
-eine Kampfsphäre
+a %sbattlesphere
+eine {adj-e}%sKampfsphäre
 %%%%
-a death cob
-ein Todeskolben
+a %sdeath cob
+ein {adj-er}%sTodeskolben
 %%%%
-a moon troll
-ein Mondtroll
+a %smoon troll
+ein {adj-er}%sMondtroll
 %%%%
-a foxfire
-{n}ein Fuchsfeuer
+a %sfoxfire
+ein {adj-es}%sFuchsfeuer
 %%%%
-a nameless horror
-ein namenloser Horror
+a %snameless horror
+ein {adj-er}%snamenloser Horror
 %%%%
-a will-o-the-wisp
-{n}ein Irrlicht
+a %swill-o-the-wisp
+ein {adj-es}%sIrrlicht
 %%%%
-a bunyip
-ein Bunyip
+a %sbunyip
+ein {adj-er}%sBunyip
 %%%%
-a boulder beetle
-ein Rollsteinkäfer
+a %sboulder beetle
+ein {adj-er}%sRollsteinkäfer
 %%%%
-a cane toad
-eine Aga-Kröte
+a %scane toad
+eine {adj-e}%sAga-Kröte
 %%%%
-a goliath frog
-ein Goliathfrosch
+a %sgoliath frog
+ein {adj-er}%sGoliathfrosch
 %%%%
-a fenstrider witch
-eine Fennläuferhexe
+a %sfenstrider witch
+eine {adj-e}%sFennläuferhexe
 %%%%
-a palentonga
-ein Palentonga
+a %spalentonga
+ein {adj-er}%sPalentonga
 %%%%
-a royal mummy
-eine königliche Mumie
+a %sroyal mummy
+eine {adj-e}%skönigliche Mumie
 %%%%
-an eleionoma
-eine Eleionoma
+a %seleionoma
+eine {adj-e}%sEleionoma
 %%%%
-a lemure
-eine Lemure
+a %slemure
+eine {adj-e}%sLemure
 %%%%
-an endoplasm
-{n}ein Endoplasma
+a %sendoplasm
+ein {adj-es}%sEndoplasma
 %%%%
-a rockslime
-ein Felsenschleim
+a %srockslime
+ein {adj-er}%sFelsenschleim
 %%%%
-a quicksilver ooze
-ein Quecksilber-Schlamm
+a %squicksilver ooze
+ein {adj-er}%sQuecksilber-Schlamm
 %%%%
-a kobold brigand
-ein Kobold-Brigant
+a %skobold brigand
+ein {adj-er}%sKobold-Brigant
 %%%%
-a dread lich
-ein Grauenlich
+a %sdread lich
+ein {adj-er}%sGrauenlich
 %%%%
-a djinni
-ein Dschinn
+a %sdjinni
+ein {adj-er}%sDschinn
 %%%%
-a salamander tyrant
-ein Salamander-Tyrann
+a %ssalamander tyrant
+ein {adj-er}%sSalamander-Tyrann
 %%%%
-an animated armour
-eine animierte Rüstung
+a %sanimated armour
+eine {adj-e}%sanimierte Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%
-a test spawner
-ein Test-Erzeuger
+a %stest spawner
+ein {adj-er}%sTest-Erzeuger
 %%%%
-a test statue
-eine Test-Statue
+a %stest statue
+eine {adj-e}%sTest-Statue
 %%%%
-a test blob
-ein Test-Klumpen
+a %stest blob
+ein {adj-er}%sTest-Klumpen
 %%%%
-a sensed monster
-ein gespürtes Monster
+a %ssensed monster
+ein {adj-er}%sgespürtes Monster
 %%%%
-a friendly sensed monster
-ein freundliches gespürtes Monster
+a %sfriendly sensed monster
+ein {adj-er}%sfreundliches gespürtes Monster
 %%%%
-a trivial sensed monster
-ein triviales gespürtes Monster
+a %strivial sensed monster
+ein {adj-er}%striviales gespürtes Monster
 %%%%
-an easy sensed monster
-ein leichtes gespürtes Monster
+a %seasy sensed monster
+ein {adj-er}%sleichtes gespürtes Monster
 %%%%
-a tough sensed monster
-ein hartes gespürtes Monster
+a %stough sensed monster
+ein {adj-er}%shartes gespürtes Monster
 %%%%
-a nasty sensed monster
-ein furchtbares gespürtes Monster
+a %snasty sensed monster
+ein {adj-er}%sfurchtbares gespürtes Monster
 %%%%
 a %ssting beast
 ein {adj-es}%sStichbiest
@@ -1439,25 +1439,25 @@ ein {adj-es}%sOchsenbiest
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
-a %s zombie
-ein %s-Zombie
+a %s@monster@ zombie
+ein {adj-er}%s@monster@-Zombie
 %%%%
-a %s skeleton
-{n}ein %s-Skelett
+a %s@monster@ skeleton
+ein {adj-es}%s@monster@-Skelett
 %%%%
-a %s simulacrum
-{n}ein %s-Simulacrum
+a %s@monster@ simulacrum
+ein {adj-es}%s@monster@-Simulacrum
 %%%%
 # can result from Zin's Recite
-a %s shaped pillar of salt
-eine %s-förmige Salzsäule
+a %s@monster@ shaped pillar of salt
+eine {adj-e}%s@monster@-förmige Salzsäule
 %%%%
 # can result from Glaciate
-a %s shaped block of ice
-ein %s-förmiger Eisblock
+a %s@monster@ shaped block of ice
+ein {adj-er}%s@monster@-förmiger Eisblock
 %%%%
-a %s shaped shifter
-ein %s-förmiger Gestaltwandler
+a %s@monster@ shaped shifter
+ein {adj-er}%s@monster@-förmiger Gestaltwandler
 %%%%
 
 # irregular derived monsters
@@ -1466,43 +1466,43 @@ a %shydra zombie
 ein {adj-er}%sHydra-Zombie
 %%%%
 a %shydra skeleton
-{n}ein {adj-es}%sHydra-Skelett
+ein {adj-es}%sHydra-Skelett
 %%%%
 a %shydra simulacrum
-{n}ein {adj-es}%sHydra-Simulacrum
+ein {adj-es}%sHydra-Simulacrum
 %%%%
 a %sdemonspawn zombie
 ein {adj-er}%sDämonenbrut-Zombie
 %%%%
 a %sdemonspawn skeleton
-{n}ein {adj-es}%sDämonenbrut-Skelett
+ein {adj-es}%sDämonenbrut-Skelett
 %%%%
 a %sdemonspawn simulacrum
-{n}ein {adj-es}%sDämonenbrut-Simulacrum
+ein {adj-es}%sDämonenbrut-Simulacrum
 %%%%
 
 # derived monsters without the name of the original monster
 # (and not already covered above)
 # "zombie", "skeleton", etc.
 %%%%
-a spectre
-eine Spukgestalt
+a %sspectre
+eine {adj-e}%sSpukgestalt
 %%%%
-a shaped pillar of salt
-eine geformte Salzsäule
+a %sshaped pillar of salt
+eine {adj-e}%sgeformte Salzsäule
 %%%%
-a shaped block of ice
-ein geformter Eisblock
+a %sshaped block of ice
+ein {adj-er}%sgeformter Eisblock
 %%%%
 
 # polymorphed uniques
 %%%%
-a %s shaped Royal Jelly
-{n}ein %s-förmiges Gelée Royale
+a %s@monster@ shaped Royal Jelly
+ein {adj-es}%s@monster@-förmiges Gelée Royale
 %%%%
-a %s shaped Lernaean hydra
-eine %s-förmige Lernäische Hydra
+a %s@monster@ shaped Lernaean hydra
+eine {adj-e}%s@monster@-förmige Lernäische Hydra
 %%%%
-a %s shaped Serpent of Hell
-eine %s-förmige Höllenschlange
+a %s@monster@ shaped Serpent of Hell
+eine {adj-e}%s@monster@-förmige Höllenschlange
 %%%%

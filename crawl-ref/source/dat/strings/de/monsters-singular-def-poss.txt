@@ -5,461 +5,461 @@
 ###############################################################################
 
 %%%%
-the program bug's
-des Programmfehlers
+the %sprogram bug's
+des {adj-en}%sProgrammfehlers
 %%%%
-the formicid's
-des Formicids
+the %sformicid's
+des {adj-en}%sFormicids
 %%%%
-the entropy weaver's
-des Entropiewebers
+the %sentropy weaver's
+des {adj-en}%sEntropiewebers
 %%%%
-the bat's
-der Fledermaus
+the %sbat's
+der {adj-en}%sFledermaus
 %%%%
-the butterfly's
-des Schmetterlings
+the %sbutterfly's
+des {adj-en}%sSchmetterlings
 %%%%
-the vampire bat's
-der Vampirfledermaus
+the %svampire bat's
+der {adj-en}%sVampirfledermaus
 %%%%
-the fire bat's
-der Feuerfledermaus
+the %sfire bat's
+der {adj-en}%sFeuerfledermaus
 %%%%
-the bennu's
-des Bennus
+the %sbennu's
+des {adj-en}%sBennus
 %%%%
-the caustic shrike's
-des ätzenden Würgers
+the %scaustic shrike's
+des {adj-en}%sätzenden Würgers
 %%%%
-the shard shrike's
-des Scherbenwürgers
+the %sshard shrike's
+des {adj-en}%sScherbenwürgers
 %%%%
-the centaur's
-des Zentauren
+the %scentaur's
+des {adj-en}%sZentauren
 %%%%
-the centaur warrior's
-des Zentaur-Kriegers
+the %scentaur warrior's
+des {adj-en}%sZentaur-Kriegers
 %%%%
-the yaktaur's
-des Yaktauren
+the %syaktaur's
+des {adj-en}%sYaktauren
 %%%%
-the yaktaur captain's
-des Yaktaur-Kapitäns
+the %syaktaur captain's
+des {adj-en}%sYaktaur-Kapitäns
 %%%%
-the faun's
-des Fauns
+the %sfaun's
+des {adj-en}%sFauns
 %%%%
-the satyr's
-des Satyrs
+the %ssatyr's
+des {adj-en}%sSatyrs
 %%%%
-the draconian's
-des Drakoniers
+the %sdraconian's
+des {adj-en}%sDrakoniers
 %%%%
-the black draconian's
-des schwarzen Drakoniers
+the %sblack draconian's
+des {adj-en}%sschwarzen Drakoniers
 %%%%
-the yellow draconian's
-des gelben Drakoniers
+the %syellow draconian's
+des {adj-en}%sgelben Drakoniers
 %%%%
-the pale draconian's
-des blassen Drakoniers
+the %spale draconian's
+des {adj-en}%sblassen Drakoniers
 %%%%
-the green draconian's
-des grünen Drakoniers
+the %sgreen draconian's
+des {adj-en}%sgrünen Drakoniers
 %%%%
-the purple draconian's
-des purpurnen Drakoniers
+the %spurple draconian's
+des {adj-en}%spurpurnen Drakoniers
 %%%%
-the red draconian's
-des roten Drakoniers
+the %sred draconian's
+des {adj-en}%sroten Drakoniers
 %%%%
-the white draconian's
-des weißen Drakoniers
+the %swhite draconian's
+des {adj-en}%sweißen Drakoniers
 %%%%
-the grey draconian's
-des grauen Drakoniers
+the %sgrey draconian's
+des {adj-en}%sgrauen Drakoniers
 %%%%
-the draconian stormcaller's
-des Drakonier-Sturmrufers
+the %sdraconian stormcaller's
+des {adj-en}%sDrakonier-Sturmrufers
 %%%%
-the draconian monk's
-des Drakonier-Mönchs
+the %sdraconian monk's
+des {adj-en}%sDrakonier-Mönchs
 %%%%
-the draconian shifter's
-des Drakonier-Verschiebers
+the %sdraconian shifter's
+des {adj-en}%sDrakonier-Verschiebers
 %%%%
-the draconian annihilator's
-des Drakonier-Vernichters
+the %sdraconian annihilator's
+des {adj-en}%sDrakonier-Vernichters
 %%%%
-the draconian knight's
-des Drakonier-Ritters
+the %sdraconian knight's
+des {adj-en}%sDrakonier-Ritters
 %%%%
-the draconian scorcher's
-des Drakonier-Verschmorers
+the %sdraconian scorcher's
+des {adj-en}%sDrakonier-Verschmorers
 %%%%
-the elf's
-des Elfs
+the %self's
+des {adj-en}%sElfs
 %%%%
-the deep elf knight's
-des Tiefenelf-Ritters
+the %sdeep elf knight's
+des {adj-en}%sTiefenelf-Ritters
 %%%%
-the deep elf archer's
-des Tiefenelf-Bogenschützen
+the %sdeep elf archer's
+des {adj-en}%sTiefenelf-Bogenschützen
 %%%%
-the deep elf blademaster's
-des Tiefenelf-Klingenmeisters
+the %sdeep elf blademaster's
+des {adj-en}%sTiefenelf-Klingenmeisters
 %%%%
-the deep elf master archer's
-des Tiefenelf-Bogenmeisters
+the %sdeep elf master archer's
+des {adj-en}%sTiefenelf-Bogenmeisters
 %%%%
-the deep elf zephyrmancer's
-des Tiefenelf-Zephyrmanten
+the %sdeep elf zephyrmancer's
+des {adj-en}%sTiefenelf-Zephyrmanten
 %%%%
-the deep elf pyromancer's
-des Tiefenelf-Pyromanten
+the %sdeep elf pyromancer's
+des {adj-en}%sTiefenelf-Pyromanten
 %%%%
-the deep elf high priest's
-des Tiefenelf-Hohepriesters
+the %sdeep elf high priest's
+des {adj-en}%sTiefenelf-Hohepriesters
 %%%%
-the deep elf demonologist's
-des Tiefenelf-Dämonologen
+the %sdeep elf demonologist's
+des {adj-en}%sTiefenelf-Dämonologen
 %%%%
-the deep elf annihilator's
-des Tiefenelf-Vernichters
+the %sdeep elf annihilator's
+des {adj-en}%sTiefenelf-Vernichters
 %%%%
-the deep elf sorcerer's
-des Tiefenelf-Zauberers
+the %sdeep elf sorcerer's
+des {adj-en}%sTiefenelf-Zauberers
 %%%%
-the deep elf death mage's
-des Tiefenelf-Todesmagiers
+the %sdeep elf death mage's
+des {adj-en}%sTiefenelf-Todesmagiers
 %%%%
-the deep elf elementalist's
-des Tiefenelf-Elementalisten
+the %sdeep elf elementalist's
+des {adj-en}%sTiefenelf-Elementalisten
 %%%%
-the wandering mushroom's
-des wandernden Pilzs
+the %swandering mushroom's
+des {adj-en}%swandernden Pilzs
 %%%%
-the deathcap's
-der Todesmütze
+the %sdeathcap's
+der {adj-en}%sTodesmütze
 %%%%
-the thorn hunter's
-des Dornenjägers
+the %sthorn hunter's
+des {adj-en}%sDornenjägers
 %%%%
-the shambling mangrove's
-der watschelnden Mangrove
+the %sshambling mangrove's
+der {adj-en}%swatschelnden Mangrove
 %%%%
-the vine stalker's
-des Rebjägers
+the %svine stalker's
+des {adj-en}%sRebjägers
 %%%%
-the goblin's
-des Goblins
+the %sgoblin's
+des {adj-en}%sGoblins
 %%%%
-the hobgoblin's
-des Hobgoblins
+the %shobgoblin's
+des {adj-en}%sHobgoblins
 %%%%
-the gnoll's
-des Gnolls
+the %sgnoll's
+des {adj-en}%sGnolls
 %%%%
-the gnoll shaman's
-des Gnoll-Schamanen
+the %sgnoll shaman's
+des {adj-en}%sGnoll-Schamanen
 %%%%
-the gnoll sergeant's
-des Gnoll-Wachtmeisters
+the %sgnoll sergeant's
+des {adj-en}%sGnoll-Wachtmeisters
 %%%%
-the boggart's
-des Boggarts
+the %sboggart's
+des {adj-en}%sBoggarts
 %%%%
-the dwarf's
-des Zwergs
+the %sdwarf's
+des {adj-en}%sZwergs
 %%%%
-the deep dwarf's
-des Tiefenzwergs
+the %sdeep dwarf's
+des {adj-en}%sTiefenzwergs
 %%%%
-the jackal's
-des Schakals
+the %sjackal's
+des {adj-en}%sSchakals
 %%%%
-the hound's
-des Hunds
+the %shound's
+des {adj-en}%sHunds
 %%%%
-the howler monkey's
-des Brüllaffen
+the %showler monkey's
+des {adj-en}%sBrüllaffen
 %%%%
-the warg's
-des Wargs
+the %swarg's
+des {adj-en}%sWargs
 %%%%
-the wolf's
-des Wolfs
+the %swolf's
+des {adj-en}%sWolfs
 %%%%
-the hog's
-des Schweins
+the %shog's
+des {adj-en}%sSchweins
 %%%%
-the hell hound's
-des Höllenhunds
+the %shell hound's
+des {adj-en}%sHöllenhunds
 %%%%
-the doom hound's
-des Untergangshunds
+the %sdoom hound's
+des {adj-en}%sUntergangshunds
 %%%%
-the raiju's
-des Raijus
+the %sraiju's
+des {adj-en}%sRaijus
 %%%%
-the hell hog's
-des höllischen Schweins
+the %shell hog's
+des {adj-en}%shöllischen Schweins
 %%%%
-the holy swine's
-des heiligen Schweins
+the %sholy swine's
+des {adj-en}%sheiligen Schweins
 %%%%
-the felid's
-des Felids
+the %sfelid's
+des {adj-en}%sFelids
 %%%%
-the bear's
-des Bären
+the %sbear's
+des {adj-en}%sBären
 %%%%
-the polar bear's
-des Eisbären
+the %spolar bear's
+des {adj-en}%sEisbären
 %%%%
-the black bear's
-des Schwarzbären
+the %sblack bear's
+des {adj-en}%sSchwarzbären
 %%%%
-the spriggan's
-des Spriggans
+the %sspriggan's
+des {adj-en}%sSpriggans
 %%%%
-the spriggan rider's
-des Spriggan-Reiters
+the %sspriggan rider's
+des {adj-en}%sSpriggan-Reiters
 %%%%
-the spriggan druid's
-des Spriggan-Druiden
+the %sspriggan druid's
+des {adj-en}%sSpriggan-Druiden
 %%%%
-the spriggan berserker's
-des Spriggan-Berserkers
+the %sspriggan berserker's
+des {adj-en}%sSpriggan-Berserkers
 %%%%
-the spriggan air mage's
-des Spriggan-Luftmagiers
+the %sspriggan air mage's
+des {adj-en}%sSpriggan-Luftmagiers
 %%%%
-the spriggan defender's
-des Spriggan-Verteidigers
+the %sspriggan defender's
+des {adj-en}%sSpriggan-Verteidigers
 %%%%
-the drake's
-des Drachlings
+the %sdrake's
+des {adj-en}%sDrachlings
 %%%%
-the swamp drake's
-des Sumpfdrachlings
+the %sswamp drake's
+des {adj-en}%sSumpfdrachlings
 %%%%
-the rime drake's
-des Reifsdrachlings
+the %srime drake's
+des {adj-en}%sReifsdrachlings
 %%%%
-the wind drake's
-des Winddrachlings
+the %swind drake's
+des {adj-en}%sWinddrachlings
 %%%%
-the lindwurm's
-des Lindwurms
+the %slindwurm's
+des {adj-en}%sLindwurms
 %%%%
-the death drake's
-des Todesdrachlings
+the %sdeath drake's
+des {adj-en}%sTodesdrachlings
 %%%%
-the giant lizard's
-der Rieseneidechse
+the %sgiant lizard's
+der {adj-en}%sRieseneidechse
 %%%%
-the frilled lizard's
-der gekräuselten Eidechse
+the %sfrilled lizard's
+der {adj-en}%sgekräuselten Eidechse
 %%%%
-the iguana's
-des Leguans
+the %siguana's
+des {adj-en}%sLeguans
 %%%%
-the basilisk's
-des Basilisks
+the %sbasilisk's
+des {adj-en}%sBasilisks
 %%%%
-the wyvern's
-des Wyverns
+the %swyvern's
+des {adj-en}%sWyverns
 %%%%
-the komodo dragon's
-des Komododrachen
+the %skomodo dragon's
+des {adj-en}%sKomododrachen
 %%%%
-the merfolk's
-des Meervolks
+the %smerfolk's
+des {adj-en}%sMeervolks
 %%%%
-the merfolk impaler's
-des Meervolk-Impalers
+the %smerfolk impaler's
+des {adj-en}%sMeervolk-Impalers
 %%%%
-the merfolk javelineer's
-des Meervolk-Speerführers
+the %smerfolk javelineer's
+des {adj-en}%sMeervolk-Speerführers
 %%%%
-the merfolk aquamancer's
-des Meervolk-Aquamancers
+the %smerfolk aquamancer's
+des {adj-en}%sMeervolk-Aquamancers
 %%%%
-the merfolk siren's
-der Meervolk-Sirene
+the %smerfolk siren's
+der {adj-en}%sMeervolk-Sirene
 %%%%
-the merfolk avatar's
-des Meervolk-Avatars
+the %smerfolk avatar's
+des {adj-en}%sMeervolk-Avatars
 %%%%
-the water nymph's
-der Wassernymphe
+the %swater nymph's
+der {adj-en}%sWassernymphe
 %%%%
-the bog body's
-der Moorleiche
+the %sbog body's
+der {adj-en}%sMoorleiche
 %%%%
-the necrophage's
-des Nekrophagens
+the %snecrophage's
+des {adj-en}%sNekrophagens
 %%%%
-the bloated husk's
-der aufgeblähten Hülle
+the %sbloated husk's
+der {adj-en}%saufgeblähten Hülle
 %%%%
-the ghoul's
-des Ghuls
+the %sghoul's
+des {adj-en}%sGhuls
 %%%%
-the orc's
-des Orks
+the %sorc's
+des {adj-en}%sOrks
 %%%%
-the orc wizard's
-des Ork-Zauberers
+the %sorc wizard's
+des {adj-en}%sOrk-Zauberers
 %%%%
-the orc priest's
-des Ork-Priesters
+the %sorc priest's
+des {adj-en}%sOrk-Priesters
 %%%%
-the orc warrior's
-des Ork-Kriegers
+the %sorc warrior's
+des {adj-en}%sOrk-Kriegers
 %%%%
-the orc knight's
-des Ork-Ritters
+the %sorc knight's
+des {adj-en}%sOrk-Ritters
 %%%%
-the orc warlord's
-des Ork-Warlords
+the %sorc warlord's
+des {adj-en}%sOrk-Warlords
 %%%%
-the orc sorcerer's
-des Ork-Hexenmeisters
+the %sorc sorcerer's
+des {adj-en}%sOrk-Hexenmeisters
 %%%%
-the orc high priest's
-des Ork-Hohepriesters
+the %sorc high priest's
+des {adj-en}%sOrk-Hohepriesters
 %%%%
-the human's
-des Menschen
+the %shuman's
+des {adj-en}%sMenschen
 %%%%
-the hell knight's
-des Höllenritters
+the %shell knight's
+des {adj-en}%sHöllenritters
 %%%%
-the death knight's
-des Todesritters
+the %sdeath knight's
+des {adj-en}%sTodesritters
 %%%%
-the necromancer's
-des Nekromanten
+the %snecromancer's
+des {adj-en}%sNekromanten
 %%%%
-the wizard's
-des Zauberers
+the %swizard's
+des {adj-en}%sZauberers
 %%%%
-the vault guard's
-des Tresorwächters
+the %svault guard's
+des {adj-en}%sTresorwächters
 %%%%
-the vault sentinel's
-der Tresorwache
+the %svault sentinel's
+der {adj-en}%sTresorwache
 %%%%
-the vault warden's
-des Tresorwärters
+the %svault warden's
+des {adj-en}%sTresorwärters
 %%%%
-the ironbound convoker's
-des eisenbeschlagenen Einberufers
+the %sironbound convoker's
+des {adj-en}%seisenbeschlagenen Einberufers
 %%%%
-the ironbound frostheart's
-des eisengebundenen Frostherzens
+the %sironbound frostheart's
+des {adj-en}%seisengebundenen Frostherzens
 %%%%
-the ironbound preserver's
-des eisenbeschlagenen Bewahrers
+the %sironbound preserver's
+des {adj-en}%seisenbeschlagenen Bewahrers
 %%%%
-the ironbound beastmaster's
-des eisenbeschlagenen Bestienmeisters
+the %sironbound beastmaster's
+des {adj-en}%seisenbeschlagenen Bestienmeisters
 %%%%
-the ironbound thunderhulk's
-des eisenbeschlagenen Donnerkolosses
+the %sironbound thunderhulk's
+des {adj-en}%seisenbeschlagenen Donnerkolosses
 %%%%
-the imperial myrmidon's
-des kaiserlichen Myrmidons
+the %simperial myrmidon's
+des {adj-en}%skaiserlichen Myrmidons
 %%%%
-the servant of whispers's
-des Dieners des Flüsterns
+the %sservant of whispers's
+des {adj-en}%sDieners des Flüsterns
 %%%%
-the ragged hierophant's
-des zerlumpten Hierophanten
+the %sragged hierophant's
+des {adj-en}%szerlumpten Hierophanten
 %%%%
-the shapeshifter's
-des Gestaltwandlers
+the %sshapeshifter's
+des {adj-en}%sGestaltwandlers
 %%%%
-the glowing shapeshifter's
-des leuchtenden Gestaltwandlers
+the %sglowing shapeshifter's
+des {adj-en}%sleuchtenden Gestaltwandlers
 %%%%
-the Killer Klown's
-des Killer-Klowns
+the %sKiller Klown's
+des {adj-en}%sKiller-Klowns
 %%%%
-the demigod's
-des Halbgotts
+the %sdemigod's
+des {adj-en}%sHalbgotts
 %%%%
-the halfling's
-des Halblings
+the %shalfling's
+des {adj-en}%sHalblings
 %%%%
-the rat's
-der Ratte
+the %srat's
+der {adj-en}%sRatte
 %%%%
-the quokka's
-des Quokkas
+the %squokka's
+des {adj-en}%sQuokkas
 %%%%
-the river rat's
-der Flussratte
+the %sriver rat's
+der {adj-en}%sFlussratte
 %%%%
-the hell rat's
-der Höllenratte
+the %shell rat's
+der {adj-en}%sHöllenratte
 %%%%
-the giant cockroach's
-der Riesenkakerlake
+the %sgiant cockroach's
+der {adj-en}%sRiesenkakerlake
 %%%%
-the scorpion's
-des Skorpions
+the %sscorpion's
+des {adj-en}%sSkorpions
 %%%%
-the emperor scorpion's
-des Kaiserskorpions
+the %semperor scorpion's
+des {adj-en}%sKaiserskorpions
 %%%%
-the death scarab's
-des Todesskarabäus
+the %sdeath scarab's
+des {adj-en}%sTodesskarabäus
 %%%%
-the spider's
-der Spinne
+the %sspider's
+der {adj-en}%sSpinne
 %%%%
-the tarantella's
-der Tarantella
+the %starantella's
+der {adj-en}%sTarantella
 %%%%
-the jumping spider's
-der springenden Spinne
+the %sjumping spider's
+der {adj-en}%sspringenden Spinne
 %%%%
-the wolf spider's
-der Wolfsspinne
+the %swolf spider's
+der {adj-en}%sWolfsspinne
 %%%%
-the redback's
-der Rotrückenspinne
+the %sredback's
+der {adj-en}%sRotrückenspinne
 %%%%
-the demonic crawler's
-des dämonischen Kriechers
+the %sdemonic crawler's
+des {adj-en}%sdämonischen Kriechers
 %%%%
-the orb spider's
-der Kugelspinne
+the %sorb spider's
+der {adj-en}%sKugelspinne
 %%%%
-the alligator's
-des Alligators
+the %salligator's
+des {adj-en}%sAlligators
 %%%%
-the snapping turtle's
-der Schnappschildkröte
+the %ssnapping turtle's
+der {adj-en}%sSchnappschildkröte
 %%%%
-the alligator snapping turtle's
-der Alligatorschnappschildkröte
+the %salligator snapping turtle's
+der {adj-en}%sAlligatorschnappschildkröte
 %%%%
-the crab's
-der Krabbe
+the %scrab's
+der {adj-en}%sKrabbe
 %%%%
-the fire crab's
-der Feuerkrabbe
+the %sfire crab's
+der {adj-en}%sFeuerkrabbe
 %%%%
-the ghost crab's
-der Geisterkrabbe
+the %sghost crab's
+der {adj-en}%sGeisterkrabbe
 %%%%
-the apocalypse crab's
-der Apokalypse-Krabbe
+the %sapocalypse crab's
+der {adj-en}%sApokalypse-Krabbe
 %%%%
 the %sugly thing's
 des {adj-en}%shässlichen Dings
@@ -467,955 +467,955 @@ des {adj-en}%shässlichen Dings
 the %svery ugly thing's
 des {adj-en}%ssehr hässlichen Dings
 %%%%
-the fire vortex's
-des Feuerwirbels
+the %sfire vortex's
+des {adj-en}%sFeuerwirbels
 %%%%
-the spatial vortex's
-des räumlichen Wirbels
+the %sspatial vortex's
+des {adj-en}%sräumlichen Wirbels
 %%%%
-the spatial maelstrom's
-des räumlichen Mahlstroms
+the %sspatial maelstrom's
+des {adj-en}%sräumlichen Mahlstroms
 %%%%
-the insubstantial wisp's
-des unwesentlichen Irrlichts
+the %sinsubstantial wisp's
+des {adj-en}%sunwesentlichen Irrlichts
 %%%%
-the twister's
-des Twisters
+the %stwister's
+des {adj-en}%sTwisters
 %%%%
-the worm's
-des Wurms
+the %sworm's
+des {adj-en}%sWurms
 %%%%
-the swamp worm's
-des Sumpfwurms
+the %sswamp worm's
+des {adj-en}%sSumpfwurms
 %%%%
-the tyrant leech's
-des Tyrannblutegels
+the %styrant leech's
+des {adj-en}%sTyrannblutegels
 %%%%
-the dart slug's
-der Pfeilschnecke
+the %sdart slug's
+der {adj-en}%sPfeilschnecke
 %%%%
-the torpor snail's
-der Erstarrungsschnecke
+the %storpor snail's
+der {adj-en}%sErstarrungsschnecke
 %%%%
-the elephant slug's
-der Elefantenschnecke
+the %selephant slug's
+der {adj-en}%sElefantenschnecke
 %%%%
-the unseen horror's
-des unsichtbaren Grauens
+the %sunseen horror's
+des {adj-en}%sunsichtbaren Grauens
 %%%%
-the small abomination's
-des kleinen Greuels
+the %ssmall abomination's
+des {adj-en}%skleinen Greuels
 %%%%
-the ancient zyme's
-des uralten Zyms
+the %sancient zyme's
+des {adj-en}%suralten Zyms
 %%%%
-the worldbinder's
-des Weltbinders
+the %sworldbinder's
+des {adj-en}%sWeltbinders
 %%%%
-the killer bee's
-der Killerbiene
+the %skiller bee's
+der {adj-en}%sKillerbiene
 %%%%
-the queen bee's
-der Bienenkönigin
+the %squeen bee's
+der {adj-en}%sBienenkönigin
 %%%%
-the vampire mosquito's
-der Vampir-Mücke
+the %svampire mosquito's
+der {adj-en}%sVampir-Mücke
 %%%%
-the hornet's
-der Hornisse
+the %shornet's
+der {adj-en}%sHornisse
 %%%%
-the meliai's
-der Meliai
+the %smeliai's
+der {adj-en}%sMeliai
 %%%%
-the spark wasp's
-der Funkenwespe
+the %sspark wasp's
+der {adj-en}%sFunkenwespe
 %%%%
-the moth's
-der Motte
+the %smoth's
+der {adj-en}%sMotte
 %%%%
-the ghost moth's
-der Geistermotte
+the %sghost moth's
+der {adj-en}%sGeistermotte
 %%%%
-the moth of wrath's
-der Motte des Zorns
+the %smoth of wrath's
+der {adj-en}%sMotte des Zorns
 %%%%
-the wight's
-des Wights
+the %swight's
+des {adj-en}%sWights
 %%%%
-the skeletal warrior's
-des Skelettkriegers
+the %sskeletal warrior's
+des {adj-en}%sSkelettkriegers
 %%%%
-the ancient champion's
-des alten Champions
+the %sancient champion's
+des {adj-en}%salten Champions
 %%%%
-the flying skull's
-des fliegenden Schädels
+the %sflying skull's
+des {adj-en}%sfliegenden Schädels
 %%%%
-the curse skull's
-des Fluchschädels
+the %scurse skull's
+des {adj-en}%sFluchschädels
 %%%%
-the curse toe's
-des Fluchzehs
+the %scurse toe's
+des {adj-en}%sFluchzehs
 %%%%
-the angel's
-des Engels
+the %sangel's
+des {adj-en}%sEngels
 %%%%
-the cherub's
-des Cherubs
+the %scherub's
+des {adj-en}%sCherubs
 %%%%
-the seraph's
-des Seraphs
+the %sseraph's
+des {adj-en}%sSeraphs
 %%%%
-the daeva's
-des Daevas
+the %sdaeva's
+des {adj-en}%sDaevas
 %%%%
-the profane servitor's
-des profanen Dieners
+the %sprofane servitor's
+des {adj-en}%sprofanen Dieners
 %%%%
-the giant's
-des Riesen
+the %sgiant's
+des {adj-en}%sRiesen
 %%%%
-the cyclops's
-des Zyklops
+the %scyclops's
+des {adj-en}%sZyklops
 %%%%
-the ettin's
-des Ettins
+the %settin's
+des {adj-en}%sEttins
 %%%%
-the fire giant's
-des Feuerriesen
+the %sfire giant's
+des {adj-en}%sFeuerriesen
 %%%%
-the frost giant's
-des Frostriesen
+the %sfrost giant's
+des {adj-en}%sFrostriesen
 %%%%
-the stone giant's
-des Steinriesen
+the %sstone giant's
+des {adj-en}%sSteinriesen
 %%%%
-the titan's
-des Titans
+the %stitan's
+des {adj-en}%sTitans
 %%%%
-the juggernaut's
-des Juggernauts
+the %sjuggernaut's
+des {adj-en}%sJuggernauts
 %%%%
-the iron giant's
-des Eisenriesen
+the %siron giant's
+des {adj-en}%sEisenriesen
 %%%%
-the dragon's
-des Drachen
+the %sdragon's
+des {adj-en}%sDrachen
 %%%%
-the fire dragon's
-des Feuerdrachen
+the %sfire dragon's
+des {adj-en}%sFeuerdrachen
 %%%%
 the %shydra's
 der {adj-en}%sHydra
 %%%%
-the ice dragon's
-des Eisdrachen
+the %sice dragon's
+des {adj-en}%sEisdrachen
 %%%%
-the steam dragon's
-des Dampfdrachen
+the %ssteam dragon's
+des {adj-en}%sDampfdrachen
 %%%%
-the swamp dragon's
-des Sumpfdrachen
+the %sswamp dragon's
+des {adj-en}%sSumpfdrachen
 %%%%
-the acid dragon's
-des Säuredrachen
+the %sacid dragon's
+des {adj-en}%sSäuredrachen
 %%%%
-the quicksilver dragon's
-des Quecksilberdrachen
+the %squicksilver dragon's
+des {adj-en}%sQuecksilberdrachen
 %%%%
-the iron dragon's
-des Eisendrachen
+the %siron dragon's
+des {adj-en}%sEisendrachen
 %%%%
-the storm dragon's
-des Sturmdrachen
+the %sstorm dragon's
+des {adj-en}%sSturmdrachen
 %%%%
-the golden dragon's
-des Golddrachen
+the %sgolden dragon's
+des {adj-en}%sGolddrachen
 %%%%
-the shadow dragon's
-des Schattendrachen
+the %sshadow dragon's
+des {adj-en}%sSchattendrachen
 %%%%
-the bone dragon's
-des Knochendrachen
+the %sbone dragon's
+des {adj-en}%sKnochendrachen
 %%%%
-the pearl dragon's
-des Perlendrachen
+the %spearl dragon's
+des {adj-en}%sPerlendrachen
 %%%%
-the elemental's
-des Elementars
+the %selemental's
+des {adj-en}%sElementars
 %%%%
-the earth elemental's
-des Erdelementars
+the %searth elemental's
+des {adj-en}%sErdelementars
 %%%%
-the fire elemental's
-des Feuerelementars
+the %sfire elemental's
+des {adj-en}%sFeuerelementars
 %%%%
-the water elemental's
-des Wasserelementars
+the %swater elemental's
+des {adj-en}%sWasserelementars
 %%%%
-the air elemental's
-des Luftelementars
+the %sair elemental's
+des {adj-en}%sLuftelementars
 %%%%
-the iron elemental's
-des Eisenelementars
+the %siron elemental's
+des {adj-en}%sEisenelementars
 %%%%
-the elemental wellspring's
-der elementaren Quelle
+the %selemental wellspring's
+der {adj-en}%selementaren Quelle
 %%%%
-the giant frog's
-des Riesenfrosches
+the %sgiant frog's
+des {adj-en}%sRiesenfrosches
 %%%%
-the bullfrog's
-des Ochsenfrosches
+the %sbullfrog's
+des {adj-en}%sOchsenfrosches
 %%%%
-the spiny frog's
-des Stachelfrosches
+the %sspiny frog's
+des {adj-en}%sStachelfrosches
 %%%%
-the blink frog's
-des Blinzelfrosches
+the %sblink frog's
+des {adj-en}%sBlinzelfrosches
 %%%%
-the barachi's
-der Barachi
+the %sbarachi's
+der {adj-en}%sBarachi
 %%%%
-the floating eye's
-des schwebenden Auges
+the %sfloating eye's
+des {adj-en}%sschwebenden Auges
 %%%%
-the glowing orange brain's
-des orangen leuchtenden Gehirns
+the %sglowing orange brain's
+des {adj-en}%sorangen leuchtenden Gehirns
 %%%%
-the great orb of eyes's
-der großen Augenkugel
+the %sgreat orb of eyes's
+der {adj-en}%sgroßen Augenkugel
 %%%%
-the shining eye's
-des leuchtenden Auges
+the %sshining eye's
+des {adj-en}%sleuchtenden Auges
 %%%%
-the eye of devastation's
-des Auges der Verwüstung
+the %seye of devastation's
+des {adj-en}%sAuges der Verwüstung
 %%%%
-the golden eye's
-des goldenen Auges
+the %sgolden eye's
+des {adj-en}%sgoldenen Auges
 %%%%
-the ophan's
-des Ophans
+the %sophan's
+des {adj-en}%sOphans
 %%%%
-the manticore's
-des Mantikors
+the %smanticore's
+des {adj-en}%sMantikors
 %%%%
-the minotaur's
-des Minotauren
+the %sminotaur's
+des {adj-en}%sMinotauren
 %%%%
-the sphinx's
-der Sphinx
+the %ssphinx's
+der {adj-en}%sSphinx
 %%%%
-the harpy's
-der Harpyie
+the %sharpy's
+der {adj-en}%sHarpyie
 %%%%
-the mutant beast's
-der mutierten Bestie
+the %smutant beast's
+der {adj-en}%smutierten Bestie
 %%%%
-the ancestor's
-des Ahnen
+the %sancestor's
+des {adj-en}%sAhnen
 %%%%
-the knight's
-des Ritters
+the %sknight's
+des {adj-en}%sRitters
 %%%%
-the battlemage's
-des Kampfmagiers
+the %sbattlemage's
+des {adj-en}%sKampfmagiers
 %%%%
-the hexer's
-des Hexers
+the %shexer's
+des {adj-en}%sHexers
 %%%%
-the jelly's
-des Gelees
+the %sjelly's
+des {adj-en}%sGelees
 %%%%
 the %sslime creature's
 des {adj-en}%sSchleimwesens
 %%%%
-the merged slime creature's
-der verschmolzenen Schleimkreatur
+the %smerged slime creature's
+der {adj-en}%sverschmolzenen Schleimkreatur
 %%%%
-the azure jelly's
-des azurblauen Gelees
+the %sazure jelly's
+des {adj-en}%sazurblauen Gelees
 %%%%
-the acid blob's
-des Säureklumpens
+the %sacid blob's
+des {adj-en}%sSäureklumpens
 %%%%
-the kobold's
-des Kobolds
+the %skobold's
+des {adj-en}%sKobolds
 %%%%
-the big kobold's
-des großen Kobolds
+the %sbig kobold's
+des {adj-en}%sgroßen Kobolds
 %%%%
-the kobold demonologist's
-des Kobold-Dämonologen
+the %skobold demonologist's
+des {adj-en}%sKobold-Dämonologen
 %%%%
-the lich's
-des Lichs
+the %slich's
+des {adj-en}%sLichs
 %%%%
-the ancient lich's
-des alten Lichs
+the %sancient lich's
+des {adj-en}%salten Lichs
 %%%%
-the revenant's
-des Wiedergängers
+the %srevenant's
+des {adj-en}%sWiedergängers
 %%%%
-the halazid warlock's
-des halazidischen Hexenmeisters
+the %shalazid warlock's
+des {adj-en}%shalazidischen Hexenmeisters
 %%%%
-the mummy's
-der Mumie
+the %smummy's
+der {adj-en}%sMumie
 %%%%
-the guardian mummy's
-der Wächtermumie
+the %sguardian mummy's
+der {adj-en}%sWächtermumie
 %%%%
-the greater mummy's
-der größeren Mumie
+the %sgreater mummy's
+der {adj-en}%sgrößeren Mumie
 %%%%
-the mummy priest's
-des Mumie-Priesters
+the %smummy priest's
+des {adj-en}%sMumie-Priesters
 %%%%
-the naga's
-des Nagas
+the %snaga's
+des {adj-en}%sNagas
 %%%%
-the naga mage's
-des Naga-Magiers
+the %snaga mage's
+des {adj-en}%sNaga-Magiers
 %%%%
-the naga sharpshooter's
-des Naga-Scharfschützen
+the %snaga sharpshooter's
+des {adj-en}%sNaga-Scharfschützen
 %%%%
-the naga ritualist's
-des Naga-Ritualisten
+the %snaga ritualist's
+des {adj-en}%sNaga-Ritualisten
 %%%%
-the naga warrior's
-des Naga-Kriegers
+the %snaga warrior's
+des {adj-en}%sNaga-Kriegers
 %%%%
-the nagaraja's
-des Nagarajas
+the %snagaraja's
+des {adj-en}%sNagarajas
 %%%%
-the ogre's
-des Ogers
+the %sogre's
+des {adj-en}%sOgers
 %%%%
-the two-headed ogre's
-des zweiköpfigen Ogers
+the %stwo-headed ogre's
+des {adj-en}%szweiköpfigen Ogers
 %%%%
-the ogre mage's
-des Oger-Magiers
+the %sogre mage's
+des {adj-en}%sOger-Magiers
 %%%%
-the plant's
-der Pflanze
+the %splant's
+der {adj-en}%sPflanze
 %%%%
-the demonic plant's
-der dämonischen Pflanze
+the %sdemonic plant's
+der {adj-en}%sdämonischen Pflanze
 %%%%
-the withered plant's
-der verwelkten Pflanze
+the %swithered plant's
+der {adj-en}%sverwelkten Pflanze
 %%%%
-the oklob sapling's
-des Oklob-Setzlings
+the %soklob sapling's
+des {adj-en}%sOklob-Setzlings
 %%%%
-the oklob plant's
-der Oklob-Pflanze
+the %soklob plant's
+der {adj-en}%sOklob-Pflanze
 %%%%
-the bush's
-des Busches
+the %sbush's
+des {adj-en}%sBusches
 %%%%
-the burning bush's
-des brennenden Busches
+the %sburning bush's
+des {adj-en}%sbrennenden Busches
 %%%%
-the toadstool's
-des Giftpilzs
+the %stoadstool's
+des {adj-en}%sGiftpilzs
 %%%%
-the fungus's
-des Pilzs
+the %sfungus's
+des {adj-en}%sPilzs
 %%%%
-the ballistomycete's
-des Ballistomyceten
+the %sballistomycete's
+des {adj-en}%sBallistomyceten
 %%%%
-the hyperactive ballistomycete's
-des hyperaktiven Ballistomyceten
+the %shyperactive ballistomycete's
+des {adj-en}%shyperaktiven Ballistomyceten
 %%%%
-the briar patch's
-des Dornstrauchs
+the %sbriar patch's
+des {adj-en}%sDornstrauchs
 %%%%
-the tengu's
-des Tengus
+the %stengu's
+des {adj-en}%sTengus
 %%%%
-the tengu conjurer's
-des Tengu-Zauberers
+the %stengu conjurer's
+des {adj-en}%sTengu-Zauberers
 %%%%
-the tengu warrior's
-des Tengu-Kriegers
+the %stengu warrior's
+des {adj-en}%sTengu-Kriegers
 %%%%
-the tengu reaver's
-des Tengu-Häschers
+the %stengu reaver's
+des {adj-en}%sTengu-Häschers
 %%%%
-the efreet's
-des Efreets
+the %sefreet's
+des {adj-en}%sEfreets
 %%%%
-the rakshasa's
-des Rakshasas
+the %srakshasa's
+des {adj-en}%sRakshasas
 %%%%
-the dryad's
-der Dryade
+the %sdryad's
+der {adj-en}%sDryade
 %%%%
-the snaplasher vine's
-der Peitscherrebe
+the %ssnaplasher vine's
+der {adj-en}%sPeitscherrebe
 %%%%
-the snaplasher vine segment's
-des Peitscherrebesegments
+the %ssnaplasher vine segment's
+des {adj-en}%sPeitscherrebesegments
 %%%%
-the snake's
-der Schlange
+the %ssnake's
+der {adj-en}%sSchlange
 %%%%
-the ball python's
-der Kugelpython
+the %sball python's
+der {adj-en}%sKugelpython
 %%%%
-the adder's
-der Kreuzotter
+the %sadder's
+der {adj-en}%sKreuzotter
 %%%%
-the water moccasin's
-des Wassermokassins
+the %swater moccasin's
+des {adj-en}%sWassermokassins
 %%%%
-the black mamba's
-der schwarzen Mamba
+the %sblack mamba's
+der {adj-en}%sschwarzen Mamba
 %%%%
-the sea snake's
-der Seeschlange
+the %ssea snake's
+der {adj-en}%sSeeschlange
 %%%%
-the anaconda's
-der Anakonda
+the %sanaconda's
+der {adj-en}%sAnakonda
 %%%%
-the guardian serpent's
-der Wächter-Schlange
+the %sguardian serpent's
+der {adj-en}%sWächter-Schlange
 %%%%
-the shock serpent's
-der Schockschlange
+the %sshock serpent's
+der {adj-en}%sSchockschlange
 %%%%
-the mana viper's
-der Manaviper
+the %smana viper's
+der {adj-en}%sManaviper
 %%%%
-the troll's
-des Trolls
+the %stroll's
+des {adj-en}%sTrolls
 %%%%
-the iron troll's
-des Eisentrolls
+the %siron troll's
+des {adj-en}%sEisentrolls
 %%%%
-the deep troll's
-des Tiefentrolls
+the %sdeep troll's
+des {adj-en}%sTiefentrolls
 %%%%
-the deep troll earth mage's
-des Tiefentroll-Erdmagiers
+the %sdeep troll earth mage's
+des {adj-en}%sTiefentroll-Erdmagiers
 %%%%
-the deep troll shaman's
-des Tiefentroll-Schamanen
+the %sdeep troll shaman's
+des {adj-en}%sTiefentroll-Schamanen
 %%%%
-the vampire's
-des Vampirs
+the %svampire's
+des {adj-en}%sVampirs
 %%%%
-the vampire knight's
-des Vampir-Ritters
+the %svampire knight's
+des {adj-en}%sVampir-Ritters
 %%%%
-the vampire mage's
-des Vampir-Magiers
+the %svampire mage's
+des {adj-en}%sVampir-Magiers
 %%%%
-the jiangshi's
-des Jiangshis
+the %sjiangshi's
+des {adj-en}%sJiangshis
 %%%%
-the ghost's
-des Gespensts
+the %sghost's
+des {adj-en}%sGespensts
 %%%%
-the phantom's
-des Phantoms
+the %sphantom's
+des {adj-en}%sPhantoms
 %%%%
-the hungry ghost's
-des hungrigen Geistes
+the %shungry ghost's
+des {adj-en}%shungrigen Geistes
 %%%%
-the flayed ghost's
-des enthäuteten Geistes
+the %sflayed ghost's
+des {adj-en}%senthäuteten Geistes
 %%%%
-the player ghost's
-des Spielergeistes
+the %splayer ghost's
+des {adj-en}%sSpielergeistes
 %%%%
-the shadow's
-des Schattens
+the %sshadow's
+des {adj-en}%sSchattens
 %%%%
-the silent spectre's
-des stillen Gespensts
+the %ssilent spectre's
+des {adj-en}%sstillen Gespensts
 %%%%
-the drowned soul's
-der ertrunkenen Seele
+the %sdrowned soul's
+der {adj-en}%sertrunkenen Seele
 %%%%
-the wraith's
-des Geistes
+the %swraith's
+des {adj-en}%sGeistes
 %%%%
-the shadow wraith's
-des Schattengeistes
+the %sshadow wraith's
+des {adj-en}%sSchattengeistes
 %%%%
-the freezing wraith's
-des Frostgeistes
+the %sfreezing wraith's
+des {adj-en}%sFrostgeistes
 %%%%
-the eidolon's
-des Eidolons
+the %seidolon's
+des {adj-en}%sEidolons
 %%%%
-the phantasmal warrior's
-des phantastischen Kriegers
+the %sphantasmal warrior's
+des {adj-en}%sphantastischen Kriegers
 %%%%
-the large abomination's
-des großen Greuels
+the %slarge abomination's
+des {adj-en}%sgroßen Greuels
 %%%%
-the thrashing horror's
-des verprügelnden Grauens
+the %sthrashing horror's
+des {adj-en}%sverprügelnden Grauens
 %%%%
-the tentacled monstrosity's
-der Tentakel-Monstrosität
+the %stentacled monstrosity's
+der {adj-en}%sTentakel-Monstrosität
 %%%%
-the Orb Guardian's
-des Kugelwächters
+the %sOrb Guardian's
+des {adj-en}%sKugelwächters
 %%%%
-the tentacled starspawn's
-des Tentakelsternbruts
+the %stentacled starspawn's
+des {adj-en}%sTentakelsternbruts
 %%%%
-the starspawn tentacle's
-des Sternbruttentakels
+the %sstarspawn tentacle's
+des {adj-en}%sSternbruttentakels
 %%%%
-the starspawn tentacle segment's
-des Sternbruttentakelsegments
+the %sstarspawn tentacle segment's
+des {adj-en}%sSternbruttentakelsegments
 %%%%
-the starcursed mass's
-der sternverfluchten Masse
+the %sstarcursed mass's
+der {adj-en}%ssternverfluchten Masse
 %%%%
-the dream sheep's
-des Traumschafs
+the %sdream sheep's
+des {adj-en}%sTraumschafs
 %%%%
-the yak's
-des Yaks
+the %syak's
+des {adj-en}%sYaks
 %%%%
-the death yak's
-des Todesyaks
+the %sdeath yak's
+des {adj-en}%sTodesyaks
 %%%%
-the catoblepas's
-der Catoblepas
+the %scatoblepas's
+der {adj-en}%sCatoblepas
 %%%%
-the elephant's
-des Elefanten
+the %selephant's
+des {adj-en}%sElefanten
 %%%%
-the dire elephant's
-des Schreckenselefanten
+the %sdire elephant's
+des {adj-en}%sSchreckenselefanten
 %%%%
-the hellephant's
-des Höllefanten
+the %shellephant's
+des {adj-en}%sHöllefanten
 %%%%
-the apis's
-der Apis
+the %sapis's
+der {adj-en}%sApis
 %%%%
-the ice beast's
-der Eisbestie
+the %sice beast's
+der {adj-en}%sEisbestie
 %%%%
-the sky beast's
-des Himmelstiers
+the %ssky beast's
+des {adj-en}%sHimmelstiers
 %%%%
-the zombie's
-des Zombies
+the %szombie's
+des {adj-en}%sZombies
 %%%%
-the skeleton's
-des Skeletts
+the %sskeleton's
+des {adj-en}%sSkeletts
 %%%%
-the simulacrum's
-des Simulacrums
+the %ssimulacrum's
+des {adj-en}%sSimulacrums
 %%%%
-the small zombie's
-des kleinen Zombies
+the %ssmall zombie's
+des {adj-en}%skleinen Zombies
 %%%%
-the small skeleton's
-des kleinen Skeletts
+the %ssmall skeleton's
+des {adj-en}%skleinen Skeletts
 %%%%
-the small simulacrum's
-des kleinen Simulacrums
+the %ssmall simulacrum's
+des {adj-en}%skleinen Simulacrums
 %%%%
-the large zombie's
-des großen Zombies
+the %slarge zombie's
+des {adj-en}%sgroßen Zombies
 %%%%
-the large skeleton's
-des großen Skeletts
+the %slarge skeleton's
+des {adj-en}%sgroßen Skeletts
 %%%%
-the large simulacrum's
-des großen Simulacrums
+the %slarge simulacrum's
+des {adj-en}%sgroßen Simulacrums
 %%%%
-the spectral thing's
-der spektralen Sache
+the %sspectral thing's
+der {adj-en}%sspektralen Sache
 %%%%
-the electric eel's
-des Zitteraals
+the %selectric eel's
+des {adj-en}%sZitteraals
 %%%%
-the kraken's
-des Krakens
+the %skraken's
+des {adj-en}%sKrakens
 %%%%
-the tentacle's
-des Tentakels
+the %stentacle's
+des {adj-en}%sTentakels
 %%%%
-the tentacle segment's
-des Tentakelsegments
+the %stentacle segment's
+des {adj-en}%sTentakelsegments
 %%%%
-the octopode's
-des Oktopods
+the %soctopode's
+des {adj-en}%sOktopods
 %%%%
-the lava snake's
-der Lavaschlange
+the %slava snake's
+der {adj-en}%sLavaschlange
 %%%%
-the salamander's
-des Salamanders
+the %ssalamander's
+des {adj-en}%sSalamanders
 %%%%
-the salamander mystic's
-des Salamander-Mystikers
+the %ssalamander mystic's
+des {adj-en}%sSalamander-Mystikers
 %%%%
-the Hellbinder's
-des Höllenbinders
+the %sHellbinder's
+des {adj-en}%sHöllenbinders
 %%%%
-the Cloud Mage's
-des Wolkenmagiers
+the %sCloud Mage's
+des {adj-en}%sWolkenmagiers
 %%%%
-the player's
-des Spielers
+the %splayer's
+des {adj-en}%sSpielers
 %%%%
-the player illusion's
-der Spieler-Illusion
+the %splayer illusion's
+der {adj-en}%sSpieler-Illusion
 %%%%
-the dancing weapon's
-der tanzenden Waffe
+the %sdancing weapon's
+der {adj-en}%stanzenden Waffe
 %%%%
-the spectral weapon's
-der Spektralwaffe
+the %sspectral weapon's
+der {adj-en}%sSpektralwaffe
 %%%%
-the eldritch tentacle's
-des unheimlichen Tentakels
+the %seldritch tentacle's
+des {adj-en}%sunheimlichen Tentakels
 %%%%
-the eldritch tentacle segment's
-des unheimlichen Tentakelsegments
+the %seldritch tentacle segment's
+des {adj-en}%sunheimlichen Tentakelsegments
 %%%%
-the demonspawn's
-der Dämonenbrut
+the %sdemonspawn's
+der {adj-en}%sDämonenbrut
 %%%%
-the monstrous demonspawn's
-der monströsen Dämonenbrut
+the %smonstrous demonspawn's
+der {adj-en}%smonströsen Dämonenbrut
 %%%%
-the gelid demonspawn's
-des geliden Dämonenbruts
+the %sgelid demonspawn's
+des {adj-en}%sgeliden Dämonenbruts
 %%%%
-the infernal demonspawn's
-der höllischen Dämonenbrut
+the %sinfernal demonspawn's
+der {adj-en}%shöllischen Dämonenbrut
 %%%%
-the torturous demonspawn's
-der quälenden Dämonenbrut
+the %storturous demonspawn's
+der {adj-en}%squälenden Dämonenbrut
 %%%%
-the blood saint's
-des Blutheiligen
+the %sblood saint's
+des {adj-en}%sBlutheiligen
 %%%%
-the warmonger's
-des Kriegstreibers
+the %swarmonger's
+des {adj-en}%sKriegstreibers
 %%%%
-the corrupter's
-des Korruptors
+the %scorrupter's
+des {adj-en}%sKorruptors
 %%%%
-the black sun's
-der schwarzen Sonne
+the %sblack sun's
+der {adj-en}%sschwarzen Sonne
 %%%%
-the crimson imp's
-des karminroten Teufelchens
+the %scrimson imp's
+des {adj-en}%skarminroten Teufelchens
 %%%%
-the quasit's
-des Quasits
+the %squasit's
+des {adj-en}%sQuasits
 %%%%
-the white imp's
-des weißen Teufelchens
+the %swhite imp's
+des {adj-en}%sweißen Teufelchens
 %%%%
-the ufetubus's
-des Ufetubus
+the %sufetubus's
+des {adj-en}%sUfetubus
 %%%%
-the iron imp's
-des Eisenteufelchens
+the %siron imp's
+des {adj-en}%sEisenteufelchens
 %%%%
-the shadow imp's
-des Schattenteufelchens
+the %sshadow imp's
+des {adj-en}%sSchattenteufelchens
 %%%%
-the rust devil's
-des Rostteufels
+the %srust devil's
+des {adj-en}%sRostteufels
 %%%%
-the orange demon's
-des orangen Dämons
+the %sorange demon's
+des {adj-en}%sorangen Dämons
 %%%%
-the red devil's
-des roten Teufels
+the %sred devil's
+des {adj-en}%sroten Teufels
 %%%%
-the hellwing's
-des Höllenflügels
+the %shellwing's
+des {adj-en}%sHöllenflügels
 %%%%
-the ice devil's
-des Eisteufels
+the %sice devil's
+des {adj-en}%sEisteufels
 %%%%
-the chaos spawn's
-der Chaosbrut
+the %schaos spawn's
+der {adj-en}%sChaosbrut
 %%%%
-the sun demon's
-des Sonnendämons
+the %ssun demon's
+des {adj-en}%sSonnendämons
 %%%%
-the soul eater's
-des Seelenfressers
+the %ssoul eater's
+des {adj-en}%sSeelenfressers
 %%%%
-the smoke demon's
-des Rauchdämons
+the %ssmoke demon's
+des {adj-en}%sRauchdämons
 %%%%
-the neqoxec's
-der Neqoxec
+the %sneqoxec's
+der {adj-en}%sNeqoxec
 %%%%
-the ynoxinul's
-des Ynoxinuls
+the %synoxinul's
+des {adj-en}%sYnoxinuls
 %%%%
-the sixfirhy's
-des Sixfirhys
+the %ssixfirhy's
+des {adj-en}%sSixfirhys
 %%%%
-the shadow demon's
-des Schattendämons
+the %sshadow demon's
+des {adj-en}%sSchattendämons
 %%%%
-the green death's
-des grünen Tods
+the %sgreen death's
+des {adj-en}%sgrünen Tods
 %%%%
-the blizzard demon's
-des Blizzarddämons
+the %sblizzard demon's
+des {adj-en}%sBlizzarddämons
 %%%%
-the balrug's
-des Balrugs
+the %sbalrug's
+des {adj-en}%sBalrugs
 %%%%
-the cacodemon's
-des Cacodaemons
+the %scacodemon's
+des {adj-en}%sCacodaemons
 %%%%
-the hell beast's
-des Höllentiers
+the %shell beast's
+des {adj-en}%sHöllentiers
 %%%%
-the hellion's
-des Teufelsbratens
+the %shellion's
+des {adj-en}%sTeufelsbratens
 %%%%
-the reaper's
-des Schnitters
+the %sreaper's
+des {adj-en}%sSchnitters
 %%%%
-the lorocyproca's
-der Lorocyproca
+the %slorocyproca's
+der {adj-en}%sLorocyproca
 %%%%
-the tormentor's
-des Quälers
+the %stormentor's
+des {adj-en}%sQuälers
 %%%%
-the Brimstone Fiend's
-des Schwefelunterweltlers
+the %sBrimstone Fiend's
+des {adj-en}%sSchwefelunterweltlers
 %%%%
-the Ice Fiend's
-des Eisunterweltlers
+the %sIce Fiend's
+des {adj-en}%sEisunterweltlers
 %%%%
-the Tzitzimitl's
-des Tzitzimitls
+the %sTzitzimitl's
+des {adj-en}%sTzitzimitls
 %%%%
-the Hell Sentinel's
-des Höllenwächters
+the %sHell Sentinel's
+des {adj-en}%sHöllenwächters
 %%%%
-the Executioner's
-des Scharfrichters
+the %sExecutioner's
+des {adj-en}%sScharfrichters
 %%%%
-the animated tree's
-des animierten Baums
+the %sanimated tree's
+des {adj-en}%sanimierten Baums
 %%%%
-the golem's
-des Golems
+the %sgolem's
+des {adj-en}%sGolems
 %%%%
-the saltling's
-des Salzlings
+the %ssaltling's
+des {adj-en}%sSalzlings
 %%%%
-the peacekeeper's
-des Friedenshüters
+the %speacekeeper's
+des {adj-en}%sFriedenshüters
 %%%%
-the iron golem's
-des Eisengolems
+the %siron golem's
+des {adj-en}%sEisengolems
 %%%%
-the crystal guardian's
-des Kristallwächters
+the %scrystal guardian's
+des {adj-en}%sKristallwächters
 %%%%
-the toenail golem's
-des Zehennagelgolems
+the %stoenail golem's
+des {adj-en}%sZehennagelgolems
 %%%%
-the electric golem's
-des Blitzgolems
+the %selectric golem's
+des {adj-en}%sBlitzgolems
 %%%%
-the ushabti's
-der Uschabti
+the %sushabti's
+der {adj-en}%sUschabti
 %%%%
-the guardian golem's
-des Wächtergolems
+the %sguardian golem's
+des {adj-en}%sWächtergolems
 %%%%
-the spellforged servitor's
-des zaubergeschmeideten Dieners
+the %sspellforged servitor's
+des {adj-en}%szaubergeschmeideten Dieners
 %%%%
-the ice statue's
-der Eisstatue
+the %sice statue's
+der {adj-en}%sEisstatue
 %%%%
-the obsidian statue's
-der Obsidianstatue
+the %sobsidian statue's
+der {adj-en}%sObsidianstatue
 %%%%
-the orange crystal statue's
-der orangen Kristallstatue
+the %sorange crystal statue's
+der {adj-en}%sorangen Kristallstatue
 %%%%
-the statue's
-der Statue
+the %sstatue's
+der {adj-en}%sStatue
 %%%%
-the training dummy's
-der Trainingspuppe
+the %straining dummy's
+der {adj-en}%sTrainingspuppe
 %%%%
-the pillar of salt's
-der Säule des Salzes
+the %spillar of salt's
+der {adj-en}%sSäule des Salzes
 %%%%
-the block of ice's
-des Eisblocks
+the %sblock of ice's
+des {adj-en}%sEisblocks
 %%%%
-the diamond obelisk's
-des Diamantobelisks
+the %sdiamond obelisk's
+des {adj-en}%sDiamantobelisks
 %%%%
-the lightning spire's
-des Blitzturms
+the %slightning spire's
+des {adj-en}%sBlitzturms
 %%%%
-the gargoyle's
-des Gargoyles
+the %sgargoyle's
+des {adj-en}%sGargoyles
 %%%%
-the war gargoyle's
-des Kriegsgargoyles
+the %swar gargoyle's
+des {adj-en}%sKriegsgargoyles
 %%%%
-the molten gargoyle's
-des geschmolzenen Gargoyles
+the %smolten gargoyle's
+des {adj-en}%sgeschmolzenen Gargoyles
 %%%%
-the pandemonium lord's
-des Pandämoniumsfürsten
+the %spandemonium lord's
+des {adj-en}%sPandämoniumsfürsten
 %%%%
-the hell lord's
-des Höllenfürsten
+the %shell lord's
+des {adj-en}%sHöllenfürsten
 %%%%
-the ball lightning's
-des Kugelblitzs
+the %sball lightning's
+des {adj-en}%sKugelblitzs
 %%%%
-the ballistomycete spore's
-der Ballistomycetenspore
+the %sballistomycete spore's
+der {adj-en}%sBallistomycetenspore
 %%%%
-the lost soul's
-der verlorenen Seele
+the %slost soul's
+der {adj-en}%sverlorenen Seele
 %%%%
-the lurking horror's
-des lauernden Grauens
+the %slurking horror's
+des {adj-en}%slauernden Grauens
 %%%%
-the orb of fire's
-der Feuerkugel
+the %sorb of fire's
+der {adj-en}%sFeuerkugel
 %%%%
-the orb of destruction's
-der Kugel der Zerstörung
+the %sorb of destruction's
+der {adj-en}%sKugel der Zerstörung
 %%%%
-the wavering orb of destruction's
-der schwankenden Kugel der Zerstörung
+the %swavering orb of destruction's
+der {adj-en}%sschwankenden Kugel der Zerstörung
 %%%%
-the fulminant prism's
-des fulminanten Prismas
+the %sfulminant prism's
+des {adj-en}%sfulminanten Prismas
 %%%%
-the wretched star's
-des elenden Sterns
+the %swretched star's
+des {adj-en}%selenden Sterns
 %%%%
-the battlesphere's
-der Kampfsphäre
+the %sbattlesphere's
+der {adj-en}%sKampfsphäre
 %%%%
-the death cob's
-des Todeskolbens
+the %sdeath cob's
+des {adj-en}%sTodeskolbens
 %%%%
-the moon troll's
-des Mondtrolls
+the %smoon troll's
+des {adj-en}%sMondtrolls
 %%%%
-the foxfire's
-des Fuchsfeuers
+the %sfoxfire's
+des {adj-en}%sFuchsfeuers
 %%%%
-the nameless horror's
-des namenlosen Horrors
+the %snameless horror's
+des {adj-en}%snamenlosen Horrors
 %%%%
-the will-o-the-wisp's
-des Irrlichts
+the %swill-o-the-wisp's
+des {adj-en}%sIrrlichts
 %%%%
-the bunyip's
-des Bunyips
+the %sbunyip's
+des {adj-en}%sBunyips
 %%%%
-the boulder beetle's
-des Rollsteinkäfers
+the %sboulder beetle's
+des {adj-en}%sRollsteinkäfers
 %%%%
-the cane toad's
-der Aga-Kröte
+the %scane toad's
+der {adj-en}%sAga-Kröte
 %%%%
-the goliath frog's
-des Goliathfrosches
+the %sgoliath frog's
+des {adj-en}%sGoliathfrosches
 %%%%
-the fenstrider witch's
-der Fennläuferhexe
+the %sfenstrider witch's
+der {adj-en}%sFennläuferhexe
 %%%%
-the palentonga's
-des Palentongas
+the %spalentonga's
+des {adj-en}%sPalentongas
 %%%%
-the royal mummy's
-der königlichen Mumie
+the %sroyal mummy's
+der {adj-en}%sköniglichen Mumie
 %%%%
-the eleionoma's
-der Eleionoma
+the %seleionoma's
+der {adj-en}%sEleionoma
 %%%%
-the lemure's
-der Lemure
+the %slemure's
+der {adj-en}%sLemure
 %%%%
-the endoplasm's
-des Endoplasmas
+the %sendoplasm's
+des {adj-en}%sEndoplasmas
 %%%%
-the rockslime's
-des Felsenschleims
+the %srockslime's
+des {adj-en}%sFelsenschleims
 %%%%
-the quicksilver ooze's
-des Quecksilber-Schlamms
+the %squicksilver ooze's
+des {adj-en}%sQuecksilber-Schlamms
 %%%%
-the kobold brigand's
-des Kobold-Briganten
+the %skobold brigand's
+des {adj-en}%sKobold-Briganten
 %%%%
-the dread lich's
-des Grauenlichs
+the %sdread lich's
+des {adj-en}%sGrauenlichs
 %%%%
-the djinni's
-des Dschinns
+the %sdjinni's
+des {adj-en}%sDschinns
 %%%%
-the salamander tyrant's
-des Salamander-Tyranns
+the %ssalamander tyrant's
+des {adj-en}%sSalamander-Tyranns
 %%%%
-the animated armour's
-der animierten Rüstung
+the %sanimated armour's
+der {adj-en}%sanimierten Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%
-the test spawner's
-des Test-Erzeugers
+the %stest spawner's
+des {adj-en}%sTest-Erzeugers
 %%%%
-the test statue's
-der Test-Statue
+the %stest statue's
+der {adj-en}%sTest-Statue
 %%%%
-the test blob's
-des Test-Klumpens
+the %stest blob's
+des {adj-en}%sTest-Klumpens
 %%%%
-the sensed monster's
-des gespürten Monsters
+the %ssensed monster's
+des {adj-en}%sgespürten Monsters
 %%%%
-the friendly sensed monster's
-des freundlichen gespürten Monsters
+the %sfriendly sensed monster's
+des {adj-en}%sfreundlichen gespürten Monsters
 %%%%
-the trivial sensed monster's
-des trivialen gespürten Monsters
+the %strivial sensed monster's
+des {adj-en}%strivialen gespürten Monsters
 %%%%
-the easy sensed monster's
-des leichten gespürten Monsters
+the %seasy sensed monster's
+des {adj-en}%sleichten gespürten Monsters
 %%%%
-the tough sensed monster's
-des harten gespürten Monsters
+the %stough sensed monster's
+des {adj-en}%sharten gespürten Monsters
 %%%%
-the nasty sensed monster's
-des furchtbaren gespürten Monsters
+the %snasty sensed monster's
+des {adj-en}%sfurchtbaren gespürten Monsters
 %%%%
 the %ssting beast's
 des {adj-en}%sStichbiests
@@ -1439,70 +1439,49 @@ des {adj-en}%sOchsenbiests
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
-the %s zombie's
-des %s-Zombies
+the %s@monster@ zombie's
+des {adj-en}%s@monster@-Zombies
 %%%%
-the %s skeleton's
-des %s-Skeletts
+the %s@monster@ skeleton's
+des {adj-en}%s@monster@-Skeletts
 %%%%
-the %s simulacrum's
-des %s-Simulacrums
+the %s@monster@ simulacrum's
+des {adj-en}%s@monster@-Simulacrums
 %%%%
 # can result from Zin's Recite
-the %s shaped pillar of salt's
-der %s-förmigen Salzsäule
+the %s@monster@ shaped pillar of salt's
+der {adj-en}%s@monster@-förmigen Salzsäule
 %%%%
 # can result from Glaciate
-the %s shaped block of ice's
-des %s-förmigen Eisblocks
+the %s@monster@ shaped block of ice's
+des {adj-en}%s@monster@-förmigen Eisblocks
 %%%%
-the %s shaped shifter's
-des %s-förmigen Gestaltwandlers
-%%%%
-
-# irregular derived monsters
-%%%%
-the %shydra zombie's
-des {adj-en}%sHydra-Zombies
-%%%%
-the %shydra skeleton's
-des {adj-en}%sHydra-Skeletts
-%%%%
-the %shydra simulacrum's
-des {adj-en}%sHydra-Simulacrums
-%%%%
-the %sdemonspawn zombie's
-des {adj-en}%sDämonenbrut-Zombies
-%%%%
-the %sdemonspawn skeleton's
-des {adj-en}%sDämonenbrut-Skeletts
-%%%%
-the %sdemonspawn simulacrum's
-des {adj-en}%sDämonenbrut-Simulacrums
+the %s@monster@ shaped shifter's
+des {adj-en}%s@monster@-förmigen Gestaltwandlers
 %%%%
 
 # derived monsters without the name of the original monster
 # (and not already covered above)
 # "zombie", "skeleton", etc.
 %%%%
-the spectre's
-der Spukgestalt
+the %sspectre's
+der {adj-en}%sSpukgestalt
 %%%%
-the shaped pillar of salt's
-der geformten Salzsäule
+the %sshaped pillar of salt's
+der {adj-en}%sgeformten Salzsäule
 %%%%
-the shaped block of ice's
-des geformten Eisblocks
+the %sshaped block of ice's
+des {adj-en}%sgeformten Eisblocks
 %%%%
 
 # polymorphed uniques
 %%%%
-the %s shaped Royal Jelly's
-des %s-förmigen Gelée Royale
+the %s@monster@ shaped Royal Jelly's
+des {adj-en}%s@monster@-förmigen Gelée Royale
 %%%%
-the %s shaped Lernaean hydra's
-der %s-förmigen Lernäischen Hydra
+the %s@monster@ shaped Lernaean hydra's
+der {adj-en}%s@monster@-förmigen Lernäischen Hydra
 %%%%
-the %s shaped Serpent of Hell's
-der %s-förmigen Höllenschlange
+the %s@monster@ shaped Serpent of Hell's
+der {adj-en}%s@monster@-förmigen Höllenschlange
 %%%%

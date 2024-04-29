@@ -1,0 +1,264 @@
+###############################################################################
+#
+# Monsters - unique, definite article, nominative
+#
+# Note: All uniques can appear with definite article
+# For example: "You hit the helpless Ijyb from behind."
+#
+###############################################################################
+
+%%%%
+the %sMennas
+der {adj-e}%sMennas
+%%%%
+the %sNessos
+das {adj-e}%sNessos
+%%%%
+the %sChuck
+der {adj-e}%sChuck
+%%%%
+the %sPolyphemus
+der {adj-e}%sPolyphem
+%%%%
+the %sAntaeus
+der {adj-e}%sAntaeus
+%%%%
+the %sTiamat
+die {adj-e}%sTiamat
+%%%%
+the %sBai Suzhen
+die {adj-e}%sBai Suzhen
+%%%%
+the %sXtahua
+das {adj-e}%sXtahua
+%%%%
+the %sIjyb
+die {adj-e}%sIjyb
+%%%%
+the %sRobin
+das {adj-e}%sRobin
+%%%%
+the %sGrum
+der {adj-e}%sGrum
+%%%%
+the %sDuvessa
+die {adj-e}%sDuvessa
+%%%%
+the %sDowan
+der {adj-e}%sDowan
+%%%%
+the %sFannar
+das {adj-e}%sFannar
+%%%%
+the %sJorgrun
+der {adj-e}%sJorgrun
+%%%%
+the %sNatasha
+die {adj-e}%sNatascha
+%%%%
+the %sArachne
+die {adj-e}%sArachne
+%%%%
+the %sAsterion
+der {adj-e}%sAsterion
+%%%%
+the %sAgnes
+die {adj-e}%sAgnes
+%%%%
+the %sDissolution
+die {adj-e}%sDissolution
+%%%%
+the %sSonja
+die {adj-e}%sSonja
+%%%%
+the %sPikel
+der {adj-e}%sPikel
+%%%%
+the %sBoris
+der {adj-e}%sBoris
+%%%%
+the %sMenkaure
+der {adj-e}%sMenkaure
+%%%%
+the %sKhufu
+der {adj-e}%sKhufu
+%%%%
+the %sIlsuiw
+die {adj-e}%sIlsuiw
+%%%%
+the %sVashnia
+die {adj-e}%sVashnia
+%%%%
+the %sErolcha
+die {adj-e}%sErolcha
+%%%%
+the %sUrug
+die {adj-e}%sUrug
+%%%%
+the %sNergalle
+die {adj-e}%sNergalle
+%%%%
+the %sSaint Roka
+der {adj-e}%sSankt Roka
+%%%%
+the %sSojobo
+die {adj-e}%sSojobo
+%%%%
+the %sAzrael
+der {adj-e}%sAzrael
+%%%%
+the %sMara
+der {adj-e}%sMara
+%%%%
+the %sAizul
+die {adj-e}%sAizul
+%%%%
+the %sSnorg
+die {adj-e}%sSnorg
+%%%%
+the %sPurgy
+der {adj-e}%sPurgy
+%%%%
+the %sJory
+der {adj-e}%sJory
+%%%%
+the %sGastronok
+der {adj-e}%sGastronok
+%%%%
+the %sNellie
+die {adj-e}%sNellie
+%%%%
+the %sMurray
+der {adj-e}%sMurray
+%%%%
+the %sIgnacio
+der {adj-e}%sIgnacio
+%%%%
+the %sGrinder
+die {adj-e}%sGrinder
+%%%%
+the %sRoxanne
+die {adj-e}%sRoxanne
+%%%%
+the %sTerence
+der {adj-e}%sTerence
+%%%%
+the %sJessica
+die {adj-e}%sJessica
+%%%%
+the %sSigmund
+der {adj-e}%sSigmund
+%%%%
+the %sEdmund
+der {adj-e}%sEdmund
+%%%%
+the %sPsyche
+die {adj-e}%sPsyche
+%%%%
+the %sDonald
+der {adj-e}%sDonald
+%%%%
+the %sJoseph
+der {adj-e}%sJoseph
+%%%%
+the %sErica
+die {adj-e}%sErica
+%%%%
+the %sJosephine
+die {adj-e}%sJosephine
+%%%%
+the %sHarold
+der {adj-e}%sHarold
+%%%%
+the %sLouise
+die {adj-e}%sLouise
+%%%%
+the %sFrances
+die {adj-e}%sFrances
+%%%%
+the %sRupert
+der {adj-e}%sRupert
+%%%%
+the %sKirke
+die {adj-e}%sKirke
+%%%%
+the %sFrederick
+der {adj-e}%sFrederick
+%%%%
+the %sMargery
+die {adj-e}%sMargery
+%%%%
+the %sMaggie
+die {adj-e}%sMaggie
+%%%%
+the %sEustachio
+der {adj-e}%sEustachio
+%%%%
+the %sMaurice
+der {adj-e}%sMaurice
+%%%%
+the %sNikola
+der {adj-e}%sNikola
+%%%%
+the %sMnoleg
+das {adj-e}%sMnoleg
+%%%%
+the %sLom Lobon
+das {adj-e}%sLom Lobon
+%%%%
+the %sCerebov
+der {adj-e}%sCerebov
+%%%%
+the %sGloorx Vloq
+das {adj-e}%sGloorx Vloq
+%%%%
+the %sGeryon
+der {adj-e}%sGeryon
+%%%%
+the %sDispater
+der {adj-e}%sDispater
+%%%%
+the %sAsmodeus
+der {adj-e}%sAsmodäus
+%%%%
+the %sEreshkigal
+die {adj-e}%sEreshkigal
+%%%%
+the %sPrince Ribbit
+der {adj-e}%sPrinz Ribbit
+%%%%
+the %sCrazy Yiuf
+der {adj-e}%sVerrückte Yiuf
+%%%%
+the %sEnchantress
+die {adj-e}%sHexenmeisterin
+%%%%
+the %sBlork the orc
+der {adj-e}%sBlork der Ork
+%%%%
+the %sBlork
+der {adj-e}%sBlork
+%%%%
+the %sRoyal Jelly
+das {adj-e}%sGelée Royale
+%%%%
+the %sSerpent of Hell
+die {adj-e}%sHöllenschlange
+%%%%
+the %sLernaean hydra
+die {adj-e}%sLernäische Hydra
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+# unseen monster
+the %ssomething
+das {adj-e}%sEtwas
+%%%%
+the %s%s's ghost
+der {adj-e}%s Geist %s's
+%%%%
+the %s%s's illusion
+die {adj-e}%s Illusion %s's
+%%%%

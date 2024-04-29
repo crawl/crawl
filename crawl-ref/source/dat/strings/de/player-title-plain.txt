@@ -762,9 +762,8 @@ Spalter
 Severer
 Henker
 %%%%
-# duplicate (monster)
-#Executioner
-#Scharfrichter
+Executioner
+Scharfrichter
 %%%%
 Axe Maniac
 Axt-Maniac
@@ -1043,9 +1042,8 @@ Einbeirufer
 Demonologist
 Dämonologe
 %%%%
-# duplicate (monster)
-#Hellbinder
-#Höllenbinder
+Hellbinder
+Höllenbinder
 %%%%
 
 # Necromancy
@@ -1150,9 +1148,8 @@ Zephyrmant
 Stormcaller
 Sturmrufer
 %%%%
-# duplicate (also a monster, apparently)
-#Cloud Mage
-#Wolkenmagier
+Cloud Mage
+Wolkenmagier
 %%%%
 Meteorologist
 Meteorologe

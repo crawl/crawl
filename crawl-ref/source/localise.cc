@@ -31,6 +31,7 @@ using namespace std;
 #else
 #define DEBUG(...)
 #endif
+#define TRACE(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
 
 static string _language;
 static bool _paused;
@@ -39,12 +40,6 @@ static string _context;
 // forward declarations
 static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
-
-// check if string contains the char
-static inline bool _contains(const std::string& s, char c)
-{
-    return s.find(c) != string::npos;
-}
 
 // is this char a printf typespec (i.e. the end of %<something><char>)?
 static inline bool _is_type_spec(char c)
@@ -254,22 +249,6 @@ static string _shift_context(const string& str)
     return result;
 }
 
-static bool is_determiner(const string& word)
-{
-    if (ends_with(word, "'s"))
-        return true;
-
-    string lower = lowercase_string(word);
-    if (lower == "a" || lower == "an" || lower == "the"
-             || lower == "his" || lower == "her" || lower == "its"
-             || lower == "their" || lower == "your")
-    {
-        return true;
-    }
-
-    return false;
-}
-
 // replace all instances of given substring
 // std::regex_replace would do this, but not sure if available on all platforms
 static void _replace_all(std::string& str, const std::string& patt, const std::string& replace)
@@ -311,6 +290,22 @@ static string _strip_menu_id(const string& s, string& id)
 }
 
 /*
+ * Is this a count (natural number)?
+ */
+static bool _is_count(const string& s)
+{
+    for (size_t i = 0; i < s.length(); i++)
+    {
+        char ch = s[i];
+        // note: isdigit() can be affected by locale
+        if (ch < '0' || ch > '9')
+            return false;
+    }
+
+    return !s.empty();
+}
+
+/*
  * Does it start with a count (number followed by space)
  */
 static bool _starts_with_count(const string& s)
@@ -320,7 +315,8 @@ static bool _starts_with_count(const string& s)
         char ch = s[i];
         if (ch == ' ' && i > 0)
             return true;
-        else if (!isdigit(ch))
+        // note: isdigit() can be affected by locale
+        else if (ch < '0' || ch > '9')
             return false;
     }
 
@@ -349,6 +345,39 @@ static string _strip_count(const string& s, int& count)
     return trim_string_left(rest);
 }
 
+static bool _is_determiner(const string& word)
+{
+    if (ends_with(word, "'s"))
+        return true;
+
+    string lower = lowercase_string(word);
+    if (lower == "a" || lower == "an" || lower == "the"
+             || lower == "his" || lower == "her" || lower == "its"
+             || lower == "their" || lower == "your")
+    {
+        return true;
+    }
+    else if (_is_count(lower))
+        return true;
+
+    return false;
+}
+
+static string _normalise_determiner(const string& word)
+{
+    string lower = lowercase_string(word);
+    // third-person possessive determiners are hard to translate because
+    // grammatical gender in the target language might not match English
+    if (lower == "his" || lower == "her" || lower == "its" || lower == "their")
+        return "a";
+    else if (lower == "an")
+        return "a";
+    else if (_is_count(lower))
+        return "%d";
+    else
+        return lower;
+}
+
 // localise a string with count
 static string _localise_counted_string(const string& context, const string& singular,
                                        const string& plural, const int count)
@@ -357,7 +386,7 @@ static string _localise_counted_string(const string& context, const string& sing
           context.c_str(), singular.c_str(), plural.c_str(), count);
 
     string result;
-    result = cnxlate(context, singular, plural, count);
+    result = cnxlate(context, singular, plural, count, false);
     result = replace_first(result, "%d", to_string(count));
     return result;
 }
@@ -366,7 +395,7 @@ static string _localise_counted_string(const string& context, const string& sing
 static string _localise_counted_string(const string& context, const string& value)
 {
     if (value.empty() || !_starts_with_count(value))
-        return value;
+        return "";
 
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
@@ -400,7 +429,7 @@ static string _localise_possibly_counted_string(const string& context, const str
     if (_starts_with_count(value))
     {
         string result = _localise_counted_string(context, value);
-        return result == value ? "" : result;
+        return result;
     }
     else
         return cxlate(context, value, false);
@@ -437,7 +466,10 @@ static string _localise_annotation_element(const string& s)
         return prefix + _localise_annotation_element(rest) + suffix;
 
     if (isdigit(s[0]))
-        return _localise_counted_string("", s);
+    {
+        result =  _localise_counted_string("", s);
+        return result.empty() ? s : result;
+    }
 
     vector<string> tokens = split_string(" ", s, false, true);
     for (size_t idx = 0; idx < tokens.size(); idx++)
@@ -618,21 +650,37 @@ static string _strip_context(const string& s, size_t pos, string& context)
     return result;
 }
 
-static string _strip_determiner(const string& s, string& determiner)
+static void _strip_determiner(const string& s, string& determiner, string& base)
 {
     auto pos = s.find(' ');
     if (pos != string::npos)
     {
         string prefix = s.substr(0, pos);
-        if (is_determiner(prefix))
+        if (_is_determiner(prefix))
         {
             determiner = prefix;
             // ditch the space in between
-            return s.substr(pos + 1);
+            base = s.substr(pos + 1);
+            return;
         }
     }
 
-    return s;
+    base = s;
+}
+
+static void _separate_first_word(const string& s, string& word, string& rest)
+{
+    auto pos = s.find(' ');
+    if (pos == string::npos)
+    {
+        word = s;
+        rest = "";
+    }
+    else
+    {
+        word = s.substr(0, pos);
+        rest = s.substr(pos + 1);
+    }
 }
 
 // strip a suffix of the form " of <whatever>" or a quoted artefact name
@@ -692,6 +740,95 @@ static string _insert_adjectives(const string& s, const vector<string>& adjs)
     string result = _strip_context(s, pos, _context);
 
     return _insert_adjectives(_context, result, adjs);
+}
+
+// localise adjectives
+// it's assumed that the main string is already localised
+static string _localise_adjectives(const string& s, const vector<string>& adjs)
+{
+    string result = s;
+    size_t pos = result.find("%s");
+    if (pos == string:: npos)
+        return result;
+
+    // find the context for the adjectives
+    size_t ctx_end = result.rfind("}", pos);
+    if (ctx_end != string::npos)
+    {
+        size_t ctx_pos = result.rfind("{", ctx_end);
+        if (ctx_pos != string::npos)
+        {
+            _context = result.substr(ctx_pos + 1, ctx_end - ctx_pos - 1);
+            result.erase(ctx_pos, ctx_end - ctx_pos + 1);
+        }
+    }
+
+    // some languages (e.g. French) have adjectives both before and after the noun
+    string prefix_adjs;
+    string postfix_adjs;
+
+    for (const string& adj_en: adjs)
+    {
+        string adj = cxlate(_context, adj_en + " ", true);
+        if (adj[0] == ' ')
+            postfix_adjs += adj;
+        else
+            prefix_adjs += adj;
+    }
+
+    if (count_occurrences(result, "%s") == 1)
+        result = replace_first(result, "%s", prefix_adjs + postfix_adjs);
+    else
+    {
+        result = replace_first(result, "%s", prefix_adjs);
+        result = replace_first(result, "%s", postfix_adjs);
+    }
+
+    return result;
+}
+
+// localise adjectives
+// it's assumed that the main string is already localised
+static string _localise_adjectives(const string& s, const string& adj_str)
+{
+    vector<string> adjectives = split_string(" ", adj_str);
+    return _localise_adjectives(s, adjectives);
+}
+
+
+static string _localise_string_with_adjectives(const string& s)
+{
+    DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
+
+    // separate determiner
+    string determiner, rest;
+    _strip_determiner(s, determiner, rest);
+    string normal_det;
+    if (!determiner.empty())
+        normal_det = _normalise_determiner(determiner);
+
+    // try to translate the biggest base string we can
+    string adjectives, result;
+    result = cxlate(_context, normal_det + " %s" + rest, false);
+    while (result.empty())
+    {
+        string adj;
+        _separate_first_word(rest, adj, rest);
+        if (rest.empty())
+            return "";
+        adjectives += adj + " ";
+        if (normal_det == "%d")
+            result = _localise_counted_string(_context, determiner + " %s" + rest);
+        else
+            result = cxlate(_context, normal_det + " %s" + rest, false);
+    }
+
+    if (result.empty())
+        return "";
+
+    DEBUG("base=%s, adjectives=%s", result.c_str(), adjectives.c_str());
+    result = _localise_adjectives(result, adjectives);
+    return _shift_context(result);
 }
 
 // get fist tag of form "<foo>" or "</foo>"
@@ -804,7 +941,7 @@ static string _localise_pair(const string& context, const string& name)
         if (i == 0)
         {
             const string word = lowercase_string(words[i]);
-            if (is_determiner(word))
+            if (_is_determiner(word))
             {
                 determiner = word == "an" ? "a" : word;
                 continue;
@@ -907,9 +1044,8 @@ static string _localise_item_name(const string& context, const string& item)
     if (!result.empty() && result != item)
         return result;
 
-    string determiner;
-    string owner;
-    string base = _strip_determiner(item, determiner);
+    string determiner, base, owner;
+    _strip_determiner(item, determiner, base);
 
     if (ends_with(determiner,"'s"))
     {
@@ -1329,6 +1465,101 @@ static string _localise_jiyva_long_name(const string& context, const string& val
     return result;
 }
 
+static bool _is_derived_monster(const string& s)
+{
+    static const vector<string> derived = {
+        "skeleton", "skeletons", "zombie", "zombies", "simulacrum", "simulacra",
+        "corpse", "corpses", // not really a monster, but derived similarly
+    };
+    for (const string& d: derived)
+        if (ends_with(s, d))
+            return true;
+    return false;
+}
+
+static string _localise_derived_monster_name(const string& context, const string& value)
+{
+    if (!_is_derived_monster(value))
+        return "";
+
+    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+
+    string determiner, rest;
+    _strip_determiner(value, determiner, rest);
+    string normal_det = _normalise_determiner(determiner);
+
+    vector<string> words = split_string(" ", rest, true, false);
+    string derived = words[words.size() - 1];
+    words.pop_back();
+
+    // determine the original monster
+    string original;
+    size_t start;
+    for (start = 0; start < words.size(); start++)
+    {
+        string candidate;
+        for (size_t i = start; i < words.size(); i++)
+        {
+            if (!candidate.empty())
+                candidate += " ";
+            candidate += words[i];
+        }
+        original = xlate(candidate, false);
+        if (!original.empty())
+            break;
+        original = xlate("%s" + candidate, false);
+        if (!original.empty())
+        {
+            original = replace_first(original, "%s", "");
+            break;
+        }
+    }
+
+    // discard context from original monster
+    string ctx = _context;
+    original = _shift_context(original);
+    _context = ctx;
+    if (original.empty())
+        return "";
+
+    vector<string> adjectives;
+    for (size_t i = 0; i < start; i++)
+        adjectives.push_back(words[i]);
+
+    if (!determiner.empty())
+    {
+        determiner += " ";
+        normal_det += " ";
+    }
+
+    string result;
+    string base = "%s@monster@ " + derived;
+    if (normal_det == "%d ")
+        result = _localise_counted_string(context, determiner + base);
+    else
+        result = cxlate(context, normal_det + base, false);
+    DEBUG("result=%s", result.c_str());
+
+    if (result.empty() && adjectives.empty())
+    {
+        // try without adjective placeholder
+        base = "@monster@ " + derived;
+        if (normal_det == "%d ")
+            result = _localise_counted_string(context, determiner + base);
+        else
+            result = cxlate(context, normal_det + base, false);
+        DEBUG("result=%s", result.c_str());
+    }
+
+    if (result.empty())
+        return "";
+
+    result = replace_first(result, "@monster@", original);
+    result = _localise_adjectives(result, adjectives);
+
+    return result;
+}
+
 static string _localise_monster_name(const string& context, const string& value)
 {
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
@@ -1341,26 +1572,37 @@ static string _localise_monster_name(const string& context, const string& value)
     if (!result.empty())
         return result;
 
+    // make sure it doesn't contain "of the", which would indicate an item
+    if (contains(value, " of the "))
+        return "";
+
     // substring " the " could mean a name like "Boghold the orc warlord"
+    string prefix, base;
     size_t pos = value.find(" the ");
     if (pos == string::npos)
-        return "";
+        base = value;
+    else
+    {
+        // prefix, e.g. "Boghold " (including space)
+        prefix = value.substr(0, pos+1);
 
-    // make sure it's not "of the", which would indicate an item
-    if (value.rfind(" of", pos) == pos - 3)
-        return "";
+        // base name, e.g. "the orc warlord"
+        base = value.substr(pos+1);
+    }
 
-    // prefix, e.g. "Boghold "
-    string prefix = value.substr(0, pos+1);
-
-    // base name, e.g. "the orc warlord"
-    string base = value.substr(pos+1);
+    result = _localise_derived_monster_name(context, base);
+    if (!result.empty())
+        return prefix + result;
 
     result = cxlate(context, base, false);
-    if (result.empty())
-        return "";
+    if (!result.empty())
+        return prefix + result;
 
-    return prefix + result;
+    result = _localise_string_with_adjectives(base);
+    if (!result.empty())
+        return prefix + result;
+
+    return "";
 }
 
 static string _localise_location(const string& context, const string& value)
@@ -1413,6 +1655,8 @@ static string _localise_thing_in_location(const string& context, const string& v
     size_t pos = value.find(" on ");
     if (pos == string::npos || pos == 0)
         return "";
+
+    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
     string thing = value.substr(0, pos);
     thing = _localise_string(context, thing);
@@ -1582,6 +1826,8 @@ static string _localise_string(const string context, const string& value)
     if (value.empty() || !localisation_active())
         return value;
 
+    _context = context;
+
     if (contains(value, "\n"))
     {
         // split lines and localise individually
@@ -1659,7 +1905,7 @@ static string _localise_string(const string context, const string& value)
 
     // try treating as a plural
     result = _localise_counted_string(context, value);
-    if (result != value)
+    if (!result.empty())
         return result;
 
     // try treating as multiple sentences
@@ -1681,6 +1927,12 @@ static string _localise_string(const string context, const string& value)
     result = _localise_monster_name(context, value);
     if (!result.empty())
         return result;
+
+    _context = context;
+    result = _localise_string_with_adjectives(value);
+    if (!result.empty())
+        return result;
+
 
     if (value[0] == '[')
     {
@@ -1721,9 +1973,11 @@ static string _localise_string(const string& context, const LocalisationArg& arg
 {
     if (arg.plural.empty())
         return _localise_string(context, arg.stringVal);
-    else
-        return _localise_counted_string(context, arg.stringVal,
-                                        arg.plural, arg.count);
+
+    string result;
+    result = _localise_counted_string(context, arg.stringVal,
+                                      arg.plural, arg.count);
+    return result.empty() ? arg.plural : result;
 }
 
 void LocalisationArg::init()

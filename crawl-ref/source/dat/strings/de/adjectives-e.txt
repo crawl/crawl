@@ -451,6 +451,12 @@ einfarbig braune
 "bribed "
 "bestochene "
 %%%%
+"neutral "
+"neutrale "
+%%%%
+"non-hostile "
+"nicht-feindliche "
+%%%%
 # used for obsolete monsters
 "removed "
 "entfernte "

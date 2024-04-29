@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - unique, nominative
+# Monsters - unique, no article, nominative
 #
 ###############################################################################
 
@@ -227,9 +227,6 @@ Prinz Ribbit
 Crazy Yiuf
 Verrückter Yiuf
 %%%%
-the Enchantress
-die Hexenmeisterin
-%%%%
 Enchantress
 Hexenmeisterin
 %%%%
@@ -239,26 +236,14 @@ Blork der Ork
 Blork
 Blork
 %%%%
-the Royal Jelly
-das Gelée Royale
-%%%%
 Royal Jelly
 Gelée Royale
-%%%%
-the Serpent of Hell
-die Höllenschlange
 %%%%
 Serpent of Hell
 Höllenschlange
 %%%%
-Lernaean hydra
-Lernäische Hydra
-%%%%
 %sLernaean hydra
 {adj-e}%sLernäische Hydra
-%%%%
-the %sLernaean hydra
-die {adj-e}%sLernäische Hydra
 %%%%
 
 # not really uniques, but gramatically similar
