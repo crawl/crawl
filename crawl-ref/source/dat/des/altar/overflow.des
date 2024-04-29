@@ -4823,7 +4823,7 @@ NSUBST:  G = 2:g / *:G
 NSUBST:  H = 1:+ / *:b
 NSUBST:  . = 1:i / *:.
 KPROP:   1 = no_tele_into
-MONS:    chaos spawn
+MONS:    generate_awake chaos spawn
 KMONS:   g = pile of debris
 KITEM:   i = any damaged weapon ego:chaos ident:all
 COLOUR:  b = lightred
