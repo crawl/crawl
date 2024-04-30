@@ -1462,29 +1462,128 @@ eines {adj-en}%s@monster@-förmigen Gestaltwandlers
 %%%%
 
 # irregular derived monsters
+
 %%%%
-a %sdemonspawn zombie's
-eines {adj-en}%sDämonenbrut-Zombies
+a %sLernaean hydra zombie's
+eines {adj-en}%sLernäische-Hydra-zombies
 %%%%
-a %sdemonspawn skeleton's
-eines {adj-en}%sDämonenbrut-Skeletts
+a %smonstrous demonspawn zombie's
+eines {adj-en}%sMonströse-Dämonenbrut-zombies
 %%%%
-a %sdemonspawn simulacrum's
-eines {adj-en}%sDämonenbrut-Simulacrums
+a %sgelid demonspawn zombie's
+eines {adj-en}%sGelide-Dämonenbrut-zombies
+%%%%
+a %sinfernal demonspawn zombie's
+eines {adj-en}%sHöllische-Dämonenbrut-zombies
+%%%%
+a %storturous demonspawn zombie's
+eines {adj-en}%sQuälende-Dämonenbrut-zombies
+%%%%
+a %sblack draconian zombie's
+eines {adj-en}%sSchwarzer-Drakonier-zombies
+%%%%
+a %syellow draconian zombie's
+eines {adj-en}%sGelber-Drakonier-zombies
+%%%%
+a %spale draconian zombie's
+eines {adj-en}%sBlasser-Drakonier-zombies
+%%%%
+a %sgreen draconian zombie's
+eines {adj-en}%sGrüner-Drakonier-zombies
+%%%%
+a %spurple draconian zombie's
+eines {adj-en}%sPurpurner-Drakonier-zombies
+%%%%
+a %sred draconian zombie's
+eines {adj-en}%sRoter-Drakonier-zombies
+%%%%
+a %swhite draconian zombie's
+eines {adj-en}%sWeißer-Drakonier-zombies
+%%%%
+a %sgrey draconian zombie's
+eines {adj-en}%sGrauer-Drakonier-zombies
 %%%%
 
-# derived monsters without the name of the original monster
-# (and not already covered above)
-# "zombie", "skeleton", etc.
 %%%%
-a %sspectre's
-einer {adj-en}%sSpukgestalt
+a %sLernaean hydra skeleton's
+eines {adj-en}%sLernäische-Hydra-Skeletts
 %%%%
-a %sshaped pillar of salt's
-einer {adj-en}%sgeformten Salzsäule
+a %smonstrous demonspawn skeleton's
+eines {adj-en}%sMonströse-Dämonenbrut-Skeletts
 %%%%
-a %sshaped block of ice's
-eines {adj-en}%sgeformten Eisblocks
+a %sgelid demonspawn skeleton's
+eines {adj-en}%sGelide-Dämonenbrut-Skeletts
+%%%%
+a %sinfernal demonspawn skeleton's
+eines {adj-en}%sHöllische-Dämonenbrut-Skeletts
+%%%%
+a %storturous demonspawn skeleton's
+eines {adj-en}%sQuälende-Dämonenbrut-Skeletts
+%%%%
+a %sblack draconian skeleton's
+eines {adj-en}%sSchwarzer-Drakonier-Skeletts
+%%%%
+a %syellow draconian skeleton's
+eines {adj-en}%sGelber-Drakonier-Skeletts
+%%%%
+a %spale draconian skeleton's
+eines {adj-en}%sBlasser-Drakonier-Skeletts
+%%%%
+a %sgreen draconian skeleton's
+eines {adj-en}%sGrüner-Drakonier-Skeletts
+%%%%
+a %spurple draconian skeleton's
+eines {adj-en}%sPurpurner-Drakonier-Skeletts
+%%%%
+a %sred draconian skeleton's
+eines {adj-en}%sRoter-Drakonier-Skeletts
+%%%%
+a %swhite draconian skeleton's
+eines {adj-en}%sWeißer-Drakonier-Skeletts
+%%%%
+a %sgrey draconian skeleton's
+eines {adj-en}%sGrauer-Drakonier-Skeletts
+%%%%
+
+%%%%
+a %sLernaean hydra simulacrum's
+eines {adj-en}%sLernäische-Hydra-Simulacrums
+%%%%
+a %smonstrous demonspawn simulacrum's
+eines {adj-en}%sMonströse-Dämonenbrut-Simulacrums
+%%%%
+a %sgelid demonspawn simulacrum's
+eines {adj-en}%sGelide-Dämonenbrut-Simulacrums
+%%%%
+a %sinfernal demonspawn simulacrum's
+eines {adj-en}%sHöllische-Dämonenbrut-Simulacrums
+%%%%
+a %storturous demonspawn simulacrum's
+eines {adj-en}%sQuälende-Dämonenbrut-Simulacrums
+%%%%
+a %sblack draconian simulacrum's
+eines {adj-en}%sSchwarzer-Drakonier-Simulacrums
+%%%%
+a %syellow draconian simulacrum's
+eines {adj-en}%sGelber-Drakonier-Simulacrums
+%%%%
+a %spale draconian simulacrum's
+eines {adj-en}%sBlasser-Drakonier-Simulacrums
+%%%%
+a %sgreen draconian simulacrum's
+eines {adj-en}%sGrüner-Drakonier-Simulacrums
+%%%%
+a %spurple draconian simulacrum's
+eines {adj-en}%sPurpurner-Drakonier-Simulacrums
+%%%%
+a %sred draconian simulacrum's
+eines {adj-en}%sRoter-Drakonier-Simulacrums
+%%%%
+a %swhite draconian simulacrum's
+eines {adj-en}%sWeißer-Drakonier-Simulacrums
+%%%%
+a %sgrey draconian simulacrum's
+eines {adj-en}%sGrauer-Drakonier-Simulacrums
 %%%%
 
 # polymorphed uniques

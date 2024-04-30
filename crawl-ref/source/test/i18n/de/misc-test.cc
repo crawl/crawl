@@ -152,19 +152,23 @@ int main()
     show_result(msg, expected);
 
     msg = localise("a 27-headed Lernaean hydra zombie (dormant)");
-    expected = "ein 27-köpfiger Lernäischer Hydra-Zombie (ruhend)";
+    expected = "ein 27-köpfiger Lernäische-Hydra-Zombie (ruhend)";
     show_result(msg, expected);
 
     msg = localise("You hit %s", "the 27-headed Lernaean hydra zombie");
-    expected = "Ihr schlagt den 27-köpfigen Lernäischen Hydra-Zombie";
+    expected = "Ihr schlagt den 27-köpfigen Lernäische-Hydra-Zombie";
     show_result(msg, expected);
 
     msg = localise("an infernal demonspawn simulacrum (dormant)");
-    expected = "ein höllisches Dämonenbrut-Simulacrum (ruhend)";
+    expected = "ein Höllische-Dämonenbrut-Simulacrum (ruhend)";
     show_result(msg, expected);
 
-    msg = localise("You see here %s.", "an infernal demonspawn simulacrum");
-    expected = "Ihr seht hier ein höllisches Dämonenbrut-Simulacrum.";
+    msg = localise("You see here %s.", "a yellow draconian skeleton");
+    expected = "Ihr seht hier ein Gelber-Drakonier-Skelett.";
+    show_result(msg, expected);
+
+    msg = localise("You see here %s.", "3 red draconian skeletons");
+    expected = "Ihr seht hier 3 Roter-Drakonier-Skelette.";
     show_result(msg, expected);
 
     msg = localise("You strike %s from behind!", "the helpless yellow draconian");

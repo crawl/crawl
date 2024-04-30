@@ -1460,6 +1460,131 @@ the %s@monster@ shaped shifter's
 des {adj-en}%s@monster@-förmigen Gestaltwandlers
 %%%%
 
+# irregular derived monsters
+
+%%%%
+the %sLernaean hydra zombie's
+des {adj-en}%sLernäische-Hydra-zombies
+%%%%
+the %smonstrous demonspawn zombie's
+des {adj-en}%sMonströse-Dämonenbrut-zombies
+%%%%
+the %sgelid demonspawn zombie's
+des {adj-en}%sGelide-Dämonenbrut-zombies
+%%%%
+the %sinfernal demonspawn zombie's
+des {adj-en}%sHöllische-Dämonenbrut-zombies
+%%%%
+the %storturous demonspawn zombie's
+des {adj-en}%sQuälende-Dämonenbrut-zombies
+%%%%
+the %sblack draconian zombie's
+des {adj-en}%sSchwarzer-Drakonier-zombies
+%%%%
+the %syellow draconian zombie's
+des {adj-en}%sGelber-Drakonier-zombies
+%%%%
+the %spale draconian zombie's
+des {adj-en}%sBlasser-Drakonier-zombies
+%%%%
+the %sgreen draconian zombie's
+des {adj-en}%sGrüner-Drakonier-zombies
+%%%%
+the %spurple draconian zombie's
+des {adj-en}%sPurpurner-Drakonier-zombies
+%%%%
+the %sred draconian zombie's
+des {adj-en}%sRoter-Drakonier-zombies
+%%%%
+the %swhite draconian zombie's
+des {adj-en}%sWeißer-Drakonier-zombies
+%%%%
+the %sgrey draconian zombie's
+des {adj-en}%sGrauer-Drakonier-zombies
+%%%%
+
+%%%%
+the %sLernaean hydra skeleton's
+des {adj-en}%sLernäische-Hydra-Skeletts
+%%%%
+the %smonstrous demonspawn skeleton's
+des {adj-en}%sMonströse-Dämonenbrut-Skeletts
+%%%%
+the %sgelid demonspawn skeleton's
+des {adj-en}%sGelide-Dämonenbrut-Skeletts
+%%%%
+the %sinfernal demonspawn skeleton's
+des {adj-en}%sHöllische-Dämonenbrut-Skeletts
+%%%%
+the %storturous demonspawn skeleton's
+des {adj-en}%sQuälende-Dämonenbrut-Skeletts
+%%%%
+the %sblack draconian skeleton's
+des {adj-en}%sSchwarzer-Drakonier-Skeletts
+%%%%
+the %syellow draconian skeleton's
+des {adj-en}%sGelber-Drakonier-Skeletts
+%%%%
+the %spale draconian skeleton's
+des {adj-en}%sBlasser-Drakonier-Skeletts
+%%%%
+the %sgreen draconian skeleton's
+des {adj-en}%sGrüner-Drakonier-Skeletts
+%%%%
+the %spurple draconian skeleton's
+des {adj-en}%sPurpurner-Drakonier-Skeletts
+%%%%
+the %sred draconian skeleton's
+des {adj-en}%sRoter-Drakonier-Skeletts
+%%%%
+the %swhite draconian skeleton's
+des {adj-en}%sWeißer-Drakonier-Skeletts
+%%%%
+the %sgrey draconian skeleton's
+des {adj-en}%sGrauer-Drakonier-Skeletts
+%%%%
+
+%%%%
+the %sLernaean hydra simulacrum's
+des {adj-en}%sLernäische-Hydra-Simulacrums
+%%%%
+the %smonstrous demonspawn simulacrum's
+des {adj-en}%sMonströse-Dämonenbrut-Simulacrums
+%%%%
+the %sgelid demonspawn simulacrum's
+des {adj-en}%sGelide-Dämonenbrut-Simulacrums
+%%%%
+the %sinfernal demonspawn simulacrum's
+des {adj-en}%sHöllische-Dämonenbrut-Simulacrums
+%%%%
+the %storturous demonspawn simulacrum's
+des {adj-en}%sQuälende-Dämonenbrut-Simulacrums
+%%%%
+the %sblack draconian simulacrum's
+des {adj-en}%sSchwarzer-Drakonier-Simulacrums
+%%%%
+the %syellow draconian simulacrum's
+des {adj-en}%sGelber-Drakonier-Simulacrums
+%%%%
+the %spale draconian simulacrum's
+des {adj-en}%sBlasser-Drakonier-Simulacrums
+%%%%
+the %sgreen draconian simulacrum's
+des {adj-en}%sGrüner-Drakonier-Simulacrums
+%%%%
+the %spurple draconian simulacrum's
+des {adj-en}%sPurpurner-Drakonier-Simulacrums
+%%%%
+the %sred draconian simulacrum's
+des {adj-en}%sRoter-Drakonier-Simulacrums
+%%%%
+the %swhite draconian simulacrum's
+des {adj-en}%sWeißer-Drakonier-Simulacrums
+%%%%
+the %sgrey draconian simulacrum's
+des {adj-en}%sGrauer-Drakonier-Simulacrums
+%%%%
+
 # derived monsters without the name of the original monster
 # (and not already covered above)
 # "zombie", "skeleton", etc.

@@ -1462,24 +1462,128 @@ Eures {adj-en}%s@monster@-förmigen Gestaltwandlers
 %%%%
 
 # irregular derived monsters
+
 %%%%
-your %shydra zombie's
-Eures {adj-en}%sHydra-Zombies
+your %sLernaean hydra zombie's
+Eures {adj-en}%sLernäische-Hydra-zombies
 %%%%
-your %shydra skeleton's
-Eures {adj-en}%sHydra-Skeletts
+your %smonstrous demonspawn zombie's
+Eures {adj-en}%sMonströse-Dämonenbrut-zombies
 %%%%
-your %shydra simulacrum's
-Eures {adj-en}%sHydra-Simulacrums
+your %sgelid demonspawn zombie's
+Eures {adj-en}%sGelide-Dämonenbrut-zombies
 %%%%
-your %sdemonspawn zombie's
-Eures {adj-en}%sDämonenbrut-Zombies
+your %sinfernal demonspawn zombie's
+Eures {adj-en}%sHöllische-Dämonenbrut-zombies
 %%%%
-your %sdemonspawn skeleton's
-Eures {adj-en}%sDämonenbrut-Skeletts
+your %storturous demonspawn zombie's
+Eures {adj-en}%sQuälende-Dämonenbrut-zombies
 %%%%
-your %sdemonspawn simulacrum's
-Eures {adj-en}%sDämonenbrut-Simulacrums
+your %sblack draconian zombie's
+Eures {adj-en}%sSchwarzer-Drakonier-zombies
+%%%%
+your %syellow draconian zombie's
+Eures {adj-en}%sGelber-Drakonier-zombies
+%%%%
+your %spale draconian zombie's
+Eures {adj-en}%sBlasser-Drakonier-zombies
+%%%%
+your %sgreen draconian zombie's
+Eures {adj-en}%sGrüner-Drakonier-zombies
+%%%%
+your %spurple draconian zombie's
+Eures {adj-en}%sPurpurner-Drakonier-zombies
+%%%%
+your %sred draconian zombie's
+Eures {adj-en}%sRoter-Drakonier-zombies
+%%%%
+your %swhite draconian zombie's
+Eures {adj-en}%sWeißer-Drakonier-zombies
+%%%%
+your %sgrey draconian zombie's
+Eures {adj-en}%sGrauer-Drakonier-zombies
+%%%%
+
+%%%%
+your %sLernaean hydra skeleton's
+Eures {adj-en}%sLernäische-Hydra-Skeletts
+%%%%
+your %smonstrous demonspawn skeleton's
+Eures {adj-en}%sMonströse-Dämonenbrut-Skeletts
+%%%%
+your %sgelid demonspawn skeleton's
+Eures {adj-en}%sGelide-Dämonenbrut-Skeletts
+%%%%
+your %sinfernal demonspawn skeleton's
+Eures {adj-en}%sHöllische-Dämonenbrut-Skeletts
+%%%%
+your %storturous demonspawn skeleton's
+Eures {adj-en}%sQuälende-Dämonenbrut-Skeletts
+%%%%
+your %sblack draconian skeleton's
+Eures {adj-en}%sSchwarzer-Drakonier-Skeletts
+%%%%
+your %syellow draconian skeleton's
+Eures {adj-en}%sGelber-Drakonier-Skeletts
+%%%%
+your %spale draconian skeleton's
+Eures {adj-en}%sBlasser-Drakonier-Skeletts
+%%%%
+your %sgreen draconian skeleton's
+Eures {adj-en}%sGrüner-Drakonier-Skeletts
+%%%%
+your %spurple draconian skeleton's
+Eures {adj-en}%sPurpurner-Drakonier-Skeletts
+%%%%
+your %sred draconian skeleton's
+Eures {adj-en}%sRoter-Drakonier-Skeletts
+%%%%
+your %swhite draconian skeleton's
+Eures {adj-en}%sWeißer-Drakonier-Skeletts
+%%%%
+your %sgrey draconian skeleton's
+Eures {adj-en}%sGrauer-Drakonier-Skeletts
+%%%%
+
+%%%%
+your %sLernaean hydra simulacrum's
+Eures {adj-en}%sLernäische-Hydra-Simulacrums
+%%%%
+your %smonstrous demonspawn simulacrum's
+Eures {adj-en}%sMonströse-Dämonenbrut-Simulacrums
+%%%%
+your %sgelid demonspawn simulacrum's
+Eures {adj-en}%sGelide-Dämonenbrut-Simulacrums
+%%%%
+your %sinfernal demonspawn simulacrum's
+Eures {adj-en}%sHöllische-Dämonenbrut-Simulacrums
+%%%%
+your %storturous demonspawn simulacrum's
+Eures {adj-en}%sQuälende-Dämonenbrut-Simulacrums
+%%%%
+your %sblack draconian simulacrum's
+Eures {adj-en}%sSchwarzer-Drakonier-Simulacrums
+%%%%
+your %syellow draconian simulacrum's
+Eures {adj-en}%sGelber-Drakonier-Simulacrums
+%%%%
+your %spale draconian simulacrum's
+Eures {adj-en}%sBlasser-Drakonier-Simulacrums
+%%%%
+your %sgreen draconian simulacrum's
+Eures {adj-en}%sGrüner-Drakonier-Simulacrums
+%%%%
+your %spurple draconian simulacrum's
+Eures {adj-en}%sPurpurner-Drakonier-Simulacrums
+%%%%
+your %sred draconian simulacrum's
+Eures {adj-en}%sRoter-Drakonier-Simulacrums
+%%%%
+your %swhite draconian simulacrum's
+Eures {adj-en}%sWeißer-Drakonier-Simulacrums
+%%%%
+your %sgrey draconian simulacrum's
+Eures {adj-en}%sGrauer-Drakonier-Simulacrums
 %%%%
 
 # derived monsters without the name of the original monster

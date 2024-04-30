@@ -372,8 +372,6 @@ static string _normalise_determiner(const string& word)
         return "a";
     else if (lower == "an")
         return "a";
-    else if (_is_count(lower))
-        return "%d";
     else
         return lower;
 }
@@ -803,13 +801,12 @@ static string _localise_string_with_adjectives(const string& s)
     // separate determiner
     string determiner, rest;
     _strip_determiner(s, determiner, rest);
-    string normal_det;
-    if (!determiner.empty())
-        normal_det = _normalise_determiner(determiner);
+    determiner = _normalise_determiner(determiner);
 
     // try to translate the biggest base string we can
     string adjectives, result;
-    result = cxlate(_context, normal_det + " %s" + rest, false);
+    string prefix = determiner + " %s";
+    result = _localise_possibly_counted_string(_context, prefix + rest);
     while (result.empty())
     {
         string adj;
@@ -817,10 +814,7 @@ static string _localise_string_with_adjectives(const string& s)
         if (rest.empty())
             return "";
         adjectives += adj + " ";
-        if (normal_det == "%d")
-            result = _localise_counted_string(_context, determiner + " %s" + rest);
-        else
-            result = cxlate(_context, normal_det + " %s" + rest, false);
+        result = _localise_possibly_counted_string(_context, prefix + rest);
     }
 
     if (result.empty())
@@ -1486,15 +1480,18 @@ static string _localise_derived_monster_name(const string& context, const string
 
     string determiner, rest;
     _strip_determiner(value, determiner, rest);
-    string normal_det = _normalise_determiner(determiner);
+    determiner = _normalise_determiner(determiner);
+    if (!determiner.empty())
+        determiner += " ";
 
     vector<string> words = split_string(" ", rest, true, false);
     string derived = words[words.size() - 1];
     words.pop_back();
 
-    // determine the original monster
-    string original;
+    string result, original;
     size_t start;
+
+    // check for a specific translation
     for (start = 0; start < words.size(); start++)
     {
         string candidate;
@@ -1504,50 +1501,58 @@ static string _localise_derived_monster_name(const string& context, const string
                 candidate += " ";
             candidate += words[i];
         }
-        original = xlate(candidate, false);
-        if (!original.empty())
+        candidate += " " + derived;
+        result = _localise_possibly_counted_string(context, determiner + "%s" + candidate);
+        if (result.empty())
+            result = _localise_possibly_counted_string(context, determiner + candidate);
+        if (!result.empty())
             break;
-        original = xlate("%s" + candidate, false);
-        if (!original.empty())
-        {
-            original = replace_first(original, "%s", "");
-            break;
-        }
     }
 
-    // discard context from original monster
-    string ctx = _context;
-    original = _shift_context(original);
-    _context = ctx;
-    if (original.empty())
-        return "";
+    if (result.empty())
+    {
+        // determine the original monster
+        for (start = 0; start < words.size(); start++)
+        {
+            string candidate;
+            for (size_t i = start; i < words.size(); i++)
+            {
+                if (!candidate.empty())
+                    candidate += " ";
+                candidate += words[i];
+            }
+            original = cxlate(context, candidate, false);
+            if (!original.empty())
+                break;
+            original = cxlate(context, "%s" + candidate, false);
+            if (!original.empty())
+            {
+                original = replace_first(original, "%s", "");
+                break;
+            }
+        }
+
+        // discard context from original monster
+        string ctx = _context;
+        original = _shift_context(original);
+        _context = ctx;
+        if (original.empty())
+            return "";
+
+        string base = "%s@monster@ " + derived;
+        result = _localise_possibly_counted_string(context, determiner + base);
+        DEBUG("result=%s", result.c_str());
+    }
 
     vector<string> adjectives;
     for (size_t i = 0; i < start; i++)
         adjectives.push_back(words[i]);
 
-    if (!determiner.empty())
-    {
-        determiner += " ";
-        normal_det += " ";
-    }
-
-    string result;
-    string base = "%s@monster@ " + derived;
-    if (normal_det == "%d ")
-        result = _localise_counted_string(context, determiner + base);
-    else
-        result = cxlate(context, normal_det + base, false);
-    DEBUG("result=%s", result.c_str());
-
-    if (result.empty() && adjectives.empty())
+    if (result.empty() && adjectives.empty() && !original.empty())
     {
         // try without adjective placeholder
-        base = "@monster@ " + derived;
-        if (normal_det == "%d ")
-            result = _localise_counted_string(context, determiner + base);
-        else
-            result = cxlate(context, normal_det + base, false);
+        string base = "@monster@ " + derived;
+        result = _localise_possibly_counted_string(context, determiner + base);
         DEBUG("result=%s", result.c_str());
     }
 
