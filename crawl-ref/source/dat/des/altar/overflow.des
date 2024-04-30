@@ -4344,6 +4344,7 @@ TILE:   b = dngn_crystal_lightmagenta
 FTILE:  _ = floor_limestone
 COLOUR: b = lightmagenta
 COLOUR: _ = brown
+KMASK:  12 = opaque
 : set_feature_name("crystal_wall", "wall of pink crystal")
 : interest_check(_G)
 MAP
