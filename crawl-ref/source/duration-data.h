@@ -618,7 +618,7 @@ static const duration_def duration_data[] =
       YELLOW, "-Gavotte",
       "on gavotte cooldown", "gavotte cooldown",
       "You are unable to cast Gavotte.", D_NO_FLAGS,
-      {{ "Gravity stabilizes in your vacinity."}}},
+      {{ "Gravity stabilizes in your vicinity."}}},
     { DUR_ANIMATE_DEAD,
       MAGENTA, "Reap",
       "animating dead", "animating dead",
