@@ -620,3 +620,15 @@ einfarbig braune
 "27-headed "
 "27-köpfige "
 %%%%
+
+# polymorphed monsters or pillars of salt, etc.
+%%%%
+"@monster@ shaped "
+"@monster@-förmige "
+%%%%
+
+# shaped can also appear without a monster name in front of it
+%%%%
+"shaped "
+"geformte "
+%%%%

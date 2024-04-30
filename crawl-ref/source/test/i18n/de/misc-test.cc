@@ -171,6 +171,14 @@ int main()
     expected = "Ihr seht hier 3 Roter-Drakonier-Skelette.";
     show_result(msg, expected);
 
+    msg = localise("an orc shaped pillar of salt");
+    expected = "eine Ork-förmige Salzsäule";
+    show_result(msg, expected);
+
+    msg = localise("You see here %s.", "a Mennas shaped block of ice");
+    expected = "Ihr seht hier einen Mennas-förmigen Eisblock.";
+    show_result(msg, expected);
+
     msg = localise("You strike %s from behind!", "the helpless yellow draconian");
     expected = "Ihr schlagt den hilflosen gelben Drakonier von hinten!";
     show_result(msg, expected);

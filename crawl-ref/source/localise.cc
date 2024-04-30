@@ -740,6 +740,39 @@ static string _insert_adjectives(const string& s, const vector<string>& adjs)
     return _insert_adjectives(_context, result, adjs);
 }
 
+// return the position of any embedded name in a list of words
+// takes the largest possible string ending with the specified word
+static size_t _find_embedded_name(const vector<string>& words, const size_t end, string& name)
+{
+    for (size_t start = 0; start <= end && start < words.size(); start++)
+    {
+        string candidate;
+        for (size_t i = start; i <= end; i++)
+        {
+            if (!candidate.empty())
+                candidate += " ";
+            candidate += words[i];
+        }
+        name = xlate(candidate, false);
+        if (name.empty())
+        {
+            name = xlate("%s" + candidate, false);
+            if (!name.empty())
+                name = replace_first(name, "%s", "");
+        }
+        if (!name.empty())
+        {
+            // discard context
+            string ctx = _context;
+            name = _shift_context(name);
+            _context = ctx;
+
+            return start;
+        }
+    }
+    return SIZE_MAX;
+}
+
 // localise adjectives
 // it's assumed that the main string is already localised
 static string _localise_adjectives(const string& s, const vector<string>& adjs)
@@ -761,13 +794,45 @@ static string _localise_adjectives(const string& s, const vector<string>& adjs)
         }
     }
 
+    // check for "<monster> shaped" as an adjective
+    string monster;
+    size_t mon_start = SIZE_MAX;
+    size_t mon_end = SIZE_MAX;
+    for (size_t i = 0; i < adjs.size(); i++)
+    {
+        if (i > 0 && adjs[i] == "shaped")
+        {
+            mon_start = _find_embedded_name(adjs, i - 1, monster);
+            if (!monster.empty() && mon_start != SIZE_MAX)
+                mon_end = i - 1;
+            break;
+        }
+    }
+
     // some languages (e.g. French) have adjectives both before and after the noun
     string prefix_adjs;
     string postfix_adjs;
 
-    for (const string& adj_en: adjs)
+    for (size_t i = 0; i < adjs.size(); i++)
     {
-        string adj = cxlate(_context, adj_en + " ", true);
+        if (i >= mon_start && i <= mon_end)
+            continue;
+
+        string adj;
+        if (!monster.empty() && i == mon_end + 1 && adjs[i] == "shaped")
+        {
+            // check for specific translation for "<this monster> shaped"
+            adj = cxlate(_context, monster + " shaped ", false);
+            if (adj.empty())
+            {
+                // use generic translation for @monster@ shaped
+                adj = cxlate(_context, "@monster@ shaped ", true);
+                adj = replace_first(adj, "@monster@", monster);
+            }
+        }
+        else
+            adj = cxlate(_context, adjs[i] + " ", true);
+
         if (adj[0] == ' ')
             postfix_adjs += adj;
         else
@@ -1512,31 +1577,8 @@ static string _localise_derived_monster_name(const string& context, const string
     if (result.empty())
     {
         // determine the original monster
-        for (start = 0; start < words.size(); start++)
-        {
-            string candidate;
-            for (size_t i = start; i < words.size(); i++)
-            {
-                if (!candidate.empty())
-                    candidate += " ";
-                candidate += words[i];
-            }
-            original = cxlate(context, candidate, false);
-            if (!original.empty())
-                break;
-            original = cxlate(context, "%s" + candidate, false);
-            if (!original.empty())
-            {
-                original = replace_first(original, "%s", "");
-                break;
-            }
-        }
-
-        // discard context from original monster
-        string ctx = _context;
-        original = _shift_context(original);
-        _context = ctx;
-        if (original.empty())
+        start = _find_embedded_name(words, words.size() - 1, original);
+        if (original.empty() || start == SIZE_MAX)
             return "";
 
         string base = "%s@monster@ " + derived;

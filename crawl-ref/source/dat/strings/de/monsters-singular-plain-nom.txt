@@ -1266,7 +1266,7 @@
 {adj-e}%sTrainingspuppe
 %%%%
 %spillar of salt
-{adj-e}%sSäule des Salzes
+{adj-e}%sSalzsäule
 %%%%
 %sblock of ice
 {adj-er}%sEisblock
@@ -1435,6 +1435,9 @@
 %sox beast
 {adj-es}%sOchsenbiest
 %%%%
+%sspectre
+{adj-e}%sSpukgestalt
+%%%%
 
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
@@ -1447,17 +1450,6 @@
 %%%%
 %s@monster@ simulacrum
 {adj-es}%s@monster@-Simulacrum
-%%%%
-# can result from Zin's Recite
-%s@monster@ shaped pillar of salt
-{adj-e}%s@monster@-förmige Salzsäule
-%%%%
-# can result from Glaciate
-%s@monster@ shaped block of ice
-{adj-er}%s@monster@-förmiger Eisblock
-%%%%
-%s@monster@ shaped shifter
-{adj-er}%s@monster@-förmiger Gestaltwandler
 %%%%
 
 # irregular derived monsters
@@ -1583,30 +1575,4 @@
 %%%%
 %sgrey draconian simulacrum
 {adj-es}%sGrauer-Drakonier-Simulacrum
-%%%%
-
-# derived monsters without the name of the original monster
-# (and not already covered above)
-# "zombie", "skeleton", etc.
-%%%%
-%sspectre
-{adj-e}%sSpukgestalt
-%%%%
-%sshaped pillar of salt
-{adj-e}%sgeformte Salzsäule
-%%%%
-%sshaped block of ice
-{adj-er}%sgeformter Eisblock
-%%%%
-
-# polymorphed uniques
-%%%%
-%s@monster@ shaped Royal Jelly
-{adj-es}%s@monster@-förmiges Gelée Royale
-%%%%
-%s@monster@ shaped Lernaean hydra
-{adj-e}%s@monster@-förmige Lernäische Hydra
-%%%%
-%s@monster@ shaped Serpent of Hell
-{adj-e}%s@monster@-förmige Höllenschlange
 %%%%

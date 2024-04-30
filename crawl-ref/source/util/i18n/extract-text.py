@@ -1694,8 +1694,10 @@ for filename in files:
             if string == 'runed door' and '"runed "' in output and '%sdoor' in output:
                 continue
             elif string.startswith("shaped "):
-                append_monster_permutations(filtered_strings, "%s@monster@ " + string)
-                append_monster_permutations(filtered_strings, "%s" + string)
+                # separate "shaped" out as an adjective
+                filtered_strings.append("shaped ");
+                filtered_strings.append("@monster@ shaped ");
+                append_monster_permutations(filtered_strings, "%s" + string.replace("shaped ", ""))
                 continue
             elif string in ["spectre", "wavering orb of destruction"]:
                 # treat like monsters in mon-data.h

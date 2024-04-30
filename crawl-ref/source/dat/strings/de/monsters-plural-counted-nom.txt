@@ -1266,7 +1266,7 @@
 %d Trainingspuppen
 %%%%
 %d pillars of salt
-%d Säulen des Salzes
+%d Salzsäulen
 %%%%
 %d blocks of ice
 %d Eisblocke
@@ -1430,6 +1430,9 @@
 %d %sox beasts
 %d {adj-e}%sOchsenbiester
 %%%%
+%d %sspectres
+%d {adj-e}%sSpukgestalten
+%%%%
 
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
@@ -1442,15 +1445,6 @@
 %%%%
 %d %s@monster@ simulacra
 %d {adj-e}%s@monster@-Simulacra
-%%%%
-%d %s@monster@ shaped pillars of salt
-%d {adj-e}%s@monster@-förmige Salzsäulen
-%%%%
-%d %s@monster@ shaped blocks of ice
-%d {adj-e}%s@monster@-förmige Eisblöcke
-%%%%
-%d %s@monster@ shaped shifters
-%d {adj-e}%s@monster@-förmige Gestaltwandler
 %%%%
 
 # irregular derived monsters
@@ -1567,18 +1561,4 @@
 %%%%
 %d %sgrey draconian simulacrum
 %d {adj-e}%sGrauer-Drakonier-Simulacrum
-%%%%
-
-# derived monsters without the name of the original monster
-# (and not already covered above)
-# "zombie", "skeleton", etc.
-%%%%
-%d spectres
-%d Spukgestalten
-%%%%
-%d shaped pillars of salt
-%d geformte Salzsäulen
-%%%%
-%d shaped blocks of ice
-%d geformte Eisblöcke
 %%%%
