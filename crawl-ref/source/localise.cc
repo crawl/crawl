@@ -773,6 +773,29 @@ static size_t _find_embedded_name(const vector<string>& words, const size_t end,
     return SIZE_MAX;
 }
 
+// check that adjectives actually are adjectives
+static bool _check_adjectives(const vector<string>& adjs)
+{
+    bool contains_name = false;
+    bool contains_shaped = false;
+    for (const string& adj: adjs)
+        if (adj.empty())
+            continue;
+        else if (_is_determiner(adj))
+            return false;
+        else if (adj == "of" || ends_with(adj, "'s"))
+            return false;
+        else if (adj == "shaped")
+            contains_shaped = true;
+        else if (adj[0] >= 'A' && adj[0] <= 'Z' && adj != "Lernaean")
+            contains_name = true;
+
+    if (contains_name && !contains_shaped)
+        return false;
+    else
+        return true;
+}
+
 // localise adjectives
 // it's assumed that the main string is already localised
 static string _localise_adjectives(const string& s, const vector<string>& adjs)
@@ -869,8 +892,9 @@ static string _localise_string_with_adjectives(const string& s)
     determiner = _normalise_determiner(determiner);
 
     // try to translate the biggest base string we can
-    string adjectives, result;
+    string result;
     string prefix = determiner + " %s";
+    vector<string> adjectives;
     result = _localise_possibly_counted_string(_context, prefix + rest);
     while (result.empty())
     {
@@ -878,11 +902,11 @@ static string _localise_string_with_adjectives(const string& s)
         _separate_first_word(rest, adj, rest);
         if (rest.empty())
             return "";
-        adjectives += adj + " ";
+        adjectives.push_back(adj);
         result = _localise_possibly_counted_string(_context, prefix + rest);
     }
 
-    if (result.empty())
+    if (!_check_adjectives(adjectives))
         return "";
 
     DEBUG("base=%s, adjectives=%s", result.c_str(), adjectives.c_str());
