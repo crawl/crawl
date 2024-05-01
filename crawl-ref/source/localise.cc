@@ -1521,6 +1521,12 @@ static string _localise_monster_name(const string& context, const string& value)
     if (!result.empty())
         return prefix + result;
 
+    if (prefix.empty())
+    {
+        // no point retrying basic translation
+        return "";
+    }
+
     result = cxlate(context, base, false);
     if (!result.empty())
         return prefix + result;
@@ -1850,20 +1856,6 @@ static string _localise_string(const string context, const string& value)
     if (!result.empty())
         return result;
 
-    // try treating as monster name
-    result = _localise_monster_name(context, value);
-    if (!result.empty())
-        return result;
-
-    _context = context;
-    result = _localise_string_with_adjectives(value);
-    if (!result.empty())
-        return result;
-
-    result = _localise_player_species_job(value);
-    if (!result.empty())
-        return result;
-
     if (value[0] == '[')
     {
         // has an annotation at the front
@@ -1884,6 +1876,20 @@ static string _localise_string(const string context, const string& value)
         annotations = _localise_annotations(annotations);
         return _add_annotations(result, annotations);
     }
+
+    // try treating as monster name
+    result = _localise_monster_name(context, value);
+    if (!result.empty())
+        return result;
+
+    _context = context;
+    result = _localise_string_with_adjectives(value);
+    if (!result.empty())
+        return result;
+
+    result = _localise_player_species_job(value);
+    if (!result.empty())
+        return result;
 
     // try treating it as an item name
     result = _localise_item_name(context, value);
