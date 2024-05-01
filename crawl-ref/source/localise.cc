@@ -40,6 +40,7 @@ static string _context;
 // forward declarations
 static string _localise_string(const string context, const string& value);
 static string _localise_list(const string context, const string& value);
+static string _localise_player_species_job(const string& s);
 
 // is this char a printf typespec (i.e. the end of %<something><char>)?
 static inline bool _is_type_spec(char c)
@@ -78,53 +79,6 @@ static string _remove_arg_id(const string& fmt)
     if (dollar_pos < fmt.length()-1)
         result += fmt.substr(dollar_pos+1, string::npos);
     return result;
-}
-
-// find the nth occurrence of a char in a string
-static size_t _find_nth_occurrence(const string &s, const char c, size_t n)
-{
-    if (n > 0)
-    {
-        size_t count = 0;
-        size_t pos = s.find(c);
-        while (pos != string::npos)
-        {
-            count++;
-            if (count == n)
-                return pos;
-            pos = s.find(c, pos+1);
-        }
-    }
-    return string::npos;
-}
-
-// split on nth occurrence of char
-// prefix will contain everything up to and including the target character
-// the rest of the string will be returned in suffix
-// if less than n occurrences, then prefix will be full string and suffix will be empty
-static void _split_after_nth_occurrence(const string &s, const char c, size_t n,
-                                        string& prefix, string& suffix)
-{
-    if (n == 0)
-    {
-        prefix = "";
-        suffix = s;
-    }
-    else
-    {
-        size_t pos = _find_nth_occurrence(s, c, n);
-        if (pos == string::npos)
-        {
-            prefix = s;
-            suffix = "";
-            return;
-        }
-        else
-        {
-            prefix = s.substr(0, pos+1); // target char is included
-            suffix = s.substr(pos+1);
-        }
-    }
 }
 
 // split format string into constants, format specifiers, and context specifiers
@@ -873,15 +827,6 @@ static string _localise_adjectives(const string& s, const vector<string>& adjs)
     return result;
 }
 
-// localise adjectives
-// it's assumed that the main string is already localised
-static string _localise_adjectives(const string& s, const string& adj_str)
-{
-    vector<string> adjectives = split_string(" ", adj_str);
-    return _localise_adjectives(s, adjectives);
-}
-
-
 static string _localise_string_with_adjectives(const string& s)
 {
     DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
@@ -890,20 +835,24 @@ static string _localise_string_with_adjectives(const string& s)
     string determiner, rest;
     _strip_determiner(s, determiner, rest);
     determiner = _normalise_determiner(determiner);
+    if (!determiner.empty())
+        determiner += " ";
 
     // try to translate the biggest base string we can
     string result;
-    string prefix = determiner + " %s";
+    string prefix = determiner + "%s";
     vector<string> adjectives;
-    result = _localise_possibly_counted_string(_context, prefix + rest);
     while (result.empty())
     {
+        result = _localise_possibly_counted_string(_context, prefix + rest);
+        if (!result.empty())
+            break;
+
         string adj;
         _separate_first_word(rest, adj, rest);
-        if (rest.empty())
+        if (rest.empty() || adj == "of")
             return "";
         adjectives.push_back(adj);
-        result = _localise_possibly_counted_string(_context, prefix + rest);
     }
 
     if (!_check_adjectives(adjectives))
@@ -1117,6 +1066,8 @@ static string _localise_item_name(const string& context, const string& item)
     if (item.empty())
         return item;
 
+    _context = context;
+
     // try unlabelled scroll
     string result = _localise_unidentified_scroll(context, item);
     if (!result.empty())
@@ -1127,142 +1078,21 @@ static string _localise_item_name(const string& context, const string& item)
     if (!result.empty() && result != item)
         return result;
 
-    string determiner, base, owner;
-    _strip_determiner(item, determiner, base);
+    result = _localise_string_with_adjectives(item);
+    if (!result.empty())
+        return result;
 
-    if (ends_with(determiner,"'s"))
-    {
-        // determiner is a possessive like "the orc's" or "Sigmund's"
-        owner = determiner;
-        determiner = "%s";
-    }
-
-    int count = 0;
-    base = _strip_count(base, count);
-
-    // change his/her/its/their to a/an for ease of translation
-    // (owner may not have the same gender in other languages)
-    if (determiner == "his" || determiner == "her" || determiner == "its" || determiner == "their")
-        determiner = "a";
-    else if (determiner == "an")
-        determiner = "a";
-
-    // try to construct a string that can be translated
-
-    const size_t max_adjectives = 3;
-    for (size_t adjs = 0; adjs <= max_adjectives; adjs++)
-    {
-        // split base string after the nth space
-        string part1, part2;
-        _split_after_nth_occurrence(base, ' ', adjs, part1, part2);
-
-        string item_en;
-
-        if (!determiner.empty())
-            item_en = determiner + " ";
-        if (count > 0)
-            item_en += to_string(count) + " ";
-        // placeholder for adjectives
-        item_en += "%s";
-
-        // concatenate the non-adjectives
-        item_en += part2;
-
-        bool space_with_adjective = true;
-
-        result = _localise_possibly_counted_string(context, item_en);
-
-        if (result.empty())
-        {
-            // try with space after adjective
-            item_en = replace_first(item_en, "%s", "%s ");
-            result = _localise_possibly_counted_string(context, item_en);
-            if (!result.empty())
-                space_with_adjective = false;
-        }
-
-        if (!result.empty())
-        {
-            result = _shift_context(result);
-            string new_context = _context;
-
-            if (!owner.empty())
-            {
-                owner = cxlate(context, owner);
-                result = replace_first(result, "%s", owner);
-            }
-
-            // insert adjectives
-            size_t pos = result.find("%s");
-            if (pos != string:: npos)
-            {
-                // find the context for the adjectives
-                size_t ctx_pos = result.rfind("{", pos);
-                if (ctx_pos != string::npos)
-                {
-                    size_t ctx_end = result.find("}", ctx_pos);
-                    if (ctx_end != string::npos)
-                    {
-                        new_context = result.substr(ctx_pos + 1, ctx_end - ctx_pos - 1);
-                        result.erase(ctx_pos, ctx_end - ctx_pos +1);
-                        // remember the context because it can affect later grammar
-                        // (e.g. in romance languages, gender of subject affects predicate adjectives)
-                        _context = new_context;
-                    }
-                }
-                // localise adjectives
-                string prefix_adjs;
-                string postfix_adjs;
-                if (!space_with_adjective && ends_with(part1, " "))
-                    part1 = part1.substr(0, part1.length()-1);
-                // first, try to localise adjectives as a block
-                prefix_adjs = cxlate(new_context, part1, false);
-                if (prefix_adjs.empty() && ends_with(part1, " "))
-                {
-                    prefix_adjs = cxlate(new_context, part1.substr(0, part1.length()-1), false);
-                    if (!prefix_adjs.empty())
-                        prefix_adjs += " ";
-                }
-                if (prefix_adjs.empty())
-                {
-                    // localise one-by-one
-                    vector<string> adjectives = split_string(" ", part1);
-                    for (size_t k = 0; k < adjs; k++)
-                    {
-                        string adj_en = adjectives[k];
-                        if (space_with_adjective)
-                            adj_en += " ";
-                        string adj = cxlate(new_context, adj_en);
-                        if (!adj.empty() && adj[0] == ' ')
-                            postfix_adjs += adj;
-                        else
-                            prefix_adjs += adj;
-                    }
-                }
-                if (count_occurrences(result, "%s") == 1)
-                    result = replace_first(result, "%s", prefix_adjs + postfix_adjs);
-                else
-                {
-                    result = replace_first(result, "%s", prefix_adjs);
-                    result = replace_first(result, "%s", postfix_adjs);
-                }
-            }
-
-            return result;
-        }
-
-    }
-
+    // try to translate suffix like "of <whatever>" separately
     string suffix;
-    base = _strip_suffix(item, suffix);
-    if (!suffix.empty()) {
-        // try to translate base without suffix
-        result = cxlate(context, base, false);
-        if (!result.empty())
-            result = _shift_context(result);
-        else
+    string base = _strip_suffix(item, suffix);
+    if (!suffix.empty())
+    {
+        //fprintf(stderr, "suffix=\"%s\"\n", suffix.c_str());
+        result = cxlate(_context, base, false);
+        if (result.empty())
             result = _localise_item_name(context, base);
-        if (!result.empty()) {
+        if (!result.empty())
+        {
             string suffix_result = _localise_item_suffix(suffix);
             DEBUG("returning base+suffix: '%s' + '%s'",
                 result.c_str(), suffix_result.c_str());
@@ -2004,6 +1834,9 @@ static string _localise_string(const string context, const string& value)
     if (!result.empty())
         return result;
 
+    result = _localise_player_species_job(value);
+    if (!result.empty())
+        return result;
 
     if (value[0] == '[')
     {
@@ -2559,6 +2392,56 @@ string localise_contextual(const string& context, const string& text_en)
         return text_en;
     else
         return _localise_string(context, text_en);
+}
+
+// localise a string like "Deep Elf Earth Elementalist" or "Random Deep Elf"
+static string _localise_player_species_job(const string& s)
+{
+    DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
+
+    string determiner, rest;
+    _strip_determiner(s, determiner, rest);
+    if (!determiner.empty())
+        determiner += " ";
+
+    vector<string> words = split_string(" ", rest, true, false);
+
+    string dummy;
+    size_t start = _find_embedded_name(words, words.size() - 1, dummy);
+    if (dummy.empty() || start == SIZE_MAX)
+        return "";
+
+    string first_part, last_part;
+    for (size_t i = 0; i < words.size(); i++)
+    {
+        if (i < start)
+        {
+            if (!first_part.empty())
+                first_part += " ";
+            first_part += words[i];
+        }
+        else
+        {
+            if (!last_part.empty())
+                last_part += " ";
+            last_part += words[i];
+        }
+    }
+
+    string prefix = determiner + "%s";
+    string base = cxlate(_context, prefix + " " + last_part, false);
+    if (base.empty())
+    {
+        base = cxlate(_context, prefix + last_part, false);
+        first_part += " ";
+    }
+    first_part = cxlate(_context, first_part, false);
+
+    if (base.empty() || first_part.empty())
+        return "";
+
+    string result = replace_first(base, "%s", first_part);
+    return _shift_context(result);
 }
 
 /**
