@@ -27,11 +27,10 @@ using namespace std;
 #include "english.h"
 
 #if 0
-#define DEBUG(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
-#else
-#define DEBUG(...)
-#endif
 #define TRACE(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
+#else
+#define TRACE(...)
+#endif
 
 static string _language;
 static bool _paused;
@@ -334,7 +333,7 @@ static string _normalise_determiner(const string& word)
 static string _localise_counted_string(const string& context, const string& singular,
                                        const string& plural, const int count)
 {
-    DEBUG("context='%s', singular='%s', plural='%s', count=%d", \
+    TRACE("context='%s', singular='%s', plural='%s', count=%d", \
           context.c_str(), singular.c_str(), plural.c_str(), count);
 
     string result;
@@ -349,7 +348,7 @@ static string _localise_counted_string(const string& context, const string& valu
     if (value.empty() || !_starts_with_count(value))
         return "";
 
-    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
 
     int count;
     string plural = _strip_count(value, count);
@@ -392,7 +391,7 @@ static string _localise_annotation_element(const string& s)
     if (s.empty())
         return "";
 
-    DEBUG("s='%s'", s.c_str());
+    TRACE("s='%s'", s.c_str());
 
     // try translating whole thing
     string result = xlate(s, false);
@@ -472,7 +471,7 @@ static string _localise_annotation(const string& s)
     if (s.empty())
         return "";
 
-    DEBUG("s='%s'", s.c_str());
+    TRACE("s='%s'", s.c_str());
 
     // try translating whole thing
     string result = xlate(s, false);
@@ -875,7 +874,7 @@ static string _localise_adjectives(const string& s, const vector<string>& adjs)
 
 static string _localise_string_with_adjectives(const string& s)
 {
-    DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
+    TRACE("context='%s', value='%s'", _context.c_str(), s.c_str());
 
     string base_en, base_xlated, rest;
     if (!_find_base_name(s, base_en, base_xlated, rest))
@@ -983,12 +982,12 @@ static string _localise_pair(const string& context, const string& name)
     if (pos == string::npos)
         return "";
 
-    DEBUG("context='%s', name='%s'", context.c_str(), name.c_str());
+    TRACE("context='%s', name='%s'", context.c_str(), name.c_str());
 
     string prefix = name.substr(0, pos);
     string rest = name.substr(pos);
 
-    DEBUG("prefix='%s', rest='%s'", prefix.c_str(), rest.c_str());
+    TRACE("prefix='%s', rest='%s'", prefix.c_str(), rest.c_str());
 
     // break the prefix up into determiner and adjectives
     string determiner;
@@ -1011,7 +1010,7 @@ static string _localise_pair(const string& context, const string& name)
     // check for unrand artefact
     string candidate = determiner + " %s" + rest;
     trim_string(candidate);
-    DEBUG("candidate='%s'", candidate.c_str());
+    TRACE("candidate='%s'", candidate.c_str());
     string result = cxlate(context, candidate, false);
     if (result != "")
     {
@@ -1028,7 +1027,7 @@ static string _localise_pair(const string& context, const string& name)
         rest = rest.substr(0, pos);
     }
 
-    DEBUG("determiner='%s', rest='%s', suffix='%s'", \
+    TRACE("determiner='%s', rest='%s', suffix='%s'", \
           determiner.c_str(), rest.c_str(), suffix.c_str());
 
     vector<string> adj_group2;
@@ -1052,7 +1051,7 @@ static string _localise_pair(const string& context, const string& name)
     for (size_t i = 0; i < cnt; i++)
          adj_group2.push_back(words2[i]);
 
-    DEBUG("base='%s', suffix='%s'", base.c_str(), suffix.c_str());
+    TRACE("base='%s', suffix='%s'", base.c_str(), suffix.c_str());
 
     if (suffix.empty())
         result = cxlate(context, base);
@@ -1063,7 +1062,7 @@ static string _localise_pair(const string& context, const string& name)
             result = cxlate(context, base) + cxlate(context, suffix);
     }
 
-    DEBUG("before inserting adjectives: result='%s'", result.c_str());
+    TRACE("before inserting adjectives: result='%s'", result.c_str());
 
     // first set of adjectives (before the word "pair")
     result = _insert_adjectives(result, adj_group1);
@@ -1071,64 +1070,8 @@ static string _localise_pair(const string& context, const string& name)
     // second set of adjectives (before the word "boots"/"gloves")
     result = _insert_adjectives(result, adj_group2);
 
-    DEBUG("result='%s'", result.c_str());
+    TRACE("result='%s'", result.c_str());
     return result;
-}
-
-// try to localise complex item name
-//
-// Some examples:
-//   a +0 broad axe
-//   a +7 broad axe of flaming
-//   the +11 broad axe "Jetioplo" (weapon) {vorpal, Str+4}
-//   the +18 shield of the Gong (worn) {rElec rN+ MR+ EV-5}
-//   the +2 pair of boots of Boqauskewui (worn) {*Contam rN+++ rCorr SInv}
-//
-//
-static string _localise_item_name(const string& context, const string& item)
-{
-    DEBUG("context='%s', value='%s'", context.c_str(), item.c_str());
-
-    if (item.empty())
-        return item;
-
-    _context = context;
-
-    // try unlabelled scroll
-    string result = _localise_unidentified_scroll(context, item);
-    if (!result.empty())
-        return result;
-
-    // try "pair of <whatever>"
-    result = _localise_pair(context, item);
-    if (!result.empty() && result != item)
-        return result;
-
-    result = _localise_string_with_adjectives(item);
-    if (!result.empty())
-        return result;
-
-    // try to translate suffix like "of <whatever>" separately
-    string suffix;
-    string base = _strip_suffix(item, suffix);
-    if (!suffix.empty())
-    {
-        //fprintf(stderr, "suffix=\"%s\"\n", suffix.c_str());
-        result = cxlate(_context, base, false);
-        if (result.empty())
-            result = _localise_item_name(context, base);
-        if (!result.empty())
-        {
-            string suffix_result = _localise_item_suffix(suffix);
-            DEBUG("returning base+suffix: '%s' + '%s'",
-                result.c_str(), suffix_result.c_str());
-            result += suffix_result;
-            return result;
-        }
-    }
-
-    // failed
-    return "";
 }
 
 // list separators, order is important - we want to get the longest possible
@@ -1243,7 +1186,7 @@ static string _localise_list(const string context, const string& s)
     if (substrings.size() < 2)
         return "";
 
-    DEBUG("context='%s', s='%s'", context.c_str(), s.c_str());
+    TRACE("context='%s', s='%s'", context.c_str(), s.c_str());
 
     string result;
     for (string sub: substrings)
@@ -1421,7 +1364,7 @@ static string _localise_derived_monster_name(const string& context, const string
     if (!_is_derived_monster(value))
         return "";
 
-    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
 
     string determiner, rest;
     _strip_determiner(value, determiner, rest);
@@ -1463,7 +1406,7 @@ static string _localise_derived_monster_name(const string& context, const string
 
         string base = "%s@monster@ " + derived;
         result = _localise_possibly_counted_string(context, determiner + base);
-        DEBUG("result=%s", result.c_str());
+        TRACE("result=%s", result.c_str());
     }
 
     vector<string> adjectives;
@@ -1475,7 +1418,7 @@ static string _localise_derived_monster_name(const string& context, const string
         // try without adjective placeholder
         string base = "@monster@ " + derived;
         result = _localise_possibly_counted_string(context, determiner + base);
-        DEBUG("result=%s", result.c_str());
+        TRACE("result=%s", result.c_str());
     }
 
     if (result.empty())
@@ -1487,11 +1430,15 @@ static string _localise_derived_monster_name(const string& context, const string
     return result;
 }
 
-static string _localise_monster_name(const string& context, const string& value)
+// localise the name of a monster, item, feature, etc.
+static string _localise_name(const string& context, const string& value)
 {
-    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
 
-    string result = _localise_ghost_name(context, value);
+   _context = context;
+
+    string result;
+    result = cxlate(context, value, false);
     if (!result.empty())
         return result;
 
@@ -1499,42 +1446,65 @@ static string _localise_monster_name(const string& context, const string& value)
     if (!result.empty())
         return result;
 
-    // make sure it doesn't contain "of the", which would indicate an item
-    if (contains(value, " of the "))
-        return "";
-
     // substring " the " could mean a name like "Boghold the orc warlord"
-    string prefix, base;
     size_t pos = value.find(" the ");
-    if (pos == string::npos)
-        base = value;
-    else
+    if (pos != string::npos && value.rfind("of") != pos-2)
     {
         // prefix, e.g. "Boghold " (including space)
-        prefix = value.substr(0, pos+1);
+        string prefix = value.substr(0, pos+1);
 
         // base name, e.g. "the orc warlord"
-        base = value.substr(pos+1);
+        string base = value.substr(pos+1);
+        base = _localise_name(context, base);
+        if (base.empty())
+            return "";
+        else
+            return prefix + base;
     }
 
-    result = _localise_derived_monster_name(context, base);
+    result = _localise_ghost_name(context, value);
     if (!result.empty())
-        return prefix + result;
+        return result;
 
-    if (prefix.empty())
+    result = _localise_derived_monster_name(context, value);
+    if (!result.empty())
+        return result;
+
+    result = _localise_string_with_adjectives(value);
+    if (!result.empty())
+        return result;
+
+    // try unlabelled scroll
+    result = _localise_unidentified_scroll(context, value);
+    if (!result.empty())
+        return result;
+
+    // try "pair of <whatever>"
+    result = _localise_pair(context, value);
+    if (!result.empty() && result != value)
+        return result;
+
+    result = _localise_string_with_adjectives(value);
+    if (!result.empty())
+        return result;
+
+    // try to translate suffix like "of <whatever>" separately
+    string suffix;
+    string base = _strip_suffix(value, suffix);
+    if (!suffix.empty())
     {
-        // no point retrying basic translation
-        return "";
+        result = _localise_name(context, base);
+        if (!result.empty())
+        {
+            string suffix_result = _localise_item_suffix(suffix);
+            TRACE("returning base+suffix: '%s' + '%s'",
+                result.c_str(), suffix_result.c_str());
+            result += suffix_result;
+            return result;
+        }
     }
 
-    result = cxlate(context, base, false);
-    if (!result.empty())
-        return prefix + result;
-
-    result = _localise_string_with_adjectives(base);
-    if (!result.empty())
-        return prefix + result;
-
+    // failed
     return "";
 }
 
@@ -1589,7 +1559,7 @@ static string _localise_thing_in_location(const string& context, const string& v
     if (pos == string::npos || pos == 0)
         return "";
 
-    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
 
     string thing = value.substr(0, pos);
     thing = _localise_string(context, thing);
@@ -1754,7 +1724,7 @@ static string _reverse_engineer_parameterised_string(const string& s)
 // localise a string
 static string _localise_string(const string context, const string& value)
 {
-    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+    TRACE("context='%s', value='%s'", context.c_str(), value.c_str());
 
     if (value.empty() || !localisation_active())
         return value;
@@ -1877,13 +1847,8 @@ static string _localise_string(const string context, const string& value)
         return _add_annotations(result, annotations);
     }
 
-    // try treating as monster name
-    result = _localise_monster_name(context, value);
-    if (!result.empty())
-        return result;
-
-    _context = context;
-    result = _localise_string_with_adjectives(value);
+    // try treating as a name of a monster, item, etc.
+    result = _localise_name(context, value);
     if (!result.empty())
         return result;
 
@@ -1891,16 +1856,8 @@ static string _localise_string(const string context, const string& value)
     if (!result.empty())
         return result;
 
-    // try treating it as an item name
-    result = _localise_item_name(context, value);
-    if (!result.empty()) {
-        DEBUG("context='%s', value='%s': success as item name: %s",
-              context.c_str(), value.c_str(), result.c_str());
-        return result;
-    }
-
     // failed
-    DEBUG("context='%s', value='%s': failed. returning original value",
+    TRACE("context='%s', value='%s': failed. returning original value",
           context.c_str(), value.c_str());
     return value;
 }
@@ -2429,7 +2386,7 @@ string localise_contextual(const string& context, const string& text_en)
 // localise a string like "Deep Elf Earth Elementalist" or "Random Deep Elf"
 static string _localise_player_species_job(const string& s)
 {
-    DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
+    TRACE("context='%s', value='%s'", _context.c_str(), s.c_str());
 
     string base_en, base_xlated, rest;
     if (!_find_base_name(s, base_en, base_xlated, rest))
