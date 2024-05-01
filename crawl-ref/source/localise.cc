@@ -1312,22 +1312,6 @@ static string _localise_ghost_name(const string& context, const string& value)
     return make_stringf(fmt.c_str(), name.c_str());
 }
 
-/// localise pan lord name
-static string _localise_pan_lord_name(const string& context, const string& value)
-{
-    static const string suffix = " the pandemonium lord";
-
-    size_t pos = value.find(suffix);
-    if (pos == string::npos || pos == 0)
-        return "";
-
-    string name = value.substr(0, pos);
-    string fmt = string("%s") + value.substr(pos);
-    fmt = cxlate(context, fmt, true);
-
-    return replace_first(fmt, "%s", name);
-}
-
 static string _localise_jiyva_long_name(const string& context, const string& value)
 {
     if (!starts_with(value, "Jiyva J")) {
@@ -1439,10 +1423,6 @@ static string _localise_name(const string& context, const string& value)
 
     string result;
     result = cxlate(context, value, false);
-    if (!result.empty())
-        return result;
-
-    result = _localise_pan_lord_name(context, value);
     if (!result.empty())
         return result;
 

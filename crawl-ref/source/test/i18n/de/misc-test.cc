@@ -131,6 +131,10 @@ int main()
     expected = "Boghold der Ork-Warlord (stark)";
     show_result(msg, expected);
 
+    msg = localise_contextual("acc", "Fred the pandemonium lord (strong)");
+    expected = "Fred den Pandämoniumsfürsten (stark)";
+    show_result(msg, expected);
+
     msg = localise("hydra");
     expected = "Hydra";
     show_result(msg, expected);

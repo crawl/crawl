@@ -1526,10 +1526,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             death_source_name += " (glowing shapeshifter)";
 
         if (mons->type == MONS_PANDEMONIUM_LORD)
-        {
-            death_source_name = make_stringf("%s the pandemonium lord",
-                                             death_source_name.c_str());
-        }
+            death_source_name += " the pandemonium lord";
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
             death_source_name += " (illusionary)";

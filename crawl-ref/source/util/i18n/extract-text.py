@@ -1703,6 +1703,8 @@ for filename in files:
                 # treat like monsters in mon-data.h
                 append_monster_permutations(filtered_strings, "%s" + string)
                 continue
+            elif string == " the pandemonium lord":
+                string = "the %spandemonium lord"
 
         if string not in filtered_strings:
             filtered_strings.append(string)

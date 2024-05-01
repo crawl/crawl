@@ -748,16 +748,6 @@ seinen eigenen Schatten
 {dat}their own shadow
 seinem eigenen Schatten
 %%%%
-# must decline manually because article is not at the start
-%s the pandemonium lord
-%s der Pandämoniumsfürst
-%%%%
-{acc}%s the pandemonium lord
-%s den Pandämoniumsfürsten
-%%%%
-{dat}%s the pandemonium lord
-%s dem Pandämoniumsfürsten
-%%%%
 unknown source
 unbekannte Quelle
 %%%%
