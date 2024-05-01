@@ -301,7 +301,7 @@ static string _strip_count(const string& s, int& count)
 
 static bool _is_determiner(const string& word)
 {
-    if (ends_with(word, "'s"))
+    if (ends_with(word, "'s") && word != "'s")
         return true;
 
     string lower = lowercase_string(word);
@@ -620,21 +620,6 @@ static void _strip_determiner(const string& s, string& determiner, string& base)
     base = s;
 }
 
-static void _separate_first_word(const string& s, string& word, string& rest)
-{
-    auto pos = s.find(' ');
-    if (pos == string::npos)
-    {
-        word = s;
-        rest = "";
-    }
-    else
-    {
-        word = s.substr(0, pos);
-        rest = s.substr(pos + 1);
-    }
-}
-
 // strip a suffix of the form " of <whatever>" or a quoted artefact name
 // don't match on "pair of " though
 static string _strip_suffix(const string& s, string& suffix)
@@ -725,6 +710,67 @@ static size_t _find_embedded_name(const vector<string>& words, const size_t end,
         }
     }
     return SIZE_MAX;
+}
+
+/*
+ * Find the largest possible translatable base name.
+ *
+ * The results will depend on how the strings are defined in the .txt files, but
+ * some examples might be:
+ *  "the helpless orc priest" -> base_en = "the %sorc priest", rest = "helpless "
+ *  "Deep Elf Earth Elementalist" -> base_en = "%s Earth Elementalist", rest = "Deep Elf"
+ *
+ * base_xlated contains the translation of base_en. It's guaranteed to be
+ * non-empty if the function returns true (success).
+ */
+static bool _find_base_name(const string& s, string& base_en, string& base_xlated, string &rest)
+{
+    // extract any determiner (e.g. "a", "the", etc.)
+    string determiner, main;
+    _strip_determiner(s, determiner, main);
+    if (!determiner.empty())
+        determiner = _normalise_determiner(determiner) + " ";
+    string prefix = determiner + "%s";
+
+    size_t pos = 0;
+    while (pos < main.length())
+    {
+        string base = main.substr(pos);
+        rest = main.substr(0, pos);
+
+        if (starts_with(rest, "of "))
+        {
+            // we've gone too far - this is a suffix
+            break;
+        }
+
+        // try with space not in base name (e.g. "the %sbroad axe")
+        base_en = prefix + base;
+        base_xlated = _localise_possibly_counted_string(_context, base_en);
+        if (!base_xlated.empty())
+            return true;
+
+        // try with space in base name (e.g. "the %s broad axe")
+        base_en = prefix + " " + base;
+        base_xlated = _localise_possibly_counted_string(_context, base_en);
+        if (!base_xlated.empty())
+        {
+            // remove the trailing space from rest
+            if (pos > 0)
+                rest = main.substr(0, pos - 1);
+            return true;
+        }
+
+        pos = main.find(' ', pos+1);
+        if (pos == string::npos)
+            break;
+        // move split-point to character after space
+        pos++;
+    }
+
+    base_en = "";
+    rest = "";
+    return false;
 }
 
 // check that adjectives actually are adjectives
@@ -831,36 +877,16 @@ static string _localise_string_with_adjectives(const string& s)
 {
     DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
 
-    // separate determiner
-    string determiner, rest;
-    _strip_determiner(s, determiner, rest);
-    determiner = _normalise_determiner(determiner);
-    if (!determiner.empty())
-        determiner += " ";
+    string base_en, base_xlated, rest;
+    if (!_find_base_name(s, base_en, base_xlated, rest))
+        return "";
 
-    // try to translate the biggest base string we can
-    string result;
-    string prefix = determiner + "%s";
-    vector<string> adjectives;
-    while (result.empty())
-    {
-        result = _localise_possibly_counted_string(_context, prefix + rest);
-        if (!result.empty())
-            break;
-
-        string adj;
-        _separate_first_word(rest, adj, rest);
-        if (rest.empty() || adj == "of")
-            return "";
-        adjectives.push_back(adj);
-    }
-
+    vector<string> adjectives = split_string(" ", rest, true, false);
     if (!_check_adjectives(adjectives))
         return "";
 
-    DEBUG("base=%s, adjectives=%s", result.c_str(), adjectives.c_str());
-    result = _localise_adjectives(result, adjectives);
-    return _shift_context(result);
+    string result = _localise_adjectives(base_xlated, adjectives);
+    return result;
 }
 
 // get fist tag of form "<foo>" or "</foo>"
@@ -2399,48 +2425,12 @@ static string _localise_player_species_job(const string& s)
 {
     DEBUG("context='%s', value='%s'", _context.c_str(), s.c_str());
 
-    string determiner, rest;
-    _strip_determiner(s, determiner, rest);
-    if (!determiner.empty())
-        determiner += " ";
-
-    vector<string> words = split_string(" ", rest, true, false);
-
-    string dummy;
-    size_t start = _find_embedded_name(words, words.size() - 1, dummy);
-    if (dummy.empty() || start == SIZE_MAX)
+    string base_en, base_xlated, rest;
+    if (!_find_base_name(s, base_en, base_xlated, rest))
         return "";
 
-    string first_part, last_part;
-    for (size_t i = 0; i < words.size(); i++)
-    {
-        if (i < start)
-        {
-            if (!first_part.empty())
-                first_part += " ";
-            first_part += words[i];
-        }
-        else
-        {
-            if (!last_part.empty())
-                last_part += " ";
-            last_part += words[i];
-        }
-    }
-
-    string prefix = determiner + "%s";
-    string base = cxlate(_context, prefix + " " + last_part, false);
-    if (base.empty())
-    {
-        base = cxlate(_context, prefix + last_part, false);
-        first_part += " ";
-    }
-    first_part = cxlate(_context, first_part, false);
-
-    if (base.empty() || first_part.empty())
-        return "";
-
-    string result = replace_first(base, "%s", first_part);
+    rest = cxlate(_context, rest, true);
+    string result = replace_first(base_xlated, "%s", rest);
     return _shift_context(result);
 }
 
