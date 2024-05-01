@@ -135,6 +135,10 @@ int main()
     expected = "Fred den Pandämoniumsfürsten (stark)";
     show_result(msg, expected);
 
+    msg = localise("The apparition of %s.", "MrDizzy the Warrior, an amateur Naga Venom Mage of Cheibriados");
+    expected = "Eine Erscheinung von MrDizzy dem Krieger, einem amateurhaften Naga Giftmagier von Cheibriados.";
+    show_result(msg, expected);
+
     msg = localise("hydra");
     expected = "Hydra";
     show_result(msg, expected);

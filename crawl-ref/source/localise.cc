@@ -202,6 +202,26 @@ static string _shift_context(const string& str)
     return result;
 }
 
+static string _get_context(const string& str)
+{
+    string context;
+    size_t start = str.find('{');
+    size_t end = str.find('}');
+    if (start != string::npos && end != string::npos && start < end)
+        context = str.substr(start + 1, end - start - 1);
+    return context;
+}
+
+static string _remove_context(const string& str)
+{
+    string result = str;
+    size_t start = str.find('{');
+    size_t end = str.find('}');
+    if (start != string::npos && end != string::npos && start < end)
+        result.erase(start, end - start + 1);
+    return result;
+}
+
 // replace all instances of given substring
 // std::regex_replace would do this, but not sure if available on all platforms
 static void _replace_all(std::string& str, const std::string& patt, const std::string& replace)
@@ -903,7 +923,7 @@ static string _get_first_tag(const string& s)
     return s.substr(start, end - start + 1);
 }
 
-static string _localise_item_suffix(const string& s)
+static string _localise_suffix(const string& s)
 {
     if (s.empty())
         return s;
@@ -913,16 +933,25 @@ static string _localise_item_suffix(const string& s)
     if (!loc.empty())
         return loc;
 
-    // otherwise, assume artefact name
-    // translate "of" if present and quote the rest
     string fmt, arg;
     if (starts_with(s, " of "))
     {
-        fmt = " of \"%s\"";
+        fmt = xlate(" of %s");
+        string context = _get_context(fmt);
         arg = s.substr(4);
+        string arg_xlated = cxlate(context, arg, false);
+        if (!arg_xlated.empty())
+        {
+            fmt = _remove_context(fmt);
+            return replace_first(fmt, "%s", arg_xlated);
+        }
+
+        // assume artefact name
+        fmt = " of \"%s\"";
     }
     else
     {
+        // assume artefact name
         fmt = " \"%s\"";
         arg = s;
         if (s.length() > 3 && starts_with(s, " \"") && ends_with(s, "\""))
@@ -1464,6 +1493,10 @@ static string _localise_name(const string& context, const string& value)
     if (!result.empty())
         return result;
 
+    result = _localise_player_species_job(value);
+    if (!result.empty())
+        return result;
+
     // try to translate suffix like "of <whatever>" separately
     string suffix;
     string base = _strip_suffix(value, suffix);
@@ -1472,7 +1505,7 @@ static string _localise_name(const string& context, const string& value)
         result = _localise_name(context, base);
         if (!result.empty())
         {
-            string suffix_result = _localise_item_suffix(suffix);
+            string suffix_result = _localise_suffix(suffix);
             TRACE("returning base+suffix: '%s' + '%s'",
                 result.c_str(), suffix_result.c_str());
             result += suffix_result;
@@ -1825,10 +1858,6 @@ static string _localise_string(const string context, const string& value)
 
     // try treating as a name of a monster, item, etc.
     result = _localise_name(context, value);
-    if (!result.empty())
-        return result;
-
-    result = _localise_player_species_job(value);
     if (!result.empty())
         return result;
 
@@ -2359,18 +2388,57 @@ string localise_contextual(const string& context, const string& text_en)
         return _localise_string(context, text_en);
 }
 
-// localise a string like "Deep Elf Earth Elementalist" or "Random Deep Elf"
+// localise a string like "amateur Deep Elf Earth Elementalist" or "Random Deep Elf"
 static string _localise_player_species_job(const string& s)
 {
-    TRACE("context='%s', value='%s'", _context.c_str(), s.c_str());
 
     string base_en, base_xlated, rest;
     if (!_find_base_name(s, base_en, base_xlated, rest))
         return "";
 
-    rest = cxlate(_context, rest, true);
-    string result = replace_first(base_xlated, "%s", rest);
-    return _shift_context(result);
+    string context = _get_context(base_xlated);
+    if (context.empty())
+        context = _context;
+    else
+        base_xlated = _remove_context(base_xlated);
+
+    TRACE("context='%s', value='%s', base='%s', rest='%s'",
+          context.c_str(), s.c_str(), base_xlated.c_str(), rest.c_str());
+
+    // handle easy case like "Deep Elf Earth Elementalist"
+    string rest_xlated = cxlate(context, rest, false);
+    if (!rest_xlated.empty())
+        return replace_first(base_xlated, "%s", rest_xlated);
+
+    // probably something like "amateur Deep Elf Earth Elementalist"
+    base_en = replace_first(base_en, "%s", "%s%s");
+    base_xlated = cxlate(_context, base_en, false);
+    if (base_xlated.empty())
+        return "";
+
+    context = _get_context(base_xlated);
+    if (context.empty())
+        context = _context;
+    else
+        base_xlated = _remove_context(base_xlated);
+
+    string species;
+    vector<string> words = split_string(" ", rest, true, false);
+    size_t start = _find_embedded_name(words, words.size() - 1, species);
+    if (start == 0 || start == SIZE_MAX)
+        return "";
+
+    string adjectives = "";
+    for (size_t i = 0; i < start; i++)
+    {
+        string adj = cxlate(context, words[i] + " ");
+        adjectives += adj;
+    }
+
+    // TODO: Fix this
+    string result = replace_first(base_xlated, "%s", adjectives);
+    result = replace_first(result, "%s", species);
+    return result;
 }
 
 /**

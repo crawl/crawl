@@ -4792,16 +4792,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     }
 
     case MONS_PLAYER_GHOST:
-        inf.body << localise("The apparition of %s.",
-                             LocalisationArg(get_ghost_description(mi), false))
+        inf.body << localise("The apparition of %s.", get_ghost_description(mi))
                  << "\n";
         if (mi.props.exists(MIRRORED_GHOST_KEY))
             inf.body << localise("It looks just like you...spooky!") << "\n";
         break;
 
     case MONS_PLAYER_ILLUSION:
-        inf.body << localise("An illusion of %s.",
-                             LocalisationArg(get_ghost_description(mi), false))
+        inf.body << localise("An illusion of %s.", get_ghost_description(mi))
                  << "\n";
         break;
 
@@ -5234,6 +5232,13 @@ static const char* xl_rank_names[] =
     "legendary "
 };
 
+static string _xl_rank_name(const int xl_rank)
+{
+    const string rank = xl_rank_names[xl_rank];
+
+    return article_a(rank);
+}
+
 string short_ghost_description(const monster *mon, bool abbrev)
 {
     ASSERT(mons_is_pghost(mon->type));
@@ -5262,30 +5267,31 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     const species_type gspecies = mi.i_ghost.species;
 
-    gstr << mi.mname << localise(" ")
+    gstr << mi.mname << " the "
          << skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
-                        true,
+                        false,
                         gspecies,
                         species::has_low_str(gspecies), mi.i_ghost.religion)
-         << localise(", ");
+         << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
-    string rank = xl_rank_names[ghost_level_to_rank(mi.i_ghost.xl_rank)];
-
-    string fmt;
     if (concise)
     {
-        fmt = string("a %s%s") + get_job_abbrev(mi.i_ghost.job); // @noloc
-        gstr << localise(fmt, rank, species::get_abbrev(gspecies));
+        gstr << species::get_abbrev(gspecies)
+             << get_job_abbrev(mi.i_ghost.job);
     }
     else
     {
-        fmt = string("a %s%s ") + get_job_name(mi.i_ghost.job); // @noloc
-        gstr << localise(fmt, rank, species::name(gspecies));
+        gstr << species::name(gspecies)
+             << " "
+             << get_job_name(mi.i_ghost.job);
     }
 
     if (mi.i_ghost.religion != GOD_NO_GOD)
-        gstr << localise(" of %s", god_name(mi.i_ghost.religion));
+    {
+        gstr << " of "
+             << god_name(mi.i_ghost.religion);
+    }
 
     return gstr.str();
 }

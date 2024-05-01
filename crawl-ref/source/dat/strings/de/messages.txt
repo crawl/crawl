@@ -4066,13 +4066,13 @@ are
 
 %%%%
 The apparition of %s.
-Eine Erscheinung (%s).
+Eine Erscheinung von {dat}%s.
 %%%%
 It looks just like you...spooky!
 
 %%%%
 An illusion of %s.
-Eine Illusion (%s).
+Eine Illusion von {dat}%s.
 %%%%
 It is quickly melting away.
 
