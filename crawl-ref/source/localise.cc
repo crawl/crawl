@@ -1450,10 +1450,6 @@ static string _localise_name(const string& context, const string& value)
     if (!result.empty())
         return result;
 
-    result = _localise_string_with_adjectives(value);
-    if (!result.empty())
-        return result;
-
     // try unlabelled scroll
     result = _localise_unidentified_scroll(context, value);
     if (!result.empty())
