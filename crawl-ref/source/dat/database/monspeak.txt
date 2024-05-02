@@ -8935,6 +8935,14 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 
 @The_monster@ draws the Swarm. "Bees, bees everywhere!"
 
+@The_monster@ draws the Swine. "I'm a pig now!"
+
+@The_monster@ draws Torment. "Half my health gone? Yikes!"
+
+@The_monster@ draws the Wraith. "Draining hurts!"
+
+@The_monster@ draws Wrath. "So many ways gods can punish you!"
+
 @The_monster@ fumbles a card and drops it. "Whoops!"
 
 @The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
