@@ -3295,8 +3295,13 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;
-        else if (bolt.name == "shard of ice")
+        else if (bolt.name == "shard of ice"
+                 || bolt.name == "shard of alchemical ice"
+                 || bolt.name == "salvo of alchemical ice"
+                    && !bolt.in_explosion_phase)
+        {
             return TILE_BOLT_ICICLE + dir;
+        }
         else if (bolt.name == "searing ray")
             return TILE_BOLT_SEARING_RAY;
         else if (bolt.name == "bolt of light"

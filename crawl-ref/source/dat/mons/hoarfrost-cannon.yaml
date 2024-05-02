@@ -1,15 +1,15 @@
-name: "seismic cannon"
-glyph: {char: "I", colour: yellow}
+name: "hoarfrost cannon"
+glyph: {char: "I", colour: cyan}
 flags: [speaks, see_invis, stationary, no_regen]
-resists: {elec: 1, fire: 2, cold: 2}
+resists: {elec: 1, fire: -1, cold: 3, petrify: 1}
 holiness: [nonliving]
 will: invuln
 attacks:
 hd: 8
-hp_10x: 440
-ac: 15
+hp_10x: 340
+ac: 9
 ev: 0
-spells: seismic_cannon
+spells: hoarfrost_cannon
 intelligence: brainless
 size: large
 shape: misc

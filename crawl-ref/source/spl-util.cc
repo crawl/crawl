@@ -1170,7 +1170,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
     case SPELL_TUKIMAS_DANCE:
-    case SPELL_SEISMIC_CANNONADE:
+    case SPELL_HOARFROST_CANNONADE:
         if (you.allies_forbidden())
             return "you cannot coerce anything to obey you.";
         break;

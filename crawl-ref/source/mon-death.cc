@@ -2251,6 +2251,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             return nullptr;
         }
     }
+    else if (mons.type == MONS_HOARFROST_CANNON && !silent && !mons_reset
+             && !was_banished && !wizard)
+    {
+        temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
+                            TERRAIN_CHANGE_FLOOD);
+    }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
 
@@ -2468,11 +2474,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                     // Necrotise/Animate Dead/Infestation
                     else if (mons.type == MONS_ZOMBIE
                              || mons.type == MONS_SKELETON
-                             || mons.type == MONS_DEATH_SCARAB
-                             || mons.type == MONS_SEISMIC_CANNON)
+                             || mons.type == MONS_DEATH_SCARAB)
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }
+                    else if (mons.type == MONS_HOARFROST_CANNON)
+                        simple_monster_message(mons, " melts away.");
                     else
                     {
                         string msg = " " + summoned_poof_msg(&mons) + "!";

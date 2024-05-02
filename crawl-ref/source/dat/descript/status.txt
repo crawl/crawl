@@ -991,8 +991,3 @@ Fusillade status
 
 You are hurling conjured alchemical reagents at nearby monsters.
 %%%%
-Shockwave status
-
-One of your seismic cannons is fully assembled and ready to unleash a seismic
-shockwave. (Recast Seismic Cannonade to aim it.)
-%%%%

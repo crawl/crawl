@@ -787,6 +787,25 @@ Conjures a focused blast of highly toxic sludge, poisoning the victim and
 drenching their surroundings. The sludge damages and poisons all monsters,
 even those resistant to poison.
 %%%%
+Hoarfrost Bullet spell
+
+Fires a shard of alchemical ice that coats whatever it hits with a layer of
+brittle frost which slows their movement.
+
+Each shot fired will deplete the cannon's remaining durability, but if it
+survives to fire 5 times, the final shot will fragment to hit all enemies around
+the primary target for additional damage.
+%%%%
+Hoarfrost Cannonade spell
+
+Sculpts a pair of cannons from alchemical ice that assail the caster's enemies
+from long range. The frigid shards they fire rapidly coat their targets with a
+layer of brittle frost that slows their movement.
+
+The cannons are short-lived and consume a part of themselves with every shard
+they fire, but if they survive to fire their final salvo without interference,
+it will be extra-powerful.
+%%%%
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
@@ -1380,18 +1399,6 @@ Searing Breath spell
 Breathes a blast of fire at a targeted creature, leaving a cloud of flames at
 the endpoint.
 %%%%
-Seismic Cannonade spell
-
-Shapes a trio of alchemical cannons around the caster that drill into the earth
-beneath them, transmuting the rocky minerals they find there into razor-sharp
-projectiles. Initially created in an incomplete state, each salvo they fire
-crystallizes more material into their frame, healing them.
-
-Once a cannon has fully assembled itself, recasting this spell will allow you to
-direct its full power into the ground, unleashing a powerful seismic shockwave
-that devastates a targeted area at the cost of sacrificing every cannon in the
-process.
-%%%%
 Sentinel's Mark spell
 
 Bestows a strong beacon upon a targeted creature. It announces the presence
@@ -1577,10 +1584,6 @@ Adds malice to hellish fires, binding it with flame into a creeping inferno.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
-%%%%
-Stone Bullet spell
-
-Fires a hardened shard of rock over a long distance.
 %%%%
 Strip Willpower spell
 

@@ -652,13 +652,3 @@ private:
     vector<coord_def> beam_targets;
     vector<coord_def> beam_paths;
 };
-
-class targeter_seismic_shockwave : public targeter_smite
-{
-public:
-    targeter_seismic_shockwave(const actor *act, int cannon_range);
-    bool valid_aim(coord_def a) override;
-private:
-    vector<coord_def> cannon_pos;
-    int cannon_range;
-};

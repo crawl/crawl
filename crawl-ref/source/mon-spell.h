@@ -1661,9 +1661,9 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_SEISMIC_CANNON,
+    {  MST_HOARFROST_CANNON,
       {
-       { SPELL_STONE_BULLET, 200, MON_SPELL_MAGICAL },
+       { SPELL_HOARFROST_BULLET, 200, MON_SPELL_MAGICAL },
       }
     },
 

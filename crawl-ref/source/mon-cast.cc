@@ -318,6 +318,32 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE,
         5,
     } },
+    { SPELL_HOARFROST_BULLET, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& beam) {
+            const int shot = caster.props.exists(HOARFROST_SHOTS_KEY)
+                                ? caster.props[HOARFROST_SHOTS_KEY].get_int() : 0;
+            const int pow = mons_spellpower(caster, slot.spell);
+            if (shot == MAX_HOARFROST_SHOTS)
+                zappy(ZAP_HOARFROST_BULLET_FINALE, pow, true, beam);
+            else
+                zappy(ZAP_HOARFROST_BULLET, pow, true, beam);
+
+            _fire_simple_beam(caster, slot, beam);
+
+            // Immediately destroy the cannon on its finale shot, otherwise
+            // just injure it.
+            if (shot == MAX_HOARFROST_SHOTS)
+                monster_die(caster, KILL_TIMEOUT, NON_MONSTER);
+            else
+            {
+                caster.hurt(&caster, caster.max_hit_points / 5, BEAM_MMISSILE,
+                            KILLED_BY_BEAM);
+                caster.props[HOARFROST_SHOTS_KEY] = (shot + 1);
+            }
+        },
+        _zap_setup(SPELL_HOARFROST_BULLET),
+    } },
     { SPELL_TROGS_HAND, {
         [](const monster &caster) {
             return ai_action::good_or_impossible(
@@ -1572,7 +1598,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLIZING_SHOT:
-    case SPELL_STONE_BULLET:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -4409,29 +4434,6 @@ bool handle_mon_spell(monster* mons)
         return true;
     }
 
-    // Seismic cannons heal themselves with each shot and will be eliable to
-    // fire a shockwave attack once they reach full health in this way.
-    if (mons->type == MONS_SEISMIC_CANNON)
-    {
-        if (mons->hit_points < mons->max_hit_points)
-        {
-            mons->heal(mons->max_hit_points / 10);
-            if (mons->hit_points == mons->max_hit_points
-                && !mons->has_ench(ENCH_SPELL_CHARGED))
-            {
-                mons->add_ench(ENCH_SPELL_CHARGED);
-                simple_monster_message(*mons, " finishes assembling itself.");
-
-                // Give charged cannons a little more duration, to avoid the
-                // bad-feeling situation of having them immediately vanish once
-                // shockwave becomes available, but before it can be used.
-                mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0,
-                                           actor_by_mid(mons->summoner),
-                                           random_range(3, 5) * BASELINE_DELAY));
-            }
-        }
-    }
-
     if (!(flags & MON_SPELL_INSTANT))
     {
         mons->lose_energy(EUT_SPELL);
@@ -7228,6 +7230,15 @@ static void _speech_keys(vector<string>& key_list,
             key_list.push_back(spell_name + cast_str + " real");
         if (mons_intel(*mons) >= I_HUMAN)
             key_list.push_back(spell_name + cast_str + " gestures");
+    }
+
+    // XXX: Give the final shot from hoarfrost cannonade a different message.
+    //      (If only I could see a nicer way to do this...)
+    if (spell == SPELL_HOARFROST_BULLET
+        && mons->props.exists(HOARFROST_SHOTS_KEY)
+        && mons->props[HOARFROST_SHOTS_KEY].get_int() == MAX_HOARFROST_SHOTS)
+    {
+        key_list.push_back(spell_name + cast_str + " finale");
     }
 
     key_list.push_back(spell_name + cast_str);

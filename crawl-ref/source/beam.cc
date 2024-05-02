@@ -4333,6 +4333,12 @@ bool bolt::ignores_player() const
         return true;
     }
 
+    if (origin_spell == SPELL_HOARFROST_BULLET && is_explosion
+        && agent() && agent()->wont_attack())
+    {
+        return true;
+    }
+
     if (agent() && agent()->is_monster()
         && mons_is_hepliaklqana_ancestor(agent()->as_monster()->type))
     {
@@ -5004,6 +5010,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         _combustion_breath_explode(this, mon->pos());
 
     if (origin_spell == SPELL_FLASH_FREEZE
+             || origin_spell == SPELL_HOARFROST_BULLET
              || name == "blast of ice"
              || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
@@ -5574,10 +5581,8 @@ bool bolt::ignores_monster(const monster* mon) const
     if (origin_spell == SPELL_RIMEBLIGHT)
         return mon->friendly() || mon->pos() == source;
 
-    // Casting this destroys the cannon anyway, but this prevents misleading
-    // targeter prompts.
-    if (origin_spell == SPELL_SEISMIC_SHOCKWAVE && mon->type == MONS_SEISMIC_CANNON)
-        return true;
+    if (origin_spell == SPELL_HOARFROST_BULLET)
+        return in_explosion_phase && mons_aligned(agent(), mon);
 
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);
@@ -6576,6 +6581,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_NULLIFYING_BREATH, {
         "The antimagic surges outward!",
         "a quiet echo",
+    } },
+    { SPELL_HOARFROST_BULLET, {
+        "The shards fragment into shrapnel!",
+        "an explosion",
     } },
 };
 

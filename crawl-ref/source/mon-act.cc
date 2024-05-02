@@ -2241,32 +2241,6 @@ static void _post_monster_move(monster* mons)
         }
     }
 
-    if (mons->type == MONS_SEISMIC_CANNON)
-    {
-        // All that drilling makes an awful racket (and sometimes dust)
-        noisy(12, mons->pos(), mons->mid);
-        if (one_chance_in(10))
-            mons_speaks(mons);
-
-        if (one_chance_in(2))
-        {
-            coord_def spot;
-            int num_found = 0;
-            for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            {
-                if (!feat_is_solid(env.grid(*ai)) && !cloud_at(*ai)
-                    && one_chance_in(++num_found))
-                {
-                    spot = *ai;
-                }
-            }
-
-            if (!spot.origin())
-                place_cloud(CLOUD_DUST, spot, random_range(3, 5), mons);
-        }
-    }
-
-
     update_mons_cloud_ring(mons);
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);

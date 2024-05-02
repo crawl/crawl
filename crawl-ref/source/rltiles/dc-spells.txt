@@ -129,7 +129,7 @@ venom_bolt VENOM_BOLT
 mercury_vapours MERCURY_VAPOURS
 noxious_bog NOXIOUS_BOG
 fulsome_fusillade FULSOME_FUSILLADE
-seismic_cannonade SEISMIC_CANNONADE
+hoarfrost_cannonade HOARFROST_CANNONADE
 
 %sdir gui/spells/summoning
 animate_armour ANIMATE_ARMOUR

@@ -1401,9 +1401,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MAGNAVOLT:
         return make_unique<targeter_magnavolt>(&you, range);
 
-    case SPELL_SEISMIC_SHOCKWAVE:
-        return make_unique<targeter_seismic_shockwave>(&you, range);
-
     default:
         break;
     }
@@ -1948,13 +1945,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     // succeeded must be performed after the switch.
     if (!wiz_cast && _spellcasting_aborted(spell, !actual_spell))
         return spret::abort;
-
-    // XXX: The second mode of cannonade is implemented as a separate spell to
-    //      prevent various buggy behavior regarding one mode bein aimed and
-    //      the other not. To avoid *other* issues, like miscasts happening
-    //      twice, switch which spell we are actually performing at this point.
-    if (spell == SPELL_SEISMIC_CANNONADE && cannonade_is_fully_charged(you))
-        spell = SPELL_SEISMIC_SHOCKWAVE;
 
     const spell_flags flags = get_spell_flags(spell);
 
@@ -2597,11 +2587,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FULSOME_FUSILLADE:
         return cast_fulsome_fusillade(powc, fail);
 
-    case SPELL_SEISMIC_CANNONADE:
-        return cast_seismic_cannonade(you, powc, fail);
-
-    case SPELL_SEISMIC_SHOCKWAVE:
-        return cast_seismic_shockwave(you, beam.target, powc, fail);
+    case SPELL_HOARFROST_CANNONADE:
+        return cast_hoarfrost_cannonade(you, powc, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

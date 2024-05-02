@@ -3908,14 +3908,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SEISMIC_CANNONADE, "Seismic Cannonade",
-    spschool::alchemy | spschool::earth,
+    SPELL_HOARFROST_CANNONADE, "Hoarfrost Cannonade",
+    spschool::alchemy | spschool::ice,
     spflag::none,
-    7,
+    5,
     200,
     -1, -1,
     0,
-    TILEG_SEISMIC_CANNONADE,
+    TILEG_HOARFROST_CANNONADE,
 },
 
 {
@@ -3930,14 +3930,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_STONE_BULLET, "Stone Bullet",
-    spschool::conjuration | spschool::earth,
+    SPELL_HOARFROST_BULLET, "Hoarfrost Bullet",
+    spschool::conjuration | spschool::ice,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
     6, 6,
     0,
-    TILEG_STONE_ARROW,
+    TILEG_THROW_ICICLE,
 },
 
 {

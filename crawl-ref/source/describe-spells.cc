@@ -522,6 +522,14 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return make_stringf("0-%d MP", pow / 8); // >_> >_>
     }
 
+    if (spell == SPELL_HOARFROST_BULLET)
+    {
+        const int pow = mons_power_for_hd(spell, hd);
+        return make_stringf("3d(%d/%d)",
+            zap_damage(ZAP_HOARFROST_BULLET, pow, true, false).size,
+            zap_damage(ZAP_HOARFROST_BULLET_FINALE, pow, true, false).size);
+    }
+
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";

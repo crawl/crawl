@@ -7718,14 +7718,14 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
-################## Seismic cannon ##########################
-default seismic cannon
+################## Hoarfrost cannon ##########################
+default hoarfrost cannon
 
-@The_monster@ rumbles loudly.
+VISUAL: Water drips from @the_monster@'s barrel.
 
-VISUAL:The ground beneath @the_monster@ churns.
+VISUAL: A cold fog rises from @the_monster@.
 
-@The_monster@ makes a grinding noise.
+@The_monster@ makes a faint grinding noise.
 %%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A

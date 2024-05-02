@@ -1044,9 +1044,14 @@ sun moth cast
 
 @The_monster@'s wings beat fiercely.
 %%%%
-seismic cannon cast
+Hoarfrost Bullet cast finale
 
-@The_monster@ launches a salvo of rock.
+@The_monster@ launches the last of itself @at@ @target@ with a shrill rumble.
+%%%%
+Hoarfrost Bullet cast
+
+@The_monster@ fires a salvo of icy shards.
+%%%%
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
