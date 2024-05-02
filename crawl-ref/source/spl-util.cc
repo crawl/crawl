@@ -1583,7 +1583,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return cast_hailstorm(-1, false, true) == spret::abort;
 
     case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(pow, false, true) == spret::abort;
+        return cast_dazzling_flash(&you, pow, false, true) == spret::abort;
 
      case SPELL_MAXWELLS_COUPLING:
          return cast_maxwells_coupling(pow, false, true) == spret::abort;

@@ -3337,57 +3337,92 @@ int dazzle_chance_denom(int pow)
     return 150 - pow;
 }
 
-bool dazzle_monster(monster * mons, int pow)
+static bool _can_be_dazzled(const actor *victim)
 {
-    if (!mons || !mons_can_be_dazzled(mons->type))
+    if (victim->is_player())
+        return you.can_be_dazzled();
+    return mons_can_be_dazzled(victim->as_monster()->type);
+}
+
+bool dazzle_target(actor *victim, const actor *agent, int pow)
+{
+    if (!_can_be_dazzled(victim))
         return false;
 
-    const int numerator = dazzle_chance_numerator(mons->get_hit_dice());
-    if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
+    if (victim->is_monster())
     {
-        mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
-                       random_range(4, 8) * BASELINE_DELAY));
-        return true;
+        auto mons = victim->as_monster();
+        const int numerator = dazzle_chance_numerator(mons->get_hit_dice());
+        if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
+        {
+            mons->add_ench(mon_enchant(ENCH_BLIND, 1, agent,
+                        random_range(4, 8) * BASELINE_DELAY));
+            return true;
+        }
+    }
+    else
+    {
+        // Dazzling player: similar logic to monster dazzling but it's maybe
+        // not the best way to handle this. Dividing XL by 2 so there is still
+        // decent chance at XL27 that the player can be affected.
+        const int numerator = dazzle_chance_numerator(you.experience_level / 2);
+        if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
+        {
+            blind_player(random_range(4, 8));
+            return true;
+        }
     }
 
     return false;
 }
 
-spret cast_dazzling_flash(int pow, bool fail, bool tracer)
+spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer)
 {
-    int range = spell_range(SPELL_DAZZLING_FLASH, pow);
-    auto hitfunc = find_spell_targeter(SPELL_DAZZLING_FLASH, pow, range);
-    bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
+    int range = spell_range(SPELL_DAZZLING_FLASH, pow, caster->is_player());
+    auto vulnerable = [caster](const actor *act) -> bool
     {
-        // No fedhas checks needed, plants can't be dazzled
-        return act->is_monster()
-               && mons_can_be_dazzled(act->as_monster()->type);
+        // No fedhas checks needed, plants can't be dazzled.
+        if (!_can_be_dazzled(act))
+            return false;
+
+        // For monster casting, only affect enemies, to make it easier to use
+        // (Hopefully this is not somehow abusable)
+        return caster->is_player() || !mons_aligned(caster, act);
     };
 
     if (tracer)
     {
-        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
+         // XX: LOS_NO_TRANS ?
+        for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
         {
             if (!in_bounds(*ri))
                 continue;
 
-            const monster* mon = monster_at(*ri);
+            // XX: monster tracer will need to check for player at
+            const actor* victim = actor_at(*ri);
 
-            if (!mon || !you.can_see(*mon))
+            if (!victim || !caster->can_see(*victim) || !vulnerable(victim))
                 continue;
 
-            if (!mon->friendly() && (*vulnerable)(mon))
+            if (caster->is_monster() && !mons_aligned(caster, victim)
+                || caster->is_player() && victim->as_monster()->friendly())
+            {
                 return spret::success;
+            }
         }
 
         return spret::abort;
     }
 
+    if (caster->is_player())
+    {
+        auto hitfunc = find_spell_targeter(SPELL_DAZZLING_FLASH, pow, range);
 
-    // [eb] the simulationist in me wants to use LOS_DEFAULT
-    // and let this blind through glass
-    if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable))
-        return spret::abort;
+        // [eb] the simulationist in me wants to use LOS_DEFAULT
+        // and let this blind through glass
+        if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable))
+            return spret::abort;
+    }
 
     fail_check();
 
@@ -3395,24 +3430,29 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
     beam.name = "energy";
     beam.flavour = BEAM_VISUAL;
     beam.origin_spell = SPELL_DAZZLING_FLASH;
-    beam.set_agent(&you);
+    beam.set_agent(caster);
     beam.colour = WHITE;
     beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
     beam.range = range;
     beam.ex_size = range;
     beam.is_explosion = true;
-    beam.source = you.pos();
-    beam.target = you.pos();
+    beam.source = caster->pos();
+    beam.target = caster->pos();
     beam.hit = AUTOMATIC_HIT;
     beam.loudness = 0;
     beam.explode(true, true);
 
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_SOLID_SEE, true);
+    for (radius_iterator ri(caster->pos(), range, C_SQUARE, LOS_SOLID_SEE, true);
          ri; ++ri)
     {
-        monster* mons = monster_at(*ri);
-        if (mons && dazzle_monster(mons, pow))
-            simple_monster_message(*mons, " is dazzled.");
+        actor* victim = actor_at(*ri);
+        if (victim && vulnerable(victim) && dazzle_target(victim, caster, pow))
+        {
+            if (victim->is_monster())
+                simple_monster_message(*victim->as_monster(), " is dazzled.");
+            // Player already got a message from blind_player
+            // XX: Should it be a slightly different message? Show something if resisted?
+        }
     }
 
     return spret::success;

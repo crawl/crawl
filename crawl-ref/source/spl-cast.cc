@@ -2344,7 +2344,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_thunderbolt(&you, powc, target, fail);
 
     case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(powc, fail);
+        return cast_dazzling_flash(&you, powc, fail);
 
     case SPELL_CHAIN_OF_CHAOS:
         return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);

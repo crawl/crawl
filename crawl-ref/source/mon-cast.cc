@@ -691,6 +691,20 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE,
         18, // 1.5x iceblast
     } },
+    { SPELL_DAZZLING_FLASH, {
+        [](const monster &caster)
+        {
+            // Run tracer version of spell. Power matters for range.
+            const int pow = mons_spellpower(caster, SPELL_DAZZLING_FLASH);
+            return ai_action::good_or_bad(
+                cast_dazzling_flash(&caster, pow, false, true) == spret::success
+            );
+        },
+        [](monster &caster, mon_spell_slot /*slot*/, bolt& /*pbolt*/) {
+            const int pow = mons_spellpower(caster, SPELL_DAZZLING_FLASH);
+            cast_dazzling_flash(&caster, pow, false);
+        },
+    } }
 };
 
 /// Create the appropriate casting logic for a simple conjuration.
@@ -1999,6 +2013,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BESTOW_ARMS:
     case SPELL_FULMINANT_PRISM:
     case SPELL_HELLFIRE_MORTAR:
+    case SPELL_DAZZLING_FLASH:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -8078,7 +8093,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     if (friendly && !foe && spell_typematch(spell, spschool::summoning))
         return ai_action::bad();
 
-
     // Don't use abilities while rolling.
     if (mon->has_ench(ENCH_ROLLING))
         return ai_action::impossible();
@@ -8579,7 +8593,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
     case SPELL_DEATHS_DOOR:
-    case SPELL_DAZZLING_FLASH:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_TELEPORT_SELF:
 #endif
