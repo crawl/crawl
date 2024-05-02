@@ -8937,7 +8937,6 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 
 @The_monster@ fumbles a card and drops it. "Whoops!"
 
-w:1
 @The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
 %%%%
 _misplaced_card_
