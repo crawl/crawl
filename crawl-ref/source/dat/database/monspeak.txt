@@ -8902,15 +8902,38 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 
 @The_monster@ draws Degeneration. "So many ways to mutate things!"
 
+@The_monster@ draws the Orb. "Magically getting blown up hurts!"
+
+@The_monster@ draws Pain. "Necromancy hurts!"
+
+@The_monster@ draws the Storm. "Thunder and lightning everywhere!"
+
 @The_monster@ draws Wild Magic. "So many ways magic can go wrong!"
+
+@The_monster@ draws Vitriol. "Acid hurts!"
+
+@The_monster@ draws the Cloud. "Smoke, smoke everywhere!"
+
+@The_monster@ draws the Elixir. "Healing and magic? Woohoo!"
 
 @The_monster@ draws Exile. "The Abyss is a horrible place!"
 
 @The_monster@ draws the Tomb. "I don't want to be sealed in with no windows!"
 
+# Kenny Rogers, "The Gambler"
+@The_monster@ draws Velocity. "Know when to walk away, know when to run."
+
 @The_monster@ draws the Dance. "Hope the weapon's aim is true!"
 
+@The_monster@ draws the Elements. "Elemental beasts everywhere!"
+
+@The_monster@ draws the Illusion. "I have a twin now!"
+
 @The_monster@ draws the Pentagram. "Hope the demon is friendly!"
+
+@The_monster@ draws the Rangers. "New friends who can shoot!"
+
+@The_monster@ draws the Swarm. "Bees, bees everywhere!"
 
 @The_monster@ fumbles a card and drops it. "Whoops!"
 
