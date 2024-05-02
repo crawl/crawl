@@ -7,7 +7,7 @@ species: human
 will: 40
 attacks:
  - {type: touch, flavour: cold, damage: 25}
-hd: 12
+hd: 11
 hp_10x: 600
 ac: 0
 ev: 10

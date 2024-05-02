@@ -320,10 +320,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         invalidate_agrid(true);
         break;
 
-    case ENCH_FROZEN:
-        calc_speed();
-        break;
-
     case ENCH_INVIS:
         if (testbits(flags, MF_WAS_IN_VIEW))
         {
@@ -2413,7 +2409,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_FROZEN:
-        cturn = 3 * 10 / _mod_speed(10, mons->speed);
+        cturn = 5 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_EMPOWERED_SPELLS:
         cturn = 35 * 10 / _mod_speed(10, mons->speed);

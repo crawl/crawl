@@ -5689,7 +5689,8 @@ int monster::energy_cost(energy_use_type et, int div, int mult) const
     }
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
-        energy_loss += 4;
+        energy_loss = energy_loss * 2;
+
     return energy_loss;
 }
 
