@@ -8941,6 +8941,9 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 %%%%
 _misplaced_card_
 
+w:20
+@_deck_of_oddities_card_@
+
 the Ace of Spades
 
 the Old Maid
@@ -8953,8 +8956,10 @@ the Happy Squirrel
 
 # Uno
 Wild Draw Four
+%%%%
+# Nemelex's old Deck of Oddities
+_deck_of_oddities_card_
 
-# cards from Nemelex's old Deck of Oddities
 the Bargain
 
 the Curse
