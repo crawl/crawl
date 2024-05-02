@@ -4145,9 +4145,7 @@ void bolt::affect_player()
     int pre_ac_dam = 0;
 
     // Roll the damage.
-    if (!(origin_spell == SPELL_FLASH_FREEZE && you.duration[DUR_FROZEN]))
-        pre_ac_dam += damage.roll();
-
+    pre_ac_dam += damage.roll();
     int pre_res_dam = apply_AC(&you, pre_ac_dam);
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -4314,12 +4312,7 @@ void bolt::affect_player()
         || name == "blast of ice"
         || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
-        if (you.duration[DUR_FROZEN])
-        {
-            if (origin_spell == SPELL_FLASH_FREEZE)
-                canned_msg(MSG_YOU_UNAFFECTED);
-        }
-        else
+        if (!you.duration[DUR_FROZEN])
         {
             mprf(MSGCH_WARN, "You are encased in ice.");
             you.duration[DUR_FROZEN] = (2 + random2(3)) * BASELINE_DELAY;
@@ -4444,9 +4437,6 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
 {
     preac = postac = final = 0;
 
-    const bool freeze_immune =
-        origin_spell == SPELL_FLASH_FREEZE && mon->has_ench(ENCH_FROZEN);
-
     // [ds] Changed how tracers determined damage: the old tracer
     // model took the average damage potential, subtracted the average
     // AC damage reduction and called that the average damage output.
@@ -4472,9 +4462,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
     // hurt monsters with low-damage ranged attacks and high-damage
     // melee attacks. I judge this an acceptable compromise (for now).
     //
-    const int preac_max_damage =
-        (freeze_immune) ? 0
-                        : damage.num * damage.size;
+    const int preac_max_damage = damage.num * damage.size;
 
     // preac: damage before AC modifier
     // postac: damage after AC modifier
@@ -4486,7 +4474,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final)
         // Was mean between min and max;
         preac = preac_max_damage;
     }
-    else if (!freeze_immune)
+    else
         preac = damage.roll();
 
     int tracer_postac_max = preac_max_damage;
@@ -5019,12 +5007,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
              || name == "blast of ice"
              || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
-        if (mon->has_ench(ENCH_FROZEN))
-        {
-            if (origin_spell == SPELL_FLASH_FREEZE)
-                simple_monster_message(*mon, " is unaffected.");
-        }
-        else
+        if (!mon->has_ench(ENCH_FROZEN))
         {
             simple_monster_message(*mon, " is flash-frozen.");
             mon->add_ench(ENCH_FROZEN);

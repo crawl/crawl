@@ -8140,9 +8140,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(handle_throw(mon, beam, true, true));
     }
 
-    case SPELL_FLASH_FREEZE:
-        return _foe_effect_viable(*mon, DUR_FROZEN, ENCH_FROZEN);
-
     case SPELL_BLACK_MARK:
         return ai_action::good_or_impossible(!mon->has_ench(ENCH_BLACK_MARK));
 

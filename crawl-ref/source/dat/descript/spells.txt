@@ -612,8 +612,7 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement. Half of its damage bypasses cold resistance. It has no
-effect on targets that are already frozen.
+target's movement for a short time. Half of its damage bypasses cold resistance.
 %%%%
 Flashing Balestra spell
 
