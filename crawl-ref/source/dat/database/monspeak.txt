@@ -8902,7 +8902,7 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 
 @The_monster@ draws Degeneration. "So many ways to mutate things!"
 
-@The_monster@ draws the Orb. "Magically getting blown up hurts!"
+@The_monster@ draws the Orb. "Orbs of destruction hurt!"
 
 @The_monster@ draws Pain. "Necromancy hurts!"
 
