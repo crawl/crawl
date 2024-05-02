@@ -843,6 +843,7 @@ public:
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
     bool can_sleep(bool holi_only = false) const override;
+    bool can_be_dazzled() const;
 
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;
@@ -1186,7 +1187,7 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void barb_player(int turns, int pow);
-void blind_player(int turns, colour_t flavour_colour = LIGHTGREY);
+void blind_player(int turns, colour_t flavour_colour = WHITE);
 int blind_player_to_hit_modifier(const int to_hit, const int distance);
 void dec_berserk_recovery_player(int delay);
 

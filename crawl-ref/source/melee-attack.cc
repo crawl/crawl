@@ -3766,7 +3766,8 @@ void melee_attack::do_starlight()
         "@The_monster@'s vision is obscured by starry radiance!",
     };
 
-    if (one_chance_in(5) && dazzle_monster(attacker->as_monster(), 100))
+    if (attacker->is_monster() && one_chance_in(5)
+        && dazzle_target(attacker, defender, 100))
     {
         string msg = *random_iterator(dazzle_msgs);
         msg = do_mon_str_replacements(msg, *attacker->as_monster(), S_SILENT);

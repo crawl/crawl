@@ -4910,6 +4910,15 @@ void barb_player(int turns, int pow)
 }
 
 /**
+ * Players are rather more susceptible to dazzling: only vine stalkers
+ * and trees are immune.
+ */
+bool player::can_be_dazzled() const
+{
+    return !(you.holiness() & MH_PLANT);
+}
+
+/**
  * Increase the player's blindness duration.
  *
  * @param amount   The number of turns to increase blindness duration by.
