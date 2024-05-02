@@ -7962,6 +7962,13 @@ bool player::do_shaft()
 
 bool player::can_do_shaft_ability(bool quiet) const
 {
+    if (!form_keeps_mutations())
+    {
+        if (!quiet)
+            mpr("You can't shaft yourself in current form.");
+        return false;
+    }
+
     if (attribute[ATTR_HELD])
     {
         if (!quiet)
