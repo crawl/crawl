@@ -8955,5 +8955,19 @@ the Happy Squirrel
 # Uno
 Wild Draw Four
 
-# Nemelex's old Deck of Oddities
+# cards from Nemelex's old Deck of Oddities
+the Bargain
+
+the Curse
+
+Famine
+
+Focus
+
+the Feast
+
+the Genie
+
+the Helix
+
 Xom
