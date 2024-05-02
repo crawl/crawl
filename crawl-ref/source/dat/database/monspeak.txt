@@ -8900,6 +8900,10 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 
 @The_monster@ grins. "So many cards! Brought to you by @my_God@!"
 
+@The_monster@ fumbles a card and drops it. "Whoops!"
+
+@The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
+
 @_deck_of_destruction_line_@
 
 @_deck_of_escape_line_@
@@ -8907,10 +8911,6 @@ VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
 @_deck_of_summoning_line_@
 
 @_deck_of_punishment_line_@
-
-@The_monster@ fumbles a card and drops it. "Whoops!"
-
-@The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
 %%%%
 _misplaced_card_
 
