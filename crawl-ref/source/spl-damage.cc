@@ -5104,16 +5104,20 @@ static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
 
 void fire_fusillade()
 {
-    if (!enough_mp(2, true))
+    // The first volley is incuded in the casting cost. The rest drain additional mp.
+    if (you.duration[DUR_FUSILLADE] != 5)
     {
-        mpr("Your magical reserves are too exhausted to conjure more reagents.");
-        return;
+        if (!enough_mp(2, true))
+        {
+            mpr("Your magical reserves are too exhausted to conjure more reagents.");
+            you.duration[DUR_FUSILLADE] = 0;
+            return;
+        }
+        pay_mp(2);
+        finalize_mp_cost();
     }
 
     mpr("Flasks of reagents rain from above!");
-
-    pay_mp(2);
-    finalize_mp_cost();
 
     int pow = you.props[FUSILLADE_POWER_KEY].get_int();
 
