@@ -292,7 +292,7 @@ void tick_rimeblight(monster& victim)
     if (ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16)
         && you.see_cell_no_trans(victim.pos()))
     {
-        mprf("Shards of ice erupt from the %s body!", victim.name(DESC_ITS).c_str());
+        mprf("Shards of ice erupt from %s body!", apostrophise(victim.name(DESC_THE)).c_str());
         do_rimeblight_explosion(victim.pos(), pow, 1);
     }
 
