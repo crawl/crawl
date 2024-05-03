@@ -4927,7 +4927,7 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
     monster* mon = monster_at(target);
 
     if (!mon->has_ench(ENCH_MAGNETISED))
-        mprf("Magnetic shrapnel attaches itself to %s", mon->name(DESC_THE).c_str());
+        mprf("Magnetic shrapnel attaches itself to %s.", mon->name(DESC_THE).c_str());
 
     mon->add_ench(mon_enchant(ENCH_MAGNETISED, 1, &you,
                               random_range(5, 8) * BASELINE_DELAY));

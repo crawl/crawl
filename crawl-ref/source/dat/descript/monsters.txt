@@ -1259,8 +1259,8 @@ A type of fish capable of generating a powerful electric field.
 %%%%
 electroferric vortex
 
-A swirling cluster of magnetic iron framents and lingering electricity crackling
-between them. It dissipates rapidly unless re-electrified.
+A swirling cluster of magnetic iron fragments and lingering electricity
+crackling between them. It dissipates rapidly unless re-electrified.
 %%%%
 eleionoma
 
