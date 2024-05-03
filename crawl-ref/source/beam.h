@@ -157,7 +157,6 @@ struct bolt
     bool chose_ray = false;       // do we want a specific ray?
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
-    bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
     bool overshoot_prompt = true; // warn when an ally is past the target
     bool friendly_past_target = false; // we fired and found something past the target
 

@@ -294,7 +294,6 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.foe_ratio        = 100;
     pbolt.beam_cancelled   = false;
     pbolt.dont_stop_player = false;
-    pbolt.dont_stop_trees  = false;
 
     // Clear misc
     pbolt.seen          = false;
@@ -2245,7 +2244,6 @@ void bolt_parent_init(const bolt &parent, bolt &child)
     child.friend_info.dont_stop = parent.friend_info.dont_stop;
     child.foe_info.dont_stop    = parent.foe_info.dont_stop;
     child.dont_stop_player      = parent.dont_stop_player;
-    child.dont_stop_trees       = parent.dont_stop_trees;
 
 #ifdef DEBUG_DIAGNOSTICS
     child.quiet_debug    = parent.quiet_debug;
