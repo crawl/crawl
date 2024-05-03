@@ -645,6 +645,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_DIAMOND_OBELISK,
     MONS_HOARFROST_CANNON,
+    MONS_HELLFIRE_MORTAR,
 #endif
 
     // Demons:
@@ -1259,6 +1260,7 @@ enum monster_type                      // env.mons[].type
     MONS_MARROWCUDA,
     MONS_UNDYING_ARMOURY,
     MONS_XAKKRIXIS,
+    MONS_HELLFIRE_MORTAR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

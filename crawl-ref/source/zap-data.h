@@ -650,6 +650,22 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
 },
 
 {
+    ZAP_HELLFIRE_MORTAR_DIG,
+    "",
+    100,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    RED,
+    true,
+    BEAM_DIGGING,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
     ZAP_FASTROOT,
     "",
     200,

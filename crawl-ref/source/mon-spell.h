@@ -1667,6 +1667,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_HELLFIRE_MORTAR,
+      {
+       { SPELL_BOLT_OF_MAGMA, 200, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_ELECTRIC_GOLEM,
       {
        { SPELL_LIGHTNING_BOLT, 44, MON_SPELL_MAGICAL },

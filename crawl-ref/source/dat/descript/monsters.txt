@@ -1562,6 +1562,11 @@ hellephant
 An abhorrent pachyderm, descendant of demons, burning from within with the
 fires of Hell.
 %%%%
+hellfire mortar
+
+A terrifying weapon hewn from molten rock. It rains fiery destruction down upon
+its creators' enemies.
+%%%%
 hellion
 
 A hateful demon, desirous to see all life destroyed by its damnation.

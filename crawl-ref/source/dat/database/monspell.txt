@@ -1052,6 +1052,10 @@ Hoarfrost Bullet cast
 
 @The_monster@ fires a salvo of icy shards.
 %%%%
+Hellfire mortar cast
+
+@The_monster@ blasts a torrent of magma @at@ @target@.
+%%%%
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

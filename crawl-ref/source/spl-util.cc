@@ -1470,6 +1470,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.duration[DUR_FUSILLADE])
             return "you are already unleashing a barrage of alchemical concoctions!";
 
+    case SPELL_HELLFIRE_MORTAR:
+        if (temp && hellfire_mortar_active(you))
+            return "you already have an active mortar!";
+
     default:
         break;
     }

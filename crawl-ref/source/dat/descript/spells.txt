@@ -769,6 +769,16 @@ Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
 dies. The number of spectres summoned increases with spell power.
 %%%%
+Hellfire Mortar spell
+
+Splits apart the ground in front of the caster and sculpts a terrifying weapon
+out of molten rock. This mortar will move slowly along the lava-filled chasm,
+autonomously launching gouts of magma at the caster's enemies as it does so.
+
+When it reaches the end of its path, or is obstructed in its movement by another
+creature, it will sink back into the lava and the chasm will seal itself shut
+shortly thereafter.
+%%%%
 Heal Other spell
 
 Heals a nearby ally.

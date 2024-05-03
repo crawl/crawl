@@ -2482,3 +2482,58 @@ aff_type targeter_magnavolt::is_affected(coord_def loc)
 
     return AFF_NO;
 }
+
+targeter_mortar::targeter_mortar(const actor* act, int max_range) :
+    targeter_beam(act, max_range, ZAP_HELLFIRE_MORTAR_DIG, 0, 0, 0)
+{
+    beam.origin_spell = SPELL_HELLFIRE_MORTAR;
+}
+
+bool targeter_mortar::can_affect_unseen()
+{
+    return true;
+}
+
+bool targeter_mortar::affects_monster(const monster_info& /*mon*/)
+{
+    return false;
+}
+
+bool targeter_mortar::can_affect_walls()
+{
+    return true;
+}
+
+aff_type targeter_mortar::is_affected(coord_def loc)
+{
+    aff_type current = AFF_YES;
+    bool hit_barrier = false;
+    for (auto pc : path_taken)
+    {
+        if (hit_barrier)
+            return AFF_NO; // some previous iteration hit a barrier
+        current = AFF_YES;
+        // uses comparison to DNGN_UNSEEN so that this works sensibly with magic
+        // mapping etc. TODO: console tracers use the same symbol/color as
+        // mmapped walls.
+        if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
+        {
+            if (cell_is_solid(pc) && !beam.can_affect_wall(pc)
+                || (monster_at(pc) && you.can_see(*monster_at(pc))
+                    && !beam.ignores_monster(monster_at(pc))))
+            {
+                current = AFF_NO;
+                hit_barrier = true;
+            }
+            else if (!cell_is_solid(pc))
+                current = AFF_TRACER;
+
+            // otherwise, default to AFF_YES
+        }
+        // unseen squares default to AFF_YES
+        if (pc == loc)
+            return current;
+    }
+    // path never intersected loc at all
+    return AFF_NO;
+}

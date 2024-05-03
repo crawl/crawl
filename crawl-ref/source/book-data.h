@@ -332,6 +332,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Armaments
     SPELL_STONE_ARROW,
     SPELL_ANIMATE_ARMOUR,
+    SPELL_HELLFIRE_MORTAR,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
@@ -524,6 +525,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOULDER,
     SPELL_HOARFROST_CANNONADE,
     SPELL_BOMBARD,
+    SPELL_HELLFIRE_MORTAR,
 },
 
 { // Book of Maladies

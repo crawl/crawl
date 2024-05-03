@@ -17,6 +17,8 @@
 #define HOARFROST_SHOTS_KEY "hoarfrost_shot_count"
 constexpr int MAX_HOARFROST_SHOTS = 4;
 
+#define HELLFIRE_PATH_KEY "hellfire_mortar_path"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -129,3 +131,7 @@ string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
 
 spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail);
+
+dice_def hellfire_mortar_damage(int pow);
+spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail);
+bool hellfire_mortar_active(const actor& agent);

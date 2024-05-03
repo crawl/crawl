@@ -3058,3 +3058,126 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 
     return spret::success;
 }
+
+static int _hellfire_mortar_hd(int pow, bool random = true)
+{
+    if (random)
+        return 6 + div_rand_round(pow, 30);
+    return 6 + pow / 30;
+}
+
+dice_def hellfire_mortar_damage(int pow)
+{
+    return zap_damage(ZAP_BOLT_OF_MAGMA, _hellfire_mortar_hd(pow, false) * 12, true, false);
+}
+
+static bool _hellfire_stops_here(bolt& beam, coord_def pos)
+{
+    return actor_at(pos) && !beam.ignores_monster(monster_at(pos))
+           || cell_is_solid(pos) && !beam.can_affect_wall(pos);
+}
+
+spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
+{
+    // Determine path by firing digging tracer
+    zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, false, beam);
+    beam.source_id = agent.mid;
+    beam.origin_spell = SPELL_HELLFIRE_MORTAR;
+    beam.is_tracer = true;
+    beam.fire();
+
+    // Check whether the path ends because it reached max range, or because it
+    // hit something invalid.
+    const int len = _hellfire_stops_here(beam, beam.path_taken.back())
+                    ? beam.path_taken.size() - 1
+                    : beam.path_taken.size();
+
+    // Abort if the player knows this path is blocked. (Invisible monsters at
+    // close range need to be handled later, alas)
+    if (agent.is_player())
+    {
+        monster* mon = monster_at(beam.path_taken[0]);
+        if (mon && you.can_see(*mon))
+        {
+            mprf("%s is in the way!", mon->name(DESC_THE).c_str());
+            return spret::abort;
+        }
+        else if (len == 0 && !mon)
+        {
+            mpr("There's no room!");
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+
+    // Likely because of an invisible monster standing in our first cannon spot
+    if (actor_at(beam.path_taken[0]))
+    {
+        mpr("Something prevents your mortar from forming!");
+        return spret::success;
+    }
+
+    // Make the lava
+    int dur = random_range(15, 19) * BASELINE_DELAY;
+    for (unsigned int i = 0; i < beam.path_taken.size(); ++i)
+    {
+        const coord_def pos = beam.path_taken[i];
+
+        // Don't make lava under things that can't survive there.
+        if (monster_at(pos) && !beam.ignores_monster(monster_at(pos)))
+            break;
+
+        if (feat_is_solid(env.grid(pos)) && !feat_is_diggable(env.grid(pos))
+            && !feat_is_tree(env.grid(pos)))
+        {
+            break;
+        }
+
+        temp_change_terrain(beam.path_taken[i], DNGN_LAVA,
+                            //random_range(11, 17) * BASELINE_DELAY,
+                            dur - (i * BASELINE_DELAY),
+                            TERRAIN_CHANGE_HELLFIRE_MORTAR);
+
+        flash_tile(pos, RED, 5);
+    }
+
+    mgen_data mg = _summon_data(agent, MONS_HELLFIRE_MORTAR, 0,
+                                GOD_NO_GOD, SPELL_HELLFIRE_MORTAR);
+    mg.flags |= MG_FORCE_PLACE;
+    mg.pos = beam.path_taken[0];
+    mg.hd = _hellfire_mortar_hd(pow);
+    monster* cannon = create_monster(mg);
+
+    // Unclear why this could happen (we've already checked that the spot is
+    // empty), but let's guard against it anyway.
+    if (!cannon)
+    {
+        mpr("Something prevents your mortar from forming!");
+        return spret::success;
+    }
+
+    // Store the cannon's movement path
+    CrawlVector& path = cannon->props[HELLFIRE_PATH_KEY].get_vector();
+    for (unsigned int i = 0; i < beam.path_taken.size(); ++i)
+    {
+        const coord_def pos = beam.path_taken[i];
+        path.push_back(pos);
+    }
+
+    mpr("With a deafening crack, the ground splits apart in the path of your "
+        "chthonic artillery!");
+
+    return spret::success;
+}
+
+bool hellfire_mortar_active(const actor& agent)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_HELLFIRE_MORTAR && mi->summoner == agent.mid)
+            return true;
+    }
+
+    return false;
+}

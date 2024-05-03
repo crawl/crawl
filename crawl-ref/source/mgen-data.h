@@ -175,6 +175,7 @@ struct mgen_data
                || cls == MONS_BOULDER
                || cls == MONS_HOARFROST_CANNON
                || cls == MONS_PILE_OF_DEBRIS
+               || cls == MONS_HELLFIRE_MORTAR
                || summon_type == SPELL_ANIMATE_DEAD
                || summon_type == SPELL_NECROTISE
                || summon_type == SPELL_DEATH_CHANNEL

@@ -3963,6 +3963,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HELLFIRE_MORTAR, "Hellfire Mortar",
+    spschool::earth | spschool::fire,
+    spflag::dir_or_target | spflag::destructive,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    20,
+    TILEG_BOLT_OF_MAGMA,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

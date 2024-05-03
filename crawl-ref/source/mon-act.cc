@@ -1109,6 +1109,79 @@ static void _handle_boulder_movement(monster& boulder)
         _swim_or_move_energy(boulder);
 }
 
+static void _handle_hellfire_mortar(monster& mortar)
+{
+    // First, fire a bolt of magma at some random target we have line of fire to
+    vector<coord_def> targs;
+    for (monster_near_iterator mi(&mortar, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_aligned(&mortar, *mi) && monster_los_is_valid(&mortar, *mi))
+        {
+            bolt tracer = mons_spell_beam(&mortar, SPELL_BOLT_OF_MAGMA, 100);
+            tracer.source = mortar.pos();
+            tracer.target = mi->pos();
+
+            fire_tracer(&mortar, tracer);
+            if (mons_should_fire(tracer))
+                targs.push_back(mi->pos());
+        }
+    }
+
+    shuffle_array(targs);
+
+    const unsigned int count = min(2, (int)targs.size());
+    for (unsigned int i = 0; i < count; ++i)
+    {
+        bolt beam;
+        setup_mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA);
+        beam.target = targs[i];
+        mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA,
+                    mortar.spell_slot_flags(SPELL_BOLT_OF_MAGMA));
+    }
+
+    // Then try to advance one tile further along our movement path.
+    // If we cannot (either because our path has ended, or we're blocked), die.
+    CrawlVector& path = mortar.props[HELLFIRE_PATH_KEY].get_vector();
+    for (unsigned int i = 0; i < path.size(); ++i)
+    {
+        if (path[i].get_coord() == mortar.pos())
+        {
+            // We've reached the end of our path.
+            if (i + 1 == path.size())
+            {
+                simple_monster_message(mortar, " sinks back into the magma.");
+                monster_die(mortar, KILL_MISC, true);
+                return;
+            }
+
+            coord_def new_pos = path[i+1].get_coord();
+
+            // We're blocked!
+            if (env.grid(new_pos) != DNGN_LAVA || actor_at(new_pos))
+            {
+                const string reason = actor_at(new_pos)
+                                        ? actor_at(new_pos)->name(DESC_THE).c_str()
+                                        : article_a(feat_type_name(env.grid(new_pos)));
+
+                if (you.can_see(mortar))
+                {
+                    mprf("%s collides with %s and sinks back into the magma.",
+                         mortar.name(DESC_THE).c_str(),
+                         reason.c_str());
+                }
+
+                monster_die(mortar, KILL_MISC, true);
+                return;
+            }
+
+            if (!_do_move_monster(mortar, new_pos - mortar.pos()))
+                mortar.lose_energy(EUT_ATTACK);
+
+            break;
+        }
+    }
+}
+
 static void _check_blazeheart_golem_link(monster& mons)
 {
     // Check distance from player. If we're non-adjacent, decrease timer
@@ -1765,6 +1838,12 @@ void handle_monster_move(monster* mons)
     if (mons->type == MONS_BOULDER)
     {
         _handle_boulder_movement(*mons);
+        return;
+    }
+
+    if (mons->type == MONS_HELLFIRE_MORTAR)
+    {
+        _handle_hellfire_mortar(*mons);
         return;
     }
 
