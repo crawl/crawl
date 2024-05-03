@@ -776,7 +776,7 @@ out of molten rock. This mortar will move slowly along the lava-filled chasm,
 autonomously launching gouts of magma at the caster's enemies as it does so.
 
 When it reaches the end of its path, or is obstructed in its movement by another
-creature, it will sink back into the lava and the chasm will seal itself shut
+creature, it will sink back into the lava, and the chasm will seal itself shut
 shortly thereafter.
 %%%%
 Heal Other spell
@@ -800,7 +800,7 @@ even those resistant to poison.
 Hoarfrost Bullet spell
 
 Fires a shard of alchemical ice that coats whatever it hits with a layer of
-brittle frost which slows their movement.
+brittle frost, which slows their movement.
 
 Each shot fired will deplete the cannon's remaining durability, but if it
 survives to fire 5 times, the final shot will fragment to hit all enemies around
@@ -810,7 +810,7 @@ Hoarfrost Cannonade spell
 
 Sculpts a pair of cannons from alchemical ice that assail the caster's enemies
 from long range. The frigid shards they fire rapidly coat their targets with a
-layer of brittle frost that slows their movement.
+layer of brittle frost, which slows their movement.
 
 The cannons are short-lived and consume a part of themselves with every shard
 they fire, but if they survive to fire their final salvo without interference,
