@@ -409,8 +409,8 @@ the damage they take from all sources.
 %%%%
 Curse of Agony spell
 
-Curses a foe, halving their remaining health after the next two times that
-the caster strikes them in melee.
+Curses a foe, halving their remaining health after each of the next two times
+that the caster strikes them in melee.
 %%%%
 Dazzling Flash spell
 
