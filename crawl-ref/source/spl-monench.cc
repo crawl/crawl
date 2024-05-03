@@ -233,6 +233,20 @@ string describe_rimeblight_damage(int pow, bool terse)
                         shards_damage.num, shards_damage.size);
 }
 
+bool maybe_spread_rimeblight(monster& victim, int power)
+{
+    if (victim.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+        && !victim.has_ench(ENCH_RIMEBLIGHT)
+        && x_chance_in_y(2, 3)
+        && you.see_cell_no_trans(victim.pos()))
+    {
+        apply_rimeblight(victim, power);
+        return true;
+    }
+
+    return false;
+}
+
 bool apply_rimeblight(monster& victim, int power, bool quiet)
 {
     if (victim.has_ench(ENCH_RIMEBLIGHT)
@@ -241,7 +255,7 @@ bool apply_rimeblight(monster& victim, int power, bool quiet)
         return false;
     }
 
-    int duration = (random_range(5, 9) + div_rand_round(power, 20))
+    int duration = (random_range(6, 10) + div_rand_round(power, 30))
                     * BASELINE_DELAY;
     victim.add_ench(mon_enchant(ENCH_RIMEBLIGHT, 0, &you, duration));
     victim.props[RIMEBLIGHT_POWER_KEY] = power;
@@ -275,10 +289,10 @@ void tick_rimeblight(monster& victim)
 
     // Determine chance to explode with ice (rises over time)
     // Never happens below 3, always happens at 4, random chance beyond that
-    if (ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16))
+    if (ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16)
+        && you.see_cell_no_trans(victim.pos()))
     {
-        if (you.can_see(victim))
-            mprf("Shards of ice erupt from the %s body!", victim.name(DESC_ITS).c_str());
+        mprf("Shards of ice erupt from the %s body!", victim.name(DESC_ITS).c_str());
         do_rimeblight_explosion(victim.pos(), pow, 1);
     }
 

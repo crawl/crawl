@@ -5074,14 +5074,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 0, nullptr, BASELINE_DELAY * 2));
 
     if (origin_spell == SPELL_RIMEBLIGHT)
-    {
-        if (mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
-            && !mon->has_ench(ENCH_RIMEBLIGHT)
-            && one_chance_in(2))
-        {
-            apply_rimeblight(*mon, ench_power);
-        }
-    }
+        maybe_spread_rimeblight(*mon, ench_power);
 }
 
 static int _knockback_dist(spell_type origin, int pow)
@@ -5582,7 +5575,7 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
 
     // Rimeblight explosions won't hurt allies OR the monster that is exploding
-    if (origin_spell == SPELL_RIMEBLIGHT)
+    if (origin_spell == SPELL_RIMEBLIGHT && is_explosion)
         return mon->friendly() || mon->pos() == source;
 
     if (origin_spell == SPELL_HOARFROST_BULLET)

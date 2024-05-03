@@ -2040,6 +2040,15 @@ item_def* monster_die(monster& mons, killer_type killer,
         death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
                                      mons.pos(),
                                      random_range(3, 11) * BASELINE_DELAY);
+
+        // Potentially infect everyone around the dying unit
+        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        {
+            monster* victim = monster_at(*ai);
+            if (victim && !victim->friendly())
+                maybe_spread_rimeblight(*victim, mons.props[RIMEBLIGHT_POWER_KEY].get_int());
+        }
+
     }
     else if (mons.has_ench(ENCH_MAGNETISED) && mons.type != MONS_ELECTROFERRIC_VORTEX)
     {
