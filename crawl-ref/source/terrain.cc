@@ -1257,7 +1257,23 @@ static void _dgn_check_terrain_player(const coord_def pos)
     if (you.can_pass_through(pos))
         move_player_to_grid(pos, false);
     else
-        you_teleport_now();
+    {
+        // Try pushing the player out of the wall first. If this fails, find the
+        // nearest place in los range they *could* be and put them there.
+        // Teleport only if both fail.
+        if (push_actor_from(pos, nullptr, true).origin())
+        {
+            for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
+            {
+                if (you.can_pass_through(*di) && !actor_at(*di))
+                {
+                    move_player_to_grid(*di, false);
+                    return;
+                }
+            }
+            you_teleport_now();
+        }
+    }
 }
 
 /**
