@@ -868,7 +868,7 @@ VISUAL:@The_monster@ [plays|frolics] in the surf!
 if you.can_smell() then
     return "VISUAL:A distinct wet dog smell emanates from @the_monster@."
 else
-    return "VISUAL:@The_monster@ motions as if to dry itself off on you."
+    return "VISUAL:@The_monster@ motions as if to dry @reflexive@ off on you."
 end
 }}
 
@@ -5714,7 +5714,7 @@ VISUAL:@The_monster@ smiles, but it's obviously fake.
 
 @The_monster@ says @to_foe@, "Fear not. I will immortalise you in the tale of my first kill."
 
-VISUAL:@The_monster@ gives herself a magical halo, but it quickly sputters out.
+VISUAL:@The_monster@ gives @reflexive@ a magical halo, but it quickly sputters out.
 
 @The_monster@ mumbles the words to a spell, but in the wrong order.
 %%%%
@@ -5730,7 +5730,7 @@ _Maggie_rare_
 
 @The_monster@ shouts @at_foe@, "Leave me alone!"
 
-@The_monster@ mutters to herself, "Master Lance won't take me back. This is the way forward."
+@The_monster@ mutters to @reflexive@, "Master Lance won't take me back. This is the way forward."
 ## END Maggie ##
 %%%%
 ############ MARA ### A powerful demon lord, Lord of Illusions
@@ -7432,7 +7432,7 @@ Bennu killed
 %%%%
 _Bennu_death_
 
-VISUAL:@The_monster@ renews itself in a burst of flame!
+VISUAL:@The_monster@ renews @reflexive@ in a burst of flame!
 %%%%
 Bennu permanently killed
 

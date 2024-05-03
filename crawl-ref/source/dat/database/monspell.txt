@@ -196,7 +196,7 @@ Call Lost Souls cast
 %%%%
 Haste Plants cast
 
-@The_monster@ empowers the plants around itself!
+@The_monster@ empowers the plants around @reflexive@!
 %%%%
 Major Destruction cast
 
@@ -718,13 +718,13 @@ Splinterspray cast
 %%%%
 Crystallizing Shot crystal guardian cast
 
-@The_monster@ fires a shard of itself @at@ @target@.
+@The_monster@ fires a shard of @reflexive@ @at@ @target@.
 %%%%
 Rebounding Blaze thermic dynamo cast
 
 A wild whirl of fire shoots out from @the_monster@ @at@ @target@.
 
-@The_monster@ overcharges itself and releases excess heat @at@ @target@.
+@The_monster@ overcharges @reflexive@ and releases excess heat @at@ @target@.
 %%%%
 Rebounding Chill thermic dynamo cast
 
@@ -1034,7 +1034,7 @@ Corrupting Pulse wretched star cast
 %%%%
 living spell cast
 
-@The_monster@ casts itself @at@ @target@.
+@The_monster@ casts @reflexive@ @at@ @target@.
 %%%%
 bombardier beetle cast
 
@@ -1046,7 +1046,7 @@ sun moth cast
 %%%%
 Hoarfrost Bullet cast finale
 
-@The_monster@ launches the last of itself @at@ @target@ with a shrill rumble.
+@The_monster@ launches the last of @reflexive@ @at@ @target@ with a shrill rumble.
 %%%%
 Hoarfrost Bullet cast
 
