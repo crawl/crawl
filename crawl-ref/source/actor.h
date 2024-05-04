@@ -230,9 +230,6 @@ public:
                        bool temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
-#define TORPOR_SLOWED_KEY "torpor_slowed"
-    bool torpor_slowed() const;
-
     virtual int heads() const = 0;
 
     virtual int stat_hp() const = 0;

@@ -230,7 +230,7 @@ NAME:  lemuel_hellish_altar
 DEPTH: Crypt, Geh
 TAGS:  no_monster_gen no_descent
 MONS:  rust devil / orange demon
-MONS:  hell beast / red devil
+MONS:  sin beast / red devil
 MONS:  iron imp
 MONS:  hellion
 KPROP: 1234_ = no_tele_into

@@ -653,12 +653,12 @@ private:
     vector<coord_def> beam_paths;
 };
 
-class targeter_seismic_shockwave : public targeter_smite
+class targeter_mortar : public targeter_beam
 {
 public:
-    targeter_seismic_shockwave(const actor *act, int cannon_range);
-    bool valid_aim(coord_def a) override;
-private:
-    vector<coord_def> cannon_pos;
-    int cannon_range;
+    targeter_mortar(const actor* act, int max_range);
+    aff_type is_affected(coord_def loc) override;
+    bool can_affect_unseen() override;
+    bool can_affect_walls() override;
+    bool affects_monster(const monster_info& mon) override;
 };

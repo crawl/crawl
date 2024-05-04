@@ -1234,7 +1234,7 @@ NAME:   nicolae_arachne_temple
 TAGS:   no_item_gen no_monster_gen no_trap_gen
 DEPTH:  Spider:2-
 MONS:   tarantella, wolf spider, redback, jumping spider
-KMONS:  A = Arachne, orb spider
+KMONS:  A = Xak'krixis, orb spider
 KFEAT:  -' = web / floor w:40
 COLOUR: -2 = brown
 COLOUR: 'A435 = yellow
@@ -2286,13 +2286,13 @@ TAGS:   no_pool_fixup
 WEIGHT: 20
 PLACE:  Spider:$
 ORIENT: float
-MONS:   ghost moth, moth of wrath / ghost moth, emperor scorpion
+MONS:   ghost moth, moth of wrath, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
-MONS:   orb spider / steelbarb worm, redback
+MONS:   orb spider / steelbarb worm w:7, redback
 KITEM:  R = milky-white gem
 KITEM:  O = gossamer rune of Zot
-NSUBST: 4 = 3:3 / * = 44.
-NSUBST: 7 = 3 = 111.. / 1:2
+NSUBST: 4 = 3:3 / * = 44444..
+NSUBST: 7 = 3 = 111.. / 2 = 12
 NSUBST: d = 1:R / 3:d / 3:e / *:f
 SUBST:  5 = 5., 6 = 66...
 SUBST:  W = W..
@@ -2311,7 +2311,7 @@ wW.xcccW666....W5.W....WWWWW..cccxx
   xxcW-4.wccdd575dwww4d--ccc.-..cccxx
   WxcW-..5cd4wwwww3Oww474-3c..W5cccxxx
   xxccW.4.c-74.wwwwwww4ddccc6-.Wcccxx
-   xxccW4Wcccc...4.dd4---6-6-6ccccxx
+   xxccW4Wcccc..74.dd4---6-6-6ccccxx
     xxcW45..-cccc-3cc-66-6-ccccxxxx
      xcccW-...44cccc6-6-6-ccxxxxxx
      xxxcccccc4.....-6-ccccxx  xx
@@ -2480,7 +2480,8 @@ xxcc-.h.....""...g...."".......-"c
 ENDMAP
 
 ##########################################
-# Arachne Lair Rune Vault
+# Made pre-exile, but still named in her honour,
+# and also still named for easier statistics assessment.
 NAME:   johnstein_spider_rune_arachne_lair
 TAGS:   no_monster_gen
 ORIENT: float
@@ -2516,14 +2517,14 @@ KMONS:   3 = emperor scorpion / spark wasp w:5 / jorogumo
 KMONS:   4 = moth of wrath / ghost moth w:40 / sun moth
 KMONS:   5 = orb spider w:40 / demonic crawler
 KMONS:   6 = torpor snail / entropy weaver
-KMONS:   Z = Arachne, jorogumo
+KMONS:   Z = jorogumo
 KITEM:   O = gossamer rune of Zot
 KITEM:   o = milky-white gem
 KFEAT:   Y = web / floor w:40
 SHUFFLE: Gg / Hh / Ii / Jj / Kk / Ll
 SUBST:   G = O, g = o, HhIiJKL = %, jkl = .
 # thin out monsters and set up loot
-SUBST:   1 = 1..
+SUBST:   1 = 111.....
 NSUBST:  % = 2:d / 2:e / 2:f / * = def...
 NSUBST:  2 = 6 = 5. / 2:4 / 6 = 2. / *:1
 NSUBST:  3 = 4:3 / 1:6 / * = 2.
@@ -2533,9 +2534,9 @@ MAP
    ..cccccc5...5cccccc..
    .cc.Gcccc+++ccccH.cc.
    ccg4.c..2.2.2..c.4hcc
-  cc..3cc.2.2Z2.2.cc3..cc
+  cc..3cc.2.2.2.2.cc3..cc
  xc...cc.2'''''''2.cc...cx
- xc.2cc..1c''!''c1..cc2.cx
+ xc.2cc.Z1c''!''c1Z.cc2.cx
  xc..c.'1ccc!!!ccc1'.c..cx
 xxc.1.'''1c--!--c1'''.1.cxx
 xcc.1''''_"?????"_''''1.ccx
@@ -2553,7 +2554,7 @@ xcc.1''''_""???""_''''1.ccx
  xcc.1.'1ccc'!'ccc1'.1.ccx
  xcc..c..1c'''''c1..c..ccx
  xcc..cc.2'''''''2.cc..ccx
- xc2.ccc...2.Z.2...ccc.2cx
+ xc2.ccc..Z2...2Z..ccc.2cx
  xc..cccc1..222..1cccc..cx
  xc..cccc.1..2..1.cccc..cx
  xc2.ccc...........ccc.2cx
@@ -2589,7 +2590,7 @@ KITEM:  R = milky-white gem
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 KFEAT:  M = stone_wall
 KFEAT:  P = granite_statue
-NSUBST: S = 4:1 / 6 = 1. /*:., H = 2:5 / 1:6 / 1:7 / K
+NSUBST: S = 4:1 / 6 = 1. / *:., H = 4:5 / 1:6 / 1:7 / *:K
 SUBST:  K = 2 5:4 6:2 7:2 E:20, E = 3 4:30 .:20
 SUBST:  Q = W .:15
 NSUBST: d = 2:d / 2:e / 3:f / *=gggge
@@ -2650,7 +2651,7 @@ MONS:   broodmother
 KITEM:  P = milky-white gem
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 KFEAT:  ^ = web
-NSUBST: . = 96 = 1... / *:., 2 = 2:2 / *=2...
+NSUBST: . = 80 = 1... / *:., 2 = 2:2 / *=2...
 NSUBST: 6 = 4:6 / 4 = 456. / *= 4..
 NSUBST: d = 1:O / 1:P / 3:d / 3:e / 3:f
 SUBST:  3 = 3....
@@ -2715,7 +2716,7 @@ MONS:   emperor scorpion
 MONS:   radroach / spark wasp
 KITEM:  R = milky-white gem
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
-NSUBST: 7 = 4:7 / * = 7..
+NSUBST: 7 = 4:7 / 1:. / * = 7..
 # bias the big monsters, randomly
 : if crawl.one_chance_in(3) then
     SUBST:  7 = 44456
@@ -2724,8 +2725,8 @@ NSUBST: 7 = 4:7 / * = 7..
 : else
     SUBST:  7 = 45666
 : end
-NSUBST: . = 16 = 3... / 16 = 2... / 16 = 1... / *:.
-NSUBST: ' = 12 = 1... / 16 = 2... / 1:3 / 1:3. / *:.
+NSUBST: . = 12 = 3... / 16 = 2... / 16 = 1... / *:.
+NSUBST: ' = 10 = 1... / 16 = 2... / 1:3 / 1:3. / *:.
 # bias the ruination level of the terrain
 : if crawl.one_chance_in(3) then
     SUBST:  A = cc.

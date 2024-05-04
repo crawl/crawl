@@ -925,6 +925,9 @@ bool dont_harm(const actor &attacker, const actor &defender)
     if (mons_aligned(&attacker, &defender))
         return true;
 
+    if (defender.is_monster())
+        return god_protects(&attacker, defender.as_monster(), false);
+
     if (defender.is_player())
         return attacker.wont_attack();
 

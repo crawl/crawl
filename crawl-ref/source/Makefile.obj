@@ -146,6 +146,7 @@ message.o \
 misc.o \
 mon-abil.o \
 mon-act.o \
+mon-aura.o \
 mon-behv.o \
 mon-cast.o \
 mon-clone.o \

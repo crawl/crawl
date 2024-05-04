@@ -843,16 +843,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_FUSILLADE:
-        if (you.magic_points < 2)
+        if (!enough_mp(2, true))
             inf.light_colour = DARKGREY;
-        break;
-
-    case STATUS_CANNONADE:
-        if (cannonade_is_fully_charged(you))
-        {
-            inf.light_colour = LIGHTCYAN;
-            inf.light_text = "Shockwave";
-        }
         break;
 
     default:

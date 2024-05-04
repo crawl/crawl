@@ -1403,8 +1403,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MAGNAVOLT:
         return make_unique<targeter_magnavolt>(&you, range);
 
-    case SPELL_SEISMIC_SHOCKWAVE:
-        return make_unique<targeter_seismic_shockwave>(&you, range);
+    case SPELL_HELLFIRE_MORTAR:
+        return make_unique<targeter_mortar>(&you, range);
 
     default:
         break;
@@ -2598,11 +2598,11 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FULSOME_FUSILLADE:
         return cast_fulsome_fusillade(powc, fail);
 
-    case SPELL_SEISMIC_CANNONADE:
-        return cast_seismic_cannonade(you, powc, fail);
+    case SPELL_HOARFROST_CANNONADE:
+        return cast_hoarfrost_cannonade(you, powc, fail);
 
-    case SPELL_SEISMIC_SHOCKWAVE:
-        return cast_seismic_shockwave(you, beam.target, powc, fail);
+    case SPELL_HELLFIRE_MORTAR:
+        return cast_hellfire_mortar(you, beam, powc, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
@@ -2891,6 +2891,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return boulder_damage(power, false);
         case SPELL_THUNDERBOLT:
             return thunderbolt_damage(power, 1);
+        case SPELL_HELLFIRE_MORTAR:
+            return hellfire_mortar_damage(power);
         default:
             break;
     }

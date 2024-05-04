@@ -243,6 +243,8 @@ boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
 boulder_beetle_rolling2
+%sdir mon/unique
+xakkrixis MONS_XAKKRIXIS
 
 ## Frogs and flying fish ('F')
 %sdir mon/demihumanoids
@@ -259,8 +261,11 @@ blinking_frog MONS_BLINK_FROG_BLINKING
 cane_toad MONS_CANE_TOAD
 goliath_frog MONS_GOLIATH_FROG
 skyshark MONS_SKYSHARK
+%sdir mon/undead
+marrowcuda MONS_MARROWCUDA
 
 ## Snakes ('S')
+%sdir mon/animals
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
@@ -345,6 +350,9 @@ living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno MONS_CREEPING_INFERNO
+%sdir mon/undead
+polterguardian MONS_POLTERGUARDIAN
+undying_armoury MONS_UNDYING_ARMOURY
 
 ### Abyssal horrors ('*')
 %sdir mon/abyss
@@ -383,9 +391,8 @@ ignacio MONS_IGNACIO
 %sdir mon/demons
 
 # type '2' demons
-hell_beast MONS_HELL_BEAST
+sin_beast MONS_SIN_BEAST
 ice_devil MONS_ICE_DEVIL
-lorocyproca MONS_LOROCYPROCA
 reaper MONS_REAPER
 soul_eater MONS_SOUL_EATER
 sun_demon MONS_SUN_DEMON
@@ -542,7 +549,7 @@ obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 machine_tukima MONS_STRANGE_MACHINE
-seismic_cannon MONS_SEISMIC_CANNON
+hoarfrost_cannon MONS_HOARFROST_CANNON
 %sdir mon/vault
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE

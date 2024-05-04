@@ -159,7 +159,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEEP_ELF_HIGH_PRIEST,
       {
-       { SPELL_AURA_OF_BRILLIANCE, 25, MON_SPELL_PRIEST },
+       { SPELL_PRAYER_OF_BRILLIANCE, 25, MON_SPELL_PRIEST },
        { SPELL_CALL_DOWN_DAMNATION, 12, MON_SPELL_PRIEST },
        { SPELL_MALIGN_OFFERING, 18, MON_SPELL_PRIEST },
        { SPELL_SMITING, 18, MON_SPELL_PRIEST },
@@ -423,7 +423,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ARCANIST,
       {
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
+       { SPELL_SEARING_RAY, 16, MON_SPELL_WIZARD },
        { SPELL_VITRIFY, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 14, MON_SPELL_WIZARD },
       }
@@ -631,6 +631,19 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_POLTERGUARDIAN,
+      {
+       { SPELL_FORCE_LANCE, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_UNDYING_ARMOURY,
+      {
+       { SPELL_BESTOW_ARMS, 40, MON_SPELL_NATURAL },
+       { SPELL_FLASHING_BALESTRA, 35, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {
@@ -788,6 +801,14 @@ static const mon_spellbook mspell_list[] =
     {  MST_RADROACH,
       {
        { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},
+      }
+    },
+
+    {  MST_XAKKRIXIS,
+      {
+       { SPELL_VENOM_BOLT, 24, MON_SPELL_WIZARD},
+       { SPELL_IGNITE_POISON, 35, MON_SPELL_WIZARD},
+       { SPELL_FULMINANT_PRISM, 21, MON_SPELL_WIZARD},
       }
     },
 
@@ -1640,9 +1661,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_SEISMIC_CANNON,
+    {  MST_HOARFROST_CANNON,
       {
-       { SPELL_STONE_BULLET, 200, MON_SPELL_MAGICAL },
+       { SPELL_HOARFROST_BULLET, 200, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_HELLFIRE_MORTAR,
+      {
+       { SPELL_BOLT_OF_MAGMA, 200, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2279,7 +2306,7 @@ static const mon_spellbook mspell_list[] =
     // ('&', mostly) Demon lords.
     {  MST_GERYON,
       {
-       { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_VOCAL },
+       { SPELL_SUMMON_SIN_BEAST, 55, MON_SPELL_VOCAL },
       }
     },
 

@@ -169,6 +169,7 @@ static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
 static ai_action::goodness _should_irradiate(const monster& mons);
 static void _whack(const actor &caster, actor &victim);
+static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only);
 
 enum spell_logic_flag
 {
@@ -317,6 +318,32 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE,
         5,
     } },
+    { SPELL_HOARFROST_BULLET, {
+        _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& beam) {
+            const int shot = caster.props.exists(HOARFROST_SHOTS_KEY)
+                                ? caster.props[HOARFROST_SHOTS_KEY].get_int() : 0;
+            const int pow = mons_spellpower(caster, slot.spell);
+            if (shot == MAX_HOARFROST_SHOTS)
+                zappy(ZAP_HOARFROST_BULLET_FINALE, pow, true, beam);
+            else
+                zappy(ZAP_HOARFROST_BULLET, pow, true, beam);
+
+            _fire_simple_beam(caster, slot, beam);
+
+            // Immediately destroy the cannon on its finale shot, otherwise
+            // just injure it.
+            if (shot == MAX_HOARFROST_SHOTS)
+                monster_die(caster, KILL_TIMEOUT, NON_MONSTER);
+            else
+            {
+                caster.hurt(&caster, caster.max_hit_points / 5, BEAM_MMISSILE,
+                            KILLED_BY_BEAM);
+                caster.props[HOARFROST_SHOTS_KEY] = (shot + 1);
+            }
+        },
+        _zap_setup(SPELL_HOARFROST_BULLET),
+    } },
     { SPELL_TROGS_HAND, {
         [](const monster &caster) {
             return ai_action::good_or_impossible(
@@ -454,6 +481,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_FIRE_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_STICKS_TO_SNAKES, { _always_worthwhile, _mons_sticks_to_snakes } },
     { SPELL_SHEZAS_DANCE, { _always_worthwhile, _mons_summon_dancing_weapons } },
+    { SPELL_FLASHING_BALESTRA, { _foe_not_nearby, _fire_simple_beam,
+                                 _zap_setup(SPELL_FLASHING_BALESTRA)
+    } },
     { SPELL_DIVINE_ARMAMENT, { _always_worthwhile, _cast_divine_armament } },
     { SPELL_HASTE_OTHER, {
         _always_worthwhile,
@@ -1090,7 +1120,8 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
         return !monster.has_ench(ENCH_HASTE);
 
     case BEAM_MIGHT:
-        return !monster.has_ench(ENCH_MIGHT);
+        return !monster.has_ench(ENCH_MIGHT)
+               && mons_has_attacks(monster);
 
     case BEAM_INVISIBILITY:
         return !monster.has_ench(ENCH_INVIS);
@@ -1292,11 +1323,12 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_IOOD:
         case SPELL_FREEZE:
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_IGNITE_POISON:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
         case SPELL_BATTLESPHERE:
-        case SPELL_IGNITE_POISON:
         case SPELL_IRRADIATE:
         case SPELL_FOXFIRE:
         case SPELL_MANIFOLD_ASSAULT:
@@ -1566,7 +1598,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLIZING_SHOT:
-    case SPELL_STONE_BULLET:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1846,7 +1877,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
     case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_HELL_BEAST:  // Geryon
+    case SPELL_SUMMON_SIN_BEAST:  // Geryon
     case SPELL_SUMMON_UNDEAD:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
@@ -1930,7 +1961,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ENTROPIC_WEAVE:
     case SPELL_SUMMON_EXECUTIONERS:
     case SPELL_DOOM_HOWL:
-    case SPELL_AURA_OF_BRILLIANCE:
+    case SPELL_PRAYER_OF_BRILLIANCE:
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
@@ -1944,6 +1975,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FUNERAL_DIRGE:
     case SPELL_MANIFOLD_ASSAULT:
     case SPELL_REGENERATE_OTHER:
+    case SPELL_BESTOW_ARMS:
+    case SPELL_FULMINANT_PRISM:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -2096,7 +2129,7 @@ static bool _mirrorable(const monster* agent, const monster* mon)
            && !mons_is_unique(mon->type);
 }
 
-static bool _valid_aura_of_brilliance_ally(const monster* caster,
+static bool _valid_prayer_of_brilliance_ally(const monster* caster,
                                            const monster* target)
 {
     return mons_aligned(caster, target) && caster != target
@@ -3575,35 +3608,22 @@ static void _cast_black_mark(monster* agent)
     }
 }
 
-void aura_of_brilliance(monster* agent)
+static void _prayer_of_brilliance(monster* agent)
 {
-    bool did_something = false;
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    for (monster_near_iterator mi(agent, LOS_NO_TRANS); mi; ++mi)
     {
-        if (ai->is_player() || !mons_aligned(*ai, agent))
+        if (!mons_aligned(*mi, agent))
             continue;
-        monster* mon = ai->as_monster();
-        if (_valid_aura_of_brilliance_ally(agent, mon))
+        if (_valid_prayer_of_brilliance_ally(agent, *mi))
         {
-            if (!mon->has_ench(ENCH_EMPOWERED_SPELLS) && you.can_see(*mon))
+            if (!mi->has_ench(ENCH_EMPOWERED_SPELLS) && you.can_see(**mi))
             {
-               mprf("%s is empowered by %s aura!",
-                    mon->name(DESC_THE).c_str(),
-                    apostrophise(agent->name(DESC_THE)).c_str());
+               mprf("%s spells are empowered by the prayer of brilliance!",
+                    mi->name(DESC_ITS).c_str());
             }
-
-            mon_enchant ench = mon->get_ench(ENCH_EMPOWERED_SPELLS);
-            if (ench.ench != ENCH_NONE)
-                mon->update_ench(ench);
-            else
-                mon->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, agent));
-
-            did_something = true;
+            mi->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, agent));
         }
     }
-
-    if (!did_something)
-        agent->del_ench(ENCH_BRILLIANCE_AURA);
 }
 
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
@@ -4412,29 +4432,6 @@ bool handle_mon_spell(monster* mons)
     {
         monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
         return true;
-    }
-
-    // Seismic cannons heal themselves with each shot and will be eliable to
-    // fire a shockwave attack once they reach full health in this way.
-    if (mons->type == MONS_SEISMIC_CANNON)
-    {
-        if (mons->hit_points < mons->max_hit_points)
-        {
-            mons->heal(mons->max_hit_points / 10);
-            if (mons->hit_points == mons->max_hit_points
-                && !mons->has_ench(ENCH_SPELL_CHARGED))
-            {
-                mons->add_ench(ENCH_SPELL_CHARGED);
-                simple_monster_message(*mons, " finishes assembling itself.");
-
-                // Give charged cannons a little more duration, to avoid the
-                // bad-feeling situation of having them immediately vanish once
-                // shockwave becomes available, but before it can be used.
-                mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0,
-                                           actor_by_mid(mons->summoner),
-                                           random_range(3, 5) * BASELINE_DELAY));
-            }
-        }
     }
 
     if (!(flags & MON_SPELL_INSTANT))
@@ -5890,6 +5887,147 @@ static bool _cast_dirge(monster& caster, bool check_only = false)
     return true;
 }
 
+static void _cast_bestow_arms(monster& caster)
+{
+    vector<monster*> targs;
+
+    // Compile list of eligable targets (and check if there are viable targets
+    // for two-handers and ranged weapons while we're at it)
+    bool two_hand_eligable = false;
+    bool ranged_eligable = false;
+    for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_ARMED)
+            && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
+        {
+            // Skip enemies with unrandarts, which are special enough to not
+            // replace.
+            if (mi->weapon() && is_unrandom_artefact(*mi->weapon()))
+                continue;
+
+            targs.push_back(*mi);
+
+            if (!mi->shield())
+                two_hand_eligable = true;
+
+            // Attempting to give a ranged weapon to a dual-wielder is strange
+            // and somewhat buggy, so let's not.
+            if (!mons_wields_two_weapons(**mi))
+                ranged_eligable = true;
+        }
+    }
+
+    // Pick a weapon to give everyone
+    item_def wpn;
+    wpn.base_type = OBJ_WEAPONS;
+    wpn.sub_type = random_choose_weighted(
+                        two_hand_eligable ? 14 : 0, WPN_BARDICHE,
+                        two_hand_eligable ? 14 : 0, WPN_GLAIVE,
+                        11, WPN_DEMON_TRIDENT,
+                        15, WPN_EVENINGSTAR,
+                        15, WPN_DOUBLE_SWORD,
+                        6, WPN_QUICK_BLADE,
+                        ranged_eligable && two_hand_eligable ? 8 : 0, WPN_LONGBOW,
+                        ranged_eligable && two_hand_eligable ? 7 : 0, WPN_TRIPLE_CROSSBOW,
+                        ranged_eligable ? 5 : 0, WPN_HAND_CANNON);
+
+    wpn.brand = random_choose_weighted(11, SPWPN_FLAMING,
+                                       11, SPWPN_FREEZING,
+                                       7,  SPWPN_SPEED,
+                                       7,  SPWPN_VAMPIRISM,
+                                       4,  SPWPN_CHAOS,
+                                       1,  SPWPN_DISTORTION);
+
+    wpn.plus = random_range(4, 9);
+    wpn.flags |= (ISFLAG_SUMMONED | ISFLAG_IDENT_MASK);
+    wpn.quantity = 1;
+
+    if (you.can_see(caster))
+    {
+        mprf(MSGCH_MONSTER_SPELL, "%s arms its allies with %s.", caster.name(DESC_THE).c_str(),
+                                    pluralise(wpn.name(DESC_PLAIN, false, true)).c_str());
+    }
+
+    int dur = random_range(12, 26) * BASELINE_DELAY;
+
+    shuffle_array(targs);
+    int count = random_range(5, 7);
+
+    for (monster* mon : targs)
+    {
+        // Skip if this monster is not a valid recipient of this weapon
+        if (mon->hands_reqd(wpn) == HANDS_TWO && mon->shield())
+            continue;
+        if (mons_wields_two_weapons(*mon) && is_ranged_weapon_type(wpn.sub_type))
+            continue;
+
+        item_def clone = wpn;
+
+        // Save their previous weapons, if they were using any
+        if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+        {
+            mon->props[OLD_ARMS_KEY] = env.item[mon->inv[MSLOT_WEAPON]];
+            destroy_item(mon->inv[MSLOT_WEAPON]);
+        }
+        if (mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
+        {
+            mon->props[OLD_ARMS_ALT_KEY] = env.item[mon->inv[MSLOT_ALT_WEAPON]];
+            destroy_item(mon->inv[MSLOT_ALT_WEAPON]);
+        }
+
+        give_specific_item(mon, clone);
+        mon->add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
+        flash_tile(mon->pos(), MAGENTA, 50);
+
+        if (--count == 0)
+            break;
+    }
+
+    caster.add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
+}
+
+static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only)
+{
+    // Determine which pair of locations to summon prisms on. The spots must
+    // both be within 2 tiles of our foe, and also inside our spell range.
+    // (And ideally not adjacent!)
+
+    vector<coord_def> pos;
+    for (radius_iterator ri(foe.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(caster.pos(), *ri) <= spell_range(SPELL_FULMINANT_PRISM, pow)
+            && !actor_at(*ri) && !feat_is_solid(env.grid(*ri)))
+        {
+            // If we're just looking for a valid position, we found one.
+            if (check_only)
+                return true;
+
+            pos.push_back(*ri);
+        }
+    }
+
+    // Didn't find any empty space to place it
+    if (pos.empty())
+        return false;
+
+    // Place the first prism
+    int index = random2(pos.size());
+    cast_fulminating_prism(&caster, pow, pos[index], false);
+
+    // Then look at all valid locations that are non-adjacent to the prism we
+    // placed and pick one of those for the second prism
+    vector<coord_def> pos2;
+    for (coord_def p : pos)
+    {
+        if (grid_distance(p, pos[index]) > 1)
+            pos2.push_back(p);
+    }
+
+    if (!pos2.empty())
+        cast_fulminating_prism(&caster, pow, pos2[random2(pos2.size())], false);
+
+    return true;
+}
 
 /**
  *  Make this monster cast a spell
@@ -6284,10 +6422,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_HELL_BEAST:  // Geryon
+    case SPELL_SUMMON_SIN_BEAST:  // Geryon
         create_monster(
-            mgen_data(MONS_HELL_BEAST, SAME_ATTITUDE(mons), mons->pos(),
-                      mons->foe).set_summoned(mons, 4, spell_cast, god));
+            mgen_data(MONS_SIN_BEAST, SAME_ATTITUDE(mons), mons->pos(),
+                      mons->foe).set_summoned(mons, 3, spell_cast, god));
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
@@ -6876,10 +7014,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_call_of_chaos(*mons);
         return;
 
-    case SPELL_AURA_OF_BRILLIANCE:
-        simple_monster_message(*mons, " begins emitting a brilliant aura!");
-        mons->add_ench(ENCH_BRILLIANCE_AURA);
-        aura_of_brilliance(mons);
+    case SPELL_PRAYER_OF_BRILLIANCE:
+        _prayer_of_brilliance(mons);
         return;
 
     case SPELL_BIND_SOULS:
@@ -6970,6 +7106,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _cast_regenerate_other(mons);
         return;
 
+    case SPELL_BESTOW_ARMS:
+        _cast_bestow_arms(*mons);
+        return;
+
+    case SPELL_FULMINANT_PRISM:
+        _mons_cast_prisms(*mons, *mons->get_foe(),
+                          mons_spellpower(*mons, SPELL_FULMINANT_PRISM), false);
+        return;
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -7086,6 +7230,15 @@ static void _speech_keys(vector<string>& key_list,
             key_list.push_back(spell_name + cast_str + " real");
         if (mons_intel(*mons) >= I_HUMAN)
             key_list.push_back(spell_name + cast_str + " gestures");
+    }
+
+    // XXX: Give the final shot from hoarfrost cannonade a different message.
+    //      (If only I could see a nicer way to do this...)
+    if (spell == SPELL_HOARFROST_BULLET
+        && mons->props.exists(HOARFROST_SHOTS_KEY)
+        && mons->props[HOARFROST_SHOTS_KEY].get_int() == MAX_HOARFROST_SHOTS)
+    {
+        key_list.push_back(spell_name + cast_str + " finale");
     }
 
     key_list.push_back(spell_name + cast_str);
@@ -7998,9 +8151,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(handle_throw(mon, beam, true, true));
     }
 
-    case SPELL_FLASH_FREEZE:
-        return _foe_effect_viable(*mon, DUR_FROZEN, ENCH_FROZEN);
-
     case SPELL_BLACK_MARK:
         return ai_action::good_or_impossible(!mon->has_ench(ENCH_BLACK_MARK));
 
@@ -8180,16 +8330,16 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_CALL_OF_CHAOS:
         return ai_action::good_or_bad(_mons_call_of_chaos(*mon, true));
 
-    case SPELL_AURA_OF_BRILLIANCE:
+    case SPELL_PRAYER_OF_BRILLIANCE:
         if (!foe || !mon->can_see(*foe))
             return ai_action::bad();
 
-        if (mon->has_ench(ENCH_BRILLIANCE_AURA))
-            return ai_action::impossible();
-
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-            if (_valid_aura_of_brilliance_ally(mon, *mi))
+            if (_valid_prayer_of_brilliance_ally(mon, *mi)
+                && !mi->has_ench(ENCH_EMPOWERED_SPELLS))
+            {
                 return ai_action::good();
+            }
         return ai_action::bad();
 
     case SPELL_BIND_SOULS:
@@ -8240,13 +8390,43 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_impossible(
                 cast_manifold_assault(*mon, -1, false, false) != spret::abort);
 
+    case SPELL_BESTOW_ARMS:
+    {
+        // The self-buff acts as a sort of cooldown, also.
+        if (mon->has_ench(ENCH_ARMED))
+            return ai_action::impossible();
+
+        for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_ARMED)
+                && (mons_itemuse(**mi) >= MONUSE_STARTING_EQUIPMENT))
+            {
+                return ai_action::good();
+            }
+        }
+
+        return ai_action::impossible();
+    }
+
+    case SPELL_FULMINANT_PRISM:
+    {
+        // Only place prisms if none are already out
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_FULMINANT_PRISM && mi->summoner == mon->mid)
+                return ai_action::bad();
+        }
+
+        return ai_action::good_or_impossible(
+            _mons_cast_prisms(*mon, *mon->get_foe(), 100, true));
+    }
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
     case SPELL_DEATHS_DOOR:
-    case SPELL_FULMINANT_PRISM:
     case SPELL_DAZZLING_FLASH:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_TELEPORT_SELF:

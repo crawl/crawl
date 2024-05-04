@@ -1292,7 +1292,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
     spschool::conjuration | spschool::alchemy,
-    spflag::target | spflag::area | spflag::not_self,
+    spflag::target | spflag::area | spflag::not_self | spflag::no_ghost,
     4,
     200,
     4, 4,
@@ -1407,14 +1407,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_HELL_BEAST, "Summon Hell Beast",
+    SPELL_SUMMON_SIN_BEAST, "Summon Sin Beast",
     spschool::summoning,
     spflag::unholy | spflag::monster | spflag::selfench,
     4,
     0,
     -1, -1,
     0,
-    TILEG_SUMMON_HELL_BEAST,
+    TILEG_SUMMON_SIN_BEAST,
 },
 
 {
@@ -3054,7 +3054,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AURA_OF_BRILLIANCE, "Aura of Brilliance",
+    SPELL_PRAYER_OF_BRILLIANCE, "Prayer of Brilliance",
     spschool::conjuration,
     spflag::area | spflag::monster,
     5,
@@ -3918,14 +3918,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SEISMIC_CANNONADE, "Seismic Cannonade",
-    spschool::alchemy | spschool::earth,
+    SPELL_HOARFROST_CANNONADE, "Hoarfrost Cannonade",
+    spschool::alchemy | spschool::ice,
     spflag::none,
-    7,
+    5,
     200,
     -1, -1,
     0,
-    TILEG_SEISMIC_CANNONADE,
+    TILEG_HOARFROST_CANNONADE,
 },
 
 {
@@ -3940,14 +3940,47 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_STONE_BULLET, "Stone Bullet",
-    spschool::conjuration | spschool::earth,
+    SPELL_HOARFROST_BULLET, "Hoarfrost Bullet",
+    spschool::conjuration | spschool::ice,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
     6, 6,
     0,
-    TILEG_STONE_ARROW,
+    TILEG_THROW_ICICLE,
+},
+
+{
+    SPELL_FLASHING_BALESTRA, "Flashing Balestra",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_TUKIMAS_DANCE,
+},
+
+{
+    SPELL_BESTOW_ARMS, "Bestow Arms",
+    spschool::hexes,
+    spflag::area | spflag::utility | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_SHEZAS_DANCE,
+},
+
+{
+    SPELL_HELLFIRE_MORTAR, "Hellfire Mortar",
+    spschool::earth | spschool::fire,
+    spflag::dir_or_target | spflag::destructive,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    20,
+    TILEG_BOLT_OF_MAGMA,
 },
 
 {

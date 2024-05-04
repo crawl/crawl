@@ -123,7 +123,7 @@ function species_mock(e)
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
-    return "hell beast"
+    return "sin beast"
   elseif you.race() == "Djinni" then
     return "crimson imp"
   elseif you.race():find("Draconian") then
@@ -4331,6 +4331,34 @@ xxxXXX+CCCxxx
     x.@.x
 ENDMAP
 
+NAME:   dolorous_temple_overflow_order_and_chaos_3
+TAGS:   temple_overflow_2 temple_overflow_nemelex_xobeh temple_overflow_zin
+TAGS:   no_item_gen no_monster_gen no_trap_gen transparent decor
+KPROP:  12 = no_tele_into
+MONS:   generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
+MONS:   generate_awake angel god:zin dbname:zin_angel
+KFEAT:  A = altar_nemelex_xobeh
+KFEAT:  B = altar_zin
+KFEAT:  _ = floor
+TILE:   b = dngn_crystal_lightmagenta
+FTILE:  _ = floor_limestone
+COLOUR: b = lightmagenta
+COLOUR: _ = brown
+KMASK:  12 = opaque
+: set_feature_name("crystal_wall", "wall of pink crystal")
+: interest_check(_G)
+MAP
+ ....bbbb+vvvv....
+..bbbb..._...vvvv..
+.bb....U._.T....vv.
+.bmm....._.....mmv.
+.b1m..A.._..B..m2v.
+.bmm....._.....mmv.
+.bb....U._.T....vv.
+..bbbb..._...vvvv..
+ ....bbbb+vvvv....
+ENDMAP
+
 NAME:    grunt_temple_overflow_magic_moments
 TAGS:    temple_overflow_3 temple_overflow_kikubaaqudgha
 TAGS:    temple_overflow_sif_muna temple_overflow_vehumet
@@ -4784,6 +4812,43 @@ xxc..cdc..cxx
       @
 ENDMAP
 
+NAME:    dolorous_overflow_abandoned_chaos_spawn_temple
+TAGS:    temple_overflow_3 temple_overflow_xom
+TAGS:    temple_overflow_makhleb temple_overflow_nemelex_xobeh
+TAGS:    no_item_gen no_monster_gen no_trap_gen
+SHUFFLE: DEF
+KFEAT:   D = altar_xom
+KFEAT:   E = altar_makhleb
+KFEAT:   F = altar_nemelex_xobeh
+NSUBST:  G = 2:g / *:G
+NSUBST:  H = 1:+ / *:b
+NSUBST:  . = 1:i / *:.
+KPROP:   1 = no_tele_into
+MONS:    generate_awake chaos spawn
+KMONS:   g = pile of debris
+KITEM:   i = any damaged weapon ego:chaos ident:all
+COLOUR:  b = lightred
+TILE:    b = dngn_crystal_lightred
+TILE:    G = dngn_scintillating_statue
+: set_feature_name("crystal_wall", "wall of orange crystal")
+: set_feature_name("granite_statue", "scintillating statue")
+MAP
+   bbHbb
+ bbbb.bbbb
+bbb.....bbb
+H....G....H
+b.........b
+b..D...E..b
+b...mmm...b
+H.G.m1m.G.H
+b...mmm...b
+b....F....b
+b.........b
+H....G....H
+bbb.....bbb
+ bbbb.bbbb
+   bbHbb
+ENDMAP
 
 ### Variable overflow altars ##################################################
 

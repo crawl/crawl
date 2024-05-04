@@ -46,7 +46,7 @@ void init_pandemonium()
     for (int pc = 0; pc < PAN_MONS_ALLOC; ++pc)
     {
         env.mons_alloc[pc] = random_choose_weighted(5, MONS_SMOKE_DEMON,
-                                                    5, MONS_YNOXINUL,
+                                                    4, MONS_YNOXINUL,
                                                     5, MONS_ABOMINATION_LARGE,
                                                     5, MONS_SOUL_EATER,
                                                     5, MONS_DEMONIC_CRAWLER,
@@ -54,7 +54,7 @@ void init_pandemonium()
                                                     2, MONS_NEQOXEC,
                                                     5, MONS_CHAOS_SPAWN,
                                                     1, MONS_SHADOW_DEMON,
-                                                    1, MONS_LOROCYPROCA,
+                                                    2, MONS_SIN_BEAST,
                                                     1, MONS_HELLION,
                                                     1, MONS_TORMENTOR,
                                                     1, MONS_REAPER);

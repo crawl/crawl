@@ -1,6 +1,6 @@
 name: "torpor snail"
 glyph: {char: "w", colour: green}
-flags: [web_immune, no_skeleton]
+flags: [web_immune, no_skeleton, has_aura]
 xp_mult: 20
 genus: elephant_slug
 will: 80

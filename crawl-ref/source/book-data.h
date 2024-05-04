@@ -319,6 +319,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Winter
     SPELL_FROZEN_RAMPARTS,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_HOARFROST_CANNONADE,
     SPELL_ENGLACIATION,
 },
 
@@ -333,7 +334,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Armaments
     SPELL_STONE_ARROW,
     SPELL_ANIMATE_ARMOUR,
-    SPELL_SEISMIC_CANNONADE,
+    SPELL_HELLFIRE_MORTAR,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
@@ -526,8 +527,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Compendium of Siegecraft
     SPELL_BOULDER,
+    SPELL_HOARFROST_CANNONADE,
     SPELL_BOMBARD,
-    SPELL_SEISMIC_CANNONADE,
+    SPELL_HELLFIRE_MORTAR,
 },
 
 { // Book of Maladies

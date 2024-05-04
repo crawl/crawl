@@ -868,7 +868,7 @@ VISUAL:@The_monster@ [plays|frolics] in the surf!
 if you.can_smell() then
     return "VISUAL:A distinct wet dog smell emanates from @the_monster@."
 else
-    return "VISUAL:@The_monster@ motions as if to dry itself off on you."
+    return "VISUAL:@The_monster@ motions as if to dry @reflexive@ off on you."
 end
 }}
 
@@ -1801,17 +1801,23 @@ _Amaemon_rare_
 ############ ARACHNE ### Half-human half-spider
 Arachne
 
-@The_monster@ says @to_foe@, "Come to my web."
+@The_monster@ says, "Follow my lead, little ones."
+
+@The_monster@ says, "I resented this body once, but could any human make what I've made?"
+
+@The_monster@ snarls, "I will not be driven out again."
 
 @The_monster@ says @to_foe@, "Come closer, little fly."
 
-@The_monster@ says @to_foe@, "You'll find yourself a bit attached to my weave."
+@The_monster@ says @to_foe@, "I'm done suffering for art; you can suffer instead."
 
-@The_monster@ says @to_foe@, "No one escapes my webs."
+@The_monster@ says @to_foe@, "My silk is a match for both steel and spell."
+
+@The_monster@ says @to_foe@, "I will spin a new home for us all."
 %%%%
 Arachne triumphant
 
-@The_monster@ says, "All wrapped up."
+@The_monster@ shouts, "This is my domain now; anyone trespasses at their own peril!"
 %%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
@@ -2047,9 +2053,9 @@ brown
 
 burgundy
 
-caerulean
-
 cerise
+
+cerulean
 
 charcoal
 
@@ -2122,6 +2128,8 @@ scarlet
 silver
 
 sinopia
+
+smaragdine
 
 sorcerer's violet
 
@@ -3354,11 +3362,13 @@ _yredelemnul_Donald_
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
+@The_monster@ says, "Zombies? Skeletons? Spectral things? Don't you get bored without any real company?"
 
 @The_monster@ says, "Angels painted black are so last century."
 
 @The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
+
+@The_monster@ says, "What kind of torch can only be lit once per level?"
 
 @The_monster@ says, "How does that torch stay lit when you throw its fire all over?"
 
@@ -5506,7 +5516,7 @@ _Josephina_rare_
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL:One of @The_monster@'s icy fingers falls off.
+VISUAL:One of @the_monster@'s icy fingers falls off.
 
 @The_monster@ says @to_foe@, "I'll make a rug of your skin."
 
@@ -5704,7 +5714,7 @@ VISUAL:@The_monster@ smiles, but it's obviously fake.
 
 @The_monster@ says @to_foe@, "Fear not. I will immortalise you in the tale of my first kill."
 
-VISUAL:@The_monster@ gives herself a magical halo, but it quickly sputters out.
+VISUAL:@The_monster@ gives @reflexive@ a magical halo, but it quickly sputters out.
 
 @The_monster@ mumbles the words to a spell, but in the wrong order.
 %%%%
@@ -5720,7 +5730,7 @@ _Maggie_rare_
 
 @The_monster@ shouts @at_foe@, "Leave me alone!"
 
-@The_monster@ mutters to herself, "Master Lance won't take me back. This is the way forward."
+@The_monster@ mutters to @reflexive@, "Master Lance won't take me back. This is the way forward."
 ## END Maggie ##
 %%%%
 ############ MARA ### A powerful demon lord, Lord of Illusions
@@ -6946,7 +6956,7 @@ VISUAL:@The_monster@ beckons gently.
 
 VISUAL:@The_monster@ smiles kindly.
 
-VISUAL:A flash of anger passes briefly over @The_monster@'s face.
+VISUAL:A flash of anger passes briefly over @the_monster@'s face.
 
 VISUAL:@The_monster@ draws @possessive@ long claws delicately across @possessive@ gut.
 %%%%
@@ -7258,6 +7268,52 @@ Vashnia triumphant
 @The_monster@ says, "All clear. Let's check for more."
 ## END Vashnia ##
 %%%%
+############ Xak'krixis ### A formicid expeditionary alchemist
+Xak'krixis
+
+@The_monster@ ponders what role @player_genus_plural@ plays in the local ecosystem.
+
+@The_monster@ says, "I'll be sure to include this battle in my report!"
+
+@The_monster@ says, "We all must contribute to the advancement of science."
+
+@The_monster@ shouts @to_foe@, "You're giving me such wonderful data!"
+
+VISUAL:@The_monster@ furiously scribbles notes with a free limb.
+
+VISUAL:@The_monster@'s mandibles click thoughtfully.
+
+@The_monster@ says, "{{
+    if you.skill("Alchemy") >= 10 then
+      return "Ah, a fellow alchemist! Surely you'll appreciate what I've learned here."
+    else
+      return "Allow me to demonstrate my discoveries."
+    end }}" @player_only@
+
+w:20
+@_Xak'krixis_monster_thoughts_@
+
+%%%%
+_Xak'krixis_monster_thoughts_
+
+@The_monster@ muses, "Oh, to leap as freely as a jumping spider..."
+
+@The_monster@ muses, "Oh, to fly as furtive as a ghost moth..."
+
+@The_monster@ muses, "Oh, to shine as brightly as a sun moth..."
+
+@The_monster@ muses, "Oh, to be as impervious as an emperor scorpion..."
+
+@The_monster@ muses, "Oh, to inspire such passion as a moth of wrath..."
+
+@The_monster@ grumbles, "Oh, to ruin all my specimens like a blasted pharaoh ant..."
+
+%%%%
+Xak'krixis triumphant
+
+@The_monster@ says, "I'll be sure to list you as a co-author when my work is published!"
+## END Xak'krixis ##
+%%%%
 ############ XTAHUA ### An ancient fire dragon
 Xtahua
 
@@ -7376,7 +7432,7 @@ Bennu killed
 %%%%
 _Bennu_death_
 
-VISUAL:@The_monster@ renews itself in a burst of flame!
+VISUAL:@The_monster@ renews @reflexive@ in a burst of flame!
 %%%%
 Bennu permanently killed
 
@@ -7662,14 +7718,14 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
-################## Seismic cannon ##########################
-default seismic cannon
+################## Hoarfrost cannon ##########################
+default hoarfrost cannon
 
-@The_monster@ rumbles loudly.
+VISUAL: Water drips from @the_monster@'s barrel.
 
-VISUAL:The ground beneath @The_monster@ churns.
+VISUAL: A cold fog rises from @the_monster@.
 
-@The_monster@ makes a grinding noise.
+@The_monster@ makes a faint grinding noise.
 %%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A
@@ -8824,3 +8880,124 @@ VISUAL:@The_monster@'s armour gleams in the torchlight.
 w:1
 VISUAL:@The_monster@, chosen of Okawaru, glows resplendent with favour.
 %%%%
+#################################
+# Monsters who worship Nemelex Xobeh
+#################################
+goblin sharper
+
+VISUAL:@The_monster@ fiddles with @possessive@ portable altar.
+
+VISUAL:@The_monster@ shuffles one of @possessive@ decks.
+
+VISUAL:@The_monster@ fans some cards from one of @possessive@ decks.
+
+VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
+
+# Kenny Rogers, "The Gambler"
+@The_monster@ chants, "Know when to hold 'em, know when to fold 'em..."
+
+@The_monster@ praises @possessive_God@.
+
+@The_monster@ grins. "So many cards! Brought to you by @my_God@!"
+
+@The_monster@ fumbles a card and drops it. "Whoops!"
+
+@The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
+
+@_deck_of_destruction_line_@
+
+@_deck_of_escape_line_@
+
+@_deck_of_summoning_line_@
+
+@_deck_of_punishment_line_@
+%%%%
+_misplaced_card_
+
+w:20
+@_deck_of_oddities_card_@
+
+the Ace of Spades
+
+the Old Maid
+
+# Tarot
+the Hanged Man
+
+# Tarot via the Simpsons
+the Happy Squirrel
+
+# Uno
+Wild Draw Four
+%%%%
+# Nemelex's old Deck of Oddities; just names, not lines
+_deck_of_oddities_card_
+
+the Bargain
+
+the Curse
+
+Famine
+
+Focus
+
+the Feast
+
+the Genie
+
+the Helix
+
+Xom
+%%%%
+# Nemelex's deck of destruction
+_deck_of_destruction_line_
+
+@The_monster@ draws Degeneration. "So many ways to mutate things!"
+
+@The_monster@ draws the Orb. "Orbs of destruction hurt!"
+
+@The_monster@ draws Pain. "Necromancy hurts!"
+
+@The_monster@ draws the Storm. "Thunder and lightning everywhere!"
+
+@The_monster@ draws Vitriol. "Acid hurts!"
+
+@The_monster@ draws Wild Magic. "So many ways magic can go wrong!"
+%%%%
+# Nemelex's deck of escape
+_deck_of_escape_line_
+
+@The_monster@ draws the Cloud. "Smoke, smoke everywhere!"
+
+@The_monster@ draws the Elixir. "Healing and magic? Woohoo!"
+
+@The_monster@ draws Exile. "The Abyss is a horrible place!"
+
+@The_monster@ draws the Tomb. "I don't want to be sealed in with no windows!"
+
+# Kenny Rogers, "The Gambler"
+@The_monster@ draws Velocity. "Know when to walk away, know when to run."
+%%%%
+_deck_of_summoning_line_
+
+@The_monster@ draws the Dance. "Hope the weapon's aim is true!"
+
+@The_monster@ draws the Elements. "Elemental beasts everywhere!"
+
+@The_monster@ draws the Illusion. "I have a twin now!"
+
+@The_monster@ draws the Pentagram. "Hope the demon is friendly!"
+
+@The_monster@ draws the Rangers. "New friends who can shoot!"
+
+@The_monster@ draws the Swarm. "Bees, bees everywhere!"
+%%%%
+_deck_of_punishment_line_
+
+@The_monster@ draws the Swine. "I'm a pig now!"
+
+@The_monster@ draws Torment. "Half my health gone? Yikes!"
+
+@The_monster@ draws the Wraith. "Draining hurts!"
+
+@The_monster@ draws Wrath. "So many ways gods can punish you!"

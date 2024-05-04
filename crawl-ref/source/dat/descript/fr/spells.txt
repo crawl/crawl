@@ -753,7 +753,7 @@ Summon Fire Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires de feu.
 %%%%
-Summon Hell Beast spell
+Summon Sin Beast spell
 
 En utilisant sa corne, Geryon peut convoquer contre vous une meurtrière bête de
 l'enfer.

@@ -283,7 +283,7 @@ curling
 
 decrepit
 
-disorganized
+disorganised
 
 dog-eared
 
@@ -2780,7 +2780,7 @@ Septic
 
 Spagyric
 
-Synthesized
+Synthesised
 
 Toxic
 

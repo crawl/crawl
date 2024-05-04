@@ -792,7 +792,7 @@ faith mutation
 
 You were embalmed with holy oils and sacred spices and bound about with blessed
 cloth. Now you have a special connection with the divine, allowing you to gain
-favor with your chosen god more quickly.
+favour with your chosen god more quickly.
 %%%%
 devour on kill mutation
 

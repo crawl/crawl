@@ -3072,8 +3072,12 @@ try_again:
                     if (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD)
                         cloud_producing++;
 
-                    if (m == MUT_SPINY || m == MUT_FOUL_SHADOW)
+                    if (m == MUT_SPINY
+                        || m == MUT_FOUL_STENCH
+                        || m == MUT_FOUL_SHADOW)
+                    {
                         retaliation++;
+                    }
                 }
             }
 
@@ -3323,8 +3327,7 @@ void check_demonic_guardian()
                                MONS_SIXFIRHY, MONS_SUN_DEMON);
             break;
         case 4:
-            mt = random_choose(MONS_BALRUG, MONS_LOROCYPROCA,
-                               MONS_CACODEMON, MONS_HELL_BEAST);
+            mt = random_choose(MONS_BALRUG, MONS_CACODEMON, MONS_SIN_BEAST);
             break;
         case 5:
             mt = random_choose(MONS_EXECUTIONER, MONS_HELL_SENTINEL,

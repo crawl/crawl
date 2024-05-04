@@ -2286,6 +2286,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_VENGEANCE_TARGET, TILEI_VENGEANCE_TARGET },
     { MB_MAGNETISED, TILEI_BULLSEYE },  // Placeholder
     { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
+    { MB_ARMED, TILEI_UNDYING_ARMS },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2849,7 +2850,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_HORN_OF_GERYON;
 
     case MISC_BOX_OF_BEASTS:
-        return TILE_MISC_BOX_OF_BEASTS;
+        return evoker_charges(item.sub_type) ? TILE_MISC_BOX_OF_BEASTS
+                                             : TILE_MISC_BOX_OF_BEASTS_INERT;
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_CRYSTAL_BALL_OF_ENERGY:
@@ -2864,7 +2866,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_SACK_OF_SPIDERS;
 
     case MISC_GRAVITAMBOURINE:
-        return TILE_MISC_TAMBOURINE;
+        return evoker_charges(item.sub_type) ? TILE_MISC_TAMBOURINE
+                                             : TILE_MISC_TAMBOURINE_INERT;
 
     // Default for summary menus
     case NUM_MISCELLANY:
@@ -3292,8 +3295,13 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;
-        else if (bolt.name == "shard of ice")
+        else if (bolt.name == "shard of ice"
+                 || bolt.name == "shard of alchemical ice"
+                 || bolt.name == "salvo of alchemical ice"
+                    && !bolt.in_explosion_phase)
+        {
             return TILE_BOLT_ICICLE + dir;
+        }
         else if (bolt.name == "searing ray")
             return TILE_BOLT_SEARING_RAY;
         else if (bolt.name == "bolt of light"

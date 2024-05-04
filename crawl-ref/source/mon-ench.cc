@@ -30,10 +30,12 @@
 #include "losglobal.h"
 #include "message.h"
 #include "mon-abil.h"
+#include "mon-aura.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-explode.h"
+#include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
@@ -316,10 +318,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
         invalidate_agrid(true);
-        break;
-
-    case ENCH_FROZEN:
-        calc_speed();
         break;
 
     case ENCH_INVIS:
@@ -845,11 +843,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer unusually resistant.");
         break;
 
-    case ENCH_BRILLIANCE_AURA:
-        if (!quiet)
-            simple_monster_message(*this, " is no longer giving off an aura.");
-        break;
-
     case ENCH_EMPOWERED_SPELLS:
         if (!quiet)
             simple_monster_message(*this, " seems less brilliant.");
@@ -966,6 +959,21 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         scale_hp(100, touch_of_beogh_hp_mult(*this));
         break;
 
+    case ENCH_ARMED:
+        // Restore our previous weapon(s)
+        drop_item(MSLOT_WEAPON, false);
+        if (props.exists(OLD_ARMS_KEY))
+        {
+            give_specific_item(this, props[OLD_ARMS_KEY].get_item());
+            props.erase(OLD_ARMS_KEY);
+        }
+        if (props.exists(OLD_ARMS_ALT_KEY))
+        {
+            give_specific_item(this, props[OLD_ARMS_ALT_KEY].get_item());
+            props.erase(OLD_ARMS_ALT_KEY);
+        }
+        break;
+
     default:
         break;
     }
@@ -974,6 +982,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 bool monster::lose_ench_levels(const mon_enchant &e, int lev, bool infinite)
 {
     if (!lev)
+        return false;
+
+    // Check if this enchantment is being sustained by someone, and don't decay
+    // in that case.
+    if (e.ench_is_aura && aura_is_active(*this, e.ench))
         return false;
 
     if (e.duration >= INFINITE_DURATION && !infinite)
@@ -995,6 +1008,11 @@ bool monster::lose_ench_levels(const mon_enchant &e, int lev, bool infinite)
 bool monster::lose_ench_duration(const mon_enchant &e, int dur)
 {
     if (!dur)
+        return false;
+
+    // Check if this enchantment is being sustained by someone, and don't decay
+    // in that case.
+    if (e.ench_is_aura && aura_is_active(*this, e.ench))
         return false;
 
     if (e.duration >= INFINITE_DURATION)
@@ -1046,15 +1064,6 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     const int spd = (me.ench == ENCH_HELD) ? speed :
                                              10;
     int actdur = speed_to_duration(spd);
-
-    // Don't let ENCH_SLOW time out while a torpor snail is around.
-    if (en == ENCH_SLOW)
-    {
-        if (torpor_slowed())
-            actdur = min(actdur, me.duration - 1);
-        else
-            props.erase(TORPOR_SLOWED_KEY);
-    }
 
     if (lose_ench_duration(me, actdur))
         return true;
@@ -1286,7 +1295,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FRENZIED:
         if (decay_enchantment(en))
         {
-            simple_monster_message(*this, " is no longer in an wild frenzy.");
+            simple_monster_message(*this, " is no longer in a wild frenzy.");
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
@@ -1355,7 +1364,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_GOLD_LUST:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
-    case ENCH_BRILLIANCE_AURA:
     case ENCH_EMPOWERED_SPELLS:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
@@ -1371,6 +1379,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PROTEAN_SHAPESHIFTING:
     case ENCH_CURSE_OF_AGONY:
     case ENCH_MAGNETISED:
+    case ENCH_REPEL_MISSILES:
         decay_enchantment(en);
         break;
 
@@ -1708,10 +1717,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
-            || me.agent()->mid == MID_ANON_FRIEND
-            // XXX: A bit of a hack to end injury bond on allies of a martyred
-            //      shade that became a flayed ghost.
-            || me.agent()->type == MONS_FLAYED_GHOST)
+            || me.agent()->mid == MID_ANON_FRIEND)
         {
             del_ench(ENCH_INJURY_BOND, true, false);
         }
@@ -1873,6 +1879,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_RIMEBLIGHT:
         tick_rimeblight(*this);
+        if (!alive())
+            return;
         // Instakill at <=20% max hp
         if (hit_points * 5 <= max_hit_points)
         {
@@ -1881,6 +1889,13 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         else if (decay_enchantment(en))
             simple_monster_message(*this, " recovers from rimeblight.");
+        break;
+
+    case ENCH_ARMED:
+        // Remove this whenever the armoury stops being around;
+        if (!me.agent())
+            del_ench(en);
+        decay_enchantment(en);
         break;
 
     default:
@@ -2108,9 +2123,9 @@ static const char *enchant_names[] =
     "resistant", "hexed",
 #if TAG_MAJOR_VERSION == 34
     "corpse_armour",
-    "chanting_fire_storm", "chanting_word_of_entropy",
+    "chanting_fire_storm", "chanting_word_of_entropy", "aura_of_brilliance",
 #endif
-    "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
+    "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed",
 #if TAG_MAJOR_VERSION == 34
@@ -2133,6 +2148,7 @@ static const char *enchant_names[] =
     "touch_of_beogh", "vengeance_target",
     "rimeblight",
     "magnetised",
+    "armed",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2155,8 +2171,8 @@ enchant_type name_to_ench(const char *name)
 }
 
 mon_enchant::mon_enchant(enchant_type e, int deg, const actor* a,
-                         int dur)
-    : ench(e), degree(deg), duration(dur), maxduration(0)
+                         int dur, ench_aura_type is_aura)
+    : ench(e), degree(deg), duration(dur), maxduration(0), ench_is_aura(is_aura)
 {
     if (a)
     {
@@ -2393,13 +2409,10 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_FROZEN:
-        cturn = 3 * 10 / _mod_speed(10, mons->speed);
-        break;
-    case ENCH_BRILLIANCE_AURA:
-        cturn = 20 * 10 / _mod_speed(10, mons->speed);
+        cturn = 5 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_EMPOWERED_SPELLS:
-        cturn = 20 * 10 / _mod_speed(10, mons->speed);
+        cturn = 35 * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_NECROTISE:
         return 10;

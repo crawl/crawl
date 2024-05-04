@@ -45,7 +45,7 @@ enum band_type
     BAND_HELL_RATS,
     BAND_DREAM_SHEEP,
     BAND_GHOULS,
-    BAND_DEEP_TROLLS,
+    BAND_PRESERVER,
     BAND_DEEP_TROLL_SHAMAN,
     BAND_HOGS,
     BAND_HELL_HOGS,
@@ -131,6 +131,7 @@ enum band_type
     BAND_LATE_ROKA,
     BAND_WEEPING_SKULLS,
     BAND_THERMIC_DYNAMOS,
+    BAND_ORB_SPIDERS,
     NUM_BANDS                   // always last
 };
 

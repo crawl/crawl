@@ -41,12 +41,23 @@ w:12
 w:45
 @_other_orcish_name_@
 %%%%
-# some specials for orcish priests
-orc high priest name
+orc apostle warrior name
 
-@orc priest name@
+w:1
+Orconan
+
+w:50
+@orc name@
 %%%%
-orc priest name
+orc apostle wizard name
+
+w:1
+Simorc Magus
+
+w:50
+@orc name@
+%%%%
+orc apostle priest name
 
 # Watch out! :p
 w:1

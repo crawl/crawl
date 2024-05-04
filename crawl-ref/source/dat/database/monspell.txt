@@ -196,7 +196,7 @@ Call Lost Souls cast
 %%%%
 Haste Plants cast
 
-@The_monster@ empowers the plants around itself!
+@The_monster@ empowers the plants around @reflexive@!
 %%%%
 Major Destruction cast
 
@@ -542,7 +542,7 @@ Primal Wave Norris cast
 %%%%
 Draining Gaze Norris cast
 
-Something numinous underneath @The_monster@'s waves suddenly gazes at @target@.
+Something numinous underneath @the_monster@'s waves suddenly gazes at @target@.
 
 @The_monster@'s eyes shimmer, overwhelming @target@ with visions from beyond.
 %%%%
@@ -718,17 +718,17 @@ Splinterspray cast
 %%%%
 Crystallizing Shot crystal guardian cast
 
-@The_monster@ fires a shard of itself @at@ @target@.
+@The_monster@ fires a shard of @reflexive@ @at@ @target@.
 %%%%
 Rebounding Blaze thermic dynamo cast
 
-A wild whirl of fire shoots out from @The_monster@ @at@ @target@.
+A wild whirl of fire shoots out from @the_monster@ @at@ @target@.
 
-@The_monster@ overcharges itself and releases excess heat @at@ @target@.
+@The_monster@ overcharges @reflexive@ and releases excess heat @at@ @target@.
 %%%%
 Rebounding Chill thermic dynamo cast
 
-A wild whirl of ice shoots out from @The_monster@ @at@ @target@.
+A wild whirl of ice shoots out from @the_monster@ @at@ @target@.
 
 @The_monster@ overflows with ice and vents excess cold @at@ @target@.
 %%%%
@@ -937,6 +937,14 @@ Vanquished Vanguard Nergalle cast
 @The_monster@ cries out, "Spectres! Fight for the home you helped make!"
 
 %%%%
+force lance polterguardian cast
+
+@The_monster@ focuses its will @at@ @target@.
+%%%%
+flashing balestra undying armoury cast
+
+A weapon leaps out from @the_monster@ and lunges @at@ @target@!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -1026,7 +1034,7 @@ Corrupting Pulse wretched star cast
 %%%%
 living spell cast
 
-@The_monster@ casts itself @at@ @target@.
+@The_monster@ casts @reflexive@ @at@ @target@.
 %%%%
 bombardier beetle cast
 
@@ -1036,9 +1044,18 @@ sun moth cast
 
 @The_monster@'s wings beat fiercely.
 %%%%
-seismic cannon cast
+Hoarfrost Bullet cast finale
 
-@The_monster@ launches a salvo of rock.
+@The_monster@ launches the last of @reflexive@ @at@ @target@ with a shrill rumble.
+%%%%
+Hoarfrost Bullet cast
+
+@The_monster@ fires a salvo of icy shards.
+%%%%
+Hellfire mortar cast
+
+@The_monster@ blasts a torrent of magma @at@ @target@.
+%%%%
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

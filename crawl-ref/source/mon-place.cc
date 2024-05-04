@@ -1206,6 +1206,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
+    if (mg.cls == MONS_ABOMINATION_SMALL || mg.cls == MONS_ABOMINATION_LARGE)
+    {
+        enchant_type buff = random_choose(ENCH_MIGHT, ENCH_HASTE, ENCH_REGENERATION);
+        mon->add_ench(mon_enchant(buff, 0, 0, INFINITE_DURATION));
+    }
+
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
         mon->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
@@ -1935,7 +1941,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_TARANTELLA,      { {2}, {{ BAND_TARANTELLA, {1, 5} }}}},
     { MONS_VAULT_WARDEN,    { {}, {{ BAND_YAKTAURS, {2, 6}, true },
                                    { BAND_VAULT_WARDEN, {2, 5}, true }}}},
-    { MONS_IRONBOUND_PRESERVER, { {}, {{ BAND_DEEP_TROLLS, {3, 6}, true }}}},
+    { MONS_IRONBOUND_PRESERVER, { {}, {{ BAND_PRESERVER, {3, 6}, true }}}},
     { MONS_TENGU_CONJURER,  { {2}, {{ BAND_TENGU, {1, 2} }}}},
     { MONS_TENGU_WARRIOR,   { {2}, {{ BAND_TENGU, {1, 2} }}}},
     { MONS_SOJOBO,          { {}, {{ BAND_SOJOBO, {2, 3}, true }}}},
@@ -1958,6 +1964,10 @@ static const map<monster_type, band_set> bands_by_leader = {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
+    { MONS_POLTERGUARDIAN,  { {2, 0, []() {
+        return branch_has_monsters(you.where_are_you)
+            || !vault_mon_types.empty();
+    }},                           {{ BAND_RANDOM_SINGLE, {1, 3} }}}},
     { MONS_CEREBOV,         { {}, {{ BAND_CEREBOV, {5, 8}, true }}}},
     { MONS_GLOORX_VLOQ,     { {}, {{ BAND_GLOORX_VLOQ, {5, 8}, true }}}},
     { MONS_MNOLEG,          { {}, {{ BAND_MNOLEG, {5, 8}, true }}}},
@@ -2001,6 +2011,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_NORRIS,           { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
     { MONS_UFETUBUS,         { {}, {{ BAND_UFETUBI, {1, 2} }}}},
     { MONS_KOBOLD_BLASTMINER, { {}, {{ BAND_BLASTMINER, {0, 2} }}}},
+    { MONS_ARACHNE,          { {}, {{ BAND_ORB_SPIDERS, {2, 4}}}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
@@ -2244,7 +2255,9 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
-    { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
+    { BAND_PRESERVER,           {{{MONS_DEEP_TROLL, 10},
+                                  {MONS_POLTERGUARDIAN, 2}},
+                                {{MONS_DEEP_TROLL, 1}}}},
     { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
@@ -2393,6 +2406,10 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                  {MONS_IRONBOUND_THUNDERHULK, 2},
                                  {MONS_VAULT_GUARD, 20}},
 
+        // 25% chance of a polterguardian
+                                {{MONS_POLTERGUARDIAN, 1},
+                                 {MONS_VAULT_GUARD, 4}},
+
                                 {{MONS_VAULT_GUARD, 1}}}},
 
     { BAND_FAUN_PARTY,          {{{MONS_MERFOLK_SIREN, 1}},
@@ -2506,7 +2523,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
 
     { BAND_WARMONGER,           {{{MONS_EXECUTIONER, 1},
-                                  {MONS_REAPER, 3}},
+                                  {MONS_SIN_BEAST, 3}},
 
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
@@ -2521,7 +2538,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
 
-    { BAND_BLACK_SUN,           {{{MONS_LOROCYPROCA, 1},
+    { BAND_BLACK_SUN,           {{{MONS_REAPER, 1},
                                   {MONS_SOUL_EATER, 1}},
 
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
@@ -2532,6 +2549,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
     // for Norris
     { BAND_SKYSHARKS,           {{{MONS_SKYSHARK, 1}}}},
+    // for Arachne
+    { BAND_ORB_SPIDERS,         {{{MONS_ORB_SPIDER, 1}}}},
 };
 
 /**
@@ -3059,10 +3078,9 @@ monster_type random_demon_by_tier(int tier)
                              MONS_BLIZZARD_DEMON,
                              MONS_BALRUG,
                              MONS_CACODEMON,
-                             MONS_HELL_BEAST,
+                             MONS_SIN_BEAST,
                              MONS_HELLION,
                              MONS_REAPER,
-                             MONS_LOROCYPROCA,
                              MONS_TORMENTOR,
                              MONS_SHADOW_DEMON);
     case 1:

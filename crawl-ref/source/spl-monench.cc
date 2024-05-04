@@ -15,6 +15,7 @@
 #include "fight.h"
 #include "losglobal.h"
 #include "message.h"
+#include "mon-tentacle.h"
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf
 #include "terrain.h"
@@ -32,12 +33,19 @@ int englaciate(coord_def where, int pow, actor *agent)
 
     monster* mons = victim->as_monster();
 
-    if (victim->res_cold() > 0
-        || victim->is_stationary())
+    // Skip some ineligable monster categories
+    if (mons &&
+        (mons_is_conjured(mons->type) || mons_is_firewood(*mons)
+        || mons_is_tentacle_segment(mons->type)))
+    {
+        return 0;
+    }
+
+    if (victim->res_cold() > 0)
     {
         if (!mons)
             canned_msg(MSG_YOU_UNAFFECTED);
-        else if (!mons_is_firewood(*mons))
+        else
             simple_monster_message(*mons, " is unaffected.");
         return 0;
     }
@@ -107,8 +115,7 @@ bool do_slow_monster(monster& mon, const actor* agent, int dur)
     if (mon.stasis())
         return true;
 
-    if (!mon.is_stationary()
-        && mon.add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
+    if (mon.add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
         if (!mon.paralysed() && !mon.petrified()
             && simple_monster_message(mon, " seems to slow down."))
@@ -226,6 +233,20 @@ string describe_rimeblight_damage(int pow, bool terse)
                         shards_damage.num, shards_damage.size);
 }
 
+bool maybe_spread_rimeblight(monster& victim, int power)
+{
+    if (victim.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+        && !victim.has_ench(ENCH_RIMEBLIGHT)
+        && x_chance_in_y(2, 3)
+        && you.see_cell_no_trans(victim.pos()))
+    {
+        apply_rimeblight(victim, power);
+        return true;
+    }
+
+    return false;
+}
+
 bool apply_rimeblight(monster& victim, int power, bool quiet)
 {
     if (victim.has_ench(ENCH_RIMEBLIGHT)
@@ -234,7 +255,7 @@ bool apply_rimeblight(monster& victim, int power, bool quiet)
         return false;
     }
 
-    int duration = (random_range(5, 9) + div_rand_round(power, 20))
+    int duration = (random_range(6, 10) + div_rand_round(power, 30))
                     * BASELINE_DELAY;
     victim.add_ench(mon_enchant(ENCH_RIMEBLIGHT, 0, &you, duration));
     victim.props[RIMEBLIGHT_POWER_KEY] = power;
@@ -268,10 +289,10 @@ void tick_rimeblight(monster& victim)
 
     // Determine chance to explode with ice (rises over time)
     // Never happens below 3, always happens at 4, random chance beyond that
-    if (ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16))
+    if (ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16)
+        && you.see_cell_no_trans(victim.pos()))
     {
-        if (you.can_see(victim))
-            mprf("Shards of ice erupt from the %s body!", victim.name(DESC_ITS).c_str());
+        mprf("Shards of ice erupt from %s body!", apostrophise(victim.name(DESC_THE)).c_str());
         do_rimeblight_explosion(victim.pos(), pow, 1);
     }
 

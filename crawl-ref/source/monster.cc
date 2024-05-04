@@ -1532,6 +1532,10 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
 
 bool monster::wants_weapon(const item_def &weap) const
 {
+    // Don't swap out undying armoury weapons for anything else.
+    if (has_ench(ENCH_ARMED))
+        return false;
+
     if (!could_wield(weap))
         return false;
 
@@ -3163,12 +3167,6 @@ int monster::base_armour_class() const
         return _zombie_ac_modifier(type) + base_ac;
     }
 
-    // abominations are weird.
-    if (type == MONS_ABOMINATION_LARGE)
-        return min(20, 7 + get_hit_dice() / 2);
-    if (type == MONS_ABOMINATION_SMALL)
-        return min(10, 3 + get_hit_dice() * 2 / 3);
-
     // Hepliaklqana ancestors scale with xl.
     if (mons_is_hepliaklqana_ancestor(type))
     {
@@ -3298,12 +3296,6 @@ int monster::base_evasion() const
 
         return _zombie_ev_modifier(type) + base_ev;
     }
-
-    // abominations are weird.
-    if (type == MONS_ABOMINATION_LARGE)
-        return min(20, 2 * get_hit_dice() / 3);
-    if (type == MONS_ABOMINATION_SMALL)
-        return min(10, 4 + get_hit_dice());
 
     const int base_ev = get_monster_data(type)->ev;
 
@@ -5123,7 +5115,8 @@ bool monster::is_stationary() const
 
 bool monster::can_burrow() const
 {
-    return mons_class_flag(type, M_BURROWS);
+    return mons_class_flag(type, M_BURROWS)
+           && (type == MONS_DISSOLUTION || behaviour != BEH_WANDER);
 }
 
 /**
@@ -5256,6 +5249,7 @@ static bool _mons_is_skeletal(int mc)
            || mc == MONS_WEEPING_SKULL
            || mc == MONS_LAUGHING_SKULL
            || mc == MONS_CURSE_SKULL
+           || mc == MONS_MARROWCUDA
            || mc == MONS_MURRAY;
 }
 
@@ -5695,7 +5689,8 @@ int monster::energy_cost(energy_use_type et, int div, int mult) const
     }
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
-        energy_loss += 4;
+        energy_loss = energy_loss * 2;
+
     return energy_loss;
 }
 
@@ -6469,6 +6464,7 @@ bool monster::angered_by_attacks() const
             && !mons_class_is_zombified(type)
             && !is_divine_companion()
             && type != MONS_SPELLFORGED_SERVITOR
+            && type != MONS_HOARFROST_CANNON
             && type != MONS_BLOCK_OF_ICE
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)

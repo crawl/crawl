@@ -275,7 +275,7 @@ mset(spec_fn(function ()
   local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
          "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
-         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
+         "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 
 mset(spec_fn(function ()
@@ -374,8 +374,9 @@ mset(with_props(spec_fn(function ()
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
-         "crystal guardian w:" .. e .. " / iron dragon w:" .. e .. " / " ..
-         "iron giant w:" .. f .. " / hell sentinel w:" .. f
+         "iron dragon w:" .. d .. " / crystal guardian w:" .. e .. " / " ..
+         "undying armoury w:" .. e .. " / iron giant w:" .. f .. " / " ..
+         "hell sentinel w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -505,7 +506,7 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
   local g = 0 + you.zigs_completed() * 2
   return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
          "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
-         "place:Hell w:100 / hell beast w:" .. e .. " / " ..
+         "place:Hell w:100 / sin beast w:" .. e .. " / " ..
          "hellion w:5 / tormentor w:5 / greater demon w:" .. f .. " / " ..
          "shard shrike w:" .. g .. " / quicksilver elemental w:" .. g .. " / " ..
          "searing wretch w:" .. g .. " / silent spectre w:" .. g

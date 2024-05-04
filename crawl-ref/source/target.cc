@@ -2086,7 +2086,7 @@ targeter_englaciate::targeter_englaciate()
 bool targeter_englaciate::affects_monster(const monster_info& mon)
 {
     return get_resist(mon.resists(), MR_RES_COLD) <= 0
-           && !mons_class_flag(mon.type, M_STATIONARY);
+           && !mons_is_conjured(mon.type) && !mons_class_is_firewood(mon.type);
 }
 
 targeter_fear::targeter_fear()
@@ -2386,7 +2386,7 @@ bool targeter_gavotte::set_aim(coord_def a)
     bolt tempbeam = beam;
     tempbeam.target = a;
     tempbeam.aimed_at_spot = false;
-    tempbeam.range = GAVOTTE_DISTANCE;
+    tempbeam.range = you.is_stationary() || you.stasis() ? 0 : GAVOTTE_DISTANCE;
     tempbeam.path_taken.clear();
     tempbeam.fire();
     path_taken = tempbeam.path_taken;
@@ -2483,25 +2483,57 @@ aff_type targeter_magnavolt::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_seismic_shockwave::targeter_seismic_shockwave(const actor* act, int _cannon_range) :
-    targeter_smite(act, LOS_RADIUS, 2, 2, true, nullptr), cannon_range(_cannon_range)
+targeter_mortar::targeter_mortar(const actor* act, int max_range) :
+    targeter_beam(act, max_range, ZAP_HELLFIRE_MORTAR_DIG, 0, 0, 0)
 {
-    cannon_pos = get_charged_cannon_pos(*act);
+    beam.origin_spell = SPELL_HELLFIRE_MORTAR;
 }
 
-bool targeter_seismic_shockwave::valid_aim(coord_def a)
+bool targeter_mortar::can_affect_unseen()
 {
-    if (!targeter_smite::valid_aim(a))
-        return false;
+    return true;
+}
 
-    for (coord_def cannon : cannon_pos)
+bool targeter_mortar::affects_monster(const monster_info& /*mon*/)
+{
+    return false;
+}
+
+bool targeter_mortar::can_affect_walls()
+{
+    return true;
+}
+
+aff_type targeter_mortar::is_affected(coord_def loc)
+{
+    aff_type current = AFF_YES;
+    bool hit_barrier = false;
+    for (auto pc : path_taken)
     {
-        if (grid_distance(a, cannon) <= cannon_range
-            && cell_see_cell(a, cannon, LOS_NO_TRANS))
+        if (hit_barrier)
+            return AFF_NO; // some previous iteration hit a barrier
+        current = AFF_YES;
+        // uses comparison to DNGN_UNSEEN so that this works sensibly with magic
+        // mapping etc. TODO: console tracers use the same symbol/color as
+        // mmapped walls.
+        if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
         {
-            return true;
-        }
-    }
+            if (cell_is_solid(pc) && !beam.can_affect_wall(pc)
+                || (monster_at(pc) && you.can_see(*monster_at(pc))
+                    && !beam.ignores_monster(monster_at(pc))))
+            {
+                current = AFF_NO;
+                hit_barrier = true;
+            }
+            else if (!cell_is_solid(pc))
+                current = AFF_TRACER;
 
-    return notify_fail("Not in range of any cannon.");
+            // otherwise, default to AFF_YES
+        }
+        // unseen squares default to AFF_YES
+        if (pc == loc)
+            return current;
+    }
+    // path never intersected loc at all
+    return AFF_NO;
 }

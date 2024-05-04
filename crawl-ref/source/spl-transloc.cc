@@ -2145,7 +2145,7 @@ static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
 
     if (victim.is_monster() && !god_prot)
     {
-        behaviour_event(victim.as_monster(), ME_ANNOY, &you, you.pos());
+        behaviour_event(victim.as_monster(), ME_ALERT, &you, you.pos());
         victim.as_monster()->speed_increment -= 10;
     }
 
@@ -2222,9 +2222,16 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
 
     mprf("Gravity reorients to the %s!", dir_msg.c_str());
 
-    // Gather all monsters we will be moving
+    if (you.stasis())
+        canned_msg(MSG_STRANGE_STASIS);
+
+    // Gather all actors we will be moving
     vector<actor*> targs;
-    targs.push_back(&you);
+
+    // Don't move stationary players (or formicids)
+    if (!you.is_stationary() && !you.stasis())
+        targs.push_back(&you);
+
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))

@@ -53,7 +53,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_REPEL_MISSILES,
     ENCH_RESISTANCE,
     ENCH_HEXED,
-    ENCH_BRILLIANCE_AURA,
     ENCH_EMPOWERED_SPELLS,
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,

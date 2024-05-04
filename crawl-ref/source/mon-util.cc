@@ -95,6 +95,7 @@ static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
 #define MONDATASIZE ARRAYSZ(mondata)
 
+static bool _give_apostle_proper_name(monster& mon, apostle_type type);
 static int _mons_exp_mod(monster_type mclass);
 
 // Macro that saves some typing, nothing more.
@@ -889,6 +890,7 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON
            || mc == MONS_LIGHTNING_SPIRE
+           || mc == MONS_HOARFROST_CANNON
            || mc == MONS_CREEPING_INFERNO;
 }
 
@@ -1396,7 +1398,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
 
     // For Pandemonium lords, almost everything is fair game. It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
-    if (mc != MONS_HELL_BEAST && mc != MONS_MUTANT_BEAST)
+    if (mc != MONS_SIN_BEAST && mc != MONS_MUTANT_BEAST)
         return true;
 
     switch (shout)
@@ -1936,7 +1938,7 @@ static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
         case BF_OX:
             return { AT_TRAMPLE, AF_TRAMPLE, dam };
         case BF_WEIRD:
-            return { AT_CONSTRICT, AF_CRUSH, dam };
+            return { AT_CONSTRICT, AF_CRUSH, dam * 2 / 5};
         default:
             return { };
     }
@@ -2881,15 +2883,6 @@ void define_monster(monster& mons, bool friendly)
 
     switch (mcls)
     {
-    // Please keep describe.cc in sync if you change abominations.
-    case MONS_ABOMINATION_SMALL:
-        hd = 4 + random2(4);
-        break;
-
-    case MONS_ABOMINATION_LARGE:
-        hd = 8 + random2(4);
-        break;
-
     case MONS_SLIME_CREATURE:
         // Slime creatures start off as only single un-merged blobs.
         mons.blob_size = 1;
@@ -3014,13 +3007,13 @@ void define_monster(monster& mons, bool friendly)
         else
             mons.props[TILE_NUM_KEY].get_short() = 200;
 
-        give_monster_proper_name(mons);
+        _give_apostle_proper_name(mons, type);
 
         // Reroll our name until it is different from all player apostle names,
         // to try and lessen possible confusion if they end up with two that
         // have identical names.
         while (!apostle_has_unique_name(mons))
-            give_monster_proper_name(mons);
+            _give_apostle_proper_name(mons, type);
 
         break;
     }
@@ -3261,6 +3254,19 @@ static string _get_proper_monster_name(const monster& mon)
 bool give_monster_proper_name(monster& mon)
 {
     mon.mname = _get_proper_monster_name(mon);
+    if (!mon.props.exists(DBNAME_KEY))
+        mon.props[DBNAME_KEY] = mons_class_name(mon.type);
+
+    return mon.is_named();
+}
+
+// Names an orc apostle (will rename it if it already had a name)
+static bool _give_apostle_proper_name(monster& mon, apostle_type type)
+{
+    string apostle_key = "orc apostle " + apostle_type_names[type] + " name";
+    mon.mname = getRandMonNameString(apostle_key);
+
+    // XXX: The rest of this is duplicated from give_monster_proper_name().
     if (!mon.props.exists(DBNAME_KEY))
         mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 
@@ -3959,7 +3965,7 @@ bool monster_shover(const monster& m)
     if (!mons_can_use_stairs(m) && !m.is_summoned())
         return false;
 
-    // Geryon really profits from *not* pushing past hell beasts.
+    // Geryon really profits from *not* pushing past sin beasts.
     if (m.type == MONS_GERYON)
         return false;
     // Likewise, Robin and her mob.

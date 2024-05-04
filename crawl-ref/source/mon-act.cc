@@ -1109,6 +1109,79 @@ static void _handle_boulder_movement(monster& boulder)
         _swim_or_move_energy(boulder);
 }
 
+static void _handle_hellfire_mortar(monster& mortar)
+{
+    // First, fire a bolt of magma at some random target we have line of fire to
+    vector<coord_def> targs;
+    for (monster_near_iterator mi(&mortar, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_aligned(&mortar, *mi) && monster_los_is_valid(&mortar, *mi))
+        {
+            bolt tracer = mons_spell_beam(&mortar, SPELL_BOLT_OF_MAGMA, 100);
+            tracer.source = mortar.pos();
+            tracer.target = mi->pos();
+
+            fire_tracer(&mortar, tracer);
+            if (mons_should_fire(tracer))
+                targs.push_back(mi->pos());
+        }
+    }
+
+    shuffle_array(targs);
+
+    const unsigned int count = min(2, (int)targs.size());
+    for (unsigned int i = 0; i < count; ++i)
+    {
+        bolt beam;
+        setup_mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA);
+        beam.target = targs[i];
+        mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA,
+                    mortar.spell_slot_flags(SPELL_BOLT_OF_MAGMA));
+    }
+
+    // Then try to advance one tile further along our movement path.
+    // If we cannot (either because our path has ended, or we're blocked), die.
+    CrawlVector& path = mortar.props[HELLFIRE_PATH_KEY].get_vector();
+    for (unsigned int i = 0; i < path.size(); ++i)
+    {
+        if (path[i].get_coord() == mortar.pos())
+        {
+            // We've reached the end of our path.
+            if (i + 1 == path.size())
+            {
+                simple_monster_message(mortar, " sinks back into the magma.");
+                monster_die(mortar, KILL_MISC, true);
+                return;
+            }
+
+            coord_def new_pos = path[i+1].get_coord();
+
+            // We're blocked!
+            if (env.grid(new_pos) != DNGN_LAVA || actor_at(new_pos))
+            {
+                const string reason = actor_at(new_pos)
+                                        ? actor_at(new_pos)->name(DESC_THE).c_str()
+                                        : article_a(feat_type_name(env.grid(new_pos)));
+
+                if (you.can_see(mortar))
+                {
+                    mprf("%s collides with %s and sinks back into the magma.",
+                         mortar.name(DESC_THE).c_str(),
+                         reason.c_str());
+                }
+
+                monster_die(mortar, KILL_MISC, true);
+                return;
+            }
+
+            if (!_do_move_monster(mortar, new_pos - mortar.pos()))
+                mortar.lose_energy(EUT_ATTACK);
+
+            break;
+        }
+    }
+}
+
 static void _check_blazeheart_golem_link(monster& mons)
 {
     // Check distance from player. If we're non-adjacent, decrease timer
@@ -1214,7 +1287,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
         || mons->caught()
-        || mons_is_confused(*mons))
+        || mons_is_confused(*mons)
+        || (mons->has_ench(ENCH_ARMED)
+            && mons->weapon()
+            && !is_range_weapon(*mons->weapon())))
     {
         return false;
     }
@@ -1227,7 +1303,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     const bool prefer_ranged_attack
-        = mons_class_flag(mons->type, M_PREFER_RANGED);
+        = mons_class_flag(mons->type, M_PREFER_RANGED)
+          || (mons->has_ench(ENCH_ARMED)
+              && mons->weapon()
+              && is_range_weapon(*mons->weapon()));
 
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
@@ -1762,6 +1841,12 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->type == MONS_HELLFIRE_MORTAR)
+    {
+        _handle_hellfire_mortar(*mons);
+        return;
+    }
+
     if (mons->type == MONS_BLAZEHEART_CORE)
     {
         mons->suicide();
@@ -1839,9 +1924,6 @@ void handle_monster_move(monster* mons)
         mons->speed_increment -= non_move_energy;
         return;
     }
-
-    if (mons->has_ench(ENCH_BRILLIANCE_AURA))
-        aura_of_brilliance(mons);
 
     if (you.duration[DUR_GOZAG_GOLD_AURA]
         && have_passive(passive_t::gold_aura)
@@ -2178,48 +2260,6 @@ static void _ancient_zyme_sicken(monster* mons)
     }
 }
 
-/**
- * Apply the torpor snail slowing effect.
- *
- * @param mons      The snail applying the effect.
- */
-static void _torpor_snail_slow(monster* mons)
-{
-    // XXX: might be nice to refactor together with _ancient_zyme_sicken().
-    // XXX: also with torpor_slowed().... so many duplicated checks :(
-
-    if (is_sanctuary(mons->pos()) || mons->props.exists(KIKU_WRETCH_KEY))
-        return;
-
-    if (!is_sanctuary(you.pos())
-        && !you.stasis()
-        && !mons->wont_attack()
-        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
-    {
-        if (!you.duration[DUR_SLOW])
-        {
-            mprf("Being near %s leaves you feeling lethargic.",
-                 mons->name(DESC_THE).c_str());
-        }
-
-        if (you.duration[DUR_SLOW] <= 1)
-            you.set_duration(DUR_SLOW, 1);
-        you.props[TORPOR_SLOWED_KEY] = true;
-    }
-
-    for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
-    {
-        monster *m = *ri;
-        if (m && !mons_aligned(mons, m) && !m->stasis()
-            && !mons_is_conjured(m->type) && !m->is_stationary()
-            && !is_sanctuary(m->pos()))
-        {
-            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));
-            m->props[TORPOR_SLOWED_KEY] = true;
-        }
-    }
-}
-
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
@@ -2236,8 +2276,7 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_ANCIENT_ZYME)
         _ancient_zyme_sicken(mons);
 
-    if (mons->type == MONS_TORPOR_SNAIL)
-        _torpor_snail_slow(mons);
+    mons_update_aura(*mons);
 
     // Check golem distance again at the END of its move (so that it won't go
     // dormant if it is following a player who was adjacent to it at the start
@@ -2280,32 +2319,6 @@ static void _post_monster_move(monster* mons)
                 mi->del_ench(ENCH_ABJ);
         }
     }
-
-    if (mons->type == MONS_SEISMIC_CANNON)
-    {
-        // All that drilling makes an awful racket (and sometimes dust)
-        noisy(12, mons->pos(), mons->mid);
-        if (one_chance_in(10))
-            mons_speaks(mons);
-
-        if (one_chance_in(2))
-        {
-            coord_def spot;
-            int num_found = 0;
-            for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            {
-                if (!feat_is_solid(env.grid(*ai)) && !cloud_at(*ai)
-                    && one_chance_in(++num_found))
-                {
-                    spot = *ai;
-                }
-            }
-
-            if (!spot.origin())
-                place_cloud(CLOUD_DUST, spot, random_range(3, 5), mons);
-        }
-    }
-
 
     update_mons_cloud_ring(mons);
 
@@ -3656,7 +3669,11 @@ static bool _monster_move(monster* mons, coord_def& delta)
             }
             // Dissolution dissolves walls.
             else if (player_can_hear(mons->pos() + delta))
-                mprf(MSGCH_SOUND, "You hear a sizzling sound.");
+            {
+                mprf(MSGCH_SOUND, mons->type == MONS_DISSOLUTION
+                                    ? "You hear a sizzling sound."
+                                    : "You hear a grinding noise.");
+            }
         }
     }
 

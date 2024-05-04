@@ -558,6 +558,8 @@ enum monster_type                      // env.mons[].type
     MONS_HALAZID_WARLOCK,
     MONS_SPECTATOR,
     MONS_METEORAN,
+    MONS_POLTERGUARDIAN,
+    MONS_UNDYING_ARMOURY,
 #endif
     MONS_KILLER_KLOWN,
     MONS_SHAPESHIFTER,
@@ -642,7 +644,8 @@ enum monster_type                      // env.mons[].type
     MONS_LIGHTNING_SPIRE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DIAMOND_OBELISK,
-    MONS_SEISMIC_CANNON,
+    MONS_HOARFROST_CANNON,
+    MONS_HELLFIRE_MORTAR,
 #endif
 
     // Demons:
@@ -668,7 +671,9 @@ enum monster_type                      // env.mons[].type
     MONS_YNOXINUL,
     MONS_CHAOS_SPAWN,
     MONS_HELLION,
+#if TAG_MAJOR_VERSION == 34
     MONS_LOROCYPROCA,
+#endif
     MONS_TORMENTOR,
     MONS_REAPER,
     MONS_SOUL_EATER,
@@ -676,7 +681,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_BLUE_DEVIL,
 #endif
-    MONS_HELL_BEAST,
+    MONS_SIN_BEAST,
     MONS_RUST_DEVIL,
     MONS_EXECUTIONER,
     MONS_GREEN_DEATH,
@@ -750,6 +755,7 @@ enum monster_type                      // env.mons[].type
     MONS_FLAMING_CORPSE,
 #else
     MONS_BLOATED_HUSK,
+    MONS_MARROWCUDA,
 #endif
     MONS_MUMMY,
     MONS_BOG_BODY,
@@ -938,6 +944,7 @@ enum monster_type                      // env.mons[].type
     MONS_ZENATA,
     MONS_GRUNN,
     MONS_JEREMIAH,
+    MONS_XAKKRIXIS,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1247,8 +1254,13 @@ enum monster_type                      // env.mons[].type
     MONS_OBSIDIAN_BAT,
     MONS_PILE_OF_DEBRIS,
     MONS_PILLAR_OF_RIME,
-    MONS_SEISMIC_CANNON,
+    MONS_HOARFROST_CANNON,
     MONS_ELECTROFERRIC_VORTEX,
+    MONS_POLTERGUARDIAN,
+    MONS_MARROWCUDA,
+    MONS_UNDYING_ARMOURY,
+    MONS_XAKKRIXIS,
+    MONS_HELLFIRE_MORTAR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

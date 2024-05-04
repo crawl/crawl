@@ -14,6 +14,11 @@
 
 #define SIMULACRUM_TYPE_KEY "simulacrum_type"
 
+#define HOARFROST_SHOTS_KEY "hoarfrost_shot_count"
+constexpr int MAX_HOARFROST_SHOTS = 4;
+
+#define HELLFIRE_PATH_KEY "hellfire_mortar_path"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -118,6 +123,7 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos);
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow);
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
+bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
 
@@ -126,8 +132,8 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool f
 string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
 
-spret cast_seismic_cannonade(const actor& agent, int pow, bool fail);
-bool cannonade_is_active(const actor& agent);
-bool cannonade_is_fully_charged(const actor& agent);
-vector<coord_def> get_charged_cannon_pos(const actor& agent);
-spret cast_seismic_shockwave(const actor& agent, coord_def target, int pow, bool fail);
+spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail);
+
+dice_def hellfire_mortar_damage(int pow);
+spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail);
+bool hellfire_mortar_active(const actor& agent);

@@ -21,7 +21,7 @@ Antaeus, Guardian of Cocytus
 %%%%
 Arachne title
 
-Arachne the Weaver
+Arachne the Outcast
 %%%%
 Asmodeus title
 
@@ -322,6 +322,10 @@ Vashnia the Elite Marksnaga
 Vv title
 
 Vv the Exile
+%%%%
+Xak'krixis title
+
+Xak'krixis, Royal Expeditionary Alchemist
 %%%%
 Xtahua title
 

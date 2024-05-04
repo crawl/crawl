@@ -411,6 +411,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return polar_vortex_dice(pow, false);
         case SPELL_ELECTROLUNGE:
             return electrolunge_damage(pow);
+        case SPELL_FULMINANT_PRISM:
+            return prism_damage(prism_hd(pow, false), true);
 
         // This is the per-turn *sticky flame* damage against the player.
         // The spell has no impact damage and otherwise uses different numbers
@@ -518,6 +520,14 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     {
         const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, hd);
         return make_stringf("0-%d MP", pow / 8); // >_> >_>
+    }
+
+    if (spell == SPELL_HOARFROST_BULLET)
+    {
+        const int pow = mons_power_for_hd(spell, hd);
+        return make_stringf("3d(%d/%d)",
+            zap_damage(ZAP_HOARFROST_BULLET, pow, true, false).size,
+            zap_damage(ZAP_HOARFROST_BULLET_FINALE, pow, true, false).size);
     }
 
     const dice_def dam = _spell_damage(spell, hd);

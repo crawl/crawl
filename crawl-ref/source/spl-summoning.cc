@@ -41,6 +41,7 @@
 #include "mgen-data.h"
 #include "mon-abil.h"
 #include "mon-act.h"
+#include "mon-aura.h"
 #include "mon-behv.h"
 #include "mon-book.h" // MON_SPELL_WIZARD
 #include "mon-cast.h"
@@ -1563,7 +1564,7 @@ spret cast_martyrs_knell(const actor* caster, int pow, god_type god, bool fail)
                  caster->name(DESC_THE).c_str());
         }
 
-        martyr_injury_bond(*shade);
+        mons_update_aura(*shade);
     }
     else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2171,6 +2172,14 @@ spret cast_fulminating_prism(actor* caster, int pow,
         }
         else if (you.can_see(*prism))
             mprf("A prism of explosive energy appears from nowhere!");
+
+        // This looks silly, but prevents the even sillier-looking situation of
+        // monster-cast prisms displaying as 'unaware of you'.
+        if (caster->is_monster())
+        {
+            prism->foe = caster->as_monster()->foe;
+            prism->behaviour = BEH_SEEK;
+        }
     }
     else if (you.can_see(*caster))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2274,7 +2283,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },
-    { SPELL_SUMMON_HELL_BEAST,        { 0, 8 } },
+    { SPELL_SUMMON_SIN_BEAST,         { 0, 5 } },
     { SPELL_SUMMON_UNDEAD,            { 0, 8 } },
     { SPELL_SUMMON_DRAKES,            { 0, 4 } },
     { SPELL_SUMMON_MUSHROOMS,         { 0, 8 } },
@@ -2306,6 +2315,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_CONJURE_LIVING_SPELLS,    { 0, 4 } },
     { SPELL_SHEZAS_DANCE,             { 0, 6 } },
     { SPELL_DIVINE_ARMAMENT,          { 0, 1 } },
+    { SPELL_FLASHING_BALESTRA,        { 0, 2 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -2828,6 +2838,40 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos)
     return false;
 }
 
+bool summon_swarm_clone(const monster& agent, coord_def target_pos)
+{
+    // Go up the summon chain to find the highest-level version of ourselves
+    const monster* parent = &agent;
+    while (parent->summoner && monster_by_mid(parent->summoner)
+           && monster_by_mid(parent->summoner)->type == agent.type)
+    {
+        parent = monster_by_mid(parent->summoner);
+    }
+
+    // Apply pseudo-summon cap
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+       if (mi->summoner == parent->mid)
+           ++count;
+
+        if (count > 8)
+           return false;
+    }
+
+    mgen_data mg(agent.type, BEH_COPY, target_pos, _auto_autofoe(parent), MG_AUTOFOE);
+    mg.set_summoned(parent, 2, SPELL_NO_SPELL, GOD_NO_GOD);
+
+    if (monster* spawn = create_monster(mg))
+    {
+        if (you.can_see(*spawn))
+            mprf("Another %s is drawn to the feast!", spawn->name(DESC_PLAIN).c_str());
+        return true;
+    }
+
+    return false;
+}
+
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow)
 {
@@ -2990,132 +3034,173 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     return spret::success;
 }
 
-spret cast_seismic_cannonade(const actor& agent, int pow, bool fail)
+spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 {
-    if (cannonade_is_active(agent))
-    {
-        if (cannonade_is_fully_charged(agent))
-            return your_spells(SPELL_SEISMIC_SHOCKWAVE, pow);
-        else
-        {
-            mpr("None of your cannons are fully assembled yet.");
-            return spret::abort;
-        }
-    }
-
     fail_check();
 
-    mgen_data cannon = _pal_data(MONS_SEISMIC_CANNON, 0, GOD_NO_GOD,
-                                SPELL_SEISMIC_CANNONADE);
-    cannon.flags |= MG_FORCE_PLACE;
-    cannon.hd = 5 + div_rand_round(pow, 30);
+    // Remove any existing cannons we may have first
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_HOARFROST_CANNON && mi->summoner == agent.mid)
+            monster_die(**mi, KILL_MISC, NON_MONSTER);
+    }
 
-    // Make all cannons share the same duration
-    const int dur = random_range(20, 30) * BASELINE_DELAY;
+    mgen_data cannon = _pal_data(MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
+                                SPELL_HOARFROST_CANNONADE);
+    cannon.flags |= MG_FORCE_PLACE;
+    cannon.hd = 4 + div_rand_round(pow, 20);
+
+    // Make both cannons share the same duration
+    const int dur = random_range(16, 22) * BASELINE_DELAY;
 
     int num_created = 0;
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         // Find a spot for each cannon (at a somewhat larger distance than
         // normal summons)
-        find_habitable_spot_near(you.pos(), MONS_SEISMIC_CANNON, 3, false,
+        find_habitable_spot_near(you.pos(), MONS_HOARFROST_CANNON, 3, false,
                                  cannon.pos);
 
         monster* mons = create_monster(cannon);
         if (mons)
         {
+            // Give a bit of instant energy so the slow cannons don't take
+            // multiple turns to fire their first shot.
+            mons->speed_increment = 70;
             mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
-            mons->hit_points = mons->max_hit_points / 2;
             ++num_created;
         }
     }
 
     if (num_created > 1)
-        mpr("You sculpt cannons from the earth!");
+        mpr("You sculpt a pair of cannons out of ice!");
     else if (num_created == 1)
-        mpr("You sculpt a cannon from the earth!");
+        mpr("You sculpt a cannon out of ice!");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
 }
 
-bool cannonade_is_active(const actor& agent)
+static int _hellfire_mortar_hd(int pow, bool random = true)
 {
-    if (!agent.has_spell(SPELL_SEISMIC_CANNONADE))
-        return false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid)
-            return true;
-    }
-
-    return false;
+    if (random)
+        return 6 + div_rand_round(pow, 30);
+    return 6 + pow / 30;
 }
 
-bool cannonade_is_fully_charged(const actor& agent)
+dice_def hellfire_mortar_damage(int pow)
 {
-    if (!agent.has_spell(SPELL_SEISMIC_CANNONADE))
-        return false;
+    return zap_damage(ZAP_BOLT_OF_MAGMA, _hellfire_mortar_hd(pow, false) * 12, true, false);
+}
 
-    for (monster_iterator mi; mi; ++mi)
+static bool _hellfire_stops_here(bolt& beam, coord_def pos)
+{
+    return actor_at(pos) && !beam.ignores_monster(monster_at(pos))
+           || cell_is_solid(pos) && !beam.can_affect_wall(pos);
+}
+
+spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
+{
+    // Determine path by firing digging tracer
+    zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, false, beam);
+    beam.source_id = agent.mid;
+    beam.origin_spell = SPELL_HELLFIRE_MORTAR;
+    beam.is_tracer = true;
+    beam.fire();
+
+    // Check whether the path ends because it reached max range, or because it
+    // hit something invalid.
+    const int len = _hellfire_stops_here(beam, beam.path_taken.back())
+                    ? beam.path_taken.size() - 1
+                    : beam.path_taken.size();
+
+    // Abort if the player knows this path is blocked. (Invisible monsters at
+    // close range need to be handled later, alas)
+    if (agent.is_player())
     {
-        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid
-            && mi->has_ench(ENCH_SPELL_CHARGED))
+        monster* mon = monster_at(beam.path_taken[0]);
+        if (mon && you.can_see(*mon))
         {
-            return true;
+            mprf("%s is in the way!", mon->name(DESC_THE).c_str());
+            return spret::abort;
+        }
+        else if (len == 0 && !mon)
+        {
+            mpr("There's no room!");
+            return spret::abort;
         }
     }
-
-    return false;
-}
-
-vector<coord_def> get_charged_cannon_pos(const actor& agent)
-{
-    vector<coord_def> pos;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid
-            && mi->has_ench(ENCH_SPELL_CHARGED))
-        {
-            pos.push_back(mi->pos());
-        }
-    }
-
-    return pos;
-}
-
-
-spret cast_seismic_shockwave(const actor& agent, coord_def target, int pow, bool fail)
-{
-    bolt beam;
-    zappy(ZAP_SEISMIC_SHOCKWAVE, pow, agent.is_monster(), beam);
-    beam.source_id    = agent.mid;
-    beam.thrower      = agent.is_player() ? KILL_YOU_MISSILE : KILL_MON;
-    beam.is_tracer    = false;
-    beam.origin_spell = SPELL_SEISMIC_SHOCKWAVE;
-    beam.ex_size = 2;
-    beam.source = target;
-    beam.target = target;
-    beam.aimed_at_spot = true;
-
-    bolt tracer = beam;
-    tracer.is_tracer = true;
-    tracer.explode(false);
-    if (tracer.beam_cancelled)
-        return spret::abort;
 
     fail_check();
 
-    mpr("Your cannons unleash a shockwave through the ground and break into pieces!");
-    for (monster_iterator mi; mi; ++mi)
+    // Likely because of an invisible monster standing in our first cannon spot
+    if (actor_at(beam.path_taken[0]))
     {
-        if (mi->type == MONS_SEISMIC_CANNON && mi->summoner == agent.mid)
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true);
+        mpr("Something prevents your mortar from forming!");
+        return spret::success;
     }
 
-    beam.explode();
+    // Make the lava
+    int dur = random_range(15, 19) * BASELINE_DELAY;
+    for (unsigned int i = 0; i < beam.path_taken.size(); ++i)
+    {
+        const coord_def pos = beam.path_taken[i];
+
+        // Don't make lava under things that can't survive there.
+        if (monster_at(pos) && !beam.ignores_monster(monster_at(pos)))
+            break;
+
+        if (feat_is_solid(env.grid(pos)) && !feat_is_diggable(env.grid(pos))
+            && !feat_is_tree(env.grid(pos)))
+        {
+            break;
+        }
+
+        temp_change_terrain(beam.path_taken[i], DNGN_LAVA,
+                            //random_range(11, 17) * BASELINE_DELAY,
+                            dur - (i * BASELINE_DELAY),
+                            TERRAIN_CHANGE_HELLFIRE_MORTAR);
+
+        flash_tile(pos, RED, 5);
+    }
+
+    mgen_data mg = _summon_data(agent, MONS_HELLFIRE_MORTAR, 0,
+                                GOD_NO_GOD, SPELL_HELLFIRE_MORTAR);
+    mg.flags |= MG_FORCE_PLACE;
+    mg.pos = beam.path_taken[0];
+    mg.hd = _hellfire_mortar_hd(pow);
+    monster* cannon = create_monster(mg);
+
+    // Unclear why this could happen (we've already checked that the spot is
+    // empty), but let's guard against it anyway.
+    if (!cannon)
+    {
+        mpr("Something prevents your mortar from forming!");
+        return spret::success;
+    }
+
+    // Store the cannon's movement path
+    CrawlVector& path = cannon->props[HELLFIRE_PATH_KEY].get_vector();
+    for (unsigned int i = 0; i < beam.path_taken.size(); ++i)
+    {
+        const coord_def pos = beam.path_taken[i];
+        path.push_back(pos);
+    }
+
+    mpr("With a deafening crack, the ground splits apart in the path of your "
+        "chthonic artillery!");
 
     return spret::success;
+}
+
+bool hellfire_mortar_active(const actor& agent)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_HELLFIRE_MORTAR && mi->summoner == agent.mid)
+            return true;
+    }
+
+    return false;
 }

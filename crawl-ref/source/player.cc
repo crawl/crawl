@@ -1926,9 +1926,6 @@ int player_movement_speed(bool check_terrain, bool temp)
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
-    if (temp && you.duration[DUR_FROZEN])
-        mv += 3;
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
@@ -1938,6 +1935,9 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv *= 10 + slow * 2;
         mv /= 10;
     }
+
+    if (temp && you.duration[DUR_FROZEN])
+        mv = div_rand_round(mv * 3, 2);
 
     if (temp && you.duration[DUR_SWIFTNESS] > 0)
     {
@@ -4880,13 +4880,11 @@ void dec_slow_player(int delay)
             ? haste_mul(delay) : delay;
     }
 
-    if (you.torpor_slowed())
+    if (aura_is_active_on_player(TORPOR_SLOWED_KEY))
     {
         you.duration[DUR_SLOW] = max(1, you.duration[DUR_SLOW]);
         return;
     }
-    if (you.props.exists(TORPOR_SLOWED_KEY))
-        you.props.erase(TORPOR_SLOWED_KEY);
 
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
@@ -8686,7 +8684,7 @@ void player_close_door(coord_def doorpos)
         if (monster* mon = monster_at(dc))
         {
             const bool mons_unseen = !you.can_see(*mon);
-            if (mons_unseen || mons_is_object(mon->type))
+            if (mons_unseen || (mon->holiness() & MH_NONLIVING))
             {
                 mprf("Something is blocking the %s!", waynoun);
                 // No free detection!

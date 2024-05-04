@@ -354,6 +354,16 @@ NAME:   uniq_nikola
 DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
 
+NAME:   uniq_arachne
+DEPTH:  Vaults:1-4, Elf, Depths:1
+veto {{
+  if crawl.game_started() and dgn.br_exists("Spider") then
+    return true
+  end
+  return false
+}}
+: place_unique(_G, "Arachne")
+
 NAME:   uniq_parghit
 DEPTH:  Depths:3-, Zot:1-4
 : place_unique(_G, "Parghit")
@@ -417,10 +427,10 @@ DEPTH:  Shoals:2-, !Shoals:$
 WEIGHT: 50
 : place_unique(_G, "Ilsuiw band")
 
-NAME:   uniq_arachne
+NAME:   uniq_xakkrixis
 DEPTH:  Spider:2-
-WEIGHT: 50
-: place_unique(_G, "Arachne")
+WEIGHT: 40
+: place_unique(_G, "Xak'krixis")
 
 NAME:   uniq_dissolution
 DEPTH:  Slime:2-

@@ -173,8 +173,9 @@ struct mgen_data
                || cls == MONS_BALL_LIGHTNING || cls == MONS_ORB_OF_DESTRUCTION
                || cls == MONS_BATTLESPHERE || cls == MONS_BALLISTOMYCETE_SPORE
                || cls == MONS_BOULDER
-               || cls == MONS_SEISMIC_CANNON
+               || cls == MONS_HOARFROST_CANNON
                || cls == MONS_PILE_OF_DEBRIS
+               || cls == MONS_HELLFIRE_MORTAR
                || summon_type == SPELL_ANIMATE_DEAD
                || summon_type == SPELL_NECROTISE
                || summon_type == SPELL_DEATH_CHANNEL

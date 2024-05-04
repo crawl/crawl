@@ -1179,6 +1179,17 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             make_item_unrandart(item, UNRAND_SNAKEBITE);
         break;
 
+    case MONS_XAKKRIXIS:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.plus += 1 + random2(4);
+        item.sub_type = random_choose_weighted(15, WPN_GREAT_MACE,
+                                               10, WPN_LAJATANG,
+                                               10, WPN_QUARTERSTAFF,
+                                                5, WPN_GLAIVE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
+        break;
+
     case MONS_ARACHNE:
         force_item = true;
         item.base_type = OBJ_STAVES;
@@ -1595,6 +1606,7 @@ static void _give_shield(monster* mon, int level)
     switch (mon->type)
     {
     case MONS_ASTERION:
+    case MONS_XAKKRIXIS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_KITE_SHIELD,
                               level * 2 + 1, 1);
         break;

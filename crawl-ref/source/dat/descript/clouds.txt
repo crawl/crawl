@@ -107,9 +107,8 @@ paralysis.
 %%%%
 rain cloud
 
-An extremely localized rainstorm. It may produce pools of shallow water, or
-temporarily deepen existing pools. Beings made entirely out of fire are averse
-to spending much time in the rain.
+An extremely localised rainstorm. It may produce short-lived pools of shallow
+water. Beings made of fire are averse to spending much time in the rain.
 %%%%
 mutagenic fog cloud
 

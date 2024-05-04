@@ -66,11 +66,6 @@ the caster. The electricity continues to arc through everything in a connected
 chain, though the caster themself is unaffected. The damage dealt bypasses half
 of defenders' armour.
 %%%%
-Aura of Brilliance spell
-
-Empowers the magic of nearby wizard allies of the caster, allowing them to
-cast their magic more powerfully and more often.
-%%%%
 Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
@@ -105,6 +100,11 @@ Berserk Other spell
 
 Causes a nearby ally to fly into a berserk rage. Going berserk temporarily
 increases health, speed, and damage dealt in melee.
+%%%%
+Bestow Arms spell
+
+Temporarily grants numerous nearby allies a magical weapon from within the
+armoury, so long as the souls holding it together remain intact.
 %%%%
 Bind Souls spell
 
@@ -409,8 +409,8 @@ the damage they take from all sources.
 %%%%
 Curse of Agony spell
 
-Curses a foe, halving their remaining health after the next two times that
-the caster strikes them in melee.
+Curses a foe, halving their remaining health after each of the next two times
+that the caster strikes them in melee.
 %%%%
 Dazzling Flash spell
 
@@ -612,8 +612,13 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement. Half of its damage bypasses cold resistance. It has no
-effect on targets that are already frozen.
+target's movement for a short time. Half of its damage bypasses cold resistance.
+%%%%
+Flashing Balestra spell
+
+A single soul from within the armoury leaps out, striking with their weapon and
+then duelling independently for a short time before returning to the maelstrom
+once more.
 %%%%
 Force Lance spell
 
@@ -764,6 +769,16 @@ Calls wraiths and ghosts to haunt the caster's target. They will only attack
 the creature they are haunting, and will dissipate quickly once their target
 dies. The number of spectres summoned increases with spell power.
 %%%%
+Hellfire Mortar spell
+
+Splits apart the ground in front of the caster and sculpts a terrifying weapon
+out of molten rock. This mortar will move slowly along the lava-filled chasm,
+autonomously launching gouts of magma at the caster's enemies as it does so.
+
+When it reaches the end of its path, or is obstructed in its movement by another
+creature, it will sink back into the lava, and the chasm will seal itself shut
+shortly thereafter.
+%%%%
 Heal Other spell
 
 Heals a nearby ally.
@@ -781,6 +796,25 @@ Hurl Sludge spell
 Conjures a focused blast of highly toxic sludge, poisoning the victim and
 drenching their surroundings. The sludge damages and poisons all monsters,
 even those resistant to poison.
+%%%%
+Hoarfrost Bullet spell
+
+Fires a shard of alchemical ice that coats whatever it hits with a layer of
+brittle frost, which slows their movement.
+
+Each shot fired will deplete the cannon's remaining durability, but if it
+survives to fire 5 times, the final shot will fragment to hit all enemies around
+the primary target for additional damage.
+%%%%
+Hoarfrost Cannonade spell
+
+Sculpts a pair of cannons from alchemical ice that assail the caster's enemies
+from long range. The frigid shards they fire rapidly coat their targets with a
+layer of brittle frost, which slows their movement.
+
+The cannons are short-lived and consume a part of themselves with every shard
+they fire, but if they survive to fire their final salvo without interference,
+it will be extra-powerful.
 %%%%
 Holy Breath spell
 
@@ -939,7 +973,7 @@ Envelops a target in a thin layer of magnetically charged metal fragments, then
 unleashes a powerful surge of electricity that arcs unerringly towards every
 visible target coated in these fragments.
 
-Magnetised creatures are additionally unable to evade attacks and will leave
+Magnetised creatures are additionally unable to evade attacks, and will leave
 behind a short-lived vortex of electrified metal upon death that will continue
 to serve as a lightning rod for this spell.
 %%%%
@@ -1251,6 +1285,11 @@ Portal Projectile spell
 
 Teleports a fired or thrown missile at a targeted enemy.
 %%%%
+Prayer of Brilliance spell
+
+Empowers the magic of nearby wizard allies of the caster, allowing them to
+cast their magic more powerfully and more often.
+%%%%
 Primal Wave spell
 
 Conjures a torrent of water that may knock back the target, and creates a
@@ -1310,7 +1349,7 @@ violently from their flesh, damaging nearby enemies and even spreading the
 affliction to others.
 
 The disease feeds off the necromantic energies released by its host's suffering,
-and as they near death, it may accellerate rapidly, devouring the last
+and as they near death, it may accelerate rapidly, devouring the last
 vestiges of their body and leaving nothing behind but a twisted pillar of
 stygian ice.
 %%%%
@@ -1369,18 +1408,6 @@ Searing Breath spell
 
 Breathes a blast of fire at a targeted creature, leaving a cloud of flames at
 the endpoint.
-%%%%
-Seismic Cannonade spell
-
-Shapes a trio of alchemical cannons around the caster that drill into the earth
-beneath them, transmuting the rocky minerals they find there into razor-sharp
-projectiles. Initially created in an incomplete state, each salvo they fire
-crystallizes more material into their frame, healing them.
-
-Once a cannon has fully assembled itself, recasting this spell will allow you to
-direct its full power into the ground, unleashing a powerful seismic shockwave
-that devastates a targeted area at the cost of sacrificing every cannon in the
-process.
 %%%%
 Sentinel's Mark spell
 
@@ -1568,10 +1595,6 @@ Stone Arrow spell
 
 Fires a sharp spine of rock.
 %%%%
-Stone Bullet spell
-
-Fires a hardened shard of rock over a long distance.
-%%%%
 Strip Willpower spell
 
 Greatly reduces the target's willpower, making them more vulnerable to a
@@ -1660,9 +1683,9 @@ while still active, the exposed core will violently detonate a moment later.
 
 It gains greater explosive damage at higher power.
 %%%%
-Summon Hell Beast spell
+Summon Sin Beast spell
 
-Summons a deadly hell beast.
+Summons a deadly sin beast.
 %%%%
 Summon Hell Sentinel spell
 

@@ -1011,6 +1011,7 @@ static const vector<random_pick_entry<monster_type>> _yred_servants =
 {
   { -2,  5,   80, PEAK, MONS_NECROPHAGE },
   { -1,  7,   75, PEAK, MONS_PHANTOM },
+  {  2,  9,   70, SEMI, MONS_MARROWCUDA },
   {  4,  11,  145, SEMI, MONS_WIGHT },
   {  6,  13,  90, SEMI, MONS_SHADOW },
   {  8,  15,  110, SEMI, MONS_WRAITH },
@@ -1487,7 +1488,8 @@ static bool _give_kiku_gift(bool forced)
                          SPELL_DISPEL_UNDEAD,
                          SPELL_CURSE_OF_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
-                         SPELL_DEATH_CHANNEL};
+                         SPELL_DEATH_CHANNEL,
+                         SPELL_RIMEBLIGHT};
     }
 
     shuffle_array(spell_options);

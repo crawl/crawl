@@ -328,7 +328,7 @@ To set the colour a (very) ugly thing takes when it is first created, use:
 
 The valid colours are <w>brown</w>, <w>cyan</w>, <w>green</w>, <w>purple</w>, <w>red</w> and <w>white</w>.
 
-A mutant beast can be customized by prefacing it with a maturity level and/or
+A mutant beast can be customised by prefacing it with a maturity level and/or
 hyphen-separated set of traits, as follows:
 
 <w>mature shock-weird mutant beast</w>
@@ -636,7 +636,7 @@ that is on letter `a`.
 <w>Keymaps</w> are lower-level key substitutions that replace keys entirely with
 a sequence of keystrokes. They are recommended for changing keys uniformly to
 deal with alternative keyboard layouts. Keymaps are contextual, and the
-default/"regular" context is used anywhere that a non-specialized context is not
+default/"regular" context is used anywhere that a non-specialised context is not
 active. Macros take the result of keymaps as input.
 
 Example: In some European keyboard layouts, the § symbol replaces ~. Therefore,

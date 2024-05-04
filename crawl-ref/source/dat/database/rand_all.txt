@@ -189,6 +189,8 @@ Dawn
 
 Day
 
+Dusk
+
 Eternal Night
 
 Eternity
@@ -1078,6 +1080,8 @@ Hairy
 Haunted
 
 Histrionic
+
+Impassible
 
 Impish
 

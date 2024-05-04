@@ -34,10 +34,14 @@ frozen spite.
 %%%%
 Arachne
 
-Once a talented human weaver, Arachne was cursed by being transformed into her
-present form: half-human, half-spider. Her sympathies now lie with the inhuman
-residents of her new home, and she's eager to dispose of any who would threaten
-them.
+Once a talented human weaver, Arachne was transformed into a monstrous
+half-spider by a jealous rival's curse. Driven out of her village, she found
+sanctuary for a time among the jorogumo before a bitter feud forced her to
+flee once more.
+
+Now she wanders other corners of the dungeon with a small retinue of loyal
+students in tow, seeking a new domain in which they can spin their peerless
+tapestries in peace.
 %%%%
 Asmodeus
 
@@ -549,6 +553,18 @@ One of the Stoneborn, formed untold aeons ago with supreme command over rock.
 Her people shelter deep within the living earth, so whatever has forced Vv
 into the oppressive openness of the Dungeon must be dire indeed. But whatever
 it is, she's not talking...
+%%%%
+Xak'krixis
+
+It has been centuries since outsiders were last allowed access to the cavernous
+libraries of the formicids, but their emissaries are still seen from time to
+time - surveying other lands for resources or scientific discoveries that might
+aid the colony.
+
+This one's study of the magical fibres excreted by orb spiders has already led
+to an alchemical breakthrough, allowing them to shape fulminant prisms such that
+their explosions are directed at enemies alone. Alas, their enthusiasm to
+conduct a field test bodes poorly for your health.
 %%%%
 Xtahua
 
@@ -1243,8 +1259,8 @@ A type of fish capable of generating a powerful electric field.
 %%%%
 electroferric vortex
 
-A swirling cluster of magnetic iron framents and lingering electricity crackling
-between them. It dissipates rapidly unless re-electrified.
+A swirling cluster of magnetic iron fragments and lingering electricity
+crackling between them. It dissipates rapidly unless re-electrified.
 %%%%
 eleionoma
 
@@ -1452,6 +1468,11 @@ A short, impatient and unfriendly humanoid. Goblins first appeared only a few
 years ago, but are now remarkably numerous. Sadly, no number of raucous goblin
 parties will put them in a welcoming mood toward adventurers.
 %%%%
+goblin sharper
+
+A goblin newly converted to Nemelex Xobeh. It's still learning about all the
+cards, and, thankfully, isn't inclined to use them against you.
+%%%%
 golden dragon
 
 A great winged dragon covered in shining golden scales. Legends say that its
@@ -1506,9 +1527,10 @@ harpy
 A bird-like creature with a human face that roams the coasts endlessly, feared
 for its sharp claws and harrying strikes.
 %%%%
-hell beast
+sin beast
 
-An abominable crossbreed of beast and man that makes horrible barking noises.
+A ravenous brute of a demon - as much animal as person. Born from the residue
+of mortal depravity, it gorges itself on malice and magic alike.
 %%%%
 hell hog
 
@@ -1540,6 +1562,11 @@ hellephant
 An abhorrent pachyderm, descendant of demons, burning from within with the
 fires of Hell.
 %%%%
+hellfire mortar
+
+A terrifying weapon hewn from molten rock. It rains fiery destruction down upon
+its creators' enemies.
+%%%%
 hellion
 
 A hateful demon, desirous to see all life destroyed by its damnation.
@@ -1556,6 +1583,12 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
+%%%%
+hoarfrost cannon
+
+An elegant siege weapon, magically sculpted from crystalline ice. As ephemeral
+as a summer snowstorm, every salvo it fires consumes a portion of itself until
+nothing is left behind but water.
 %%%%
 hobgoblin
 
@@ -1772,8 +1805,8 @@ reach towards the shore and crush any who draw near.
 large abomination
 
 A hideous conglomeration of mangled body parts, possessed and altered in ways
-that challenge sanity. Each varies in durability by the nature of whatever
-unfortunates were used to make it.
+that challenge sanity. Each varies in speed, strength, or resilience by
+the nature of whatever unfortunates were used to make it.
 %%%%
 laughing skull
 
@@ -1811,11 +1844,6 @@ living spell
 A spell, waiting to cast itself at the first foe that enters its range. Once
 it does, it'll dissipate into the ether.
 %%%%
-lorocyproca
-
-A tall and gaunt figure, draped in long robes which flow as if alive. It
-thirsts for magical energies.
-%%%%
 lost soul
 
 The echo of an unmourned soul. Though the memories of its living self are
@@ -1841,6 +1869,16 @@ manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
+%%%%
+marrowcuda
+
+The flame-wreathed skeleton of a carnivorous fish, darting through air as easily
+as it once parted water. It burns with a hunger it could not satisfy in life and
+is singularly driven by in death.
+
+While a single one may be only a nuisance, the swarm is never far behind, and
+every bite it lands will summon more and more of them until every scrap of flesh
+on its prey has been devoured.
 %%%%
 martyred shade
 
@@ -2189,6 +2227,16 @@ polar bear
 A bear covered in glistening white fur, habituated to cold conditions. Like all
 ursines, it will become enraged if badly hurt.
 %%%%
+polterguardian
+
+Many poltergeists are fiercely territorial over the domains they choose to
+haunt, but these have extended that protection even to the people who share
+their domain with them. Some say they must be the lingering souls of those who
+guarded the Vaults in life; others suggest the Ironbound Order simply recruited
+them in common cause. Whichever is true, their very presence shelters other
+creatures from missiles, causing sling and spell alike to veer off-course at the
+last moment.
+%%%%
 profane servitor
 
 A blasphemous being that was once an angel of the Shining One. It now stands as
@@ -2399,17 +2447,6 @@ A member of an order of monks who abandoned their former faith. It now serves
 a minor god of wind and whispers, who allows it to calm the air and, when
 in great need, to break the stillness with divine thunder.
 %%%%
-seismic cannon
-
-A bulky seige weapon, magically hewn from rock and metal, forever drilling into
-the ground beneath itself to replenish ammunition. Every shot it fires draws a
-portion of the minerals used to fabricate it into its own frame, strengthening
-it if damaged.
-
-When fully assembled, it can turn its stockpiled ammunition to an even more
-destructive purpose, unleashing a devastating seismic shockwave that destroys
-the cannon in the process.
-%%%%
 shadow
 
 A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
@@ -2509,8 +2546,8 @@ to do so in confined spaces.
 %%%%
 small abomination
 
-A hideous mass of body parts. Each varies in durability by the nature of
-whatever unfortunates were used to make it.
+A hideous mass of body parts. Each varies in speed, strength, or resilience by
+the nature of whatever unfortunates were used to make it.
 %%%%
 smoke demon
 
@@ -2816,6 +2853,12 @@ ufetubus
 
 A chattering and shrieking minor demon. They delight in sneaking past and
 backstabbing their prey.
+%%%%
+undying armoury
+
+A swirling tempest of souls and steel: knights and blacksmiths and
+weaponmasters, all bound to weapons they once held in life. To fight one is like
+fighting an entire army.
 %%%%
 ugly thing
 

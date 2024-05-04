@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "attitude-change.h"
+#include "beam.h"
 #include "bloodspatter.h"
 #include "cloud.h"
 #include "cluautil.h"
@@ -221,9 +222,10 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
         dprf("Success");
 
         if (corpse.base_type == OBJ_GOLD)
-            corpse.quantity = div_rand_round(total_gold, nchunks);
-        if (corpse.quantity)
+        {
+            corpse.quantity = max(1, div_rand_round(total_gold, nchunks));
             copy_item_to_grid(corpse, cp);
+        }
     }
 
     return true;
@@ -672,6 +674,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         return false;
     }
 
+    actor *act = &you;
+
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
         monster* mon = &env.mons[i];
@@ -680,6 +684,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
         if (!you.see_cell(mons->pos()))
             return false;
+
+        act = mon;
     }
     else if (!YOU_KILL(killer))
         return false;
@@ -697,6 +703,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
     god_speaks(god, msg.c_str());
+
+    behaviour_event(mons, ME_WHACK, act);
 
     lugonu_meddle_fineff::schedule();
 
@@ -1056,6 +1064,27 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         cloud = random_smoke_type();
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
+    else if (msg.find("armoury") != string::npos)
+    {
+        cloud = CLOUD_NONE;
+
+        // XXX: This doesn't feel like quite the right place for this code, but
+        //      it *is* about the visual after-effects of a summon going poof...
+        if (monster* armoury = monster_by_mid(mons->summoner))
+        {
+            if (!silent && armoury->alive()
+                && armoury->see_cell_no_trans(mons->pos()))
+            {
+                bolt visual;
+                visual.source = mons->pos();
+                visual.target = armoury->pos();
+                visual.flavour = BEAM_VISUAL;
+                visual.range = LOS_RADIUS;
+                visual.aimed_at_spot = true;
+                visual.fire();
+            }
+        }
+    }
 
     if (!silent)
         simple_monster_message(*mons, (prefix + msg).c_str());
@@ -1821,6 +1850,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Lose our bullseye target
     mons.del_ench(ENCH_BULLSEYE_TARGET, true);
 
+    // Restore old items, if appropriate
+    mons.del_ench(ENCH_ARMED, true);
+
     // Clean up any blood from the flayed effect
     if (mons.has_ench(ENCH_FLAYED))
         heal_flayed_effect(&mons, true, true);
@@ -2008,6 +2040,15 @@ item_def* monster_die(monster& mons, killer_type killer,
         death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
                                      mons.pos(),
                                      random_range(3, 11) * BASELINE_DELAY);
+
+        // Potentially infect everyone around the dying unit
+        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        {
+            monster* victim = monster_at(*ai);
+            if (victim && !victim->friendly())
+                maybe_spread_rimeblight(*victim, mons.props[RIMEBLIGHT_POWER_KEY].get_int());
+        }
+
     }
     else if (mons.has_ench(ENCH_MAGNETISED) && mons.type != MONS_ELECTROFERRIC_VORTEX)
     {
@@ -2219,6 +2260,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             return nullptr;
         }
     }
+    else if (mons.type == MONS_HOARFROST_CANNON && !silent && !mons_reset
+             && !was_banished && !wizard)
+    {
+        temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
+                            TERRAIN_CHANGE_FLOOD);
+    }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
 
@@ -2421,11 +2468,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 if (fake_abjure)
                 {
-                    // Sticks to Snakes
-                    if (mons_genus(mons.type) == MONS_SNAKE)
-                        simple_monster_message(mons, " withers and dies!");
                     // ratskin cloak
-                    else if (mons_genus(mons.type) == MONS_RAT)
+                    if (mons_genus(mons.type) == MONS_RAT)
                     {
                         simple_monster_message(mons, " returns to the shadows"
                                                       " of the Dungeon!");
@@ -2436,11 +2480,12 @@ item_def* monster_die(monster& mons, killer_type killer,
                     // Necrotise/Animate Dead/Infestation
                     else if (mons.type == MONS_ZOMBIE
                              || mons.type == MONS_SKELETON
-                             || mons.type == MONS_DEATH_SCARAB
-                             || mons.type == MONS_SEISMIC_CANNON)
+                             || mons.type == MONS_DEATH_SCARAB)
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }
+                    else if (mons.type == MONS_HOARFROST_CANNON)
+                        simple_monster_message(mons, " melts away.");
                     else
                     {
                         string msg = " " + summoned_poof_msg(&mons) + "!";
@@ -3172,6 +3217,10 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
     case SPELL_STICKS_TO_SNAKES:
         msg = "turns back into a lifeless stick";
+        break;
+
+    case SPELL_FLASHING_BALESTRA:
+        msg = "returns to the armoury";
         break;
     }
 
