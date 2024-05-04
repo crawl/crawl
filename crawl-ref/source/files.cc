@@ -2037,6 +2037,14 @@ static void _fixup_transmuters()
 }
 #endif
 
+/// Learn where each transporter on the current level goes.
+static void _learn_transporters()
+{
+    auto li = travel_cache.find_level_info(level_id::current());
+    for (auto &tp : li->get_transporters())
+        li->update_transporter(tp.position, get_transporter_dest(tp.position));
+}
+
 /**
  * Load the current level.
  *
@@ -2381,7 +2389,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
         gozag_count_level_gold();
         if (branches[you.where_are_you].branch_flags & brflag::fully_map)
+        {
             magic_mapping(GDM, 100, true, false, false, true, false);
+            _learn_transporters();
+        }
     }
 
 

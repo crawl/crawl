@@ -4839,7 +4839,8 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (feat == DNGN_TRANSPORTER)
     {
-        seen_tracked_feature(feat);
+        if (is_unknown_transporter(pos))
+            seen_tracked_feature(feat);
         if (ES_transporter)
         {
             for (orth_adjacent_iterator ai(pos); ai; ++ai)
