@@ -647,7 +647,6 @@ static void _handle_gastronomic_expanse_duration(int delay)
     //TODO: fiddle with ratios here
     
     int radius = get_gastronomic_radius();
-    mprf("%d", radius);
     set_gastronomic_radius(radius);
 }
 
