@@ -5540,7 +5540,7 @@ bool bolt::ignores_monster(const monster* mon) const
     // This is the lava digging tracer. It will stop at anything which cannot
     // survive having lava put beneath it (ie: ignore everything else)
     if (origin_spell == SPELL_HELLFIRE_MORTAR)
-        return mon->airborne() || monster_habitable_grid(mon, DNGN_LAVA);
+        return mon && (mon->airborne() || monster_habitable_grid(mon, DNGN_LAVA));
 
     // Digging doesn't affect monsters (should it harm earth elementals?).
     if (flavour == BEAM_DIGGING)
