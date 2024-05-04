@@ -4851,10 +4851,15 @@ spret cast_noxious_bog(int pow, bool fail)
     return spret::success;
 }
 
+int get_gastronomic_radius(bool get_max)
+{
+    int dur = get_max ? GASTRONOMIC_MAX_DUR : you.duration[DUR_GASTRONOMIC];
+    return dur / 10;
+}
+
 static coord_def _get_gastronomic_center()
 {
-    //TODO: deduplicate radius code
-    int radius = you.duration[DUR_GASTRONOMIC] / GASTRONOMIC_RATE;
+    int radius = get_gastronomic_radius();
     coord_def center = you.props[GASTRONOMIC_ORIGIN_KEY].get_coord();
     center += you.props[GASTRONOMIC_DIRECTION_KEY].get_coord() * radius;
     return center;
@@ -4890,21 +4895,20 @@ void gastronomic_expanse_effect(int delay)
 
     if(is_gastronomic(you.pos()))
     {
-        //TODO delay scale this somehow
-        you.corrode_equipment("the gastric acid");
+        if(x_chance_in_y(delay, GASTRONOMIC_SELF_CORR))
+            you.corrode_equipment("the gastric acid");
     }
     else
         you.props[GASTRONOMIC_RETRACTING_KEY] = true;
-
 }
 
 //Set 
 void set_gastronomic_radius(int radius)
 {
-    int max_radius = GASTRONOMIC_MAX_DUR / GASTRONOMIC_RATE;
+    int max_radius = get_gastronomic_radius(true);
     coord_def center = _get_gastronomic_center();
 
-    for (distance_iterator di(center, false, false, max_radius); di; ++di)
+    for (distance_iterator di(center, false, false, max_radius + 1); di; ++di)
         env.pgrid(*di) &= ~FPROP_GASTRONOMY;
 
     for (distance_iterator di(center, false, false, radius); di; ++di)
@@ -4913,7 +4917,11 @@ void set_gastronomic_radius(int radius)
 
 spret cast_gastronomic_expanse(int pow, const coord_def &target, bool fail)
 {
-    //TODO: handle repeat casts
+    if (you.duration[DUR_GASTRONOMIC])
+    {
+        mpr("You are already maintaining an expanse.");
+        return spret::abort;
+    }
 
     fail_check();
 
@@ -4936,7 +4944,6 @@ void end_gastronomic_expanse()
     if (!you.props.exists(GASTRONOMIC_ORIGIN_KEY))
         return;
 
-    mpr("AAAAAAAAAAAA");
     set_gastronomic_radius(-1);
 }
 

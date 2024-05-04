@@ -1443,7 +1443,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
     case SPELL_GASTRONOMIC_EXPANSE:
-        return make_unique<targeter_smite>(&you, 1, 1, 1, pow);
+        return make_unique<targeter_gastronomic>(&you, pow);
     case SPELL_FLAME_WAVE:
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
