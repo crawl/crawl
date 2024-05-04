@@ -5104,7 +5104,7 @@ static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
 
 void fire_fusillade()
 {
-    // The first volley is incuded in the casting cost. The rest drain additional mp.
+    // The first volley is included in the casting cost. The rest drain additional mp.
     if (you.duration[DUR_FUSILLADE] != 5)
     {
         if (!enough_mp(2, true))
