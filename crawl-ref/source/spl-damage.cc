@@ -4878,7 +4878,7 @@ void gastronomic_expanse_effect(int delay)
         }
 
         mi->corrode_equipment();
-    
+
         int pow = you.props[GASTRONOMIC_POWER_KEY].get_int();
         int unadjusted = gastronomic_damage(pow, true).roll();
         int ac_adjusted = mi->apply_ac(unadjusted);
@@ -4893,16 +4893,16 @@ void gastronomic_expanse_effect(int delay)
         behaviour_event(*mi, ME_WHACK, &you);
     }
 
-    if(is_gastronomic(you.pos()))
+    if (is_gastronomic(you.pos()))
     {
-        if(x_chance_in_y(delay, GASTRONOMIC_SELF_CORR))
+        if (x_chance_in_y(delay, GASTRONOMIC_SELF_CORR))
             you.corrode_equipment("the gastric acid");
     }
     else
         you.props[GASTRONOMIC_RETRACTING_KEY] = true;
 }
 
-//Set 
+//Set
 void set_gastronomic_radius(int radius)
 {
     int max_radius = get_gastronomic_radius(true);
@@ -4925,8 +4925,8 @@ spret cast_gastronomic_expanse(int pow, const coord_def &target, bool fail)
 
     fail_check();
 
-    coord_def delta = target - you.pos(); 
-    
+    coord_def delta = target - you.pos();
+
 
     you.props[GASTRONOMIC_DIRECTION_KEY] = delta.sgn();
     you.props[GASTRONOMIC_ORIGIN_KEY] = you.pos();

@@ -58,7 +58,8 @@ struct packed_cell
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0),
                     is_highlighted_summoner(false), is_bloody(false),
                     is_silenced(false), halo(HALO_NONE), is_sanctuary(false),
-                    is_blasphemy(false), is_liquefied(false), mangrove_water(false),
+                    is_blasphemy(false), is_gastronomic(false),
+                    is_liquefied(false), mangrove_water(false),
                     awakened_forest(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0),
                     quad_glow(false), disjunct(false), has_bfb_corpse(false)

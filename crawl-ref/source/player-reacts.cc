@@ -629,9 +629,9 @@ static void _decrement_rampage_heal_duration(int delay)
 
 static void _handle_gastronomic_expanse_duration(int delay)
 {
-    if(you.props[GASTRONOMIC_RETRACTING_KEY].get_bool())
+    if (you.props[GASTRONOMIC_RETRACTING_KEY].get_bool())
     {
-        if(_decrement_a_duration(DUR_GASTRONOMIC, delay))
+        if (_decrement_a_duration(DUR_GASTRONOMIC, delay))
         {
             end_gastronomic_expanse();
             return;
@@ -641,11 +641,11 @@ static void _handle_gastronomic_expanse_duration(int delay)
     {
         //Manually increase duration since we don't want decaaut increments.
         you.duration[DUR_GASTRONOMIC] += delay;
-        if(you.duration[DUR_GASTRONOMIC] >= GASTRONOMIC_MAX_DUR)
+        if (you.duration[DUR_GASTRONOMIC] >= GASTRONOMIC_MAX_DUR)
             you.duration[DUR_GASTRONOMIC] = GASTRONOMIC_MAX_DUR;
     }
     //TODO: fiddle with ratios here
-    
+
     int radius = get_gastronomic_radius();
     set_gastronomic_radius(radius);
 }

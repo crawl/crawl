@@ -1869,7 +1869,7 @@ targeter_bog::targeter_bog(const actor *a, int pow)
 targeter_gastronomic::targeter_gastronomic(const actor *a, int pow)
     : targeter_smite(a, 1, 1, 1, {})
 {
-    
+
 }
 
 bool targeter_gastronomic::valid_aim(coord_def loc)

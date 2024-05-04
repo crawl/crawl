@@ -816,7 +816,7 @@ Gastronomic Expanse spell
 
 Transposes part of the dungeon with the stomach of a great extraplanar
 beast, which will rapidly digest any other creatures within. The transposed
-region will expand as long as the caster remains in it, but they are only 
+region will expand as long as the caster remains in it, but they are only
 partially protected from its corrosive effects.
 
 It is unclear who, if any, commands this great beast, but it is worrying
