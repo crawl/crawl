@@ -4894,9 +4894,9 @@ void gastronomic_expanse_effect(int delay)
         behaviour_event(*mi, ME_WHACK, &you);
     }
 
-    if(is_gastronomic(you.pos()))
+    if (is_gastronomic(you.pos()))
     {
-        if(x_chance_in_y(delay, GASTRONOMIC_SELF_CORR))
+        if (x_chance_in_y(delay, GASTRONOMIC_SELF_CORR))
             you.corrode(nullptr, "The gastric acid");
     }
     else
