@@ -194,10 +194,6 @@ Call Lost Souls cast
 
 @The_monster@ beckons forth restless souls!
 %%%%
-Haste Plants cast
-
-@The_monster@ empowers the plants around @reflexive@!
-%%%%
 Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
