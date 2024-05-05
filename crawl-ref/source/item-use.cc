@@ -4224,7 +4224,7 @@ bool read(item_def* scroll, dist *target)
 
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
-            mpr("This is a scroll of acquirement!");
+            mpr("This is a scroll of acquirement! Yippee!");
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.

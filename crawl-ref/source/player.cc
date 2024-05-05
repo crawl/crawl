@@ -3139,6 +3139,9 @@ void level_change(bool skip_attribute_increase)
             upgrade_hepliaklqana_ancestor();
 
         learned_something_new(HINT_NEW_LEVEL);
+
+        if (you.props.exists(ACQUIRE_ITEMS_KEY))
+            acquirement_clear();
     }
 
     while (you.experience >= exp_needed(you.max_level + 1))
@@ -4151,6 +4154,9 @@ int get_real_hp(bool trans, bool drained)
 
     if (trans)
         hitp = get_form()->mult_hp(hitp);
+
+    if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+        hitp += you.experience_level * 3;
 
     return max(1, hitp);
 }

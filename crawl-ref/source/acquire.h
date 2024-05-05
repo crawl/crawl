@@ -31,6 +31,7 @@ bool coglin_invent_gizmo();
 void coglin_announce_gizmo_name();
 
 void make_acquirement_items();
+void acquirement_clear();
 
 int acquirement_create_item(object_class_type class_wanted, int agent,
                             bool quiet, const coord_def &pos = coord_def());

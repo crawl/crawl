@@ -1853,6 +1853,27 @@ void make_acquirement_items()
         acq_items.push_back(gold_item);
 }
 
+void acquirement_clear()
+{
+    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+
+    // Now that we have a selection, mark any generated unrands as not having
+    // been generated, so they go back in circulation. Exclude the selected
+    // item from this, if it's an unrand.
+    for (item_def &aitem : acq_items)
+    {
+        if (is_unrandom_artefact(aitem))
+        {
+            destroy_item(aitem, true);
+        }
+        // TODO: if we allow misc acquirement, also destroy unchosen miscs
+    }
+
+    acq_items.clear();
+    you.props.erase(ACQUIRE_ITEMS_KEY);
+
+}
+
 /*
  * Handle scroll of acquirement.
  *
