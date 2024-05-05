@@ -4883,7 +4883,7 @@ void gastronomic_expanse_effect(int delay)
         int delay_adjusted = div_rand_round(ac_adjusted * delay, BASELINE_DELAY);
 
         bolt beam;
-        beam.flavour = BEAM_COLD;
+        beam.flavour = BEAM_ACID;
         beam.thrower = KILL_YOU;
         int dam = mons_adjust_flavoured(*mi, beam, delay_adjusted);
 
