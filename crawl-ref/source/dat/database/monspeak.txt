@@ -8810,9 +8810,9 @@ w:1
 
 VISUAL:@The_monster@ wriggles @possessive@ tentacles.
 
-VISUAL:A dozen eyes blink open in the @monster@'s chest.
+VISUAL:A dozen eyes blink open in @the_monster@'s chest.
 
-VISUAL:Strange appendages sprout from the @monster@'s back.
+VISUAL:Strange appendages sprout from @the_monster@'s back.
 
 VISUAL:@The_monster@ lashes @possessive@ tail.
 
@@ -8821,9 +8821,9 @@ VISUAL:@The_monster@ suddenly sprouts two large horns!
 w:3
 VISUAL:@The_monster@'s flesh secretes a thick mucus.
 
-VISUAL:Hollow, blind eyes appear on the @monster@'s head.
+VISUAL:Hollow, blind eyes appear on @the_monster@'s head.
 
-VISUAL:Suppurating sores blossom under the @monster@'s eyelids.
+VISUAL:Suppurating sores blossom under @the_monster@'s eyelids.
 
 @The_monster@ begs you to kill @objective@.
 
@@ -8978,6 +8978,7 @@ _deck_of_escape_line_
 # Kenny Rogers, "The Gambler"
 @The_monster@ draws Velocity. "Know when to walk away, know when to run."
 %%%%
+# Nemelex's deck of summoning
 _deck_of_summoning_line_
 
 @The_monster@ draws the Dance. "Hope the weapon's aim is true!"
@@ -8992,6 +8993,7 @@ _deck_of_summoning_line_
 
 @The_monster@ draws the Swarm. "Bees, bees everywhere!"
 %%%%
+# Nemelex's deck of punishment
 _deck_of_punishment_line_
 
 @The_monster@ draws the Swine. "I'm a pig now!"

@@ -1100,19 +1100,10 @@ static void _handle_regen_item_equip(const item_def& item)
         return;
     }
 
-    bool activate = false;
-    if (regen_hp && you.hp == you.hp_max
-        && (!regen_mp || you.magic_points == you.max_magic_points))
-    {
-        activate = true;
-    }
-    else if (regen_mp && you.magic_points == you.max_magic_points
-             && (!regen_hp || you.hp == you.hp_max))
-    {
-        activate = true;
-    }
+    bool low_mp = regen_mp && you.magic_points < you.max_magic_points;
+    bool low_hp = regen_hp && you.hp < you.hp_max;
 
-    if (activate)
+    if (!low_mp && !low_hp)
     {
         mprf("The %s throb%s to your%s body.", item_name.c_str(),
              plural ? " as they attune themselves" : "s as it attunes itself",
@@ -1122,8 +1113,7 @@ static void _handle_regen_item_equip(const item_def& item)
     }
 
     mprf("The %s cannot attune %s to your%s body.", item_name.c_str(),
-         plural ? "themselves" : "itself",
-         you.hp < you.hp_max ? " injured" : " exhausted");
+         plural ? "themselves" : "itself", low_hp ? " injured" : " exhausted");
 
     you.activated.set(eq_slot, false);
     return;

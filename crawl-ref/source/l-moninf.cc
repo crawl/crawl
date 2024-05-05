@@ -735,6 +735,17 @@ LUAFN(moninf_get_is_stationary)
     return 1;
 }
 
+/*** Can this monster use doors?
+ * @treturn boolean
+ * @function can_use_doors
+ */
+LUAFN(moninf_get_can_use_doors)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mons_class_itemuse(mi->type) >= MONUSE_OPEN_DOORS);
+    return 1;
+}
+
 /*** Get a string describing how injured this monster is.
  * @treturn string
  * @function damage_desc
@@ -843,6 +854,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),
+    MIREG(can_use_doors),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),

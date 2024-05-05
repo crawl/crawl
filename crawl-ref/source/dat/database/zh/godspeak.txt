@@ -610,7 +610,7 @@ Jiyva death corpse
 %%%%
 Jiyva death corpse undead
 
-<Jiyva death corpse>
+@Jiyva death corpse@
 %%%%
 Jiyva death corpse nonliving
 
@@ -630,15 +630,15 @@ Kikubaaqudgha death corpse undead
 %%%%
 Kikubaaqudgha death corpse nonliving
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Kikubaaqudgha death undead
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Kikubaaqudgha death nonliving
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Lugonu welcome
 
@@ -759,11 +759,11 @@ Uskayaw death corpse
 %%%%
 Uskayaw death corpse undead
 
-<Uskayaw death corpse>
+@Uskayaw death corpse@
 %%%%
 Uskayaw death corpse nonliving
 
-<Uskayaw death corpse>
+@Uskayaw death corpse@
 %%%%
 Vehumet welcome
 
@@ -886,7 +886,7 @@ Yredelemnul death corpse nonliving
 %%%%
 Yredelemnul death undead
 
-<Yredelemnul death corpse undead>
+@Yredelemnul death corpse undead@
 %%%%
 Zin penance
 
