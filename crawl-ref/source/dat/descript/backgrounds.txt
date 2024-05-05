@@ -94,8 +94,8 @@ start out with the Necrotise spell.
 %%%%
 Reaver
 
-Reavers start with a weapon of their choice and deadly magic to supplement it
-when in need. They start with the Kiss of Death spell.
+Reavers start with a weapon of their choice and deadly evill magic to supplement
+it when in need. They start with the Kiss of Death spell.
 %%%%
 Summoner
 

@@ -290,13 +290,14 @@ static const map<job_type, job_def> job_data =
       SP_MOUNTAIN_DWARF, },
     {
         SPELL_KISS_OF_DEATH,
-        SPELL_MOMENTUM_STRIKE,
-        SPELL_HAILSTORM,
+        SPELL_FUGUE_OF_THE_FALLEN,
+        SPELL_VAMPIRIC_DRAINING,
+        SPELL_CURSE_OF_AGONY,
     },
     { "leather armour" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_WEAPON, 3 }, { SK_DODGING, 2 },
-      { SK_SPELLCASTING, 2 }, { SK_CONJURATIONS, 3 }, },
+      { SK_SPELLCASTING, 2 }, { SK_NECROMANCY, 3 }, },
 } },
 
 { JOB_SUMMONER, {
