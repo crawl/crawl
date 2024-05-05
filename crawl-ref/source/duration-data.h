@@ -729,7 +729,7 @@ static const duration_def duration_data[] =
       {{ "Your bloodlust subsides." },
        { "You feel your bloodlust ebbing." }}, 6},
     //TODO this needs rewrite
-    { DUR_GASTRONOMIC, YELLOW, "Gut", "transposing a stomach", "gastronomic expanse",
+    { DUR_GASTRONOMIC, MAGENTA, "Gut", "transposing a stomach", "gastronomic expanse",
       "You are transposing a stomach with part of the dungeon.", D_DISPELLABLE,},
 
     // The following are visible in wizmode only, or are handled
