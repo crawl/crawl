@@ -4868,9 +4868,7 @@ static coord_def _get_gastronomic_center()
 
 void gastronomic_expanse_effect(int delay)
 {
-    coord_def center = _get_gastronomic_center();
-
-    for (monster_near_iterator mi(center); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!is_gastronomic(mi->pos())
             || mi->wont_attack() || mi->is_firewood())
