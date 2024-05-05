@@ -8978,6 +8978,7 @@ _deck_of_escape_line_
 # Kenny Rogers, "The Gambler"
 @The_monster@ draws Velocity. "Know when to walk away, know when to run."
 %%%%
+# Nemelex's deck of summoning
 _deck_of_summoning_line_
 
 @The_monster@ draws the Dance. "Hope the weapon's aim is true!"
@@ -8992,6 +8993,7 @@ _deck_of_summoning_line_
 
 @The_monster@ draws the Swarm. "Bees, bees everywhere!"
 %%%%
+# Nemelex's deck of punishment
 _deck_of_punishment_line_
 
 @The_monster@ draws the Swine. "I'm a pig now!"
