@@ -5,7 +5,7 @@
 #include "transformation.h"
 
 // Maximum amount of slaying you can stack with fugue
-const int FUGUE_MAX_STACKS = 7;
+const int FUGUE_MAX_STACKS = 4;
 
 class actor;
 
