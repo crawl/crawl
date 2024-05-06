@@ -340,6 +340,23 @@ void follower::restore_mons_items(monster& m)
     }
 }
 
+void follower::write_to_prop(CrawlVector& vec)
+{
+    vec.clear();
+    vec.push_back(mons);
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        vec.push_back(items[i]);
+    vec.push_back(transit_start_time);
+}
+
+void follower::read_from_prop(CrawlVector& vec)
+{
+    mons = vec[0].get_monster();
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        items[i] = vec[i + 1].get_item();
+    transit_start_time = vec[NUM_MONSTER_SLOTS + 1].get_int();
+}
+
 static bool _is_religious_follower(const monster &mon)
 {
     return (you_worship(GOD_YREDELEMNUL)

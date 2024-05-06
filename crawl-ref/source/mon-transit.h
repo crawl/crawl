@@ -25,6 +25,10 @@ struct follower
     void load_mons_items();
     void restore_mons_items(monster& m);
 
+    // Serialize piecemeal, to allow storing in a CrawlStoreValue
+    void write_to_prop(CrawlVector& vec);
+    void read_from_prop(CrawlVector& vec);
+
     // Reconstitutes the monster and their equipment, but does NOT place the
     // monster onto the floor. Use to examine stats that include equipment,
     // but may not be safe for other purposes.
