@@ -2765,8 +2765,6 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(*this, *agent) && damage_contributes_xp(*agent))
     {
-        // Count all remaining HP as damage done by you.
-        // (monster_die won't double-dip as KILL_BANISHED has an anonymous source)
         damage_friendly += hit_points;
         // Note: we do not set MF_PACIFIED, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
@@ -2777,7 +2775,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
                             true /*possibly wrong*/, this);
         }
     }
-    monster_die(*this, KILL_BANISHED, NON_MONSTER);
+    monster_die(*this, KILL_BANISHED, agent->mindex());
 
     if (!cell_is_solid(old_pos))
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
