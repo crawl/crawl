@@ -2320,6 +2320,9 @@ static void _post_monster_move(monster* mons)
         }
     }
 
+    if (mons->type == MONS_VAMPIRE_BAT)
+        blorkula_bat_merge(*mons);
+
     update_mons_cloud_ring(mons);
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);

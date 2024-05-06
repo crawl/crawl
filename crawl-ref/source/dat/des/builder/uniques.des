@@ -105,9 +105,9 @@ NAME:   uniq_azrael
 DEPTH:  D:12-, Orc:$, Elf, !Elf:$, Snake, !Snake:$, Spider, !Spider:$
 : place_unique(_G, "Azrael band")
 
-NAME:   uniq_blork_the_orc
-DEPTH:  D:4-6
-: place_unique(_G, "Blork the orc")
+NAME:   uniq_blorkula_the_orcula
+DEPTH:  D:5-8
+: place_unique(_G, "Blorkula the orcula")
 
 # Crazy Yuif's hut is bottom of this file.
 

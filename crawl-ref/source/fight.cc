@@ -1257,7 +1257,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blork the orc".
+    // Listed in the form: "your rat", "Blorkula the orcula".
     string mon_name = mon->name(DESC_PLAIN);
     if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name = mon_name.substr(4); // strlen("the ")
@@ -1351,7 +1351,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blork the orc".
+    // Listed in the form: "your rat", "Blorkula the orcula".
     string mon_name = victims.describe(DESC_PLAIN);
     if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name = mon_name.substr(4); // strlen("the ")

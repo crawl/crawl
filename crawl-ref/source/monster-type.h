@@ -858,7 +858,7 @@ enum monster_type                      // env.mons[].type
     MONS_JESSICA,
     MONS_SIGMUND,
     MONS_TERENCE,
-    MONS_BLORK_THE_ORC,
+    MONS_BLORKULA_THE_ORCULA,
     MONS_EDMUND,
     MONS_PSYCHE,
     MONS_EROLCHA,

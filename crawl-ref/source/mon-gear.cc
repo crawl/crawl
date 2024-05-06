@@ -590,7 +590,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_NAGA_WARRIOR,            { NAGA_WEAPONS } },
         { MONS_ORC_WARRIOR,             { NAGA_WEAPONS } },
         { MONS_ORC_HIGH_PRIEST,         { NAGA_WEAPONS } },
-        { MONS_BLORK_THE_ORC,           { NAGA_WEAPONS } },
+        { MONS_BLORKULA_THE_ORCULA,     { NAGA_WEAPONS } },
         { MONS_DANCING_WEAPON,          { NAGA_WEAPONS, {}, {}, 1 } },
         { MONS_SPECTRAL_WEAPON,         { NAGA_WEAPONS } }, // for mspec placement
         { MONS_FRANCES,                 { NAGA_WEAPONS } },
@@ -2097,7 +2097,7 @@ int make_mons_armour(monster_type type, int level)
             level = ISPEC_GOOD_ITEM;
         // fallthrough to robes
     case MONS_ORC_WIZARD:
-    case MONS_BLORK_THE_ORC:
+    case MONS_BLORKULA_THE_ORCULA:
     case MONS_NERGALLE:
     case MONS_DOWAN:
     case MONS_JESSICA:

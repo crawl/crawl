@@ -1987,27 +1987,24 @@ VISUAL:@The_monster@'s form shimmers in the rain.
 ## END Bai Suzhen ##
 %%%%
 
-############ BLORK ### In case Blork ends up polymorphed.
-Blork
-
-@Blork the orc@
+############ BLORK ###
 %%%%
-Blork triumphant
+Blorkula the orcula triumphant
 
 @Blork the orc triumphant@
 %%%%
-Blork killed
+Blorkula the orcula killed
 
 @Blork the orc killed@
 %%%%
-Blork the orc
+Blorkula the orcula
 
 @_Blork_common_@
 
 w:5
 @_Blork_rare_@
 %%%%
-Blork the orc triumphant
+Blorkula the orcula triumphant
 
 # Rainbow Raider winning against Batman
 @The_monster@ shouts, "I believe in me!"
@@ -2017,7 +2014,7 @@ _blork_colour_
 w:20
 @_rainbow_colour_@
 
-w:1
+w:10
 @_misc_colour_@
 %%%%
 _rainbow_colour_
@@ -2165,15 +2162,15 @@ VISUAL:@The_monster@'s eyes glow @_blork_colour_@.
 
 @The_monster@ screams @at_foe@, "Let me show you how many colours things can be!"
 
-@The_monster@ screams @at_foe@, "It's all true! You just have to believe!"
+@The_monster@ says, "Beogh has given me so many different colours to drink."
 
-@The_monster@ says, "I was weak, but now I'm strong. And I'll get stronger."
+@The_monster@ says, "I was weak before I became an orc, but now I'm strong. And I'll get stronger."
 
-@The_monster@ says, "I had no talent until I found my suspenders."
-
-@The_monster@ says, "Everything's been so different since I wore my suspenders."
+@The_monster@ says, "Everything's been so different since that missionary gave me these suspenders."
 
 @The_monster@ mutters, "Such pretty colours everywhere..."
+
+@The_monster@ says, "My favourite colour of blood is @_blork_colour_@. Wait, no, @_blork_colour_@."
 
 @The_monster@ screams, "What are you staring at, @player_name@? I'm stylish!" @player_only@
 %%%%
@@ -2181,13 +2178,15 @@ _Blork_rare_
 
 @The_monster@ screams @at_foe@, "What are you like inside? I'll break you open and find out!"
 
+@The_monster@ screams @at_foe@, "It's all true! You just have to believe!"
+
 @The_monster@ screams @at_foe@, "Look beyond the surface! Nothing is what it seems!"
 
 @The_monster@ screams @at_foe@, "I'll make you see things how they really are!"
 
-@The_monster@ screams @at_foe@, "I can see the energies behind everything! Can't you?"
-
 @The_monster@ says @to_foe@, "There's so much colour in the world. Let me show it to you."
+
+VISUAL:@The_monster@ contemplates whether Beogh's temples would look better painted @_blork_colour_@.
 
 # Calvin and Hobbes
 @The_monster@ says @to_foe@, "The problem is, you see everything in terms of black and white."
@@ -2196,9 +2195,9 @@ _Blork_rare_
 
 @The_monster@ says, "Things are no longer grey! Not since my great insight!"
 %%%%
-Blork the orc killed
+Blorkula the orcula killed
 
-@The_monster@'s eyes stop glowing, and @subjective@ collapses.
+A faint prismatic mist rises from Blorkula's broken form and then dissipates.
 ## END Blork the orc ##
 %%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
@@ -8375,11 +8374,11 @@ w:1
 w:1
 __NONE
 %%%%
-# special casing for Blork
-related beogh Blork the orc
+# special casing for Blorkula
+related beogh Blorkula the orcula
 
 # behave like normal Blork
-@Blork the orc@
+@Blorkula the orcula@
 
 # with some Beogh-hostile messages strewn in
 w:4

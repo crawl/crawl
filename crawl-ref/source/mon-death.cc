@@ -70,6 +70,9 @@
 #include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "rltiles/tiledef-player.h"
+#endif
 #include "tilepick.h"
 #include "timed-effects.h"
 #include "traps.h"
@@ -804,6 +807,146 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     return false;
 }
 
+static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
+{
+    // Can't recover from these
+    if (ktype == KILL_BANISHED || ktype == KILL_RESET)
+        return false;
+
+    if (blorkula.props.exists(BLORKULA_DIE_FOR_REAL_KEY))
+        return false;
+
+    // If our death escape is still on cooldown, just let him die.
+    if (blorkula.props.exists(BLORKULA_NEXT_BAT_TIME)
+        && (you.elapsed_time < blorkula.props[BLORKULA_NEXT_BAT_TIME].get_int()))
+    {
+        if (you.can_see(blorkula))
+        {
+            mprf("%s attempts to avoid another deathblow, but is too exhausted to transform.",
+                blorkula.name(DESC_THE).c_str());
+        }
+        return false;
+    }
+
+    const int num_bats = random_range(4, 5);
+    const int revive_timer = you.elapsed_time + random_range(140, 220);
+    blorkula.heal(blorkula.max_hit_points);
+    blorkula.props[BLORKULA_NEXT_BAT_TIME] = you.elapsed_time + (random_range(550, 1250));
+
+#ifdef USE_TILE
+    static vector<int> bat_colours =
+    {
+        TILEP_MONS_VAMPIRE_BAT_GREEN,
+        TILEP_MONS_VAMPIRE_BAT_ORANGE,
+        TILEP_MONS_VAMPIRE_BAT_RED,
+        TILEP_MONS_VAMPIRE_BAT_PURPLE,
+        TILEP_MONS_VAMPIRE_BAT_BLUE,
+    };
+    shuffle_array(bat_colours);
+#endif
+
+    follower saved_blork = follower(blorkula);
+    bool placed_bat = false;
+    for (int i = 0; i < num_bats; ++i)
+    {
+        monster *bat =
+        create_monster(
+            mgen_data(MONS_VAMPIRE_BAT, SAME_ATTITUDE(&blorkula),
+                      blorkula.pos(), blorkula.foe));
+
+        if (bat)
+        {
+            bat->props[BLORKULA_REVIVAL_TIMER_KEY] = revive_timer;
+#ifdef USE_TILE
+            bat->props[MONSTER_TILE_KEY] = bat_colours[i];
+#endif
+            saved_blork.write_to_prop(bat->props[SAVED_BLORKULA_KEY].get_vector());
+            bat->flags |= (MF_NO_REWARD | MF_WAS_IN_VIEW);
+            placed_bat = true;
+        }
+    }
+
+    if (!placed_bat)
+    {
+        mprf("%s attempts to avoid the deathblow, but fails!",
+             blorkula.name(DESC_THE).c_str());
+        return false;
+    }
+
+    if (you.can_see(blorkula))
+    {
+        mprf(MSGCH_MONSTER_SPELL,
+            "%s avoids the killing blow by scattering into a rainbow of bats!",
+            blorkula.name(DESC_THE).c_str());
+
+        saved_blork.mons.props[BLORKULA_NEXT_BAT_TIME] = you.elapsed_time + (random_range(550, 1250));
+        monster_die(blorkula, KILL_RESET, NON_MONSTER, true);
+    }
+
+    return true;
+}
+
+static monster* _retrieve_saved_blorkula(monster& bat)
+{
+    follower saved_blork;
+    saved_blork.read_from_prop(bat.props[SAVED_BLORKULA_KEY].get_vector());
+    monster* blork = saved_blork.place();
+    return blork;
+}
+
+static void _blorkula_bat_death(monster& bat, killer_type killer, int killer_index)
+{
+    // Check if any other bats are still alive. If they are not, formally kill Blorkula.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_VAMPIRE_BAT && *mi != &bat && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+            return;
+    }
+
+    // No other bats left, so pass this death onto Blorkula as 'real'
+    monster* blork = _retrieve_saved_blorkula(bat);
+    blork->swap_with(&bat);
+    blork->props[BLORKULA_DIE_FOR_REAL_KEY] = true;
+
+    // Otherwise we won't get proper XP or piety for banishing Blork via banishing
+    // the final bat, if worshipping Lugonu. There is a mild possibility that in at
+    // least a decade of people playing this game, this may occur once.
+    if (killer == KILL_BANISHED && killer_index == MHITYOU)
+    {
+            did_god_conduct(DID_BANISH, blork->get_experience_level(), true, blork);
+            blork->damage_friendly = blork->hit_points;
+    }
+
+    monster_die(*blork, killer, killer_index);
+}
+
+void blorkula_bat_merge(monster& bat)
+{
+    if (!bat.props.exists(BLORKULA_REVIVAL_TIMER_KEY)
+        || bat.props[BLORKULA_REVIVAL_TIMER_KEY].get_int() > you.elapsed_time)
+    {
+        return;
+    }
+
+    monster* blork = _retrieve_saved_blorkula(bat);
+    const coord_def pos = bat.pos();
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_VAMPIRE_BAT && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+            monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+    }
+
+    blork->move_to_pos(pos);
+
+    if (you.can_see(*blork))
+    {
+        mprf(MSGCH_MONSTER_SPELL,
+             "The bats swarm back together and %s reappears in a puff of irridescent mist.",
+             blork->name(DESC_THE).c_str());
+    }
+}
+
 /**
  * Attempt to save the given monster's life at the last moment.
  *
@@ -847,6 +990,9 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     }
     else if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
         return true;
+
+    if (mons->type == MONS_BLORKULA_THE_ORCULA)
+        return _blorkula_bat_split(*mons, killer);
 
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
         return false;
@@ -1998,6 +2144,11 @@ item_def* monster_die(monster& mons, killer_type killer,
              && !wizard && !mons_reset)
     {
         _druid_final_boon(&mons);
+    }
+    else if (mons.type == MONS_VAMPIRE_BAT && !silent && !mons_reset
+             && mons.props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+    {
+        _blorkula_bat_death(mons, killer, killer_index);
     }
     // Only transform if we 'died' to timeout. Something simply dealing damage
     // to us can still shatter us.

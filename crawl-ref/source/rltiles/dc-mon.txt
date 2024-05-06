@@ -87,6 +87,12 @@ radroach MONS_RADROACH
 %rim 1
 bat MONS_BAT
 vampire_bat MONS_VAMPIRE_BAT
+## Colors for blorkula
+vampire_bat_green MONS_VAMPIRE_BAT_GREEN
+vampire_bat_orange MONS_VAMPIRE_BAT_ORANGE
+vampire_bat_red MONS_VAMPIRE_BAT_RED
+vampire_bat_purple MONS_VAMPIRE_BAT_PURPLE
+vampire_bat_blue MONS_VAMPIRE_BAT_BLUE
 butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2
@@ -1164,7 +1170,7 @@ ghoul MONS_GHOUL
 
 %sdir mon/unique
 %rim 0
-blork_the_orc MONS_BLORK_THE_ORC
+blorkula MONS_BLORKULA_THE_ORCULA
 urug MONS_URUG
 nergalle MONS_NERGALLE
 saint_roka MONS_SAINT_ROKA

@@ -16,6 +16,10 @@
 #define OLD_DUVESSA_ENERGIZE_KEY "duvessa_berserk"
 #define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
 #endif
+#define BLORKULA_REVIVAL_TIMER_KEY "blorkula_revival_timer"
+#define BLORKULA_NEXT_BAT_TIME "blorkula_next_bat_time"
+#define SAVED_BLORKULA_KEY "original_blorkula"
+#define BLORKULA_DIE_FOR_REAL_KEY "blorkula_die_for_real"
 
 class actor;
 class monster;
@@ -89,3 +93,5 @@ bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
 bool mons_bennu_can_revive(const monster* mons);
+
+void blorkula_bat_merge(monster& bat);

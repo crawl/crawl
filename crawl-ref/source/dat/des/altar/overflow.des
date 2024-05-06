@@ -1267,7 +1267,7 @@ TAGS:    no_monster_gen patrolling no_trap_gen uniq_altar_hepliaklqana
 SHUFFLE: 123
 SHUFFLE: _-G
 : if you.in_branch("D") then
-:     if you.depth() < 4 then
+:     if you.depth() < 5 then
 KMONS:   1 = orc wizard; quarterstaff . robe
 # Early for kobold brigands, but they get a wand of charming instead of darts,
 # so less threatening.
@@ -1278,7 +1278,7 @@ KMONS:   3 = orc ; flail . kite shield . chain mail
 # We generate one ancestor monster for D:3-9
 NSUBST:  123 = 2=.
 :     elseif you.depth() < 7 then
-KMONS:   1 = blork the orc ; quarterstaff good_item . robe \
+KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe \
              / orc wizard ; quarterstaff good_item . robe \
              , orc wizard ; quarterstaff good_item . robe
 KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe \
@@ -2491,10 +2491,10 @@ NAME:       tgw_sif
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
 TAGS:       temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna
-: if you.absdepth() <= 3 then
+: if you.absdepth() <= 4 then
 MONS:       Jessica
 : elseif you.absdepth() <= 6 then
-MONS:       orc wizard w:15 / Blork the orc
+MONS:       orc wizard w:15 / Blorkula the orcula
 : elseif you.in_branch("Depths") then
 MONS:       deep elf annihilator
 :else

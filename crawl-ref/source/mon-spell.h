@@ -1807,13 +1807,14 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('o') Orcs.
-    {  MST_BLORK,
+    {  MST_BLORKULA,
       {
-       { SPELL_CANTRIP, 9, MON_SPELL_WIZARD },
-       { SPELL_MAGIC_DART, 9, MON_SPELL_WIZARD },
+       { SPELL_SANDBLAST, 9, MON_SPELL_WIZARD },
+       { SPELL_STING, 9, MON_SPELL_WIZARD },
+       { SPELL_SHOCK, 9, MON_SPELL_WIZARD },
        { SPELL_THROW_FROST, 9, MON_SPELL_WIZARD },
        { SPELL_THROW_FLAME, 9, MON_SPELL_WIZARD },
-       { SPELL_HASTE, 9, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 12, MON_SPELL_WIZARD },
       }
     },
 
