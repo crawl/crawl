@@ -53,6 +53,9 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
 
     beam.aux_source.clear();
     beam.attitude = origin.attitude;
+
+    // Cache a copy of the exploding monster so we can look up blame info after it dies.
+    env.final_effect_monster_cache.push_back(origin);
 }
 
 static int _inferno_power(int /*hd*/)

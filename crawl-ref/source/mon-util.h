@@ -496,6 +496,7 @@ int get_dist_to_nearest_monster();
 bool monster_nearby();
 actor *actor_by_mid(mid_t m, bool require_valid = false);
 monster *monster_by_mid(mid_t m, bool require_valid = false);
+monster *cached_monster_copy_by_mid(mid_t m);
 bool mons_is_recallable(const actor* caller, const monster& targ);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);

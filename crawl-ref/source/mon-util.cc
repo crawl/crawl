@@ -4813,6 +4813,17 @@ monster *monster_by_mid(mid_t m, bool require_valid)
     return 0;
 }
 
+monster *cached_monster_copy_by_mid(mid_t m)
+{
+    for (size_t i = 0; i < env.final_effect_monster_cache.size(); ++i)
+    {
+        if (env.final_effect_monster_cache[i].mid == m)
+            return &env.final_effect_monster_cache[i];
+    }
+
+    return nullptr;
+}
+
 void init_anon()
 {
     monster &mon = env.mons[ANON_FRIENDLY_MONSTER];
