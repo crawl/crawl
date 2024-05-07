@@ -1989,14 +1989,6 @@ VISUAL:@The_monster@'s form shimmers in the rain.
 
 ############ BLORK ###
 %%%%
-Blorkula the orcula triumphant
-
-@Blork the orc triumphant@
-%%%%
-Blorkula the orcula killed
-
-@Blork the orc killed@
-%%%%
 Blorkula the orcula
 
 @_Blork_common_@
