@@ -1158,6 +1158,7 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OBJ_WEAPONS:
     case OSEL_WIELD:
+    case OSEL_BLESSABLE_WEAPON:
         return item_is_wieldable(i);
 
     case OSEL_EVOKABLE:
@@ -1174,10 +1175,6 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_ENCHANTABLE_WEAPON:
         return is_enchantable_weapon(i, true);
-
-    case OSEL_BLESSABLE_WEAPON:
-        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE)
-                    || you_worship(GOD_KIKUBAAQUDGHA), true);
 
     case OSEL_CURSABLE:
         return item_is_equipped(i) && item_is_cursable(i);
