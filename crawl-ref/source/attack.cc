@@ -280,6 +280,12 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
             modifiers += UMBRA_TO_HIT_MALUS;
     }
 
+    if (defender->is_monster() && attacker->is_player())
+    {
+        const int distance = you.pos().distance_from(defender->pos());
+        modifiers += blind_player_to_hit_modifier(mhit, distance);
+    }
+
     return modifiers;
 }
 

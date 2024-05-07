@@ -3132,6 +3132,9 @@ static string _general_cannot_read_reason()
     if (you.confused())
         return "You are too confused!";
 
+    if (you.duration[DUR_BLIND])
+        return "You are too blind!";
+
     // no reading while threatened (Ru/random mutation)
     if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
         return "You cannot read scrolls in your current state!";

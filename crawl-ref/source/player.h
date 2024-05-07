@@ -55,6 +55,8 @@
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
 #define RAMPAGE_HEAL_KEY "rampage_heal_strength"
 #define RAMPAGE_HEAL_MAX 7
+#define BLIND_FLAVOUR_KEY "blind_flavour"
+#define BLIND_COLOUR_KEY "blind_colour"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -1184,6 +1186,8 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void barb_player(int turns, int pow);
+void blind_player(int turns, colour_t flavour_colour = LIGHTGREY);
+int blind_player_to_hit_modifier(const int to_hit, const int distance);
 void dec_berserk_recovery_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);

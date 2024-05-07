@@ -5522,9 +5522,14 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
  * @param result[in,out]    The stringstream to append to.
  * @param weapon            The weapon you are hitting them with
  * @param verbose           Uses more flowery language (for monster info pane)
+ * @param source            An attack source to use for calculations. An appropriate
+ *                          one will be created if not provided.
+ * @param distance          Distance from which the attack is being made. If not
+ *                          provided, assume distance between player and the target.
  */
-void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     const item_def* weapon, bool verbose)
+void describe_to_hit(const monster_info &mi, ostringstream &result,
+                     const item_def *weapon, bool verbose, attack *source,
+                     const int distance)
 {
     if (weapon != nullptr
         && !(is_weapon(*weapon) || is_throwable(&you, *weapon)))
@@ -5532,18 +5537,27 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         return; // breadwielding
     }
 
-    const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
+    const bool melee = weapon == nullptr || !(is_range_weapon(*weapon)
+                                              || is_throwable(&you, *weapon));
+    int distance_from = distance > 0 ? distance
+                                     : you.pos().distance_from(mi.pos);
+    // On xv screen, don't show a bigger penalty than player's maximum reach,
+    // even if we're the other side of the map. But if we're adjacent and
+    // targetting, show correct penalty for 1 tile distance.
+    if (melee)
+        distance_from = min(distance_from, (int)you.reach_range());
     int acc_pct;
     if (melee)
     {
         melee_attack attk(&you, nullptr);
-        acc_pct = to_hit_pct(mi, attk, true);
+        acc_pct = to_hit_pct(mi, source ? *source : attk, true, false,
+                             distance_from);
     }
     else if (weapon->base_type == OBJ_MISSILES)
     {
         ranged_attack attk(&you, nullptr, nullptr, weapon, false);
         const bool penetrating = is_penetrating_attack(you, nullptr, *weapon);
-        acc_pct = to_hit_pct(mi, attk, false, penetrating);
+        acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
     }
     else
     {
@@ -5551,7 +5565,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         populate_fake_projectile(*weapon, fake_proj);
         const bool penetrating = is_penetrating_attack(you, weapon, fake_proj);
         ranged_attack attk(&you, nullptr, weapon, &fake_proj, false);
-        acc_pct = to_hit_pct(mi, attk, false, penetrating);
+        acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
     }
 
     if (verbose)
@@ -5566,6 +5580,14 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
             result << "your " << you.hand_name(true);
         else
             result << weapon->name(DESC_YOUR, false, false, false);
+    }
+
+    if (you.duration[DUR_BLIND])
+    {
+        if (verbose)
+            result << " (blind and from distance " << distance_from << ")";
+        else
+            result << " blind";
     }
 }
 

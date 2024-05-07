@@ -1478,7 +1478,7 @@ static int _to_hit_pct(const monster_info& mi, int acc)
     if (acc == AUTOMATIC_HIT)
         return 100;
 
-    acc += mi.lighting_modifiers();
+    acc += mi.lighting_modifiers(acc, you.pos().distance_from(mi.pos));
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
 
@@ -1645,7 +1645,9 @@ static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
 
     vector<string> desc;
     ostringstream result;
-    describe_to_hit(mi, result, nullptr);
+    // Pass in our own attack and specify distance 1 so we get correct to-hit
+    // for where the attack *will* be from
+    describe_to_hit(mi, result, nullptr, false, &attk, 1);
     desc.emplace_back(result.str());
     return desc;
 }
