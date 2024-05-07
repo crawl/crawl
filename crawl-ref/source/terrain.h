@@ -169,6 +169,7 @@ bool has_push_spaces(const coord_def& pos, bool push_actor,
                     const vector<coord_def>* excluded);
 bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded);
 coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* excluded, bool random);
+coord_def push_or_teleport_actor_from(const coord_def& pos);
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);

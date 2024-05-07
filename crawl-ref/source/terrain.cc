@@ -1257,23 +1257,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
     if (you.can_pass_through(pos))
         move_player_to_grid(pos, false);
     else
-    {
-        // Try pushing the player out of the wall first. If this fails, find the
-        // nearest place in los range they *could* be and put them there.
-        // Teleport only if both fail.
-        if (push_actor_from(pos, nullptr, true).origin())
-        {
-            for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
-            {
-                if (you.can_pass_through(*di) && !actor_at(*di))
-                {
-                    move_player_to_grid(*di, false);
-                    return;
-                }
-            }
-            you_teleport_now();
-        }
-    }
+        push_or_teleport_actor_from(pos);
 }
 
 /**
@@ -1302,8 +1286,10 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (env.grid(pos) == nfeat)
         return;
+    // If we're trying to place a wall on top of a monster, push it out of the
+    // way first.
     if (feat_is_wall(nfeat) && monster_at(pos))
-        return;
+        push_or_teleport_actor_from(pos);
     if (feat_is_trap(nfeat) && env.trap.find(pos) == env.trap.end())
     {
         // TODO: create a trap_def in env for this case?
@@ -2403,6 +2389,46 @@ coord_def push_actor_from(const coord_def& pos,
     // The new position of the monster is now an additional veto spot for
     // monsters.
     return newpos;
+}
+
+/**
+ * Move an actor from 'pos' to some available space, by increasingly forceful
+ * means. Will first try to push into an adjacent moveable space. If none is
+ * available, will instead move into the closest habitable space without LOS_RADIUS.
+ * (Note: there is no guarantee that this isn't on the other side of a wall, but
+ * since this is usually used to push things OUT of walls, that is acceptable).
+ * Finally, if this fails, simply teleport the actor at random.
+ *
+ * @return the new coordinates for the actor.
+ */
+coord_def push_or_teleport_actor_from(const coord_def& pos)
+{
+    actor* act = actor_at(pos);
+    if (!act)
+        return coord_def(0,0);
+
+    if (push_actor_from(pos, nullptr, true).origin())
+    {
+        for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
+        {
+            if (!actor_at(*di)
+                && ((act->is_player() && you.can_pass_through(*di))
+                    || monster_habitable_grid(act->as_monster(), env.grid(*di))))
+            {
+                if (act->is_player())
+                    move_player_to_grid(*di, false);
+                else
+                    act->move_to_pos(*di);
+                return act->pos();
+            }
+        }
+
+        // Failed to find anywhere in LOS_RADIUS that was valid to put this actor,
+        // so just teleport them instead
+        act->teleport(true);
+    }
+
+    return act->pos();
 }
 
 /** Close any door at the given position. Handles the grid change, but does not
