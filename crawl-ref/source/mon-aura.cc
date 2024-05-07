@@ -55,6 +55,11 @@ static const vector<mon_aura_data> aura_map =
 
     {MONS_POLTERGUARDIAN,
         ENCH_REPEL_MISSILES, 1, false},
+
+    {MONS_GLOWING_ORANGE_BRAIN,
+        ENCH_EMPOWERED_SPELLS, 1, false,
+        NUM_DURATIONS, "",
+        [](const actor& targ) { return targ.antimagic_susceptible() ;}},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)

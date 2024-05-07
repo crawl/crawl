@@ -1,6 +1,6 @@
 name: "glowing orange brain"
 glyph: {char: "G", colour: lightred}
-flags: [flies, see_invis, warm_blood, no_skeleton]
+flags: [flies, see_invis, warm_blood, no_skeleton, cautious, has_aura]
 xp_mult: 13
 will: 100
 attacks:
