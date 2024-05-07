@@ -1991,17 +1991,17 @@ VISUAL:@The_monster@'s form shimmers in the rain.
 %%%%
 Blorkula the orcula
 
-@_Blork_common_@
+@_Blorkula_common_@
 
 w:5
-@_Blork_rare_@
+@_Blorkula_rare_@
 %%%%
 Blorkula the orcula triumphant
 
 # Rainbow Raider winning against Batman
 @The_monster@ shouts, "I believe in me!"
 %%%%
-_blork_colour_
+_blorkula_colour_
 
 w:20
 @_rainbow_colour_@
@@ -2138,7 +2138,7 @@ viridian
 
 zaffre
 %%%%
-_Blork_common_
+_Blorkula_common_
 
 # some chance of generic orc speech
 w:20
@@ -2146,9 +2146,9 @@ w:20
 
 VISUAL:@The_monster@ grins serenely.
 
-VISUAL:@The_monster@ is briefly surrounded by a halo of @_blork_colour_@ light.
+VISUAL:@The_monster@ is briefly surrounded by a halo of @_blorkula_colour_@ light.
 
-VISUAL:@The_monster@'s eyes glow @_blork_colour_@.
+VISUAL:@The_monster@'s eyes glow @_blorkula_colour_@.
 
 @The_monster@ says @to_foe@, "You need a new perspective."
 
@@ -2162,11 +2162,11 @@ VISUAL:@The_monster@'s eyes glow @_blork_colour_@.
 
 @The_monster@ mutters, "Such pretty colours everywhere..."
 
-@The_monster@ says, "My favourite colour of blood is @_blork_colour_@. Wait, no, @_blork_colour_@."
+@The_monster@ says, "My favourite colour of blood is @_blorkula_colour_@. Wait, no, @_blorkula_colour_@."
 
 @The_monster@ screams, "What are you staring at, @player_name@? I'm stylish!" @player_only@
 %%%%
-_Blork_rare_
+_Blorkula_rare_
 
 @The_monster@ screams @at_foe@, "What are you like inside? I'll break you open and find out!"
 
@@ -2178,12 +2178,12 @@ _Blork_rare_
 
 @The_monster@ says @to_foe@, "There's so much colour in the world. Let me show it to you."
 
-VISUAL:@The_monster@ contemplates whether Beogh's temples would look better painted @_blork_colour_@.
+VISUAL:@The_monster@ contemplates whether Beogh's temples would look better painted @_blorkula_colour_@.
 
 # Calvin and Hobbes
 @The_monster@ says @to_foe@, "The problem is, you see everything in terms of black and white."
 
-@The_monster@ mutters, "Why is everything @_blork_colour_@ all of a sudden?"
+@The_monster@ mutters, "Why is everything @_blorkula_colour_@ all of a sudden?"
 
 @The_monster@ says, "Things are no longer grey! Not since my great insight!"
 %%%%
