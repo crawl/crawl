@@ -3022,20 +3022,20 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
             monster_die(**mi, KILL_MISC, NON_MONSTER);
     }
 
-    mgen_data cannon = _pal_data(MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
-                                SPELL_HOARFROST_CANNONADE);
+    mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
+                                    SPELL_HOARFROST_CANNONADE);
     cannon.flags |= MG_FORCE_PLACE;
     cannon.hd = 4 + div_rand_round(pow, 20);
 
     // Make both cannons share the same duration
     const int dur = random_range(16, 22) * BASELINE_DELAY;
 
-    int num_created = 0;
+    int num_seen = 0;
     for (int i = 0; i < 2; ++i)
     {
         // Find a spot for each cannon (at a somewhat larger distance than
         // normal summons)
-        find_habitable_spot_near(you.pos(), MONS_HOARFROST_CANNON, 3, false,
+        find_habitable_spot_near(agent.pos(), MONS_HOARFROST_CANNON, 3, false,
                                  cannon.pos);
 
         monster* mons = create_monster(cannon);
@@ -3044,15 +3044,26 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
             // Give a bit of instant energy so the slow cannons don't take
             // multiple turns to fire their first shot.
             mons->speed_increment = 70;
-            mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
-            ++num_created;
+            mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &agent, dur));
+            mons->mark_summoned(0, false, SPELL_HOARFROST_CANNONADE, false);
+
+            if (you.can_see(*mons))
+                ++num_seen;
         }
     }
 
-    if (num_created > 1)
-        mpr("You sculpt a pair of cannons out of ice!");
-    else if (num_created == 1)
-        mpr("You sculpt a cannon out of ice!");
+    if (num_seen > 1)
+    {
+        mprf("%s sculpt%s a pair of cannons out of ice!",
+             agent.name(DESC_THE).c_str(),
+             agent.is_player() ? ""  : "s");
+    }
+    else if (num_seen == 1)
+    {
+        mprf("%s sculpt%s a cannon out of ice!",
+             agent.name(DESC_THE).c_str(),
+             agent.is_player() ? ""  : "s");
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

@@ -6438,9 +6438,15 @@ void monster::remove_summons(bool check_attitude)
         if ((!check_attitude || attitude != mi->attitude)
             && mi->summoner == mid
             && (mi->is_summoned(nullptr, &sumtype)
-                || sumtype == MON_SUMM_CLONE))
+                || sumtype == MON_SUMM_CLONE)
+                || sumtype == SPELL_HOARFROST_CANNONADE)
         {
             mi->del_ench(ENCH_ABJ);
+
+            // TODO: Make non-abjurable things that should still be removed on
+            //       caster death not be special-cased in 4 different ways.
+            if (sumtype == SPELL_HOARFROST_CANNONADE)
+                mi->del_ench(ENCH_FAKE_ABJURATION);
         }
     }
 }

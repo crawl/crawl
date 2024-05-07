@@ -1931,33 +1931,35 @@ void monster::mark_summoned(int longevity, bool mark_items, int summon_type, boo
  */
 bool monster::is_summoned(int* duration, int* summon_type) const
 {
+    // Not everything with a 'summon source' counts as a temporary summon, but
+    // we should at least return their source if one exists
+    const mon_enchant summ = get_ench(ENCH_SUMMON);
+    if (summ.ench == ENCH_NONE)
+    {
+        if (summon_type != nullptr)
+            *summon_type = 0;
+    }
+    else if (summon_type != nullptr)
+        *summon_type = summ.degree;
+
     const mon_enchant abj = get_ench(ENCH_ABJ);
     if (abj.ench == ENCH_NONE)
     {
         if (duration != nullptr)
             *duration = -1;
-        if (summon_type != nullptr)
-            *summon_type = 0;
 
         return false;
     }
     if (duration != nullptr)
         *duration = abj.duration;
 
-    const mon_enchant summ = get_ench(ENCH_SUMMON);
-    if (summ.ench == ENCH_NONE)
-    {
-        if (summon_type != nullptr)
-            *summon_type = 0;
-
-        return true;
-    }
-    if (summon_type != nullptr)
-        *summon_type = summ.degree;
-
     // Conjured things (fire vortices, ball lightning, IOOD) are not summoned.
     if (mons_is_conjured(type))
         return false;
+
+    // No summon type specified, but we otherwise seem to be temporary.
+    if (summ.ench == ENCH_NONE)
+        return true;
 
     // Certain spells or monster summon types that set abjuration but aren't
     // considered summons.

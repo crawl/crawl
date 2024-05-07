@@ -171,6 +171,7 @@ static ai_action::goodness _should_irradiate(const monster& mons);
 static void _whack(const actor &caster, actor &victim);
 static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only);
 static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, bool check_only);
+static ai_action::goodness _hoarfrost_cannonade_goodness(const monster &caster);
 
 enum spell_logic_flag
 {
@@ -318,6 +319,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _zap_setup(SPELL_OZOCUBUS_REFRIGERATION),
         MSPELL_LOGIC_NONE,
         5,
+    } },
+    { SPELL_HOARFROST_CANNONADE, {
+        _hoarfrost_cannonade_goodness,
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            const int pow = mons_spellpower(caster, slot.spell);
+            cast_hoarfrost_cannonade(caster, pow, false);
+        },
     } },
     { SPELL_HOARFROST_BULLET, {
         _always_worthwhile,
@@ -1326,6 +1334,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
         case SPELL_IGNITE_POISON:
+        case SPELL_HELLFIRE_MORTAR:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
@@ -2953,6 +2962,25 @@ static ai_action::goodness _still_winds_goodness(const monster &caster)
 
     // let's give a pass otherwise.
     return ai_action::bad();
+}
+
+static ai_action::goodness _hoarfrost_cannonade_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe)
+        return ai_action::bad();
+
+    // Check if we already have at least one living cannon in LoS of our foe.
+    // This should prevent recasting the spell before the cannon has a chance
+    // to fire its final shots without making the monster refuse to resummon
+    // if the player ducks around a corner.
+    for (monster_near_iterator mi(foe->pos()); mi; ++mi)
+    {
+        if (mi->type == MONS_HOARFROST_CANNON && mi->summoner == caster.mid)
+            return ai_action::bad();
+    }
+
+    return ai_action::good();
 }
 
 /// Cast the spell Still Winds, disabling clouds across the level temporarily.
