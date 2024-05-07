@@ -811,7 +811,7 @@ PLUS:     +0
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-SLAY:     -3
+MP:       -5
 STEALTH:  1
 BOOL:     seeinv
 DESCRIP:  Quiet:      All noise in your surroundings is dampened.
