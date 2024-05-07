@@ -2144,6 +2144,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_RAGGED_HIEROPHANT:
     case MONS_FENSTRIDER_WITCH:
     case MONS_JEREMIAH:
+    case MONS_XAKKRIXIS:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
