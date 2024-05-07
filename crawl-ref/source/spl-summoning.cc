@@ -3031,11 +3031,17 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     const int dur = random_range(16, 22) * BASELINE_DELAY;
 
     int num_seen = 0;
+
+    // Monsters summon cannons around their foe instead of themselves (both to
+    // let them operate with other monsters in the way and because it's too easy
+    // for the player to back out of range otherwise)
+    const coord_def center = (agent.is_player() ? you.pos()
+                                                : agent.as_monster()->get_foe()->pos());
     for (int i = 0; i < 2; ++i)
     {
         // Find a spot for each cannon (at a somewhat larger distance than
         // normal summons)
-        find_habitable_spot_near(agent.pos(), MONS_HOARFROST_CANNON, 3, false,
+        find_habitable_spot_near(center, MONS_HOARFROST_CANNON, 3, false,
                                  cannon.pos);
 
         monster* mons = create_monster(cannon);
