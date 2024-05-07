@@ -98,7 +98,8 @@ static double _to_hit_to_land(attack &atk)
     return to_land;
 }
 
-static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee, int to_land)
+static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee,
+                                 const int to_land, const int distance)
 {
     int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
@@ -113,7 +114,7 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
 
         // But the above will bail out because there's no defender in the attack object,
         // so we reproduce any possibly relevant effects here:
-        adjusted_mhit += mi.lighting_modifiers();
+        adjusted_mhit += mi.lighting_modifiers(rolled_mhit, distance);
 
         // And this duplicates ranged_attack::post_roll_to_hit_modifiers().
         if (!melee)
@@ -176,15 +177,16 @@ static double _to_hit_shield_chance(const monster_info& mi,
 }
 
 /**
- * Return the odds of an attack with the given to-hit bonus hitting a defender with the
- * given EV and SH, rounded to the nearest percent.
+ * Return the odds of a provided attack hitting a defender defined as a
+ * monster_info, rounded to the nearest percent.
  *
  * @return                  To-hit percent between 0 and 100 (inclusive).
  */
-int to_hit_pct(const monster_info& mi, attack &atk, bool melee, bool penetrating)
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
+               bool penetrating, int distance)
 {
     const int to_land = _to_hit_to_land(atk);
-    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
+    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land, distance);
     const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
     return (int)(hit_chance * (1.0 - shield_chance) * 100);
 }

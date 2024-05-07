@@ -4909,6 +4909,40 @@ void barb_player(int turns, int pow)
     }
 }
 
+/**
+ * Increase the player's blindness duration.
+ *
+ * @param amount   The number of turns to increase blindness duration by.
+ */
+void blind_player(int amount, colour_t flavour_colour)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (amount <= 0)
+        return;
+
+    const int current = you.duration[DUR_BLIND];
+    you.increase_duration(DUR_BLIND, amount, 50);
+    you.props[BLIND_COLOUR_KEY] = flavour_colour;
+    you.check_awaken(500);
+    if (current > 0)
+        mpr("You are blinded for an even longer time.");
+    else
+        mpr("You are blinded!");
+    learned_something_new(HINT_YOU_ENCHANTED);
+    xom_is_stimulated((you.duration[DUR_BLIND] - current) / BASELINE_DELAY);
+}
+
+int blind_player_to_hit_modifier(const int to_hit, const int distance)
+{
+    if (!you.duration[DUR_BLIND])
+        return 0;
+    // Lose a 10th of to_hit per tile distance, starting at 1 from own square.
+    // At full LOS range only 10% of hit chance remains for Barachi.
+    const int factor = min(distance, LOS_MAX_RANGE) + 1;
+    return -div_round_up(to_hit * factor, 10);
+}
+
 void dec_berserk_recovery_player(int delay)
 {
     if (!you.duration[DUR_BERSERK_COOLDOWN])

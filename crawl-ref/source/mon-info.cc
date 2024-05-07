@@ -889,15 +889,15 @@ int monster_info::regen_rate(int scale) const
 /**
  * Calculate some defender-specific effects on an attacker's to-hit.
  */
-int monster_info::lighting_modifiers() const
+int monster_info::lighting_modifiers(const int to_hit, const int distance) const
 {
+    int mod = blind_player_to_hit_modifier(to_hit, distance);
     if (backlit)
-        return BACKLIGHT_TO_HIT_BONUS;
-    if (umbraed && !you.nightvision())
-        return UMBRA_TO_HIT_MALUS;
-    return 0;
+        mod += BACKLIGHT_TO_HIT_BONUS;
+    else if (umbraed && !you.nightvision())
+        mod += UMBRA_TO_HIT_MALUS;
+    return mod;
 }
-
 
 /**
  * Name the given mutant beast tier.

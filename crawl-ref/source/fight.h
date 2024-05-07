@@ -68,7 +68,7 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk,
-               bool melee, bool penetrating = false);
+               bool melee, bool penetrating, int distance);
 int mon_to_hit_base(int hd, bool skilled);
 int mon_to_hit_pct(int to_land, int scaled_ev);
 int mon_shield_bypass(int hd);
