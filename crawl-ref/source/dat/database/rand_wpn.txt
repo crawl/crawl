@@ -516,6 +516,8 @@ Hummingbird
 
 Fulmar
 
+Hoatzin
+
 Owl
 
 Penguin
