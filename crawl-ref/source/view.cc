@@ -1708,7 +1708,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         // The effect of alpha is already disproportionate depending on the flash colour
         // and may need to be revised: for a white flash the effect is already extreme by
         // around alpha 80, but for darker colours it is way dimmer and needs more like 150.
-        const int alpha_base = blind_player_distance_to(gc);
+        const int alpha_base = gc.distance_from(you.pos());
         cell->flash_alpha = max(1, alpha_base * alpha_base);
     }
 #endif
