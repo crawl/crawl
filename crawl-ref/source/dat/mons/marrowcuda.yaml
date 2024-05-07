@@ -5,7 +5,7 @@ flags: [flies]
 xp_mult: 9
 species: skeleton
 holiness: [undead]
-will: 1
+will: 10
 attacks:
  - {type: bite, flavour: swarm, damage: 8}
 hd: 4
