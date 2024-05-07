@@ -354,6 +354,10 @@ NAME:   uniq_nikola
 DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
 
+NAME:   uniq_wiglaf
+DEPTH:  Elf, Snake, Spider, Vaults:1-3
+: place_unique(_G, "Wiglaf")
+
 NAME:   uniq_arachne
 DEPTH:  Vaults:1-4, Elf, Depths:1
 veto {{

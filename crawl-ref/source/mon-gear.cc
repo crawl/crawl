@@ -749,6 +749,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 0, 5},
             { { SPWPN_HOLY_WRATH, 1}}
         } },
+        { MONS_WIGLAF,
+            { { { WPN_BROAD_AXE,        14 },
+                { WPN_BATTLEAXE,        8 },
+                { WPN_EVENINGSTAR,      5 },
+                { WPN_MORNINGSTAR,      8 }
+        } } },
         { MONS_DONALD,
             { { { WPN_SCIMITAR,         12 },
                 { WPN_LONG_SWORD,       10 },
@@ -1405,6 +1411,13 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
                               0, 1, ISFLAG_KNOW_TYPE);
     }
 
+    if (mon->type == MONS_WIGLAF)
+    {
+        // Always good, and sometimes especially good
+        item_def* hat = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, ISPEC_RANDART);
+        hat->plus = random_range(2, 4);
+    }
+
     if (mon->type == MONS_JOSEPHINA)
     {
         make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
@@ -1614,6 +1627,7 @@ static void _give_shield(monster* mon, int level)
     {
     case MONS_ASTERION:
     case MONS_XAKKRIXIS:
+    case MONS_WIGLAF:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_KITE_SHIELD,
                               level * 2 + 1, 1);
         break;
@@ -1910,6 +1924,7 @@ int make_mons_armour(monster_type type, int level)
     }
 
     case MONS_DONALD:
+    case MONS_WIGLAF:
         if (one_chance_in(3))
             level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_ARMOUR;

@@ -583,7 +583,6 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
 
     int ret = 0;
 
-    // TODO: do we really want to prevent randarts from working for zombies?
     if (mons_itemuse(*this) >= MONUSE_STARTING_EQUIPMENT)
     {
         const int weap      = inv[MSLOT_WEAPON];
@@ -616,11 +615,12 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
             ret += artefact_property(env.item[shld], ra_prop);
         }
 
-        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
-            && is_artefact(env.item[jewellery]))
-        {
+        // XXX: Because monster armour slots are awkward, Wiglaf wears his hat
+        //      in the jewelry slot. Since it is always an artefact, this should
+        //      mostly work out fine, but I'd be happy for a better solution in
+        //      future.
+        if (jewellery != NON_ITEM && is_artefact(env.item[jewellery]))
             ret += artefact_property(env.item[jewellery], ra_prop);
-        }
     }
 
     return ret;

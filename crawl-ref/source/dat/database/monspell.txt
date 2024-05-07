@@ -586,6 +586,14 @@ Paralyse Xtahua cast
 
 @The_monster@ thunders ferociously @at@ @target@!
 %%%%
+Hellfire Mortar Wiglaf cast
+
+VISUAL:@The_monster@ slams @possessive@ weapon against the ground.
+
+@The_monster@ shouts @at@ @foe@, "Taste the blood o the mountain!"
+
+@The_monster@ roars @at@ @foe@, "Let me show ye whit a REAL cannon looks like!"
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

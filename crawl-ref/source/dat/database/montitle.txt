@@ -315,6 +315,10 @@ Urug title
 
 Urug the Orcish Ballista
 %%%%
+Wiglaf title
+
+Wiglaf the Gunnerdwarf
+%%%%
 Vashnia title
 
 Vashnia the Elite Marksnaga

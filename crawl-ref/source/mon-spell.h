@@ -1774,6 +1774,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_WIGLAF,
+      {
+       { SPELL_MIGHT, 34, MON_SPELL_WIZARD },
+       { SPELL_HELLFIRE_MORTAR, 34, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('h') Carnivorous quadrupeds.
     {  MST_NATASHA,
       {

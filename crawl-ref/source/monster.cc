@@ -1611,6 +1611,11 @@ bool monster::wants_jewellery(const item_def &item) const
         return false;
     }
 
+    // XXX: Because Wiglaf's hat is stored in the jewelry slot (there wasn't
+    //      room elsewhere!), don't pick up anything that would push it out.
+    if (type == MONS_WIGLAF)
+        return false;
+
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
@@ -1688,6 +1693,9 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     case ARM_HAT:
         if (base_type == MONS_GASTRONOK || genus == MONS_OCTOPODE)
             eq = EQ_BODY_ARMOUR;
+        // The worst one
+        else if (base_type == MONS_WIGLAF)
+            eq = EQ_RINGS;
         break;
     case ARM_CLOAK:
         if (base_type == MONS_MAURICE

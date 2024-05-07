@@ -7267,6 +7267,62 @@ Vashnia triumphant
 @The_monster@ says, "All clear. Let's check for more."
 ## END Vashnia ##
 %%%%
+######## Wiglaf ####### A dwarf with a big cannon and deep attachment to his hat
+Wiglaf
+
+@_Wiglaf_common_@
+
+w:5
+@_Wiglaf_rare_@
+
+@_Wiglaf_nondwarf_@
+%%%%
+related Wiglaf
+
+@_Wiglaf_common_@
+
+w:5
+@_Wiglaf_rare_@
+%%%%
+_Wiglaf_common_
+
+@The_monster@ says @to_foe@, "I'll gie ye a proper bath in magma."
+
+@The_monster@ shouts @at@ @foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
+
+@The_monster@ says, "I got whit I came for, but wha passes up a proper rammy?"
+
+@The_monster@ says, "Ye nae take from a dwarf whit's his!"
+
+@The_monster@ says, "Hit me lik' ye mean it, ye dafty glaikit!"
+
+@The_monster@ says, "Och, ye'r asking fur it now."
+
+VISUAL: @The_monster@ straightens out a crease in @possessive@ hat.
+%%%%
+_Wiglaf_rare_
+
+@The_monster@ mutters, "Wee kobolds think thay ken whit a cannon is."
+
+@The_monster@ growls, "I'll break a bone for every stich ye rip."
+
+@The_monster@ mumbles, "If ye must ken, mah gran stiched it fur me."
+
+@The_monster@ sings a few bars of a dwarven mine shanty. Very poorly.
+
+@The_monster@ says, "I havnae been down this way for yonks. They've redecorated."
+
+@The_monster@ says, "I hear the Orcs make a nippy scran these days."
+
+%%%%
+_Wiglaf_nondwarf_
+
+w:5
+@The_monster@ says @to_foe@, "Ye cannae match dwarven artillery."
+
+@The_monster@ says @to_foe@, "Have ye nae fought a dwarf before?"
+## END Wiglaf ##
+%%%%
 ############ Xak'krixis ### A formicid expeditionary alchemist
 Xak'krixis
 
