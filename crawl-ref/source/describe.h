@@ -100,7 +100,7 @@ void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const monster_info* mon_owner);
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     const item_def* weapon = nullptr);
+                     const item_def* weapon = nullptr, bool verbose = false);
 
 string get_command_description(const command_type cmd, bool terse);
 

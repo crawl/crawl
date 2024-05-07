@@ -89,32 +89,33 @@ int aux_to_hit()
 
 }
 
-/**
- * Return the odds of an attack with the given to-hit bonus hitting a defender with the
- * given EV, rounded to the nearest percent.
- *
- * @return                  To-hit percent between 0 and 100 (inclusive).
- */
-int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
+static double _to_hit_to_land(attack &atk)
 {
-    const int to_land = atk.calc_pre_roll_to_hit(false);
+    int to_land = atk.calc_pre_roll_to_hit(false);
     if (to_land >= AUTOMATIC_HIT)
-        return 100;
+        return 1;
 
+    return to_land;
+}
+
+static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee, int to_land)
+{
     int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
-        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+        return 1 - MIN_HIT_MISS_PERCENTAGE / 200.0;
 
     int hits = 0;
     for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
     {
         // Apply post-roll manipulations:
-        int adjusted_mhit = rolled_mhit + mi.lighting_modifiers();
+        int adjusted_mhit = rolled_mhit + atk.post_roll_to_hit_modifiers(rolled_mhit, false);
 
-        adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
+        // But the above will bail out because there's no defender in the attack object,
+        // so we reproduce any possibly relevant effects here:
+        adjusted_mhit += mi.lighting_modifiers();
 
-        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
+        // And this duplicates ranged_attack::post_roll_to_hit_modifiers().
         if (!melee)
         {
             if (mi.is(MB_BULLSEYE_TARGET))
@@ -131,8 +132,61 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
     double hit_chance = ((double)hits) / to_land;
     // Apply Bayes Theorem to account for auto hit and miss.
     hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+    return hit_chance;
+}
 
-    return (int)(hit_chance*100);
+static bool _to_hit_is_invisible(const monster_info& mi)
+{
+    // Replicates player->visible_to(defender)
+    if (mi.attitude == ATT_FRIENDLY)
+        return false;
+
+    if (mi.has_trivial_ench(ENCH_BLIND))
+        return true;
+
+    return you.invisible() && !mi.can_see_invisible() && !you.in_water();
+}
+
+static double _to_hit_shield_chance(const monster_info& mi,
+                                    bool melee, int to_land, bool penetrating)
+{
+    // Duplicates more logic that is defined in attack::attack_shield_blocked, and
+    // attack_melee and attack_ranged classes, for real attacks.
+
+    // Attack first checks for incapacitation, this is handled with a shield bonus
+    // of -100 (or if they have no shield) so we can resolve this here.
+    if (mi.shield_bonus == -100)
+        return 0;
+
+    // There is also a check for a ranged attacker to ignore a shield, but we can't call
+    // the same function because it needs a real defender; instead we simply pass in
+    // penetration (since we might want to set it another way for e.g. spells)
+    if (!melee && !player_omnireflects() && penetrating)
+        return 0;
+
+    // Main check
+    const int con_block = you.shield_bypass_ability(to_land);
+    const int pro_block = _to_hit_is_invisible(mi) ? mi.shield_bonus : mi.shield_bonus / 3;
+
+    // There is also a check for shield exhausted but we have no way of accounting for
+    // this (and we assume not)
+
+    // Final average
+    return min(1.0, max(0.0, (double)pro_block / (double)con_block));
+}
+
+/**
+ * Return the odds of an attack with the given to-hit bonus hitting a defender with the
+ * given EV and SH, rounded to the nearest percent.
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee, bool penetrating)
+{
+    const int to_land = _to_hit_to_land(atk);
+    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
+    const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
+    return (int)(hit_chance * (1.0 - shield_chance) * 100);
 }
 
 /**
