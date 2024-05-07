@@ -1987,7 +1987,7 @@ VISUAL:@The_monster@'s form shimmers in the rain.
 ## END Bai Suzhen ##
 %%%%
 
-############ BLORK ###
+############ BLORKULA ###
 %%%%
 Blorkula the orcula
 
@@ -2190,7 +2190,7 @@ VISUAL:@The_monster@ contemplates whether Beogh's temples would look better pain
 Blorkula the orcula killed
 
 A faint prismatic mist rises from Blorkula's broken form and then dissipates.
-## END Blork the orc ##
+## END Blorkula the orcula ##
 %%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
