@@ -388,7 +388,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_EVOKE_BLINK, "Evoke Blink",
             0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
-            0, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
+            0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::max_hp_drain },
         // TODO: any way to automatically derive these from the artefact name?
         { ABIL_EVOKE_DISPATER, "Evoke Damnation",
             4, 100, 0, 6, {}, abflag::none },
@@ -2897,7 +2897,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (!invis_allowed())
             return spret::abort;
         if (_invis_causes_drain())
-            drain_player(60, false, true); // yes, before the fail check!
+            drain_player(40, false, true); // yes, before the fail check!
         fail_check();
         potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
         contaminate_player(1000 + random2(500), true);
