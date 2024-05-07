@@ -3080,7 +3080,8 @@ static bool _hellfire_stops_here(bolt& beam, coord_def pos)
 spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 {
     // Determine path by firing digging tracer
-    zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, false, beam);
+    zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, agent.is_monster(), beam);
+    beam.source = agent.pos();
     beam.source_id = agent.mid;
     beam.origin_spell = SPELL_HELLFIRE_MORTAR;
     beam.is_tracer = true;
@@ -3114,7 +3115,8 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     // Likely because of an invisible monster standing in our first cannon spot
     if (actor_at(beam.path_taken[0]))
     {
-        mpr("Something prevents your mortar from forming!");
+        if (agent.is_player())
+            mpr("Something prevents your mortar from forming!");
         return spret::success;
     }
 
@@ -3124,9 +3126,15 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     {
         const coord_def pos = beam.path_taken[i];
 
-        // Don't make lava under things that can't survive there.
-        if (monster_at(pos) && !beam.ignores_monster(monster_at(pos)))
+        if (!in_bounds(pos))
             break;
+
+        // Don't make lava under things that can't survive there.
+        if (monster_at(pos) && !beam.ignores_monster(monster_at(pos))
+            || pos == you.pos() && !you.airborne())
+        {
+            break;
+        }
 
         if (feat_is_solid(env.grid(pos)) && !feat_is_diggable(env.grid(pos))
             && !feat_is_tree(env.grid(pos)))
@@ -3142,6 +3150,8 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         flash_tile(pos, RED, 5);
     }
 
+    noisy(spell_effect_noise(SPELL_HELLFIRE_MORTAR), agent.pos(), agent.mid);
+
     mgen_data mg = _summon_data(agent, MONS_HELLFIRE_MORTAR, 0,
                                 GOD_NO_GOD, SPELL_HELLFIRE_MORTAR);
     mg.flags |= MG_FORCE_PLACE;
@@ -3153,7 +3163,8 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     // empty), but let's guard against it anyway.
     if (!cannon)
     {
-        mpr("Something prevents your mortar from forming!");
+        if (agent.is_player())
+            mpr("Something prevents your mortar from forming!");
         return spret::success;
     }
 
@@ -3165,8 +3176,8 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         path.push_back(pos);
     }
 
-    mpr("With a deafening crack, the ground splits apart in the path of your "
-        "chthonic artillery!");
+    mprf("With a deafening crack, the ground splits apart in the path of %s "
+        "chthonic artillery!", agent.name(DESC_ITS).c_str());
 
     return spret::success;
 }

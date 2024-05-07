@@ -170,6 +170,7 @@ static ai_action::goodness _mons_will_abjure(const monster& mons);
 static ai_action::goodness _should_irradiate(const monster& mons);
 static void _whack(const actor &caster, actor &victim);
 static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only);
+static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, bool check_only);
 
 enum spell_logic_flag
 {
@@ -1598,6 +1599,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_DEVASTATION:
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLIZING_SHOT:
+    case SPELL_HELLFIRE_MORTAR:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1977,6 +1979,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REGENERATE_OTHER:
     case SPELL_BESTOW_ARMS:
     case SPELL_FULMINANT_PRISM:
+    case SPELL_HELLFIRE_MORTAR:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6029,6 +6032,103 @@ static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_o
     return true;
 }
 
+static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, bool check_only)
+{
+    // The general heuristic used here is:
+    // Try aiming at all spaces in a 5x5 square around our foe's location, picking
+    // the first one that creates a mortar path at least 3 tiles long before running
+    // into any actor, and that at least 3 tiles along that path have a viable shot
+    // at something with bolt of magma.
+    //
+    // (Iteration among those spaces is random, but prefering ones adjacent to the
+    // foe first.)
+
+    vector<coord_def> possible_targets;
+    for (distance_iterator di(foe.pos(), true, true, 2); di; ++di)
+    {
+        if (cell_see_cell(foe.pos(), *di, LOS_NO_TRANS))
+            possible_targets.push_back(*di);
+    }
+
+    coord_def found_target;
+    for (size_t i = 0; i < possible_targets.size(); ++i)
+    {
+        bolt tracer;
+        zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, true, tracer);
+        tracer.range = LOS_RADIUS;
+        tracer.source = caster.pos();
+        tracer.target = possible_targets[i];
+        tracer.source_id = caster.mid;
+        tracer.origin_spell = SPELL_HELLFIRE_MORTAR;
+        tracer.is_tracer = true;
+        tracer.fire();
+
+        // Skip paths that are less than 3 tiles long (which generally requires
+        // them to be 4 tiles long, since the last tile will be some obstruction)
+        if (tracer.path_taken.size() < 4)
+            continue;
+
+        size_t len;
+        for (len = 0; len < tracer.path_taken.size(); ++len)
+        {
+            if (actor_at(tracer.path_taken[len]))
+                break;
+        }
+
+        // Skip paths that run into an obstruction before 3 tiles
+        if (len < 3)
+            continue;
+
+        // Now that we've determined the path is long enough, let's see if we
+        // can shoot at something useful on at least 3 spaces of this path
+        int useful_count = 0;
+        for (size_t j = 0; j < len; ++j)
+        {
+            // These tracers are from the perspective a possible morter at these spots,
+            // but since that doesn't exist yet, we assume that the caster is firing
+            // them. Possibly this doesn't result in exact results, but mostly should
+            // be close enough, I think.
+            bolt magma_tracer = mons_spell_beam(&caster, SPELL_BOLT_OF_MAGMA, 100);
+            magma_tracer.source = tracer.path_taken[j];
+            magma_tracer.target = foe.pos();
+            magma_tracer.source_id = caster.mid;
+            magma_tracer.attitude = mons_attitude(caster);
+            magma_tracer.is_tracer = true;
+            magma_tracer.foe_ratio = 100;
+            magma_tracer.fire();
+
+            if (mons_should_fire(magma_tracer))
+                useful_count++;
+
+            // This path has enough useful shots to take!
+            if (useful_count == 3)
+            {
+                found_target = possible_targets[i];
+                break;
+            }
+        }
+
+        // If this target was found to be valid, stop looking at other ones.
+        if (!found_target.origin())
+            break;
+    }
+
+    // If we didn't find anything, stop.
+    if (found_target.origin())
+        return false;
+
+    // If this is just a tracer, we know we've found a valid target.
+    if (check_only)
+        return true;
+
+    // Actually cast it!
+    bolt beam = mons_spell_beam(&caster, SPELL_HELLFIRE_MORTAR, pow);
+    beam.target = found_target;
+    cast_hellfire_mortar(caster, beam, pow, false);
+
+    return true;
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -7113,6 +7213,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_FULMINANT_PRISM:
         _mons_cast_prisms(*mons, *mons->get_foe(),
                           mons_spellpower(*mons, SPELL_FULMINANT_PRISM), false);
+        return;
+
+    case SPELL_HELLFIRE_MORTAR:
+        _mons_cast_hellfire_mortar(*mons, *mons->get_foe(),
+                                   mons_spellpower(*mons, SPELL_HELLFIRE_MORTAR), false);
         return;
     }
 
@@ -8419,6 +8524,15 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
         return ai_action::good_or_impossible(
             _mons_cast_prisms(*mon, *mon->get_foe(), 100, true));
+    }
+
+    case SPELL_HELLFIRE_MORTAR:
+    {
+        if (hellfire_mortar_active(*mon))
+            return ai_action::impossible();
+
+        return ai_action::good_or_impossible(
+            _mons_cast_hellfire_mortar(*mon, *mon->get_foe(), 100, true));
     }
 
 #if TAG_MAJOR_VERSION == 34

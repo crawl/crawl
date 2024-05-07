@@ -1113,17 +1113,17 @@ static void _handle_hellfire_mortar(monster& mortar)
 {
     // First, fire a bolt of magma at some random target we have line of fire to
     vector<coord_def> targs;
-    for (monster_near_iterator mi(&mortar, LOS_NO_TRANS); mi; ++mi)
+    for (actor_near_iterator ai(&mortar, LOS_NO_TRANS); ai; ++ai)
     {
-        if (!mons_aligned(&mortar, *mi) && monster_los_is_valid(&mortar, *mi))
+        if (!mons_aligned(&mortar, *ai) && monster_los_is_valid(&mortar, *ai))
         {
             bolt tracer = mons_spell_beam(&mortar, SPELL_BOLT_OF_MAGMA, 100);
             tracer.source = mortar.pos();
-            tracer.target = mi->pos();
+            tracer.target = ai->pos();
 
             fire_tracer(&mortar, tracer);
             if (mons_should_fire(tracer))
-                targs.push_back(mi->pos());
+                targs.push_back(ai->pos());
         }
     }
 
@@ -1132,6 +1132,9 @@ static void _handle_hellfire_mortar(monster& mortar)
     const unsigned int count = min(2, (int)targs.size());
     for (unsigned int i = 0; i < count; ++i)
     {
+        // Set our foe to whatever we're shooting at here, for accurate cast messages
+        mortar.foe = actor_at(targs[i])->mindex();
+
         bolt beam;
         setup_mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA);
         beam.target = targs[i];
