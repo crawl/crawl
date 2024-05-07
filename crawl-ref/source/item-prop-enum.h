@@ -364,6 +364,8 @@ enum missile_type
 #endif
     MI_ARROW,
     MI_BOLT,
+    MI_DOUBLE_BOLT,
+    MI_TRIPLE_BOLT,
     MI_JAVELIN,
 
     MI_STONE,

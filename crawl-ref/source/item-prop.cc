@@ -764,8 +764,8 @@ static const weapon_def Weapon_prop[] =
     { WPN_LONGBOW,           "longbow",            14,  0, 17,
         SK_RANGED_WEAPONS,   SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 2, 10, 65, RANGED_BRANDS },
-    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23, -2, 23,
-        SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23, -2, 12,
+        SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS, MI_TRIPLE_BOLT,   
         DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
 
 };
@@ -832,6 +832,8 @@ static const missile_def Missile_prop[] =
     { MI_STONE,         "stone",         2, 8,  1  },
     { MI_ARROW,         "arrow",         0, 1,  2  },
     { MI_BOLT,          "bolt",          0, 1,  2  },
+    { MI_TRIPLE_BOLT,"triplet of bolts", 0, 1,  2  },
+    { MI_DOUBLE_BOLT, "couple of bolts", 0, 1,  2  },
     { MI_SLUG,          "slug",          0, 1,  2  },
     { MI_LARGE_ROCK,    "large rock",   20, 25, 15 },
     { MI_SLING_BULLET,  "sling bullet",  0, 1,  5  },

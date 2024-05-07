@@ -8,12 +8,15 @@ class ranged_attack : public attack
 public:
     int range_used;
     bool reflected;
+    int force_range = 0;
 
 // Public Methods
 public:
     ranged_attack(actor *attacker, actor *defender,
                   const item_def *wpn, const item_def *projectile,
                   bool teleport, actor *blame = 0, bool mulched = false);
+
+    void set_path(bolt path);
 
     // Applies attack damage and other effects.
     bool attack();
@@ -25,7 +28,10 @@ private:
     bool handle_phase_blocked() override;
     bool handle_phase_dodged() override;
     bool handle_phase_hit() override;
+    bool handle_phase_end() override;
     bool ignores_shield(bool verbose) override;
+
+    bolt the_path;
 
     /* Combat Calculations */
     bool using_weapon() const override;
@@ -44,6 +50,8 @@ private:
 
     /* Weapon Effects */
     bool check_unrand_effects() override;
+
+    int attack_count;
 
     /* Attack Effects */
     bool mons_attack_effects() override;

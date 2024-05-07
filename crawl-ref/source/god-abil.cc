@@ -158,12 +158,12 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     }
 
     item_def& wpn(you.inv[item_slot]);
-    // TSO and KIKU allow blessing ranged weapons, but LUGONU does not.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH
+    // TSO and KIKU allow blessing ranged weapons, but LUGONU does not. WRONG!
+    /*if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH
                                                                   || brand == SPWPN_PAIN, true))
     {
         return false;
-    }
+    }*/
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
@@ -208,7 +208,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
     mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
     flash_view(UA_PLAYER, colour);
-    simple_god_message(" booms: Use this gift wisely!");
+    simple_god_message(" booms: Thanks, and have fun!");
     you.one_time_ability_used.set(you.religion);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 

@@ -8,14 +8,18 @@
 #include "ranged-attack.h"
 
 #include "areas.h"
+#include "beam.h"
 #include "chardump.h"
 #include "coord.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
 #include "god-conduct.h"
+#include "items.h"
 #include "item-prop.h"
+#include "makeitem.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-util.h"
@@ -99,6 +103,15 @@ bool ranged_attack::attack()
         return true;
     }
 
+     attack_count = 1;
+    if (projectile->base_type == OBJ_MISSILES)
+    {
+        if (projectile->sub_type == MI_TRIPLE_BOLT)
+            attack_count = 3;
+        if (projectile->sub_type == MI_DOUBLE_BOLT)
+            attack_count = 2;
+    }
+
     int ev = defender->evasion(false, attacker);
 
     // Works even if the defender is incapacitated
@@ -160,6 +173,50 @@ bool ranged_attack::handle_phase_attempted()
     attack_occurred = true;
 
     return true;
+}
+
+void ranged_attack::set_path(bolt path)
+{
+    the_path = path;
+}
+
+bool ranged_attack::handle_phase_end()
+{
+    const int remaining_range = you.current_vision - grid_distance(attacker->pos(), defender->pos());
+
+    if (projectile->base_type == OBJ_MISSILES &&
+       (projectile->sub_type == MI_TRIPLE_BOLT || projectile->sub_type == MI_DOUBLE_BOLT) &&
+        !the_path.aimed_at_spot && !invalid_monster(defender->as_monster()) 
+        && (remaining_range >= 1))
+    {
+        bolt continuation = the_path;
+        continuation.range = remaining_range;
+        const int x0 = the_path.source.x;
+        const int x1 = the_path.target.x;
+        const int y0 = the_path.source.y;
+        const int y1 = the_path.target.y;
+        continuation.target = coord_def(x0 + (x1 - x0) * 5, y0 + (y1 - y0) * 5);
+        range_used = BEAM_STOP;
+        continuation.source = defender->pos();
+        int x = MI_BOLT;
+        if (attack_count > 1)
+            x = MI_DOUBLE_BOLT;
+        int i = items(false, OBJ_MISSILES, x, 1);
+        item_def item = env.item[i];
+        item.quantity = 1;
+        continuation.item = &item;
+        continuation.aux_source.clear();
+        continuation.name = item.name(DESC_PLAIN, false, false, false);
+
+        continuation.fire();
+        destroy_item(i);
+    }
+
+    // XXX: this kind of hijacks the shield block check
+    if (!is_penetrating_attack(*attacker, weapon, *projectile) && attack_count <= 1)
+        range_used = BEAM_STOP;
+
+    return attack::handle_phase_end();
 }
 
 bool ranged_attack::handle_phase_blocked()
@@ -262,13 +319,6 @@ static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
 
 bool ranged_attack::handle_phase_hit()
 {
-    if (mulch_bonus()
-        // XXX: this kind of hijacks the shield block check
-        || !is_penetrating_attack(*attacker, weapon, *projectile))
-    {
-        range_used = BEAM_STOP;
-    }
-
     if (projectile->is_type(OBJ_MISSILES, MI_DART))
     {
         damage_done = dart_duration_roll(get_ammo_brand(*projectile));
@@ -289,49 +339,63 @@ bool ranged_attack::handle_phase_hit()
             monster_caught_in_net(defender->as_monster());
     }
     else
-    {
-        damage_done = calc_damage();
-        if (damage_done > 0)
+    {   
+        for (; attack_count > 0; --attack_count)
         {
-            if (!handle_phase_damaged())
-                return false;
-            // Jiyva mutation - piercing projectiles won't keep going if they
-            // get eaten.
-            if (attacker->is_monster()
-                && defender->is_player()
-                && !you.pending_revival
-                && _jelly_eat_missile(*projectile, damage_done))
+            const int bdam = calc_damage();
+
+            if (bdam > 0)
             {
-                range_used = BEAM_STOP;
+                // Sweetspotting!
+                const int lrange = force_range ? force_range : grid_distance(attacker->pos(), defender->pos());
+                int multiplier = 5;
+                if (lrange > 5)
+                {
+                    multiplier -= (lrange - 5);
+                    multiplier = max(multiplier, 3); // Bu special case
+                }
+                else if (lrange < 5)
+                    multiplier -= (5 - lrange);
+                multiplier = max(multiplier, 1);
+                damage_done = div_rand_round(bdam * multiplier, 4);
+                set_attack_verb(damage_done);
+                if (!handle_phase_damaged())
+                    return false;
+                // Jiyva mutation - piercing projectiles won't keep going if they
+                // get eaten.
+                if (attacker->is_monster()
+                    && defender->is_player()
+                    && !you.pending_revival
+                    && _jelly_eat_missile(*projectile, damage_done))
+                {
+                    range_used = BEAM_STOP;
+                }
             }
-        }
-        else
-        {
-            if (needs_message)
+            else if (needs_message)
             {
+                set_attack_verb(0);
                 mprf("%s %s %s%s but does no damage.",
                     projectile->name(DESC_THE).c_str(),
                     attack_verb.c_str(),
                     defender->name(DESC_THE).c_str(),
                     mulch_bonus() ? " and shatters," : "");
             }
-        }
 
-        maybe_trigger_jinxbite();
-    }
-
-    if ((using_weapon() || throwing())
-        && (!defender->is_player() || !you.pending_revival))
-    {
-        if (using_weapon()
-            && apply_damage_brand(projectile->name(DESC_THE).c_str()))
-        {
-            return false;
-        }
-        if ((!defender->is_player() || !you.pending_revival)
-            && apply_missile_brand())
-        {
-            return false;
+            maybe_trigger_jinxbite();
+            if ((using_weapon() || throwing())
+                && (!defender->is_player() || !you.pending_revival))
+            {
+                if (using_weapon()
+                    && apply_damage_brand(projectile->name(DESC_THE).c_str()))
+                {
+                    return false;
+                }
+                if ((!defender->is_player() || !you.pending_revival)
+                    && apply_missile_brand())
+                {
+                    return false;
+                }
+            }
         }
     }
 

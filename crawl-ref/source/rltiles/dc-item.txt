@@ -290,6 +290,22 @@ effect/bolt4 MI_BOLT4
 effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
+effect/doubolt0 MI_DOUBOLT0
+effect/doubolt1 MI_DOUBOLT1
+effect/doubolt2 MI_DOUBOLT2
+effect/doubolt3 MI_DOUBOLT3
+effect/doubolt4 MI_DOUBOLT4
+effect/doubolt5 MI_DOUBOLT5
+effect/doubolt6 MI_DOUBOLT6
+effect/doubolt7 MI_DOUBOLT7
+effect/tribolt0 MI_TRIBOLT0
+effect/tribolt1 MI_TRIBOLT1
+effect/tribolt2 MI_TRIBOLT2
+effect/tribolt3 MI_TRIBOLT3
+effect/tribolt4 MI_TRIBOLT4
+effect/tribolt5 MI_TRIBOLT5
+effect/tribolt6 MI_TRIBOLT6
+effect/tribolt7 MI_TRIBOLT7
 
 %rim 0
 boomerang1 MI_BOOMERANG
