@@ -555,6 +555,7 @@ monster_info::monster_info(const monster* m, int milev)
     sleepwalking = m->sleepwalking();
     backlit = m->backlit(false);
     umbraed = m->umbra();
+    shield_bonus = m->shield_bonus();
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune())

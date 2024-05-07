@@ -3314,8 +3314,9 @@ int bolt::apply_lighting(int base_hit, const actor &targ) const
     if (targ.backlit(false))
         base_hit += BACKLIGHT_TO_HIT_BONUS * 2;
 
+    // Malus is already negative so must still be ADDED to the base_hit
     if (!nightvision && targ.umbra())
-        base_hit -= UMBRA_TO_HIT_MALUS * 2;
+        base_hit += UMBRA_TO_HIT_MALUS * 2;
 
     return base_hit;
 }

@@ -1642,8 +1642,12 @@ static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
 {
     melee_attack attk(&you, nullptr);
     attk.charge_pow = 1; // to give the accuracy bonus
-    const int acc_pct = to_hit_pct(mi, attk, true);
-    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
+
+    vector<string> desc;
+    ostringstream result;
+    describe_to_hit(mi, result, nullptr);
+    desc.emplace_back(result.str());
+    return desc;
 }
 
 static vector<string> _desc_insubstantial(const monster_info& mi, string desc)

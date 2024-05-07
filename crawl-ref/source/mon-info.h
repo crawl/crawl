@@ -283,6 +283,7 @@ struct monster_info_base
     bool sleepwalking;
     bool backlit;
     bool umbraed;
+    int shield_bonus;
 
     uint32_t client_id;
 };

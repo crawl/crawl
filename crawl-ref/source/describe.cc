@@ -81,6 +81,7 @@
 #include "stringutil.h" // to_string on Cygwin
 #include "tag-version.h"
 #include "terrain.h"
+#include "throw.h"
 #include "tile-flags.h"
 #include "tilepick.h"
 #ifdef USE_TILE_LOCAL
@@ -5519,12 +5520,17 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
  *
  * @param mi[in]            Player-visible info about the monster in question.
  * @param result[in,out]    The stringstream to append to.
+ * @param weapon            The weapon you are hitting them with
+ * @param verbose           Uses more flowery language (for monster info pane)
  */
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     const item_def* weapon)
+                     const item_def* weapon, bool verbose)
 {
-    if (weapon != nullptr && !is_weapon(*weapon))
+    if (weapon != nullptr
+        && !(is_weapon(*weapon) || is_throwable(&you, *weapon)))
+    {
         return; // breadwielding
+    }
 
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
     int acc_pct;
@@ -5533,20 +5539,34 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         melee_attack attk(&you, nullptr);
         acc_pct = to_hit_pct(mi, attk, true);
     }
+    else if (weapon->base_type == OBJ_MISSILES)
+    {
+        ranged_attack attk(&you, nullptr, nullptr, weapon, false);
+        const bool penetrating = is_penetrating_attack(you, nullptr, *weapon);
+        acc_pct = to_hit_pct(mi, attk, false, penetrating);
+    }
     else
     {
-        // TODO: handle throwing to-hit somehow?
         item_def fake_proj;
         populate_fake_projectile(*weapon, fake_proj);
+        const bool penetrating = is_penetrating_attack(you, weapon, fake_proj);
         ranged_attack attk(&you, nullptr, weapon, &fake_proj, false);
-        acc_pct = to_hit_pct(mi, attk, false);
+        acc_pct = to_hit_pct(mi, attk, false, penetrating);
     }
 
-    result << "about " << (100 - acc_pct) << "% to evade ";
-    if (weapon == nullptr)
-        result << "your " << you.hand_name(true);
-    else
-        result << weapon->name(DESC_YOUR, false, false, false);
+    if (verbose)
+        result << "about ";
+
+    result << acc_pct << "% to hit";
+
+    if (verbose)
+    {
+        result << " with ";
+        if (weapon == nullptr)
+            result << "your " << you.hand_name(true);
+        else
+            result << weapon->name(DESC_YOUR, false, false, false);
+    }
 }
 
 static bool _visible_to(const monster_info& mi)
@@ -6061,9 +6081,8 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     if (crawl_state.game_started)
     {
-        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
-               << conjugate_verb("have", mi.pronoun_plurality()) << " ";
-        describe_to_hit(mi, result, you.weapon());
+        result << "You have ";
+        describe_to_hit(mi, result, you.weapon(), true);
         if (mi.base_ev != mi.ev)
         {
             if (!mi.ev)

@@ -15,6 +15,7 @@
 #include "chardump.h"
 #include "command.h"
 #include "coordit.h"
+#include "describe.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -194,18 +195,14 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     item_def* item = active_item();
-    item_def fake_proj;
     const item_def *launcher = action.get_launcher();
-    if (launcher && is_range_weapon(*launcher))
-    {
-        populate_fake_projectile(*launcher, fake_proj);
-        item = &fake_proj;
-    }
-    if (!targeted() || !item || item->base_type != OBJ_MISSILES)
+    const bool ranged = launcher && is_range_weapon(*launcher);
+    if (!targeted() || !(ranged || (item && item->base_type == OBJ_MISSILES)))
         return descs;
 
-    ranged_attack attk(&you, nullptr, launcher, item, false);
-    descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
+    ostringstream result;
+    describe_to_hit(mi, result, ranged ? launcher : item);
+    descs.emplace_back(result.str());
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
         descs.emplace_back("chaotic");
