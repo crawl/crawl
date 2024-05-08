@@ -478,6 +478,9 @@ bool valid_blink_destination(const actor &moved, const coord_def& target,
     return true;
 }
 
+// This is for purposes of the targeter UI only, and will include destinations
+// that contain invisible monsters which the player cannot see (even though
+// a real blink will never move them there).
 vector<coord_def> find_blink_targets()
 {
     vector<coord_def> result;
