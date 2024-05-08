@@ -3671,7 +3671,7 @@ w:50
 
 @The_monster@ says, "What kind of god gives you spells but not spellbooks?"
 
-@The_monster@ says, "Let it end in hellfire? When do you get a hellfire spell?"
+@The_monster@ says, "Let it end in hellfire? Why is there only one hellfire spell?"
 
 @The_monster@ says, "I hate Vehumet."
 
