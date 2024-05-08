@@ -5210,6 +5210,8 @@ static string _monster_attacks_description(const monster_info& mi)
 
     _describe_mons_to_hit(mi, result);
 
+    result << "\n";
+
     size_t attk_desc_width = 7;                    // length of "Attacks"
     size_t damage_width   = 10;                    // length of "Max Damage"
     size_t bonus_width = !has_any_flavour ? 0      // no bonus column
@@ -5218,80 +5220,6 @@ static string _monster_attacks_description(const monster_info& mi)
     vector<string> attack_descriptions;
     vector<string> damage_descriptions;
     vector<string> bonus_descriptions;
-
-    // First, check for throwing weapons
-    item_def *quiv = mi.inv[MSLOT_MISSILE].get();
-    if (quiv && quiv->base_type == OBJ_MISSILES)
-    {
-        string throw_str = "Throw: ";
-        if (quiv->is_type(OBJ_MISSILES, MI_THROWING_NET))
-            throw_str += quiv->name(DESC_A, false, false, true, false);
-        else
-            throw_str += pluralise(quiv->name(DESC_PLAIN, false, false,
-                                              true, false));
-        attack_descriptions.emplace_back(throw_str);
-        attk_desc_width = max(attk_desc_width, throw_str.size());
-
-        string dam_desc = "0";
-        string bonus_desc = "";
-        if (quiv->sub_type == MI_THROWING_NET)
-        {
-            bonus_desc = "Ensnare in a net";
-            has_any_flavour = true;
-            flavour_without_dam = true;
-        }
-        else if (quiv->sub_type == MI_DART)
-        {
-            has_any_flavour = true;
-            flavour_without_dam = true;
-            switch (quiv->brand)
-            {
-            case SPMSL_CURARE:
-                dam_desc = "12 (curare)"; // direct curare damage is 2d6
-                bonus_desc = "Poison and slowing";
-                break;
-            case SPMSL_POISONED:
-                bonus_desc = "Poison";
-                break;
-            case SPMSL_BLINDING:
-                bonus_desc = "Blinding and confusion";
-                break;
-            case SPMSL_FRENZY:
-                bonus_desc = "Drive defenders into a frenzy";
-                break;
-            case SPMSL_DISPERSAL:
-                bonus_desc = "Blink the defender away";
-                break;
-            default:
-                break;
-            }
-        }
-        else // ordinary missiles
-        {
-            // Missile attacks use the damage number of a monster's first attack
-            const mon_attack_info info = _atk_info(mi, 0);
-            const mon_attack_def &attack = info.definition;
-            int dam = attack.damage;
-            dam += property(*quiv, PWPN_DAMAGE) - 1;
-            dam += max(_monster_slaying(mi), 0);
-            if (mons_class_flag(mi.type, M_ARCHER))
-                dam += archer_bonus_damage(mi.hd);
-            string silver_str;
-            if (quiv->brand == SPMSL_SILVER)
-            {
-                string dmg_msg;
-                int silver_dam = max(dam / 3,
-                                     silver_damages_victim(&you, dam, dmg_msg));
-                silver_str = make_stringf(" + %d (silver)", silver_dam);
-            }
-            dam_desc = make_stringf("%d%s", dam, silver_str.c_str());
-        }
-
-        damage_descriptions.emplace_back(dam_desc);
-        bonus_descriptions.emplace_back(bonus_desc);
-        damage_width = max(damage_width, dam_desc.size());
-        bonus_width = max(bonus_width, bonus_desc.size());
-    }
 
     // Get all the info that will form the table of attacks
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
@@ -5440,6 +5368,80 @@ static string _monster_attacks_description(const monster_info& mi)
         }
 
         bonus_descriptions.emplace_back(bonus_desc);
+        bonus_width = max(bonus_width, bonus_desc.size());
+    }
+
+    // Check for throwing weapons
+    item_def *quiv = mi.inv[MSLOT_MISSILE].get();
+    if (quiv && quiv->base_type == OBJ_MISSILES)
+    {
+        string throw_str = "Throw: ";
+        if (quiv->is_type(OBJ_MISSILES, MI_THROWING_NET))
+            throw_str += quiv->name(DESC_A, false, false, true, false);
+        else
+            throw_str += pluralise(quiv->name(DESC_PLAIN, false, false,
+                                              true, false));
+        attack_descriptions.emplace_back(throw_str);
+        attk_desc_width = max(attk_desc_width, throw_str.size());
+
+        string dam_desc = "0";
+        string bonus_desc = "";
+        if (quiv->sub_type == MI_THROWING_NET)
+        {
+            bonus_desc = "Ensnare in a net";
+            has_any_flavour = true;
+            flavour_without_dam = true;
+        }
+        else if (quiv->sub_type == MI_DART)
+        {
+            has_any_flavour = true;
+            flavour_without_dam = true;
+            switch (quiv->brand)
+            {
+            case SPMSL_CURARE:
+                dam_desc = "12 (curare)"; // direct curare damage is 2d6
+                bonus_desc = "Poison and slowing";
+                break;
+            case SPMSL_POISONED:
+                bonus_desc = "Poison";
+                break;
+            case SPMSL_BLINDING:
+                bonus_desc = "Blinding and confusion";
+                break;
+            case SPMSL_FRENZY:
+                bonus_desc = "Drive defenders into a frenzy";
+                break;
+            case SPMSL_DISPERSAL:
+                bonus_desc = "Blink the defender away";
+                break;
+            default:
+                break;
+            }
+        }
+        else // ordinary missiles
+        {
+            // Missile attacks use the damage number of a monster's first attack
+            const mon_attack_info info = _atk_info(mi, 0);
+            const mon_attack_def &attack = info.definition;
+            int dam = attack.damage;
+            dam += property(*quiv, PWPN_DAMAGE) - 1;
+            dam += max(_monster_slaying(mi), 0);
+            if (mons_class_flag(mi.type, M_ARCHER))
+                dam += archer_bonus_damage(mi.hd);
+            string silver_str;
+            if (quiv->brand == SPMSL_SILVER)
+            {
+                string dmg_msg;
+                int silver_dam = max(dam / 3,
+                                     silver_damages_victim(&you, dam, dmg_msg));
+                silver_str = make_stringf(" + %d (silver)", silver_dam);
+            }
+            dam_desc = make_stringf("%d%s", dam, silver_str.c_str());
+        }
+
+        damage_descriptions.emplace_back(dam_desc);
+        bonus_descriptions.emplace_back(bonus_desc);
+        damage_width = max(damage_width, dam_desc.size());
         bonus_width = max(bonus_width, bonus_desc.size());
     }
 
