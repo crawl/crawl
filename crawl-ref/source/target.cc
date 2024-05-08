@@ -2249,12 +2249,12 @@ bool targeter_bind_soul::valid_aim(coord_def a)
 
     if (!yred_can_bind_soul(targ))
     {
-        if (targ->type == MONS_PANDEMONIUM_LORD)
+        if (targ->friendly())
+            return notify_fail("You cannot bind the soul of an ally.");
+        else if (targ->type == MONS_PANDEMONIUM_LORD)
             return notify_fail("You are unable to grasp such an alien soul.");
         else if (targ->is_summoned())
             return notify_fail("You cannot bind the soul of a summoned being.");
-        else if (targ->friendly())
-            return notify_fail("You cannot bind the soul of an ally.");
         else
             return notify_fail("That does not possess a soul you can bind.");
     }
