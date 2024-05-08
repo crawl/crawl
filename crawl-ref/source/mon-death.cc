@@ -830,7 +830,12 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 
     const int num_bats = random_range(4, 5);
     const int revive_timer = you.elapsed_time + random_range(140, 220);
-    blorkula.heal(blorkula.max_hit_points);
+    {
+        // Suppress messages about status effects wearing off
+        msg::suppress msg;
+        blorkula.heal(blorkula.max_hit_points);
+        blorkula.timeout_enchantments(1000);
+    }
     blorkula.props[BLORKULA_NEXT_BAT_TIME] = you.elapsed_time + (random_range(550, 1250));
 
 #ifdef USE_TILE
