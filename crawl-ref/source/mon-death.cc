@@ -866,6 +866,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
             bat->props[MONSTER_TILE_KEY] = bat_colours[i];
 #endif
             saved_blork.write_to_prop(bat->props[SAVED_BLORKULA_KEY].get_vector());
+            mons_add_blame(bat, "manifested out of " + blorkula.name(DESC_A, true));
             bat->flags |= (MF_NO_REWARD | MF_WAS_IN_VIEW);
             placed_bat = true;
         }
