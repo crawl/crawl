@@ -1129,10 +1129,17 @@ static void _handle_hellfire_mortar(monster& mortar)
 
     shuffle_array(targs);
 
-    const unsigned int count = min(2, (int)targs.size());
-    for (unsigned int i = 0; i < count; ++i)
+    int shots_fired = 0;
+    for (size_t i = 0; i < targs.size() && shots_fired < 2; ++i)
     {
-        // Set our foe to whatever we're shooting at here, for accurate cast messages
+        actor* foe = actor_at(targs[i]);
+
+        // Skip dead targets, and move onto the next possible candidate, if one exists.
+        // (They might have been killed by a previous beam)
+        if (!foe)
+            continue;
+
+        // Set our foe to whatever we're shooting at for accurate cast messages
         mortar.foe = actor_at(targs[i])->mindex();
 
         bolt beam;
@@ -1140,6 +1147,8 @@ static void _handle_hellfire_mortar(monster& mortar)
         beam.target = targs[i];
         mons_cast(&mortar, beam, SPELL_BOLT_OF_MAGMA,
                     mortar.spell_slot_flags(SPELL_BOLT_OF_MAGMA));
+
+        ++shots_fired;
     }
 
     // Then try to advance one tile further along our movement path.
