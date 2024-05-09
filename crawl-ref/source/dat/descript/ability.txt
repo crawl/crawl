@@ -319,6 +319,12 @@ Receive Armour ability
 Acquires a piece of armour from a choice of four. This blessing may only be
 redeemed once.
 %%%%
+Deny Gifts ability
+
+Invites the challenge of Okawaru, summoning a pack of monsters scalar to your
+XL level. In exchange, Okawaru will offer the worthy a different set of gifts
+if they have not already taken them.
+%%%%
 # Makhleb
 Minor Destruction ability
 

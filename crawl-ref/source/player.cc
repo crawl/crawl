@@ -3141,7 +3141,7 @@ void level_change(bool skip_attribute_increase)
         learned_something_new(HINT_NEW_LEVEL);
 
         if (you.props.exists(ACQUIRE_ITEMS_KEY))
-            acquirement_clear();
+            acquirement_clear(ACQUIRE_ITEMS_KEY);
     }
 
     while (you.experience >= exp_needed(you.max_level + 1))

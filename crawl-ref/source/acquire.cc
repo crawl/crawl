@@ -1853,9 +1853,9 @@ void make_acquirement_items()
         acq_items.push_back(gold_item);
 }
 
-void acquirement_clear()
+void acquirement_clear(string key)
 {
-    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    auto &acq_items = you.props[key].get_vector();
 
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
@@ -1870,7 +1870,7 @@ void acquirement_clear()
     }
 
     acq_items.clear();
-    you.props.erase(ACQUIRE_ITEMS_KEY);
+    you.props.erase(key);
 
 }
 
@@ -2023,6 +2023,24 @@ bool okawaru_gift_armour()
     you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
 
     return true;
+}
+
+bool okawaru_deny_check()
+{   
+    bool cleared = false;
+
+    if (you.props.exists(OKAWARU_WEAPONS_KEY))
+    {
+        acquirement_clear(OKAWARU_WEAPONS_KEY);
+        cleared = true;
+    }
+        
+    if (you.props.exists(OKAWARU_ARMOUR_KEY))
+    {
+        acquirement_clear(OKAWARU_ARMOUR_KEY);
+        cleared = true;
+    }
+    return cleared;
 }
 
 static string _generate_gizmo_serial_number(bool at_end = false)

@@ -342,22 +342,10 @@ bool ranged_attack::handle_phase_hit()
     {   
         for (; attack_count > 0; --attack_count)
         {
-            const int bdam = calc_damage();
+            damage_done = calc_damage();
 
-            if (bdam > 0)
+            if (damage_done > 0)
             {
-                // Sweetspotting!
-                const int lrange = force_range ? force_range : grid_distance(attacker->pos(), defender->pos());
-                int multiplier = 5;
-                if (lrange > 5)
-                {
-                    multiplier -= (lrange - 5);
-                    multiplier = max(multiplier, 3); // Bu special case
-                }
-                else if (lrange < 5)
-                    multiplier -= (5 - lrange);
-                multiplier = max(multiplier, 1);
-                damage_done = div_rand_round(bdam * multiplier, 4);
                 set_attack_verb(damage_done);
                 if (!handle_phase_damaged())
                     return false;

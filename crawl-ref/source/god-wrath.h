@@ -12,3 +12,5 @@ void reduce_xp_penance(god_type god, int amount);
 
 void gozag_incite(monster *mon);
 void lucy_check_meddling();
+
+bool _okawaru_retribution();

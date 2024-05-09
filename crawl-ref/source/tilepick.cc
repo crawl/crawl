@@ -3821,6 +3821,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_OKAWARU_GIFT_WEAPON;
     case ABIL_OKAWARU_GIFT_ARMOUR:
         return TILEG_ABILITY_OKAWARU_GIFT_ARMOUR;
+    case ABIL_OKAWARU_DENY_GIFTS:
+        return TILEG_ABILITY_OKAWARU_DENY_GIFTS;
     // Makhleb
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
         return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;

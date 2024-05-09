@@ -726,14 +726,19 @@ string attack::debug_damage_number()
  */
 string attack_strength_punctuation(int dmg)
 {
-    if (dmg < HIT_WEAK)
+    if (dmg == 0)
         return ".";
+
+    string exclams = "";
+    if (dmg < HIT_WEAK)
+        exclams = ".";
     else if (dmg < HIT_MED)
-        return "!";
+        exclams = "!";
     else if (dmg < HIT_STRONG)
-        return "!!";
+        exclams = "!!";
     else
-        return string(3 + (int) log2(dmg / HIT_STRONG), '!');
+        exclams = string(3 + (int) log2(dmg / HIT_STRONG), '!');
+    return make_stringf(" (%d)%s", dmg, exclams.c_str());
 }
 
 /* Returns evasion adverb

@@ -26,12 +26,13 @@ bool acquirement_menu();
 
 bool okawaru_gift_weapon();
 bool okawaru_gift_armour();
+bool okawaru_deny_check();
 
 bool coglin_invent_gizmo();
 void coglin_announce_gizmo_name();
 
 void make_acquirement_items();
-void acquirement_clear();
+void acquirement_clear(string key);
 
 int acquirement_create_item(object_class_type class_wanted, int agent,
                             bool quiet, const coord_def &pos = coord_def());
