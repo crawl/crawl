@@ -58,9 +58,8 @@ string pluralise(const string &name, const char * const qualifiers[],
     {
         if (ends_with(name, "lotus") || ends_with(name, "status"))
             return name + "es";
-        else
-            // Fungus, ufetubus, for instance.
-            return name.substr(0, name.length() - 2) + "i";
+        // Fungus, ufetubus, for instance.
+        return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(name, "larva") || ends_with(name, "antenna")
              || ends_with(name, "hypha") || ends_with(name, "noma"))
@@ -85,11 +84,10 @@ string pluralise(const string &name, const char * const qualifiers[],
         if (name == "y")
             return "ys";
         // day -> days, boy -> boys, etc
-        else if (is_vowel(name[name.length() - 2]))
+        if (is_vowel(name[name.length() - 2]))
             return name + "s";
         // jelly -> jellies
-        else
-            return name.substr(0, name.length() - 1) + "ies";
+        return name.substr(0, name.length() - 1) + "ies";
     }
     else if (ends_with(name, "fe"))
     {
@@ -166,7 +164,7 @@ string pluralise(const string &name, const char * const qualifiers[],
     // "<name>'s ghost" -> "ghosts called <name>".
     pos = name.find("'s ghost");
     if (string::npos != pos)
-            return string(name, 0, pos).insert(0, "ghosts called ");
+        return string(name, 0, pos).insert(0, "ghosts called ");
 
     return name + "s";
 }
