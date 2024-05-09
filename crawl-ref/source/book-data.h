@@ -136,7 +136,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Vapours
     SPELL_MERCURY_VAPOURS,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },
 
@@ -149,6 +148,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Callings
     SPELL_SUMMON_SMALL_MAMMAL,
+    SPELL_CALL_IMP,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_SUMMON_BLAZEHEART_GOLEM,
 },
@@ -438,8 +438,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Blood
-    SPELL_CALL_IMP,
     SPELL_SUBLIMATION_OF_BLOOD,
+    SPELL_IGNITE_POISON,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -487,7 +487,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Trismegistus Codex
     SPELL_ROT,
-    SPELL_IGNITE_POISON,
+    SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },
 
