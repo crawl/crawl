@@ -7965,7 +7965,7 @@ bool player::can_do_shaft_ability(bool quiet) const
     if (!form_keeps_mutations())
     {
         if (!quiet)
-            mpr("You can't shaft yourself in current form.");
+            mpr("You can't shaft yourself in your current form.");
         return false;
     }
 
