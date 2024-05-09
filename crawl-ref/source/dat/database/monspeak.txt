@@ -7318,7 +7318,7 @@ w:5
 ############ Xak'krixis ### A formicid expeditionary alchemist
 Xak'krixis
 
-@The_monster@ ponders what role @player_genus_plural@ plays in the local ecosystem.
+@The_monster@ ponders what role @player_genus_plural@ play in the local ecosystem.
 
 @The_monster@ says, "I'll be sure to include this battle in my report!"
 
