@@ -788,6 +788,8 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
         || !you.see_cell(mons.pos()) || mons_is_god_gift(mons)
+        // Don't attempt a deathbed conversion of an already converted orc
+        || mons.flags & MF_PACIFIED
         || mons.flags & MF_APOSTLE_BAND
         || mons.type == MONS_ORC_APOSTLE)
     {
