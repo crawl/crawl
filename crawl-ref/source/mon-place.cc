@@ -884,11 +884,10 @@ static void _place_monster_set_god(monster *mon, monster_type cls,
         // Draconian stormcallers worship Qazlal.
         else if (cls == MONS_DRACONIAN_STORMCALLER)
             mon->god = GOD_QAZLAL;
-        // Demonspawn blood saints and Asterion worship Makhleb.
-        // Hell Knights need some reason to be evil.
+        // Demonspawn blood saints, hell knights, and Asterion worship Makhleb.
         else if (cls == MONS_DEMONSPAWN_BLOOD_SAINT
-                 || cls == MONS_ASTERION
-                 || cls == MONS_HELL_KNIGHT)
+                 || cls == MONS_HELL_KNIGHT
+                 || cls == MONS_ASTERION)
         {
             mon->god = GOD_MAKHLEB;
         }
