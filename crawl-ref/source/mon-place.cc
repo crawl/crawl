@@ -884,8 +884,11 @@ static void _place_monster_set_god(monster *mon, monster_type cls,
         // Draconian stormcallers worship Qazlal.
         else if (cls == MONS_DRACONIAN_STORMCALLER)
             mon->god = GOD_QAZLAL;
+        // Demonspawn blood saints and Asterion worship Makhleb.
+        // Hell Knights need some reason to be evil.
         else if (cls == MONS_DEMONSPAWN_BLOOD_SAINT
-                 || cls == MONS_ASTERION)
+                 || cls == MONS_ASTERION
+                 || cls == MONS_HELL_KNIGHT)
         {
             mon->god = GOD_MAKHLEB;
         }
@@ -932,10 +935,8 @@ static void _place_monster_set_god(monster *mon, monster_type cls,
     else if (cls == MONS_CRAZY_YIUF)
         mon->god = GOD_XOM;
     // Grinder and Ignacio belong to Makhleb.
-    // Hell Knights need some reason to be evil.
     else if (cls == MONS_GRINDER
-             || cls == MONS_IGNACIO
-             || cls == MONS_HELL_KNIGHT)
+             || cls == MONS_IGNACIO)
     {
         mon->god = GOD_MAKHLEB;
     }
