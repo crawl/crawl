@@ -1555,21 +1555,65 @@ int monster_info::willpower() const
     return mr;
 }
 
+static bool _add_energy_desc(int energy, string name, int speed, vector<string> &out)
+{
+    if (energy == 10)
+        return false;
+
+    ASSERT(energy);
+    const int perc = speed * 100 / energy;
+    out.push_back(make_stringf("%s: %d%%", name.c_str(), perc));
+    return true;
+}
+
 string monster_info::speed_description() const
 {
-    if (mbase_speed < 7)
-        return "very slow";
-    else if (mbase_speed < 10)
-        return "slow";
-    else if (mbase_speed > 20)
-        return "extremely fast";
-    else if (mbase_speed > 15)
-        return "very fast";
-    else if (mbase_speed > 10)
-        return "fast";
+    const int speed = base_speed();
+    if (!speed) // something weird - let's not touch it
+        return "";
 
-    // This only ever displays through Lua.
-    return "normal";
+    const bool unusual_speed = speed != 10;
+    const mon_energy_usage default_energy = DEFAULT_ENERGY;
+    const bool unusual_energy = !(menergy == default_energy);
+    const int travel_delay = menergy.move * 10 / speed;
+    const int player_travel_delay = player_movement_speed(false, false);
+    // Don't show a difference in travel speed between players and statues,
+    // tentacle segments, etc.
+    const int travel_delay_diff = mons_class_flag(type, M_STATIONARY) ? 0
+        : travel_delay - player_travel_delay;
+    if (!unusual_speed && !unusual_energy && !travel_delay_diff)
+        return "";
+
+    ostringstream result;
+    result << "Speed: " << speed * 10 << "%";
+
+    vector<string> unusuals;
+
+    _add_energy_desc(menergy.attack, "attack", speed, unusuals);
+    _add_energy_desc(menergy.missile, "shoot", speed, unusuals);
+    _add_energy_desc(menergy.move, "travel", speed, unusuals);
+    if (menergy.swim != menergy.move)
+        _add_energy_desc(menergy.swim, "swim", speed, unusuals);
+    // If we ever add a non-magical monster with fast/slow abilities,
+    // we'll need to update this.
+    _add_energy_desc(menergy.spell, is_priest() ? "pray" : "magic",
+                     speed, unusuals);
+
+    if (!unusuals.empty())
+        result << " (" << join_strings(unusuals.begin(), unusuals.end(), ", ") << ")";
+
+    if (type == MONS_SIXFIRHY || type == MONS_JIANGSHI)
+        result << " (but often pauses)";
+    else if (travel_delay_diff)
+    {
+        const bool slow = travel_delay_diff > 0;
+        const string diff_desc = slow ? "slower" : "faster";
+        result << " (normally travels " << diff_desc << " than you)";
+        // It would be interesting to qualify this with 'on land',
+        // if appropriate, but sort of annoying to get player swim speed.
+    }
+
+    return result.str();
 }
 
 bool monster_info::wields_two_weapons() const
