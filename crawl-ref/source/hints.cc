@@ -764,6 +764,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_HEXES:
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
+    case SK_FORGECRAFT:
     case SK_TRANSLOCATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:

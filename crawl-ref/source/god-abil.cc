@@ -2164,7 +2164,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
     } },
     { CURSE_COMPANIONS, {
         "Companions", "Comp",
-        { SK_SUMMONINGS, SK_NECROMANCY },
+        { SK_SUMMONINGS, SK_NECROMANCY, SK_FORGECRAFT },
     } },
     { CURSE_BEGUILING, {
         "Beguiling", "Bglg",
@@ -4337,6 +4337,7 @@ static const vector<mutation_type> _moderate_arcane_sacrifices =
 {
     MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_HEXES_MAGIC,
+    MUT_NO_FORGECRAFT_MAGIC,
 };
 
 /// School-disabling mutations that are mostly easy to deal with.

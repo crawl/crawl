@@ -104,9 +104,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
-#if TAG_MAJOR_VERSION == 34
-    {"Transmutations", "Destabilizer",  "Alchemist",       "Transmogrifier",  "Entropist",      "Reality Shaper", "Tmut"},
-#endif
+    {"Forgecraft",     "Tinkerer",      "Fabricator",      "Mechanist",       "Seigecrafter",   "Architect of Ages", "Frge"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
@@ -2212,7 +2210,6 @@ bool is_removed_skill(skill_type skill)
     case SK_CHARMS:
     case SK_SLINGS:
     case SK_CROSSBOWS:
-    case SK_TRANSMUTATIONS:
         return true;
     default:
         break;
@@ -2233,6 +2230,7 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_TRANSLOCATIONS, MUT_NO_TRANSLOCATION_MAGIC },
     { SK_CONJURATIONS,   MUT_NO_CONJURATION_MAGIC },
     { SK_NECROMANCY,     MUT_NO_NECROMANCY_MAGIC },
+    { SK_FORGECRAFT,     MUT_NO_FORGECRAFT_MAGIC },
     { SK_SUMMONINGS,     MUT_NO_SUMMONING_MAGIC },
 
     { SK_DODGING,        MUT_NO_DODGING },

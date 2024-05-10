@@ -27,6 +27,7 @@ aptitudes:
   conjurations: -2
   hexes: -1
   summoning: -2
+  forgecraft: -2
   translocations: -2
   shapeshifting: False
   fire_magic: -2

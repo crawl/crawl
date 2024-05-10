@@ -1841,6 +1841,11 @@ int player_spec_summ()
     return you.scan_artefacts(ARTP_ENHANCE_SUMM);
 }
 
+int player_spec_forgecraft()
+{
+    return you.scan_artefacts(ARTP_ENHANCE_FORGECRAFT);
+}
+
 int player_spec_alchemy()
 {
     int sp = 0;

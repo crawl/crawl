@@ -1083,6 +1083,7 @@ int player_spec_fire();
 int player_spec_hex();
 int player_spec_alchemy();
 int player_spec_summ();
+int player_spec_forgecraft();
 int player_spec_tloc();
 
 int player_speed();

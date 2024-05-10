@@ -1,10 +1,11 @@
-enum: JOB_SUMMONER
-name: "Summoner"
+enum: JOB_FORGEWRIGHT
+name: "Forgewright"
+short_name: "Fw"
 category: Mage
 category_priority: 80
-str: 0
+str: 2
 int: 7
-dex: 5
+dex: 3
 spells:
   - SPELL_SUMMON_SMALL_MAMMAL
   - SPELL_CALL_IMP
@@ -14,16 +15,17 @@ spells:
 equipment:
   - "robe"
   - "potion of magic"
+  - "hammer"
 recommended_species:
-  - deep elf
-  - oni
+  - mountain dwarf
+  - coglin
+  - barachi
+  - human
   - vine stalker
   - merfolk
-  - tengu
-  - vampire
 skills:
   dodging: 2
   stealth: 2
   spellcasting: 2
-  summonings: 4
+  forgecraft: 4
 create_enum: false

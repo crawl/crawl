@@ -4101,6 +4101,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     case SK_EARTH_MAGIC:
     case SK_AIR_MAGIC:
     case SK_SUMMONINGS:
+    case SK_FORGECRAFT:
         return is_actual_spellcaster() ? hd : hd / 3;
 
     // Weapon skills for spectral weapon

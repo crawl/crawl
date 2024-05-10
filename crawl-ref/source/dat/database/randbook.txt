@@ -2050,6 +2050,48 @@ the Voyage
 
 the Wayfarer
 %%%%
+Forgecraft
+
+Artifice
+
+Blueprints
+
+Clockwork
+
+Cogs
+
+Crafting
+
+Construction
+
+Diagrams
+
+Drafting
+
+Gears
+
+Mechanisms
+
+Mechanics
+
+Metalworking
+
+Metallurgy
+
+Schematics
+
+Structure
+
+the Blacksmith
+
+the Edifice
+
+the Engineer
+
+the Masterpiece
+
+the Mechanist
+%%%%
 ##############################################
 # adjectives for secondary spell school
 Air adj
@@ -2971,6 +3013,38 @@ Twisted
 Unstable
 
 Warped
+%%%%
+forgecraft adj
+
+Artificial
+
+Clockwork
+
+Concrete
+
+Constructed
+
+Engineered
+
+Industrial
+
+Ingenious
+
+Metallic
+
+Metallurgical
+
+Mechanical
+
+Reified
+
+Schematic
+
+Spellforged
+
+Spellsmithed
+
+Structural
 %%%%
 # potential previous owners of books
 # __NONE is parsed to the empty string

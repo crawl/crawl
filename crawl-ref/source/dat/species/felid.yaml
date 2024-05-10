@@ -29,6 +29,7 @@ aptitudes:
   hexes: 4
   translocations: 4
   shapeshifting: -2
+  forgecraft: -1
   fire_magic: -1
   ice_magic: -1
   air_magic: -1

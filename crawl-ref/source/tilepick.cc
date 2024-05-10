@@ -3668,6 +3668,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
     case SK_HEXES:          ch = TILEG_HEXES_ON; break;
     case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
+    case SK_FORGECRAFT:     ch = TILEG_FORGECRAFT_ON; break;
     case SK_NECROMANCY:
         ch = you.religion == GOD_KIKUBAAQUDGHA ? TILEG_NECROMANCY_K_ON
                                                : TILEG_NECROMANCY_ON; break;
@@ -4387,6 +4388,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_ICE_ELEMENTALIST;
         case JOB_SUMMONER:
             return TILEG_JOB_SUMMONER;
+        case JOB_FORGEWRIGHT:
+            return TILEG_JOB_FORGEWRIGHT;
         case JOB_AIR_ELEMENTALIST:
             return TILEG_JOB_AIR_ELEMENTALIST;
         case JOB_EARTH_ELEMENTALIST:

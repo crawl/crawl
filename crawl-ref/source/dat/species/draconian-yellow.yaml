@@ -20,9 +20,9 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  forgecraft: 2
   shapeshifting: -1
   invocations: 1
-  # no Yellow Draconian specific apts
 str: 10
 int: 8
 dex: 6

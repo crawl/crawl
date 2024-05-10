@@ -878,6 +878,8 @@ const char* spelltype_short_name(spschool which_spelltype)
         return "Necr";
     case spschool::summoning:
         return "Summ";
+    case spschool::forgecraft:
+        return "Frge";
     case spschool::translocation:
         return "Tloc";
     case spschool::alchemy:
@@ -909,6 +911,8 @@ const char* spelltype_long_name(spschool which_spelltype)
         return "Necromancy";
     case spschool::summoning:
         return "Summoning";
+    case spschool::forgecraft:
+        return "Forgecraft";
     case spschool::translocation:
         return "Translocation";
     case spschool::alchemy:
@@ -933,6 +937,7 @@ skill_type spell_type2skill(spschool spelltype)
     case spschool::fire:           return SK_FIRE_MAGIC;
     case spschool::ice:            return SK_ICE_MAGIC;
     case spschool::necromancy:     return SK_NECROMANCY;
+    case spschool::forgecraft:     return SK_FORGECRAFT;
     case spschool::summoning:      return SK_SUMMONINGS;
     case spschool::translocation:  return SK_TRANSLOCATIONS;
     case spschool::alchemy:        return SK_ALCHEMY;
@@ -957,6 +962,7 @@ spschool skill2spell_type(skill_type spell_skill)
     case SK_ICE_MAGIC:       return spschool::ice;
     case SK_NECROMANCY:      return spschool::necromancy;
     case SK_SUMMONINGS:      return spschool::summoning;
+    case SK_FORGECRAFT:      return spschool::forgecraft;
     case SK_TRANSLOCATIONS:  return spschool::translocation;
     case SK_ALCHEMY:         return spschool::alchemy;
     case SK_EARTH_MAGIC:     return spschool::earth;
@@ -1793,6 +1799,7 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_ICE_MAGIC,
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
+    MUT_NO_FORGECRAFT_MAGIC,
     MUT_NO_TRANSLOCATION_MAGIC,
     MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_EARTH_MAGIC,

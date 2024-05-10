@@ -1022,9 +1022,10 @@ There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps to
 cast any spell, though less so than schools associated with a spell. Next, there
 are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
-Translocation and Alchemy) as well as several elemental schools (Fire, Ice, Air
-and Earth). A particular spell can belong to up to three schools. Being skilled
-in a spell's schools improves the casting chance and the power of that spell.
+Forgecraft, Translocation and Alchemy) as well as several elemental schools
+(Fire, Ice, Air and Earth). A particular spell can belong to up to three
+schools. Being skilled in a spell's schools improves the casting chance and the
+power of that spell.
 
 Spells are stored in books, which you will occasionally find in the dungeon.
 Once you have picked up a book and added its contents to your spell library, you
@@ -2107,8 +2108,8 @@ Mage backgrounds
 
 A mage is not an available character background by itself, but a type of
 background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
-various Elementalists and Alchemists. Mages are the best at using magic.
-Among other things, they start with a robe, a potion of magic, and spells
+Forgewrights, various Elementalists and Alchemists. Mages are the best at using
+magic. Among other things, they start with a robe, a potion of magic, and spells
 which should see them through the first several levels of the Dungeon.
 
 Hedge Wizards
@@ -2132,6 +2133,11 @@ Necromancers
   The Necromancer is a magician who specialises in the less pleasant side of
   magic. Necromantic spells are a varied bunch, but many involve some degree of
   risk or harm to the caster.
+
+Forgewright
+ The Forgewright specialises in the creation of magical constructs, ranging from
+ simple weapons to elaborate and powerful golems. Many of their creations
+ benefit from fighting alongside them.
 
 Elementalists
   Elementalists are magicians who specialise in one of the four types of
