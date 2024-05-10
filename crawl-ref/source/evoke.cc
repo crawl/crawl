@@ -925,17 +925,14 @@ static spret _condenser()
         target_list.push_back(t);
     shuffle_array(target_list);
     bool did_something = false;
-    bool suppressed = false;
 
     for (auto p : target_list)
     {
-        const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
+        cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-        if (is_good_god(you.religion) && cloud == CLOUD_MISERY)
-        {
-            suppressed = true;
-            continue;
-        }
+        // Reroll misery clouds until we get something our god is okay with
+        while (is_good_god(you.religion) && cloud == CLOUD_MISERY)
+            cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
         // Get at least one cloud, even at 0 power.
         if (did_something && !x_chance_in_y(50 + pow, 160))
@@ -949,8 +946,6 @@ static spret _condenser()
 
     if (did_something)
         mpr("Clouds condense from the air!");
-    else if (suppressed)
-        simple_god_message(" suppresses the foul vapours!");
 
     return spret::success;
 }
