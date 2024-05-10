@@ -2113,8 +2113,10 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_BOOTS && you.can_wear_barding())
         {
             if (!you.can_wear_barding(true))
+            {
                 str = "<darkgrey>(" + slot_name_lwr +
                                    " currently unavailable)</darkgrey>";
+            }
             else
                 str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         }
