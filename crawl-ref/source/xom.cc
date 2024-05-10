@@ -2349,16 +2349,26 @@ static void _xom_unclimbable_stairs(int) { _xom_repel_stairs(true); }
 static void _xom_cloud_trail(int /*sever*/)
 {
     you.duration[DUR_CLOUD_TRAIL] = random_range(600, 1200);
-    you.props[XOM_CLOUD_TRAIL_TYPE_KEY] =
-        // 80% chance of a useful trail
-        random_choose_weighted(20, CLOUD_CHAOS,
-                               9,  CLOUD_MAGIC_TRAIL,
-                               5,  CLOUD_MIASMA,
-                               5,  CLOUD_PETRIFY,
-                               5,  CLOUD_MUTAGENIC,
-                               4,  CLOUD_MISERY,
-                               1,  CLOUD_SALT,
-                               1,  CLOUD_BLASTMOTES);
+    // 80% chance of a useful trail
+    cloud_type ctype = random_choose_weighted(20, CLOUD_CHAOS,
+                                              9,  CLOUD_MAGIC_TRAIL,
+                                              5,  CLOUD_MIASMA,
+                                              5,  CLOUD_PETRIFY,
+                                              5,  CLOUD_MUTAGENIC,
+                                              4,  CLOUD_MISERY,
+                                              1,  CLOUD_SALT,
+                                              1,  CLOUD_BLASTMOTES);
+
+    bool suppressed = false;
+    if (you_worship(GOD_ZIN) && (ctype == CLOUD_CHAOS || ctype == CLOUD_MUTAGENIC))
+        suppressed = true;
+    else if (is_good_god(you.religion) && (ctype == CLOUD_MIASMA || ctype == CLOUD_MISERY))
+        suppressed = true;
+
+    if (suppressed)
+        ctype = CLOUD_SALT;
+
+    you.props[XOM_CLOUD_TRAIL_TYPE_KEY] = ctype;
 
     // Need to explicitly set as non-zero. Use a clean half of the power cap.
     if (you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int() == CLOUD_BLASTMOTES)
@@ -2368,6 +2378,9 @@ static void _xom_cloud_trail(int /*sever*/)
 
     const string speech = _get_xom_speech("cloud trail");
     god_speaks(GOD_XOM, speech.c_str());
+
+    if (suppressed)
+        simple_god_message(" purifies the foul vapours!");
 }
 
 static void _xom_statloss(int /*sever*/)
