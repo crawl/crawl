@@ -89,17 +89,20 @@ int aux_to_hit()
 
 }
 
-static double _to_hit_to_land(attack &atk)
+static double _to_hit_to_land(const monster_info& mi, attack &atk,
+                              const int distance)
 {
     int to_land = atk.calc_pre_roll_to_hit(false);
     if (to_land >= AUTOMATIC_HIT)
         return 1;
 
+    to_land += blind_player_to_hit_modifier(to_land, mi.ev, distance);
+
     return to_land;
 }
 
 static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee,
-                                 const int to_land, const int distance)
+                                 int to_land)
 {
     int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
@@ -114,25 +117,24 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
 
         // But the above will bail out because there's no defender in the attack object,
         // so we reproduce any possibly relevant effects here:
-        adjusted_mhit += mi.lighting_modifiers(rolled_mhit, distance);
+        adjusted_mhit += mi.lighting_modifiers();
 
         // And this duplicates ranged_attack::post_roll_to_hit_modifiers().
-        if (!melee)
+        if (!melee && mi.is(MB_BULLSEYE_TARGET))
         {
-            if (mi.is(MB_BULLSEYE_TARGET))
-            {
-                adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
-                                 / 2 / BULLSEYE_TO_HIT_DIV;
-            }
+            adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
+                                / 2 / BULLSEYE_TO_HIT_DIV;
         }
 
+        // Now count the hit if it's above target ev
         if (adjusted_mhit >= ev)
             hits++;
     }
 
     double hit_chance = ((double)hits) / to_land;
     // Apply Bayes Theorem to account for auto hit and miss.
-    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
+                 + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
     return hit_chance;
 }
 
@@ -185,8 +187,8 @@ static double _to_hit_shield_chance(const monster_info& mi,
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
                bool penetrating, int distance)
 {
-    const int to_land = _to_hit_to_land(atk);
-    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land, distance);
+    const int to_land = _to_hit_to_land(mi, atk, distance);
+    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
     const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
     return (int)(hit_chance * (1.0 - shield_chance) * 100);
 }

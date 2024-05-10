@@ -339,8 +339,8 @@ static int moninf_get_target_desc(lua_State *ls)
     return 1;
 }
 
-/*** Returns the string displayed if you target this monster with a weapon (or unarmed attack).
- * @treturn string (such as "about 18% to evade your dagger")
+/*** Returns the string displayed in xv for your current weapon hit chance.
+ * @treturn string (such as "about 82% to hit with your dagger")
  * @function target_weapon
  */
 static int moninf_get_target_weapon(lua_State *ls)

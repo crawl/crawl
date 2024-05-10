@@ -104,6 +104,10 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
                      const item_def* weapon = nullptr, bool verbose = false,
                      attack *source = nullptr, int distance = 0);
 
+void describe_hit_chance(int hit_chance, ostringstream &result,
+                         const item_def *weapon,
+                         bool verbose = false, int distance_from = 0);
+
 string get_command_description(const command_type cmd, bool terse);
 
 int show_description(const string &body, const tile_def *tile = nullptr);

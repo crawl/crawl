@@ -1475,7 +1475,10 @@ static int _to_hit_pct(const monster_info& mi, int acc)
     if (acc == AUTOMATIC_HIT)
         return 100;
 
-    acc += mi.lighting_modifiers(acc, you.pos().distance_from(mi.pos));
+    // See note in bolt::apply_lighting about using 0 for EV
+    acc += blind_player_to_hit_modifier(acc, 0, you.pos().distance_from(mi.pos));
+
+    acc += mi.lighting_modifiers();
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
 
@@ -1515,7 +1518,11 @@ static vector<string> _desc_hit_chance(const monster_info& mi, int acc)
     const int hit_pct = _to_hit_pct(mi, acc);
     if (hit_pct == -1)
         return vector<string>{};
-    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
+
+    ostringstream result;
+    describe_hit_chance(hit_pct, result, nullptr, false,
+                        you.pos().distance_from(mi.pos));
+    return vector<string>{result.str()};
 }
 
 vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
@@ -1533,7 +1540,11 @@ static vector<string> _desc_plasma_hit_chance(const monster_info& mi, int powc)
     const int hit_pct = _to_hit_pct(mi, beam.hit);
     if (hit_pct == -1)
         return vector<string>{};
-    return vector<string>{make_stringf("2x%d%% to hit", hit_pct)};
+
+    ostringstream result;
+    describe_hit_chance(hit_pct, result, nullptr, false,
+                        you.pos().distance_from(mi.pos));
+    return vector<string>{make_stringf("2x%s", result.str().c_str())};
 }
 
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,

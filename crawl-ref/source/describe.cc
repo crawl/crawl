@@ -5572,7 +5572,7 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
 }
 
 /**
- * Display the % chance of a player hitting the given monster.
+ * Calculate and describe the % chance of a player hitting the given monster.
  *
  * @param mi[in]            Player-visible info about the monster in question.
  * @param result[in,out]    The stringstream to append to.
@@ -5585,7 +5585,7 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
  */
 void describe_to_hit(const monster_info &mi, ostringstream &result,
                      const item_def *weapon, bool verbose, attack *source,
-                     const int distance)
+                     int distance)
 {
     if (weapon != nullptr
         && !(is_weapon(*weapon) || is_throwable(&you, *weapon)))
@@ -5624,10 +5624,19 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
         acc_pct = to_hit_pct(mi, attk, false, penetrating, distance_from);
     }
 
+    describe_hit_chance(acc_pct, result, weapon, verbose, distance_from);
+}
+
+/**
+ * Describe the given hit chance and write to an string stream
+ */
+void describe_hit_chance(int hit_chance, ostringstream &result, const item_def *weapon,
+                         bool verbose, int distance_from)
+{
     if (verbose)
         result << "about ";
 
-    result << acc_pct << "% to hit";
+    result << hit_chance << "% to hit";
 
     if (verbose)
     {
@@ -5641,9 +5650,9 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
     if (you.duration[DUR_BLIND])
     {
         if (verbose)
-            result << " (blind and from distance " << distance_from << ")";
+            result << " (while you are blinded and from distance " << distance_from << ")";
         else
-            result << " blind";
+            result << " at this distance";
     }
 }
 
