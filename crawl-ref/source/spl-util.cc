@@ -1548,6 +1548,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
     case SPELL_FULSOME_FUSILLADE:
+    case SPELL_HELLFIRE_MORTAR:
         return minRange > you.current_vision;
 
     // Special handling for cloud spells.
