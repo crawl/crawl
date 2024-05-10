@@ -1904,18 +1904,6 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
     return false;
 }
 
-// If you can't wear a bardings, why not? (If you can, return "".)
-static string _cant_wear_barding_reason(bool ignore_temporary)
-{
-    if (!you.wear_barding())
-        return "You can't wear that!";
-
-    if (!ignore_temporary && !get_form()->slot_available(EQ_BOOTS))
-        return "You can wear that only in your normal form.";
-
-    return "";
-}
-
 /**
  * Can you wear this item of armour currently?
  *
@@ -1964,11 +1952,15 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BARDING)
     {
-        const string reason = _cant_wear_barding_reason(ignore_temporary);
-        if (reason == "")
+        if (you.can_wear_barding(ignore_temporary))
             return true;
         if (verbose)
-            mprf(MSGCH_PROMPT, "%s", reason.c_str());
+        {
+            if (ignore_temporary)
+                mprf(MSGCH_PROMPT, "You can't wear that!");
+            else
+                mprf(MSGCH_PROMPT, "You can wear that only in your normal form.");
+        }
         return false;
     }
 
@@ -2015,7 +2007,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
-        if (you.wear_barding())
+        if (you.can_wear_barding())
         {
             if (verbose)
             {
@@ -2101,7 +2093,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BOOTS)
     {
-        if (you.wear_barding())
+        if (you.can_wear_barding())
         {
             if (verbose)
             {

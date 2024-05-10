@@ -133,7 +133,7 @@ M filtered_vector_select(vector<pair<M, int>> weights, function<bool(M)> filter)
  */
 static equipment_type _acquirement_armour_slot(int agent)
 {
-    if (you.wear_barding()
+    if (you.can_wear_barding()
         && one_chance_in(you.seen_armour[ARM_BARDING] ? 4 : 2))
     {
         return EQ_BOOTS;
@@ -178,7 +178,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type)
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_BOOTS:
-            if (you.wear_barding())
+            if (you.can_wear_barding())
                 return ARM_BARDING;
             else
                 return ARM_BOOTS;

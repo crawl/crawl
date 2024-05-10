@@ -875,7 +875,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_BOOTS: // And bardings
         dummy.sub_type = ARM_BOOTS;
-        if (you.wear_barding())
+        if (you.can_wear_barding())
             alternate.sub_type = ARM_BARDING;
         break;
 
@@ -8370,8 +8370,11 @@ bool player::form_uses_xl() const
     return !get_form()->get_unarmed_uses_skill();
 }
 
-bool player::wear_barding() const
+bool player::can_wear_barding(bool temp) const
 {
+    if (temp && !get_form()->slot_available(EQ_BOOTS))
+        return false;
+
     return species::wears_barding(species);
 }
 

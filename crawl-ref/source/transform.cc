@@ -1989,7 +1989,7 @@ void untransform(bool skip_move)
     // Removed barding check, no transformed creatures can wear barding
     // anyway.
     // *coughs* Ahem, blade hands... -- jpeg
-    if (you.wear_barding())
+    if (you.can_wear_barding())
     {
         const int arm = you.equip[EQ_BOOTS];
 

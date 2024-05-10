@@ -1961,7 +1961,7 @@ const char *equip_slot_to_name(int equip)
         return "Ring";
     }
 
-    if (equip == EQ_BOOTS && you.wear_barding())
+    if (equip == EQ_BOOTS && you.can_wear_barding())
         return "Barding";
 
     if (equip < EQ_FIRST_EQUIP || equip >= NUM_EQUIP)
@@ -2110,8 +2110,14 @@ static void _print_overview_screen_equip(column_composer& cols,
             const bool plural = you.arm_count() > 1;
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
-        else if (eqslot == EQ_BOOTS && you.wear_barding())
-            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+        else if (eqslot == EQ_BOOTS && you.can_wear_barding())
+        {
+            if (!you.can_wear_barding(true))
+                str = "<darkgrey>(" + slot_name_lwr +
+                                   " currently unavailable)</darkgrey>";
+            else
+                str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+        }
         else if (!you_can_wear(eqslot))
             str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
         else if (!you_can_wear(eqslot, true))

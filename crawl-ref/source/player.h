@@ -691,7 +691,7 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const override;
 
-    bool wear_barding() const;
+    bool can_wear_barding(bool temp = false) const;
 
     string name(description_level_type type, bool force_visible = false,
                 bool force_article = false) const override;
