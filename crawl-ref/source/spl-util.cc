@@ -1461,18 +1461,22 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_CALL_CANINE_FAMILIAR:
         if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
             return "your canine familiar is too injured to answer your call.";
+        break;
 
     case SPELL_GELLS_GAVOTTE:
         if (temp && you.duration[DUR_GAVOTTE_COOLDOWN])
             return "local gravity is still too unstable to reorient.";
+        break;
 
     case SPELL_FULSOME_FUSILLADE:
         if (temp && you.duration[DUR_FUSILLADE])
             return "you are already unleashing a barrage of alchemical concoctions!";
+        break;
 
     case SPELL_HELLFIRE_MORTAR:
         if (temp && hellfire_mortar_active(you))
             return "you already have an active mortar!";
+        break;
 
     default:
         break;
