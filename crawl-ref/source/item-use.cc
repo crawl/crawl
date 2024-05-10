@@ -2018,7 +2018,12 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.wear_barding())
         {
             if (verbose)
-                mprf(MSGCH_PROMPT, "The hauberk won't fit over your tail.");
+            {
+                if (you.has_mutation(MUT_CONSTRICTING_TAIL))
+                    mprf(MSGCH_PROMPT, "The hauberk won't fit over your tail.");
+                else
+                    mprf(MSGCH_PROMPT, "The hauberk won't fit over your feet."); // armataur
+            }
             return false;
         }
 
