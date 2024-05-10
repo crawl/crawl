@@ -2794,14 +2794,14 @@ spret foxfire_swarm()
 bool summon_hell_out_of_bat(const actor &agent, coord_def pos)
 {
     // Since this isn't really used as for a spell: count how many creatures
-    // this has already summoned, and abort at our max defined here (three).
+    // this has already summoned, and abort at our max defined here (four).
     int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
        if (mi->summoner == agent.mid)
            ++count;
 
-        if (count > 2)
+        if (count > 3)
            return false;
     }
 

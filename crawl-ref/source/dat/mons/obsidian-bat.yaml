@@ -7,12 +7,12 @@ genus: bat
 holiness: [nonliving]
 will: 20
 attacks:
- - {type: bite, flavour: hell_hunt, damage: 18}
+ - {type: bite, flavour: hell_hunt, damage: 21}
 hd: 9
-hp_10x: 395
-ac: 12
-ev: 12
+hp_10x: 425
+ac: 13
+ev: 13
 intelligence: animal
-speed: 25
+speed: 30
 size: tiny
 shape: bat
