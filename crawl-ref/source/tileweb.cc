@@ -1058,6 +1058,28 @@ player_info::player_info()
     position = coord_def(-1, -1);
 }
 
+// XXX duplicates code for local tiles/console in output.cc.
+// This is necessary to allow customisation of the displayed weapon
+// on the stats display (top-right corner) correctly using the
+// menu_colour += stats:<colour>:<weapon> option.
+static uint8_t _weapon_colour(bool offhand = false)
+{
+    if (you.corrosion_amount())
+        return RED;
+
+    const item_def* weapon = offhand ? you.offhand_weapon() : you.weapon();
+
+    if (!weapon)
+        return get_form()->uc_colour;
+
+    const string prefix = item_prefix(*weapon);
+    const int prefcol = menu_colour(weapon->name(DESC_INVENTORY),
+                                    prefix, "stats", false);
+    if (prefcol != -1)
+        return prefcol;
+    return LIGHTGREY;
+}
+
 /**
  * Send the player properties to the webserver. Any player properties that
  * must be available to the WebTiles client must be sent here through an
@@ -1250,8 +1272,13 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
+    _update_int(force_full, c.weapon_colour, _weapon_colour(), "weapon_colour");
+
     _update_int(force_full, c.offhand_weapon, (bool) you.offhand_weapon(),
                 "offhand_weapon");
+
+    _update_int(force_full, c.offhand_weapon_colour, _weapon_colour(true),
+                "offhand_weapon_colour");
 
     _update_int(force_full, c.quiver_item,
                 (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
@@ -1262,8 +1289,7 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
-    _update_int(force_full, c.unarmed_attack_colour,
-                (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
+
     _update_int(force_full, c.quiver_available,
                     you.quiver_action.get()->is_valid()
                                 && you.quiver_action.get()->is_enabled(),
@@ -1360,7 +1386,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= _update_string(force_full, current.inscription,
                               next.inscription, "inscription", false);
 
-    // TODO: props?
+    // TODO: props? Hopefully covered by the name check below
 
     changed |= (current.special != next.special);
 
@@ -1368,19 +1394,20 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= _update_int(force_full, current_uselessness,
                            is_useless_item(next, true), "useless");
 
+    // This hopefully includes all other properties we care about...
+    const string current_name = current.name(DESC_A, true, false, true);
+    const string next_name = next.name(DESC_A, true, false, true);
+    changed |= (current_name != next_name);
+
     if (changed && defined)
     {
-        string name = next.name(DESC_A, true, false, true);
-        if (force_full || current.name(DESC_A, true, false, true) != name
-            || xp_evoker_changed)
-        {
-            json_write_string("name", name);
-        }
+        if (force_full || current_name != next_name || xp_evoker_changed)
+            json_write_string("name", next_name);
 
         // -1 in this field means don't show. *note*: showing in the action
         // panel has undefined behavior for item types that don't have a
         // quiver::action implementation...
-        json_write_int("action_panel_order", _useful_consumable_order(next, name));
+        json_write_int("action_panel_order", _useful_consumable_order(next, next_name));
         json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
