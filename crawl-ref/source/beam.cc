@@ -2360,6 +2360,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
 
     if (flavour == BEAM_ELECTRICITY
         && origin_spell != SPELL_BLINKBOLT
+        && origin_spell != SPELL_MAGNAVOLT
         && !feat_is_metal(feat)
         && !feat_is_tree(feat))
     {
