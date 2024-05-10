@@ -2636,6 +2636,11 @@ void bolt::affect_endpoint()
 
     case SPELL_FLASHING_BALESTRA:
     {
+        // If the initial bolt is reflected or redirected back at the summoner,
+        // we can crash on trying to create the summon.
+        if (!agent()->alive())
+            break;
+
         coord_def spot;
         int num_found = 0;
         for (adjacent_iterator ai(pos()); ai; ++ai)
