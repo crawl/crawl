@@ -219,6 +219,14 @@ int attack::calc_pre_roll_to_hit(bool random)
         // mutation
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
+
+        // blindness
+        if (defender && defender->is_monster())
+        {
+            const int distance = you.pos().distance_from(defender->pos());
+            mhit += blind_player_to_hit_modifier(mhit,
+                                defender->evasion(false, attacker), distance);
+        }
     }
     else    // Monster to-hit.
     {
@@ -278,12 +286,6 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
             modifiers += BACKLIGHT_TO_HIT_BONUS;
         if (!attacker->nightvision() && defender->umbra())
             modifiers += UMBRA_TO_HIT_MALUS;
-    }
-
-    if (defender->is_monster() && attacker->is_player())
-    {
-        const int distance = you.pos().distance_from(defender->pos());
-        modifiers += blind_player_to_hit_modifier(mhit, distance);
     }
 
     return modifiers;

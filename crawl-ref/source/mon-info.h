@@ -402,7 +402,7 @@ struct monster_info : public monster_info_base
     bool can_see_invisible() const;
     bool nightvision() const;
     int willpower() const;
-    int lighting_modifiers(const int to_hit, const int distance) const;
+    int lighting_modifiers() const;
 
     int base_speed() const
     {

@@ -4942,24 +4942,36 @@ void blind_player(int amount, colour_t flavour_colour)
 
     const int current = you.duration[DUR_BLIND];
     you.increase_duration(DUR_BLIND, amount, 50);
-    you.props[BLIND_COLOUR_KEY] = flavour_colour;
-    you.check_awaken(500);
-    if (current > 0)
-        mpr("You are blinded for an even longer time.");
-    else
-        mpr("You are blinded!");
-    learned_something_new(HINT_YOU_ENCHANTED);
-    xom_is_stimulated((you.duration[DUR_BLIND] - current) / BASELINE_DELAY);
+
+    if (you.duration[DUR_BLIND] > current)
+    {
+        you.props[BLIND_COLOUR_KEY] = flavour_colour;
+        if (current > 0)
+            mpr("You are blinded for an even longer time.");
+        else
+            mpr("You are blinded!");
+        learned_something_new(HINT_YOU_ENCHANTED);
+        xom_is_stimulated((you.duration[DUR_BLIND] - current) / BASELINE_DELAY);
+    }
 }
 
-int blind_player_to_hit_modifier(const int to_hit, const int distance)
+int blind_player_to_hit_modifier(int to_hit, int target_ev, int distance)
 {
-    if (!you.duration[DUR_BLIND])
+    // If rolled to hit is less than target's ev then we literally cannot make
+    // things any worse, so don't even apply a modifier
+    if (!you.duration[DUR_BLIND] || to_hit <= target_ev)
         return 0;
-    // Lose a 10th of to_hit per tile distance, starting at 1 from own square.
-    // At full LOS range only 10% of hit chance remains for Barachi.
-    const int factor = min(distance, LOS_MAX_RANGE) + 1;
-    return -div_round_up(to_hit * factor, 10);
+    // The formula is: -(1 - 1/(distance + 1)) * (to_hit - ev)
+    // It simplifies to: (diff/denom - diff)
+    // where diff = (to_hit - ev), denom = (distance + 1)
+    // In other words we are closing the margin between max to_hit and target's ev (below
+    // which a hit is impossible). At distance 1, half of the margin remains, at
+    // distance 2 only 1/3, and so on.
+    const int denom = 1 + min(distance, LOS_MAX_RANGE);
+    const int diff = to_hit - target_ev;
+    const int result = div_round_near(diff, denom) - diff;
+    dprf("To hit: %i EV: %i Distance: %i Result: %i", to_hit, target_ev, distance, result);
+    return result;
 }
 
 void dec_berserk_recovery_player(int delay)

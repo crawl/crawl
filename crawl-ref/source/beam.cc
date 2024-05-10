@@ -3306,11 +3306,22 @@ void bolt::tracer_affect_player()
 
 int bolt::apply_lighting(int base_hit, const actor &targ) const
 {
+    // Apply blindness first; for regular attacks it's in pre-roll and these
+    // other modifiers are for post-roll.
+    if (targ.is_monster())
+    {
+        const int distance = you.pos().distance_from(targ.pos());
+        // Because beam to hit works differently than regular attacks, pretend
+        // ev is zero for the purposes of scaling to-hit (ev is randomised so it
+        // *can* be zero, so this scales nicer)
+        base_hit += blind_player_to_hit_modifier(base_hit, 0, distance);
+    }
+
     if (targ.invisible() && !can_see_invis)
         base_hit /= 2;
 
-    // We multiply these lighting effects by 2, since they're applied
-    // before rolling to-hit (and hence will get halved later)
+    // We multiply these lighting effects by 2, since normally they're applied post-roll
+    // where the effect (on average) counts doubled
 
     if (targ.backlit(false))
         base_hit += BACKLIGHT_TO_HIT_BONUS * 2;
@@ -3318,14 +3329,6 @@ int bolt::apply_lighting(int base_hit, const actor &targ) const
     // Malus is already negative so must still be ADDED to the base_hit
     if (!nightvision && targ.umbra())
         base_hit += UMBRA_TO_HIT_MALUS * 2;
-
-    // Blindness modifier does *not* need to be x2 because it applies a % to the
-    // passed in hit value so it will already affect the roll correctly
-    if (targ.is_monster())
-    {
-        const int distance = you.pos().distance_from(targ.pos());
-        base_hit += blind_player_to_hit_modifier(base_hit, distance);
-    }
 
     return base_hit;
 }
