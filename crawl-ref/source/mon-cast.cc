@@ -1687,7 +1687,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_COLD_BREATH:
         if (mons && mons_is_draconian(mons->type))
-            power = power * 2 / 3;
+            power = power * 5 / 6;
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source = "blast of icy breath";
         beam.short_name = "frost";
@@ -1801,6 +1801,9 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
         beam.ex_size     = 1;
+        // A little lower than normal, so a stormcaller is willing to blast at
+        // least a single summoned drake alongside the player.
+        beam.foe_ratio   = 70;
         break;
 
     case SPELL_ERUPTION:
@@ -5778,8 +5781,14 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     affected.push_back(beam.target);
 
     for (adjacent_iterator ai(beam.target); ai; ++ai)
-        if (in_bounds(*ai) && !cell_is_solid(*ai))
+    {
+        if (in_bounds(*ai) && !cell_is_solid(*ai)
+            // Proper Upheaval can't hit the caster
+            && (*ai != mons.pos() || !randomize))
+        {
             affected.push_back(*ai);
+        }
+    }
 
     shuffle_array(affected);
 

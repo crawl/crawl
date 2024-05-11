@@ -5601,6 +5601,9 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)
         return true;
 
+    if (origin_spell == SPELL_UPHEAVAL && agent() && agent() == mon)
+        return true;
+
     return false;
 }
 

@@ -549,7 +549,7 @@ static const mon_spellbook mspell_list[] =
       {
         { SPELL_SMITING, 20, MON_SPELL_PRIEST },
         { SPELL_SUMMON_DRAKES, 20, MON_SPELL_PRIEST },
-        { SPELL_UPHEAVAL, 20, MON_SPELL_PRIEST },
+        { SPELL_UPHEAVAL, 30, MON_SPELL_PRIEST },
       }
     },
 

@@ -437,6 +437,8 @@ static int _spell_hd(spell_type spell, const monster_info &mon_owner)
 {
     if (spell == SPELL_SEARING_BREATH && mon_owner.type == MONS_XTAHUA)
         return mon_owner.hd * 3 / 2;
+    if (spell == SPELL_COLD_BREATH && mons_is_draconian(mon_owner.type))
+        return mon_owner.hd * 5 / 6;
     if (mons_spell_is_spell(spell))
         return mon_owner.spell_hd();
     return mon_owner.hd;
