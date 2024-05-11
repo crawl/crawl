@@ -4815,7 +4815,7 @@ ENDMAP
 NAME:    dolorous_overflow_abandoned_chaos_spawn_temple
 TAGS:    temple_overflow_3 temple_overflow_xom
 TAGS:    temple_overflow_makhleb temple_overflow_nemelex_xobeh
-TAGS:    no_item_gen no_monster_gen no_trap_gen
+TAGS:    no_item_gen no_monster_gen no_trap_gen transparent
 SHUFFLE: DEF
 KFEAT:   D = altar_xom
 KFEAT:   E = altar_makhleb
@@ -4830,6 +4830,7 @@ KITEM:   i = any damaged weapon ego:chaos ident:all
 COLOUR:  b = lightred
 TILE:    b = dngn_crystal_lightred
 TILE:    G = dngn_scintillating_statue
+KMASK:   1 = opaque
 : set_feature_name("crystal_wall", "wall of orange crystal")
 : set_feature_name("granite_statue", "scintillating statue")
 MAP
