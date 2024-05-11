@@ -3259,7 +3259,7 @@ KFEAT:   } = enter_depths
 MONS:    juggernaut, hell knight, rakshasa, fire giant, flayed ghost
 TILE:    b = bedeviled_crystal_gehenna
 :   else
-MONS:    black draconian knight, yellow draconian
+MONS:    purple draconian knight, yellow draconian
 MONS:    black draconian, juggernaut zombie, flayed ghost
 KMONS:   )]b = nonbase draconian w:30 / \
                shadow dragon / golden dragon / storm dragon
