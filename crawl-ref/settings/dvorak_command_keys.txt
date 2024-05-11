@@ -65,7 +65,7 @@ bindkey = [l] CMD_LOOK_AROUND
 # Take off armour -> 'U'nequip
 bindkey = [U] CMD_REMOVE_ARMOUR
 # Fire without quiver -> (K)ill from afar without quiver
-bindkey = [K] CMD_THROW_ITEM_NO_QUIVER
+bindkey = [K] CMD_FIRE_ITEM_NO_QUIVER
 # Goto level -> J for no reason
 bindkey = [J] CMD_INTERLEVEL_TRAVEL
 # e(X)amine map -> (L)ook at map
