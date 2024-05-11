@@ -36,6 +36,7 @@ enum feature_property_type
     FPROP_OLD_BLOOD     = (1 << 18),
     FPROP_ICY           = (1 << 19),
     FPROP_BLASPHEMY     = (1 << 20),
+    FPROP_GASTRONOMY    = (1 << 21),
 };
 DEF_BITFIELD(terrain_property_t, feature_property_type);
 
@@ -46,3 +47,4 @@ feature_property_type str_to_fprop(const string &str);
 char blood_rotation(const coord_def & p);
 bool is_icecovered(const coord_def& p);
 bool is_blasphemy(const coord_def& p);
+bool is_gastronomic(const coord_def& p);

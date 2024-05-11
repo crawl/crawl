@@ -79,6 +79,11 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         colour = LIGHTMAGENTA;
     }
+    else if (!feat_is_solid(feat)
+        && (cell.flags & MAP_GASTRONOMIC))
+    {
+        colour = YELLOW; //TODO figure out if this works
+    }
     else if (cell.flags & MAP_BLOODY && !norecolour && Options.show_blood)
         colour = RED;
     else if (cell.flags & MAP_CORRODING && feat == DNGN_FLOOR)
