@@ -662,3 +662,10 @@ public:
     bool can_affect_walls() override;
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_slouch : public targeter_radius
+{
+public:
+    targeter_slouch();
+    virtual aff_type is_affected(coord_def loc) override;
+};

@@ -1898,8 +1898,8 @@ void cheibriados_time_bend(int pow)
 
 // So that we can display a damage number for slouch to the player
 // TODO Add slouch damage to the targeter
-int slouch_damage_formula(int mon_speed, int mon_action_energy, int jerk_num,
-                          int jerk_denom)
+int slouch_damage_for_speed(int mon_speed, int mon_action_energy, int jerk_num,
+                            int jerk_denom)
 {
     const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
     return 4 * (mon_speed * BASELINE_DELAY * jerk_num
@@ -1907,22 +1907,23 @@ int slouch_damage_formula(int mon_speed, int mon_action_energy, int jerk_num,
                 - player_number / player_movement_speed() / player_speed());
 }
 
-static int _slouch_damage(monster *mon)
+int slouch_damage(monster *victim)
 {
     // Please change handle_monster_move in mon-act.cc to match.
-    const int jerk_num = mon->type == MONS_SIXFIRHY ? 8
-                       : mon->type == MONS_JIANGSHI ? 48
-                                                    : 1;
+    const int jerk_num = victim->type == MONS_SIXFIRHY ? 8
+                       : victim->type == MONS_JIANGSHI ? 48
+                                                       : 1;
 
-    const int jerk_denom = mon->type == MONS_SIXFIRHY ? 24
-                         : mon->type == MONS_JIANGSHI ? 90
-                                                      : 1;
+    const int jerk_denom = victim->type == MONS_SIXFIRHY ? 24
+                         : victim->type == MONS_JIANGSHI ? 90
+                                                         : 1;
 
-    return slouch_damage_formula(mon->speed, mon->action_energy(EUT_MOVE),
-                                 jerk_num, jerk_denom);
+    return slouch_damage_for_speed(victim->speed,
+                                   victim->action_energy(EUT_MOVE),
+                                   jerk_num, jerk_denom);
 }
 
-static bool _slouchable(coord_def where)
+bool is_slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
     if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
@@ -1932,27 +1933,27 @@ static bool _slouchable(coord_def where)
         return false;
     }
 
-    return _slouch_damage(mon) > 0;
+    return slouch_damage(mon) > 0;
 }
 
 static bool _act_slouchable(const actor *act)
 {
     if (act->is_player())
         return false;  // too slow-witted
-    return _slouchable(act->pos());
+    return is_slouchable(act->pos());
 }
 
 static int _slouch_monsters(coord_def where)
 {
-    if (!_slouchable(where))
+    if (!is_slouchable(where))
         return 0;
 
     monster* mon = monster_at(where);
     ASSERT(mon);
 
-    // Between 1/2 and 3/2 of _slouch_damage(), but weighted strongly
+    // Between 1/2 and 3/2 of slouch_damage(), but weighted strongly
     // towards the middle.
-    const int dmg = roll_dice(_slouch_damage(mon), 3) / 2;
+    const int dmg = roll_dice(slouch_damage(mon), 3) / 2;
 
     mon->hurt(&you, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
     return 1;
@@ -1960,7 +1961,7 @@ static int _slouch_monsters(coord_def where)
 
 spret cheibriados_slouch(bool fail)
 {
-    int count = apply_area_visible(_slouchable, you.pos());
+    int count = apply_area_visible(is_slouchable, you.pos());
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))

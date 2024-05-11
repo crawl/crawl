@@ -1416,9 +1416,8 @@ static string _ability_damage_string(ability_type ability)
         case ABIL_TSO_CLEANSING_FLAME:
             return make_stringf("2d%d*", _tso_cleansing_flame_power(false));
         case ABIL_CHEIBRIADOS_SLOUCH:
-            // Display damage against normal-speed monsters
-            // Perhaps "about %d" would be better?
-            return make_stringf("%dd3/2*", slouch_damage_formula());
+            return make_stringf("%dd3 / 2 (against normal-speed enemies)",
+                                slouch_damage_for_speed());
         case ABIL_IGNIS_FOXFIRE:
             return "1d8/foxfire"; // constant
         case ABIL_QAZLAL_UPHEAVAL:
@@ -2418,6 +2417,16 @@ private:
     ability_type abil;
 };
 
+static vector<string> _desc_slouch_damage(const monster_info& mi)
+{
+    if (!monster_at(mi.pos) || !you.can_see(*monster_at(mi.pos)))
+        return vector<string>{};
+    else if (!is_slouchable(mi.pos))
+        return vector<string>{make_stringf("not susceptible")};
+    else
+        return vector<string>{make_stringf("damage: %dd3 / 2", slouch_damage(monster_at(mi.pos)))};
+}
+
 static vector<string> _desc_bind_soul_hp(const monster_info& mi)
 {
     if (!monster_at(mi.pos) || !yred_can_bind_soul(monster_at(mi.pos)))
@@ -2458,7 +2467,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
 
     // Full LOS:
     case ABIL_KIKU_TORMENT:
-    case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_QAZLAL_DISASTER_AREA: // Doesn't account for explosions hitting
                                     // areas behind glass.
     case ABIL_RU_APOCALYPSE:
@@ -2531,6 +2539,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_YRED_BIND_SOUL:
         return make_unique<targeter_bind_soul>();
 
+    case ABIL_CHEIBRIADOS_SLOUCH:
+        return make_unique<targeter_slouch>();
+
     default:
         break;
     }
@@ -2594,6 +2605,8 @@ bool activate_talent(const talent& tal, dist *target)
             args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1, hitfunc.get());
         else if (abil.ability == ABIL_YRED_BIND_SOUL)
             args.get_desc_func = bind(_desc_bind_soul_hp, placeholders::_1);
+        else if (abil.ability == ABIL_CHEIBRIADOS_SLOUCH)
+            args.get_desc_func = bind(_desc_slouch_damage, placeholders::_1);
 
         if (abil.failure.base_chance)
         {

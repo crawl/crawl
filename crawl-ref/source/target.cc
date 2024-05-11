@@ -2537,3 +2537,22 @@ aff_type targeter_mortar::is_affected(coord_def loc)
     // path never intersected loc at all
     return AFF_NO;
 }
+
+targeter_slouch::targeter_slouch()
+    : targeter_radius(&you, LOS_NO_TRANS, LOS_RADIUS)
+{
+}
+
+aff_type targeter_slouch::is_affected(coord_def loc)
+{
+    if (targeter_radius::is_affected(loc) == AFF_NO)
+        return AFF_NO;
+
+    if (!monster_at(loc) || !you.can_see(*monster_at(loc))
+        || !is_slouchable(loc))
+    {
+        return AFF_NO;
+    }
+
+    return AFF_YES;
+}

@@ -135,8 +135,10 @@ void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
-int slouch_damage_formula(int mon_speed = 10, int mon_energy_usage = 10,
-                          int jerk_num = 1, int jerk_denom = 1);
+int slouch_damage_for_speed(int mon_speed = 10, int mon_energy_usage = 10,
+                            int jerk_num = 1, int jerk_denom = 1);
+int slouch_damage(monster *victim);
+bool is_slouchable(coord_def where);
 spret cheibriados_slouch(bool fail);
 void cheibriados_time_step(int pow);
 
