@@ -729,6 +729,8 @@ Distraction
 
 Extremism
 
+Goblin Mode
+
 Havoc
 
 Imbalance
