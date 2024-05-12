@@ -2504,6 +2504,14 @@ bool targeter_mortar::can_affect_walls()
     return true;
 }
 
+bool targeter_mortar::valid_aim(coord_def a)
+{
+    if (!in_bounds(a))
+        return notify_fail("Out of range.");
+    else
+        return targeter_beam::valid_aim(a);
+}
+
 aff_type targeter_mortar::is_affected(coord_def loc)
 {
     aff_type current = AFF_YES;
