@@ -6093,7 +6093,7 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     vector<coord_def> possible_targets;
     for (distance_iterator di(foe.pos(), true, true, 2); di; ++di)
     {
-        if (cell_see_cell(foe.pos(), *di, LOS_NO_TRANS))
+        if (in_bounds(*di) && cell_see_cell(foe.pos(), *di, LOS_NO_TRANS))
             possible_targets.push_back(*di);
     }
 
