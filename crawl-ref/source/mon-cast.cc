@@ -6131,6 +6131,9 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
         int useful_count = 0;
         for (size_t j = 0; j < len; ++j)
         {
+            if (!in_bounds(tracer.path_taken[j]))
+                break;
+
             // These tracers are from the perspective a possible morter at these spots,
             // but since that doesn't exist yet, we assume that the caster is firing
             // them. Possibly this doesn't result in exact results, but mostly should
