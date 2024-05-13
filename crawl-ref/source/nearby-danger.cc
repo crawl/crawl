@@ -267,27 +267,25 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             // Temporary immunity allows travelling through a cloud but not
             // resting in it.
             // Qazlal immunity will allow for it, however.
-            if (cloud_damages_over_time(type, want_move, cloud_is_yours_at(you.pos())))
+            bool your_fault = cloud_is_yours_at(you.pos());
+            if (cloud_damages_over_time(type, want_move, your_fault))
             {
                 if (announce)
                 {
-                    mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
+                    mprf(MSGCH_WARN, "You are in a cloud of %s!",
                          cloud_type_name(type).c_str());
                 }
                 return false;
             }
         }
 
-        // No monster will attack you inside a sanctuary,
-        // so presence of monsters won't matter -- until it starts shrinking...
-        if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
-            return true;
-
         if (poison_is_lethal())
         {
             if (announce)
-                mprf(MSGCH_WARN, "There is a lethal amount of poison in your body!");
-
+            {
+                mprf(MSGCH_WARN,
+                     "There is a lethal amount of poison in your body!");
+            }
             return false;
         }
 
@@ -302,10 +300,17 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         if (you.props[EMERGENCY_FLIGHT_KEY])
         {
             if (announce)
-                mprf(MSGCH_WARN, "You are being drained by your emergency flight!");
-
+            {
+                mprf(MSGCH_WARN,
+                     "You are being drained by your emergency flight!");
+            }
             return false;
         }
+
+        // No monster will attack you inside a sanctuary,
+        // so presence of monsters won't matter -- until it starts shrinking...
+        if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
+            return true;
     }
 
     // Monster check.
@@ -318,7 +323,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             [](const monster *mon){ return mon->visible_to(&you); });
     const bool sensed = any_of(monsters.begin(), monsters.end(),
                    [](const monster *mon){
-                       return env.map_knowledge(mon->pos()).flags & MAP_INVISIBLE_MONSTER;
+                       return env.map_knowledge(mon->pos()).flags
+                              & MAP_INVISIBLE_MONSTER;
                    });
 
     const string announcement = _seen_monsters_announcement(visible, sensed);
