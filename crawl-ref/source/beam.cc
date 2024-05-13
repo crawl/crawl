@@ -2672,6 +2672,30 @@ void bolt::affect_endpoint()
     }
     break;
 
+    case SPELL_GREATER_ENSNARE:
+    {
+        int count = random_range(3, 6);
+        for (distance_iterator di(pos(), true, true, 1); di && count > 0; ++di)
+        {
+            trap_def *trap = trap_at(*di);
+            if (trap && trap->type != TRAP_WEB
+                || !trap && env.grid(*di) != DNGN_FLOOR)
+            {
+                continue;
+            }
+
+            if (actor_at(*di))
+                ensnare(actor_at(*di));
+            else
+            {
+                temp_change_terrain(*di, DNGN_TRAP_NET, random_range(60, 110),
+                                    TERRAIN_CHANGE_WEBS);
+            }
+            count--;
+        }
+        break;
+    }
+
     default:
         break;
     }

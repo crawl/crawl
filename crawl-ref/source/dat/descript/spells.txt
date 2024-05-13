@@ -743,6 +743,11 @@ Greater Servant of Makhleb spell
 
 Summons a major demon.
 %%%%
+Greater Ensnare spell
+
+Shoots a stream of webbing at a creature, ensnaring them in a sticky web and
+scattering additional webs nearby that dissolve after a short length of time.
+%%%%
 Hailstorm spell
 
 Conjures a cannonade of hail, battering nearby creatures that fail to dodge.

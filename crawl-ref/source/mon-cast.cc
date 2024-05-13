@@ -1719,6 +1719,15 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit      = 22 + power / 20;
         break;
 
+    case SPELL_GREATER_ENSNARE:
+        beam.name     = "stream of webbing";
+        beam.colour   = WHITE;
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.flavour  = BEAM_ENSNARE;
+        beam.hit      = 22 + power / 12;
+        beam.aimed_at_spot = true;
+        break;
+
     case SPELL_SPECTRAL_CLOUD:
         beam.name     = "spectral mist";
         beam.damage   = dice_def(0, 1);

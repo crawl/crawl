@@ -2033,6 +2033,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_GREATER_ENSNARE, "Greater Ensnare",
+    spschool::conjuration | spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    6,
+    200,
+    5, 5,
+    0,
+    TILEG_ENSNARE,
+},
+
+{
     SPELL_THUNDERBOLT, "Thunderbolt",
     spschool::conjuration | spschool::air,
     spflag::dir_or_target | spflag::not_self,

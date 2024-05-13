@@ -5,10 +5,10 @@ genus: spider
 will: 80
 attacks:
  - {type: hit, damage: 30}
-hd: 17
+hd: 19
 hp_10x: 2040
-ac: 3
-ev: 10
+ac: 9
+ev: 12
 spells: arachne
 has_corpse: true
 shout: shout
