@@ -1,6 +1,6 @@
 name: "living spell"
 glyph: {char: "*", colour: lightblue}
-flags: [flies, insubstantial, no_exp_gain]
+flags: [flies, insubstantial, no_exp_gain, conjured]
 holiness: [nonliving]
 will: invuln
 attacks:
