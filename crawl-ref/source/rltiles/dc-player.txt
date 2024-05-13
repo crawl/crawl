@@ -222,6 +222,8 @@ scarf_red SCARF_RED
 scarf_white SCARF_WHITE
 scarf_magenta SCARF_MAGENTA
 scarf_green SCARF_GREEN SCARF_LAST_NORM
+#unrand
+scarf_invisibility SCARF_INVISIBILITY
 %end_ctg
 
 ###Boots

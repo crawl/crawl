@@ -1,3 +1,13 @@
+{{
+  function invisibility_setup(e)
+    if you.race() == "Coglin" then
+      e.kitem("n = scarf of invisibility")
+    else
+      e.kitem("n = amulet of invisibility")
+    end
+  end
+}}
+
 NAME:   dungeon_sprint_fedhas
 TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 DESC:   Sprint IV: "Fedhas' Mad Dash"
@@ -52,11 +62,10 @@ KMONS:  h = moth of wrath
 KMONS:  m = river rat
 KMONS:  n = scorpion
 KMONS:  u = rat
-KITEM:  n = amulet of invisibility
 KITEM:  M = any book
 KITEM:  # = Orb of Zot
 KFEAT:  Z = any shop
-
+: invisibility_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccccx

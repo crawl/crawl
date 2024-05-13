@@ -814,7 +814,8 @@ bool string_matches_ability_name(const string& key)
 
 static bool _invis_causes_drain()
 {
-    return !player_equip_unrand(UNRAND_INVISIBILITY);
+    return !player_equip_unrand(UNRAND_AMULET_INVISIBILITY)
+               && !player_equip_unrand(UNRAND_SCARF_INVISIBILITY);
 }
 
 /**
