@@ -1291,13 +1291,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     if (feat_is_wall(nfeat) && monster_at(pos))
         push_or_teleport_actor_from(pos);
     if (feat_is_trap(nfeat) && env.trap.find(pos) == env.trap.end())
-    {
-        // TODO: create a trap_def in env for this case?
-        mprf(MSGCH_ERROR,
-            "Attempting to change terrain to a trap without a corresponding"
-            " trap_def!");
-        nfeat = DNGN_FLOOR;
-    }
+        place_specific_trap(pos, trap_type_from_feature(nfeat), 1);
 
 
     _dgn_check_terrain_covering(pos, env.grid(pos), nfeat);

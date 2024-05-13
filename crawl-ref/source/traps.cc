@@ -1004,6 +1004,35 @@ dungeon_feature_type trap_feature(trap_type type)
     }
 }
 
+trap_type trap_type_from_feature(dungeon_feature_type type)
+{
+    switch (type)
+    {
+    case DNGN_TRAP_WEB:
+        return TRAP_WEB;
+    case DNGN_TRAP_SHAFT:
+        return TRAP_SHAFT;
+    case DNGN_TRAP_DISPERSAL:
+        return TRAP_DISPERSAL;
+    case DNGN_TRAP_TELEPORT:
+        return TRAP_TELEPORT;
+    case DNGN_TRAP_TELEPORT_PERMANENT:
+        return TRAP_TELEPORT_PERMANENT;
+    case DNGN_TRAP_ALARM:
+        return TRAP_ALARM;
+    case DNGN_TRAP_ZOT:
+        return TRAP_ZOT;
+    case DNGN_PASSAGE_OF_GOLUBRIA:
+        return TRAP_GOLUBRIA;
+    case DNGN_TRAP_NET:
+        return TRAP_NET;
+    case DNGN_TRAP_PLATE:
+        return TRAP_PLATE;
+    default:
+        return TRAP_UNASSIGNED;
+    }
+}
+
 /***
  * Can a shaft be placed on the current level?
  *
