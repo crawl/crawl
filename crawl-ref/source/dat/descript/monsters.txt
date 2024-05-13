@@ -1448,8 +1448,9 @@ such a curious servitor.
 %%%%
 glowing orange brain
 
-A huge wrinkled brain, floating just off the floor and glowing with mutagenic
-energies. Every now and then it seems to pulsate.
+A huge pulsating brain, floating just off the floor and glowing with mutagenic
+energies. It radiates a constant psychic influence upon nearby allies, using its
+vast intellect to empower their spellcasting abilities.
 %%%%
 glowing shapeshifter
 
