@@ -4082,8 +4082,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return player_equip_unrand(UNRAND_DISPATER)
                && !you.has_mutation(MUT_NO_ARTIFICE);
     case ABIL_EVOKE_OLGREB:
-        return you.weapon()
-               && is_unrandom_artefact(*you.weapon(), UNRAND_OLGREB)
+        return player_equip_unrand(UNRAND_OLGREB)
                && !you.has_mutation(MUT_NO_ARTIFICE);
     default:
         // removed abilities handled here
