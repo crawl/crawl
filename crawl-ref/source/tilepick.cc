@@ -1985,9 +1985,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_BURNING_BUSH;
             return base;
 
-        // Temporary borrowing tiles for the non-beetle boulders.
         case MONS_BOULDER_BEETLE:
-        case MONS_BOULDER:
             return mon.is(MB_ROLLING)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number)
                    : base;

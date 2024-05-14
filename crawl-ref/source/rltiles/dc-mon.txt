@@ -341,7 +341,10 @@ twister2
 twister3
 twister4
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
-boulder MONS_BOULDER /*'*'*/
+boulder1 MONS_BOULDER /*'*'*/
+boulder2
+boulder3
+boulder4
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2
 orb_of_destruction3
