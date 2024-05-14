@@ -2646,7 +2646,7 @@ void bolt::affect_endpoint()
     {
         // If the initial bolt is reflected or redirected back at the summoner,
         // we can crash on trying to create the summon.
-        if (!agent()->alive())
+        if (!agent(true) || !agent(true)->alive())
             break;
 
         coord_def spot;
