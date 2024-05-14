@@ -3166,13 +3166,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_YRED_HURL_TORCHLIGHT:
     {
-        int charges = yred_get_torch_power();
         spret result = your_spells(SPELL_HURL_TORCHLIGHT,
                                    _yred_hurl_torchlight_power(),
                                    false, nullptr, target, fail);
 
         if (result == spret::success)
-            you.props[YRED_TORCH_POWER_KEY] = (charges - 1);
+            you.props[YRED_TORCH_POWER_KEY].get_int() -= 1;
 
         return result;
     }
