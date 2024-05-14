@@ -1025,8 +1025,11 @@ static coord_def _wobble_dir(coord_def dir)
 static void _handle_boulder_movement(monster& boulder)
 {
     // If we don't have a movement direction (probably from a vault-placed
-    // decorative boulder), don't crash by assuming we do
-    if (!boulder.props.exists(BOULDER_DIRECTION_KEY))
+    // decorative boulder), don't crash by assuming we do.
+    // Also, since we bypass a lot of normal action code, yet can get netted,
+    // prevent the boulder from moving away from the net's location and creating
+    // multiple item bugs due to how netting works.
+    if (!boulder.props.exists(BOULDER_DIRECTION_KEY) || boulder.caught())
     {
         // Have to use energy anyway, or we cause an infinite loop.
         _swim_or_move_energy(boulder);
