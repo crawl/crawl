@@ -58,16 +58,12 @@ void init_companions()
 void add_companion(monster* mons)
 {
     ASSERT(mons->alive());
-    // Right now this is a special case for Saint Roka, but
-    // future orcish uniques should behave in the same way.
-    mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
     companion_list[mons->mid] = companion(*mons);
 }
 
 void remove_companion(monster* mons)
 {
-    mons->props[NO_ANNOTATE_KEY] = false;
     set_unique_annotation(mons);
     companion_list.erase(mons->mid);
 }
