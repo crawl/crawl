@@ -2688,7 +2688,7 @@ void bolt::affect_endpoint()
                 ensnare(actor_at(*di));
             else
             {
-                temp_change_terrain(*di, DNGN_TRAP_NET, random_range(60, 110),
+                temp_change_terrain(*di, DNGN_TRAP_WEB, random_range(60, 110),
                                     TERRAIN_CHANGE_WEBS);
             }
             count--;
