@@ -812,7 +812,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
 static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 {
     // Can't recover from these
-    if (ktype == KILL_BANISHED || ktype == KILL_RESET)
+    if (ktype == KILL_BANISHED || ktype == KILL_RESET || ktype == KILL_DISMISSED)
         return false;
 
     if (blorkula.props.exists(BLORKULA_DIE_FOR_REAL_KEY))
