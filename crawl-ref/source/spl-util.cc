@@ -516,10 +516,17 @@ bool spell_is_direct_attack(spell_type spell)
 int spell_mana(spell_type which_spell, bool real_spell)
 {
     const int level = _seekspell(which_spell)->level;
-    if (real_spell && (you.duration[DUR_BRILLIANCE]
-                       || player_equip_unrand(UNRAND_FOLLY)))
+
+    if (real_spell)
     {
-        return level/2 + level%2; // round up
+        int cost = level;
+        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+            cost = max(1, cost - you.rev_tier());
+
+        if (you.duration[DUR_BRILLIANCE] || player_equip_unrand(UNRAND_FOLLY))
+            cost = cost/2 + cost%2; // round up
+
+        return cost;
     }
     return level;
 }

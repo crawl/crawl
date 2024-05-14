@@ -1030,7 +1030,7 @@ const char* gizmo_effect_name(int type)
 {
     switch (static_cast<special_gizmo_type>(type))
     {
-        case SPGIZMO_MANAREV:       return "RevMP";
+        case SPGIZMO_MANAREV:       return "RevMPSaver";
         case SPGIZMO_GADGETEER:     return "Gadgeteer";
         case SPGIZMO_PARRYREV:      return "RevParry";
         case SPGIZMO_AUTODAZZLE:    return "AutoDazzle";

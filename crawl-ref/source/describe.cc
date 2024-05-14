@@ -2675,8 +2675,8 @@ static string _describe_gizmo(const item_def &item)
         switch (item.brand)
         {
             case SPGIZMO_MANAREV:
-                ret += "Your magic regeneration increases greatly based on how "
-                       "Revved you are.\n";
+                ret += "Your spells cost less MP based on how Revved you are "
+                       "(up to 3 less, but cannot reduce below 1). \n";
                 break;
 
             case SPGIZMO_GADGETEER:

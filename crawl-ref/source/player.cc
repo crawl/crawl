@@ -1333,12 +1333,6 @@ int player_mp_regen()
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
 
-    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
-    {
-        const static int rev_bonus[] = {0, 20, 40, 80};
-        regen_amount += rev_bonus[you.rev_tier()];
-    }
-
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
