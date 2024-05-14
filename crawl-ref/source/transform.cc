@@ -2107,27 +2107,30 @@ void merfolk_stop_swimming()
 
 void unset_default_form()
 {
-    if (is_artefact(you.active_talisman))
-        unequip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE, false);
+    item_def talisman = you.active_talisman;
 
     you.default_form = transformation::none;
     you.active_talisman.clear();
+
+    if (is_artefact(talisman))
+        unequip_artefact_effect(talisman, nullptr, false, EQ_NONE, false);
 }
 
 void set_default_form(transformation t, const item_def *source)
 {
-    if (is_artefact(you.active_talisman))
-        unequip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE, false);
-
+    item_def talisman = you.active_talisman;
+    you.active_talisman.clear();
     you.default_form = t;
+
+    if (is_artefact(talisman))
+        unequip_artefact_effect(talisman, nullptr, false, EQ_NONE, false);
+
     if (source)
     {
         you.active_talisman = *source; // iffy
         if (is_artefact(you.active_talisman))
             equip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE);
     }
-    else
-        you.active_talisman.clear();
 }
 
 void vampire_update_transformations()
