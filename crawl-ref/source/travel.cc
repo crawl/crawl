@@ -279,11 +279,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback,
             return true;
 
         // Permanently flying players can cross most hostile terrain.
-        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
-            || grid == DNGN_TOXIC_BOG)
-        {
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
             return assume_flight || you.permanent_flight();
-        }
+        // Players casting Toxic Bog can safely traverse it
+        else if (grid == DNGN_TOXIC_BOG)
+            return you.duration[DUR_NOXIOUS_BOG];
     }
 
     return feat_is_traversable(grid, try_fallback);
