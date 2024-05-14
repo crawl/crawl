@@ -2030,6 +2030,10 @@ _misc_colour_
 
 alizarin crimson
 
+amaranth
+
+aqua
+
 aubergine
 
 azure
@@ -2041,6 +2045,8 @@ bronze
 brown
 
 burgundy
+
+cattleya
 
 cerise
 
@@ -2057,6 +2063,10 @@ copper
 cyan
 
 dun
+
+dusty rose
+
+ecru
 
 erin
 
@@ -2104,7 +2114,11 @@ phlox
 
 pink
 
+puce
+
 purple
+
+rose
 
 rubric
 
@@ -2117,6 +2131,8 @@ scarlet
 silver
 
 sinopia
+
+smalt
 
 smaragdine
 
@@ -2131,6 +2147,8 @@ turquoise
 ultramarine
 
 umber
+
+verdigris
 
 vermilion
 
