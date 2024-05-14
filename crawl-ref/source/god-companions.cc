@@ -809,6 +809,12 @@ void beogh_dismiss_apostle(int slot)
             remove_companion(real);
             monster_die(*real, KILL_RESET, -1, true);
         }
+        // This is likely because our apostle is in a disconnected branch that
+        // the player is not in. We still need to manually erase them from the
+        // companion list, otherwise they will still be recallable and this can
+        // cause other crahses because their apostle data has been deleted.
+        else
+            companion_list.erase(mid);
     }
 
     _cleanup_apostle_corpse(slot);
