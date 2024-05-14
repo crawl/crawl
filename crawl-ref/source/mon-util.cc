@@ -4034,9 +4034,11 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     }
 
     // Band leaders can displace followers regardless of type considerations.
+    if (m1.is_band_leader_of(m2))
+        return true;
     // And prevent followers to displace the leader to avoid constant swapping.
     // -cao
-    if (m1.is_band_leader_of(m2) || m1.is_band_follower_of(m2))
+    else if (m1.is_band_follower_of(m2))
         return false;
 
     // Monsters smart enough to use stairs can push past monsters too stupid

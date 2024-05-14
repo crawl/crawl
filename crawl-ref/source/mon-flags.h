@@ -288,7 +288,8 @@ enum monster_flag_type : uint64_t
     /// Part of an orc apostle band
     MF_APOSTLE_BAND       = BIT(39),
 
-    // MF_BAND_LEADER      = BIT(40) // Created as the leader of a band
+    // Created as the leader of a band
+    MF_BAND_LEADER        = BIT(40),
 
     /// Will prefer not to approach enemies it's already in spellcast range of
     MF_CAUTIOUS           = BIT(41),

@@ -759,6 +759,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (mon->mindex() >= MAX_MONSTERS - 30)
         return mon;
 
+    if (band_size > 1)
+        mon->flags |= MF_BAND_LEADER;
+
     const bool priest = mon->is_priest();
 
     mgen_data band_template = mg;

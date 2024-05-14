@@ -6495,6 +6495,10 @@ bool monster::is_band_follower_of(const monster& leader) const
 
 bool monster::is_band_leader_of(const monster& follower) const
 {
+    // Check if we're a leader of anyone at all
+    if (!testbits(flags, MF_BAND_LEADER))
+        return false;
+
     return follower.is_band_follower_of(*this);
 }
 

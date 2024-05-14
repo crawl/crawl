@@ -789,6 +789,42 @@ static bool _band_wander_target(monster * mon)
     return false;
 }
 
+// Makes a band leader with nothing better to do wander in the general direction
+// of a band follower that has moved away to chase after something.
+//
+// Return true if a target still needs to be set. If returns false, mon->target
+// was set.
+static bool _leader_wander_target(monster * mon)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_band_follower_of(*mon)
+            && mi->behaviour == BEH_SEEK
+            && (grid_distance(mi->pos(), mon->pos()) > LOS_DEFAULT_RANGE
+               || !mon->see_cell(mi->pos())))
+        {
+            monster_pathfind mp;
+            mp.set_range(1000);
+
+            if (mp.init_pathfind(mon, mi->pos()))
+            {
+                mon->travel_path = mp.calc_waypoints();
+                if (!mon->travel_path.empty())
+                {
+                    // Okay then, we found a path. Let's use it!
+                    mon->target = mon->travel_path[0];
+                    mon->travel_target = MTRAV_PATROL;
+                    return false;
+                }
+
+                // If we can't find a path to them, look through the rest of our followers
+            }
+        }
+    }
+
+    return true;
+}
+
 // Returns true if a movement target still needs to be set
 static bool _herd_wander_target(monster * mon)
 {
@@ -924,6 +960,9 @@ void check_wander_target(monster* mon, bool isPacified)
 
         if (need_target && band_leader != nullptr)
             need_target = _band_wander_target(mon);
+
+        if (need_target && testbits(mon->flags, MF_BAND_LEADER))
+            need_target = _leader_wander_target(mon);
 
         // XXX: This is really dumb wander behaviour... instead of
         // changing the goal square every turn, better would be to
