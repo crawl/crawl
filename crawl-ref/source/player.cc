@@ -2248,7 +2248,8 @@ int player_armour_shield_spell_penalty()
 int player_wizardry()
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
-           + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
+           + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0)
+           + you.scan_artefacts(ARTP_WIZARDRY);
 }
 
 int player_channeling()

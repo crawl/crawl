@@ -447,6 +447,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_MANA_REGENERATION,
             "It increases your rate of magic regeneration.",
             prop_note::symbolic },
+        { ARTP_WIZARDRY,
+            "It increases the success rate of your magical spells.",
+            prop_note::plain },
     };
     return data;
 }
@@ -518,6 +521,7 @@ static vector<string> _randart_propnames(const item_def& item,
         // Quantitative attributes
         ARTP_HP,
         ARTP_MAGICAL_POWER,
+        ARTP_WIZARDRY,
         ARTP_AC,
         ARTP_EVASION,
         ARTP_STRENGTH,
