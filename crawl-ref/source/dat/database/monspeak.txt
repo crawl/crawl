@@ -2028,17 +2028,31 @@ violet
 # No black, white, or grey here.
 _misc_colour_
 
+aero
+
 alizarin crimson
+
+almond
 
 amaranth
 
 amethyst
 
+ametrine
+
 amber
+
+apple green
+
+apple red
+
+apple yellow
 
 apricot
 
 aqua
+
+aquamarine
 
 aubergine
 
@@ -2048,11 +2062,17 @@ beige
 
 bistre
 
+blood red
+
 bole
+
+brass
 
 bronze
 
 brown
+
+buff
 
 burgundy
 
@@ -2062,6 +2082,8 @@ burnt sienna
 
 burnt umber
 
+byzantium
+
 cameo pink
 
 cardinal red
@@ -2069,6 +2091,8 @@ cardinal red
 carmine
 
 carnation
+
+carnelian
 
 carrot orange
 
@@ -2086,15 +2110,27 @@ charcoal
 
 chartreuse
 
+chestnut
+
+chocolate
+
 cinnabar
+
+cinnamon
 
 citrine
 
+citron
+
 cobalt blue
+
+cornflower blue
 
 copper
 
 coral pink
+
+cordovan
 
 crimson
 
@@ -2104,15 +2140,27 @@ dun
 
 dusty rose
 
+ebony
+
 ecru
 
 electric blue
 
+electric purple
+
 emerald
+
+eminence
 
 erin
 
 falu red
+
+fire orange
+
+fire red
+
+forest green
 
 fuchsia
 
@@ -2126,13 +2174,19 @@ glaucous
 
 goblin blue
 
+goblin scarlet
+
 gold
 
 goldenrod
 
+goshenite
+
 gridelin
 
 haint blue
+
+heliodor
 
 heliotrope
 
@@ -2142,25 +2196,47 @@ hot pink
 
 hunter green
 
+icterine
+
+imperial blue
+
+imperial orange
+
+imperial purple
+
+imperial red
+
+imperial yellow
+
 indanthrone blue
 
 khaki
 
+kobicha
+
 kombu green
+
+lapis lazuli
 
 lavender
 
 lavender blue
 
+lavender purple
+
 lavender indigo
 
 leaf green
+
+leek green
 
 lemon yellow
 
 lilac
 
 lime green
+
+liseran purple
 
 lusty gallant
 
@@ -2172,15 +2248,35 @@ mahogany
 
 marigold
 
+marmalade
+
 maroon
 
 mauve
 
+maxixe
+
+mellow yellow
+
+mindaro
+
+mint green
+
+morganite
+
 mulberry
+
+mustard yellow
 
 ochre
 
+octarine
+
+old rose
+
 olive green
+
+olive drab
 
 orchid
 
@@ -2192,6 +2288,10 @@ palatinate
 
 peach
 
+pear yellow
+
+peridot
+
 periwinkle
 
 persimmon
@@ -2200,7 +2300,11 @@ phlox
 
 pink
 
+pink lavender
+
 plum
+
+prase
 
 puce
 
@@ -2210,11 +2314,19 @@ purple
 
 purpura
 
+purpureus
+
+quartz
+
 realgar
+
+red emerald
 
 rose
 
 rose quartz
+
+rose vale
 
 rubric
 
@@ -2228,9 +2340,15 @@ salmon
 
 sapphire
 
+sea blue
+
+sea green
+
 sepia
 
 scarlet
+
+scarlet emerald
 
 shocking pink
 
@@ -2241,6 +2359,10 @@ silver
 silver pink
 
 sinopia
+
+skobeloff
+
+sky blue
 
 sky magenta
 
@@ -2254,6 +2376,8 @@ sorcerer's violet
 
 steel blue
 
+strawberry red
+
 tangerine
 
 taupe
@@ -2264,15 +2388,23 @@ teal
 
 telemagenta
 
+terracotta
+
+thistle
+
 tomato red
 
 topaz
+
+turmeric
 
 turquoise
 
 ultramarine
 
 umber
+
+vanilla
 
 verdigris
 
@@ -2281,6 +2413,10 @@ vermilion
 veronica
 
 viridian
+
+walnut
+
+wenge
 
 wisteria
 
