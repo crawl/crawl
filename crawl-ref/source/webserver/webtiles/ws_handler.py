@@ -1099,8 +1099,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         max_length = config.get('max_chat_length')
         if max_length:
             max_length = max(100, int(max_length)) # if it's set, enforce a minimum
-            if len(text) >= max_length:
-                text = text[:max_length - 5] + "[...]"
+        else:
+            max_length = 1000 # if not set, enforce a default
+        if len(text) >= max_length:
+            text = text[:max_length - 5] + "[...]"
         receiver = None
         if self.process:
             receiver = self.process
