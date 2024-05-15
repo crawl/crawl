@@ -2032,6 +2032,12 @@ alizarin crimson
 
 amaranth
 
+amethyst
+
+amber
+
+apricot
+
 aqua
 
 aubergine
@@ -2040,13 +2046,23 @@ azure
 
 beige
 
+bole
+
 bronze
 
 brown
 
 burgundy
 
+burnt sienna
+
+burnt umber
+
+carmine
+
 cattleya
+
+celadon
 
 cerise
 
@@ -2056,9 +2072,13 @@ charcoal
 
 chartreuse
 
+citrine
+
 cobalt blue
 
 copper
+
+crimson
 
 cyan
 
@@ -2068,6 +2088,10 @@ dusty rose
 
 ecru
 
+electric blue
+
+emerald
+
 erin
 
 fuchsia
@@ -2076,11 +2100,15 @@ fulvous
 
 gamboge
 
+garnet
+
 glaucous
 
 goblin blue
 
 gold
+
+goldenrod
 
 gridelin
 
@@ -2088,9 +2116,21 @@ haint blue
 
 heliotrope
 
+hibiscus
+
+hot pink
+
 indanthrone blue
 
+khaki
+
+kombu green
+
 lavender
+
+lavender blue
+
+lavender indigo
 
 leaf green
 
@@ -2100,7 +2140,11 @@ lime green
 
 magenta
 
+mahogany
+
 marigold
+
+maroon
 
 mauve
 
@@ -2108,29 +2152,49 @@ mulberry
 
 ochre
 
+palatinate
+
 periwinkle
 
 phlox
 
 pink
 
+plum
+
 puce
 
 purple
 
+purpura
+
 rose
+
+rose quartz
 
 rubric
 
+ruby
+
+russet
+
 saffron
+
+salmon
+
+sapphire
 
 sepia
 
 scarlet
 
+sienna
+
 silver
 
 sinopia
+
+slate
 
 smalt
 
@@ -2138,9 +2202,13 @@ smaragdine
 
 sorcerer's violet
 
+steel blue
+
 taupe
 
 teal
+
+topaz
 
 turquoise
 
@@ -2152,7 +2220,11 @@ verdigris
 
 vermilion
 
+veronica
+
 viridian
+
+wisteria
 
 zaffre
 %%%%
