@@ -2046,6 +2046,8 @@ azure
 
 beige
 
+bistre
+
 bole
 
 bronze
@@ -2054,15 +2056,27 @@ brown
 
 burgundy
 
+burnt orange
+
 burnt sienna
 
 burnt umber
 
+cameo pink
+
+cardinal red
+
 carmine
+
+carnation
+
+carrot orange
 
 cattleya
 
 celadon
+
+celeste
 
 cerise
 
@@ -2072,11 +2086,15 @@ charcoal
 
 chartreuse
 
+cinnabar
+
 citrine
 
 cobalt blue
 
 copper
+
+coral pink
 
 crimson
 
@@ -2093,6 +2111,8 @@ electric blue
 emerald
 
 erin
+
+falu red
 
 fuchsia
 
@@ -2120,6 +2140,8 @@ hibiscus
 
 hot pink
 
+hunter green
+
 indanthrone blue
 
 khaki
@@ -2134,9 +2156,15 @@ lavender indigo
 
 leaf green
 
+lemon yellow
+
 lilac
 
 lime green
+
+lusty gallant
+
+madder
 
 magenta
 
@@ -2152,9 +2180,21 @@ mulberry
 
 ochre
 
+olive green
+
+orchid
+
+orpiment
+
+oxblood
+
 palatinate
 
+peach
+
 periwinkle
+
+persimmon
 
 phlox
 
@@ -2164,9 +2204,13 @@ plum
 
 puce
 
+pumpkin
+
 purple
 
 purpura
+
+realgar
 
 rose
 
@@ -2188,11 +2232,17 @@ sepia
 
 scarlet
 
+shocking pink
+
 sienna
 
 silver
 
+silver pink
+
 sinopia
+
+sky magenta
 
 slate
 
@@ -2204,9 +2254,17 @@ sorcerer's violet
 
 steel blue
 
+tangerine
+
 taupe
 
+tawny
+
 teal
+
+telemagenta
+
+tomato red
 
 topaz
 
@@ -2226,7 +2284,13 @@ viridian
 
 wisteria
 
+xanthous
+
 zaffre
+
+zinnwaldite
+
+zomp
 %%%%
 _Blorkula_common_
 
