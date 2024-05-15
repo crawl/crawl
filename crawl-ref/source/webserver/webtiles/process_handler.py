@@ -238,6 +238,9 @@ class CrawlProcessHandlerBase(object):
     def handle_chat_command(self, source_ws, text):
         # type: (CrawlWebSocket, str) -> bool
         source = source_ws.username
+        if len(text) >= 500:
+            # sanity check, distinct from chat max length
+            text = text[:500]
         text = text.strip()
         if len(text) == 0 or text[0] != '/':
             return False

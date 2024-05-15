@@ -808,6 +808,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.restore_blocklist()
             self.process.handle_notification(self.process.username,
                             "'/help' to see available chat commands")
+            if not config.get('max_chat_length'):
+                self.process.handle_notification(self.process.username,
+                            "Regular chat is disabled on this server")
+
 
             if config.get('dgl_mode'):
                 if self.process.where == {}:
@@ -1083,12 +1087,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started", username = process.username)
+            if not config.get('max_chat_length'):
+                process.handle_notification(self.username,
+                                            "Chat is disabled on this server")
         else:
             if self.watched_game:
                 self.stop_watching()
             self.go_lobby()
 
     def post_chat_message(self, text):
+        max_length = config.get('max_chat_length')
+        if max_length:
+            max_length = max(100, int(max_length)) # if it's set, enforce a minimum
+            if len(text) >= max_length:
+                text = text[:max_length - 5] + "[...]"
         receiver = None
         if self.process:
             receiver = self.process
@@ -1106,6 +1118,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             if not receiver.handle_chat_command(self, text):
+                if not max_length:
+                    return # chat disabled!
                 receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):

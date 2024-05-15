@@ -101,6 +101,7 @@ defaults = {
     'wizard_accounts': False,
     'allow_anon_spectate': True,
     'enable_ttyrecs': True,
+    'max_chat_length': 1000,
 }
 
 
