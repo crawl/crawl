@@ -5329,6 +5329,7 @@ static string _monster_attacks_description(const monster_info& mi)
         {
             // TODO Merge this with weapon brand handling above
             bonus_descriptions.emplace_back(_desc_ghost_brand(special_flavour));
+            bonus_width = max(bonus_width, _desc_ghost_brand(special_flavour).size());
             continue;
         }
 
