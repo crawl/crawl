@@ -489,7 +489,6 @@ tileidx_t tileidx_player()
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case transformation::shadow:    ch = TILEP_TRAN_SHADOW;    break;
     case transformation::dragon:
     {
         switch (you.species)

@@ -2004,8 +2004,7 @@ bool player_is_shapechanged()
 {
     // TODO: move into data
     return form_changed_physiology(you.form)
-        && you.form != transformation::death
-        && you.form != transformation::shadow;
+        && you.form != transformation::death;
 }
 
 bool player_acrobatic()
@@ -3310,9 +3309,6 @@ int player_stealth()
         stealth *= umbra_mul;
         stealth /= umbra_div;
     }
-
-    if (you.form == transformation::shadow)
-        stealth *= 2;
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
     if (have_passive(passive_t::storm_shield))
@@ -6900,9 +6896,6 @@ int player::willpower() const
 
 int player_willpower(bool temp)
 {
-    if (temp && you.form == transformation::shadow)
-        return WILL_INVULN;
-
     if (player_equip_unrand(UNRAND_FOLLY))
         return 0;
 
@@ -7595,8 +7588,7 @@ bool player::innate_sinv() const
 
 bool player::invisible() const
 {
-    return (duration[DUR_INVIS] || form == transformation::shadow)
-           && !backlit();
+    return duration[DUR_INVIS] && !backlit();
 }
 
 bool player::visible_to(const actor *looker) const
@@ -7623,9 +7615,6 @@ bool player::visible_to(const actor *looker) const
 */
 bool player::backlit(bool self_halo, bool temp) const
 {
-    if (temp && form == transformation::shadow)
-        return false;
-
     return temp && (player_severe_contamination()
                     || duration[DUR_CORONA]
                     || duration[DUR_STICKY_FLAME]
@@ -7646,12 +7635,6 @@ bool player::umbra() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (form == transformation::shadow)
-    {
-        mpr("Shadows surge around you.");
-        return;
-    }
-
     if (!duration[DUR_INVIS])
     {
         if (duration[DUR_CORONA])

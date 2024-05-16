@@ -1318,7 +1318,6 @@ lich_form_felid TRAN_LICH_FELID
 tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
-shadow_form TRAN_SHADOW
 storm_form TRAN_STORM_HUMANOID
 storm_form_felid TRAN_STORM_FELID
 storm_form_octopode TRAN_STORM_OCTOPODE
