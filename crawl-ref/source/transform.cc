@@ -968,6 +968,7 @@ public:
     string get_untransform_message() const override { return "You stop sporulating."; }
 };
 
+#if TAG_MAJOR_VERSION == 34
 class FormShadow : public Form
 {
 private:
@@ -986,6 +987,7 @@ public:
         return "You emerge from the shadows.";
     }
 };
+#endif
 
 class FormStorm : public Form
 {
@@ -1090,8 +1092,8 @@ static const Form* forms[] =
     &FormJelly::instance(),
 #endif
     &FormFungus::instance(),
-    &FormShadow::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &FormShadow::instance(),
     &FormHydra::instance(),
 #endif
     &FormStorm::instance(),
@@ -1554,9 +1556,6 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
     if (which_trans == transformation::none)
         return UFR_GOOD; // everything can become itself
 
-    if (which_trans == transformation::shadow)
-        return UFR_GOOD; // even the undead can use dith's shadow form
-
     if (!you.has_mutation(MUT_VAMPIRISM))
         return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
 
@@ -1688,17 +1687,6 @@ static void _on_enter_form(transformation which_trans)
         you.redraw_status_lights = true;
         _print_death_brand_changes(you.weapon(), true);
         _print_death_brand_changes(you.offhand_weapon(), true);
-        break;
-
-    case transformation::shadow:
-        drain_player(25, true, true);
-        if (you.duration[DUR_CORONA])
-            you.duration[DUR_CORONA] = 0;
-
-        if (you.invisible())
-            mpr("You fade into the shadows.");
-        else
-            mpr("You feel less conspicuous.");
         break;
 
     case transformation::maw:

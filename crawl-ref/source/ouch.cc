@@ -714,20 +714,7 @@ static void _powered_by_pain(int dam)
 static void _maybe_fog(int dam)
 {
     const int upper_threshold = you.hp_max / 2;
-    const int lower_threshold = upper_threshold
-                                - upper_threshold
-                                  * (you.piety - minpiety)
-                                  / (MAX_PIETY - minpiety);
-    if (have_passive(passive_t::hit_smoke)
-        && (dam > 0 && you.form == transformation::shadow
-            || dam >= lower_threshold
-               && x_chance_in_y(dam - lower_threshold,
-                                upper_threshold - lower_threshold)))
-    {
-        mpr("You emit a cloud of dark smoke.");
-        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
-    }
-    else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
+    if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
@@ -1026,11 +1013,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.form == transformation::shadow)
-        {
-            drain_amount = (dam - (dam / 2));
-            dam /= 2;
-        }
         if (you.may_pruneify() && you.cannot_act())
             dam /= 2;
         if (you.petrified())

@@ -596,16 +596,6 @@ Shadow Step ability
 Allows you to step into the shadow of any hostile creature within your umbra,
 landing on a random spot adjacent to the target.
 %%%%
-Shadow Form ability
-
-Transforms you into a swirling mass of dark shadows. While in this form, you
-are permanently invisible and are immune to poison, draining, and torment.
-All incoming damage is halved, you bleed smoke on any incoming attack, and
-you have infinite willpower. However, your ability to deal damage in melee
-and with ranged attacks is halved, your spellcasting power is greatly
-hampered, and your maximum health is further drained when taking damage.
-Invocations skill increases the duration of the transformation.
-%%%%
 # Gozag
 Potion Petition ability
 

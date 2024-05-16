@@ -589,8 +589,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
             4, 80, 5, -1, {fail_basis::invo, 30, 6, 20}, // range special-cased
             abflag::none },
-        { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
-            9, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::max_hp_drain },
 
         // Ru
         { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
@@ -2103,18 +2101,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
-    case ABIL_DITHMENOS_SHADOW_FORM:
-    {
-        const string reason = cant_transform_reason(transformation::shadow);
-        if (!reason.empty())
-        {
-            if (!quiet)
-                mpr(reason);
-            return false;
-        }
-        return true;
-    }
-
 #if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         if (you.hp == you.hp_max)
@@ -2524,7 +2510,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_JIYVA_SLIMIFY:
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_CHEIBRIADOS_DISTORTION:
-    case ABIL_DITHMENOS_SHADOW_FORM:
     case ABIL_RU_DRAW_OUT_POWER:
     case ABIL_GOZAG_POTION_PETITION:
     case ABIL_GOZAG_CALL_MERCHANT:
@@ -3584,11 +3569,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (_abort_if_stationary() || cancel_harmful_move(false))
             return spret::abort;
         return dithmenos_shadow_step(fail);
-
-    case ABIL_DITHMENOS_SHADOW_FORM:
-        fail_check();
-        transform(you.skill(SK_INVOCATIONS, 2), transformation::shadow);
-        break;
 
     case ABIL_GOZAG_POTION_PETITION:
         run_uncancel(UNC_POTION_PETITION, 0);

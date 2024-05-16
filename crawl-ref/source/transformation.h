@@ -27,8 +27,8 @@ enum class transformation
     jelly,
 #endif
     fungus,
-    shadow,
 #if TAG_MAJOR_VERSION == 34
+    shadow,
     hydra,
 #endif
     storm,

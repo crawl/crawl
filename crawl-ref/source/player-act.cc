@@ -711,8 +711,6 @@ string player::arm_name(bool plural, bool *can_plural) const
     string adj;
     if (form == transformation::death)
         adj = "bony";
-    else if (form == transformation::shadow)
-        adj = "shadowy";
     else
         adj = species::skin_name(species, true);
 

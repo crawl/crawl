@@ -325,8 +325,6 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 4, "Your shadow now sometimes tangibly mimics your actions.",
                  "Your shadow no longer tangibly mimics your actions.",
                  "Your shadow sometimes tangibly mimics your actions." },
-            { 5, ABIL_DITHMENOS_SHADOW_FORM,
-                 "transform into a swirling mass of shadows" },
         },
 
         // Gozag
@@ -3071,8 +3069,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_DITHMENOS:
-        if (you.form == transformation::shadow)
-            untransform();
         break;
 
     case GOD_GOZAG:
