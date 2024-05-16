@@ -2042,6 +2042,8 @@ ametrine
 
 amber
 
+annatto
+
 apple green
 
 apple red
@@ -2064,7 +2066,11 @@ aureolin
 
 azure
 
+azurite
+
 beige
+
+bisque
 
 bistre
 
@@ -2078,6 +2084,8 @@ bronze
 
 brown
 
+brown ochre
+
 buff
 
 burgundy
@@ -2085,6 +2093,8 @@ burgundy
 burlywood
 
 burnt amber
+
+burnt ochre
 
 burnt orange
 
@@ -2094,7 +2104,17 @@ burnt umber
 
 byzantium
 
+cadmium red
+
+cadmium green
+
+cadmium orange
+
+cadmium yellow
+
 cameo pink
+
+cantaloupe
 
 caput mortuum
 
@@ -2128,15 +2148,31 @@ chocolate
 
 chocolate cosmos
 
+chrome green
+
+chrome orange
+
+chrome yellow
+
 cinnabar
 
 cinnamon
+
+citreous
 
 citrine
 
 citron
 
 cobalt blue
+
+cobalt green
+
+cobalt violet
+
+cobalt yellow
+
+coffee
 
 cornflower blue
 
@@ -2150,9 +2186,15 @@ cordovan
 
 crimson
 
+crocoite
+
 cyan
 
+dragon's blood
+
 dun
+
+dusty orange
 
 dusty rose
 
@@ -2196,7 +2238,17 @@ goblin blue
 
 goblin scarlet
 
+green earth
+
+green ochre
+
+greenockite
+
+greige
+
 gold
+
+gold ochre
 
 goldenrod
 
@@ -2216,6 +2268,12 @@ hot pink
 
 hunter green
 
+hunter orange
+
+hyacinth
+
+hyacinth blue
+
 icterine
 
 imperial blue
@@ -2229,6 +2287,10 @@ imperial red
 imperial yellow
 
 indanthrone blue
+
+iris
+
+ivy green
 
 khaki
 
@@ -2268,6 +2330,12 @@ magenta
 
 mahogany
 
+malachite
+
+manganese violet
+
+mango
+
 marigold
 
 marmalade
@@ -2278,11 +2346,15 @@ mauve
 
 maxixe
 
+mazarine
+
 mellow yellow
 
 mikado
 
 mindaro
+
+minium
 
 mint green
 
@@ -2310,6 +2382,10 @@ olive green
 
 olive drab
 
+olive ochre
+
+orange ochre
+
 orchid
 
 orpiment
@@ -2336,9 +2412,13 @@ pink lavender
 
 plum
 
+ponceau
+
 poppy red
 
 prase
+
+primrose yellow
 
 puce
 
@@ -2346,15 +2426,21 @@ pumpkin
 
 purple
 
+purple ochre
+
 purpura
 
 purpureus
 
 quartz
 
+quercitron
+
 realgar
 
 red emerald
+
+red ochre
 
 rose
 
@@ -2373,6 +2459,8 @@ safflower orange
 saffron
 
 salmon
+
+sanguine
 
 sapphire
 
@@ -2414,6 +2502,8 @@ steel blue
 
 strawberry red
 
+strontium yellow
+
 tangerine
 
 taupe
@@ -2426,9 +2516,13 @@ telemagenta
 
 terracotta
 
+terre verte
+
 thistle
 
 tiger's eye
+
+titanium yellow
 
 tomato red
 
@@ -2458,11 +2552,17 @@ wenge
 
 wisteria
 
+xanthic
+
 xanthous
 
 yam
 
+yellow ochre
+
 zaffre
+
+zinc yellow
 
 zinnwaldite
 
