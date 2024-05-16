@@ -322,9 +322,6 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Dithmenos
         {   { 2, ABIL_DITHMENOS_SHADOW_STEP,
                  "step into the shadows of nearby creatures" },
-            { 3, "You will now sometimes bleed smoke when heavily injured by enemies.",
-                 "You will no longer bleed smoke.",
-                 "You sometimes bleed smoke when heavily injured by enemies." },
             { 4, "Your shadow now sometimes tangibly mimics your actions.",
                  "Your shadow no longer tangibly mimics your actions.",
                  "Your shadow sometimes tangibly mimics your actions." },
