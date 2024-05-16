@@ -5235,8 +5235,7 @@ bool mons_is_avatar(monster_type mc)
 
 bool mons_is_wrath_avatar(const monster &mon)
 {
-    return mon.type == MONS_PLAYER_SHADOW // ugh
-        && mon.attitude != ATT_FRIENDLY;
+    return mon.type == MONS_GOD_WRATH_AVATAR;
 }
 
 bool mons_is_player_shadow(const monster& mon)

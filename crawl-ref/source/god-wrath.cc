@@ -494,22 +494,24 @@ static spell_type _makhleb_destruction_type()
  * @param god           The god doing the wrath-hurling.
  * @return              An avatar monster, or nullptr if none could be set up.
  */
-static monster* get_avatar(god_type god)
+static monster* _get_wrath_avatar(god_type god)
 {
-    // TODO: it would be better to abstract the fake monster code from both
-    // this and shadow monster and possibly use different monster types --
-    // doing it this way makes it easier for bugs where the two are conflated
-    // to creep in
-    monster* avatar = shadow_monster(false);
+    if (monster_at(you.pos()))
+        return nullptr;
+
+    monster* avatar = get_free_monster();
     if (!avatar)
         return nullptr;
 
-    // shadow_monster() has the player's mid, which is no good here.
+    avatar->type       = MONS_GOD_WRATH_AVATAR;
+    avatar->behaviour  = BEH_SEEK;
+    avatar->attitude   = ATT_HOSTILE;
+    avatar->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                         | MF_WAS_IN_VIEW | MF_HARD_RESET | MF_NAME_REPLACE;
+    avatar->set_position(you.pos());
     avatar->set_new_monster_id();
-
+    env.mgrid(you.pos()) = avatar->mindex();
     avatar->mname = _god_wrath_name(god);
-    avatar->flags |= MF_NAME_REPLACE;
-    avatar->attitude = ATT_HOSTILE;
     avatar->set_hit_dice(you.experience_level);
 
     return avatar;
@@ -519,7 +521,7 @@ static monster* get_avatar(god_type god)
 static void _reset_avatar(monster &avatar)
 {
     env.mid_cache.erase(avatar.mid);
-    shadow_monster_reset(&avatar);
+    avatar.reset();
 }
 
 /**
@@ -531,7 +533,7 @@ static bool _makhleb_call_down_destruction()
 {
     const god_type god = GOD_MAKHLEB;
 
-    monster* avatar = get_avatar(god);
+    monster* avatar = _get_wrath_avatar(god);
     // can't be const because mons_cast() doesn't accept const monster*
 
     if (avatar == nullptr)
@@ -794,7 +796,7 @@ static bool _trog_retribution()
         // A fireball is magic when used by a mortal but just a manifestation
         // of pure rage when used by a god. --ebering
 
-        monster* avatar = get_avatar(god);
+        monster* avatar = _get_wrath_avatar(god);
         // can't be const because mons_cast() doesn't accept const monster*
 
         if (avatar == nullptr)
@@ -1130,7 +1132,7 @@ static bool _vehumet_retribution()
 {
     const god_type god = GOD_VEHUMET;
 
-    monster* avatar = get_avatar(god);
+    monster* avatar = _get_wrath_avatar(god);
     if (!avatar)
     {
         simple_god_message(" has no time to deal with you just now.", god);
@@ -1289,7 +1291,7 @@ static void _fedhas_nature_retribution()
 {
     const god_type god = GOD_FEDHAS;
 
-    monster* avatar = get_avatar(god);
+    monster* avatar = _get_wrath_avatar(god);
     // can't be const because mons_cast() doesn't accept const monster*
 
     if (avatar == nullptr)
