@@ -2054,7 +2054,13 @@ aqua
 
 aquamarine
 
+atrovirens
+
 aubergine
+
+auburn
+
+aureolin
 
 azure
 
@@ -2076,6 +2082,10 @@ buff
 
 burgundy
 
+burlywood
+
+burnt amber
+
 burnt orange
 
 burnt sienna
@@ -2085,6 +2095,8 @@ burnt umber
 byzantium
 
 cameo pink
+
+caput mortuum
 
 cardinal red
 
@@ -2114,6 +2126,8 @@ chestnut
 
 chocolate
 
+chocolate cosmos
+
 cinnabar
 
 cinnamon
@@ -2127,6 +2141,8 @@ cobalt blue
 cornflower blue
 
 copper
+
+coquelicot
 
 coral pink
 
@@ -2154,7 +2170,11 @@ eminence
 
 erin
 
+fallow
+
 falu red
+
+feldgrau
 
 fire orange
 
@@ -2216,6 +2236,8 @@ kobicha
 
 kombu green
 
+labradorite
+
 lapis lazuli
 
 lavender
@@ -2258,6 +2280,8 @@ maxixe
 
 mellow yellow
 
+mikado
+
 mindaro
 
 mint green
@@ -2267,6 +2291,14 @@ morganite
 mulberry
 
 mustard yellow
+
+nattier
+
+nickel
+
+nutmeg
+
+nyanza
 
 ochre
 
@@ -2304,6 +2336,8 @@ pink lavender
 
 plum
 
+poppy red
+
 prase
 
 puce
@@ -2333,6 +2367,8 @@ rubric
 ruby
 
 russet
+
+safflower orange
 
 saffron
 
@@ -2392,6 +2428,8 @@ terracotta
 
 thistle
 
+tiger's eye
+
 tomato red
 
 topaz
@@ -2421,6 +2459,8 @@ wenge
 wisteria
 
 xanthous
+
+yam
 
 zaffre
 
