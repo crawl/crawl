@@ -83,9 +83,6 @@ enum class passive_t
     /// You have an umbra.
     umbra,
 
-    /// You emit clouds when hit.
-    hit_smoke,
-
     /// Your shadow attacks alongside you.
     shadow_attacks,
 

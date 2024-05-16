@@ -713,10 +713,6 @@ static void _powered_by_pain(int dam)
 
 static void _maybe_fog(int dam)
 {
-    const int minpiety = have_passive(passive_t::hit_smoke)
-        ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
-        : piety_breakpoint(2); // Xom
-
     const int upper_threshold = you.hp_max / 2;
     if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
