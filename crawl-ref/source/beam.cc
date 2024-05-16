@@ -5292,7 +5292,7 @@ bool bolt::at_blocking_monster() const
 void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead or fake monsters.
-    if (!mon->alive() || mon->type == MONS_PLAYER_SHADOW)
+    if (!mon->alive() || mon->type == MONS_GOD_WRATH_AVATAR)
         return;
 
     hit_count[mon->mid]++;

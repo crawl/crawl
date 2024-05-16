@@ -993,6 +993,7 @@ enum monster_type                      // env.mons[].type
     MONS_TEST_STATUE,
     MONS_TEST_BLOB,
     MONS_NAMELESS,              // summoning miscast
+    MONS_GOD_WRATH_AVATAR,      // some god wrath effects
 #endif
 
     // Add new monsters here:
@@ -1259,6 +1260,7 @@ enum monster_type                      // env.mons[].type
     MONS_UNDYING_ARMOURY,
     MONS_XAKKRIXIS,
     MONS_HELLFIRE_MORTAR,
+    MONS_GOD_WRATH_AVATAR,      // Used as a source for some god wrath effects
 #endif
 
     NUM_MONSTERS,               // used for polymorph
