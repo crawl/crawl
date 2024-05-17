@@ -2030,11 +2030,17 @@ _misc_colour_
 
 aero
 
+alabaster
+
 alizarin crimson
 
 almond
 
 amaranth
+
+amaranth pink
+
+amaranth purple
 
 amethyst
 
@@ -2056,6 +2062,8 @@ aqua
 
 aquamarine
 
+artichoke green
+
 atrovirens
 
 aubergine
@@ -2068,6 +2076,8 @@ azure
 
 azurite
 
+baby blue
+
 banana yellow
 
 beige
@@ -2075,6 +2085,8 @@ beige
 bisque
 
 bistre
+
+blaze orange
 
 blood red
 
@@ -2118,6 +2130,12 @@ cadmium yellow
 
 cameo pink
 
+candy apple green
+
+candy apple red
+
+candy apple yellow
+
 caput mortuum
 
 cardinal red
@@ -2147,6 +2165,8 @@ charcoal
 chartreuse
 
 chestnut
+
+china blue
 
 chocolate
 
@@ -2190,11 +2210,15 @@ coral pink
 
 cordovan
 
+cream
+
 crimson
 
 crocoite
 
 cyan
+
+cyclamen
 
 dragon's blood
 
@@ -2212,9 +2236,13 @@ ecru
 
 electric blue
 
+electric indigo
+
 electric magenta
 
 electric purple
+
+electric violet
 
 emerald
 
@@ -2230,6 +2258,8 @@ falu red
 
 fandango
 
+fawn
+
 feldgrau
 
 fern green
@@ -2238,11 +2268,17 @@ fire orange
 
 fire red
 
+flax
+
+flirt
+
 fluorescent blue
 
 forest green
 
 fuchsia
+
+fuchsine
 
 fulvous
 
@@ -2268,13 +2304,21 @@ gold
 
 gold ochre
 
+gold poppy
+
+golden brown
+
 goldenrod
 
 goshenite
 
 gridelin
 
+grullo
+
 haint blue
+
+hansa yellow
 
 harlequin
 
@@ -2310,11 +2354,19 @@ indanthrone blue
 
 independence
 
+irresistible
+
 iris
+
+isabelline
 
 ivy green
 
 jade
+
+jasmine
+
+jonquil
 
 khaki
 
@@ -2335,6 +2387,10 @@ lavender blue
 lavender purple
 
 lavender indigo
+
+lavender magenta
+
+lavender rose
 
 leaf green
 
@@ -2360,6 +2416,8 @@ mahogany
 
 malachite
 
+mandarin
+
 manganese violet
 
 mango
@@ -2373,6 +2431,8 @@ marmalade
 maroon
 
 mauve
+
+mauveine
 
 maxixe
 
@@ -2392,15 +2452,25 @@ mint green
 
 morganite
 
+morning blue
+
 moss green
 
 mulberry
+
+mustard brown
+
+mustard green
 
 mustard yellow
 
 myrtle
 
 nattier
+
+navy blue
+
+navy purple
 
 nickel
 
@@ -2412,6 +2482,10 @@ ochre
 
 octarine
 
+old helio
+
+old heliotrope
+
 old rose
 
 olive green
@@ -2419,6 +2493,8 @@ olive green
 olive drab
 
 olive ochre
+
+olivine
 
 orange ochre
 
@@ -2429,6 +2505,10 @@ orpiment
 oxblood
 
 palatinate
+
+palatinate blue
+
+palatinate purple
 
 peach
 
@@ -2443,6 +2523,8 @@ persimmon
 phlox
 
 picotee blue
+
+pine green
 
 pine tree
 
@@ -2478,6 +2560,8 @@ quartz
 
 quercitron
 
+raspberry rose
+
 realgar
 
 red emerald
@@ -2498,7 +2582,11 @@ ruby
 
 ruddy blue
 
+rufous
+
 russet
+
+rust
 
 safflower orange
 
@@ -2540,6 +2628,8 @@ sky magenta
 
 slate
 
+slate blue
+
 smalt
 
 smaragdine
@@ -2565,6 +2655,8 @@ tawny
 teal
 
 teal blue
+
+teal green
 
 tea green
 
@@ -2604,9 +2696,13 @@ viridian
 
 walnut
 
+watermelon green
+
 watermelon red
 
 wenge
+
+wheat
 
 wine
 
