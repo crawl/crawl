@@ -2068,6 +2068,8 @@ azure
 
 azurite
 
+banana yellow
+
 beige
 
 bisque
@@ -2075,6 +2077,8 @@ bisque
 bistre
 
 blood red
+
+blush
 
 bole
 
@@ -2132,6 +2136,8 @@ celadon
 
 celeste
 
+celestial blue
+
 cerise
 
 cerulean
@@ -2162,6 +2168,8 @@ citrine
 
 citron
 
+cloudy blue
+
 cobalt blue
 
 cobalt green
@@ -2190,6 +2198,8 @@ cyan
 
 dragon's blood
 
+duck blue
+
 dun
 
 dusty orange
@@ -2202,6 +2212,8 @@ ecru
 
 electric blue
 
+electric magenta
+
 electric purple
 
 emerald
@@ -2210,15 +2222,23 @@ eminence
 
 erin
 
+evergreen
+
 fallow
 
 falu red
 
+fandango
+
 feldgrau
+
+fern green
 
 fire orange
 
 fire red
+
+fluorescent blue
 
 forest green
 
@@ -2256,6 +2276,8 @@ gridelin
 
 haint blue
 
+harlequin
+
 heliodor
 
 heliotrope
@@ -2286,9 +2308,13 @@ imperial yellow
 
 indanthrone blue
 
+independence
+
 iris
 
 ivy green
+
+jade
 
 khaki
 
@@ -2299,6 +2325,8 @@ kombu green
 labradorite
 
 lapis lazuli
+
+laurel green
 
 lavender
 
@@ -2313,6 +2341,8 @@ leaf green
 leek green
 
 lemon yellow
+
+liberty
 
 lilac
 
@@ -2336,6 +2366,8 @@ mango
 
 marigold
 
+marine blue
+
 marmalade
 
 maroon
@@ -2348,6 +2380,8 @@ mazarine
 
 mellow yellow
 
+midnight blue
+
 mikado
 
 mindaro
@@ -2358,9 +2392,13 @@ mint green
 
 morganite
 
+moss green
+
 mulberry
 
 mustard yellow
+
+myrtle
 
 nattier
 
@@ -2404,6 +2442,10 @@ persimmon
 
 phlox
 
+picotee blue
+
+pine tree
+
 pink
 
 pink lavender
@@ -2413,6 +2455,8 @@ plum
 ponceau
 
 poppy red
+
+powder blue
 
 prase
 
@@ -2452,6 +2496,8 @@ rubric
 
 ruby
 
+ruddy blue
+
 russet
 
 safflower orange
@@ -2461,6 +2507,8 @@ saffron
 salmon
 
 sanguine
+
+sap green
 
 sapphire
 
@@ -2504,6 +2552,10 @@ strawberry red
 
 strontium yellow
 
+tamarind
+
+tang blue
+
 tangerine
 
 taupe
@@ -2511,6 +2563,10 @@ taupe
 tawny
 
 teal
+
+teal blue
+
+tea green
 
 telemagenta
 
@@ -2548,7 +2604,11 @@ viridian
 
 walnut
 
+watermelon red
+
 wenge
+
+wine
 
 wisteria
 
