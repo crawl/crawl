@@ -748,25 +748,12 @@ int player::umbra_radius() const
 
     if (have_passive(passive_t::umbra))
     {
-        // XXX: Two different gods have the umbra passive, but their umbras
-        // behave differently, so handle them differently.
-        if (you.religion == GOD_YREDELEMNUL)
-        {
-            if (piety >= piety_breakpoint(4))
-                size = 4;
-            else if (piety >= piety_breakpoint(3))
-                size = 3;
-            else
-                size = 2;
-        }
-        else if (you.religion == GOD_DITHMENOS)
-        {
-            // The cap is reached at piety 160 = ******.
-            size = min((int)piety, piety_breakpoint(5)) * you.normal_vision
-                                                        / piety_breakpoint(5);
-        }
+        if (piety >= piety_breakpoint(4))
+            size = 4;
+        else if (piety >= piety_breakpoint(3))
+            size = 3;
         else
-            mprf(MSGCH_ERROR, "God with umbra passive needs handling!");
+            size = 2;
     }
 
     if (you.has_mutation(MUT_FOUL_SHADOW))

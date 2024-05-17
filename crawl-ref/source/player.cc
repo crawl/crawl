@@ -3286,29 +3286,8 @@ int player_stealth()
 
     // On the other hand, shrouding has the reverse effect, if you know
     // how to make use of it:
-    if (you.umbra())
-    {
-        int umbra_mul = 1, umbra_div = 1;
-        if (you.umbra_radius() >= 0)
-        {
-            if (have_passive(passive_t::umbra))
-            {
-                umbra_mul = you.piety + MAX_PIETY;
-                umbra_div = MAX_PIETY;
-            }
-            if ((you.has_mutation(MUT_FOUL_SHADOW)
-                 || player_equip_unrand(UNRAND_BRILLIANCE)
-                 || player_equip_unrand(UNRAND_SHADOWS))
-                && 2 * umbra_mul < 3 * umbra_div)
-            {
-                umbra_mul = 3;
-                umbra_div = 2;
-            }
-        }
-
-        stealth *= umbra_mul;
-        stealth /= umbra_div;
-    }
+    if (you.umbra() && you.umbra_radius() >= 0)
+        stealth = stealth * 3 / 2;
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
     if (have_passive(passive_t::storm_shield))

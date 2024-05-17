@@ -885,20 +885,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
 
     case GOD_DITHMENOS:
-    {
-        have_any = true;
-        const int umbra_size = you_worship(which_god) ? you.umbra_radius() : -1;
-        if (umbra_size < 0)
-            desc.textcolour(DARKGREY);
-        else
-            desc.textcolour(god_colour(which_god));
-        desc.cprintf("You radiate a%s aura of darkness, enhancing your stealth "
-                "and reducing the accuracy of your foes.\n",
-                umbra_size > 5 ? " large" :
-                umbra_size > 3 ? "n" :
-                                 " small");
         break;
-    }
 
     case GOD_HEPLIAKLQANA:
         // Frailty occurs even under penance post-abandonment, so we can't put
