@@ -2114,8 +2114,6 @@ cadmium yellow
 
 cameo pink
 
-cantaloupe
-
 caput mortuum
 
 cardinal red
@@ -2441,6 +2439,8 @@ realgar
 red emerald
 
 red ochre
+
+rock melon
 
 rose
 
