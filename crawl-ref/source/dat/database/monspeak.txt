@@ -4182,6 +4182,8 @@ w:50
 
 @The_monster@ says, "I hate disasters."
 
+@The_monster@ says, "I hate elementals."
+
 @The_monster@ says, "What was that? Sorry, I couldn't hear you over all this noise."
 
 @The_monster@ says, "Well, at least you're never short of company."
