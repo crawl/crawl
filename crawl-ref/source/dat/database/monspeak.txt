@@ -2432,6 +2432,8 @@ maroon
 
 mauve
 
+mauve taupe
+
 mauveine
 
 maxixe
@@ -2551,6 +2553,8 @@ pumpkin
 purple
 
 purple ochre
+
+purple taupe
 
 purpura
 
