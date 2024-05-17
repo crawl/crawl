@@ -1214,6 +1214,10 @@ Mango
 
 Watermelon
 
+Cantaloupe
+
+Strawberry
+
 Coconut
 
 Breadfruit
