@@ -432,11 +432,6 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    if (cell_is_runed(p))
-        return false;
-    if (!mons->is_habitable(p))
-        return false;
-
     return mons_can_traverse(*mons, p, traverse_in_sight);
 }
 
