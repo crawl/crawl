@@ -2064,6 +2064,8 @@ aquamarine
 
 artichoke green
 
+asparagus green
+
 atrovirens
 
 aubergine
@@ -2071,6 +2073,8 @@ aubergine
 auburn
 
 aureolin
+
+avocado green
 
 azure
 
@@ -2087,6 +2091,8 @@ bisque
 bistre
 
 blaze orange
+
+blood orange
 
 blood red
 
@@ -2163,6 +2169,10 @@ cerulean
 charcoal
 
 chartreuse
+
+chartreuse green
+
+cherry red
 
 chestnut
 
@@ -2368,6 +2378,8 @@ jasmine
 
 jonquil
 
+kachi indigo
+
 khaki
 
 kobicha
@@ -2514,6 +2526,8 @@ palatinate purple
 
 peach
 
+pear green
+
 pear yellow
 
 peridot
@@ -2533,6 +2547,8 @@ pine tree
 pink
 
 pink lavender
+
+pistachio
 
 plum
 
@@ -2639,6 +2655,10 @@ smalt
 smaragdine
 
 sorcerer's violet
+
+spring bud
+
+spring green
 
 steel blue
 
