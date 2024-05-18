@@ -825,8 +825,7 @@ static function<void(bolt&, const monster&, int)>
     return [flavour](bolt &beam, const monster &caster, int)
     {
         beam.flavour = flavour;
-        if (!mons_is_player_shadow(caster))
-            beam.target = caster.pos();
+        beam.target = caster.pos();
     };
 }
 
@@ -887,8 +886,7 @@ static void _setup_healing_beam(bolt &beam, const monster &caster)
 static void _setup_minor_healing(bolt &beam, const monster &caster, int)
 {
     _setup_healing_beam(beam, caster);
-    if (!mons_is_player_shadow(caster))
-        beam.target = caster.pos();
+    beam.target = caster.pos();
 }
 
 static void _setup_heal_other(bolt &beam, const monster &caster, int)
@@ -911,9 +909,6 @@ static function<void(bolt&, const monster&, int)>
     return [targeter](bolt& beam, const monster& caster, int)
     {
         _setup_fake_beam(beam, caster);
-        // Your shadow keeps your targeting.
-        if (mons_is_player_shadow(caster))
-            return;
         beam.target = targeter(caster);
         beam.aimed_at_spot = true;  // to get noise to work properly
     };
@@ -3804,9 +3799,6 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
                                           int power)
 {
     _setup_ghostly_beam(beam, power, 5);
-    // Future-proofing: your shadow keeps your targeting.
-    if (mons_is_player_shadow(caster))
-        return;
 
     beam.target = _mons_ghostly_sacrifice_target(caster, beam);
     beam.aimed_at_spot = true;  // to get noise to work properly
@@ -5119,19 +5111,6 @@ static coord_def _mons_fragment_target(const monster &mon)
         return target;
     const monster *mons = &mon; // TODO: rewriteme
     const int pow = mons_spellpower(*mons, SPELL_LRD);
-
-    // Shadow casting should try to affect the same tile as the player.
-    if (mons_is_player_shadow(*mons))
-    {
-        bool temp;
-        bolt beam;
-        if (!setup_fragmentation_beam(beam, pow, mons, mons->target, true,
-                                      nullptr, temp))
-        {
-            return target;
-        }
-        return mons->target;
-    }
 
     const int range = mons_spell_range(*mons, SPELL_LRD);
     int maxpower = 0;

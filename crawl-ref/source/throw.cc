@@ -738,9 +738,10 @@ void throw_it(quiver::action &a)
     if ((launcher || is_thrown)
         && will_have_passive(passive_t::shadow_attacks)
         && item.base_type == OBJ_MISSILES
-        && item.sub_type != MI_DART)
+        && item.sub_type != MI_DART
+        && item.sub_type != MI_THROWING_NET)
     {
-        dithmenos_shadow_throw(a.target, item);
+        dithmenos_shadow_shoot(a.target, item);
     }
 }
 

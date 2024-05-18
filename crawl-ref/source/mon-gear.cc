@@ -2292,6 +2292,10 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
 
 void view_monster_equipment(monster* mon)
 {
+    // Don't fully identify player shadow equipment, since it makes messaging worse.
+    if (mon->type == MONS_PLAYER_SHADOW)
+        return;
+
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mon->inv[i] == NON_ITEM)

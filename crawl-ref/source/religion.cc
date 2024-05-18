@@ -2710,6 +2710,13 @@ bool god_protects(const actor *agent, const monster &target, bool quiet)
         return true;
     }
 
+    if (aligned && agent->is_player()
+        && will_have_passive(passive_t::shadow_attacks)
+        && mons_is_player_shadow(target))
+    {
+        return true;
+    }
+
     if (aligned
         && agent->is_player()
         && have_passive(passive_t::neutral_slimes)

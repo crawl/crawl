@@ -2168,27 +2168,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             trigger_battlesphere(&you);
         }
 
-        const auto victim = monster_at(beam.target);
-        if (will_have_passive(passive_t::shadow_spells)
-            && actual_spell
-            && !god_hates_spell(spell, you.religion, !actual_spell)
-            && (flags & spflag::targeting_mask)
-            && !(flags & spflag::neutral)
-            && (beam.is_enchantment()
-                || battlesphere_can_mirror(spell))
-            // Must have a target, but that can't be the player.
-            && !self_target
-            && orig_target
-            // For teleport other, only mimic if the spell hit who we
-            // originally targeted and if we failed to change the target's
-            // teleport status. This way the mimic won't just undo the effect
-            // of a successful cast.
-            && (spell != SPELL_TELEPORT_OTHER
-                || (orig_target == victim
-                    && had_tele == victim->has_ench(ENCH_TP))))
-        {
-            dithmenos_shadow_spell(&beam, spell);
-        }
+        if (will_have_passive(passive_t::shadow_spells) && actual_spell)
+            dithmenos_shadow_spell(spell);
         _spellcasting_side_effects(spell, god, !actual_spell);
         return spret::success;
     }

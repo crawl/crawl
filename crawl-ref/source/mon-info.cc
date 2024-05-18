@@ -450,7 +450,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
         mb.set(MB_SUMMONED);
     }
-    else if (m->is_perm_summoned())
+    else if (m->is_perm_summoned() && !mons_is_player_shadow(*m))
         mb.set(MB_PERM_SUMMON);
     else if (testbits(m->flags, MF_NO_REWARD)
              && mons_class_gives_xp(m->type, true))

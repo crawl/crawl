@@ -2458,6 +2458,13 @@ A member of an order of monks who abandoned their former faith. It now serves
 a minor god of wind and whispers, who allows it to calm the air and, when
 in great need, to break the stillness with divine thunder.
 %%%%
+shadow
+
+A featureless silhouette of your own body, moving independently through the
+divine power of Dithmenos. No matter how many times it is struck down, it will
+reform itself, for a shadow is inextinguishable so long as whatever cast it
+remains.
+%%%%
 shadowghast
 
 A skulking apparition that disguises itself as a harmless shadow. Attuned to the

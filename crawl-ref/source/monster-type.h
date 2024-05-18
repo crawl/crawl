@@ -982,7 +982,7 @@ enum monster_type                      // env.mons[].type
     MONS_SENSED_FRIENDLY,
     MONS_PLAYER,                // a certain ugly creature
 #if TAG_MAJOR_VERSION > 34
-    MONS_PLAYER_SHADOW,         // Dithmenos / god wrath
+    MONS_PLAYER_SHADOW,         // Dithmenos
     MONS_ANCESTOR,              // Hepliaklqana
     MONS_ANCESTOR_KNIGHT,
     MONS_ANCESTOR_BATTLEMAGE,
@@ -1025,7 +1025,7 @@ enum monster_type                      // env.mons[].type
 
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
-    MONS_PLAYER_SHADOW,         // Dithmenos / god wrath
+    MONS_PLAYER_SHADOW,         // Dithmenos
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,

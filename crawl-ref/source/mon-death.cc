@@ -2419,7 +2419,10 @@ item_def* monster_die(monster& mons, killer_type killer,
                             TERRAIN_CHANGE_FLOOD);
     }
 
-    check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
+    if (mons.type == MONS_INUGAMI)
+        check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
+    else if (mons.type == MONS_PLAYER_SHADOW)
+        dithmenos_cleanup_player_shadow(&mons);
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
