@@ -215,8 +215,7 @@ void init_mon_name_cache()
         // Deal sensibly with duplicate entries; refuse or allow the
         // insert, depending on which should take precedence. Some
         // uniques of multiple forms can get away with this, though.
-        if (mon == MONS_PLAYER_SHADOW
-            || mon == MONS_BAI_SUZHEN_DRAGON
+        if (mon == MONS_BAI_SUZHEN_DRAGON
             || mon != MONS_SERPENT_OF_HELL
                && mons_species(mon) == MONS_SERPENT_OF_HELL)
         {
@@ -2060,8 +2059,8 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
         if (mons_is_player_shadow(mon))
         {
-            if (!you.weapon())
-                attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
+            if (mon.props.exists(DITH_SHADOW_ATTACK_KEY))
+                attk.damage = mon.props[DITH_SHADOW_ATTACK_KEY].get_int();
         }
 
         // summoning miscast monster; hd scaled with miscast severity

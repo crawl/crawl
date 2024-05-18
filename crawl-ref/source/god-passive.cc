@@ -32,6 +32,7 @@
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "output.h"
@@ -342,9 +343,9 @@ static const vector<god_passive> god_passives[] =
 
     // Dithmenos
     {
-        {  4, passive_t::shadow_attacks,
+        {  2, passive_t::shadow_attacks,
               "Your attacks are NOW mimicked by a shadow" },
-        {  4, passive_t::shadow_spells,
+        {  2, passive_t::shadow_spells,
               "Your attack spells are NOW mimicked by a shadow" },
     },
 
@@ -1041,36 +1042,71 @@ ru_interference get_ru_attack_interference_level()
         return DO_NOTHING;
 }
 
-static bool _shadow_acts(bool spell)
+constexpr int DITH_MELEE_SHADOW_INTERVAL = 150;
+#define DITH_SHADOW_INTERVAL_KEY "dith_shadow_interval"
+
+static bool _shadow_will_act(bool spell, bool melee)
 {
     const passive_t pasv = spell ? passive_t::shadow_spells
                                  : passive_t::shadow_attacks;
     if (!have_passive(pasv))
         return false;
 
+    if (you.duration[DUR_MIDNIGHT_PANTOMIME])
+        return true;
+
+    // If we're making a weapon shadow and haven't done so for a while,
+    // guarantee it. (This helps consistency when fishing for shadowslip stab
+    // opportunities a lot.)
+    const int last_shadow = (you.props.exists(DITH_SHADOW_INTERVAL_KEY)
+                                ? you.props[DITH_SHADOW_INTERVAL_KEY].get_int()
+                                : 0);
+
+    if (melee && you.elapsed_time > last_shadow)
+        return true;
+
     const int minpiety = piety_breakpoint(rank_for_passive(pasv) - 1);
 
-    // 10% chance at minimum piety; 50% chance at 200 piety.
-    const int range = MAX_PIETY - minpiety;
-    const int min   = range / 5;
-    return x_chance_in_y(min + ((range - min)
-                                * (you.piety - minpiety)
-                                / (MAX_PIETY - minpiety)),
-                         2 * range);
+    // For attacks: 10% chance at minimum piety, 20% chance at 160 piety.
+    // For spells:  15% chance at min piety, 25% chance at 160 piety.
+    const int range = piety_breakpoint(5) - minpiety;
+    return x_chance_in_y(10 + (spell ? 5 : 0)
+                          + ((you.piety - minpiety) * 10 / range), 100);
+
+    return true;
 }
 
-monster* shadow_monster(bool equip)
+void dithmenos_cleanup_player_shadow(monster* shadow)
 {
-    if (monster_at(you.pos()))
+    if (shadow && dithmenos_get_player_shadow() == shadow)
+        you.props.erase(DITH_SHADOW_MID_KEY);
+}
+
+monster* dithmenos_get_player_shadow()
+{
+    if (!you.props.exists(DITH_SHADOW_MID_KEY))
         return nullptr;
+    const int mid = you.props[DITH_SHADOW_MID_KEY].get_int();
+    return monster_by_mid(mid);
+}
 
+monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_known)
+{
+    // If a player shadow already exists, remove it first
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mons_is_player_shadow(**mi))
+        {
+            monster_die(**mi, KILL_RESET, true);
+            break;
+        }
+    }
+
+    // Do a basic clone of the weapon (same base type, but no brand or plusses).
+    // Also magical staves become plain staves instead.
     int wpn_index  = NON_ITEM;
-
-    // Do a basic clone of the weapon.
     item_def* wpn = you.weapon();
-    if (equip
-        && wpn
-        && is_weapon(*wpn))
+    if (wpn && is_weapon(*wpn))
     {
         wpn_index = get_mitm_slot(10);
         if (wpn_index == NON_ITEM)
@@ -1091,7 +1127,15 @@ monster* shadow_monster(bool equip)
         new_item.flags   |= ISFLAG_SUMMONED;
     }
 
-    monster* mon = get_free_monster();
+    mgen_data mg(MONS_PLAYER_SHADOW, friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                 pos, MHITYOU, MG_AUTOFOE);
+    mg.flags |= MG_FORCE_PLACE;
+
+    // This is for weapon accuracy only. Spell HD is calculated differently.
+    mg.hd = 7 + (you.experience_level * 5 / 4);
+    mg.hp = you.experience_level + you.skill_rdiv(SK_INVOCATIONS, 3, 2);
+
+    monster* mon = create_monster(mg);
     if (!mon)
     {
         if (wpn_index)
@@ -1099,39 +1143,28 @@ monster* shadow_monster(bool equip)
         return nullptr;
     }
 
-    mon->type       = MONS_PLAYER_SHADOW;
-    mon->behaviour  = BEH_SEEK;
-    mon->attitude   = ATT_FRIENDLY;
     mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                     | MF_WAS_IN_VIEW | MF_HARD_RESET;
     mon->hit_points = you.hp;
-    mon->set_hit_dice(min(27, max(1,
-                                  you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? item_attack_skill(env.item[wpn_index])
-                                                 : SK_UNARMED_COMBAT, 10, 20)
-                                  + you.skill_rdiv(SK_FIGHTING, 10, 20))));
-    mon->set_position(you.pos());
-    mon->mid        = MID_PLAYER;
-    mon->inv[MSLOT_WEAPON]  = wpn_index;
-    mon->inv[MSLOT_MISSILE] = NON_ITEM;
 
-    env.mgrid(you.pos()) = mon->mindex();
+    if (wpn_index != NON_ITEM)
+        mon->pickup_item(env.item[wpn_index], false, true);
+    mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you,
+                              random_range(3, 5) * BASELINE_DELAY));
+
+    // Set damage based on xl, with a bonus for UC characters (since they won't
+    // get the damage from their weapon on top of this)
+    mon->props[DITH_SHADOW_ATTACK_KEY] = you.experience_level;
+    if (wpn_index == NON_ITEM)
+        mon->props[DITH_SHADOW_ATTACK_KEY].get_int() += you.skill(SK_UNARMED_COMBAT);
+
+    if (spell_known != SPELL_NO_SPELL)
+        mon->spells.emplace_back(spell_known, 50, MON_SPELL_WIZARD);
+
+    if (friendly)
+        you.props[DITH_SHADOW_MID_KEY].get_int() = mon->mid;
 
     return mon;
-}
-
-void shadow_monster_reset(monster *mon)
-{
-    if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_WEAPON]);
-    // in case the shadow unwields for some reason, e.g. you clumsily bash with
-    // a ranged weapon:
-    if (mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_ALT_WEAPON]);
-    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
-        destroy_item(mon->inv[MSLOT_MISSILE]);
-
-    mon->reset();
 }
 
 /**
@@ -1152,17 +1185,102 @@ static bool _in_melee_range(actor* target)
     return dist <= you.reach_range();
 }
 
-void dithmenos_shadow_melee(actor* target)
+static bool _shadow_can_stand_here(coord_def pos)
 {
-    if (!target
-        || !target->alive()
-        || !_in_melee_range(target)
-        || !_shadow_acts(false))
+    return in_bounds(pos) && !feat_is_solid(env.grid(pos))
+            && !feat_is_trap(env.grid(pos))
+            && pos != you.pos()
+            // Player shadows can replace existing shadows
+            && (!monster_at(pos) || mons_is_player_shadow(*monster_at(pos)))
+            && you.see_cell_no_trans(pos);
+}
+
+// Attempt to find a place to put a melee player shadow to attack a given spot.
+//
+// It will first prefer being exactly on the opposite side of it compared to
+// where the player is standing. If that is impossible, it will look for
+// somewhere else in attack range of the target position, preferring to not
+// be adjacent to the player while doing so (if possible).
+//
+// Returns (0, 0) if it could not find a spot
+static coord_def _find_shadow_melee_position(coord_def target_pos, int reach)
+{
+    coord_def opposite = you.pos() + ((target_pos - you.pos()) * 2);
+
+    // If the player is attacking with a reaching weapon from melee range, try
+    // to make the shadow that appears behind the enemy appear non-adjacent.
+    // (This helps Shadow Step with reaching weapons feel a little better.)
+    if (reach > 1 && grid_distance(you.pos(), target_pos) < reach)
+        opposite += (target_pos - you.pos()).sgn();
+
+    if (_shadow_can_stand_here(opposite))
+        return opposite;
+
+    for (distance_iterator di(target_pos, true, true, reach); di; ++di)
     {
-        return;
+        if (grid_distance(you.pos(), *di) == 1)
+            continue;
+
+        if (_shadow_can_stand_here(*di))
+            return *di;
     }
 
-    monster* mon = shadow_monster();
+    for (distance_iterator di(target_pos, true, true, reach); di; ++di)
+    {
+        if (grid_distance(you.pos(), *di) > 1)
+            continue;
+
+        if (_shadow_can_stand_here(*di) && cell_see_cell(target_pos, *di, LOS_NO_TRANS))
+            return *di;
+    }
+
+    return coord_def(0, 0);
+}
+
+void dithmenos_shadow_melee(actor* initial_target)
+{
+    if (!_shadow_will_act(false, true))
+        return;
+
+    // First, determine what we're hitting. Prefer the player's target if it's
+    // still alive. If it isn't, look for something hostile that is also in
+    // range of the player's melee attack.
+    //
+    // If we pick a target and there is no room to place a shadow in reach of
+    // that target, try another target instead.
+    const int reach = you.reach_range();
+    monster* target = nullptr;
+    coord_def pos;
+    if (initial_target && initial_target->alive() && _in_melee_range(initial_target))
+        pos = _find_shadow_melee_position(initial_target->pos(), reach);
+
+    if (pos.origin())
+    {
+        for (distance_iterator di(you.pos(), true, true, reach); di; ++di)
+        {
+            if (!monster_at(*di) || mons_aligned(&you, monster_at(*di))
+                || mons_is_firewood(*monster_at(*di)))
+            {
+                continue;
+            }
+
+            pos = _find_shadow_melee_position(*di, reach);
+            if (!pos.origin())
+            {
+                target = monster_at(*di);
+                break;
+            }
+        }
+    }
+    else
+        target = initial_target->as_monster();
+
+    // Still couldn't find a single space to stand to attack a single enemy
+    if (!target)
+        return;
+
+    // Now create the shadow monster (or grab an existing one) and make it attack
+    monster* mon = create_player_shadow(pos);
     if (!mon)
         return;
 
@@ -1171,90 +1289,319 @@ void dithmenos_shadow_melee(actor* target)
 
     fight_melee(mon, target);
 
-    shadow_monster_reset(mon);
+    // Store this action's target so that it can be reused on future turns.
+    if (target->alive())
+        mon->props[DITH_SHADOW_LAST_TARGET_KEY].get_int() = target->mid;
+    else
+        mon->props.erase(DITH_SHADOW_LAST_TARGET_KEY);
+
+    you.props[DITH_SHADOW_INTERVAL_KEY] = you.elapsed_time
+        + random_range(DITH_MELEE_SHADOW_INTERVAL, DITH_MELEE_SHADOW_INTERVAL * 2);
 }
 
-void dithmenos_shadow_throw(const dist &d, const item_def &item)
+// Determine the first monster that could be hit by an arrow fired from one spot
+// to another spot (ignoring the player, since our shadow can shoot through us).
+static monster* _find_shot_target(coord_def origin, coord_def aim)
+{
+    monster* targ = nullptr;
+    ray_def ray;
+    if (!find_ray(origin, aim, ray, opc_solid))
+        return targ;
+
+    while (ray.advance())
+    {
+        if (grid_distance(ray.pos(), origin) > LOS_RADIUS)
+            break;
+        else if (monster_at(ray.pos()))
+            return monster_at(ray.pos());
+    }
+
+    return nullptr;
+}
+
+static coord_def _find_preferred_shadow_shoot_position(monster* target)
+{
+    // First, test spots at range 2-3 from the player
+    vector<coord_def> spots;
+    for (distance_iterator di(you.pos(), true, true, 3); di; ++di)
+    {
+        if (grid_distance(you.pos(), *di) == 1)
+            continue;
+
+        if (_shadow_can_stand_here(*di))
+            spots.push_back(*di);
+    }
+
+    shuffle_array(spots);
+
+    // Then test spots at range 1
+    for (distance_iterator di(you.pos(), true, true, 2); di; ++di)
+    {
+        if (_shadow_can_stand_here(*di))
+            spots.push_back(*di);
+    }
+
+    for (size_t i = 0; i < spots.size(); ++i)
+    {
+        if (_find_shot_target(spots[i], target->pos()) == target)
+            return spots[i];
+    }
+
+    // There is no spot within shadow range that can shoot directly at the
+    // preferred target.
+    return coord_def();
+}
+
+static bool _simple_shot_tracer(coord_def source, coord_def target, mid_t source_mid = MID_PLAYER)
+{
+    bolt tracer;
+    tracer.attitude = ATT_FRIENDLY;
+    tracer.range = LOS_RADIUS;
+    tracer.source = source;
+    tracer.target = target;
+    tracer.source_id = source_mid;
+    tracer.damage = dice_def(100, 1);
+    tracer.is_tracer = true;
+    tracer.fire();
+
+    return mons_should_fire(tracer);
+}
+
+static coord_def _find_any_shadow_shoot_position(coord_def& aim)
+{
+    vector<monster*> valid_targs;
+    vector<coord_def> valid_spots;
+
+    // Find all valid targets immediately, so we can properly iterate through
+    // then in random order for each possible shadow position.
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+            valid_targs.push_back(*mi);
+    }
+
+    // Nothing to shoot at.
+    if (valid_targs.empty())
+        return coord_def();
+
+    shuffle_array(valid_targs);
+
+    // First, test spots at range 2-3 from the player
+    for (distance_iterator di(you.pos(), true, true, 3); di; ++di)
+    {
+        if (grid_distance(you.pos(), *di) == 1)
+            continue;
+
+        if (!_shadow_can_stand_here(*di))
+            continue;
+
+        valid_spots.push_back(*di);
+    }
+
+    shuffle_array(valid_spots);
+
+    // Then add adjacent-to-player spots last
+    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (_shadow_can_stand_here(*ai))
+            valid_spots.push_back(*ai);
+    }
+
+    // Somehow, nowhere to stand.
+    if (valid_spots.empty())
+        return coord_def();
+
+    // Now lets run through possible targets and see if aiming at any of
+    // them does anything useful here.
+    for (size_t i = 0; i < valid_spots.size(); ++i)
+    {
+        for (size_t j = 0; j < valid_targs.size(); ++j)
+        {
+            if (_simple_shot_tracer(valid_spots[i], valid_targs[j]->pos()))
+            {
+                aim = valid_targs[j]->pos();
+                return valid_spots[i];
+            }
+        }
+    }
+
+    // Somehow, no valid spots can hit any valid targets
+    return coord_def();
+}
+
+// Tests whether there is a still-active player shadow that is capable of
+// performing a useful ranged attack from its current position at either what
+// the player is attacking or at whatever it shot at on its last action.
+//
+// XXX: This doesn't ensure that they can actually hit the target in question,
+//      since something else may have moved in the way of it since last action,
+//      but that something is at least required to be another enemy worth
+//      shooting at.
+//
+// Returns the target it's comfortable aiming at (or (0,0) if there isn't one)
+static coord_def _shadow_already_okay_for_ranged(coord_def preferred_target)
+{
+    monster* shadow = dithmenos_get_player_shadow();
+    if (!shadow)
+        return coord_def();
+
+    if (_simple_shot_tracer(shadow->pos(), preferred_target, shadow->mid))
+        return preferred_target;
+    else if (shadow->props.exists(DITH_SHADOW_LAST_TARGET_KEY))
+    {
+        monster* targ = monster_by_mid(shadow->props[DITH_SHADOW_LAST_TARGET_KEY].get_int());
+        if (!targ || !targ->alive())
+            return coord_def();
+
+
+        if (_simple_shot_tracer(shadow->pos(), targ->pos(), shadow->mid))
+            return targ->pos();
+    }
+
+    return coord_def();
+}
+
+void dithmenos_shadow_shoot(const dist &d, const item_def &item)
 {
     ASSERT(d.isValid);
-    if (!_shadow_acts(false))
+    if (!_shadow_will_act(false, false))
+        return;
+    // Determine preferred target for ranged shadow mimic by tracing along the
+    // ray used by the player to fire their own shot and stopping at the first
+    // hostile thing we see in that path.
+    coord_def aim = d.target;
+    monster* target = _find_shot_target(you.pos(), d.target);
+    if (target && mons_aligned(&you, target))
+        target = nullptr;
+
+    coord_def pos;  // Position we want to place shadow if not already deployed
+    coord_def existing_target; // Aim target if we are re-using shadow
+
+    if (target)
+    {
+        existing_target = _shadow_already_okay_for_ranged(target->pos());
+        if (!existing_target.origin())
+            aim = existing_target;
+        else
+        {
+            pos = _find_preferred_shadow_shoot_position(target);
+            if (!pos.origin())
+                aim = target->pos();
+        }
+    }
+
+    // Either there was no preferred target, or it was not possible to aim
+    // directly at the preferred target. Let's aim for any viable hostile from
+    // a nearby space instead
+    if (existing_target.origin() && pos.origin())
+        pos = _find_any_shadow_shoot_position(aim);
+
+    // Found nothing useful possible for the shadow to do, so do nothing
+    if (existing_target.origin() && pos.origin())
         return;
 
-    monster* mon = shadow_monster();
+    monster* mon = (existing_target.origin() ? create_player_shadow(pos)
+                                             : dithmenos_get_player_shadow());
+
     if (!mon)
         return;
 
-    const int ammo_index = get_mitm_slot(10);
-    if (ammo_index == NON_ITEM)
+    // If we're reusing an existing shadow mimic, make sure it lasts at least
+    // one turn.
+    if (!existing_target.origin())
     {
-        shadow_monster_reset(mon);
-        return;
+        mon_enchant me = mon->get_ench(ENCH_FAKE_ABJURATION);
+        me.duration += you.time_taken;
+        mon->update_ench(me);
     }
 
-    item_def& new_item = env.item[ammo_index];
-    new_item.base_type = item.base_type;
-    new_item.sub_type  = item.sub_type;
-    new_item.quantity  = 1;
-    new_item.rnd = 1;
-    new_item.flags    |= ISFLAG_SUMMONED;
-    mon->inv[MSLOT_MISSILE] = ammo_index;
+    mon->props[DITH_SHADOW_ATTACK_KEY] = you.experience_level * 2 / 3;
+    mon->target     = aim;
+    mon->foe        = monster_at(aim)->mindex();
 
-    mon->target = clamp_in_bounds(d.target);
+    // XXX: Code partially copied from handle_throw to populate fake/real
+    //      projectiles, depending on whether the shadow is using a launcher
+    //      or not, and whether can existing shadow is being reused or not.
+    const item_def *launcher = mon->launcher();
+    item_def *throwable = mon->missiles();
+    item_def fake_proj;
+    item_def *missile = &fake_proj;
+    if (is_throwable(mon, item))
+    {
+        // If the shadow doesn't already have a missile item, make one for them
+        if (!throwable)
+        {
+            const int ammo_index = get_mitm_slot(10);
+            if (ammo_index == NON_ITEM)
+            {
+                monster_die(*mon, KILL_RESET, NON_MONSTER);
+                return;
+            }
+            item_def& new_item = env.item[ammo_index];
+            missile = &new_item;
+        }
 
-    bolt beem;
-    beem.set_target(d);
-    setup_monster_throw_beam(mon, beem);
-    beem.item = &new_item;
-    mons_throw(mon, beem);
-    shadow_monster_reset(mon);
+        // Set properties of the missile item it's using
+        missile->base_type = item.base_type;
+        missile->sub_type  = item.sub_type;
+        missile->quantity  = 1;
+        missile->rnd       = 1;
+        missile->flags    |= ISFLAG_SUMMONED;
+
+        if (!throwable)
+            mon->pickup_item(*missile, false, true);
+    }
+    else if (launcher)
+        populate_fake_projectile(*launcher, fake_proj);
+
+    bolt shot;
+    shot.target = aim;
+    setup_monster_throw_beam(mon, shot);
+    shot.item = missile;
+
+    mons_throw(mon, shot);
+
+    // Store this action's target so that it can be reused on future turns.
+    if (monster_at(aim) && monster_at(aim)->alive())
+        mon->props[DITH_SHADOW_LAST_TARGET_KEY].get_int() = monster_at(aim)->mid;
+    else
+        mon->props.erase(DITH_SHADOW_LAST_TARGET_KEY);
 }
 
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
+void dithmenos_shadow_spell(spell_type spell)
 {
-    if (!orig_beam)
+    if (!_shadow_will_act(true, false))
         return;
 
-    const coord_def target = orig_beam->target;
+    // monster* mon = shadow_monster();
+    // if (!mon)
+    //     return;
 
-    if (orig_beam->target.origin()
-        || spell == SPELL_BOULDER
-        || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
-        || orig_beam->flavour == BEAM_CHARM
-           && monster_at(target) && monster_at(target)->friendly()
-        || !_shadow_acts(true))
-    {
-        return;
-    }
+    // // Don't let shadow spells get too powerful.
+    // mon->set_hit_dice(max(1,
+    //                       min(3 * spell_difficulty(spell),
+    //                           you.experience_level) / 2));
 
-    monster* mon = shadow_monster();
-    if (!mon)
-        return;
+    // mon->target = clamp_in_bounds(target);
+    // if (actor_at(target))
+    //     mon->foe = actor_at(target)->mindex();
 
-    // Don't let shadow spells get too powerful.
-    mon->set_hit_dice(max(1,
-                          min(3 * spell_difficulty(spell),
-                              you.experience_level) / 2));
+    // spell_type shadow_spell = spell;
+    // if (!orig_beam->is_enchantment())
+    // {
+    //     shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
+    //                                        : SPELL_SHADOW_SHARD;
+    // }
 
-    mon->target = clamp_in_bounds(target);
-    if (actor_at(target))
-        mon->foe = actor_at(target)->mindex();
+    // bolt beem;
+    // beem.target = target;
+    // beem.aimed_at_spot = orig_beam->aimed_at_spot;
 
-    spell_type shadow_spell = spell;
-    if (!orig_beam->is_enchantment())
-    {
-        shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
-                                           : SPELL_SHADOW_SHARD;
-    }
+    // mprf(MSGCH_FRIEND_SPELL, "%s mimics your spell!",
+    //      mon->name(DESC_THE).c_str());
+    // mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
-    bolt beem;
-    beem.target = target;
-    beem.aimed_at_spot = orig_beam->aimed_at_spot;
-
-    mprf(MSGCH_FRIEND_SPELL, "%s mimics your spell!",
-         mon->name(DESC_THE).c_str());
-    mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
-
-    shadow_monster_reset(mon);
+    // shadow_monster_reset(mon);
 }
 
 void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)

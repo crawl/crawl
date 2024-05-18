@@ -1871,6 +1871,14 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    // Friendly player shadows don't act independently (though hostile ones from
+    // wrath effects may do so)
+    if (mons_is_player_shadow(*mons))
+    {
+        mons->lose_energy(EUT_MOVE);
+        return;
+    }
+
     mons->shield_blocks = 0;
     check_spectral_weapon(*mons);
 

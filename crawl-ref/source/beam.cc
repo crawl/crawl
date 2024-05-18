@@ -4380,7 +4380,8 @@ bool bolt::ignores_player() const
     }
 
     if (agent() && agent()->is_monster()
-        && mons_is_hepliaklqana_ancestor(agent()->as_monster()->type))
+        && (mons_is_hepliaklqana_ancestor(agent()->as_monster()->type)
+            || mons_is_player_shadow(*agent()->as_monster())))
     {
         // friends!
         return true;
@@ -7200,20 +7201,6 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    // Check for whether this is actually a dith player shadow, not you.
-    // Dith player shadows also have MID_PLAYER and ranged attacks will get
-    // confused and look at the player's launcher if we don't short-circuit here.
-    //
-    // Todo: Not this.
-    if (monster* shadow = monster_at(you.pos()))
-    {
-        if (shadow->type == MONS_PLAYER_SHADOW
-            && nominal_source == MID_PLAYER && shadow->mid == MID_PLAYER)
-        {
-            return shadow;
-        }
-    }
-
     if (YOU_KILL(nominal_ktype))
         return &you;
     else
@@ -7487,7 +7474,9 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
         return false;
     return god_protects(originator, *victim)
            || (originator->is_player()
-               && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
+               && testbits(victim->flags, MF_DEMONIC_GUARDIAN)
+           || (originator->type == MONS_PLAYER_SHADOW
+               && victim->type == MONS_PLAYER_SHADOW));
 }
 
 /**

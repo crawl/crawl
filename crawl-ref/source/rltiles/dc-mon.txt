@@ -645,6 +645,8 @@ xmas-sigmund MONS_XMAS_SIGMUND
 zenata MONS_ZENATA
 %rim 1
 terence MONS_TERENCE
+%sdir mon/nonliving
+player_shadow MONS_PLAYER_SHADOW
 
 %sdir mon/amorphous
 %rim 0
