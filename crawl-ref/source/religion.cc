@@ -307,11 +307,17 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Dithmenos
-        {   { 2, ABIL_DITHMENOS_SHADOW_STEP,
-                 "step into the shadows of nearby creatures" },
-            { 4, "Your shadow now sometimes tangibly mimics your actions.",
+        {   { 1, "Dithmenos quiets all noise in your surroundings.",
+                 "Dithmenos no longer quiets all noise in your surroundings."},
+            { 2, "Your shadow now sometimes tangibly mimics your actions.",
                  "Your shadow no longer tangibly mimics your actions.",
                  "Your shadow sometimes tangibly mimics your actions." },
+            { 3, ABIL_DITHMENOS_SHADOWSLIP,
+                 "mislead enemies by swapping places with your shadow" },
+            { 4, ABIL_DITHMENOS_SIPHON_SHADOWS,
+                 "draw the shadows of monsters into your own"},
+            { 5, ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL,
+                 "surround yourself with impenetrable night"},
         },
 
         // Gozag

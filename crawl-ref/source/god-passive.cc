@@ -1092,11 +1092,15 @@ monster* dithmenos_get_player_shadow()
 
 monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_known)
 {
-    // If a player shadow already exists, remove it first
+    // If a player shadow already exists, remove it first.
+    // But save some state, in case it was currently in decoy mode.
+    int decoy_duration = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mons_is_player_shadow(**mi))
         {
+            if (mi->has_ench(ENCH_CHANGED_APPEARANCE))
+                decoy_duration = mi->get_ench(ENCH_CHANGED_APPEARANCE).duration;
             monster_die(**mi, KILL_RESET, true);
             break;
         }
@@ -1145,7 +1149,6 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                     | MF_WAS_IN_VIEW | MF_HARD_RESET;
-    mon->hit_points = you.hp;
 
     if (wpn_index != NON_ITEM)
         mon->pickup_item(env.item[wpn_index], false, true);
@@ -1163,6 +1166,22 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     if (friendly)
         you.props[DITH_SHADOW_MID_KEY].get_int() = mon->mid;
+
+    // Now, if there was a previously-existing shadow that was in decoy mode,
+    // update its tile and remap all existing misdirections onto the new shadow
+    if (decoy_duration > 0)
+    {
+        dithmenos_change_shadow_appearance(*mon, decoy_duration - you.time_taken);
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->has_ench(ENCH_MISDIRECTED))
+            {
+                mon_enchant en = mi->get_ench(ENCH_MISDIRECTED);
+                en.source = mon->mid;
+                mi->update_ench(en);
+            }
+        }
+    }
 
     return mon;
 }

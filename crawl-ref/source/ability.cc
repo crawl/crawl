@@ -580,9 +580,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::curse },
 
         // Dithmenos
-        { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
-            4, 80, 5, -1, {fail_basis::invo, 30, 6, 20}, // range special-cased
-            abflag::none },
+        { ABIL_DITHMENOS_SHADOWSLIP, "Shadowslip",
+            4, 60, 2, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
 
         // Ru
         { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
@@ -765,9 +764,6 @@ int ability_range(ability_type abil)
     {
         case ABIL_HOP:
             range = frog_hop_range();
-            break;
-        case ABIL_DITHMENOS_SHADOW_STEP:
-            range = you.umbra_radius();
             break;
         default:
             break;
@@ -2360,6 +2356,18 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_DITHMENOS_SHADOWSLIP:
+    {
+        const string reason = dithmenos_cannot_shadowslip_reason();
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason.c_str());
+            return false;
+        }
+        return true;
+    }
+
     default:
         return true;
     }
@@ -2451,6 +2459,10 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_walls>(&you, find_slimeable_walls());
     case ABIL_SIPHON_ESSENCE:
         return make_unique<targeter_siphon_essence>();
+    case ABIL_DITHMENOS_SHADOWSLIP:
+        return make_unique<targeter_multiposition>(&you,
+                                vector<coord_def>{dithmenos_get_player_shadow()->pos()},
+                                AFF_YES);
 
     // Full LOS:
     case ABIL_KIKU_TORMENT:
@@ -3556,10 +3568,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         break;
 
-    case ABIL_DITHMENOS_SHADOW_STEP:
-        if (_abort_if_stationary() || cancel_harmful_move(false))
-            return spret::abort;
-        return dithmenos_shadow_step(fail);
+    case ABIL_DITHMENOS_SHADOWSLIP:
+        return dithmenos_shadowslip(fail);
 
     case ABIL_GOZAG_POTION_PETITION:
         run_uncancel(UNC_POTION_PETITION, 0);

@@ -974,6 +974,26 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_MISDIRECTED:
+        // If we're still targeting the shadow, immediately return focus to the player
+        if (foe == me.agent()->mindex())
+        {
+            foe = MHITYOU;
+            behaviour = BEH_SEEK;
+            if (can_see(you))
+            {
+                target = you.pos();
+                mprf("%s turns %s attention back to you.",
+                        name(DESC_THE).c_str(),
+                        pronoun(PRONOUN_POSSESSIVE).c_str());
+            }
+        }
+        break;
+
+    case ENCH_CHANGED_APPEARANCE:
+        props.erase(MONSTER_TILE_KEY);
+        break;
+
     default:
         break;
     }
@@ -1380,6 +1400,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CURSE_OF_AGONY:
     case ENCH_MAGNETISED:
     case ENCH_REPEL_MISSILES:
+    case ENCH_MISDIRECTED:
+    case ENCH_CHANGED_APPEARANCE:
         decay_enchantment(en);
         break;
 
@@ -2152,6 +2174,7 @@ static const char *enchant_names[] =
     "rimeblight",
     "magnetised",
     "armed",
+    "misdirected", "changed appearance",
     "buggy", // NUM_ENCHANTMENTS
 };
 
