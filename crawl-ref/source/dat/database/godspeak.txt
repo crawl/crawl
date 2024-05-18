@@ -181,7 +181,6 @@ w:30
 
 Xom pulls you back into the comparable quietude of the dungeon.
 %%%%
-%%%%
 Xom revert other banishment
 
 "Get back here!"
