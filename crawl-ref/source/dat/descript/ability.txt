@@ -591,10 +591,13 @@ Shatter The Chains ability
 Destroys a chosen cursed equipped item, relieving the wearer of the curse.
 %%%%
 # Dithmenos
-Shadow Step ability
+Shadowslip ability
 
-Allows you to step into the shadow of any hostile creature within your umbra,
-landing on a random spot adjacent to the target.
+Instantly swaps places with your shadow (so long as it is active) and misleads
+all enemies in sight about which of the two is which. Enemies which were
+previously focused on you will instead focus their attention exclusively upon
+your shadow for several turns before they realize their mistake - though if they
+succeed in destroying your shadow, the illusion will end prematurely.
 %%%%
 # Gozag
 Potion Petition ability

@@ -8,8 +8,8 @@ attacks:
  - {type: hit, damage: 0}
 hd: 1
 hp_10x: 10
-ac: 3
-ev: 13
+ac: 7
+ev: 20
 intelligence: human
 uses: weapons_armour
 size: medium

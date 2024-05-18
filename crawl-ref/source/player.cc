@@ -187,8 +187,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
-    // Boldly go into the unknown (for shadow step and other ranged move
-    // prompts)
+    // Boldly go into the unknown (for ranged move prompts)
     if (env.map_knowledge(p).trap() == TRAP_UNASSIGNED)
         return true;
 
@@ -253,8 +252,7 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg, bool *prompted)
 {
-    // Boldly go into the unknown (for shadow step and other ranged move
-    // prompts)
+    // Boldly go into the unknown (for ranged move prompts)
     if (!env.map_knowledge(p).known())
         return true;
 

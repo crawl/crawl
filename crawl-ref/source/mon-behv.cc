@@ -417,6 +417,22 @@ void handle_behaviour(monster* mon)
         }
     }
 
+    // Misdirected monsters will only focus on your shadow, if it's still around.
+    // If it has stopped being around, snap back to the player instead.
+    if (mon->has_ench(ENCH_MISDIRECTED))
+    {
+        actor* agent = mon->get_ench(ENCH_MISDIRECTED).agent();
+        // agent() will return ANON_FRIENDLY_MONSTER if the source no longer
+        // exists, but was originally friendly
+        if (agent && agent->alive() && agent->mindex() != ANON_FRIENDLY_MONSTER)
+        {
+            mon->foe = agent->mindex();
+            mon->target = agent->pos();
+        }
+        else
+            mon->del_ench(ENCH_MISDIRECTED);
+    }
+
     while (changed)
     {
         const actor* afoe = mon->get_foe();

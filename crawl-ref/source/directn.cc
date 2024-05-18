@@ -109,9 +109,6 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
                                bool need_path, int range, targeter *hitfunc,
                                aff_type mon_aff, aff_type allowed_self_aff);
-static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
-                                   bool need_path, int range,
-                                   targeter *hitfunc, bool find_preferred = false);
 static bool _find_object(const coord_def& where, bool need_path, int range,
                          targeter *hitfunc);
 static bool _find_autopickup_object(const coord_def& where, bool need_path,
@@ -340,7 +337,6 @@ void direction_chooser::print_key_hints() const
                 direction_hint = "Shift-Dir - straight line";
                 break;
             case DIR_TARGET:
-            case DIR_SHADOW_STEP:
             case DIR_ENFORCE_RANGE:
                 direction_hint = "Dir - move target";
                 break;
@@ -1145,17 +1141,13 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
                                                        AFF_MULTIPLE, AFF_YES),
                                                   hitfunc)
                   || _find_square_wrapper(result, prefer_farthest ? -1 : 1,
-                                          bind(restricts == DIR_SHADOW_STEP ?
-                                               _find_shadow_step_mons :
-                                               _find_monster,
+                                          bind(_find_monster,
                                                placeholders::_1, mode,
                                                needs_path, range, hitfunc,
                                                true),
                                           hitfunc)
                   || _find_square_wrapper(result, prefer_farthest ? -1 : 1,
-                                          bind(restricts == DIR_SHADOW_STEP ?
-                                               _find_shadow_step_mons :
-                                               _find_monster,
+                                          bind(_find_monster,
                                                placeholders::_1, mode,
                                                needs_path, range, hitfunc,
                                                false),
@@ -1207,8 +1199,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     // pretty confusing.)
     if (needs_path
         && _find_square_wrapper(result, 1,
-                                bind(restricts == DIR_SHADOW_STEP ?
-                                     _find_shadow_step_mons : _find_monster,
+                                bind(_find_monster,
                                      placeholders::_1, mode, false,
                                      range, hitfunc, false),
                                hitfunc))
@@ -1473,17 +1464,8 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 {
     const monster* mons = monster_at(target());
 
-    if (restricts == DIR_SHADOW_STEP)
-    {
-        targeter_shadow_step &tgt =
-            *static_cast<targeter_shadow_step*>(hitfunc);
-        if (!tgt.has_additional_sites(target()))
-            return false;
-    }
-
-    // leap and shadow step never allow selecting from past the target point
+    // leap never allows selecting from past the target point
     if ((restricts == DIR_ENFORCE_RANGE
-         || restricts == DIR_SHADOW_STEP
          || !allow_out_of_range)
         && !in_range(target()))
     {
@@ -2866,30 +2848,6 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
         return false;
 
     return _want_target_monster(mon, mode, hitfunc);
-}
-
-static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
-                                   bool need_path, int range,
-                                   targeter *hitfunc, bool find_preferred)
-{
-    {
-        coord_def dp = grid2player(where);
-        // We could pass more info here.
-        maybe_bool x = clua.callmbooleanfn("ch_target_shadow_step", "dd",
-                                           dp.x, dp.y);
-        if (x.is_bool())
-            return bool(x);
-    }
-
-    // Need a monster to attack; this checks that the monster is a valid target.
-    if (!_find_monster(where, mode, need_path, range, hitfunc, find_preferred))
-        return false;
-    // Can't step on yourself
-    if (where == you.pos())
-        return false;
-
-    targeter_shadow_step &tgt = *static_cast<targeter_shadow_step*>(hitfunc);
-    return tgt.has_additional_sites(where);
 }
 
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,

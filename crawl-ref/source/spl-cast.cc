@@ -2141,9 +2141,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     dprf("Spell #%d, power=%d", spell, powc);
 
     const coord_def orig_target_pos = beam.target;
-    const auto orig_target = monster_at(beam.target);
-    const bool self_target = you.pos() == beam.target;
-    const bool had_tele = orig_target && orig_target->has_ench(ENCH_TP);
 
     spret cast_result = _do_cast(spell, powc, *target, beam, god,
                                  force_failure || fail, actual_spell);

@@ -162,7 +162,9 @@ bool beogh_cancel_leaving_floor();
 
 void beogh_increase_orcification();
 
-spret dithmenos_shadow_step(bool fail);
+void dithmenos_change_shadow_appearance(monster& shadow, int dur);
+string dithmenos_cannot_shadowslip_reason();
+spret dithmenos_shadowslip(bool fail);
 
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();

@@ -96,7 +96,9 @@
 #include "teleport.h" // monster_teleport
 #include "terrain.h"
 #ifdef USE_TILE
+ #include "tilepick.h"
  #include "rltiles/tiledef-main.h"
+ #include "rltiles/tiledef-player.h"
 #endif
 #include "timed-effects.h"
 #include "transform.h" // untransform
@@ -2770,103 +2772,96 @@ void beogh_increase_orcification()
     you.props[ORCIFICATION_LEVEL_KEY] = 1;
 }
 
-spret dithmenos_shadow_step(bool fail)
+void dithmenos_change_shadow_appearance(monster& shadow, int dur)
 {
-    // You can shadow-step anywhere within your umbra.
-    ASSERT(you.umbra_radius() > -1);
-    const int range = you.umbra_radius();
+#ifdef USE_TILE
+    // Change tile to show our shadow is in decoy mode
+    shadow.props[MONSTER_TILE_KEY].get_int() = tileidx_player_shadow();
+    shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, 0, &you, dur));
+#endif
+}
 
-    targeter_shadow_step tgt(&you, you.umbra_radius());
-    direction_chooser_args args;
-    args.hitfunc = &tgt;
-    args.restricts = DIR_SHADOW_STEP;
-    args.mode = TARG_HOSTILE;
-    args.range = range;
-    args.just_looking = false;
-    args.needs_path = false;
-    args.top_prompt = "Aiming: <white>Shadow Step</white>";
-    dist sdirect;
-    direction(sdirect, args);
-    if (!sdirect.isValid || tgt.landing_site.origin())
+string dithmenos_cannot_shadowslip_reason()
+{
+    const monster* shadow = dithmenos_get_player_shadow();
+    if (!shadow)
+        return "Your shadow is still firmly attached to your body.";
+    else if (!you.can_see(*shadow))
+        return "Your shadow isn't in sight!";
+    else if (is_feat_dangerous(env.grid(shadow->pos())))
     {
-        canned_msg(MSG_OK);
-        return spret::abort;
+        return make_stringf("It would be unwise to slip onto %s.",
+                             env.grid(shadow->pos()) == DNGN_DEEP_WATER
+                                ? "deep water" : "lava");
     }
 
-    // Check for hazards.
-    bool zot_trap_prompted = false,
-         trap_prompted = false,
-         exclusion_prompted = false,
-         cloud_prompted = false,
-         terrain_prompted = false;
+    return "";
+}
 
-    for (auto site : tgt.additional_sites)
-    {
-        if (!cloud_prompted
-            && !check_moveto_cloud(site, "shadow step", &cloud_prompted))
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-
-        if (!zot_trap_prompted)
-        {
-            trap_def* trap = trap_at(site);
-            if (trap && trap->type == TRAP_ZOT)
-            {
-                if (!check_moveto_trap(site, "shadow step",
-                                       &trap_prompted))
-                {
-                    canned_msg(MSG_OK);
-                    return spret::abort;
-                }
-                zot_trap_prompted = true;
-            }
-            else if (!trap_prompted
-                     && !check_moveto_trap(site, "shadow step",
-                                           &trap_prompted))
-            {
-                canned_msg(MSG_OK);
-                return spret::abort;
-            }
-        }
-
-        if (!exclusion_prompted
-            && !check_moveto_exclusion(site, "shadow step",
-                                       &exclusion_prompted))
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-
-        if (!terrain_prompted
-            && !check_moveto_terrain(site, "shadow step", "",
-                                     &terrain_prompted))
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-    }
-
+spret dithmenos_shadowslip(bool fail)
+{
     fail_check();
 
-    you.stop_being_constricted(false, "step");
+    monster* shadow = dithmenos_get_player_shadow();
+    ASSERT(shadow && shadow->alive());
 
-    const coord_def old_pos = you.pos();
-    // XXX: This only ever fails if something's on the landing site;
-    // perhaps this should be handled more gracefully.
-    if (!you.move_to_pos(tgt.landing_site))
-    {
-        mpr("Something blocks your shadow step.");
+    you.stop_being_constricted(false, "slip");
+
+    const coord_def shadow_pos = shadow->pos();
+    const coord_def you_pos = you.pos();
+
+    mpr("You swap places with your shadow and weave the vestiges of your form into it.");
+
+    shadow->move_to_pos(you.pos(), true, true);
+    you.move_to_pos(shadow_pos, true, true);
+
+    you.apply_location_effects(you_pos);
+    shadow->apply_location_effects(shadow_pos);
+
+    // Paranoia, in case swapping somehow killed our shadow entirely
+    // (But clouds don't trigger without time passing? Maybe there's some way...)
+    if (!shadow || !shadow->alive())
         return spret::success;
+
+    // Mislead all hostiles around the shadow's new location
+    int dur = random_range(40, 60 + you.skill(SK_INVOCATIONS, 2));
+    for (monster_near_iterator mi(shadow->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        // For every monster in sight of both the player *and* their shadow, and
+        // which is currently aware of and targeting the player, direct their
+        // attention towards the shadow instead.
+        if (*mi != shadow && !mons_aligned(*mi, shadow)
+            && you.see_cell_no_trans(mi->pos()))
+        {
+            // Enemies that are already misdirected will have their status
+            // updated to the new shadow.
+            if (mi->has_ench(ENCH_MISDIRECTED))
+            {
+                mon_enchant en = mi->get_ench(ENCH_MISDIRECTED);
+                en.source = shadow->mid;
+                en.duration = dur;
+                mi->update_ench(en);
+                continue;
+            }
+            // Otherwise don't distract things that aren't already focused on the player
+            else if (mi->foe == MHITYOU && mi->behaviour == BEH_SEEK)
+            {
+                // Add enchantment and immediately update the monster's target
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, 0, shadow, dur));
+                mi->foe = shadow->mindex();
+                mi->behaviour = BEH_SEEK;
+
+                mprf("%s turns %s attention towards your shadow.",
+                        mi->name(DESC_THE).c_str(),
+                        mi->pronoun(PRONOUN_POSSESSIVE).c_str());
+            }
+        }
     }
 
-    const actor *victim = actor_at(sdirect.target);
-    mprf("You step into %s shadow.",
-         apostrophise(victim->name(DESC_THE)).c_str());
-    // Using 'stepped = true' here because it's Shadow *Step*.
-    // This helps to evade splash upon landing on water.
-    moveto_location_effects(env.grid(old_pos), true, old_pos);
+    // Extend our shadow's life to last at least as long as the misdirection
+    shadow->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
+
+    dithmenos_change_shadow_appearance(*shadow, dur);
 
     return spret::success;
 }
