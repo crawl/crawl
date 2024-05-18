@@ -250,6 +250,8 @@ Blue
 
 Grey
 
+Indigo
+
 Orange
 
 Purple
