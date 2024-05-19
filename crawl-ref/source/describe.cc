@@ -5503,8 +5503,10 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     // hacky, refactor so this isn't necessary
     if (mark_spells)
         description += SPELL_LIST_BEGIN;
-
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
+    if (mark_spells)
+        description += SPELL_LIST_END;
+
     description.cprintf("\nTo read a description, press the key listed above. "
         "(AdB) indicates damage (the sum of A B-sided dice), "
         "(x%%) indicates the chance to defeat your Will, "
@@ -5512,8 +5514,6 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     description.cprintf(crawl_state.need_save
         ? "; shown in red if you are in range.\n"
         : ".\n");
-    if (mark_spells)
-        description += SPELL_LIST_END;
 
     return description.to_colour_string();
 }
@@ -6720,10 +6720,13 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         // now -advil
         auto start = desc_without_spells.find(SPELL_LIST_BEGIN);
         auto end = desc_without_spells.find(SPELL_LIST_END);
-        if (start == string::npos || end == string::npos || start > end)
+        if (start == string::npos || end == string::npos || start >= end)
             desc_without_spells += "\n\nBUGGY SPELLSET\n\nSPELLSET_PLACEHOLDER";
         else
-            desc_without_spells.replace(start, end, "SPELLSET_PLACEHOLDER");
+        {
+            const size_t len = end + (string(SPELL_LIST_END) + "\n").size() - start;
+            desc_without_spells.replace(start, len, "SPELLSET_PLACEHOLDER");
+        }
     }
     tiles.json_write_string("body", desc_without_spells);
     tiles.json_write_string("quote", quote);
