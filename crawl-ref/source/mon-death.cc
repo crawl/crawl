@@ -2186,9 +2186,11 @@ item_def* monster_die(monster& mons, killer_type killer,
         silent = true;
     }
     else if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
-             && !silent && !was_banished && !wizard && !mons_reset && !mons_reset
+             && !silent && !was_banished && !wizard && !mons_reset
              && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
     {
+        // If we died due to the rimeblight instakill threshold, leave a pillar
+        // of rime behind.
         leaves_corpse = false;
         did_death_message = true;
         if (you.see_cell(mons.pos()))
@@ -2197,17 +2199,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                  "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
         }
         death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
-                                     mons.pos(),
-                                     random_range(3, 11) * BASELINE_DELAY);
-
-        // Potentially infect everyone around the dying unit
-        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
-        {
-            monster* victim = monster_at(*ai);
-            if (victim && !victim->friendly())
-                maybe_spread_rimeblight(*victim, mons.props[RIMEBLIGHT_POWER_KEY].get_int());
-        }
-
+                                    mons.pos(),
+                                    random_range(3, 11) * BASELINE_DELAY);
     }
     else if (mons.has_ench(ENCH_MAGNETISED) && mons.type != MONS_ELECTROFERRIC_VORTEX)
     {
@@ -2863,6 +2856,38 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mons.name(DESC_A),
                 killer,
                 mummy_curse_power(mons.type));
+    }
+
+    if (mons.has_ench(ENCH_RIMEBLIGHT) && !was_banished && !mons_reset)
+    {
+        // Potentially infect everyone around the dead monster
+        bool did_spread_message = false;
+        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        {
+            monster* victim = monster_at(*ai);
+            if (victim && !victim->friendly())
+            {
+                // We only 'test' for spread here, and then manually apply later
+                // on, so that we only print the message about the plague
+                // spreading if it *does* spread, but still print it before other
+                // things get infected by it.
+                if (maybe_spread_rimeblight(*victim,
+                                            mons.props[RIMEBLIGHT_POWER_KEY].get_int(),
+                                            true))
+                {
+                    if (!did_spread_message)
+                    {
+                        if (you.can_see(mons))
+                        {
+                            mprf("Plague seeps from the dead %s.",
+                                 victim->name(DESC_PLAIN).c_str());
+                        }
+                        did_spread_message = true;
+                    }
+                    apply_rimeblight(*victim, mons.props[RIMEBLIGHT_POWER_KEY].get_int());
+                }
+            }
+        }
     }
 
     // Necromancy

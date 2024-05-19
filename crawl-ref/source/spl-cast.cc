@@ -1666,7 +1666,7 @@ static vector<string> _desc_rimeblight_valid(const monster_info& mi)
 {
     if (mi.is(MB_RIMEBLIGHT))
         return vector<string>{"already infected"};
-    else if (!(mi.holi & (MH_NATURAL | MH_DEMONIC | MH_HOLY)))
+    else if (mons_class_is_firewood(mi.type) || mons_is_conjured(mi.type))
         return vector<string>{"not susceptible"};
 
     return vector<string>{};

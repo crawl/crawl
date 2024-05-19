@@ -214,7 +214,7 @@ bool start_ranged_constriction(actor& caster, actor& target, int duration,
 
 dice_def rimeblight_dot_damage(int pow)
 {
-    return dice_def(2, 3 + div_rand_round(pow, 17));
+    return dice_def(2, 4 + div_rand_round(pow, 17));
 }
 
 string describe_rimeblight_damage(int pow, bool terse)
@@ -233,14 +233,16 @@ string describe_rimeblight_damage(int pow, bool terse)
                         shards_damage.num, shards_damage.size);
 }
 
-bool maybe_spread_rimeblight(monster& victim, int power)
+bool maybe_spread_rimeblight(monster& victim, int power, bool test_only)
 {
-    if (victim.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
-        && !victim.has_ench(ENCH_RIMEBLIGHT)
+    if (!victim.has_ench(ENCH_RIMEBLIGHT)
+        && !mons_is_firewood(victim)
+        && !mons_is_conjured(victim.type)
         && x_chance_in_y(2, 3)
         && you.see_cell_no_trans(victim.pos()))
     {
-        apply_rimeblight(victim, power);
+        if (!test_only)
+            apply_rimeblight(victim, power);
         return true;
     }
 
@@ -249,13 +251,10 @@ bool maybe_spread_rimeblight(monster& victim, int power)
 
 bool apply_rimeblight(monster& victim, int power, bool quiet)
 {
-    if (victim.has_ench(ENCH_RIMEBLIGHT)
-        || !(victim.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)))
-    {
+    if (victim.has_ench(ENCH_RIMEBLIGHT))
         return false;
-    }
 
-    int duration = (random_range(6, 10) + div_rand_round(power, 30))
+    int duration = (random_range(7, 11) + div_rand_round(power, 30))
                     * BASELINE_DELAY;
     victim.add_ench(mon_enchant(ENCH_RIMEBLIGHT, 0, &you, duration));
     victim.props[RIMEBLIGHT_POWER_KEY] = power;

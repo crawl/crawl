@@ -1881,8 +1881,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         tick_rimeblight(*this);
         if (!alive())
             return;
-        // Instakill at <=20% max hp
-        if (hit_points * 5 <= max_hit_points)
+        // Instakill living/demonic/holy creatures that reach <=20% max hp
+        if (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+            && hit_points * 5 <= max_hit_points)
         {
             props[RIMEBLIGHT_DEATH_KEY] = true;
             monster_die(*this, KILL_YOU, NON_MONSTER);

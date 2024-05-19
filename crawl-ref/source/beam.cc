@@ -5798,8 +5798,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_RIMEBLIGHT:
-        rc = !mon->has_ench(ENCH_RIMEBLIGHT)
-             && mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY);
+        rc = !mon->has_ench(ENCH_RIMEBLIGHT);
         break;
 
     default:
