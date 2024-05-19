@@ -527,6 +527,8 @@ static const map<spschool, miscast_datum> miscast_effects = {
             },
             {
                 "The air has a green tinge for a moment",
+                "You are briefly surrounded by sulphurous heat",
+                "You are suddenly coated in salt",
             },
             [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
                 int dam, string /*cause*/)
