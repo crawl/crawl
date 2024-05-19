@@ -516,14 +516,14 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 "There is a flash of cinnabar",
                 "Mercury flows from your @hands@",
                 "Parts of your body briefly turn golden",
-                "Clouds of @any_colour@ smoke overwhelm you",
+                "You are overcome by clouds of @any_colour@ smoke",
             },
             {
                 "@The_monster@ is engulfed in toxic fumes",
                 "@The_monster@ is blasted with cinnabar dust",
                 "@The_monster@ starts coughing violently",
                 "@The_monster@ looks incredibly sick",
-                "Clouds of @any_colour@ smoke overwhelm @the_monster@",
+                "@The_monster@ is overcome by clouds of @any_colour@ smoke",
             },
             {
                 "The air has a green tinge for a moment",
