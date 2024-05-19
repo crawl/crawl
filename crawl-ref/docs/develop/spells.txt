@@ -152,7 +152,7 @@ Compared to other schools, Fire's damage offers some of the largest and most
 controlled area-of-effect spells, but is unfriendly to allies and can still
 catch the caster in their own blasts. Fire also cannot produce non-damage,
 'utility' effects without other schools being involved, but can be used to
-create fiery clouds or, potentially, temporary lava. 
+create fiery clouds or temporary lava.
 
 Ice
 ===
@@ -179,8 +179,8 @@ Compared to other schools, clouds are prolonged in their damage, while electric
 effects involve some danger and strange uncontrolled targeting. In exchange,
 Electricity resistance is rare compared to other resists, and all electric
 damage ignores half of AC. Single-target effects should be very rare: Air's only
-access to precise single-target damage is Airstrike, which has heavy limitations
-attached to it.
+access to precise single-target damage without leaving Air and Conjurations
+is Airstrike, which has heavy limitations attached to it.
 
 Earth
 =====

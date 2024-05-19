@@ -288,6 +288,16 @@ DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 # Uniques which can appear in the Depths:
 ################################################################################
 
+NAME:   uniq_arachne
+DEPTH:  Vaults:1-4, Elf, Depths:1
+veto {{
+  if crawl.game_started() and dgn.br_exists("Spider") then
+    return true
+  end
+  return false
+}}
+: place_unique(_G, "Arachne")
+
 NAME:   uniq_asterion
 DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Asterion")
@@ -354,20 +364,6 @@ NAME:   uniq_nikola
 DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
 
-NAME:   uniq_wiglaf
-DEPTH:  Elf, Snake, Spider, Vaults:1-3
-: place_unique(_G, "Wiglaf")
-
-NAME:   uniq_arachne
-DEPTH:  Vaults:1-4, Elf, Depths:1
-veto {{
-  if crawl.game_started() and dgn.br_exists("Spider") then
-    return true
-  end
-  return false
-}}
-: place_unique(_G, "Arachne")
-
 NAME:   uniq_parghit
 DEPTH:  Depths:3-, Zot:1-4
 : place_unique(_G, "Parghit")
@@ -413,6 +409,10 @@ DEPTH:  Crypt, !Crypt:$, Elf, Orc:$
 NAME:   uniq_mlioglotl
 DEPTH:  Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Mlioglotl")
+
+NAME:   uniq_wiglaf
+DEPTH:  Elf, Snake, Spider, Vaults:1-3
+: place_unique(_G, "Wiglaf")
 
 NAME:   uniq_vashnia
 DEPTH:  Snake:2-
