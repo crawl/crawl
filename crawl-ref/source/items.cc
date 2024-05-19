@@ -1914,6 +1914,31 @@ static void _get_rune(const item_def& it, bool quiet)
         mpr("You feel the abyssal rune guiding you out of this place.");
 }
 
+static bool _is_disabled_gem(gem_type gem)
+{
+    switch (gem)
+    {
+#if TAG_MAJOR_VERSION == 34
+    case GEM_ORC:
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
+
+static bool _got_all_gems()
+{
+    for (int gem = GEM_DUNGEON; gem < NUM_GEM_TYPES; ++gem)
+    {
+        if (_is_disabled_gem(static_cast<gem_type>(gem)))
+            continue;
+        if (!you.gems_found[static_cast<gem_type>(gem)])
+            return false;
+    }
+    return true;
+}
+
 static void _get_gem(const item_def& it, bool quiet)
 {
     you.gems_found.set(it.sub_type);
@@ -1924,6 +1949,11 @@ static void _get_gem(const item_def& it, bool quiet)
     // XXX: consider customizing this message per-gem
     mprf("You pick up %s and feel its impossibly delicate weight in your %s.",
          it.name(DESC_THE).c_str(), you.hand_name(true).c_str());
+    if (_got_all_gems())
+    {
+        mprf("You've found all the gems! Together, they sparkle an otherworldly %s!",
+             getSpeakString("misc_colour").c_str());
+	}
     mpr("Press } and ! to see all the gems you have collected.");
     print_gem_warnings(it.sub_type, 0);
 }
