@@ -583,7 +583,7 @@ enum stave_type
     STAFF_AIR,
     STAFF_EARTH,
 #if TAG_MAJOR_VERSION == 34
-    STAFF_CHANNELING,
+    STAFF_CHANNELLING,
 #endif
     NUM_STAVES,
 };

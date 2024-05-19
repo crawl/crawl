@@ -837,7 +837,7 @@ for a short duration.
 %%%%
 Charge- status
 
-You are currently channeling electrical charge. Pressing <w>.</w> or <w>s</w>
+You are currently channelling electrical charge. Pressing <w>.</w> or <w>s</w>
 to wait in place will maintain and continue this process until it discharges.
 Any other action, including recasting the spell, will dissipate the charge
 harmlessly.
@@ -856,7 +856,7 @@ Charge| status
 %%%%
 Wave status
 
-You are currently channeling waves of flames. Pressing <w>.</w> or <w>s</w>
+You are currently channelling waves of flames. Pressing <w>.</w> or <w>s</w>
 to wait in place will maintain and intensify the waves, at the cost of 1 MP per
 turn. Any other action, including recasting the spell, will end it.
 %%%%

@@ -806,7 +806,7 @@ static const staff_def Staff_prop[] =
     { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,
         63, ac_type::normal, BEAM_MMISSILE },
 #if TAG_MAJOR_VERSION == 34
-    { STAFF_CHANNELING,  "channeling" },
+    { STAFF_CHANNELLING,  "channelling" },
 #endif
 };
 
@@ -979,7 +979,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, RING_ATTENTION },
     { OBJ_JEWELLERY, RING_STEALTH },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
-    { OBJ_STAVES,    STAFF_CHANNELING },
+    { OBJ_STAVES,    STAFF_CHANNELLING },
     { OBJ_STAVES,    STAFF_POWER },
     { OBJ_STAVES,    STAFF_ENERGY },
     { OBJ_STAVES,    STAFF_SUMMONING },

@@ -2730,7 +2730,7 @@ static string _extra_passive_effects()
     if (you.archmagi())
         passives.emplace_back("archmagi");
 
-    const int channel = player_channeling();
+    const int channel = player_channelling();
     if (channel)
     {
         passives.emplace_back(

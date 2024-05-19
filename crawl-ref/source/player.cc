@@ -2252,7 +2252,7 @@ int player_wizardry()
            + you.scan_artefacts(ARTP_WIZARDRY);
 }
 
-int player_channeling()
+int player_channelling()
 {
     // Here and elsewhere, let's consider making this work for Dj.
     if (you.has_mutation(MUT_HP_CASTING))
