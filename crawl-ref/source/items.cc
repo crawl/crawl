@@ -1953,7 +1953,7 @@ static void _get_gem(const item_def& it, bool quiet)
     {
         mprf("You've found all the gems! Together, they sparkle an otherworldly %s!",
              getSpeakString("misc_colour").c_str());
-	}
+    }
     mpr("Press } and ! to see all the gems you have collected.");
     print_gem_warnings(it.sub_type, 0);
 }
