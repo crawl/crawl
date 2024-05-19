@@ -1903,7 +1903,7 @@ static void _get_rune(const item_def& it, bool quiet)
         else if (nrunes > 1)
         {
             if (player_in_branch(BRANCH_PANDEMONIUM) && _got_all_pan_runes())
-                mprf("You've emptied out Pandemonium! Nothing left here but demons.");
+                mpr("You've emptied out Pandemonium! Nothing left here but demons.");
             mprf("You now have %d runes.", nrunes);
         }
 
