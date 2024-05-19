@@ -283,6 +283,8 @@ Xom good mutations
 Xom's power touches on you for a moment.
 
 You hear Xom's maniacal cackling.
+
+With a gout of [@rainbow_colour@|@misc_colour@] light, Xom rebuilds you.
 %%%%
 Xom random mutations
 
@@ -293,6 +295,8 @@ Xom random mutations
 Xom's power brushes against you for a moment.
 
 You hear Xom's avuncular chuckle.
+
+With a flash of [@rainbow_colour@|@misc_colour@] light, Xom rebuilds you.
 %%%%
 Xom snakes to sticks
 
