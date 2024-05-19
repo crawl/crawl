@@ -3398,7 +3398,7 @@ ITEM:     plate armour ego:fire_resistance good_item / \
           staff of fire randart / staff of earth randart w:5 / \
           book of spectacle w:5 / everburning encyclopedia / \
           book of spontaneous combustion / \
-          orb ego:channelling randart artprops:Fire&&rF / \
+          orb ego:energy randart artprops:Fire&&rF / \
           dragon-blood talisman randart / \
           granite talisman randart artprops:rF w:5
 KFEAT:    G = metal_statue
