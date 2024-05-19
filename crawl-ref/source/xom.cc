@@ -1970,7 +1970,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
-        str += " briefly flashes a lurid colour!";
+        str += " briefly flashes a lurid ";
+        str += getSpeakString("any_colour");
+        str += "!";
         messages.push_back(str);
     }
 
