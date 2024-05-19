@@ -520,7 +520,6 @@ static bool _is_disabled_god(god_type god)
     case GOD_PAKELLAS:
         return true;
 #endif
-
     default:
         return false;
     }
