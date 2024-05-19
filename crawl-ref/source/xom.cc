@@ -1840,6 +1840,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
         priority.emplace_back("Dust puffs up from the dry fountain.");
     }
 
+    if (in_view[DNGN_FOUNTAIN_BLOOD])
+    {
+        priority.emplace_back("The blood in the fountain briefly boils.");
+        priority.emplace_back("The blood in the fountain briefly coagulates.");
+    }
+
     if (in_view[DNGN_STONE_ARCH])
     {
         priority.emplace_back("The stone arch briefly shows a sunny meadow on "
