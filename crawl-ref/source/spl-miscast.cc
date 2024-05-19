@@ -9,6 +9,7 @@
 
 #include "attack.h"
 #include "beam-type.h"
+#include "database.h"
 #include "fight.h"
 #include "god-passive.h"
 #include "message.h"
@@ -55,6 +56,11 @@ static void _do_msg(actor& target, miscast_datum effect, int dam)
         msg = replace_all(msg, "@hand_conj@", "");
     else
         msg = replace_all(msg, "@hand_conj@", "s");
+
+    msg = replace_all(msg, "@rainbow_colour@", getSpeakString("rainbow_colour"));
+    msg = replace_all(msg, "@misc_colour@", getSpeakString("misc_colour"));
+    msg = replace_all(msg, "@mono_colour@", getSpeakString("mono_colour"));
+    msg = replace_all(msg, "@any_colour@", getSpeakString("any_colour"));
 
     if (target.is_monster())
     {
@@ -510,12 +516,14 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 "There is a flash of cinnabar",
                 "Mercury flows from your @hands@",
                 "Parts of your body briefly turn golden",
+                "Clouds of @any_colour@ smoke overwhelm you",
             },
             {
                 "@The_monster@ is engulfed in toxic fumes",
                 "@The_monster@ is blasted with cinnabar dust",
                 "@The_monster@ starts coughing violently",
                 "@The_monster@ looks incredibly sick",
+                "Clouds of @any_colour@ smoke overwhelm @the_monster@",
             },
             {
                 "The air has a green tinge for a moment",
