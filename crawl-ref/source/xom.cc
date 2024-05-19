@@ -1784,6 +1784,13 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.emplace_back("The water briefly bubbles.");
         messages.emplace_back("The water briefly swirls.");
         messages.emplace_back("The water briefly glows.");
+
+        {
+            string str = "The water briefly flashes ";
+            str += getSpeakString("any_colour");
+            str += ".";
+            messages.emplace_back(str);
+        }
     }
 
     if (in_view[DNGN_DEEP_WATER])
@@ -1818,6 +1825,13 @@ static void _xom_pseudo_miscast(int /*sever*/)
         priority.emplace_back("The water in the fountain briefly bubbles.");
         priority.emplace_back("The water in the fountain briefly swirls.");
         priority.emplace_back("The water in the fountain briefly glows.");
+
+        {
+            string str = "The water in the fountain briefly flashes ";
+            str += getSpeakString("any_colour");
+            str += ".";
+            priority.emplace_back(str);
+        }
     }
 
     if (in_view[DNGN_DRY_FOUNTAIN])
