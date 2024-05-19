@@ -355,6 +355,8 @@ Xom smiles on you.
 
 "Toy, don't you die on me yet!"
 
+Xom saves you before everything goes @mono_colour@.
+
 w:1
 "One more [life|try|go]."
 %%%%
