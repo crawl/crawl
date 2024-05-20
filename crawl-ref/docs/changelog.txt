@@ -183,7 +183,7 @@ Species
   - Yellow draconians breathe a penetrating bolt that leaves acidic clouds.
   - Purple draconians breathe an explosion of both dispelling and antimagic.
   - Pale draconians now deal fairly more impact damage with their steam breath.
-* Deep Elf Air Magic apts has been raised from 0 to +1.
+* Deep Elf Air Magic apt has been raised from 0 to +1.
 * New Demonspawn mutation: Foul Shadow, which wreathes the player in umbra to
   reduce monster accuracy and increases stealth, and which burns attackers with
   foul flame.
@@ -191,7 +191,7 @@ Species
 Spells
 ------
 * New spells:
-  - Propulsive Piledriver (L3 Tloc): Grab an adjacent foe that maximizes travel
+  - Propulsive Piledriver (L3 Tloc): Grab an adjacent foe that maximises travel
     distance to solid terrain, then hurls you both forward and damages that foe.
   - Hoarfrost Cannonade (L5 Ice / Alch): Summons two transient icy cannons
     that deal damage, slow down movement, and eventually (safely) explode.
@@ -202,12 +202,13 @@ Spells
   - Hellfire Mortar (L7 Fire / Earth): Temporarily digs out a river of lava,
     then deploys an auto-firing magma cannon to float down that river.
   - Magnavolt (L7 Air / Earth): Magnetises enemies, making them lose all EV and
-    drop magnetized vortices on death, then zaps every magnetised foe in sight.
+    drop magnetised vortices on death, then zaps every magnetised foe in sight.
   - Rimeblight (L7 Ice / Necro): Inflicts a plague on enemies that spreads
     through icy explosions, which can instantly kill foes at low health.
   - Fulsome Fusillade (L8 Conj / Alch): Rains reagent explosions of random
     elements on top of random foes, inflicting random debuffs if they overlap.
-* Teleport Other now tries teleport affected monsters out of the caster's sight.
+* Teleport Other now tries to teleport affected monsters out of the caster's
+  sight.
 * Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
   hits 4 to 12 foes at once instead of 2 to 6.
 * Removed spells: Gell's Gravitas.
@@ -219,7 +220,7 @@ Tiles and Other Art
   * Yred's Recall tile.
   * Formless jellyfish.
   * Box of beasts.
-  * Boulders from Brom's Barreling Boulder.
+  * Boulders from Brom's Barrelling Boulder.
   * Crystal walls in Zot.
 
 Stone Soup 0.31 (20240119)
