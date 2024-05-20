@@ -60,8 +60,14 @@ static void _do_msg(actor& target, spschool which, int dam)
     {
         msg = do_mon_str_replacements(msg, *target.as_monster(), S_SILENT);
         if (!mons_has_body(*target.as_monster()))
+        {
             msg = replace_all(msg, "'s body", "");
+            msg = replace_all(msg, "'s skin", "");
+        }
     }
+    // For monsters this is done inside do_mon_str_replacements
+    else
+        msg = maybe_pick_random_substring(msg);
 
     mpr(msg + attack_strength_punctuation(dam));
 }

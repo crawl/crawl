@@ -756,3 +756,50 @@ w:20
 
 w:10
 @mono_colour@
+%%%%
+any_pattern
+
+arrows
+
+chequers
+
+chevrons
+
+diamonds
+
+fractals
+
+leopard spots
+
+paisley
+
+pinstripes
+
+plaid
+
+polkadots
+
+quatrefoil
+
+stripes
+
+spirals
+
+spots
+
+squares
+
+stars
+
+tartan
+
+whorls
+%%%%
+any_colour_pattern
+
+# Single colour
+@any_colour@ @any_pattern@
+
+# Two colours. There's a chance of them being the same but
+# in practise it happens little enough to just be funny when it does.
+@any_colour@ on @any_colour@ @any_pattern@
