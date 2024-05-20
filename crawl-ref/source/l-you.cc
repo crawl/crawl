@@ -278,6 +278,29 @@ static int you_unarmed_damage_rating(lua_State *ls)
     return 2;
 }
 
+/*** What is the ego of our unarmed attack?
+ * @tparam[opt=false] boolean terse
+ * @treturn string|nil the ego for unarmed combat, if any
+ * @function ego
+ */
+static int you_unarmed_ego(lua_State *ls)
+{
+    bool terse = false;
+    if (lua_isboolean(ls, 1))
+        terse = lua_toboolean(ls, 1);
+
+    brand_type brand = get_form()->get_uc_brand();
+    const string s = brand_type_name(brand, terse);
+    if (!s.empty())
+    {
+        lua_pushstring(ls, s.c_str());
+        return 1;
+    }
+
+    lua_pushnil(ls);
+    return 1;
+}
+
 /*** Poison resistance (rPois).
  * @treturn int resistance level
  * @function res_poison
@@ -1392,6 +1415,7 @@ static const struct luaL_reg you_clib[] =
     { "can_train_skill", you_can_train_skill },
     { "best_skill",   you_best_skill },
     { "unarmed_damage_rating",   you_unarmed_damage_rating},
+    { "unarmed_ego",  you_unarmed_ego},
     { "train_skill",  you_train_skill },
     { "skill_cost"  , you_skill_cost },
     { "get_training_target", you_get_training_target },
