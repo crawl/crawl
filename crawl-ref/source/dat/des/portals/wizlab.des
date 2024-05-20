@@ -948,8 +948,8 @@ NSUBST:     3 = 1:3 / 1, ~ = 3:1 / 4:2 / 1:3 / 1:4 / 8 = 12.... / ., f = 1:g / f
 COLOUR:     c = darkgrey
 COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
 TILE:       c = wall_stone_dark
-TILE:       b = bedeviled_crystal_gehenna / bedeviled_crystal_cocytus / \
-                bedeviled_crystal_dis / bedeviled_crystal_pandemonium
+TILE:       b = bedevilled_crystal_gehenna / bedevilled_crystal_cocytus / \
+                bedevilled_crystal_dis / bedevilled_crystal_pandemonium
 TILE:       p = dngn_statue_demonic_bust / dngn_statue_imp \
                 / dngn_statue_cerebov / dngn_statue_ancient_evil
 # symbols roughly corresponding to sigil shape
@@ -997,7 +997,7 @@ set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
 wizlab_setup(_G)
 set_feature_name("stone_wall", "black wall")
 set_feature_name("rock_wall", "carved rock wall")
-set_feature_name("crystal_wall", "bedeviled crystal wall")
+set_feature_name("crystal_wall", "bedevilled crystal wall")
 }}
 epilogue{{ wizlab_milestone(_G, "The Hall of the Hellbinder") }}
 MAP

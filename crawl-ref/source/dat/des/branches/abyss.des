@@ -187,8 +187,8 @@ TAGS:    nolayout_encompass transparent no_monster_gen patrolling
 WEIGHT:  5
 MONS:    tentacled monstrosity / lich, glowing shapeshifter, glass eye
 NSUBST:  1 = 1:1 / 1:2 / 1:3 / *:., b = 1:O / *:b
-TILE:    b = bedeviled_crystal_abyss
-:   set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_abyss
+:   set_feature_name("crystal_wall", "bedevilled crystal wall")
 : abyss_entry(_G, 'O')
 MAP
  ..xxx..

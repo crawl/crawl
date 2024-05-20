@@ -2577,8 +2577,8 @@ SUBST:  1 = 1., * = *..
 KMONS:  1 = fire dragon / salamander tyrant / fire giant / balrug
 KMONS:  2 = hellephant
 SUBST:  * = *., b = bl
-TILE:   b = bedeviled_crystal_gehenna
-:   set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_gehenna
+:   set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
 KFEAT:  2 = escape_hatch_down
 MARKER: D = lua:fog_machine { cloud_type = "flame", \
@@ -3246,7 +3246,7 @@ MONS:    laughing skull band / efreet, skeletal warrior
 MONS:    centaur warrior zombie, deep troll, boulder beetle
 KITEM:   })] = demon whip / demon trident / demon blade / \
                hand cannon w:2 / book of the dragon / grand grimoire w:2
-TILE:    b = bedeviled_crystal_gehenna
+TILE:    b = bedevilled_crystal_gehenna
 :   else
 MONS:    hell knight, deep troll, spriggan berserker zombie
 MONS:    sphinx zombie, red ugly thing
@@ -3257,7 +3257,7 @@ KFEAT:   } = enter_depths
 : else
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    juggernaut, hell knight, rakshasa, fire giant, flayed ghost
-TILE:    b = bedeviled_crystal_gehenna
+TILE:    b = bedevilled_crystal_gehenna
 :   else
 MONS:    black draconian knight, yellow draconian
 MONS:    black draconian, juggernaut zombie, flayed ghost
@@ -3274,7 +3274,7 @@ NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334
 SHUFFLE: 345
 MARKER:  O = lua:fog_machine { cloud_type = 'flame', pow_min=10, pow_max=10, \
                                delay=10, size=1, excl_rad=0 }
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
              cccc
              c})c
@@ -3341,9 +3341,9 @@ MARKER: C = lua:fog_machine { cloud_type= "purple smoke", \
 FTILE:  'P1vbtmn = floor_pebble_red
 COLOUR:  G = mountain
 TILE:    G = dngn_scintillating_statue
-TILE:    b = bedeviled_crystal_abyss
+TILE:    b = bedevilled_crystal_abyss
 : set_feature_name("granite_statue", "scintillating statue")
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
     ---------
   --....-....--
@@ -4255,8 +4255,8 @@ MONS:   ice devil, ufetubus
 NSUBST: - = 4:2 / 4:3 / 4 = 23 / *:.
 :   end
 SUBST:  b = bmm
-TILE:   b = bedeviled_crystal_cocytus
-:   set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_cocytus
+:   set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
 NSUBST: ' = 5=*$ / *:%
 KPROP:  '123$%* = no_tele_into
@@ -4419,9 +4419,9 @@ KFEAT:   yz = b
 SUBST:   y : yccc
 SHUFFLE: l2'y / w4Bz
 NSUBST:  ' = 3:1 / 3=1. / *:., B = 3:3 / 3=3. / *:., - = 2=|* / 4:* / 6=$%
-TILE:    y = bedeviled_crystal_gehenna
-TILE:    z = bedeviled_crystal_cocytus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    y = bedevilled_crystal_gehenna
+TILE:    z = bedevilled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 ...................
 .ccccc.......ccccc.
@@ -4462,8 +4462,8 @@ NSUBST: " = 2 = w:2 d | / 5:* / 5 = %$"
 NSUBST: ' = 3:* / 6:% / *:., ` = 5:2 / 4 = 2.
 KPROP:  "1 = no_tele_into
 KFEAT:  - = iron_grate
-TILE:   b = bedeviled_crystal_tartarus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_tartarus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 @..xxxxxxxxxxxxxxx
 .................x
@@ -6811,12 +6811,12 @@ KFEAT:   m = iron_grate
 KPROP:   Cn" = bloody
 KPROP:   C = no_tele_into
 TILE:    G = dngn_gravestone
-TILE:    y = bedeviled_crystal_gehenna
-TILE:    Y = bedeviled_crystal_cocytus
-TILE:    z = bedeviled_crystal_tartarus
-TILE:    Z = bedeviled_crystal_dis
+TILE:    y = bedevilled_crystal_gehenna
+TILE:    Y = bedevilled_crystal_cocytus
+TILE:    z = bedevilled_crystal_tartarus
+TILE:    Z = bedevilled_crystal_dis
 : set_feature_name("granite_statue", "a gravestone")
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
       xxxxxx        xxxxxx
       xvvvvx        xvvvvx

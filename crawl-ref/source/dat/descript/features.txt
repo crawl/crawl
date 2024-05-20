@@ -1077,7 +1077,7 @@ destroyed and disrupted by sufficiently mighty magic, its crackling energy will
 harmlessly disperse.
 %%%%
 # Vaults with extraplanar contents.
-A bedeviled crystal wall
+A bedevilled crystal wall
 
 A wall made from shimmering crystal, from which some demonic plane peers out.
 While its composition both make it resist destruction plus reflect both fire and

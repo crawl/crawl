@@ -3191,9 +3191,9 @@ SUBST:  '3456 = ., 1 = 7, 2 = 8, " = %
 : end
 SHUFFLE: yz / CC / CC
 SUBST:   C = c
-TILE:    y = bedeviled_crystal_gehenna
-TILE:    z = bedeviled_crystal_cocytus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    y = bedevilled_crystal_gehenna
+TILE:    z = bedevilled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 ............. .............
 ..ccccccc.........ccccccc..
@@ -3328,8 +3328,8 @@ NSUBST:  3 = 1:5 / *:3
 SUBST:   b = bbv
 SHUFFLE: {( / <<
 KPROP:   2345*| = no_tele_into
-TILE:    b = bedeviled_crystal_pandemonium
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 xxxxxxxxxxxx@@x
 @.lxlll.l.l...x
@@ -3734,8 +3734,8 @@ SUBST:  b = w
 SUBST: | = ||****%%%%
 SUBST: T = TU, W = w:20 W .:5
 SUBST: ' = W
-TILE:  b = bedeviled_crystal_cocytus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:  b = bedevilled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 T.WWW..........WWW.T
 .'WWW..........WWW'.
@@ -7963,8 +7963,8 @@ KITEM:  - = obsidian_axe no_pickup
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0}
-TILE:   b = bedeviled_crystal_gehenna / bedeviled_crystal_dis
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_gehenna / bedevilled_crystal_dis
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
       ccccc
       cO1Oc
@@ -8535,8 +8535,8 @@ NSUBST: D = 2 / 1..
 SUBST:  a = c
 : end
 SUBST:  b = bc, c : cv
-TILE:   b = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
            ccc    ccccccc
  ccc       cDcccccccc..Dcc

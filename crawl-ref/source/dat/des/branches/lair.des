@@ -3266,9 +3266,9 @@ FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
 COLOUR:  g = warp
 TILE:    g = dimensional_conduit
-TILE:    b = bedeviled_crystal_gehenna
+TILE:    b = bedevilled_crystal_gehenna
 : set_feature_name("metal_statue", "dimensional conduit")
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
   ...TTTT....  .............................
  ..TttttttT.......Tt.TtT....TT..TT......Tt....

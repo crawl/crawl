@@ -970,7 +970,7 @@ A storm conduit
 如果它被足够强大的魔法摧毁破坏，其爆裂的能量会无害地消散。
 %%%%
 # 有着界外内容的宝库。
-A bedeviled crystal wall
+A bedevilled crystal wall
 
 这面墙由散发微光的水晶制成，一些恶魔位面从中向外隐现。
 虽然它的组成成分既能抵抗破坏，又能反射火和寒，

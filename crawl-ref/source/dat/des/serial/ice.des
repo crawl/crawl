@@ -22,8 +22,8 @@ function init_ice(e, force_opaque)
                   wolf  / yak / polar bear / white imp w:20 / \
                   ufetubus / ice beast w:15 / w:2000 nothing')
     e.subst('G = GGb')
-    e.tile('b = bedeviled_crystal_cocytus')
-    e.set_feature_name('crystal_wall', 'bedeviled crystal wall')
+    e.tile('b = bedevilled_crystal_cocytus')
+    e.set_feature_name('crystal_wall', 'bedevilled crystal wall')
   end
   e.subst("- = --.")
   e.rtile("x = wall_zot_cyan")

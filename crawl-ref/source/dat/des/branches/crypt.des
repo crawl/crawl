@@ -2854,8 +2854,8 @@ SUBST:  ~ = m
 KMONS:  t = w:20 hell knight / smoke demon / laughing skull
 KMONS:  X = w:1 curse skull / w:19 balrug
 KFEAT:  ~ = crystal_wall
-TILE:   ~ = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   ~ = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
 ####### Randomisation of doors
 NSUBST: K = 1:+ / *:v

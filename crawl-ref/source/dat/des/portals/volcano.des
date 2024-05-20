@@ -1247,9 +1247,9 @@ SUBST:  $ = $$deef, b : bbGGG
 MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
                               pow_min=4, pow_max=10, delay=25, size=2, \
                               spread_rate=0, }
-TILE:   b = bedeviled_crystal_gehenna
+TILE:   b = bedevilled_crystal_gehenna
 TILE:   G = dngn_statue_dragon
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : volcano_setup(_G)
 MAP
             xxxxxxxxxxxxxxxx

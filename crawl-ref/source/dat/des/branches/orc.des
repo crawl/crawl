@@ -2326,8 +2326,8 @@ SHUFFLE: BC
 TILE:    c = wall_stone_dark
 FTILE:  .1234567@ = floor_pebble_lightred
 SUBST:   b = bc
-TILE:    b = bedeviled_crystal_pandemonium
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
              cc2@2c
             ccc33ccc

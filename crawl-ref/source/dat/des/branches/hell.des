@@ -289,9 +289,9 @@ KMONS:  O = Margery band / hell knight band w:4, hell knight band
 KFEAT:  yz = b
 SUBST:  b : xxxz
 NSUBST: z = 1:y / 1:z
-TILE:   y = bedeviled_crystal_gehenna
-TILE:   z = bedeviled_crystal_dis
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   y = bedevilled_crystal_gehenna
+TILE:   z = bedevilled_crystal_dis
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
 MAP
@@ -775,8 +775,8 @@ NSUBST: - = 4=1 / 8=1. / 2=2 / 4=2. / 1=3 / 2=3. / .
 SUBST:  b = bc
 KMASK:  O = opaque
 KPROP:  O = no_tele_into
-TILE:   b = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
 MAP

@@ -1926,8 +1926,8 @@ TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
              dngn_transparent_wall_green
 TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
              dngn_transparent_wall_cyan
-TILE:    b = bedeviled_crystal_abyss
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_abyss
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
       ..  ccc  ..
  ..@....cccmccc....@..
@@ -1961,8 +1961,8 @@ TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
              dngn_transparent_wall_green
 TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
              dngn_transparent_wall_white
-TILE:    b = bedeviled_crystal_abyss
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_abyss
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 x x x x
  x.xxxxxxxxxxxxxxx
@@ -2258,8 +2258,8 @@ KPROP:    l = no_cloud_gen
 TILE:     m : dngn_transparent_wall_red / dngn_transparent_wall_yellow
 TILE:     n : dngn_transparent_wall_green / dngn_transparent_wall_blue
 TILE:     G = dngn_statue_ancient_evil
-TILE:     b = bedeviled_crystal_pandemonium
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:     b = bedevilled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
            ....@...
           ..Dww.wwC..
@@ -2298,8 +2298,8 @@ SHUFFLE: opqr, fg
 SUBST:   op = l, qr = ., f = v, g = ., l : ll.
 SUBST:   } = {([})]<b$>>>
 TILE:    m = dngn_transparent_wall_red
-TILE:    b = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 xxxxxxxxxxx
 c......col.
@@ -2341,8 +2341,8 @@ SUBST:   HI = x, J : xw, K : xw, LM = w
 SUBST:   p : xww., qr = ., - : ++., w : www.., C : CCb
 CLEAR:   '
 TILE:    m = dngn_transparent_wall_blue
-TILE:    b = bedeviled_crystal_cocytus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
    .............
  .......www......
@@ -2382,8 +2382,8 @@ SHUFFLE: opqrst
 SUBST:   op = x, q : xx., r : x.., st = .
 SUBST:   - : +c, { = {([})]++CC^^.., b = bxx
 TILE:    G = dngn_statue_wraith
-TILE:    b = bedeviled_crystal_tartarus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_tartarus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
            s
    ........s........
@@ -2411,8 +2411,8 @@ SUBST:   o : v.., p : vG., r : vGb, s : vb, t = v
 SUBST:   P = CCC>>><$d{([})], ~QRS = e, -'" = v, G : Gvv
 TILE:    G = dngn_statue_imp
 : if crawl.coinflip() then
-TILE:    b = bedeviled_crystal_dis
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_dis
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : else
 TILE:    b = wall_emerald
 : end
