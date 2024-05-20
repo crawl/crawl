@@ -1,4 +1,4 @@
-Stone Soup 0.32 (through 0.32-a0-1229-g1eea0c6e6f)
+Stone Soup 0.32 (through 0.32-a0-1219-g78dc6a7b8a)
 --------------------------
 
 Highlights
