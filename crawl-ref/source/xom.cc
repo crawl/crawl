@@ -1809,10 +1809,26 @@ static void _xom_pseudo_miscast(int /*sever*/)
         || in_view[DNGN_CLEAR_PERMAROCK_WALL])
     {
         messages.emplace_back("Dim shapes swim through the translucent wall.");
+
+        {
+            string str = "The translucent wall is briefly covered with ";
+            str += getSpeakString("any_colour_pattern");
+            str += ".";
+            messages.emplace_back(str);
+        }
     }
 
     if (in_view[DNGN_CRYSTAL_WALL])
+    {
         messages.emplace_back("Dim shapes swim through the crystal wall.");
+
+        {
+            string str = "The crystal wall is briefly covered with ";
+            str += getSpeakString("any_colour_pattern");
+            str += ".";
+            messages.emplace_back(str);
+        }
+    }
 
     if (in_view[DNGN_METAL_WALL])
     {
