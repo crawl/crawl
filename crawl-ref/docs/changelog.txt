@@ -115,7 +115,8 @@ Monsters
   - New: Xak'krixis, a formicid Royal Expeditionary Alchemist, found solely in
     the Spider Nest. They have Ignite Poison and a version of Fulminant Prism
     that doesn't hurt allies.
-  - Reflavoured: Nergalle is now an archivist, and Ijyb is now an artificer.
+  - Reflavoured: Nergalle is now an archivist, and Ijyb is now an ex-Coglin
+    artificer.
 * New monsters:
   - Marrowcudas, early-D skeleton fish that summon swarms of themselves
     whenever they hit foes.
