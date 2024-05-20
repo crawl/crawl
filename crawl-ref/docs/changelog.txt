@@ -27,6 +27,7 @@ Artefacts
 
 Branches, Environment
 ---------------------
+* Crypt now contains more item rewards throughout its levels.
 * Troves no longer ask Draconians to offer dragon scales.
 * Ziggurats now scale up their enemy choices and counts up much faster
   if one dares to dive through multiple ziggurats on the same character.
@@ -180,8 +181,7 @@ Species
   - Yellow draconians breathe a penetrating bolt that leaves acidic clouds.
   - Purple draconians breathe an explosion of both dispelling and antimagic.
   - Pale draconians now deal fairly more impact damage with their steam breath.
-* Deep elves now have innate fast mana regeneration, and their Air Magic apt
-  has been raised to +1.
+* Deep Elf Air Magic apts has been raised from 0 to +1.
 * New Demonspawn mutation: Foul Flame, which wreathes the player in umbra to
   reduce monster accuracy and increases stealth, and which burns attackers.
 
