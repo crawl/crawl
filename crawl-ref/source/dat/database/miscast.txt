@@ -12,11 +12,7 @@ conjuration miscast player
 
 Sparks fly from your @hands@
 
-The air around you crackles with energy
-
-You feel a strange surge of energy
-
-Strange energies run through your body
+A strange surge of energy strikes you from nowhere
 
 A wave of violent energy washes through your body
 
@@ -29,8 +25,6 @@ You are blasted with magical energy
 conjuration miscast monster
 
 Sparks fly from @the_monster@'s @hands@
-
-The air around @the_monster@ crackles with energy
 
 @The_monster@ emits a flash of light
 
@@ -50,31 +44,23 @@ There is a sudden explosion of magical energy
 %%%%
 hexes miscast player
 
-You feel off-balance for a moment
-
 Multicoloured lights dance before your eyes
 
 You feel a bit tired
 
 The light around you dims momentarily
 
-Strange energies run through your body
-
 You hear an indistinct dissonance whispering inside your mind
-
-The air around you crackles with energy
 
 You feel a strange surge of energy
 
-Waves of light ripple over your body
+Waves of @any_colour@ light ripple over your body
 
 You feel enfeebled
 
 Magic surges out from your body
 %%%%
 hexes miscast monster
-
-@The_monster@ looks off-balance for a moment
 
 Multicoloured lights dance around @the_monster@
 
@@ -86,9 +72,7 @@ The light around @the_monster@ dims momentarily
 
 @The_monster@'s body glows momentarily
 
-The air around @the_monster@ crackles with energy
-
-Waves of light ripple over @the_monster@'s body
+Waves of @any_colour@ light ripple over @the_monster@'s body
 
 Magic surges out from @the_monster@
 %%%%
@@ -126,9 +110,7 @@ You hear strange and distant voices
 
 The world around you seems to dim momentarily
 
-Strange energies run through your body
-
-You shiver with cold
+You feel as though something walked over your grave
 
 You sense a malignant aura
 
@@ -154,7 +136,7 @@ necromancy miscast monster
 
 @The_monster@ seems to dim momentarily
 
-@The_monster@ shivers with cold
+@The_monster@ looks like something walked over @possessive@ grave
 
 @The_monster@ is briefly tinged with black
 
@@ -184,49 +166,41 @@ translocation miscast player
 
 You catch a glimpse of the back of your own head
 
-The air around you crackles with energy
-
 You feel a wrenching sensation
+
+You feel off-balance for a moment
 
 The floor and the ceiling briefly switch places
 
 You spin around
 
-Strange energies run through your body
-
 The world appears momentarily distorted
 
 You are caught in a field of spatial distortion
 
-Space bends around you
-
 Space twists in upon itself
 
-Space warps crazily around you
+Space [bends|warps] [crazily |]around you
 %%%%
 translocation miscast monster
 
-The air around @the_monster@ crackles with energy
-
 @The_monster@ jerks violently for a moment
+
+@The_monster@ looks off-balance for a moment
 
 @The_monster@ spins around
 
 @The_monster@ appears momentarily distorted
 
-@The_monster@ scowls
+@The_monster@'s features rearrange themselves for a while
 
 @The_monster@ is caught in a field of spatial distortion
 
-Space bends around @the_monster@
-
-Space warps around @the_monster@
-
-Space warps crazily around @the_monster@
+Space [bends|warps] [crazily |]around @the_monster@
 %%%%
 translocation miscast unseen
 
-The air around something crackles with energy
+The space around something warps impossibly
 
 A piece of empty space twists and distorts
 
@@ -234,7 +208,7 @@ A rift temporarily opens in the fabric of space
 %%%%
 fire miscast player
 
-Sparks fly from your @hands@
+[Cinders|Ashes] fly from your @hands@
 
 The air around you burns with energy
 
@@ -246,17 +220,15 @@ Fire whirls out from your @hands@
 
 Flames sear your flesh
 
-You are blasted with fire
+You are blasted with [searing |][fire|flames]
 
 You are caught in a fiery explosion
-
-You are blasted with searing flames
 
 There is a sudden and violent explosion of flames
 %%%%
 fire miscast monster
 
-Sparks fly from @the_monster@'s @hands@
+[Cinders|Ashes] fly from @the_monster@'s @hands@
 
 The air around @the_monster@ burns with energy
 
@@ -266,11 +238,9 @@ Fire whirls out @the_monster@'s @hands@
 
 Flames sear @the_monster@
 
-@The_monster@ is blasted with fire
+@The_monster@ is blasted with [searing |][fire|flames]
 
 @The_monster@ is caught in a fiery explosion
-
-@The_monster@ is blasted with searing flames
 %%%%
 fire miscast unseen
 
@@ -290,21 +260,17 @@ A chill runs through your body
 
 Your @hands@ feel@hand_conj@ numb with cold
 
-A chill runs through your body
+You feel [a little bit|uncomfortably|extremely] cold
 
-You feel uncomfortably cold
+[Ice|Frost] covers your body
 
-Frost covers your body
+You are encased in [ice|frost]
 
-You feel extremely cold
-
-You are covered in a thin layer of ice
+You are covered in a thin layer of [ice|frost]
 
 Heat is drained from your body
 
 You are caught in an explosion of ice and frost
-
-You are encased in ice
 %%%%
 ice miscast monster
 
@@ -314,13 +280,13 @@ Frost covers @the_monster@'s body
 
 @The_monster@ shivers
 
-@The_monster@ is covered in a thin layer of ice
+@The_monster@ is covered in a thin layer of [ice|frost]
 
 Heat is drained from @the_monster@
 
 @The_monster@ is caught in an explosion of ice and frost
 
-@The_monster@ is encased in ice
+@The_monster@ is encased in [ice|frost]
 %%%%
 ice miscast unseen
 
@@ -328,11 +294,13 @@ Wisps of condensation drift in the air
 
 Ice and frost explode from out of thin air
 
-An unseen figure is encased in ice
+An unseen figure is encased in [ice|frost]
 %%%%
 air miscast player
 
 Sparks of electricity dance around you
+
+The air around you crackles with energy
 
 You are blasted with air
 
@@ -352,6 +320,8 @@ air miscast monster
 
 Sparks of electricity dance between @the_monster@'s @hands@
 
+The air around @the_monster@ crackles with energy
+
 @The_monster@ is blasted with air
 
 @The_monster@ is briefly showered in sparks
@@ -366,9 +336,11 @@ The wind whips around @the_monster@
 %%%%
 air miscast unseen
 
-The wind whips
+The wind whips up out of nowhere
 
 Something invisible sparkles with electricity
+
+The air around something crackles with energy
 
 Electrical discharges explode from out of thin air
 
@@ -376,11 +348,11 @@ The air madly twists around a spot
 %%%%
 earth miscast player
 
-Sand pours from your @hands@
+[Sand|Gravel] pours from your @hands@
 
 You feel a surge of energy from the ground
 
-The floor shifts beneath you alarmingly
+The floor [shifts|shudders|quakes|rumbles] beneath you alarmingly
 
 You are hit by flying rocks
 
@@ -392,7 +364,7 @@ You are caught in an explosion of flying shrapnel
 %%%%
 earth miscast monster
 
-Sand pours from @the_monster@'s @hands@
+[Sand|Gravel] pours from @the_monster@'s @hands@
 
 @The_monster@ is hit by flying rocks
 
@@ -418,23 +390,34 @@ You are engulfed in toxic fumes
 
 There is a flash of cinnabar
 
-Mercury flows from your @hands@
+[Mercury|Quicksilver|Fool's gold|Saltpeter|Sulphur|Liquid metal] flows from your @hands@
 
-Parts of your body briefly turn golden
+Parts of your body briefly turn [golden|silvery|metallic|leaden|crystalline]
 
+w:4
 You are overcome by clouds of @any_colour@ smoke
+
+w:4
+The inside of your mouth momentarily tastes like @any_colour@
+
+w:2
+Your skin changes to @any_colour_pattern@
 %%%%
 alchemy miscast monster
 
 @The_monster@ is engulfed in toxic fumes
 
-@The_monster@ is blasted with cinnabar dust
+@The_monster@ is [blasted|coated] with [cinnabar|sulphur] dust
 
 @The_monster@ starts coughing violently
 
 @The_monster@ looks incredibly sick
 
+w:5
 @The_monster@ is overcome by clouds of @any_colour@ smoke
+
+w:5
+@The_monster@'s skin changes to @any_colour_pattern@
 %%%%
 alchemy miscast unseen
 
