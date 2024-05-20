@@ -136,7 +136,7 @@ necromancy miscast monster
 
 @The_monster@ seems to dim momentarily
 
-@The_monster@ looks like something walked over @possessive@ grave
+@The_monster@ looks as though something walked over @possessive@ grave
 
 @The_monster@ is briefly tinged with black
 
