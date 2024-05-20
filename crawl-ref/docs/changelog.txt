@@ -122,7 +122,7 @@ Monsters
   - Obsidian bats, Orcish Mines stone bats which summon demonic animals
     whenever they hit foes.
   - Polterguardians, Vaults geists that give their allies Repel Missiles.
-  - Scrub nettles, which fire partially-irresistable poison stings.
+  - Scrub nettles, which fire partially-irresistible poison stings.
   - Thermic dynamos, Elven Halls vortex-engines that wield both hits and
     rebounding bolts of fire and ice.
   - Undying armouries, late Vaults terrors that hurl dancing weapons and
@@ -130,7 +130,7 @@ Monsters
 * Other monster changes:
   - Arcanists now cast Searing Ray instead of Force Lance.
   - Crystal guardians and crystal echidnas no longer fire rebounding bolts of
-    fire or ice, and instead have crystalizing shots that inflict Vitrify.
+    fire or ice, and instead have crystallizing shots that inflict Vitrify.
   - Deep elf elementalists cast Hoarfrost Cannonade instead of Freezing Cloud.
   - Deep elf high priests give a long duration brilliance buff to every ally
     in their sight, rather than using an aura of brilliance.
@@ -146,14 +146,14 @@ Monsters
     Geryon's (hell -> sin) beast summoning has been weakened in exchange.
   - Necrophages are weaker and now only appear from Yred's summonings.
   - Norris now casts Draining Gaze instead of Brain Bite.
-  - Ophanim now passively irresistably inflict Mark on all those they see.
+  - Ophanim now passively irresistibly inflict Mark on all those they see.
   - Worldbinders now summon ironbound frosthearts instead of thunderhulks.
 * Monster constriction is now more difficult to escape via moving, but blinks
   now always work as an escape.
 * Monster frozen status now lasts a bit longer, inflicts a heavier movement
   penalty, and no longer blocks further Flash Freeze casts.
 * Monster repel missiles now acts as a flat +15 effective EV against
-  projectiles, rather than scaling heavily to the monsters's own EV.
+  projectiles, rather than scaling heavily to the monster's own EV.
 * Player ghosts now can cast a fair bit more low-level and mid-level spells.
 * Removed monsters: burning bushes, lorocyprocas.
 
@@ -165,7 +165,7 @@ Species
   - They can't wear jewellery, but at XL 13 they can choose to invent one of
     three gizmos that passively provide resists and unique benefits.
 * Returning species: Since all species can become orcs, Hill Orcs swap out with
-  Mountain Dwarves, with similiar but less skewed apts and stats. New features:
+  Mountain Dwarves, with similar but less skewed apts and stats. New features:
   - They ignore half of the spellcasting penalty heavy armour would inflict.
   - They can enchant randart equipment up to the base equipment's default
     enchantment maximum.
@@ -188,7 +188,7 @@ Species
 Spells
 ------
 * New spells:
-  - Propulsive Piledriver (L3 Tloc): Grab an adjascent foe that maximizes travel
+  - Propulsive Piledriver (L3 Tloc): Grab an adjacent foe that maximizes travel
     distance to solid terrain, then hurls you both forward and damages that foe.
   - Hoarfrost Cannonade (L5 Ice / Alch): Summons two transient icy cannons
     that deal damage, slow down movement, and eventually (safely) explode.
@@ -198,11 +198,11 @@ Spells
     on top of the densest cluster of enemies in sight.
   - Hellfire Mortar (L7 Fire / Earth): Temporarily digs out a river of lava,
     then deploys an auto-firing magma cannon to float down that river.
-  - Magnavolt (L7 Air / Earth): Magnetizes enemies, making them lose all EV and
-    drop magnetized vortices on death, then zaps every magnetized foe in sight.
+  - Magnavolt (L7 Air / Earth): Magnetises enemies, making them lose all EV and
+    drop magnetized vortices on death, then zaps every magnetised foe in sight.
   - Rimeblight (L7 Ice / Necro): Inflicts a plague on enemies that spreads
     through icy explosions, which can instantly kill foes at low health.
-  - Fulsome Fusillade (L8 Conj / Alch): Rains regeants explosions of random
+  - Fulsome Fusillade (L8 Conj / Alch): Rains reagent explosions of random
     elements on top of random foes, inflicting random debuffs if they overlap.
 * Teleport Other now tries teleport affected monsters out of the caster's sight.
 * Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
