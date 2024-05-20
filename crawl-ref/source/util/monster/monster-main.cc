@@ -1166,13 +1166,13 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(BLUE, "(sleep)");
                     break;
                 case AF_FLANK:
-                    monsterattacks += "(flank)";
+                    monsterattacks += colour(BROWN, "(flank)");
                     break;
                 case AF_DRAG:
                     monsterattacks += colour(BROWN, "(drag)");
                     break;
                 case AF_SWARM:
-                    monsterattacks += "(swarm)";
+                    monsterattacks += colour(BROWN, "(swarm)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
