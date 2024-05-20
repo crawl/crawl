@@ -110,6 +110,7 @@ static TextDB AllDBs[] =
             "monname.txt",  // names for Beogh apostles and Hep ancestors
                             // and weapon spirits
             "colourname.txt", // colour names
+            "miscast.txt",  // spell miscasts
             }),
 
     TextDB("shout", "database/",
