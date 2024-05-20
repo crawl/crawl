@@ -81,7 +81,8 @@ Gods
       - Removed abilities: Dark Bargain, Drain Life.
 * Both Beogh and Yred's recall abilities are now instant.
 * Jiyva now prevents all harm players could do to all jellies and slimes,
-  instead of punishing them whenever they did so.
+  instead of punishing them whenever they did so. Fedhas now also prevents
+  players from doing harm to friendly plants.
 * Nemelex is now a chaotic (but not evil) god.
 * Okawaru's Duel now blocks all summoning.
 * Qazlal's Upheaval and Disaster Area no longer hit the player nor any of
