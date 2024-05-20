@@ -183,8 +183,9 @@ Species
   - Purple draconians breathe an explosion of both dispelling and antimagic.
   - Pale draconians now deal fairly more impact damage with their steam breath.
 * Deep Elf Air Magic apts has been raised from 0 to +1.
-* New Demonspawn mutation: Foul Flame, which wreathes the player in umbra to
-  reduce monster accuracy and increases stealth, and which burns attackers.
+* New Demonspawn mutation: Foul Shadow, which wreathes the player in umbra to
+  reduce monster accuracy and increases stealth, and which burns attackers with
+  foul flame.
 
 Spells
 ------
