@@ -423,6 +423,6 @@ alchemy miscast unseen
 
 The air has a green tinge for a moment
 
-You are briefly surrounded by sulphurous heat
+Sulphurous heat splodes from thin air
 
-You are suddenly coated in salt
+An unseen figure is coated in salt
