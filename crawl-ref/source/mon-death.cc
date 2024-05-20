@@ -2413,7 +2413,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
     else if (mons.type == MONS_HOARFROST_CANNON && !silent && !mons_reset
-             && !was_banished && !wizard)
+             && !was_banished && !wizard && env.grid(mons.pos()) == DNGN_FLOOR)
     {
         temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
                             TERRAIN_CHANGE_FLOOD);
