@@ -759,6 +759,8 @@ w:10
 %%%%
 any_pattern
 
+arabesque
+
 arrows
 
 chequers
