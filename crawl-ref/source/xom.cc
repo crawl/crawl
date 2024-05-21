@@ -1970,6 +1970,13 @@ static void _xom_pseudo_miscast(int /*sever*/)
             messages.emplace_back("Your cloak billows in an unfelt wind.");
         else if (item->sub_type == ARM_SCARF)
             messages.emplace_back("Your scarf briefly wraps itself around your head!");
+
+        string str = "Your ";
+        str += item->name(DESC_BASENAME, false, false, false);
+        str += " is briefly covered in lurid ";
+        str += getSpeakString("any_colour_pattern");
+        str += "!";
+        messages.push_back(str);
     }
 
     if (item_def* item = you.slot_item(EQ_HELMET))
