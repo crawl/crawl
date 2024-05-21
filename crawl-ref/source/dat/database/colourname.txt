@@ -769,6 +769,8 @@ diamonds
 
 fractals
 
+gingham
+
 leopard spots
 
 paisley
