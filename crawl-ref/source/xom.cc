@@ -1916,6 +1916,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str  = uppercase_first(in_view_name[iv]);
             str += " briefly shows a sunny meadow on the other side.";
             messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly shows a lifeless wasteland on the other side.";
+            messages.emplace_back(str);
         }
     }
 
