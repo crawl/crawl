@@ -515,22 +515,6 @@ Cure Bad Mutation ability
 
 Annule une mutation négative choisie au hasard.
 %%%%
-Shadow Step ability
-
-Si vous pouvez vous concentrer suffisement sur l'ombre d'une creature présente
-dans votre umbra, vous pourrez traverser cette ombre et vous placer
-immediatement à coté de votre cible.
-%%%%
-Shadow Form ability
-
-Ce pouvoir vous transforme en une masse virevoltante d'ombres ténébreuses.
-Cette forme vous rend invisible, immunisé au poison, au drain, aux tourments et
-aux malédictions. Vous ne recevrez que la moitié des dégâts d'une attaque, et
-de la fumée s'echapera de vos blessures. En contrepartie, les dégâts que vous
-infligerez en combat seront réduits de moitié, vos capacités magiques seront
-grandement réduites, et vos compétences seront drainées à chaque blessure que
-vous recevrez.
-%%%%
 Renounce Religion ability
 
 Renoncez à votre religion. Votre personnage quittera le service de son dieu (et

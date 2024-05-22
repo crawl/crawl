@@ -496,21 +496,6 @@ Cure Bad Mutation ability
 
 Fjerner en tilfældigt valgt dårlig mutation.
 %%%%
-Shadow Step ability
-
-Hvis et væsen i din umbra står stille nok til, at du kan fokusere på dets
-skygge, så lader denne evne dig træde igennem skyggen, så du øjeblikkeligt
-placeres ved siden af det.
-%%%%
-Shadow Form ability
-
-Denne påkaldelse forvandler dig til et hvirvlende virvar af mørke skygger. Mens
-du er i denne form, er du permanent usynlig og immun over for gift, dræn,
-uhellig pinsel og fjendtlige fortryllelser. Al den skade du forvoldes halveres,
-og du bløder røg hver gang du bliver ramt. Til gængæld forvolder du selv kun
-halv skade, dine besværgelser kraft er alvorligt svækket og dine færdigheder
-bliver yderligere drænet, når du tager skade.
-%%%%
 Renounce Religion ability
 
 Forsager din tro. Dette vil få din karakter til at forlade sin gud (hvilket som
