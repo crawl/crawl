@@ -1185,6 +1185,10 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         if (mon->type == MONS_SPECTRAL_WEAPON)
             return false;
 
+        // If we cannot hurt an ally anyway, don't bother warning as if we could
+        if (god_protects(mon))
+            return false;
+
         if (god_hates_attacking_friend(you.religion, *mon))
         {
             adj = "your ally ";
