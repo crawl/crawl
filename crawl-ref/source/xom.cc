@@ -1779,7 +1779,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         const dungeon_feature_type feat = env.grid(*ri);
         const string feat_name = feature_description_at(*ri, false,
-                                                         DESC_THE);
+                                                        DESC_THE);
         in_view.push_back(feat);
         in_view_name.push_back(feat_name);
     }
