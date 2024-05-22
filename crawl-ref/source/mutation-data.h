@@ -511,6 +511,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_NOISE_DAMPENING, 2, 1, mutflag::good, false,
   "noise suppression",
 
@@ -520,6 +521,7 @@ static const mutation_def mut_data[] =
 
   {"You feel your surroundings grow louder.", "", ""},
 },
+#endif
 
 { MUT_CLARITY, 6, 1, mutflag::good, false,
   "clarity",
