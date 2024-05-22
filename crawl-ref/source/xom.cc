@@ -1784,7 +1784,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         in_view_name.push_back(feat_name);
     }
 
-    for (size_t iv = 0; iv != in_view.size(); ++iv)
+    for (size_t iv = 0; iv < in_view.size(); ++iv)
     {
         string str;
 
