@@ -1772,101 +1772,143 @@ static void _xom_pseudo_miscast(int /*sever*/)
     ///////////////////////////////////
     // Dungeon feature dependent stuff.
 
-    FixedBitVector<NUM_FEATURES> in_view;
+    vector<dungeon_feature_type> in_view;
+    vector<string> in_view_name;
+
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-        in_view.set(env.grid(*ri));
-
-    if (in_view[DNGN_LAVA])
-        messages.emplace_back("The lava spits out sparks!");
-
-    if (in_view[DNGN_SHALLOW_WATER] || in_view[DNGN_DEEP_WATER])
     {
-        messages.emplace_back("The water briefly bubbles.");
-        messages.emplace_back("The water briefly swirls.");
-        messages.emplace_back("The water briefly glows.");
+        const dungeon_feature_type feat = env.grid(*ri);
+        const string feat_name = feature_description_at(*ri, false,
+                                                         DESC_THE);
+        in_view.push_back(feat);
+        in_view_name.push_back(feat_name);
+    }
 
+    for (size_t iv = 0; iv != in_view.size(); ++iv)
+    {
+        string str;
+
+        if (in_view[iv] == DNGN_LAVA)
         {
-            string str = "The water briefly flashes ";
+            str  = uppercase_first(in_view_name[iv]);
+            str += " spits out sparks!";
+            messages.emplace_back(str);
+        }
+
+        if (in_view[iv] == DNGN_SHALLOW_WATER
+            || in_view[iv] == DNGN_DEEP_WATER
+            || in_view[iv] == DNGN_FOUNTAIN_BLUE
+            || in_view[iv] == DNGN_FOUNTAIN_SPARKLING
+            || in_view[iv] == DNGN_FOUNTAIN_BLOOD)
+        {
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly bubbles.";
+            messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly swirls.";
+            messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly glows.";
+            messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly flashes ";
             str += getSpeakString("any_colour");
             str += ".";
             messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly boils.";
+            messages.emplace_back(str);
+
+            if (in_view[iv] == DNGN_DEEP_WATER)
+            {
+                str  = "From the corner of your eye, you spot something "
+                       "lurking in ";
+                str += in_view_name[iv];
+                str += ".";
+                messages.emplace_back(str);
+            }
+
+            if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
+            {
+                str  = uppercase_first(in_view_name[iv]);
+                str += " briefly coagulates.";
+                messages.emplace_back(str);
+            }
         }
-    }
 
-    if (in_view[DNGN_DEEP_WATER])
-    {
-        messages.emplace_back("From the corner of your eye, you spot "
-                              "something lurking in the deep water.");
-    }
-
-    if (in_view[DNGN_ORCISH_IDOL])
-        priority.emplace_back("The idol of Beogh turns to glare at you.");
-
-    if (in_view[DNGN_GRANITE_STATUE] || in_view[DNGN_METAL_STATUE])
-        priority.emplace_back("The statue turns to stare at you.");
-
-    if (in_view[DNGN_CLEAR_ROCK_WALL] || in_view[DNGN_CLEAR_STONE_WALL]
-        || in_view[DNGN_CLEAR_PERMAROCK_WALL])
-    {
-        messages.emplace_back("Dim shapes swim through the translucent wall.");
-
+        if (in_view[iv] == DNGN_ORCISH_IDOL
+            || in_view[iv] == DNGN_GRANITE_STATUE
+            || in_view[iv] == DNGN_METAL_STATUE)
         {
-            string str = "The translucent wall is briefly covered with ";
+            str  = uppercase_first(in_view_name[iv]);
+            str += " turns to glare at you.";
+            messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " turns to stare at you.";
+            messages.emplace_back(str);
+        }
+
+        if (in_view[iv] == DNGN_CLEAR_ROCK_WALL
+            || in_view[iv] == DNGN_CLEAR_STONE_WALL
+            || in_view[iv] == DNGN_CLEAR_PERMAROCK_WALL
+            || in_view[iv] == DNGN_CRYSTAL_WALL)
+        {
+            str  = "Dim shapes swim through ";
+            str += in_view_name[iv];
+            str += ".";
+            messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " is briefly covered with ";
             str += getSpeakString("any_colour_pattern");
             str += ".";
             messages.emplace_back(str);
         }
-    }
 
-    if (in_view[DNGN_CRYSTAL_WALL])
-    {
-        messages.emplace_back("Dim shapes swim through the crystal wall.");
-
+        if (in_view[iv] == DNGN_METAL_WALL)
         {
-            string str = "The crystal wall is briefly covered with ";
-            str += getSpeakString("any_colour_pattern");
+            str  = "Tendrils of electricity crawl over ";
+            str += in_view_name[iv];
             str += ".";
             messages.emplace_back(str);
         }
-    }
 
-    if (in_view[DNGN_METAL_WALL])
-    {
-        messages.emplace_back("Tendrils of electricity crawl over the metal "
-                              "wall!");
-    }
-
-    if (in_view[DNGN_FOUNTAIN_BLUE] || in_view[DNGN_FOUNTAIN_SPARKLING])
-    {
-        priority.emplace_back("The water in the fountain briefly bubbles.");
-        priority.emplace_back("The water in the fountain briefly swirls.");
-        priority.emplace_back("The water in the fountain briefly glows.");
-
+        if (in_view[iv] == DNGN_DRY_FOUNTAIN)
         {
-            string str = "The water in the fountain briefly flashes ";
-            str += getSpeakString("any_colour");
+            str  = "Water briefly sprays from ";
+            str += in_view_name[iv];
             str += ".";
-            priority.emplace_back(str);
+            messages.emplace_back(str);
+
+            str  = "Blood briefly sprays from ";
+            str += in_view_name[iv];
+            str += ".";
+            messages.emplace_back(str);
+
+            str  = "Dust puffs up from ";
+            str += in_view_name[iv];
+            str += ".";
+            messages.emplace_back(str);
         }
-    }
 
-    if (in_view[DNGN_DRY_FOUNTAIN])
-    {
-        priority.emplace_back("Water briefly sprays from the dry fountain.");
-        priority.emplace_back("Blood briefly sprays from the dry fountain.");
-        priority.emplace_back("Dust puffs up from the dry fountain.");
-    }
+        if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
+        {
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly coagulates.";
+            messages.emplace_back(str);
+        }
 
-    if (in_view[DNGN_FOUNTAIN_BLOOD])
-    {
-        priority.emplace_back("The blood in the fountain briefly boils.");
-        priority.emplace_back("The blood in the fountain briefly coagulates.");
-    }
-
-    if (in_view[DNGN_STONE_ARCH])
-    {
-        priority.emplace_back("The stone arch briefly shows a sunny meadow on "
-                              "the other side.");
+        if (in_view[iv] == DNGN_STONE_ARCH)
+        {
+            str  = uppercase_first(in_view_name[iv]);
+            str += " briefly shows a sunny meadow on the other side.";
+            messages.emplace_back(str);
+        }
     }
 
     const dungeon_feature_type feat = env.grid(you.pos());
