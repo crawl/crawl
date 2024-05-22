@@ -343,6 +343,8 @@ static const vector<god_passive> god_passives[] =
 
     // Dithmenos
     {
+        {  1, passive_t::dampen_noise,
+              "You NOW dampen all noise in your surroundings." },
         {  2, passive_t::shadow_attacks,
               "Your attacks are NOW mimicked by a shadow" },
         {  2, passive_t::shadow_spells,
