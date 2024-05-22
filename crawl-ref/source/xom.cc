@@ -1840,6 +1840,24 @@ static void _xom_pseudo_miscast(int /*sever*/)
             }
         }
 
+        if (in_view[iv] == DNGN_DRY_FOUNTAIN)
+        {
+            str  = "Water briefly sprays from ";
+            str += in_view_name[iv];
+            str += ".";
+            messages.emplace_back(str);
+
+            str  = "Blood briefly sprays from ";
+            str += in_view_name[iv];
+            str += ".";
+            messages.emplace_back(str);
+
+            str  = "Dust puffs up from ";
+            str += in_view_name[iv];
+            str += ".";
+            messages.emplace_back(str);
+        }
+
         if (in_view[iv] == DNGN_ORCISH_IDOL
             || in_view[iv] == DNGN_GRANITE_STATUE
             || in_view[iv] == DNGN_METAL_STATUE)
@@ -1881,24 +1899,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
         if (in_view[iv] == DNGN_METAL_WALL)
         {
             str  = "Tendrils of electricity crawl over ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-        }
-
-        if (in_view[iv] == DNGN_DRY_FOUNTAIN)
-        {
-            str  = "Water briefly sprays from ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-
-            str  = "Blood briefly sprays from ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-
-            str  = "Dust puffs up from ";
             str += in_view_name[iv];
             str += ".";
             messages.emplace_back(str);
