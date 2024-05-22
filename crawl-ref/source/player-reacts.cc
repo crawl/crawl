@@ -1141,6 +1141,9 @@ void player_reacts()
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
 
+    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+        update_vision_range();
+
     incr_gem_clock();
     incr_zot_clock();
 }
