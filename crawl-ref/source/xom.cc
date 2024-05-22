@@ -1851,6 +1851,14 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str  = uppercase_first(in_view_name[iv]);
             str += " turns to stare at you.";
             messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " turns away from you.";
+            messages.emplace_back(str);
+
+            str  = uppercase_first(in_view_name[iv]);
+            str += " does an impromptu tapdance.";
+            messages.emplace_back(str);
         }
 
         if (in_view[iv] == DNGN_CLEAR_ROCK_WALL
