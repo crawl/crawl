@@ -2001,7 +2001,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string str = "A fancy cane briefly appears in your ";
         str += you.hand_name(false);
         str += ".";
-
         messages.push_back(str);
     }
 
@@ -2028,7 +2027,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
         str += item->name(DESC_BASENAME, false, false, false);
         str += " leaps into the air, briefly spins, then lands back on "
                "your head!";
-
         messages.push_back(str);
     }
 
@@ -2051,7 +2049,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
         str += " spins!";
-
         messages.push_back(str);
 
         str = "Your ";
