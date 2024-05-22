@@ -133,6 +133,7 @@ vector<mutation_type> get_removed_mutations()
         MUT_UNBREATHING,
         MUT_GOURMAND,
         MUT_AWKWARD_TONGUE,
+        MUT_NOISE_DAMPENING,
 #endif
     };
 
