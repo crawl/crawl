@@ -89,6 +89,9 @@ enum class passive_t
     /// Your shadow casts attack spells alongside you.
     shadow_spells,
 
+    /// You dampen all noise in your surroundings.
+    dampen_noise,
+
     /// No accuracy penalty in umbra. Gain stealth in umbra.
     nightvision,
 
