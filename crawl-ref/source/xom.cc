@@ -1904,13 +1904,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
             messages.emplace_back(str);
         }
 
-        if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
-        {
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly coagulates.";
-            messages.emplace_back(str);
-        }
-
         if (in_view[iv] == DNGN_STONE_ARCH)
         {
             str  = uppercase_first(in_view_name[iv]);
