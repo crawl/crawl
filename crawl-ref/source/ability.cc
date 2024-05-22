@@ -588,6 +588,8 @@ static vector<ability_def> &_get_ability_list()
         // Dithmenos
         { ABIL_DITHMENOS_SHADOWSLIP, "Shadowslip",
             4, 60, 2, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
+        { ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL, "Primordial Nightfall",
+            8, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Ru
         { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
@@ -2374,6 +2376,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
+    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+    {
+        if (!quiet)
+            mpr("Night has already fallen.");
+        return false;
+    }
+    return true;
+
     default:
         return true;
     }
@@ -3579,6 +3590,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_DITHMENOS_SHADOWSLIP:
         return dithmenos_shadowslip(fail);
+
+    case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
+        return dithmenos_nightfall(fail);
 
     case ABIL_GOZAG_POTION_PETITION:
         run_uncancel(UNC_POTION_PETITION, 0);

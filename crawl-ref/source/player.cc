@@ -772,7 +772,27 @@ void update_vision_range()
     if (player_equip_unrand(UNRAND_NIGHT))
         you.current_vision = you.current_vision * 3 / 4;
 
-    ASSERT(you.current_vision > 0);
+    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+    {
+        // Determine the percentage of Nightfall's max duration that has passed,
+        // then use a hermite curve to map this to the actual sight radius value.
+        const int max_dur = you.props[NIGHTFALL_INITIAL_DUR_KEY].get_int();
+        const int dur = (max_dur - you.duration[DUR_PRIMORDIAL_NIGHTFALL]) * 100 / max_dur;
+        const int intensity = (3 * dur * dur / 100) - (2 * dur * dur * dur / 10000);
+        int vision = intensity * you.normal_vision / 100;
+        // Cap radius 0 sight at no more than 5 turns (otherwise kobolds and/or
+        // high invo characters can hold all monsters out of sight for too long)
+        if (max_dur - you.duration[DUR_PRIMORDIAL_NIGHTFALL] > 50)
+            vision = max(1, vision);
+
+        // Immediately end the effect when it reaches our normal vision level
+        if (vision >= you.current_vision)
+            you.duration[DUR_PRIMORDIAL_NIGHTFALL] = 1;
+        else
+            you.current_vision = vision;
+    }
+
+    ASSERT(you.current_vision >= 0);
     set_los_radius(you.current_vision);
 }
 

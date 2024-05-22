@@ -599,6 +599,18 @@ previously focused on you will instead focus their attention exclusively upon
 your shadow for several turns before they realize their mistake - though if they
 succeed in destroying your shadow, the illusion will end prematurely.
 %%%%
+Primordial Nightfall ability
+
+Invokes a night from before the stars first burned in the sky, engulfing your
+surroundings in impenetrable darkness. The user's sight radius will be reduced
+to nothing, preventing enemies from tracking or aiming abilities at you, and
+slowly expand back to normal over the duration of the effect.
+
+It cannot be invoked again until its effect has fully ended, as even the very
+first night of creation must eventually must give way to day.
+
+Invocations skill increases the duration of the effect.
+%%%%
 # Gozag
 Potion Petition ability
 

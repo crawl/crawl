@@ -78,6 +78,8 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define YRED_BLASPHEMY_CENTER_KEY "blasphemy_center"
 #define YRED_SHACKLES_KEY "shackles_bound"
 
+#define NIGHTFALL_INITIAL_DUR_KEY "nightfall_initial_dur"
+
 struct bolt;
 class stack_iterator;
 
@@ -165,6 +167,7 @@ void beogh_increase_orcification();
 void dithmenos_change_shadow_appearance(monster& shadow, int dur);
 string dithmenos_cannot_shadowslip_reason();
 spret dithmenos_shadowslip(bool fail);
+spret dithmenos_nightfall(bool fail);
 
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();

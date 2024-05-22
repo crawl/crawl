@@ -991,3 +991,7 @@ Fusillade status
 
 You are hurling conjured alchemical reagents at nearby monsters.
 %%%%
+Nightfall status
+
+You are channelling the deepest night, greatly reducing your sight range. It
+will gradually return to normal over time.

@@ -2866,6 +2866,20 @@ spret dithmenos_shadowslip(bool fail)
     return spret::success;
 }
 
+spret dithmenos_nightfall(bool fail)
+{
+    fail_check();
+
+    mpr("The world around you is engulfed in lightless night!");
+
+    const int dur = (random_range(16, 24) + you.skill_rdiv(SK_INVOCATIONS, 2, 3))
+                        * BASELINE_DELAY;
+    you.duration[DUR_PRIMORDIAL_NIGHTFALL] = dur;
+    you.props[NIGHTFALL_INITIAL_DUR_KEY] = dur;
+
+    return spret::success;
+}
+
 static potion_type _gozag_potion_list[][4] =
 {
     { POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS, NUM_POTIONS },
