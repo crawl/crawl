@@ -1789,129 +1789,45 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string str;
 
         if (in_view[iv] == DNGN_LAVA)
+            str = _get_xom_speech("feature lava");
+        else if (in_view[iv] == DNGN_SHALLOW_WATER
+                 || in_view[iv] == DNGN_FOUNTAIN_BLUE
+                 || in_view[iv] == DNGN_FOUNTAIN_SPARKLING)
         {
-            str  = uppercase_first(in_view_name[iv]);
-            str += " spits out sparks!";
-            messages.emplace_back(str);
+            str = _get_xom_speech("feature shallow water");
         }
-
-        if (in_view[iv] == DNGN_SHALLOW_WATER
-            || in_view[iv] == DNGN_DEEP_WATER
-            || in_view[iv] == DNGN_FOUNTAIN_BLUE
-            || in_view[iv] == DNGN_FOUNTAIN_SPARKLING
-            || in_view[iv] == DNGN_FOUNTAIN_BLOOD)
+        else if (in_view[iv] == DNGN_DEEP_WATER)
+            str = _get_xom_speech("feature deep water");
+        else if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
+            str = _get_xom_speech("feature blood");
+        else if (in_view[iv] == DNGN_DRY_FOUNTAIN)
+            str = _get_xom_speech("feature dry");
+        else if (in_view[iv] == DNGN_ORCISH_IDOL
+                 || in_view[iv] == DNGN_GRANITE_STATUE
+                 || in_view[iv] == DNGN_METAL_STATUE)
         {
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly bubbles.";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly swirls.";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly glows.";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly flashes ";
-            str += getSpeakString("any_colour");
-            str += ".";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly boils.";
-            messages.emplace_back(str);
-
-            if (in_view[iv] == DNGN_DEEP_WATER)
-            {
-                str  = "From the corner of your eye, you spot something "
-                       "lurking in ";
-                str += in_view_name[iv];
-                str += ".";
-                messages.emplace_back(str);
-            }
-
-            if (in_view[iv] == DNGN_FOUNTAIN_BLOOD)
-            {
-                str  = uppercase_first(in_view_name[iv]);
-                str += " briefly coagulates.";
-                messages.emplace_back(str);
-            }
+            str = _get_xom_speech("feature statue");
         }
-
-        if (in_view[iv] == DNGN_DRY_FOUNTAIN)
+        else if (in_view[iv] == DNGN_CLEAR_ROCK_WALL
+                 || in_view[iv] == DNGN_CLEAR_STONE_WALL
+                 || in_view[iv] == DNGN_CLEAR_PERMAROCK_WALL
+                 || in_view[iv] == DNGN_CRYSTAL_WALL)
         {
-            str  = "Water briefly sprays from ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-
-            str  = "Blood briefly sprays from ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-
-            str  = "Dust puffs up from ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
+            str = _get_xom_speech("feature translucent wall");
         }
+        else if (in_view[iv] == DNGN_METAL_WALL)
+            str = _get_xom_speech("feature metal wall");
+        else if (in_view[iv] == DNGN_STONE_ARCH)
+            str = _get_xom_speech("feature stone arch");
 
-        if (in_view[iv] == DNGN_ORCISH_IDOL
-            || in_view[iv] == DNGN_GRANITE_STATUE
-            || in_view[iv] == DNGN_METAL_STATUE)
+        if (!str.empty())
         {
-            str  = uppercase_first(in_view_name[iv]);
-            str += " turns to glare at you.";
-            messages.emplace_back(str);
+            str = maybe_pick_random_substring(str);
 
-            str  = uppercase_first(in_view_name[iv]);
-            str += " turns to stare at you.";
-            messages.emplace_back(str);
+            str = replace_all(str, "@The_feature@",
+                              uppercase_first(in_view_name[iv]));
+            str = replace_all(str, "@the_feature@", in_view_name[iv]);
 
-            str  = uppercase_first(in_view_name[iv]);
-            str += " turns away from you.";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " does an impromptu tapdance.";
-            messages.emplace_back(str);
-        }
-
-        if (in_view[iv] == DNGN_CLEAR_ROCK_WALL
-            || in_view[iv] == DNGN_CLEAR_STONE_WALL
-            || in_view[iv] == DNGN_CLEAR_PERMAROCK_WALL
-            || in_view[iv] == DNGN_CRYSTAL_WALL)
-        {
-            str  = "Dim shapes swim through ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " is briefly covered with ";
-            str += getSpeakString("any_colour_pattern");
-            str += ".";
-            messages.emplace_back(str);
-        }
-
-        if (in_view[iv] == DNGN_METAL_WALL)
-        {
-            str  = "Tendrils of electricity crawl over ";
-            str += in_view_name[iv];
-            str += ".";
-            messages.emplace_back(str);
-        }
-
-        if (in_view[iv] == DNGN_STONE_ARCH)
-        {
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly shows a sunny meadow on the other side.";
-            messages.emplace_back(str);
-
-            str  = uppercase_first(in_view_name[iv]);
-            str += " briefly shows a lifeless wasteland on the other side.";
             messages.emplace_back(str);
         }
     }

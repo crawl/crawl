@@ -108,6 +108,54 @@ Xom's power almost touches on you for a moment.
 
 You almost hear Xom's maniacal laughter.
 %%%%
+Xom feature lava
+
+@The_feature@ spits out sparks!
+%%%%
+Xom feature shallow water
+
+@The_feature@ briefly [bubbles|swirls|glows|flashes @any_colour@|boils].
+%%%%
+Xom feature deep water
+
+@Xom feature shallow water@
+
+From the corner of your eye, you spot something lurking in @the_feature@.
+%%%%
+Xom feature blood
+
+@Xom feature shallow water@
+
+@The_feature@ briefly coagulates.
+%%%%
+Xom feature dry
+
+[Water|Blood] briefly sprays from @the_feature@.
+
+Dust puffs up from @the_feature@.
+%%%%
+Xom feature statue
+
+@The_feature@ turns to [glare|stare] at you.
+
+@The_feature@ turns away from you.
+
+@The_feature@ does an impromptu tapdance.
+%%%%
+Xom feature translucent wall
+
+Dim shapes swim through @the_feature@.
+
+@The_feature@ is briefly covered in @any_colour_pattern@.
+%%%%
+Xom feature metal wall
+
+Tendrils of electricity crawl over @the_feature@.
+%%%%
+Xom feature stone arch
+
+@The_feature@ briefly shows a [sunny meadow|lifeless wasteland] on the other side.
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
