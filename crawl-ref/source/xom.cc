@@ -1853,6 +1853,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (in_view[DNGN_DRY_FOUNTAIN])
     {
         priority.emplace_back("Water briefly sprays from the dry fountain.");
+        priority.emplace_back("Blood briefly sprays from the dry fountain.");
         priority.emplace_back("Dust puffs up from the dry fountain.");
     }
 
