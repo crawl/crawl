@@ -1795,8 +1795,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (in_view[DNGN_DEEP_WATER])
     {
-        messages.emplace_back("From the corner of your eye you spot something "
-                           "lurking in the deep water.");
+        messages.emplace_back("From the corner of your eye, you spot "
+                              "something lurking in the deep water.");
     }
 
     if (in_view[DNGN_ORCISH_IDOL])
