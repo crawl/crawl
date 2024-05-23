@@ -234,6 +234,16 @@ cha-cha
 
 tapdance
 %%%%
+Xom unarmed one hand
+
+A fancy cane briefly appears in your @hand@.
+%%%%
+Xom unarmed two hands
+
+@Xom unarmed one hand@
+
+Two fancy canes briefly appear in your @hands@.
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.

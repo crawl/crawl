@@ -1957,10 +1957,19 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (you_can_wear(EQ_WEAPON, true) != false
         && !you.slot_item(EQ_WEAPON))
     {
-        string str = "A fancy cane briefly appears in your ";
-        str += you.hand_name(false);
-        str += ".";
-        messages.push_back(str);
+        string str =_get_xom_speech(
+                you.get_mutation_level(MUT_MISSING_HAND) ? "unarmed one hand"
+                                                         : "unarmed two hands");
+
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+
+            str = replace_all(str, "@hand@", you.hand_name(false));
+            str = replace_all(str, "@hands@", you.hand_name(true));
+
+            messages.push_back(str);
+        }
     }
 
     if (you.slot_item(EQ_CLOAK))
