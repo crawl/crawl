@@ -1877,8 +1877,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
         if (feat_has_solid_floor(feat))
         {
             str = _get_xom_speech(
-                      item.quantity == 1 ? "underfoot inventory singular"
-                                         : "underfoot inventory plural");
+                      item.quantity == 1 ? "floor inventory singular"
+                                         : "floor inventory plural");
         }
         else
             str = _get_xom_speech(
