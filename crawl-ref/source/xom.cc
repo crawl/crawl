@@ -1957,9 +1957,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (you_can_wear(EQ_WEAPON, true) != false
         && !you.slot_item(EQ_WEAPON))
     {
-        string str =_get_xom_speech(
-                you.get_mutation_level(MUT_MISSING_HAND) ? "unarmed one hand"
-                                                         : "unarmed two hands");
+        const bool one_handed = you.slot_item(EQ_OFFHAND)
+                                || you.get_mutation_level(MUT_MISSING_HAND);
+        string str =_get_xom_speech(one_handed ? "unarmed one hand"
+                                               : "unarmed two hands");
 
         if (!str.empty())
         {
