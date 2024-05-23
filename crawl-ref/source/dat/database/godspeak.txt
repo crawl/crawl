@@ -244,6 +244,14 @@ Xom unarmed two hands
 
 Two fancy canes briefly appear in your @hands@.
 %%%%
+Xom cloak slot
+
+@Your_item@ billows in an unfelt wind.
+
+@Your_item@ briefly wraps itself around your head!
+
+@Your_item@ is briefly covered in lurid @any_colour_pattern@!
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.

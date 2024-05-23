@@ -1972,22 +1972,20 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
-    if (you.slot_item(EQ_CLOAK))
+    if (item_def* item = you.slot_item(EQ_CLOAK))
     {
-        item_def* item = you.slot_item(EQ_CLOAK);
+        string name = item->name(DESC_YOUR, false, false, false);
+        string str = _get_xom_speech("cloak slot");
 
-        if (item->sub_type == ARM_CLOAK)
-            messages.emplace_back("Your cloak billows in an unfelt wind.");
-        else if (item->sub_type == ARM_SCARF)
-            messages.emplace_back("Your scarf briefly wraps itself around "
-                                  "your head!");
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
 
-        string str = "Your ";
-        str += item->name(DESC_BASENAME, false, false, false);
-        str += " is briefly covered in lurid ";
-        str += getSpeakString("any_colour_pattern");
-        str += "!";
-        messages.push_back(str);
+            str = replace_all(str, "@Your_item@", uppercase_first(name));
+            str = replace_all(str, "@your_item@", name);
+
+            messages.push_back(str);
+        }
     }
 
     if (item_def* item = you.slot_item(EQ_HELMET))
