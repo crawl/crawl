@@ -1868,16 +1868,22 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
-    if (feat_has_solid_floor(feat) && !inv_items.empty())
+    if (!inv_items.empty())
     {
         const item_def &item = **random_iterator(inv_items);
         string name = item.name(DESC_YOUR, false, false, false);
         string str;
 
-        if (item.quantity == 1)
-            str = _get_xom_speech("item single");
+        if (feat_has_solid_floor(feat))
+        {
+            str = _get_xom_speech(
+                      item.quantity == 1 ? "underfoot inventory singular"
+                                         : "underfoot inventory plural");
+        }
         else
-            str = _get_xom_speech("item stack");
+            str = _get_xom_speech(
+                      item.quantity == 1 ? "inventnry singular"
+                                         : "inventory plural");
 
         if (!str.empty())
         {
@@ -2025,21 +2031,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         if (!str.empty())
             messages.push_back(str);
-    }
-
-    ////////
-    // Misc.
-    if (!inv_items.empty())
-    {
-        item_def &item = **random_iterator(inv_items);
-
-        string name = item.name(DESC_YOUR, false, false, false);
-        string verb = random_choose("glow", "vibrate");
-
-        if (item.quantity == 1)
-            verb += "s";
-
-        messages.push_back(name + " briefly " + verb + ".");
     }
 
     if (!priority.empty() && coinflip())

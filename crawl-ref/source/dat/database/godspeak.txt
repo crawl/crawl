@@ -172,13 +172,29 @@ Xom underfoot airborne water
 
 Something invisible splashes into @the_feature@ beneath you!
 %%%%
-Xom item single
+Xom inventory singular
+
+@Your_item@ briefly [glows|vibrates|flashes @any_colour@].
+%%%%
+Xom inventory plural
+
+One of @your_item@ briefly [glows|vibrates|flashes @any_colour@].
+
+@Your_item@ briefly [glow|vibrate|flash @any_colour@].
+%%%%
+Xom underfoot inventory singular
+
+@Xom inventory singular@
 
 @Your_item@ falls out of your pack, then immediately jumps back in!
 %%%%
-Xom item stack
+Xom underfoot inventory plural
+
+@Xom inventory plural@
 
 One of @your_item@ falls out of your pack, then immediately jumps back in!
+
+@Your_item@ fall out of your pack, then immediately jump back in!
 %%%%
 Xom rearrange the pieces
 
