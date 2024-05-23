@@ -2021,17 +2021,18 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (item_def* item = you.slot_item(EQ_OFFHAND))
     {
-        string str = "Your ";
-        str += item->name(DESC_BASENAME, false, false, false);
-        str += " spins!";
-        messages.push_back(str);
+        string name = "Your " + item->name(DESC_BASENAME, false, false, false);
+        string str = _get_xom_speech("offhand slot");
 
-        str = "Your ";
-        str += item->name(DESC_BASENAME, false, false, false);
-        str += " briefly flashes a lurid ";
-        str += getSpeakString("any_colour");
-        str += "!";
-        messages.push_back(str);
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+
+            str = replace_all(str, "@Your_item@", uppercase_first(name));
+            str = replace_all(str, "@your_item@", name);
+
+            messages.push_back(str);
+        }
     }
 
     if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))

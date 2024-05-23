@@ -256,6 +256,12 @@ Xom helmet slot
 
 @Your_item@ leaps into the air, briefly spins, then lands back on your head!
 %%%%
+Xom offhand slot
+
+@Your_item@ spins!
+
+@Your_item@ briefly flashes a lurid @any_colour@!
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
