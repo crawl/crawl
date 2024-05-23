@@ -140,7 +140,7 @@ Xom feature statue
 
 @The_feature@ turns away from you.
 
-@The_feature@ does an impromptu @dance_name@.
+@The_feature@ spins in place.
 %%%%
 Xom feature translucent wall
 
