@@ -172,6 +172,14 @@ Xom underfoot airborne water
 
 Something invisible splashes into @the_feature@ beneath you!
 %%%%
+Xom item single
+
+@Your_item@ falls out of your pack, then immediately jumps back in!
+%%%%
+Xom item stack
+
+One of @your_item@ falls out of your pack, then immediately jumps back in!
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.

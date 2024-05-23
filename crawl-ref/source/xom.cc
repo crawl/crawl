@@ -1871,17 +1871,23 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (feat_has_solid_floor(feat) && !inv_items.empty())
     {
         const item_def &item = **random_iterator(inv_items);
+        string name = item.name(DESC_YOUR, false, false, false);
+        string str;
 
-        string name;
         if (item.quantity == 1)
-            name = item.name(DESC_YOUR, false, false, false);
+            str = _get_xom_speech("item single");
         else
+            str = _get_xom_speech("item stack");
+
+        if (!str.empty())
         {
-            name  = "One of ";
-            name += item.name(DESC_YOUR, false, false, false);
+            str = maybe_pick_random_substring(str);
+
+            str = replace_all(str, "@Your_item@", uppercase_first(name));
+            str = replace_all(str, "@your_item@", name);
+
+            messages.emplace_back(str);
         }
-        messages.push_back(name + " falls out of your pack, then "
-                           "immediately jumps back in!");
     }
 
     //////////////////////////////////////////////
