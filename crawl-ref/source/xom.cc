@@ -1924,8 +1924,11 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.emplace_back("Your eyebrows wriggle.");
     }
 
-    if (you.species != SP_NAGA && !you.fishtail && !you.airborne())
+    if (you.species != SP_NAGA && !you.fishtail && !you.airborne()
+        && !you.cannot_act())
+    {
         messages.emplace_back("You do an impromptu tapdance.");
+    }
 
     ///////////////////////////
     // Equipment related stuff.
