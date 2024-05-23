@@ -4606,6 +4606,21 @@ static void _get_spell_description(const spell_type spell,
             description += stringize_glyph(mons_char(mon_owner->type)) + "..-->";
         else
             description += range_string(range, range, mons_char(mon_owner->type));
+
+        if (crawl_state.need_save && you_worship(GOD_DITHMENOS))
+        {
+            if (!valid_marionette_spell(spell))
+            {
+                description += "\n\n<magenta>This spell cannot be performed via "
+                               "Aphotic Marionette.</magenta>\n";
+            }
+            else if (spell_has_marionette_override(spell))
+            {
+                description += "\n\n<magenta>When cast via Aphotic Marionette, "
+                               "this spell will affect the player instead.";
+            }
+        }
+
         description += "\n";
 
         // Report summon cap

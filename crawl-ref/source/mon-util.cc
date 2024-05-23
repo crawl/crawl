@@ -5215,6 +5215,11 @@ bool mons_is_player_shadow(const monster& mon)
         && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
+bool mons_is_marionette(const monster& mon)
+{
+    return testbits(mon.flags, MF_MARIONETTE);
+}
+
 // Zero-damage attacks with special effects (constriction, drowning, pure fire,
 // etc.) aren't counted by default, since this is used to decide whether the
 // monster can go berserk or be weakened, both of which require an attack with

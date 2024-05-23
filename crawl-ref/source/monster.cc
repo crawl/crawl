@@ -250,6 +250,14 @@ mon_attitude_type monster::temp_attitude() const
     }
     if (has_ench(ENCH_CHARM) || has_ench(ENCH_FRIENDLY_BRIBED))
         return ATT_FRIENDLY;
+    else if (testbits(flags, MF_MARIONETTE))
+    {
+        // This is so they don't count as 'friendly' for all the logic that
+        // prevents friendly monsters from casting various spells at all, while
+        // still count as 'aligned' with friendly monsters and not aligned with
+        // hostile ones.
+        return ATT_GOOD_NEUTRAL;
+    }
     else if (has_ench(ENCH_NEUTRAL_BRIBED))
         return ATT_GOOD_NEUTRAL; // ???
     else

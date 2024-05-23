@@ -720,7 +720,6 @@ static const duration_def duration_data[] =
       "You are seeking vengeance for the death of your brethren.", D_NO_FLAGS},
     { DUR_CONSTRICTION_IMMUNITY, 0, "", "", "constrict immune", "", D_NO_FLAGS, {{""}}},
 
-
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

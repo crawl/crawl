@@ -589,6 +589,22 @@ previously focused on you will instead focus their attention exclusively upon
 your shadow for several turns before they realize their mistake - though if they
 succeed in destroying your shadow, the illusion will end prematurely.
 %%%%
+Aphotic Marionette ability
+
+Grabs hold of another creature's shadow and rapidly unleashes their spells and
+abilities as if they were your own, aimed at random enemies. Creatures they
+summon this way will belong to you, and many beneficial effects that they would
+apply to themselves will be applied to you instead. You are also fully protected
+from any damage they would cause.
+
+Can only be used on creatures with eligible spells and only while another enemy
+is present for them to target. The process also leaves the victim's shadow too
+dim to grasp a second time - once used successfully on a target, it may never be
+used on them again.
+
+(Not all spells can be cast via this method; those which cannot will be marked
+with an exclamation mark when examined.)
+%%%%
 Primordial Nightfall ability
 
 Invokes a night from before the stars first burned in the sky, engulfing your

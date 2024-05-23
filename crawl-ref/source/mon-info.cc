@@ -134,6 +134,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAGNETISED,      MB_MAGNETISED },
     { ENCH_RIMEBLIGHT,      MB_RIMEBLIGHT },
     { ENCH_ARMED,           MB_ARMED },
+    { ENCH_SHADOWLESS,      MB_SHADOWLESS },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

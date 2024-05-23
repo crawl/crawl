@@ -2285,6 +2285,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_MAGNETISED, TILEI_BULLSEYE },  // Placeholder
     { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
     { MB_ARMED, TILEI_UNDYING_ARMS },
+    { MB_SHADOWLESS, TILEI_SHADOWLESS },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3979,6 +3980,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Dithmenos
     case ABIL_DITHMENOS_SHADOWSLIP:
         return TILEG_ABILITY_DITHMENOS_SHADOWSLIP;
+    case ABIL_DITHMENOS_APHOTIC_MARIONETTE:
+        return TILEG_ABILITY_DITHMENOS_PANTOMIME;
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
         return TILEG_ABILITY_DITHMENOS_NIGHTFALL;
     // Gozag

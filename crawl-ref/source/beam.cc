@@ -3162,6 +3162,10 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
+    // Marionettes can't hurt the player with anything, so don't worry about it.
+    if (agent() && agent()->is_monster() && mons_is_marionette(*agent()->as_monster()))
+        return false;
+
     if (you.cloud_immune() && is_big_cloud())
         return true;
 
@@ -4684,7 +4688,9 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
             const monster* mon_source = agent() ? agent()->as_monster() : nullptr;
             if (mon_source && mon_source->summoner == mon->mid)
                 friend_info.power = 100;
-            else
+            // Marionettes will avoid harming other 'allies', but are
+            // deliberately reckless about themselves.
+            else if (mon_source != mon || !testbits(mon_source->flags, MF_MARIONETTE))
             {
                 friend_info.power
                     += 2 * final * mon->get_experience_level() / preac;

@@ -1056,9 +1056,6 @@ static bool _shadow_will_act(bool spell, bool melee)
     if (!have_passive(pasv))
         return false;
 
-    if (you.duration[DUR_MIDNIGHT_PANTOMIME])
-        return true;
-
     // If we're making a weapon shadow and haven't done so for a while,
     // guarantee it. (This helps consistency when fishing for shadowslip stab
     // opportunities a lot.)

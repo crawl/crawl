@@ -414,9 +414,11 @@ void lose_level()
  * @param announce_full     Whether to print messages even when fully resisting
  *                          the drain.
  * @param ignore_protection Whether to ignore the player's rN.
+ * @param quiet             Whether to hide all messages that would be printed
+ *                          by this.
  * @return                  Whether draining occurred.
  */
-bool drain_player(int power, bool announce_full, bool ignore_protection)
+bool drain_player(int power, bool announce_full, bool ignore_protection, bool quiet)
 {
     if (crawl_state.disables[DIS_AFFLICTIONS])
         return false;
@@ -425,7 +427,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (protection == 3)
     {
-        if (announce_full)
+        if (announce_full && !quiet)
             canned_msg(MSG_YOU_RESIST);
 
         return false;
@@ -433,7 +435,8 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (protection > 0)
     {
-        canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        if (!quiet)
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
     }
 
@@ -448,7 +451,8 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
         dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
         calc_hp();
 
-        mpr("You feel drained.");
+        if (!quiet)
+            mpr("You feel drained.");
         xom_is_stimulated(15);
         return true;
     }
@@ -993,6 +997,14 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         return;
 
     int drain_amount = 0;
+
+    // Marionettes will never hurt the player with their spells (even if they
+    // have somehow killed themselves in the process)
+    if (monster* mon_source = cached_monster_copy_by_mid(source))
+    {
+        if (testbits(mon_source->flags, MF_MARIONETTE))
+            dam = 0;
+    }
 
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
     if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
