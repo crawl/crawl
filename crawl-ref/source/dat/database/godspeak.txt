@@ -252,6 +252,10 @@ Xom cloak slot
 
 @Your_item@ is briefly covered in lurid @any_colour_pattern@!
 %%%%
+Xom helmet slot
+
+@Your_item@ leaps into the air, briefly spins, then lands back on your head!
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
