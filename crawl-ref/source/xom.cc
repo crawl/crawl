@@ -1882,7 +1882,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
         else
             str = _get_xom_speech(
-                      item.quantity == 1 ? "inventnry singular"
+                      item.quantity == 1 ? "inventory singular"
                                          : "inventory plural");
 
         if (!str.empty())
