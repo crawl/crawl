@@ -1909,8 +1909,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     {
         string str = "A monocle briefly appears over your ";
-        str += random_choose("right", "left");
-        str += " eye.";
+        if (!you.get_mutation_level(MUT_MISSING_EYE))
+        {
+            str += random_choose("right", "left");
+            str += " ";
+        }
+        str += "eye.";
         messages.push_back(str);
     }
 
