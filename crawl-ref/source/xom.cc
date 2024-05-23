@@ -1975,7 +1975,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (item_def* item = you.slot_item(EQ_CLOAK))
     {
-        string name = item->name(DESC_YOUR, false, false, false);
+        string name = "Your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("cloak slot");
 
         if (!str.empty())
@@ -1991,7 +1991,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (item_def* item = you.slot_item(EQ_HELMET))
     {
-        string name = item->name(DESC_YOUR, false, false, false);
+        string name = "Your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("helmet slot");
 
         if (!str.empty())
