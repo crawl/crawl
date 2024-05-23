@@ -235,6 +235,10 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
+    // This takes priority over everything.
+    if (attitude == ATT_MARIONETTE)
+        return ATT_MARIONETTE;
+
     if (has_ench(ENCH_FRENZIED))
         return ATT_NEUTRAL;
 

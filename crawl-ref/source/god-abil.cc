@@ -59,6 +59,7 @@
 #include "message.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-pathfind.h"
@@ -2876,6 +2877,231 @@ spret dithmenos_nightfall(bool fail)
                         * BASELINE_DELAY;
     you.duration[DUR_PRIMORDIAL_NIGHTFALL] = dur;
     you.props[NIGHTFALL_INITIAL_DUR_KEY] = dur;
+
+    return spret::success;
+}
+
+bool valid_marionette_spell(spell_type spell)
+{
+    switch (spell)
+    {
+        // Generally bad for the player (or cannot be stolen by them)
+        case SPELL_REPEL_MISSILES:
+        case SPELL_SPRINT:
+        case SPELL_ROLL:
+        case SPELL_WOODWEAL:
+        case SPELL_MINOR_HEALING:
+        case SPELL_MAJOR_HEALING:
+        case SPELL_INJURY_MIRROR:
+        case SPELL_WARNING_CRY:
+        case SPELL_SENTINEL_MARK:
+        case SPELL_WORD_OF_RECALL:
+        case SPELL_SEAL_DOORS:
+        case SPELL_STILL_WINDS:
+        case SPELL_DIG:
+        case SPELL_SILENCE:
+        case SPELL_WALL_OF_BRAMBLES:
+        case SPELL_CALL_TIDE:
+        case SPELL_DRUIDS_CALL:
+
+        // Doesn't do anything to monsters
+        case SPELL_MESMERISE:
+        case SPELL_SIREN_SONG:
+        case SPELL_AVATAR_SONG:
+
+        // Would be buggy to try
+        case SPELL_CREATE_TENTACLES:
+        case SPELL_FAKE_MARA_SUMMON:
+
+        // Generally likely to be useless
+        case SPELL_CANTRIP:
+        case SPELL_BLINK:
+        case SPELL_BLINK_ALLIES_AWAY:
+        case SPELL_BLINK_ALLIES_ENCIRCLE:
+        case SPELL_BLINK_AWAY:
+        case SPELL_BLINK_CLOSE:
+        case SPELL_BLINK_RANGE:
+        case SPELL_WIND_BLAST:
+        case SPELL_DIMENSION_ANCHOR:
+        case SPELL_INK_CLOUD:
+
+        // Could possibly be adapted to function, but currently doesn't
+        case SPELL_MALIGN_GATEWAY:
+        case SPELL_SPECTRAL_CLOUD:
+        case SPELL_CORRUPTING_PULSE:
+        case SPELL_OLGREBS_TOXIC_RADIANCE:
+        case SPELL_POLAR_VORTEX:
+        case SPELL_SUMMON_ILLUSION:
+        case SPELL_BATTLESPHERE:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
+static bool _marionette_spell_attempt(monster& caster, spell_type spell, vector<monster*>& targs)
+{
+    shuffle_array(targs);
+
+    for (monster* targ : targs)
+    {
+        if (targ == &caster || !targ->alive())
+            continue;
+
+        caster.foe = targ->mindex();
+        caster.target = targ->pos();
+        if (try_mons_cast(caster, spell))
+            return true;
+    }
+
+    return false;
+}
+
+// Checks whether there is at least one valid target to use marionette on, and
+// one valid remaining monster for them to use as a foe, if you did so.
+string dithmenos_cannot_marionette_reason()
+{
+    bool found_marionette = false;
+    int audience_size = 0;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
+            continue;
+
+        if (!found_marionette && !mi->has_ench(ENCH_SHADOWLESS))
+        {
+            for (mon_spell_slot spell : mi->spells)
+            {
+                if (valid_marionette_spell(spell.spell))
+                {
+                    found_marionette = true;
+                    break;
+                }
+            }
+        }
+
+        ++audience_size;
+        if (audience_size >= 2 && found_marionette)
+            return "";
+    }
+
+    if (!found_marionette)
+        return "There isn't a suitable marionette in sight.";
+
+    if (audience_size < 2)
+        return "A shadow play requires a proper audience as well as an actor.";
+
+    // Should be unreachable
+    return "A shadow play requires a strange bug not to happen!";
+}
+
+spret dithmenos_marionette(monster& target, bool fail)
+{
+    vector<spell_type> mon_spells;
+    for (const mon_spell_slot slot : target.spells)
+    {
+        if (valid_marionette_spell(slot.spell))
+            mon_spells.push_back(slot.spell);
+    }
+
+    // Should be impossible, I think.
+    if (mon_spells.empty())
+        return spret::abort;
+
+    fail_check();
+
+    mprf("You grasp %s shadow with your own and put on a performance!",
+          target.name(DESC_ITS).c_str());
+
+    behaviour_event(&target, ME_WHACK, &you);
+
+    vector<monster*> valid_targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi)
+            && *mi != &target)
+        {
+            valid_targs.push_back(*mi);
+        }
+    }
+
+    int num_casts = 3 + max(0, you.skill_rdiv(SK_INVOCATIONS, 1, 6) - 2);
+    int num_successful_casts = 0;
+
+    const int old_foe = target.foe;
+    const coord_def old_target = target.target;
+    const int old_energy = target.speed_increment;
+    target.attitude = ATT_MARIONETTE;
+    env.final_effect_monster_cache.push_back(target);
+
+    // Attempt to cast all valid spells the monster has, in randomized order,
+    // (but using all spells at least once before repeating). End early if the
+    // monster dies or we fail to be able to validly cast any spell.
+    while (num_successful_casts < num_casts)
+    {
+        shuffle_array(mon_spells);
+        bool success = false;
+
+        for (size_t j = 0; j < mon_spells.size(); ++j)
+        {
+            if (_marionette_spell_attempt(target, mon_spells[j], valid_targs))
+            {
+                ++num_successful_casts;
+                success = true;
+            }
+
+            if (!target.alive())
+                break;
+
+            if (num_successful_casts >= num_casts)
+                break;
+        }
+
+        // Skip trying for more spells if we just tried every spell we have and
+        // it didn't work.
+        if (!target.alive() || !success)
+            break;
+    }
+
+    // Return monster to its prior state (after a fashion)
+    if (target.alive())
+    {
+        target.foe = old_foe;
+        target.target = old_target;
+        target.speed_increment = old_energy;
+        target.attitude = ATT_HOSTILE;
+    }
+
+    // Charge piety based on how many spells were actually performed.
+    // No additional cost if nothing happened, reduced cost for 1, standard
+    // cost for anything greater than 1.
+    if (!num_successful_casts)
+    {
+        mpr("...but nothing seems to happen.");
+        return spret::success;
+    }
+
+    // 1 piety was paid up front, so imitates a standard 3 piety ability.
+    int piety_cost = random_range(2, 5);
+    if (num_successful_casts == 1)
+        piety_cost = div_rand_round(piety_cost, 2);
+    lose_piety(piety_cost);
+
+    if (!target.alive())
+    {
+        mpr("Your performance comes to an abrupt end.");
+        return spret::success;
+    }
+
+    target.add_ench(ENCH_SHADOWLESS);
+    mprf("%s shadow slips away and your performance ends.",
+            target.name(DESC_ITS).c_str());
+
+    // Let the monster complain about what you did to them, in their own way.
+    string msg = getSpeakString(target.name(DESC_PLAIN) + " marionette");
+    if (!msg.empty() && (mons_is_unique(target.type) || one_chance_in(4)))
+        mons_speaks_msg(&target, msg, MSGCH_TALK);
 
     return spret::success;
 }

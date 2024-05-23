@@ -3848,6 +3848,10 @@ VISUAL:@The_monster@ tugs at @possessive@ hair.
 
 VISUAL:@The_monster@ twirls gently on the spot.
 %%%%
+Donald marionette
+
+@The_monster@ says, "Don't use me like a cheap sock puppet. I hate that."
+%%%%
 Donald killed
 
 w:100

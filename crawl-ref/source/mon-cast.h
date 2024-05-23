@@ -42,6 +42,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                mon_spell_slot_flags slot_flags, bool do_noise = true);
+bool try_mons_cast(monster& mons, spell_type spell);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags);
 bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
@@ -52,6 +53,8 @@ void mons_cast_flay(monster &caster, mon_spell_slot, bolt&);
 bool mons_word_of_recall(monster* mons, int recall_target);
 void setup_breath_timeout(monster* mons);
 bool mons_can_bind_soul(monster* binder, monster* bound);
+
+bool spell_has_marionette_override(spell_type spell);
 
 int living_spell_count(spell_type spell, bool random);
 spell_type living_spell_type_for(monster_type mtyp);

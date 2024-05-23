@@ -635,7 +635,11 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     if (mon_targ)
         hurted = mons_adjust_flavoured(mon_targ, beam, hurted, doFlavour);
     else
+    {
         hurted = check_your_resists(hurted, beam.flavour, beam.name, 0, doFlavour);
+        if (agent->real_attitude() == ATT_MARIONETTE)
+            hurted = 0;
+    }
     dprf("damage done: %d", hurted);
 
     if (actual)

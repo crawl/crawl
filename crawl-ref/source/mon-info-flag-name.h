@@ -147,4 +147,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_VENGEANCE_TARGET, "target of vengeance", "target of orcish vengeance", "targets of vengeance"},
     { MB_MAGNETISED, "magnetised", "covered in magnetic dust", "magnetised"},
     { MB_RIMEBLIGHT, "rimeblight", "afflicted by rimeblight", "rimeblight"},
+    { MB_SHADOWLESS, "shadowless", "missing a shadow", "shadowless"},
 };

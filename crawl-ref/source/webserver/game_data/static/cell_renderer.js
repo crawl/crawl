@@ -1070,6 +1070,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.BERSERK:
                 case icons.IDEALISED:
                 case icons.TOUCH_OF_BEOGH:
+                case icons.SHADOWLESS:
                 // Anim. weap. and summoned might overlap, but that's okay
                 case icons.SUMMONED:
                 case icons.PERM_SUMMON:

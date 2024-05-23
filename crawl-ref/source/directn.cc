@@ -162,6 +162,9 @@ static void _wizard_make_friendly(monster* m)
         m->attitude = ATT_FRIENDLY;
         m->flags |= MF_NO_REWARD;
         break;
+    // This attitude is transient, so this should be impossible.
+    case ATT_MARIONETTE:
+        break;
     }
     mons_att_changed(m);
 }

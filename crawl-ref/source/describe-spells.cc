@@ -12,6 +12,7 @@
 #include "describe.h"
 #include "english.h"
 #include "externs.h"
+#include "god-abil.h"
 #include "invent.h"
 #include "libutil.h"
 #include "menu.h"
@@ -622,10 +623,18 @@ static void _describe_book(const spellbook_contents &book,
         const string range_str = _range_string(spell, mon_owner, hd);
         string effect_str = _effect_string(spell, mon_owner);
 
+        const string dith_marker = crawl_state.need_save
+                                   && you_worship(GOD_DITHMENOS)
+                                   && !valid_marionette_spell(spell)
+                                        ? "<magenta>!</magenta>"
+                                        : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : "";
+
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 30 - effect_len - range_len - effect_range_space;
+        const int chop_len = 30 - effect_len - range_len - effect_range_space
+                                - (dith_marker.length() > 0 ? 1 : 0);
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
@@ -638,7 +647,8 @@ static void _describe_book(const spellbook_contents &book,
             spell_name = "Crystal Spear";
         }
         description += formatted_string::parse_string(
-                make_stringf("%c - %s%s%s%s", spell_letter,
+                make_stringf("%c - %s%s%s%s%s", spell_letter,
+                             dith_marker.c_str(),
                              chop_string(spell_name, chop_len).c_str(),
                              effect_str.c_str(),
                              effect_range_space ? " " : "",
@@ -712,7 +722,15 @@ static void _write_book(const spellbook_contents &book,
     for (auto spell : book.spells)
     {
         tiles.json_open_object();
-        tiles.json_write_string("title", spell_title(spell));
+
+        const string dith_marker = crawl_state.need_save
+                                   && you_worship(GOD_DITHMENOS)
+                                   && !valid_marionette_spell(spell)
+                                        ? "<magenta>!</magenta>"
+                                        : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : "";
+
+        tiles.json_write_string("title", dith_marker + spell_title(spell));
         tiles.json_write_int("colour", _spell_colour(spell, source_item));
         tiles.json_write_name("tile");
         tiles.write_tileidx(tileidx_spell(spell));

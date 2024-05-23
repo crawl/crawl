@@ -602,7 +602,8 @@ static bool _is_pet_kill(killer_type killer, int i)
         return false;
 
     const monster* m = &env.mons[i];
-    if (m->friendly()) // This includes charmed monsters.
+    // This includes charmed monsters.
+    if (m->friendly() || m->attitude == ATT_MARIONETTE)
         return true;
 
     // Check if the monster was confused by you or a friendly, which

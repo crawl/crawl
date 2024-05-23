@@ -2174,7 +2174,7 @@ static const char *enchant_names[] =
     "rimeblight",
     "magnetised",
     "armed",
-    "misdirected", "changed appearance",
+    "misdirected", "changed appearance", "shadowless",
     "buggy", // NUM_ENCHANTMENTS
 };
 

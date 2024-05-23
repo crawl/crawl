@@ -226,6 +226,7 @@ enum enchant_type
     ENCH_ARMED,
     ENCH_MISDIRECTED,
     ENCH_CHANGED_APPEARANCE,  // Visual change for player shadow during Shadowslip
+    ENCH_SHADOWLESS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

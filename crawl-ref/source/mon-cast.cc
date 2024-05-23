@@ -807,6 +807,57 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         } } },
 };
 
+// Logic for special-cased Aphotic Marionette hijacking of monster buffs to
+// apply to the player instead.
+static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
+    { SPELL_HASTE, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(!you.duration[DUR_HASTE] && !you.stasis());
+        },
+        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            haste_player(random_range(15, 25));
+        }
+    } },
+    { SPELL_MIGHT, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(!you.duration[DUR_MIGHT]);
+        },
+        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            mprf(MSGCH_DURATION, "You feel very mighty all of a sudden.");
+            you.increase_duration(DUR_MIGHT, random_range(15, 25));
+        }
+    } },
+    { SPELL_INVISIBILITY, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(!you.duration[DUR_INVIS] && !you.backlit());
+        },
+        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+           you.increase_duration(DUR_INVIS, random_range(10, 15), 100);
+        }
+    } },
+    { SPELL_BERSERKER_RAGE, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(you.can_go_berserk(true, false, true));
+        },
+        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            you.go_berserk(true);
+        }
+    } },
+};
+
+static const mons_spell_logic* _get_spell_logic(const monster& caster, spell_type spell)
+{
+    // Use marionette overrides when appropriate
+    if (caster.attitude == ATT_MARIONETTE)
+    {
+        const mons_spell_logic* logic = map_find(marionette_spell_to_logic, spell);
+        if (logic)
+            return logic;
+    }
+
+    return map_find(spell_to_logic, spell);
+}
+
 /// Create the appropriate casting logic for a simple conjuration.
 static mons_spell_logic _conjuration_logic(spell_type spell)
 {
@@ -1682,7 +1733,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     if (!mons_spell_is_spell(real_spell))
         power = mons_power_for_hd(real_spell, mons->get_hit_dice());
 
-    const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+    const mons_spell_logic* logic = _get_spell_logic(*mons, spell_cast);
     if (logic && logic->setup_beam)
         logic->setup_beam(beam, *mons, power);
 
@@ -2139,7 +2190,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
         return true;
     default:
     {
-        const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+        const mons_spell_logic* logic = _get_spell_logic(*mons, spell_cast);
         if (logic && logic->setup_beam == nullptr)
         {
             pbolt.range = 0;
@@ -4322,7 +4373,7 @@ static bool _target_and_justify_spell(monster &mons,
 
     // special beam targeting sets the beam's target to an out-of-bounds coord
     // if no valid target was found.
-    const mons_spell_logic* logic = map_find(spell_to_logic, spell);
+    const mons_spell_logic* logic = _get_spell_logic(mons, spell);
     if (logic && logic->setup_beam && !in_bounds(beem.target))
         return false;
 
@@ -4615,6 +4666,42 @@ bool handle_mon_spell(monster* mons)
     }
 
     return false; // to let them do something else
+}
+
+// Attempts to have a given monster cast a given spell, while still performing
+// normal setup and target justification.
+//
+// Returns whether the spell was cast.
+bool try_mons_cast(monster& mons, spell_type spell)
+{
+    // Look up slot flags for the spell we're being asked to cast
+    mon_spell_slot slot;
+    for (const mon_spell_slot& _slot : mons.spells)
+    {
+        if (_slot.spell == spell)
+        {
+            slot = _slot;
+            break;
+        }
+    }
+    if (slot.spell == SPELL_NO_SPELL)
+        return false;
+
+    // Check if the spell is viable and target it
+    if (!ai_action::is_viable(_monster_spell_goodness(&mons, slot)))
+        return false;
+    bolt beam;
+    if (!_target_and_justify_spell(mons, beam, spell, false))
+        return false;
+
+    // Actually cast the spell
+    mons_cast(&mons, beam, spell, slot.flags);
+    return true;
+}
+
+bool spell_has_marionette_override(spell_type spell)
+{
+    return map_find(marionette_spell_to_logic, spell) != nullptr;
 }
 
 static int _monster_abjure_target(monster* target, int pow, bool actual)
@@ -6381,7 +6468,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     // single calculation permissible {dlb}
     const spell_flags flags = get_spell_flags(spell_cast);
     actor* const foe = mons->get_foe();
-    const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
+    const mons_spell_logic* logic = _get_spell_logic(*mons, spell_cast);
     const mon_spell_slot slot = {spell_cast, 0, slot_flags};
 
     int sumcount = 0;
@@ -8241,13 +8328,19 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     }
 
     // Don't bother casting a summon spell if we're already at its cap
-    if (summons_are_capped(spell)
-        && count_summons(mon, spell) >= summons_limit(spell, false))
+    // (Marionettes pass their summons onto the player, so count for them instead)
+    if (summons_are_capped(spell))
     {
-        return ai_action::impossible();
+        if (mon->attitude == ATT_MARIONETTE)
+        {
+            if (count_summons(&you, spell) >= summons_limit(spell, false))
+                return ai_action::impossible();
+        }
+        else if (count_summons(mon, spell) >= summons_limit(spell, false))
+            return ai_action::impossible();
     }
 
-    const mons_spell_logic* logic = map_find(spell_to_logic, spell);
+    const mons_spell_logic* logic = _get_spell_logic(*mon, spell);
     if (logic && logic->calc_goodness)
         return logic->calc_goodness(*mon);
 

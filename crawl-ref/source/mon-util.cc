@@ -3512,7 +3512,7 @@ bool should_attract_mons(const monster &m)
 
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
-    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;
+    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_MARIONETTE;
 }
 
 mon_attitude_type mons_attitude(const monster& m)

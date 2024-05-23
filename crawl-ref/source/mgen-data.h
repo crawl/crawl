@@ -165,12 +165,15 @@ struct mgen_data
     mgen_data &set_summoned(const actor* _summoner, int abjuration_dur,
                             int _summon_type, god_type _god = GOD_NO_GOD)
     {
-        // Hijack any summons created by player shadows to belong to the player
-        // instead (since the shadow is too emphemeral to keep them from poofing)
+        // Hijack any summons created by player shadows or marionettes to belong
+        // to the player (your shadow is too emphemeral to keep them from
+        // poofing and marionette is a one-shot effect)
         if (_summoner && _summoner->is_monster()
-            && mons_is_player_shadow(*_summoner->as_monster()))
+            && (mons_is_player_shadow(*_summoner->as_monster())
+                || _summoner->real_attitude() == ATT_MARIONETTE))
         {
             summoner = &you;
+            behaviour = BEH_FRIENDLY;
         }
         else
             summoner = _summoner;

@@ -168,6 +168,9 @@ void dithmenos_change_shadow_appearance(monster& shadow, int dur);
 string dithmenos_cannot_shadowslip_reason();
 spret dithmenos_shadowslip(bool fail);
 spret dithmenos_nightfall(bool fail);
+bool valid_marionette_spell(spell_type spell);
+string dithmenos_cannot_marionette_reason();
+spret dithmenos_marionette(monster& target, bool fail);
 
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();

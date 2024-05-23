@@ -3239,9 +3239,18 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
 bool hellfire_mortar_active(const actor& agent)
 {
+    // XXX: Really hate to put marionette-specific code in individual spells,
+    //      but this one doesn't have an obvious way to avoid it yet.
+    //
+    //      I'd really like to generalize 'count_summons' to count all things
+    //      with a given summoner, rather than just abjurable things with a
+    //      given summoner.
+    const mid_t agent_mid = (agent.real_attitude() == ATT_MARIONETTE
+                                ? MID_PLAYER : agent.mid);
+
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_HELLFIRE_MORTAR && mi->summoner == agent.mid)
+        if (mi->type == MONS_HELLFIRE_MORTAR && mi->summoner == agent_mid)
             return true;
     }
 

@@ -2375,3 +2375,35 @@ aff_type targeter_slouch::is_affected(coord_def loc)
 
     return AFF_YES;
 }
+
+targeter_marionette::targeter_marionette() :
+    targeter_smite(&you, LOS_RADIUS, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_marionette::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* mons = monster_at(a);
+    if (!mons || !you.can_see(*mons) || mons_is_firewood(*mons)
+        || mons->friendly())
+    {
+        return notify_fail("");
+    }
+
+    if (mons->has_ench(ENCH_SHADOWLESS))
+        return notify_fail("Their shadow is too faded to take hold of.");
+
+    if (mons->is_summoned())
+        return notify_fail("A summoned shadow is too ephemeral to take hold of.");
+
+    for (const mon_spell_slot slot : mons->spells)
+    {
+        if (valid_marionette_spell(slot.spell))
+            return true;
+    }
+
+    return false;
+}

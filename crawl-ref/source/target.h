@@ -639,3 +639,10 @@ public:
     targeter_slouch();
     virtual aff_type is_affected(coord_def loc) override;
 };
+
+class targeter_marionette : public targeter_smite
+{
+public:
+    targeter_marionette();
+    bool valid_aim(coord_def a) override;
+};

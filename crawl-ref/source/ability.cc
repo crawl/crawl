@@ -50,6 +50,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -270,6 +271,13 @@ struct ability_def
     {
         if (!piety_cost)
             return 0;
+
+        // Report a more accurate average cost to the UI, since actual payment
+        // is special-cased and most of it happens after confirming that the
+        // marionette acted.
+        if (ability == ABIL_DITHMENOS_APHOTIC_MARIONETTE)
+            return 4;
+
         return piety_cost.base + piety_cost.add/2;
     }
 
@@ -588,6 +596,8 @@ static vector<ability_def> &_get_ability_list()
         // Dithmenos
         { ABIL_DITHMENOS_SHADOWSLIP, "Shadowslip",
             4, 60, 2, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
+        { ABIL_DITHMENOS_APHOTIC_MARIONETTE, "Aphotic Marionette",
+            5, 0, generic_cost::fixed(1), -1, {fail_basis::invo, 60, 4, 25}, abflag::target },
         { ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL, "Primordial Nightfall",
             8, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
@@ -2376,6 +2386,18 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+    case ABIL_DITHMENOS_APHOTIC_MARIONETTE:
+    {
+        const string reason = dithmenos_cannot_marionette_reason();
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason.c_str());
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
     if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
     {
@@ -2444,6 +2466,23 @@ static vector<string> _desc_bind_soul_hp(const monster_info& mi)
     if (!monster_at(mi.pos) || !yred_can_bind_soul(monster_at(mi.pos)))
         return vector<string>{};
     return vector<string>{make_stringf("hp as a bound soul: ~%d", yred_get_bound_soul_hp(mi.type, true))};
+}
+
+static vector<string> _desc_marionette_spells(const monster_info& mi)
+{
+    if (mi.is(MB_SHADOWLESS) || mi.is(MB_SUMMONED) || mi.attitude != ATT_HOSTILE)
+        return vector<string>();
+
+    vector<mon_spell_slot> spells = get_unique_spells(mi);
+    int num_spells = spells.size();
+    int num_usable_spells = 0;
+    for (mon_spell_slot spell : spells)
+    {
+        if (valid_marionette_spell(spell.spell))
+            ++num_usable_spells;
+    }
+
+    return vector<string>{make_stringf("%d/%d spells usable", num_usable_spells, num_spells)};
 }
 
 unique_ptr<targeter> find_ability_targeter(ability_type ability)
@@ -2557,6 +2596,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_CHEIBRIADOS_SLOUCH:
         return make_unique<targeter_slouch>();
 
+    case ABIL_DITHMENOS_APHOTIC_MARIONETTE:
+        return make_unique<targeter_marionette>();
+
     default:
         break;
     }
@@ -2622,6 +2664,8 @@ bool activate_talent(const talent& tal, dist *target)
             args.get_desc_func = bind(_desc_bind_soul_hp, placeholders::_1);
         else if (abil.ability == ABIL_CHEIBRIADOS_SLOUCH)
             args.get_desc_func = bind(_desc_slouch_damage, placeholders::_1);
+        else if (abil.ability == ABIL_DITHMENOS_APHOTIC_MARIONETTE)
+            args.get_desc_func = bind(_desc_marionette_spells, placeholders::_1);
 
         if (abil.failure.base_chance)
         {
@@ -3590,6 +3634,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_DITHMENOS_SHADOWSLIP:
         return dithmenos_shadowslip(fail);
+
+    case ABIL_DITHMENOS_APHOTIC_MARIONETTE:
+        return dithmenos_marionette(*monster_at(beam.target), fail);
 
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
         return dithmenos_nightfall(fail);

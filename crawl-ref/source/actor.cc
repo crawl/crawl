@@ -130,6 +130,15 @@ int actor::check_willpower(const actor* source, int power) const
     if (source && source->wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
         wl = guile_adjust_willpower(wl);
 
+    // Marionettes get better hex success against friends to avoid hex casts
+    // often being wasted with normal monster spellpower.
+    if (source && source->is_monster()
+        && source->as_monster()->attitude == ATT_MARIONETTE
+        && mons_atts_aligned(source->real_attitude(), temp_attitude()))
+    {
+        wl /= 2;
+    }
+
     const int adj_pow = ench_power_stepdown(power);
 
     const int wlchance = (100 + wl) - adj_pow;
