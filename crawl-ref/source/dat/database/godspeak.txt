@@ -140,7 +140,7 @@ Xom feature statue
 
 @The_feature@ turns away from you.
 
-@The_feature@ does an impromptu tapdance.
+@The_feature@ does an impromptu @dance_name@.
 %%%%
 Xom feature translucent wall
 
@@ -201,6 +201,16 @@ Xom floor inventory plural
 One of @your_item@ falls out of your pack, then immediately jumps back in!
 
 @Your_item@ fall out of your pack, then immediately jump back in!
+%%%%
+Xom impromptu dance
+
+You do an impromptu @dance_name@.
+%%%%
+dance_name
+
+cha-cha
+
+tapdance
 %%%%
 Xom rearrange the pieces
 

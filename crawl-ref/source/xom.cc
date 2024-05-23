@@ -1930,7 +1930,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (you.species != SP_NAGA && !you.fishtail && !you.airborne()
         && !you.cannot_act())
     {
-        messages.emplace_back("You do an impromptu tapdance.");
+        string str = _get_xom_speech("impromptu dance");
+        messages.push_back(str);
     }
 
     ///////////////////////////
