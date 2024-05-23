@@ -202,6 +202,16 @@ One of @your_item@ falls out of your pack, then immediately jumps back in!
 
 @Your_item@ fall out of your pack, then immediately jump back in!
 %%%%
+Xom bandages
+
+You briefly get tangled in your bandages.
+%%%%
+Xom floor bandages
+
+@Xom bandages@
+
+You trip over your bandages.
+%%%%
 Xom monocle one eye
 
 A monocle briefly appears over your eye.

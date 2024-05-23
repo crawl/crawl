@@ -1905,9 +1905,15 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (starts_with(species::skin_name(you.species), "bandage")
         && you_can_wear(EQ_BODY_ARMOUR, true) != false)
     {
-        messages.emplace_back("You briefly get tangled in your bandages.");
-        if (!you.airborne() && !you.swimming())
-            messages.emplace_back("You trip over your bandages.");
+        string str =_get_xom_speech(
+                        (!you.airborne() && !you.swimming()) ? "floor bandages"
+                                                             : "bandages");
+
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+            messages.push_back(str);
+        }
     }
 
     {
