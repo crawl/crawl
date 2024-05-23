@@ -1915,16 +1915,22 @@ static void _xom_pseudo_miscast(int /*sever*/)
                 you.get_mutation_level(MUT_MISSING_EYE) ? "monocle one eye"
                                                         : "monocle two eyes");
 
-        str = maybe_pick_random_substring(str);
-        messages.push_back(str);
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+            messages.push_back(str);
+        }
     }
 
     if (species::has_hair(you.species))
     {
         string str = _get_xom_speech("eyebrows");
 
-        str = maybe_pick_random_substring(str);
-        messages.push_back(str);
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+            messages.push_back(str);
+        }
     }
 
     if (you.species != SP_NAGA && !you.fishtail && !you.airborne()
@@ -1932,8 +1938,11 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = _get_xom_speech("impromptu dance");
 
-        str = maybe_pick_random_substring(str);
-        messages.push_back(str);
+        if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+            messages.push_back(str);
+        }
     }
 
     ///////////////////////////
