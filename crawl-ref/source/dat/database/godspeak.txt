@@ -156,6 +156,24 @@ Xom feature stone arch
 
 @The_feature@ briefly shows a [sunny meadow|lifeless wasteland] on the other side.
 %%%%
+Xom underfoot water
+
+@The_feature@ briefly recedes away from you.
+
+Something invisible splashes into @the_feature@ beside you!
+%%%%
+Xom underfoot airborne general
+
+@The_feature@ seems to fall away from under you!
+
+@The_feature@ seems to rush up at you!
+%%%%
+Xom underfoot airborne water
+
+@Xom underfoot airborne general@
+
+Something invisible splashes into @the_feature@ beneath you!
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.

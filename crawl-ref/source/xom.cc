@@ -1840,33 +1840,31 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         const string feat_name = feature_description_at(you.pos(), false,
                                                         DESC_THE);
+        string str;
 
         if (you.airborne())
         {
-            // Don't put airborne messages into the priority vector for
-            // anyone who can fly a lot.
-            vector<string>* vec;
-            if (you.racial_permanent_flight())
-                vec = &messages;
-            else
-                vec = &priority;
-
-            vec->push_back(feat_name
-                           + " seems to fall away from under you!");
-            vec->push_back(feat_name
-                           + " seems to rush up at you!");
-
             if (feat_is_water(feat))
-            {
-                priority.emplace_back("Something invisible splashes into the "
-                                      "water beneath you!");
-            }
+                str = _get_xom_speech("underfoot airborne water");
+            else
+                str = _get_xom_speech("underfoot airborne general");
         }
         else if (feat_is_water(feat))
+            str = _get_xom_speech("underfoot water");
+
+        if (!str.empty())
         {
-            priority.emplace_back("The water briefly recedes away from you.");
-            priority.emplace_back("Something invisible splashes into the water "
-                                  "beside you!");
+            str = maybe_pick_random_substring(str);
+
+            str = replace_all(str, "@The_feature@", uppercase_first(feat_name));
+            str = replace_all(str, "@the_feature@", feat_name);
+
+            // Don't put airborne messages into the priority vector for
+            // anyone who can fly a lot.
+            if (you.racial_permanent_flight())
+                messages.emplace_back(str);
+            else
+                priority.emplace_back(str);
         }
     }
 
