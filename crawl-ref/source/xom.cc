@@ -1828,7 +1828,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
                               uppercase_first(in_view_name[iv]));
             str = replace_all(str, "@the_feature@", in_view_name[iv]);
 
-            messages.emplace_back(str);
+            messages.push_back(str);
         }
     }
 
@@ -1862,9 +1862,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
             // Don't put airborne messages into the priority vector for
             // anyone who can fly a lot.
             if (you.racial_permanent_flight())
-                messages.emplace_back(str);
+                messages.push_back(str);
             else
-                priority.emplace_back(str);
+                priority.push_back(str);
         }
     }
 
@@ -1892,7 +1892,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str = replace_all(str, "@Your_item@", uppercase_first(name));
             str = replace_all(str, "@your_item@", name);
 
-            messages.emplace_back(str);
+            messages.push_back(str);
         }
     }
 
