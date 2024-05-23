@@ -2005,20 +2005,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
-    if (item_def* item = you.slot_item(EQ_BOOTS))
-    {
-        if (item->sub_type == ARM_BOOTS && !you.cannot_act())
-        {
-            string name = item->name(DESC_BASENAME, false, false, false);
-            name = replace_all(name, "pair of ", "");
-
-            string str = "You compulsively click the heels of your ";
-            str += name;
-            str += " together three times.";
-            messages.push_back(str);
-        }
-    }
-
     if (item_def* item = you.slot_item(EQ_OFFHAND))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);

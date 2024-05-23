@@ -227,6 +227,8 @@ Your eyebrows [briefly feel incredibly bushy|wriggle].
 Xom impromptu dance
 
 You do an impromptu @dance_name@.
+
+You compulsively click your heels together three times.
 %%%%
 dance_name
 
