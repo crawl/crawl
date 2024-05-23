@@ -1911,13 +1911,11 @@ static void _xom_pseudo_miscast(int /*sever*/)
     }
 
     {
-        string str = "A monocle briefly appears over your ";
-        if (!you.get_mutation_level(MUT_MISSING_EYE))
-        {
-            str += random_choose("right", "left");
-            str += " ";
-        }
-        str += "eye.";
+        string str =_get_xom_speech(
+                you.get_mutation_level(MUT_MISSING_EYE) ? "monocle one eye"
+                                                        : "monocle two eyes");
+
+        str = maybe_pick_random_substring(str);
         messages.push_back(str);
     }
 

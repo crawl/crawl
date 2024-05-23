@@ -202,6 +202,14 @@ One of @your_item@ falls out of your pack, then immediately jumps back in!
 
 @Your_item@ fall out of your pack, then immediately jump back in!
 %%%%
+Xom monocle one eye
+
+A monocle briefly appears over your eye.
+%%%%
+Xom monocle two eyes
+
+A monocle briefly appears over your [right|left] eye.
+%%%%
 Xom eyebrows
 
 Your eyebrows [briefly feel incredibly bushy|wriggle].
