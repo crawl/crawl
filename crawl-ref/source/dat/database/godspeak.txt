@@ -164,9 +164,7 @@ Something invisible splashes into @the_feature@ beside you!
 %%%%
 Xom underfoot airborne general
 
-@The_feature@ seems to fall away from under you!
-
-@The_feature@ seems to rush up at you!
+@The_feature@ seems to [fall away from under|rush up at] you!
 %%%%
 Xom underfoot airborne water
 
