@@ -1844,10 +1844,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         if (you.airborne())
         {
-            if (feat_is_water(feat))
-                str = _get_xom_speech("underfoot airborne water");
-            else
-                str = _get_xom_speech("underfoot airborne general");
+            str = _get_xom_speech(
+                      feat_is_water(feat) ? "underfoot airborne water"
+                                          : "underfoot airborne general");
         }
         else if (feat_is_water(feat))
             str = _get_xom_speech("underfoot water");
