@@ -127,7 +127,7 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     cloud_type cty = spell_to_cloud(spl);
     if (is_sanctuary(beam.target) && !is_harmless_cloud(cty))
     {
-        mprf("You can't place harmful clouds in a sanctuary.");
+        mpr("You can't place harmful clouds in a sanctuary.");
         return spret::abort;
     }
 

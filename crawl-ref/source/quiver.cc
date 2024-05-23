@@ -1521,7 +1521,7 @@ namespace quiver
 
             // TODO: does non-targeted case come up?
             if (target.isCancel && !target.interactive && is_targeted())
-                mprf("No targets found!");
+                mpr("No targets found!");
 
             t = target; // copy back, in case they are different
         }
@@ -2850,7 +2850,7 @@ namespace quiver
             {
                 set_to_quiver(make_shared<quiver::action>());
                 // TODO maybe drop this messaging?
-                mprf("Clearing quiver.");
+                mpr("Clearing quiver.");
                 return false;
             }
             else if (isadigit(key))

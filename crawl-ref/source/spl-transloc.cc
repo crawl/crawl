@@ -1321,7 +1321,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         if (unproj_reason != "")
         {
             if (agent.is_player())
-                mprf("%s", unproj_reason.c_str());
+                mpr(unproj_reason);
             return spret::abort;
         }
     }
@@ -1898,7 +1898,7 @@ spret word_of_chaos(int pow, bool fail)
     fail_check();
     shuffle_array(targets);
 
-    mprf("You speak a word of chaos!");
+    mpr("You speak a word of chaos!");
     for (auto mons : targets)
     {
         if (mons->no_tele())

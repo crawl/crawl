@@ -1046,7 +1046,7 @@ static void _handle_fugue(int delay)
     {
         // Keep the spam down
         if (you.props[FUGUE_KEY].get_int() < 3 || one_chance_in(5))
-            mprf("The wailing of tortured souls fills the air!");
+            mpr("The wailing of tortured souls fills the air!");
         noisy(spell_effect_noise(SPELL_FUGUE_OF_THE_FALLEN), you.pos());
     }
 }

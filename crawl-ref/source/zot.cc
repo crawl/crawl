@@ -214,13 +214,16 @@ void incr_zot_clock()
     switch (lvl)
     {
         case 1:
-            mprf("You have lingered too long. Zot senses you. Dive deeper or flee this branch before you suffer!");
+            mpr("You have lingered too long. Zot senses you. "
+                "Dive deeper or flee this branch before you suffer!");
             break;
         case 2:
-            mpr("Zot draws nearer. Dive deeper or flee this branch before you suffer!");
+            mpr("Zot draws nearer. "
+                "Dive deeper or flee this branch before you suffer!");
             break;
         case 3:
-            mprf("Zot has nearly found you. Suffering is imminent. Descend or flee this branch!");
+            mpr("Zot has nearly found you. Suffering is imminent. "
+                "Descend or flee this branch!");
             break;
     }
 

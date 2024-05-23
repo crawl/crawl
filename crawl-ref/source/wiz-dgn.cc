@@ -593,8 +593,8 @@ static void debug_load_map_by_name(string name, bool primary)
                        "for this location; placing it with &P may result in "
                        "crashes and save corruption. Continue?", true, 'y'))
         {
-            mprf("Ok; try placing with &L or go to the relevant location to "
-                 "safely place with &P.");
+            mpr("Ok; try placing with &L or go to the relevant location to "
+                "safely place with &P.");
             return;
         }
         if (toplace->is_minivault())

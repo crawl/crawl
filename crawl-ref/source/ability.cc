@@ -1659,7 +1659,7 @@ static bool _can_movement_ability(bool quiet)
     if (reason.empty())
         return true;
     if (!quiet)
-        mprf("%s", reason.c_str());
+        mpr(reason);
     return false;
 }
 
@@ -3072,7 +3072,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                 (recite_type) random2(NUM_RECITE_TYPES); // This is just flavor
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
-            mprf("You clear your throat and prepare to recite.");
+            mpr("You clear your throat and prepare to recite.");
         }
         else
         {

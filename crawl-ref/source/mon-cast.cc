@@ -961,11 +961,11 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
         if (you.magic_points <= you.max_magic_points / 5)
         {
             dam_multiplier = 2;
-            mprf("Something gnaws heavily on your mind!");
+            mpr("Something gnaws heavily on your mind!");
             xom_is_stimulated(30);
         }
         else
-            mprf("Something gnaws on your mind!");
+            mpr("Something gnaws on your mind!");
 
     }
     else
@@ -3245,7 +3245,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
 {
     if (_is_wiz_cast())
     {
-        mprf("Sorry, this spell isn't supported for dummies!"); //mons dummy
+        mpr("Sorry, this spell isn't supported for dummies!"); //mons dummy
         return false;
     }
 

@@ -758,7 +758,7 @@ void seen_monster(monster* mons)
     {
         const item_def *wyrmbane = you.weapon();
         if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
-            mprf("<green>Wyrmbane glows as a worthy foe approaches.</green>");
+            mpr("<green>Wyrmbane glows as a worthy foe approaches.</green>");
     }
 
     // attempt any god conversions on first sight

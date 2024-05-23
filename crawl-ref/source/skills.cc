@@ -1779,7 +1779,7 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
     if (announce && ranged_target != (int) training_targets[sk])
     {
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-            mprf("You can't set training targets!");
+            mpr("You can't set training targets!");
         else if (ranged_target == 0)
             mprf("Clearing the skill training target for %s.", skill_name(sk));
         else

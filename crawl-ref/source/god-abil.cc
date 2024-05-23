@@ -3087,7 +3087,7 @@ bool gozag_setup_call_merchant(bool quiet)
     {
         if (!quiet)
         {
-            mprf("No merchants are willing to come to this location.");
+            mpr("No merchants are willing to come to this location.");
             return false;
         }
     }
@@ -3095,7 +3095,7 @@ bool gozag_setup_call_merchant(bool quiet)
     {
         if (!quiet)
         {
-            mprf("You need to be standing on open floor to call a merchant.");
+            mpr("You need to be standing on open floor to call a merchant.");
             return false;
         }
     }
