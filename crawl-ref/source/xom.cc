@@ -1923,14 +1923,18 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (species::has_hair(you.species))
     {
-        messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
-        messages.emplace_back("Your eyebrows wriggle.");
+        string str = _get_xom_speech("eyebrows");
+
+        str = maybe_pick_random_substring(str);
+        messages.push_back(str);
     }
 
     if (you.species != SP_NAGA && !you.fishtail && !you.airborne()
         && !you.cannot_act())
     {
         string str = _get_xom_speech("impromptu dance");
+
+        str = maybe_pick_random_substring(str);
         messages.push_back(str);
     }
 

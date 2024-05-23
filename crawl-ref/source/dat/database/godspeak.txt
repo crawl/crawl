@@ -202,6 +202,10 @@ One of @your_item@ falls out of your pack, then immediately jumps back in!
 
 @Your_item@ fall out of your pack, then immediately jump back in!
 %%%%
+Xom eyebrows
+
+Your eyebrows [briefly feel incredibly bushy|wriggle].
+%%%%
 Xom impromptu dance
 
 You do an impromptu @dance_name@.
