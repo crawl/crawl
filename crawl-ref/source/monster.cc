@@ -858,7 +858,7 @@ void monster::equip_weapon_message(item_def &item)
         mpr("It is briefly surrounded by shifting shadows.");
         break;
     case SPWPN_ACID:
-        mprf("It begins to drip corrosive slime!");
+        mpr("It begins to drip corrosive slime!");
         break;
 
     default:

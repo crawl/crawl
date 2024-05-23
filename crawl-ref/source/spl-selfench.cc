@@ -78,7 +78,7 @@ void fiery_armour()
         mpr("Your cloak of flame flares fiercely!");
     else if (you.duration[DUR_ICY_ARMOUR] || player_icemail_armour_class())
     {
-        mprf("A sizzling cloak of flame settles atop your icy armour.");
+        mpr("A sizzling cloak of flame settles atop your icy armour.");
         // TODO: add corresponding inverse message for casting ozo's etc
         // while DUR_FIERY_ARMOUR is active (maybe..?)
     }

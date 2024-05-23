@@ -3664,7 +3664,7 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
     const string immune_reason = mons_inner_flame_immune_reason(mons);
     if (!immune_reason.empty())
     {
-        mprf("%s", immune_reason.c_str());
+        mpr(immune_reason);
         return spret::abort;
     }
 

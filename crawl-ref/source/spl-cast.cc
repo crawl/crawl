@@ -3109,7 +3109,7 @@ void do_demonic_magic(int pow, int rank)
     if (rank < 1)
         return;
 
-    mprf("Malevolent energies surge around you.");
+    mpr("Malevolent energies surge around you.");
 
     for (radius_iterator ri(you.pos(), rank, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {

@@ -124,7 +124,7 @@ void debug_show_builder_logs()
 {
     if (!you.props.exists(DEBUG_BUILDER_LOGS_KEY))
     {
-        mprf("This save was not generated on a build that stores logs.");
+        mpr("This save was not generated on a build that stores logs.");
         return;
     }
     const string cur_level = level_id::current().describe();

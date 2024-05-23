@@ -698,7 +698,7 @@ bool summon_holy_warrior(int pow, bool punish)
  **/
 static bool _fail_tukimas()
 {
-    mprf("You can't see a target there!");
+    mpr("You can't see a target there!");
     return false; // Waste the turn - no anti-invis tech
 }
 
@@ -2150,7 +2150,7 @@ spret cast_fulminating_prism(actor* caster, int pow,
                  caster->conj_verb("conjure").c_str());
         }
         else if (you.can_see(*prism))
-            mprf("A prism of explosive energy appears from nowhere!");
+            mpr("A prism of explosive energy appears from nowhere!");
 
         // This looks silly, but prevents the even sillier-looking situation of
         // monster-cast prisms displaying as 'unaware of you'.

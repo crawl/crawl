@@ -3494,7 +3494,7 @@ static void _display_damage_rating(const item_def *weapon)
         weapon_name = "unarmed combat";
 
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_WOE))
-        mprf("%s", uppercase_first(damage_rating(weapon)).c_str());
+        mpr(uppercase_first(damage_rating(weapon)));
     else
     {
         mprf("Your damage rating with %s is about %s",

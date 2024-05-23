@@ -759,7 +759,7 @@ static bool _need_water_walking()
 
 static void _grant_temporary_waterwalk()
 {
-    mprf("Your water-walking will last only until you reach solid ground.");
+    mpr("Your water-walking will last only until you reach solid ground.");
     you.props[TEMP_WATERWALK_KEY] = true;
 }
 
