@@ -586,7 +586,12 @@ desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
 portal_unknown DNGN_UNKNOWN_PORTAL
 
 %sdir dngn/altars
-zin DNGN_ALTAR_ZIN
+zin1 DNGN_ALTAR_ZIN
+zin2
+zin3
+zin4
+zin5
+zin6
 shining_one DNGN_ALTAR_SHINING_ONE
 kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
 yredelemnul DNGN_ALTAR_YREDELEMNUL
