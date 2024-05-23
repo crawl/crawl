@@ -1848,8 +1848,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
                       feat_is_water(feat) ? "underfoot airborne water"
                                           : "underfoot airborne general");
         }
-        else if (feat_is_water(feat))
-            str = _get_xom_speech("underfoot water");
+        else
+        {
+            str = _get_xom_speech(
+                      feat_is_water(feat) ? "underfoot water"
+                                          : "underfoot general");
+        }
 
         if (!str.empty())
         {
