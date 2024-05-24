@@ -2023,44 +2023,32 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))
     {
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str;
-        string name = item->name(DESC_BASENAME, false, false, false);
 
         if (name.find("dragon") != string::npos)
-        {
-            str  = "The scales on your ";
-            str += name;
-            str += " wiggle briefly.";
-        }
+            str = _get_xom_speech("dragon armour");
         else if (item->sub_type == ARM_ANIMAL_SKIN)
-        {
-            str  = "The fur on your ";
-            str += name;
-            str += " grows longer at an alarming rate, then retracts back "
-                   "to normal.";
-        }
+            str = _get_xom_speech("animal skin");
         else if (item->sub_type == ARM_LEATHER_ARMOUR)
-        {
-            str  = "Your ";
-            str += name;
-            str += " briefly grows fur, then returns to normal.";
-        }
+            str = _get_xom_speech("leather armour");
         else if (item->sub_type == ARM_ROBE)
-        {
-            str  = "You briefly become tangled in your ";
-            str += pluralise(name);
-            str += ".";
-        }
+            str = _get_xom_speech("robe");
         else if (item->sub_type >= ARM_RING_MAIL
                  && item->sub_type <= ARM_PLATE_ARMOUR)
         {
-            str  = "Your ";
-            str += name;
-            str += " briefly appears rusty.";
+            str = _get_xom_speech("metal armour");
         }
 
         if (!str.empty())
+        {
+            str = maybe_pick_random_substring(str);
+
+            str = replace_all(str, "@Your_item@", uppercase_first(name));
+            str = replace_all(str, "@your_item@", name);
+
             messages.push_back(str);
+        }
     }
 
     if (!priority.empty() && coinflip())

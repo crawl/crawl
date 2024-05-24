@@ -264,6 +264,26 @@ Xom offhand slot
 
 @Your_item@ briefly flashes a lurid @any_colour@!
 %%%%
+Xom dragon armour
+
+The scales on @your_item@ wiggle briefly.
+%%%%
+Xom animal skin
+
+The fur on @your_item@ grows longer at an alarming rate, then retracts back to normal.
+%%%%
+Xom leather armour
+
+@Your_item@ briefly grows fur, then returns to normal.
+%%%%
+Xom robe
+
+You briefly become tangled in @your_item@.
+%%%%
+Xom metal armour
+
+@Your_item@ briefly appears rusty.
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
