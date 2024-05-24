@@ -1918,8 +1918,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     {
         string str =_get_xom_speech(
-                you.get_mutation_level(MUT_MISSING_EYE) ? "monocle one eye"
-                                                        : "monocle two eyes");
+                you.get_mutation_level(MUT_MISSING_EYE) ? "one eye"
+                                                        : "two eyes");
 
         if (!str.empty())
         {

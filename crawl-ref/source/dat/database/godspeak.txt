@@ -212,13 +212,17 @@ Xom floor bandages
 
 You trip over your bandages.
 %%%%
-Xom monocle one eye
+Xom one eye
 
 A monocle briefly appears over your eye.
+
+An eyepatch briefly covers your eye.
 %%%%
-Xom monocle two eyes
+Xom two eyes
 
 A monocle briefly appears over your [right|left] eye.
+
+An eyepatch briefly covers your [right|left] eye.
 %%%%
 Xom eyebrows
 
