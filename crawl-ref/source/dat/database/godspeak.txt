@@ -151,6 +151,8 @@ Dim shapes swim through @the_feature@.
 Xom feature metal wall
 
 Tendrils of electricity crawl over @the_feature@.
+
+@The_feature@ briefly appears tarnished.
 %%%%
 Xom feature stone arch
 
