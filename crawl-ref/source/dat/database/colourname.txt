@@ -769,11 +769,19 @@ chevrons
 
 diamonds
 
+flamestitch
+
 fractals
 
 gingham
 
+herringbone
+
+houndstooth
+
 leopard spots
+
+ogee
 
 paisley
 
