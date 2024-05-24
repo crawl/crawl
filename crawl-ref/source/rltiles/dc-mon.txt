@@ -1196,7 +1196,7 @@ deformed_orc MONS_DEFORMED_ORC
 ## Ghosts ('p')
 %sdir mon/undead
 %rim 0
-shadow MONS_SHADOW /*' '*/
+shadowghast MONS_SHADOWGHAST /*' '*/
 phantom MONS_PHANTOM
 ## Ghosts of AXED_MONs
 missing_ghost MONS_GHOST

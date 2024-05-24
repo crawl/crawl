@@ -297,7 +297,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
                 "w:3 skeletal warrior / wight / weeping skull / zombie w:5 /\
                     skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
-                    shadow w:3 / silent spectre / w:4 josephine",
+                    shadowghast w:3 / silent spectre / w:4 josephine",
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death

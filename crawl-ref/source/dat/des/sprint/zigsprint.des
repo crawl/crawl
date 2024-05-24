@@ -325,7 +325,7 @@ function choose_mset_3(e)
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
                  laughing skull w:5 / vampire w:5 / vampire mage w:5 /\
-                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow /\
+                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadowghast /\
                  wight / necromancer")
 -- Abyss
   elseif rnd < 39 then
@@ -455,7 +455,7 @@ local rnd = crawl.random2(142)
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
                  laughing skull / vampire mage w:5 /\
-                 vampire knight / lich w:5 / ancient lich w:2 / shadow /\
+                 vampire knight / lich w:5 / ancient lich w:2 / shadowghast /\
                  wight / necromancer")
 -- Abyss
   elseif rnd < 42 then

@@ -1,4 +1,4 @@
-name: "shadow"
+name: "shadowghast"
 glyph: {char: "W", colour: magenta}
 flags: [flies, see_invis, insubstantial]
 resists: {cold: 3}
@@ -7,12 +7,12 @@ genus: wraith
 holiness: [undead]
 will: 40
 attacks:
- - {type: hit, flavour: shadowstab, damage: 14}
+ - {type: claw, flavour: shadowstab, damage: 14}
 hd: 6
 hp_10x: 240
 ac: 7
 ev: 10
-spells: shadow
+spells: shadowghast
 intelligence: animal
 uses: open_doors
 size: small

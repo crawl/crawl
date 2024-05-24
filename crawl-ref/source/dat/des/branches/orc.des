@@ -375,7 +375,7 @@ ORIENT: float
 WEIGHT: 5
 MONS:   orc zombie / orc skeleton w:2 / gnoll zombie w:2 / gnoll skeleton w:2
 MONS:   ogre zombie / troll zombie w:3
-MONS:   shadow / phantom / w:1 wraith
+MONS:   shadowghast / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
 : else
@@ -414,7 +414,7 @@ ORIENT: float
 WEIGHT: 5
 MONS:   orc zombie / orc skeleton w:2 / gnoll zombie w:2 / gnoll skeleton w:2
 MONS:   ogre zombie / troll zombie w:3 / two-headed ogre zombie w:1
-MONS:   orc priest / phantom / wraith w:2, shadow, orc sorcerer
+MONS:   orc priest / phantom / wraith w:2, shadowghast, orc sorcerer
 : if you.absdepth() >= 11 then
 SUBST:  4 = 3 4 5:2
 : else

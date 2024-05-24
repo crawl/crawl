@@ -1007,7 +1007,7 @@ static const vector<random_pick_entry<monster_type>> _yred_servants =
   { -1,  7,   75, PEAK, MONS_PHANTOM },
   {  2,  9,   70, SEMI, MONS_MARROWCUDA },
   {  4,  11,  145, SEMI, MONS_WIGHT },
-  {  6,  13,  90, SEMI, MONS_SHADOW },
+  {  6,  13,  90, SEMI, MONS_SHADOWGHAST },
   {  8,  15,  110, SEMI, MONS_WRAITH },
   {  9,  15,  90, SEMI, MONS_VAMPIRE },
   { 10,  16,  110, SEMI, MONS_FREEZING_WRAITH },

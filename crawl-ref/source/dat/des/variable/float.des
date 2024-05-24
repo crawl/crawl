@@ -1976,7 +1976,7 @@ MONS:    weeping skull
 MONS:    basilisk / spectral black mamba / black mamba simulacrum \
          / spectral boulder beetle / boulder beetle simulacrum /
 MONS:    wraith
-MONS:    shadow
+MONS:    shadowghast
 MONS:    vampire
 :    else
 MONS:    skeleton / zombie / wraith / spectral thing \
@@ -2724,7 +2724,7 @@ MONS:    phantasmal warrior / skeletal warrior / eidolon
 MONS:    vampire mage / death knight
 KMONS:   5 = Frances / vampire mage / death knight, vampire mage / death knight
 : else
-MONS:    wight / wraith / shadow
+MONS:    wight / wraith / shadowghast
 MONS:    skeletal warrior / necromancer
 KMONS:   5 = Josephine / skeletal warrior / necromancer, \
              skeletal warrior / necromancer
@@ -6665,14 +6665,14 @@ ORIENT:  float
 MONS:    kobold brigand / centaur w:5 / ogre
 MONS:    two-headed ogre / troll
 MONS:    cyclops / gargoyle / boggart
-MONS:    shadow, vampire, rakshasa
+MONS:    shadowghast, vampire, rakshasa
 SUBST:   ' = 1, | = *, & = |
 :   else
 MONS:    tengu warrior / gargoyle / yaktaur
 MONS:    centaur warrior / ogre mage / orc knight
 MONS:    boggart band / deep elf knight / deep elf archer / ettin
-MONS:    shadow, rakshasa, vampire knight
-MONS:    shadow / vampire w:5
+MONS:    shadowghast, rakshasa, vampire knight
+MONS:    shadowghast / vampire w:5
 NSUBST:  4 = 3 = 77. / *:4
 :   end
 : else
