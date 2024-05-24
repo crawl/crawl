@@ -4386,6 +4386,9 @@ bool bolt::ignores_player() const
         return true;
     }
 
+    if (source_id == MID_PLAYER_SHADOW_DUMMY)
+        return true;
+
     if (flavour == BEAM_ROOTS || flavour == BEAM_VILE_CLUTCH)
     {
         return agent()->wont_attack()
@@ -7477,8 +7480,9 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
     return god_protects(originator, *victim)
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN)
-           || (originator->type == MONS_PLAYER_SHADOW
-               && victim->type == MONS_PLAYER_SHADOW));
+           || ((victim->type == MONS_PLAYER_SHADOW
+               && (originator->type == MONS_PLAYER_SHADOW
+                   || beam.source_id == MID_PLAYER_SHADOW_DUMMY))));
 }
 
 /**
