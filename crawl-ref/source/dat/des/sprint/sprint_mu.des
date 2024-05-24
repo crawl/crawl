@@ -268,7 +268,7 @@ KFEAT: H = altar_hepliaklqana
 KMONS: l = patrolling spatial vortex
 KFEAT: l = altar_lugonu
 KFEAT: J = altar_jiyva
-KMONS: m = shadow
+KMONS: m = shadowghast
 KMONS: j = patrolling jelly
 COLOUR: # = yellow
 KFEAT: # = closed_door
@@ -1384,7 +1384,7 @@ TAGS: sprint_mu_tartarus no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
 KMONS: 3 = patrolling quasit
-KMONS: 4 = patrolling shadow
+KMONS: 4 = patrolling shadowghast
 KMONS: 5 = patrolling royal mummy
 KMONS: 6 = orange crystal statue
 KMONS: 7 = ghost moth

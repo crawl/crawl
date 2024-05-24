@@ -364,7 +364,7 @@ tier1_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "shadow", min = 2, max = 4},
+    second = {mons = "shadowghast", min = 2, max = 4},
     liquid = "water",
     plant  = "withered",
   },
@@ -474,7 +474,7 @@ tier2_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    second = {mons = "shadow", min = 3, max = 6},
+    second = {mons = "shadowghast", min = 3, max = 6},
     liquid = "water",
     plant  = "withered",
   },

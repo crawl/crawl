@@ -1434,7 +1434,7 @@ ENDMAP
 NAME:    minmay_shadows
 ORIENT:  northwest
 DEPTH:   Crypt, Tar
-MONS:    shadow, soul eater, tzitzimitl
+MONS:    shadowghast, soul eater, tzitzimitl
 ITEM:    any misc
 SUBST:   A : x., B : x., C : x., E : x., F : x.
 : if you.in_branch("Tar") then
@@ -2571,7 +2571,7 @@ MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
 MONS:   weeping skull
 MONS:   wraith / freezing wraith / shadow wraith / spectral thing / \
-        w:20 shadow / nothing
+        w:20 shadowghast / nothing
 # mummy layout - rare
 : else
 MONS:   royal mummy
@@ -2820,7 +2820,7 @@ KMONS:  8 = gargoyle
 KMONS:  A = ancient lich / dread lich / w:4 mummy priest
 KMONS:  DL = lich w:40 / ancient lich / dread lich
 KMONS:  E = war gargoyle
-KMONS:  G = shadow / wraith
+KMONS:  G = shadowghast / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
 : if crawl.coinflip() then
 KMONS:  H = vampire knight
@@ -2843,7 +2843,7 @@ KMONS:  S = zombie / skeleton
 KMONS:  Z = patrolling curse skull
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
-KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
+KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
@@ -2990,7 +2990,7 @@ KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = wight
-KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
+KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadowghast / nothing
 KMONS:  F = patrolling bone dragon
 : else
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
@@ -3134,7 +3134,7 @@ MONS:   patrolling freezing wraith / patrolling spectral thing w:8
 MONS:   revenant
 MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior
-MONS:   spectral thing / simulacrum / shadow w:3 / wraith w:2 / shadow wraith / \
+MONS:   spectral thing / simulacrum / shadowghast w:3 / wraith w:2 / shadow wraith / \
         spectral storm dragon w:5 / spectral quicksilver dragon w:5
 MONS:   generate_awake shadow dragon / generate_awake ghost moth
 SUBST:  2 = ., ' = 2, " = 4
@@ -3233,7 +3233,7 @@ KMONS:   K = nothing
 KMONS:   M = burial acolyte
 KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
-KMONS:   Q = flayed ghost / shadow w:20
+KMONS:   Q = flayed ghost / shadowghast w:20
 
 # Boss tier monsters.
 : if crawl.one_chance_in(4) then

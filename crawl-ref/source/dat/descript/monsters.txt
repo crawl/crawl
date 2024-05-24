@@ -2458,11 +2458,12 @@ A member of an order of monks who abandoned their former faith. It now serves
 a minor god of wind and whispers, who allows it to calm the air and, when
 in great need, to break the stillness with divine thunder.
 %%%%
-shadow
+shadowghast
 
-A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
-It moves swiftly and silently from one pool of shade to another, striking
-unerringly from the blind spots of those who cannot see it.
+A skulking apparition that disguises itself as a harmless shadow. Attuned to the
+dim light of the dungeon, it can slip in and out of sight at will, moving
+swiftly from one pool of shade to the next before striking unerringly at the
+blind spots of those who cannot see it.
 %%%%
 shadow demon
 

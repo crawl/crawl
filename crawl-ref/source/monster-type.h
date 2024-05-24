@@ -767,7 +767,7 @@ enum monster_type                      // env.mons[].type
     MONS_VAMPIRE_MAGE,
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_PHANTOM,
-    MONS_SHADOW,
+    MONS_SHADOWGHAST,
 #if TAG_MAJOR_VERSION == 34
     MONS_HUNGRY_GHOST,
 #endif

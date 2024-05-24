@@ -506,7 +506,7 @@ DEPTH: D:5-
 KFEAT: C = altar_dithmenos
 {{
   if you.absdepth() >= 9 then
-     mons("shadow")
+     mons("shadowghast")
   else
      local imp_weight = 9 - you.depth()
      if imp_weight > 0 then
@@ -4630,7 +4630,7 @@ KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / skeleton / phantom
-MONS: wraith / vampire / shadow / w:5 death knight / w:5 skeletal warrior
+MONS: wraith / vampire / shadowghast / w:5 death knight / w:5 skeletal warrior
 MONS: flayed ghost / death knight
 NSUBST: 2 = 2 / 2-
 : end
@@ -4673,7 +4673,7 @@ TAGS:   temple_overflow_hepliaklqana temple_overflow_dithmenos
 KPROP:  12- = no_tele_into
 KMASK:  12- = no_item_gen
 KMASK:  12- = no_monster_gen
-MONS:   ancestor, shadow
+MONS:   ancestor, shadowghast
 KFEAT:  A = altar_hepliaklqana
 KFEAT:  B = altar_dithmenos
 KFEAT:  DE = stone_wall

@@ -1613,7 +1613,7 @@ sea snake
 Un serpent vivement coloré, très à l'aise dans l'eau. Sa morsure est
 extrêmement venimeuse.
 %%%%
-shadow
+shadowghast
 
 Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle se
 déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant

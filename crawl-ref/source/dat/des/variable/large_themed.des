@@ -763,7 +763,7 @@ NAME:   minmay_goldmine
 ORIENT: southeast
 DEPTH:  D:8-12, Orc
 MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
-MONS:   two-headed ogre / troll / cyclops / wraith / shadow
+MONS:   two-headed ogre / troll / cyclops / wraith / shadowghast
 MONS:   deep troll w:5 / obsidian bat
 : if you.in_branch("Orc") then
 NSUBST: $ = 1:3 / *:$, 1 = 1:2 / 2:$ / *:1, . = 2:$ / *:.
@@ -2760,7 +2760,7 @@ SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF, C : C..
   mons("wyvern w:" .. d .. " /  ogre w:" .. d / 2 ..
        " / killer bee w:" .. d .. " / killer bee zombie w:" .. d  / 2 ..
        " / two-headed ogre w:" .. e .. " / wyvern zombie w:" .. e / 2 ..
-       " / kobold brigand w:" .. e / 2 .. " / shadow w:" .. f ..
+       " / kobold brigand w:" .. e / 2 .. " / shadowghast w:" .. f ..
        " / hornet w:" .. f)
   mons("water moccasin w:" .. d .. " / sleepcap w:" .. d ..
        " / crocodile w:" .. d .. " / ugly thing w:" .. e ..
@@ -2981,7 +2981,7 @@ ORIENT:  northeast
 : if you.in_branch("D") or you.in_branch("Depths") then
 :   if you.in_branch("D") then
 MONS:    vampire mosquito, gargoyle, vampire, skeletal warrior
-MONS:    shadow / freezing wraith, white ugly thing, unseen horror
+MONS:    shadowghast / freezing wraith, white ugly thing, unseen horror
 KMONS:   8 = great orb of eyes
 KMONS:   9 = glowing orange brain
 NSUBST:  12 = 3:., 34 = 2:", 5 = 1:', 789 = 2:.
@@ -3172,7 +3172,7 @@ KMONS:   0 = water moccasin / hornet w:1
 NSUBST:  7 = 2:1 / 2:7 / 3:8 / 3:9 / 1:0 / 3 = 123490 / *:.
 :   elseif you.depth() < 12 then
 MONS:    phantom / wight, meliai zombie, centaur warrior zombie
-MONS:    vampire / wraith, necromancer / shadow, skeletal warrior
+MONS:    vampire / wraith, necromancer / shadowghast, skeletal warrior
 MONS:    wyvern / hornet
 KMONS:   8 = centaur
 KMONS:   9 = yak band

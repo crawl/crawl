@@ -3405,7 +3405,7 @@ TAGS:    no_pool_fixup no_monster_gen
 PLACE:   Swamp:$
 ORIENT:  southeast
 MONS:    bog body / ugly thing / small abomination w:2
-MONS:    shadow / orange demon w:2
+MONS:    shadowghast / orange demon w:2
 MONS:    large abomination / very ugly thing / thrashing horror w:6
 MONS:    green death, sin beast, great orb of eyes, titanic slime creature
 KMONS:   8 = hydra / swamp dragon

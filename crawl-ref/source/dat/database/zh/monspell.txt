@@ -714,7 +714,7 @@ Summon Water Elementals elemental wellspring cast
 
 水之灵从@the_monster@身上涌了出来！
 %%%%
-Invisibility shadow cast
+Invisibility shadowghast cast
 
 @The_monster@没入黑暗。
 %%%%

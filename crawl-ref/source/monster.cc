@@ -5668,9 +5668,9 @@ int monster::action_energy(energy_use_type et) const
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;
 
-    // Shadows move more quickly when blended with the darkness.
+    // Shadowghasts move more quickly when blended with the darkness.
     // Change _monster_stat_description in describe.cc if you change this.
-    if (type == MONS_SHADOW && invisible())
+    if (type == MONS_SHADOWGHAST && invisible())
         move_cost -= 3;
 
     // Floundering monsters get the same penalty as the player, except that

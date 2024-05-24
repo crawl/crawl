@@ -2832,7 +2832,7 @@ NAME:   mainiacjoe_labyrinth_nostalgia
 TAGS:   no_monster_gen no_item_gen patrolling uniq_faux_labyrinth
 DEPTH:  D:11-
 WEIGHT: 5
-MONS:   basilisk / gargoyle / shadow, generate_awake minotaur
+MONS:   basilisk / gargoyle / shadowghast, generate_awake minotaur
 KFEAT:  < = <
 KITEM:  < = |, *, %
 KFEAT:  X = rock_wall
@@ -8709,7 +8709,7 @@ DEPTH:  D:7-
 WEIGHT: 3
 ITEM:   robe_of_night no_pickup
 : if you.depth() < 13 then
-MONS:   dream sheep, shadow
+MONS:   dream sheep, shadowghast
 SUBST:  1 = 1.
 : else
 MONS:   dream sheep w:20 / satyr, shadow wraith
