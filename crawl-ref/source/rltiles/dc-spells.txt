@@ -297,6 +297,19 @@ prayer_of_brilliance PRAYER_OF_BRILLIANCE
 regeneration REGENERATION
 sap_magic SAP_MAGIC
 
+# Dithmenos shadow spells
+%sdir gui/spells/monster/shadow
+creeping_shadow CREEPING_SHADOW
+shadow_beam SHADOW_BEAM
+shadow_bind SHADOW_BIND
+shadow_draining SHADOW_DRAINING
+shadow_prism SHADOW_PRISM
+shadow_puppet SHADOW_PUPPET
+shadow_shard SHADOW_SHARD
+shadow_tempest SHADOW_TEMPEST
+shadow_torpor SHADOW_TORPOR
+shadowball SHADOWBALL
+
 # spells mimicking divine abilities
 %sdir gui/invocations
 beogh_smite SMITING

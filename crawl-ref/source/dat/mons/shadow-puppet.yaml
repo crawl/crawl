@@ -1,0 +1,16 @@
+name: "shadow puppet"
+glyph: {char: "E", colour: magenta}
+flags: [flies, fighter, insubstantial, no_exp_gain, no_poly_to]
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: swoop, damage: 1}
+ - {type: hit, flavour: flank, damage: 1}
+ - {type: hit, flavour: crush, damage: 1}
+hd: 9
+hp_10x: 400
+ac: 5
+ev: 20
+intelligence: brainless
+size: medium
+shape: misc

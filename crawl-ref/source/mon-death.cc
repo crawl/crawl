@@ -2214,7 +2214,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         did_death_message =
             explode_monster(&mons, killer, pet_kill, wizard);
     }
-    else if (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge == 0)
+    else if ((mons.type == MONS_FULMINANT_PRISM || mons.type == MONS_SHADOW_PRISM)
+             && mons.prism_charge == 0)
     {
         if (!silent && !hard_reset && !was_banished)
         {

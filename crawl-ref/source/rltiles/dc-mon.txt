@@ -314,6 +314,7 @@ water_elemental MONS_WATER_ELEMENTAL
 air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
 wellspring MONS_ELEMENTAL_WELLSPRING
+shadow_puppet MONS_SHADOW_PUPPET
 %rim 0
 quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
@@ -353,6 +354,10 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
+shadow_prism1 MONS_SHADOW_PRISM
+shadow_prism2
+shadow_prism3
+shadow_prism4
 foxfire MONS_FOXFIRE
 marshlight MONS_MARSHLIGHT
 living_spell MONS_LIVING_SPELL

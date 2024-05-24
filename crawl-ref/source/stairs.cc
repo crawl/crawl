@@ -255,8 +255,12 @@ static void _clear_golubria_traps()
 static void _clear_constructs()
 {
     for (auto &mons : menv_real)
-        if (mons.type == MONS_FULMINANT_PRISM || mons.type == MONS_HELLFIRE_MORTAR)
+        if (mons.type == MONS_FULMINANT_PRISM
+            || mons.type == MONS_SHADOW_PRISM
+            || mons.type == MONS_HELLFIRE_MORTAR)
+        {
             mons.reset();
+        }
 }
 
 static void _complete_zig()

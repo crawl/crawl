@@ -401,6 +401,11 @@ Calls forth freezing cold from the walls. Any enemies of the caster standing
 next to the walls will be frozen and will find their movements slowed. Cold
 resistance will reduce damage, but not prevent the freezing effect.
 %%%%
+Creeping Shadow spell
+
+Calls forth shadows from the corners of nearby walls to strike at all of the
+caster's enemies standing adjacent to them.
+%%%%
 Crystallizing Shot spell
 
 Hurls a large and heavy shard of crystal. It may render a creature's body
@@ -1427,20 +1432,53 @@ Violently collapses a nearby simulacrum into a large mass of ice, which
 explodes on impact. The ice affects even cold-resistant creatures somewhat, due
 to the strong impact and cutting edges.
 %%%%
-Shadow Bolt spell
+Shadowball spell
 
-Mimics a penetrating damaging spell cast by a Dithmenos worshipper, firing a
-bolt of shadow.
+Hurls a ball of flickering shadows which explodes in a small area.
+%%%%
+Shadow Beam spell
+
+Fires a penetrating beam of shadow.
+%%%%
+Shadow Bind spell
+
+Pins several random nearby enemies to their own shadows, briefly preventing them
+from moving. At higher spellpower, it affects more enemies at once.
 %%%%
 Shadow Creatures spell
 
 Creates replicas of creatures native to the caster's current location, weaving
 them from shadows and threads of Abyssal matter.
 %%%%
+Shadow Draining spell
+
+Forcefully steals a sliver from the shadows of all nearby enemies, causing
+damage which bypasses the victim's armour entirely.
+%%%%
+Shadow Prism spell
+
+Conjures a shadowy prism which will unleash a violent blast of shadows after a
+short duration. If destroyed prematurely, this blast will be much weaker.
+%%%%
+Shadow Puppet spell
+
+Summons a servant of living shadow to harass and constrict the caster's enemies.
+The strength of its attacks is directly increased by spellpower.
+%%%%
 Shadow Shard spell
 
-Mimics a damaging spell cast by a Dithmenos worshipper, firing a shard of
-shadow.
+Fires a shard of hardened shadow at a single enemy.
+%%%%
+Shadow Tempest spell
+
+Calls down shadowy lightning upon up to half of all visible enemies, dealing
+irresistible damage to them.
+%%%%
+Shadow Torpor spell
+
+Saps the energy from a line of enemies, slowing them for a short while.
+Spellpower increases the duration of this effect, but stronger creatures may
+shake off their lethargy more quickly.
 %%%%
 Shatter spell
 

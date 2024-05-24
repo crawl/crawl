@@ -94,7 +94,8 @@ void reset_battlesphere(monster* mons);
 dice_def battlesphere_damage(int pow);
 
 spret cast_fulminating_prism(actor* caster, int pow,
-                                  const coord_def& where, bool fail);
+                                  const coord_def& where, bool fail,
+                                  bool is_shadow = false);
 int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);

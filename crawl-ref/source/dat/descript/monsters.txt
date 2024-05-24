@@ -2485,6 +2485,20 @@ shadow imp
 
 A shadowy minor demon, with an affinity for the necromantic arts.
 %%%%
+shadow prism
+
+A prism-like silhouette which wavers with barely-contained destructive energy.
+Any blow which disrupts its form will result in a violent blast of shadow.
+%%%%
+shadow puppet
+
+A minor servant of living shadow whose form wavers perpetually on the edge of
+recognition - as if an unseen light were flickering behind something almost
+familiar.
+
+The strength of its attacks increases in proportion with the power of the spell
+which summoned it.
+%%%%
 shadow wraith
 
 A mist-wreathed skeletal shadow, hanging in mid-air. It drains away the
