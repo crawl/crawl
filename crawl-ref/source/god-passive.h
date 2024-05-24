@@ -257,6 +257,7 @@ enum ru_interference
 };
 
 #define DITH_SHADOW_ATTACK_KEY "dith_shadow_attack"
+#define DITH_SHADOW_SPELLPOWER_KEY "dith_shadow_spellpower"
 #define DITH_SHADOW_MID_KEY "dith_shadow_mid"
 #define DITH_SHADOW_LAST_TARGET_KEY "dith_shadow_last_target"
 

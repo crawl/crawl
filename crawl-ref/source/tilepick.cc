@@ -3402,6 +3402,17 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case MAGENTA:
+        if (bolt.origin_spell == SPELL_SHADOW_BEAM)
+            return TILE_BOLT_SHADOW_BEAM + dir % tile_main_count(TILE_BOLT_SHADOW_BEAM);
+        if (bolt.origin_spell == SPELL_SHADOW_BALL
+            || bolt.origin_spell == SPELL_CREEPING_SHADOW
+            || bolt.origin_spell == SPELL_SHADOW_TEMPEST
+            || bolt.origin_spell == SPELL_SHADOW_PRISM)
+        {
+            return TILE_BOLT_SHADOW_BLAST;
+        }
+        if (bolt.origin_spell == SPELL_SHADOW_SHARD)
+            return TILE_BOLT_SHADOW_SHARD;
         break;
 
     case CYAN:
@@ -3434,6 +3445,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
         return tile + (dist - 1) % tile_main_count(tile);
     case TILE_BOLT_FLAME:
     case TILE_BOLT_IRRADIATE:
+    case TILE_BOLT_SHADOW_BLAST:
         return tile + ui_random(tile_main_count(tile));
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);

@@ -120,6 +120,7 @@ static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
 static void _setup_creeping_frost(bolt &beam, const monster &caster, int pow);
+static void _setup_creeping_shadow(bolt &beam, const monster &, int pow);
 static void _setup_pyroclastic_surge(bolt &beam, const monster &caster, int pow);
 static ai_action::goodness _negative_energy_spell_goodness(const actor* foe);
 static ai_action::goodness _caster_sees_foe(const monster &caster);
@@ -147,6 +148,7 @@ static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_dancing_weapons(monster &caster, mon_spell_slot, bolt&);
 static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&);
 static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&);
+static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -695,6 +697,113 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         MSPELL_LOGIC_NONE,
         18, // 1.5x iceblast
     } },
+    { SPELL_SHADOW_BALL, _conjuration_logic(SPELL_SHADOW_BALL) },
+    { SPELL_SHADOW_BEAM, _conjuration_logic(SPELL_SHADOW_BEAM) },
+    { SPELL_SHADOW_SHARD, _conjuration_logic(SPELL_SHADOW_SHARD) },
+    { SPELL_SHADOW_PUPPET, { _always_worthwhile, _mons_shadow_puppet } },
+    { SPELL_CREEPING_SHADOW, { _foe_near_wall,
+        [](monster &caster, mon_spell_slot, bolt& beam) {
+            _cast_wall_burst(caster, beam, 5);
+        },
+        _setup_creeping_shadow } },
+    { SPELL_SHADOW_PRISM, { _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt& beam){
+            const int pow = mons_spellpower(caster, SPELL_SHADOW_PRISM);
+            spret ret = cast_fulminating_prism(&caster, pow, beam.target, false, true);
+            if (ret == spret::abort)
+                mprf(MSGCH_WARN, "Failed to place prism at (%d, %d)", beam.target.x, beam.target.y);
+        }
+    } },
+    { SPELL_SHADOW_TEMPEST, { _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            vector<monster*> targs;
+            for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+            {
+                if (!mi->is_stationary() && !mons_is_firewood(**mi)
+                    && !mons_aligned(&caster, *mi))
+                {
+                    targs.push_back(*mi);
+                }
+            }
+            const unsigned int num_targs = (targs.size() * random_range(30, 50) / 100)
+                                           + 1;
+            shuffle_array(targs);
+            const int draw_delay = 150 / num_targs;
+            for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+            {
+                if (you.see_cell(targs[i]->pos()))
+                {
+#ifdef USE_TILE
+                    if (Options.use_animations & UA_BEAM)
+                    {
+                        view_add_tile_overlay(targs[i]->pos(), vary_bolt_tile(tileidx_bolt(beam), 0));
+                        animation_delay(50, draw_delay);
+                    }
+#else
+                    flash_tile(targs[i]->pos(), MAGENTA, draw_delay);
+#endif
+                }
+
+            }
+            for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+            {
+                beam.source = targs[i]->pos();
+                beam.target = targs[i]->pos();
+                beam.fire();
+            }
+        },
+        _zap_setup(SPELL_SHADOW_TEMPEST) } },
+    { SPELL_SHADOW_BIND, { _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt&) {
+            vector<monster*> targs;
+            for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+            {
+                if (!mi->is_stationary() && !mons_is_firewood(**mi)
+                    && !mons_aligned(&caster, *mi) && !mi->has_ench(ENCH_BOUND))
+                {
+                    targs.push_back(*mi);
+                }
+            }
+            const int pow = mons_spellpower(caster, SPELL_SHADOW_BIND);
+            const unsigned int num_targs = div_rand_round(pow, 30);
+            shuffle_array(targs);
+            for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+            {
+                targs[i]->add_ench(mon_enchant(ENCH_BOUND, 1, &caster,
+                                                random_range(3, 5) * BASELINE_DELAY));
+                if (you.can_see(*targs[i]))
+                {
+                    mprf("%s is pinned to %s own shadow.",
+                         targs[i]->name(DESC_THE).c_str(),
+                         targs[i]->pronoun(PRONOUN_POSSESSIVE).c_str());
+                }
+
+            }
+        } } },
+    { SPELL_SHADOW_DRAINING, { _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt&) {
+            if (you.can_see(caster))
+            {
+                targeter_radius hitfunc(&caster, LOS_SOLID, 2);
+                flash_view_delay(UA_MONSTER, DARKGREY, 200, &hitfunc);
+                mprf("%s draws nearby shadows into %s.",
+                    caster.name(DESC_THE).c_str(),
+                    caster.pronoun(PRONOUN_REFLEXIVE).c_str());
+            }
+
+            dice_def dmg = zap_damage(ZAP_SHADOW_DRAIN,
+                                      mons_spellpower(caster, SPELL_SHADOW_DRAINING),
+                                      true);
+            for (radius_iterator ri(caster.pos(), 2, C_SQUARE); ri; ++ri)
+            {
+                monster* m = monster_at(*ri);
+                if (m && cell_see_cell(caster.pos(), *ri, LOS_NO_TRANS)
+                    && !mons_aligned(&caster, m))
+                {
+                    m->hurt(&caster, dmg.roll());
+                }
+            }
+        } } },
 };
 
 /// Create the appropriate casting logic for a simple conjuration.
@@ -1342,6 +1451,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_IOOD:
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
+        case SPELL_SHADOW_PRISM:
         case SPELL_IGNITE_POISON:
         case SPELL_HELLFIRE_MORTAR:
             return 8;
@@ -1618,6 +1728,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BORGNJORS_VILE_CLUTCH:
     case SPELL_CRYSTALLIZING_SHOT:
     case SPELL_HELLFIRE_MORTAR:
+    case SPELL_SHADOW_TORPOR:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1744,19 +1855,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     //      damage is done via another means
     case SPELL_FREEZE:
         beam.flavour    = BEAM_COLD;
-        break;
-
-    case SPELL_SHADOW_BOLT:
-        beam.name     = "shadow bolt";
-        beam.pierce   = true;
-        // deliberate fall-through
-    case SPELL_SHADOW_SHARD:
-        if (real_spell == SPELL_SHADOW_SHARD)
-            beam.name  = "shadow shard";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = MAGENTA;
-        beam.flavour  = BEAM_MMISSILE;
-        beam.hit      = 17 + power / 25;
         break;
 
     case SPELL_FLAMING_CLOUD:
@@ -2765,7 +2863,7 @@ static ai_action::goodness _foe_near_wall(const monster &caster)
     if (!foe)
         return ai_action::bad();
 
-    if (near_visible_wall(caster, foe->pos()))
+    if (near_visible_wall(caster.pos(), foe->pos()))
         return ai_action::good();
     return ai_action::bad();
 }
@@ -2779,6 +2877,15 @@ static void _setup_creeping_frost(bolt &beam, const monster &, int pow)
     beam.aux_source = "creeping frost";
 }
 
+static void _setup_creeping_shadow(bolt &beam, const monster &, int pow)
+{
+    zappy(spell_to_zap(SPELL_CREEPING_SHADOW), pow, true, beam);
+    beam.hit = AUTOMATIC_HIT;
+    beam.name = "creeping shadows";
+    beam.hit_verb = "grasp";
+    beam.aux_source = "creeping shadow";
+}
+
 // Deals damage to all non-aligned creatures adjacent to visible walls within a
 // given distance of the caster.
 //
@@ -2790,7 +2897,7 @@ static void _cast_wall_burst(monster &caster, bolt &beam, int radius)
     {
         if (grid_distance(caster.pos(), *vi) > radius
             || feat_is_solid(env.grid(*vi))
-            || !near_visible_wall(caster, *vi))
+            || !near_visible_wall(caster.pos(), *vi))
         {
             continue;
         }
@@ -4654,6 +4761,17 @@ static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&)
 
     for (int i = 0; i < 2; ++i)
         _summon(mons, type, 2, slot);
+}
+
+static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_SHADOW_PUPPET);
+    const god_type god = _find_god(mons, slot.flags);
+    mgen_data mg = mgen_data(MONS_SHADOW_PUPPET, SAME_ATTITUDE((&mons)), mons.pos(),
+                             mons.foe);
+    mg.set_summoned(&mons, 2, slot.spell, god);
+    mg.hd = 2 + div_rand_round(pow, 12);
+    create_monster(mg);
 }
 
 static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bolt&)

@@ -116,6 +116,18 @@ pie5
 pie6
 pie7
 
+shadow_beam0 BOLT_SHADOW_BEAM
+shadow_beam1
+shadow_beam2
+shadow_beam3
+
+shadow_shard BOLT_SHADOW_SHARD
+
+shadow_blast0 BOLT_SHADOW_BLAST
+shadow_blast1
+shadow_blast2
+shadow_blast3
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

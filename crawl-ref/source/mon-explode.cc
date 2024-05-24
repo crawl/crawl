@@ -154,10 +154,20 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
     beam.ex_size = origin.prism_charge;
-    if (origin.summoner)
-        beam.origin_spell = SPELL_FULMINANT_PRISM;
+    beam.origin_spell = SPELL_FULMINANT_PRISM;
     dprf("prism hd: %d, damage: %dd%d", origin.get_hit_dice(),
          beam.damage.num, beam.damage.size);
+}
+
+static void _setup_shadow_prism_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_MMISSILE;
+    beam.damage  = prism_damage(origin.get_hit_dice(), origin.prism_charge == 2);
+    beam.name    = "blast of shadow";
+    beam.colour  = MAGENTA;
+    beam.ex_size = origin.prism_charge;
+    beam.origin_spell = SPELL_SHADOW_PRISM;
 }
 
 static dice_def _bennu_damage(int hd)
@@ -235,6 +245,10 @@ static const map<monster_type, monster_explosion> explosions {
     } },
     { MONS_FULMINANT_PRISM, {
         _setup_prism_explosion,
+        [](int hd){ return prism_damage(hd, true); }
+    } },
+    { MONS_SHADOW_PRISM, {
+        _setup_shadow_prism_explosion,
         [](int hd){ return prism_damage(hd, true); }
     } },
     { MONS_BENNU, {

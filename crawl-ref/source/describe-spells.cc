@@ -412,6 +412,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_ELECTROLUNGE:
             return electrolunge_damage(pow);
         case SPELL_FULMINANT_PRISM:
+        case SPELL_SHADOW_PRISM:
             return prism_damage(prism_hd(pow, false), true);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(pow);

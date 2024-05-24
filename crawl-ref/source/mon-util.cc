@@ -2099,6 +2099,13 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.damage = ac + ac * ac / 2;
         }
     }
+    else if (mon.type == MONS_SHADOW_PUPPET)
+    {
+        if (attk_number == 2)
+            attk.damage = m.get_hit_dice() * 2 / 3;
+        else
+            attk.damage = 4 + (m.get_hit_dice() * 3 / 2);
+    }
 
     if (!base_flavour)
     {

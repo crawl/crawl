@@ -4365,7 +4365,8 @@ bool bolt::ignores_player() const
 
     if (origin_spell == SPELL_COMBUSTION_BREATH
         || origin_spell == SPELL_NULLIFYING_BREATH
-        || origin_spell == SPELL_RIMEBLIGHT)
+        || origin_spell == SPELL_RIMEBLIGHT
+        || origin_spell == SPELL_SHADOW_PRISM)
     {
         return true;
     }
@@ -5596,6 +5597,26 @@ bool bolt::ignores_monster(const monster* mon) const
     if (!mon)
         return false;
 
+    // Player shadows (or a dummy for a shadow spell tracer) can shoot through
+    // other shadows (ie: where they are currently standing while contemplating
+    // being somewhere else).
+    if (mon->type == MONS_PLAYER_SHADOW
+        && ((agent() && agent()->type == MONS_PLAYER_SHADOW)
+            || source_id == MID_PLAYER_SHADOW_DUMMY))
+    {
+        return true;
+    }
+
+    // Shadow spells have no friendly fire, even against monsters.
+    // (These should be the only ones that don't avoid that in other ways.)
+    if ((origin_spell == SPELL_SHADOW_PRISM || origin_spell == SPELL_SHADOW_BEAM
+         || origin_spell == SPELL_SHADOW_TORPOR
+         || (origin_spell == SPELL_SHADOW_BALL && in_explosion_phase))
+        && mons_atts_aligned(attitude, mons_attitude(*mon)))
+    {
+        return true;
+    }
+
     // All kinds of beams go past orbs of destruction and friendly
     // battlespheres.
     if (always_shoot_through_monster(agent(), *mon))
@@ -5681,6 +5702,7 @@ bool bolt::has_saving_throw() const
     case BEAM_ENFEEBLE:
     case BEAM_VITRIFYING_GAZE:
     case BEAM_RIMEBLIGHT:
+    case BEAM_SHADOW_TORPOR:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
@@ -5703,6 +5725,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
     case BEAM_SLOW:
     case BEAM_HASTE:
     case BEAM_PARALYSIS:
+    case BEAM_SHADOW_TORPOR:
         rc = !mon->stasis();
         break;
 
@@ -6504,6 +6527,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_SHADOW_TORPOR:
+    {
+        int dur = max(2, random_range(2, 5) - div_rand_round(
+                            random2(mon->get_hit_dice() * 30), ench_power));
+        obvious_effect = do_slow_monster(*mon, agent(), dur * BASELINE_DELAY);
+        return MON_AFFECTED;
+    }
+
     default:
         break;
     }
@@ -6524,7 +6555,8 @@ int bolt::range_used_on_hit() const
     if (flavour == BEAM_DAMNATION
         || flavour == BEAM_DIGGING
         || flavour == BEAM_VILE_CLUTCH
-        || flavour == BEAM_ROOTS)
+        || flavour == BEAM_ROOTS
+        || flavour == BEAM_SHADOW_TORPOR)
     {
         return 0;
     }
@@ -6629,6 +6661,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_HOARFROST_BULLET, {
         "The shards fragment into shrapnel!",
         "an explosion",
+    } },
+    { SPELL_SHADOW_BALL, {
+        "The flickering shadows explode!",
+        "a quiet whistle",
     } },
 };
 
@@ -6804,6 +6840,12 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         // gas leak).
         if (name == "blast of putrescent gases")
             loudness = loudness * 2 / 3;
+        // Shadow spells are silent
+        else if (origin_spell == SPELL_SHADOW_BALL
+                 || origin_spell == SPELL_SHADOW_PRISM)
+        {
+            loudness = 0;
+        }
 
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
@@ -7352,6 +7394,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_WARPING:               return "spatial disruption";
     case BEAM_QAZLAL:                return "upheaval targetter";
     case BEAM_RIMEBLIGHT:            return "rimeblight";
+    case BEAM_SHADOW_TORPOR:         return "shadow torpor";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
@@ -7476,10 +7519,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
         return false;
     return god_protects(originator, *victim)
            || (originator->is_player()
-               && testbits(victim->flags, MF_DEMONIC_GUARDIAN)
-           || ((victim->type == MONS_PLAYER_SHADOW
-               && (originator->type == MONS_PLAYER_SHADOW
-                   || beam.source_id == MID_PLAYER_SHADOW_DUMMY))));
+               && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }
 
 /**

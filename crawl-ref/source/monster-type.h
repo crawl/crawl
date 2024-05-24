@@ -329,6 +329,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRON_ELEMENTAL,
     MONS_QUICKSILVER_ELEMENTAL,
     MONS_ELEMENTAL_WELLSPRING,
+    MONS_SHADOW_PUPPET,
 #endif
     MONS_TWISTER,        // air miscasts
     MONS_GOLDEN_EYE,
@@ -961,6 +962,7 @@ enum monster_type                      // env.mons[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
+    MONS_SHADOW_PRISM,
     MONS_BATTLESPHERE,
     MONS_FOXFIRE,
     MONS_BOULDER,
@@ -1261,6 +1263,8 @@ enum monster_type                      // env.mons[].type
     MONS_XAKKRIXIS,
     MONS_HELLFIRE_MORTAR,
     MONS_GOD_WRATH_AVATAR,      // Used as a source for some god wrath effects
+    MONS_SHADOW_PUPPET,
+    MONS_SHADOW_PRISM,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

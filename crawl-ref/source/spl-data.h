@@ -2527,28 +2527,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SHADOW_SHARD, "Shadow Shard",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    5,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
-    SPELL_SHADOW_BOLT, "Shadow Bolt",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    5,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_REBOUNDING_BLAZE, "Rebounding Blaze",
     spschool::conjuration | spschool::fire,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
@@ -3982,6 +3960,125 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     20,
     TILEG_BOLT_OF_MAGMA,
+},
+
+// Dithmenos shadow mimic spells
+{
+    SPELL_SHADOW_SHARD, "Shadow Shard",
+    spschool::earth,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_SHARD,
+},
+
+{
+    SPELL_SHADOW_BEAM, "Shadow Beam",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_BEAM,
+},
+
+{
+    SPELL_SHADOW_BALL, "Shadowball",
+    spschool::fire,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOWBALL,
+},
+
+{
+    SPELL_CREEPING_SHADOW, "Creeping Shadow",
+    spschool::ice,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_CREEPING_SHADOW,
+},
+
+{
+    SPELL_SHADOW_TEMPEST, "Shadow Tempest",
+    spschool::air,
+    spflag::area | spflag::monster | spflag::needs_tracer | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_TEMPEST,
+},
+
+{
+    SPELL_SHADOW_PRISM, "Shadow Prism",
+    spschool::alchemy,
+    spflag::target | spflag::area | spflag::not_self | spflag::monster
+    | spflag::needs_tracer | spflag::silent,
+    5,
+    200,
+    4, 4,
+    0,
+    TILEG_SHADOW_PRISM,
+},
+
+
+{
+    SPELL_SHADOW_PUPPET, "Shadow Puppet",
+    spschool::summoning,
+    spflag::monster | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_PUPPET,
+},
+
+{
+    SPELL_SHADOW_BIND, "Shadowbind",
+    spschool::translocation,
+    spflag::target | spflag::monster | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_BIND,
+},
+
+{
+    SPELL_SHADOW_TORPOR, "Shadow Torpor",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_TORPOR,
+},
+
+{
+    SPELL_SHADOW_DRAINING, "Shadow Draining",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_DRAINING,
 },
 
 {

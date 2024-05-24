@@ -2083,8 +2083,8 @@ int prism_hd(int pow, bool random)
     return pow / 10;
 }
 
-spret cast_fulminating_prism(actor* caster, int pow,
-                                  const coord_def& where, bool fail)
+spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
+                             bool fail, bool is_shadow)
 {
     if (grid_distance(where, caster->pos())
         > spell_range(SPELL_FULMINANT_PRISM, pow))
@@ -2132,12 +2132,15 @@ spret cast_fulminating_prism(actor* caster, int pow,
 
     const int hd = prism_hd(pow);
 
-    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM,
+    mgen_data prism_data = mgen_data(is_shadow
+                                        ? MONS_SHADOW_PRISM
+                                        : MONS_FULMINANT_PRISM,
                                      caster->is_player()
-                                     ? BEH_FRIENDLY
-                                     : SAME_ATTITUDE(caster->as_monster()),
+                                        ? BEH_FRIENDLY
+                                        : SAME_ATTITUDE(caster->as_monster()),
                                      where, MHITNOT, MG_FORCE_PLACE);
-    prism_data.set_summoned(caster, 0, SPELL_FULMINANT_PRISM);
+    prism_data.set_summoned(caster, 0, is_shadow ? SPELL_SHADOW_PRISM
+                                                 : SPELL_FULMINANT_PRISM);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
@@ -2145,12 +2148,16 @@ spret cast_fulminating_prism(actor* caster, int pow,
     {
         if (caster->observable())
         {
-            mprf("%s %s a prism of explosive energy!",
+            mprf("%s %s a prism of %s energy!",
                  caster->name(DESC_THE).c_str(),
-                 caster->conj_verb("conjure").c_str());
+                 caster->conj_verb("conjure").c_str(),
+                 is_shadow ? "shadowy" : "explosive");
         }
         else if (you.can_see(*prism))
-            mpr("A prism of explosive energy appears from nowhere!");
+        {
+            mprf("A prism of %s energy appears from nowhere!",
+                 is_shadow ? "shadowy" : "explosive");
+        }
 
         // This looks silly, but prevents the even sillier-looking situation of
         // monster-cast prisms displaying as 'unaware of you'.
@@ -2158,6 +2165,7 @@ spret cast_fulminating_prism(actor* caster, int pow,
         {
             prism->foe = caster->as_monster()->foe;
             prism->behaviour = BEH_SEEK;
+            prism->flags |= MF_WAS_IN_VIEW;
         }
     }
     else if (you.can_see(*caster))

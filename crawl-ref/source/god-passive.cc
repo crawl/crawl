@@ -28,6 +28,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "los.h"
+#include "losglobal.h"
 #include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
@@ -41,6 +42,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "spl-clouds.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -1388,24 +1390,27 @@ static bool _simple_shot_tracer(coord_def source, coord_def target, mid_t source
     return mons_should_fire(tracer);
 }
 
-static coord_def _find_any_shadow_shoot_position(coord_def& aim)
+// Gets all eligible enemy targets in view of the player, in random order
+static vector<monster*> _get_shadow_targets()
 {
     vector<monster*> valid_targs;
-    vector<coord_def> valid_spots;
-
-    // Find all valid targets immediately, so we can properly iterate through
-    // then in random order for each possible shadow position.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
             valid_targs.push_back(*mi);
     }
-
-    // Nothing to shoot at.
-    if (valid_targs.empty())
-        return coord_def();
-
     shuffle_array(valid_targs);
+    return valid_targs;
+}
+
+// Gets all spots within a certain radius of the player where your shadow could
+// be placed. (These will be sorted to prefer spots at distance 2-3 at random,
+// with adjacent spots only at the end, so that the shadow will prefer to be
+// non-adjacent, but not ignore adjacent positions if they are the only valid
+// ones)
+static vector<coord_def> _get_shadow_spots(bool check_silence = false)
+{
+    vector<coord_def> valid_spots;
 
     // First, test spots at range 2-3 from the player
     for (distance_iterator di(you.pos(), true, true, 3); di; ++di)
@@ -1416,6 +1421,9 @@ static coord_def _find_any_shadow_shoot_position(coord_def& aim)
         if (!_shadow_can_stand_here(*di))
             continue;
 
+        if (check_silence && silenced(*di))
+            continue;
+
         valid_spots.push_back(*di);
     }
 
@@ -1424,9 +1432,27 @@ static coord_def _find_any_shadow_shoot_position(coord_def& aim)
     // Then add adjacent-to-player spots last
     for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
     {
+        if (check_silence && silenced(*ai))
+            continue;
+
         if (_shadow_can_stand_here(*ai))
             valid_spots.push_back(*ai);
     }
+
+    return valid_spots;
+}
+
+static coord_def _find_any_shadow_shoot_position(coord_def& aim)
+{
+    // Find all valid targets immediately, so we can properly iterate through
+    // then in random order for each possible shadow position.
+    vector<monster*> valid_targs = _get_shadow_targets();
+
+    // Nothing to shoot at.
+    if (valid_targs.empty())
+        return coord_def();
+
+    vector<coord_def> valid_spots = _get_shadow_spots();
 
     // Somehow, nowhere to stand.
     if (valid_spots.empty())
@@ -1589,40 +1615,315 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
         mon->props.erase(DITH_SHADOW_LAST_TARGET_KEY);
 }
 
+static int _shadow_zap_tracer(zap_type ztype, coord_def source, coord_def target)
+{
+    bolt tracer;
+
+    zappy(ztype, 100, true, tracer);
+
+    tracer.attitude = ATT_FRIENDLY;
+    tracer.range = LOS_RADIUS;
+    tracer.source = source;
+    tracer.target = target;
+    tracer.source_id = MID_PLAYER_SHADOW_DUMMY;
+    tracer.is_tracer = true;
+    tracer.fire();
+
+    if (tracer.friend_info.power > 0)
+        return 0;
+    else
+        return tracer.foe_info.power;
+}
+
+// Tries to find a vaguely 'best' spot to cast a given zap at some random
+// enemy or cluster of enemies in view.
+static coord_def _find_shadow_zap_position(zap_type ztype, coord_def& aim)
+{
+    // Find all valid targets immediately, so we can properly iterate through
+    // then in random order for each possible shadow position.
+    vector<monster*> valid_targs = _get_shadow_targets();
+
+    // Nothing to shoot at.
+    if (valid_targs.empty())
+        return coord_def();
+
+    // Check valid shadow spots that are NOT silenced.
+    vector<coord_def> valid_spots = _get_shadow_spots(true);
+
+    // Somehow, nowhere to stand.
+    if (valid_spots.empty())
+        return coord_def();
+
+    coord_def best_spot, best_aim;
+    int best_score = 0;
+
+    // Now lets run through combinations of possible targets and positions and
+    // try to find a vaguely 'best' shot.
+    //
+    // Since sometimes there will be a very large number of targets visible
+    // (eg: Zigs, Vaults:5) without many of those targets being accessible,
+    // we limit the number of successful shots we test to 10.
+    int num_tests = 0;
+    for (size_t i = 0; i < valid_spots.size(); ++i)
+    {
+        for (size_t j = 0; j < valid_targs.size(); ++j)
+        {
+            int score = _shadow_zap_tracer(ztype, valid_spots[i], valid_targs[j]->pos());
+            if (score > best_score)
+            {
+                best_aim = valid_targs[j]->pos();
+                best_spot = valid_spots[i];
+                best_score = score;
+                ++num_tests;
+            }
+
+            if (num_tests >= 10)
+                break;
+        }
+
+        if (num_tests >= 10)
+            break;
+    }
+
+    // Somehow, no valid spots can hit any valid targets
+    if (best_aim.origin())
+        return coord_def();
+
+    aim = best_aim;
+    return best_spot;
+}
+
+static coord_def _find_shadow_aoe_position(int radius, bool test_bind = false,
+                                           bool near_walls = false)
+{
+    vector<monster*> valid_targs = _get_shadow_targets();
+
+    // Nothing to shoot at.
+    if (valid_targs.empty())
+        return coord_def();
+
+    // Check valid shadow spots that are NOT silenced.
+    vector<coord_def> valid_spots = _get_shadow_spots(true);
+
+    // Somehow, nowhere to stand.
+    if (valid_spots.empty())
+        return coord_def();
+
+    coord_def best_spot;
+    int best_score = 0;
+
+    // Now let's see how many targets are in range from each shadow spot and
+    // randomly pick the best of these.
+    int num_tests = 0;
+    for (size_t i = 0; i < valid_spots.size(); ++i)
+    {
+        int score = 0;
+        for (size_t j = 0; j < valid_targs.size(); ++j)
+        {
+            if (grid_distance(valid_spots[i], valid_targs[j]->pos()) <= radius
+                && cell_see_cell(valid_spots[i], valid_targs[j]->pos(), LOS_NO_TRANS)
+                && (!test_bind || !valid_targs[j]->has_ench(ENCH_BOUND))
+                && (!near_walls || near_visible_wall(valid_spots[i], valid_targs[j]->pos())))
+            {
+                score += valid_targs[j]->get_experience_level();
+            }
+        }
+
+        if (score > best_score)
+        {
+            best_spot = valid_spots[i];
+            best_score = score;
+            ++num_tests;
+        }
+    }
+
+    // Somehow, no valid spots can hit any valid targets
+    if (best_spot.origin())
+        return coord_def();
+
+    return best_spot;
+}
+
+static coord_def _find_shadow_prism_position(coord_def& aim)
+{
+    // Create a sort of 'heatmap' by finding all foes, then iterating through
+    // all spaces within prism explosion radius of each foe and adding that
+    // foe's HD to that spot in the map. Then we can iterate to find the 'best'
+    // spots to place a prism and afterward determine where to summon the shadow
+    // so that it could put one there.
+    //
+    // (Yes, this doesn't account for monster's moving or hitting prisms, but
+    // we don't need to be too smart about this. It's expected that some prisms
+    // won't detonate usefully, but in exchange others will be very good)
+
+    vector<monster*> valid_targs = _get_shadow_targets();
+
+    // Nothing to shoot at.
+    if (valid_targs.empty())
+        return coord_def();
+
+    // Check valid shadow spots that are NOT silenced (we'll use this later, but
+    // we can save some work if somehow there aren't any).
+    vector<coord_def> valid_spots = _get_shadow_spots(true);
+
+    // Somehow, nowhere to stand.
+    if (valid_spots.empty())
+        return coord_def();
+
+    SquareArray<int, LOS_MAX_RANGE> map;
+    map.init(0);
+
+    // Fill heatmap
+    for (unsigned int i = 0; i < valid_targs.size(); ++i)
+    {
+        for (distance_iterator di(valid_targs[i]->pos(), false, true, 2); di; ++di)
+        {
+            if (actor_at(*di) || feat_is_solid(env.grid(*di)))
+                continue;
+
+            if (grid_distance(you.pos(), *di) > you.current_vision)
+                continue;
+
+            coord_def p = *di - you.pos();
+            map(p) += valid_targs[i]->get_experience_level();
+        }
+    }
+
+    vector<pair<coord_def, int>> targ_spots;
+    for (int iy = -LOS_MAX_RANGE; iy < LOS_MAX_RANGE; ++iy)
+    {
+        for (int ix = -LOS_MAX_RANGE; ix < LOS_MAX_RANGE; ++ix)
+        {
+            coord_def p(ix, iy);
+            if (map(p) > 0)
+                targ_spots.emplace_back(p, map(p));
+        }
+    }
+
+    // Sort valid prism spots from best to worst
+    sort(targ_spots.begin(), targ_spots.end(),
+            [](const pair<coord_def, int> &a, const pair<coord_def, int> &b)
+                {return a.second > b.second;});
+
+    // Try to place the shadow to cast at the best spot, but keep checking
+    // other spots if somehow there is no casting position in range of them.
+    for (size_t i = 0; i < targ_spots.size(); ++i)
+    {
+        for (size_t j = 0; j < valid_spots.size(); ++j)
+        {
+            coord_def p = you.pos() + targ_spots[i].first;
+            if (p != valid_spots[j]
+                && grid_distance(p, valid_spots[j]) <= spell_range(SPELL_SHADOW_PRISM, 100)
+                && cell_see_cell(p, valid_spots[j], LOS_NO_TRANS)
+                && cell_see_cell(you.pos(), valid_spots[j], LOS_NO_TRANS)
+                && cell_see_cell(you.pos(), p, LOS_NO_TRANS))
+            {
+                aim = p;
+                return valid_spots[j];
+            }
+        }
+    }
+
+    return coord_def();
+}
+
+static spell_type _get_shadow_spell(spell_type player_spell)
+{
+    vector<spell_type> spells;
+
+    const spschools_type schools = get_spell_disciplines(player_spell);
+
+    if (schools & spschool::fire)
+        spells.push_back(SPELL_SHADOW_BALL);
+    if (schools & spschool::ice)
+        spells.push_back(SPELL_CREEPING_SHADOW);
+    if (schools & spschool::earth)
+        spells.push_back(SPELL_SHADOW_SHARD);
+    if (schools & spschool::air)
+        spells.push_back(SPELL_SHADOW_TEMPEST);
+    if (schools & spschool::alchemy)
+        spells.push_back(SPELL_SHADOW_PRISM);
+    if (schools & spschool::conjuration)
+        spells.push_back(SPELL_SHADOW_BEAM);
+    if (schools & spschool::necromancy)
+        spells.push_back(SPELL_SHADOW_DRAINING);
+    if (schools & spschool::translocation)
+        spells.push_back(SPELL_SHADOW_BIND);
+    if (schools & spschool::hexes)
+        spells.push_back(SPELL_SHADOW_TORPOR);
+    if (schools & spschool::summoning)
+        spells.push_back(SPELL_SHADOW_PUPPET);
+
+    return spells[random2(spells.size())];
+}
+
 void dithmenos_shadow_spell(spell_type spell)
 {
     if (!_shadow_will_act(true, false))
         return;
 
-    // monster* mon = shadow_monster();
-    // if (!mon)
-    //     return;
+    spell_type shadow_spell = _get_shadow_spell(spell);
 
-    // // Don't let shadow spells get too powerful.
-    // mon->set_hit_dice(max(1,
-    //                       min(3 * spell_difficulty(spell),
-    //                           you.experience_level) / 2));
+    coord_def pos, aim;
 
-    // mon->target = clamp_in_bounds(target);
-    // if (actor_at(target))
-    //     mon->foe = actor_at(target)->mindex();
+    switch (shadow_spell)
+    {
+        case SPELL_SHADOW_BALL:
+        case SPELL_SHADOW_SHARD:
+        case SPELL_SHADOW_BEAM:
+        case SPELL_SHADOW_TORPOR:
+            pos = _find_shadow_zap_position(spell_to_zap(shadow_spell), aim);
+        break;
 
-    // spell_type shadow_spell = spell;
-    // if (!orig_beam->is_enchantment())
-    // {
-    //     shadow_spell = (orig_beam->pierce) ? SPELL_SHADOW_BOLT
-    //                                        : SPELL_SHADOW_SHARD;
-    // }
+        case SPELL_SHADOW_PRISM:
+            pos = _find_shadow_prism_position(aim);
+            break;
 
-    // bolt beem;
-    // beem.target = target;
-    // beem.aimed_at_spot = orig_beam->aimed_at_spot;
+        case SPELL_SHADOW_BIND:
+            pos = _find_shadow_aoe_position(you.current_vision, true);
+            break;
 
-    // mprf(MSGCH_FRIEND_SPELL, "%s mimics your spell!",
-    //      mon->name(DESC_THE).c_str());
-    // mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
+        case SPELL_SHADOW_DRAINING:
+            pos = _find_shadow_aoe_position(2);
+            break;
 
-    // shadow_monster_reset(mon);
+        case SPELL_CREEPING_SHADOW:
+            pos = _find_shadow_aoe_position(4, false, true);
+            break;
+
+        case SPELL_SHADOW_TEMPEST:
+            pos = _find_shadow_aoe_position(you.current_vision);
+
+        default:
+            pos = _get_shadow_spots()[0];
+            break;
+    }
+
+    // If we weren't able to find a position to cast this spell usefully
+    // (possibly because there are no valid targets in sight), bail.
+    if (pos.origin())
+        return;
+
+    monster* mon = create_player_shadow(pos);
+    if (!mon)
+        return;
+
+    mon->target = aim;
+    if (monster_at(aim))
+        mon->foe = monster_at(aim)->mindex();
+
+    // Note spell, for if player examines the shadow
+    mon->spells.emplace_back(shadow_spell, 200, MON_SPELL_WIZARD);
+    mon->props[CUSTOM_SPELLS_KEY] = true;
+
+    // Set spellpower based on xl and the level of spell cast
+    int spell_hd = div_rand_round((you.experience_level + spell_difficulty(spell) * 4) * 2, 7);
+    mon->props[DITH_SHADOW_SPELLPOWER_KEY] = spell_hd;
+
+    bolt beam;
+    setup_mons_cast(mon, beam, shadow_spell);
+    beam.target = aim;
+    mons_cast(mon, beam, shadow_spell, MON_SPELL_WIZARD);
 }
 
 void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)

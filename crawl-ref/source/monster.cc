@@ -37,6 +37,7 @@
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
+#include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -6408,6 +6409,13 @@ int monster::spell_hd(spell_type spell) const
         hd = max(1, hd * 2 / 3);
     if (has_ench(ENCH_IDEALISED))
         hd *= 2;
+
+    if (mons_is_player_shadow(*this))
+    {
+        if (props.exists(DITH_SHADOW_SPELLPOWER_KEY))
+            hd = props[DITH_SHADOW_SPELLPOWER_KEY].get_int();
+    }
+
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
     return hd;
