@@ -1122,8 +1122,7 @@ void bolt::affect_cell()
             const bool ignored = ignores_monster(m);
             affect_monster(m);
             if (hit == AUTOMATIC_HIT && !pierce && !ignored
-                // Assumes tracers will always have an agent!
-                && (!is_tracer || m->visible_to(agent())))
+                && (!is_tracer || (agent() && m->visible_to(agent()))))
             {
                 finish_beam();
             }
@@ -4681,7 +4680,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         else
         {
             // Discourage summoned monsters firing on their summoner.
-            const monster* mon_source = agent()->as_monster();
+            const monster* mon_source = agent() ? agent()->as_monster() : nullptr;
             if (mon_source && mon_source->summoner == mon->mid)
                 friend_info.power = 100;
             else
@@ -4708,8 +4707,11 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 void bolt::tracer_affect_monster(monster* mon)
 {
     // Ignore unseen monsters.
-    if (!agent() || !agent()->can_see(*mon))
+    if ((agent() && !agent()->can_see(*mon))
+        || !cell_see_cell(source, mon->pos(), LOS_NO_TRANS))
+    {
         return;
+    }
 
     if (flavour == BEAM_UNRAVELLING && monster_can_be_unravelled(*mon))
         is_explosion = true;
