@@ -114,7 +114,7 @@ Xom feature lava
 %%%%
 Xom feature shallow water
 
-@The_feature@ briefly [bubbles|swirls|glows|flashes @any_colour@|boils].
+@The_feature@ briefly [bubbles|swirls|glows|flashes @any_colour@|boils|freezes].
 %%%%
 Xom feature deep water
 
