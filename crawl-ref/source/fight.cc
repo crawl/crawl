@@ -1494,9 +1494,8 @@ int stat_modify_damage(int damage, skill_type wpn_skill, bool using_weapon)
     const bool use_str = weapon_uses_strength(wpn_skill, using_weapon);
     const int attr = use_str ? you.strength() : you.dex();
     damage *= max(1.0, 75 + 2.5 * attr);
-    damage /= 100;
 
-    return damage;
+    return div_rand_round(damage, 100);
 }
 
 int apply_weapon_skill(int damage, skill_type wpn_skill, bool random)
