@@ -1939,7 +1939,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
-    if (you.species != SP_NAGA && !you.fishtail && !you.airborne()
+    if (you_can_wear(EQ_BOOTS, true) != false && !you.airborne()
         && !you.cannot_act())
     {
         string str = _get_xom_speech("impromptu dance");
