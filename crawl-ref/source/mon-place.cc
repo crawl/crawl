@@ -3003,14 +3003,6 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 
     monster *summd = 0;
 
-    // Block enemy summoning in Okawaru's arena
-    if (okawaru_duel_active() && mg.summoner && !mons_is_conjured(mg.cls))
-    {
-        if (you.can_see(*mg.summoner))
-            mpr("...but nothing answers their call.");
-        return nullptr;
-    }
-
     if (!mg.force_place()
         || monster_at(mg.pos)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
