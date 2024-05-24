@@ -1375,7 +1375,7 @@ static void _xom_give_bad_mutations(int) { _xom_give_mutations(false); }
  */
 static void _xom_throw_divine_lightning(int /*sever*/)
 {
-    god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
+    god_speaks(GOD_XOM, _get_xom_speech("divine lightning").c_str());
 
     bolt beam;
 

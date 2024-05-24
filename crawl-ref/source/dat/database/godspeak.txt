@@ -480,6 +480,14 @@ You hear Xom's avuncular chuckle.
 
 With a flash of [@rainbow_colour@|@misc_colour@] light, Xom rebuilds you.
 %%%%
+Xom divine lightning
+
+The area is suffused with divine lightning!
+
+Xom hurls a blast of lightning!
+
+"Ready, aim, fire!"
+%%%%
 Xom snakes to sticks
 
 Xom transforms those around you.
