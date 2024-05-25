@@ -226,9 +226,11 @@ A monocle briefly appears over your [right|left] eye.
 
 An eyepatch briefly covers your [right|left] eye.
 %%%%
-Xom eyebrows
+Xom hair
 
 Your eyebrows [briefly feel incredibly bushy|wriggle].
+
+You briefly grow a large moustache and beard.
 %%%%
 Xom impromptu dance
 

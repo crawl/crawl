@@ -1930,7 +1930,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (species::has_hair(you.species))
     {
-        string str = _get_xom_speech("eyebrows");
+        string str = _get_xom_speech("hair");
 
         if (!str.empty())
         {
