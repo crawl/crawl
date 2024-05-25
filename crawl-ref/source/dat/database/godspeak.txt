@@ -114,7 +114,17 @@ Xom feature lava
 %%%%
 Xom feature shallow water
 
-@The_feature@ briefly [bubbles|swirls|glows|flashes @any_colour@|boils|freezes].
+@The_feature@ briefly bubbles.
+
+@The_feature@ briefly swirls.
+
+@The_feature@ briefly glows.
+
+@The_feature@ briefly flashes @any_colour@.
+
+@The_feature@ briefly boils.
+
+@The_feature@ briefly freezes.
 %%%%
 Xom feature deep water
 
@@ -130,13 +140,17 @@ Xom feature blood
 %%%%
 Xom feature dry
 
-[Water|Blood] briefly sprays from @the_feature@.
+Water briefly sprays from @the_feature@.
+
+Blood briefly sprays from @the_feature@.
 
 Dust puffs up from @the_feature@.
 %%%%
 Xom feature statue
 
-@The_feature@ turns to [glare|stare] at you.
+@The_feature@ turns to glare at you.
+
+@The_feature@ turns to stare at you.
 
 @The_feature@ turns away from you.
 
@@ -156,7 +170,9 @@ Tendrils of electricity crawl over @the_feature@.
 %%%%
 Xom feature stone arch
 
-@The_feature@ briefly shows a [sunny meadow|lifeless wasteland] on the other side.
+@The_feature@ briefly shows a sunny meadow on the other side.
+
+@The_feature@ briefly shows a lifeless wasteland on the other side.
 %%%%
 Xom underfoot general
 
@@ -172,7 +188,9 @@ Something invisible splashes into @the_feature@ beside you!
 %%%%
 Xom underfoot airborne general
 
-@The_feature@ seems to [fall away from under|rush up at] you!
+@The_feature@ seems to fall away from under you!
+
+@The_feature@ seems to rush up at you!
 %%%%
 Xom underfoot airborne water
 
@@ -182,13 +200,25 @@ Something invisible splashes into @the_feature@ beneath you!
 %%%%
 Xom inventory singular
 
-@Your_item@ briefly [glows|vibrates|flashes @any_colour@].
+@Your_item@ briefly glows.
+
+@Your_item@ briefly vibrates.
+
+@Your_item@ briefly flashes @any_colour@.
 %%%%
 Xom inventory plural
 
-One of @your_item@ briefly [glows|vibrates|flashes @any_colour@].
+One of @your_item@ briefly glows.
 
-@Your_item@ briefly [glow|vibrate|flash @any_colour@].
+One of @your_item@ briefly vibrates.
+
+One of @your_item@ briefly flashes @any_colour@.
+
+@Your_item@ briefly glow.
+
+@Your_item@ briefly vibrate.
+
+@Your_item@ briefly flash @any_colour@.
 %%%%
 Xom floor inventory singular
 
@@ -222,13 +252,19 @@ An eyepatch briefly covers your eye.
 %%%%
 Xom two eyes
 
-A monocle briefly appears over your [right|left] eye.
+A monocle briefly appears over your right eye.
 
-An eyepatch briefly covers your [right|left] eye.
+A monocle briefly appears over your left eye.
+
+An eyepatch briefly covers your right eye.
+
+An eyepatch briefly covers your left eye.
 %%%%
 Xom hair
 
-Your eyebrows [briefly feel incredibly bushy|wriggle].
+Your eyebrows briefly feel incredibly bushy.
+
+Your eyebrows wriggle.
 
 You briefly grow a large moustache and beard.
 %%%%

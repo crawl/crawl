@@ -1822,8 +1822,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         if (!str.empty())
         {
-            str = maybe_pick_random_substring(str);
-
             str = replace_all(str, "@The_feature@",
                               uppercase_first(in_view_name[iv]));
             str = replace_all(str, "@the_feature@", in_view_name[iv]);
@@ -1855,20 +1853,15 @@ static void _xom_pseudo_miscast(int /*sever*/)
                                           : "underfoot general");
         }
 
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
+        str = replace_all(str, "@The_feature@", uppercase_first(feat_name));
+        str = replace_all(str, "@the_feature@", feat_name);
 
-            str = replace_all(str, "@The_feature@", uppercase_first(feat_name));
-            str = replace_all(str, "@the_feature@", feat_name);
-
-            // Don't put airborne messages into the priority vector for
-            // anyone who can fly a lot.
-            if (you.racial_permanent_flight())
-                messages.push_back(str);
-            else
-                priority.push_back(str);
-        }
+        // Don't put airborne messages into the priority vector for
+        // anyone who can fly a lot.
+        if (you.racial_permanent_flight())
+            messages.push_back(str);
+        else
+            priority.push_back(str);
     }
 
     if (!inv_items.empty())
@@ -1888,15 +1881,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
                       item.quantity == 1 ? "inventory singular"
                                          : "inventory plural");
 
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+        str = replace_all(str, "@your_item@", name);
 
-            str = replace_all(str, "@Your_item@", uppercase_first(name));
-            str = replace_all(str, "@your_item@", name);
-
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     //////////////////////////////////////////////
@@ -1908,47 +1896,27 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string str =_get_xom_speech(
                         (!you.airborne() && !you.swimming()) ? "floor bandages"
                                                              : "bandages");
-
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     {
         string str =_get_xom_speech(
                 you.get_mutation_level(MUT_MISSING_EYE) ? "one eye"
                                                         : "two eyes");
-
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     if (species::has_hair(you.species))
     {
         string str = _get_xom_speech("hair");
-
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     if (you_can_wear(EQ_BOOTS, true) != false && !you.airborne()
         && !you.cannot_act())
     {
         string str = _get_xom_speech("impromptu dance");
-
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     ///////////////////////////
@@ -1962,15 +1930,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string str =_get_xom_speech(one_handed ? "unarmed one hand"
                                                : "unarmed two hands");
 
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
+        str = replace_all(str, "@hand@", you.hand_name(false));
+        str = replace_all(str, "@hands@", you.hand_name(true));
 
-            str = replace_all(str, "@hand@", you.hand_name(false));
-            str = replace_all(str, "@hands@", you.hand_name(true));
-
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     if (item_def* item = you.slot_item(EQ_CLOAK))
@@ -1978,15 +1941,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("cloak slot");
 
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+        str = replace_all(str, "@your_item@", name);
 
-            str = replace_all(str, "@Your_item@", uppercase_first(name));
-            str = replace_all(str, "@your_item@", name);
-
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     if (item_def* item = you.slot_item(EQ_HELMET))
@@ -1994,15 +1952,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("helmet slot");
 
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+        str = replace_all(str, "@your_item@", name);
 
-            str = replace_all(str, "@Your_item@", uppercase_first(name));
-            str = replace_all(str, "@your_item@", name);
-
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     if (item_def* item = you.slot_item(EQ_OFFHAND))
@@ -2010,15 +1963,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("offhand slot");
 
-        if (!str.empty())
-        {
-            str = maybe_pick_random_substring(str);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+        str = replace_all(str, "@your_item@", name);
 
-            str = replace_all(str, "@Your_item@", uppercase_first(name));
-            str = replace_all(str, "@your_item@", name);
-
-            messages.push_back(str);
-        }
+        messages.push_back(str);
     }
 
     if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))
@@ -2042,8 +1990,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         if (!str.empty())
         {
-            str = maybe_pick_random_substring(str);
-
             str = replace_all(str, "@Your_item@", uppercase_first(name));
             str = replace_all(str, "@your_item@", name);
 
