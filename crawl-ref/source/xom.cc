@@ -1912,8 +1912,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (you_can_wear(EQ_BOOTS, true) != false && !you.airborne()
-        && !you.cannot_act())
+    if (player_has_feet() && !you.airborne() && !you.cannot_act())
     {
         string str = _get_xom_speech("impromptu dance");
         messages.push_back(str);
