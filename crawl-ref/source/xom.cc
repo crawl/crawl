@@ -1822,9 +1822,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         if (!str.empty())
         {
+            str = replace_all(str, "@the_feature@", in_view_name[iv]);
             str = replace_all(str, "@The_feature@",
                               uppercase_first(in_view_name[iv]));
-            str = replace_all(str, "@the_feature@", in_view_name[iv]);
 
             messages.push_back(str);
         }
@@ -1853,8 +1853,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
                                           : "underfoot general");
         }
 
-        str = replace_all(str, "@The_feature@", uppercase_first(feat_name));
         str = replace_all(str, "@the_feature@", feat_name);
+        str = replace_all(str, "@The_feature@", uppercase_first(feat_name));
 
         // Don't put airborne messages into the priority vector for
         // anyone who can fly a lot.
@@ -1881,8 +1881,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
                       item.quantity == 1 ? "inventory singular"
                                          : "inventory plural");
 
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
         str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
 
         messages.push_back(str);
     }
@@ -1941,8 +1941,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("cloak slot");
 
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
         str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
 
         messages.push_back(str);
     }
@@ -1952,8 +1952,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("helmet slot");
 
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
         str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
 
         messages.push_back(str);
     }
@@ -1963,8 +1963,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("offhand slot");
 
-        str = replace_all(str, "@Your_item@", uppercase_first(name));
         str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
 
         messages.push_back(str);
     }
@@ -1990,8 +1990,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
         if (!str.empty())
         {
-            str = replace_all(str, "@Your_item@", uppercase_first(name));
             str = replace_all(str, "@your_item@", name);
+            str = replace_all(str, "@Your_item@", uppercase_first(name));
 
             messages.push_back(str);
         }
