@@ -139,7 +139,6 @@ static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_brain_bite(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
-static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
 static void _flay(const monster &caster, actor &defender, int damage);
@@ -172,6 +171,7 @@ static void _whack(const actor &caster, actor &victim);
 static bool _mons_cast_prisms(monster& caster, actor& foe, int pow, bool check_only);
 static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, bool check_only);
 static ai_action::goodness _hoarfrost_cannonade_goodness(const monster &caster);
+static void _cast_wall_burst(monster &caster, bolt &beam, int radius = LOS_RADIUS);
 
 enum spell_logic_flag
 {
@@ -446,7 +446,11 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BRAIN_BITE, { _always_worthwhile, _cast_brain_bite, } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
-    { SPELL_CREEPING_FROST, { _foe_near_wall, _cast_creeping_frost, _setup_creeping_frost } },
+    { SPELL_CREEPING_FROST, { _foe_near_wall,
+        [](monster &caster, mon_spell_slot, bolt& beam) {
+            _cast_wall_burst(caster, beam);
+        },
+        _setup_creeping_frost } },
     { SPELL_PYROCLASTIC_SURGE, { _foe_near_lava, _cast_pyroclastic_surge, _setup_pyroclastic_surge } },
     { SPELL_FLAY, {
         [](const monster &caster) {
@@ -2729,17 +2733,6 @@ static bool _seal_doors_and_stairs(const monster* warden,
     return false;
 }
 
-/// Can the caster see the given target's cell and a wall next to them?
-static bool _near_visible_wall(const monster &caster, coord_def targ)
-{
-    if (!caster.see_cell_no_trans(targ))
-        return false;
-    for (adjacent_iterator ai(targ); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)) && caster.see_cell_no_trans(*ai))
-            return true;
-    return false;
-}
-
 /// Does the given monster have a foe that's 3+ distance away?
 static ai_action::goodness _foe_not_nearby(const monster &caster)
 {
@@ -2772,7 +2765,7 @@ static ai_action::goodness _foe_near_wall(const monster &caster)
     if (!foe)
         return ai_action::bad();
 
-    if (_near_visible_wall(caster, foe->pos()))
+    if (near_visible_wall(caster, foe->pos()))
         return ai_action::good();
     return ai_action::bad();
 }
@@ -2783,46 +2776,36 @@ static void _setup_creeping_frost(bolt &beam, const monster &, int pow)
     beam.hit = AUTOMATIC_HIT;
     beam.name = "frost";
     beam.hit_verb = "grips";
-}
-
-static bool _creeping_frost_freeze(coord_def p, bolt &beam)
-{
-    beam.source = p;
-    beam.target = p;
     beam.aux_source = "creeping frost";
-    beam.fire();
-    return beam.explosion_draw_cell(p);
 }
 
-/// Cast the spell Creeping Frost, freezing any of the caster's foes that are
-/// adjacent to walls.
-static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
+// Deals damage to all non-aligned creatures adjacent to visible walls within a
+// given distance of the caster.
+//
+// (Damage type and amount is determine by the beam passed in)
+static void _cast_wall_burst(monster &caster, bolt &beam, int radius)
 {
     bool visible_effect = false;
-    // Freeze the player.
-    if (!caster.wont_attack() && _near_visible_wall(caster, you.pos()))
-        visible_effect |= _creeping_frost_freeze(you.pos(), beam);
-
-    // Freeze the player's friends.
     for (vision_iterator vi(caster); vi; ++vi)
     {
-        actor* target = actor_at(*vi);
-        if (!target)
+        if (grid_distance(caster.pos(), *vi) > radius
+            || feat_is_solid(env.grid(*vi))
+            || !near_visible_wall(caster, *vi))
         {
-            if (!cell_is_solid(*vi) && _near_visible_wall(caster, *vi))
-                visible_effect |= beam.explosion_draw_cell(*vi);
             continue;
         }
 
-        monster *mon = target->as_monster();
-        if (!mon || mons_aligned(&caster, mon))
-        {
-            if (mon && !you.can_see(*mon) && _near_visible_wall(caster, *vi))
-                visible_effect |= beam.explosion_draw_cell(*vi);
+        visible_effect |= beam.explosion_draw_cell(*vi);
+
+        // Just draw the burst if there isn't a hostile here, and skip damage.
+        actor* target = actor_at(*vi);
+        if (!target || mons_aligned(&caster, target))
             continue;
-        }
-        if (_near_visible_wall(caster, mon->pos()))
-            visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
+
+        // There's a hostile here; do the burst for real
+        beam.source = *vi;
+        beam.target = *vi;
+        beam.fire();
     }
     if (visible_effect && Options.use_animations & UA_MONSTER)
         animation_delay(50, true);
