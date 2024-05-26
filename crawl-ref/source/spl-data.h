@@ -3062,7 +3062,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_AURA_OF_BRILLIANCE,
+    TILEG_PRAYER_OF_BRILLIANCE,
 },
 
 {
@@ -3970,7 +3970,7 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     0,
-    TILEG_SHEZAS_DANCE,
+    TILEG_BESTOW_ARMS,
 },
 
 {

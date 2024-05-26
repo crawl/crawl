@@ -669,8 +669,10 @@ may attract unwanted attention even while you maintain it.
 %%%%
 Fulminant Prism spell
 
-Conjures a prism which unleashes a violent explosion of arcane force after a
-short duration. If destroyed prematurely, its blast will be much weaker.
+Conjures a shining prism of an unstable soft gold alloy. This is useless as
+legal tender, however, as it will unfortunately violently explode with arcane
+force after a short duration. If destroyed prematurely, its blast will be much
+weaker.
 %%%%
 Fulsome Fusillade spell
 

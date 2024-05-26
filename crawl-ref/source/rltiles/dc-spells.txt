@@ -1,9 +1,9 @@
 %sdir gui/spells/air
 airstrike AIRSTRIKE
+arcjolt ARCJOLT
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 lightning_bolt LIGHTNING_BOLT
-arcjolt ARCJOLT
 magnavolt MAGNAVOLT
 maxwells MAXWELLS_COUPLING
 repel_missiles REPEL_MISSILES
@@ -13,20 +13,21 @@ static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
 
 %sdir gui/spells/conjuration
-iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
-magic_dart MAGIC_DART
-orb_of_destruction IOOD
 battlesphere BATTLESPHERE
 dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
-searing_ray SEARING_RAY
-momentum_strike MOMENTUM_STRIKE
 irradiate IRRADIATE
+iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
+orb_of_destruction IOOD
+magic_dart MAGIC_DART
+momentum_strike MOMENTUM_STRIKE
+searing_ray SEARING_RAY
 
 %sdir gui/spells/earth
-iron_shot IRON_SHOT
+boulder BOULDER
 dig DIG
+iron_shot IRON_SHOT
 lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
 lehudibs_crystal_spear LEHUDIBS_CRYSTAL_SPEAR
 ledas_liquefaction LEDAS_LIQUEFACTION
@@ -36,7 +37,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-boulder BOULDER
 
 %sdir gui/spells/enchantment
 anguish ANGUISH
@@ -50,29 +50,29 @@ enfeeble ENFEEBLE
 charming CHARMING
 haste HASTE
 invisibility INVISIBILITY
+jinxbite JINXBITE
 mass_confusion MASS_CONFUSION
+sigil_of_binding SIGIL_OF_BINDING
 slow SLOW
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
-sigil_of_binding SIGIL_OF_BINDING
-jinxbite JINXBITE
 
 %sdir gui/spells/fire
+volatile_blastmotes BLASTMOTE
 bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
 fire_storm FIRE_STORM
 fireball FIREBALL
-volatile_blastmotes BLASTMOTE
+flame_wave FLAME_WAVE
+foxfire FOXFIRE
 ignite_poison IGNITE_POISON
+ignition IGNITION
+inner_flame INNER_FLAME
+plasma_beam PLASMA_BEAM
+scorch SCORCH
+starburst STARBURST
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
-inner_flame INNER_FLAME
-ignition IGNITION
-starburst STARBURST
-foxfire FOXFIRE
-scorch SCORCH
-flame_wave FLAME_WAVE
-plasma_beam PLASMA_BEAM
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -81,16 +81,17 @@ freeze FREEZE
 freezing_cloud FREEZING_CLOUD
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
+hoarfrost_cannonade HOARFROST_CANNONADE
 ice_form ICE_FORM
 ice_storm ICE_STORM
 metabolic_englaciation METABOLIC_ENGLACIATION
 ozocubus_armour OZOCUBUS_ARMOUR
 ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 permafrost_eruption PERMAFROST_ERUPTION
+rimeblight RIMEBLIGHT
 throw_frost THROW_FROST
 throw_icicle THROW_ICICLE
 polar_vortex POLAR_VORTEX
-rimeblight RIMEBLIGHT
 
 %sdir gui/spells/necromancy
 agony AGONY
@@ -119,17 +120,16 @@ vampiric_draining VAMPIRIC_DRAINING
 
 %sdir gui/spells/alchemy
 alistairs_intoxication ALISTAIRS_INTOXICATION
+fulsome_fusillade FULSOME_FUSILLADE
 mephitic_cloud MEPHITIC_CLOUD
+mercury_vapours MERCURY_VAPOURS
+noxious_bog NOXIOUS_BOG
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_arrow POISON_ARROW
 poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
-mercury_vapours MERCURY_VAPOURS
-noxious_bog NOXIOUS_BOG
-fulsome_fusillade FULSOME_FUSILLADE
-hoarfrost_cannonade HOARFROST_CANNONADE
 
 %sdir gui/spells/summoning
 animate_armour ANIMATE_ARMOUR
@@ -161,23 +161,23 @@ blink BLINK
 disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
+piledriver PILEDRIVER
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
+gavotte GAVOTTE
 gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
 electric_charge ELECTRIC_CHARGE
-piledriver PILEDRIVER
-gavotte GAVOTTE
 
 # item-based spells
 %sdir gui/spells/misc
+bolt_of_light BOLT_OF_LIGHT
+bolt_corrosive CORROSIVE_BOLT
+cloud_cone CLOUD_CONE
+bolt_energy ENERGY_BOLT
+iceblast ICEBLAST
 paralyse PARALYSE
 bolt_thunder THUNDERBOLT
-cloud_cone CLOUD_CONE
-bolt_corrosive CORROSIVE_BOLT
-iceblast ICEBLAST
-bolt_energy ENERGY_BOLT
-bolt_of_light BOLT_OF_LIGHT
 warp_space WARP_SPACE
 
 # spells normally only used by monsters
@@ -189,6 +189,7 @@ awaken_forest AWAKEN_FOREST
 awaken_vines AWAKEN_VINES
 battlecry BATTLECRY
 berserk_other BERSERK_OTHER
+bestow_arms BESTOW_ARMS
 blink_other BLINK_OTHER
 brain_bite BRAIN_BITE
 call_of_chaos CALL_OF_CHAOS
@@ -288,11 +289,11 @@ hurl_damnation HURL_DAMNATION
 
 # spells flavoured as divine abilities
 %sdir gui/spells/monster
-aura_of_brilliance AURA_OF_BRILLIANCE
 drain_life DRAIN_LIFE
 druids_call DRUIDS_CALL
 injury_mirror INJURY_MIRROR
 malign_offering MALIGN_OFFERING
+prayer_of_brilliance PRAYER_OF_BRILLIANCE
 regeneration REGENERATION
 sap_magic SAP_MAGIC
 
