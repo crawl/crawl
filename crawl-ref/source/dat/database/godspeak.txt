@@ -252,13 +252,9 @@ An eyepatch briefly covers your eye.
 %%%%
 Xom two eyes
 
-A monocle briefly appears over your right eye.
+A monocle briefly appears over your [right|left] eye.
 
-A monocle briefly appears over your left eye.
-
-An eyepatch briefly covers your right eye.
-
-An eyepatch briefly covers your left eye.
+An eyepatch briefly covers your [right|left] eye.
 %%%%
 Xom hair
 

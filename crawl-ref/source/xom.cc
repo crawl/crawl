@@ -1996,10 +1996,15 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
+    string str;
+
     if (!priority.empty() && coinflip())
-        mpr(priority[random2(priority.size())]);
+        str = priority[random2(priority.size())];
     else
-        mpr(messages[random2(messages.size())]);
+        str = messages[random2(messages.size())];
+
+    str = maybe_pick_random_substring(str);
+    mpr(str);
 }
 
 static bool _miscast_is_nasty(int sever)
