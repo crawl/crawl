@@ -2880,7 +2880,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                         if (you.can_see(mons))
                         {
                             mprf("Plague seeps from the dead %s.",
-                                 victim->name(DESC_PLAIN).c_str());
+                                 mons.name(DESC_PLAIN).c_str());
                         }
                         did_spread_message = true;
                     }
