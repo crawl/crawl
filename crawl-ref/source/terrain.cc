@@ -926,6 +926,17 @@ int count_adjacent_icy_walls(const coord_def &pos)
     return count;
 }
 
+// Can an actor see a wall next to a given cell?
+bool near_visible_wall(const actor &observer, coord_def cell)
+{
+    if (!observer.see_cell_no_trans(cell))
+        return false;
+    for (adjacent_iterator ai(cell); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)) && observer.see_cell_no_trans(*ai))
+            return true;
+    return false;
+}
+
 void feat_splash_noise(dungeon_feature_type feat)
 {
     if (crawl_state.generating_level)
