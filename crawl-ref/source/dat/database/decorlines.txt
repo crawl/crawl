@@ -101,6 +101,14 @@ short meat cache
 
 You root around and sample @_meat_and_reaction_@
 %%%%
+stone fruit cache
+
+You pestle and swallow @_fruit_and_reaction_@
+%%%%
+stone meat cache
+
+You pestle and swallow @_meat_and_reaction_@
+%%%%
 inediate fruit cache
 
 You briefly stare at the fruit pile and sigh.
@@ -129,6 +137,14 @@ You pick out some berries and nibble upon them. Bland.
 felid meat cache
 
 You nibble upon @_meat_and_reaction_@
+%%%%
+gargoyle fruit cache
+
+@stone fruit cache@
+%%%%
+gargoyle meat cache
+
+@stone meat cache@
 %%%%
 ghoul fruit cache
 
@@ -235,6 +251,14 @@ You distend your jaw to swallow @_fruit_and_reaction_@
 snake meat cache
 
 You distend your jaw to swallow @_meat_and_reaction_@
+%%%%
+statue fruit cache
+
+@stone fruit cache@
+%%%%
+statue meat cache
+
+@stone meat cache@
 %%%%
 storm fruit cache
 
