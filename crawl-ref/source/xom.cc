@@ -2275,20 +2275,18 @@ static void _xom_repel_stairs(bool unclimbable)
 
     // Don't mention staircases if there aren't any nearby.
     string stair_msg = _get_xom_speech("repel stairs");
-    if (stair_msg.find("@staircase@") != string::npos)
+    string feat_name;
+
+    if (!real_stairs)
     {
-        string feat_name;
-        if (!real_stairs)
-        {
-            if (feat_is_escape_hatch(env.grid(stairs_avail[0])))
-                feat_name = "escape hatch";
-            else
-                feat_name = "gate";
-        }
-        else
-            feat_name = "staircase";
-        stair_msg = replace_all(stair_msg, "@staircase@", feat_name);
+        feat_name =
+            feat_is_escape_hatch(env.grid(stairs_avail[0])) ? "escape hatch"
+                                                            : "gate";
     }
+    else
+        feat_name = "staircase";
+
+    stair_msg = replace_all(stair_msg, "@staircase@", feat_name);
 
     god_speaks(GOD_XOM, stair_msg.c_str());
 

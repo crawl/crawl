@@ -592,6 +592,10 @@ Xom changes the scenery.
 
 Xom pokes at a nearby @staircase@.
 
+Xom pushes on a nearby @staircase@.
+
+Xom pulls on a nearby @staircase@.
+
 "Tag, you're it!"
 
 Xom alters the dungeon around you.
