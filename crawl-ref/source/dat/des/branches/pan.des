@@ -3179,6 +3179,7 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
+COLOUR:  G = mountain
 TILE:    x = wall_undead
 TILE:    G = dngn_scintillating_statue
 :   set_feature_name("granite_statue", "scintillating statue")
@@ -3206,6 +3207,7 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
+COLOUR:  G = mountain
 TILE:    x = wall_undead
 TILE:    G = dngn_scintillating_statue
 :   set_feature_name("granite_statue", "scintillating statue")

@@ -1260,6 +1260,8 @@ KFEAT:   + = closed_clear_door
 KFEAT:   g = granite_statue
 KFEAT:   S = metal_statue
 SHUFFLE: apDE, apqrsyz, DEFHJKLM
+COLOUR:  g = mountain
+COLOUR:  S = yellow
 TILE:    g = dngn_scintillating_statue
 TILE:    S = dngn_golden_statue
 : set_feature_name("granite_statue", "scintillating statue")

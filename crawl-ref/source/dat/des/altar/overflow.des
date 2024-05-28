@@ -3461,6 +3461,7 @@ SUBST: _ = ____C
 : end
 NSUBST:  " = 2:^ / 1:G__ / 5:m /  * = ltbm~......
 NSUBST:  T = 2:^ / *:., ^ = 2:^ / *:.
+COLOUR:  G = mountain
 TILE:    G = dngn_scintillating_statue
 : set_feature_name("granite_statue", "scintillating statue")
 : interest_check(_G)
@@ -3898,7 +3899,7 @@ TAGS:   transparent uniq_altar_zin
 KFEAT:  _ = altar_zin
 KFEAT:  S = metal_statue
 COLOUR: c = white
-COLOUR: G = silver
+COLOUR: GS = silver
 TILE:   c = wall_church
 TILE:   G = dngn_statue_triangle
 TILE:   S = dngn_silver_statue
@@ -4031,7 +4032,7 @@ TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
 TAGS: temple_overflow_1 transparent decor
 KFEAT: G = metal_statue
 SUBST: X = xxx.
-COLOUR: ' = yellow
+COLOUR: 'G = yellow
 COLOUR: c = white
 TILE: G = dngn_golden_statue
 TILE: c = wall_church
@@ -4460,7 +4461,7 @@ KFEAT:  O = altar_zin
 KFEAT:  G = metal_statue
 : if crawl.one_chance_in(4) then
 SUBST:  v = x
-COLOUR: G = white
+COLOUR: G = silver
 TILE:   G = dngn_silver_statue
 TILE:   x = wall_orc
 FTILE:  +._OG$ = floor_w_marble
@@ -4828,6 +4829,7 @@ MONS:    generate_awake chaos spawn
 KMONS:   g = pile of debris
 KITEM:   i = any damaged weapon ego:chaos ident:all
 COLOUR:  b = lightred
+COLOUR:  G = mountain
 TILE:    b = dngn_crystal_lightred
 TILE:    G = dngn_scintillating_statue
 KMASK:   1 = opaque

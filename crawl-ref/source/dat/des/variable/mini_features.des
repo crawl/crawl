@@ -2298,9 +2298,11 @@ KMASK:   W = no_monster_gen
 FTILE:   'tGg : floor_w_marble / floor_limestone
 TILE:    G = dngn_statue_angel
 : if crawl.coinflip() then
+COLOUR:  g = silver
 TILE:    g = dngn_silver_statue
 :   set_feature_name("metal_statue", "silver statue")
 : else
+COLOUR:  g = yellow
 TILE:    g = dngn_golden_statue
 :   set_feature_name("metal_statue", "golden statue")
 : end
