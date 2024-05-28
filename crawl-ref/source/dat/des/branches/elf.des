@@ -2040,10 +2040,12 @@ SUBST:   0 = 12, 9 = 33344455
 SHUFFLE: df, df / eg
 : if crawl.coinflip() then
 SUBST:   ! = l, ? = G, ~ = w
+COLOUR:  G = ice
 TILE:    G = icy_conduit
 :   set_feature_name("metal_statue", "icy conduit")
 : else
 SUBST:   ! = G, ? = w, ~ = l
+COLOUR:  G = fire
 TILE:    G = fiery_conduit
 :   set_feature_name("metal_statue", "fiery conduit")
 : end

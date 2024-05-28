@@ -1187,6 +1187,7 @@ MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
    spread_rate = 0, excl_rad = 0 }
 COLOUR: m = magenta
+COLOUR: G = poison
 TILE:   m = dngn_transparent_wall_magenta
 TILE:   G = alchemical_conduit
 MAP
@@ -2061,10 +2062,14 @@ KFEAT: S = general shop type:Magical suffix:Supplies w:10 ; \
   manual of alchemy w:1 | manual of translocations w:1 | \
   manual of fire magic w:1 | manual of air magic w:1 | \
   manual of ice magic w:1 | manual of earth magic w:1
-: local conduittype = util.random_from({"arcane", "dimensional", "misfortune",
-:   "soul", "fiery", "alchemical", "icy", "earthen", "storm"})
-: tile("G = " .. conduittype .. "_conduit")
-: set_feature_name("metal_statue", conduittype .. " conduit")
+: local conduittype = {"arcane", "dimensional", "misfortune",
+:   "soul", "fiery", "alchemical", "icy", "earthen", "storm"}
+: local conduitcolour = {"vehumet", "warp", "shimmer_blue",
+:   "smoke", "fire", "poison", "ice", "earth", "electricity"}
+: local whichconduit = crawl.random2(#conduittype) + 1
+: tile("G = " .. conduittype[whichconduit] .. "_conduit")
+: set_feature_name("metal_statue", conduittype[whichconduit] .. " conduit")
+: colour("G = " .. conduitcolour[whichconduit])
 MAP
  . .
 G.S.G
