@@ -309,8 +309,6 @@ Discretion
 
 Generosity
 
-Generosity
-
 Grace
 
 Honesty
@@ -318,6 +316,8 @@ Honesty
 Hospitality
 
 Kindness
+
+Largesse
 
 Modesty
 
