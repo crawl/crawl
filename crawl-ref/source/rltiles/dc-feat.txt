@@ -326,6 +326,12 @@ mystic_cage_0 DNGN_MYSTIC_CAGE
 mystic_cage_1
 mystic_cage_2
 
+## Colourful horror statue for Abyss.
+colourful_horror_statue_0 DNGN_COLOURFUL_HORROR_STATUE
+colourful_horror_statue_1
+colourful_horror_statue_2
+colourful_horror_statue_3
+
 #### Random tile animation for statuary ends here.
 #### Cycling tile animation for statuary starts here.
 #### Weights need to be weight 1 for that code to work properly
