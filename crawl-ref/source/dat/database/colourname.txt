@@ -74,6 +74,8 @@ baby blue
 
 banana yellow
 
+beetroot red
+
 beige
 
 bisque
@@ -85,6 +87,8 @@ blaze orange
 blood orange
 
 blood red
+
+blueberry
 
 blush
 
@@ -570,6 +574,8 @@ quartz
 
 quercitron
 
+raspberry
+
 raspberry rose
 
 realgar
@@ -577,6 +583,8 @@ realgar
 red emerald
 
 red ochre
+
+rocket green
 
 rockmelon
 
@@ -737,6 +745,8 @@ zinc yellow
 zinnwaldite
 
 zomp
+
+zucchini green
 %%%%
 mono_colour
 
