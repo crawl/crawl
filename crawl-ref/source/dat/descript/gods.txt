@@ -31,11 +31,11 @@ time and its needless disturbances.
 %%%%
 Dithmenos
 
-Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
-a strange and otherworldly affinity to the shadows of their environment. This
-god despises the physical world and constantly seeks to encroach on it.
-Dithmenos therefore rewards those who wield death and destruction while
-gradually consuming them with darkness.
+Dithmenos is the god of night and of things half-seen in flickering torchlight.
+Worshipped by actors as often as thieves, followers of Dithmenos can learn to
+control their own shadow as if it were an extension of their body - misdirecting
+onlookers and acting upon the world with force as tangible as anything that has
+ever been imagined lurking in the dark.
 %%%%
 Elyvilon
 
@@ -254,13 +254,16 @@ and finally the ability to step out of the flow of time entirely.
 %%%%
 Dithmenos powers
 
-Followers of Dithmenos are constantly surrounded in an aura of shadow, the
-extent of which is reflective of their level of devotion. Dithmenos grants
-followers the ability to instantly step into the shadow of nearby creatures,
-and protects followers by occasionally shrouding those struck by attacks in
-dark smoke. Sufficiently pious followers of Dithmenos will find their own
-shadow will begin to attack on its own, and eventually gain the ability to
-assume the form of a shadow themself.
+Followers of Dithmenos are surrounded by an unnatural quiet, which helps the
+sounds they make go unnoticed. As they rise in devotion, they will find their
+own shadow begins to imitate some of their actions, attacking when they attack
+and even casting shadowy magics that mimic the form - if not the substance - of
+whichever schools of magic they had been utilising.
+
+More devout worshippers additionally gain the ability to swap places with their
+shadow to mislead enemies, grasp other beings' shadows to unleash their magic on
+the worshipper's behalf, and finally call down a night so dark that it hides all
+denizens of the dungeon from each other.
 %%%%
 Elyvilon powers
 

@@ -506,8 +506,7 @@ bool is_evil_god(god_type god)
            || god == GOD_MAKHLEB
            || god == GOD_YREDELEMNUL
            || god == GOD_BEOGH
-           || god == GOD_LUGONU
-           || god == GOD_DITHMENOS;
+           || god == GOD_LUGONU;
 }
 
 bool is_good_god(god_type god)

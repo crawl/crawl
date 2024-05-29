@@ -548,10 +548,6 @@ Cheibriados death
 
 切布理亚多欣赏死亡的静止。
 %%%%
-Dithmenos penance
-
-迪斯姆诺说：回到黑暗之中！
-%%%%
 Dithmenos welcome
 
 迪斯姆诺说：铺开永恒的黑夜。
