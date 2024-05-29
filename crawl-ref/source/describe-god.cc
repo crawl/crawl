@@ -208,8 +208,8 @@ static const char *divine_title[][8] =
         "Oracle",            "Illuminatus",            "Prince of Secrets",        "Omniscient"},
 
     // Dithmenos -- darkness theme
-    {"Ember",              "Gloomy",                "Darkened",                 "Extinguished",
-        "Caliginous",         "Umbral",                "Hand of Shadow",           "Eternal Night"},
+    {"Conspicuous",         "Nocturnal",            "Bump in the Night",        "Thespian",
+        "Tenebrous",          "Puppetmaster",          "@Walking@ Midnight",       "Who Hides the Stars"},
 
     // Gozag -- entrepreneur theme
     {"Profligate",         "Pauper",                "Entrepreneur",             "Capitalist",

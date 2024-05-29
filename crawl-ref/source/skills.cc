@@ -2104,7 +2104,10 @@ string player_title(bool the)
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     const string title =
             skill_title_by_rank(best, get_skill_rank(you.skills[best]));
-    const string article = !the ? "" : title == "Petite Mort" ? "La " : "the ";
+    const string article = !the ? ""
+                                : title == "Petite Mort" ? "La "
+                                : title == "Who Hides the Stars" ? ", "
+                                : "the ";
     return article + title;
 }
 
