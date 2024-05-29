@@ -606,21 +606,21 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "extremely drained";
             inf.long_text    = "Your life force is extremely drained.";
         }
-        else if (drain_perc >= 25)
+        else if (drain_perc >= 30)
         {
             inf.light_colour = RED;
             inf.light_text   = "Drain";
             inf.short_text   = "very heavily drained";
             inf.long_text    = "Your life force is very heavily drained.";
         }
-        else if (drain_perc >= 10)
+        else if (drain_perc >= 20)
         {
             inf.light_colour = LIGHTRED;
             inf.light_text   = "Drain";
             inf.short_text   = "heavily drained";
             inf.long_text    = "Your life force is heavily drained.";
         }
-        else if (drain_perc >= 5)
+        else if (drain_perc >= 10)
         {
             inf.light_colour = YELLOW;
             inf.light_text   = "Drain";
