@@ -632,7 +632,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
                                   &mg.pos, mg.map_mask,
                                   &place, &want_band, allow_ood);
-    // TODO: it doesn't seem that this check can ever come out to be true??
+    // Place may have been updated inside resolve_monster_type
+    // and then inside pick_random_monster for OOD.
     bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
