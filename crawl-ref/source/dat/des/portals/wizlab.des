@@ -1415,7 +1415,7 @@ ENDMAP
 # Iskenderun's Mystic Tower
 #
 # TODO: Implement monster IMB and give it to the statues in exchange for
-#       less overall statues, try out some small number of orb spiders.
+#       less overall statues?
 #
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
@@ -1423,6 +1423,7 @@ MONS:       tengu conjurer
 MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
             tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian
+KMONS:      4 = orb spider
 KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
 KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
                 spells:iskenderun's_mystic_blast&iskenderun's_battlesphere, \
@@ -1434,7 +1435,8 @@ KMONS:      H = purple draconian scorcher / purple draconian annihilator /\
 MARKER:     " = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" }
-NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / * = 1:15 ., H = 1:H / 1:H. / *:.
+NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / 2:. / * = 1:15 .
+NSUBST:     H = 1:H / 1:H. / *:.
 SHUFFLE:    '=F- / '=F- / '=F- / F-'= / F-'=, DEF
 SUBST:      - = v, ' = ., = = +
 COLOUR:     v = magenta
@@ -1469,9 +1471,9 @@ vxx..........v.v1vvvEvvv1v.v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
 vxx..........v1vvvH...Hvvv1v..........xxv
 vx.x.......cv1vvvH......vvv1vc.......x.xv
-vxxx........v1vvv.......vvv1v........xxxv
+vxxx........v1vvv..4....vvv1v........xxxv
 vx".G...2.....vD+.H.2...+'=.....2...G."xv
-vxxx........v1vvv.......vvv1v........xxxv
+vxxx........v1vvv....4..vvv1v........xxxv
 vx.x.......cv1vvvH......vvv1vc.......x.xv
 vxx..........v1vvvH...Hvvv1v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv

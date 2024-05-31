@@ -5275,19 +5275,29 @@ c...............c
 cccccccc+cccccccc
 ENDMAP
 
-NAME: lightli_airlock
+NAME:  lightli_airlock
 DEPTH: D:11-, Snake, Shoals
+: if not you.in_branch("D") then
+SUBST: = = +
+:   if you.in_branch("Shoals") then
+SUBST: n = c
+CLEAR: x
+:   end
+: end
+KMASK: W = no_monster_gen
 KPROP: W = no_tele_into
 MAP
- WccccWWWccccWW
- cc..ccWcc..ccWWWWW
- c....cGc....cccccW
- c.00.ccc.09.cc%*cc
-@=..9.+%+.0*.++%8|c
- c.00.ccc.09.cc%*cc
- c....cGc....cccccW
- cc..ccWcc..ccWWWWW
- WccccWWWccccWW
+     xxxxx  xxxx
+ WccccWWWccccWWxxxxx
+ cc..ncWcn..nnWWWWWx
+ c....cGc....cccncWx
+ c.00.cnc.09.cc%*ccx
+@=..9.+%+.0*.++%8|cx
+ c.00.cnc.09.cc%*ccx
+ c....cGc....cccncWx
+ cc..ncWcn..nnWWWWWx
+ WccccWWWccccWWxxxxx
+     xxxxx  xxxx
 ENDMAP
 
 NAME: lightli_fourway_metalbox

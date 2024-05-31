@@ -2779,7 +2779,8 @@ COLOUR:  G = fire
 TILE:    G = fiery_conduit
 :   set_feature_name("metal_statue", "fiery conduit")
 : end
-SHUFFLE: defg
+ITEM:    potion of enlightenment ident:type q:1, ring of flight ident:type
+SHUFFLE: defg, hi
 SUBST:   HIJ = c
 SUBST:   1 = 112., 2 = 221.
 MAP
@@ -2815,7 +2816,7 @@ xx.Wwwwwc...Hcccccccc..ccccccccH...cwwwwW.
 xx.Wwwwwc...cccccccGc..cGccccccc...cwwwwW.
 xx.Wwcccc..........................ccccwW.
 xx.Wwc1........2............2........1cwW.
-xx.Wwc................................cwW.
+xx.Wwci..............................hcwW.
 xx.Wwc%....cccccccccccccccccccccc....%cwW.
 xx.Wwc*%...cwwwwwwwwwwwwwwwwwwwwc...%*cwW.
 xx.Wwce*%.1cwwwwwwwwwwwwwwwwwwwwc1.%*fcwW.

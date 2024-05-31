@@ -2097,7 +2097,7 @@ ENDMAP
 #
 NAME:    lemuel_reptile_caves
 TAGS:    transparent no_pool_fixup
-DEPTH:   D:10-12, Lair:1-, !Lair:$
+DEPTH:   D:9-11, Lair, !Lair:$
 ORIENT:  float
 MONS:    frilled lizard, iguana, komodo dragon
 MONS:    rime drake / swamp drake
@@ -2317,7 +2317,7 @@ NAME:   minmay_eyes
 DEPTH:  Depths
 ORIENT: float
 MONS:   eye of devastation / great orb of eyes w:2
-MONS:   golden eye
+MONS:   golden eye / glass eye w:5
 MONS:   glowing orange brain
 KFEAT:  m = iron_grate
 KFEAT:  G = metal_statue
@@ -2343,7 +2343,7 @@ MAP
 .c...c...c...c3.....3c...c.......n.
 .c...c...c...c..%.%..c...n.......n.
 .c...c...c.....%|*|%.m...n.......n.
-.c.1.c.1.c.1....*|*..m.1.n.1...1.n.
+.c.1.c.1.c.1.8..*|*..m.1.n.1.0.1.n.
 .c...c...c.....%|*|%.m...n.......n.
 .c...c...c...c..%.%..c...n.......n.
 .c...c...c...c3.....3c...c.......n.
@@ -2351,7 +2351,7 @@ MAP
 .c...c...c...............c...c...c.
 .c...c...cmm.....1.....1.c...c...c.
 .c...c...c2m............Gc...c...c.
-.c...c...cccccc.....cccccc...c...c.
+.c...c...cccccc..9..cccccc...c...c.
 .c...c.......................c...c.
 .c...c.1.........1.........mmc...c.
 .c...cG....................m2c...c.
@@ -3101,9 +3101,9 @@ ORIENT:  float
 DEPTH:   Elf, !Elf:$, Crypt, !Crypt:$
 : if you.in_branch("Crypt") then
 TAGS:    patrolling
-MONS:    skeletal warrior / eidolon, necromancer
+MONS:    skeletal warrior / eidolon, laughing skull band
 MONS:    necromancer band / vampire mage band w:6
-MONS:    vampire knight w:25 / bone dragon / ghoul / lich
+MONS:    vampire knight w:25 / bone dragon / revenant / lich
 SUBST:   x = e
 : else
 KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / \
@@ -3123,12 +3123,12 @@ MAP
      x...........a.........X...xx
      xx...Y.........A...........x
       x..YYY........AY.Y...Y.Y..x
-      x.YYY3D...C...BYYYYYYYYYY.x
+      x1YYY3D...C...BYYYYYYYYYY.x
       x..YYY...C....AY*Y%4%Y*Y..x
 xxxxxxx...Y.........A...........x
 x...........A.........Y...xxxxxxx
 x..Y*Y%4%Y*YA....C...YYY..x
-x.YYYYYYYYYYB...C...D3YYY.x
+x.YYYYYYYYYYB...C...D3YYY1x
 x..Y.Y...Y.YA........YYY..x
 x...........A.........Y...xx
 xx...X.........a...........x
@@ -4059,7 +4059,7 @@ KMONS: 2 = ice dragon / frost giant
 : elseif you.in_branch("Elf") then
 MONS:  deep elf blademaster simulacrum / freezing wraith / ice dragon \
        / deep elf knight
-KMONS: 2 = frost giant / shard shrike
+KMONS: 2 = frost giant / walking frostbound tome w:5
 : else -- Depths
 MONS:   simulacrum w:20 / ice dragon / frost giant
 KMONS:  2 = ice fiend / walking frostbound tome
@@ -12036,9 +12036,9 @@ cG%%ccc             ccc%%Gc
 c%..v9ccc         ccc9v..%c
 c%.8..+9ccc @@@ ccc9+..8.%c
 ccv...v.+9ccc.ccc9+.v...vcc
- c9..9..x.+0c+c0+.x..9..9c
+ c9..0..x.+0c+c0+.x..0..9c
  cc+v...v.x.+.+.x.v...v+cc
-  c9...0..x.x.x.x..0...9c
+  c9......x.x.x.x......9c
   cc+xv...v0x.x0v...vx+cc
    c9.......x.x.......9c
    cc+xxv...v0v...vxx+cc
@@ -12050,9 +12050,9 @@ ccv...v.+9ccc.ccc9+.v...vcc
    cc+xxv...v0v...vxx+cc
    c9.......x.x.......9c
   cc+xv...v0x.x0v...vx+cc
-  c9...0..x.x.x.x..0...9c
+  c9......x.x.x.x......9c
  cc+v...v.x.+.+.x.v...v+cc
- c8..9..x.+.c+c.+.x..9..8c
+ c8..0..x.+.c+c.+.x..0..8c
 ccv...v.+9ccc.ccc9+.v...vcc
 c%.8..+9ccc @@@ ccc9+..8.%c
 c%..v8ccc         ccc8v..%c

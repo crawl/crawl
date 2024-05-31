@@ -1447,7 +1447,7 @@ ENDMAP
 NAME:   blackcustard_rock_pile
 TAGS:   no_item_gen no_monster_gen transparent preserve_wall vaults_hard
 DEPTH:  Orc, Vaults
-WEIGHT: 2 (Vaults), 10
+WEIGHT: 5 (Vaults), 10
 MONS:   orc ; sling, kobold blastminer, boulder beetle
 MONS:   orc knight ; plate armour . sling, stone giant
 ITEM:   stone w:30 / large rock q:1, gold q:100
