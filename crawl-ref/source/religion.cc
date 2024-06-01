@@ -143,6 +143,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Yredelemnul
         {   { 0, ABIL_YRED_LIGHT_THE_TORCH, "light the black torch and reap souls in Yredelemnul's name" },
             { 0, ABIL_YRED_RECALL_UNDEAD_HARVEST, "recall your undead harvest" },
+            { 1, "Yredelemnul will now gift you temporary undead servants when you light the torch.",
+                 "Yredelemnul will no longer gift you temporary undead servants when you light the torch.",
+                 "Yredelemnul will gift you temporary undead servants when you light the torch." },
             { 2, ABIL_YRED_HURL_TORCHLIGHT, "hurl gouts of umbral torchlight" },
             { 4, ABIL_YRED_BIND_SOUL, "bind living souls" },
             { 5, ABIL_YRED_FATHOMLESS_SHACKLES, "engulf your surroundings in Yredelemnul's grip" },
@@ -162,7 +165,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Okawaru
-        {   { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
+        {
+            {-1, "", "", "Okawaru requires that you fight alone, and prevents you from gaining allies." },
+            { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
             { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
             { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
             { 5, "Okawaru will now gift you throwing weapons as you gain piety.",
@@ -233,7 +238,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Lugonu
-        {   { 1, ABIL_LUGONU_ABYSS_EXIT,
+        {   {-1, "", "", "Lugonu protects you from the effects of unwielding distortion weapons." },
+            {-1, "", "", "Lugonu may banish nearby foes when other gods try to punish you." },
+            { 1, ABIL_LUGONU_ABYSS_EXIT,
                  "depart the Abyss",
                  "depart the Abyss at will" },
             { 2, ABIL_LUGONU_BANISH, "banish your foes" },
@@ -247,8 +254,13 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Beogh
         {   { 2, ABIL_BEOGH_SMITING, "smite your foes" },
             { 1, ABIL_BEOGH_RECALL_APOSTLES, "recall your orcish followers" },
+            { 3, "Beogh will now send orc apostles to challenge you in battle as you gain piety.",
+                 "Beogh will no longer send orc apostles to challenge you in battle.",
+                 "Beogh will send orc apostles to challenge you in battle as you gain piety." },
+            { 0, "", "", "You can recruit apostles that you defeat into your service." },
+            { 3, "", "", "Your orcish followers are sometimes invigorated when you deal damage." },
             { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
-            { 0, ABIL_BEOGH_RECRUIT_APOSTLE, "recruit orcish followers" },
+            { 0, ABIL_BEOGH_RECRUIT_APOSTLE, "" },
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_2, ""},
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_3, ""},
@@ -258,7 +270,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Jiyva
         {   { 2, "Jiyva is now protecting you from corrosive effects.",
                  "Jiyva will no longer protect you from corrosive effects.",
-                 "Jiyva protects you from corrosive effects." },
+                 "Jiyva protects you from corrosive effects. (rCorr)" },
             { 3, "Jiyva will now mutate your body as you gain piety.",
                  "Jiyva will no longer mutate your body.",
                  "Jiyva will mutate your body as you gain piety." },
@@ -271,6 +283,7 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Fedhas
         {
+            { 0, "", "", "You can walk through plants and fire through allied plants." },
             { 2, ABIL_FEDHAS_WALL_OF_BRIARS, "encircle yourself with summoned briar patches"},
             { 3, ABIL_FEDHAS_GROW_BALLISTOMYCETE, "grow a ballistomycete" },
             { 4, ABIL_FEDHAS_OVERGROW, "transform dungeon walls and trees into plant allies"},
@@ -320,7 +333,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Gozag
-        {   { 0, ABIL_GOZAG_POTION_PETITION, "petition Gozag for potion effects" },
+        {   { 0, "", "", "Gozag turns your defeated foes' bodies to gold." },
+            { 0, "", "", "Your enemies may become distracted by gold." },
+            { 0, ABIL_GOZAG_POTION_PETITION, "petition Gozag for potion effects" },
             { 0, ABIL_GOZAG_CALL_MERCHANT,
                  "fund merchants seeking to open stores in the dungeon" },
             { 0, ABIL_GOZAG_BRIBE_BRANCH,
@@ -376,7 +391,8 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Hepliaklqana
-        {   { 1, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
+        {   { 1, "", "", "Your ancestor manifests to aid you." },
+            { 1, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
@@ -401,9 +417,10 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Ignis
         {
+            { 0, "", "", "You are resistant to fire. (rF+)" },
             { 1, ABIL_IGNIS_FIERY_ARMOUR, "armour yourself in flame" },
             { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
-            { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away" },
+            { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away, once" },
         },
     };
     static bool god_powers_init = false;
