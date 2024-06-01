@@ -70,9 +70,10 @@ Gods
   - Followers of Yred get an umbral aura around them that grows as they gain
     piety, and zombies are passively animated only in the umbra aura.
   - Yredelemnul grants the following active abilities:
-      - 0*: Raise the Black Torch, which summons scaling undead allies and
-            enables piety gain, but which can only be used once per floor and
-            only lasts until the player leaves the floor.
+      - 0*: Raise the Black Torch, which enables piety gain, but which can only
+            be used once per floor and only lasts until the player leaves the
+            floor. Starting at 1*, this ability also summons scaling undead
+            allies.
       - 2*: Hurl Torchlight, which mights undead while damaging most others.
       - 4*: Bind Soul, which now temporarily flays the player until the
             binding is successful and heavily scales the soul's HP with invo.
