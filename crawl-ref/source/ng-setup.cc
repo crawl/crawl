@@ -191,14 +191,14 @@ item_def* newgame_make_item(object_class_type base,
     return &item;
 }
 
-static void _give_throwing_ammo()
+void give_throwing_ammo(int n)
 {
     if (species::can_throw_large_rocks(you.species))
-        newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 1);
+        newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, n);
     else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
-        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 2);
+        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 2*n);
     else
-        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 1);
+        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, n);
 }
 
 static void _give_job_spells(job_type job)
@@ -302,7 +302,7 @@ void give_items_skills(const newgame_def& ng)
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
     if (you.char_class == JOB_GLADIATOR)
-        _give_throwing_ammo();
+        give_throwing_ammo(1);
 
     if (you.has_mutation(MUT_NO_GRASPING)) // i.e. felids
         you.skills[SK_THROWING] = 0;
