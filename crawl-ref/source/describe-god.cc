@@ -767,9 +767,9 @@ static formatted_string _describe_god_powers(god_type which_god)
     case GOD_BEOGH:
     {
         if (piety >= piety_breakpoint(5))
-            desc.cprintf("Orcs frequently recognize you as Beogh's chosen one.\n");
+            desc.cprintf("Orcs frequently recognise you as Beogh's chosen one.\n");
         else if (piety >= piety_breakpoint(1))
-            desc.cprintf("Orcs sometimes recognize you as one of their own.\n");
+            desc.cprintf("Orcs sometimes recognise you as one of their own.\n");
 
         if (piety >= piety_breakpoint(2))
             desc.cprintf("Your orcish followers are sometimes invigorated when you deal damage.\n");

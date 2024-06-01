@@ -267,7 +267,7 @@ static const vector<god_passive> god_passives[] =
 
     // Beogh
     {
-        {  1, passive_t::convert_orcs, "Orcs sometimes recognize you as one of their own" },
+        {  1, passive_t::convert_orcs, "Orcs sometimes recognise you as one of their own" },
         {  5, passive_t::water_walk, "walk on water" },
     },
 
