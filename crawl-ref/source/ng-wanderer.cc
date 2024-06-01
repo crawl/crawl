@@ -19,13 +19,18 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
 {
     if (wpn_skill == SK_THROWING)
     {
-        // good_item always gives curare
+        // good_item always assigns 7 ammo: 1-4 curare, the rest javelins
         if (good_item)
         {
-            newgame_make_item(OBJ_MISSILES, MI_DART, 1 + random2(4),
+            const int num_curare = 1 + random2(4);
+            newgame_make_item(OBJ_MISSILES, MI_DART, num_curare,
                               0, SPMSL_CURARE);
+
+            // Gives large rocks for large species, 2x boomerangs for small
+            const int num_javelins = 7 - num_curare;
+            give_throwing_ammo(num_javelins);
         }
-        // Otherwise, we get some poisoned darts or some boomerangs.
+        // Otherwise, we get 7-15 poisoned darts or 6-10 boomerangs.
         else
         {
             if (one_chance_in(3))
@@ -39,11 +44,12 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
                               0, SPMSL_POISONED);
             }
         }
+        return; // don't give a dagger as well
     }
 
     weapon_type sub_type;
     int plus = 0;
-    bool upgrade_base = good_item && one_chance_in(5);
+    bool upgrade_base = good_item && one_chance_in(3);
     int ego = SPWPN_NORMAL;
 
     // Now fill in the type according to the random wpn_skill.
