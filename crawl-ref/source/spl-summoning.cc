@@ -3194,6 +3194,8 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         path.push_back(pos);
     }
 
+    cannon->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, &agent, dur));
+
     mprf("With a deafening crack, the ground splits apart in the path of %s "
         "chthonic artillery!", agent.name(DESC_ITS).c_str());
 
