@@ -1390,6 +1390,29 @@ cpppppppppccccccccc
 ccccccccccc
 ENDMAP
 
+NAME:   tekkud_yamata_no_oroachi
+TAGS:   no_monster_gen
+DEPTH:  D:12-, !D:$, Lair, !Lair:$
+MONS:   eight-headed hydra, patrolling giant cockroach, plant
+ITEM:   long sword good_item / scimitar good_item w:6, human skeleton
+KFEAT:  C = cache of fruit
+SUBST:  ` = @'''', ' = x', " = x.
+NSUBST: . = 4:2 / *:.
+CLEAR:  '
+MAP
+     '   `
+  `''x'''x''
+ xx'xxx'xxx'
+ 'xxxCxxx'''
+''xxe...xxxx`
+'x'xd.1..xx'
+ 'xxx....3xx'
+  'x"x..33x3
+ `xxxx3x333
+  'x'xx3x3@
+     x3
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
