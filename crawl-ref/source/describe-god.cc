@@ -773,9 +773,9 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(god_colour(which_god));
 
         if (piety >= piety_breakpoint(5))
-            desc.cprintf("Orcs frequently recognize you as Beogh's chosen one.\n");
+            desc.cprintf("Orcs frequently recognise you as Beogh's chosen one.\n");
         else
-            desc.cprintf("Orcs sometimes recognize you as one of their own.\n");
+            desc.cprintf("Orcs sometimes recognise you as one of their own.\n");
     }
     break;
 
