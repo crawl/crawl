@@ -8681,8 +8681,12 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_BIND_SOULS:
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (*mi == mon)
+                continue;
             if (mons_can_bind_soul(mon, *mi))
                 return ai_action::good();
+        }
         return ai_action::bad();
 
     case SPELL_REGENERATE_OTHER:
