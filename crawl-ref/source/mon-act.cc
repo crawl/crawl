@@ -2651,10 +2651,6 @@ static bool _handle_pickup(monster* mons)
 
     // Note: Monsters only look at stuff near the top of stacks.
     //
-    // XXX: Need to put in something so that monster picks up
-    // multiple items (e.g. ammunition) identical to those it's
-    // carrying.
-    //
     // Monsters may now pick up up to two items in the same turn.
     // (jpeg)
     for (stack_iterator si(mons->pos()); si; ++si)
