@@ -1018,10 +1018,6 @@ static void _add_good_randart_prop(artefact_prop_type prop,
  *
  * @param item          The item to apply properties to.
  * @param item_props    The properties of that item.
- * @param quality       How high quality the randart will be, measured in number
-                        of rolls for good property boosts.
- * @param max_bad_props The maximum number of bad properties this artefact can
-                        be given.
  */
 static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &item_props)
@@ -1069,7 +1065,7 @@ static void _get_randart_properties(const item_def &item,
     // enhance one good property.
     int good = max(quality + fixed_bad + bad - fixed_good, 0);
 
-    // We want avoid generating more then 4-ish properties properties or things
+    // We want to avoid generating more than 4-ish properties or things
     // get spammy. Extra "good" properties will be used to enhance properties
     // only, not to add more distinct properties. There's still a small chance
     // of >4 properties.
