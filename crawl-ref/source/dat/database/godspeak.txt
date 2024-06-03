@@ -160,6 +160,8 @@ Xom feature translucent wall
 
 Dim shapes swim through @the_feature@.
 
+Faint @any_colour@ flames crawl over @the_feature@.
+
 @The_feature@ is briefly covered in @any_colour_pattern@.
 %%%%
 Xom feature metal wall
@@ -281,12 +283,16 @@ tapdance
 Xom unarmed one hand
 
 A fancy cane briefly appears in your @hand@.
+
+You compulsively punch the air.
 %%%%
 Xom unarmed two hands
 
 @Xom unarmed one hand@
 
 Two fancy canes briefly appear in your @hands@.
+
+You compulsively clap your @hands@ three times.
 %%%%
 Xom cloak slot
 
