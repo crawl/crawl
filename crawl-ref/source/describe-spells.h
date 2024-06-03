@@ -15,6 +15,12 @@
 
 using std::vector;
 
+enum class spellbook_source
+{
+    monster_book,
+    wand
+};
+
 /// What's in a given spellbook?
 struct spellbook_contents
 {
@@ -22,6 +28,8 @@ struct spellbook_contents
     string label;
     /// The spells contained in the book (or 'book').
     vector<spell_type> spells;
+    /// Where do these spells come from: book, wand, etc.
+    spellbook_source source;
 };
 
 typedef vector<spellbook_contents> spellset;

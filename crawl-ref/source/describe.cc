@@ -4350,20 +4350,25 @@ string get_skill_description(skill_type skill, bool need_title)
 }
 
 /// How much power do we think the given monster casts this spell with?
-static int _hex_pow(const spell_type spell, const int hd)
+static int _hex_pow(const int pow)
 {
+    // TODO: This mirrors _ench_pow in mon-cast.cc but it's not *entirely*
+    // clear if this is needed in all cases or why. Would be good to confirm
+    // the logic is correct (especially in the case of evoked hexes) and
+    // write something better about it.
     const int cap = 200;
-    const int pow = mons_power_for_hd(spell, hd) / ENCH_POW_FACTOR;
-    return min(cap, pow);
+    const int real_pow = pow / ENCH_POW_FACTOR;
+    return min(cap, real_pow);
 }
 
 /**
  * What are the odds of the given spell, cast by a monster with the given
  * spell_hd, affecting the player?
  */
-int hex_chance(const spell_type spell, const monster_info* mi)
+int hex_chance(const spell_type spell, const monster_info* mi, int pow)
 {
-    const int capped_pow = _hex_pow(spell, mi->spell_hd());
+    const int capped_pow = _hex_pow(pow);
+
     const bool guile = mi->inv[MSLOT_SHIELD]
                        && get_armour_ego_type(*mi->inv[MSLOT_SHIELD]) == SPARM_GUILE;
     const int will = guile ? guile_adjust_willpower(you.willpower())
@@ -4650,20 +4655,20 @@ static void _get_spell_description(const spell_type spell,
 #endif
             )
         {
+            const int pow = mons_power_for_hd(spell, mon_owner->hd);
             string wiz_info;
 #ifdef WIZARD
             if (you.wizard)
-                wiz_info += make_stringf(" (pow %d)", _hex_pow(spell, hd));
+                wiz_info += make_stringf(" (pow %d)", _hex_pow(pow));
 #endif
             description += you.immune_to_hex(spell)
                 ? make_stringf("You cannot be affected by this "
                                "spell right now. %s\n",
                                wiz_info.c_str())
                 : make_stringf("Chance to defeat your Will: %d%%%s\n",
-                               hex_chance(spell, mon_owner),
+                               hex_chance(spell, mon_owner, pow),
                                wiz_info.c_str());
         }
-
     }
     else
         description += player_spell_desc(spell);
