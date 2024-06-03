@@ -5195,7 +5195,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         if (mons_invuln_will(**mi)
             || !(mi->holiness() & MH_NATURAL)
             || mons_is_firewood(**mi)
-            || mons_atts_aligned(mi->attitude, mons->attitude)
+            || mons_aligned(*mi, mons)
             || mi->has_ench(ENCH_FEAR))
         {
             continue;
