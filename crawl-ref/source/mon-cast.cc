@@ -2281,8 +2281,11 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     }
     }
 
-    int power = evoke ? 30 + mons->get_hit_dice()
-                      : mons_spellpower(*mons, spell_cast);
+    int power = 0;
+    if (evoke)
+        power = mons_wand_power(mons->type, mons->get_hit_dice());
+    else
+        power = mons_spellpower(*mons, spell_cast);
 
     // Laughing skulls get a power boost based on other nearby laughing skulls.
     // (Doing it here feels a little hacky, but I'm not sure where else it
@@ -6483,6 +6486,14 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     return true;
 }
 
+int mons_wand_power(monster_type type, int hd)
+{
+    // Artificers get a 50% boost to their HD for wands. Ijyb is a little
+    // less threatening than before (33->28), Maurice is rather more. (36->40)
+    bool is_artificer = mons_class_flag(type, M_ARTIFICER);
+    return 12 + hd * (is_artificer ? 6 : 4);
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -6587,8 +6598,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     const god_type god = _find_god(*mons, slot_flags);
-    const int splpow = evoke ? 30 + mons->get_hit_dice()
-                             : mons_spellpower(*mons, spell_cast);
+    int splpow = 0;
+    if (evoke)
+        splpow = mons_wand_power(mons->type, mons->get_hit_dice());
+    else
+        splpow = mons_spellpower(*mons, spell_cast);
 
     switch (spell_cast)
     {

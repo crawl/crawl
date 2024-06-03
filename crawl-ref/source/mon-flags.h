@@ -26,8 +26,7 @@ enum monclass_flag_type : uint64_t
     /// do not give (unique) a wand
     M_NO_WAND           = BIT(4),
 
-    /// do not give a high tier wand
-    M_NO_HT_WAND        = BIT(5),
+                      //= BIT(5), // was M_NO_HT_WAND
 
     /// is created invis
     M_INVIS             = BIT(6),
@@ -173,8 +172,8 @@ enum monclass_flag_type : uint64_t
     /// monster will never harm the player
     M_NO_THREAT         = BIT(55),
 
-    /// monster always receives a wand
-    M_ALWAYS_WAND       = BIT(56),
+    /// monster always receives a wand and gets an evo power boost
+    M_ARTIFICER         = BIT(56),
 
     /// uses they/them pronouns
     M_GENDER_NEUTRAL    = BIT(57),
