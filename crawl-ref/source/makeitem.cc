@@ -1122,32 +1122,6 @@ static int _random_wand_subtype()
                                   5, WAND_DIGGING);
 }
 
-/**
- * Should wands of this type NOT spawn extremely early on? (At very low
- * item_level, or in the hands of very low HD monsters?)
- *
- * @param type      The wand_type in question.
- * @return          Whether it'd be excessively mean for this wand to be used
- *                  against very early players.
- */
-bool is_high_tier_wand(int type)
-{
-    switch (type)
-    {
-    case WAND_CHARMING:
-    case WAND_PARALYSIS:
-    case WAND_ACID:
-    case WAND_LIGHT:
-    case WAND_QUICKSILVER:
-    case WAND_ICEBLAST:
-    case WAND_ROOTS:
-    case WAND_MINDBURST:
-        return true;
-    default:
-        return false;
-    }
-}
-
 void generate_wand_item(item_def& item, int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
@@ -1158,10 +1132,6 @@ void generate_wand_item(item_def& item, int force_type, int item_level)
     // Add wand charges and ensure we have at least one charge.
     const int max_charges = wand_charge_value(item.sub_type, item_level);
     item.charges = 1 + random2avg(max_charges, 2);
-
-    // Don't let monsters pickup early high-tier wands
-    if (item_level < 2 && is_high_tier_wand(item.sub_type))
-        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 static int _potion_weight(item_rarity_type rarity)
