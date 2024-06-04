@@ -254,14 +254,14 @@ and finally the ability to step out of the flow of time entirely.
 %%%%
 Dithmenos powers
 
-Followers of Dithmenos are surrounded by an unnatural quiet which helps the
+Followers of Dithmenos are surrounded by an unnatural quiet, which helps the
 sounds they make go unnoticed. As they rise in devotion, they will find their
-own shadow begins to immitate some of their actions, attacking when they attack
+own shadow begins to imitate some of their actions, attacking when they attack
 and even casting shadowy magics that mimic the form - if not the substance - of
-whichever schools of magic they had been utilizing.
+whichever schools of magic they had been utilising.
 
 More devout worshippers additionally gain the ability to swap places with their
-shadow to mislead enemies, grasp other being's shadows to unleash their magic on
+shadow to mislead enemies, grasp other beings' shadows to unleash their magic on
 the worshipper's behalf, and finally call down a night so dark that it hides all
 denizens of the dungeon from each other.
 %%%%
