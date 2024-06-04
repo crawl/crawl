@@ -268,17 +268,29 @@ You briefly grow a large moustache and beard.
 %%%%
 Xom impromptu dance
 
-You do an impromptu @dance_name@.
+You perform an impromptu @dance_name@.
 
 You compulsively click your heels together three times.
 %%%%
 dance_name
 
+ballet
+
 cha-cha
+
+fandango
 
 jig
 
+line dance
+
+macarena
+
+tango
+
 tapdance
+
+waltz
 %%%%
 Xom unarmed one hand
 
