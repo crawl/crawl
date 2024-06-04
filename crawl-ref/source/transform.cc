@@ -1092,8 +1092,8 @@ static const Form* forms[] =
     &FormJelly::instance(),
 #endif
     &FormFungus::instance(),
-    &FormShadow::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &FormShadow::instance(),
     &FormHydra::instance(),
 #endif
     &FormStorm::instance(),
