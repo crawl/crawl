@@ -4237,6 +4237,23 @@ static string _replace_god_name(god_type god, bool need_verb = false,
     return result;
 }
 
+static string _random_class_of_god_name(bool (*class_of_god)(god_type god))
+{
+    string result;
+    god_type some_god;
+
+    do
+    {
+        some_god = random_god();
+    }
+    while (!class_of_god(some_god));
+
+    const string godname = god_name(some_god, false);
+    result = godname;
+
+    return result;
+}
+
 static string _get_species_insult(const string &species, const string &type)
 {
     string insult;
@@ -4587,6 +4604,16 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
         msg = replace_all(msg, "@my_God@", godname);
         msg = replace_all(msg, "@My_God@", godcap);
+    }
+
+    if (msg.find("@random_god_") != string::npos)
+    {
+        msg = replace_all(msg, "@random_god_chaotic@",
+                          _random_class_of_god_name(is_chaotic_god));
+        msg = replace_all(msg, "@random_god_evil@",
+                          _random_class_of_god_name(is_evil_god));
+        msg = replace_all(msg, "@random_god_good@",
+                          _random_class_of_god_name(is_good_god));
     }
 
     // Replace with species specific insults.

@@ -8631,35 +8631,11 @@ the alliance of Zin and the Shining One.
 
 the alliance of Zin and Elyvilon.
 
-the lawlessness of @_chaotic_god_@.
+the lawlessness of @random_god_chaotic@.
 
-the evilness of @_evil_god_@.
-%%%%
-_chaotic_god_
+the evilness of @random_god_evil@.
 
-Xom
-
-Makhleb
-
-Nemelex Xobeh
-
-Lugonu
-
-Jiyva
-%%%%
-_evil_god_
-
-Kikubaaqudgha
-
-Makhleb
-
-Yredelemnul
-
-Beogh
-
-Lugonu
-
-Dithmenos
+the goodness of @random_god_good@.
 %%%%
 confused zin angel
 
