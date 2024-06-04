@@ -97,6 +97,7 @@
 #include "teleport.h" // monster_teleport
 #include "terrain.h"
 #ifdef USE_TILE
+ #include "tilepick.h"
  #include "rltiles/tiledef-main.h"
  #include "rltiles/tiledef-player.h"
 #endif

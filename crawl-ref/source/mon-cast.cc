@@ -76,6 +76,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
+#include "tilepick.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-player.h"
 #endif
