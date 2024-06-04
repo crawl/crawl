@@ -4832,7 +4832,7 @@ VISUAL:@The_monster@ pats at a spot of missing fur and sighs.
 
 @The_monster@ shouts, "Faster, @_Grum_dog_name_@! Kill! Kill!"
 
-@The_monster@ lets out out a long, sad whine.
+@The_monster@ lets out a long, sad whine.
 
 @The_monster@ says, "Selling your soul isn't that bad. What the hell, right?"
 
