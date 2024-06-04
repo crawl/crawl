@@ -39,7 +39,7 @@ bool is_blasphemy(const coord_def& p)
 
 bool is_gastronomic(const coord_def& p)
 {
-    return testbits(env.pgrid(p), FPROP_GASTRONOMY);
+    return !cell_is_solid(p) && testbits(env.pgrid(p), FPROP_GASTRONOMY);
 }
 
 bool is_tide_immune(const coord_def &p)
