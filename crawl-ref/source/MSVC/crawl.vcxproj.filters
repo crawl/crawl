@@ -947,6 +947,9 @@
     <ClCompile Include="..\branch-data-json.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\mon-aura.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h">
@@ -2293,6 +2296,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\ng-init-branches.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mon-aura.h">
       <Filter>h</Filter>
     </ClInclude>
   </ItemGroup>
