@@ -591,6 +591,7 @@ perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\b
     <ClCompile Include="..\lookup-help.cc" />
     <ClCompile Include="..\maybe-bool.cc" />
     <ClCompile Include="..\melee-attack.cc" />
+    <ClCompile Include="..\mon-aura.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-explode.cc" />
@@ -1046,6 +1047,7 @@ perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\b
     <ClInclude Include="..\mon-abil.h" />
     <ClInclude Include="..\mon-act.h" />
     <ClInclude Include="..\mon-attitude-type.h" />
+    <ClInclude Include="..\mon-aura.h" />
     <ClInclude Include="..\mon-behv.h" />
     <ClInclude Include="..\mon-book.h" />
     <ClInclude Include="..\mon-cast.h" />
