@@ -270,7 +270,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Jiyva
         {   { 2, "Jiyva is now protecting you from corrosive effects.",
                  "Jiyva will no longer protect you from corrosive effects.",
-                 "Jiyva protects you from corrosive effects. (rCorr)" },
+                 "Jiyva protects you from corrosive effects." },
             { 3, "Jiyva will now mutate your body as you gain piety.",
                  "Jiyva will no longer mutate your body.",
                  "Jiyva will mutate your body as you gain piety." },
@@ -417,7 +417,10 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Ignis
         {
-            { 0, "", "", "You are resistant to fire. (rF+)" },
+            // It would be nice to specify explicitly that this is rF+
+            // Unfortunately, including parentheses at the end here breaks
+            // the UI on Webtiles.
+            { 0, "", "", "You are resistant to fire." },
             { 1, ABIL_IGNIS_FIERY_ARMOUR, "armour yourself in flame" },
             { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
             { 7, ABIL_IGNIS_RISING_FLAME, "rocket upward and away, once" },
