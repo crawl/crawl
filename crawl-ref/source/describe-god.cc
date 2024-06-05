@@ -834,7 +834,7 @@ static formatted_string _describe_god_powers(god_type which_god)
     case GOD_JIYVA:
         have_any = true;
         desc.cprintf("Jellies are peaceful and will consume items off the floor.\n");
-        desc.cprintf("Jiyva prevents you from injuring jellies.\n");
+        desc.cprintf("Jiyva prevents you from harming jellies.\n");
 
         if (have_passive(passive_t::jelly_regen))
             desc.textcolour(god_colour(which_god));
