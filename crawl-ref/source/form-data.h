@@ -414,7 +414,7 @@ static const form_entry formdata[] =
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
     { { "contaminating", "Foes you strike become dangerously contaminated with magical radiation." }, },
-    { { "glow", "You glow with magical radiation, making you easy to see and hit." } }
+    { { "glow", "You glow with magical radiation, making you easy to see." } }
 },
 
 };
