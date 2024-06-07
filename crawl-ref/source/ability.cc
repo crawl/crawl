@@ -2465,7 +2465,7 @@ static vector<string> _desc_bind_soul_hp(const monster_info& mi)
 static vector<string> _desc_marionette_spells(const monster_info& mi)
 {
     if (mi.is(MB_SHADOWLESS) || mi.is(MB_SUMMONED) || mi.attitude != ATT_HOSTILE)
-        return vector<string>{""};
+        return vector<string>();
 
     vector<mon_spell_slot> spells = get_unique_spells(mi);
     int num_spells = spells.size();
