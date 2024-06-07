@@ -80,7 +80,7 @@ int god_favour_rank(god_type which_god)
 {
     if (which_god == GOD_GOZAG)
         return _gold_level();
-    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
+    else if (which_god == GOD_USKAYAW)
         return _invocations_level();
     else
         return _piety_level(you.piety);
