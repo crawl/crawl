@@ -1141,9 +1141,7 @@ static void _adjust_brand(item_def &item, int agent)
     if (agent != GOD_TROG && item.base_type == OBJ_WEAPONS)
     {
         while (!one_chance_in(_weapon_brand_reroll_denom(get_weapon_brand(item))))
-        {
             reroll_brand(item, ISPEC_GOOD_ITEM);
-        }
     }
 }
 
