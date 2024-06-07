@@ -1041,7 +1041,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell)
 
     return _summon_demon_wrapper(pow, god, spell, type,
                                  min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false);
+                                 true, false);
 }
 
 bool summon_demon_type(monster_type mon, int pow, god_type god,
