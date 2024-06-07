@@ -3268,6 +3268,9 @@ int player_stealth()
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
 
+    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+        stealth += STEALTH_PIP * 2;
+
     // Mutations.
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_NIGHTSTALKER) / 3;
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
