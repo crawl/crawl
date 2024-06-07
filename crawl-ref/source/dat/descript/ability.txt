@@ -620,7 +620,8 @@ Primordial Nightfall ability
 Invokes a night from before the stars first burned in the sky, engulfing your
 surroundings in impenetrable darkness. The user's sight radius will be reduced
 to nothing, preventing enemies from tracking or aiming abilities at you, and
-slowly expand back to normal over the duration of the effect.
+slowly expand back to normal over the duration of the effect. Your stealth will
+also be increased.
 
 It cannot be invoked again until its effect has fully ended, as even the very
 first night of creation must eventually must give way to day.
