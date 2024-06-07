@@ -32,8 +32,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
         // game, style information is missing for some reason.
         // Use hard coded values instead.
         healthy = "#8ae234";
-        hp_spend = "#a40000";
-        magic = "#729fcf";
+        hp_spend = "#b30009";
+        magic = "#5e78ff";
         // healthy = $("#stats_hp_bar_full").css("background-color");
         // hp_spend = $("#stats_hp_bar_decrease").css("background-color");
         // magic = $("#stats_mp_bar_full").css("background-color");
