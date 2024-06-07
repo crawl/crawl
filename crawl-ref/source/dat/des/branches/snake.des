@@ -1022,7 +1022,6 @@ Nxx......xx..xx......xxP
 .....MM..........LL.....
 ENDMAP
 
-
 NAME:    regret_index_snakedec_diamondback
 TAGS:    transparent extra decor
 DEPTH:   Snake
@@ -1052,7 +1051,675 @@ xx.."?"..xx..x``.zzx..xx.."?"..xx..x``.zzx..
                 x                  ^^.@.
 ENDMAP
 
-###############################################################################
+NAME:   nicolae_snake_am_anfang
+TAGS:   transparent decor extra
+DEPTH:  Snake
+: if you.depth() == 1 then
+SUBST:  S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  S = [{(
+: else
+SUBST:  S = ]})[{(
+: end
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+xxxxx..@@@..xxxxx
+xccccc.....cccccx
+xc...cc...cc...cx
+xcnn.........nncx
+xc......S......cx
+xcnn.........nncx
+xc...cc...cc...cx
+xccccc.....cccccx
+xxxxx..@@@..xxxxx
+ENDMAP
+
+NAME:    nicolae_snake_entwined_pools
+TAGS:    transparent decor extra no_pool_fixup
+DEPTH:   Snake
+SHUFFLE: DEF
+SUBST:   D = ., E : .c, F = c
+MAP
+ ........................@
+ .w...lll...www...lll..ww.
+ ..w.l...l.w...w.l...lwww.
+cccllFEDEFwFEDEFlFEDEFwwccc
+ .lllw...w.l...l.w...w.l..
+ .ll..www...lll...www...l.
+ @........................
+ENDMAP
+
+NAME:   nicolae_snake_hissss
+TAGS:   transparent decor extra
+DEPTH:  Snake
+: if you.depth() == 1 then
+SUBST:  S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  S = [{(
+: else
+SUBST:  S = ]})[{(
+: end
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+xxxxxxxxxxx
+xxxxxxxccccc
+xxxccccc...cc
+xxxcc....n..ccc
+xllc...........@
+xxlS............@
+xllc...........@
+xxxcc....n..ccc
+xxxccccc...cc
+xxxxxxxccccc
+xxxxxxxxxxx
+ENDMAP
+
+# Some abstract art installations celebrating the eternal alliance of the nagas
+# and salamanders. Green crystal for the nagas, red lava for the salamanders.
+# If you want to make more, note that each vault has an equal number of lava
+# tiles and crystal tiles, and all crystal tiles should be visible, even when
+# the lava and crystal tiles are swapped.
+NAME:    nicolae_snake_nagamander_alliance_1
+TAGS:    transparent decor extra luniq_nagamander
+DEPTH:   Snake
+SHUFFLE: bl
+MAP
+    ..........
+    .llllll...
+    .lbbbbl...
+    .lb..bl.l.
+    .lb...lll.
+    .lbbb.....
+.....lllb.
+.bbb...lb.
+.b.bl..lb.
+...bllllb.
+...bbbbbb.
+..........
+ENDMAP
+
+NAME:    nicolae_snake_nagamander_alliance_2
+TAGS:    transparent decor extra luniq_nagamander
+DEPTH:   Snake
+SHUFFLE: bl
+MAP
+     .......
+    ....ll........
+   ...lllll....bb.
+  .......ll.....b.
+ ...bb..lll.bbb.b.
+.....b..ll..b.bbb.
+.bbb.b..ll..b.....
+.b.bbb.lll..bb...
+.b.....ll.......
+.bb....lllll...
+........ll....
+      .......
+ENDMAP
+
+NAME:    nicolae_snake_nagamander_alliance_3
+TAGS:    transparent decor extra luniq_nagamander
+DEPTH:   Snake
+SHUFFLE: bl
+MAP
+  ..............
+ ..bbbb..l....l..
+..b....b..l..l...
+.b..ll..b.l..l.b.
+.b.l..l.b.l..l.b.
+.b.l..l.b.l..l.b.
+.b.l..l.b..ll..b.
+...l..l..b....b..
+..l....l..bbbb..
+ ..............
+ENDMAP
+
+NAME:    nicolae_snake_nagamander_alliance_4
+TAGS:    transparent decor extra luniq_nagamander
+DEPTH:   Snake
+SHUFFLE: bl
+MAP
+.......
+..llll.
+.bbbbl.
+.bllbl.
+.b..bl.
+...bbl.
+..bbll.
+.bbll.........
+.bll...llllll.
+.bl...llbbbbl.
+.bl..llbb.lbl.
+.bllllbb..lbl.
+.bbbbbb..bbb..
+..............
+ENDMAP
+
+NAME:    nicolae_snake_nagamander_alliance_5
+TAGS:    transparent decor extra luniq_nagamander
+DEPTH:   Snake
+SHUFFLE: bl
+MAP
+..........
+...ll.....
+..bbl.lb..
+.lbbl.bl..
+.llll.....
+.....bbbb.
+..bl.bllb.
+..lb.bll..
+.....bb...
+..........
+ENDMAP
+
+# The "parade" vaults all feature a continuous wall which is broken up at random
+# to make several snake-shaped walls, following each other like a snake parade.
+NAME:    nicolae_snake_parade_curves
+TAGS:    transparent extra decor luniq_snakeparade
+DEPTH:   Snake
+KFEAT:   g = metal_statue
+SHUFFLE: Tg
+NSUBST:  D = . / c, E = . / c, F = . / c, H = . / c, J = . / c, K = . / c, \
+         L = . / c, M = . / c, N = . / c
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
+: end
+MAP
+    .......
+    .ccDDc.
+    .c...D.....
+    .cNc.cDDDc.
+.......N.....c.
+.cMc...cNc.T.c.
+.M.M.....N...E.....
+.M.cMc.cNc.cEc.ccc.
+.M...c.N...E...c.F.
+.ccc.ccc.g.cEEEc.F.
+...c.............F...
+  .L.cLLcc.g.cHc.cFc.
+  .L.L...c...H.H...F.
+  .cLc.cKc.cHc.cHc.F.
+  .....K...c.....H.c.
+      .K.T.ccc...ccc.
+      .K.....J.......
+      .cKKcc.cJc.
+      .....c...J.
+          .cJJJc.
+          .......
+ENDMAP
+
+NAME:   nicolae_snake_parade_fountainous
+TAGS:   transparent decor extra luniq_snakeparade
+DEPTH:  Snake
+NSUBST: p = 3=. / 3=c. / c
+KFEAT:  g = metal_statue
+: local glifz = "DEFHJKLMNOPQRSZa"
+: for i = 1, string.len(glifz), 1 do
+:    subvault(string.sub(glifz, i, i) .. " : nico_snake_corners")
+: end
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
+: end
+MAP
+.................
+..DcpcE...FcpcH..
+.DDD.EEE.FFF.HHH.
+.cD...EcpcF...Hc.
+.p..T.......T..p.
+.cJ...KcpcL...Mc.
+.JJJ.KKK.LLL.MMM.
+..JcpcK...Lc.cM..
+........g..p.p...
+..NcpcO...Pc.cQ..
+.NNN.OOO.PPP.QQQ.
+.cN...OcpcP...Qc.
+.p..T.......T..p.
+.cR...ScpcZ...ac.
+.RRR.SSS.ZZZ.aaa.
+..RcpcS...Zcpca..
+.................
+ENDMAP
+
+NAME:  nicolae_snake_fountainsnakessubvault
+TAGS:  transparent no_dump unrand nico_snake_corners allow_dup
+DEPTH: Snake
+MAP
+ c
+.c.
+ c
+ENDMAP
+
+NAME:   nicolae_snake_parade_hashtag
+TAGS:   transparent decor extra luniq_snakeparade
+DEPTH:  Snake
+NSUBST: a = . / c, p = . / c, q = . / c, r = . / c, s = . / c, y = . / c, \
+        z = . / c, - = . / c, ` = . / c
+MAP
+   ............
+   .caac..cppc.
+   .a..a..p..p.
+....c..a..c..p....
+.czcc..cacc..cpcc.
+.z..............c.
+.z..............q.
+.czzc..c--c..cqqc.
+....z..-..c..q....
+....c..c..`..q....
+.cycc..c``c..cqcc.
+.y..............c.
+.y..............r.
+.cyyc..cssc..crrc.
+....y..s..s..r....
+   .c..s..c..r.
+   .ccsc..ccrc.
+   ............
+ENDMAP
+
+NAME:   nicolae_snake_parade_hilbert
+TAGS:   transparent decor extra luniq_snakeparade
+DEPTH:  Snake
+NSUBST: p = . / c, q = . / c, r = . / c, s = . / c, z = . / c
+MAP
+.............
+.cqqqc.cqqqc.ccc
+.q...q.q...c.p...
+.cqc.cqc.ccc.cpc.
+...q.....p.....p.
+ cqc.crc.p.cpc.p.
+ c...r.r.p.p.p.p.
+ ccrrc.r.cpc.cpc.
+ ......r.........
+ ccrrc.r.czc.czc.
+ c...r.r.z.z.z.z.
+ csc.crc.z.czc.z.
+...s.....z.....z.
+.csc.csc.ccc.czc.
+.s...s.s...c.z...
+.csssc.csssc.ccc
+.............
+ENDMAP
+
+NAME:    nicolae_snake_parade_liquids
+TAGS:    transparent decor extra no_pool_fixup luniq_snakeparade
+DEPTH:   Snake
+SHUFFLE: DE, FH
+SUBST:   D = -, F = `, EH = .
+NSUBST:  p = . / c, q = . / c, r = . / c, s = . / c, z = . / c, \
+         - = . / w, ` = . / w
+SUBST:   w : wwwl
+MAP
+........................
+.cpc.cpc..cqqc..cqc.ccc.
+.p.p.p.p..q..q..q.ccc.r.
+.p.cpc.c..q..cqqc.....r.
+.p.....ccqc..F..H..crrc.
+.cpcc..D..E..w``w..r....
+....c..w--w..H..F..crrc.
+.czzc..E..D..cssc.....r.
+.z.....czzc..s..s.csc.r.
+.z.czc.z..c..s..s.s.c.r.
+.czc.czc..ccsc..csc.ccc.
+........................
+ENDMAP
+
+NAME:   nicolae_snake_parade_weird_curve
+TAGS:   transparent decor extra luniq_snakeparade
+DEPTH:  Snake
+KFEAT:  g = metal_statue
+NSUBST: a = . / c, p = . / c, q = . / c, r = . / c, s = . / c, y = . / c, \
+        z = . / c
+SUBST:  S = TTggS
+: if you.depth() == 1 then
+SUBST:  S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  S = [{(
+: else
+SUBST:  S = ]})[{(
+: end
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR: g = poison
+TILE:   g = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR: g = fire
+TILE:   g = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
+: end
+MAP
+   ............
+ ccc.caac.cppc.
+ c.cac..a.p..p.
+.z.....cc.cc.p.
+.z.czc.a...p.c
+.czc.z.caccc.c
+.....z.......q.
+.cyccc.S.cqqqc.
+.y.......q.....
+.y.csssc.q.ccc.
+.y.s...s.ccc.r.
+.y.cc.cc.....r.
+.y..s.c..crc.r.
+.cccc.ccrc.crc.
+..  ...........
+ENDMAP
+
+NAME:   nicolae_snake_parade_wet_stairs
+TAGS:   transparent decor extra no_pool_fixup luniq_snakeparade
+DEPTH:  Snake
+NSUBST: p = . / c, q = . / c, r = . / c, s = . / c, y = . / c, z = . / c
+SUBST:  w : wwwl
+: if you.depth() == 1 then
+SUBST:  S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  S = [{(
+: else
+SUBST:  S = ]})[{(
+: end
+MAP
+  .........
+ cppcc.cqqcc
+.p...c.q...c.
+.p.w.cqc.w.r.
+.c..w.w.w..r.
+.ccc.....crc.
+...zw.S.wr...
+.czc.....ccc.
+.z..w.w.w..c.
+.z.w.cyc.w.s.
+.c...y.c...s.
+ ccyyc.ccssc
+  .........
+ENDMAP
+
+NAME:   nicolae_snake_parade_wheel
+TAGS:   transparent decor extra luniq_snakeparade
+DEPTH:  Snake
+KFEAT:  g = metal_statue
+SUBST:  S = TTggS
+NSUBST: p = . / c, q = . / c, r = . / c, s = . / c
+: if you.depth() == 1 then
+SUBST:  S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  S = [{(
+: else
+SUBST:  S = ]})[{(
+: end
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR: g = poison
+TILE:   g = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR: g = fire
+TILE:   g = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
+: end
+MAP
+   ...@@@...
+  ccpc...cpcc
+ cc..p...p..cc
+.c...cpc.p...c.
+.s.....cpc...q.
+.cssc......cqc.
+@...s......q..@
+@..cc..S..cc..@
+@..s......q...@
+.csc......cqqc.
+.s...crc.....q.
+.c...r.crc...c.
+ cc..r...r..cc
+  ccrc...crcc
+   ...@@@...
+ENDMAP
+
+NAME:    nicolae_snake_parade_wiggly_rhombus
+TAGS:    transparent decor extra luniq_snakeparade
+DEPTH:   Snake
+KFEAT:   g = metal_statue
+SHUFFLE: SED/HJK, DEF, HJK
+SUBST:   DF : g., EJ : T., FK : G.
+NSUBST:  p = . / c, q = . / c, r = . / c, s = . / c
+: if you.depth() == 1 then
+SUBST:   S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:   S = [{(
+: else
+SUBST:   S = ]})[{(
+: end
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:    G : dngn_statue_naga / dngn_statue_archer
+MAP
+...........
+.csscc........
+.s...c........
+.s.D.cpppc.E..
+.s.......p.....
+.csc.....cpc...
+...c.......p...
+...c...S...c...
+...r.......c...
+...crc.....cqc.
+.....r.......q.
+ ..E.crrrc.D.q.
+ ........c...q.
+ ........ccqqc.
+    ...........
+ENDMAP
+
+NAME:   nicolae_snake_serpentine_stairdown
+TAGS:   transparent decor extra
+DEPTH:  Snake
+: if you.depth() == 1 then
+SUBST: S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: S = [{(
+: else
+SUBST: S = ]})[{(
+: end
+NSUBST: p = c / ., q = c / ., r = c / ., s = c / .
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+ .....   .....
+...cc.....cc...
+..c..c..nc..c..
+.q.q.c..cn.s.s.
+..c....S....c..
+.p.p.nc..c.r.r.
+..c..cn..c..c..
+...cc.....cc...
+ .....   .....
+ENDMAP
+
+NAME:    nicolae_snake_slithering_moat
+TAGS:    no_pool_fixup transparent extra decor
+DEPTH:   Snake
+SHUFFLE: apqrsyz-
+SUBST:   a = @, pqrsyz- = w
+MAP
+  wsw.waw
+  r.y.-.p
+  w.wzw.w
+  q.....q
+wpw.ccc.wrw
+a...ccc...s
+w-w.ccc.wyw
+  z.....z
+  w.wqw.w
+  y.r p.-
+  wsw waw
+ENDMAP
+
+NAME:   nicolae_snake_striped_snake_set
+TAGS:   transparent decor extra
+DEPTH:  Snake
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+ ccc.@.bbb
+bb.bb.cc.cc
+b...b+c...c
+@..cc.bb..@
+..bc...bc..
+..b.....c..
+..bc...bc..
+@..cc.bb..@
+b...b+c...c
+bb.bb.cc.cc
+ ccc.@.bbb
+ENDMAP
+
+NAME:   nicolae_snake_to_our_wiggly_heroes
+TAGS:   transparent decor extra
+DEPTH:  Snake
+KFEAT:  F = G
+NSUBST: J = c / ., K = c / ., L = c / ., M = c / ., N = c / ., O = c / ., \
+        P = c / ., Q = c / .
+SUBST:  c : cbn, T = TTTU
+TILE:   F : dngn_statue_archer
+TILE:   G : dngn_statue_naga
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+   .......
+   ..J.K..
+   .c.c.c.
+...c.J.K.c...
+..c.F...G.c..
+.Q.Q.....L.L.
+..c...T...c..
+.P.P.....M.M.
+..c.G...F.c..
+...c.O.N.c...
+   .c.c.c.
+   ..O.N..
+   .......
+ENDMAP
+
+NAME:    nicolae_snake_two_snakes_lying_around
+TAGS:    transparent decor extra
+DEPTH:   Snake
+SHUFFLE: DE, FH
+SUBST:   DF = c, EH = .
+MAP
+ ..........
+..cE.DD.Ec..
+.c..c..c..c.
+.c..c..c..c.
+..cD.EE.Dc..
+............
+..cF.HH.Fc..
+.c..c..c..c.
+.c..c..c..c.
+..cH.FF.Hc..
+ ..........
+ENDMAP
+
+NAME:    nicolae_snake_wiggly_hallway
+TAGS:    transparent decor extra
+DEPTH:   Snake
+SHUFFLE: TG
+SUBST:   G : GG., T : TT.
+COLOUR:  n = lightgreen
+TILE:    n = dngn_transparent_stone_green
+MAP
+      .......@@@............
+    ccncc...........ccncc......
+ccccc...ccncc...ccncc...ccncc...ccccc
+@.....T.....ccncc.....T.....ccncc...@
+@.........G.......G.......G.........@
+@...ccncc.....T.....ccncc.....T.....@
+ccccc...ccncc...ccncc...ccncc...ccccc
+      ......ccncc...........ccncc
+         ............@@@.......
+ENDMAP
+
+NAME:   nicolae_snake_wiggly_wall
+TAGS:   transparent decor extra
+DEPTH:  Snake
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+           ..@..
+       .............
+   .........cnc.........
+........cnc.c.c.cnc..........
+....cnc.c.c.c.c.c.c.cnc......
+cn+nc.+.c.+.c.+.c.+.c.+.cn+nc
+......cnc.c.c.c.c.c.c.cnc....
+..........cnc.c.c.cnc........
+     .........cnc.........
+         .............
+             ..@..
+ENDMAP
+
+NAME:   nicolae_snake_widesinders
+TAGS:   transparent decor extra
+DEPTH:  Snake
+MAP
+       ....
+      ..cc..
+      .c..c.
+      .c......
+   .....c..cc..
+  ..cc..c.c..c.
+  .c..cc..c......
+  .c.......c..cc..
+....c..cc..c.c..c.
+.c..c.c..cc..c....
+..cc..c.......c.
+ ......c..cc..c.
+   .c..c.c..cc..
+   ..cc..c.....
+    ......c.
+      .c..c.
+      ..cc..
+       ....
+ENDMAP
+
+NAME:   nicolae_snake_yet_another_squirming_detour
+TAGS:   transparent decor extra
+DEPTH:  Snake
+NSUBST: D = c / ., E = c / ., F = c / ., H = c / ., J = c / ., K = c / ., \
+        L = c / ., M = c / ., N = c / ., O = c / ., P = c / ., Q = c / .
+COLOUR: n = lightgreen
+TILE:   n = dngn_transparent_stone_green
+MAP
+    ........
+... .HcncF..n
+.JccccH.FcE.c
+.cJ......Ec.c.@
+.n..Lccn..n.cQ.
+.cK.cL...Dc.Qc.
+.Kc.n..nccD..n.
+@.c.cM......Pc.
+  c.McN.OccccP.
+  n..NcncO. ...
+   ........
+ENDMAP
+
+##############################################################################
 #
 # <<3>> Monster-placing vaults.
 #
