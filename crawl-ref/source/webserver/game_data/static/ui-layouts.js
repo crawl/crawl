@@ -61,8 +61,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
                 renderer.draw_from_texture(spell.tile, 0, 0, enums.texture.GUI, 0, 0, 0, false);
                 $item.append($canvas);
 
-                var label = " " + letter + " - "+spell.title;
-                $item.append("<span>" + label + "</span>");
+                var label = " " + letter + " - " + spell.title;
+                $item.append("<span>" + util.formatted_string_to_html(label) + "</span>");
 
                 if (spell.effect !== undefined)
                     $item.append("<span>" + util.formatted_string_to_html(spell.effect) + " </span>");

@@ -722,7 +722,15 @@ static void _write_book(const spellbook_contents &book,
     for (auto spell : book.spells)
     {
         tiles.json_open_object();
-        tiles.json_write_string("title", spell_title(spell));
+
+        const string dith_marker = crawl_state.need_save
+                                   && you_worship(GOD_DITHMENOS)
+                                   && !valid_marionette_spell(spell)
+                                        ? "<magenta>!</magenta>"
+                                        : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : "";
+
+        tiles.json_write_string("title", dith_marker + spell_title(spell));
         tiles.json_write_int("colour", _spell_colour(spell, source_item));
         tiles.json_write_name("tile");
         tiles.write_tileidx(tileidx_spell(spell));
