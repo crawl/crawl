@@ -292,9 +292,13 @@ struct ability_def
             // since Ignis's max piety is Special.
             return "";
         }
-        const int perc = max(avg_piety_cost() * 100 / 200, 1);
-        return make_stringf(" (about %d%% of your maximum possible piety)",
-                            perc);
+
+        if (avg_piety_cost() <= 1)
+            return " (less than 1% of your maximum possible piety)";
+
+        // Round up
+        const int perc = max((avg_piety_cost() * 100 + 199) / 200, 0);
+        return make_stringf(" (about %d%% of your maximum possible piety)", perc);
     }
 };
 
