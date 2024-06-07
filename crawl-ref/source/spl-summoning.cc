@@ -3216,7 +3216,7 @@ bool hellfire_mortar_active(const actor& agent)
     //      I'd really like to generalize 'count_summons' to count all things
     //      with a given summoner, rather than just abjurable things with a
     //      given summoner.
-    const mid_t agent_mid = (agent.is_monster() && mons_is_marionette(*agent.as_monster())
+    const mid_t agent_mid = (agent.real_attitude() == ATT_MARIONETTE
                                 ? MID_PLAYER : agent.mid);
 
     for (monster_iterator mi; mi; ++mi)

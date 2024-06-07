@@ -3511,7 +3511,7 @@ bool should_attract_mons(const monster &m)
 
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
-    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;
+    return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_MARIONETTE;
 }
 
 mon_attitude_type mons_attitude(const monster& m)
@@ -5240,11 +5240,6 @@ bool mons_is_player_shadow(const monster& mon)
 {
     return mon.type == MONS_PLAYER_SHADOW
         && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
-}
-
-bool mons_is_marionette(const monster& mon)
-{
-    return testbits(mon.flags, MF_MARIONETTE);
 }
 
 // Zero-damage attacks with special effects (constriction, drowning, pure fire,

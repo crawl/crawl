@@ -848,7 +848,7 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
 static const mons_spell_logic* _get_spell_logic(const monster& caster, spell_type spell)
 {
     // Use marionette overrides when appropriate
-    if (mons_is_marionette(caster))
+    if (caster.attitude == ATT_MARIONETTE)
     {
         const mons_spell_logic* logic = map_find(marionette_spell_to_logic, spell);
         if (logic)
@@ -8289,7 +8289,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     // (Marionettes pass their summons onto the player, so count for them instead)
     if (summons_are_capped(spell))
     {
-        if (testbits(mon->flags, MF_MARIONETTE))
+        if (mon->attitude == ATT_MARIONETTE)
         {
             if (count_summons(&you, spell) >= summons_limit(spell, false))
                 return ai_action::impossible();

@@ -1002,7 +1002,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     // have somehow killed themselves in the process)
     if (monster* mon_source = cached_monster_copy_by_mid(source))
     {
-        if (testbits(mon_source->flags, MF_MARIONETTE))
+        if (mon_source->attitude == ATT_MARIONETTE)
             dam = 0;
     }
 

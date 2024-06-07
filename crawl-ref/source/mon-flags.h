@@ -293,9 +293,6 @@ enum monster_flag_type : uint64_t
 
     /// Will prefer not to approach enemies it's already in spellcast range of
     MF_CAUTIOUS           = BIT(41),
-
-    /// In the process of performing actions as a marionette
-    MF_MARIONETTE         = BIT(42),
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

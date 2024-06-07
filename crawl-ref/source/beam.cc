@@ -2739,7 +2739,9 @@ bool bolt::found_player() const
             && !YOU_KILL(thrower)
             && !can_see_invis && you.invisible()
             && (!agent()
-                || agent()->is_monster() && !agent()->as_monster()->friendly())
+                || (agent()->is_monster()
+                    && !agent()->as_monster()->friendly()
+                    && agent()->as_monster()->attitude != ATT_MARIONETTE))
             // No point in fuzzing to a position that could never be hit.
             && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
@@ -3163,8 +3165,8 @@ bool bolt::harmless_to_player() const
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
     // Marionettes can't hurt the player with anything, so don't worry about it.
-    if (agent() && agent()->is_monster() && mons_is_marionette(*agent()->as_monster()))
-        return false;
+    if (agent() && agent()->real_attitude() == ATT_MARIONETTE)
+        return true;
 
     if (you.cloud_immune() && is_big_cloud())
         return true;
@@ -4383,7 +4385,8 @@ bool bolt::ignores_player() const
 
     if (agent() && agent()->is_monster()
         && (mons_is_hepliaklqana_ancestor(agent()->as_monster()->type)
-            || mons_is_player_shadow(*agent()->as_monster())))
+            || mons_is_player_shadow(*agent()->as_monster()))
+            || agent()->real_attitude() == ATT_MARIONETTE)
     {
         // friends!
         return true;
@@ -4690,7 +4693,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
                 friend_info.power = 100;
             // Marionettes will avoid harming other 'allies', but are
             // deliberately reckless about themselves.
-            else if (mon_source != mon || !testbits(mon_source->flags, MF_MARIONETTE))
+            else if (mon_source != mon || mon_source->attitude == ATT_MARIONETTE)
             {
                 friend_info.power
                     += 2 * final * mon->get_experience_level() / preac;

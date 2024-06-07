@@ -170,7 +170,7 @@ struct mgen_data
         // poofing and marionette is a one-shot effect)
         if (_summoner && _summoner->is_monster()
             && (mons_is_player_shadow(*_summoner->as_monster())
-                || mons_is_marionette(*_summoner->as_monster())))
+                || _summoner->real_attitude() == ATT_MARIONETTE))
         {
             summoner = &you;
             behaviour = BEH_FRIENDLY;

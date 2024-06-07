@@ -3028,7 +3028,7 @@ spret dithmenos_marionette(monster& target, bool fail)
     const int old_foe = target.foe;
     const coord_def old_target = target.target;
     const int old_energy = target.speed_increment;
-    target.flags |= MF_MARIONETTE;
+    target.attitude = ATT_MARIONETTE;
     env.final_effect_monster_cache.push_back(target);
 
     // Attempt to cast all valid spells the monster has, in randomized order,
@@ -3066,7 +3066,7 @@ spret dithmenos_marionette(monster& target, bool fail)
         target.foe = old_foe;
         target.target = old_target;
         target.speed_increment = old_energy;
-        target.flags &= ~MF_MARIONETTE;
+        target.attitude = ATT_HOSTILE;
     }
 
     // Charge piety based on how many spells were actually performed.
