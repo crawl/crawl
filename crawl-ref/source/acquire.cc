@@ -210,7 +210,7 @@ static armour_type _acquirement_shield_type()
         { ARM_ORB,           27 - _skill_rdiv(SK_SHIELDS) },
         { ARM_BUCKLER,       27 - _skill_rdiv(SK_SHIELDS) },
         { ARM_KITE_SHIELD,   27},
-        { ARM_TOWER_SHIELD,  27 - _skill_rdiv(SK_SHIELDS, 2) },
+        { ARM_TOWER_SHIELD,  27 + _skill_rdiv(SK_SHIELDS, 2) },
     };
 
     return filtered_vector_select<armour_type>(weights, [] (armour_type shtyp) {
