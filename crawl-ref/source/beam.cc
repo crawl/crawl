@@ -4385,8 +4385,8 @@ bool bolt::ignores_player() const
 
     if (agent() && agent()->is_monster()
         && (mons_is_hepliaklqana_ancestor(agent()->as_monster()->type)
-            || mons_is_player_shadow(*agent()->as_monster()))
-            || agent()->real_attitude() == ATT_MARIONETTE)
+            || mons_is_player_shadow(*agent()->as_monster())
+            || agent()->real_attitude() == ATT_MARIONETTE))
     {
         // friends!
         return true;
