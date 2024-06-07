@@ -1768,7 +1768,7 @@ bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
     return mons_class_holiness(mzc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
         && mc != MONS_PANDEMONIUM_LORD
         && mzc != MONS_ORC_APOSTLE
-        && (!divine || smc->attack[0].type != AT_NONE); // i.e. has_attack
+        && (divine || smc->attack[0].type != AT_NONE); // i.e. has_attack
 }
 
 // Does this monster have a soul that can be used for necromancy (Death
