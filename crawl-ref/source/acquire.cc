@@ -60,6 +60,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type);
 static armour_type _acquirement_shield_type();
 static armour_type _acquirement_body_armour();
 static armour_type _useless_armour_type();
+static bool _armour_slot_seen(equipment_type);
 
 /**
  * Get a randomly rounded value for the player's specified skill, unmodified
@@ -140,12 +141,12 @@ static equipment_type _acquirement_armour_slot(int agent)
     }
 
     vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 5 : 1) },
+        { EQ_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 6 : 2) },
         { EQ_OFFHAND,       1 },
-        { EQ_CLOAK,         1 },
-        { EQ_HELMET,        1 },
-        { EQ_GLOVES,        1 },
-        { EQ_BOOTS,         1 },
+        { EQ_CLOAK,         (_armour_slot_seen(EQ_CLOAK) ? 1 : 3) },
+        { EQ_HELMET,        (_armour_slot_seen(EQ_HELMET) ? 1 : 3) },
+        { EQ_GLOVES,        (_armour_slot_seen(EQ_GLOVES) ? 1 : 3) },
+        { EQ_BOOTS,         (_armour_slot_seen(EQ_BOOTS) ? 1 : 3) },
     };
 
     return filtered_vector_select<equipment_type>(weights,
@@ -198,33 +199,18 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type)
 /**
  * Choose a random type of shield to be generated via acquirement or god gifts.
  *
- * Weighted by Shields skill & the secret racial shield bonus.
- *
- * Ratios by shields skill & player size (B = buckler, K = kite shield, T = tower shield)
- *
- *     Shields    0           5         10          15        20
- * Large:   {6B}/5K/4T  ~{1B}/1K/1T  ~{1B}/5K/7T  ~2K/3T     1K/2T
- * Med.:        2B/1K    6B/4K/1T      2B/2K/1T   4B/8K/3T   1K/1T
- * Small:      ~3B/1K     ~5B/2K      ~2B/1K     ~3B/2K     ~1B/1K
- *
- * XXX: possibly shield skill should count for more for non-med races?
+ * Weighted by Shields skill: at 0 skill orb/buckler/kite/tower are equally
+ * likely, while at 27 skill you get 25% kite and 75% tower.
  *
  * @return A potentially wearable type of shield.
  */
 static armour_type _acquirement_shield_type()
 {
-    // Fixed chance for an orb.
-    if (one_chance_in(4))
-        return ARM_ORB;
-
-    const int scale = 256;
     vector<pair<armour_type, int>> weights = {
-        { ARM_BUCKLER,       (5 + player_shield_racial_factor()) * 4 * scale
-                                - _skill_rdiv(SK_SHIELDS, scale) },
-        { ARM_KITE_SHIELD,        10 * scale },
-        { ARM_TOWER_SHIELD,  20 * scale
-                             - (5 + player_shield_racial_factor()) * 4 * scale
-                             + _skill_rdiv(SK_SHIELDS, scale / 2) },
+        { ARM_ORB,           27 - _skill_rdiv(SK_SHIELDS) },
+        { ARM_BUCKLER,       27 - _skill_rdiv(SK_SHIELDS) },
+        { ARM_KITE_SHIELD,   27},
+        { ARM_TOWER_SHIELD,  27 - _skill_rdiv(SK_SHIELDS, 2) },
     };
 
     return filtered_vector_select<armour_type>(weights, [] (armour_type shtyp) {
@@ -235,31 +221,16 @@ static armour_type _acquirement_shield_type()
 /**
  * Determine the weight (likelihood) to acquire a specific type of body armour.
  *
- * If warrior is set, multiplies the base weight by the base ac^2.
- * Otherwise, uses the player's Armour skill to crudely guess how likely they
- * are to want the armour, based on its EVP.
+ * Weighted by Armour skill, though not particularly strongly.
  *
  * @param armour    The type of armour in question. (E.g. ARM_ROBE.)
- * @param warrior   Whether we think the player only cares about AC.
  * @return          A weight for the armour.
  */
-static int _body_acquirement_weight(armour_type armour, bool warrior)
+static int _body_acquirement_weight(armour_type armour)
 {
     const int base_weight = armour_acq_weight(armour);
-
-    if (warrior)
-    {
-        const int ac = armour_prop(armour, PARM_AC);
-        return base_weight * ac * ac;
-    }
-
-    // highest chance when armour skill = (displayed) evp - 3
-    const int evp = armour_prop(armour, PARM_EVASION);
-    const int skill = min(27, _skill_rdiv(SK_ARMOUR) + 3);
-    const int sk_diff = abs(skill + evp / 10);
-    const int inv_diff = max(1, 27 - sk_diff);
-    // armour closest to ideal evp is 27^3 times as likely as the furthest away
-    return base_weight * inv_diff * inv_diff * inv_diff;
+    const int ac = armour_prop(armour, PARM_AC);
+    return base_weight * (300 + (_skill_rdiv(SK_ARMOUR) - 6) * ac);
 }
 
 /**
@@ -270,13 +241,6 @@ static int _body_acquirement_weight(armour_type armour, bool warrior)
  */
 static armour_type _acquirement_body_armour()
 {
-    // Using an arbitrary legacy formula, do we think the player doesn't care
-    // about armour EVP?
-    int light_pref = _skill_rdiv(SK_SPELLCASTING, 3);
-    light_pref += _skill_rdiv(SK_DODGING);
-    light_pref = random2(light_pref);
-    const bool warrior = light_pref < random2(_skill_rdiv(SK_ARMOUR, 2));
-
     vector<pair<armour_type, int>> weights;
     for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
     {
@@ -287,7 +251,7 @@ static armour_type _acquirement_body_armour()
         if (!check_armour_size(armour, you.body_size(PSIZE_TORSO, true)))
             continue;
 
-        const int weight = _body_acquirement_weight(armour, warrior);
+        const int weight = _body_acquirement_weight(armour);
 
         if (weight)
         {
@@ -366,35 +330,6 @@ static armour_type _useless_armour_type()
         default:
             die("Unknown slot type selected for Xom bad-armour-acq!");
     }
-}
-
-static armour_type _pick_unseen_armour()
-{
-    // Consider shields uninteresting always, since unlike with other slots
-    // players might well prefer an empty slot to wearing one. We don't
-    // want to try to guess at this by looking at their weapon's handedness
-    // because this would encourage switching weapons or putting on a
-    // shield right before reading acquirement in some cases. --elliptic
-    // This affects only the "unfilled slot" special-case, not regular
-    // acquirement which can always produce (wearable) shields.
-    static const equipment_type armour_slots[] =
-        {  EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
-
-    armour_type picked = NUM_ARMOURS;
-    int count = 0;
-    for (auto &slot : armour_slots)
-    {
-        if (!you_can_wear(slot))
-            continue;
-
-        const armour_type sub_type = _acquirement_armour_for_slot(slot);
-        ASSERT(sub_type != NUM_ARMOURS);
-
-        if (!you.seen_armour[sub_type] && one_chance_in(++count))
-            picked = sub_type;
-    }
-
-    return picked;
 }
 
 static bool _regular_staves_useless()
@@ -1187,7 +1122,7 @@ static int _weapon_brand_quality(int brand, bool range)
     }
 }
 
-static bool _armour_slot_seen(armour_type arm)
+static bool _armour_slot_seen(equipment_type slot)
 {
     item_def item;
     item.base_type = OBJ_ARMOUR;
@@ -1195,7 +1130,7 @@ static bool _armour_slot_seen(armour_type arm)
 
     for (int i = 0; i < NUM_ARMOURS; i++)
     {
-        if (get_armour_slot(arm) != get_armour_slot((armour_type)i))
+        if (slot != get_armour_slot((armour_type)i))
             continue;
         item.sub_type = i;
 
@@ -1208,22 +1143,6 @@ static bool _armour_slot_seen(armour_type arm)
             return true;
     }
     return false;
-}
-
-static bool _is_armour_plain(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_ARMOUR);
-    if (is_artefact(item))
-        return false;
-
-    if (armour_is_special(item))
-    {
-        // These are always interesting, even with no brand.
-        // May still be redundant, but that has another check.
-        return false;
-    }
-
-    return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
 /**
@@ -1349,49 +1268,17 @@ int acquirement_create_item(object_class_type class_wanted,
         item_def &acq_item(env.item[thing_created]);
         _adjust_brand(acq_item, agent);
 
-        // For plain armour, try to change the subtype to something
-        // matching a currently unfilled equipment slot.
+        // Increase the chance of armour being an artefact by usually
+        // rerolling non-artefacts.
         if (acq_item.base_type == OBJ_ARMOUR && !is_artefact(acq_item))
         {
-            if (agent != GOD_XOM &&
-                (x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
-                || you.seen_armour[acq_item.sub_type]
-                && !one_chance_in(3)
-                && item_tries < 20))
+            if (agent != GOD_XOM && !one_chance_in(13))
             {
-                // We have seen the exact item already, it's very unlikely
-                // extras will do any good.
-                // For scroll acquirement, prefer base items not seen before
-                // as well, even if you didn't see the exact brand yet.
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
                 if (!quiet)
                     dprf("Destroying already-seen item!");
                 continue;
-            }
-
-            // Try to fill empty slots.
-            if ((_is_armour_plain(acq_item)
-                 || get_armour_slot(acq_item) == EQ_BODY_ARMOUR && coinflip())
-                && _armour_slot_seen((armour_type)acq_item.sub_type))
-            {
-                armour_type at = _pick_unseen_armour();
-                if (at != NUM_ARMOURS)
-                {
-                    destroy_item(thing_created, true);
-                    thing_created = items(true, OBJ_ARMOUR, at,
-                                          item_level, 0, agent);
-                }
-                else if (agent != GOD_XOM && one_chance_in(3))
-                {
-                    // If the item is plain and there aren't any
-                    // unfilled slots, we might want to roll again.
-                    destroy_item(thing_created, true);
-                    thing_created = NON_ITEM;
-                    if (!quiet)
-                        dprf("Destroying plain item!");
-                    continue;
-                }
             }
         }
 

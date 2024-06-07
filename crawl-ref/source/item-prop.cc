@@ -109,11 +109,11 @@ static const vector<ego_weight_tuple> SHIELD_EGOS = {
     { ARM_ ## id ## _DRAGON_HIDE, "removed " name " dragon hide", 0, 0, 0,  \
       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {}, res },             \
     { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 25, {}, res }
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 37, {}, res }
 #else
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
     { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 25, {}, res }
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 37, {}, res }
 #endif
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -123,9 +123,9 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,     3,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, 333 },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, 1 },
     { ARM_ROBE,                 "robe",                   2,   0,     7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, 1000, {
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, 100, {
             { SPARM_RESISTANCE,      1 },
             { SPARM_COLD_RESISTANCE, 2 },
             { SPARM_FIRE_RESISTANCE, 2 },
@@ -134,17 +134,17 @@ static const armour_def Armour_prop[] =
             { SPARM_WILLPOWER,       4 },
     }},
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 0, BASIC_BODY_EGOS },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
     { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 100, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, BASIC_BODY_EGOS },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -140,   45,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, HEAVY_BODY_EGOS },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 10, HEAVY_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 1000, HEAVY_BODY_EGOS },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 150, HEAVY_BODY_EGOS },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 500 },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 150 },
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_TROLL_HIDE, "removed troll hide",              0,    0,      0,
@@ -152,7 +152,7 @@ static const armour_def Armour_prop[] =
        ARMF_REGENERATION, },
 #endif
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  3,  -40,    150,
-       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 50, {},
+       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 100, {},
        ARMF_REGENERATION },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
