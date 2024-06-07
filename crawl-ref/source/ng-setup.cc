@@ -188,6 +188,8 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_WEAPONS && you.species == SP_COGLIN)
         name_weapon(item);
 
+    seen_item(item);
+
     return &item;
 }
 
