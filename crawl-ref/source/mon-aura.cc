@@ -64,9 +64,12 @@ static const vector<mon_aura_data> aura_map =
 
 static mon_aura_data _get_aura_for(const monster& mon)
 {
+    const monster_type mtype = (mon.type == MONS_BOUND_SOUL ? mon.base_monster
+                                                            : mon.type);
+
     for (mon_aura_data aura : aura_map)
     {
-        if (aura.mon_source == mon.type)
+        if (aura.mon_source == mtype)
             return aura;
     }
 
@@ -86,8 +89,13 @@ static mon_aura_data _get_aura_from_key(string player_key)
 
 bool mons_has_aura(const monster& mon)
 {
-    return mons_class_flag(mon.type, M_HAS_AURA)
-           && !mon.props.exists(KIKU_WRETCH_KEY);
+    if (mon.type == MONS_BOUND_SOUL)
+        return mons_class_flag(mon.base_monster, M_HAS_AURA);
+    else
+    {
+        return mons_class_flag(mon.type, M_HAS_AURA)
+               && !mon.props.exists(KIKU_WRETCH_KEY);
+    }
 }
 
 bool mons_has_aura_of_type(const monster& mon, enchant_type type)
@@ -95,9 +103,12 @@ bool mons_has_aura_of_type(const monster& mon, enchant_type type)
     if (!mons_has_aura(mon))
         return false;
 
+    const monster_type mtype = (mon.type == MONS_BOUND_SOUL ? mon.base_monster
+                                                            : mon.type);
+
     for (mon_aura_data aura : aura_map)
     {
-        if (aura.ench_type == type && aura.mon_source == mon.type)
+        if (aura.ench_type == type && aura.mon_source == mtype)
             return true;
     }
 
@@ -109,9 +120,12 @@ bool mons_has_aura_of_type(const monster& mon, duration_type type)
     if (!mons_has_aura(mon))
         return false;
 
+    const monster_type mtype = (mon.type == MONS_BOUND_SOUL ? mon.base_monster
+                                                            : mon.type);
+
     for (mon_aura_data aura : aura_map)
     {
-        if (aura.dur_type == type && aura.mon_source == mon.type)
+        if (aura.dur_type == type && aura.mon_source == mtype)
             return true;
     }
 
