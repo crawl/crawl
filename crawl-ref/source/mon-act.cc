@@ -961,6 +961,10 @@ static bool _handle_reaching(monster& mons)
     const reach_type range = mons.reach_range();
     actor *foe = mons.get_foe();
 
+    // Don't attempt to reach-attack a player we cannot see through Nightfall
+    if (you.current_vision < range)
+        return false;
+
     if (mons.caught()
         || mons_is_confused(mons)
         || !foe
