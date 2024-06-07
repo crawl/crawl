@@ -57,13 +57,13 @@ canvas {
     color: #fce94f; /* yellow */
 }
 #stats_piety.penance {
-    color: #a40000; /* red */
+    color: #b30009; /* red */
 }
 #stats_piety.monk {
     color: #555753; /* darkgray */
 }
 #stats_wizmode {
-    color: #204a87; /* blue */
+    color: #005afa; /* blue */
 }
 .stats_caption {
     color: #8f5902; /* brown */
@@ -76,23 +76,23 @@ canvas {
     color: #ef2929; /* lightred */
 }
 .low_stat {
-    color: #a40000; /* red */
+    color: #b30009; /* red */
 }
 .boosted_stat {
-    color: #729fcf; /* lightblue */
+    color: #5e78ff; /* lightblue */
 }
 
 .degenerated_defense {
-    color: #a40000; /* red */
+    color: #b30009; /* red */
 }
 .boosted_defense {
-    color: #729fcf; /* lightblue */
+    color: #5e78ff; /* lightblue */
 }
 #game #stats_weapon .corroded_weapon {
-    color: #a40000; /* red */
+    color: #b30009; /* red */
 }
 #game #stats_offhand_weapon .corroded_weapon {
-    color: #a40000; /* red */
+    color: #b30009; /* red */
 }
 
 .bar span {
@@ -108,7 +108,7 @@ canvas {
     background-color: #8ae234; /* lightgreen */
 }
 #stats_hp_bar_decrease {
-    background-color: #a40000; /* red */
+    background-color: #b30009; /* red */
 }
 #stats_hp_bar_poison {
     background-color: yellow;
@@ -121,13 +121,13 @@ canvas {
     background-color: #555753; /* darkgray */
 }
 #stats_mp_bar_full {
-    background-color: #729fcf; /* lightblue */
+    background-color: #5e78ff; /* lightblue */
 }
 #stats_mp_bar_decrease {
-    background-color: #5c3566; /* magenta */
+    background-color: #cd21cb; /* magenta */
 }
 #stats_mp_bar_increase {
-    background-color: #204a87; /* blue */
+    background-color: #005afa; /* blue */
 }
 
 /* default color when showing "Silenced" */
@@ -341,11 +341,11 @@ canvas {
 }
 
 #monster_list .severely_damaged {
-    background-color: #5c3566; /* magenta */
+    background-color: #cd21cb; /* magenta */
 }
 
 #monster_list .almost_dead {
-    background-color: #a40000; /* red */
+    background-color: #b30009; /* red */
 }
 
 #monster_list .ellipse {
@@ -523,36 +523,36 @@ canvas {
 }
 
 #game .fg0 { color: #000000; } /* black */
-#game .fg1 { color: #204a87; } /* blue */
+#game .fg1 { color: #005afa; } /* blue */
 #game .fg2 { color: #4e9a06; } /* green */
 #game .fg3 { color: #06989a; } /* cyan */
-#game .fg4 { color: #a40000; } /* red */
-#game .fg5 { color: #5c3566; } /* magenta */
+#game .fg4 { color: #b30009; } /* red */
+#game .fg5 { color: #cd21cb; } /* magenta */
 #game .fg6 { color: #8f5902; } /* brown */
 #game .fg7 { color: #babdb6; } /* lightgray */
 #game .fg8 { color: #555753; } /* darkgray */
-#game .fg9 { color: #729fcf; } /* lightblue */
+#game .fg9 { color: #5e78ff; } /* lightblue */
 #game .fg10 { color: #8ae234; } /* lightgreen */
 #game .fg11 { color: #34e2e2; } /* lightcyan */
 #game .fg12 { color: #ef2929; } /* lightred */
-#game .fg13 { color: #ad7fa8; } /* lightmagenta */
+#game .fg13 { color: #fd59fa; } /* lightmagenta */
 #game .fg14 { color: #fce94f; } /* yellow */
 #game .fg15 { color: #eeeeec; } /* white */
 
 #game .bg0 { background-color: #000000; } /* black */
-#game .bg1 { background-color: #204a87; } /* blue */
+#game .bg1 { background-color: #005afa; } /* blue */
 #game .bg2 { background-color: #4e9a06; } /* green */
 #game .bg3 { background-color: #06989a; } /* cyan */
-#game .bg4 { background-color: #a40000; } /* red */
-#game .bg5 { background-color: #5c3566; } /* magenta */
+#game .bg4 { background-color: #b30009; } /* red */
+#game .bg5 { background-color: #cd21cb; } /* magenta */
 #game .bg6 { background-color: #8f5902; } /* brown */
 #game .bg7 { background-color: #babdb6; } /* lightgray */
 #game .bg8 { background-color: #555753; } /* darkgray */
-#game .bg9 { background-color: #729fcf; } /* lightblue */
+#game .bg9 { background-color: #5e78ff; } /* lightblue */
 #game .bg10 { background-color: #8ae234; } /* lightgreen */
 #game .bg11 { background-color: #34e2e2; } /* lightcyan */
 #game .bg12 { background-color: #ef2929; } /* lightred */
-#game .bg13 { background-color: #ad7fa8; } /* lightmagenta */
+#game .bg13 { background-color: #fd59fa; } /* lightmagenta */
 #game .bg14 { background-color: #fce94f; } /* yellow */
 #game .bg15 { background-color: #eeeeec; } /* white */
 
@@ -1169,7 +1169,7 @@ canvas {
 }
 
 .newgame-choice .grid .button.selected.hlc-7 { border: 1px solid #babdb6; } /* lightgrey */
-.newgame-choice .grid .button.selected.hlc-1 { border: 1px solid #204a87; } /* blue */
+.newgame-choice .grid .button.selected.hlc-1 { border: 1px solid #005afa; } /* blue */
 .newgame-choice .grid .button.selected.hlc-2 { border: 1px solid #4e9a06; } /* green */
 
 .newgame-choice .grid .button.selected:hover {
