@@ -1416,6 +1416,10 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         // Always good, and sometimes especially good
         item_def* hat = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, ISPEC_RANDART);
         hat->plus = random_range(2, 4);
+
+        hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
+        hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
+        bind_item_tile(*hat);
     }
 
     if (mon->type == MONS_JOSEPHINA)

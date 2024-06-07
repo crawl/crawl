@@ -1071,6 +1071,7 @@ hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
 hat_explorer2 EXPLORER2
+hat_wiglaf HAT_WIGLAF
 
 ## Mutations
 horns1 HORNS1

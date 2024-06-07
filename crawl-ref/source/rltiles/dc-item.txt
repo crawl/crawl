@@ -480,6 +480,7 @@ elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
 hat_explorer THELM_HAT_EXPLORER
 hat_explorer2 THELM_HAT_EXPLORER2
+hat_wiglaf THELM_HAT_WIGLAF
 santa_hat THELM_HAT_SANTA
 
 %rim 0
