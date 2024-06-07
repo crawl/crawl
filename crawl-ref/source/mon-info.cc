@@ -1389,6 +1389,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         colour_type = MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
+    case ATT_MARIONETTE:
 #if TAG_MAJOR_VERSION == 34
     case ATT_OLD_STRICT_NEUTRAL:
 #endif

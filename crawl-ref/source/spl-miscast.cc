@@ -196,6 +196,7 @@ static const map<spschool, miscast_datum> miscast_effects = {
                             break;
                         case ATT_GOOD_NEUTRAL:
                         case ATT_NEUTRAL:
+                        case ATT_MARIONETTE:
 #if TAG_MAJOR_VERSION == 34
                     case ATT_OLD_STRICT_NEUTRAL:
 #endif
