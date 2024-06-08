@@ -211,7 +211,7 @@ Spells
 * Teleport Other now tries to teleport affected monsters out of the caster's
   sight.
 * Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
-  hits 4 to 12 foes at once instead of 2 to 6.
+  hits 4 to 12 foes at once instead of 2 to 4.
 * Removed spells: Gell's Gravitas.
 
 Tiles and Other Art
