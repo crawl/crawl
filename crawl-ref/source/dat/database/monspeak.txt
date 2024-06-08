@@ -8809,15 +8809,16 @@ w:10
 @_deck_of_punishment_line_@
 
 w:5
-@The_monster@ draws @_misplaced_card_@. "Wait, this doesn't belong here!"
+@The_monster@ draws @_deck_of_oddities_card_@. "Wait, this doesn't belong here!"
+
+w:5
+@The_monster@ draws @_misplaced_card_@. "Wait, where'd this come from?"
 
 w:5
 @The_monster@ fumbles a card and drops it. "Whoops!"
 %%%%
+# Cards not from any Nemelex deck
 _misplaced_card_
-
-w:20
-@_deck_of_oddities_card_@
 
 the Ace of Spades
 
