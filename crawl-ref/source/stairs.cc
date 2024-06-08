@@ -252,10 +252,10 @@ static void _clear_golubria_traps()
     }
 }
 
-static void _clear_prisms()
+static void _clear_constructs()
 {
     for (auto &mons : menv_real)
-        if (mons.type == MONS_FULMINANT_PRISM)
+        if (mons.type == MONS_FULMINANT_PRISM || mons.type == MONS_HELLFIRE_MORTAR)
             mons.reset();
 }
 
@@ -289,7 +289,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
-    _clear_prisms();
+    _clear_constructs();
 }
 
 static void _update_travel_cache(const level_id& old_level,
