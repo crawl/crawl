@@ -2662,12 +2662,14 @@ void bolt::affect_endpoint()
 
         if (!spot.origin())
         {
-            create_monster(mgen_data(MONS_DANCING_WEAPON,
-                                SAME_ATTITUDE(agent(true)->as_monster()),
-                                spot,
-                                agent(true)->as_monster()->foe,
-                                MG_FORCE_PLACE)
-                        .set_summoned(agent(true), 1, SPELL_FLASHING_BALESTRA, GOD_NO_GOD));
+            monster* blade = create_monster(mgen_data(MONS_DANCING_WEAPON,
+                                            SAME_ATTITUDE(agent(true)->as_monster()),
+                                            spot, agent(true)->as_monster()->foe,
+                                            MG_FORCE_PLACE)
+                            .set_summoned(agent(true), 1, SPELL_FLASHING_BALESTRA, GOD_NO_GOD));
+
+            if (blade)
+                blade->add_ench(ENCH_MIGHT);
         }
     }
     break;

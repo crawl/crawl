@@ -5986,9 +5986,9 @@ static void _cast_bestow_arms(monster& caster)
                         15, WPN_EVENINGSTAR,
                         15, WPN_DOUBLE_SWORD,
                         6, WPN_QUICK_BLADE,
-                        ranged_eligable && two_hand_eligable ? 8 : 0, WPN_LONGBOW,
-                        ranged_eligable && two_hand_eligable ? 7 : 0, WPN_TRIPLE_CROSSBOW,
-                        ranged_eligable ? 5 : 0, WPN_HAND_CANNON);
+                        ranged_eligable && two_hand_eligable ? 12 : 0, WPN_LONGBOW,
+                        ranged_eligable && two_hand_eligable ? 10 : 0, WPN_TRIPLE_CROSSBOW,
+                        ranged_eligable ? 8 : 0, WPN_HAND_CANNON);
 
     wpn.brand = random_choose_weighted(11, SPWPN_FLAMING,
                                        11, SPWPN_FREEZING,
@@ -6007,7 +6007,7 @@ static void _cast_bestow_arms(monster& caster)
                                     pluralise(wpn.name(DESC_PLAIN, false, true)).c_str());
     }
 
-    int dur = random_range(12, 26) * BASELINE_DELAY;
+    int dur = random_range(20, 37) * BASELINE_DELAY;
 
     shuffle_array(targs);
     int count = random_range(5, 7);
