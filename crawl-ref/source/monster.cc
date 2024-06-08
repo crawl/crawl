@@ -5330,6 +5330,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (alive()
         && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
         && !monster_habitable_grid(this, env.grid(pos()))
+        && type != MONS_HELLFIRE_MORTAR
         && !has_ench(ENCH_AQUATIC_LAND))
     {
         add_ench(ENCH_AQUATIC_LAND);

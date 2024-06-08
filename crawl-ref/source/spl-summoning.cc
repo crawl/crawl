@@ -3161,7 +3161,6 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         }
 
         temp_change_terrain(beam.path_taken[i], DNGN_LAVA,
-                            //random_range(11, 17) * BASELINE_DELAY,
                             dur - (i * BASELINE_DELAY),
                             TERRAIN_CHANGE_HELLFIRE_MORTAR);
 
