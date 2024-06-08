@@ -55,6 +55,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-book.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "state.h"
@@ -1578,9 +1579,20 @@ static spell_type servitor_spells[] =
  */
 spell_type player_servitor_spell()
 {
+    if (you.props.exists(SERVITOR_SPELL_KEY))
+    {
+        spell_type spell = (spell_type)you.props[SERVITOR_SPELL_KEY].get_int();
+        // Double-check that we know the spell and can cast it well enough, since
+        // both things may have changed since it was saved.
+        if (you.has_spell(spell) && failure_rate_to_int(raw_spell_fail(spell)) <= 20)
+            return spell;
+    }
+
+    // Fallback using default list if none was specified.
     for (const spell_type spell : servitor_spells)
         if (you.has_spell(spell) && failure_rate_to_int(raw_spell_fail(spell)) <= 20)
             return spell;
+
     return SPELL_NO_SPELL;
 }
 
@@ -1609,17 +1621,21 @@ static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
                                             // mhp doesn't vary with HD
     int spell_levels = 0;
 
-    for (const spell_type spell : servitor_spells)
+    if (caster.is_player())
     {
-        if (caster.has_spell(spell)
-            && (caster_mon || failure_rate_to_int(raw_spell_fail(spell)) <= 20))
+        const spell_type spell = player_servitor_spell();
+        mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
+        spell_levels += spell_difficulty(spell);
+    }
+    else
+    {
+        for (const spell_type spell : servitor_spells)
         {
-            mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
-            spell_levels += spell_difficulty(spell);
-
-            // Player servitors take a single spell
-            if (!caster_mon)
-                break;
+            if (caster.has_spell(spell))
+            {
+                mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
+                spell_levels += spell_difficulty(spell);
+            }
         }
     }
 
@@ -1679,6 +1695,18 @@ spret cast_spellforged_servitor(int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
+
+void remove_player_servitor()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SPELLFORGED_SERVITOR && mi->summoner == MID_PLAYER)
+        {
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
+            return;
+        }
+    }
 }
 
 monster* find_battlesphere(const actor* agent)

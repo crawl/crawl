@@ -381,6 +381,8 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
 #endif
+        { ABIL_IMBUE_SERVITOR, "Imbue Servitor",
+            0, 0, 0, -1, {}, abflag::none },
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
         { ABIL_BEGIN_UNTRANSFORM, "Begin Untransformation",
@@ -2985,6 +2987,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
     }
 
+    case ABIL_IMBUE_SERVITOR:
+        return imbue_servitor();
+
     case ABIL_COMBUSTION_BREATH:
     case ABIL_GLACIAL_BREATH:
     case ABIL_NULLIFYING_BREATH:
@@ -4058,6 +4063,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_INVENT_GIZMO:
         return you.species == SP_COGLIN
         && !you.props.exists(INVENT_GIZMO_USED_KEY);
+    case ABIL_IMBUE_SERVITOR:
+        return you.has_spell(SPELL_SPELLFORGED_SERVITOR);
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -4136,6 +4143,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_INVENT_GIZMO,
             ABIL_BLINKBOLT,
             ABIL_SIPHON_ESSENCE,
+            ABIL_IMBUE_SERVITOR,
             ABIL_END_TRANSFORMATION,
             ABIL_BEGIN_UNTRANSFORM,
             ABIL_RENOUNCE_RELIGION,

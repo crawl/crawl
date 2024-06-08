@@ -19,6 +19,8 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 #define HELLFIRE_PATH_KEY "hellfire_mortar_path"
 
+#define SERVITOR_SPELL_KEY "servitor_spell"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -74,6 +76,7 @@ spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster, int pow);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
+void remove_player_servitor();
 
 monster_type pick_random_wraith();
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail);

@@ -1395,6 +1395,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_exsanguinate = interrupt_butcher",
         "interrupt_revivify = interrupt_butcher",
+        "interrupt_imbue_servitor = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
         "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",

@@ -3708,10 +3708,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_ACID;
     case ABIL_MUD_BREATH:
         return TILEG_ABILITY_BREATHE_MUD;
-#if TAG_MAJOR_VERSION == 34
-    case ABIL_BLINK:
-        return TILEG_ABILITY_BLINK;
-#endif
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
     case ABIL_BLINKBOLT:
@@ -3720,6 +3716,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SIPHON_ESSENCE;
     case ABIL_INVENT_GIZMO:
         return TILEG_ABILITY_INVENT_GIZMO;
+    case ABIL_IMBUE_SERVITOR:
+        return TILEG_ABILITY_IMBUE_SERVITOR;
 
     // Others
     case ABIL_END_TRANSFORMATION:

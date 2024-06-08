@@ -58,6 +58,7 @@
 #include "sound.h"
 #include "spl-damage.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h" // attract_monster
 #include "spl-util.h"
 #include "stairs.h"
@@ -328,6 +329,31 @@ bool TransformDelay::try_interrupt(bool force)
     return true;
 }
 
+bool ImbueDelay::try_interrupt(bool force)
+{
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
+    {
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep imbuing your servitor?", false, 0, false))
+        {
+            interrupt = true;
+        }
+        else
+            was_prompted = true;
+    }
+
+    if (interrupt)
+    {
+        mpr("You stop imbuing your servitor.");
+        return true;
+    }
+    return false;
+}
+
 void stop_delay(bool stop_relocations, bool force)
 {
     if (you.delay_queue.empty())
@@ -481,6 +507,13 @@ void ExsanguinateDelay::start()
 void RevivifyDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
+}
+
+void ImbueDelay::start()
+{
+    mprf(MSGCH_MULTITURN_ACTION, "You begin to imbue your servitor with "
+         "knowledge of %s.",
+         spell_title(spell));
 }
 
 void TransformDelay::start()
@@ -939,6 +972,12 @@ void RevivifyDelay::finish()
     mpr("You return to life.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
+}
+
+void ImbueDelay::finish()
+{
+    mpr("You finish imbuing your servitor.");
+    you.props[SERVITOR_SPELL_KEY] = spell;
 }
 
 bool TransformDelay::invalidated()

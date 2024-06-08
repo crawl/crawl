@@ -27,6 +27,7 @@ stop_recall ABILITY_STOP_RECALL
 wordofchaos ABILITY_WORD_OF_CHAOS
 siphon_essence ABILITY_SIPHON_ESSENCE
 invent_gizmo ABILITY_INVENT_GIZMO
+imbue_servitor ABILITY_IMBUE_SERVITOR
 
 wiz_build_terrain ABILITY_WIZ_BUILD_TERRAIN
 wiz_set_terrain ABILITY_WIZ_SET_TERRAIN

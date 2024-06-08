@@ -17,8 +17,8 @@ enum ability_type
     ABIL_NOXIOUS_BREATH,
     ABIL_CAUSTIC_BREATH,
     // Others
+    ABIL_IMBUE_SERVITOR,
 #if TAG_MAJOR_VERSION == 34
-    ABIL_BLINK,
     ABIL_DELAYED_FIREBALL,
 #endif
     // Abort duration-based spells

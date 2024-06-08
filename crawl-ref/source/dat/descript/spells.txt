@@ -1522,6 +1522,9 @@ the caster's own magic. The servitor is capable of unleashing some of the
 destructive spells known to its creator, though the strongest and most volatile
 of magics cannot be imbued in this fashion. The strength of the servitor
 increases with spell power.
+
+(While you know this spell, you may choose which of your eligable spells it will
+cast with the Imbue Servitor ability.)
 %%%%
 Spit Acid spell
 
