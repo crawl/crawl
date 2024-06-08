@@ -5220,7 +5220,8 @@ static bool _mons_is_icy(int mc)
            || mc == MONS_SIMULACRUM
            || mc == MONS_ICE_STATUE
            || mc == MONS_BLOCK_OF_ICE
-           || mc == MONS_NARGUN;
+           || mc == MONS_NARGUN
+           || mc == MONS_HOARFROST_CANNON;
 }
 
 bool monster::is_icy() const
