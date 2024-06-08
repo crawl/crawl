@@ -47,52 +47,52 @@ canvas {
 #stats {
     display: inline-block;
     position: static;
-    color: #babdb6; /* lightgray */
+    color: var(--color-7); /* lightgray */
 }
 
 #stats_titleline, #stats_species_god {
-    color: #fce94f; /* yellow */
+    color: var(--color-14); /* yellow */
 }
 #stats_piety {
-    color: #fce94f; /* yellow */
+    color: var(--color-14); /* yellow */
 }
 #stats_piety.penance {
-    color: #b30009; /* red */
+    color: var(--color-4); /* red */
 }
 #stats_piety.monk {
-    color: #555753; /* darkgray */
+    color: var(--color-8); /* darkgray */
 }
 #stats_wizmode {
-    color: #005afa; /* blue */
+    color: var(--color-1); /* blue */
 }
 .stats_caption {
-    color: #8f5902; /* brown */
+    color: var(--color-6); /* brown */
 }
 
 .degenerated_stat {
-    color: #fce94f; /* yellow */
+    color: var(--color-14); /* yellow */
 }
 .zero_stat {
-    color: #ef2929; /* lightred */
+    color: var(--color-12); /* lightred */
 }
 .low_stat {
-    color: #b30009; /* red */
+    color: var(--color-4); /* red */
 }
 .boosted_stat {
-    color: #5e78ff; /* lightblue */
+    color: var(--color-9); /* lightblue */
 }
 
 .degenerated_defense {
-    color: #b30009; /* red */
+    color: var(--color-4); /* red */
 }
 .boosted_defense {
-    color: #5e78ff; /* lightblue */
+    color: var(--color-9); /* lightblue */
 }
 #game #stats_weapon .corroded_weapon {
-    color: #b30009; /* red */
+    color: var(--color-4); /* red */
 }
 #game #stats_offhand_weapon .corroded_weapon {
-    color: #b30009; /* red */
+    color: var(--color-4); /* red */
 }
 
 .bar span {
@@ -102,32 +102,32 @@ canvas {
 
 /* Some of these values are also hard coded to cell_renderer.js */
 #stats_hp_bar {
-    background-color: #555753; /* darkgray */
+    background-color: var(--color-8); /* darkgray */
 }
 #stats_hp_bar_full {
-    background-color: #8ae234; /* lightgreen */
+    background-color: var(--color-10); /* lightgreen */
 }
 #stats_hp_bar_decrease {
-    background-color: #b30009; /* red */
+    background-color: var(--color-4); /* red */
 }
 #stats_hp_bar_poison {
     background-color: yellow;
 }
 #stats_hp_bar_increase {
-    background-color: #4e9a06; /* green */
+    background-color: var(--color-2); /* green */
 }
 
 #stats_mp_bar {
-    background-color: #555753; /* darkgray */
+    background-color: var(--color-8); /* darkgray */
 }
 #stats_mp_bar_full {
-    background-color: #5e78ff; /* lightblue */
+    background-color: var(--color-9); /* lightblue */
 }
 #stats_mp_bar_decrease {
-    background-color: #cd21cb; /* magenta */
+    background-color: var(--color-5); /* magenta */
 }
 #stats_mp_bar_increase {
-    background-color: #005afa; /* blue */
+    background-color: var(--color-1); /* blue */
 }
 
 /* default color when showing "Silenced" */
@@ -142,7 +142,7 @@ canvas {
 
 /* default bar change color */
 #stats_noise_bar_decrease {
-    background-color: #555753; /* darkgray */
+    background-color: var(--color-8); /* darkgray */
 }
 
 /* clear the bar entirely */
@@ -252,10 +252,10 @@ canvas {
     width: 100%;
 }
 .prefix_glyph.command_marker {
-    color: #555753; /* darkgray */
+    color: var(--color-8); /* darkgray */
 }
 .prefix_glyph.turn_marker {
-    color: #babdb6; /* lightgray */
+    color: var(--color-7); /* lightgray */
 }
 .game_message {
     white-space: pre-wrap;
@@ -298,25 +298,25 @@ canvas {
 }
 
 #monster_list .trivial {
-    color: #555753; /* darkgray */
+    color: var(--color-8); /* darkgray */
 }
 #monster_list .easy {
-    color: #babdb6; /* lightgray */
+    color: var(--color-7); /* lightgray */
 }
 #monster_list .tough {
-    color: #fce94f; /* yellow */
+    color: var(--color-14); /* yellow */
 }
 #monster_list .nasty {
-    color: #ef2929; /* lightred */
+    color: var(--color-12); /* lightred */
 }
 
 #monster_list .friendly {
-    color: #4e9a06; /* green */
+    color: var(--color-2); /* green */
 }
 
 #monster_list .good_neutral,
 #monster_list .neutral {
-    color: #8f5902; /* brown */
+    color: var(--color-6); /* brown */
 }
 
 #monster_list .health {
@@ -325,27 +325,27 @@ canvas {
 }
 
 #monster_list .uninjured {
-    background-color: #4e9a06; /* green */
+    background-color: var(--color-2); /* green */
 }
 
 #monster_list .lightly_damaged {
-    background-color: #4e9a06; /* green */
+    background-color: var(--color-2); /* green */
 }
 
 #monster_list .moderately_damaged {
-    background-color: #8f5902; /* brown */
+    background-color: var(--color-6); /* brown */
 }
 
 #monster_list .heavily_damaged {
-    background-color: #8f5902; /* brown */
+    background-color: var(--color-6); /* brown */
 }
 
 #monster_list .severely_damaged {
-    background-color: #cd21cb; /* magenta */
+    background-color: var(--color-5); /* magenta */
 }
 
 #monster_list .almost_dead {
-    background-color: #b30009; /* red */
+    background-color: var(--color-4); /* red */
 }
 
 #monster_list .ellipse {
@@ -522,39 +522,58 @@ canvas {
     max-width: 5em;
 }
 
-#game .fg0 { color: #000000; } /* black */
-#game .fg1 { color: #005afa; } /* blue */
-#game .fg2 { color: #4e9a06; } /* green */
-#game .fg3 { color: #06989a; } /* cyan */
-#game .fg4 { color: #b30009; } /* red */
-#game .fg5 { color: #cd21cb; } /* magenta */
-#game .fg6 { color: #8f5902; } /* brown */
-#game .fg7 { color: #babdb6; } /* lightgray */
-#game .fg8 { color: #555753; } /* darkgray */
-#game .fg9 { color: #5e78ff; } /* lightblue */
-#game .fg10 { color: #8ae234; } /* lightgreen */
-#game .fg11 { color: #34e2e2; } /* lightcyan */
-#game .fg12 { color: #ef2929; } /* lightred */
-#game .fg13 { color: #fd59fa; } /* lightmagenta */
-#game .fg14 { color: #fce94f; } /* yellow */
-#game .fg15 { color: #eeeeec; } /* white */
+:root {
+    --color-0: #000000; /* black */
+    --color-1: #005afa; /* blue */
+    --color-2: #4e9a06; /* green */
+    --color-3: #06989a; /* cyan */
+    --color-4: #b30009; /* red */
+    --color-5: #cd21cb; /* magenta */
+    --color-6: #8f5902; /* brown */
+    --color-7: #babdb6; /* lightgray */
+    --color-8: #555753; /* darkgray */
+    --color-9: #5e78ff; /* lightblue */
+    --color-10: #8ae234; /* lightgreen */
+    --color-11: #34e2e2; /* lightcyan */
+    --color-12: #ef2929; /* lightred */
+    --color-13: #fd59fa; /* lightmagenta */
+    --color-14: #fce94f; /* yellow */
+    --color-15: #eeeeec; /* white */
+}
 
-#game .bg0 { background-color: #000000; } /* black */
-#game .bg1 { background-color: #005afa; } /* blue */
-#game .bg2 { background-color: #4e9a06; } /* green */
-#game .bg3 { background-color: #06989a; } /* cyan */
-#game .bg4 { background-color: #b30009; } /* red */
-#game .bg5 { background-color: #cd21cb; } /* magenta */
-#game .bg6 { background-color: #8f5902; } /* brown */
-#game .bg7 { background-color: #babdb6; } /* lightgray */
-#game .bg8 { background-color: #555753; } /* darkgray */
-#game .bg9 { background-color: #5e78ff; } /* lightblue */
-#game .bg10 { background-color: #8ae234; } /* lightgreen */
-#game .bg11 { background-color: #34e2e2; } /* lightcyan */
-#game .bg12 { background-color: #ef2929; } /* lightred */
-#game .bg13 { background-color: #fd59fa; } /* lightmagenta */
-#game .bg14 { background-color: #fce94f; } /* yellow */
-#game .bg15 { background-color: #eeeeec; } /* white */
+#game .fg0 { color: var(--color-0); } /* black */
+#game .fg1 { color: var(--color-1); } /* blue */
+#game .fg2 { color: var(--color-2); } /* green */
+#game .fg3 { color: var(--color-3); } /* cyan */
+#game .fg4 { color: var(--color-4); } /* red */
+#game .fg5 { color: var(--color-5); } /* magenta */
+#game .fg6 { color: var(--color-6); } /* brown */
+#game .fg7 { color: var(--color-7); } /* lightgray */
+#game .fg8 { color: var(--color-8); } /* darkgray */
+#game .fg9 { color: var(--color-9); } /* lightblue */
+#game .fg10 { color: var(--color-10); } /* lightgreen */
+#game .fg11 { color: var(--color-11); } /* lightcyan */
+#game .fg12 { color: var(--color-12); } /* lightred */
+#game .fg13 { color: var(--color-13); } /* lightmagenta */
+#game .fg14 { color: var(--color-14); } /* yellow */
+#game .fg15 { color: var(--color-15); } /* white */
+
+#game .bg0 { background-color: var(--color-0); } /* black */
+#game .bg1 { background: var(--color-1); } /* blue */
+#game .bg2 { background: var(--color-2); } /* green */
+#game .bg3 { background: var(--color-3); } /* cyan */
+#game .bg4 { background: var(--color-4); } /* red */
+#game .bg5 { background: var(--color-5); } /* magenta */
+#game .bg6 { background: var(--color-6); } /* brown */
+#game .bg7 { background: var(--color-7); } /* lightgray */
+#game .bg8 { background: var(--color-8); } /* darkgray */
+#game .bg9 { background: var(--color-9); } /* lightblue */
+#game .bg10 { background: var(--color-10); } /* lightgreen */
+#game .bg11 { background: var(--color-11); } /* lightcyan */
+#game .bg12 { background: var(--color-12); } /* lightred */
+#game .bg13 { background: var(--color-13); } /* lightmagenta */
+#game .bg14 { background: var(--color-14); } /* yellow */
+#game .bg15 { background: var(--color-15); } /* white */
 
 .menu_txt:not(.menu_crt_shrink) {
     width: 80ch;
@@ -1168,9 +1187,9 @@ canvas {
     border: 1px solid #222;
 }
 
-.newgame-choice .grid .button.selected.hlc-7 { border: 1px solid #babdb6; } /* lightgrey */
-.newgame-choice .grid .button.selected.hlc-1 { border: 1px solid #005afa; } /* blue */
-.newgame-choice .grid .button.selected.hlc-2 { border: 1px solid #4e9a06; } /* green */
+.newgame-choice .grid .button.selected.hlc-7 { border: 1px solid var(--color-7); } /* lightgrey */
+.newgame-choice .grid .button.selected.hlc-1 { border: 1px solid var(--color-1); } /* blue */
+.newgame-choice .grid .button.selected.hlc-2 { border: 1px solid var(--color-2); } /* green */
 
 .newgame-choice .grid .button.selected:hover {
     cursor: pointer;

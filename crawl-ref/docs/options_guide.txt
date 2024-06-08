@@ -2269,6 +2269,11 @@ level. Using RGB hex codes is also allowed, such as #00ff00 for green.
                                   tile_floor_col and tile_item_col, only)
    tile_window_col              - colour of the rectangular view window
 
+custom_text_colours = lightmagenta:#fd59fa, blue:#005afa
+	Remaps any of the 16 basic terminal colours used by Crawl's interface,
+	specified as pairs of colour names and RGB hex codes. Any colours not
+	included in the list will use their default values.
+
 tile_update_rate = 1000
         The number of milliseconds that tick by before the screen is redrawn
         without any input. If game response is slow, try increasing this

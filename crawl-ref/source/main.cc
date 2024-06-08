@@ -333,6 +333,12 @@ int main(int argc, char *argv[])
         return -1;
 #endif
 
+#ifdef USE_TILE_LOCAL
+    // Hook up text colour redefinitions
+    for (auto col : Options.custom_text_colours)
+        term_colours[col.colour_index] = col.colour_def;
+#endif
+
     _launch_game_loop();
     if (crawl_state.last_game_exit.message.size())
         end(0, false, "%s\n", crawl_state.last_game_exit.message.c_str());

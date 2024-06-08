@@ -178,6 +178,30 @@ mlc_mapping::mlc_mapping(const string &s)
     }
 }
 
+#ifdef USE_TILE
+colour_remapping::colour_remapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, true, 1);
+    const int scolour = thesplit.size() == 1 ? -1 : str_to_colour(thesplit[0]);
+
+    // let -1 for "" through
+    if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[0].empty()))
+    {
+        mprf(MSGCH_ERROR, "Options error: Bad custom_text_colours key: '%s'",
+            thesplit[1].c_str());
+        return;
+    }
+
+    colour_index = scolour;
+    colour_def = str_to_tile_colour(thesplit[1]);
+    if (colour_index == NUM_TERM_COLOURS)
+    {
+        mprf(MSGCH_ERROR, "Bad custom_text_colours: %s\n",
+                     thesplit[0].c_str());
+    }
+}
+#endif
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -866,6 +890,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
+        new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
 # ifndef __ANDROID__
@@ -5231,6 +5256,21 @@ static void _write_vcolour(const string &name, VColour colour)
     tiles.json_close_object();
 }
 
+static void _write_custom_colours(const string &name, const vector<colour_remapping> colours)
+{
+    tiles.json_open_array(name);
+    for (const auto &entry : colours)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("index", entry.colour_index);
+        tiles.json_write_int("r", entry.colour_def.r);
+        tiles.json_write_int("g", entry.colour_def.g);
+        tiles.json_write_int("b", entry.colour_def.b);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+}
+
 static void _write_minimap_colours()
 {
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
@@ -5268,6 +5308,8 @@ void game_options::write_webtiles_options(const string& name)
     _write_colour_list(hp_colour, "hp_colour");
     _write_colour_list(mp_colour, "mp_colour");
     _write_colour_list(stat_colour, "stat_colour");
+
+    _write_custom_colours("custom_text_colours", custom_text_colours);
 
     tiles.json_write_bool("tile_show_minihealthbar",
                           tile_show_minihealthbar);
