@@ -186,8 +186,8 @@ Species
   - Pale draconians now deal fairly more impact damage with their steam breath.
 * Deep Elf Air Magic apt has been raised from 0 to +1.
 * New Demonspawn mutation: Foul Shadow, which wreathes the player in umbra to
-  reduce monster accuracy and increases stealth, and which burns attackers with
-  foul flame.
+  reduce monster accuracy and increases stealth, and also burns attackers in
+  melee range with foul flame.
 
 Spells
 ------
