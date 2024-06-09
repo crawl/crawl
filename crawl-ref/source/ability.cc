@@ -2479,6 +2479,28 @@ static vector<string> _desc_marionette_spells(const monster_info& mi)
     return vector<string>{make_stringf("%d/%d spells usable", num_usable_spells, num_spells)};
 }
 
+static vector<coord_def> _find_shadowslip_affected()
+{
+    vector<coord_def> targs;
+
+    monster* shadow = dithmenos_get_player_shadow();
+    ASSERT(shadow && shadow->alive());
+
+    // All monsters in LoS of both the player and their shadow, and which are
+    // currently focused on the player.
+    for (monster_near_iterator mi(shadow->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (*mi != shadow && !mons_aligned(*mi, shadow)
+            && you.see_cell_no_trans(mi->pos())
+            && (mi->foe == MHITYOU && mi->behaviour == BEH_SEEK))
+        {
+            targs.push_back(mi->pos());
+        }
+    }
+
+    return targs;
+}
+
 unique_ptr<targeter> find_ability_targeter(ability_type ability)
 {
     switch (ability)
@@ -2510,9 +2532,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_SIPHON_ESSENCE:
         return make_unique<targeter_siphon_essence>();
     case ABIL_DITHMENOS_SHADOWSLIP:
-        return make_unique<targeter_multiposition>(&you,
-                                vector<coord_def>{dithmenos_get_player_shadow()->pos()},
-                                AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_shadowslip_affected(), AFF_YES);
 
     // Full LOS:
     case ABIL_KIKU_TORMENT:
