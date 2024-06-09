@@ -1140,6 +1140,9 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     mg.hd = 7 + (you.experience_level * 5 / 4);
     mg.hp = you.experience_level + you.skill_rdiv(SK_INVOCATIONS, 3, 2);
 
+    if (!friendly)
+        mg.hp = mg.hp * 2;
+
     monster* mon = create_monster(mg);
     if (!mon)
     {
@@ -1153,8 +1156,12 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     if (wpn_index != NON_ITEM)
         mon->pickup_item(env.item[wpn_index], false, true);
-    mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you,
-                              random_range(3, 5) * BASELINE_DELAY));
+
+    if (friendly)
+    {
+        mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you,
+                                random_range(3, 5) * BASELINE_DELAY));
+    }
 
     // Set damage based on xl, with a bonus for UC characters (since they won't
     // get the damage from their weapon on top of this)
@@ -1163,10 +1170,18 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
         mon->props[DITH_SHADOW_ATTACK_KEY].get_int() += you.skill(SK_UNARMED_COMBAT);
 
     if (spell_known != SPELL_NO_SPELL)
+    {
         mon->spells.emplace_back(spell_known, 50, MON_SPELL_WIZARD);
+        mon->props[CUSTOM_SPELLS_KEY] = true;
+    }
 
     if (friendly)
         you.props[DITH_SHADOW_MID_KEY].get_int() = mon->mid;
+    else
+    {
+        mon->props[DITH_SHADOW_ATTACK_KEY].get_int() += you.experience_level;
+        mon->props[DITH_SHADOW_SPELLPOWER_KEY] = div_rand_round(you.experience_level * 2, 3);
+    }
 
     // Now, if there was a previously-existing shadow that was in decoy mode,
     // update its tile and remap all existing misdirections onto the new shadow

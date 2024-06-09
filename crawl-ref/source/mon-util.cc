@@ -2056,7 +2056,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         if (m.has_ench(ENCH_FIRE_CHAMPION))
             attk.flavour = AF_FIRE;
 
-        if (mons_is_player_shadow(mon))
+        if (mon.type == MONS_PLAYER_SHADOW)
         {
             if (mon.props.exists(DITH_SHADOW_ATTACK_KEY))
                 attk.damage = mon.props[DITH_SHADOW_ATTACK_KEY].get_int();
