@@ -4627,7 +4627,8 @@ bool bolt::has_relevant_side_effect(monster* mon)
     else if (flavour == BEAM_ENSNARE || flavour == BEAM_LIGHT)
         return true;
 
-    if ((origin_spell == SPELL_NOXIOUS_CLOUD || origin_spell == SPELL_POISONOUS_CLOUD)
+    if ((origin_spell == SPELL_NOXIOUS_CLOUD || origin_spell == SPELL_POISONOUS_CLOUD
+         || origin_spell == SPELL_NOXIOUS_BREATH)
         && mon->res_poison() < 1)
     {
         return true;
