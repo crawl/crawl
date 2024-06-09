@@ -830,7 +830,7 @@ private:
     }
 
 public:
-    SpellLibraryMenu(spell_list& list, action _default_action = action::cast)
+    SpellLibraryMenu(spell_list& list, action _default_action)
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
                 | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_SHOW_EMPTY
                 // To have the ctrl-f menu show up in webtiles
