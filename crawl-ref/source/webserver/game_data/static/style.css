@@ -111,7 +111,7 @@ canvas {
     background-color: var(--color-4); /* red */
 }
 #stats_hp_bar_poison {
-    background-color: yellow;
+    background-color: var(--color-14); /* yellow */
 }
 #stats_hp_bar_increase {
     background-color: var(--color-2); /* green */
