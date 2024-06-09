@@ -253,12 +253,12 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Beogh
         {   { 2, ABIL_BEOGH_SMITING, "smite your foes" },
-            { 1, ABIL_BEOGH_RECALL_APOSTLES, "recall your orcish followers" },
+            { 1, ABIL_BEOGH_RECALL_APOSTLES, "recall your apostles" },
             { 3, "Beogh will now send orc apostles to challenge you in battle as you gain piety.",
                  "Beogh will no longer send orc apostles to challenge you in battle.",
                  "Beogh will send orc apostles to challenge you in battle as you gain piety." },
             { 0, "", "", "You can recruit apostles that you defeat into your service." },
-            { 3, "", "", "Your orcish followers are sometimes invigorated when you deal damage." },
+            { 3, "", "", "Your apostles are sometimes healed when you deal damage." },
             { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
             { 0, ABIL_BEOGH_RECRUIT_APOSTLE, "" },
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},

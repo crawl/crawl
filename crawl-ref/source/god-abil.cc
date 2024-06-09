@@ -2644,7 +2644,8 @@ void beogh_end_blood_for_blood()
 void beogh_ally_healing()
 {
     if (!you.props.exists(BEOGH_DAMAGE_DONE_KEY)
-        || x_chance_in_y(2, 5))
+        || x_chance_in_y(2, 5)
+        || you.piety < piety_breakpoint(3))
     {
         you.props.erase(BEOGH_DAMAGE_DONE_KEY);
         return;
@@ -2653,7 +2654,7 @@ void beogh_ally_healing()
     int value = you.props[BEOGH_DAMAGE_DONE_KEY].get_int();
     you.props.erase(BEOGH_DAMAGE_DONE_KEY);
 
-    value = value * 4 / 10;
+    value = value * 6 / 10;
 
     // Skip small heals
     if (value < 5)
