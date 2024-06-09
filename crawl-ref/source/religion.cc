@@ -3807,17 +3807,18 @@ void join_religion(god_type which_god)
     you.religion = static_cast<god_type>(which_god);
     set_god_ability_slots();    // remove old god's slots, reserve new god's
 
-    mark_milestone("god.worship", "became a worshipper of "
-                   + god_name(you.religion) + ".");
-    take_note(Note(NOTE_GET_GOD, you.religion));
-
+    // included in default force_more_message
     simple_god_message(make_stringf(" welcomes you%s!",
                                     you.worshipped[which_god] ? " back"
                                                               : "").c_str());
-    // included in default force_more_message
     update_whereis();
 
     _set_initial_god_piety();
+
+    // Only mark the milestone now that piety has been set due to invo titles.
+    mark_milestone("god.worship", "became a worshipper of "
+                   + god_name(you.religion) + ".");
+    take_note(Note(NOTE_GET_GOD, you.religion));
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
     if (join_effect != nullptr)
