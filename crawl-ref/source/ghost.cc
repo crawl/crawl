@@ -567,7 +567,9 @@ static const vector<random_pick_entry<spell_type>> wizard_primary_spells =
   { 35, 90, 155, RISE, SPELL_BOLT_OF_COLD },
   { 35, 90, 280, RISE, SPELL_BOLT_OF_FIRE },
   { 50, 100, 180, RISE, SPELL_BOMBARD },
+  { 60, 100,  50, RISE, SPELL_PERMAFROST_ERUPTION },
   { 65, 100,  80, RISE, SPELL_PLASMA_BEAM },
+  { 70, 100,  70, RISE, SPELL_HELLFIRE_MORTAR },
   { 70, 100,  90, RISE, SPELL_LEHUDIBS_CRYSTAL_SPEAR },
 };
 
