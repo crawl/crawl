@@ -6416,7 +6416,7 @@ int monster::spell_hd(spell_type spell) const
     if (has_ench(ENCH_IDEALISED))
         hd *= 2;
 
-    if (mons_is_player_shadow(*this))
+    if (type == MONS_PLAYER_SHADOW)
     {
         if (props.exists(DITH_SHADOW_SPELLPOWER_KEY))
             hd = props[DITH_SHADOW_SPELLPOWER_KEY].get_int();

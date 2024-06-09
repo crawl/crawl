@@ -3581,6 +3581,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_SLOW:
+    case BEAM_SHADOW_TORPOR:
         slow_player(10 + random2(ench_power));
         obvious_effect = true;
         break;
