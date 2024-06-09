@@ -2537,17 +2537,20 @@ void beogh_blood_for_blood()
     }
 }
 
+bool mons_is_blood_for_blood_orc(const monster& mon)
+{
+    return mon.has_ench(ENCH_SUMMON)
+            && mon.get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+            && mons_genus(mon.type) == MONS_ORC;
+}
+
 static int _count_orcish_reinforcements()
 {
     int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->has_ench(ENCH_SUMMON)
-            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
-            && mons_genus(mi->type) == MONS_ORC)
-        {
+        if (mons_is_blood_for_blood_orc(**mi))
             count += 1;
-        }
     }
 
     return count;

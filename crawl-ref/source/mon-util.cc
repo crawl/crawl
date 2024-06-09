@@ -32,6 +32,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -4093,8 +4094,15 @@ bool mons_can_open_door(const monster& mon, const coord_def& pos)
 
     // Creatures allied with the player can't open doors.
     // (to prevent sabotaging the player accidentally.)
-    if (mon.friendly())
+    //
+    // Blood for Blood gets an exception since they filter in continuously over
+    // time and otherwise get stuck behind doors in places like Vaults regularly.
+    if (mon.friendly()
+        && (!mons_is_blood_for_blood_orc(mon)
+            || env.grid(pos) == DNGN_SEALED_DOOR ))
+    {
         return false;
+    }
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return false;

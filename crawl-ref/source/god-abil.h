@@ -153,6 +153,7 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 bool can_convert_to_beogh();
 void announce_beogh_conversion_offer();
 void spare_beogh_convert();
+bool mons_is_blood_for_blood_orc(const monster& mon);
 void beogh_blood_for_blood();
 void beogh_blood_for_blood_tick(int delay);
 void beogh_end_blood_for_blood();
