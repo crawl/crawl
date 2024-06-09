@@ -737,8 +737,9 @@ void ghost_demon::pick_apostle_spells(apostle_type type, int pow)
 
             if (spells.size() == 3 && one_chance_in(4))
             {
-                const spell_type secondary2 =
-                    picker.pick(wizard_secondary_spells, pow, SPELL_NO_SPELL);
+                spell_type secondary2 = SPELL_NO_SPELL;
+                while (secondary2 == secondary || secondary2 == SPELL_NO_SPELL)
+                    secondary2 = picker.pick(wizard_secondary_spells, pow, SPELL_NO_SPELL);
                 _add_apostle_spell(spells, secondary2, 30, MON_SPELL_WIZARD);
             }
         }
