@@ -1401,7 +1401,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
 
     if (mon->type == MONS_ERICA && i.is_type(OBJ_WEAPONS, WPN_SCIMITAR))
     {
-        make_item_for_monster(mon, OBJ_JEWELLERY, OBJ_RANDOM,
+        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS,
                               0, 1, ISFLAG_KNOW_TYPE);
     }
 
