@@ -13,6 +13,8 @@ Dungeon Crawl Stone Soup is a game of dungeon exploration, combat and magic, inv
 
 ## How to Play
 
+For information on how to install the game, please visit [the installation documentation](crawl-ref/INSTALL.md).
+
 If you'd like to dive in immediately, we suggest one of:
 
 * Start a game and pick a tutorial (select tutorial in the game menu),
