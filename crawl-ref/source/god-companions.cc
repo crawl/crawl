@@ -539,7 +539,11 @@ static bool _is_invalid_challenge_level()
 // every combination of bad circumstance, but should at least help.
 static bool _is_bad_moment_for_challenge()
 {
-    if (you.hp < you.hp_max / 2
+    // Make the injury requirement more lenient at lower xl.
+    // (Scaling from requiring 80% of max at xl 0 to 50% by xl 27)
+    const int threshold = 80 - (you.experience_level * 30 / 27);
+
+    if (you.hp < you.hp_max * threshold / 100
         || player_stair_delay()
         || player_on_orb_run()
         || get_tension() > 45)
