@@ -916,7 +916,7 @@ static spell_type _choose_mem_spell(spell_list &spells)
     // If we've gotten this far, we know that at least one spell here is
     // memorisable, which is enough.
 
-    SpellLibraryMenu spell_menu(spells);
+    SpellLibraryMenu spell_menu(spells, SpellLibraryMenu::action::memorise);
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
