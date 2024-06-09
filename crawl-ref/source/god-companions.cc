@@ -529,7 +529,9 @@ static bool _is_invalid_challenge_level()
     return !is_connected_branch(level_id::current())
            || player_in_branch(BRANCH_ZOT)
            || branch_has_rune(level_id::current().branch)
-              && at_branch_bottom();
+              && at_branch_bottom()
+           || player_in_branch(BRANCH_DUNGEON)
+              && you.depth < 6;
 }
 
 // Try to avoid locking the player into an apostle challenge if they're already
