@@ -1013,13 +1013,30 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
     start_ranged_constriction(caster, *foe, turns, CONSTRICT_ROOTS);
 }
 
+static void _regen_monster(monster* mon, monster* source, int dur)
+{
+    mon->add_ench(mon_enchant(ENCH_REGENERATION, 0, source, dur));
+
+    // Animate visuals
+    bolt beam;
+    beam.source = mon->pos();
+    beam.target = mon->pos();
+    beam.colour = ETC_HOLY;
+    beam.range = LOS_RADIUS;
+    beam.aimed_at_spot = true;
+    beam.flavour = BEAM_VISUAL;
+    beam.draw_delay = 3;
+    beam.fire();
+}
+
 static void _cast_regenerate_other(monster* caster)
 {
     int seen = 0;
     monster* targ = nullptr;
     for (monster_near_iterator mi(caster, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_aligned(caster, *mi) && mi->hit_points < mi->max_hit_points
+        if (*mi != caster
+            && mons_aligned(caster, *mi) && mi->hit_points < mi->max_hit_points
             && !mi->has_ench(ENCH_REGENERATION))
         {
             if (one_chance_in(++seen))
@@ -1029,23 +1046,30 @@ static void _cast_regenerate_other(monster* caster)
 
     if (targ != nullptr)
     {
-        simple_monster_message(*targ, "'s wounds begin to rapidly close.");
-
         const int pow = mons_spellpower(*caster, SPELL_REGENERATE_OTHER);
         int dur = (4 + roll_dice(2, pow / 20)) * BASELINE_DELAY;
-        targ->add_ench(mon_enchant(ENCH_REGENERATION, 0, caster, dur));
-
-        // Animate visuals
-        bolt beam;
-        beam.source = targ->pos();
-        beam.target = targ->pos();
-        beam.colour = ETC_HOLY;
-        beam.range = LOS_RADIUS;
-        beam.aimed_at_spot = true;
-        beam.flavour = BEAM_VISUAL;
-        beam.draw_delay = 3;
-        beam.fire();
+        simple_monster_message(*targ, "'s wounds begin to rapidly close.");
+        _regen_monster(targ, caster, dur);
     }
+}
+
+static void _cast_mass_regeneration(monster* caster)
+{
+    vector<monster*> targs;
+    for (monster_near_iterator mi(caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(caster, *mi) && !mi->has_ench(ENCH_REGENERATION))
+            targs.push_back(*mi);
+    }
+
+    if (targs.empty())
+        return;
+
+    const int pow = mons_spellpower(*caster, SPELL_MASS_REGENERATION);
+    int dur = (3 + roll_dice(2, pow / 25)) * BASELINE_DELAY;
+    simple_monster_message(*caster, "'s allies begin to heal rapidly.");
+    for (monster* mon : targs)
+        _regen_monster(mon, caster, dur);
 }
 
 
@@ -2008,6 +2032,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FUNERAL_DIRGE:
     case SPELL_MANIFOLD_ASSAULT:
     case SPELL_REGENERATE_OTHER:
+    case SPELL_MASS_REGENERATION:
     case SPELL_BESTOW_ARMS:
     case SPELL_FULMINANT_PRISM:
     case SPELL_HELLFIRE_MORTAR:
@@ -2844,6 +2869,19 @@ static ai_action::goodness _mons_likes_blinking(const monster &caster)
     // Prefer not to blink if a friendly monster is targeting the player so that
     // they won't constantly blink while resting/travelling
     return ai_action::good_or_bad(caster.get_foe());
+}
+
+static ai_action::goodness _ally_needs_regeneration(const monster& caster)
+{
+    for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(&caster, *mi) && mi->hit_points < mi->max_hit_points
+            && !mi->has_ench(ENCH_REGENERATION))
+        {
+            return ai_action::good();
+        }
+    }
+    return ai_action::bad();
 }
 
 /// Can the caster see the given target's cell and lava next to (or under) them?
@@ -7265,6 +7303,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _cast_regenerate_other(mons);
         return;
 
+    case SPELL_MASS_REGENERATION:
+        _cast_mass_regeneration(mons);
+        return;
+
     case SPELL_BESTOW_ARMS:
         _cast_bestow_arms(*mons);
         return;
@@ -8517,15 +8559,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::bad();
 
     case SPELL_REGENERATE_OTHER:
-        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mons_aligned(mon, *mi) && mi->hit_points < mi->max_hit_points
-                && !mi->has_ench(ENCH_REGENERATION))
-            {
-                return ai_action::good();
-            }
-        }
-        return ai_action::bad();
+    case SPELL_MASS_REGENERATION:
+        return _ally_needs_regeneration(*mon);
 
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:

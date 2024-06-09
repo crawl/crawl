@@ -3774,6 +3774,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MASS_REGENERATION, "Mass Regeneration",
+    spschool::necromancy,
+    spflag::monster  | spflag::helpful,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_REGENERATION,
+},
+
+{
     SPELL_NOXIOUS_BREATH, "Noxious Breath",
     spschool::conjuration | spschool::air | spschool:: alchemy,
     spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
