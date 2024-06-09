@@ -6613,7 +6613,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_WOODWEAL:
         if (mons->heal(35 + random2(mons->spell_hd(spell_cast) * 3)))
             simple_monster_message(*mons, " is healed.");
-        break;
+        return;
 
     case SPELL_MAJOR_HEALING:
         if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
@@ -7280,7 +7280,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const int num_scorps = random_range(1, max_scorps);
         for (int i = 0; i < num_scorps; ++i)
             _summon(*mons, MONS_SCORPION, 2, slot);
-        break;
+        return;
     }
 
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
@@ -7373,7 +7373,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_DOOM_HOWL:
         _doom_howl(*mons);
-        break;
+        return;
 
     case SPELL_CALL_OF_CHAOS:
         _mons_call_of_chaos(*mons);
