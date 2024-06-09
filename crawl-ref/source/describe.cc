@@ -4480,6 +4480,16 @@ static string _player_spell_desc(spell_type spell)
             description << " casts " << spell_title(player_servitor_spell());
         description << ".\n";
     }
+    else if (you.has_spell(SPELL_SPELLFORGED_SERVITOR) && spell_servitorable(spell))
+    {
+        if (failure_rate_to_int(raw_spell_fail(spell)) <= 20)
+            description << "Your servitor can be imbued with this spell.\n";
+        else
+        {
+            description << "Your servitor could be imbued with this spell if "
+                           "your spell success rate were higher.\n";
+        }
+    }
 
     // Report summon cap
     const int limit = summons_limit(spell, true);
