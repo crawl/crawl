@@ -536,7 +536,7 @@ You are surrounded by an aura of silence. Those adjacent to you cannot make any
 sound. This prevents most forms of spellcasting and prayer, though demonic
 magic, being noiseless, is unaffected.
 %%%%
-bedeviling mutation
+bedevilling mutation
 
 You cast Hex spells with increased power.
 %%%%

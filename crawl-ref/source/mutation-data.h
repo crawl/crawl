@@ -1885,7 +1885,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_HEX_ENHANCER, 0, 1, mutflag::good, false,
-  "bedeviling",
+  "bedevilling",
 
   {"Your hexes are more powerful.", "", ""},
   {"You feel devilish.", "", ""},

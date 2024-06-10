@@ -460,7 +460,7 @@ aura of silence mutation
 你被沉默力场所围绕。与你相邻的怪物无法发出任何声音。
 它可以阻止大多数形式的施法和祈祷，但恶魔的魔法是无声的，不受此影响。
 %%%%
-bedeviling mutation
+bedevilling mutation
 
 你施放的妖术威力增强。
 %%%%
