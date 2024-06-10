@@ -1230,6 +1230,9 @@ w:1
 # Terry Pratchett, Foul Old Ron
 @The_weapon@ @_screams_@, "BUGGRIT, MILLENNIUM HAND AND SHRIMP!"
 
+# Tolkien, Turin Turambar on Gurthang
+@The_weapon@ @_screams_@, "I AM THE IRON OF DEATH! FROM NO BLOOD WILL I SHRINK!"
+
 ###############################################################################
 # Lines from real songs.
 #
