@@ -625,10 +625,11 @@ static void _describe_book(const spellbook_contents &book,
 
         const string dith_marker = crawl_state.need_save
                                    && you_worship(GOD_DITHMENOS)
-                                   && !valid_marionette_spell(spell)
-                                        ? "<magenta>!</magenta>"
-                                        : spell_has_marionette_override(spell)
-                                          ? "<lightmagenta>*</lightmagenta>" : "";
+                                        ? !valid_marionette_spell(spell)
+                                          ? "<magenta>!</magenta>"
+                                          : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : ""
+                                        : "";
 
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
@@ -725,10 +726,11 @@ static void _write_book(const spellbook_contents &book,
 
         const string dith_marker = crawl_state.need_save
                                    && you_worship(GOD_DITHMENOS)
-                                   && !valid_marionette_spell(spell)
-                                        ? "<magenta>!</magenta>"
-                                        : spell_has_marionette_override(spell)
-                                          ? "<lightmagenta>*</lightmagenta>" : "";
+                                        ? !valid_marionette_spell(spell)
+                                          ? "<magenta>!</magenta>"
+                                          : spell_has_marionette_override(spell)
+                                          ? "<lightmagenta>*</lightmagenta>" : ""
+                                        : "";
 
         tiles.json_write_string("title", dith_marker + spell_title(spell));
         tiles.json_write_int("colour", _spell_colour(spell, source_item));
