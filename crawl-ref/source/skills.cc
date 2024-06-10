@@ -2051,6 +2051,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Rockslime";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Black Lotus";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Nightshade";
             else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
             else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
