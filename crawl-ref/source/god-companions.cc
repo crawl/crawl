@@ -527,11 +527,11 @@ static bool _is_invalid_challenge_level()
     // No Abyss/Pan/Portals/Zot or on rune floors (banning the player from
     // retreating or stairdancing there seems too mean)
     return !is_connected_branch(level_id::current())
-           || player_in_branch(BRANCH_ZOT)
-           || branch_has_rune(level_id::current().branch)
-              && at_branch_bottom()
+           || player_in_branch(BRANCH_TEMPLE)
            || player_in_branch(BRANCH_DUNGEON)
-              && you.depth < 6;
+              && you.depth < 6
+           || player_in_branch(BRANCH_ZOT)
+              && you.depth == 5;
 }
 
 // Try to avoid locking the player into an apostle challenge if they're already
@@ -546,7 +546,7 @@ static bool _is_bad_moment_for_challenge()
     if (you.hp < you.hp_max * threshold / 100
         || player_stair_delay()
         || player_on_orb_run()
-        || get_tension() > 45)
+        || get_tension() > 40)
     {
         return true;
     }
