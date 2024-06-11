@@ -605,18 +605,32 @@ class CrawlProcessHandlerBase(object):
         game_html = to_unicode(templ.generate(version = v))
         watcher.send_message("game_client", version = v, content = game_html)
 
-    def stop(self):
+    def stop(self, delay=False):
+        if delay:
+            IOLoop.current().call_later(0.2, self.stop)
+            return
         if self.process:
             self.process.flush_ttyrec()
-            self.process.send_signal(subprocess.signal.SIGHUP)
+            try:
+                self.process.send_signal(subprocess.signal.SIGHUP)
+            except OSError as e:
+                self.logger.error(f"Error {repr(e)} on SIGHUP to child process")
+                self._on_process_end()
+                return
             t = time.time() + config.get('kill_timeout')
             self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
 
     def kill(self):
         if self.process:
             self.logger.info("Killing crawl process after SIGHUP did nothing.")
-            self.process.send_signal(subprocess.signal.SIGABRT)
-            self.kill_timeout = None
+            try:
+                self.process.send_signal(subprocess.signal.SIGABRT)
+            except OSError as e:
+                self.logger.error(f"Error {repr(e)} on SIGKILL to child process")
+                self._on_process_end()
+                return
+            finally:
+                self.kill_timeout = None
 
     interesting_info = ("xl", "char", "place", "turn", "dur", "god", "title")
 
@@ -745,9 +759,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def start(self):
         self._purge_locks_and_start(True)
 
-    def stop(self):
+    def stop(self, delay=False):
         # n.b. the super call here is partly async
-        super(CrawlProcessHandler, self).stop()
+        super(CrawlProcessHandler, self).stop(delay=delay)
         self._stop_purging_stale_processes()
         self._stale_pid = None
 
@@ -916,6 +930,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         else:
             self.logger.info("Starting game.")
 
+        connected = False
+
         try:
             self.process = TerminalRecorder(call,
                                             self.logger,
@@ -947,7 +963,12 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.exit_dump_url = None
 
             if self.process and self.process.is_started():
-                self.stop()
+                # n.b. we delay a bit here so that the process has more
+                # time to start up, and avoid race conditions. (I couldn't come
+                # up with anything more reliable.) Also, currently
+                # if the connection fails the crawl process will be in a state
+                # where it ignores HUP, and the kill handler is needed.
+                self.stop(delay=True)
             else:
                 self._on_process_end()
 

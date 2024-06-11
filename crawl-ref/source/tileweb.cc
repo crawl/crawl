@@ -341,6 +341,7 @@ wint_t TilesFramework::_receive_control_message()
 
     srcaddr_len = sizeof(srcaddr);
 
+    // XX currently this is not interrupted by HUP
     int len = recvfrom(m_sock, buf, sizeof(buf),
                        0,
                        (sockaddr *) &srcaddr, &srcaddr_len);

@@ -189,10 +189,8 @@ def reload():
     global source_file, source_module
     try:
         logging.warning("Reloading config from %s", source_file)
-        try:
-            from importlib import reload
-        except:
-            from imp import reload
+        from importlib import reload
+
         # major caveat: this will not reset the namespace before doing the
         # reload. So to return something to the default value requires an
         # explicit setting. XX is there anything better to do about this?
