@@ -5254,6 +5254,7 @@ static string _monster_attacks_description(const monster_info& mi)
     {
         const mon_attack_info info = _atk_info(mi, i);
         const mon_attack_def &attack = info.definition;
+        const bool ranged = info.weapon && is_range_weapon(*info.weapon);
 
         int attk_mult = attack_counts[info];
         if (!attk_mult) // we're done
@@ -5266,7 +5267,7 @@ static string _monster_attacks_description(const monster_info& mi)
         if (weapon_multihits(info.weapon))
             attk_mult *= weapon_hits_per_swing(*info.weapon);
         string attk_name = uppercase_first(mon_attack_name_short(attack.type));
-        if (info.weapon && is_range_weapon(*info.weapon))
+        if (ranged)
             attk_name = "Shoot";
         string weapon_descriptor = "";
         if (info.weapon)
@@ -5309,12 +5310,15 @@ static string _monster_attacks_description(const monster_info& mi)
 
         // Show damage modified by effects, if applicable
         int real_dam = dam;
-        if (mi.is(MB_STRONG) || mi.is(MB_BERSERK))
-            real_dam = real_dam * 3 / 2;
-        if (mi.is(MB_IDEALISED))
-            real_dam = real_dam * 2;
-        if (mi.is(MB_WEAK))
-            real_dam = real_dam * 2 / 3;
+        if (!ranged)
+        {
+            if (mi.is(MB_STRONG) || mi.is(MB_BERSERK))
+                real_dam = real_dam * 3 / 2;
+            if (mi.is(MB_IDEALISED))
+                real_dam = real_dam * 2;
+            if (mi.is(MB_WEAK))
+                real_dam = real_dam * 2 / 3;
+        }
         if (mi.is(MB_TOUCH_OF_BEOGH))
             real_dam = real_dam * 4 / 3;
 
