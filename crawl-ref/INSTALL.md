@@ -389,6 +389,7 @@ Lua support for editing are untested, and a webtiles build is not available.
 
     ```sh
     git clone https://github.com/crawl/crawl.git
+	cd crawl
     git submodule update --init
     ```
 
@@ -402,13 +403,9 @@ Lua support for editing are untested, and a webtiles build is not available.
     pip install pyyaml
     ```
 
-5. In the DCSS source, run `gen-all.cmd` inside `crawl-ref/source/util/`. This
-   step must be executed any time you update to a new version of the source (or
-   if you have modified tile data or unrandarts).
+5. Open `crawl-ref.sln` in Visual Studio, this is in `crawl-ref/source/MSVC/`.
 
-6. Open `crawl-ref.sln` in Visual Studio, this is in `crawl-ref/source/MSVC/`.
-
-7. Select the configuration you want such as `Release Tiles` from the build
+6. Select the configuration you want such as `Release Tiles` from the build
    configurations menu on the main toolbar; `crawl.exe` is compiled by
    selecting "Build Solution" in the BUILD menu.
 
@@ -420,7 +417,7 @@ MSVC solution files are finicky. Opening the "All Configurations" or
 Troubleshooting tips:
 
 - Make sure Windows Universal C Runtime is installed in MSVC.
-- Make sure the Windows 8.1 SDK is installed in Visual Studio. This this
+- Make sure the Windows 8.1 SDK is installed in Visual Studio. This
      doesn't appear to be available in the latest version of Visual Studio.
 - Build Release before rebuilding both solutions with Debug
 - Use "Rebuild Solution" to make sure all files are rewritten
