@@ -2651,7 +2651,7 @@ void beogh_ally_healing()
 {
     if (!you.props.exists(BEOGH_DAMAGE_DONE_KEY)
         || x_chance_in_y(2, 5)
-        || you.piety < piety_breakpoint(3))
+        || you.piety < piety_breakpoint(2))
     {
         you.props.erase(BEOGH_DAMAGE_DONE_KEY);
         return;
