@@ -1490,6 +1490,25 @@ static void _place_player(dungeon_feature_type stair_taken,
         monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
     }
+
+    // Dump all arena contents on the player's feet when exiting the arena
+    if (stair_taken == DNGN_EXIT_ARENA && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
+    {
+        // If the player has emerged over deep water / lava, put something solid
+        // under us so that items from the duel are not lost
+        if ((env.grid(you.pos()) == DNGN_DEEP_WATER && !player_likes_water(true)
+             || env.grid(you.pos()) == DNGN_LAVA))
+        {
+            env.grid(you.pos()) = DNGN_ALTAR_OKAWARU;
+            set_terrain_changed(you.pos());
+        }
+
+        CrawlVector& vec = you.props[OKAWARU_DUEL_ITEMS_KEY].get_vector();
+        for (CrawlStoreValue value : vec)
+            copy_item_to_grid(value.get_item(), you.pos());
+
+        you.props.erase(OKAWARU_DUEL_ITEMS_KEY);
+    }
 }
 
 // Update the trackers after the player changed level.

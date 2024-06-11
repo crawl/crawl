@@ -318,6 +318,11 @@ Duel ability
 Enters you into single combat with a worthy foe. On success, you and the
 challenged foe will be transported to Okawaru's Arena to fight to the death,
 with no escape until you either emerge victorious or are slain.
+
+Half of your missing health will be restored as the duel begins, and upon
+victory, Okawaru will return your health and magical power to whatever they
+were before you issued the challenge - letting you shake off any damage taken
+during it in the blink of an eye.
 %%%%
 Receive Weapon ability
 

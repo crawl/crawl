@@ -32,6 +32,9 @@ class dist;
 #define OKAWARU_DUEL_TARGET_KEY "okawaru_duel_target"
 #define OKAWARU_DUEL_CURRENT_KEY "okawaru_duel_current"
 #define OKAWARU_DUEL_ABANDONED_KEY "okawaru_duel_abandoned"
+#define OKAWARU_DUEL_ORIG_HP_KEY "okawaru_duel_hp"
+#define OKAWARU_DUEL_ORIG_MP_KEY "okawaru_duel_mp"
+#define OKAWARU_DUEL_ITEMS_KEY "okawaru_duel_floor_items"
 
 #define BEOGH_DAMAGE_DONE_KEY "beogh_damage_done"
 #define ORCIFICATION_LEVEL_KEY "orcification_level"
@@ -228,9 +231,11 @@ void wu_jian_heavenly_storm();
 
 bool okawaru_duel_active();
 spret okawaru_duel(const coord_def& target, bool fail);
+void okawaru_duel_healing();
+void okawaru_end_duel(bool kicked_out = false);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
-void okawaru_end_duel();
+
 
 vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);

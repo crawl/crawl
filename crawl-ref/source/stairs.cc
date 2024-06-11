@@ -997,6 +997,9 @@ void floor_transition(dungeon_feature_type how,
         if (branch == BRANCH_GAUNTLET)
             _gauntlet_effect();
 
+        if (branch == BRANCH_ARENA)
+            okawaru_duel_healing();
+
         const set<branch_type> boring_branch_exits = {
             BRANCH_TEMPLE,
             BRANCH_BAZAAR,

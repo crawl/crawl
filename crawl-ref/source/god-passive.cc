@@ -2373,20 +2373,3 @@ void uskayaw_bonds_audience()
     else // Reset the timer because we didn't actually execute.
         you.props[USKAYAW_BOND_TIMER] = 0;
 }
-
-// Clean up after a duel ends. If we're still in the Arena, start a timer to
-// kick the player back out (after they've had some time to loot), and if
-// we've left the Arena via the gate, clear the timer.
-void okawaru_handle_duel()
-{
-    if (player_in_branch(BRANCH_ARENA)
-        && !okawaru_duel_active()
-        && !you.duration[DUR_DUEL_COMPLETE])
-    {
-        you.set_duration(DUR_DUEL_COMPLETE, random_range(15, 25));
-    }
-
-    if (!player_in_branch(BRANCH_ARENA) && you.duration[DUR_DUEL_COMPLETE])
-        you.duration[DUR_DUEL_COMPLETE] = 0;
-
-}

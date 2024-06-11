@@ -585,11 +585,6 @@ static const duration_def duration_data[] =
       "on word of chaos cooldown", "word of chaos cooldown",
       "You are unable to speak a word of chaos.", D_NO_FLAGS,
       {{ "You are ready to speak a word of chaos again." }}},
-    { DUR_DUEL_COMPLETE, LIGHTGREY, "Duel",
-      "duelling", "duel complete",
-      "Your duel has come to an end.", D_EXPIRES,
-      {{ "", okawaru_end_duel },
-      { "Okawaru bids you farewell from the Arena.", 1 }}, 6},
     { DUR_SAP_MAGIC, YELLOW, "Sap",
       "magic-sapped", "sap magic",
       "Casting spells may cause you to lose access to your magic.",
@@ -770,5 +765,6 @@ static const duration_def duration_data[] =
     { DUR_CORPSE_ROT, 0, "", "", "old corpse rot", "", D_NO_FLAGS },
     { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
     { DUR_BINDING_SIGIL_WARNING, 0, "", "", "old binding sigil", "", D_NO_FLAGS },
+    { DUR_DUEL_COMPLETE, 0, "", "", "old duel complete", "", D_NO_FLAGS },
 #endif
 };

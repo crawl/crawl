@@ -462,7 +462,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_OKAWARU_FINESSE, "Finesse",
             5, 0, 5, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_OKAWARU_DUEL, "Duel",
-            7, 0, 10, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
+            7, 0, 5, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
             abflag::target | abflag::not_self },
         { ABIL_OKAWARU_GIFT_WEAPON, "Receive Weapon",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
