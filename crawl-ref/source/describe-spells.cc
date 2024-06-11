@@ -726,7 +726,7 @@ static void _write_book(const spellbook_contents &book,
         tiles.json_open_object();
 
         const string dith_marker = mon_owner
-                                   crawl_state.need_save
+                                   && crawl_state.need_save
                                    && you_worship(GOD_DITHMENOS)
                                         ? !valid_marionette_spell(spell)
                                           ? "<magenta>!</magenta>"
