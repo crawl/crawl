@@ -679,9 +679,9 @@ const vector<GameOption*> game_options::build_options_list()
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
         new ListGameOption<string>(SIMPLE_NAME(dump_order),
-            {"header", "hiscore", "stats", "misc", "inventory", "skills",
-             "spells", "overview", "mutations", "messages", "screenshot",
-             "monlist", "kills", "notes", "screenshots", "vaults",
+            {"header", "hiscore", "stats", "misc",  "apostles", "inventory",
+             "skills", "spells", "overview", "mutations", "messages",
+             "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
              "skill_gains", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(

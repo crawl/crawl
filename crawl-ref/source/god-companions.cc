@@ -865,7 +865,7 @@ static apostle_data& _get_saved_apostle(const monster apostle)
 
 int get_num_apostles()
 {
-    return apostles.size() - 1;
+    return max(0, (int)apostles.size() - 1);
 }
 
 bool beogh_apostle_is_alive(int slot)
