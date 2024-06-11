@@ -1465,7 +1465,8 @@ static void _place_player(dungeon_feature_type stair_taken,
     for (distance_iterator di(you.pos(), true, false); di; ++di)
         if (you.is_habitable_feat(env.grid(*di))
             && !is_feat_dangerous(env.grid(*di), true)
-            && !feat_is_trap(env.grid(*di)))
+            && !feat_is_trap(env.grid(*di))
+            && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
         {
             if (you.pos() != *di)
                 you.moveto(*di);
