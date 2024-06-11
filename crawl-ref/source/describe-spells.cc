@@ -623,7 +623,8 @@ static void _describe_book(const spellbook_contents &book,
         const string range_str = _range_string(spell, mon_owner, hd);
         string effect_str = _effect_string(spell, mon_owner);
 
-        const string dith_marker = crawl_state.need_save
+        const string dith_marker = mon_owner
+                                   && crawl_state.need_save
                                    && you_worship(GOD_DITHMENOS)
                                         ? !valid_marionette_spell(spell)
                                           ? "<magenta>!</magenta>"
@@ -724,7 +725,8 @@ static void _write_book(const spellbook_contents &book,
     {
         tiles.json_open_object();
 
-        const string dith_marker = crawl_state.need_save
+        const string dith_marker = mon_owner
+                                   crawl_state.need_save
                                    && you_worship(GOD_DITHMENOS)
                                         ? !valid_marionette_spell(spell)
                                           ? "<magenta>!</magenta>"
