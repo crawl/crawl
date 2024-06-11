@@ -1700,29 +1700,6 @@ static string _category_string(const item_def &item, bool monster)
     return description;
 }
 
-static string _ghost_brand_extra_info(brand_type brand)
-{
-    switch (brand)
-    {
-    case SPWPN_FLAMING:
-    case SPWPN_FREEZING:      return "+1/4 damage after AC";
-    case SPWPN_HOLY_WRATH:    return "+3/4 damage vs evil after AC"; // ish
-    case SPWPN_ELECTROCUTION: return "1/4 chance of 8-20 damage";
-    case SPWPN_ACID:          return "2d4 damage, corrosion";
-    // Would be nice to show Pain/Foul Flame damage and chance
-    default: return "";
-    }
-}
-
-static string _desc_ghost_brand(brand_type brand)
-{
-    const string base_name = uppercase_first(brand_type_name(brand, true));
-    const string extra_info = _ghost_brand_extra_info(brand);
-    if (extra_info.empty())
-        return base_name;
-    return make_stringf("%s (%s)", base_name.c_str(), extra_info.c_str());
-}
-
 static string _describe_weapon_brand(const item_def &item)
 {
     if (is_unrandom_artefact(item))
@@ -5187,8 +5164,8 @@ static string _monster_attacks_description(const monster_info& mi)
         special_flavour = (brand_type) mi.props[SPECIAL_WEAPON_KEY].get_int();
     }
 
-    bool has_any_flavour = special_flavour != SPWPN_NORMAL;
-    bool flavour_without_dam = special_flavour != SPWPN_NORMAL;
+    bool has_any_flavour = false;
+    bool flavour_without_dam = false;
     bool plural = false;
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
@@ -5272,6 +5249,8 @@ static string _monster_attacks_description(const monster_info& mi)
         string weapon_descriptor = "";
         if (info.weapon)
             weapon_descriptor = ": " + info.weapon->name(DESC_PLAIN, true, true, false);
+        else if (special_flavour != SPWPN_NORMAL)
+            weapon_descriptor = ": " + ghost_brand_name(special_flavour, mi.type);
         string attk_desc = make_stringf("%s%s", attk_name.c_str(),
                                         weapon_descriptor.c_str());
         if (attk_mult > 1)
@@ -5338,12 +5317,16 @@ static string _monster_attacks_description(const monster_info& mi)
             {
                 brand_str = _brand_damage_string(mi,
                                                  get_weapon_brand(*info.weapon),
-                                                 dam);
+                                                 real_dam);
             }
             else if (info.weapon->base_type == OBJ_STAVES)
+            {
                 brand_str = _monster_staff_damage_string(mi,
                                 static_cast<stave_type>(info.weapon->sub_type));
+            }
         }
+        else if (special_flavour != SPWPN_NORMAL)
+            brand_str = _brand_damage_string(mi, special_flavour, real_dam);
 
         string final_dam_str = make_stringf("%s%s%s", dam_str.c_str(),
                                             brand_str.c_str(),
@@ -5353,14 +5336,6 @@ static string _monster_attacks_description(const monster_info& mi)
 
         // Part 3: The "Bonus" column
         // Describe any additional effects from a monster's attack flavour
-
-        if (special_flavour != SPWPN_NORMAL)
-        {
-            // TODO Merge this with weapon brand handling above
-            bonus_descriptions.emplace_back(_desc_ghost_brand(special_flavour));
-            bonus_width = max(bonus_width, _desc_ghost_brand(special_flavour).size());
-            continue;
-        }
 
         string bonus_desc = uppercase_first(_flavour_base_desc(attack.flavour));
         if (flav_dam && attack.flavour != AF_PURE_FIRE)
