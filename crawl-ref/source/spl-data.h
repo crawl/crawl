@@ -4058,7 +4058,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SHADOW_BIND, "Shadowbind",
+    SPELL_SHADOW_BIND, "Shadow Bind",
     spschool::translocation,
     spflag::target | spflag::monster | spflag::silent,
     5,
