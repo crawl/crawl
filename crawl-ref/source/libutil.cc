@@ -615,7 +615,7 @@ static BOOL WINAPI console_handler(DWORD sig)
     case CTRL_LOGOFF_EVENT:
     case CTRL_SHUTDOWN_EVENT:
         //XXX: seen_hups isn't atomic and console handlers are run in there
-                //     own threads, so this is UB
+        //     own threads, so this is UB
         if (crawl_state.seen_hups++)
             return true; // abort immediately
 
@@ -623,12 +623,15 @@ static BOOL WINAPI console_handler(DWORD sig)
         // Should never happen in tiles -- if it does (Cygwin?), this will
         // kill the game without saving.
 
-        //XXX: this calls WriteConsoleInputW which crashes if the
-        //     console has been closed. Which unfortunately
-                //     is what usually generates CTRL_CLOSE_EVENT
-        w32_insert_escape();
-
-        Sleep(15000); // allow 15 seconds for shutdown, then kill -9
+        // allow 15 seconds for shutdown, although Windows will probably kill
+        // the process before then.
+        for (int i = 0; i < 100; i++)
+        {
+            // We still need to cancel reading from the console even if it is
+            // gone already.
+            w32_cancel_waiting_for_input();
+            Sleep(150);
+        }
 #endif
         return true;
     }
