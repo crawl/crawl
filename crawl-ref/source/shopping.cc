@@ -594,7 +594,7 @@ unsigned int item_value(item_def item, bool ident)
                     break;
 
                 case RING_MAGICAL_POWER:
-                case RING_LIFE_PROTECTION:
+                case RING_POSITIVE_ENERGY:
                 case RING_POISON_RESISTANCE:
                 case RING_RESIST_CORROSION:
                     valued += 200;

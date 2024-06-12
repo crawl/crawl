@@ -2457,7 +2457,7 @@ void give_apostle_equipment(monster* apostle)
                                                      RING_POISON_RESISTANCE,
                                                      RING_PROTECTION_FROM_COLD,
                                                      RING_EVASION,
-                                                     RING_LIFE_PROTECTION,
+                                                     RING_POSITIVE_ENERGY,
                                                      RING_PROTECTION);
 
                 make_item_for_monster(apostle, OBJ_JEWELLERY, rtype, 0,

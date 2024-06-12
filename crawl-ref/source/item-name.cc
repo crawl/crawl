@@ -799,7 +799,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_WIZARDRY:              return "wizardry";
         case RING_MAGICAL_POWER:         return "magical power";
         case RING_FLIGHT:                return "flight";
-        case RING_LIFE_PROTECTION:       return "positive energy";
+        case RING_POSITIVE_ENERGY:       return "positive energy";
         case RING_WILLPOWER: return "willpower";
         case RING_FIRE:                  return "fire";
         case RING_ICE:                   return "ice";
@@ -849,7 +849,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_INTELLIGENCE:          return "Int";
         case RING_MAGICAL_POWER:         return "MP+9";
         case RING_FLIGHT:                return "Fly";
-        case RING_LIFE_PROTECTION:       return "rN+";
+        case RING_POSITIVE_ENERGY:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
         case AMU_REGENERATION:           return "Regen";
 #if TAG_MAJOR_VERSION == 34
@@ -3494,7 +3494,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false) || you.has_mutation(MUT_HP_CASTING);
 
-        case RING_LIFE_PROTECTION:
+        case RING_POSITIVE_ENERGY:
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
