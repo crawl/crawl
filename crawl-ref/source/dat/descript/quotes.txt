@@ -1406,10 +1406,6 @@ ring of intelligence
          I feel smarter already.”
     -Bill Watterson, _Calvin and Hobbes_. November 19, 1993.
 %%%%
-ring of resist corrosion
-
-<ring>
-%%%%
 ring of magical power
 
 <ring>
@@ -1455,12 +1451,9 @@ ring of protection from fire
  smell of fire had passed on them.”
     -KJV Bible, Daniel 3:23-27.
 %%%%
-ring of willpower
+ring of resist corrosion
 
-“I am, indeed, a king, because I know how to rule myself.”
-    -Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
-      _The Works of Aretino, Translated into English from the original Italian_,
-      trans. Samuel Putnam. 1926
+<ring>
 %%%%
 ring of see invisible
 
@@ -1478,6 +1471,13 @@ ring of strength
 
 “That which does not kill us makes us stronger.”
     -Friedrich Nietzsche
+%%%%
+ring of willpower
+
+“I am, indeed, a king, because I know how to rule myself.”
+    -Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
+      _The Works of Aretino, Translated into English from the original Italian_,
+      trans. Samuel Putnam. 1926
 %%%%
 ring of wizardry
 
