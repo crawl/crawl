@@ -751,7 +751,15 @@ amulet of magic regeneration
 
 <amulet>
 %%%%
+amulet of reflection
+
+<amulet>
+%%%%
 amulet of regeneration
+
+<amulet>
+%%%%
+amulet of the acrobat
 
 <amulet>
 %%%%
