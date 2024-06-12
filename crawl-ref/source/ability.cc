@@ -494,8 +494,10 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 2, -1, {fail_basis::invo, piety_breakpoint(2), 0, 1},
             abflag::none },
         { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
-            0, 0, 5, -1, {fail_basis::invo, piety_breakpoint(5), 0, 1},
+            0, 0, 8, -1, {fail_basis::invo, piety_breakpoint(5), 0, 1},
             abflag::none },
+        { ABIL_TROG_GIFT_WEAPON, "Receive Weapon",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         // Elyvilon
         { ABIL_ELYVILON_PURIFICATION, "Purification",
@@ -1155,6 +1157,15 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_LUGONU_BLESS_WEAPON:
         if (you.has_mutation(MUT_NO_GRASPING))
             return ABIL_NON_ABILITY;
+        else
+            return ability;
+
+    case ABIL_TROG_GIFT_WEAPON:
+        if (you.props.exists(TROG_WEAPON_GIFTED_KEY)
+            || you.has_mutation(MUT_NO_GRASPING))
+        {
+            return ABIL_NON_ABILITY;
+        }
         else
             return ability;
 
@@ -1912,6 +1923,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_OKAWARU_GIFT_WEAPON:
     case ABIL_OKAWARU_GIFT_ARMOUR:
+    case ABIL_TROG_GIFT_WEAPON:
         if (feat_eliminates_items(env.grid(you.pos())))
         {
             if (!quiet)
@@ -3418,6 +3430,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                          &you);
         break;
 
+    case ABIL_TROG_GIFT_WEAPON:
+        if (!trog_gift_weapon())
+            return spret::abort;
+        break;
+
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (cast_selective_amnesia() <= 0)
         {
@@ -4379,6 +4396,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
     case ABIL_OKAWARU_GIFT_WEAPON:
+    case ABIL_TROG_GIFT_WEAPON:
         first_slot = letter_to_index('W');
         break;
     case ABIL_OKAWARU_GIFT_ARMOUR:

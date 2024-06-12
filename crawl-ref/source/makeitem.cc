@@ -239,6 +239,14 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         // On weapons, an enchantment of less than 0 is never viable.
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
+        // Trog weapon gifts are special.
+        if (agent == GOD_TROG)
+        {
+            item.plus = 3 + biased_random2(12,2);
+            make_trog_randart(item);
+            return true;
+        }
+
         // The rest are normal randarts.
         make_item_randart(item);
 

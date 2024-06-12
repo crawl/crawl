@@ -15,6 +15,9 @@
 #define OKAWARU_ARMOUR_KEY "okawaru_armour"
 #define OKAWARU_ARMOUR_GIFTED_KEY "okawaru_armour_gifted"
 
+#define TROG_WEAPONS_KEY "trog_weapons"
+#define TROG_WEAPON_GIFTED_KEY "trog_weapon_gifted"
+
 #define INVENT_GIZMO_USED_KEY "invent_gizmo_used"
 #define COGLIN_GIZMO_KEY "coglin_gizmos"
 #define COGLIN_GIZMO_NAMES_KEY "coglin_gizmo_names"
@@ -26,6 +29,8 @@ bool acquirement_menu();
 
 bool okawaru_gift_weapon();
 bool okawaru_gift_armour();
+
+bool trog_gift_weapon();
 
 bool coglin_invent_gizmo();
 void coglin_announce_gizmo_name();

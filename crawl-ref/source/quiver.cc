@@ -1340,6 +1340,7 @@ namespace quiver
         case ABIL_CONVERT_TO_BEOGH:
         case ABIL_OKAWARU_GIFT_WEAPON:
         case ABIL_OKAWARU_GIFT_ARMOUR:
+        case ABIL_TROG_GIFT_WEAPON:
         case ABIL_INVENT_GIZMO:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:

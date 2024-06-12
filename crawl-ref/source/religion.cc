@@ -212,9 +212,9 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 2, ABIL_TROG_HAND,
                  "call upon Trog for regeneration and willpower" },
             { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
-            { 5, "Trog will now gift you melee weapons as you gain piety.",
-                 "Trog will no longer gift you weapons.",
-                 "Trog will gift you melee weapons as you gain piety." },
+            { 6, ABIL_TROG_GIFT_WEAPON,
+                 "Trog will grant you a choice of weapons... once.",
+                 "Trog is no longer ready to gift you weaponry." },
         },
 
         // Nemelex
@@ -1314,7 +1314,7 @@ static set<spell_type> _vehumet_get_spell_gifts()
     return offers;
 }
 
-static bool _give_trog_oka_gift(bool forced)
+static bool _give_oka_gift(bool forced)
 {
     // Break early if giving a gift now means it would be lost.
     if (feat_eliminates_items(env.grid(you.pos())))
@@ -1325,19 +1325,13 @@ static bool _give_trog_oka_gift(bool forced)
     if (you.has_mutation(MUT_NO_GRASPING))
         return false;
 
-    const bool want_weapons = you_worship(GOD_TROG)
-                              && (forced || you.piety >= piety_breakpoint(4)
-                                            && random2(you.piety) > 120
-                                            && one_chance_in(4));
     const bool want_missiles = you_worship(GOD_OKAWARU)
                                && (forced || you.piety >= piety_breakpoint(4)
                                              && random2(you.piety) > 120
                                              && x_chance_in_y(2,5));
     object_class_type gift_type;
 
-    if (want_weapons)
-        gift_type = OBJ_WEAPONS;
-    else if (want_missiles)
+    if (want_missiles)
         gift_type = OBJ_MISSILES;
     else
         return false;
@@ -1346,9 +1340,6 @@ static bool _give_trog_oka_gift(bool forced)
     {
     case OBJ_MISSILES:
         simple_god_message(" grants you throwing weapons!");
-        break;
-    case OBJ_WEAPONS:
-        simple_god_message(" grants you a weapon!");
         break;
     default:
         simple_god_message(" grants you bugs!");
@@ -1363,17 +1354,9 @@ static bool _give_trog_oka_gift(bool forced)
         mpr("...but nothing appears.");
         return false;
     }
-    switch (gift_type)
-    {
-    case OBJ_MISSILES:
-        _inc_gift_timeout(26 + random2avg(19, 2));
-        break;
-    case OBJ_WEAPONS:
-        _inc_gift_timeout(30 + random2avg(19, 2));
-        break;
-    default:
-        break;
-    }
+
+    _inc_gift_timeout(26 + random2avg(19, 2));
+
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
     take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -2046,8 +2029,7 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_OKAWARU:
-        case GOD_TROG:
-            success = _give_trog_oka_gift(forced);
+            success = _give_oka_gift(forced);
             break;
 
         case GOD_JIYVA:

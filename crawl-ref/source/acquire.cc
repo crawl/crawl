@@ -389,9 +389,7 @@ static skill_type _acquirement_weapon_skill(int agent)
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
         int weight = _skill_rdiv(sk) + 1;
-        // Exaggerate the weighting if it's not a Trog gift.
-        if (agent != GOD_TROG)
-            weight = (weight + 1) * (weight + 2);
+        weight = (weight + 1) * (weight + 2);
         count += weight;
 
         if (x_chance_in_y(weight, count))
@@ -1120,29 +1118,17 @@ static bool _armour_slot_seen(equipment_type slot)
  * @param agent     The source of the acquirement. For god gifts, it's equal to
  *                  the god.
  */
-static void _adjust_brand(item_def &item, int agent)
+static void _adjust_brand(item_def &item)
 {
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR)
+    if (item.base_type != OBJ_WEAPONS)
         return; // don't reroll missile brands, I guess
 
     if (is_artefact(item))
         return; // their own kettle of fish
 
-    // Trog has a restricted brand table.
-    if (agent == GOD_TROG && item.base_type == OBJ_WEAPONS)
-    {
-        // 75% chance of a brand
-        item.brand = random_choose(SPWPN_NORMAL, SPWPN_HEAVY,
-                                   SPWPN_FLAMING, SPWPN_ANTIMAGIC);
-        return;
-    }
-
-    // Otherwise we weight "boring" brands lower.
-    if (agent != GOD_TROG && item.base_type == OBJ_WEAPONS)
-    {
-        while (!one_chance_in(_weapon_brand_reroll_denom(get_weapon_brand(item))))
-            reroll_brand(item, ISPEC_GOOD_ITEM);
-    }
+    // Reroll boring brands sometimes.
+    while (!one_chance_in(_weapon_brand_reroll_denom(get_weapon_brand(item))))
+        reroll_brand(item, ISPEC_GOOD_ITEM);
 }
 
 /**
@@ -1165,7 +1151,8 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying unusable weapon or armour!";
     }
 
-    // Trog does not gift the Wrath of Trog.
+    // Trog does not gift the Wrath of Trog. (Can't happen nowadays
+    // anyway since Trog only gifts randarts.)
     if (agent == GOD_TROG && is_unrandom_artefact(item, UNRAND_TROG))
         return "Destroying Trog-gifted Wrath of Trog!";
 
@@ -1188,9 +1175,9 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    // Trog/Xom gifts are generally lower quality than scroll acquirement or
-    // Oka gifts. We also use lower quality for missile gifts.
-    const int item_level = ((agent == GOD_TROG || agent == GOD_XOM || class_wanted == OBJ_MISSILES) ? ISPEC_GIFT : ISPEC_GOOD_ITEM);
+    // Trog gifts are all randarts, and Xom gifts and missile gifts use
+    // lower quality.
+    const int item_level = ((agent == GOD_TROG ? ISPEC_RANDART : ((agent == GOD_XOM || class_wanted == OBJ_MISSILES) ? ISPEC_GIFT : ISPEC_GOOD_ITEM)));
     int thing_created = NON_ITEM;
     int quant = 1;
 #define MAX_ACQ_TRIES 40
@@ -1210,8 +1197,6 @@ int acquirement_create_item(object_class_type class_wanted,
         // Don't generate randart books in items(), we do that
         // ourselves.
         bool want_arts = (class_wanted != OBJ_BOOKS);
-        if (agent == GOD_TROG && !one_chance_in(3))
-            want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted,
                               item_level, 0, agent);
@@ -1224,7 +1209,7 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(env.item[thing_created]);
-        _adjust_brand(acq_item, agent);
+        _adjust_brand(acq_item);
 
         // Increase the chance of armour being an artefact by usually
         // rerolling non-artefacts.
@@ -1308,8 +1293,7 @@ int acquirement_create_item(object_class_type class_wanted,
                  && !is_unrandom_artefact(acq_item))
         {
             // These can never get egos, and mundane versions are quite common,
-            // so guarantee artefact status. Rarity is a bit low to compensate.
-            // ...except actually, trog can give them antimagic brand, so...
+            // so guarantee artefact status.
             if (is_giant_club_type(acq_item.sub_type)
                 && get_weapon_brand(acq_item) == SPWPN_NORMAL
                 && !one_chance_in(25))
@@ -1317,8 +1301,6 @@ int acquirement_create_item(object_class_type class_wanted,
                 make_item_randart(acq_item, true);
             }
 
-            if (agent == GOD_TROG)
-                acq_item.plus += random2(3);
             // Don't acquire negative enchantment except via Xom.
             if (agent != GOD_XOM)
                 acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
@@ -1845,6 +1827,88 @@ bool okawaru_gift_armour()
 
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
+
+    return true;
+}
+
+static void _add_trog_artprop(item_def &item, int which_prop)
+{
+    int num_props = 3;
+    // Don't gift TrogRage to a character who can never berserk.
+    if (!you.can_go_berserk(true, false, true, nullptr, false))
+        num_props -= 1;
+    switch (which_prop % num_props)
+    {
+    case 0:
+        artefact_set_property(item, ARTP_TROG_LOUD, 1);
+        break;
+    case 1:
+        artefact_set_property(item, ARTP_TROG_MESMERISE, 1);
+        artefact_set_property(item, ARTP_FLY, 1);
+        break;
+    case 2:
+        artefact_set_property(item, ARTP_TROG_RAGE, 1);
+        break;
+    }
+}
+
+static void _make_trog_gifts()
+{
+    const string key = TROG_WEAPONS_KEY;
+    CrawlVector &acq_items = you.props[key].get_vector();
+    acq_items.clear();
+
+    // Choose a random starting point to cycle through either 2 or 3
+    // special Trog artprops to make sure we get a mixture.
+    int counter = random2(6);
+
+    while (acq_items.size() < 4)
+    {
+        auto item = _acquirement_item_def(OBJ_WEAPONS, you.religion);
+        if (item.defined())
+        {
+            _add_trog_artprop(item, counter + acq_items.size());
+            acq_items.push_back(item);
+        }
+    }
+}
+
+bool trog_gift_weapon()
+{
+    ASSERT(!you.props.exists(TROG_WEAPON_GIFTED_KEY));
+
+    if (!you.props.exists(TROG_WEAPONS_KEY))
+        _make_trog_gifts();
+
+    auto &acq_items = you.props[TROG_WEAPONS_KEY].get_vector();
+
+    simple_god_message(" offers you a choice of weapons!");
+
+    int index = 0;
+    if (!clua.callfn("c_choose_trog_weapon", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], TROG_WEAPONS_KEY);
+
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        you.props[TROG_WEAPON_GIFTED_KEY] = true;
+
+        return true;
+    }
+
+    AcquireMenu acq_menu(acq_items, TROG_WEAPONS_KEY);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(TROG_WEAPONS_KEY))
+        return false;
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    you.props[TROG_WEAPON_GIFTED_KEY] = true;
 
     return true;
 }
