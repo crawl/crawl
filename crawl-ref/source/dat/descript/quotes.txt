@@ -1968,6 +1968,10 @@ wand of iceblast
 
 <wand>
 %%%%
+wand of light
+
+<wand>
+%%%%
 wand of paralysis
 
 <wand>
@@ -1977,6 +1981,14 @@ wand of polymorph
 “Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in
  seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
     -Franz Kafka, _Die Verwandlung_. 1915
+%%%%
+wand of quicksilver
+
+<wand>
+%%%%
+wand of roots
+
+<wand>
 %%%%
 wand of warping
 
