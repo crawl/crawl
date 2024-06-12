@@ -1978,6 +1978,10 @@ wand of polymorph
  seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
     -Franz Kafka, _Die Verwandlung_. 1915
 %%%%
+wand of warping
+
+<wand>
+%%%%
 war axe
 
 “‘God speed the kiss,’ said Max, and Katie sigh'd,
