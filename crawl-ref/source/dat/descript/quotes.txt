@@ -1467,6 +1467,10 @@ ring of slaying
  once.”
     -Thomas Huxley
 %%%%
+ring of stealth
+
+<ring>
+%%%%
 ring of strength
 
 “That which does not kill us makes us stronger.”
