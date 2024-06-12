@@ -1956,10 +1956,6 @@ wand of digging
  things have learnt to walk that ought to crawl.”
     -H.P. Lovecraft, “The Festival”. 1925
 %%%%
-wand of mindburst
-
-<wand>
-%%%%
 wand of flame
 
 <wand>
@@ -1969,6 +1965,10 @@ wand of iceblast
 <wand>
 %%%%
 wand of light
+
+<wand>
+%%%%
+wand of mindburst
 
 <wand>
 %%%%
