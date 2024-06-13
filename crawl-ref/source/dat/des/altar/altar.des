@@ -432,3 +432,38 @@ MAP
 ..1..
 .....
 ENDMAP
+
+### Altars to Ignis ##########################################################
+
+NAME:    dolorous_big_flames_little_flames
+DEPTH:   D:4-
+TAGS:    no_item_gen no_monster_gen no_trap_gen transparent
+WEIGHT:  1
+SHUFFLE: DE
+KPROP:   . = bloody w:5 / nothing w:25
+KFEAT:   D = altar_ignis
+KFEAT:   E = altar_makhleb
+KFEAT:   G = metal_statue
+KFEAT:   ' = floor
+NSUBST:  F = 1:+ / *:c
+MARKER:  P = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
+             pow_min = 3, pow_max = 3, delay = 100, \
+             size = 1, walk_dist = 1, start_clouds = 1 }
+FTILE:   ' = floor_rough_brown
+TILE:    G = fiery_conduit
+COLOUR:  c = lightred
+COLOUR:  ' = brown
+COLOUR:  G = fire
+: set_feature_name("metal_statue", "fiery conduit")
+MAP
+   ccccccccFcccccccc
+ ccc....ccc'ccc....ccc
+cc...Y...c'''c...E...cc
+cG.......''P''.......Gc
+cc...D...c'''c...Y...cc
+ ccc....ccc'ccc....ccc
+   ccccccccFcccccccc
+ENDMAP
