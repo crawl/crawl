@@ -9,6 +9,8 @@
 ###############################################################################
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ###############################################################################
 #
 # <<1>> Snake entries.
@@ -235,8 +237,20 @@ ENDMAP
 
 default-depth: Snake
 
+# Directly place a decorative vault 33% of the time on the latter half.
+NAME:    snake_decor
+TAGS:    no_dump extra allow_dup nolayout_encompass luniq
+DEPTH:   Snake:3-4
+CHANCE:  33%
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="snakedec", count=c}
+  end)
+}}
+
 NAME:    hangedman_snake_thin_pillar_pass
-TAGS:    extra transparent
+TAGS:    transparent extra snakedec
 WEIGHT:  6
 SHUFFLE: @' / @' / @' / '@
 SUBST:   A : c.., B : c.., C : c.., D = cccc., E = c...., ' = .
@@ -260,7 +274,7 @@ xx.cA..c..Ac.xx
 ENDMAP
 
 NAME:    hangedman_snake_wide_pillar_pass
-TAGS:    extra transparent
+TAGS:    transparent extra snakedec
 WEIGHT:  4
 SHUFFLE: @' / @' / @' / '@
 SUBST:   A : c.., B : c.., C : c.., D = cccc., E : c...., F : c...., ' = .
@@ -282,7 +296,7 @@ ENDMAP
 # Somewhat vaguely inspired by a vault shape in
 # a draft of evilmike's for something else entirely.
 NAME:    hangedman_snake_pattern
-TAGS:    transparent extra
+TAGS:    transparent extra snakedec
 # Pillars, door positions, entrances.
 SHUFFLE: XYZ, aA-+ / aA-+ / aA-+ / Aa+- / Aa+-, ABCDE
 SUBST:   X : cx.., Y : cx...., Z = ., a = x, - : xx+, + : +++..
@@ -300,7 +314,7 @@ aa...X...xx..Z..--...X...xx..Z..aa
 ENDMAP
 
 NAME:   nicolae_snake_squiggles
-TAGS:   transparent extra
+TAGS:   transparent extra snakedec
 NSUBST: a = x / ., p = x / ., q = x / ., D = x / ., E = x / ., F = x / .
 NSUBST: r = x / ., H = x / ., s = x / ., J = x / ., K = x / ., L = x / .
 NSUBST: M = x / ., N = x / ., O = x / ., P = x / ., Q = x / ., R = x / .
@@ -326,7 +340,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_large_snake_swirl
-TAGS:  transparent
+TAGS:  transparent luniq_snakedec_large
 : if you.depth() == 1 then
 SUBST: s = ]})
 : elseif you.depth() == dgn.br_depth(you.branch()) then
@@ -363,7 +377,7 @@ xx.........xxxx
 ENDMAP
 
 NAME:  nicolae_coiled_stairwell_down
-TAGS:  uniq_coiled_stairwell
+TAGS:  extra uniq_coiled_stairwell
 DEPTH: Snake, !Snake:$
 SUBST: } = }])>
 MAP
@@ -385,7 +399,7 @@ xx.xxxx.x.x
 ENDMAP
 
 NAME:  nicolae_coiled_stairwell_up
-TAGS:  uniq_coiled_stairwell
+TAGS:  extra uniq_coiled_stairwell
 DEPTH: Snake:2-
 SUBST: { = {[(<
 MAP
@@ -407,7 +421,7 @@ xx.xxxx.x.x
 ENDMAP
 
 NAME:   nicolae_snake_nest
-TAGS:   transparent
+TAGS:   transparent snakedec luniq_snakedec_large
 ORIENT: float
 MAP
          .........
@@ -438,7 +452,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_snake_serpentine_hallways
-TAGS:  transparent extra
+TAGS:  transparent extra snakedec
 MAP
         x@@@@xxxxx
         x........xxx
@@ -465,7 +479,7 @@ xx....xxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:  nicolae_snake_linked_coils
-TAGS:  transparent extra
+TAGS:  transparent extra snakedec
 SUBST: + : +x
 MAP
     xxxxxxxxxxxxxx
@@ -488,7 +502,7 @@ xx...xxxx...xxxxx...xx
 ENDMAP
 
 NAME: nicolae_snake_single_loop
-TAGS: transparent extra
+TAGS: transparent extra snakedec
 MAP
  xxxxxxx
 xx.....xx
@@ -507,7 +521,7 @@ xx.....xx...xx
 ENDMAP
 
 NAME:    nicolae_snake_double_loop
-TAGS:    transparent extra
+TAGS:    transparent extra snakedec
 SHUFFLE: AB, CD
 SUBST:   AC = ., BD = +
 MAP
@@ -528,7 +542,7 @@ xx.....xxxxxx.....xx
 ENDMAP
 
 NAME:    nicolae_snake_round_shape_thing
-TAGS:    transparent extra
+TAGS:    transparent extra snakedec luniq_snakedec_large
 SHUFFLE: bc
 SUBST:   a : x., b : x@, c : @
 MAP
@@ -560,19 +574,9 @@ xx.......xxx.......xx
 ENDMAP
 
 NAME:   nicolae_snake_biting_tails
-TAGS:   transparent extra
-KFEAT:  g = metal_statue
+TAGS:   transparent extra snakedec
 SUBST:  g : ggG, G : GT
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR: g = poison
-TILE:   g = alchemical_conduit
-:   set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR: g = fire
-TILE:   g = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
-: end
-TILE:   G = dngn_statue_naga
+: snake_statue_setup(_G, "g")
 MAP
 xxxxx     xxxxxxx     xxxxxxx     xxxxxxx
 @...xxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxxx
@@ -588,7 +592,7 @@ xx....xx..........xxx.........xxx.........xx...x
 ENDMAP
 
 NAME:    nicolae_snake_serpentine_bazaar
-TAGS:    no_pool_fixup transparent
+TAGS:    transparent no_pool_fixup
 KFEAT:   a = weapon shop
 KFEAT:   p = armour shop
 KFEAT:   q = antiques shop
@@ -626,20 +630,10 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_slithery_corners
-TAGS:    extra transparent
-KFEAT:   g = metal_statue
+TAGS:    transparent extra snakedec
 SHUFFLE: DEF
 SUBST:   D : ggG., E : TG., F : T.
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR:  g = poison
-TILE:    g = alchemical_conduit
-:   set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR:  g = fire
-TILE:    g = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
-: end
-TILE:  G : dngn_statue_naga / dngn_statue_archer
+: snake_statue_setup(_G, "g")
 MAP
      ccc
 c@@@ccccc@@@cc
@@ -664,20 +658,10 @@ cc....ccc.......ccc
 ENDMAP
 
 NAME:    nicolae_snake_slithery_hallway
-TAGS:    extra transparent
-KFEAT:   g = metal_statue
+TAGS:    transparent extra snakedec
 SHUFFLE: DEF
 SUBST:   D : ggG., E : TG., F : T.
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR:  g = poison
-TILE:    g = alchemical_conduit
-:   set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR:  g = fire
-TILE:    g = fiery_conduit
-:   set_feature_name("metal_statue", "fiery conduit")
-: end
-TILE:  G : dngn_statue_naga / dngn_statue_archer
+: snake_statue_setup(_G, "g")
 MAP
   cccccccccccccccccccccccccccccccccc
  cc..F..ccccc..D..ccccc..E..ccccc..@
@@ -689,7 +673,7 @@ cccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   nicolae_snake_snake_lake
-TAGS:   extra transparent
+TAGS:   transparent extra snakedec luniq_snakedec_large uniq_snakedec_liquid
 KMONS:  1 = plant
 KFEAT:  1 = . w:40 / W
 NSUBST: t = . / t
@@ -715,7 +699,7 @@ ENDMAP
 
 # Although sometimes it's not a hallway.
 NAME:  nicolae_snake_yet_another_twisty_hallway
-TAGS:  extra transparent
+TAGS:  transparent extra snakedec
 : if crawl.one_chance_in(5) then
 SUBST: x = -, . = x, @- = .
 : end
@@ -737,7 +721,7 @@ ENDMAP
 
 # https://www.youtube.com/watch?v=RmzgObMCicw
 NAME:  nicolae_snake_flat_spine
-TAGS:  transparent extra
+TAGS:  transparent extra snakedec
 DEPTH: Snake
 MAP
         .....................
@@ -760,7 +744,7 @@ ENDMAP
 # the rest of the level.
 
 NAME:    nicolae_snake_gridmaze_big_u
-TAGS:    extra transparent
+TAGS:    transparent extra snakedec luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DEFHJ, KL/MN, KL, OPQRSZ, apqrsy, z-
 SUBST:   DEFHKMz = x, JLNPQRSZpqrsy- = ., Oa = _
 CLEAR:   _
@@ -792,7 +776,7 @@ Rxx...xxxxxxxxxxxx...xxq
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_entwining
-TAGS:    extra transparent
+TAGS:    extra transparent snakedec luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DE/FH, DE, JK, LM, NOPQRSZap
 SUBST:   HDJL = x, FEKMOPQRSZap = ., N = _
 CLEAR:   _
@@ -824,7 +808,7 @@ axx..................xxO
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_spiral
-TAGS:    extra transparent
+TAGS:    extra transparent luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DE/FH/JK/LM/pq, DE, NO, PQRSZa
 SUBST:   DFJLNp = x, EHKMOQRSZaq = ., P = _
 CLEAR:   _
@@ -856,7 +840,7 @@ axx...xxxxxFFxxxxx...xxR
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_squiggle
-TAGS:    extra transparent
+TAGS:    transparent extra luniq_snakedec_large uniq_snake_gridmaze
 : if crawl.one_chance_in(3) then
 SUBST:   DHK = x, EFJ = .
 : elseif crawl.coinflip() then
@@ -895,7 +879,7 @@ Qxx..xx..xx..xx..xx..xxM
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_swirls
-TAGS:    extra transparent
+TAGS:    transparent extra luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DE, FH, JKLMNO
 SUBST:   DF = x, EHKLMNO = ., J = _
 CLEAR:   _
@@ -927,7 +911,7 @@ Lxx..........xx......xxO
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_tees
-TAGS:    extra transparent
+TAGS:    transparent extra snakedec luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DE/FH/JK/LM, DE, FH, JK, NOPQRSZ
 SUBST:   DFJL = x, EHKMOPQRSZ = ., N = _
 CLEAR:   _
@@ -959,7 +943,7 @@ Oxx..JJ..............xxS
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_waves
-TAGS:    extra transparent
+TAGS:    extra transparent snakedec luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DE, FH, JKLMNOPQ
 SUBST:   DF = x, EHKLMNOPQ = ., J = _
 CLEAR:   _
@@ -991,7 +975,7 @@ Mxx..................EE.
 ENDMAP
 
 NAME:    nicolae_snake_gridmaze_zigzag
-TAGS:    extra transparent
+TAGS:    extra transparent snakedec luniq_snakedec_large uniq_snake_gridmaze
 SHUFFLE: DE, FH, JK, LMNOP
 SUBST:   DFJ = x, EHKMNOP = ., L = _
 CLEAR:   _
@@ -1023,7 +1007,7 @@ Nxx......xx..xx......xxP
 ENDMAP
 
 NAME:    regret_index_snakedec_diamondback
-TAGS:    transparent extra decor
+TAGS:    transparent extra snakedec
 DEPTH:   Snake
 KFEAT:   C = altar_cheibriados / altar_gozag w:5
 KFEAT:   F = cache of fruit / cache of meat
@@ -1052,7 +1036,7 @@ xx.."?"..xx..x``.zzx..xx.."?"..xx..x``.zzx..
 ENDMAP
 
 NAME:   nicolae_snake_am_anfang
-TAGS:   transparent decor extra
+TAGS:   transparent extra snakedec luniq_snakedec_glass
 DEPTH:  Snake
 : if you.depth() == 1 then
 SUBST:  S = ]})
@@ -1076,7 +1060,7 @@ xxxxx..@@@..xxxxx
 ENDMAP
 
 NAME:    nicolae_snake_entwined_pools
-TAGS:    transparent decor extra no_pool_fixup
+TAGS:    transparent extra snakedec no_pool_fixup uniq_snakedec_liquid
 DEPTH:   Snake
 SHUFFLE: DEF
 SUBST:   D = ., E : .c, F = c
@@ -1091,7 +1075,7 @@ cccllFEDEFwFEDEFlFEDEFwwccc
 ENDMAP
 
 NAME:   nicolae_snake_hissss
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra luniq_snakedec_glass
 DEPTH:  Snake
 : if you.depth() == 1 then
 SUBST:  S = ]})
@@ -1122,7 +1106,7 @@ ENDMAP
 # tiles and crystal tiles, and all crystal tiles should be visible, even when
 # the lava and crystal tiles are swapped.
 NAME:    nicolae_snake_nagamander_alliance_1
-TAGS:    transparent decor extra luniq_nagamander
+TAGS:    transparent snakedec extra luniq_nagamander
 DEPTH:   Snake
 SHUFFLE: bl
 MAP
@@ -1141,7 +1125,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_nagamander_alliance_2
-TAGS:    transparent decor extra luniq_nagamander
+TAGS:    transparent snakedec extra luniq_nagamander
 DEPTH:   Snake
 SHUFFLE: bl
 MAP
@@ -1160,7 +1144,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_nagamander_alliance_3
-TAGS:    transparent decor extra luniq_nagamander
+TAGS:    transparent snakedec extra luniq_nagamander
 DEPTH:   Snake
 SHUFFLE: bl
 MAP
@@ -1177,7 +1161,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_nagamander_alliance_4
-TAGS:    transparent decor extra luniq_nagamander
+TAGS:    transparent snakedec extra luniq_nagamander
 DEPTH:   Snake
 SHUFFLE: bl
 MAP
@@ -1198,7 +1182,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_nagamander_alliance_5
-TAGS:    transparent decor extra luniq_nagamander
+TAGS:    transparent snakedec extra luniq_nagamander
 DEPTH:   Snake
 SHUFFLE: bl
 MAP
@@ -1217,21 +1201,12 @@ ENDMAP
 # The "parade" vaults all feature a continuous wall which is broken up at random
 # to make several snake-shaped walls, following each other like a snake parade.
 NAME:    nicolae_snake_parade_curves
-TAGS:    transparent extra decor luniq_snakeparade
+TAGS:    transparent extra snakedec luniq_snakeparade
 DEPTH:   Snake
-KFEAT:   g = metal_statue
 SHUFFLE: Tg
 NSUBST:  D = . / c, E = . / c, F = . / c, H = . / c, J = . / c, K = . / c, \
          L = . / c, M = . / c, N = . / c
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR:  g = poison
-TILE:    g = alchemical_conduit
-: set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR:  g = fire
-TILE:    g = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
-: end
+: snake_statue_setup(_G, "g")
 MAP
     .......
     .ccDDc.
@@ -1257,7 +1232,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_parade_fountainous
-TAGS:   transparent decor extra luniq_snakeparade
+TAGS:   transparent snakedec extra luniq_snakeparade
 DEPTH:  Snake
 NSUBST: p = 3=. / 3=c. / c
 KFEAT:  g = metal_statue
@@ -1265,15 +1240,7 @@ KFEAT:  g = metal_statue
 : for i = 1, string.len(glifz), 1 do
 :    subvault(string.sub(glifz, i, i) .. " : nico_snake_corners")
 : end
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR:  g = poison
-TILE:    g = alchemical_conduit
-: set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR:  g = fire
-TILE:    g = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
-: end
+: snake_statue_setup(_G, "g")
 MAP
 .................
 ..DcpcE...FcpcH..
@@ -1304,7 +1271,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_parade_hashtag
-TAGS:   transparent decor extra luniq_snakeparade
+TAGS:   transparent snakedec extra luniq_snakeparade
 DEPTH:  Snake
 NSUBST: a = . / c, p = . / c, q = . / c, r = . / c, s = . / c, y = . / c, \
         z = . / c, - = . / c, ` = . / c
@@ -1330,7 +1297,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_parade_hilbert
-TAGS:   transparent decor extra luniq_snakeparade
+TAGS:   transparent snakedec extra luniq_snakeparade
 DEPTH:  Snake
 NSUBST: p = . / c, q = . / c, r = . / c, s = . / c, z = . / c
 MAP
@@ -1354,7 +1321,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_parade_liquids
-TAGS:    transparent decor extra no_pool_fixup luniq_snakeparade
+TAGS:    transparent snakedec extra no_pool_fixup luniq_snakeparade
 DEPTH:   Snake
 SHUFFLE: DE, FH
 SUBST:   D = -, F = `, EH = .
@@ -1377,9 +1344,8 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_parade_weird_curve
-TAGS:   transparent decor extra luniq_snakeparade
+TAGS:   transparent snakedec extra luniq_snakeparade
 DEPTH:  Snake
-KFEAT:  g = metal_statue
 NSUBST: a = . / c, p = . / c, q = . / c, r = . / c, s = . / c, y = . / c, \
         z = . / c
 SUBST:  S = TTggS
@@ -1389,15 +1355,6 @@ SUBST:  S = ]})
 SUBST:  S = [{(
 : else
 SUBST:  S = ]})[{(
-: end
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR: g = poison
-TILE:   g = alchemical_conduit
-: set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR: g = fire
-TILE:   g = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
 : end
 MAP
    ............
@@ -1418,7 +1375,8 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_parade_wet_stairs
-TAGS:   transparent decor extra no_pool_fixup luniq_snakeparade
+TAGS:   transparent snakedec extra no_pool_fixup
+TAGS:   luniq_snakeparade uniq_snakedec_liquid
 DEPTH:  Snake
 NSUBST: p = . / c, q = . / c, r = . / c, s = . / c, y = . / c, z = . / c
 SUBST:  w : wwwl
@@ -1446,9 +1404,8 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_parade_wheel
-TAGS:   transparent decor extra luniq_snakeparade
+TAGS:   transparent snakedec extra luniq_snakeparade
 DEPTH:  Snake
-KFEAT:  g = metal_statue
 SUBST:  S = TTggS
 NSUBST: p = . / c, q = . / c, r = . / c, s = . / c
 : if you.depth() == 1 then
@@ -1458,15 +1415,7 @@ SUBST:  S = [{(
 : else
 SUBST:  S = ]})[{(
 : end
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR: g = poison
-TILE:   g = alchemical_conduit
-: set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR: g = fire
-TILE:   g = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
-: end
+: snake_statue_setup(_G, "g")
 MAP
    ...@@@...
   ccpc...cpcc
@@ -1486,9 +1435,8 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_parade_wiggly_rhombus
-TAGS:    transparent decor extra luniq_snakeparade
+TAGS:    transparent snakedec extra luniq_snakeparade
 DEPTH:   Snake
-KFEAT:   g = metal_statue
 SHUFFLE: SED/HJK, DEF, HJK
 SUBST:   DF : g., EJ : T., FK : G.
 NSUBST:  p = . / c, q = . / c, r = . / c, s = . / c
@@ -1499,16 +1447,7 @@ SUBST:   S = [{(
 : else
 SUBST:   S = ]})[{(
 : end
-: if crawl.x_chance_in_y(2, 3) then
-COLOUR:  g = poison
-TILE:    g = alchemical_conduit
-: set_feature_name("metal_statue", "alchemical conduit")
-: else
-COLOUR:  g = fire
-TILE:    g = fiery_conduit
-: set_feature_name("metal_statue", "fiery conduit")
-: end
-TILE:    G : dngn_statue_naga / dngn_statue_archer
+: snake_statue_setup(_G, "g")
 MAP
 ...........
 .csscc........
@@ -1528,7 +1467,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_serpentine_stairdown
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra luniq_snakedec_glass
 DEPTH:  Snake
 : if you.depth() == 1 then
 SUBST: S = ]})
@@ -1553,7 +1492,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_slithering_moat
-TAGS:    no_pool_fixup transparent extra decor
+TAGS:    no_pool_fixup transparent extra snakedec luniq_snakedec_liquid
 DEPTH:   Snake
 SHUFFLE: apqrsyz-
 SUBST:   a = @, pqrsyz- = w
@@ -1572,10 +1511,8 @@ w-w.ccc.wyw
 ENDMAP
 
 NAME:   nicolae_snake_striped_snake_set
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra
 DEPTH:  Snake
-COLOUR: n = lightgreen
-TILE:   n = dngn_transparent_stone_green
 MAP
  ccc.@.bbb
 bb.bb.cc.cc
@@ -1591,7 +1528,7 @@ bb.bb.cc.cc
 ENDMAP
 
 NAME:   nicolae_snake_to_our_wiggly_heroes
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra
 DEPTH:  Snake
 KFEAT:  F = G
 NSUBST: J = c / ., K = c / ., L = c / ., M = c / ., N = c / ., O = c / ., \
@@ -1618,7 +1555,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_two_snakes_lying_around
-TAGS:    transparent decor extra
+TAGS:    transparent snakedec extra
 DEPTH:   Snake
 SHUFFLE: DE, FH
 SUBST:   DF = c, EH = .
@@ -1637,7 +1574,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_wiggly_hallway
-TAGS:    transparent decor extra
+TAGS:    transparent snakedec extra luniq_snakedec_glass
 DEPTH:   Snake
 SHUFFLE: TG
 SUBST:   G : GG., T : TT.
@@ -1656,7 +1593,7 @@ ccccc...ccncc...ccncc...ccncc...ccccc
 ENDMAP
 
 NAME:   nicolae_snake_wiggly_wall
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra luniq_snakedec_glass
 DEPTH:  Snake
 COLOUR: n = lightgreen
 TILE:   n = dngn_transparent_stone_green
@@ -1675,7 +1612,7 @@ cn+nc.+.c.+.c.+.c.+.c.+.cn+nc
 ENDMAP
 
 NAME:   nicolae_snake_widesinders
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra
 DEPTH:  Snake
 MAP
        ....
@@ -1699,7 +1636,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_yet_another_squirming_detour
-TAGS:   transparent decor extra
+TAGS:   transparent snakedec extra luniq_snakedec_glass
 DEPTH:  Snake
 NSUBST: D = c / ., E = c / ., F = c / ., H = c / ., J = c / ., K = c / ., \
         L = c / ., M = c / ., N = c / ., O = c / ., P = c / ., Q = c / .
@@ -3203,7 +3140,7 @@ KFEAT:  S = metal_statue
 NSUBST: 1 = 4:1 / *=1., 2 = 2:2 / *=2., 5 = 2:5 / *=5..
 SUBST:  3 = 3.., 4 = 4., S : SG
 COLOUR: S = poison
-TILE:   G = dngn_statue_naga
+TILE:   G = dngn_statue_naga / dngn_statue_archer w:2
 TILE:   S = alchemical_conduit
 : set_feature_name("metal_statue", "alchemical conduit")
 MAP

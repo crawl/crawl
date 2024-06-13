@@ -1370,7 +1370,7 @@ MAP
 ENDMAP
 
 NAME:  abandoned_shop
-TAGS:  transparent extra allow_dup decor
+TAGS:  transparent extra allow_dup
 DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake
 KFEAT: O = abandoned_shop
 MAP
@@ -2796,7 +2796,7 @@ JJ.KKK.LLL.MMM.FF
 ENDMAP
 
 NAME:    nicolae_elevator_lobby_asterisk
-TAGS:    transparent decor luniq_nicolobby
+TAGS:    transparent decor snakedec luniq_nicolobby
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Snake:2-, !Snake:$, Elf:2-, !Elf:$, \
          Crypt:2-, !Crypt:$
 SHUFFLE: FJ, DE/FH
@@ -2822,7 +2822,7 @@ xxxx.......xxxx
 ENDMAP
 
 NAME:    nicolae_elevator_lobby_plus
-TAGS:    transparent decor luniq_nicolobby
+TAGS:    transparent decor luniq_nicolobby snakdec
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Snake:2-, !Snake:$, Elf:2-, !Elf:$, \
          Crypt:2-, !Crypt:$
 # Chance of X sets of real stairs (not escape hatches): 1=30%, 2=60%, 3=10%
@@ -3342,19 +3342,24 @@ HxQ`....HxQ`....HxQ`....
 ENDMAP
 
 NAME:  nicolae_twisty_statue_hallways
-TAGS:  transparent decor
+TAGS:  transparent decor snakedec
 DEPTH: D, Depths, Snake, Elf
+: if you.in_branch("Snake") then
+:   snake_statue_setup (_G, "g")
+: else
+SUBST:  g = G
+: end
 MAP
     xxxxx
  @..x.x.x..@
  ....x.x....
- ..G.xGx.G..
+ ..G.xgx.G..
 xx...x.x...xx
 x.xxx.x.xxx.x
 xx.G.xxx.G.xx
 x.xxx.x.xxx.x
 xx...x.x...xx
- ..G.xGx.G..
+ ..G.xgx.G..
  ....x.x....
  @..x.x.x..@
     xxxxx
@@ -3464,9 +3469,10 @@ MAP
 ........
 ENDMAP
 
-NAME:  nicolae_zig_zag_zippers
-TAGS:  transparent decor
-DEPTH: D:4-, Depths, Snake, Elf, Zot
+NAME:   nicolae_zig_zag_zippers
+TAGS:   transparent decor snakedec
+DEPTH:  D:4-, Depths, Snake, Elf, Zot
+WEIGHT: 5 (Snake), 10
 MAP
 @....
 ..cc....

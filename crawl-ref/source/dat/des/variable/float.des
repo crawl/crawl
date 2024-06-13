@@ -1409,7 +1409,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_integral_box
-TAGS:    transparent extra decor
+TAGS:    transparent extra decor luniq_snakedec_large
 DEPTH:   D, Depths, Snake
 ORIENT:  float
 SHUFFLE: Pp/Pp/Pp/Qq, Rr/Rr/Rr/Ss
@@ -1503,7 +1503,7 @@ x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
 ENDMAP
 
 NAME:    nicolae_triple_integral
-TAGS:    transparent extra decor
+TAGS:    transparent extra decor luniq_snakedec_large
 DEPTH:   D, Depths, Snake
 ORIENT:  float
 SHUFFLE: DE

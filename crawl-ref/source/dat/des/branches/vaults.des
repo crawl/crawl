@@ -238,7 +238,7 @@ ENDMAP
 # Tiered entry
 #
 NAME:   grunt_vaults_entry_tiered
-TAGS:   vaults_entry no_monster_gen no_tele_into transparent
+TAGS:   vaults_entry no_monster_gen transparent
 MONS:   human w:29 / orc warrior w:1
 MONS:   necromancer / arcanist / yaktaur w:2
 MONS:   vault guard w:58 / deep elf knight w:1 / deep elf archer w:1

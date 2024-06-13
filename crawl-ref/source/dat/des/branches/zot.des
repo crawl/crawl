@@ -187,7 +187,6 @@ TILE:   X = wall_zot_magenta
 FTILE:  -ROD = floor_hall
 COLOUR: -RD = magenta
 COLOUR: X = lightmagenta
-KPROP:  RO-X = no_tele_into
 SUBST:  X = x
 SUBST:  - = ., D = +
 KITEM:  R = midnight gem
@@ -296,12 +295,10 @@ TAGS:   no_monster_gen zot_entry patrolling
 TILE:   X = wall_zot_magenta
 COLOUR: X+- = magenta
 SUBST:  X = c
-FTILE:  -O+ = floor_hall
-KPROP:  O- = no_tele_into
-SUBST:  - = .
-SUBST:  v: ....cnXblw, z:..cnXblw
+SUBST:  v: ....cnblw, z:..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
+FTILE:  -O+ = floor_hall
 : zot_entry_setup(_G)
 MAP
                    cccccccccccc
@@ -324,7 +321,6 @@ TAGS:   no_monster_gen zot_entry transparent
 TILE:   c = wall_zot_magenta
 COLOUR: c+- = magenta
 FTILE:  O-+c = floor_hall
-KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 1:0 / 4:1 / 2:2 / 1:3
 : zot_entry_setup(_G)
@@ -345,12 +341,8 @@ TAGS:   no_monster_gen zot_entry transparent
 KFEAT:  A = stone_arch
 TILE:   c = wall_zot_magenta
 COLOUR: c- = magenta
+NSUBST: 1 = 1:0 / *:1, 2 = 2:2 / *:., 3 = 2:3 / *:2
 FTILE:  -O+Ac = floor_hall
-KPROP:  -OcA = no_tele_into
-SUBST:  - = .
-NSUBST: 1 = 1:0 / *:1
-NSUBST: 2 = 2:2 / *:.
-NSUBST: 3 = 2:3 / *:2
 : zot_entry_setup(_G)
 MAP
       ..3..
@@ -399,9 +391,9 @@ ENDMAP
 
 NAME:   grunt_zot_entry_funnels
 TAGS:   no_monster_gen zot_entry patrolling transparent
-COLOUR: 123c+. = magenta
-FTILE:  123c+.O = floor_hall
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
+COLOUR: 1239c+. = magenta
+FTILE:  1239c+.O = floor_hall
 : zot_entry_setup(_G)
 MAP
       @       @
@@ -430,9 +422,9 @@ ENDMAP
 NAME:   grunt_zot_entry_pinwheel
 TAGS:   no_monster_gen zot_entry patrolling transparent
 KFEAT:  A = stone_arch
+NSUBST: A = 1:O / *:A, 1 = 2:0 / *:1, 3 = 1:9 / *:3
 COLOUR: 123c+. = magenta
 FTILE:  123c+.AO = floor_hall
-NSUBST: A = 1:O / *:A, 1 = 2:0 / *:1, 3 = 1:9 / *:3
 : zot_entry_setup(_G)
 MAP
        @

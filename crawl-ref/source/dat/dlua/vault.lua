@@ -182,3 +182,18 @@ function master_elementalist_setup(e, glyph, ele_staff)
             "haste.11.wizard;" ..
             "repel_missiles.11.wizard" .. equip_def)
 end
+
+-- A poison & fire theming for statues that show up in Snake.
+function snake_statue_setup (e, glyph)
+  e.kfeat(glyph .. " = metal_statue")
+  if crawl.x_chance_in_y(2, 3) then
+    e.colour(glyph .. " = poison")
+    e.tile(glyph .. " = alchemical_conduit")
+    e.set_feature_name("metal_statue", "alchemical conduit")
+  else
+    e.colour(glyph .. " = fire")
+    e.tile(glyph .. " = fiery_conduit")
+    e.set_feature_name("metal_statue", "fiery conduit")
+  end
+  e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
+end

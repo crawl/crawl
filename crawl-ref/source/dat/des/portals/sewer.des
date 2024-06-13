@@ -1005,27 +1005,29 @@ ENDMAP
 ###############################################################################
 # A sewer opening to sea by st_.
 #
-NAME:   sewer_sea
-TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
-ORIENT: encompass
-WEIGHT: 5
-MONS:   rat, rat / river rat w:4
-KMONS:  G = sickly merfolk siren
-KMONS:  H = malarious merfolk avatar
-KMONS:  hJ = frilled lizard / ball python / adder
-KMONS:  g = frilled lizard / ball python / giant cockroach / quokka
-KMONS:  K = crocodile
-KFEAT:  gsh = W
-KFEAT:  GnHJ = w
-KFEAT:  O = open_sea
-NSUBST: 1 = 1:K / 2:. / * = 1.
-SUBST:  2 = 2., J = Jn, h = hW, g = gggW
-COLOUR: gh = lightgreen
-COLOUR: HJ = blue
-COLOUR: G = green
-COLOUR: s = cyan
-KITEM:  M = potion of enlightenment q:3 ident:type
-KITEM:  N = scroll of teleportation q:2 ident:type
+NAME:    sewer_sea
+TAGS:    no_item_gen no_monster_gen no_rotate no_pool_fixup
+ORIENT:  encompass
+WEIGHT:  5
+MONS:    rat, river rat w:4
+KMONS:   G = sickly merfolk siren
+KMONS:   H = malarious merfolk avatar
+KMONS:   hJ = frilled lizard / ball python / adder
+KMONS:   g = frilled lizard / ball python / giant cockroach / quokka
+KMONS:   K = crocodile
+KFEAT:   gsh = W
+KFEAT:   GnHJ = w
+KFEAT:   O = open_sea
+SHUFFLE: 12 / 12 / 34 / 34 / 34
+NSUBST:  1 = 2:1 / 1:. / * = 1.,2 = 2:2 / * = 1 2:5 .:15
+NSUBST:  3 = 2:. / * = 1., 4 = 1:K / 2:. / * = 1 2:4 .:14
+SUBST:   J = Jn, h = hW, g = gggW
+COLOUR:  gh = lightgreen
+COLOUR:  HJ = blue
+COLOUR:  G = green
+COLOUR:  s = cyan
+KITEM:   M = potion of enlightenment q:3 ident:type
+KITEM:   N = scroll of teleportation q:2 ident:type
 : sewer_setup(_G)
 MAP
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
@@ -1234,7 +1236,7 @@ SHUFFLE: BC' / DE? / FG", ''y, HI` / JK! / LM~, ``z
 NSUBST:  B = 1:. / *:c, C = 1:. / *:c, H = 1:. / *:c, I = 1:. / *:c
 # Fill the pipes and the other possible locations.
 NSUBST:  ' = 5:W / 4:2 / 3 = 2. / *:., ` = 5:W / 4:2 / 3 = 2. / *:.
-NSUBST:  y = 1:3 / *:W, z = 1:3 / *:W
+NSUBST:  y = 1:3 / *:W, z = 2:3 / *:W
 SUBST:   DEFGLMKJ = c, ?"!~ = x
 # Handle pipe enemies and items.
 SUBST:   1 = 11..., d = dddddeeeee%
@@ -1245,7 +1247,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccx
 xwwwwwwwwmwWd.....1.....1--------.......1...4.<cx
-xwwwwwwwwmwWd..1......1...---3---..1......1..1dcx
+xwwwwwwwwmwWd..1......1...---3---..1......4..1dcx
 xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
 xxxxxxxxxxxxxx`xx`xxxxxxxxxxc!cxxxxxx~xxxxxxx~xxx
             xxx``xxxxxxxxxxxc!cxxxxxxx~x~xxx~xx
