@@ -2065,9 +2065,12 @@ vector<coord_def> possible_piledriver_targets()
     return targs;
 }
 
-int piledriver_collision_power(int pow, int dist)
+dice_def piledriver_collision_damage(int pow, int dist, bool random)
 {
-    return (pow + 42) * (1 + (dist * 2)) / 3;
+    if (!random)
+        return dice_def(1 + (dist * 2), 2 + (pow + 10) / 15);
+    else
+        return dice_def(1 + (dist * 2), 2 + (div_rand_round(pow + 10, 15)));
 }
 
 spret cast_piledriver(int pow, bool fail)
@@ -2106,8 +2109,8 @@ spret cast_piledriver(int pow, bool fail)
     you.move_to_pos(path[path.size() - 3]);
 
     // Apply collision damage (scaling with distance covered)
-    const int scaled_pow = piledriver_collision_power(pow, path.size() - 2);
-    mon->collide(path.back(), &you, scaled_pow);
+    const int dmg = piledriver_collision_damage(pow, path.size() - 2, true).roll();
+    mon->collide(path.back(), &you, dmg);
 
     // Now trigger location effects (to avoid dispersal traps causing all sorts
     // of problems with keeping the two of us together in the middle)
