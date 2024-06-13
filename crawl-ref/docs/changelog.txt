@@ -69,8 +69,8 @@ Gods
   thieves, and everyone else who works in the shadows. They no longer count as
   evil, and have replaced nearly all of their active and passive abilities.
   - 1*: Passive noise dampening, halving all noise made around the player.
-  - 2*: A passive shadow mimic, which now cast differing spells based on the
-        spell schools of spells cast to now cover all spell types, deal more
+  - 2*: A passive shadow mimic, which now casts differing spells based on the
+        spell schools of spells cast to now cover all spell types, deals more
         damage with weapons scaling to XL, and also lingers around afterwards.
   - 3*: Shadowslip, which instantly swaps worshippers' places with a lingering
         shadow and misleads foes into targeting the shadow for a while instead.
@@ -226,7 +226,7 @@ Spells
     elements on top of random foes, inflicting random debuffs if they overlap.
 * Teleport Other now tries to teleport affected monsters out of the caster's
   sight.
-* Players with Spellforged Servitor memorized now get an Imbue Servitor ability
+* Players with Spellforged Servitor memorised now get an Imbue Servitor ability
   that allows you to choose which compatible spell the servitor will cast.
 * Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
   hits 4 to 12 foes at once instead of 2 to 4.
