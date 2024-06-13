@@ -1,9 +1,9 @@
-Stone Soup 0.32 (through 0.32-a0-1219-g78dc6a7b8a)
+Stone Soup 0.32 (through 0.32-a0-1431-be6e7be4eb9)
 --------------------------
 
 Highlights
 ----------
-* Beogh and Yred have been substantially overhauled.
+* Beogh, Dith, and Yred have been substantially overhauled.
 * Since everybody can become orcs, reworked Mountain Dwarves replace Hill Orcs.
 * New species: Coglins, dual-wielding gizmo-inventing goblins in exosuits.
 * More new spells, aimed at new school combinations and higher levels.
@@ -47,6 +47,7 @@ Character
 ---------
 * Only players without weapons can punch with their offhand.
 * Player constriction no longer deals ramping-up damage.
+* Removed mutations: noise dampening.
 
 Gods
 ----
@@ -64,6 +65,20 @@ Gods
   - Beogh gains a new 5* ability, Blood for Blood. This can only be invoked
     on top of an orc apostle's corpse, and summons a large amount of orcs both
     immediately around the player and around the edges of the screen over time.
+* Dithmenos has been completely overhauled, becoming the god of actors,
+  thieves, and everyone else who works in the shadows. They no longer count as
+  evil, and have replaced nearly all of their active and passive abilities.
+  - 1*: Passive noise dampening, halving all noise made around the player.
+  - 2*: A passive shadow mimic, which now cast differing spells based on the
+        spell schools of spells cast to now cover all spell types, deal more
+        damage with weapons scaling to XL, and also lingers around afterwards.
+  - 3*: Shadowslip, which instantly swaps worshippers' places with a lingering
+        shadow and misleads foes into targeting the shadow for a while instead.
+  - 4*: Aphotic Marionette, which forces an enemy with spells to instantly cast
+        random conjurations at other enemies or give buffs & summons to the
+        player.
+  - 5*: Primordial Nightfall, which reduces one's line of sight to zero, with
+        line of sight gradually coming back over the duration.
 * Yredelemnul has been significantly overhauled.
   - Yred now uses a somewhat conventional piety system again, though followers
     have to obey the rules of raising the black torch.
@@ -147,6 +162,7 @@ Monsters
     blinks over 3 to 6 allies as is possible, instead of always 8.
   - Hell beasts have become sin beasts, gaining HD and antimagic attacks.
     Geryon's (hell -> sin) beast summoning has been weakened in exchange.
+  - Monster shadows are now called shadowghasts.
   - Necrophages are weaker and now only appear from Yred's summonings.
   - Norris now casts Draining Gaze instead of Brain Bite.
   - Ophanim now passively irresistibly inflict Mark on all those they see.
@@ -210,6 +226,8 @@ Spells
     elements on top of random foes, inflicting random debuffs if they overlap.
 * Teleport Other now tries to teleport affected monsters out of the caster's
   sight.
+* Players with Spellforged Servitor memorized now get an Imbue Servitor ability
+  that allows you to choose which compatible spell the servitor will cast.
 * Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
   hits 4 to 12 foes at once instead of 2 to 4.
 * Removed spells: Gell's Gravitas.
