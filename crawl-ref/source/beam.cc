@@ -5072,6 +5072,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         beogh_follower_convert(mon, true);
 
     knockback_actor(mon, dmg);
+    pull_actor(mon, dmg);
 
     if (origin_spell == SPELL_COMBUSTION_BREATH && !in_explosion_phase)
         _combustion_breath_explode(this, mon->pos());
