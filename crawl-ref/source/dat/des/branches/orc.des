@@ -1918,7 +1918,7 @@ KMONS:   V = orc warlord
 KFEAT:   V = T
 # This one has a lot more high level orcs than the rest,
 # so instead of adding more shops, guarantees good shops.
-KFEAT:   S = general shop
+KFEAT:   S = general shop / gadget shop
 KFEAT:   A = antique armour shop
 KFEAT:   B = antique weapon shop
 KFEAT:   C = book shop / jewellery shop
@@ -2015,7 +2015,7 @@ ORIENT: float
   dgn.persist.grunt_orc_gardens_giant_problem = crawl.one_chance_in(7)
   hook("post_place", function()
     local stores = { "antique weapon shop", "antique armour shop",
-                     "general shop", "book shop / jewellery shop" }
+                     "general shop / gadget shop", "book shop / jewellery shop" }
     local which = crawl.random2(#stores) + 1
     dgn.persist.grunt_orc_gardens_store = stores[which]
     table.remove(stores, which)
@@ -2277,7 +2277,7 @@ KMONS:   B = Nergalle w:2 / orc sorcerer, orc sorcerer
 KMONS:   C = Urug w:2 / orc knight, orc knight
 KMONS:   D = Blorkula the orcula w:2 / orc wizard, orc wizard
 KMONS:   E = Erolcha w:2 / ogre mage band, ogre mage band
-KFEAT:   J = general shop
+KFEAT:   J = general shop / gadget shop
 KFEAT:   K = antique armour shop
 KFEAT:   L = antique weapon shop
 KFEAT:   M = book shop / jewellery shop
@@ -2319,7 +2319,7 @@ MONS:    orc knight / kobold blastminer w:1
 MONS:    demonspawn / obsidian bat w:2 / nothing w:8
 MONS:    orc high priest / orc sorcerer
 KFEAT:   A = w:20 general shop / distillery shop / scroll shop
-KFEAT:   B = book shop / jewellery shop
+KFEAT:   B = book shop / jewellery shop / gadget shop
 KFEAT:   C = antique weapon shop / antique armour shop
 KFEAT:   P = enter_pandemonium
 SHUFFLE: BC
@@ -2368,7 +2368,7 @@ KMONS:  4 = Erolcha / ogre mage, ogre mage
 KMONS:  5 = Nergalle / orc sorcerer, orc sorcerer
 KMONS:  6 = obsidian bat
 KFEAT:  A = distillery shop / scroll shop
-KFEAT:  B = book shop / jewellery shop
+KFEAT:  B = book shop / jewellery shop / gadget shop
 KFEAT:  C = antique weapon shop / antique armour shop
 KFEAT:  D = altar_beogh
 KFEAT:  E = altar_kikubaaqudgha

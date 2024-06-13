@@ -1344,14 +1344,15 @@ x.................xxxxx...x
 ENDMAP
 
 ############################################################
-# Consumable shops (scrolls, potions).
+# Consumable shops (scrolls, potions, evocables).
 # Monsters in rooms.
 NAME:    vaults_end_dpeg_shops2
 TAGS:    vaults_end_quadrant vaults_end_quadrant_mall unrand
 SHUFFLE: Ll / Mm / Nn / Oo / Pp / Qq / Rr / Ss / Tt
 SUBST:   o = k, lmnpqrst = ', LMNPQ = S99, RT = S
 NSUBST:  A = 1:+ / *:x+, B = 1:+ / *:x+, C = 1:+ / *:x+
-KFEAT:   S = scroll shop / distillery shop / abandoned_shop
+KFEAT:   S = scroll shop w:7 / distillery shop w:7 / \
+             gadget shop w:6 / abandoned_shop
 NSUBST:  ' = 20:9 / *:.
 NSUBST:  . = 5:9 / *:.
 SUBST:   9 = 8 9 .:20
@@ -2403,7 +2404,7 @@ SHUFFLE: AB, CD, Ee / Ff / Gg / Hh / Ii
 SUBST:   A = +, B : xx+, C : xxx+, D : xxxx+
 SUBST:   E = O, e = k, fghi = ', FG = S, HI : RRU9
 KFEAT:   S = jewellery shop / antique armour shop / distillery shop
-KFEAT:   R = general shop / book shop / scroll shop / \
+KFEAT:   R = general shop / book shop / scroll shop / gadget shop / \
              antique weapon shop / distillery shop
 KFEAT:   U = stone_arch
 NSUBST:  ' = 22:9 / *:., . = 2:9 / *:.

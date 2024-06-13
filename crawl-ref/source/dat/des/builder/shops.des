@@ -1450,11 +1450,18 @@ MAP
 ENDMAP
 
 # Gadget shops are back! Well, one gadget shop is back.
+# Now gadget shops are really back, I've added a unique gimmick: here we
+# can also find +Blink and +Inv evocables armour and jewellery. I would have
+# liked to add these items rarely to normal gadget shops, but the complexity
+# of doing so seems not worth it, so it's nicely handled by a vault. -mumra
 NAME:    nicolae_shop_gadgets
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KFEAT:   S = general shop type:Gadget suffix:Gallery count:4 ; \
-         any wand | any misc
+KFEAT:   S = gadget shop type:Gadget suffix:Gallery count:8 ; \
+         w:40 any wand | w:20 any misc | w:15 any talisman | orb | \
+         w:2 any armour artprops:+Inv | w:2 any jewellery artprops:+Inv | \
+         w:3 any armour artprops:+Blink | w:3 any jewellery artprops:+Blink | \
+         w:2 scarf ego:invisibility | w:2 cloak ego:invisibility
 SHUFFLE: cvmb
 MAP
 cc.vv
