@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "item-prop-enum.h"
+#include "job-def.h"
 #include "job-type.h"
 #include "species-type.h"
 #include "spell-type.h"

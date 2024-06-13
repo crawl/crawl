@@ -46,12 +46,12 @@ mutations:
     MUT_FANGS: 1
     MUT_DISTRIBUTED_TRAINING: 1
 recommended_jobs:
-  - JOB_CINDER_ACOLYTE
-  - JOB_REAVER
-  - JOB_WARPER
-  - JOB_HEXSLINGER
-  - JOB_SHAPESHIFTER
-  - JOB_WANDERER
+  - cinder acolyte
+  - reaver
+  - warper
+  - hexslinger
+  - shapeshifter
+  - wanderer
 
 child_name: Pup
 orc_name: Hyenorc

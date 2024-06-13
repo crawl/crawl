@@ -47,11 +47,11 @@ mutations:
     MUT_HORNS: 2
     MUT_REFLEXIVE_HEADBUTT: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_GLADIATOR
-  - JOB_MONK
-  - JOB_HUNTER
-  - JOB_BERSERKER
+  - fighter
+  - gladiator
+  - monk
+  - hunter
+  - berserker
 
 child_name: Calf
 orc_name: Minotorc

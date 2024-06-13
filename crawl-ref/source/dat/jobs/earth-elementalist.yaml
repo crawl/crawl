@@ -1,0 +1,31 @@
+enum: JOB_EARTH_ELEMENTALIST
+name: "Earth Elementalist"
+short_name: EE
+category: Mage
+category_priority: 30
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_SANDBLAST
+  - SPELL_PASSWALL
+  - SPELL_STONE_ARROW
+  - SPELL_PETRIFY
+  - SPELL_BOULDER
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - deep elf
+  - spriggan
+  - gargoyle
+  - demigod
+  - ghoul
+  - octopode
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  conjurations: 1
+  earth magic: 3
+create_enum: false

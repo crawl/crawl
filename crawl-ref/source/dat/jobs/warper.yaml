@@ -1,0 +1,34 @@
+enum: JOB_WARPER
+name: "Warper"
+short_name: Wr
+category: Warrior-mage
+category_priority: 100
+str: 3
+int: 5
+dex: 4
+spells:
+  - SPELL_BLINK
+  - SPELL_BECKONING
+  - SPELL_TELEPORT_OTHER
+  - SPELL_PILEDRIVER
+  - SPELL_ELECTRIC_CHARGE
+equipment:
+  - "leather armour"
+  - "scroll of blinking"
+  - "dart ego:dispersal q:7"
+weapon_choice: plain
+recommended_species:
+  - felid
+  - spriggan
+  - armataur
+  - draconian
+  - coglin
+skills:
+  fighting: 2
+  throwing: 1
+  armour: 1
+  dodging: 2
+  spellcasting: 2
+  translocations: 3
+  weapon: 2
+create_enum: false

@@ -1,0 +1,31 @@
+enum: JOB_ALCHEMIST
+name: "Alchemist"
+category: Mage
+category_priority: 20
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_STING
+  - SPELL_MERCURY_VAPOURS
+  - SPELL_MEPHITIC_CLOUD
+  - SPELL_OLGREBS_TOXIC_RADIANCE
+  - SPELL_STICKY_FLAME
+equipment:
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - deep elf
+  - spriggan
+  - naga
+  - merfolk
+  - octopode
+  - djinni
+  - demonspawn
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  conjurations: 1
+  alchemy: 3
+create_enum: false

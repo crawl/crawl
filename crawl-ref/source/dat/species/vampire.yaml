@@ -33,7 +33,7 @@ aptitudes:
   alchemy: 1
   invocations: -1
   evocations: -1
-undead_type: US_SEMI_UNDEAD
+undead_type: semi_undead
 str: 7
 int: 10
 dex: 9
@@ -49,16 +49,16 @@ mutations:
   3:
     MUT_VAMPIRISM: 1 # batform
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_BRIGAND
-  - JOB_ENCHANTER
-  - JOB_NECROMANCER
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - gladiator
+  - brigand
+  - enchanter
+  - necromancer
+  - earth elementalist
+  - ice elementalist
+  - alchemist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_AXES
-  - SK_LONG_BLADES
+  - short blades
+  - axes
+  - long blades
 
 orc_name: Orcula

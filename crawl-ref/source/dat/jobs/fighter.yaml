@@ -1,0 +1,25 @@
+enum: JOB_FIGHTER
+name: "Fighter"
+category: Warrior
+category_priority: 100
+str: 8
+int: 0
+dex: 4
+equipment:
+  - "scale mail"
+  - "buckler"
+  - "potion of might"
+weapon_choice: good
+recommended_species:
+  - mountain dwarf
+  - troll
+  - minotaur
+  - gargoyle
+  - armataur
+  - formicid
+skills:
+  fighting: 3
+  armour: 3
+  shields: 3
+  weapon: 2
+create_enum: false

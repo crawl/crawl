@@ -17,11 +17,11 @@ int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
-  - JOB_BERSERKER
-  - JOB_CINDER_ACOLYTE
-  - JOB_CONJURER
-  - JOB_NECROMANCER
-  - JOB_ICE_ELEMENTALIST
+  - berserker
+  - cinder acolyte
+  - conjurer
+  - necromancer
+  - ice elementalist
 mutations:
   1:
     MUT_EXPLORE_REGEN: 1
