@@ -2118,9 +2118,12 @@ spret cast_piledriver(int pow, bool fail)
     return spret::success;
 }
 
-int gavotte_impact_power(int pow, int dist)
+dice_def gavotte_impact_damage(int pow, int dist, bool random)
 {
-    return (pow * 3 / 4 + 35) * (dist + 5) / 2;
+    if (!random)
+        return dice_def(2, (pow * 3 / 4 + 35) * (dist + 5) / 20 + 1);
+    else
+        return dice_def(2, div_rand_round((pow * 3 / 4 + 35) * (dist + 5), 20) + 1);
 }
 
 static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor& victim)
@@ -2157,7 +2160,7 @@ static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
         if (!victim.can_pass_through_feat(env.grid(next_pos)) && i > 1
             && !victim.is_player())
         {
-            victim.collide(next_pos, &you, gavotte_impact_power(pow, i));
+            victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
             _maybe_penance_for_collision(conducts, victim);
             break;
         }
@@ -2166,7 +2169,7 @@ static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
             if (i > 1 && &victim != act_at_space && !victim.is_player()
                 && !act_at_space->is_player())
             {
-                victim.collide(next_pos, &you, gavotte_impact_power(pow, i));
+                victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
                 _maybe_penance_for_collision(conducts, victim);
                 _maybe_penance_for_collision(conducts, *act_at_space);
             }

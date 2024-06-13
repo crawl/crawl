@@ -628,7 +628,8 @@ once more.
 Force Lance spell
 
 Fires a shaft of concussive force. If the impact deals damage, it may knock the
-target back.
+target back. If this knockback causes the target to hit a wall or another
+creature, both will take additional damage.
 %%%%
 Forceful Invitation spell
 
@@ -1995,7 +1996,8 @@ requiring line of sight but not line of fire.
 %%%%
 Wind Blast spell
 
-Causes a strong gust of wind, pushing away creatures and clouds in a cone.
+Causes a strong gust of wind, pushing away creatures and clouds in a cone. If
+this causes a creature to collide with something, it will take damage.
 %%%%
 Woodweal spell
 

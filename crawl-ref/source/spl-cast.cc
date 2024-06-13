@@ -2909,12 +2909,11 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return describe_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_PILEDRIVER:
             return make_stringf("2d(%d-%d)",
-                        collision_damage(piledriver_collision_power(pow, 1), false).size,
-                        collision_damage(piledriver_collision_power(pow, 4), false).size);
+                        default_collision_damage(piledriver_collision_power(pow, 1), false).size,
+                        default_collision_damage(piledriver_collision_power(pow, 4), false).size);
         case SPELL_GELLS_GAVOTTE:
-            return make_stringf("2d(%d-%d)",
-                        collision_damage(gavotte_impact_power(pow, 1), false).size,
-                        collision_damage(gavotte_impact_power(pow, 4), false).size);
+            return make_stringf("2d(%d-%d)", gavotte_impact_damage(pow, 1, false).size,
+                                             gavotte_impact_damage(pow, 4, false).size);
 
         case SPELL_FULSOME_FUSILLADE:
             return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
@@ -2952,7 +2951,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
         else
             return make_stringf("%s (+%s)",
                 dam_str.c_str(),
-                describe_collision_dam(collision_damage(pow, false)).c_str());
+                describe_collision_dam(default_collision_damage(pow, false)).c_str());
     }
 
     if (spell == SPELL_LRD

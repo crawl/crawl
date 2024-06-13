@@ -5150,11 +5150,25 @@ static int _knockback_dist(spell_type origin, int pow)
 {
     switch (origin)
     {
-    case SPELL_FORCE_LANCE:
-    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return 2 + div_rand_round(pow, 50);
-    default:
-        return 1;
+        case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+            return 2 + div_rand_round(pow, 50);
+        case SPELL_FORCE_LANCE:
+            return 4;
+        default:
+            return 1;
+    }
+}
+
+static int _collision_damage(spell_type spell, int pow)
+{
+    switch (spell)
+    {
+        case SPELL_PRIMAL_WAVE:
+        case SPELL_MUD_BREATH:
+            return 0;
+
+        default:
+            return default_collision_damage(pow, true).roll();
     }
 }
 
@@ -5166,12 +5180,12 @@ void bolt::knockback_actor(actor *act, int dam)
     const monster_type montyp = act->is_monster() ? act->type
                                                   : you.mons_species();
     const int weight = max_corpse_chunks(montyp);
-    const int roll = origin_spell == SPELL_FORCE_LANCE
-                     ? 7 + 0.27 * ench_power
-                     : 17;
+    const int roll = origin_spell == SPELL_FORCE_LANCE ? 42
+                     : origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST ? 17
+                     : 25;
     const int dist = binomial(max_dist, roll - weight, roll); // This is silly! -- PF
 
-    act->knockback(*agent(), dist, ench_power, name);
+    act->knockback(*agent(), dist, _collision_damage(origin_spell, ench_power), name);
 }
 
 void bolt::pull_actor(actor *act, int dam)
@@ -5219,7 +5233,7 @@ void bolt::pull_actor(actor *act, int dam)
     }
 
     if (act->pos() != newpos)
-        act->collide(newpos, agent(), ench_power);
+        act->collide(newpos, agent(), default_collision_damage(ench_power, true).roll());
 
     act->apply_location_effects(oldpos, killer(),
                                 actor_to_death_source(agent()));

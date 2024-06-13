@@ -528,6 +528,22 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return make_stringf("0-%d MP", pow / 8); // >_> >_>
     }
 
+    if (spell == SPELL_WIND_BLAST)
+    {
+        const int pow = mons_power_for_hd(SPELL_WIND_BLAST, hd);
+        return make_stringf("2d%d*", default_collision_damage(pow, false).size);
+    }
+
+    if (spell == SPELL_FORCE_LANCE)
+    {
+        const int pow = mons_power_for_hd(SPELL_FORCE_LANCE, hd);
+            return make_stringf("%dd%d(+%dd%d)",
+                _spell_damage(spell, hd).num,
+                _spell_damage(spell, hd).size,
+                default_collision_damage(pow, false).num,
+                default_collision_damage(pow, false).size);
+    }
+
     if (spell == SPELL_HOARFROST_BULLET)
     {
         const int pow = mons_power_for_hd(spell, hd);

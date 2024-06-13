@@ -4898,7 +4898,7 @@ int get_warp_space_chance(int pow)
     return min(90, 35 + pow);
 }
 
-dice_def collision_damage(int pow, bool random)
+dice_def default_collision_damage(int pow, bool random)
 {
     return dice_def(2, random ? 1 + div_rand_round(pow, 10) : 1 + pow / 10);
 }

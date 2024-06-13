@@ -966,7 +966,7 @@ string actor::resist_margin_phrase(int margin) const
                         conj_verb(resist_messages[index][1]).c_str());
 }
 
-void actor::collide(coord_def newpos, const actor *agent, int pow)
+void actor::collide(coord_def newpos, const actor *agent, int damage)
 {
     actor *other = actor_at(newpos);
     // TODO: should the first of these check agent?
@@ -976,8 +976,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     ASSERT(this != other);
     ASSERT(alive());
 
-    if (is_insubstantial()
-        || mons_is_projectile(type)
+    if (mons_is_projectile(type)
         || other && mons_is_projectile(other->type))
     {
         return;
@@ -986,12 +985,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     if (is_monster() && !god_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
-    const dice_def damage = collision_damage(pow, true);
-    const int dam = apply_ac(damage.roll());
+    const int dam = apply_ac(damage);
 
     if (other && other->alive())
     {
-        const int damother = other->apply_ac(damage.roll());
+        const int damother = other->apply_ac(damage);
         if (you.can_see(*this) || you.can_see(*other))
         {
             mprf("%s %s with %s%s",
@@ -1066,12 +1064,13 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
  *        must be checked by the calling function.
  * @param cause The actor responsible for the knockback.
  * @param dist How far back to try to push this actor.
- * @param pow Determines damage done to us if we hit something. If -1, don't do damage.
+ * @param dmg Amount of (pre-AC) damage to apply to us (and anything we hit) if
+ *            we collide with something.
  * @param source_name The name of the thing that's pushing this actor.
  * @returns True if this actor is moved from their initial position; false otherwise.
  */
 
-bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
+bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
 {
     if (is_stationary() || resists_dislodge("being knocked back"))
         return false;
@@ -1123,8 +1122,8 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
              source_name.c_str());
     }
 
-    if (pow != -1 && pos() != newpos)
-        collide(newpos, &cause, pow);
+    if (dmg > 0 && pos() != newpos)
+        collide(newpos, &cause, dmg);
 
     // Stun the monster briefly so that it doesn't look as though it wasn't
     // knocked back at all

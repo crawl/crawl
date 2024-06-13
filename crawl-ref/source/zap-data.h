@@ -603,7 +603,7 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
     new tohit_calculator<10, 1, 25>,
     // Water attack is weaker than the pure elemental damage attacks, but also
     // less resistible.
-    new dicedef_calculator<3, 6, 1, 12>,
+    new dicedef_calculator<3, 6, 1, 10>,
     // Huge wave of water is hard to dodge.
     new tohit_calculator<14, 1, 35>,
     LIGHTBLUE,

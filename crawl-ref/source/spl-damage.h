@@ -166,7 +166,7 @@ dice_def electrolunge_damage(int pow);
 
 int get_warp_space_chance(int pow);
 
-dice_def collision_damage(int pow, bool random);
+dice_def default_collision_damage(int pow, bool random);
 string describe_collision_dam(dice_def dice);
 
 vector<coord_def> get_magnavolt_targets();
