@@ -5312,38 +5312,43 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     // Part 3: The "Bonus" column
     // Describe any additional effects from a monster's attack flavour
 
-    string bonus_desc = uppercase_first(_flavour_base_desc(attack.flavour));
-    if (flav_dam && attack.flavour != AF_PURE_FIRE)
+    string bonus_desc = "";
+    // Attack flavours don't apply to ranged weapon attacks...
+    if (!ranged)
     {
-        bonus_desc += make_stringf(" (max %d%s)",
-                                   flav_dam,
-                                   attk_mult > 1 ? " each" : "");
-    }
-    else if (attack.flavour == AF_DRAIN)
-        bonus_desc += make_stringf(" (max %d damage)", real_dam / 2);
-    else if (attack.flavour == AF_CRUSH)
-    {
-        bonus_desc += make_stringf(" (%d-%d dam)", attack.damage,
-                                   attack.damage*2);
-    }
+        bonus_desc = uppercase_first(_flavour_base_desc(attack.flavour));
+        if (flav_dam && attack.flavour != AF_PURE_FIRE)
+        {
+            bonus_desc += make_stringf(" (max %d%s)",
+                                    flav_dam,
+                                    attk_mult > 1 ? " each" : "");
+        }
+        else if (attack.flavour == AF_DRAIN)
+            bonus_desc += make_stringf(" (max %d damage)", real_dam / 2);
+        else if (attack.flavour == AF_CRUSH)
+        {
+            bonus_desc += make_stringf(" (%d-%d dam)", attack.damage,
+                                    attack.damage*2);
+        }
 
-    if (di.flavour_without_dam
-        && !bonus_desc.empty()
-        && !flavour_triggers_damageless(attack.flavour)
-        && !flavour_has_mobility(attack.flavour))
-    {
-        bonus_desc += " (if damage dealt)";
-    }
+        if (di.flavour_without_dam
+            && !bonus_desc.empty()
+            && !flavour_triggers_damageless(attack.flavour)
+            && !flavour_has_mobility(attack.flavour))
+        {
+            bonus_desc += " (if damage dealt)";
+        }
 
-    // Nessos' ranged weapon attacks apply venom as a special effect
-    if (mi.type == MONS_NESSOS && ranged)
+        if (flavour_has_reach(attack.flavour))
+        {
+            bonus_desc += (bonus_desc.empty() ? "Reaches" : "; reaches");
+            bonus_desc += (attack.flavour == AF_RIFT ? " very far"
+                                                     : " from afar");
+        }
+    }
+    // ...except Nessos' ranged attacks apply venom as a special effect
+    else if (mi.type == MONS_NESSOS)
         bonus_desc += make_stringf("Poison");
-
-    if (flavour_has_reach(attack.flavour))
-    {
-        bonus_desc += (bonus_desc.empty() ? "Reaches" : "; reaches");
-        bonus_desc += (attack.flavour == AF_RIFT ? " very far" : " from afar");
-    }
 
     di.bonus_descriptions.emplace_back(bonus_desc);
     di.bonus_width = max(di.bonus_width, bonus_desc.size());
@@ -5512,6 +5517,17 @@ static string _monster_attacks_description(const monster_info& mi)
             break;
 
         _attacks_table_row(mi, di, info, info.weapon);
+
+        // For ranged weapons, it's misleading to show attack flavours on the
+        // same table row as the ranged weapon damage, since monsters
+        // (except Nessos) don't apply their attack flavour to ranged attacks.
+
+        // So that the player can see the attack flavour of the monster's
+        // primary melee attack at all times, when the monster has a ranged
+        // weapon, we add an extra row for the melee base damage and flavour of
+        // the monster's corresponding melee attack.
+        if (info.weapon && is_range_weapon(*info.weapon))
+            _attacks_table_row(mi, di, info, nullptr);
     }
 
     // Check for throwing weapons
