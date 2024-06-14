@@ -1351,6 +1351,10 @@ int player_regen()
         rr += REGEN_PIP + (REGEN_PIP * (piety_rank(you.piety) - 1)) / 5;
     }
 
+    // TrogMesm artprop doubles regeneration while mesmerised.
+    if (you.duration[DUR_MESMERISED] && you.scan_artefacts(ARTP_TROG_MESMERISE))
+        rr *= 2;
+
     return rr;
 }
 

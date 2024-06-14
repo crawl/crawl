@@ -1292,7 +1292,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
-        && player_equip_unrand(UNRAND_DEMON_AXE)
+        && (player_equip_unrand(UNRAND_DEMON_AXE)
+            || you.scan_artefacts(ARTP_TROG_MESMERISE))
         && you.beheld())
     {
         SAY(mprf(MSGCH_PROMPT, "Your thirst for blood prevents you from unwielding your "

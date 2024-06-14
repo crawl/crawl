@@ -571,51 +571,9 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
     }
 }
 
-static monster* _find_nearest_possible_beholder()
-{
-    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
-    {
-        monster *mon = monster_at(*di);
-        if (mon && you.can_see(*mon)
-            && you.possible_beholder(mon)
-            && mons_is_threatening(*mon))
-        {
-            return mon;
-        }
-    }
-
-    return nullptr;
-}
-
 static void _DEMON_AXE_world_reacts(item_def */*item*/)
 {
-
-    monster* mon = _find_nearest_possible_beholder();
-
-    if (!mon)
-        return;
-
-    monster& closest = *mon;
-
-    if (!you.beheld_by(closest))
-    {
-        mprf("Visions of slaying %s flood into your mind.",
-             closest.name(DESC_THE).c_str());
-
-        // The monsters (if any) currently mesmerising the player do not include
-        // this monster. To avoid trapping the player, all other beholders
-        // are removed.
-
-        you.clear_beholders();
-    }
-
-    if (you.confused())
-    {
-        mpr("Your confusion fades away as the thirst for blood takes over your mind.");
-        you.duration[DUR_CONF] = 0;
-    }
-
-    you.add_beholder(closest, true);
+    you.become_mesmerised_by_nearest();
 }
 
 static void _DEMON_AXE_unequip(item_def */*item*/, bool */*show_msgs*/)

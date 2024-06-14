@@ -1175,8 +1175,8 @@ BOOL:     seeinv, fly, drain
 INSCRIP:  demonic, Mesm
 DBRAND:   Demonic:   It occasionally summons demons to assist the wielder when
  it strikes in combat.
-DESCRIP:  Mesm:      Its wielder is mesmerised by any visible foes, and it
- cannot be unequipped while any foes are visible.
+DESCRIP:  Mesm:      Its wielder is mesmerised by any visible foes (even if
+ they have Clarity), and it cannot be unequipped while any foes are visible.
 
 NAME:     lightning scales
 INSCRIP:  swift,
