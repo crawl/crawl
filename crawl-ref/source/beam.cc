@@ -5850,7 +5850,8 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
     // These are special allies whose loyalty can't be so easily bent
     case BEAM_CHARM:
         rc = !(god_protects(*mon)
-               || testbits(mon->flags, MF_DEMONIC_GUARDIAN));
+               || testbits(mon->flags, MF_DEMONIC_GUARDIAN))
+             && !mons_aligned(agent, mon);
         break;
 
     case BEAM_MINDBURST:
@@ -7149,6 +7150,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_VAMPIRIC_DRAINING:
         case BEAM_ENFEEBLE:
         case BEAM_RIMEBLIGHT:
+        case BEAM_CHARM:
             return ench_flavour_affects_monster(agent(), flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
