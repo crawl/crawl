@@ -1645,6 +1645,17 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
 
     mons_throw(mon, shot);
 
+    // Give Coglins a shot with their other weapon, if they have one
+    if (you.has_mutation(MUT_WIELD_OFFHAND)
+        && mon->mslot_item(MSLOT_ALT_WEAPON)
+        && is_range_weapon(*mon->mslot_item(MSLOT_ALT_WEAPON)))
+    {
+        mon->swap_weapons(false);
+        populate_fake_projectile(*mon->launcher(), fake_proj);
+        shot.item = missile;
+        mons_throw(mon, shot);
+    }
+
     // Store this action's target so that it can be reused on future turns.
     if (monster_at(aim) && monster_at(aim)->alive())
         mon->props[DITH_SHADOW_LAST_TARGET_KEY].get_int() = monster_at(aim)->mid;
