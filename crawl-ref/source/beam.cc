@@ -4759,8 +4759,6 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     bool hit_woke_orc = false;
 
-    // Nasty enchantments will annoy the monster, and are considered
-    // naughty (even if a monster might resist).
     if (nasty_to(mon))
     {
         if (YOU_KILL(thrower))
@@ -4776,13 +4774,7 @@ void bolt::enchantment_affect_monster(monster* mon)
             if (flavour != BEAM_HIBERNATION)
                 you.pet_target = mon->mindex();
         }
-
-        // Don't wake a target that just got slept by Hibernation
-        if (flavour != BEAM_SHADOW_TORPOR || !mon->asleep())
-            behaviour_event(mon, ME_ANNOY, agent());
     }
-    else if (flavour != BEAM_HIBERNATION || !mon->asleep())
-        behaviour_event(mon, ME_ALERT, agent());
 
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
@@ -4835,6 +4827,17 @@ void bolt::enchantment_affect_monster(monster* mon)
     handle_petrify_chaining(mon->pos());
 
     extra_range_used += range_used_on_hit();
+
+    // Nasty enchantments will annoy the monster, and are considered
+    // naughty (even if a monster resisted).
+    if (nasty_to(mon))
+    {
+        // Don't wake a target that just got slept by Hibernation
+        if (flavour != BEAM_SHADOW_TORPOR || !mon->asleep())
+            behaviour_event(mon, ME_ANNOY, agent());
+    }
+    else if (flavour != BEAM_HIBERNATION || !mon->asleep())
+        behaviour_event(mon, ME_ALERT, agent());
 }
 
 static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
