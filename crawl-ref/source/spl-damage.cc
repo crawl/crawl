@@ -1176,8 +1176,11 @@ spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
         set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
         for (coord_def t : maybe_targets)
             for (adjacent_iterator ai(t); ai; ++ai)
-                if (caster.see_cell(*ai))
+                if (caster.see_cell(*ai)
+                    && monster_at(*ai) && monster_at(*ai)->res_cold() < 3)
+                {
                     maybe_victims.insert(*ai);
+                }
 
         vector<coord_def> mvv(maybe_victims.begin(), maybe_victims.end());
         if (warn_about_bad_targets(SPELL_PERMAFROST_ERUPTION, mvv))
