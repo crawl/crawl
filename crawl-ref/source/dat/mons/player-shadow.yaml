@@ -1,7 +1,7 @@
 name: "shadow"
 enum: player_shadow
 glyph: {char: "@", colour: magenta}
-flags: [flies, insubstantial, no_exp_gain, no_poly_to]
+flags: [flies, insubstantial, no_exp_gain, no_poly_to, two_weapons]
 holiness: [nonliving]
 will: invuln
 attacks:

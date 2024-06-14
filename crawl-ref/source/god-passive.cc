@@ -1091,6 +1091,31 @@ monster* dithmenos_get_player_shadow()
     return monster_by_mid(mid);
 }
 
+// Returns index of the new item
+static int _clone_player_weapon(const item_def* wpn)
+{
+    int index = get_mitm_slot(10);
+    if (index == NON_ITEM)
+        return index;
+
+    item_def& new_item = env.item[index];
+    if (wpn->base_type == OBJ_STAVES)
+    {
+        new_item.base_type = OBJ_WEAPONS;
+        new_item.sub_type  = WPN_STAFF;
+    }
+    else
+    {
+        new_item.base_type = wpn->base_type;
+        new_item.sub_type  = wpn->sub_type;
+    }
+    new_item.quantity = 1;
+    new_item.rnd = 1;
+    new_item.flags   |= ISFLAG_SUMMONED;
+
+    return index;
+}
+
 monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_known)
 {
     // If a player shadow already exists, remove it first.
@@ -1110,26 +1135,22 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     // Do a basic clone of the weapon (same base type, but no brand or plusses).
     // Also magical staves become plain staves instead.
     int wpn_index  = NON_ITEM;
+    int wpn2_index = NON_ITEM;
     item_def* wpn = you.weapon();
     if (wpn && is_weapon(*wpn))
     {
-        wpn_index = get_mitm_slot(10);
+        wpn_index = _clone_player_weapon(wpn);
         if (wpn_index == NON_ITEM)
             return nullptr;
-        item_def& new_item = env.item[wpn_index];
-        if (wpn->base_type == OBJ_STAVES)
-        {
-            new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_STAFF;
-        }
-        else
-        {
-            new_item.base_type = wpn->base_type;
-            new_item.sub_type  = wpn->sub_type;
-        }
-        new_item.quantity = 1;
-        new_item.rnd = 1;
-        new_item.flags   |= ISFLAG_SUMMONED;
+    }
+
+    // Clone a Coglin's second weapon also
+    if (you.has_mutation(MUT_WIELD_OFFHAND) && you.offhand_weapon()
+        && is_weapon(*you.offhand_weapon()))
+    {
+        wpn2_index = _clone_player_weapon(you.offhand_weapon());
+        if (wpn_index == NON_ITEM)
+            return nullptr;
     }
 
     mgen_data mg(MONS_PLAYER_SHADOW, friendly ? BEH_FRIENDLY : BEH_HOSTILE,
@@ -1148,6 +1169,8 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     {
         if (wpn_index)
             destroy_item(wpn_index);
+        if (wpn2_index)
+            destroy_item(wpn2_index);
         return nullptr;
     }
 
@@ -1156,6 +1179,8 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     if (wpn_index != NON_ITEM)
         mon->pickup_item(env.item[wpn_index], false, true);
+    if (wpn2_index != NON_ITEM)
+        mon->pickup_item(env.item[wpn2_index], false, true);
 
     if (friendly)
     {

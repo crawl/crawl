@@ -2074,6 +2074,14 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.damage *= 2;
         }
     }
+    // Give Coglin player shadows a second attack for their second weapon
+    else if (attk_number == 1 && mon.type == MONS_PLAYER_SHADOW
+             && you.has_mutation(MUT_WIELD_OFFHAND))
+    {
+        attk.type = AT_HIT;
+        if (mon.props.exists(DITH_SHADOW_ATTACK_KEY))
+            attk.damage = mon.props[DITH_SHADOW_ATTACK_KEY].get_int();
+    }
     else if (mons_species(mon.type) == MONS_DRACONIAN
              && mon.type != MONS_DRACONIAN
              && attk.type == AT_NONE
