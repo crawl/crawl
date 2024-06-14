@@ -1036,6 +1036,14 @@ bool direction_chooser::move_is_ok() const
                 return true; // is this too broad?
             if (you.see_cell(target()))
                 mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
+            // XXX: Hack to let bump attack with a ranged weapon still work
+            //      when Primordial Nightfall is active. Hopefully doesn't
+            //      affect anything else?
+            else if (you.current_vision == 0 && !moves.interactive
+                     && grid_distance(you.pos(), target()) == 1)
+            {
+                return true;
+            }
             else
                 mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
             return false;

@@ -772,9 +772,10 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
     }
 
     // Create message.
-    mprf("You %s %s.",
+    mprf("You %s %s%s.",
           is_thrown ? "throw" : launcher ? "shoot" : "toss away",
-          _ammo_name(item, launcher).c_str());
+          _ammo_name(item, launcher).c_str(),
+          you.current_vision == 0 ? " into the darkness" : "");
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -796,7 +797,21 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
         Hints.hints_throw_counter++;
 
     const coord_def target = pbolt.target;
-    pbolt.fire();
+
+    // XXX: Firing via beam will never hit a target outside our vision range,
+    //      so create the ranged_attack manually when bumping into something
+    //      during the start of Primordial Nightfall
+    if (you.current_vision == 0)
+    {
+        monster* mon = monster_at(target);
+        if (mon && mon->alive())
+        {
+            ranged_attack attk(&you, mon, launcher, pbolt.item, false, &you, false);
+            attk.attack();
+        }
+    }
+    else
+        pbolt.fire();
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
         did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
