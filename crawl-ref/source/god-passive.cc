@@ -1180,7 +1180,13 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     if (wpn_index != NON_ITEM)
         mon->pickup_item(env.item[wpn_index], false, true);
     if (wpn2_index != NON_ITEM)
+    {
         mon->pickup_item(env.item[wpn2_index], false, true);
+
+        // Randomize order, like for players
+        if (coinflip())
+            mon->swap_weapons(false);
+    }
 
     if (friendly)
     {
