@@ -5186,7 +5186,7 @@ static void _check_attack_counts_and_flavours(const monster_info &mi,
         }
 
         // Nessos' special cased poisonous ranged attacks
-        if (mi.type == MONS_NESSOS && is_range_weapon(*attack_info.weapon))
+        if (mi.type == MONS_NESSOS && attack_info.weapon && is_range_weapon(*attack_info.weapon))
         {
             di.has_any_flavour = true;
             di.flavour_without_dam = true;
