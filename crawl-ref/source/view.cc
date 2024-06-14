@@ -1716,7 +1716,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
-        if (!you.see_cell(gc))
+        if (!you.see_cell(gc) || mesmerise_excluded && allow_mon_recolour)
             cell->colour = DARKGREY;
         else if (gc != you.pos() && allow_mon_recolour)
             cell->colour = real_colour(flash_colour);

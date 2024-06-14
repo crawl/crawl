@@ -5131,7 +5131,6 @@ static int _mons_mesmerise(monster* mons, bool actual)
         || (!you.can_see(*mons)           // Or if we are, and you're aren't
             && !already_mesmerised)       // already mesmerised by us.
         || !player_can_hear(mons->pos())  // Or if you're silenced, or we are.
-        || you.berserk()                  // Or if you're berserk.
         || mons->has_ench(ENCH_CONFUSION) // Or we're confused,
         || mons_is_fleeing(*mons)          // fleeing,
         || mons->pacified()               // pacified,
