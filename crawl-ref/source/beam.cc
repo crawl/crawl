@@ -4827,7 +4827,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     // Nasty enchantments will annoy the monster, and are considered
     // naughty (even if a monster resisted).
-    if (nasty_to(mon))
+    if (mon && mon->alive() && nasty_to(mon))
     {
         // Don't wake a target that just got slept by Hibernation
         if (flavour != BEAM_SHADOW_TORPOR || !mon->asleep())
