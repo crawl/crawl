@@ -7346,7 +7346,7 @@ orb spider charge
 %%%%
 bennu
 
-VISUAL:@The_monster@'s plumage briefly flares with an otherwordly flame.
+VISUAL:@The_monster@'s plumage briefly flares with an otherworldly flame.
 
 VISUAL:@The_monster@ jubilantly flits about.
 %%%%
