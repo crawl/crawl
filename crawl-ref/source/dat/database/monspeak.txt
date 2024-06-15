@@ -7299,7 +7299,7 @@ VISUAL:@The_monster@ polishes a blade.
 
 Strange mechanisms whir as @the_monster@ focuses on @foe@.
 
-VISUAL:A stray blade cuts @the_monster@'s own flesh. She ignores it.
+VISUAL:A stray blade cuts @the_monster@'s own flesh. @Subjective@ ignores it.
 
 # A Deepness in the Sky, more or less
 @The_monster@ howls @at_foe@, "I'll flense you until there's nothing left!"

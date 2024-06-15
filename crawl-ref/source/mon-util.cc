@@ -4516,14 +4516,18 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     msg = replace_all(msg, "@A_monster@",   mons.name(DESC_A));
     msg = replace_all(msg, "@The_monster@", mons.name(cap));
 
-    msg = replace_all(msg, "@Subjective@",
-                      mons.pronoun(PRONOUN_SUBJECTIVE));
-    msg = replace_all(msg, "@subjective@",
-                      mons.pronoun(PRONOUN_SUBJECTIVE));
-    msg = replace_all(msg, "@Possessive@",
-                      mons.pronoun(PRONOUN_POSSESSIVE));
-    msg = replace_all(msg, "@possessive@",
-                      mons.pronoun(PRONOUN_POSSESSIVE));
+    string subj_or_poss;
+
+    subj_or_poss = mons.pronoun(PRONOUN_SUBJECTIVE);
+    msg = replace_all(msg, "@subjective@", subj_or_poss);
+    subj_or_poss[0] = toupper_safe(subj_or_poss[0]);
+    msg = replace_all(msg, "@Subjective@", subj_or_poss);
+
+    subj_or_poss = mons.pronoun(PRONOUN_POSSESSIVE);
+    msg = replace_all(msg, "@possessive@", subj_or_poss);
+    subj_or_poss[0] = toupper_safe(subj_or_poss[0]);
+    msg = replace_all(msg, "@Possessive@", subj_or_poss);
+
     msg = replace_all(msg, "@reflexive@",
                       mons.pronoun(PRONOUN_REFLEXIVE));
     msg = replace_all(msg, "@objective@",
