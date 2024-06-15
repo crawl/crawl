@@ -2556,7 +2556,7 @@ foot
 
 shoe
 
-hand
+knee
 
 arm
 
