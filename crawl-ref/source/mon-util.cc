@@ -4455,6 +4455,15 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@The_something@", name);
         msg = replace_all(msg, "@the_monster@",   name);
         msg = replace_all(msg, "@The_monster@",   name);
+
+        msg = replace_all(msg, "@the_something_possessive@",
+                          apostrophise(name));
+        msg = replace_all(msg, "@The_something_possessive@",
+                          apostrophise(name));
+        msg = replace_all(msg, "@the_monster_possessive@",
+                          apostrophise(name));
+        msg = replace_all(msg, "@The_monster_possessive@",
+                          apostrophise(name));
     }
     else if (mons.attitude == ATT_FRIENDLY
              && !mons_is_unique(mons.type)
@@ -4468,6 +4477,15 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@The_something@", "Your @the_something@");
         msg = replace_all(msg, "@the_monster@",   "your @the_monster@");
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
+
+        msg = replace_all(msg, "@the_something_possessive@",
+                          "your @the_something_possessive@");
+        msg = replace_all(msg, "@The_something_possessive@",
+                          "Your @the_something_possessive@");
+        msg = replace_all(msg, "@the_monster_possessive@",
+                          "your @the_monster_possessive@");
+        msg = replace_all(msg, "@The_monster_possessive@",
+                          "Your @the_monster_possessive@");
     }
 
     // XXX: Shouldn't be able to see 'fake' monsters
@@ -4497,11 +4515,15 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     msg = replace_all(msg, "@something@",   something);
     msg = replace_all(msg, "@a_something@", mons.name(DESC_A));
     msg = replace_all(msg, "@the_something@", mons.name(nocap));
+    msg = replace_all(msg, "@the_something_possessive@",
+                      apostrophise(mons.name(nocap)));
 
     something[0] = toupper_safe(something[0]);
     msg = replace_all(msg, "@Something@",   something);
     msg = replace_all(msg, "@A_something@", mons.name(DESC_A));
     msg = replace_all(msg, "@The_something@", mons.name(cap));
+    msg = replace_all(msg, "@The_something_possessive@",
+                      apostrophise(mons.name(cap)));
 
     // Player name.
     msg = replace_all(msg, "@player_name@", you.your_name);
@@ -4512,11 +4534,15 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     msg = replace_all(msg, "@monster@",     plain);
     msg = replace_all(msg, "@a_monster@",   mons.name(DESC_A));
     msg = replace_all(msg, "@the_monster@", mons.name(nocap));
+    msg = replace_all(msg, "@the_monster_possessive@",
+                      apostrophise(mons.name(nocap)));
 
     plain[0] = toupper_safe(plain[0]);
     msg = replace_all(msg, "@Monster@",     plain);
     msg = replace_all(msg, "@A_monster@",   mons.name(DESC_A));
     msg = replace_all(msg, "@The_monster@", mons.name(cap));
+    msg = replace_all(msg, "@The_monster_possessive@",
+                      apostrophise(mons.name(cap)));
 
     string subj_or_poss;
 

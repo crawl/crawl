@@ -210,7 +210,7 @@ VISUAL:@The_monster@ shimmers violently.
 
 VISUAL:@The_monster@ glows brightly for a moment.
 
-VISUAL:@The_monster@'s @hands@ start to glow.
+VISUAL:@The_monster_possessive@ @hands@ start to glow.
 
 VISUAL:You feel disoriented. @player_only@
 
@@ -220,7 +220,7 @@ _wizard_medium_
 
 VISUAL:@The_monster@ becomes larger for a moment.
 
-VISUAL:@The_monster@'s eyes start to glow.
+VISUAL:@The_monster_possessive@ eyes start to glow.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
@@ -1193,7 +1193,7 @@ Spellcasting player ghost
 
 @The_monster@ says, "I practised a lot since I died."
 
-VISUAL:@The_monster@'s fingertips begin to glow.
+VISUAL:@The_monster_possessive@ fingertips begin to glow.
 
 VISUAL:@The_monster@ frowns in concentration.
 
@@ -1776,11 +1776,11 @@ _Amaemon_common_
 
 @The_monster@ hisses.
 
-VISUAL:Something foul drips from @the_monster@'s claws.
+VISUAL:Something foul drips from @the_monster_possessive@ claws.
 
-VISUAL:@The_monster@'s eyes glow red.
+VISUAL:@The_monster_possessive@ eyes glow red.
 
-VISUAL:@The_monster@'s tail lashes.
+VISUAL:@The_monster_possessive@ tail lashes.
 
 @The_monster@ shouts @at_foe@, "You think you're better than me?"
 
@@ -1862,7 +1862,7 @@ _Asterion_rare_
 
 @The_monster@ chants and is briefly shrouded in fire.
 
-@The_monster@'s eyes glow.
+@The_monster_possessive@ eyes glow.
 You hear demonic laughter.
 
 @The_monster@ says, "{{
@@ -1907,7 +1907,7 @@ _Azrael_common_
 
 VISUAL:@The_monster@ blows smoke rings.
 
-VISUAL:@The_monster@'s eyes look fiery.
+VISUAL:@The_monster_possessive@ eyes look fiery.
 
 VISUAL:@The_monster@ is momentarily hidden by a cloud of flames.
 %%%%
@@ -1983,7 +1983,7 @@ w:5
 @The_monster@ whispers to @reflexive@, "Everyone I saved... Everyone I doomed..."
 
 w:5
-VISUAL:@The_monster@'s form shimmers in the rain.
+VISUAL:@The_monster_possessive@ form shimmers in the rain.
 ## END Bai Suzhen ##
 %%%%
 
@@ -2019,7 +2019,7 @@ VISUAL:@The_monster@ grins serenely.
 
 VISUAL:@The_monster@ is briefly surrounded by a halo of @_blorkula_colour_@ light.
 
-VISUAL:@The_monster@'s eyes glow @_blorkula_colour_@.
+VISUAL:@The_monster_possessive@ eyes glow @_blorkula_colour_@.
 
 @The_monster@ says @to_foe@, "You need a new perspective."
 
@@ -3928,9 +3928,9 @@ _Dowan_rare_
 
 VISUAL:@The_monster@ throws and catches a handful of magical flame, then smirks.
 
-VISUAL:@The_monster@'s robes are whipped around by a magical breeze.
+VISUAL:@The_monster_possessive@ robes are whipped around by a magical breeze.
 
-VISUAL:@The_monster@'s feet meld with the ground, briefly.
+VISUAL:@The_monster_possessive@ feet meld with the ground, briefly.
 
 VISUAL:@The_monster@ generates a fountain of clear water, and laughs cruelly.
 
@@ -3952,7 +3952,7 @@ VISUAL:@The_monster@ seems overcome with grief.
 
 @The_monster@ screams, "No! Oh no!"
 
-@The_monster@'s eyes darken. "You have made a grave mistake."
+@The_monster_possessive@ eyes darken. "You have made a grave mistake."
 %%%%
 Dowan_Duvessa_dies_invisible
 
@@ -4610,11 +4610,11 @@ VISUAL:@The_monster@ sloshes about.
 %%%%
 _Gastronok_rare_
 
-VISUAL:@The_monster@'s mouth opens, radula flailing wildly.
+VISUAL:@The_monster_possessive@ mouth opens, radula flailing wildly.
 
 VISUAL:@The_monster@ is buffeted by a sudden breeze.
 
-VISUAL:@The_monster@'s eyestalks wobble, almost dislodging @possessive@ wizard hat.
+VISUAL:@The_monster_possessive@ eyestalks wobble, almost dislodging @possessive@ wizard hat.
 
 @The_monster@ gurgles, "You're how I like my food. Fast!"
 
@@ -4820,7 +4820,7 @@ _Grunn_common_
 %%%%
 _Grunn_rare_
 
-VISUAL:One of @the_monster@'s claws falls out.
+VISUAL:One of @the_monster_possessive@ claws falls out.
 
 VISUAL:@The_monster@ pats at a spot of missing fur and sighs.
 
@@ -5173,9 +5173,9 @@ _Jeremiah_common_
 
 @The_monster@ whispers, "I obey. I obey. I obey."
 
-VISUAL:@The_monster@'s eyes close briefly, then snap open.
+VISUAL:@The_monster_possessive@ eyes close briefly, then snap open.
 
-VISUAL:@The_monster@'s eyes momentarily flash bright red.
+VISUAL:@The_monster_possessive@ eyes momentarily flash bright red.
 
 VISUAL:@The_monster@ yawns.
 
@@ -5384,7 +5384,7 @@ _Josephina_rare_
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL:One of @the_monster@'s icy fingers falls off.
+VISUAL:One of @the_monster_possessive@ icy fingers falls off.
 
 @The_monster@ says @to_foe@, "I'll make a rug of your skin."
 
@@ -5611,7 +5611,7 @@ w:5
 %%%%
 _Mara_common_
 
-VISUAL:@The_monster@'s face changes twice.
+VISUAL:@The_monster_possessive@ face changes twice.
 
 @The_monster@ says, "I mislead the hearts of men!"
 
@@ -5636,7 +5636,7 @@ _Mara_rare_
 # Lord of Light
 @The_monster@ screams, "Tenfold be your damnation!"
 
-@The_monster@'s features momentarily become yours. "Wouldst slay thyself?"
+@The_monster_possessive@ features momentarily become yours. "Wouldst slay thyself?"
 
 @The_monster@ says, "I stand as high above you as a star above the ocean's bottom."
 
@@ -5672,14 +5672,14 @@ VISUAL:@The_monster@ is surrounded with an aura of power.
 
 VISUAL:@The_monster@ becomes transparent for a moment.
 
-VISUAL:@The_monster@'s hands start to glow.
+VISUAL:@The_monster_possessive@ hands start to glow.
 %%%%
 _Margery_common_
 
 VISUAL:@The_monster@ gestures.
 @_Margery_spell_results_@
 
-VISUAL:@The_monster@'s eyes start to glow with a @_spell_colour_@ light.
+VISUAL:@The_monster_possessive@ eyes start to glow with a @_spell_colour_@ light.
 
 VISUAL:@The_monster@ gestures.
 VISUAL:You feel [cursed|doomed].
@@ -5789,7 +5789,7 @@ w:2
 %%%%
 _Menkaure_common_
 
-VISUAL:@The_monster@'s bandages flutter.
+VISUAL:@The_monster_possessive@ bandages flutter.
 
 @The_monster@ @_Menkaure_verb_@ in an indecipherable tongue.
 
@@ -5813,7 +5813,7 @@ VISUAL:@The_monster@ grins.
 %%%%
 _Menkaure_rare_
 
-@The_monster@'s ankle releases a plume of dust as @subjective@ confides, "I'm not really a mummy, you know."
+@The_monster_possessive@ ankle releases a plume of dust as @subjective@ confides, "I'm not really a mummy, you know."
 
 VISUAL:@The_monster@ forgets how to speak, silenced by the ages.
 
@@ -5875,7 +5875,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ laughs evilly.
 
-@The_monster@'s teeth chatter loudly.
+@The_monster_possessive@ teeth chatter loudly.
 
 @The_monster@ cackles @at_foe@, "I will rule the world!"
 %%%%
@@ -5956,15 +5956,15 @@ _Natasha_death_common_
 @The_monster@ growls in agony!
 %%%%
 _Natasha_death_rare_
-Suddenly @the_monster@'s spirit rises from @possessive@ lifeless body.
+Suddenly @the_monster_possessive@ spirit rises from @possessive@ lifeless body.
 
-Moaning pathetically, @the_monster@'s spirit plunges into the ground.
+Moaning pathetically, @the_monster_possessive@ spirit plunges into the ground.
 
 You hear a faint echoing roar filled with hate and sorrow!
 %%%%
 Natasha permanently killed
 
-You feel @the_monster@'s spirit has finally been put to rest.
+You feel @the_monster_possessive@ spirit has finally been put to rest.
 %%%%
 confused Natasha killed
 
@@ -6000,9 +6000,9 @@ _Robin_common_
 
 @The_monster@ laughs in a distinctly smug fashion.
 
-VISUAL:@The_monster@'s bangles clink loudly.
+VISUAL:@The_monster_possessive@ bangles clink loudly.
 
-VISUAL:@The_monster@'s horned helmet rattles.
+VISUAL:@The_monster_possessive@ horned helmet rattles.
 
 VISUAL:@The_monster@ flexes a bicep menacingly.
 
@@ -6648,7 +6648,7 @@ VISUAL:@The_monster@ flexes.
 
 VISUAL:@The_monster@ pounds @possessive@ chest with @possessive@ fists.
 
-VISUAL:Sweat drips down @the_monster@'s chest.
+VISUAL:Sweat drips down @the_monster_possessive@ chest.
 
 @The_monster@ says, "Strength rules this world!"
 
@@ -6781,10 +6781,10 @@ VISUAL:@The_monster@ looks at you with fury.
 
 @The_monster@ giggles. "Time to reap what you sow."
 
-VISUAL:@The_monster@'s eyes start glowing with a red light.
+VISUAL:@The_monster_possessive@ eyes start glowing with a red light.
 
 @The_monster@ breathes a few words.
-VISUAL:@The_monster@'s hands start flickering wildly.
+VISUAL:@The_monster_possessive@ hands start flickering wildly.
 
 VISUAL:@The_monster@ is suddenly surrounded by pale @_spell_colour_@ light.
 %%%%
@@ -6824,7 +6824,7 @@ VISUAL:@The_monster@ beckons gently.
 
 VISUAL:@The_monster@ smiles kindly.
 
-VISUAL:A flash of anger passes briefly over @the_monster@'s face.
+VISUAL:A flash of anger passes briefly over @the_monster_possessive@ face.
 
 VISUAL:@The_monster@ draws @possessive@ long claws delicately across @possessive@ gut.
 %%%%
@@ -6858,7 +6858,7 @@ VISUAL:@The_monster@ grins devilishly.
 
 The air crackles briefly around @the_monster@.
 
-VISUAL:A brief shower of sparks shoots from @the_monster@'s claws.
+VISUAL:A brief shower of sparks shoots from @the_monster_possessive@ claws.
 %%%%
 _Sojobo_rare_
 
@@ -7205,7 +7205,7 @@ Xak'krixis
 
 VISUAL:@The_monster@ furiously scribbles notes with a free limb.
 
-VISUAL:@The_monster@'s mandibles click thoughtfully.
+VISUAL:@The_monster_possessive@ mandibles click thoughtfully.
 
 @The_monster@ says, "{{
     if you.skill("Alchemy") >= 10 then
@@ -7299,7 +7299,7 @@ VISUAL:@The_monster@ polishes a blade.
 
 Strange mechanisms whir as @the_monster@ focuses on @foe@.
 
-VISUAL:A stray blade cuts @the_monster@'s own flesh. @Subjective@ ignores it.
+VISUAL:A stray blade cuts @the_monster_possessive@ own flesh. @Subjective@ ignores it.
 
 # A Deepness in the Sky, more or less
 @The_monster@ howls @at_foe@, "I'll flense you until there's nothing left!"
@@ -7346,7 +7346,7 @@ orb spider charge
 %%%%
 bennu
 
-VISUAL:@The_monster@'s plumage briefly flares with an otherworldly flame.
+VISUAL:@The_monster_possessive@ plumage briefly flares with an otherworldly flame.
 
 VISUAL:@The_monster@ jubilantly flits about.
 %%%%
@@ -7524,7 +7524,7 @@ kobold blastminer
 
 VISUAL:@The_monster@ bats away at the thin smoke enveloping @possessive@ cannon.
 
-VISUAL:@The_monster@'s cannon shakes and flares with a red glow.
+VISUAL:@The_monster_possessive@ cannon shakes and flares with a red glow.
 
 w:20
 __NONE
@@ -7645,7 +7645,7 @@ VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 ################## Hoarfrost cannon ##########################
 default hoarfrost cannon
 
-VISUAL: Water drips from @the_monster@'s barrel.
+VISUAL: Water drips from @the_monster_possessive@ barrel.
 
 VISUAL: A cold fog rises from @the_monster@.
 
@@ -7661,9 +7661,9 @@ __NONE
 ################## Protean progenitor ###########################
 protean progenitor
 
-VISUAL:@The_monster@'s form [briefly |][ripples|wavers] with deep exhaustion.
+VISUAL:@The_monster_possessive@ form [briefly |][ripples|wavers] with deep exhaustion.
 
-VISUAL:@The_monster@'s [three nested|six fanged|nine smoking] eyes blink slowly.
+VISUAL:@The_monster_possessive@ [three nested|six fanged|nine smoking] eyes blink slowly.
 
 # A mash-up of several other monster dialogue lines.
 VISUAL:@The_monster@ [glitters|crackles], [sighs|grumbles], and [beckons|stomps].
@@ -8483,9 +8483,9 @@ cherub
 
 @The_monster@ sings praise to the Shining One, in four-part harmony.
 
-@The_monster@'s lion-head roars!
+@The_monster_possessive@ lion-head roars!
 
-@The_monster@'s eagle-head screeches!
+@The_monster_possessive@ eagle-head screeches!
 
 @The_monster@ sings praise to Zin.
 
@@ -8710,20 +8710,20 @@ w:1
 
 VISUAL:@The_monster@ wriggles @possessive@ tentacles.
 
-VISUAL:A dozen eyes blink open in @the_monster@'s chest.
+VISUAL:A dozen eyes blink open in @the_monster_possessive@ chest.
 
-VISUAL:Strange appendages sprout from @the_monster@'s back.
+VISUAL:Strange appendages sprout from @the_monster_possessive@ back.
 
 VISUAL:@The_monster@ lashes @possessive@ tail.
 
 VISUAL:@The_monster@ suddenly sprouts two large horns!
 
 w:3
-VISUAL:@The_monster@'s flesh secretes a thick mucus.
+VISUAL:@The_monster_possessive@ flesh secretes a thick mucus.
 
-VISUAL:Hollow, blind eyes appear on @the_monster@'s head.
+VISUAL:Hollow, blind eyes appear on @the_monster_possessive@ head.
 
-VISUAL:Suppurating sores blossom under @the_monster@'s eyelids.
+VISUAL:Suppurating sores blossom under @the_monster_possessive@ eyelids.
 
 @The_monster@ begs you to kill @objective@.
 
@@ -8775,7 +8775,7 @@ w:5
 VISUAL:@The_monster@ waves a pennant, rooting for your enemy!
 
 w:5
-VISUAL:@The_monster@'s armour gleams in the torchlight.
+VISUAL:@The_monster_possessive@ armour gleams in the torchlight.
 
 w:1
 VISUAL:@The_monster@, chosen of Okawaru, glows resplendent with favour.
@@ -8791,7 +8791,7 @@ VISUAL:@The_monster@ shuffles one of @possessive@ decks.
 
 VISUAL:@The_monster@ fans some cards from one of @possessive@ decks.
 
-VISUAL:@The_monster@'s deck briefly glows with a rainbow of weird colours.
+VISUAL:@The_monster_possessive@ deck briefly glows with a rainbow of weird colours.
 
 # Kenny Rogers, "The Gambler"
 @The_monster@ chants, "Know when to hold 'em, know when to fold 'em..."
