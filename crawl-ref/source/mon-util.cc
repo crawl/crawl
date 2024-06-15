@@ -4465,7 +4465,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         cap   = DESC_PLAIN;
 
         msg = replace_all(msg, "@the_something@", "your @the_something@");
-        msg = replace_all(msg, "@The_something@", "Your @The_something@");
+        msg = replace_all(msg, "@The_something@", "Your @the_something@");
         msg = replace_all(msg, "@the_monster@",   "your @the_monster@");
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
