@@ -517,7 +517,7 @@ Dithmenos wrath
 
 When angered, Dithmenos turns the shadows against victims. Monsters emerge from
 the darkness, both illusions woven from shadow and the very shadow themselves
-turning against sinners. Dithmenos's subtle punishments are, if anything, more
+turning against sinners. Dithmenos' subtle punishments are, if anything, more
 dangerous: victims find the shadows ripped away from them, hunted with nowhere
 to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 %%%%
@@ -609,7 +609,7 @@ surrounded by titans and elvish blademasters.
 Pakellas wrath
 
 Those that offend Pakellas will find themselves completely unable to make use
-of their devices for the duration of Pakellas's displeasure. Those who abandon
+of their devices for the duration of Pakellas' displeasure. Those who abandon
 Pakellas altogether will also continue to be unable to regenerate their magical
 power so long as Pakellas' attention remains on them.
 %%%%
