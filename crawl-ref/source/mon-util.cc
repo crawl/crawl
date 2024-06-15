@@ -4505,6 +4505,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     // Player name.
     msg = replace_all(msg, "@player_name@", you.your_name);
+    msg = replace_all(msg, "@player_name_possessive@",
+                      apostrophise(you.your_name));
 
     string plain = mons.name(DESC_PLAIN);
     msg = replace_all(msg, "@monster@",     plain);

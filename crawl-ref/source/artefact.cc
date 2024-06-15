@@ -184,7 +184,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
                                "@player_name@"
                                + getRandNameString("killer_name"));
             name = replace_all(name, "@player_doom@",
-                               "@player_name@'s "
+                               "@player_name_possessive@ "
                                + getRandNameString("death_or_doom"));
         }
         else
@@ -196,6 +196,8 @@ string replace_name_parts(const string &name_in, const item_def& item)
         }
     }
     name = replace_all(name, "@player_name@", you.your_name);
+    name = replace_all(name, "@player_name_possessive@",
+                       apostrophise(you.your_name));
 
     name = replace_all(name, "@player_species@",
                  species::name(you.species, species::SPNAME_GENUS));

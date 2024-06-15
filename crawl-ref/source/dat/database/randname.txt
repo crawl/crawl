@@ -468,7 +468,7 @@ w:400
 
 # with a few special cases
 w:2
-of @player_name@'s @_valour_name_@
+of @player_name_possessive@ @_valour_name_@
 
 w:3
 of Okawaru's @divine_esteem@
@@ -521,7 +521,7 @@ w:400
 @armour@
 
 w:2
-of @player_name@'s @_valour_name_@
+of @player_name_possessive@ @_valour_name_@
 
 w:2
 of Okawaru's @divine_esteem@
