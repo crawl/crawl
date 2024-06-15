@@ -1534,7 +1534,7 @@ Xom player ghost
 
 @The_monster@ giggles, "Hey deadhead, what fun to see your head drop dead!"
 
-@The_monster@ says: "I need scissors! I think I chipped a nail somewhere..."
+@The_monster@ says, "I need scissors! I think I chipped a nail somewhere..."
 
 @The_monster@ tries to make a funny facial expression.
 %%%%
