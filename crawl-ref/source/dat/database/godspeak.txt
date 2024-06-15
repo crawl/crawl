@@ -111,6 +111,8 @@ You almost hear Xom's maniacal laughter.
 Xom feature lava
 
 @The_feature@ spits out sparks!
+
+@The_feature@ briefly solidifies.
 %%%%
 Xom feature shallow water
 
