@@ -2396,7 +2396,7 @@ and decay to all it touches.
 sacred lotus
 
 A large and vivid bloom drifting placidly upon the surface of the water. The
-cradle of the lotus' petals shine with eternity and elegance - while it is
+cradle of the lotus's petals shine with eternity and elegance - while it is
 entirely harmless, it would take immense effort to destroy it.
 %%%%
 salamander
