@@ -7,6 +7,6 @@
     {hd}, {hp_10x},
     {ac}, {ev}, {spells}, {has_corpse}, {shout},
     {intelligence}, {habitat}, {speed}, {energy_desc},
-    {uses}, {size}, {shape},
+    {uses}, {size}, {shape}, {god},
     {{ {tile_desc} }}, {tile_corpse}
 }},

@@ -18,4 +18,5 @@ uses: starting_equipment
 size: medium
 habitat: amphibious
 shape: humanoid
+god: Beogh
 tile_variance: mod
