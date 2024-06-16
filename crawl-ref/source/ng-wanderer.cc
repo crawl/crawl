@@ -120,23 +120,22 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
             case SK_AXES:
             case SK_MACES_FLAILS:
             case SK_ARMOUR:
+            case SK_POLEARMS:
+            case SK_STAVES:
                 str_count++;
                 break;
 
             case SK_SHORT_BLADES:
             case SK_LONG_BLADES:
             case SK_RANGED_WEAPONS:
-            case SK_STAVES:
             case SK_DODGING:
             case SK_SHIELDS:
             case SK_STEALTH:
                 dex_count++;
                 break;
 
-            case SK_POLEARMS:
             case SK_UNARMED_COMBAT:
             case SK_FIGHTING:
-            case SK_EVOCATIONS:
             case SK_THROWING:
             case SK_SHAPESHIFTING:
                 if (coinflip())
@@ -159,6 +158,13 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
                 int_count++;
                 break;
 
+            case SK_EVOCATIONS:
+                if (one_chance_in(3))
+                    str_count++;
+                else if (coinflip())
+                    int_count++;
+                else
+                    dex_count++;
             default:
                 break;
         }
