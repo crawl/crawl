@@ -78,6 +78,7 @@ public:
     string     attack_verb, verb_degree;
     string     no_damage_message;
     string     special_damage_message;
+    bool       print_resist_vulnerability_message;
     string     aux_attack, aux_verb;
 
     item_def        *defender_shield;
