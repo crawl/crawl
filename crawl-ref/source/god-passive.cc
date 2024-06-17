@@ -1768,7 +1768,6 @@ static coord_def _find_shadow_aoe_position(int radius, bool test_bind = false,
 
     // Now let's see how many targets are in range from each shadow spot and
     // randomly pick the best of these.
-    int num_tests = 0;
     for (size_t i = 0; i < valid_spots.size(); ++i)
     {
         int score = 0;
@@ -1787,7 +1786,6 @@ static coord_def _find_shadow_aoe_position(int radius, bool test_bind = false,
         {
             best_spot = valid_spots[i];
             best_score = score;
-            ++num_tests;
         }
     }
 

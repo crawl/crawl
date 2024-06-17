@@ -1009,7 +1009,6 @@ void id_floor_items()
 void pickup_menu(int item_link)
 {
     int n_did_pickup   = 0;
-    int n_tried_pickup = 0;
 
     // XX why is this const?
     auto items = const_item_list_on_square(item_link);
@@ -1050,14 +1049,12 @@ void pickup_menu(int item_link)
                 // floor.
                 if (!move_item_to_inv(j, num_to_take))
                 {
-                    n_tried_pickup++;
                     pickup_warning = "You can't carry that many items.";
                     if (env.item[j].defined())
                         env.item[j].flags = oldflags;
                 }
                 else
                 {
-                    n_did_pickup++;
                     // If we deliberately chose to take only part of a
                     // pile, we consider the rest to have been
                     // "dropped."

@@ -205,13 +205,17 @@ void TilesFramework::finish_message()
     m_msg_buf.append("\n");
     const char* fragment_start = m_msg_buf.data();
     const char* data_end = m_msg_buf.data() + m_msg_buf.size();
+#ifdef DEBUG_WEBSOCKETS
     int fragments = 0;
+#endif
     while (fragment_start < data_end)
     {
         int fragment_size = data_end - fragment_start;
         if (fragment_size > m_max_msg_size)
             fragment_size = m_max_msg_size;
+#ifdef DEBUG_WEBSOCKETS
         fragments++;
+#endif
 
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {

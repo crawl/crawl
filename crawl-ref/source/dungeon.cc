@@ -4119,7 +4119,6 @@ static void _builder_monsters()
         in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf(DIAG_DNGN, "_builder_monsters: Generating %d monsters", mon_wanted);
-    int success = 0;
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
@@ -4151,8 +4150,7 @@ static void _builder_monsters()
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
-        if (place_monster(mg))
-            success++;
+        place_monster(mg);
     }
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.

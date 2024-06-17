@@ -1351,20 +1351,14 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     bool used_queue = false;
     if (morph && !abyss_sample_queue.empty())
     {
-        int ii = 0;
         used_queue = true;
         while (!abyss_sample_queue.empty()
             && abyss_sample_queue.top().changepoint() < abyssal_state.depth)
         {
-            ++ii;
             coord_def p = abyss_sample_queue.top().coord();
             _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_sample_queue.pop();
         }
-/*
-        if (ii)
-            dprf(DIAG_ABYSS, "Examined %d features.", ii);
-*/
     }
 
     int ii = 0;
