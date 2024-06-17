@@ -497,6 +497,7 @@ static monster* _get_wrath_avatar(god_type god)
     avatar->attitude   = ATT_HOSTILE;
     avatar->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                          | MF_WAS_IN_VIEW | MF_HARD_RESET | MF_NAME_REPLACE;
+    avatar->god        = god;
     avatar->set_position(you.pos());
     avatar->set_new_monster_id();
     env.mgrid(you.pos()) = avatar->mindex();
