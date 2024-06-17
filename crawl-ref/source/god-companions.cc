@@ -720,7 +720,7 @@ void beogh_recruit_apostle()
 
     mpr(msg.c_str());
 
-    // Now atually convert and save the apostle
+    // Now actually convert and save the apostle
     real->hit_points = real->max_hit_points;
     real->timeout_enchantments(1000);
     real->flags &= ~MF_APOSTLE_BAND;
