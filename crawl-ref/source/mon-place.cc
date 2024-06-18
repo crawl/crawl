@@ -876,10 +876,12 @@ static void _place_monster_maybe_override_god(monster *mon, monster_type cls,
     if (mon->is_priest() && mon->god == GOD_NO_GOD)
     {
         mon->god = GOD_NAMELESS;
+        return;
     }
+
     // 1 out of 7 non-priestly orcs who are unbelievers stay that way,
     // and the others follow Beogh's word.
-    else if (mons_genus(cls) == MONS_ORC && mon->god == GOD_NO_GOD)
+    if (mons_genus(cls) == MONS_ORC && mon->god == GOD_NO_GOD)
     {
         if (!one_chance_in(7))
             mon->god = GOD_BEOGH;
