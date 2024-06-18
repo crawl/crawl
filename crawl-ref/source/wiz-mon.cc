@@ -1051,8 +1051,8 @@ void debug_miscast(int target_index)
     {
         if (kbhit())
         {
+            getch_ck();
             mpr("Key pressed, interrupting miscast testing.");
-            getchm();
             break;
         }
 

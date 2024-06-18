@@ -749,27 +749,11 @@ public:
 
 #ifdef USE_TILE_LOCAL
         if (ev.type() == ui::Event::Type::MouseMove
-            || ev.type() == ui::Event::Type::MouseDown)
+            || ev.type() == ui::Event::Type::MouseDown
+            || ev.type() == ui::Event::Type::MouseUp)
         {
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
-            int k = tiles.handle_mouse(wm_event);
-            // XX this really seems like it shouldn't be here, maybe should be
-            // in tilereg stuff?
-            // in any case, CK_MOUSE_CLICK *should* be what only tilereg-dgn.cc
-            // could returns, if the player clicked in the dungeon region.
-            if (k == CK_MOUSE_CLICK && ev.type() == ui::Event::Type::MouseDown)
-            {
-                if (tiles.get_cursor() == m_state.lpos.pos)
-                {
-                    process_command(CMD_MAP_GOTO_TARGET);
-                    return true;
-                }
-                else
-                {
-                    m_state.lpos.pos
-                        = tiles.get_cursor().clamped(known_map_bounds());
-                }
-            }
+            tiles.handle_mouse_for_map_view(wm_event);
             _expose();
             return true;
         }
@@ -797,6 +781,8 @@ public:
         m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
     }
 
+    // This function should only be called while a map command is processing
+    // as it sets m_reentry to true
     void set_lpos(level_pos dest)
     {
         map_control_state state = m_state;
@@ -818,6 +804,12 @@ public:
 
         m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
         m_reentry = true;
+    }
+
+    // This function should not be called while a map command is processing
+    void view_map_location(coord_def pos)
+    {
+        m_state.lpos.pos = pos.clamped(known_map_bounds());
     }
 
     void goto_level()
@@ -891,15 +883,20 @@ private:
 #endif
 };
 
+static shared_ptr<UIMapView> map_view = nullptr;
+
+bool is_showing_map() noexcept
+{
+    return map_view != nullptr;
+}
+
 // show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are. They'll need to explore
 // to get that. This function is still a mess, though. -- bwr
 bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 {
-    static shared_ptr<UIMapView> map_view = nullptr;
-
-    if (map_view)
+    if (is_showing_map())
     {
         ASSERT(map_view->is_alive());
         // handle reentry -- just attempt to set the position. Ignore both
@@ -910,11 +907,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     }
     else
     {
-#ifdef USE_TILE_LOCAL
-        mouse_control mc(MOUSE_MODE_NORMAL);
-        tiles.do_map_display();
-#endif
-
 #ifdef USE_TILE
         ui::cutoff_point ui_cutoff_point;
 #endif
@@ -929,6 +921,13 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         map_view = make_shared<UIMapView>(lpos, le, travel_mode, allow_offlevel);
 
 #ifdef USE_TILE_LOCAL
+        mouse_control mc(MOUSE_MODE_NORMAL);
+        // This must be called after map_view has been set in case
+        // it checks `is_showing_map`
+        tiles.start_map_display();
+#endif
+
+#ifdef USE_TILE_LOCAL
         unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
 #else
         cursor_control cc(!Options.use_fake_cursor);
@@ -939,9 +938,6 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
             ui::pump_events();
         ui::pop_layout();
 
-#ifdef USE_TILE_LOCAL
-        tiles.set_map_display(false);
-#endif
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
 #endif
@@ -949,6 +945,13 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         lpos = map_view->lpos();
         const bool result = map_view->chose();
         map_view = nullptr;
+
+#ifdef USE_TILE_LOCAL
+        // This must be called after map_view has been set to null in case
+        // it checks `is_showing_map`
+        tiles.stop_map_display();
+#endif
+
         return result;
     }
 }
@@ -975,10 +978,8 @@ level_pos map_follow_stairs(bool up, const coord_def &pos)
 
 void process_map_command(command_type cmd)
 {
-    // XX cleaner API for this
-    shared_ptr<ui::Widget> l = ui::top_layout();
-    if (UIMapView *mv = dynamic_cast<UIMapView *>(l.get()))
-        mv->process_command(cmd);
+    if (is_showing_map())
+        map_view->process_command(cmd);
 }
 
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
@@ -1265,6 +1266,17 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         break;
     }
 
+#ifdef USE_TILE_LOCAL
+    case CMD_MAP_TARGET_CURSOR:
+        if (tiles.get_cursor() != state.lpos.pos)
+        {
+            state.lpos.pos
+                = tiles.get_cursor().clamped(known_map_bounds());
+            break;
+        }
+        // fall through to CMD_MAP_GOTO_TARGET
+#endif
+
     case CMD_MAP_GOTO_TARGET:
         if (state.travel_mode && state.on_level && state.lpos.pos == you.pos())
         {
@@ -1367,6 +1379,12 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
     }
 
     return state;
+}
+
+void view_map_location(coord_def pos)
+{
+    if (is_showing_map())
+        map_view->view_map_location(pos);
 }
 
 bool emphasise(const coord_def& where)

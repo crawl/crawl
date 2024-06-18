@@ -7,6 +7,7 @@
 
 #include "command-type.h"
 #include "cio.h"
+#include "directn.h"
 #include "english.h"
 #include "libutil.h"
 #include "macro.h"
@@ -14,6 +15,7 @@
 #include "stringutil.h"
 #include "rltiles/tiledef-gui.h"
 #include "tiles-build-specific.h"
+#include "viewmap.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
@@ -382,14 +384,8 @@ int TabbedRegion::get_mouseover_tab(wm_mouse_event &event) const
     return -1;
 }
 
-int TabbedRegion::handle_mouse(wm_mouse_event &event)
+void TabbedRegion::_update_mouse_tab(wm_mouse_event &event)
 {
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
-        && !tiles.get_map_display())
-    {
-        return 0;
-    }
-
     int mouse_tab = get_mouseover_tab(event);
     if (mouse_tab != m_mouse_tab)
     {
@@ -397,18 +393,30 @@ int TabbedRegion::handle_mouse(wm_mouse_event &event)
         m_dirty = true;
         tiles.set_need_redraw();
     }
+}
+
+int TabbedRegion::handle_mouse(wm_mouse_event &event)
+{
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+        return 0;
+
+    _update_mouse_tab(event);
 
     if (m_mouse_tab != -1)
     {
         if (event.event == wm_mouse_event::PRESS)
         {
-            if (m_tabs[m_mouse_tab].cmd == CMD_NO_CMD)
+            const command_type cmd = m_tabs[m_mouse_tab].cmd;
+            if (cmd == CMD_NO_CMD)
             {
                 activate_tab(m_mouse_tab);
-                return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
+                // prevent clicking on tab from 'bubbling up' to other regions
+                return CK_NO_KEY;
             }
-            else
-                return command_to_key(m_tabs[m_mouse_tab].cmd);
+
+            if (cmd < CMD_NO_CMD || cmd > CMD_MAX_NORMAL)
+                return CK_NO_KEY;
+            return encode_command_as_key(m_tabs[m_mouse_tab].cmd);
         }
     }
 
@@ -417,6 +425,65 @@ int TabbedRegion::handle_mouse(wm_mouse_event &event)
         return 0;
 
     return get_tab_region(active_tab())->handle_mouse(event);
+}
+
+bool TabbedRegion::handle_mouse_for_map_view(wm_mouse_event &event)
+{
+    _update_mouse_tab(event);
+
+    if (m_mouse_tab != -1)
+    {
+        if (event.event == wm_mouse_event::PRESS)
+        {
+            const command_type cmd = m_tabs[m_mouse_tab].cmd;
+            if (cmd == CMD_NO_CMD)
+            {
+                activate_tab(m_mouse_tab);
+                // prevent clicking on tab from 'bubbling up' to other regions
+                return true;
+            }
+
+            if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
+                return true;
+            process_map_command(cmd);
+            return true;
+        }
+    }
+
+    // Otherwise, pass input to the active tab.
+    if (!active_is_valid())
+        return false;
+
+    return get_tab_region(active_tab())->handle_mouse_for_map_view(event);
+}
+
+bool TabbedRegion::handle_mouse_for_targeting(wm_mouse_event &event)
+{
+    _update_mouse_tab(event);
+
+    if (m_mouse_tab != -1)
+    {
+        if (event.event == wm_mouse_event::PRESS)
+        {
+            const command_type cmd = m_tabs[m_mouse_tab].cmd;
+            if (cmd == CMD_NO_CMD)
+            {
+                activate_tab(m_mouse_tab);
+                return true;
+            }
+
+            if (cmd < CMD_MIN_TARGET || cmd > CMD_MAX_TARGET)
+                return true;
+            process_targeting_command(cmd);
+            return true;
+        }
+    }
+
+    // Otherwise, pass input to the active tab.
+    if (!active_is_valid())
+        return false;
+
+    return get_tab_region(active_tab())->handle_mouse_for_targeting(event);
 }
 
 bool TabbedRegion::update_tab_tip_text(string &/*tip*/, bool /*active*/)

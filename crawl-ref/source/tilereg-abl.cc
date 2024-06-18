@@ -64,14 +64,10 @@ int AbilityRegion::handle_mouse(wm_mouse_event &event)
     if (event.button == wm_mouse_event::LEFT)
     {
         m_last_clicked_item = item_idx;
-        tiles.set_need_redraw();
-        // TODO get_talent returns ABIL_NON_ABILITY if you are confused,
-        // but not if you're silenced/penanced, so you only get a message in the
-        // latter case. We'd like these three cases to behave similarly.
-        talent tal = get_talent(ability, true);
-        if (tal.which == ABIL_NON_ABILITY || !activate_talent(tal))
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        return CK_MOUSE_CMD;
+
+        ASSERT(ability != ABIL_NON_ABILITY);
+        const command_type cmd = (command_type)(CMD_ACTIVATE_ABILITY_MIN + ability);
+        return encode_command_as_key(cmd);
     }
     else if (ability != NUM_ABILITIES && event.button == wm_mouse_event::RIGHT)
     {

@@ -29,6 +29,8 @@ public:
     virtual void render() override;
     virtual void clear() override;
     virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_map_view(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_targeting(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_alt_text(string &alt) override;
     virtual void on_resize() override;
@@ -55,8 +57,6 @@ protected:
     void pack_cursor(cursor_type type, unsigned int tile);
 
     void draw_minibars();
-
-    int get_buffer_index(const coord_def &gc);
 
     crawl_view_buffer m_vbuf;
     int m_cx_to_gx;

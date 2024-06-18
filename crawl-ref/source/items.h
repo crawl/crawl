@@ -95,7 +95,8 @@ void id_floor_items();
 
 bool player_on_single_stack();
 void pickup_menu(int item_link);
-void pickup(bool partial_quantity = false);
+void pickup(bool partial_quantity = false,
+    bool force_menu_for_multiple_items = false);
 
 bool item_is_branded(const item_def& item);
 bool item_is_unusual(const item_def& item);

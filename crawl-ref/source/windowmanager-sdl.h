@@ -43,8 +43,8 @@ public:
     virtual void delay(unsigned int ms) override;
 
     // Event functions
-    virtual int wait_event(wm_event *event, int timeout) override;
-    virtual bool next_event_is(wm_event_type type) override;
+    virtual bool peek_next_event(wm_event& event, int timeout) override;
+    virtual bool pop_next_event() override;
 
     // Display functions
     virtual bool init_hidpi() override;
@@ -65,7 +65,7 @@ public:
 protected:
     // Helper functions
     SDL_Surface *load_image(const char *file) const;
-    int send_textinput(wm_event *event);
+    void send_textinput(wm_event *event);
 
     SDL_Window *m_window;
     SDL_GLContext m_context;
@@ -75,6 +75,11 @@ protected:
 private:
     void glDebug(const char *msg);
 
+    void _pump_next_event(int timeout);
+    bool _has_next_event() const noexcept;
+    void _clear_next_event() noexcept;
+
+    wm_event m_next_event;
     int prev_keycode;
     string m_textinput_queue;
     array<SDL_Cursor*, NUM_MOUSE_CURSORS> m_cursors;

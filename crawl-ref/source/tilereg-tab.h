@@ -45,6 +45,8 @@ public:
     virtual void render() override;
     virtual void on_resize() override;
     virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_map_view(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_targeting(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_tab_tip_text(string &tip, bool active) override;
     virtual bool update_alt_text(string &alt) override;
@@ -86,6 +88,7 @@ protected:
 
 private:
     int _push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab);
+    void _update_mouse_tab(wm_mouse_event &event);
     int _icon_width;
     bool _show_tab_icons;
 };

@@ -4,6 +4,7 @@
 
 #include "tilereg-msg.h"
 
+#include "cio.h"
 #include "libutil.h"
 #include "format.h"
 #include "macro.h"
@@ -35,7 +36,7 @@ int MessageRegion::handle_mouse(wm_mouse_event &event)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
 
-    return command_to_key(CMD_REPLAY_MESSAGES);
+    return encode_command_as_key(CMD_REPLAY_MESSAGES);
 }
 
 bool MessageRegion::update_tip_text(string& tip)

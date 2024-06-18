@@ -15,6 +15,7 @@ public:
 
     virtual void update() override;
     virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual bool handle_mouse_for_targeting(wm_mouse_event &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_tab_tip_text(string &tip, bool active) override;
     virtual bool update_alt_text(string &alt) override;
@@ -29,6 +30,8 @@ protected:
     virtual void activate() override;
 
     vector<monster_info> m_mon_info;
+private:
+    bool _update_cursor(wm_mouse_event &event);
 };
 
 #endif

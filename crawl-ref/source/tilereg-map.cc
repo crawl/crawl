@@ -13,6 +13,7 @@
 #include "tiles-build-specific.h"
 #include "travel.h"
 #include "viewgeom.h"
+#include "viewmap.h"
 
 MapRegion::MapRegion(int pixsz) :
     m_dirty(true),
@@ -196,19 +197,52 @@ void MapRegion::clear()
 
 int MapRegion::handle_mouse(wm_mouse_event &event)
 {
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
-        && !tiles.get_map_display())
-    {
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
-    }
 
+    // XXX: we need a better way to end this as you can exit map view and then
+    //      enter it again without using the mouse.
+    m_far_view = false;
+
+    if (!inside(event.px, event.py))
+        return 0;
+
+    int cx, cy;
+    mouse_pos(event.px, event.py, cx, cy);
+    const coord_def gc(m_min_gx + cx, m_min_gy + cy);
+
+    tiles.place_cursor(CURSOR_MOUSE, gc);
+
+    if (event.event != wm_mouse_event::PRESS)
+        return 0;
+
+    if (event.button == wm_mouse_event::LEFT)
+    {
+        if (event.mod & TILES_MOD_SHIFT)
+        {
+            // Start autotravel, or give an appropriate message.
+            return encode_command_as_key(CMD_EXPLORE);
+        }
+
+        const command_type cmd = click_travel(gc, event.mod & TILES_MOD_CTRL,
+            event.mod & TILES_MOD_SHIFT);
+        if (cmd == CMD_NO_CMD)
+            return 0;
+        return encode_command_as_key(cmd);
+    }
+    else if (event.button == wm_mouse_event::RIGHT)
+        return encode_command_as_key(CMD_DISPLAY_MAP);
+    return 0;
+}
+
+bool MapRegion::handle_mouse_for_map_view(wm_mouse_event &event)
+{
     if (!inside(event.px, event.py))
     {
         if (m_far_view)
         {
             m_far_view = false;
-            tiles.load_dungeon(crawl_view.vgrdc);
-            return 0;
+            view_map_location(crawl_view.vgrdc);
         }
         return 0;
     }
@@ -223,40 +257,18 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
     {
     case wm_mouse_event::MOVE:
         if (m_far_view)
-            tiles.load_dungeon(gc);
+            view_map_location(gc);
         return 0;
     case wm_mouse_event::PRESS:
-        if (event.button == wm_mouse_event::LEFT)
-        {
-            if (event.mod & TILES_MOD_SHIFT)
-            {
-                // Start autotravel, or give an appropriate message.
-                do_explore_cmd();
-                return CK_MOUSE_CMD;
-            }
-            else if (!tiles.get_map_display())
-            {
-                const int cmd = click_travel(gc, event.mod & TILES_MOD_CTRL);
-                if (cmd != CK_MOUSE_CMD)
-                    process_command((command_type) cmd);
-
-                return CK_MOUSE_CMD;
-            }
-        }
-        else if (event.button == wm_mouse_event::RIGHT)
+        if (event.button == wm_mouse_event::RIGHT)
         {
             m_far_view = true;
-            tiles.load_dungeon(gc);
-            if (!tiles.get_map_display())
-            {
-                process_command(CMD_DISPLAY_MAP);
-                m_far_view = false;
-                return CK_MOUSE_CMD;
-            }
+            view_map_location(gc);
+            return 0;
         }
         return 0;
     case wm_mouse_event::RELEASE:
-        if (event.button == wm_mouse_event::RIGHT && m_far_view)
+        if (event.button == wm_mouse_event::RIGHT)
             m_far_view = false;
         return 0;
     default:

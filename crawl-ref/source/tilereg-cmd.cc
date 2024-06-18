@@ -8,6 +8,7 @@
 #include "cio.h"
 #include "command.h"
 #include "describe.h"
+#include "directn.h"
 #include "env.h"
 #include "items.h"
 #include "libutil.h"
@@ -65,16 +66,50 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;
 
-        // this is a really horrid way to preserve the interface in viewmap.cc
-        // which expects a keypress rather than a command :(
-        if (tiles.get_map_display())
-            process_map_command(cmd);
-        else
-            process_command(cmd);
-
-        return CK_MOUSE_CMD;
+        if (cmd >= CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
+            return encode_command_as_key(cmd);
     }
     return 0;
+}
+
+bool CommandRegion::handle_mouse_for_map_view(wm_mouse_event &event)
+{
+    unsigned int item_idx;
+    if (!place_cursor(event, item_idx))
+        return false;
+
+    if (event.button == wm_mouse_event::LEFT)
+    {
+        const command_type cmd = (command_type)m_items[item_idx].idx;
+        m_last_clicked_item = item_idx;
+
+        if (cmd >= CMD_MIN_OVERMAP && cmd <= CMD_MAX_OVERMAP)
+        {
+            process_map_command(cmd);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CommandRegion::handle_mouse_for_targeting(wm_mouse_event &event)
+{
+    unsigned int item_idx;
+    if (!place_cursor(event, item_idx))
+        return false;
+
+    if (event.button == wm_mouse_event::LEFT)
+    {
+        const command_type cmd = (command_type)m_items[item_idx].idx;
+        m_last_clicked_item = item_idx;
+
+        if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
+        {
+            process_targeting_command(cmd);
+            return true;
+        }
+    }
+    return false;
 }
 
 bool CommandRegion::update_tab_tip_text(string &tip, bool active)

@@ -68,12 +68,9 @@ int MemoriseRegion::handle_mouse(wm_mouse_event &event)
     if (event.button == wm_mouse_event::LEFT)
     {
         m_last_clicked_item = item_idx;
-        tiles.set_need_redraw();
-        if (learn_spell(spell))
-            tiles.update_tabs();
-        else
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        return CK_MOUSE_CMD;
+        const command_type cmd =
+            (command_type)(CMD_MEMORISE_SPELL_MIN + spell);
+        return encode_command_as_key(cmd);
     }
     else if (event.button == wm_mouse_event::RIGHT)
     {

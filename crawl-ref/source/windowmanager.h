@@ -165,8 +165,23 @@ public:
     virtual void delay(unsigned int ms) = 0;
 
     // Event functions
-    virtual int wait_event(wm_event *event, int timeout) = 0;
-    virtual bool next_event_is(wm_event_type type) = 0;
+    virtual bool peek_next_event(wm_event& event, int timeout) = 0;
+    virtual bool pop_next_event() = 0;
+    int wait_event(wm_event *event, int timeout)
+    {
+        bool succeded = peek_next_event(*event, timeout);
+        if (succeded)
+            pop_next_event();
+        return (int)succeded;
+    }
+    bool next_event_is(wm_event_type type)
+    {
+        wm_event event;
+        bool succeded = peek_next_event(event, 0);
+        if (!succeded)
+            return false;
+        return event.type == type;
+    }
 
     // Display functions
     virtual bool init_hidpi() = 0;

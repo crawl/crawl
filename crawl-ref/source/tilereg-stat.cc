@@ -4,6 +4,7 @@
 
 #include "tilereg-stat.h"
 
+#include "cio.h"
 #include "libutil.h"
 #include "macro.h"
 #include "tiles-build-specific.h"
@@ -25,11 +26,11 @@ int StatRegion::handle_mouse(wm_mouse_event &event)
 
 #ifdef __ANDROID__
     if (tiles.is_using_small_layout())
-        return command_to_key(CMD_TOGGLE_TAB_ICONS);
+        return encode_command_as_key(CMD_TOGGLE_TAB_ICONS);
 #endif
 
     // clicking on stats should show all the stats
-    return command_to_key(CMD_RESISTS_SCREEN);
+    return encode_command_as_key(CMD_RESISTS_SCREEN);
 }
 
 bool StatRegion::update_tip_text(string& tip)

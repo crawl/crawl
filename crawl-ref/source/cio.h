@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "command-type.h"
 #include "enum.h"
 #include "KeymapContext.h"
 
@@ -144,6 +145,13 @@ void          c_input_reset(bool enable_mouse, bool flush = false);
 // Keys that getch() must return for keys Crawl is interested in.
 enum KEYS
 {
+    // Note: keycodes with bit 30 set are reserved for internal SDL keycodes
+    // and shouldn't be used for other things
+
+    // We seem to be using the ascii+ characters for SDL.
+    // Is this actually correct?
+    CK_MAX_NORMAL_CHARACTER_SDL = 255,
+
     CK_ENTER  = '\r',
     CK_BKSP   = 8,
     CK_TAB    = 9,
@@ -240,7 +248,7 @@ enum KEYS
     CK_CTRL_SHIFT_DELETE,
     CK_CTRL_SHIFT_SPACE,
 
-    CK_MAX_INTERNAL = CK_CTRL_SHIFT_DELETE,
+    CK_MAX_INTERNAL = CK_CTRL_SHIFT_SPACE,
 
     // numpad keys are still a mess; see unixcurses_defkeys for the source of
     // some of these bindings. On local console, in my testing, most of the
@@ -297,8 +305,15 @@ enum KEYS
     CK_F1, // (ncurses) -265, aka -KEY_F1
     CK_F0, // is this actually used?
 
+    // SDL only, fairly arbitrary.
+    // the whole range from CK_ALT_MIN to CK_ALT_MAX inclusive is reserved
+    // for keycodes where the alt key was down
+    CK_ALT_BASE = -3000,
+    CK_ALT_MAX = CK_ALT_BASE + CK_MAX_NORMAL_CHARACTER_SDL,
+    CK_ALT_MIN = CK_ALT_BASE + CK_MIN_INTERNAL,
+
     // Mouse codes.
-    CK_MOUSE_MOVE  = -9999,
+    CK_MOUSE_MOVE = -9999,
     CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,
@@ -306,18 +321,44 @@ enum KEYS
     CK_MOUSE_B4,
     CK_MOUSE_B5,
     CK_MOUSE_CLICK,
-    CK_TOUCH_DUMMY, // so a non-event can be passed from handle_mouse to the controlling code
     CK_REDRAW, // no-op to force redraws of things
     CK_RESIZE,
 
-    CK_NO_KEY, // so that the handle_mouse loop can be broken from early (for
-              // popups), and otherwise for keys to ignore
+    // so that the handle_mouse loop can be broken from early (for
+    // popups), and otherwise for keys to ignore
+    CK_NO_KEY,
 
-    // SDL only, both fairly arbitrary
-    // ugh
-    CK_ALT_BASE = -3000,
+    // SDL only, fairly arbitrary.
+    // the whole range from CK_CMD_MIN to CK_CMD_MAX inclusive is reserved
+    // for keycodes where the command key was down
     CK_CMD_BASE = -20000,
+    CK_CMD_MAX = CK_CMD_BASE + CK_MAX_NORMAL_CHARACTER_SDL,
+    CK_CMD_MIN = CK_CMD_BASE + CK_MIN_INTERNAL,
+
+    // SDL only, fairly arbitrary.
+    // the whole range from CK_CMD_ALT_MIN to CK_CMD_ALT_MAX inclusive is
+    // reserved for keycodes where the command and alt keys were down
+    CK_CMD_ALT_BASE = CK_CMD_BASE + CK_ALT_BASE,
+    CK_CMD_ALT_MAX = CK_CMD_ALT_BASE + CK_MAX_NORMAL_CHARACTER_SDL,
+    CK_CMD_ALT_MIN = CK_CMD_ALT_BASE + CK_MIN_INTERNAL,
+
+    CK_COMMAND_AS_KEY_MAX = CK_CMD_ALT_MIN - 1,
+    CK_COMMAND_AS_KEY_MIN = CK_COMMAND_AS_KEY_MAX - CMD_MAX_CMD - 1,
 };
+static_assert(CK_ALT_MAX < CK_MIN_INTERNAL, "Keycodes overlap");
+static_assert(CK_NO_KEY < CK_ALT_MIN, "Keycodes overlap");
+static_assert(CK_CMD_MIN < CK_MOUSE_MOVE, "Keycodes overlap");
+static_assert(CK_CMD_ALT_MAX < CK_CMD_MIN, "Keycodes overlap");
+
+// This is an ugly hack to return a command where a keycode is expected
+// e.g. when returning mouse input from the getch_ck function
+inline int encode_command_as_key(command_type cmd) noexcept
+{
+    // Don't accept buggy commands
+    if (cmd < CMD_NO_CMD || cmd >= CMD_MAX_CMD)
+        cmd = CMD_NO_CMD;
+    return cmd + CK_COMMAND_AS_KEY_MIN;
+}
 
 class cursor_control
 {
