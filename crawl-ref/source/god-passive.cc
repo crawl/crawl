@@ -1072,7 +1072,7 @@ static bool _shadow_will_act(bool spell, bool melee)
     // For spells:  15% chance at min piety, 25% chance at 160 piety.
     const int range = piety_breakpoint(5) - minpiety;
     return x_chance_in_y(10 + (spell ? 5 : 0)
-                          + ((you.piety - minpiety) * 10 / range), 100);
+                          + ((min(piety_breakpoint(5), (int)you.piety) - minpiety) * 10 / range), 100);
 
     return true;
 }

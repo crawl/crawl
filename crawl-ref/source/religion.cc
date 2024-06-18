@@ -1108,13 +1108,11 @@ bool yred_reap_chance()
         return true;
 
     // Minimum chance scales from 15% at 0 piety to 40% at 6 stars
-    int ratio = min(piety_breakpoint(6), (int)you.piety) * 100 / piety_breakpoint(6);
+    int ratio = min(piety_breakpoint(5), (int)you.piety) * 100 / piety_breakpoint(5);
     int min_chance = 15 + (25 * ratio / 100);
 
     ratio = min(100, (hd * 100 / you.piety * 4));
     int chance = (ratio * min_chance / 100) + ((100 - ratio));
-
-    //mprf("Min chance: %d, Ratio: %d, Chance: %d", min_chance, ratio, chance);
 
     return x_chance_in_y(chance, 100);
 }
