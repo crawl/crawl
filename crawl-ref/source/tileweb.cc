@@ -992,14 +992,7 @@ static bool _update_statuses(player_info& c)
     status_info inf;
     for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        if (status == DUR_DIVINE_SHIELD)
-        {
-            inf = status_info();
-            if (!you.duration[status])
-                continue;
-            inf.short_text = "divinely shielded";
-        }
-        else if (status == DUR_ICEMAIL_DEPLETED)
+        if (status == DUR_ICEMAIL_DEPLETED)
         {
             inf = status_info();
             if (you.duration[status] <= ICEMAIL_TIME / ICEMAIL_MAX)

@@ -849,16 +849,6 @@ int qazlal_sh_boost(int piety)
     return min(piety, piety_breakpoint(5)) / 10;
 }
 
-// Not actually passive, but placing it here so that it can be easily compared
-// with Qazlal's boost.
-int tso_sh_boost()
-{
-    if (!you.duration[DUR_DIVINE_SHIELD])
-        return 0;
-
-    return you.attribute[ATTR_DIVINE_SHIELD];
-}
-
 void qazlal_storm_clouds()
 {
     if (!have_passive(passive_t::storm_shield))

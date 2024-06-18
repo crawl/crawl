@@ -267,6 +267,18 @@ bool melee_attack::handle_phase_blocked()
     //such as darts don't trigger it
     maybe_trigger_jinxbite();
 
+    if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
+        && coinflip())
+    {
+        if (!attacker->as_monster()->has_ench(ENCH_BLIND))
+        {
+            mprf("%s is struck blind by the light of your shield.",
+                    attacker->name(DESC_THE).c_str());
+        }
+        attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                                            random_range(3, 5) * BASELINE_DELAY));
+    }
+
     return attack::handle_phase_blocked();
 }
 

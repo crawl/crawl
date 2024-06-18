@@ -524,7 +524,7 @@ static const duration_def duration_data[] =
       "horrified", "horror",
       "You are horrified, weakening your attacks and spells.", D_NO_FLAGS},
     { DUR_DIVINE_SHIELD,
-      0, "",
+      LIGHTBLUE, "",
       "divinely shielded", "divine shield",
       "You are shielded by the power of the Shining One.", D_NO_FLAGS,
       {{ "", tso_remove_divine_shield }}},

@@ -2333,10 +2333,6 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
-    // divine shield
-    if (!ignore_temporary)
-        shield += tso_sh_boost() * 100;
-
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
 
@@ -3562,6 +3558,14 @@ bool player::clarity(bool items) const
 bool player::faith(bool items) const
 {
     return you.has_mutation(MUT_FAITH) || actor::faith(items);
+}
+
+bool player::reflection(bool items) const
+{
+    if (you.duration[DUR_DIVINE_SHIELD])
+        return true;
+
+    return actor::reflection(items);
 }
 
 /// Does the player have permastasis?
@@ -6053,7 +6057,9 @@ void player::shield_block_succeeded(actor *attacker)
 {
     actor::shield_block_succeeded(attacker);
 
-    shield_blocks++;
+    if (!you.duration[DUR_DIVINE_SHIELD])
+        shield_blocks++;
+
     practise_shield_block();
     if (is_shield(shield()))
         count_action(CACT_BLOCK, shield()->sub_type);

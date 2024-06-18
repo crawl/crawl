@@ -801,6 +801,7 @@ public:
     bool res_corr(bool allow_random = true, bool temp = true) const override;
     bool clarity(bool items = true) const override;
     bool faith(bool items = true) const override;
+    bool reflection(bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
 

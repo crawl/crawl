@@ -283,8 +283,6 @@ void gozag_move_level_gold_to_top();
 void gozag_move_gold_to_top(const coord_def p);
 void gozag_count_level_gold();
 
-int tso_sh_boost();
-
 int qazlal_sh_boost(int piety = you.piety);
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);

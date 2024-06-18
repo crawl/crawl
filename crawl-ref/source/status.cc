@@ -242,6 +242,13 @@ bool fill_status_info(int status, status_info& inf)
         }
     break;
 
+    case DUR_DIVINE_SHIELD:
+    {
+        inf.light_text = make_stringf("Shield (%d)",
+                                        you.attribute[ATTR_DIVINE_SHIELD]);
+    }
+    break;
+
     case STATUS_CORROSION:
         // No blank or double lights
         if (you.corrosion_amount() == 0 || you.duration[DUR_CORROSION])

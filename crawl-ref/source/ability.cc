@@ -425,7 +425,7 @@ static vector<ability_def> &_get_ability_list()
 
         // The Shining One
         { ABIL_TSO_DIVINE_SHIELD, "Divine Shield",
-            3, 0, 2, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, 3, -1, {fail_basis::invo, 35, 5, 20}, abflag::none },
         { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame",
             5, 0, 2, -1, {fail_basis::invo, 70, 4, 25}, abflag::none },
         { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",

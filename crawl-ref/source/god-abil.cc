@@ -1315,34 +1315,19 @@ void zin_sanctuary()
     create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
 }
 
-// shield bonus = attribute for duration turns, then decreasing by 1
-//                every two out of three turns
-// overall shield duration = duration + attribute
-// recasting simply resets those two values (to better values, presumably)
 void tso_divine_shield()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
-    {
-        if (is_shield(you.shield()))
-        {
-            mprf("Your shield is strengthened by %s divine power.",
-                 apostrophise(god_name(GOD_SHINING_ONE)).c_str());
-        }
-        else
-            mpr("A divine shield forms around you!");
-    }
+        mpr("A divine shield manifests in front of you!");
     else
         mpr("Your divine shield is renewed.");
 
-    // Duration from 35-80 turns.
-    you.set_duration(DUR_DIVINE_SHIELD,
-                     35 + you.skill_rdiv(SK_INVOCATIONS, 5, 3));
+    you.set_duration(DUR_DIVINE_SHIELD, max(you.duration[DUR_DIVINE_SHIELD],
+                                            random_range(20, 35)));
 
     // Size of SH bonus.
     you.attribute[ATTR_DIVINE_SHIELD] =
-        12 + you.skill_rdiv(SK_INVOCATIONS, 4, 5);
-
-    you.redraw_armour_class = true;
+        3 + you.skill_rdiv(SK_INVOCATIONS, 2, 5);
 }
 
 void tso_remove_divine_shield()

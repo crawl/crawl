@@ -194,10 +194,14 @@ Cures all your mutations — but only once.
 # The Shining One
 Divine Shield ability
 
-Grants a temporary divine shield. Because it is held aloft by the Shining One's
-power, it does not interfere with your equipment, but it functions otherwise as
-a normal, physical shield. The strength and duration of the shield are increased
-by Invocations skill.
+Manifests a blindingly bright shield in front of the user. Held aloft by the
+Shining One's power, it will unerringly block the next several attacks which
+could be blocked by a mundane shield. Ranged attacks will be reflected and melee
+attackers have a chance of being briefly blinded by the resulting flash of
+light.
+
+This shield will block only a limited number of attacks before vanishing, with
+Invocations skill increasing how many.
 %%%%
 Cleansing Flame ability
 

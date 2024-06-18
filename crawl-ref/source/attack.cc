@@ -24,6 +24,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "item-name.h"
@@ -83,6 +84,13 @@ bool attack::handle_phase_blocked()
 
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+
+    // Use up a charge of Divine Shield, if active.
+    if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
+    {
+        if (--you.attribute[ATTR_DIVINE_SHIELD] <= 0)
+            tso_remove_divine_shield();
+    }
 
     return true;
 }
@@ -1084,8 +1092,12 @@ bool attack::attack_shield_blocked(bool verbose)
     if (defender == attacker)
         return false; // You can't block your own attacks!
 
-    if (defender->incapacitated())
+    // Divine Shield blocks are guaranteed, no matter what.
+    if (defender->incapacitated()
+        && !(defender->is_player() && you.duration[DUR_DIVINE_SHIELD]))
+    {
         return false;
+    }
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit));
     int pro_block = defender->shield_bonus();
@@ -1096,12 +1108,10 @@ bool attack::attack_shield_blocked(bool verbose)
     dprf(DIAG_COMBAT, "Defender: %s, Pro-block: %d, Con-block: %d",
          def_name(DESC_PLAIN).c_str(), pro_block, con_block);
 
-    if (pro_block >= con_block)
+    if (pro_block >= con_block && !defender->shield_exhausted()
+        || defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
     {
         perceived_attack = true;
-
-        if (defender->shield_exhausted())
-            return false;
 
         if (ignores_shield(verbose))
             return false;
