@@ -873,16 +873,13 @@ static void _place_monster_maybe_override_god(monster *mon, monster_type cls,
                                               level_id place)
 {
     // [ds] Vault defs can request priest monsters of unusual types.
-    if (mon->is_priest())
+    if (mon->is_priest() && mon->god == GOD_NO_GOD)
     {
-        if (mon->god == GOD_NO_GOD)
-            mon->god = GOD_NAMELESS;
-        return;
+        mon->god = GOD_NAMELESS;
     }
-
     // 1 out of 7 non-priestly orcs who are unbelievers stay that way,
     // and the others follow Beogh's word.
-    if (mons_genus(cls) == MONS_ORC && mon->god == GOD_NO_GOD)
+    else if (mons_genus(cls) == MONS_ORC && mon->god == GOD_NO_GOD)
     {
         if (!one_chance_in(7))
             mon->god = GOD_BEOGH;
