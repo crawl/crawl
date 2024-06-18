@@ -63,6 +63,8 @@ int get_spell_slot_by_letter(char letter);
 int get_spell_letter(spell_type spell);
 spell_type get_spell_by_letter(char letter);
 
+bool spell_is_memorised(spell_type spell) noexcept;
+
 bool add_spell_to_memory(spell_type spell);
 bool del_spell_from_memory_by_slot(int slot);
 bool del_spell_from_memory(spell_type spell);

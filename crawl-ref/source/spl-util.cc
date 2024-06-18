@@ -279,6 +279,15 @@ spell_type get_spell_by_letter(char letter)
     return (slot == -1) ? SPELL_NO_SPELL : you.spells[slot];
 }
 
+bool spell_is_memorised(spell_type spell) noexcept
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    auto i = find(begin(you.spells), end(you.spells), spell);
+    return i != end(you.spells);
+}
+
 bool add_spell_to_memory(spell_type spell)
 {
     if (vehumet_is_offering(spell))
