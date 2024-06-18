@@ -820,8 +820,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
         return false;
 
     // If our death escape is still on cooldown, just let him die.
-    if (blorkula.props.exists(BLORKULA_NEXT_BAT_TIME)
-        && (you.elapsed_time < blorkula.props[BLORKULA_NEXT_BAT_TIME].get_int()))
+    if (blorkula.has_ench(ENCH_BREATH_WEAPON))
     {
         if (you.can_see(blorkula))
         {
@@ -832,14 +831,16 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
     }
 
     const int num_bats = random_range(4, 5);
-    const int revive_timer = you.elapsed_time + random_range(140, 220);
+    const int revive_timer = you.elapsed_time + random_range(150, 190);
     {
         // Suppress messages about status effects wearing off
         msg::suppress msg;
         blorkula.heal(blorkula.max_hit_points);
+        blorkula.del_ench(ENCH_CONFUSION, true);    // Don't blink at random
         blorkula.timeout_enchantments(1000);
     }
-    blorkula.props[BLORKULA_NEXT_BAT_TIME] = you.elapsed_time + (random_range(550, 1250));
+    blorkula.add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, &blorkula,
+                                  random_range(450, 900) * BASELINE_DELAY));
 
 #ifdef USE_TILE
     static vector<int> bat_colours =
@@ -877,8 +878,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 
     if (!placed_bat)
     {
-        mprf("%s attempts to avoid the deathblow, but fails!",
-             blorkula.name(DESC_THE).c_str());
+        simple_monster_message(blorkula, " attempts to avoid the deathblow, but fails!");
         return false;
     }
 
@@ -887,10 +887,9 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
         mprf(MSGCH_MONSTER_SPELL,
             "%s avoids the killing blow by scattering into a rainbow of bats!",
             blorkula.name(DESC_THE).c_str());
-
-        saved_blork.mons.props[BLORKULA_NEXT_BAT_TIME] = you.elapsed_time + (random_range(550, 1250));
-        monster_die(blorkula, KILL_RESET, NON_MONSTER, true);
     }
+
+    monster_die(blorkula, KILL_RESET, NON_MONSTER, true);
 
     return true;
 }
@@ -940,12 +939,22 @@ void blorkula_bat_merge(monster& bat)
     monster* blork = _retrieve_saved_blorkula(bat);
     const coord_def pos = bat.pos();
 
+    int bat_count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_VAMPIRE_BAT && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+        {
             monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+            ++bat_count;
+        }
     }
 
+    // If not all the bats are still alive, injure Blork proportionally
+    if (bat_count < 4)
+    {
+        blork->hit_points = min(blork->max_hit_points,
+                                (blork->max_hit_points * 2 / 7) * bat_count);
+    }
     blork->move_to_pos(pos);
 
     if (you.can_see(*blork))

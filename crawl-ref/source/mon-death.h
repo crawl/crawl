@@ -17,7 +17,6 @@
 #define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
 #endif
 #define BLORKULA_REVIVAL_TIMER_KEY "blorkula_revival_timer"
-#define BLORKULA_NEXT_BAT_TIME "blorkula_next_bat_time"
 #define SAVED_BLORKULA_KEY "original_blorkula"
 #define BLORKULA_DIE_FOR_REAL_KEY "blorkula_die_for_real"
 

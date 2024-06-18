@@ -6,9 +6,9 @@ genus: bat
 holiness: [undead]
 will: 10
 attacks:
- - {type: bite, flavour: vampiric, damage: 5}
+ - {type: bite, flavour: vampiric, damage: 6}
 hd: 3
-hp_10x: 125
+hp_10x: 145
 ac: 1
 ev: 14
 intelligence: animal
