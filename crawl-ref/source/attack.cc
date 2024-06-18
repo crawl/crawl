@@ -1420,8 +1420,10 @@ bool attack::apply_damage_brand(const char *what)
 
         // Player took fire/cold damage with rF-/rC-
         if (print_resist_vulnerability_message)
+        {
             mpr(brand == SPWPN_FLAMING ? "The fire burns you terribly!"
                                        : "You feel a terrible chill!");
+        }
         print_resist_vulnerability_message = false;
     }
 
