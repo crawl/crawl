@@ -2304,13 +2304,14 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
     return false;
 }
 
-vector<monster*> gavotte_affected_monsters(const coord_def dir)
+vector<monster*> gavotte_affected_monsters(const coord_def dir, bool actual)
 {
     vector<monster*> affected;
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos())
+            && (actual || you.can_see(**mi)))
         {
             if (_gavotte_will_wall_slam(*mi, dir))
                 affected.push_back(*mi);

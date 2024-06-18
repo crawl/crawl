@@ -71,4 +71,5 @@ spret cast_piledriver(int pow, bool fail);
 
 dice_def gavotte_impact_damage(int pow, int dist, bool random);
 spret cast_gavotte(int pow, const coord_def dir, bool fail);
-vector<monster*> gavotte_affected_monsters(const coord_def dir);
+vector<monster*> gavotte_affected_monsters(const coord_def dir,
+                                           bool actual = true);

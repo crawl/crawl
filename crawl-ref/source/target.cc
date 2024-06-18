@@ -2202,7 +2202,7 @@ bool targeter_gavotte::set_aim(coord_def a)
     tempbeam.fire();
     path_taken = tempbeam.path_taken;
 
-    vector<monster*> affected = gavotte_affected_monsters(a - you.pos());
+    vector<monster*> affected = gavotte_affected_monsters(a - you.pos(), false);
     for (monster* mon : affected)
         affected_monsters.push_back(mon->pos());
 
