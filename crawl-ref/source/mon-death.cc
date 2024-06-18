@@ -2528,9 +2528,11 @@ item_def* monster_die(monster& mons, killer_type killer,
             // killing born-friendly monsters.
             const bool valid_heal_source = gives_player_xp
                 && !mons_is_object(mons.type);
+            // Chance scales from 30% at 1* to 80% at 6*
             const bool can_divine_heal = valid_heal_source
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0);
+                && x_chance_in_y(50 * ((min(piety_breakpoint(5), (int)you.piety) - 30)
+                                 / (piety_breakpoint(5) - piety_breakpoint(0))) + 30, 100);
 
             if (valid_heal_source
                 && you.has_mutation(MUT_DEVOUR_ON_KILL)
