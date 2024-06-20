@@ -219,14 +219,6 @@ int attack::calc_pre_roll_to_hit(bool random)
         // mutation
         if (you.get_mutation_level(MUT_EYEBALLS))
             mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
-
-        // blindness
-        if (defender && defender->is_monster())
-        {
-            const int distance = you.pos().distance_from(defender->pos());
-            mhit += blind_player_to_hit_modifier(mhit,
-                                defender->evasion(false, attacker), distance);
-        }
     }
     else    // Monster to-hit.
     {
@@ -1047,6 +1039,13 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
         margin = (random2(2) ? 1 : -1) * AUTOMATIC_HIT;
     else
         margin = to_land - ev;
+
+    if (attacker->is_player() && you.duration[DUR_BLIND])
+    {
+        const int distance = you.pos().distance_from(defender->pos());
+        if (x_chance_in_y(player_blind_miss_chance(distance), 100))
+            margin = -1;
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_COMBAT, "to hit: %d; ev: %d; result: %s (%d)",

@@ -96,8 +96,6 @@ static double _to_hit_to_land(const monster_info& mi, attack &atk,
     if (to_land >= AUTOMATIC_HIT)
         return 1;
 
-    to_land += blind_player_to_hit_modifier(to_land, mi.ev, distance);
-
     return to_land;
 }
 
@@ -190,7 +188,8 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
     const int to_land = _to_hit_to_land(mi, atk, distance);
     const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
     const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
-    return (int)(hit_chance * (1.0 - shield_chance) * 100);
+    const int blind_miss_chance = player_blind_miss_chance(distance);
+    return (int)(hit_chance * (1.0 - shield_chance) * 100 * (100 - blind_miss_chance) / 100);
 }
 
 /**

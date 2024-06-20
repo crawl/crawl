@@ -1475,9 +1475,6 @@ static int _to_hit_pct(const monster_info& mi, int acc)
     if (acc == AUTOMATIC_HIT)
         return 100;
 
-    // See note in bolt::apply_lighting about using 0 for EV
-    acc += blind_player_to_hit_modifier(acc, 0, you.pos().distance_from(mi.pos));
-
     acc += mi.lighting_modifiers();
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
@@ -1505,10 +1502,14 @@ static int _to_hit_pct(const monster_info& mi, int acc)
         }
     }
 
+    int base_chance = 0;
     if (iters <= 0) // probably low monster ev?
-        return 100;
+        base_chance = 100;
+    else
+        base_chance = hits * 100 / iters;
 
-    return hits * 100 / iters;
+    base_chance = base_chance * (100 - player_blind_miss_chance(you.pos().distance_from(mi.pos))) / 100;
+    return base_chance;
 }
 
 static vector<string> _desc_hit_chance(const monster_info& mi, int acc)
