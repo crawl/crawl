@@ -516,6 +516,9 @@ void player_reacts_to_monsters()
         _handle_uskayaw_time(you.time_taken);
 
     announce_beogh_conversion_offer();
+
+    if (player_in_branch(BRANCH_ARENA) && !okawaru_duel_active())
+        okawaru_end_duel();
 }
 
 static bool _check_recite()
@@ -868,9 +871,6 @@ static void _decrement_durations()
     {
         _try_to_respawn_ancestor();
     }
-
-    if (player_in_branch(BRANCH_ARENA) && !okawaru_duel_active())
-        okawaru_end_duel();
 
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
