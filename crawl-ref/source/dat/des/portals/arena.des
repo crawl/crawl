@@ -18,11 +18,11 @@ MAP
 vvvvvvvvvvv
 v1'1'1'1'1v
 v'ooooooo'v
-v1o.....o1v
-v'o.....o'v
-v1o..A..o1v
+v1oA...Ao1v
 v'o.....o'v
 v1o.....o1v
+v'o.....o'v
+v1oA...Ao1v
 v'ooooooo'v
 v1'1o<o1'1v
 vvvvvvvvvvv
@@ -55,7 +55,7 @@ vvvvvvvvvvvvvvv
 v''11''o''11''v
 vooooooooooooov
 v.............v
-v.G....A....G.v
+v.G..A...A..G.v
 v.............v
 vooooooooooooov
 v1'o'1o<o1'o'1v

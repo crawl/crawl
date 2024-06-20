@@ -23,6 +23,7 @@
 #include "mpr.h"
 #include "religion.h"
 #include "tag-version.h"
+#include "terrain.h"
 #include "timed-effects.h"
 
 #define MAX_LOST 100
@@ -150,16 +151,41 @@ void place_followers()
     _place_lost_ones(_level_place_followers);
 }
 
+static void _place_oka_duel_target(monster* mons)
+{
+    int seen = 0;
+    coord_def targ;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (cell_is_solid(*ri) || (env.pgrid(*ri) & FPROP_NO_TELE_INTO))
+            continue;
+
+        const int dist = grid_distance(you.pos(), *ri);
+        if (dist > 5 || dist < 3)
+            continue;
+
+        if (one_chance_in(++seen))
+            targ = *ri;
+    }
+
+    if (!targ.origin())
+        mons->move_to_pos(targ);
+}
+
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
 
-    // Duel targets have to arrive next to the player.
-    bool near_player = f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY)
-                       || f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
+    // Duel targets that survive a duel (due to player excommunication) should
+    // be placed next to the player when they exit.
+    bool near_player = f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
 
     if (monster* mons = f.place(near_player))
     {
+        // Try to place current duel targets 3-5 spaces away from the player
+        if (f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            _place_oka_duel_target(mons);
+
         // Figure out how many turns we need to update the monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
 
