@@ -170,10 +170,11 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
     fail_check();
 
+    constexpr int abj_dur = 5;
     // Summon our dog if one isn't already active
     if (!old_dog)
     {
-        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
+        mgen_data mg = _pal_data(MONS_INUGAMI, abj_dur, god, SPELL_CALL_CANINE_FAMILIAR);
 
         monster* dog = create_monster(mg);
         if (!dog)
@@ -203,6 +204,12 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
         old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
         old_dog->lose_ench_levels(ENCH_POISON, 1);
         old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+
+        // Reset duration so the dog doesn't disappear immediately after
+        mon_enchant en = old_dog->get_ench(ENCH_ABJ);
+        en.degree = abj_dur;
+        en.set_duration(calc_abj_duration(old_dog, abj_dur));
+        old_dog->update_ench(en);
     }
 
     return spret::success;
@@ -1168,7 +1175,7 @@ spret summon_shadow_creatures()
             int x = max(mons->get_experience_level() - 3, 1);
             int d = min(4, 1 + div_rand_round(17, x));
             mon_enchant me = mon_enchant(ENCH_ABJ, d);
-            me.set_duration(mons, &me);
+            me.add_duration(mons, &me);
             mons->update_ench(me);
 
             // Set summon ID, to share summon cap with its band members
