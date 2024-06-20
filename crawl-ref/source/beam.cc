@@ -4258,7 +4258,7 @@ void bolt::affect_player()
     }
 
     if (flavour == BEAM_LIGHT)
-        blind_player(random_range(5, 15), WHITE);
+        blind_player(random_range(7, 12), WHITE);
 
     if (flavour == BEAM_MIASMA && final_dam > 0)
         was_affected = miasma_player(agent(), name);

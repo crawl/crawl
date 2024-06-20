@@ -995,3 +995,9 @@ Nightfall status
 
 You are channelling the deepest night, greatly reducing your sight range. It
 will gradually return to normal over time.
+%%%%
+Blind status
+
+Your vision is badly impaired. All spells and attacks you perform (which do not
+automatically hit) have an increased chance to miss. This chance is much greater
+the further away you are from your target.

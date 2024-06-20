@@ -231,6 +231,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_FROZEN] = 0;
         you.duration[DUR_SAP_MAGIC] = 0;
         you.duration[DUR_SLOW] = 0;
+        you.duration[DUR_BLIND] = 0;
         you.duration[DUR_CANINE_FAMILIAR_DEAD] = 0;
         you.duration[DUR_VORTEX_COOLDOWN] = 0;
         you.duration[DUR_DRAGON_CALL_COOLDOWN] = 0;
