@@ -31,3 +31,5 @@ void do_rimeblight_explosion(coord_def pos, int power, int size);
 bool maybe_spread_rimeblight(monster& victim, int power, bool test_only = false);
 bool apply_rimeblight(monster& victim, int power, bool quiet = false);
 void tick_rimeblight(monster& victim);
+
+spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool check_only = false);

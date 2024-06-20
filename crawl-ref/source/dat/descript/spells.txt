@@ -111,12 +111,6 @@ Bind Souls spell
 Bestows an enchantment on other nearby living creatures that causes them to
 rise as simulacra after being slain.
 %%%%
-Black Mark spell
-
-Empowers the caster and any nearby allies to debilitate their foes on a
-successful melee attack, allowing them to inflict draining, cause weakness, or
-deplete magical power.
-%%%%
 Blink Allies Away spell
 
 Blinks allies in sight of the caster away from a nearby enemy.
@@ -1509,6 +1503,13 @@ from any source grants immunity to binding.
 
 Only one set of sigils can be maintained at a time, and they will expire
 prematurely if they leave your sight.
+%%%%
+Sign of Ruin spell
+
+Inflicts the sign of ruin upon a group of enemies, condemning their bodies to
+inexorable decay and collapse. Whenever anything bearing this sign receives
+damage from a melee attack, they will suffer heavy draining and may additionally
+become either slow, weak, or blind.
 %%%%
 Silence spell
 

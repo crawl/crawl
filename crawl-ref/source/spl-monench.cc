@@ -308,3 +308,68 @@ void tick_rimeblight(monster& victim)
     if (victim.alive())
         victim.props[RIMEBLIGHT_TICKS_KEY] = (++ticks);
 }
+
+spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool check_only)
+{
+    vector<actor*> targets;
+
+    // Gather targets (returning early if we're just checking if there are any)
+    for (radius_iterator ri(target, 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        actor* act = actor_at(*ri);
+        if (!act)
+            continue;
+
+        if (!mons_aligned(&caster, act))
+        {
+            if (act->is_player() && !you.duration[DUR_SIGN_OF_RUIN]
+                || act->is_monster() && !act->as_monster()->has_ench(ENCH_SIGN_OF_RUIN))
+            {
+                if (check_only)
+                    return spret::success;
+                else
+                    targets.push_back(act);
+            }
+        }
+    }
+
+    // No targets were found
+    if (check_only)
+        return spret::abort;
+
+    // Show animation
+    for (int i = 2; i >= 0; --i)
+    {
+        for (distance_iterator di(target, false, false, i); di; ++di)
+        {
+            if (grid_distance(target, *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                flash_tile(*di, random_choose(DARKGRAY, RED), 0);
+            }
+        }
+
+        animation_delay(50, true);
+        view_clear_overlays();
+    }
+
+    // Apply signs
+    for (actor* act : targets)
+    {
+        if (act->is_player())
+        {
+            mprf(MSGCH_WARN, "The sign of ruin forms upon you!");
+            you.duration[DUR_SIGN_OF_RUIN] = random_range(duration, duration * 3 / 2);
+        }
+        else
+        {
+            if (you.can_see(*act))
+                mprf("The sign of ruin forms upon %s!", act->name(DESC_THE).c_str());
+
+            act->as_monster()->add_ench(mon_enchant(ENCH_SIGN_OF_RUIN, 1, &caster,
+                                                    random_range(duration, duration * 3 / 2)));
+        }
+    }
+
+    return spret::success;
+}

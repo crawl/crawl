@@ -149,7 +149,7 @@ enum monster_info_flags
     MB_POISON_VULN,
     MB_AGILE,
     MB_FROZEN,
-    MB_BLACK_MARK,
+    MB_SIGN_OF_RUIN,
     MB_SAP_MAGIC,
     MB_SHROUD,
     MB_CORROSION,

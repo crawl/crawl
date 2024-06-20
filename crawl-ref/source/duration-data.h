@@ -643,6 +643,10 @@ static const duration_def duration_data[] =
       "The further away your target is the more your accuracy is reduced.",
       D_DISPELLABLE | D_EXPIRES, {{ "",
         [](){mprf(MSGCH_RECOVERY, "Your vision returns to normal.");}}}},
+    { DUR_SIGN_OF_RUIN, RED, "Ruin",
+      "sign of ruin", "ruin",
+      "The sign of ruin enfeebles you when you suffer attacks.", D_DISPELLABLE,
+      {{ "The sign of ruin upon you fades." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

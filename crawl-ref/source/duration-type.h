@@ -263,5 +263,6 @@ enum duration_type
     DUR_FUSILLADE,
     DUR_PRIMORDIAL_NIGHTFALL,
     DUR_BLIND,
+    DUR_SIGN_OF_RUIN,
     NUM_DURATIONS
 };

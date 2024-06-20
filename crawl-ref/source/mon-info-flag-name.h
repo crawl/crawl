@@ -57,7 +57,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_REPEL_MSL, "repels missiles", "repelling missiles", "repel missiles"},
     { MB_TOXIC_RADIANCE, "toxic aura", "radiating toxic energy", "toxic auras"},
     { MB_CONCENTRATE_VENOM, "curare", "concentrated venom", "curare" },
-    { MB_BLACK_MARK, "black mark", "absorbing vital energies", "black marks"},
+    { MB_SIGN_OF_RUIN, "sign of ruin", "marked with the sign of ruin", "signs of ruin"},
     { MB_RESISTANCE, "resistant", "unusually resistant", "resistant"},
     { MB_INVISIBLE, "invisible", "slightly transparent", "invisible"},
     { MB_REGENERATION, "regenerating", "regenerating", "regenerating"},

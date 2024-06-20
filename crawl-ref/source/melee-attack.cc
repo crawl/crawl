@@ -378,12 +378,9 @@ void melee_attack::apply_black_mark_effects()
         DRAINING,
     };
 
-    // Less reliable effects for players.
     if (attacker->is_player()
         && you.has_mutation(MUT_BLACK_MARK)
-        && one_chance_in(5)
-        || attacker->is_monster()
-           && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
+        && one_chance_in(5))
     {
         if (!defender->alive())
             return;
@@ -415,6 +412,62 @@ void melee_attack::apply_black_mark_effects()
                 break;
             case DRAINING:
                 defender->drain(attacker, false, damage_done);
+                break;
+        }
+    }
+}
+
+void melee_attack::apply_sign_of_ruin_effects()
+{
+    enum ruin_effect
+    {
+        SLOW,
+        WEAKNESS,
+        BLIND,
+    };
+
+    if (defender->is_monster() && defender->as_monster()->has_ench(ENCH_SIGN_OF_RUIN)
+        || defender->is_player() && you.duration[DUR_SIGN_OF_RUIN])
+    {
+        if (!defender->alive())
+            return;
+
+        // Always drain heavily, then apply one other random effect
+        defender->drain(attacker, false, random_range(30, 50));
+
+        vector<ruin_effect> effects;
+
+        if (defender->is_player()
+            || mons_has_attacks(*defender->as_monster()))
+        {
+            effects.push_back(WEAKNESS);
+        }
+        if (defender->is_player() || mons_can_be_dazzled(defender->type))
+            effects.push_back(BLIND);
+        if (!defender->stasis())
+            effects.push_back(SLOW);
+
+        if (effects.empty())
+            return;
+
+        ruin_effect choice = effects[random2(effects.size())];
+
+        switch (choice)
+        {
+            case SLOW:
+                defender->slow_down(attacker, random_range(5, 8));
+                break;
+            case WEAKNESS:
+                defender->weaken(attacker, 6);
+                break;
+            case BLIND:
+                if (defender->is_monster())
+                {
+                    defender->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, attacker,
+                                                    random_range(5, 8) * BASELINE_DELAY));
+                }
+                else
+                    blind_player(random_range(5, 8));
                 break;
         }
     }
@@ -638,6 +691,7 @@ bool melee_attack::handle_phase_hit()
         apply_black_mark_effects();
         do_ooze_engulf();
         try_parry_disarm();
+        apply_sign_of_ruin_effects();
     }
 
     if (attacker->is_player())

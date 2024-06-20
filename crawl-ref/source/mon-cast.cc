@@ -2149,7 +2149,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_POLAR_VORTEX:
     case SPELL_DISCHARGE:
     case SPELL_IGNITE_POISON:
-    case SPELL_BLACK_MARK:
+    case SPELL_SIGN_OF_RUIN:
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_PHANTOM_MIRROR:
     case SPELL_SUMMON_MANA_VIPER:
@@ -3832,23 +3832,6 @@ static bool _mutation_vulnerable(const actor* victim)
     if (!victim)
         return false;
     return victim->can_mutate();
-}
-
-static void _cast_black_mark(monster* agent)
-{
-    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (ai->is_player() || !mons_aligned(*ai, agent))
-            continue;
-        monster* mon = ai->as_monster();
-
-        if (!mon->has_ench(ENCH_BLACK_MARK)
-            && mons_has_attacks(*mon))
-        {
-            mon->add_ench(ENCH_BLACK_MARK);
-            simple_monster_message(*mon, " begins absorbing vital energies!");
-        }
-    }
 }
 
 static void _prayer_of_brilliance(monster* agent)
@@ -7246,8 +7229,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_ignite_poison(mons, splpow, false);
         return;
 
-    case SPELL_BLACK_MARK:
-        _cast_black_mark(mons);
+    case SPELL_SIGN_OF_RUIN:
+        cast_sign_of_ruin(*mons, foe->pos(), random_range(25, 35) * BASELINE_DELAY);
         return;
 
     case SPELL_BLINK_ALLIES_AWAY:
@@ -8545,8 +8528,10 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(handle_throw(mon, beam, true, true));
     }
 
-    case SPELL_BLACK_MARK:
-        return ai_action::good_or_impossible(!mon->has_ench(ENCH_BLACK_MARK));
+    case SPELL_SIGN_OF_RUIN:
+        ASSERT(foe);
+        return ai_action::good_or_impossible(cast_sign_of_ruin(*mon, foe->pos(), 1, true)
+                                                == spret::success);
 
     case SPELL_BLINK_ALLIES_AWAY:
         ASSERT(foe);

@@ -2286,6 +2286,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
     { MB_ARMED, TILEI_UNDYING_ARMS },
     { MB_SHADOWLESS, TILEI_SHADOWLESS },
+    { MB_SIGN_OF_RUIN, TILEI_SIGN_OF_RUIN },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

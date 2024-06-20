@@ -1128,6 +1128,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.RIMEBLIGHT:
                 case icons.UNDYING_ARMS:
                 case icons.BIND:
+                case icons.SIGN_OF_RUIN:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

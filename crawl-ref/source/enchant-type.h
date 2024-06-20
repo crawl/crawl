@@ -149,7 +149,7 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_EPHEMERAL_INFUSION,
 #endif
-    ENCH_BLACK_MARK,
+    ENCH_SIGN_OF_RUIN,
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRAND_AVATAR,
 #endif

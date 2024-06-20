@@ -91,6 +91,7 @@ rimeblight RIMEBLIGHT
 arms UNDYING_ARMS
 shadowless SHADOWLESS
 bind BIND
+sign_of_ruin SIGN_OF_RUIN
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

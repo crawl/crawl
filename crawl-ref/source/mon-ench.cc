@@ -804,13 +804,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_BLACK_MARK:
-        if (!quiet)
-        {
-            simple_monster_message(*this, " is no longer absorbing vital"
-                                         " energies.");
-        }
-        calc_speed();
+    case ENCH_SIGN_OF_RUIN:
+        simple_monster_message(*this, "'s sign of ruin fades away.");
         break;
 
     case ENCH_SAP_MAGIC:
@@ -1387,7 +1382,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_EMPOWERED_SPELLS:
     case ENCH_BOUND_SOUL:
     case ENCH_INFESTATION:
-    case ENCH_BLACK_MARK:
+    case ENCH_SIGN_OF_RUIN:
     case ENCH_STILL_WINDS:
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
@@ -2314,7 +2309,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_WEAK:
     case ENCH_INVIS:
     case ENCH_AGILE:
-    case ENCH_BLACK_MARK:
+    case ENCH_SIGN_OF_RUIN:
     case ENCH_RESISTANCE:
     case ENCH_IDEALISED:
     case ENCH_BOUND_SOUL:

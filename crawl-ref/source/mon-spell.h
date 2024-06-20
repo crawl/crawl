@@ -1616,7 +1616,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_DRAINING, 18, MON_SPELL_PRIEST },
        { SPELL_DISPEL_UNDEAD_RANGE, 18, MON_SPELL_PRIEST },
-       { SPELL_BLACK_MARK, 28, MON_SPELL_PRIEST },
+       { SPELL_SIGN_OF_RUIN, 28, MON_SPELL_PRIEST },
       }
     },
 
@@ -1856,7 +1856,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SYMBOL_OF_TORMENT, 11, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
        { SPELL_SUMMON_UNDEAD, 33, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
-       { SPELL_BLACK_MARK, 22, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
+       { SPELL_SIGN_OF_RUIN, 22, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
       }
     },
 

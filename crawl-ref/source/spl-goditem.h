@@ -48,7 +48,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_POISON_VULN,
     ENCH_AGILE,
     ENCH_FROZEN,
-    ENCH_BLACK_MARK,
+    ENCH_SIGN_OF_RUIN,
     ENCH_SAP_MAGIC,
     ENCH_CORROSION,
     ENCH_REPEL_MISSILES,
