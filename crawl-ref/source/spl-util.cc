@@ -1495,6 +1495,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you already have an active mortar!";
         break;
 
+    case SPELL_STARBURST:
+        if (temp && you.current_vision == 0)
+            return "you cannot see far enough to hit anything with this spell.";
+
     default:
         break;
     }
