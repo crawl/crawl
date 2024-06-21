@@ -1810,6 +1810,31 @@ static bool _do_wield_weapon(item_def &new_wpn, const item_def *old_wpn,
     // Unwield any old weapon.
     if (old_wpn)
     {
+        bool penance = false;
+        // check_old_item_warning isn't able to determine which weapon slot we are
+        // unwielding, so we have to prompt coglins for unwield effects here.
+        // XXX This duplicates code both in unwield_weapon and
+        // check_old_item_warning, but it would require a major refactor to fix
+        // it, and I'm not brave enough. -- NormalPerson7
+        if (you.has_mutation(MUT_WIELD_OFFHAND)
+            && (needs_handle_warning(*old_wpn, OPER_WIELD, penance)
+            // check specifically for !u inscriptions:
+                || needs_handle_warning(*old_wpn, OPER_UNEQUIP, penance)))
+        {
+            string prompt = "Really unwield ";
+            if (old_wpn->cursed())
+                prompt += "and destroy ";
+            prompt += old_wpn->name(DESC_INVENTORY) + "?";
+            if (penance)
+                prompt += " This could place you under penance!";
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
+
         if (!unwield_item(*old_wpn))
             return false;
 
