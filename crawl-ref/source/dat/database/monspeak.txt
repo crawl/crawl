@@ -6950,7 +6950,7 @@ VISUAL:@The_monster@ applauds @reflexive@.
 @The_monster@ says, "Show's over."
 ## END Sonja ##
 %%%%
-############ TERENCE ### A fighter who likes to kill
+############ TERENCE ### A retired veteran who hates being disturbed
 Terence
 
 @_Terence_common_@
@@ -6964,39 +6964,58 @@ VISUAL:@The_monster@ looks scornfully at @foe@.
 
 VISUAL:@The_monster@ bares @possessive@ teeth.
 
-@The_monster@ asks @foe,@ "Do you want it fast or slow?"
+VISUAL:@The_monster@ looks irritated.
 
-@The_monster@ says @to_foe@, "Don't bother to defend, it's @_pointless_@."
+@The_monster@ screams @at_foe@, "I fought strong elephant-riders! You're not strong!"
 
-@The_monster@ shouts @at_foe@, "Now you die!"
+@The_monster@ looks @foe@ up and down. "You're not a real warrior! I'll show you a warrior!"
 
-@The_monster@ shouts @at_foe@, "[ATTACK|DIE]!!!"
+@The_monster@ says @to_foe@, "I've sent legions of armataurs to their deaths. With their elephants."
 
-@The_monster@ shouts @at_foe@, "Get ready for death!"
+@The_monster@ screams @at_foe@, "I hate armataurs! They have no honour!"
 
-@The_monster@ screams @at_foe@, "I want your blood!"
+@The_monster@ says @to_foe@, "I retired to this dungeon. Do you want to retire to the afterlife?"
 
-@The_monster@ screams @at_foe@, "I'm going to kill you!"
+@The_monster@ screams @at_foe@, "I'm retired! Go away!"
+
+@The_monster@ screams @at_foe@, "I want to be left alone!"
 %%%%
 _Terence_rare_
 
-@The_monster@ says @to_foe@, "Rest in peace."
+@The_monster@ screams @at_foe@, "Your {{
+if you.race() == "Armataur" then
+    return "tough hide"
+else
+    return "supposed skill"
+end
+}} won't protect you!" @player_only@
 
-@The_monster@ says @to_foe@, "How do you enjoy it?"
+@The_monster@ screams @at_foe@, "Where's your {{
+if you.race() == "Armataur" then
+    return "elephant"
+else
+    return "power"
+end
+}} now?!" @player_only@
 
-@The_monster@ says @to_foe@, "You're history."
+@The_monster@ screams @at_foe@, "Stand, coward! You want a fight, show some honour!"
 
-@The_monster@ says @to_foe@, "Did you write a will? You should..."
+@The_monster@ says @to_foe@, "I'm tired of war. But if you want blood, you'll get blood!"
 
-@The_monster@ says @to_foe@, "Time to say good-bye..."
+@The_monster@ screams @at_foe@, "Get out, before I make you get out!"
+
+@The_monster@ screams @at_foe@, "I hate trespassers!"
+
+@The_monster@ screams @at_foe@, "I put up a 'Do Not Disturb' sign! Can't you read?!"
 %%%%
 Terence triumphant
 
-@The_monster@ says, "Rest in peace."
+@The_monster@ says, "Finally, peace and quiet."
 
-@The_monster@ says, "That felt goooood."
+@The_monster@ says, "And stay out!"
 
-@The_monster@ says, "Time to find some more victims."
+# Ayla, Chrono Trigger
+@The_monster@ says, "Win and live. Lose and die. It's the rule of life."
 ## END Terence ###
 %%%%
 ##################### A coarse and lanky orc. Urug lost her eye in a fight with a harpy,
