@@ -89,8 +89,10 @@ void monster_drop_things(monster* mons,
 
         // If a monster is swimming, the items are ALREADY underwater.
         if (move_item_to_grid(&item, mons->pos(), mons->swimming())
-            && env.item[item].base_type == OBJ_GOLD
             && player_under_penance(GOD_GOZAG)
+            // Dropping items into water/lava may have destroyed them
+            && item != NON_ITEM
+            && env.item[item].base_type == OBJ_GOLD
             && you.see_cell(mons->pos())
             && x_chance_in_y(env.item[item].quantity, 100))
         {
