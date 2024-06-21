@@ -89,8 +89,7 @@ int aux_to_hit()
 
 }
 
-static double _to_hit_to_land(const monster_info& mi, attack &atk,
-                              const int distance)
+static double _to_hit_to_land(attack &atk)
 {
     int to_land = atk.calc_pre_roll_to_hit(false);
     if (to_land >= AUTOMATIC_HIT)
@@ -185,7 +184,7 @@ static double _to_hit_shield_chance(const monster_info& mi,
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
                bool penetrating, int distance)
 {
-    const int to_land = _to_hit_to_land(mi, atk, distance);
+    const int to_land = _to_hit_to_land(atk);
     const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
     const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
     const int blind_miss_chance = player_blind_miss_chance(distance);
