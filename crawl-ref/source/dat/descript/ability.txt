@@ -227,11 +227,9 @@ Bring forth those near death from Kikubaaqudgha's necropolis, providing ample
 fodder for all kinds of necromancy. Their number and quality is dependent on
 Necromancy skill.
 %%%%
-Torment ability
+Sign of Ruin ability
 
-Call out to the dead, making all living creatures in sight experience all the
-pain some poor soul suffered in its entire life. This damage is never directly
-lethal. Kikubaaqudgha will always at least partially shield you from the effect.
+[[Sign of Ruin spell]]
 %%%%
 Brand Weapon With Pain ability
 

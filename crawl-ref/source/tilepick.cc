@@ -3835,8 +3835,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Kiku
     case ABIL_KIKU_UNEARTH_WRETCHES:
         return TILEG_ABILITY_KIKU_UNEARTH_WRETCHES;
-    case ABIL_KIKU_TORMENT:
-        return TILEG_ABILITY_KIKU_TORMENT;
+    case ABIL_KIKU_SIGN_OF_RUIN:
+        return TILEG_ABILITY_KIKU_SIGN_OF_RUIN;
     case ABIL_KIKU_BLESS_WEAPON:
         return TILEG_ABILITY_KIKU_BLESS_WEAPON;
     case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
