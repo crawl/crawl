@@ -173,13 +173,13 @@ bool EquipOnDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep equipping yourself?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -210,13 +210,13 @@ bool EquipOffDelay::try_interrupt(bool force)
                                && get_armour_slot(equip) != EQ_OFFHAND;
         const char* verb = is_armour ? "disrobing" : "removing your equipment";
         const string prompt = make_stringf("Keep %s?", verb);
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno(prompt.c_str(), false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -264,13 +264,13 @@ bool ExsanguinateDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep bloodletting?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -289,13 +289,13 @@ bool RevivifyDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Continue your ritual?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
@@ -314,13 +314,13 @@ bool TransformDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep transforming yourself?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (!interrupt)
@@ -337,13 +337,13 @@ bool ImbueDelay::try_interrupt(bool force)
         interrupt = true;
     else if (duration > 1 && !was_prompted)
     {
+        // yesno might call this function again, don't double prompt
+        was_prompted = true;
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep imbuing your servitor?", false, 0, false))
         {
             interrupt = true;
         }
-        else
-            was_prompted = true;
     }
 
     if (interrupt)
