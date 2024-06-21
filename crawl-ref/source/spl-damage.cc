@@ -3403,11 +3403,8 @@ spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer)
             if (!victim || !caster->can_see(*victim) || !vulnerable(victim))
                 continue;
 
-            if (caster->is_monster() && !mons_aligned(caster, victim)
-                || caster->is_player() && victim->as_monster()->friendly())
-            {
+            if (!mons_aligned(caster, victim))
                 return spret::success;
-            }
         }
 
         return spret::abort;
