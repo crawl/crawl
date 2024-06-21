@@ -1160,12 +1160,15 @@ static void _input()
 #endif
 
         // Some delays reset you.time_taken.
-        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over)
+            && you.berserk())
         {
-            if (you.berserk())
-                _do_berserk_no_combat_penalty();
-            world_reacts();
+            _do_berserk_no_combat_penalty();
         }
+
+        // Call this even if we took no time - we might have been banished
+        // by an unwield effect.
+        world_reacts();
 
         if (!you_are_delayed())
             update_can_currently_train();
