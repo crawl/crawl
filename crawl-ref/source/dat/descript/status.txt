@@ -1005,4 +1005,4 @@ the further away you are from your target.
 Ruin status
 
 You are marked with the sign of ruin, causing any melee attacks which damage you
-to inflict heavy draining and also one of slow, weak, or blind at random.
+to heavily drain and randomly slow, weaken, or blind you.
