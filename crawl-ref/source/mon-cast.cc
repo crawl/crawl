@@ -8529,8 +8529,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     }
 
     case SPELL_SIGN_OF_RUIN:
-        ASSERT(foe);
-        return ai_action::good_or_impossible(cast_sign_of_ruin(*mon, foe->pos(), 1, true)
+        return ai_action::good_or_impossible(foe &&
+                                             cast_sign_of_ruin(*mon, foe->pos(), 1, true)
                                                 == spret::success);
 
     case SPELL_BLINK_ALLIES_AWAY:
