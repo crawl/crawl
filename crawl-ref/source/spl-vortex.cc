@@ -248,7 +248,7 @@ void polar_vortex_damage(actor *caster, int dur)
         return;
 
     int pow;
-    const int max_radius = POLAR_VORTEX_RADIUS;
+    const int max_radius = min(POLAR_VORTEX_RADIUS, (int)you.current_vision);
 
     if (caster->is_player())
         pow = you.props[VORTEX_POWER_KEY].get_int();
