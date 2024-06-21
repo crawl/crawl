@@ -1001,3 +1001,8 @@ Blind status
 Your vision is badly impaired. All spells and attacks you perform (which do not
 automatically hit) have an increased chance to miss. This chance is much greater
 the further away you are from your target.
+%%%%
+Ruin status
+
+You are marked with the sign of ruin, causing any melee attacks which damage you
+to inflict heavy draining and also one of slow, weak, or blind at random.
