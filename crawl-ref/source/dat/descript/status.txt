@@ -813,12 +813,6 @@ Gem status
 If you spend the indicated number of turns in this branch, its gem will be found
 and shattered by the power of Zot.
 %%%%
-Curl status
-
-After being struck by an attack, you reflexively curled up, protecting yourself
-against subsequent strikes. You are now emerging from that defensive curl and
-will receive no further protection until after you are struck again.
-%%%%
 rF0 status
 
 The wrath of Ignis prevents you from resisting fire.
