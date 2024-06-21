@@ -379,44 +379,6 @@ static bool _allied_monster_at(monster* mon, coord_def delta)
     return mons_aligned(mon, ally);
 }
 
-// Altars as well as branch entrances are considered interesting for
-// some monster types.
-static bool _mon_on_interesting_grid(monster* mon)
-{
-    const dungeon_feature_type feat = env.grid(mon->pos());
-
-    switch (feat)
-    {
-    // Holy beings will tend to patrol around altars to the good gods.
-    case DNGN_ALTAR_ELYVILON:
-        if (!one_chance_in(3))
-            return false;
-        // else fall through
-    case DNGN_ALTAR_ZIN:
-    case DNGN_ALTAR_SHINING_ONE:
-        return mon->is_holy();
-
-    // Orcs will tend to patrol around altars to Beogh, and guard the
-    // stairway from and to the Orcish Mines.
-    case DNGN_ALTAR_BEOGH:
-    case DNGN_ENTER_ORC:
-    case DNGN_EXIT_ORC:
-        return mons_is_native_in_branch(*mon, BRANCH_ORC);
-
-    // Same for elves and the Elven Halls.
-    case DNGN_ENTER_ELF:
-    case DNGN_EXIT_ELF:
-        return mons_is_native_in_branch(*mon, BRANCH_ELF);
-
-    // Spiders...
-    case DNGN_ENTER_SPIDER:
-        return mons_is_native_in_branch(*mon, BRANCH_SPIDER);
-
-    default:
-        return false;
-    }
-}
-
 static void _passively_summon_butterfly(const monster &summoner)
 {
     const actor* foe = summoner.get_foe();
@@ -446,21 +408,6 @@ static void _passively_summon_butterfly(const monster &summoner)
         }
     }
     butt->move_to_pos(closest_pos);
-}
-
-// If a hostile monster finds itself on a grid of an "interesting" feature,
-// while unoccupied, it will remain in that area, and try to return to it
-// if it left it for fighting, seeking etc.
-static void _maybe_set_patrol_route(monster* mons)
-{
-    if (_mon_on_interesting_grid(mons) // Patrolling shouldn't always happen
-        && one_chance_in(4)
-        && mons_is_wandering(*mons)
-        && !mons->is_patrolling()
-        && !mons->friendly())
-    {
-        mons->patrol_point = mons->pos();
-    }
 }
 
 static bool _mons_can_cast_dig(const monster* mons, bool random)
@@ -576,8 +523,6 @@ static coord_def _find_best_step(monster* mons)
 {
     if (!_fungal_move_check(*mons))
         return coord_def();
-
-    _maybe_set_patrol_route(mons);
 
     if (sanctuary_exists())
     {
