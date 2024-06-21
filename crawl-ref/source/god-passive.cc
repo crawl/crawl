@@ -1525,6 +1525,10 @@ static coord_def _shadow_already_okay_for_ranged(coord_def preferred_target)
     if (!shadow)
         return coord_def();
 
+    // Check that it's actually wielding a ranged weapon.
+    if (!shadow->launcher())
+        return coord_def();
+
     if (_simple_shot_tracer(shadow->pos(), preferred_target, shadow->mid))
         return preferred_target;
     else if (shadow->props.exists(DITH_SHADOW_LAST_TARGET_KEY))
