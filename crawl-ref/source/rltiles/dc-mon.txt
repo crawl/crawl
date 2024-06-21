@@ -455,7 +455,7 @@ demonspawn MONS_DEMONSPAWN
 blood_saint MONS_DEMONSPAWN_BLOOD_SAINT
 warmonger MONS_DEMONSPAWN_WARMONGER
 corrupter MONS_DEMONSPAWN_CORRUPTER
-black_sun MONS_DEMONSPAWN_BLACK_SUN
+soul_scholar MONS_DEMONSPAWN_SOUL_SCHOLAR
 mon/unique/amaemon MONS_AMAEMON
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault

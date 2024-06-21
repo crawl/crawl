@@ -2630,13 +2630,6 @@ battlesphere
  But I am”
     -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
 %%%%
-demonspawn black sun
-
-“The sky is sad and beautiful, like a vast altar.
- The sun has drowned in its congealing blood.”
-    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
-     trans. Ruth White, 1969.
-%%%%
 boggart
 
 “He thinks every bush a boggart.”
@@ -3878,6 +3871,11 @@ sun demon
 “Behold him setting in his western skies,
  The shadows lengthening as the vapours rise.”
     -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
+
+“The sky is sad and beautiful, like a vast altar.
+ The sun has drowned in its congealing blood.”
+    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
+     trans. Ruth White, 1969.
 %%%%
 swamp drake
 

@@ -67,7 +67,7 @@ function pan_lord_setup(_G, name)
                  "hellephant skeleton w:100 / soul eater w:200 / " ..
                  "reaper w:200 / executioner w:300 / " ..
                  "flayed ghost / laughing skull band / shadow wraith / " ..
-                 "demonspawn black sun"
+                 "demonspawn soul scholar"
     }
     local decName = "empty"
 
@@ -108,7 +108,7 @@ function pan_lord_setup(_G, name)
         _G.lrocktile("wall_hall_darkgray")
         _G.tile ("c = dngn_stone_dark")
         _G.kitem("O = dark rune of Zot")
-        _G.kmons("& = patrolling demonspawn black sun")
+        _G.kmons("& = patrolling demonspawn soul scholar")
         decName = "gloorxdec"
     end
 
@@ -207,13 +207,13 @@ end
 function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
     e.tags('allow_dup')
     e.orient('float')
-    e.kmons(anyglyph .. " = any demon w:76 / demonspawn black sun w:1 / \
+    e.kmons(anyglyph .. " = any demon w:76 / demonspawn soul scholar w:1 / \
                             demonspawn blood saint w:1 / \
                             demonspawn corrupter w:1 / \
                             demonspawn warmonger w:1")
     e.kmons(commonglyph .. " = common demon")
     e.kmons(greaterglyph .. " = greater demon w:36 / \
-                                demonspawn black sun w:1 / \
+                                demonspawn soul scholar w:1 / \
                                 demonspawn blood saint w:1 / \
                                 demonspawn corrupter w:1 / \
                                 demonspawn warmonger w:1")
@@ -2620,9 +2620,9 @@ KITEM:   TUY = $ / nothing w:50
 KMONS:   HJKLMNOS-_ = deep elf demonologist / kobold demonologist / \
            mummy priest / orc high priest / orc sorcerer / dread lich / \
            greater demon w:60 / demonspawn warmonger w:2 / \
-           demonspawn black sun w:2 / demonspawn blood saint w:2 / \
+           demonspawn soul scholar w:2 / demonspawn blood saint w:2 / \
            demonspawn corrupter w:2 / any demon w:112 / nothing w:300
-KMONS:   YPQR = greater demon w:360 / demonspawn black sun / \
+KMONS:   YPQR = greater demon w:360 / demonspawn soul scholar / \
            demonspawn blood saint / demonspawn corrupter / demonspawn warmonger
 KFEAT:   _ = altar_gozag
 KFEAT:   P = exit_pandemonium
@@ -2697,7 +2697,7 @@ NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
-MONS:   demonspawn black sun, sin beast, any demon
+MONS:   demonspawn soul scholar, sin beast, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
@@ -2939,7 +2939,7 @@ NAME:   grunt_pan_frozen_over
 TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
 TAGS:   no_pool_fixup no_monster_gen transparent
 ORIENT: float
-MONS:   blizzard demon, demonspawn black sun
+MONS:   blizzard demon, demonspawn soul scholar
 MONS:   walking frostbound tome, ice devil
 KMONS:  56 = ice statue
 KMONS:  7 = executioner simulacrum

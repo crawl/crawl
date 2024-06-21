@@ -359,7 +359,7 @@ function sroom_demon_pit(e)
 
     lord_mon = "brimstone fiend / ice fiend / tzitzimitl / " ..
                "hell sentinel / demonspawn blood saint w:5 / " ..
-               "demonspawn black sun w:5 / demonspawn corrupter w:5 / " ..
+               "demonspawn soul scholar w:5 / demonspawn corrupter w:5 / " ..
                "demonspawn warmonger"
 
     fill_special_room(e, mons, lord_mon, true)

@@ -5900,22 +5900,22 @@ MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
 NSUBST: - = 2=2 / 2=2- / 3=3 / 3=3- / -
 : if you.in_branch("D") then
-KMONS:  1 = demonspawn black sun
+KMONS:  1 = salamander mystic
 KMONS:  2 = sun demon
-KMONS:  3 = small abomination / large abomination
+KMONS:  3 = salamander / large abomination w:5
 KITEM:  1 = manual of fire magic w:5 / manual of necromancy w:5 / \
             randbook disc:fire disc2:necromancy spells:scorch \
-            slevels:8 numspells:4 title:The_Black_Sun, \
+            slevels:8 numspells:4 title:Dead_Stars, \
             staff of fire / staff of death / scroll of immolation q:3 / \
             scroll of torment q:3 / any weapon ego:flaming / \
             any weapon ego:draining
 : else
 KMONS:  1 = orb of fire
-KMONS:  2 = demonspawn black sun
-KMONS:  3 = draconian scorcher / draconian monk
+KMONS:  2 = sun moth / balrug w:5
+KMONS:  3 = draconian scorcher / draconian monk w:5
 KITEM:  1 = manual of fire magic / manual of necromancy, \
             randbook disc:fire disc2:necromancy spells:starburst \
-            slevels:25 numspells:4 title:The_Black_Sun, \
+            slevels:25 numspells:4 title:Dead_Stars, \
             any weapon ego:flaming randart / any weapon ego:draining randart
 : end
 MAP
@@ -11018,7 +11018,7 @@ SUBST:   F = -, JK = ", ' = ^-, " = ^^-, d = dd$
 KMONS:   1 = ancient lich / dread lich
 NSUBST:  8 = 1 / 8
 : elseif you.in_branch("Pandemonium") then
-KMONS:   1 = greater demon w:20 / demonspawn black sun w:5 / \
+KMONS:   1 = greater demon w:20 / demonspawn soul scholar w:5 / \
              demonspawn blood saint w:5 / demonspawn corrupter w:5 / \
              demonspawn warmonger w:5
 KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
@@ -11098,7 +11098,7 @@ KMONS:  2 = ancient lich / dread lich
 NSUBST: 8 = 2 / 8
 :   elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
-KMONS:  2 = greater demon w:20 / demonspawn black sun w:5 / \
+KMONS:  2 = greater demon w:20 / demonspawn soul scholar w:5 / \
             demonspawn blood saint w:5 / demonspawn corrupter w:5 / \
             demonspawn warmonger w:5
 KMONS:  3 = executioner / brimstone fiend / ice fiend / tzitzimitl \

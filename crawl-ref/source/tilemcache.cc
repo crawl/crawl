@@ -310,7 +310,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEMONSPAWN_BLOOD_SAINT:
     case TILEP_MONS_DEMONSPAWN_WARMONGER:
     case TILEP_MONS_DEMONSPAWN_CORRUPTER:
-    case TILEP_MONS_DEMONSPAWN_BLACK_SUN:
+    case TILEP_MONS_DEMONSPAWN_SOUL_SCHOLAR:
     case TILEP_MONS_VAMPIRE_KNIGHT:
     case TILEP_MONS_ZOMBIE_ORC:
     case TILEP_MONS_JORGRUN:
@@ -892,7 +892,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEMONSPAWN_BLOOD_SAINT:
     case TILEP_MONS_DEMONSPAWN_WARMONGER:
     case TILEP_MONS_DEMONSPAWN_CORRUPTER:
-    case TILEP_MONS_DEMONSPAWN_BLACK_SUN:
+    case TILEP_MONS_DEMONSPAWN_SOUL_SCHOLAR:
     case TILEP_MONS_NORRIS:
         *ofs_x = 2;
         *ofs_y = 0;

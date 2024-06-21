@@ -1,4 +1,4 @@
-name: "demonspawn black sun"
+name: "demonspawn soul scholar"
 glyph: {char: "6", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood]
 resists: {cold: 3}
@@ -11,7 +11,7 @@ hd: 15
 hp_10x: 925
 ac: 9
 ev: 12
-spells: demonspawn_black_sun
+spells: demonspawn_soul_scholar
 has_corpse: true
 shout: shout
 intelligence: human

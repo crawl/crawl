@@ -1131,11 +1131,6 @@ demonspawn
 A half-mortal, half-demonic creature, with its hellish heritage asserting
 itself through a certain devilish cast to its features.
 %%%%
-demonspawn black sun
-
-A half-mortal, half-demonic creature, covered in icy blue scales. It wields
-powers of darkness from its devotion to the deities of death.
-%%%%
 demonspawn blood saint
 
 A half-mortal, half-demonic creature, radiating an intense heat. It weaves
@@ -1147,11 +1142,17 @@ A half-mortal, half-demonic creature, oozing with dark energies. It twists
 space around itself, and can corrupt weapons, armour and even the very flesh of
 its opponents.
 %%%%
+demonspawn soul scholar
+
+A half-mortal, half-demonic creature, covered in icy blue scales. Its devotion
+to the deities of death grants it great insight into the vulnerabilities and
+applications of mortal souls.
+%%%%
 demonspawn warmonger
 
 A half-mortal, half-demonic creature, now more beast than whatever species it
-is descended from. It is devoted to combat, disrupting the magic of its foes as
-it battles endlessly.
+is descended from. It is devoted to martial combat, disrupting the magic of its
+foes as it feasts off of endless conflict.
 %%%%
 diamond obelisk
 

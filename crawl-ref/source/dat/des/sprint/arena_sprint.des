@@ -621,7 +621,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "spriggan air mage / titan / electric golem w:20 /\
                     storm dragon",
                 "tzitzimitl / reaper / shadow dragon / death drake /\
-                    deep elf death mage / demonspawn black sun /\
+                    deep elf death mage / demonspawn soul scholar /\
                     death knight w:5",
                 "daeva w:20 / angel / cherub / pearl dragon w:20 / ophan / apis",
                 -- Misc

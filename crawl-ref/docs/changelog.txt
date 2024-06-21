@@ -163,6 +163,7 @@ Monsters
   - Hell beasts have become sin beasts, gaining HD and antimagic attacks.
     Geryon's (hell -> sin) beast summoning has been weakened in exchange.
   - Monster shadows are now called shadowghasts.
+  - Monster demonspawn black suns are now called soul scholars.
   - Necrophages are weaker and now only appear from Yred's summonings.
   - Norris now casts Draining Gaze instead of Brain Bite.
   - Ophanim now passively irresistibly inflict Mark on all those they see.

@@ -386,7 +386,7 @@ mset(with_props(spec_fn(function ()
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
          "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
-         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
+         "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
          "player ghost w:" .. f
 end), { weight = 2 }))
 
@@ -471,14 +471,14 @@ local pan_critter_fn = zig_monster_fn(
          "place:Pan w:" .. math.max(1, 105 - you.zigs_completed() * 12) .. " / " ..
          "greater demon w:" .. math.max(1, 75 - you.zigs_completed() * 7) .. " / " ..
          "brimstone fiend w:5 / ice fiend w:5 / tzitzimitl w:5 / " ..
-         "hell sentinel w:5 / demonspawn black sun / " ..
+         "hell sentinel w:5 / demonspawn soul scholar / " ..
          "demonspawn blood saint / demonspawn corrupter / " ..
          "demonspawn warmonger w:" .. 10 + you.zigs_completed())
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
     dgn.set_random_mon_list("place:Pan w:100 / greater demon w:90 / " ..
-         "demonspawn black sun / demonspawn blood saint / " ..
+         "demonspawn soul scholar / demonspawn blood saint / " ..
          "demonspawn corrupter / demonspawn warmonger")
     return pan_lord_fn(x, y)
   else

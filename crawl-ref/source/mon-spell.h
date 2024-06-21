@@ -1612,7 +1612,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEMONSPAWN_BLACK_SUN,
+    {  MST_DEMONSPAWN_SOUL_SCHOLAR,
       {
        { SPELL_BOLT_OF_DRAINING, 18, MON_SPELL_PRIEST },
        { SPELL_DISPEL_UNDEAD_RANGE, 18, MON_SPELL_PRIEST },

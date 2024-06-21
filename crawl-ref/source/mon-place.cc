@@ -1896,7 +1896,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DEMONSPAWN_BLOOD_SAINT, { {}, {{ BAND_BLOOD_SAINT, {1, 3} }}}},
     { MONS_DEMONSPAWN_WARMONGER, { {}, {{ BAND_WARMONGER, {1, 3} }}}},
     { MONS_DEMONSPAWN_CORRUPTER, { {}, {{ BAND_CORRUPTER, {1, 3} }}}},
-    { MONS_DEMONSPAWN_BLACK_SUN, { {}, {{ BAND_BLACK_SUN, {1, 3} }}}},
+    { MONS_DEMONSPAWN_SOUL_SCHOLAR, { {}, {{ BAND_SOUL_SCHOLAR, {1, 3} }}}},
     { MONS_VASHNIA,         { {}, {{ BAND_VASHNIA, {3, 6}, true }}}},
     { MONS_ROBIN,           { {}, {{ BAND_ROBIN, {10, 13}, true }}}},
     { MONS_RAKSHASA,        { {2, 0, []() {
@@ -2459,7 +2459,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
-                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+                                  {MONS_DEMONSPAWN_SOUL_SCHOLAR, 1}}}},
 
     { BAND_WARMONGER,           {{{MONS_EXECUTIONER, 1},
                                   {MONS_SIN_BEAST, 3}},
@@ -2467,7 +2467,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
-                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+                                  {MONS_DEMONSPAWN_SOUL_SCHOLAR, 1}}}},
 
     { BAND_CORRUPTER,           {{{MONS_CACODEMON, 1},
                                   {MONS_SHADOW_DEMON, 3}},
@@ -2475,15 +2475,15 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
-                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+                                  {MONS_DEMONSPAWN_SOUL_SCHOLAR, 1}}}},
 
-    { BAND_BLACK_SUN,           {{{MONS_REAPER, 1},
+    { BAND_SOUL_SCHOLAR,        {{{MONS_REAPER, 1},
                                   {MONS_SOUL_EATER, 1}},
 
                                  {{MONS_DEMONSPAWN_BLOOD_SAINT, 1},
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
-                                  {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
+                                  {MONS_DEMONSPAWN_SOUL_SCHOLAR, 1}}}},
     // for Grunn
     { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
     // for Norris
