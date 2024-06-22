@@ -1240,6 +1240,7 @@ missing_ghost MONS_GHOST
 ghost MONS_PLAYER_GHOST
 silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
+soul_wisp MONS_SOUL_WISP
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
 martyred_shade MONS_MARTYRED_SHADE

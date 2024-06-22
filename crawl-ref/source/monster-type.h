@@ -799,6 +799,7 @@ enum monster_type                      // env.mons[].type
     MONS_ANTIQUE_CHAMPION,
     MONS_REVENANT,
     MONS_LOST_SOUL,
+    MONS_SOUL_WISP,
     MONS_MARTYRED_SHADE,
     MONS_JIANGSHI,
     MONS_SEARING_WRETCH,
@@ -1265,6 +1266,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOD_WRATH_AVATAR,      // Used as a source for some god wrath effects
     MONS_SHADOW_PUPPET,
     MONS_SHADOW_PRISM,
+    MONS_SOUL_WISP,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

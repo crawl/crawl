@@ -1492,7 +1492,7 @@ static bool _give_kiku_gift(bool forced)
         else
             chosen_spells.push_back(SPELL_FUGUE_OF_THE_FALLEN);
 
-        spell_options = {SPELL_NECROTISE,
+        spell_options = {SPELL_SOUL_SPLINTER,
                          SPELL_KISS_OF_DEATH,
                          SPELL_SUBLIMATION_OF_BLOOD,
                          SPELL_ROT,

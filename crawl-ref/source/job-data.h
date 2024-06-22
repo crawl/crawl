@@ -272,7 +272,7 @@ static const map<job_type, job_def> job_data =
     { SP_DEEP_ELF, SP_DJINNI, SP_MOUNTAIN_DWARF, SP_DEMONSPAWN, SP_MUMMY,
       SP_VAMPIRE, },
     {
-        SPELL_NECROTISE,
+        SPELL_SOUL_FLICKER,
         SPELL_VAMPIRIC_DRAINING,
         SPELL_ANIMATE_DEAD,
         SPELL_CURSE_OF_AGONY,

@@ -1,0 +1,15 @@
+name: "soul wisp"
+glyph: {char: "*", colour: lightblue}
+flags: [flies, see_invis, insubstantial]
+xp_mult: 14
+holiness: [undead]
+will: 10
+attacks:
+ - {type: touch, damage: 4}
+hd: 2
+hp_10x: 90
+ac: 3
+ev: 11
+intelligence: brainless
+size: small
+shape: orb

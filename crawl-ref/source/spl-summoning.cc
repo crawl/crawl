@@ -2293,6 +2293,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_MARTYRS_KNELL,            { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
+    { SPELL_SOUL_SPLINTER,            { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
@@ -3255,4 +3256,49 @@ bool hellfire_mortar_active(const actor& agent)
     }
 
     return false;
+}
+
+bool make_soul_wisp(const actor& agent, monster& victim)
+{
+    if (!mons_can_be_spectralised(victim))
+        return false;
+
+    vector<coord_def> spots;
+    for (adjacent_iterator ai(victim.pos()); ai; ++ai)
+    {
+        if (monster_habitable_grid(MONS_SOUL_WISP, env.grid(*ai))
+            && !actor_at(*ai) && agent.see_cell_no_trans(*ai))
+        {
+            spots.push_back(*ai);
+        }
+    }
+    if (spots.size() <= 0)
+        return false;
+
+    if (you.see_cell(victim.pos()))
+    {
+        mprf("A fragment of %s soul is dislodged from %s body.",
+                victim.name(DESC_ITS).c_str(),
+                victim.pronoun(PRONOUN_POSSESSIVE).c_str());
+
+    }
+
+    mgen_data mg = _summon_data(agent, MONS_SOUL_WISP, 2, GOD_NO_GOD, SPELL_SOUL_SPLINTER);
+    mg.pos = spots[random2(spots.size())];
+    mg.flags |= MG_FORCE_PLACE;
+
+    // Damage improves when extracted from stronger enemies, but they are always fragile.
+    mg.hd = 1 + victim.get_experience_level();
+    mg.hp = random_range(7, 11);
+
+    monster* wisp = create_monster(mg);
+
+    wisp->add_ench(mon_enchant(ENCH_HAUNTING, 1, &victim, INFINITE_DURATION));
+    victim.weaken(&agent, wisp->get_ench(ENCH_ABJ).duration / 10);
+
+    // Let wisp act immediately (so that if it appears behind the enemy, the
+    // enemy won't simply move out of range first).
+    wisp->speed_increment = 80;
+
+    return true;
 }

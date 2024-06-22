@@ -76,6 +76,7 @@ msc += $boring:fades into mist
 msc += $boring:returns to the deep
 msc += $boring:shimmers and vanishes
 msc += $boring:turns back into a lifeless stick
+msc += $boring:returns to where it belongs
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage

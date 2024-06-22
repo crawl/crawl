@@ -206,7 +206,7 @@ public:
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength,
                               bool hibernate = false) = 0;
-    virtual void weaken(actor *attacker, int pow) = 0;
+    virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,

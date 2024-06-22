@@ -139,3 +139,5 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail);
 dice_def hellfire_mortar_damage(int pow);
 spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail);
 bool hellfire_mortar_active(const actor& agent);
+
+bool make_soul_wisp(const actor& agent, monster& victim);

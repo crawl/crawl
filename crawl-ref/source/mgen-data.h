@@ -190,7 +190,6 @@ struct mgen_data
                || cls == MONS_PILE_OF_DEBRIS
                || cls == MONS_HELLFIRE_MORTAR
                || summon_type == SPELL_ANIMATE_DEAD
-               || summon_type == SPELL_NECROTISE
                || summon_type == SPELL_DEATH_CHANNEL
                || summon_type == SPELL_BIND_SOULS
                || summon_type == SPELL_SIMULACRUM

@@ -757,13 +757,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_HAUNTING:
-    {
-        mon_enchant abj = get_ench(ENCH_ABJ);
-        abj.degree = 1;
-        abj.duration = min(5 + random2(30), abj.duration);
-        update_ench(abj);
+        if (type != MONS_SOUL_WISP)
+        {
+            mon_enchant abj = get_ench(ENCH_ABJ);
+            abj.degree = 1;
+            abj.duration = min(5 + random2(30), abj.duration);
+            update_ench(abj);
+        }
         break;
-    }
 
     case ENCH_WEAK:
         if (!quiet)
@@ -1387,7 +1388,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     case ENCH_WATERLOGGED:
-    case ENCH_NECROTISE:
     case ENCH_CONCENTRATE_VENOM:
     case ENCH_VITRIFIED:
     case ENCH_INSTANT_CLEAVE:
@@ -2435,8 +2435,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 35 * 10 / _mod_speed(10, mons->speed);
         break;
-    case ENCH_NECROTISE:
-        return 10;
     case ENCH_RING_OF_THUNDER:
     case ENCH_RING_OF_FLAMES:
     case ENCH_RING_OF_CHAOS:

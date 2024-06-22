@@ -2067,6 +2067,9 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         if (mon.type == MONS_NAMELESS)
             attk.damage = mon.get_hit_dice() * 2;
 
+        if (mon.type == MONS_SOUL_WISP)
+            attk.damage = 2 + mon.get_hit_dice();
+
         // Boulder beetles get double attack damage and a normal 'hit' attack.
         if (mon.has_ench(ENCH_ROLLING))
         {

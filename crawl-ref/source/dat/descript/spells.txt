@@ -1138,12 +1138,6 @@ Mud Breath spell
 
 <Mud Breath ability>
 %%%%
-Necrotise spell
-
-Agonizingly rots away the victim's flesh. Those slain by this spell (or otherwise
-dying immediately afterward) may rise as skeletons to fight for the caster. Only
-the living can be affected.
-%%%%
 Noxious Breath spell
 
 <Noxious Breath ability>
@@ -1544,6 +1538,17 @@ Fires a sharp dart of hardened chitin.
 Smiting spell
 
 Smites any targeted enemy within sight, with no direct line of fire required.
+%%%%
+Soul Splinter spell
+
+Attempts to force a tiny fragment of a living, holy, or demonic being's soul to
+take leave of their body and manifest as a soul wisp. This wisp is nominally
+under the necromancer's control, but will focus its attacks foremost on the
+creature it was created from, instinctually trying to return to its proper home
+once more.
+
+Wisps created from more powerful souls have more damaging attacks, but are
+always fragile.
 %%%%
 Spawn Tentacles spell
 

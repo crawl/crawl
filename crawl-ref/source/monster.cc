@@ -5575,7 +5575,7 @@ void monster::put_to_sleep(actor */*attacker*/, int /*strength*/, bool hibernate
         add_ench(ENCH_SLEEP_WARY);
 }
 
-void monster::weaken(actor *attacker, int pow)
+void monster::weaken(const actor *attacker, int pow)
 {
     if (!has_ench(ENCH_WEAK))
         simple_monster_message(*this, " looks weaker.");

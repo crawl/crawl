@@ -203,7 +203,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_CURSE_OF_AGONY:
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
-    case BEAM_NECROTISE:
+    case BEAM_SOUL_SPLINTER:
         elem = ETC_UNHOLY;
         break;
     case BEAM_DISPEL_UNDEAD:
@@ -5801,7 +5801,6 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_PAIN:
-    case BEAM_NECROTISE:
         rc = mon->res_negative_energy(intrinsic_only) < 3;
         break;
 
@@ -5887,6 +5886,10 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     case BEAM_RIMEBLIGHT:
         rc = !mon->has_ench(ENCH_RIMEBLIGHT);
+        break;
+
+    case BEAM_SOUL_SPLINTER:
+        rc = mons_can_be_spectralised(*mon, false, true);
         break;
 
     default:
@@ -6078,27 +6081,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
-    case BEAM_NECROTISE:
-    {
-        const int dam = resist_adjust_damage(mon, flavour, damage.roll());
-        if (!dam)
-            return MON_UNAFFECTED;
+    case BEAM_SOUL_SPLINTER:
         if (you.see_cell(mon->pos()))
-        {
-            mprf("%s writhes in agony%s",
-                 mon->name(DESC_THE).c_str(),
-                 attack_strength_punctuation(dam).c_str());
             obvious_effect = true;
-        }
-        if (mons_can_be_zombified(*mon)
-            && !mons_class_flag(mon->type, M_NO_SKELETON)
-            && !you.allies_forbidden())
-        {
-            mon->add_ench(mon_enchant(ENCH_NECROTISE, 0, agent(), 1));
-        }
-        mon->hurt(agent(), dam, flavour);
-        return MON_AFFECTED;
-    }
+        if (make_soul_wisp(*agent(), *mon))
+            return MON_AFFECTED;
+        else
+            return MON_UNAFFECTED;
 
     case BEAM_AGONY:
         torment_cell(mon->pos(), agent(), TORMENT_AGONY);
@@ -7147,12 +7136,6 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_INNER_FLAME:
             // Co-aligned inner flame is fine.
             return !mons_aligned(mon, agent());
-        case BEAM_NECROTISE:
-            // HACK: we want to warn when players accidentally aim necrotise
-            // through their skeletal allies. So mark it harmful to pals.
-            if (mons_aligned(mon, agent()))
-                return true;
-            // else fallthrough to generic enchantments
         case BEAM_TELEPORT:
         case BEAM_BECKONING:
         case BEAM_INFESTATION:
@@ -7443,7 +7426,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
     case BEAM_ENFEEBLE:              return "enfeeble";
-    case BEAM_NECROTISE:             return "necrotise";
+    case BEAM_SOUL_SPLINTER:         return "soul splinter";
     case BEAM_ROOTS:                 return "roots";
     case BEAM_VITRIFY:               return "vitrification";
     case BEAM_VITRIFYING_GAZE:       return "vitrification";

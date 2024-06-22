@@ -2611,6 +2611,13 @@ soul eater
 A demon that manifests as a malignantly shifting shadow gliding through the
 air. It radiates an intense aura of negative force.
 %%%%
+soul wisp
+
+A tiny fragment of a living soul, splintered from the body in which it belongs.
+Too mindless to be fully controlled, it seeks nothing but to reunite with its
+greater self once more - unfortunately, this process tends to be more violent
+than the magic which created it.
+%%%%
 spark wasp
 
 A profoundly unnatural insect covered in vaguely metallic plates. Its stinger

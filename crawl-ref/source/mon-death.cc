@@ -1204,7 +1204,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
     // Don't bother placing a cloud for living spells.
-    if (mons->type == MONS_LIVING_SPELL)
+    if (mons->type == MONS_LIVING_SPELL || mons->type == MONS_SOUL_WISP)
         return;
 
     // Chaos spawn always leave behind a cloud of chaos.
@@ -1767,14 +1767,6 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
     if (in_los && (_animate_dead_reap(mons) || _reaping(mons)))
         return true;
 
-    if (mons.has_ench(ENCH_NECROTISE))
-    {
-        _make_derived_undead(&mons, quiet, MONS_SKELETON,
-                                 BEH_FRIENDLY,
-                                 SPELL_NECROTISE,
-                                 GOD_NO_GOD);
-        return true;
-    }
     return false;
 }
 
@@ -2175,6 +2167,16 @@ item_def* monster_die(monster& mons, killer_type killer,
              && mons.props.exists(BLORKULA_REVIVAL_TIMER_KEY))
     {
         _blorkula_bat_death(mons, killer, killer_index);
+    }
+    else if (mons.type == MONS_SOUL_WISP)
+    {
+        actor* source = mons.get_ench(ENCH_HAUNTING).agent();
+        if (source && source->alive())
+        {
+            simple_monster_message(mons, " returns to where it belongs.");
+            source->as_monster()->del_ench(ENCH_WEAK);
+            silent = true;
+        }
     }
     // Only transform if we 'died' to timeout. Something simply dealing damage
     // to us can still shatter us.
@@ -2666,6 +2668,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                         simple_monster_message(mons, msg.c_str());
                     }
                 }
+                else if (mons.type == MONS_SOUL_WISP)
+                    simple_monster_message(mons, " fades into mist!");
                 else
                 {
                     const char* msg =
