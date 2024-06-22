@@ -80,7 +80,7 @@ hotkey to travel to its location.
 Some examples of search strings:
 <w>mutation</w>      find all potions of mutation, including potions in shops.
 <w>throwing net</w>  finds every single throwing net and piles of nets.
-<w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
+<w>shop</w>          lists all shops. Press <w>!</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
 <w>/D:[2-4]</w>      finds everything on Dungeon levels 2-4. Regexes are allowed!
               Note that /D:[3-10] will not work as intended, since [x-y] is a
