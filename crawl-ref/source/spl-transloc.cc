@@ -2265,7 +2265,7 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
     return spret::success;
 }
 
-static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
+static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir, bool actual)
 {
     // Scan in our push direction. We want to find at least one tile of open
     // space before the nearest solid feature or stationary monster. Non-stationary
@@ -2289,14 +2289,18 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
         // least one space before doing so.
         monster* mon_at_pos = monster_at(pos);
         if (!mon->can_pass_through_feat(env.grid(pos))
-            ||mon_at_pos && mon_at_pos->is_stationary())
+            || mon_at_pos && mon_at_pos->is_stationary()
+               && (actual || mon_at_pos->visible_to(&you)))
         {
             return steps < GAVOTTE_DISTANCE;
         }
         // Skip over mobile monsters as 'free' spaces (since we can all pile up
         // against a wall)
-        else if (mon_at_pos && !mon_at_pos->is_stationary())
+        else if (mon_at_pos && !mon_at_pos->is_stationary()
+                 && (actual || mon_at_pos->visible_to(&you)))
+        {
             steps++;
+        }
 
         steps--;
     }
@@ -2313,7 +2317,7 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir, bool actual)
         if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos())
             && (actual || you.can_see(**mi)))
         {
-            if (_gavotte_will_wall_slam(*mi, dir))
+            if (_gavotte_will_wall_slam(*mi, dir, actual))
                 affected.push_back(*mi);
         }
     }
