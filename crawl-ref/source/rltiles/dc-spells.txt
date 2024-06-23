@@ -196,12 +196,16 @@ call_of_chaos CALL_OF_CHAOS
 call_down_damnation CALL_DOWN_DAMNATION
 call_tide CALL_TIDE
 cantrip CANTRIP
+chain_of_chaos CHAIN_OF_CHAOS
+chaos_breath CHAOS_BREATH
 cold_breath COLD_BREATH
 concentrate_venom CONCENTRATE_VENOM
 confusion_gaze CONFUSION_GAZE
+conjure_living_spells CONJURE_LIVING_SPELLS
 corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 crystallizing_shot CRYSTALLIZING_SHOT
+doom_howl DOOM_HOWL
 draining_gaze DRAINING_GAZE
 drain_magic DRAIN_MAGIC
 dream_dust DREAM_DUST
@@ -215,10 +219,14 @@ fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
 fire_breath FIRE_BREATH
 fire_elementals FIRE_ELEMENTALS
 fire_summon FIRE_SUMMON
+flaming_cloud FLAMING_CLOUD
+flay FLAY
 forceful_invitation FORCEFUL_INVITATION
 ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
+harpoon_shot HARPOON_SHOT
 haste_other HASTE_OTHER
+holy_flames HOLY_FLAMES
 ink_cloud INK_CLOUD
 injury_bond INJURY_BOND
 iron_elementals IRON_ELEMENTALS
@@ -247,6 +255,7 @@ slug_dart SLUG_DART
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON
+spit_lava SPIT_LAVA
 sporulate SPORULATE
 sprint SPRINT
 steam_ball STEAM_BALL
@@ -291,6 +300,7 @@ hurl_damnation HURL_DAMNATION
 %sdir gui/spells/monster
 drain_life DRAIN_LIFE
 druids_call DRUIDS_CALL
+funeral_dirge FUNERAL_DIRGE
 injury_mirror INJURY_MIRROR
 malign_offering MALIGN_OFFERING
 prayer_of_brilliance PRAYER_OF_BRILLIANCE
