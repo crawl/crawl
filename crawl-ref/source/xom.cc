@@ -39,6 +39,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
@@ -49,6 +50,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
+#include "random-pick.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-clouds.h"
@@ -835,24 +837,196 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     }
 }
 
-static monster_type _xom_random_demon(int sever)
+static const vector<random_pick_entry<monster_type>> _xom_summons =
 {
-    const int roll = random2(1000 - (MAX_PIETY - sever) * 5);
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
-         sever, roll);
-#endif
-    monster_type dct = (roll >= 340) ? RANDOM_DEMON_COMMON
-                                     : RANDOM_DEMON_LESSER;
+  { -2, 27,   5, FLAT, MONS_BUTTERFLY },
+  { -2,  6,  60, SEMI, MONS_CRIMSON_IMP },
+  {  0,  6,  40, SEMI, MONS_IRON_IMP },
+  {  2,  8,  60, SEMI, MONS_QUASIT },
+  {  2,  8,  40, SEMI, MONS_SHADOW_IMP },
+  {  3,  7,  50, SEMI, MONS_UFETUBUS },
+  {  3,  7,   5, SEMI, MONS_MUMMY },
+  {  3,  8,  40, SEMI, MONS_WHITE_IMP },
+  {  4,  9,  75, SEMI, MONS_PHANTOM },
+  {  5, 10,  80, SEMI, MONS_SWAMP_DRAKE },
+  {  5, 10,  20, SEMI, MONS_WEEPING_SKULL },
+  {  7, 14,  50, SEMI, MONS_ICE_DEVIL },
+  {  7, 14,  60, SEMI, MONS_ORANGE_DEMON },
+  {  7, 14,  50, SEMI, MONS_RED_DEVIL },
+  {  8, 14,  80, SEMI, MONS_HELLWING },
+  {  8, 13,  40, SEMI, MONS_HELL_RAT },
+  {  8, 15, 105, SEMI, MONS_SHAPESHIFTER },
+  {  8, 15,  70, SEMI, MONS_BOGGART },
+  {  8, 18,  85, SEMI, MONS_RUST_DEVIL },
+  {  8, 20, 155, SEMI, MONS_CHAOS_SPAWN },
+  {  9, 14,   5, FLAT, MONS_TOENAIL_GOLEM },
+  {  9, 14,  30, SEMI, MONS_VAMPIRE },
+  {  9, 14,  50, SEMI, MONS_KOBOLD_DEMONOLOGIST },
+  {  9, 15,  90, SEMI, MONS_ABOMINATION_SMALL },
+  {  9, 16,  50, SEMI, MONS_UGLY_THING },
+  {  9, 16,  50, SEMI, MONS_YNOXINUL },
+  { 10, 17,  50, SEMI, MONS_SOUL_EATER },
+  { 11, 20,  80, SEMI, MONS_WORLDBINDER },
+  { 11, 16,  30, SEMI, MONS_OBSIDIAN_BAT },
+  { 11, 17,  30, SEMI, MONS_DREAM_SHEEP },
+  { 11, 18,  30, SEMI, MONS_TARANTELLA },
+  { 11, 19,  75, SEMI, MONS_SUN_DEMON },
+  { 11, 19,  75, SEMI, MONS_SIXFIRHY },
+  { 11, 22,  50, SEMI, MONS_NEQOXEC },
+  { 12, 18,  15, SEMI, MONS_DEMONSPAWN },
+  { 12, 18,  15, SEMI, MONS_GREAT_ORB_OF_EYES },
+  { 13, 21, 105, SEMI, MONS_LAUGHING_SKULL },
+  { 14, 22,  90, SEMI, MONS_ABOMINATION_LARGE },
+  { 14, 23, 105, SEMI, MONS_GLOWING_SHAPESHIFTER },
+  { 15, 22,  50, SEMI, MONS_HELL_HOG },
+  { 15, 23,   1, FLAT, MONS_OBSIDIAN_STATUE },
+  { 15, 25,  75, SEMI, MONS_VERY_UGLY_THING },
+  { 16, 23,  60, SEMI, MONS_RADROACH },
+  { 16, 24,  35, SEMI, MONS_GLOWING_ORANGE_BRAIN },
+  { 16, 30,  35, SEMI, MONS_SHADOW_DEMON },
+  { 17, 25,  50, SEMI, MONS_SPHINX },
+  { 17, 30,  75, SEMI, MONS_SIN_BEAST },
+  { 17, 32,  15, SEMI, MONS_CACODEMON },
+  { 18, 24,  30, SEMI, MONS_DANCING_WEAPON },
+  { 18, 26,   1, FLAT, MONS_ORANGE_STATUE },
+  { 20, 30,  30, SEMI, MONS_APOCALYPSE_CRAB },
+  { 21, 30,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
+  { 22, 30,   1, FLAT, MONS_STARFLOWER },
+  { 23, 30,  50, SEMI, MONS_HELLEPHANT },
+  { 24, 30,   5, SEMI, MONS_MOTH_OF_WRATH },
+};
 
-    monster_type demon = MONS_PROGRAM_BUG;
+// Whenever choosing a monster that obviously comes in bands, spawn a few more,
+// which is then used later on to not count for the summon count range of the
+// power tier the given Xom summon calls for.
+static int _xom_pal_minibands(monster_type mtype)
+{
+    int count = 1;
 
-    if (dct == RANDOM_DEMON_COMMON && one_chance_in(10))
-        demon = MONS_CHAOS_SPAWN;
+    if (mtype == MONS_BUTTERFLY || mtype == MONS_LAUGHING_SKULL||
+        mtype == MONS_DREAM_SHEEP)
+    {
+        count = x_chance_in_y(you.experience_level, 27) ? 3 : 2;
+    }
+    else if (mtype == MONS_HELL_RAT || mtype == MONS_BOGGART ||
+             mtype == MONS_UGLY_THING || mtype == MONS_TARANTELLA ||
+             mtype == MONS_HELL_HOG || mtype == MONS_VERY_UGLY_THING)
+    {
+        count = 2;
+    }
+
+    return count;
+}
+
+// Don't let later summoners double-up later on in summon calls;
+// it gets too messy too quickly to tell what's happening.
+static bool _xom_pal_summonercheck(monster_type mtype)
+{
+     return mtype == MONS_OBSIDIAN_STATUE || mtype == MONS_ORANGE_STATUE ||
+            mtype == MONS_GLOWING_ORANGE_BRAIN || mtype == MONS_SHADOW_DEMON;
+}
+
+// This and _xom_random_pal keep three tiers of enemies that are each scaled
+// to three tiers of XL, spawning either more of weaker monsters or less
+// of stronger monsters whenever Xom summons allies or enemies.
+static int _xom_pal_counting(int roll)
+{
+    int count = 0;
+
+    if (roll <= 150)
+    {
+        // The earliest options are really weak, while the later options will
+        // struggle against the inherent player power curve, so the ends
+        // get more enemies than the middle does.
+        if (you.experience_level < 10 || you.experience >= 19)
+            count = random_range(4, 5);
+        else
+            count = random_range(3, 4);
+    }
+    else if (roll <= 300)
+    {
+        if (you.experience_level < 10)
+            count = random_range(1, 2);
+        else if (you.experience_level < 19)
+            count = random_range(2, 3);
+        else
+            count = random_range(2, 4);
+    }
     else
-        demon = summon_any_demon(dct);
+    {
+        if (you.experience_level < 10)
+            count = 1;
+        else if (you.experience_level < 19)
+            count = random_range(1, 2);
+        else
+            count = random_range(2, 3);
+    }
 
-    return demon;
+    return count;
+}
+
+static monster_type _xom_random_pal(int roll, bool isFriendly)
+{
+    monster_picker xom_picker;
+    int variance = you.experience_level;
+
+    // Tiers here match _xom_pal_counting's tiers of strength related
+    // inversely to summon count but scaling up versus one's XL regardless.
+    if (roll <= 150)
+        if (you.experience_level < 19)
+           variance += -3;
+        else
+           variance += random_range(-3, -2);
+    else if (roll <= 300)
+        if (you.experience_level < 19)
+            variance += random_range(-2, -1);
+        else
+            variance += random_range(-2, 0);
+    else
+        if (you.experience_level < 10)
+            variance += random_range(0, 1);
+        else if (you.experience_level < 19)
+            variance += random_range(1, 2);
+        else
+            variance += random_range(1, 3);
+
+    // Make it a little flashier if it's allied or if Xom's quite dissatisfied.
+    if (isFriendly)
+        variance += random_range(-1, 4);
+    else if (you.penance[GOD_XOM] or _xom_is_bored())
+        variance += random_range(2, 3);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "_xom_random_pal(); xl variance roll: %d", roll);
+#endif
+
+    monster_type mon_type = xom_picker.pick(_xom_summons, variance, MONS_CRIMSON_IMP);
+
+    // Endgame and extended monsters Xom has some fondness for (in being jokes
+    // or highly chaotic), but which are mostly meant to stay in their branches,
+    // get a small extra chance to be picked in the appropriate branch or Zigs.
+    // Makes it a little more dramatic.
+    if ((player_in_branch(BRANCH_ZOT) || player_in_branch(BRANCH_ZIGGURAT))
+         && one_chance_in(13))
+    {
+        mon_type = random_choose_weighted(5, MONS_DEATH_COB,
+                                          4, MONS_KILLER_KLOWN,
+                                          3, MONS_PROTEAN_PROGENITOR,
+                                          2, MONS_CURSE_TOE);
+    }
+    else if ((player_in_branch(BRANCH_PANDEMONIUM) ||
+              player_in_branch(BRANCH_ZIGGURAT)) and one_chance_in(13))
+    {
+        mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
+                                         MONS_DEMONSPAWN_CORRUPTER;
+    }
+    else if (player_in_branch(BRANCH_ZIGGURAT) and one_chance_in(6))
+    {
+        mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
+                                         MONS_PLAYER_GHOST;
+    }
+
+    return mon_type;
 }
 
 static bool _player_is_dead()
@@ -949,23 +1123,13 @@ static void _xom_confuse_monsters(int sever)
 /// Post a passel of pals to the player.
 static void _xom_send_allies(int sever)
 {
-    // The number of allies is dependent on severity, though heavily
-    // randomised.
-    int numdemons = sever;
-    for (int i = 0; i < 3; i++)
-        numdemons = random2(numdemons + 1);
-    numdemons = min(numdemons + 2, 16);
-
-    // Limit number of demons by experience level.
-    const int maxdemons = (you.experience_level);
-    if (numdemons > maxdemons)
-        numdemons = maxdemons;
-
+    int strengthRoll = random2(1000 - (MAX_PIETY + sever) * 5);
+    int count = _xom_pal_counting(strengthRoll);
     int num_actually_summoned = 0;
 
-    for (int i = 0; i < numdemons; ++i)
+    for (int i = 0; i < count; ++i)
     {
-        monster_type mon_type = _xom_random_demon(sever);
+        monster_type mon_type = _xom_random_pal(strengthRoll, true);
 
         mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
         mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
@@ -974,15 +1138,31 @@ static void _xom_send_allies(int sever)
         // they should still show as Xom's fault if one of them kills you.
         mg.non_actor_summoner = "Xom";
 
-        if (create_monster(mg))
-            num_actually_summoned++;
+        // Banding monsters don't count against the overall summon roll range,
+        // and are restricted themselves in _xom_pal_minibands.
+        int miniband = _xom_pal_minibands(mon_type);
+
+        for (int j = 0; j < miniband; ++j)
+            if (create_monster(mg))
+                num_actually_summoned++;
+
+        // To make given random monster summonings more coherent, have a good
+        // chance to jump forward and make the next summon the same as the last,
+        // but only if it's not already a banding monster or a late summoner.
+        if (x_chance_in_y(2, 3) && miniband == 1 &&
+            !_xom_pal_summonercheck(mon_type) && i < count - 1)
+        {
+            i += 1;
+            if (create_monster(mg))
+                num_actually_summoned++;
+        }
     }
 
     if (num_actually_summoned)
     {
         god_speaks(GOD_XOM, _get_xom_speech("multiple summons").c_str());
 
-        const string note = make_stringf("summons %d friendly demon%s",
+        const string note = make_stringf("summons %d friend%s",
                                          num_actually_summoned,
                                          num_actually_summoned > 1 ? "s" : "");
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
@@ -992,7 +1172,8 @@ static void _xom_send_allies(int sever)
 /// Send a single pal to the player's aid, hopefully.
 static void _xom_send_one_ally(int sever)
 {
-    const monster_type mon_type = _xom_random_demon(sever);
+    int strengthRoll = random2(1000 - (MAX_PIETY + sever) * 5);
+    const monster_type mon_type = _xom_random_pal(strengthRoll, true);
 
     mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
     mg.set_summoned(&you, 6, MON_SUMM_AID, GOD_XOM);
@@ -2406,37 +2587,49 @@ static monster* _xom_summon_hostile(monster_type hostile)
 
 static void _xom_summon_hostiles(int sever)
 {
+    int strengthRoll = random2(1000 - (MAX_PIETY- sever) * 5);
     int num_summoned = 0;
-    const bool shadow_creatures = one_chance_in(3);
+    const bool shadow_creatures = one_chance_in(4);
 
     if (shadow_creatures)
     {
-        // Small number of shadow creatures.
-        int count = 1 + random2(4);
+        // Small number of shadow creatures, but still a little touch of chaos.
+        int count = random_range(1, 3);
+
+        if (_xom_summon_hostile(_xom_random_pal(strengthRoll, false)))
+            num_summoned++;
+
         for (int i = 0; i < count; ++i)
             if (_xom_summon_hostile(RANDOM_MOBILE_MONSTER))
                 num_summoned++;
     }
     else
     {
-        // The number of demons is dependent on severity, though heavily
-        // randomised.
-        int numdemons = sever;
-        for (int i = 0; i < 3; ++i)
-            numdemons = random2(numdemons + 1);
-        numdemons = min(numdemons + 1, 14);
+        int count = _xom_pal_counting(strengthRoll);
 
-        // Limit number of demons by experience level.
-        if (!you.penance[GOD_XOM])
+        for (int i = 0; i < count; ++i)
         {
-            const int maxdemons = ((you.experience_level / 2) + 1);
-            if (numdemons > maxdemons)
-                numdemons = maxdemons;
-        }
+            monster_type mon_type = _xom_random_pal(strengthRoll, false);
 
-        for (int i = 0; i < numdemons; ++i)
-            if (_xom_summon_hostile(_xom_random_demon(sever)))
-                num_summoned++;
+            // As seen in _xom_send_allies, add more of given banding monsters
+            // without adding to the overall summon cap.
+            int miniband = _xom_pal_minibands(mon_type);
+
+            for (int j = 0; j < miniband; ++j)
+                if (_xom_summon_hostile(mon_type))
+                    num_summoned++;
+
+            // Again as seen in _xom_send_allies, make summons likely to come in
+            // pairs of the same type if neither a band nor later summoners,
+            // while still respecting the overall summon cap.
+            if (x_chance_in_y(2, 3) && miniband == 1 &&
+                !_xom_pal_summonercheck(mon_type) && i < count - 1)
+            {
+                i += 1;
+                if (_xom_summon_hostile(_xom_random_pal(strengthRoll, false)))
+                    num_summoned++;
+            }
+        }
     }
 
     if (num_summoned > 0)
@@ -2444,7 +2637,7 @@ static void _xom_summon_hostiles(int sever)
         const string note = make_stringf("summons %d hostile %s%s",
                                          num_summoned,
                                          shadow_creatures ? "shadow creature"
-                                                          : "demon",
+                                                          : "chaos creature",
                                          num_summoned > 1 ? "s" : "");
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 
