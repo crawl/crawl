@@ -177,11 +177,11 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW protects your summons from abjuration" },
         { -1, passive_t::bless_followers_vs_evil,
               "GOD NOW blesses your followers when they kill evil beings" },
-        { -1, passive_t::restore_hp_mp_vs_evil,
-              "gain health and magic from killing evil beings" },
         { -1, passive_t::no_stabbing,
               "are NOW prevented from stabbing unaware creatures" },
         {  0, passive_t::halo, "are NOW surrounded by divine halo" },
+        {  1, passive_t::restore_hp_mp_vs_evil,
+              "gain health and magic from killing evil beings" },
     },
 
     // Kikubaaqudgha
@@ -207,7 +207,7 @@ static const vector<god_passive> god_passives[] =
 
     // Vehumet
     {
-        { -1, passive_t::mp_on_kill,
+        {  1, passive_t::mp_on_kill,
               "have a chance to gain magical power from killing" },
         {  3, passive_t::spells_success,
               "are NOW less likely to miscast destructive spells" },
@@ -223,7 +223,7 @@ static const vector<god_passive> god_passives[] =
 
     // Makhleb
     {
-        { -1, passive_t::restore_hp, "gain health from killing" },
+        { 1, passive_t::restore_hp, "gain health from killing" },
     },
 
     // Sif Muna
