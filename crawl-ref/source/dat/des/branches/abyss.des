@@ -1144,6 +1144,20 @@ MAP
  ....      ....
 ENDMAP
 
+NAME:   dolorous_abyss_art_and_altar
+TAGS:   no_monster_gen transparent decor
+KFEAT:  _ = altar_lugonu
+KFEAT:  G = metal_statue
+COLOUR: G = flash
+TILE:   G = dngn_colourful_horror_statue
+: set_feature_name("metal_statue", "colourful horror statue")
+MAP
+...
+.G.
+._.
+...
+ENDMAP
+
 ###############################################################################
 # Abyss rune vaults
 #

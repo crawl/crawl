@@ -1021,6 +1021,12 @@ A sturdy metal cage, inscribed with cryptic magics. Whatever it once held -
 whether person, beast, or experiment - was evidently already freed in response
 to intruders like you infiltrating the Dungeon.
 %%%%
+# Abyss vaults.
+A colourful horror statue
+
+A statue of some Abyssal horror, painted with an array of bizarre and constantly
+shifting colours.
+%%%%
 # Themed magic branches / portals / vaults.
 An arcane conduit
 
