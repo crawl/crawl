@@ -2519,7 +2519,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             const bool valid_heal_source = gives_player_xp
                 && !mons_is_object(mons.type);
             const bool can_divine_heal = valid_heal_source
-                && !player_under_penance();
+                && !player_under_penance()
+                && random2(you.piety) >= piety_breakpoint(0);
 
             if (valid_heal_source
                 && you.has_mutation(MUT_DEVOUR_ON_KILL)
@@ -2529,27 +2530,20 @@ item_def* monster_die(monster& mons, killer_type killer,
                 hp_heal += 1 + random2avg(1 + you.experience_level, 3);
             }
 
-            if (can_divine_heal
-                && have_passive(passive_t::restore_hp)
-                && random2(you.piety) >= piety_breakpoint(0))
+            if (can_divine_heal && have_passive(passive_t::restore_hp))
             {
                 hp_heal += (1 + mons.get_experience_level()) / 2
                         + random2(mons.get_experience_level() / 2);
             }
             if (can_divine_heal
                 && have_passive(passive_t::restore_hp_mp_vs_evil)
-                && random2(you.piety) >= piety_breakpoint(0)
                 && mons.evil())
             {
                 hp_heal += random2(1 + 2 * mons.get_experience_level());
                 mp_heal += random2(2 + mons.get_experience_level() / 3);
             }
-            if (can_divine_heal
-                && have_passive(passive_t::mp_on_kill)
-                && random2(you.piety) >= piety_breakpoint(0)/2)
-            {
+            if (can_divine_heal && have_passive(passive_t::mp_on_kill))
                 mp_heal += 1 + random2(mons.get_experience_level() / 2);
-            }
 
             if (hp_heal && you.hp < you.hp_max
                 && !you.duration[DUR_DEATHS_DOOR])
