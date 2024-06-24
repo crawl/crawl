@@ -4305,6 +4305,12 @@ void bolt::affect_player()
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
         barb_player(random_range(4, 8), 4);
 
+    if (origin_spell == SPELL_GRAVE_CLAW)
+    {
+        mpr("You are skewered in place!");
+        you.increase_duration(DUR_NO_MOMENTUM, random_range(2, 4));
+    }
+
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
 
@@ -5158,6 +5164,12 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (origin_spell == SPELL_RIMEBLIGHT)
         maybe_spread_rimeblight(*mon, ench_power);
+
+    if (origin_spell == SPELL_GRAVE_CLAW)
+    {
+        simple_monster_message(*mon, " is pinned in place!");
+        mon->add_ench(mon_enchant(ENCH_BOUND, 0, nullptr, random_range(2, 4) * BASELINE_DELAY));
+    }
 }
 
 static int _knockback_dist(spell_type origin, int pow)

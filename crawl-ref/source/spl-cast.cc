@@ -1283,6 +1283,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             silence_min_range(pow));
     case SPELL_MERCURY_VAPOURS:
         return make_unique<targeter_smite>(&you, range, 0, 1);
+    case SPELL_GRAVE_CLAW:
+        return make_unique<targeter_smite>(&you, range);
 
     // at player's position only but not a selfench
     case SPELL_ROT:
@@ -2517,6 +2519,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_MERCURY_VAPOURS:
         return cast_mercury_vapours(powc, spd.target, fail);
+
+    case SPELL_GRAVE_CLAW:
+        return cast_grave_claw(you, spd.target, powc, fail);
 
     case SPELL_BLINKBOLT:
         return blinkbolt(powc, beam, fail);

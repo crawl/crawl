@@ -2943,6 +2943,12 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         corpse_consumed = _apply_necromancy(mons, !death_message, corpse_gone,
                                             in_los, corpseworthy);
+
+        if (in_los && corpseworthy && you.duration[DUR_NO_GRAVE_CLAW])
+        {
+            if (--you.duration[DUR_NO_GRAVE_CLAW] == 0)
+                mprf(MSGCH_DURATION, "You have harvested enough death to cast Grave Claw again.");
+        }
     }
 
     if (!wizard && !was_banished)

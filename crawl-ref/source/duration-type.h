@@ -264,5 +264,6 @@ enum duration_type
     DUR_PRIMORDIAL_NIGHTFALL,
     DUR_BLIND,
     DUR_SIGN_OF_RUIN,
+    DUR_NO_GRAVE_CLAW,
     NUM_DURATIONS
 };

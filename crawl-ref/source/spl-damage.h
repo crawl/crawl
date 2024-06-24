@@ -176,4 +176,6 @@ spret cast_magnavolt(coord_def target, int pow, bool fail);
 spret cast_fulsome_fusillade(int pow, bool fail);
 void fire_fusillade();
 
+spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail);
+
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets);

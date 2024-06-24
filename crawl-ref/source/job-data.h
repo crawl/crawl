@@ -273,6 +273,7 @@ static const map<job_type, job_def> job_data =
       SP_VAMPIRE, },
     {
         SPELL_SOUL_FLICKER,
+        SPELL_GRAVE_CLAW,
         SPELL_VAMPIRIC_DRAINING,
         SPELL_ANIMATE_DEAD,
         SPELL_CURSE_OF_AGONY,
@@ -386,7 +387,7 @@ static const map<job_type, job_def> job_data =
         SPELL_SLOW,
         SPELL_BLINK,
         SPELL_CALL_IMP,
-        SPELL_ROT,
+        SPELL_GRAVE_CLAW,
         SPELL_MEPHITIC_CLOUD,
     },
     { "dagger", "robe", "hat", "potion of magic" },

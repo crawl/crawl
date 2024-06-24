@@ -1496,6 +1496,7 @@ static bool _give_kiku_gift(bool forced)
                          SPELL_KISS_OF_DEATH,
                          SPELL_SUBLIMATION_OF_BLOOD,
                          SPELL_ROT,
+                         SPELL_GRAVE_CLAW,
                          SPELL_VAMPIRIC_DRAINING};
     }
     else

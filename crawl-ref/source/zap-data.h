@@ -2290,4 +2290,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_GRAVE_CLAW,
+    "jagged bones",
+    50,
+    new dicedef_calculator<2, 7, 1, 7>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<2, 7, 1, 7>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+},
+
 };

@@ -158,5 +158,6 @@ enum zap_type
     ZAP_SHADOW_JOLT,
     ZAP_SHADOW_DRAIN,
     ZAP_SHADOW_TORPOR,
+    ZAP_GRAVE_CLAW,
     NUM_ZAPS
 };

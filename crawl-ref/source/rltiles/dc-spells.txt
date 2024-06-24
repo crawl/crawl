@@ -106,6 +106,7 @@ deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
 fugue_of_the_fallen FUGUE_OF_THE_FALLEN
+grave_claw GRAVE_CLAW
 haunt HAUNT
 infestation INFESTATION
 kiss_of_death KISS_OF_DEATH

@@ -647,6 +647,9 @@ static const duration_def duration_data[] =
       "sign of ruin", "ruin",
       "The sign of ruin enfeebles you when you suffer attacks.", D_DISPELLABLE,
       {{ "The sign of ruin upon you fades." }}},
+    { DUR_NO_GRAVE_CLAW, DARKGRAY, "-GClaw",
+      "grave claw unavailable", "grave claw unavailable",
+      "Your Grave Claw spell must be recharged.", D_NO_FLAGS},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

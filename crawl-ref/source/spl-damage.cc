@@ -5258,3 +5258,33 @@ void fire_fusillade()
     if (!you.duration[DUR_FUSILLADE])
         mprf(MSGCH_DURATION, "Your rain of reagents ends.");
 }
+
+spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
+{
+    actor* act = actor_at(targ);
+
+    if (caster.is_player() && act)
+    {
+        if (stop_attack_prompt(act->as_monster(), false, you.pos()))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    if (caster.is_player())
+        you.duration[DUR_NO_GRAVE_CLAW] = random_range(2, 3);
+
+    flash_tile(targ, WHITE);
+
+    bolt beam;
+    beam.set_agent(&caster);
+    beam.attitude = caster.is_player() ? ATT_FRIENDLY
+                                       : mons_attitude(*caster.as_monster());
+    beam.origin_spell = SPELL_GRAVE_CLAW;
+    beam.source = beam.target = targ;
+    zappy(ZAP_GRAVE_CLAW, pow, caster.is_monster(), beam);
+    beam.hit_verb = "skewer";
+    beam.fire();
+
+    return spret::success;
+}

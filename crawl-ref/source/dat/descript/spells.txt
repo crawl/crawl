@@ -741,6 +741,13 @@ Calls giant grasping roots from deep underground that hold and constrict their
 victim. The roots will retreat if the victim breaks free or if the caller moves
 out of view.
 %%%%
+Grave Claw spell
+
+Calls forth the spite of the recently dead to skewer a targeted enemy with
+shards of bone. This spell never misses and will pin its target in place for
+several turns, but cannot be recast until the caster resupplies it with fresh
+malice by causing the death of living beings.
+%%%%
 Greater Servant of Makhleb spell
 
 Summons a major demon.

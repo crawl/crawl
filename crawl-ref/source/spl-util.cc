@@ -1499,6 +1499,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.current_vision == 0)
             return "you cannot see far enough to hit anything with this spell.";
 
+    case SPELL_GRAVE_CLAW:
+        if (temp && you.duration[DUR_NO_GRAVE_CLAW])
+            return "You must harvest another living soul to power this spell.";
+
     default:
         break;
     }
