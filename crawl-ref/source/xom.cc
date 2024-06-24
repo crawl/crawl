@@ -904,7 +904,7 @@ static int _xom_pal_minibands(monster_type mtype)
 {
     int count = 1;
 
-    if (mtype == MONS_BUTTERFLY || mtype == MONS_LAUGHING_SKULL||
+    if (mtype == MONS_BUTTERFLY || mtype == MONS_LAUGHING_SKULL ||
         mtype == MONS_DREAM_SHEEP)
     {
         count = x_chance_in_y(you.experience_level, 27) ? 3 : 2;
