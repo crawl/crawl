@@ -116,6 +116,7 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_DISJUNCTION,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
+    SPELL_FULSOME_FUSILLADE,
     SPELL_CHAIN_OF_CHAOS
 };
 
@@ -514,7 +515,7 @@ static void _xom_random_spell(int sever)
          spell);
 #endif
 
-    your_spells(spell, sever, false);
+    your_spells(spell, sever + you.experience_level * 2, false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
@@ -831,9 +832,9 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
         if (!(item.flags & ISFLAG_COSMETIC_MASK))
             item.flags |= ISFLAG_GLOWING;
 
-        // Make the pluses more like a randomly generated ego item.
+        // Give some extra enchantments to tempt players into using chaos brand.
         if (item.base_type == OBJ_WEAPONS)
-            item.plus  += random2(5);
+            item.plus  += random_range(2, 4);
     }
 }
 
