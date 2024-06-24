@@ -5513,9 +5513,8 @@ static string _monster_attacks_description(const monster_info& mi)
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const mon_attack_info info = _atk_info(mi, i);
-
-        if (!di.attack_counts[info]) // we're done
-            break;
+        if (!di.attack_counts[info])
+            continue;
 
         _attacks_table_row(mi, di, info, info.weapon);
 
