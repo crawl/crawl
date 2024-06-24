@@ -1209,23 +1209,12 @@ static bool _handle_wand(monster& mons)
         || mons.pacified()
         || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
-        || !mons.likes_wand(*wand)
+        || !mons.likes_wand((wand_type)wand->sub_type)
 
         || x_chance_in_y(3, 4))
     {
         return false;
     }
-
-    if (wand->charges <= 0)
-        return false;
-
-    if (item_type_removed(wand->base_type, wand->sub_type))
-        return false;
-
-    // Digging is handled elsewhere so that sensible (wall) targets are
-    // chosen.
-    if (wand->sub_type == WAND_DIGGING)
-        return false;
 
     bolt beem;
 
@@ -2635,12 +2624,7 @@ static bool _handle_pickup(monster* mons)
           || have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
           || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
 
-
     // Note: Monsters only look at stuff near the top of stacks.
-    //
-    // XXX: Need to put in something so that monster picks up
-    // multiple items (e.g. ammunition) identical to those it's
-    // carrying.
     //
     // Monsters may now pick up up to two items in the same turn.
     // (jpeg)
