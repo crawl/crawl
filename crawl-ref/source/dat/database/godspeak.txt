@@ -60,7 +60,6 @@ Xom single summon
 
 Xom opens a gate.
 %%%%
-# several demons
 Xom multiple summons
 
 "Serve the mortal, my children!"
@@ -78,6 +77,20 @@ You hear Xom's maniacal laughter.
 Xom grants you a minor favour.
 
 Xom smiles on you.
+%%%%
+Xom flora ring
+
+Xom shows off a fistful of green thumbs.
+
+Xom spreads life in this Dungeon full of death.
+
+Xom incites some dramatic evolution in the adjacent floor mold.
+
+w:5
+Xom adds fresh vegetables to this Dungeon dish.
+
+w:5
+Xom plants some magic beans in the ground.
 %%%%
 # changing the scenery
 Xom scenery

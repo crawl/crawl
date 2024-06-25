@@ -1515,6 +1515,54 @@ static void _xom_animate_monster_weapon(int sever)
     dancing->colour = env.item[wpn].get_colour();
 }
 
+// Have Xom make a big ring of temporary harmless plantlife around the player.
+static void _xom_harmless_flora(int /*sever*/)
+{
+    bool created = false;
+    bool perfectRing = coinflip();
+    int radius = random_choose_weighted(54 - you.experience_level, 2,
+                                        27, 3,
+                                        13 + you.experience_level, 4);
+
+    monster_type mon_type = x_chance_in_y(13 + you.experience_level, 54) ?
+                            MONS_DEMONIC_PLANT : MONS_TOADSTOOL;
+
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        // Half of the time, make it an imperfect on the inner parts.
+        if (ri->distance_from(you.pos()) != radius
+            && !perfectRing && x_chance_in_y(1, 3))
+        {
+            continue;
+        }
+
+        if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
+        {
+        mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
+        mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_XOM);
+
+        mg.non_actor_summoner = "Xom";
+
+        if (create_monster(mg))
+            created = true;
+        }
+    }
+
+    if (created)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("flora ring").c_str());
+        if (mon_type == MONS_DEMONIC_PLANT)
+            mpr("Demonic plants sprout up around you!");
+        else
+            mpr("Toadstools sprout up around you!");
+
+        const string note = make_stringf("made a garden");
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS); // shouldn't be reached, and yet
+}
+
 static void _xom_give_mutations(bool good)
 {
     if (!you.can_safely_mutate())
@@ -2990,6 +3038,16 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     if (tension > random2(5) && x_chance_in_y(14, sever))
         return XOM_GOOD_CLEAVING;
 
+    if (tension > random2(3) && x_chance_in_y(14, sever))
+    {
+        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+             ri; ++ri)
+        {
+            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
+                return XOM_GOOD_FLORA_RING;
+        }
+    }
+
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
@@ -3617,6 +3675,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_MUTATION, { "good mutations", _xom_give_good_mutations }},
     { XOM_GOOD_LIGHTNING, { "lightning", _xom_throw_divine_lightning }},
     { XOM_GOOD_SCENERY, { "change scenery", _xom_change_scenery }},
+    { XOM_GOOD_FLORA_RING, {"flora ring", _xom_harmless_flora }},
     { XOM_GOOD_SNAKES, { "snakes to sticks", _xom_snakes_to_sticks }},
     { XOM_GOOD_DESTRUCTION, { "mass fireball", _xom_real_destruction }},
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
