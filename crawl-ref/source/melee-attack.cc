@@ -2032,8 +2032,7 @@ void melee_attack::set_attack_verb(int damage)
                      && Options.has_fake_lang(flang_t::grunt))
             {
                 attack_verb = "attack";
-                verb_degree = apostrophise(defender_name(false))
-                                  + " weak point";
+                verb_degree = "'s weak point";
             }
             else
             {
