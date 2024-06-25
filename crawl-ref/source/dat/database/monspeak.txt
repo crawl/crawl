@@ -3585,6 +3585,8 @@ w:50
 
 @The_monster@ says, "I hate shadows."
 
+@The_monster@ says, "I hate starless nights."
+
 @The_monster@ says, "Are you still afraid of the dark?"
 
 @The_monster@ says, "Careful; you might trip over your own shadow."
