@@ -426,14 +426,18 @@ void melee_attack::apply_sign_of_ruin_effects()
         BLIND,
     };
 
+    if (!defender->alive())
+        return;
+
     if (defender->is_monster() && defender->as_monster()->has_ench(ENCH_SIGN_OF_RUIN)
         || defender->is_player() && you.duration[DUR_SIGN_OF_RUIN])
     {
-        if (!defender->alive())
-            return;
-
         // Always drain heavily, then apply one other random effect
         defender->drain(attacker, false, random_range(30, 50));
+
+        // The draining itself might kill the victim.
+        if (!defender->alive())
+            return;
 
         vector<ruin_effect> effects;
 
