@@ -1374,7 +1374,7 @@ int acquirement_create_item(object_class_type class_wanted,
         && agent < NUM_GODS)
     {
         if (!quiet && agent == GOD_XOM)
-            simple_god_message(" snickers.", GOD_XOM);
+            simple_god_message(" snickers.", false, GOD_XOM);
         else
             return _failed_acquirement(quiet);
     }

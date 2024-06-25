@@ -613,7 +613,7 @@ static void _abyss_lose_monster(monster& mons)
     else if (hepliaklqana_ancestor() == mons.mid)
     {
         simple_monster_message(mons, " is pulled into the Abyss.",
-                MSGCH_BANISHMENT);
+                false, MSGCH_BANISHMENT);
         remove_companion(&mons);
         you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
     }
@@ -656,7 +656,7 @@ static void _place_displaced_monsters()
             if (you.can_see(*mon) && hepliaklqana_ancestor() != mon->mid)
             {
                 simple_monster_message(*mon, " is pulled into the Abyss.",
-                        MSGCH_BANISHMENT);
+                        false, MSGCH_BANISHMENT);
             }
             _abyss_lose_monster(*mon);
 
@@ -2285,7 +2285,7 @@ void lugonu_corrupt_level(int power)
     if (is_level_incorruptible())
         return;
 
-    simple_god_message("'s Hand of Corruption reaches out!");
+    simple_god_message(" Hand of Corruption reaches out!", true);
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
     mark_corrupted_level(level_id::current());

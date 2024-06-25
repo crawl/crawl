@@ -493,7 +493,7 @@ static void _hell_effects()
     if (have_passive(passive_t::resist_hell_effects)
         && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
-        simple_god_message("'s power protects you from the chaos of Hell!");
+        simple_god_message(" power protects you from the chaos of Hell!", true);
         return;
     }
 

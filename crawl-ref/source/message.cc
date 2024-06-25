@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "colour.h"
 #include "delay.h"
+#include "english.h"
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -2104,6 +2105,7 @@ void canned_msg(canned_message_type which_message)
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. - bwr
 bool simple_monster_message(const monster& mons, const char *event,
+                            bool need_possessive,
                             msg_channel_type channel,
                             int param,
                             description_level_type descrip)
@@ -2113,6 +2115,8 @@ bool simple_monster_message(const monster& mons, const char *event,
             || mons.visible_to(&you)))
     {
         string msg = mons.name(descrip);
+        if (need_possessive)
+            msg = apostrophise(msg);
         msg += event;
 
         if (channel == MSGCH_PLAIN && mons.wont_attack())
@@ -2134,9 +2138,13 @@ string god_speaker(god_type which_deity)
 }
 
 // yet another wrapper for mpr() {dlb}:
-void simple_god_message(const char *event, god_type which_deity)
+void simple_god_message(const char *event, bool need_possessive,
+                        god_type which_deity)
 {
-    string msg = god_speaker(which_deity) + event;
+    string msg = god_speaker(which_deity);
+    if (need_possessive)
+        msg = apostrophise(msg);
+    msg += event;
 
     god_speaks(which_deity, msg.c_str());
 }

@@ -366,7 +366,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const string god = apostrophise(god_name(caster.god));
             const string msg = make_stringf(" invokes %s protection!",
                                             god.c_str());
-            simple_monster_message(caster, msg.c_str(), MSGCH_MONSTER_SPELL);
+            simple_monster_message(caster, msg.c_str(), false, MSGCH_MONSTER_SPELL);
             // Not spell_hd(spell_cast); this is an invocation
             const int dur = BASELINE_DELAY
                 * min(4 + roll_dice(2, (caster.get_hit_dice() * 4) / 3 + 1),
@@ -1099,7 +1099,7 @@ static void _cast_injury_mirror(monster &mons, mon_spell_slot /*slot*/, bolt&)
         = make_stringf(" offers %s to %s, and fills with unholy energy.",
                        mons.pronoun(PRONOUN_REFLEXIVE).c_str(),
                        god_name(mons.god).c_str());
-    simple_monster_message(mons, msg.c_str(), MSGCH_MONSTER_SPELL);
+    simple_monster_message(mons, msg.c_str(), false, MSGCH_MONSTER_SPELL);
     mons.add_ench(mon_enchant(ENCH_MIRROR_DAMAGE, 0, &mons,
                               random_range(7, 9) * BASELINE_DELAY));
     mons.props[MIRROR_RECAST_KEY].get_int()
@@ -1148,10 +1148,10 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
         if (mon_foe->has_ench(ENCH_ANTIMAGIC))
         {
             dam_multiplier = 2;
-            simple_monster_message(*foe->as_monster(), "'s mind is heavily gnawed upon.");
+            simple_monster_message(*foe->as_monster(), " mind is heavily gnawed upon.", true);
         }
         else
-            simple_monster_message(*foe->as_monster(), "'s mind is gnawed upon.");
+            simple_monster_message(*foe->as_monster(), " mind is gnawed upon.", true);
     }
 
     foe->hurt(&caster, (4 + random2avg(5, 2)) * dam_multiplier,
@@ -1222,7 +1222,7 @@ static void _cast_regenerate_other(monster* caster)
     {
         const int pow = mons_spellpower(*caster, SPELL_REGENERATE_OTHER);
         int dur = (4 + roll_dice(2, pow / 20)) * BASELINE_DELAY;
-        simple_monster_message(*targ, "'s wounds begin to rapidly close.");
+        simple_monster_message(*targ, " wounds begin to rapidly close.", true);
         _regen_monster(targ, caster, dur);
     }
 }
@@ -1241,7 +1241,7 @@ static void _cast_mass_regeneration(monster* caster)
 
     const int pow = mons_spellpower(*caster, SPELL_MASS_REGENERATION);
     int dur = (3 + roll_dice(2, pow / 25)) * BASELINE_DELAY;
-    simple_monster_message(*caster, "'s allies begin to heal rapidly.");
+    simple_monster_message(*caster, " allies begin to heal rapidly.", true);
     for (monster* mon : targs)
         _regen_monster(mon, caster, dur);
 }
@@ -4543,7 +4543,7 @@ bool handle_mon_spell(monster* mons)
             const string message
                 = make_stringf(" begins to %s, but is stunned by your conviction!",
                                _ru_spell_stop_desc(*mons).c_str());
-            simple_monster_message(*mons, message.c_str(), MSGCH_GOD);
+            simple_monster_message(*mons, message.c_str(), false, MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
             return true;
         }
@@ -6635,7 +6635,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
         invalidate_agrid(true);
-        simple_monster_message(*mons, "'s surroundings become eerily quiet.");
+        simple_monster_message(*mons, " surroundings become eerily quiet.", true);
         return;
 
     case SPELL_CALL_TIDE:

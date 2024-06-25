@@ -1252,7 +1252,7 @@ bool melee_attack::attack()
             && ev_margin >= 0
             && one_chance_in(20))
         {
-            simple_god_message(" blocks your attack.", GOD_ELYVILON);
+            simple_god_message(" blocks your attack.", false, GOD_ELYVILON);
             handle_phase_end();
             return false;
         }
@@ -1718,7 +1718,7 @@ bool melee_attack::player_aux_test_hit()
         && to_hit >= evasion
         && one_chance_in(20))
     {
-        simple_god_message(" blocks your attack.", GOD_ELYVILON);
+        simple_god_message(" blocks your attack.", false, GOD_ELYVILON);
         return false;
     }
 
@@ -2032,7 +2032,8 @@ void melee_attack::set_attack_verb(int damage)
                      && Options.has_fake_lang(flang_t::grunt))
             {
                 attack_verb = "attack";
-                verb_degree = "'s weak point";
+                verb_degree = apostrophise(defender_name(false))
+                                  + " weak point";
             }
             else
             {

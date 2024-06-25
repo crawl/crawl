@@ -6227,7 +6227,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (mon->hit_points == mon->max_hit_points)
             {
-                if (simple_monster_message(*mon, "'s wounds heal themselves!"))
+                if (simple_monster_message(*mon, " wounds heal themselves!", true))
                     obvious_effect = true;
             }
             else if (simple_monster_message(*mon, " is healed somewhat."))
@@ -6567,7 +6567,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!mon->has_ench(ENCH_CONCENTRATE_VENOM)
             && mon->add_ench(ENCH_CONCENTRATE_VENOM))
         {
-            if (simple_monster_message(*mon, "'s venom grows more potent."))
+            if (simple_monster_message(*mon, " venom grows more potent.", true))
                 obvious_effect = true;
         }
         return MON_AFFECTED;

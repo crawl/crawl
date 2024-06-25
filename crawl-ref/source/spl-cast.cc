@@ -2123,7 +2123,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         {
             // And you thought you'd Haunt your way out of penance...
             simple_god_message(" does not allow the disloyal to dabble in "
-                               "death!", GOD_KIKUBAAQUDGHA);
+                               "death!", false, GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
             miscast_effect(you, nullptr,
@@ -2140,7 +2140,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         {
             // And you thought you'd Fire Storm your way out of penance...
             simple_god_message(" does not allow the disloyal to dabble in "
-                               "destruction!", GOD_VEHUMET);
+                               "destruction!", false, GOD_VEHUMET);
 
             // The spell still goes through, but you get a miscast anyway.
             miscast_effect(you, nullptr, {miscast_source::god, GOD_VEHUMET},

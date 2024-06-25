@@ -626,7 +626,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
     move_item_to_grid(&thing_created, you.pos());
 
     if (thing_created == NON_ITEM) // if it fell into lava
-        simple_god_message(" snickers.", GOD_XOM);
+        simple_god_message(" snickers.", false, GOD_XOM);
 
     stop_running();
 }

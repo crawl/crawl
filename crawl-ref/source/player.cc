@@ -5912,14 +5912,14 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
     if (player_in_branch(BRANCH_ARENA))
     {
         simple_god_message(" prevents your banishment from the Arena!",
-                           GOD_OKAWARU);
+                           false, GOD_OKAWARU);
         return;
     }
 
     if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
     {
         simple_god_message(" refuses to let the Abyss claim you during a challenge!",
-                           GOD_BEOGH);
+                           false, GOD_BEOGH);
 
         return;
     }

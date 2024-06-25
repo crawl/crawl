@@ -1168,9 +1168,10 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 if (mon->alive())
                 {
                     simple_monster_message(*mon,
-                      (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
-                      (damage < 50) ? "'s chaotic flesh bubbles and boils."
-                                    : "'s chaotic flesh runs like molten wax.");
+                      (damage < 25) ? " chaotic flesh sizzles and spatters!" :
+                      (damage < 50) ? " chaotic flesh bubbles and boils."
+                                    : " chaotic flesh runs like molten wax.",
+                      true);
 
                     print_wounds(*mon);
                     behaviour_event(mon, ME_WHACK, &you);
@@ -1878,7 +1879,7 @@ void cheibriados_time_bend(int pow)
             simple_god_message(
                 make_stringf(" rebukes %s.",
                              mon->name(DESC_THE).c_str()).c_str(),
-                             GOD_CHEIBRIADOS);
+                             false, GOD_CHEIBRIADOS);
             do_slow_monster(*mon, &you);
         }
     }
@@ -6650,10 +6651,9 @@ void okawaru_end_duel(bool kicked_out)
     if (you.props.exists(OKAWARU_DUEL_ORIG_MP_KEY))
         set_mp(you.props[OKAWARU_DUEL_ORIG_MP_KEY].get_int());
 
-    if (kicked_out)
-        simple_god_message(" casts you out from the arena!", GOD_OKAWARU);
-    else
-        simple_god_message(" crowns you victorious!", GOD_OKAWARU);
+    simple_god_message(kicked_out ? " casts you out from the arena!"
+                                  : " crowns you victorious!",
+                       false, GOD_OKAWARU);
 
     stop_delay(true);
     down_stairs(DNGN_EXIT_ARENA);

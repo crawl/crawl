@@ -628,7 +628,7 @@ void debuff_monster(monster &mon)
     // effect = true does for PETRIFYING is cause it to turn into
     // ENCH_PETRIFIED. So... let's not do that. (Hacky, sorry!)
 
-    simple_monster_message(mon, "'s magical effects unravel!");
+    simple_monster_message(mon, " magical effects unravel!", true);
 }
 
 // pow -1 for passive

@@ -3304,7 +3304,8 @@ bool drink(item_def* potion)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
-        simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
+        simple_god_message(" petitions for your drink to fail.", false,
+                           GOD_GOZAG);
         you.turn_is_over = true;
         return false;
     }

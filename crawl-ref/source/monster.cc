@@ -2753,7 +2753,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     {
         string msg = make_stringf(" prevents %s banishment from the Arena!",
                                   name(DESC_ITS).c_str());
-        simple_god_message(msg.c_str(), GOD_OKAWARU);
+        simple_god_message(msg.c_str(), false, GOD_OKAWARU);
         return;
     }
 
@@ -2774,7 +2774,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
         }
     }
 
-    simple_monster_message(*this, " is devoured by a tear in reality.",
+    simple_monster_message(*this, " is devoured by a tear in reality.", false,
                            MSGCH_BANISHMENT);
     if (agent && mons_gives_xp(*this, *agent) && damage_contributes_xp(*agent))
     {

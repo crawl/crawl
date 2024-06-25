@@ -5433,7 +5433,7 @@ void print_wounds(const monster& mons)
 
     desc.insert(0, " is ");
     desc += ".";
-    simple_monster_message(mons, desc.c_str(), MSGCH_MONSTER_DAMAGE,
+    simple_monster_message(mons, desc.c_str(), false, MSGCH_MONSTER_DAMAGE,
                            dam_level);
 }
 

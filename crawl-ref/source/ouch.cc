@@ -939,7 +939,7 @@ static void _god_death_messages(kill_method_type death_type,
                 msg = " appreciates " + killer->name(DESC_ITS)
                         + " killing of an apostate.";
             }
-            simple_god_message(msg.c_str(), GOD_BEOGH);
+            simple_god_message(msg.c_str(), false, GOD_BEOGH);
         }
 
         // Doesn't depend on Okawaru worship - you can still lose the duel
@@ -948,7 +948,7 @@ static void _god_death_messages(kill_method_type death_type,
         {
             const string msg = " crowns " + killer->name(DESC_THE, true)
                                 + " victorious!";
-            simple_god_message(msg.c_str(), GOD_OKAWARU);
+            simple_god_message(msg.c_str(), false, GOD_OKAWARU);
         }
     }
 }
