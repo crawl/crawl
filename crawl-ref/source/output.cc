@@ -750,8 +750,16 @@ static void _print_stats_noise(int x, int y)
 
     bool silence = silenced(you.pos());
     int level = silence ? 0 : you.get_noise_perception(true);
-    textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("Noise: ");
+    if (have_passive(passive_t::dampen_noise) || player_equip_unrand(UNRAND_THIEF))
+    {
+        textcolour(LIGHTMAGENTA);
+        CPRINTF("Quiet: ");
+    }
+    else 
+    {
+        textcolour(HUD_CAPTION_COLOUR);
+        CPRINTF("Noise: ");
+    }
     colour_t noisecolour;
 
     // This is calibrated roughly so that in an open-ish area:
