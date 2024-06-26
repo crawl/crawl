@@ -316,7 +316,7 @@ currents will prevent this pestilence from forming wherever the caster is
 standing, but they are not otherwise protected from its effects.
 
 This spell may only be cast on a living creature who is at least heavily
-wounded and channelling such necrotic energies will leave the caster's own
+wounded, and channelling such necrotic energies will leave the caster's own
 health temporarily drained (though spellpower will reduce the intensity of this
 side-effect).
 %%%%
@@ -747,7 +747,7 @@ out of view.
 Grave Claw spell
 
 Calls forth the spite of the recently dead to skewer a targeted enemy with
-shards of bone. This spell never misses and will pin its target in place for
+shards of bone. This spell never misses, and will pin its target in place for
 several turns, but cannot be recast until the caster resupplies it with fresh
 malice by causing the death of living beings.
 %%%%
