@@ -851,7 +851,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_FLIGHT:                return "Fly";
         case RING_POSITIVE_ENERGY:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
+        case RING_WIZARDRY:              return "Wiz";
         case AMU_REGENERATION:           return "Regen";
+        case AMU_MANA_REGENERATION:      return "RegenMP";
 #if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";
 #endif
