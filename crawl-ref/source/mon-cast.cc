@@ -6240,7 +6240,9 @@ static void _cast_bestow_arms(monster& caster)
 
         give_specific_item(mon, clone);
         mon->add_ench(mon_enchant(ENCH_ARMED, 1, &caster, dur));
-        flash_tile(mon->pos(), MAGENTA, 50);
+
+        if (you.see_cell(mon->pos()))
+            flash_tile(mon->pos(), MAGENTA, 50);
 
         if (--count == 0)
             break;
