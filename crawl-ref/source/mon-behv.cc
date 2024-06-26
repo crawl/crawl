@@ -850,7 +850,13 @@ void handle_behaviour(monster* mon)
             }
 
             if (stop_retreat)
+            {
                 mons_end_withdraw_order(*mon);
+                // XXX: The above function already sets this, but otherwise they
+                //      with be ignored just below. Ugh.
+                new_beh = BEH_SEEK;
+                new_foe = MHITYOU;
+            }
             else
                 mon->props[LAST_POS_KEY] = mon->pos();
 
