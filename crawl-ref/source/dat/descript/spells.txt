@@ -307,15 +307,18 @@ Chaos Breath spell
 
 Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
-Cigotuvi's Dreadful Rot spell
+Cigotuvi's Putrefaction spell
 
-Rots away a part of the caster's flesh to produce a cloud of miasma around them.
-The miasma slows and powerfully poisons any living creature that lingers within -
-including the caster, if they tarry after casting. Most living creatures are
-terrified of miasma and will not willingly enter it.
+Magically accelerates the decay of damaged living tissue, causing great clouds
+of miasma to billow forth from a targeted victim's wounds over several turns
+which may slow and heavily poison any living creature who stands in them. Air
+currents will prevent this pestilence from forming wherever the caster is
+standing, but they are not otherwise protected from its effects.
 
-The rot leaves the caster's health temporarily drained. The undead can still use
-this spell, but fleshless beings (e.g., those made of stone) cannot.
+This spell may only be cast on a living creature who is at least heavily
+wounded and channelling such necrotic energies will leave the caster's own
+health temporarily drained (though spellpower will reduce the intensity of this
+side-effect).
 %%%%
 Cleansing Flame spell
 

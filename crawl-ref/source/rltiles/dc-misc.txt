@@ -238,6 +238,11 @@ cloud_electricity_trail1
 cloud_electricity_trail2
 cloud_electricity_trail3
 
+cloud_faint_miasma0 CLOUD_FAINT_MIASMA
+cloud_faint_miasma1
+cloud_faint_miasma2
+cloud_faint_miasma3
+
 cloud_degeneration CLOUD_DEGENERATION
 
 cloud_blastmotes0 CLOUD_BLASTMOTES

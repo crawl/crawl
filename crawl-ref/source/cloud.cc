@@ -322,6 +322,11 @@ static const cloud_data clouds[] = {
       ETC_ELECTRICITY,                                   // colour
       { TILE_CLOUD_ELECTRICITY, CTVARY_RANDOM },        // tile
     },
+    // CLOUD_FAINT_MIASMA,
+    { "faint pestilence", nullptr,                // terse, verbose name
+      DARKGREY,                                      // colour
+      { TILE_CLOUD_FAINT_MIASMA, CTVARY_RANDOM },    // tile
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -552,8 +557,23 @@ static void _dissipate_cloud(cloud_struct& cloud)
         cloud.decay       -= _spread_cloud(cloud);
     }
 
+    // Faint miasma becomes proper miasma after the first tick (regardless of
+    // duration), but will not spawn beneath the player.
+    // XXX: This is currently very player-centric, but the player is also the
+    //      only possible source of this at present.
+    if (cloud.type == CLOUD_FAINT_MIASMA)
+    {
+        if (cloud.decay > 1)
+            cloud.decay = 1;
+        else if (cloud.pos != you.pos())
+        {
+            cloud.decay = random_range(50, 90);
+            cloud.type = CLOUD_MIASMA;
+        }
+    }
+
     // Check for total dissipation and handle accordingly.
-    if (cloud.decay < 1)
+    if (cloud.decay < 1 && cloud.type != CLOUD_FAINT_MIASMA)
         delete_cloud(cloud.pos);
 }
 

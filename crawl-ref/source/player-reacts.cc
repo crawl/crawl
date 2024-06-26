@@ -1099,11 +1099,8 @@ void player_reacts()
     abyss_maybe_spawn_xp_exit();
 
     actor_apply_cloud(&you);
-    // Miasma immunity from Dreadful Rot. Only lasts for one turn,
-    // so erase it just after we apply clouds for the turn (above).
-    if (you.props.exists(MIASMA_IMMUNE_KEY))
-        you.props.erase(MIASMA_IMMUNE_KEY);
-    // Ditto for blastmotes.
+    // Immunity due to just casting Volatile Blastmotes. Only lasts for one
+    // turn, so erase it just after we apply clouds for the turn (above).
     if (you.props.exists(BLASTMOTE_IMMUNE_KEY))
         you.props.erase(BLASTMOTE_IMMUNE_KEY);
 

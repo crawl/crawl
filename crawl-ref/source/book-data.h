@@ -345,7 +345,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Decay
-    SPELL_ROT,
+    SPELL_PUTREFACTION,
     SPELL_DISPEL_UNDEAD,
     SPELL_MARTYRS_KNELL,
 },
@@ -487,7 +487,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Trismegistus Codex
-    SPELL_ROT,
+    SPELL_PUTREFACTION,
     SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },

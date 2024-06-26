@@ -2407,3 +2407,29 @@ bool targeter_marionette::valid_aim(coord_def a)
 
     return false;
 }
+
+targeter_putrefaction::targeter_putrefaction(int r) :
+    targeter_smite(&you, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_putrefaction::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (!mon || !you.can_see(*mon))
+        return false;
+
+    if (mons_aligned(&you, mon))
+        return notify_fail("You cannot putrefy a friendly monster.");
+
+    if (!(mon->holiness() & MH_NATURAL))
+        return notify_fail("You can only putrefy natural creatures.");
+
+    if (mons_get_damage_level(*mon) < MDAM_HEAVILY_DAMAGED)
+        return notify_fail("This isn't wounded badly enough.");
+
+    return true;
+}

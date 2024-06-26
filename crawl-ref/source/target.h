@@ -646,3 +646,10 @@ public:
     targeter_marionette();
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_putrefaction : public targeter_smite
+{
+public:
+    targeter_putrefaction(int range);
+    bool valid_aim(coord_def a) override;
+};

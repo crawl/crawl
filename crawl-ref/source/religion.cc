@@ -1495,7 +1495,6 @@ static bool _give_kiku_gift(bool forced)
         spell_options = {SPELL_SOUL_SPLINTER,
                          SPELL_KISS_OF_DEATH,
                          SPELL_SUBLIMATION_OF_BLOOD,
-                         SPELL_ROT,
                          SPELL_GRAVE_CLAW,
                          SPELL_VAMPIRIC_DRAINING};
     }
@@ -1504,6 +1503,7 @@ static bool _give_kiku_gift(bool forced)
         spell_options = {SPELL_ANGUISH,
                          SPELL_MARTYRS_KNELL,
                          SPELL_DISPEL_UNDEAD,
+                         SPELL_PUTREFACTION,
                          SPELL_CURSE_OF_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
                          SPELL_DEATH_CHANNEL,

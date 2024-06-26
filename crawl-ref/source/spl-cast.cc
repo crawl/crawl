@@ -1287,7 +1287,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_smite>(&you, range);
 
     // at player's position only but not a selfench
-    case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_BLASTMOTE:
@@ -1402,6 +1401,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 
     case SPELL_HELLFIRE_MORTAR:
         return make_unique<targeter_mortar>(&you, range);
+
+    case SPELL_PUTREFACTION:
+        return make_unique<targeter_putrefaction>(range);
 
     default:
         break;
@@ -2448,8 +2450,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_vile_clutch(powc, beam, fail);
 
-    case SPELL_ROT:
-        return cast_dreadful_rot(powc, fail);
+    case SPELL_PUTREFACTION:
+        return cast_putrefaction(monster_at(target), powc, fail);
 
     // Our few remaining self-enchantments.
     case SPELL_SWIFTNESS:
