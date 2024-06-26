@@ -1437,10 +1437,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
     switch (cloud.type)
     {
-    case CLOUD_MIASMA:
-        // Even the dumbest monsters will avoid miasma if they can.
-        return true;
-
     case CLOUD_BLASTMOTES:
         // As with traps, make friendly monsters not walk into blastmotes.
         return mons->attitude == ATT_FRIENDLY
@@ -1462,8 +1458,9 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int base_damage = _cloud_damage_calc(dam_info.random,
                                                    max(1, dam_info.random / 9),
                                                    dam_info.base, false);
-        // Add in an arbitrary proxy for poison damage from poison clouds.
-        const int bonus_dam = cloud.type == CLOUD_POISON ? roll_dice(3, 4) : 0;
+        // Add in an arbitrary proxy for poison damage from poison/miasma clouds.
+        const int bonus_dam = cloud.type == CLOUD_POISON ? roll_dice(3, 4)
+                              : cloud.type == CLOUD_MIASMA ? roll_dice(3, 5) : 0;
         const int damage = resist_adjust_damage(mons,
                                                 clouds[cloud.type].beam_effect,
                                                 base_damage + bonus_dam);
