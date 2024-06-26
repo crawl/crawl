@@ -1016,12 +1016,12 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
                                           2, MONS_CURSE_TOE);
     }
     else if ((player_in_branch(BRANCH_PANDEMONIUM) ||
-              player_in_branch(BRANCH_ZIGGURAT)) and one_chance_in(13))
+              player_in_branch(BRANCH_ZIGGURAT)) && one_chance_in(13))
     {
         mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
                                          MONS_DEMONSPAWN_CORRUPTER;
     }
-    else if (player_in_branch(BRANCH_ZIGGURAT) and one_chance_in(6))
+    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(6))
     {
         mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
                                          MONS_PLAYER_GHOST;
