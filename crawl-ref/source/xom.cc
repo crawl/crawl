@@ -1691,19 +1691,26 @@ static vector<coord_def> _xom_scenery_candidates()
     return candidates;
 }
 
-/// Place one or more altars to Xom nearish the player.
-static void _xom_place_altars()
+/// Place one or more decorative features nearish the player.
+static void _xom_place_decor()
 {
     coord_def place;
     bool success = false;
-    const int max_altars = max(1, random2(random2(14)));
-    for (int tries = max_altars; tries > 0; --tries)
+    dungeon_feature_type decor = random_choose_weighted(10, DNGN_ALTAR_XOM,
+                                                        2, DNGN_CACHE_OF_FRUIT,
+                                                        2, DNGN_CACHE_OF_MEAT,
+                                                        1, DNGN_CLOSED_DOOR,
+                                                        1, DNGN_OPEN_DOOR,
+                                                        1, DNGN_ENTER_ABYSS);
+
+    const int featuresCount = max(1, random2(random2(14)));
+    for (int tries = featuresCount; tries > 0; --tries)
     {
         if ((random_near_space(&you, you.pos(), place, false)
              || random_near_space(&you, you.pos(), place, true))
             && env.grid(place) == DNGN_FLOOR)
         {
-            env.grid(place) = DNGN_ALTAR_XOM;
+            dungeon_terrain_changed(place, decor);
             success = true;
         }
     }
@@ -1711,8 +1718,9 @@ static void _xom_place_altars()
     if (success)
     {
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                       "scenery: create altars"), true);
-        god_speaks(GOD_XOM, _get_xom_speech("scenery").c_str());
+                       "scenery: changed the scenery"), true);
+        const string key = make_stringf("scenery %s", dungeon_feature_name(decor));
+        god_speaks(GOD_XOM, _get_xom_speech(key).c_str());
     }
 }
 
@@ -1744,8 +1752,8 @@ static void _xom_change_scenery(int /*sever*/)
 
     if (candidates.empty())
     {
-        if (coinflip())
-            _xom_place_altars();
+        if (x_chance_in_y(2, 3))
+            _xom_place_decor();
         else
             _xom_summon_butterflies();
         return;

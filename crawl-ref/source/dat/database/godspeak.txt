@@ -92,20 +92,50 @@ Xom adds fresh vegetables to this Dungeon dish.
 w:5
 Xom plants some magic beans in the ground.
 %%%%
-# changing the scenery
-Xom scenery
+# all scenery changing effects need to refer to the feature-data.h vaultnames
+Xom scenery generic
 
 Xom briefly touches your surroundings.
-
-Xom adds some personal touches to your environment.
 
 Xom complains about the scenery.
 
 Xom alters the dungeon around you.
+%%%%
+Xom scenery open_door
+
+@Xom scenery generic@
+%%%%
+Xom scenery closed_door
+
+@Xom scenery generic@
+%%%%
+Xom scenery altar_xom
+
+Xom adds some personal touches to your environment.
 
 "There, this looks better."
 
 "Just a minor improvement..."
+
+@Xom scenery generic@
+%%%%
+Xom scenery cache of fruit
+
+Xom accidentally drops some snacks.
+
+Xom prepares the finest cultivars of fruit found anywhere, then drops them.
+%%%%
+Xom scenery cache of meat
+
+Xom [offers|fetches] you some snacks.
+
+Xom prepares a banquet formed from your trail of carnage through the Dungeon.
+%%%%
+Xom scenery enter_abyss
+
+Xom suggests a refreshing change of pace.
+
+Xom tears open a few small holes in reality.
 %%%%
 ##################
 # Xom nastiness
