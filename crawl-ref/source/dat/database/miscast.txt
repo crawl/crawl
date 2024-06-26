@@ -402,6 +402,9 @@ The inside of your mouth momentarily tastes like @any_colour@
 
 w:2
 Your skin changes to @any_colour_pattern@
+
+w:2
+You are surrounded by a cloud of @any_glowing_colour@ dust
 %%%%
 alchemy miscast monster
 
@@ -418,6 +421,9 @@ w:5
 
 w:5
 @The_monster@'s skin changes to @any_colour_pattern@
+
+w:2
+@The_monster@ is surrounded by a cloud of @any_glowing_colour@ dust
 %%%%
 alchemy miscast unseen
 

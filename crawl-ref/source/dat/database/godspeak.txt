@@ -122,6 +122,8 @@ Xom feature shallow water
 
 @The_feature@ briefly glows.
 
+@The_feature@ briefly glows @any_glowing_colour@.
+
 @The_feature@ briefly flashes @any_colour@.
 
 @The_feature@ briefly boils.
@@ -206,6 +208,8 @@ Xom inventory singular
 
 @Your_item@ briefly glows.
 
+@Your_item@ briefly glows @any_glowing_colour@.
+
 @Your_item@ briefly vibrates.
 
 @Your_item@ briefly flashes @any_colour@.
@@ -213,6 +217,8 @@ Xom inventory singular
 Xom inventory plural
 
 One of @your_item@ briefly glows.
+
+One of @your_item@ briefly glows @any_glowing_colour@.
 
 One of @your_item@ briefly vibrates.
 
