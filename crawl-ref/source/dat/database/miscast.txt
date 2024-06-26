@@ -412,6 +412,8 @@ alchemy miscast monster
 
 @The_monster@ is [blasted|coated] with [cinnabar|sulphur] dust
 
+@The_monster@ is coated in salt
+
 @The_monster@ starts coughing violently
 
 @The_monster@ looks incredibly sick
