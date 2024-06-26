@@ -507,6 +507,28 @@ Xom blink monsters
 
 Xom decides to shift things around a little.
 %%%%
+Xom fast forward
+
+Xom speeds up the battle.
+
+Xom demands a faster pace.
+
+"Hurry it up!"
+%%%%
+Xom slow motion
+
+Xom feels like nobody present is taking it easy enough.
+
+Xom bends time into knots.
+
+"Don't be so hasty!"
+%%%%
+Xom pause
+
+Xom stops everything to savour the moment.
+
+Xom stomps on time for a few moments.
+%%%%
 #####################
 # other effects
 #####################

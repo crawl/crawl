@@ -1979,6 +1979,92 @@ static void _xom_bad_enchant_monster(int /*sever*/)
     _xom_enchant_monster(false);
 }
 
+// Xom hastes, slows, or paralyzes the player and everything else in sight
+// for the same length of time (give or take time slices and base speed).
+// Mostly screws with whatever else might join the fight afterwards,
+// ally creation, and also with damage-over-time effects.
+static void _xom_time_control(int sever)
+{
+    duration_type dur;
+    enchant_type ench;
+    string xomline;
+    string message;
+    string note;
+    int time;
+    bool bad = true;
+
+    if (x_chance_in_y(1, 3))
+    {
+        dur = DUR_HASTE;
+        ench = ENCH_HASTE;
+        xomline = "fast forward";
+        if (you.stasis())
+        {
+            message = "Your stasis prevents you from being hasted, but everything else in sight speeds up!";
+            note = "hasted everything in sight";
+        }
+        else
+        {
+            message = "You and everything else in sight speeds up!";
+            note = "hasted player and everything else in sight";
+        }
+        time = random_range(100, 200) + sever / 3;
+    }
+    else if (coinflip())
+    {
+        dur = DUR_SLOW;
+        ench = ENCH_SLOW;
+        xomline = "slow motion";
+        if (you.stasis())
+        {
+            message = "Your stasis prevents you from being slowed, but everything else in sight slows down!";
+            note = "slowed everything in sight";
+            bad = false;
+        }
+        else
+        {
+            message = "You and everything else in sight slows down!";
+            note = "slowed player and everything else";
+        }
+        time = random_range(100, 200) + sever / 3;
+    }
+    else
+    {
+        dur = DUR_PARALYSIS;
+        ench = ENCH_PARALYSIS;
+        xomline = "pause";
+        if (you.stasis())
+        {
+            message = "Your stasis prevents you from being paralysed, but everything else in sight stops moving!";
+            note = "paralysed everything in sight";
+            bad = false;
+        }
+        else
+        {
+            message = "You and everything else in sight suddenly stops moving!";
+            note = "paralysed player and everything else";
+        }
+        time = random_range(30, 50);
+    }
+
+    god_speaks(GOD_XOM, _get_xom_speech(xomline).c_str());
+
+    mprf(bad ? MSGCH_WARN : MSGCH_GOD, "%s", message.c_str());
+
+    if (!you.stasis())
+        you.increase_duration(dur, time / 10);
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if ((!mons_has_attacks(**mi) && ench != ENCH_PARALYSIS) || mi->stasis())
+            continue;
+
+        mi->add_ench(mon_enchant(ench, 0, nullptr, time));
+    }
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, message), true);
+}
+
 /// Toss some fog around the player. Helping...?
 static void _xom_fog(int /*sever*/)
 {
@@ -3173,6 +3259,13 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     if (x_chance_in_y(19, sever))
         return XOM_BAD_SUMMON_HOSTILES;
 
+    if (tension > 0 && x_chance_in_y(20, sever)
+        && !you.duration[DUR_HASTE] && !you.duration[DUR_SLOW]
+        && !you.duration[DUR_PARALYSIS])
+    {
+        return XOM_BAD_TIME_CONTROL;
+    }
+
     if (x_chance_in_y(21, sever))
     {
         if (coinflip())
@@ -3698,6 +3791,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_NOISE, { "noise", _xom_noise, 10 }},
     { XOM_BAD_ENCHANT_MONSTER, { "bad enchant monster",
                                  _xom_bad_enchant_monster, 10}},
+    { XOM_BAD_TIME_CONTROL, {"time control", _xom_time_control, 15}},
     { XOM_BAD_BLINK_MONSTERS, { "blink monsters", _xom_blink_monsters, 10}},
     { XOM_BAD_CONFUSION, { "confuse player", _xom_player_confusion_effect, 13}},
     { XOM_BAD_SWAP_MONSTERS, { "swap monsters", _xom_rearrange_pieces, 20 }},
