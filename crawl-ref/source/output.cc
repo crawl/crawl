@@ -753,7 +753,7 @@ static void _print_stats_noise(int x, int y)
     if (have_passive(passive_t::dampen_noise) || player_equip_unrand(UNRAND_THIEF))
     {
         textcolour(LIGHTMAGENTA);
-        CPRINTF("Noise/2: ");
+        CPRINTF("Noi/2: ");
     }
     else 
     {
