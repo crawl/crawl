@@ -422,7 +422,7 @@ w:5
 w:5
 @The_monster_possessive@ skin changes to @any_colour_pattern@
 
-w:2
+w:5
 @The_monster@ is surrounded by a cloud of @any_glowing_colour@ dust
 %%%%
 alchemy miscast unseen
