@@ -404,7 +404,7 @@ w:2
 Your skin changes to @any_colour_pattern@
 
 w:2
-You are surrounded by a cloud of @any_glowing_colour@ dust
+You are surrounded by clouds of @any_glowing_colour@ dust
 %%%%
 alchemy miscast monster
 
@@ -423,7 +423,7 @@ w:5
 @The_monster_possessive@ skin changes to @any_colour_pattern@
 
 w:5
-@The_monster@ is surrounded by a cloud of @any_glowing_colour@ dust
+@The_monster@ is surrounded by clouds of @any_glowing_colour@ dust
 %%%%
 alchemy miscast unseen
 
