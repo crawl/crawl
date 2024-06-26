@@ -24,7 +24,7 @@ You are blasted with magical energy
 %%%%
 conjuration miscast monster
 
-Sparks fly from @the_monster@'s @hands@
+Sparks fly from @the_monster_possessive@ @hands@
 
 @The_monster@ emits a flash of light
 
@@ -70,9 +70,9 @@ The light around @the_monster@ dims momentarily
 
 @The_monster@ twitches
 
-@The_monster@'s body glows momentarily
+@The_monster_possessive@ body glows momentarily
 
-Waves of @any_colour@ light ripple over @the_monster@'s body
+Waves of @any_colour@ light ripple over @the_monster_possessive@ body
 
 Magic surges out from @the_monster@
 %%%%
@@ -192,7 +192,7 @@ translocation miscast monster
 
 @The_monster@ appears momentarily distorted
 
-@The_monster@'s features rearrange themselves for a while
+@The_monster_possessive@ features rearrange themselves for a while
 
 @The_monster@ is caught in a field of spatial distortion
 
@@ -228,13 +228,13 @@ There is a sudden and violent explosion of flames
 %%%%
 fire miscast monster
 
-[Cinders|Ashes] fly from @the_monster@'s @hands@
+[Cinders|Ashes] fly from @the_monster_possessive@ @hands@
 
 The air around @the_monster@ burns with energy
 
-Dim flames ripple over @the_monster@'s body
+Dim flames ripple over @the_monster_possessive@ body
 
-Fire whirls out @the_monster@'s @hands@
+Fire whirls out @the_monster_possessive@ @hands@
 
 Flames sear @the_monster@
 
@@ -276,7 +276,7 @@ ice miscast monster
 
 @The_monster@ shivers with cold
 
-Frost covers @the_monster@'s body
+Frost covers @the_monster_possessive@ body
 
 @The_monster@ shivers
 
@@ -318,7 +318,7 @@ air miscast monster
 
 @The_monster@ bobs in the air for a moment
 
-Sparks of electricity dance between @the_monster@'s @hands@
+Sparks of electricity dance between @the_monster_possessive@ @hands@
 
 The air around @the_monster@ crackles with energy
 
@@ -364,7 +364,7 @@ You are caught in an explosion of flying shrapnel
 %%%%
 earth miscast monster
 
-[Sand|Gravel] pours from @the_monster@'s @hands@
+[Sand|Gravel] pours from @the_monster_possessive@ @hands@
 
 @The_monster@ is hit by flying rocks
 
@@ -420,7 +420,7 @@ w:5
 @The_monster@ is overcome by clouds of @any_colour@ smoke
 
 w:5
-@The_monster@'s skin changes to @any_colour_pattern@
+@The_monster_possessive@ skin changes to @any_colour_pattern@
 
 w:2
 @The_monster@ is surrounded by a cloud of @any_glowing_colour@ dust
