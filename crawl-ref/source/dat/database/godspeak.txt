@@ -179,6 +179,8 @@ Xom feature stone arch
 @The_feature@ briefly shows a sunny meadow on the other side.
 
 @The_feature@ briefly shows a lifeless wasteland on the other side.
+
+@The_feature@ briefly shows strange @glowing_adj@ figures on the other side.
 %%%%
 Xom underfoot general
 
@@ -225,6 +227,8 @@ One of @your_item@ briefly vibrates.
 One of @your_item@ briefly flashes @any_colour@.
 
 @Your_item@ briefly glow.
+
+@Your_item@ briefly glow @any_glowing_colour@.
 
 @Your_item@ briefly vibrate.
 
