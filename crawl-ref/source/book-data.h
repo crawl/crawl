@@ -487,8 +487,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Trismegistus Codex
-    SPELL_PUTREFACTION,
     SPELL_MEPHITIC_CLOUD,
+    SPELL_PUTREFACTION,
     SPELL_FREEZING_CLOUD,
 },
 
