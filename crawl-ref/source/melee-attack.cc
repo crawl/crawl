@@ -3832,8 +3832,8 @@ void melee_attack::do_starlight()
     static const vector<string> dazzle_msgs = {
         "@The_monster@ is blinded by the light from your cloak!",
         "@The_monster@ is temporarily struck blind!",
-        "@The_monster@'s sight is seared by the starlight!",
-        "@The_monster@'s vision is obscured by starry radiance!",
+        "@The_monster_possessive@ sight is seared by the starlight!",
+        "@The_monster_possessive@ vision is obscured by starry radiance!",
     };
 
     if (attacker->is_monster() && one_chance_in(5)
