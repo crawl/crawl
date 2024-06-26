@@ -852,6 +852,8 @@ pulsating
 shimmering
 
 shining
+
+vivid
 %%%%
 any_glowing_colour
 
