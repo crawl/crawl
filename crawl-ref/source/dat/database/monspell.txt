@@ -804,7 +804,7 @@ laughing skull cast
 
 @The_monster@ gibbers with scorn.
 
-@The_monster@ lets out a vicious peal of laugher.
+@The_monster@ lets out a vicious peal of laughter.
 %%%%
 silent laughing skull cast
 
