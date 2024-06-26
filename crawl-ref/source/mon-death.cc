@@ -1225,7 +1225,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
     if (corpse && mons_class_can_leave_corpse(mons_species(mons->type)))
     {
-        prefix = " corpse";
+        prefix = " corpse ";
         need_possessive = true;
     }
 
