@@ -2156,9 +2156,9 @@ static const char *enchant_names[] =
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished",
 #if TAG_MAJOR_VERSION == 34
-    "simulacra",
+    "simulacra", "necrotizing",
 #endif
-    "necrotizing", "glowing",
+     "glowing",
 #if TAG_MAJOR_VERSION == 34
     "pursuing",
 #endif
