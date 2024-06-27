@@ -89,10 +89,22 @@ static int _auto_autofoe(const actor *caster)
 static mgen_data _summon_data(const actor &caster, monster_type mtyp,
                               int dur, god_type god, spell_type spell)
 {
-    return mgen_data(mtyp, BEH_COPY, caster.pos(),
-                     _auto_autofoe(&caster),
-                     MG_AUTOFOE)
-                     .set_summoned(&caster, dur, spell, god);
+    mgen_data result(mtyp, BEH_COPY, caster.pos(),
+        _auto_autofoe(&caster),
+        MG_AUTOFOE);
+    result.set_summoned(&caster, dur, spell, god);
+    return result;
+}
+
+static mgen_data _summon_data(const actor &caster, monster_type mtyp,
+                              int dur, god_type god, spell_type spell,
+                              coord_def pos)
+{
+    mgen_data result(mtyp, BEH_COPY, pos,
+        _auto_autofoe(&caster),
+        MG_AUTOFOE | MG_FORCE_PLACE);
+    result.set_summoned(&caster, dur, spell, god);
+    return result;
 }
 
 static mgen_data _pal_data(monster_type pal, int dur, god_type god,
@@ -101,8 +113,86 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
     return _summon_data(you, pal, dur, god, spell);
 }
 
+static mgen_data _pal_data(monster_type pal, int dur, god_type god,
+                           spell_type spell, coord_def pos)
+{
+    return _summon_data(you, pal, dur, god, spell, pos);
+}
+
+static coord_def _find_spot_for_summon(const actor& summoner,
+                               monster_type mon_type,
+                               bool& summoner_could_see_available_spot)
+{
+    coord_def result{};
+    summoner_could_see_available_spot = false;
+
+    const coord_def summoner_pos = summoner.pos();
+
+    int good_count = 0;
+    for (radius_iterator ri(summoner_pos, 2, C_SQUARE, true);
+        ri; ++ri)
+    {
+        if (!cell_see_cell(summoner_pos, *ri, LOS_NO_TRANS))
+            continue;
+
+        if (!monster_habitable_grid(mon_type, env.grid(*ri)))
+            continue;
+
+        const actor *actor_at_pos = actor_at(*ri);
+        if (actor_at_pos)
+        {
+            if (!summoner_could_see_available_spot
+                && !actor_at_pos->visible_to(&summoner))
+            {
+                summoner_could_see_available_spot = true;
+            }
+
+            continue;
+        }
+
+        if (one_chance_in(++good_count))
+        {
+            result = *ri;
+            summoner_could_see_available_spot = true;
+        }
+    }
+
+    return result;
+}
+
+// Can't handle krakens and eldritch tentacles as their habitats are special
+static bool _can_summon_monster(const actor& summoner,
+                        habitat_type habitat,
+                        bool is_flying)
+{
+    const coord_def summoner_pos = summoner.pos();
+    for (radius_iterator ri(summoner_pos, 2, C_SQUARE, true);
+        ri; ++ri)
+    {
+        if (!cell_see_cell(summoner_pos, *ri, LOS_NO_TRANS))
+            continue;
+
+        if (!monster_habitable_grid(env.grid(*ri), habitat, is_flying))
+            continue;
+
+        const actor *actor_at_pos = actor_at(*ri);
+        if (actor_at_pos && actor_at_pos->visible_to(&summoner))
+            continue;
+
+        return true;
+    }
+
+    return false;
+}
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
+    if (!_can_summon_monster(you, HT_LAND, true))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt())
         return spret::abort;
 
@@ -159,10 +249,23 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     // been summoned.
     monster *old_dog = find_canine_familiar();
 
-    if (!old_dog && stop_summoning_prompt())
-        return spret::abort;
+    coord_def spot;
+    if (!old_dog)
+    {
+        bool summoner_could_see_available_spot = false;
+        spot = _find_spot_for_summon(you, MONS_INUGAMI,
+            summoner_could_see_available_spot);
 
-    if (old_dog && !you.can_see(*old_dog))
+        if (!summoner_could_see_available_spot)
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+
+        if (stop_summoning_prompt())
+            return spret::abort;
+    }
+    else if (!you.can_see(*old_dog))
     {
         mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
         return spret::abort;
@@ -173,9 +276,10 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     // Summon our dog if one isn't already active
     if (!old_dog)
     {
-        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
+        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god,
+            SPELL_CALL_CANINE_FAMILIAR, spot);
 
-        monster* dog = create_monster(mg);
+        monster* dog = create_monster(std::move(mg));
         if (!dog)
         {
             canned_msg(MSG_NOTHING_HAPPENS);
@@ -218,14 +322,25 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
 spret cast_summon_cactus(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_CACTUS_GIANT,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, 3, god, SPELL_SUMMON_CACTUS);
+    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, 3, god, SPELL_SUMMON_CACTUS,
+        spot);
     mg.hp = hit_points(pow + 27, 1);
-    if (!create_monster(mg))
+    if (!create_monster(std::move(mg)))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -233,9 +348,6 @@ spret cast_summon_cactus(int pow, god_type god, bool fail)
 
 spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON))
-        return spret::abort;
-
     const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
     if (armour == nullptr)
     {
@@ -251,12 +363,25 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
         return spret::abort;
     }
 
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_ANIMATED_ARMOUR,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    if (stop_summoning_prompt(MR_RES_POISON))
+        return spret::abort;
+
     fail_check();
 
     mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, god,
-                             SPELL_ANIMATE_ARMOUR);
+                             SPELL_ANIMATE_ARMOUR, spot);
     mg.hd = 15 + div_rand_round(pow, 10);
-    monster* spirit = create_monster(mg);
+    monster* spirit = create_monster(std::move(mg));
     if (!spirit)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -281,16 +406,26 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_ICE_BEAST,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
     mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, 3, god,
-                                    SPELL_SUMMON_ICE_BEAST);
+                                    SPELL_SUMMON_ICE_BEAST, spot);
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
-    if (create_monster(ice_beast))
+    if (create_monster(std::move(ice_beast)))
         mpr("A chill wind blows around you.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -300,6 +435,13 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
+    if (!_can_summon_monster(*caster, HT_LAND, true))
+    {
+        if (caster->is_player())
+            mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (caster->is_player() && stop_summoning_prompt())
         return spret::abort;
 
@@ -316,20 +458,26 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
-    monster* beast = create_monster(mdata);
+    monster* beast = create_monster(std::move(mdata));
     if (!beast)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (caster->observable())
+            canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
-    if (you.can_see(*beast))
+    if (beast->observable())
     {
-        mprf("%s %s %s!", caster->name(DESC_THE).c_str(),
-                          caster->conj_verb("summon").c_str(),
-                          mons_type_name(type, DESC_A).c_str());
+        if (caster->observable())
+        {
+            mprf("%s %s %s!", caster->name(DESC_THE).c_str(),
+                caster->conj_verb("summon").c_str(),
+                mons_type_name(type, DESC_A).c_str());
+        }
+        else
+            mprf("%s appears!", mons_type_name(type, DESC_A).c_str());
     }
-    else
+    else if (caster->observable())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -337,6 +485,17 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
 spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(*caster, MONS_HYDRA,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        if (caster->is_player())
+            mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
@@ -348,9 +507,9 @@ spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
 
     // Duration is always very short - just 1.
     mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, god,
-                                SPELL_SUMMON_HYDRA);
+                                SPELL_SUMMON_HYDRA, spot);
     mg.props[MGEN_NUM_HEADS] = heads;
-    if (monster *hydra = create_monster(mg))
+    if (monster *hydra = create_monster(std::move(mg)))
     {
         if (you.see_cell(hydra->pos()))
             mprf("%s appears.", hydra->name(DESC_A).c_str());
@@ -391,8 +550,11 @@ spret cast_dragon_call(int pow, bool fail)
     mpr("You call out to the draconic realm, and the dragon horde roars back!");
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
-    you.duration[DUR_DRAGON_CALL] = (15 + div_rand_round(pow, 5) + random2(15))
-                                    * BASELINE_DELAY;
+    int duration = 15 + div_rand_round(pow, 5);
+    // force a sequence point between random calls
+    duration += random2(15);
+    duration *= BASELINE_DELAY;
+    you.duration[DUR_DRAGON_CALL] = duration;
     you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
@@ -476,6 +638,29 @@ void do_dragon_call(int time)
     you.attribute[ATTR_NEXT_DRAGON_TIME] -= time;
 }
 
+static int _doom_howl_summons_called(int time)
+{
+    int howlcalled_count = 0;
+    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
+        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
+    // 1 nasty beast every 2-4 turns
+    while (time > 0)
+    {
+        int &time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
+        const int old_time_to_call = time_to_call;
+        if (old_time_to_call <= time)
+        {
+            time_to_call = random_range(20, 40);
+            ++howlcalled_count;
+        }
+        else
+            time_to_call -= time;
+        time -= old_time_to_call;
+    }
+
+    return howlcalled_count;
+}
+
 /**
  * Handle the Doom Howl status effect, possibly summoning hostile nasties
  * around the player.
@@ -485,24 +670,7 @@ void do_dragon_call(int time)
  */
 void doom_howl(int time)
 {
-    // TODO: pull hound-count generation into a helper function
-    int howlcalled_count = 0;
-    if (!you.props.exists(NEXT_DOOM_HOUND_KEY))
-        you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
-    // 1 nasty beast every 2-4 turns
-    while (time > 0)
-    {
-        const int time_to_call = you.props[NEXT_DOOM_HOUND_KEY].get_int();
-        if (time_to_call <= time)
-        {
-            you.props[NEXT_DOOM_HOUND_KEY] = random_range(20, 40);
-            ++howlcalled_count;
-        }
-        else
-            you.props[NEXT_DOOM_HOUND_KEY].get_int() -= time;
-        time -= time_to_call;
-    }
-
+    const int howlcalled_count = _doom_howl_summons_called(time);
     if (!howlcalled_count)
         return;
 
@@ -549,6 +717,13 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     // random chance, with two low-tier dragons possible at high power.
     // Duration fixed at 6.
 
+    if (!_can_summon_monster(*caster, HT_LAND, true))
+    {
+        if (caster->is_player())
+            mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
     bool success = false;
 
@@ -580,16 +755,26 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
 
 spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_MANA_VIPER,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
     mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
-                                SPELL_SUMMON_MANA_VIPER);
+                                SPELL_SUMMON_MANA_VIPER, spot);
     viper.hd = (7 + div_rand_round(pow, 12));
 
-    if (create_monster(viper))
+    if (create_monster(std::move(viper)))
         mpr("A mana viper appears with a sibilant hiss.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -614,7 +799,7 @@ static void _make_mons_berserk_summon(monster* mon)
 }
 
 // This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, actor *caster, monster_type override_mons)
+bool summon_berserker(int pow, const actor *caster, monster_type override_mons)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -660,13 +845,35 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     }
 
-    monster *mons = create_monster(mg);
+    monster *mons = create_monster(std::move(mg));
 
     if (!mons)
+    {
+        if (caster && caster->is_player())
+            canned_msg(MSG_NOTHING_HAPPENS);
         return false;
-
+    }
     _make_mons_berserk_summon(mons);
     return true;
+}
+
+spret cast_summon_berserker(int pow, bool fail)
+{
+    // Stone giants and polar bears can swim,
+    // so the ability isn't useless above water
+    if (!_can_summon_monster(you, HT_AMPHIBIOUS, false))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "call a brother"))
+        return spret::abort;
+
+    fail_check();
+
+    summon_berserker(pow, &you);
+    return spret::success;
 }
 
 // Not a spell. Rather, this is TSO's doing.
@@ -685,10 +892,14 @@ bool summon_holy_warrior(int pow, bool punish)
         mg.non_actor_summoner = god_name(GOD_SHINING_ONE, false);
     }
 
-    monster *summon = create_monster(mg);
+    monster *summon = create_monster(std::move(mg));
 
     if (!summon)
+    {
+        if (!punish)
+            canned_msg(MSG_NOTHING_HAPPENS);
         return false;
+    }
 
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -696,6 +907,23 @@ bool summon_holy_warrior(int pow, bool punish)
         mpr("You are momentarily dazzled by a brilliant light.");
 
     return true;
+}
+
+spret cast_summon_holy_warrior(int pow, bool fail)
+{
+    if (!_can_summon_monster(you, HT_LAND, true))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+        return spret::abort;
+
+    fail_check();
+
+    summon_holy_warrior(pow, false);
+    return spret::success;
 }
 
 /**
@@ -717,7 +945,7 @@ static bool _fail_tukimas()
  * @param target  The targeted monster (or player).
  * @return        Whether the target can be affected by Tukima's Dance.
  **/
-bool tukima_affects(const actor &target)
+bool tukima_affects(const actor *caster, const actor &target)
 {
     const item_def* wpn = target.weapon();
     return wpn
@@ -725,9 +953,9 @@ bool tukima_affects(const actor &target)
            && !target.is_player()
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
-           // XX use god_protects here. But, need to know the caster too...
+           && !(caster && god_protects(caster, target.as_monster()))
            && !mons_is_hepliaklqana_ancestor(target.type)
-           && !(target.is_monster() && target.as_monster()->type == MONS_ORC_APOSTLE);
+           && target.as_monster()->type != MONS_ORC_APOSTLE;
 }
 
 /**
@@ -758,7 +986,7 @@ static bool _check_tukima_validity(const actor *target)
         return false;
     }
 
-    if (!tukima_affects(*target))
+    if (!tukima_affects(&you, *target))
     {
         if (!can_see_target)
             return _fail_tukimas();
@@ -804,7 +1032,7 @@ static void _animate_weapon(int pow, actor* target)
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
-    monster * const mons = create_monster(mg);
+    monster * const mons = create_monster(std::move(mg));
 
     if (!mons)
     {
@@ -854,6 +1082,8 @@ static void _animate_weapon(int pow, actor* target)
  **/
 void cast_tukimas_dance(int pow, actor* target)
 {
+    // XXX: we don't have a nice way to abort the spell if it shouldn't be cast
+
     ASSERT(target);
 
     if (!_check_tukima_validity(target))
@@ -879,16 +1109,34 @@ int mons_ball_lightning_hd(int pow, bool random)
 
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 {
+    // This is the player version of the spell, the monster version
+    // is handled elsewhere
+
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_BALL_LIGHTNING,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
     bool success = false;
 
     mgen_data cbl = _pal_data(MONS_BALL_LIGHTNING, 0, god,
-                             SPELL_CONJURE_BALL_LIGHTNING);
+                             SPELL_CONJURE_BALL_LIGHTNING, spot);
     cbl.foe = MHITNOT;
     cbl.hd = ball_lightning_hd(pow);
 
     for (int i = 0; i < 3; ++i)
     {
+        if (i != 0)
+        {
+            cbl.pos = _find_spot_for_summon(you, MONS_BALL_LIGHTNING,
+                summoner_could_see_available_spot);
+        }
         if (monster *ball = create_monster(cbl))
         {
             success = true;
@@ -923,19 +1171,32 @@ dice_def lightning_spire_damage(int pow)
 
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_LIGHTNING_SPIRE,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
     mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, 2, god,
-                                SPELL_SUMMON_LIGHTNING_SPIRE);
+                                SPELL_SUMMON_LIGHTNING_SPIRE, spot);
     spire.hd = _lightning_spire_hd(pow);
 
-    monster* mons = create_monster(spire);
+    monster* mons = create_monster(std::move(spire));
 
-    if (mons && !silenced(mons->pos()))
-        mpr("An electric hum fills the air.");
+    if (mons)
+        if (!silenced(mons->pos()))
+            mpr("An electric hum fills the air.");
+        else
+            mpr("A lightning spire appears.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -944,17 +1205,27 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 
 spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_BLAZEHEART_GOLEM,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
     mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3, god,
-                                SPELL_SUMMON_BLAZEHEART_GOLEM);
+                                SPELL_SUMMON_BLAZEHEART_GOLEM, spot);
     golem.flags &= ~MG_AUTOFOE; // !!!
     golem.hd = 6 + div_rand_round(pow, 10);
 
-    monster* mons = (create_monster(golem));
+    monster* mons = create_monster(std::move(golem));
 
     if (mons)
     {
@@ -970,7 +1241,7 @@ spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
 }
 
 /**
- * Cast the spell Call Imp, summoning a friendly imp nearby.
+ * Cast the player version of Call Imp, summoning a friendly imp nearby.
  *
  * @param pow   The spellpower at which the spell is being cast.
  * @param god   The god of the caster.
@@ -979,13 +1250,24 @@ spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
  */
 spret cast_call_imp(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_CERULEAN_IMP,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
-    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, 3, god, SPELL_CALL_IMP);
-    if (monster *imp = create_monster(imp_data))
+    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, 3, god,
+        SPELL_CALL_IMP, spot);
+    if (monster *imp = create_monster(std::move(imp_data)))
     {
         mpr("A tiny devil pulls itself out of the air.");
         imp->weapon()->plus = pow/10 - 4;
@@ -1047,7 +1329,7 @@ spret summon_butterflies()
                             MG_AUTOFOE);
         butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
 
-        if (create_monster(butterfly))
+        if (create_monster(std::move(butterfly)))
             success = true;
     }
     // place another set more sparsely. These will try to find a placement
@@ -1064,7 +1346,7 @@ spret summon_butterflies()
                             MG_AUTOFOE);
         butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
 
-        if (create_monster(butterfly))
+        if (create_monster(std::move(butterfly)))
             success = true;
     }
 
@@ -1076,6 +1358,19 @@ spret summon_butterflies()
 
 spret summon_shadow_creatures()
 {
+    // XXX: _find_spot_for_summon can't handle RANDOM_COMPATIBLE_MONSTER
+    // properly, and we can't let create_monster find the location for us
+    // either as that has the same problem
+    bool summoner_could_see_available_spot = false;
+    coord_def spot = _find_spot_for_summon(you, RANDOM_COMPATIBLE_MONSTER,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     // Hard to predict what resistances might come from this.
     if (stop_summoning_prompt())
         return spret::abort;
@@ -1087,13 +1382,21 @@ spret summon_shadow_creatures()
 
     for (int i = 0; i < num; ++i)
     {
-        if (monster *mons = create_monster(
-            mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
-                      MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
-                      // This duration is only used for band members.
-                      .set_summoned(&you, 2, MON_SUMM_SCROLL)
-                      .set_place(level_id::current()),
-            false))
+        if (i != 0)
+        {
+            spot = _find_spot_for_summon(you, RANDOM_COMPATIBLE_MONSTER,
+                summoner_could_see_available_spot);
+        }
+
+        mgen_data mg(RANDOM_COMPATIBLE_MONSTER,
+                     BEH_FRIENDLY,
+                     spot,
+                     MHITYOU,
+                     MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD | MG_FORCE_PLACE);
+        mg.set_summoned(&you, 2, MON_SUMM_SCROLL);
+        mg.set_place(level_id::current());
+
+        if (monster *mons = create_monster(std::move(mg), false))
         {
             // Choose a new duration based on HD.
             int x = max(mons->get_experience_level() - 3, 1);
@@ -1135,8 +1438,11 @@ bool can_cast_malign_gateway()
     return count_malign_gateways() < 1;
 }
 
-coord_def find_gateway_location(actor* caster)
+static coord_def _find_gateway_location(const actor& caster,
+    bool& summoner_could_see_available_spot)
 {
+    summoner_could_see_available_spot = false;
+
     vector<coord_def> points;
 
     for (coord_def delta : Compass)
@@ -1145,15 +1451,28 @@ coord_def find_gateway_location(actor* caster)
 
         for (int t = 0; t < 11; t++)
         {
-            test = caster->pos() + (delta * (2+t));
-            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(env.grid(test))
-                || actor_at(test)
+            test = caster.pos() + (delta * (2+t));
+            if (!in_bounds(test)
+                || !feat_is_malign_gateway_suitable(env.grid(test))
                 || count_neighbours_with_func(test, &feat_is_solid) != 0
-                || !caster->see_cell_no_trans(test))
+                || !caster.see_cell_no_trans(test))
             {
                 continue;
             }
 
+            const actor *actor_at_pos = actor_at(test);
+            if (actor_at_pos)
+            {
+                if (!summoner_could_see_available_spot
+                    && !actor_at_pos->visible_to(&caster))
+                {
+                    summoner_could_see_available_spot = true;
+                }
+
+                continue;
+            }
+
+            summoner_could_see_available_spot = true;
             points.push_back(test);
         }
     }
@@ -1162,6 +1481,12 @@ coord_def find_gateway_location(actor* caster)
         return coord_def(0, 0);
 
     return points[random2(points.size())];
+}
+
+coord_def find_gateway_location(actor* caster)
+{
+    bool unused = false;
+    return _find_gateway_location(*caster, unused);
 }
 
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
@@ -1184,45 +1509,67 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                      "and a portal to some otherworldly place is opened!");
 }
 
-spret cast_malign_gateway(actor * caster, int pow, god_type god,
+spret cast_malign_gateway(const actor* caster, int pow, god_type god,
                           bool fail, bool test)
 {
-    if (!test && caster->is_player()
-        && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+    bool summoner_could_see_available_spot;
+    const coord_def point = _find_gateway_location(*caster,
+        summoner_could_see_available_spot);
+    if (test)
     {
+        if (summoner_could_see_available_spot)
+            return spret::success;
         return spret::abort;
     }
 
-    coord_def point = find_gateway_location(caster);
-    bool success = point != coord_def(0, 0);
-    if (test)
-        return success ? spret::success : spret::abort;
+    const bool is_player = caster->is_player();
 
-    bool is_player = caster->is_player();
-
-    if (success)
+    if (!summoner_could_see_available_spot)
     {
-        fail_check();
-
-        create_malign_gateway(
-            point,
-            is_player ? BEH_FRIENDLY
-                      : attitude_creation_behavior(
-                          caster->as_monster()->attitude),
-            is_player ? ""
-                      : caster->as_monster()->full_name(DESC_A),
-            pow,
-            god,
-            is_player);
-
-        return spret::success;
+        if (is_player)
+            mpr("There is no available space!");
+        return spret::abort;
     }
 
-    return spret::abort;
+    if (is_player && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+        return spret::abort;
+
+    fail_check();
+
+    create_malign_gateway(
+        point,
+        is_player ? BEH_FRIENDLY
+        : attitude_creation_behavior(
+            caster->as_monster()->attitude),
+        is_player ? ""
+        : caster->as_monster()->full_name(DESC_A),
+        pow,
+        god,
+        is_player);
+
+    return spret::success;
 }
 
 spret cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    coord_def spot = _find_spot_for_summon(you, MONS_ABOMINATION_LARGE,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        // This shouldn't be needed unless large abominations and
+        // tentacle monstrosities have been changed to have differenct habitats
+        _find_spot_for_summon(you, MONS_TENTACLED_MONSTROSITY,
+            summoner_could_see_available_spot);
+
+        if (!summoner_could_see_available_spot)
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
@@ -1245,9 +1592,15 @@ spret cast_summon_horrible_things(int pow, god_type god, bool fail)
     while (num_abominations-- > 0)
     {
         const mgen_data abom = _pal_data(MONS_ABOMINATION_LARGE, 3, god,
-                                         SPELL_SUMMON_HORRIBLE_THINGS);
-        if (create_monster(abom))
+                                         SPELL_SUMMON_HORRIBLE_THINGS, spot);
+        if (create_monster(std::move(abom)))
             ++count;
+
+        if (num_abominations > 0)
+        {
+            spot = _find_spot_for_summon(you, MONS_ABOMINATION_LARGE,
+                summoner_could_see_available_spot);
+        }
     }
 
     while (num_tmons-- > 0)
@@ -1359,11 +1712,11 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
     mpr("A forested plane collides here with a resounding crunch!");
     noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
 
-    mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
+    mgen_data dryad_data = _summon_data(*caster, MONS_DRYAD, 1, god,
                                      SPELL_SUMMON_FOREST);
     dryad_data.hd = 6 + div_rand_round(pow, 16);
 
-    if (monster *dryad = create_monster(dryad_data))
+    if (monster *dryad = create_monster(std::move(dryad_data)))
     {
         mon_enchant abj = dryad->get_ench(ENCH_ABJ);
         abj.duration = duration - 10;
@@ -1375,6 +1728,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
                   dryad->spell_slot_flags(SPELL_AWAKEN_FOREST));
     }
 
+    // XXX: this doesn't make sense if the caster isn't you
     you.duration[DUR_FORESTED] = duration;
 
     return spret::success;
@@ -1390,6 +1744,12 @@ monster_type pick_random_wraith()
 
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
+    if (!_can_summon_monster(you, HT_LAND, true))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES, "haunt your foe"))
         return spret::abort;
 
@@ -1444,26 +1804,34 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
                      : "You sense a hostile presence.");
     }
     else
-    {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
 
     return spret::success;
 }
 
 spret cast_martyrs_knell(const actor* caster, int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(*caster, MONS_MARTYRED_SHADE,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        if (caster->is_player())
+            mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
     mgen_data mg = _summon_data(*caster, MONS_MARTYRED_SHADE, 2, god,
-                                SPELL_MARTYRS_KNELL);
+                                SPELL_MARTYRS_KNELL, spot);
     mg.hd = (6 + div_rand_round(pow, 11));
 
-    monster* shade = create_monster(mg);
+    monster* shade = create_monster(std::move(mg));
     if (shade)
     {
         if (caster->is_player())
@@ -1581,24 +1949,27 @@ static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
     mon.props[CUSTOM_SPELLS_KEY].get_bool() = true;
 }
 
-void init_servitor(monster* servitor, actor* caster, int pow)
+void init_servitor(monster& servitor, const actor& caster, int pow)
 {
-    ASSERT(servitor); // XXX: change to monster &servitor
-    ASSERT(caster); // XXX: change to actor &caster
-    _init_servitor_monster(*servitor, *caster, pow);
+    _init_servitor_monster(servitor, caster, pow);
 
-    if (you.can_see(*caster))
+    if (servitor.observable())
     {
-        mprf("%s %s a servant imbued with %s destructive magic!",
-             caster->name(DESC_THE).c_str(),
-             caster->conj_verb("summon").c_str(),
-             caster->pronoun(PRONOUN_POSSESSIVE).c_str());
+        if (caster.observable())
+        {
+            mprf("%s %s a servant imbued with %s destructive magic!",
+                caster.name(DESC_THE).c_str(),
+                caster.conj_verb("summon").c_str(),
+                caster.pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+        else
+            simple_monster_message(servitor, " appears!");
     }
-    else
-        simple_monster_message(*servitor, " appears!");
+    else if (caster.observable())
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     int shortest_range = LOS_RADIUS + 1;
-    for (const mon_spell_slot &slot : servitor->spells)
+    for (const mon_spell_slot &slot : servitor.spells)
     {
         if (slot.spell == SPELL_NO_SPELL)
             continue;
@@ -1607,21 +1978,31 @@ void init_servitor(monster* servitor, actor* caster, int pow)
         if (range < shortest_range)
             shortest_range = range;
     }
-    servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
+    servitor.props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
 spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_summon(you, MONS_SPELLFORGED_SERVITOR,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
     mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 3, god,
-                                SPELL_SPELLFORGED_SERVITOR);
+                                SPELL_SPELLFORGED_SERVITOR, spot);
 
-    if (monster* mon = create_monster(mdata))
-        init_servitor(mon, &you, pow);
+    if (monster* mon = create_monster(std::move(mdata)))
+        init_servitor(*mon, you, pow);
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -1667,14 +2048,37 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
-        return spret::abort;
+    monster* battlesphere = nullptr;
+    if (agent->is_player())
+        battlesphere = find_battlesphere(&you);
+
+    ASSERT(agent->is_player() || !find_battlesphere(agent));
+
+    coord_def spot;
+    if (!battlesphere)
+    {
+        bool summoner_could_see_available_spot = false;
+        spot = _find_spot_for_summon(*agent, MONS_BATTLESPHERE,
+            summoner_could_see_available_spot);
+
+        if (!summoner_could_see_available_spot)
+        {
+            if (agent->is_player())
+                mpr("There is no available space!");
+            return spret::abort;
+        }
+
+        if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+            return spret::abort;
+    }
 
     fail_check();
 
-    monster* battlesphere;
-    if (agent->is_player() && (battlesphere = find_battlesphere(&you)))
+
+    if (battlesphere)
     {
+        assert(agent->is_player());
+
         bool recalled = false;
         if (!you.can_see(*battlesphere))
         {
@@ -1703,47 +2107,51 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         battlesphere->set_hit_dice(_battlesphere_hd(pow));
         abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
         battlesphere->update_ench(abj);
+
+        return spret::success;
     }
+
+    mgen_data mg(MONS_BATTLESPHERE,
+        agent->is_player() ? BEH_FRIENDLY
+        : SAME_ATTITUDE(agent->as_monster()),
+        spot, agent->mindex(), MG_FORCE_PLACE);
+    mg.set_summoned(agent, 0, SPELL_BATTLESPHERE, god);
+    mg.hd = _battlesphere_hd(pow);
+    battlesphere = create_monster(std::move(mg));
+
+    if (!battlesphere)
+    {
+        if (agent->is_player())
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    int dur = min((7 + roll_dice(2, pow)) * 10, 500);
+    battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
+    battlesphere->summoner = agent->mid;
+    agent->props[BATTLESPHERE_KEY].get_int() = battlesphere->mid;
+
+    if (agent->is_player())
+        mpr("You conjure a globe of magical energy.");
     else
     {
-        ASSERT(!find_battlesphere(agent));
-        mgen_data mg (MONS_BATTLESPHERE,
-                      agent->is_player() ? BEH_FRIENDLY
-                                         : SAME_ATTITUDE(agent->as_monster()),
-                      agent->pos(), agent->mindex());
-        mg.set_summoned(agent, 0, SPELL_BATTLESPHERE, god);
-        mg.hd = _battlesphere_hd(pow);
-        battlesphere = create_monster(mg);
-
-        if (battlesphere)
+        if (battlesphere->observable())
         {
-            int dur = min((7 + roll_dice(2, pow)) * 10, 500);
-            battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
-            battlesphere->summoner = agent->mid;
-            agent->props[BATTLESPHERE_KEY].get_int() = battlesphere->mid;
-
-            if (agent->is_player())
-                mpr("You conjure a globe of magical energy.");
-            else
+            if (agent->observable())
             {
-                if (you.can_see(*agent) && you.can_see(*battlesphere))
-                {
-                    simple_monster_message(*agent->as_monster(),
-                                           " conjures a globe of magical energy!");
-                }
-                else if (you.can_see(*battlesphere))
-                    simple_monster_message(*battlesphere, " appears!");
-
-                if (agent->is_monster())
-                    battlesphere->set_band_leader(*(agent->as_monster()));
+                simple_monster_message(*agent->as_monster(),
+                    " conjures a globe of magical energy!");
             }
-            battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
-            battlesphere->foe = agent->mindex();
-            battlesphere->target = agent->pos();
+            else
+                simple_monster_message(*battlesphere, " appears!");
         }
-        else if (agent->is_player() || you.can_see(*agent))
-            canned_msg(MSG_NOTHING_HAPPENS);
+
+        if (agent->is_monster())
+            battlesphere->set_band_leader(*(agent->as_monster()));
     }
+    battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
+    battlesphere->foe = agent->mindex();
+    battlesphere->target = agent->pos();
 
     return spret::success;
 }
@@ -2101,9 +2509,25 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
     prism_data.set_summoned(caster, 0, is_shadow ? SPELL_SHADOW_PRISM
                                                  : SPELL_FULMINANT_PRISM);
     prism_data.hd = hd;
-    monster *prism = create_monster(prism_data);
+    monster *prism = create_monster(std::move(prism_data));
+    if (!prism)
+    {
+        if (caster->observable())
+            canned_msg(MSG_NOTHING_HAPPENS);
 
-    if (prism)
+        return spret::success;
+    }
+
+    // This looks silly, but prevents the even sillier-looking situation of
+    // monster-cast prisms displaying as 'unaware of you'.
+    if (caster->is_monster())
+    {
+        prism->foe = caster->as_monster()->foe;
+        prism->behaviour = BEH_SEEK;
+        prism->flags |= MF_WAS_IN_VIEW;
+    }
+
+    if (prism->observable())
     {
         if (caster->observable())
         {
@@ -2112,22 +2536,13 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
                  caster->conj_verb("conjure").c_str(),
                  is_shadow ? "shadowy" : "explosive");
         }
-        else if (you.can_see(*prism))
+        else
         {
             mprf("A prism of %s energy appears from nowhere!",
                  is_shadow ? "shadowy" : "explosive");
         }
-
-        // This looks silly, but prevents the even sillier-looking situation of
-        // monster-cast prisms displaying as 'unaware of you'.
-        if (caster->is_monster())
-        {
-            prism->foe = caster->as_monster()->foe;
-            prism->behaviour = BEH_SEEK;
-            prism->flags |= MF_WAS_IN_VIEW;
-        }
     }
-    else if (you.can_see(*caster))
+    else if (caster->observable())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -2407,7 +2822,7 @@ static bool _create_briar_patch(coord_def& target)
     mgen.set_summoned(&you, min(2 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
 
-    if (create_monster(mgen))
+    if (create_monster(std::move(mgen)))
     {
         mpr("A briar patch grows up from the ground.");
         return true;
@@ -2479,7 +2894,7 @@ static void _overgrow_wall(const coord_def &pos)
     mgen.hd = mons_class_hit_dice(mon) + you.skill_rdiv(SK_INVOCATIONS);
     mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
-    if (const monster* const plant = create_monster(mgen))
+    if (const monster* const plant = create_monster(std::move(mgen)))
     {
         mprf("%s is torn apart as %s grows in its place.", what.c_str(),
                 plant->name(DESC_A).c_str());
@@ -2552,7 +2967,7 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
     mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
 
-    if (create_monster(mgen))
+    if (create_monster(std::move(mgen)))
         mpr("A ballistomycete grows from the ground.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2599,7 +3014,7 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
     mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
             SPELL_NO_SPELL);
 
-    if (create_monster(mgen))
+    if (create_monster(std::move(mgen)))
         mpr("An oklob plant grows from the ground.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2607,8 +3022,18 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
     return spret::success;
 }
 
-void kiku_unearth_wretches()
+spret kiku_unearth_wretches(bool fail)
 {
+    // We have to go with a very generic check here because the summons could
+    // be anything with a corpse
+    if (!_can_summon_monster(you, HT_LAND, true))
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
+    fail_check();
+
     const int pow = you.skill(SK_NECROMANCY, 5);
     const int min_wretches = 1 + random2(2);
     const int max_wretches = min_wretches + div_rand_round(pow, 27); // 7 max
@@ -2632,7 +3057,7 @@ void kiku_unearth_wretches()
                        | MF_NO_REGEN;
         mg.props[KIKU_WRETCH_KEY] = true;
 
-        monster *mon = create_monster(mg);
+        monster *mon = create_monster(std::move(mg));
         if (!mon)
             continue;
 
@@ -2651,6 +3076,8 @@ void kiku_unearth_wretches()
         simple_god_message(" has no space to call forth the wretched!");
     else
         simple_god_message(" calls piteous wretches from the earth!");
+
+    return spret::success;
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos,
@@ -2667,7 +3094,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
     if (cell_is_solid(pos) || actor_at(pos))
         return false;
 
-    foxfire = create_monster(fox);
+    foxfire = create_monster(std::move(fox));
     if (!foxfire)
         return false;
 
@@ -2685,14 +3112,15 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
     return true;
 }
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlight)
+spret cast_foxfire(const actor &agent, int pow, god_type god, bool fail, bool marshlight)
 {
     bool see_space = false;
     for (adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
         if (cell_is_solid(*ai))
             continue;
-        if (actor_at(*ai) && agent.can_see(*actor_at(*ai)))
+        const actor *actor_at_pos = actor_at(*ai);
+        if (actor_at_pos && agent.can_see(*actor_at_pos))
             continue;
         see_space = true;
         break;
@@ -2716,8 +3144,10 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlig
         if (created == 2)
             break;
     }
-
-    if (created && you.see_cell(agent.pos()))
+    // XXX: This will give a message if the summoned foxfire is out of sight
+    // where the other summoning spells don't. It also won't give a message
+    // when an unseen summoner summons foxfire in view
+    if (created && agent.observable())
     {
         mprf("%s conjure%s some %s!",
              agent.name(DESC_THE).c_str(),
@@ -2778,10 +3208,8 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos)
     monster *mons = create_monster(
             mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
                       .set_summoned(&agent, 1, SPELL_NO_SPELL, GOD_NO_GOD));
-    if (mons)
-        return true;
 
-    return false;
+    return mons != nullptr;
 }
 
 bool summon_swarm_clone(const monster& agent, coord_def target_pos)
@@ -2808,7 +3236,7 @@ bool summon_swarm_clone(const monster& agent, coord_def target_pos)
     mgen_data mg(agent.type, BEH_COPY, target_pos, _auto_autofoe(parent), MG_AUTOFOE);
     mg.set_summoned(parent, 2, SPELL_NO_SPELL, GOD_NO_GOD);
 
-    if (monster* spawn = create_monster(mg))
+    if (monster* spawn = create_monster(std::move(mg)))
     {
         if (you.can_see(*spawn))
             mprf("Another %s is drawn to the feast!", spawn->name(DESC_PLAIN).c_str());
@@ -2818,7 +3246,7 @@ bool summon_swarm_clone(const monster& agent, coord_def target_pos)
     return false;
 }
 
-bool summon_spider(const actor &agent, coord_def pos, god_type god,
+monster* summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow)
 {
     monster_type mon = random_choose_weighted(100, MONS_REDBACK,
@@ -2831,34 +3259,46 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
     monster *mons = create_monster(
             mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
                       .set_summoned(&agent, 3, spell, god));
-    if (mons)
-        return true;
 
-    return false;
+    return mons;
 }
 
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
 {
     // Can't happen at present, but why not check just to be sure.
-    if (agent.is_player() && stop_summoning_prompt())
-        return spret::abort;
+    if (agent.is_player())
+    {
+        // This will need changing if any spiders gain the ability to
+        // swim or fly
+        if (!_can_summon_monster(agent, HT_LAND, false))
+        {
+            mpr("There is no available space!");
+            return spret::abort;
+        }
+
+        if (stop_summoning_prompt())
+            return spret::abort;
+    }
 
     fail_check();
 
-    int created = 0;
-
+    int seen_spiders = 0;
+    // XXX: Do we really want to recalculate a random upper limit each time
+    // through the loop? This will make high values less likely.
     for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
     {
-        if (summon_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
-            created++;
+        monster* spider = summon_spider(agent, agent.pos(), god,
+            SPELL_SUMMON_SPIDERS, pow);
+        if (spider && spider->observable())
+            seen_spiders++;
     }
 
-    if (created && you.see_cell(agent.pos()))
+    if (seen_spiders && agent.observable())
     {
         mprf("%s %s %s!",
              agent.name(DESC_THE).c_str(),
              agent.conj_verb("summon").c_str(),
-             created > 1 ? "spiders" : "a spider");
+             seen_spiders > 1 ? "spiders" : "a spider");
     }
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2873,8 +3313,6 @@ int barrelling_boulder_hp(int pow)
 
 spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool fail)
 {
-    fail_check();
-
     ray_def ray;
     if (!find_ray(agent.pos(), targ, ray, opc_solid) || !ray.advance())
     {
@@ -2883,10 +3321,13 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     }
     const coord_def pos = ray.pos();
 
+    fail_check();
+
     // For unseen invisble enemies
     if (actor_at(pos))
     {
-        mpr("Something unseen is already there!");
+        if (agent.is_player())
+            mpr("Something unseen is already there!");
         return spret::success;
     }
 
@@ -2897,12 +3338,13 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
                              pos, MHITNOT, MG_FORCE_PLACE);
     mg.set_summoned(&agent, 0, SPELL_BOULDER);
     mg.hp = barrelling_boulder_hp(pow);
-    monster *boulder = create_monster(mg);
+    monster *boulder = create_monster(std::move(mg));
 
     // If some other reason prevents this from working (I'm not sure what?)
     if (!boulder)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (agent.observable())
+            canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
@@ -2911,7 +3353,19 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     //     Currently that can't happen, but in future it might.
     boulder->props[BOULDER_DIRECTION_KEY] = pos - agent.pos();
 
-    mpr("You send a boulder barrelling forward!");
+    if (boulder->observable())
+    {
+        if (agent.observable())
+        {
+            mprf("%s send%s a boulder barrelling forward!",
+                agent.name(DESC_THE).c_str(),
+                agent.is_player() ? "" : "s");
+        }
+        else
+            mprf("A boulder barrels forward!");
+    }
+    else if (agent.observable())
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     // Let the boulder roll one space immediately.
     boulder->speed_increment = 80;
@@ -2942,18 +3396,21 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     }
 
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+
+    string immune_reason = mons_simulacrum_immune_reason(mons);
+    if (!immune_reason.empty())
     {
-        fail_check();
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
-        // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters.
-        return spret::success;
+        mpr(immune_reason);
+        return spret::abort;
     }
 
-    if (!mons_can_be_spectralised(*mons))
+    bool summoner_could_see_available_spot = false;
+    coord_def spot = _find_spot_for_summon(you, MONS_BLOCK_OF_ICE,
+        summoner_could_see_available_spot);
+
+    if (!summoner_could_see_available_spot)
     {
-        mpr("You can't make simulacra of that!");
+        mpr("There is no available space!");
         return spret::abort;
     }
 
@@ -2969,11 +3426,17 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     int delay = random_range(3, 5) * BASELINE_DELAY;
     for (int i = 0; i < num_simulacra; ++i)
     {
+        if (i != 0)
+        {
+            spot = _find_spot_for_summon(you, MONS_BLOCK_OF_ICE,
+                summoner_could_see_available_spot);
+        }
         // Note that this *not* marked as coming from SPELL_SIMULACRUM
-        mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, GOD_NO_GOD, SPELL_NO_SPELL);
+        mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, GOD_NO_GOD,
+            SPELL_NO_SPELL, spot);
         mg.base_type = mons->type;
         mg.hd = 8; // make them more durable
-        monster *ice = create_monster(mg);
+        monster *ice = create_monster(std::move(mg));
 
         if (ice)
         {
@@ -3005,8 +3468,84 @@ dice_def hoarfrost_cannonade_damage(int pow, bool finale)
         return zap_damage(ZAP_HOARFROST_BULLET, _hoarfrost_cannon_hd(pow, false) * 12, true, false);
 }
 
+static bool _summon_should_be_replaced(const actor& summon,
+    const actor& summoner, monster_type summon_type, bool allow_replace)
+{
+    if (!allow_replace)
+        return false;
+
+    const monster* monster = summon.as_monster();
+    if (!monster)
+        return false;
+
+    return monster->type == summon_type && monster->summoner == summoner.mid;
+}
+
+static coord_def _find_spot_for_hoarfrost_cannon(const actor& summoner,
+                                         monster_type mon_type,
+                                         bool& summoner_could_see_available_spot,
+                                         bool allow_replace)
+{
+    coord_def result{};
+    summoner_could_see_available_spot = false;
+
+    const coord_def summoner_pos = summoner.pos();
+
+    // Monsters summon cannons around their foe instead of themselves (both to
+    // let them operate with other monsters in the way and because it's too easy
+    // for the player to back out of range otherwise)
+    const coord_def center = (summoner.is_player() ? summoner_pos
+        : summoner.as_monster()->get_foe()->pos());
+
+    int good_count = 0;
+    for (radius_iterator ri(center, 3, C_SQUARE, true);
+        ri; ++ri)
+    {
+        if (!cell_see_cell(center, *ri, LOS_NO_TRANS))
+            continue;
+
+        if (!monster_habitable_grid(mon_type, env.grid(*ri)))
+            continue;
+
+        const actor *actor_at_pos = actor_at(*ri);
+        if (actor_at_pos
+            && !_summon_should_be_replaced(*actor_at_pos, summoner,
+                mon_type, allow_replace))
+        {
+            if (!summoner_could_see_available_spot
+                && !actor_at_pos->visible_to(&summoner))
+            {
+                summoner_could_see_available_spot = true;
+            }
+
+            continue;
+        }
+
+        if (one_chance_in(++good_count))
+        {
+            result = *ri;
+            summoner_could_see_available_spot = true;
+        }
+    }
+
+    return result;
+}
+
 spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 {
+    // Find a spot for the cannon (at a somewhat larger distance than
+    // normal summons)
+    bool summoner_could_see_available_spot = false;
+    const coord_def spot = _find_spot_for_hoarfrost_cannon(agent,
+        MONS_HOARFROST_CANNON, summoner_could_see_available_spot, true);
+
+    // Monsters can place cannons out of their line of sight
+    if (agent.is_player() && !summoner_could_see_available_spot)
+    {
+        mpr("There is no available space!");
+        return spret::abort;
+    }
+
     fail_check();
 
     // Remove any existing cannons we may have first
@@ -3017,26 +3556,21 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     }
 
     mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
-                                    SPELL_HOARFROST_CANNONADE);
-    cannon.flags |= MG_FORCE_PLACE;
+                                    SPELL_HOARFROST_CANNONADE, spot);
     cannon.hd = _hoarfrost_cannon_hd(pow);
 
     // Make both cannons share the same duration
     const int dur = random_range(16, 22) * BASELINE_DELAY;
 
     int num_seen = 0;
-
-    // Monsters summon cannons around their foe instead of themselves (both to
-    // let them operate with other monsters in the way and because it's too easy
-    // for the player to back out of range otherwise)
-    const coord_def center = (agent.is_player() ? you.pos()
-                                                : agent.as_monster()->get_foe()->pos());
     for (int i = 0; i < 2; ++i)
     {
-        // Find a spot for each cannon (at a somewhat larger distance than
-        // normal summons)
-        find_habitable_spot_near(center, MONS_HOARFROST_CANNON, 3, false,
-                                 cannon.pos);
+        if (i != 0)
+        {
+            cannon.pos = _find_spot_for_hoarfrost_cannon(agent,
+                MONS_HOARFROST_CANNON, summoner_could_see_available_spot,
+                false);
+        }
 
         monster* mons = create_monster(cannon);
         if (mons)
@@ -3047,24 +3581,23 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
             mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &agent, dur));
             mons->mark_summoned(0, false, SPELL_HOARFROST_CANNONADE, false);
 
-            if (you.can_see(*mons))
+            if (mons->observable())
                 ++num_seen;
         }
     }
-
     if (num_seen > 1)
     {
         mprf("%s sculpt%s a pair of cannons out of ice!",
-             agent.name(DESC_THE).c_str(),
-             agent.is_player() ? ""  : "s");
+            agent.observable() ? agent.name(DESC_THE).c_str() : "something",
+            agent.is_player() ? "" : "s");
     }
     else if (num_seen == 1)
     {
         mprf("%s sculpt%s a cannon out of ice!",
-             agent.name(DESC_THE).c_str(),
-             agent.is_player() ? ""  : "s");
+            agent.observable() ? agent.name(DESC_THE).c_str() : "something",
+            agent.is_player() ? "" : "s");
     }
-    else
+    else if (agent.observable())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -3163,11 +3696,10 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     noisy(spell_effect_noise(SPELL_HELLFIRE_MORTAR), agent.pos(), agent.mid);
 
     mgen_data mg = _summon_data(agent, MONS_HELLFIRE_MORTAR, 0,
-                                GOD_NO_GOD, SPELL_HELLFIRE_MORTAR);
-    mg.flags |= MG_FORCE_PLACE;
-    mg.pos = beam.path_taken[0];
+                                GOD_NO_GOD, SPELL_HELLFIRE_MORTAR,
+                                beam.path_taken[0]);
     mg.hd = _hellfire_mortar_hd(pow);
-    monster* cannon = create_monster(mg);
+    monster* cannon = create_monster(std::move(mg));
 
     // Unclear why this could happen (we've already checked that the spot is
     // empty), but let's guard against it anyway.

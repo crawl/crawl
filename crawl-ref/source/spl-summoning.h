@@ -40,11 +40,13 @@ spret cast_summon_dragon(actor *caster, int pow,
 spret cast_summon_hydra(actor *caster, int pow, god_type god = GOD_NO_GOD,
                              bool fail = false);
 spret cast_summon_mana_viper(int pow, god_type god, bool fail);
-bool summon_berserker(int pow, actor *caster,
+bool summon_berserker(int pow, const actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
+spret cast_summon_berserker(int pow, bool fail);
 bool summon_holy_warrior(int pow, bool punish);
+spret cast_summon_holy_warrior(int pow, bool fail);
 
-bool tukima_affects(const actor &target);
+bool tukima_affects(const actor *caster, const actor &target);
 void cast_tukimas_dance(int pow, actor *target);
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 int ball_lightning_hd(int pow, bool random = true);
@@ -60,7 +62,7 @@ bool can_cast_malign_gateway();
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
                            int pow, god_type god = GOD_NO_GOD,
                            bool is_player = false);
-spret cast_malign_gateway(actor* caster, int pow,
+spret cast_malign_gateway(const actor* caster, int pow,
                           god_type god = GOD_NO_GOD, bool fail = false,
                           bool test = false);
 coord_def find_gateway_location(actor* caster);
@@ -74,7 +76,7 @@ void doom_howl(int time);
 
 spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);
-void init_servitor(monster* servitor, actor* caster, int pow);
+void init_servitor(monster& servitor, const actor& caster, int pow);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
 void remove_player_servitor();
 
@@ -116,13 +118,13 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
-void kiku_unearth_wretches();
+spret kiku_unearth_wretches(bool fail);
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail,
+spret cast_foxfire(const actor &agent, int pow, god_type god, bool fail,
                    bool marshlight = false);
 spret foxfire_swarm();
 bool summon_hell_out_of_bat(const actor &agent, coord_def pos);
-bool summon_spider(const actor &agent, coord_def pos, god_type god,
+monster* summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow);
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
 bool summon_swarm_clone(const monster& agent, coord_def target_pos);

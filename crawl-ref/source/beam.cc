@@ -7267,7 +7267,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_CHARM:
             return ench_flavour_affects_monster(agent(), flavour, mon);
         case BEAM_TUKIMAS_DANCE:
-            return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
+            return tukima_affects(agent(), *mon); // XXX: move to ench_flavour_affects?
         case BEAM_UNRAVELLING:
             return monster_can_be_unravelled(*mon); // XXX: as tukima's
         default:

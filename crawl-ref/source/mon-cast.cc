@@ -7405,7 +7405,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const int pow = 7 * mons->spell_hd(spell_cast);
         monster* servitor = _summon(*mons, MONS_SPELLFORGED_SERVITOR, 4, slot);
         if (servitor)
-            init_servitor(servitor, mons, pow);
+            init_servitor(*servitor, *mons, pow);
         else if (you.can_see(*mons))
             canned_msg(MSG_NOTHING_HAPPENS);
         return;

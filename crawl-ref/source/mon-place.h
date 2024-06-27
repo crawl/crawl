@@ -13,6 +13,7 @@
 #include "dungeon-feature-type.h"
 #include "level-id.h"
 #include "mgen-enum.h"
+#include "mon-enum.h"
 #include "monster-type.h"
 #include "tag-version.h"
 #include "trap-type.h"
@@ -28,7 +29,7 @@ struct mgen_data;
  * a "puff of smoke" message if the monster cannot be placed. This is usually
  * used for summons and other monsters that want to appear near a given
  * position like a summon.
- * Returns -1 on failure, index into env.mons otherwise.
+ * Returns null on failure, the monster otherwise.
  * *********************************************************************** */
 monster* create_monster(mgen_data mg, bool fail_msg = true);
 
@@ -102,8 +103,14 @@ monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);
-bool monster_habitable_grid(monster_type mt, dungeon_feature_type actual_grid,
+bool monster_habitable_grid(monster_type mt,
+                            dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid = DNGN_UNSEEN);
+// Can't handle krakens and eldritch tentacles as their habitats are special
+bool monster_habitable_grid(dungeon_feature_type actual_grid,
+                            habitat_type monster_habitat,
+                            bool is_flying);
+
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
