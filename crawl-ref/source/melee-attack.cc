@@ -2708,6 +2708,9 @@ string melee_attack::mons_attack_verb()
     if (attk_type == AT_TENTACLE_SLAP && mons_is_tentacle(attacker->type))
         return "slap";
 
+    if (is_shadow_stab)
+        return "eviscerate";
+
     return mon_attack_name(attk_type);
 }
 
@@ -4155,6 +4158,14 @@ int melee_attack::apply_damage_modifiers(int damage)
                      || (attk_flavour == AF_SHADOWSTAB
                          &&!defender->can_see(*attacker))))
     {
+        if (mons_is_player_shadow(*attacker->as_monster())
+            && wpn_skill == SK_SHORT_BLADES
+            || you.get_mutation_level(MUT_PAWS))
+        {
+            is_shadow_stab = true;
+            damage += you.experience_level * 2 / 3;
+        }
+
         damage = damage * 5 / 2;
         dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
              defender->name(DESC_PLAIN).c_str(),

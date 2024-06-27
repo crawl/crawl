@@ -191,6 +191,10 @@ private:
     void copy_to(melee_attack &other);
 
     vorpal_damage_type damage_type;
+
+    // Is a special stab against a sleeping monster by a Dithmenos player
+    // shadow (affects messaging).
+    bool is_shadow_stab;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);
