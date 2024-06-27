@@ -1227,8 +1227,8 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
     if (gifts >= NUM_VEHUMET_GIFTS)
         return eligible_spells;
 
-    const int min_lev[] = {1,1,2,3,3,4,4,5,5,5,5,6,8};
-    const int max_lev[] = {1,2,3,4,5,7,7,7,7,7,7,8,9};
+    const int min_lev[] = {1,2,2,3,3,4,4,5,5,5,5,6,8};
+    const int max_lev[] = {1,3,3,4,5,7,7,7,7,7,7,8,9};
     COMPILE_CHECK(ARRAYSZ(min_lev) == NUM_VEHUMET_GIFTS);
     COMPILE_CHECK(ARRAYSZ(max_lev) == NUM_VEHUMET_GIFTS);
     int min_level = min_lev[gifts];
