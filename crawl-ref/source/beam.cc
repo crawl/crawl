@@ -5159,7 +5159,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_RIMEBLIGHT)
         maybe_spread_rimeblight(*mon, ench_power);
 
-    if (origin_spell == SPELL_GRAVE_CLAW)
+    if (origin_spell == SPELL_GRAVE_CLAW && !mon->has_ench(ENCH_BOUND))
     {
         simple_monster_message(*mon, " is pinned in place!");
         mon->add_ench(mon_enchant(ENCH_BOUND, 0, nullptr, random_range(2, 4) * BASELINE_DELAY));

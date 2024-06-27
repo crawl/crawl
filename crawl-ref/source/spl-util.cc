@@ -356,6 +356,10 @@ bool add_spell_to_memory(spell_type spell)
              "which spell your servitor casts)",
                 command_to_string(CMD_USE_ABILITY).c_str());
     }
+    // Give a free charge upon learning this spell for the first time, so the
+    // player can actually use it immediately.
+    else if (spell == SPELL_GRAVE_CLAW)
+        gain_grave_claw_soul(true);
 
     // Swapping with an existing spell.
     if (you.spell_letter_table[letter_j] != -1)
@@ -1493,8 +1497,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot see far enough to hit anything with this spell.";
 
     case SPELL_GRAVE_CLAW:
-        if (temp && you.duration[DUR_NO_GRAVE_CLAW])
-            return "You must harvest another living soul to power this spell.";
+        if (temp && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
+            return "You must harvest more living souls to recharge this spell.";
 
     default:
         break;

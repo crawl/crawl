@@ -2039,6 +2039,13 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                 _spell_failure_rate_description(spell).c_str());
         }
 
+        if (spell == SPELL_GRAVE_CLAW)
+        {
+            title += make_stringf("<lightgrey> (%d/%d uses available)</lightgrey>",
+                                  you.props[GRAVE_CLAW_CHARGES_KEY].get_int(),
+                                  GRAVE_CLAW_MAX_CHARGES);
+        }
+
         spell_targeting_behaviour beh(spell);
 
         direction_chooser_args args;

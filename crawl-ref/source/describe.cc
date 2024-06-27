@@ -71,6 +71,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-cast.h"
+#include "spl-damage.h"
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
@@ -4512,6 +4513,14 @@ static string _player_spell_desc(spell_type spell)
         description << "\nThis spell would have no effect right now because "
                     << spell_uselessness_reason(spell, true, false)
                     << "\n";
+    }
+
+    if (spell == SPELL_GRAVE_CLAW && you.has_spell(SPELL_GRAVE_CLAW))
+    {
+        description << "\nYou have harvested enough death to cast this spell "
+                    << you.props[GRAVE_CLAW_CHARGES_KEY].get_int() << " time"
+                    << (you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 1 ? "" : "s")
+                    << ". (Maximum of " << GRAVE_CLAW_MAX_CHARGES << ".)";
     }
 
     return description.str();

@@ -748,8 +748,12 @@ Grave Claw spell
 
 Calls forth the spite of the recently dead to skewer a targeted enemy with
 shards of bone. This spell never misses, and will pin its target in place for
-several turns, but cannot be recast until the caster resupplies it with fresh
-malice by causing the death of living beings.
+several turns, but casting it rapidly consumes the remnants of death that linger
+upon the caster.
+
+You can stockpile enough malice to cast this spell at most three times, and this
+can only be replenished by causing the death of a sufficient number of living
+beings.
 %%%%
 Greater Servant of Makhleb spell
 

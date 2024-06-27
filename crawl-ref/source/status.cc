@@ -854,6 +854,15 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = DARKGREY;
         break;
 
+    case STATUS_GRAVE_CLAW_UNAVAILABLE:
+        if (you.has_spell(SPELL_GRAVE_CLAW)
+            && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
+        {
+            inf.light_colour = DARKGREY;
+            inf.light_text = "-GClaw";
+        }
+        break;
+
     default:
         if (!found)
         {

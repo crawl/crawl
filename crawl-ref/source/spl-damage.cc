@@ -5272,7 +5272,10 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
     fail_check();
 
     if (caster.is_player())
-        you.duration[DUR_NO_GRAVE_CLAW] = random_range(2, 3);
+    {
+        mpr("You unleash the spiteful dead!");
+        you.props[GRAVE_CLAW_CHARGES_KEY].get_int()--;
+    }
 
     flash_tile(targ, WHITE);
 
@@ -5286,5 +5289,41 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
     beam.hit_verb = "skewer";
     beam.fire();
 
+    if (caster.is_player())
+    {
+        if (you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
+            mprf(MSGCH_DURATION, "The last of your harvested death is exhausted.");
+    }
+
     return spret::success;
+}
+
+void gain_grave_claw_soul(bool silent)
+{
+    int& charges = you.props[GRAVE_CLAW_CHARGES_KEY].get_int();
+
+    // Don't gain charge if we're already full.
+    if (charges == GRAVE_CLAW_MAX_CHARGES)
+        return;
+
+    if (--you.duration[DUR_GRAVE_CLAW_RECHARGE] <= 0)
+    {
+        // Set recharge to a random 4-6 kills.
+        you.duration[DUR_GRAVE_CLAW_RECHARGE] = random_range(4, 6);
+        charges++;
+
+        if (silent)
+            return;
+
+        if (charges == GRAVE_CLAW_MAX_CHARGES)
+        {
+            mprf(MSGCH_DURATION, "You have harvested as much death for "
+                                 "Grave Claw as you can hold at once.");
+        }
+        else
+        {
+            mprf(MSGCH_DURATION, "You have harvested enough death to cast "
+                                 "Grave Claw an additional time.");
+        }
+    }
 }

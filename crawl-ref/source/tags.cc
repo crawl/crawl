@@ -4321,6 +4321,13 @@ static void _tag_read_you(reader &th)
         // state with no associated mutations. It's fine, it'll
         // all clear up once the form ends.
     }
+
+    // Set up recharge info so players can actually cast the spell ever.
+    if (th.getMinorVersion() < TAG_MINOR_GRAVE_CLAW_CHARGES
+        && you.has_spell(SPELL_GRAVE_CLAW))
+    {
+        gain_grave_claw_soul(true);
+    }
 #endif
 }
 
