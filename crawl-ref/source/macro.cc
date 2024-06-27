@@ -56,6 +56,10 @@
 #include "unicode.h"
 #include "version.h"
 
+// XXX: we might not want to use an std::deque here as they can waste a
+//      lot of memory when only holding a few ints. For example minimum size
+//      for a non-empty deque is over 512 bytes with GCC, over 4096 bytes
+//      with clang. It should be fine with MSVC though.
 typedef deque<int> keybuf;
 typedef map<keyseq,keyseq> macromap;
 
@@ -589,10 +593,7 @@ void macro_buf_add_cmd(command_type cmd, bool reverse)
 {
     ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
 
-    // There should be plenty of room between the synthetic keys
-    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
-    // command_type to fit (currently 1000 through 2069).
-    macro_buf_add(-((int) cmd), reverse, true);
+    macro_buf_add(encode_command_as_key(cmd), reverse, true);
 }
 
 /*
@@ -758,6 +759,7 @@ int macro_buf_get()
     return key;
 }
 
+// Note: this only works for commands that have a key that maps to them
 void process_command_on_record(command_type cmd)
 {
     const int key = command_to_key(cmd);
@@ -838,6 +840,10 @@ static keyseq _getch_mul()
     // have a vague recollection of it being a kludge for conio support.
     do
     {
+        // Something has gone horribly wrong if we are still waiting
+        // for input when the player's turn is over
+        ASSERT(!you.turn_is_over);
+
         a = getch_ck();
         if (a != CK_NO_KEY)
             keys.push_back(a);
@@ -1854,15 +1860,15 @@ string keycode_to_name(int keycode, bool shorten)
 
     string prefix = "";
 
-    // ugh
-    if (keycode - CK_CMD_BASE < 256)
+    if (keycode >= CK_CMD_MIN && keycode <= CK_CMD_MAX
+        || keycode >= CK_CMD_ALT_MIN && keycode <= CK_CMD_ALT_MAX)
     {
         // could still also have alt on top of this
         prefix = (shorten ? "Cmd-" : "Command-");
         keycode -= CK_CMD_BASE;
     }
 
-    if (keycode - CK_ALT_BASE >= CK_MIN_INTERNAL && keycode - CK_ALT_BASE <= 256)
+    if (keycode >= CK_ALT_MIN && keycode <= CK_ALT_MAX)
     {
         prefix += "Alt-";
         keycode -= CK_ALT_BASE;
@@ -2167,21 +2173,24 @@ string command_to_name(command_type cmd)
 
 command_type key_to_command(int key, KeymapContext context)
 {
-    if (CMD_NO_CMD < -key && -key < CMD_MIN_SYNTHETIC)
+    if (CK_COMMAND_AS_KEY_MIN <= key && key <= CK_COMMAND_AS_KEY_MAX)
     {
-        const auto cmd = static_cast<command_type>(-key);
+        const auto cmd = static_cast<command_type>(key - CK_COMMAND_AS_KEY_MIN);
         const auto cmd_context = context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
             return CMD_NO_CMD;
 
-        if (cmd_context != context)
+        // Allow synthetic commands in any context as there isn't currently
+        // any way to give them a context
+        if (cmd_context != context
+            && cmd < CMD_MIN_SYNTHETIC)
         {
             mprf(MSGCH_ERROR,
                  "key_to_command(): command '%s' (%d:%d) wrong for desired "
                  "context %d",
-                 command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
-                 CMD_MAX_CMD + key, (int) context);
+                 command_to_name(cmd).c_str(), cmd,
+                 CMD_MAX_CMD - cmd, (int) context);
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
             if (crawl_state.is_replaying_keys()
@@ -2221,6 +2230,12 @@ vector<int> command_to_keys(command_type cmd)
     if (context == KMC_NONE)
         return result;
 
+    // XXX: this doesn't make sense. _cmds_to_keys is a
+    //      std::map so the code below is just a very bad
+    //      find and the result vector will always have
+    //      zero or one elements in it after.
+    //      Was this meant to search _keys_to_cmds for
+    //      the keys?
     for (auto pair : _cmds_to_keys[context])
         if (pair.first == cmd)
             result.push_back(pair.second);

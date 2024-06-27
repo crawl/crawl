@@ -233,8 +233,8 @@ bool kbhit()
 {
     if (crawl_state.tiles_disabled || crawl_state.seen_hups)
         return false;
-    // Look for the presence of any keyboard events in the queue.
-    return wm->next_event_is(WME_KEYDOWN);
+
+    return tiles.has_pending_keycode();
 }
 
 void console_startup()

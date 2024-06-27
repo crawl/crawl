@@ -82,16 +82,13 @@ bool PrecisionMenu::process_key(int key)
             // nothing to process
             return true;
         }
-        else
+        // pick the first object possible
+        for (auto mobj : m_attached_objects)
         {
-            // pick the first object possible
-            for (auto mobj : m_attached_objects)
+            if (mobj->can_be_focused())
             {
-                if (mobj->can_be_focused())
-                {
-                    m_active_object = mobj;
-                    break;
-                }
+                m_active_object = mobj;
+                break;
             }
         }
     }

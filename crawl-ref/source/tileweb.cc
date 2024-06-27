@@ -393,8 +393,8 @@ static int _handle_cell_click(const coord_def &gc, int button, bool force)
     // click travel
     if (mouse_control::current_mode() == MOUSE_MODE_COMMAND && button == 1)
     {
-        int c = click_travel(gc, force);
-        if (c != CK_MOUSE_CMD)
+        command_type c = click_travel(gc, force, false);
+        if (c != CMD_NO_CMD)
         {
             clear_messages();
             process_command((command_type) c);
