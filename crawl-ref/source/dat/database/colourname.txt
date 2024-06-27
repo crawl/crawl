@@ -841,9 +841,13 @@ faint
 
 gleaming
 
+glossy
+
 luminous
 
 mottled
+
+murky
 
 pale
 
