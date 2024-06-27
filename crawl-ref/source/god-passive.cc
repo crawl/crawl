@@ -882,6 +882,31 @@ ru_interference get_ru_attack_interference_level()
         return DO_NOTHING;
 }
 
+// Are there any targets in view which a shadow could act against?
+static bool _shadow_target_exists()
+{
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+            return true;
+    }
+
+    return false;
+}
+
+// Gets all eligible enemy targets in view of the player, in random order
+static vector<monster*> _get_shadow_targets()
+{
+    vector<monster*> valid_targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+            valid_targs.push_back(*mi);
+    }
+    shuffle_array(valid_targs);
+    return valid_targs;
+}
+
 constexpr int DITH_MELEE_SHADOW_INTERVAL = 150;
 #define DITH_SHADOW_INTERVAL_KEY "dith_shadow_interval"
 
@@ -1267,19 +1292,6 @@ static bool _simple_shot_tracer(coord_def source, coord_def target, mid_t source
     tracer.fire();
 
     return mons_should_fire(tracer);
-}
-
-// Gets all eligible enemy targets in view of the player, in random order
-static vector<monster*> _get_shadow_targets()
-{
-    vector<monster*> valid_targs;
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
-            valid_targs.push_back(*mi);
-    }
-    shuffle_array(valid_targs);
-    return valid_targs;
 }
 
 // Gets all spots within a certain radius of the player where your shadow could
@@ -1787,7 +1799,11 @@ void dithmenos_shadow_spell(spell_type spell)
             pos = _find_shadow_aoe_position(you.current_vision);
 
         default:
-            pos = _get_shadow_spots()[0];
+        case SPELL_SHADOW_PUPPET:
+            // Don't cast this spell without any enemies in sight, to prevent
+            // tedious pre-casting by the player.
+            if (_shadow_target_exists())
+                pos = _get_shadow_spots()[0];
             break;
     }
 
