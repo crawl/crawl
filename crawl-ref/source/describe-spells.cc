@@ -363,7 +363,7 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
 {
     auto flags = get_spell_flags(spell);
     int pow = mons_power_for_hd(spell, hd);
-    int range = spell_range(spell, pow, false);
+    int range = spell_range(spell, pow, mon_owner && mon_owner->is(MB_PLAYER_SERVITOR));
     const bool has_range = mon_owner
                         && range > 0
                         && !testbits(flags, spflag::selfench);

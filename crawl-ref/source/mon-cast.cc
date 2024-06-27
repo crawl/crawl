@@ -1639,21 +1639,24 @@ static int _ench_power(spell_type spell, const monster &mons)
 
 int mons_spell_range(const monster &mons, spell_type spell)
 {
-    return mons_spell_range_for_hd(spell, mons.spell_hd());
+    return mons_spell_range_for_hd(spell, mons.spell_hd(),
+                                   mons.type == MONS_SPELLFORGED_SERVITOR
+                                   && mons.summoner == MID_PLAYER);
 }
 
 /**
  * How much range does a monster of the given spell HD have with the given
  * spell?
  *
- * @param spell     The spell in question.
- * @param hd        The monster's effective HD for spellcasting purposes.
- * @return          -1 if the spell has an undefined range; else its range.
+ * @param spell         The spell in question.
+ * @param hd            The monster's effective HD for spellcasting purposes.
+ * @param use_veh_bonus Whether to use Vehumet's range bonus (for player Servitor)
+ * @return              -1 if the spell has an undefined range; else its range.
  */
-int mons_spell_range_for_hd(spell_type spell, int hd)
+int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus)
 {
     const int power = mons_power_for_hd(spell, hd);
-    return spell_range(spell, power, false);
+    return spell_range(spell, power, use_veh_bonus);
 }
 
 /**

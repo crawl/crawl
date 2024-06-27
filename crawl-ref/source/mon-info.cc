@@ -450,6 +450,8 @@ monster_info::monster_info(const monster* m, int milev)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
+        if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
+            mb.set(MB_PLAYER_SERVITOR);
     }
     else if (m->is_perm_summoned() && !mons_is_player_shadow(*m))
         mb.set(MB_PERM_SUMMON);

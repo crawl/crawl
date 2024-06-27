@@ -234,6 +234,7 @@ enum monster_info_flags
     MB_RIMEBLIGHT,
     MB_ARMED,
     MB_SHADOWLESS,
+    MB_PLAYER_SERVITOR,
     NUM_MB_FLAGS
 };
 
