@@ -4588,8 +4588,8 @@ vector<coord_def> find_ramparts_walls()
 {
     vector<coord_def> wall_locs;
     for (radius_iterator ri(you.pos(),
-            spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
-                                                        LOS_NO_TRANS, true);
+            spell_range(SPELL_FROZEN_RAMPARTS, -1), C_SQUARE,
+                                                    LOS_NO_TRANS, true);
         ri; ++ri)
     {
         const auto feat = env.grid(*ri);
@@ -4646,7 +4646,7 @@ void end_frozen_ramparts()
     ASSERT(in_bounds(pos));
 
     for (distance_iterator di(pos, false, false,
-                spell_range(SPELL_FROZEN_RAMPARTS, -1, false)); di; di++)
+                spell_range(SPELL_FROZEN_RAMPARTS, -1)); di; di++)
     {
         env.pgrid(*di) &= ~FPROP_ICY;
         env.map_knowledge(*di).flags &= ~MAP_ICY;
@@ -4843,7 +4843,7 @@ void end_maxwells_coupling(bool quiet)
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)
 {
     vector<coord_def> bog_locs;
-    const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
+    const int radius = spell_range(SPELL_NOXIOUS_BOG, pow);
 
     for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS); ri; ri++)
     {
