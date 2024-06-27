@@ -2340,12 +2340,11 @@ void queue_monster_for_action(monster* mons)
     monster_queue.emplace(mons, mons->speed_increment);
 }
 
-static void _clear_monster_flags()
+void clear_monster_flags()
 {
     // Clear any summoning flags so that lower indiced
     // monsters get their actions in the next round.
     // Also clear one-turn deep sleep flag.
-    // XXX: MF_JUST_SLEPT only really works for player-cast hibernation.
     for (auto &mons : menv_real)
         mons.flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
 }
@@ -2469,8 +2468,6 @@ void handle_monsters(bool with_noise)
     // Process noises now (before clearing the sleep flag).
     if (with_noise)
         apply_noises();
-
-    _clear_monster_flags();
 }
 
 static bool _jelly_divide(monster& parent)

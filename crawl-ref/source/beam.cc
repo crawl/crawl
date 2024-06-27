@@ -4851,12 +4851,8 @@ void bolt::enchantment_affect_monster(monster* mon)
     // Nasty enchantments will annoy the monster, and are considered
     // naughty (even if a monster resisted).
     if (mon && mon->alive() && nasty_to(mon))
-    {
-        // Don't wake a target that just got slept by Hibernation
-        if (flavour != BEAM_SHADOW_TORPOR || !mon->asleep())
-            behaviour_event(mon, ME_ANNOY, agent());
-    }
-    else if (flavour != BEAM_HIBERNATION || !mon->asleep())
+        behaviour_event(mon, ME_ANNOY, agent());
+    else
         behaviour_event(mon, ME_ALERT, agent());
 }
 
@@ -5043,13 +5039,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // did no damage. Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
-        // XXX: Unfortunate hack to not immediately wake victims of Ensorcelled
-        // Hibernation by shadow mimic casting Creeping Shadow on them.
-        if (origin_spell != SPELL_CREEPING_SHADOW || mon->behaviour != BEH_SLEEP
-            || !mon->has_ench(ENCH_SLEEP_WARY))
-        {
-            behaviour_event(mon, ME_ANNOY, agent());
-        }
+        behaviour_event(mon, ME_ANNOY, agent());
+
         // behaviour_event can make a monster leave the level or vanish.
         if (!mon->alive())
             return;

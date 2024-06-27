@@ -2639,6 +2639,8 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
 
+    clear_monster_flags();
+
     add_auto_excludes();
 
     viewwindow();

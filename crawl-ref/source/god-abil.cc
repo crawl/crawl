@@ -1980,6 +1980,7 @@ static void _run_time_step()
         run_environment_effects();
         handle_monsters();
         manage_clouds();
+        clear_monster_flags();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
 }
