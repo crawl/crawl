@@ -134,6 +134,69 @@ bool monster_habitable_grid(const monster* mon,
                     _hab_requires_mon_flight(actual_grid) && mon->airborne();
 }
 
+static bool _monster_habitable_grid(dungeon_feature_type actual_grid,
+                                    dungeon_feature_type wanted_grid,
+                                    habitat_type monster_habitat,
+                                    bool is_flying,
+                                    bool avoid_shallow_water,
+                                    bool can_stand_on_malign_gateway)
+{
+    // No monster may be placed in walls etc.
+    if ((actual_grid == DNGN_MALIGN_GATEWAY && !can_stand_on_malign_gateway))
+        return false;
+    else if (feat_is_solid(actual_grid))
+        return false;
+
+#if TAG_MAJOR_VERSION == 34
+    // Monsters can't use teleporters, and standing there would look just wrong.
+    if (actual_grid == DNGN_TELEPORTER)
+        return false;
+#endif
+    // The kraken is so large it cannot enter shallow water.
+    // Its tentacles can, and will, though.
+    if ((actual_grid == DNGN_SHALLOW_WATER
+        || actual_grid == DNGN_TOXIC_BOG)
+        && avoid_shallow_water)
+    {
+        return false;
+    }
+
+    // If the caller insists on a specific feature type, try to honour
+    // the request. This allows the builder to place amphibious
+    // creatures only on land, or flying creatures only on lava, etc.
+    if (wanted_grid != DNGN_UNSEEN
+        && _monster_habitable_grid(wanted_grid, DNGN_UNSEEN, monster_habitat,
+            is_flying, avoid_shallow_water, can_stand_on_malign_gateway))
+    {
+        return _feat_compatible(wanted_grid, actual_grid);
+    }
+
+    if (actual_grid == DNGN_MALIGN_GATEWAY)
+        return can_stand_on_malign_gateway;
+
+    const dungeon_feature_type feat_preferred =
+        habitat2grid(primary_habitat(monster_habitat));
+    const dungeon_feature_type feat_nonpreferred =
+        habitat2grid(secondary_habitat(monster_habitat));
+
+    if (_feat_compatible(feat_preferred, actual_grid))
+        return true;
+
+    if (feat_preferred != feat_nonpreferred
+        && _feat_compatible(feat_nonpreferred, actual_grid))
+    {
+        return true;
+    }
+
+    // [dshaligram] Flying creatures are all HT_LAND, so we
+    // only have to check for the additional valid grids of deep
+    // water and lava.
+    if (_hab_requires_mon_flight(actual_grid) && is_flying)
+        return true;
+
+    return false;
+}
+
 /**
  * Can monsters of this class survive on actual_grid?
  *
@@ -147,62 +210,22 @@ bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid)
 {
-    // No monster may be placed in walls etc.
-    if (!mons_class_can_pass(mt, actual_grid))
-        return false;
+    const habitat_type hatitat = mons_habitat_type(mt);
+    const bool is_flying = mons_class_flag(mt, M_FLIES);
+    const bool avoids_shallow_water = mt == MONS_KRAKEN;
+    const bool can_stand_on_malign_gateway = mt == MONS_ELDRITCH_TENTACLE
+        || mt == MONS_ELDRITCH_TENTACLE_SEGMENT;
 
-#if TAG_MAJOR_VERSION == 34
-    // Monsters can't use teleporters, and standing there would look just wrong.
-    if (actual_grid == DNGN_TELEPORTER)
-        return false;
-#endif
-    // The kraken is so large it cannot enter shallow water.
-    // Its tentacles can, and will, though.
-    if ((actual_grid == DNGN_SHALLOW_WATER
-        || actual_grid == DNGN_TOXIC_BOG)
-        && mt == MONS_KRAKEN)
-    {
-        return false;
-    }
+    return _monster_habitable_grid(actual_grid, wanted_grid, hatitat,
+        is_flying, avoids_shallow_water, can_stand_on_malign_gateway);
+}
 
-    const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(mt));
-    const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(mt));
-
-    // If the caller insists on a specific feature type, try to honour
-    // the request. This allows the builder to place amphibious
-    // creatures only on land, or flying creatures only on lava, etc.
-    if (wanted_grid != DNGN_UNSEEN
-        && monster_habitable_grid(mt, wanted_grid, DNGN_UNSEEN))
-    {
-        return _feat_compatible(wanted_grid, actual_grid);
-    }
-
-    if (actual_grid == DNGN_MALIGN_GATEWAY)
-    {
-        if (mt == MONS_ELDRITCH_TENTACLE
-            || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
-        {
-            return true;
-        }
-        else
-            return false;
-    }
-
-    if (_feat_compatible(feat_preferred, actual_grid)
-        || _feat_compatible(feat_nonpreferred, actual_grid))
-    {
-        return true;
-    }
-
-    // [dshaligram] Flying creatures are all HT_LAND, so we
-    // only have to check for the additional valid grids of deep
-    // water and lava.
-    if (_hab_requires_mon_flight(actual_grid) && (mons_class_flag(mt, M_FLIES)))
-        return true;
-
-    return false;
+bool monster_habitable_grid(dungeon_feature_type actual_grid,
+                            habitat_type monster_habitat,
+                            bool is_flying)
+{
+    return _monster_habitable_grid(actual_grid, DNGN_UNSEEN, monster_habitat,
+        is_flying, false, false);
 }
 
 static int _ood_fuzzspan(level_id &place)
@@ -2931,7 +2954,8 @@ conduct_type god_hates_monster(const monster &mon)
 
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
-    ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
+    if (!in_bounds(mg.pos))
+        return nullptr;
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 
