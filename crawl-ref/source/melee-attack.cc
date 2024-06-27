@@ -4160,8 +4160,7 @@ int melee_attack::apply_damage_modifiers(int damage)
                          &&!defender->can_see(*attacker))))
     {
         if (mons_is_player_shadow(*attacker->as_monster())
-            && wpn_skill == SK_SHORT_BLADES
-            || you.get_mutation_level(MUT_PAWS))
+            && player_good_stab())
         {
             is_shadow_stab = true;
             damage += you.experience_level * 2 / 3;
