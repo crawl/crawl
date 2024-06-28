@@ -4717,7 +4717,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
                 friend_info.power = 100;
             // Marionettes will avoid harming other 'allies', but are
             // deliberately reckless about themselves.
-            else if (mon_source != mon || mon_source->attitude == ATT_MARIONETTE)
+            else if (!(mon_source == mon && mon_source->attitude == ATT_MARIONETTE))
             {
                 friend_info.power
                     += 2 * final * mon->get_experience_level() / preac;
