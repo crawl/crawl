@@ -3019,7 +3019,7 @@ bool monster::good_neutral() const
 
 bool monster::wont_attack() const
 {
-    return friendly() || good_neutral();
+    return friendly() || good_neutral() || attitude == ATT_MARIONETTE;
 }
 
 bool monster::pacified() const
