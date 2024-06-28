@@ -1500,7 +1500,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_GRAVE_CLAW:
         if (temp && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
-            return "You must harvest more living souls to recharge this spell.";
+            return "you must harvest more living souls to recharge this spell.";
         break;
 
     default:
