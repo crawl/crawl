@@ -3238,7 +3238,7 @@ TAGS:    depths_entry uniq_depths_entry chance_depths_entry zot_entry
 ORIENT:  centre
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 PLACE:   D:$, Depths:$
-WEIGHT:  1 (D:$, Depths:$), 5
+WEIGHT:  2 (D:$, Depths:$), 5
 SHUFFLE: })]b
 : if you.in_branch("D") then
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
@@ -3756,17 +3756,20 @@ ENDMAP
 
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling no_descent
-DEPTH:   D:12-, Depths, !Depths:$
+DEPTH:   D:12-, !D:$, Depths, !Depths:$
 ORIENT:  float
-MONS:    arcanist ; staff of fire w:15 | quarterstaff ego:flaming w:15 . \
+MONS:    arcanist ; staff of fire | quarterstaff ego:flaming . \
                     robe ego:resistance
-MONS:    occultist ; staff of cold ident:type | quarterstaff ego:freezing . \
+MONS:    occultist ; staff of cold | quarterstaff ego:freezing . \
                      robe ego:resistance
-MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, hell hog, thermic dynamo
-KITEM:   d = triple crossbow ego:flaming ident:type, *
-KITEM:   e = lajatang ego:freezing ident:type, *
+MONS:    fire giant ; battleaxe ego:freezing
+MONS:    ettin simulacrum, hell hog
+KMONS:   7 = harpy simulacrum
+KMONS:   8 = efreet
+KMONS:   9 = thermic dynamo
+KITEM:   d = *, triple crossbow ego:flaming ident:type
+KITEM:   e = *, lajatang ego:freezing ident:type
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
 FTILE:   fF'@{[(< = floor_pebble_darkgray
 COLOUR:  fF'@ = white
@@ -3777,26 +3780,23 @@ MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 6, pow_max = 6, delay = 200, \
              size_min = 2, size_max = 2, walk_dist = 0, start_clouds = 1 }
 :  if you.in_branch("D") then
-SUBST:   34 = 7
-NSUBST:  5 = 1:5 / 1:5. / *:., 6 = 1:6 / 1:6. / *:.
+SUBST:   3 = 1, 4 = 2
+NSUBST:  5 = 1:7 / 1:7. / *:., 6 = 1:8 / 1:8. / *:.
 :  end
-:  if you.depth() == dgn.br_depth(you.branch()) then
-SUBST:   [(< = '
-: end
 MAP
- ......                              @{[
-..bbbb..                             xxx
+ ......                    @{[
+..bbbb..                   xxx
 .bb51bb..
 .+53dbfF''fF'
-.bb57bb..   'fF'
+.bb59bb..   'fF'
 ..bbbb..       'fF@
  ......           'fF'           ......
                      @fF'       ..bbbb..
-                        'fF'   ..bb76bb.
+                        'fF'   ..bb96bb.
                            'fF''fFbe46+.
                                ..bb26bb.
-xxx                             ..bbbb..
-(<@                              ......
+          xxx                   ..bbbb..
+          (<@                    ......
 ENDMAP
 
 # the +4 great sword "Dinovoldo's Tail" {explosions}
@@ -6736,7 +6736,7 @@ TAGS:    depths_entry uniq_depths_entry chance_depths_entry zot_entry
 DEPTH:   D:9-, !D:$, Depths, !Depths:$
 PLACE:   D:$, Depths:$
 ORIENT:  float
-WEIGHT:  1 (D:$, Depths:$), 10
+WEIGHT:  2 (D:$, Depths:$), 10
 : local dmn = "perm_ench:drained perm_ench:bound_soul att:neutral ; nothing"
 : kmons("C = human " .. dmn .. " / elf " .. dmn .. " / gnoll " .. dmn ..
 :        " / orc " .. dmn .. " / kobold " .. dmn .. " / spriggan " .. dmn)

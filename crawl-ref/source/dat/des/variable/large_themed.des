@@ -3288,7 +3288,7 @@ DEPTH:    D:8-, !D:$, Lair, !Lair:$, Elf, !Elf:$
 DEPTH:    Crypt, !Crypt:$, Depths, !Depths:$, Zot, !Zot:$
 PLACE:    D:$, Depths:$
 ORIENT:   south
-WEIGHT:   1 (D:$, Depths:$), 5 (Elf, Crypt), 10
+WEIGHT:   2 (D:$, Depths:$), 5 (Elf, Crypt), 10
 SUBST:    A : AAABBCCC, A = llly'', B = lyy, C = ll'
 SUBST:    D : DDEEEFFF, D = yzz.., E = yz..., F = y..
 : if you.in_branch("D") then

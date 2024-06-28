@@ -577,6 +577,7 @@ KFEAT:    ? = W
 KFEAT:    ! = w
 NSUBST:   . = 80 = 1.. / *:.
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
+COLOUR:   ? = lightgreen
 COLOUR:   ! = green
 SUBST:    ~ = .
 : sewer_setup(_G)

@@ -7,6 +7,7 @@ function init_ice(e, force_opaque)
   e.tags('serial_ice')
   e.tags('extra')
   e.tags('mini_float')
+  e.tags('no_wall_fixup')
   if not force_opaque then
     e.tags('transparent')
   end
@@ -14,19 +15,27 @@ function init_ice(e, force_opaque)
   if you.in_branch("Coc") then
     e.kmons('.- = simulacrum w:30 / \
                   ice fiend w:1 / blizzard demon w:5 / ice devil w:20 / \
-                  white imp / ice beast w:20 / \
                   ice dragon w:5 / ice dragon simulacrum w:5 / \
                   w:2000 nothing')
+  elseif you.in_branch("Vaults") then
+    e.tile('x = wall_ice_block')
+    e.kfeat('AG! = cache of meat')
   else
-    e.kmons('.- = simulacrum w:20 / death yak w:1 / \
-                  wolf  / yak / polar bear / white imp w:20 / \
-                  ufetubus / ice beast w:15 / w:2000 nothing')
+    if you.depth() > 11 then
+        e.kmons('.- = simulacrum w:20 / death yak / \
+                      wolf band / polar bear / ice devil w:20 / \
+                      ufetubus / ice beast w:15 / w:2000 nothing')
+    else
+        e.kmons('.- = simulacrum w:20 / death yak w:1 / \
+                      wolf  / yak / polar bear / white imp w:20 / \
+                      ufetubus / ice beast w:15 / w:2000 nothing')
+    end
     e.subst('G = GGb')
     e.tile('b = bedevilled_crystal_cocytus')
     e.set_feature_name('crystal_wall', 'bedevilled crystal wall')
+    e.tile("x = wall_zot_cyan")
   end
   e.subst("- = --.")
-  e.rtile("x = wall_zot_cyan")
   e.colour("x = white")
 
   e.colour(".@! = white")
