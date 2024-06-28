@@ -1496,10 +1496,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_STARBURST:
         if (temp && you.current_vision == 0)
             return "you cannot see far enough to hit anything with this spell.";
+        break;
 
     case SPELL_GRAVE_CLAW:
         if (temp && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
             return "You must harvest more living souls to recharge this spell.";
+        break;
 
     default:
         break;
