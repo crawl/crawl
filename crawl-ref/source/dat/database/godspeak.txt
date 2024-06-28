@@ -528,6 +528,9 @@ Xom pause
 Xom stops everything to savour the moment.
 
 Xom stomps on time for a few moments.
+
+w:1
+Xom prepares the audience for the floor's solo!
 %%%%
 #####################
 # other effects
