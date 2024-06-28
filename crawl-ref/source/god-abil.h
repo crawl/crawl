@@ -82,6 +82,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define YRED_SHACKLES_KEY "shackles_bound"
 
 #define NIGHTFALL_INITIAL_DUR_KEY "nightfall_initial_dur"
+#define DITHMENOS_MARIONETTE_SPELLS_KEY "marionette_spells_valid"
 
 struct bolt;
 class stack_iterator;
@@ -172,6 +173,7 @@ string dithmenos_cannot_shadowslip_reason();
 spret dithmenos_shadowslip(bool fail);
 spret dithmenos_nightfall(bool fail);
 bool valid_marionette_spell(spell_type spell);
+void dithmenos_cache_marionette_viability();
 string dithmenos_cannot_marionette_reason();
 spret dithmenos_marionette(monster& target, bool fail);
 

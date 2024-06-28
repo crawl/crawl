@@ -4669,14 +4669,11 @@ bool handle_mon_spell(monster* mons)
     return false; // to let them do something else
 }
 
-// Attempts to have a given monster cast a given spell, while still performing
-// normal setup and target justification.
-//
-// Returns whether the spell was cast.
-bool try_mons_cast(monster& mons, spell_type spell)
+// Performs simple targeting and justification for a given spell, by a given
+// monster.
+static bool _setup_simple_mons_cast(monster& mons, spell_type spell,
+                                    bolt& beam, mon_spell_slot& slot)
 {
-    // Look up slot flags for the spell we're being asked to cast
-    mon_spell_slot slot;
     for (const mon_spell_slot& _slot : mons.spells)
     {
         if (_slot.spell == spell)
@@ -4691,12 +4688,36 @@ bool try_mons_cast(monster& mons, spell_type spell)
     // Check if the spell is viable and target it
     if (!ai_action::is_viable(_monster_spell_goodness(&mons, slot)))
         return false;
-    bolt beam;
     if (!_target_and_justify_spell(mons, beam, spell, false))
+        return false;
+
+    return true;
+}
+
+// Checks whether it would be possible for a given monster to cast a given
+// spell, using its current foe and other state.
+bool is_mons_cast_possible(monster& mons, spell_type spell)
+{
+    mon_spell_slot slot;
+    bolt beam;
+    return _setup_simple_mons_cast(mons, spell, beam, slot);
+}
+
+// Attempts to have a given monster cast a given spell, while still performing
+// normal setup and target justification.
+//
+// Returns whether the spell was cast.
+bool try_mons_cast(monster& mons, spell_type spell)
+{
+    // Perform setup (and return false if we fail)
+    mon_spell_slot slot;
+    bolt beam;
+    if (!_setup_simple_mons_cast(mons, spell, beam, slot))
         return false;
 
     // Actually cast the spell
     mons_cast(&mons, beam, spell, slot.flags);
+
     return true;
 }
 

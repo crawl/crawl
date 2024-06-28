@@ -42,6 +42,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                mon_spell_slot_flags slot_flags, bool do_noise = true);
+bool is_mons_cast_possible(monster& mons, spell_type spell);
 bool try_mons_cast(monster& mons, spell_type spell);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags);

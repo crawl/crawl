@@ -2927,60 +2927,118 @@ bool valid_marionette_spell(spell_type spell)
     }
 }
 
-static bool _marionette_spell_attempt(monster& caster, spell_type spell, vector<monster*>& targs)
+static bool _marionette_spell_attempt(monster& caster, spell_type spell,
+                                      vector<monster*>& targs,
+                                      bool check_only = false)
 {
     shuffle_array(targs);
 
     for (monster* targ : targs)
     {
-        if (targ == &caster || !targ->alive())
+        if (!targ->alive())
             continue;
 
         caster.foe = targ->mindex();
         caster.target = targ->pos();
-        if (try_mons_cast(caster, spell))
+        if (check_only && is_mons_cast_possible(caster, spell))
+            return true;
+        else if (!check_only && try_mons_cast(caster, spell))
             return true;
     }
 
     return false;
 }
 
-// Checks whether there is at least one valid target to use marionette on, and
-// one valid remaining monster for them to use as a foe, if you did so.
-string dithmenos_cannot_marionette_reason()
+static vector<monster*> _get_marionette_targets()
 {
-    bool found_marionette = false;
-    int audience_size = 0;
+    vector<monster*> valid_targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi))
+            valid_targs.push_back(*mi);
+    }
+
+    return valid_targs;
+}
+
+// Returns how many different spells it is currently possible for a given monster
+// to cast, if Marionette was used on them now.
+//
+// (This is a fairly heavy-weight function, so it is called only once when the
+// player starts to aim the ability, and then cached for each possible target.)
+static int _dithmenos_marionette_spells_possible(monster& target)
+{
+    vector<spell_type> mon_spells;
+    for (const mon_spell_slot slot : target.spells)
+    {
+        if (valid_marionette_spell(slot.spell))
+            mon_spells.push_back(slot.spell);
+    }
+
+    if (mon_spells.empty())
+        return 0;
+
+    vector<monster*> valid_targs = _get_marionette_targets();
+
+    // Save target state, so we can restore after we test.
+    const int old_foe = target.foe;
+    const coord_def old_target = target.target;
+    const mon_attitude_type old_attitude = target.attitude;
+    target.attitude = ATT_MARIONETTE;
+
+    int valid_count = 0;
+    for (spell_type spell : mon_spells)
+        if (_marionette_spell_attempt(target, spell, valid_targs, true))
+            ++valid_count;
+
+    // Restore state, like nothing even happened
+    target.foe = old_foe;
+    target.target = old_target;
+    target.attitude = old_attitude;
+
+    return valid_count;
+}
+
+void dithmenos_cache_marionette_viability()
+{
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
             continue;
 
-        if (!found_marionette && !mi->has_ench(ENCH_SHADOWLESS))
+        if (!mi->has_ench(ENCH_SHADOWLESS))
         {
-            for (mon_spell_slot spell : mi->spells)
+            mi->props[DITHMENOS_MARIONETTE_SPELLS_KEY].get_int() =
+                _dithmenos_marionette_spells_possible(**mi);
+        }
+    }
+}
+
+// Checks whether there is at least one valid target to use marionette on who
+// knows at least one spell that could be used that way.
+//
+// Note: this doesn't test whether any of those spells are viable at this
+// particular moment, since that can be a significantly more expensive operation
+// when lots of monsters are around (and this is called potentially multiple
+// times between every single player action).
+string dithmenos_cannot_marionette_reason()
+{
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!you.can_see(**mi) || mi->wont_attack() || mons_is_firewood(**mi))
+            continue;
+
+        if (!mi->has_ench(ENCH_SHADOWLESS))
+        {
+            for (const mon_spell_slot slot : mi->spells)
             {
-                if (valid_marionette_spell(spell.spell))
-                {
-                    found_marionette = true;
-                    break;
-                }
+                if (valid_marionette_spell(slot.spell))
+                    return "";
             }
         }
-
-        ++audience_size;
-        if (audience_size >= 2 && found_marionette)
-            return "";
     }
 
-    if (!found_marionette)
-        return "There isn't a suitable marionette in sight.";
-
-    if (audience_size < 2)
-        return "A shadow play requires a proper audience as well as an actor.";
-
-    // Should be unreachable
-    return "A shadow play requires a strange bug not to happen!";
+    return "There isn't a suitable marionette in sight.";
 }
 
 spret dithmenos_marionette(monster& target, bool fail)
@@ -3003,15 +3061,7 @@ spret dithmenos_marionette(monster& target, bool fail)
 
     behaviour_event(&target, ME_WHACK, &you);
 
-    vector<monster*> valid_targs;
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi) && !mi->wont_attack() && !mons_is_firewood(**mi)
-            && *mi != &target)
-        {
-            valid_targs.push_back(*mi);
-        }
-    }
+    vector<monster*> valid_targs = _get_marionette_targets();
 
     int num_casts = 3 + max(0, you.skill_rdiv(SK_INVOCATIONS, 1, 6) - 2);
     int num_successful_casts = 0;
@@ -3059,21 +3109,6 @@ spret dithmenos_marionette(monster& target, bool fail)
         target.speed_increment = old_energy;
         target.attitude = ATT_HOSTILE;
     }
-
-    // Charge piety based on how many spells were actually performed.
-    // No additional cost if nothing happened, reduced cost for 1, standard
-    // cost for anything greater than 1.
-    if (!num_successful_casts)
-    {
-        mpr("...but nothing seems to happen.");
-        return spret::success;
-    }
-
-    // 1 piety was paid up front, so imitates a standard 3 piety ability.
-    int piety_cost = random_range(2, 5);
-    if (num_successful_casts == 1)
-        piety_cost = div_rand_round(piety_cost, 2);
-    lose_piety(piety_cost);
 
     if (!target.alive())
     {

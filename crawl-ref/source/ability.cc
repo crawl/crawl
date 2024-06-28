@@ -273,12 +273,6 @@ struct ability_def
         if (!piety_cost)
             return 0;
 
-        // Report a more accurate average cost to the UI, since actual payment
-        // is special-cased and most of it happens after confirming that the
-        // marionette acted.
-        if (ability == ABIL_DITHMENOS_APHOTIC_MARIONETTE)
-            return 4;
-
         return piety_cost.base + piety_cost.add/2;
     }
 
@@ -598,7 +592,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_DITHMENOS_SHADOWSLIP, "Shadowslip",
             4, 60, 2, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
         { ABIL_DITHMENOS_APHOTIC_MARIONETTE, "Aphotic Marionette",
-            5, 0, generic_cost::fixed(1), -1, {fail_basis::invo, 60, 4, 25}, abflag::target },
+            5, 0, 4, -1, {fail_basis::invo, 60, 4, 25}, abflag::target },
         { ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL, "Primordial Nightfall",
             8, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
@@ -2476,12 +2470,7 @@ static vector<string> _desc_marionette_spells(const monster_info& mi)
 
     vector<mon_spell_slot> spells = get_unique_spells(mi);
     int num_spells = spells.size();
-    int num_usable_spells = 0;
-    for (mon_spell_slot spell : spells)
-    {
-        if (valid_marionette_spell(spell.spell))
-            ++num_usable_spells;
-    }
+    int num_usable_spells = monster_at(mi.pos)->props[DITHMENOS_MARIONETTE_SPELLS_KEY].get_int();
 
     return vector<string>{make_stringf("%d/%d spells usable", num_usable_spells, num_spells)};
 }
@@ -2688,7 +2677,13 @@ bool activate_talent(const talent& tal, dist *target)
         else if (abil.ability == ABIL_CHEIBRIADOS_SLOUCH)
             args.get_desc_func = bind(_desc_slouch_damage, placeholders::_1);
         else if (abil.ability == ABIL_DITHMENOS_APHOTIC_MARIONETTE)
+        {
             args.get_desc_func = bind(_desc_marionette_spells, placeholders::_1);
+            // Calculate and cache what spells are usable by each target in
+            // screen so that this doesn't get recalculated numerous times as
+            // the player interacts with the targeter.
+            dithmenos_cache_marionette_viability();
+        }
 
         if (abil.failure.base_chance)
         {

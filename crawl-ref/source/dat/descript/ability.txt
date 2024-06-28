@@ -614,10 +614,10 @@ summon this way will belong to you, and many beneficial effects that they would
 apply to themselves will be applied to you instead. You are also fully protected
 from any damage they would cause.
 
-Can only be used on creatures with eligible spells and only while another enemy
-is present for them to target. The process also leaves the victim's shadow too
-dim to grasp a second time - once used successfully on a target, it may never be
-used on them again.
+Can only be used on creatures with eligible spells that they could productively
+cast at the moment. The process also leaves the victim's shadow too dim to grasp
+a second time - once used successfully on a target, it may never be used on them
+again.
 
 (Not all spells can be cast via this method; those which cannot will be marked
 with an exclamation mark when examined.)

@@ -2399,13 +2399,10 @@ bool targeter_marionette::valid_aim(coord_def a)
     if (mons->is_summoned())
         return notify_fail("A summoned shadow is too ephemeral to take hold of.");
 
-    for (const mon_spell_slot slot : mons->spells)
-    {
-        if (valid_marionette_spell(slot.spell))
-            return true;
-    }
+    if (mons->props[DITHMENOS_MARIONETTE_SPELLS_KEY].get_int() <= 0)
+        return notify_fail("They have no useful spells to cast right now.");
 
-    return false;
+    return true;
 }
 
 targeter_putrefaction::targeter_putrefaction(int r) :
