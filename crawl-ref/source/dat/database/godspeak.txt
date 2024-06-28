@@ -189,6 +189,8 @@ Xom feature dry
 
 Water briefly sprays from @the_feature@.
 
+Sparkling water briefly sprays from @the_feature@.
+
 Blood briefly sprays from @the_feature@.
 
 Dust puffs up from @the_feature@.
