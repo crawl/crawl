@@ -2045,7 +2045,7 @@ static void _xom_time_control(int sever)
             note = "paralysed player and everything else";
 
             // Less of a decent joke if it directly kills, so.
-            if (!is_harmless_cloud(cloud_at(you.pos())->type))
+            if (cloud_at(you.pos()) && !is_harmless_cloud(cloud_at(you.pos())->type))
                 delete_cloud(you.pos());
         }
         time = random_range(30, 50);
