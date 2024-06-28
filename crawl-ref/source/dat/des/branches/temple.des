@@ -2555,9 +2555,9 @@ cccccc.........B...c..........cc
               ccc
 ENDMAP
 
-# 18 gods
+# 19 gods
 NAME:    mainiacjoe_temple_bowtie_tessellation
-TAGS:    temple_altars_18
+TAGS:    temple_altars_19
 PLACE:   Temple
 ORIENT:  encompass
 SUBST:   c : cvb
