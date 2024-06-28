@@ -226,7 +226,7 @@ Pyroclastic Surge cast
 %%%%
 Eruption cast
 
-@The_monster@ rends the earth beneath you!
+@The_monster@ rends the earth beneath @target@!
 %%%%
 Call of Chaos cast
 
