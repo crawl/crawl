@@ -172,8 +172,18 @@ struct mgen_data
             && (mons_is_player_shadow(*_summoner->as_monster())
                 || _summoner->real_attitude() == ATT_MARIONETTE))
         {
+            // Summons that would appear around a marionette caster appear
+            // around the player instead. (All bets are off it any more custom
+            // placement is used.)
+            if (pos == _summoner->pos()
+                && _summoner->real_attitude() == ATT_MARIONETTE)
+            {
+                pos = you.pos();
+            }
+
             summoner = &you;
             behaviour = BEH_FRIENDLY;
+
         }
         else
             summoner = _summoner;
