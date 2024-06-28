@@ -89,7 +89,7 @@ of divine ambrosia, and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
-Necromancers are wizards specializing in the practice of death magic. They
+Necromancers are wizards specialising in the practice of death magic. They
 start out with the Soul Splinter spell.
 %%%%
 Reaver
