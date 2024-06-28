@@ -4095,7 +4095,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GRAVE_CLAW, "Grave Claw",
     spschool::necromancy,
-    spflag::target,
+    spflag::target | spflag::not_self,
     2,
     50,
     4, 4,
