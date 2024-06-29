@@ -391,7 +391,7 @@ Xom boots slot
 %%%%
 Xom gizmo slot
 
-@Your_item@ wiggles!
+@Your_item@ jiggles!
 %%%%
 Xom ring slot
 
