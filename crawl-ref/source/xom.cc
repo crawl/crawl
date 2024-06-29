@@ -2077,6 +2077,26 @@ static void _xom_fog(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
+static item_def* _xom_get_random_worn_ring()
+{
+    item_def* item;
+    vector<item_def*> worn_rings;
+
+    for (int slots = EQ_FIRST_JEWELLERY; slots <= EQ_LAST_JEWELLERY; slots++)
+    {
+        if (slots == EQ_AMULET)
+            continue;
+
+        if (item = you.slot_item(static_cast<equipment_type>(slots)))
+            worn_rings.push_back(item);
+    }
+
+    if (worn_rings.empty())
+        return nullptr;
+
+    return worn_rings[random2(worn_rings.size())];
+}
+
 static void _xom_pseudo_miscast(int /*sever*/)
 {
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
@@ -2301,6 +2321,18 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
         string str = _get_xom_speech("gizmo slot");
+
+        str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        messages.push_back(str);
+    }
+
+    if (item_def* item = _xom_get_random_worn_ring())
+    {
+        // Don't just say "your ring" here. We want to know which one.
+        string name = item->name(DESC_YOUR, false, false, false);
+        string str = _get_xom_speech("ring slot");
 
         str = replace_all(str, "@your_item@", name);
         str = replace_all(str, "@Your_item@", uppercase_first(name));

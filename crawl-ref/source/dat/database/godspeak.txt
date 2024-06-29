@@ -385,6 +385,10 @@ Xom gizmo slot
 
 @Your_item@ wiggles!
 %%%%
+Xom ring slot
+
+@Your_item@ twitches!
+%%%%
 Xom dragon armour
 
 The scales on @your_item@ wiggle briefly.
