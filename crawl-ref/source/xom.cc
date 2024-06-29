@@ -1529,7 +1529,7 @@ static void _xom_harmless_flora(int /*sever*/)
 
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        // Half of the time, make it an imperfect on the inner parts.
+        // Half of the time, make it imperfect on the inner parts.
         if (ri->distance_from(you.pos()) != radius
             && !perfectRing && x_chance_in_y(1, 3))
         {
@@ -1538,13 +1538,13 @@ static void _xom_harmless_flora(int /*sever*/)
 
         if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
         {
-        mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
-        mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_XOM);
+            mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
+            mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_XOM);
 
-        mg.non_actor_summoner = "Xom";
+            mg.non_actor_summoner = "Xom";
 
-        if (create_monster(mg))
-            created = true;
+            if (create_monster(mg))
+                created = true;
         }
     }
 
@@ -1925,6 +1925,64 @@ static void _xom_destruction(int sever, bool real)
 static void _xom_real_destruction(int sever) { _xom_destruction(sever, true); }
 static void _xom_fake_destruction(int sever) { _xom_destruction(sever, false); }
 
+// A crunched down copy of the scroll of butterflies knockback.
+static void _xom_harmless_knockback(coord_def p)
+{
+    monster* mon = monster_at(p);
+    if (mon)
+    {
+        const int dist = random_range(2, 3);
+        mon->knockback(you, dist, 0, "hand of Xom");
+        behaviour_event(mon, ME_ALERT, &you);
+    }
+}
+
+// Knock back any nearby monsters without doing damage, then summon an
+// increasing amount of living spell force lances to all rocket fire against
+// whatever doesn't clear them away the next turn.
+static void _xom_force_lances(int /* sever */)
+{
+    int xl = _xom_feels_nasty() ? you.experience_level / 3
+                                : you.experience_level;
+    int count = 2 + (xl / 2) + random_range(0, div_rand_round(xl, 5));
+    int strength = max(1, xl / 2);
+    int created = 0;
+
+    // Clear up space for summoning Force Lances, if possible.
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        if (grid_distance(*ri, you.pos()) == 2)
+            _xom_harmless_knockback(*ri);
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        _xom_harmless_knockback(*ai);
+
+    for (int i = 0; i < count; ++i)
+    {
+        mgen_data mg(MONS_LIVING_SPELL, BEH_FRIENDLY, you.pos(),
+                     MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+
+        mg.set_summoned(&you, 2, MON_SUMM_AID, GOD_XOM);
+        mg.hd = strength;
+        mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(SPELL_FORCE_LANCE);
+        mg.non_actor_summoner = "Xom";
+
+        if (create_monster(mg))
+            created++;
+    }
+
+    if (created > 0)
+    {
+        const string note = make_stringf("summons %d living force lance%s",
+                                         created,
+                                         created > 1 ? "s" : "");
+
+        god_speaks(GOD_XOM,  _get_xom_speech("force lance fleet").c_str());
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
 static void _xom_enchant_monster(bool helpful)
 {
     monster* mon = choose_random_nearby_monster(_choose_enchantable_monster);
@@ -2065,7 +2123,7 @@ static void _xom_time_control(int sever)
         mi->add_ench(mon_enchant(ench, 0, nullptr, time));
     }
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, message), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
 /// Toss some fog around the player. Helping...?
@@ -2878,7 +2936,7 @@ static bool _xom_maybe_neutral_summon (int sever, bool threat,
 static void _xom_brain_drain(int sever)
 {
     bool created = false;
-    bool upgrade = (you.penance[GOD_XOM] || _xom_is_bored());
+    bool upgrade = _xom_feels_nasty();
     int xl = upgrade ? you.experience_level + 6 : you.experience_level;
     int worm_count = 0;
     int viper_count = 0;
@@ -3249,6 +3307,9 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
 
     if (x_chance_in_y(12, sever) && _xom_mons_poly_target() != nullptr)
         return XOM_GOOD_POLYMORPH;
+
+    if (tension > random2(3) && x_chance_in_y(13, sever))
+        return XOM_GOOD_FORCE_LANCE_FLEET;
 
     if (tension > 0 && x_chance_in_y(13, sever))
     {
@@ -3930,6 +3991,8 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_SNAKES, { "snakes to sticks", _xom_snakes_to_sticks }},
     { XOM_GOOD_DESTRUCTION, { "mass fireball", _xom_real_destruction }},
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
+    { XOM_GOOD_FORCE_LANCE_FLEET, {"living force lance fleet",
+                                   _xom_force_lances }},
     { XOM_GOOD_ENCHANT_MONSTER, { "good enchant monster",
                                   _xom_good_enchant_monster }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
@@ -3952,7 +4015,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                               30}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
-    { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 15}},
+    { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
     { XOM_BAD_STATLOSS, { "statloss", _xom_statloss, 23}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},

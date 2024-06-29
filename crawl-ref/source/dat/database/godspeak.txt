@@ -703,6 +703,20 @@ Xom gives a demonstration of destructive might.
 w:1
 "Let it end in hellfire!"
 %%%%
+Xom force lance fleet
+
+Xom drops down a force batallion!
+
+Xom calls in the force cavalry!
+
+Xom lights up the force fireworks!
+
+w:1
+Xom launches an entire fire-cart's barrage!
+
+w:1
+Xom manifests dramatic pipe organ chords!
+%%%%
 Xom accidental homicide
 
 "Oops, I didn't mean to do that!"
