@@ -1407,6 +1407,8 @@ Kikubaaqudgha player ghost
 
 @The_monster@ screams at @foe@, "You cannot imagine the pain and torment in store for you!"
 
+@The_monster@ screams at @foe@, "You haven't seen true ruin and despair yet!"
+
 @The_monster@ says @to_foe@, "Death will always conquer life."
 
 @The_monster@ says @to_foe@, "You would make a fine zombie."
@@ -3196,6 +3198,10 @@ w:50
 @The_monster@ says, "Do you just use necromancy for everything, then?"
 
 @The_monster@ says, "Why a 'Demon-God'? Wouldn't a 'Zombie-God' be more appropriate?"
+
+@The_monster@ says, "I hate ruin."
+
+@The_monster@ says, "I hate despair."
 %%%%
 friendly Yredelemnul Donald
 
