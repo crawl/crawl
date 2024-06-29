@@ -683,8 +683,7 @@ static bool _choose_enchantable_monster(const monster& mon)
 
 static bool _is_chaos_upgradeable(const item_def &item)
 {
-    // Since Xom is a god, he is capable of changing randarts, but not
-    // other artefacts.
+    // Change randarts, but not other artefacts.
     if (is_unrandom_artefact(item))
         return false;
 
