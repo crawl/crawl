@@ -460,7 +460,7 @@ You hear Xom's maniacal laughter.
 
 Xom's malign attention turns to you for a moment.
 %%%%
-# 25% chance dancing weapon, else summon hostile monster
+# summon hostile monster
 Xom hostile monster
 
 "Time to have some fun!"
@@ -470,6 +470,36 @@ Xom hostile monster
 "Let's see if it's strong enough to survive yet."
 
 You hear Xom's maniacal laughter.
+%%%%
+# drain your mp, produce magicspawn
+Xom brain drain
+
+w:20
+Xom displaces most of your magic for a moment.
+
+w:20
+Xom reveals to you one of the great and terrible secrets of magic.
+
+w:20
+Xom curiously channels energy out of your body.
+
+Xom picks up your mind and accidentally drops it.
+
+Xom gives you a terrible headache.
+
+"You don't need this, do you?"
+%%%%
+# prints only if summons successfully spawn
+Xom drained brain
+
+w:25
+Your magic slithers out of your reeling mind!
+
+Your power and thoughts are overwhelmed by magic-eaters manifest!
+
+# TODO: implement form / species has_eyes / has_ears functions
+# to go with has_hair and has_bones and has_feet, then
+# have your magic rip itself out of those also.
 %%%%
 Xom banishment
 

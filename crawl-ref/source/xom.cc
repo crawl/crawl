@@ -2858,6 +2858,81 @@ static void _xom_summon_hostiles(int sever)
     }
 }
 
+// Roll per-monster whether they're neutral or hostile.
+static bool _xom_maybe_neutral_summon (int sever, bool threat,
+                                       monster_type mon_type)
+{
+    beh_type setting = (x_chance_in_y(sever, 300) || threat) ? BEH_HOSTILE
+                                                             : BEH_NEUTRAL;
+
+    mgen_data mg(mon_type, setting, you.pos(), MHITYOU, MG_FORCE_BEH);
+    mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_XOM);
+    mg.non_actor_summoner = "Xom";
+
+    return create_monster(mg);
+}
+
+// Drain you for 3/4ths of your mp, then create several brain worms, mana
+// vipers, and / or quicksilver elementals from your mp based on your xl. If
+// Xom's not bored or wrathful, severity gives a chance of some being neutral.
+static void _xom_brain_drain(int sever)
+{
+    bool created = false;
+    bool upgrade = (you.penance[GOD_XOM] || _xom_is_bored());
+    int xl = upgrade ? you.experience_level + 6 : you.experience_level;
+    int worm_count = 0;
+    int viper_count = 0;
+    int quicksilver_count = 0;
+    int drain = 1;
+
+    drain = upgrade ? you.magic_points :
+            min (you.magic_points, max (1, (you.magic_points * 3 / 4)));
+
+    if (xl < 15)
+        worm_count = xl < 5 ? 1 : min (4, div_rand_round(xl - 1, 3));
+
+    if (xl > 11 && xl < 22)
+        viper_count = xl < 14 ? 1 : min (4, div_rand_round(xl - 10, 3));
+
+    if (xl > 19)
+        quicksilver_count = xl < 22 ? 1 : min (3, div_rand_round(xl - 18, 3));
+
+    // Xom won't do this anyway if you have no MP, so...
+    if (drain > 0)
+    {
+        drain_mp(drain);
+
+        for (int i = 0; i < worm_count; ++i)
+            if (_xom_maybe_neutral_summon(sever, upgrade, MONS_BRAIN_WORM))
+                created = true;
+
+        for (int i = 0; i < viper_count; ++i)
+            if (_xom_maybe_neutral_summon(sever, upgrade, MONS_MANA_VIPER))
+                created = true;
+
+        for (int i = 0; i < quicksilver_count; ++i)
+            if (_xom_maybe_neutral_summon(sever, upgrade, MONS_QUICKSILVER_ELEMENTAL))
+                created = true;
+
+        const string speech = _get_xom_speech("brain drain");
+        god_speaks(GOD_XOM, speech.c_str());
+
+        if (created)
+        {
+            const string react = _get_xom_speech("drained brain");
+            const string note = make_stringf("drained mp, created monsters");
+            mprf(MSGCH_WARN, "%s", react.c_str());
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        }
+        else
+        {
+            mprf(MSGCH_WARN, "You feel nearly all of your power leaking away!");
+            const string note = make_stringf("drained mp");
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+        }
+    }
+}
+
 static bool _has_min_banishment_level()
 {
     return you.experience_level >= 9;
@@ -3332,6 +3407,12 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         && !you.duration[DUR_PARALYSIS])
     {
         return XOM_BAD_TIME_CONTROL;
+    }
+
+    if (tension > 0 && x_chance_in_y(20, sever)
+        && you.magic_points < 3)
+    {
+        return XOM_BAD_BRAIN_DRAIN;
     }
 
     if (x_chance_in_y(21, sever))
@@ -3871,6 +3952,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                               30}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
+    { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 15}},
     { XOM_BAD_STATLOSS, { "statloss", _xom_statloss, 23}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
