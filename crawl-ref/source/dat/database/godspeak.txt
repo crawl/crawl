@@ -381,6 +381,10 @@ Xom offhand slot
 
 @Your_item@ briefly flashes a lurid @any_colour@!
 %%%%
+Xom gizmo slot
+
+@Your_item@ wiggles!
+%%%%
 Xom dragon armour
 
 The scales on @your_item@ wiggle briefly.

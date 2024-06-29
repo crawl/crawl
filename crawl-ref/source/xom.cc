@@ -2297,6 +2297,17 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    if (item_def* item = you.slot_item(EQ_GIZMO))
+    {
+        string name = "your " + item->name(DESC_BASENAME, false, false, false);
+        string str = _get_xom_speech("gizmo slot");
+
+        str = replace_all(str, "@your_item@", name);
+        str = replace_all(str, "@Your_item@", uppercase_first(name));
+
+        messages.push_back(str);
+    }
+
     if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))
     {
         string name = "your " + item->name(DESC_BASENAME, false, false, false);
