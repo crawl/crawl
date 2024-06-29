@@ -2331,7 +2331,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (item_def* item = _xom_get_random_worn_ring())
     {
         // Don't just say "your ring" here. We want to know which one.
-        string name = item->name(DESC_YOUR, false, false, false);
+        string name = "your " + item->name(DESC_QUALNAME, false, false, false);
         string str = _get_xom_speech("ring slot");
 
         str = replace_all(str, "@your_item@", name);
