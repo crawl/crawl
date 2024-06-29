@@ -381,6 +381,14 @@ Xom offhand slot
 
 @Your_item@ briefly flashes a lurid @any_colour@!
 %%%%
+Xom gloves slot
+
+@Your_item@ briefly grows several extra fingers!
+%%%%
+Xom boots slot
+
+@Your_item@ grows to a huge size, then shrinks back down!
+%%%%
 Xom gizmo slot
 
 @Your_item@ wiggles!
