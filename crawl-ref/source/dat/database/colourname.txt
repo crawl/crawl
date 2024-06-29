@@ -815,6 +815,8 @@ stars
 
 tartan
 
+triangles
+
 whorls
 %%%%
 any_colour_pattern
