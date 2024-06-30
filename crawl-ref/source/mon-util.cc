@@ -2792,8 +2792,12 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
     {
         const mon_spell_slot breath =
             drac_breath(mi.draconian_subspecies());
-        if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
+
+        if (breath.spell != SPELL_NO_SPELL
+            && (flags == MON_SPELL_NO_FLAGS || (breath.flags & flags)))
+        {
             slots.push_back(breath);
+        }
     }
 
     // No other spells (e.g. drac and/or wand); quit right away.
