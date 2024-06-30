@@ -580,7 +580,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_CHEIBRIADOS_SLOUCH, "Slouch",
             5, 0, 8, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
-            10, 0, 10, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            10, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Ashenzari
         { ABIL_ASHENZARI_CURSE, "Curse Item",
@@ -3625,8 +3625,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();
-        cheibriados_time_step(max(1, you.skill(SK_INVOCATIONS, 10)
-                                     * you.piety / 100));
+        cheibriados_time_step(you.skill(SK_INVOCATIONS, 10));
         break;
 
     case ABIL_CHEIBRIADOS_TIME_BEND:

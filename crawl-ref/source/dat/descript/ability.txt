@@ -569,11 +569,13 @@ damage with greater differences in speed.
 %%%%
 Step From Time ability
 
-Removes you completely from the flow of time. Things around you will happen at
-their usual busy pace, and monsters will wander and may even forget about you.
-After some time has passed, you will return in the same state as the very
-second you departed. Invocations skill increases the amount of time that passes
-while you're gone.
+Removes you completely from the flow of time. Time will pass as it usually does,
+and monsters will wander away and sometimes even fall back to sleep. After some
+time has passed, you will return in the same state as the very second you
+departed.
+
+Invocations skill increases the liklihood that your absence will have been so
+long that alert monsters have fallen asleep again.
 %%%%
 # Jiyva
 Slimify ability

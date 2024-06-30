@@ -2017,18 +2017,68 @@ void cheibriados_temporal_distortion()
     mpr("You warp the flow of time around you!");
 }
 
-void cheibriados_time_step(int pow) // pow is the number of turns to skip
+static coord_def _find_displace_space(const monster* mon, coord_def start_pos)
+{
+    coord_def pos = start_pos + coord_def(random_range(-30, 30), random_range(-30, 30));
+
+    int attempts = 0;
+    while ((!in_bounds(pos) || !monster_habitable_grid(mon, env.grid(pos))
+           || you.see_cell_no_trans(pos) || actor_at(pos)) && attempts < 100)
+    {
+        pos = start_pos + coord_def(random_range(-30, 30), random_range(-30, 30));
+        ++attempts;
+    }
+
+    if (attempts < 100)
+        return pos;
+    else
+        return coord_def();
+}
+
+// Move a monster to somewhere in the wider vacinity, not in the player's LoS.
+static void _cheibriados_displace_monster(monster* mon)
+{
+    int attempts = 0;
+    while (attempts < 10)
+    {
+        // Find a random near-ish spot the monster could be
+        coord_def pos = _find_displace_space(mon, mon->pos());
+
+        // If we've somehow failed to find a place to displace this to.
+        if (pos.origin())
+            return;
+
+        // Test that they could actually have walked there from where they are.
+        monster_pathfind mp;
+        mp.set_range(50);   // Don't search further than this
+        if (mp.init_pathfind(pos, mon->pos(), false))
+        {
+            coord_def old_pos = mon->pos();
+            mon->move_to_pos(pos, true);
+            mon->apply_location_effects(old_pos);
+            break;
+        }
+        else
+            ++attempts;
+    }
+}
+
+void cheibriados_time_step(int pow)
 {
     mpr("You step out of the flow of time.");
     flash_view(UA_PLAYER, LIGHTBLUE);
-    you.duration[DUR_TIME_STEP] = pow;
+
+    // Simulate 100 turns of 'real' time passing (so poison and other timed
+    // effects will work properly). This is more than adequate for most purposes
+    // and monster wandering behavior doesn't improve tremendously beyond this.
+    you.duration[DUR_TIME_STEP] = 100;
     {
         player_vanishes absent(true);
 
         you.time_taken = 10;
         _run_time_step();
         // Update corpses, etc.
-        update_level(pow * 10);
+        update_level(1000);
 
 #ifndef USE_TILE_LOCAL
         scaled_delay(1000);
@@ -2036,6 +2086,49 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     }
     _cleanup_time_steps();
+
+    // Now do some more forceful movement on things nearby to 'simulate' more
+    // time passing in a manner that is more useful than time simply passing
+    // (due to issues/quirks with Crawl wandering behavior getting stuck in lots
+    // of terrain)
+    //
+    // We check slightly beyond LoS range here so that we can catch things
+    // immediately around corners who might show up on our very next move anyway.
+    vector<monster*> mons;
+    for (distance_iterator di(you.pos(), false, false, 9); di; ++di)
+    {
+        monster* mon = monster_at(*di);
+        if (mon && !mon->asleep() && !mon->is_stationary() && !mon->wont_attack())
+            mons.push_back(mon);
+    }
+
+    // Move between 50-85% of valid nearby monsters elsewhere, but at least 1 (if possible)
+    int num_to_move = min((int)mons.size(), max(1, random_range(mons.size() * 5 / 10,
+                                                                mons.size() * 17 / 20)));
+    shuffle_array(mons);
+    for (int i = 0; i < num_to_move; ++i)
+        _cheibriados_displace_monster(mons[i]);
+
+    // Now have a power-based chance to put all awake monsters to sleep.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!mi->asleep() && !mi->is_stationary() && !mi->wont_attack()
+            && x_chance_in_y(pow, 450))
+        {
+            mi->put_to_sleep(nullptr);
+        }
+    }
+
+    // Finally, ensure we get first action against any enemies in sight.
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        mi->speed_increment = 60;
+        mi->foe_memory = 0;
+        mi->foe = MHITNOT;
+
+        if (!mi->asleep())
+            mi->behaviour = BEH_WANDER;
+    }
 
     flash_view(UA_PLAYER, 0);
     mpr("You return to the normal time flow.");
