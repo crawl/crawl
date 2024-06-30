@@ -708,7 +708,7 @@ w:1
 %%%%
 Xom force lance fleet
 
-Xom drops down a force batallion!
+Xom drops down a force battalion!
 
 Xom calls in the force cavalry!
 
