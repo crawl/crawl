@@ -692,6 +692,9 @@ Xom calls forth mighty explosions.
 
 Xom rains down devastation!
 
+w:5
+Xom sneezes violently.
+
 @Xom fake destruction@
 %%%%
 Xom fake destruction

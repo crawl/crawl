@@ -98,16 +98,16 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_ARMOUR,
+    SPELL_MARTYRS_KNELL,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_BATTLESPHERE,
     SPELL_INTOXICATE,
+    SPELL_ANIMATE_DEAD,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
-    SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
     SPELL_MONSTROUS_MENAGERIE,
@@ -515,7 +515,7 @@ static void _xom_random_spell(int sever)
          spell);
 #endif
 
-    your_spells(spell, sever + you.experience_level * 2, false);
+    your_spells(spell, sever + you.experience_level * 2 + get_tension(), false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
@@ -839,7 +839,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 
 static const vector<random_pick_entry<monster_type>> _xom_summons =
 {
-  { -2, 27,   5, FLAT, MONS_BUTTERFLY },
+  { -3, 27,   5, FLAT, MONS_BUTTERFLY },
   { -2,  6,  60, SEMI, MONS_CRIMSON_IMP },
   {  0,  6,  40, SEMI, MONS_IRON_IMP },
   {  2,  8,  60, SEMI, MONS_QUASIT },
@@ -863,8 +863,8 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   {  9, 14,  30, SEMI, MONS_VAMPIRE },
   {  9, 14,  50, SEMI, MONS_KOBOLD_DEMONOLOGIST },
   {  9, 15,  90, SEMI, MONS_ABOMINATION_SMALL },
-  {  9, 16,  50, SEMI, MONS_UGLY_THING },
   {  9, 16,  50, SEMI, MONS_YNOXINUL },
+  { 10, 16,  50, SEMI, MONS_UGLY_THING },
   { 10, 17,  50, SEMI, MONS_SOUL_EATER },
   { 11, 20,  80, SEMI, MONS_WORLDBINDER },
   { 11, 16,  30, SEMI, MONS_OBSIDIAN_BAT },
@@ -875,25 +875,25 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 11, 22,  50, SEMI, MONS_NEQOXEC },
   { 12, 18,  15, SEMI, MONS_DEMONSPAWN },
   { 12, 18,  15, SEMI, MONS_GREAT_ORB_OF_EYES },
-  { 13, 21, 105, SEMI, MONS_LAUGHING_SKULL },
+  { 13, 20, 105, SEMI, MONS_LAUGHING_SKULL },
   { 14, 22,  90, SEMI, MONS_ABOMINATION_LARGE },
-  { 14, 23, 105, SEMI, MONS_GLOWING_SHAPESHIFTER },
+  { 14, 22, 105, SEMI, MONS_GLOWING_SHAPESHIFTER },
   { 15, 22,  50, SEMI, MONS_HELL_HOG },
   { 15, 23,   1, FLAT, MONS_OBSIDIAN_STATUE },
-  { 15, 25,  75, SEMI, MONS_VERY_UGLY_THING },
   { 16, 23,  60, SEMI, MONS_RADROACH },
+  { 16, 25,  75, SEMI, MONS_VERY_UGLY_THING },
   { 16, 24,  35, SEMI, MONS_GLOWING_ORANGE_BRAIN },
-  { 16, 30,  35, SEMI, MONS_SHADOW_DEMON },
+  { 16, 32,  35, SEMI, MONS_SHADOW_DEMON },
   { 17, 25,  50, SEMI, MONS_SPHINX },
-  { 17, 30,  75, SEMI, MONS_SIN_BEAST },
+  { 17, 32,  75, SEMI, MONS_SIN_BEAST },
   { 17, 32,  15, SEMI, MONS_CACODEMON },
   { 18, 24,  30, SEMI, MONS_DANCING_WEAPON },
   { 18, 26,   1, FLAT, MONS_ORANGE_STATUE },
-  { 20, 30,  30, SEMI, MONS_APOCALYPSE_CRAB },
-  { 21, 30,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
-  { 22, 30,   1, FLAT, MONS_STARFLOWER },
-  { 23, 30,  50, SEMI, MONS_HELLEPHANT },
-  { 24, 30,   5, SEMI, MONS_MOTH_OF_WRATH },
+  { 20, 32,  30, SEMI, MONS_APOCALYPSE_CRAB },
+  { 21, 32,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
+  { 22, 32,   1, FLAT, MONS_STARFLOWER },
+  { 23, 32,  50, SEMI, MONS_HELLEPHANT },
+  { 24, 32,   5, SEMI, MONS_MOTH_OF_WRATH },
 };
 
 // Whenever choosing a monster that obviously comes in bands, spawn a few more,
@@ -929,7 +929,7 @@ static bool _xom_pal_summonercheck(monster_type mtype)
 // This and _xom_random_pal keep three tiers of enemies that are each scaled
 // to three tiers of XL, spawning either more of weaker monsters or less
 // of stronger monsters whenever Xom summons allies or enemies.
-static int _xom_pal_counting(int roll)
+static int _xom_pal_counting(int roll, bool isFriendly)
 {
     int count = 0;
 
@@ -962,6 +962,9 @@ static int _xom_pal_counting(int roll)
             count = random_range(2, 3);
     }
 
+    if (!isFriendly &&_xom_feels_nasty())
+        count *= 2;
+
     return count;
 }
 
@@ -993,8 +996,10 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
     // Make it a little flashier if it's allied or if Xom's quite dissatisfied.
     if (isFriendly)
         variance += random_range(-1, 4);
-    else if (you.penance[GOD_XOM] or _xom_is_bored())
+    else if (_xom_is_bored())
         variance += random_range(2, 3);
+    else if (you.penance[GOD_XOM])
+        variance += random_range(4, 5);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_pal(); xl variance roll: %d", roll);
@@ -1125,7 +1130,7 @@ static void _xom_confuse_monsters(int sever)
 static void _xom_send_allies(int sever)
 {
     int strengthRoll = random2(1000 - (MAX_PIETY + sever) * 5);
-    int count = _xom_pal_counting(strengthRoll);
+    int count = _xom_pal_counting(strengthRoll, true);
     int num_actually_summoned = 0;
 
     for (int i = 0; i < count; ++i)
@@ -1183,6 +1188,11 @@ static void _xom_send_one_ally(int sever)
 
     if (monster *summons = create_monster(mg))
     {
+        // Add a little extra length and regen. Make friends with your new pal.
+        int extra = random_range(100, 200);
+        summons->add_ench(mon_enchant(ENCH_ABJ, MON_SUMM_AID, nullptr, extra));
+        summons->add_ench(mon_enchant(ENCH_REGENERATION, MON_SUMM_AID,
+                                       nullptr, 500));
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
 
         const string note = make_stringf("summons friendly %s",
@@ -1212,7 +1222,8 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     if (one_chance_in(8)
         && !mons_is_ghost_demon(mons.type)
         && !mons.is_shapeshifter()
-        && mons.holiness() & MH_NATURAL)
+        && mons.holiness() & MH_NATURAL
+        && (you.experience_level > 4 || _xom_feels_nasty()))
     {
         mons.add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                        : ENCH_SHAPESHIFTER);
@@ -1588,7 +1599,15 @@ static void _xom_give_mutations(bool good)
 
     for (int i = num_tries; i > 0; --i)
     {
-        if (!mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
+        if (you.penance[GOD_XOM] && i == num_tries && !good)
+        {
+            if (!mutate(RANDOM_BAD_MUTATION, "Xom's mischief",
+                        failMsg, false, true, false, MUTCLASS_NORMAL))
+            {
+                failMsg = false;
+            }
+        }
+        else if (!mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
                     good ? "Xom's grace" : "Xom's mischief",
                     failMsg, false, true, false, MUTCLASS_NORMAL))
         {
@@ -1600,13 +1619,8 @@ static void _xom_give_mutations(bool good)
 static void _xom_give_good_mutations(int) { _xom_give_mutations(true); }
 static void _xom_give_bad_mutations(int) { _xom_give_mutations(false); }
 
-/**
- * Have Xom throw divine lightning.
- */
-static void _xom_throw_divine_lightning(int /*sever*/)
+static void _xom_drop_lightning()
 {
-    god_speaks(GOD_XOM, _get_xom_speech("divine lightning").c_str());
-
     bolt beam;
 
     beam.flavour      = BEAM_ELECTRICITY;
@@ -1622,6 +1636,59 @@ static void _xom_throw_divine_lightning(int /*sever*/)
     beam.is_explosion = true;
 
     beam.explode(true, true);
+}
+
+static void _xom_spray_lightning(coord_def position)
+{
+    bolt beam;
+
+    // range has no tracer, so randomness is ok
+    beam.range        = 7;
+    beam.source       = you.pos();
+    beam.target       = position;
+    beam.target.x     += random_range(-1, 1);
+    beam.target.y     += random_range(-1, 1);
+    beam.thrower      = KILL_MISC;
+    beam.source_id    = MID_NOBODY;
+    beam.aux_source   = "Xom's lightning strike";
+
+    // uncontrolled, so no player tracer.
+    zappy(ZAP_LIGHTNING_BOLT, 20 + you.experience_level * 5, true, beam);
+    beam.fire();
+}
+
+// Have Xom throw down divine lightning in a 5x5 explosion, then fire random
+// lightning bolts in random directions potentially fudged towards, like
+// old black draconian breath.
+static void _xom_throw_divine_lightning(int /*sever*/)
+{
+    god_speaks(GOD_XOM, _get_xom_speech("divine lightning").c_str());
+
+    _xom_drop_lightning();
+
+    int spray_count = random_range(4, max(5, get_tension() / 5));
+    int fire_count = 0;
+
+    // Have a chance to actually aim lightning bolts near each present enemy.
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (fire_count < spray_count && one_chance_in(3))
+        {
+            _xom_spray_lightning(mi->pos());
+            fire_count++;
+        }
+    }
+
+    // Fire spare random bolts at random spots.
+    if (fire_count < spray_count)
+    {
+        coord_def randspot = you.pos();
+        randspot.x += random_range(-6, 6);
+        randspot.y += random_range(-6, 6);
+
+        for (int i = 0; i < spray_count; ++i)
+            _xom_spray_lightning(randspot);
+    }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divine lightning"), true);
 }
@@ -1696,12 +1763,13 @@ static void _xom_place_decor()
 {
     coord_def place;
     bool success = false;
+    int aby = player_in_branch(BRANCH_ABYSS) ? 0 : 1;
     dungeon_feature_type decor = random_choose_weighted(10, DNGN_ALTAR_XOM,
                                                         2, DNGN_CACHE_OF_FRUIT,
                                                         2, DNGN_CACHE_OF_MEAT,
                                                         1, DNGN_CLOSED_DOOR,
                                                         1, DNGN_OPEN_DOOR,
-                                                        1, DNGN_ENTER_ABYSS);
+                                                        aby, DNGN_ENTER_ABYSS);
 
     const int featuresCount = max(1, random2(random2(14)));
     for (int tries = featuresCount; tries > 0; --tries)
@@ -1895,11 +1963,11 @@ static void _xom_destruction(int sever, bool real)
 
         bolt beam;
 
-        beam.flavour      = BEAM_FIRE;
+        beam.flavour      = BEAM_STICKY_FLAME;
         beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage       = dice_def(2, 4 + sever / 10);
         beam.target       = mi->pos();
-        beam.name         = "fireball";
+        beam.name         = "sticky fireball";
         beam.colour       = RED;
         beam.thrower      = KILL_MISC;
         beam.source_id    = MID_NOBODY;
@@ -2012,7 +2080,6 @@ static void _xom_enchant_monster(bool helpful)
         {
             BEAM_HASTE,
             BEAM_MIGHT,
-            BEAM_AGILITY,
             BEAM_INVISIBILITY,
             BEAM_RESISTANCE,
         };
@@ -2864,10 +2931,18 @@ static void _xom_summon_hostiles(int sever)
     if (shadow_creatures)
     {
         // Small number of shadow creatures, but still a little touch of chaos.
-        int count = random_range(1, 3);
+        int multiplier = 1;
 
-        if (_xom_summon_hostile(_xom_random_pal(strengthRoll, false)))
-            num_summoned++;
+        if (_xom_is_bored())
+            multiplier = 3;
+        else if (you.penance[GOD_XOM])
+            multiplier = 2;
+
+        int count = random_range(1, 3) * multiplier;
+
+        for (int i = 0; i < multiplier; ++i)
+            if (_xom_summon_hostile(_xom_random_pal(strengthRoll, false)))
+                num_summoned++;
 
         for (int i = 0; i < count; ++i)
             if (_xom_summon_hostile(RANDOM_MOBILE_MONSTER))
@@ -2875,7 +2950,7 @@ static void _xom_summon_hostiles(int sever)
     }
     else
     {
-        int count = _xom_pal_counting(strengthRoll);
+        int count = _xom_pal_counting(strengthRoll, false);
 
         for (int i = 0; i < count; ++i)
         {
@@ -2936,7 +3011,7 @@ static bool _xom_maybe_neutral_summon (int sever, bool threat,
 static void _xom_brain_drain(int sever)
 {
     bool created = false;
-    bool upgrade = _xom_feels_nasty();
+    bool upgrade = you.penance[GOD_XOM];
     int xl = upgrade ? you.experience_level + 6 : you.experience_level;
     int worm_count = 0;
     int viper_count = 0;
@@ -2993,7 +3068,8 @@ static void _xom_brain_drain(int sever)
 
 static bool _has_min_banishment_level()
 {
-    return you.experience_level >= 9;
+    int min = you.penance[GOD_XOM] ? 6 : 9;
+    return you.experience_level >= min;
 }
 
 // Rolls whether banishment will be averted.
@@ -3010,8 +3086,8 @@ static bool _allow_xom_banishment()
     if (player_under_penance(GOD_XOM))
         return true;
 
-    // If Xom is bored, banishment becomes viable earlier.
-    if (_xom_is_bored())
+    // If Xom is bored or wrathful, banishment becomes viable earlier.
+    if (_xom_feels_nasty())
         return !_will_not_banish();
 
     // Below the minimum experience level, only fake banishment is allowed.
@@ -3061,8 +3137,10 @@ static void _xom_do_banishment(bool real)
 {
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
+    int power = _xom_feels_nasty() ? you.experience_level * 3 / 2 - 10
+                                   : you.experience_level * 5 / 4 - 13;
     // Handles note taking, scales depth by XL
-    banished("Xom", max(1, (you.experience_level * 5 / 4 - 13)));
+    banished("Xom", max(1, power));
     if (!real)
         _revert_banishment();
 }
@@ -3309,7 +3387,20 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_POLYMORPH;
 
     if (tension > random2(3) && x_chance_in_y(13, sever))
-        return XOM_GOOD_FORCE_LANCE_FLEET;
+    {
+        // Check if there's a reasonable amount of open terrain
+        // before placing down all the living spells.
+        int open_count = 0;
+        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+             ri; ++ri)
+        {
+            if (!cell_is_solid(*ri))
+                open_count++;
+        }
+
+        if (open_count > 6)
+            return XOM_GOOD_FORCE_LANCE_FLEET;
+    }
 
     if (tension > 0 && x_chance_in_y(13, sever))
     {
@@ -3402,12 +3493,16 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
 {
     const bool nasty = _miscast_is_nasty(sever);
 
-    if (!nasty && x_chance_in_y(3, sever))
+    if (!nasty && x_chance_in_y(3, sever) && !you.penance[GOD_XOM])
         return XOM_BAD_MISCAST_PSEUDO;
 
     // Sometimes do noise out of combat.
-    if ((tension > 0 || coinflip()) && x_chance_in_y(6, sever))
+    if ((tension > 0 || coinflip()) && x_chance_in_y(6, sever)
+        && !you.penance[GOD_XOM])
+     {
         return XOM_BAD_NOISE;
+     }
+
     if (tension > 0 && x_chance_in_y(7, sever))
         return XOM_BAD_ENCHANT_MONSTER;
 
@@ -3471,7 +3566,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     }
 
     if (tension > 0 && x_chance_in_y(20, sever)
-        && you.magic_points < 3)
+        && you.magic_points > 3)
     {
         return XOM_BAD_BRAIN_DRAIN;
     }
