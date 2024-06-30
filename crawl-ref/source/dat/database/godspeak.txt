@@ -666,7 +666,7 @@ Xom divine lightning
 
 The area is suffused with divine lightning!
 
-Xom hurls a blast of lightning!
+Xom hurls blasts of lightning!
 
 "Ready, aim, fire!"
 %%%%
