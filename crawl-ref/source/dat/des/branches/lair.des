@@ -2899,6 +2899,29 @@ xx..xxxW**xx
  xxxx@@x
 ENDMAP
 
+NAME:   tekkud_yamata_no_oroachi
+TAGS:   no_monster_gen
+DEPTH:  Lair, !Lair:$, D:12-14
+ORIENT: float
+MONS:   eight-headed hydra, giant cockroach, plant
+KITEM:  A = human skeleton
+KFEAT:  C = cache of fruit
+NSUBST: . = 4:2 / .
+SUBST:  ' = .x
+MAP
+     ,   ,
+  ,,,x,,,x,,
+ xx,xxx,xxx,
+ ,xxxCxxx,,,
+,,xxA...xxxx,
+,x,x..1..xx,
+ ,xxx....3xx,
+  ,x,x..33x3
+ ,xxxx3x333
+  ,x,xx3x3
+     x3
+ENDMAP
+
 ###############################################################################
 # Lair endings - split in two types.
 ###############################################################################
