@@ -2992,8 +2992,8 @@ static void _xom_summon_hostiles(int sever)
 }
 
 // Roll per-monster whether they're neutral or hostile.
-static bool _xom_maybe_neutral_summon (int sever, bool threat,
-                                       monster_type mon_type)
+static bool _xom_maybe_neutral_summon(int sever, bool threat,
+                                      monster_type mon_type)
 {
     beh_type setting = (x_chance_in_y(sever, 300) || threat) ? BEH_HOSTILE
                                                              : BEH_NEUTRAL;
@@ -3019,16 +3019,16 @@ static void _xom_brain_drain(int sever)
     int drain = 1;
 
     drain = upgrade ? you.magic_points :
-            min (you.magic_points, max (1, (you.magic_points * 3 / 4)));
+            min(you.magic_points, max(1, (you.magic_points * 3 / 4)));
 
     if (xl < 15)
-        worm_count = xl < 5 ? 1 : min (4, div_rand_round(xl - 1, 3));
+        worm_count = xl < 5 ? 1 : min(4, div_rand_round(xl - 1, 3));
 
     if (xl > 11 && xl < 22)
-        viper_count = xl < 14 ? 1 : min (4, div_rand_round(xl - 10, 3));
+        viper_count = xl < 14 ? 1 : min(4, div_rand_round(xl - 10, 3));
 
     if (xl > 19)
-        quicksilver_count = xl < 22 ? 1 : min (3, div_rand_round(xl - 18, 3));
+        quicksilver_count = xl < 22 ? 1 : min(3, div_rand_round(xl - 18, 3));
 
     // Xom won't do this anyway if you have no MP, so...
     if (drain > 0)
