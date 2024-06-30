@@ -570,6 +570,8 @@ static void _dissipate_cloud(cloud_struct& cloud)
             cloud.decay = random_range(50, 90);
             cloud.type = CLOUD_MIASMA;
         }
+        else
+            delete_cloud(cloud.pos);
     }
 
     // Check for total dissipation and handle accordingly.
