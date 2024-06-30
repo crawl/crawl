@@ -1250,6 +1250,12 @@ namespace quiver
             qdesc.cprintf("%s", spell == SPELL_MAXWELLS_COUPLING ?
                                 "Capacitive Coupling" : spell_title(spell));
 
+            if (spell == SPELL_GRAVE_CLAW)
+            {
+                qdesc.cprintf(" (%d/%d)", you.props[GRAVE_CLAW_CHARGES_KEY].get_int()
+                                        , GRAVE_CLAW_MAX_CHARGES);
+            }
+
             if (fail_severity(spell) > 0)
             {
                 qdesc.cprintf(" (%s)",
