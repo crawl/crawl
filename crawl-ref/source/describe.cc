@@ -1853,7 +1853,7 @@ static string _equip_type_name(const item_def &item)
 
 static string _equipment_switchto_string(const item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return "wielding";
     // Not always the same verb used elsewhere, but "switch putting on" sounds weird
     else
@@ -2939,6 +2939,9 @@ string get_item_description(const item_def &item,
             string art_desc = _artefact_descrip(item);
             if (!art_desc.empty())
                 description << "\n\n" + art_desc;
+
+            if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
+                description << _equipment_ac_ev_sh_change(item);
         }
         description << "\n\nIt falls into the 'Staves' category. ";
         description << _handedness_string(item);
