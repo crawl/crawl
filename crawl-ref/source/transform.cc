@@ -1181,7 +1181,7 @@ bool form_can_swim(transformation form)
 }
 
 // Used to mark transformations which override species intrinsics.
-bool form_changed_physiology(transformation form)
+bool form_changes_physiology(transformation form)
 {
     return get_form(form)->changes_physiology;
 }
@@ -1760,7 +1760,7 @@ static void _enter_form(int pow, transformation which_trans, bool was_flying)
 {
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    if (form_changed_physiology(which_trans))
+    if (form_changes_physiology(which_trans))
         merfolk_stop_swimming();
 
     // Give the transformation message.
@@ -2171,7 +2171,7 @@ bool draconian_dragon_exception()
 {
     return species::is_draconian(you.species)
            && (you.form == transformation::dragon
-               || !form_changed_physiology());
+               || !form_changes_physiology());
 }
 
 transformation form_for_talisman(const item_def &talisman)

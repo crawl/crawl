@@ -466,7 +466,7 @@ static string _annotate_form_based(string desc, bool suppressed, bool terse=fals
 
 static string _dragon_abil(string desc, bool terse=false)
 {
-    const bool supp = form_changed_physiology()
+    const bool supp = form_changes_physiology()
                             && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp, terse);
 }

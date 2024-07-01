@@ -315,7 +315,7 @@ bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
-bool form_changed_physiology(transformation form = you.form);
+bool form_changes_physiology(transformation form = you.form);
 bool form_can_bleed(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation form = you.form);

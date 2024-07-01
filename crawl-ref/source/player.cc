@@ -2034,7 +2034,7 @@ bool player_effectively_in_light_armour()
 bool player_is_shapechanged()
 {
     // TODO: move into data
-    return form_changed_physiology(you.form)
+    return form_changes_physiology(you.form)
         && you.form != transformation::death;
 }
 
