@@ -5606,7 +5606,7 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
             continue;
 
         mgen_data mg(type, SAME_ATTITUDE(mons), mons->pos(), mons->foe);
-        mg.set_summoned(mons, 1, spell_cast);
+        mg.set_summoned(mons, spell_cast == SPELL_PLANEREND ? 2 : 1, spell_cast);
         if (type == MONS_SLIME_CREATURE)
             mg.props[MGEN_BLOB_SIZE] = 5;
         create_monster(mg);
