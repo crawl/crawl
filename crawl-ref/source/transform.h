@@ -226,6 +226,9 @@ public:
     //
     const bool changes_physiology;
 
+    /// Does this form have hair?
+    const form_capability has_hair;
+
     /// what verb does the player use when shouting in this form?
     const string shout_verb;
     /// a flat bonus (or penalty) to shout volume
@@ -316,6 +319,7 @@ bool form_changed_physiology(transformation form = you.form);
 bool form_can_bleed(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation form = you.form);
+bool form_has_hair(transformation form = you.form);
 
 bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat);

@@ -954,12 +954,9 @@ bool player_has_hair(bool temp, bool include_mutations)
         return true;
     }
 
-    // Beast form is explicitly described as furry.
-    if (you.form == transformation::beast)
+    if (temp && form_has_hair(you.form))
         return true;
 
-    // XXX: There's currently no easy way to tell if other forms have
-    // hair, so just assume based on species for now.
     return species::has_hair(you.species);
 }
 

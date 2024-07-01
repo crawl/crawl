@@ -122,6 +122,7 @@ Form::Form(const form_entry &fe)
       can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),
       changes_physiology(fe.changes_physiology),
+      has_hair(fe.has_hair),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
@@ -1200,6 +1201,24 @@ bool form_can_bleed(transformation form)
 bool form_keeps_mutations(transformation form)
 {
     return get_form(form)->keeps_mutations;
+}
+
+/**
+ * Does this form have hair?
+ *
+ * @param form      The form in question.
+ * @return          Whether the form has hair.
+ */
+bool form_has_hair(transformation form)
+{
+    form_capability result = get_form(form)->has_hair;
+
+    if (result == FC_ENABLE)
+        return true;
+    else if (result == FC_FORBID)
+        return false;
+    else
+        return species::has_hair(you.species);
 }
 
 static set<equipment_type>
