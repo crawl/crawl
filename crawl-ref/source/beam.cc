@@ -2762,6 +2762,18 @@ void bolt::affect_ground()
     if (is_explosion && !in_explosion_phase)
         return;
 
+    // XXX: This feels like an ugly place to put this, but it doesn't do any
+    //      damage and the cloud placement code is otherwise skipped entirely
+    //      for tracers.
+    if (is_tracer && origin_spell == SPELL_NOXIOUS_BREATH && ench_power > 10)
+    {
+        for (adjacent_iterator ai(pos()); ai; ++ai)
+        {
+            if (monster_at(*ai))
+                handle_stop_attack_prompt(monster_at(*ai));
+        }
+    }
+
     if (is_tracer)
         return;
 
