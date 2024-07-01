@@ -1950,7 +1950,7 @@ bool coglin_invent_gizmo()
 {
     if (inv_count() >= ENDOFPACK)
     {
-        mpr("You don't have room to hold a gizmo!");
+        mpr("You don't have room to hold a gizmo! Drop something first.");
         return false;
     }
 
