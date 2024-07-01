@@ -2379,7 +2379,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (species::has_hair(you.species))
+    if (player_has_hair())
     {
         string str = _get_xom_speech("hair");
         messages.push_back(str);
