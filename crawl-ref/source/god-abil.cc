@@ -4149,8 +4149,9 @@ spret qazlal_elemental_force(bool fail)
     fail_check();
 
     shuffle_array(targets);
-    const int count = max(1, min((int)targets.size(),
-                                 random2avg(you.skill(SK_INVOCATIONS), 2)));
+    const int count = min((int)targets.size(),
+                          random_range(you.skill_rdiv(SK_INVOCATIONS, 1, 3),
+                                       1 + you.skill_rdiv(SK_INVOCATIONS, 1, 2)));
     mgen_data mg;
     mg.summon_type = MON_SUMM_AID;
     mg.abjuration_duration = 1;
