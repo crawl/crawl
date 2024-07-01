@@ -10,8 +10,8 @@ struct screen_cell_t
     unsigned short colour; // TODO: check if this is real colour (8 bit)
     // Tiles output part.
 #ifdef USE_TILE
-    unsigned short flash_colour;
-    unsigned short flash_alpha;
+    unsigned short flash_colour = 0;
+    unsigned short flash_alpha = 0;
     packed_cell tile;
 #endif
 };

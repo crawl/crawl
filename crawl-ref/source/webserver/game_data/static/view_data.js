@@ -33,9 +33,14 @@ define(["jquery", "comm"], function ($, comm) {
         if (!flash_colour)
             return null;
         const colour = flash_colours[flash_colour];
-        //if (flash_alpha === 0)
+
+        if (flash_alpha === undefined)
+            flash_alpha = 0;
+
+        if (flash_alpha === 0)
             return colour;
-        //return VColour(colour.r, colour.g, colour.b, flash_alpha);
+
+        return VColour(colour.r, colour.g, colour.b, flash_alpha);
     }
 
     exports.cursor_locs = [];
