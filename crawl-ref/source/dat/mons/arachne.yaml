@@ -5,7 +5,7 @@ genus: spider
 will: 80
 attacks:
  - {type: hit, damage: 30}
-hd: 19
+hd: 23
 hp_10x: 2040
 ac: 9
 ev: 12
