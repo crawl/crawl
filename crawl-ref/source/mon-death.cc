@@ -1479,7 +1479,7 @@ static void _orb_of_mayhem(actor& maniac, const monster& victim)
 {
     vector<monster *> witnesses;
     for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
-        if (mi->can_see(maniac) && mi->can_go_frenzy())
+        if (*mi != &victim && mi->can_see(maniac) && mi->can_go_frenzy())
             witnesses.push_back(*mi);
 
     if (coinflip() && !witnesses.empty())
