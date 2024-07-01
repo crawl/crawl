@@ -2076,7 +2076,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (draconian_breath_uses_available() <= 0)
         {
             if (!quiet)
-                mpr("You have exhausted your breath weapon. Dive deeper!");
+                mpr("You have exhausted your breath weapon. Slay more foes!");
             return false;
         }
         return true;
