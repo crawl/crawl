@@ -50,6 +50,7 @@ struct form_entry
 
     // Row 9:
     form_capability has_hair;
+    form_capability has_bones;
 
     // Row 10:
     const char *shout_verb;
@@ -78,7 +79,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
-    FC_DEFAULT,
+    FC_DEFAULT, FC_DEFAULT,
     "", 0, "", "", "", "",
     {},
     {}
@@ -93,7 +94,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_VENOM, LIGHTGREEN, "Fangs", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "hiss", -4, "front pincers", "", "crawl onto", "flesh",
     { {"venomous fangs", "You have venomous fangs."},
       {"", "You are tiny and dextrous."} // short-form "tiny" is automatically added
@@ -110,7 +111,7 @@ static const form_entry formdata[] =
     {}, true, FormScaling().Base(12).Scaling(8),
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
-    FC_DEFAULT,
+    FC_DEFAULT, FC_DEFAULT,
     "", 0, "", "", "", "",
     {},
     {}
@@ -124,7 +125,7 @@ static const form_entry formdata[] =
     FormScaling().Base(27).Scaling(11), true, FormScaling().Base(9),
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, true, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "", 0, "", "", "place yourself before", "stone",
     { { "powerful", "Your melee attacks are powerful." },
       { "torment resistance 1", "You are resistant to unholy torment." } // same as MUT_TORMENT_RESISTANCE
@@ -140,7 +141,7 @@ static const form_entry formdata[] =
     FormScaling().Base(9).Scaling(6), true, FormScaling().Base(7),
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_ENABLE,
     "hiss", -2, "", "", "coil in front of", "flesh",
     { { "constrict", "You have a powerful constriction melee attack."} },
     // cold-blooded and amphibious are added separately
@@ -156,7 +157,7 @@ static const form_entry formdata[] =
     FormScaling().Base(12).Scaling(6), true, FormScaling().Base(15).Scaling(9),
     SPWPN_NORMAL, GREEN, "Teeth and claws", { "hit", "claw", "bite", "maul" },
     FC_ENABLE, FC_FORBID, FC_ENABLE, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_ENABLE,
     "roar", 6, "foreclaw", "", "bow your head before", "flesh",
     { { "dragon claw", "You have a powerful clawing attack." },
       { "dragon scales", "Your giant scaled body is strong and resilient, but less evasive." },
@@ -173,7 +174,7 @@ static const form_entry formdata[] =
     {}, true, FormScaling().Base(6),
     SPWPN_DRAINING, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, true, true,
-    FC_FORBID,
+    FC_FORBID, FC_DEFAULT,
     "", 0, "", "", "", "bone",
     { { "vile attack", "Your melee attacks drain, slow and weaken victims." },
       { "siphon essence", "You can torment nearby foes to heal from their wounds." },
@@ -191,7 +192,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().Base(-2),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, false, true,
-    FC_ENABLE,
+    FC_ENABLE, FC_ENABLE,
     "squeak", -8, "foreclaw", "", "perch on", "flesh",
     { { "extremely fast", "You cover ground extremely quickly." },
       { "", "You are tiny, dextrous, and very evasive." } // short-form "tiny" is automatically added
@@ -210,7 +211,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, false, true,
-    FC_ENABLE,
+    FC_ENABLE, FC_ENABLE,
     "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh",
     { { "very fast", "You cover ground very quickly." } },
     { { "weak attacks", "Your unarmed attacks are very weak." },
@@ -228,7 +229,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
-    FC_DEFAULT,
+    FC_DEFAULT, FC_DEFAULT,
     "", 0, "", "", "", "",
     {},
     {}
@@ -244,7 +245,7 @@ static const form_entry formdata[] =
     FormScaling().Base(20).Scaling(14).XLBased(), true, FormScaling().Base(9),
     SPWPN_NORMAL, BROWN, "Branches", { "hit", "smack", "pummel", "thrash" },
     FC_FORBID, FC_FORBID, FC_FORBID, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "creak", 0, "branch", "root", "sway towards", "wood",
     { { "resilient", "Your bark is very hard, but your evasion is minimal." },
       { "branches", "Your unarmed attacks smack enemies forcefully with your branches." },
@@ -267,7 +268,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, false, true,
-    FC_ENABLE,
+    FC_ENABLE, FC_ENABLE,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh",
     {},
     { { "no casting", "You cannot cast spells." }, }
@@ -286,7 +287,7 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "touch",
                                                  "engulf", "engulf" },
     FC_ENABLE, FC_FORBID, FC_FORBID, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour",
     { { "", "You are tiny and evasive." },
       { "insubstantial", "You are insubstantial and cannot be petrified, ensnared, or set on fire." },
@@ -306,7 +307,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "", 0, "", "", "", "",
     {},
     { { "no casting", "You cannot cast spells." },
@@ -323,7 +324,7 @@ static const form_entry formdata[] =
     FormScaling().Base(12), false, FormScaling().Base(9).XLBased(),
     SPWPN_CONFUSE, BROWN, "Spores", FormAttackVerbs("release spores at"),
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "sporulate", -8, "hypha", "", "release spores on", "flesh",
     { { "", "You are tiny and evasive." },
       { "spores", "Your melee attacks release spores that confuse breathing creatures." },
@@ -344,7 +345,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, true, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "", 0, "", "", "", "shadow",
     { { "half damage", "Damage taken is halved, but you are drained when taking damage."},
       { "bleed smoke", "You bleed smoke when taking damage." },
@@ -368,7 +369,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_ENABLE,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh",
     { { "fast swimmer", "You swim very quickly." },
       { "devour", "You can devour living enemies to heal." }
@@ -386,7 +387,7 @@ static const form_entry formdata[] =
     FormScaling().Base(12).Scaling(3), true, FormScaling().Base(24).Scaling(6),
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
     FC_ENABLE, FC_DEFAULT, FC_FORBID, false, true,
-    FC_FORBID,
+    FC_FORBID, FC_FORBID,
     "bellow", 0, "", "", "place yourself before", "air",
     { { "electrical cleaving", "Your electrical attacks strike out in all directions at once." },
       { "evasive", "You are incredibly evasive." },
@@ -405,7 +406,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
-    FC_ENABLE,
+    FC_ENABLE, FC_DEFAULT,
     "", 0, "", "", "", "",
     {}, // slaying bonus added separately
     {}
@@ -420,7 +421,7 @@ static const form_entry formdata[] =
     {}, true, FormScaling().Base(2),
     SPWPN_NORMAL, GREEN, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
-    FC_DEFAULT,
+    FC_DEFAULT, FC_DEFAULT,
     "shout twice", 0, "", "", "", "",
     { { "devouring maw", "Your midsection houses a second, enormous mouth." },
       { "", "You can devour living enemies to heal." }
@@ -437,7 +438,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
-    FC_DEFAULT,
+    FC_DEFAULT, FC_DEFAULT,
     "", 0, "", "", "", "",
     { { "contaminating", "Foes you strike become dangerously contaminated with magical radiation." }, },
     { { "glow", "You glow with magical radiation, making you easy to see." } }

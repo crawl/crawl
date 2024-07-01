@@ -1974,7 +1974,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // No bones for thin skeletal structure or horns.
-    if (!species::has_bones(you.species)
+    if (!player_has_bones()
         && (mutat == MUT_THIN_SKELETAL_STRUCTURE || mutat == MUT_HORNS))
     {
         return true;

@@ -960,6 +960,14 @@ bool player_has_hair(bool temp, bool include_mutations)
     return species::has_hair(you.species);
 }
 
+bool player_has_bones(bool temp)
+{
+    if (temp && form_has_bones(you.form))
+        return true;
+
+    return species::has_bones(you.species);
+}
+
 bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.has_innate_mutation(MUT_CONSTRICTING_TAIL)
