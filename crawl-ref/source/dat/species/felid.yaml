@@ -5,6 +5,8 @@ adjective: Feline
 genus: Cat
 difficulty: Advanced
 difficulty_priority: 40
+species_flags:
+  - SPF_NO_FEET
 aptitudes:
   xp: -1
   hp: -3

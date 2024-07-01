@@ -6,6 +6,8 @@ adjective: Octopoid
 genus: Octopus
 difficulty: Advanced
 difficulty_priority: 50
+species_flags:
+  - SPF_NO_FEET
 aptitudes:
   xp: 0
   hp: -1

@@ -970,14 +970,8 @@ bool player_has_bones(bool temp)
 
 bool player_has_feet(bool temp, bool include_mutations)
 {
-    if (you.has_innate_mutation(MUT_CONSTRICTING_TAIL)
-        || you.has_innate_mutation(MUT_FLOAT)
-        || you.has_innate_mutation(MUT_PAWS) // paws are not feet?
-        || you.has_tentacles(temp)
-        || you.fishtail && temp)
-    {
+    if (you.fishtail && temp)
         return false;
-    }
 
     if (include_mutations &&
         (you.get_mutation_level(MUT_HOOVES, temp) == 3
@@ -986,7 +980,7 @@ bool player_has_feet(bool temp, bool include_mutations)
         return false;
     }
 
-    return true;
+    return species::has_feet(you.species);
 }
 
 // Returns false if the player is wielding a weapon inappropriate for Berserk.

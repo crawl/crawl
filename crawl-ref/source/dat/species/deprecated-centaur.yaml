@@ -6,6 +6,7 @@ difficulty: False
 species_flags:
   - SPF_SMALL_TORSO
   - SPF_BARDING
+  - SPF_NO_FEET
 aptitudes:
   xp: -1
   hp: 1

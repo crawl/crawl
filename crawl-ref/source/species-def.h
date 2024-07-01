@@ -17,6 +17,7 @@ enum species_flag
     SPF_NO_BONES    = 1 << 2, /// If members of the species have bones (flavor + minor physiology checks)
     SPF_SMALL_TORSO = 1 << 3, /// Torso is smaller than body
     SPF_BARDING     = 1 << 4, /// Whether the species wears bardings (instead of boots)
+    SPF_NO_FEET     = 1 << 5, /// If members of the species have feet
 };
 DEF_BITFIELD(species_flags, species_flag);
 

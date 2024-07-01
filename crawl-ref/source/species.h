@@ -47,6 +47,7 @@ namespace species
     const vector<string>& fake_mutations(species_type species, bool terse);
     bool has_hair(species_type species);
     bool has_bones(species_type species);
+    bool has_feet(species_type species);
     bool can_throw_large_rocks(species_type species);
     bool wears_barding(species_type species);
     bool has_claws(species_type species);
