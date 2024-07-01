@@ -1387,7 +1387,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_explosive_beam>(&you, pow, range);
     case SPELL_NOXIOUS_BREATH:
         // Note the threshold where it becomes possible to make clouds off the main beam
-        return make_unique<targeter_explosive_beam>(&you, pow, range, pow > 10);
+        return make_unique<targeter_explosive_beam>(&you, pow, range, false, pow > 10);
     case SPELL_GALVANIC_BREATH:
         return make_unique<targeter_galvanic>(&you, pow, range);
     case SPELL_NULLIFYING_BREATH:

@@ -580,11 +580,13 @@ class targeter_explosive_beam : public targeter_beam
 {
 public:
     targeter_explosive_beam(const actor *act, int pow, int range,
+                            bool explode_on_monsters = true,
                             bool always_explode = false);
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 private:
     explosion_map exp_map;
+    bool explode_on_monsters;
     bool always_explode;
 };
 
