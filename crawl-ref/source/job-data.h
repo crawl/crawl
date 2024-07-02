@@ -384,7 +384,6 @@ static const map<job_type, job_def> job_data =
       SP_DJINNI, },
     {
         SPELL_MAGIC_DART,
-        SPELL_SLOW,
         SPELL_BLINK,
         SPELL_CALL_IMP,
         SPELL_GRAVE_CLAW,
@@ -393,7 +392,8 @@ static const map<job_type, job_def> job_data =
     { "dagger", "robe", "hat", "potion of magic" },
     WCHOICE_NONE,
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
-      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
+      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 2 }, { SK_SUMMONINGS, 1 },
+      { SK_NECROMANCY, 1 } },
 } },
 #if TAG_MAJOR_VERSION == 34
 { JOB_ABYSSAL_KNIGHT, {
