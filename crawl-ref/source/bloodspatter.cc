@@ -172,14 +172,14 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
 {
     ASSERT_IN_BOUNDS(where);
 
-    if (montype == MONS_PLAYER && !you.can_bleed())
+    if (montype == MONS_PLAYER && !you.has_blood())
         return;
 
     if (montype != NUM_MONSTERS && montype != MONS_PLAYER)
     {
         monster m;
         m.type = montype;
-        if (!m.can_bleed())
+        if (!m.has_blood())
             return;
     }
 

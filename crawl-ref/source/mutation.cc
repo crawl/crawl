@@ -420,7 +420,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (mut == MUT_BERSERK && you.is_lifeless_undead())
         return mutation_activity_type::INACTIVE;
 
-    if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
+    if (!form_has_blood(you.form) && mut == MUT_SANGUINE_ARMOUR)
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())

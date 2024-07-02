@@ -7219,7 +7219,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     }
 
     if ((flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
-        && can_bleed())
+        && has_blood())
     {
         blood_spray(pos(), type, amount / 5);
     }
@@ -7747,12 +7747,15 @@ bool player::can_polymorph() const
     return !(transform_uncancellable || is_lifeless_undead());
 }
 
-bool player::can_bleed(bool temp) const
+bool player::has_blood(bool temp) const
 {
-    if (temp && !form_can_bleed(form))
+    if (is_lifeless_undead(temp))
         return false;
 
-    return !is_lifeless_undead(temp) && !is_nonliving(temp);
+    if (temp && form_has_blood(form))
+        return true;
+
+    return species::has_blood(you.species);
 }
 
 bool player::can_drink(bool temp) const

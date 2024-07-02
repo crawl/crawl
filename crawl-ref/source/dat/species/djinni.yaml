@@ -6,6 +6,7 @@ difficulty: Intermediate
 difficulty_priority: 70
 species_flags:
   - SPF_NO_FEET
+  - SPF_NO_BLOOD
 aptitudes:
   xp: 1
   hp: -1

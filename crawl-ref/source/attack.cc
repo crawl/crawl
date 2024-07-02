@@ -100,7 +100,7 @@ bool attack::handle_phase_damaged()
     // We have to check in_bounds() because removed kraken tentacles are
     // temporarily returned to existence (without a position) when they
     // react to damage.
-    if (defender->can_bleed()
+    if (defender->has_blood()
         && !defender->is_summoned()
         && in_bounds(defender->pos())
         && !simu)

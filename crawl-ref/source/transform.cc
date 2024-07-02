@@ -119,10 +119,10 @@ Form::Form(const form_entry &fe)
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
-      can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),
       changes_physiology(fe.changes_physiology),
-      has_hair(fe.has_hair), has_bones(fe.has_bones), has_feet(fe.has_feet),
+      has_blood(fe.has_blood), has_hair(fe.has_hair),
+      has_bones(fe.has_bones), has_feet(fe.has_feet),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
@@ -1186,21 +1186,28 @@ bool form_changes_physiology(transformation form)
     return get_form(form)->changes_physiology;
 }
 
-/**
- * Does this form have blood?
- *
- * @param form      The form in question.
- * @return          Whether the form can bleed, sublime, etc.
- */
-bool form_can_bleed(transformation form)
-{
-    return get_form(form)->can_bleed != FC_FORBID;
-}
-
 // Used to mark forms which keep most form-based mutations.
 bool form_keeps_mutations(transformation form)
 {
     return get_form(form)->keeps_mutations;
+}
+
+/**
+ * Does this form have blood?
+ *
+ * @param form      The form in question.
+ * @return          Whether the form has blood (can bleed, sublime, etc.).
+ */
+bool form_has_blood(transformation form)
+{
+    form_capability result = get_form(form)->has_blood;
+
+    if (result == FC_ENABLE)
+        return true;
+    else if (result == FC_FORBID)
+        return false;
+    else
+        return species::has_blood(you.species);
 }
 
 /**

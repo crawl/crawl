@@ -873,7 +873,7 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
     if (!mondied)
         defender->hurt(attacker, defender->stat_hp());
 
-    if (defender->as_monster()->can_bleed())
+    if (defender->as_monster()->has_blood())
     {
         blood_spray(defender->pos(), defender->as_monster()->type,
                     random_range(5, 10));
@@ -1352,7 +1352,7 @@ static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 static void _LEECH_melee_effects(item_def* /*item*/, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
-    if (attacker->is_player() && defender->can_bleed()
+    if (attacker->is_player() && defender->has_blood()
         && mondied && x_chance_in_y(dam, 729))
     {
         simple_monster_message(*(defender->as_monster()),

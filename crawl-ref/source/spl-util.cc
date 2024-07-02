@@ -1324,7 +1324,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
-        if (!you.can_bleed(temp))
+        if (!you.has_blood(temp))
             return "you have no blood to sublime.";
         break;
 

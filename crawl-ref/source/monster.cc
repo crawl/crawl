@@ -4335,7 +4335,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
         {
-            if (can_bleed())
+            if (has_blood())
                 blood_spray(pos(), type, amount / 5);
 
             if (!alive())
@@ -5117,7 +5117,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::can_bleed(bool /*temp*/) const
+bool monster::has_blood(bool /*temp*/) const
 {
     return mons_has_blood(type);
 }

@@ -267,6 +267,11 @@ namespace species
                      : get_species_def(species).verbose_fake_mutations;
     }
 
+    bool has_blood(species_type species)
+    {
+        return !bool(get_species_def(species).flags & SPF_NO_BLOOD);
+    }
+
     bool has_hair(species_type species)
     {
         return !bool(get_species_def(species).flags & (SPF_NO_HAIR | SPF_DRACONIAN));

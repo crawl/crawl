@@ -3739,7 +3739,7 @@ void bolt::affect_player_enchantment(bool resistible)
             int amt = damage.roll();
             internal_ouch(amt);
 
-            if (you.can_bleed())
+            if (you.has_blood())
                 blood_spray(you.pos(), MONS_PLAYER, amt / 5);
         }
 

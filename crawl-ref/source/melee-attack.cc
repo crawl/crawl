@@ -666,7 +666,7 @@ bool melee_attack::handle_phase_hit()
 
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
-        && defender->as_monster()->can_bleed()
+        && defender->as_monster()->has_blood()
         && wu_jian_has_momentum(wu_jian_attack))
     {
         blood_spray(defender->pos(), defender->as_monster()->type,
@@ -3483,7 +3483,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_BLOODZERK:
     {
-        if (!defender->can_bleed() || !attacker->can_go_berserk())
+        if (!defender->has_blood() || !attacker->can_go_berserk())
             break;
 
         monster* mon = attacker->as_monster();

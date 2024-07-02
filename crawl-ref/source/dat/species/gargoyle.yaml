@@ -6,6 +6,7 @@ difficulty: Simple
 difficulty_priority: 70
 species_flags:
   - SPF_NO_HAIR
+  - SPF_NO_BLOOD
 aptitudes:
   xp: 0
   hp: -2

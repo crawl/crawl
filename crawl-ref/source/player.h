@@ -720,7 +720,7 @@ public:
     bool can_safely_mutate(bool temp = true) const override;
     bool is_lifeless_undead(bool temp = true) const;
     bool can_polymorph() const override;
-    bool can_bleed(bool allow_tran = true) const override;
+    bool has_blood(bool temp = true) const override;
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
     bool is_motile() const;

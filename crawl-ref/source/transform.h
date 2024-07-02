@@ -219,13 +219,13 @@ public:
     /// a set of verbs to use based on damage done, when using UC in this form
     const FormAttackVerbs uc_attack_verbs;
 
-    /// has blood (used for sublimation and bloodsplatters)
-    const form_capability can_bleed;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
     //
     const bool changes_physiology;
 
+    /// Does this form have blood (used for sublimation and bloodsplatters)?
+    const form_capability has_blood;
     /// Does this form have hair?
     const form_capability has_hair;
     /// Does this form have bones?
@@ -320,9 +320,9 @@ bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
 bool form_changes_physiology(transformation form = you.form);
-bool form_can_bleed(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation form = you.form);
+bool form_has_blood(transformation form = you.form);
 bool form_has_hair(transformation form = you.form);
 bool form_has_bones(transformation form = you.form);
 bool form_has_feet(transformation form = you.form);

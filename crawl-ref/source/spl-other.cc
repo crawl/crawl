@@ -31,7 +31,7 @@ spret cast_sublimation_of_blood(int pow, bool fail)
 
     if (you.duration[DUR_DEATHS_DOOR])
         mpr("You can't draw power from your own body while in death's door.");
-    else if (!you.can_bleed())
+    else if (!you.has_blood())
     {
         if (you.has_mutation(MUT_VAMPIRISM))
             mpr("You don't have enough blood to draw power from your own body.");
