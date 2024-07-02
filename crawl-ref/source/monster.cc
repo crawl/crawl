@@ -5122,6 +5122,11 @@ bool monster::has_blood(bool /*temp*/) const
     return mons_has_blood(type);
 }
 
+bool monster::has_bones(bool /*temp*/) const
+{
+    return mons_skeleton(type);
+}
+
 bool monster::is_stationary() const
 {
     return mons_class_is_stationary(type);

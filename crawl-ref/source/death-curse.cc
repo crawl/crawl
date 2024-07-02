@@ -139,7 +139,7 @@ static void _curse_message(actor& target, actor* /*source*/,
     if (!silenced(you.pos()))
         messages.push_back("You hear strange and distant voices.");
 
-    if (player_has_bones())
+    if (you.has_bones())
         messages.push_back("Your bones ache.");
 
     mpr(*random_iterator(messages));

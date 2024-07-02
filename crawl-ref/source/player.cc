@@ -960,14 +960,6 @@ bool player_has_hair(bool temp, bool include_mutations)
     return species::has_hair(you.species);
 }
 
-bool player_has_bones(bool temp)
-{
-    if (temp && form_has_bones(you.form))
-        return true;
-
-    return species::has_bones(you.species);
-}
-
 bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.fishtail && temp)
@@ -7756,6 +7748,14 @@ bool player::has_blood(bool temp) const
         return true;
 
     return species::has_blood(you.species);
+}
+
+bool player::has_bones(bool temp) const
+{
+    if (temp && form_has_bones(you.form))
+        return true;
+
+    return species::has_bones(you.species);
 }
 
 bool player::can_drink(bool temp) const
