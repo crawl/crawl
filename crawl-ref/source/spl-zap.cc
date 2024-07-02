@@ -85,6 +85,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_GRAVITAS, ZAP_GRAVITAS },
     { SPELL_HOARFROST_BULLET, ZAP_HOARFROST_BULLET },
     { SPELL_GRAVE_CLAW, ZAP_GRAVE_CLAW },
+    { SPELL_UNLEASH_DESTRUCTION, ZAP_UNLEASH_DESTRUCTION },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },

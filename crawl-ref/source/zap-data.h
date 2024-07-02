@@ -2306,4 +2306,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_UNLEASH_DESTRUCTION,
+    "gout of destruction",
+    100,
+    new dicedef_calculator<3, 4, 2, 5>,
+    new tohit_calculator<10, 1, 7>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

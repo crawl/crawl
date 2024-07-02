@@ -851,6 +851,30 @@ no rings mutation
 Your hands are embedded into the controls for your grasping arms, leaving you
 with no place to wear magical rings without disastrous magical interference.
 %%%%
+# ------ Makhleb destruction flavours ------
+Gehenna destruction mutation
+
+Your Unleash Destruction ability is empowered by Gehenna. You are able to hurl
+bolts of magma insead of cold, and your bolts of fire can strip away their
+victims' fire resistance.
+%%%%
+Cocytus destruction mutation
+
+Your Unleash Destruction ability is empowered by Cocytus. You are able to hurl
+bolts of ice instead of fire, and your bolts of cold freeze victims solid,
+slowing their movement.
+%%%%
+Tartarus destruction mutation
+
+Your Unleash Destruction ability is empowered by Tartarus. You are able to hurl
+bolts of devastation which lower their victims willpower instead of lightning,
+and your bolts of negative energy are more powerful.
+%%%%
+Dis destruction mutation
+
+Your Unleash Destruction ability is empowered by Dis. You are able to hurl bolts
+of corrosive acid and metal splinters instead of negative energy.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

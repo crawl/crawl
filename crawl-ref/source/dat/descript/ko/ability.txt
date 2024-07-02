@@ -204,15 +204,6 @@ Finesse ability
 공격 속도를 정확도 하락 없이 큰 폭으로 향상한다. 단, 이와 같은 부자연스러운
 효과는 마법오염을 일으킬 수 있으므로 주의해야 한다.
 %%%%
-Minor Destruction ability
-
-대상이 된 적을, 임의의 파괴 마법으로 공격한다.
-%%%%
-Major Destruction ability
-
-대상을 파괴의 광선이나 폭발로 공격한다. 어떤 속성의 공격이 나갈지는 정할 수
-없다.
-%%%%
 Channel Energy ability
 
 마력을 조금 회복한다. 회복되는 양은 기도술의 영향을 받는다.

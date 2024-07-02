@@ -183,12 +183,10 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Makhleb
         {   { 1, "gain health from killing" },
-            { 2, ABIL_MAKHLEB_MINOR_DESTRUCTION,
-                 "harness Makhleb's destructive might" },
+            { 2, ABIL_MAKHLEB_DESTRUCTION,
+                 "unleash Makhleb's destructive might" },
             { 3, ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
                  "summon a lesser servant of Makhleb" },
-            { 4, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
-                 "hurl Makhleb's greater destruction" },
             { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,
                  "summon a greater servant of Makhleb" },
         },
@@ -2481,6 +2479,20 @@ static void _gain_piety_point()
                  && you.props[ORCIFICATION_LEVEL_KEY].get_int() < 2)
         {
             beogh_increase_orcification();
+        }
+
+        if (you_worship(GOD_MAKHLEB) && rank == 4
+            && !you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED)
+            && !you.has_mutation(MUT_MAKHLEB_COC_ALIGNED)
+            && !you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED)
+            && !you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
+        {
+            mutation_type mut = random_choose(MUT_MAKHLEB_GEH_ALIGNED,
+                                              MUT_MAKHLEB_COC_ALIGNED,
+                                              MUT_MAKHLEB_TAR_ALIGNED,
+                                              MUT_MAKHLEB_DIS_ALIGNED);
+
+            perma_mutate(mut, 1, "Makhleb's blessing");
         }
     }
 

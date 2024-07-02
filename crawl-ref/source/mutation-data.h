@@ -2594,6 +2594,41 @@ static const mutation_def mut_data[] =
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
 },
+
+// Makhleb-specific mutations
+
+{ MUT_MAKHLEB_GEH_ALIGNED, 0, 1, mutflag::good, false,
+  "Gehenna destruction",
+
+  {"You draw destruction from the endless fires of Gehenna.", "", ""},
+  {"You feel your soul grow hot with the fiery destruction of Gehenna.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_COC_ALIGNED, 0, 1, mutflag::good, false,
+  "Cocytus destruction",
+
+  {"You draw destruction from the frigid wastes of Cocytus.", "", ""},
+  {"You feel your soul grow cold with the frigid destruction of Cocytus.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_TAR_ALIGNED, 0, 1, mutflag::good, false,
+  "Tartarus destruction",
+
+  {"You draw destruction from the wailing grief of Tartarus.", "", ""},
+  {"You feel your soul grow tainted with the deathly destruction of Tartarus.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_DIS_ALIGNED, 0, 1, mutflag::good, false,
+  "Dis destruction",
+
+  {"You draw destruction from the ruthless spite of Dis.", "", ""},
+  {"You feel your soul grow bitter with the corrosive destruction of Dis.", "", ""},
+  {"", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

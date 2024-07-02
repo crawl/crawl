@@ -2806,6 +2806,8 @@ bool bolt::can_burn_trees() const
     case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
     case SPELL_HELLFIRE_MORTAR:
         return true;
+    case SPELL_UNLEASH_DESTRUCTION:
+        return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
     default:
         return false;
     }
@@ -5113,12 +5115,29 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_FLASH_FREEZE
              || origin_spell == SPELL_HOARFROST_BULLET
              || name == "blast of ice"
-             || origin_spell == SPELL_GLACIATE && !is_explosion)
+             || origin_spell == SPELL_GLACIATE && !is_explosion
+             || origin_spell == SPELL_UNLEASH_DESTRUCTION
+                && flavour == BEAM_COLD
+                && you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
     {
         if (!mon->has_ench(ENCH_FROZEN))
         {
             simple_monster_message(*mon, " is flash-frozen.");
             mon->add_ench(ENCH_FROZEN);
+        }
+    }
+
+    if (origin_spell == SPELL_UNLEASH_DESTRUCTION
+        && flavour == BEAM_FIRE
+        && you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
+    {
+        const int dur = 3 + div_rand_round(dmg, 3);
+        if (!mon->has_ench(ENCH_FIRE_VULN))
+        {
+            mprf("%s fire resistance burns away.",
+                mon->name(DESC_ITS).c_str());
+            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, agent(),
+                                      dur * BASELINE_DELAY));
         }
     }
 

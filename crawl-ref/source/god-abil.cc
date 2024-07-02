@@ -6843,3 +6843,98 @@ void jiyva_end_oozemancy()
         if (env.grid(*ri) == DNGN_SLIMY_WALL && is_temp_terrain(*ri))
             revert_terrain_change(*ri, TERRAIN_CHANGE_SLIME);
 }
+
+static bool _has_upgraded_destruction()
+{
+    return you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED)
+           || you.has_mutation(MUT_MAKHLEB_COC_ALIGNED)
+           || you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED)
+           || you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED);
+}
+
+spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
+{
+    // Since the actual beam is random, check with BEAM_MMISSILE.
+    // (Use a different spell as a proxy for whether this is penetrating or not)
+    if (!player_tracer(_has_upgraded_destruction() ? ZAP_SEARING_RAY
+                                                   : ZAP_MAGIC_DART,
+                        100, beam, beam.range))
+    {
+        return spret::abort;
+    }
+
+    fail_check();
+
+    zappy(ZAP_UNLEASH_DESTRUCTION, power, false, beam);
+    beam.origin_spell = SPELL_UNLEASH_DESTRUCTION;
+    if (_has_upgraded_destruction())
+        beam.pierce = true;
+
+    // Choose beam flavor based on what type of destruction we're wielding
+    if (you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
+        beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA, BEAM_ELECTRICITY, BEAM_NEG);
+    else if (you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
+        beam.flavour = random_choose(BEAM_ICE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
+    else if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
+        beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_DEVASTATION, BEAM_NEG);
+    else if (you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
+        beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_ACID, BEAM_FRAG);
+    else
+        beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
+
+    switch (beam.flavour)
+    {
+        default:
+        case BEAM_FIRE:
+            beam.name = "gout of fire";
+            beam.colour = RED;
+            break;
+
+        case BEAM_COLD:
+            beam.name = "flurry of cold";
+            beam.colour = BLUE;
+            break;
+
+        case BEAM_ELECTRICITY:
+            beam.name = "torrent of electricity";
+            beam.colour = LIGHTCYAN;
+            break;
+
+        case BEAM_NEG:
+            beam.name = "wail of negative energy";
+            beam.colour = DARKGREY;
+            if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
+                beam.damage.num = 5;
+            break;
+
+        case BEAM_LAVA:
+            beam.name = "gout of magma";
+            beam.colour = RED;
+            break;
+
+        case BEAM_ICE:
+            beam.name = "flurry of ice";
+            beam.colour = ETC_ICE;
+            break;
+
+        case BEAM_DEVASTATION:
+            beam.name = "bolt of devastation";
+            beam.colour = MAGENTA;
+            break;
+
+        case BEAM_ACID:
+            beam.name = "spray of acid";
+            beam.colour = YELLOW;
+            break;
+
+        case BEAM_FRAG:
+            beam.name = "flurry of shrapnel";
+            beam.colour = CYAN;
+            break;
+    }
+
+    bleed_for_makhleb(you);
+    beam.fire();
+
+    return spret::success;
+}

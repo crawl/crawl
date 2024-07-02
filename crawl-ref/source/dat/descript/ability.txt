@@ -337,20 +337,15 @@ Acquires a piece of armour from a choice of four. This blessing may only be
 redeemed once.
 %%%%
 # Makhleb
-Minor Destruction ability
+Unleash Destruction ability
 
-Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
+Channels a blast of hellish fire, cold, lightning, or negative energy at a
 targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
 Summons a minor demon. Failing to use this ability correctly will turn the
 demon hostile.
-%%%%
-Major Destruction ability
-
-Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
-the targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 

@@ -238,7 +238,8 @@ void okawaru_end_duel(bool kicked_out = false);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
 
-
 vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);
 void jiyva_end_oozemancy();
+
+spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);

@@ -3775,12 +3775,12 @@ static const struct spell_desc spelldata[] =
 
 // Dummy spell for the Makhleb ability.
 {
-    SPELL_MINOR_DESTRUCTION, "Minor Destruction",
+    SPELL_UNLEASH_DESTRUCTION, "Unleash Destruction",
     spschool::conjuration,
     spflag::dir_or_target | spflag::chaotic | spflag::needs_tracer,
     3,
     0,
-    5, 5,
+    LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_ERROR,
 },

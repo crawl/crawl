@@ -466,15 +466,12 @@ static vector<ability_def> &_get_ability_list()
 
 
         // Makhleb
-        { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
-            0, scaling_cost::fixed(1), 0, 5, {fail_basis::invo, 40, 5, 20},
+        { ABIL_MAKHLEB_DESTRUCTION, "Unleash Destruction",
+            0, 50, 0, LOS_MAX_RANGE, {fail_basis::invo, 20, 5, 20},
             abflag::dir_or_target },
         { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
             0, scaling_cost::fixed(4), 2, -1, {fail_basis::invo, 40, 5, 20},
             abflag::hostile },
-        { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
-            0, scaling_cost::fixed(6), generic_cost::range(0, 1), LOS_MAX_RANGE,
-            {fail_basis::invo, 60, 4, 25}, abflag::dir_or_target },
         { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
             0, scaling_cost::fixed(10), 5, -1, {fail_basis::invo, 90, 2, 5},
             abflag::hostile },
@@ -1381,6 +1378,11 @@ static int _beogh_smiting_power(bool allow_random = true)
     return 12 + skill_bump(SK_INVOCATIONS, 6, allow_random);
 }
 
+static int _makhleb_destruction_power()
+{
+    return you.skill_rdiv(SK_INVOCATIONS, 4, 3);
+}
+
 static int _hurl_damnation_power()
 {
     return 40 + you.experience_level * 6;
@@ -1405,7 +1407,6 @@ static string _ability_damage_string(ability_type ability)
     // Hep: idealise
     // Ignis: fiery armour
     // Kiku: unearth wretches
-    // Makhleb: minor destruction, major destruction
     // Ru: draw out power
     // Yred: fathomless shackles
     // Zin: vitalisation
@@ -1415,6 +1416,9 @@ static string _ability_damage_string(ability_type ability)
 
     switch (ability)
     {
+        case ABIL_MAKHLEB_DESTRUCTION:
+            return spell_damage_string(SPELL_UNLEASH_DESTRUCTION, false,
+                                       _makhleb_destruction_power());
         case ABIL_YRED_HURL_TORCHLIGHT:
             return spell_damage_string(SPELL_HURL_TORCHLIGHT, false,
                                        _yred_hurl_torchlight_power());
@@ -3334,29 +3338,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         break;
 
-    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-    {
-        int power = you.skill(SK_INVOCATIONS, 1)
-                    + random2(1 + you.skill(SK_INVOCATIONS, 1))
-                    + random2(1 + you.skill(SK_INVOCATIONS, 1));
-
-        // Since the actual beam is random, check with BEAM_MMISSILE.
-        if (!player_tracer(ZAP_MAGIC_DART, power, beam, beam.range))
-            return spret::abort;
-
-        fail_check();
-        beam.origin_spell = SPELL_MINOR_DESTRUCTION;
-
-        switch (random2(5))
-        {
-        case 0: zapping(ZAP_THROW_FLAME, power, beam); break;
-        case 1: zapping(ZAP_PAIN, power, beam); break;
-        case 2: zapping(ZAP_STONE_ARROW, power, beam); break;
-        case 3: zapping(ZAP_SHOCK, power, beam); break;
-        case 4: zapping(ZAP_BREATHE_ACID, power / 7, beam); break;
-        }
-        break;
-    }
+    case ABIL_MAKHLEB_DESTRUCTION:
+        return makhleb_unleash_destruction(_makhleb_destruction_power(), beam, fail);
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
@@ -3365,30 +3348,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                           20 + you.skill(SK_INVOCATIONS, 3),
                           GOD_MAKHLEB, 0, !fail);
         break;
-
-    case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    {
-        int power = you.skill(SK_INVOCATIONS, 2)
-                    + random2(1 + you.skill(SK_INVOCATIONS, 2))
-                    + random2(1 + you.skill(SK_INVOCATIONS, 2));
-
-        // Since the actual beam is random, check with BEAM_MMISSILE.
-        if (!player_tracer(ZAP_SEARING_RAY, power, beam, beam.range))
-            return spret::abort;
-
-        fail_check();
-        {
-            beam.origin_spell = SPELL_MAJOR_DESTRUCTION;
-            zap_type ztype =
-                random_choose(ZAP_BOLT_OF_FIRE,
-                              ZAP_LIGHTNING_BOLT,
-                              ZAP_BOLT_OF_MAGMA,
-                              ZAP_BOLT_OF_DRAINING,
-                              ZAP_CORROSIVE_BOLT);
-            zapping(ztype, power, beam);
-        }
-        break;
-    }
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
