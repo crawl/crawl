@@ -1323,20 +1323,8 @@ void tso_divine_shield()
     else
         mpr("Your divine shield is renewed.");
 
-    you.set_duration(DUR_DIVINE_SHIELD, max(you.duration[DUR_DIVINE_SHIELD],
-                                            random_range(20, 35)));
-
-    // Size of SH bonus.
-    you.attribute[ATTR_DIVINE_SHIELD] =
-        3 + you.skill_rdiv(SK_INVOCATIONS, 2, 5);
-}
-
-void tso_remove_divine_shield()
-{
-    mprf(MSGCH_DURATION, "Your divine shield fades away.");
-    you.duration[DUR_DIVINE_SHIELD] = 0;
-    you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    you.redraw_armour_class = true;
+    const int charges = 3 + you.skill_rdiv(SK_INVOCATIONS, 2, 5);
+    you.duration[DUR_DIVINE_SHIELD] = max(you.duration[DUR_DIVINE_SHIELD], charges);
 }
 
 void elyvilon_purification()

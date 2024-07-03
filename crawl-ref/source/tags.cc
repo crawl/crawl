@@ -3223,6 +3223,14 @@ static void _tag_read_you(reader &th)
             }
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_ENDLESS_DIVINE_SHIELD)
+    {
+        // Prevent players who upgraded with Divine Shield active from starting
+        // with potentially hundreds of stored blocks.
+        if (you.duration[DUR_DIVINE_SHIELD])
+            you.duration[DUR_DIVINE_SHIELD] = you.attribute[ATTR_DIVINE_SHIELD];
+    }
 #endif
 
 #if TAG_MAJOR_VERSION == 34

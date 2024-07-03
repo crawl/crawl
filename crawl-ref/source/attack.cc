@@ -88,8 +88,8 @@ bool attack::handle_phase_blocked()
     // Use up a charge of Divine Shield, if active.
     if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
     {
-        if (--you.attribute[ATTR_DIVINE_SHIELD] <= 0)
-            tso_remove_divine_shield();
+        if (--you.duration[DUR_DIVINE_SHIELD] <= 0)
+            mprf(MSGCH_DURATION, "Your divine shield fades away.");
     }
 
     return true;

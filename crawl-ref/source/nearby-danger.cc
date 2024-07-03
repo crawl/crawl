@@ -473,7 +473,6 @@ void revive()
     clear_trapping_net();
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
-    you.attribute[ATTR_DIVINE_SHIELD] = 0;
     if (you.form != you.default_form)
         return_to_default_form();
     you.clear_beholders();

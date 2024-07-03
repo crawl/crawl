@@ -245,7 +245,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_DIVINE_SHIELD:
     {
         inf.light_text = make_stringf("Shield (%d)",
-                                        you.attribute[ATTR_DIVINE_SHIELD]);
+                                        you.duration[DUR_DIVINE_SHIELD]);
     }
     break;
 
