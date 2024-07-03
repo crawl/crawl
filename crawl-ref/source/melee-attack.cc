@@ -694,12 +694,14 @@ bool melee_attack::handle_phase_hit()
     if (check_unrand_effects())
         return false;
 
+    if (damage_done > 0 || special_damage > 0)
+        apply_sign_of_ruin_effects();
+
     if (damage_done > 0)
     {
         apply_black_mark_effects();
         do_ooze_engulf();
         try_parry_disarm();
-        apply_sign_of_ruin_effects();
     }
 
     if (attacker->is_player())
