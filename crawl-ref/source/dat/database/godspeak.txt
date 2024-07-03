@@ -137,6 +137,23 @@ Xom suggests a refreshing change of pace.
 
 Xom tears open a few small holes in reality.
 %%%%
+Xom kind door ring
+
+A short distance around you seems to assume a strange safe solidity.
+
+Xom creates a safe adventurer enclosure.
+
+"Would you like some space to yourself, mortal?"
+%%%%
+Xom mean door ring
+
+Xom raises up and pulls in a makeshift [warmonger|duelist]'s arena.
+
+Xom locks you up as an exhibit to study.
+
+w:5
+Xom constructs another @player_genus@ Petting Zoo.
+%%%%
 ##################
 # Xom nastiness
 ##################

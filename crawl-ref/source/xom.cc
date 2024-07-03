@@ -1574,6 +1574,235 @@ static void _xom_harmless_flora(int /*sever*/)
         canned_msg(MSG_NOTHING_HAPPENS); // shouldn't be reached, and yet
 }
 
+// Can Xom reasonably convert a feature into interconnected doors?
+// Avoids altars, stairs, portals, and runed doors. Allow anywhere
+// diggable or otherwise walkable, and glassifies solid doors.
+static bool _xom_door_replaceable (dungeon_feature_type feat)
+{
+    return !feat_is_critical(feat)
+            && ((feat_has_solid_floor(feat)) || feat_is_diggable(feat)
+                || (feat_is_door(feat) && !feat_is_runed(feat)));
+}
+
+// Find a group of monsters in a certain range of the player,
+// then move them towards or away from the target, according to a cap.
+// Return how many were moved for further assessing how many more may be moved.
+static int _xom_count_and_move_group(int min_range, int max_range,
+                                      bool inwards, int cap = INT_MAX)
+{
+    int moved = 0;
+    vector<monster*> collectable;
+
+    for (radius_iterator ri(you.pos(), max_range, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (grid_distance(*ri, you.pos()) < min_range
+            || !monster_at(*ri)
+            || monster_at(*ri)->wont_attack())
+        {
+            continue;
+        }
+
+        collectable.push_back(monster_at(*ri));
+    }
+
+    shuffle_array(collectable);
+
+    for (monster *moving_mons : collectable)
+    {
+        if (moved == cap)
+            break;
+
+        coord_def empty;
+
+        if (inwards)
+        {
+            // Blink close a limited number of hostile enemies
+            // adjacent or one tile away.
+            if (!find_habitable_spot_near(you.pos(), mons_base_type(*moving_mons),
+                                          2, false, empty))
+            {
+                continue;
+            }
+
+            if (moving_mons->blink_to(empty, true))
+            {
+                simple_monster_message(*moving_mons, " is shoved forward by the hand of Xom!");
+                moving_mons->drain_action_energy();
+                behaviour_event(moving_mons, ME_DISTURB, nullptr, you.pos());
+                ++moved;
+            }
+        }
+        else
+        {
+            int placeable_count = 0;
+            coord_def spot;
+
+            // Xom can heavily relocate enemies as desired to make this ring,
+            // though teleporting them away by default would be more boring.
+
+            // First try to blink the monster somewhere the player can still see.
+            for (radius_iterator ri(moving_mons->pos(), 9, C_SQUARE, LOS_NO_TRANS, true);
+                 ri; ++ri)
+            {
+                // Only look for unoccupied viable spaces
+                // outside the entire door ring.
+                if (actor_at(*ri) || !monster_habitable_grid(moving_mons, env.grid(*ri))
+                    || grid_distance(*ri, you.pos()) < 6)
+                {
+                    continue;
+                }
+
+                if (one_chance_in(++placeable_count))
+                    spot = *ri;
+            }
+
+            // If that didn't work, try somewhere the player can't see.
+            if (spot.origin())
+            {
+                for (radius_iterator ri(moving_mons->pos(), 9, C_SQUARE, LOS_NO_TRANS, true);
+                    ri; ++ri)
+                {
+                    if (actor_at(*ri) || !monster_habitable_grid(moving_mons, env.grid(*ri))
+                        || grid_distance(*ri, you.pos()) < 6)
+                    {
+                        continue;
+                    }
+
+                    if (one_chance_in(++placeable_count))
+                        spot = *ri;
+                }
+            }
+
+            // If that still didn't work, just teleport the monster.
+            if (spot.origin())
+                moving_mons->teleport(true);
+            else if (moving_mons->blink_to(spot, true))
+            {
+                moving_mons->drain_action_energy();
+                ++moved;
+            }
+        }
+    }
+
+    return moved;
+}
+
+// Have Xom make an huge, slightly distant ring of clear, disconnected doors,
+// and move enemies in or out according to Xom's mood.
+static void _xom_door_ring(bool good)
+{
+    coord_def place;
+    bool created = false;
+    int total_moved = 0;
+    int dug = 0;
+    const int min_radius = 3;
+    const int max_radius = 5;
+
+    dungeon_feature_type feat = DNGN_CLOSED_CLEAR_DOOR;
+
+    if (good)
+    {
+        // If meant to be good, shove out all adjacent hostile enemies.
+        // Split to prioritize inside the ring are moved first
+        // before moving those where the doors will appear.
+        total_moved += _xom_count_and_move_group(1, min_radius - 1, false);
+        total_moved += _xom_count_and_move_group(min_radius, max_radius, false);
+    }
+    else
+    {
+        // If meant to be bad, shove in visible enemies closer to the player,
+        // capped by XL and how many are already adjacent.
+        // Once more, prioritize monsters in the closer ring's range first.
+        int soft_cap = div_rand_round(you.experience_level, 6);
+        int inner_cap = _xom_feels_nasty() ? 8 : 2 + random_range(1, soft_cap);
+
+        int moved = _xom_count_and_move_group(min_radius, max_radius,
+                                              true, inner_cap);
+        total_moved += moved;
+        inner_cap -= moved;
+
+        if (you.normal_vision >= max_radius + 1 && inner_cap > 0)
+        {
+            total_moved += _xom_count_and_move_group(max_radius + 1, you.normal_vision,
+                                                     true, inner_cap);
+        }
+
+        total_moved += _xom_count_and_move_group(min_radius, max_radius, false);
+    }
+
+    // Either way, place the door ring round the player in a radius of 3 to 5.
+    // It won't be perfect- skipping altars and stairs, rarely failing to
+    // find a better spot for a monster- but it's more than enough for Xom.
+    for (radius_iterator ri(you.pos(), max_radius, C_SQUARE, LOS_NONE); ri; ++ri)
+    {
+        if (in_bounds(*ri) && !actor_at(*ri)
+            && grid_distance(*ri, you.pos()) >= min_radius
+            && grid_distance(*ri, you.pos()) <= max_radius
+            && _xom_door_replaceable(env.grid(*ri)))
+        {
+            if (cloud_at(*ri))
+                delete_cloud(*ri);
+
+            // For later messaging's sake, track how much is being dug out.
+            if (feat_is_diggable(env.grid(*ri)))
+                dug++;
+
+            dungeon_terrain_changed(*ri, feat);
+
+            map_wiz_props_marker *marker = new map_wiz_props_marker(*ri);
+            marker->set_property("connected_exclude", "true");
+            env.markers.add(marker);
+
+            created = true;
+        }
+    }
+
+    if (created)
+    {
+        env.markers.clear_need_activate();
+        string message;
+
+        if (dug > 60)
+            message = "The dungeon churns and warps with monstrous intensity.";
+        else if (dug > 30)
+            message = "The dungeon churns and warps violently around you.";
+        else
+            message = "The dungeon churns and shimmers intensely around you.";
+
+        mprf(good ? MSGCH_GOD : MSGCH_WARN, "%s", message.c_str());
+
+        string note = "";
+        if (good)
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("kind door ring").c_str());
+            note = make_stringf("made a ring of doors, pushed %d %s out",
+                                total_moved, total_moved != 1 ? "others"
+                                                              : "other");
+        }
+        else
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("mean door ring").c_str());
+            note = make_stringf("made a ring of doors, pulled %d %s in",
+                                total_moved, total_moved != 1 ? "others"
+                                                              : "other");
+        }
+
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
+static void _xom_good_door_ring(int /*sever*/)
+{
+    _xom_door_ring(true);
+}
+
+static void _xom_bad_door_ring(int /*sever*/)
+{
+    _xom_door_ring(false);
+}
+
 static void _xom_give_mutations(bool good)
 {
     if (!you.can_safely_mutate())
@@ -1930,7 +2159,7 @@ static void _xom_change_scenery(int /*sever*/)
         noisy(10, you.pos());
 }
 
-/// Xom hurls fireballs at your foes! Or, possibly, 'fireballs'.
+/// Xom hurls liquid fireballs at your foes! Or, possibly, 'fireballs'.
 static void _xom_destruction(int sever, bool real)
 {
     bool rc = false;
@@ -3445,6 +3674,42 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
+    if (tension > random2(5) && x_chance_in_y(15, sever))
+    {
+        // Assess each if there's enough room to meaningfully raise a door ring,
+        // if there's adjacent hostiles to move so it does anything tactically,
+        // and if there's at least visible room to move them to.
+        int adjacent_hostiles = 0;
+        int replaceable = 0;
+        int spare_space_out = 0;
+        for (radius_iterator ri(you.pos(), 8, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+        {
+            if (grid_distance(*ri, you.pos()) <= 2
+              && monster_at(*ri) && !monster_at(*ri)->wont_attack())
+            {
+                adjacent_hostiles++;
+            }
+            else if (grid_distance(*ri, you.pos()) >= 6 && in_bounds(*ri)
+                     && feat_has_solid_floor(env.grid(*ri)))
+            {
+                spare_space_out++;
+            }
+        }
+
+        for (radius_iterator ri(you.pos(), 5, C_SQUARE, LOS_NONE); ri; ++ri)
+        {
+            if (grid_distance(*ri, you.pos()) >= 3
+              && in_bounds(*ri)
+              && _xom_door_replaceable(env.grid(*ri)))
+            {
+                replaceable++;
+            }
+        }
+
+        if (replaceable > 30 && adjacent_hostiles - 1 < spare_space_out)
+            return XOM_GOOD_DOOR_RING;
+    }
+
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
@@ -3597,6 +3862,47 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     {
         return XOM_BAD_CHAOS_CLOUD;
     }
+    if (tension > random2(5) && x_chance_in_y(24, sever))
+    {
+        // Calculate if there's enough room to raise a meaningful door ring
+        // and also if there's enough hostiles present either
+        // already adjacent or near enough to blink inwards.
+        int adjacent_hostiles = 0;
+        int moveable_hostiles = 0;
+        int adjacent_space = 0;
+        int replaceable = 0;
+        int adjascency_cap = 2 + div_rand_round(you.experience_level, 6);
+
+        for (radius_iterator ri(you.pos(), you.current_vision, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+        {
+            if (monster_at(*ri) && !monster_at(*ri)->wont_attack())
+                if (grid_distance(*ri, you.pos()) <= 2)
+                    adjacent_hostiles++;
+                else
+                    moveable_hostiles++;
+            else if (feat_has_solid_floor(env.grid(*ri)))
+                adjacent_space++;
+        }
+
+        for (radius_iterator ri(you.pos(), 5, C_SQUARE, LOS_NONE); ri; ++ri)
+        {
+            if (grid_distance(*ri, you.pos()) >= 3
+              && in_bounds(*ri)
+              && _xom_door_replaceable(env.grid(*ri)))
+            {
+                replaceable++;
+            }
+        }
+
+        if (replaceable > 30 && adjacent_hostiles <= adjascency_cap
+            && (moveable_hostiles <= adjacent_space && moveable_hostiles >= 2
+            || (adjacent_hostiles >= 2)))
+        {
+            return XOM_BAD_DOOR_RING;
+        }
+    }
+
+
     if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS)
         && _allow_xom_banishment())
     {
@@ -4090,6 +4396,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_LIGHTNING, { "lightning", _xom_throw_divine_lightning }},
     { XOM_GOOD_SCENERY, { "change scenery", _xom_change_scenery }},
     { XOM_GOOD_FLORA_RING, {"flora ring", _xom_harmless_flora }},
+    { XOM_GOOD_DOOR_RING, {"good door ring enclosure", _xom_good_door_ring }},
     { XOM_GOOD_SNAKES, { "snakes to sticks", _xom_snakes_to_sticks }},
     { XOM_GOOD_DESTRUCTION, { "mass fireball", _xom_real_destruction }},
     { XOM_GOOD_FAKE_DESTRUCTION, { "fake fireball", _xom_fake_destruction }},
@@ -4115,6 +4422,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_MOVING_STAIRS, { "moving stairs", _xom_moving_stairs, 20}},
     { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs,
                               30}},
+    { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring }},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
