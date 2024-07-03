@@ -3231,6 +3231,13 @@ static void _tag_read_you(reader &th)
         if (you.duration[DUR_DIVINE_SHIELD])
             you.duration[DUR_DIVINE_SHIELD] = you.attribute[ATTR_DIVINE_SHIELD];
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_NEGATIVE_DIVINE_SHIELD)
+    {
+        // Fix bugged negative charges.
+        if (you.duration[DUR_DIVINE_SHIELD] < 0)
+            you.duration[DUR_DIVINE_SHIELD] = 0;
+    }
 #endif
 
 #if TAG_MAJOR_VERSION == 34
