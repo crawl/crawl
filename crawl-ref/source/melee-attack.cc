@@ -271,13 +271,16 @@ bool melee_attack::handle_phase_blocked()
     if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
         && coinflip())
     {
-        if (!attacker->as_monster()->has_ench(ENCH_BLIND))
+        // If the monster is unblindable, making them blind will fail,
+        // so don't display a message.
+        const bool need_msg = !attacker->as_monster()->has_ench(ENCH_BLIND);
+        if (attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                                        random_range(3, 5) * BASELINE_DELAY))
+            && need_msg)
         {
             mprf("%s is struck blind by the light of your shield.",
                     attacker->name(DESC_THE).c_str());
         }
-        attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
-                                            random_range(3, 5) * BASELINE_DELAY));
     }
 
     return attack::handle_phase_blocked();
