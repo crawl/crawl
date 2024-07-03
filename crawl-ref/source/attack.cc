@@ -86,11 +86,8 @@ bool attack::handle_phase_blocked()
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
     // Use up a charge of Divine Shield, if active.
-    if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
-    {
-        if (--you.duration[DUR_DIVINE_SHIELD] <= 0)
-            mprf(MSGCH_DURATION, "Your divine shield fades away.");
-    }
+    if (defender->is_player())
+        tso_expend_divine_shield_charge();
 
     return true;
 }

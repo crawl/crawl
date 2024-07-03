@@ -32,6 +32,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -3465,8 +3466,7 @@ bool bolt::misses_player()
             you.shield_block_succeeded(agent());
 
             // Use up a charge of Divine Shield, if active.
-            if (you.duration[DUR_DIVINE_SHIELD] && --you.duration[DUR_DIVINE_SHIELD] <= 0)
-                mprf(MSGCH_DURATION, "Your divine shield fades away.");
+            tso_expend_divine_shield_charge();
 
             return true;
         }

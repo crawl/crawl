@@ -1327,6 +1327,15 @@ void tso_divine_shield()
     you.duration[DUR_DIVINE_SHIELD] = max(you.duration[DUR_DIVINE_SHIELD], charges);
 }
 
+void tso_expend_divine_shield_charge()
+{
+    if (you.duration[DUR_DIVINE_SHIELD] && --you.duration[DUR_DIVINE_SHIELD] <= 0)
+    {
+        mprf(MSGCH_DURATION, "Your divine shield fades away.");
+        you.duration[DUR_DIVINE_SHIELD] = 0;
+    }
+}
+
 void elyvilon_purification()
 {
     mpr("You feel purified!");
