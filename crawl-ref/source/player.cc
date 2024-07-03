@@ -4922,12 +4922,16 @@ void barb_player(int turns, int pow)
 }
 
 /**
- * Players are rather more susceptible to dazzling: only vine stalkers
- * and trees are immune.
+ * Players are rather more susceptible to dazzling: only plant holiness
+ * ones like vine stalkers, trees, and fungi are immune.
  */
 bool player::can_be_dazzled() const
 {
-    return !(you.holiness() & MH_PLANT);
+    // We can't actually check for plant holiness here, since players
+    // don't get it. Check for the species and forms directly.
+    return !(you.species == SP_VINE_STALKER
+             || you.form == transformation::tree
+             || you.form == transformation::fungus);
 }
 
 /**
@@ -6914,11 +6918,13 @@ bool player::res_torment() const
     return get_form()->res_neg() == 3
            || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
-    // This should probably be (you.holiness & MH_PLANT), but treeform
-    // doesn't currently make you a plant, and I suspect changing that
-    // would cause other bugs. (For example, being able to wield holy
-    // weapons as a demonspawn & keep them while untransformed?)
+    // This should probably be (you.holiness & MH_PLANT), but
+    // transforming doesn't currently make you a plant, and I suspect
+    // changing that would cause other bugs. (For example, being able
+    // to wield holy weapons as a demonspawn in treeform & keep them
+    // while untransformed?)
            || you.form == transformation::tree
+           || you.form == transformation::fungus
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
 #endif

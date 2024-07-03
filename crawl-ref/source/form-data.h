@@ -329,6 +329,7 @@ static const form_entry formdata[] =
     "sporulate", -8, "hypha", "", "release spores on", "flesh",
     { { "", "You are tiny and evasive." },
       { "spores", "Your melee attacks release spores that confuse breathing creatures." },
+      { "torment immunity", "You are immune to unholy pain and torment." },
     }, // rPois, no grasping added separately
     { { "terrified", "You become terrified and freeze when enemies are visible." },
       { "no casting", "You cannot cast spells." },
