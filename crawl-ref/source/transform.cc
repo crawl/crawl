@@ -123,6 +123,7 @@ Form::Form(const form_entry &fe)
       changes_physiology(fe.changes_physiology),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
+      has_eyes(fe.has_eyes),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
@@ -1262,6 +1263,24 @@ bool form_has_feet(transformation form)
         return false;
     else
         return species::has_feet(you.species);
+}
+
+/**
+ * Does this form have eyes?
+ *
+ * @param form      The form in question.
+ * @return          Whether the form has eyes.
+ */
+bool form_has_eyes(transformation form)
+{
+    form_capability result = get_form(form)->has_eyes;
+
+    if (result == FC_ENABLE)
+        return true;
+    else if (result == FC_FORBID)
+        return false;
+    else
+        return species::has_eyes(you.species);
 }
 
 static set<equipment_type>

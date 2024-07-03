@@ -4,6 +4,8 @@ name: Vine Stalker
 short_name: VS
 difficulty: Advanced
 difficulty_priority: 90
+species_flags:
+  - SPF_NO_EYES
 aptitudes:
   xp: 0
   hp: -3

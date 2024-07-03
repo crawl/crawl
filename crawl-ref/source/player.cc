@@ -975,6 +975,20 @@ bool player_has_feet(bool temp, bool include_mutations)
     return species::has_feet(you.species);
 }
 
+bool player_has_eyes(bool temp, bool include_mutations)
+{
+    if (include_mutations &&
+        you.get_mutation_level(MUT_EYEBALLS, temp))
+    {
+        return true;
+    }
+
+    if (temp && form_has_eyes(you.form))
+        return true;
+
+    return species::has_eyes(you.species);
+}
+
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {
@@ -4922,16 +4936,12 @@ void barb_player(int turns, int pow)
 }
 
 /**
- * Players are rather more susceptible to dazzling: only plant holiness
- * ones like vine stalkers, trees, and fungi are immune.
+ * Players are rather more susceptible to dazzling: only those with no
+ * eyes are immune.
  */
 bool player::can_be_dazzled() const
 {
-    // We can't actually check for plant holiness here, since players
-    // don't get it. Check for the species and forms directly.
-    return !(you.species == SP_VINE_STALKER
-             || you.form == transformation::tree
-             || you.form == transformation::fungus);
+    return player_has_eyes();
 }
 
 /**
