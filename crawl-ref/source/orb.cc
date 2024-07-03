@@ -100,3 +100,12 @@ void start_orb_run(game_chapter chapter, const char* message)
     xom_is_stimulated(200, XM_INTRIGUED);
     invalidate_agrid(true);
 }
+
+void orb_complain_about_being_moved(coord_def pos)
+{
+    fake_noisy(30, pos);
+    orb_pickup_noise(pos, 30,
+        "The Orb shrieks as it is dislodged from its rightful place!",
+        "The Orb lets out a furious burst of light as it is dislodged from its rightful place!");
+    start_orb_run(CHAPTER_ANGERED_PANDEMONIUM, "Now pick up the Orb and get out of here!");
+}

@@ -39,6 +39,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
+#include "orb.h"
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
@@ -1070,6 +1071,12 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     {
         int index = item.index();
         move_item_to_grid(&index, np);
+
+        // Since some methods of shoving items can be gamed, make the orb get
+        // sulky whenever it's moved at all.
+        if (item_is_orb(item))
+            orb_complain_about_being_moved(pos);
+
         return true;
     }
     return false;
