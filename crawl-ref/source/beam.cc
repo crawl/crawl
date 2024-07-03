@@ -3465,7 +3465,7 @@ bool bolt::misses_player()
             you.shield_block_succeeded(agent());
 
             // Use up a charge of Divine Shield, if active.
-            if (--you.duration[DUR_DIVINE_SHIELD] <= 0)
+            if (you.duration[DUR_DIVINE_SHIELD] && --you.duration[DUR_DIVINE_SHIELD] <= 0)
                 mprf(MSGCH_DURATION, "Your divine shield fades away.");
 
             return true;
