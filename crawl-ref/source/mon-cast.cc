@@ -8284,7 +8284,7 @@ static void _siren_sing(monster* mons, bool avatar)
         const char * const song_adj = already_mesmerised ? "its luring"
                                                          : "a haunting";
         const string song_desc = make_stringf(" chants %s song.", song_adj);
-        simple_monster_message(*mons, song_desc.c_str(), spl);
+        simple_monster_message(*mons, song_desc.c_str(), false, spl);
     }
     else
     {
