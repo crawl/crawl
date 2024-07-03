@@ -3408,7 +3408,7 @@ bool bolt::misses_player()
         && you.shielded()
         && !you.shield_exhausted()
         && !aimed_at_feet
-        && SH > 0)
+        && (SH > 0 || you.duration[DUR_DIVINE_SHIELD]))
     {
         bool blocked = false;
         if (hit == AUTOMATIC_HIT)
@@ -3432,7 +3432,9 @@ bool bolt::misses_player()
             blocked = testhit < block;
         }
 
-        if (blocked)
+        // Divine shield only blocks conventionally blockable things, even if
+        // the player is using the Warlock's Mirror.
+        if (blocked || (you.duration[DUR_DIVINE_SHIELD] || is_blockable()))
         {
             const string refl_name = name.empty() &&
                                      origin_spell != SPELL_NO_SPELL ?
@@ -3461,6 +3463,11 @@ bool bolt::misses_player()
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
+
+            // Use up a charge of Divine Shield, if active.
+            if (--you.duration[DUR_DIVINE_SHIELD] <= 0)
+                mprf(MSGCH_DURATION, "Your divine shield fades away.");
+
             return true;
         }
 
