@@ -4384,6 +4384,11 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
         return false;
 
+    // Don't offer to sacrifice an eye for players with no eyes (not counting
+    // forms or mutations).
+    if (mut == MUT_MISSING_EYE && !player_has_eyes(false, false))
+        return false;
+
     return true;
 }
 

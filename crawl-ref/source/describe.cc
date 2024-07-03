@@ -1079,7 +1079,7 @@ static string _describe_demon(const string& name, bool flying, colour_t colour)
         " It moves in a series of hideous convulsions.",
         " It moves with an unearthly grace.",
         " It leaves a glistening oily trail.",
-        " It shimmers before your eyes.",
+        " It shimmers before you.",
         " It is surrounded by a brilliant glow.",
         " It radiates an aura of extreme power.",
         " It seems utterly heartbroken.",

@@ -389,7 +389,7 @@ static const mutation_def mut_data[] =
 { MUT_ACUTE_VISION, 2, 1, mutflag::good, false,
   "see invisible",
 
-  {"You have supernaturally acute eyesight. (SInv)", "", ""},
+  {"You have supernaturally acute vision. (SInv)", "", ""},
   {"Your vision sharpens.", "", ""},
   {"Your vision seems duller.", "", ""},
 
