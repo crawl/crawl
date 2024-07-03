@@ -473,6 +473,7 @@ void melee_attack::apply_sign_of_ruin_effects()
                 {
                     defender->as_monster()->add_ench(mon_enchant(ENCH_BLIND, 1, attacker,
                                                     random_range(5, 8) * BASELINE_DELAY));
+                    simple_monster_message(*defender->as_monster(), " is struck blind.");
                 }
                 else
                     blind_player(random_range(5, 8));
