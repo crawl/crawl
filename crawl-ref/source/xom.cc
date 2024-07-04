@@ -2372,8 +2372,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    // Don't count mutation-based eyes that aren't left/right ones here.
-    if (player_has_eyes(true, false))
+    if (player_has_eyes())
     {
         string str =_get_xom_speech(
                 you.get_mutation_level(MUT_MISSING_EYE) ? "one eye"
