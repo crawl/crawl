@@ -177,7 +177,7 @@ Xom feature deep water
 
 @Xom feature shallow water@
 
-From the corner of your eye, you spot something lurking in @the_feature@.
+Off to the side, you spot something lurking in @the_feature@.
 %%%%
 Xom feature blood
 
