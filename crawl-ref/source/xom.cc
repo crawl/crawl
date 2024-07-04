@@ -2221,6 +2221,43 @@ static item_def* _xom_get_random_worn_ring()
     return worn_rings[random2(worn_rings.size())];
 }
 
+static string _xom_get_random_body_part()
+{
+    vector<string> body_parts;
+
+    string hands = you.hand_name(true);
+    body_parts.push_back(hands);
+
+    string arms = you.arm_name(true);
+    body_parts.push_back(arms);
+
+    if (player_has_feet())
+    {
+        string feet = you.foot_name(true);
+        body_parts.push_back(feet);
+    }
+
+    if (you.has_blood())
+        body_parts.push_back("blood");
+
+    if (you.has_bones())
+        body_parts.push_back("bones");
+
+    if (player_has_ears())
+        body_parts.push_back("ears");
+
+    if (player_has_eyes())
+    {
+        body_parts.push_back(
+            you.get_mutation_level(MUT_MISSING_EYE) ? "eye" : "eyes");
+    }
+
+    if (player_has_hair())
+        body_parts.push_back("hair");
+
+    return body_parts[random2(body_parts.size())];
+}
+
 static void _xom_pseudo_miscast(int /*sever*/)
 {
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "silly message"), true);
@@ -2527,6 +2564,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
         str = priority[random2(priority.size())];
     else
         str = messages[random2(messages.size())];
+
+    if (str.find("@random_body_part@") != string::npos)
+    {
+        str = replace_all(str, "@random_body_part@",
+                          _xom_get_random_body_part());
+    }
 
     str = maybe_pick_random_substring(str);
     mpr(str);

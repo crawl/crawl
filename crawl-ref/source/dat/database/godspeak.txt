@@ -503,9 +503,7 @@ Your magic slithers out of your reeling mind!
 
 Your power and thoughts are overwhelmed by magic-eaters manifest!
 
-# TODO: implement form / species has_eyes / has_ears functions
-# to go with has_blood, has_hair, has_bones and has_feet, then
-# have your magic rip itself out of those also.
+Your magic rips itself out through your @random_body_part@!
 %%%%
 Xom banishment
 
