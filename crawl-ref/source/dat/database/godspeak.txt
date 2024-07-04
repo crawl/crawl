@@ -315,6 +315,12 @@ A monocle briefly appears over one of your eyes.
 
 An eyepatch briefly covers one of your eyes.
 %%%%
+Xom ears
+
+Your ears flap wildly.
+
+Your ears briefly grow points.
+%%%%
 Xom hair
 
 Your eyebrows briefly feel incredibly bushy.

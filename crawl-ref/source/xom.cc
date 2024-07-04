@@ -2380,6 +2380,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    if (player_has_ears())
+    {
+        string str =_get_xom_speech("ears");
+        messages.push_back(str);
+    }
+
     if (player_has_hair())
     {
         string str = _get_xom_speech("hair");
