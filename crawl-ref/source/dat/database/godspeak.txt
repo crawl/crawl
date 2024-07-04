@@ -319,7 +319,7 @@ Xom ears
 
 Your ears flap wildly.
 
-Your ears briefly grow points.
+Your ears briefly glow @any_glowing_colour@.
 %%%%
 Xom hair
 
