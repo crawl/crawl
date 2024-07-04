@@ -226,8 +226,8 @@ function general_item_setup(e)
     storm dragon scales plus:8 good_item ident:all w:5 /\
     shadow dragon scales plus:12 ident:all w:5 /\
     shadow dragon scales plus:8 good_item ident:all w:5 /\
-    gold dragon scales plus:14 ident:all /\
-    gold dragon scales plus:10 good_item ident:all /\
+    golden dragon scales plus:14 ident:all /\
+    golden dragon scales plus:10 good_item ident:all /\
     pair of gloves plus:4 ident:all /\
     pair of gloves plus:2 good_item ident:all /\
     pair of boots plus:4 ident:all /\
@@ -284,7 +284,7 @@ function general_item_setup(e)
     quicksilver dragon scales ident:all w:5 /\
     storm dragon scales plus:6 ident:all w:5 /\
     shadow dragon scales plus:6 ident:all w:5 /\
-    gold dragon scales plus:8 ident:all /\
+    golden dragon scales plus:8 ident:all /\
     pair of gloves plus:2 ident:all /\
     pair of gloves plus:0 good_item ident:all /\
     pair of boots plus:2 ident:all /\
@@ -433,7 +433,7 @@ function armoury_setup(e)
           acid dragon scales plus:2 ident:all /\
           storm dragon scales plus:3 ident:all w:5 /\
           shadow dragon scales plus:3 ident:all w:5 /\
-          gold dragon scales plus:2 ident:all /\
+          golden dragon scales plus:2 ident:all /\
           tower shield plus:1 ident:all /\
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")

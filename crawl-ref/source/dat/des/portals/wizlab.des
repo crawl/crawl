@@ -1185,7 +1185,7 @@ KITEM:      | = scroll of acquirement q:1 ident:type / \
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
 KITEM:      | = granite talisman randart artprops:Int:6&Stlth:1 / \
-                gold dragon scales
+                golden dragon scales
 :           else
 KITEM:      % = any / star_item w:2
 KITEM:      * = star_item / superb_item w:2

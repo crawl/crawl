@@ -728,7 +728,7 @@ KITEM:    B = plate armour mundane ident:all plus:5, \
               ice dragon scales mundane ident:all plus:5, \
               storm dragon scales mundane ident:all plus:5, \
               shadow dragon scales mundane ident:all plus:5, \
-              gold dragon scales mundane ident:all plus:5, \
+              golden dragon scales mundane ident:all plus:5, \
               crystal plate armour mundane ident:all plus:5
 KITEM:    C = buckler mundane ident:all plus:3, \
               kite shield mundane ident:all plus:3, \

@@ -103,7 +103,7 @@
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
        "giant spiked club", "book of geomancy", "granite talisman",
-       "glaive", "gold dragon scales", "grand grimoire", "great mace",
+       "glaive", "golden dragon scales", "grand grimoire", "great mace",
        "great sword", "pair of gloves", "great wizards, vol. ii",
        "great wizards, vol. vii" }
 

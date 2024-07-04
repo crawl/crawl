@@ -646,7 +646,7 @@ KMONS:   p = dancing weapon ; rapier | triple sword | executioner's axe | \
                giant club | giant spiked club
 KMONS:   q = animated armour ; plate armour | crystal plate armour | \
                pearl dragon scales | shadow dragon scales | \
-               storm dragon scales | gold dragon scales
+               storm dragon scales | golden dragon scales
 KMONS:   r = walking crystal tome / walking divine tome / \
              walking earthen tome / walking frostbound tome
 KFEAT:   P = weapon shop
@@ -1255,7 +1255,7 @@ KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
              damaged ego:none crystal plate armour | \
              damaged ego:none barding | \
              damaged ego:none pearl dragon scales | \
-             damaged ego:none gold dragon scales
+             damaged ego:none golden dragon scales
 MAP
 S
 ENDMAP
@@ -1720,7 +1720,7 @@ WEIGHT: 5
   local scales = { "steam dragon scales", "acid dragon scales",
     "swamp dragon scales", "fire dragon scales", "ice dragon scales",
     "pearl dragon scales", "shadow dragon scales", "storm dragon scales",
-    "gold dragon scales", "quicksilver dragon scales" }
+    "golden dragon scales", "quicksilver dragon scales" }
 
   for i, sc in ipairs(scales) do
      if crawl.coinflip() then

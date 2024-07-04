@@ -372,13 +372,13 @@ glaive
 
 Une hampe avec une grande et lourde lame au bout.
 %%%%
-gold dragon scales
+golden dragon scales
 
 Une armure magique faite des écailles d'un dragon d'or. C'est la plus lourdes
 des armures draconiques, mais elle protège son porteur du poison, du feu, et du
 froid.
 %%%%
-gold dragon hide
+golden dragon hide
 
 La peau écailleuse d'un dragon d'or. Elle peut être façonnée pour en faire une
 véritable armure, mais même sous cette forme brute elle protège du poison, du

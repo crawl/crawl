@@ -996,7 +996,7 @@ local medium_scales = "swamp dragon scales good_item" ..
     " / ice dragon scales good_item / quicksilver dragon scales" ..
     " / pearl dragon scales good_item"
 local heavy_scales = "storm dragon scales / shadow dragon scales" ..
-    " / gold dragon scales"
+    " / golden dragon scales"
 local heavy_armour = "scale mail good_item w:50 / chain mail good_item w:50" ..
     " / plate armour good_item w:50 / crystal plate armour good_item"
 

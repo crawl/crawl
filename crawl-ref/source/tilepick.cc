@@ -2661,8 +2661,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_SHADOW_DRAGON_ARMOUR:
         return TILE_ARM_SHADOW_DRAGON_ARMOUR;
 
-    case ARM_GOLD_DRAGON_ARMOUR:
-        return TILE_ARM_GOLD_DRAGON_ARMOUR;
+    case ARM_GOLDEN_DRAGON_ARMOUR:
+        return TILE_ARM_GOLDEN_DRAGON_ARMOUR;
 
     case ARM_PEARL_DRAGON_ARMOUR:
         return TILE_ARM_PEARL_DRAGON_ARMOUR;
