@@ -320,6 +320,8 @@ Xom ears
 Your ears flap wildly.
 
 Your ears wiggle.
+
+Steam briefly shoots from your ears!
 %%%%
 Xom hair
 
