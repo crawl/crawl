@@ -1485,7 +1485,7 @@ goblin sharper
 A goblin newly converted to Nemelex Xobeh. It's still learning about all the
 cards, and, thankfully, isn't inclined to use them against you.
 %%%%
-golden dragon
+gold dragon
 
 A great winged dragon covered in shining golden scales. Legends say that its
 blood runs both hot and cold, and is venomous to boot.

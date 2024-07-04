@@ -77,7 +77,7 @@ function base_monster_setup(e)
            profane servitor / soul eater / sin beast / cherub / apis / ophan /\
            balrug / green death / blizzard demon / deep elf blademaster /\
            deep elf master archer / war gargoyle")
-  e.kmons("E = lich / tentacled monstrosity / golden dragon /\
+  e.kmons("E = lich / tentacled monstrosity / gold dragon /\
            iron dragon / quicksilver dragon / titan / acid blob /\
            azure jelly / golden eye / ancient lich w:5 /\
            rockslime / reaper / royal mummy w:3 / curse toe / ghost moth /\
@@ -145,7 +145,7 @@ function base_monster_setup(e)
            storm dragon / swamp drake / lindwurm / rime drake /\
            shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
-           golden dragon")
+           gold dragon")
   e.kmons("Y = base draconian")
   e.kmons("Z = nonbase draconian")
   e.subst("1 = A:30 H:2")
@@ -2042,7 +2042,7 @@ KMONS:  D = lich
 KMONS:  e = hydra w:20 / swamp dragon / acid dragon / steam dragon /\
         catoblepas / dire elephant / rime drake / lindwurm / komodo dragon /\
         basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
-KMONS:  E = golden dragon
+KMONS:  E = gold dragon
 SUBST:  1 : a, 2 : A
 SHUFFLE: aA / bB / cC / dD / eE
 COLOUR: v = yellow
@@ -2083,7 +2083,7 @@ KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\
         guardian mummy
 KMONS:  B = ancient lich
 KMONS:  c = fire dragon / ice dragon / shadow dragon / iron dragon w:5 /\
-        quicksilver dragon w:5 / golden dragon / swamp dragon /\
+        quicksilver dragon w:5 / gold dragon / swamp dragon /\
         hydra
 KMONS:  C = quicksilver dragon
 KMONS:  d = angel / daeva / cherub

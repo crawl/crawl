@@ -155,7 +155,7 @@ function simulacrum_monsters()
 
     if dgn.persist.ice_cave_hard then
         mons["cruel"] = "ettin simulacrum / 7-headed hydra simulacrum" ..
-            " / golden dragon simulacrum / caustic shrike simulacrum"
+            " / gold dragon simulacrum / caustic shrike simulacrum"
     else
         mons["cruel"] = "dire elephant simulacrum / harpy simulacrum" ..
             " / anaconda simulacrum / 3-headed hydra simulacrum"
@@ -872,8 +872,8 @@ KITEM:   j = any jewellery
 : if dgn.persist.ice_cave_hard then
 KITEM:   k = any jewellery randart
 MONS:    lindwurm simulacrum / ice dragon simulacrum \
-         / storm dragon simulacrum / golden dragon simulacrum
-MONS:    ice dragon, orange crystal statue, golden dragon
+         / storm dragon simulacrum / gold dragon simulacrum
+MONS:    ice dragon, orange crystal statue, gold dragon
 {{
 kmons("D = white draconian ; " ..
     dgn.random_item_def({["scimitar"] = 2, ["halberd"] = 2, ["broad axe"] = 1,
@@ -882,7 +882,7 @@ kmons("E = white draconian knight ; " ..
     dgn.monster_weapon("knight", "freezing", "good_item", "|") ..
     " . cloak good_item")
 set_random_mon_list("lindwurm simulacrum / swamp dragon simulacrum \
-                     / ice dragon simulacrum / golden dragon simulacrum \
+                     / ice dragon simulacrum / gold dragon simulacrum \
                      / white draconian / ice dragon")
 }}
 # 50% chance for dragons vs draconians.

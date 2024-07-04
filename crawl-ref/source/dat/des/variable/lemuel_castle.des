@@ -81,11 +81,11 @@ function castle_lemuel_setup(e)
            e.kmons("1 = red draconian / white draconian / green draconian"
                    .. " / black draconian / purple draconian")
            e.kmons("2 = draconian monk w:20 / draconian annihilator"
-                   .. " / golden dragon w:5")
+                   .. " / gold dragon w:5")
            e.kmons("3 = draconian scorcher / draconian knight"
                    .. " / draconian shifter / draconian stormcaller")
            e.kmons("4 = tentacled monstrosity / quicksilver dragon"
-                   .. " / golden dragon")
+                   .. " / gold dragon")
            e.kmons("5 = red draconian / green draconian / white draconian"
                    .. " / black draconian / purple draconian")
            e.kmons("6 = fire dragon / ice dragon / death drake / storm dragon"
@@ -102,7 +102,7 @@ function castle_lemuel_setup(e)
                   .. " / frost giant / juggernaut")
            e.mons("titan")
            e.mons("storm dragon / shadow dragon / quicksilver dragon"
-                  .. " / golden dragon / tentacled monstrosity"
+                  .. " / gold dragon / tentacled monstrosity"
                   .. " / caustic shrike")
            e.mons("deep troll / iron troll / deep troll shaman / ettin")
            e.mons("fire dragon / ice dragon / death drake / spark wasp"

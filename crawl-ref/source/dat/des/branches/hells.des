@@ -148,7 +148,7 @@ KMONS:   123 = red draconian ; cloak . long sword ego:freezing ident:type
 KMONS:   456 = white draconian ; cloak . long sword ego:flaming ident:type
 KMONS:   789 = red draconian scorcher ; cloak . staff of fire ident:type
 KMONS:   ABC = white draconian knight ; cloak . staff of cold ident:type
-KMONS:   D = golden dragon
+KMONS:   D = gold dragon
 SUBST:   c : c:5 b:2 n:1
 SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
 :  end

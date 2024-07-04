@@ -40,7 +40,7 @@
   {  3, 13,   40, FLAT, MONS_SHADOW_DRAGON },\
   {  3, 13,   20, FLAT, MONS_QUICKSILVER_DRAGON },\
   {  3, 13,   40, FLAT, MONS_IRON_DRAGON },\
-  {  3, 13,   80, SEMI, MONS_GOLDEN_DRAGON },\
+  {  3, 13,   80, SEMI, MONS_GOLD_DRAGON },\
   {  3, 13,   50, RISE, MONS_FROSTBOUND_TOME },\
   {  3, 13,   50, RISE, MONS_EARTHEN_TOME },\
   {  3, 13,   50, RISE, MONS_CRYSTAL_TOME },\
@@ -564,7 +564,7 @@ static const vector<pop_entry> population[] =
   {  5, 12,  155, RISE, MONS_SHADOW_DRAGON },
   {  5, 12,  150, RISE, MONS_UNDYING_ARMOURY },
   {  5, 12,  100, RISE, MONS_STORM_DRAGON },
-  {  5, 12,   70, RISE, MONS_GOLDEN_DRAGON },
+  {  5, 12,   70, RISE, MONS_GOLD_DRAGON },
   {  5, 12,   50, RISE, MONS_QUICKSILVER_DRAGON },
   {  5, 12,   45, RISE, MONS_IRON_DRAGON },
   {  5, 12,   45, RISE, MONS_ANCIENT_LICH },
@@ -768,7 +768,7 @@ POP_DEPTHS,
   {  1,  5,  200, FLAT, MONS_QUICKSILVER_DRAGON },
   {  1,  5,  200, FLAT, MONS_SHADOW_DRAGON },
   { -4,  5,  515, RISE, MONS_STORM_DRAGON },
-  {  1, 11,  365, SEMI, MONS_GOLDEN_DRAGON },
+  {  1, 11,  365, SEMI, MONS_GOLD_DRAGON },
   {  1,  5,  112, FLAT, MONS_PROTEAN_PROGENITOR },
   {  2,  8,   52, SEMI, MONS_KILLER_KLOWN },
   {  1,  5,  335, FLAT, MONS_DEATH_COB },
@@ -1146,7 +1146,7 @@ static const vector<pop_entry> pop_generic_late_zombie =
   {  5,   8,  222, FLAT, MONS_SHADOW_DRAGON },
   {  5,   8,  222, FLAT, MONS_STORM_DRAGON },
   {  5,  15,  222, FLAT, MONS_IRON_DRAGON },
-  {  5,  15,  222, RISE, MONS_GOLDEN_DRAGON },
+  {  5,  15,  222, RISE, MONS_GOLD_DRAGON },
   {  5,  15,  222, RISE, MONS_PEARL_DRAGON },
   {  5,  15,  666, FLAT, MONS_DIRE_ELEPHANT },
   {  5,  15,  666, FLAT, MONS_HELLEPHANT },

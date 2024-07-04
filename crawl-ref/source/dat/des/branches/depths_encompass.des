@@ -138,7 +138,7 @@
         elseif set_weight == 6 then
             e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
             e.mons("storm dragon / shadow dragon / bone dragon")
-            e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
+            e.mons("gold dragon w:15 / quicksilver dragon / iron dragon / " ..
                    "pearl dragon w:1")
             e.subst("+ = ...+")
             e.subst("A = $")
@@ -431,7 +431,7 @@ KMASK:    1290KLMN = !no_monster_gen
 KMONS:    K = storm dragon
 KMONS:    L = shadow dragon
 KMONS:    M = quicksilver dragon
-KMONS:    N = golden dragon
+KMONS:    N = gold dragon
 SUBST:    }])> = G
 NSUBST:   D = 1:K / 1:L / 1:M / 1:N
 SUBVAULT: H : grunt_zot_portal
@@ -705,7 +705,7 @@ TAGS:    grunt_profane_loot no_monster_gen
 KMONS:   K = storm dragon
 KMONS:   L = shadow dragon
 KMONS:   M = quicksilver dragon
-KMONS:   N = golden dragon
+KMONS:   N = gold dragon
 KITEM:   KLMN> = any good_item
 KITEM:   12 = any
 SHUFFLE: KLMN
@@ -778,7 +778,7 @@ MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
 MONS:    sphinx / entropy weaver / spark wasp / flayed ghost / \
          storm dragon w:4 / shadow dragon w:4 / quicksilver dragon w:4 / \
-         iron dragon w:4 / golden dragon w:4 / caustic shrike / \
+         iron dragon w:4 / gold dragon w:4 / caustic shrike / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          deep elf blademaster / deep elf master archer / \

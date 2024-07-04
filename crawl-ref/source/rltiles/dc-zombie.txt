@@ -74,7 +74,7 @@ zombie_bird MONS_ZOMBIE_BIRD
 zombie_monkey MONS_ZOMBIE_MONKEY
 zombie_elephant MONS_ZOMBIE_ELEPHANT
 zombie_quicksilver_dragon MONS_ZOMBIE_QUICKSILVER_DRAGON
-zombie_golden_dragon MONS_ZOMBIE_GOLDEN_DRAGON
+zombie_gold_dragon MONS_ZOMBIE_GOLD_DRAGON
 zombie_iron_dragon MONS_ZOMBIE_IRON_DRAGON
 zombie_yak MONS_ZOMBIE_YAK
 zombie_bear MONS_ZOMBIE_BEAR

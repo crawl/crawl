@@ -5546,7 +5546,7 @@ static branch_summon_pair _planerend_summons[] =
   { BRANCH_ZOT,
     { // Zot enemies
       {  1,   1,   40, FLAT, MONS_DRACONIAN_STORMCALLER },
-      {  1,   1,  100, FLAT, MONS_GOLDEN_DRAGON },
+      {  1,   1,  100, FLAT, MONS_GOLD_DRAGON },
       {  1,   1,   80, FLAT, MONS_MOTH_OF_WRATH },
     }},
 };

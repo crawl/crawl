@@ -732,7 +732,7 @@ TAGS:     vaults_end
 ORIENT:   encompass
 KMONS:    1 = vault guard
 KMONS:    2 = place:Vaults:$
-KMONS:    3 = shadow dragon w:15 / quicksilver dragon / golden dragon /\
+KMONS:    3 = shadow dragon w:15 / quicksilver dragon / gold dragon /\
               titan / tentacled monstrosity / stone giant / lich w:5 /\
               ancient lich / place:Vaults:$ w:40
 KMONS:    4 = shadow dragon
@@ -758,7 +758,7 @@ NAME:     d_27
 TAGS:     d_27
 KMONS:    1 = place:Depths:$
 KMONS:    2 = fire dragon w:20 / ice dragon w:20 / storm dragon /\
-              bone dragon / golden dragon / acid dragon
+              bone dragon / gold dragon / acid dragon
 KMONS:    3 = base draconian
 SUBST:    2 = 2223, 3 = 3332
 : line_setup(_G)
@@ -907,7 +907,7 @@ KMONS:    2 = place:Zot:$
 KMONS:    3 = orb of fire
 KMONS:    4 = ancient lich
 KMONS:    5 = electric golem
-KMONS:    6 = shadow dragon / golden dragon / nonbase draconian /\
+KMONS:    6 = shadow dragon / gold dragon / nonbase draconian /\
               killer klown / moth of wrath / place:Zot:$
 KMONS:    7 = moth of wrath
 KITEM:    7 = orb of zot

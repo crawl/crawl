@@ -1940,13 +1940,13 @@ DEPTH: Crypt, !Crypt:$
 ORIENT: float
 # Monster density might be off here
 MONS: fire dragon skeleton / quicksilver dragon skeleton w:5 \
-      / golden dragon skeleton w:2
+      / gold dragon skeleton w:2
 MONS: flayed ghost w:5 / phantasmal warrior, skeletal warrior
 MONS: hell knight / necromancer w:2, bone dragon, \
       reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:flaming
 MONS: lich
 KMONS: A = fire dragon skeleton / quicksilver dragon skeleton w:5 \
-           / golden dragon skeleton w:2
+           / gold dragon skeleton w:2
 KFEAT: A = l
 NSUBST: - = 1:1 / 2=1. / 2:2 / 1=2. / 1:3 / 1=3. / 6:4 / 2=4.
 NSUBST: " = 4:A / 2=Al / *:l, ' = 2:1 / 2=2. / 2:6, ; = 1:5 / 1=6. / 1:7
@@ -2005,7 +2005,7 @@ KMONS:  1 = anaconda skeleton / caustic shrike skeleton / harpy skeleton / \
         quicksilver dragon skeleton / shard shrike skeleton / \
         20-headed hydra skeleton w:5 / alligator snapping turtle skeleton w:5 /\
         apis skeleton w:5 / dire elephant skeleton w:5 / titan skeleton w:5 / \
-        golden dragon skeleton w:5 / hellephant skeleton w:5
+        gold dragon skeleton w:5 / hellephant skeleton w:5
 KMONS:  2V = skeletal warrior w:20 / laughing skull / curse skull w:5 / \
         ancient champion band / nothing w:20
 KMONS:  3 = bone dragon / revenant
@@ -2655,7 +2655,7 @@ KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
 KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / bog body w:5
-KMONS:  Q = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
+KMONS:  Q = titan zombie / fire dragon zombie / gold dragon zombie / ghoul
 # red metal walls
 COLOUR: a = red
 SUBST:  a = +
@@ -3129,7 +3129,7 @@ MONS:   patrolling vampire knight / patrolling vampire mage / \
 KMONS:  2 = vampire knight / Jory w:15, vampire knight
 KMONS:  3 = dancing weapon ; long sword ego:vampirism / vampire knight
 KMONS:  4 = phantasmal warrior / jiangshi
-KMONS:  5 = vampire / zombie / golden dragon zombie w:3 / storm dragon zombie w:3
+KMONS:  5 = vampire / zombie / gold dragon zombie w:3 / storm dragon zombie w:3
 KMONS:  6 = generate_awake vampire mage
 SUBST:  2 = ., ' = 2, " = 4
 : elseif brnd > 2 then

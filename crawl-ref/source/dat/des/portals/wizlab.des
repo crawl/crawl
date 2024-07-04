@@ -210,7 +210,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     local list_deriv_undead_base_mons = {
         "cyclops", "two-headed ogre", "swamp dragon",  -- tier 1
         "stone giant", "deep troll", "storm dragon",   -- tier 2
-        "juggernaut", "ettin", "golden dragon"         -- tier 3
+        "juggernaut", "ettin", "gold dragon"         -- tier 3
     }
 
     local list_regular_undead = {
@@ -1573,7 +1573,7 @@ set_random_mon_list(
     -- Selected to make derived and regular undead equal.
        [[ two-headed ogre skeleton / cyclops zombie / swamp dragon simulacrum / ]]
     .. [[ deep troll skeleton / stone giant zombie / storm dragon simulacrum / ]]
-    .. [[ ettin skeleton / juggernaut zombie / golden dragon simulacrum / ]]
+    .. [[ ettin skeleton / juggernaut zombie / gold dragon simulacrum / ]]
     .. [[ vampire / skeletal warrior / jiangshi / phantasmal warrior / ]]
     .. [[ vampire knight / ghoul / ancient champion w:20 / lich / ]]
 )

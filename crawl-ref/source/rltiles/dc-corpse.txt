@@ -265,7 +265,7 @@ acid_dragon CORPSE_ACID_DRAGON
 quicksilver_dragon CORPSE_QUICKSILVER_DRAGON
 iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON
-golden_dragon CORPSE_GOLDEN_DRAGON
+gold_dragon CORPSE_GOLD_DRAGON
 shadow_dragon CORPSE_SHADOW_DRAGON
 mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 

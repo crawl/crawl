@@ -370,7 +370,7 @@ KMONS:    7 = Vv w:2 / ancient lich / dread lich w:6, \
               ancient lich / dread lich w:6
 KMONS:    8 = Frederick / titan / draconian annihilator w:5, \
               titan / draconian annihilator w:5
-KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
+KMONS:    A = gold dragon w:19 / gold dragon perm_ench:shapeshifter w:1 / \
               quicksilver dragon w:14 / \
               quicksilver dragon perm_ench:shapeshifter w:1
 KMONS:    B = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
@@ -874,7 +874,7 @@ ENDMAP
 NAME:    grunt_runaround_zot
 TAGS:    grunt_runaround_zot allow_dup unrand
 MONS:    base draconian, nonbase draconian
-KMONS:   d = golden dragon
+KMONS:   d = gold dragon
 KMONS:   e = quicksilver dragon
 KMONS:   f = storm dragon
 KMONS:   g = shadow dragon

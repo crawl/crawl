@@ -18,7 +18,7 @@ function zot_entry_setup(e)
     e.orient("float")
     e.mons("patrolling base draconian")
     e.mons("fire dragon / ice dragon / storm dragon / \
-            shadow dragon / bone dragon / golden dragon")
+            shadow dragon / bone dragon / gold dragon")
     e.mons("patrolling nonbase draconian")
     e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
                  stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
@@ -36,12 +36,12 @@ function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
     e.depth("Zot, !Zot:$")
     e.kmons("D = acid dragon / fire dragon w:25 / ice dragon w:25 /\
-               storm dragon w:20 / shadow dragon w:20 / golden dragon /\
+               storm dragon w:20 / shadow dragon w:20 / gold dragon /\
                iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
                lindwurm w:2 / rime drake w:2 / death drake w:2 /\
                swamp dragon w:5")
     e.kmons("d = base draconian / nonbase draconian")
-    e.kmons("Y = patrolling golden dragon")
+    e.kmons("Y = patrolling gold dragon")
     e.kitem("Y = |")
 end
 }}
@@ -219,7 +219,7 @@ KMONS:  8 = quicksilver dragon
 : end
 # boss: 9, 0
 KMONS:  9 = nonbase draconian
-KMONS:  0 = golden dragon
+KMONS:  0 = gold dragon
 MAP
 ccc+ccccccccccccccccccc
 cvb.bvcccvb.bvccccccccc
@@ -3139,7 +3139,7 @@ ENDMAP
 # There's about 800 gold.
 NAME:   st_grand_hoard_of_tiamat
 TAGS:   no_monster_gen
-KMONS:  1 = patrolling Tiamat, patrolling golden dragon
+KMONS:  1 = patrolling Tiamat, patrolling gold dragon
 KITEM:  1 = dragon-blood talisman / dragon-blood talisman randart / \
             book of the dragon w:15
 SUBST:  D = DDD$
@@ -3506,7 +3506,7 @@ MONS:    ettin / stone giant w:5 / fire giant / \
          frost giant / crystal guardian w:5
 MONS:    base draconian
 MONS:    glowing shapeshifter w:20 / sphinx w:15 / war gargoyle w:20 / \
-         iron dragon w:20 / shadow dragon / golden dragon
+         iron dragon w:20 / shadow dragon / gold dragon
 MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
          ghost moth w:5 / tentacled monstrosity w:5 / quicksilver dragon w:5
 MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
@@ -3616,7 +3616,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: east
 MONS:   nonbase draconian, base draconian, moth of wrath
 MONS:   fire dragon w:30 / ice dragon w:30 / shadow dragon w:20 / \
-        storm dragon w:50 / bone dragon w:30 / golden dragon w:35
+        storm dragon w:50 / bone dragon w:30 / gold dragon w:35
 MONS:   Killer Klown / electric golem w:5 / \
         curse toe w:5 / protean progenitor w:5
 MONS:   orb of fire
@@ -3713,7 +3713,7 @@ DEPTH:   Zot
 ORIENT:  float
 KMONS:   R = red draconian scorcher
 KMONS:   C = white draconian stormcaller
-KMONS:   D = golden dragon
+KMONS:   D = gold dragon
 KMONS:   B = blizzard demon
 KFEAT:   r = c
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
@@ -4042,7 +4042,7 @@ NSUBST:  E = 3 = r. / 6 = ss. / *:.
 KMONS:   r = moth of wrath / ghost moth
 KMONS:   s = quicksilver dragon / storm dragon / \
              shadow dragon / iron dragon / \
-             bone dragon / golden dragon w:5
+             bone dragon / gold dragon w:5
 # The Freakshow: death cobs and maybe a curse toe or protean
 NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
 KMONS:   y = curse toe
@@ -4083,7 +4083,7 @@ NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 DEPTH:   Zot:1-4
 KMONS:   01 = ghost moth
-KMONS:   23 = golden dragon
+KMONS:   23 = gold dragon
 KMONS:   45 = nonbase draconian
 KMONS:   67 = protean progenitor
 KMONS:   89 = killer klown
@@ -4392,9 +4392,9 @@ ORIENT:  south
 DEPTH:   Zot, !Zot:$
 MONS:    0 band
 MONS:    red draconian / will-o-the-wisp w:2
-MONS:    red draconian scorcher, orb of fire / golden dragon
+MONS:    red draconian scorcher, orb of fire / gold dragon
 MONS:    white draconian / blizzard demon w:2
-MONS:    white draconian knight, golden dragon
+MONS:    white draconian knight, gold dragon
 KMONS:   8 = black draconian / spark wasp w:2
 KMONS:   9 = black draconian stormcaller
 KMONS:   0 = electric golem / storm dragon

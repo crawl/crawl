@@ -211,7 +211,7 @@ namespace species
         case SP_GREEN_DRACONIAN:
             return MONS_SWAMP_DRAGON;
         case SP_YELLOW_DRACONIAN:
-            return MONS_GOLDEN_DRAGON;
+            return MONS_GOLD_DRAGON;
         case SP_GREY_DRACONIAN:
             return MONS_IRON_DRAGON;
         case SP_BLACK_DRACONIAN:

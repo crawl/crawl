@@ -163,7 +163,7 @@ KMONS: N = human skeleton / elf skeleton / dwarf skeleton / kobold skeleton / \
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
-           golden dragon w:1 / quicksilver dragon w:1 / \
+           gold dragon w:1 / quicksilver dragon w:1 / \
            tentacled monstrosity / black draconian w:1 ; nothing / \
            yellow draconian w:1 ; nothing / green draconian w:1 ; nothing / \
            purple draconian w:1 ; nothing / red draconian w:1 ; nothing / \

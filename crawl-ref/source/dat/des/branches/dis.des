@@ -968,7 +968,7 @@ ENDMAP
 NAME:   nicolae_dis_metal_dragon_surprise
 TAGS:   transparent
 DEPTH:  Dis:2-
-KMONS:  1 = golden dragon
+KMONS:  1 = gold dragon
 KMONS:  2 = quicksilver dragon
 KMONS:  3 = iron dragon
 KFEAT:  G = metal_statue

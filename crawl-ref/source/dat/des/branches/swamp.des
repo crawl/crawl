@@ -1571,7 +1571,7 @@ KMONS:   a = death drake
 KMONS:   A = protean progenitor / green death
 KMONS:   B = green draconian stormcaller
 KMONS:   % = ghoul / bog body w:2
-KMONS:   *d = golden dragon w:8 / seven-headed hydra w:5 / \
+KMONS:   *d = gold dragon w:8 / seven-headed hydra w:5 / \
               eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
 KFEAT:   t = demonic_tree

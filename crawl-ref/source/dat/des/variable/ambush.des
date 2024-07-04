@@ -53,7 +53,7 @@ KMONS:    & = tormentor / titan
 : elseif you.in_branch("Zot") then
 KMONS:    0 = white draconian / green draconian / yellow draconian
 KMONS:    9 = shadow dragon / draconian monk
-KMONS:    8 = death cob / golden dragon / ghost moth w:5
+KMONS:    8 = death cob / gold dragon / ghost moth w:5
 KMONS:    & = curse toe / moth of wrath
 : end
 SUBVAULT: = : evilmike_ambush_outer

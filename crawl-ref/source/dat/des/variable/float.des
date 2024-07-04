@@ -25,7 +25,7 @@ function zot_entry_setup(e)
     e.kfeat("O = enter_zot")
     e.mons("patrolling base draconian")
     e.mons("fire dragon / ice dragon / storm dragon / \
-            shadow dragon / bone dragon / golden dragon")
+            shadow dragon / bone dragon / gold dragon")
     e.mons("patrolling nonbase draconian")
     e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
                  stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
@@ -2003,7 +2003,7 @@ MONS:    revenant / eidolon / lich w:5
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / sin beast / caustic shrike simulacrum w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
-MONS:    spectral golden dragon / golden dragon simulacrum \
+MONS:    spectral gold dragon / gold dragon simulacrum \
          / spectral caustic shrike / caustic shrike simulacrum \
          / spectral juggernaut / juggernaut simulacrum
 MONS:    vampire mage / deep elf death mage w:5
@@ -3167,7 +3167,7 @@ PLACE:  Depths:$
      kmons("1 = nonbase draconian")
      kmons("2 = base draconian")
      nsubst("3 = 4:2 / 2 = 2. / *:.")
-     kmons("* = golden dragon / shadow dragon / storm dragon / bone dragon"
+     kmons("* = gold dragon / shadow dragon / storm dragon / bone dragon"
            .. " / fire dragon / ice dragon")
      colour("c = lightmagenta")
   else
@@ -3262,7 +3262,7 @@ TILE:    b = bedevilled_crystal_gehenna
 MONS:    black draconian knight, yellow draconian
 MONS:    black draconian, juggernaut zombie, flayed ghost
 KMONS:   )]b = nonbase draconian w:30 / \
-               shadow dragon / golden dragon / storm dragon
+               shadow dragon / gold dragon / storm dragon
 KITEM:   b = midnight gem
 KFEAT:   } = enter_zot
 :   end
@@ -3501,7 +3501,7 @@ KMONS:    2 = occultist / deep troll earth mage / spriggan air mage \
               / deep elf annihilator / deep elf high priest
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
 KMONS:    4 = tengu reaver / spriggan air mage / sphinx
-KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
+KMONS:    5 = gold dragon / quicksilver dragon / storm dragon
 KMONS:    6 = juggernaut / spark wasp band / caustic shrike
 KMONS:    F = orange crystal statue
 KMONS:    KL = merfolk impaler / merfolk javelineer
@@ -6522,7 +6522,7 @@ NSUBST:  4 = 1:. / 1:4 / * = 4., 56 = 3:., ? = 2:. / 3 = 23.. / * : 23
 MONS:    deep elf death mage / deep elf high priest
 MONS:    deep elf sorcerer / deep elf demonologist w:5
 MONS:    deep elf annihilator, glowing shapeshifter
-MONS:    war gargoyle, crystal guardian, golden dragon / storm dragon
+MONS:    war gargoyle, crystal guardian, gold dragon / storm dragon
 SUBST:   @ = ., c = x
 NSUBST:  2 = 1:14 / *:2, 23 = 1:., 4 = 1:. / 2:4 / * = 4., 56 = 4:.
 NSUBST:  7 = 1:. / 1:56 / *:7, ? = 2 = 1. / 2 = 1233... / * : 233
@@ -6792,7 +6792,7 @@ MONS:    fire giant, red draconian scorcher
 MONS:    frost giant, white draconian stormcaller, shadow dragon, lich
 KMONS:   8 = caustic shrike
 KMONS:   9 = yellow draconian annihilator
-KMONS:   0 = golden dragon
+KMONS:   0 = gold dragon
 KITEM:   R = $, midnight gem
 KFEAT:   0 = enter_zot
 NSUBST:  $ = 1:R / *:$
@@ -10034,7 +10034,7 @@ TAGS:   uniq_kennysheep_gozag_temple
 DEPTH:  Depths, !Depths:$
 ORIENT: centre
 KMONS:  2 = guardian serpent
-KMONS:  B = golden dragon
+KMONS:  B = gold dragon
 KITEM:  | = gold good_item
 KITEM:  23 = gold
 KFEAT:  B = altar_gozag
@@ -11274,7 +11274,7 @@ SHUFFLE: Ww / LL
 SUBST:   9 = 09, 1 = 98, r = $%, s = *|,  2G = ., bcv = x, } = }>, K = p
 KFEAT:   ^ = shaft trap / teleport trap / alarm trap / dispersal trap
 : elseif you.in_branch("Depths") then
-MONS:    juggernaut / ancient lich / dread lich / golden dragon
+MONS:    juggernaut / ancient lich / dread lich / gold dragon
 MONS:    obsidian statue / orange crystal statue
 SHUFFLE: Ww / ll
 SUBST:   2 = G:50 2, r = $*, s = |

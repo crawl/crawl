@@ -146,7 +146,7 @@ enum monster_type                      // env.mons[].type
     MONS_BONE_DRAGON,
     MONS_QUICKSILVER_DRAGON,
     MONS_IRON_DRAGON,
-    MONS_GOLDEN_DRAGON,
+    MONS_GOLD_DRAGON,
     MONS_PEARL_DRAGON,
 
     MONS_ENDOPLASM,

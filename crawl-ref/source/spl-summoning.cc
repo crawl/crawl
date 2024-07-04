@@ -360,7 +360,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
     const int chance = random2(pow);
 
     if (chance >= 80 || one_chance_in(6))
-        mon = random_choose(MONS_GOLDEN_DRAGON, MONS_QUICKSILVER_DRAGON);
+        mon = random_choose(MONS_GOLD_DRAGON, MONS_QUICKSILVER_DRAGON);
     else if (chance >= 40 || one_chance_in(6))
         mon = random_choose(MONS_IRON_DRAGON, MONS_SHADOW_DRAGON, MONS_STORM_DRAGON);
     else

@@ -805,7 +805,7 @@ TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op \
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie
-MONS:    golden dragon zombie
+MONS:    gold dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
 ITEM:    gold dragon scales / storm dragon scales / fire dragon scales / troll leather armour / any useful armour good_item

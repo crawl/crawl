@@ -1197,7 +1197,7 @@ DEPTH:   Snake, !Snake:$, Zot, !Zot:$
 KMONS:   A = base draconian / green draconian w:4
 KMONS:   B = fire dragon w:5 / ice dragon w:5 / storm dragon / shadow dragon
 KMONS:   C = nonbase draconian / draconian annihilator
-KMONS:   D = golden dragon / quicksilver dragon / iron dragon
+KMONS:   D = gold dragon / quicksilver dragon / iron dragon
 : else
 KMONS:   A = naga warrior / naga mage
 KMONS:   B = mana viper / anaconda
@@ -3604,7 +3604,7 @@ MONS:   large abomination / jiangshi / laughing skull / ettin zombie
 MONS:   spriggan defender zombie w:20 / dire elephant zombie / \
         iron dragon zombie
 MONS:   deep elf blademaster zombie / caustic shrike zombie / \
-        storm dragon zombie / golden dragon zombie
+        storm dragon zombie / gold dragon zombie
 : end
 KITEM:  d = $ / %, any good_item
 KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
@@ -8363,7 +8363,7 @@ TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 WEIGHT:  3
 ITEM:    mask_of_the_dragon no_pickup
-MONS:    storm dragon, shadow dragon, golden dragon, ghost moth, moth of wrath
+MONS:    storm dragon, shadow dragon, gold dragon, ghost moth, moth of wrath
 # Shuffle one transporter destination location
 NSUBST:  r = R / -
 # Randomly swap which transporter is the entrance and the loot locations.

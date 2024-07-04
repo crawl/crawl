@@ -351,7 +351,7 @@ function arena_sprint_get_monster_set(round, boss)
                     rust devil / w:5 iron troll / w:1 roxanne /\
                     w:2 iron dragon / w:3 iron elemental",
                 "ice beast w:5 / rime drake w:5 / hydra simulacrum / stone giant simulacrum /\
-                    golden dragon simulacrum / spriggan simulacrum / water elemental",
+                    gold dragon simulacrum / spriggan simulacrum / water elemental",
                 "wraith / eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
                 "centaur w:15 / centaur warrior w:5 / nessos w:1",
@@ -404,7 +404,7 @@ function arena_sprint_get_monster_set(round, boss)
                     rust devil / w:5 iron troll / w:1 iron giant /\
                     w:2 iron dragon / w:3 iron elemental / w:2 quicksilver dragon",
                 "hydra simulacrum / stone giant simulacrum /\
-                    golden dragon simulacrum / spriggan simulacrum / water elemental /\
+                    gold dragon simulacrum / spriggan simulacrum / water elemental /\
                     ice devil / merfolk aquamancer / frost giant",
                 "death cob / death yak / death drake w:5 / deep elf death mage /\
                     death knight / green death",
@@ -417,7 +417,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "cyclops / stone giant / w:5 frost giant / w:5 fire giant /\
                     w:1 titan",
                 "fire dragon / ice dragon / storm dragon / w:5 shadow dragon /\
-                    w:5 golden dragon / w:1 xtahua",
+                    w:5 gold dragon / w:1 xtahua",
                 "yak / dream sheep / death yak / apis / catoblepas",
                 "glowing shapeshifter",
                 "hell knight / w:5 necromancer / w:1 margery",
@@ -484,7 +484,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lich / w:5 ancient lich / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
                 "fire dragon / ice dragon / storm dragon / shadow dragon /\
-                    golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
+                    gold dragon / quicksilver dragon / iron dragon / w:1 xtahua",
                 "glowing shapeshifter",
                 "hell knight w:20 / w:1 margery",
                 "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
@@ -517,7 +517,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Blade, Forest, Crypt, Pan, Tomb, Hell
                 "vault guard / ancient lich w:5 / lich / yaktaur /\
                     yaktaur captain w:3 / stone giant / shadow dragon /\
-                    titan w:5 / golden dragon / glowing shapeshifter",
+                    titan w:5 / gold dragon / glowing shapeshifter",
                 "orc sorcerer / orc knight / orc warlord /\
                     iron troll w:5 / stone giant w:5 / orc high priest /\
                     moth of wrath",
@@ -556,7 +556,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lich / ancient lich",
                 "stone giant / w:15 frost giant / w:15 fire giant / w:15 titan",
                 "w:5 fire dragon / w:5 ice dragon / w:7 storm dragon / shadow dragon /\
-                    golden dragon / quicksilver dragon / iron dragon",
+                    gold dragon / quicksilver dragon / iron dragon",
                 "glowing shapeshifter hd:18",
                 "w:5 base draconian / nonbase draconian",
                 "golden eye / shining eye / glass eye / eye of devastation /\
@@ -593,7 +593,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
                 -- Blade, Forest, Crypt, Pan, Tomb, Hell
                 "vault guard / ancient lich w:15 / deep elf master archer w:3 /\
-                    titan w:15 / golden dragon w:20 / glowing shapeshifter hd:20",
+                    titan w:15 / gold dragon w:20 / glowing shapeshifter hd:20",
                 "orc sorcerer / orc warlord w:20 / stone giant w:5 /\
                     orc high priest / moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
@@ -628,7 +628,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "deep elf master archer",
                 "ancient lich / dread lich",
                 "frost giant / fire giant / w:15 titan / iron giant",
-                "storm dragon w:7 / golden dragon w:15 /\
+                "storm dragon w:7 / gold dragon w:15 /\
                     quicksilver dragon w:15 / iron dragon",
                 "protean progenitor",
                 "nonbase draconian",

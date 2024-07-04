@@ -473,7 +473,7 @@ TAGS:   sprint2_second_timed_cluster no_item_gen no_trap_gen no_monster_gen no_p
     } }}
 KITEM:  $ = gold q:81
 SHUFFLE: 123, 456
-MONS:   golden dragon, Cacodemon, storm dragon, skeletal warrior, kobold demonologist, yaktaur captain
+MONS:   gold dragon, Cacodemon, storm dragon, skeletal warrior, kobold demonologist, yaktaur captain
 KMONS:  d = elephant
 KMONS:  e = centaur warrior
 KMONS:  f = Kirke
@@ -867,7 +867,7 @@ KITEM:    a = scroll of acquirement q:3 / potion of mutation q:3 / potion of exp
 KFEAT:    e = any shop
 KITEM:    f = potion of enlightenment q:3
 SHUFFLE:  12
-MONS:     golden dragon, storm dragon, shadow imp, iron imp
+MONS:     gold dragon, storm dragon, shadow imp, iron imp
 SUBVAULT: A : sprint2_smallroom
 SUBVAULT: B : sprint2_smallroom
 SUBVAULT: C : sprint2_smallroom

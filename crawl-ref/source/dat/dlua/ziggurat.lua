@@ -225,7 +225,7 @@ mset(spec_fn(function ()
   return "place:Swamp:$ w:" .. d .. " / fenstrider witch w:" .. e .. " / " ..
          "tentacled monstrosity w:" .. f .. " / " ..
          "shambling mangrove w:" .. f .. " / green death w:" .. g .. " / " ..
-         "golden dragon w:" .. g
+         "gold dragon w:" .. g
 end))
 
 mset(with_props(spec_fn(function ()
@@ -274,7 +274,7 @@ mset(spec_fn(function ()
   local d = math.max(5, 30 - you.zigs_completed() * 3)
   local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
-         "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "sphinx w:5 / titan w:" .. e .. " / gold dragon w:" .. e .. " / " ..
          "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 
@@ -430,7 +430,7 @@ mset(with_props(spec_fn(function ()
          "swamp dragon w:" .. d .. " / fire dragon w:" .. d .. " / " ..
          "ice dragon w:" .. d .. " / storm dragon w:" .. d .. " / " ..
          "shadow dragon w:" .. d .. " / iron dragon w:" .. e .. " / " ..
-         "quicksilver dragon w:" .. e .. " / golden dragon w:" .. e
+         "quicksilver dragon w:" .. e .. " / gold dragon w:" .. e
 end), { weight = 2 }))
 
 mset(spec_fn(function ()

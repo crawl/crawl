@@ -543,7 +543,7 @@ SUBST:   L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
 SUBST:   y = G:70 1, ' = ':80 W:20
 : elseif you.in_branch("Vaults") then
 MONS:    orange crystal statue
-MONS:    titan / golden dragon / ancient lich / dread lich
+MONS:    titan / gold dragon / ancient lich / dread lich
 NSUBST:  M = O / 2 / * = * O:15 8:5
 SUBST:   L = ':30 9:20 d:20 8 *, * = *|
 SUBST:   y = G:70 1, W = '
@@ -878,7 +878,7 @@ NSUBST: D = 5=1 / 5=1- / 2=2 / 4=2- / 2=3- / -
 MONS:   death cob w:20 / shadow dragon w:20 / storm dragon simulacrum \
         / storm dragon spectre / draconian monk simulacrum \
         / draconian monk spectre
-MONS:   bone dragon w:40 / golden dragon simulacrum / golden dragon spectre \
+MONS:   bone dragon w:40 / gold dragon simulacrum / gold dragon spectre \
         / quicksilver dragon simulacrum / quicksilver dragon spectre \
         / killer klown simulacrum / killer klown spectre
 MONS:   ancient lich / dread lich / curse toe
@@ -1095,7 +1095,7 @@ DEPTH:  Depths
 ORIENT: float
 KMONS:  O = player_ghost
 MONS:   deep troll shaman band
-MONS:   stone giant / deep troll earth mage / golden dragon
+MONS:   stone giant / deep troll earth mage / gold dragon
 MONS:   iron troll / iron dragon, iron giant
 : ghost_good_loot(_G)
 NSUBST:  2 = 2=2 / 2=2., 3 = 2=3 / 2=3.
@@ -2128,14 +2128,14 @@ SUBST:  D = FH, fg = |*, h = *, i = $%, j= -
 NSUBST: - = 1 / 2=1. / 4=2 / 4=2. / 2=3 / 2=3. / .
 : elseif you.in_branch("Depths") then
 MONS:   spark wasp / very ugly thing / fire dragon / ice dragon / glass eye w:5
-MONS:   storm dragon / shadow dragon / quicksilver dragon / golden dragon \
+MONS:   storm dragon / shadow dragon / quicksilver dragon / gold dragon \
         / iron dragon
 MONS:   caustic shrike
 SUBST:  D = FH, fgh = |*, i = *, j= %$
 NSUBST: - = 2=1 / 1. / 4=2 / 4=2. / 2=3 / 2=3. / 4 / 4. / .
 : elseif you.in_branch("Zot") then
 MONS:   ghost moth / storm dragon / shadow dragon / quicksilver dragon \
-        / golden dragon
+        / gold dragon
 MONS:   caustic shrike / shard shrike
 SUBST:  D = FH, fghij = |*
 NSUBST: - = 2=1 / 2=1. / 4=2 / 5=2. / 3=3 / 3=3. / .

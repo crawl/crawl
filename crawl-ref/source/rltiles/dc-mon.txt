@@ -801,7 +801,7 @@ iron_dragon MONS_IRON_DRAGON
 %rim 1
 storm_dragon MONS_STORM_DRAGON
 %rim 0
-golden_dragon MONS_GOLDEN_DRAGON
+gold_dragon MONS_GOLD_DRAGON
 %rim 1
 shadow_dragon MONS_SHADOW_DRAGON
 %rim 0

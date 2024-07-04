@@ -976,7 +976,7 @@ goblin
 Un humanoïde petit, moche et fort peu amical. Courtaud, large, à la peau blême
 et au nez camus, avec une grande bouche et des yeux en pistache.
 %%%%
-golden dragon
+gold dragon
 
 Un grand dragon ailé et couvert d'écailles dorées. La légende dit que son sang
 est à la fois chaud et froid, en outre il est également venimeux.

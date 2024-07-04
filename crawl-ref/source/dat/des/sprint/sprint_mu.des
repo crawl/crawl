@@ -912,7 +912,7 @@ MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
       plate armour ego:fire_resistance . tower shield ego:reflection |\
       kite shield ego:protection | tower shield ego:positive_energy
-MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
+MONS: stone giant / shadow dragon / quicksilver dragon / gold dragon /\
       titan / fire giant / frost giant
 MONS: skeletal warrior
 KMONS: 8 = obsidian statue
@@ -1165,7 +1165,7 @@ KMONS: k = patrolling shining eye
 KMONS: m = patrolling glowing orange brain
 KMONS: o = patrolling yellow draconian
 KMONS: q = generate_awake hornet
-KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
+KMONS: r = hydra simulacrum / gold dragon zombie / spectral iron dragon / \
  iron troll simulacrum / anaconda zombie / anaconda simulacrum / stone giant skeleton /\
  titan zombie
 KMONS: s = boris

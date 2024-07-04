@@ -646,13 +646,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 #############################################################################
-# The Lair of the Golden Dragon (by Mu.)
+# The Lair of the Gold Dragon (by Mu.)
 #
 NAME:   gold_lair_mu
 ORIENT: southeast
 TAGS:   no_monster_gen no_descent
 DEPTH:  Depths, !Depths:$
-MONS:   golden dragon, any draconian, fungus, plant, oklob plant
+MONS:   gold dragon, any draconian, fungus, plant, oklob plant
 KMONS:  6 = rime drake / swamp drake / lindwurm
 KMONS:  D = rime drake w:5 / swamp drake w:5 / death drake / lindwurm w:5
 KITEM:  D = $
@@ -1401,7 +1401,7 @@ SUBST:   BDFHJLNPR = .
     mons = add_mons(mons, "hell knight band", peak(depth, 23, 29, 25))
     mons = add_mons(mons, "storm dragon", peak(depth, 23, 31, 89))
     mons = add_mons(mons, "deep elf pyromancer / deep elf zephyrmancer", flat(depth, 26, 28, 6))
-    mons = add_mons(mons, "golden dragon", peak(depth, 29, 33, 8))
+    mons = add_mons(mons, "gold dragon", peak(depth, 29, 33, 8))
     mons = add_mons(mons, "titan", peak(depth, 28, 34, 25))
     mons = add_mons(mons, "thermic dynamo", peak(depth, 28, 31, 25))
     if mons == nil then return "nothing" end
@@ -2463,7 +2463,7 @@ MONS:   white ugly thing w:60 / lindwurm simulacrum / dire elephant simulacrum \
         / freezing wraith
 MONS:   ice statue
 MONS:   freezing wraith / death yak
-MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum \
+MONS:   ettin simulacrum / hydra simulacrum / gold dragon simulacrum \
         / caustic shrike simulacrum
 MONS:   bog body / ice dragon / white very ugly thing / frost giant \
         / reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
@@ -2473,7 +2473,7 @@ SUBST:  3 = 3G
 : else
 MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
 MONS:   ettin simulacrum / spriggan defender simulacrum \
-        / golden dragon simulacrum / caustic shrike simulacrum
+        / gold dragon simulacrum / caustic shrike simulacrum
 MONS:   orange crystal statue
 MONS:   frost giant / reaper ; halberd itemname:scythe tile:wpn_scythe \
         wtile:scythe ego:freezing / blizzard demon
@@ -2799,7 +2799,7 @@ SUBST:   ( = ), [ = ]
 MONS:    very ugly thing / glowing orange brain w:5 / spriggan rider
 MONS:    flayed ghost w:5 / spriggan berserker / glowing shapeshifter
 MONS:    spark wasp / glass eye w:5 / spriggan defender
-MONS:    shadow dragon / golden dragon
+MONS:    shadow dragon / gold dragon
 MONS:    tentacled monstrosity / caustic shrike
 KFEAT:   ^ = alarm trap / dispersal trap w:2
 SHUFFLE: {([ / })] / %%% / %%% / %%%
@@ -2810,7 +2810,7 @@ FTILE:   @.fgP`12345F$%*{([})]^wtxT : floor_pebble_darkbrown / floor_moss
 MONS:    shadow dragon / green draconian w:20
 MONS:    green draconian stormcaller / green draconian monk / ghost moth
 MONS:    moth of wrath / tentacled monstrosity w:15 / death cob
-MONS:    golden dragon, curse toe, protean progenitor
+MONS:    gold dragon, curse toe, protean progenitor
 KFEAT:   t = demonic_tree
 KFEAT:   ^ = zot trap
 SHUFFLE: 456
@@ -2902,7 +2902,7 @@ TILE:    v = dngn_metal_wall_brown
 TAGS:    patrolling
 MONS:    red draconian / base draconian w:5, fire giant
 MONS:    red draconian monk, tengu reaver, iron dragon
-KMONS:   6 : red draconian knight / golden dragon
+KMONS:   6 : red draconian knight / gold dragon
 KMONS:   7 : lich / red draconian scorcher
 KITEM:   > = midnight gem
 KFEAT:   > = enter_zot
@@ -2914,7 +2914,7 @@ TILE:    v = dngn_metal_wall_magenta
 MONS:    red draconian / red draconian monk w:5
 MONS:    red draconian knight, red draconian annihilator
 MONS:    red draconian scorcher, red draconian shifter
-KMONS:   6 : iron dragon / golden dragon
+KMONS:   6 : iron dragon / gold dragon
 KMONS:   7 : dread lich / orb of fire
 KMONS:   L = moth of wrath
 NSUBST:  V> = 1:} / 1 = ):6 >:1 / 1 = ]:6 >:1
@@ -3374,7 +3374,7 @@ NSUBST:   . = 2:1 / 3:2 / 2:3 / 1:112.. / 1:4
 NSUBST:   l = 1:L / 1 = Ll / *:l, * = 1:Y / 1:Z / 1:d / *:$
 :   end
 : else -- Zot
-MONS:     red draconian, red draconian monk / golden dragon
+MONS:     red draconian, red draconian monk / gold dragon
 MONS:     red draconian annihilator w:5 / red draconian scorcher, orb of fire
 KMONS:    L = moth of wrath / ghost moth w:2
 NSUBST:   . = 3:1 / 2:2 / 2:3 / 2 = 233.

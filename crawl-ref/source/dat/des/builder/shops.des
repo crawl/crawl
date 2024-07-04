@@ -1523,7 +1523,7 @@ DEPTH:  D:8-, Snake, Depths
 KFEAT:  D = armour shop type:Superior suffix:Scales count:3 ; \
         scale mail randart
 : if you.in_branch("Depths") then
-KMONS:  D = golden dragon / iron dragon / quicksilver dragon / storm dragon /\
+KMONS:  D = gold dragon / iron dragon / quicksilver dragon / storm dragon /\
         shadow dragon / pearl dragon w:1
 : elseif you.in_branch("D") and you.absdepth() < 13 then
 KMONS:  D = steam dragon / acid dragon

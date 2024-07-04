@@ -917,7 +917,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GOLDEN_DRAGON,
+    {  MST_GOLD_DRAGON,
       {
        { SPELL_BOLT_OF_FIRE, 23, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                   | MON_SPELL_NOISY },
