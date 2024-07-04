@@ -447,7 +447,7 @@ dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
 dragonarm_shadow DRAGONARM_SHADOW
-dragonarm_gold DRAGONARM_GOLD
+dragonarm_golden DRAGONARM_GOLDEN
 dragonarm_pearl DRAGONARM_PEARL
 
 aragorn ARAGORN

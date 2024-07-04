@@ -591,7 +591,7 @@ glaive
 
 杆子一端有着又大又重的刀刃。
 %%%%
-gold dragon scales
+golden dragon scales
 
 一套金龙鳞甲。它比大多数龙鳞甲重得多，但能给穿戴者提供毒抗、火抗、寒抗。
 %%%%

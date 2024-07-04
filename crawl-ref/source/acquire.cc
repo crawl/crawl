@@ -324,7 +324,7 @@ static armour_type _useless_armour_type()
             return random_choose(ARM_FIRE_DRAGON_ARMOUR,
                                  ARM_ICE_DRAGON_ARMOUR,
                                  ARM_PEARL_DRAGON_ARMOUR,
-                                 ARM_GOLD_DRAGON_ARMOUR,
+                                 ARM_GOLDEN_DRAGON_ARMOUR,
                                  ARM_SHADOW_DRAGON_ARMOUR,
                                  ARM_STORM_DRAGON_ARMOUR);
         default:

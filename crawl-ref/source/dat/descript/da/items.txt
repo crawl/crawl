@@ -275,13 +275,13 @@ glaive
 
 En stage med en stor, tung klinge i den ene ende.
 %%%%
-gold dragon scales
+golden dragon scales
 
 En magisk rustning, som er lavet af en gulddrages skæl. Den er meget tungere
 end de fleste drageskæls-rustninger og beskytter bæreren mod gift, ild og
 kulde.
 %%%%
-gold dragon hide
+golden dragon hide
 
 En gulddrages skind, dækket af ekstremt hårde, gyldne skæl. I sin ubehandlede
 form giver det ikke megen beskyttelse ud over modstandskraft over for gift, ild

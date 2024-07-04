@@ -1070,7 +1070,7 @@ KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour gre
 KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane storm dragon scales | mundane fire dragon scales |\
             mundane shadow dragon scales | mundane quicksilver dragon scales |\
-            mundane ice dragon scales | mundane gold dragon scales |\
+            mundane ice dragon scales | mundane golden dragon scales |\
             mundane steam dragon scales | mundane swamp dragon scales |\
             mundane pearl dragon scales | mundane acid dragon scales |\
             mundane troll leather armour | mundane crystal plate armour |\

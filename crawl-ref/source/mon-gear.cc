@@ -1974,7 +1974,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_PARGHIT:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
+        item.sub_type = ARM_GOLDEN_DRAGON_ARMOUR;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_DRAGON_KING))
             make_item_unrandart(item, UNRAND_DRAGON_KING);
         else
@@ -2364,7 +2364,7 @@ static const armour_list APOSTLE_ELITE_HEAVY_ARMOUR =
     {   { ARM_PLATE_ARMOUR,          45 },
         { ARM_STORM_DRAGON_ARMOUR,   25 },
         { ARM_SHADOW_DRAGON_ARMOUR,  20 },
-        { ARM_GOLD_DRAGON_ARMOUR,    8 },
+        { ARM_GOLDEN_DRAGON_ARMOUR,  8 },
         { ARM_CRYSTAL_PLATE_ARMOUR,  12 }, };
 
 void give_apostle_equipment(monster* apostle)

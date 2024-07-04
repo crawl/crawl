@@ -993,11 +993,11 @@ DESCRIP:  Dark:      It shrouds the wearer in darkness, reducing the range at
  which they can see and be seen by others.
 
 NAME:    scales of the Dragon King
-OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_GOLDEN_DRAGON_ARMOUR
 PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
-TILE_EQ: dragonarm_gold
+TILE_EQ: dragonarm_golden
 WILL:    1
 
 NAME:    hat of the Alchemist

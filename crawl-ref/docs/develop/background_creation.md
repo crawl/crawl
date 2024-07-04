@@ -92,7 +92,7 @@ herd-watcher:
 
     // They should have a light breezy garment, something to read to
     // pass the time, and a staff to protect their flock
-    { "gold dragon scales plus:9", "scroll of acquirement q:10",
+    { "golden dragon scales plus:9", "scroll of acquirement q:10",
       "greatsword plus:9 ego:flaming" },
     WCHOICE_NONE,
 

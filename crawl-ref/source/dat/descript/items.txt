@@ -691,10 +691,10 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-gold dragon scales
+golden dragon scales
 
-The scales of a gold dragon. It is much heavier than most dragon scale armours,
-and grants its wearer resistance to poison, fire and cold.
+The scales of a golden dragon. It is much heavier than most dragon scale
+armours, and grants its wearer resistance to poison, fire and cold.
 %%%%
 gold piece
 
