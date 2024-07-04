@@ -91,5 +91,6 @@ enum artefact_prop_type
     ARTP_WIZARDRY,
     ARTP_TROG_MESMERISE,
     ARTP_TROG_RAGE,
+    ARTP_TROG_LOUD,
     ARTP_NUM_PROPERTIES
 };

@@ -457,6 +457,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_TROG_RAGE,
             "It berserks you when you make melee attacks (20% chance), even if you have Clarity. In addition, your berserks last 20% longer.",
             prop_note::plain },
+        { ARTP_TROG_LOUD,
+            "It makes all your melee attacks 2.5 times louder. This extreme noise boosts the stamina of your Trog allies (20% extra health).",
+            prop_note::plain },
     };
     return data;
 }
@@ -501,6 +504,7 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_ANGRY,
         ARTP_TROG_MESMERISE,
         ARTP_TROG_RAGE,
+        ARTP_TROG_LOUD,
         ARTP_NOISE,
         ARTP_HARM,
         ARTP_RAMPAGING,

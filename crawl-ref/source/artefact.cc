@@ -876,6 +876,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, nullptr, 0, 0 },
     { "TrogRage", ARTP_VAL_BOOL, 0,   // ARTP_TROG_RAGE,
         nullptr, nullptr, 0, 0 },
+    { "TrogLoud", ARTP_VAL_BOOL, 0,   // ARTP_TROG_LOUD,
+        nullptr, nullptr, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000

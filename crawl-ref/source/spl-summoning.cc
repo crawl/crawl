@@ -658,6 +658,12 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         return false;
 
     _make_mons_berserk_summon(mons);
+
+    if (caster && caster->is_player() && you.scan_artefacts(ARTP_TROG_LOUD))
+    {
+        mons->max_hit_points = mons->max_hit_points * 6 / 5;
+        mons->hit_points = mons->hit_points * 6 / 5;
+    }
     return true;
 }
 

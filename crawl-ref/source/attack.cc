@@ -1602,6 +1602,14 @@ void attack::handle_noise(const coord_def & pos)
     // Cap noise at shouting volume.
     loudness = min(12, loudness);
 
+    // TrogLoud weapons are very noisy.
+    if (attacker->is_player()
+        && wpn_skill != SK_THROWING
+        && you.scan_artefacts(ARTP_TROG_LOUD))
+    {
+        loudness = div_rand_round(5 * loudness, 2);
+    }
+
     noisy(loudness, pos, attacker->mid);
 }
 
