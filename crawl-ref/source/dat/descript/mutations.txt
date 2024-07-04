@@ -303,7 +303,7 @@ of hostile magic. Each level of this mutation reduces your willpower further.
 %%%%
 see invisible mutation
 
-You have supernaturally acute eyesight, allowing you to see monsters that are
+You have supernaturally acute vision, allowing you to see monsters that are
 hidden from mundane sight. This has no effect on your accuracy otherwise.
 %%%%
 clarity mutation
