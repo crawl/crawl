@@ -1350,9 +1350,12 @@ void melee_attack::check_autoberserk()
     if (defender->is_monster() && mons_is_firewood(*defender->as_monster()))
         return;
 
-    if (x_chance_in_y(attacker->angry(), 100))
+    const int anger = attacker->angry();
+
+    if (x_chance_in_y(anger, 100))
     {
-        attacker->go_berserk(false);
+        // Berserk from ARTP_TROG_RAGE ignores clarity.
+        attacker->go_berserk(x_chance_in_y(20 * you.scan_artefacts(ARTP_TROG_RAGE), anger));
         return;
     }
 }

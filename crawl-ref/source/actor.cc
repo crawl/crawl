@@ -289,7 +289,8 @@ int actor::angry(bool items) const
         return anger;
 
     return anger + 20 * wearing_ego(EQ_ALL_ARMOUR, SPARM_RAGE)
-                 + scan_artefacts(ARTP_ANGRY);
+                 + scan_artefacts(ARTP_ANGRY)
+                 + 20 * scan_artefacts(ARTP_TROG_RAGE);
 }
 
 bool actor::clarity(bool items) const

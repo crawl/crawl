@@ -831,6 +831,8 @@ bool player::go_berserk(bool intentional, bool potion)
     mpr("You feel mighty!");
 
     int dur = (20 + random2avg(19,2)) / 2;
+    if (scan_artefacts(ARTP_TROG_RAGE))
+        dur = div_rand_round(6 * dur, 5);
     you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.
