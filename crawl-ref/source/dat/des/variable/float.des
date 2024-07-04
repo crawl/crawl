@@ -3251,7 +3251,7 @@ TILE:    b = bedevilled_crystal_gehenna
 MONS:    hell knight, deep troll, spriggan berserker zombie
 MONS:    sphinx zombie, red ugly thing
 KMONS:   )] = occultist / rakshasa w:5
-KITEM:   b = midnight gem
+KITEM:   b = smoky gem
 KFEAT:   } = enter_depths
 :   end
 : else
