@@ -470,7 +470,8 @@ Xom's power touches on your mind for a moment.
 
 Xom titters.
 %%%%
-# 50% stat loss, 25% draining, 25% torment
+# 50% stat loss, 25% draining,
+# 25% torment (only the player if Xom's feeling nasty)
 Xom draining or torment
 
 "You have displeased me, mortal."
@@ -484,6 +485,19 @@ You hear Xom's maniacal laughter.
 "Suffer!"
 
 Xom's malign attention turns to you for a moment.
+%%%%
+Xom torment all
+
+Xom torments the living!
+
+Xom spreads torment and darkness!
+
+Xom unleashes waves of agony!
+
+Xom's malign attention turns towards your situation for a moment.
+
+w:5
+The hand of Xom pokes all present souls.
 %%%%
 # summon hostile monster
 Xom hostile monster
@@ -652,7 +666,7 @@ Xom good monster polymorph
 
 "Hum-dee-hum-dee-hum..."
 
-Xom's power touches on a nearby monster.
+Xom's power touches your surroundings.
 
 You hear Xom's avuncular chuckle.
 %%%%

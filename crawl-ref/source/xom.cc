@@ -839,9 +839,10 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 
 static const vector<random_pick_entry<monster_type>> _xom_summons =
 {
-  { -3, 27,   5, FLAT, MONS_BUTTERFLY },
-  { -2,  6,  60, SEMI, MONS_CRIMSON_IMP },
-  {  0,  6,  40, SEMI, MONS_IRON_IMP },
+  { -4, 27,   5, FLAT, MONS_BUTTERFLY },
+  { -4, -1,   5, FLAT, MONS_QUOKKA },
+  { -3,  6,  60, SEMI, MONS_CRIMSON_IMP },
+  { -1,  6,  40, SEMI, MONS_IRON_IMP },
   {  2,  8,  60, SEMI, MONS_QUASIT },
   {  2,  8,  40, SEMI, MONS_SHADOW_IMP },
   {  3,  7,  50, SEMI, MONS_UFETUBUS },
@@ -852,43 +853,44 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   {  5, 10,  20, SEMI, MONS_WEEPING_SKULL },
   {  7, 14,  50, SEMI, MONS_ICE_DEVIL },
   {  7, 14,  60, SEMI, MONS_ORANGE_DEMON },
-  {  7, 14,  50, SEMI, MONS_RED_DEVIL },
-  {  8, 14,  80, SEMI, MONS_HELLWING },
+  {  8, 14,  50, SEMI, MONS_RED_DEVIL },
   {  8, 13,  40, SEMI, MONS_HELL_RAT },
   {  8, 15, 105, SEMI, MONS_SHAPESHIFTER },
   {  8, 15,  70, SEMI, MONS_BOGGART },
-  {  8, 18,  85, SEMI, MONS_RUST_DEVIL },
   {  8, 20, 155, SEMI, MONS_CHAOS_SPAWN },
+  {  9, 14,  80, SEMI, MONS_HELLWING },
   {  9, 14,   5, FLAT, MONS_TOENAIL_GOLEM },
   {  9, 14,  30, SEMI, MONS_VAMPIRE },
-  {  9, 14,  50, SEMI, MONS_KOBOLD_DEMONOLOGIST },
   {  9, 15,  90, SEMI, MONS_ABOMINATION_SMALL },
   {  9, 16,  50, SEMI, MONS_YNOXINUL },
+  {  9, 18,  85, SEMI, MONS_RUST_DEVIL },
+  { 10, 14,  30, SEMI, MONS_KOBOLD_DEMONOLOGIST },
   { 10, 16,  50, SEMI, MONS_UGLY_THING },
   { 10, 17,  50, SEMI, MONS_SOUL_EATER },
-  { 11, 20,  80, SEMI, MONS_WORLDBINDER },
-  { 11, 16,  30, SEMI, MONS_OBSIDIAN_BAT },
+  { 11, 17,  50, SEMI, MONS_SMOKE_DEMON },
   { 11, 17,  30, SEMI, MONS_DREAM_SHEEP },
   { 11, 18,  30, SEMI, MONS_TARANTELLA },
-  { 11, 19,  75, SEMI, MONS_SUN_DEMON },
-  { 11, 19,  75, SEMI, MONS_SIXFIRHY },
+  { 11, 20,  80, SEMI, MONS_WORLDBINDER },
   { 11, 22,  50, SEMI, MONS_NEQOXEC },
+  { 12, 16,  30, SEMI, MONS_OBSIDIAN_BAT },
   { 12, 18,  15, SEMI, MONS_DEMONSPAWN },
-  { 12, 18,  15, SEMI, MONS_GREAT_ORB_OF_EYES },
-  { 13, 20, 105, SEMI, MONS_LAUGHING_SKULL },
+  { 12, 19,  75, SEMI, MONS_SUN_DEMON },
+  { 12, 19,  75, SEMI, MONS_SIXFIRHY },
+  { 13, 20,  15, SEMI, MONS_GREAT_ORB_OF_EYES },
+  { 13, 21, 105, SEMI, MONS_LAUGHING_SKULL },
   { 14, 22,  90, SEMI, MONS_ABOMINATION_LARGE },
   { 14, 22, 105, SEMI, MONS_GLOWING_SHAPESHIFTER },
   { 15, 22,  50, SEMI, MONS_HELL_HOG },
   { 15, 23,   1, FLAT, MONS_OBSIDIAN_STATUE },
   { 16, 23,  60, SEMI, MONS_RADROACH },
   { 16, 25,  75, SEMI, MONS_VERY_UGLY_THING },
-  { 16, 24,  35, SEMI, MONS_GLOWING_ORANGE_BRAIN },
-  { 16, 32,  35, SEMI, MONS_SHADOW_DEMON },
+  { 17, 24,  35, SEMI, MONS_GLOWING_ORANGE_BRAIN },
   { 17, 25,  50, SEMI, MONS_SPHINX },
+  { 17, 32,  35, SEMI, MONS_SHADOW_DEMON },
   { 17, 32,  75, SEMI, MONS_SIN_BEAST },
   { 17, 32,  15, SEMI, MONS_CACODEMON },
   { 18, 24,  30, SEMI, MONS_DANCING_WEAPON },
-  { 18, 26,   1, FLAT, MONS_ORANGE_STATUE },
+  { 19, 26,   1, FLAT, MONS_ORANGE_STATUE },
   { 20, 32,  30, SEMI, MONS_APOCALYPSE_CRAB },
   { 21, 32,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
   { 22, 32,   1, FLAT, MONS_STARFLOWER },
@@ -962,7 +964,7 @@ static int _xom_pal_counting(int roll, bool isFriendly)
             count = random_range(2, 3);
     }
 
-    if (!isFriendly &&_xom_feels_nasty())
+    if (!isFriendly && _xom_feels_nasty())
         count *= 2;
 
     return count;
@@ -975,11 +977,11 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
 
     // Tiers here match _xom_pal_counting's tiers of strength related
     // inversely to summon count but scaling up versus one's XL regardless.
-    if (roll <= 150)
+    if (roll <= 130)
         if (you.experience_level < 19)
-           variance += -3;
+           variance += -4;
         else
-           variance += random_range(-3, -2);
+           variance += random_range(-4, -3);
     else if (roll <= 300)
         if (you.experience_level < 19)
             variance += random_range(-2, -1);
@@ -1025,7 +1027,7 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
         mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
                                          MONS_DEMONSPAWN_CORRUPTER;
     }
-    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(6))
+    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(4))
     {
         mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
                                          MONS_PLAYER_GHOST;
@@ -1192,7 +1194,7 @@ static void _xom_send_one_ally(int sever)
         int extra = random_range(100, 200);
         summons->add_ench(mon_enchant(ENCH_ABJ, MON_SUMM_AID, nullptr, extra));
         summons->add_ench(mon_enchant(ENCH_REGENERATION, MON_SUMM_AID,
-                                       nullptr, 500));
+                                       nullptr, 2000));
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
 
         const string note = make_stringf("summons friendly %s",
@@ -1230,7 +1232,14 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     }
 
     const bool powerup = !(mons.wont_attack() ^ helpful);
-    mons.polymorph(powerup ? PPT_MORE : PPT_LESS);
+
+    if (powerup)
+        if (you.experience_level > 4)
+            mons.polymorph(PPT_MORE);
+        else
+            mons.polymorph(PPT_SAME);
+    else
+        mons.polymorph(PPT_LESS);
 
     const bool see_new = you.can_see(mons);
 
@@ -1239,7 +1248,8 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
         const string new_name = see_new ? mons.full_name(DESC_PLAIN)
                                         : "something unseen";
 
-        string note = make_stringf("polymorph %s -> %s",
+        string note = make_stringf("%s polymorph %s -> %s",
+                                   helpful ? "good" : "bad",
                                    old_name.c_str(), new_name.c_str());
 
 #ifdef NOTE_DEBUG_XOM
@@ -2280,56 +2290,90 @@ static void _xom_force_lances(int /* sever */)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _xom_enchant_monster(bool helpful)
+static void _xom_enchant_monster(int sever, bool helpful)
 {
-    monster* mon = choose_random_nearby_monster(_choose_enchantable_monster);
-    if (!mon)
-        return;
+    vector<monster*> mon;
+    enchant_type ench;
+    string ench_name = "";
+    int xl = you.experience_level;
+    int affected = 0;
+    int cap = 0;
+    int range = 0;
+    int time = 0;
+
+    vector<monster*> targetable;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (_choose_enchantable_monster(**mi))
+            targetable.push_back(*mi);
+    }
+
+    if (helpful) // To the player, not the monster.
+    {
+        cap = 1 + div_rand_round(xl, 5);
+        cap = random_range(1, cap);
+        ench = random_choose_weighted(200 + xl * 4, ENCH_PETRIFYING,
+                                      300 - xl * 5, ENCH_PARALYSIS,
+                                      300 - xl * 5, ENCH_VITRIFIED,
+                                      200 + xl * 4, ENCH_SLOW);
+    }
+    else
+    {
+        cap = 1 + div_rand_round(xl, 7);
+        cap = random_range(1, cap);
+        ench = random_choose_weighted(200 + xl * 4, ENCH_HASTE,
+                                      300, ENCH_MIGHT,
+                                      200 + xl * 2, ENCH_REGENERATION,
+                                      300 - xl * 5, ENCH_RESISTANCE);
+    }
+
+    ench_name = description_for_ench(ench);
+
+    if (ench == ENCH_PETRIFYING)
+        time = 30 + random2(sever / 10);
+    else if (ench == ENCH_VITRIFIED || ench == ENCH_SLOW || ench == ENCH_PARALYSIS)
+        time = 200 + random2(sever);
+    else if (ench == ENCH_HASTE || ench == ENCH_MIGHT)
+        time = 400 + random2(sever * 4);
+    else if (ench == ENCH_REGENERATION || ench == ENCH_RESISTANCE)
+        time = 800 + random2(sever * 4);
 
     god_speaks(GOD_XOM,
                helpful ? _get_xom_speech("good enchant monster").c_str()
                        : _get_xom_speech("bad enchant monster").c_str());
 
-    beam_type ench;
+    shuffle_array(targetable);
 
-    if (helpful) // To the player, not the monster.
+    for (monster *application : targetable)
     {
-        static const beam_type enchantments[] =
-        {
-            BEAM_PETRIFY,
-            BEAM_SLOW,
-            BEAM_PARALYSIS,
-            BEAM_CHARM,
-        };
-        ench = RANDOM_ELEMENT(enchantments);
-    }
-    else
-    {
-        static const beam_type enchantments[] =
-        {
-            BEAM_HASTE,
-            BEAM_MIGHT,
-            BEAM_INVISIBILITY,
-            BEAM_RESISTANCE,
-        };
-        ench = RANDOM_ELEMENT(enchantments);
-    }
+        if (affected == cap)
+            break;
 
-    enchant_actor_with_flavour(mon, 0, ench);
+        mprf("%s suddenly %s %s!",
+              application->name(DESC_THE).c_str(),
+              (ench == ENCH_PETRIFYING || ench == ENCH_REGENERATION) ? "starts" : "looks",
+              ench_name.c_str());
+
+        application->add_ench(mon_enchant(ench, 0, nullptr, time));
+        affected++;
+    }
 
     // Take a note.
-    const string note = make_stringf("enchant monster %s",
-                                     helpful ? "(good)" : "(bad)");
+    const string note = make_stringf("enchant monster%s (%s, %s)",
+                                     affected >= 1 ? "s" : "",
+                                     helpful ? "good" : "bad",
+                                     ench_name.c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
-static void _xom_good_enchant_monster(int /*sever*/)
+static void _xom_good_enchant_monster(int sever)
 {
-    _xom_enchant_monster(true);
+    _xom_enchant_monster(sever, true);
 }
-static void _xom_bad_enchant_monster(int /*sever*/)
+static void _xom_bad_enchant_monster(int sever)
 {
-    _xom_enchant_monster(false);
+    _xom_enchant_monster(sever, false);
 }
 
 // Xom hastes, slows, or paralyzes the player and everything else in sight
@@ -3142,20 +3186,56 @@ static void _xom_draining(int /*sever*/)
 
 static void _xom_torment(int /*sever*/)
 {
-    const string speech = _get_xom_speech("draining or torment");
-    god_speaks(GOD_XOM, speech.c_str());
+    if (_xom_feels_nasty())
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("draining or torment").c_str());
+        torment_player(0, TORMENT_XOM);
+    }
+    else
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("torment all").c_str());
+        torment(nullptr, TORMENT_XOM, you.pos());
+    }
 
-    torment_player(0, TORMENT_XOM);
-
-    const string note = make_stringf("torment (%d/%d hp)", you.hp, you.hp_max);
+    const string note = make_stringf("torment%s(%d/%d hp)",
+                                      _xom_feels_nasty() ? " all (player " : " (",
+                                      you.hp, you.hp_max);
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
 static monster* _xom_summon_hostile(monster_type hostile)
 {
-    return create_monster(mgen_data::hostile_at(hostile, true, you.pos())
+    // Fuzz the monster's placement.
+    int placeable_count = 0;
+    coord_def spot = you.pos();
+
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS, true);
+             ri; ++ri)
+    {
+        if ((!feat_has_solid_floor(env.grid(*ri))) || cell_is_solid(*ri)
+            || actor_at(*ri) || grid_distance(*ri, you.pos()) <= 1)
+        {
+            continue;
+        }
+
+        if (one_chance_in(++placeable_count))
+            spot = *ri;
+    }
+
+    monster* mon = create_monster(mgen_data::hostile_at(hostile, true, spot)
                           .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)
                           .set_non_actor_summoner("Xom"));
+
+    // To prevent high-stealth players from just ducking around a corner
+    // and losing some chunk of hostile summons, give them a helping hand.
+    if (mon)
+    {
+        mon->target = you.pos();
+        mon->foe = MHITYOU;
+        mon->behaviour = BEH_SEEK;
+    }
+
+    return mon;
 }
 
 static void _xom_summon_hostiles(int sever)
@@ -3168,13 +3248,14 @@ static void _xom_summon_hostiles(int sever)
     {
         // Small number of shadow creatures, but still a little touch of chaos.
         int multiplier = 1;
+        int range_cap = _xom_feels_nasty() || you.experience_level < 10 ? 2 : 3;
 
         if (_xom_is_bored())
             multiplier = 3;
         else if (you.penance[GOD_XOM])
             multiplier = 2;
 
-        int count = random_range(1, 3) * multiplier;
+        int count = random_range(1, range_cap) * multiplier;
 
         for (int i = 0; i < multiplier; ++i)
             if (_xom_summon_hostile(_xom_random_pal(strengthRoll, false)))
@@ -3666,12 +3747,16 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
 
     if (tension > random2(3) && x_chance_in_y(14, sever))
     {
+        int plant_capacity = 0;
         for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
              ri; ++ri)
         {
             if (!monster_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
-                return XOM_GOOD_FLORA_RING;
+                plant_capacity++;
         }
+
+        if (plant_capacity >= 3)
+            return XOM_GOOD_FLORA_RING;
     }
 
     if (tension > random2(5) && x_chance_in_y(15, sever))
@@ -3775,7 +3860,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         return XOM_BAD_NOISE;
      }
 
-    if (tension > 0 && x_chance_in_y(7, sever))
+    if (tension > 0 && x_chance_in_y(7, sever)
+        && mon_nearby(_choose_enchantable_monster))
         return XOM_BAD_ENCHANT_MONSTER;
 
     if (tension > 0 && x_chance_in_y(8, sever)
