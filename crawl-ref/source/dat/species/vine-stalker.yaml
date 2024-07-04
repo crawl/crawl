@@ -6,6 +6,7 @@ difficulty: Advanced
 difficulty_priority: 90
 species_flags:
   - SPF_NO_EYES
+  - SPF_NO_EARS
 aptitudes:
   xp: 0
   hp: -3
