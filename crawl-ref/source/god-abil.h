@@ -243,3 +243,4 @@ spret jiyva_oozemancy(bool fail);
 void jiyva_end_oozemancy();
 
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);
+void makhleb_infernal_servant();

@@ -342,15 +342,15 @@ Unleash Destruction ability
 Channels a blast of hellish fire, cold, lightning, or negative energy at a
 targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
-Lesser Servant of Makhleb ability
+Infernal Servant ability
 
-Summons a minor demon. Failing to use this ability correctly will turn the
-demon hostile.
-%%%%
-Greater Servant of Makhleb ability
+Beckons a demon from the far reaches of Hell and binds it into service with your
+blood. At low Invocations skill, only lesser devils may be summoned, but major
+demons and even executioners may answer the call of those with high Invocations
+skill.
 
-[[Greater Servant of Makhleb spell]] Failing to use this ability correctly will
-turn the demon hostile.
+Beware that the armies of chaos are prone to infighting, and sometimes a
+hostile demon may answer the ritual alongside your summoned servant.
 %%%%
 # Sif Muna
 %%%%

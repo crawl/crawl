@@ -469,12 +469,8 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MAKHLEB_DESTRUCTION, "Unleash Destruction",
             0, 50, 0, LOS_MAX_RANGE, {fail_basis::invo, 20, 5, 20},
             abflag::dir_or_target },
-        { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
-            0, scaling_cost::fixed(4), 2, -1, {fail_basis::invo, 40, 5, 20},
-            abflag::hostile },
-        { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
-            0, scaling_cost::fixed(10), 5, -1, {fail_basis::invo, 90, 2, 5},
-            abflag::hostile },
+        { ABIL_MAKHLEB_INFERNAL_SERVANT, "Infernal Servant",
+            0, scaling_cost::fixed(8), 4, -1, {fail_basis::invo, 40, 5, 20}},
 
         // Sif Muna
         { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -1157,8 +1153,7 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_ELYVILON_HEAL_OTHER:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+    case ABIL_MAKHLEB_INFERNAL_SERVANT:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
@@ -2544,8 +2539,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
 
     // Summons:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+    case ABIL_MAKHLEB_INFERNAL_SERVANT:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_KIKU_UNEARTH_WRETCHES:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
@@ -2692,10 +2686,8 @@ bool activate_talent(const talent& tal, dist *target)
         if (abil.failure.base_chance)
         {
             args.top_prompt +=
-                make_stringf(" <lightgrey>(%s risk of %s)</lightgrey>",
-                             failure_rate_to_string(tal.fail).c_str(),
-                             testbits(abil.flags, abflag::hostile) ? "hostile"
-                                                                   : "failure");
+                make_stringf(" <lightgrey>(%s risk of failure)</lightgrey>",
+                             failure_rate_to_string(tal.fail).c_str());
         }
         args.behaviour = &beh;
         if (!is_targeted)
@@ -2729,7 +2721,7 @@ bool activate_talent(const talent& tal, dist *target)
     {
         case spret::success:
         {
-            ASSERT(!fail || testbits(abil.flags, abflag::hostile));
+            ASSERT(!fail);
             practise_using_ability(abil.ability);
             _pay_ability_costs(abil);
 
@@ -3341,20 +3333,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_MAKHLEB_DESTRUCTION:
         return makhleb_unleash_destruction(_makhleb_destruction_power(), beam, fail);
 
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
-                                        MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
-                                        MONS_YNOXINUL),
-                          20 + you.skill(SK_INVOCATIONS, 3),
-                          GOD_MAKHLEB, 0, !fail);
-        break;
-
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                                        MONS_BLIZZARD_DEMON, MONS_BALRUG,
-                                        MONS_CACODEMON),
-                          20 + you.skill(SK_INVOCATIONS, 3),
-                          GOD_MAKHLEB, 0, !fail);
+    case ABIL_MAKHLEB_INFERNAL_SERVANT:
+        fail_check();
+        makhleb_infernal_servant();
         break;
 
     case ABIL_TROG_BERSERK:
@@ -3822,8 +3803,7 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
     // Abilities that have aroused our ire earn 2.5x their classic
     // Crawl piety cost.
     return (crawl_state.game_is_sprint()
-            && (abil == ABIL_TROG_BROTHERS_IN_ARMS
-                || abil == ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB))
+            && abil == ABIL_TROG_BROTHERS_IN_ARMS)
            ? div_rand_round(original_cost * 5, 2)
            : original_cost;
 }
@@ -4000,9 +3980,7 @@ string describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
-    const string failure = failure_rate_to_string(tal.fail)
-        + (testbits(get_ability_def(tal.which).flags, abflag::hostile)
-           ? " hostile" : "");
+    const string failure = failure_rate_to_string(tal.fail);
 
     ostringstream desc;
     desc << left

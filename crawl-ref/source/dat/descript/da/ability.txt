@@ -242,16 +242,6 @@ Finesse ability
 virkning forårsager en anelse magisk besmittelse, som det kan være usundt at
 være udsat for gennem længere tid.
 %%%%
-Lesser Servant of Makhleb ability
-
-Hidkalder en smådæmon. Høj færdighed inden for påkaldelser mindsker risikoen
-for at den er fjendtlig.
-%%%%
-Greater Servant of Makhleb ability
-
-Hidkalder en større dæmon. Højere færdighed inden for påkaldelser mindsker
-risikoen for at den er fjendtlig.
-%%%%
 Channel Energy ability
 
 Genopfylder dit magiske reservoir med en mængde, som er baseret på dine

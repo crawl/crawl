@@ -63,6 +63,7 @@
 #include "mon-death.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-pathfind.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-speak.h"
@@ -80,6 +81,7 @@
 #include "potion.h"
 #include "prompt.h"
 #include "random.h"
+#include "random-pick.h"
 #include "religion.h"
 #include "shout.h"
 #include "skill-menu.h"
@@ -6937,4 +6939,66 @@ spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
     beam.fire();
 
     return spret::success;
+}
+
+static const vector<random_pick_entry<monster_type>> _makhleb_servants =
+{
+  {  0,  7,  100, SEMI, MONS_ICE_DEVIL },
+  {  0,  9,  120, SEMI, MONS_ORANGE_DEMON },
+  {  2,  10, 110, SEMI, MONS_RUST_DEVIL },
+  {  3,  10, 145, SEMI, MONS_RED_DEVIL },
+  {  4,  12, 145, SEMI, MONS_HELLWING },
+  {  6,  13, 100, SEMI, MONS_SOUL_EATER },
+  {  6,  13, 150, SEMI, MONS_YNOXINUL },
+  {  6,  15, 180, SEMI, MONS_SMOKE_DEMON },
+  {  8,  15, 150, SEMI, MONS_SUN_DEMON },
+  {  8,  16, 160, SEMI, MONS_SIXFIRHY },
+  { 10,  27,  155, SEMI, MONS_BLIZZARD_DEMON },
+  { 11,  27,  150, SEMI, MONS_GREEN_DEATH },
+  { 13,  27,  170, SEMI, MONS_CACODEMON },
+  { 14,  27,  185, SEMI, MONS_BALRUG },
+  { 17,  27,  220, SEMI, MONS_EXECUTIONER },
+};
+
+void makhleb_infernal_servant()
+{
+    bleed_for_makhleb(you);
+
+    int pow = you.skill(SK_INVOCATIONS);
+    const bool hostile = one_chance_in(6);
+    if (hostile)
+        pow += 3;
+
+    monster_picker servant_picker;
+    monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
+
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_MAKHLEB);
+
+    if (monster* demon = create_monster(mg))
+    {
+        mprf("%s answers the call of your %s!",
+                demon->name(DESC_A).c_str(),
+                you.has_blood() ? "blood" : "suffering");
+
+        if (hostile)
+        {
+            mon_type = servant_picker.pick(_makhleb_servants, pow - 3, MONS_RED_DEVIL);
+            mgen_data mg2(mon_type, BEH_HOSTILE, you.pos(), MHITYOU, MG_AUTOFOE);
+            mg2.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET | MF_WAS_IN_VIEW);
+            if (monster* bad_demon = create_monster(mg2))
+            {
+                if (coinflip())
+                {
+                    mprf(MSGCH_WARN, "A jealous %s pursues it!",
+                        bad_demon->name(DESC_PLAIN).c_str());
+                }
+                else
+                {
+                    mprf(MSGCH_WARN, "A rebellious %s escapes with it!",
+                        bad_demon->name(DESC_PLAIN).c_str());
+                }
+            }
+        }
+    }
 }

@@ -185,10 +185,8 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, "gain health from killing" },
             { 2, ABIL_MAKHLEB_DESTRUCTION,
                  "unleash Makhleb's destructive might" },
-            { 3, ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
-                 "summon a lesser servant of Makhleb" },
-            { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,
-                 "summon a greater servant of Makhleb" },
+            { 3, ABIL_MAKHLEB_INFERNAL_SERVANT,
+                 "summon an infernal servant of Makhleb" },
         },
 
         // Sif Muna
