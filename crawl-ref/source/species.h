@@ -51,6 +51,7 @@ namespace species
     bool has_bones(species_type species);
     bool has_feet(species_type species);
     bool has_eyes(species_type species);
+    bool has_ears(species_type species);
 
     bool can_throw_large_rocks(species_type species);
     bool wears_barding(species_type species);

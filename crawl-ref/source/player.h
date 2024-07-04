@@ -1120,6 +1120,7 @@ bool player_can_use_armour();
 bool player_has_hair(bool temp = true, bool include_mutations = true);
 bool player_has_feet(bool temp = true, bool include_mutations = true);
 bool player_has_eyes(bool temp = true, bool include_mutations = true);
+bool player_has_ears(bool temp = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);

@@ -292,6 +292,11 @@ namespace species
         return !bool(get_species_def(species).flags & SPF_NO_EYES);
     }
 
+    bool has_ears(species_type species)
+    {
+        return !bool(get_species_def(species).flags & SPF_NO_EARS);
+    }
+
     bool can_throw_large_rocks(species_type species)
     {
         return size(species) >= SIZE_LARGE;

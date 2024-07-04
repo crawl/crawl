@@ -989,6 +989,14 @@ bool player_has_eyes(bool temp, bool include_mutations)
     return species::has_eyes(you.species);
 }
 
+bool player_has_ears(bool temp)
+{
+    if (temp && form_has_ears(you.form))
+        return true;
+
+    return species::has_ears(you.species);
+}
+
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {

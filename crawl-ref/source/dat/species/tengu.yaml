@@ -6,6 +6,7 @@ difficulty_priority: 40
 species_flags:
   - SPF_NO_HAIR
   - SPF_NO_FEET
+  - SPF_NO_EARS
 aptitudes:
   xp: 0
   hp: -2

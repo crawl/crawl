@@ -234,6 +234,8 @@ public:
     const form_capability has_feet;
     /// Does this form have eyes?
     const form_capability has_eyes;
+    /// Does this form have ears?
+    const form_capability has_ears;
 
     /// what verb does the player use when shouting in this form?
     const string shout_verb;
@@ -329,6 +331,7 @@ bool form_has_hair(transformation form = you.form);
 bool form_has_bones(transformation form = you.form);
 bool form_has_feet(transformation form = you.form);
 bool form_has_eyes(transformation form = you.form);
+bool form_has_ears(transformation form = you.form);
 
 bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat);

@@ -7,6 +7,7 @@ difficulty: Intermediate
 difficulty_priority: 20
 species_flags:
   - SPF_NO_HAIR
+  - SPF_NO_EARS
 aptitudes:
   xp: 0
   hp: 0
