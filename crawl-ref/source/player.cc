@@ -4944,20 +4944,20 @@ void barb_player(int turns, int pow)
 }
 
 /**
- * Players are rather more susceptible to dazzling: only those with no
- * eyes are immune.
+ * Players are rather more susceptible to dazzling: only those who can't
+ * be blinded are immune.
  */
 bool player::can_be_dazzled() const
 {
-    return player_has_eyes();
+    return can_be_blinded();
 }
 
 /**
- * Players can be blinded only if they can be dazzled.
+ * Players can be blinded only if they have eyes.
  */
 bool player::can_be_blinded() const
 {
-    return can_be_dazzled();
+    return player_has_eyes();
 }
 
 /**
