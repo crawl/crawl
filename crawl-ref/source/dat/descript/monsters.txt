@@ -2115,7 +2115,7 @@ gather for whatever worrying activities orcs enjoy.
 %%%%
 orc apostle
 
-A orcish wayfarer who has been touched by the hand of Beogh. Whether out of
+An orcish wayfarer who has been touched by the hand of Beogh. Whether out of
 religious devotion or personal jealousy, they have come to bar your path.
 
 Hold nothing back - for neither they nor their followers will do so.
