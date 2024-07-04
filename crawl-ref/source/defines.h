@@ -333,7 +333,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define MERFOLK_AVATAR_CALL_KEY "merfolk_avatar_call"
 #define PIKEL_BAND_KEY "pikel_band"
 #define KIRKE_BAND_KEY "kirke_band"
-#define CHARMED_DEMON_KEY "charmed_demon"
 #define EMERGENCY_CLONE_KEY "emergency_clone"
 #define BINDING_SIGIL_DURATION_KEY "binding_sigil_duration"
 #define BULLSEYE_TARGET_KEY "bullseye_target"

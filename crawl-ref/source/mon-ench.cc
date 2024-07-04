@@ -532,16 +532,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet)
             {
-                if (me.ench == ENCH_CHARM && props.exists(CHARMED_DEMON_KEY))
-                {
-                    mprf("%s breaks free of your control!",
-                         name(DESC_THE, true).c_str());
-                }
-                else
-                    mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
-                         me.ench == ENCH_CHARM   ? "charmed"
-                         : me.ench == ENCH_HEXED ? "hexed"
-                                                 : "bribed");
+                mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
+                        me.ench == ENCH_CHARM   ? "charmed"
+                        : me.ench == ENCH_HEXED ? "hexed"
+                                                : "bribed");
 
                 mprf("You can %s detect %s.",
                      friendly() ? "once again" : "no longer",
@@ -558,18 +552,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet)
             {
-                if (me.ench == ENCH_CHARM && props.exists(CHARMED_DEMON_KEY))
-                {
-                    simple_monster_message(*this,
-                                           " breaks free of your control!");
-                }
-                else
-                    simple_monster_message(*this,
-                                        me.ench == ENCH_CHARM
-                                        ? " is no longer charmed."
-                                        : me.ench == ENCH_HEXED
-                                        ? " is no longer hexed."
-                                        : " is no longer bribed.");
+                simple_monster_message(*this,
+                                    me.ench == ENCH_CHARM
+                                    ? " is no longer charmed."
+                                    : me.ench == ENCH_HEXED
+                                    ? " is no longer hexed."
+                                    : " is no longer bribed.");
             }
 
         }
@@ -588,13 +576,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             patrol_point.reset();
         }
         mons_att_changed(this);
-
-        // If a greater demon is breaking free, give the player time to respond
-        if (me.ench == ENCH_CHARM && props.exists(CHARMED_DEMON_KEY))
-        {
-            speed_increment -= speed;
-            props.erase(CHARMED_DEMON_KEY);
-        }
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
