@@ -11,6 +11,7 @@
 #include "god-type.h"
 #include "item-prop-enum.h" // brand_type
 #include "los-type.h"
+#include "mutation-type.h"
 #include "random.h"
 #include "recite-eligibility.h"
 #include "recite-type.h"
@@ -83,6 +84,8 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define NIGHTFALL_INITIAL_DUR_KEY "nightfall_initial_dur"
 #define DITHMENOS_MARIONETTE_SPELLS_KEY "marionette_spells_valid"
+
+#define MAKHLEB_OFFERED_MARKS_KEY "makhleb_offered_marks"
 
 struct bolt;
 class stack_iterator;
@@ -244,3 +247,4 @@ void jiyva_end_oozemancy();
 
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);
 void makhleb_infernal_servant();
+void makhleb_inscribe_mark(mutation_type mark);

@@ -43,6 +43,7 @@ bool is_bad_mutation(mutation_type mut);
 bool is_good_mutation(mutation_type mut);
 bool is_body_facet(mutation_type mut);
 bool is_slime_mutation(mutation_type mut);
+bool is_makhleb_mark(mutation_type mut);
 
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,

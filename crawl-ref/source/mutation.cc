@@ -81,10 +81,11 @@ enum class mutflag
     bad     = 1 << 1, // used by malmut etc
     jiyva   = 1 << 2, // jiyva-only muts
     qazlal  = 1 << 3, // qazlal wrath
+    makhleb = 1 << 4, // makhleb capstone marks
 
-    last    = qazlal
+    last    = makhleb
 };
-DEF_BITFIELD(mutflags, mutflag, 3);
+DEF_BITFIELD(mutflags, mutflag, 4);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
@@ -328,6 +329,16 @@ bool is_body_facet(mutation_type mut)
  */
 mutation_activity_type mutation_activity_level(mutation_type mut)
 {
+    // Makhleb mutations are active in all forms, but only while worshipping.
+    const mutation_def& mdef = _get_mutation_def(mut);
+    if (_mut_has_use(mdef, mutflag::makhleb))
+    {
+        if (you_worship(GOD_MAKHLEB))
+            return mutation_activity_type::FULL;
+        else
+            return mutation_activity_type::INACTIVE;
+    }
+
     // First make sure the player's form permits the mutation.
     if (!form_keeps_mutations())
     {
@@ -1602,6 +1613,11 @@ static mutation_type _get_random_slime_mutation()
 bool is_slime_mutation(mutation_type mut)
 {
     return _mut_has_use(mut_data[mut_index[mut]], mutflag::jiyva);
+}
+
+bool is_makhleb_mark(mutation_type mut)
+{
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::makhleb);
 }
 
 static mutation_type _get_random_qazlal_mutation()
@@ -3382,7 +3398,11 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
     {
         if (you.mutation[i])
         {
-            const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i), innate, temp);
+            // Infernal Marks should count for silver vulnerability despite
+            // being permanent mutations.
+            const bool check_innate = innate || is_makhleb_mark(static_cast<mutation_type>(i));
+            const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i),
+                                                          check_innate, temp);
 
             if (levels)
                 result += mut_level;

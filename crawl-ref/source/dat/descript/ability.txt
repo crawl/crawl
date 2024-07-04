@@ -352,6 +352,15 @@ skill.
 Beware that the armies of chaos are prone to infighting, and sometimes a
 hostile demon may answer the ritual alongside your summoned servant.
 %%%%
+Brand Self ability
+
+Permanently carves an Infernal Mark into yourself, forever tainting body and
+soul in service of The Destroyer.
+
+So long as you continue to worship Makhleb, this mark will grant you the
+following power:
+
+%%%%
 # Sif Muna
 %%%%
 Channel Magic ability

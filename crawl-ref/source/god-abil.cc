@@ -7002,3 +7002,17 @@ void makhleb_infernal_servant()
         }
     }
 }
+
+void makhleb_inscribe_mark(mutation_type mark)
+{
+    mprf("You utter a prayer to Makhleb and carve the %s into yourself.",
+         mutation_name(mark));
+
+    const int hploss = min(you.hp - 1, you.hp * 2 / 3);
+    blood_spray(you.pos(), MONS_PLAYER, 50);
+    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER);
+
+    perma_mutate(mark, 1, " inscribed by the player.");
+
+    you.one_time_ability_used.set(GOD_MAKHLEB);
+}

@@ -187,6 +187,11 @@ const vector<vector<god_power>> & get_all_god_powers()
                  "unleash Makhleb's destructive might" },
             { 3, ABIL_MAKHLEB_INFERNAL_SERVANT,
                  "summon an infernal servant of Makhleb" },
+            { 7, ABIL_MAKHLEB_BRAND_SELF_1,
+                 "Makhleb will allow you to brand your body with an infernal mark... once.",
+                 "Mahkleb will no longer allow you to brand your body with an infernal mark."},
+            { 7, ABIL_MAKHLEB_BRAND_SELF_2, ""},
+            { 7, ABIL_MAKHLEB_BRAND_SELF_3, ""},
         },
 
         // Sif Muna
@@ -3755,6 +3760,38 @@ static void _join_cheibriados()
     notify_stat_change();
 }
 
+static void _join_makhleb()
+{
+    // Re-active our Mark, if we gained one, then abandoned and rejoined.
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        if (you.innate_mutation[i] && is_makhleb_mark((mutation_type)i))
+            mprf("Your %s burns with power once more.", mutation_name((mutation_type)i));
+    }
+
+    // Initialize what Marks the player will eventually the offered.
+    if (you.props.exists(MAKHLEB_OFFERED_MARKS_KEY))
+        you.props.erase(MAKHLEB_OFFERED_MARKS_KEY);
+
+    you.one_time_ability_used.set(GOD_MAKHLEB, false);
+
+    CrawlVector& marks = you.props[MAKHLEB_OFFERED_MARKS_KEY].get_vector();
+
+    vector<mutation_type> muts =
+    {
+        MUT_MAHKLEB_MARK_HEMOCLASM,
+        MUT_MAKHLEB_MARK_LEGION,
+        MUT_MAKHLEB_MARK_SHRIKE,
+        MUT_MAKHLEB_MARK_EXECUTION,
+        MUT_MAKHLEB_MARK_FIEND,
+    };
+
+    shuffle_array(muts);
+
+    for (int i = 0; i < 3; ++i)
+        marks.push_back(muts[i]);
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_BEOGH, update_player_symbol },
@@ -3778,6 +3815,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_RU, _join_ru },
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
+    { GOD_MAKHLEB, _join_makhleb },
     { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
 };
 

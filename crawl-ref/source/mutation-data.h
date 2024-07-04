@@ -2629,6 +2629,46 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_MAHKLEB_MARK_HEMOCLASM, 0, 1, mutflag::makhleb, false,
+  "Mark of Hemoclasm",
+
+  {"You bear the Mark of Hemoclasm.", "", ""},
+  {"You feel some sort of feeling.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_MARK_LEGION, 0, 1, mutflag::makhleb, false,
+  "Mark of the Legion",
+
+  {"You bear the Mark of the Legion.", "", ""},
+  {"You feel some sort of feeling.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_MARK_SHRIKE, 0, 1, mutflag::makhleb, false,
+  "Mark of the Shrike",
+
+  {"You bear the Mark of the Shrike.", "", ""},
+  {"You feel some sort of feeling.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_MARK_EXECUTION, 0, 1, mutflag::makhleb, false,
+  "Mark of Execution",
+
+  {"You bear the Mark of Execution.", "", ""},
+  {"You feel some sort of feeling.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_MAKHLEB_MARK_FIEND, 0, 1, mutflag::makhleb, false,
+  "Mark of the Fiend",
+
+  {"You bear the Mark of the Fiend.", "", ""},
+  {"You feel some sort of feeling.", "", ""},
+  {"", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

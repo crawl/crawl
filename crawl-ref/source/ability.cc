@@ -471,6 +471,12 @@ static vector<ability_def> &_get_ability_list()
             abflag::dir_or_target },
         { ABIL_MAKHLEB_INFERNAL_SERVANT, "Infernal Servant",
             0, scaling_cost::fixed(8), 4, -1, {fail_basis::invo, 40, 5, 20}},
+        { ABIL_MAKHLEB_BRAND_SELF_1, "Brand Self #1",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_MAKHLEB_BRAND_SELF_2, "Brand Self #2",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_MAKHLEB_BRAND_SELF_3, "Brand Self #3",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         // Sif Muna
         { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -1258,6 +1264,21 @@ talent get_talent(ability_type ability, bool check_confused)
     return result;
 }
 
+static mutation_type _makhleb_ability_to_mutation(ability_type abil)
+{
+    // XXX: The list of marks the player will be offered is generated as soon
+    //      as the player first joins Makhleb, but internally their ability
+    //      keybinds are assigned before god-specific code is run, and it will
+    //      try to pull the names of mutations that aren't asigned yet. Use a
+    //      placeholder to stop a crash on conversion.
+    if (!you.props.exists(MAKHLEB_OFFERED_MARKS_KEY))
+        return MUT_NON_MUTATION;
+
+    return (mutation_type)you.props[MAKHLEB_OFFERED_MARKS_KEY]
+                            .get_vector()[abil - ABIL_MAKHLEB_BRAND_SELF_1].get_int();
+}
+
+
 string ability_name(ability_type ability, bool dbname)
 {
     // Special-case some dynamic names
@@ -1286,6 +1307,17 @@ string ability_name(ability_type ability, bool dbname)
                 return "Dismiss Apostle";
             else
                 return "Dismiss " + get_apostle_name(3, true);
+
+        case ABIL_MAKHLEB_BRAND_SELF_1:
+        case ABIL_MAKHLEB_BRAND_SELF_2:
+        case ABIL_MAKHLEB_BRAND_SELF_3:
+            if (dbname)
+                return "Brand Self";
+            else
+            {
+                return make_stringf("Accept %s",
+                                    mutation_name(_makhleb_ability_to_mutation(ability)));
+            }
 
         default:
             return get_ability_def(ability).name;
@@ -1497,15 +1529,33 @@ string get_ability_desc(const ability_type ability, bool need_title)
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
 
-    if (ability == ABIL_ASHENZARI_CURSE)
-        lookup += _curse_desc();
+    switch (ability)
+    {
+        case ABIL_ASHENZARI_CURSE:
+            lookup += _curse_desc();
+            break;
 
-    if (ability == ABIL_BEOGH_DISMISS_APOSTLE_1)
-        lookup += "\n" + apostle_short_description(1) + "\n";
-    else if (ability == ABIL_BEOGH_DISMISS_APOSTLE_2)
-        lookup += "\n" + apostle_short_description(2) + "\n";
-    else if (ability == ABIL_BEOGH_DISMISS_APOSTLE_3)
-        lookup += "\n" + apostle_short_description(3) + "\n";
+        case ABIL_BEOGH_DISMISS_APOSTLE_1:
+        case ABIL_BEOGH_DISMISS_APOSTLE_2:
+        case ABIL_BEOGH_DISMISS_APOSTLE_3:
+        {
+            const int index = ability - ABIL_BEOGH_DISMISS_APOSTLE_1;
+            lookup += "\n" + apostle_short_description(index) + "\n";
+        }
+        break;
+
+        case ABIL_MAKHLEB_BRAND_SELF_1:
+        case ABIL_MAKHLEB_BRAND_SELF_2:
+        case ABIL_MAKHLEB_BRAND_SELF_3:
+        {
+            const mutation_type mut = _makhleb_ability_to_mutation(ability);
+            lookup += "\n" + get_mutation_desc(mut);
+        }
+        break;
+
+        default:
+        break;
+    }
 
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
@@ -3336,6 +3386,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_MAKHLEB_INFERNAL_SERVANT:
         fail_check();
         makhleb_infernal_servant();
+        break;
+
+    case ABIL_MAKHLEB_BRAND_SELF_1:
+    case ABIL_MAKHLEB_BRAND_SELF_2:
+    case ABIL_MAKHLEB_BRAND_SELF_3:
+        makhleb_inscribe_mark(_makhleb_ability_to_mutation(abil.ability));
         break;
 
     case ABIL_TROG_BERSERK:
