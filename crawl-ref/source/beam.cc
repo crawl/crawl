@@ -4101,7 +4101,7 @@ static const vector<pie_effect> pie_effects = {
     {
         "glitter",
         [](const actor &defender) {
-            return defender.is_player() || mons_can_be_dazzled(defender.as_monster()->type);
+            return defender.can_be_dazzled();
         },
         [](actor &defender, const bolt &beam) {
             if (defender.is_player())
@@ -4279,7 +4279,7 @@ void bolt::affect_player()
 
     }
 
-    if (flavour == BEAM_LIGHT)
+    if (flavour == BEAM_LIGHT && you.can_be_dazzled())
         blind_player(random_range(7, 12), WHITE);
 
     if (flavour == BEAM_MIASMA && final_dam > 0)
@@ -5147,7 +5147,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     if (flavour == BEAM_LIGHT
-        && mons_can_be_dazzled(mon->type)
+        && mon->can_be_dazzled()
         && !mon->has_ench(ENCH_BLIND))
     {
         const int dur = max(1, div_rand_round(54, mon->get_hit_dice())) * BASELINE_DELAY;

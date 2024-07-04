@@ -450,7 +450,7 @@ void melee_attack::apply_sign_of_ruin_effects()
         {
             effects.push_back(WEAKNESS);
         }
-        if (defender->is_player() || mons_can_be_dazzled(defender->type))
+        if (defender->can_be_dazzled())
             effects.push_back(BLIND);
         if (!defender->stasis())
             effects.push_back(SLOW);

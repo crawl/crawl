@@ -4935,6 +4935,14 @@ bool player::can_be_dazzled() const
 }
 
 /**
+ * Players can be blinded only if they can be dazzled.
+ */
+bool player::can_be_blinded() const
+{
+    return can_be_dazzled();
+}
+
+/**
  * Increase the player's blindness duration.
  *
  * @param amount   The number of turns to increase blindness duration by.
@@ -4942,6 +4950,12 @@ bool player::can_be_dazzled() const
 void blind_player(int amount, colour_t flavour_colour)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (!you.can_be_dazzled())
+    {
+        mpr("Your vision flashes for a moment.");
+        return;
+    }
 
     if (amount <= 0)
         return;

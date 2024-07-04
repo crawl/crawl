@@ -3338,9 +3338,7 @@ int dazzle_chance_denom(int pow)
 
 static bool _can_be_dazzled(const actor *victim)
 {
-    if (victim->is_player())
-        return you.can_be_dazzled();
-    return mons_can_be_dazzled(victim->as_monster()->type);
+    return victim->can_be_dazzled();
 }
 
 bool dazzle_target(actor *victim, const actor *agent, int pow)
@@ -3365,7 +3363,8 @@ bool dazzle_target(actor *victim, const actor *agent, int pow)
         // not the best way to handle this. Dividing XL by 2 so there is still
         // decent chance at XL27 that the player can be affected.
         const int numerator = dazzle_chance_numerator(you.experience_level / 2);
-        if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
+        if (you.can_be_dazzled()
+            && x_chance_in_y(numerator, dazzle_chance_denom(pow)))
         {
             blind_player(random_range(4, 8));
             return true;

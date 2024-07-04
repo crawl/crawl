@@ -697,6 +697,16 @@ bool monster::can_throw_large_rocks() const
            || type == MONS_PLAYER_SHADOW; // can throw them if you can!
 }
 
+bool monster::can_be_dazzled() const
+{
+    return mons_can_be_dazzled(type);
+}
+
+bool monster::can_be_blinded() const
+{
+    return mons_can_be_blinded(type);
+}
+
 bool monster::can_speak()
 {
     if (cannot_act())
