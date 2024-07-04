@@ -571,7 +571,7 @@ _singing_no_tension_
 @The_weapon@ makes a painfully high-pitched squeak.
 
 w:30
-@The_weapon@ sings [a sudden staccato|a quivering drawn-out|an ear-splitting high] note.
+@The_weapon@ sings [a sudden staccato|a quivering drawn-out|a painfully high] note.
 
 @The_weapon@ trains the @_kind_of_scales_@ scales.
 

@@ -511,7 +511,7 @@ Xom banishment
 
 Xom casts you into the Abyss!
 
-The world seems to spin as Xom's maniacal laughter rings in your ears.
+The world seems to spin as Xom's maniacal laughter rings.
 %%%%
 Xom revert own banishment
 
