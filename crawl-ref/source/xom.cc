@@ -2372,6 +2372,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    // Don't count mutation-based eyes that aren't left/right ones here.
     if (player_has_eyes(true, false))
     {
         string str =_get_xom_speech(
