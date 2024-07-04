@@ -845,8 +845,8 @@ public:
     bool can_smell() const;
     bool can_sleep(bool holi_only = false) const override;
 
-    bool can_be_dazzled() const;
-    bool can_be_blinded() const;
+    bool can_be_dazzled() const override;
+    bool can_be_blinded() const override;
 
     int racial_ac(bool temp) const;
     int base_ac(int scale) const;

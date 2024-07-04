@@ -459,8 +459,8 @@ public:
 
     bool can_throw_large_rocks() const override;
 
-    bool can_be_dazzled() const;
-    bool can_be_blinded() const;
+    bool can_be_dazzled() const override;
+    bool can_be_blinded() const override;
 
     bool can_speak();
     bool is_silenced() const;
