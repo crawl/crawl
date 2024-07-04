@@ -4677,6 +4677,44 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
                           _random_class_of_god_name(is_good_god));
     }
 
+    if (msg.find("@random_body_part@") != string::npos)
+    {
+        vector<string> body_parts;
+
+        string hands = you.hand_name(true);
+        body_parts.push_back(hands);
+
+        string arms = you.arm_name(true);
+        body_parts.push_back(arms);
+
+        if (player_has_feet())
+        {
+            string feet = you.foot_name(true);
+            body_parts.push_back(feet);
+        }
+
+        if (you.has_blood())
+            body_parts.push_back("blood");
+
+        if (you.has_bones())
+            body_parts.push_back("bones");
+
+        if (player_has_ears())
+            body_parts.push_back("ears");
+
+        if (player_has_eyes())
+        {
+            body_parts.push_back(
+                you.get_mutation_level(MUT_MISSING_EYE) ? "eye" : "eyes");
+        }
+
+        if (player_has_hair())
+            body_parts.push_back("hair");
+
+        msg = replace_all(msg, "@random_body_part@",
+                          body_parts[random2(body_parts.size())]);
+    }
+
     // Replace with species specific insults.
     if (msg.find("@species_insult_") != string::npos)
     {
