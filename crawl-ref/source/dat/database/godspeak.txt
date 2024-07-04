@@ -323,9 +323,9 @@ Your ears wiggle.
 %%%%
 Xom hair
 
-Your eyebrows briefly feel incredibly bushy.
+Your hair briefly feels incredibly bushy.
 
-Your eyebrows wriggle.
+Your hair wriggles.
 
 You briefly grow a large moustache and beard.
 %%%%
