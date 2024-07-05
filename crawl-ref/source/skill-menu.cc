@@ -931,9 +931,7 @@ int SkillMenu::read_skill_target(skill_type sk)
             return -1;
         }
         else
-        {
             set_help("");
-        }
     }
     you.set_training_target(sk, input);
     cancel_set_target();
