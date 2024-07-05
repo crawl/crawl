@@ -4562,7 +4562,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_MOVING_STAIRS, { "moving stairs", _xom_moving_stairs, 20}},
     { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs,
                               30}},
-    { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring }},
+    { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring, 25}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
