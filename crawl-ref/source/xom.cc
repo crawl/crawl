@@ -1587,7 +1587,7 @@ static void _xom_harmless_flora(int /*sever*/)
 // Can Xom reasonably convert a feature into interconnected doors?
 // Avoids altars, stairs, portals, and runed doors. Allow anywhere
 // diggable or otherwise walkable, and glassifies solid doors.
-static bool _xom_door_replaceable (dungeon_feature_type feat)
+static bool _xom_door_replaceable(dungeon_feature_type feat)
 {
     return !feat_is_critical(feat)
             && ((feat_has_solid_floor(feat)) || feat_is_diggable(feat)
