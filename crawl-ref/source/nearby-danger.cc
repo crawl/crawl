@@ -503,7 +503,8 @@ void revive()
         if (dur != DUR_PIETY_POOL
             && dur != DUR_TRANSFORMATION
             && dur != DUR_BEOGH_SEEKING_VENGEANCE
-            && dur != DUR_BEOGH_DIVINE_CHALLENGE)
+            && dur != DUR_BEOGH_DIVINE_CHALLENGE
+            && dur != DUR_GRAVE_CLAW_RECHARGE)
         {
             you.duration[dur] = 0;
         }
