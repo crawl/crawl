@@ -1,0 +1,35 @@
+enum: JOB_HEDGE_WIZARD
+name: "Hedge Wizard"
+short_name: HW
+category: Mage
+category_priority: 100
+str: 2
+int: 6
+dex: 4
+spells:
+  - SPELL_MAGIC_DART
+  - SPELL_BLINK
+  - SPELL_CALL_IMP
+  - SPELL_GRAVE_CLAW
+  - SPELL_MEPHITIC_CLOUD
+equipment:
+  - "dagger"
+  - "robe"
+  - "hat"
+  - "potion of magic"
+recommended_species:
+  - deep elf
+  - naga
+  - draconian
+  - octopode
+  - human
+  - djinni
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 3
+  conjurations: 1
+  translocations: 1
+  summonings: 1
+  necromancy: 1
+create_enum: false

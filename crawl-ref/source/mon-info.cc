@@ -2060,3 +2060,16 @@ bool monster_info::pronoun_plurality() const
 
     return mons_class_gender(type) == GENDER_NEUTRAL;
 }
+
+string description_for_ench(enchant_type type)
+{
+    const monster_info_flags *flag = map_find(trivial_ench_mb_mappings, type);
+    if (!flag)
+        return "";
+
+    for (auto& name : monster_info_flag_names)
+        if (name.flag == *flag)
+            return name.long_singular;
+
+    return "";
+}

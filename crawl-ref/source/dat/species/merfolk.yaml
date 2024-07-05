@@ -43,14 +43,14 @@ mutations:
     MUT_MERTAIL: 1
     MUT_NIMBLE_SWIMMER: 2
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_BERSERKER
-  - JOB_SHAPESHIFTER
-  - JOB_SUMMONER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - gladiator
+  - berserker
+  - shapeshifter
+  - summoner
+  - ice elementalist
+  - alchemist
 recommended_weapons:
-  - SK_POLEARMS
-  - SK_LONG_BLADES
+  - polearms
+  - long blades
 
 orc_name: Merforc

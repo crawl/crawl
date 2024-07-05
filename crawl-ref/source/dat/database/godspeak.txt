@@ -137,6 +137,23 @@ Xom suggests a refreshing change of pace.
 
 Xom tears open a few small holes in reality.
 %%%%
+Xom kind door ring
+
+A short distance around you seems to assume a strange safe solidity.
+
+Xom creates a safe adventurer enclosure.
+
+"Would you like some space to yourself, mortal?"
+%%%%
+Xom mean door ring
+
+Xom raises up and pulls in a makeshift [warmonger|duelist]'s arena.
+
+Xom locks you up as an exhibit to study.
+
+w:5
+Xom constructs another @player_genus@ Petting Zoo.
+%%%%
 ##################
 # Xom nastiness
 ##################
@@ -453,7 +470,8 @@ Xom's power touches on your mind for a moment.
 
 Xom titters.
 %%%%
-# 50% stat loss, 25% draining, 25% torment
+# 50% stat loss, 25% draining,
+# 25% torment (only the player if Xom's feeling nasty)
 Xom draining or torment
 
 "You have displeased me, mortal."
@@ -467,6 +485,19 @@ You hear Xom's maniacal laughter.
 "Suffer!"
 
 Xom's malign attention turns to you for a moment.
+%%%%
+Xom torment all
+
+Xom torments the living!
+
+Xom spreads torment and darkness!
+
+Xom unleashes waves of agony!
+
+Xom's malign attention turns towards your situation for a moment.
+
+w:5
+The hand of Xom pokes all present souls.
 %%%%
 # summon hostile monster
 Xom hostile monster
@@ -635,7 +666,7 @@ Xom good monster polymorph
 
 "Hum-dee-hum-dee-hum..."
 
-Xom's power touches on a nearby monster.
+Xom's power touches your surroundings.
 
 You hear Xom's avuncular chuckle.
 %%%%
@@ -776,6 +807,20 @@ Xom good enchant monster
 Xom bad enchant monster
 
 @Xom good enchant monster@
+%%%%
+Xom mass charm
+
+Xom readies the chaos crusade!
+
+Xom seizes a variety of puppet strings.
+
+"Would you like more friends, my child?"
+
+w:5
+Xom bribes nearby enemies with the offer of @_trout_species_@ trout.
+
+w:5
+The hand of Xom pokes present minds.
 %%%%
 Xom stealth player
 
