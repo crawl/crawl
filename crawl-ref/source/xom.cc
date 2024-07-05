@@ -1697,7 +1697,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
     return moved;
 }
 
-// Have Xom make an huge, slightly distant ring of clear, disconnected doors,
+// Have Xom make a huge, slightly distant ring of clear, disconnected doors,
 // and move enemies in or out according to Xom's mood.
 static void _xom_door_ring(bool good)
 {
