@@ -1921,12 +1921,15 @@ static void _xom_throw_divine_lightning(int /*sever*/)
     // Fire spare random bolts at random spots.
     if (fire_count < spray_count)
     {
-        coord_def randspot = you.pos();
-        randspot.x += random_range(-6, 6);
-        randspot.y += random_range(-6, 6);
-
-        for (int i = 0; i < spray_count; ++i)
-            _xom_spray_lightning(randspot);
+        for (int i = 0; i < spray_count - fire_count; ++i)
+        {
+            coord_def randspot = you.pos();
+            randspot.x += random_range(-6, 6);
+            randspot.y += random_range(-6, 6);
+            if (randspot != you.pos())
+                _xom_spray_lightning(randspot);
+            fire_count++;
+        }
     }
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divine lightning"), true);
@@ -2292,16 +2295,13 @@ static void _xom_force_lances(int /* sever */)
 
 static void _xom_enchant_monster(int sever, bool helpful)
 {
-    vector<monster*> mon;
+    vector<monster*> targetable;
     enchant_type ench;
     string ench_name = "";
     int xl = you.experience_level;
     int affected = 0;
     int cap = 0;
-    int range = 0;
     int time = 0;
-
-    vector<monster*> targetable;
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -2374,6 +2374,51 @@ static void _xom_good_enchant_monster(int sever)
 static void _xom_bad_enchant_monster(int sever)
 {
     _xom_enchant_monster(sever, false);
+}
+
+static void _xom_mass_charm(int sever)
+{
+    vector<monster*> targetable;
+    int affected = 0;
+    int iters = 0;
+    int hd_target = 0;
+    int target_count = 0;
+    int time = 500 + random2(sever);
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        // While Xom won't care, other gods of blasphemer chaos knights might.
+        if (!god_hates_monster(**mi) && _choose_enchantable_monster(**mi))
+        {
+            targetable.push_back(*mi);
+            hd_target += mi->get_hit_dice();
+            target_count++;
+        }
+    }
+
+    hd_target /= target_count;
+    shuffle_array(targetable);
+
+    god_speaks(GOD_XOM, _get_xom_speech("mass charm").c_str());
+
+    for (monster *application : targetable)
+    {
+        // Always guarantee one is affected and one is not affected, regardless
+        // of HD. Otherwise, mostly try to get the weaker half.
+        if (iters == 0 || (iters > 1 && affected <= target_count / 2
+            && application->get_hit_dice() + random_range(-1, 1) <= hd_target))
+        {
+            simple_monster_message(*application, " is charmed.");
+            application->add_ench(mon_enchant(ENCH_CHARM, 0, nullptr, time));
+            affected++;
+        }
+
+        iters++;
+    }
+
+    const string note = make_stringf("charmed %d monster%s",
+                                     affected,  affected != 1 ? "s" : "");
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
 // Xom hastes, slows, or paralyzes the player and everything else in sight
@@ -3795,6 +3840,12 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return XOM_GOOD_DOOR_RING;
     }
 
+    if (tension > 0 && x_chance_in_y(15, sever)
+        && mon_nearby(_choose_enchantable_monster))
+    {
+        return XOM_GOOD_MASS_CHARM;
+    }
+
     if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
@@ -3862,7 +3913,9 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
 
     if (tension > 0 && x_chance_in_y(7, sever)
         && mon_nearby(_choose_enchantable_monster))
+    {
         return XOM_BAD_ENCHANT_MONSTER;
+    }
 
     if (tension > 0 && x_chance_in_y(8, sever)
         && mon_nearby(_mon_valid_blink_victim))
@@ -4490,6 +4543,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                    _xom_force_lances }},
     { XOM_GOOD_ENCHANT_MONSTER, { "good enchant monster",
                                   _xom_good_enchant_monster }},
+    { XOM_GOOD_MASS_CHARM, {"mass charm", _xom_mass_charm }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},

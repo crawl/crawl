@@ -808,6 +808,20 @@ Xom bad enchant monster
 
 @Xom good enchant monster@
 %%%%
+Xom mass charm
+
+Xom readies the chaos crusade!
+
+Xom seizes a variety of puppet strings.
+
+"Would you like more friends, my child?"
+
+w:5
+Xom bribes nearby enemies with the offer of @_trout_species_@ trout.
+
+w:5
+The hand of Xom pokes present minds.
+%%%%
 Xom stealth player
 
 Xom shushes you conspicuously.
