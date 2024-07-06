@@ -29,7 +29,8 @@
 # if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #  include <unistd.h>
 # endif
-# include "syscalls.h" //needed for usleep replacement on platforms that don't support it
+// needed for usleep replacement on platforms that don't support it
+# include "syscalls.h"
 # include "output.h"
 # include "stringutil.h"
 # include "view.h"
