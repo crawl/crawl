@@ -389,7 +389,7 @@ Lua support for editing are untested, and a webtiles build is not available.
 
     ```sh
     git clone https://github.com/crawl/crawl.git
-	cd crawl
+    cd crawl
     git submodule update --init
     ```
 

@@ -8,16 +8,16 @@ this.
 from subprocess import Popen, PIPE
 
 import os
+import shlex
 import sys
 
 if len(sys.argv) < 2:
     sys.stderr.write('CXX not specified\n')
     sys.exit(1)
-CXX = sys.argv[1]
 
-command = sys.argv[1:]
-command.append('-c');
-command.append('conftest.cc');
+# Not just the name of the compiler, it can have arguments to
+CXX = sys.argv[1]
+command = shlex.split(CXX) + ['-c', 'conftest.cc']
 
 out = open('conftest.cc', 'w')
 out.write("""
