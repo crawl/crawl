@@ -6989,12 +6989,12 @@ void player::acid_corrode(int acid_strength)
         corrode_equipment();
 }
 
-bool player::drain(const actor */*who*/, bool quiet, int pow)
+bool player::drain(const actor * /*who*/, bool quiet, int pow)
 {
     return drain_player(pow, !quiet);
 }
 
-void player::confuse(actor */*who*/, int str)
+void player::confuse(actor * /*who*/, int str)
 {
     confuse_player(str);
 }
@@ -7165,7 +7165,7 @@ void player::give_stun_immunity(int dur)
     }
 }
 
-void player::slow_down(actor */*foe*/, int str)
+void player::slow_down(actor * /*foe*/, int str)
 {
     ::slow_player(str);
 }
@@ -8010,7 +8010,7 @@ bool player::made_nervous_by(const monster *mons)
     return false;
 }
 
-void player::weaken(const actor */*attacker*/, int pow)
+void player::weaken(const actor * /*attacker*/, int pow)
 {
     if (!duration[DUR_WEAK])
         mprf(MSGCH_WARN, "You feel your attacks grow feeble.");
@@ -8020,7 +8020,7 @@ void player::weaken(const actor */*attacker*/, int pow)
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
-bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
+bool player::strip_willpower(actor * /*attacker*/, int dur, bool quiet)
 {
     // Only prints a message when you gain this status for the first time,
     // replicating old behavior. Should this change?
