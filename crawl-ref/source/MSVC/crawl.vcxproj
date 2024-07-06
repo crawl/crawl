@@ -183,7 +183,7 @@
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
@@ -215,7 +215,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
@@ -247,7 +247,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
@@ -281,7 +281,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
@@ -315,7 +315,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
@@ -347,7 +347,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <ClCompile>
@@ -379,7 +379,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
@@ -413,7 +413,7 @@ python.exe util/gen-all.py</Command>
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver.pl" build.h "" "nul"
 perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;" "$(PreferredToolArchitecture)-Windows-msvc$(VCToolsVersion)" $(ProcessorArchitecture)-$(SDKIdentifier)-msvc$(VCToolsVersion)"
-perl.exe "util/configure-msvc.pl" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
+python.exe "util/configure-msvc.py" "$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\bin\Host$(PreferredToolArchitecture)\$(PlatformTargetAsMSBuildArchitecture)\cl.exe" "$(VC_IncludePath);$(WindowsSDK_IncludePath)"
 python.exe util/gen-all.py</Command>
     </PreBuildEvent>
     <Midl>
