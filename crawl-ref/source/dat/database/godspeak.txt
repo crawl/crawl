@@ -584,6 +584,18 @@ w:1
 w:1
 Xom does a drum roll.
 %%%%
+Xom fake shatter
+
+w:30
+"Ka-crash!"
+
+"Let the forces of chaos tear it all down!"
+
+Xom reshapes the earth.
+
+w:1
+Xom reveals the great annihilating truth to the Dungeon's walls!
+%%%%
 Xom blink monsters
 
 "Over there now!"

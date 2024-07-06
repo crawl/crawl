@@ -1813,6 +1813,102 @@ static void _xom_bad_door_ring(int /*sever*/)
     _xom_door_ring(false);
 }
 
+static const map<dungeon_feature_type, int> terrain_fake_shatter_chances = {
+    { DNGN_CLOSED_DOOR,      90 },
+    { DNGN_GRATE,            90 },
+    { DNGN_ORCISH_IDOL,      90 },
+    { DNGN_GRANITE_STATUE,   90 },
+    { DNGN_CLEAR_ROCK_WALL,  33 },
+    { DNGN_ROCK_WALL,        33 },
+    { DNGN_SLIMY_WALL,       25 },
+    { DNGN_CRYSTAL_WALL,     25 },
+    { DNGN_TREE,             25 },
+    { DNGN_CLEAR_STONE_WALL, 15 },
+    { DNGN_STONE_WALL,       15 },
+    { DNGN_METAL_STATUE,      5 },
+    { DNGN_METAL_WALL,        5 },
+};
+
+static int _xom_shatter_walls(coord_def where, bool more_than_dig)
+{
+    dungeon_feature_type feat = env.grid(where);
+
+    if (!in_bounds(where)
+         || env.markers.property_at(where, MAT_ANY, "veto_destroy") == "veto")
+    {
+        return 0;
+    }
+
+    if (feat_is_tree(feat))
+        feat = DNGN_TREE;
+    else if (feat_is_door(feat))
+        feat = DNGN_CLOSED_DOOR;
+
+    auto chance = terrain_fake_shatter_chances.find(feat);
+
+    if (chance == terrain_fake_shatter_chances.end()
+        || ((!feat_is_diggable(feat) || feat_is_door(feat)) && !more_than_dig)
+        || !x_chance_in_y(chance->second, 100))
+    {
+        return 0;
+    }
+
+    if (you.see_cell(where))
+    {
+        if (feat_is_door(feat))
+            mpr("A door shatters!");
+        else if (feat == DNGN_GRATE)
+            mpr("An iron grate is ripped into pieces!");
+    }
+
+    noisy(spell_effect_noise(SPELL_SHATTER), where);
+    destroy_wall(where);
+
+    if (feat == DNGN_ROCK_WALL || feat == DNGN_STONE_WALL
+        || feat == DNGN_GRANITE_STATUE)
+    {
+        mgen_data mg(MONS_PILE_OF_DEBRIS, BEH_HOSTILE, where, MHITYOU,
+                     MG_FORCE_BEH | MG_FORCE_PLACE);
+
+        create_monster(mg);
+    }
+
+    return 1;
+}
+
+// Xom produces Shatter level noise, demolishes random features, and also
+// fails to actually do any actual damage. Unlike actual Shatter, this both
+// leaves behind debris and usually has very little chance to do more than dig.
+static void _xom_fake_shatter(int /*sever*/)
+{
+    bool more_than_dig = one_chance_in(5);
+
+    god_speaks(GOD_XOM, _get_xom_speech("fake shatter").c_str());
+
+    if (silenced(you.pos()))
+        mpr("The dungeon shakes... harmlessly?");
+    else
+    {
+        noisy(spell_effect_noise(SPELL_SHATTER), you.pos());
+        mprf(MSGCH_SOUND, "The dungeon rumbles... harmlessly?");
+    }
+
+    run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
+
+    int dest = 0;
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
+            continue;
+
+        dest += _xom_shatter_walls(*di, more_than_dig);
+    }
+
+    if (dest)
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "fake shatter"), true);
+
+}
+
 static void _xom_give_mutations(bool good)
 {
     if (!you.can_safely_mutate())
@@ -3982,6 +4078,20 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         return XOM_BAD_BRAIN_DRAIN;
     }
 
+    if (tension > 0 && x_chance_in_y(20, sever))
+    {
+        // Check if there's a reasonable amount of features
+        // the weaker Xom shatter is likely to change.
+        int nearby_diggable = 0;
+        for (radius_iterator ri(you.pos(), you.current_vision, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+        {
+            if (feat_is_diggable(env.grid(*ri)) || feat_is_door(env.grid(*ri)))
+                nearby_diggable++;
+        }
+        if (nearby_diggable >= 4)
+            return XOM_BAD_FAKE_SHATTER;
+    }
+
     if (x_chance_in_y(21, sever))
     {
         if (coinflip())
@@ -4563,6 +4673,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs,
                               30}},
     { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring, 25}},
+    { XOM_BAD_FAKE_SHATTER, {"fake shatter", _xom_fake_shatter, 25}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
