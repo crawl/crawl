@@ -117,5 +117,11 @@ def main():
     command = [python, input_files[0], 'dat/species/', 'util/species-gen/'] + generated_files
     run_if_needed(generated_files, input_files, command)
 
+    generated_files = ['job-data.h', 'job-groups.h', 'job-type.h']
+    input_files = (['util/job-gen.py'] + glob.glob('dat/jobs/*.yaml') +
+        glob.glob('util/job-gen/*.txt'))
+    command = [python, input_files[0], 'dat/jobs/', 'util/job-gen/'] + generated_files
+    run_if_needed(generated_files, input_files, command)
+
 if __name__ == '__main__':
     main()
