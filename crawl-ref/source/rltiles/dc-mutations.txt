@@ -1,6 +1,19 @@
 %parts_ctg MUT
 %sdir gui/mutations
 
+generic_good_mutation_1 GENERIC_GOOD_MUTATION
+generic_good_mutation_2
+generic_good_mutation_3
+generic_bad_mutation_1 GENERIC_BAD_MUTATION
+generic_bad_mutation_2
+generic_bad_mutation_3
+generic_demonspawn_mutation_1 GENERIC_DEMONSPAWN_MUTATION
+generic_demonspawn_mutation_2
+generic_demonspawn_mutation_3
+generic_jiyva_mutation_1 GENERIC_JIYVA_MUTATION
+generic_jiyva_mutation_2
+generic_jiyva_mutation_3
+
 blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
