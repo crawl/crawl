@@ -107,7 +107,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl2\include;$(SolutionDir)\..\contrib\sdl2-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -150,7 +150,7 @@ copy *.png ..\dat\tiles\
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\contrib\sdl2\include;$(SolutionDir)\..\contrib\sdl2-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -193,6 +193,7 @@ copy *.png ..\dat\tiles\
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;ucrt.lib;vcruntime.lib;msvcrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -235,6 +236,7 @@ copy *.png ..\dat\tiles\
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2_image.lib;libpng.lib;ucrt.lib;vcruntime.lib;msvcrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
