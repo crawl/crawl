@@ -2856,6 +2856,8 @@ void dithmenos_change_shadow_appearance(monster& shadow, int dur)
     // Change tile to show our shadow is in decoy mode
     shadow.props[MONSTER_TILE_KEY].get_int() = tileidx_player_shadow();
     shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, 0, &you, dur));
+#else
+    UNUSED(shadow, dur);
 #endif
 }
 
