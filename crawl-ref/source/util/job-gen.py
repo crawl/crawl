@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Generate the files job-data.h, job-type.h and job-groups.h from the YAML files
 in ../dat/jobs/.

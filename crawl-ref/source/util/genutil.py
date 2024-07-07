@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Utility functions for python scripts converting yaml to C++ headers."""
 
 # from __future__ import print_function
