@@ -2919,11 +2919,12 @@ fenstrider witch
 %%%%
 fire crab
 
-“The planet brought forth scintillating jewelled scuttling crabs, which [they]
- ate, smashing their shells with iron mallets; tall aspiring trees with
- breathtaking slenderness and colour which [they] cut down and burned the crab
- meat with.”
-    -Douglas Adams, The Hitch-hiker's Guide to the Galaxy
+“The planet brought forth scintillating jewelled scuttling crabs, which the
+ Vogons ate, smashing their shells with iron mallets; tall aspiring trees with
+ breathtaking slenderness and colour which the Vogons cut down and burned the
+ crab meat with; elegant gazellelike creatures with silken coats and dewy eyes
+ which the Vogons would catch and sit on.”
+    -Douglas Adams, _The Hitch-hiker's Guide to the Galaxy_. 1979.
 %%%%
 flayed ghost
 
