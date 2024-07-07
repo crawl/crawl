@@ -230,7 +230,16 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
                 // sub in any alpha char if that's what the player typed, for
                 // error messaging
-                const int actual_key = pop.getkey();
+                int actual_key = pop.getkey();
+
+                // if the typed key is out of alpha char range, leave it as
+                // ESCAPE to avoid a crash
+                if (actual_key != EOF
+                    && actual_key != (unsigned char)actual_key)
+                {
+                    actual_key = tmp;
+                }
+
                 if (isalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
                 // otherwise, leave as ESCAPE
