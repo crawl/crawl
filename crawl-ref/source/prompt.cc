@@ -4,6 +4,7 @@
  **/
 
 #include "AppHdr.h"
+#include <climits> // UCHAR_MAX
 #include <cmath> // isnan
 
 #include "prompt.h"
@@ -234,11 +235,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
                 // if the typed key is out of alpha char range, leave it as
                 // ESCAPE to avoid a crash
-                if (actual_key != EOF
-                    && actual_key != (unsigned char)actual_key)
-                {
+                if (actual_key != EOF && actual_key > UCHAR_MAX)
                     actual_key = tmp;
-                }
 
                 if (isalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
