@@ -258,7 +258,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         // If no safe answer exists, we still need to abort when a HUP happens.
         // The caller must handle this case, preferably by issuing an uncancel
         // event that can restart when the game restarts -- and ignore the
-        // the return value here.
+        // return value here.
         if (crawl_state.seen_hups && !default_answer)
             return false;
 
