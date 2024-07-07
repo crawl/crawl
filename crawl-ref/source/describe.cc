@@ -452,7 +452,7 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It increases the success rate of your magical spells.",
             prop_note::plain },
         { ARTP_TROG_MESMERISE,
-            "It causes you to become mesmerised by a new foe when you kill something in melee (even if you have Clarity), and it cannot be unequipped while mesmerised. In exchange, your health regeneration is doubled while mesmerised.",
+            "It causes you to become mesmerised by a new foe when you kill something in melee (even if you have Clarity), and it cannot be unequipped while mesmerised. In exchange, while you are mesmerised the regeneration effect of Trog's Hand is tripled and other health regeneration is doubled.",
             prop_note::plain },
         { ARTP_TROG_RAGE,
             "It berserks you when you make melee attacks (20% chance), even if you have Clarity. In addition, your berserks last 20% longer.",
