@@ -242,7 +242,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         // Trog weapon gifts are special.
         if (agent == GOD_TROG)
         {
-            item.plus = 3 + biased_random2(12,2);
+            item.plus = 4 + biased_random2(7,2);
+            item.plus += random2(3);
             make_trog_randart(item);
             return true;
         }
