@@ -1701,7 +1701,6 @@ static int _xom_count_and_move_group(int min_range, int max_range,
 // and move enemies in or out according to Xom's mood.
 static void _xom_door_ring(bool good)
 {
-    coord_def place;
     bool created = false;
     int total_moved = 0;
     int dug = 0;
