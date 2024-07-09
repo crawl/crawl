@@ -1972,6 +1972,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_SWAMP_OGRE;
             return base;
 
+        case MONS_SUN_DEMON:
+            if (today_is_serious())
+                return TILEP_MONS_SUNNIER_DEMON;
+            return base;
+
         case MONS_NESSOS:
         {
             const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();

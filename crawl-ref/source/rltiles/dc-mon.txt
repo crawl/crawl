@@ -410,6 +410,7 @@ ice_devil MONS_ICE_DEVIL
 reaper MONS_REAPER
 soul_eater MONS_SOUL_EATER
 sun_demon MONS_SUN_DEMON
+sunnier_demon MONS_SUNNIER_DEMON
 
 # type '3' demons
 chaos_spawn1 MONS_CHAOS_SPAWN
