@@ -6958,28 +6958,57 @@ static const vector<random_pick_entry<monster_type>> _makhleb_servants =
   { 13,  27,  170, SEMI, MONS_CACODEMON },
   { 14,  27,  185, SEMI, MONS_BALRUG },
   { 17,  27,  220, SEMI, MONS_EXECUTIONER },
+
+  // Accessible only through the Mark of the Tyrant
+  { 19,  27,  260, SEMI, MONS_TZITZIMITL },
+  { 21,  27,  280, SEMI, MONS_ICE_FIEND },
+  { 22,  27,  300, SEMI, MONS_BRIMSTONE_FIEND },
+  { 26,  27,  150, SEMI, MONS_HELL_SENTINEL },
 };
 
 void makhleb_infernal_servant()
 {
     bleed_for_makhleb(you);
 
+    const bool tyrant = you.has_mutation(MUT_MAKHLEB_MARK_TYRANT);
+
     int pow = you.skill(SK_INVOCATIONS);
     const bool hostile = one_chance_in(6);
     if (hostile)
         pow += 3;
 
+    // Top-end demons are only accessed with this mark
+    if (!tyrant)
+        pow = min(pow, 18);
+
     monster_picker servant_picker;
     monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
 
     mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_MAKHLEB);
+    mg.set_summoned(&you, tyrant ? 6 : 4, MON_SUMM_AID, GOD_MAKHLEB);
 
     if (monster* demon = create_monster(mg))
     {
-        mprf("%s answers the call of your %s!",
-                demon->name(DESC_A).c_str(),
-                you.has_blood() ? "blood" : "suffering");
+        if (tyrant)
+        {
+            mprf("%s answers its master's command!",
+                    demon->name(DESC_A).c_str());
+        }
+        else
+        {
+            mprf("%s answers the call of your %s!",
+                    demon->name(DESC_A).c_str(),
+                    you.has_blood() ? "blood" : "suffering");
+        }
+
+        // Top-tier demons are more costly to summon.
+        if (mon_type == MONS_TZITZIMITL
+            || mon_type == MONS_ICE_FIEND
+            || mon_type == MONS_BRIMSTONE_FIEND
+            || mon_type == MONS_HELL_SENTINEL)
+        {
+            lose_piety(random_range(2, 3));
+        }
 
         if (hostile)
         {
@@ -6988,7 +7017,12 @@ void makhleb_infernal_servant()
             mg2.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET | MF_WAS_IN_VIEW);
             if (monster* bad_demon = create_monster(mg2))
             {
-                if (coinflip())
+                if (tyrant)
+                {
+                    mprf(MSGCH_WARN, "A traitorous %s dares provoke your wrath!",
+                        bad_demon->name(DESC_PLAIN).c_str());
+                }
+                else if (coinflip())
                 {
                     mprf(MSGCH_WARN, "A jealous %s pursues it!",
                         bad_demon->name(DESC_PLAIN).c_str());

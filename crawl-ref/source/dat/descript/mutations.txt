@@ -875,6 +875,14 @@ Dis destruction mutation
 Your Unleash Destruction ability is empowered by Dis. You are able to hurl bolts
 of corrosive acid and metal splinters instead of negative energy.
 %%%%
+# ------ Makhleb marks ------
+Mark of the Tyrant mutation
+
+Your Infernal Servants have a longer duration and you can summon even stronger
+ones at very high Invocations (at the cost of additional piety). When you slay
+enemies, a random servant may be gain one of: Haste, Might, Regeneration, or
+Brilliance.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

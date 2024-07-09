@@ -2661,11 +2661,11 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAKHLEB_MARK_FIEND, 0, 1, mutflag::makhleb, false,
-  "Mark of the Fiend",
+{ MUT_MAKHLEB_MARK_TYRANT, 0, 1, mutflag::makhleb, false,
+  "Mark of the Tyrant",
 
-  {"You bear the Mark of the Fiend.", "", ""},
-  {"You feel some sort of feeling.", "", ""},
+  {"You bear the Mark of the Tyrant.", "", ""},
+  {"Even fiends shall kneel before you now.", "", ""},
   {"", "", ""},
 },
 

@@ -2476,6 +2476,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    if (you.has_mutation(MUT_MAKHLEB_MARK_TYRANT)
+        && gives_player_xp
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && !one_chance_in(3))
+    {
+        makhleb_tyrant_buff();
+    }
+
     // Apply unrand effects.
     unrand_death_effects(&mons, killer);
 

@@ -3783,7 +3783,7 @@ static void _join_makhleb()
         MUT_MAKHLEB_MARK_LEGION,
         MUT_MAKHLEB_MARK_SHRIKE,
         MUT_MAKHLEB_MARK_EXECUTION,
-        MUT_MAKHLEB_MARK_FIEND,
+        MUT_MAKHLEB_MARK_TYRANT,
     };
 
     shuffle_array(muts);
