@@ -299,8 +299,6 @@ void blink_fineff::fire()
     if (!pal || !pal->alive() || pal->no_tele())
         return;
 
-    int cells_seen = 0;
-    coord_def target;
     for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
     {
         // No blinking into teleport closets.
@@ -309,14 +307,10 @@ void blink_fineff::fire()
         // XXX: allow fedhasites to be blinked into plants?
         if (actor_at(*ai) || !pal->is_habitable(*ai))
             continue;
-        cells_seen++;
-        if (one_chance_in(cells_seen))
-            target = *ai;
-    }
-    if (!cells_seen)
-        return;
 
-    pal->blink_to(target);
+        pal->blink_to(*ai);
+        break;
+    }
 }
 
 void teleport_fineff::fire()
