@@ -883,6 +883,25 @@ ones at very high Invocations (at the cost of additional piety). When you slay
 enemies, a random servant may be gain one of: Haste, Might, Regeneration, or
 Brilliance.
 %%%%
+Mark of Carnage mutation
+
+Your Infernal Servants are now summoned adjacent to a random enemy instead of
+near you. When they appear, they do so in a blast of your characteristic
+Destruction (which cannot hurt you or other allies).
+
+(Your servants unleash blasts of either
+{{
+    if you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "fire or lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "cold or ice"
+    end
+}}.)
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

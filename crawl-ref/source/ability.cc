@@ -2546,6 +2546,22 @@ static vector<coord_def> _find_shadowslip_affected()
     return targs;
 }
 
+static vector<coord_def> _find_carnage_servant_targets()
+{
+    vector<coord_def> targs;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+         if (!mi->wont_attack() && !mons_is_firewood(**mi)
+            && you.can_see(**mi))
+        {
+            targs.push_back(mi->pos());
+        }
+    }
+
+    return targs;
+}
+
 unique_ptr<targeter> find_ability_targeter(ability_type ability)
 {
     switch (ability)
@@ -2589,12 +2605,16 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
 
     // Summons:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_MAKHLEB_INFERNAL_SERVANT:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_KIKU_UNEARTH_WRETCHES:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case ABIL_IGNIS_FOXFIRE:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+    case ABIL_MAKHLEB_INFERNAL_SERVANT:
+        if (you.has_mutation(MUT_MAKHLEB_MARK_CARNAGE))
+            return make_unique<targeter_multiposition>(&you, _find_carnage_servant_targets(), AFF_MAYBE);
+        else
+            return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
 
     // Self-targeted:
     case ABIL_TRAN_BAT:
@@ -3384,6 +3404,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return makhleb_unleash_destruction(_makhleb_destruction_power(), beam, fail);
 
     case ABIL_MAKHLEB_INFERNAL_SERVANT:
+        if (you.has_mutation(MUT_MAKHLEB_MARK_CARNAGE)
+            && get_dist_to_nearest_monster() > you.current_vision)
+        {
+            mprf("You can't see any nearby targets.");
+            return spret::abort;
+        }
+
         fail_check();
         makhleb_infernal_servant();
         break;

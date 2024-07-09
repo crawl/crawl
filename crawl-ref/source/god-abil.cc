@@ -6854,19 +6854,8 @@ static bool _has_upgraded_destruction()
            || you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED);
 }
 
-spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
+static void _setup_destruction_beam(bolt& beam, int power, bool signature_only)
 {
-    // Since the actual beam is random, check with BEAM_MMISSILE.
-    // (Use a different spell as a proxy for whether this is penetrating or not)
-    if (!player_tracer(_has_upgraded_destruction() ? ZAP_SEARING_RAY
-                                                   : ZAP_MAGIC_DART,
-                        100, beam, beam.range))
-    {
-        return spret::abort;
-    }
-
-    fail_check();
-
     zappy(ZAP_UNLEASH_DESTRUCTION, power, false, beam);
     beam.origin_spell = SPELL_UNLEASH_DESTRUCTION;
     if (_has_upgraded_destruction())
@@ -6874,13 +6863,33 @@ spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
 
     // Choose beam flavor based on what type of destruction we're wielding
     if (you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
-        beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA, BEAM_ELECTRICITY, BEAM_NEG);
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA);
+        else
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA, BEAM_ELECTRICITY, BEAM_NEG);
+    }
     else if (you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
-        beam.flavour = random_choose(BEAM_ICE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_ICE, BEAM_COLD);
+        else
+            beam.flavour = random_choose(BEAM_ICE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
+    }
     else if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
-        beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_DEVASTATION, BEAM_NEG);
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_DEVASTATION, BEAM_NEG);
+        else
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_DEVASTATION, BEAM_NEG);
+    }
     else if (you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
-        beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_ACID, BEAM_FRAG);
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_ACID, BEAM_FRAG);
+        else
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_ACID, BEAM_FRAG);
+    }
     else
         beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
 
@@ -6930,10 +6939,27 @@ spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
             break;
 
         case BEAM_FRAG:
+            beam.damage.num = 5;
             beam.name = "flurry of shrapnel";
             beam.colour = CYAN;
             break;
     }
+}
+
+spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
+{
+    // Since the actual beam is random, check with BEAM_MMISSILE.
+    // (Use a different spell as a proxy for whether this is penetrating or not)
+    if (!player_tracer(_has_upgraded_destruction() ? ZAP_SEARING_RAY
+                                                   : ZAP_MAGIC_DART,
+                        100, beam, beam.range))
+    {
+        return spret::abort;
+    }
+
+    fail_check();
+
+    _setup_destruction_beam(beam, power, false);
 
     bleed_for_makhleb(you);
     beam.fire();
@@ -6966,11 +6992,54 @@ static const vector<random_pick_entry<monster_type>> _makhleb_servants =
   { 26,  27,  150, SEMI, MONS_HELL_SENTINEL },
 };
 
+static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_spot)
+{
+    // First, find all possible valid enemies
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi)
+            && you.can_see(**mi))
+        {
+            targs.push_back(*mi);
+        }
+    }
+    shuffle_array(targs);
+
+    // Now iterate through these in random order, looking for a place that this
+    // demon could appear at.
+    for (size_t i = 0; i < targs.size(); ++i)
+    {
+        coord_def pos;
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 1, false, pos, true))
+        {
+            demon_spot = pos;
+            return targs[i];
+        }
+    }
+
+    // If there somehow weren't any valid spaces, iterate a second time, looking
+    // at all tiles within *2* spaces of enemies instead.
+    for (size_t i = 0; i < targs.size(); ++i)
+    {
+        coord_def pos;
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 2, false, pos, true))
+        {
+            demon_spot = pos;
+            return targs[i];
+        }
+    }
+
+    // Alas, now we give up.
+    return nullptr;
+}
+
 void makhleb_infernal_servant()
 {
     bleed_for_makhleb(you);
 
     const bool tyrant = you.has_mutation(MUT_MAKHLEB_MARK_TYRANT);
+    const bool carnage = you.has_mutation(MUT_MAKHLEB_MARK_CARNAGE);
 
     int pow = you.skill(SK_INVOCATIONS);
     const bool hostile = one_chance_in(6);
@@ -6987,9 +7056,39 @@ void makhleb_infernal_servant()
     mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
     mg.set_summoned(&you, tyrant ? 6 : 4, MON_SUMM_AID, GOD_MAKHLEB);
 
+    if (carnage)
+    {
+        if (monster* targ = _find_carnage_target(mon_type, mg.pos))
+        {
+            mg.foe = targ->mindex();
+            mg.flags |= MG_FORCE_PLACE;
+        }
+        else
+        {
+            // It is very unfortunate if this happens, since it still costs piety...
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return;
+        }
+    }
+
     if (monster* demon = create_monster(mg))
     {
-        if (tyrant)
+        if (carnage)
+        {
+            bolt beam;
+            beam.thrower = KILL_YOU;
+            beam.source = demon->pos();
+            beam.target = demon->pos();
+            _setup_destruction_beam(beam, you.skill(SK_INVOCATIONS, 2), true);
+            beam.is_explosion = true;
+            beam.ex_size = 2;
+
+            mprf("%s appears in a burst of %s!", demon->name(DESC_A).c_str(),
+                                        beam.get_short_name().c_str());
+
+            beam.explode();
+        }
+        else if (tyrant)
         {
             mprf("%s answers its master's command!",
                     demon->name(DESC_A).c_str());

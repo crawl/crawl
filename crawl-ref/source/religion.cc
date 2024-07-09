@@ -3781,7 +3781,7 @@ static void _join_makhleb()
     {
         MUT_MAHKLEB_MARK_HEMOCLASM,
         MUT_MAKHLEB_MARK_LEGION,
-        MUT_MAKHLEB_MARK_SHRIKE,
+        MUT_MAKHLEB_MARK_CARNAGE,
         MUT_MAKHLEB_MARK_EXECUTION,
         MUT_MAKHLEB_MARK_TYRANT,
     };

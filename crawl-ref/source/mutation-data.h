@@ -2645,11 +2645,11 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAKHLEB_MARK_SHRIKE, 0, 1, mutflag::makhleb, false,
-  "Mark of the Shrike",
+{ MUT_MAKHLEB_MARK_CARNAGE, 0, 1, mutflag::makhleb, false,
+  "Mark of Carnage",
 
-  {"You bear the Mark of the Shrike.", "", ""},
-  {"You feel some sort of feeling.", "", ""},
+  {"You bear the Mark of Carnage.", "", ""},
+  {"Your servants grow eager to unleash destruction.", "", ""},
   {"", "", ""},
 },
 

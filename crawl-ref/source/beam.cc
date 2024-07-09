@@ -4449,6 +4449,10 @@ bool bolt::ignores_player() const
     if (flavour == BEAM_QAZLAL)
         return true;
 
+    // Explosions caused by Mark of Carnage don't cause friendly fire.
+    if (origin_spell == SPELL_UNLEASH_DESTRUCTION && is_explosion)
+        return true;
+
     return false;
 }
 
@@ -5748,6 +5752,10 @@ bool bolt::ignores_monster(const monster* mon) const
 
     if (origin_spell == SPELL_HOARFROST_BULLET)
         return in_explosion_phase && mons_aligned(agent(), mon);
+
+    // Explosions caused by Mark of Carnage don't cause friendly fire.
+    if (origin_spell == SPELL_UNLEASH_DESTRUCTION && is_explosion && mon->friendly())
+        return true;
 
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);

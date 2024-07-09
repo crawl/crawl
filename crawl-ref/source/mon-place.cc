@@ -2962,7 +2962,8 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 }
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty)
+                              int radius, bool allow_centre, coord_def& empty,
+                              bool in_player_sight)
 {
     int good_count = 0;
 
@@ -2976,6 +2977,9 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
             continue;
 
         if (!monster_habitable_grid(mon_type, env.grid(*ri)))
+            continue;
+
+        if (in_player_sight && !you.see_cell_no_trans(*ri))
             continue;
 
         if (one_chance_in(++good_count))
