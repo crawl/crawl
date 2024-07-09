@@ -2641,7 +2641,7 @@ static const mutation_def mut_data[] =
   "Mark of the Legion",
 
   {"You bear the Mark of the Legion.", "", ""},
-  {"You feel some sort of feeling.", "", ""},
+  {"The armies of chaos are now yours to lead.", "", ""},
   {"", "", ""},
 },
 

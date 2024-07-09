@@ -3900,6 +3900,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;
     case ABIL_MAKHLEB_INFERNAL_SERVANT:
         return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
+    case ABIL_MAKHLEB_INFERNAL_LEGION:
+        return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
     // Sif Muna
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;

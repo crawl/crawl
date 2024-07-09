@@ -265,5 +265,6 @@ enum duration_type
     DUR_BLIND,
     DUR_SIGN_OF_RUIN,
     DUR_GRAVE_CLAW_RECHARGE,
+    DUR_INFERNAL_LEGION,
     NUM_DURATIONS
 };

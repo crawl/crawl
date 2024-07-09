@@ -361,6 +361,14 @@ So long as you continue to worship Makhleb, this mark will grant you the
 following power:
 
 %%%%
+Infernal Legion ability
+
+Uses one's own body as a conduit to unleash an army of chaos upon the world.
+For a short while, lesser demons will continuously manifest near the user -
+provided there is something around for them to fight. While these demons may
+be individually short-lived, the legions of chaos as a whole are virtually
+inexhuastable.
+%%%%
 # Sif Muna
 %%%%
 Channel Magic ability

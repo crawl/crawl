@@ -646,6 +646,11 @@ static const duration_def duration_data[] =
       "sign of ruin", "ruin",
       "The sign of ruin enfeebles you when you suffer attacks.", D_DISPELLABLE,
       {{ "The sign of ruin upon you fades." }}},
+    { DUR_INFERNAL_LEGION,
+      WHITE, "Legion",
+      "unleashing the legion", "infernal legion",
+      "You are beckoning forth the legions of chaos.", D_EXPIRES,
+      {{ "Your infernal gateway subsides." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

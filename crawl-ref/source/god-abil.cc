@@ -71,6 +71,7 @@
 #include "mon-util.h"
 #include "movement.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"
@@ -6949,9 +6950,8 @@ static void _setup_destruction_beam(bolt& beam, int power, bool signature_only)
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
 {
     // Since the actual beam is random, check with BEAM_MMISSILE.
-    // (Use a different spell as a proxy for whether this is penetrating or not)
-    if (!player_tracer(_has_upgraded_destruction() ? ZAP_SEARING_RAY
-                                                   : ZAP_MAGIC_DART,
+    if (!player_tracer(_has_upgraded_destruction() ? ZAP_UNLEASH_DESTRUCTION
+                                                   : ZAP_UNLEASH_DESTRUCTION_PIERCING,
                         100, beam, beam.range))
     {
         return spret::abort;
@@ -7148,4 +7148,60 @@ void makhleb_inscribe_mark(mutation_type mark)
     perma_mutate(mark, 1, " inscribed by the player.");
 
     you.one_time_ability_used.set(GOD_MAKHLEB);
+}
+
+#define NEXT_INFERNAL_LEGION_KEY "next_infernal_legion"
+
+static void _summon_legion_demon()
+{
+    const int pow = max(0, you.skill_rdiv(SK_INVOCATIONS, 1, 2) - 1);
+    monster_picker servant_picker;
+    monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
+
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, 1, MON_SUMM_AID, GOD_MAKHLEB);
+    create_monster(mg);
+}
+
+spret makhleb_infernal_legion(bool fail)
+{
+    if (you.duration[DUR_INFERNAL_LEGION])
+    {
+        mpr("You are already unleashing the legions of chaos!");
+        return spret::abort;
+    }
+
+    fail_check();
+    mpr("You carve a gateway into yourself and beckon forth the legions of chaos!");
+    bleed_for_makhleb(you);
+    you.duration[DUR_INFERNAL_LEGION] = (you.skill_rdiv(SK_INVOCATIONS, 5, 4)
+                                            + random_range(10, 20)) * BASELINE_DELAY;
+
+    you.props[NEXT_INFERNAL_LEGION_KEY] = random_range(9, 15);
+
+    if (there_are_monsters_nearby(true, false))
+    {
+        // Summon a couple demons immediately
+        const int num = random_range(1, 3);
+        for (int i = 0; i < num; ++i)
+            _summon_legion_demon();
+    }
+
+    return spret::success;
+}
+
+void makhleb_infernal_legion_tick(int delay)
+{
+    // First, check if there are any hostiles in sight
+    if (!there_are_monsters_nearby(true, false))
+        return;
+
+    while (delay >= you.props[NEXT_INFERNAL_LEGION_KEY].get_int())
+    {
+        delay -= you.props[NEXT_INFERNAL_LEGION_KEY].get_int();
+        _summon_legion_demon();
+        you.props[NEXT_INFERNAL_LEGION_KEY] = random_range(9, 15);
+    }
+
+    you.props[NEXT_INFERNAL_LEGION_KEY].get_int() -= delay;
 }

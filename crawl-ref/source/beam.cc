@@ -5753,9 +5753,13 @@ bool bolt::ignores_monster(const monster* mon) const
     if (origin_spell == SPELL_HOARFROST_BULLET)
         return in_explosion_phase && mons_aligned(agent(), mon);
 
-    // Explosions caused by Mark of Carnage don't cause friendly fire.
-    if (origin_spell == SPELL_UNLEASH_DESTRUCTION && is_explosion && mon->friendly())
+    // Explosions caused by Mark of Carnage don't cause friendly fire, and Mark
+    // of the Legion allows firing through allies at all times.
+    if ((origin_spell == SPELL_UNLEASH_DESTRUCTION && mon->friendly())
+        && (is_explosion || you.has_mutation(MUT_MAKHLEB_MARK_LEGION)))
+    {
         return true;
+    }
 
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);

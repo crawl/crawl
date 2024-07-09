@@ -471,6 +471,8 @@ static vector<ability_def> &_get_ability_list()
             abflag::dir_or_target },
         { ABIL_MAKHLEB_INFERNAL_SERVANT, "Infernal Servant",
             0, scaling_cost::fixed(8), 4, -1, {fail_basis::invo, 40, 5, 20}},
+        { ABIL_MAKHLEB_INFERNAL_LEGION, "Infernal Legion",
+            0, scaling_cost::fixed(10), 8, -1, {fail_basis::invo, 55, 5, 20}},
         { ABIL_MAKHLEB_BRAND_SELF_1, "Brand Self #1",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_MAKHLEB_BRAND_SELF_2, "Brand Self #2",
@@ -784,6 +786,11 @@ int ability_range(ability_type abil)
     return min((int)you.current_vision, range);
 }
 
+static int _makhleb_destruction_power()
+{
+    return you.skill_rdiv(SK_INVOCATIONS, 4, 3);
+}
+
 static int _ability_zap_pow(ability_type abil)
 {
     switch (abil)
@@ -795,6 +802,8 @@ static int _ability_zap_pow(ability_type abil)
             return you.form == transformation::dragon
                                  ? 2 * you.experience_level
                                  : you.experience_level;
+        case ABIL_MAKHLEB_DESTRUCTION:
+            return _makhleb_destruction_power();
         default:
             ASSERT(ability_to_zap(abil) == NUM_ZAPS);
             return 0;
@@ -1159,7 +1168,6 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_ELYVILON_HEAL_OTHER:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-    case ABIL_MAKHLEB_INFERNAL_SERVANT:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
@@ -1201,6 +1209,13 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_BEOGH_RECALL_APOSTLES:
         if (get_num_apostles() < 1)
             return ABIL_NON_ABILITY;
+        return ability;
+
+    case ABIL_MAKHLEB_INFERNAL_SERVANT:
+        if (you.allies_forbidden())
+            return ABIL_NON_ABILITY;
+        else if (you.has_mutation(MUT_MAKHLEB_MARK_LEGION))
+            return ABIL_MAKHLEB_INFERNAL_LEGION;
         return ability;
 
     default:
@@ -1403,11 +1418,6 @@ static int _yred_hurl_torchlight_power()
 static int _beogh_smiting_power(bool allow_random = true)
 {
     return 12 + skill_bump(SK_INVOCATIONS, 6, allow_random);
-}
-
-static int _makhleb_destruction_power()
-{
-    return you.skill_rdiv(SK_INVOCATIONS, 4, 3);
 }
 
 static int _hurl_damnation_power()
@@ -3414,6 +3424,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         fail_check();
         makhleb_infernal_servant();
         break;
+
+    case ABIL_MAKHLEB_INFERNAL_LEGION:
+        return makhleb_infernal_legion(fail);
 
     case ABIL_MAKHLEB_BRAND_SELF_1:
     case ABIL_MAKHLEB_BRAND_SELF_2:

@@ -1004,3 +1004,8 @@ to heavily drain and randomly slow, weaken, or blind you.
 -GClaw status
 
 You have not yet harvested enough death to cast Grave Claw again.
+%%%%
+Legion status
+
+You are beckoning the legions of chaos; short-lived demons will be periodically
+summoned near you.

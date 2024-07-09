@@ -248,3 +248,5 @@ void jiyva_end_oozemancy();
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);
 void makhleb_infernal_servant();
 void makhleb_inscribe_mark(mutation_type mark);
+spret makhleb_infernal_legion(bool fail);
+void makhleb_infernal_legion_tick(int delay);
