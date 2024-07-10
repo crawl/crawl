@@ -1648,9 +1648,10 @@ ENDMAP
 # besides the default pluses for that type of ring.
 # For the special randart, the available artprops are those that can go on rings
 # and either have weight 0 for random generation (everything but MP), or have a
-# preset value (MP+/-9) which we can exceed. For HP and MP, the values go from
-# +13 to +17 -- the low end is to exceed the max MP bonus of +12, the high end
-# is to be symmetric around +15, the HP from the old amulet of Vitality.
+# preset value (MP+/-12) which we can exceed. For MP, the values go from
+# +13 to +15 -- the low end is to exceed the max MP bonus of +12, the high end
+# is a nice round multiple of 5. For HP, the values are +5 to +15, capped by the
+# HP from the old Amulet of Vitality.
 # For each of the six rings that can have pluses, there is the possibility of
 # a ring of that type whose pluses are worse than default (which makes it a bit
 # less useful, but cheaper, and so possibly more enticing to poor players),
@@ -1665,8 +1666,8 @@ WEIGHT: 5
 {{
   local itemcount = crawl.roll_dice( 2, 3 ) + 2
   local artprops = {"rMut", "Clar", "RMsl", "SH:5",
-     "HP:" .. (crawl.roll_dice(4, 2) + 9),
-     "MP:" .. (crawl.roll_dice(4, 2) + 9)}
+     "HP:" .. (crawl.roll_dice(10, 2) - 5),
+     "MP:" .. (crawl.roll_dice(2, 2) + 11)}
   local rings = {
      -- Worse than usual:
      -- +1 to +5
@@ -1962,24 +1963,6 @@ cc3.....3cc
 ccc.....ccc
  ccc...ccc
   ccb+bcc
-ENDMAP
-
-NAME:   nicolae_clarity_for_sale
-TAGS:   transparent
-DEPTH:  D:7-, Depths, Elf, Snake
-WEIGHT: 5
-KFEAT:  S = general shop type:Clear_Minds suffix:Boutique count:5 use_all ; \
-            any weapon artprops:Clar | any armour artprops:Clar | \
-            any jewellery artprops:Clar | any magical staff artprops:Clar | \
-            any talisman artprops:Clar
-MAP
-...m...
-.m...m.
-.......
-m..S..m
-.......
-.m...m.
-...m...
 ENDMAP
 
 # Wiglaf says his gran stitched his ever-iconic hat, so.
