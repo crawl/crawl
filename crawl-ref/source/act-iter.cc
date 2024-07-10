@@ -188,9 +188,7 @@ monster* monster_iterator::operator->() const
 
 monster_iterator& monster_iterator::operator++()
 {
-    while (++i < MAX_MONSTERS)
-        if (env.mons[i].alive())
-            break;
+    advance();
     return *this;
 }
 
