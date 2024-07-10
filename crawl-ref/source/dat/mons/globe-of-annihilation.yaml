@@ -1,0 +1,17 @@
+name: "globe of annihilation"
+glyph: {char: "*", colour: lightred}
+flags: [flies, insubstantial, no_exp_gain, no_poly_to, no_threat, projectile]
+resists: {elec: 3, fire: 3, cold: 3, acid: 3, damnation: 1}
+xp_mult: 0
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 5
+hp_10x: 50000
+ac: 0
+ev: 10
+intelligence: brainless
+speed: 15
+size: little
+shape: orb
+tile: globe_of_annihilation_geh

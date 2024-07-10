@@ -1630,6 +1630,25 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
             return TILEP_MONS_BLINK_FROG_BLINKING;
         break;
 
+    case MONS_GLOBE_OF_ANNIHILATION:
+    {
+        // Max size isn't reached until distance 4 (distance 2-3 look the same)
+        if (tile_num_prop == 3)
+            tile_num_prop--;
+
+        tileidx_t base_tile;
+        switch (colour)
+        {
+            default:
+            case LIGHTRED: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_GEH; break;
+            case LIGHTBLUE: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_COC; break;
+            case LIGHTGREY: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_DIS; break;
+            case CYAN: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_TAR; break;
+        }
+
+        return tileidx_mon_clamp(base_tile, tile_num_prop - 1);
+    }
+
     case MONS_HYDRA:
         // Number of heads
         return tileidx_mon_clamp(TILEP_MONS_HYDRA, number - 1);
@@ -3898,6 +3917,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Makhleb
     case ABIL_MAKHLEB_DESTRUCTION:
         return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;
+    case ABIL_MAKHLEB_ANNIHILATION:
+        return TILEG_ABILITY_MAKHLEB_GLOBE_OF_ANNIHILATION;
     case ABIL_MAKHLEB_INFERNAL_SERVANT:
         return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
     case ABIL_MAKHLEB_INFERNAL_LEGION:

@@ -369,6 +369,41 @@ provided there is something around for them to fight. While these demons may
 be individually short-lived, the legions of chaos as a whole are virtually
 inexhuastable.
 %%%%
+Globe of Annihilation ability
+
+Launches a roiling sphere of intense destructive force drawn from the
+{{
+    if you.get_base_mutation_level("Dis destruction") == 1 then
+        return "ruthless spite of Dis."
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "wailing grief of Tartarus."
+    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "endless fires of Gehenna."
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "frigid wastes of Cocytus."
+    else
+        return "the very Hells themselves."
+    end
+}}
+
+This sphere gathers strength as it travels, and will attempt to home in on a
+designated target, though it moves and turns with considerable inertia. When it
+collides with a creature or other obstruction, it will detonate in a violent
+explosion of
+{{
+    if you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "fire or lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "cold or ice"
+    end
+}} whose radius depends on the distance travelled.
+
+You are protected from this explosion yourself.
+%%%%
 # Sif Muna
 %%%%
 Channel Magic ability

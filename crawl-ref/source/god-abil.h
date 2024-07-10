@@ -245,6 +245,7 @@ vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);
 void jiyva_end_oozemancy();
 
+void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only);
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);
 void makhleb_infernal_servant();
 void makhleb_inscribe_mark(mutation_type mark);

@@ -6855,7 +6855,7 @@ static bool _has_upgraded_destruction()
            || you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED);
 }
 
-static void _setup_destruction_beam(bolt& beam, int power, bool signature_only)
+void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
 {
     zappy(ZAP_UNLEASH_DESTRUCTION, power, false, beam);
     beam.origin_spell = SPELL_UNLEASH_DESTRUCTION;
@@ -6959,7 +6959,7 @@ spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
 
     fail_check();
 
-    _setup_destruction_beam(beam, power, false);
+    makhleb_setup_destruction_beam(beam, power, false);
 
     bleed_for_makhleb(you);
     beam.fire();
@@ -7079,7 +7079,7 @@ void makhleb_infernal_servant()
             beam.thrower = KILL_YOU;
             beam.source = demon->pos();
             beam.target = demon->pos();
-            _setup_destruction_beam(beam, you.skill(SK_INVOCATIONS, 2), true);
+            makhleb_setup_destruction_beam(beam, you.skill(SK_INVOCATIONS, 2), true);
             beam.is_explosion = true;
             beam.ex_size = 2;
 

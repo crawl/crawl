@@ -52,6 +52,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h"
@@ -469,6 +470,10 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MAKHLEB_DESTRUCTION, "Unleash Destruction",
             0, 50, 0, LOS_MAX_RANGE, {fail_basis::invo, 20, 5, 20},
             abflag::dir_or_target },
+        { ABIL_MAKHLEB_ANNIHILATION, "Globe of Annihilation",
+            0, scaling_cost::fixed(6), 2, LOS_MAX_RANGE,
+            {fail_basis::invo, 20, 5, 20}, abflag::dir_or_target },
+
         { ABIL_MAKHLEB_INFERNAL_SERVANT, "Infernal Servant",
             0, scaling_cost::fixed(8), 4, -1, {fail_basis::invo, 40, 5, 20}},
         { ABIL_MAKHLEB_INFERNAL_LEGION, "Infernal Legion",
@@ -789,6 +794,11 @@ int ability_range(ability_type abil)
 static int _makhleb_destruction_power()
 {
     return you.skill_rdiv(SK_INVOCATIONS, 4, 3);
+}
+
+static int _makhleb_annihilation_power()
+{
+    return you.skill_rdiv(SK_INVOCATIONS, 7, 3);
 }
 
 static int _ability_zap_pow(ability_type abil)
@@ -1212,7 +1222,9 @@ ability_type fixup_ability(ability_type ability)
         return ability;
 
     case ABIL_MAKHLEB_INFERNAL_SERVANT:
-        if (you.allies_forbidden())
+        if (you.has_mutation(MUT_MAKHLEB_MARK_ANNIHILATION))
+            return ABIL_MAKHLEB_ANNIHILATION;
+        else if (you.allies_forbidden())
             return ABIL_NON_ABILITY;
         else if (you.has_mutation(MUT_MAKHLEB_MARK_LEGION))
             return ABIL_MAKHLEB_INFERNAL_LEGION;
@@ -1456,6 +1468,11 @@ static string _ability_damage_string(ability_type ability)
         case ABIL_MAKHLEB_DESTRUCTION:
             return spell_damage_string(SPELL_UNLEASH_DESTRUCTION, false,
                                        _makhleb_destruction_power());
+
+        case ABIL_MAKHLEB_ANNIHILATION:
+            return spell_damage_string(SPELL_UNLEASH_DESTRUCTION, false,
+                                       _makhleb_annihilation_power());
+
         case ABIL_YRED_HURL_TORCHLIGHT:
             return spell_damage_string(SPELL_HURL_TORCHLIGHT, false,
                                        _yred_hurl_torchlight_power());
@@ -3409,6 +3426,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (!okawaru_gift_armour())
             return spret::abort;
         break;
+
+    case ABIL_MAKHLEB_ANNIHILATION:
+        return cast_iood(&you, _makhleb_annihilation_power(), &beam, 0, 0, MHITNOT,
+                         fail, false, MONS_GLOBE_OF_ANNIHILATION);
 
     case ABIL_MAKHLEB_DESTRUCTION:
         return makhleb_unleash_destruction(_makhleb_destruction_power(), beam, fail);

@@ -2653,11 +2653,11 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAKHLEB_MARK_EXECUTION, 0, 1, mutflag::makhleb, false,
-  "Mark of Execution",
+{ MUT_MAKHLEB_MARK_ANNIHILATION, 0, 1, mutflag::makhleb, false,
+  "Mark of Annihilation",
 
-  {"You bear the Mark of Execution.", "", ""},
-  {"You feel some sort of feeling.", "", ""},
+  {"You bear the Mark of Annihilation.", "", ""},
+  {"You feel the destructive energies within you surge violently.", "", ""},
   {"", "", ""},
 },
 
