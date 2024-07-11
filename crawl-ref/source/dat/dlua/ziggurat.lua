@@ -253,13 +253,13 @@ mset(spec_fn(function ()
 end))
 
 mset(spec_fn(function ()
-  local d = math.max(2, 290 - 10 * you.depth() - you.zigs_completed() * 3)
-  local e = 10 + you.zigs_completed() * 3
-  local f = math.max(0, math.floor(you.depth() + you.zigs_completed() * 2 - 20))
+  local d = math.max(2, 380 - 20 * you.depth() - you.zigs_completed() * 6)
+  local e = 25 + you.zigs_completed() * 6
+  local f = math.max(0, math.floor(you.depth() * 1.5 + you.zigs_completed() * 3 - 35))
   return "place:Orc:$ w:" .. d .. " / orc warlord w:" .. e .. " / " ..
-         "orc high priest w:" .. e .. " / orc sorcerer w:5 / " ..
-         "stone giant w:5 / iron troll w:5 / " ..
-         "moth of wrath w:" .. f .. " / juggernaut w:" .. e - 10
+         "orc high priest w:" .. e .. " / orc sorcerer / " ..
+         "stone giant / iron troll / juggernaut w:" .. e - 24 .. " / " ..
+         "moth of wrath w:" .. f .. " / undying armoury w:" .. f
 end))
 
 mset(spec_fn(function ()
@@ -415,11 +415,12 @@ end))
 mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 9
   local e = 20 + you.zigs_completed() * 12
-  local f = 20 + you.zigs_completed() * 15
+  local f = 20 + you.zigs_completed() * 16
   return "cyclops w:20 / ettin w:20 / " ..
          "stone giant w:" .. d .. " / " .. "fire giant w:" .. d .. " / " ..
          "frost giant w:" .. d .. " / titan w:" .. f .. " / " ..
-         "juggernaut w:" .. e .. " / iron giant w:" .. e
+         "juggernaut w:" .. e .. " / iron giant w:" .. e .. " / " ..
+         "protean progenitor w:" .. d
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
