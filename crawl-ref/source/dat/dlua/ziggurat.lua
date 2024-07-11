@@ -259,7 +259,8 @@ mset(spec_fn(function ()
   return "place:Orc:$ w:" .. d .. " / orc warlord w:" .. e .. " / " ..
          "orc high priest w:" .. e .. " / orc sorcerer w:5 / " ..
          "stone giant w:5 / iron troll w:5 / " ..
-         "moth of wrath w:" .. f .. " / juggernaut w:" .. e - 10
+         "moth of wrath w:" .. f .. " / juggernaut w:" .. e - 10 .. " / " ..
+         "undying armoury w:" .. f
 end))
 
 mset(spec_fn(function ()
@@ -419,7 +420,8 @@ mset(with_props(spec_fn(function ()
   return "cyclops w:20 / ettin w:20 / " ..
          "stone giant w:" .. d .. " / " .. "fire giant w:" .. d .. " / " ..
          "frost giant w:" .. d .. " / titan w:" .. f .. " / " ..
-         "juggernaut w:" .. e .. " / iron giant w:" .. e
+         "juggernaut w:" .. e .. " / iron giant w:" .. e .. " / " ..
+         "protean progenitor w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
