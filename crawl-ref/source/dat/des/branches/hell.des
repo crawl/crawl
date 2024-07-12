@@ -646,7 +646,6 @@ MAP
 ...................
 .........@.........
 ENDMAP
-
 # If you're dumb enough to go to the Hells this weekend, you're a big enough
 # schmuck to come to Big Baal Hell's Store!
 # Inspired by the NSFW classic: https://www.youtube.com/watch?v=4sZuN0xXWLc
@@ -665,46 +664,45 @@ WEIGHT: 2
   -- the Dis inventory focuses on damage/AC increases to counteract the
   -- corrosion hell effect, rCorr for caustic shrikes, reflection for various
   -- Dis projectiles, and enchant armour/weapon scrolls in bulk
-  local disinv = util.random_subset( { "any weapon good_item ego:heavy",
-    "any weapon randart ego:heavy", "ring of slaying randart",
-    "ring of protection randart", "any weapon good_item ego:protection",
+  local disinv = util.random_subset( { "any weapon randart ego:heavy",
+    "ring of slaying randart", "ring of protection randart",
     "any weapon randart ego:protection", "crystal plate armour randart",
     "golden dragon scales randart", "tower shield randart",
+    "any weapon randart artprops:rCorr", "any armour randart artprops:rCorr",
     "ring of resist corrosion randart", "amulet of reflection randart",
     "scroll of enchant weapon q:10", "scroll of enchant armour q:10",
-    "potion of might q:10", "randbook disc:conjuration slevels:12",
-    "randbook disc:earth slevels:12", "staff of earth",
-    "staff of conjuration" }, 2 )
+    "potion of might q:10", "randbook disc:conjuration slevels:13",
+    "randbook disc:earth slevels:13", "staff of earth randart",
+    "staff of conjuration randart" }, 2 )
 
   -- the Gehenna inventory focuses on fire resistance and cold damage, and
   -- some potions of invisibility since a lot of monsters there can't sInv,
   -- and some tloc since you can't use blink/tele scrolls
-  local gehinv = util.random_subset( { "any weapon good_item ego:freezing",
-    "any weapon randart ego:freezing", "ring of protection from fire randart",
-    "ring of fire randart", "fire dragon scales randart",
-    "wand of iceblast charges:25", "any armour good_item ego:fire_resistance",
-    "any armour randart ego:fire_resistance", "potion of invisibility q:10",
-    "randbook disc:ice slevels:12", "randbook disc:translocation slevels:12",
-    "staff of fire" }, 2 )
+  local gehinv = util.random_subset( { "any weapon randart ego:freezing",
+    "ring of protection from fire randart", "ring of fire randart",
+    "fire dragon scales randart", "wand of iceblast charges:25",
+    "any weapon randart artprops:rF:1", "any armour randart artprops:rF:1",
+    "potion of invisibility q:10", "randbook disc:ice slevels:13",
+    "randbook disc:translocation slevels:13", "staff of fire randart" }, 2 )
 
   -- the Cocytus inventory focuses on cold resistance and fire damage, and
   -- throws in some willpower for narguns
-  local cocinv = util.random_subset( { "any weapon good_item ego:flaming",
-    "any weapon randart ego:flaming", "ring of protection from cold randart",
-    "ring of ice randart", "ice dragon scales randart",
-    "wand of flame charges:55", "any armour good_item ego:cold_resistance",
-    "any armour randart ego:cold_resistance", "ring of willpower randart",
-    "randbook disc:fire slevels:12", "staff of air", "staff of cold" }, 2 )
+  local cocinv = util.random_subset( { "any weapon randart ego:flaming",
+    "ring of protection from cold randart", "ring of ice randart",
+    "ice dragon scales randart", "any weapon randart artprops:rC:1",
+    "staff of air randart", "staff of cold randart", "wand of flame charges:55",
+    "any armour randart artprops:rC:1", "ring of willpower randart",
+    "randbook disc:fire slevels:13" }, 2 )
 
   -- the Tartarus inventory focuses on increased willpower to counteract the
   -- Will/2 hell effect, as well rN+ for theme, scrolls of fog in bulk to deal
   -- with fear/mesmerise
   local tarinv = util.random_subset( { "ring of willpower randart",
-    "ring of positive energy randart", "any armour randart ego:positive_energy",
-    "any armour randart ego:willpower", "pearl dragon scales randart",
-    "scroll of fog q:10", "any armour good_item ego:positive_energy",
-    "any armour good_item ego:willpower", "quicksilver dragon scales randart",
-    "staff of death" }, 2 )
+    "ring of positive energy randart", "any armour randart artprops:rN:1",
+    "any armour randart artprops:Will:1", "pearl dragon scales randart",
+    "scroll of fog q:10", "quicksilver dragon scales randart",
+    "any weapon randart artprops:Will:1", "any weapon randart artprops:rN:1",
+    "staff of death randart" }, 2 )
 
   -- Generically useful in all the Hells, a lot of scrolls and potions in bulk,
   -- but also rings of rN+ and willpower, which are useful in all the Hells, and
@@ -713,15 +711,15 @@ WEIGHT: 2
   local hellinv = util.random_subset( { "scroll of blinking q:10",
     "scroll of revelation q:10", "scroll of silence q:10",
     "any ally scroll q:10", "scroll of teleportation q:10",
-    "potion of brilliance q:10",
+    "potion of brilliance q:10", "potion of enlightenment q:10",
     "potion of cancellation q:10", "potion of curing q:10",
     "potion of haste q:10","potion of heal wounds q:10", "potion of magic q:10",
     "potion of experience", "potion of resistance q:10", "any weapon randart",
     "any armour randart", "any jewellery randart", "any weapon randart",
-    "any armour randart", "any jewellery randart", "any wand charges:25",
+    "any armour randart", "any jewellery randart", "any wand charges:27",
     "ring of positive energy randart", "ring of willpower randart",
     "randbook good_item", "randbook good_item", "ring of wizardry randart",
-    "any magical staff", "scroll of acquirement", "any manual",
+    "any magical staff randart", "scroll of acquirement q:2", "any manual",
     "demon trident randart", "demon whip randart", "demon blade randart",
     "javelin ego:silver q:25", "any misc" }, 2)
 
