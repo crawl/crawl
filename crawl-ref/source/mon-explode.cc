@@ -398,15 +398,7 @@ bool explode_monster(monster* mons, killer_type killer,
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
-    // Unless it's a phoenix, where this isn't much of a concern.
     env.mgrid(mons->pos()) = NON_MONSTER;
-
-    // The explosion might cause a monster to be placed where the bomb
-    // used to be, so make sure that env.mgrid() doesn't get cleared a second
-    // time (causing the new monster to become floating) when
-    // mons->reset() is called.
-    if (type == MONS_BALLISTOMYCETE_SPORE)
-        mons->set_position(coord_def(0,0));
 
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;
