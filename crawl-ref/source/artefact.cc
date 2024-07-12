@@ -511,13 +511,15 @@ static void _add_randart_weapon_brand(const item_def &item,
     else if (is_range_weapon(item))
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            2, SPWPN_SPEED,
-            2, SPWPN_ELECTROCUTION,
+            8, SPWPN_DRAINING,
+            8, SPWPN_HEAVY,
+            8, SPWPN_FLAMING,
+            8, SPWPN_FREEZING,
+            4, SPWPN_ELECTROCUTION,
+            3, SPWPN_SPEED,
             2, SPWPN_ANTIMAGIC,
-            4, SPWPN_DRAINING,
-            4, SPWPN_HEAVY,
-            4, SPWPN_FLAMING,
-            4, SPWPN_FREEZING);
+            2, SPWPN_CHAOS,
+            1, SPWPN_HOLY_WRATH);
 
         // Penetration is only allowed on crossbows.
         // This may change in future.
