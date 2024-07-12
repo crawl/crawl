@@ -3412,6 +3412,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
+        if (bolt.name == "rain of gore")
+            return TILE_BOLT_HAEMOCLASM;
         break;
 
     case LIGHTRED:
@@ -3498,6 +3500,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_FLAME:
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_SHADOW_BLAST:
+    case TILE_BOLT_HAEMOCLASM:
         return tile + ui_random(tile_main_count(tile));
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);

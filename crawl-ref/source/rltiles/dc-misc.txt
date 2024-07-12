@@ -128,6 +128,11 @@ shadow_blast1
 shadow_blast2
 shadow_blast3
 
+haemoclasm0 BOLT_HAEMOCLASM
+haemoclasm1
+haemoclasm2
+haemoclasm3
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

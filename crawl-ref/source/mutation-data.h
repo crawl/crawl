@@ -2629,11 +2629,11 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAHKLEB_MARK_HEMOCLASM, 0, 1, mutflag::makhleb, false,
-  "Mark of Hemoclasm",
+{ MUT_MAKHLEB_MARK_HAEMOCLASM, 0, 1, mutflag::makhleb, false,
+  "Mark of Haemoclasm",
 
-  {"You bear the Mark of Hemoclasm.", "", ""},
-  {"You feel some sort of feeling.", "", ""},
+  {"You bear the Mark of Haemoclasm.", "", ""},
+  {"Gore shall rain upon your enemies.", "", ""},
   {"", "", ""},
 },
 

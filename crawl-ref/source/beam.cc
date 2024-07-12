@@ -4446,7 +4446,7 @@ bool bolt::ignores_player() const
                                                                      : CONSTRICT_BVC);
     }
 
-    if (flavour == BEAM_QAZLAL)
+    if (flavour == BEAM_QAZLAL || flavour == BEAM_HAEMOCLASM)
         return true;
 
     // Explosions caused by Mark of Carnage don't cause friendly fire.
@@ -5674,6 +5674,13 @@ void bolt::affect_monster(monster* mon)
         }
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
+
+        // Haemoclasm explosions will always chain-explode if they kill something
+        if (!mon->alive() && flavour == BEAM_HAEMOCLASM
+            && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM))
+        {
+            mon->props[MAKHLEB_HAEMOCLASM_KEY] = true;
+        }
     }
 
     if (mon->alive())
@@ -5760,6 +5767,9 @@ bool bolt::ignores_monster(const monster* mon) const
     {
         return true;
     }
+
+    if (flavour == BEAM_HAEMOCLASM && mon->friendly())
+        return true;
 
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);
@@ -7494,6 +7504,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_QAZLAL:                return "upheaval targetter";
     case BEAM_RIMEBLIGHT:            return "rimeblight";
     case BEAM_SHADOW_TORPOR:         return "shadow torpor";
+    case BEAM_HAEMOCLASM:            return "gore";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

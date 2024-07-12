@@ -2119,6 +2119,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    // Chance to cause monsters you kill yourself to explode with Mark of Haemoclasm
+    if (YOU_KILL(killer) && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM)
+        && one_chance_in(10))
+    {
+        mons.props[MAKHLEB_HAEMOCLASM_KEY] = true;
+    }
+
     if (you.prev_targ == monster_killed)
     {
         you.prev_targ = MHITNOT;

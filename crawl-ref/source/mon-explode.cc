@@ -206,6 +206,20 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
         beam.source_id = agent->mid;
 }
 
+static void _setup_haemoclasm_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour     = BEAM_HAEMOCLASM;
+    beam.damage      = dice_def(3, 5 + origin.max_hit_points / 4);
+    beam.name        = "rain of gore";
+    beam.hit_verb    = "batters";
+    beam.colour      = RED;
+    beam.ex_size     = 1;
+    beam.source_name = origin.name(DESC_PLAIN, true);
+    beam.thrower     = KILL_YOU_MISSILE;
+    beam.source_id   = MID_PLAYER;
+}
+
 static dice_def _bloated_husk_damage(int hd)
 {
     return dice_def(8, hd);
@@ -280,6 +294,8 @@ bool monster_explodes(const monster &mons)
 {
     if (mons.has_ench(ENCH_INNER_FLAME))
         return true;
+    else if (mons.props.exists(MAKHLEB_HAEMOCLASM_KEY))
+        return true;
     if (!mon_explodes_on_death(mons.type))
         return false;
     if (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge <= 0)
@@ -327,15 +343,8 @@ bool explode_monster(monster* mons, killer_type killer,
         if (type == MONS_BENNU)
             boom_msg = make_stringf("%s blazes out!", mons->full_name(DESC_THE).c_str());
     }
-    else
+    else if (mons->has_ench(ENCH_INNER_FLAME))
     {
-        if (!mons->has_ench(ENCH_INNER_FLAME))
-        {
-            msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
-                                            << static_cast<int>(type)
-                                            << endl;
-            return false;
-        }
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
         ASSERT(i_f.ench == ENCH_INNER_FLAME);
         agent = actor_by_mid(i_f.source);
@@ -350,6 +359,13 @@ bool explode_monster(monster* mons, killer_type killer,
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "ignited by their inner flame";
         inner_flame = true;
+    }
+    else if (mons->props.exists(MAKHLEB_HAEMOCLASM_KEY))
+    {
+        _setup_haemoclasm_explosion(beam, *mons);
+        mons->flags |= MF_EXPLODE_KILL;
+        boom_msg = make_stringf("%s shudders for a moment, then explodes violently!",
+                                mons->name(DESC_THE).c_str());
     }
 
     if (beam.aux_source.empty())

@@ -3779,7 +3779,7 @@ static void _join_makhleb()
 
     vector<mutation_type> muts =
     {
-        MUT_MAHKLEB_MARK_HEMOCLASM,
+        MUT_MAKHLEB_MARK_HAEMOCLASM,
         MUT_MAKHLEB_MARK_LEGION,
         MUT_MAKHLEB_MARK_CARNAGE,
         MUT_MAKHLEB_MARK_ANNIHILATION,
