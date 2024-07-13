@@ -17,6 +17,8 @@ _armour_animal_
 # microorganisms
 Amoeba
 
+Tardigrade
+
 # insects
 Ant
 
