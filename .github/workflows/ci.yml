@@ -599,10 +599,15 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          gradle-version: 7.5 # known to work
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.7 # compatible with Android Gradle plugin 8.5
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:

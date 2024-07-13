@@ -5,4 +5,4 @@ APP_STL := c++_shared
 APP_ABI := all
 
 APP_CFLAGS := -fexceptions
-APP_CXXFLAGS := -frtti $(APP_CFLAGS)
+APP_CXXFLAGS := -frtti -std=c++11 $(APP_CFLAGS)
