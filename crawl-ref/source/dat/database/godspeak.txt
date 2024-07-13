@@ -352,6 +352,8 @@ Xom impromptu dance
 
 You perform an impromptu @dance_name@.
 
+You do an impromptu @acrobatic_move_name@.
+
 You compulsively click your heels together three times.
 %%%%
 dance_name
@@ -373,6 +375,12 @@ tango
 tapdance
 
 waltz
+%%%%
+acrobatic_move_name
+
+cartwheel
+
+somersault
 %%%%
 Xom unarmed one hand
 
