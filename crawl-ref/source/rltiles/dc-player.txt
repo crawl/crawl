@@ -116,6 +116,8 @@ vine_stalker_green_f VINE_STALKER
 vine_stalker_green_m
 vine_stalker_red_f
 vine_stalker_red_m
+vine_stalker_purple_f
+vine_stalker_purple_m
 
 # draconians
 draconian DRACONIAN DRACONIAN_FIRST
