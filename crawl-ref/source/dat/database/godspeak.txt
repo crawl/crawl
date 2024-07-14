@@ -168,6 +168,19 @@ Xom's power almost touches on you for a moment.
 
 You almost hear Xom's maniacal laughter.
 %%%%
+# Keep this greater than one, and small.
+Xom_number
+
+two
+
+three
+
+four
+
+five
+
+six
+%%%%
 Xom feature lava
 
 @The_feature@ spits out sparks!
@@ -362,9 +375,9 @@ You perform an impromptu @dance_name@.
 
 You do an impromptu @acrobatic_move_name@.
 
-You compulsively click your heels together three times.
+You compulsively click your heels together @Xom_number@ times.
 
-You compulsively stomp your @feet@ three times.
+You compulsively stomp your @feet@ @Xom_number@ times.
 %%%%
 dance_name
 
@@ -406,7 +419,7 @@ Xom unarmed two hands
 
 Two fancy canes briefly appear in your @hands@.
 
-You compulsively clap your @hands@ three times.
+You compulsively clap your @hands@ @Xom_number@ times.
 %%%%
 Xom cloak slot
 
@@ -428,7 +441,7 @@ Xom offhand slot
 %%%%
 Xom gloves slot
 
-@Your_item@ briefly grows several extra fingers!
+@Your_item@ briefly grows @Xom_number@ extra fingers!
 %%%%
 Xom boots slot
 
