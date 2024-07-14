@@ -363,6 +363,8 @@ You perform an impromptu @dance_name@.
 You do an impromptu @acrobatic_move_name@.
 
 You compulsively click your heels together three times.
+
+You compulsively stomp your @feet@ three times.
 %%%%
 dance_name
 
@@ -385,6 +387,8 @@ tapdance
 waltz
 %%%%
 acrobatic_move_name
+
+@hand@stand
 
 cartwheel
 

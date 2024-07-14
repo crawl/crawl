@@ -2815,6 +2815,13 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (player_has_feet() && !you.airborne() && !you.cannot_act())
     {
         string str = _get_xom_speech("impromptu dance");
+
+        str = replace_all(str, "@hand@", you.hand_name(false));
+        str = replace_all(str, "@hands@", you.hand_name(true));
+
+        str = replace_all(str, "@foot@", you.foot_name(false));
+        str = replace_all(str, "@feet@", you.foot_name(true));
+
         messages.push_back(str);
     }
 
