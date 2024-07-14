@@ -2688,19 +2688,10 @@ static void _xom_pseudo_miscast(int /*sever*/)
             str = _get_xom_speech("feature blood");
         else if (in_view[iv] == DNGN_DRY_FOUNTAIN)
             str = _get_xom_speech("feature dry");
-        else if (in_view[iv] == DNGN_ORCISH_IDOL
-                 || in_view[iv] == DNGN_GRANITE_STATUE
-                 || in_view[iv] == DNGN_METAL_STATUE)
-        {
-            str = _get_xom_speech("feature statue");
-        }
-        else if (in_view[iv] == DNGN_TREE
-                 || in_view[iv] == DNGN_MANGROVE
-                 || in_view[iv] == DNGN_PETRIFIED_TREE
-                 || in_view[iv] == DNGN_DEMONIC_TREE)
-        {
+        else if (feat_is_statuelike(in_view[iv]))
+            str = _get_xom_speech("feature statuelike");
+        else if (feat_is_tree(in_view[iv]))
             str = _get_xom_speech("feature tree");
-        }
         else if (in_view[iv] == DNGN_CLEAR_ROCK_WALL
                  || in_view[iv] == DNGN_CLEAR_STONE_WALL
                  || in_view[iv] == DNGN_CLEAR_PERMAROCK_WALL

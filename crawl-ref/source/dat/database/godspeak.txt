@@ -225,7 +225,7 @@ Blood briefly sprays from @the_feature@.
 
 Dust puffs up from @the_feature@.
 %%%%
-Xom feature statue
+Xom feature statuelike
 
 @The_feature@ turns to glare at you.
 
