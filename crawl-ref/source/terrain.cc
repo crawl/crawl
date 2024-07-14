@@ -515,7 +515,7 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
-/** Is this feature a type of water, with the concomitant dangers/bonuss?
+/** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
