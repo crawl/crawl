@@ -2796,7 +2796,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str =_get_xom_speech(
                 you.get_mutation_level(MUT_MISSING_EYE) ? "one eye"
-                                                        : "two eyes");
+                                                        : "eyes");
         messages.push_back(str);
     }
 

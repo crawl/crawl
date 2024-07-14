@@ -334,7 +334,7 @@ A monocle briefly appears over your eye.
 
 An eyepatch briefly covers your eye.
 %%%%
-Xom two eyes
+Xom eyes
 
 A monocle briefly appears over one of your eyes.
 
