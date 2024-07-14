@@ -605,6 +605,8 @@ Ancient Evil
 
 Corruption
 
+Debasement
+
 Defilement
 
 Deformation
@@ -626,6 +628,8 @@ Perversion
 Putrescence
 
 Shrieking Terror
+
+Vitiation
 
 the Beast
 
