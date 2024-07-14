@@ -222,6 +222,14 @@ Xom feature statue
 
 @The_feature@ spins in place.
 %%%%
+Xom feature tree
+
+@The_feature@ bends towards you.
+
+@The_feature@ bends away from you.
+
+@The_feature@ sways in place.
+%%%%
 Xom feature translucent wall
 
 Dim shapes swim through @the_feature@.

@@ -2694,6 +2694,13 @@ static void _xom_pseudo_miscast(int /*sever*/)
         {
             str = _get_xom_speech("feature statue");
         }
+        else if (in_view[iv] == DNGN_TREE
+                 || in_view[iv] == DNGN_MANGROVE
+                 || in_view[iv] == DNGN_PETRIFIED_TREE
+                 || in_view[iv] == DNGN_DEMONIC_TREE)
+        {
+            str = _get_xom_speech("feature tree");
+        }
         else if (in_view[iv] == DNGN_CLEAR_ROCK_WALL
                  || in_view[iv] == DNGN_CLEAR_STONE_WALL
                  || in_view[iv] == DNGN_CLEAR_PERMAROCK_WALL
