@@ -714,16 +714,13 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_BLINDING:
         if (!dart_check(brand))
             break;
-        if (defender->is_player())
+        if (defender->can_be_blinded())
         {
-            if (defender->can_be_blinded())
+            if (defender->is_player())
                 blind_player(damage_done, LIGHTGREEN);
-        }
-        else
-        {
-            monster* mon = defender->as_monster();
-            if (mons_can_be_blinded(mon->type))
+            else
             {
+                monster* mon = defender->as_monster();
                 mon->add_ench(mon_enchant(ENCH_BLIND, 1, attacker,
                        damage_done * BASELINE_DELAY));
             }
