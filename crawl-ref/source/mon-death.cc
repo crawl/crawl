@@ -2195,7 +2195,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!monster_habitable_grid(simu.base_type, env.grid(mons.pos())))
             find_habitable_spot_near(mons.pos(), simu.base_type, 3, true, simu.pos);
 
-        string msg = "Your " + mons_type_name(simu.base_type, DESC_PLAIN) +
+        monster_type real_simu_type = simu.base_type;
+        // Don't use uniques' names here; their simulacra won't use them either.
+        if (mons_is_unique(simu.base_type))
+            real_simu_type = mons_species(simu.base_type);
+
+        string msg = "Your " + mons_type_name(real_simu_type, DESC_PLAIN) +
                      " simulacrum begins to move.";
         make_derived_undead_fineff::schedule(simu.pos, simu,
                                              get_monster_data(simu.base_type)->HD,
