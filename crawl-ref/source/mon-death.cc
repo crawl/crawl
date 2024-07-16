@@ -2551,8 +2551,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Chance scales from 30% at 1* to 80% at 6*
             const bool can_divine_heal = valid_heal_source
                 && !player_under_penance()
-                && x_chance_in_y(50 * ((min(piety_breakpoint(5), (int)you.piety) - 30)
-                                 / (piety_breakpoint(5) - piety_breakpoint(0))) + 30, 100);
+                && (x_chance_in_y(50 * ((min(piety_breakpoint(5), (int)you.piety) - 30)
+                                 / (piety_breakpoint(5) - piety_breakpoint(0))) + 30, 100)
+                    || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
             if (valid_heal_source
                 && you.has_mutation(MUT_DEVOUR_ON_KILL)

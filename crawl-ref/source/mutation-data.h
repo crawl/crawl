@@ -2669,6 +2669,14 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_MAKHLEB_MARK_CELEBRANT, 0, 1, mutflag::makhleb, false,
+  "Mark of the Celebrant",
+
+  {"You bear the Mark of the Celebrant.", "", ""},
+  {"Your suffering will be repaid in blood.", "", ""},
+  {"", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

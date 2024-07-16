@@ -1009,3 +1009,8 @@ Legion status
 
 You are beckoning the legions of chaos; short-lived demons will be periodically
 summoned near you.
+%%%%
+-Bloodrite status
+
+You have recently performed an infernal blood rite and must fully heal before
+being able to perform another.

@@ -1147,6 +1147,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            makhleb_celebrant_bloodrite();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();

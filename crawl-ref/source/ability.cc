@@ -3953,7 +3953,12 @@ static void _pay_ability_costs(const ability_def& abil)
     }
 
     if (hp_cost)
+    {
         dec_hp(hp_cost, false);
+
+        // This should still trigger off using other invocations that cost HP
+        makhleb_celebrant_bloodrite();
+    }
 
     if (piety_cost)
         lose_piety(piety_cost);

@@ -2322,4 +2322,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_BLOOD_ARROW,
+    "blood arrow",
+    200,
+    new dicedef_calculator<4, 3, 1, 3>,
+    new tohit_calculator<20, 1, 7>,
+    nullptr,
+    nullptr,
+    LIGHTRED,
+    false,
+    BEAM_BLOODRITE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

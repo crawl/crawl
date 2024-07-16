@@ -3419,6 +3419,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case LIGHTRED:
         if (bolt.name.find("damnation") != string::npos)
             return TILE_BOLT_DAMNATION;
+        if (bolt.name == "blood arrow")
+            return TILE_BOLT_BLOOD_ARROW + dir;
         break;
 
     case LIGHTMAGENTA:

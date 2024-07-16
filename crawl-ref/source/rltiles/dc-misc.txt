@@ -133,6 +133,15 @@ haemoclasm1
 haemoclasm2
 haemoclasm3
 
+blood_arrow0 BOLT_BLOOD_ARROW
+blood_arrow1
+blood_arrow2
+blood_arrow3
+blood_arrow4
+blood_arrow5
+blood_arrow6
+blood_arrow7
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

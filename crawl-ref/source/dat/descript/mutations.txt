@@ -934,6 +934,17 @@ gore which damages adjacent foes proportional to the victim's maximum health.
 
 Enemies who die to this explosion will always explode themselves.
 %%%%
+Mark of the Celebrant mutation
+
+Whenever you fall below 50% of your maximum HP, you perform an infernal rite,
+unleashing a flurry of blood arrows aimed at nearby enemies. You will fire at
+least one arrow for every valid target, but may fire additional ones if few are
+present. Invocations increases the damage of these arrows, and Makhleb will
+always bestow healing upon you for enemies killed by them.
+
+After performing a blood rite, you cannot perform another until your HP has
+fully recovered.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

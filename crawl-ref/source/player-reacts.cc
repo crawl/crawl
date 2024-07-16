@@ -1121,6 +1121,12 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
+    if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "You are ready to preform a blood rite again.");
+        you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
+    }
+
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

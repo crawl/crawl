@@ -5022,6 +5022,9 @@ void bolt::kill_monster(monster &mon)
         kindex = YOU_FAULTLESS;
     }
 
+    if (flavour == BEAM_BLOODRITE)
+        mon.props[MAKHLEB_BLOODRITE_KILL_KEY] = true;
+
     item_def *corpse = monster_die(mon, ref_killer, kindex);
 
     if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH)
@@ -5768,7 +5771,7 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
     }
 
-    if (flavour == BEAM_HAEMOCLASM && mon->friendly())
+    if ((flavour == BEAM_HAEMOCLASM || flavour == BEAM_BLOODRITE) && mon->friendly())
         return true;
 
     int summon_type = 0;
@@ -7505,6 +7508,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_RIMEBLIGHT:            return "rimeblight";
     case BEAM_SHADOW_TORPOR:         return "shadow torpor";
     case BEAM_HAEMOCLASM:            return "gore";
+    case BEAM_BLOODRITE:             return "blood";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
