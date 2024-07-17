@@ -2841,7 +2841,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             && !was_banished)
         {
             if (mons_base_type(mons) == MONS_KRAKEN)
-                mpr("The dead kraken's tentacles slide back into the water.");
+            {
+                const char *dead = "", *die = "slide back into the water";
+                if (!mons_is_zombified(mons))
+                    dead = "dead ";
+                else if (mons.type == MONS_SIMULACRUM)
+                    die = "melt away";
+                mprf("The %skraken's tentacles %s.", dead, die);
+            }
             else if (mons.type == MONS_TENTACLED_STARSPAWN)
                 mpr("The starspawn's tentacles wither and die.");
         }
