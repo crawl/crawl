@@ -1853,20 +1853,20 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
     static const map<spell_type, vector<spell_type>> soh_breaths = {
         { SPELL_SERPENT_OF_HELL_GEH_BREATH,
             { SPELL_FIRE_BREATH,
-              SPELL_FLAMING_CLOUD,
+              SPELL_BOLT_OF_MAGMA,
               SPELL_FIREBALL } },
         { SPELL_SERPENT_OF_HELL_COC_BREATH,
             { SPELL_COLD_BREATH,
               SPELL_FREEZING_CLOUD,
               SPELL_FLASH_FREEZE } },
         { SPELL_SERPENT_OF_HELL_DIS_BREATH,
-            { SPELL_METAL_SPLINTERS,
+            { SPELL_IRON_SHOT,
               SPELL_QUICKSILVER_BOLT,
-              SPELL_LEHUDIBS_CRYSTAL_SPEAR } },
-        { SPELL_SERPENT_OF_HELL_TAR_BREATH,
-            { SPELL_BOLT_OF_DRAINING,
-              SPELL_MIASMA_BREATH,
               SPELL_CORROSIVE_BOLT } },
+        { SPELL_SERPENT_OF_HELL_TAR_BREATH,
+            { SPELL_GHOSTLY_FIREBALL,
+              SPELL_MIASMA_BREATH,
+              SPELL_POISON_ARROW } },
     };
 
     return map_find(soh_breaths, spell);
