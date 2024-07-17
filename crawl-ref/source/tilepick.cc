@@ -4173,6 +4173,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_WIZARD_LAB_7; /* I like this colour */
     case BRANCH_DESOLATION:
         return TILE_DNGN_PORTAL_DESOLATION;
+    case BRANCH_ARENA:
+        return TILE_DNGN_ALTAR_OKAWARU;
 
     default:
         return TILEG_ERROR;
