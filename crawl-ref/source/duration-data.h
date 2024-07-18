@@ -655,6 +655,11 @@ static const duration_def duration_data[] =
       "unleashing the legion", "infernal legion",
       "You are beckoning forth the legions of chaos.", D_EXPIRES,
       {{ "Your infernal gateway subsides." }}},
+    { DUR_EXECUTION,
+      LIGHTBLUE, "Execution",
+      "surrounded by blades", "execution",
+      "You are surrounded by a whirlwind of blades.", D_EXPIRES,
+      {{ "You feel a little less murderous for the moment." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

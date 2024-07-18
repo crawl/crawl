@@ -11,6 +11,7 @@
 #include "coordit.h"
 #include "describe.h"
 #include "debug.h"
+#include "duration-type.h"
 #include "env.h"
 #include "tile-env.h"
 #include "files.h"
@@ -39,6 +40,7 @@
 #include "rltiles/tiledef-unrand.h"
 #include "tag-version.h"
 #include "tilemcache.h"
+#include "tilepick-p.h"
 #include "tileview.h"
 #include "transform.h"
 #include "traps.h"
@@ -2381,7 +2383,10 @@ tileidx_t tileidx_draco_job(const monster_info& mon)
 */
 tileidx_t tileidx_player_mons()
 {
-    ASSERT(Options.tile_use_monster != MONS_0);
+    ASSERT(player_uses_monster_tile());
+
+    if (you.duration[DUR_EXECUTION])
+        return TILEP_MONS_EXECUTIONER;
 
     monster_type mons;
     if (Options.tile_player_tile)

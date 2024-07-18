@@ -2677,6 +2677,14 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_MAKHLEB_MARK_EXECUTION, 0, 1, mutflag::makhleb, false,
+  "Mark of Execution",
+
+  {"You bear the Mark of Execution.", "", ""},
+  {"Whirling blades manifest around you.", "", ""},
+  {"", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

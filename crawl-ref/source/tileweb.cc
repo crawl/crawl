@@ -1691,7 +1691,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             if (fg_changed || player_doll_changed)
             {
                 send_doll(last_player_doll, in_water, false);
-                if (Options.tile_use_monster != MONS_0)
+                if (player_uses_monster_tile())
                 {
                     monster_info minfo(MONS_PLAYER, MONS_PLAYER);
                     minfo.props[MONSTER_TILE_KEY] =

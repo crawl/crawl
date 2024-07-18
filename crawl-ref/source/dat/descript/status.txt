@@ -1014,3 +1014,9 @@ summoned near you.
 
 You have recently performed an infernal blood rite and must fully heal before
 being able to perform another.
+%%%%
+Execution status
+
+You are sharing your body with an Executioner, giving you a powerful auxiliary
+attack that also triggers when you dodge attacks, as well as letting you rampage
+towards foes. This will expire quickly if you stop attacking.

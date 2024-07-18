@@ -1057,6 +1057,18 @@ w:5
 w:5
 "My hands, my teeth, my burning tears: these will never betray me!"
 %%%%
+Makhleb executioner chatter
+
+w:40
+"Kill. Kill. Kill!"
+
+"More. More. More!"
+
+"Another! And Another! And Another!"
+
+w:5
+"Everything deserves to die!"
+%%%%
 ######################################
 # Welcome messages on game restoration
 ######################################

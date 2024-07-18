@@ -34,6 +34,7 @@
 #include "mon-death.h" // maybe_drop_monster_organ
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "nearby-danger.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
@@ -334,6 +335,13 @@ bool melee_attack::handle_phase_dodged()
                 == MONS_MINOTAUR)
             {
                 do_minotaur_retaliation();
+            }
+
+            if (defender->is_player() && you.duration[DUR_EXECUTION])
+            {
+                melee_attack retaliation(&you, attacker);
+                retaliation.player_aux_setup(UNAT_EXECUTIONER_BLADE);
+                retaliation.player_aux_apply(UNAT_EXECUTIONER_BLADE);
             }
 
             // Retaliations can kill!
@@ -922,7 +930,21 @@ bool melee_attack::handle_phase_killed()
                                     true, special_damage);
     }
 
-    return attack::handle_phase_killed();
+    bool killed = attack::handle_phase_killed();
+
+    if (killed && attacker->is_player() && defender->is_monster()
+        && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
+        && !you.duration[DUR_EXECUTION]
+        && mons_gives_xp(*defender->as_monster(), you)
+        && one_chance_in(8)
+        // It's unsatisfying to repeatedly trigger a transformation on the final
+        // monster of a group, so let's not cause the player that disappointment.
+        && there_are_monsters_nearby(true, true, false))
+    {
+        makhleb_execution_activate();
+    }
+
+    return killed;
 }
 
 void melee_attack::handle_spectral_brand()
@@ -1640,6 +1662,26 @@ public:
     bool xl_based_chance() const override { return false; }
 };
 
+class AuxBlades: public AuxAttackType
+{
+public:
+    AuxBlades()
+    : AuxAttackType(1, 100, "whirl of blades") { };
+
+    string get_verb() const override
+    {
+        return "shred";
+    }
+
+    int get_damage(bool random) const override
+    {
+        return 7 + (random ? div_rand_round(you.experience_level, 3)
+                           : you.experience_level / 3);
+    };
+
+    bool xl_based_chance() const override { return false; }
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -1651,6 +1693,7 @@ static const AuxBite        AUX_BITE = AuxBite();
 static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
 static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
+static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 
 static const AuxAttackType* const aux_attack_types[] =
 {
@@ -1665,6 +1708,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_PSEUDOPODS,
     &AUX_TENTACLES,
     &AUX_MAW,
+    &AUX_EXECUTIONER_BLADE,
 };
 
 
@@ -4127,6 +4171,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_MAW:
         return you.form == transformation::maw;
 
+    case UNAT_EXECUTIONER_BLADE:
+        return you.duration[DUR_EXECUTION];
+
     default:
         return false;
     }
@@ -4302,6 +4349,8 @@ string mut_aux_attack_desc(mutation_type mut)
                               "Base damage:     %d\n\n",
                             _minotaur_headbutt_chance(),
                             AUX_HEADBUTT.get_damage(false));
+    case MUT_MAKHLEB_MARK_EXECUTION:
+        return AUX_EXECUTIONER_BLADE.describe();
     default:
         return "";
     }

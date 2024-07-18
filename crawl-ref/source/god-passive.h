@@ -315,3 +315,4 @@ bool wu_jian_move_triggers_attacks(coord_def new_pos);
 
 void makhleb_tyrant_buff();
 void makhleb_celebrant_bloodrite();
+void makhleb_execution_activate();

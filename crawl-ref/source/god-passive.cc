@@ -13,6 +13,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "database.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -47,6 +48,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "tiledoll.h"
 #include "throw.h"
 #include "unwind.h"
 
@@ -2423,4 +2425,26 @@ void makhleb_celebrant_bloodrite()
     }
 
     you.duration[DUR_CELEBRANT_COOLDOWN] = 1;
+}
+
+void makhleb_execution_activate()
+{
+    string talk = getSpeakString("Makhleb executioner chatter");
+    mprf(MSGCH_TALK, "<lightred>%s</lightred>", talk.c_str());
+    mprf(MSGCH_DURATION, "A whirlwind of blades manifests around you!");
+
+    you.duration[DUR_EXECUTION] = random_range(50, 70);
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && mon->alive() && !mon->wont_attack())
+        {
+            melee_attack shred(&you, mon);
+            shred.player_do_aux_attack(UNAT_EXECUTIONER_BLADE);
+        }
+    }
 }

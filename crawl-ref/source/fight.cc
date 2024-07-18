@@ -443,6 +443,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
+        // Executioner state doesn't wear off so long as you keep attacking.
+        if (you.duration[DUR_EXECUTION])
+            you.duration[DUR_EXECUTION] += you.time_taken;
+
         return true;
     }
 

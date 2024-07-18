@@ -945,6 +945,18 @@ always bestow healing upon you for enemies killed by them.
 After performing a blood rite, you cannot perform another until your HP has
 fully recovered.
 %%%%
+Mark of Execution mutation
+
+A demonic incarnation of murder lies dormant within your soul. Whenever you kill
+an enemy in melee, there is a small chance for it to awaken and manifest as a
+maelstrom of scythe-like blades enveloping you. These blades will attack
+whenever you do and also retaliate whenever you successfully dodge an enemy
+attack.
+
+You have the ability to rampage swiftly towards enemies while possessed, but if
+you spend more than a short while doing anything other than attacking, the
+demonic presence will go dormant inside you once again.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

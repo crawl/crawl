@@ -365,7 +365,7 @@ void fill_doll_equipment(dolls_data &result)
         break;
     default:
         // A monster tile is being used for the player.
-        if (Options.tile_use_monster != MONS_0)
+        if (player_uses_monster_tile())
         {
             result.parts[TILEP_PART_BASE]    = tileidx_player_mons();
             result.parts[TILEP_PART_HAIR]    = 0;
@@ -631,7 +631,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     int draw_info_count = 0, dind = 0;
     mcache_entry *entry = nullptr;
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
-    if (Options.tile_use_monster != MONS_0)
+    if (player_uses_monster_tile())
     {
         monster_info minfo(MONS_PLAYER, MONS_PLAYER);
         minfo.props[MONSTER_TILE_KEY] = int(doll.parts[TILEP_PART_BASE]);

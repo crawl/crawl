@@ -7,6 +7,7 @@
 
 #include "artefact.h"
 #include "describe.h"
+#include "duration-type.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -1289,6 +1290,12 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     }
     ptr[0] = '\n'; // erase the last ':'
     ptr[1] = 0;
+}
+
+bool player_uses_monster_tile()
+{
+    return Options.tile_use_monster != MONS_0
+            || you.duration[DUR_EXECUTION];
 }
 
 #endif

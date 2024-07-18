@@ -3785,6 +3785,7 @@ static void _join_makhleb()
         MUT_MAKHLEB_MARK_ANNIHILATION,
         MUT_MAKHLEB_MARK_TYRANT,
         MUT_MAKHLEB_MARK_CELEBRANT,
+        MUT_MAKHLEB_MARK_EXECUTION,
     };
 
     shuffle_array(muts);
