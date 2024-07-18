@@ -1347,6 +1347,8 @@ Dried Tears
 
 Dung
 
+Ichor
+
 Ointment
 
 Oozing Pus
