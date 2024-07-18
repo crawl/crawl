@@ -884,7 +884,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { NUM_SPECIAL_WEAPONS, 3 } },
         } },
         { MONS_SPRIGGAN_DEFENDER, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
-        { MONS_THE_ENCHANTRESS, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
+        { MONS_ENCHANTRESS, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
         { MONS_HELLBINDER, { { { WPN_DEMON_BLADE, 1 } } } },
         { MONS_IGNACIO, {
             { { WPN_EXECUTIONERS_AXE, 1 } },
@@ -1239,7 +1239,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-    case MONS_THE_ENCHANTRESS:
+    case MONS_ENCHANTRESS:
         if (one_chance_in(6))
         {
             force_item = true;
@@ -1728,9 +1728,9 @@ static void _give_shield(monster* mon, int level)
             break;
     // else fall-through
     case MONS_SPRIGGAN_DEFENDER:
-    case MONS_THE_ENCHANTRESS:
+    case MONS_ENCHANTRESS:
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
-                      mon->type == MONS_THE_ENCHANTRESS ? ISPEC_GOOD_ITEM :
+                      mon->type == MONS_ENCHANTRESS ? ISPEC_GOOD_ITEM :
                       mon->type == MONS_SPRIGGAN_DEFENDER ? level * 2 + 1 :
                       level);
         if (shield && !is_artefact(*shield)) // ineligible...
@@ -2165,7 +2165,7 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_CLOAK;
         break;
 
-    case MONS_THE_ENCHANTRESS:
+    case MONS_ENCHANTRESS:
         force_item = true;
         make_item_unrandart(item, UNRAND_FAERIE);
         break;

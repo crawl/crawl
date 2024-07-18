@@ -1791,7 +1791,7 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('i') Spriggans.
-    { MST_THE_ENCHANTRESS,
+    { MST_ENCHANTRESS,
       {
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_DIMENSION_ANCHOR, 11, MON_SPELL_WIZARD },

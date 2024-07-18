@@ -363,7 +363,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
             || mons_species(type) == MONS_SERPENT_OF_HELL
-            || type == MONS_THE_ENCHANTRESS)
+            || type == MONS_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -470,7 +470,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
             || mons_species(type) == MONS_SERPENT_OF_HELL
-            || type == MONS_THE_ENCHANTRESS)
+            || type == MONS_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -970,7 +970,7 @@ string monster_info::_core_name() const
         s = "Royal Jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
-    else if (nametype == MONS_THE_ENCHANTRESS)
+    else if (nametype == MONS_ENCHANTRESS)
         s = "Enchantress";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";

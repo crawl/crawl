@@ -1,4 +1,5 @@
 name: "the Enchantress"
+enum: enchantress
 glyph: {char: "i", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood, unique, female]
 xp_mult: 35
@@ -10,7 +11,7 @@ hd: 15
 hp_10x: 975
 ac: 1
 ev: 30
-spells: the_enchantress
+spells: enchantress
 has_corpse: true
 shout: shout
 intelligence: human

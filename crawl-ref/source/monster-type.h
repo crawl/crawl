@@ -843,7 +843,7 @@ enum monster_type                      // env.mons[].type
     MONS_ANTAEUS,
     MONS_ERESHKIGAL,
     MONS_ROYAL_JELLY,
-    MONS_THE_ENCHANTRESS,
+    MONS_ENCHANTRESS,
     // the four Pan lords, order must match runes
     MONS_MNOLEG,
     MONS_LOM_LOBON,
