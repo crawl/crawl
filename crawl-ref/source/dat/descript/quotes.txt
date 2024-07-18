@@ -554,6 +554,21 @@ Lee's Rapid Deconstruction spell
  he slew in his life.”
     -KJV Bible, Judges 16:27-30.
 %%%%
+Magic Dart spell
+
+“Wie die Mächtigen es schon seit jeher wissen,
+ Es gibt immer einen Kniff;
+ Denn als Guter bist du niemals so gerissen,
+ Ein Zauberpfeil der immer trifft!
+
+ [As the powerful have known all along,
+ There is always a trick;
+ Because as a good person, you'll never be so cunning,
+ A magic arrow that always hits!]”
+    -ASP, "Verwandlungen I-III". 2008
+
+# translation by me, nicolae
+%%%%
 Mass Confusion spell
 
 “Go to, let us go down, and there confound their language, that they may not
