@@ -782,7 +782,7 @@ bool melee_attack::handle_phase_aux()
         if (!defender->as_monster()->friendly()
             && adjacent(defender->pos(), attack_position))
         {
-            player_aux_unarmed();
+            player_do_aux_attacks();
         }
 
         // Don't print wounds after the first attack with quick blades.
@@ -1748,7 +1748,7 @@ bool melee_attack::player_aux_test_hit()
  *
  * Returns (defender dead)
  */
-bool melee_attack::player_aux_unarmed()
+bool melee_attack::player_do_aux_attacks()
 {
     unwind_var<brand_type> save_brand(damage_brand);
 
@@ -1762,35 +1762,47 @@ bool melee_attack::player_aux_unarmed()
         if (!_extra_aux_attack(atk))
             continue;
 
-        // Determine and set damage and attack words.
-        player_aux_setup(atk);
+        if (player_do_aux_attack(atk))
+            return true;
+    }
 
-        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
-            continue;
+    return false;
+}
 
-        to_hit = random2(aux_to_hit());
-        to_hit += post_roll_to_hit_modifiers(to_hit, false);
+/* Performs the specified auxiliary attack type against the defender.
+ *
+ * Returns if the defender was killed
+ */
+bool melee_attack::player_do_aux_attack(unarmed_attack_type atk)
+{
+    // Determine and set damage and attack words.
+    player_aux_setup(atk);
 
-        handle_noise(defender->pos());
-        alert_nearby_monsters();
+    if (atk == UNAT_CONSTRICT && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
+        return false;
 
-        // Just about anything could've happened after all that racket.
-        // Let's be paranoid.
+    to_hit = random2(aux_to_hit());
+    to_hit += post_roll_to_hit_modifiers(to_hit, false);
+
+    handle_noise(defender->pos());
+    alert_nearby_monsters();
+
+    // Just about anything could've happened after all that racket.
+    // Let's be paranoid.
+    if (!defender->alive())
+        return true;
+
+    if (player_aux_test_hit())
+    {
+        // Upset the monster.
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
         if (!defender->alive())
             return true;
 
-        if (player_aux_test_hit())
-        {
-            // Upset the monster.
-            behaviour_event(defender->as_monster(), ME_WHACK, attacker);
-            if (!defender->alive())
-                return true;
-
-            if (attack_shield_blocked(true))
-                continue;
-            if (player_aux_apply(atk))
-                return true;
-        }
+        if (attack_shield_blocked(true))
+            return false;
+        if (player_aux_apply(atk))
+            return true;
     }
 
     return false;

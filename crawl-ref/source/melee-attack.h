@@ -64,6 +64,8 @@ public:
 
     static void chaos_affect_actor(actor *victim);
 
+    bool player_do_aux_attack(unarmed_attack_type atk);
+
 private:
     /* Attack phases */
     bool handle_phase_attempted() override;
@@ -148,7 +150,7 @@ private:
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
-    bool player_aux_unarmed();
+    bool player_do_aux_attacks();
     bool player_gets_aux_punch();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
