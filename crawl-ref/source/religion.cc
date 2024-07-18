@@ -4526,28 +4526,24 @@ int get_monster_tension(const monster& mons, god_type god)
         exper /= 2;
 
     if (mons.has_ench(ENCH_SLOW))
-    {
-        exper *= 2;
-        exper /= 3;
-    }
+        exper = exper * 2 / 3;
 
     if (mons.has_ench(ENCH_HASTE))
-    {
-        exper *= 3;
-        exper /= 2;
-    }
+        exper = exper * 3 / 2;
 
     if (mons.has_ench(ENCH_MIGHT))
-    {
-        exper *= 5;
-        exper /= 4;
-    }
+        exper = exper * 5 / 4;
+
+    if (mons.has_ench(ENCH_EMPOWERED_SPELLS))
+        exper = exper * 5 / 4;
+
+    if (mons.has_ench(ENCH_ARMED))
+        exper = exper * 5 / 4;
 
     if (mons.berserk_or_frenzied())
     {
         // in addition to haste and might bonuses above
-        exper *= 3;
-        exper /= 2;
+        exper = exper * 3 / 2;
     }
 
     return exper;
@@ -4599,10 +4595,7 @@ int get_tension(god_type god)
         if (tension < 2)
             tension = 2;
         else
-        {
-            tension *= 3;
-            tension /= 2;
-        }
+            tension = tension * 3 / 2;
     }
 
     if (you.cannot_act())
@@ -4613,23 +4606,59 @@ int get_tension(god_type god)
         return tension;
     }
 
+    if (you.magic_points <= you.max_magic_points / 10)
+        tension = tension * 9 / 8;
+
     if (you.confused())
         tension *= 2;
 
     if (you.caught())
         tension *= 2;
 
+    if (you.duration[DUR_CORROSION])
+        tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
+
+    if (you.duration[DUR_MESMERISED])
+        tension = tension * 6 / 5;
+
+    if (you.duration[DUR_AFRAID])
+        tension = tension * 6 / 5;
+
+    if (you.duration[DUR_VITRIFIED])
+        tension = tension * 4 / 3;
+
+    if (you.duration[DUR_NO_POTIONS])
+        tension = tension * 4 / 3;
+
+    if (you.duration[DUR_NO_SCROLLS])
+        tension = tension * 4 / 3;
+
     if (you.duration[DUR_SLOW])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_SENTINEL_MARK])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_ATTRACTIVE])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_NO_CAST])
+        tension = tension * 3 / 2;
+
+    if (you.form == transformation::bat ||
+        you.form == transformation::wisp)
     {
-        tension *= 3;
-        tension /= 2;
+        tension = tension * 3 / 2;
+    }
+    else if (you.form == transformation::fungus ||
+             you.form == transformation::pig ||
+             you.form == transformation::tree)
+    {
+        tension = tension * 5 / 3;
     }
 
     if (you.duration[DUR_HASTE])
-    {
-        tension *= 2;
-        tension /= 3;
-    }
+        tension = tension * 2 / 3;
 
     return max(0, tension);
 }
