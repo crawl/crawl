@@ -48,6 +48,9 @@ Character
 * Only players without weapons can punch with their offhand.
 * Player constriction no longer deals ramping-up damage.
 * Removed mutations: noise dampening.
+* Undead and demonic players can wield weapons of holy wrath, but the brand is
+  disabled for them. The same applies to good god-worshipping players who wield
+  weapons of foul flame.
 
 Gods
 ----
