@@ -86,6 +86,8 @@ Xom spreads life in this Dungeon full of death.
 
 Xom incites some dramatic evolution in the adjacent floor mould.
 
+"It's alive! It's alive!"
+
 w:5
 Xom adds fresh vegetables to this Dungeon dish.
 
