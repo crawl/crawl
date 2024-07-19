@@ -73,6 +73,11 @@ static void _post_shackles_effect()
     yred_end_blasphemy();
 }
 
+static void _end_growing_destruction()
+{
+    you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -660,6 +665,11 @@ static const duration_def duration_data[] =
       "surrounded by blades", "execution",
       "You are surrounded by a whirlwind of blades.", D_EXPIRES,
       {{ "You feel a little less murderous for the moment." }}},
+    { DUR_GROWING_DESTRUCTION,
+      LIGHTBLUE, "Destr",
+      "growing destruction", "growing destruction",
+      "Your Destruction is growing increasingly wild.", D_EXPIRES,
+      {{ "", _end_growing_destruction}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

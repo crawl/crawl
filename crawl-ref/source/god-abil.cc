@@ -6947,6 +6947,67 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
     }
 }
 
+static void _makhleb_atrocity_trigger(int power)
+{
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+            targs.push_back(*mi);
+    }
+
+    if (targs.empty())
+    {
+        mprf("Your accumulated destruction dissipates without a target.");
+        return;
+    }
+
+    mpr("Your destruction surges wildly!");
+
+    bolt beam;
+    beam.range = you.current_vision;
+    beam.source = you.pos();
+    beam.thrower = KILL_YOU;
+
+    bleed_for_makhleb(you);
+    bleed_for_makhleb(you);
+
+    shuffle_array(targs);
+    far_to_near_sorter sorter = {you.pos()};
+    sort(targs.begin(), targs.end(), sorter);
+
+    // Will fire up to 4 times, aimed at random distant targets. Can fire up to
+    // twice at a single target, if there aren't actually 4 of them alive.
+    int shots_remain = 4;
+    for (int n = 0; n < 2 && shots_remain; ++n)
+    {
+        bool found_alive = false;
+        for (size_t i = 0; i < targs.size() && shots_remain; ++i)
+        {
+            if (targs[i]->alive())
+            {
+                beam.target = targs[i]->pos();
+                makhleb_setup_destruction_beam(beam, power, false);
+                beam.fire();
+                --shots_remain;
+                found_alive = true;
+            }
+        }
+        if (!found_alive)
+            break;
+
+        shuffle_array(targs);
+    }
+}
+
+int makhleb_get_atrocity_stacks()
+{
+    if (you.props.exists(MAKHLEB_ATROCITY_STACKS_KEY))
+        return you.props[MAKHLEB_ATROCITY_STACKS_KEY].get_int();
+
+    return 0;
+}
+
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
 {
     // Since the actual beam is random, check with BEAM_MMISSILE.
@@ -6963,6 +7024,22 @@ spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
 
     bleed_for_makhleb(you);
     beam.fire();
+
+    if (you.has_mutation(MUT_MAKHLEB_MARK_ATROCITY))
+    {
+        int& stacks = you.props[MAKHLEB_ATROCITY_STACKS_KEY].get_int();
+        if (stacks == MAKHLEB_ATROCITY_MAX_STACKS)
+        {
+            you.duration[DUR_GROWING_DESTRUCTION] = 0;
+            you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
+            _makhleb_atrocity_trigger(power);
+        }
+        else
+        {
+            you.duration[DUR_GROWING_DESTRUCTION] = you.time_taken + 1;
+           ++stacks;
+        }
+    }
 
     return spret::success;
 }

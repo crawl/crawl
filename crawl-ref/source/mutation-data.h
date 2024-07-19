@@ -2682,6 +2682,12 @@ static const mutation_def mut_data[] =
 
   {"You bear the Mark of Execution.", "", ""},
   {"Whirling blades manifest around you.", "", ""},
+
+{ MUT_MAKHLEB_MARK_ATROCITY, 0, 1, mutflag::makhleb, false,
+  "Mark of Atrocity",
+
+  {"You bear the Mark of Atrocity.", "", ""},
+  {"You will scour this world clean.", "", ""},
   {"", "", ""},
 },
 

@@ -863,6 +863,17 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case DUR_GROWING_DESTRUCTION:
+    {
+        inf.light_text = "Destr";
+        const int stacks = you.props[MAKHLEB_ATROCITY_STACKS_KEY].get_int();
+        for (int i = 0; i < stacks - 1; ++i)
+            inf.light_text += "+";
+        if (stacks == MAKHLEB_ATROCITY_MAX_STACKS)
+            inf.light_colour = LIGHTBLUE;
+    }
+    break;
+
     default:
         if (!found)
         {

@@ -4449,9 +4449,13 @@ bool bolt::ignores_player() const
     if (flavour == BEAM_QAZLAL || flavour == BEAM_HAEMOCLASM)
         return true;
 
-    // Explosions caused by Mark of Carnage don't cause friendly fire.
-    if (origin_spell == SPELL_UNLEASH_DESTRUCTION && is_explosion)
+    // The player is immune to their own Destruction (both from Carnage / Annihilation
+    // explosions, but also reflected lightning bolts or shots from hellmouths)
+    if (origin_spell == SPELL_UNLEASH_DESTRUCTION
+        && (!agent() || agent()->wont_attack()))
+    {
         return true;
+    }
 
     return false;
 }

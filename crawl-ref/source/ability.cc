@@ -124,18 +124,20 @@ struct generic_cost
 
 struct scaling_cost
 {
-    int value;
+    int scaling_val;
+    int fixed_val;
 
-    scaling_cost(int permille) : value(permille) {}
+    scaling_cost(int permille, int fixed = 0)
+        : scaling_val(permille), fixed_val(fixed) {}
 
     static scaling_cost fixed(int fixed)
     {
-        return scaling_cost(-fixed);
+        return scaling_cost(0, fixed);
     }
 
     int cost(int max) const;
 
-    operator bool () const { return value != 0; }
+    operator bool () const { return fixed_val != 0 || scaling_val != 0; }
 };
 
 /// What affects the failure chance of the ability?
@@ -264,6 +266,13 @@ struct ability_def
     int get_hp_cost() const
     {
         int cost = hp_cost.cost(you.hp_max);
+        if (ability == ABIL_MAKHLEB_DESTRUCTION
+            && you.has_mutation(MUT_MAKHLEB_MARK_ATROCITY)
+            && you.duration[DUR_GROWING_DESTRUCTION])
+        {
+            const int stacks = makhleb_get_atrocity_stacks();
+            cost = cost * (100 + (stacks * 13)) / 100 + (stacks * 4);
+        }
         if (you.has_mutation(MUT_HP_CASTING))
             return cost + mp_cost;
         return cost;
@@ -793,7 +802,13 @@ int ability_range(ability_type abil)
 
 static int _makhleb_destruction_power()
 {
-    return you.skill_rdiv(SK_INVOCATIONS, 4, 3);
+    if (you.has_mutation(MUT_MAKHLEB_MARK_ATROCITY))
+    {
+        const int stacks = makhleb_get_atrocity_stacks();
+        return you.skill_rdiv(SK_INVOCATIONS, 8 + (3 * stacks), 6) + (stacks * 3);
+    }
+    else
+        return you.skill_rdiv(SK_INVOCATIONS, 4, 3);
 }
 
 static int _makhleb_annihilation_power()
@@ -4645,5 +4660,5 @@ int generic_cost::cost() const
 
 int scaling_cost::cost(int max) const
 {
-    return (value < 0) ? (-value) : ((value * max + 500) / 1000);
+    return fixed_val + ((scaling_val * max + 500) / 1000);
 }

@@ -86,6 +86,8 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define DITHMENOS_MARIONETTE_SPELLS_KEY "marionette_spells_valid"
 
 #define MAKHLEB_OFFERED_MARKS_KEY "makhleb_offered_marks"
+#define MAKHLEB_ATROCITY_STACKS_KEY "makhleb_atrocity_stacks"
+#define MAKHLEB_ATROCITY_MAX_STACKS 3
 
 struct bolt;
 class stack_iterator;
@@ -245,8 +247,10 @@ vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);
 void jiyva_end_oozemancy();
 
+int makhleb_get_atrocity_stacks();
 void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only);
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);
+spret makhleb_scouring_destruction(int power, bolt& beam, bool fail);
 void makhleb_infernal_servant();
 void makhleb_inscribe_mark(mutation_type mark);
 spret makhleb_infernal_legion(bool fail);
