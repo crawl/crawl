@@ -902,7 +902,7 @@ MONS:     blizzard demon, green death
 MONS:     nagaraja / merfolk aquamancer / jorogumo / fenstrider witch
 MONS:     draconian annihilator, sixfirhy
 SUBST:    0 = 2344444556
-NSUBST:   Q = 1:O / *:4, 9 = 2 = 2233455 / *:.
+NSUBST:   Q = 1:O / *:4, 9 = 5 = 2233455 / *:.
 NSUBST:   B = 1:. / *:b
 TILE:     v = dngn_metal_wall_blue
 : pan_lord_setup(_G, 'Lom Lobon')
@@ -918,7 +918,7 @@ xxxxwxxwwwwbb....0....bbwbb....0....bbwwwwwwxxxxx
 xxxwwwwwwwbb...........bbb...........bbwwwwwwxxxx
 xxxwwwwwwbb...wwwwwww.......wwwwwww...bbwwwwxxxxx
 xxxxwwwwbb...wwwwwwwww..9..wwwwwwwww...bbwwwwxxxx
-xxwwwwwbb...wwbbbbbbbww...wwbbbbbbbww...bbwwwwxxx
+xxwwwwwbb...wwbbbbbbbww.9.wwbbbbbbbww...bbwwwwxxx
 xxxwwwbb...wwbbwwwwwbbw...wbbwwwwwbbww...bbwwwxxx
 xxxwwbb...wwbbwwwwwwwbb...bbwwwwwwwbbww...bbwwwxx
 xxwwbb...wwbbwwvvvwwwwbbBbbwwwwvvvwwbbww...bbwxxx
@@ -931,7 +931,7 @@ xxwwbb...wwbbwwwwwww.........wwwwwwwbbww...bbwxxx
 xwwwwbb...wwbbwwwwwb.........bwwwwwbbww...bbwwxxx
 xxxwwwbb...wwbbwwwbb.........bbwwwbbww...bbwwxxxx
 xxxxwwwbb.....bbbbb...........bbbbb.....bbwwwwxxx
-xxxwwwwwb.9...B.........1.........B...9.bwwwwwxxx
+xxxwwwwwb.99..B.........1.........B..99.bwwwwwxxx
 xxxwwwwbb.....bbbbb...........bbbbb.....bbwwwwwxx
 xxwwwwbb...wwbbwwwbb.........bbwwwbbww...bbwwwxxx
 xwwwwbb...wwbbwwwwwb.........bwwwwwbbww...bbwwwxx
@@ -944,7 +944,7 @@ xxxwbb..wwbbwwvv.vvwwwwb.bwwwwvv.vvwwbbww..bbwwxx
 xxwwbb...wwbbwwvvvwwwwbbBbbwwwwvvvwwbbww...bbwwxx
 xxxxwbb...wwbbwwwwwwwbb...bbwwwwwwwbbww...bbwwwxx
 xxxxwwbb...wwbbwwwwwbbw...wbbwwwwwbbww&..bbwwwxxx
-xxxxxwwbb...wwbbbbbbbww...wwbbbbbbbww&.&bbwwwwxxx
+xxxxxwwbb...wwbbbbbbbww.9.wwbbbbbbbww&.&bbwwwwxxx
 xxxxwwwwbb...wwwwwwwww..9..wwwwwwwww..&....wwwxxx
 xxxwwwwwwbb...wwwwwww.......wwwwwww...b.....wwwxx
 xxxxwwwwwwbb...........bbb...........bb.......wxx

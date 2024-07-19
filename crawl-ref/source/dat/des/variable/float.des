@@ -1772,31 +1772,33 @@ ENDMAP
 # Old Forge (1KB)
 #
 NAME:    old_forge
-DEPTH:   D:4-12
+DEPTH:   D:4-11
 ORIENT:  float
-KITEM:   ? = singing_sword, damaged short sword, \
-             damaged long sword, damaged hand axe
-KITEM:   ! = damaged executioner's axe, damaged short sword, \
-             damaged long sword, damaged morningstar
-KITEM:   + = damaged eveningstar, damaged short sword, \
-             damaged long sword, damaged war axe
-KITEM:   & = damaged mace / nothing
+ITEM:    singing sword, damaged executioner's axe, damaged eveningstar
+ITEM:    damaged short sword / damaged long sword / \
+         damaged morningstar / damaged war axe
+ITEM:    damaged mace
 MONS:    fungus, plant
-MONS:    adder, scorpion
-MONS:    rat, river rat / hell rat
-MONS:    bat
-KFEAT:   w = web
-SHUFFLE: ?!+
-SUBST:   c:cccvvb , b=cc.
+: if you.depth() < 9 then
+MONS:    adder, scorpion, bat
+NSUBST:  . = 2:5 / 2 = 5. / * = ......^^1
+: else
+MONS:    yak, basilisk, shadowghast
+NSUBST:  . = 1:5 / 1:5. / * = ......^^1
+: end
+KFEAT:   ^ = web
+SUBST:   d = def
+NSUBST:  h = 1:h / * = h.
+SUBST:   c:cccvvb , b = cc.
 SUBST:   1 : 1112
-SUBST:   1=1. , 2=2.... , 3=3. , 4=4. , 5=5. , 6=6.
-SUBST:   ':.x''' , '=.x , .=......ww17
+SUBST:   1 = 1. , 2=2...., 3 = 3., 4 = 4.
+SUBST:   ' : .'''x, ' = .x
 MAP
    xxxxxxxxxxxxxxxx
   xxx11'cccccccxxxx
- xxx'...c..?v3cx1xx
-xx111.3.c&'.v3c14xx
-x111'.......&&c4xxx
+ xxx'...cggdv3cx1xx
+xx111.3.ch'.v3c14xx
+x111'.......hhc4xxx
 xxx3.11..1xxccc.44x
   xxx.1.1113x..'xxx
    xxx'&..11.'xxx
@@ -2853,7 +2855,7 @@ MAP
 ....ccccc*.*ccccc....
 ...cc$.c..6..c.%cc...
 ..cc$..+.ccc.+..%cc..
-..c$.5$ccc6ccc%3.%c..
+..c$.5$ccc6ccc%32%c..
 ..c..$cn.....nc%..c..
 ..cc+cn.......nc+cc..
 .cc..c.........c..cc.
@@ -2863,8 +2865,8 @@ MAP
 .cc..c.........c..cc.
 ..cc+cc.......cc+cc..
 ..c..%cc.....cc$..c..
-..c%55%cnc.cnc$55$c..
-..cc%54+.cnc.+45$cc..
+..c%35%cnc.cnc$53$c..
+..cc%34+.cnc.+43$cc..
 ...cc%.+.....+.$cc...
 ....ccccc...ccccc....
   ......c+++c......
@@ -3803,9 +3805,14 @@ ENDMAP
 NAME:   regret_index_qazlal_generations
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 DEPTH:  Depths, !Depths:$, Zot, !Zot:$
-PLACE:  Depths:$
-WEIGHT: 1 (Depths:$), 10
+PLACE:  D:$, Depths:$
+WEIGHT: 1 (Depths:$), 2 (D:$), 10
 ORIENT: float
+KMONS:  q = fire elemental / rime drake / basilisk
+KMONS:  r = red ugly thing / white ugly thing / cyan ugly thing w:15
+KMONS:  s = deep elf pyromancer / cyclops
+KMONS:  t = lindwurm / wind drake / boulder beetle
+KMONS:  u = arcanist / occultist / tengu conjurer
 KMONS:  1 = red very ugly thing / white very ugly thing / \
             cyan very ugly thing w:15
 KMONS:  2 = fire dragon / ice dragon
@@ -3826,7 +3833,8 @@ KMONS:  0 = red draconian stormcaller / white draconian stormcaller / \
 KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
 KMONS:  & = ancient lich
 KITEM:  $ = $ no_pickup
-KITEM:  Z = midnight gem
+KITEM:  y = $ no_pickup, smoky gem
+KITEM:  z = $ no_pickup, midnight gem
 KITEM:  | = staff of cold randart artprops:fire&Stlth:-2 / \
             staff of fire randart artprops:ice&Stlth:-2 / \
             staff of air randart artprops:earth&Stlth:-2 / \
@@ -3837,10 +3845,16 @@ KITEM:  | = staff of cold randart artprops:fire&Stlth:-2 / \
             book of annihilations / manual of invocations w:2
 KFEAT:  ~ = .
 KFEAT:  _ = altar_qazlal
+KFEAT:  Y = enter_depths
 KFEAT:  Z = enter_zot
 SUBST:  A = 1 3:14, B = 2 4:14, C = 5:14 6
-: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-SUBST:  } = Z, ])> = ., 1 = 9
+: if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+SUBST:  1 = q, 2 = r, 3 = s, 4 = t, 56 = u
+NSUBST: ! = 1:1 / 1:2 / *:?, | = 2:| / *:*
+SUBST:  } = Y, ] = $, ) = y
+FTILE:  ?_$|*yY12 = floor_depthstone
+: elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+SUBST:  } = Z, ] = $, ) = z, 1 = 9
 NSUBST: ! = 1:8 / 1:9 / 2  = 80
 : elseif you.in_branch("Zot") then
 SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0

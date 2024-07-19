@@ -242,6 +242,15 @@ function trove.good_scroll (e)
              any ally scroll w:1 ]])
 end
 
+function trove.good_talisman (e)
+    e.item([[blade talisman randart / maw talisman randart /
+             serpent talisman randart w:8 / granite talisman w:4 /
+             granite talisman randart w:6 / dragon-blood talisman w:4 /
+             dragon-blood talisman randart w:6 / storm talisman w:8 /
+             storm talisman randart w:2 / talisman of death w:8 /
+             talisman of death randart w:2]])
+end
+
 function trove.place_fog(e, type, strength)
    e.lua_marker("m", fog_machine { pow_max = strength, cloud_type = type,
                      delay_min = 50, delay_max = 300, size = 12,
@@ -537,9 +546,9 @@ xxxxxx
 ENDMAP
 
 NAME:    trove_garden
+TAGS:    no_item_gen no_monster_gen allow_dup
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup
 # Loot: 16 items, spread out a bit.
 KFEAT:   x = X
 COLOUR:  o = blue
@@ -663,8 +672,10 @@ NAME:   trove_jewel_1
 TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 WEIGHT: 20
 ORIENT: encompass
-# Loot: once again, 16 items.
+# Loot: 18 items, with two guaranteed talismans.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
+: trove.good_talisman(_G)
+NSUBST: d = 2:e / *:d
 : trove.setup_features(_G)
 MAP
 xxxxxxxx
@@ -674,6 +685,7 @@ x......x
 xxx++xxx
 x......x
 x+o..o+x
+xdo..odx
 xdo..odx
 xdo..odx
 xdo..odx
@@ -690,16 +702,17 @@ WEIGHT: 20
 ORIENT: encompass
 # Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
+: trove.good_talisman(_G)
 COLOUR: x = blue
 : trove.setup_features(_G)
 MAP
 xxxxxxxx
 xddd+<Ax
 xdddxxxx
-xdddx
-xdddx
-xdddx
-xxxxx
+xdddex
+xdddxx
+xdddex
+xxxxxx
 ENDMAP
 
 # A 'weapon shoppe', same template as the jewellery shop.
@@ -754,9 +767,9 @@ ENDMAP
 
 # An 'armour shoppe', same template as the jewellery shop.
 NAME:   trove_armour_1
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot: once again, 16 items.
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -779,9 +792,9 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_armour_2
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -798,21 +811,19 @@ ENDMAP
 
 # A "themed" trove.
 NAME:    trove_hunter_1
-WEIGHT:  5
-ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op \
          no_species_dr
+WEIGHT:  5
+ORIENT:  encompass
 # Loot:  15 items, this time.
 COLOUR:  x = blue
-MONS:    storm dragon zombie
-MONS:    golden dragon zombie
-MONS:    fire dragon skeleton
-ITEM:    animal skin good_item / any armour good_item
-ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / troll leather armour / any useful armour good_item
+MONS:    storm dragon zombie, golden dragon zombie, fire dragon skeleton
+ITEM:    dragon-blood talisman good_item / any armour good_item
+ITEM:    golden dragon scales / storm dragon scales / fire dragon scales / \
+         troll leather armour / any useful armour good_item
 ITEM:    javelin good_item / dart good_item
 ITEM:    longbow good_item / arbalest good_item / any useful weapon good_item
-SHUFFLE: 123
-SHUFFLE: defg
+SHUFFLE: 123, defg
 : trove.setup_features(_G)
 MAP
 xxxxxxx
@@ -901,15 +912,18 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
-# Misc items/evocations trove. 15 items.
-NAME:    trove_misc_throne_room
+# Evocations and shapeshifting trove. 15 items.
+NAME:    trove_misc_dual_throne_room
+TAGS:    no_item_gen no_monster_gen allow_dup
 ORIENT:  encompass
 WEIGHT:  15
-TAGS:    no_item_gen no_monster_gen allow_dup
-ITEM:    manual of evocations, lightning rod, acquire magical staff
-ITEM:    any area misc, phial of floods, any ally misc, phantom mirror
-ITEM:    acquire wand
-SHUFFLE: efghij
+ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
+ITEM:    any misc, maw talisman randart / blade talisman randart
+ITEM:    dragon-blood talisman randart / granite talisman randart
+ITEM:    storm talisman / talisman of death
+ITEM:    wand of digging charge:8 / any hex wand charges:8 / \
+         any beam wand charges:8 / any blast wand charges:8
+SHUFFLE: hij
 COLOUR:  x = blue
 COLOUR:  ' = yellow
 FTILE:   ' = floor_limestone
@@ -919,15 +933,15 @@ veto {{ return crawl.game_started()
              and not crawl.one_chance_in(3)
              or you.mutation("inability to use devices") == 1) }}
 MAP
-   xxx
-   xdx
+  xxxxx
+  xdxex
  xxx+xxx
+ xf'''gx
+ xg'''fx
  xk'''kx
- xe'''fx
+ xi'''hx
  xk'''kx
- xg'''hx
- xk'''kx
- xi'''jx
+ xh'''jx
  xk'''kx
 xxxx+xxxx
 x.......x
@@ -1057,11 +1071,12 @@ x............<x
 xxxxxxxxxxxxxxx
 ENDMAP
 
-# 16 pieces of jewellery
+# 16 pieces of jewellery, 2 talismans
 NAME:   trove_jewellery_lava
 TAGS:   no_item_gen no_monster_gen no_species_co allow_dup
 ORIENT: encompass
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
+: trove.good_talisman(_G)
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1075,11 +1090,11 @@ xlllllllllllllllllllllllllx
 xlllllllllllllllllllllllllx
 xllllllllxxxmmmxxxllllllllx
 xllllllllxA.ddd.Axllllllllx
-xllllllllx...d...xllllllllx
+xllllllllx.e.d...xllllllllx
 xllllllllmd.....dmllllllllx
 xllllllllmdd.<.ddmllllllllx
 xllllllllmd.....dmllllllllx
-xllllllllx...d...xllllllllx
+xllllllllx...d.e.xllllllllx
 xllllllllxA.ddd.Axllllllllx
 xllllllllxxxmmmxxxllllllllx
 xlllllllllllllllllllllllllx
@@ -1188,68 +1203,76 @@ E..............................S.......E
 EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 ENDMAP
 
-# Generates 16 branded weapons. Half are "generic" brands, the other half are
-# more god-related brands.
+# Generates 16 branded weapons. Half are "generic" brands,
+# the other half are more god-related brands.
 NAME:    nicolae_trove_branded_display_cases
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 veto  {{ return crawl.game_started()
            and (trove.weapon_skills() < trove.spell_skills()
              or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
            and not crawl.one_chance_in(3) }}
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
-KITEM:   a = any weapon randart ego:electrocution / \
-             any useful weapon good_item ego:electrocution / \
-             any weapon ego:electrocution w:2
-KITEM:   p = any weapon randart ego:flaming / \
-             any useful weapon good_item ego:flaming / \
-             any weapon ego:flaming w:2
-KITEM:   q = any weapon randart ego:freezing / \
-             any useful weapon good_item ego:freezing / \
-             any weapon ego:freezing w:2
-KITEM:   r = any weapon randart ego:heavy / \
-             any useful weapon good_item ego:heavy / \
-             any weapon ego:heavy w:2
-KITEM:   s = any weapon randart ego:protection / \
-             any useful weapon good_item ego:protection / \
-             any weapon ego:protection w:2
-KITEM:   y = any weapon randart ego:spectral / \
-             any useful weapon good_item ego:spectral / \
-             any weapon ego:spectral w:2
-KITEM:   z = any weapon randart ego:venom / \
-             any useful weapon good_item ego:venom / \
-             any weapon ego:venom w:2
-# Brands that are god-related (i.e. either forbidden or chosen by a god)
-KITEM:   D = any weapon randart ego:antimagic / \
-             any useful weapon good_item ego:antimagic / \
-             any weapon ego:antimagic w:2
-KITEM:   E = any weapon randart ego:chaos / \
-             any useful weapon good_item ego:chaos / \
-             any weapon ego:chaos w:2
-KITEM:   F = any weapon randart ego:distortion / \
-             any useful weapon good_item ego:distortion / \
-             any weapon ego:distortion w:2
-KITEM:   H = any weapon randart ego:draining / \
-             any useful weapon good_item ego:draining / \
-             any weapon ego:draining w:2
-KITEM:   J = any weapon randart ego:holy_wrath / \
-             any useful weapon good_item ego:holy_wrath / \
-             any weapon ego:holy_wrath w:2
-KITEM:   K = any weapon randart ego:pain / \
-             any useful weapon good_item ego:pain / \
-             any weapon ego:pain w:2
-KITEM:   L = any weapon randart ego:speed / \
-             any useful weapon good_item ego:speed / \
-             any weapon ego:speed w:2
-KITEM:   M = any weapon randart ego:vampirism / \
-             any useful weapon good_item ego:vampirism / \
-             any weapon ego:vampirism w:2
+{{
+-- Acquirement code doesn't work with specifying brands. Pulling out the
+-- higher quality of weapons doesn't guarantee one gets their current weapon
+-- school, but it's much better than otherwise getting whips and short swords.
+local weaps = { "double sword", "great sword w:30", "triple sword w:5",
+                "halberd w:30", "glaive", "bardiche w:5", "morningstar w:30",
+                "eveningstar w:5", "great mace", "war axe w:30", "broad axe",
+                "battleaxe", "executioner's axe w:5", "quarterstaff w:40",
+                "lajatang w:15", "rapier w:45" }
+local demon = { "demon blade", "demon trident", "demon whip" }
+local range = { "orcbow w:30", "hand cannon", "longbow", "triple crossbow w:5"}
+
+-- The second half of these brands are either gifted or forbidden by a god.
+local regego = { "ego:electrocution", "ego:flaming", "ego:freezing",
+                 "ego:heavy", "ego:protection", "ego:spectral", "ego:venom" }
+local godego = { "ego:antimagic", "ego:chaos", "ego:distortion",
+                 "ego:draining", "ego:holy_wrath", "ego:speed", "ego:pain",
+                 "ego:vampirism" }
+
+local egos1 = util.random_subset(regego, 2)
+local egos2 = util.random_subset(godego, 2)
+
+local function genweap(ego)
+  local usable = weaps
+  local r = " randart "
+  local g = " good_item "
+
+  if ego ~= "ego:speed" then
+    table.insert(usable, "quick blade")
+  end
+
+  if ego ~= "ego:holy_wrath" then
+    for x, _ in pairs(demon) do
+      table.insert(usable, demon[x])
+    end
+  end
+
+  -- Refer to 2721c5b on brands not allowed to spawn on ranged weapons.
+  if ego ~= "ego:distortion" and ego ~= "ego:pain" and ego ~= "ego:protection"
+     and ego ~= "ego:spectral" and ego ~= "ego:venom" then
+    for x, _ in pairs(range) do
+      table.insert(usable, range[x])
+    end
+  end
+
+  return table.concat(usable, r .. ego .. " / ") ..  r .. ego .. " / " ..
+         table.concat(usable, g .. ego .. " / ") .. g .. ego .. " / " ..
+         "any useful weapon w:55" .. g .. ego
+end
+
+item(genweap(egos1[1]))
+item(genweap(egos1[2]))
+item(genweap(egos2[1]))
+item(genweap(egos2[2]))
+}}
 KFEAT:   + = closed_clear_door
-KFEAT:   g = granite_statue
 KFEAT:   S = metal_statue
-SHUFFLE: apDE, apqrsyz, DEFHJKLM
-COLOUR:  g = mountain
+SHUFFLE: defg
+COLOUR:  G = mountain
 COLOUR:  S = yellow
-TILE:    g = dngn_scintillating_statue
+TILE:    G = dngn_scintillating_statue
 TILE:    S = dngn_golden_statue
 : set_feature_name("granite_statue", "scintillating statue")
 : set_feature_name("metal_statue", "golden statue")
@@ -1258,18 +1281,18 @@ MAP
 xxxxxxxxxxxxxxxxxx
 x................x
 x.....mmmmmm.....x
-x..v..mDDDDm..v..x
+x..v..mddddm..v..x
 x.....m++++m.....x
 x................x
 x.mmm........mmm.x
-x.mp+..g..<..+Em.x
-x.mp+........+Em.x
-x.mp+........+Em.x
-x.mp+..A..S..+Em.x
+x.me+..G..<..+fm.x
+x.me+........+fm.x
+x.me+........+fm.x
+x.me+..A..S..+fm.x
 x.mmm........mmm.x
 x................x
 x.....m++++m.....x
-x..v..maaaam..v..x
+x..v..mggggm..v..x
 x.....mmmmmm.....x
 x................x
 xxxxxxxxxxxxxxxxxx
@@ -1325,10 +1348,11 @@ x.G.G.xdxdxdxdxdx.G.G.x
 xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# Generates 18 items useful for an Octopode: hats, amulets, and of course rings.
+# Generates 19 items useful for an Octopode: hats, amulets, and of course rings.
 NAME:   nicolae_trove_octotrove
 TAGS:   no_item_gen no_monster_gen no_species_co allow_dup no_pool_fixup
 ORIENT: encompass
+: trove.good_talisman(_G)
 KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
 KITEM:  E = useful hat good_item / hat randart / hat w:2
 KITEM:  F = any useful ring good_item / any randart ring / any ring w:2
@@ -1350,7 +1374,7 @@ MAP
 ~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
 ~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
 ~wwwwwwwww...ww.EEE.wwF..wwwwwwwww~
-~wwwwwwwww.w.w.......www.wwwwwwwww~
+~wwwwwwwww.w.w...d...www.wwwwwwwww~
 ~wwwwwwwwwFw...SDDDS.....wwwwwwwww~
 ~wwwwwwwwwwwww.......wwwwwwwwwwwww~
 ~wwwwwwwwww....A...<......wwwwwwww~

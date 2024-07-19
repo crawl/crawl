@@ -23,8 +23,9 @@ MAP
 O
 ENDMAP
 
-NAME:   enter_ziggurat_a
+NAME:   enter_ziggurat_a_and_e
 TAGS:   zig_entry transparent
+WEIGHT: 15
 KFEAT:  O = enter_ziggurat no_mimic
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
@@ -42,16 +43,14 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-TAGS:    zig_entry transparent no_descent
-KMASK:   O = opaque
+TAGS:    zig_entry transparent no_descent no_pool_fixup
 KFEAT:   O = enter_ziggurat no_mimic
-TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
 COLOUR:  _ : blue / lightred
 COLOUR:  ' = cyan
-FTILE:   ' = floor_hall, _ = floor_hall, ; = floor_hall, O = floor_hall
-SUBST:   '=. , ;=. , _=.
+FTILE:   '_ = floor_hall, ;O = floor_marble
+KMASK:   O = opaque
 MAP
    ..'..
   ..'W'..
@@ -64,92 +63,82 @@ MAP
    ..'..
 ENDMAP
 
-NAME:    enter_ziggurat_c
+NAME:    enter_ziggurat_c_and_d
 TAGS:    zig_entry no_trap_gen transparent no_descent
+WEIGHT:  15
 KFEAT:   O = enter_ziggurat no_mimic
-MONS:    lich / ancient lich / dread lich
-MONS:    angel / daeva
-MONS:    eye of devastation / glass eye / \
-         great orb of eyes / shining eye
-KPROP:   1Om = no_tele_into
-SHUFFLE: 123x
-SUBST:   1=1___, 2=2_, x=_
-KMASK:   O123_ = opaque
-KFEAT:   _ = floor
-KFEAT:   m = iron_grate
-MAP
-    ...
-   ..m..
-  ..mmm..
- ..mm1mm..
-..mm1O1mm..
- ..mm1mm..
-  ..mmm..
-   ..m..
-    ...
-ENDMAP
-
-NAME:    enter_ziggurat_d
-TAGS:    zig_entry no_trap_gen transparent no_descent
-KFEAT:   O = enter_ziggurat no_mimic
-MONS:    lich / ancient lich / dread lich
-MONS:    angel / daeva
-MONS:    eye of devastation / glass eye / \
-         great orb of eyes / shining eye
-KPROP:   1On; = no_tele_into
-SHUFFLE: 123x
-SUBST:   1=1___, 2=2_, x=_
-SUBST:   ;=_
+MONS:    lich / ancient lich, dread lich
+MONS:    angel / pearl dragon w:2, daeva
+MONS:    eye of devastation / great orb of eyes / shining eye, glass eye
+# Iron grates are guaranteed to get at least one monster that can threaten
+# from behind the grates, while transparent rock is not.
+SHUFFLE: Aa / 'A
+SUBST:   A = m, a = '
+SHUFFLE: 1m / 2n, 135", 246
+NSUBST:  1 = 1:1 / * = 112''''''''', 2 = 1:2 / * = 112'''''''''
+NSUBST:  3 = 1:3 / * = 34'', 4 = 1:4 / * = 34''
+NSUBST:  5 = 1:5 / * = 5556, 6 = 1:6 / * = 5556
+KPROP:   123456O'" = no_tele_into
+KMASK:   123456'"O = opaque
+KMASK:   '"O = no_monster_gen
 KFEAT:   n = iron_grate
-KMASK:   O123_ = opaque
-KFEAT:   _ = floor
 MAP
     ...
-   ..n..
-  .nnnnn.
- ..n;1;n..
-..nn1O1nn..
- ..n;1;n..
-  .nnnnn.
-   ..n..
+   ..m..
+  .AmmmA.
+ ..ma1am..
+..mm1O1mm..
+ ..ma1am..
+  .AmmmA.
+   ..m..
     ...
-ENDMAP
-
-NAME:   enter_ziggurat_e
-TAGS:   zig_entry transparent
-KFEAT:  O = enter_ziggurat no_mimic
-COLOUR: ; : cyan / lightblue
-COLOUR: ' = blue
-FTILE:  ; = floor_hall
-SUBST:  ' = .
-SUBST:  ; = .
-MAP
-.......
-.;;;;;.
-.;''';.
-.;'O';.
-.;''';.
-.;;;;;.
-.......
 ENDMAP
 
 NAME:   enter_ziggurat_f
 TAGS:   zig_entry no_trap_gen transparent no_descent
-KFEAT:  O = enter_ziggurat no_mimic
 MONS:   angel / nothing w:20
-KPROP:  1Om; = no_tele_into
-KFEAT:  ; = floor
+KFEAT:  O = enter_ziggurat no_mimic
+KPROP:  1Om' = no_tele_into
+KFEAT:  ' = floor
 KMASK:  1O; = opaque
 MAP
     ...
    ..m..
   ..mmm..
  ..mm1mm..
-..mm;O;mm..
+..mm'O'mm..
  ..mm1mm..
   ..mmm..
    ..m..
     ...
+ENDMAP
+
+NAME:    index_enter_ziggurat_g
+TAGS:    zig_entry no_trap_gen transparent no_descent no_pool_fixup
+MONS:    ghost crab / fenstrider witch
+MONS:    nagaraja / naga sharpshooter
+MONS:    merfolk aquamancer / merfolk javelineer
+MONS:    emperor scorpion / torpor snail
+KMONS:   O = ancient lich / dread lich / titan / juggernaut / glass eye
+KFEAT:   O = enter_ziggurat no_mimic
+SHUFFLE: 1234
+SUBST:   ' : 'w, W : nw
+KPROP:   1234'O = no_tele_into
+KMASK:   w1234'O = opaque
+KMASK:   w1234'O = no_monster_gen
+FTILE:   1234'-O = floor_hall
+MAP
+ .  .n.  .
+....---....
+ .nnnxnnn.
+ .nWwwwWn.
+.-nw'1'wn-.
+n-xw2O3wx-n
+.-nw'4'wn-.
+ .nWwwwWn.
+ .nnnxnnn.
+....---....
+ .  .n.  .
 ENDMAP
 
 default-depth: Zig
@@ -291,7 +280,7 @@ ENDMAP
 NAME:    ziggurat_pillar_centre_l
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 KFEAT:   g = metal_statue
-SHUFFLE: X' / X' / G' / 'X
+SHUFFLE: X' / X' / X' / 'X
 SUBST:   xX : bcmvx, ' = .
 NSUBST:  G = 1:g / *:G
 COLOUR:  G = mountain, g = silver
@@ -312,7 +301,7 @@ TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 DEPTH:   Zig:18-
 WEIGHT:  5
 SHUFFLE: X'" / X'" / 'X" / '"X
-SUBST:   x : bcmvx, X : bcmvx G:5, '" = .
+SUBST:   x : bcmvx, X : bcmvx, '" = .
 NSUBST:  G = 1:G / *:g
 COLOUR:  G = mountain, g = silver
 TILE:    G = dngn_scintillating_statue
@@ -330,7 +319,7 @@ ENDMAP
 NAME:    ziggurat_pillar_centre_n
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits no_pool_fixup
 DEPTH:   Zig:18-
-SUBST:   x : w:40 bcmvx G:5
+SUBST:   x : w:40 bcmvx
 NSUBST:  G = 1:g / *:G
 COLOUR:  G = mountain, g = silver
 TILE:    G = dngn_scintillating_statue

@@ -3254,7 +3254,7 @@ ORIENT:  southeast
 MONS:    spectral swamp dragon / spectral hydra w:12
 MONS:    swamp dragon zombie / hydra zombie w:12
 MONS:    spectral alligator w:12 / alligator zombie
-MONS:    death drake / vampire mosquito band / spectral bunyip w:5
+MONS:    death drake / vampire mosquito band w:5 / spectral bunyip w:5
 MONS:    bloated husk, phantom, bog body
 KMONS:   8 = phantasmal warrior
 KMONS:   9 = ghost crab
@@ -3316,7 +3316,8 @@ ORIENT:  southeast
 MONS:    bog body / ugly thing / small abomination w:2
 MONS:    shadowghast / orange demon w:2
 MONS:    large abomination / very ugly thing / thrashing horror w:6
-MONS:    green death, sin beast, great orb of eyes, titanic slime creature
+MONS:    green death, sin beast, great orb of eyes
+MONS:    shadow demon / titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KMONS:   & = the Lernaean hydra
@@ -3327,8 +3328,8 @@ KFEAT:   T = demonic_tree
 SHUFFLE: yz, '"
 SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
 SUBST:   b = bccc, 5 : 59
-NSUBST:  7 = 1:4 / 1:8 / *:7, 0 = 7:1 / 3:. / *:2
-NSUBST:  5 = 1:5 / 1:6 / * = 56 &:2, 9 = 1 = 9 &:1 / *:.
+NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 7:1 / 3:. / *:2
+NSUBST:  5 = 1:5 / 1:6 / * = 56 &:2, 9 = 1 = 9 &:1 / * = 33.
 TILE:    b = bedevilled_crystal_pandemonium
 TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
              dngn_demonic_tree_12 / dngn_demonic_tree_13
@@ -3354,14 +3355,14 @@ MAP
   c"'wWWwWW..wWW.WW..wWwWWwWwWcct
  ctWzyzyzWW.w.yzyzy.W.WWzyzyzWTct
  ct.yzyzyzxw..zyzyzw..xzyzyzy.Tct
-  c"'wWWw.WXWWwwwwwwWXc.WW.w'"cct
+  c"'wWWw.WXWWwwwwwwWXc7WW.w'"cct
   c"'WxxWW.yWwW.x.wWWy7WWxx."'xtt
  ct'"xx.xWwzyWxx0xWwyzWWc0cx'"cct
  ct'"x04.xWyzWx030xWzyWx0R5T"'Tct
- ctt8xx0xxWyzWxxxxxWyz.xc5Oc'"cct
-  ct"'xxxWwzywWwwwWwzyw.xTcb8TXct
-  cc'"8""''yz""'7'""yz'"'"'85Tcct
-  tcccT''""W.''"'"''W."'"'"TTTcct
+ ctt8xx0xxWyzWxxxxxWyz.xc5Oc'8cct
+  ct"3xxxWwzywWwwwWwzyw.xTcb5TXct
+  cc'"8""''yz""'7'""yz'"'"'5wTcct
+  tcccT''""W.''"'"''W."'"'8TTTcct
  ttttcccxcccTTcxcTcxcXcTcXXxTccct
 ttttttttttttttttttttttttttttttttt
 ENDMAP
@@ -3598,10 +3599,9 @@ KITEM:   R = mossy gem
 KITEM:   O = decaying rune of Zot
 SUBST:   X = tttw., - = Wwwww., ~ = ll., L : cll
 NSUBST:  O = 1:O / 1:R, ? = 1:155 / 1:6 / 2:. / * = 155666.........
-NSUBST:  8 = 1:8 / 1:9. / *:7, ! = 1:3 / 1:4 / 2 = 22337 / 2:. / * = 34..
+NSUBST:  8 = 1:8 / 1:9. / *:7, ! = 1:3 / 1:4 / 2 = 22337. / 2:. / * = 34..
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 6, \
-             pow_max = 8, delay = 110, \
-             size = 1, excl_rad = 1 }
+             pow_max = 8, delay = 110, size = 1, excl_rad = 1 }
 MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 3, spread_rate = 1, walk_dist = 1, excl_rad = 1 }

@@ -884,46 +884,46 @@ SHUFFLE: QRSTU
 # two nearly empty pools, and an empty entrance pool.
 NSUBST:  Q = 2:1 / 1:2 / 1:d / 1:e / 2:$ / 2:f / 2:g
 NSUBST:  R = 2 = 1. / 1:3 / 2:d / 2:e / 2:$ / 1:f / 1:g
-NSUBST:  S = 1:1 / *:., T = 1:1. / *:.,  U = 1:A / *:.
+NSUBST:  S = 1:1 / *:., T = 1:1. / *:., U = 1:A / *:.
 : volcano_setup(_G)
 : place_tiny_volcano(_G)
 KFEAT:   J = l
 MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MAP
-                               xxxx
-              xxxx            xxllxx
-             xxllx           xxLlllx
-             xJlllxx        xxLllllx
-             xlllLUxx      xxyLllllxx
-            xxllUUUyxx     xyQ.Lllllx
-            xllLUUUUyx     xxyQ.Llllxx
-            xllU<UUyxx      xxQQ<Llllx
-            xxlL.yyxx        xyQQllllx
-             xxxy.xx         xQQQLllJx
-             xxx.xxxxxx      xyQLlllxx
-             xy.yxxxxyxxxxxxxxx.llllx
+                              xxxx
+             xxxx            xxllxx
+            xxllx            xxLlllx
+            xJlllxx         xxLllllx
+            xlllLUxx       xxyLllllxx
+           xxllUUUyxx      xyQ.Lllllx
+           xllLUUUUyx      xxyQ.Llllxx
+           xllU<UUyxx       xxQQ<Llllx
+           xxlL.yyxx         xyQQllllx
+            xxxy.xx          xQQQLllJx
+             xxxx.xxxxxx      xyQLlllxx
+             xy..xyxxyxxxxxxxxx.llllx
              xx...xy..xxy..yxx.xxllxx
-             xx.............y.xxxxx
-            xxy...LlLlLlL....xyxx      xxx
+             xx.............yxx.xxx
+            xxy...LlLlLlL....x.xx      xxx
            xxy...LllllllllL....yx      xJx
            xy...LllllllllllL....x     xxllx
           xy...LlllllVllllL....xx    xxlllxx
           xy...LlllllllllllL....x   xxlLLllx
-        xxx....LlllllllllL....yxxxxxxlLRRLlx
-     xxxy........LllLlLlL.......xyxxy<RRRRyx
-    xxx..yxyyxy..............yxx..yy.RRRRyxx
- xxyxy.Lyxxxxxxyyxxxyyxy.yyyxxxxxx..yy.Ryxx
+      xxxxx....LlllllllllL....yxxxxxxlLRRLlx
+     xxy.x.......LllLlLlL.......xyxxy<RRRRyx
+    xxx.x.xyyxy..............yxx..yy.RRRRyxx
+ xxyxy.Lyxxxxxxyyxxxyyxy.xyyxxxxxx..yy.Ryxx
  xyTyy.LllllJxxxxx xxxxxx.xxxxxx xxxxxxxxx
-xy<TTT.Lllllxx         xx.y<ySyx  xxxx
-xLTTTTLlllllx         xxyySSSyyx
-xxLTTTLllllxx        xxySSSSSyxx
-xlllLLlllxx          xxllLSSlLLx
-xlllllllxx            xxllLlllxx
-xxllllxxx              xxllllxx
- xxxJlxx                xxxllx
-   xxxx                   xJxx
-                          xxx
+xy<TTT.Lllllxx        xx.y<ySyx   xxxx
+xLTTTTLlllllx        xxyySSSyyx
+xxLTTTLllllxx       xxySSSSSyxx
+xlllLLlllxx         xxllLSSlLLx
+xlllllllxx           xxllLlllxx
+xxllllxxx             xxllllxx
+ xxxJlxx               xxxllx
+   xxxx                  xJxx
+                         xxx
 ENDMAP
 ###############################################################################
 
