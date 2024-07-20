@@ -408,6 +408,8 @@ circulator
 
 coil
 
+collator
+
 collimator
 
 commutator
