@@ -199,7 +199,7 @@ pneumatic
 
 polar
 
-polarized
+polarised
 
 power
 
@@ -208,7 +208,7 @@ prefabulated
 
 preliminary
 
-pressurized
+pressurised
 
 primary
 
