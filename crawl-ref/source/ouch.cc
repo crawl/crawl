@@ -1234,6 +1234,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();
+                take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
+                                "You cheat death using unusual wizardly powers."), true);
                 return;
             }
         }
