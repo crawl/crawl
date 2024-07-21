@@ -504,6 +504,9 @@ static spell_type _choose_random_spell(int sever)
 static void _xom_random_spell(int sever)
 {
     const spell_type spell = _choose_random_spell(sever);
+    int power = sever + you.experience_level * 2
+                + get_tension() + you.runes.count() * 2;
+
     if (spell == SPELL_NO_SPELL)
         return;
 
@@ -515,46 +518,23 @@ static void _xom_random_spell(int sever)
          spell);
 #endif
 
-    your_spells(spell, sever + you.experience_level * 2 + get_tension(), false);
+    your_spells(spell, power, false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
-/// Map out the level.
-static void _xom_magic_mapping(int sever)
+// Map out the level, detect items across the level, and detect creatures.
+static void _xom_divination(int sever)
 {
     god_speaks(GOD_XOM, _get_xom_speech("divination").c_str());
 
-    // power isn't relevant at present, but may again be, someday?
-    const int power = stepdown_value(sever, 10, 10, 40, 45);
-    magic_mapping(5 + power, 50 + random2avg(power * 2, 2), false);
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                   "divination: magic mapping"), true);
-}
-
-/// Detect items across the level.
-static void _xom_detect_items(int sever)
-{
-    god_speaks(GOD_XOM, _get_xom_speech("divination").c_str());
-
-    if (detect_items(sever) == 0)
-        canned_msg(MSG_DETECT_NOTHING);
-    else
-        mpr("You detect items!");
-
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                   "divination: detect items"), true);
-}
-
-/// Detect creatures across the level.
-static void _xom_detect_creatures(int sever)
-{
-    god_speaks(GOD_XOM, _get_xom_speech("divination").c_str());
+    magic_mapping(5 + sever * 2, 50 + random2avg(sever * 2, 2), false);
 
     const int prev_detected = count_detected_mons();
     const int num_creatures = detect_creatures(sever);
+    const int num_items = detect_items(sever);
 
-    if (num_creatures == 0)
+    if (num_creatures == 0 && num_items == 0)
         canned_msg(MSG_DETECT_NOTHING);
     else if (num_creatures == prev_detected)
     {
@@ -563,13 +543,17 @@ static void _xom_detect_creatures(int sever)
         // still on the map when the original one has been killed. Then
         // another one is spawned, so the number is the same as before.
         // There's no way we can check this, however.
-        mpr("You detect no further creatures.");
+        mpr("You detect items, but no nearby creatures.");
     }
     else
-        mpr("You detect creatures!");
+    {
+        if (num_items > 0)
+            mpr("You detect items and creatures!");
+        else
+            mpr("You detect creatures, but no further items.");
+    }
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                   "divination: detect creatures"), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divination: all"), true);
 }
 
 static void _try_brand_switch(const int item_index)
@@ -882,19 +866,21 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 14, 22, 105, SEMI, MONS_GLOWING_SHAPESHIFTER },
   { 15, 22,  50, SEMI, MONS_HELL_HOG },
   { 15, 23,   1, FLAT, MONS_OBSIDIAN_STATUE },
-  { 16, 23,  60, SEMI, MONS_RADROACH },
+  { 16, 22,  10, SEMI, MONS_BUNYIP },
+  { 16, 23,  50, SEMI, MONS_RADROACH },
   { 16, 25,  75, SEMI, MONS_VERY_UGLY_THING },
   { 17, 24,  35, SEMI, MONS_GLOWING_ORANGE_BRAIN },
   { 17, 25,  50, SEMI, MONS_SPHINX },
   { 17, 32,  35, SEMI, MONS_SHADOW_DEMON },
-  { 17, 32,  75, SEMI, MONS_SIN_BEAST },
+  { 17, 32,  65, SEMI, MONS_SIN_BEAST },
   { 17, 32,  15, SEMI, MONS_CACODEMON },
+  { 18, 32,  35, SEMI, MONS_REAPER },
   { 18, 24,  30, SEMI, MONS_DANCING_WEAPON },
   { 19, 26,   1, FLAT, MONS_ORANGE_STATUE },
   { 20, 32,  30, SEMI, MONS_APOCALYPSE_CRAB },
   { 21, 32,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
   { 22, 32,   1, FLAT, MONS_STARFLOWER },
-  { 23, 32,  50, SEMI, MONS_HELLEPHANT },
+  { 23, 32,  30, SEMI, MONS_HELLEPHANT },
   { 24, 32,   5, SEMI, MONS_MOTH_OF_WRATH },
 };
 
@@ -964,8 +950,11 @@ static int _xom_pal_counting(int roll, bool isFriendly)
             count = random_range(2, 3);
     }
 
+    if (you.runes.count() > 4)
+        count += div_rand_round(you.runes.count(), 5);
+
     if (!isFriendly && _xom_feels_nasty())
-        count *= 2;
+        count *= 1.5;
 
     return count;
 }
@@ -1151,8 +1140,16 @@ static void _xom_send_allies(int sever)
         int miniband = _xom_pal_minibands(mon_type);
 
         for (int j = 0; j < miniband; ++j)
-            if (create_monster(mg))
+        {
+            monster* made = create_monster(mg);
+
+            if (made)
+            {
                 num_actually_summoned++;
+                if (made->type == MONS_REAPER)
+                    _do_chaos_upgrade(*made->weapon(), made);
+            }
+        }
 
         // To make given random monster summonings more coherent, have a good
         // chance to jump forward and make the next summon the same as the last,
@@ -1161,8 +1158,14 @@ static void _xom_send_allies(int sever)
             !_xom_pal_summonercheck(mon_type) && i < count - 1)
         {
             i += 1;
-            if (create_monster(mg))
+            monster* made = create_monster(mg);
+
+            if (made)
+            {
                 num_actually_summoned++;
+                if (made->type == MONS_REAPER)
+                    _do_chaos_upgrade(*made->weapon(), made);
+            }
         }
     }
 
@@ -1196,6 +1199,9 @@ static void _xom_send_one_ally(int sever)
         summons->add_ench(mon_enchant(ENCH_REGENERATION, MON_SUMM_AID,
                                        nullptr, 2000));
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
+
+        if (summons->type == MONS_REAPER)
+            _do_chaos_upgrade(*summons->weapon(), summons);
 
         const string note = make_stringf("summons friendly %s",
                                          summons->name(DESC_PLAIN).c_str());
@@ -1722,7 +1728,7 @@ static void _xom_door_ring(bool good)
         // If meant to be bad, shove in visible enemies closer to the player,
         // capped by XL and how many are already adjacent.
         // Once more, prioritize monsters in the closer ring's range first.
-        int soft_cap = div_rand_round(you.experience_level, 6);
+        int soft_cap = max(1, div_rand_round(you.experience_level, 6));
         int inner_cap = _xom_feels_nasty() ? 8 : 2 + random_range(1, soft_cap);
 
         int moved = _xom_count_and_move_group(min_radius, max_radius,
@@ -1895,6 +1901,8 @@ static void _xom_fake_shatter(int /*sever*/)
     run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
 
     int dest = 0;
+    int rocks = 0;
+
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
@@ -1902,6 +1910,21 @@ static void _xom_fake_shatter(int /*sever*/)
 
         dest += _xom_shatter_walls(*di, more_than_dig);
     }
+
+    for (distance_iterator di(you.pos(), true, true, LOS_NO_TRANS); di; ++di)
+    {
+        if (one_chance_in(5) && rocks <= dest / 2 && !monster_at(*di)
+              && !cell_is_solid(*di))
+        {
+             int rock_spot = items(true, OBJ_MISSILES, MI_LARGE_ROCK, 0, 0, GOD_XOM);
+             move_item_to_grid(&rock_spot, *di);
+             env.item[rock_spot].quantity = 1;
+             rocks++;
+        }
+    }
+
+    if (rocks)
+        mpr("Some rocks are dislodged from the ceiling.");
 
     if (dest)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "fake shatter"), true);
@@ -1982,12 +2005,21 @@ static void _xom_spray_lightning(coord_def position)
     beam.target       = position;
     beam.target.x     += random_range(-1, 1);
     beam.target.y     += random_range(-1, 1);
+    while (beam.target == you.pos())
+    {
+        beam.target.x     += random_range(-1, 1);
+        beam.target.y     += random_range(-1, 1);
+    }
     beam.thrower      = KILL_MISC;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
 
+    int power = 20 + you.experience_level * 5;
+    if (you.runes.count() > 4)
+        power += you.runes.count() * 3;
+
     // uncontrolled, so no player tracer.
-    zappy(ZAP_LIGHTNING_BOLT, 20 + you.experience_level * 5, true, beam);
+    zappy(ZAP_LIGHTNING_BOLT, power, true, beam);
     beam.fire();
 }
 
@@ -2000,7 +2032,7 @@ static void _xom_throw_divine_lightning(int /*sever*/)
 
     _xom_drop_lightning();
 
-    int spray_count = random_range(4, max(5, get_tension() / 5));
+    int spray_count = random_range(4, max(5, (min(27, get_tension() / 5))));
     int fire_count = 0;
 
     // Have a chance to actually aim lightning bolts near each present enemy.
@@ -2021,13 +2053,13 @@ static void _xom_throw_divine_lightning(int /*sever*/)
             coord_def randspot = you.pos();
             randspot.x += random_range(-6, 6);
             randspot.y += random_range(-6, 6);
-            if (randspot != you.pos())
-                _xom_spray_lightning(randspot);
+            _xom_spray_lightning(randspot);
             fire_count++;
         }
     }
 
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divine lightning"), true);
+    string note = make_stringf("divine lightning + %d bolts", spray_count);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
 /// What scenery nearby would Xom like to mess with, if any?
@@ -2095,25 +2127,26 @@ static vector<coord_def> _xom_scenery_candidates()
     return candidates;
 }
 
-/// Place one or more decorative features nearish the player.
+/// Place one or more decorative* features nearish the player.
 static void _xom_place_decor()
 {
     coord_def place;
     bool success = false;
     int aby = player_in_branch(BRANCH_ABYSS) ? 0 : 1;
     dungeon_feature_type decor = random_choose_weighted(10, DNGN_ALTAR_XOM,
+                                                        4, DNGN_TRAP_TELEPORT,
                                                         2, DNGN_CACHE_OF_FRUIT,
                                                         2, DNGN_CACHE_OF_MEAT,
                                                         1, DNGN_CLOSED_DOOR,
                                                         1, DNGN_OPEN_DOOR,
                                                         aby, DNGN_ENTER_ABYSS);
 
-    const int featuresCount = max(1, random2(random2(14)));
+    const int featuresCount = max(2, random2(random2(16)));
     for (int tries = featuresCount; tries > 0; --tries)
     {
         if ((random_near_space(&you, you.pos(), place, false)
              || random_near_space(&you, you.pos(), place, true))
-            && env.grid(place) == DNGN_FLOOR)
+            && env.grid(place) == DNGN_FLOOR && !(env.igrid(place) != NON_ITEM))
         {
             dungeon_terrain_changed(place, decor);
             success = true;
@@ -2298,11 +2331,15 @@ static void _xom_destruction(int sever, bool real)
             continue;
         }
 
+        int dice = 2 + div_rand_round(you.experience_level, 13);
+        if (you.runes.count() > 4)
+            dice += div_rand_round(you.runes.count(), 3);
+
         bolt beam;
 
         beam.flavour      = BEAM_STICKY_FLAME;
         beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(2, 4 + sever / 10);
+        beam.damage       = dice_def(dice, 4 + sever / 12);
         beam.target       = mi->pos();
         beam.name         = "sticky fireball";
         beam.colour       = RED;
@@ -2348,7 +2385,7 @@ static void _xom_harmless_knockback(coord_def p)
 static void _xom_force_lances(int /* sever */)
 {
     int xl = _xom_feels_nasty() ? you.experience_level / 3
-                                : you.experience_level;
+                                : you.experience_level + you.runes.count() / 4;
     int count = 2 + (xl / 2) + random_range(0, div_rand_round(xl, 5));
     int strength = max(1, xl / 2);
     int created = 0;
@@ -2425,9 +2462,9 @@ static void _xom_enchant_monster(int sever, bool helpful)
 
     ench_name = description_for_ench(ench);
 
-    if (ench == ENCH_PETRIFYING)
+    if (ench == ENCH_PETRIFYING || ench == ENCH_PARALYSIS)
         time = 30 + random2(sever / 10);
-    else if (ench == ENCH_VITRIFIED || ench == ENCH_SLOW || ench == ENCH_PARALYSIS)
+    else if (ench == ENCH_VITRIFIED || ench == ENCH_SLOW)
         time = 200 + random2(sever);
     else if (ench == ENCH_HASTE || ench == ENCH_MIGHT)
         time = 400 + random2(sever * 4);
@@ -3352,9 +3389,10 @@ static monster* _xom_summon_hostile(monster_type hostile)
 {
     // Fuzz the monster's placement.
     int placeable_count = 0;
+    int distance = you.penance[GOD_XOM] ? 5 : 3;
     coord_def spot = you.pos();
 
-    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS, true);
+    for (radius_iterator ri(you.pos(), distance, C_SQUARE, LOS_NO_TRANS, true);
              ri; ++ri)
     {
         if ((!feat_has_solid_floor(env.grid(*ri))) || cell_is_solid(*ri)
@@ -3378,6 +3416,9 @@ static monster* _xom_summon_hostile(monster_type hostile)
         mon->target = you.pos();
         mon->foe = MHITYOU;
         mon->behaviour = BEH_SEEK;
+
+        if (mon->type == MONS_REAPER)
+            _do_chaos_upgrade(*mon->weapon(), mon);
     }
 
     return mon;
@@ -3761,6 +3802,7 @@ static void _handle_accidental_death(const int orig_hp,
 /**
  * Try to choose an action for Xom to take that is at least notionally 'good'
  * for the player.
+ * TODO: Completely rewrite. Please.
  *
  * @param sever         The intended magnitude of the action.
  * @param tension       How much danger we think the player's currently in.
@@ -3776,29 +3818,17 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     if (tension > random2(3) && x_chance_in_y(2, sever))
         return XOM_GOOD_POTION;
 
-    if (x_chance_in_y(3, sever))
-    {
-        const xom_event_type divination
-            = random_choose(XOM_GOOD_MAGIC_MAPPING,
-                            XOM_GOOD_DETECT_CREATURES,
-                            XOM_GOOD_DETECT_ITEMS);
-
-        if (divination == XOM_GOOD_DETECT_CREATURES)
-        {
-            return divination; // useful regardless of exploration state
-
-        // Only do mmap/detect items if there's a decent chunk of unexplored
-        }
-        // level left
-        const int explored = _exploration_estimate(false);
-        if (explored <= 80 || x_chance_in_y(explored, 100))
-            return divination;
-    }
-
-    if (x_chance_in_y(4, sever) && tension > 0
+    if (x_chance_in_y(3, sever) && tension > 0
         && _choose_random_spell(sever) != SPELL_NO_SPELL)
     {
         return XOM_GOOD_SPELL;
+    }
+
+
+    if (x_chance_in_y(4, sever))
+    {
+        // Detecting creatures is useful regardless of anything else.
+        return XOM_GOOD_DIVINATION;
     }
 
     if (tension <= 0 && x_chance_in_y(5, sever)
@@ -3864,7 +3894,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return XOM_GOOD_FORCE_LANCE_FLEET;
     }
 
-    if (tension > 0 && x_chance_in_y(13, sever))
+    if (tension > 0 && x_chance_in_y(14, sever))
     {
         const bool fake = one_chance_in(3);
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -3887,10 +3917,10 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
-    if (tension > random2(5) && x_chance_in_y(14, sever))
+    if (tension > random2(5) && x_chance_in_y(15, sever))
         return XOM_GOOD_CLEAVING;
 
-    if (tension > random2(3) && x_chance_in_y(14, sever))
+    if (tension > random2(3) && x_chance_in_y(16, sever))
     {
         int plant_capacity = 0;
         for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
@@ -3904,7 +3934,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return XOM_GOOD_FLORA_RING;
     }
 
-    if (tension > random2(5) && x_chance_in_y(15, sever))
+    if (tension > random2(3) && x_chance_in_y(17, sever))
     {
         // Assess each if there's enough room to meaningfully raise a door ring,
         // if there's adjacent hostiles to move so it does anything tactically,
@@ -3936,26 +3966,26 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             }
         }
 
-        if (replaceable > 30 && adjacent_hostiles - 1 < spare_space_out)
+        if (replaceable > 24 && adjacent_hostiles - 1 < spare_space_out)
             return XOM_GOOD_DOOR_RING;
     }
 
-    if (tension > 0 && x_chance_in_y(15, sever)
+    if (tension > 0 && x_chance_in_y(18, sever)
         && mon_nearby(_choose_enchantable_monster))
     {
         return XOM_GOOD_MASS_CHARM;
     }
 
-    if (tension > 0 && x_chance_in_y(15, sever) && !cloud_at(you.pos()))
+    if (tension > 0 && x_chance_in_y(19, sever) && !cloud_at(you.pos()))
         return XOM_GOOD_FOG;
 
-    if (random2(tension) < 15 && x_chance_in_y(16, sever))
+    if (random2(tension) < 20 && x_chance_in_y(20, sever))
     {
         return x_chance_in_y(sever, 201) ? XOM_GOOD_ACQUIREMENT
                                          : XOM_GOOD_RANDOM_ITEM;
     }
 
-    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(17, sever)
+    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(21, sever)
         && _teleportation_check())
     {
         // This is not very interesting if the level is already fully
@@ -3966,14 +3996,14 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return XOM_GOOD_TELEPORT;
     }
 
-    if (random2(tension) < 5 && x_chance_in_y(19, sever)
+    if (random2(tension) < 5 && x_chance_in_y(22, sever)
         && x_chance_in_y(16, you.how_mutated())
         && you.can_safely_mutate())
     {
         return XOM_GOOD_MUTATION;
     }
 
-    if (tension > 0 && x_chance_in_y(20, sever)
+    if (tension > 0 && x_chance_in_y(23, sever)
         && player_in_a_dangerous_place())
     {
         // Make sure there's at least one enemy within the lightning radius.
@@ -4632,9 +4662,8 @@ struct xom_event
 static const map<xom_event_type, xom_event> xom_events = {
     { XOM_DID_NOTHING, { "nothing" }},
     { XOM_GOOD_POTION, { "potion", _xom_do_potion }},
-    { XOM_GOOD_MAGIC_MAPPING, { "magic mapping", _xom_magic_mapping }},
-    { XOM_GOOD_DETECT_CREATURES, { "detect creatures", _xom_detect_creatures }},
-    { XOM_GOOD_DETECT_ITEMS, { "detect items", _xom_detect_items }},
+    { XOM_GOOD_DIVINATION, { "magic mapping + detect items / creatures",
+                              _xom_divination }},
     { XOM_GOOD_SPELL, { "tension spell", _xom_random_spell }},
     { XOM_GOOD_CONFUSION, { "confuse monsters", _xom_confuse_monsters }},
     { XOM_GOOD_SINGLE_ALLY, { "single ally", _xom_send_one_ally }},

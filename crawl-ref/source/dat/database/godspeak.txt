@@ -139,6 +139,10 @@ Xom suggests a refreshing change of pace.
 
 Xom tears open a few small holes in reality.
 %%%%
+Xom scenery trap_teleport
+
+@Xom scenery enter_abyss@
+%%%%
 Xom kind door ring
 
 A short distance around you seems to assume a strange safe solidity.
