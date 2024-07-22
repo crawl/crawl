@@ -549,6 +549,13 @@ Xom hostile monster
 
 You hear Xom's maniacal laughter.
 %%%%
+# one friendly player illusion + two hostile player illusions
+Xom send in the clones
+
+Xom feels like there should be more of you to share with the Dungeon.
+
+Xom gently smashes a mirror over your @random_body_part@.
+%%%%
 # drain your mp, produce magicspawn
 Xom brain drain
 
@@ -570,7 +577,7 @@ Xom gives you a terrible headache.
 # prints only if summons successfully spawn
 Xom drained brain
 
-w:25
+w:20
 Your magic slithers out of your reeling mind!
 
 Your power and thoughts are overwhelmed by magic-eaters manifest!

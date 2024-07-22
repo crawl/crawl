@@ -38,6 +38,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-place.h"
@@ -3491,6 +3492,63 @@ static void _xom_summon_hostiles(int sever)
     }
 }
 
+// Make two hostile clones and one friendly clone. Net danger, but maybe
+// the player can make something of it anyway.
+static void _xom_send_in_clones(int /*sever*/)
+{
+    const int friendly_count = 1;
+    const int hostile_count = 2;
+    int hostiles_summon_count = 0;
+    int friendly_summon_count = 0;
+    int power = 0;
+
+    const string speech = _get_xom_speech("send in the clones");
+    god_speaks(GOD_XOM, speech.c_str());
+
+    for (int i = 0; i < friendly_count + hostile_count; i++)
+    {
+        monster* mon = get_free_monster();
+
+        if (!mon || monster_at(you.pos()))
+            return;
+
+        mon->type = MONS_PLAYER;
+        mon->behaviour = BEH_SEEK;
+        mon->set_position(you.pos());
+        mon->mid = MID_PLAYER;
+        env.mgrid(you.pos()) = mon->mindex();
+
+        if (hostiles_summon_count < hostile_count)
+        {
+            mon->attitude = ATT_HOSTILE;
+            power = -1;
+        }
+        else if (!you.allies_forbidden())
+        {
+            mon->attitude = ATT_FRIENDLY;
+            power = 0;
+        }
+
+        if (mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power, true))
+        {
+            if (hostiles_summon_count < hostile_count)
+                hostiles_summon_count++;
+            else
+                friendly_summon_count++;
+        }
+        mon->reset();
+    }
+
+    const string note = make_stringf("summoned %d hostile %s + %d friendly %s",
+                                     hostiles_summon_count,
+                                     hostiles_summon_count == 1 ? "illusions"
+                                                                : "illusion",
+                                     friendly_summon_count,
+                                     friendly_summon_count == 1 ? "illusions"
+                                                                : "illusion");
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+}
+
 // Roll per-monster whether they're neutral or hostile.
 static bool _xom_maybe_neutral_summon(int sever, bool threat,
                                       monster_type mon_type)
@@ -4123,6 +4181,22 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
             return XOM_BAD_FAKE_SHATTER;
     }
 
+    if (tension > 0 && tension < 20
+        && mon_nearby([](monster& mon){ return !mon.wont_attack(); })
+        && x_chance_in_y(20, sever))
+    {
+        int clone_capacity = 0;
+        for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+             ri; ++ri)
+        {
+            if (!monster_at(*ri) && monster_habitable_grid(MONS_PLAYER_ILLUSION, env.grid(*ri)))
+                clone_capacity++;
+        }
+
+        if (clone_capacity >= 3)
+            return XOM_BAD_SEND_IN_THE_CLONES;
+    }
+
     if (x_chance_in_y(21, sever))
     {
         if (coinflip())
@@ -4706,6 +4780,8 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_FAKE_SHATTER, {"fake shatter", _xom_fake_shatter, 25}},
     { XOM_BAD_MUTATION, { "bad mutations", _xom_give_bad_mutations, 30}},
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
+    { XOM_BAD_SEND_IN_THE_CLONES, {"friendly and hostile illusions",
+                                   _xom_send_in_clones, 40}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
     { XOM_BAD_STATLOSS, { "statloss", _xom_statloss, 23}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
