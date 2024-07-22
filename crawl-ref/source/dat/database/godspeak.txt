@@ -138,6 +138,8 @@ Xom scenery enter_abyss
 Xom suggests a refreshing change of pace.
 
 Xom tears open a few small holes in reality.
+
+Xom bends space into knots.
 %%%%
 Xom scenery trap_teleport
 
@@ -732,6 +734,13 @@ You hear Xom's avuncular chuckle.
 Xom bad monster polymorph
 
 @Xom good monster polymorph@
+%%%%
+Xom wave of despair
+
+Xom recounts a horror story in an instant.
+
+w:2
+Xom joyfully recalls the collapse of multiple Dungeon civilizations.
 %%%%
 Xom good mutations
 

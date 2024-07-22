@@ -91,6 +91,7 @@ rimeblight RIMEBLIGHT
 arms UNDYING_ARMS
 shadowless SHADOWLESS
 bind BIND
+weak_willed WEAK_WILLED
 sign_of_ruin SIGN_OF_RUIN
 
 something_under SOMETHING_UNDER

@@ -16,6 +16,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
+#include "corpse.h"
 #include "coordit.h"
 #include "database.h"
 #ifdef WIZARD
@@ -97,12 +98,13 @@ static bool _action_is_bad(xom_event_type action)
 static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_SMALL_MAMMAL,
+    SPELL_DAZZLING_FLASH,
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_ANIMATE_ARMOUR,
     SPELL_MARTYRS_KNELL,
     SPELL_LEDAS_LIQUEFACTION,
-    SPELL_CAUSE_FEAR,
+    SPELL_SUMMON_BLAZEHEART_GOLEM,
     SPELL_BATTLESPHERE,
     SPELL_INTOXICATE,
     SPELL_ANIMATE_DEAD,
@@ -2554,6 +2556,74 @@ static void _xom_mass_charm(int sever)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
+// Xom makes some scary skeletons pop out.
+// This halves enemy willpower, drains them, and fears them.
+static void _xom_wave_of_despair(int sever)
+{
+    int skeleton_count = 0;
+    god_speaks(GOD_XOM, _get_xom_speech("wave of despair").c_str());
+
+    // As is done in wiz-item.cc L#154, apparently the simplest way we have for
+    // making decorative skeletons is to make a monster and then kill it. Sure.
+    for (distance_iterator di(you.pos(), true, true, 2); di; ++di)
+    {
+        if (!monster_at(*di) && !cell_is_solid(*di)
+          && env.grid(*di) != DNGN_ORB_DAIS)
+        {
+            monster dummy;
+            dummy.type = MONS_HUMAN; // maybe random floor monsters? player genus?
+            dummy.position = *di;
+
+            item_def* corpse = place_monster_corpse(dummy, true);
+            turn_corpse_into_skeleton(*corpse);
+            if (corpse)
+                skeleton_count++;
+        }
+    }
+
+    if (skeleton_count)
+        mpr("Skeletons, inanimate yet cursed, drop down from the ceiling.");
+
+    for (int i = 0; i <= you.current_vision; ++i)
+    {
+        for (distance_iterator di(you.pos(), false, false, i); di; ++di)
+        {
+            if (grid_distance(you.pos(), *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                flash_tile(*di, random_choose(DARKGRAY, MAGENTA), 0);
+            }
+        }
+
+        animation_delay(35, true);
+        view_clear_overlays();
+    }
+
+    mprf(MSGCH_DANGER, "A draining tide of despair and horror washes over you and your surroundings!");
+
+    const int pow = 50 + random_range(sever / 2, sever);
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (monster* mon = monster_at(*ri))
+        {
+            mon->strip_willpower(&you, pow, true);
+
+            if (mon->holiness() & (MH_NATURAL | MH_PLANT))
+                mon->add_ench(mon_enchant(ENCH_DRAINED, 2, &you, pow));
+
+            if (!mon->wont_attack())
+                behaviour_event(mon, ME_ANNOY, &you);
+        }
+    }
+
+    you.strip_willpower(&you, pow, true);
+    mass_enchantment(ENCH_FEAR, pow * 5);
+
+    const string note = make_stringf("spooky wave of despair");
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+}
+
 // Xom hastes, slows, or paralyzes the player and everything else in sight
 // for the same length of time (give or take time slices and base speed).
 // Mostly screws with whatever else might join the fight afterwards,
@@ -3879,7 +3949,6 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_SPELL;
     }
 
-
     if (x_chance_in_y(4, sever))
     {
         // Detecting creatures is useful regardless of anything else.
@@ -4071,6 +4140,12 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
+    if (tension > 0 && x_chance_in_y(24, sever)
+        && mon_nearby(_choose_enchantable_monster))
+    {
+        return XOM_GOOD_WAVE_OF_DESPAIR;
+    }
+
     return XOM_DID_NOTHING;
 }
 
@@ -4207,7 +4282,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
                 return XOM_BAD_DRAINING;
             // else choose something else
         }
-        else if (!you.res_torment())
+        else if (!you.res_torment() && tension > 0)
             return XOM_BAD_TORMENT;
         // else choose something else
     }
@@ -4758,6 +4833,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_ENCHANT_MONSTER, { "good enchant monster",
                                   _xom_good_enchant_monster }},
     { XOM_GOOD_MASS_CHARM, {"mass charm", _xom_mass_charm }},
+    { XOM_GOOD_WAVE_OF_DESPAIR, {"wave of despair", _xom_wave_of_despair }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
