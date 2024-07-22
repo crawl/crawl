@@ -495,11 +495,19 @@ Alligator
 
 Asp
 
+Axolotl
+
+Caecilian
+
 Crocodile
+
+Frog
 
 Gecko
 
 Gharial
+
+Hellbender
 
 Krait
 
@@ -507,13 +515,23 @@ Leatherback
 
 Lizard
 
+Newt
+
+Olm
+
 Python
 
 Rattlesnake
 
+Salamander
+
+Siren
+
 Skink
 
 Terrapin
+
+Toad
 
 Tortoise
 
