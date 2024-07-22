@@ -481,15 +481,43 @@ Wasp
 
 # arachnids
 
+Harvestman
+
 Scorpion
 
 Spider
 
+Tick
+
 # amphibians and reptiles
+
+Alligator
 
 Asp
 
+Crocodile
+
+Gecko
+
+Gharial
+
+Krait
+
+Leatherback
+
+Lizard
+
+Python
+
 Rattlesnake
+
+Skink
+
+Terrapin
+
+Tortoise
+
+Turtle
 
 Viper
 
