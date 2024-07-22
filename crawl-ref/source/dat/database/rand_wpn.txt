@@ -506,29 +506,69 @@ Shark
 
 # birds
 
+Apostlebird
+
+Arctic Tern
+
+Auk
+
+Bustard
+
+Buzzard
+
 Cardinal
+
+Cassowary
 
 Dove
 
+Duck
+
 Flamingo
+
+Forest Kingfisher
+
+Fulmar
+
+Goose
+
+Guillemot
 
 Hawk
 
 Hummingbird
 
-Fulmar
-
 Hoatzin
+
+Kookaburra
+
+Noisy Friarbird
 
 Owl
 
 Penguin
 
+Pigeon
+
 Puffin
+
+Rainbow Bee-Eater
+
+Razorbill
+
+Roseate Spoonbill
+
+Sage Grouse
 
 Shrike
 
 Stork
+
+Swan
+
+Superb Lyrebird
+
+Tawny Frogmouth
 
 Vulture
 
