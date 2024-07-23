@@ -542,7 +542,7 @@ Woodlouse
 
 Yellowjacket
 
-%%%%%
+%%%%
 
 _arachnid_name_
 
@@ -554,7 +554,7 @@ Spider
 
 Tick
 
-%%%%%
+%%%%
 
 _amphibian_name_
 
