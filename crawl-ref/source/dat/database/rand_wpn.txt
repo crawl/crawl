@@ -459,6 +459,24 @@ w:15
 %%%%
 _weapon_animal_
 
+@_arachnid_name_@
+
+@_crustacean_name_@
+
+@_fish_name_@
+
+@_amphibian_name_@
+
+@_reptile_name_@
+
+@_bird_name_@
+
+@_mammal_name_@
+
+%%%%
+
+_crustacean_name_
+
 # insects and other crustaceans
 
 Ant
@@ -524,7 +542,9 @@ Woodlouse
 
 Yellowjacket
 
-# arachnids
+%%%%%
+
+_arachnid_name_
 
 Harvestman
 
@@ -534,25 +554,41 @@ Spider
 
 Tick
 
-# amphibians and reptiles
+%%%%%
 
-Alligator
-
-Asp
+_amphibian_name_
 
 Axolotl
 
 Caecilian
 
-Crocodile
-
 Frog
+
+Hellbender
+
+Newt
+
+Olm
+
+Salamander
+
+Siren
+
+Toad
+
+%%%%
+
+_reptile_name_
+
+Alligator
+
+Asp
+
+Crocodile
 
 Gecko
 
 Gharial
-
-Hellbender
 
 Krait
 
@@ -560,23 +596,13 @@ Leatherback
 
 Lizard
 
-Newt
-
-Olm
-
 Python
 
 Rattlesnake
 
-Salamander
-
-Siren
-
 Skink
 
 Terrapin
-
-Toad
 
 Tortoise
 
@@ -584,7 +610,10 @@ Turtle
 
 Viper
 
-# fish
+%%%%
+
+_fish_name_
+
 Big Fish
 
 Eel
@@ -595,7 +624,9 @@ Salmon
 
 Shark
 
-# birds
+%%%%
+
+_bird_name_
 
 Apostlebird
 
@@ -675,7 +706,10 @@ Tawny Frogmouth
 
 Vulture
 
-# mammals
+%%%%
+
+_mammal_name_
+
 Ass
 
 Badger
