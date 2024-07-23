@@ -459,17 +459,49 @@ w:15
 %%%%
 _weapon_animal_
 
-# insects
+# insects and other crustaceans
+
+Ant
+
+Barnacle
+
+Bee
 
 Blowfly
 
+Bristletail
+
 Butterfly
+
+Caddisfly
+
+Crab
+
+Crayfish
+
+Damselfly
 
 Dragonfly
 
 Firefly
 
+Flea
+
 Gnat
+
+Hornet
+
+June-Bug
+
+Krill
+
+Lacewing
+
+Lobster
+
+Louse
+
+Mayfly
 
 Mosquito
 
@@ -477,7 +509,20 @@ Moth
 
 Pill Bug
 
+Prawn
+
+Shrimp
+
+Silverfish
+
 Wasp
+
+# The largest extant insect, endemic to New Zealand
+Weta
+
+Woodlouse
+
+Yellowjacket
 
 # arachnids
 
