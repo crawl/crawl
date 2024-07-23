@@ -2683,9 +2683,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     for (auto &item : you.inv)
     {
         if (item.defined() && !item_is_equipped(item))
-        {
             inv_items.push_back(&item);
-        }
     }
 
     // Assure that the messages vector has at least one element.
