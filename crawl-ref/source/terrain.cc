@@ -1949,7 +1949,7 @@ const char* feat_type_name(dungeon_feature_type feat)
     if (feat_is_fountain(feat))
         return "fountain";
     if (feat == DNGN_ORB_DAIS)
-        return "dias";
+        return "dais";
     if (feat == DNGN_UNSEEN)
         return "unknown terrain";
     return "floor";
