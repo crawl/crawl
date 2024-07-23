@@ -647,12 +647,6 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                      << (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                      << "</" << col_string << ">) ";
 #endif
-            if (Options.monster_item_view_coordinates)
-            {
-                const coord_def relpos = mi.pos - you.pos();
-                prefix << "(" << relpos.x << ", " << -relpos.y << ") ";
-            }
-
             string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
             if (mi.dam != MDAM_OKAY)
                 str += ", " + mi.damage_desc();
@@ -660,6 +654,13 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             string consinfo = mi.constriction_description();
             if (!consinfo.empty())
                 str += ", " + consinfo;
+
+            if (Options.monster_item_view_coordinates)
+            {
+                const coord_def relpos = mi.pos - you.pos();
+                str = make_stringf("(%d, %d) %s", relpos.x, -relpos.y,
+                                   str.c_str());
+            }
 
 #ifndef USE_TILE_LOCAL
             // Wraparound if the description is longer than allowed.
