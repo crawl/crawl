@@ -321,6 +321,7 @@ show_class get_cell_show_class(const map_cell& cell,
     if (feat && feat_is_solid(feat)
         || feat_has_dry_floor(feat)
            && feat != DNGN_FLOOR
+           && feat != DNGN_ORB_DAIS
            && !feat_is_open_door(feat)
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH
