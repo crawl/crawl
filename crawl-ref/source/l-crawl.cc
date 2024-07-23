@@ -159,7 +159,7 @@ LUAFN(crawl_stack)
         else
             file++;
         char buf[1000];
-        sprintf(buf, "%s, function %s, line %d\n", file, dbg.name, dbg.currentline);
+        snprintf(buf, 1000, "%s, function %s, line %d\n", file, dbg.name, dbg.currentline);
         r += buf;
     }
     lua_pushstring(ls, r.c_str());
