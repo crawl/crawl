@@ -39,7 +39,6 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
-#include "orb.h"
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
