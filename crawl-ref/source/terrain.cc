@@ -2049,6 +2049,12 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, int mid)
 {
     dungeon_feature_type old_feat = env.grid(pos);
+
+    // We can't actually change this, so don't add a map marker that will add
+    // a confusing 'summoned' to the feature name when examining it.
+    if (old_feat == DNGN_ORB_DAIS)
+        return;
+
     tile_flavour old_flv = tile_env.flv(pos);
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
