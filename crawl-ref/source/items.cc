@@ -4203,13 +4203,13 @@ bool item_def::is_valid(bool iinfo, bool error) const
     return true;
 }
 
-// The Orb of Zot and unique runes are considered critical.
+// The Orb of Zot, gems, and unique runes are considered critical.
 bool item_def::is_critical() const
 {
     if (!defined())
         return false;
 
-    if (base_type == OBJ_ORBS)
+    if (base_type == OBJ_ORBS || base_type == OBJ_GEMS)
         return true;
 
     return item_is_unique_rune(*this);
