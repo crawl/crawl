@@ -272,6 +272,13 @@ static feature_def feat_defs[] =
     FFT_NONE, MF_FLOOR,
 },
 
+{
+    DNGN_ORB_DAIS, "the orb dais", "orb dais",
+    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
+    COLOUR_IS(ETC_FLOOR),
+    FFT_NONE, MF_FLOOR,
+},
+
 #if TAG_MAJOR_VERSION == 34
 {
     DNGN_BADLY_SEALED_DOOR, "", "badly_sealed_door",

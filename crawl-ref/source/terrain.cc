@@ -1074,11 +1074,6 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
         int index = item.index();
         move_item_to_grid(&index, np);
 
-        // Since some methods of shoving items can be gamed, make the orb get
-        // sulky whenever it's moved at all.
-        if (item_is_orb(item))
-            orb_complain_about_being_moved(pos);
-
         return true;
     }
     return false;
@@ -1310,6 +1305,11 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (env.grid(pos) == nfeat)
         return;
+
+    // Cannot change the terrain beneath the orb's starting location by any means.
+    if (env.grid(pos) == DNGN_ORB_DAIS)
+        return;
+
     // If we're trying to place a wall on top of a monster, push it out of the
     // way first.
     if (feat_is_wall(nfeat) && monster_at(pos))

@@ -545,6 +545,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_UNKNOWN_PORTAL;
     case DNGN_BINDING_SIGIL:
         return TILE_DNGN_BINDING_SIGIL;
+    case DNGN_ORB_DAIS:
+        return TILE_DNGN_ORB_DAIS;
     default:
         return TILE_DNGN_ERROR;
     }

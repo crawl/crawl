@@ -390,6 +390,9 @@ dimension_edge DNGN_DIMENSION_EDGE
 ## The disco ball in pan_disco_hall.
 disco_ball DNGN_DISCO_BALL
 
+## The Orb of Zot's pedestal
+orb_dais DNGN_ORB_DAIS
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)

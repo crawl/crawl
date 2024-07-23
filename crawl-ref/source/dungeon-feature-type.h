@@ -99,6 +99,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
+    DNGN_ORB_DAIS,
 #endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_UNDISCOVERED_TRAP,
@@ -360,6 +361,7 @@ enum dungeon_feature_type
     DNGN_METAL_STATUE,
     DNGN_CACHE_OF_FRUIT,
     DNGN_CACHE_OF_MEAT,
+    DNGN_ORB_DAIS,
 #endif
 
     NUM_FEATURES
