@@ -1762,7 +1762,7 @@ static void _xom_door_ring(bool good)
             if (feat_is_diggable(env.grid(*ri)))
                 dug++;
 
-            dungeon_terrain_changed(*ri, feat);
+            dungeon_terrain_changed(*ri, feat, false, true);
 
             map_wiz_props_marker *marker = new map_wiz_props_marker(*ri);
             marker->set_property("connected_exclude", "true");
