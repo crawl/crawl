@@ -2682,8 +2682,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     vector<item_def *> inv_items;
     for (auto &item : you.inv)
     {
-        if (item.defined() && !item_is_equipped(item)
-            && !item.is_critical())
+        if (item.defined() && !item_is_equipped(item))
         {
             inv_items.push_back(&item);
         }
