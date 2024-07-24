@@ -954,22 +954,27 @@ bool player_has_hair(bool temp, bool include_mutations)
         return true;
     }
 
-    if (temp && form_has_hair(you.form))
-        return true;
+    if (temp)
+        return form_has_hair(you.form);
 
     return species::has_hair(you.species);
 }
 
 bool player_has_feet(bool temp, bool include_mutations)
 {
-    if (you.fishtail && temp)
-        return false;
-
     if (include_mutations &&
         (you.get_mutation_level(MUT_HOOVES, temp) == 3
          || you.get_mutation_level(MUT_TALONS, temp) == 3))
     {
         return false;
+    }
+
+    if (temp)
+    {
+        if (you.fishtail)
+            return false;
+
+        return form_has_feet(you.form);
     }
 
     return species::has_feet(you.species);
@@ -983,16 +988,16 @@ bool player_has_eyes(bool temp, bool include_mutations)
         return true;
     }
 
-    if (temp && form_has_eyes(you.form))
-        return true;
+    if (temp)
+        return form_has_eyes(you.form);
 
     return species::has_eyes(you.species);
 }
 
 bool player_has_ears(bool temp)
 {
-    if (temp && form_has_ears(you.form))
-        return true;
+    if (temp)
+        return form_has_ears(you.form);
 
     return species::has_ears(you.species);
 }
@@ -7782,16 +7787,17 @@ bool player::has_blood(bool temp) const
     if (is_lifeless_undead(temp))
         return false;
 
-    if (temp && form_has_blood(form))
-        return true;
+    if (temp)
+        return form_has_blood(form);
 
     return species::has_blood(you.species);
 }
 
 bool player::has_bones(bool temp) const
 {
-    if (temp && form_has_bones(you.form))
-        return true;
+    if (temp)
+        return form_has_bones(you.form);
+;
 
     return species::has_bones(you.species);
 }
