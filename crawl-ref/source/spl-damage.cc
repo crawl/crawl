@@ -5049,7 +5049,7 @@ static map<beam_type, string> concoction_description =
 {
     { BEAM_FIRE, "fiery phlogiston" },
     { BEAM_COLD, "frigid brine" },
-    { BEAM_POISON_ARROW, "noxious sulfur" },
+    { BEAM_POISON_ARROW, "noxious sulphur" },
     { BEAM_ELECTRICITY, "flickering plasma" },
     { BEAM_MMISSILE, "unstable reaction" },
 };

@@ -309,7 +309,7 @@ page, clearly reserving this book for only the tackiest of wizards.
 %%%%
 book of spontaneous combustion
 
-A heavy tome whose desiccated pages smell faintly of sulfer. The ink with which
+A heavy tome whose desiccated pages smell faintly of sulphur. The ink with which
 it was written is wildly flammable and care must be taken even opening it, but
 the power of the spells described therein is undeniable.
 %%%%
