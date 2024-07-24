@@ -5129,6 +5129,9 @@ bool monster::can_polymorph() const
 
 bool monster::has_blood(bool /*temp*/) const
 {
+    if (petrified())
+        return false;
+
     return mons_has_blood(type);
 }
 

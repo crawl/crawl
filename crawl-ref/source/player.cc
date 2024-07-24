@@ -7786,7 +7786,12 @@ bool player::has_blood(bool temp) const
         return false;
 
     if (temp)
+    {
+        if (petrified())
+            return false;
+
         return form_has_blood(form);
+    }
 
     return species::has_blood(you.species);
 }
