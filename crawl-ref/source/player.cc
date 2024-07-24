@@ -962,6 +962,9 @@ bool player_has_hair(bool temp, bool include_mutations)
 
 bool player_has_feet(bool temp, bool include_mutations)
 {
+    if (temp && you.fishtail)
+        return false;
+
     if (include_mutations &&
         (you.get_mutation_level(MUT_HOOVES, temp) == 3
          || you.get_mutation_level(MUT_TALONS, temp) == 3))
@@ -970,12 +973,7 @@ bool player_has_feet(bool temp, bool include_mutations)
     }
 
     if (temp)
-    {
-        if (you.fishtail)
-            return false;
-
         return form_has_feet(you.form);
-    }
 
     return species::has_feet(you.species);
 }
