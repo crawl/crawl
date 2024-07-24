@@ -144,7 +144,7 @@ static const form_entry formdata[] =
     FormScaling().Base(9).Scaling(6), true, FormScaling().Base(7),
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
     FC_DEFAULT, FC_ENABLE, false, true,
-    FC_ENABLE, FC_FORBID, FC_ENABLE, FC_FORBID, FC_ENABLE, FC_FORBID,
+    FC_DEFAULT, FC_FORBID, FC_ENABLE, FC_FORBID, FC_ENABLE, FC_FORBID,
     "hiss", -2, "", "", "coil in front of", "flesh",
     { { "constrict", "You have a powerful constriction melee attack."} },
     // cold-blooded and amphibious are added separately
@@ -160,7 +160,7 @@ static const form_entry formdata[] =
     FormScaling().Base(12).Scaling(6), true, FormScaling().Base(15).Scaling(9),
     SPWPN_NORMAL, GREEN, "Teeth and claws", { "hit", "claw", "bite", "maul" },
     FC_ENABLE, FC_FORBID, false, true,
-    FC_ENABLE, FC_FORBID, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    FC_DEFAULT, FC_FORBID, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
     "roar", 6, "foreclaw", "", "bow your head before", "flesh",
     { { "dragon claw", "You have a powerful clawing attack." },
       { "dragon scales", "Your giant scaled body is strong and resilient, but less evasive." },
@@ -195,7 +195,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().Base(-2),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, false, true,
-    FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
     "squeak", -8, "foreclaw", "", "perch on", "flesh",
     { { "extremely fast", "You cover ground extremely quickly." },
       { "", "You are tiny, dextrous, and very evasive." } // short-form "tiny" is automatically added
@@ -214,7 +214,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, false, true,
-    FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
     "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh",
     { { "very fast", "You cover ground very quickly." } },
     { { "weak attacks", "Your unarmed attacks are very weak." },
@@ -271,7 +271,7 @@ static const form_entry formdata[] =
     {}, false, FormScaling().XLBased(),
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, false, true,
-    FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh",
     {},
     { { "no casting", "You cannot cast spells." }, }
@@ -373,7 +373,7 @@ static const form_entry formdata[] =
     {}, true, {},
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, false, true,
-    FC_ENABLE, FC_FORBID, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
+    FC_DEFAULT, FC_FORBID, FC_ENABLE, FC_ENABLE, FC_ENABLE, FC_ENABLE,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh",
     { { "fast swimmer", "You swim very quickly." },
       { "devour", "You can devour living enemies to heal." }
