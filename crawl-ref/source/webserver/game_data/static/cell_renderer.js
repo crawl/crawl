@@ -381,7 +381,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.save();
                 try
                 {
-                    this.ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+                    this.ctx.globalAlpha = cell.trans ? 0.65 : 1.0;
 
                     draw_dolls();
                 }
