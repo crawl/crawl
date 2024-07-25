@@ -4283,6 +4283,95 @@ static string _random_class_of_god_name(bool (*class_of_god)(god_type god))
     return result;
 }
 
+string random_body_part_name(bool ext, bool plural)
+{
+    vector<bool> plural_parts;
+    vector<string> body_parts;
+
+    plural_parts.push_back(false);
+    body_parts.push_back("head");
+
+    string hands;
+    if (you.get_mutation_level(MUT_MISSING_HAND))
+    {
+        hands = you.hand_name(false);
+        plural_parts.push_back(false);
+    }
+    else
+    {
+        hands = you.hand_name(true);
+        plural_parts.push_back(true);
+    }
+    body_parts.push_back(hands);
+
+    string arms = you.arm_name(true);
+    plural_parts.push_back(true);
+    body_parts.push_back(arms);
+
+    if (player_has_feet())
+    {
+        string feet = you.foot_name(true);
+        plural_parts.push_back(true);
+        body_parts.push_back(feet);
+    }
+
+    if (you.has_tail())
+    {
+        plural_parts.push_back(false);
+        body_parts.push_back("tail");
+    }
+
+    if (!ext && you.has_blood())
+    {
+        plural_parts.push_back(false);
+        body_parts.push_back("blood");
+    }
+
+    if (!ext && you.has_bones())
+    {
+        plural_parts.push_back(true);
+        body_parts.push_back("bones");
+    }
+
+    if (player_has_ears())
+    {
+        plural_parts.push_back(true);
+        body_parts.push_back("ears");
+    }
+
+    if (player_has_eyes())
+    {
+        string eyes;
+        if (you.get_mutation_level(MUT_MISSING_EYE))
+        {
+            plural_parts.push_back(false);
+            eyes = "eye";
+        }
+        else
+        {
+            plural_parts.push_back(true);
+            eyes = "eyes";
+        }
+        body_parts.push_back(eyes);
+    }
+
+    if (player_has_hair())
+    {
+        plural_parts.push_back(false);
+        body_parts.push_back("hair");
+    }
+
+    int which_part;
+
+    do
+    {
+        which_part = random2(body_parts.size());
+    }
+    while (plural_parts[which_part] != plural);
+
+    return body_parts[which_part];
+}
+
 static string _get_species_insult(const string &species, const string &type)
 {
     string insult;
@@ -4679,65 +4768,14 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     if (msg.find("@random_body_part") != string::npos)
     {
-        vector<string> body_parts;
-        vector<string> body_parts_ext;
-
-        body_parts.push_back("head");
-        body_parts_ext.push_back("head");
-
-        string hands =
-            you.get_mutation_level(MUT_MISSING_HAND) ? you.hand_name(false)
-                                                     : you.hand_name(true);
-        body_parts.push_back(hands);
-        body_parts_ext.push_back(hands);
-
-        string arms = you.arm_name(true);
-        body_parts.push_back(arms);
-        body_parts_ext.push_back(arms);
-
-        if (player_has_feet())
-        {
-            string feet = you.foot_name(true);
-            body_parts.push_back(feet);
-            body_parts_ext.push_back(feet);
-        }
-
-        if (you.has_tail())
-        {
-            body_parts.push_back("tail");
-            body_parts_ext.push_back("tail");
-        }
-
-        if (you.has_blood())
-            body_parts.push_back("blood");
-
-        if (you.has_bones())
-            body_parts.push_back("bones");
-
-        if (player_has_ears())
-        {
-            body_parts.push_back("ears");
-            body_parts_ext.push_back("ears");
-        }
-
-        if (player_has_eyes())
-        {
-            string eyes = you.get_mutation_level(MUT_MISSING_EYE) ? "eye"
-                                                                  : "eyes";
-            body_parts.push_back(eyes);
-            body_parts_ext.push_back(eyes);
-        }
-
-        if (player_has_hair())
-        {
-            body_parts.push_back("hair");
-            body_parts_ext.push_back("hair");
-        }
-
-        msg = replace_all(msg, "@random_body_part@",
-                          body_parts[random2(body_parts.size())]);
-        msg = replace_all(msg, "@random_body_part_external@",
-                          body_parts_ext[random2(body_parts_ext.size())]);
+        msg = replace_all(msg, "@random_body_part_singular@",
+                          random_body_part_name(false, false));
+        msg = replace_all(msg, "@random_body_part_external_singular@",
+                          random_body_part_name(true, false));
+        msg = replace_all(msg, "@random_body_part_plural@",
+                          random_body_part_name(false, true));
+        msg = replace_all(msg, "@random_body_part_external_plural@",
+                          random_body_part_name(true, true));
     }
 
     // Replace with species specific insults.

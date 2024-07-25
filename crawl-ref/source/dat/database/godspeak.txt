@@ -564,7 +564,7 @@ Xom send in the clones
 
 Xom feels like there should be more of you to share with the Dungeon.
 
-Xom gently smashes a mirror over your @random_body_part_external@.
+Xom gently smashes a mirror over your [@random_body_part_external_singular@|@random_body_part_external_plural@].
 %%%%
 # drain your mp, produce magicspawn
 Xom brain drain
@@ -592,7 +592,7 @@ Your magic slithers out of your reeling mind!
 
 Your power and thoughts are overwhelmed by magic-eaters manifest!
 
-Your magic rips itself out through your @random_body_part@!
+Your magic rips itself out through your [@random_body_part_singular@|@random_body_part_plural@]!
 %%%%
 Xom banishment
 
