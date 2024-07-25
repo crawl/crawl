@@ -2879,7 +2879,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
     //////////////////////////////////////////////
     // Body, player species, transformations, etc.
 
-    if (starts_with(species::skin_name(you.species), "bandage")
+    if (get_form()->flesh_equivalent.empty()
+        && starts_with(species::skin_name(you.species), "bandage")
         && you_can_wear(EQ_BODY_ARMOUR, true) != false)
     {
         string str =_get_xom_speech(
