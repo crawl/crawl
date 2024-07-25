@@ -4365,7 +4365,7 @@ string random_body_part_name(bool ext, bool plural)
     // XXX: species::skin_name() can use either a singular or a plural noun, so
     // we can't rely on it.
     string flesh;
-    if (you.petrified())
+    if (you.petrified() || you.species == SP_GARGOYLE)
         flesh = "stone";
     else if (!get_form()->flesh_equivalent.empty())
         flesh = get_form()->flesh_equivalent;
