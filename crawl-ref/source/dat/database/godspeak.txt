@@ -413,6 +413,8 @@ acrobatic_move_name
 
 cartwheel
 
+pirouette
+
 somersault
 %%%%
 Xom unarmed one hand
