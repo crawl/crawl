@@ -4370,7 +4370,7 @@ string random_body_part_name(bool ext, bool plural)
     else if (!get_form()->flesh_equivalent.empty())
         flesh = get_form()->flesh_equivalent;
     else
-        flesh = "flesh";
+        flesh = "skin";
     plural_parts.push_back(false);
     body_parts.push_back(flesh);
 
