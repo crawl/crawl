@@ -4089,6 +4089,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_TAILSLAP:
         // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
         return you.has_tail()
+               // felid tails don't slap
+               && you.species != SP_FELID
                // constricting tails are too slow to slap
                && !you.has_mutation(MUT_CONSTRICTING_TAIL);
 
