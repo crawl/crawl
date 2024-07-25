@@ -4362,16 +4362,24 @@ string random_body_part_name(bool ext, bool plural)
         body_parts.push_back("hair");
     }
 
-    // XXX: species::skin_name() can use either a singular or a plural noun, so
-    // we can't rely on it.
     string flesh;
-    if (you.petrified() || you.species == SP_GARGOYLE)
+    if (you.petrified())
+    {
+        plural_parts.push_back(false);
         flesh = "stone";
+    }
     else if (!get_form()->flesh_equivalent.empty())
+    {
+        plural_parts.push_back(false);
         flesh = get_form()->flesh_equivalent;
+    }
     else
-        flesh = "skin";
-    plural_parts.push_back(false);
+    {
+        string skin = species::skin_name(you.species);
+        // Check plurality as the species::skin_name() comment suggests.
+        plural_parts.push_back(ends_with(skin, "s"));
+        flesh = skin;
+    }
     body_parts.push_back(flesh);
 
     int which_part;
