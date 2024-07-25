@@ -6851,10 +6851,10 @@ void jiyva_end_oozemancy()
 
 static bool _has_upgraded_destruction()
 {
-    return you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED)
-           || you.has_mutation(MUT_MAKHLEB_COC_ALIGNED)
-           || you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED)
-           || you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED);
+    return you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH)
+           || you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC)
+           || you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR)
+           || you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS);
 }
 
 void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
@@ -6865,28 +6865,28 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
         beam.pierce = true;
 
     // Choose beam flavor based on what type of destruction we're wielding
-    if (you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
+    if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
     {
         if (signature_only)
             beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA);
         else
             beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA, BEAM_ELECTRICITY, BEAM_NEG);
     }
-    else if (you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
+    else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
     {
         if (signature_only)
             beam.flavour = random_choose(BEAM_ICE, BEAM_COLD);
         else
             beam.flavour = random_choose(BEAM_ICE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
     }
-    else if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
+    else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
     {
         if (signature_only)
             beam.flavour = random_choose(BEAM_DEVASTATION, BEAM_NEG);
         else
             beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_DEVASTATION, BEAM_NEG);
     }
-    else if (you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
+    else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
     {
         if (signature_only)
             beam.flavour = random_choose(BEAM_ACID, BEAM_FRAG);
@@ -6917,7 +6917,7 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
         case BEAM_NEG:
             beam.name = "wail of negative energy";
             beam.colour = DARKGREY;
-            if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
+            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
                 beam.damage.num = 5;
             break;
 

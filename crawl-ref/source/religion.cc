@@ -2486,15 +2486,15 @@ static void _gain_piety_point()
         }
 
         if (you_worship(GOD_MAKHLEB) && rank == 4
-            && !you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED)
-            && !you.has_mutation(MUT_MAKHLEB_COC_ALIGNED)
-            && !you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED)
-            && !you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH)
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC)
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR)
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
         {
-            mutation_type mut = random_choose(MUT_MAKHLEB_GEH_ALIGNED,
-                                              MUT_MAKHLEB_COC_ALIGNED,
-                                              MUT_MAKHLEB_TAR_ALIGNED,
-                                              MUT_MAKHLEB_DIS_ALIGNED);
+            mutation_type mut = random_choose(MUT_MAKHLEB_DESTRUCTION_GEH,
+                                              MUT_MAKHLEB_DESTRUCTION_COC,
+                                              MUT_MAKHLEB_DESTRUCTION_TAR,
+                                              MUT_MAKHLEB_DESTRUCTION_DIS);
 
             perma_mutate(mut, 1, "Makhleb's blessing");
         }

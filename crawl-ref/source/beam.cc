@@ -5129,7 +5129,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
              || origin_spell == SPELL_GLACIATE && !is_explosion
              || origin_spell == SPELL_UNLEASH_DESTRUCTION
                 && flavour == BEAM_COLD
-                && you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
+                && you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
     {
         if (!mon->has_ench(ENCH_FROZEN))
         {
@@ -5140,7 +5140,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (origin_spell == SPELL_UNLEASH_DESTRUCTION
         && flavour == BEAM_FIRE
-        && you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
+        && you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
     {
         const int dur = 3 + div_rand_round(dmg, 3);
         if (!mon->has_ench(ENCH_FIRE_VULN))

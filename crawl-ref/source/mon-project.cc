@@ -64,13 +64,13 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     // Set up appearance based on our destruction's element
     if (orb_type == MONS_GLOBE_OF_ANNIHILATION)
     {
-        if (you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
+        if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
             mon->colour = LIGHTBLUE;
-        else if (you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
             mon->colour = LIGHTGREY;
-        else if (you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
             mon->colour = LIGHTRED;
-        if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
+        if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
             mon->colour = CYAN;
     }
 

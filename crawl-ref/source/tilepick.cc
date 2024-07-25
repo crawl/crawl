@@ -3927,13 +3927,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_OKAWARU_GIFT_ARMOUR;
     // Makhleb
     case ABIL_MAKHLEB_DESTRUCTION:
-        if (you.has_mutation(MUT_MAKHLEB_COC_ALIGNED))
+        if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
             return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_COC;
-        else if (you.has_mutation(MUT_MAKHLEB_DIS_ALIGNED))
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
             return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_DIS;
-        else if (you.has_mutation(MUT_MAKHLEB_GEH_ALIGNED))
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
             return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_GEH;
-        else if (you.has_mutation(MUT_MAKHLEB_TAR_ALIGNED))
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
             return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_TAR;
         else
             return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;

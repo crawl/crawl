@@ -2597,7 +2597,7 @@ static const mutation_def mut_data[] =
 
 // Makhleb-specific mutations
 
-{ MUT_MAKHLEB_GEH_ALIGNED, 0, 1, mutflag::good, false,
+{ MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good, false,
   "Gehenna destruction",
 
   {"You draw destruction from the endless fires of Gehenna.", "", ""},
@@ -2605,7 +2605,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAKHLEB_COC_ALIGNED, 0, 1, mutflag::good, false,
+{ MUT_MAKHLEB_DESTRUCTION_COC, 0, 1, mutflag::good, false,
   "Cocytus destruction",
 
   {"You draw destruction from the frigid wastes of Cocytus.", "", ""},
@@ -2613,7 +2613,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAKHLEB_TAR_ALIGNED, 0, 1, mutflag::good, false,
+{ MUT_MAKHLEB_DESTRUCTION_TAR, 0, 1, mutflag::good, false,
   "Tartarus destruction",
 
   {"You draw destruction from the wailing grief of Tartarus.", "", ""},
@@ -2621,7 +2621,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_MAKHLEB_DIS_ALIGNED, 0, 1, mutflag::good, false,
+{ MUT_MAKHLEB_DESTRUCTION_DIS, 0, 1, mutflag::good, false,
   "Dis destruction",
 
   {"You draw destruction from the ruthless spite of Dis.", "", ""},
