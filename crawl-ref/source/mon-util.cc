@@ -4362,9 +4362,15 @@ string random_body_part_name(bool ext, bool plural)
         body_parts.push_back("hair");
     }
 
-    string flesh =
-        get_form()->flesh_equivalent.empty() ? species::skin_name(you.species)
-                                             : get_form()->flesh_equivalent;
+    // XXX: species::skin_name() can use either a singular or a plural noun, so
+    // we can't rely on it.
+    string flesh;
+    if (you.petrified())
+        flesh = "stone";
+    else if (!get_form()->flesh_equivalent.empty())
+        flesh = get_form()->flesh_equivalent;
+    else
+        flesh = "flesh";
     plural_parts.push_back(false);
     body_parts.push_back(flesh);
 
