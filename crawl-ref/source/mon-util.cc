@@ -70,6 +70,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"
+#include "transform.h"
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -4360,6 +4361,12 @@ string random_body_part_name(bool ext, bool plural)
         plural_parts.push_back(false);
         body_parts.push_back("hair");
     }
+
+    string flesh =
+        get_form()->flesh_equivalent.empty() ? species::skin_name(you.species)
+                                             : get_form()->flesh_equivalent;
+    plural_parts.push_back(false);
+    body_parts.push_back(flesh);
 
     int which_part;
 
