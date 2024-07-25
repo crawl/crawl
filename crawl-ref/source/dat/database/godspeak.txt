@@ -556,7 +556,7 @@ Xom send in the clones
 
 Xom feels like there should be more of you to share with the Dungeon.
 
-Xom gently smashes a mirror over your @random_body_part@.
+Xom gently smashes a mirror over your @random_body_part_external@.
 %%%%
 # drain your mp, produce magicspawn
 Xom brain drain
