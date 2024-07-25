@@ -4681,7 +4681,9 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     {
         vector<string> body_parts;
 
-        string hands = you.hand_name(true);
+        string hands =
+            you.get_mutation_level(MUT_MISSING_HAND) ? you.hand_name(false)
+                                                     : you.hand_name(true);
         body_parts.push_back(hands);
 
         string arms = you.arm_name(true);
