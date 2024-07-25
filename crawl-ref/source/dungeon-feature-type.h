@@ -362,6 +362,9 @@ enum dungeon_feature_type
     DNGN_CACHE_OF_FRUIT,
     DNGN_CACHE_OF_MEAT,
     DNGN_ORB_DAIS,
+    DNGN_ENTER_CRUCIBLE,
+    DNGN_EXIT_CRUCIBLE,
+
 #endif
 
     NUM_FEATURES

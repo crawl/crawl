@@ -1528,6 +1528,22 @@ crystal_wall_green DNGN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 desolation1 WALL_DESOLATION
 desolation2
 
+crucible_of_flesh0 WALL_CRUCIBLE
+%weight 6
+crucible_of_flesh1
+%weight 10
+crucible_of_flesh2
+crucible_of_flesh3
+crucible_of_flesh4
+crucible_of_flesh5
+%weight 6
+crucible_of_flesh6
+%weight 10
+crucible_of_flesh7
+crucible_of_flesh8
+%weight 6
+crucible_of_flesh9
+
 %variation DNGN_CRYSTAL blue
 crystal_wall_blue DNGN_CRYSTAL_BLUE
 

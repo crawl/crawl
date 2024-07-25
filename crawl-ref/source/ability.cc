@@ -482,7 +482,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MAKHLEB_ANNIHILATION, "Globe of Annihilation",
             0, scaling_cost::fixed(6), 2, LOS_MAX_RANGE,
             {fail_basis::invo, 20, 5, 20}, abflag::dir_or_target },
-
         { ABIL_MAKHLEB_INFERNAL_SERVANT, "Infernal Servant",
             0, scaling_cost::fixed(8), 4, -1, {fail_basis::invo, 40, 5, 20}},
         { ABIL_MAKHLEB_INFERNAL_LEGION, "Infernal Legion",
@@ -493,6 +492,9 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_MAKHLEB_BRAND_SELF_3, "Brand Self #3",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER, "Vessel of Slaughter",
+            0, 0, 12, -1,
+            {fail_basis::invo, 75, 5, 25}, abflag::none },
 
         // Sif Muna
         { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
@@ -1244,6 +1246,11 @@ ability_type fixup_ability(ability_type ability)
         else if (you.has_mutation(MUT_MAKHLEB_MARK_LEGION))
             return ABIL_MAKHLEB_INFERNAL_LEGION;
         return ability;
+
+    case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
+        if (you.has_mutation(MUT_MAKHLEB_MARK_FANATIC))
+            return ability;
+        return ABIL_NON_ABILITY;
 
     default:
         return ability;
@@ -3463,6 +3470,16 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_MAKHLEB_INFERNAL_LEGION:
         return makhleb_infernal_legion(fail);
+
+    case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
+        if (player_in_branch(BRANCH_CRUCIBLE))
+        {
+            mpr("Mahkleb denies you. Endure the Crucible first!");
+            return spret::abort;
+        }
+        fail_check();
+        makhleb_vessel_of_slaughter();
+        break;
 
     case ABIL_MAKHLEB_BRAND_SELF_1:
     case ABIL_MAKHLEB_BRAND_SELF_2:

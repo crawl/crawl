@@ -1,0 +1,277 @@
+##############################################################################
+#
+# The Crucible of Flesh. (regret-index.)
+#
+# Accessed solely as a punishment, whether as downside for Makhleb's
+# Mark of the Fanatic or as part of Makhleb's wrath. This portal solely
+# functions as an arena to slay mortals and dodge demons until the player
+# does enough torture work to convince Makhleb to spawn a portal out.
+#
+##############################################################################
+
+{{
+function crucible_original_subvault_setup(e, branch)
+  e.tags("unrand")
+  e.tags("allow_dup")
+  if branch == "Gehenna" then
+    e.ftile(".'sS = floor_rough_red")
+    e.tile("x = wall_zot_red")
+  elseif branch == "Cocytus" then
+    e.ftile(".'sS = floor_frozen")
+    e.tile("x = wall_ice")
+  elseif branch == "Tartarus" then
+    e.kfeat("g = metal_statue")
+    e.colour("g = smoke")
+    e.ftile(".'sSgG = floor_green_bones")
+    e.tile("G = dngn_gravestone")
+    e.tile("g = soul_conduit")
+    e.tile("c = wall_cobalt_stone")
+  else
+    e.ftile(".'sS+ = floor_iron")
+    e.tile("v = dngn_metal_iron")
+  end
+
+  -- Choices are biased towards the most common Dungeon monsters as well as
+  -- player species that aren't to be used as actual monsters.
+  local n = "never_decay"
+  e.kitem("s : " .. n .. " human corpse / " .. n .. " kobold corpse / " ..
+                    n .. " orc corpse / " .. n .. " naga corpse / " ..
+                    n .. " merfolk corpse / " .. n .. " merfolk corpse")
+  e.kitem("S : " .. n .. " armataur corpse / " .. n .. " barachi corpse / " ..
+                    n .. " demonspawn corpse / " .. n .. " dwarf corpse / " ..
+                    n .. " felid corpse / " .. n .. " formicid corpse / " ..
+                    n .. " ghoul corpse / " .. n .. " octopode corpse / " ..
+                    n .. " oni corpse")
+  e.kprop("'sS = bloody")
+  e.kprop("xcv+ = bloody / nothing w:70")
+  e.nsubst(". = 2:s / 2 = sS' / *:.")
+end
+}}
+default-depth: Crucible
+
+NAME:     regret_index_crucible_original
+TAGS:     no_item_gen no_pool_fixup allow_dup
+PLACE:    Crucible
+ORIENT:   encompass
+KFEAT:    M = altar_makhleb
+KFEAT:    ^ = teleport trap
+SHUFFLE:  BCDE
+SUBVAULT: B : crucible_original_gehenna
+SUBVAULT: C : crucible_original_cocytus
+SUBVAULT: D : crucible_original_tartarus
+SUBVAULT: E : crucible_original_dis
+NSUBST:   M = 2:^ / *:M
+FTILE:    M^ = floor_cage
+TILE:     X = wall_crucible
+: set_border_fill_type('permarock_wall')
+: set_feature_name("metal_statue", "soul conduit")
+: set_feature_name("granite_statue", "gravestone")
+: set_feature_name("permarock_wall", "unnaturally hard bloodstone wall")
+MAP
+         XXXXXXXXX    XXXXXXXXX
+        XXXXXXXXXXXXXXXXXXXXXXXX
+       XXXXXXXXXXXXXXXXXXXXXXXXXX
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  XXXXXXXXXXXBBBBXXXXXXCCCCXXXXXXXXXXX
+ XXXXXXXXXXXBBBBBBXXXXCCCCCCXXXXXXXXXXX
+XXXXXXXXXXXBBBBBBBBXXCCCCCCCCXXXXXXXXXXX
+XXXXXXXXXXMEEEEEEEEEBBBBBBBBBMXXXXXXXXXX
+XXXXXXXXXBEEEEBBEEEEBBBBCCBBBBCXXXXXXXXX
+XXXXXXXXBBEEEBBBBEEEBBBCCCCBBBCCXXXXXXXX
+XXXXXXXBBBEEBBBBBBEEBBCCCCCCBBCCCXXXXXXX
+XXXXXXXBBBEBBBBBBBBEBCCCCCCCCBCCCXXXXXXX
+XXXXXXXBBBEBBBBBBBBEBCCCCCCCCBCCCXXXXXXX
+XXXXXXXBBBEEBBBBBBEEBBCCCCCCBBCCCXXXXXXX
+XXXXXXXXBBEEEBBBBEEEBBBCCCCBBBCCXXXXXXXX
+ XXXXXXXXBEEEEBBEEEEBBBBCCBBBBCXXXXXXXX
+ XXXXXXXXXEEEEEEEEEX^BBBBBBBBBXXXXXXXXX
+ XXXXXXXXXDDDDDDDDD^XCCCCCCCCCXXXXXXXXX
+ XXXXXXXXEDDDDEEDDDDCCCCDDCCCCDXXXXXXXX
+XXXXXXXXEEDDDEEEEDDDCCCDDDDCCCDDXXXXXXXX
+XXXXXXXEEEDDEEEEEEDDCCDDDDDDCCDDDXXXXXXX
+XXXXXXXEEEDEEEEEEEEDCDDDDDDDDCDDDXXXXXXX
+XXXXXXXEEEDEEEEEEEEDCDDDDDDDDCDDDXXXXXXX
+XXXXXXXEEEDDEEEEEEDDCCDDDDDDCCDDDXXXXXXX
+XXXXXXXXEEDDDEEEEDDDCCCDDDDCCCDDXXXXXXXX
+XXXXXXXXXEDDDDEEDDDDCCCCDDCCCCDXXXXXXXXX
+XXXXXXXXXXMDDDDDDDDDCCCCCCCCCMXXXXXXXXXX
+XXXXXXXXXXXEEEEEEEEXXDDDDDDDDXXXXXXXXXXX
+ XXXXXXXXXXXEEEEEEXXXXDDDDDDXXXXXXXXXXX
+  XXXXXXXXXXXEEEEXXXXXXDDDDXXXXXXXXXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+       XXXXXXXXXXXXXXXXXXXXXXXXXX
+        XXXXXXXXXXXXXXXXXXXXXXXX
+         XXXXXXXXX    XXXXXXXXX
+ENDMAP
+
+NAME:    index_crucible_gehenna_1
+TAGS:    crucible_original_gehenna
+SUBST:   A : ...l, B : ...x
+: crucible_original_subvault_setup(_G, "Gehenna")
+MAP
+lx......x
+xl..  ..lx    xx    l
+...    ...   lAAl   lx
+.B      ..  xx..xx  l.x
+x        x ...ll... ...
+x        x ...ll... ...
+..      B.  xx..xx  l.x
+...    ...   lAAl   lx
+x...  ..lx    xx    l
+ x......xl
+           lll..lll
+            x....x
+             x..x
+ENDMAP
+
+NAME:    index_crucible_gehenna_2
+TAGS:    crucible_original_gehenna
+WEIGHT:  5
+SUBST:   A : llx, B : xxl, C : l..
+: crucible_original_subvault_setup(_G, "Gehenna")
+MAP
+x........
+.C.x  x.x.    x.     .
+...    ...   x..B    ..
+.x      x.  .l..x.   All
+.        . ...x....  ...
+.        . ....x...  ...
+.x      x.  .x..l.   All
+...    ...   B..x    ..
+.x.x  x.C.    .x     .
+ ........x
+           ..A..A..
+            .l..l.
+             l..l
+ENDMAP
+
+NAME:    index_crucible_cocytus_1
+TAGS:    crucible_original_cocytus
+SUBST:   a : xx., w : wwW
+: crucible_original_subvault_setup(_G, "Cocytus")
+MAP
+...xxxx..
+....  ....    ..    .
+.x.    .x.   .xx.   .x
+..      ..  ..xx..  .ww
+.        . a.wxxw.a xww
+.        . a.wxxw.a xww
+..      ..  ..xx..  .ww
+.x.    .x.   .xx.   .x
+....  ....    ..    .
+ ..x..x..x
+           ...xx...
+            xwwwwx
+             wwww
+ENDMAP
+
+NAME:    index_crucible_cocytus_2
+TAGS:    crucible_original_cocytus
+WEIGHT:  5
+SUBST:   A : xxx., B : ..w, C : ..w, w : wwW
+: crucible_original_subvault_setup(_G, "Cocytus")
+MAP
+.........
+x...  ...x    ..    .
+Ax.    .xA   ....   .w
+..      ..  .BxxC.  .xx
+.        . ..xwwx.. Wxx
+.        . ..xwwx.. wxx
+..      ..  .CxxB.  .xx
+Ax.    .xA   ....   .w
+x...  ...x    ..    .
+ .........
+           ...WW...
+            wxxxxw
+             xxxx
+ENDMAP
+
+NAME:    index_crucible_tartarus_1
+TAGS:    crucible_original_tartarus
+SUBST:   A : cccG, g : GGg
+: crucible_original_subvault_setup(_G, "Tartarus")
+MAP
+....cc...
+.g..  ..G.    ..    c
+...    ...   .cc.   ..
+..      ..  ..Ac..  .G.
+.        . .cccccc. ...
+.        . .cccccc. ...
+..      ..  ..cA..  .g.
+...    ...   .cc.   ..
+.G..  ..g.    ..    c
+ ...cc....
+           c......c
+            .G..g.
+             ....
+ENDMAP
+
+NAME:    index_crucible_tartarus_2
+TAGS:    crucible_original_tartarus
+WEIGHT:  5
+SUBST:   g : GGg, A : c..
+: crucible_original_subvault_setup(_G, "Tartarus")
+MAP
+g......A.
+cc..  ..G.    ..    .
+cc.    ..A   .cc.   c.
+..      ..  ..cc..  .cg
+.        . cc....cc ...
+.        . cc....cc ...
+..      ..  ..cc..  .cG
+A..    .cc   .cc.   c.
+.G..  ..cc    ..    .
+ .A......g
+           .c....c.
+            .c..c.
+             G..g
+ENDMAP
+
+NAME:    index_crucible_dis_1
+TAGS:    crucible_original_dis
+SHUFFLE: AaBb / AaBb / BbAa
+SUBST:   - : ++++', A = v, a = +, Bb = ., c : vv., d : vvv.
+: crucible_original_subvault_setup(_G, "Dis")
+MAP
+.d.v..c.v
+d...  ...v    AA     v
+...    ...   .A..    vv
+v.      .c  ..a...   -'v
+.        . BBb++bBB  -..
+.        . B..++..B  -..
+c.      .v  ..a...   -'v
+...    ...   .A..    vv
+v...  ...d    AA     v
+ v.c..v.d.
+           vv----vv
+            v'..'v
+             v..v
+ENDMAP
+
+NAME:    index_crucible_dis_2
+TAGS:    crucible_original_dis
+WEIGHT:  5
+SHUFFLE: AB / AB / AB / BA
+SUBST:   + : +++', A = +, B = v, C : v.., D : v..
+: crucible_original_subvault_setup(_G, "Dis")
+MAP
+D........
+.vCv  ....    ..    +
+.Cv    ...   BAAB   +'
+.v      ..  Bv..vB  +.'
+.        . .A....A. vvv
+.        . .A....A. vvv
+..      v.  Bv..vB  +.'
+...    vC.   BAAB   +'
+....  vCv.    ..    +
+ ........D
+           +++vv+++
+            '.vv.'
+             'vv'
+ENDMAP

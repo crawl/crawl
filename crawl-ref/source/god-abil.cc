@@ -101,6 +101,8 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tile-env.h"
+ #include "rltiles/tiledef-dngn.h"
  #include "rltiles/tiledef-main.h"
  #include "rltiles/tiledef-player.h"
 #endif
@@ -7281,4 +7283,226 @@ void makhleb_infernal_legion_tick(int delay)
     }
 
     you.props[NEXT_INFERNAL_LEGION_KEY].get_int() -= delay;
+}
+
+void makhleb_vessel_of_slaughter()
+{
+    const int boost = div_rand_round((100 - (you.hp * 100 / you.hp_max)) * 2, 3);
+    you.props[MAKHLEB_SLAUGHTER_BOOST_KEY] = boost;
+
+    mpr("You offer yourself as an instrument of Makhleb's will and feel "
+        "overwhelming power flowing through you!");
+
+    transform(100, transformation::slaughter);
+    you.transform_uncancellable = true;
+
+    bolt damnation;
+    zappy(ZAP_CALL_DOWN_DAMNATION, 100, false, damnation);
+    damnation.thrower = KILL_YOU;
+    damnation.source_id = MID_PLAYER;
+    damnation.is_explosion = true;
+    damnation.ex_size = 3;
+    damnation.damage = dice_def(3, 7 + you.experience_level);
+    damnation.source = you.pos();
+    damnation.target = you.pos();
+    damnation.explode(true, true);
+}
+
+// Similar to servant list, but weights of lategame options are a bit tweaks,
+// and there are no cacodemons (mutations are annoying and they tear up the
+// Crucible). (Also there are some weak demons for earlygame)
+static const vector<random_pick_entry<monster_type>> _makhleb_torturers =
+{
+  {  -5,  3, 200, FALL, MONS_WHITE_IMP },
+  {  -4,  3, 200, SEMI, MONS_IRON_IMP },
+  {  -3,  3, 200, SEMI, MONS_UFETUBUS },
+  {  0,  8,  100, SEMI, MONS_ICE_DEVIL },
+  {  2,  10,  120, SEMI, MONS_ORANGE_DEMON },
+  {  2,  12, 110, SEMI, MONS_RUST_DEVIL },
+  {  3,  12, 145, SEMI, MONS_RED_DEVIL },
+  {  4,  14, 145, SEMI, MONS_HELLWING },
+  {  6,  15, 100, SEMI, MONS_SOUL_EATER },
+  {  6,  17, 150, SEMI, MONS_YNOXINUL },
+  {  6,  21, 180, SEMI, MONS_SMOKE_DEMON },
+  {  8,  18, 150, SEMI, MONS_SUN_DEMON },
+  {  8,  19, 160, SEMI, MONS_SIXFIRHY },
+  { 11,  27,  155, SEMI, MONS_BLIZZARD_DEMON },
+  { 15,  27,  150, SEMI, MONS_GREEN_DEATH },
+  { 20,  27,  185, SEMI, MONS_BALRUG },
+  { 20,  32,  220, PEAK, MONS_EXECUTIONER },
+  { 23,  35,  160, RISE, MONS_TZITZIMITL },
+  { 23,  35,  180, RISE, MONS_ICE_FIEND },
+  { 24,  39,  300, RISE, MONS_BRIMSTONE_FIEND },
+  { 27,  41,  180, RISE, MONS_HELL_SENTINEL },
+};
+
+static void _spawn_crucible_demon(bool allow_in_sight)
+{
+    int pow = (you.experience_level - 7) * 5 / 4;
+
+    if (runes_in_pack() > 3)
+        pow += (runes_in_pack() - 3) * 2 / 3;
+
+    if (coinflip())
+        pow = pow * 2 / 3;
+    else if (one_chance_in(4))
+        pow += 3;
+
+    monster_picker picker;
+    monster_type mon_type = picker.pick(_makhleb_torturers, pow, MONS_RED_DEVIL);
+
+    mgen_data mg(mon_type, BEH_HOSTILE, coord_def(-1, -1), MHITNOT,
+                  MG_FORBID_BANDS, GOD_MAKHLEB);
+    mg.extra_flags |= MF_NO_REWARD | MF_HARD_RESET;
+
+    if (!allow_in_sight)
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+    else
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+
+    mons_place(mg);
+}
+
+// Just to gently prevent overly strong species monsters from spawning very early
+// (since the player does want to actually kill them reasonably quickly)
+static const vector<random_pick_entry<monster_type>> _crucible_victims =
+{
+  {  0,  27, 500, FALL, MONS_KOBOLD },
+  {  0,  27, 500, FALL, MONS_GOBLIN },
+  {  2,  27, 500, SEMI, MONS_GNOLL },
+  {  2,  27, 500, SEMI, MONS_ORC },
+  {  9,  27, 900, FLAT, MONS_HUMAN },
+  {  9,  27, 300, FLAT, MONS_MERFOLK },
+  {  9,  27, 200, FLAT, MONS_NAGA },
+  {  9,  27, 200, FLAT, MONS_SPRIGGAN },
+  {  9,  27, 300, FLAT, MONS_TROLL },
+  {  11, 27, 200, FLAT, MONS_GARGOYLE },
+  {  12, 27, 300, FLAT, MONS_DEMONSPAWN },
+  {  15, 27, 200, FLAT, MONS_MINOTAUR },
+  {  16, 27, 200, RISE, MONS_DRACONIAN },
+  {  17, 27, 200, FLAT, MONS_TENGU_WARRIOR },
+  {  17, 27,  80, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
+};
+
+static void _spawn_crucible_victim(bool near_player_okay = false)
+{
+    monster_picker servant_picker;
+    monster_type victim_type = servant_picker.pick(_crucible_victims,
+                                                   you.experience_level, MONS_HUMAN);
+    if (victim_type == MONS_DRACONIAN)
+        victim_type = random_draconian_monster_species();
+
+    mgen_data mg(victim_type, BEH_HOSTILE, coord_def(-1, -1), MHITYOU,
+                  MG_FORBID_BANDS, GOD_NO_GOD);
+    mg.extra_flags |= MF_NO_REWARD;
+
+    if (!near_player_okay)
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+
+    if (monster* victim = mons_place(mg))
+    {
+        victim->destroy_inventory();
+        victim->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, INFINITE_DURATION));
+
+        // Mostly meaningless, but flavorful, signs of torture
+        enchant_type ench = random_choose(ENCH_CORROSION,
+                                          ENCH_BLIND,
+                                          ENCH_BARBS,
+                                          ENCH_WEAK);
+        victim->add_ench(mon_enchant(ench, 0, nullptr, INFINITE_DURATION));
+
+        victim->hit_points = random_range(victim->hit_points * 3 / 10,
+                                          victim->hit_points * 8 / 10);
+
+        victim->props[MAKHLEB_CRUCIBLE_VICTIM_KEY] = true;
+        victim->props[ALWAYS_CORPSE_KEY] = true;
+        victim->flags |= MF_NO_REGEN;
+    }
+}
+
+void makhleb_enter_crucible_of_flesh(int debt)
+{
+    stop_delay(true);
+    down_stairs(DNGN_ENTER_CRUCIBLE);
+
+    const int num_enemies = random_range(3, 5);
+    const int num_near_enemies = random_range(1, 2);
+    const int num_victims = random_range(9, 13);
+
+    for (int i = 0; i < num_enemies; ++i)
+        _spawn_crucible_demon(false);
+
+    for (int i = 0; i < num_near_enemies; ++i)
+        _spawn_crucible_demon(true);
+
+    for (int i = 0; i < num_victims; ++i)
+        _spawn_crucible_victim(true);
+
+    simple_god_message(" says \"Flay and bleed and purify yourself, if you wish"
+                       " to be found worthy of leaving this place!\"", false,
+                       GOD_MAKHLEB);
+
+    mpr("(Slaughtering mortal victims (and sometimes even demons) will "
+        "eventually satisfy Makhleb and create an exit.)");
+
+    you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int() = debt;
+}
+
+void makhleb_handle_crucible_of_flesh()
+{
+    if (!player_in_branch(BRANCH_CRUCIBLE))
+        return;
+
+    // Count number of hostiles still alive.
+    int num_hostiles = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!mi->wont_attack() && mi->god == GOD_MAKHLEB)
+            ++num_hostiles;
+    }
+
+    const int max_demons = 7;
+    if (num_hostiles < max_demons)
+    {
+        int gen = random_range(1, 2);
+        if (num_hostiles < 3)
+            ++gen;
+
+        gen = min(gen, (max_demons - num_hostiles));
+        for (int i = 0; i < gen; ++i)
+            _spawn_crucible_demon(coinflip());
+    }
+}
+
+void makhleb_crucible_kill(monster& victim)
+{
+    // Immediately replace victims as they are killed, so that the player can
+    // go hunt more.
+    if (victim.props.exists(MAKHLEB_CRUCIBLE_VICTIM_KEY))
+        _spawn_crucible_victim();
+    // Demons have only 50% chance of reducing debt when they die.
+    else if (coinflip())
+        return;
+
+    // Deduct from the player's 'debt' and spawn an exit if they have killed enough.
+    if (--you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int() == 0)
+    {
+        coord_def pos;
+        while (pos.origin() || cell_is_solid(pos)
+               || grid_distance(you.pos(), pos) < 12)
+        {
+            pos = random_in_bounds();
+        }
+
+        dungeon_terrain_changed(pos, DNGN_EXIT_CRUCIBLE);
+        simple_god_message(" acknowledges your contrition and permits you depart the Crucible.",
+                           false, GOD_MAKHLEB);
+
+        env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
+#ifdef USE_TILE
+        tile_env.bk_bg(pos) = TILE_DNGN_PORTAL;
+#endif
+
+        return;
+    }
 }

@@ -1192,6 +1192,13 @@ defaced; not a single distinguishing feature remains.
 A broken fleshy orifice
 
 It seems to be oozing quietly. Best not to touch it.
+%%%%
+# Crucible of Flesh
+An unnaturally hard bloodstone wall
+
+An indestructible bulwark, wrought from blood and tempered in the suffering of
+mortal lives beyond count.
+%%%%
 ########################################################################
 ### Sprint
 ########################################################################

@@ -2691,6 +2691,14 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_MAKHLEB_MARK_FANATIC, 0, 1, mutflag::makhleb, false,
+  "Mark of the Fanatic",
+
+  {"You bear the Mark of the Fanatic.", "", ""},
+  {"You will become an instrument of Makhleb's will.", "", ""},
+  {"", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

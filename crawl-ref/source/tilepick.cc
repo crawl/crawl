@@ -448,6 +448,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_BAILEY:
     case DNGN_EXIT_DESOLATION:
     case DNGN_EXIT_ARENA:
+    case DNGN_EXIT_CRUCIBLE:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
@@ -3942,6 +3943,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
     case ABIL_MAKHLEB_INFERNAL_LEGION:
         return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
+    case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
+        return TILEG_ABILITY_MAKHLEB_VESSEL_OF_SLAUGHTER;
     // Sif Muna
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;
@@ -4239,6 +4242,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_DESOLATION;
     case BRANCH_ARENA:
         return TILE_DNGN_ALTAR_OKAWARU;
+    case BRANCH_CRUCIBLE:
+        return TILE_DNGN_ALTAR_MAKHLEB;
 
     default:
         return TILEG_ERROR;

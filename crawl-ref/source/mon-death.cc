@@ -2137,6 +2137,12 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     const bool pet_kill = _is_pet_kill(killer, killer_index);
 
+    if (player_in_branch(BRANCH_CRUCIBLE) && !summoned
+        && (YOU_KILL(killer) || pet_kill))
+    {
+        makhleb_crucible_kill(mons);
+    }
+
     bool did_death_message = false;
 
     // We do some of these BEFORE checking for explosions from inner flame,
@@ -2549,24 +2555,26 @@ item_def* monster_die(monster& mons, killer_type killer,
             const bool valid_heal_source = gives_player_xp
                 && !mons_is_object(mons.type);
             // Chance scales from 30% at 1* to 80% at 6*
-            const bool can_divine_heal = valid_heal_source
+            const bool can_divine_heal =
+                (valid_heal_source
+                    || you_worship(GOD_MAKHLEB)
+                        && player_in_branch(BRANCH_CRUCIBLE)
+                        && mons_class_gives_xp(mons.type)
+                        && !summoned
+                        && !fake_abjure
+                        && !mons.friendly())
                 && !player_under_penance()
                 && (x_chance_in_y(50 * ((min(piety_breakpoint(5), (int)you.piety) - 30)
                                  / (piety_breakpoint(5) - piety_breakpoint(0))) + 30, 100)
                     || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
-            if (valid_heal_source
-                && you.has_mutation(MUT_DEVOUR_ON_KILL)
-                && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                && coinflip())
-            {
-                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-            }
-
             if (can_divine_heal && have_passive(passive_t::restore_hp))
             {
                 hp_heal += (1 + mons.get_experience_level()) / 2
                         + random2(mons.get_experience_level() / 2);
+
+                if (you.form == transformation::slaughter)
+                    hp_heal *= 2;
             }
             if (can_divine_heal
                 && have_passive(passive_t::restore_hp_mp_vs_evil)
@@ -2577,6 +2585,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             if (can_divine_heal && have_passive(passive_t::mp_on_kill))
                 mp_heal += 1 + random2(mons.get_experience_level() / 2);
+
+            if (valid_heal_source
+                && you.has_mutation(MUT_DEVOUR_ON_KILL)
+                && mons.holiness() & (MH_NATURAL | MH_PLANT)
+                && coinflip())
+            {
+                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+            }
 
             if (hp_heal && you.hp < you.hp_max
                 && !you.duration[DUR_DEATHS_DOOR])

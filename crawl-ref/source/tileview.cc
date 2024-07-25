@@ -296,6 +296,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_CRUCIBLE:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
+
     case NUM_BRANCHES:
     case GLOBAL_BRANCH_INFO:
         break;

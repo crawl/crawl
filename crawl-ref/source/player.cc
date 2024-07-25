@@ -6796,6 +6796,8 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
         {
             holi = MH_NONLIVING;
         }
+        else if (f == transformation::slaughter)
+            holi = MH_DEMONIC;
     }
 
     // Petrification takes precedence over base holiness and lich form
@@ -6993,6 +6995,9 @@ int player::willpower() const
 
 int player_willpower(bool temp)
 {
+    if (temp && you.form == transformation::slaughter)
+        return WILL_INVULN;
+
     if (player_equip_unrand(UNRAND_FOLLY))
         return 0;
 

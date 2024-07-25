@@ -1039,3 +1039,24 @@ Destr+++ status
 If you use it again, it will unleash a salvo of additional bolts aimed at random
 targets and this bonus will reset.
 %%%%
+Slaughter status
+
+You are an instrument of Makhleb's destructive will. Your power and defenses are
+greatly enhanced, but you must endure the Crucible of Flesh once this effect
+ends.
+%%%%
+Pact status
+
+Makhleb has come to collect on certain promises made to them.
+{{ if you.religion == "Makhleb" then
+        return "Fulfill your oath as their instrument by slaying the terrified " ..
+               "mortals that have been gathered here and they may grant you " ..
+               "freedom once again."
+   else
+        return "Fight and bleed and you may be granted freedom once again."
+    end}}
+%%%%
+Escape! status
+
+A path out of the Crucible has opened. Find it and claim your freedom again. For
+a time.

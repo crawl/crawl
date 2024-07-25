@@ -188,6 +188,9 @@ force_more_message += allow you to induct
 
 force_more_message += Beogh speaks to you:
 
+# Crucible exit notification
+force_more_message += Makhleb acknowledges your contrition
+
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock
 

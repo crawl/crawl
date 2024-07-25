@@ -88,6 +88,9 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define MAKHLEB_OFFERED_MARKS_KEY "makhleb_offered_marks"
 #define MAKHLEB_ATROCITY_STACKS_KEY "makhleb_atrocity_stacks"
 #define MAKHLEB_ATROCITY_MAX_STACKS 3
+#define MAKHLEB_SLAUGHTER_BOOST_KEY "makhleb_slaughter_slaying"
+#define MAKHLEB_CRUCIBLE_VICTIM_KEY "makhleb_crucible_victim"
+#define MAKHLEB_CRUCIBLE_DEBT_KEY "makhleb_crucible_debt"
 
 struct bolt;
 class stack_iterator;
@@ -255,3 +258,8 @@ void makhleb_infernal_servant();
 void makhleb_inscribe_mark(mutation_type mark);
 spret makhleb_infernal_legion(bool fail);
 void makhleb_infernal_legion_tick(int delay);
+void makhleb_vessel_of_slaughter();
+
+void makhleb_enter_crucible_of_flesh(int debt);
+void makhleb_handle_crucible_of_flesh();
+void makhleb_crucible_kill(monster& victim);

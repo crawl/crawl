@@ -964,6 +964,13 @@ without pause, increasing in both damage and health cost. Upon using it a fourth
 time in a row, you will automatically unleash a wild barrage of additional bolts
 aimed at random targets and reset this boost.
 %%%%
+Mark of the Fanatic mutation
+
+Grants you the Vessel of Slaughter ability, allowing you to transform into a
+powerful demonic avatar with greatly boosted offense and defense for a short
+period of time, in exchange for being dragged down into the Crucible of Flesh
+afterward and made to fight for your freedom.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

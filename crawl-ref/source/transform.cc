@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "english.h"
 #include "env.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning
@@ -1066,6 +1067,32 @@ public:
 };
 #endif
 
+class FormSlaughter : public Form
+{
+private:
+    FormSlaughter() : Form(transformation::slaughter) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSlaughter);
+public:
+    static const FormSlaughter &instance() { static FormSlaughter inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Makhleb calls their payment due...";
+    }
+
+    /**
+     * % screen description
+     */
+    string get_long_name() const override
+    {
+        const int boost = you.props[MAKHLEB_SLAUGHTER_BOOST_KEY].get_int();
+        return make_stringf("vessel of slaughter (+%d%% damage done)", boost);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1102,6 +1129,7 @@ static const Form* forms[] =
     &FormBeast::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
+    &FormSlaughter::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1655,6 +1683,9 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
     if (which_trans == transformation::none)
         return UFR_GOOD; // everything can become itself
 
+    if (which_trans == transformation::slaughter)
+        return UFR_GOOD; // Godly power can transcend such things as unlife
+
     if (!you.has_mutation(MUT_VAMPIRISM))
         return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
 
@@ -2102,6 +2133,9 @@ void untransform(bool skip_move)
     you.turn_is_over = true;
     if (you.transform_uncancellable)
         you.transform_uncancellable = false;
+
+    if (old_form == transformation::slaughter)
+        makhleb_enter_crucible_of_flesh(15);
 }
 
 void return_to_default_form()

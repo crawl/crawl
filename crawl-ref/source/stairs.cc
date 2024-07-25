@@ -216,7 +216,10 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         return;
 
     if (feat_is_portal(stair))
-        mpr("The world spins around you as you enter the gateway.");
+    {
+        if (stair != DNGN_ENTER_CRUCIBLE)
+            mpr("The world spins around you as you enter the gateway.");
+    }
     else if (feat_is_escape_hatch(stair))
     {
         if (going_up)

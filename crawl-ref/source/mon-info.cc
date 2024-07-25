@@ -21,6 +21,7 @@
 #include "env.h"
 #include "fight.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -809,6 +810,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->behaviour == BEH_WITHDRAW)
         mb.set(MB_RETREATING);
 
+    if (m->props.exists(MAKHLEB_CRUCIBLE_VICTIM_KEY))
+        mb.set(MB_FROZEN_IN_TERROR);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -1452,6 +1456,10 @@ vector<string> monster_info::attributes() const
     {
         if (is(name.flag) && !_hide_moninfo_flag(name.flag))
         {
+            // Hide this for better flavour messaging
+            if (name.flag == MB_PARALYSED && is(MB_FROZEN_IN_TERROR))
+                continue;
+
             // TODO: just use `do_mon_str_replacements`?
             v.push_back(replace_all(name.long_singular,
                                     "@possessive@",

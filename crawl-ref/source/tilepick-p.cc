@@ -508,6 +508,18 @@ tileidx_t tileidx_player()
         }
         break;
     }
+    case transformation::slaughter:
+    {
+        switch (you.species)
+        {
+        case SP_ARMATAUR: ch = TILEP_TRAN_SLAUGHTER_ARMATAUR;  break;
+        case SP_NAGA:     ch = TILEP_TRAN_SLAUGHTER_NAGA;      break;
+        case SP_FELID:    ch = TILEP_TRAN_SLAUGHTER_FELID;     break;
+        case SP_OCTOPODE: ch = TILEP_TRAN_SLAUGHTER_OCTOPODE;  break;
+        default:          ch = TILEP_TRAN_SLAUGHTER_HUMANOID;  break;
+        }
+        break;
+    }
     // no special tile
     case transformation::blade_hands:
     case transformation::none:

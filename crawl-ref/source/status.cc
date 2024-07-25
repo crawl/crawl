@@ -874,6 +874,29 @@ bool fill_status_info(int status, status_info& inf)
     }
     break;
 
+    case STATUS_CRUCIBLE_DEBT:
+    {
+        if (player_in_branch(BRANCH_CRUCIBLE))
+        {
+            inf.light_text = "Pact";
+            const int debt = you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int();
+            if (debt > 20)
+                inf.light_colour = MAGENTA;
+            else if (debt > 10)
+                inf.light_colour = RED;
+            else if (debt > 5)
+                inf.light_colour = LIGHTRED;
+            else if (debt > 0)
+                inf.light_colour = YELLOW;
+            else
+            {
+                inf.light_text = "Escape!";
+                inf.light_colour = WHITE;
+            }
+        }
+        break;
+    }
+
     default:
         if (!found)
         {

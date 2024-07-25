@@ -448,5 +448,25 @@ static const form_entry formdata[] =
     { { "glow", "You glow with magical radiation, making you easy to see." } }
 },
 
+{
+    transformation::slaughter, MONS_BRIMSTONE_FIEND, "Slaughter", "slaughter-form", "slaughter",
+    "a vessel of demonic slaughter.",
+    0, 0, NUM_TALISMANS,
+    EQF_NONE, mrd(MR_RES_POISON, 1) | mrd(MR_RES_NEG, 3),
+    FormDuration(50, PS_DOUBLE, 100), 0, 0, SIZE_CHARACTER, 10,
+    {}, true, {},
+    SPWPN_NORMAL, LIGHTRED, "", DEFAULT_VERBS,
+    FC_ENABLE, FC_FORBID, true, false,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT,
+    "", 0, "", "", "", "",
+    { { "half damage", "Damage taken is decreased by 1/3."},
+      { "doubled heal-on-kills", "Healing from kills is doubled."},
+      { "unshakeable will", "Your willpower is unshakeable." },
+      { "torment immunity", "You are immune to unholy pain and torment."},
+    },
+    { { "demonic bargain", "You will endure the Crucible once your slaughter is complete." },
+    }
+},
+
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);
