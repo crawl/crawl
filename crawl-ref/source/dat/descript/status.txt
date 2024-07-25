@@ -978,8 +978,8 @@ and will remain so as long as you keep swinging and for a short while afterward.
 %%%%
 -Gavotte status
 
-You have recently cast Gell's Gavotte, which has destabilised gravity around
-you. You cannot cast it again until gravity settles back down.
+Gravity around you is still unstable, and you cannot cast Gell's Gavotte again
+until it settles back down.
 %%%%
 Fusillade status
 
