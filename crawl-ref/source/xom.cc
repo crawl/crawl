@@ -2928,12 +2928,19 @@ static void _xom_pseudo_miscast(int /*sever*/)
     }
 
     {
-        string str = _get_xom_speech("random body part");
+        string str = _get_xom_speech("random body part singular");
 
         str = replace_all(str, "@random_body_part_singular@",
                           random_body_part_name(false, false));
         str = replace_all(str, "@random_body_part_external_singular@",
                           random_body_part_name(true, false));
+
+        messages.push_back(str);
+    }
+
+    {
+        string str = _get_xom_speech("random body part plural");
+
         str = replace_all(str, "@random_body_part_plural@",
                           random_body_part_name(true, true));
         str = replace_all(str, "@random_body_part_external_plural@",
