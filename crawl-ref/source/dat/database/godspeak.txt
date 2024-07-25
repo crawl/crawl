@@ -423,6 +423,12 @@ Your tail briefly retracts into your body.
 
 You briefly grow a second tail.
 %%%%
+Xom random body part
+
+Your @random_body_part_external_singular@ briefly jumps off your body, then reattaches itself!
+
+Your @random_body_part_external_plural@ briefly jump off your body, then reattach themselves!
+%%%%
 Xom unarmed one hand
 
 A fancy cane briefly appears in your @hand@.

@@ -2927,6 +2927,21 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    {
+        string str = _get_xom_speech("random body part");
+
+        str = replace_all(str, "@random_body_part_singular@",
+                          random_body_part_name(false, false));
+        str = replace_all(str, "@random_body_part_external_singular@",
+                          random_body_part_name(true, false));
+        str = replace_all(str, "@random_body_part_plural@",
+                          random_body_part_name(true, true));
+        str = replace_all(str, "@random_body_part_external_plural@",
+                          random_body_part_name(true, true));
+
+        messages.push_back(str);
+    }
+
     ///////////////////////////
     // Equipment related stuff.
 
