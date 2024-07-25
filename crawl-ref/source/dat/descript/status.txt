@@ -981,6 +981,11 @@ Stiff status
 Your legs have stiffened up from lack of motion, making your next move twice as
 slow as usual. This only affects movement actions.
 %%%%
+-Gavotte status
+
+You have recently cast Gell's Gavotte, which has destabilised gravity around
+you. You cannot cast it again until gravity settles back down.
+%%%%
 Fusillade status
 
 You are hurling conjured alchemical reagents at nearby monsters.
