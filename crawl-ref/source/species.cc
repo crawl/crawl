@@ -274,7 +274,7 @@ namespace species
 
     bool has_hair(species_type species)
     {
-        return !bool(get_species_def(species).flags & (SPF_NO_HAIR | SPF_DRACONIAN));
+        return !bool(get_species_def(species).flags & SPF_NO_HAIR);
     }
 
     bool has_bones(species_type species)
