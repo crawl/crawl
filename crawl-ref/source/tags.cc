@@ -1359,6 +1359,26 @@ void tag_read(reader &inf, tag_type tag_id)
         // disabled. Doing this here rather in _tag_read_you() because
         // you.can_currently_train() requires the player's equipment be loaded.
         init_can_currently_train();
+
+#if TAG_MAJOR_VERSION == 34
+        // Set up Marks and major destruction mutation for current worshippers.
+        // (Done outside _tag_read_you since evidently giving a mutation
+        // requires equipment to be loaded.)
+        if (th.getMinorVersion() < TAG_MINOR_MAKHLEB_REVAMP
+            && you_worship(GOD_MAKHLEB))
+        {
+            makhleb_initialize_marks();
+            if (you.piety >= piety_breakpoint(3))
+            {
+                mutation_type mut = random_choose(MUT_MAKHLEB_DESTRUCTION_GEH,
+                                                MUT_MAKHLEB_DESTRUCTION_COC,
+                                                MUT_MAKHLEB_DESTRUCTION_TAR,
+                                                MUT_MAKHLEB_DESTRUCTION_DIS);
+
+                perma_mutate(mut, 1, "Makhleb's blessing");
+            }
+        }
+#endif
         break;
     case TAG_LEVEL:
         _tag_read_level(th);

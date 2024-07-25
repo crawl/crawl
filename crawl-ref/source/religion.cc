@@ -3772,14 +3772,12 @@ static void _join_makhleb()
             mprf("Your %s burns with power once more.", mutation_name((mutation_type)i));
     }
 
-    // Initialize what Marks the player will eventually the offered.
-    if (you.props.exists(MAKHLEB_OFFERED_MARKS_KEY))
-        you.props.erase(MAKHLEB_OFFERED_MARKS_KEY);
+    makhleb_initialize_marks();
+}
 
-    you.one_time_ability_used.set(GOD_MAKHLEB, false);
-
-    CrawlVector& marks = you.props[MAKHLEB_OFFERED_MARKS_KEY].get_vector();
-
+// Initialize what Marks the player will eventually the offered.
+void makhleb_initialize_marks()
+{
     vector<mutation_type> muts =
     {
         MUT_MAKHLEB_MARK_HAEMOCLASM,
@@ -3792,9 +3790,9 @@ static void _join_makhleb()
         MUT_MAKHLEB_MARK_ATROCITY,
         MUT_MAKHLEB_MARK_FANATIC,
     };
-
     shuffle_array(muts);
 
+    CrawlVector& marks = you.props[MAKHLEB_OFFERED_MARKS_KEY].get_vector();
     for (int i = 0; i < 3; ++i)
         marks.push_back(muts[i]);
 }
