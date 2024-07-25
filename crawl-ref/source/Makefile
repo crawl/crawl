@@ -1874,7 +1874,7 @@ species-type.h: species-groups.h
 	$(QUIET_GEN)
 
 job-data.h: dat/jobs/*.yaml util/job-gen.py util/job-gen/*.txt
-	$(QUIET_GEN)util/job-gen.py dat/jobs/ util/job-gen/ job-data.h job-groups.h job-type.h
+	$(QUIET_PYTHON)$(PYTHON) util/job-gen.py dat/jobs/ util/job-gen/ job-data.h job-groups.h job-type.h
 
 # no-op
 job-groups.h: job-data.h
