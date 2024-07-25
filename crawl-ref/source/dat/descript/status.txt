@@ -976,11 +976,6 @@ Rev* status
 You're limbered up. Your weapon-based and unarmed attacks are at full strength,
 and will remain so as long as you keep swinging and for a short while afterward.
 %%%%
-Stiff status
-
-Your legs have stiffened up from lack of motion, making your next move twice as
-slow as usual. This only affects movement actions.
-%%%%
 -Gavotte status
 
 You have recently cast Gell's Gavotte, which has destabilised gravity around
