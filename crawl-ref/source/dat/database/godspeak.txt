@@ -421,6 +421,8 @@ Xom tail
 
 Your tail briefly retracts into your body.
 
+Your tail briefly grows to an incredible length.
+
 You briefly grow another tail.
 %%%%
 Xom random body part
