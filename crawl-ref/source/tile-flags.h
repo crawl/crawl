@@ -2,6 +2,10 @@
 
 #include "tag-version.h"
 
+// If you change these, you need to sync your changes with:
+//     webserver/game_data/static/enums.js
+//     webserver/game_data/static/cell_renderer.js
+// to ensure that your tile will also be drawn in webtiles builds!
 enum tile_flags ENUM_INT64
 {
     //// Foreground flags

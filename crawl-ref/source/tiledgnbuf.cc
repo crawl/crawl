@@ -430,6 +430,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                         m_buf_feat.add(TILE_THREAT_GHOST_TOUGH, x, y);
                     else if (threat_flag == TILE_FLAG_NASTY)
                         m_buf_feat.add(TILE_THREAT_GHOST_NASTY, x, y);
+                    else if (threat_flag == TILE_FLAG_UNUSUAL)
+                        m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
                 }
                 else
                 {

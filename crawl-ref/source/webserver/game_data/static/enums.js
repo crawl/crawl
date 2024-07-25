@@ -200,6 +200,8 @@ define(function () {
         UNUSUAL    : [0, 0x60000000 | highbit],
     });
 
+    fg_flags.flags.GHOST = [0, 0x00100000];
+
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
         mask       : [0x40000000 | highbit, 0x01],
