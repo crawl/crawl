@@ -1924,7 +1924,7 @@ static bool _body_facet_blocks(mutation_type mutat)
 static bool _exoskeleton_incompatible(mutation_type mutat)
 {
     // Coglins attack with and wear aux armour on their exoskeleton-limbs,
-    // not their fleshy, mutatation-prone hands. Disable mutations that would
+    // not their fleshy, mutation-prone hands. Disable mutations that would
     // make no sense in this scheme.
     switch (mutat)
     {
