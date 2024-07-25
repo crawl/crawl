@@ -4682,6 +4682,9 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         vector<string> body_parts;
         vector<string> body_parts_ext;
 
+        body_parts.push_back("head");
+        body_parts_ext.push_back("head");
+
         string hands =
             you.get_mutation_level(MUT_MISSING_HAND) ? you.hand_name(false)
                                                      : you.hand_name(true);
