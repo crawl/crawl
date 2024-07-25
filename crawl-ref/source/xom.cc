@@ -2921,6 +2921,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    if (you.has_tail())
+    {
+        string str = _get_xom_speech("tail");
+        messages.push_back(str);
+    }
+
     ///////////////////////////
     // Equipment related stuff.
 

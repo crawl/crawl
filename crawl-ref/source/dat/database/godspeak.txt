@@ -417,6 +417,12 @@ pirouette
 
 somersault
 %%%%
+Xom tail
+
+Your tail briefly retracts into your body.
+
+You briefly grow a second tail.
+%%%%
 Xom unarmed one hand
 
 A fancy cane briefly appears in your @hand@.

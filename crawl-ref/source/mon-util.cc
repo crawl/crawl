@@ -4702,6 +4702,12 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
             body_parts_ext.push_back(feet);
         }
 
+        if (you.has_tail())
+        {
+            body_parts.push_back("tail");
+            body_parts_ext.push_back("tail");
+        }
+
         if (you.has_blood())
             body_parts.push_back("blood");
 
