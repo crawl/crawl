@@ -7533,11 +7533,11 @@ bool player::has_tail(bool allow_tran) const
     {
         // these transformations bring a tail with them
         if (form == transformation::dragon)
-            return 1;
+            return true;
 
         // Most transformations suppress a tail.
         if (!form_keeps_mutations())
-            return 0;
+            return false;
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
@@ -7548,10 +7548,10 @@ bool player::has_tail(bool allow_tran) const
         || get_mutation_level(MUT_STINGER, allow_tran)
         || get_mutation_level(MUT_WEAKNESS_STINGER, allow_tran))
     {
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 // Whether the player has a usable offhand for the
