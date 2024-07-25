@@ -2,6 +2,7 @@
 
 #include "tilepick.h"
 
+#include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h" // vaults_is_locked
@@ -3945,6 +3946,34 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
     case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
         return TILEG_ABILITY_MAKHLEB_VESSEL_OF_SLAUGHTER;
+    case ABIL_MAKHLEB_BRAND_SELF_1:
+    case ABIL_MAKHLEB_BRAND_SELF_2:
+    case ABIL_MAKHLEB_BRAND_SELF_3:
+    {
+        switch (makhleb_ability_to_mutation(ability))
+        {
+            case MUT_MAKHLEB_MARK_HAEMOCLASM:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_HAEMOCLASM;
+            case MUT_MAKHLEB_MARK_LEGION:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_LEGION;
+            case MUT_MAKHLEB_MARK_CARNAGE:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_CARNAGE;
+            case MUT_MAKHLEB_MARK_ANNIHILATION:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_ANNIHILATION;
+            case MUT_MAKHLEB_MARK_TYRANT:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_TYRANT;
+            case MUT_MAKHLEB_MARK_CELEBRANT:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_CELEBRANT;
+            case MUT_MAKHLEB_MARK_EXECUTION:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_EXECUTION;
+            case MUT_MAKHLEB_MARK_ATROCITY:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_ATROCITY;
+            case MUT_MAKHLEB_MARK_FANATIC:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_FANATIC;
+            default:
+                return TILEG_ERROR;
+        }
+    }
     // Sif Muna
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;

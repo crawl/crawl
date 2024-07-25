@@ -1313,7 +1313,7 @@ talent get_talent(ability_type ability, bool check_confused)
     return result;
 }
 
-static mutation_type _makhleb_ability_to_mutation(ability_type abil)
+mutation_type makhleb_ability_to_mutation(ability_type abil)
 {
     // XXX: The list of marks the player will be offered is generated as soon
     //      as the player first joins Makhleb, but internally their ability
@@ -1365,7 +1365,7 @@ string ability_name(ability_type ability, bool dbname)
             else
             {
                 return make_stringf("Accept %s",
-                                    mutation_name(_makhleb_ability_to_mutation(ability)));
+                                    mutation_name(makhleb_ability_to_mutation(ability)));
             }
 
         default:
@@ -1597,7 +1597,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
         case ABIL_MAKHLEB_BRAND_SELF_2:
         case ABIL_MAKHLEB_BRAND_SELF_3:
         {
-            const mutation_type mut = _makhleb_ability_to_mutation(ability);
+            const mutation_type mut = makhleb_ability_to_mutation(ability);
             lookup += "\n" + get_mutation_desc(mut);
         }
         break;
@@ -3484,7 +3484,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_MAKHLEB_BRAND_SELF_1:
     case ABIL_MAKHLEB_BRAND_SELF_2:
     case ABIL_MAKHLEB_BRAND_SELF_3:
-        makhleb_inscribe_mark(_makhleb_ability_to_mutation(abil.ability));
+        makhleb_inscribe_mark(makhleb_ability_to_mutation(abil.ability));
         break;
 
     case ABIL_TROG_BERSERK:

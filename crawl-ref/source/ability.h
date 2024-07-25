@@ -54,6 +54,7 @@ vector<ability_type> get_defined_abilities();
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
 string nemelex_card_text(ability_type ability);
+mutation_type makhleb_ability_to_mutation(ability_type abil);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
 int ability_range(ability_type abil);
