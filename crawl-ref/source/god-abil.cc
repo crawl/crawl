@@ -7227,6 +7227,10 @@ void makhleb_inscribe_mark(mutation_type mark)
     perma_mutate(mark, 1, " inscribed by the player.");
 
     you.one_time_ability_used.set(GOD_MAKHLEB);
+
+    const string mile_text = make_stringf("accepted the %s", mutation_name(mark));
+    take_note(Note(NOTE_INFERNAL_MARK, 0, 0, mutation_name(mark)));
+    mark_milestone("mark", mile_text);
 }
 
 #define NEXT_INFERNAL_LEGION_KEY "next_infernal_legion"

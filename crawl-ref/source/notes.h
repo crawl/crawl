@@ -68,6 +68,7 @@ enum NOTE_TYPES
     NOTE_GAIN_LIFE,             /* needs: lives left */
     NOTE_LOSE_LIFE,             /* needs: lives left */
     NOTE_FLED_CHALLENGE,
+    NOTE_INFERNAL_MARK,         /* needs: name of mark accepted (string) */
     NOTE_NUM_TYPES
 };
 
