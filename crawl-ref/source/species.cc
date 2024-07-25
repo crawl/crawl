@@ -456,6 +456,8 @@ namespace species
             return adj ? "furry" : "fur";
         else if (species == SP_MUMMY)
             return adj ? "bandage-wrapped" : "bandages";
+        else if (species == SP_GARGOYLE)
+            return adj ? "stony" : "stone";
         else
             return adj ? "fleshy" : "skin";
     }
