@@ -2415,6 +2415,24 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     else if (Options.tile_show_threat_levels.find("unusual") != string::npos
              && m->has_unusual_items())
         tileset.emplace_back(TILE_THREAT_UNUSUAL);
+    else if (m->type == MONS_PLAYER_GHOST)
+        switch (m->threat)
+        {
+        case MTHRT_TRIVIAL:
+            tileset.emplace_back(TILE_THREAT_GHOST_TRIVIAL);
+            break;
+        case MTHRT_EASY:
+            tileset.emplace_back(TILE_THREAT_GHOST_EASY);
+            break;
+        case MTHRT_TOUGH:
+            tileset.emplace_back(TILE_THREAT_GHOST_TOUGH);
+            break;
+        case MTHRT_NASTY:
+            tileset.emplace_back(TILE_THREAT_GHOST_NASTY);
+            break;
+        default:
+            break;
+        }
     else
         switch (m->threat)
         {

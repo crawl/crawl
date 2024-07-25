@@ -2135,6 +2135,29 @@ tileidx_t tileidx_monster(const monster_info& mons)
     else if (Options.tile_show_threat_levels.find("unusual") != string::npos
              && mons.has_unusual_items())
         ch |= TILE_FLAG_UNUSUAL;
+    else if (mons.type == MONS_PLAYER_GHOST)
+    {
+       // Threat is always displayed for ghosts, with different tiles,
+        // to make them more easily visible.
+        ch |= TILE_FLAG_GHOST;
+        switch (mons.threat)
+        {
+        case MTHRT_TRIVIAL:
+            ch |= TILE_FLAG_TRIVIAL;
+            break;
+        case MTHRT_EASY:
+            ch |= TILE_FLAG_EASY;
+            break;
+        case MTHRT_TOUGH:
+            ch |= TILE_FLAG_TOUGH;
+            break;
+        case MTHRT_NASTY:
+            ch |= TILE_FLAG_NASTY;
+            break;
+        default:
+            break;
+        }
+    }
     else
         switch (mons.threat)
         {

@@ -847,6 +847,10 @@ monster_threat_trivial THREAT_TRIVIAL
 monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
+ghost_threat_trivial THREAT_GHOST_TRIVIAL
+ghost_threat_easy THREAT_GHOST_EASY
+ghost_threat_tough THREAT_GHOST_TOUGH
+ghost_threat_nasty THREAT_GHOST_NASTY
 monster_threat_unusual THREAT_UNUSUAL
 
 travel_exclusion TRAVEL_EXCLUSION_BG
