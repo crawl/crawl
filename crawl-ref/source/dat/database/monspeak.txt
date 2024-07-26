@@ -3274,15 +3274,21 @@ w:50
 
 @The_monster@ says, "Are you sure that summoning demons is a good idea?"
 
-@The_monster@ says, "What's so minor about destruction?"
+@The_monster@ says, "Hey, watch where you throw those bolts!"
 
-@The_monster@ says, "Hey, watch where you throw those lightning bolts!"
+@The_monster@ says, "What will you do after everything's destroyed?"
 
 @The_monster@ says, "I hate demons."
 
 @The_monster@ says, "I hate blood."
 
 @The_monster@ says, "I hate suffering."
+
+@The_monster@ says, "I hate branding."
+
+@The_monster@ says, "I hate pacts."
+
+@The_monster@ says, "I hate the Hells."
 
 @The_monster@ says, "I just stubbed my toe. Does that mean I'm cleansed?"
 %%%%
