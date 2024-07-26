@@ -459,7 +459,7 @@ static const form_entry formdata[] =
     FC_ENABLE, FC_FORBID, true, false,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, FC_DEFAULT,
     "", 0, "", "", "", "",
-    { { "half damage", "Damage taken is decreased by 1/3."},
+    { { "damage resistance", "Damage taken is decreased by 1/3."},
       { "doubled heal-on-kills", "Healing from kills is doubled."},
       { "unshakeable will", "Your willpower is unshakeable." },
       { "torment immunity", "You are immune to unholy pain and torment."},
