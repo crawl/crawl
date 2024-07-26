@@ -7499,7 +7499,7 @@ void makhleb_crucible_kill(monster& victim)
         }
 
         dungeon_terrain_changed(pos, DNGN_EXIT_CRUCIBLE);
-        simple_god_message(" acknowledges your contrition and permits you depart the Crucible.",
+        simple_god_message(" acknowledges your contrition and permits you to depart the Crucible.",
                            false, GOD_MAKHLEB);
 
         env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
