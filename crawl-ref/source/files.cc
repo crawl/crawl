@@ -1252,8 +1252,9 @@ static void _grab_followers()
 
         if (fol->wont_attack() && !mons_can_use_stairs(*fol))
         {
-            non_stair_using_allies++;
-            if (fol->is_summoned() || mons_is_conjured(fol->type))
+            if (!mons_is_conjured(fol->type))
+                non_stair_using_allies++;
+            if (fol->is_summoned())
                 non_stair_using_summons++;
             if (fol->holiness() & MH_UNDEAD)
                 non_stair_using_undead++;
