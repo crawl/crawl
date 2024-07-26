@@ -1431,6 +1431,8 @@ Makhleb player ghost
 @The_monster@ says, "Destruction is an occupation beyond life."
 
 @The_monster@ says @to_foe@, "First you will suffer, then you will die."
+
+@The_monster@ boasts, "I survived the Crucible of Flesh! I fear nothing now!"
 %%%%
 Nemelex Xobeh player ghost
 
