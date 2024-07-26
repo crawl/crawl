@@ -1066,6 +1066,8 @@ w:40
 
 "Another! And another! And another!"
 
+"Slaughter. Them. All!"
+
 w:5
 "Everything deserves to die!"
 %%%%
