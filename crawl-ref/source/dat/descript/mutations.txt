@@ -1038,7 +1038,7 @@ Your reflexes are slow, making it easier for foes to hit you.
 %%%%
 inexperienced mutation
 
-You are inexperienced, and unable to fully gain 27 levels.
+You are inexperienced and unable to fully gain 27 levels.
 %%%%
 missing an eye mutation
 
