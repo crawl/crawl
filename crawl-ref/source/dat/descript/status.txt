@@ -1012,7 +1012,7 @@ summoned near you.
 %%%%
 -Bloodrite status
 
-You have recently performed an infernal blood rite, and must fully heal before
+You have recently performed an infernal blood rite and must fully heal before
 being able to perform another.
 %%%%
 Execution status

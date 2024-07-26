@@ -930,7 +930,7 @@ in an enormous blast of your characteristic Destruction.
 Mark of Haemoclasm mutation
 
 When you kill enemies, they have a small chance to explode in a violent rain of
-gore, which damages adjacent foes proportional to the victim's maximum health.
+gore which damages adjacent foes proportional to the victim's maximum health.
 
 Enemies who die to this explosion will always explode themselves.
 %%%%

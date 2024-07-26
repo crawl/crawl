@@ -2379,7 +2379,7 @@ void makhleb_celebrant_bloodrite()
     if (targs.empty())
         return;
 
-    mpr("You consecrate your suffering, and invoke the rites of blood!");
+    mpr("You consecrate your suffering and invoke the rites of blood!");
 
     shuffle_array(targs);
 
