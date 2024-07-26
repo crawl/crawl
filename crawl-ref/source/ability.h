@@ -35,6 +35,7 @@ enum class abflag
     max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
+                       // 0x00001000, // currently unused
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     torchlight          = 0x00008000, // costs torchlight (Yred)
