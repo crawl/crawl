@@ -1327,12 +1327,37 @@ static void _grab_followers()
     {
         if (!mons.alive())
             continue;
+
+        mons.flags &= ~MF_TAKING_STAIRS;
+    }
+}
+
+// Expire all friendly summons / zombies / etc. when the player is leaving a floor.
+static void _expire_temporary_allies()
+{
+    for (auto &mons : menv_real)
+    {
+        if (!mons.alive())
+            continue;
+
         if (mons.type == MONS_BATTLESPHERE)
             end_battlesphere(&mons, false);
-        if (mons.type == MONS_SPECTRAL_WEAPON)
+        else if (mons.type == MONS_SPECTRAL_WEAPON)
             end_spectral_weapon(&mons, false);
-        check_canid_farewell(mons, false);
-        mons.flags &= ~MF_TAKING_STAIRS;
+        else if (mons.type == MONS_INUGAMI)
+            check_canid_farewell(mons, false);
+        else if (mons.friendly()
+                && (mons.is_summoned() || mons.has_ench(ENCH_FAKE_ABJURATION))
+                    && !mons.is_perm_summoned())
+        {
+            monster_die(mons, KILL_RESET, NON_MONSTER, true);
+        }
+        // Yred & animate dead zombies crumble on floor change
+        else if (mons.has_ench(ENCH_SUMMON)
+                    && mons.get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD)
+        {
+            monster_die(mons, KILL_RESET, NON_MONSTER, true);
+        }
     }
 }
 
@@ -2138,7 +2163,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (old_level.depth != -1)
         {
             if (!crawl_state.game_is_descent())
+            {
                 _grab_followers();
+                _expire_temporary_allies();
+            }
 
             if (env.level_state & LSTATE_DELETED)
                 delete_level(old_level), dprf("<lightmagenta>Deleting level.</lightmagenta>");

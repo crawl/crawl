@@ -438,53 +438,6 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
-    // Ball lightning dissipates harmlessly out of LOS
-    if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
-    {
-        monster_die(*mon, KILL_RESET, NON_MONSTER);
-        return;
-    }
-
-    // Expire friendly summons and temporary allies
-    if (mon->friendly()
-        && (mon->is_summoned() || mon->has_ench(ENCH_FAKE_ABJURATION))
-        && !mon->is_perm_summoned())
-    {
-        // You might still see them disappear if you were quick
-        if (turns > 2)
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-        else
-        {
-            enchant_type abj_type = mon->has_ench(ENCH_ABJ) ? ENCH_ABJ
-                                    : ENCH_FAKE_ABJURATION;
-            mon_enchant abj  = mon->get_ench(abj_type);
-            abj.duration = 0;
-            mon->update_ench(abj);
-        }
-        return;
-    }
-
-    // Yred & animate dead zombies crumble on floor change
-    if (mon->friendly()
-        && ((is_yred_undead_follower(*mon) && mon->type != MONS_BOUND_SOUL)
-            || (mon->has_ench(ENCH_SUMMON)
-                && mon->get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD)))
-    {
-        if (turns > 2)
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-        else
-        {
-            // handle expiration messages if the player was quick
-            // doing it this way so the messages are kept consistent with
-            // corresponding non-yred derived undead
-            mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
-            mon->add_ench(abj);
-            abj.duration = 0;
-            mon->update_ench(abj);
-        }
-        return;
-    }
-
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(*mon) != HT_LAND
         || mons_is_zombified(*mon)
