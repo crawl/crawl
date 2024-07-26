@@ -185,6 +185,7 @@ force_more_message += deals you some cards
 force_more_message += deal. but finds you have enough
 force_more_message += partake of a vision and a curse
 force_more_message += allow you to induct
+force_more_message += will allow you to brand your body
 
 force_more_message += Beogh speaks to you:
 
