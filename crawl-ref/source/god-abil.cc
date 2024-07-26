@@ -7301,7 +7301,7 @@ void makhleb_vessel_of_slaughter()
     you.transform_uncancellable = true;
 
     bolt damnation;
-    zappy(ZAP_CALL_DOWN_DAMNATION, 100, false, damnation);
+    zappy(ZAP_HURL_DAMNATION, 100, false, damnation);
     damnation.thrower = KILL_YOU;
     damnation.source_id = MID_PLAYER;
     damnation.is_explosion = true;
