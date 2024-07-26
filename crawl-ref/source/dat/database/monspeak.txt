@@ -3293,6 +3293,8 @@ w:50
 @The_monster@ says, "I hate the Hells."
 
 @The_monster@ says, "I just stubbed my toe. Does that mean I'm cleansed?"
+
+@The_monster@ says, "If I carve 'Go Away' into myself, will Makhleb do that?"
 %%%%
 Sif Muna Donald
 
