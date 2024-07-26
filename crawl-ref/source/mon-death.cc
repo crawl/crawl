@@ -960,7 +960,7 @@ void blorkula_bat_merge(monster& bat)
     if (you.can_see(*blork))
     {
         mprf(MSGCH_MONSTER_SPELL,
-             "The bats swarm back together and %s reappears in a puff of irridescent mist.",
+             "The bats swarm back together and %s reappears in a puff of iridescent mist.",
              blork->name(DESC_THE).c_str());
     }
 }
