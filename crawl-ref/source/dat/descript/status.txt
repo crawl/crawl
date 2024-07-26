@@ -385,9 +385,9 @@ randomly blinked away from you.
 %%%%
 Fugue status
 
-Your weapon is temporarily enhanced by the souls of the damned, providing slaying
-bonuses that increase with every enemy killed. At the maximum bonus, foes adjacent
-to your attacks' targets suffer pain damage.
+Your weapon is temporarily enhanced by the souls of the damned, providing
+slaying bonuses that increase with every enemy killed. At the maximum bonus,
+foes adjacent to your attacks' targets suffer pain damage.
 %%%%
 Debt status
 
