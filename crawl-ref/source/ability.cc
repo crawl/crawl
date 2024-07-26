@@ -2492,13 +2492,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
-    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
-    {
-        if (!quiet)
-            mpr("Night has already fallen.");
-        return false;
-    }
-    return true;
+        if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+        {
+            if (!quiet)
+                mpr("Night has already fallen.");
+            return false;
+        }
+        return true;
 
     case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
         if (player_in_branch(BRANCH_CRUCIBLE))
