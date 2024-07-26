@@ -3676,7 +3676,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DIMENSIONAL_BULLSEYE, "Dimensional Bullseye",
     spschool::translocation | spschool::hexes,
-    spflag::target | spflag::not_self,
+    spflag::target | spflag::not_self | spflag::prefer_farthest,
     4,
     200,
     LOS_RADIUS, LOS_RADIUS,
