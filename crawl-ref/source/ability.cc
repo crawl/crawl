@@ -2500,6 +2500,21 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
     return true;
 
+    case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
+        if (player_in_branch(BRANCH_CRUCIBLE))
+        {
+            if (!quiet)
+                mpr("Mahkleb denies you. Endure the Crucible first!");
+            return false;
+        }
+        else if (you.form == transformation::slaughter)
+        {
+            if (!quiet)
+                mpr("You are already a vessel of slaughter!");
+            return false;
+        }
+        return true;
+
     default:
         return true;
     }
@@ -3472,11 +3487,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return makhleb_infernal_legion(fail);
 
     case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
-        if (player_in_branch(BRANCH_CRUCIBLE))
-        {
-            mpr("Mahkleb denies you. Endure the Crucible first!");
-            return spret::abort;
-        }
         fail_check();
         makhleb_vessel_of_slaughter();
         break;
