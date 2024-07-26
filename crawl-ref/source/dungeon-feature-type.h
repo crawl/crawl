@@ -286,6 +286,7 @@ enum dungeon_feature_type
     DNGN_ENTER_DESOLATION,
 #if TAG_MAJOR_VERSION > 34
     DNGN_ENTER_ARENA,
+    DNGN_ENTER_CRUCIBLE,
 #endif
 
     DNGN_EXIT_ZIGGURAT,
@@ -306,6 +307,7 @@ enum dungeon_feature_type
     DNGN_EXIT_DESOLATION,
 #if TAG_MAJOR_VERSION > 34
     DNGN_EXIT_ARENA,
+    DNGN_EXIT_CRUCIBLE,
 #endif
 #if TAG_MAJOR_VERSION == 34
 
