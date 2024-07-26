@@ -1437,7 +1437,7 @@ to the strong impact and cutting edges.
 %%%%
 Shadowball spell
 
-Hurls a ball of flickering shadows which explodes in a small area.
+Hurls a ball of flickering shadows, which explodes in a small area.
 %%%%
 Shadow Beam spell
 
