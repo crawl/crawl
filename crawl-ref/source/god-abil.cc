@@ -7224,7 +7224,7 @@ void makhleb_inscribe_mark(mutation_type mark)
     blood_spray(you.pos(), MONS_PLAYER, 50);
     ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER);
 
-    perma_mutate(mark, 1, " inscribed by the player.");
+    perma_mutate(mark, 1, "inscribed by the player");
 
     you.one_time_ability_used.set(GOD_MAKHLEB);
 

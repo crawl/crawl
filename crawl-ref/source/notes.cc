@@ -414,6 +414,7 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_INFERNAL_MARK:
             result << "Branded self with the " << name;
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
