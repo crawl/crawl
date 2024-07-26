@@ -296,7 +296,7 @@ veto {{
   end
   return false
 }}
-: place_unique(_G, "Arachne")
+: place_unique(_G, "Arachne band")
 
 NAME:   uniq_asterion
 DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
