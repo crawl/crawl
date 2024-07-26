@@ -404,7 +404,7 @@ explosion of
 
 You are protected from this explosion yourself.
 %%%%
-Vessel of Slaughter
+Vessel of Slaughter ability
 
 Invokes a blood pact with the Destroyer, temporarily granting you enormous power
 at a dangerous price.
