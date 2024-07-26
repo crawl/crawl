@@ -855,7 +855,7 @@ with no place to wear magical rings without disastrous magical interference.
 Gehenna destruction mutation
 
 Your Unleash Destruction ability is empowered by Gehenna. You are able to hurl
-bolts of magma insead of cold, and your bolts of fire can strip away their
+bolts of magma instead of cold, and your bolts of fire can strip away their
 victims' fire resistance.
 %%%%
 Cocytus destruction mutation
@@ -867,7 +867,7 @@ slowing their movement.
 Tartarus destruction mutation
 
 Your Unleash Destruction ability is empowered by Tartarus. You are able to hurl
-bolts of devastation which lower their victims willpower instead of lightning,
+bolts of devastation which lower their victims' willpower instead of lightning,
 and your bolts of negative energy are more powerful.
 %%%%
 Dis destruction mutation
@@ -878,9 +878,9 @@ of corrosive acid and metal splinters instead of negative energy.
 # ------ Makhleb marks ------
 Mark of the Tyrant mutation
 
-Your Infernal Servants have a longer duration and you can summon even stronger
+Your Infernal Servants have a longer duration, and you can summon even stronger
 ones at very high Invocations (at the cost of additional piety). When you slay
-enemies, a random servant may be gain one of: Haste, Might, Regeneration, or
+enemies, a random servant may gain one of: Haste, Might, Regeneration, or
 Brilliance.
 %%%%
 Mark of Carnage mutation
@@ -930,7 +930,7 @@ in an enormous blast of your characteristic Destruction.
 Mark of Haemoclasm mutation
 
 When you kill enemies, they have a small chance to explode in a violent rain of
-gore which damages adjacent foes proportional to the victim's maximum health.
+gore, which damages adjacent foes proportional to the victim's maximum health.
 
 Enemies who die to this explosion will always explode themselves.
 %%%%
@@ -950,7 +950,7 @@ Mark of Execution mutation
 A demonic incarnation of murder lies dormant within your soul. Whenever you kill
 an enemy in melee, there is a small chance for it to awaken and manifest as a
 maelstrom of scythe-like blades enveloping you. These blades will attack
-whenever you do and also retaliate whenever you successfully dodge an enemy
+whenever you do, and also retaliate whenever you successfully dodge an enemy
 attack.
 
 You have the ability to rampage swiftly towards enemies while possessed, but if
@@ -967,7 +967,7 @@ aimed at random targets and reset this boost.
 Mark of the Fanatic mutation
 
 Grants you the Vessel of Slaughter ability, allowing you to transform into a
-powerful demonic avatar with greatly boosted offense and defense for a short
+powerful demonic avatar with greatly boosted offence and defence for a short
 period of time, in exchange for being dragged down into the Crucible of Flesh
 afterward and made to fight for your freedom.
 %%%%

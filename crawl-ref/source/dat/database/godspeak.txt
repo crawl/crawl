@@ -1064,7 +1064,7 @@ w:40
 
 "More. More. More!"
 
-"Another! And Another! And Another!"
+"Another! And another! And another!"
 
 w:5
 "Everything deserves to die!"

@@ -344,10 +344,10 @@ targeted creature. Damage and accuracy are increased by Invocations skill.
 %%%%
 Infernal Servant ability
 
-Beckons a demon from the far reaches of Hell and binds it into service with your
-blood. At low Invocations skill, only lesser devils may be summoned, but major
-demons and even executioners may answer the call of those with high Invocations
-skill.
+Beckons a demon from the far reaches of Hell, and binds it into service with
+your blood. At low Invocations skill, only lesser devils may be summoned, but
+major demons and even executioners may answer the call of those with high
+Invocations skill.
 
 Beware that the armies of chaos are prone to infighting, and sometimes a
 hostile demon may answer the ritual alongside your summoned servant.
@@ -355,7 +355,7 @@ hostile demon may answer the ritual alongside your summoned servant.
 Brand Self ability
 
 Permanently carves an Infernal Mark into yourself, forever tainting body and
-soul in service of The Destroyer.
+soul in service of the Destroyer.
 
 So long as you continue to worship Makhleb, this mark will grant you the
 following power:
@@ -367,11 +367,11 @@ Uses one's own body as a conduit to unleash an army of chaos upon the world.
 For a short while, lesser demons will continuously manifest near the user -
 provided there is something around for them to fight. While these demons may
 be individually short-lived, the legions of chaos as a whole are virtually
-inexhuastable.
+inexhaustible.
 %%%%
 Globe of Annihilation ability
 
-Launches a roiling sphere of intense destructive force drawn from the
+Launches a roiling sphere of intense destructive force, drawn from the
 {{
     if you.get_base_mutation_level("Dis destruction") == 1 then
         return "ruthless spite of Dis."
@@ -406,14 +406,14 @@ You are protected from this explosion yourself.
 %%%%
 Vessel of Slaughter
 
-Invokes a blood pact with The Destroyer, temporarily granting you enormous power
+Invokes a blood pact with the Destroyer, temporarily granting you enormous power
 at a dangerous price.
 
 At the moment the pact is sealed, a massive explosion of damnation will surround
 you and you will transform into a demonic avatar, granting you demonic
 resistances, invulnerable will, doubled healing from kills, and reducing all
-damage you take by 1/3. You additionally gain a bonus to all outgoing damage
-proportional to how injured you were when you used this ability.
+damage you take by 1/3. You will additionally gain a bonus to all outgoing
+damage, proportional to how injured you were when you used this ability.
 
 When your transformation expires, you will be dragged down into the Crucible of
 Flesh, and made to fight through waves of demons until Makhleb considers your

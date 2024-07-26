@@ -1318,7 +1318,7 @@ mutation_type makhleb_ability_to_mutation(ability_type abil)
     // XXX: The list of marks the player will be offered is generated as soon
     //      as the player first joins Makhleb, but internally their ability
     //      keybinds are assigned before god-specific code is run, and it will
-    //      try to pull the names of mutations that aren't asigned yet. Use a
+    //      try to pull the names of mutations that aren't assigned yet. Use a
     //      placeholder to stop a crash on conversion.
     if (!you.props.exists(MAKHLEB_OFFERED_MARKS_KEY))
         return MUT_NON_MUTATION;

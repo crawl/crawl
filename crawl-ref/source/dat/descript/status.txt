@@ -1012,7 +1012,7 @@ summoned near you.
 %%%%
 -Bloodrite status
 
-You have recently performed an infernal blood rite and must fully heal before
+You have recently performed an infernal blood rite, and must fully heal before
 being able to perform another.
 %%%%
 Execution status
@@ -1050,7 +1050,7 @@ Pact status
 Makhleb has come to collect on certain promises made to them.
 {{ if you.religion == "Makhleb" then
         return "Fulfill your oath as their instrument by slaying the terrified " ..
-               "mortals that have been gathered here and they may grant you " ..
+               "mortals that have been gathered here, and they may grant you " ..
                "freedom once again."
    else
         return "Fight and bleed and you may be granted freedom once again."

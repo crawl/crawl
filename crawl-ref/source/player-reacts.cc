@@ -1123,7 +1123,7 @@ void player_reacts()
 
     if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "You are ready to preform a blood rite again.");
+        mprf(MSGCH_DURATION, "You are ready to perform a blood rite again.");
         you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
     }
 
