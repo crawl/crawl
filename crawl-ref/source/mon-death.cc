@@ -2181,8 +2181,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         actor* source = mons.get_ench(ENCH_HAUNTING).agent();
         if (source && source->alive())
         {
-            simple_monster_message(mons, " returns to where it belongs.");
+            if (!silent)
+                simple_monster_message(mons, " returns to where it belongs.");
             source->as_monster()->del_ench(ENCH_WEAK);
+            source->props.erase(SOUL_SPLINTERED_KEY);
             silent = true;
         }
     }

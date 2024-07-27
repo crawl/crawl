@@ -340,6 +340,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define BOULDER_POWER_KEY "boulder_power"
 #define PROTEAN_TARGET_KEY "protean_target"
 #define PASSWALL_ARMOUR_KEY "passwall_armour"
+#define SOUL_SPLINTERED_KEY "soul_splintered"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"

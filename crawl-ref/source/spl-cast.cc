@@ -1270,6 +1270,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                   0, 1);
     case SPELL_INNER_FLAME:
         return make_unique<targeter_inner_flame>(&you, range);
+    case SPELL_SOUL_SPLINTER:
+        return make_unique<targeter_soul_splinter>(&you, range);
     case SPELL_SIMULACRUM:
         return make_unique<targeter_simulacrum>(&you, range);
     case SPELL_LEDAS_LIQUEFACTION:

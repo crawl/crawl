@@ -813,6 +813,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->props.exists(MAKHLEB_CRUCIBLE_VICTIM_KEY))
         mb.set(MB_FROZEN_IN_TERROR);
 
+    if (m->props.exists(SOUL_SPLINTERED_KEY))
+        mb.set(MB_SOUL_SPLINTERED);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {

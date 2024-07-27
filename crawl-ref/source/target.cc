@@ -2431,3 +2431,35 @@ bool targeter_putrefaction::valid_aim(coord_def a)
 
     return true;
 }
+
+targeter_soul_splinter::targeter_soul_splinter(const actor* caster, int r)
+    : targeter_beam(caster, r, ZAP_SOUL_SPLINTER, 0, 0, 0)
+{
+}
+
+bool targeter_soul_splinter::affects_monster(const monster_info& mon)
+{
+    if (!targeter_beam::affects_monster(mon))
+        return false;
+
+    if (mon.is(MB_SOUL_SPLINTERED))
+        return false;
+
+    if (!mons_can_be_spectralised(*monster_at(mon.pos), false, true))
+        return false;
+
+    if (agent->is_player())
+    {
+        for (adjacent_iterator ai(mon.pos); ai; ++ai)
+        {
+            if (!cell_is_solid(*ai) && !actor_at(*ai)
+                && agent->see_cell_no_trans(*ai))
+            {
+                return true;
+            }
+        }
+    }
+
+    // No visible free spots found
+    return false;
+}
