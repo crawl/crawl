@@ -974,7 +974,7 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
 
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
-    mprf("Your %s attune%s to your body and you begin to regenerate%s "
+    mprf("Your %s attune%s to your body, and you begin to regenerate%s "
          "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself",
          msg);
 }
