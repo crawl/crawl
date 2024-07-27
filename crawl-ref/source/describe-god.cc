@@ -884,9 +884,6 @@ static formatted_string _describe_god_powers(god_type which_god)
                      "Foes that die within your umbra may be raised as undead servants.\n");
         break;
 
-    case GOD_DITHMENOS:
-        break;
-
     case GOD_HEPLIAKLQANA:
         // Frailty occurs even under penance post-abandonment, so we can't put
         // this in the usual god_powers block.
