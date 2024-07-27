@@ -3214,8 +3214,8 @@ bool make_soul_wisp(const actor& agent, monster& victim)
     mg.flags |= MG_FORCE_PLACE;
 
     // Damage improves when extracted from stronger enemies, but they are always fragile.
-    mg.hd = 1 + victim.get_experience_level();
-    mg.hp = random_range(7, 11);
+    mg.hd = 2 + div_rand_round(victim.get_experience_level(), 2);
+    mg.hp = random_range(5, 8);
 
     monster* wisp = create_monster(mg);
 

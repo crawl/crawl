@@ -7,7 +7,7 @@ will: 10
 attacks:
  - {type: touch, damage: 4}
 hd: 2
-hp_10x: 90
+hp_10x: 65
 ac: 3
 ev: 11
 intelligence: brainless
