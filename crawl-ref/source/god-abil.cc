@@ -7013,8 +7013,8 @@ int makhleb_get_atrocity_stacks()
 spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
 {
     // Since the actual beam is random, check with BEAM_MMISSILE.
-    if (!player_tracer(_has_upgraded_destruction() ? ZAP_UNLEASH_DESTRUCTION
-                                                   : ZAP_UNLEASH_DESTRUCTION_PIERCING,
+    if (!player_tracer(_has_upgraded_destruction() ? ZAP_UNLEASH_DESTRUCTION_PIERCING
+                                                   : ZAP_UNLEASH_DESTRUCTION,
                         100, beam, beam.range))
     {
         return spret::abort;

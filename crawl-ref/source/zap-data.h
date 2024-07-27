@@ -2323,6 +2323,22 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 },
 
 {
+    ZAP_UNLEASH_DESTRUCTION_PIERCING,
+    "gout of destruction",
+    100,
+    new dicedef_calculator<3, 5, 1, 2>,
+    new tohit_calculator<10, 1, 7>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
+{
     ZAP_BLOOD_ARROW,
     "blood arrow",
     200,
