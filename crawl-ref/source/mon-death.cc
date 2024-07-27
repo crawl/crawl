@@ -2559,8 +2559,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                         && !fake_abjure
                         && !mons.friendly())
                 && !player_under_penance()
-                && (x_chance_in_y(50 * ((min(piety_breakpoint(5), (int)you.piety) - 30)
-                                 / (piety_breakpoint(5) - piety_breakpoint(0))) + 30, 100)
+                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                                 / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
                     || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
             if (can_divine_heal && have_passive(passive_t::restore_hp))
