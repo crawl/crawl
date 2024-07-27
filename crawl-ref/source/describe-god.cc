@@ -911,6 +911,13 @@ static formatted_string _describe_god_powers(god_type which_god)
         {
             continue;
         }
+        // Skip over Makhleb's brand options after the first one, since
+        // only the first one has an associated god ability.
+        if (power.abil == ABIL_MAKHLEB_BRAND_SELF_2
+            || power.abil == ABIL_MAKHLEB_BRAND_SELF_3)
+        {
+            continue;
+        }
         have_any = true;
 
         if (you_worship(which_god)
