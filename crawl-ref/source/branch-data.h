@@ -427,7 +427,7 @@ const Branch branches[NUM_BRANCHES] =
     { BRANCH_CRUCIBLE, NUM_BRANCHES, -1, -1, 1, 0,
       brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_CRUCIBLE, DNGN_EXIT_CRUCIBLE, NUM_FEATURES,
-      "The Crucible", "The Crucible of Flesh", "Crucible",
+      "Crucible", "the Crucible of Flesh", "Crucible",
       "You are dragged down into the Crucible of Flesh!",
       BLACK, BLACK,
       '@', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
