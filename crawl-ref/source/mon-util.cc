@@ -1832,6 +1832,15 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
     }
 
+    // If this is the entrance to a portal vault (or another region of Pandemonium)
+    // only friendly monsters can traverse this.
+    if (!mon.friendly()
+        && (feat_is_portal_entrance(stair) || stair == DNGN_TRANSIT_PANDEMONIUM
+                                           || stair == DNGN_ENTER_PANDEMONIUM))
+    {
+        return false;
+    }
+
     // Everything else is fine
     return true;
 }

@@ -60,7 +60,7 @@ void place_transiting_monsters();
 void place_followers();
 void handle_followers(const coord_def &from,
                       bool (*handler)(const coord_def &pos,
-                                      const coord_def &from, bool &real));
+                                      const coord_def &from));
 void tag_followers();
 void untag_followers();
 void transport_followers_from(const coord_def &from);
