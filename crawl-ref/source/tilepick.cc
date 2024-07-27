@@ -3438,8 +3438,9 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case BROWN:
         if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
-        if (bolt.name == "entropic shot")
-            return TILE_BOLT_IRON_SHOT + dir;
+        else if (bolt.name == "volley of thorns" ||
+                 bolt.name == "spray of wooden splinters")
+            return TILE_BOLT_SPLINTERSPRAY + dir;
         if (bolt.name == "klown pie")
             return TILE_BOLT_PIE + dir;
         break;
@@ -3481,6 +3482,14 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case CYAN:
         if (bolt.name == "slug dart")
             return TILE_BOLT_STONE_ARROW + dir;
+        else if (bolt.name == "lance of force")
+            return TILE_BOLT_FORCE_LANCE + dir;
+        else if (bolt.name == "harpoon shot")
+            return TILE_BOLT_HARPOON_SHOT + dir;
+        else if (bolt.name == "spray of metal splinters")
+            return TILE_BOLT_METAL_SPLINTERS + dir;
+        else if (bolt.name == "ghostly fireball")
+            return TILE_BOLT_GHOSTLY_FIREBALL;
         else if (bolt.name == "umbral torchlight")
             return TILE_BOLT_UMBRAL_TORCHLIGHT;
         break;
@@ -3510,6 +3519,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
+    case TILE_BOLT_GHOSTLY_FIREBALL:
         return tile + ui_random(tile_main_count(tile));
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);

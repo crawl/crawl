@@ -37,6 +37,42 @@ iron_shot5
 iron_shot6
 iron_shot7
 
+splinters_thornwood0 BOLT_SPLINTERSPRAY
+splinters_thornwood1
+splinters_thornwood2
+splinters_thornwood3
+splinters_thornwood4
+splinters_thornwood5
+splinters_thornwood6
+splinters_thornwood7
+
+splinters_metal0 BOLT_METAL_SPLINTERS
+splinters_metal1
+splinters_metal2
+splinters_metal3
+splinters_metal4
+splinters_metal5
+splinters_metal6
+splinters_metal7
+
+force_lance0 BOLT_FORCE_LANCE
+force_lance1
+force_lance2
+force_lance3
+force_lance4
+force_lance5
+force_lance6
+force_lance7
+
+harpoon_shot0 BOLT_HARPOON_SHOT
+harpoon_shot1
+harpoon_shot2
+harpoon_shot3
+harpoon_shot4
+harpoon_shot5
+harpoon_shot6
+harpoon_shot7
+
 stone_arrow0 BOLT_STONE_ARROW
 stone_arrow1
 stone_arrow2
@@ -101,6 +137,9 @@ searing_ray5
 damnation BOLT_DAMNATION
 
 umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+
+ghostfire0 BOLT_GHOSTLY_FIREBALL
+ghostfire1
 
 irradiate0 BOLT_IRRADIATE
 irradiate1
