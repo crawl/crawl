@@ -1166,12 +1166,6 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
-    case ABIL_OKAWARU_DUEL:
-        if (brdepth[BRANCH_ARENA] == -1)
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-
     case ABIL_OKAWARU_GIFT_ARMOUR:
         if (you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY)
             || !player_can_use_armour())
