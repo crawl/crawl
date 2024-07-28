@@ -695,8 +695,11 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+%weight 8
 cache_of_fruit_0 DNGN_CACHE_OF_FRUIT
 cache_of_fruit_1
+%weight 10
+cache_of_fruit_2
 cache_of_meat_0 DNGN_CACHE_OF_MEAT
 
 %sdir dngn
