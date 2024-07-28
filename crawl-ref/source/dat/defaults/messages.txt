@@ -14,7 +14,7 @@ msc += $danger:Space warps( horribly)? around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
-msc += $danger:The blast of calcifying dust hits you!
+msc += $danger:The blast of calcifying dust hits you
 msc += $danger:you are engulfed in calcifying dust
 msc += $danger:is moving more slowly
 # Don't recolour acquirement messages along with messages about invisible monsters.
