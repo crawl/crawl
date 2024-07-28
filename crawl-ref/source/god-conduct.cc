@@ -656,7 +656,7 @@ static const like_response _yred_kill_response()
                              you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "a");
                     }
                 }
-                else if (!victim->has_ench(ENCH_SOUL_RIPE))
+                else
                 {
                     mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
                          you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "A",
