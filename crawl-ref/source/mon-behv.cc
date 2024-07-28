@@ -1406,7 +1406,11 @@ void make_mons_leave_level(monster* mon)
         if (mons_genus(mon->type) == MONS_ORC && you_worship(GOD_BEOGH))
         {
             if (you.can_see(*mon))
-                simple_monster_message(*mon, " donates their equipment to the cause.");
+            {
+                simple_monster_message(*mon,
+                    make_stringf(" donates %s equipment to the cause.",
+                        mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
+            }
             monster_drop_things(mon);
         }
 
