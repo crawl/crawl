@@ -108,7 +108,7 @@ local function test_potion(tries, iterations, premutate)
     sum = 0
     for i=1, tries do
         you.delete_all_mutations("mutation test")
-        assert(you.how_mutated(true, true, true) == 0,
+        assert(you.how_mutated(false, true, true) == 0,
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
         for i=1, premutate do
             -- note: won't guarantee `premutate` mutations, because some will
@@ -132,7 +132,7 @@ end
 local function test_random_mutations(tries, iterations, chance_temporary, chance_clear)
     for i=1, tries do
         you.delete_all_mutations("mutation test")
-        assert(you.how_mutated(true, true, true) == 0,
+        assert(you.how_mutated(false, true, true) == 0,
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
         for j=1, iterations do
             if crawl.x_chance_in_y(chance_clear, 100) then
