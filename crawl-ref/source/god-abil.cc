@@ -7123,7 +7123,7 @@ void makhleb_infernal_servant()
     int pow = you.skill(SK_INVOCATIONS);
     const bool hostile = one_chance_in(6);
     if (hostile)
-        min(27, pow += 3);
+        pow = min(27, pow + 3);
 
     // Top-end demons are only accessed with this mark
     if (!tyrant)
