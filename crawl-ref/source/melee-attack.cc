@@ -335,6 +335,8 @@ bool melee_attack::handle_phase_dodged()
                 == MONS_MINOTAUR)
             {
                 do_minotaur_retaliation();
+                if (!attacker->alive())
+                    return false;
             }
 
             if (defender->is_player() && you.duration[DUR_EXECUTION])
@@ -342,11 +344,9 @@ bool melee_attack::handle_phase_dodged()
                 melee_attack retaliation(&you, attacker);
                 retaliation.player_aux_setup(UNAT_EXECUTIONER_BLADE);
                 retaliation.player_aux_apply(UNAT_EXECUTIONER_BLADE);
+                if (!attacker->alive())
+                    return false;
             }
-
-            // Retaliations can kill!
-            if (!attacker->alive())
-                return false;
 
             if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
                 do_starlight();
