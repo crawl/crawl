@@ -151,8 +151,14 @@ local function test_random_mutations(tries, iterations, chance_temporary, chance
     end
 end
 
+local old_species = you.species()
+-- change to a species with no physiological mutations to conflict with tests
+assert(you.change_species("human"))
+
 test_basic_mutation_stuff()
 try_all_mutation_categories()
 test_potion(5, mut_iterations, 0)
 test_random_mutations(tries, mut_iterations, chance_temporary, chance_clear)
 you.delete_all_mutations("Mutation test")
+
+you.change_species(old_species)
