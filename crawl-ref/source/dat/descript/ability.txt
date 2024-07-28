@@ -339,8 +339,7 @@ redeemed once.
 # Makhleb
 Unleash Destruction ability
 
-Channels a blast of hellish
-{{
+Channels a blast of hellish {{
     if you.get_base_mutation_level("Dis destruction") == 1 then
         return "piercing fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
     elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
@@ -384,8 +383,7 @@ inexhaustible.
 %%%%
 Globe of Annihilation ability
 
-Launches a roiling sphere of intense destructive force drawn from the
-{{
+Launches a roiling sphere of intense destructive force drawn from the {{
     if you.get_base_mutation_level("Dis destruction") == 1 then
         return "ruthless spite of Dis."
     elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
@@ -402,8 +400,7 @@ Launches a roiling sphere of intense destructive force drawn from the
 This sphere gathers strength as it travels, and will attempt to home in on a
 designated target, though it moves and turns with considerable inertia. When it
 collides with a creature or other obstruction, it will detonate in a violent
-explosion of
-{{
+explosion of {{
     if you.get_base_mutation_level("Dis destruction") == 1 then
         return "acid or metal splinters"
     elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
