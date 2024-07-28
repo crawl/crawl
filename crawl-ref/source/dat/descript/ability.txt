@@ -342,13 +342,13 @@ Unleash Destruction ability
 Channels a blast of hellish
 {{
     if you.get_base_mutation_level("Dis destruction") == 1 then
-        return "fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
+        return "piercing fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
     elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
-        return "fire, cold, devastation (from Tartarus' influence), or negative energy"
+        return "piercing fire, cold, devastation (from Tartarus' influence), or negative energy"
     elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
-        return "fire, lava (from Gehenna's influence), lightning, or negative energy"
+        return "piercing fire, lava (from Gehenna's influence), lightning, or negative energy"
     elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
-        return "ice (from Cocytus' influence), cold, lightning, or negative energy"
+        return "piercing ice (from Cocytus' influence), cold, lightning, or negative energy"
     else
         return "fire, cold, lightning, or negative energy"
     end
