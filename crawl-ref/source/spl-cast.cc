@@ -484,9 +484,6 @@ int calc_spell_power(spell_type spell)
 {
     int power = _skill_power(spell);
 
-    if (you.divine_exegesis)
-        power += you.skill(SK_INVOCATIONS, 300);
-
     power = (power * you.intel()) / 10;
 
     // [dshaligram] Enhancers don't affect fail rates any more, only spell
@@ -512,9 +509,19 @@ int calc_spell_power(spell_type spell)
     // apply a stepdown, and scale.
     power = _stepdown_spellpower(power);
 
+    // Divine exegesis gives a flat bonus to spell power that scales
+    // linearly with invocations, reaching 150 at max invocations
+    // Also have a minimum spellpower
+    if (you.divine_exegesis)
+    {
+        power = max(power + you.skill(SK_INVOCATIONS, 150) / 27,
+            you.skill(SK_INVOCATIONS, 200) / 27);
+    }
+
     const int cap = spell_power_cap(spell);
     if (cap > 0)
         power = min(power, cap);
+
 
     return power;
 }
