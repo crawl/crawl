@@ -7123,7 +7123,7 @@ void makhleb_infernal_servant()
     int pow = you.skill(SK_INVOCATIONS);
     const bool hostile = one_chance_in(6);
     if (hostile)
-        pow += 3;
+        min(27, pow += 3);
 
     // Top-end demons are only accessed with this mark
     if (!tyrant)
@@ -7190,6 +7190,9 @@ void makhleb_infernal_servant()
 
         if (hostile)
         {
+            // Don't let Mark of the Tyrant produce fiends as hostiles
+            pow = min(pow, 18);
+
             mon_type = servant_picker.pick(_makhleb_servants, pow - 3, MONS_RED_DEVIL);
             mgen_data mg2(mon_type, BEH_HOSTILE, you.pos(), MHITYOU, MG_AUTOFOE);
             mg2.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET | MF_WAS_IN_VIEW);
