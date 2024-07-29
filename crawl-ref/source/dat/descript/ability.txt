@@ -340,14 +340,14 @@ redeemed once.
 Unleash Destruction ability
 
 Channels a blast of hellish {{
-    if you.get_base_mutation_level("Dis destruction") == 1 then
-        return "piercing fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
-    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
-        return "piercing fire, cold, devastation (from Tartarus' influence), or negative energy"
-    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
         return "piercing fire, lava (from Gehenna's influence), lightning, or negative energy"
     elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
         return "piercing ice (from Cocytus' influence), cold, lightning, or negative energy"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "piercing fire, cold, devastation (from Tartarus' influence), or negative energy"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "piercing fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
     else
         return "fire, cold, lightning, or negative energy"
     end
@@ -384,16 +384,16 @@ inexhaustible.
 Globe of Annihilation ability
 
 Launches a roiling sphere of intense destructive force drawn from the {{
-    if you.get_base_mutation_level("Dis destruction") == 1 then
-        return "ruthless spite of Dis."
-    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
-        return "wailing grief of Tartarus."
-    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
         return "endless fires of Gehenna."
     elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
         return "frigid wastes of Cocytus."
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "wailing grief of Tartarus."
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "ruthless spite of Dis."
     else
-        return "the very Hells themselves."
+        return "very Hells themselves."
     end
 }}
 
@@ -401,14 +401,14 @@ This sphere gathers strength as it travels, and will attempt to home in on a
 designated target, though it moves and turns with considerable inertia. When it
 collides with a creature or other obstruction, it will detonate in a violent
 explosion of {{
-    if you.get_base_mutation_level("Dis destruction") == 1 then
-        return "acid or metal splinters"
-    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
-        return "negative energy or devastation"
-    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
         return "fire or lava"
     elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
         return "cold or ice"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
     end
 }} whose radius depends on the distance travelled.
 
