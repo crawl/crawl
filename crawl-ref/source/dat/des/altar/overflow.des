@@ -1765,7 +1765,7 @@ TAGS:   temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen decor no_rotate
 TAGS:   layout_rooms layout_city layout_open
 KFEAT:  _ = altar_nemelex_xobeh
-SUBST:  e : dd', d : n', g : e., f : nn., i : hh. , h : nn. , k : j. , j : n.
+SUBST:  e : dd', d : n', g : e', f : nn', i : hh' , h : nn' , k : j' , j : n'
 SUBST:  G:GGTTUUbl
 KPROP:  'RS = no_tele_into
 MARKER: R = lua:fog_machine { cloud_type="calcifying dust", walk_dist=1, \
