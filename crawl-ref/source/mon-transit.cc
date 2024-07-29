@@ -180,8 +180,11 @@ static monster* _place_lost_monster(follower &f)
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
 
     // Duel targets that survive a duel (due to player excommunication) should
-    // be placed next to the player when they exit.
-    bool near_player = f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
+    // be placed next to the player when they exit. Duel targets *entering* a
+    // duel will be moved again later, but near_player prevents a tiny chance
+    // of them failing to place at all.
+    bool near_player = f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY)
+                       || f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY);
 
     if (monster* mons = f.place(near_player))
     {
