@@ -436,6 +436,33 @@ wall_stone_depths2
 wall_stone_depths3
 wall_stone_depths4
 
+wall_stone_abyss_a0 STONE_WALL_ABYSS_A
+wall_stone_abyss_a1
+wall_stone_abyss_a2
+wall_stone_abyss_a3
+wall_stone_abyss_a4
+wall_stone_abyss_a5
+wall_stone_abyss_a6
+wall_stone_abyss_a7
+
+wall_stone_abyss_b0 STONE_WALL_ABYSS_B
+wall_stone_abyss_b1
+wall_stone_abyss_b2
+wall_stone_abyss_b3
+wall_stone_abyss_b4
+wall_stone_abyss_b5
+wall_stone_abyss_b6
+wall_stone_abyss_b7
+
+wall_stone_abyss_c0 STONE_WALL_ABYSS_C
+wall_stone_abyss_c1
+wall_stone_abyss_c2
+wall_stone_abyss_c3
+wall_stone_abyss_c4
+wall_stone_abyss_c5
+wall_stone_abyss_c6
+wall_stone_abyss_c7
+
 # ssssssss
 %weight 10
 wall_stone_spider0 STONE_WALL_SPIDER

@@ -1345,6 +1345,16 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_DEPTHS;
     }
+    else if (player_in_branch(BRANCH_ABYSS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+        {
+            tileidx_t choices[3] = {TILE_STONE_WALL_ABYSS_A,
+                                    TILE_STONE_WALL_ABYSS_B,
+                                    TILE_STONE_WALL_ABYSS_C};
+            orig = choices[you.birth_time % 3];
+        }
+    }
     else if (player_in_branch(BRANCH_ZOT))
     {
         if (orig == TILE_DNGN_CRYSTAL_WALL)
