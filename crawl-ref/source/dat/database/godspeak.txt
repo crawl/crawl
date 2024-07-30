@@ -427,9 +427,13 @@ You briefly grow another tail.
 %%%%
 Xom random body part singular
 
+Your @random_body_part_internal_singular@ briefly wanders out of your body, then fuses itself back in!
+
 Your @random_body_part_external_singular@ briefly jumps off your body, then reattaches itself!
 %%%%
 Xom random body part plural
+
+Your @random_body_part_internal_plural@ briefly wander out of your body, then fuse themselves back in!
 
 Your @random_body_part_external_plural@ briefly jump off your body, then reattach themselves!
 %%%%
