@@ -95,6 +95,13 @@ private:
     }
 };
 
+enum body_part_class_flags
+{
+    BPART_INTERNAL = 1,
+    BPART_EXTERNAL = 1 << 1,
+    BPART_ANY      = (BPART_INTERNAL|BPART_EXTERNAL),
+};
+
 /// in what ways do a monster's tiles vary?
 enum mon_type_tile_variation
 {
@@ -468,7 +475,7 @@ monster_type random_monster_at_grid(const coord_def& p, bool species = false);
 void         init_mon_name_cache();
 monster_type get_monster_by_name(string name, bool substring = false);
 
-string random_body_part_name(bool ext, bool plural);
+string random_body_part_name(bool plural, int part_class);
 
 string do_mon_str_replacements(const string &msg, const monster& mons,
                                int s_type = -1);

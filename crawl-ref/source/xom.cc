@@ -45,6 +45,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
@@ -2931,10 +2932,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = _get_xom_speech("random body part singular");
 
-        str = replace_all(str, "@random_body_part_singular@",
-                          random_body_part_name(false, false));
+        str = replace_all(str, "@random_body_part_any_singular@",
+                          random_body_part_name(false, BPART_ANY));
+        str = replace_all(str, "@random_body_part_internal_singular@",
+                          random_body_part_name(false, BPART_INTERNAL));
         str = replace_all(str, "@random_body_part_external_singular@",
-                          random_body_part_name(true, false));
+                          random_body_part_name(false, BPART_EXTERNAL));
 
         messages.push_back(str);
     }
@@ -2942,10 +2945,12 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = _get_xom_speech("random body part plural");
 
-        str = replace_all(str, "@random_body_part_plural@",
-                          random_body_part_name(true, true));
+        str = replace_all(str, "@random_body_part_any_plural@",
+                          random_body_part_name(true, BPART_ANY));
+        str = replace_all(str, "@random_body_part_internal_plural@",
+                          random_body_part_name(true, BPART_INTERNAL));
         str = replace_all(str, "@random_body_part_external_plural@",
-                          random_body_part_name(true, true));
+                          random_body_part_name(true, BPART_EXTERNAL));
 
         messages.push_back(str);
     }
