@@ -16,6 +16,7 @@ struct mutation_def
     const char* gain[3];    ///< Message when you gain the mutation.
     const char* lose[3];    ///< Message when you lose the mutation.
     tileidx_t   tile;       ///< Icon for the mutation.
+    const char* will_gain[3]; ///< Message on the 'A' screen future XL gain of the mutation.
 };
 
 struct mutation_category_def
@@ -749,6 +750,8 @@ static const mutation_def mut_data[] =
   {"Your magical nature develops, letting you fly evasively.",
    "", ""},
   {"", "", ""},
+  0,
+  {"Your magical flight will help you evade attacks. (EV + 4)"}
 },
 
 { MUT_ACROBATIC, 0, 1, mutflag::good, false,
@@ -965,6 +968,8 @@ static const mutation_def mut_data[] =
    "Your tail grows strong enough to constrict your enemies.", ""},
   {"Your lower body returns to normal.",
    "Your snake tail weakens and can no longer constrict your enemies.", ""},
+   0,
+   {0, "Your tail will grow strong enough to constrict your foes."}
 },
 
 // Naga and Draconian only
@@ -1112,6 +1117,8 @@ static const mutation_def mut_data[] =
    "Your thick fur recedes somewhat.",
    "Your shaggy fur recedes somewhat."},
   TILEG_MUT_GENERIC_GOOD_MUTATION,
+
+  {0, 0, "Your shaggy fur will keep you warm. (AC + 3, rC+)"}
 },
 
 { MUT_HIGH_MAGIC, 2, 3, mutflag::good, false,
@@ -2456,6 +2463,8 @@ static const mutation_def mut_data[] =
   {"You are afflicted with vampirism.", "You are afflicted with vampirism and can become a bat while bloodless.", ""},
   {"You feel a craving for blood.", "You can now turn into a vampire bat when bloodless.", ""},
   {"Your craving for blood subsides.", "You can no longer turn into a bat.", ""},
+  0,
+  {"", "You will be able to turn into a vampire bat when bloodless.", ""}
 },
 
 { MUT_MERTAIL, 0, 1, mutflag::good, true,
