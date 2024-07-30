@@ -282,7 +282,7 @@ You shudder with dread.
 
 You suddenly feel all small and vulnerable.
 
-You taste blood in your mouth. It's definitely not yours.
+Blood fills your mouth. It's definitely not yours.
 
 %%%%
 hell_effect_noisy
