@@ -1136,9 +1136,10 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
     // Wizlab entries and conduits both have spinning sequential cycle
-    // tile animations.
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB ||
-        (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
+    // tile animations. The Jiyva altar, meanwhile, drips.
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
+       || bg_idx == TILE_DNGN_ALTAR_JIYVA
+       || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
         && Options.tile_misc_anim)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);

@@ -641,6 +641,7 @@ jiyva08
 jiyva09
 jiyva10
 jiyva11
+jiyva12
 fedhas DNGN_ALTAR_FEDHAS
 cheibriados DNGN_ALTAR_CHEIBRIADOS
 ashenzari DNGN_ALTAR_ASHENZARI

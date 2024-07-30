@@ -8156,6 +8156,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
         bolt beam;
         beam.range   = INFINITE_DISTANCE;
         beam.hit     = AUTOMATIC_HIT;
+        beam.name    = throwee.name(DESC_THE, true);
         beam.flavour = BEAM_VISUAL;
         beam.source  = thrower.pos();
         beam.target  = chosen_dest;

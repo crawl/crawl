@@ -3441,7 +3441,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         else if (bolt.name == "volley of thorns" ||
                  bolt.name == "spray of wooden splinters")
             return TILE_BOLT_SPLINTERSPRAY + dir;
-        if (bolt.name == "klown pie")
+        else if (bolt.name == "klown pie")
             return TILE_BOLT_PIE + dir;
         break;
 
