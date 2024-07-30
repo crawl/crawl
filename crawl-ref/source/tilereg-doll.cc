@@ -256,6 +256,7 @@ void DollEditRegion::render()
         "Body",
         "Gloves",
         "LHand",
+        "RHandWpn",
         "RHand",
         "Hair",
         "Beard",
