@@ -4305,6 +4305,9 @@ string random_body_part_name(bool plural, int part_class)
         plural_parts.push_back(false);
         body_parts.push_back("soul");
 
+        plural_parts.push_back(true);
+        body_parts.push_back("muscles");
+
         if (you.has_blood())
         {
             plural_parts.push_back(false);
