@@ -478,7 +478,7 @@ static vector<ability_def> &_get_ability_list()
         // Makhleb
         { ABIL_MAKHLEB_DESTRUCTION, "Unleash Destruction",
             0, scaling_cost(65, 2), 0, LOS_MAX_RANGE, {fail_basis::invo, 20, 5, 20},
-            abflag::dir_or_target },
+            abflag::dir_or_target | abflag::not_self },
         { ABIL_MAKHLEB_ANNIHILATION, "Globe of Annihilation",
             0, scaling_cost::fixed(6), 2, LOS_MAX_RANGE,
             {fail_basis::invo, 20, 5, 20}, abflag::dir_or_target },
