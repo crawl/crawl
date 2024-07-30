@@ -50,7 +50,7 @@ end
 default-depth: Crucible
 
 NAME:     regret_index_crucible_original
-TAGS:     no_item_gen no_pool_fixup allow_dup
+TAGS:     no_item_gen no_monster_gen no_pool_fixup allow_dup
 PLACE:    Crucible
 ORIENT:   encompass
 KFEAT:    M = altar_makhleb

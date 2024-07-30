@@ -1126,6 +1126,21 @@ POP_DEPTHS,
 },
 
 { // Crucible
+  {  1,  1,  100, FLAT, MONS_ICE_DEVIL },
+  {  1,  1,  100, FLAT, MONS_ORANGE_DEMON },
+  {  1,  1,  100, FLAT, MONS_RUST_DEVIL },
+  {  1,  1,  100, FLAT, MONS_RED_DEVIL },
+  {  1,  1,   75, FLAT, MONS_HELLWING },
+  {  1,  1,  100, FLAT, MONS_SOUL_EATER },
+  {  1,  1,  120, FLAT, MONS_YNOXINUL },
+  {  1,  1,  120, FLAT, MONS_SMOKE_DEMON },
+  {  1,  1,  120, FLAT, MONS_SUN_DEMON },
+  {  1,  1,  120, FLAT, MONS_SIXFIRHY },
+  {  1,  1,  100, FLAT, MONS_BLIZZARD_DEMON },
+  {  1,  1,  100, FLAT, MONS_GREEN_DEATH },
+  {  1,  1,   65, FLAT, MONS_CACODEMON },
+  {  1,  1,   50, FLAT, MONS_BALRUG },
+  {  1,  1,   50, FLAT, MONS_EXECUTIONER },
 },
 
 };
