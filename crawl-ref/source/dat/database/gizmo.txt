@@ -45,6 +45,9 @@ backup
 # another from the turbo encabulator article
 barescent
 
+# Look Around You
+besselheim
+
 bifurcated
 
 bismuth
@@ -240,6 +243,8 @@ shock
 
 sinusoidal
 
+sonic
+
 spiral
 
 # turbo encabulator
@@ -312,6 +317,8 @@ voltaic
 
 @gizmo_modifier@cyclic
 
+@gizmo_modifier@dermic
+
 @gizmo_modifier@dynamic
 
 @gizmo_modifier@faceted
@@ -331,6 +338,8 @@ voltaic
 @gizmo_modifier@matic
 
 @gizmo_modifier@metric
+
+@gizmo_modifier@meric
 
 @gizmo_modifier@phasic
 
@@ -376,6 +385,8 @@ balancer
 ballast
 
 battery
+
+bearing
 
 booster
 
@@ -500,6 +511,9 @@ grammeter
 
 grating
 
+# Look Around You
+gribbin
+
 grid
 
 grommet
@@ -565,6 +579,8 @@ phasor
 pinion
 
 pivot
+
+plating
 
 plug
 
@@ -732,6 +748,9 @@ auto
 
 auxo
 
+# Smells Like Nirvana
+bargle
+
 baro
 
 baryo
@@ -739,6 +758,8 @@ baryo
 bathy
 
 beepo
+
+benzo
 
 bi
 
@@ -791,6 +812,8 @@ dia
 
 dingle
 
+dodeca
+
 ecto
 
 eigen
@@ -832,7 +855,7 @@ helico
 
 hemi
 
-hepto
+hepta
 
 hetero
 
@@ -851,6 +874,8 @@ hygro
 hyper
 
 hypo
+
+icosa
 
 idio
 
@@ -914,6 +939,8 @@ meta
 
 metro
 
+micro
+
 mnemo
 
 mono
@@ -921,6 +948,8 @@ mono
 morpho
 
 multi
+
+myria
 
 myxo
 
@@ -974,6 +1003,8 @@ physio
 
 piezo
 
+placo
+
 poly
 
 posi
@@ -983,6 +1014,8 @@ post
 potentio
 
 pre
+
+preter
 
 pro
 
@@ -1006,11 +1039,15 @@ reticulo
 
 retro
 
+rhabdo
+
 rheo
 
 roto
 
 semi
+
+septa
 
 sesqui
 
@@ -1019,6 +1056,8 @@ sinistro
 spectro
 
 sphero
+
+spiro
 
 stereo
 
