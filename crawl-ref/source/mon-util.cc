@@ -4302,6 +4302,9 @@ string random_body_part_name(bool plural, int part_class)
 
     if (part_class & BPART_INTERNAL)
     {
+        plural_parts.push_back(false);
+        body_parts.push_back("soul");
+
         if (you.has_blood())
         {
             plural_parts.push_back(false);
