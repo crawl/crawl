@@ -103,6 +103,8 @@ endiom
 
 energy
 
+engrammatic
+
 experimental
 
 exponential
@@ -184,8 +186,6 @@ oscillating
 
 # turbo encabulator
 panandermic
-
-parabolic
 
 permeable
 
