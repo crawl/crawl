@@ -932,6 +932,29 @@ static formatted_string _describe_god_powers(god_type which_god)
         else
             desc.textcolour(DARKGREY);
 
+        // XXX: I don't like this, but there's no other obvious way to
+        //      slot the destruction upgrade mutations in at the right piety
+        //      point in the list for them.
+        if (which_god == GOD_MAKHLEB && power.rank == 4)
+        {
+            desc.textcolour(god_colour(which_god));
+            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+                desc.cprintf("Your Destruction is augmented by the power of Cocytus.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+                desc.cprintf("Your Destruction is augmented by the power of Dis.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+                desc.cprintf("Your Destruction is augmented by the power of Gehenna.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+                desc.cprintf("Your Destruction is augmented by the power of Tartarus.\n");
+            else
+            {
+                desc.textcolour(DARKGREY);
+                desc.cprintf("Your Destruction will be augmented by one of the Four Hells.\n");
+            }
+
+            continue;
+        }
+
         string buf = power.general;
 
         // Skip listing powers with no description (they are intended to be hidden)

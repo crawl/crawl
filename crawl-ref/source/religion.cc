@@ -187,6 +187,7 @@ const vector<vector<god_power>> & get_all_god_powers()
                  "unleash Makhleb's destructive might" },
             { 3, ABIL_MAKHLEB_INFERNAL_SERVANT,
                  "summon an infernal servant of Makhleb" },
+            { 4, "", ""},   // XXX: A marker, replaced by dynamic text in _describe_god_powers()
             { -1, ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER, ""},
             { 7, ABIL_MAKHLEB_BRAND_SELF_1,
                  "Makhleb will allow you to brand your body with an infernal mark... once.",
