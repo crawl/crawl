@@ -4378,6 +4378,9 @@ string random_body_part_name(bool plural, int part_class)
             body_parts.push_back(eyes);
         }
 
+        plural_parts.push_back(false);
+        body_parts.push_back("mouth");
+
         if (player_has_hair())
         {
             plural_parts.push_back(false);

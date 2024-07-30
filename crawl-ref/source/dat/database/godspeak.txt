@@ -369,6 +369,16 @@ Your ears wiggle.
 
 Steam briefly shoots from your ears!
 %%%%
+Xom mouth
+
+Your mouth briefly shrinks away entirely.
+
+Your mouth briefly widens across your entire face.
+
+You briefly grow another mouth.
+
+Smoke briefly pours from your mouth!
+%%%%
 Xom hair
 
 Your hair briefly feels incredibly bushy.

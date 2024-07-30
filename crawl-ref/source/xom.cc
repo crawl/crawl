@@ -2904,6 +2904,11 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    {
+        string str =_get_xom_speech("mouth");
+        messages.push_back(str);
+    }
+
     if (player_has_hair())
     {
         string str = _get_xom_speech("hair");
