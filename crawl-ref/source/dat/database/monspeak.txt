@@ -281,7 +281,7 @@ _friendly_imp_greeting
 
 @The_monster@ says, "I @_truckle_@ to your @_vassalage_@, @_suck_up_address_@ @_suck_up_adj1_@ and @_suck_up_adj2_@ @_suck_up_noun_@!"
 
-w:970
+w:300
 __NONE
 %%%%
 _cause_or_spread_
