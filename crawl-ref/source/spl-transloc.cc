@@ -151,6 +151,8 @@ void uncontrolled_blink(bool override_stasis)
     const coord_def origin = you.pos();
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
+
+    crawl_state.potential_pursuers.clear();
 }
 
 /**
@@ -1109,6 +1111,8 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
         move_player_to_grid(newpos, false);
         stop_delay(true);
     }
+
+    crawl_state.potential_pursuers.clear();
 
     _handle_teleport_update(large_change, old_pos);
     return !wizard_tele;
