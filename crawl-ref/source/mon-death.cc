@@ -2412,7 +2412,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
                  mons.name(DESC_YOUR).c_str());
+
+            int old_hd = mons.get_hit_dice();
             change_monster_type(&mons, MONS_BLAZEHEART_CORE);
+            mons.set_hit_dice(old_hd);
 
             // Cores should not count as summons and either expire or be removed
             // by recasting golem itself.

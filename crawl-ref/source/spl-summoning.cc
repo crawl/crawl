@@ -939,7 +939,7 @@ spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
     mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3, god,
                                 SPELL_SUMMON_BLAZEHEART_GOLEM);
     golem.flags &= ~MG_AUTOFOE; // !!!
-    golem.hd = 6 + div_rand_round(pow, 12);
+    golem.hd = 6 + div_rand_round(pow, 10);
 
     monster* mons = (create_monster(golem));
 
