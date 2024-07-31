@@ -1415,6 +1415,7 @@ public:
             return base * (30 + you.experience_level) / 59;
         return base;
     }
+    virtual bool is_usable() const {return false; };
     virtual int get_base_chance() const { return chance; }
     virtual bool xl_based_chance() const { return true; }
     virtual string describe() const;
@@ -1431,6 +1432,14 @@ public:
     AuxConstrict()
     : AuxAttackType(0, 100, "grab") { };
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
+                || you.has_mutation(MUT_TENTACLE_ARMS)
+                    && you.has_usable_tentacle()
+                || you.form == transformation::serpent;
+    }
 };
 
 class AuxKick: public AuxAttackType
@@ -1473,6 +1482,13 @@ public:
             return "tentacle spike";
         return name;
     }
+
+    bool is_usable() const override
+    {
+        return you.has_usable_hooves()
+               || you.has_usable_talons()
+               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
+    }
 };
 
 class AuxHeadbutt: public AuxAttackType
@@ -1485,6 +1501,11 @@ public:
     {
         return damage + you.get_mutation_level(MUT_HORNS) * 3;
     }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_HORNS);
+    }
 };
 
 class AuxPeck: public AuxAttackType
@@ -1492,6 +1513,11 @@ class AuxPeck: public AuxAttackType
 public:
     AuxPeck()
     : AuxAttackType(6, 67, "peck") { };
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_BEAK);
+    }
 };
 
 class AuxTailslap: public AuxAttackType
@@ -1513,6 +1539,16 @@ public:
             return SPWPN_WEAKNESS;
 
         return you.get_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
+    }
+
+    bool is_usable() const override
+    {
+        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
+        return you.has_tail()
+               // felid tails don't slap
+               && you.species != SP_FELID
+               // constricting tails are too slow to slap
+               && !you.has_mutation(MUT_CONSTRICTING_TAIL);
     }
 };
 
@@ -1563,6 +1599,16 @@ public:
         // consistent for mut descriptions.
         return 5 + you.skill(SK_UNARMED_COMBAT, 5) / 3;
     }
+
+    bool is_usable() const override
+    {
+        return !you.weapon() // UC only
+        // Bats like drinking punch, not throwing 'em.
+           && get_form()->can_offhand_punch()
+        // No punching with a shield or 2-handed wpn.
+        // Octopodes aren't affected by this, though!
+            && (you.arm_count() > 2 || you.has_usable_offhand());
+    }
 };
 
 class AuxBite: public AuxAttackType
@@ -1606,6 +1652,13 @@ public:
             return 100;
         return chance;
     }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
+            || (you.has_usable_fangs()
+                || you.get_mutation_level(MUT_ACIDIC_BITE));
+    }
 };
 
 class AuxPseudopods: public AuxAttackType
@@ -1618,6 +1671,11 @@ public:
     {
         return damage * you.has_usable_pseudopods();
     }
+
+    bool is_usable() const override
+    {
+        return you.has_usable_pseudopods();
+    }
 };
 
 class AuxTentacles: public AuxAttackType
@@ -1625,6 +1683,11 @@ class AuxTentacles: public AuxAttackType
 public:
     AuxTentacles()
     : AuxAttackType(12, 67, "squeeze") { };
+
+    bool is_usable() const override
+    {
+        return you.has_usable_tentacles();
+    }
 };
 
 
@@ -1649,6 +1712,12 @@ public:
     }
 
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_DEMONIC_TOUCH)
+            && you.has_usable_offhand();
+    }
 };
 
 class AuxMaw: public AuxAttackType
@@ -1660,6 +1729,11 @@ public:
         return get_form()->get_aux_damage(random);
     };
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.form == transformation::maw;
+    }
 };
 
 class AuxBlades: public AuxAttackType
@@ -1680,6 +1754,11 @@ public:
     };
 
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.duration[DUR_EXECUTION];
+    }
 };
 
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
@@ -1740,21 +1819,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     {
         damage_brand = SPWPN_VAMPIRISM;
     }
-}
-
-/**
- * Decide whether the player gets a bonus punch attack.
- *
- * @return  Whether the player gets a bonus punch aux attack on this attack.
- */
-bool melee_attack::player_gets_aux_punch()
-{
-    return !weapon // UC only
-    // Bats like drinking punch, not throwing 'em.
-           && get_form()->can_offhand_punch()
-    // No punching with a shield or 2-handed wpn.
-    // Octopodes aren't affected by this, though!
-           && (you.arm_count() > 2 || you.has_usable_offhand());
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -4111,6 +4175,11 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     ASSERT(atk >= UNAT_FIRST_ATTACK);
     ASSERT(atk <= UNAT_LAST_ATTACK);
     const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
+
+    // Does the player even qualify to use this type of aux?
+    if (aux->is_usable())
+        return false;
+
     if (!x_chance_in_y(aux->get_chance(), 100))
         return false;
 
@@ -4122,61 +4191,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
        return false;
     }
 
-    // XXX: dedup with mut_aux_attack_desc()
-    switch (atk)
-    {
-    case UNAT_CONSTRICT:
-        return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
-                || you.has_mutation(MUT_TENTACLE_ARMS)
-                    && you.has_usable_tentacle()
-                || you.form == transformation::serpent;
-
-    case UNAT_KICK:
-        return you.has_usable_hooves()
-               || you.has_usable_talons()
-               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
-
-    case UNAT_PECK:
-        return you.get_mutation_level(MUT_BEAK);
-
-    case UNAT_HEADBUTT:
-        return you.get_mutation_level(MUT_HORNS);
-
-    case UNAT_TAILSLAP:
-        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
-        return you.has_tail()
-               // felid tails don't slap
-               && you.species != SP_FELID
-               // constricting tails are too slow to slap
-               && !you.has_mutation(MUT_CONSTRICTING_TAIL);
-
-    case UNAT_PSEUDOPODS:
-        return you.has_usable_pseudopods();
-
-    case UNAT_TENTACLES:
-        return you.has_usable_tentacles();
-
-    case UNAT_BITE:
-        return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
-               || (you.has_usable_fangs()
-                   || you.get_mutation_level(MUT_ACIDIC_BITE));
-
-    case UNAT_PUNCH:
-        return player_gets_aux_punch();
-
-    case UNAT_TOUCH:
-        return you.get_mutation_level(MUT_DEMONIC_TOUCH)
-               && you.has_usable_offhand();
-
-    case UNAT_MAW:
-        return you.form == transformation::maw;
-
-    case UNAT_EXECUTIONER_BLADE:
-        return you.duration[DUR_EXECUTION];
-
-    default:
-        return false;
-    }
+    return true;
 }
 
 bool melee_attack::using_weapon() const
