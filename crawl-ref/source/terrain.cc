@@ -701,7 +701,8 @@ FEATFN_MEMOIZED(feat_is_critical, feat)
     return feat_stair_direction(feat) != CMD_NO_CMD
            || feat_altar_god(feat) != GOD_NO_GOD
            || feat == DNGN_TRANSPORTER_LANDING
-           || feat == DNGN_MALIGN_GATEWAY;
+           || feat == DNGN_MALIGN_GATEWAY
+           || feat == DNGN_ORB_DAIS;
 }
 
 /** Can you use this feature for a map border?
