@@ -829,4 +829,4 @@ Charlatan's Orb
 This orb is the work of a master artificer, contracted to retrieve the orb, who
 valued their life more than their professional integrity. While this fake
 faithfully recreates the eerie glow and space-warping properties of the true
-orb, it has no powers but a boost to Evocations.
+orb, the power it grants is artificial and only accessible to skilled evokers.
