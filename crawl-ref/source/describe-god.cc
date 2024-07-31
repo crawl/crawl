@@ -938,14 +938,14 @@ static formatted_string _describe_god_powers(god_type which_god)
         if (which_god == GOD_MAKHLEB && power.rank == 4)
         {
             desc.textcolour(god_colour(which_god));
-            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
-                desc.cprintf("Your Destruction is augmented by the power of Cocytus.\n");
-            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
-                desc.cprintf("Your Destruction is augmented by the power of Dis.\n");
-            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
                 desc.cprintf("Your Destruction is augmented by the power of Gehenna.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+                desc.cprintf("Your Destruction is augmented by the power of Cocytus.\n");
             else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
                 desc.cprintf("Your Destruction is augmented by the power of Tartarus.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+                desc.cprintf("Your Destruction is augmented by the power of Dis.\n");
             else
             {
                 desc.textcolour(DARKGREY);
