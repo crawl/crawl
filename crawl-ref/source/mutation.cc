@@ -1458,6 +1458,8 @@ private:
                 }
             }
         }
+        else
+            has_future_muts = false;
 
         if (items.empty())
         {
