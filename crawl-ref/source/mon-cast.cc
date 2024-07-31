@@ -2947,6 +2947,7 @@ static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt &bea
         return;
     beam.source = foe->pos();
     beam.target = foe->pos();
+    beam.draw_delay = 80;
     beam.fire();
 }
 
