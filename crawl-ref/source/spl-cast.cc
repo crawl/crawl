@@ -2951,6 +2951,14 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
         case SPELL_RIMEBLIGHT:
             return describe_rimeblight_damage(pow, terse);
+        case SPELL_HOARFROST_CANNONADE:
+        {
+            dice_def shot_dam = hoarfrost_cannonade_damage(pow, false);
+            dice_def finale_dam = hoarfrost_cannonade_damage(pow, true);
+
+            return make_stringf("%dd%d/%dd%d",
+                shot_dam.num, shot_dam.size, finale_dam.num, finale_dam.size);
+        }
         default:
             break;
     }

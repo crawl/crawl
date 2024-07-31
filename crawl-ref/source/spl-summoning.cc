@@ -2959,6 +2959,21 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     return spret::success;
 }
 
+static int _hoarfrost_cannon_hd(int pow, bool random = true)
+{
+    if (random)
+        return 4 + div_rand_round(pow, 20);
+    return 4 + pow / 20;
+}
+
+dice_def hoarfrost_cannonade_damage(int pow, bool finale)
+{
+    if (finale)
+        return zap_damage(ZAP_HOARFROST_BULLET_FINALE, _hoarfrost_cannon_hd(pow, false) * 12, true, false);
+    else
+        return zap_damage(ZAP_HOARFROST_BULLET, _hoarfrost_cannon_hd(pow, false) * 12, true, false);
+}
+
 spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 {
     fail_check();
@@ -2973,7 +2988,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
                                     SPELL_HOARFROST_CANNONADE);
     cannon.flags |= MG_FORCE_PLACE;
-    cannon.hd = 4 + div_rand_round(pow, 20);
+    cannon.hd = _hoarfrost_cannon_hd(pow);
 
     // Make both cannons share the same duration
     const int dur = random_range(16, 22) * BASELINE_DELAY;

@@ -131,6 +131,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool f
 string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
 
+dice_def hoarfrost_cannonade_damage(int pow, bool finale);
 spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail);
 
 dice_def hellfire_mortar_damage(int pow);
