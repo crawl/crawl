@@ -800,7 +800,7 @@ bool item_is_worth_listing(const item_def& item)
 // 3 - unrandart, 2 - artefact, 1 - glowing/runed, 0 - mundane
 static int _item_name_specialness(const item_def& item)
 {
-    if (is_unrandom_artefact(item))
+    if (is_unrandom_artefact(item) || is_xp_evoker(item))
         return 3;
 
     // You can tell something is an artefact, because it'll have a
