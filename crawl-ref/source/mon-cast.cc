@@ -820,6 +820,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 }
             }
         } } },
+    { SPELL_GRAVE_CLAW, {
+       _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            const int pow = mons_spellpower(caster, SPELL_GRAVE_CLAW);
+            cast_grave_claw(caster, beam.target, pow, false);
+        },
+    } },
     { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 
