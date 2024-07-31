@@ -212,14 +212,17 @@ bool start_ranged_constriction(actor& caster, actor& target, int duration,
     return true;
 }
 
-dice_def rimeblight_dot_damage(int pow)
+dice_def rimeblight_dot_damage(int pow, bool random)
 {
-    return dice_def(2, 4 + div_rand_round(pow, 17));
+    if (random)
+        return dice_def(2, 4 + div_rand_round(pow, 17));
+    else
+        return dice_def(2, 4 + pow / 17);
 }
 
 string describe_rimeblight_damage(int pow, bool terse)
 {
-    dice_def dot_damage = rimeblight_dot_damage(pow);
+    dice_def dot_damage = rimeblight_dot_damage(pow, false);
     dice_def shards_damage = zap_damage(ZAP_RIMEBLIGHT_SHARDS, pow, false, false);
 
     if (terse)
