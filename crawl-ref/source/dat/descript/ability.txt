@@ -409,6 +409,8 @@ explosion of {{
         return "negative energy or devastation"
     elseif you.get_base_mutation_level("Dis destruction") == 1 then
         return "acid or metal splinters"
+    else
+        return "hellish energy"
     end
 }} whose radius depends on the distance travelled.
 
