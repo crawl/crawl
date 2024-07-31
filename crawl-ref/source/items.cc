@@ -797,14 +797,11 @@ bool item_is_worth_listing(const item_def& item)
     }
 }
 
-// 2 - artefact, 1 - glowing/runed, 0 - mundane
+// 3 - unrandart, 2 - artefact, 1 - glowing/runed, 0 - mundane
 static int _item_name_specialness(const item_def& item)
 {
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_MISSILES && item.base_type != OBJ_JEWELLERY)
-    {
-        return 0;
-    }
+    if (is_unrandom_artefact(item))
+        return 3;
 
     // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
@@ -858,6 +855,7 @@ string item_message(vector<const item_def *> const &items)
                     out_string += "</" + colour + ">";
                 switch (specialness)
                 {
+                case 3: colour = "lightcyan"; break; // unrandart
                 case 2: colour = "yellow";   break; // artefact
                 case 1: colour = "white";    break; // glowing/runed
                 case 0: colour = "darkgrey"; break; // mundane
