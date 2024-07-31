@@ -1633,7 +1633,7 @@ spret cast_dispersal(int pow, bool fail)
 
 int gravitas_radius(int pow)
 {
-    return 2 + (pow / 45);
+    return 2 + (pow / 48);
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
@@ -1725,7 +1725,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
     // Bind all hostile monsters in place and damage them
     // (friendlies are exempt from this part)
-    int dur = (random_range(2, 5) + div_rand_round(pow, 30)) * BASELINE_DELAY;
+    int dur = (random_range(2, 4) + div_rand_round(pow, 25)) * BASELINE_DELAY;
     for (distance_iterator di(where, false, false, radius); di; ++di)
     {
         if (!you.see_cell_no_trans(*di))
