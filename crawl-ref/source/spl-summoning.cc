@@ -203,6 +203,14 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
         old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
         old_dog->lose_ench_levels(ENCH_POISON, 1);
         old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+
+        // Give our familiar a small amount of extra duration, if its duration
+        // is currently low, to avoid imbuing it and then having it immediately
+        // poof before it can even do anything with the buff.
+        mon_enchant abj = old_dog->get_ench(ENCH_ABJ);
+        if (abj.duration < 110)
+            abj.duration += random_range(60, 90);
+        old_dog->update_ench(abj);
     }
 
     return spret::success;
