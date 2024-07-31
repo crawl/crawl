@@ -590,7 +590,7 @@ Okawaru wrath
 Pakellas wrath
 
 Those that offend Pakellas will find themselves completely unable to make use
-of their devices for the duration of Pakellas's displeasure. Those who abandon
+of their devices for the duration of Pakellas' displeasure. Those who abandon
 Pakellas altogether will also continue to be unable to regenerate their magical
 power so long as Pakellas' attention remains on them.
 %%%%

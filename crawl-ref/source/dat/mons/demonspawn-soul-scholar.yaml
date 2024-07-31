@@ -1,0 +1,21 @@
+name: "demonspawn soul scholar"
+glyph: {char: "6", colour: lightmagenta}
+flags: [see_invis, speaks, warm_blood]
+resists: {cold: 3}
+species: demonspawn
+holiness: [natural, demonic]
+will: 60
+attacks:
+ - {type: hit, damage: 25}
+hd: 15
+hp_10x: 925
+ac: 9
+ev: 12
+spells: demonspawn_soul_scholar
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Kikubaaqudgha

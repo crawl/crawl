@@ -304,6 +304,10 @@ enum tag_minor_version
     TAG_MINOR_COGLIN_NO_JEWELLERY, // Remove all jewellery from Coglins
     TAG_MINOR_TALISMANS_SEEN,      // Keep track of seen talismans
     TAG_MINOR_FIX_APOSTLE_DAMAGE,  // Fix damage tracking of banished apostles
+    TAG_MINOR_MON_AURA_REFACTORING,// Mark enchantments from passive auras in mon_enchant
+    TAG_MINOR_GRAVE_CLAW_CHARGES,  // Add stockpiling of Grave Claw charges
+    TAG_MINOR_ENDLESS_DIVINE_SHIELD, // Make Divine Shield not expire with time
+    TAG_MINOR_NEGATIVE_DIVINE_SHIELD, // Fix negative Divine Shield charges
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

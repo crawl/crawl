@@ -4,7 +4,9 @@ name: Tengu
 difficulty: Intermediate
 difficulty_priority: 40
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_feet
+  - no_ears
 aptitudes:
   xp: 0
   hp: -2
@@ -46,19 +48,19 @@ mutations:
   7:
     MUT_TENGU_FLIGHT: 1
 recommended_jobs:
-  - JOB_BERSERKER
-  - JOB_REAVER
-  - JOB_HEDGE_WIZARD
-  - JOB_CONJURER
-  - JOB_SUMMONER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
+  - berserker
+  - reaver
+  - hedge wizard
+  - conjurer
+  - summoner
+  - fire elementalist
+  - air elementalist
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_POLEARMS
-  - SK_LONG_BLADES
-  - SK_STAVES
+  - maces and flails
+  - axes
+  - polearms
+  - long blades
+  - staves
 
 walking_verb: Glid
 child_name: Chick

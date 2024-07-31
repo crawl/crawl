@@ -212,7 +212,16 @@ static void _do_wizard_command(int wiz_command)
 
     case '\\': debug_make_shop(); break;
     case '|': wizard_create_all_artefacts(true); break;
-    case CONTROL('\\'): wizard_create_all_artefacts(false); break;
+
+    case CONTROL('\\'):
+#ifdef USE_TILE_LOCAL
+    // Control-\ generates CONTROL(xxx) on console, but LC_CONTROL(xxx) on
+    // local tiles, as do all the non-letter control sequences that work on
+    // console.
+    case LC_CONTROL('\\'):
+#endif
+        wizard_create_all_artefacts(false);
+        break;
 
     case ';': wizard_list_levels(); break;
     case ':': wizard_list_branches(); break;

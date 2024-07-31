@@ -617,7 +617,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_NECROTISE, "Necrotise",
+    SPELL_SOUL_SPLINTER, "Soul Splinter",
     spschool::necromancy,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     1,
@@ -864,12 +864,12 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ROT, "Cigotuvi's Dreadful Rot",
-    spschool::necromancy | spschool::air | spschool::alchemy,
-    spflag::unclean,
-    2,
-    50,
-    -1, -1,
+    SPELL_PUTREFACTION, "Cigotuvi's Putrefaction",
+    spschool::necromancy | spschool::air,
+    spflag::target | spflag::unclean,
+    4,
+    100,
+    5, 5,
     0,
     TILEG_CORPSE_ROT,
 },
@@ -1282,7 +1282,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
     spschool::conjuration | spschool::alchemy,
-    spflag::target | spflag::area | spflag::not_self,
+    spflag::target | spflag::area | spflag::not_self | spflag::no_ghost,
     4,
     200,
     4, 4,
@@ -1397,14 +1397,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_HELL_BEAST, "Summon Hell Beast",
+    SPELL_SUMMON_SIN_BEAST, "Summon Sin Beast",
     spschool::summoning,
     spflag::unholy | spflag::monster | spflag::selfench,
     4,
     0,
     -1, -1,
     0,
-    TILEG_SUMMON_HELL_BEAST,
+    TILEG_SUMMON_SIN_BEAST,
 },
 
 {
@@ -1609,7 +1609,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     2,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CHAOS_BREATH,
 },
 
 {
@@ -1915,7 +1915,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_HOLY_FLAMES,
 },
 
 {
@@ -2033,6 +2033,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_GREATER_ENSNARE, "Greater Ensnare",
+    spschool::conjuration | spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    6,
+    200,
+    5, 5,
+    0,
+    TILEG_ENSNARE,
+},
+
+{
     SPELL_THUNDERBOLT, "Thunderbolt",
     spschool::conjuration | spschool::air,
     spflag::dir_or_target | spflag::not_self,
@@ -2091,7 +2102,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DAZZLING_FLASH, "Dazzling Flash",
     spschool::conjuration | spschool::hexes,
-    spflag::area | spflag::no_ghost,
+    spflag::area,
     3,
     50,
     2, 3,
@@ -2423,7 +2434,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CHAIN_OF_CHAOS,
 },
 
 {
@@ -2438,14 +2449,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_BLACK_MARK, "Black Mark",
+    SPELL_SIGN_OF_RUIN, "Sign of Ruin",
     spschool::necromancy,
     spflag::monster,
     7,
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_ABILITY_KIKU_SIGN_OF_RUIN,
 },
 
 {
@@ -2513,28 +2524,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     0,
     TILEG_SUMMON_BLAZEHEART_GOLEM,
-},
-
-{
-    SPELL_SHADOW_SHARD, "Shadow Shard",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    5,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
-    SPELL_SHADOW_BOLT, "Shadow Bolt",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    5,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -2728,7 +2717,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_SPIT_LAVA,
 },
 
 {
@@ -2752,7 +2741,7 @@ static const struct spell_desc spelldata[] =
     0,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FLAMING_CLOUD,
 },
 
 {
@@ -2808,7 +2797,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FUNERAL_DIRGE,
 },
 
 {
@@ -2830,7 +2819,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_FLAY,
 },
 
 {
@@ -2987,14 +2976,15 @@ static const struct spell_desc spelldata[] =
     TILEG_CLEANSING_FLAME,
 },
 
+// Evoker-only now
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
     spschool::translocation,
-    spflag::target | spflag::not_self | spflag::needs_tracer,
+    spflag::target | spflag::needs_tracer | spflag::no_ghost,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,
-    0,
+    8,
     TILEG_GRAVITAS,
 },
 
@@ -3039,18 +3029,18 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     15,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_DOOM_HOWL,
 },
 
 {
-    SPELL_AURA_OF_BRILLIANCE, "Aura of Brilliance",
+    SPELL_PRAYER_OF_BRILLIANCE, "Prayer of Brilliance",
     spschool::conjuration,
     spflag::area | spflag::monster,
     5,
     200,
     -1, -1,
     0,
-    TILEG_AURA_OF_BRILLIANCE,
+    TILEG_PRAYER_OF_BRILLIANCE,
 },
 
 {
@@ -3194,7 +3184,7 @@ static const struct spell_desc spelldata[] =
     50,
     3, 3,
     0,
-    TILEG_POISONOUS_VAPOURS,
+    TILEG_MERCURY_VAPOURS,
 },
 
 {
@@ -3211,7 +3201,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BORGNJORS_VILE_CLUTCH, "Borgnjor's Vile Clutch",
     spschool::necromancy | spschool::earth,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::not_self | spflag::needs_tracer,
     5,
     200,
     6, 6,
@@ -3249,7 +3239,7 @@ static const struct spell_desc spelldata[] =
     200,
     6, 6,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_HARPOON_SHOT,
 },
 
 {
@@ -3455,8 +3445,8 @@ static const struct spell_desc spelldata[] =
     SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
     spflag::none,
-    4,
-    100,
+    7,
+    200,
     -1, -1,
     0,
     TILEG_MANIFOLD_ASSAULT,
@@ -3526,7 +3516,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_CONJURE_LIVING_SPELLS,
 },
 
 {
@@ -3598,7 +3588,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_SPIDERS, "Summon Spiders",
     spschool::summoning | spschool::alchemy,
-    spflag::mons_abjure | spflag::monster,
+    spflag::monster,
     6,
     200,
     -1, -1,
@@ -3762,6 +3752,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MASS_REGENERATION, "Mass Regeneration",
+    spschool::necromancy,
+    spflag::monster  | spflag::helpful,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_REGENERATION,
+},
+
+{
     SPELL_NOXIOUS_BREATH, "Noxious Breath",
     spschool::conjuration | spschool::air | spschool:: alchemy,
     spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
@@ -3848,6 +3849,258 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     10,
     TILEG_ERROR,
+},
+
+{
+    SPELL_PILEDRIVER, "Maxwell's Portable Piledriver",
+    spschool::translocation,
+    spflag::none,
+    3,
+    100,
+    5, 5,
+    0,
+    TILEG_PILEDRIVER,
+},
+
+{
+    SPELL_GELLS_GAVOTTE, "Gell's Gavotte",
+    spschool::translocation,
+    spflag::target,
+    6,
+    200,
+    1, 1,
+    0,
+    TILEG_GAVOTTE,
+},
+
+{
+    SPELL_MAGNAVOLT, "Magnavolt",
+    spschool::air | spschool::earth,
+    spflag::target | spflag::needs_tracer | spflag::destructive
+    | spflag::prefer_farthest,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_MAGNAVOLT,
+},
+
+{
+    SPELL_FULSOME_FUSILLADE, "Fulsome Fusillade",
+    spschool::alchemy | spschool::conjuration,
+    spflag::area | spflag::destructive | spflag::chaotic,
+    8,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_FULSOME_FUSILLADE,
+},
+
+{
+    SPELL_RIMEBLIGHT, "Rimeblight",
+    spschool::necromancy | spschool::ice,
+    spflag::dir_or_target | spflag::unclean | spflag::destructive,
+    7,
+    200,
+    5, 5,
+    0,
+    TILEG_RIMEBLIGHT,
+},
+
+{
+    SPELL_HOARFROST_CANNONADE, "Hoarfrost Cannonade",
+    spschool::alchemy | spschool::ice,
+    spflag::none,
+    5,
+    200,
+    -1, -1,
+    0,
+    TILEG_HOARFROST_CANNONADE,
+},
+
+{
+    SPELL_SEISMIC_SHOCKWAVE, "Seismic Shockwave",
+    spschool::alchemy | spschool::earth,
+    spflag::target,
+    7,
+    200,
+    6, 6,
+    0,
+    TILEG_SUMMON_LIGHTNING_SPIRE,
+},
+
+{
+    SPELL_HOARFROST_BULLET, "Hoarfrost Bullet",
+    spschool::conjuration | spschool::ice,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_THROW_ICICLE,
+},
+
+{
+    SPELL_FLASHING_BALESTRA, "Flashing Balestra",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_TUKIMAS_DANCE,
+},
+
+{
+    SPELL_BESTOW_ARMS, "Bestow Arms",
+    spschool::hexes,
+    spflag::area | spflag::utility | spflag::monster,
+    5,
+    200,
+    6, 6,
+    0,
+    TILEG_BESTOW_ARMS,
+},
+
+{
+    SPELL_HELLFIRE_MORTAR, "Hellfire Mortar",
+    spschool::earth | spschool::fire,
+    spflag::dir_or_target | spflag::destructive,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    20,
+    TILEG_BOLT_OF_MAGMA,
+},
+
+// Dithmenos shadow mimic spells
+{
+    SPELL_SHADOW_SHARD, "Shadow Shard",
+    spschool::earth,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_SHARD,
+},
+
+{
+    SPELL_SHADOW_BEAM, "Shadow Beam",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_BEAM,
+},
+
+{
+    SPELL_SHADOW_BALL, "Shadowball",
+    spschool::fire,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOWBALL,
+},
+
+{
+    SPELL_CREEPING_SHADOW, "Creeping Shadow",
+    spschool::ice,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_CREEPING_SHADOW,
+},
+
+{
+    SPELL_SHADOW_TEMPEST, "Shadow Tempest",
+    spschool::air,
+    spflag::area | spflag::monster | spflag::needs_tracer | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_TEMPEST,
+},
+
+{
+    SPELL_SHADOW_PRISM, "Shadow Prism",
+    spschool::alchemy,
+    spflag::target | spflag::area | spflag::not_self | spflag::monster
+    | spflag::needs_tracer | spflag::silent,
+    5,
+    200,
+    4, 4,
+    0,
+    TILEG_SHADOW_PRISM,
+},
+
+
+{
+    SPELL_SHADOW_PUPPET, "Shadow Puppet",
+    spschool::summoning,
+    spflag::monster | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_PUPPET,
+},
+
+{
+    SPELL_SHADOW_BIND, "Shadow Bind",
+    spschool::translocation,
+    spflag::target | spflag::monster | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_BIND,
+},
+
+{
+    SPELL_SHADOW_TORPOR, "Shadow Torpor",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_TORPOR,
+},
+
+{
+    SPELL_SHADOW_DRAINING, "Shadow Draining",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer
+    | spflag::silent,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_SHADOW_DRAINING,
+},
+
+{
+    SPELL_GRAVE_CLAW, "Grave Claw",
+    spschool::necromancy,
+    spflag::target | spflag::not_self,
+    2,
+    50,
+    4, 4,
+    0,
+    TILEG_GRAVE_CLAW,
 },
 
 {

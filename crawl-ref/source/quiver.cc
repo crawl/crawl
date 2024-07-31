@@ -1032,7 +1032,6 @@ namespace quiver
         switch (s)
         {
         case SPELL_FULMINANT_PRISM:
-        case SPELL_GRAVITAS: // will autotarget to a monster if allowed, should we allow?
         case SPELL_PASSWALL: // targeted, but doesn't make sense with autotarget
         case SPELL_GOLUBRIAS_PASSAGE: // targeted, but doesn't make sense with autotarget
             return true;
@@ -1072,6 +1071,7 @@ namespace quiver
                                           // that are clutched, and spell
                                           // targeting handles this case.
         case SPELL_APPORTATION: // Apport doesn't target monsters at all
+        case SPELL_MAGNAVOLT:
             return true;
         default:
             return _spell_needs_manual_targeting(s);
@@ -1249,6 +1249,12 @@ namespace quiver
             // TODO: is showing the spell letter useful?
             qdesc.cprintf("%s", spell == SPELL_MAXWELLS_COUPLING ?
                                 "Capacitive Coupling" : spell_title(spell));
+
+            if (spell == SPELL_GRAVE_CLAW)
+            {
+                qdesc.cprintf(" (%d/%d)", you.props[GRAVE_CLAW_CHARGES_KEY].get_int()
+                                        , GRAVE_CLAW_MAX_CHARGES);
+            }
 
             if (fail_severity(spell) > 0)
             {
@@ -1445,13 +1451,19 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
+            case ABIL_COMBUSTION_BREATH:
+            case ABIL_GLACIAL_BREATH:
+            case ABIL_GALVANIC_BREATH:
             case ABIL_CAUSTIC_BREATH:
+            case ABIL_NULLIFYING_BREATH:
+            case ABIL_STEAM_BREATH:
+            case ABIL_NOXIOUS_BREATH:
+            case ABIL_MUD_BREATH:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
             case ABIL_FEDHAS_OVERGROW:
-            case ABIL_DITHMENOS_SHADOW_STEP:
             case ABIL_QAZLAL_UPHEAVAL:
             case ABIL_RU_POWER_LEAP:
             case ABIL_USKAYAW_LINE_PASS:
@@ -1514,7 +1526,7 @@ namespace quiver
 
             // TODO: does non-targeted case come up?
             if (target.isCancel && !target.interactive && is_targeted())
-                mprf("No targets found!");
+                mpr("No targets found!");
 
             t = target; // copy back, in case they are different
         }
@@ -1842,6 +1854,7 @@ namespace quiver
             case MISC_HORN_OF_GERYON:
             case MISC_QUAD_DAMAGE:
             case MISC_PHANTOM_MIRROR:
+            case MISC_GRAVITAMBOURINE:
                 return false;
             default:
                 return true;
@@ -2842,7 +2855,7 @@ namespace quiver
             {
                 set_to_quiver(make_shared<quiver::action>());
                 // TODO maybe drop this messaging?
-                mprf("Clearing quiver.");
+                mpr("Clearing quiver.");
                 return false;
             }
             else if (isadigit(key))

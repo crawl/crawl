@@ -1,0 +1,25 @@
+enum: JOB_CINDER_ACOLYTE
+name: "Cinder Acolyte"
+short_name: CA
+category: Zealot
+category_priority: 90
+str: 6
+int: 6
+dex: 0
+spells:
+  - SPELL_SCORCH
+equipment:
+  - "robe"
+weapon_choice: plain
+recommended_species:
+  - mountain dwarf
+  - draconian
+  - oni
+  - djinni
+  - gnoll
+skills:
+  fighting: 3
+  weapon: 3
+  spellcasting: 1
+  fire magic: 3
+create_enum: false

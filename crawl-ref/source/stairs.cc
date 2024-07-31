@@ -252,11 +252,15 @@ static void _clear_golubria_traps()
     }
 }
 
-static void _clear_prisms()
+static void _clear_constructs()
 {
     for (auto &mons : menv_real)
-        if (mons.type == MONS_FULMINANT_PRISM)
+        if (mons.type == MONS_FULMINANT_PRISM
+            || mons.type == MONS_SHADOW_PRISM
+            || mons.type == MONS_HELLFIRE_MORTAR)
+        {
             mons.reset();
+        }
 }
 
 static void _complete_zig()
@@ -289,7 +293,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
-    _clear_prisms();
+    _clear_constructs();
 }
 
 static void _update_travel_cache(const level_id& old_level,
@@ -489,7 +493,7 @@ static void _hell_effects()
     if (have_passive(passive_t::resist_hell_effects)
         && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
-        simple_god_message("'s power protects you from the chaos of Hell!");
+        simple_god_message(" power protects you from the chaos of Hell!", true);
         return;
     }
 
@@ -992,6 +996,9 @@ void floor_transition(dungeon_feature_type how,
 
         if (branch == BRANCH_GAUNTLET)
             _gauntlet_effect();
+
+        if (branch == BRANCH_ARENA)
+            okawaru_duel_healing();
 
         const set<branch_type> boring_branch_exits = {
             BRANCH_TEMPLE,

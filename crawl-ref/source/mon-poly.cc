@@ -10,6 +10,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "attitude-change.h"
+#include "colour.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
@@ -87,7 +88,20 @@ void monster_drop_things(monster* mons,
         }
 
         // If a monster is swimming, the items are ALREADY underwater.
-        move_item_to_grid(&item, mons->pos(), mons->swimming());
+        if (move_item_to_grid(&item, mons->pos(), mons->swimming())
+            && player_under_penance(GOD_GOZAG)
+            // Dropping items into water/lava may have destroyed them
+            && item != NON_ITEM
+            && env.item[item].base_type == OBJ_GOLD
+            && you.see_cell(mons->pos())
+            && x_chance_in_y(env.item[item].quantity, 100)
+            && you.can_be_dazzled())
+        {
+            string msg = make_stringf("%s dazzles you with the glint of coin.",
+                                       god_name(GOD_GOZAG).c_str());
+            mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+            blind_player(10 + random2(8), ETC_GOLD);
+        }
         mons->inv[i] = NON_ITEM;
     }
 }
@@ -204,8 +218,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // trj spills out jellies when polied, as if he'd been hit for mhp.
     if (mons->type == MONS_ROYAL_JELLY)
     {
-        simple_monster_message(*mons, "'s form twists and warps, and jellies "
-                               "spill out!");
+        simple_monster_message(*mons, " form twists and warps, and jellies "
+                               "spill out!", true);
         trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
                                    mons->hit_points);
     }
@@ -240,6 +254,12 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
         name   = "shaped Serpent of Hell";
         flags |= MF_NAME_SUFFIX;
     }
+    else if (mons->type == MONS_THE_ENCHANTRESS
+            || mons->mname == "shaped Enchantress")
+    {
+        name   = "shaped Enchantress";
+        flags |= MF_NAME_SUFFIX;
+    }
     else if (!mons->mname.empty())
     {
         if (flags & MF_NAME_MASK)
@@ -256,7 +276,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     {
         name = mons->name(DESC_PLAIN, true);
 
-        // "Blork the orc" and similar.
+        // "Blorkula the orcula" and similar.
         const size_t the_pos = name.find(" the ");
         if (the_pos != string::npos)
             name = name.substr(0, the_pos);
@@ -573,7 +593,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (mons_demon_tier(mons->type) == -1)
     {
         return simple_monster_message(*mons,
-            "'s appearance momentarily alters.");
+            " appearance momentarily alters.", true);
     }
 
     targetc = _concretize_target(*mons, targetc, power);
@@ -758,7 +778,7 @@ void seen_monster(monster* mons)
     {
         const item_def *wyrmbane = you.weapon();
         if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
-            mprf("<green>Wyrmbane glows as a worthy foe approaches.</green>");
+            mpr("<green>Wyrmbane glows as a worthy foe approaches.</green>");
     }
 
     // attempt any god conversions on first sight

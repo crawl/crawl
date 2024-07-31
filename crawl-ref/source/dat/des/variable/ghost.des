@@ -537,7 +537,7 @@ SUBST:   L = ':60 9 0 %, % = %*, * = **e|
 SUBST:   y = G:70 1
 : elseif you.in_branch("Spider") then
 MONS:    orange crystal statue / oklob plant
-KMONS:   2 = arachne / spark wasp, spark wasp
+KMONS:   2 = spark wasp / jorogumo
 NSUBST:  M = O / 2 / * = * O:5 8:5
 SUBST:   L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
 SUBST:   y = G:70 1, ' = ':80 W:20
@@ -694,11 +694,11 @@ KMONS:  O = player ghost
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 9 then
-MONS:   wraith / shadow
+MONS:   wraith / shadowghast
 SUBST:  d = *, e = *%, f = %$--,  ghi = -
 NSUBST: D = 1--
 :     elseif you.depth() < 12 then
-MONS:   wraith / shadow, freezing wraith
+MONS:   wraith / shadowghast, freezing wraith
 SUBST:  e = *, f = %$,  ghi = -
 NSUBST: D = 112---
 :     elseif you.depth() < 14 then
@@ -820,7 +820,7 @@ NSUBST: D = 2=1 / 3=1- / 2=2- / -
 :     elseif you.depth() < 12 then
 MONS:   mummy / wight / zombie place:D:12 / spectre place:D:12 \
         / simulacrum place:D:12 / phantom / wraith / vampire
-MONS:   vampire mosquito band / shadow / death knight / skeletal warrior \
+MONS:   vampire mosquito band / shadowghast / death knight / skeletal warrior \
         / freezing wraith w:5
 SUBST:  e = *, f = *%,  g = %$--, hi = -
 NSUBST: D = 3=1 / 3=1- / 2=2- / -
@@ -1162,8 +1162,8 @@ DEPTH:  Depths
 KITEM:  O = wand of polymorph ident:type
 KMONS:  O = player ghost
 MONS:   any common demon
-MONS:   balrug / blizzard demon / cacodemon / green death / \
-        hell beast / lorocyproca / shadow demon
+MONS:   balrug / blizzard demon / cacodemon / \
+        sin beast / shadow demon / green death
 MONS:   brimstone fiend / tzitzimitl / ice fiend / hell sentinel
 : ghost_good_loot(_G)
 SUBST:  f = |*
@@ -2394,7 +2394,7 @@ kmons("y = orc warrior ; " .. disto_weapon("warrior",
 kmons("z = skeletal warrior ; " .. disto_weapon("warrior", "randart"))
 }}
 :     if you.depth() < 6 then
-MONS:   any lesser demon / small abomination
+MONS:   any lesser demon
 MONS:   toenail golem / ancient zyme
 SUBST:  d = *%, e = %$, fghij= -
 NSUBST: - = qrs / 2=1 / 2=1- / 2--- / -

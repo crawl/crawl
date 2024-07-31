@@ -121,6 +121,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "startup.h"
@@ -330,6 +331,12 @@ int main(int argc, char *argv[])
 #ifdef USE_TILE
     if (!tiles.initialise())
         return -1;
+#endif
+
+#ifdef USE_TILE_LOCAL
+    // Hook up text colour redefinitions
+    for (auto col : Options.custom_text_colours)
+        term_colours[col.colour_index] = col.colour_def;
 #endif
 
     _launch_game_loop();
@@ -2631,6 +2638,8 @@ void world_reacts()
         _update_still_winds();
     if (!crawl_state.game_is_arena())
         player_reacts_to_monsters();
+
+    clear_monster_flags();
 
     add_auto_excludes();
 

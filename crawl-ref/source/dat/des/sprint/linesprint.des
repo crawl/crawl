@@ -628,7 +628,7 @@ KITEM:    d = plate armour plus:5 ident:all /\
     acid dragon scales plus:1 ident:all /\
     storm dragon scales plus:2 ident:all w:5 /\
     shadow dragon scales plus:2 ident:all w:5 /\
-    gold dragon scales plus:0 ident:all /\
+    golden dragon scales plus:0 ident:all /\
     pair of gloves plus:1 ident:all /\
     pair of gloves plus:0 good_item ident:all /\
     pair of boots plus:1 ident:all /\
@@ -844,8 +844,8 @@ KITEM:    d = plate armour plus:6 ident:all /\
     storm dragon scales plus:3 good_item ident:all w:5 /\
     shadow dragon scales plus:5 ident:all w:5 /\
     shadow dragon scales plus:3 good_item ident:all w:5 /\
-    gold dragon scales plus:4 ident:all /\
-    gold dragon scales plus:0 good_item ident:all /\
+    golden dragon scales plus:4 ident:all /\
+    golden dragon scales plus:0 good_item ident:all /\
     pair of gloves plus:2 ident:all /\
     pair of gloves plus:0 good_item ident:all /\
     pair of boots plus:2 ident:all /\

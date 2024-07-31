@@ -31,6 +31,7 @@
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "map-knowledge.h" // set_terrain_visible
 #include "mapmark.h"
 #include "message.h"
@@ -38,6 +39,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
+#include "orb.h"
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
@@ -513,7 +515,7 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
-/** Is this feature a type of water, with the concomitant dangers/bonuss?
+/** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
@@ -926,6 +928,20 @@ int count_adjacent_icy_walls(const coord_def &pos)
     return count;
 }
 
+// Could an actor standing at a given position see a wall next to a given cell?
+bool near_visible_wall(coord_def observer_pos, coord_def cell)
+{
+    if (!cell_see_cell(observer_pos, cell, LOS_NO_TRANS))
+        return false;
+    for (adjacent_iterator ai(cell); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai))
+            && cell_see_cell(observer_pos, *ai, LOS_NO_TRANS))
+        {
+            return true;
+        }
+    return false;
+}
+
 void feat_splash_noise(dungeon_feature_type feat)
 {
     if (crawl_state.generating_level)
@@ -1055,6 +1071,12 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     {
         int index = item.index();
         move_item_to_grid(&index, np);
+
+        // Since some methods of shoving items can be gamed, make the orb get
+        // sulky whenever it's moved at all.
+        if (item_is_orb(item))
+            orb_complain_about_being_moved(pos);
+
         return true;
     }
     return false;
@@ -1257,7 +1279,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
     if (you.can_pass_through(pos))
         move_player_to_grid(pos, false);
     else
-        you_teleport_now();
+        push_or_teleport_actor_from(pos);
 }
 
 /**
@@ -1286,16 +1308,12 @@ void dungeon_terrain_changed(const coord_def &pos,
 {
     if (env.grid(pos) == nfeat)
         return;
+    // If we're trying to place a wall on top of a monster, push it out of the
+    // way first.
     if (feat_is_wall(nfeat) && monster_at(pos))
-        return;
+        push_or_teleport_actor_from(pos);
     if (feat_is_trap(nfeat) && env.trap.find(pos) == env.trap.end())
-    {
-        // TODO: create a trap_def in env for this case?
-        mprf(MSGCH_ERROR,
-            "Attempting to change terrain to a trap without a corresponding"
-            " trap_def!");
-        nfeat = DNGN_FLOOR;
-    }
+        place_specific_trap(pos, trap_type_from_feature(nfeat), 1);
 
 
     _dgn_check_terrain_covering(pos, env.grid(pos), nfeat);
@@ -2187,7 +2205,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
         if (ctype == TERRAIN_CHANGE_BOG)
             env.map_knowledge(pos).set_feature(newfeat, colour);
         dungeon_terrain_changed(pos, newfeat, false, true, false, false,
-            newfeat_flv, newfeat_flv_idx);
+                                newfeat_flv, newfeat_flv_idx);
         env.grid_colours(pos) = colour;
         return true;
     }
@@ -2387,6 +2405,46 @@ coord_def push_actor_from(const coord_def& pos,
     // The new position of the monster is now an additional veto spot for
     // monsters.
     return newpos;
+}
+
+/**
+ * Move an actor from 'pos' to some available space, by increasingly forceful
+ * means. Will first try to push into an adjacent moveable space. If none is
+ * available, will instead move into the closest habitable space without LOS_RADIUS.
+ * (Note: there is no guarantee that this isn't on the other side of a wall, but
+ * since this is usually used to push things OUT of walls, that is acceptable).
+ * Finally, if this fails, simply teleport the actor at random.
+ *
+ * @return the new coordinates for the actor.
+ */
+coord_def push_or_teleport_actor_from(const coord_def& pos)
+{
+    actor* act = actor_at(pos);
+    if (!act)
+        return coord_def(0,0);
+
+    if (push_actor_from(pos, nullptr, true).origin())
+    {
+        for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
+        {
+            if (!actor_at(*di)
+                && ((act->is_player() && you.can_pass_through(*di))
+                    || act->is_monster() && monster_habitable_grid(act->as_monster(), env.grid(*di))))
+            {
+                if (act->is_player())
+                    move_player_to_grid(*di, false);
+                else
+                    act->move_to_pos(*di);
+                return act->pos();
+            }
+        }
+
+        // Failed to find anywhere in LOS_RADIUS that was valid to put this actor,
+        // so just teleport them instead
+        act->teleport(true);
+    }
+
+    return act->pos();
 }
 
 /** Close any door at the given position. Handles the grid change, but does not

@@ -669,12 +669,16 @@ huge body can wear it.
 %%%%
 warlock's mirror
 
-A handheld array of hexagonal mirrors, synthesized from a truly exotic
+A handheld array of hexagonal mirrors, synthesised from a truly exotic
 substance and polished to a blinding sheen.
 %%%%
 amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
+%%%%
+scarf of invisibility
+
+A scarf that can be activated to render its wearer invisible.
 %%%%
 Maxwell's thermic engine
 

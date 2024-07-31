@@ -123,7 +123,7 @@ function species_mock(e)
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
-    return "hell beast"
+    return "sin beast"
   elseif you.race() == "Djinni" then
     return "crimson imp"
   elseif you.race():find("Draconian") then
@@ -506,7 +506,7 @@ DEPTH: D:5-
 KFEAT: C = altar_dithmenos
 {{
   if you.absdepth() >= 9 then
-     mons("shadow")
+     mons("shadowghast")
   else
      local imp_weight = 9 - you.depth()
      if imp_weight > 0 then
@@ -1267,7 +1267,7 @@ TAGS:    no_monster_gen patrolling no_trap_gen uniq_altar_hepliaklqana
 SHUFFLE: 123
 SHUFFLE: _-G
 : if you.in_branch("D") then
-:     if you.depth() < 4 then
+:     if you.depth() < 5 then
 KMONS:   1 = orc wizard; quarterstaff . robe
 # Early for kobold brigands, but they get a wand of charming instead of darts,
 # so less threatening.
@@ -1278,7 +1278,7 @@ KMONS:   3 = orc ; flail . kite shield . chain mail
 # We generate one ancestor monster for D:3-9
 NSUBST:  123 = 2=.
 :     elseif you.depth() < 7 then
-KMONS:   1 = blork the orc ; quarterstaff good_item . robe \
+KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe \
              / orc wizard ; quarterstaff good_item . robe \
              , orc wizard ; quarterstaff good_item . robe
 KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe \
@@ -2002,15 +2002,16 @@ ENDMAP
 
 NAME:  okawaru_altar_gauntlet_db
 TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
+TAGS:  no_pool_fixup
 KFEAT: _ = altar_okawaru
 KPROP: 1 = no_tele_into
 : if you.in_branch("Depths") then
 MONS:  spriggan defender ; flail . robe . buckler . boomerang w:3 /\
        tengu warrior ; long sword . leather armour . buckler . boomerang
-:else
+: else
 MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
        orc; stone q:5 / kobold; stone q:5
-:end
+: end
 : interest_check(_G)
 MAP
   xxx
@@ -2491,10 +2492,10 @@ NAME:       tgw_sif
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
 TAGS:       temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna
-: if you.absdepth() <= 3 then
+: if you.absdepth() <= 4 then
 MONS:       Jessica
 : elseif you.absdepth() <= 6 then
-MONS:       orc wizard w:15 / Blork the orc
+MONS:       orc wizard w:15 / Blorkula the orcula
 : elseif you.in_branch("Depths") then
 MONS:       deep elf annihilator
 :else
@@ -3461,6 +3462,7 @@ SUBST: _ = ____C
 : end
 NSUBST:  " = 2:^ / 1:G__ / 5:m /  * = ltbm~......
 NSUBST:  T = 2:^ / *:., ^ = 2:^ / *:.
+COLOUR:  G = mountain
 TILE:    G = dngn_scintillating_statue
 : set_feature_name("granite_statue", "scintillating statue")
 : interest_check(_G)
@@ -3898,7 +3900,7 @@ TAGS:   transparent uniq_altar_zin
 KFEAT:  _ = altar_zin
 KFEAT:  S = metal_statue
 COLOUR: c = white
-COLOUR: G = silver
+COLOUR: GS = silver
 TILE:   c = wall_church
 TILE:   G = dngn_statue_triangle
 TILE:   S = dngn_silver_statue
@@ -4031,7 +4033,7 @@ TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
 TAGS: temple_overflow_1 transparent decor
 KFEAT: G = metal_statue
 SUBST: X = xxx.
-COLOUR: ' = yellow
+COLOUR: 'G = yellow
 COLOUR: c = white
 TILE: G = dngn_golden_statue
 TILE: c = wall_church
@@ -4331,6 +4333,34 @@ xxxXXX+CCCxxx
     x.@.x
 ENDMAP
 
+NAME:   dolorous_temple_overflow_order_and_chaos_3
+TAGS:   temple_overflow_2 temple_overflow_nemelex_xobeh temple_overflow_zin
+TAGS:   no_item_gen no_monster_gen no_trap_gen transparent decor
+KPROP:  12 = no_tele_into
+MONS:   generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
+MONS:   generate_awake angel god:zin dbname:zin_angel
+KFEAT:  A = altar_nemelex_xobeh
+KFEAT:  B = altar_zin
+KFEAT:  _ = floor
+TILE:   b = dngn_crystal_lightmagenta
+FTILE:  _ = floor_limestone
+COLOUR: b = lightmagenta
+COLOUR: _ = brown
+KMASK:  12 = opaque
+: set_feature_name("crystal_wall", "wall of pink crystal")
+: interest_check(_G)
+MAP
+ ....bbbb+vvvv....
+..bbbb..._...vvvv..
+.bb....U._.T....vv.
+.bmm....._.....mmv.
+.b1m..A.._..B..m2v.
+.bmm....._.....mmv.
+.bb....U._.T....vv.
+..bbbb..._...vvvv..
+ ....bbbb+vvvv....
+ENDMAP
+
 NAME:    grunt_temple_overflow_magic_moments
 TAGS:    temple_overflow_3 temple_overflow_kikubaaqudgha
 TAGS:    temple_overflow_sif_muna temple_overflow_vehumet
@@ -4338,7 +4368,7 @@ TAGS:    no_item_gen transparent
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
-ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotise \
+ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:soul_splinter \
          numspells:1
 # You already get a direct damage spell by looting the other gods' altars.
 ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
@@ -4432,7 +4462,7 @@ KFEAT:  O = altar_zin
 KFEAT:  G = metal_statue
 : if crawl.one_chance_in(4) then
 SUBST:  v = x
-COLOUR: G = white
+COLOUR: G = silver
 TILE:   G = dngn_silver_statue
 TILE:   x = wall_orc
 FTILE:  +._OG$ = floor_w_marble
@@ -4600,7 +4630,7 @@ KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / skeleton / phantom
-MONS: wraith / vampire / shadow / w:5 death knight / w:5 skeletal warrior
+MONS: wraith / vampire / shadowghast / w:5 death knight / w:5 skeletal warrior
 MONS: flayed ghost / death knight
 NSUBST: 2 = 2 / 2-
 : end
@@ -4643,7 +4673,7 @@ TAGS:   temple_overflow_hepliaklqana temple_overflow_dithmenos
 KPROP:  12- = no_tele_into
 KMASK:  12- = no_item_gen
 KMASK:  12- = no_monster_gen
-MONS:   ancestor, shadow
+MONS:   ancestor, shadowghast
 KFEAT:  A = altar_hepliaklqana
 KFEAT:  B = altar_dithmenos
 KFEAT:  DE = stone_wall
@@ -4784,6 +4814,45 @@ xxc..cdc..cxx
       @
 ENDMAP
 
+NAME:    dolorous_overflow_abandoned_chaos_spawn_temple
+TAGS:    temple_overflow_3 temple_overflow_xom
+TAGS:    temple_overflow_makhleb temple_overflow_nemelex_xobeh
+TAGS:    no_item_gen no_monster_gen no_trap_gen transparent
+SHUFFLE: DEF
+KFEAT:   D = altar_xom
+KFEAT:   E = altar_makhleb
+KFEAT:   F = altar_nemelex_xobeh
+NSUBST:  G = 2:g / *:G
+NSUBST:  H = 1:+ / *:b
+NSUBST:  . = 1:i / *:.
+KPROP:   1 = no_tele_into
+MONS:    generate_awake chaos spawn
+KMONS:   g = pile of debris
+KITEM:   i = any damaged weapon ego:chaos ident:all
+COLOUR:  b = lightred
+COLOUR:  G = mountain
+TILE:    b = dngn_crystal_lightred
+TILE:    G = dngn_scintillating_statue
+KMASK:   1 = opaque
+: set_feature_name("crystal_wall", "wall of orange crystal")
+: set_feature_name("granite_statue", "scintillating statue")
+MAP
+   bbHbb
+ bbbb.bbbb
+bbb.....bbb
+H....G....H
+b.........b
+b..D...E..b
+b...mmm...b
+H.G.m1m.G.H
+b...mmm...b
+b....F....b
+b.........b
+H....G....H
+bbb.....bbb
+ bbbb.bbbb
+   bbHbb
+ENDMAP
 
 ### Variable overflow altars ##################################################
 

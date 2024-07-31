@@ -62,6 +62,7 @@
 #include "mapmark.h"
 #include "misc.h"
 #include "mon-death.h"
+#include "mon-ench.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-place.h"
  #include "mon-poly.h"
@@ -1424,6 +1425,22 @@ void tag_read(reader &inf, tag_type tag_id)
                     dec_mitm_item_quantity(si.index(), si->quantity);
                 }
             }
+
+        // These you-related changes have to be after terrain is loaded,
+        // because they might cause you to lose flight. That will check
+        // the terrain below you and crash if the map hasn't loaded yet.
+        if (you.species == SP_FORMICID)
+            remove_one_equip(EQ_HELMET, false, true);
+
+        if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
+        {
+            if (you.has_mutation(MUT_NO_JEWELLERY))
+            {
+                remove_one_equip(EQ_AMULET, false, true);
+                remove_one_equip(EQ_RIGHT_RING, false, true);
+                remove_one_equip(EQ_LEFT_RING, false, true);
+            }
+        }
 #endif
         break;
     case TAG_GHOST:
@@ -2453,6 +2470,7 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_RING_OF_FLAMES:
         case SPELL_HASTE:
         case SPELL_STICKS_TO_SNAKES:
+        case SPELL_GRAVITAS:
             return SPELL_NO_SPELL;
 
         case SPELL_FLAME_TONGUE:
@@ -3204,6 +3222,21 @@ static void _tag_read_you(reader &th)
                 break;
             }
         }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_ENDLESS_DIVINE_SHIELD)
+    {
+        // Prevent players who upgraded with Divine Shield active from starting
+        // with potentially hundreds of stored blocks.
+        if (you.duration[DUR_DIVINE_SHIELD])
+            you.duration[DUR_DIVINE_SHIELD] = you.attribute[ATTR_DIVINE_SHIELD];
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_NEGATIVE_DIVINE_SHIELD)
+    {
+        // Fix bugged negative charges.
+        if (you.duration[DUR_DIVINE_SHIELD] < 0)
+            you.duration[DUR_DIVINE_SHIELD] = 0;
     }
 #endif
 
@@ -4303,6 +4336,13 @@ static void _tag_read_you(reader &th)
         // state with no associated mutations. It's fine, it'll
         // all clear up once the form ends.
     }
+
+    // Set up recharge info so players can actually cast the spell ever.
+    if (th.getMinorVersion() < TAG_MINOR_GRAVE_CLAW_CHARGES
+        && you.has_spell(SPELL_GRAVE_CLAW))
+    {
+        gain_grave_claw_soul(true);
+    }
 #endif
 }
 
@@ -4592,18 +4632,6 @@ static void _tag_read_you_items(reader &th)
         // FOOD_PURGE and FOOD_PURGE_AP_FIX, copy the old exemplar FOOD_PEAR.
         if (food_pickups[FOOD_FRUIT] == AP_FORCE_NONE)
             food_pickups[FOOD_FRUIT] = food_pickups[FOOD_PEAR];
-    }
-    if (you.species == SP_FORMICID)
-        remove_one_equip(EQ_HELMET, false, true);
-
-    if (th.getMinorVersion() < TAG_MINOR_COGLIN_NO_JEWELLERY)
-    {
-        if (you.has_mutation(MUT_NO_JEWELLERY))
-        {
-            remove_one_equip(EQ_AMULET, false, true);
-            remove_one_equip(EQ_RIGHT_RING, false, true);
-            remove_one_equip(EQ_LEFT_RING, false, true);
-        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
@@ -5340,7 +5368,7 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
-    if (item.is_type(OBJ_STAVES, STAFF_CHANNELING))
+    if (item.is_type(OBJ_STAVES, STAFF_CHANNELLING))
         item.sub_type = STAFF_ENERGY;
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
@@ -5699,7 +5727,7 @@ void unmarshallItem(reader &th, item_def &item)
         { ARM_ICE_DRAGON_HIDE,          ARM_ICE_DRAGON_ARMOUR },
         { ARM_STEAM_DRAGON_HIDE,        ARM_STEAM_DRAGON_ARMOUR },
         { ARM_STORM_DRAGON_HIDE,        ARM_STORM_DRAGON_ARMOUR },
-        { ARM_GOLD_DRAGON_HIDE,         ARM_GOLD_DRAGON_ARMOUR },
+        { ARM_GOLDEN_DRAGON_HIDE,       ARM_GOLDEN_DRAGON_ARMOUR },
         { ARM_SWAMP_DRAGON_HIDE,        ARM_SWAMP_DRAGON_ARMOUR },
         { ARM_PEARL_DRAGON_HIDE,        ARM_PEARL_DRAGON_ARMOUR },
         { ARM_SHADOW_DRAGON_HIDE,       ARM_SHADOW_DRAGON_ARMOUR },
@@ -5983,6 +6011,7 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallInt(th, me.source);
     marshallShort(th, min(me.duration, INFINITE_DURATION));
     marshallShort(th, min(me.maxduration, INFINITE_DURATION));
+    marshallByte(th, me.ench_is_aura);
 }
 
 static mon_enchant unmarshall_mon_enchant(reader &th)
@@ -5994,6 +6023,10 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     me.source      = unmarshallInt(th);
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MON_AURA_REFACTORING)
+        me.ench_is_aura = static_cast<ench_aura_type>(unmarshallByte(th));
+#endif
     return me;
 }
 
@@ -6337,8 +6370,8 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         case LIGHTGREEN:   // corrupter
             mi.type = MONS_DEMONSPAWN_CORRUPTER;
             break;
-        case LIGHTMAGENTA: // black sun
-            mi.type = MONS_DEMONSPAWN_BLACK_SUN;
+        case LIGHTMAGENTA: // soul scholar
+            mi.type = MONS_DEMONSPAWN_SOUL_SCHOLAR;
             break;
         case CYAN:         // worldbinder
             mi.type = MONS_WORLDBINDER;
@@ -7097,6 +7130,7 @@ void unmarshallMonster(reader &th, monster& m)
         }
 #if TAG_MAJOR_VERSION == 34
         else if (slot.spell != SPELL_DELAYED_FIREBALL
+                 && slot.spell != SPELL_GRAVITAS
                  && slot.spell != SPELL_MELEE
                  && slot.spell != SPELL_NO_SPELL)
         {
@@ -7257,7 +7291,7 @@ void unmarshallMonster(reader &th, monster& m)
             m.type = MONS_DEMONSPAWN_CORRUPTER;
             break;
         case LIGHTMAGENTA: // black sun
-            m.type = MONS_DEMONSPAWN_BLACK_SUN;
+            m.type = MONS_DEMONSPAWN_SOUL_SCHOLAR;
             break;
         case CYAN:         // worldbinder
             m.type = MONS_WORLDBINDER;

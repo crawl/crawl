@@ -414,9 +414,11 @@ void lose_level()
  * @param announce_full     Whether to print messages even when fully resisting
  *                          the drain.
  * @param ignore_protection Whether to ignore the player's rN.
+ * @param quiet             Whether to hide all messages that would be printed
+ *                          by this.
  * @return                  Whether draining occurred.
  */
-bool drain_player(int power, bool announce_full, bool ignore_protection)
+bool drain_player(int power, bool announce_full, bool ignore_protection, bool quiet)
 {
     if (crawl_state.disables[DIS_AFFLICTIONS])
         return false;
@@ -425,7 +427,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (protection == 3)
     {
-        if (announce_full)
+        if (announce_full && !quiet)
             canned_msg(MSG_YOU_RESIST);
 
         return false;
@@ -433,7 +435,8 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (protection > 0)
     {
-        canned_msg(MSG_YOU_PARTIALLY_RESIST);
+        if (!quiet)
+            canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
     }
 
@@ -448,7 +451,8 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
         dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
         calc_hp();
 
-        mpr("You feel drained.");
+        if (!quiet)
+            mpr("You feel drained.");
         xom_is_stimulated(15);
         return true;
     }
@@ -713,25 +717,8 @@ static void _powered_by_pain(int dam)
 
 static void _maybe_fog(int dam)
 {
-    const int minpiety = have_passive(passive_t::hit_smoke)
-        ? piety_breakpoint(rank_for_passive(passive_t::hit_smoke) - 1)
-        : piety_breakpoint(2); // Xom
-
     const int upper_threshold = you.hp_max / 2;
-    const int lower_threshold = upper_threshold
-                                - upper_threshold
-                                  * (you.piety - minpiety)
-                                  / (MAX_PIETY - minpiety);
-    if (have_passive(passive_t::hit_smoke)
-        && (dam > 0 && you.form == transformation::shadow
-            || dam >= lower_threshold
-               && x_chance_in_y(dam - lower_threshold,
-                                upper_threshold - lower_threshold)))
-    {
-        mpr("You emit a cloud of dark smoke.");
-        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
-    }
-    else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
+    if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
@@ -952,7 +939,7 @@ static void _god_death_messages(kill_method_type death_type,
                 msg = " appreciates " + killer->name(DESC_ITS)
                         + " killing of an apostate.";
             }
-            simple_god_message(msg.c_str(), GOD_BEOGH);
+            simple_god_message(msg.c_str(), false, GOD_BEOGH);
         }
 
         // Doesn't depend on Okawaru worship - you can still lose the duel
@@ -961,7 +948,7 @@ static void _god_death_messages(kill_method_type death_type,
         {
             const string msg = " crowns " + killer->name(DESC_THE, true)
                                 + " victorious!";
-            simple_god_message(msg.c_str(), GOD_OKAWARU);
+            simple_god_message(msg.c_str(), false, GOD_OKAWARU);
         }
     }
 }
@@ -1011,6 +998,14 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
+    // Marionettes will never hurt the player with their spells (even if they
+    // have somehow killed themselves in the process)
+    if (monster* mon_source = cached_monster_copy_by_mid(source))
+    {
+        if (mon_source->attitude == ATT_MARIONETTE)
+            dam = 0;
+    }
+
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
     if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
     {
@@ -1030,11 +1025,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.form == transformation::shadow)
-        {
-            drain_amount = (dam - (dam / 2));
-            dam /= 2;
-        }
         if (you.may_pruneify() && you.cannot_act())
             dam /= 2;
         if (you.petrified())

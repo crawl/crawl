@@ -303,7 +303,7 @@ of hostile magic. Each level of this mutation reduces your willpower further.
 %%%%
 see invisible mutation
 
-You have supernaturally acute eyesight, allowing you to see monsters that are
+You have supernaturally acute vision, allowing you to see monsters that are
 hidden from mundane sight. This has no effect on your accuracy otherwise.
 %%%%
 clarity mutation
@@ -478,11 +478,6 @@ monsters with greater willpower can resist it. Each level of this mutation
 allows more distant monsters to be affected. The third level of this mutation
 also allows you to paralyse monsters in the same way while zapping wands.
 %%%%
-noise suppression mutation
-
-Your surroundings are quieter, reducing the distance that noise will travel
-from any place you can see.
-%%%%
 icemail mutation
 
 You are coated in a protective layer of ice. Fiery attacks can temporarily melt
@@ -541,7 +536,7 @@ You are surrounded by an aura of silence. Those adjacent to you cannot make any
 sound. This prevents most forms of spellcasting and prayer, though demonic
 magic, being noiseless, is unaffected.
 %%%%
-bedeviling mutation
+bedevilling mutation
 
 You cast Hex spells with increased power.
 %%%%
@@ -792,7 +787,7 @@ faith mutation
 
 You were embalmed with holy oils and sacred spices and bound about with blessed
 cloth. Now you have a special connection with the divine, allowing you to gain
-favor with your chosen god more quickly.
+favour with your chosen god more quickly.
 %%%%
 devour on kill mutation
 

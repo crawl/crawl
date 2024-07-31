@@ -1525,6 +1525,25 @@ void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
     glyph_overlays.push_back({gc, glyph});
 }
 
+// Simple helper function to reduce duplication with repeatedly used animation code
+void flash_tile(coord_def p, colour_t colour, int delay)
+{
+    if (!(Options.use_animations & UA_BEAM))
+        return;
+
+    if (!in_los_bounds_v(grid2view(p)))
+        return;
+
+#ifdef USE_TILE
+        view_add_tile_overlay(p, tileidx_zap(colour));
+#endif
+        view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
+                                   static_cast<unsigned short>(colour)});
+
+    if (delay > 0)
+        animation_delay(delay, true);
+}
+
 void view_clear_overlays()
 {
 #ifdef USE_TILE
@@ -1665,6 +1684,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
     cell->flash_colour = BLACK;
+    cell->flash_alpha = 0;
 #endif
 
     // Don't hide important information by recolouring monsters.
@@ -1680,6 +1700,19 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
                                && !feat_is_solid(env.grid(gc)));
 
+#ifdef USE_TILE
+    if (you.duration[DUR_BLIND] && you.see_cell(gc))
+    {
+        cell->flash_colour = real_colour(you.props[BLIND_COLOUR_KEY].get_int());
+        // Using a square curve for the alpha is nicer on the eyes than a straight multiple.
+        // The effect of alpha is already disproportionate depending on the flash colour
+        // and may need to be revised: for a white flash the effect is already extreme by
+        // around alpha 80, but for darker colours it is way dimmer and needs more like 150.
+        const int alpha_base = gc.distance_from(you.pos());
+        cell->flash_alpha = max(1, alpha_base * alpha_base);
+    }
+#endif
+
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
@@ -1688,8 +1721,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         else if (gc != you.pos() && allow_mon_recolour)
             cell->colour = real_colour(flash_colour);
 #ifdef USE_TILE
-        if (you.see_cell(gc))
+        if (you.see_cell(gc)) {
             cell->flash_colour = real_colour(flash_colour);
+            cell->flash_alpha = 0;
+        }
 #endif
     }
     else if (crawl_state.darken_range)

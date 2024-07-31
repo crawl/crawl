@@ -20,6 +20,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "item-status-flag-type.h"
 #include "jobs.h"
@@ -832,9 +833,14 @@ bool noisy(int original_loudness, const coord_def& where,
         ambient < 0 ? original_loudness + random2avg(abs(ambient), 3)
                     : original_loudness - random2avg(abs(ambient), 3);
 
-    const int adj_loudness = ((you.has_mutation(MUT_NOISE_DAMPENING)
-                               || player_equip_unrand(UNRAND_THIEF))
-                && you.see_cell(where)) ? div_rand_round(loudness, 2) : loudness;
+    int adj_loudness = loudness;
+    if (you.see_cell(where))
+    {
+        if (have_passive(passive_t::dampen_noise))
+            adj_loudness = div_rand_round(adj_loudness, 2);
+        if (player_equip_unrand(UNRAND_THIEF))
+            adj_loudness = div_rand_round(adj_loudness, 2);
+    }
 
     dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
          adj_loudness, original_loudness, ambient, where.x, where.y);

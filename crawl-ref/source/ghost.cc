@@ -567,7 +567,9 @@ static const vector<random_pick_entry<spell_type>> wizard_primary_spells =
   { 35, 90, 155, RISE, SPELL_BOLT_OF_COLD },
   { 35, 90, 280, RISE, SPELL_BOLT_OF_FIRE },
   { 50, 100, 180, RISE, SPELL_BOMBARD },
+  { 60, 100,  50, RISE, SPELL_PERMAFROST_ERUPTION },
   { 65, 100,  80, RISE, SPELL_PLASMA_BEAM },
+  { 70, 100,  70, RISE, SPELL_HELLFIRE_MORTAR },
   { 70, 100,  90, RISE, SPELL_LEHUDIBS_CRYSTAL_SPEAR },
 };
 
@@ -603,10 +605,11 @@ static const vector<random_pick_entry<spell_type>> priest_spells =
   { 10, 130, 100, PEAK, SPELL_MIGHT_OTHER },
   { 10, 130, 100, PEAK, SPELL_HASTE_OTHER },
   { 0, 100, 100, FLAT, SPELL_REGENERATE_OTHER },
-  { 0, 100, 100, RISE, SPELL_REGENERATE_OTHER },
+  { 0, 100,  50, SEMI, SPELL_REGENERATE_OTHER },
+  { 65, 100, 70, RISE, SPELL_MASS_REGENERATION },
   { 40, 80, 200, SEMI, SPELL_AGONY},
   { 40, 100, 60, SEMI, SPELL_STUNNING_BURST},
-  { 45, 100, 65,  FLAT, SPELL_AURA_OF_BRILLIANCE },
+  { 45, 100, 65,  FLAT, SPELL_PRAYER_OF_BRILLIANCE },
   { 65, 100, 65,  RISE, SPELL_CALL_DOWN_LIGHTNING },
   { 70, 100, 40, RISE, SPELL_CONJURE_LIVING_SPELLS },
 };
@@ -634,7 +637,7 @@ static const map<spell_type, int> freq_map =
     {SPELL_MIGHT, 35},
     {SPELL_HASTE, 35},
     {SPELL_BATTLESPHERE, 80},
-    {SPELL_AURA_OF_BRILLIANCE, 60},
+    {SPELL_PRAYER_OF_BRILLIANCE, 60},
     {SPELL_CALL_DOWN_LIGHTNING, 15},
     {SPELL_SEARING_RAY, 30},
     {SPELL_CONJURE_LIVING_SPELLS, 40},
@@ -710,7 +713,7 @@ void ghost_demon::pick_apostle_spells(apostle_type type, int pow)
                 picker.pick(wizard_primary_spells, pow, SPELL_NO_SPELL);
 
             spell_type primary2 = SPELL_NO_SPELL;
-            int pow2 = pow - random_range(0, 20);
+            int pow2 = max(-10, pow - random_range(0, 20));
             for (int tries = 0; tries < 3; ++tries)
             {
                 // Keep rerolling until we find something other than our starting
@@ -734,8 +737,9 @@ void ghost_demon::pick_apostle_spells(apostle_type type, int pow)
 
             if (spells.size() == 3 && one_chance_in(4))
             {
-                const spell_type secondary2 =
-                    picker.pick(wizard_secondary_spells, pow, SPELL_NO_SPELL);
+                spell_type secondary2 = SPELL_NO_SPELL;
+                while (secondary2 == secondary || secondary2 == SPELL_NO_SPELL)
+                    secondary2 = picker.pick(wizard_secondary_spells, pow, SPELL_NO_SPELL);
                 _add_apostle_spell(spells, secondary2, 30, MON_SPELL_WIZARD);
             }
         }
@@ -1091,8 +1095,6 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;
 #endif
-    case SPELL_NECROTISE:
-        return SPELL_PAIN;
     case SPELL_SWIFTNESS:
         return SPELL_SPRINT;
     case SPELL_CONFUSING_TOUCH:

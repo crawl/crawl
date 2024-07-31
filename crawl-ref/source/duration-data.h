@@ -355,6 +355,10 @@ static const duration_def duration_data[] =
       LIGHTGREY, "Vortex",
       "in a vortex", "vortex",
       "You are in the eye of a polar vortex.", D_EXPIRES},
+    { DUR_FUSILLADE,
+      LIGHTGREY, "Fusillade",
+      "raining reagents", "fusillade",
+      "You are unleashing a barrage of alchemical reagents.", D_EXPIRES},
     { DUR_BLOOD_FOR_BLOOD,
       LIGHTBLUE, "Pray",
       "chanting a vengeful prayer", "blood for blood",
@@ -520,10 +524,9 @@ static const duration_def duration_data[] =
       "horrified", "horror",
       "You are horrified, weakening your attacks and spells.", D_NO_FLAGS},
     { DUR_DIVINE_SHIELD,
-      0, "",
+      LIGHTBLUE, "",
       "divinely shielded", "divine shield",
-      "You are shielded by the power of the Shining One.", D_NO_FLAGS,
-      {{ "", tso_remove_divine_shield }}},
+      "You are shielded by the power of the Shining One.", D_NO_FLAGS},
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
@@ -581,11 +584,6 @@ static const duration_def duration_data[] =
       "on word of chaos cooldown", "word of chaos cooldown",
       "You are unable to speak a word of chaos.", D_NO_FLAGS,
       {{ "You are ready to speak a word of chaos again." }}},
-    { DUR_DUEL_COMPLETE, LIGHTGREY, "Duel",
-      "duelling", "duel complete",
-      "Your duel has come to an end.", D_EXPIRES,
-      {{ "", okawaru_end_duel },
-      { "Okawaru bids you farewell from the Arena.", 1 }}, 6},
     { DUR_SAP_MAGIC, YELLOW, "Sap",
       "magic-sapped", "sap magic",
       "Casting spells may cause you to lose access to your magic.",
@@ -610,6 +608,11 @@ static const duration_def duration_data[] =
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
       {{ "You feel ready to blink again."}}},
+    { DUR_GAVOTTE_COOLDOWN,
+      YELLOW, "-Gavotte",
+      "on gavotte cooldown", "gavotte cooldown",
+      "You are unable to cast Gavotte.", D_NO_FLAGS,
+      {{ "Gravity stabilises in your vicinity."}}},
     { DUR_ANIMATE_DEAD,
       MAGENTA, "Reap",
       "animating dead", "animating dead",
@@ -631,6 +634,18 @@ static const duration_def duration_data[] =
     { DUR_BEOGH_CAN_RECRUIT, LIGHTBLUE, "Recruit", "", "can recruit",
       "You may recruit a defeated apostle into your service", D_EXPIRES,
        {{ "", end_beogh_recruit_window}}},
+    { DUR_PRIMORDIAL_NIGHTFALL, MAGENTA, "Nightfall",
+      "nightfall", "nightfall",
+      "You are enveloped in primordial darkness.", D_EXPIRES,
+      {{ "Night gives way to day once more.", update_vision_range }}},
+    { DUR_BLIND, RED, "Blind", "blinded", "blindness",
+      "The further away your target is the more your accuracy is reduced.",
+      D_DISPELLABLE | D_EXPIRES, {{ "",
+        [](){mprf(MSGCH_RECOVERY, "Your vision returns to normal.");}}}},
+    { DUR_SIGN_OF_RUIN, RED, "Ruin",
+      "sign of ruin", "ruin",
+      "The sign of ruin enfeebles you when you suffer attacks.", D_DISPELLABLE,
+      {{ "The sign of ruin upon you fades." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -706,7 +721,7 @@ static const duration_def duration_data[] =
     { DUR_BEOGH_SEEKING_VENGEANCE, LIGHTRED, "Vengeance", "", "vengeance",
       "You are seeking vengeance for the death of your brethren.", D_NO_FLAGS},
     { DUR_CONSTRICTION_IMMUNITY, 0, "", "", "constrict immune", "", D_NO_FLAGS, {{""}}},
-
+    { DUR_GRAVE_CLAW_RECHARGE, 0, "", "", "grave claw recharging", "", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -758,5 +773,6 @@ static const duration_def duration_data[] =
     { DUR_CORPSE_ROT, 0, "", "", "old corpse rot", "", D_NO_FLAGS },
     { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
     { DUR_BINDING_SIGIL_WARNING, 0, "", "", "old binding sigil", "", D_NO_FLAGS },
+    { DUR_DUEL_COMPLETE, 0, "", "", "old duel complete", "", D_NO_FLAGS },
 #endif
 };

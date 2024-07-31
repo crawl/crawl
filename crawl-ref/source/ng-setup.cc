@@ -181,21 +181,26 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_MISSILES)
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
 
+    if (item.base_type == OBJ_MISCELLANY)
+        handle_generated_misc(static_cast<misc_item_type>(item.sub_type));
+
     origin_set_startequip(item);
     if (item.base_type == OBJ_WEAPONS && you.species == SP_COGLIN)
         name_weapon(item);
 
+    seen_item(item);
+
     return &item;
 }
 
-static void _give_throwing_ammo()
+void give_throwing_ammo(int n)
 {
     if (species::can_throw_large_rocks(you.species))
-        newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 1);
+        newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, n);
     else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
-        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 2);
+        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 2*n);
     else
-        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, 1);
+        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, n);
 }
 
 static void _give_job_spells(job_type job)
@@ -299,7 +304,7 @@ void give_items_skills(const newgame_def& ng)
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
     if (you.char_class == JOB_GLADIATOR)
-        _give_throwing_ammo();
+        give_throwing_ammo(1);
 
     if (you.has_mutation(MUT_NO_GRASPING)) // i.e. felids
         you.skills[SK_THROWING] = 0;

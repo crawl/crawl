@@ -873,7 +873,7 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
     if (!mondied)
         defender->hurt(attacker, defender->stat_hp());
 
-    if (defender->as_monster()->can_bleed())
+    if (defender->as_monster()->has_blood())
     {
         blood_spray(defender->pos(), defender->as_monster()->type,
                     random_range(5, 10));
@@ -1080,10 +1080,10 @@ static void _FORCE_LANCE_melee_effects(item_def* /*weapon*/, actor* attacker,
                                        actor* defender, bool mondied, int dam)
 {
     if (mondied || !dam || !one_chance_in(3)) return;
-    // max power around a !!! hit (ie ~2d11 on collide from a 34+ damage hit)
-    // no real justification for this, just vibes
-    const int collide_power = min(100, dam * 3);
-    defender->knockback(*attacker, 1, collide_power, "blow");
+    // max power on a !!! hit (ie 36+ damage), but try to make some damage
+    // quite likely to beat AC on any collision.
+    const int collide_damage = 7 + roll_dice(3, div_rand_round(min(36, dam), 4));
+    defender->knockback(*attacker, 1, collide_damage, "blow");
 }
 
 ///////////////////////////////////////////////////
@@ -1352,7 +1352,7 @@ static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 static void _LEECH_melee_effects(item_def* /*item*/, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
-    if (attacker->is_player() && defender->can_bleed()
+    if (attacker->is_player() && defender->has_blood()
         && mondied && x_chance_in_y(dam, 729))
     {
         simple_monster_message(*(defender->as_monster()),
@@ -1686,7 +1686,7 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 
     // If attempting to cast manifold assault would abort (likely because of no
     // valid targets in range), do nothing
-    if (cast_manifold_assault(*attacker, 100, false, false, defender) == spret::abort)
+    if (cast_manifold_assault(*attacker, 0, false, false, defender) == spret::abort)
         return;
 
     mprf("%s slice%s through the folds of space itself!",

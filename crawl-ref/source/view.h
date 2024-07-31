@@ -87,6 +87,8 @@ void view_add_tile_overlay(const coord_def &gc, tileidx_t tile);
 #endif
 void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph);
 
+void flash_tile(coord_def p, colour_t colour = WHITE, int delay = 50);
+
 void view_clear_overlays();
 
 void run_animation(animation_type anim, use_animation_type type,

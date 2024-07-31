@@ -39,7 +39,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source = MID_NOBODY,
 
 void lose_level();
 bool drain_player(int power = 25, bool announce_full = true,
-                  bool ignore_protection = false);
+                  bool ignore_protection = false, bool quiet = false);
 
 void expose_player_to_element(beam_type flavour, int strength = 0,
                               bool slow_cold_blooded = true);

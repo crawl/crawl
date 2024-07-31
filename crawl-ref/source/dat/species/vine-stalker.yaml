@@ -4,6 +4,9 @@ name: Vine Stalker
 short_name: VS
 difficulty: Advanced
 difficulty_priority: 90
+species_flags:
+  - no_eyes
+  - no_ears
 aptitudes:
   xp: 0
   hp: -3
@@ -41,19 +44,19 @@ mutations:
   8:
     MUT_FANGS: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_BRIGAND
-  - JOB_BERSERKER
-  - JOB_ENCHANTER
-  - JOB_CONJURER
-  - JOB_NECROMANCER
-  - JOB_ICE_ELEMENTALIST
+  - fighter
+  - brigand
+  - berserker
+  - enchanter
+  - conjurer
+  - necromancer
+  - ice elementalist
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_POLEARMS
-  - SK_LONG_BLADES
-  - SK_STAVES
+  - maces and flails
+  - axes
+  - polearms
+  - long blades
+  - staves
 
 walking_verb: Stalk
 orc_name: Orchid Stalker

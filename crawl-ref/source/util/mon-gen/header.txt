@@ -27,7 +27,7 @@ static monsterentry mondata[] =
     0, 0, \
     0, 0, MST_NO_SPELLS, true, S_SILENT, \
     I_BRAINLESS, HT_LAND, 0, DEFAULT_ENERGY, \
-    MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC, \
+    MONUSE_NOTHING, SIZE_GIANT, MON_SHAPE_MISC, GOD_NO_GOD, \
     {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR \
 },
 
@@ -153,6 +153,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_GELID_DEMONSPAWN, "gelid demonspawn")
     AXED_MON(MONS_INFERNAL_DEMONSPAWN, "infernal demonspawn")
     AXED_MON(MONS_TORTUROUS_DEMONSPAWN, "torturous demonspawn")
+    AXED_MON(MONS_LOROCYPROCA, "lorocyproca")
 #endif
 
 // Real monsters begin here {dlb}:

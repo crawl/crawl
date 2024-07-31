@@ -178,6 +178,30 @@ mlc_mapping::mlc_mapping(const string &s)
     }
 }
 
+#ifdef USE_TILE
+colour_remapping::colour_remapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, true, 1);
+    const int scolour = thesplit.size() == 1 ? -1 : str_to_colour(thesplit[0]);
+
+    // let -1 for "" through
+    if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[0].empty()))
+    {
+        mprf(MSGCH_ERROR, "Options error: Bad custom_text_colours key: '%s'",
+            thesplit[1].c_str());
+        return;
+    }
+
+    colour_index = scolour;
+    colour_def = str_to_tile_colour(thesplit[1]);
+    if (colour_index == NUM_TERM_COLOURS)
+    {
+        mprf(MSGCH_ERROR, "Bad custom_text_colours: %s\n",
+                     thesplit[0].c_str());
+    }
+}
+#endif
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -655,9 +679,9 @@ const vector<GameOption*> game_options::build_options_list()
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
         new ListGameOption<string>(SIMPLE_NAME(dump_order),
-            {"header", "hiscore", "stats", "misc", "inventory", "skills",
-             "spells", "overview", "mutations", "messages", "screenshot",
-             "monlist", "kills", "notes", "screenshots", "vaults",
+            {"header", "hiscore", "stats", "misc",  "apostles", "inventory",
+             "skills", "spells", "overview", "mutations", "messages",
+             "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
              "skill_gains", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
@@ -866,6 +890,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
+        new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
 # ifndef __ANDROID__
@@ -1370,6 +1395,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_exsanguinate = interrupt_butcher",
         "interrupt_revivify = interrupt_butcher",
+        "interrupt_imbue_servitor = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
         "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
@@ -1619,16 +1645,16 @@ void game_options::reset_options()
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
           SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
-          SPELL_PLASMA_BEAM };
+          SPELL_PLASMA_BEAM, SPELL_PILEDRIVER };
     always_use_static_spell_targeters = false;
 
     force_ability_targeter =
         { ABIL_ZIN_SANCTUARY, ABIL_TSO_CLEANSING_FLAME, ABIL_WORD_OF_CHAOS,
           ABIL_ZIN_RECITE, ABIL_QAZLAL_ELEMENTAL_FORCE, ABIL_JIYVA_OOZEMANCY,
-          ABIL_GALVANIC_BREATH, ABIL_KIKU_TORMENT, ABIL_YRED_FATHOMLESS_SHACKLES,
+          ABIL_GALVANIC_BREATH, ABIL_YRED_FATHOMLESS_SHACKLES,
           ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE,
-          ABIL_SIPHON_ESSENCE };
+          ABIL_SIPHON_ESSENCE, ABIL_DITHMENOS_SHADOWSLIP };
     always_use_static_ability_targeters = false;
 
 #ifdef DGAMELAUNCH
@@ -5231,6 +5257,21 @@ static void _write_vcolour(const string &name, VColour colour)
     tiles.json_close_object();
 }
 
+static void _write_custom_colours(const string &name, const vector<colour_remapping> colours)
+{
+    tiles.json_open_array(name);
+    for (const auto &entry : colours)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("index", entry.colour_index);
+        tiles.json_write_int("r", entry.colour_def.r);
+        tiles.json_write_int("g", entry.colour_def.g);
+        tiles.json_write_int("b", entry.colour_def.b);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+}
+
 static void _write_minimap_colours()
 {
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
@@ -5268,6 +5309,8 @@ void game_options::write_webtiles_options(const string& name)
     _write_colour_list(hp_colour, "hp_colour");
     _write_colour_list(mp_colour, "mp_colour");
     _write_colour_list(stat_colour, "stat_colour");
+
+    _write_custom_colours("custom_text_colours", custom_text_colours);
 
     tiles.json_write_bool("tile_show_minihealthbar",
                           tile_show_minihealthbar);

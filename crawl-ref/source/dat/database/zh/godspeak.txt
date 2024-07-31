@@ -180,7 +180,6 @@ w:30
 
 佐姆把你拉回到类似地牢的宁静之中。
 %%%%
-%%%%
 Xom revert other banishment
 
 “给我回来！”
@@ -549,10 +548,6 @@ Cheibriados death
 
 切布理亚多欣赏死亡的静止。
 %%%%
-Dithmenos penance
-
-迪斯姆诺说：回到黑暗之中！
-%%%%
 Dithmenos welcome
 
 迪斯姆诺说：铺开永恒的黑夜。
@@ -610,7 +605,7 @@ Jiyva death corpse
 %%%%
 Jiyva death corpse undead
 
-<Jiyva death corpse>
+@Jiyva death corpse@
 %%%%
 Jiyva death corpse nonliving
 
@@ -630,15 +625,15 @@ Kikubaaqudgha death corpse undead
 %%%%
 Kikubaaqudgha death corpse nonliving
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Kikubaaqudgha death undead
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Kikubaaqudgha death nonliving
 
-<Kikubaaqudgha death corpse undead>
+@Kikubaaqudgha death corpse undead@
 %%%%
 Lugonu welcome
 
@@ -759,11 +754,11 @@ Uskayaw death corpse
 %%%%
 Uskayaw death corpse undead
 
-<Uskayaw death corpse>
+@Uskayaw death corpse@
 %%%%
 Uskayaw death corpse nonliving
 
-<Uskayaw death corpse>
+@Uskayaw death corpse@
 %%%%
 Vehumet welcome
 
@@ -886,7 +881,7 @@ Yredelemnul death corpse nonliving
 %%%%
 Yredelemnul death undead
 
-<Yredelemnul death corpse undead>
+@Yredelemnul death corpse undead@
 %%%%
 Zin penance
 

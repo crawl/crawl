@@ -102,7 +102,7 @@ static bool _evoke_horn_of_geryon()
 
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
+        mgen_data mg(MONS_SIN_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
         mg.set_summoned(&you, 3, SPELL_NO_SPELL);
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
@@ -519,7 +519,8 @@ void wind_blast(actor* agent, int pow, coord_def target)
         if (act->alive())
         {
             const int push = _gale_push_dist(agent, act, pow);
-            act->knockback(*agent, push, pow, "gust of wind");
+            act->knockback(*agent, push, default_collision_damage(pow, true).roll(),
+                           "gust of wind");
         }
     }
 
@@ -925,17 +926,14 @@ static spret _condenser()
         target_list.push_back(t);
     shuffle_array(target_list);
     bool did_something = false;
-    bool suppressed = false;
 
     for (auto p : target_list)
     {
-        const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
+        cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-        if (is_good_god(you.religion) && cloud == CLOUD_MISERY)
-        {
-            suppressed = true;
-            continue;
-        }
+        // Reroll misery clouds until we get something our god is okay with
+        while (is_good_god(you.religion) && cloud == CLOUD_MISERY)
+            cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
         // Get at least one cloud, even at 0 power.
         if (did_something && !x_chance_in_y(50 + pow, 160))
@@ -949,10 +947,24 @@ static spret _condenser()
 
     if (did_something)
         mpr("Clouds condense from the air!");
-    else if (suppressed)
-        simple_god_message(" suppresses the foul vapours!");
 
     return spret::success;
+}
+
+static int _gravitambourine_power()
+{
+    return 15 + you.skill(SK_EVOCATIONS, 7) / 2;
+}
+
+static bool _gravitambourine(dist *target)
+{
+    const spret ret = your_spells(SPELL_GRAVITAS, _gravitambourine_power(),
+            false, nullptr, target);
+
+    if (ret == spret::abort)
+        return false;
+
+    return true;
 }
 
 static transformation _form_for_talisman(const item_def &talisman)
@@ -1067,7 +1079,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         && silenced(you.pos()))
     {
         return "You can't produce a sound!";
-
     }
 
     if (temp && is_xp_evoker(*item) && evoker_charges(item->sub_type) <= 0)
@@ -1144,6 +1155,16 @@ bool evoke_item(item_def& item, dist *preselect)
 
         case MISC_PHIAL_OF_FLOODS:
             if (_phial_of_floods(preselect))
+            {
+                expend_xp_evoker(item.sub_type);
+                practise_evoking(3);
+            }
+            else
+                return false;
+            break;
+
+        case MISC_GRAVITAMBOURINE:
+            if (_gravitambourine(preselect))
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
@@ -1345,6 +1366,11 @@ string evoke_damage_string(const item_def& item)
             return spell_damage_string(SPELL_TREMORSTONE, true,
                 _tremorstone_power());
         }
+        else if (item.sub_type == MISC_GRAVITAMBOURINE)
+        {
+            return spell_damage_string(SPELL_GRAVITAS, true,
+                _gravitambourine_power());
+        }
         else
             return "";
     }
@@ -1367,6 +1393,8 @@ string evoke_noise_string(const item_def& item)
             return spell_noise_string(SPELL_THUNDERBOLT);
         else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
             return spell_noise_string(SPELL_TREMORSTONE);
+        else if (item.sub_type == MISC_GRAVITAMBOURINE)
+            return spell_noise_string(SPELL_GRAVITAS);
         else
             return "";
     }

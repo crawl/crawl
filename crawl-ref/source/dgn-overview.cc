@@ -944,8 +944,8 @@ static string unique_name(monster* mons)
             name = "Lernaean hydra";
         if (strstr(name.c_str(), "Serpent of Hell"))
             name = "Serpent of Hell";
-        if (strstr(name.c_str(), "Blork"))
-            name = "Blork the orc";
+        if (strstr(name.c_str(), "Blorkula"))
+            name = "Blorkula the orcula";
     }
     return name;
 }

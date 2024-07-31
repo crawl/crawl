@@ -107,8 +107,10 @@ static TextDB AllDBs[] =
             "wpnnoise.txt", // noisy weapon speech
             "insult.txt",   // imp/demon taunts
             "godspeak.txt", // god speech
-            "monname.txt"   // names for Beogh apostles and Hep ancestors
+            "monname.txt",  // names for Beogh apostles and Hep ancestors
                             // and weapon spirits
+            "colourname.txt", // colour names
+            "miscast.txt",  // spell miscasts
             }),
 
     TextDB("shout", "database/",

@@ -1570,7 +1570,7 @@ local scary_monsters = {
   ["Duvessa"] = 7,
   ["Menkaure"] = 7,
   ["Edmund"] = 7,
-  ["Blork the orc"] = 7,
+  ["Blorkula the orcula"] = 7,
   ["Eustachio"] = 7,
   ["gnoll sergeant"] = 7,
 

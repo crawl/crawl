@@ -818,6 +818,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\wizard.cc" />
     <ClCompile Include="..\worley.cc" />
     <ClCompile Include="..\xom.cc" />
+    <ClCompile Include="..\zot.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability-type.h" />
@@ -1266,6 +1267,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\xp-tracking-type.h" />
     <ClInclude Include="..\zap-data.h" />
     <ClInclude Include="..\zap-type.h" />
+    <ClInclude Include="..\zot.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="tilegen.vcxproj">

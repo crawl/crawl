@@ -89,50 +89,106 @@ int aux_to_hit()
 
 }
 
-/**
- * Return the odds of an attack with the given to-hit bonus hitting a defender with the
- * given EV, rounded to the nearest percent.
- *
- * @return                  To-hit percent between 0 and 100 (inclusive).
- */
-int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
+static double _to_hit_to_land(attack &atk)
 {
-    const int to_land = atk.calc_pre_roll_to_hit(false);
+    int to_land = atk.calc_pre_roll_to_hit(false);
     if (to_land >= AUTOMATIC_HIT)
-        return 100;
+        return 1;
 
+    return to_land;
+}
+
+static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee,
+                                 int to_land)
+{
     int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
-        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+        return 1 - MIN_HIT_MISS_PERCENTAGE / 200.0;
 
     int hits = 0;
     for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
     {
         // Apply post-roll manipulations:
-        int adjusted_mhit = rolled_mhit + mi.lighting_modifiers();
+        int adjusted_mhit = rolled_mhit + atk.post_roll_to_hit_modifiers(rolled_mhit, false);
 
-        adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
+        // But the above will bail out because there's no defender in the attack object,
+        // so we reproduce any possibly relevant effects here:
+        adjusted_mhit += mi.lighting_modifiers();
 
-        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
-        if (!melee)
+        // And this duplicates ranged_attack::post_roll_to_hit_modifiers().
+        if (!melee && mi.is(MB_BULLSEYE_TARGET))
         {
-            if (mi.is(MB_BULLSEYE_TARGET))
-            {
-                adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
-                                 / 2 / BULLSEYE_TO_HIT_DIV;
-            }
+            adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
+                                / 2 / BULLSEYE_TO_HIT_DIV;
         }
 
+        // Now count the hit if it's above target ev
         if (adjusted_mhit >= ev)
             hits++;
     }
 
     double hit_chance = ((double)hits) / to_land;
     // Apply Bayes Theorem to account for auto hit and miss.
-    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
+                 + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+    return hit_chance;
+}
 
-    return (int)(hit_chance*100);
+static bool _to_hit_is_invisible(const monster_info& mi)
+{
+    // Replicates player->visible_to(defender)
+    if (mi.attitude == ATT_FRIENDLY)
+        return false;
+
+    if (mi.has_trivial_ench(ENCH_BLIND))
+        return true;
+
+    return you.invisible() && !mi.can_see_invisible() && !you.in_water();
+}
+
+static double _to_hit_shield_chance(const monster_info& mi,
+                                    bool melee, int to_land, bool penetrating)
+{
+    // Duplicates more logic that is defined in attack::attack_shield_blocked, and
+    // attack_melee and attack_ranged classes, for real attacks.
+
+    // Attack first checks for incapacitation, this is handled with a shield bonus
+    // of -100 (or if they have no shield) so we can resolve this here.
+    if (mi.shield_bonus == -100)
+        return 0;
+
+    // There is also a check for a ranged attacker to ignore a shield, but we can't call
+    // the same function because it needs a real defender; instead we simply pass in
+    // penetration (since we might want to set it another way for e.g. spells)
+    if (!melee && !player_omnireflects() && penetrating)
+        return 0;
+
+    // Main check
+    const int con_block = you.shield_bypass_ability(to_land);
+    const int pro_block = _to_hit_is_invisible(mi) ? mi.shield_bonus : mi.shield_bonus / 3;
+
+    // There is also a check for shield exhausted but we have no way of accounting for
+    // this (and we assume not)
+
+    // Final average
+    return min(1.0, max(0.0, (double)pro_block / (double)con_block));
+}
+
+/**
+ * Return the odds of a provided attack hitting a defender defined as a
+ * monster_info, rounded to the nearest percent.
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
+               bool penetrating, int distance)
+{
+    const int to_land = _to_hit_to_land(atk);
+    const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
+    const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
+    const int blind_miss_chance = player_blind_miss_chance(distance);
+    return (int)(hit_chance * (1.0 - shield_chance) * 100 * (100 - blind_miss_chance) / 100);
 }
 
 /**
@@ -650,7 +706,6 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
         case BEAM_VAMPIRIC_DRAINING:
-        case BEAM_NECROTISE:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_acid();
@@ -701,7 +756,6 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
-                                     || flavour == BEAM_NECROTISE
                                      || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
@@ -722,7 +776,6 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
-                     || flavour == BEAM_NECROTISE
                      || flavour == BEAM_MALIGN_OFFERING
                      || flavour == BEAM_VAMPIRIC_DRAINING)
             {
@@ -924,6 +977,9 @@ bool dont_harm(const actor &attacker, const actor &defender)
 {
     if (mons_aligned(&attacker, &defender))
         return true;
+
+    if (defender.is_monster())
+        return god_protects(&attacker, defender.as_monster(), false);
 
     if (defender.is_player())
         return attacker.wont_attack();
@@ -1182,6 +1238,10 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         if (mon->type == MONS_SPECTRAL_WEAPON)
             return false;
 
+        // If we cannot hurt an ally anyway, don't bother warning as if we could
+        if (god_protects(mon))
+            return false;
+
         if (god_hates_attacking_friend(you.religion, *mon))
         {
             adj = "your ally ";
@@ -1254,7 +1314,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blork the orc".
+    // Listed in the form: "your rat", "Blorkula the orcula".
     string mon_name = mon->name(DESC_PLAIN);
     if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name = mon_name.substr(4); // strlen("the ")
@@ -1348,7 +1408,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blork the orc".
+    // Listed in the form: "your rat", "Blorkula the orcula".
     string mon_name = victims.describe(DESC_PLAIN);
     if (starts_with(mon_name, "the ")) // no "your the Royal Jelly" nor "the the RJ"
         mon_name = mon_name.substr(4); // strlen("the ")

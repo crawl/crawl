@@ -631,9 +631,8 @@ default_autopickup = true
         You can still toggle autopickup in-game with Ctrl-A.
 
 pickup_thrown = true
-        pickup_thrown = true causes autopickup to pick up thrown/fired
-        missiles, which can make life much easier for hunter types. Be
-        aware that autopickup uses a turn, though it won't trigger if
+        pickup_thrown = true causes autopickup to pick up thrown missiles,
+        Be aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
 
 assign_item_slot = (forward | backward)
@@ -677,8 +676,8 @@ drop_filter += <regex>, <regex>, ...
         expression(s).
 
 drop_disables_autopickup = false
-        drop_disables_autopickup = true automatically removes dropped items
-        from autopickup.
+        drop_disables_autopickup = true automatically removes dropped
+        non-missile items from autopickup.
 
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
@@ -2269,6 +2268,11 @@ level. Using RGB hex codes is also allowed, such as #00ff00 for green.
    tile_excl_centre_col         - colour of exclusion centre (overrides
                                   tile_floor_col and tile_item_col, only)
    tile_window_col              - colour of the rectangular view window
+
+custom_text_colours = lightmagenta:#fd59fa, blue:#005afa
+	Remaps any of the 16 basic terminal colours used by Crawl's interface,
+	specified as pairs of colour names and RGB hex codes. Any colours not
+	included in the list will use their default values.
 
 tile_update_rate = 1000
         The number of milliseconds that tick by before the screen is redrawn

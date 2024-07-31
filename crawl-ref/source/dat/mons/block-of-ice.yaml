@@ -14,3 +14,4 @@ uses: starting_equipment
 size: medium
 shape: misc
 tile_variance: mod
+habitat: amphibious

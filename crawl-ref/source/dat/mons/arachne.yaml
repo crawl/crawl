@@ -2,13 +2,13 @@ name: "Arachne"
 glyph: {char: "H", colour: lightcyan}
 flags: [see_invis, speaks, web_immune, warm_blood, unique, female]
 genus: spider
-will: 60
+will: 80
 attacks:
  - {type: hit, damage: 30}
-hd: 17
+hd: 23
 hp_10x: 2040
-ac: 3
-ev: 10
+ac: 9
+ev: 12
 spells: arachne
 has_corpse: true
 shout: shout

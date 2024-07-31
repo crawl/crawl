@@ -67,6 +67,7 @@ public:
 private:
     /* Attack phases */
     bool handle_phase_attempted() override;
+    bool handle_phase_blocked() override;
     bool handle_phase_dodged() override;
     bool handle_phase_hit() override;
     bool handle_phase_damaged() override;
@@ -141,6 +142,7 @@ private:
     void mons_do_eyeball_confusion();
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
+    void apply_sign_of_ruin_effects();
     void do_ooze_engulf();
     void try_parry_disarm();
 private:
@@ -189,6 +191,10 @@ private:
     void copy_to(melee_attack &other);
 
     vorpal_damage_type damage_type;
+
+    // Is a special stab against a sleeping monster by a Dithmenos player
+    // shadow (affects messaging).
+    bool is_shadow_stab;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);

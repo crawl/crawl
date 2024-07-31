@@ -486,8 +486,8 @@ D..vvv.......vv.
 ENDMAP
 
 NAME:   kennysheep_iron_temple
-ORIENT: centre
 TAGS:   transparent no_rotate no_vmirror no_monster_gen
+ORIENT: centre
 MONS:   hell sentinel, iron golem
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \

@@ -5,6 +5,8 @@ adjective: Feline
 genus: Cat
 difficulty: Advanced
 difficulty_priority: 40
+species_flags:
+  - no_feet
 aptitudes:
   xp: -1
   hp: -3
@@ -56,15 +58,15 @@ mutations:
   12:
     MUT_SHAGGY_FUR: 1
 recommended_jobs:
-  - JOB_BERSERKER
-  - JOB_ENCHANTER
-  - JOB_SHAPESHIFTER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_CONJURER
-  - JOB_SUMMONER
+  - berserker
+  - enchanter
+  - shapeshifter
+  - ice elementalist
+  - air elementalist
+  - conjurer
+  - summoner
 recommended_weapons:
-  - SK_UNARMED_COMBAT
+  - unarmed combat
 
 altar_action: sit before
 child_name: Kitten

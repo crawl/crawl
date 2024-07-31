@@ -35,6 +35,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-clouds.h" // explode_blastmotes_at
+#include "spl-damage.h" // dazzle_target
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -321,6 +322,11 @@ static const cloud_data clouds[] = {
       ETC_ELECTRICITY,                                   // colour
       { TILE_CLOUD_ELECTRICITY, CTVARY_RANDOM },        // tile
     },
+    // CLOUD_FAINT_MIASMA,
+    { "faint pestilence", nullptr,                // terse, verbose name
+      DARKGREY,                                      // colour
+      { TILE_CLOUD_FAINT_MIASMA, CTVARY_RANDOM },    // tile
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 
@@ -551,8 +557,25 @@ static void _dissipate_cloud(cloud_struct& cloud)
         cloud.decay       -= _spread_cloud(cloud);
     }
 
+    // Faint miasma becomes proper miasma after the first tick (regardless of
+    // duration), but will not spawn beneath the player.
+    // XXX: This is currently very player-centric, but the player is also the
+    //      only possible source of this at present.
+    if (cloud.type == CLOUD_FAINT_MIASMA)
+    {
+        if (cloud.decay > 1)
+            cloud.decay = 1;
+        else if (cloud.pos != you.pos())
+        {
+            cloud.decay = random_range(50, 90);
+            cloud.type = CLOUD_MIASMA;
+        }
+        else
+            delete_cloud(cloud.pos);
+    }
+
     // Check for total dissipation and handle accordingly.
-    if (cloud.decay < 1)
+    if (cloud.decay < 1 && cloud.type != CLOUD_FAINT_MIASMA)
         delete_cloud(cloud.pos);
 }
 
@@ -628,28 +651,15 @@ static void _maybe_leave_water(const coord_def pos)
 {
     ASSERT_IN_BOUNDS(pos);
 
-    // Rain clouds can occasionally leave shallow water or deepen it.
-    if (!one_chance_in(5))
+    // Rain clouds can occasionally leave shallow water.
+    if (env.grid(pos) != DNGN_FLOOR || !one_chance_in(5))
         return;
 
-    dungeon_feature_type feat = env.grid(pos);
-
-    if (env.grid(pos) == DNGN_FLOOR)
-        feat = DNGN_SHALLOW_WATER;
-    else if (env.grid(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
-             && one_chance_in(3) && !crawl_state.game_is_sprint())
-    {
-        // Don't drown the player!
-        feat = DNGN_DEEP_WATER;
-    }
-
-    if (env.grid(pos) != feat)
-    {
-        if (you.pos() == pos && you.ground_level())
-            mpr("The rain has left you waist-deep in water!");
-        temp_change_terrain(pos, feat, random_range(500, 1000),
-                            TERRAIN_CHANGE_FLOOD);
-    }
+    if (you.pos() == pos && you.ground_level())
+        mpr("The rain has left you waist-deep in water!");
+    temp_change_terrain(pos, DNGN_SHALLOW_WATER,
+                        random_range(500, 1000),
+                        TERRAIN_CHANGE_FLOOD);
 }
 
 void delete_cloud(coord_def p)
@@ -1449,10 +1459,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
     switch (cloud.type)
     {
-    case CLOUD_MIASMA:
-        // Even the dumbest monsters will avoid miasma if they can.
-        return true;
-
     case CLOUD_BLASTMOTES:
         // As with traps, make friendly monsters not walk into blastmotes.
         return mons->attitude == ATT_FRIENDLY
@@ -1460,25 +1466,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             || mons->attitude == ATT_GOOD_NEUTRAL;
 
     case CLOUD_RAIN:
-        // Fiery monsters dislike the rain.
-        if (mons->is_fiery() && extra_careful)
-            return true;
-
-        // We don't care about what's underneath the rain cloud if we can fly.
-        if (mons->airborne())
-            return false;
-
-        // These don't care about deep water.
-        if (monster_habitable_grid(mons, DNGN_DEEP_WATER))
-            return false;
-
-        // This position could become deep water, and they might drown.
-        if (env.grid(cloud.pos) == DNGN_SHALLOW_WATER
-            && mons_intel(*mons) > I_BRAINLESS)
-        {
-            return true;
-        }
-        break;
+        return !mons->is_fiery() || !extra_careful;
 
     default:
     {
@@ -1492,8 +1480,9 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int base_damage = _cloud_damage_calc(dam_info.random,
                                                    max(1, dam_info.random / 9),
                                                    dam_info.base, false);
-        // Add in an arbitrary proxy for poison damage from poison clouds.
-        const int bonus_dam = cloud.type == CLOUD_POISON ? roll_dice(3, 4) : 0;
+        // Add in an arbitrary proxy for poison damage from poison/miasma clouds.
+        const int bonus_dam = cloud.type == CLOUD_POISON ? roll_dice(3, 4)
+                              : cloud.type == CLOUD_MIASMA ? roll_dice(3, 5) : 0;
         const int damage = resist_adjust_damage(mons,
                                                 clouds[cloud.type].beam_effect,
                                                 base_damage + bonus_dam);
@@ -1933,8 +1922,7 @@ static bool _is_chaos_slowable(const actor &defender)
     if (!mon)
         return true;
 
-    // What, no hasting oklobs? Boo.
-    return !mons_is_firewood(*mon) && !mon->is_stationary();
+    return !mons_is_firewood(*mon);
 }
 
 struct chaos_effect
@@ -2051,6 +2039,17 @@ static const vector<chaos_effect> chaos_effects = {
         "petrify", 3, [](const actor &victim) {
             return _is_chaos_slowable(victim) && !victim.res_petrify();
         }, BEAM_PETRIFY,
+    },
+    {
+        "blinding", 5, [](const actor &victim) {
+            return victim.can_be_dazzled();
+        }, BEAM_NONE, [](actor* victim, actor* source) {
+            if (victim->is_player())
+                blind_player(random_range(7, 12), ETC_RANDOM);
+            else
+                dazzle_target(victim, source, 149);
+            return you.can_see(*victim);
+        },
     },
 };
 

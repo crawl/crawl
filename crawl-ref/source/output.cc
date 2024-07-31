@@ -630,8 +630,7 @@ static bool _boosted_ev()
 
 static bool _boosted_sh()
 {
-    return you.duration[DUR_DIVINE_SHIELD]
-           || qazlal_sh_boost() > 0
+    return qazlal_sh_boost() > 0
            || (you.get_mutation_level(MUT_CONDENSATION_SHIELD)
                 && !you.duration[DUR_ICEMAIL_DEPLETED]);
 }
@@ -1354,7 +1353,8 @@ static void _draw_wizmode_flag(const char *word)
 static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
-    string title = you.your_name + " " + filtered_lang(player_title());
+    string title = filtered_lang(player_title());
+    title = you.your_name + (title[0] == ',' ? "" : " ") + title;
     const bool small_layout = _is_using_small_layout();
 
     if (small_layout)
@@ -1961,7 +1961,7 @@ const char *equip_slot_to_name(int equip)
         return "Ring";
     }
 
-    if (equip == EQ_BOOTS && you.wear_barding())
+    if (equip == EQ_BOOTS && you.can_wear_barding())
         return "Barding";
 
     if (equip < EQ_FIRST_EQUIP || equip >= NUM_EQUIP)
@@ -2110,8 +2110,16 @@ static void _print_overview_screen_equip(column_composer& cols,
             const bool plural = you.arm_count() > 1;
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
-        else if (eqslot == EQ_BOOTS && you.wear_barding())
-            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+        else if (eqslot == EQ_BOOTS && you.can_wear_barding())
+        {
+            if (!you.can_wear_barding(true))
+            {
+                str = "<darkgrey>(" + slot_name_lwr +
+                                   " currently unavailable)</darkgrey>";
+            }
+            else
+                str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+        }
         else if (!you_can_wear(eqslot))
             str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
         else if (!you_can_wear(eqslot, true))
@@ -2129,7 +2137,8 @@ static void _print_overview_screen_equip(column_composer& cols,
 
 static string _overview_screen_title(int sw)
 {
-    string title = make_stringf(" %s ", player_title().c_str());
+    string title = player_title();
+    title = (title[0] == ',' ? "" : " ") + title;
 
     string species_job = make_stringf("(%s %s)",
                                       species::name(you.species).c_str(),
@@ -2529,17 +2538,20 @@ static vector<formatted_string> _get_overview_resistances(
     out += chop_string("HPRegen", cwidth);
     out += make_stringf("%d.%02d/turn\n", regen/100, regen%100);
 
-    out += chop_string("MPRegen", cwidth);
+    if (!you.has_mutation(MUT_HP_CASTING))
+    {
+        out += chop_string("MPRegen", cwidth);
 #if TAG_MAJOR_VERSION == 34
-    const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
-    const int mp_regen = player_mp_regen() //round up
-                         + (etheric ? 50 : 0); // on average
-    out += make_stringf("%d.%02d/turn%s\n", mp_regen / 100, mp_regen % 100,
-                        etheric ? "*" : "");
+        const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
+        const int mp_regen = player_mp_regen() //round up
+                            + (etheric ? 50 : 0); // on average
+        out += make_stringf("%d.%02d/turn%s\n", mp_regen / 100, mp_regen % 100,
+                            etheric ? "*" : "");
 #else
-    const int mp_regen = player_mp_regen(); // round up
-    out += make_stringf("%d.%02d/turn\n", mp_regen / 100, mp_regen % 100);
+        const int mp_regen = player_mp_regen(); // round up
+        out += make_stringf("%d.%02d/turn\n", mp_regen / 100, mp_regen % 100);
 #endif
+    }
 
     cols.add_formatted(0, out, false);
 
@@ -2719,7 +2731,7 @@ static string _extra_passive_effects()
     if (you.archmagi())
         passives.emplace_back("archmagi");
 
-    const int channel = player_channeling();
+    const int channel = player_channelling();
     if (channel)
     {
         passives.emplace_back(

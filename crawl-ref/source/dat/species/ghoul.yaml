@@ -5,7 +5,8 @@ adjective: Ghoulish
 difficulty: Intermediate
 difficulty_priority: 50
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_blood
 aptitudes:
   xp: 0
   hp: 1
@@ -38,7 +39,7 @@ aptitudes:
   alchemy: -1
   invocations: 1
   evocations: -1
-undead_type: US_UNDEAD
+undead_type: undead
 str: 11
 int: 7
 dex: 4
@@ -54,13 +55,13 @@ mutations:
     MUT_CLAWS: 1
     MUT_DEVOUR_ON_KILL: 1
 recommended_jobs:
-  - JOB_WARPER
-  - JOB_GLADIATOR
-  - JOB_MONK
-  - JOB_NECROMANCER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
+  - warper
+  - gladiator
+  - monk
+  - necromancer
+  - ice elementalist
+  - earth elementalist
 recommended_weapons:
-  - SK_UNARMED_COMBAT
+  - unarmed combat
 
 orc_name: Rotting Orc

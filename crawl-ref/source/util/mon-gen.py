@@ -365,6 +365,7 @@ keyfns = {
     'uses': Field(parse_use),
     'size': Field(parse_size, required = True),
     'shape': Field(parse_shape, required = True),
+    'god': Field(lambda s: "GOD_" + s.upper().replace(" ", "_")),
 
     'tile': Field(parse_str),
     'tile_variance': Field(parse_tile_variants),
@@ -382,6 +383,7 @@ defaults = {
     'speed': 10,
     'uses': 'MONUSE_NOTHING',
     'has_corpse': 'false',
+    'god': 'GOD_NO_GOD',
 }
 
 def load_template(templatedir, name):

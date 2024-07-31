@@ -23,6 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "god-abil.h" // fedhas_passthrough for armataur charge
+#include "god-conduct.h"
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -1256,19 +1257,6 @@ string weapon_unprojectability_reason(const item_def* wpn)
     return "";
 }
 
-static void _animate_manass_hit(const coord_def p)
-{
-    if (!in_los_bounds_v(grid2view(p)))
-        return; // needed..?
-
-    const colour_t colour = LIGHTMAGENTA;
-#ifdef USE_TILE
-    view_add_tile_overlay(p, tileidx_zap(colour));
-#endif
-    view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
-                                static_cast<unsigned short>(colour)});
-}
-
 // Mildly hacky: If this was triggered via Autumn Katana, katana_defender is the
 //               target it first triggered on. If nullptr, this is a normal cast.
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
@@ -1333,7 +1321,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
         if (unproj_reason != "")
         {
             if (agent.is_player())
-                mprf("%s", unproj_reason.c_str());
+                mpr(unproj_reason);
             return spret::abort;
         }
     }
@@ -1359,12 +1347,12 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
     // shapeshifters have a much easier time casting it.
-    const size_t max_targets = weapon ? 2 + div_rand_round(pow, 50)
-                                      : 1 + div_rand_round(pow, 100);
+    const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
+                                      : 2 + div_rand_round(pow, 50);
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
         if (animate)
-            _animate_manass_hit(targets[i]->pos());
+            flash_tile(targets[i]->pos(), LIGHTMAGENTA, 0);
 
         melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
@@ -1639,138 +1627,122 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
-int gravitas_range(int pow)
+int gravitas_radius(int pow)
 {
-    return pow >= 80 ? 3 : 2;
-}
-
-
-#define GRAVITY "by gravitational forces"
-
-static void _attract_actor(const actor* agent, actor* victim,
-                           const coord_def pos, int pow, int strength)
-{
-    ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = victim->is_monster()
-                                && god_protects(agent, victim->as_monster());
-
-    ray_def ray;
-    if (!find_ray(victim->pos(), pos, ray, opc_solid))
-    {
-        // This probably shouldn't ever happen, but just in case:
-        if (you.can_see(*victim))
-        {
-            mprf("%s violently %s moving!",
-                 victim->name(DESC_THE).c_str(),
-                 victim->conj_verb("stop").c_str());
-        }
-        if (fedhas_prot)
-        {
-            simple_god_message(
-                make_stringf(" protects %s from harm.",
-                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
-        }
-        else
-        {
-            victim->hurt(agent, roll_dice(strength / 2, pow / 20),
-                         BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
-        }
-        return;
-    }
-
-    const coord_def starting_pos = victim->pos();
-    for (int i = 0; i < strength; i++)
-    {
-        ray.advance();
-        const coord_def newpos = ray.pos();
-
-        if (!victim->can_pass_through_feat(env.grid(newpos)))
-        {
-            victim->collide(newpos, agent, pow);
-            break;
-        }
-        else if (actor* act_at_space = actor_at(newpos))
-        {
-            if (victim != act_at_space)
-                victim->collide(newpos, agent, pow);
-            break;
-        }
-        else if (!victim->is_habitable(newpos))
-            break;
-        else
-            victim->move_to_pos(newpos);
-
-        if (victim->is_monster() && !fedhas_prot)
-        {
-            behaviour_event(victim->as_monster(),
-                            ME_ANNOY, agent, agent ? agent->pos()
-                                                   : coord_def(0, 0));
-        }
-
-        if (victim->pos() == pos)
-            break;
-    }
-    if (starting_pos != victim->pos())
-    {
-        victim->apply_location_effects(starting_pos);
-        if (victim->is_monster())
-            mons_relocated(victim->as_monster());
-    }
-}
-
-bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
-{
-    vector <actor *> victims;
-
-    for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
-    {
-        if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
-            continue;
-
-        const int range = (pos - ai->pos()).rdist();
-        if (range > gravitas_range(pow))
-            continue;
-
-        victims.push_back(*ai);
-    }
-
-    if (victims.empty())
-        return false;
-
-    near_to_far_sorter sorter = {you.pos()};
-    sort(victims.begin(), victims.end(), sorter);
-
-    for (actor * ai : victims)
-    {
-        const int range = (pos - ai->pos()).rdist();
-        const int strength = ((pow + 100) / 20) / (range*range);
-
-        _attract_actor(agent, ai, pos, pow, strength);
-    }
-
-    return true;
+    return 2 + (pow / 45);
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
 {
-    if (cell_is_solid(where))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
     fail_check();
 
     monster* mons = monster_at(where);
+    const int radius = gravitas_radius(pow);
 
-    mprf("Gravity reorients around %s.",
-         mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
-                                                         NUM_TRAPS, "",
-                                                         DESC_THE)
-                                                         .c_str()
-                                   : "empty space");
-    fatal_attraction(where, &you, pow);
+    // XXX: If this is ever usable from elsewhere than the item, change this.
+    mpr("You rattle the tambourine.");
+
+    mprf("Waves of gravity draw inward%s%s.",
+         mons || feat_is_solid(env.grid(where)) ? " around " : "",
+         mons ? mons->name(DESC_THE).c_str() :
+                feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
+                                                                     NUM_TRAPS, "",
+                                                                     DESC_THE)
+                                                                    .c_str() : "");
+
+    // Show animation
+    for (int i = radius; i >= 0; --i)
+    {
+        for (distance_iterator di(where, false, false, i); di; ++di)
+        {
+            if (grid_distance(where, *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                flash_tile(*di, LIGHTMAGENTA, 0);
+            }
+        }
+
+        animation_delay(50, true);
+        view_clear_overlays();
+    }
+
+    vector<coord_def> empty[LOS_RADIUS];
+    vector<monster*> targ;
+
+    // Build lists of valid monsters and empty spaces, sorted in order of distance
+    for (distance_iterator di(where, true, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        const int dist = grid_distance(where, *di);
+        monster* mon = monster_at(*di);
+        if (mon && !mon->is_stationary())
+            targ.push_back(mon);
+        else if (!mon && !feat_is_solid(env.grid(*di)))
+            empty[dist].push_back(*di);
+    }
+
+    // Move each monster to a nearer space, if we can
+    for (monster* mon : targ)
+    {
+        bool moved = false;
+        for (int dist = 0; dist <= radius; ++dist)
+        {
+            if (grid_distance(mon->pos(), where) <= dist)
+                break;
+
+            for (unsigned int i = 0; i < empty[dist].size(); ++i)
+            {
+                const coord_def new_pos = empty[dist][i];
+
+                if (monster_habitable_grid(mon, env.grid(new_pos)))
+                {
+                    const coord_def old_pos = mon->pos();
+                    mon->move_to_pos(new_pos);
+                    mon->apply_location_effects(old_pos);
+                    mons_relocated(mon);
+
+                    empty[dist].erase(empty[dist].begin() + i);
+
+                    if (grid_distance(where, old_pos) < 2)
+                        empty[grid_distance(where, old_pos) - 1].push_back(old_pos);
+
+                    moved = true;
+
+                    break;
+                }
+            }
+
+            if (moved)
+                break;
+        }
+    }
+
+    // Bind all hostile monsters in place and damage them
+    // (friendlies are exempt from this part)
+    int dur = (random_range(2, 5) + div_rand_round(pow, 30)) * BASELINE_DELAY;
+    for (distance_iterator di(where, false, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        if (monster* mon = monster_at(*di))
+        {
+            if (mon->wont_attack())
+                continue;
+
+            int dmg = zap_damage(ZAP_GRAVITAS, pow, false).roll();
+            dmg = mon->apply_ac(dmg);
+
+            if (you.can_see(*mon))
+                mprf("%s is pinned by gravity.", mon->name(DESC_THE).c_str());
+            mon->hurt(&you, dmg);
+            mon->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur));
+            behaviour_event(mon, ME_WHACK, &you, you.pos());
+        }
+    }
+
     return spret::success;
 }
 
@@ -1926,7 +1898,7 @@ spret word_of_chaos(int pow, bool fail)
     fail_check();
     shuffle_array(targets);
 
-    mprf("You speak a word of chaos!");
+    mpr("You speak a word of chaos!");
     for (auto mons : targets)
     {
         if (mons->no_tele())
@@ -2000,4 +1972,355 @@ spret blinkbolt(int power, bolt &beam, bool fail)
     you.duration[DUR_BLINKBOLT_COOLDOWN] = 50 + random2(150);
 
     return spret::success;
+}
+
+static bool _valid_piledriver_target(monster* targ)
+{
+    return targ && !targ->friendly() && !mons_is_firewood(*targ)
+           && !targ->is_stationary() && you.can_see(*targ);
+}
+
+vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets)
+{
+    const int max_range = 5;
+
+    vector<coord_def> path;
+    for (unsigned int j = 0; j < targets.size(); ++j)
+    {
+        monster* targ = monster_at(targets[j]);
+        coord_def delta = targ->pos() - you.pos();
+
+        // Iterate through all tiles in the appropriate direction, testing at each
+        // step whether the monster can occupy its new space and whether the player
+        // can occupy the space immediately before that. Stop as soon as this is not
+        // true or we reach our maximum range.
+        for (int i = 0; i <= max_range; ++i)
+        {
+            const coord_def new_pos = targ->pos() + (delta * i);
+
+            // Check if this is where our movement stops
+            if (i > 0
+                && (actor_at(new_pos)
+                    || !monster_habitable_grid(targ, env.grid(new_pos))
+                    || is_feat_dangerous(env.grid(new_pos - delta))))
+            {
+                path.push_back(new_pos);
+                break;
+            }
+
+            path.push_back(new_pos);
+        }
+    }
+
+    return path;
+}
+
+static int calc_piledriver_dist(const monster& targ)
+{
+    vector<coord_def> path = piledriver_beam_paths(vector<coord_def>{targ.pos()});
+
+    // Test if the final space of the path would hit something and only consider
+    // paths that would do so.
+    if (path.size() > 2)
+    {
+        if (actor_at(path.back()) || feat_is_solid(env.grid(path.back())))
+            return path.size();
+    }
+
+    return 0;
+}
+
+vector<coord_def> possible_piledriver_targets()
+{
+    vector<coord_def> targs;
+    int furthest_dist = 0;
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monster* targ = monster_at(*ai);
+        if (_valid_piledriver_target(targ))
+        {
+            int dist = calc_piledriver_dist(*targ);
+
+            // Skip targets that will not move the player at all.
+            // (This needs at least 3 tiles, since the target monster will be
+            // on the 1st, and a possible blocker on the 2nd)
+            if (dist < 3)
+                continue;
+
+            // Better than any target yet found
+            if (dist > furthest_dist)
+            {
+                targs.clear();
+                furthest_dist = dist;
+                targs.push_back(*ai);
+            }
+            // Tied with a target already found
+            else if (dist == furthest_dist)
+                targs.push_back(*ai);
+            // Otherwise, ignore it
+        }
+    }
+
+    return targs;
+}
+
+dice_def piledriver_collision_damage(int pow, int dist, bool random)
+{
+    if (!random)
+        return dice_def(1 + (dist * 2), 2 + (pow + 10) / 15);
+    else
+        return dice_def(1 + (dist * 2), 2 + (div_rand_round(pow + 10, 15)));
+}
+
+spret cast_piledriver(int pow, bool fail)
+{
+    // Calculate all possible valid targets first, so we can prompt the player
+    // about anything they *might* hit.
+    vector<coord_def> targs = possible_piledriver_targets();
+    vector<coord_def> path = piledriver_beam_paths(targs);
+    if (warn_about_bad_targets(SPELL_PILEDRIVER, path))
+        return spret::abort;
+
+    fail_check();
+
+    // Now that they've confirmed, pick the *real* target
+    shuffle_array(targs);
+    targs.resize(1);
+    monster* mon = monster_at(targs[0]);
+    path = piledriver_beam_paths(targs);
+
+    mprf("Space contracts around you and %s and then re-expands violently!",
+            mon->name(DESC_THE).c_str());
+
+    // Animate the player and their victim flying forward together
+    bolt anim;
+    anim.source = you.pos();
+    anim.target = path.back();
+    anim.flavour = BEAM_VISUAL;
+    anim.range = path.size();
+    anim.fire();
+
+    // Move both the player and their target to their destination first
+    const coord_def old_pos = you.pos();
+    const coord_def old_targ_pos = mon->pos();
+
+    mon->move_to_pos(path[path.size() - 2]);
+    you.move_to_pos(path[path.size() - 3]);
+
+    // Apply collision damage (scaling with distance covered)
+    const int dmg = piledriver_collision_damage(pow, path.size() - 2, true).roll();
+    mon->collide(path.back(), &you, dmg);
+
+    // Now trigger location effects (to avoid dispersal traps causing all sorts
+    // of problems with keeping the two of us together in the middle)
+    if (mon->alive())
+        mon->apply_location_effects(old_targ_pos);
+    you.apply_location_effects(old_pos);
+
+    return spret::success;
+}
+
+dice_def gavotte_impact_damage(int pow, int dist, bool random)
+{
+    if (!random)
+        return dice_def(2, (pow * 3 / 4 + 35) * (dist + 5) / 20 + 1);
+    else
+        return dice_def(2, div_rand_round((pow * 3 / 4 + 35) * (dist + 5), 20) + 1);
+}
+
+static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor& victim)
+{
+    if (victim.is_monster() && victim.alive())
+    {
+        //potentially penance
+        if (!mons_is_conjured(victim.as_monster()->type))
+        {
+            set_attack_conducts(conducts, *victim.as_monster(),
+                you.can_see(*victim.as_monster()));
+        }
+    }
+}
+
+static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
+{
+    const bool god_prot = victim.is_monster()
+                                && god_protects(&you, victim.as_monster());
+
+    god_conduct_trigger conducts[3];
+
+    if (victim.is_monster() && !god_prot)
+    {
+        behaviour_event(victim.as_monster(), ME_ALERT, &you, you.pos());
+        victim.as_monster()->speed_increment -= 10;
+    }
+
+    const coord_def starting_pos = victim.pos();
+    for (int i = 1; i <= dist; ++i)
+    {
+        const coord_def next_pos = starting_pos + (dir * i);
+
+        if (!victim.can_pass_through_feat(env.grid(next_pos)) && i > 1
+            && !victim.is_player())
+        {
+            victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
+            _maybe_penance_for_collision(conducts, victim);
+            break;
+        }
+        else if (actor* act_at_space = actor_at(next_pos))
+        {
+            if (i > 1 && &victim != act_at_space && !victim.is_player()
+                && !act_at_space->is_player())
+            {
+                victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
+                _maybe_penance_for_collision(conducts, victim);
+                _maybe_penance_for_collision(conducts, *act_at_space);
+            }
+            break;
+        }
+        else if (!victim.is_habitable(next_pos))
+            break;
+        else
+            victim.move_to_pos(next_pos);
+    }
+
+    if (starting_pos != victim.pos())
+    {
+        victim.apply_location_effects(starting_pos);
+        if (victim.is_monster())
+            mons_relocated(victim.as_monster());
+    }
+}
+
+spret cast_gavotte(int pow, const coord_def dir, bool fail)
+{
+    vector<monster*> affected = gavotte_affected_monsters(dir);
+    if (!affected.empty())
+    {
+        vector<coord_def> spots;
+        for (unsigned int i = 0; i < affected.size(); ++i)
+            spots.push_back(affected[i]->pos());
+
+        if (warn_about_bad_targets(SPELL_GELLS_GAVOTTE, spots))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    // XXX: Surely there's a better way to do this
+    string dir_msg = "???";
+    if (dir.x == 0 && dir.y == -1)
+        dir_msg = "north";
+    else if (dir.x == 0 && dir.y == 1)
+        dir_msg = "south";
+    else if (dir.x == -1 && dir.y == 0)
+        dir_msg = "west";
+    else if (dir.x == 1 && dir.y == 0)
+        dir_msg = "east";
+    else if (dir.x == -1 && dir.y == -1)
+        dir_msg = "northwest";
+    else if (dir.x == 1 && dir.y == -1)
+        dir_msg = "northeast";
+    else if (dir.x == -1 && dir.y == 1)
+        dir_msg = "southwest";
+    else if (dir.x == 1 && dir.y == 1)
+        dir_msg = "southeast";
+
+    mprf("Gravity reorients to the %s!", dir_msg.c_str());
+
+    if (you.stasis())
+        canned_msg(MSG_STRANGE_STASIS);
+
+    // Gather all actors we will be moving
+    vector<actor*> targs;
+
+    // Don't move stationary players (or formicids)
+    if (!you.is_stationary() && !you.stasis())
+        targs.push_back(&you);
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+            targs.push_back(*mi);
+    }
+
+    // Sort by closest to the pull direction
+    sort(targs.begin( ), targs.end( ), [dir](actor* a, actor* b)
+    {
+        return (a->pos().x * dir.x) + (a->pos().y * dir.y)
+               > (b->pos().x * dir.x) + (b->pos().y * dir.y);
+    });
+
+    // Push all monsters, in order
+    for (unsigned int i = 0; i < targs.size(); ++i)
+    {
+        // Some circumstances, such as lost souls sacrificing themselves, can
+        // result in monsters dying before it even comes time to push them.
+        if (targs[i]->alive())
+            _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow);
+    }
+
+    you.increase_duration(DUR_GAVOTTE_COOLDOWN, random_range(5, 9) - div_rand_round(pow, 50));
+
+    return spret::success;
+}
+
+static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir, bool actual)
+{
+    // Scan in our push direction. We want to find at least one tile of open
+    // space before the nearest solid feature or stationary monster. Non-stationary
+    // monsters are 'free'
+    int steps = GAVOTTE_DISTANCE;
+    coord_def pos = mon->pos();
+    while (steps)
+    {
+        pos += dir;
+
+        // They may actually be able to hit something here, but we shouldn't
+        // leak the presence of immediately off-screen walls to the targeter
+        if (!you.see_cell(pos))
+            return false;
+
+        // Can never collide with the player (for the player's sake)
+        if (pos == you.pos())
+            return false;
+
+        // If we're about to hit a blocker, check whether we will have moved at
+        // least one space before doing so.
+        monster* mon_at_pos = monster_at(pos);
+        if (!mon->can_pass_through_feat(env.grid(pos))
+            || mon_at_pos && mon_at_pos->is_stationary()
+               && (actual || mon_at_pos->visible_to(&you)))
+        {
+            return steps < GAVOTTE_DISTANCE;
+        }
+        // Skip over mobile monsters as 'free' spaces (since we can all pile up
+        // against a wall)
+        else if (mon_at_pos && !mon_at_pos->is_stationary()
+                 && (actual || mon_at_pos->visible_to(&you)))
+        {
+            steps++;
+        }
+
+        steps--;
+    }
+
+    return false;
+}
+
+vector<monster*> gavotte_affected_monsters(const coord_def dir, bool actual)
+{
+    vector<monster*> affected;
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos())
+            && (actual || you.can_see(**mi)))
+        {
+            if (_gavotte_will_wall_slam(*mi, dir, actual))
+                affected.push_back(*mi);
+        }
+    }
+
+    return affected;
 }

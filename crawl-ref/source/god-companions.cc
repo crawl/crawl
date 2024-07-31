@@ -58,16 +58,12 @@ void init_companions()
 void add_companion(monster* mons)
 {
     ASSERT(mons->alive());
-    // Right now this is a special case for Saint Roka, but
-    // future orcish uniques should behave in the same way.
-    mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
     companion_list[mons->mid] = companion(*mons);
 }
 
 void remove_companion(monster* mons)
 {
-    mons->props[NO_ANNOTATE_KEY] = false;
     set_unique_annotation(mons);
     companion_list.erase(mons->mid);
 }
@@ -531,9 +527,11 @@ static bool _is_invalid_challenge_level()
     // No Abyss/Pan/Portals/Zot or on rune floors (banning the player from
     // retreating or stairdancing there seems too mean)
     return !is_connected_branch(level_id::current())
+           || player_in_branch(BRANCH_TEMPLE)
+           || player_in_branch(BRANCH_DUNGEON)
+              && you.depth < 6
            || player_in_branch(BRANCH_ZOT)
-           || branch_has_rune(level_id::current().branch)
-              && at_branch_bottom();
+              && you.depth == 5;
 }
 
 // Try to avoid locking the player into an apostle challenge if they're already
@@ -541,10 +539,14 @@ static bool _is_invalid_challenge_level()
 // every combination of bad circumstance, but should at least help.
 static bool _is_bad_moment_for_challenge()
 {
-    if (you.hp < you.hp_max / 2
+    // Make the injury requirement more lenient at lower xl.
+    // (Scaling from requiring 80% of max at xl 0 to 50% by xl 27)
+    const int threshold = 80 - (you.experience_level * 30 / 27);
+
+    if (you.hp < you.hp_max * threshold / 100
         || player_stair_delay()
         || player_on_orb_run()
-        || get_tension() > 45)
+        || get_tension() > 40)
     {
         return true;
     }
@@ -718,7 +720,7 @@ void beogh_recruit_apostle()
 
     mpr(msg.c_str());
 
-    // Now atually convert and save the apostle
+    // Now actually convert and save the apostle
     real->hit_points = real->max_hit_points;
     real->timeout_enchantments(1000);
     real->flags &= ~MF_APOSTLE_BAND;
@@ -809,6 +811,12 @@ void beogh_dismiss_apostle(int slot)
             remove_companion(real);
             monster_die(*real, KILL_RESET, -1, true);
         }
+        // This is likely because our apostle is in a disconnected branch that
+        // the player is not in. We still need to manually erase them from the
+        // companion list, otherwise they will still be recallable and this can
+        // cause other crahses because their apostle data has been deleted.
+        else
+            companion_list.erase(mid);
     }
 
     _cleanup_apostle_corpse(slot);
@@ -857,7 +865,7 @@ static apostle_data& _get_saved_apostle(const monster apostle)
 
 int get_num_apostles()
 {
-    return apostles.size() - 1;
+    return max(0, (int)apostles.size() - 1);
 }
 
 bool beogh_apostle_is_alive(int slot)

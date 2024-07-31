@@ -5,7 +5,8 @@ short_name: Gr
 difficulty: Simple
 difficulty_priority: 70
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_blood
 aptitudes:
   xp: 0
   hp: -2
@@ -52,15 +53,15 @@ fake_mutations:
   - long: You are immune to sickness and miasma.
   - short: sickness immunity
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_GLADIATOR
-  - JOB_MONK
-  - JOB_BERSERKER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_REAVER
+  - fighter
+  - gladiator
+  - monk
+  - berserker
+  - fire elementalist
+  - earth elementalist
+  - reaver
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_STAVES
+  - maces and flails
+  - staves
 
 orc_name: Gargorcle

@@ -1064,8 +1064,8 @@ SUBST:   ! = .
 SHUFFLE: rsu / rr! / zzz / zzz
 SUBST:   r = ., su = w, z = x, b = bbccc
 : place_freezing_vapour_machine(_G, 8)
-TILE:    b = bedeviled_crystal_cocytus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : ice_cave_appearance(_G)
 MAP
                     xxxxxx

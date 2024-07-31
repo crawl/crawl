@@ -181,6 +181,36 @@ struct mlc_mapping
     int colour;
 };
 
+#ifdef USE_TILE
+struct colour_remapping
+{
+    colour_remapping()
+        : colour_index(NUM_TERM_COLOURS), colour_def(0, 0, 0)
+    {
+    }
+
+    colour_remapping(int c, VColour col)
+        : colour_index(c), colour_def(col)
+    {
+    }
+
+    colour_remapping(const string &s);
+
+    bool operator== (const colour_remapping &o) const
+    {
+        return colour_index == o.colour_index
+                && colour_def.r == o.colour_def.r
+                && colour_def.g == o.colour_def.g
+                && colour_def.b == o.colour_def.b;
+    }
+
+    bool valid() const { return colour_index >= 0 && colour_index < NUM_TERM_COLOURS; }
+
+    int colour_index;
+    VColour colour_def;
+};
+#endif
+
 struct flang_entry
 {
     flang_t lang_id;
@@ -821,6 +851,8 @@ public:
     VColour     tile_transporter_col;
     VColour     tile_transporter_landing_col;
     VColour     tile_explore_horizon_col;
+
+    vector<colour_remapping> custom_text_colours;
 
     string      tile_display_mode;
 

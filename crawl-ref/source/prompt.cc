@@ -4,6 +4,7 @@
  **/
 
 #include "AppHdr.h"
+#include <climits> // UCHAR_MAX
 #include <cmath> // isnan
 
 #include "prompt.h"
@@ -230,7 +231,13 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
                 // sub in any alpha char if that's what the player typed, for
                 // error messaging
-                const int actual_key = pop.getkey();
+                int actual_key = pop.getkey();
+
+                // if the typed key is out of alpha char range, leave it as
+                // ESCAPE to avoid a crash
+                if (actual_key != EOF && actual_key > UCHAR_MAX)
+                    actual_key = tmp;
+
                 if (isalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
                 // otherwise, leave as ESCAPE
@@ -249,7 +256,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         // If no safe answer exists, we still need to abort when a HUP happens.
         // The caller must handle this case, preferably by issuing an uncancel
         // event that can restart when the game restarts -- and ignore the
-        // the return value here.
+        // return value here.
         if (crawl_state.seen_hups && !default_answer)
             return false;
 

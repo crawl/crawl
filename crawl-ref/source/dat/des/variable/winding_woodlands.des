@@ -35,12 +35,12 @@
 #
 ###############################################################################
 
-default-depth: D:7-, Depths, Lair:2-
+default-depth: D:8-, Depths, Lair:2-
 
 NAME:     nzn_winding_woodlands_small
 ORIENT:   float
 TAGS:     uniq_winding_woodlands transparent
-DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+DEPTH:    D:8-, Depths, Lair:2-, Swamp:2-3
 SUBVAULT: A : winding_woodlands_5x15
 SUBVAULT: B : winding_woodlands_center
 SUBVAULT: C : winding_woodlands_5x15
@@ -76,7 +76,7 @@ ENDMAP
 NAME:     nzn_winding_woodlands_medium
 ORIENT:   float
 TAGS:     uniq_winding_woodlands transparent
-DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+DEPTH:    D:8-, Depths, Lair:2-, Swamp:2-3
 SUBVAULT: A : winding_woodlands_5x5
 SUBVAULT: B : winding_woodlands_5x15
 SUBVAULT: C : winding_woodlands_5x5
@@ -215,7 +215,7 @@ ENDMAP
 NAME:     nzn_winding_woodlands_cross
 ORIENT:   float
 TAGS:     uniq_winding_woodlands transparent
-DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+DEPTH:    D:8-, Depths, Lair:2-, Swamp:2-3
 SUBVAULT: A : winding_woodlands_5x15
 SUBVAULT: B : winding_woodlands_5x15
 SUBVAULT: C : winding_woodlands_5x15
@@ -263,7 +263,7 @@ ENDMAP
 NAME:     nzn_winding_woodlands_three_and_one
 ORIENT:   float
 TAGS:     uniq_winding_woodlands transparent
-DEPTH:    D:7-, Depths, Lair:2-, Swamp:2-3
+DEPTH:    D:8-, Depths, Lair:2-, Swamp:2-3
 SUBVAULT: A : winding_woodlands_5x15
 SUBVAULT: B : winding_woodlands_5x15
 SUBVAULT: C : winding_woodlands_5x15
@@ -346,7 +346,7 @@ ENDMAP
 NAME:     nzn_winding_woodlands_stair_trap
 ORIENT:   float
 TAGS:     uniq_winding_woodlands transparent
-DEPTH:    D:11-, Depths, Lair:2-
+DEPTH:    D:8-, Depths, Lair:2-
 SUBVAULT: A : winding_woodlands_5x15
 SUBVAULT: B : winding_woodlands_5x15
 SUBVAULT: C : winding_woodlands_5x15
@@ -757,7 +757,7 @@ ENDMAP
 NAME:   nzn_winding_woodlands_center_pierced_h
 TAGS:   winding_woodlands_center unrand
 SUBST:  0 = 0 9:3 8:1
-NSUBST: A = * / 2=% / 3=$ / .
+NSUBST: 8 = 1:8 / *:9, A = * / 2=% / 3=$ / .
 SUBST:  B = WwbGTU
 SUBST:  * = * |:1, % = % *:1, $ = $ %:5
 MAP
@@ -771,6 +771,7 @@ ENDMAP
 NAME:   nzn_winding_woodlands_center_triple_pond
 TAGS:   winding_woodlands_center unrand
 SUBST:  9 = 9 8:1, * = * |:2
+NSUBST: 8 = 1:8 / *:9
 MAP
   .   *.*   .
  .W. 9WWW9 .W.
@@ -782,6 +783,7 @@ ENDMAP
 NAME:   nzn_winding_woodlands_center_lodge
 TAGS:   winding_woodlands_center unrand
 SUBST:  0 = 0 9:4 8:2, * = * |:1
+NSUBST: 8 = 1:8 / *:9
 MAP
 ........cccc...
 . .cccccc00+. .
@@ -805,7 +807,7 @@ NAME:   nzn_winding_woodlands_center_garden
 TAGS:   winding_woodlands_center unrand
 MONS:   plant
 SUBST:  0 = 00 9:3 8:1
-NSUBST: A = * / 2=% / 3=$ / .
+NSUBST: 8 = 1:8 / *:9, A = * / 2=% / 3=$ / .
 SUBST:  * = * |:1, % = % *:1, $ = $ %:5
 MAP
   ccc.....ccc

@@ -1858,33 +1858,33 @@ icy_wall_overlay3
 brick_dark_leak WALL_BRICK_DARK_LEAK
 
 %weight 10
-bedeviled_crystal_abyss_0 BEDEVILED_CRYSTAL_ABYSS
+bedevilled_crystal_abyss_0 bedevilled_CRYSTAL_ABYSS
 %weight 2
-bedeviled_crystal_abyss_1
+bedevilled_crystal_abyss_1
 
 %weight 10
-bedeviled_crystal_geh_0 BEDEVILED_CRYSTAL_GEHENNA
+bedevilled_crystal_geh_0 bedevilled_CRYSTAL_GEHENNA
 %weight 2
-bedeviled_crystal_geh_1
+bedevilled_crystal_geh_1
 
 %weight 10
-bedeviled_crystal_coc_0 BEDEVILED_CRYSTAL_COCYTUS
+bedevilled_crystal_coc_0 bedevilled_CRYSTAL_COCYTUS
 %weight 2
-bedeviled_crystal_coc_1
+bedevilled_crystal_coc_1
 
 %weight 10
-bedeviled_crystal_dis_0 BEDEVILED_CRYSTAL_DIS
+bedevilled_crystal_dis_0 bedevilled_CRYSTAL_DIS
 %weight 2
-bedeviled_crystal_dis_1
+bedevilled_crystal_dis_1
 
 %weight 10
-bedeviled_crystal_tar_0 BEDEVILED_CRYSTAL_TARTARUS
+bedevilled_crystal_tar_0 bedevilled_CRYSTAL_TARTARUS
 %weight 2
-bedeviled_crystal_tar_1
+bedevilled_crystal_tar_1
 
 %weight 10
-bedeviled_crystal_pan_0 BEDEVILED_CRYSTAL_PANDEMONIUM
-bedeviled_crystal_pan_1
+bedevilled_crystal_pan_0 bedevilled_CRYSTAL_PANDEMONIUM
+bedevilled_crystal_pan_1
 %weight 2
-bedeviled_crystal_pan_2
-bedeviled_crystal_pan_3
+bedevilled_crystal_pan_2
+bedevilled_crystal_pan_3

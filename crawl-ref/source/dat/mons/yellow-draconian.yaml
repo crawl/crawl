@@ -6,6 +6,7 @@ genus: draconian
 will: 40
 attacks:
  - {type: hit, damage: 20}
+ - {type: bite, flavour: acid, damage: 12}
 hd: 14
 hp_10x: 980
 ac: 9

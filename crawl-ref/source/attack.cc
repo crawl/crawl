@@ -24,6 +24,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "item-name.h"
@@ -84,7 +85,9 @@ bool attack::handle_phase_blocked()
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
-    maybe_trigger_jinxbite();
+    // Use up a charge of Divine Shield, if active.
+    if (defender->is_player())
+        tso_expend_divine_shield_charge();
 
     return true;
 }
@@ -94,7 +97,7 @@ bool attack::handle_phase_damaged()
     // We have to check in_bounds() because removed kraken tentacles are
     // temporarily returned to existence (without a position) when they
     // react to damage.
-    if (defender->can_bleed()
+    if (defender->has_blood()
         && !defender->is_summoned()
         && in_bounds(defender->pos())
         && !simu)
@@ -899,10 +902,6 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
 int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
 {
-    // Can't affect much of anything as a shadow.
-    if (you.form == transformation::shadow)
-        damage = div_rand_round(damage, 2);
-
     // Spectral weapons deal "only" 70% of the damage that their
     // owner would, matching cleaving.
     if (attacker->type == MONS_SPECTRAL_WEAPON)
@@ -1035,14 +1034,23 @@ int attack::calc_damage()
 int attack::test_hit(int to_land, int ev, bool randomise_ev)
 {
     int margin = AUTOMATIC_HIT;
+
     if (randomise_ev)
         ev = random2avg(2*ev, 2);
     if (to_land >= AUTOMATIC_HIT)
         return true;
-    else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
+
+    if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
         margin = (random2(2) ? 1 : -1) * AUTOMATIC_HIT;
     else
         margin = to_land - ev;
+
+    if (attacker->is_player() && you.duration[DUR_BLIND])
+    {
+        const int distance = you.pos().distance_from(defender->pos());
+        if (x_chance_in_y(player_blind_miss_chance(distance), 100))
+            margin = -1;
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_COMBAT, "to hit: %d; ev: %d; result: %s (%d)",
@@ -1081,8 +1089,12 @@ bool attack::attack_shield_blocked(bool verbose)
     if (defender == attacker)
         return false; // You can't block your own attacks!
 
-    if (defender->incapacitated())
+    // Divine Shield blocks are guaranteed, no matter what.
+    if (defender->incapacitated()
+        && !(defender->is_player() && you.duration[DUR_DIVINE_SHIELD]))
+    {
         return false;
+    }
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit));
     int pro_block = defender->shield_bonus();
@@ -1093,12 +1105,10 @@ bool attack::attack_shield_blocked(bool verbose)
     dprf(DIAG_COMBAT, "Defender: %s, Pro-block: %d, Con-block: %d",
          def_name(DESC_PLAIN).c_str(), pro_block, con_block);
 
-    if (pro_block >= con_block)
+    if (pro_block >= con_block && !defender->shield_exhausted()
+        || defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
     {
         perceived_attack = true;
-
-        if (defender->shield_exhausted())
-            return false;
 
         if (ignores_shield(verbose))
             return false;

@@ -60,13 +60,14 @@ function pan_lord_setup(_G, name)
                  "deep elf annihilator / titan w:5 / lich w:5 / " ..
                  "demonspawn blood saint",
         Cerebov = "sun moth / efreet / sun demon / ynoxinul / balrug / " ..
-                  "brimstone fiend w:1 / demonspawn warmonger w:1",
+                  "undying armoury w:1 / brimstone fiend w:1 / " ..
+                  "demonspawn warmonger w:1",
         ['Gloorx Vloq'] = "juggernaut skeleton w:100 / " ..
                  "caustic shrike skeleton w:100 / " ..
                  "hellephant skeleton w:100 / soul eater w:200 / " ..
                  "reaper w:200 / executioner w:300 / " ..
                  "flayed ghost / laughing skull band / shadow wraith / " ..
-                 "demonspawn black sun"
+                 "demonspawn soul scholar"
     }
     local decName = "empty"
 
@@ -107,7 +108,7 @@ function pan_lord_setup(_G, name)
         _G.lrocktile("wall_hall_darkgray")
         _G.tile ("c = dngn_stone_dark")
         _G.kitem("O = dark rune of Zot")
-        _G.kmons("& = patrolling demonspawn black sun")
+        _G.kmons("& = patrolling demonspawn soul scholar")
         decName = "gloorxdec"
     end
 
@@ -206,13 +207,13 @@ end
 function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
     e.tags('allow_dup')
     e.orient('float')
-    e.kmons(anyglyph .. " = any demon w:76 / demonspawn black sun w:1 / \
+    e.kmons(anyglyph .. " = any demon w:76 / demonspawn soul scholar w:1 / \
                             demonspawn blood saint w:1 / \
                             demonspawn corrupter w:1 / \
                             demonspawn warmonger w:1")
     e.kmons(commonglyph .. " = common demon")
     e.kmons(greaterglyph .. " = greater demon w:36 / \
-                                demonspawn black sun w:1 / \
+                                demonspawn soul scholar w:1 / \
                                 demonspawn blood saint w:1 / \
                                 demonspawn corrupter w:1 / \
                                 demonspawn warmonger w:1")
@@ -253,7 +254,7 @@ function pan_entry_vault_contents(e, glyph)
     local tierthree = "rust devil w:5 / sixfirhy / smoke demon / " ..
                       "soul eater / sun demon / ynoxinul w:5"
     local tiertwo = "balrug / blizzard demon / cacodemon w:5 / " ..
-                    "green death / hell beast / hellion / lorocyproca / " ..
+                    "green death / sin beast / hellion / " ..
                     "reaper / shadow demon / tormentor"
 
     if e.is_validating() then return end
@@ -1185,7 +1186,7 @@ NAME:      cerebov_st
 TAGS:      cerebov patrolling uniq_cerebov
 ORIENT:    north
 MONS:      patrolling Cerebov, balrug, brimstone fiend
-MONS:      red devil, sun demon, sun moth
+MONS:      red devil, sun demon, sun moth, undying armoury
 : pan_lord_setup(_G, 'Cerebov')
 epilogue{{
   pan_lord_epilogue('Cerebov')
@@ -1209,10 +1210,10 @@ xx....vv.vv||v.......v$$vv+v.................v.+.........3v.$||v.vv....xx
 xx.....v.vv||v.v.1.v.v$$v4.v.v...2.....2...v.v.v..v..v..v.v.$$$v.v.....xx
 xx....vv.vv||v.v...v.v$$vO3v.................v.v.....5..5.+.$$$v.vv....xx
 xx....vv.vv+vv.......vv+vvvv.v.....&.&.....v.v.vvvvvvvvvvvvvvvvv.vv....xx
-xx.....v.vv..2.......2..v..+.................+.............+...v.v.....xx
+xx.....v.vv..2.......2..v..+........7........+.............+...v.v.....xx
 xx....vv.vv..2.......2..v..v.v.....&.&.....v.vvvvvvvvvvvvvvv...v.vv....xx
 xx....vv.vv.............v..v.................v...v..4..v$|$v.6.v.vv....xx
-xx.....v.vv....v...v....v..v.v...2.....2...v.v...+..2..+|$|v.2.v.v.....xx
+xx.....v.vv....v...v....v..v.v...2.....2...v.v...+..2.7+|$|v.2.v.v.....xx
 xx....vv.vv...vv+++vv...v..v.................v.4.v..4..v$|$v...v.vv....xx
 xx....vv.vvvvvv.....vvvvv..v.v.v.v.....v.v.v.v.4.vvvvvvvvvvv...v.vv....xx
 xx.....v.vvv...............v.......v.v.......v...vvvvvvvvvvv+vvv.v.....xx
@@ -1232,7 +1233,8 @@ ENDMAP
 NAME:     evilmike_cerebov_lava
 TAGS:     cerebov patrolling uniq_cerebov
 ORIENT:   northwest
-MONS:     Cerebov, balrug, brimstone fiend, sun demon, sun moth
+MONS:     Cerebov, balrug, brimstone fiend, sun demon
+MONS:     sun moth, undying armoury
 SUBST:    X : v, Y : .v, L : lll.
 SUBST:    U : W., W : V., V : v.
 SHUFFLE:  XY
@@ -1263,7 +1265,7 @@ xx.....vv.v...LLLL...llll...v2vvvvvvvvvvvv..
 xx..vvvvv.U..LLLL.....llll.....&....vllvvv..
 xx..v%%%v...LLvvv......llll...vWvWv.v4...vv.
 xx..v|||v..LLvv.v.Y....llll...&.....+.......
-xx..v|Q|+..LLvOX3.Y...1lllll.4......+.5.2..@
+xx..v|Q|+.6LLvOX3.Y..1.lllll...6....+.5.2..@
 xx..v|||v..LLvv.v.Y....llll...&.....+.......
 xx..v%%%v...LLvvv......llll...vWvWv.v4...vv.
 xx..vvvvv.U..LLLL.....llll.....&....vllvvv..
@@ -1288,7 +1290,7 @@ NAME:     cerebov_grunt
 TAGS:     cerebov uniq_cerebov
 ORIENT:   northwest
 MONS:     patrolling Cerebov, balrug, brimstone fiend
-MONS:     sun demon, red devil, sun moth
+MONS:     sun demon, red devil, sun moth, undying armoury
 NSUBST:   5 = 2:6 / * = 44455
 : pan_lord_setup(_G, 'Cerebov')
 epilogue{{
@@ -1304,13 +1306,13 @@ xxxx............v|||v............
 xxxx..........vvv|||vvv..........
 xxxx.........vvvvv+vvvvv.........
 xxxx........vvv...4...vvv........
-xxxx.......vvv.........vvv.......
+xxxx.......vvv....7....vvv.......
 xxxx......vvv2...vvv...2vvv......
 xxxx.vvvvvv.....vvOvv.....vvvvvv.
 xxxx.v|$$v.....vv$3$vv.....v$||v.
 xxxx.v||$+4..vvv$vvv$vvv..4+$$|v.
 xxxx.v|$$v...vll.$1$.llv...v$||v.
-xxxx.vvvvv...vll$.2.$llv...vvvvv.
+xxxx.vvvvv...vll$...$llv...vvvvv.
 xxxx....vv...vvl.2.2.lvv...vv....
 xxxx....vv....vl.vvv.lv....vv....
 xxxx....vvv...v.lllll.v...vvv....
@@ -1333,7 +1335,8 @@ ENDMAP
 NAME:     cerebov_grunt_fire_and_steel
 TAGS:     cerebov uniq_cerebov
 ORIENT:   north
-MONS:     patrolling Cerebov, balrug, brimstone fiend, sun demon, sun moth
+MONS:     patrolling Cerebov, balrug, brimstone fiend, sun demon
+MONS:     sun moth, undying armoury
 NSUBST:   O = 1:O / *:|, 4 = 3:5 / *:4
 : pan_lord_setup(_G, 'Cerebov')
 epilogue{{
@@ -1352,7 +1355,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .lvv..4.....2..vvvvvl.lvvvvvvvl.lvvvvvvl...lvvvllll.
 .llv...vvvvv...vlllll4lllllllll4lllllvll...llvvvvvl.
 ...+.4.v|$|v...+.........&.&.........+..4.2..v$|$vl.
-...+...v$|$+.2.+...2.........2.......+...1.3.+|O$vl.
+...+...v$|$+2.6+...2.........2.......+...1.3.+|O$vl.
 ...+.4.v|$|v...+.........&.&.........+..4.2..v$|$vl.
 .llv...vvvvv...vlllll4lllllllll4lllllvll...llvvvvvl.
 .lvv..4.....2..vvvvvl.lvvvvvvvl.lvvvvvvl...lvvvllll.
@@ -1364,7 +1367,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ..................lllllll...lllllll...lllllll.......
 ....@..........................................@....
 ENDMAP
-
 
 ##############################################################################
 # Gloorx Vloq
@@ -2427,7 +2429,7 @@ KMONS:  p = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
-            oni ; nothing
+            oni ; nothing / goblin ; nothing
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)
@@ -2618,9 +2620,9 @@ KITEM:   TUY = $ / nothing w:50
 KMONS:   HJKLMNOS-_ = deep elf demonologist / kobold demonologist / \
            mummy priest / orc high priest / orc sorcerer / dread lich / \
            greater demon w:60 / demonspawn warmonger w:2 / \
-           demonspawn black sun w:2 / demonspawn blood saint w:2 / \
+           demonspawn soul scholar w:2 / demonspawn blood saint w:2 / \
            demonspawn corrupter w:2 / any demon w:112 / nothing w:300
-KMONS:   YPQR = greater demon w:360 / demonspawn black sun / \
+KMONS:   YPQR = greater demon w:360 / demonspawn soul scholar / \
            demonspawn blood saint / demonspawn corrupter / demonspawn warmonger
 KFEAT:   _ = altar_gozag
 KFEAT:   P = exit_pandemonium
@@ -2695,7 +2697,7 @@ NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
-MONS:   demonspawn black sun, lorocyproca, any demon
+MONS:   demonspawn soul scholar, sin beast, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
@@ -2937,7 +2939,7 @@ NAME:   grunt_pan_frozen_over
 TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
 TAGS:   no_pool_fixup no_monster_gen transparent
 ORIENT: float
-MONS:   blizzard demon, demonspawn black sun
+MONS:   blizzard demon, demonspawn soul scholar
 MONS:   walking frostbound tome, ice devil
 KMONS:  56 = ice statue
 KMONS:  7 = executioner simulacrum
@@ -3177,6 +3179,7 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
+COLOUR:  G = mountain
 TILE:    x = wall_undead
 TILE:    G = dngn_scintillating_statue
 :   set_feature_name("granite_statue", "scintillating statue")
@@ -3204,6 +3207,7 @@ KFEAT:   L = altar_lugonu
 KFEAT:   t = demonic_tree
 : if crawl.one_chance_in(3) then
 SHUFFLE: YT / xK / GM / tL
+COLOUR:  G = mountain
 TILE:    x = wall_undead
 TILE:    G = dngn_scintillating_statue
 :   set_feature_name("granite_statue", "scintillating statue")

@@ -187,7 +187,6 @@ TILE:   X = wall_zot_magenta
 FTILE:  -ROD = floor_hall
 COLOUR: -RD = magenta
 COLOUR: X = lightmagenta
-KPROP:  RO-X = no_tele_into
 SUBST:  X = x
 SUBST:  - = ., D = +
 KITEM:  R = midnight gem
@@ -296,12 +295,10 @@ TAGS:   no_monster_gen zot_entry patrolling
 TILE:   X = wall_zot_magenta
 COLOUR: X+- = magenta
 SUBST:  X = c
-FTILE:  -O+ = floor_hall
-KPROP:  O- = no_tele_into
-SUBST:  - = .
-SUBST:  v: ....cnXblw, z:..cnXblw
+SUBST:  v: ....cnblw, z:..cnblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
+FTILE:  -O+ = floor_hall
 : zot_entry_setup(_G)
 MAP
                    cccccccccccc
@@ -324,7 +321,6 @@ TAGS:   no_monster_gen zot_entry transparent
 TILE:   c = wall_zot_magenta
 COLOUR: c+- = magenta
 FTILE:  O-+c = floor_hall
-KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 1:0 / 4:1 / 2:2 / 1:3
 : zot_entry_setup(_G)
@@ -345,12 +341,8 @@ TAGS:   no_monster_gen zot_entry transparent
 KFEAT:  A = stone_arch
 TILE:   c = wall_zot_magenta
 COLOUR: c- = magenta
+NSUBST: 1 = 1:0 / *:1, 2 = 2:2 / *:., 3 = 2:3 / *:2
 FTILE:  -O+Ac = floor_hall
-KPROP:  -OcA = no_tele_into
-SUBST:  - = .
-NSUBST: 1 = 1:0 / *:1
-NSUBST: 2 = 2:2 / *:.
-NSUBST: 3 = 2:3 / *:2
 : zot_entry_setup(_G)
 MAP
       ..3..
@@ -399,9 +391,9 @@ ENDMAP
 
 NAME:   grunt_zot_entry_funnels
 TAGS:   no_monster_gen zot_entry patrolling transparent
-COLOUR: 123c+. = magenta
-FTILE:  123c+.O = floor_hall
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
+COLOUR: 1239c+. = magenta
+FTILE:  1239c+.O = floor_hall
 : zot_entry_setup(_G)
 MAP
       @       @
@@ -430,9 +422,9 @@ ENDMAP
 NAME:   grunt_zot_entry_pinwheel
 TAGS:   no_monster_gen zot_entry patrolling transparent
 KFEAT:  A = stone_arch
+NSUBST: A = 1:O / *:A, 1 = 2:0 / *:1, 3 = 1:9 / *:3
 COLOUR: 123c+. = magenta
 FTILE:  123c+.AO = floor_hall
-NSUBST: A = 1:O / *:A, 1 = 2:0 / *:1, 3 = 1:9 / *:3
 : zot_entry_setup(_G)
 MAP
        @
@@ -1926,8 +1918,8 @@ TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
              dngn_transparent_wall_green
 TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
              dngn_transparent_wall_cyan
-TILE:    b = bedeviled_crystal_abyss
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_abyss
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
       ..  ccc  ..
  ..@....cccmccc....@..
@@ -1961,8 +1953,8 @@ TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
              dngn_transparent_wall_green
 TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
              dngn_transparent_wall_white
-TILE:    b = bedeviled_crystal_abyss
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_abyss
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 x x x x
  x.xxxxxxxxxxxxxxx
@@ -2258,8 +2250,8 @@ KPROP:    l = no_cloud_gen
 TILE:     m : dngn_transparent_wall_red / dngn_transparent_wall_yellow
 TILE:     n : dngn_transparent_wall_green / dngn_transparent_wall_blue
 TILE:     G = dngn_statue_ancient_evil
-TILE:     b = bedeviled_crystal_pandemonium
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:     b = bedevilled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
            ....@...
           ..Dww.wwC..
@@ -2298,8 +2290,8 @@ SHUFFLE: opqr, fg
 SUBST:   op = l, qr = ., f = v, g = ., l : ll.
 SUBST:   } = {([})]<b$>>>
 TILE:    m = dngn_transparent_wall_red
-TILE:    b = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 xxxxxxxxxxx
 c......col.
@@ -2341,8 +2333,8 @@ SUBST:   HI = x, J : xw, K : xw, LM = w
 SUBST:   p : xww., qr = ., - : ++., w : www.., C : CCb
 CLEAR:   '
 TILE:    m = dngn_transparent_wall_blue
-TILE:    b = bedeviled_crystal_cocytus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
    .............
  .......www......
@@ -2382,8 +2374,8 @@ SHUFFLE: opqrst
 SUBST:   op = x, q : xx., r : x.., st = .
 SUBST:   - : +c, { = {([})]++CC^^.., b = bxx
 TILE:    G = dngn_statue_wraith
-TILE:    b = bedeviled_crystal_tartarus
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_tartarus
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
            s
    ........s........
@@ -2411,8 +2403,8 @@ SUBST:   o : v.., p : vG., r : vGb, s : vb, t = v
 SUBST:   P = CCC>>><$d{([})], ~QRS = e, -'" = v, G : Gvv
 TILE:    G = dngn_statue_imp
 : if crawl.coinflip() then
-TILE:    b = bedeviled_crystal_dis
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:    b = bedevilled_crystal_dis
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : else
 TILE:    b = wall_emerald
 : end
@@ -2779,7 +2771,8 @@ COLOUR:  G = fire
 TILE:    G = fiery_conduit
 :   set_feature_name("metal_statue", "fiery conduit")
 : end
-SHUFFLE: defg
+ITEM:    potion of enlightenment ident:type q:1, ring of flight ident:type
+SHUFFLE: defg, hi
 SUBST:   HIJ = c
 SUBST:   1 = 112., 2 = 221.
 MAP
@@ -2815,7 +2808,7 @@ xx.Wwwwwc...Hcccccccc..ccccccccH...cwwwwW.
 xx.Wwwwwc...cccccccGc..cGccccccc...cwwwwW.
 xx.Wwcccc..........................ccccwW.
 xx.Wwc1........2............2........1cwW.
-xx.Wwc................................cwW.
+xx.Wwci..............................hcwW.
 xx.Wwc%....cccccccccccccccccccccc....%cwW.
 xx.Wwc*%...cwwwwwwwwwwwwwwwwwwwwc...%*cwW.
 xx.Wwce*%.1cwwwwwwwwwwwwwwwwwwwwc1.%*fcwW.
@@ -3772,13 +3765,14 @@ ORIENT:  northwest
 WEIGHT:  5
 # Cheap plastic imitations, mostly. Well, maybe not cheap...
 MONS:    hell knight w:6 / very ugly thing / caustic shrike zombie / \
-         lorocyproca / thermic dynamo / quicksilver ooze / \
+         sin beast / thermic dynamo / quicksilver ooze / \
          tentacled starspawn / spark wasp / glowing shapeshifter
 MONS:    guardian serpent / deep elf annihilator / balrug / \
          deep elf high priest / will-o-the-wisp / acid blob
 MONS:    halazid warlock / revenant / apocalypse crab
 MONS:    butterfly
-ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup, orb randart no_pickup
+ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
+KITEM:   O = charlatans_orb no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   C = altar_ecumenical
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / altar_ignis w:5
@@ -3789,9 +3783,9 @@ NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
 SUBST:   X : X Y Z:4, X = bbbbvvc, Y = bvvvvc, Z = bvvcccc
 SUBST:   az = bbvc
 NSUBST:  2 = 4 = 2223 / 2 = 122 / 1 = 1.. / *:1
-NSUBST:  . = 1:3 / 4:4 / 4:% / *:.
+NSUBST:  . = 1:3 / 4:4 / 12:% / *:.
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])defG, fGHCD~
+SHUFFLE: ])deOG, OGUCD~
 # Invert the normal Zot colours.
 : local wallc = "darkgray"
 : local floorc = "white"
@@ -3809,8 +3803,7 @@ SHUFFLE: ])defG, fGHCD~
 : tile("b = dngn_crystal_" .. wallc)
 : tile("v = dngn_metal_wall_" .. wallc)
 : tile("c = dngn_stone_wall_" .. wallc)
-# : tile("n = dngn_transparent_stone_" .. wallc)
-: ftile(".123409def%CDG~+ = floor_rough_" .. floorc)
+: ftile(".`123409deO%CDG~+ = floor_rough_" .. floorc)
 COLOUR: G = mountain
 TILE:   G = dngn_scintillating_statue
 : set_feature_name("granite_statue", "scintillating statue")
@@ -3825,22 +3818,22 @@ xyyXX.....XXyxxxxxxxyXX.....XXyyxxxxxxxxxxyyXX'''
 xxyyXX.....XyxxxxxxxyX1....XXyyxxxxxxxxxxxxyyXX''
 xxxyyX....1zzxxxxxxxzz.....XyyxxxxxxxxxxxxxxyyX''
 xxxxyX.....zyyyyyyyyyyz1....XyxxxxxxxxxxxxxxxxyX'
-xxxxyX....Xzy...2...yzX....XyxxxxxxxxxxxxxxxxyX'
-xxxyyX....Xzy1y.].y1yzX....XyyxxxxxxxxxxxxxxxyX''
+xxxxyX....Xzy..`2`..yzX....XyxxxxxxxxxxxxxxxxyX'
+xxxyyX....Xzy1y`]`y1yzX....XyyxxxxxxxxxxxxxxxyX''
 xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxyyyyyyyyyyzzX''
-xxyXX...zzz1....2....1zzz...XXyxxyyd......2zzX'''
+xxyXX...zzz1....2....1zzz...XXyxxyyd``....2zzX'''
 xxyX...zzX1...........1Xzz...Xyyyyyyyy1..1zzX''''
 xxXX+++z.................z+++XXXXXXXzzzz+zzX''''
 xx1....................................112z1'''
 xxXX.........................XXXXXXXzzzz+zzX''''
 xxyXXXX...................XXXXyyyyyyy1...1zzX''''
-xxxyyyXXX...............XXXyyyyyyye.......2zzX'''
+xxxyyyXXX...............XXXyyyyyyye``.....2zzX'''
 xxxxxyyyXX.............XXyyyxxxxyyyyyyyyyyyyzzX'
 xxxxxxxyyX...zzz1zzz...XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxxxxyX..Xz1z+z1zX..XyxxxxxxxxxxxxxxxxxxyXX'''
-xxxxxxxxyX.2zzX%%%Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
-xxxxxxxxyzzzz1.%)%.1zzzzyxxxxxxxxxxxxxxxxxyX1''
-xxxxxxxxyX''zzX%%%Xzz''XyxxxxxxxxxxxxxxxxxyyX'''
+xxxxxxxxyX.2zzX$$$Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
+xxxxxxxxyzzzz1.$)$.1zzzzyxxxxxxxxxxxxxxxxxyX1''
+xxxxxxxxyX''zzX$$$Xzz''XyxxxxxxxxxxxxxxxxxyyX'''
 xxxxxxxxyX''Xz2zzz2zX''XyxxxxxxxxxxxxxxxxxxyXX'''
 xxxxxxxyyX'''zzz'zzz'''XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxyyyXX'''''''''''''XXyyyxxxxxxxxxxxxxxxyyXX'

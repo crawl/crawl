@@ -97,13 +97,12 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_POISON_VULN,     MB_POISON_VULN },
     { ENCH_AGILE,           MB_AGILE },
     { ENCH_FROZEN,          MB_FROZEN },
-    { ENCH_BLACK_MARK,      MB_BLACK_MARK },
+    { ENCH_SIGN_OF_RUIN,    MB_SIGN_OF_RUIN },
     { ENCH_SAP_MAGIC,       MB_SAP_MAGIC },
     { ENCH_CORROSION,       MB_CORROSION },
     { ENCH_REPEL_MISSILES,  MB_REPEL_MSL },
     { ENCH_RESISTANCE,      MB_RESISTANCE },
     { ENCH_HEXED,           MB_HEXED },
-    { ENCH_BRILLIANCE_AURA, MB_BRILLIANCE_AURA },
     { ENCH_EMPOWERED_SPELLS, MB_EMPOWERED_SPELLS },
     { ENCH_GOZAG_INCITE,    MB_GOZAG_INCITED },
     { ENCH_PAIN_BOND,       MB_PAIN_BOND },
@@ -132,6 +131,10 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
     { ENCH_TOUCH_OF_BEOGH,  MB_TOUCH_OF_BEOGH },
     { ENCH_VENGEANCE_TARGET, MB_VENGEANCE_TARGET },
+    { ENCH_MAGNETISED,      MB_MAGNETISED },
+    { ENCH_RIMEBLIGHT,      MB_RIMEBLIGHT },
+    { ENCH_ARMED,           MB_ARMED },
+    { ENCH_SHADOWLESS,      MB_SHADOWLESS },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -359,7 +362,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     {
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
-            || mons_species(type) == MONS_SERPENT_OF_HELL)
+            || mons_species(type) == MONS_SERPENT_OF_HELL
+            || type == MONS_THE_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -447,8 +451,10 @@ monster_info::monster_info(const monster* m, int milev)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
+        if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
+            mb.set(MB_PLAYER_SERVITOR);
     }
-    else if (m->is_perm_summoned())
+    else if (m->is_perm_summoned() && !mons_is_player_shadow(*m))
         mb.set(MB_PERM_SUMMON);
     else if (testbits(m->flags, MF_NO_REWARD)
              && mons_class_gives_xp(m->type, true))
@@ -463,7 +469,8 @@ monster_info::monster_info(const monster* m, int milev)
     {
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
-            || mons_species(type) == MONS_SERPENT_OF_HELL)
+            || mons_species(type) == MONS_SERPENT_OF_HELL
+            || type == MONS_THE_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -553,6 +560,7 @@ monster_info::monster_info(const monster* m, int milev)
     sleepwalking = m->sleepwalking();
     backlit = m->backlit(false);
     umbraed = m->umbra();
+    shield_bonus = m->shield_bonus();
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune())
@@ -707,6 +715,9 @@ monster_info::monster_info(const monster* m, int milev)
     else if (m->is_actual_spellcaster())
         props[ACTUAL_SPELLCASTER_KEY] = true;
 
+    if (m->has_spell_of_type(spschool::necromancy))
+        props[NECROMANCER_KEY] = true;
+
     // assumes spell hd modifying effects are always public
     const int spellhd = m->spell_hd();
     if (spellhd != hd)
@@ -813,18 +824,10 @@ monster_info::monster_info(const monster* m, int milev)
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
-string monster_info::get_max_hp_desc() const
+int monster_info::get_known_max_hp() const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
-    {
-        const int hp = props[KNOWN_MAX_HP_KEY].get_int();
-
-        // Indicate that this apostle's HP has been increased by Beogh
-        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
-            return make_stringf("*%d*", hp);
-
-        return std::to_string(hp);
-    }
+        return props[KNOWN_MAX_HP_KEY].get_int();
 
     const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
@@ -842,20 +845,49 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     mhp /= scale;
-    return make_stringf("~%d", mhp);
+
+    return mhp;
+}
+
+/// Player-known max HP information for a monster: "about 55", "243".
+string monster_info::get_max_hp_desc() const
+{
+    int hp = get_known_max_hp();
+    if (props.exists(KNOWN_MAX_HP_KEY))
+    {
+        // Indicate that this apostle's HP has been increased by Beogh
+        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
+            return make_stringf("*%d*", hp);
+
+        return std::to_string(hp);
+    }
+
+    return make_stringf("~%d", hp);
 }
 
 /// HP regenerated every (scale) turns.
 int monster_info::regen_rate(int scale) const
 {
+    int rate = 0;
     if (!can_regenerate() || is(MB_SICK) /* ? */)
         return 0;
-    if (mons_class_fast_regen(type) || is(MB_REGENERATION) /* ? */)
-        return mons_class_regen_amount(type) * scale;
 
-    // Duplicates monster::natural_regen_rate.
-    const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
-    return min(scale, max(1, hd * scale / (divider * 25)));
+    if (mons_class_fast_regen(type))
+        rate = mons_class_regen_amount(type) * scale;
+    else
+    {
+        // Duplicates monster::natural_regen_rate.
+        const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
+        rate = min(scale, max(1, hd * scale / (divider * 25)));
+    }
+
+    // XXX: This rounds slightly inaccurately, and also doesn't say that it's
+    //      an approximation when monster hp isn't known for sure. Still, it's
+    //      probably close enough?
+    if (is(MB_REGENERATION))
+        rate += 3 + get_known_max_hp() / 20;
+
+    return rate;
 }
 
 /**
@@ -863,13 +895,13 @@ int monster_info::regen_rate(int scale) const
  */
 int monster_info::lighting_modifiers() const
 {
+    int mod = 0;
     if (backlit)
-        return BACKLIGHT_TO_HIT_BONUS;
+        mod += BACKLIGHT_TO_HIT_BONUS;
     if (umbraed && !you.nightvision())
-        return UMBRA_TO_HIT_MALUS;
-    return 0;
+        mod += UMBRA_TO_HIT_MALUS;
+    return mod;
 }
-
 
 /**
  * Name the given mutant beast tier.
@@ -938,6 +970,8 @@ string monster_info::_core_name() const
         s = "Royal Jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
+    else if (nametype == MONS_THE_ENCHANTRESS)
+        s = "Enchantress";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -1362,6 +1396,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         colour_type = MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
+    case ATT_MARIONETTE:
 #if TAG_MAJOR_VERSION == 34
     case ATT_OLD_STRICT_NEUTRAL:
 #endif
@@ -1529,21 +1564,65 @@ int monster_info::willpower() const
     return mr;
 }
 
+static bool _add_energy_desc(int energy, string name, int speed, vector<string> &out)
+{
+    if (energy == 10)
+        return false;
+
+    ASSERT(energy);
+    const int perc = speed * 100 / energy;
+    out.push_back(make_stringf("%s: %d%%", name.c_str(), perc));
+    return true;
+}
+
 string monster_info::speed_description() const
 {
-    if (mbase_speed < 7)
-        return "very slow";
-    else if (mbase_speed < 10)
-        return "slow";
-    else if (mbase_speed > 20)
-        return "extremely fast";
-    else if (mbase_speed > 15)
-        return "very fast";
-    else if (mbase_speed > 10)
-        return "fast";
+    const int speed = base_speed();
+    if (!speed) // something weird - let's not touch it
+        return "";
 
-    // This only ever displays through Lua.
-    return "normal";
+    const bool unusual_speed = speed != 10;
+    const mon_energy_usage default_energy = DEFAULT_ENERGY;
+    const bool unusual_energy = !(menergy == default_energy);
+    const int travel_delay = menergy.move * 10 / speed;
+    const int player_travel_delay = player_movement_speed(false, false);
+    // Don't show a difference in travel speed between players and statues,
+    // tentacle segments, etc.
+    const int travel_delay_diff = mons_class_flag(type, M_STATIONARY) ? 0
+        : travel_delay - player_travel_delay;
+    if (!unusual_speed && !unusual_energy && !travel_delay_diff)
+        return "";
+
+    ostringstream result;
+    result << "Speed: " << speed * 10 << "%";
+
+    vector<string> unusuals;
+
+    _add_energy_desc(menergy.attack, "attack", speed, unusuals);
+    _add_energy_desc(menergy.missile, "shoot", speed, unusuals);
+    _add_energy_desc(menergy.move, "travel", speed, unusuals);
+    if (menergy.swim != menergy.move)
+        _add_energy_desc(menergy.swim, "swim", speed, unusuals);
+    // If we ever add a non-magical monster with fast/slow abilities,
+    // we'll need to update this.
+    _add_energy_desc(menergy.spell, is_priest() ? "pray" : "magic",
+                     speed, unusuals);
+
+    if (!unusuals.empty())
+        result << " (" << join_strings(unusuals.begin(), unusuals.end(), ", ") << ")";
+
+    if (type == MONS_SIXFIRHY || type == MONS_JIANGSHI)
+        result << " (but often pauses)";
+    else if (travel_delay_diff)
+    {
+        const bool slow = travel_delay_diff > 0;
+        const string diff_desc = slow ? "slower" : "faster";
+        result << " (normally travels " << diff_desc << " than you)";
+        // It would be interesting to qualify this with 'on land',
+        // if appropriate, but sort of annoying to get player swim speed.
+    }
+
+    return result.str();
 }
 
 bool monster_info::wields_two_weapons() const
@@ -1984,4 +2063,17 @@ bool monster_info::pronoun_plurality() const
         return props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL;
 
     return mons_class_gender(type) == GENDER_NEUTRAL;
+}
+
+string description_for_ench(enchant_type type)
+{
+    const monster_info_flags *flag = map_find(trivial_ench_mb_mappings, type);
+    if (!flag)
+        return "";
+
+    for (auto& name : monster_info_flag_names)
+        if (name.flag == *flag)
+            return name.long_singular;
+
+    return "";
 }

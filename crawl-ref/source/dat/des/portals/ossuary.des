@@ -635,9 +635,9 @@ ORIENT: encompass
 MONS:   scorpion, mummy
 MONS:   gnoll zombie / jackal zombie / orc zombie / \
         human zombie / ball python zombie / adder zombie / \
-        centaur zombie / scorpion zombie w:20
+        centaur zombie / scorpion zombie w:30
 ITEM:   any scroll / any potion / any jewellery w:1
-SUBST:  1 = 11..., 3 = 3., d = d:21 .
+SUBST:  1 = 11..., 3 = 33., d = d:21 .
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccc
@@ -655,13 +655,13 @@ c3.3cdddn...c..3c3.1c...c
 cc+ccccccc+ccccccccccc+cc
 c1...3c.....c...c...c3.1c
 c.....c.....c...+...G...c
-c.....G.....c...c......3c
-c...........cc+cccG...Gcc
+c..3..G.....c...c......3c
+c...........cc+cccG.3.Gcc
 c3..........c3.3c3.....3c
 cccG..3..Gccc...c...G...c
 c3.........3c3.3c1.3c3.1c
 c...........cc+ccccccc+cc
-c.....G.....c...ndddc3.3c
+c..3..G..3..c...ndddc3.3c
 c.....c.....+...nd2d+.3.c
 c3...3c3...1c...ndddc1.1c
 ccccccccccccccccccccccccc
@@ -803,21 +803,21 @@ MONS:    mummy, crocodile zombie
 MONS:    kobold zombie / centaur zombie w:5 / gnoll zombie
 KFEAT:   ~ = net trap / alarm trap w:30 / dispersal trap
 KFEAT:   ^ = net trap w:20 / dispersal trap w:5
-SUBST:   M = 111., z = c...
+SUBST:   M = 11., z = c...
 NSUBST:  3 = 1:2 / 4:. / * = 333..
 NSUBST:  ~ = 4:~ / 40:. / * = ~:25 .:200
 NSUBST:  ^ = 1:^ / 1:. / * = ^.
 : ossuary_setup_features(_G)
 MAP
-            cccccccccccccccccccccc
- cccccccccccc3c3c3c3c3c3c3cccddddcc
-cc3........~c~~~~~~~~~~~~~c+^.....cc
-c..........~~~~~~~~~~~~~~~~+^.....Mcc
-c1....A..<.....z...z...z...+^.....2<c
-c..........~~~~~~~~~~~~~~~~+^.....Mcc
-cc2........~c~~~~~~~~~~~~~c+^.....cc
- cccccccccccc3c3c3c3c3c3c3cccddddcc
-            cccccccccccccccccccccc
+             cccccccccccccccccccccc
+ ccccccccccccc3c3c3c3c3c3c3cccddddcc
+cc3.........~c~~~~~~~~~~~~~c+^.....cc
+c...........~~~~~~~~~~~~~~~~+^.....Mcc
+c1.....A..<.....z...z...z...+^.....2<c
+c...........~~~~~~~~~~~~~~~~+^.....Mcc
+cc2.........~c~~~~~~~~~~~~~c+^.....cc
+ ccccccccccccc3c3c3c3c3c3c3cccddddcc
+             cccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_due_mausoleum
@@ -856,7 +856,7 @@ ccccccccccccc+++ccccccccccccc
 ccccccccccccc...ccccccccccccc
 cccccccccc$d+.2.+d$cccccccccc
 ccccccccccddc111cddcccccccccc
-ccccccccccccc111ccccccccccccc
+ccccccccccccc.1.ccccccccccccc
 ccccccccccccc1.1ccccccccccccc
 ccccccccccccc...ccccccccccccc
 ccccccccccccc...ccccccccccccc
@@ -982,7 +982,7 @@ KMONS:  6 = spectral bullfrog / spectral scorpion
 ITEM:   any potion / any scroll / nothing w:1
 KFEAT:  IP`" = floor
 KFEAT:  ^ = alarm trap
-NSUBST: I = 1:5i / 7:I / 5 = I` / *:`, P = 1:6p / 7:P / 5 = P" / *:"
+NSUBST: I = 1:5i / 6:I / 5 = I` / *:`, P = 1:6p / 6:P / 5 = P" / *:"
 COLOUR: I` = cyan
 COLOUR: P" = green
 SUBST:  ' = ^ .:70
@@ -1035,7 +1035,7 @@ NSUBST:  B : 1:+ / 1:+ccc / *:c, C : 1:+ / 1:+ccc / *:c
 SHUFFLE: VX, yzYZ
 NSUBST:  y = 1:n / * = c:20 n:8, z = 2:n / * = c:20 n:4
 NSUBST:  Y = 1:n / * = c:20 n:4, Z = 1:n / * = c:20 n:1
-NSUBST:  3 = 1:113 / *:3, 4 = 1:4 / 1:42 / *:2
+NSUBST:  3 = 1:113 / *:3, 4 = 1:4 / 1:1 / 1:42 / *:2
 SUBST:   0 = 1:10 2:1
 KPROP:   VX = no_tele_into
 : ossuary_setup_features(_G)
@@ -1231,11 +1231,13 @@ KMONS:   2 = burial acolyte
 KMONS:   3 = mummy
 KMONS:   4 = hound zombie / gnoll zombie / orc zombie
 KMONS:   5 = human zombie / elf zombie / centaur zombie
+KMONS:   F = marrowcuda
 KITEM:   123d = any potion / any scroll / any jewellery w:1
 KFEAT:   ^ = alarm trap
 KFEAT:   C = altar_kikubaaqudgha / altar_hepliaklqana w:2
+KFEAT:   DF = dry_fountain
 SHUFFLE: HIJKLMNOPQRSTUVW
-NSUBST:  4 = 3:4 / 2:. / * = 4:3 5:1 .:6
+NSUBST:  4 = 3:4 / 1:. / * = 4:3 5:1 .:6, F = 1:F / *:D
 NSUBST:  H = 1:1 / 1:2 / *:d, I = 1:3 / *:4
 NSUBST:  J = 1:3 / *:4, K = 1:2 / *:d
 SUBST:   L = 4, M = 5, NOPQ = ., RS = $, TUVW = d, C = CGG
@@ -1250,21 +1252,21 @@ c..xHHx..xIIx...xJJx..xKKx..c
 c..x++x..x++x...x++x..x++x..c
 c..x..x..x..x...x..x..x..x..c
 c...........................c
-c...........................c
+c.............F.............c
 c..xxxx..4..xxxxx..4..xxxx..c
 c..xL+..4G4.xMMMx.4G4..+Nx..c
 c..xL+...4..x+++x..4...+Nx..c
 c..xxxx.....x...x.....xxxx..c
 c...........................c
 c......xxxxx..4..xxxxx......c
-c^.....xOO+..4C4..+PPx.....^c
+c^....FxOO+..4C4..+PPxF....^c
 c......xxxxx..4..xxxxx......c
 c...........................c
 c..xxxx.....x...x.....xxxx..c
 c..xQ+...4..x+++x..4...+Sx..c
 c..xQ+..4G4.xRRRx.4G4..+Sx..c
 c..xxxx..4..xxxxx..4..xxxx..c
-c...........................c
+c.............D.............c
 c...........................c
 c..x..x..x..x...x..x..x..x..c
 c..x++x..x++x...x++x..x++x..c
@@ -1289,7 +1291,7 @@ NAME:   ossuary_hellmonk_silent_tomb
 TAGS:   no_item_gen no_monster_gen
 WEIGHT: 10
 ORIENT: encompass
-MONS:   silent spectre, wight / weeping skull w:5
+MONS:   silent spectre, wight / marrowcuda / weeping skull w:5
 MONS:   centaur zombie w:20 / water moccasin zombie / scorpion zombie /\
         bullfrog zombie / scorpion w:2
 MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\

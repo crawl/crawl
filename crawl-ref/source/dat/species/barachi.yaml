@@ -6,7 +6,8 @@ genus: Frog
 difficulty: Intermediate
 difficulty_priority: 20
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_ears
 aptitudes:
   xp: 0
   hp: 0
@@ -47,13 +48,13 @@ mutations:
   13:
     MUT_HOP: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_BERSERKER
-  - JOB_WARPER
-  - JOB_HEXSLINGER
-  - JOB_SUMMONER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_REAVER
+  - fighter
+  - berserker
+  - warper
+  - hexslinger
+  - summoner
+  - ice elementalist
+  - reaver
 
 child_name: Tadpole
 orc_name: Orcphibian

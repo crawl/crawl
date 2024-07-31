@@ -134,6 +134,9 @@ static bool _decrement_a_duration(duration_type dur, int delay,
             "expiration delay loss %d not less than duration expiration point %d",
             exploss * BASELINE_DELAY, exppoint);
 
+    if (dur == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
+        return false;
+
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
 
@@ -513,6 +516,9 @@ void player_reacts_to_monsters()
         _handle_uskayaw_time(you.time_taken);
 
     announce_beogh_conversion_offer();
+
+    if (player_in_branch(BRANCH_ARENA) && !okawaru_duel_active())
+        okawaru_end_duel();
 }
 
 static bool _check_recite()
@@ -866,8 +872,6 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
-    okawaru_handle_duel();
-
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();
@@ -886,6 +890,9 @@ static void _decrement_durations()
 
     if (you.duration[DUR_BLOOD_FOR_BLOOD])
         beogh_blood_for_blood_tick(delay);
+
+    if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
+        fire_fusillade();
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
@@ -1040,7 +1047,7 @@ static void _handle_fugue(int delay)
     {
         // Keep the spam down
         if (you.props[FUGUE_KEY].get_int() < 3 || one_chance_in(5))
-            mprf("The wailing of tortured souls fills the air!");
+            mpr("The wailing of tortured souls fills the air!");
         noisy(spell_effect_noise(SPELL_FUGUE_OF_THE_FALLEN), you.pos());
     }
 }
@@ -1092,11 +1099,8 @@ void player_reacts()
     abyss_maybe_spawn_xp_exit();
 
     actor_apply_cloud(&you);
-    // Miasma immunity from Dreadful Rot. Only lasts for one turn,
-    // so erase it just after we apply clouds for the turn (above).
-    if (you.props.exists(MIASMA_IMMUNE_KEY))
-        you.props.erase(MIASMA_IMMUNE_KEY);
-    // Ditto for blastmotes.
+    // Immunity due to just casting Volatile Blastmotes. Only lasts for one
+    // turn, so erase it just after we apply clouds for the turn (above).
     if (you.props.exists(BLASTMOTE_IMMUNE_KEY))
         you.props.erase(BLASTMOTE_IMMUNE_KEY);
 
@@ -1134,6 +1138,9 @@ void player_reacts()
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
+
+    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+        update_vision_range();
 
     incr_gem_clock();
     incr_zot_clock();

@@ -18,6 +18,7 @@
 #include "branch.h"
 #include "colour.h"
 #include "database.h"
+#include "english.h"
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -82,7 +83,10 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     switch (which_god)
     {
     case GOD_ZIN:
-        // Lawful god: no mutagenics.
+        // Lawful god: no chaos or mutagenics.
+        if (brand == SPWPN_CHAOS)
+            return false;
+
         if (artefact_property(item, ARTP_CONTAM))
             return false;
         break;
@@ -150,6 +154,12 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
         break;
 
+    case GOD_IGNIS:
+        // Fire god.
+        if (item.base_type == OBJ_WEAPONS && brand != SPWPN_FLAMING)
+            return false;
+        break;
+
     default:
         break;
     }
@@ -174,19 +184,20 @@ string replace_name_parts(const string &name_in, const item_def& item)
                                "@player_name@"
                                + getRandNameString("killer_name"));
             name = replace_all(name, "@player_doom@",
-                               "@player_name@'s "
+                               "@player_name_possessive@ "
                                + getRandNameString("death_or_doom"));
         }
         else
         {
             // Simply overwrite the name with one of type "God's Favour".
             name = "of ";
-            name += god_name(god_gift, false);
-            name += "'s ";
+            name += apostrophise(god_name(god_gift, false));
             name += getRandNameString("divine_esteem");
         }
     }
     name = replace_all(name, "@player_name@", you.your_name);
+    name = replace_all(name, "@player_name_possessive@",
+                       apostrophise(you.your_name));
 
     name = replace_all(name, "@player_species@",
                  species::name(you.species, species::SPNAME_GENUS));
@@ -201,7 +212,8 @@ string replace_name_parts(const string &name_in, const item_def& item)
     // Occasionally use long name for Xom (see religion.cc).
     name = replace_all(name, "@xom_name@", god_name(GOD_XOM, coinflip()));
 
-    if (name.find("@god_name@", 0) != string::npos)
+    if (name.find("@god_name@", 0) != string::npos
+        || name.find("@god_name_possessive@", 0) != string::npos)
     {
         god_type which_god;
 
@@ -218,6 +230,8 @@ string replace_name_parts(const string &name_in, const item_def& item)
         }
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));
+        name = replace_all(name, "@god_name_possessive@",
+                           apostrophise(god_name(which_god, false)));
     }
 
     return name;
@@ -385,6 +399,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { AMU_REFLECTION, { { ARTP_SHIELDING, AMU_REFLECT_SH / 2} } },
 
     { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
+    { RING_WIZARDRY, { { ARTP_WIZARDRY, 1} } },
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
@@ -392,7 +407,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_PROTECTION_FROM_FIRE, { { ARTP_FIRE, 1 } } },
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
     { RING_POISON_RESISTANCE, { { ARTP_POISON, 1 } } },
-    { RING_LIFE_PROTECTION, { { ARTP_NEGATIVE_ENERGY, 1 } } },
+    { RING_POSITIVE_ENERGY, { { ARTP_NEGATIVE_ENERGY, 1 } } },
     { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
 
@@ -496,13 +511,15 @@ static void _add_randart_weapon_brand(const item_def &item,
     else if (is_range_weapon(item))
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            2, SPWPN_SPEED,
-            2, SPWPN_ELECTROCUTION,
+            8, SPWPN_DRAINING,
+            8, SPWPN_HEAVY,
+            8, SPWPN_FLAMING,
+            8, SPWPN_FREEZING,
+            4, SPWPN_ELECTROCUTION,
+            3, SPWPN_SPEED,
             2, SPWPN_ANTIMAGIC,
-            4, SPWPN_DRAINING,
-            4, SPWPN_HEAVY,
-            4, SPWPN_FLAMING,
-            4, SPWPN_FREEZING);
+            2, SPWPN_CHAOS,
+            1, SPWPN_HOLY_WRATH);
 
         // Penetration is only allowed on crossbows.
         // This may change in future.
@@ -715,7 +732,9 @@ static int _gen_good_res_artp() { return 1; }
 static int _gen_bad_res_artp() { return -1; }
 
 /// Generate 'good' values for ARTP_HP/ARTP_MAGICAL_POWER
-static int _gen_good_hpmp_artp() { return 9; }
+static int _gen_good_hpmp_artp() { return random_range(4, 9) +
+                                          (one_chance_in(3) ? random_range(1, 3)
+                                                            : 0); }
 
 /// Generate 'bad' values for ARTP_HP/ARTP_MAGICAL_POWER
 static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
@@ -852,6 +871,8 @@ static const artefact_prop_data artp_data[] =
     { "Acrobat", ARTP_VAL_BOOL, 0, // ARTP_ACROBAT,
         []() {return 1;}, nullptr, 0, 0},
     { "RegenMP", ARTP_VAL_BOOL, 0,   // ARTP_MANA_REGENERATION,
+        []() { return 1; }, nullptr, 0, 0 },
+    { "Wiz", ARTP_VAL_BOOL, 0,   // ARTP_WIZARDRY,
         []() { return 1; }, nullptr, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
@@ -1966,7 +1987,7 @@ enum gizmo_prop_type
     GIZMO_RELEC,
     GIZMO_RPOIS,
     GIZMO_SLAY,
-    GIZMO_WILL,
+    GIZMO_WIZ,
 
     NUM_GIZMO_PROPS,
 };
@@ -1997,8 +2018,9 @@ static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
             artefact_set_property(gizmo, ARTP_SLAYING, 3);
             break;
 
-        case GIZMO_WILL:
-            artefact_set_property(gizmo, ARTP_WILLPOWER, 1);
+        case GIZMO_WIZ:
+            artefact_set_property(gizmo, ARTP_WIZARDRY, 1);
+            artefact_set_property(gizmo, ARTP_MAGICAL_POWER, 4);
             break;
 
         // Rare props
@@ -2114,7 +2136,7 @@ static jewellery_type octoring_types[8] =
 {
     RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
     RING_RESIST_CORROSION, RING_FLIGHT, RING_WIZARDRY, RING_MAGICAL_POWER,
-    RING_LIFE_PROTECTION
+    RING_POSITIVE_ENERGY
 };
 
 static void _make_octoring(item_def &item)

@@ -111,13 +111,14 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     return start_pathfind(msg);
 }
 
-bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
-                                     bool msg)
+bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool doors,
+                                     bool diag, bool msg)
 {
     start  = src;
     target = dest;
     pos    = start;
     allow_diagonals = diag;
+    traverse_doors = doors;
 
     // Easy enough. :P
     if (start == target)
@@ -425,6 +426,12 @@ bool monster_pathfind::traversable(const coord_def& p)
     if (mons)
         return mons_traversable(p);
 
+    if (traverse_doors && feat_is_closed_door(env.grid(p))
+        && !cell_is_runed(p))
+    {
+        return true;
+    }
+
     return feat_has_solid_floor(env.grid(p));
 }
 
@@ -432,11 +439,6 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    if (cell_is_runed(p))
-        return false;
-    if (!mons->is_habitable(p))
-        return false;
-
     return mons_can_traverse(*mons, p, traverse_in_sight);
 }
 

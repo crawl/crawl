@@ -110,6 +110,8 @@ void slime_wall_damage(actor* act, int delay);
 
 int count_adjacent_icy_walls(const coord_def &pos);
 
+bool near_visible_wall(coord_def observer_pos, coord_def cell);
+
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
 void feat_splash_noise(dungeon_feature_type feat);
@@ -169,6 +171,7 @@ bool has_push_spaces(const coord_def& pos, bool push_actor,
                     const vector<coord_def>* excluded);
 bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded);
 coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* excluded, bool random);
+coord_def push_or_teleport_actor_from(const coord_def& pos);
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);

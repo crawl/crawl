@@ -156,7 +156,7 @@ SOUND:You hear a skittering sound.
 %%%%
 __SKITTER seen
 
-SOUND:@The_monster@'s many legs skitter.
+SOUND:@The_monster_possessive@ many legs skitter.
 %%%%
 __FAINT_SKITTER unseen
 
@@ -164,7 +164,7 @@ SOUND:You hear a faint skittering sound.
 %%%%
 __FAINT_SKITTER seen
 
-SOUND:@The_monster@'s many legs skitter faintly.
+SOUND:@The_monster_possessive@ many legs skitter faintly.
 %%%%
 __SQUEAL unseen
 
@@ -180,13 +180,13 @@ __DEMON_TAUNT
 %%%%
 __CHERUB seen
 
-SOUND:@The_monster@'s eagle head screeches!
+SOUND:@The_monster_possessive@ eagle head screeches!
 
-SOUND:@The_monster@'s lion head roars!
+SOUND:@The_monster_possessive@ lion head roars!
 
-SOUND:@The_monster@'s ox head lows!
+SOUND:@The_monster_possessive@ ox head lows!
 
-SOUND:@The_monster@'s human head shouts!
+SOUND:@The_monster_possessive@ human head shouts!
 %%%%
 __CHERUB unseen
 
@@ -212,7 +212,7 @@ SOUND:You hear a loud rustle.
 %%%%
 __RUSTLE seen
 
-SOUND:@The_monster@'s pages rustle loudly.
+SOUND:@The_monster_possessive@ pages rustle loudly.
 %%%%
 __SQUEAK unseen
 
@@ -358,7 +358,7 @@ SOUND:@The_monster@ @says@, "@imp_taunt@"
 %%%%
 moth of wrath
 
-VISUAL:@The_monster@'s fur bristles in rage as it notices you.
+VISUAL:@The_monster_possessive@ fur bristles in rage as it notices you.
 %%%%
 iron imp
 

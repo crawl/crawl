@@ -115,7 +115,12 @@ ENDMAP
 
 NAME:    hangedman_research_geology
 MONS:    boulder beetle / catoblepas, crystal guardian, iron dragon
-KMONS:   D = caustic shrike
+: if you.in_branch("Vaults") then
+KMONS:   D? = dancing weapon ; staff of earth
+: else
+KMONS:   D = walking earthen tome
+SUBST:   ? = .
+: end
 KITEM:   B = large rock q:1
 COLOUR:  .xB012345D = brown
 FTILE:   .+xB012345D = floor_pebble_brown
@@ -131,7 +136,7 @@ bB..x..Bb
 c0x1.1x0c
 d.2xxx2.d
 a.xxDxx.a
-b.x3.3x.b
+b.x3?3x.b
 cx..G..xc
 dcbadabcd
 ENDMAP

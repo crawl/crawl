@@ -185,7 +185,7 @@ able to keep their balance, move at a normal speed, and avoid fumbling.
 %%%%
 Some mud
 
-A thick layer of gritty mud.
+A thick layer of gritty mud. [[liquefied]]
 %%%%
 The open sea
 
@@ -928,6 +928,14 @@ The damp floor
 The floor. It remains forever damp, perhaps due to the humidity or the constant
 flow of clouds.
 %%%%
+A wall of orange crystal
+
+<A crystal wall>
+%%%%
+A wall of pink crystal
+
+<A crystal wall>
+%%%%
 A wall of white crystal
 
 A wall made from low-grade crystal with an opalescent gleam.
@@ -1016,60 +1024,60 @@ to intruders like you infiltrating the Dungeon.
 # Themed magic branches / portals / vaults.
 An arcane conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its destructive mystic
 energy will harmlessly disperse.
 %%%%
 A misfortune conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its malevolent cursed
 energy will harmlessly disperse.
 %%%%
 A dimensional conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its extraplanar warp
 energy will harmlessly disperse.
 %%%%
 A soul conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its negative energy will
 harmlessly disperse.
 %%%%
 An alchemical conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its venomous churning
 energy will harmlessly disperse.
 %%%%
 A fiery conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its ever-burning energy
 will harmlessly disperse.
 %%%%
 An icy conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its chilling cold energy
 will harmlessly disperse.
 %%%%
 An earthen conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its seismic energy will
 harmlessly disperse.
 %%%%
 A storm conduit
 
-A strange but benign metal construct, analyzing raw ambient magical energy. If
+A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its crackling energy will
 harmlessly disperse.
 %%%%
 # Vaults with extraplanar contents.
-A bedeviled crystal wall
+A bedevilled crystal wall
 
 A wall made from shimmering crystal, from which some demonic plane peers out.
 While its composition both make it resist destruction plus reflect both fire and

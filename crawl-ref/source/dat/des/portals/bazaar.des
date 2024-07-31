@@ -83,13 +83,25 @@ function bazaar_setup(e, randomise_tileset, shop_halo)
   -- that won't follow you out of the portal. They're also customers!
   e.tags("no_monster_gen")
   local a = "att:good_neutral ; nothing"
+  local b = "att:good_neutral"
   local cust = "kobold " .. a .. " / orc " .. a .. " / spriggan " .. a ..
                " / naga " .. a .. " / merfolk " .. a .. " / human " .. a
   if you.god() ~= "Elyvilon" and you.god() ~= "Zin" and you.god() ~= "the Shining One" then
-      cust = cust .. " / lesser demon w:2 att:good_neutral " ..
-                     " / mummy w:2 att:good_neutral"
+      cust = cust .. " / lesser demon w:2 " .. b .. " / mummy w:2 " .. b
   end
-  e.kmons("K = " .. cust)
+
+  local xomCust = "boggart " .. a .. " / common demon " .. b ..
+                  " / laughing skull band " .. b .. " / ugly thing " .. b ..
+                  " / worldbinder " .. b .. " / glowing shapeshifter " .. b ..
+                  " / demonspawn w:2 " .. b .. " / cacodemon " .. b ..
+                  " / sin beast " .. b .. " / tentacled monstrosity " .. b
+
+  if you.god() == "Xom" then
+      e.kmons("K = " .. xomCust)
+  else
+      e.kmons("K = " .. cust)
+  end
+
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
 
@@ -99,10 +111,19 @@ function bazaar_setup(e, randomise_tileset, shop_halo)
   elseif you.god() == "Okawaru" then
       crawl.mpr("Upon your arrival, your lonesome duelist's vow makes the other customers flee.")
   else
-      if you.silenced() == false then
-          crawl.mpr("You hear the chatter and bustle of other customers!")
+      -- Xom sees a flavour opportunity and takes it.
+      if you.god() == "Xom" then
+          crawl.mpr("Xom shifts dimensions to bring you to a more interesting bazaar.")
+          if you.silenced() == false then
+              crawl.mpr("You hear the bustle and chatter of other... customers...?")
+          end
+          e.nsubst(". = 2:K / 4 = K. / 6 : K .:260 / *:.")
+      else
+          if you.silenced() == false then
+              crawl.mpr("You hear the chatter and bustle of other customers!")
+          end
+          e.nsubst(". = 1:K / 2 = K. / 3 : K .:260 / *:.")
       end
-      e.nsubst(". = 1:K / 2 = K. / 3 : K .:260 / *:.")
   end
 
   -- Note: (false, true) makes no sense because of how the floor halos work.

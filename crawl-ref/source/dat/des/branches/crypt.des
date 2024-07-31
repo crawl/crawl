@@ -743,6 +743,40 @@ GxxxxG
 ......
 ENDMAP
 
+NAME:  nicolae_crypt_reliquary_box_2
+TAGS:  transparent extra decor
+DEPTH: Crypt
+MAP
+...G...
+.xxxxx.
+.+.|.+.
+.+.|.+.
+.xxxxx.
+...G...
+ENDMAP
+
+NAME:  nicolae_crypt_reliquary_box_3
+TAGS:  transparent extra decor
+DEPTH: Crypt
+MAP
+.......
+xxx.xxx
+G|+.+|G
+xxx.xxx
+.......
+ENDMAP
+
+NAME:  nicolae_crypt_reliquary_box_4
+TAGS:  transparent extra decor
+DEPTH: Crypt
+MAP
+...G...
+.xxxxx.
+.+|G|+.
+.xxxxx.
+...G...
+ENDMAP
+
 NAME:    nicolae_crypt_skullbonk
 TAGS:    transparent extra decor
 DEPTH:   Crypt
@@ -812,6 +846,406 @@ xx............xx
 x..............x
 R..x..x..x..x..N
 RRxxQQxPPxOOxxNN
+ENDMAP
+
+NAME:   nicolae_crypt_disinterred
+TAGS:   transparent extra decor
+DEPTH:  Crypt, !Crypt:$
+KFEAT:  ^ = shaft trap
+NSUBST: ^ = 3=^ / 3=^. / .
+TILE:   G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
+MAP
+xxxx    xxxx
+x..........x
+x.G^.G^.G^.x
+ ..........
+ .G^.G^.G^.@
+ ..........
+x.G^.G^.G^.x
+x..........x
+xxxx    xxxx
+ENDMAP
+
+NAME:  nicolae_crypt_draining_blood
+TAGS:  transparent extra decor
+DEPTH: Crypt
+SUBST: ' = `...
+KFEAT: - = iron_grate
+KPROP: `- = bloody
+MAP
+...........xx
+.```'`'.'`'xx
+.`Y``'`'`'`-x
+.```..'`'..xx
+...........xx
+ENDMAP
+
+# https://www.oglaf.com/fountain-of-death/
+NAME:    nicolae_crypt_fountain_of_water_so_delicious
+TAGS:    transparent extra decor
+DEPTH:   Crypt
+KITEM:   D = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
+             draconian skeleton / merfolk skeleton / minotaur skeleton / \
+             spriggan skeleton / troll skeleton / barachi skeleton / \
+             oni skeleton / dwarf skeleton / felid skeleton
+SHUFFLE: pq
+SUBST:   p = x, q = .
+NSUBST:  - = 3=D / 2=D. / D...., ` = 2=D / 2=D. / .
+TILE:    G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+MAP
+  GpppG
+ qq...qq
+Gq.```.qG
+p.`---`.p
+p.`-U-`.p
+p.`---`.p
+Gq.```.qG
+ qq...qq
+  GpppG
+ENDMAP
+
+NAME:  nicolae_crypt_grate_for_corpse_storage
+TAGS:  transparent extra decor
+DEPTH: Crypt
+KITEM: a = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
+           draconian skeleton / merfolk skeleton / minotaur skeleton / \
+           spriggan skeleton / troll skeleton / barachi skeleton / \
+           oni skeleton / dwarf skeleton / felid skeleton / nothing w:65
+KFEAT: - = iron_grate
+KPROP: a = no_tele_into
+KMASK: a = no_monster_gen
+KMASK: a = no_trap_gen
+KMASK: a = no_item_gen
+KMASK: a = opaque
+MAP
+xxxxxxxx
+xaaaaaax
+xx----xx
+@......
+@......
+xx----xx
+xaaaaaax
+xxxxxxxx
+ENDMAP
+
+NAME:  nicolae_crypt_grave_club
+TAGS:  transparent extra decor
+DEPTH: Crypt
+TILE:  G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
+MAP
+  xxxxx
+  x...x
+xxx.G.xxx
+x.......x
+x.G...G.x
+x.......x
+xxx...xxx
+  x...x
+    @
+ENDMAP
+
+NAME:  nicolae_crypt_gravecubes
+TAGS:  transparent extra decor
+DEPTH: Crypt
+SUBST: - = G.
+TILE:  G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
+MAP
+G-.--.-G
+--.--.--
+........
+--.--.--
+--.--.--
+........
+--.--.--
+G-.--.-G
+ENDMAP
+
+NAME:  nicolae_crypt_hallway_flooded
+TAGS:  transparent extra decor no_pool_fixup
+DEPTH: Crypt
+SUBST: ` = W., ~ = wW, ' = .wW
+TILE:  G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
+MAP
+xxxxxxxxxxxxxxxxx
+x.G.xwwwxwG.x.G.x
+x.``xw~wxw'`x...x
+x`WWx~W~x~WWx...x
+xxWxxxWxxxWxxx.xx
+@`WWWWWww~WW~'..@
+@...`WWWWW~WWWW`@
+xx.xxxWxxxwxxx`xx
+x...x.Wwxwwwx'.'x
+x...x.`Wxwwwx...x
+x.G.x.GWxwwwx.G.x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_crypt_little_cemetery
+TAGS:   transparent extra decor
+DEPTH:  Crypt
+SUBST:  ` = tt.
+NSUBST: ' = @ / _
+CLEAR:  _
+TILE:   t = dngn_tree_dead, G = dngn_gravestone
+COLOUR: t = brown
+: set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+MAP
+ 'G'G G
+ .......
+G.......G
+ ..```..
+G..`t`..G
+ ..```..
+G.......G
+ .......
+  G G G
+ENDMAP
+
+NAME:  nicolae_crypt_memorial_pool
+TAGS:  transparent extra decor no_pool_fixup
+DEPTH: Crypt
+MAP
+xxx..
+x.........
+x..wwwww..
+xG.wwwww.@
+x..wwwww..
+x.........
+xxx..
+ENDMAP
+
+NAME:   nicolae_crypt_mild_blasphemy
+TAGS:   transparent extra decor no_item_gen
+DEPTH:  Crypt
+KITEM:  r = large rock
+KITEM:  s = demigod skeleton
+NSUBST: r = r / .
+MAP
+xxxxxx
+xx..sx
+xx...x
+xxAxxx
+.r.r..
+......
+ENDMAP
+
+NAME:   nicolae_crypt_mourning_fourly
+TAGS:   transparent extra decor
+DEPTH:  Crypt
+SUBST:  t = t., * = ..***|
+TILE:   t = dngn_tree_dead, G = dngn_gravestone
+COLOUR: t = brown, G = lightgrey
+: set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+MAP
+@.txxxt.@
+...txt...
+t.*.x.*.t
+xt.GxG.tx
+xxxxxxxxx
+xt.GxG..x
+t.*.x.*.t
+...txt...
+@.txxxt.@
+ENDMAP
+
+NAME:  nicolae_crypt_ornate_mausoleum
+TAGS:  transparent extra decor
+DEPTH: Crypt
+KFEAT: - = iron_grate
+SUBST: P : x+, Q = x+
+MAP
+...........
+.x-x...x-x.
+.-G-...-G-.
+.x-xxPxx-x.
+...x...x...
+...+.*.Q...
+...x...x...
+.x-xxPxx-x.
+.-G-...-G-.
+.x-x...x-x.
+...........
+ENDMAP
+
+NAME:  nicolae_crypt_overgrown_tholos
+TAGS:  transparent extra decor
+DEPTH: Crypt
+KMONS: p = withered plant
+SUBST: - = `````pp*, ` = ..p, * = **|
+TILE:  G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+MAP
+     .........
+     .```.```.
+     .`G`.`G`.
+ .....```.```.....
+ .```.........```.
+ .`G`..xx+xx..`G`.
+ .```.xx...xx.```.
+.....nx.---.xn.....
+.```.x-------x.```.
+.`G`.xV--G--Vx.`G`.
+.```.x-------x.```.
+.....nx.---.xn.....
+ .```.xx...xx.```.
+ .`G`..xx+xx..`G`.
+ .```.........```.
+ .....```.```.....
+     .`G`.`G`.
+     .```.```.
+     .........
+ENDMAP
+
+NAME:   nicolae_crypt_remembering
+TAGS:   transparent extra decor
+DEPTH:  Crypt
+SUBST:  * = **|, p : xxx., q : x..., r : xx.., s : xxx.
+TILE:   t = dngn_tree_dead, G = dngn_gravestone
+COLOUR: t = brown
+: set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+MAP
+xxxxxxx
+xptGtpx
+xq.*.qx
+xr...rx
+xs...sx
+xxx@xxx
+ENDMAP
+
+NAME:   nicolae_crypt_skeletal_stacks
+TAGS:   transparent extra decor
+DEPTH:  Crypt
+KITEM:  ' = human skeleton / any skeleton, * / | w:5 / nothing w:150
+KFEAT:  - = iron_grate
+NSUBST: p = @ / ., q = @ / ., r = @ / ., s = @ / .
+KPROP:  ' = no_tele_into
+KMASK:  ' = no_monster_gen
+KMASK:  ' = no_trap_gen
+KMASK:  ' = no_item_gen
+KMASK:  ' = opaque
+MAP
+pxxxqxxxrxxxs
+.-'x.-'x.-'x.
+.xxx.xxx.xxx.
+.x'-.x'-.x'-.
+.xxx.xxx.xxx.
+.-'x.-'x.-'x.
+.xxx.xxx.xxx.
+.x'-.x'-.x'-.
+pxxxqxxxrxxxs
+ENDMAP
+
+NAME:  nicolae_crypt_shared_small_mausoleum
+TAGS:  transparent extra decor
+DEPTH: Crypt
+MAP
+...xxxxxxx...
+...x.....x...
+.V.+.GxG.+.V.
+...x.....x...
+...xxxxxxx...
+ENDMAP
+
+NAME:    nicolae_crypt_staircase_of_the_dead
+TAGS:    transparent extra decor
+DEPTH:   Crypt, !Crypt:1, !Crypt:$
+SHUFFLE: {}/[]/()
+TILE:    t = dngn_tree_dead, G = dngn_gravestone
+COLOUR:  t = brown
+: set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+MAP
+xxxxxxxxxxx
+xt.txxxt.tx
+.....G.....
+@V.{.G.}.V@
+.....G.....
+xt.txxxt.tx
+xxxxxxxxxxx
+ENDMAP
+
+NAME:  nicolae_crypt_stairmouth
+TAGS:  transparent extra decor
+DEPTH: Crypt
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+TILE:  G = dngn_gravestone
+: set_feature_name("granite_statue", "gravestone")
+MAP
+xxxxxxx..
+xG.G.G...
+x........
+xV.s....@
+x........
+xG.G.G...
+xxxxxxx..
+ENDMAP
+
+NAME:   nicolae_crypt_they're_not_using_it
+TAGS:   transparent extra decor
+DEPTH:  Crypt
+KITEM:  a = human skeleton / elf skeleton / orc skeleton / kobold skeleton / \
+            draconian skeleton / merfolk skeleton / minotaur skeleton / \
+            spriggan skeleton / troll skeleton / barachi skeleton / \
+            oni skeleton / dwarf skeleton / felid skeleton
+KFEAT:  - = iron_grate
+NSUBST: ' = @ / ., ` = @ / .
+KPROP:  a = no_tele_into
+KMASK:  a = no_monster_gen
+KMASK:  a = no_trap_gen
+KMASK:  a = no_item_gen
+KMASK:  a = opaque
+MAP
+'''GxG```
+'xxxxxxx`
+'xaxaxax`
+'x-x-x-x`
+'+.*|*.+`
+'x-x-x-x`
+'xaxaxax`
+'xxxxxxx`
+'''GxG```
+ENDMAP
+
+NAME:   nicolae_crypt_x_marks_the_plot
+TAGS:   transparent extra decor
+DEPTH:  Crypt
+NSUBST: P = 3=t / 3=.t / ., Q = 3=t / 3=.t / .
+NSUBST: R = 3=t / 3=.t / ., S = 3=t / 3=.t / .
+NSUBST: p = G / ., q = G / ., r = G / ., s = G / .
+TILE:   t = dngn_tree_dead, G = dngn_gravestone
+COLOUR: t = brown
+: set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+MAP
+.....     .....
+.PPP.     .QQQ.
+.PPP.     .QQQ.
+.PPP... ...QQQ.
+....pp. .qq....
+   .pp...qq.
+   .........
+     ..V..
+   .........
+   .rr...ss.
+....rr. .ss....
+.RRR... ...SSS.
+.RRR.     .SSS.
+.RRR.     .SSS.
+.....     .....
 ENDMAP
 
 ##############################################################################
@@ -1000,7 +1434,7 @@ ENDMAP
 NAME:    minmay_shadows
 ORIENT:  northwest
 DEPTH:   Crypt, Tar
-MONS:    shadow, soul eater, tzitzimitl
+MONS:    shadowghast, soul eater, tzitzimitl
 ITEM:    any misc
 SUBST:   A : x., B : x., C : x., E : x., F : x.
 : if you.in_branch("Tar") then
@@ -2137,7 +2571,7 @@ MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
 MONS:   weeping skull
 MONS:   wraith / freezing wraith / shadow wraith / spectral thing / \
-        w:20 shadow / nothing
+        w:20 shadowghast / nothing
 # mummy layout - rare
 : else
 MONS:   royal mummy
@@ -2386,7 +2820,7 @@ KMONS:  8 = gargoyle
 KMONS:  A = ancient lich / dread lich / w:4 mummy priest
 KMONS:  DL = lich w:40 / ancient lich / dread lich
 KMONS:  E = war gargoyle
-KMONS:  G = shadow / wraith
+KMONS:  G = shadowghast / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
 : if crawl.coinflip() then
 KMONS:  H = vampire knight
@@ -2409,7 +2843,7 @@ KMONS:  S = zombie / skeleton
 KMONS:  Z = patrolling curse skull
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
-KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
+KMONS:  S = shadowghast / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
@@ -2420,8 +2854,8 @@ SUBST:  ~ = m
 KMONS:  t = w:20 hell knight / smoke demon / laughing skull
 KMONS:  X = w:1 curse skull / w:19 balrug
 KFEAT:  ~ = crystal_wall
-TILE:   ~ = bedeviled_crystal_gehenna
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   ~ = bedevilled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
 ####### Randomisation of doors
 NSUBST: K = 1:+ / *:v
@@ -2517,27 +2951,9 @@ ENDMAP
 # A: ~use your Imagination~
 #
 NAME:   evilmike_haunted_forest
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
 ORIENT: encompass
 PLACE:  Crypt:$
-TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
-SUBST:  T = t.
-SUBST:  t = ttttu
-SUBST:  v = cccc.-
-COLOUR: t = w:5 lightgrey / brown
-COLOUR: x'D = white
-COLOUR: G = lightgrey
-COLOUR: "2 = brown
-NSUBST: . = 68:p / *:.
-KMONS:  p = withered plant
-FTILE:  .tuT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
-FTILE:  '_D = FLOOR_SANDSTONE
-TILE:   x = WALL_STONE_GRAY, t = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE
-KFEAT:  u = petrified_tree
-SUBST:  x: c, -'": ., ?: |
-SUBST:  D = +, d = cc+
-NSUBST: * = 12:* / 12:% / *:$
-KFEAT:  m = iron_grate
-KFEAT:  > = enter_tomb
 MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
 MONS:   jumping spider / wolf spider / redback / w:19 nothing
@@ -2546,24 +2962,23 @@ MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull
-SHUFFLE: 9H
+KMONS:  p = withered plant
 : if crawl.coinflip() then
 # Temple of yred
-KFEAT: _ = altar_yredelemnul
 KMONS:  9 = patrolling profane servitor
-KMONS:  H = w:20 patrolling death knight / patrolling profane servitor
+KMONS:  H = patrolling death knight w:20 / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = wight
-KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
+KMONS:  E = phantasmal warrior / flayed ghost w:4 / nothing
 KMONS:  F = patrolling bone dragon
+KFEAT:  _ = altar_yredelemnul
 : else
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
-# him/her/it being demonic). Not as much undead in this set.
-KFEAT:  _ = altar_kikubaaqudgha
+# them being demonic). Not as much undead in this set.
 KMONS:  9 = patrolling ancient lich / patrolling dread lich
-KMONS:  H = w:40 patrolling lich / patrolling ancient lich / \
+KMONS:  H = patrolling lich w:40 / patrolling ancient lich / \
             patrolling dread lich
 KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
 KMONS:  A = patrolling deep elf death mage
@@ -2571,8 +2986,30 @@ KMONS:  B = necromancer
 KMONS:  C = hellwing
 KMONS:  E = skeleton w:13 / nothing
 KMONS:  F = patrolling reaper
+KFEAT:  _ = altar_kikubaaqudgha
 : end
+KITEM:  ? = |
+KFEAT:  Z = c
+KFEAT:  u = petrified_tree
+KFEAT:  m = iron_grate
+KFEAT:  > = enter_tomb
+SUBST:  T = t., t = ttttu
+SUBST:  v = cccc.-
+NSUBST: . = 68:p / *:.
+COLOUR: t = brown
+COLOUR: x'D = white
+COLOUR: G = lightgrey
+COLOUR: "2 = brown
+FTILE:  .tu5f?<8 = FLOOR_GREY_DIRT
+FTILE:  "G2{[( = FLOOR_PEBBLE_BROWN
+FTILE:  '_D = FLOOR_SANDSTONE
+TILE:   Z = WALL_STONE_GRAY
+SUBST:  D = +, d = cc+
+NSUBST: * = 12:* / 12:% / *:$
+SHUFFLE: 9H
 SUBST:  n : ncc
+TILE:   t = DNGN_TREE_DEAD
+TILE:   G = DNGN_GRAVESTONE
 : set_feature_name("granite_statue", "gravestone")
 : set_feature_name("tree", "dead tree")
 NSUBST: *| = 1:d / 1:h
@@ -2589,8 +3026,8 @@ tt""ttTt...T..vv."""....c*0-+.......+CC*c...T.T..t..TttttttttTTWWWTtttttWWW.Tttt
 tt""TtT..T..""".""".....c*-cccccccccccC*c.......t..t..ttttttttTTT.ttttttTW.Ttttt
 ttT""T.t.."""""""".....cccccc9--k--Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
 tttT"""""""".......T...c------*|||*------c..555....t.....t.tTtttttT.TtT.TTtttttt
-ttttt"""""".vvvvv.....ccc--xx**|V|**xx--ccc..555...t..tt..t...TTtttT....Tttttttt
-ttttttTtT"".v--4vvv...ccc--xx-*|||*-xx--ccc.......T.....t....t..TttttT.TTttttttt
+ttttt"""""".vvvvv.....ccc--ZZ**|V|**ZZ--ccc..555...t..tt..t...TTtttT....Tttttttt
+ttttttTtT"".v--4vvv...ccc--ZZ-*|||*-ZZ--ccc.......T.....t....t..TttttT.TTttttttt
 ttttttT..."...-%v--v...c-----------------c...........t...t..t.t..Tttttt.tttttttt
 ttttttT.t.".v-4-v4-v...c------ccccc------c....T.vvvT...t..t......Ttttt.ttcnnnctt
 ttttT.t.....vvvvvvvv..cccc+cccc$$$cccc+cccc.....v4--.T..t....t..tTttttt..c***ctt
@@ -2599,32 +3036,32 @@ ttT....T...T..v4--.....n--cccccc+cccccc--n......vvvvvv...T..T..t..Tttcc+cc---ctt
 tttT.t........vvvvvv...n--ccccc---ccccc--n.........T...............Ttc3333333ctt
 ttttT.t.T.............ccc-cccc-C'C-cccc-ccc..T...............T...t..tc3333333ctt
 tttttT.....cccccccccccccc-cVcC-'''-CcVc-cccccccccccccc.........T...tpcccnnnccctt
-ttttT..t..cc----+---------c-+-''x''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
+ttttT..t..cc----+---------c-+-''Z''-+-c---------+--E-cc....vvvv.T.t.Tttttttttttt
 ttttTt.....n-B--cccmmcccccc-c--'''--c-ccccccmmcccEEE-n..T..v44vT....Tttttttttttt
 ttttT..T..ccEEE-ccc00cc-----cc--'--cc-----cc00ccc-EEEcc....v--v....t.Ttttttttttt
 tttTt.T....n----cc--cc--ccccccc---ccccccc--cc--cc-E--n.....-vvv...t...Tttttttttt
 ttT.......ccc+ccc*-cc--ccccccccc+ccccccccc--cc-*ccc+ccc.........T....tTttttttttt
 ttT..t555..cc-cc**cc--ccccccc-------ccccccc--cc**cc-cc....T.......T....Ttttttttt
 tttT.55T..ccc-c<*ccc+cc-------AV-VA-------cc+ccc*<c-ccc.............t...Tttttttt
-ttttT5t....cc-cccc-EE-c-B-xxxx'''''xxxx-B-c----cccc-cc...vvvvvvv..T...t.Tttttttt
-tttttT....ccc+ccccEEEEc---xxxx'''''xxxx---c0--0cccc+ccc..v---4--v....t.Ttttttttt
-ttttT..t...n--'F-c-EE-c---xxxx''_''xxxx---c----c--'B-n...v-xxxx-v..T..tTtttttttt
-ttttT.t...cc-'x'-ccc+cc-V----B'''''B---V--cc+ccc-'x'-cc..v-xxxx4v......Ttttttttt
-tttttT..T..n--'--+----d--------'''--------d----+--'B-n...v4xxxx-v..T..t.Tttttttt
-ttttttTt...cccdcccccccccc-xxx--'''--xxx-ccccccccccdccc...v%---4-v........Ttttttt
-tttttttT..............ccc-xxx--'''--xxx-ccc..............vvvvvvvv....T.t.tTttttt
-ttttttttTt....xxxxx....n-------'''-------n...555....T..............--v....Tttttt
-tttttttT......x*1*x....n---B---'''---B---n..555......ccccccccc....--Tv..t.Tttttt
-ttttttT.t..T..x*|*x...ccc-xxx--'''--xxx-ccc...T......c$$$>$$$c...--44vT...tTtttt
-ttttttT.......x***x...ccc-xxx--'''--xxx-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
-tttttttT.t.T..xx-xx....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
-ttttttttT......x+x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
-tttttttttTt..T.x"x....ccc-xxx--'''--xxx-ccc..T...t..tc-------c....T..t....t..Ttt
-tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc+cccct.t.t........tTttt
+ttttT5t....cc-cccc-EE-c-B-ZZZZ'''''ZZZZ-B-c----cccc-cc...vvvvvvv..T...t.Tttttttt
+tttttT....ccc+ccccEEEEc---ZZZZ'''''ZZZZ---c0--0cccc+ccc..v---4--v....t.Ttttttttt
+ttttT..t...n--'F-c-EE-c---ZZZZ''_''ZZZZ---c----c--'B-n...v-ZZZZ-v..T..tTtttttttt
+ttttT.t...cc-'Z'-ccc+cc-V----B'''''B---V--cc+ccc-'Z'-cc..v-ZZZZ4v......Ttttttttt
+tttttT..T..n--'--+----d--------'''--------d----+--'B-n...v4ZZZZ-v..T..t.Tttttttt
+ttttttTt...cccdcccccccccc-ZZZ--'''--ZZZ-ccccccccccdccc...v%---4-v........Ttttttt
+tttttttT..............ccc-ZZZ--'''--ZZZ-ccc..............vvvvvvvv....T.t.tTttttt
+ttttttttTt....ZZZZZ....n-------'''-------n...555....T..............--v....Tttttt
+tttttttT......Z*1*Z....n---B---'''---B---n..555......ccccccccc....--Tv..t.Tttttt
+ttttttT.t..T..Z*|*Z...ccc-ZZZ--'''--ZZZ-ccc...T......c$$$>$$$c...--44vT...tTtttt
+ttttttT.......Z***Z...ccc-ZZZ--'''--ZZZ-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
+tttttttT.t.T..ZZ-ZZ....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
+ttttttttT......Z+Z.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
+tttttttttTt..T.Z"Z....ccc-ZZZ--'''--ZZZ-ccc..T...t..tc-------c....T..t....t..Ttt
+tttttttttT......".....ccc-ZZZ--'''--ZZZ-ccc...t....ttcccc+cccct.t.t........tTttt
 ttttttttTt..T..."".....n--C----'''----C--n..t..tt.ttttccc-ccctt.....t...t..Ttttt
 tttttttT.........".....nCC-----'''-----CCn....ttttt"""c-----ctttttt...t..Ttttttt
-tttttTT.t..T....."....cccccxxxcDDDcxxxccccc.tttt"""2""cc+++cc""""2tt.t..Tttttttt
-ttttT.t5........""....ccc--xxxV'''Vxxx--ccc<tt""""""G"""""""""2"G""tt..tTttttttt
+tttttTT.t..T....."....cccccZZZcDDDcZZZccccc.tttt"""2""cc+++cc""""2tt.t..Tttttttt
+ttttT.t5........""....ccc--ZZZV'''VZZZ--ccc<tt""""""G"""""""""2"G""tt..tTttttttt
 tttT.t5....T...."......d-------'''-------cttt""2""""""2"""G"""""""""tt...Ttttttt
 ttT.55.t........"".....ccnnccc-'''-cccnncctt""""""G"""""2"""2"G""2"2"t..t.Tttttt
 tttTt.....T......""..........ccDDDcc....t.tt"G""""""2""""2"""""2""G""tt..t.Ttttt
@@ -2700,7 +3137,7 @@ MONS:   patrolling freezing wraith / patrolling spectral thing w:8
 MONS:   revenant
 MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior
-MONS:   spectral thing / simulacrum / shadow w:3 / wraith w:2 / shadow wraith / \
+MONS:   spectral thing / simulacrum / shadowghast w:3 / wraith w:2 / shadow wraith / \
         spectral storm dragon w:5 / spectral quicksilver dragon w:5
 MONS:   generate_awake shadow dragon / generate_awake ghost moth
 SUBST:  2 = ., ' = 2, " = 4
@@ -2799,7 +3236,7 @@ KMONS:   K = nothing
 KMONS:   M = burial acolyte
 KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
-KMONS:   Q = flayed ghost / shadow w:20
+KMONS:   Q = flayed ghost / shadowghast w:20
 
 # Boss tier monsters.
 : if crawl.one_chance_in(4) then

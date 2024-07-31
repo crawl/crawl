@@ -21,7 +21,7 @@ Antaeus, Guardian of Cocytus
 %%%%
 Arachne title
 
-Arachne the Weaver
+Arachne the Outcast
 %%%%
 Asmodeus title
 
@@ -305,7 +305,7 @@ Sonja, the Graceful Assassin
 %%%%
 Terence title
 
-Terence the Incautious
+Terence the Veteran
 %%%%
 Tiamat title
 
@@ -315,6 +315,10 @@ Urug title
 
 Urug the Orcish Ballista
 %%%%
+Wiglaf title
+
+Wiglaf the Gunnerdwarf
+%%%%
 Vashnia title
 
 Vashnia the Elite Marksnaga
@@ -322,6 +326,10 @@ Vashnia the Elite Marksnaga
 Vv title
 
 Vv the Exile
+%%%%
+Xak'krixis title
+
+Xak'krixis, Royal Expeditionary Alchemist
 %%%%
 Xtahua title
 

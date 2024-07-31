@@ -40,6 +40,7 @@ tileidx_t tileidx_monster(const monster_info& mon);
 tileidx_t tileidx_draco_base(const monster_info& mon);
 tileidx_t tileidx_draco_job(const monster_info& mon);
 tileidx_t tileidx_player_mons();
+tileidx_t tileidx_player_shadow();
 tileidx_t tileidx_tentacle(const monster_info& mon);
 
 tileidx_t tileidx_item(const item_def &item);

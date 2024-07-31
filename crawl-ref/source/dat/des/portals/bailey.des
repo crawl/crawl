@@ -651,7 +651,7 @@ NSUBST: E = 1:+ / *:c
 SUBST:  2 = 22223..
 SUBST:  1 = 1 2:1 .
 ITEM:   good_item crystal plate armour / good_item plate armour w:20 /\
-        good_item gold dragon scales w:3 / good_item ice dragon scales w:3 /\
+        good_item golden dragon scales w:3 / good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item storm dragon scales w:3 /\
         good_item shadow dragon scales w:3
 ITEM:   good_item cloak / good_item pair of gloves /\

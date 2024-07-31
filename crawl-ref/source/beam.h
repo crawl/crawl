@@ -157,7 +157,6 @@ struct bolt
     bool chose_ray = false;       // do we want a specific ray?
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
-    bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
     bool overshoot_prompt = true; // warn when an ally is past the target
     bool friendly_past_target = false; // we fired and found something past the target
 
@@ -373,6 +372,8 @@ int zap_ench_power(zap_type z_type, int pow, bool is_monster);
 int zap_to_hit(zap_type z_type, int power, bool is_monster);
 dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
 colour_t zap_colour(zap_type z_type);
+
+dice_def combustion_breath_damage(int pow, bool allow_random = true);
 
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);

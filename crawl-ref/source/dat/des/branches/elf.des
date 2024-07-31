@@ -1250,7 +1250,7 @@ MONS:    great orb of eyes / sphinx
 # The orcs might have a unique with them. He or she will likely be outclassed
 # by the others in attendance, but perhaps has some special testimony to
 # present. None of the uniques really fits in with the deep elves...
-KMONS:   D = Ijyb / Blork the orc / Urug / Erolcha / Snorg
+KMONS:   D = Ijyb / Blorkula the orcula / Urug / Erolcha / Snorg
 MAP
      xxxx
     xxGGxx
@@ -1955,8 +1955,8 @@ KMONS:  3 = orc sorcerer
 KMONS:  4 = deep elf sorcerer
 KFEAT:  4 = altar_lugonu
 SUBST:  b = GGb
-TILE:   b = bedeviled_crystal_abyss
-:   set_feature_name("crystal_wall", "bedeviled crystal wall")
+TILE:   b = bedevilled_crystal_abyss
+:   set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
 KFEAT:  3 = altar_beogh
 SUBST:  % = %%*, * = **|, S = 12, 1 = 11., 2 = 22.
@@ -2040,10 +2040,12 @@ SUBST:   0 = 12, 9 = 33344455
 SHUFFLE: df, df / eg
 : if crawl.coinflip() then
 SUBST:   ! = l, ? = G, ~ = w
+COLOUR:  G = ice
 TILE:    G = icy_conduit
 :   set_feature_name("metal_statue", "icy conduit")
 : else
 SUBST:   ! = G, ? = w, ~ = l
+COLOUR:  G = fire
 TILE:    G = fiery_conduit
 :   set_feature_name("metal_statue", "fiery conduit")
 : end

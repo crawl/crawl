@@ -1052,8 +1052,8 @@ KMONS:   8 = frost giant
 KMONS:   9 = titan
 KMONS:   D = pile of debris
 KFEAT:   123456789D = deep_water
-KITEM:   | = |
-KITEM:   * = *
+KITEM:   | = $, *, |
+KITEM:   * = $, %, *
 KFEAT:   |* = shallow_water
 SHUFFLE: 12345 / 86769
 NSUBST:  Z = 1:w / *:c

@@ -4,6 +4,9 @@ name: Djinni
 short_name: Dj
 difficulty: Intermediate
 difficulty_priority: 70
+species_flags:
+  - no_feet
+  - no_blood
 aptitudes:
   xp: 1
   hp: -1
@@ -50,13 +53,13 @@ fake_mutations:
   - long: You are immune to sickness and miasma.
   - short: sickness immunity
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_SHAPESHIFTER
-  - JOB_HEDGE_WIZARD
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
+  - gladiator
+  - shapeshifter
+  - hedge wizard
+  - fire elementalist
+  - ice elementalist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_LONG_BLADES
+  - short blades
+  - long blades
 
 orc_name: Orcfreeti

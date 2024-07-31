@@ -417,6 +417,22 @@ void handle_behaviour(monster* mon)
         }
     }
 
+    // Misdirected monsters will only focus on your shadow, if it's still around.
+    // If it has stopped being around, snap back to the player instead.
+    if (mon->has_ench(ENCH_MISDIRECTED))
+    {
+        actor* agent = mon->get_ench(ENCH_MISDIRECTED).agent();
+        // agent() will return ANON_FRIENDLY_MONSTER if the source no longer
+        // exists, but was originally friendly
+        if (agent && agent->alive() && agent->mindex() != ANON_FRIENDLY_MONSTER)
+        {
+            mon->foe = agent->mindex();
+            mon->target = agent->pos();
+        }
+        else
+            mon->del_ench(ENCH_MISDIRECTED);
+    }
+
     while (changed)
     {
         const actor* afoe = mon->get_foe();
@@ -834,7 +850,13 @@ void handle_behaviour(monster* mon)
             }
 
             if (stop_retreat)
+            {
                 mons_end_withdraw_order(*mon);
+                // XXX: The above function already sets this, but otherwise they
+                //      will be ignored just below. Ugh.
+                new_beh = BEH_SEEK;
+                new_foe = MHITYOU;
+            }
             else
                 mon->props[LAST_POS_KEY] = mon->pos();
 
@@ -975,7 +997,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         dprf("Disturbing %s", mon->name(DESC_A, true).c_str());
 #endif
         // Assumes disturbed by noise...
-        if (mon->asleep())
+        if (mon->asleep() && !mons_just_slept(*mon))
             mon->behaviour = BEH_WANDER;
 
         // A bit of code to make Projected Noise actually do
@@ -1031,7 +1053,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // either, retreat.
         try_pathfind(mon);
         if (mons_intel(*mon) > I_BRAINLESS && !mons_can_attack(*mon)
-            && target_is_unreachable(mon))
+            && target_is_unreachable(mon) && !mons_just_slept(*mon))
         {
             mon->behaviour = BEH_RETREAT;
         }
@@ -1050,7 +1072,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else if (!mons_is_fleeing(*mon))
+        else if (!mons_is_fleeing(*mon) && !mons_just_slept(*mon))
             mon->behaviour = BEH_SEEK;
 
         if (src == &you && mon->angered_by_attacks())
@@ -1101,8 +1123,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        // Orders to withdraw take precedence over interruptions
-        if (mon->behaviour == BEH_WITHDRAW)
+        // Orders to withdraw take precedence over interruptions, and monsters
+        // forced to sleep should not react at all.
+        if (mon->behaviour == BEH_WITHDRAW || mons_just_slept(*mon))
             break;
 
         // Avoid moving friendly explodey things out of BEH_WANDER.
@@ -1200,7 +1223,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             {
                 msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
                 if (msg.empty())
-                    msg = "PLAIN:Cornered, @The_monster@ turns to fight!";
+                    msg = "PLAIN:Cornered, @the_monster@ turns to fight!";
             }
             mon->del_ench(ENCH_FEAR, true);
             mon->behaviour = BEH_SEEK;

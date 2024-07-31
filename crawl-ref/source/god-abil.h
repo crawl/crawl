@@ -11,6 +11,7 @@
 #include "god-type.h"
 #include "item-prop-enum.h" // brand_type
 #include "los-type.h"
+#include "random.h"
 #include "recite-eligibility.h"
 #include "recite-type.h"
 #include "spl-cast.h"
@@ -31,6 +32,9 @@ class dist;
 #define OKAWARU_DUEL_TARGET_KEY "okawaru_duel_target"
 #define OKAWARU_DUEL_CURRENT_KEY "okawaru_duel_current"
 #define OKAWARU_DUEL_ABANDONED_KEY "okawaru_duel_abandoned"
+#define OKAWARU_DUEL_ORIG_HP_KEY "okawaru_duel_hp"
+#define OKAWARU_DUEL_ORIG_MP_KEY "okawaru_duel_mp"
+#define OKAWARU_DUEL_ITEMS_KEY "okawaru_duel_floor_items"
 
 #define BEOGH_DAMAGE_DONE_KEY "beogh_damage_done"
 #define ORCIFICATION_LEVEL_KEY "orcification_level"
@@ -75,6 +79,10 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define YRED_TORCH_USED_KEY "yred_torch_used"
 #define YRED_KILLS_LOGGED_KEY "yred_souls_scoured"
 #define YRED_BLASPHEMY_CENTER_KEY "blasphemy_center"
+#define YRED_SHACKLES_KEY "shackles_bound"
+
+#define NIGHTFALL_INITIAL_DUR_KEY "nightfall_initial_dur"
+#define DITHMENOS_MARIONETTE_SPELLS_KEY "marionette_spells_valid"
 
 struct bolt;
 class stack_iterator;
@@ -99,7 +107,7 @@ spret zin_imprison(const coord_def& target, bool fail);
 void zin_sanctuary();
 
 void tso_divine_shield();
-void tso_remove_divine_shield();
+void tso_expend_divine_shield_charge();
 
 void elyvilon_purification();
 void elyvilon_divine_vigour();
@@ -133,6 +141,10 @@ void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
+int slouch_damage_for_speed(int mon_speed = 10, int mon_energy_usage = 10,
+                            int jerk_num = 1, int jerk_denom = 1);
+int slouch_damage(monster *victim);
+bool is_slouchable(coord_def where);
 spret cheibriados_slouch(bool fail);
 void cheibriados_time_step(int pow);
 
@@ -147,6 +159,7 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse);
 bool can_convert_to_beogh();
 void announce_beogh_conversion_offer();
 void spare_beogh_convert();
+bool mons_is_blood_for_blood_orc(const monster& mon);
 void beogh_blood_for_blood();
 void beogh_blood_for_blood_tick(int delay);
 void beogh_end_blood_for_blood();
@@ -155,7 +168,14 @@ bool beogh_cancel_leaving_floor();
 
 void beogh_increase_orcification();
 
-spret dithmenos_shadow_step(bool fail);
+void dithmenos_change_shadow_appearance(monster& shadow, int dur);
+string dithmenos_cannot_shadowslip_reason();
+spret dithmenos_shadowslip(bool fail);
+spret dithmenos_nightfall(bool fail);
+bool valid_marionette_spell(spell_type spell);
+void dithmenos_cache_marionette_viability();
+string dithmenos_cannot_marionette_reason();
+spret dithmenos_marionette(monster& target, bool fail);
 
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
@@ -169,6 +189,7 @@ void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
+dice_def qazlal_upheaval_damage(bool allow_random = true);
 spret qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false, dist *player_target=nullptr);
 vector<coord_def> find_elemental_targets();
@@ -187,11 +208,14 @@ void ru_reset_sacrifice_timer(bool clear_timer = false,
 bool will_ru_retaliate();
 void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
+dice_def ru_power_leap_damage(bool allow_random = true);
 bool ru_power_leap();
 int cell_has_valid_target(coord_def where);
+int apocalypse_die_size(bool allow_random = true);
 bool ru_apocalypse();
 string ru_sacrifice_vector(ability_type sac);
 
+dice_def uskayaw_stomp_extra_damage(bool allow_random = true);
 bool uskayaw_stomp();
 bool uskayaw_line_pass();
 spret uskayaw_grand_finale(bool fail);
@@ -209,9 +233,11 @@ void wu_jian_heavenly_storm();
 
 bool okawaru_duel_active();
 spret okawaru_duel(const coord_def& target, bool fail);
+void okawaru_duel_healing();
+void okawaru_end_duel(bool kicked_out = false);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
-void okawaru_end_duel();
+
 
 vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);

@@ -190,10 +190,6 @@ Call Lost Soul cast
 
 @The_monster@召唤出不安分的灵魂！
 %%%%
-Haste Plants cast
-
-@The_monster@给他周围的植物赋予能量！
-%%%%
 Major Destruction cast
 
 @The_monster@以@possessive_God@的名义，生成了一股毁灭性的力量！
@@ -718,7 +714,7 @@ Summon Water Elementals elemental wellspring cast
 
 水之灵从@the_monster@身上涌了出来！
 %%%%
-Invisibility shadow cast
+Invisibility shadowghast cast
 
 @The_monster@没入黑暗。
 %%%%

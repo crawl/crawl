@@ -49,4 +49,6 @@ vector<spell_type> get_sorted_spell_list(bool silent = false,
                                          bool memorise_only = true);
 spret divine_exegesis(bool fail);
 
+spret imbue_servitor();
+
 book_type choose_book_type(int item_level);

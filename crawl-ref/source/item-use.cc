@@ -1904,18 +1904,6 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
     return false;
 }
 
-// If you can't wear a bardings, why not? (If you can, return "".)
-static string _cant_wear_barding_reason(bool ignore_temporary)
-{
-    if (!you.wear_barding())
-        return "You can't wear that!";
-
-    if (!ignore_temporary && !get_form()->slot_available(EQ_BOOTS))
-        return "You can wear that only in your normal form.";
-
-    return "";
-}
-
 /**
  * Can you wear this item of armour currently?
  *
@@ -1964,11 +1952,15 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BARDING)
     {
-        const string reason = _cant_wear_barding_reason(ignore_temporary);
-        if (reason == "")
+        if (you.can_wear_barding(ignore_temporary))
             return true;
         if (verbose)
-            mprf(MSGCH_PROMPT, "%s", reason.c_str());
+        {
+            if (ignore_temporary)
+                mprf(MSGCH_PROMPT, "You can't wear that!");
+            else
+                mprf(MSGCH_PROMPT, "You can wear that only in your normal form.");
+        }
         return false;
     }
 
@@ -2015,10 +2007,15 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
-        if (you.wear_barding())
+        if (you.can_wear_barding())
         {
             if (verbose)
-                mprf(MSGCH_PROMPT, "The hauberk won't fit over your tail.");
+            {
+                if (you.has_mutation(MUT_CONSTRICTING_TAIL))
+                    mprf(MSGCH_PROMPT, "The hauberk won't fit over your tail.");
+                else
+                    mprf(MSGCH_PROMPT, "The hauberk won't fit over your feet."); // armataur
+            }
             return false;
         }
 
@@ -2096,7 +2093,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
     if (sub_type == ARM_BOOTS)
     {
-        if (you.wear_barding())
+        if (you.can_wear_barding())
         {
             if (verbose)
             {
@@ -3307,7 +3304,8 @@ bool drink(item_def* potion)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
-        simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
+        simple_god_message(" petitions for your drink to fail.", false,
+                           GOD_GOZAG);
         you.turn_is_over = true;
         return false;
     }
@@ -4492,12 +4490,19 @@ void tile_item_pickup(int idx, bool part)
         return;
     }
 
-    if (part)
+    int quantity = env.item[idx].quantity;
+    if (part && quantity > 1)
     {
-        pickup_menu(idx);
-        return;
+        quantity = prompt_for_int("Pick up how many? ", true);
+        if (quantity < 1)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        if (quantity > env.item[idx].quantity)
+            quantity = env.item[idx].quantity;
     }
-    pickup_single_item(idx, -1);
+    pickup_single_item(idx, quantity);
 }
 
 void tile_item_drop(int idx, bool partdrop)

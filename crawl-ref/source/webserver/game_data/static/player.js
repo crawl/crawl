@@ -15,9 +15,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
     var defense_boosters = {
         "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|curled up|fiery-armoured",
+              + "|under a protective aura|fiery-armoured",
         "ev": "^agile|acrobatic|in a heavenly storm",
-        "sh": "divinely shielded",
+
+        "sh": "I am here because empty strings match everything and this does not"
     }
 
     /**
@@ -175,10 +176,11 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     }
     player.inventory_item_desc = inventory_item_desc;
 
-    function wielded_weapon()
+    function wielded_weapon(offhand=false)
     {
         var elem;
-        var wielded = player.equip[enums.equip.WEAPON];
+        var wielded = player.equip[offhand ? enums.equip.OFFHAND
+                                           : enums.equip.WEAPON];
         if (wielded == -1)
         {
             elem = $("<span>");
@@ -236,7 +238,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         elem.text(player[type]);
         elem.removeClass();
         if (type == "sh" && player.incapacitated()
-            && player.equip[enums.equip.SHIELD] != -1)
+            && player.equip[enums.equip.OFFHAND] != -1)
+            // XXX This really doesn't work properly
+            // Orbs, and coglins with offhand weapons, also trigger this...
+            // Amulets of reflection on the other hand, do not...
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
@@ -446,6 +451,15 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         $("#stats_weapon_letter").text(
             index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
         $("#stats_weapon").html(wielded_weapon());
+
+        if (player.offhand_weapon) // Coglin dual wielding
+            $("#stats_offhand_weapon_line").show();
+        else
+            $("#stats_offhand_weapon_line").hide();
+
+        $("#stats_offhand_weapon_letter").text(
+            index_to_letter(player.equip[enums.equip.OFFHAND]) + ")");
+        $("#stats_offhand_weapon").html(wielded_weapon(true));
 
         $("#stats_quiver").html(quiver());
     }

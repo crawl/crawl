@@ -1411,7 +1411,7 @@ KMASK:    Z = no_monster_gen
           * "no_wall_fixup": Prevents (rock) walls from being converted to
              the level's default wall type, such as in Vaults.
           * "opaque": Overrides the "transparent" tag for this particular
-             symbol. The symbol is considered impassible for level-building
+             symbol. The symbol is considered impassable for level-building
              purposes. A "transparent" vault with a deliberately disconnected
              region must use this mask on the disconnected part.
 

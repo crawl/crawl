@@ -924,9 +924,9 @@ MARKER:     h = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "flame", \
                 excl_rad = 0 }
 KMONS:      1 = orange demon / hellwing / red devil / rust devil / \
-                sixfirhy / sun demon / soul eater / smoke demon / hell beast
+                sixfirhy / sun demon / soul eater / smoke demon / sin beast
 KMONS:      2 = balrug / blizzard demon / cacodemon / green death / \
-                hellion / lorocyproca / shadow demon / tormentor
+                hellion / shadow demon / tormentor
 KMONS:      3 = hellephant / dread lich w:4 / tentacled monstrosity w:1
 {{
 wizname = crawl.make_name()
@@ -942,14 +942,14 @@ KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
                 / manual of summonings w:3 / any randart jewellery w:5 \
                 / damnation w:1 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
-NSUBST:     d = e / d, ' = 2:1 / 4=12...., " = 2:1 / 4=12....
-NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3=12....
-NSUBST:     3 = 1:3 / 1, ~ = 3:1 / 4:2 / 1:3 / 1:4 / 8=12.... / ., f = 1:g / f
+NSUBST:     d = e / d, ' = 2:1 / 4 = 112......, " = 2:1 / 4 = 12....
+NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3 = 112......
+NSUBST:     3 = 1:3 / 1, ~ = 3:1 / 4:2 / 1:3 / 1:4 / 8 = 12.... / ., f = 1:g / f
 COLOUR:     c = darkgrey
 COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
 TILE:       c = wall_stone_dark
-TILE:       b = bedeviled_crystal_gehenna / bedeviled_crystal_cocytus / \
-                bedeviled_crystal_dis / bedeviled_crystal_pandemonium
+TILE:       b = bedevilled_crystal_gehenna / bedevilled_crystal_cocytus / \
+                bedevilled_crystal_dis / bedevilled_crystal_pandemonium
 TILE:       p = dngn_statue_demonic_bust / dngn_statue_imp \
                 / dngn_statue_cerebov / dngn_statue_ancient_evil
 # symbols roughly corresponding to sigil shape
@@ -991,13 +991,13 @@ LFLOORCOL:  red
 LROCKCOL:   red
 {{
 set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
-                     cacodemon / green death / hell beast / hellion / \
-                     lorocyproca / shadow demon / tormentor \
-                     / hellephant w:5 / dread lich w:5")
+                     cacodemon / green death / sin beast / hellion / \
+                     shadow demon / tormentor / \
+                     hellephant w:5 / dread lich w:5")
 wizlab_setup(_G)
 set_feature_name("stone_wall", "black wall")
 set_feature_name("rock_wall", "carved rock wall")
-set_feature_name("crystal_wall", "bedeviled crystal wall")
+set_feature_name("crystal_wall", "bedevilled crystal wall")
 }}
 epilogue{{ wizlab_milestone(_G, "The Hall of the Hellbinder") }}
 MAP
@@ -1148,20 +1148,20 @@ SUBST:      efghijklmn = %
 SUBST:      opqrstu = *
 :           end
 #           Monsters
-#            0 Tomb set: zombies, mummies (weight *2)
-#            1 Demons (if demons are added or reclassified, please change!)
+#            - Demons (if demons are added or reclassified, please change!)
+#            - Tomb set: zombies, mummies (weight *2)
 :           local mrnd = crawl.random2(3)
 :           if mrnd == 0 then
 KMONS:      0% = smoke demon / ynoxinul / neqoxec w:6 / ice devil /\
                  chaos spawn / soul eater / sun demon
-KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion /\
-                blizzard demon / green death / balrug / cacodemon
+KMONS:      * = reaper / shadow demon w:12 / tormentor / hellion / \
+                blizzard demon w:12 / green death w:12 / balrug w:12 / cacodemon
 KMONS:      | = hell sentinel / brimstone fiend / tzitzimitl /\
                 ice fiend / executioner
 :           set_random_mon_list(
 :               "smoke demon / ynoxinul / neqoxec / " ..
 :               "chaos spawn / soul eater / sun demon / " ..
-:               "lorocyproca / reaper / shadow demon / tormentor / hellion")
+:               "reaper / shadow demon / tormentor / hellion")
 :           else
 KMONS:      0% = place:Depths:1 zombie / guardian mummy w:4
 KMONS:      * = zombie / mummy priest w:6
@@ -1185,7 +1185,7 @@ KITEM:      | = scroll of acquirement q:1 ident:type / \
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
 KITEM:      | = granite talisman randart artprops:Int:6&Stlth:1 / \
-                gold dragon scales
+                golden dragon scales
 :           else
 KITEM:      % = any / star_item w:2
 KITEM:      * = star_item / superb_item w:2
@@ -1387,8 +1387,8 @@ c^dd^+...cccccc--cccc+cccc---Rcccc""c...c...c
 c^dd^c...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
 cc^ccccc+cccccccc--m.7.m---I--Rccc""c...9...c
 ccccccc...cccc---F-m...m----K-ccic""c...6...c
-cccc.........c--G--m...mc----cc$$c""c..6669.c
-c.67...ccc...cc--cccc+cccc--ccc+cc""c..66..cc
+cccc.........c--G--m...mc----cc$$c""c..6.69.c
+c.68...ccc...cc--cccc+cccc--ccc+cc""c..66..cc
 c...ccccccc+cccccc.m.....cccc.666c""+.....ccc
 cc...ccccc'''cccc..m.....4cc9.666c""ccccccccc
 cc...ccc''''''cc.!.m.....<4c9....+"""""""""cc
@@ -1398,7 +1398,7 @@ c..cc''''''''''ccccc...ccccccc""""""""""""""c
 c..cc''''''''''ccc.......cccc""""""""""""""cc
 c..c'''''''''''cc.........ccc""cccccccccccccc
 c..c'c'c'c'c'ccc...........cc""""""""""""""cc
-c..c8c8c'c8c8ccc...........ccc""""""""""""""c
+c..c8c7c'c7c8ccc...........ccc""""""""""""""c
 c..cccccccccccc.....c.c.....cccccccccccccc""c
 c...76........+......?......+"""""ccc"""""""c
 c...76........c.....c.c.....c""""""c"""""""cc
@@ -1415,7 +1415,7 @@ ENDMAP
 # Iskenderun's Mystic Tower
 #
 # TODO: Implement monster IMB and give it to the statues in exchange for
-#       less overall statues, try out some small number of orb spiders.
+#       less overall statues?
 #
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
@@ -1423,6 +1423,7 @@ MONS:       tengu conjurer
 MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
             tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian
+KMONS:      4 = orb spider
 KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
 KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
                 spells:iskenderun's_mystic_blast&iskenderun's_battlesphere, \
@@ -1434,7 +1435,8 @@ KMONS:      H = purple draconian scorcher / purple draconian annihilator /\
 MARKER:     " = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" }
-NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / * = 1:15 ., H = 1:H / 1:H. / *:.
+NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / 2:. / * = 1:15 .
+NSUBST:     H = 1:H / 1:H. / *:.
 SHUFFLE:    '=F- / '=F- / '=F- / F-'= / F-'=, DEF
 SUBST:      - = v, ' = ., = = +
 COLOUR:     v = magenta
@@ -1469,9 +1471,9 @@ vxx..........v.v1vvvEvvv1v.v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
 vxx..........v1vvvH...Hvvv1v..........xxv
 vx.x.......cv1vvvH......vvv1vc.......x.xv
-vxxx........v1vvv.......vvv1v........xxxv
+vxxx........v1vvv..4....vvv1v........xxxv
 vx".G...2.....vD+.H.2...+'=.....2...G."xv
-vxxx........v1vvv.......vvv1v........xxxv
+vxxx........v1vvv....4..vvv1v........xxxv
 vx.x.......cv1vvvH......vvv1vc.......x.xv
 vxx..........v1vvvH...Hvvv1v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
@@ -1694,7 +1696,7 @@ MARKER:     c = lua:props_marker { veto_destroy="veto" }
 MARKER:     t = lua:props_marker { veto_destroy="veto" }
 :           wizlab_setup(_G)
 :           set_border_fill_type("tree")
-:           set_random_mon_list([[shadow w:6 / flayed ghost w:2 / wraith w:2 / ]]
+:           set_random_mon_list([[shadowghast w:6 / flayed ghost w:2 / wraith w:2 / ]]
 :                            .. [[demonspawn / deep troll / ]]
 :                            .. [[grey draconian monk w:6 / ]])
 :           set_feature_name("tree", "autumnal tree")
@@ -2389,6 +2391,7 @@ NSUBST:  7 = 3:7 / 1:. / * = 775., 6 = 2:6 / * = 6.
 NSUBST:  4 = 2:4 / 1:. / *=4.., 2 = 2:2 / * = 2..
 NSUBST:  A = 1:< / *:A
 SUBST:   1 = 1.., 3 = 3.., 5 = 55..., V = VVVY
+COLOUR:  G = smoke
 TILE:    c = wall_borg_stone
 TILE:    G = soul_conduit
 LFLOORTILE: floor_borg

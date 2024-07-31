@@ -23,10 +23,10 @@ DEPTH:  D:4-, Depths, Elf, Snake
 -- the lines below 80 characters.
 local books = {
 "Amateur_Aromatherapy numspells:4 spells:mephitic_cloud&eringya's_noxious_bog&"
-  .. "cigotuvi's_dreadful_rot&mercury_vapours",
+  .. "cigotuvi's_putrefaction&mercury_vapours",
 "Aperture_Sorcery numspells:4 spells:dimensional_bullseye&passage_of_golubria&"
   .. "malign_gateway&death's_door",
-"Apprentice_Sorcery owner:Jessica numspells:4 spells:necrotise&slow&blink&"
+"Apprentice_Sorcery owner:Jessica numspells:4 spells:soul_splinter&slow&blink&"
   .. "swiftness",
 "Arcane_Animation numspells:2 spells:animate_armour&animate_dead",
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
@@ -62,7 +62,7 @@ local books = {
 "Legendary_Spells,_Part_II numspells:6 spells:gell's_gravitas&"
   .. "leda's_liquefaction&lee's_rapid_deconstruction&iskenderun's_battlesphere&"
   .. "eringya's_noxious_bog&borgnjor's_revivification",
-"Legendary_Spells,_Part_IX numspells:7 spells:cigotuvi's_dreadful_rot&"
+"Legendary_Spells,_Part_IX numspells:7 spells:cigotuvi's_putrefaction&"
   .. "vhi's_electric_charge&iskenderun's_mystic_blast&olgreb's_toxic_radiance&"
   .. "yara's_violent_unravelling&ozocubu's_refrigeration&"
   .. "lehudib's_crystal_spear",
@@ -84,8 +84,8 @@ local books = {
   .. "maxwell's_capacitive_coupling&polar_vortex",
 "Modern_Magic,_Vol._28 numspells:5 spells:scorch&anguish&flame_wave&"
   .. "summon_cactus_giant&enfeeble",
-"Modern_Magic,_Vol._30 numspells:7 spells:kiss_of_death&"
-  .. "cigotuvi's_dreadful_rot&momentum_strike&vhi's_electric_charge&"
+"Modern_Magic,_Vol._30 numspells:6 spells:kiss_of_death&"
+  .. "momentum_strike&vhi's_electric_charge&"
   .. "volatile_blastmotes&arcjolt&plasma_beam",
 "Modern_Magic,_Vol._31 numspells:1 spells:brom's_barrelling_boulder&bombard",
 "Multidimensional_Combat numspells:6 spells:momentum_strike&"
@@ -113,7 +113,7 @@ local books = {
   .. "summon_cactus_giant",
 "Scholastic_Tactics numspells:3 spells:static_discharge&mephitic_cloud&"
   .. "iskenderun's_mystic_blast",
-"Self-Indulgence owner:Encalio numspells:7 spells:necrotise&ignite_poison&"
+"Self-Indulgence owner:Encalio numspells:7 spells:soul_splinter&ignite_poison&"
   .. "chain_lightning&ozocubu's_armour&lehudib's_crystal_spear&animate_dead&"
   .. "enfeeble",
 "Servitor_Tips_and_Tricks numspells:6 spells:plasma_beam&fireball&arcjolt&"
@@ -123,14 +123,14 @@ local books = {
 "Terraforming numspells:6 spells:frozen_ramparts&leda's_liquefaction&"
   .. "lee's_rapid_deconstruction&summon_forest&eringya's_noxious_bog&"
   .. "shatter",
-"Thorough_Poisoning numspells:8 spells:sting&cigotuvi's_dreadful_rot&"
+"Thorough_Poisoning numspells:8 spells:sting&cigotuvi's_putrefaction&"
   .. "mercury_vapours&mephitic_cloud&ignite_poison&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog",
 "Truth_and_Just_Ice numspells:5 spells:freeze&frozen_ramparts&ozocubu's_armour&"
   .. "ozocubu's_refrigeration&polar_vortex",
 "Ultimate_Ambition numspells:6 spells:chain_lightning&death's_door&"
   .. "dragon's_call&fire_storm&polar_vortex&shatter",
-"Uncleanliness owner:Zin numspells:2 spells:cigotuvi's_dreadful_rot&"
+"Uncleanliness owner:Zin numspells:2 spells:cigotuvi's_putrefaction&"
   .. "infestation",
 "Unconjured_Destruction owner:Vehumet numspells:8 spells:"
   .. "mercury_vapours&scorch&frozen_ramparts&ignite_poison&"
@@ -152,7 +152,7 @@ local books = {
   .. "summon_ice_beast&freezing_cloud&ozocubu's_refrigeration",
 "the_Dance owner:Terpsichore numspells:3 spells:blink&swiftness&"
   .. "tukima's_dance",
-"the_Ennead numspells:8 spells:necrotise&sandblast&fugue_of_the_fallen&swiftness&"
+"the_Ennead numspells:8 spells:soul_splinter&sandblast&fugue_of_the_fallen&swiftness&"
   .. "hailstorm&irradiate&dispersal&starburst",
 "the_Full_Count numspells:5 spells:momentum_strike&airstrike&fireball&"
   .. "iskenderun's_battlesphere&conjure_ball_lightning",
@@ -168,14 +168,14 @@ local books = {
   .. "disjunction",
 "the_Iron_Gauntlet owner:Mastigos numspells:6 spells:call_imp&cause_fear&"
   .. "manifold_assault&passage_of_golubria&curse_of_agony&discord",
-"the_Lead_Coin owner:Moros numspells:6 spells:necrotise&passwall&"
+"the_Lead_Coin owner:Moros numspells:6 spells:soul_splinter&passwall&"
   .. "leda's_liquefaction&death_channel&sculpt_simulacrum&haunt",
 "the_Lords_of_Pandemonium numspells:4 spells:fire_storm&summon_horrible_things&"
   .. "conjure_ball_lightning&dispel_undead",
 "the_Lunargent_Thorn owner:Acanthus numspells:6 spells:slow&"
   .. "ensorcelled_hibernation&anguish&summon_forest&summon_cactus_giant&"
   .. "dragon's_call",
-"the_Monster_Mash numspells:6 spells:necrotise&fugue_of_the_fallen&"
+"the_Monster_Mash numspells:6 spells:soul_splinter&fugue_of_the_fallen&"
   .. "call_canine_familiar&"
   .. "vampiric_draining&summon_lightning_spire&spellforged_servitor",
 "the_Nosferatu numspells:6 spells:summon_small_mammal&call_canine_familiar&"

@@ -700,7 +700,7 @@ string player::foot_name(bool plural, bool *can_plural) const
 
 string player::arm_name(bool plural, bool *can_plural) const
 {
-    if (form_changed_physiology())
+    if (form_changes_physiology())
         return hand_name(plural, can_plural);
 
     if (can_plural != nullptr)
@@ -710,9 +710,7 @@ string player::arm_name(bool plural, bool *can_plural) const
 
     string adj;
     if (form == transformation::death)
-        adj = "bony";
-    else if (form == transformation::shadow)
-        adj = "shadowy";
+        adj = "fossilised";
     else
         adj = species::skin_name(species, true);
 

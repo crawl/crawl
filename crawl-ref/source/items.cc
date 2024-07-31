@@ -1009,7 +1009,6 @@ void id_floor_items()
 void pickup_menu(int item_link)
 {
     int n_did_pickup   = 0;
-    int n_tried_pickup = 0;
 
     // XX why is this const?
     auto items = const_item_list_on_square(item_link);
@@ -1050,14 +1049,12 @@ void pickup_menu(int item_link)
                 // floor.
                 if (!move_item_to_inv(j, num_to_take))
                 {
-                    n_tried_pickup++;
                     pickup_warning = "You can't carry that many items.";
                     if (env.item[j].defined())
                         env.item[j].flags = oldflags;
                 }
                 else
                 {
-                    n_did_pickup++;
                     // If we deliberately chose to take only part of a
                     // pile, we consider the rest to have been
                     // "dropped."
@@ -1818,8 +1815,6 @@ static void _get_book(item_def& it)
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
-        if (is_artefact(it) && !item_ident(it, ISFLAG_KNOW_PROPERTIES))
-            mprf("It was %s.", it.name(DESC_A, false, true).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
@@ -1905,7 +1900,7 @@ static void _get_rune(const item_def& it, bool quiet)
         else if (nrunes > 1)
         {
             if (player_in_branch(BRANCH_PANDEMONIUM) && _got_all_pan_runes())
-                mprf("You've emptied out Pandemonium! Nothing left here but demons.");
+                mpr("You've emptied out Pandemonium! Nothing left here but demons.");
             mprf("You now have %d runes.", nrunes);
         }
 
@@ -1914,6 +1909,31 @@ static void _get_rune(const item_def& it, bool quiet)
 
     if (it.sub_type == RUNE_ABYSSAL)
         mpr("You feel the abyssal rune guiding you out of this place.");
+}
+
+static bool _is_disabled_gem(gem_type gem)
+{
+    switch (gem)
+    {
+#if TAG_MAJOR_VERSION == 34
+    case GEM_ORC:
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
+
+static bool _got_all_gems()
+{
+    for (int gem = GEM_DUNGEON; gem < NUM_GEM_TYPES; ++gem)
+    {
+        if (_is_disabled_gem(static_cast<gem_type>(gem)))
+            continue;
+        if (!you.gems_found[static_cast<gem_type>(gem)])
+            return false;
+    }
+    return true;
 }
 
 static void _get_gem(const item_def& it, bool quiet)
@@ -1926,6 +1946,11 @@ static void _get_gem(const item_def& it, bool quiet)
     // XXX: consider customizing this message per-gem
     mprf("You pick up %s and feel its impossibly delicate weight in your %s.",
          it.name(DESC_THE).c_str(), you.hand_name(true).c_str());
+    if (_got_all_gems())
+    {
+        mprf("You've found all the gems! Together, they sparkle an otherworldly %s!",
+             getSpeakString("misc_colour").c_str());
+    }
     mpr("Press } and ! to see all the gems you have collected.");
     print_gem_warnings(it.sub_type, 0);
 }
@@ -2645,7 +2670,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     ASSERT(item.defined());
 
-    if (Options.drop_disables_autopickup)
+    if (Options.drop_disables_autopickup && item.base_type != OBJ_MISSILES)
         set_item_autopickup(item, AP_FORCE_OFF);
 
     if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
@@ -3990,6 +4015,8 @@ colour_t item_def::miscellany_colour() const
             return LIGHTRED;
         case MISC_SACK_OF_SPIDERS:
             return WHITE;
+        case MISC_GRAVITAMBOURINE:
+            return LIGHTMAGENTA;
 #if TAG_MAJOR_VERSION == 34
         case MISC_LAMP_OF_FIRE:
             return YELLOW;

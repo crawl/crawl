@@ -187,8 +187,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
-    // Boldly go into the unknown (for shadow step and other ranged move
-    // prompts)
+    // Boldly go into the unknown (for ranged move prompts)
     if (env.map_knowledge(p).trap() == TRAP_UNASSIGNED)
         return true;
 
@@ -253,8 +252,7 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg, bool *prompted)
 {
-    // Boldly go into the unknown (for shadow step and other ranged move
-    // prompts)
+    // Boldly go into the unknown (for ranged move prompts)
     if (!env.map_knowledge(p).known())
         return true;
 
@@ -638,7 +636,6 @@ void move_player_to_grid(const coord_def& p, bool stepped)
 
     ASSERT(!monster_at(p)
            || fedhas_passthrough(monster_at(p))
-           || mons_is_player_shadow(*monster_at(p))
            || mons_is_wrath_avatar(*monster_at(p)));
 
     // Move the player to new location.
@@ -775,7 +772,27 @@ void update_vision_range()
     if (player_equip_unrand(UNRAND_NIGHT))
         you.current_vision = you.current_vision * 3 / 4;
 
-    ASSERT(you.current_vision > 0);
+    if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
+    {
+        // Determine the percentage of Nightfall's max duration that has passed,
+        // then use a hermite curve to map this to the actual sight radius value.
+        const int max_dur = you.props[NIGHTFALL_INITIAL_DUR_KEY].get_int();
+        const int dur = (max_dur - you.duration[DUR_PRIMORDIAL_NIGHTFALL]) * 100 / max_dur;
+        const int intensity = (3 * dur * dur / 100) - (2 * dur * dur * dur / 10000);
+        int vision = intensity * you.normal_vision / 100;
+        // Cap radius 0 sight at no more than 5 turns (otherwise kobolds and/or
+        // high invo characters can hold all monsters out of sight for too long)
+        if (max_dur - you.duration[DUR_PRIMORDIAL_NIGHTFALL] > 50)
+            vision = max(1, vision);
+
+        // Immediately end the effect when it reaches our normal vision level
+        if (vision >= you.current_vision)
+            you.duration[DUR_PRIMORDIAL_NIGHTFALL] = 1;
+        else
+            you.current_vision = vision;
+    }
+
+    ASSERT(you.current_vision >= 0);
     set_los_radius(you.current_vision);
 }
 
@@ -875,7 +892,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_BOOTS: // And bardings
         dummy.sub_type = ARM_BOOTS;
-        if (you.wear_barding())
+        if (you.can_wear_barding())
             alternate.sub_type = ARM_BARDING;
         break;
 
@@ -929,16 +946,24 @@ bool player_can_use_armour()
     return false;
 }
 
+bool player_has_hair(bool temp, bool include_mutations)
+{
+    if (include_mutations &&
+        you.get_mutation_level(MUT_SHAGGY_FUR, temp))
+    {
+        return true;
+    }
+
+    if (temp && form_has_hair(you.form))
+        return true;
+
+    return species::has_hair(you.species);
+}
+
 bool player_has_feet(bool temp, bool include_mutations)
 {
-    if (you.has_innate_mutation(MUT_CONSTRICTING_TAIL)
-        || you.has_innate_mutation(MUT_FLOAT)
-        || you.has_innate_mutation(MUT_PAWS) // paws are not feet?
-        || you.has_tentacles(temp)
-        || you.fishtail && temp)
-    {
+    if (you.fishtail && temp)
         return false;
-    }
 
     if (include_mutations &&
         (you.get_mutation_level(MUT_HOOVES, temp) == 3
@@ -947,7 +972,29 @@ bool player_has_feet(bool temp, bool include_mutations)
         return false;
     }
 
-    return true;
+    return species::has_feet(you.species);
+}
+
+bool player_has_eyes(bool temp, bool include_mutations)
+{
+    if (include_mutations &&
+        you.get_mutation_level(MUT_EYEBALLS, temp))
+    {
+        return true;
+    }
+
+    if (temp && form_has_eyes(you.form))
+        return true;
+
+    return species::has_eyes(you.species);
+}
+
+bool player_has_ears(bool temp)
+{
+    if (temp && form_has_ears(you.form))
+        return true;
+
+    return species::has_ears(you.species);
 }
 
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
@@ -1333,12 +1380,6 @@ int player_mp_regen()
     if (you.duration[DUR_RAMPAGE_HEAL])
         regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
 
-    if (you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
-    {
-        const static int rev_bonus[] = {0, 20, 40, 80};
-        regen_amount += rev_bonus[you.rev_tier()];
-    }
-
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
@@ -1631,10 +1672,10 @@ bool player_kiku_res_torment()
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
-int player_res_poison(bool allow_random, bool temp, bool items)
+int player_res_poison(bool allow_random, bool temp, bool items, bool forms)
 {
-    const int form_rp = cur_form(temp)->res_pois();
-    if (you.is_nonliving(temp)
+    const int form_rp = forms ? cur_form(temp)->res_pois() : 0;
+    if (you.is_nonliving(temp, forms)
         || you.is_lifeless_undead(temp)
         || form_rp == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
@@ -1859,7 +1900,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
     if (items)
     {
         // rings
-        pl += you.wearing(EQ_RINGS, RING_LIFE_PROTECTION);
+        pl += you.wearing(EQ_RINGS, RING_POSITIVE_ENERGY);
 
         // armour (checks body armour only)
         pl += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
@@ -1926,9 +1967,6 @@ int player_movement_speed(bool check_terrain, bool temp)
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
-    if (temp && you.duration[DUR_FROZEN])
-        mv += 3;
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
@@ -1938,6 +1976,9 @@ int player_movement_speed(bool check_terrain, bool temp)
         mv *= 10 + slow * 2;
         mv /= 10;
     }
+
+    if (temp && you.duration[DUR_FROZEN])
+        mv = div_rand_round(mv * 3, 2);
 
     if (temp && you.duration[DUR_SWIFTNESS] > 0)
     {
@@ -2009,9 +2050,8 @@ bool player_effectively_in_light_armour()
 bool player_is_shapechanged()
 {
     // TODO: move into data
-    return form_changed_physiology(you.form)
-        && you.form != transformation::death
-        && you.form != transformation::shadow;
+    return form_changes_physiology(you.form)
+        && you.form != transformation::death;
 }
 
 bool player_acrobatic()
@@ -2254,10 +2294,11 @@ int player_armour_shield_spell_penalty()
 int player_wizardry()
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
-           + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
+           + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0)
+           + you.scan_artefacts(ARTP_WIZARDRY);
 }
 
-int player_channeling()
+int player_channelling()
 {
     // Here and elsewhere, let's consider making this work for Dj.
     if (you.has_mutation(MUT_HP_CASTING))
@@ -2321,10 +2362,6 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     shield += qazlal_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
-
-    // divine shield
-    if (!ignore_temporary)
-        shield += tso_sh_boost() * 100;
 
     return random ? div_rand_round(shield * scale, 100) : ((shield * scale) / 100);
 }
@@ -3292,32 +3329,8 @@ int player_stealth()
 
     // On the other hand, shrouding has the reverse effect, if you know
     // how to make use of it:
-    if (you.umbra())
-    {
-        int umbra_mul = 1, umbra_div = 1;
-        if (you.umbra_radius() >= 0)
-        {
-            if (have_passive(passive_t::umbra))
-            {
-                umbra_mul = you.piety + MAX_PIETY;
-                umbra_div = MAX_PIETY;
-            }
-            if ((you.has_mutation(MUT_FOUL_SHADOW)
-                 || player_equip_unrand(UNRAND_BRILLIANCE)
-                 || player_equip_unrand(UNRAND_SHADOWS))
-                && 2 * umbra_mul < 3 * umbra_div)
-            {
-                umbra_mul = 3;
-                umbra_div = 2;
-            }
-        }
-
-        stealth *= umbra_mul;
-        stealth /= umbra_div;
-    }
-
-    if (you.form == transformation::shadow)
-        stealth *= 2;
+    if (you.umbra() && you.umbra_radius() >= 0)
+        stealth = stealth * 3 / 2;
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
     if (have_passive(passive_t::storm_shield))
@@ -3331,7 +3344,8 @@ int player_stealth()
     if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
         stealth /= 3;
 
-    stealth = max(0, stealth);
+    // Cap minimum stealth during Nightfall at 100. (0, otherwise.)
+    stealth = max(you.duration[DUR_PRIMORDIAL_NIGHTFALL] ? 100 : 0, stealth);
 
     return stealth;
 }
@@ -3499,7 +3513,7 @@ static void _display_damage_rating(const item_def *weapon)
         weapon_name = "unarmed combat";
 
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_WOE))
-        mprf("%s", uppercase_first(damage_rating(weapon)).c_str());
+        mpr(uppercase_first(damage_rating(weapon)));
     else
     {
         mprf("Your damage rating with %s is about %s",
@@ -3574,6 +3588,14 @@ bool player::clarity(bool items) const
 bool player::faith(bool items) const
 {
     return you.has_mutation(MUT_FAITH) || actor::faith(items);
+}
+
+bool player::reflection(bool items) const
+{
+    if (you.duration[DUR_DIVINE_SHIELD])
+        return true;
+
+    return actor::reflection(items);
 }
 
 /// Does the player have permastasis?
@@ -4781,10 +4803,12 @@ void dec_sticky_flame_player(int delay)
         return;
     }
 
-    mprf(MSGCH_WARN, "The liquid fire burns you!");
+    int base_damage = roll_dice(2, you.props[STICKY_FLAME_POWER_KEY].get_int());
+    int damage = resist_adjust_damage(&you, BEAM_FIRE, base_damage);
 
-    int damage = roll_dice(2, you.props[STICKY_FLAME_POWER_KEY].get_int());
-    damage = resist_adjust_damage(&you, BEAM_FIRE, damage);
+    mprf(MSGCH_WARN, "The liquid fire burns you%s!",
+         damage > base_damage ? " terribly" : "");
+
     damage = div_rand_round(damage * delay, BASELINE_DELAY);
 
     you.expose_to_element(BEAM_STICKY_FLAME, 2);
@@ -4880,13 +4904,11 @@ void dec_slow_player(int delay)
             ? haste_mul(delay) : delay;
     }
 
-    if (you.torpor_slowed())
+    if (aura_is_active_on_player(TORPOR_SLOWED_KEY))
     {
         you.duration[DUR_SLOW] = max(1, you.duration[DUR_SLOW]);
         return;
     }
-    if (you.props.exists(TORPOR_SLOWED_KEY))
-        you.props.erase(TORPOR_SLOWED_KEY);
 
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
@@ -4919,6 +4941,66 @@ void barb_player(int turns, int pow)
         you.attribute[ATTR_BARBS_POW] =
             min(max_pow, you.attribute[ATTR_BARBS_POW]++);
     }
+}
+
+/**
+ * Players are rather more susceptible to dazzling: only those who can't
+ * be blinded are immune.
+ */
+bool player::can_be_dazzled() const
+{
+    return can_be_blinded();
+}
+
+/**
+ * Players can be blinded only if they have eyes.
+ */
+bool player::can_be_blinded() const
+{
+    return player_has_eyes();
+}
+
+/**
+ * Increase the player's blindness duration.
+ *
+ * @param amount   The number of turns to increase blindness duration by.
+ */
+void blind_player(int amount, colour_t flavour_colour)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (!you.can_be_dazzled())
+    {
+        mpr("Your vision flashes for a moment.");
+        return;
+    }
+
+    if (amount <= 0)
+        return;
+
+    const int current = you.duration[DUR_BLIND];
+    you.increase_duration(DUR_BLIND, amount, 50);
+
+    if (you.duration[DUR_BLIND] > current)
+    {
+        you.props[BLIND_COLOUR_KEY] = flavour_colour;
+        if (current > 0)
+            mpr("You are blinded for an even longer time.");
+        else
+            mpr("You are blinded!");
+        learned_something_new(HINT_YOU_ENCHANTED);
+        xom_is_stimulated((you.duration[DUR_BLIND] - current) / BASELINE_DELAY);
+    }
+}
+
+// Returns the percentage chance any attack or dodgeable beam will miss at a
+// given distance. (ie: 30%, 45%, 60%, 75%, 90%)
+int player_blind_miss_chance(int distance)
+{
+    if (you.duration[DUR_BLIND])
+        return min(90, 15 + (distance * 15));
+    else
+        return 0;
 }
 
 void dec_berserk_recovery_player(int delay)
@@ -5874,14 +5956,14 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
     if (player_in_branch(BRANCH_ARENA))
     {
         simple_god_message(" prevents your banishment from the Arena!",
-                           GOD_OKAWARU);
+                           false, GOD_OKAWARU);
         return;
     }
 
     if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
     {
         simple_god_message(" refuses to let the Abyss claim you during a challenge!",
-                           GOD_BEOGH);
+                           false, GOD_BEOGH);
 
         return;
     }
@@ -6019,7 +6101,9 @@ void player::shield_block_succeeded(actor *attacker)
 {
     actor::shield_block_succeeded(attacker);
 
-    shield_blocks++;
+    if (!you.duration[DUR_DIVINE_SHIELD])
+        shield_blocks++;
+
     practise_shield_block();
     if (is_shield(shield()))
         count_action(CACT_BLOCK, shield()->sub_type);
@@ -6557,7 +6641,7 @@ void player::refresh_rampage_hints()
   **/
 int player::gdr_perc() const
 {
-    return max(0, (int)(16 * sqrt(sqrt(you.armour_class()))));
+    return (int)(16 * sqrt(sqrt(max(0, you.armour_class()))));
 }
 
 /**
@@ -6800,7 +6884,7 @@ int player::res_elec() const
 bool player::res_water_drowning() const
 {
     return is_unbreathing()
-           || species::can_swim(species) && !form_changed_physiology()
+           || cur_form(true)->player_can_swim()
            || you.species == SP_GREY_DRACONIAN && draconian_dragon_exception();
 }
 
@@ -6813,8 +6897,7 @@ bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
         || is_nonliving(temp)
-        || cur_form(temp)->res_miasma()
-        || temp && you.props.exists(MIASMA_IMMUNE_KEY))
+        || cur_form(temp)->res_miasma())
     {
         return true;
     }
@@ -6867,11 +6950,13 @@ bool player::res_torment() const
     return get_form()->res_neg() == 3
            || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
-    // This should probably be (you.holiness & MH_PLANT), but treeform
-    // doesn't currently make you a plant, and I suspect changing that
-    // would cause other bugs. (For example, being able to wield holy
-    // weapons as a demonspawn & keep them while untransformed?)
+    // This should probably be (you.holiness & MH_PLANT), but
+    // transforming doesn't currently make you a plant, and I suspect
+    // changing that would cause other bugs. (For example, being able
+    // to wield holy weapons as a demonspawn in treeform & keep them
+    // while untransformed?)
            || you.form == transformation::tree
+           || you.form == transformation::fungus
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
 #endif
@@ -6905,9 +6990,6 @@ int player::willpower() const
 
 int player_willpower(bool temp)
 {
-    if (temp && you.form == transformation::shadow)
-        return WILL_INVULN;
-
     if (player_equip_unrand(UNRAND_FOLLY))
         return 0;
 
@@ -7167,7 +7249,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     }
 
     if ((flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
-        && can_bleed())
+        && has_blood())
     {
         blood_spray(pos(), type, amount / 5);
     }
@@ -7212,8 +7294,8 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
     for (int i = 0; i < degree; i++)
         if (!x_chance_in_y(prev_corr, prev_corr + 28))
         {
-            props[CORROSION_KEY].get_int() += res_corr() ? 2 : 4;
-            prev_corr++;
+            prev_corr += res_corr() ? 2 : 4;
+            props[CORROSION_KEY] = prev_corr;
             did_corrode = true;
         }
 
@@ -7600,8 +7682,7 @@ bool player::innate_sinv() const
 
 bool player::invisible() const
 {
-    return (duration[DUR_INVIS] || form == transformation::shadow)
-           && !backlit();
+    return duration[DUR_INVIS] && !backlit();
 }
 
 bool player::visible_to(const actor *looker) const
@@ -7628,9 +7709,6 @@ bool player::visible_to(const actor *looker) const
 */
 bool player::backlit(bool self_halo, bool temp) const
 {
-    if (temp && form == transformation::shadow)
-        return false;
-
     return temp && (player_severe_contamination()
                     || duration[DUR_CORONA]
                     || duration[DUR_STICKY_FLAME]
@@ -7651,12 +7729,6 @@ bool player::umbra() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (form == transformation::shadow)
-    {
-        mpr("Shadows surge around you.");
-        return;
-    }
-
     if (!duration[DUR_INVIS])
     {
         if (duration[DUR_CORONA])
@@ -7705,12 +7777,23 @@ bool player::can_polymorph() const
     return !(transform_uncancellable || is_lifeless_undead());
 }
 
-bool player::can_bleed(bool temp) const
+bool player::has_blood(bool temp) const
 {
-    if (temp && !form_can_bleed(form))
+    if (is_lifeless_undead(temp))
         return false;
 
-    return !is_lifeless_undead(temp) && !is_nonliving(temp);
+    if (temp && form_has_blood(form))
+        return true;
+
+    return species::has_blood(you.species);
+}
+
+bool player::has_bones(bool temp) const
+{
+    if (temp && form_has_bones(you.form))
+        return true;
+
+    return species::has_bones(you.species);
 }
 
 bool player::can_drink(bool temp) const
@@ -7964,6 +8047,13 @@ bool player::do_shaft()
 
 bool player::can_do_shaft_ability(bool quiet) const
 {
+    if (!form_keeps_mutations())
+    {
+        if (!quiet)
+            mpr("You can't shaft yourself in your current form.");
+        return false;
+    }
+
     if (attribute[ATTR_HELD])
     {
         if (!quiet)
@@ -8203,7 +8293,7 @@ bool player::made_nervous_by(const monster *mons)
     return false;
 }
 
-void player::weaken(actor */*attacker*/, int pow)
+void player::weaken(const actor */*attacker*/, int pow)
 {
     if (!duration[DUR_WEAK])
         mprf(MSGCH_WARN, "You feel your attacks grow feeble.");
@@ -8365,8 +8455,11 @@ bool player::form_uses_xl() const
     return !get_form()->get_unarmed_uses_skill();
 }
 
-bool player::wear_barding() const
+bool player::can_wear_barding(bool temp) const
 {
+    if (temp && !get_form()->slot_available(EQ_BOOTS))
+        return false;
+
     return species::wears_barding(species);
 }
 
@@ -8686,7 +8779,7 @@ void player_close_door(coord_def doorpos)
         if (monster* mon = monster_at(dc))
         {
             const bool mons_unseen = !you.can_see(*mon);
-            if (mons_unseen || mons_is_object(mon->type))
+            if (mons_unseen || (mon->holiness() & MH_NONLIVING))
             {
                 mprf("Something is blocking the %s!", waynoun);
                 // No free detection!

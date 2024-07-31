@@ -1,5 +1,250 @@
+Stone Soup 0.32 (through 0.32-a0-1431-be6e7be4eb9)
+--------------------------
+
+Highlights
+----------
+* Beogh, Dith, and Yred have been substantially overhauled.
+* Since everybody can become orcs, reworked Mountain Dwarves replace Hill Orcs.
+* New species: Coglins, dual-wielding gizmo-inventing goblins in exosuits.
+* More new spells, aimed at new school combinations and higher levels.
+* Many more new and revamped monsters and decorations throughout the Dungeon.
+
+Artefacts
+---------
+* New and returning unrands:
+  - Returning: Brilliance, an eveningstar of foul flame, which inflicts
+    reduced damage to unholy foes and extra damage to holy foes.
+  - Returning: Sword of the Doom Knight, which loses pain brand to instead
+    make its targets lose 10% of their maximum health on hit.
+  - New: Charlatan's Orb, an orb which boosts Evocations power but has
+    the translocations and stealth downside of the real Orb of Zot.
+  - New: Gloves of the Gadgeteer, fragile gloves that boost evoker recharge
+    rate, wand damage, and give a chance to save wand charges on use.
+* The Cloak of the Thief is now +0, but gives noise suppression instead of
+  random bursts of fog and no longer gives negative slaying.
+* Randart MP bonuses and maluses now range from 4 to 12, instead of always
+  being fixed at 9.
+
+Branches, Environment
+---------------------
+* Crypt now contains more item rewards throughout its levels.
+* Troves no longer ask Draconians to offer dragon scales.
+* Ziggurats now scale up their enemy choices and counts up much faster
+  if one dares to dive through multiple ziggurats on the same character.
+* Quite a few new decorative features have been added to many a vault:
+  - Several new types of decorative statue: silver statues,
+    scintillating statues, mystic cages, and magic conduits.
+  - A new decorative wall type: bedevilled crystal.
+  - Completely-decorative caches of fruits and meat, which may occasionally
+    be snacked upon when walked over.
+  - Piles of debris, stony wreckage that crumbles away on a delay after
+    being hit.
+  - Sacred lotuses, extremely resilient but entirely harmless plants.
+* Rain no longer can create deep water.
+* Skeletons no longer decay.
+
+Character
+---------
+* Only players without weapons can punch with their offhand.
+* Player constriction no longer deals ramping-up damage.
+* Removed mutations: noise dampening.
+
+Gods
+----
+* Beogh has been completely overhauled, becoming the god of collective
+  pariahs and outcasts. All species may elect to worship Beogh and become orcs
+  when at low HP in front of orc priests. Most abilities are also changed:
+  - Orc apostles, scaling throughout the game, will challenge the player with
+    their own followers, unalterable artefact equipment, and potent mystic
+    might. Forfeiting their challenge by leaving the floor inflicts penance,
+    which only dismisses worshippers' followers and disables their invocations.
+  - Shortly after defeating apostles, worshippers can recruit up to three
+    apostles to follow them at a time. Beogh now will automatically revive those
+    apostles if they die, but only after the player gains sufficient piety.
+  - Other encountered orcs are pacified instead of recruited.
+  - Beogh gains a new 5* ability, Blood for Blood. This can only be invoked
+    on top of an orc apostle's corpse, and summons a large amount of orcs both
+    immediately around the player and around the edges of the screen over time.
+* Dithmenos has been completely overhauled, becoming the god of actors,
+  thieves, and everyone else who works in the shadows. They no longer count as
+  evil, and have replaced nearly all of their active and passive abilities.
+  - 1*: Passive noise dampening, halving all noise made around the player.
+  - 2*: A passive shadow mimic, which now casts differing spells based on the
+        spell schools of spells cast to now cover all spell types, deals more
+        damage with weapons scaling to XL, and also lingers around afterwards.
+  - 3*: Shadowslip, which instantly swaps worshippers' places with a lingering
+        shadow and misleads foes into targeting the shadow for a while instead.
+  - 4*: Aphotic Marionette, which forces an enemy with spells to instantly cast
+        random conjurations at other enemies or give buffs & summons to the
+        player.
+  - 5*: Primordial Nightfall, which reduces one's line of sight to zero, with
+        line of sight gradually coming back over the duration.
+* Yredelemnul has been significantly overhauled.
+  - Yred now uses a somewhat conventional piety system again, though followers
+    have to obey the rules of raising the black torch.
+  - Followers of Yred get an umbral aura around them that grows as they gain
+    piety, and zombies are passively animated only in the umbra aura.
+  - Yredelemnul grants the following active abilities:
+      - 0*: Raise the Black Torch, which enables piety gain, but which can only
+            be used once per floor and only lasts until the player leaves the
+            floor. Starting at 1*, this ability also summons scaling undead
+            allies.
+      - 2*: Hurl Torchlight, which mights undead while damaging most others.
+      - 4*: Bind Soul, which now temporarily flays the player until the
+            binding is successful and heavily scales the soul's HP with invo.
+      - 5*: Fathomless Shackles, which binds a large area centered on the
+            player and damages over time while vampirically draining foes.
+      - Removed abilities: Dark Bargain, Drain Life.
+* Both Beogh and Yred's recall abilities are now instant.
+* Jiyva now prevents all harm players could do to all jellies and slimes,
+  instead of punishing them whenever they did so. Fedhas now also prevents
+  players from doing harm to friendly plants.
+* Nemelex is now a chaotic (but not evil) god.
+* Okawaru's Duel now blocks all summoning.
+* Qazlal's Upheaval and Disaster Area no longer hit the player nor any of
+  their elemental allies.
+* Most gods now comment upon or otherwise influence the player's death.
+
+Interface and Options
+---------------------
+* Monster damage display has been further improved in specificity.
+
+Items
+-----
+* New evoker: Gell's Gravitambourine, which pulls all monsters in a large
+  radius close together and then binds them in place for several turns.
+* Dispersal darts are now much more likely to blink their targets away
+  from the thrower.
+* Condenser vanes now reroll misery clouds if the good gods would block
+  their creation, rather than placing nothing as a result.
+
+Monsters
+--------
+* Uniques:
+  - Revamped: Arachne has been exiled out of the Spider Nest, now appearing
+    a bit later in games without Spider's Nest, with a Greater Ensnare spell
+    and an orb spider band.
+  - Revamped: Blork the orc is now Blorkula the Orcula, both vampire and orc.
+    He now casts a wider spread of conjurations and can delay death by
+    becoming a rainbow swarm of vampire bats.
+  - Revamped: Wiglaf has returned, gaining a randart hat, and dropping Okawaru
+    invocations of Haste for Hellfire Mortar.
+  - New: Xak'krixis, a formicid Royal Expeditionary Alchemist, found solely in
+    the Spider Nest. They have Ignite Poison and a version of Fulminant Prism
+    that doesn't hurt allies.
+  - Reflavoured: Nergalle is now an archivist, and Ijyb is now an ex-Coglin
+    artificer.
+* New monsters:
+  - Marrowcudas, early-D skeleton fish that summon swarms of themselves
+    whenever they hit foes.
+  - Obsidian bats, Orcish Mines stone bats which summon demonic animals
+    whenever they hit foes.
+  - Polterguardians, Vaults geists that give their allies Repel Missiles.
+  - Scrub nettles, which fire partially-irresistible poison stings.
+  - Thermic dynamos, Elven Halls vortex-engines that wield both hits and
+    rebounding bolts of fire and ice.
+  - Undying armouries, late Vaults terrors that hurl dancing weapons and
+    grant temporary copies of the same weapon to their allies.
+* Other monster changes:
+  - Arcanists now cast Searing Ray instead of Force Lance.
+  - Crystal guardians and crystal echidnas no longer fire rebounding bolts of
+    fire or ice, and instead have crystallizing shots that inflict Vitrify.
+  - Deep elf elementalists cast Hoarfrost Cannonade instead of Freezing Cloud.
+  - Deep elf high priests give a long duration brilliance buff to every ally
+    in their sight, rather than using an aura of brilliance.
+  - Demonspawn corrupters now summon thunderhulks instead of vault sentinels.
+  - Draconian monster adjustments: yellow draconians have acidic bites,
+    white draconians have more damaging breath, and stormcallers no longer are
+    hurt by their own Upheavals.
+  - Glowing orange brains are now reluctant to move closer to their foes and
+    having an innate aura of brilliance affecting their allies.
+  - Guardian serpents and draconian shifters' Blink Allies Encircling now
+    blinks over 3 to 6 allies as is possible, instead of always 8.
+  - Hell beasts have become sin beasts, gaining HD and antimagic attacks.
+    Geryon's (hell -> sin) beast summoning has been weakened in exchange.
+  - Monster shadows are now called shadowghasts.
+  - Monster demonspawn black suns are now called soul scholars.
+  - Necrophages are weaker and now only appear from Yred's summonings.
+  - Norris now casts Draining Gaze instead of Brain Bite.
+  - Ophanim now passively irresistibly inflict Mark on all those they see.
+  - Worldbinders now summon ironbound frosthearts instead of thunderhulks.
+* Monster constriction is now more difficult to escape via moving, but blinks
+  now always work as an escape.
+* Monster frozen status now lasts a bit longer, inflicts a heavier movement
+  penalty, and no longer blocks further Flash Freeze casts.
+* Monster repel missiles now acts as a flat +15 effective EV against
+  projectiles, rather than scaling heavily to the monster's own EV.
+* Player ghosts now can cast a fair bit more low-level and mid-level spells.
+* Removed monsters: burning bushes, lorocyprocas.
+
+Species
+-------
+* New species: Coglins, goblins in mechanical exoskeletons. Features:
+  - Their exoskeletons allow them to dual wield, but innately take a few
+    swings to rev up to normal damage.
+  - They can't wear jewellery, but at XL 13 they can choose to invent one of
+    three gizmos that passively provide resists and unique benefits.
+* Returning species: Since all species can become orcs, Hill Orcs swap out with
+  Mountain Dwarves, with similar but less skewed apts and stats. New features:
+  - They ignore half of the spellcasting penalty heavy armour would inflict.
+  - They can enchant randart equipment up to the base equipment's default
+    enchantment maximum.
+* Draconian breaths have been revamped: most effects have been replaced for
+  much stronger and flashier effects, but now use a limited number of charges
+  refilled by gaining experience instead of coming back on a breath timer.
+  - Red draconians breathe penetrating bolts that explode on each hit.
+  - White draconians breathe high-damage penetrating bolts that turn defeated
+    foes into blocks of ice.
+  - Black draconians breathe projectiles that chain in a connected group.
+  - Grey draconians now have mud immunity and breathe large mud blasts.
+  - Green breathe now get additional noxious clouds alongside the main path.
+  - Yellow draconians breathe a penetrating bolt that leaves acidic clouds.
+  - Purple draconians breathe an explosion of both dispelling and antimagic.
+  - Pale draconians now deal fairly more impact damage with their steam breath.
+* Deep Elf Air Magic apt has been raised from 0 to +1.
+* New Demonspawn mutation: Foul Shadow, which wreathes the player in umbra to
+  reduce monster accuracy and increases stealth, and also burns attackers in
+  melee range with foul flame.
+
+Spells
+------
+* New spells:
+  - Propulsive Piledriver (L3 Tloc): Grab an adjacent foe that maximises travel
+    distance to solid terrain, then hurls you both forward and damages that foe.
+  - Hoarfrost Cannonade (L5 Ice / Alch): Summons two transient icy cannons
+    that deal damage, slow down movement, and eventually (safely) explode.
+  - Gell's Gavotte (L6 Tloc): Pulls the player and everybody else in sight
+    four tiles in a chosen direction, damaging those flung into solid objects.
+  - Permafrost Eruption (L6 Ice / Earth): Creates an explosion of rock and ice
+    on top of the densest cluster of enemies in sight.
+  - Hellfire Mortar (L7 Fire / Earth): Temporarily digs out a river of lava,
+    then deploys an auto-firing magma cannon to float down that river.
+  - Magnavolt (L7 Air / Earth): Magnetises enemies, making them lose all EV and
+    drop magnetised vortices on death, then zaps every magnetised foe in sight.
+  - Rimeblight (L7 Ice / Necro): Inflicts a plague on enemies that spreads
+    through icy explosions, which can instantly kill foes at low health.
+  - Fulsome Fusillade (L8 Conj / Alch): Rains reagent explosions of random
+    elements on top of random foes, inflicting random debuffs if they overlap.
+* Teleport Other now tries to teleport affected monsters out of the caster's
+  sight.
+* Players with Spellforged Servitor memorised now get an Imbue Servitor ability
+  that allows you to choose which compatible spell the servitor will cast.
+* Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
+  hits 4 to 12 foes at once instead of 2 to 4.
+* Removed spells: Gell's Gravitas.
+
+Tiles and Other Art
+-------------------
+* New tiles for existing game elements:
+  * Dozens of monster-only spells.
+  * Yred's Recall tile.
+  * Formless jellyfish.
+  * Box of beasts.
+  * Boulders from Brom's Barrelling Boulder.
+  * Crystal walls in Zot.
+
 Stone Soup 0.31 (20240119)
--------------------------
+--------------------------
 
 Highlights
 ----------

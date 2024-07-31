@@ -134,11 +134,11 @@ Goad Beasts cast
 %%%%
 Call Down Lightning cast
 
-Electricity crackles from @the_monster@'s apparatus.
+Electricity crackles from @the_monster_possessive@ apparatus.
 %%%%
 Blink Range ironbound thunderhulk cast
 
-Strange energies crackle from @the_monster@'s apparatus.
+Strange energies crackle from @the_monster_possessive@ apparatus.
 %%%%
 Mara Summon cast
 
@@ -194,10 +194,6 @@ Call Lost Souls cast
 
 @The_monster@ beckons forth restless souls!
 %%%%
-Haste Plants cast
-
-@The_monster@ empowers the plants around itself!
-%%%%
 Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
@@ -230,7 +226,7 @@ Pyroclastic Surge cast
 %%%%
 Eruption cast
 
-@The_monster@ rends the earth beneath you!
+@The_monster@ rends the earth beneath @target@!
 %%%%
 Call of Chaos cast
 
@@ -423,7 +419,7 @@ Ensnare Arachne cast
 
 @The_monster@ points @possessive@ staff @at@ @target@, shooting a stream of webbing.
 
-@The_monster@'s staff shoots out a stream of webbing.
+@The_monster_possessive@ staff shoots out a stream of webbing.
 %%%%
 unseen Ensnare Arachne cast
 
@@ -477,7 +473,7 @@ VISUAL:@The_monster@ glows a brilliant shade of cerise.
 
 VISUAL:@The_monster@ wobbles crazily.
 
-VISUAL:@The_monster@'s eyestalks stretch out, then return to normal size.
+VISUAL:@The_monster_possessive@ eyestalks stretch out, then return to normal size.
 
 You wobble.
 
@@ -500,7 +496,7 @@ Gastronok cast targeted
 %%%%
 Gastronok cast
 
-@The_monster@'s eyestalks quiver as @subjective@ mumbles some strange words.
+@The_monster_possessive@ eyestalks quiver as @subjective@ mumbles some strange words.
 
 @The_monster@ chants a spell, wobbling all the while.
 
@@ -542,9 +538,9 @@ Primal Wave Norris cast
 %%%%
 Draining Gaze Norris cast
 
-Something numinous underneath @The_monster@'s waves suddenly gazes at @target@.
+Something numinous underneath @the_monster_possessive@ waves suddenly gazes at @target@.
 
-@The_monster@'s eyes shimmer, overwhelming @target@ with visions from beyond.
+@The_monster_possessive@ eyes shimmer, overwhelming @target@ with visions from beyond.
 %%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
@@ -590,14 +586,22 @@ Paralyse Xtahua cast
 
 @The_monster@ thunders ferociously @at@ @target@!
 %%%%
+Hellfire Mortar Wiglaf cast
+
+VISUAL:@The_monster@ slams @possessive@ weapon against the ground.
+
+@The_monster@ shouts @at@ @foe@, "Taste the blood o the mountain!"
+
+@The_monster@ roars @at@ @foe@, "Let me show ye whit a REAL cannon looks like!"
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
 brain worm cast
 
-@The_monster@'s bulging head throbs.
+@The_monster_possessive@ bulging head throbs.
 
-@The_monster@'s throbbing head pulsates.
+@The_monster_possessive@ throbbing head pulsates.
 %%%%
 glowing orange brain cast
 
@@ -643,7 +647,7 @@ orb of fire cast
 %%%%
 obsidian statue cast
 
-@The_monster@'s eyes glow briefly.
+@The_monster_possessive@ eyes glow briefly.
 %%%%
 # Sphinxes can't gesture or point.
 sphinx cast
@@ -718,17 +722,17 @@ Splinterspray cast
 %%%%
 Crystallizing Shot crystal guardian cast
 
-@The_monster@ fires a shard of itself @at@ @target@.
+@The_monster@ fires a shard of @reflexive@ @at@ @target@.
 %%%%
 Rebounding Blaze thermic dynamo cast
 
-A wild whirl of fire shoots out from @The_monster@ @at@ @target@.
+A wild whirl of fire shoots out from @the_monster@ @at@ @target@.
 
-@The_monster@ overcharges itself and releases excess heat @at@ @target@.
+@The_monster@ overcharges @reflexive@ and releases excess heat @at@ @target@.
 %%%%
 Rebounding Chill thermic dynamo cast
 
-A wild whirl of ice shoots out from @The_monster@ @at@ @target@.
+A wild whirl of ice shoots out from @the_monster@ @at@ @target@.
 
 @The_monster@ overflows with ice and vents excess cold @at@ @target@.
 %%%%
@@ -756,7 +760,7 @@ Summon Water Elementals elemental wellspring cast
 
 Water spirits pour forth from @the_monster@!
 %%%%
-Invisibility shadow cast
+Invisibility shadowghast cast
 
 @The_monster@ slips into darkness.
 %%%%
@@ -784,11 +788,11 @@ weeping skull cast
 
 @The_monster@ [unleashes|releases] gushing sobs.
 
-@The_monster@'s misery [bubbles over|overflows].
+@The_monster_possessive@ misery [bubbles over|overflows].
 %%%%
 silent weeping skull cast
 
-@The_monster@'s misery [bubbles over|overflows].
+@The_monster_possessive@ misery [bubbles over|overflows].
 %%%%
 unseen weeping skull cast
 
@@ -800,7 +804,7 @@ laughing skull cast
 
 @The_monster@ gibbers with scorn.
 
-@The_monster@ lets out a vicious peal of laugher.
+@The_monster@ lets out a vicious peal of laughter.
 %%%%
 silent laughing skull cast
 
@@ -937,6 +941,14 @@ Vanquished Vanguard Nergalle cast
 @The_monster@ cries out, "Spectres! Fight for the home you helped make!"
 
 %%%%
+force lance polterguardian cast
+
+@The_monster@ focuses its will @at@ @target@.
+%%%%
+flashing balestra undying armoury cast
+
+A weapon leaps out from @the_monster@ and lunges @at@ @target@!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -1026,7 +1038,7 @@ Corrupting Pulse wretched star cast
 %%%%
 living spell cast
 
-@The_monster@ casts itself @at@ @target@.
+@The_monster@ casts @reflexive@ @at@ @target@.
 %%%%
 bombardier beetle cast
 
@@ -1034,7 +1046,20 @@ bombardier beetle cast
 %%%%
 sun moth cast
 
-@The_monster@'s wings beat fiercely.
+@The_monster_possessive@ wings beat fiercely.
+%%%%
+Hoarfrost Bullet cast finale
+
+@The_monster@ launches the last of @reflexive@ @at@ @target@ with a shrill rumble.
+%%%%
+Hoarfrost Bullet cast
+
+@The_monster@ fires a salvo of icy shards.
+%%%%
+Hellfire mortar cast
+
+@The_monster@ blasts a torrent of magma @at@ @target@.
+%%%%
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

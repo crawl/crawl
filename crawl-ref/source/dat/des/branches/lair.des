@@ -3246,7 +3246,7 @@ ORIENT:  southeast
 WEIGHT:  5
 MONS:    rime drake, hydra w:15 / dire elephant, arcanist / occultist
 MONS:    red devil / ice devil w:15 / orange demon w:15
-MONS:    hellwing / smoke demon, sun demon / sixfirhy / hell beast w:4
+MONS:    hellwing / smoke demon, sun demon / sixfirhy / sin beast w:4
 KMONS:   hH = hell hound
 KMONS:   F = fungus
 KITEM:   A = superb_item no_pickup, any good_item no_pickup \
@@ -3266,9 +3266,9 @@ FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
 COLOUR:  g = warp
 TILE:    g = dimensional_conduit
-TILE:    b = bedeviled_crystal_gehenna
+TILE:    b = bedevilled_crystal_gehenna
 : set_feature_name("metal_statue", "dimensional conduit")
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
   ...TTTT....  .............................
  ..TttttttT.......Tt.TtT....TT..TT......Tt....
@@ -3666,10 +3666,12 @@ ENDMAP
 NAME:    hellmonk_lair_end_abyssal_woods
 PLACE:   Lair:$
 ORIENT:  northwest
-MONS:    blink frog / basilisk w:3, small abomination
+MONS:    blink frog / basilisk w:3, small abomination / brain worm w:2
 MONS:    shapeshifter / chaos spawn / smoke demon / ynoxinul
-MONS:    raiju, ugly thing / large abomination, thrashing horror
+MONS:    raiju, ugly thing, thrashing horror / large abomination w:5
 KMONS:   7 = spriggan ; rapier ego:distortion
+KITEM:   O = spriggan skeleton / wolf skeleton w:3 /\
+             polar bear skeleton w:2 / black bear skeleton w:2
 KITEM:   R = earthy gem, %
 KFEAT:   u = demonic_tree
 KFEAT:   N = enter_abyss
@@ -3678,18 +3680,32 @@ SUBST:   " = '.
 COLOUR:  '%M = magenta
 FTILE:   '%MN_u = floor_nerves_magenta
 NSUBST:  %d = 1:R / 2:| / 3:* / *:%
-NSUBST:  1 = 5=1 / 1.., 2 = 4=2 / 2..
-NSUBST:  4 = 4 / 3, ' = 2:6 / 2 = 56 / 3:O / 5 = 5543O. / .
+NSUBST:  1 = 5:1 / 1.., 2 = 3:2 / 2:. / * = 2..
+NSUBST:  4 = 4 / *:3, ' = 2:6 / 2 = 56 / 3:O / 5 = 5543O. / *:.
 SUBST:   7M = 7O
-# 33% chance for an additional opening at the south.
+# 33% chance each for additional openings at the south or north east.
 SHUFFLE: yzD / JKL / JKL
 SUBST:   y = @, zD= ., JK = t, L = p
-# 33% chance for an additional opening at the north east.
 SHUFFLE: EFH / JKL / JKL
 SUBST:   E = @, FH= ., JK = t, L = p
 SUBST:   a = tt..., q = pp..., p = tttu, s = rr..., r = tu
-KITEM:   O = spriggan skeleton / wolf skeleton w:3 /\
-             polar bear skeleton w:2 / black bear skeleton w:2
+{{
+  local cols = {"dngn_demonic_tree_1 / dngn_demonic_tree_16",
+                "dngn_demonic_tree_2 / dngn_demonic_tree_3",
+                "dngn_demonic_tree_4 / dngn_demonic_tree_5",
+                "dngn_demonic_tree_6 / dngn_demonic_tree_7",
+                "dngn_demonic_tree_8 / dngn_demonic_tree_9",
+                "dngn_demonic_tree_10 / dngn_demonic_tree_11",
+                "dngn_demonic_tree_12 / dngn_demonic_tree_13",
+                "dngn_demonic_tree_14 / dngn_demonic_tree_15",}
+  local col1 = util.random_from(cols)
+  local col2 = col1
+  while col2 == col1 do
+    col2 = util.random_from(cols)
+  end
+
+  tile("u = " .. col1 .. " / " .. col2)
+}}
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttpppppppppppttpppptt

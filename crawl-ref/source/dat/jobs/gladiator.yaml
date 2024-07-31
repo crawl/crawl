@@ -1,0 +1,25 @@
+enum: JOB_GLADIATOR
+name: "Gladiator"
+category: Warrior
+category_priority: 90
+str: 6
+int: 0
+dex: 6
+equipment:
+  - "leather armour"
+  - "helmet"
+  - "throwing net q:3"
+weapon_choice: good
+recommended_species:
+  - mountain dwarf
+  - merfolk
+  - minotaur
+  - gargoyle
+  - coglin
+  - vine stalker
+skills:
+  fighting: 2
+  throwing: 2
+  dodging: 3
+  weapon: 3
+create_enum: false

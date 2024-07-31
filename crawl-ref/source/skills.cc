@@ -265,12 +265,18 @@ void reassess_starting_skills()
         you.skill_points[sk] = you.skills[sk] ?
             skill_exp_needed(you.skills[sk], sk, SP_HUMAN) + 1 : 0;
 
+        item_def* current_armour = you.slot_item(EQ_BODY_ARMOUR);
+
+        // No one who can't wear mundane heavy armour should start with
+        // the Armour skill -- D:1 dragon armour is too unlikely.
+        // However, specifically except the special case of Sp/Tr/On
+        // wanderers starting with acid dragon scales.
         if (sk == SK_DODGING && you.skills[SK_ARMOUR]
             && (is_useless_skill(SK_ARMOUR)
-                || you_can_wear(EQ_BODY_ARMOUR) != true))
+                || you_can_wear(EQ_BODY_ARMOUR) != true)
+            && !(current_armour
+                 && current_armour->sub_type == ARM_ACID_DRAGON_ARMOUR))
         {
-            // No one who can't wear mundane heavy armour should start with
-            // the Armour skill -- D:1 dragon armour is too unlikely.
             you.skill_points[sk] += skill_exp_needed(you.skills[SK_ARMOUR],
                 SK_ARMOUR, SP_HUMAN) + 1;
             you.skills[SK_ARMOUR] = 0;
@@ -1773,7 +1779,7 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
     if (announce && ranged_target != (int) training_targets[sk])
     {
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-            mprf("You can't set training targets!");
+            mpr("You can't set training targets!");
         else if (ranged_target == 0)
             mprf("Clearing the skill training target for %s.", skill_name(sk));
         else
@@ -2045,6 +2051,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Rockslime";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Black Lotus";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Nightshade";
             else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
             else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
@@ -2098,7 +2106,10 @@ string player_title(bool the)
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     const string title =
             skill_title_by_rank(best, get_skill_rank(you.skills[best]));
-    const string article = !the ? "" : title == "Petite Mort" ? "La " : "the ";
+    const string article = !the ? ""
+                                : title == "Petite Mort" ? "La "
+                                : title == "Who Hides the Stars" ? ", "
+                                : "the ";
     return article + title;
 }
 
@@ -2270,9 +2281,11 @@ bool trainable_skills(bool check_all)
     return false;
 }
 
-int skill_bump(skill_type skill, int scale)
+// Currently only for ABIL_BEOGH_SMITING, see ability.cc::_beogh_smiting_power
+int skill_bump(skill_type skill, int scale, bool allow_random)
 {
-    const int sk = you.skill_rdiv(skill, scale);
+    const int sk = allow_random ? you.skill_rdiv(skill, scale)
+                                : you.skill(skill, scale);
     return sk + min(sk, 3 * scale);
 }
 

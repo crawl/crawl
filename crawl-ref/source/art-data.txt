@@ -811,7 +811,6 @@ PLUS:     +0
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-SLAY:     -3
 STEALTH:  1
 BOOL:     seeinv
 DESCRIP:  Quiet:      All noise in your surroundings is dampened.
@@ -994,11 +993,11 @@ DESCRIP:  Dark:      It shrouds the wearer in darkness, reducing the range at
  which they can see and be seen by others.
 
 NAME:    scales of the Dragon King
-OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_GOLDEN_DRAGON_ARMOUR
 PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
-TILE_EQ: dragonarm_gold
+TILE_EQ: dragonarm_golden
 WILL:    1
 
 NAME:    hat of the Alchemist
@@ -1527,11 +1526,12 @@ INSCRIP:  omnireflect
 DBRAND:   Omnireflect: It can block and reflect piercing ranged attacks and
  magical attacks against the wielder's willpower.
 
-# Fedhas sprint, to allow all species access to evocable invisibility.
+# Fedhas sprint, to allow all but coglins access to evocable invisibility.
+ENUM:     AMULET_INVISIBILITY
 NAME:     amulet of invisibility
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
-TILE:     urand_cekugob
+TILE:     urand_amulet_invisibility
 BOOL:     inv, nogen
 
 ENUM:     THERMIC_ENGINE
@@ -1835,6 +1835,15 @@ INSCRIP: orb Evoboost
 DBRAND:  It massively reduces your stealth.
 +It interferes with translocations, delaying teleports.
 +Evoboost:    It boosts the power of your evoked items.
+
+# Fedhas sprint, to allow coglins access to evocable invisibility.
+ENUM:     SCARF_INVISIBILITY
+NAME:     scarf of invisibility
+OBJ:      OBJ_ARMOUR/ARM_SCARF
+COLOUR:   WHITE
+TILE:     urand_scarf_invisibility
+TILE_EQ:  scarf_invisibility
+BOOL:     inv, nogen
 
 # This entry must always be last.
 ENUM:   DUMMY2

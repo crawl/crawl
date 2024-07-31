@@ -159,7 +159,7 @@ w:5
 of @_destiny_name_@
 
 w:9
-of @god_name@'s @divine_esteem@
+of @god_name_possessive@ @divine_esteem@
 
 w:4
 of the @_verbing_@ Gods
@@ -268,7 +268,7 @@ of @_number_or_qualifier_@ @_verbing_@ @_thing_names_@
 of @_number_or_qualifier_@ @_thing_names_@
 
 w:20
-of @god_name@'s @divine_esteem@
+of @god_name_possessive@ @divine_esteem@
 
 w:4
 of the @_verbing_@ Gods
@@ -342,7 +342,7 @@ of @_time_name_@
 of @_sky_or_light_@
 
 w:20
-of @god_name@'s @divine_esteem@
+of @god_name_possessive@ @divine_esteem@
 
 w:4
 of the @_verbing_@ Gods
@@ -468,7 +468,7 @@ w:400
 
 # with a few special cases
 w:2
-of @player_name@'s @_valour_name_@
+of @player_name_possessive@ @_valour_name_@
 
 w:3
 of Okawaru's @divine_esteem@
@@ -521,7 +521,7 @@ w:400
 @armour@
 
 w:2
-of @player_name@'s @_valour_name_@
+of @player_name_possessive@ @_valour_name_@
 
 w:2
 of Okawaru's @divine_esteem@
@@ -672,7 +672,7 @@ w:100
 of the @_ashenzari_adjective_@ @_ashenzari_object_@
 
 w:100
-of @god_name@'s @_ashenzari_object_@
+of @god_name_possessive@ @_ashenzari_object_@
 
 w:100
 "@_ashenzari_adjective_@ @_ashenzari_object_@"
@@ -696,7 +696,7 @@ w:20
 of the @_ashenzari_knowledge_adjective_@ @_celestial_bodies_@
 
 w:20
-of @god_name@'s @_celestial_bodies_@
+of @god_name_possessive@ @_celestial_bodies_@
 
 w:20
 "Share My @_ashenzari_object_@"
@@ -774,7 +774,7 @@ w:5
 "Thunder Perfect Mind"
 
 w:5
-of Toth-Mos's Legacy
+of Toth-Mos' Legacy
 
 w:5
 of the Unyielding Gaze

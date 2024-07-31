@@ -5,7 +5,8 @@ genus: Ant
 difficulty: Advanced
 difficulty_priority: 70
 species_flags: # n.b. ants have hair
-  - SPF_NO_BONES
+  - no_bones
+  - no_ears
 aptitudes:
   xp: 1
   hp: 0
@@ -42,16 +43,16 @@ fake_mutations:
   - long: You can dig through walls and to a lower floor.
     short: dig shafts and tunnels
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_HUNTER
-  - JOB_HEXSLINGER
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
+  - fighter
+  - hunter
+  - hexslinger
+  - earth elementalist
+  - alchemist
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_POLEARMS
-  - SK_STAVES
+  - maces and flails
+  - axes
+  - polearms
+  - staves
 
 child_name: Larva
 orc_name: Orcmicid

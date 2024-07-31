@@ -14,6 +14,13 @@
 
 #define SIMULACRUM_TYPE_KEY "simulacrum_type"
 
+#define HOARFROST_SHOTS_KEY "hoarfrost_shot_count"
+constexpr int MAX_HOARFROST_SHOTS = 4;
+
+#define HELLFIRE_PATH_KEY "hellfire_mortar_path"
+
+#define SERVITOR_SPELL_KEY "servitor_spell"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -69,6 +76,7 @@ spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster, int pow);
 spret cast_spellforged_servitor(int pow, god_type god, bool fail);
+void remove_player_servitor();
 
 monster_type pick_random_wraith();
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
@@ -86,7 +94,8 @@ void reset_battlesphere(monster* mons);
 dice_def battlesphere_damage(int pow);
 
 spret cast_fulminating_prism(actor* caster, int pow,
-                                  const coord_def& where, bool fail);
+                                  const coord_def& where, bool fail,
+                                  bool is_shadow = false);
 int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);
@@ -116,6 +125,7 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos);
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow);
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
+bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
 
@@ -123,3 +133,11 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool f
 
 string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
+
+spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail);
+
+dice_def hellfire_mortar_damage(int pow);
+spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail);
+bool hellfire_mortar_active(const actor& agent);
+
+bool make_soul_wisp(const actor& agent, monster& victim);

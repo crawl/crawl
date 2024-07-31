@@ -37,6 +37,7 @@
 #include "ouch.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -574,7 +575,7 @@ void explosion_fineff::fire()
     if (you.see_cell(beam.target))
     {
         if (typ == EXPLOSION_FINEFF_CONCUSSION)
-            mprf("%s", boom_message.c_str());
+            mpr(boom_message);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
     }
@@ -966,6 +967,17 @@ void dismiss_divine_allies_fineff::fire()
         dismiss_god_summons(god);
 }
 
+void death_spawn_fineff::fire()
+{
+    if (monster *pillar = create_monster(mgen_data(mon_type,
+                                                   BEH_HOSTILE, posn,
+                                                   MHITNOT, MG_FORCE_PLACE),
+                                         false))
+    {
+        pillar->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, &you, duration));
+    }
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
@@ -978,4 +990,7 @@ void fire_final_effects()
         env.final_effects.pop_back();
         eff->fire();
     }
+
+    // Clear all cached monster copies
+    env.final_effect_monster_cache.clear();
 }

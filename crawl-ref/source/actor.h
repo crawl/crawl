@@ -177,7 +177,8 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
-    virtual bool can_bleed(bool temp = true) const = 0;
+    virtual bool has_blood(bool temp = true) const = 0;
+    virtual bool has_bones(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
@@ -206,7 +207,7 @@ public:
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength,
                               bool hibernate = false) = 0;
-    virtual void weaken(actor *attacker, int pow) = 0;
+    virtual void weaken(const actor *attacker, int pow) = 0;
     virtual bool strip_willpower(actor *attacker, int dur,
                                  bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
@@ -230,9 +231,6 @@ public:
                        bool temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
-#define TORPOR_SLOWED_KEY "torpor_slowed"
-    bool torpor_slowed() const;
-
     virtual int heads() const = 0;
 
     virtual int stat_hp() const = 0;
@@ -241,6 +239,9 @@ public:
     virtual int stealth () const = 0;
 
     virtual bool can_throw_large_rocks() const = 0;
+
+    virtual bool can_be_dazzled() const = 0;
+    virtual bool can_be_blinded() const = 0;
 
     virtual int armour_class() const = 0;
     virtual int gdr_perc() const = 0;
@@ -423,7 +424,7 @@ public:
 
     string resist_margin_phrase(int margin) const;
 
-    void collide(coord_def newpos, const actor *agent, int pow);
+    void collide(coord_def newpos, const actor *agent, int damage);
     bool knockback(const actor &cause, int dist, int pow, string source_name);
     coord_def stumble_pos(coord_def targ) const;
     void stumble_away_from(coord_def targ, string src);

@@ -1965,7 +1965,7 @@ TAGS:   vaults_empty no_windows
 WEIGHT: 2
 KFEAT:  g = metal_statue
 SUBST:  ` = G....
-COLOUR: g = white
+COLOUR: g = silver
 TILE:   g = dngn_silver_statue
 : set_feature_name("metal_statue", "silver statue")
 MAP

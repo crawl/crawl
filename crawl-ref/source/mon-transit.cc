@@ -23,6 +23,7 @@
 #include "mpr.h"
 #include "religion.h"
 #include "tag-version.h"
+#include "terrain.h"
 #include "timed-effects.h"
 
 #define MAX_LOST 100
@@ -150,16 +151,41 @@ void place_followers()
     _place_lost_ones(_level_place_followers);
 }
 
+static void _place_oka_duel_target(monster* mons)
+{
+    int seen = 0;
+    coord_def targ;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (cell_is_solid(*ri) || (env.pgrid(*ri) & FPROP_NO_TELE_INTO))
+            continue;
+
+        const int dist = grid_distance(you.pos(), *ri);
+        if (dist > 5 || dist < 3)
+            continue;
+
+        if (one_chance_in(++seen))
+            targ = *ri;
+    }
+
+    if (!targ.origin())
+        mons->move_to_pos(targ);
+}
+
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
 
-    // Duel targets have to arrive next to the player.
-    bool near_player = f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY)
-                       || f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
+    // Duel targets that survive a duel (due to player excommunication) should
+    // be placed next to the player when they exit.
+    bool near_player = f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
 
     if (monster* mons = f.place(near_player))
     {
+        // Try to place current duel targets 3-5 spaces away from the player
+        if (f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            _place_oka_duel_target(mons);
+
         // Figure out how many turns we need to update the monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
 
@@ -340,6 +366,23 @@ void follower::restore_mons_items(monster& m)
     }
 }
 
+void follower::write_to_prop(CrawlVector& vec)
+{
+    vec.clear();
+    vec.push_back(mons);
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        vec.push_back(items[i]);
+    vec.push_back(transit_start_time);
+}
+
+void follower::read_from_prop(CrawlVector& vec)
+{
+    mons = vec[0].get_monster();
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        items[i] = vec[i + 1].get_item();
+    transit_start_time = vec[NUM_MONSTER_SLOTS + 1].get_int();
+}
+
 static bool _is_religious_follower(const monster &mon)
 {
     return (you_worship(GOD_YREDELEMNUL)
@@ -355,7 +398,9 @@ static bool _mons_can_follow_player_from(const monster &mons,
     if (!mons.alive()
         || mons.speed_increment < 50
         || mons.incapacitated()
-        || mons.is_stationary())
+        || mons.is_stationary()
+        || mons.is_constricted()
+        || mons.has_ench(ENCH_BOUND))
     {
         return false;
     }

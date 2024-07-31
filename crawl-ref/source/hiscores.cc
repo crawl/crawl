@@ -1345,7 +1345,10 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     death_type   = dtype;
     damage       = dam;
 
-    const monster *source_monster = monster_by_mid(death_source);
+    // Try searching for both a living monster and a dead-but-cached monster
+    const monster *source_monster = monster_by_mid(death_source)
+                                     ? monster_by_mid(death_source)
+                                     : cached_monster_copy_by_mid(death_source);
     if (source_monster)
         killer_map = source_monster->originating_map();
 
@@ -1375,9 +1378,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_BEING_THROWN
             || death_type == KILLED_BY_COLLISION
             || death_type == KILLED_BY_CONSTRICTION)
-        && monster_by_mid(death_source))
+        && source_monster)
     {
-        const monster* mons = monster_by_mid(death_source);
+        const monster* mons = source_monster;
         ASSERT(mons);
 
         // Previously the weapon was only used for dancing weapons,
@@ -1399,7 +1402,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             // Setting this is redundant for dancing weapons, however
             // we do care about the above identification. -- bwr
             if (!mons_class_is_animated_weapon(mons->type))
+            {
                 auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+                if (mons->has_ench(ENCH_ARMED))
+                    auxkilldata += " (from an undying armoury)";
+            }
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
@@ -1412,8 +1419,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (death || you.can_see(*mons))
             death_source_name = mons->full_name(desc);
 
-        // Some shadows have names
-        if (mons_is_player_shadow(*mons) && mons->mname.empty())
+        if (mons_is_player_shadow(*mons))
             death_source_name = "their own shadow"; // heh
 
         if (mons->mid == MID_YOU_FAULTLESS)

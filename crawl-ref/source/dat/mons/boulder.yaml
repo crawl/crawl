@@ -14,3 +14,4 @@ intelligence: brainless
 speed: 20
 size: giant
 shape: orb
+tile_variance: cycle

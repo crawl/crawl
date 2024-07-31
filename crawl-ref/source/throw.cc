@@ -15,6 +15,7 @@
 #include "chardump.h"
 #include "command.h"
 #include "coordit.h"
+#include "describe.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -194,18 +195,14 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     item_def* item = active_item();
-    item_def fake_proj;
     const item_def *launcher = action.get_launcher();
-    if (launcher && is_range_weapon(*launcher))
-    {
-        populate_fake_projectile(*launcher, fake_proj);
-        item = &fake_proj;
-    }
-    if (!targeted() || !item || item->base_type != OBJ_MISSILES)
+    const bool ranged = launcher && is_range_weapon(*launcher);
+    if (!targeted() || !(ranged || (item && item->base_type == OBJ_MISSILES)))
         return descs;
 
-    ranged_attack attk(&you, nullptr, launcher, item, false);
-    descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
+    ostringstream result;
+    describe_to_hit(mi, result, ranged ? launcher : item);
+    descs.emplace_back(result.str());
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
         descs.emplace_back("chaotic");
@@ -637,6 +634,7 @@ void throw_it(quiver::action &a)
         direction_chooser_args args;
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
+        args.self = confirm_prompt_type::cancel;
         direction(a.target, args);
     }
     if (!a.target.isValid || a.target.isCancel)
@@ -737,9 +735,10 @@ void throw_it(quiver::action &a)
     if ((launcher || is_thrown)
         && will_have_passive(passive_t::shadow_attacks)
         && item.base_type == OBJ_MISSILES
-        && item.sub_type != MI_DART)
+        && item.sub_type != MI_DART
+        && item.sub_type != MI_THROWING_NET)
     {
-        dithmenos_shadow_throw(a.target, item);
+        dithmenos_shadow_shoot(a.target, item);
     }
 }
 
@@ -770,9 +769,10 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
     }
 
     // Create message.
-    mprf("You %s %s.",
+    mprf("You %s %s%s.",
           is_thrown ? "throw" : launcher ? "shoot" : "toss away",
-          _ammo_name(item, launcher).c_str());
+          _ammo_name(item, launcher).c_str(),
+          you.current_vision == 0 ? " into the darkness" : "");
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -794,7 +794,21 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
         Hints.hints_throw_counter++;
 
     const coord_def target = pbolt.target;
-    pbolt.fire();
+
+    // XXX: Firing via beam will never hit a target outside our vision range,
+    //      so create the ranged_attack manually when bumping into something
+    //      during the start of Primordial Nightfall
+    if (you.current_vision == 0)
+    {
+        monster* mon = monster_at(target);
+        if (mon && mon->alive())
+        {
+            ranged_attack attk(&you, mon, launcher, pbolt.item, false, &you, false);
+            attk.attack();
+        }
+    }
+    else
+        pbolt.fire();
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
         did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);

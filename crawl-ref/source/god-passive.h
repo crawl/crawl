@@ -83,14 +83,14 @@ enum class passive_t
     /// You have an umbra.
     umbra,
 
-    /// You emit clouds when hit.
-    hit_smoke,
-
     /// Your shadow attacks alongside you.
     shadow_attacks,
 
     /// Your shadow casts attack spells alongside you.
     shadow_spells,
+
+    /// You dampen all noise in your surroundings.
+    dampen_noise,
 
     /// No accuracy penalty in umbra. Gain stealth in umbra.
     nightvision,
@@ -256,34 +256,48 @@ enum ru_interference
     DO_REDIRECT_ATTACK
 };
 
+#define DITH_SHADOW_ATTACK_KEY "dith_shadow_attack"
+#define DITH_SHADOW_SPELLPOWER_KEY "dith_shadow_spellpower"
+#define DITH_SHADOW_MID_KEY "dith_shadow_mid"
+#define DITH_SHADOW_LAST_TARGET_KEY "dith_shadow_last_target"
+
 bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
-int chei_stat_boost(int piety = you.piety);
-void jiyva_eat_offlevel_items();
-void ash_check_bondage();
 bool god_id_item(item_def& item, bool silent = true);
+
+int chei_stat_boost(int piety = you.piety);
+
+void jiyva_eat_offlevel_items();
+
+void ash_check_bondage();
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
 void ash_scrying();
+
 void gozag_move_level_gold_to_top();
 void gozag_move_gold_to_top(const coord_def p);
 void gozag_count_level_gold();
+
 int qazlal_sh_boost(int piety = you.piety);
-int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
+
 bool does_ru_wanna_redirect(const monster &mon);
 ru_interference get_ru_attack_interference_level();
-monster* shadow_monster(bool equip = true);
-void shadow_monster_reset(monster *mon);
+void dithmenos_cleanup_player_shadow(monster* shadow);
+monster* dithmenos_get_player_shadow();
+
+monster* create_player_shadow(coord_def pos, bool friendly = true,
+                              spell_type spell_known = SPELL_NO_SPELL);
 void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(const dist &d, const item_def &item);
-void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
+void dithmenos_shadow_shoot(const dist &d, const item_def &item);
+void dithmenos_shadow_spell(spell_type spell);
+
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
@@ -298,5 +312,3 @@ bool wu_jian_has_momentum(wu_jian_attack_type);
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);
 bool wu_jian_move_triggers_attacks(coord_def new_pos);
-
-void okawaru_handle_duel();

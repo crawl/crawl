@@ -31,7 +31,7 @@ spret cast_sublimation_of_blood(int pow, bool fail)
 
     if (you.duration[DUR_DEATHS_DOOR])
         mpr("You can't draw power from your own body while in death's door.");
-    else if (!you.can_bleed())
+    else if (!you.has_blood())
     {
         if (you.has_mutation(MUT_VAMPIRISM))
             mpr("You don't have enough blood to draw power from your own body.");
@@ -614,7 +614,7 @@ void trigger_binding_sigil(actor& actor)
     {
         simple_monster_message(*m,
             " moves over the binding sigil and is bound in place!",
-            MSGCH_FRIEND_SPELL);
+            false, MSGCH_FRIEND_SPELL);
 
         // The enemy will gain swift for twice as long as it was bound
         m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;

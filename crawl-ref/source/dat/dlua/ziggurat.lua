@@ -275,7 +275,7 @@ mset(spec_fn(function ()
   local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
          "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
-         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
+         "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 
 mset(spec_fn(function ()
@@ -374,8 +374,9 @@ mset(with_props(spec_fn(function ()
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
-         "crystal guardian w:" .. e .. " / iron dragon w:" .. e .. " / " ..
-         "iron giant w:" .. f .. " / hell sentinel w:" .. f
+         "iron dragon w:" .. d .. " / crystal guardian w:" .. e .. " / " ..
+         "undying armoury w:" .. e .. " / iron giant w:" .. f .. " / " ..
+         "hell sentinel w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -385,7 +386,7 @@ mset(with_props(spec_fn(function ()
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
          "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
-         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
+         "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
          "player ghost w:" .. f
 end), { weight = 2 }))
 
@@ -470,14 +471,14 @@ local pan_critter_fn = zig_monster_fn(
          "place:Pan w:" .. math.max(1, 105 - you.zigs_completed() * 12) .. " / " ..
          "greater demon w:" .. math.max(1, 75 - you.zigs_completed() * 7) .. " / " ..
          "brimstone fiend w:5 / ice fiend w:5 / tzitzimitl w:5 / " ..
-         "hell sentinel w:5 / demonspawn black sun / " ..
+         "hell sentinel w:5 / demonspawn soul scholar / " ..
          "demonspawn blood saint / demonspawn corrupter / " ..
          "demonspawn warmonger w:" .. 10 + you.zigs_completed())
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
     dgn.set_random_mon_list("place:Pan w:100 / greater demon w:90 / " ..
-         "demonspawn black sun / demonspawn blood saint / " ..
+         "demonspawn soul scholar / demonspawn blood saint / " ..
          "demonspawn corrupter / demonspawn warmonger")
     return pan_lord_fn(x, y)
   else
@@ -505,7 +506,7 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
   local g = 0 + you.zigs_completed() * 2
   return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
          "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
-         "place:Hell w:100 / hell beast w:" .. e .. " / " ..
+         "place:Hell w:100 / sin beast w:" .. e .. " / " ..
          "hellion w:5 / tormentor w:5 / greater demon w:" .. f .. " / " ..
          "shard shrike w:" .. g .. " / quicksilver elemental w:" .. g .. " / " ..
          "searing wretch w:" .. g .. " / silent spectre w:" .. g

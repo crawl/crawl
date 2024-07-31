@@ -9,7 +9,7 @@ aptitudes:
   xp: 0
   hp: 0
   mp_mod: 0
-  wl: 3
+  wl: 5
   short_blades: -1
   long_blades: 0
   axes: 0
@@ -45,11 +45,11 @@ mutations:
     MUT_WARMUP_STRIKES: 1
     MUT_NO_JEWELLERY: 1
 recommended_jobs:
-  - JOB_ARTIFICER
-  - JOB_HUNTER
-  - JOB_GLADIATOR
-  - JOB_WARPER
-  - JOB_BERSERKER
-  - JOB_ALCHEMIST
+  - artificer
+  - hunter
+  - gladiator
+  - warper
+  - berserker
+  - alchemist
 
 orc_name: Exo-Orc

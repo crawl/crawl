@@ -314,7 +314,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_QUICKSILVER_DRAGON_ARMOUR: tile = TILEP_BODY_DRAGONARM_QUICKSILVER; break;
     case ARM_STORM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BLUE; break;
     case ARM_SHADOW_DRAGON_ARMOUR:  tile = TILEP_BODY_DRAGONARM_SHADOW; break;
-    case ARM_GOLD_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_GOLD; break;
+    case ARM_GOLDEN_DRAGON_ARMOUR:  tile = TILEP_BODY_DRAGONARM_GOLDEN; break;
     case ARM_SWAMP_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BROWN; break;
     case ARM_PEARL_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_PEARL; break;
 
@@ -489,7 +489,6 @@ tileidx_t tileidx_player()
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif
     case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case transformation::shadow:    ch = TILEP_TRAN_SHADOW;    break;
     case transformation::dragon:
     {
         switch (you.species)

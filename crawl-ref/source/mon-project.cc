@@ -17,6 +17,7 @@
 #include "cloud.h"
 #include "directn.h"
 #include "env.h"
+#include "god-abil.h"
 #include "item-prop.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -203,6 +204,9 @@ void cast_iood_burst(int pow, coord_def target)
 
     const int n_orbs = random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
+    // 2097152 = 2^21. 21 is the greatest n s.t. `(2 ** n) * PI * 2` does not
+    // exceed 2 ** 24; 24 bits is where `float` (`PI` is a float constant)
+    // starts to lose precision.
     const double angle0 = random2(2097152) * PI * 2 / 2097152;
 
     for (int i = 0; i < n_orbs; i++)
@@ -268,6 +272,9 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 // Alas, too much differs to reuse beam shield blocks :(
 static bool _iood_shielded(monster& mon, actor &victim)
 {
+    if (victim.is_player() && you.duration[DUR_DIVINE_SHIELD])
+        return true;
+
     if (!victim.shielded() || victim.incapacitated() || victim.shield_exhausted())
         return false;
 
@@ -570,6 +577,10 @@ move_again:
                 }
             }
             victim->shield_block_succeeded(&mon);
+
+            // Use up a charge of Divine Shield, if active.
+            if (victim->is_player())
+                tso_expend_divine_shield_charge();
 
             // mid_t is unsigned so won't fit in a plain int
             mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;

@@ -107,10 +107,10 @@ local function test_random_mutations_slime(species, tries, iterations, chance_te
 end
 
 
-species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
-            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "oni", "deep dwarf",
-            "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
-            "mummy", "gnoll"}
+species = {"mountain dwarf", "minotaur", "merfolk", "gargoyle", "draconian", "troll", "deep elf",
+           "armataur", "gnoll", "human", "kobold", "djinni", "spriggan", "ghoul", "tengu", "oni",
+           "barachi", "coglin", "vine stalker", "vampire", "demigod", "formicid", "naga",
+           "octopode", "felid", "mummy"}
 
 local you_x, you_y = you.pos() -- probably out of bounds
 -- move to a guaranteed real position. This is because losing some mutations

@@ -25,6 +25,7 @@
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
@@ -347,6 +348,19 @@ bool add_spell_to_memory(spell_type spell)
     if (you.num_turns)
         mprf("Spell assigned to '%c'.", index_to_letter(letter_j));
 
+    // A hint, for those who may not be aware.
+    if (spell == SPELL_SPELLFORGED_SERVITOR)
+    {
+        mprf(MSGCH_TUTORIAL,
+             "(You may use Imbue Servitor from the <w>%s</w>bility menu to change "
+             "which spell your servitor casts)",
+                command_to_string(CMD_USE_ABILITY).c_str());
+    }
+    // Give a free charge upon learning this spell for the first time, so the
+    // player can actually use it immediately.
+    else if (spell == SPELL_GRAVE_CLAW)
+        gain_grave_claw_soul(true);
+
     // Swapping with an existing spell.
     if (you.spell_letter_table[letter_j] != -1)
     {
@@ -462,7 +476,6 @@ bool spell_is_direct_attack(spell_type spell)
         // spell school exceptions
         if (spell == SPELL_VIOLENT_UNRAVELLING  // hex
             || spell == SPELL_FORCE_LANCE // transloc
-            || spell == SPELL_GRAVITAS
             || spell == SPELL_BLINKBOLT
             || spell == SPELL_BANISHMENT)
         {
@@ -517,10 +530,17 @@ bool spell_is_direct_attack(spell_type spell)
 int spell_mana(spell_type which_spell, bool real_spell)
 {
     const int level = _seekspell(which_spell)->level;
-    if (real_spell && (you.duration[DUR_BRILLIANCE]
-                       || player_equip_unrand(UNRAND_FOLLY)))
+
+    if (real_spell)
     {
-        return level/2 + level%2; // round up
+        int cost = level;
+        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+            cost = max(1, cost - you.rev_tier());
+
+        if (you.duration[DUR_BRILLIANCE] || player_equip_unrand(UNRAND_FOLLY))
+            cost = cost/2 + cost%2; // round up
+
+        return cost;
     }
     return level;
 }
@@ -1015,7 +1035,6 @@ int spell_range(spell_type spell, int pow,
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
         && maxrange > 1
-        && spell != SPELL_HAILSTORM // uses a special system
         && spell != SPELL_THUNDERBOLT) // lightning rod only
     {
         maxrange++;
@@ -1171,6 +1190,8 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
     case SPELL_TUKIMAS_DANCE:
+    case SPELL_HOARFROST_CANNONADE:
+    case SPELL_SOUL_SPLINTER:
         if (you.allies_forbidden())
             return "you cannot coerce anything to obey you.";
         break;
@@ -1303,7 +1324,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
-        if (!you.can_bleed(temp))
+        if (!you.has_blood(temp))
             return "you have no blood to sublime.";
         break;
 
@@ -1362,13 +1383,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already reaping souls!";
         break;
 
-    case SPELL_ROT:
-        {
-            const mon_holy_type holiness = you.holiness(temp, false);
-            if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
-                return "you have no flesh to rot.";
-        }
-        // fallthrough to cloud spells
+    case SPELL_PUTREFACTION:
     case SPELL_BLASTMOTE:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
@@ -1424,6 +1439,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot redirect your momentum while unable to move.";
         break;
 
+    case SPELL_PILEDRIVER:
+        if (you.stasis())
+            return "your stasis prevents you from slingshotting yourself.";
+        if (temp)
+        {
+            if (!you.is_motile())
+                return "you cannot slingshot yourself while unable to move.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+            if (possible_piledriver_targets().empty())
+                return "there is nothing nearby that you can slingshot.";
+        }
+        break;
+
     case SPELL_ELECTRIC_CHARGE:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
@@ -1447,6 +1476,32 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_CALL_CANINE_FAMILIAR:
         if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
             return "your canine familiar is too injured to answer your call.";
+        break;
+
+    case SPELL_GELLS_GAVOTTE:
+        if (temp && you.duration[DUR_GAVOTTE_COOLDOWN])
+            return "local gravity is still too unstable to reorient.";
+        break;
+
+    case SPELL_FULSOME_FUSILLADE:
+        if (temp && you.duration[DUR_FUSILLADE])
+            return "you are already unleashing a barrage of alchemical concoctions!";
+        break;
+
+    case SPELL_HELLFIRE_MORTAR:
+        if (temp && hellfire_mortar_active(you))
+            return "you already have an active mortar!";
+        break;
+
+    case SPELL_STARBURST:
+        if (temp && you.current_vision == 0)
+            return "you cannot see far enough to hit anything with this spell.";
+        break;
+
+    case SPELL_GRAVE_CLAW:
+        if (temp && you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
+            return "you must harvest more living souls to recharge this spell.";
+        break;
 
     default:
         break;
@@ -1508,6 +1563,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
     case SPELL_BOULDER:
+    case SPELL_GELLS_GAVOTTE:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
@@ -1516,6 +1572,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
+    case SPELL_FULSOME_FUSILLADE:
+    case SPELL_HELLFIRE_MORTAR:
         return minRange > you.current_vision;
 
     // Special handling for cloud spells.
@@ -1555,7 +1613,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return cast_hailstorm(-1, false, true) == spret::abort;
 
     case SPELL_DAZZLING_FLASH:
-        return cast_dazzling_flash(pow, false, true) == spret::abort;
+        return cast_dazzling_flash(&you, pow, false, true) == spret::abort;
 
      case SPELL_MAXWELLS_COUPLING:
          return cast_maxwells_coupling(pow, false, true) == spret::abort;

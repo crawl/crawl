@@ -537,7 +537,7 @@ void trap_def::trigger(actor& triggerer)
             break;
         trap_destroyed = true;
         if (you_trigger)
-            mprf("You set off the alarm!");
+            mpr("You set off the alarm!");
         else
             mprf("%s %s the alarm!", triggerer.name(DESC_THE).c_str(),
                  mons_intel(*m) >= I_HUMAN ? "pulls" : "sets off");
@@ -602,7 +602,7 @@ void trap_def::trigger(actor& triggerer)
                 mpr("You trigger the net trap.");
             const string reason = _net_immune_reason();
             if (!reason.empty())
-                mprf("%s", reason.c_str());
+                mpr(reason);
             break;
         }
 
@@ -1004,6 +1004,35 @@ dungeon_feature_type trap_feature(trap_type type)
     }
 }
 
+trap_type trap_type_from_feature(dungeon_feature_type type)
+{
+    switch (type)
+    {
+    case DNGN_TRAP_WEB:
+        return TRAP_WEB;
+    case DNGN_TRAP_SHAFT:
+        return TRAP_SHAFT;
+    case DNGN_TRAP_DISPERSAL:
+        return TRAP_DISPERSAL;
+    case DNGN_TRAP_TELEPORT:
+        return TRAP_TELEPORT;
+    case DNGN_TRAP_TELEPORT_PERMANENT:
+        return TRAP_TELEPORT_PERMANENT;
+    case DNGN_TRAP_ALARM:
+        return TRAP_ALARM;
+    case DNGN_TRAP_ZOT:
+        return TRAP_ZOT;
+    case DNGN_PASSAGE_OF_GOLUBRIA:
+        return TRAP_GOLUBRIA;
+    case DNGN_TRAP_NET:
+        return TRAP_NET;
+    case DNGN_TRAP_PLATE:
+        return TRAP_PLATE;
+    default:
+        return TRAP_UNASSIGNED;
+    }
+}
+
 /***
  * Can a shaft be placed on the current level?
  *
@@ -1133,18 +1162,19 @@ void do_trap_effects()
                 simple_god_message(" reveals an alarm trap just before you would have tripped it.");
                 return;
             }
-            mprf("With a horrendous wail, an alarm goes off!");
+            mpr("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
             break;
 
         case TRAP_TELEPORT:
         {
-            string msg = make_stringf("%s and a teleportation trap spontaneously manifests!",
+            string msg = make_stringf("%s and a teleportation trap "
+                                      "spontaneously manifests!",
                                       _malev_msg().c_str());
             if (have_passive(passive_t::avoid_traps))
             {
-                mprf("%s", msg.c_str());
+                mpr(msg);
                 simple_god_message(" warns you in time for you to avoid it.");
                 return;
             }

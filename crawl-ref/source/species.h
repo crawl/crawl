@@ -45,8 +45,14 @@ namespace species
 
     int mutation_level(species_type species, mutation_type mut, int mut_level=1);
     const vector<string>& fake_mutations(species_type species, bool terse);
+
+    bool has_blood(species_type species);
     bool has_hair(species_type species);
     bool has_bones(species_type species);
+    bool has_feet(species_type species);
+    bool has_eyes(species_type species);
+    bool has_ears(species_type species);
+
     bool can_throw_large_rocks(species_type species);
     bool wears_barding(species_type species);
     bool has_claws(species_type species);

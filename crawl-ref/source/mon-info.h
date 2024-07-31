@@ -14,6 +14,7 @@ using std::vector;
 #define CLOUD_IMMUNE_MB_KEY "cloud_immune"
 #define PRIEST_KEY "priest"
 #define ACTUAL_SPELLCASTER_KEY "actual_spellcaster"
+#define NECROMANCER_KEY "necromancer"
 
 enum monster_info_flags
 {
@@ -148,7 +149,7 @@ enum monster_info_flags
     MB_POISON_VULN,
     MB_AGILE,
     MB_FROZEN,
-    MB_BLACK_MARK,
+    MB_SIGN_OF_RUIN,
     MB_SAP_MAGIC,
     MB_SHROUD,
     MB_CORROSION,
@@ -169,7 +170,9 @@ enum monster_info_flags
     MB_CHANT_WORD_OF_ENTROPY,
 #endif
     MB_AIRBORNE,
+#if TAG_MAJOR_VERSION == 34
     MB_BRILLIANCE_AURA,
+#endif
     MB_EMPOWERED_SPELLS,
     MB_READY_TO_HOWL,
     MB_PARTIALLY_CHARGED,
@@ -227,6 +230,11 @@ enum monster_info_flags
     MB_TOUCH_OF_BEOGH,
     MB_AWAITING_RECRUITMENT,
     MB_VENGEANCE_TARGET,
+    MB_MAGNETISED,
+    MB_RIMEBLIGHT,
+    MB_ARMED,
+    MB_SHADOWLESS,
+    MB_PLAYER_SERVITOR,
     NUM_MB_FLAGS
 };
 
@@ -277,6 +285,7 @@ struct monster_info_base
     bool sleepwalking;
     bool backlit;
     bool umbraed;
+    int shield_bonus;
 
     uint32_t client_id;
 };
@@ -349,6 +358,7 @@ struct monster_info : public monster_info_base
         return get_damage_level_string(holi, dam);
     }
     string get_max_hp_desc() const;
+    int get_known_max_hp() const;
     int regen_rate(int scale) const;
 
     inline bool neutral() const
@@ -432,6 +442,11 @@ struct monster_info : public monster_info_base
         return props.exists(PRIEST_KEY);
     }
 
+    bool has_necromancy_spell() const
+    {
+        return props.exists(NECROMANCER_KEY);
+    }
+
     bool fellow_slime() const;
 
     vector<string> get_unusual_items() const;
@@ -463,3 +478,5 @@ void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
                            int count);
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                             int start, int count, bool equipment);
+
+string description_for_ench(enchant_type type);

@@ -54,119 +54,119 @@ string pluralise(const string &name, const char * const qualifiers[],
         return pluralise(name.substr(0, pos)) + name.substr(pos);
     }
 
-    if (ends_with(name, "us"))
+    const string lowname = lowercase_string(name);
+
+    if (ends_with(lowname, "us"))
     {
-        if (ends_with(name, "lotus") || ends_with(name, "status"))
+        if (ends_with(lowname, "lotus") || ends_with(lowname, "status"))
             return name + "es";
-        else
-            // Fungus, ufetubus, for instance.
-            return name.substr(0, name.length() - 2) + "i";
+        // Fungus, ufetubus, for instance.
+        return name.substr(0, name.length() - 2) + "i";
     }
-    else if (ends_with(name, "larva") || ends_with(name, "antenna")
-             || ends_with(name, "hypha") || ends_with(name, "noma"))
+    else if (ends_with(lowname, "larva") || ends_with(lowname, "antenna")
+             || ends_with(lowname, "hypha") || ends_with(lowname, "noma"))
     {
         return name + "e";
     }
-    else if (ends_with(name, "ex"))
+    else if (ends_with(lowname, "ex"))
     {
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
     }
-    else if (ends_with(name, "mosquito") || ends_with(name, "ss"))
+    else if (ends_with(lowname, "mosquito") || ends_with(lowname, "ss"))
         return name + "es";
-    else if (ends_with(name, "cyclops"))
+    else if (ends_with(lowname, "cyclops"))
         return name.substr(0, name.length() - 1) + "es";
-    else if (name == "catoblepas")
+    else if (lowname == "catoblepas")
         return "catoblepae";
-    else if (ends_with(name, "s"))
+    else if (ends_with(lowname, "s"))
         return name;
-    else if (ends_with(name, "y"))
+    else if (ends_with(lowname, "y"))
     {
-        if (name == "y")
-            return "ys";
+        if (lowname == "y")
+            return name + "s"; // oh ys.
         // day -> days, boy -> boys, etc
-        else if (is_vowel(name[name.length() - 2]))
+        if (is_vowel(lowname[lowname.length() - 2]))
             return name + "s";
         // jelly -> jellies
-        else
-            return name.substr(0, name.length() - 1) + "ies";
+        return name.substr(0, name.length() - 1) + "ies";
     }
-    else if (ends_with(name, "fe"))
+    else if (ends_with(lowname, "fe"))
     {
         // knife -> knives
         return name.substr(0, name.length() - 2) + "ves";
     }
-    else if (ends_with(name, "staff"))
+    else if (ends_with(lowname, "staff"))
     {
         // staff -> staves
         return name.substr(0, name.length() - 2) + "ves";
     }
-    else if (ends_with(name, "f") && !ends_with(name, "ff"))
+    else if (ends_with(lowname, "f") && !ends_with(lowname, "ff"))
     {
         // elf -> elves, but not hippogriff -> hippogrives.
         // TODO: if someone defines a "goblin chief", this should be revisited.
         return name.substr(0, name.length() - 1) + "ves";
     }
-    else if (ends_with(name, "mage"))
+    else if (ends_with(lowname, "mage"))
     {
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
     }
-    else if (name == "gold"                 || ends_with(name, "fish")
-             || ends_with(name, "folk")     || ends_with(name, "spawn")
-             || ends_with(name, "tengu")    || ends_with(name, "sheep")
-             || ends_with(name, "swine")    || ends_with(name, "efreet")
-             || ends_with(name, "jiangshi") || ends_with(name, "raiju")
-             || ends_with(name, "meliai"))
+    else if (lowname == "gold"                 || ends_with(lowname, "fish")
+             || ends_with(lowname, "folk")     || ends_with(lowname, "spawn")
+             || ends_with(lowname, "tengu")    || ends_with(lowname, "sheep")
+             || ends_with(lowname, "swine")    || ends_with(lowname, "efreet")
+             || ends_with(lowname, "jiangshi") || ends_with(lowname, "raiju")
+             || ends_with(lowname, "meliai"))
     {
         return name;
     }
-    else if (ends_with(name, "ch") || ends_with(name, "sh")
-             || ends_with(name, "x"))
+    else if (ends_with(lowname, "ch") || ends_with(lowname, "sh")
+             || ends_with(lowname, "x"))
     {
         // To handle cockroaches, sphinxes, and bushes.
         return name + "es";
     }
-    else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))
+    else if (ends_with(lowname, "simulacrum") || ends_with(lowname, "eidolon"))
     {
         // simulacrum -> simulacra (correct Latin pluralisation)
         // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
     }
-    else if (ends_with(name, "djinni"))
+    else if (ends_with(lowname, "djinni"))
     {
         // djinni -> djinn.
         return name.substr(0, name.length() - 1);
     }
-    else if (name == "foot")
-        return "feet";
-    else if (name == "ophan" || name == "cherub" || name == "seraph")
+    else if (lowname == "foot")
+        return "feet"; // TODO: handle Foot correctly
+    else if (lowname == "ophan" || lowname == "cherub" || lowname == "seraph")
     {
         // Unlike "angel" which is fully assimilated, and "cherub" and "seraph"
         // which may be pluralised both ways, "ophan" always uses Hebrew
         // pluralisation.
         return name + "im";
     }
-    else if (ends_with(name, "arachi"))
+    else if (ends_with(lowname, "arachi"))
     {
         // Barachi -> Barachim. Kind of Hebrew? Kind of goofy.
         // (not sure if this is ever used...)
         return name + "m";
     }
-    else if (name == "ushabti")
+    else if (lowname == "ushabti")
     {
         // ushabti -> ushabtiu (correct ancient Egyptian pluralisation)
         return name + "u";
     }
-    else if (name == "Tzitzimitl")
+    else if (lowname == "Tzitzimitl")
     {
         // Tzitzimitl -> Tzitzimimeh (correct Nahuatl pluralisation)
         return name.substr(0, name.length() - 2) + "meh";
     }
     // "<name>'s ghost" -> "ghosts called <name>".
-    pos = name.find("'s ghost");
+    pos = lowname.find("'s ghost");
     if (string::npos != pos)
-            return string(name, 0, pos).insert(0, "ghosts called ");
+        return string(name, 0, pos).insert(0, "ghosts called ");
 
     return name + "s";
 }

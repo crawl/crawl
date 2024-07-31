@@ -251,13 +251,13 @@ glaive
 
 Eine Stange mit einer großen und schweren Klinge an einem Ende.
 %%%%
-gold dragon scales
+golden dragon scales
 
 Rüstung von den Skalen eines Golddrachen gemacht. Es ist viel schwerer als die
 meisten Drache-Skala-Rüstungen, und gewährt seinen Träger-Widerstand gegen
 Gift, Feuer und Kälte.
 %%%%
-gold dragon hide
+golden dragon hide
 
 Das Verbergen eines Golddrachen, der in äußerst harten goldenen Skalen bedeckt
 ist. In seiner rohen Form stellt es viel Schutz außer dem Widerstand gegen Gift

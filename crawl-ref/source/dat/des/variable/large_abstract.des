@@ -93,7 +93,7 @@ TAGS:    depths_entry uniq_depths_entry chance_depths_entry
 ORIENT:  north
 DEPTH:   Depths, !Depths:$
 PLACE:   D:$
-WEIGHT:  1 (D:$), 10
+WEIGHT:  2 (D:$), 10
 : if (you.where() == dgn.level_name(dgn.br_entrance("Depths"))) then
 MONS:    shapeshifter, ugly thing, glowing shapeshifter
 MONS:    obsidian statue, 0 band / 9 band

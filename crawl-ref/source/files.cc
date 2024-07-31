@@ -1462,15 +1462,23 @@ static void _place_player(dungeon_feature_type stair_taken,
         _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 
     // Don't return the player into walls, deep water, or a trap.
-    for (distance_iterator di(you.pos(), true, false); di; ++di)
-        if (you.is_habitable_feat(env.grid(*di))
-            && !is_feat_dangerous(env.grid(*di), true)
-            && !feat_is_trap(env.grid(*di)))
-        {
-            if (you.pos() != *di)
-                you.moveto(*di);
-            break;
-        }
+    if (!you.is_habitable_feat(env.grid(you.pos()))
+        || is_feat_dangerous(env.grid(you.pos()), true)
+        || feat_is_trap(env.grid(you.pos())))
+    {
+        for (distance_iterator di(you.pos(), true, false); di; ++di)
+            if (you.is_habitable_feat(env.grid(*di))
+                && !is_feat_dangerous(env.grid(*di), true)
+                && !feat_is_trap(env.grid(*di))
+                && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
+            {
+                if (you.pos() != *di)
+                    you.moveto(*di);
+                break;
+            }
+    }
+
+
 
     // This should fix the "monster occurring under the player" bug.
     monster *mon = monster_at(you.pos());
@@ -1489,6 +1497,25 @@ static void _place_player(dungeon_feature_type stair_taken,
              mon->name(DESC_PLAIN).c_str());
         monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
+    }
+
+    // Dump all arena contents on the player's feet when exiting the arena
+    if (stair_taken == DNGN_EXIT_ARENA && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
+    {
+        // If the player has emerged over deep water / lava, put something solid
+        // under us so that items from the duel are not lost
+        if ((env.grid(you.pos()) == DNGN_DEEP_WATER && !player_likes_water(true)
+             || env.grid(you.pos()) == DNGN_LAVA))
+        {
+            env.grid(you.pos()) = DNGN_ALTAR_OKAWARU;
+            set_terrain_changed(you.pos());
+        }
+
+        CrawlVector& vec = you.props[OKAWARU_DUEL_ITEMS_KEY].get_vector();
+        for (CrawlStoreValue value : vec)
+            copy_item_to_grid(value.get_item(), you.pos());
+
+        you.props.erase(OKAWARU_DUEL_ITEMS_KEY);
     }
 }
 
@@ -2037,6 +2064,14 @@ static void _fixup_transmuters()
 }
 #endif
 
+/// Learn where each transporter on the current level goes.
+static void _learn_transporters()
+{
+    auto li = travel_cache.find_level_info(level_id::current());
+    for (auto &tp : li->get_transporters())
+        li->update_transporter(tp.position, get_transporter_dest(tp.position));
+}
+
 /**
  * Load the current level.
  *
@@ -2191,6 +2226,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Shouldn't happen, but this is too unimportant to assert.
     deleteAll(env.final_effects);
+    env.final_effect_monster_cache.clear();
 
     los_changed();
 
@@ -2381,7 +2417,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
         gozag_count_level_gold();
         if (branches[you.where_are_you].branch_flags & brflag::fully_map)
+        {
             magic_mapping(GDM, 100, true, false, false, true, false);
+            _learn_transporters();
+        }
     }
 
 

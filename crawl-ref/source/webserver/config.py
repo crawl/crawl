@@ -423,6 +423,9 @@ player_url = None
 # new_accounts_disabled = True
 # new_accounts_hold = True
 
+# customize chat limits. Set to 0 or False to disable chat. Value in characters.
+# max_chat_length = 1000
+
 # If set to True, a SIGHUP triggers an attempt to reload the config and game
 # data. Some values cannot be reloaded (including this one), and to reset a
 # value to its default, you need to explicitly set the value rather than

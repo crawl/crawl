@@ -506,13 +506,19 @@ Shark
 
 # birds
 
+Cardinal
+
 Dove
+
+Flamingo
 
 Hawk
 
 Hummingbird
 
 Fulmar
+
+Hoatzin
 
 Owl
 
@@ -599,6 +605,8 @@ Ancient Evil
 
 Corruption
 
+Debasement
+
 Defilement
 
 Deformation
@@ -620,6 +628,8 @@ Perversion
 Putrescence
 
 Shrieking Terror
+
+Vitiation
 
 the Beast
 
@@ -725,6 +735,8 @@ Distraction
 
 Extremism
 
+Goblin Mode
+
 Havoc
 
 Imbalance
@@ -745,8 +757,13 @@ Upheaval
 
 the Extremes
 
+the Farrago
+
 the Fray
 
+the Hodge-Podge
+
+the Mish-Mash
 %%%%
 _balance_or_order_
 

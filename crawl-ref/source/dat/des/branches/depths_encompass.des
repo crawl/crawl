@@ -10,12 +10,14 @@
             e.kmons('2 = nonbase draconian / base draconian w:20')
             e.kmons('3 = draconian stormcaller / draconian monk w:2')
         else
-            e.kmons('1 = tengu warrior / tengu conjurer / '
-                    .. 'glowing orange brain / spriggan berserker w:5 / '
-                    .. 'spriggan air mage w:5 / deep elf demonologist w:5 / '
-                    .. 'nothing w:68')
-            e.kmons('2 = spriggan berserker / tengu warrior w:20')
-            e.kmons('3 = deep elf high priest')
+            e.kmons('1 = tengu warrior w:5 / tengu conjurer w:5 / ' ..
+                        'glowing orange brain / flayed ghost w:5 / ' ..
+                        'rakshasa / spriggan rider w:5 / ' ..
+                        'spriggan air mage w:5 / ' ..
+                        'nothing w:68')
+            e.kmons('2 = spriggan berserker / deep elf demonologist / ' ..
+                        'sphinx w:5')
+            e.kmons('3 = deep elf high priest / walking divine tome w:5')
         end
         e.subst('% = * %:20 .')
         e.lua_marker(':', fog_machine { cloud_type = "flame",
@@ -255,9 +257,9 @@ KFEAT:   Du = >
 KFEAT:   H = w
 MARKER:  O = lua:props_marker { portal=1 }
 TILE:    G = depths_crumbled_column
-TILE:    b = bedeviled_crystal_tartarus
+TILE:    b = bedevilled_crystal_tartarus
 LFLOORTILE: floor_depthstone
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccxxxxxx
@@ -447,7 +449,7 @@ TILE:     G = dngn_statue_imp / dngn_statue_dragon / dngn_statue_maw / \
               dngn_statue_demonic_bust / dngn_statue_tentacles / \
               dngn_statue_wraith / dngn_statue_sigmund
 TILE:     C = depths_column
-: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 : set_feature_name("metal_statue", "iron statue")
 LFLOORTILE: floor_depthstone
 MAP
@@ -479,7 +481,7 @@ ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
 ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
 cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
 cccceeeeeeeeeeecc++...cc.....G.......C...C.......G.....cc...++ccfffffffffffcccc
-cccceeeeeeeeeeeeee++ccc%.........1.C...D...C.1.........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%...........C...D...C...........%ccc++ffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeccc%.....1....2.........2....1.....%cccffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeecc.........C.:%HHHHH%:.C.........ccffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
@@ -491,7 +493,7 @@ cccceeeeeeeeeeeeeeeeeeeec.......C..HHHHHHHHH..C.......cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeecc.........C.:%HHHHH%:.C.........ccffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeccc%.....1....2.........2....1.....%cccffffffffffffffffcccc
-cccceeeeeeeeeeeeee++ccc%.........1.C...D...C.1.........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%...........C...D...C...........%ccc++ffffffffffffffcccc
 cccceeeeeeeeeeecc++...cc.....G.......C...C.......G.....cc...++ccfffffffffffcccc
 cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
 ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
@@ -556,14 +558,14 @@ ENDMAP
 NAME:   grunt_profane_temple_geh
 TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-KMONS:  4 = hell hog
-KMONS:  5 = sun demon
-KMONS:  6 = balrug
+KMONS:  4 = sun demon
+KMONS:  5 : hell hog / hell knight
+KMONS:  6 : balrug / salamander tyrant
 KFEAT:  A = stone_arch
 NSUBST: 4 = 8 = 4. / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
 KMASK:  12345 = !no_monster_gen
-TILE:   b = bedeviled_crystal_gehenna
+TILE:   b = bedevilled_crystal_gehenna
 MAP
 ll...l%b%l...ll
 l....l%%%l....l
@@ -590,15 +592,15 @@ ENDMAP
 NAME:   grunt_profane_temple_coc
 TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-KMONS:  4 = ice devil / ettin simulacrum w:20 / freezing wraith
+KMONS:  4 = ettin simulacrum / spriggan berserker simulacrum / freezing wraith
 KMONS:  5 = quicksilver dragon simulacrum
-KMONS:  6 = blizzard demon
+KMONS:  6 : blizzard demon / walking frostbound tome w:5
 KMONS:  8 = ice statue
 KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
 KMASK:  12345 = !no_monster_gen
-TILE:   b = bedeviled_crystal_cocytus
+TILE:   b = bedevilled_crystal_cocytus
 MAP
 wwww...b...wwww
 www....5....www
@@ -626,12 +628,12 @@ NAME:   grunt_profane_temple_tar
 TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 KMONS:  4 = shadow wraith / nothing w:30
-KMONS:  5 = soul eater
-KMONS:  6 = reaper w:18 / lich w:5 / bone dragon w:4
+KMONS:  5 : soul eater / flayed ghost
+KMONS:  6 : reaper w:18 / lich w:5 / bone dragon w:4
 KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
-TILE:   b = bedeviled_crystal_tartarus
+TILE:   b = bedevilled_crystal_tartarus
 TILE:   G = dngn_gravestone
 # FIXME: this doesn't work for encompass subvaults.
 # Lots of statues elsewhere in the level, maybe trim them down?
@@ -663,17 +665,17 @@ ENDMAP
 NAME:   grunt_profane_temple_dis
 TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-KMONS:  4 = iron troll / nothing
-KMONS:  5 = skeletal warrior / iron troll w:1
-KMONS:  6 = iron dragon / war gargoyle
+KMONS:  4 : iron troll / skeletal warrior
+KMONS:  5 : iron dragon / walking earthen tome
+KMONS:  6 : war gargoyle w:15 / caustic shrike
 KFEAT:  A = stone_arch
 KFEAT:  G = metal_statue
 MARKER: A = lua:props_marker { portal=1 }
-NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
+NSUBST: 4 = 5:4 / 2 = 4. / *:., 5 = 1:6 / *:5
 KMASK:  12345 = !no_monster_gen
 COLOUR: G = cyan
 TILE:   G = dngn_statue_iron_golem
-TILE:   b = bedeviled_crystal_dis
+TILE:   b = bedevilled_crystal_dis
 MAP
 %%.5...b...5.%%
 %G...........G%

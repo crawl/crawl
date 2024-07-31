@@ -17,6 +17,8 @@ _armour_animal_
 # microorganisms
 Amoeba
 
+Tardigrade
+
 # insects
 Ant
 
@@ -81,6 +83,8 @@ Turtle
 Barracuda
 
 Catfish
+
+Cichlid
 
 Mackerel
 
@@ -157,7 +161,7 @@ Circus Animal
 
 Monkey's Uncle
 
-#classical mythical animals
+# classical mythical animals
 Centaur
 
 Cockatrice
@@ -208,7 +212,9 @@ Mpinguari
 
 # Unlikely hybrids
 
-Giraffatuar
+Giraffataur
+
+Elephantaur
 
 Mertaur
 
@@ -233,6 +239,10 @@ Dropbear
 
 Jackalope
 
+Jersey Devil
+
+Snallygaster
+
 Wild Haggis
 
 Yeti
@@ -246,6 +256,8 @@ Daisies
 Lilacs
 
 Periwinkles
+
+Purple Dead-Nettles
 
 Tulips
 
@@ -1035,10 +1047,13 @@ Vermicelli
 
 Macaroni
 
+Strozzapreti
+
 w:1
 the Pastamancer
 
-
+# sometimes pasta-adjacent
+Meatballs
 %%%%
 _card_
 

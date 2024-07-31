@@ -162,6 +162,18 @@ A portal to a secret trove of treasure
  generations thieves must have stored their gains and spoils in this place.”
     -_The Arabian Nights_. trans. Sir Richard F. Burton, 1885.
 %%%%
+A portal to somewhere
+
+“The hole now stood some three meters in diameter beginning from the dais -
+ though its outline shrank and dilated slightly like a pulsing, living thing.
+ Through it we could see shapes seething and changing constantly with the
+ colors and the light. Purple trees grew upside down from a pink sky, changing
+ into black flowers and the flowers into feathery tongues of giant yellow worms
+ lumbering over a shaking, exploding desert. It was as if the world couldn't
+ make up its mind what to be yet. Looking at the scene for even a moment gave
+ me a headache, and anyone looking at it for long would surely go mad.”
+    -Laurence Yep, _Dragon War_. 1992.
+%%%%
 A rock wall
 
 “I know not whether Laws be right,
@@ -179,7 +191,7 @@ A sacrificial altar of Ru
  and hung my torso up on a hanger. Then I walked out of the apartment, climbed
  up the stairs to the roof. I opened the door, and stepped out into a beautiful
  green meadow.”
-    -Celestial Navigations, “The Sniper”, 1995.
+    -Celestial Navigations, “The Sniper”. 1995.
 %%%%
 A shaft
 
@@ -751,7 +763,15 @@ amulet of magic regeneration
 
 <amulet>
 %%%%
+amulet of reflection
+
+<amulet>
+%%%%
 amulet of regeneration
+
+<amulet>
+%%%%
+amulet of the acrobat
 
 <amulet>
 %%%%
@@ -970,7 +990,7 @@ eveningstar "Brilliance"
 
  ‘Evil does not exist,’ urZah answered. ‘Evil is disharmony between existences.
   Now go, Gelfling, with your questions.’”
-    -A. C. H. Smith, _Jim Henson’s “The Dark Crystal”: The Novelization_, 1982.
+    -A. C. H. Smith, _Jim Henson’s “The Dark Crystal”: The Novelization_. 1982.
 %%%%
 executioner's axe
 
@@ -1056,7 +1076,7 @@ glaive
  ſtaffe behind the backmoſt hand doth no harme.”
     -George Silver,_Paradoxes of Defence_.1599.
 %%%%
-gold dragon scales
+golden dragon scales
 
 <steam dragon scales>
 %%%%
@@ -1406,10 +1426,6 @@ ring of intelligence
          I feel smarter already.”
     -Bill Watterson, _Calvin and Hobbes_. November 19, 1993.
 %%%%
-ring of resist corrosion
-
-<ring>
-%%%%
 ring of magical power
 
 <ring>
@@ -1455,12 +1471,9 @@ ring of protection from fire
  smell of fire had passed on them.”
     -KJV Bible, Daniel 3:23-27.
 %%%%
-ring of willpower
+ring of resist corrosion
 
-“I am, indeed, a king, because I know how to rule myself.”
-    -Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
-      _The Works of Aretino, Translated into English from the original Italian_,
-      trans. Samuel Putnam. 1926
+<ring>
 %%%%
 ring of see invisible
 
@@ -1474,10 +1487,21 @@ ring of slaying
  once.”
     -Thomas Huxley
 %%%%
+ring of stealth
+
+<ring>
+%%%%
 ring of strength
 
 “That which does not kill us makes us stronger.”
     -Friedrich Nietzsche
+%%%%
+ring of willpower
+
+“I am, indeed, a king, because I know how to rule myself.”
+    -Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
+      _The Works of Aretino, Translated into English from the original Italian_,
+      trans. Samuel Putnam. 1926
 %%%%
 ring of wizardry
 
@@ -1874,7 +1898,7 @@ tower shield of Ignorance
  When life is going by you, you'll never know
  When everything is simple, it's really sublime
  Don't try to rise above it, below it is fine”
-    -Daryl Hall & John Oates, “No Brain, No Pain”, 1979.
+    -Daryl Hall & John Oates, “No Brain, No Pain”. 1979.
 %%%%
 trident
 
@@ -1956,15 +1980,19 @@ wand of digging
  things have learnt to walk that ought to crawl.”
     -H.P. Lovecraft, “The Festival”. 1925
 %%%%
-wand of mindburst
-
-<wand>
-%%%%
 wand of flame
 
 <wand>
 %%%%
 wand of iceblast
+
+<wand>
+%%%%
+wand of light
+
+<wand>
+%%%%
+wand of mindburst
 
 <wand>
 %%%%
@@ -1977,6 +2005,18 @@ wand of polymorph
 “Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in
  seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
     -Franz Kafka, _Die Verwandlung_. 1915
+%%%%
+wand of quicksilver
+
+<wand>
+%%%%
+wand of roots
+
+<wand>
+%%%%
+wand of warping
+
+<wand>
 %%%%
 war axe
 
@@ -2296,17 +2336,6 @@ Sigmund
     -William Morris, _The Story of Sigurd the Volsung and the Fall of the
 Niblungs_. 1891.
 %%%%
-Terence
-
-“A MAN committed a murder, and was pursued by the relations of the man whom he
- murdered. On his reaching the river Nile he saw a Lion on its bank and being
- fearfully afraid, climbed up a tree. He found a serpent in the upper branches
- of the tree, and again being greatly alarmed, he threw himself into the river,
- where a crocodile caught him and ate him. Thus the earth, the air, and the
- water alike refused shelter to a murderer.”
-    -Aesop, _The Manslayer_. 6th century BCE.
-     trans. George Fyler Townsend
-%%%%
 Tiamat
 
 “He saith that Tiamat our mother hath conceived a hatred for us,
@@ -2601,13 +2630,6 @@ battlesphere
  But really I'm not actually your friend
  But I am”
     -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
-%%%%
-demonspawn black sun
-
-“The sky is sad and beautiful, like a vast altar.
- The sun has drowned in its congealing blood.”
-    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
-     trans. Ruth White, 1969.
 %%%%
 boggart
 
@@ -2909,11 +2931,12 @@ fenstrider witch
 %%%%
 fire crab
 
-“The planet brought forth scintillating jewelled scuttling crabs, which [they]
- ate, smashing their shells with iron mallets; tall aspiring trees with
- breathtaking slenderness and colour which [they] cut down and burned the crab
- meat with.”
-    -Douglas Adams, The Hitch-hiker's Guide to the Galaxy
+“The planet brought forth scintillating jewelled scuttling crabs, which the
+ Vogons ate, smashing their shells with iron mallets; tall aspiring trees with
+ breathtaking slenderness and colour which the Vogons cut down and burned the
+ crab meat with; elegant gazellelike creatures with silken coats and dewy eyes
+ which the Vogons would catch and sit on.”
+    -Douglas Adams, _The Hitch-hiker's Guide to the Galaxy_. 1979.
 %%%%
 flayed ghost
 
@@ -3168,13 +3191,6 @@ lindwurm
     -Leopold Ziegelhauſer, _Schattenbilder der Vorzeit: Ein Kranz von
      Geschichten, Sagen, Legenden, Märchen, Skizzen und Heldenmahlen, Aus allen
      Gegenden Deutschlands und des österreichischen Kaiserstaates_. 1844.
-%%%%
-lorocyproca
-
-“There it had assumed a wild, incalculable and incredible shape, twisted into a
- fantastic arabesque — invisible to their eyes, but dreadful nonetheless — into
- the unfamiliar numeral under whose menace they lived.”
-    -Bruno Schulz, “The Brilliant Epoch”. 1937.
 %%%%
 lost soul
 
@@ -3611,7 +3627,7 @@ seraph
  the whole earth is full of his glory.”
     -KJV Bible, Isaiah 6:1-3.
 %%%%
-shadow
+shadowghast
 
 “Between the idea
  And the reality
@@ -3857,6 +3873,11 @@ sun demon
 “Behold him setting in his western skies,
  The shadows lengthening as the vapours rise.”
     -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
+
+“The sky is sad and beautiful, like a vast altar.
+ The sun has drowned in its congealing blood.”
+    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
+     trans. Ruth White, 1969.
 %%%%
 swamp drake
 

@@ -799,7 +799,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_WIZARDRY:              return "wizardry";
         case RING_MAGICAL_POWER:         return "magical power";
         case RING_FLIGHT:                return "flight";
-        case RING_LIFE_PROTECTION:       return "positive energy";
+        case RING_POSITIVE_ENERGY:       return "positive energy";
         case RING_WILLPOWER: return "willpower";
         case RING_FIRE:                  return "fire";
         case RING_ICE:                   return "ice";
@@ -849,9 +849,11 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_INTELLIGENCE:          return "Int";
         case RING_MAGICAL_POWER:         return "MP+9";
         case RING_FLIGHT:                return "Fly";
-        case RING_LIFE_PROTECTION:       return "rN+";
+        case RING_POSITIVE_ENERGY:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
+        case RING_WIZARDRY:              return "Wiz";
         case AMU_REGENERATION:           return "Regen";
+        case AMU_MANA_REGENERATION:      return "RegenMP";
 #if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";
 #endif
@@ -1019,6 +1021,7 @@ static string misc_type_name(int type)
 #endif
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
+    case MISC_GRAVITAMBOURINE:           return "Gell's gravitambourine";
 
     default:
         return "buggy miscellaneous item";
@@ -1029,7 +1032,7 @@ const char* gizmo_effect_name(int type)
 {
     switch (static_cast<special_gizmo_type>(type))
     {
-        case SPGIZMO_MANAREV:       return "RevMP";
+        case SPGIZMO_MANAREV:       return "RevMPSaver";
         case SPGIZMO_GADGETEER:     return "Gadgeteer";
         case SPGIZMO_PARRYREV:      return "RevParry";
         case SPGIZMO_AUTODAZZLE:    return "AutoDazzle";
@@ -1122,6 +1125,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_SCORCHING:              return "Scorching";
     case BOOK_MOVEMENT:               return "Movement";
     case BOOK_WICKED_CREATION:        return "Wicked Creation";
+    case BOOK_MALADIES:               return "Maladies";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -1243,6 +1247,10 @@ string sub_type_string(const item_def &item, bool known)
             return "Trismegistus Codex";
         case BOOK_UNRESTRAINED:
             return "the Unrestrained Analects";
+        case BOOK_SIEGECRAFT:
+            return "Compendium of Siegecraft";
+        case BOOK_CONDUCTIVITY:
+            return "Codex of Conductivity";
 #if TAG_MAJOR_VERSION == 34
         case BOOK_AKASHIC_RECORD:
             return "Akashic Record";
@@ -3488,7 +3496,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case AMU_GUARDIAN_SPIRIT:
             return you.spirit_shield(false) || you.has_mutation(MUT_HP_CASTING);
 
-        case RING_LIFE_PROTECTION:
+        case RING_POSITIVE_ENERGY:
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:

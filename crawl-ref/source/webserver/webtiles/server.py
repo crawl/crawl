@@ -193,11 +193,17 @@ def all_tasks_compat():
 
 
 def stop_everything(shutdown_event):
+    # prevent reload signals from interacting with shutdown
+    if config.get('hup_reloads_config'):
+        asyncio.get_event_loop().remove_signal_handler(signal.SIGHUP)
+    asyncio.get_event_loop().remove_signal_handler(signal.SIGUSR1)
+
     global servers
     # shut down servers first -- stop accepting new connections
     for server in servers:
         server.stop()
     # shut down ongoing games
+    # XX any errors in this code will prevent shutdown, do something more?
     ws_handler.shutdown()
 
     # an open question -- are there cases where even stronger measures might be
@@ -823,6 +829,8 @@ def run():
         except asyncio.exceptions.CancelledError:
             # triggered by the cancel case in stop_everything
             err_exit("Normal server stop failed, some tasks were force-cancelled!")
+        except SystemExit:
+            raise
         except:
             err_exit("Server exited with error!", exc_info=True)
 
