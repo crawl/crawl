@@ -2183,8 +2183,18 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             if (!silent)
                 simple_monster_message(mons, " returns to where it belongs.");
-            source->as_monster()->del_ench(ENCH_WEAK);
-            source->props.erase(SOUL_SPLINTERED_KEY);
+
+            if (source->is_monster())
+            {
+                source->as_monster()->del_ench(ENCH_WEAK);
+                source->props.erase(SOUL_SPLINTERED_KEY);
+            }
+            else if (source->is_player())
+            {
+                you.duration[DUR_WEAK] = 0;
+                mprf(MSGCH_RECOVERY, "You feel your strength returning.");
+            }
+
             silent = true;
         }
     }

@@ -3191,14 +3191,14 @@ bool hellfire_mortar_active(const actor& agent)
     return false;
 }
 
-bool make_soul_wisp(const actor& agent, monster& victim)
+bool make_soul_wisp(const actor& agent, actor& victim)
 {
-    if (!mons_can_be_spectralised(victim))
+    if (victim.is_monster() && !mons_can_be_spectralised(*victim.as_monster()))
         return false;
 
     // Don't try to create a wisp from a monster who's already had one made from
     // them. (This causes wierd messaging and removes the Weak effect).
-    if (victim.props.exists(SOUL_SPLINTERED_KEY))
+    if (victim.is_monster() && victim.props.exists(SOUL_SPLINTERED_KEY))
     {
         if (agent.is_player() && victim.observable())
         {

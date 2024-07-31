@@ -130,6 +130,7 @@ static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_wl_lower_goodness(const monster &caster);
 static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
+static ai_action::goodness _foe_soul_splinter_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
 static ai_action::goodness _scorch_goodness(const monster& caster);
@@ -819,6 +820,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 }
             }
         } } },
+    { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -989,6 +991,13 @@ static ai_action::goodness _foe_wl_lower_goodness(const monster &caster)
 static ai_action::goodness _foe_vitrify_goodness(const monster &caster)
 {
     return _foe_effect_viable(caster, DUR_VITRIFIED, ENCH_VITRIFIED);
+}
+
+static ai_action::goodness _foe_soul_splinter_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    return ai_action::good_or_impossible(!!(foe->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)));
 }
 
 /**

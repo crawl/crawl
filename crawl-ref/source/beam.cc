@@ -3914,6 +3914,14 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_SOUL_SPLINTER:
+        obvious_effect = true;
+        if (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+            make_soul_wisp(*agent(), you);
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
