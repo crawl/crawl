@@ -18,8 +18,9 @@ function init_ice(e, force_opaque)
                   ice dragon w:5 / ice dragon simulacrum w:5 / \
                   w:2000 nothing')
   elseif you.in_branch("Vaults") then
-    e.tile('x = wall_ice_block')
     e.kfeat('AG! = cache of meat')
+    e.tile('x = wall_ice_block')
+    e.set_feature_name("rock_wall", "ice covered rock wall")
   else
     if you.depth() > 11 then
         e.kmons('.- = simulacrum w:20 / death yak / \

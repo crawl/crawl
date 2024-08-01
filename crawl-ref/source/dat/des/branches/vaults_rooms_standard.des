@@ -9,7 +9,7 @@
 # You can additionally use the following tags:
 #
 # vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
-# no_windows preserve_wall
+# no_windows no_wall_fixup
 #
 # vaults_orient_x: controls the entry points to the subvault.
 # A subvault using vaults_orient_n will always be entered from the north side,
@@ -17,7 +17,7 @@
 #
 # no_windows: prevents the layout from creating windows into the subvault.
 #
-# preserve_wall: prevents the layout from changing rock into the same wall type
+# no_wall_fixup: prevents the layout from changing rock into the same wall type
 # as the rest of the floor.
 #
 # For the most part, any )s [a potential staircase placement]
@@ -30,6 +30,8 @@
 # Also, use allow_dup only on the generic layouts.
 #
 ################################################################################
+
+: crawl_require('dlua/vault.lua')
 
 {{
 
@@ -2607,4 +2609,310 @@ MAP
 ..xxx.xx'xx.
 ..x'x.......
 ............
+ENDMAP
+
+####
+# Heavily themed vaults rooms, using a function in vault.lua.
+# Meant to add a little focused spice into a branch that only gets a small
+# number of themed vaults any more. Since these are both a small fraction of
+# total vaults and don't use bands, they place slightly more monsters.
+
+NAME:    regret_index_vaults_magi_inspection_point
+NSUBST:  1 = 2:1 / 1:. / * = 11.
+SHUFFLE: ABCDE
+SUBST:   A = x, B : xx., C : x.., DE = ., - : +x
+SUBST:   c : cx, 2 = 11222.., 3 = 233
+: index_vaults_room_themes(_G, "magic", false)
+MAP
+  ..xxxxxxxxxxx..
+  ..xxcxxbxxcxx..
+  ..xxe..3..dxx..
+ ....xx.x1x.xx....
+...B..xx-+-xx..B...
+..A.C1.+...+.1C.A..
+.DxbxD.+.2.+.DxbxD.
+..C.A1.+.d.+.1A.C..
+...B..xxxbxx...B..
+ ....xx    xx....
+  ..xx      xx..
+  ..x        x..
+  ..x        x..
+ENDMAP
+
+NAME:    regret_index_vaults_magi_fracturing_power
+NSUBST:  1 = 2:1 / 1:. / * = 11.
+SHUFFLE: ABCDE
+SUBST:   A = x, B : xx., C : x.., DE = ., - : +., + : +...
+SUBST:   c : cx, 2 = 1222., 3 = 2333
+: index_vaults_room_themes(_G, "magic", false)
+MAP
+             .....
+            ......
+   xxxxxxxxxxb+F..
+  xx3.....x..-++..
+  x1.E.D..x...-b..
+  xc.....xx....x.
+  x.xxx.1x..C..x
+  x....xxbx....x
+  x1.B.dex.xxx.x
+  x....dx.....cx
+  xc.....xd....x
+  x.xxx.xed.B.1x
+  x....xbxx....x
+  x..C..x1.xxx.x
+ .x....xx.....cx
+..b-...x..D.E.1x
+..++-..x.....2xx
+..F+bxxxxxxxxxx
+......
+.....
+ENDMAP
+
+NAME:    regret_index_vaults_magi_shocking_road
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  1 = 2:1 / 1:. / * = 11.
+SHUFFLE: AH / BI / CJ / DK / EL, Ss, +-
+SUBST:   H : AAA.., I : BBB.., J : CCC.., KL = .
+SUBST:   AB = x, C : xx., D : x., E = .
+SUBST:   + : +., c : cx, 2 = 1222., 3 = 2333
+: index_vaults_room_themes(_G, "magic", false)
+MAP
+   x...b....x
+  x....A.H.x
+  x.I.B....x
+ x....C.J.x
+x1.K..D..x
+x....x..dx
+1..L.b.+x
+xxe....+3xx
+  xxc1.++.1cxx
+     xx2+....exx
+       x+.b.L..1
+      xd..x....x
+      x..D..K.1x
+     x.J.C....x
+    x....B.I.x
+    x.H.A....x
+   x....b...x
+ENDMAP
+
+NAME:    regret_index_vaults_faire_fishracks
+TAGS:    vaults_orient_n vaults_orient_s
+SHUFFLE: ABC
+NSUBST:  A = 1:. / *:v, B = 2:. / *:v, C = 1:v. / *:.
+NSUBST:  J = 2:. / *:I, K = 2:. / *:I, L = 2:. / *:I, M = 2:. / *:I
+NSUBST:  1 = 1:1 / 1:. / * = 11.
+SUBST:   z = v.., m : m..
+: index_vaults_room_themes(_G, "icebox", false)
+MAP
+   ...A...
+  ....A....
+ .....A.....
+....z.A.z....
+d.....A.....1
+vJJJJIIIKKKKv
+e....1B1....1
+2z....B....zm
+mz....B....z3
+1....1B1....e
+vLLLLIIIMMMMv
+1.....C.....d
+....z.C.z....
+ .....C.....
+  ....C....
+   ...C...
+ENDMAP
+
+NAME:    regret_index_vaults_faire_sandwich
+NSUBST:  1 = 1:1 / 1:. / * = 11.
+SHUFFLE: ABCDE
+SUBST:   A = I, B : I., C : v..., DE = ., m : m..
+: index_vaults_room_themes(_G, "icebox", false)
+MAP
+I.....
+F.v..B.
+..v.A...
+..v......
+..Ivvv..D.
+..Em1vdC...
+.1..1v2d1...
+ ....vvvv....
+  ...1d3v1..1.
+   ...Cdv1mE..
+    .D..vvvI..
+     ......v..
+      ...A.v..
+       .B..v.F
+        .....I
+ENDMAP
+
+NAME:    regret_index_vaults_faire_tray
+TAGS:    vaults_orient_n vaults_orient_s
+NSUBST:  1 = 1:1 / 1:. / * = 11.
+SHUFFLE: ABCDEF
+SUBST:   A : Iv, B : I., C : v.., D : v.., EF = ., m : m..
+: index_vaults_room_themes(_G, "icebox", false)
+MAP
+mAA..BB..CC
+............1DDedEE12
+..vv....vv...........
+..vI1II1II....Iv.....
+.....vI....II1II1Iv..
+...........vv....vv..
+31EEdeDD1............
+          CC..BB..AAm
+ENDMAP
+
+NAME:    regret_index_vaults_park_passage
+TAGS:    vaults_orient_e vaults_orient_s
+WEIGHT:  8
+NSUBST:  1 = 2:1 / 2:. / * = 11.
+SHUFFLE: ABCDEG, Ss, +-
+SUBST:   AB = x, C : x., D : x., EG = ., F = F``, s = `, - : +x
+: index_vaults_room_themes(_G, "garden", false)
+MAP
+ C...D.....x
+C.1....E....
+.1xx--xxxxx.
+..xT....dxx
+..+.2.s..1x
+D.+..S`S.Ax
+..x.s`s`.1x
+..x..S`F1Bx
+.Exd...1.3x
+..xx1A1B2xx
+..xxxxxxxx
+x..
+ENDMAP
+
+NAME:    regret_index_vaults_park_slither
+TAGS:    vaults_orient_w vaults_orient_e
+WEIGHT:  8
+NSUBST:  1 = 2:1 / 2:. / * = 11.
+SHUFFLE: ABCDE, Ss, +-
+SUBST:   AB = x, C : x., DE = ., s = `, F : F```, - : +x, + : ++++.
+: index_vaults_room_themes(_G, "garden", false)
+MAP
+     xxxxxxxxxxxx
+     xx1.s`S2.1xx
+     x2.D`F`D.C.x
+     xd1..`S`...x.....
+ xxxxxxxxxxxsdB.+..B..
+.AA.1x...````...-.....
+.....-...````...x1.AA.
+..B..+.Bdsxxxxxxxxxxx
+.....x...`S`...dx
+     x.C.D`F`D13x
+     xx1.2S`s..xx
+     xxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_vaults_park_cavernous
+WEIGHT:  8
+NSUBST:  1 = 2:1 / 2:. / * = 11.
+SHUFFLE: ABCDE, Ss, +-
+SUBST:   AB = x, C : x., DE = ., s = `, F : F```, - : +x, + : ++.
+: index_vaults_room_themes(_G, "garden", false)
+MAP
+ xxxxxxxxxxxx..
+xxd....B....x..
+xd........A....
+x.C.xxxxxxxA...
+x....x.sSsx...E
+xD.T.-.1`Sx..xxxxx
+x....+..1`x...E.1xx
+x.C.xxx3`Fxxx....1x
+x1....xxxF`2xxx.C.x
+xx1.E...x`1..+....x
+ xxxxx..xS`1.-.T.Dx
+    E...xsSs.x....x
+    ...Axxxxxxx.C.x
+    ....A........dx
+    ..x....B....dxx
+    ..xxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_vaults_shooting_gallery
+TAGS:    vaults_orient_n
+SHUFFLE: ABCDEF
+SUBST:   AB : x, C : Ux.., D : xx..., EF = ., z : x.
+NSUBST:  12 = 1:. / 1:1, 1 = 2:1 / 1:. / * = 11.
+: index_vaults_room_themes(_G, "rangers", false)
+MAP
+   .A...   ...A.
+...................
+zxxxxx...B...xxxxxz
+...................
+..xU.xxxB.Bxxx.Ux..
+1....2C.....C1....1
+...................
+ 2.xxD..d3d..Dxx.2
+  E...1d   d1...E
+ENDMAP
+
+NAME:    regret_index_vaults_shooting_goal
+TAGS:    vaults_orient_w vaults_orient_e vaults_orient_s
+KFEAT:   S = weapon shop
+SHUFFLE: ABCDEF
+SUBST:   AB : x, C : Ux.., D : xx..., EF = .
+NSUBST:  12 = 1:. / 1:1, 1 = 2:1 / 1:. / * = 11.
+: index_vaults_room_themes(_G, "rangers", false)
+MAP
+        xxxxx
+       xxd3dxx
+      xxd.E.dxx
+...x..x1.....1x..x...
+........C.1.D........
+.xxx.xA.2.S.2.Ax.xxx.
+........D...C........
+...x.. 1..E..1 ..x...
+        ..2..
+         .B.
+        ..x..
+        .....
+        x.x.x
+        ..x..
+        ..x..
+        .....
+ENDMAP
+
+NAME:    regret_index_vaults_charnel_closets
+TAGS:    vaults_orient_n vaults_orient_s
+SHUFFLE: ABCDE
+SUBST:   A : cvGG, B : cvuu, C : vv..., D : vv..., E = .
+NSUBST:  12 = 1:. / 1:1, 1 = 2:1 / 1:. / * = 11.
+: index_vaults_room_themes(_G, "warriorcrypt", false)
+MAP
+   ..       ....
+   ..vcc ccv....
+   .Cv2uuu1v.A1.
+ccv..v+++++v....vcc
+c1+.....d.......+1c
+cu+dB..D.E.D..Bd+uc
+c1+.......d.....+2c
+ccv....v+++++v..vcc
+   .2A.v1uuu3vC.
+   ....vcc ccv..
+   ....       ..
+ENDMAP
+
+NAME:    regret_index_vaults_charnel_boxing
+TAGS:    vaults_orient_n vaults_orient_w
+SHUFFLE: ABCDE
+SUBST:   A : cvGG, B : cvuu, C : vv..., D : vv..., E = .
+NSUBST:  12 = 1:. / 1:1, 1 = 2:1 / 2:. / * = 11.
+: index_vaults_room_themes(_G, "warriorcrypt", false)
+MAP
+ .....v
+ .....vvvvvvv
+ ..1..+.....d
+ .A.A.+.B..C1
+ ..1..+......
+vvvvvvv..1..2
+vu.2..+......
+c.D.E.+.C..B1
+c3.d.1+.....d
+c.E.D.vvvvvvv
+vu.2.uv
+vvcccvv
 ENDMAP

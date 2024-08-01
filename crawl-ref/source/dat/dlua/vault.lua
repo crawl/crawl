@@ -197,3 +197,105 @@ function snake_statue_setup (e, glyph)
   end
   e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
 end
+
+-- A function that uses what's in the mon-pick-data (and bands) for V in 0.32
+-- for several distinct, tiered, depths-scaling themes + decorations.
+function index_vaults_room_themes (e, set, hard)
+  e.tags('luniq_vaults_room_' .. set)
+
+  local d = you.depth() + 1
+  if hard then
+    e.tags("vaults_hard")
+    d = d + 1
+  else
+    e.tags("vaults_room")
+  end
+
+  if set == 'magic' then
+    local sl = 1
+    if crawl.x_chance_in_y(d, 10) then
+      sl = sl + 1
+    end
+    e.mons('ugly thing w:' .. 7 - d .. ' / lindwurm w:4 / ' ..
+           'freezing wraith w:4 / crystal guardian w:' .. d)
+    e.mons('great orb of eyes w:' .. 7 - d .. ' / ' ..
+           'boggart band w:5 / glowing orange brain w:' .. d + 1)
+    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx w:10 / ' ..
+           'ironbound convoker w:5 / deep elf annihilator w:1')
+    e.mons('deep elf annihilator / deep elf sorcerer / lich / tengu reaver')
+    e.item('robe / mundane hat')
+    e.item('randbook numspells:1 slevels:' .. sl  .. ' / ' ..
+           'mundane ring of magical power w:2')
+    e.tile('c = wall_studio')
+  elseif set == 'icebox' then
+    e.tags('no_wall_fixup')
+    local f = 'ego:freezing ident:type'
+    local c = 'ego:cold_resistance ident:type'
+    e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
+           'redback simulacrum w:' .. 8 - d * 2 .. ' / ' ..
+           'freezing wraith w:2 / sphinx simulacrum w:' .. d - 1)
+    e.mons('necromancer w:2 / arcanist / white very ugly thing')
+    e.mons('ironbound frostheart / frost giant w:1')
+    e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
+                                            ' . ring mail ' .. c)
+    e.kitem('d : dagger ' .. f .. ' no_pickup / ' ..
+                'long sword ' .. f .. ' no_pickup/ ' ..
+                'mace ' .. f .. ' no_pickup')
+    e.kitem('e = robe ' .. c .. ' / leather armour ' .. c)
+    e.kfeat('m = cache of meat')
+    e.kfeat('I = rock_wall')
+    e.tile('I = wall_ice_block')
+    e.tile('v = dngn_metal_wall_lightblue')
+    e.set_feature_name("rock_wall", "ice covered rock wall")
+  elseif set == 'garden' then
+    e.tags('no_pool_fixup')
+    e.mons('harpy w:' .. 80 - d * 20 .. ' / ' ..
+           'redback w:' .. 100 - d * 16 .. ' / ' ..
+           'wolf spider w:' .. 20 - d * 3 .. ' / ' ..
+           'lindwurm w:' .. 140 - d * 20 .. ' / ' ..
+           'dire elephant w:' .. d * 3 )
+    e.mons('dire elephant w:' .. 18 - d * 3 .. ' / ' ..
+           'formless jellyfish w:' .. 2 + d * 4 .. ' / ' ..
+           'sphinx w:' .. 2 + d * 2)
+    e.mons('necromancer w:' .. 10 - d * 2 .. ' / ' ..
+           'ironbound preserver w:' .. 2 + d * 3 .. ' / ' ..
+           'entropy weaver w:' .. 2 + d * 4)
+    e.kmons('S = bush')
+    e.kfeat('F = cache of fruit')
+    e.ftile('`SF = floor_lair')
+    e.kitem('d = animal skin / club / whip w:5 / quarterstaff w:5')
+  elseif set == 'rangers' then
+    local eq = "arbalest w:29 | hand cannon w:1 . " ..
+               " scimitar . ring mail | scale mail"
+    e.mons('centaur warrior w:' .. 6 - d * 2 .. ' / ' ..
+           'yaktaur w:' .. 6 - d * 2 .. ' / ' ..
+           'polterguardian w:' .. 6 - d * 2 )
+    e.mons('vault sentinel w:' .. 8 - d * 2 .. ' ; '  .. eq .. ' / ' ..
+           'orc knight w:' .. 2 + d * 2 .. ' ; '  .. eq .. ' / ' ..
+           'yaktaur captain w:' .. 2 + d * 2)
+    e.mons('orc warlord w:' .. 2 + d * 2 .. ' ; '  .. eq .. ' / ' ..
+           'deep elf high priest w:' .. 2 + d * 3 .. ' / ' ..
+           'vault warden w:' .. 2 + d * 4 .. ' ; ' .. eq)
+    e.mons('stone giant')
+    e.kmons('U = training dummy ; nothing')
+    e.item('sling no_pickup w:5 / shortbow no_pickup / arbalest no_pickup')
+  elseif set == 'warriorcrypt' then
+    e.tags('no_wall_fixup')
+    e.mons('vault guard w:' .. 14 - d .. ' / ' ..
+           'vault sentinel w:' .. 10 - d .. ' / ' ..
+           'orc knight')
+    e.mons('necromancer w:' .. 10 - d .. ' / ' ..
+           'flayed ghost w:' .. 10 - d .. ' / ' ..
+           'phantasmal warrior w:' .. d + 2)
+    e.mons('war gargoyle w:' .. 16 - d * 2 .. ' / ' ..
+           'deep elf death mage w:4 / ' ..
+           'undying armoury w:' .. -2 + d)
+    e.mons('deep elf death mage w:5 / lich / ancient lich')
+    e.item('human skeleton / ogre skeleton w:1 / orc skeleton w:1')
+    e.kfeat('u = rock_wall')
+    e.tile('u = wall_undead')
+    e.tile('c = wall_crypt')
+    e.tile('G = dngn_statue_angel / dngn_statue_wraith / dngn_statue_twins / ' ..
+               'dngn_statue_dwarf / dngn_statue_sword / dngn_statue_centaur')
+  end
+end

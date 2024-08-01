@@ -4892,7 +4892,7 @@ ENDMAP
 NAME:    gammafunk_sealed_library
 TAGS:    no_monster_gen no_trap_gen transparent no_descent
 # Allow placement in Vaults as a room.
-TAGS:    vaults_hard preserve_wall passable
+TAGS:    vaults_hard no_wall_fixup passable
 DEPTH:   Crypt, D:12-, Depths, Elf, Snake, Vaults, Zot
 ORIENT:  float
 KMASK:   -UT_QR12345defg|*$+ = opaque
@@ -6579,7 +6579,7 @@ ENDMAP
 NAME:    regret_index_early_branch_jog
 TAGS:    no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_n vaults_orient_w vaults_orient_s
-DEPTH:   D:9-, !D:$, Vaults
+DEPTH:   D:9-, !D:$, Vaults, !Vaults:$
 WEIGHT:  20 (Vaults), 10
 ORIENT:  float
 KFEAT:   O = any shop
@@ -10965,7 +10965,7 @@ ENDMAP
 NAME:   gammafunk_sealed_arena
 TAGS:   no_monster_gen no_trap_gen transparent no_descent
 # Allow placement in Vaults as a room.
-TAGS:   vaults_hard preserve_wall passable
+TAGS:   vaults_hard no_wall_fixup passable
 DEPTH:  Crypt, D:8-, Depths, Elf, Shoals, Snake, Spider, Swamp, Vaults, Zot
 ORIENT: float
 KMASK:  -QR189de|*$ = opaque

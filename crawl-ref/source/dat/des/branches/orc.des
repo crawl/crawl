@@ -1445,7 +1445,7 @@ ENDMAP
 ##################################################
 # The orcs piled up some loose rubble.
 NAME:   blackcustard_rock_pile
-TAGS:   no_item_gen no_monster_gen transparent preserve_wall vaults_hard
+TAGS:   no_item_gen no_monster_gen transparent no_wall_fixup vaults_hard
 DEPTH:  Orc, Vaults
 WEIGHT: 5 (Vaults), 10
 MONS:   orc ; sling, kobold blastminer, boulder beetle

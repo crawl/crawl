@@ -2331,7 +2331,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_abyssal_escape
-TAGS:   transparent passable preserve_wall
+TAGS:   transparent passable no_wall_fixup
 ORIENT: float
 KMASK:  -DEFHNOQRdeqrsyuz1234|*%$^ = opaque
 KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
