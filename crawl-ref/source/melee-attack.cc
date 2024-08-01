@@ -1580,6 +1580,14 @@ public:
 
     string get_name() const override
     {
+        if (you.has_usable_tentacles())
+            return get_verb();
+        else
+            return "off-hand " + get_verb();
+    }
+
+    string get_verb() const override
+    {
         if (you.form == transformation::blade_hands)
             return "slash";
 
@@ -1665,11 +1673,16 @@ class AuxPseudopods: public AuxAttackType
 {
 public:
     AuxPseudopods()
-    : AuxAttackType(4, 67, "bludgeon") { };
+    : AuxAttackType(4, 67, "pseudopods") { };
 
     int get_damage(bool /*random*/) const override
     {
         return damage * you.has_usable_pseudopods();
+    }
+
+    string get_verb() const override
+    {
+        return "bludgeon";
     }
 
     bool is_usable() const override
