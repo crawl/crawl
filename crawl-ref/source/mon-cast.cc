@@ -4542,10 +4542,19 @@ bool handle_mon_spell(monster* mons)
     if (mons->asleep()
         || mons->berserk_or_frenzied()
         || mons_is_confused(*mons, false)
-        || !mons->has_spells()
-        || mons->no_cast())
+        || !mons->has_spells())
     {
         return false;
+    }
+
+    if (mons->no_cast())
+    {
+        monster_drop_things(mons, true, [](const item_def &item){
+            return is_artefact(item)
+                && artefact_property(item, ARTP_PREVENT_SPELLCASTING);
+        });
+
+        simple_monster_message(*mons, " takes off the burden that blocked casting.");
     }
 
     const monster_spells hspell_pass = _find_usable_spells(*mons);
