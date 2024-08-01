@@ -4554,7 +4554,8 @@ bool handle_mon_spell(monster* mons)
                 && artefact_property(item, ARTP_PREVENT_SPELLCASTING);
         });
 
-        simple_monster_message(*mons, " takes off the burden that blocked casting.");
+        simple_monster_message(*mons,
+            " takes off the burden that blocked casting a spell.");
     }
 
     const monster_spells hspell_pass = _find_usable_spells(*mons);
