@@ -1423,6 +1423,7 @@ private:
         }
 
         const vector<level_up_mutation> &xl_muts = get_species_def(you.species).level_up_mutations;
+        has_future_muts = false;
         if (!xl_muts.empty())
         {
             vector<pair<mutation_type, int>> gained_muts;
@@ -1458,8 +1459,6 @@ private:
                 }
             }
         }
-        else
-            has_future_muts = false;
 
         if (items.empty())
         {
