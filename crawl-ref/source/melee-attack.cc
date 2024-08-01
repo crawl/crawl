@@ -1852,6 +1852,12 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
+    if (you.duration[DUR_BLIND])
+    {
+        if (x_chance_in_y(player_blind_miss_chance(1), 100))
+            to_hit = -1;
+    }
+
     if (to_hit >= evasion || auto_hit)
         return true;
 
