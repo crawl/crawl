@@ -260,40 +260,34 @@ end
 function trove.weapon_skills (e)
     local weapon_skills = { "Short Blades", "Long Blades", "Axes",
         "Maces & Flails", "Polearms", "Staves", "Ranged Weapons" }
-    local skill_total = 0
-    local nonzero_skills = 0
+    local max, sum = 0, 0
+
     for _, skill in ipairs(weapon_skills) do
-        local base_skill = you.base_skill(skill)
-        skill_total = skill_total + base_skill
-        if base_skill > 0 then
-            nonzero_skills = nonzero_skills + 1
-        end
+        max = math.max(you.base_skill(skill), max)
+        sum = sum + you.base_skill(skill)
     end
-    if nonzero_skills > 0 then
-        return skill_total / nonzero_skills
-    else
-        return 0
-    end
+
+    return max == 0 and 0 or max + math.min(sum / max - 1, 2)
 end
 
 function trove.spell_skills (e)
     local spell_skills = { "Spellcasting", "Conjurations", "Hexes", "Summonings",
         "Necromancy", "Translocations", "Alchemy", "Fire Magic", "Ice Magic",
         "Air Magic", "Earth Magic" }
-    local skill_total = 0
-    local nonzero_skills = 0
+    local max, sum = 0, 0
+
     for _, skill in ipairs(spell_skills) do
-        local base_skill = you.base_skill(skill)
-        skill_total = skill_total + base_skill
-        if base_skill > 0 then
-            nonzero_skills = nonzero_skills + 1
-        end
+        max = math.max(you.base_skill(skill), max)
+        sum = sum + you.base_skill(skill)
     end
-    if nonzero_skills > 0 then
-        return skill_total / nonzero_skills
-    else
+
+    if max == 0 then
         return 0
     end
+
+    local cap = math.min(you.base_skill("Spellcasting") / 5, 3)
+    local bonus = math.min(sum / max - 1, cap)
+    return max + bonus
 end
 }}
 
