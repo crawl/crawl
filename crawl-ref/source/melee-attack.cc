@@ -4196,7 +4196,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
 
     // Does the player even qualify to use this type of aux?
-    if (aux->is_usable())
+    if (!aux->is_usable())
         return false;
 
     if (!x_chance_in_y(aux->get_chance(), 100))
