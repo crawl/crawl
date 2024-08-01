@@ -25,6 +25,7 @@
 #include "teleport.h"
 #include "throw.h"
 #include "traps.h"
+#include "unwind.h"
 #include "xom.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn,
@@ -328,6 +329,15 @@ bool ranged_attack::handle_phase_hit()
         {
             return false;
         }
+
+        if (using_weapon() && testbits(weapon->flags, ISFLAG_CHAOTIC))
+        {
+            unwind_var<brand_type> save_brand(damage_brand);
+            damage_brand = SPWPN_CHAOS;
+            if (apply_damage_brand(projectile->name(DESC_THE).c_str()))
+                return false;
+        }
+
         if ((!defender->is_player() || !you.pending_revival)
             && apply_missile_brand())
         {

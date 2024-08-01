@@ -553,7 +553,11 @@ static vector<string> _randart_propnames(const item_def& item,
 
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
+    {
         entry = get_unrand_entry(item.unrand_idx);
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
+            propnames.push_back("chaos,");
+    }
     const bool skip_ego = is_unrandom_artefact(item)
                           && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
 
@@ -1617,6 +1621,10 @@ static void _append_weapon_stats(string &description, const item_def &item)
                 (brand_desc.empty() ? "\n" : ""),
                 _format_dbrand(entry->dbrand).c_str());
         }
+        // XXX: Would be nice if this wasn't duplicated
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
+            description += "\nChaotic:    Each hit has a different, random effect.";
+
         // XX spacing following brand and dbrand for randarts/unrands is a bit
         // inconsistent with other object types
     }

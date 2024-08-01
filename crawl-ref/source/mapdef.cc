@@ -5290,6 +5290,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[UNOBTAINABLE_KEY] = true;
     if (strip_tag(s, "no_exclude"))
         result.props[NO_EXCLUDE_KEY] = true;
+    if (strip_tag(s, "chaotic"))
+        result.props[CHAOTIC_ITEM_KEY] = true;
 
     const int mimic = strip_number_tag(s, "mimic:");
     if (mimic != TAG_UNFOUND)

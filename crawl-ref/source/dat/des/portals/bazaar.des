@@ -2139,7 +2139,7 @@ equips[1] = weaps[1] .. ' ego:chaos randart plus:' .. crawl.roll_dice(3, 4)
 equips[2] = weaps[2] .. ' ego:chaos randart plus:' .. crawl.roll_dice(2, 5)
 equips[3] = weaps[3] .. ' ego:chaos good_item plus:' .. crawl.roll_dice(3, 2)
 
-if crawl.coinflip() then
+if crawl.x_chance_in_y(3, 4) then
   equip_count = equip_count + 1
 
   local baseunlist = { "plutonium_sword", "singing_sword", "obsidian_axe",
@@ -2150,7 +2150,19 @@ if crawl.coinflip() then
                        "hat_of_the_bear_spirit", "mad_mage's_maulers",
                        "ratskin_cloak", "slick_slippers", "seven_league_boots"}
 
-  table.insert(equips, util.random_from(baseunlist))
+  local chaoticlist = { "spriggan's_knife", "captain's_cutlass", "gyre",
+                        "sword_of_zonguldrok", "maxwell's_thermic_engine",
+                        "autumn_katana", "elemental_staff", "wrath_of_trog",
+                        "frostbite", "consecrated_labrys", "wyrmbane",
+                        "rift", "glaive_of_the_guard", "lochaber_axe",
+                        "eos", "spellbinder", "sceptre_of_torment",
+                        "punk", "storm_bow", "mule" }
+
+  if crawl.coinflip() then
+    table.insert(equips, util.random_from(baseunlist))
+  else
+    table.insert(equips, "chaotic " .. util.random_from(chaoticlist))
+  end
 end
 
 equips = table.concat(equips, ' | ')

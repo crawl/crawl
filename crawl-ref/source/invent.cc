@@ -591,6 +591,9 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         else if (item.cursed())
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
 
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
+            tileset.emplace_back(TILE_MODIFIER_CHAOTIC);
+
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
             tileset.emplace_back(base_item);

@@ -669,6 +669,13 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
+    if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC))
+    {
+        unwind_var<brand_type> save_brand(damage_brand);
+        damage_brand = SPWPN_CHAOS;
+        apply_damage_brand();
+    }
+
     // Apply flux form's sfx.
     if (attacker->is_player() && you.form == transformation::flux
         && defender->alive() && defender->is_monster())
