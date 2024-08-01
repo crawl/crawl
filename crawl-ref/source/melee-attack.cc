@@ -4371,23 +4371,11 @@ string mut_aux_attack_desc(mutation_type mut)
     }
 }
 
-static string _desc_aux(int chance, int to_hit, int dam)
+static string _desc_aux(int chance, int dam)
 {
-    string to_hit_pips = "";
-    // Each pip is 10 to-hit. Since to-hit is rolled before we compare it to
-    // defender evasion, for these pips to be comparable to monster EV pips,
-    // these need to be twice as large.
-    for (int i = 0; i < to_hit / 10; ++i)
-    {
-        to_hit_pips += "+";
-        if (i % 5 == 4)
-            to_hit_pips += " ";
-    }
     return make_stringf("\nTrigger chance:  %d%%\n"
-                          "Accuracy:        %s\n"
                           "Base damage:     %d",
                         chance,
-                        to_hit_pips.c_str(),
                         dam);
 }
 
@@ -4398,10 +4386,23 @@ string aux_attack_desc(unarmed_attack_type unat, int force_damage)
     const AuxAttackType* const aux = aux_attack_types[idx];
     const int dam = force_damage == -1 ? aux->get_damage(false) : force_damage;
     // lazily assume chance and to hit don't vary in/out of forms
-    return _desc_aux(aux->get_chance(), aux_to_hit(), dam);
+    return _desc_aux(aux->get_chance(), dam);
 }
 
 string AuxAttackType::describe() const
 {
-    return _desc_aux(get_chance(), aux_to_hit(), get_damage(false)) + "\n\n";
+    return _desc_aux(get_chance(), get_damage(false)) + "\n\n";
+}
+
+vector<string> get_player_aux_names()
+{
+    vector<string> names;
+    for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
+    {
+        const AuxAttackType* const aux = aux_attack_types[i - 1];
+        if (aux->is_usable())
+            names.push_back(aux->get_name());
+    }
+
+    return names;
 }

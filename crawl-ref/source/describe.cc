@@ -5582,6 +5582,25 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     return description.to_colour_string();
 }
 
+static void _describe_aux_hit_chance(ostringstream &result, vector<string>& auxes, int chance)
+{
+    result << " and " << chance << "% to hit with your ";
+    for (size_t i = 0; i < auxes.size(); ++i)
+    {
+        if (i > 0 && auxes.size() > 2)
+        {
+            if (i < auxes.size() - 1)
+                result << ", ";
+            else
+                result << ", and ";
+        }
+        else if (i == 1 && auxes.size() == 2)
+            result << " and ";
+
+        result << auxes[i];
+    }
+}
+
 /**
  * Calculate and describe the % chance of a player hitting the given monster.
  *
@@ -5619,6 +5638,17 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
         melee_attack attk(&you, nullptr);
         acc_pct = to_hit_pct(mi, source ? *source : attk, true, false,
                              distance_from);
+
+        describe_hit_chance(acc_pct, result, weapon, verbose, distance_from);
+
+        vector<string> aux_names = get_player_aux_names();
+        if (!aux_names.empty())
+        {
+            acc_pct = to_hit_pct_aux(mi, attk);
+            _describe_aux_hit_chance(result, aux_names, acc_pct);
+        }
+
+        return;
     }
     else if (weapon->base_type == OBJ_MISSILES)
     {

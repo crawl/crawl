@@ -99,12 +99,15 @@ static double _to_hit_to_land(attack &atk)
 }
 
 static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee,
-                                 int to_land)
+                                 int to_land, bool is_aux = false)
 {
+    const double AUTO_MISS_CHANCE = is_aux ? 0 : 2.5;
+    const double AUTO_HIT_CHANCE = is_aux ? 3.3333 : 2.5;
+
     int ev = mi.ev + (!melee && mi.is(MB_REPEL_MSL) ? REPEL_MISSILES_EV_BONUS : 0);
 
     if (ev <= 0)
-        return 1 - MIN_HIT_MISS_PERCENTAGE / 200.0;
+        return 1 - AUTO_MISS_CHANCE / 200.0;
 
     int hits = 0;
     for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
@@ -130,8 +133,8 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
 
     double hit_chance = ((double)hits) / to_land;
     // Apply Bayes Theorem to account for auto hit and miss.
-    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
-                 + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+    hit_chance = hit_chance * (1 - AUTO_MISS_CHANCE / 200.0)
+                 + (1 - hit_chance) * AUTO_HIT_CHANCE / 200.0;
     return hit_chance;
 }
 
@@ -188,6 +191,19 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee,
     const double hit_chance = _to_hit_hit_chance(mi, atk, melee, to_land);
     const double shield_chance = _to_hit_shield_chance(mi, melee, to_land, penetrating);
     const int blind_miss_chance = player_blind_miss_chance(distance);
+    return (int)(hit_chance * (1.0 - shield_chance) * 100 * (100 - blind_miss_chance) / 100);
+}
+
+/**
+ * Return the odds of the player hitting a defender defined as a
+ * monster_info with an auxiliary melee attack, rounded to the nearest percent.
+ */
+int to_hit_pct_aux(const monster_info& mi, attack &atk)
+{
+    const int to_land = aux_to_hit();
+    const double hit_chance = _to_hit_hit_chance(mi, atk, true, to_land, true);
+    const double shield_chance = _to_hit_shield_chance(mi, true, to_land, false);
+    const int blind_miss_chance = player_blind_miss_chance(1);
     return (int)(hit_chance * (1.0 - shield_chance) * 100 * (100 - blind_miss_chance) / 100);
 }
 
