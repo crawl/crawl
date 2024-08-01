@@ -162,6 +162,19 @@ Xom locks you up as an exhibit to study.
 w:5
 Xom constructs another @player_genus@ Petting Zoo.
 %%%%
+Xom bazaar trip
+
+Xom whisks you away into a realm of unfathomable savings!
+
+Xom casts you into... a shopping extravaganza?
+
+Xom offers you everything you could ever want (according to Xom).
+
+The world spins wildly as Xom's jovial laughter rings.
+
+w:2
+"Your coin purse has grown too comfortable in its little world, mortal!"
+%%%%
 ##################
 # Xom nastiness
 ##################

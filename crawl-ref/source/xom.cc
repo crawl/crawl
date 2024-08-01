@@ -24,6 +24,7 @@
 #endif
 #include "delay.h"
 #include "directn.h"
+#include "dlua.h"
 #include "english.h"
 #include "env.h"
 #include "errors.h"
@@ -823,6 +824,18 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
         if (item.base_type == OBJ_WEAPONS)
             item.plus  += random_range(2, 4);
     }
+}
+
+// Xom forcibly sends you to a special bazaar,
+// with visuals pretending it's banishment.
+static void _xom_bazaar_trip (int /*sever*/) {
+    stop_delay(true);
+    god_speaks(GOD_XOM, _get_xom_speech("bazaar trip").c_str());
+    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
+    dlua.callfn("dgn_set_persistent_var", "sb", "xom_bazaar", true);
+    down_stairs(DNGN_ENTER_BAZAAR);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "banished to a bazaar"),
+                  true);
 }
 
 static const vector<random_pick_entry<monster_type>> _xom_summons =
@@ -4147,7 +4160,14 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
                                          : XOM_GOOD_RANDOM_ITEM;
     }
 
-    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(21, sever)
+    if (you.gold > (500 + sever * 5) && x_chance_in_y(21, sever)
+        && !player_in_branch(BRANCH_BAZAAR)
+        && !player_in_branch(BRANCH_ABYSS))
+    {
+        return XOM_GOOD_BAZAAR_TRIP;
+    }
+
+    if (!player_in_branch(BRANCH_ABYSS) && x_chance_in_y(22, sever)
         && _teleportation_check())
     {
         // This is not very interesting if the level is already fully
@@ -4158,14 +4178,14 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return XOM_GOOD_TELEPORT;
     }
 
-    if (random2(tension) < 5 && x_chance_in_y(22, sever)
+    if (random2(tension) < 5 && x_chance_in_y(23, sever)
         && x_chance_in_y(16, you.how_mutated())
         && you.can_safely_mutate())
     {
         return XOM_GOOD_MUTATION;
     }
 
-    if (tension > 0 && x_chance_in_y(23, sever)
+    if (tension > 0 && x_chance_in_y(24, sever)
         && player_in_a_dangerous_place())
     {
         // Make sure there's at least one enemy within the lightning radius.
@@ -4178,7 +4198,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
-    if (tension > 0 && x_chance_in_y(24, sever)
+    if (tension > 0 && x_chance_in_y(25, sever)
         && mon_nearby(_choose_enchantable_monster))
     {
         return XOM_GOOD_WAVE_OF_DESPAIR;
@@ -4855,6 +4875,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                   _xom_animate_monster_weapon }},
     { XOM_GOOD_RANDOM_ITEM, { "random item gift", _xom_random_item }},
     { XOM_GOOD_ACQUIREMENT, { "acquirement", _xom_acquirement }},
+    { XOM_GOOD_BAZAAR_TRIP, { "bazaar trip", _xom_bazaar_trip }},
     { XOM_GOOD_ALLIES, { "summon allies", _xom_send_allies }},
     { XOM_GOOD_POLYMORPH, { "good polymorph", _xom_good_polymorph }},
     { XOM_GOOD_TELEPORT, { "good teleportation", _xom_good_teleport }},
