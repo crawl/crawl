@@ -351,10 +351,10 @@ they remain in the Abyss itself.
 Makhleb powers
 
 Makhleb offers followers the ability to unleash bolts of chaotic destruction at
-their cost of their own health as well as call in help from powerful (if
-sometimes uncooperative) demons. The most devoted of worshippers will eventually
-be gifted with knowledge of Infernal Marks, allowing them to ritually brand
-their own bodies in exchange for one of the Destroyer's many hellish powers.
+the cost of their own health as well as call in help from powerful (if sometimes
+uncooperative) demons. The most devoted of worshippers will eventually be gifted
+with knowledge of Infernal Marks, allowing them to ritually brand their own
+bodies in exchange for one of the Destroyer's many hellish powers.
 
 Makhleb's powers all come with a price in blood. However, Makhleb will grant
 followers renewed health in return for killing beings of all kinds.
