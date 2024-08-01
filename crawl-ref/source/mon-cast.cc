@@ -4542,7 +4542,8 @@ bool handle_mon_spell(monster* mons)
     if (mons->asleep()
         || mons->berserk_or_frenzied()
         || mons_is_confused(*mons, false)
-        || !mons->has_spells())
+        || !mons->has_spells()
+        || mons->no_cast())
     {
         return false;
     }
