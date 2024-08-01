@@ -64,7 +64,8 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
       art_props(0), unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
-      no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
+      no_damage_message(), special_damage_message(),
+      print_resist_vulnerability_message(), aux_attack(), aux_verb(),
       defender_shield(nullptr), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
@@ -1431,8 +1432,15 @@ bool attack::apply_damage_brand(const char *what)
     if (needs_message && !special_damage_message.empty())
     {
         mpr(special_damage_message);
-
         special_damage_message.clear();
+
+        // Player took fire/cold damage with rF-/rC-
+        if (print_resist_vulnerability_message)
+        {
+            mpr(brand == SPWPN_FLAMING ? "The fire burns you terribly!"
+                                       : "You feel a terrible chill!");
+        }
+        print_resist_vulnerability_message = false;
     }
 
     // Preserve Nessos's brand stacking in a hacky way -- but to be fair, it
@@ -1456,8 +1464,10 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
                                          const char *verb,
                                          const char *what)
 {
+    int pre_resist_damage = random2(damage_done) / 2 + 1;
+
     special_damage = resist_adjust_damage(defender, flavour,
-                                          random2(damage_done) / 2 + 1);
+                                          pre_resist_damage);
 
     if (needs_message && special_damage > 0 && verb)
     {
@@ -1471,6 +1481,9 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
             defender_name(!what).c_str(),
             attack_strength_punctuation(special_damage).c_str());
     }
+
+    if (special_damage > pre_resist_damage)
+        print_resist_vulnerability_message = true;
 }
 
 int attack::player_stab_weapon_bonus(int damage)
