@@ -7537,8 +7537,11 @@ bool player::has_tail(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring a tail with them
-        if (form == transformation::dragon)
+        if (form == transformation::serpent
+            || form == transformation::dragon)
+        {
             return true;
+        }
 
         // Most transformations suppress a tail.
         if (!form_keeps_mutations())

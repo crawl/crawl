@@ -1547,8 +1547,9 @@ public:
         return you.has_tail()
                // felid tails don't slap
                && you.species != SP_FELID
-               // constricting tails are too slow to slap
-               && !you.has_mutation(MUT_CONSTRICTING_TAIL);
+               // constricting/serpent tails are too slow to slap
+               && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+               && you.form != transformation::serpent;
     }
 };
 
