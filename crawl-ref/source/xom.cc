@@ -2890,16 +2890,16 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
+    if (player_has_ears())
+    {
+        string str =_get_xom_speech("ears");
+        messages.push_back(str);
+    }
+
     {
         string str =_get_xom_speech(
                 you.get_mutation_level(MUT_MISSING_EYE) ? "one eye"
                                                         : "eyes");
-        messages.push_back(str);
-    }
-
-    if (player_has_ears())
-    {
-        string str =_get_xom_speech("ears");
         messages.push_back(str);
     }
 
