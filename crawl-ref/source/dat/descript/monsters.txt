@@ -1491,7 +1491,7 @@ parties will put them in a welcoming mood toward adventurers.
 goblin sharper
 
 A goblin newly converted to Nemelex Xobeh. It's still learning about all the
-cards, and, thankfully, isn't inclined to use them against you.
+cards and, thankfully, isn't inclined to use them against you.
 %%%%
 golden dragon
 
