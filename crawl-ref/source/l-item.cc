@@ -272,6 +272,45 @@ static int l_item_do_drop(lua_State *ls)
  */
 IDEFN(drop, do_drop)
 
+static int l_item_do_inscribe(lua_State *ls)
+{
+    UDATA_ITEM(item);
+
+    if (item)
+    {
+        string new_inscr = "";
+        bool append = true;
+        if (lua_isstring(ls, 1))
+            new_inscr = lua_tostring(ls, 1);
+
+        if (lua_isboolean(ls, 2))
+            append = lua_toboolean(ls, 2);
+
+        if (append)
+            new_inscr = item->inscription + new_inscr;
+
+        item->inscription = new_inscr;
+
+        // Redraw if item is wielded or quivered
+        if (item == you.weapon())
+          you.wield_change = true;
+        else if (you.quiver_action.item_is_quivered(*item))
+          you.redraw_quiver = true;
+
+        lua_pushboolean(ls, true);
+    }
+    else
+        lua_pushboolean(ls, false);
+    return 1;
+}
+/*** Edit this item's inscription.
+ * @tparam[opt=""] string inscription to add
+ * @tparam[opt=true] boolean append to existing inscription; if false, replace
+ * @treturn boolean successfully inscribed
+ * @function inscribe
+ */
+IDEFN(inscribe, do_inscribe)
+
 /*** Is this equipped?
  * @field equipped boolean
  */
@@ -1771,6 +1810,7 @@ static ItemAccessor item_attrs[] =
     { "puton",             l_item_puton },
     { "remove",            l_item_remove },
     { "drop",              l_item_drop },
+    { "inscribe",          l_item_inscribe },
     { "equipped",          l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
