@@ -3180,8 +3180,17 @@ static bool _interesting_explore_pickup(const item_def& item)
         const string name = item.name(DESC_PLAIN);
 
         for (const text_pattern &pat : ignores)
+        {
             if (pat.matches(name))
                 return false;
+
+            const string c = lowercase_string(pat.tostring());
+            if ((c == "book" || c == "books" || c == "spellbook" || c == "spellbooks")
+                && item_is_spellbook(item))
+            {
+                return false;
+            }
+        }
     }
 
     if (!(Options.explore_stop & ES_GREEDY_PICKUP_SMART))
