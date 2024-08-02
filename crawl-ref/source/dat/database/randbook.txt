@@ -489,6 +489,8 @@ Occultism
 
 Sorcery
 
+Sortilege
+
 Spellcasting
 
 Spellcraft
