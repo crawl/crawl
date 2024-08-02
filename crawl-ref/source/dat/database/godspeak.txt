@@ -354,12 +354,16 @@ Xom one eye
 A monocle briefly appears over your eye.
 
 An eyepatch briefly covers your eye.
+
+A burst of @any_colour@ light briefly shoots from your eye!
 %%%%
 Xom eyes
 
 A monocle briefly appears over one of your eyes.
 
 An eyepatch briefly covers one of your eyes.
+
+Bursts of @any_colour@ light briefly shoot from your eyes!
 %%%%
 Xom ears
 
