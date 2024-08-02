@@ -3904,6 +3904,7 @@ void drain_mp(int mp_loss)
 void pay_hp(int cost)
 {
     you.hp -= cost;
+    makhleb_celebrant_bloodrite();
     ASSERT(you.hp);
 }
 
