@@ -8661,6 +8661,9 @@ a proper diet respecting intelligent beings.
 # necromancy and evil
 the evils of necromancy.
 
+# chaotic acts, esp. Nemelex Xobeh
+the evils of gambling.
+
 undead, and why they are evil.
 
 # the gods
@@ -8836,6 +8839,8 @@ VISUAL:@The_monster_possessive@ deck briefly glows with a rainbow of weird colou
 @The_monster@ praises @possessive_God@.
 
 @The_monster@ grins. "So many cards! Brought to you by @my_God@!"
+
+@The_monster@ refuses insurance.
 
 w:20
 @_deck_of_destruction_line_@
