@@ -7,12 +7,13 @@ will: invuln
 attacks:
  - {type: tentacle_slap, damage: 29}
 hd: 12
-hp_10x: 480
+hp_10x: 240
 ac: 5
 ev: 7
 intelligence: animal
 habitat: amphibious
-speed: 17
+speed: 10
+energy: {attack: 25}
 size: large
 shape: snake
 tile: program_bug
