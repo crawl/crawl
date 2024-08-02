@@ -731,7 +731,6 @@ void bolt::initialise_fire()
     {
         range             = 0;
         aimed_at_feet     = true;
-        auto_hit          = true;
         aimed_at_spot     = true;
         use_target_as_pos = true;
     }
@@ -1143,7 +1142,6 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.aimed_at_spot    = copy.aimed_at_spot;
     orig.aimed_at_feet    = copy.aimed_at_feet;
     orig.extra_range_used = copy.extra_range_used;
-    orig.auto_hit         = copy.auto_hit;
     orig.ray              = copy.ray;
     orig.colour           = copy.colour;
     orig.flavour          = copy.flavour;
@@ -3392,7 +3390,7 @@ bool bolt::misses_player()
     if (flavour == BEAM_VISUAL)
         return true;
 
-    if ((is_explosion || auto_hit || aimed_at_feet)
+    if ((is_explosion || aimed_at_feet)
         && origin_spell != SPELL_CALL_DOWN_LIGHTNING
         && origin_spell != SPELL_MOMENTUM_STRIKE)
     {
