@@ -4362,21 +4362,18 @@ string random_body_part_name(bool plural, int part_class)
             body_parts.push_back("ears");
         }
 
-        if (player_has_eyes())
+        string eyes;
+        if (you.get_mutation_level(MUT_MISSING_EYE))
         {
-            string eyes;
-            if (you.get_mutation_level(MUT_MISSING_EYE))
-            {
-                plural_parts.push_back(false);
-                eyes = "eye";
-            }
-            else
-            {
-                plural_parts.push_back(true);
-                eyes = "eyes";
-            }
-            body_parts.push_back(eyes);
+            plural_parts.push_back(false);
+            eyes = "eye";
         }
+        else
+        {
+            plural_parts.push_back(true);
+            eyes = "eyes";
+        }
+        body_parts.push_back(eyes);
 
         plural_parts.push_back(false);
         body_parts.push_back("mouth");

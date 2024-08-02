@@ -232,8 +232,6 @@ public:
     const form_capability has_bones;
     /// Does this form have feet?
     const form_capability has_feet;
-    /// Does this form have eyes?
-    const form_capability has_eyes;
     /// Does this form have ears?
     const form_capability has_ears;
 
@@ -330,7 +328,6 @@ bool form_has_blood(transformation form = you.form);
 bool form_has_hair(transformation form = you.form);
 bool form_has_bones(transformation form = you.form);
 bool form_has_feet(transformation form = you.form);
-bool form_has_eyes(transformation form = you.form);
 bool form_has_ears(transformation form = you.form);
 
 bool feat_dangerous_for_form(transformation which_trans,

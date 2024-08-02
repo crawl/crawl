@@ -1,6 +1,6 @@
 name: "Maurice"
 glyph: {char: "f", colour: lightgreen}
-flags: [speaks, warm_blood, unique, fast_regen, male, no_skeleton, unblindable, always_wand]
+flags: [speaks, warm_blood, unique, fast_regen, male, no_skeleton, always_wand]
 xp_mult: 24
 species: vine_stalker
 will: 40

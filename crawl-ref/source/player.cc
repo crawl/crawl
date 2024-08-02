@@ -978,20 +978,6 @@ bool player_has_feet(bool temp, bool include_mutations)
     return species::has_feet(you.species);
 }
 
-bool player_has_eyes(bool temp, bool include_mutations)
-{
-    if (include_mutations &&
-        you.get_mutation_level(MUT_EYEBALLS, temp))
-    {
-        return true;
-    }
-
-    if (temp)
-        return form_has_eyes(you.form);
-
-    return species::has_eyes(you.species);
-}
-
 bool player_has_ears(bool temp)
 {
     if (temp)
@@ -4957,11 +4943,11 @@ bool player::can_be_dazzled() const
 }
 
 /**
- * Players can be blinded only if they have eyes.
+ * Players can be blinded only if they're not undead.
  */
 bool player::can_be_blinded() const
 {
-    return player_has_eyes();
+    return holiness() != MH_UNDEAD;
 }
 
 /**

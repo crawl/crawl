@@ -192,7 +192,7 @@ ALL_WEAPON_SKILLS = ('short blades', 'long blades', 'axes',
 
 ALL_SPECIES_FLAGS = {'draconian', 'no_hair', 'no_bones',
     'small_torso', 'barding', 'no_feet',
-    'no_blood', 'no_eyes', 'no_ears'}
+    'no_blood', 'no_ears'}
 
 JOB_ENUM = 'JOB'
 UNDEAD_TYPE_ENUM = 'US'
