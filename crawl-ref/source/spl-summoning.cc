@@ -3197,7 +3197,7 @@ bool make_soul_wisp(const actor& agent, actor& victim)
         return false;
 
     // Don't try to create a wisp from a monster who's already had one made from
-    // them. (This causes wierd messaging and removes the Weak effect).
+    // them. (This causes weird messaging and removes the Weak effect).
     if (victim.is_monster() && victim.props.exists(SOUL_SPLINTERED_KEY))
     {
         if (agent.is_player() && victim.observable())
