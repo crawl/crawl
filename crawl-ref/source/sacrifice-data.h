@@ -184,7 +184,7 @@ static const sacrifice_def sac_data[] =
   25,
   SK_NONE,
   nullptr,
-  nullptr,
+  []() { return player_has_eyes(false, false); }
 },
 
 { ABIL_RU_SACRIFICE_RESISTANCE, MUT_TEMPERATURE_SENSITIVITY,
