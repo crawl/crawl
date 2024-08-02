@@ -1276,10 +1276,10 @@ static bool _safe_to_remove_or_wear(const item_def &item,
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(const item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield)
+               bool ignore_temporary_disability, bool unwield, bool offhand)
 {
 #define SAY(x) {if (say_reason) { x; }}
-    if (you.melded[EQ_WEAPON] && unwield)
+    if (unwield && you.melded[offhand ? EQ_OFFHAND : EQ_WEAPON])
     {
         SAY(mprf(MSGCH_PROMPT, "Your weapon is melded into your body!"));
         return false;
@@ -1300,16 +1300,12 @@ bool can_wield(const item_def *weapon, bool say_reason,
         return false;
     }
 
-    const item_def *old_wpn = you.weapon();
+    const item_def *old_wpn = unwield && weapon ? weapon :
+                              offhand ? you.offhand_weapon() : you.weapon();
     if (!ignore_temporary_disability
-        && old_wpn
-        && old_wpn->cursed()
-        && (!you.has_mutation(MUT_WIELD_OFFHAND)
-            || you.hands_reqd(*old_wpn) == HANDS_TWO
-            || you.offhand_weapon() && you.offhand_weapon()->cursed()))
+        && old_wpn && old_wpn->cursed())
     {
-        SAY(mprf(MSGCH_PROMPT, "You can't unwield your weapon%s%s!",
-                 you.offhand_weapon() ? "s" : "",
+        SAY(mprf(MSGCH_PROMPT, "You can't unwield your weapon%s!",
                  !unwield ? " to draw a new one" : ""));
         return false;
     }
@@ -1776,7 +1772,7 @@ static bool _do_wield_weapon(item_def &new_wpn, const item_def *old_wpn,
     }
 
     // Ensure wieldable
-    if (!can_wield(&new_wpn, true))
+    if (!can_wield(&new_wpn, true, false, false, !as_primary))
         return false;
 
     if (!as_primary)
@@ -2161,7 +2157,7 @@ static bool _can_equip_armour(const item_def &item)
     {
         if (slot == EQ_OFFHAND && is_weapon(you.inv[equipped]))
         {
-            if (!can_wield(&you.inv[equipped], true, false, true))
+            if (!can_wield(&you.inv[equipped], true, false, true, true))
                 return false;
         }
         else if (!_can_takeoff_armour(equipped))
