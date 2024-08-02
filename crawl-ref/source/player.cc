@@ -7796,7 +7796,6 @@ bool player::has_bones(bool temp) const
 {
     if (temp)
         return form_has_bones(you.form);
-;
 
     return species::has_bones(you.species);
 }
