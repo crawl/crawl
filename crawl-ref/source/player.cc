@@ -4947,7 +4947,7 @@ bool player::can_be_dazzled() const
  */
 bool player::can_be_blinded() const
 {
-    return holiness() != MH_UNDEAD;
+    return !is_lifeless_undead();
 }
 
 /**
