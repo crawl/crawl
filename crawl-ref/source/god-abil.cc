@@ -4783,8 +4783,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
     }
 
-    // Award piety for any mutations removed by adding new innate muts
-    // These can only be removed positive mutations, so we'll always give piety.
+    // Award piety for any mutations removed by adding new innate muts.
+    // These can only be removed by positive mutations, so we'll always give
+    // piety.
     if (sacrifice == ABIL_RU_SACRIFICE_PURITY
         || sacrifice == ABIL_RU_SACRIFICE_HEALTH
         || sacrifice == ABIL_RU_SACRIFICE_ESSENCE)
