@@ -61,7 +61,7 @@ Character
 * Background changes:
   - Necromancers now start with Soul Splinter instead of Necrotise, as well as
     a dagger and knowledge of Grave Claw.
-  - Hedge Wizards now know Grave Claw instead of Cigotuvi's Deadful Rot and
+  - Hedge Wizards now know Grave Claw instead of Cigotuvi's Dreadful Rot and
     start with additional Conjurations and Necromancy skill.
   - Wanderers can now start with talismans and Shapeshifting skill, and those
     that start with throwing items will usually start with more of them. Logic
@@ -196,7 +196,7 @@ Gods
   100% block chance for the next several attacks after using it. Ranged
   projectiles will be reflected and melee attackers have a high chance to become
   blinded.
-* Makhleb, Vehumet, and The Shining One are now much more likely to restore
+* Makhleb, Vehumet, and the Shining One are now much more likely to restore
   HP or MP on eligible kills made while at low piety.
 * Most gods now comment upon or otherwise influence the player's death.
 
