@@ -287,7 +287,7 @@ Species
 * New species: Coglins, goblins in mechanical exoskeletons. Features:
   - Their exoskeletons allow them to dual wield, but innately take a few
     swings to rev up to normal damage.
-  - They can't wear jewellery, but at XL 13 they can choose to invent one of
+  - They can't wear jewellery, but at XL 14 they can choose to invent one of
     three gizmos that passively provide resists and unique benefits.
 * Returning species: Since all species can become orcs, Hill Orcs swap out with
   Mountain Dwarves, with similar but less skewed apts and stats. New features:
