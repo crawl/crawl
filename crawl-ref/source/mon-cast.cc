@@ -3325,7 +3325,7 @@ static bool _ms_quick_get_away(spell_type monspell)
 // Is it worth bothering to invoke recall? (Currently defined by there being at
 // least 3 things we could actually recall, and then with a probability inversely
 // proportional to how many HD of allies are current nearby)
-static bool _should_recall(monster* caller)
+bool _should_recall(monster* caller)
 {
     ASSERT(caller); // XXX: change to monster &caller
     // It's a long recitation - if we're winded, we can't use it.

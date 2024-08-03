@@ -51,6 +51,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 
 void mons_cast_flay(monster &caster, mon_spell_slot, bolt&);
+bool _should_recall(monster* caller);
 bool mons_word_of_recall(monster* mons, int recall_target);
 void setup_breath_timeout(monster* mons);
 bool mons_can_bind_soul(monster* binder, monster* bound);

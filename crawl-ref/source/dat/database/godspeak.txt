@@ -726,6 +726,18 @@ Xom stomps on time for a few moments.
 w:1
 Xom prepares the audience for the floor's solo!
 %%%%
+Xom grant word of recall
+
+Xom feels like this meagre party needs more guests.
+
+Xom sends out highly concerning invitations.
+%%%%
+Xom grant voiceless word of recall
+
+Xom demands a dramatic dialogue!
+
+Xom grants a terrible voice to the voiceless.
+%%%%
 #####################
 # other effects
 #####################

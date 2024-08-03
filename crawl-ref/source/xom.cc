@@ -40,6 +40,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-pick.h"
@@ -3745,6 +3746,100 @@ static void _xom_brain_drain(int sever)
     }
 }
 
+// XXX: Possibly this could be used elsewhere, like defaults for wizard spells
+// for those without speech, but we generally try to just give those custom
+// messages per-monster anyway currently.
+static const map<shout_type, string> speaking_keys = {
+    { S_SILENT,         "dramatically intoning" },
+    { S_SHOUT,          "shouting" },
+    { S_BARK,           "barking" },
+    { S_HOWL,           "howling" },
+    { S_SHOUT2,         "shouting twice-over" },
+    { S_ROAR,           "roaring" },
+    { S_SCREAM,         "screaming" },
+    { S_BELLOW,         "bellowing" },
+    { S_BLEAT,          "bleating" },
+    { S_TRUMPET,        "trumpeting" },
+    { S_SCREECH,        "screeching" },
+    { S_BUZZ,           "buzzing" },
+    { S_MOAN,           "chillingly moaning" },
+    { S_GURGLE,         "gurgling" },
+    { S_CROAK,          "croaking" },
+    { S_GROWL,          "growling" },
+    { S_HISS,           "hissing" },
+    { S_SKITTER,        "weaving" },
+    { S_FAINT_SKITTER,  "faintly weaving" },
+    { S_DEMON_TAUNT,    "sneering" },
+    { S_CHERUB,         "speaking" },
+    { S_SQUEAL,         "squealing" },
+    { S_LOUD_ROAR,      "roaring" },
+    { S_RUSTLE,         "scribing" },
+    { S_SQUEAK,         "squeaking" },
+};
+
+static bool _has_min_recall_level()
+{
+    int min = you.penance[GOD_XOM] ? 3 : 5;
+    return you.experience_level > min;
+}
+
+// As intense as these checks are, it basically just avoids monsters who
+// would otherwise be preoccupied or aren't "real monsters" to kill.
+static bool _valid_speaker_of_recall(monster* mon)
+{
+    return mon->alive() && !mon->wont_attack() && _should_recall(mon)
+            && !mon->berserk_or_frenzied() && you.can_see(*mon)
+            && !mons_is_tentacle_or_tentacle_segment(mon->type)
+            && !mons_is_firewood(*mon) && !mons_is_object(mon->type)
+            && !mon->is_summoned() && !mons_is_confused(*mon)
+            && !mon->petrifying() && !mon->cannot_act() && !mon->asleep()
+            && !mon->is_silenced() && !mon->has_ench(ENCH_WORD_OF_RECALL);
+}
+
+// Xom forces a random monster in sight to start reciting a Word of Recall.
+// Since this is much rarer and less anticipated compared to normal sightings
+// of ironbound convokers, it takes extra long to cast.
+static void _xom_grants_word_of_recall(int /*sever*/)
+{
+    int duration = 90 - div_rand_round(you.experience_level, 9) * 10;
+    string note = "";
+
+    vector<monster*> targetable;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (_valid_speaker_of_recall(*mi))
+            targetable.push_back(*mi);
+    }
+
+    // Shouldn't be reached outside of wizmode due to
+    // having checked for a valid speaker first.
+    if (targetable.empty())
+        return;
+
+    shuffle_array(targetable);
+    string phrasing = "reciting";
+    string xom_speech = "grant word of recall";
+
+    shout_type shouting = get_monster_data(targetable[0]->type)->shouts;
+    phrasing = speaking_keys.find(shouting)->second;
+    if (phrasing == "dramatically intoning")
+        xom_speech = "grant voiceless word of recall";
+
+    god_speaks(GOD_XOM, _get_xom_speech(xom_speech).c_str());
+    mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
+                     targetable[0]->name(DESC_A, true, false).c_str(),
+                     phrasing.c_str());
+    mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1,
+                                          targetable[0], duration);
+    targetable[0]->add_ench(chant_timer);
+
+    note = make_stringf("made %s speak a word of recall",
+                        targetable[0]->name(DESC_A, true, false).c_str());
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+}
+
 static bool _has_min_banishment_level()
 {
     int min = you.penance[GOD_XOM] ? 6 : 9;
@@ -4328,6 +4423,20 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
 
         if (clone_capacity >= 3)
             return XOM_BAD_SEND_IN_THE_CLONES;
+    }
+
+    if (tension > 0 && tension < 20 && x_chance_in_y(21, sever) &&
+        _has_min_recall_level())
+    {
+        bool recall_ready = false;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (_valid_speaker_of_recall(*mi))
+                recall_ready = true;
+        }
+
+        if (recall_ready)
+            return XOM_BAD_GRANT_WORD_OF_RECALL;
     }
 
     if (x_chance_in_y(21, sever))
@@ -4917,6 +5026,8 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
     { XOM_BAD_SEND_IN_THE_CLONES, {"friendly and hostile illusions",
                                    _xom_send_in_clones, 40}},
+    { XOM_BAD_GRANT_WORD_OF_RECALL, {"speaker of recall",
+                                    _xom_grants_word_of_recall, 40}},
     { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
     { XOM_BAD_STATLOSS, { "statloss", _xom_statloss, 23}},
     { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},

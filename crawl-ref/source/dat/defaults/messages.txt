@@ -189,6 +189,9 @@ force_more_message += will allow you to brand your body
 
 force_more_message += Beogh speaks to you:
 
+# Xom doing things you really shouldn't miss
+force_more_message += is forced to slowly start .* word of recall
+
 # Crucible exit notification
 force_more_message += Makhleb acknowledges your contrition
 
