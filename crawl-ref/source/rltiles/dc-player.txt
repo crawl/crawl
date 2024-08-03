@@ -47,8 +47,8 @@ kobold2_m
 kobold2_f
 mummy_m MUMMY
 mummy_f
-naga_f NAGA
-naga_m
+naga_green_f NAGA
+naga_green_m
 naga_darkgreen_f
 naga_darkgreen_m
 naga_lightgreen_f
@@ -101,8 +101,8 @@ octopode3
 octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
-djinni_f DJINNI
-djinni_m
+djinni_red_f DJINNI
+djinni_red_m
 djinni_blue_f
 djinni_blue_m
 djinni_gold_f

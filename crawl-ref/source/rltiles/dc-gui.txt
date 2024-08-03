@@ -304,7 +304,7 @@ felids/cat3 SP_RECOMMENDED_FELID
 %finish SP_RECOMMENDED_MINOTAUR
 base/mummy_m SP_RECOMMENDED_MUMMY
 %start
-%compose base/naga_f
+%compose base/naga_green_f
 %compose body/animal_skin
 %compose hair/part2_red
 %finish SP_RECOMMENDED_NAGA
@@ -340,7 +340,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose body/animal_skin
 %finish SP_RECOMMENDED_VINE_STALKER
 %start
-%compose base/djinni_f
+%compose base/djinni_red_f
 %compose body/animal_skin
 %compose hair/part2_red
 %finish SP_RECOMMENDED_DJINNI
