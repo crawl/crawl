@@ -829,7 +829,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 
 // Xom forcibly sends you to a special bazaar,
 // with visuals pretending it's banishment.
-static void _xom_bazaar_trip (int /*sever*/) {
+static void _xom_bazaar_trip(int /*sever*/)
+{
     stop_delay(true);
     god_speaks(GOD_XOM, _get_xom_speech("bazaar trip").c_str());
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
