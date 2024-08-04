@@ -190,7 +190,7 @@ Xom's power almost touches on you for a moment.
 You almost hear Xom's maniacal laughter.
 %%%%
 # Keep this greater than one, and small.
-Xom_number
+_xom_number_
 
 two
 
@@ -410,9 +410,9 @@ You perform an impromptu @dance_name@.
 
 You do an impromptu @acrobatic_move_name@.
 
-You compulsively click your heels together @Xom_number@ times.
+You compulsively click your heels together @_xom_number_@ times.
 
-You compulsively stomp your @feet@ @Xom_number@ times.
+You compulsively stomp your @feet@ @_xom_number_@ times.
 %%%%
 dance_name
 
@@ -476,7 +476,7 @@ Xom unarmed two hands
 
 Two fancy canes briefly appear in your @hands@.
 
-You compulsively clap your @hands@ @Xom_number@ times.
+You compulsively clap your @hands@ @_xom_number_@ times.
 %%%%
 Xom cloak slot
 
@@ -498,7 +498,7 @@ Xom offhand slot
 %%%%
 Xom gloves slot
 
-@Your_item@ briefly grows @Xom_number@ extra fingers!
+@Your_item@ briefly grows @_xom_number_@ extra fingers!
 %%%%
 Xom boots slot
 
