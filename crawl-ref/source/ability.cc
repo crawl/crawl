@@ -1581,7 +1581,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
         case ABIL_BEOGH_DISMISS_APOSTLE_2:
         case ABIL_BEOGH_DISMISS_APOSTLE_3:
         {
-            const int index = ability - ABIL_BEOGH_DISMISS_APOSTLE_1;
+            const int index = ability - ABIL_BEOGH_DISMISS_APOSTLE_1 + 1;
             lookup += "\n" + apostle_short_description(index) + "\n";
         }
         break;
