@@ -2428,7 +2428,6 @@ NAME:    grunt_spider_rune_island
 TAGS:    no_monster_gen
 PLACE:   Spider:$
 ORIENT:  west
-NSUBST:  d = 1:O / 3:d / 3:e / *:f
 MONS:    ghost moth, moth of wrath, sun moth
 MONS:    emperor scorpion / w:5 spark wasp / w:5 jorogumo
 MONS:    orb spider
@@ -2436,18 +2435,18 @@ MONS:    wolf spider / redback / tarantella / culicivora / jumping spider
 MONS:    demonic crawler / steelbarb worm / torpor snail / meliai
 KITEM:   R = milky-white gem
 KITEM:   O = gossamer rune of Zot
+KFEAT:   ^ = web trap
+KFEAT:   _ = .
+NSUBST:  d = 1:O / 3:d / 3:e / *:f
 NSUBST:  h = 2:9 / 2 = 4. / *= 6667....
-NSUBST:  9 = 3:13 / 1:2 / * = 6..
+NSUBST:  9 = 3:13 / 1:2 / * = 6.., ? = 1:_ / *:"
 SUBST:   5 = 5.., g = 6667....
 SUBST:   0 = 667...
 SUBST:   + = ^^^+
 SUBST:   " = ...xxW^
 SUBST:   - = ...cWW^^^
 SUBST:   . = .:20 x:2 ^:1
-KFEAT:   ^ = web trap
-KFEAT:   _ = .
-SUBST:   c : cx
-SUBST:   C : c
+SUBST:   c : cx, C : c
 : setup_endvault_loot(_G)
 MAP
   xxxxc--"""""@"""x""@5""""""--ccc
@@ -2462,9 +2461,9 @@ xcc....h..WWwwwCCCCCCwwwwwW...g-"-
 xcch.5...hWwwwCC----CCCwwwW...g-"-
 xc-......_WwwCC--0R---CwwwW....-"-
 xc-..h.._-WwwC--409__-CCwwW..0.-"-
-xc-.h.h_-"-"wC-0ddd0_--CwwW.5..-"-
+xc-.h.h_-"-?wC-0ddd0_--CwwW.5..-"-
 xc-..._-"---_+49dddd9-CCwwW...g-"-
-xc-.h.h_-"-"wC-0ddd0--CwwwW...g-"-
+xc-.h.h_-"-?wC-0ddd0--CwwwW...g-"-
 xc-..h.._"WwwC--409--CCwwwW..g.-"@
 xcc..5..._WwwCC--0_-CCwwwWW....-"-
 xcc.......WwwwCC----CwwwwW....5-"-

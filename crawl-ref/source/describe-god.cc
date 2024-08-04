@@ -884,9 +884,6 @@ static formatted_string _describe_god_powers(god_type which_god)
                      "Foes that die within your umbra may be raised as undead servants.\n");
         break;
 
-    case GOD_DITHMENOS:
-        break;
-
     case GOD_HEPLIAKLQANA:
         // Frailty occurs even under penance post-abandonment, so we can't put
         // this in the usual god_powers block.
@@ -914,6 +911,13 @@ static formatted_string _describe_god_powers(god_type which_god)
         {
             continue;
         }
+        // Skip over Makhleb's brand options after the first one, since
+        // only the first one has an associated god ability.
+        if (power.abil == ABIL_MAKHLEB_BRAND_SELF_2
+            || power.abil == ABIL_MAKHLEB_BRAND_SELF_3)
+        {
+            continue;
+        }
         have_any = true;
 
         if (you_worship(which_god)
@@ -927,6 +931,29 @@ static formatted_string _describe_god_powers(god_type which_god)
         }
         else
             desc.textcolour(DARKGREY);
+
+        // XXX: I don't like this, but there's no other obvious way to
+        //      slot the destruction upgrade mutations in at the right piety
+        //      point in the list for them.
+        if (which_god == GOD_MAKHLEB && power.rank == 4)
+        {
+            desc.textcolour(god_colour(which_god));
+            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+                desc.cprintf("Your Destruction is augmented by the power of Gehenna.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+                desc.cprintf("Your Destruction is augmented by the power of Cocytus.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+                desc.cprintf("Your Destruction is augmented by the power of Tartarus.\n");
+            else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+                desc.cprintf("Your Destruction is augmented by the power of Dis.\n");
+            else
+            {
+                desc.textcolour(DARKGREY);
+                desc.cprintf("Your Destruction will be augmented by one of the Four Hells.\n");
+            }
+
+            continue;
+        }
 
         string buf = power.general;
 

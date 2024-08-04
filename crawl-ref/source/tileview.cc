@@ -296,6 +296,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_CRUCIBLE:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
+
     case NUM_BRANCHES:
     case GLOBAL_BRANCH_INFO:
         break;
@@ -1131,9 +1136,10 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
     // Wizlab entries and conduits both have spinning sequential cycle
-    // tile animations.
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB ||
-        (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
+    // tile animations. The Jiyva altar, meanwhile, drips.
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
+       || bg_idx == TILE_DNGN_ALTAR_JIYVA
+       || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
         && Options.tile_misc_anim)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
@@ -1339,6 +1345,16 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_DEPTHS;
+    }
+    else if (player_in_branch(BRANCH_ABYSS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+        {
+            tileidx_t choices[3] = {TILE_STONE_WALL_ABYSS_A,
+                                    TILE_STONE_WALL_ABYSS_B,
+                                    TILE_STONE_WALL_ABYSS_C};
+            orig = choices[you.birth_time % 3];
+        }
     }
     else if (player_in_branch(BRANCH_ZOT))
     {

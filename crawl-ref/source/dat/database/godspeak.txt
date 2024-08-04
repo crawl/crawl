@@ -86,6 +86,8 @@ Xom spreads life in this Dungeon full of death.
 
 Xom incites some dramatic evolution in the adjacent floor mould.
 
+"It's alive! It's alive!"
+
 w:5
 Xom adds fresh vegetables to this Dungeon dish.
 
@@ -136,6 +138,12 @@ Xom scenery enter_abyss
 Xom suggests a refreshing change of pace.
 
 Xom tears open a few small holes in reality.
+
+Xom bends space into knots.
+%%%%
+Xom scenery trap_teleport
+
+@Xom scenery enter_abyss@
 %%%%
 Xom kind door ring
 
@@ -153,6 +161,19 @@ Xom locks you up as an exhibit to study.
 
 w:5
 Xom constructs another @player_genus@ Petting Zoo.
+%%%%
+Xom bazaar trip
+
+Xom whisks you away into a realm of unfathomable savings!
+
+Xom casts you into... a shopping extravaganza?
+
+Xom offers you everything you could ever want (according to Xom).
+
+The world spins wildly as Xom's jovial laughter rings.
+
+w:2
+"Your coin purse has grown too comfortable in its little world, mortal!"
 %%%%
 ##################
 # Xom nastiness
@@ -346,12 +367,16 @@ Xom one eye
 A monocle briefly appears over your eye.
 
 An eyepatch briefly covers your eye.
+
+A burst of @any_colour@ light briefly shoots from your eye!
 %%%%
 Xom eyes
 
 A monocle briefly appears over one of your eyes.
 
 An eyepatch briefly covers one of your eyes.
+
+Bursts of @any_colour@ light briefly shoot from your eyes!
 %%%%
 Xom ears
 
@@ -359,7 +384,17 @@ Your ears flap wildly.
 
 Your ears wiggle.
 
-Steam briefly shoots from your ears!
+[Smoke|Steam] briefly shoots from your ears!
+%%%%
+Xom mouth
+
+Your mouth briefly shrinks away entirely.
+
+Your mouth briefly widens across your entire face.
+
+You briefly grow another mouth.
+
+[Smoke|Steam] briefly pours from your mouth!
 %%%%
 Xom hair
 
@@ -405,7 +440,29 @@ acrobatic_move_name
 
 cartwheel
 
+pirouette
+
 somersault
+%%%%
+Xom tail
+
+Your tail briefly retracts into your body.
+
+Your tail briefly grows to an incredible length.
+
+You briefly grow another tail.
+%%%%
+Xom random body part singular
+
+Your @random_body_part_internal_singular@ briefly wanders out of your body, then fuses itself back in!
+
+Your @random_body_part_external_singular@ briefly jumps off your body, then reattaches itself!
+%%%%
+Xom random body part plural
+
+Your @random_body_part_internal_plural@ briefly wander out of your body, then fuse themselves back in!
+
+Your @random_body_part_external_plural@ briefly jump off your body, then reattach themselves!
 %%%%
 Xom unarmed one hand
 
@@ -543,6 +600,13 @@ Xom hostile monster
 
 You hear Xom's maniacal laughter.
 %%%%
+# one friendly player illusion + two hostile player illusions
+Xom send in the clones
+
+Xom feels like there should be more of you to share with the Dungeon.
+
+Xom gently smashes a mirror over your [@random_body_part_external_singular@|@random_body_part_external_plural@].
+%%%%
 # drain your mp, produce magicspawn
 Xom brain drain
 
@@ -564,12 +628,12 @@ Xom gives you a terrible headache.
 # prints only if summons successfully spawn
 Xom drained brain
 
-w:25
+w:20
 Your magic slithers out of your reeling mind!
 
 Your power and thoughts are overwhelmed by magic-eaters manifest!
 
-Your magic rips itself out through your @random_body_part@!
+Your magic rips itself out through your [@random_body_part_any_singular@|@random_body_part_any_plural@]!
 %%%%
 Xom banishment
 
@@ -662,6 +726,18 @@ Xom stomps on time for a few moments.
 w:1
 Xom prepares the audience for the floor's solo!
 %%%%
+Xom grant word of recall
+
+Xom feels like this meagre party needs more guests.
+
+Xom sends out highly concerning invitations.
+%%%%
+Xom grant voiceless word of recall
+
+Xom demands a dramatic dialogue!
+
+Xom grants a terrible voice to the voiceless.
+%%%%
 #####################
 # other effects
 #####################
@@ -719,6 +795,13 @@ You hear Xom's avuncular chuckle.
 Xom bad monster polymorph
 
 @Xom good monster polymorph@
+%%%%
+Xom wave of despair
+
+Xom recounts a horror story in an instant.
+
+w:2
+Xom joyfully recalls the collapse of multiple Dungeon civilisations.
 %%%%
 Xom good mutations
 
@@ -1016,6 +1099,20 @@ w:5
 
 w:5
 "My hands, my teeth, my burning tears: these will never betray me!"
+%%%%
+Makhleb executioner chatter
+
+w:40
+"Kill. Kill. Kill!"
+
+"More. More. More!"
+
+"Another! And another! And another!"
+
+"Slaughter. Them. All!"
+
+w:5
+"Everything deserves to die!"
 %%%%
 ######################################
 # Welcome messages on game restoration

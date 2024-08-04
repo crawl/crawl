@@ -57,7 +57,7 @@ end
 NAME:   gammafunk_the_bubble
 TAGS:   no_monster_gen no_trap_gen no_descent
 # Allow placement in Vaults as a room.
-TAGS:   vaults_hard preserve_wall passable
+TAGS:   vaults_hard no_wall_fixup passable
 DEPTH:  Crypt, D:7-, Depths, Elf, Pan, Snake, Vaults, Zot
 ORIENT: float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)

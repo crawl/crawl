@@ -1612,9 +1612,9 @@ item_stack_summary_minimum = 4
         items in the stack (up to 50 items), in a format which looks
         like this:
           Items here: !! """ ( )))))) [[[
-        Known artefacts will be coloured in yellow; glowing or runed
-        items will be in white, unless you already know that they are
-        not ego items.
+        Non-random artefacts and evokers will be coloured in lightcyan; random
+        artefacts will be in yellow; glowing or runed items will be in white,
+        unless you already know that they are not ego items.
 
 mlist_min_height = 4
         If there is extra space available for the message area and

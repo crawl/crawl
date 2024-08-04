@@ -637,7 +637,7 @@ void check_map_validity()
     // these may require you to look farther:
     if (exit == DNGN_EXIT_PANDEMONIUM)
         exit = DNGN_TRANSIT_PANDEMONIUM;
-    if (exit == DNGN_EXIT_ABYSS)
+    if (exit == DNGN_EXIT_ABYSS || exit == DNGN_EXIT_CRUCIBLE)
         exit = DNGN_UNSEEN;
 
     for (rectangle_iterator ri(0); ri; ++ri)

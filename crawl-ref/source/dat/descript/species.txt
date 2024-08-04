@@ -17,6 +17,7 @@ wrapping slow-revving metal around their puny goblinoid frames.
 Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
+They regenerate magical power rapidly.
 %%%%
 Demigod
 

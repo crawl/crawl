@@ -22,8 +22,9 @@ enum unarmed_attack_type
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
     UNAT_MAW,
+    UNAT_EXECUTIONER_BLADE,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_MAW,
+    UNAT_LAST_ATTACK = UNAT_EXECUTIONER_BLADE,
     NUM_UNARMED_ATTACKS,
 };
 
@@ -63,6 +64,8 @@ public:
     bool would_prompt_player();
 
     static void chaos_affect_actor(actor *victim);
+
+    bool player_do_aux_attack(unarmed_attack_type atk);
 
 private:
     /* Attack phases */
@@ -148,8 +151,7 @@ private:
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
-    bool player_aux_unarmed();
-    bool player_gets_aux_punch();
+    bool player_do_aux_attacks();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
@@ -199,3 +201,4 @@ private:
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);
 string mut_aux_attack_desc(mutation_type mut);
+vector<string> get_player_aux_names();

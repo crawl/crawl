@@ -11,6 +11,7 @@
 #include "god-type.h"
 #include "item-prop-enum.h" // brand_type
 #include "los-type.h"
+#include "mutation-type.h"
 #include "random.h"
 #include "recite-eligibility.h"
 #include "recite-type.h"
@@ -83,6 +84,13 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define NIGHTFALL_INITIAL_DUR_KEY "nightfall_initial_dur"
 #define DITHMENOS_MARIONETTE_SPELLS_KEY "marionette_spells_valid"
+
+#define MAKHLEB_OFFERED_MARKS_KEY "makhleb_offered_marks"
+#define MAKHLEB_ATROCITY_STACKS_KEY "makhleb_atrocity_stacks"
+#define MAKHLEB_ATROCITY_MAX_STACKS 3
+#define MAKHLEB_SLAUGHTER_BOOST_KEY "makhleb_slaughter_slaying"
+#define MAKHLEB_CRUCIBLE_VICTIM_KEY "makhleb_crucible_victim"
+#define MAKHLEB_CRUCIBLE_DEBT_KEY "makhleb_crucible_debt"
 
 struct bolt;
 class stack_iterator;
@@ -238,7 +246,20 @@ void okawaru_end_duel(bool kicked_out = false);
 void okawaru_remove_heroism();
 void okawaru_remove_finesse();
 
-
 vector<coord_def> find_slimeable_walls();
 spret jiyva_oozemancy(bool fail);
 void jiyva_end_oozemancy();
+
+int makhleb_get_atrocity_stacks();
+void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only);
+spret makhleb_unleash_destruction(int power, bolt& beam, bool fail);
+spret makhleb_scouring_destruction(int power, bolt& beam, bool fail);
+void makhleb_infernal_servant();
+void makhleb_inscribe_mark(mutation_type mark);
+spret makhleb_infernal_legion(bool fail);
+void makhleb_infernal_legion_tick(int delay);
+void makhleb_vessel_of_slaughter();
+
+void makhleb_enter_crucible_of_flesh(int debt);
+void makhleb_handle_crucible_of_flesh();
+void makhleb_crucible_kill(monster& victim);

@@ -284,6 +284,7 @@ summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
 throw_ally THROW_ALLY
 throw_klown_pie THROW_KLOWN_PIE
+thorn_volley THORN_VOLLEY
 virulence VIRULENCE
 wall_of_brambles WALL_OF_BRAMBLES
 warning_cry WARNING_CRY

@@ -53,6 +53,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "mutant-beast.h"
 #include "notes.h"
 #include "options.h"
@@ -70,6 +71,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"
+#include "transform.h"
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -1831,6 +1833,15 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
     }
 
+    // If this is the entrance to a portal vault (or another region of Pandemonium)
+    // only friendly monsters can traverse this.
+    if (!mon.friendly()
+        && (feat_is_portal_entrance(stair) || stair == DNGN_TRANSIT_PANDEMONIUM
+                                           || stair == DNGN_ENTER_PANDEMONIUM))
+    {
+        return false;
+    }
+
     // Everything else is fine
     return true;
 }
@@ -1848,7 +1859,7 @@ void name_zombie(monster& mon, monster_type mc, const string &mon_name)
     }
     // Also for the Enchantress: treat Enchantress as an adjective to
     // avoid mentions of "the Enchantress the spriggan zombie".
-    else if (mc == MONS_THE_ENCHANTRESS)
+    else if (mc == MONS_ENCHANTRESS)
     {
         mon.mname = "Enchantress";
         mon.flags |= MF_NAME_ADJECTIVE;
@@ -4283,6 +4294,128 @@ static string _random_class_of_god_name(bool (*class_of_god)(god_type god))
     return result;
 }
 
+// part_class should be a body_part_class_flags value.
+string random_body_part_name(bool plural, int part_class)
+{
+    vector<bool> plural_parts;
+    vector<string> body_parts;
+
+    if (part_class & BPART_INTERNAL)
+    {
+        plural_parts.push_back(false);
+        body_parts.push_back("soul");
+
+        plural_parts.push_back(true);
+        body_parts.push_back("muscles");
+
+        if (you.has_blood())
+        {
+            plural_parts.push_back(false);
+            body_parts.push_back("blood");
+        }
+
+        if (you.has_bones())
+        {
+            plural_parts.push_back(true);
+            body_parts.push_back("bones");
+        }
+    }
+
+    if (part_class & BPART_EXTERNAL)
+    {
+        plural_parts.push_back(false);
+        body_parts.push_back("head");
+
+        string hands;
+        if (you.get_mutation_level(MUT_MISSING_HAND))
+        {
+            hands = you.hand_name(false);
+            plural_parts.push_back(false);
+        }
+        else
+        {
+            hands = you.hand_name(true);
+            plural_parts.push_back(true);
+        }
+        body_parts.push_back(hands);
+
+        string arms = you.arm_name(true);
+        plural_parts.push_back(true);
+        body_parts.push_back(arms);
+
+        if (player_has_feet())
+        {
+            string feet = you.foot_name(true);
+            plural_parts.push_back(true);
+            body_parts.push_back(feet);
+        }
+
+        if (you.has_tail())
+        {
+            plural_parts.push_back(false);
+            body_parts.push_back("tail");
+        }
+
+        if (player_has_ears())
+        {
+            plural_parts.push_back(true);
+            body_parts.push_back("ears");
+        }
+
+        string eyes;
+        if (you.get_mutation_level(MUT_MISSING_EYE))
+        {
+            plural_parts.push_back(false);
+            eyes = "eye";
+        }
+        else
+        {
+            plural_parts.push_back(true);
+            eyes = "eyes";
+        }
+        body_parts.push_back(eyes);
+
+        plural_parts.push_back(false);
+        body_parts.push_back("mouth");
+
+        if (player_has_hair())
+        {
+            plural_parts.push_back(false);
+            body_parts.push_back("hair");
+        }
+
+        string flesh;
+        if (you.petrified())
+        {
+            plural_parts.push_back(false);
+            flesh = "stone";
+        }
+        else if (!get_form()->flesh_equivalent.empty())
+        {
+            plural_parts.push_back(false);
+            flesh = get_form()->flesh_equivalent;
+        }
+        else
+        {
+            string skin = species::skin_name(you.species);
+            // Check plurality as the species::skin_name() comment suggests.
+            plural_parts.push_back(ends_with(skin, "s"));
+            flesh = skin;
+        }
+        body_parts.push_back(flesh);
+    }
+
+    int which_part;
+
+    do
+    {
+        which_part = random2(body_parts.size());
+    }
+    while (plural_parts[which_part] != plural);
+
+    return body_parts[which_part];
+}
+
 static string _get_species_insult(const string &species, const string &type)
 {
     string insult;
@@ -4677,42 +4810,20 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
                           _random_class_of_god_name(is_good_god));
     }
 
-    if (msg.find("@random_body_part@") != string::npos)
+    if (msg.find("@random_body_part") != string::npos)
     {
-        vector<string> body_parts;
-
-        string hands = you.hand_name(true);
-        body_parts.push_back(hands);
-
-        string arms = you.arm_name(true);
-        body_parts.push_back(arms);
-
-        if (player_has_feet())
-        {
-            string feet = you.foot_name(true);
-            body_parts.push_back(feet);
-        }
-
-        if (you.has_blood())
-            body_parts.push_back("blood");
-
-        if (you.has_bones())
-            body_parts.push_back("bones");
-
-        if (player_has_ears())
-            body_parts.push_back("ears");
-
-        if (player_has_eyes())
-        {
-            body_parts.push_back(
-                you.get_mutation_level(MUT_MISSING_EYE) ? "eye" : "eyes");
-        }
-
-        if (player_has_hair())
-            body_parts.push_back("hair");
-
-        msg = replace_all(msg, "@random_body_part@",
-                          body_parts[random2(body_parts.size())]);
+        msg = replace_all(msg, "@random_body_part_any_singular@",
+                          random_body_part_name(false, BPART_ANY));
+        msg = replace_all(msg, "@random_body_part_internal_singular@",
+                          random_body_part_name(false, BPART_INTERNAL));
+        msg = replace_all(msg, "@random_body_part_external_singular@",
+                          random_body_part_name(false, BPART_EXTERNAL));
+        msg = replace_all(msg, "@random_body_part_any_plural@",
+                          random_body_part_name(true, BPART_ANY));
+        msg = replace_all(msg, "@random_body_part_internal_plural@",
+                          random_body_part_name(true, BPART_INTERNAL));
+        msg = replace_all(msg, "@random_body_part_external_plural@",
+                          random_body_part_name(true, BPART_EXTERNAL));
     }
 
     // Replace with species specific insults.

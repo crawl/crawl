@@ -180,14 +180,16 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
     }
 }
 
-void mons_summon_illusion_from(monster* mons, actor *foe,
-                               spell_type spell_cast, int card_power)
+int mons_summon_illusion_from(monster* mons, actor *foe,
+                              spell_type spell_cast, int card_power, bool xom)
 {
     if (foe->is_player())
     {
         int abj = 6;
 
-        if (card_power >= 0)
+        if (xom)
+            abj = 2;
+        else if (card_power >= 0)
         {
           // card effect
           abj = 2 + random2(card_power);
@@ -207,15 +209,22 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
             clone->add_ench(ENCH_PHANTOM_MIRROR);
+
+            return 1;
         }
         else if (card_power >= 0)
+        {
             mpr("You see a puff of smoke.");
+            return 0;
+        }
     }
     else
     {
         monster* mfoe = foe->as_monster();
         _mons_summon_monster_illusion(mons, mfoe);
     }
+
+    return 1;
 }
 
 bool mons_clonable(const monster* mon, bool needs_adjacent)

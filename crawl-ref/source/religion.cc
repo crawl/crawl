@@ -183,14 +183,17 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Makhleb
         {   { 1, "gain health from killing" },
-            { 2, ABIL_MAKHLEB_MINOR_DESTRUCTION,
-                 "harness Makhleb's destructive might" },
-            { 3, ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
-                 "summon a lesser servant of Makhleb" },
-            { 4, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
-                 "hurl Makhleb's greater destruction" },
-            { 5, ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,
-                 "summon a greater servant of Makhleb" },
+            { 2, ABIL_MAKHLEB_DESTRUCTION,
+                 "unleash Makhleb's destructive might" },
+            { 3, ABIL_MAKHLEB_INFERNAL_SERVANT,
+                 "summon an infernal servant of Makhleb" },
+            { 4, "", ""},   // XXX: A marker, replaced by dynamic text in _describe_god_powers()
+            { -1, ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER, ""},
+            { 7, ABIL_MAKHLEB_BRAND_SELF_1,
+                 "Makhleb will allow you to brand your body with an infernal mark... once.",
+                 "Mahkleb will no longer allow you to brand your body with an infernal mark."},
+            { 7, ABIL_MAKHLEB_BRAND_SELF_2, ""},
+            { 7, ABIL_MAKHLEB_BRAND_SELF_3, ""},
         },
 
         // Sif Muna
@@ -2482,6 +2485,20 @@ static void _gain_piety_point()
         {
             beogh_increase_orcification();
         }
+
+        if (you_worship(GOD_MAKHLEB) && rank == 4
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH)
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC)
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR)
+            && !you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+        {
+            mutation_type mut = random_choose(MUT_MAKHLEB_DESTRUCTION_GEH,
+                                              MUT_MAKHLEB_DESTRUCTION_COC,
+                                              MUT_MAKHLEB_DESTRUCTION_TAR,
+                                              MUT_MAKHLEB_DESTRUCTION_DIS);
+
+            perma_mutate(mut, 1, "Makhleb's blessing");
+        }
     }
 
     // The player's symbol depends on Beogh piety.
@@ -2991,6 +3008,8 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_MAKHLEB:
         dismiss_divine_allies_fineff::schedule(GOD_MAKHLEB);
+        if (you.form == transformation::slaughter)
+            untransform();
         break;
 
     case GOD_TROG:
@@ -3745,6 +3764,40 @@ static void _join_cheibriados()
     notify_stat_change();
 }
 
+static void _join_makhleb()
+{
+    // Re-active our Mark, if we gained one, then abandoned and rejoined.
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        if (you.innate_mutation[i] && is_makhleb_mark((mutation_type)i))
+            mprf("Your %s burns with power once more.", mutation_name((mutation_type)i));
+    }
+
+    makhleb_initialize_marks();
+}
+
+// Initialize what Marks the player will eventually the offered.
+void makhleb_initialize_marks()
+{
+    vector<mutation_type> muts =
+    {
+        MUT_MAKHLEB_MARK_HAEMOCLASM,
+        MUT_MAKHLEB_MARK_LEGION,
+        MUT_MAKHLEB_MARK_CARNAGE,
+        MUT_MAKHLEB_MARK_ANNIHILATION,
+        MUT_MAKHLEB_MARK_TYRANT,
+        MUT_MAKHLEB_MARK_CELEBRANT,
+        MUT_MAKHLEB_MARK_EXECUTION,
+        MUT_MAKHLEB_MARK_ATROCITY,
+        MUT_MAKHLEB_MARK_FANATIC,
+    };
+    shuffle_array(muts);
+
+    CrawlVector& marks = you.props[MAKHLEB_OFFERED_MARKS_KEY].get_vector();
+    for (int i = 0; i < 3; ++i)
+        marks.push_back(muts[i]);
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_BEOGH, update_player_symbol },
@@ -3768,6 +3821,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_RU, _join_ru },
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
+    { GOD_MAKHLEB, _join_makhleb },
     { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
 };
 
@@ -4277,6 +4331,9 @@ void handle_god_time(int /*time_delta*/)
         if (you.piety < 1)
             excommunication();
     }
+
+    if (player_in_branch(BRANCH_CRUCIBLE))
+        makhleb_handle_crucible_of_flesh();
 }
 
 int god_colour(god_type god) // mv - added
@@ -4526,28 +4583,24 @@ int get_monster_tension(const monster& mons, god_type god)
         exper /= 2;
 
     if (mons.has_ench(ENCH_SLOW))
-    {
-        exper *= 2;
-        exper /= 3;
-    }
+        exper = exper * 2 / 3;
 
     if (mons.has_ench(ENCH_HASTE))
-    {
-        exper *= 3;
-        exper /= 2;
-    }
+        exper = exper * 3 / 2;
 
     if (mons.has_ench(ENCH_MIGHT))
-    {
-        exper *= 5;
-        exper /= 4;
-    }
+        exper = exper * 5 / 4;
+
+    if (mons.has_ench(ENCH_EMPOWERED_SPELLS))
+        exper = exper * 5 / 4;
+
+    if (mons.has_ench(ENCH_ARMED))
+        exper = exper * 5 / 4;
 
     if (mons.berserk_or_frenzied())
     {
         // in addition to haste and might bonuses above
-        exper *= 3;
-        exper /= 2;
+        exper = exper * 3 / 2;
     }
 
     return exper;
@@ -4599,10 +4652,7 @@ int get_tension(god_type god)
         if (tension < 2)
             tension = 2;
         else
-        {
-            tension *= 3;
-            tension /= 2;
-        }
+            tension = tension * 3 / 2;
     }
 
     if (you.cannot_act())
@@ -4613,23 +4663,59 @@ int get_tension(god_type god)
         return tension;
     }
 
+    if (you.magic_points <= you.max_magic_points / 10)
+        tension = tension * 9 / 8;
+
     if (you.confused())
         tension *= 2;
 
     if (you.caught())
         tension *= 2;
 
+    if (you.duration[DUR_CORROSION])
+        tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
+
+    if (you.duration[DUR_MESMERISED])
+        tension = tension * 6 / 5;
+
+    if (you.duration[DUR_AFRAID])
+        tension = tension * 6 / 5;
+
+    if (you.duration[DUR_VITRIFIED])
+        tension = tension * 4 / 3;
+
+    if (you.duration[DUR_NO_POTIONS])
+        tension = tension * 4 / 3;
+
+    if (you.duration[DUR_NO_SCROLLS])
+        tension = tension * 4 / 3;
+
     if (you.duration[DUR_SLOW])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_SENTINEL_MARK])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_ATTRACTIVE])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_NO_CAST])
+        tension = tension * 3 / 2;
+
+    if (you.form == transformation::bat ||
+        you.form == transformation::wisp)
     {
-        tension *= 3;
-        tension /= 2;
+        tension = tension * 3 / 2;
+    }
+    else if (you.form == transformation::fungus ||
+             you.form == transformation::pig ||
+             you.form == transformation::tree)
+    {
+        tension = tension * 5 / 3;
     }
 
     if (you.duration[DUR_HASTE])
-    {
-        tension *= 2;
-        tension /= 3;
-    }
+        tension = tension * 2 / 3;
 
     return max(0, tension);
 }

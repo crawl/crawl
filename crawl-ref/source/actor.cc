@@ -372,7 +372,8 @@ int actor::spirit_shield(bool items) const
 bool actor::rampaging() const
 {
     return wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
-           || scan_artefacts(ARTP_RAMPAGING);
+           || scan_artefacts(ARTP_RAMPAGING)
+           || you.duration[DUR_EXECUTION];
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const

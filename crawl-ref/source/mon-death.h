@@ -20,6 +20,9 @@
 #define SAVED_BLORKULA_KEY "original_blorkula"
 #define BLORKULA_DIE_FOR_REAL_KEY "blorkula_die_for_real"
 
+#define MAKHLEB_HAEMOCLASM_KEY "makhleb_haemoclasm"
+#define MAKHLEB_BLOODRITE_KILL_KEY "bloodrite_kill"
+
 class actor;
 class monster;
 

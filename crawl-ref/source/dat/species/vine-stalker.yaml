@@ -5,7 +5,6 @@ short_name: VS
 difficulty: Advanced
 difficulty_priority: 90
 species_flags:
-  - no_eyes
   - no_ears
 aptitudes:
   xp: 0

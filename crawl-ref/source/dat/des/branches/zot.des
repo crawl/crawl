@@ -4474,6 +4474,7 @@ ORIENT:  north
 TAGS:    no_dump no_trap_gen
 KITEM:   R = prismatic gem
 KITEM:   Z = Orb of Zot
+KFEAT:   Z = orb dais
 MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
 MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
 # Traps to spread throughout the vault. Fewer alarm traps as those have a big

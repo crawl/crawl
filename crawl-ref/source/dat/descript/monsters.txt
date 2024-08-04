@@ -1474,6 +1474,14 @@ gnoll sergeant
 A commander of a pack of gnolls. Scars on its stout body give evidence of how
 it earned its rank.
 %%%%
+globe of annihilation
+
+A roiling sphere of intense destructive energies, drawn from the fabric of the
+Hells themselves. It pursues a designated target inexorably, growing in size as
+it travels. If it collides with either a creature or wall, it will explode
+violently - though its creator is protected from the wild destruction unleashed
+as it does so.
+%%%%
 goblin
 
 A short, impatient and unfriendly humanoid. Goblins first appeared only a few
@@ -1483,7 +1491,7 @@ parties will put them in a welcoming mood toward adventurers.
 goblin sharper
 
 A goblin newly converted to Nemelex Xobeh. It's still learning about all the
-cards, and, thankfully, isn't inclined to use them against you.
+cards and, thankfully, isn't inclined to use them against you.
 %%%%
 golden dragon
 
@@ -3497,7 +3505,7 @@ naga warlord
 
 <naga warrior>
 %%%%
-sulfuric acid blob
+sulphuric acid blob
 
 <acid blob>
 %%%%

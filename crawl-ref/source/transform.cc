@@ -16,6 +16,7 @@
 #include "describe.h"
 #include "english.h"
 #include "env.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning
@@ -123,7 +124,7 @@ Form::Form(const form_entry &fe)
       changes_physiology(fe.changes_physiology),
       has_blood(fe.has_blood), has_hair(fe.has_hair),
       has_bones(fe.has_bones), has_feet(fe.has_feet),
-      has_eyes(fe.has_eyes), has_ears(fe.has_ears),
+      has_ears(fe.has_ears),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
@@ -1066,6 +1067,32 @@ public:
 };
 #endif
 
+class FormSlaughter : public Form
+{
+private:
+    FormSlaughter() : Form(transformation::slaughter) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSlaughter);
+public:
+    static const FormSlaughter &instance() { static FormSlaughter inst; return inst; }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Makhleb calls their payment due...";
+    }
+
+    /**
+     * % screen description
+     */
+    string get_long_name() const override
+    {
+        const int boost = you.props[MAKHLEB_SLAUGHTER_BOOST_KEY].get_int();
+        return make_stringf("vessel of slaughter (+%d%% damage done)", boost);
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1102,6 +1129,7 @@ static const Form* forms[] =
     &FormBeast::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
+    &FormSlaughter::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1263,24 +1291,6 @@ bool form_has_feet(transformation form)
         return false;
     else
         return species::has_feet(you.species);
-}
-
-/**
- * Does this form have eyes?
- *
- * @param form      The form in question.
- * @return          Whether the form has eyes.
- */
-bool form_has_eyes(transformation form)
-{
-    form_capability result = get_form(form)->has_eyes;
-
-    if (result == FC_ENABLE)
-        return true;
-    else if (result == FC_FORBID)
-        return false;
-    else
-        return species::has_eyes(you.species);
 }
 
 /**
@@ -1654,6 +1664,9 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
 
     if (which_trans == transformation::none)
         return UFR_GOOD; // everything can become itself
+
+    if (which_trans == transformation::slaughter)
+        return UFR_GOOD; // Godly power can transcend such things as unlife
 
     if (!you.has_mutation(MUT_VAMPIRISM))
         return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
@@ -2102,6 +2115,9 @@ void untransform(bool skip_move)
     you.turn_is_over = true;
     if (you.transform_uncancellable)
         you.transform_uncancellable = false;
+
+    if (old_form == transformation::slaughter)
+        makhleb_enter_crucible_of_flesh(15);
 }
 
 void return_to_default_form()

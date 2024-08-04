@@ -7,6 +7,7 @@ genus: Draconian
 difficulty: False
 species_flags:
   - draconian
+  - no_hair
 aptitudes:
   xp: -1
   hp: 1

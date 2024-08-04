@@ -733,7 +733,7 @@ function arena_sprint_init_boss_table()
     end
 
     bs[4] = {"place:Slime", "dissolution hp:430 / " ..
-             "acid blob name:sulfuric n_adj col:white hp:450 / " ..
+             "acid blob name:sulphuric n_adj col:white hp:450 / " ..
              "great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600",
              "slimy rune of zot"}
     bs[5] = {"vault guard / place:Vaults", "mennas hp:250 / mara hp:300 / " ..

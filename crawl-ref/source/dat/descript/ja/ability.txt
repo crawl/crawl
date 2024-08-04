@@ -206,14 +206,6 @@ Finesse ability
 この超常の効果は少量の魔力汚染を引き起こし、
 長期間身を晒すとあなたの健康に害を与える可能性がある。
 %%%%
-Minor Destruction ability
-
-指定したモンスターにランダムな有害な爆風を放つ。
-%%%%
-Major Destruction ability
-
-指定したモンスターにランダムな有害な光線、もしくは爆発を放つ。
-%%%%
 Channel Energy ability
 
 あなたの祈祷スキルに応じた量の魔力を補充する。

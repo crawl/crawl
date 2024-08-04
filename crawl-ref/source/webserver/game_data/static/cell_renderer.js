@@ -381,7 +381,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.save();
                 try
                 {
-                    this.ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+                    this.ctx.globalAlpha = cell.trans ? 0.55 : 1.0;
 
                     draw_dolls();
                 }
@@ -829,17 +829,33 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         else if (fg.NEUTRAL)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
 
-                        // Monster difficulty
-                        if (fg.TRIVIAL)
-                            this.draw_dngn(dngn.THREAT_TRIVIAL, x, y);
-                        else if (fg.EASY)
-                            this.draw_dngn(dngn.THREAT_EASY, x, y);
-                        else if (fg.TOUGH)
-                            this.draw_dngn(dngn.THREAT_TOUGH, x, y);
-                        else if (fg.NASTY)
-                            this.draw_dngn(dngn.THREAT_NASTY, x, y);
-                        else if (fg.UNUSUAL)
-                            this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        // Monster difficulty. Ghosts get a special highlight.
+                        if (fg.GHOST)
+                        {
+                            if (fg.TRIVIAL)
+                                this.draw_dngn(dngn.THREAT_GHOST_TRIVIAL, x, y);
+                            else if (fg.EASY)
+                                this.draw_dngn(dngn.THREAT_GHOST_EASY, x, y);
+                            else if (fg.TOUGH)
+                                this.draw_dngn(dngn.THREAT_GHOST_TOUGH, x, y);
+                            else if (fg.NASTY)
+                                this.draw_dngn(dngn.THREAT_GHOST_NASTY, x, y);
+                            else if (fg.UNUSUAL)
+                                this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        }
+                        else
+                        {
+                            if (fg.TRIVIAL)
+                                this.draw_dngn(dngn.THREAT_TRIVIAL, x, y);
+                            else if (fg.EASY)
+                                this.draw_dngn(dngn.THREAT_EASY, x, y);
+                            else if (fg.TOUGH)
+                                this.draw_dngn(dngn.THREAT_TOUGH, x, y);
+                            else if (fg.NASTY)
+                                this.draw_dngn(dngn.THREAT_NASTY, x, y);
+                            else if (fg.UNUSUAL)
+                                this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        }
 
                         if (cell.highlighted_summoner)
                             this.draw_dngn(dngn.HALO_SUMMONER, x, y);
@@ -1129,6 +1145,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.UNDYING_ARMS:
                 case icons.BIND:
                 case icons.SIGN_OF_RUIN:
+                case icons.WEAK_WILLED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

@@ -204,15 +204,6 @@ Finesse ability
 공격 속도를 정확도 하락 없이 큰 폭으로 향상한다. 단, 이와 같은 부자연스러운
 효과는 마법오염을 일으킬 수 있으므로 주의해야 한다.
 %%%%
-Minor Destruction ability
-
-대상이 된 적을, 임의의 파괴 마법으로 공격한다.
-%%%%
-Major Destruction ability
-
-대상을 파괴의 광선이나 폭발로 공격한다. 어떤 속성의 공격이 나갈지는 정할 수
-없다.
-%%%%
 Channel Energy ability
 
 마력을 조금 회복한다. 회복되는 양은 기도술의 영향을 받는다.
@@ -593,11 +584,6 @@ Elemental Force ability
 주변의 원소구름을 합쳐 정령으로 부린다. 자신이 만든 구름은 아군 정령으로
 적대적인 구름은 적군 정령으로, 중립구름은 중립정령이 된다.
 %%%%
-Greater Servant of Makhleb ability
-
-대악마를 소환한다. 이 능력을 정확히 이용하지 못하면 악마는 적의를 갖고
-소환될 것이다.
-%%%%
 Growth ability
 
 과일을 사용하여 사용자의 주변을 감싸는 식물을 자라게 합니다.
@@ -625,11 +611,6 @@ Jelly Paralyse ability
 Lesser Healing ability
 
 소량의 체력을 회복한다. 회복량은 기도술에 따라 적용된다.
-%%%%
-Lesser Servant of Makhleb ability
-
-소악마를 소환한다. 이 능력을 정확히 이용하지 못하면 악마는 적의를 갖고
-소환될 것이다.
 %%%%
 Potion Petition ability
 

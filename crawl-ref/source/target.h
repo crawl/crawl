@@ -655,3 +655,10 @@ public:
     targeter_putrefaction(int range);
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_soul_splinter : public targeter_beam
+{
+public:
+    targeter_soul_splinter(const actor *act, int r);
+    bool affects_monster(const monster_info& mon) override;
+};

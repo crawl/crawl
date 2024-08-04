@@ -1,9 +1,9 @@
-Stone Soup 0.32 (through 0.32-a0-1431-be6e7be4eb9)
+Stone Soup 0.32 (through 0.32-a0-1984-g19b87b1804)
 --------------------------
 
 Highlights
 ----------
-* Beogh, Dith, and Yred have been substantially overhauled.
+* Beogh, Dithmenos, Yredelemnul, and Makhleb have been substantially revamped.
 * Since everybody can become orcs, reworked Mountain Dwarves replace Hill Orcs.
 * New species: Coglins, dual-wielding gizmo-inventing goblins in exosuits.
 * More new spells, aimed at new school combinations and higher levels.
@@ -40,6 +40,7 @@ Branches, Environment
   - Piles of debris, stony wreckage that crumbles away on a delay after
     being hit.
   - Sacred lotuses, extremely resilient but entirely harmless plants.
+* Miasma clouds deal more damage to monsters and slow them for longer.
 * Rain no longer can create deep water.
 * Skeletons no longer decay.
 
@@ -48,6 +49,24 @@ Character
 * Only players without weapons can punch with their offhand.
 * Player constriction no longer deals ramping-up damage.
 * Removed mutations: noise dampening.
+* Undead and demonic players can wield weapons of holy wrath, but the brand is
+  disabled for them. The same applies to good god-worshipping players who wield
+  weapons of foul flame.
+* The player can now be Blinded, which gives them a flat chance to miss with
+  any dodgeable effect that increases with their distance from the target they
+  are aiming at.
+  - Wands of Light now Blind the player instead of inflicting Confusion.
+* The Frozen status now lasts a bit longer, inflicts a heavier movement penalty,
+  and no longer prevents the player from being hit with Flash Freeze.
+* Background changes:
+  - Necromancers now start with Soul Splinter instead of Necrotise, as well as
+    a dagger and knowledge of Grave Claw.
+  - Hedge Wizards now know Grave Claw instead of Cigotuvi's Dreadful Rot and
+    start with additional Conjurations and Necromancy skill.
+  - Wanderers can now start with talismans and Shapeshifting skill, and those
+    that start with throwing items will usually start with more of them. Logic
+    for giving suitable skill levels and items has been improved in multiple
+    cases.
 
 Gods
 ----
@@ -95,19 +114,97 @@ Gods
       - 5*: Fathomless Shackles, which binds a large area centered on the
             player and damages over time while vampirically draining foes.
       - Removed abilities: Dark Bargain, Drain Life.
+* Makhleb has been significantly revamped.
+  - Minor and Major Destruction have been merged into a single ability: Unleash
+    Destruction. Earned at 2*, it costs more HP than Major Destruction, but no
+    piety.
+  - At 4* the player will receive one of 4 random upgrades to their Unleash
+    Destruction ability. These upgrades, themed after each of the 4 Hells, grant
+    additional effects and elements to your Destruction as well as allow it to
+    pierce enemies.
+  - Lesser and Greater Servant have been merged into a single ability: Infernal
+    Servant. Earned at 3*, this costs an amount of piety between Lesser and
+    Greater Servant. Many more types of demons can be summoned by this ability
+    and the quality of demon increases with Invocations skill. It is no longer
+    possible to reduce the chance of a hostile demon, but the player will always
+    receive a friendly one at the same time.
+  - At 6*, the player is offered a one-time choice between 3 different Infernal
+    Marks which they may brand themselves with. These Marks grant powerful
+    effects so long as the player continues to worship Makhleb:
+    - Mark of Haemoclasm: Gives all slain enemies a chance to explode in a
+      shower of gore upon death. This explosion may cause a chain reaction if it
+      kills something.
+    - Mark of the Legion: Replaces Infernal Servant with Infernal Legion, which
+      summons a swarm of lower-level demons over time. You may fire Unleash
+      Destruction freely through these allies.
+    - Mark of Carnage: Infernal Servants appear next to enemies instead of the
+      player and arrive in a large explosion of Destruction.
+    - Mark of Annihilation: Replaces Infernal Servant with Globe of
+      Annihilation, which fires a slow-moving homing projectile that explodes
+      in a massive blast of hellish Destruction.
+    - Mark of the Tyrant: Infernal Servants last much longer and killing enemies
+      will buff them with Haste, Might, Regeneration, or Brilliance. At high
+      Invocations skill, it becomes possible to summon even Hell Sentinels.
+    - Mark of the Celebrant: Unleash a flurry of blood arrows at nearby enemies
+      whenever the player falls below 50% of their max HP, but does not recharge
+      until they are fully healed once more.
+    - Mark of Execution: Upon killing an enemy in melee, there is a chance to
+      temporarily take on the appearance of an Executioner, gaining a strong
+      auxiliary blade attack and rampage. This effect lasts indefinitely, so
+      long as the player continues attacking.
+    - Mark of Atrocity: Both the damage and HP cost of Unleash Destruction now
+      increases with the number of times in a row it is used. Upon the 4th use
+      in a row, a huge barrage of empowered Destruction will be fired at many
+      enemies in sight.
+    - Mark of the Fanatic: Gives the player the Vessel of Slaughter ability,
+      temporarily transforming them into a demonic avatar of Makhleb and greatly
+      increasing their power and durability. But when the form ends, they will
+      be forced to fight their way out of the Crucible of Flesh as a cost!
+* Xom has received significant adjustments and many new effects.
+  - Summoned monsters (both friendly and hostile) now scale with the player's
+    XL, resulting in fewer unfair encounters at low XL and fewer harmless ones
+    at high XL. A much greater variety of creatures can now be summoned.
+  - Xom can now transport the player to a curious bazaar where an assortment of
+    spells and consumables Xom finds amusing may be purchased (as well as
+    occasionally a chaos-branded unrand weapon).
+  - Many other new Xom effects have been added, such as planting a garden,
+    creating a safe adventurer enclosure, teaching rats how to chant Word of
+    Recall, and summoning a fleet of living Force Lance spells.
+  - Xom wrath now causes hostile effects of much greater intensity than those
+    experienced while worshipping.
 * Both Beogh and Yred's recall abilities are now instant.
 * Jiyva now prevents all harm players could do to all jellies and slimes,
   instead of punishing them whenever they did so. Fedhas now also prevents
   players from doing harm to friendly plants.
 * Nemelex is now a chaotic (but not evil) god.
-* Okawaru's Duel now blocks all summoning.
+* Okawaru's Duel now heals the player for half their missing health when used,
+  but resets their HP and MP back to whatever they were before entering, once
+  the duel is complete. It costs half as much piety and is now usable in Sprint.
 * Qazlal's Upheaval and Disaster Area no longer hit the player nor any of
   their elemental allies.
+* Cheibriados' Step From Time ability is now significantly more likely to result
+  in monsters wandering away from the player's location, and monsters can no
+  longer act before the player takes a subsequent action.
+* Kikubaaqudgha's Torment ability has been replaced with Sign of Ruin, which
+  applies a temporary status effect to a group of enemies that causes them to
+  suffer Draining and also one of Weak, Blind, or Slow whenever they take melee
+  damage.
+* Vehumet's range extension now applies to Hailstorm, Frozen Ramparts, Eringya's
+  Toxic Bog, and any eligible spells cast by the player's Spellforged Servitor.
+* Vehumet's second spell gift is now level 2-3 instead of 1-2.
+* The Shining One's Divine Shield ability has been reworked. It now provides a
+  100% block chance for the next several attacks after using it. Ranged
+  projectiles will be reflected and melee attackers have a high chance to become
+  blinded.
+* Makhleb, Vehumet, and the Shining One are now much more likely to restore
+  HP or MP on eligible kills made while at low piety.
 * Most gods now comment upon or otherwise influence the player's death.
 
 Interface and Options
 ---------------------
-* Monster damage display has been further improved in specificity.
+* Examining a monster with 'xv' now displays more accurate and detailed
+  information about a monster's damage (especially with weapons) and your chance
+  to hit them.
 
 Items
 -----
@@ -117,6 +214,7 @@ Items
   from the thrower.
 * Condenser vanes now reroll misery clouds if the good gods would block
   their creation, rather than placing nothing as a result.
+* Randart launchers can now generate with Chaos or Holy brands.
 
 Monsters
 --------
@@ -167,14 +265,21 @@ Monsters
   - Necrophages are weaker and now only appear from Yred's summonings.
   - Norris now casts Draining Gaze instead of Brain Bite.
   - Ophanim now passively irresistibly inflict Mark on all those they see.
-  - Worldbinders now summon ironbound frosthearts instead of thunderhulks.
+  - Worldbinders now summon ironbound frosthearts instead of thunderhulks and
+    their summons have a longer duration.
+  - Demonspawn Black Suns have been renamed to Soul Scholars and their Black
+    Mark spell has been replaced with Sign of Ruin (which functions like the new
+    Kikubaaqudgha invocation).
+  - The Serpent of Hell has been adjusted to have more appropriate breath
+    attacks in Dis, Gehenna, and Tartarus.
+
 * Monster constriction is now more difficult to escape via moving, but blinks
   now always work as an escape.
-* Monster frozen status now lasts a bit longer, inflicts a heavier movement
-  penalty, and no longer blocks further Flash Freeze casts.
 * Monster repel missiles now acts as a flat +15 effective EV against
   projectiles, rather than scaling heavily to the monster's own EV.
-* Player ghosts now can cast a fair bit more low-level and mid-level spells.
+* Player ghosts now can cast many additional low-level and mid-level spells.
+* Monsters put to sleep through effects like Ensorcelled Hibernation cannot be
+  woken by any means until after the player's next action.
 * Removed monsters: burning bushes, lorocyprocas.
 
 Species
@@ -182,7 +287,7 @@ Species
 * New species: Coglins, goblins in mechanical exoskeletons. Features:
   - Their exoskeletons allow them to dual wield, but innately take a few
     swings to rev up to normal damage.
-  - They can't wear jewellery, but at XL 13 they can choose to invent one of
+  - They can't wear jewellery, but at XL 14 they can choose to invent one of
     three gizmos that passively provide resists and unique benefits.
 * Returning species: Since all species can become orcs, Hill Orcs swap out with
   Mountain Dwarves, with similar but less skewed apts and stats. New features:
@@ -201,7 +306,9 @@ Species
   - Yellow draconians breathe a penetrating bolt that leaves acidic clouds.
   - Purple draconians breathe an explosion of both dispelling and antimagic.
   - Pale draconians now deal fairly more impact damage with their steam breath.
-* Deep Elf Air Magic apt has been raised from 0 to +1.
+* Deep Elves now regenerate MP more rapidly and their Air Magic apt has been
+  raised from 0 to +1.
+* Formicid Translocations apt raised from -1 to +2.
 * New Demonspawn mutation: Foul Shadow, which wreathes the player in umbra to
   reduce monster accuracy and increases stealth, and also burns attackers in
   melee range with foul flame.
@@ -209,8 +316,18 @@ Species
 Spells
 ------
 * New spells:
-  - Propulsive Piledriver (L3 Tloc): Grab an adjacent foe that maximises travel
-    distance to solid terrain, then hurls you both forward and damages that foe.
+  - Soul Splinter (L1 Necro): Force a tiny fragment of an enemy's soul from
+    their body, weakening them and creating a short-lived soul wisp ally.
+  - Grave Claw (L2 Necro): Skewers an enemy on shards of bone, dealing
+    unavoidable damage and briefly preventing them from moving. It uses the
+    malice of the recently dead as ammunition and can only be recharged by
+    slaying living beings.
+  - Maxwell's Portable Piledriver (L3 Tloc): Grabs an adjacent foe and hurls
+    both you and it forward, inflicting damage if they collide with something
+    solid in the process.
+  - Cigotuvi's Putrefaction (L4 Necro / Air): Causes a heavily wounded living
+    monster to spew a large amount of miasma clouds over several turns, but
+    drains the caster.
   - Hoarfrost Cannonade (L5 Ice / Alch): Summons two transient icy cannons
     that deal damage, slow down movement, and eventually (safely) explode.
   - Gell's Gavotte (L6 Tloc): Pulls the player and everybody else in sight
@@ -231,7 +348,9 @@ Spells
   that allows you to choose which compatible spell the servitor will cast.
 * Manifold Assault has moved from L4 to L7, no longer misses its strikes, and
   hits 4 to 12 foes at once instead of 2 to 4.
-* Removed spells: Gell's Gravitas.
+* Blazeheart Golem now scales properly with spellpower.
+* Polar Vortex no longer damages enemies outside the player's line-of-sight.
+* Removed spells: Necrotise, Cigotuvi's Dreadful Rot, Gell's Gravitas.
 
 Tiles and Other Art
 -------------------

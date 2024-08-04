@@ -797,14 +797,11 @@ bool item_is_worth_listing(const item_def& item)
     }
 }
 
-// 2 - artefact, 1 - glowing/runed, 0 - mundane
+// 3 - unrandart, 2 - artefact, 1 - glowing/runed, 0 - mundane
 static int _item_name_specialness(const item_def& item)
 {
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_MISSILES && item.base_type != OBJ_JEWELLERY)
-    {
-        return 0;
-    }
+    if (is_unrandom_artefact(item) || is_xp_evoker(item))
+        return 3;
 
     // You can tell something is an artefact, because it'll have a
     // description which rules out anything else.
@@ -858,6 +855,7 @@ string item_message(vector<const item_def *> const &items)
                     out_string += "</" + colour + ">";
                 switch (specialness)
                 {
+                case 3: colour = "lightcyan"; break; // unrandart
                 case 2: colour = "yellow";   break; // artefact
                 case 1: colour = "white";    break; // glowing/runed
                 case 0: colour = "darkgrey"; break; // mundane
@@ -4203,13 +4201,13 @@ bool item_def::is_valid(bool iinfo, bool error) const
     return true;
 }
 
-// The Orb of Zot and unique runes are considered critical.
+// The Orb of Zot, gems, and unique runes are considered critical.
 bool item_def::is_critical() const
 {
     if (!defined())
         return false;
 
-    if (base_type == OBJ_ORBS)
+    if (base_type == OBJ_ORBS || base_type == OBJ_GEMS)
         return true;
 
     return item_is_unique_rune(*this);
@@ -4645,7 +4643,7 @@ item_def get_item_known_info(const item_def& item)
     ii.flags = item.flags & (0
             | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
-            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED);
+            | ISFLAG_COSMETIC_MASK | ISFLAG_CURSED | ISFLAG_CHAOTIC);
 
     if (in_inventory(item))
     {

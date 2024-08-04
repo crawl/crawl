@@ -2,6 +2,7 @@
 
 #include "tilepick.h"
 
+#include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h" // vaults_is_locked
@@ -11,6 +12,7 @@
 #include "coordit.h"
 #include "describe.h"
 #include "debug.h"
+#include "duration-type.h"
 #include "env.h"
 #include "tile-env.h"
 #include "files.h"
@@ -39,6 +41,7 @@
 #include "rltiles/tiledef-unrand.h"
 #include "tag-version.h"
 #include "tilemcache.h"
+#include "tilepick-p.h"
 #include "tileview.h"
 #include "transform.h"
 #include "traps.h"
@@ -446,6 +449,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_BAILEY:
     case DNGN_EXIT_DESOLATION:
     case DNGN_EXIT_ARENA:
+    case DNGN_EXIT_CRUCIBLE:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
@@ -545,6 +549,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_UNKNOWN_PORTAL;
     case DNGN_BINDING_SIGIL:
         return TILE_DNGN_BINDING_SIGIL;
+    case DNGN_ORB_DAIS:
+        return TILE_DNGN_ORB_DAIS;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -1628,6 +1634,25 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
             return TILEP_MONS_BLINK_FROG_BLINKING;
         break;
 
+    case MONS_GLOBE_OF_ANNIHILATION:
+    {
+        // Max size isn't reached until distance 4 (distance 2-3 look the same)
+        if (tile_num_prop == 3)
+            tile_num_prop--;
+
+        tileidx_t base_tile;
+        switch (colour)
+        {
+            default:
+            case LIGHTRED: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_GEH; break;
+            case LIGHTBLUE: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_COC; break;
+            case LIGHTGREY: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_DIS; break;
+            case CYAN: base_tile = TILEP_MONS_GLOBE_OF_ANNIHILATION_TAR; break;
+        }
+
+        return tileidx_mon_clamp(base_tile, tile_num_prop - 1);
+    }
+
     case MONS_HYDRA:
         // Number of heads
         return tileidx_mon_clamp(TILEP_MONS_HYDRA, number - 1);
@@ -2133,6 +2158,29 @@ tileidx_t tileidx_monster(const monster_info& mons)
     else if (Options.tile_show_threat_levels.find("unusual") != string::npos
              && mons.has_unusual_items())
         ch |= TILE_FLAG_UNUSUAL;
+    else if (mons.type == MONS_PLAYER_GHOST)
+    {
+       // Threat is always displayed for ghosts, with different tiles,
+        // to make them more easily visible.
+        ch |= TILE_FLAG_GHOST;
+        switch (mons.threat)
+        {
+        case MTHRT_TRIVIAL:
+            ch |= TILE_FLAG_TRIVIAL;
+            break;
+        case MTHRT_EASY:
+            ch |= TILE_FLAG_EASY;
+            break;
+        case MTHRT_TOUGH:
+            ch |= TILE_FLAG_TOUGH;
+            break;
+        case MTHRT_NASTY:
+            ch |= TILE_FLAG_NASTY;
+            break;
+        default:
+            break;
+        }
+    }
     else
         switch (mons.threat)
         {
@@ -2291,6 +2339,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_RIMEBLIGHT, TILEI_RIMEBLIGHT },
     { MB_ARMED, TILEI_UNDYING_ARMS },
     { MB_SHADOWLESS, TILEI_SHADOWLESS },
+    { MB_LOWERED_WL, TILEI_WEAK_WILLED },
     { MB_SIGN_OF_RUIN, TILEI_SIGN_OF_RUIN },
 };
 
@@ -2336,7 +2385,10 @@ tileidx_t tileidx_draco_job(const monster_info& mon)
 */
 tileidx_t tileidx_player_mons()
 {
-    ASSERT(Options.tile_use_monster != MONS_0);
+    ASSERT(player_uses_monster_tile());
+
+    if (you.duration[DUR_EXECUTION])
+        return TILEP_MONS_EXECUTIONER;
 
     monster_type mons;
     if (Options.tile_player_tile)
@@ -3367,11 +3419,15 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case RED:
         if (bolt.name == "puff of flame")
             return TILE_BOLT_FLAME;
+        if (bolt.name == "rain of gore")
+            return TILE_BOLT_HAEMOCLASM;
         break;
 
     case LIGHTRED:
         if (bolt.name.find("damnation") != string::npos)
             return TILE_BOLT_DAMNATION;
+        if (bolt.name == "blood arrow")
+            return TILE_BOLT_BLOOD_ARROW + dir;
         break;
 
     case LIGHTMAGENTA:
@@ -3382,9 +3438,10 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case BROWN:
         if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
-        if (bolt.name == "entropic shot")
-            return TILE_BOLT_IRON_SHOT + dir;
-        if (bolt.name == "klown pie")
+        else if (bolt.name == "volley of thorns" ||
+                 bolt.name == "spray of wooden splinters")
+            return TILE_BOLT_SPLINTERSPRAY + dir;
+        else if (bolt.name == "klown pie")
             return TILE_BOLT_PIE + dir;
         break;
 
@@ -3425,6 +3482,14 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case CYAN:
         if (bolt.name == "slug dart")
             return TILE_BOLT_STONE_ARROW + dir;
+        else if (bolt.name == "lance of force")
+            return TILE_BOLT_FORCE_LANCE + dir;
+        else if (bolt.name == "harpoon shot")
+            return TILE_BOLT_HARPOON_SHOT + dir;
+        else if (bolt.name == "spray of metal splinters")
+            return TILE_BOLT_METAL_SPLINTERS + dir;
+        else if (bolt.name == "ghostly fireball")
+            return TILE_BOLT_GHOSTLY_FIREBALL;
         else if (bolt.name == "umbral torchlight")
             return TILE_BOLT_UMBRAL_TORCHLIGHT;
         break;
@@ -3453,6 +3518,8 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_FLAME:
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_SHADOW_BLAST:
+    case TILE_BOLT_HAEMOCLASM:
+    case TILE_BOLT_GHOSTLY_FIREBALL:
         return tile + ui_random(tile_main_count(tile));
     case TILE_MI_BOOMERANG0:
         return tile + ui_random(4);
@@ -3870,14 +3937,53 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_OKAWARU_GIFT_ARMOUR:
         return TILEG_ABILITY_OKAWARU_GIFT_ARMOUR;
     // Makhleb
-    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;
-    case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
+    case ABIL_MAKHLEB_DESTRUCTION:
+        if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+            return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_COC;
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+            return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_DIS;
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+            return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_GEH;
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+            return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION_TAR;
+        else
+            return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;
+    case ABIL_MAKHLEB_ANNIHILATION:
+        return TILEG_ABILITY_MAKHLEB_GLOBE_OF_ANNIHILATION;
+    case ABIL_MAKHLEB_INFERNAL_SERVANT:
         return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
-    case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-        return TILEG_ABILITY_MAKHLEB_MAJOR_DESTRUCTION;
-    case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        return TILEG_ABILITY_MAKHLEB_GREATER_SERVANT;
+    case ABIL_MAKHLEB_INFERNAL_LEGION:
+        return TILEG_ABILITY_MAKHLEB_LESSER_SERVANT;
+    case ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER:
+        return TILEG_ABILITY_MAKHLEB_VESSEL_OF_SLAUGHTER;
+    case ABIL_MAKHLEB_BRAND_SELF_1:
+    case ABIL_MAKHLEB_BRAND_SELF_2:
+    case ABIL_MAKHLEB_BRAND_SELF_3:
+    {
+        switch (makhleb_ability_to_mutation(ability))
+        {
+            case MUT_MAKHLEB_MARK_HAEMOCLASM:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_HAEMOCLASM;
+            case MUT_MAKHLEB_MARK_LEGION:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_LEGION;
+            case MUT_MAKHLEB_MARK_CARNAGE:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_CARNAGE;
+            case MUT_MAKHLEB_MARK_ANNIHILATION:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_ANNIHILATION;
+            case MUT_MAKHLEB_MARK_TYRANT:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_TYRANT;
+            case MUT_MAKHLEB_MARK_CELEBRANT:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_CELEBRANT;
+            case MUT_MAKHLEB_MARK_EXECUTION:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_EXECUTION;
+            case MUT_MAKHLEB_MARK_ATROCITY:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_ATROCITY;
+            case MUT_MAKHLEB_MARK_FANATIC:
+                return TILEG_ABILITY_MAKHLEB_MARK_OF_THE_FANATIC;
+            default:
+                return TILEG_ERROR;
+        }
+    }
     // Sif Muna
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         return TILEG_ABILITY_SIF_MUNA_CHANNEL;
@@ -4173,6 +4279,10 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_WIZARD_LAB_7; /* I like this colour */
     case BRANCH_DESOLATION:
         return TILE_DNGN_PORTAL_DESOLATION;
+    case BRANCH_ARENA:
+        return TILE_DNGN_ALTAR_OKAWARU;
+    case BRANCH_CRUCIBLE:
+        return TILE_DNGN_ALTAR_MAKHLEB;
 
     default:
         return TILEG_ERROR;

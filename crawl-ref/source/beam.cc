@@ -731,7 +731,6 @@ void bolt::initialise_fire()
     {
         range             = 0;
         aimed_at_feet     = true;
-        auto_hit          = true;
         aimed_at_spot     = true;
         use_target_as_pos = true;
     }
@@ -1143,7 +1142,6 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.aimed_at_spot    = copy.aimed_at_spot;
     orig.aimed_at_feet    = copy.aimed_at_feet;
     orig.extra_range_used = copy.extra_range_used;
-    orig.auto_hit         = copy.auto_hit;
     orig.ray              = copy.ray;
     orig.colour           = copy.colour;
     orig.flavour          = copy.flavour;
@@ -2806,6 +2804,8 @@ bool bolt::can_burn_trees() const
     case SPELL_SUMMON_BLAZEHEART_GOLEM: // core breach!
     case SPELL_HELLFIRE_MORTAR:
         return true;
+    case SPELL_UNLEASH_DESTRUCTION:
+        return flavour == BEAM_FIRE || flavour == BEAM_LAVA;
     default:
         return false;
     }
@@ -3390,7 +3390,7 @@ bool bolt::misses_player()
     if (flavour == BEAM_VISUAL)
         return true;
 
-    if ((is_explosion || auto_hit || aimed_at_feet)
+    if ((is_explosion || aimed_at_feet)
         && origin_spell != SPELL_CALL_DOWN_LIGHTNING
         && origin_spell != SPELL_MOMENTUM_STRIKE)
     {
@@ -3910,6 +3910,14 @@ void bolt::affect_player_enchantment(bool resistible)
         debuff_player();
         _unravelling_explode(*this);
         obvious_effect = true;
+        break;
+
+    case BEAM_SOUL_SPLINTER:
+        obvious_effect = true;
+        if (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+            make_soul_wisp(*agent(), you);
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
         break;
 
     default:
@@ -4444,8 +4452,16 @@ bool bolt::ignores_player() const
                                                                      : CONSTRICT_BVC);
     }
 
-    if (flavour == BEAM_QAZLAL)
+    if (flavour == BEAM_QAZLAL || flavour == BEAM_HAEMOCLASM)
         return true;
+
+    // The player is immune to their own Destruction (both from Carnage / Annihilation
+    // explosions, but also reflected lightning bolts or shots from hellmouths)
+    if (origin_spell == SPELL_UNLEASH_DESTRUCTION
+        && (!agent() || agent()->wont_attack()))
+    {
+        return true;
+    }
 
     return false;
 }
@@ -5016,6 +5032,9 @@ void bolt::kill_monster(monster &mon)
         kindex = YOU_FAULTLESS;
     }
 
+    if (flavour == BEAM_BLOODRITE)
+        mon.props[MAKHLEB_BLOODRITE_KILL_KEY] = true;
+
     item_def *corpse = monster_die(mon, ref_killer, kindex);
 
     if (origin_spell != SPELL_GLACIATE && origin_spell != SPELL_GLACIAL_BREATH)
@@ -5113,12 +5132,29 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_FLASH_FREEZE
              || origin_spell == SPELL_HOARFROST_BULLET
              || name == "blast of ice"
-             || origin_spell == SPELL_GLACIATE && !is_explosion)
+             || origin_spell == SPELL_GLACIATE && !is_explosion
+             || origin_spell == SPELL_UNLEASH_DESTRUCTION
+                && flavour == BEAM_COLD
+                && you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
     {
         if (!mon->has_ench(ENCH_FROZEN))
         {
             simple_monster_message(*mon, " is flash-frozen.");
             mon->add_ench(ENCH_FROZEN);
+        }
+    }
+
+    if (origin_spell == SPELL_UNLEASH_DESTRUCTION
+        && flavour == BEAM_FIRE
+        && you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+    {
+        const int dur = 3 + div_rand_round(dmg, 3);
+        if (!mon->has_ench(ENCH_FIRE_VULN))
+        {
+            mprf("%s fire resistance burns away.",
+                mon->name(DESC_ITS).c_str());
+            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, agent(),
+                                      dur * BASELINE_DELAY));
         }
     }
 
@@ -5651,6 +5687,13 @@ void bolt::affect_monster(monster* mon)
         }
         // Now hurt monster.
         mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
+
+        // Haemoclasm explosions will always chain-explode if they kill something
+        if (!mon->alive() && flavour == BEAM_HAEMOCLASM
+            && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM))
+        {
+            mon->props[MAKHLEB_HAEMOCLASM_KEY] = true;
+        }
     }
 
     if (mon->alive())
@@ -5729,6 +5772,17 @@ bool bolt::ignores_monster(const monster* mon) const
 
     if (origin_spell == SPELL_HOARFROST_BULLET)
         return in_explosion_phase && mons_aligned(agent(), mon);
+
+    // Explosions caused by Mark of Carnage don't cause friendly fire, and Mark
+    // of the Legion allows firing through allies at all times.
+    if ((origin_spell == SPELL_UNLEASH_DESTRUCTION && mon->friendly())
+        && (is_explosion || you.has_mutation(MUT_MAKHLEB_MARK_LEGION)))
+    {
+        return true;
+    }
+
+    if ((flavour == BEAM_HAEMOCLASM || flavour == BEAM_BLOODRITE) && mon->friendly())
+        return true;
 
     int summon_type = 0;
     mon->is_summoned(nullptr, &summon_type);
@@ -5914,7 +5968,8 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_SOUL_SPLINTER:
-        rc = mons_can_be_spectralised(*mon, false, true);
+        rc = mons_can_be_spectralised(*mon, false, true)
+             && !mon->props.exists(SOUL_SPLINTERED_KEY);
         break;
 
     default:
@@ -7463,6 +7518,8 @@ static string _beam_type_name(beam_type type)
     case BEAM_QAZLAL:                return "upheaval targetter";
     case BEAM_RIMEBLIGHT:            return "rimeblight";
     case BEAM_SHADOW_TORPOR:         return "shadow torpor";
+    case BEAM_HAEMOCLASM:            return "gore";
+    case BEAM_BLOODRITE:             return "blood";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

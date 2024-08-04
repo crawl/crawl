@@ -63,6 +63,7 @@
 #include "mon-death.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-pathfind.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-speak.h"
@@ -70,6 +71,7 @@
 #include "mon-util.h"
 #include "movement.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"
@@ -80,6 +82,7 @@
 #include "potion.h"
 #include "prompt.h"
 #include "random.h"
+#include "random-pick.h"
 #include "religion.h"
 #include "shout.h"
 #include "skill-menu.h"
@@ -98,6 +101,8 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tile-env.h"
+ #include "rltiles/tiledef-dngn.h"
  #include "rltiles/tiledef-main.h"
  #include "rltiles/tiledef-player.h"
 #endif
@@ -4386,11 +4391,6 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
         return false;
 
-    // Don't offer to sacrifice an eye for players with no eyes (not counting
-    // forms or mutations).
-    if (mut == MUT_MISSING_EYE && !player_has_eyes(false, false))
-        return false;
-
     return true;
 }
 
@@ -4778,8 +4778,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
     }
 
-    // Award piety for any mutations removed by adding new innate muts
-    // These can only be removed positive mutations, so we'll always give piety.
+    // Award piety for any mutations removed by adding new innate muts.
+    // These can only be removed by positive mutations, so we'll always give
+    // piety.
     if (sacrifice == ABIL_RU_SACRIFICE_PURITY
         || sacrifice == ABIL_RU_SACRIFICE_HEALTH
         || sacrifice == ABIL_RU_SACRIFICE_ESSENCE)
@@ -6842,4 +6843,669 @@ void jiyva_end_oozemancy()
     for (rectangle_iterator ri(0); ri; ++ri)
         if (env.grid(*ri) == DNGN_SLIMY_WALL && is_temp_terrain(*ri))
             revert_terrain_change(*ri, TERRAIN_CHANGE_SLIME);
+}
+
+static bool _has_upgraded_destruction()
+{
+    return you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH)
+           || you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC)
+           || you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR)
+           || you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS);
+}
+
+void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
+{
+    zappy(ZAP_UNLEASH_DESTRUCTION, power, false, beam);
+    beam.origin_spell = SPELL_UNLEASH_DESTRUCTION;
+    if (_has_upgraded_destruction())
+        beam.pierce = true;
+
+    // Choose beam flavor based on what type of destruction we're wielding
+    if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA);
+        else
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_LAVA, BEAM_ELECTRICITY, BEAM_NEG);
+    }
+    else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_ICE, BEAM_COLD);
+        else
+            beam.flavour = random_choose(BEAM_ICE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
+    }
+    else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_DEVASTATION, BEAM_NEG);
+        else
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_DEVASTATION, BEAM_NEG);
+    }
+    else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+    {
+        if (signature_only)
+            beam.flavour = random_choose(BEAM_ACID, BEAM_FRAG);
+        else
+            beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_ACID, BEAM_FRAG);
+    }
+    else
+        beam.flavour = random_choose(BEAM_FIRE, BEAM_COLD, BEAM_ELECTRICITY, BEAM_NEG);
+
+    switch (beam.flavour)
+    {
+        default:
+        case BEAM_FIRE:
+            beam.name = "gout of fire";
+            beam.colour = RED;
+            break;
+
+        case BEAM_COLD:
+            beam.name = "flurry of cold";
+            beam.colour = BLUE;
+            break;
+
+        case BEAM_ELECTRICITY:
+            beam.name = "torrent of electricity";
+            beam.colour = LIGHTCYAN;
+            break;
+
+        case BEAM_NEG:
+            beam.name = "wail of negative energy";
+            beam.colour = DARKGREY;
+            if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+                beam.damage.num = 5;
+            break;
+
+        case BEAM_LAVA:
+            beam.name = "gout of magma";
+            beam.colour = RED;
+            break;
+
+        case BEAM_ICE:
+            beam.name = "flurry of ice";
+            beam.colour = ETC_ICE;
+            break;
+
+        case BEAM_DEVASTATION:
+            beam.name = "bolt of devastation";
+            beam.colour = MAGENTA;
+            break;
+
+        case BEAM_ACID:
+            beam.name = "spray of acid";
+            beam.colour = YELLOW;
+            break;
+
+        case BEAM_FRAG:
+            beam.damage.num = 5;
+            beam.name = "flurry of shrapnel";
+            beam.colour = CYAN;
+            break;
+    }
+}
+
+static void _makhleb_atrocity_trigger(int power)
+{
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+            targs.push_back(*mi);
+    }
+
+    if (targs.empty())
+    {
+        mprf("Your accumulated destruction dissipates without a target.");
+        return;
+    }
+
+    mpr("Your destruction surges wildly!");
+
+    bolt beam;
+    beam.range = you.current_vision;
+    beam.source = you.pos();
+    beam.thrower = KILL_YOU;
+
+    bleed_for_makhleb(you);
+    bleed_for_makhleb(you);
+
+    shuffle_array(targs);
+    far_to_near_sorter sorter = {you.pos()};
+    sort(targs.begin(), targs.end(), sorter);
+
+    // Will fire up to 4 times, aimed at random distant targets. Can fire up to
+    // twice at a single target, if there aren't actually 4 of them alive.
+    int shots_remain = 4;
+    for (int n = 0; n < 2 && shots_remain; ++n)
+    {
+        bool found_alive = false;
+        for (size_t i = 0; i < targs.size() && shots_remain; ++i)
+        {
+            if (targs[i]->alive())
+            {
+                beam.target = targs[i]->pos();
+                makhleb_setup_destruction_beam(beam, power, false);
+                beam.fire();
+                --shots_remain;
+                found_alive = true;
+            }
+        }
+        if (!found_alive)
+            break;
+
+        shuffle_array(targs);
+    }
+}
+
+int makhleb_get_atrocity_stacks()
+{
+    if (you.props.exists(MAKHLEB_ATROCITY_STACKS_KEY))
+        return you.props[MAKHLEB_ATROCITY_STACKS_KEY].get_int();
+
+    return 0;
+}
+
+spret makhleb_unleash_destruction(int power, bolt& beam, bool fail)
+{
+    // Since the actual beam is random, check with BEAM_MMISSILE.
+    if (!player_tracer(_has_upgraded_destruction() ? ZAP_UNLEASH_DESTRUCTION_PIERCING
+                                                   : ZAP_UNLEASH_DESTRUCTION,
+                        100, beam, beam.range))
+    {
+        return spret::abort;
+    }
+
+    fail_check();
+
+    makhleb_setup_destruction_beam(beam, power, false);
+
+    bleed_for_makhleb(you);
+    beam.fire();
+
+    if (you.has_mutation(MUT_MAKHLEB_MARK_ATROCITY))
+    {
+        int& stacks = you.props[MAKHLEB_ATROCITY_STACKS_KEY].get_int();
+        if (stacks == MAKHLEB_ATROCITY_MAX_STACKS)
+        {
+            you.duration[DUR_GROWING_DESTRUCTION] = 0;
+            you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
+            _makhleb_atrocity_trigger(power);
+        }
+        else
+        {
+            you.duration[DUR_GROWING_DESTRUCTION] = you.time_taken + 1;
+           ++stacks;
+        }
+    }
+
+    return spret::success;
+}
+
+static const vector<random_pick_entry<monster_type>> _makhleb_servants =
+{
+  {  0,  7,  100, SEMI, MONS_ICE_DEVIL },
+  {  0,  9,  120, SEMI, MONS_ORANGE_DEMON },
+  {  2,  10, 110, SEMI, MONS_RUST_DEVIL },
+  {  3,  10, 145, SEMI, MONS_RED_DEVIL },
+  {  4,  12, 145, SEMI, MONS_HELLWING },
+  {  6,  13, 100, SEMI, MONS_SOUL_EATER },
+  {  6,  13, 150, SEMI, MONS_YNOXINUL },
+  {  6,  15, 180, SEMI, MONS_SMOKE_DEMON },
+  {  8,  15, 150, SEMI, MONS_SUN_DEMON },
+  {  8,  16, 160, SEMI, MONS_SIXFIRHY },
+  { 10,  27,  155, SEMI, MONS_BLIZZARD_DEMON },
+  { 11,  27,  150, SEMI, MONS_GREEN_DEATH },
+  { 13,  27,  170, SEMI, MONS_CACODEMON },
+  { 14,  27,  185, SEMI, MONS_BALRUG },
+  { 17,  27,  220, SEMI, MONS_EXECUTIONER },
+
+  // Accessible only through the Mark of the Tyrant
+  { 19,  27,  260, SEMI, MONS_TZITZIMITL },
+  { 21,  27,  280, SEMI, MONS_ICE_FIEND },
+  { 22,  27,  300, SEMI, MONS_BRIMSTONE_FIEND },
+  { 26,  27,  150, SEMI, MONS_HELL_SENTINEL },
+};
+
+static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_spot)
+{
+    // First, find all possible valid enemies
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi)
+            && you.can_see(**mi))
+        {
+            targs.push_back(*mi);
+        }
+    }
+    shuffle_array(targs);
+
+    // Now iterate through these in random order, looking for a place that this
+    // demon could appear at.
+    for (size_t i = 0; i < targs.size(); ++i)
+    {
+        coord_def pos;
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 1, false, pos, true))
+        {
+            demon_spot = pos;
+            return targs[i];
+        }
+    }
+
+    // If there somehow weren't any valid spaces, iterate a second time, looking
+    // at all tiles within *2* spaces of enemies instead.
+    for (size_t i = 0; i < targs.size(); ++i)
+    {
+        coord_def pos;
+        if (find_habitable_spot_near(targs[i]->pos(), demon_type, 2, false, pos, true))
+        {
+            demon_spot = pos;
+            return targs[i];
+        }
+    }
+
+    // Alas, now we give up.
+    return nullptr;
+}
+
+void makhleb_infernal_servant()
+{
+    bleed_for_makhleb(you);
+
+    const bool tyrant = you.has_mutation(MUT_MAKHLEB_MARK_TYRANT);
+    const bool carnage = you.has_mutation(MUT_MAKHLEB_MARK_CARNAGE);
+
+    int pow = you.skill(SK_INVOCATIONS);
+    const bool hostile = one_chance_in(6);
+    if (hostile)
+        pow = min(27, pow + 3);
+
+    // Top-end demons are only accessed with this mark
+    if (!tyrant)
+        pow = min(pow, 18);
+
+    monster_picker servant_picker;
+    monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
+
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, tyrant ? 6 : 4, MON_SUMM_AID, GOD_MAKHLEB);
+
+    if (carnage)
+    {
+        if (monster* targ = _find_carnage_target(mon_type, mg.pos))
+        {
+            mg.foe = targ->mindex();
+            mg.flags |= MG_FORCE_PLACE;
+        }
+        else
+        {
+            // It is very unfortunate if this happens, since it still costs piety...
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return;
+        }
+    }
+
+    if (monster* demon = create_monster(mg))
+    {
+        if (carnage)
+        {
+            bolt beam;
+            beam.thrower = KILL_YOU;
+            beam.source = demon->pos();
+            beam.target = demon->pos();
+            makhleb_setup_destruction_beam(beam, you.skill(SK_INVOCATIONS, 2), true);
+            beam.is_explosion = true;
+            beam.ex_size = 2;
+
+            mprf("%s appears in a burst of %s!", demon->name(DESC_A).c_str(),
+                                        beam.get_short_name().c_str());
+
+            beam.explode();
+        }
+        else if (tyrant)
+        {
+            mprf("%s answers its master's command!",
+                    demon->name(DESC_A).c_str());
+        }
+        else
+        {
+            mprf("%s answers the call of your %s!",
+                    demon->name(DESC_A).c_str(),
+                    you.has_blood() ? "blood" : "suffering");
+        }
+
+        // Top-tier demons are more costly to summon.
+        if (mon_type == MONS_TZITZIMITL
+            || mon_type == MONS_ICE_FIEND
+            || mon_type == MONS_BRIMSTONE_FIEND
+            || mon_type == MONS_HELL_SENTINEL)
+        {
+            lose_piety(random_range(2, 3));
+        }
+
+        if (hostile)
+        {
+            // Don't let Mark of the Tyrant produce fiends as hostiles
+            pow = min(pow, 18);
+
+            mon_type = servant_picker.pick(_makhleb_servants, pow - 3, MONS_RED_DEVIL);
+            mgen_data mg2(mon_type, BEH_HOSTILE, you.pos(), MHITYOU, MG_AUTOFOE);
+            mg2.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET | MF_WAS_IN_VIEW);
+            if (monster* bad_demon = create_monster(mg2))
+            {
+                if (tyrant)
+                {
+                    mprf(MSGCH_WARN, "A traitorous %s dares provoke your wrath!",
+                        bad_demon->name(DESC_PLAIN).c_str());
+                }
+                else if (coinflip())
+                {
+                    mprf(MSGCH_WARN, "A jealous %s pursues it!",
+                        bad_demon->name(DESC_PLAIN).c_str());
+                }
+                else
+                {
+                    mprf(MSGCH_WARN, "A rebellious %s escapes with it!",
+                        bad_demon->name(DESC_PLAIN).c_str());
+                }
+            }
+        }
+    }
+}
+
+void makhleb_inscribe_mark(mutation_type mark)
+{
+    mprf("You utter a prayer to Makhleb and carve the %s into yourself.",
+         mutation_name(mark));
+
+    const int hploss = min(you.hp - 1, you.hp * 2 / 3);
+    blood_spray(you.pos(), MONS_PLAYER, 50);
+    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER);
+
+    perma_mutate(mark, 1, "inscribed by the player");
+
+    you.one_time_ability_used.set(GOD_MAKHLEB);
+
+    const string mile_text = make_stringf("accepted the %s", mutation_name(mark));
+    take_note(Note(NOTE_INFERNAL_MARK, 0, 0, mutation_name(mark)));
+    mark_milestone("mark", mile_text);
+}
+
+#define NEXT_INFERNAL_LEGION_KEY "next_infernal_legion"
+
+static void _summon_legion_demon()
+{
+    const int pow = max(0, you.skill_rdiv(SK_INVOCATIONS, 1, 2) - 1);
+    monster_picker servant_picker;
+    monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
+
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, 1, MON_SUMM_AID, GOD_MAKHLEB);
+    create_monster(mg);
+}
+
+spret makhleb_infernal_legion(bool fail)
+{
+    if (you.duration[DUR_INFERNAL_LEGION])
+    {
+        mpr("You are already unleashing the legions of chaos!");
+        return spret::abort;
+    }
+
+    fail_check();
+    mpr("You carve a gateway into yourself and beckon forth the legions of chaos!");
+    bleed_for_makhleb(you);
+    you.duration[DUR_INFERNAL_LEGION] = (you.skill_rdiv(SK_INVOCATIONS, 5, 4)
+                                            + random_range(10, 20)) * BASELINE_DELAY;
+
+    you.props[NEXT_INFERNAL_LEGION_KEY] = random_range(9, 15);
+
+    if (there_are_monsters_nearby(true, false))
+    {
+        // Summon a couple demons immediately
+        const int num = random_range(1, 3);
+        for (int i = 0; i < num; ++i)
+            _summon_legion_demon();
+    }
+
+    return spret::success;
+}
+
+void makhleb_infernal_legion_tick(int delay)
+{
+    // First, check if there are any hostiles in sight
+    if (!there_are_monsters_nearby(true, false))
+        return;
+
+    while (delay >= you.props[NEXT_INFERNAL_LEGION_KEY].get_int())
+    {
+        delay -= you.props[NEXT_INFERNAL_LEGION_KEY].get_int();
+        _summon_legion_demon();
+        you.props[NEXT_INFERNAL_LEGION_KEY] = random_range(9, 15);
+    }
+
+    you.props[NEXT_INFERNAL_LEGION_KEY].get_int() -= delay;
+}
+
+void makhleb_vessel_of_slaughter()
+{
+    const int boost = div_rand_round((100 - (you.hp * 100 / you.hp_max)) * 2, 3);
+    you.props[MAKHLEB_SLAUGHTER_BOOST_KEY] = boost;
+
+    mpr("You offer yourself as an instrument of Makhleb's will and feel "
+        "overwhelming power flowing through you!");
+
+    transform(100, transformation::slaughter);
+    you.transform_uncancellable = true;
+
+    bolt damnation;
+    zappy(ZAP_HURL_DAMNATION, 100, false, damnation);
+    damnation.thrower = KILL_YOU;
+    damnation.source_id = MID_PLAYER;
+    damnation.is_explosion = true;
+    damnation.ex_size = 3;
+    damnation.damage = dice_def(3, 7 + you.experience_level);
+    damnation.source = you.pos();
+    damnation.target = you.pos();
+    damnation.explode(true, true);
+}
+
+// Similar to servant list, but weights of lategame options are a bit tweaks,
+// and there are no cacodemons (mutations are annoying and they tear up the
+// Crucible). (Also there are some weak demons for earlygame)
+static const vector<random_pick_entry<monster_type>> _makhleb_torturers =
+{
+  {  -5,  3, 200, FALL, MONS_WHITE_IMP },
+  {  -4,  3, 200, SEMI, MONS_IRON_IMP },
+  {  -3,  3, 200, SEMI, MONS_UFETUBUS },
+  {  0,  8,  100, SEMI, MONS_ICE_DEVIL },
+  {  2,  10,  120, SEMI, MONS_ORANGE_DEMON },
+  {  2,  12, 110, SEMI, MONS_RUST_DEVIL },
+  {  3,  12, 145, SEMI, MONS_RED_DEVIL },
+  {  4,  14, 145, SEMI, MONS_HELLWING },
+  {  6,  15, 100, SEMI, MONS_SOUL_EATER },
+  {  6,  17, 150, SEMI, MONS_YNOXINUL },
+  {  6,  21, 180, SEMI, MONS_SMOKE_DEMON },
+  {  8,  18, 150, SEMI, MONS_SUN_DEMON },
+  {  8,  19, 160, SEMI, MONS_SIXFIRHY },
+  { 11,  27,  155, SEMI, MONS_BLIZZARD_DEMON },
+  { 15,  27,  150, SEMI, MONS_GREEN_DEATH },
+  { 20,  27,  185, SEMI, MONS_BALRUG },
+  { 20,  32,  220, PEAK, MONS_EXECUTIONER },
+  { 23,  35,  160, RISE, MONS_TZITZIMITL },
+  { 23,  35,  180, RISE, MONS_ICE_FIEND },
+  { 24,  39,  300, RISE, MONS_BRIMSTONE_FIEND },
+  { 27,  41,  180, RISE, MONS_HELL_SENTINEL },
+};
+
+static void _spawn_crucible_demon(bool allow_in_sight)
+{
+    int pow = (you.experience_level - 7) * 5 / 4;
+
+    if (runes_in_pack() > 3)
+        pow += (runes_in_pack() - 3) * 2 / 3;
+
+    if (coinflip())
+        pow = pow * 2 / 3;
+    else if (one_chance_in(4))
+        pow += 3;
+
+    monster_picker picker;
+    monster_type mon_type = picker.pick(_makhleb_torturers, pow, MONS_RED_DEVIL);
+
+    mgen_data mg(mon_type, BEH_HOSTILE, coord_def(-1, -1), MHITNOT,
+                  MG_FORBID_BANDS, GOD_MAKHLEB);
+    mg.extra_flags |= MF_NO_REWARD | MF_HARD_RESET;
+
+    if (!allow_in_sight)
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+    else
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+
+    mons_place(mg);
+}
+
+// Just to gently prevent overly strong species monsters from spawning very early
+// (since the player does want to actually kill them reasonably quickly)
+static const vector<random_pick_entry<monster_type>> _crucible_victims =
+{
+  {  0,  27, 500, FALL, MONS_KOBOLD },
+  {  0,  27, 500, FALL, MONS_GOBLIN },
+  {  2,  27, 500, SEMI, MONS_GNOLL },
+  {  2,  27, 500, SEMI, MONS_ORC },
+  {  9,  27, 900, FLAT, MONS_HUMAN },
+  {  9,  27, 300, FLAT, MONS_MERFOLK },
+  {  9,  27, 200, FLAT, MONS_NAGA },
+  {  9,  27, 200, FLAT, MONS_SPRIGGAN },
+  {  9,  27, 300, FLAT, MONS_TROLL },
+  {  11, 27, 200, FLAT, MONS_GARGOYLE },
+  {  12, 27, 300, FLAT, MONS_DEMONSPAWN },
+  {  15, 27, 200, FLAT, MONS_MINOTAUR },
+  {  16, 27, 200, RISE, MONS_DRACONIAN },
+  {  17, 27, 200, FLAT, MONS_TENGU_WARRIOR },
+  {  17, 27,  80, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
+};
+
+static void _spawn_crucible_victim(bool near_player_okay = false)
+{
+    monster_picker servant_picker;
+    monster_type victim_type = servant_picker.pick(_crucible_victims,
+                                                   you.experience_level, MONS_HUMAN);
+    if (victim_type == MONS_DRACONIAN)
+        victim_type = random_draconian_monster_species();
+
+    mgen_data mg(victim_type, BEH_HOSTILE, coord_def(-1, -1), MHITYOU,
+                  MG_FORBID_BANDS, GOD_NO_GOD);
+    mg.extra_flags |= MF_NO_REWARD;
+
+    if (!near_player_okay)
+        mg.proximity = PROX_AWAY_FROM_PLAYER;
+
+    if (monster* victim = mons_place(mg))
+    {
+        victim->destroy_inventory();
+        victim->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, INFINITE_DURATION));
+
+        // Mostly meaningless, but flavorful, signs of torture
+        enchant_type ench = random_choose(ENCH_CORROSION,
+                                          ENCH_BLIND,
+                                          ENCH_BARBS,
+                                          ENCH_WEAK);
+        victim->add_ench(mon_enchant(ench, 0, nullptr, INFINITE_DURATION));
+
+        victim->hit_points = random_range(victim->hit_points * 3 / 10,
+                                          victim->hit_points * 8 / 10);
+
+        victim->props[MAKHLEB_CRUCIBLE_VICTIM_KEY] = true;
+        victim->props[ALWAYS_CORPSE_KEY] = true;
+        victim->flags |= MF_NO_REGEN;
+    }
+}
+
+void makhleb_enter_crucible_of_flesh(int debt)
+{
+    stop_delay(true);
+    down_stairs(DNGN_ENTER_CRUCIBLE);
+
+    const int num_enemies = random_range(3, 5);
+    const int num_near_enemies = random_range(1, 2);
+    const int num_victims = random_range(9, 13);
+
+    for (int i = 0; i < num_enemies; ++i)
+        _spawn_crucible_demon(false);
+
+    for (int i = 0; i < num_near_enemies; ++i)
+        _spawn_crucible_demon(true);
+
+    for (int i = 0; i < num_victims; ++i)
+        _spawn_crucible_victim(true);
+
+    simple_god_message(" says \"Flay and bleed and purify yourself, if you wish"
+                       " to be found worthy of leaving this place!\"", false,
+                       GOD_MAKHLEB);
+
+    mpr("(Slaughtering mortal victims (and sometimes even demons) will "
+        "eventually satisfy Makhleb and create an exit.)");
+
+    you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int() = debt;
+}
+
+void makhleb_handle_crucible_of_flesh()
+{
+    if (!player_in_branch(BRANCH_CRUCIBLE))
+        return;
+
+    // Count number of hostiles still alive.
+    int num_hostiles = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!mi->wont_attack() && mi->god == GOD_MAKHLEB)
+            ++num_hostiles;
+    }
+
+    const int max_demons = 7;
+    if (num_hostiles < max_demons)
+    {
+        int gen = random_range(1, 2);
+        if (num_hostiles < 3)
+            ++gen;
+
+        gen = min(gen, (max_demons - num_hostiles));
+        for (int i = 0; i < gen; ++i)
+            _spawn_crucible_demon(coinflip());
+    }
+}
+
+void makhleb_crucible_kill(monster& victim)
+{
+    // Immediately replace victims as they are killed, so that the player can
+    // go hunt more.
+    if (victim.props.exists(MAKHLEB_CRUCIBLE_VICTIM_KEY))
+        _spawn_crucible_victim();
+    // Demons have only 50% chance of reducing debt when they die.
+    else if (coinflip())
+        return;
+
+    // Deduct from the player's 'debt' and spawn an exit if they have killed enough.
+    if (--you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int() == 0)
+    {
+        coord_def pos;
+        while (pos.origin() || cell_is_solid(pos)
+               || grid_distance(you.pos(), pos) < 12)
+        {
+            pos = random_in_bounds();
+        }
+
+        dungeon_terrain_changed(pos, DNGN_EXIT_CRUCIBLE);
+        simple_god_message(" acknowledges your contrition and permits you to"
+                           " depart the Crucible.", false, GOD_MAKHLEB);
+
+        env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
+#ifdef USE_TILE
+        tile_env.bk_bg(pos) = TILE_DNGN_PORTAL;
+#endif
+
+        return;
+    }
 }

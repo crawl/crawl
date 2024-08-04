@@ -46,11 +46,13 @@
 #include "terrain.h"
 #include "transform.h"
 #include "unicode.h"
+#include "view.h"
 #include "xom.h"
 
 using namespace ui;
 
 static bool _delete_single_mutation_level(mutation_type mutat, const string &reason, bool transient);
+static string _future_mutation_description(mutation_type mut, int levels);
 
 struct body_facet_def
 {
@@ -81,10 +83,11 @@ enum class mutflag
     bad     = 1 << 1, // used by malmut etc
     jiyva   = 1 << 2, // jiyva-only muts
     qazlal  = 1 << 3, // qazlal wrath
+    makhleb = 1 << 4, // makhleb capstone marks
 
-    last    = qazlal
+    last    = makhleb
 };
-DEF_BITFIELD(mutflags, mutflag, 3);
+DEF_BITFIELD(mutflags, mutflag, 4);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
@@ -328,6 +331,16 @@ bool is_body_facet(mutation_type mut)
  */
 mutation_activity_type mutation_activity_level(mutation_type mut)
 {
+    // Makhleb mutations are active in all forms, but only while worshipping.
+    const mutation_def& mdef = _get_mutation_def(mut);
+    if (_mut_has_use(mdef, mutflag::makhleb))
+    {
+        if (you_worship(GOD_MAKHLEB))
+            return mutation_activity_type::FULL;
+        else
+            return mutation_activity_type::INACTIVE;
+    }
+
     // First make sure the player's form permits the mutation.
     if (!form_keeps_mutations())
     {
@@ -1228,6 +1241,7 @@ private:
     vector<string> fakemuts;
     vector<mutation_type> muts;
     mut_menu_mode mode;
+    bool has_future_muts;
 public:
     MutationMenu()
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
@@ -1408,6 +1422,44 @@ private:
             add_entry(me);
         }
 
+        const vector<level_up_mutation> &xl_muts = get_species_def(you.species).level_up_mutations;
+        has_future_muts = false;
+        if (!xl_muts.empty())
+        {
+            vector<pair<mutation_type, int>> gained_muts;
+            for (auto& mut : get_species_def(you.species).level_up_mutations)
+            {
+                if (you.experience_level < mut.xp_level)
+                {
+                    // Tally how many levels of this mutation we will have by the
+                    // time we gain this instance of it (so that mutations
+                    // scheduled to be gotten progressively will name each step
+                    // correctly).
+                    gained_muts.emplace_back(mut.mut, mut.mut_level);
+                    int mut_lv = 0;
+                    for (auto& gained_mut : gained_muts)
+                        if (gained_mut.first == mut.mut)
+                            mut_lv += gained_mut.second;
+
+                    string mut_desc = _future_mutation_description(mut.mut, mut_lv);
+#ifndef USE_TILE
+                    chop_string(mut_desc, crawl_view.termsz.x - 15, false);
+#endif
+
+                    const string desc = make_stringf("<darkgrey>[%s]</darkgrey> XL %d",
+                                                        mut_desc.c_str(),
+                                                        mut.xp_level);
+                    MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
+                    ++hotkey;
+                    // XXX: Ugh...
+                    me->data = (void*)&mut.mut;
+                    add_entry(me);
+
+                    has_future_muts = true;
+                }
+            }
+        }
+
         if (items.empty())
         {
             add_entry(new MenuEntry("You are rather mundane.",
@@ -1427,6 +1479,8 @@ private:
                 extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
             if (_has_transient_muts())
                 extra += "<magenta>[]</magenta>   : Transient mutations.\n";
+            if (has_future_muts)
+                extra += "<darkgrey>[]</darkgrey>: Gained at a future XL.\n";
         }
         extra += picker_footer();
         set_more(extra);
@@ -1602,6 +1656,11 @@ static mutation_type _get_random_slime_mutation()
 bool is_slime_mutation(mutation_type mut)
 {
     return _mut_has_use(mut_data[mut_index[mut]], mutflag::jiyva);
+}
+
+bool is_makhleb_mark(mutation_type mut)
+{
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::makhleb);
 }
 
 static mutation_type _get_random_qazlal_mutation()
@@ -1924,7 +1983,7 @@ static bool _body_facet_blocks(mutation_type mutat)
 static bool _exoskeleton_incompatible(mutation_type mutat)
 {
     // Coglins attack with and wear aux armour on their exoskeleton-limbs,
-    // not their fleshy, mutatation-prone hands. Disable mutations that would
+    // not their fleshy, mutation-prone hands. Disable mutations that would
     // make no sense in this scheme.
     switch (mutat)
     {
@@ -1955,10 +2014,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
             return true;
     }
 
-    // Only species that already have tails can get this one. For merfolk it
-    // would only work in the water, so skip it, and demonspawn tails come
-    // with a stinger already.
+    // Only species that already have tails can get this one. A felid
+    // tail does nothing in combat, so ignore it. For merfolk it would
+    // only work in the water, so skip it. Demonspawn tails come with a
+    // stinger already.
     if ((!you.has_tail(false)
+         || you.species == SP_FELID
          || you.has_innate_mutation(MUT_MERTAIL)
          || you.has_mutation(MUT_WEAKNESS_STINGER))
         && mutat == MUT_STINGER)
@@ -3007,6 +3068,27 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     return result;
 }
 
+// Get a description for a mutation the player will gain at a future XL,
+// reworded slightly to sound like they do not currently have it.
+static string _future_mutation_description(mutation_type mut_type, int levels)
+{
+    levels += you.get_base_mutation_level(mut_type);
+    string mut_desc = mutation_desc(mut_type, levels);
+
+    // If we have a custom message defined for this future mutation, use it.
+    const char* const* future_desc = _get_mutation_def(mut_type).will_gain;
+    if (future_desc[levels - 1] != NULL)
+        return string(future_desc[levels - 1]);
+
+    // Otherwise do some simple string replacements to cover common cases.
+    mut_desc = replace_all(mut_desc, " can ", " will be able to ");
+    mut_desc = replace_all(mut_desc, " have ", " will have ");
+    mut_desc = replace_all(mut_desc, " are ", " will be ");
+    mut_desc = replace_all(mut_desc, " is ", " will be ");
+
+    return mut_desc;
+}
+
 // The "when" numbers indicate the range of times in which the mutation tries
 // to place itself; it will be approximately placed between when% and
 // (when + 100)% of the way through the mutations. For example, you should
@@ -3380,7 +3462,11 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
     {
         if (you.mutation[i])
         {
-            const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i), innate, temp);
+            // Infernal Marks should count for silver vulnerability despite
+            // being permanent mutations.
+            const bool check_innate = innate || is_makhleb_mark(static_cast<mutation_type>(i));
+            const int mut_level = get_base_mutation_level(static_cast<mutation_type>(i),
+                                                          check_innate, temp);
 
             if (levels)
                 result += mut_level;

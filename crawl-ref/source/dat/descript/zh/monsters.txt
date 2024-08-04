@@ -3001,7 +3001,7 @@ naga warlord
 
 <naga warrior>
 %%%%
-sulfuric acid blob
+sulphuric acid blob
 
 <acid blob>
 %%%%

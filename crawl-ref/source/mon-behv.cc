@@ -1399,6 +1399,21 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
+        // Have pacified orcs drop their gear to avoid potentially tedious
+        // methods of trying to get something to kill them before they leave the
+        // level, or the deeply unflavorful approach of simply killing them for
+        // it and putting up with Beogh being upset with you.
+        if (mons_genus(mon->type) == MONS_ORC && you_worship(GOD_BEOGH))
+        {
+            if (you.can_see(*mon))
+            {
+                simple_monster_message(*mon,
+                    make_stringf(" donates %s equipment to the cause.",
+                        mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
+            }
+            monster_drop_things(mon);
+        }
+
         if (you.can_see(*mon))
             _mons_indicate_level_exit(mon);
 

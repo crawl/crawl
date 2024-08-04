@@ -954,15 +954,15 @@ bool player_has_hair(bool temp, bool include_mutations)
         return true;
     }
 
-    if (temp && form_has_hair(you.form))
-        return true;
+    if (temp)
+        return form_has_hair(you.form);
 
     return species::has_hair(you.species);
 }
 
 bool player_has_feet(bool temp, bool include_mutations)
 {
-    if (you.fishtail && temp)
+    if (temp && you.fishtail)
         return false;
 
     if (include_mutations &&
@@ -972,27 +972,16 @@ bool player_has_feet(bool temp, bool include_mutations)
         return false;
     }
 
+    if (temp)
+        return form_has_feet(you.form);
+
     return species::has_feet(you.species);
-}
-
-bool player_has_eyes(bool temp, bool include_mutations)
-{
-    if (include_mutations &&
-        you.get_mutation_level(MUT_EYEBALLS, temp))
-    {
-        return true;
-    }
-
-    if (temp && form_has_eyes(you.form))
-        return true;
-
-    return species::has_eyes(you.species);
 }
 
 bool player_has_ears(bool temp)
 {
-    if (temp && form_has_ears(you.form))
-        return true;
+    if (temp)
+        return form_has_ears(you.form);
 
     return species::has_ears(you.species);
 }
@@ -3901,6 +3890,7 @@ void drain_mp(int mp_loss)
 void pay_hp(int cost)
 {
     you.hp -= cost;
+    makhleb_celebrant_bloodrite();
     ASSERT(you.hp);
 }
 
@@ -4953,11 +4943,11 @@ bool player::can_be_dazzled() const
 }
 
 /**
- * Players can be blinded only if they have eyes.
+ * Players can be blinded only if they're not undead.
  */
 bool player::can_be_blinded() const
 {
-    return player_has_eyes();
+    return !is_lifeless_undead();
 }
 
 /**
@@ -6796,6 +6786,8 @@ mon_holy_type player::holiness(bool temp, bool incl_form) const
         {
             holi = MH_NONLIVING;
         }
+        else if (f == transformation::slaughter)
+            holi = MH_DEMONIC;
     }
 
     // Petrification takes precedence over base holiness and lich form
@@ -6993,6 +6985,9 @@ int player::willpower() const
 
 int player_willpower(bool temp)
 {
+    if (temp && you.form == transformation::slaughter)
+        return WILL_INVULN;
+
     if (player_equip_unrand(UNRAND_FOLLY))
         return 0;
 
@@ -7532,26 +7527,30 @@ bool player::has_tail(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring a tail with them
-        if (form == transformation::dragon)
-            return 1;
+        if (form == transformation::serpent
+            || form == transformation::dragon)
+        {
+            return true;
+        }
 
         // Most transformations suppress a tail.
         if (!form_keeps_mutations())
-            return 0;
+            return false;
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (species::is_draconian(species)
+        || species == SP_FELID
         || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
         || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
         || get_mutation_level(MUT_STINGER, allow_tran)
         || get_mutation_level(MUT_WEAKNESS_STINGER, allow_tran))
     {
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 // Whether the player has a usable offhand for the
@@ -7785,16 +7784,21 @@ bool player::has_blood(bool temp) const
     if (is_lifeless_undead(temp))
         return false;
 
-    if (temp && form_has_blood(form))
-        return true;
+    if (temp)
+    {
+        if (petrified())
+            return false;
+
+        return form_has_blood(form);
+    }
 
     return species::has_blood(you.species);
 }
 
 bool player::has_bones(bool temp) const
 {
-    if (temp && form_has_bones(you.form))
-        return true;
+    if (temp)
+        return form_has_bones(you.form);
 
     return species::has_bones(you.species);
 }

@@ -1071,8 +1071,8 @@ ENDMAP
 
 ############################################################################
 # 15 rooms, by co
-# All rooms will always be accessible, except the room in the center, which
-# is surrounded by deep water.
+# All rooms will always be accessible, though the room in the center requires
+# finding the one guaranteed identified enlightenment potion elsewhere.
 #
 NAME:    sewer_co_15_rooms
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
@@ -1100,8 +1100,10 @@ SHUFFLE: yZzSsUuTgY
 SUBST:   y = w
 SUBST:   hVZzSsUuTgY = W
 #      loot
-SUBST:   e = !!???-----
-KITEM:  - = any potion / any scroll
+ITEM:    potion of enlightenment ident:type
+KITEM:   - = any potion / any scroll
+NSUBST:  d = 1:d / *:-
+SUBST:   - = !!???-----
 : kitem("? = " .. dgn.loot_potions)
 : kitem("! =  " .. dgn.loot_scrolls)
 : sewer_setup(_G)
@@ -1110,35 +1112,35 @@ xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
 xxxxxxxxxxcc.1.ccxxxcc...ccxxxxXXXxxx
 xxxxxxxxxxc.2...ccccc...2.cxxxx.11Xxx
-xxxxxxxxxxc..2..yyyyy..2..NPPP.e.1Xxx
-xxxxxxxxxxc...2.ccccc.2...cxxxX.e.Xxx
+xxxxxxxxxxc..2..yyyyy..2..NPPP.d.1Xxx
+xxxxxxxxxxc...2.ccccc.2...cxxxX.d.Xxx
 xxxxxxxxxxcc...ccxxxcc...ccxxxxX.xxxx
 xxxxxxxxxxxccZccxxxxxcczccxxxxxxQxxxx
 xxxxxxxxxxxxcZcxxxxxxxczcxxxxxxxQxxxx
 xxxxxxxxxxxxcZcxxxxxxxczcxxxxxxxQxxxx
 xxcccccxxxxccZccxxxxxcczccxxxxccRccxx
 xcc...ccxxcc...ccxxxcc...ccxxcc...ccx
-cc.2...cccc.A...ccccc.e...cccc...2.cc
+cc.2...cccc.A...ccccc.d...cccc...2.cc
 cc..2..SSSS..<.WwwwwwW....ssss..2..cc
-cc...2.cccc.....ccBcc...e.cccc.2...cc
+cc...2.cccc.....ccBcc...d.cccc.2...cc
 xcc...ccxxcc.W.ccxCxcc.W.ccxxcc...ccx
 xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
-xxxcUcxxxxxxcwcxx.e1xxcwcxxxxxxcucxxx
-xxxcUcxxxxxxcwDE.e<e.FGwcxxxxxxcucxxx
-xxxcUcxxxxxxcwcxx1e3xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx.-1xxcwcxxxxxxcucxxx
+xxxcUcxxxxxxcwDE.-<-.FGwcxxxxxxcucxxx
+xxxcUcxxxxxxcwcxx1-3xxcwcxxxxxxcucxxx
 xxccUccxxxxccwccxx.xxccwccxxxxccuccxx
 xcc...ccxxcc.W.ccxHxcc.W.ccxxcc...ccx
-cc...2.cccc.e...ccIcc.....cccc.2...cc
+cc...2.cccc.d...ccIcc.....cccc.2...cc
 cc..2..TTTT....WwwwwwW.<..gggg..2..cc
-cc.2...cccc...e.ccccc.....cccc...2.cc
+cc.2...cccc...d.ccccc.....cccc...2.cc
 xcc...ccxxcc...ccxxxcc...ccxxcc...ccx
 xxccJccxxxxccVccxxxxxcchccxxxxcccccxx
 xxxxKxxxxxxxcVcxxxxxxxchcxxxxxxxxxxxx
 xxxxKxxxxxxxcVcxxxxxxxchcxxxxxxxxxxxx
 xxxxKxxxxxxccVccxxxxxcchccxxxxxxxxxxx
 xxxx.Xxxxxcc...ccxxxcc...ccxxxxxxxxxx
-xxX.e.Xxxxc...2.ccccc.2...cxxxxxxxxxx
-xxX1.e.MMML..2..YYYYY..2..cxxxxxxxxxx
+xxX.d.Xxxxc...2.ccccc.2...cxxxxxxxxxx
+xxX1.d.MMML..2..YYYYY..2..cxxxxxxxxxx
 xxX11.xxxxc.2...ccccc...2.cxxxxxxxxxx
 xxxXXXxxxxcc...ccxxxcc.1.ccxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx

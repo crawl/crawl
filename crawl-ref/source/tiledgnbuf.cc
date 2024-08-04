@@ -419,16 +419,33 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
 
                 const tileidx_t threat_flag = cell.fg & TILE_FLAG_THREAT_MASK;
-                if (threat_flag == TILE_FLAG_TRIVIAL)
-                    m_buf_feat.add(TILE_THREAT_TRIVIAL, x, y);
-                else if (threat_flag == TILE_FLAG_EASY)
-                    m_buf_feat.add(TILE_THREAT_EASY, x, y);
-                else if (threat_flag == TILE_FLAG_TOUGH)
-                    m_buf_feat.add(TILE_THREAT_TOUGH, x, y);
-                else if (threat_flag == TILE_FLAG_NASTY)
-                    m_buf_feat.add(TILE_THREAT_NASTY, x, y);
-                else if (threat_flag == TILE_FLAG_UNUSUAL)
-                    m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
+
+                if (cell.fg & TILE_FLAG_GHOST)
+                {
+                    if (threat_flag == TILE_FLAG_TRIVIAL)
+                        m_buf_feat.add(TILE_THREAT_GHOST_TRIVIAL, x, y);
+                    else if (threat_flag == TILE_FLAG_EASY)
+                        m_buf_feat.add(TILE_THREAT_GHOST_EASY, x, y);
+                    else if (threat_flag == TILE_FLAG_TOUGH)
+                        m_buf_feat.add(TILE_THREAT_GHOST_TOUGH, x, y);
+                    else if (threat_flag == TILE_FLAG_NASTY)
+                        m_buf_feat.add(TILE_THREAT_GHOST_NASTY, x, y);
+                    else if (threat_flag == TILE_FLAG_UNUSUAL)
+                        m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
+                }
+                else
+                {
+                    if (threat_flag == TILE_FLAG_TRIVIAL)
+                        m_buf_feat.add(TILE_THREAT_TRIVIAL, x, y);
+                    else if (threat_flag == TILE_FLAG_EASY)
+                        m_buf_feat.add(TILE_THREAT_EASY, x, y);
+                    else if (threat_flag == TILE_FLAG_TOUGH)
+                        m_buf_feat.add(TILE_THREAT_TOUGH, x, y);
+                    else if (threat_flag == TILE_FLAG_NASTY)
+                        m_buf_feat.add(TILE_THREAT_NASTY, x, y);
+                    else if (threat_flag == TILE_FLAG_UNUSUAL)
+                        m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
+                }
 
                 if (cell.is_highlighted_summoner)
                     m_buf_feat.add(TILE_HALO_SUMMONER, x, y);

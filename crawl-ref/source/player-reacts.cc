@@ -851,6 +851,9 @@ static void _decrement_durations()
     if (you.duration[DUR_DRAGON_CALL])
         do_dragon_call(delay);
 
+    if (you.duration[DUR_INFERNAL_LEGION])
+        makhleb_infernal_legion_tick(delay);
+
     if (you.duration[DUR_DOOM_HOWL])
         doom_howl(min(delay, you.duration[DUR_DOOM_HOWL]));
 
@@ -971,7 +974,7 @@ static void _maybe_attune_items(bool attune_regen, bool attune_mana_regen)
 
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
-    mprf("Your %s attune%s to your body and you begin to regenerate%s "
+    mprf("Your %s attune%s to your body, and you begin to regenerate%s "
          "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself",
          msg);
 }
@@ -1117,6 +1120,12 @@ void player_reacts()
     you.handle_constriction();
 
     _regenerate_hp_and_mp(you.time_taken);
+
+    if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
+    {
+        mprf(MSGCH_DURATION, "You are ready to perform a blood rite again.");
+        you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
+    }
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);

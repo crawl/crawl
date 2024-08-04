@@ -34,6 +34,7 @@
 #include "mon-death.h" // maybe_drop_monster_organ
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "nearby-danger.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
@@ -334,11 +335,18 @@ bool melee_attack::handle_phase_dodged()
                 == MONS_MINOTAUR)
             {
                 do_minotaur_retaliation();
+                if (!attacker->alive())
+                    return false;
             }
 
-            // Retaliations can kill!
-            if (!attacker->alive())
-                return false;
+            if (defender->is_player() && you.duration[DUR_EXECUTION])
+            {
+                melee_attack retaliation(&you, attacker);
+                retaliation.player_aux_setup(UNAT_EXECUTIONER_BLADE);
+                retaliation.player_aux_apply(UNAT_EXECUTIONER_BLADE);
+                if (!attacker->alive())
+                    return false;
+            }
 
             if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
                 do_starlight();
@@ -661,6 +669,13 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
+    if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC))
+    {
+        unwind_var<brand_type> save_brand(damage_brand);
+        damage_brand = SPWPN_CHAOS;
+        apply_damage_brand();
+    }
+
     // Apply flux form's sfx.
     if (attacker->is_player() && you.form == transformation::flux
         && defender->alive() && defender->is_monster())
@@ -782,7 +797,7 @@ bool melee_attack::handle_phase_aux()
         if (!defender->as_monster()->friendly()
             && adjacent(defender->pos(), attack_position))
         {
-            player_aux_unarmed();
+            player_do_aux_attacks();
         }
 
         // Don't print wounds after the first attack with quick blades.
@@ -922,7 +937,21 @@ bool melee_attack::handle_phase_killed()
                                     true, special_damage);
     }
 
-    return attack::handle_phase_killed();
+    bool killed = attack::handle_phase_killed();
+
+    if (killed && attacker->is_player() && defender->is_monster()
+        && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
+        && !you.duration[DUR_EXECUTION]
+        && mons_gives_xp(*defender->as_monster(), you)
+        && one_chance_in(8)
+        // It's unsatisfying to repeatedly trigger a transformation on the final
+        // monster of a group, so let's not cause the player that disappointment.
+        && there_are_monsters_nearby(true, true, false))
+    {
+        makhleb_execution_activate();
+    }
+
+    return killed;
 }
 
 void melee_attack::handle_spectral_brand()
@@ -1393,6 +1422,7 @@ public:
             return base * (30 + you.experience_level) / 59;
         return base;
     }
+    virtual bool is_usable() const {return false; };
     virtual int get_base_chance() const { return chance; }
     virtual bool xl_based_chance() const { return true; }
     virtual string describe() const;
@@ -1409,6 +1439,14 @@ public:
     AuxConstrict()
     : AuxAttackType(0, 100, "grab") { };
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
+                || you.has_mutation(MUT_TENTACLE_ARMS)
+                    && you.has_usable_tentacle()
+                || you.form == transformation::serpent;
+    }
 };
 
 class AuxKick: public AuxAttackType
@@ -1451,6 +1489,13 @@ public:
             return "tentacle spike";
         return name;
     }
+
+    bool is_usable() const override
+    {
+        return you.has_usable_hooves()
+               || you.has_usable_talons()
+               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
+    }
 };
 
 class AuxHeadbutt: public AuxAttackType
@@ -1463,6 +1508,11 @@ public:
     {
         return damage + you.get_mutation_level(MUT_HORNS) * 3;
     }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_HORNS);
+    }
 };
 
 class AuxPeck: public AuxAttackType
@@ -1470,6 +1520,11 @@ class AuxPeck: public AuxAttackType
 public:
     AuxPeck()
     : AuxAttackType(6, 67, "peck") { };
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_BEAK);
+    }
 };
 
 class AuxTailslap: public AuxAttackType
@@ -1491,6 +1546,17 @@ public:
             return SPWPN_WEAKNESS;
 
         return you.get_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
+    }
+
+    bool is_usable() const override
+    {
+        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
+        return you.has_tail()
+               // felid tails don't slap
+               && you.species != SP_FELID
+               // constricting/serpent tails are too slow to slap
+               && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+               && you.form != transformation::serpent;
     }
 };
 
@@ -1522,6 +1588,14 @@ public:
 
     string get_name() const override
     {
+        if (you.has_usable_tentacles())
+            return get_verb();
+        else
+            return "off-hand " + get_verb();
+    }
+
+    string get_verb() const override
+    {
         if (you.form == transformation::blade_hands)
             return "slash";
 
@@ -1540,6 +1614,16 @@ public:
         // We don't div-rand-round because we want this to be
         // consistent for mut descriptions.
         return 5 + you.skill(SK_UNARMED_COMBAT, 5) / 3;
+    }
+
+    bool is_usable() const override
+    {
+        return !you.weapon() // UC only
+        // Bats like drinking punch, not throwing 'em.
+           && get_form()->can_offhand_punch()
+        // No punching with a shield or 2-handed wpn.
+        // Octopodes aren't affected by this, though!
+            && (you.arm_count() > 2 || you.has_usable_offhand());
     }
 };
 
@@ -1584,17 +1668,34 @@ public:
             return 100;
         return chance;
     }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
+            || (you.has_usable_fangs()
+                || you.get_mutation_level(MUT_ACIDIC_BITE));
+    }
 };
 
 class AuxPseudopods: public AuxAttackType
 {
 public:
     AuxPseudopods()
-    : AuxAttackType(4, 67, "bludgeon") { };
+    : AuxAttackType(4, 67, "pseudopods") { };
 
     int get_damage(bool /*random*/) const override
     {
         return damage * you.has_usable_pseudopods();
+    }
+
+    string get_verb() const override
+    {
+        return "bludgeon";
+    }
+
+    bool is_usable() const override
+    {
+        return you.has_usable_pseudopods();
     }
 };
 
@@ -1603,6 +1704,11 @@ class AuxTentacles: public AuxAttackType
 public:
     AuxTentacles()
     : AuxAttackType(12, 67, "squeeze") { };
+
+    bool is_usable() const override
+    {
+        return you.has_usable_tentacles();
+    }
 };
 
 
@@ -1627,6 +1733,12 @@ public:
     }
 
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_DEMONIC_TOUCH)
+            && you.has_usable_offhand();
+    }
 };
 
 class AuxMaw: public AuxAttackType
@@ -1638,6 +1750,36 @@ public:
         return get_form()->get_aux_damage(random);
     };
     bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.form == transformation::maw;
+    }
+};
+
+class AuxBlades: public AuxAttackType
+{
+public:
+    AuxBlades()
+    : AuxAttackType(1, 100, "whirl of blades") { };
+
+    string get_verb() const override
+    {
+        return "shred";
+    }
+
+    int get_damage(bool random) const override
+    {
+        return 7 + (random ? div_rand_round(you.experience_level, 3)
+                           : you.experience_level / 3);
+    };
+
+    bool xl_based_chance() const override { return false; }
+
+    bool is_usable() const override
+    {
+        return you.duration[DUR_EXECUTION];
+    }
 };
 
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
@@ -1651,6 +1793,7 @@ static const AuxBite        AUX_BITE = AuxBite();
 static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
 static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
 static const AuxMaw         AUX_MAW = AuxMaw();
+static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 
 static const AuxAttackType* const aux_attack_types[] =
 {
@@ -1665,6 +1808,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_PSEUDOPODS,
     &AUX_TENTACLES,
     &AUX_MAW,
+    &AUX_EXECUTIONER_BLADE,
 };
 
 
@@ -1698,21 +1842,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-/**
- * Decide whether the player gets a bonus punch attack.
- *
- * @return  Whether the player gets a bonus punch aux attack on this attack.
- */
-bool melee_attack::player_gets_aux_punch()
-{
-    return !weapon // UC only
-    // Bats like drinking punch, not throwing 'em.
-           && get_form()->can_offhand_punch()
-    // No punching with a shield or 2-handed wpn.
-    // Octopodes aren't affected by this, though!
-           && (you.arm_count() > 2 || you.has_usable_offhand());
-}
-
 bool melee_attack::player_aux_test_hit()
 {
     // XXX We're clobbering did_hit
@@ -1731,6 +1860,12 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
+    if (you.duration[DUR_BLIND])
+    {
+        if (x_chance_in_y(player_blind_miss_chance(1), 100))
+            to_hit = -1;
+    }
+
     if (to_hit >= evasion || auto_hit)
         return true;
 
@@ -1748,7 +1883,7 @@ bool melee_attack::player_aux_test_hit()
  *
  * Returns (defender dead)
  */
-bool melee_attack::player_aux_unarmed()
+bool melee_attack::player_do_aux_attacks()
 {
     unwind_var<brand_type> save_brand(damage_brand);
 
@@ -1762,35 +1897,47 @@ bool melee_attack::player_aux_unarmed()
         if (!_extra_aux_attack(atk))
             continue;
 
-        // Determine and set damage and attack words.
-        player_aux_setup(atk);
+        if (player_do_aux_attack(atk))
+            return true;
+    }
 
-        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
-            continue;
+    return false;
+}
 
-        to_hit = random2(aux_to_hit());
-        to_hit += post_roll_to_hit_modifiers(to_hit, false);
+/* Performs the specified auxiliary attack type against the defender.
+ *
+ * Returns if the defender was killed
+ */
+bool melee_attack::player_do_aux_attack(unarmed_attack_type atk)
+{
+    // Determine and set damage and attack words.
+    player_aux_setup(atk);
 
-        handle_noise(defender->pos());
-        alert_nearby_monsters();
+    if (atk == UNAT_CONSTRICT && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
+        return false;
 
-        // Just about anything could've happened after all that racket.
-        // Let's be paranoid.
+    to_hit = random2(aux_to_hit());
+    to_hit += post_roll_to_hit_modifiers(to_hit, false);
+
+    handle_noise(defender->pos());
+    alert_nearby_monsters();
+
+    // Just about anything could've happened after all that racket.
+    // Let's be paranoid.
+    if (!defender->alive())
+        return true;
+
+    if (player_aux_test_hit())
+    {
+        // Upset the monster.
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
         if (!defender->alive())
             return true;
 
-        if (player_aux_test_hit())
-        {
-            // Upset the monster.
-            behaviour_event(defender->as_monster(), ME_WHACK, attacker);
-            if (!defender->alive())
-                return true;
-
-            if (attack_shield_blocked(true))
-                continue;
-            if (player_aux_apply(atk))
-                return true;
-        }
+        if (attack_shield_blocked(true))
+            return false;
+        if (player_aux_apply(atk))
+            return true;
     }
 
     return false;
@@ -4055,6 +4202,11 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     ASSERT(atk >= UNAT_FIRST_ATTACK);
     ASSERT(atk <= UNAT_LAST_ATTACK);
     const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
+
+    // Does the player even qualify to use this type of aux?
+    if (!aux->is_usable())
+        return false;
+
     if (!x_chance_in_y(aux->get_chance(), 100))
         return false;
 
@@ -4066,56 +4218,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
        return false;
     }
 
-    // XXX: dedup with mut_aux_attack_desc()
-    switch (atk)
-    {
-    case UNAT_CONSTRICT:
-        return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
-                || you.has_mutation(MUT_TENTACLE_ARMS)
-                    && you.has_usable_tentacle()
-                || you.form == transformation::serpent;
-
-    case UNAT_KICK:
-        return you.has_usable_hooves()
-               || you.has_usable_talons()
-               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
-
-    case UNAT_PECK:
-        return you.get_mutation_level(MUT_BEAK);
-
-    case UNAT_HEADBUTT:
-        return you.get_mutation_level(MUT_HORNS);
-
-    case UNAT_TAILSLAP:
-        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
-        return you.has_tail()
-               // constricting tails are too slow to slap
-               && !you.has_mutation(MUT_CONSTRICTING_TAIL);
-
-    case UNAT_PSEUDOPODS:
-        return you.has_usable_pseudopods();
-
-    case UNAT_TENTACLES:
-        return you.has_usable_tentacles();
-
-    case UNAT_BITE:
-        return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
-               || (you.has_usable_fangs()
-                   || you.get_mutation_level(MUT_ACIDIC_BITE));
-
-    case UNAT_PUNCH:
-        return player_gets_aux_punch();
-
-    case UNAT_TOUCH:
-        return you.get_mutation_level(MUT_DEMONIC_TOUCH)
-               && you.has_usable_offhand();
-
-    case UNAT_MAW:
-        return you.form == transformation::maw;
-
-    default:
-        return false;
-    }
+    return true;
 }
 
 bool melee_attack::using_weapon() const
@@ -4288,28 +4391,18 @@ string mut_aux_attack_desc(mutation_type mut)
                               "Base damage:     %d\n\n",
                             _minotaur_headbutt_chance(),
                             AUX_HEADBUTT.get_damage(false));
+    case MUT_MAKHLEB_MARK_EXECUTION:
+        return AUX_EXECUTIONER_BLADE.describe();
     default:
         return "";
     }
 }
 
-static string _desc_aux(int chance, int to_hit, int dam)
+static string _desc_aux(int chance, int dam)
 {
-    string to_hit_pips = "";
-    // Each pip is 10 to-hit. Since to-hit is rolled before we compare it to
-    // defender evasion, for these pips to be comparable to monster EV pips,
-    // these need to be twice as large.
-    for (int i = 0; i < to_hit / 10; ++i)
-    {
-        to_hit_pips += "+";
-        if (i % 5 == 4)
-            to_hit_pips += " ";
-    }
     return make_stringf("\nTrigger chance:  %d%%\n"
-                          "Accuracy:        %s\n"
                           "Base damage:     %d",
                         chance,
-                        to_hit_pips.c_str(),
                         dam);
 }
 
@@ -4320,10 +4413,23 @@ string aux_attack_desc(unarmed_attack_type unat, int force_damage)
     const AuxAttackType* const aux = aux_attack_types[idx];
     const int dam = force_damage == -1 ? aux->get_damage(false) : force_damage;
     // lazily assume chance and to hit don't vary in/out of forms
-    return _desc_aux(aux->get_chance(), aux_to_hit(), dam);
+    return _desc_aux(aux->get_chance(), dam);
 }
 
 string AuxAttackType::describe() const
 {
-    return _desc_aux(get_chance(), aux_to_hit(), get_damage(false)) + "\n\n";
+    return _desc_aux(get_chance(), get_damage(false)) + "\n\n";
+}
+
+vector<string> get_player_aux_names()
+{
+    vector<string> names;
+    for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
+    {
+        const AuxAttackType* const aux = aux_attack_types[i - 1];
+        if (aux->is_usable())
+            names.push_back(aux->get_name());
+    }
+
+    return names;
 }

@@ -208,14 +208,6 @@ Incrementas en gran medida tu velocidad de combate sin perder precisión. Este
 efecto no natural causa pequeñas cantidades de contaminación mágica y la
 exposición prolongada puede ser mala para tu salud.
 %%%%
-Minor Destruction ability
-
-Disparas un destructivo rayo al monstruo que apuntes
-%%%%
-Major Destruction ability
-
-Lanza un rayo destructivo o una explosión al monstruo que apuntes.
-%%%%
 Channel Energy ability
 
 Recargas tus reservas mágicas en una cierta cantidad en función del nivel en

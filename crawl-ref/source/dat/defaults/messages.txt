@@ -14,7 +14,7 @@ msc += $danger:Space warps( horribly)? around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
-msc += $danger:The blast of calcifying dust hits you!
+msc += $danger:The blast of calcifying dust hits you
 msc += $danger:you are engulfed in calcifying dust
 msc += $danger:is moving more slowly
 # Don't recolour acquirement messages along with messages about invisible monsters.
@@ -185,8 +185,15 @@ force_more_message += deals you some cards
 force_more_message += deal. but finds you have enough
 force_more_message += partake of a vision and a curse
 force_more_message += allow you to induct
+force_more_message += will allow you to brand your body
 
 force_more_message += Beogh speaks to you:
+
+# Xom doing things you really shouldn't miss
+force_more_message += is forced to slowly start .* word of recall
+
+# Crucible exit notification
+force_more_message += Makhleb acknowledges your contrition
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

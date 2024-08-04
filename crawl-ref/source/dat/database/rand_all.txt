@@ -193,6 +193,8 @@ Dusk
 
 Eternal Night
 
+Eternal Winter
+
 Eternity
 
 Midnight
@@ -214,6 +216,8 @@ Summer
 
 w:5
 Summertime
+
+Time Moved Backwards
 
 Tomorrow
 

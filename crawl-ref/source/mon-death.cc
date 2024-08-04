@@ -960,7 +960,7 @@ void blorkula_bat_merge(monster& bat)
     if (you.can_see(*blork))
     {
         mprf(MSGCH_MONSTER_SPELL,
-             "The bats swarm back together and %s reappears in a puff of irridescent mist.",
+             "The bats swarm back together and %s reappears in a puff of iridescent mist.",
              blork->name(DESC_THE).c_str());
     }
 }
@@ -2072,7 +2072,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player
-    // instead. Ditto Dithmenos shadow melee and shadow throw.
+    // instead. Ditto Dithmenos shadow actions.
     if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
         && ((env.mons[killer_index].type == MONS_SPECTRAL_WEAPON
@@ -2080,13 +2080,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             || mons_is_player_shadow(env.mons[killer_index])))
     {
         killer_index = you.mindex();
-    }
-
-    // Set an appropriate killer; besides the cases in the preceding if,
-    // this handles Dithmenos shadow spells, which look like they come from
-    // you because the shadow's mid is MID_PLAYER.
-    if (MON_KILL(killer) && killer_index == you.mindex())
         killer = (killer == KILL_MON_MISSILE) ? KILL_YOU_MISSILE : KILL_YOU;
+    }
 
     // Take notes and mark milestones.
     record_monster_defeat(&mons, killer);
@@ -2119,6 +2114,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    // Chance to cause monsters you kill yourself to explode with Mark of Haemoclasm
+    if (YOU_KILL(killer) && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM)
+        && one_chance_in(10))
+    {
+        mons.props[MAKHLEB_HAEMOCLASM_KEY] = true;
+    }
+
     if (you.prev_targ == monster_killed)
     {
         you.prev_targ = MHITNOT;
@@ -2129,6 +2131,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         crawl_state.cancel_cmd_repeat();
 
     const bool pet_kill = _is_pet_kill(killer, killer_index);
+
+    if (player_in_branch(BRANCH_CRUCIBLE) && !summoned
+        && (YOU_KILL(killer) || pet_kill))
+    {
+        makhleb_crucible_kill(mons);
+    }
 
     bool did_death_message = false;
 
@@ -2173,8 +2181,20 @@ item_def* monster_die(monster& mons, killer_type killer,
         actor* source = mons.get_ench(ENCH_HAUNTING).agent();
         if (source && source->alive())
         {
-            simple_monster_message(mons, " returns to where it belongs.");
-            source->as_monster()->del_ench(ENCH_WEAK);
+            if (!silent)
+                simple_monster_message(mons, " returns to where it belongs.");
+
+            if (source->is_monster())
+            {
+                source->as_monster()->del_ench(ENCH_WEAK);
+                source->props.erase(SOUL_SPLINTERED_KEY);
+            }
+            else if (source->is_player())
+            {
+                you.duration[DUR_WEAK] = 0;
+                mprf(MSGCH_RECOVERY, "You feel your strength returning.");
+            }
+
             silent = true;
         }
     }
@@ -2402,7 +2422,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
                  mons.name(DESC_YOUR).c_str());
+
+            int old_hd = mons.get_hit_dice();
             change_monster_type(&mons, MONS_BLAZEHEART_CORE);
+            mons.set_hit_dice(old_hd);
 
             // Cores should not count as summons and either expire or be removed
             // by recasting golem itself.
@@ -2476,6 +2499,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    if (you.has_mutation(MUT_MAKHLEB_MARK_TYRANT)
+        && gives_player_xp
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && !one_chance_in(3))
+    {
+        makhleb_tyrant_buff();
+    }
+
     // Apply unrand effects.
     unrand_death_effects(&mons, killer);
 
@@ -2534,23 +2565,26 @@ item_def* monster_die(monster& mons, killer_type killer,
             const bool valid_heal_source = gives_player_xp
                 && !mons_is_object(mons.type);
             // Chance scales from 30% at 1* to 80% at 6*
-            const bool can_divine_heal = valid_heal_source
+            const bool can_divine_heal =
+                (valid_heal_source
+                    || you_worship(GOD_MAKHLEB)
+                        && player_in_branch(BRANCH_CRUCIBLE)
+                        && mons_class_gives_xp(mons.type)
+                        && !summoned
+                        && !fake_abjure
+                        && !mons.friendly())
                 && !player_under_penance()
-                && x_chance_in_y(50 * ((min(piety_breakpoint(5), (int)you.piety) - 30)
-                                 / (piety_breakpoint(5) - piety_breakpoint(0))) + 30, 100);
-
-            if (valid_heal_source
-                && you.has_mutation(MUT_DEVOUR_ON_KILL)
-                && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                && coinflip())
-            {
-                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-            }
+                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                                 / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
+                    || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
             if (can_divine_heal && have_passive(passive_t::restore_hp))
             {
                 hp_heal += (1 + mons.get_experience_level()) / 2
                         + random2(mons.get_experience_level() / 2);
+
+                if (you.form == transformation::slaughter)
+                    hp_heal *= 2;
             }
             if (can_divine_heal
                 && have_passive(passive_t::restore_hp_mp_vs_evil)
@@ -2561,6 +2595,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             if (can_divine_heal && have_passive(passive_t::mp_on_kill))
                 mp_heal += 1 + random2(mons.get_experience_level() / 2);
+
+            if (valid_heal_source
+                && you.has_mutation(MUT_DEVOUR_ON_KILL)
+                && mons.holiness() & (MH_NATURAL | MH_PLANT)
+                && coinflip())
+            {
+                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+            }
 
             if (hp_heal && you.hp < you.hp_max
                 && !you.duration[DUR_DEATHS_DOOR])

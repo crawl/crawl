@@ -19,8 +19,7 @@ enum species_flag
     SPF_BARDING     = 1 << 4, /// Whether the species wears bardings (instead of boots)
     SPF_NO_FEET     = 1 << 5, /// If members of the species have feet
     SPF_NO_BLOOD    = 1 << 6, /// If members of the species have blood
-    SPF_NO_EYES     = 1 << 7, /// If members of the species have eyes (flavor + minor physiology checks)
-    SPF_NO_EARS     = 1 << 8, /// If members of the species have ears (flavor only)
+    SPF_NO_EARS     = 1 << 7, /// If members of the species have ears (flavor only)
 };
 DEF_BITFIELD(species_flags, species_flag);
 

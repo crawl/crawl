@@ -73,6 +73,11 @@ static void _post_shackles_effect()
     yred_end_blasphemy();
 }
 
+static void _end_growing_destruction()
+{
+    you.props.erase(MAKHLEB_ATROCITY_STACKS_KEY);
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -624,6 +629,10 @@ static const duration_def duration_data[] =
       "on siphon cooldown", "siphon cooldown",
       "You are unable to siphon essence.", D_NO_FLAGS,
       {{ "You are ready to siphon essence again." }}},
+    { DUR_CELEBRANT_COOLDOWN,
+      YELLOW, "-Bloodrite",
+      "on bloodrite cooldown", "bloodrite cooldown",
+      "You are unable to performed a blood rite.", D_NO_FLAGS},
     { DUR_JINXBITE, LIGHTBLUE, "Jinx",
       "jinxed", "jinxbite",
       "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
@@ -646,6 +655,21 @@ static const duration_def duration_data[] =
       "sign of ruin", "ruin",
       "The sign of ruin enfeebles you when you suffer attacks.", D_DISPELLABLE,
       {{ "The sign of ruin upon you fades." }}},
+    { DUR_INFERNAL_LEGION,
+      WHITE, "Legion",
+      "unleashing the legion", "infernal legion",
+      "You are beckoning forth the legions of chaos.", D_EXPIRES,
+      {{ "Your infernal gateway subsides." }}},
+    { DUR_EXECUTION,
+      LIGHTBLUE, "Execution",
+      "surrounded by blades", "execution",
+      "You are surrounded by a whirlwind of blades.", D_EXPIRES,
+      {{ "You feel a little less murderous for the moment." }}},
+    { DUR_GROWING_DESTRUCTION,
+      LIGHTBLUE, "Destr",
+      "growing destruction", "growing destruction",
+      "Your Destruction is growing increasingly wild.", D_EXPIRES,
+      {{ "", _end_growing_destruction}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

@@ -13,6 +13,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "database.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -30,8 +31,10 @@
 #include "los.h"
 #include "losglobal.h"
 #include "map-knowledge.h"
+#include "mapdef.h"
 #include "melee-attack.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -47,6 +50,10 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "tiledoll.h"
+#include "tile-env.h"
+#include "rltiles/tiledef-dngn.h"
+#include "tileview.h"
 #include "throw.h"
 #include "unwind.h"
 
@@ -2268,4 +2275,181 @@ void uskayaw_bonds_audience()
     }
     else // Reset the timer because we didn't actually execute.
         you.props[USKAYAW_BOND_TIMER] = 0;
+}
+
+// Checks whether there is at least one possible Tyrant buff that a given
+// qualifies for, but does not yet have.
+static bool _is_tyrant_buffable(monster* mon)
+{
+    return !mon->has_ench(ENCH_HASTE)
+            || !mon->has_ench(ENCH_MIGHT)
+            || !mon->has_ench(ENCH_REGENERATION)
+            || (mon->has_spells() && !mon->has_ench(ENCH_EMPOWERED_SPELLS));
+}
+
+static bool _is_infernal_servant(monster* mon)
+{
+    return mon->has_ench(ENCH_SUMMON)
+            && mon->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+            && mon->summoner == MID_PLAYER;
+}
+
+// Upon killing an enemy, maybe buff a nearby servant
+void makhleb_tyrant_buff()
+{
+    int count = 0;
+    monster* demon = nullptr;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->friendly())
+        {
+            if (_is_infernal_servant(*mi) && _is_tyrant_buffable(*mi))
+            {
+                if (one_chance_in(++count))
+                    demon = *mi;
+            }
+        }
+    }
+
+    enum tyrant_buff
+    {
+        HASTE,
+        MIGHT,
+        REGEN,
+        BRILLIANCE,
+    };
+
+    if (demon)
+    {
+        vector<tyrant_buff> buffs;
+
+        if (!demon->has_ench(ENCH_HASTE))
+            buffs.push_back(HASTE);
+        if (!demon->has_ench(ENCH_MIGHT))
+            buffs.push_back(MIGHT);
+        if (!demon->has_ench(ENCH_REGENERATION))
+            buffs.push_back(REGEN);
+        if (demon->has_spells() && !demon->has_ench(ENCH_EMPOWERED_SPELLS))
+            buffs.push_back(BRILLIANCE);
+
+        shuffle_array(buffs);
+
+        switch (buffs[0])
+        {
+            case HASTE:
+                demon->add_ench(ENCH_HASTE);
+                break;
+
+            case MIGHT:
+                demon->add_ench(ENCH_MIGHT);
+                break;
+
+            case REGEN:
+                demon->add_ench(ENCH_REGENERATION);
+                break;
+
+            case BRILLIANCE:
+                demon->add_ench(ENCH_EMPOWERED_SPELLS);
+                break;
+        }
+
+        simple_monster_message(*demon, " is spurred on by your onslaught.");
+    }
+}
+
+constexpr int BLOODRITE_MIN_SHOTS = 8;
+
+void makhleb_celebrant_bloodrite()
+{
+    if (you.hp * 2 > you.hp_max
+        || !you.has_mutation(MUT_MAKHLEB_MARK_CELEBRANT)
+        || you.duration[DUR_CELEBRANT_COOLDOWN])
+    {
+        return;
+    }
+
+    vector<coord_def> targs;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi))
+            targs.push_back(mi->pos());
+    }
+
+    // Don't activate or go on cooldown if there's nothing to shoot at.
+    if (targs.empty())
+        return;
+
+    mpr("You consecrate your suffering and invoke the rites of blood!");
+
+    shuffle_array(targs);
+
+    int shots_fired = 0;
+    int repeats = 0;
+
+    bolt beam;
+    beam.range        = you.current_vision;
+    beam.source       = you.pos();
+    beam.source_id    = MID_PLAYER;
+    beam.attitude     = ATT_FRIENDLY;
+    beam.thrower      = KILL_YOU;
+    zappy(ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2), false, beam);
+
+    beam.draw_delay   = 10;
+
+    // Fire once at every visible target. If that doesn't hit the minimum number
+    // of shots, fire at most a second time at each of these targets.
+    while (shots_fired < BLOODRITE_MIN_SHOTS && repeats < 2)
+    {
+        for (size_t i = 0; i < targs.size()
+                && (repeats == 0 || shots_fired < BLOODRITE_MIN_SHOTS); ++i)
+        {
+            beam.target = targs[i];
+            beam.fire();
+            view_clear_overlays();
+            ++shots_fired;
+        }
+        ++repeats;
+        shuffle_array(targs);
+    }
+
+    // If firing twice at every target still didn't hit the minimum number of
+    // shots, fire the rest of them completely at random.
+    while (shots_fired < BLOODRITE_MIN_SHOTS)
+    {
+        coord_def targ = you.pos();
+        targ.x += random_range(-LOS_RADIUS, LOS_RADIUS);
+        targ.y += random_range(-LOS_RADIUS, LOS_RADIUS);
+
+        if (targ == you.pos())
+            continue;
+
+        beam.target = targ;
+        beam.fire();
+        view_clear_overlays();
+        ++shots_fired;
+    }
+
+    you.duration[DUR_CELEBRANT_COOLDOWN] = 1;
+}
+
+void makhleb_execution_activate()
+{
+    string talk = getSpeakString("Makhleb executioner chatter");
+    mprf(MSGCH_TALK, "<lightred>%s</lightred>", talk.c_str());
+    mprf(MSGCH_DURATION, "A whirlwind of blades manifests around you!");
+
+    you.duration[DUR_EXECUTION] = random_range(50, 70);
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && mon->alive() && !mon->wont_attack())
+        {
+            melee_attack shred(&you, mon);
+            shred.player_do_aux_attack(UNAT_EXECUTIONER_BLADE);
+        }
+    }
 }

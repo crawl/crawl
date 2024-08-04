@@ -619,7 +619,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SOUL_SPLINTER, "Soul Splinter",
     spschool::necromancy,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
+        | spflag::not_self,
     1,
     25,
     5, 5,
@@ -2232,7 +2233,7 @@ static const struct spell_desc spelldata[] =
     100,
     5, 5,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_THORN_VOLLEY,
 },
 
 {
@@ -3676,7 +3677,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DIMENSIONAL_BULLSEYE, "Dimensional Bullseye",
     spschool::translocation | spschool::hexes,
-    spflag::target | spflag::not_self,
+    spflag::target | spflag::not_self | spflag::prefer_farthest,
     4,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3775,12 +3776,12 @@ static const struct spell_desc spelldata[] =
 
 // Dummy spell for the Makhleb ability.
 {
-    SPELL_MINOR_DESTRUCTION, "Minor Destruction",
+    SPELL_UNLEASH_DESTRUCTION, "Unleash Destruction",
     spschool::conjuration,
     spflag::dir_or_target | spflag::chaotic | spflag::needs_tracer,
     3,
     0,
-    5, 5,
+    LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_ERROR,
 },

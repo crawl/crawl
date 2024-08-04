@@ -567,7 +567,17 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                 .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
         }
         else if (!you.allies_forbidden())
-            cast_summon_demon(50 + random2(100));
+        {
+            monster_type type = (one_chance_in(3) ? random_demon_by_tier(3)
+                                                  : random_demon_by_tier(4));
+            if (create_monster(
+                    mgen_data(type, BEH_COPY, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
+                    .set_summoned(&you, 6, SPELL_SUMMON_DEMON, GOD_NO_GOD)))
+            {
+                mpr("A gate to Pandemonium opens briefly!");
+            }
+        }
+
     }
 }
 

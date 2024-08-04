@@ -237,6 +237,10 @@ i-frenzy BRAND_FRENZY
 i-sleep BRAND_SLEEP
 # end TAG_MAJOR_VERSION
 i-blinding BRAND_BLINDING
+
+
+i-chaotic MODIFIER_CHAOTIC
+
 %rim 1
 %sdir item/weapon/ranged
 

@@ -5290,6 +5290,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[UNOBTAINABLE_KEY] = true;
     if (strip_tag(s, "no_exclude"))
         result.props[NO_EXCLUDE_KEY] = true;
+    if (strip_tag(s, "chaotic"))
+        result.props[CHAOTIC_ITEM_KEY] = true;
 
     const int mimic = strip_number_tag(s, "mimic:");
     if (mimic != TAG_UNFOUND)
@@ -5692,6 +5694,12 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
     {
         spec.base_type = OBJ_JEWELLERY;
         spec.sub_type = NUM_JEWELLERY;
+        return;
+    }
+    if (c == "hex wand")
+    {
+        spec.base_type = OBJ_WANDS;
+        spec.sub_type = item_for_set(ITEM_SET_HEX_WANDS);
         return;
     }
     if (c == "beam wand")

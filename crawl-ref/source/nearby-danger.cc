@@ -123,7 +123,8 @@ static bool _mons_is_always_safe(const monster *mon)
     return (mon->wont_attack() && (!mons_blows_up(*mon) || mon->type == MONS_SHADOW_PRISM))
           || mon->type == MONS_BUTTERFLY
           || (mon->type == MONS_BALLISTOMYCETE
-              && !mons_is_active_ballisto(*mon));
+              && !mons_is_active_ballisto(*mon))
+          || mon->type == MONS_TRAINING_DUMMY && !mon->weapon();;
 }
 
 // HACK ALERT: In the following several functions, want_move is true if the

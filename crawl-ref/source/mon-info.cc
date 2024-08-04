@@ -21,6 +21,7 @@
 #include "env.h"
 #include "fight.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -363,7 +364,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
             || mons_species(type) == MONS_SERPENT_OF_HELL
-            || type == MONS_THE_ENCHANTRESS)
+            || type == MONS_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -470,7 +471,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
             || mons_species(type) == MONS_SERPENT_OF_HELL
-            || type == MONS_THE_ENCHANTRESS)
+            || type == MONS_ENCHANTRESS)
         {
             mb.set(MB_NAME_THE);
         }
@@ -809,6 +810,12 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->behaviour == BEH_WITHDRAW)
         mb.set(MB_RETREATING);
 
+    if (m->props.exists(MAKHLEB_CRUCIBLE_VICTIM_KEY))
+        mb.set(MB_FROZEN_IN_TERROR);
+
+    if (m->props.exists(SOUL_SPLINTERED_KEY))
+        mb.set(MB_SOUL_SPLINTERED);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -970,7 +977,7 @@ string monster_info::_core_name() const
         s = "Royal Jelly";
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
-    else if (nametype == MONS_THE_ENCHANTRESS)
+    else if (nametype == MONS_ENCHANTRESS)
         s = "Enchantress";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
@@ -1452,6 +1459,10 @@ vector<string> monster_info::attributes() const
     {
         if (is(name.flag) && !_hide_moninfo_flag(name.flag))
         {
+            // Hide this for better flavour messaging
+            if (name.flag == MB_PARALYSED && is(MB_FROZEN_IN_TERROR))
+                continue;
+
             // TODO: just use `do_mon_str_replacements`?
             v.push_back(replace_all(name.long_singular,
                                     "@possessive@",

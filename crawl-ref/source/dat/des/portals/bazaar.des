@@ -71,12 +71,19 @@ end
 --                      the shops. Has no effect if randomise_tiles == false.
 --
 -- Both arguments default to true.
-function bazaar_setup(e, randomise_tileset, shop_halo)
+function bazaar_setup(e, randomise_tileset, shop_halo, from_xom)
   if randomise_tileset == nil then
     randomise_tileset = true
   end
   if shop_halo == nil then
     shop_halo = true
+  end
+  if from_xom == nil then
+    from_xom = false
+  end
+
+  if from_xom == false then
+    e.tags("normal_bazaar")
   end
 
   -- No hostile monsters, but one to six weak friendly monsters
@@ -91,7 +98,7 @@ function bazaar_setup(e, randomise_tileset, shop_halo)
   end
 
   local xomCust = "boggart " .. a .. " / common demon " .. b ..
-                  " / laughing skull band " .. b .. " / ugly thing " .. b ..
+                  " / laughing skull band w:5 " .. b .. " / ugly thing " .. b ..
                   " / worldbinder " .. b .. " / glowing shapeshifter " .. b ..
                   " / demonspawn w:2 " .. b .. " / cacodemon " .. b ..
                   " / sin beast " .. b .. " / tentacled monstrosity " .. b
@@ -113,7 +120,9 @@ function bazaar_setup(e, randomise_tileset, shop_halo)
   else
       -- Xom sees a flavour opportunity and takes it.
       if you.god() == "Xom" then
-          crawl.mpr("Xom shifts dimensions to bring you to a more interesting bazaar.")
+          if from_xom == false then
+              crawl.mpr("Xom shifts dimensions to make the bazaar a little more interesting.")
+          end
           if you.silenced() == false then
               crawl.mpr("You hear the bustle and chatter of other... customers...?")
           end
@@ -337,6 +346,29 @@ b...b
 @.O.@
 b...b
 bb@bb
+ENDMAP
+
+###############################################################################
+# Bazaar wrapper (to allow for Xom's bazaars)
+
+NAME:   bazaar_wrapper
+TAGS:   allow_dup
+PLACE:  Bazaar
+ORIENT: encompass
+{{
+  local xom = dgn.persist.xom_bazaar
+  if crawl.game_started() and xom == true then
+    local map = dgn.map_by_tag("xom_bazaar")
+    assert(map, "Couldn't find a map for Xom bazaar")
+    dgn.place_map(map, false, false)
+  elseif crawl.game_started() then
+    local map = dgn.map_by_tag("normal_bazaar")
+    assert(map, "Couldn't find a map for normal bazaar")
+    dgn.place_map(map, false, false)
+  end
+  dgn.persist.xom_bazaar = false
+}}
+MAP
 ENDMAP
 
 ###############################################################################
@@ -1973,3 +2005,311 @@ WEIGHT: 50
     kfeat('C = any shop')
     bazaar_setup(_G)
 }}
+
+##########################################################################
+# Xom's unique bazaar maps
+#
+# Only seen when Xom directly pulls you into a bazaar.
+# Heavily customized in flavour and power to emphasize Xom's love of risks.
+##########################################################################
+
+# TODO: integrate the Chaotic flag code.
+NAME:    regret_index_bazaar_x_original
+TAGS:    allow_dup xom_bazaar
+ORIENT:  encompass
+KMONS:   p = pile of debris
+KMONS:   E = demonic plant
+KMONS:   f = butterfly perm_ench:paralysis
+KITEM:   d = potion of degeneration ident:all
+KITEM:   r = large rock
+KITEM:   s = human skeleton / kobold skeleton / orc skeleton / \
+             naga skeleton / merfolk skeleton / spriggan skeleton
+KITEM:   $ = $ no_pickup
+KFEAT:   g = metal_statue
+KFEAT:   h = stone_wall
+KFEAT:   t = demonic_tree
+KFEAT:   ^ = permanent teleport trap
+KFEAT:   y = x
+KFEAT:   D = abandoned_shop
+KFEAT:   X = altar_xom
+KFEAT:   + = closed_clear_door
+NSUBST:  A = 1:A / 1:B / 1:C / *:D
+NSUBST:  ? = 1:E+ / 2 = E+n / * = xy
+NSUBST:  X = 2:X / 2:g / 2:G / 2:D / 2:U / 2:Y / 2:> / * = XgGDUY
+# Each of the eight passages towards possible shops
+# has different randomized decor configurations.
+SHUFFLE: HIJKLMNOPQRS
+NSUBST:  H = 6:t / 2 = t. / 1:s / 2 = s. / 10:' / *:.
+NSUBST:  I = 8:^ / 4 = ^. / 8 = +. / 10:' / *:.
+NSUBST:  J = 3:c / 2 = y / 1 = cy.. / 15 = p. / 10:' / *:.
+NSUBST:  K = 6:f / 3:E / 5 = fE... / 10:' / *:.
+NSUBST:  L = 11:W / 2 = W. / 4 = E. / 4 = x... / 10:' / *:.
+NSUBST:  M = 24:+ / 2 = +. / 2:c / 2 = cxy / 10:' / *:.
+NSUBST:  N = 4:$ / 2:s / 2 = s. / 2 = EEg.. / 10:' / *:.
+NSUBST:  O = 4:F / 2 = bn / 4 = s. / 10:' / *:.
+NSUBST:  P = 2:d / 2:d. / 4 = t. / 8 = +. / 2 = n. / 10:' / *:.
+NSUBST:  Q = 1:c / 2 = xy / 2:fpp / 2:r / 10:' / *:.
+NSUBST:  R = 4:$ / 15:' / *:.
+NSUBST:  S = 2:t / 2:^ / 2:F / 4 = +W / 2 = xy / *:.
+SUBST:   b = bbbn, - = ccxy
+SUBST:   " = bbbnnnnxycct^+g ":300
+KPROP:   "` = no_tele_into
+COLOUR:  W = lightgreen
+COLOUR:  g = shimmer_blue
+COLOUR:  G = mountain
+FTILE:   t = floor_nerves_magenta
+TILE:    g = misfortune_conduit
+TILE:    G = dngn_scintillating_statue
+TILE:    v = wall_crypt_metal
+MARKER:  F = lua:fog_machine { cloud_type = "magical condensation", \
+             pow_min = 6, pow_max = 7, delay_min = 60, delay_max = 80, size = 8 }
+MARKER:  + = lua: props_marker { connected_exclude="true" }
+: set_feature_name("metal_statue", "misfortune conduit")
+: set_feature_name("granite_statue", "scintillating statue")
+: bazaar_setup(_G, false, false, true)
+{{
+local magi_name = util.random_from({"type:Ever-Affordable suffix:Forbidden_Knowledge",
+                                    "type:Easily-Learnt suffix:Chaos_Theory",
+                                    "type:Trivially-Accessible suffix:Secrets",
+                                    "type:Fathomable suffix:Mysteries"})
+local equip_name = util.random_from({ "type:Avant-Garde suffix:Galleria",
+                                      "type:Bespoke suffix:Boutique",
+                                      "type:Haute_Couture suffix:Collection",
+                                      "type:Ready-to-Wear suffix:Runway" })
+
+-- Spells that Xom effects can specifically invoke, which resemble other effects
+-- Xom can do, or which come inherently with some sort of risk, in schools
+-- less focused on direct destruction (besides Alchemy).
+-- TODO: Properly crunch down all this boilerplate.
+local hexspells = util.random_subset({ "jinxbite", "tukima's_dance",
+                                       "yara's_violent_unravelling", "discord" }, 3)
+local alchspells = util.random_subset({ "mephitic_cloud", "alistair's_intoxication",
+                                        "irradiate", "fulsome_fusillade" }, 3)
+local necrospells = util.random_subset({ "kiss_of_death", "sublimation_of_blood",
+                                         "fugue_of_the_fallen", "cigotuvi's_putrefaction" }, 3)
+local tlocspells = util.random_subset({ "maxwell's_portable_piledriver", "gell's_gavotte",
+                                        "dispersal", "malign_gateway" }, 3)
+local summspells = util.random_subset({ "call_imp", "summon_blazeheart_golem",
+                                        "summon_forest", "summon_horrible_things" }, 3)
+
+local hexbook = "randbook owner:Xom title:Mystic_Anarchy disc:hexes " ..
+                "numspells:" .. crawl.random_range(2, 3) .. " " ..
+                "spells:" .. table.concat(hexspells, '&&' )
+local alchbook = "randbook owner:Xom title:Mad_Science disc:alchemy " ..
+                 "numspells:" .. crawl.random_range(2, 3) .. " " ..
+                 "spells:" .. table.concat(alchspells, '&&' )
+local necrobook = "randbook owner:Xom title:Vocational_Suffering disc:necromancy " ..
+                  "numspells:" .. crawl.random_range(2, 3) .. " " ..
+                  "spells:" .. table.concat(necrospells, '&&' )
+local tlocbook = "randbook owner:Xom title:Spontaneous_Journeys disc:translocation " ..
+                 "numspells:" .. crawl.random_range(2, 3) .. " " ..
+                 "spells:" .. table.concat(tlocspells, '&&' )
+local summbook = "randbook owner:Xom title:New_Friends disc:summoning " ..
+                 "numspells:" .. crawl.random_range(2, 3) .. " " ..
+                 "spells:" .. table.concat(summspells, '&&' )
+
+local use_books = table.concat(util.random_subset({
+                  hexbook, alchbook, necrobook, tlocbook, summbook}, 3), ' | ')
+
+-- Manual options: above spell schools, other magical items offered in the same
+-- shop, and a joke dud of Stealth since Xom will break it constantly.
+local manuals = {"hexes", "alchemy", "necromancy", "translocations",
+                 "summonings", "evocations", "evocations", "shapeshifting",
+                 "shapeshifting", "stealth"}
+local manual = "manual of " .. util.random_from(manuals)
+
+local wand1 = "any blast wand charges:" .. crawl.random_range(12, 18)
+local wand2 = "any hex wand charges:" .. crawl.random_range(12, 18)
+local wand3 = "wand of polymorph charges:" .. crawl.random_range(12, 18)
+
+-- Only chaos weapons: two randarts and one good_item.
+-- Unrands are chosen for chaotic / demonic flavour, inherent risks,
+-- or very niche build support.
+local equip_count = 7
+local weaps = { "demon blade", "double sword", "triple sword",
+                "demon trident", "glaive", "bardiche", "demon whip",
+                "eveningstar", "great mace", "broad axe", "battleaxe",
+                "executioner's axe", "lajatang", "hand cannon", "longbow",
+                "triple crossbow", "rapier", "quick blade"}
+weaps = util.random_subset(weaps, 3)
+
+local equips = {}
+
+equips[1] = weaps[1] .. ' ego:chaos randart plus:' .. crawl.roll_dice(3, 4)
+equips[2] = weaps[2] .. ' ego:chaos randart plus:' .. crawl.roll_dice(2, 5)
+equips[3] = weaps[3] .. ' ego:chaos good_item plus:' .. crawl.roll_dice(3, 2)
+
+if crawl.x_chance_in_y(3, 4) then
+  equip_count = equip_count + 1
+
+  local baseunlist = { "plutonium_sword", "singing_sword", "obsidian_axe",
+                       "glaive_of_prune", "mace_of_variability", "firestarter",
+                       "majin-bo", "robe_of_folly", "robe_of_misfortune",
+                       "maxwell's_patent_armour", "orange_crystal_plate_armour",
+                       "shield_of_the_gong", "tower_shield_of_ignorance",
+                       "hat_of_the_bear_spirit", "mad_mage's_maulers",
+                       "ratskin_cloak", "slick_slippers", "seven-league_boots"}
+
+  local chaoticlist = { "spriggan's_knife", "captain's_cutlass", "gyre",
+                        "sword_of_zonguldrok", "maxwell's_thermic_engine",
+                        "autumn_katana", "elemental_staff", "wrath_of_trog",
+                        "frostbite", "consecrated_labrys", "wyrmbane",
+                        "rift", "glaive_of_the_guard", "lochaber_axe",
+                        "eos", "spellbinder", "sceptre_of_torment",
+                        "punk", "storm_bow", "mule" }
+
+  if crawl.coinflip() then
+    table.insert(equips, util.random_from(baseunlist))
+  else
+    table.insert(equips, "chaotic " .. util.random_from(chaoticlist))
+  end
+end
+
+equips = table.concat(equips, ' | ')
+
+-- To make it more obvious the rings are deliberately pairing their upsides
+-- with both an unequip punishment and a negative resist, use the same
+-- unequip punishment and negative resist for both rings.
+local sticky = util.random_from({"^Contam", "^Drain"})
+local resist = util.random_from({"rF:-1", "rC:-1", "Will:-1"})
+local ring = "any ring randart artprops:" .. sticky .. "&" .. resist
+
+-- Risky, niche aux properties given extra artprop juice.
+local aux = table.concat(util.random_subset({
+            "orb ego:mayhem randart artprops:Int:" .. crawl.random_range(4, 8),
+            "orb ego:wrath randart artprops:Str:" .. crawl.random_range(4, 8),
+            "orb ego:guile randart artprops:Dex:" .. crawl.random_range(4, 8),
+            "scarf ego:harm randart artprops:Slay:" .. crawl.random_range(3, 5)}, 2), " | ")
+
+-- Double-sided consumables and niche darts. Since only Xom worshippers see
+-- this bazaar, the potions of mutation are fine to hand out.
+local darts = { "dart ego:atropa w:3", "dart ego:datura w:3",
+                "dart ego:dispersal w:3" }
+
+darts = table.concat(darts, ' q:' .. crawl.random_range(5, 8) .. ' | ' ) ..
+        ' q:' .. crawl.random_range(5, 8)
+
+local cons = {};
+local consum = { "potion of ambrosia", "potion of attraction w:5",
+                 "potion of berserk rage w:5", "potion of lignification",
+                 "potion of mutation", "scroll of silence",
+                 "scroll of poison", "scroll of vulnerability",
+                 "scroll of immolation" }
+
+for _, consumables in ipairs(consum) do
+    table.insert(cons, consumables .. " q:" .. crawl.random_range(1, 4))
+end
+
+-- Only Xom gets to get away with this particular lack of niceness.
+if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
+     and you.race() ~= "Vampire" then
+    table.insert(cons, "scroll of torment w:5 q:" .. crawl.random_range(1, 4))
+end
+
+cons = table.concat(cons, " | ")
+
+-- Finally, assemble the shops.
+kfeat('A = book shop no_mimic ' .. magi_name .. ' greed:8 count:10 use_all ; ' ..
+           use_books .. ' | ' .. manual .. ' | ' ..  ' any talisman | ' ..
+           ' any talisman | any talisman randart | ' .. wand1 ..
+           ' | ' .. wand2 .. ' | ' .. wand3)
+kfeat('B = weapon shop no_mimic ' .. equip_name .. ' greed:13 ' ..
+           ' count:' .. equip_count .. ' use_all ; ' .. equips .. ' | ' ..
+           ring .. ' | ' .. ring .. ' | ' .. aux)
+kfeat('C = general shop no_mimic type:Party suffix:Supplies greed:6 count:' ..
+           crawl.random_range(8, 11) .. ' ; ' .. darts .. ' | ' .. cons)
+
+-- Xom bazaars should look quite garishly variable.
+if crawl.x_chance_in_y(4, 7) then
+  local feature = util.random_from({'tree', 'petrified_tree', 'demonic_tree',
+                                    'open_sea', 'endless_lava'})
+  kfeat('Z = ' .. feature)
+  set_border_fill_type(feature)
+else
+  kfeat('Z : iron_grate')
+  subst('Z : vhZ+')
+  set_border_fill_type(util.random_from({'rock_wall', 'stone_wall', 'metal_wall'}))
+end
+
+local cols = util.random_subset( { "magenta", "blue", "red",
+                                   "green", "cyan" }, 3)
+tile('x = wall_zot_' .. cols[1] .. ' / wall_zot_light' .. cols[1] ..
+          ' / wall_abyss_' .. cols[1] .. ' / wall_abyss_light' .. cols[1])
+tile('y = wall_bars_' .. cols[2] .. ' / wall_bars_light' .. cols[2] ..
+          ' / wall_undead_' .. cols[2] .. ' / wall_undead_light' .. cols[2])
+tile('c = ' .. util.random_from({"wall_stone_mossy", "stone_wall_snake",
+                                 "stone_wall_spider", "stone_wall_shoals",
+                                 "stone_wall_vault", "wall_crypt"}))
+tile('b = dngn_crystal_' .. cols[3] .. ' / dngn_crystal_light' .. cols[3])
+tile('n = dngn_transparent_stone_' .. cols[3])
+ftile("ABC' = " .. util.random_from({"floor_vines", "floor_marble",
+                                     "floor_crystal_squares"}))
+ftile("Z = " .. util.random_from({"floor_nerves", "floor_rough_brown",
+                                  "floor_grass", "floor_pebble_red"}))
+tile('h : wall_flesh / wall_stone_black_marked')
+tile('v : dngn_metal_iron / dngn_metal_wall_darkgray')
+lfloortile(util.random_from({"floor_slime", "floor_sandstone",
+                             "floor_cobble_blood", "floor_cage"}))
+}}
+MAP
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZ""""""""""""""""""""""""""""""""""""""""""""ZZZZZZZZ
+ZZZZZZZ""""""""""""""""""""""""""""""""""""""""""""""ZZZZZZZ
+ZZZZZZ"""""""`````````````""""""""`````````````"""""""ZZZZZZ
+ZZZZZ""""""""``cbbbbbbc```""""""""```cbbbbbbc``""""""""ZZZZZ
+ZZZZ"""""""""``bHH..HHb```""""""""```bII..IIb``"""""""""ZZZZ
+ZZZZ"""""""""``bH'''.Hbb```""""""```bbI.'''Ib``"""""""""ZZZZ
+ZZZZ"""""""""``b.'A'..bbb```""""```bbb..'A'.b``"""""""""ZZZZ
+ZZZZ"""""""""``b.'''..Hbbb```""```bbbI..'''.b``"""""""""ZZZZ
+ZZZZ"""""""""``bH...XHH'bbb``````bbb'IIX...Ib``"""""""""ZZZZ
+ZZZZ"""````````bHH..HHHHHbbb````bbbIIIII..IIb````````"""ZZZZ
+ZZZZ""````````bcbbbHHHHHH'bbb``bbb'IIIIIIbbbcb````````""ZZZZ
+ZZZZ""`cbbbbbbcxxxbb'HHHHHHbbbbbbIIIIII'bbxxxcbbbbbbc`""ZZZZ
+ZZZZ""`bOO..OObxxxxbbHHHHHH'bbbb'IIIIIIbbxxxxbJJ..JJb`""ZZZZ
+ZZZZ""`bO'''.Obxxxxxbb'HHHHHHccIIIIII'bbxxxxxbJ.'''Jb`""ZZZZ
+ZZZZ""`b.'A'..bbxxxxxbbHHHHH....IIIIIbbxxxxxbb..'A'.b`""ZZZZ
+ZZZZ""`b.'''..Obbxxxxxbb'HH......II'bbxxxxxbbJ..'''.b`""ZZZZ
+ZZZZ""`bO...XOO'bbxxxxxbbH..X--X..Ibbxxxxxbb'JJX...Jb`""ZZZZ
+ZZZZ""`bOO..OOOOObbxxxxxbb..--....bbxxxxxbbJJJJJ..JJb`""ZZZZ
+ZZZZ""`cbbbOOOOOO'bbxxxxbb..-.-...bbxxxxbb'JJJJJJbbbc`""ZZZZ
+ZZZZ""````bb'OO.OOObbxxbb...-..-...bbxxbbJJJJJJ'bb````""ZZZZ
+ZZZZ"""""``bbOOOxOO'bbbb............bbbb'JJJJJJbb``"""""ZZZZ
+ZZZZ""""""``bb'OO.OOObb..............bbJJJJJJ'bb``""""""ZZZZ
+ZZZZ"""""""``bbOOOOO.........xx.........JJJJJbb``"""""""ZZZZ
+ZZZZ""""""""``bb'OO.........y??x.........JJ'bb``""""""""ZZZZ
+ZZZZ"""""""""``bbO..X..-...x?..?y..---X...Jbb``"""""""""ZZZZ
+ZZZZ""""""""""``bc..-.-...x?.<..?x...--...cb``""""""""""ZZZZ
+ZZZZ""""""""""``bc..--....x?..>.?x..-.-...cbb``"""""""""ZZZZ
+ZZZZ"""""""""``bbN..X---...y?..?x..-..X...Kbbb``""""""""ZZZZ
+ZZZZ""""""""``bb'NN.........x??y.........KK'bbb``"""""""ZZZZ
+ZZZZ"""""""``bbNNNNN.........xx.........KKKKKbbb``""""""ZZZZ
+ZZZZ""""""``bb'NNNNNNbb..............bbKKKKKK'bbb``"""""ZZZZ
+ZZZZ"""""``bbNNNNNN'bbbb............bbbb'KKKKKKbbb````""ZZZZ
+ZZZZ""````bb'NNNNNNbbxxbb...-..-...bbxxbbKKKKKK'bbbbc`""ZZZZ
+ZZZZ""`cbbbNNNNNN'bbxxxxbb...-.-..bbxxxxbb'KKKKKKbbbb`""ZZZZ
+ZZZZ""`bNN..NNNNNbbxxxxxbb....--..bbxxxxxbbKKKKK..KKb`""ZZZZ
+ZZZZ""`bN...XNN'bbxxxxxbbM..X--X..Lbbxxxxxbb'KKX...Kb`""ZZZZ
+ZZZZ""`b.'''..Nbbxxxxxbb'MM......LL'bbxxxxxbbK..'''.b`""ZZZZ
+ZZZZ""`b.'A'..bbxxxxxbbMMMMM....LLLLLbbxxxxxbb..'A'.b`""ZZZZ
+ZZZZ""`bN'''.Nbxxxxxbb'MMMMMMccLLLLLL'bbxxxxxbK.'''Kb`""ZZZZ
+ZZZZ""`bNN..NNbxxxxbbMMMMMM'bbbb'LLLLLLbbxxxxbKK..KKb`""ZZZZ
+ZZZZ""`cbbbbbbcxxxbb'MMMMMMbb``bbLLLLLL'bbxxxcbbbbbbc`""ZZZZ
+ZZZZ""`````````cbbbMMMMMM'bb`""`bb'LLLLLLbbbc`````````""ZZZZ
+ZZZZ""""""""""`bMM..MMMMMbb`""""`bbLLLLL..LLb`""""""""""ZZZZ
+ZZZZ""""""""""`bM...XMM'bb`""""""`bb'LLX...Lb`""""""""""ZZZZ
+ZZZZ""""""""""`b.'''..Mbb`""""""""`bbL..'''.b`""""""""""ZZZZ
+ZZZZ""""""""""`b.'A'..bb`""""""""""`bb..'A'.b`""""""""""ZZZZ
+ZZZZ""""""""""`bM'''.Mb`""""""""""""`bL.'''Lb`""""""""""ZZZZ
+ZZZZ""""""""""`bMM..MMb`""""""""""""`bLL..LLb`""""""""""ZZZZ
+ZZZZZ"""""""""`cbbbbbbc`""""""""""""`cbbbbbbc`"""""""""ZZZZZ
+ZZZZZZ""""""""``````````""""""""""""``````````""""""""ZZZZZZ
+ZZZZZZZ""""""""""""""""""""""""""""""""""""""""""""""ZZZZZZZ
+ZZZZZZZZ""""""""""""""""""""""""""""""""""""""""""""ZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ENDMAP

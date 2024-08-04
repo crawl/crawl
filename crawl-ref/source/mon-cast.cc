@@ -130,6 +130,7 @@ static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_wl_lower_goodness(const monster &caster);
 static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
+static ai_action::goodness _foe_soul_splinter_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
 static ai_action::goodness _scorch_goodness(const monster& caster);
@@ -819,6 +820,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 }
             }
         } } },
+    { SPELL_GRAVE_CLAW, {
+       _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            const int pow = mons_spellpower(caster, SPELL_GRAVE_CLAW);
+            cast_grave_claw(caster, beam.target, pow, false);
+        },
+    } },
+    { SPELL_SOUL_SPLINTER, _hex_logic(SPELL_SOUL_SPLINTER, _foe_soul_splinter_goodness) },
 };
 
 // Logic for special-cased Aphotic Marionette hijacking of monster buffs to
@@ -989,6 +998,13 @@ static ai_action::goodness _foe_wl_lower_goodness(const monster &caster)
 static ai_action::goodness _foe_vitrify_goodness(const monster &caster)
 {
     return _foe_effect_viable(caster, DUR_VITRIFIED, ENCH_VITRIFIED);
+}
+
+static ai_action::goodness _foe_soul_splinter_goodness(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    ASSERT(foe);
+    return ai_action::good_or_impossible(!!(foe->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)));
 }
 
 /**
@@ -2947,6 +2963,7 @@ static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt &bea
         return;
     beam.source = foe->pos();
     beam.target = foe->pos();
+    beam.draw_delay = 80;
     beam.fire();
 }
 
@@ -3308,7 +3325,7 @@ static bool _ms_quick_get_away(spell_type monspell)
 // Is it worth bothering to invoke recall? (Currently defined by there being at
 // least 3 things we could actually recall, and then with a probability inversely
 // proportional to how many HD of allies are current nearby)
-static bool _should_recall(monster* caller)
+bool _should_recall(monster* caller)
 {
     ASSERT(caller); // XXX: change to monster &caller
     // It's a long recitation - if we're winded, we can't use it.
@@ -3993,6 +4010,7 @@ static bool _can_injury_bond(const monster &protector, const monster &protectee)
         && !protectee.has_ench(ENCH_HEXED)
         && !protectee.has_ench(ENCH_INJURY_BOND)
         && !mons_is_projectile(protectee)
+        && !mons_is_firewood(protectee)
         && &protector != &protectee;
 }
 
@@ -8138,6 +8156,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
         bolt beam;
         beam.range   = INFINITE_DISTANCE;
         beam.hit     = AUTOMATIC_HIT;
+        beam.name    = throwee.name(DESC_THE, true);
         beam.flavour = BEAM_VISUAL;
         beam.source  = thrower.pos();
         beam.target  = chosen_dest;

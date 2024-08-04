@@ -349,6 +349,18 @@ boulder4
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2
 orb_of_destruction3
+globe_of_annihilation_coc1 MONS_GLOBE_OF_ANNIHILATION_COC
+globe_of_annihilation_coc2
+globe_of_annihilation_coc3
+globe_of_annihilation_dis1 MONS_GLOBE_OF_ANNIHILATION_DIS
+globe_of_annihilation_dis2
+globe_of_annihilation_dis3
+globe_of_annihilation_geh1 MONS_GLOBE_OF_ANNIHILATION_GEH
+globe_of_annihilation_geh2
+globe_of_annihilation_geh3
+globe_of_annihilation_tar1 MONS_GLOBE_OF_ANNIHILATION_TAR
+globe_of_annihilation_tar2
+globe_of_annihilation_tar3
 battlesphere MONS_BATTLESPHERE
 fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
@@ -1169,7 +1181,7 @@ spriggan_defender MONS_SPRIGGAN_DEFENDER
 %rim 0
 spriggan_air_mage MONS_SPRIGGAN_AIR_MAGE
 %rim 1
-mon/unique/enchantress MONS_THE_ENCHANTRESS
+mon/unique/enchantress MONS_ENCHANTRESS
 mon/unique/agnes MONS_AGNES
 mon/unique/agnes_staveless MONS_AGNES_STAVELESS
 
@@ -1359,6 +1371,11 @@ mushroom_form TRAN_MUSHROOM
 storm_form TRAN_STORM_HUMANOID
 storm_form_felid TRAN_STORM_FELID
 storm_form_octopode TRAN_STORM_OCTOPODE
+slaughter_form_octopode TRAN_SLAUGHTER_OCTOPODE
+slaughter_form_armataur TRAN_SLAUGHTER_ARMATAUR
+slaughter_form_felid TRAN_SLAUGHTER_FELID
+slaughter_form_humanoid TRAN_SLAUGHTER_HUMANOID
+slaughter_form_naga TRAN_SLAUGHTER_NAGA
 %rim 1
 
 %sdir misc

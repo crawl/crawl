@@ -1025,6 +1025,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
+        if (you.form == transformation::slaughter)
+            dam = dam * 10 / 15;
         if (you.may_pruneify() && you.cannot_act())
             dam /= 2;
         if (you.petrified())
@@ -1147,6 +1149,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            makhleb_celebrant_bloodrite();
             if (sanguine_armour_valid())
                 activate_sanguine_armour();
             refresh_meek_bonus();
@@ -1234,6 +1237,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();
+                take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
+                                "You cheat death using unusual wizardly powers."), true);
                 return;
             }
         }

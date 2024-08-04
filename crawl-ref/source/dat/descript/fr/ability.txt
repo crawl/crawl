@@ -255,24 +255,6 @@ Accroit grandement votre vitesse de combat, avec aucune perte de précision. Cet
 effet surnaturel provoque une faible contamination magique. Une exposition
 prolongée peut être mauvaise pour la santé.
 %%%%
-Minor Destruction ability
-
-Tire une salve dévastatrice aléatoire sur un monstre ciblé.
-%%%%
-Lesser Servant of Makhleb ability
-
-Convoque un démon mineur, qui a des chances de vous être hostile si votre
-niveau d'Invocations est faible.
-%%%%
-Major Destruction ability
-
-Tire aléatoirement une explosion ou un faisceau dangereux sur un monstre ciblé.
-%%%%
-Greater Servant of Makhleb ability
-
-Convoquer un démon majeur, qui a de grandes chances de vous être hostile si vos
-compétences en Invocations sont faibles.
-%%%%
 Channel Energy ability
 
 Rempli votre réservoir de magie d'une quantité dépendante de votre compétence

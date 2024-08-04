@@ -2635,7 +2635,7 @@ ENDMAP
 
 ##############################################################################
 
-# majored in destruction and minored in blood.
+# majored in destruction, minored in blood, got top marks.
 NAME:    regret_index_makhleb_lecture_halls
 TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 DEPTH:   D:12-, Depths
@@ -3436,4 +3436,187 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Underfunded, overgrown, falling apart. Still full of interested guests.
+NAME:    regret_index_arboreal_archives
+TAGS:    no_monster_gen no_item_gen water_ok
+DEPTH:   D:6-, !D:$, Shoals, !Shoals:$, Depths, !Depths:$, Zot, !Zot:$
+PLACE:   D:$, Depths:$
+WEIGHT:  3 (D:$, Depths:$), 10
+ORIENT:  north
+# Randomization comes first before monsters due to per-branch tilework.
+SHUFFLE: HIJKLMNO
+SUBST:   HI = PP.., JKL = PDk..., MNO = ., 0 = 223
+NSUBST:  ? = 2 = c. / *:c, ! = 2 = c. / *:c
+NSUBST:  1 = 2:1 / * = 234, c = 25:t / 10:x / *:c
+NSUBST:  . = 1:1 / 3:2 / 3:3 / 6:4 / 6:5 / 2:e / 6:f / 6:D / 30:P / 8:k / *:.
+# Magicians with minimal fire or loud lightning unless the set particularly
+# needs it for variety, loose magic entities, wildlife and wildlings.
+: if you.in_branch("D") then
+:   if you.depth() < 9 then
+MONS:    orc wizard, shadow imp / white imp
+MONS:    ice beast / sky beast / sleepcap
+MONS:    bullfrog / scorpion / iguana / black bear
+MONS:    hound / phantom / ufetubus
+SUBST:   })] = %
+NSUBST:  | = 1:e / 1:ef / 2:g / * = effg, % = 1:d / 2:e / 1:fg / * = k.
+NSUBST:  23 = 1:.
+:   elseif you.depth() < 12 then
+MONS:    arcanist / kobold demonologist w:5, boggart / vampire w:5
+MONS:    basilisk / shapeshifter w:20 / manticore
+MONS:    hornet / wyvern / centaur / yak band
+MONS:    howler monkey / water moccasin / acid dragon
+SUBST:   })] = %
+NSUBST:  | = 1:e / 1:f / 3:g / * = ffg, % = 2:d / 2:e / 2:fg / * = k.
+NSUBST:  1 = 1:2 / *:1, 23 = 2:.
+:   elseif you.where() ~= dgn.level_name(dgn.br_entrance("Depths")) then
+MONS:    deep elf knight / orc sorcerer / ogre mage / sphinx w:2
+MONS:    tengu conjurer w:5 / deep elf archer w:15 / arcanist / boggart band
+MONS:    laughing skull band w:5 / great orb of eyes / meliai band w:1
+MONS:    centaur warrior / boulder beetle / unseen horror / wolf spider
+MONS:    basilisk / manticore / shapeshifter w:20 / shadowghast / redback zombie
+SUBST:   })] = %
+NSUBST:  | = 1:f / 3:g / 1:h / 1:i / * = ffg, % = 1:d / 2:e / 1:fg / * = def.
+:   else
+MONS:    rakshasa / occultist, tengu conjurer / necromancer
+MONS:    ice dragon w:1 / glowing orange brain w:20 / \
+         very ugly thing / storm dragon zombie
+MONS:    flayed ghost / glowing shapeshifter w:20 / sphinx skeleton
+MONS:    ugly thing / shapeshifter w:15 / spriggan air mage simulacrum w:5
+KFEAT:   ) = enter_depths
+KITEM:   S = smoky gem
+NSUBST:  | = 1:f / 4:g / 1:i / * = ffg, % = 2:d / 2:e / 1:fg / * = def.
+:   end
+FTILE:   .12345defghijkS) = floor_vines / floor_pebble_darkgray
+FTILE:   P = floor_pebble_brown
+TILE:    x = wall_pebble_lightblue
+TILE:    c = wall_marble w:200 / dngn_stone_wall_lightblue
+: elseif you.in_branch("Shoals") then
+MONS:    merfolk aquamancer / frost giant w:2, merfolk avatar / satyr
+MONS:    formless jellyfish / harpy band, skyshark
+MONS:    merfolk siren w:2 / faun w:2 / water elemental
+SHUFFLE: })]
+SUBST:   )] = %
+NSUBST:  | = 1:f / 2:g / 2:h / 1:i / * = ffg
+NSUBST:  % = 1:d / 2:e / 1:f / 1:g / * = def., . = 4:5 / *:.
+: elseif you.in_branch("Depths") then
+:   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
+MONS:    tengu reaver / titan / lich
+MONS:    frost giant / vampire mage / vampire knight w:5
+MONS:    walking crystal tome / walking frostbound tome / \
+         walking divine tome / walking earthen tome
+MONS:    sphinx / spark wasp / caustic shrike / glass eye
+MONS:    spriggan air mage / very ugly thing / glowing orange brain / \
+         glowing shapeshifter w:20 / rakshasa
+SHUFFLE: }])
+SUBST:   } = }:60 >, ] = ]:40 >
+NSUBST:  . = 2:3 / 2 = 5. / *:.
+NSUBST:  | = 3:h / 2:i / * = fgg, % = 2:d / 2:f / 2:g / * = e.
+FTILE:   .12345defghijkS}]) = floor_vines / floor_pebble_darkgray
+:   else
+MONS:    draconian annihilator / draconian shifter
+MONS:    purple draconian / yellow draconian / \
+         frost giant / vampire mage / vampire knight w:5
+MONS:    walking divine tome / walking crystal tome / shadow dragon w:15
+MONS:    spark wasp / flayed ghost / tentacled monstrosity w:5 / glass eye
+MONS:    white draconian w:15 / green draconian w:15 / ice dragon w:15 / \
+         glowing shapeshifter / spriggan air mage / glowing orange brain / \
+         moth of wrath perm_ench:glowing_shapeshifter
+KMONS:   ) = lich / ancient lich
+KFEAT:   ) = enter_zot
+KITEM:   S = smoky gem
+SUBST:   }] = %
+NSUBST:  . = 1:1 / 3 = 245. / *:.
+NSUBST:  | = 4 = hfg / 1:i / 1:hi / *:f, % = 2:d / 2 = fg / * = ee.
+FTILE:   .12345defghijkS) = floor_hall / floor_pebble_darkgray
+:   end
+FTILE:   PDt = floor_pebble_brown
+TILE:    x = wall_pebble_cyan
+TILE:    c = wall_marble
+: else -- Zot
+MONS:    draconian shifter / draconian knight / \
+         protean progenitor band / ancient lich w:4 / dread lich w:4
+MONS:    draconian stormcaller / draconian annihilator
+MONS:    quicksilver dragon / electric golem w:6
+MONS:    ghost moth / shadow dragon w:5 / curse toe w:5
+MONS:    purple draconian / yellow draconian / white draconian / death cob w:2
+SHUFFLE: }])
+SUBST:   } = }:70 >, ] = ]:50 >, % = ddeeef, | = ggghhi
+NSUBST:  . = 2:1 / 2:2 / *:.
+: end
+: if you.in_branch("Zot") then
+KMONS:   P = withered plant
+KFEAT:   t = petrified_tree
+SUBST:   B = D, X = x
+: else
+KMONS:   P = plant
+:   if you.in_branch("Shoals") then
+KFEAT:   X = open_sea
+KFEAT:   PDk = W
+KPROP:   .12345defghijkS) = no_tide
+:   else
+SUBST:   X = x
+:   end
+: end
+KMONS:   D = pile of debris
+ITEM:    potion of brilliance ident:type / potion of magic ident:type / \
+         potion of enlightenment ident:type / potion of ambrosia ident:type
+ITEM:    scroll of identify q:1 ident:type / scroll of amnesia q:1 ident:type
+ITEM:    any scroll / orb ego:light ident:type w:1, randbook numspells:1
+# Books with notable spells at level 6 or higher, across each school.
+ITEM:    book of spontaneous combustion / book of ice / book of spectacle / \
+         book of power / book of chaos / book of the warp / book of death / \
+         book of siegecraft / necronomicon / grand grimoire / book of annihilations
+ITEM:    robe randart / orb ego:guile randart / orb ego:channeling randart / \
+         orb ego:light randart / any magical staff randart w:15 / \
+         ring of wizardry randart / manual of spellcasting w:5
+: if you.in_branch("D") and you.depth() < 9 then
+ITEM:    mundane pair of boots / mundane cloak, stone q:1
+: else
+ITEM:    pair of boots / hat / cloak, large rock q:1
+: end
+KFEAT:   - = broken_door
+KFEAT:   S = altar_sif_muna
+KFEAT:   y = x
+KFEAT:   C = c
+SHUFFLE: UVb
+SUBST:   ~ = xPt'', & = yy@
+TILE:    C = wall_studio
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccc....ccc.CC.|.|.CC0ccccj.jccccc0..|.|...tccc...%cccc
+ccc%.....cD...t.......cccj5.5jccc..CCPCPCC..cc......ccc
+cc...P...Dc...t..C....ccj.....jcc1..........cc...P..%cc
+cc..PVP..cD....tPt...1cc.......ccCPPCCtCCPPCcc..PUP..cc
+cc...P...Dc....C..t...cc.......cc...........cc...P...cc
+cc.......cc.......t...cc.......cc..CC.C.CC..cc.......cc
+ccHH...HHcc.CC.....CC.cc.cDcDc.cctP.......Pccc...M...cc
+cc.HHHHH.ccccccD-DcccccccDcDcDccccc.c+++c.cccc.MMMMM.cc
+cc...H...cccccccccccccccc.....cccccccDDDccccccMM...MMcc
+ccc.......!..J........?c.......c?........L..!.......ccc
+ccc......c...JJ......c.....).....c......LL...c......ccc
+ccc..}....!.J.J.......c..........c.......L.L.!....]..ccc
+ccc.......!.J.J......?...x...x...?......L.L.!.......ccc
+ccc......c...J........c...xSx...c........L...c......ccc
+ccc.......!..J........?c.......c?........L..!.......ccc
+cc...I...ccccccDDDccccccc.....ccccccccccccccccNN...NNcc
+cc.IIIII.cccc.c+++c.cctcc-D-D-cccccccD-Dcccccc.NNNNN.cc
+ccII...IIccc.........tcc.c---c.cc.CC.....CC.cc...N...cc
+cc.......cc..CC.C.CC..cc.......cc...........Dc.......cc
+cc...P...cc.....P.....ccKK.K.KKcc..ttP.C....cD...P...cc
+cc..PUP..ccC..CCtCC..Ccc.K...K.cc1..PtttP...Dc..PVP..cc
+cc%..P...cc.....P....1cc..KKK..cc....C.Ptt..cD...P...cc
+ccc......cc..CC.C.CC..cc.......cc...........cc.....%ccc
+cccc%...ccct...|t|..0ccc.......cc0CC.|.|.CCPccc....cccc
+@ccccccccttcccccccccccccDD+++DDccccccccccccctccccccccc@
+@'ccccccccccccccccccccccDxxcxxDcccccccccccccccccccccc'@
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''~~~~''''~~~~~'''~~'''''''''''''''~~'''~~~~~''''~~~~''
+''''''~~~~'''''~~~''~~~~'''''''~~~~''~~~'''''~~~~''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+  y&yyy@@@yyyy&&&yyy&&yyyyyyyyyyy&&yyy&&&yyyy@@@yyy&y
 ENDMAP

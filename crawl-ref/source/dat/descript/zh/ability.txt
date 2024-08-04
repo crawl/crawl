@@ -243,26 +243,6 @@ Receive Armour ability
 
 从四件防具中选取其中一件。这个福泽只能承蒙一次。
 %%%%
-# 马科列布
-Minor Destruction ability
-
-向一个目标怪物发射一道较弱的火、闪电、石、酸或负能量冲击波。
-攻击力和命中率随祈祷技能的提升而增加。
-%%%%
-Lesser Servant of Makhleb ability
-
-召唤一个低阶恶魔。使用此能力时如果失败会让那个恶魔变得敌对。
-%%%%
-Major Destruction ability
-
-向一个目标怪物发射一道火、闪电、岩浆、酸或负能量冲击波。
-攻击力和命中率随祈祷技能的提升而增加。
-%%%%
-Greater Servant of Makhleb ability
-
-[[Greater Servant of Makhleb spell]] 使用此能力时如果失败
-会让那个恶魔变得敌对。
-%%%%
 # Sif Muna
 %%%%
 Channel Magic ability

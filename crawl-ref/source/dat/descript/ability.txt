@@ -337,25 +337,99 @@ Acquires a piece of armour from a choice of four. This blessing may only be
 redeemed once.
 %%%%
 # Makhleb
-Minor Destruction ability
+Unleash Destruction ability
 
-Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
-targeted creature. Damage and accuracy are increased by Invocations skill.
+Channels a blast of hellish {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "piercing fire, lava (from Gehenna's influence), lightning, or negative energy"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "piercing ice (from Cocytus' influence), cold, lightning, or negative energy"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "piercing fire, cold, devastation (from Tartarus' influence), or negative energy"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "piercing fire, cold, lightning, acid, or metal splinters (the last two from Dis' influence)"
+    else
+        return "fire, cold, lightning, or negative energy"
+    end
+}} at a targeted creature. Damage and accuracy are increased by Invocations
+skill.
 %%%%
-Lesser Servant of Makhleb ability
+Infernal Servant ability
 
-Summons a minor demon. Failing to use this ability correctly will turn the
-demon hostile.
+Beckons a demon from the far reaches of Hell and binds it into service with your
+blood. At low Invocations skill, only lesser devils may be summoned, but major
+demons and even executioners may answer the call of those with high Invocations
+skill.
+
+Beware that the armies of chaos are prone to infighting, and sometimes a
+hostile demon may answer the ritual alongside your summoned servant.
 %%%%
-Major Destruction ability
+Brand Self ability
 
-Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
-the targeted creature. Damage and accuracy are increased by Invocations skill.
+Permanently carves an Infernal Mark into yourself, forever tainting body and
+soul in service of the Destroyer.
+
+So long as you continue to worship Makhleb, this mark will grant you the
+following power:
+
 %%%%
-Greater Servant of Makhleb ability
+Infernal Legion ability
 
-[[Greater Servant of Makhleb spell]] Failing to use this ability correctly will
-turn the demon hostile.
+Uses one's own body as a conduit to unleash an army of chaos upon the world.
+For a short while, lesser demons will continuously manifest near the user -
+provided there is something around for them to fight. While these demons may
+be individually short-lived, the legions of chaos as a whole are virtually
+inexhaustible.
+%%%%
+Globe of Annihilation ability
+
+Launches a roiling sphere of intense destructive force drawn from the {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "endless fires of Gehenna."
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "frigid wastes of Cocytus."
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "wailing grief of Tartarus."
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "ruthless spite of Dis."
+    else
+        return "very Hells themselves."
+    end
+}}
+
+This sphere gathers strength as it travels, and will attempt to home in on a
+designated target, though it moves and turns with considerable inertia. When it
+collides with a creature or other obstruction, it will detonate in a violent
+explosion of {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "fire or lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "cold or ice"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
+    else
+        return "hellish energy"
+    end
+}} whose radius depends on the distance travelled.
+
+You are protected from this explosion yourself.
+%%%%
+Vessel of Slaughter ability
+
+Invokes a blood pact with the Destroyer, temporarily granting you enormous power
+at a dangerous price.
+
+At the moment the pact is sealed, a massive explosion of damnation will surround
+you, and you will transform into a demonic avatar, granting you demonic
+resistances, invulnerable will, doubled healing from kills, and reducing all
+damage you take by 1/3. You will additionally gain a bonus to all outgoing
+damage proportional to how injured you were when you used this ability.
+
+When your transformation expires, you will be dragged down into the Crucible of
+Flesh, and made to fight through waves of demons until Makhleb considers your
+debt paid.
 %%%%
 # Sif Muna
 %%%%

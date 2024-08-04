@@ -114,20 +114,20 @@ MONS:   ugly thing w:16 / very ugly thing w:2 / rakshasa w:4
 MONS:   glowing orange brain / great orb of eyes, slime creature band
 MONS:   glowing shapeshifter
 NSUBST: . = 3:1 / 1:1. / *:., 3 = 1:2 / 1:3
-FTILE:  .34gOG = floor_depthstone
+FTILE:  '234gOG = floor_depthstone
 : depths_entry(_G)
 MAP
  xxxxxx
-xx.x..x bbbb
-x.3...xbb..bb
-xx.xx..b....bb
+xx'x..x bbbb
+x'3'..xbb''bb
+xx'xx..b....bb
 x..xxx...1...+
 x....xxb....bb
-xxbb.bbbb..bb
+xxbb.bbbb''bb
  bb...bbbbbb
 bb.....bb
-b4..g..3b
-bb.....bb
+b4''g''3b
+bb'''''bb
  bbbObbb
    bbb
 ENDMAP

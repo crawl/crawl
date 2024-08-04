@@ -254,8 +254,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
         name   = "shaped Serpent of Hell";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->type == MONS_THE_ENCHANTRESS
-            || mons->mname == "shaped Enchantress")
+    else if (mons->type == MONS_ENCHANTRESS
+             || mons->mname == "shaped Enchantress")
     {
         name   = "shaped Enchantress";
         flags |= MF_NAME_SUFFIX;

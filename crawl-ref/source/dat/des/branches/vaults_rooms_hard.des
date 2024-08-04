@@ -14,7 +14,7 @@
 # You can additionally use the following tags:
 #
 # vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
-# no_windows preserve_wall
+# no_windows no_wall_fixup
 #
 # vaults_orient_x: controls the entry points to the subvault.
 # A subvault using vaults_orient_n will always be entered from the north side,
@@ -22,17 +22,12 @@
 #
 # no_windows: prevents the layout from creating windows into the subvault.
 #
-# preserve_wall: prevents the layout from changing rock into the same wall type
+# no_wall_fixup: prevents the layout from changing rock into the same wall type
 # as the rest of the floor.
 #
 ################################################################################
 
 : crawl_require('dlua/vault.lua')
-
-#
-#  st_box_setup
-#
-#  This is the header for st's "greater box" vaults.
 
 {{
 function init_protected_by_tso(e)
@@ -52,6 +47,7 @@ function init_protected_by_tso(e)
   e.tile('G = dngn_statue_angel')
 end
 
+-- This is the header for st's "greater box" vaults.
 function st_box_setup(e)
   e.tags("no_item_gen")
   e.subst("% = %%%**|$")
@@ -2227,4 +2223,73 @@ xxx...x..px+x
 ..x+x...xxx..
 .p..n.p.n**P.
 ....n...n**|.
+ENDMAP
+
+NAME:    regret_index_vaults_magi_blasting
+TAGS:    vaults_orient_n vaults_orient_w
+NSUBST:  1 = 2:1 / 1:. / * = 11.
+SHUFFLE: ABCDEF, +-
+SUBST:   AB = x, C : xx., D : x.., EF = ., - : +x, + : +++.
+NSUBST:  12 = 2:.
+: index_vaults_room_themes(_G, "magic", true)
+MAP
+...
+...xxxxxxxxxxxx
+.............1xxx
+ x.b...A....B...
+ x..x....xx.....2
+ x...b.xxxxxx1.C.
+ x....xx...3xx....
+ x.A.xx4.....xx.D.
+ x...x...be2..-...
+ x..xx..bbcd..xx..
+ x..xx..ecbb..xx..
+ x...x3.2db...+...
+ x.B.xx.....1xx.E.
+ x1..1xx....xx...d
+ xx....x-xx+x....
+  x..C...xx.....d
+  x 2..D....E..d
+      .......d
+ENDMAP
+
+NAME:    regret_index_vaults_faire_storage
+TAGS:    patrolling vaults_orient_w vaults_orient_s
+SHUFFLE: ABCDE
+SUBST:   A : Iv, B : v., C : v., DE = .,  m : m., * = %**
+: index_vaults_room_themes(_G, "icebox", true)
+MAP
+    vvvv*....D.......
+ vvvv*e..C...2..I4I..
+ v*d........vvv.vvv.A
+ v...1..I1I.I2I..m...
+ vB.vvv.vvv.....I3I..
+ v..I1I..m..vvv.vvv.B
+ v......I1I.I2I..3...
+.vA.vvv.vvv........d*
+.+..I1I..1...C..e*vvv
+.+.......D....*vvvv
+.+++vvvvvvvvvvvv
+.....
+ENDMAP
+
+NAME:    regret_index_vaults_park_twin
+TAGS:    patrolling vaults_orient_e vaults_orient_s
+SHUFFLE: ABCDE, Ss, +-
+SUBST:   AB = x, C : x., DE = ., s = `, F : F`, - : +x, | = |**%
+: index_vaults_room_themes(_G, "garden", true)
+MAP
+     xx1123
+    xx`...12x
+   `Fxs`.C.|x
+  `w`xSs.D.|x
+ xF`S``...d1x
+xxxx`xn+-xxxx
+x`sS`n3......
+1.`s.+.T...A.
+1....-..2B...
+2.CD.x..B
+31..dx.A.
+ 2||1x...
+ xxxxx...
 ENDMAP

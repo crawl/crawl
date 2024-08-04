@@ -4334,6 +4334,14 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
+        // Apply damage multiplier from Vessel of Slaughter
+        if (amount != INSTANT_DEATH && agent && agent->is_player()
+            && you.form == transformation::slaughter)
+        {
+            amount = amount * (100 + you.props[MAKHLEB_SLAUGHTER_BOOST_KEY].get_int())
+                            / 100;
+        }
+
         amount = min(amount, hit_points);
         hit_points -= amount;
 
@@ -5129,6 +5137,9 @@ bool monster::can_polymorph() const
 
 bool monster::has_blood(bool /*temp*/) const
 {
+    if (petrified())
+        return false;
+
     return mons_has_blood(type);
 }
 

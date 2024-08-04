@@ -42,8 +42,9 @@ dex: 10
 levelup_stat_frequency: 4
 levelup_stats:
   - int
-# if you add any mutations here: you'll need to fix test/mut_species.lua, which
-# relies on DE having none.
+mutations:
+  1:
+    MUT_MANA_REGENERATION: 1
 recommended_jobs:
   - hedge wizard
   - conjurer

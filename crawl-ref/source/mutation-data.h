@@ -16,6 +16,7 @@ struct mutation_def
     const char* gain[3];    ///< Message when you gain the mutation.
     const char* lose[3];    ///< Message when you lose the mutation.
     tileidx_t   tile;       ///< Icon for the mutation.
+    const char* will_gain[3]; ///< Message on the 'A' screen future XL gain of the mutation.
 };
 
 struct mutation_category_def
@@ -749,6 +750,8 @@ static const mutation_def mut_data[] =
   {"Your magical nature develops, letting you fly evasively.",
    "", ""},
   {"", "", ""},
+  0,
+  {"Your magical flight will help you evade attacks. (EV + 4)"}
 },
 
 { MUT_ACROBATIC, 0, 1, mutflag::good, false,
@@ -965,6 +968,8 @@ static const mutation_def mut_data[] =
    "Your tail grows strong enough to constrict your enemies.", ""},
   {"Your lower body returns to normal.",
    "Your snake tail weakens and can no longer constrict your enemies.", ""},
+   0,
+   {0, "Your tail will grow strong enough to constrict your foes."}
 },
 
 // Naga and Draconian only
@@ -1112,6 +1117,8 @@ static const mutation_def mut_data[] =
    "Your thick fur recedes somewhat.",
    "Your shaggy fur recedes somewhat."},
   TILEG_MUT_GENERIC_GOOD_MUTATION,
+
+  {0, 0, "Your shaggy fur will keep you warm. (AC + 3, rC+)"}
 },
 
 { MUT_HIGH_MAGIC, 2, 3, mutflag::good, false,
@@ -2456,6 +2463,8 @@ static const mutation_def mut_data[] =
   {"You are afflicted with vampirism.", "You are afflicted with vampirism and can become a bat while bloodless.", ""},
   {"You feel a craving for blood.", "You can now turn into a vampire bat when bloodless.", ""},
   {"Your craving for blood subsides.", "You can no longer turn into a bat.", ""},
+  0,
+  {"", "You will be able to turn into a vampire bat when bloodless.", ""}
 },
 
 { MUT_MERTAIL, 0, 1, mutflag::good, true,
@@ -2594,6 +2603,139 @@ static const mutation_def mut_data[] =
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
 },
+
+// Makhleb-specific mutations
+
+{ MUT_MAKHLEB_DESTRUCTION_GEH, 0, 1, mutflag::good, false,
+  "Gehenna destruction",
+
+  {"You draw destruction from the endless fires of Gehenna.", "", ""},
+  {"You feel your soul grow hot with the fiery destruction of Gehenna.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MAJOR_DESTRUCTION_OF_GEHENNA,
+},
+
+{ MUT_MAKHLEB_DESTRUCTION_COC, 0, 1, mutflag::good, false,
+  "Cocytus destruction",
+
+  {"You draw destruction from the frigid wastes of Cocytus.", "", ""},
+  {"You feel your soul grow cold with the frigid destruction of Cocytus.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MAJOR_DESTRUCTION_OF_COCYTUS,
+},
+
+{ MUT_MAKHLEB_DESTRUCTION_TAR, 0, 1, mutflag::good, false,
+  "Tartarus destruction",
+
+  {"You draw destruction from the wailing grief of Tartarus.", "", ""},
+  {"You feel your soul grow tainted with the deathly destruction of Tartarus.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MAJOR_DESTRUCTION_OF_TARTARUS,
+},
+
+{ MUT_MAKHLEB_DESTRUCTION_DIS, 0, 1, mutflag::good, false,
+  "Dis destruction",
+
+  {"You draw destruction from the ruthless spite of Dis.", "", ""},
+  {"You feel your soul grow bitter with the corrosive destruction of Dis.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MAJOR_DESTRUCTION_OF_DIS,
+},
+
+{ MUT_MAKHLEB_MARK_HAEMOCLASM, 0, 1, mutflag::makhleb, false,
+  "Mark of Haemoclasm",
+
+  {"You bear the Mark of Haemoclasm.", "", ""},
+  {"Gore shall rain upon your enemies.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_HAEMOCLASM,
+},
+
+{ MUT_MAKHLEB_MARK_LEGION, 0, 1, mutflag::makhleb, false,
+  "Mark of the Legion",
+
+  {"You bear the Mark of the Legion.", "", ""},
+  {"The armies of chaos are now yours to lead.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_THE_LEGION,
+},
+
+{ MUT_MAKHLEB_MARK_CARNAGE, 0, 1, mutflag::makhleb, false,
+  "Mark of Carnage",
+
+  {"You bear the Mark of Carnage.", "", ""},
+  {"Your servants grow eager to unleash destruction.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_CARNAGE,
+},
+
+{ MUT_MAKHLEB_MARK_ANNIHILATION, 0, 1, mutflag::makhleb, false,
+  "Mark of Annihilation",
+
+  {"You bear the Mark of Annihilation.", "", ""},
+  {"You feel the destructive energies within you surge violently.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_ANNIHILATION,
+},
+
+{ MUT_MAKHLEB_MARK_TYRANT, 0, 1, mutflag::makhleb, false,
+  "Mark of the Tyrant",
+
+  {"You bear the Mark of the Tyrant.", "", ""},
+  {"Even fiends shall kneel before you now.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_THE_TYRANT,
+},
+
+{ MUT_MAKHLEB_MARK_CELEBRANT, 0, 1, mutflag::makhleb, false,
+  "Mark of the Celebrant",
+
+  {"You bear the Mark of the Celebrant.", "", ""},
+  {"Your suffering will be repaid in blood.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_THE_CELEBRANT,
+},
+
+{ MUT_MAKHLEB_MARK_EXECUTION, 0, 1, mutflag::makhleb, false,
+  "Mark of Execution",
+
+  {"You bear the Mark of Execution.", "", ""},
+  {"Murder takes root in your soul.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_EXECUTION,
+},
+
+{ MUT_MAKHLEB_MARK_ATROCITY, 0, 1, mutflag::makhleb, false,
+  "Mark of Atrocity",
+
+  {"You bear the Mark of Atrocity.", "", ""},
+  {"You will scour this world clean.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_ATROCITY,
+},
+
+{ MUT_MAKHLEB_MARK_FANATIC, 0, 1, mutflag::makhleb, false,
+  "Mark of the Fanatic",
+
+  {"You bear the Mark of the Fanatic.", "", ""},
+  {"You will become an instrument of Makhleb's will.", "", ""},
+  {"", "", ""},
+
+  TILEG_MUT_MARK_OF_THE_FANATIC,
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

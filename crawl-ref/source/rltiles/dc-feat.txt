@@ -390,6 +390,9 @@ dimension_edge DNGN_DIMENSION_EDGE
 ## The disco ball in pan_disco_hall.
 disco_ball DNGN_DISCO_BALL
 
+## The Orb of Zot's pedestal
+orb_dais DNGN_ORB_DAIS
+
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
 # (In response to error messages, basically.)
@@ -638,6 +641,7 @@ jiyva08
 jiyva09
 jiyva10
 jiyva11
+jiyva12
 fedhas DNGN_ALTAR_FEDHAS
 cheibriados DNGN_ALTAR_CHEIBRIADOS
 ashenzari DNGN_ALTAR_ASHENZARI
@@ -692,8 +696,11 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+%weight 8
 cache_of_fruit_0 DNGN_CACHE_OF_FRUIT
 cache_of_fruit_1
+%weight 10
+cache_of_fruit_2
 cache_of_meat_0 DNGN_CACHE_OF_MEAT
 
 %sdir dngn
@@ -844,6 +851,10 @@ monster_threat_trivial THREAT_TRIVIAL
 monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
+ghost_threat_trivial THREAT_GHOST_TRIVIAL
+ghost_threat_easy THREAT_GHOST_EASY
+ghost_threat_tough THREAT_GHOST_TOUGH
+ghost_threat_nasty THREAT_GHOST_NASTY
 monster_threat_unusual THREAT_UNUSUAL
 
 travel_exclusion TRAVEL_EXCLUSION_BG

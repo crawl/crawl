@@ -553,7 +553,11 @@ static vector<string> _randart_propnames(const item_def& item,
 
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
+    {
         entry = get_unrand_entry(item.unrand_idx);
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
+            propnames.push_back("chaos,");
+    }
     const bool skip_ego = is_unrandom_artefact(item)
                           && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
 
@@ -1617,6 +1621,10 @@ static void _append_weapon_stats(string &description, const item_def &item)
                 (brand_desc.empty() ? "\n" : ""),
                 _format_dbrand(entry->dbrand).c_str());
         }
+        // XXX: Would be nice if this wasn't duplicated
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
+            description += "\nChaotic:    Each hit has a different, random effect.";
+
         // XX spacing following brand and dbrand for randarts/unrands is a bit
         // inconsistent with other object types
     }
@@ -5582,6 +5590,25 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     return description.to_colour_string();
 }
 
+static void _describe_aux_hit_chance(ostringstream &result, vector<string>& auxes, int chance)
+{
+    result << " and " << chance << "% to hit with your ";
+    for (size_t i = 0; i < auxes.size(); ++i)
+    {
+        if (i > 0 && auxes.size() > 2)
+        {
+            if (i < auxes.size() - 1)
+                result << ", ";
+            else
+                result << ", and ";
+        }
+        else if (i == 1 && auxes.size() == 2)
+            result << " and ";
+
+        result << auxes[i];
+    }
+}
+
 /**
  * Calculate and describe the % chance of a player hitting the given monster.
  *
@@ -5619,6 +5646,17 @@ void describe_to_hit(const monster_info &mi, ostringstream &result,
         melee_attack attk(&you, nullptr);
         acc_pct = to_hit_pct(mi, source ? *source : attk, true, false,
                              distance_from);
+
+        describe_hit_chance(acc_pct, result, weapon, verbose, distance_from);
+
+        vector<string> aux_names = get_player_aux_names();
+        if (!aux_names.empty())
+        {
+            acc_pct = to_hit_pct_aux(mi, attk);
+            _describe_aux_hit_chance(result, aux_names, acc_pct);
+        }
+
+        return;
     }
     else if (weapon->base_type == OBJ_MISSILES)
     {

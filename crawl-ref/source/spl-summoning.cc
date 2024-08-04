@@ -203,6 +203,14 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
         old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
         old_dog->lose_ench_levels(ENCH_POISON, 1);
         old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+
+        // Give our familiar a small amount of extra duration, if its duration
+        // is currently low, to avoid imbuing it and then having it immediately
+        // poof before it can even do anything with the buff.
+        mon_enchant abj = old_dog->get_ench(ENCH_ABJ);
+        if (abj.duration < 110)
+            abj.duration += random_range(60, 90);
+        old_dog->update_ench(abj);
     }
 
     return spret::success;
@@ -931,7 +939,7 @@ spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
     mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3, god,
                                 SPELL_SUMMON_BLAZEHEART_GOLEM);
     golem.flags &= ~MG_AUTOFOE; // !!!
-    golem.hd = 6 + div_rand_round(pow, 12);
+    golem.hd = 6 + div_rand_round(pow, 10);
 
     monster* mons = (create_monster(golem));
 
@@ -971,96 +979,6 @@ spret cast_call_imp(int pow, god_type god, bool fail)
         _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return spret::success;
-}
-
-static bool _summon_demon_wrapper(int pow, god_type god, int spell,
-                                  monster_type mon, int dur, bool friendly,
-                                  bool charmed)
-{
-    bool success = false;
-
-    if (monster *demon = create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY :
-                       charmed ? BEH_CHARMED
-                               : BEH_HOSTILE,
-                      you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
-            .set_summoned(&you, dur, spell, god)))
-    {
-        success = true;
-
-        mpr("A demon appears!");
-
-        if (!friendly)
-        {
-            mpr(charmed ? "You don't feel so good about this..."
-                        : "It doesn't seem very happy.");
-        }
-        else if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
-                || mon == MONS_IRON_IMP || mon == MONS_SHADOW_IMP)
-        {
-            _monster_greeting(demon, "_friendly_imp_greeting");
-        }
-
-        if (charmed && !friendly)
-        {
-            int charm_dur = random_range(15 + pow / 14, 27 + pow / 11)
-                            * BASELINE_DELAY;
-
-            mon_enchant charm = demon->get_ench(ENCH_CHARM);
-            charm.duration = charm_dur;
-            demon->update_ench(charm);
-
-            // Ensure that temporarily-charmed demons will outlast their charm
-            mon_enchant abj = demon->get_ench(ENCH_ABJ);
-            if (charm.duration + 100 > abj.duration)
-            {
-                abj.duration = charm.duration + 100;
-                demon->update_ench(abj);
-            }
-
-            // Affects messaging, and stuns demon a turn upon charm wearing off
-            demon->props[CHARMED_DEMON_KEY].get_bool() = true;
-        }
-    }
-
-    return success;
-}
-
-static bool _summon_common_demon(int pow, god_type god, int spell)
-{
-    const int chance = 70 - (pow / 3);
-    monster_type type = MONS_PROGRAM_BUG;
-
-    if (x_chance_in_y(chance, 100))
-        type = random_demon_by_tier(4);
-    else
-        type = random_demon_by_tier(3);
-
-    return _summon_demon_wrapper(pow, god, spell, type,
-                                 min(2 + (random2(pow) / 4), 6),
-                                 true, false);
-}
-
-bool summon_demon_type(monster_type mon, int pow, god_type god,
-                       int spell, bool friendly)
-{
-    return _summon_demon_wrapper(pow, god, spell, mon,
-                                 min(2 + (random2(pow) / 4), 6),
-                                 friendly, false);
-}
-
-spret cast_summon_demon(int pow)
-{
-    // Don't prompt here, since this is invoked automatically by the
-    // obsidian axe. The player shouldn't have control.
-
-    mpr("You open a gate to Pandemonium!");
-
-    if (!_summon_common_demon(pow, GOD_NO_GOD, SPELL_SUMMON_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -3049,6 +2967,21 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     return spret::success;
 }
 
+static int _hoarfrost_cannon_hd(int pow, bool random = true)
+{
+    if (random)
+        return 4 + div_rand_round(pow, 20);
+    return 4 + pow / 20;
+}
+
+dice_def hoarfrost_cannonade_damage(int pow, bool finale)
+{
+    if (finale)
+        return zap_damage(ZAP_HOARFROST_BULLET_FINALE, _hoarfrost_cannon_hd(pow, false) * 12, true, false);
+    else
+        return zap_damage(ZAP_HOARFROST_BULLET, _hoarfrost_cannon_hd(pow, false) * 12, true, false);
+}
+
 spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 {
     fail_check();
@@ -3063,7 +2996,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
                                     SPELL_HOARFROST_CANNONADE);
     cannon.flags |= MG_FORCE_PLACE;
-    cannon.hd = 4 + div_rand_round(pow, 20);
+    cannon.hd = _hoarfrost_cannon_hd(pow);
 
     // Make both cannons share the same duration
     const int dur = random_range(16, 22) * BASELINE_DELAY;
@@ -3258,10 +3191,22 @@ bool hellfire_mortar_active(const actor& agent)
     return false;
 }
 
-bool make_soul_wisp(const actor& agent, monster& victim)
+bool make_soul_wisp(const actor& agent, actor& victim)
 {
-    if (!mons_can_be_spectralised(victim))
+    if (victim.is_monster() && !mons_can_be_spectralised(*victim.as_monster()))
         return false;
+
+    // Don't try to create a wisp from a monster who's already had one made from
+    // them. (This causes weird messaging and removes the Weak effect).
+    if (victim.is_monster() && victim.props.exists(SOUL_SPLINTERED_KEY))
+    {
+        if (agent.is_player() && victim.observable())
+        {
+            mprf("A fragment of %s is already outside their body!",
+                    victim.name(DESC_THE).c_str());
+        }
+        return false;
+    }
 
     vector<coord_def> spots;
     for (adjacent_iterator ai(victim.pos()); ai; ++ai)
@@ -3273,7 +3218,11 @@ bool make_soul_wisp(const actor& agent, monster& victim)
         }
     }
     if (spots.size() <= 0)
+    {
+        if (agent.is_player())
+            mpr("There's no room for the soul wisp to form!");
         return false;
+    }
 
     if (you.see_cell(victim.pos()))
     {
@@ -3288,13 +3237,14 @@ bool make_soul_wisp(const actor& agent, monster& victim)
     mg.flags |= MG_FORCE_PLACE;
 
     // Damage improves when extracted from stronger enemies, but they are always fragile.
-    mg.hd = 1 + victim.get_experience_level();
-    mg.hp = random_range(7, 11);
+    mg.hd = 2 + div_rand_round(victim.get_experience_level(), 2);
+    mg.hp = random_range(5, 8);
 
     monster* wisp = create_monster(mg);
 
     wisp->add_ench(mon_enchant(ENCH_HAUNTING, 1, &victim, INFINITE_DURATION));
     victim.weaken(&agent, wisp->get_ench(ENCH_ABJ).duration / 10);
+    victim.props[SOUL_SPLINTERED_KEY]= true;
 
     // Let wisp act immediately (so that if it appears behind the enemy, the
     // enemy won't simply move out of range first).

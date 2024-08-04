@@ -843,7 +843,7 @@ enum monster_type                      // env.mons[].type
     MONS_ANTAEUS,
     MONS_ERESHKIGAL,
     MONS_ROYAL_JELLY,
-    MONS_THE_ENCHANTRESS,
+    MONS_ENCHANTRESS,
     // the four Pan lords, order must match runes
     MONS_MNOLEG,
     MONS_LOM_LOBON,
@@ -968,6 +968,7 @@ enum monster_type                      // env.mons[].type
     MONS_FOXFIRE,
     MONS_BOULDER,
     MONS_BLAZEHEART_CORE,
+    MONS_GLOBE_OF_ANNIHILATION,
     MONS_PILE_OF_DEBRIS,
 #endif
     MONS_PILLAR_OF_SALT,
@@ -1267,6 +1268,7 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_PUPPET,
     MONS_SHADOW_PRISM,
     MONS_SOUL_WISP,
+    MONS_GLOBE_OF_ANNIHILATION,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

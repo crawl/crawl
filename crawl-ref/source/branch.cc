@@ -61,6 +61,7 @@ static const branch_type logical_branch_order[] = {
     BRANCH_DESOLATION,
     BRANCH_GAUNTLET,
     BRANCH_ARENA,
+    BRANCH_CRUCIBLE,
 };
 COMPILE_CHECK(ARRAYSZ(logical_branch_order) == NUM_BRANCHES);
 
@@ -88,6 +89,7 @@ static const branch_type danger_branch_order[] = {
     BRANCH_CRYPT,
     BRANCH_DESOLATION,
     BRANCH_ABYSS,
+    BRANCH_CRUCIBLE,
     BRANCH_WIZLAB,
     BRANCH_SLIME,
     BRANCH_DEPTHS,

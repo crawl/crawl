@@ -24,15 +24,19 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "ouch.h"
+#include "output.h"
 #include "shout.h"
 #include "stepdown.h"
 #include "terrain.h"
+#ifdef USE_TILE
+    #include "tilepick.h"
+#endif
 #include "viewchar.h"
 
 static void _fuzz_direction(const actor *caster, monster& mon, int pow);
 
 spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
-                     int foe, bool fail, bool needs_tracer)
+                     int foe, bool fail, bool needs_tracer, monster_type orb_type)
 {
     const bool is_player = caster->is_player();
     if (beam && is_player && needs_tracer
@@ -46,7 +50,7 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     int mtarg = !beam ? MHITNOT :
                 beam->target == you.pos() ? int{MHITYOU} : env.mgrid(beam->target);
 
-    monster *mon = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
+    monster *mon = place_monster(mgen_data(orb_type,
                 (is_player) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 coord_def(),
@@ -55,6 +59,19 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     {
         mprf(MSGCH_ERROR, "Failed to spawn projectile.");
         return spret::abort;
+    }
+
+    // Set up appearance based on our destruction's element
+    if (orb_type == MONS_GLOBE_OF_ANNIHILATION)
+    {
+        if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+            mon->colour = LIGHTBLUE;
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_DIS))
+            mon->colour = LIGHTGREY;
+        else if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_GEH))
+            mon->colour = LIGHTRED;
+        if (you.has_mutation(MUT_MAKHLEB_DESTRUCTION_TAR))
+            mon->colour = CYAN;
     }
 
     if (beam)
@@ -71,7 +88,8 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         mon->props[IOOD_Y].get_float() = beam->ray.r.start.y - 0.5;
         mon->props[IOOD_VX].get_float() = beam->ray.r.dir.x;
         mon->props[IOOD_VY].get_float() = beam->ray.r.dir.y;
-        _fuzz_direction(caster, *mon, pow);
+        _fuzz_direction(caster, *mon,
+                        orb_type == MONS_GLOBE_OF_ANNIHILATION ? 80 : pow);
     }
     else
     {
@@ -272,6 +290,9 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 // Alas, too much differs to reuse beam shield blocks :(
 static bool _iood_shielded(monster& mon, actor &victim)
 {
+    if (mon.type == MONS_GLOBE_OF_ANNIHILATION)
+        return false;
+
     if (victim.is_player() && you.duration[DUR_DIVINE_SHIELD])
         return true;
 
@@ -300,22 +321,19 @@ dice_def iood_damage(int pow, int dist, bool random)
                               : (flat + pow) / 12 );
 }
 
-static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
+static void _iood_common_beam_setup(monster& orb, const coord_def& pos, bolt& beam)
 {
-    bolt beam;
-    beam.name = "orb of destruction";
-    beam.flavour = BEAM_DESTRUCTION;
-    beam.attitude = mon.attitude;
+    beam.attitude = orb.attitude;
 
-    actor *caster = actor_by_mid(mon.summoner);
+    actor *caster = actor_by_mid(orb.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
-        caster = &mon;  // friendliness is correct)
+        caster = &orb;  // friendliness is correct)
     beam.set_agent(caster);
-    if (mon.props.exists(IOOD_REFLECTOR))
+    if (orb.props.exists(IOOD_REFLECTOR))
     {
         beam.reflections = 1;
 
-        const mid_t refl_mid = mon.props[IOOD_REFLECTOR].get_int64();
+        const mid_t refl_mid = orb.props[IOOD_REFLECTOR].get_int64();
 
         if (refl_mid == MID_PLAYER)
             beam.reflector = MID_PLAYER;
@@ -326,17 +344,24 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
             beam.reflector = rmon ? refl_mid : caster->mid;
         }
     }
-    beam.colour = WHITE;
-    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
+
     beam.range = 1;
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
-    beam.source_name = mon.props[IOOD_CASTER].get_string();
+    beam.source_name = orb.props[IOOD_CASTER].get_string();
+}
+
+static void _iood_hit_setup(monster& orb, bolt& beam)
+{
+    beam.name = "orb of destruction";
+    beam.flavour = BEAM_DESTRUCTION;
+    beam.colour = WHITE;
+    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.origin_spell = SPELL_IOOD;
 
-    const int pow = mon.props[IOOD_POW].get_short();
-    const int dist = mon.props[IOOD_DIST].get_int();
+    const int pow = orb.props[IOOD_POW].get_short();
+    const int dist = orb.props[IOOD_DIST].get_int();
     ASSERT(dist >= 0);
     beam.damage = iood_damage(pow, dist);
 
@@ -346,11 +371,72 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
         beam.hit_verb = "weakly hits";
     beam.ex_size = 1;
     beam.loudness = 7;
+}
+
+static void _annihilation_explode_setup(monster& globe, bolt& beam)
+{
+    const int pow = globe.props[IOOD_POW].get_short();
+    const int dist = globe.props[IOOD_DIST].get_int();
+
+    // Does full damage beyond distance 1. (The explosion getting large is
+    // motivation enough to blast from further away.)
+    makhleb_setup_destruction_beam(beam, dist > 1 ? pow : pow / 2, true);
+
+    if (dist >= 4)
+        beam.ex_size = 3;
+    else if (dist >= 2)
+        beam.ex_size = 2;
+    else if (dist >= 1)
+        beam.ex_size = 1;
+
+    // If we've hit a wall or something similar, explode at the globe's
+    // current location instead of 'inside' the wall (which will result in no
+    // explosion at all)
+    if (cell_is_solid(beam.source))
+    {
+        beam.source = globe.pos();
+        beam.target = globe.pos();
+    }
+
+    if (beam.ex_size > 0)
+    {
+        beam.is_explosion = true;
+        beam.hit_verb = "blasts";
+    }
+    else
+        beam.hit_verb = "feebly blasts";
+
+    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.name = "annihilating " + beam.get_short_name();
+}
+
+static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
+{
+    bolt beam;
+    _iood_common_beam_setup(mon, pos, beam);
+
+    if (mon.type == MONS_GLOBE_OF_ANNIHILATION)
+    {
+        _annihilation_explode_setup(mon, beam);
+        if (beam.ex_size > 0)
+            big_boom = true;
+    }
+    else
+        _iood_hit_setup(mon, beam);
+
+    if (mon.type == MONS_GLOBE_OF_ANNIHILATION && you.can_see(mon) && big_boom)
+        simple_monster_message(mon, " detonates violently!");
 
     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 
     if (big_boom)
+    {
+        // Update orb position so that the explosion looks centered in the
+        // right place.
+        redraw_screen();
+        update_screen();
         beam.explode(true, false);
+    }
     else
         beam.fire();
 
@@ -437,6 +523,12 @@ move_again:
     mon.props[IOOD_Y] = y;
     mon.props[IOOD_DIST].get_int()++;
 
+    // Make globe of annihilation tile grow based on distance travelled
+#ifdef USE_TILE
+    if (mon.type == MONS_GLOBE_OF_ANNIHILATION)
+        mon.props[TILE_NUM_KEY].get_short() = mon.props[IOOD_DIST].get_int();
+#endif
+
     const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))
     {
@@ -459,7 +551,23 @@ move_again:
         return false;
 
     if (!no_trail)
-        place_cloud(CLOUD_MAGIC_TRAIL, starting_pos, 2 + random2(3), &mon);
+    {
+        if (mon.type == MONS_ORB_OF_DESTRUCTION)
+            place_cloud(CLOUD_MAGIC_TRAIL, starting_pos, 2 + random2(3), &mon);
+        else if (mon.type == MONS_GLOBE_OF_ANNIHILATION)
+        {
+            // Flavor trail based on the type of destruction involved
+            cloud_type ctype = CLOUD_FLAME; // Gehenna
+            if (mon.colour == LIGHTGREY)
+                ctype = CLOUD_DUST;         // Dis
+            else if (mon.colour == LIGHTBLUE)
+                ctype = CLOUD_ELECTRICITY;  // Cocytus
+            else if (mon.colour == CYAN)
+                ctype = CLOUD_MIST;         // Tartarus
+
+            place_cloud(ctype, starting_pos, 2 + random2(3), &mon);
+        }
+    }
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
@@ -475,7 +583,9 @@ move_again:
         monster* mons = (victim && victim->is_monster()) ?
             (monster*) victim : 0;
 
-        if (mons && mons_is_projectile(victim->type))
+        // Handle collisions between orbs of destruction specifically.
+        if (mons && mons->type == MONS_ORB_OF_DESTRUCTION
+                 && mon.type == MONS_ORB_OF_DESTRUCTION)
         {
             // Weak orbs just fizzle instead of exploding.
             if (mons->props[IOOD_DIST].get_int() < 2

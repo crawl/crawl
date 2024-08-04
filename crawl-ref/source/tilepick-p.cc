@@ -7,6 +7,7 @@
 
 #include "artefact.h"
 #include "describe.h"
+#include "duration-type.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -504,6 +505,18 @@ tileidx_t tileidx_player()
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;    break;
         case SP_RED_DRACONIAN:
         default:                   ch = TILEP_TRAN_DRAGON;          break;
+        }
+        break;
+    }
+    case transformation::slaughter:
+    {
+        switch (you.species)
+        {
+        case SP_ARMATAUR: ch = TILEP_TRAN_SLAUGHTER_ARMATAUR;  break;
+        case SP_NAGA:     ch = TILEP_TRAN_SLAUGHTER_NAGA;      break;
+        case SP_FELID:    ch = TILEP_TRAN_SLAUGHTER_FELID;     break;
+        case SP_OCTOPODE: ch = TILEP_TRAN_SLAUGHTER_OCTOPODE;  break;
+        default:          ch = TILEP_TRAN_SLAUGHTER_HUMANOID;  break;
         }
         break;
     }
@@ -1289,6 +1302,12 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     }
     ptr[0] = '\n'; // erase the last ':'
     ptr[1] = 0;
+}
+
+bool player_uses_monster_tile()
+{
+    return Options.tile_use_monster != MONS_0
+            || you.duration[DUR_EXECUTION];
 }
 
 #endif

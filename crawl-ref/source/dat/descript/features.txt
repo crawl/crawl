@@ -393,6 +393,11 @@ A cursed staircase leading up, imbued with magic to prevent any return back
 down the stairs. Adventurers taking this passage will need to find a return
 stairway somewhere else on the level where they arrive.
 %%%%
+The orb dais
+
+A raised pedestal upon which rests the fabled Orb of Zot. More ancient than even
+the dungeon itself, it cannot be destroyed or transformed by any means.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################
@@ -1187,6 +1192,13 @@ defaced; not a single distinguishing feature remains.
 A broken fleshy orifice
 
 It seems to be oozing quietly. Best not to touch it.
+%%%%
+# Crucible of Flesh
+An unnaturally hard bloodstone wall
+
+An indestructible bulwark, wrought from blood and tempered in the suffering of
+mortal lives beyond count.
+%%%%
 ########################################################################
 ### Sprint
 ########################################################################

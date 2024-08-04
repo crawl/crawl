@@ -182,7 +182,7 @@ static const cloud_data clouds[] = {
     // CLOUD_PETRIFY,
     { "calcifying dust",  nullptr,              // terse, verbose name
       WHITE,                                    // colour
-      { TILE_CLOUD_PETRIFY, CTVARY_RANDOM },    // tile
+      { TILE_CLOUD_PETRIFY, CTVARY_DUR },       // tile
       BEAM_PETRIFYING_CLOUD, {},                // beam_effect & damage
       true,                                     // opacity
     },

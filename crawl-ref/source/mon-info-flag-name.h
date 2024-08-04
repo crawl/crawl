@@ -148,4 +148,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MAGNETISED, "magnetised", "covered in magnetic dust", "magnetised"},
     { MB_RIMEBLIGHT, "rimeblight", "afflicted by rimeblight", "rimeblight"},
     { MB_SHADOWLESS, "shadowless", "missing a shadow", "shadowless"},
+    { MB_FROZEN_IN_TERROR, "paralysed with fear", "paralysed with fear", "paralysed with fear"},
+    { MB_SOUL_SPLINTERED, "soul-splintered", "soul-splintered", "soul-splintered"},
 };

@@ -17,8 +17,8 @@ monster *clone_mons(const monster* orig, bool quiet = false,
 monster *clone_mons(const monster* orig, bool quiet,
                     bool* obvious, mon_attitude_type mon_att);
 
-void mons_summon_illusion_from(monster* mons, actor *foe,
+int mons_summon_illusion_from(monster* mons, actor *foe,
                                spell_type spell_cast = SPELL_NO_SPELL,
-                               int card_power = -1);
+                               int card_power = -1, bool xom = false);
 
 bool actor_is_illusion_cloneable(actor *target);

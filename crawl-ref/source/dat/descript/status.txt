@@ -385,9 +385,9 @@ randomly blinked away from you.
 %%%%
 Fugue status
 
-Your weapon is temporarily enhanced by the souls of the damned, providing slaying
-bonuses that increase with every enemy killed. At the maximum bonus, foes adjacent
-to your attacks' targets suffer pain damage.
+Your weapon is temporarily enhanced by the souls of the damned, providing
+slaying bonuses that increase with every enemy killed. At the maximum bonus,
+foes adjacent to your attacks' targets suffer pain damage.
 %%%%
 Debt status
 
@@ -976,10 +976,10 @@ Rev* status
 You're limbered up. Your weapon-based and unarmed attacks are at full strength,
 and will remain so as long as you keep swinging and for a short while afterward.
 %%%%
-Stiff status
+-Gavotte status
 
-Your legs have stiffened up from lack of motion, making your next move twice as
-slow as usual. This only affects movement actions.
+Gravity around you is still unstable, and you cannot cast Gell's Gavotte again
+until it settles back down.
 %%%%
 Fusillade status
 
@@ -1000,3 +1000,63 @@ Ruin status
 
 You are marked with the sign of ruin, causing any melee attacks which damage you
 to heavily drain and randomly slow, weaken, or blind you.
+%%%%
+-GClaw status
+
+You have not yet harvested enough death to cast Grave Claw again.
+%%%%
+Legion status
+
+You are beckoning the legions of chaos; short-lived demons will be periodically
+summoned near you.
+%%%%
+-Bloodrite status
+
+You have recently performed an infernal blood rite and must fully heal before
+being able to perform another.
+%%%%
+Execution status
+
+You are sharing your body with an Executioner, giving you a powerful auxiliary
+attack that also triggers when you dodge attacks, as well as letting you rampage
+towards foes. This will expire quickly if you stop attacking.
+%%%%
+Destr status
+
+Your Unleash Destruction is growing more powerful as you use it consecutively.
+%%%%
+Destr+ status
+
+<Destr status>
+%%%%
+Destr++ status
+
+<Destr status>
+%%%%
+Destr+++ status
+
+<Destr status>
+If you use it again, it will unleash a salvo of additional bolts aimed at random
+targets and this bonus will reset.
+%%%%
+Slaughter status
+
+You are an instrument of Makhleb's destructive will. Your power and defenses are
+greatly enhanced, but you must endure the Crucible of Flesh once this effect
+ends.
+%%%%
+Pact status
+
+Makhleb has come to collect on certain promises made to them.
+{{ if you.religion == "Makhleb" then
+        return "Fulfill your oath as their instrument by slaying the terrified " ..
+               "mortals that have been gathered here, and they may grant you " ..
+               "freedom once again."
+   else
+        return "Fight and bleed and you may be granted freedom once again."
+    end}}
+%%%%
+Escape! status
+
+A path out of the Crucible has opened. Find it and claim your freedom again. For
+a time.

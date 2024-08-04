@@ -168,7 +168,6 @@ struct bolt
     mid_t reflector = MID_NOBODY; // latest thing to reflect beam
 
     bool use_target_as_pos = false; // pos() should return ::target()
-    bool auto_hit = false;
 
     ray_def     ray;             // shoot on this specific ray
 

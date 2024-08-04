@@ -1270,6 +1270,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                   0, 1);
     case SPELL_INNER_FLAME:
         return make_unique<targeter_inner_flame>(&you, range);
+    case SPELL_SOUL_SPLINTER:
+        return make_unique<targeter_soul_splinter>(&you, range);
     case SPELL_SIMULACRUM:
         return make_unique<targeter_simulacrum>(&you, range);
     case SPELL_LEDAS_LIQUEFACTION:
@@ -2949,6 +2951,14 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
         case SPELL_RIMEBLIGHT:
             return describe_rimeblight_damage(pow, terse);
+        case SPELL_HOARFROST_CANNONADE:
+        {
+            dice_def shot_dam = hoarfrost_cannonade_damage(pow, false);
+            dice_def finale_dam = hoarfrost_cannonade_damage(pow, true);
+
+            return make_stringf("%dd%d/%dd%d",
+                shot_dam.num, shot_dam.size, finale_dam.num, finale_dam.size);
+        }
         default:
             break;
     }

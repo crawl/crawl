@@ -104,6 +104,9 @@ void InventoryRegion::pack_buffers()
             if (item.flag & TILEI_FLAG_CURSOR)
                 m_buf.add_icons_tile(TILEI_CURSOR, x, y);
 
+            if (item.flag & TILEI_FLAG_CHAOTIC)
+                m_buf.add_special_tile(TILE_MODIFIER_CHAOTIC, x, y, 0, 0);
+
             if (item.tile)
                 m_buf.add_main_tile(item.tile, x, y);
 
@@ -543,6 +546,8 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.flag |= TILEI_FLAG_CURSE;
     if (item.pos.x != -1)
         desc.flag |= TILEI_FLAG_FLOOR;
+    if (testbits(item.flags, ISFLAG_CHAOTIC))
+        desc.flag |= TILEI_FLAG_CHAOTIC;
 }
 
 void InventoryRegion::update()

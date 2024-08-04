@@ -199,6 +199,7 @@ struct mgen_data
                || cls == MONS_HOARFROST_CANNON
                || cls == MONS_PILE_OF_DEBRIS
                || cls == MONS_HELLFIRE_MORTAR
+               || cls == MONS_GLOBE_OF_ANNIHILATION
                || summon_type == SPELL_ANIMATE_DEAD
                || summon_type == SPELL_DEATH_CHANNEL
                || summon_type == SPELL_BIND_SOULS
