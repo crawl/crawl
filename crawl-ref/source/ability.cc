@@ -319,7 +319,6 @@ static int _lookup_ability_slot(ability_type abil);
 static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                          bolt beam);
 static void _pay_ability_costs(const ability_def& abil);
-static int _scale_piety_cost(ability_type abil, int original_cost);
 
 static vector<ability_def> &_get_ability_list()
 {
@@ -3949,18 +3948,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     return spret::success;
 }
 
-// [ds] Increase piety cost for god abilities that are particularly
-// overpowered in Sprint. Yes, this is a hack. No, I don't care.
-static int _scale_piety_cost(ability_type abil, int original_cost)
-{
-    // Abilities that have aroused our ire earn 2.5x their classic
-    // Crawl piety cost.
-    return (crawl_state.game_is_sprint()
-            && abil == ABIL_TROG_BROTHERS_IN_ARMS)
-           ? div_rand_round(original_cost * 5, 2)
-           : original_cost;
-}
-
 static void _pay_ability_costs(const ability_def& abil)
 {
     // wall jump handles its own timing, because it can be instant if
@@ -3974,8 +3961,7 @@ static void _pay_ability_costs(const ability_def& abil)
     else if (abil.ability != ABIL_WU_JIAN_WALLJUMP)
         you.turn_is_over = true;
 
-    const int piety_cost =
-        _scale_piety_cost(abil.ability, abil.piety_cost.cost());
+    const int piety_cost = abil.piety_cost.cost();
     const int hp_cost    = abil.get_hp_cost();
     const int mp_cost = abil.get_mp_cost();
 
