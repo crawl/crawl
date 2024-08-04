@@ -142,8 +142,6 @@ bool monster_habitable_grid(const monster* mon,
  * @param wanted_grid if == DNGN_UNSEEN, or if the monster can't survive on it,
  *                    ignored. Otherwise, return false even if actual_grid is
  *                    survivable, if actual_grid isn't similar to wanted_grid.
- * @param flies if true, treat the monster as flying even if the monster class
- *              can't usually fly.
  */
 bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
