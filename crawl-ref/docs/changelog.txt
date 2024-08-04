@@ -199,6 +199,7 @@ Gods
   blinded.
 * Makhleb, Vehumet, and the Shining One are now much more likely to restore
   HP or MP on eligible kills made while at low piety.
+* Trog's Brothers in Arms ability no longer costs extra piety in Sprint.
 * Most gods now comment upon or otherwise influence the player's death.
 
 Interface and Options
