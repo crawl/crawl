@@ -398,9 +398,9 @@ You briefly grow another mouth.
 %%%%
 Xom hair
 
-Your hair briefly feels incredibly bushy.
+Your eyebrows briefly feel incredibly bushy.
 
-Your hair wriggles.
+Your eyebrows wriggle.
 
 You briefly grow a large moustache and beard.
 %%%%
