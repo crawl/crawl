@@ -16,8 +16,9 @@ Artefacts
     reduced damage to unholy foes and extra damage to holy foes.
   - Returning: Sword of the Doom Knight, which loses pain brand to instead
     make its targets lose 10% of their maximum health on hit.
-  - New: Charlatan's Orb, an orb which boosts power based on Evocations but has
-    the translocations and stealth downside of the real Orb of Zot.
+  - New: Charlatan's Orb, an orb which boosts your other skills by 20% of your
+    base Evocations but has the translocations and stealth downside of the real
+    Orb of Zot.
   - New: Gloves of the Gadgeteer, fragile gloves that boost evoker recharge
     rate, wand damage, and give a chance to save wand charges on use.
 * The Cloak of the Thief is now +0, but gives noise suppression instead of
