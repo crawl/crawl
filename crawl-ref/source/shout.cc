@@ -572,7 +572,6 @@ static bool _issue_order(int keyn, int &mons_targd)
                 mpr("Stop fighting!");
             break;
 
-        case 'w':
         case 'g':
             mpr("Guard this area!");
             mons_targd = MHITNOT;
@@ -737,8 +736,8 @@ void issue_orders()
 
     you.turn_is_over = true;
     you.pet_target = mons_targd;
-    // Allow patrolling for "Stop fighting!" and "Wait here!"
-    _set_friendly_foes(keyn == 's' || keyn == 'w');
+    // Allow patrolling for "Stop fighting!"
+    _set_friendly_foes(keyn == 's');
 
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
     {
