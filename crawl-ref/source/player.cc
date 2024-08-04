@@ -6210,14 +6210,11 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     else if (ash_has_skill_boost(sk))
             level = ash_skill_boost(sk, scale);
 
-    if (player_equip_unrand(UNRAND_CHARLATANS_ORB) && sk != SK_EVOCATIONS)
-        level += skill(SK_EVOCATIONS, 10, true, false) * scale / 50;
+    if (player_equip_unrand(UNRAND_CHARLATANS_ORB) && sk == SK_EVOCATIONS)
+        level = div_rand_round(level * 3, 2);
 
     if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        level += 5 * scale;
-
-    if (level > MAX_SKILL_LEVEL * scale)
-        level = MAX_SKILL_LEVEL * scale;
+        level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
 
     return level;
 }

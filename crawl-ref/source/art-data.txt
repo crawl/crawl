@@ -1831,10 +1831,10 @@ OBJ:      OBJ_ARMOUR/ARM_ORB
 TILE:     urand_charlatan
 TILE_EQ:  charlatans_orb
 COLOUR:   MAGENTA
-INSCRIP: orb Charlatan
+INSCRIP: orb Evoboost
 DBRAND:  It massively reduces your stealth.
 +It interferes with translocations, delaying teleports.
-+Charlatan: It boosts your other skills by 20% of your base Evocations skill.
++Evoboost:    It boosts the power of your evoked items.
 
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY
