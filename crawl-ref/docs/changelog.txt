@@ -1,4 +1,4 @@
-Stone Soup 0.32 (through 0.32-a0-1984-g19b87b1804)
+Stone Soup 0.32 (through 0.32-a0-1996-g48cd30fd63)
 --------------------------
 
 Highlights
@@ -16,7 +16,7 @@ Artefacts
     reduced damage to unholy foes and extra damage to holy foes.
   - Returning: Sword of the Doom Knight, which loses pain brand to instead
     make its targets lose 10% of their maximum health on hit.
-  - New: Charlatan's Orb, an orb which boosts Evocations power but has
+  - New: Charlatan's Orb, an orb which boosts power based on Evocations but has
     the translocations and stealth downside of the real Orb of Zot.
   - New: Gloves of the Gadgeteer, fragile gloves that boost evoker recharge
     rate, wand damage, and give a chance to save wand charges on use.
