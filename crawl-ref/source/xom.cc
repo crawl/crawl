@@ -3729,7 +3729,7 @@ static void _xom_summon_hostiles(int sever)
 // the player can make something of it anyway.
 static void _xom_send_in_clones(int /*sever*/)
 {
-    const int friendly_count = 1;
+    const int friendly_count = you.allies_forbidden() ? 0 : 1;
     const int hostile_count = 2;
     int hostiles_summon_count = 0;
     int friendly_summon_count = 0;
@@ -3756,7 +3756,7 @@ static void _xom_send_in_clones(int /*sever*/)
             mon->attitude = ATT_HOSTILE;
             power = -1;
         }
-        else if (!you.allies_forbidden())
+        else
         {
             mon->attitude = ATT_FRIENDLY;
             power = 0;
