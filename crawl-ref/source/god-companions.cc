@@ -1121,17 +1121,22 @@ string apostle_short_description(int slot)
     const apostle_type atype
         = static_cast<apostle_type>(apostle.props[APOSTLE_TYPE_KEY].get_int());
 
-    string str;
+    string status;
+
+    if (slot == 0)
+        status = "<green>**Available to recruit**</green>";
+    else if (!beogh_apostle_is_alive(slot))
+        status = "<lightred>**DEAD**</lightred>";
+    else if (apostle_d.state == STATE_BANISHED)
+        status = "<magenta>**BANISHED**</magenta>";
 
     // Make title line
-    str = make_stringf("%s (<%s>%s</%s>)     %s\n",
+    string str = make_stringf("%s (<%s>%s</%s>)     %s\n",
         apostle.name(DESC_PLAIN, true).c_str(),
         _apostle_type_colours[atype],
         apostle_type_names[atype].c_str(),
         _apostle_type_colours[atype],
-        slot > 0 ? beogh_apostle_is_alive(slot) ? ""
-                                                : "<lightred>**DEAD**</lightred>"
-                 : "<green>**Available to recruit**</green>");
+        status.c_str());
 
     // Stat line
     str += make_stringf("HP: %d    AC: %d    Damage:%d (w/weapon)\n",
