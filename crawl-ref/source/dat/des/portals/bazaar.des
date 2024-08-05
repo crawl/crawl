@@ -349,7 +349,27 @@ bb@bb
 ENDMAP
 
 ###############################################################################
+# Bazaar layouts.
+#
+# "encompass" levels are recommended, and can be as small or large as you like.
+# No monsters are pre-placed in bazaars, and monsters do not spawn in bazaars,
+# but you can place monsters in your maps if you know what you're doing.
+#
+# Every encompass bazaar level must have at least one downstair, which will be
+# replaced with an exit from the bazaar. It's a good idea to also provide an
+# upstair, which will be converted into a stone arch (and on which the player
+# will be placed when entering the bazaar). If there's no upstair, the player
+# will arrive on a random square.
+#
+# The bazaar_setup function should be called unless you know what you're doing.
+#
+# Maps are sorted by WEIGHTs: common (20), rare (5), very rare (1).
+
+default-depth: Bazaar
+
+###############################################################################
 # Bazaar wrapper (to allow for Xom's bazaars)
+###############################################################################
 
 NAME:   bazaar_wrapper
 TAGS:   allow_dup
@@ -370,25 +390,6 @@ ORIENT: encompass
 }}
 MAP
 ENDMAP
-
-###############################################################################
-# Bazaar layouts.
-#
-# "encompass" levels are recommended, and can be as small or large as you like.
-# No monsters are pre-placed in bazaars, and monsters do not spawn in bazaars,
-# but you can place monsters in your maps if you know what you're doing.
-#
-# Every encompass bazaar level must have at least one downstair, which will be
-# replaced with an exit from the bazaar. It's a good idea to also provide an
-# upstair, which will be converted into a stone arch (and on which the player
-# will be placed when entering the bazaar). If there's no upstair, the player
-# will arrive on a random square.
-#
-# The bazaar_setup function should be called unless you know what you're doing.
-#
-# Maps are sorted by WEIGHTs: common (20), rare (5), very rare (1).
-
-default-depth: Bazaar
 
 ##########################################################################
 # Common maps (weight 200)
