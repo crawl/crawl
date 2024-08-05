@@ -4533,25 +4533,36 @@ int get_monster_tension(const monster& mons, god_type god)
     }
 
     const mon_attitude_type att = mons_attitude(mons);
-    if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
-        return 0;
 
     if (mons.cannot_act() || mons.asleep() || mons_is_fleeing(mons))
         return 0;
 
     int exper = exper_value(mons);
-    if (exper <= 0)
-        return 0;
 
-    // Almost dead monsters don't count as much.
-    exper *= mons.hit_points;
-    exper /= mons.max_hit_points;
+    // XXX: It's hard to entirely figure out how strong a projectile
+    // or bomb is offhand, but they should count for _some_ minimal tension.
+    if (exper <= 0)
+    {
+        if (mons_is_conjured(mons.type))
+            exper = 50;
+        else
+            return 0;
+    }
+
+    // Almost dead monsters might die the next turn, but they're also
+    // still entirely capable of killing you.
+    if (att == ATT_HOSTILE || att == ATT_NEUTRAL)
+        exper = exper * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 30;
+    else
+        exper = exper * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 50;
 
     bool gift = false;
 
     if (god != GOD_NO_GOD)
         gift = mons_is_god_gift(mons, god);
 
+    // FIXME: God gift checking is fine for Xom and
+    // deeply weird for everything else.
     if (att == ATT_HOSTILE)
     {
         // God is punishing you with a hostile gift, so it doesn't
@@ -4570,14 +4581,27 @@ int get_monster_tension(const monster& mons, god_type god)
         if (gift)
             exper *= 2;
     }
+    else if (att == ATT_NEUTRAL)
+    {
+        // Might hit you, might hit something else. Unreliable in threat.
+        exper = exper / 2;
+    }
+    else if (att == ATT_GOOD_NEUTRAL)
+    {
+        // Unreliable in its help versus wandering or leaving entirely.
+        exper = -exper / 2;
+    }
 
-    if (att != ATT_FRIENDLY)
+    if (att != ATT_FRIENDLY && att != ATT_GOOD_NEUTRAL)
     {
         if (!you.visible_to(&mons))
-            exper /= 2;
+            exper = exper * 2 / 3;
         if (!mons.visible_to(&you))
             exper *= 2;
     }
+
+    if (mons.is_silenced() && (mons.is_actual_spellcaster() || mons.is_priest()))
+        exper = exper * 2 / 3;
 
     if (mons.confused() || mons.caught())
         exper /= 2;
@@ -4594,12 +4618,15 @@ int get_monster_tension(const monster& mons, god_type god)
     if (mons.has_ench(ENCH_EMPOWERED_SPELLS))
         exper = exper * 5 / 4;
 
+    if (mons.has_ench(ENCH_WORD_OF_RECALL))
+        exper = exper * 5 / 4;
+
     if (mons.has_ench(ENCH_ARMED))
         exper = exper * 5 / 4;
 
     if (mons.berserk_or_frenzied())
     {
-        // in addition to haste and might bonuses above
+        // Health boosting gives adds more to haste and might bonuses above
         exper = exper * 3 / 2;
     }
 
@@ -4647,6 +4674,7 @@ int get_tension(god_type god)
 
     tension /= div;
 
+    // Indefinite spawns and unreliable / delayed escape.
     if (player_in_branch(BRANCH_ABYSS))
     {
         if (tension < 2)
@@ -4654,53 +4682,20 @@ int get_tension(god_type god)
         else
             tension = tension * 3 / 2;
     }
-
-    if (you.cannot_act())
-    {
-        tension *= 10;
-        tension  = max(1, tension);
-
-        return tension;
-    }
-
-    if (you.magic_points <= you.max_magic_points / 10)
+    else if (player_in_branch(BRANCH_PANDEMONIUM))
         tension = tension * 9 / 8;
 
-    if (you.confused())
-        tension *= 2;
+    if (player_on_orb_run())
+    {
+        if (tension < 3)
+            tension = 3;
+        else
+            tension = tension * 2;
+    }
 
-    if (you.caught())
-        tension *= 2;
-
-    if (you.duration[DUR_CORROSION])
-        tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
-
-    if (you.duration[DUR_MESMERISED])
-        tension = tension * 6 / 5;
-
-    if (you.duration[DUR_AFRAID])
-        tension = tension * 6 / 5;
-
+    // Effects that'll still affect sleep / para / petrify go before those.
     if (you.duration[DUR_VITRIFIED])
         tension = tension * 4 / 3;
-
-    if (you.duration[DUR_NO_POTIONS])
-        tension = tension * 4 / 3;
-
-    if (you.duration[DUR_NO_SCROLLS])
-        tension = tension * 4 / 3;
-
-    if (you.duration[DUR_SLOW])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_SENTINEL_MARK])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_ATTRACTIVE])
-        tension = tension * 3 / 2;
-
-    if (you.duration[DUR_NO_CAST])
-        tension = tension * 3 / 2;
 
     if (you.form == transformation::bat ||
         you.form == transformation::wisp)
@@ -4713,6 +4708,55 @@ int get_tension(god_type god)
     {
         tension = tension * 5 / 3;
     }
+
+    if (you.duration[DUR_CORROSION])
+        tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
+
+    if (you.cannot_act())
+    {
+        tension *= 10;
+        tension  = max(1, tension);
+
+        return tension;
+    }
+
+    // Other effects are listed from highest influence to lowest to help with
+    // rounding on more minor effects.
+    if (you.confused())
+        tension *= 2;
+
+    if (you.caught())
+        tension *= 2;
+
+    if (silenced(you.pos()))
+        tension = tension * 5 / 3;
+
+    if (you.duration[DUR_SLOW])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_ATTRACTIVE])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_NO_CAST])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_SENTINEL_MARK])
+        tension = tension * 3 / 2;
+
+    if (you.duration[DUR_NO_POTIONS])
+        tension = tension * 4 / 3;
+
+    if (you.duration[DUR_NO_SCROLLS])
+        tension = tension * 4 / 3;
+
+    if (you.duration[DUR_MESMERISED])
+        tension = tension * 6 / 5;
+
+    if (you.duration[DUR_AFRAID])
+        tension = tension * 6 / 5;
+
+    if (you.magic_points <= you.max_magic_points / 10)
+        tension = tension * 9 / 8;
 
     if (you.duration[DUR_HASTE])
         tension = tension * 2 / 3;

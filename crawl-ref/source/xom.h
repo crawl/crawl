@@ -14,6 +14,7 @@
 using std::string;
 
 #define XOM_CLOUD_TRAIL_TYPE_KEY "xom_cloud_trail_type"
+#define XOM_BAZAAR_TRIP_COUNT "xom_bazaar_trip_count"
 
 struct item_def;
 
@@ -67,6 +68,7 @@ enum xom_event_type
     XOM_BAD_POLYMORPH,
     XOM_BAD_MOVING_STAIRS,
     XOM_BAD_CLIMB_STAIRS,
+    XOM_BAD_FIDDLE_WITH_DOORS,
     XOM_BAD_DOOR_RING,
     XOM_BAD_FAKE_SHATTER,
     XOM_BAD_CONFUSION,
