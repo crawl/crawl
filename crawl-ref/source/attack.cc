@@ -1239,9 +1239,9 @@ bool attack::apply_damage_brand(const char *what)
 
         const int rff = defender->res_foul_flame();
         if (rff < 0)
-            special_damage = 1 + (random2(damage_done) * 0.75);
+            special_damage = 1 + (random2(damage_done) * 1.5);
         else if (rff < 3)
-            special_damage = 1 + (random2(damage_done) / ((rff + 1) * 2));
+            special_damage = 1 + (random2(damage_done) / (rff + 1));
 
         if (defender_visible && special_damage)
         {
