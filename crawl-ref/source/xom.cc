@@ -1013,7 +1013,7 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
     else if (you.penance[GOD_XOM])
         variance += random_range(4, 6);
 
-    variance = max(33, variance);
+    variance = min(33, variance);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_pal(); xl variance roll: %d", roll);
