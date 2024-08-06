@@ -633,7 +633,8 @@ void do_interlevel_travel();
 // If force is true, then the player will attack empty squares/open doors.
 #ifdef USE_TILE
 bool click_travel_safe(const coord_def &gc);
-int click_travel(const coord_def &gc, bool force);
+command_type click_travel(const coord_def &gc, bool force_attack,
+    bool force_close_doors);
 #endif
 
 bool check_for_interesting_features();

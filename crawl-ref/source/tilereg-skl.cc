@@ -66,8 +66,9 @@ int SkillRegion::handle_mouse(wm_mouse_event &event)
 #ifdef WIZARD
         if (you.wizard && (event.mod & TILES_MOD_CTRL))
         {
-            wizard_set_skill_level(skill);
-            return CK_MOUSE_CMD;
+            const command_type cmd =
+                (command_type)(CMD_WIZARD_SET_SKILL_MIN + skill);
+            return encode_command_as_key(cmd);
         }
 #endif
         m_last_clicked_item = item_idx;

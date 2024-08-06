@@ -65,16 +65,37 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;
 
-        // this is a really horrid way to preserve the interface in viewmap.cc
-        // which expects a keypress rather than a command :(
-        if (tiles.get_map_display())
-            process_map_command(cmd);
-        else
-            process_command(cmd);
+        if (cmd >= CMD_MIN_OVERMAP && cmd <= CMD_MAX_OVERMAP)
+        {
+            // XXX: maybe we should give a message? We are very inconsistant
+            //      about giving messages when the player clicks on things
+            //      that can't be done.
+            return 0;
+        }
 
-        return CK_MOUSE_CMD;
+        return encode_command_as_key(cmd);
     }
     return 0;
+}
+
+bool CommandRegion::handle_mouse_for_map_view(wm_mouse_event &event)
+{
+    unsigned int item_idx;
+    if (!place_cursor(event, item_idx))
+        return false;
+
+    if (event.button == wm_mouse_event::LEFT)
+    {
+        const command_type cmd = (command_type)m_items[item_idx].idx;
+        m_last_clicked_item = item_idx;
+
+        if (cmd >= CMD_MIN_OVERMAP && cmd <= CMD_MAX_OVERMAP)
+        {
+            process_map_command(cmd);
+            return true;
+        }
+    }
+    return false;
 }
 
 bool CommandRegion::update_tab_tip_text(string &tip, bool active)
