@@ -40,7 +40,7 @@ PotionEffect::PotionEffect(const potion_type pot)
     : potion_name(potion_type_name(pot)), kind(pot)
 { }
 
-bool PotionEffect::can_quaff(string */*reason*/, bool /*temp*/) const
+bool PotionEffect::can_quaff(string * /*reason*/, bool /*temp*/) const
 {
     return true;
 }

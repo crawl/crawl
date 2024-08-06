@@ -3,10 +3,12 @@
  * @brief Skill menu.
 **/
 
+// this precompiled header must be the first include otherwise
+// includes before it will be ignored without any warning in MSVC
+#include "AppHdr.h"
+
 #include <cmath>
 #include <clocale>
-
-#include "AppHdr.h"
 
 #include "skill-menu.h"
 

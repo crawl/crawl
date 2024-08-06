@@ -5589,7 +5589,7 @@ bool monster::do_shaft()
     return reveal;
 }
 
-void monster::put_to_sleep(actor */*attacker*/, int /*strength*/, bool hibernate)
+void monster::put_to_sleep(actor * /*attacker*/, int /*strength*/, bool hibernate)
 {
     const bool valid_target = hibernate ? can_hibernate() : can_sleep();
     if (!valid_target)

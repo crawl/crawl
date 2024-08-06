@@ -2467,7 +2467,7 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square, bool center)
+static void _ignition_square(const actor * /*agent*/, bolt beam, coord_def square, bool center)
 {
     // HACK: bypass visual effect
     beam.target = square;

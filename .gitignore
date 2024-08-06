@@ -1,6 +1,7 @@
 .cquery_cache/
 .DS_Store
 .vscode/
+.vs
 
 *.sublime-workspace
 *.sublime-project

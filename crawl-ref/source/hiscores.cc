@@ -322,7 +322,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
         if (i == newest_entry)
             ret += "<yellow>";
 
-        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char */*fmt*/, const char *s){
+        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char * /*fmt*/, const char *s){
             ret += string(s);
         });
 
