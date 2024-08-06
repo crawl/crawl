@@ -507,6 +507,8 @@ Xom boots slot
 Xom gizmo slot
 
 @Your_item@ jiggles!
+
+@Your_item@ leaks @rainbow_colour@ smoke!
 %%%%
 Xom ring slot
 
