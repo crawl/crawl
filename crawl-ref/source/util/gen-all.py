@@ -81,7 +81,7 @@ def main():
     #
     generated_files = ['art-data.h', 'art-enum.h', 'rltiles/dc-unrand.txt',
         'rltiles/tiledef-unrand.cc']
-    input_files = ['util/art-data.pl', 'art-data.txt', 'art-func.h']
+    input_files = ['util/art-data.pl', 'art-data.txt', 'art-func.h', 'rltiles/dc-player.txt']
     command = [perl, input_files[0]]
     run_if_needed(generated_files, input_files, command)
 
