@@ -134,6 +134,7 @@ powered_by_pain_3
 powered_by_death_1 POWERED_BY_DEATH
 powered_by_death_3
 powered_by_death_3
+word_of_chaos WORD_OF_CHAOS
 
 inhibited_regeneration INHIBITED_REGENERATION
 

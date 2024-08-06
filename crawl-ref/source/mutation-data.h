@@ -1512,6 +1512,8 @@ static const mutation_def mut_data[] =
   {"Your system completely accepts the healing effects of potions.",
    "Your system partly accepts the healing effects of potions.",
    ""},
+
+  TILEG_MUT_GENERIC_BAD_MUTATION,
 },
 
 // Scale mutations
@@ -1951,7 +1953,7 @@ static const mutation_def mut_data[] =
   {"You can speak a Word of Chaos.", "", ""},
   {"Your tongue twists.", "", ""},
   {"", "", ""},
-  TILEG_MUT_GENERIC_DEMONSPAWN_MUTATION,
+  TILEG_MUT_WORD_OF_CHAOS,
 },
 
 { MUT_DEMONIC_WILL, 0, 1, mutflag::good, false,

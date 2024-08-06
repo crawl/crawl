@@ -3771,7 +3771,7 @@ static const struct spell_desc spelldata[] =
     0,
     6, 6,
     0,
-    TILEG_ERROR,
+    TILEG_NOXIOUS_CLOUD,
 },
 
 // Dummy spell for the Makhleb ability.
@@ -3838,7 +3838,7 @@ static const struct spell_desc spelldata[] =
     0,
     6, 6,
     10,
-    TILEG_ERROR,
+    TILEG_LEDAS_LIQUEFACTION,
 },
 
 {
@@ -3849,7 +3849,7 @@ static const struct spell_desc spelldata[] =
     0,
     LOS_RADIUS, LOS_RADIUS,
     10,
-    TILEG_ERROR,
+    TILEG_ARCJOLT,
 },
 
 {
