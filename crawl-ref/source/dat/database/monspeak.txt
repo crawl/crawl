@@ -3101,7 +3101,7 @@ w:50
 
 @The_monster@ says, "The Orb of Power is here? Where are the others, then?"
 
-@The_monster@ says, "I saw some tasty-looking corn earlier, but it tried to eat me. I hate that."
+@The_monster@ says, "I saw some tasty-looking maize earlier, but it tried to eat me. I hate that."
 
 %%%%
 orb Donald
