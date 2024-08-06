@@ -1562,6 +1562,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
+    case SPELL_GASTRONOMIC_EXPANSE:
     case SPELL_BOULDER:
     case SPELL_GELLS_GAVOTTE:
     // This can always potentially hit out-of-LOS, although this is conditional

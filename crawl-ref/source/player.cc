@@ -1596,6 +1596,9 @@ bool player::res_corr(bool allow_random, bool temp) const
         return true;
     }
 
+    if (you.duration[DUR_GASTRONOMIC])
+        return true;
+
     return actor::res_corr(allow_random, temp);
 }
 

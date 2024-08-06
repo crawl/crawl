@@ -24,6 +24,12 @@ const int GRAVE_CLAW_MAX_CHARGES = 3;
 #define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
 #define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
 #define VORTEX_POWER_KEY "vortex_power"
+#define GASTRONOMIC_POWER_KEY "gastronomic_expanse_power"
+#define GASTRONOMIC_DIRECTION_KEY "gastronomic_expanse_direction"
+#define GASTRONOMIC_ORIGIN_KEY "gastronomic_expanse_center"
+#define GASTRONOMIC_RETRACTING_KEY "gastronomic_expanse_state"
+#define GASTRONOMIC_MAX_DUR 80 //maximum duration for gastronomic expanse
+#define GASTRONOMIC_SELF_CORR 20 //avg auts/corrosion application
 #define FUSILLADE_POWER_KEY "fusillade_power"
 #define GRAVE_CLAW_CHARGES_KEY "grave_claw_charges"
 
@@ -157,6 +163,13 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow);
 
 vector<coord_def> find_near_hostiles(int range, bool affect_invis,
                                      const actor& agent);
+
+spret cast_gastronomic_expanse(int pow, const coord_def &target, bool fail);
+void gastronomic_expanse_effect(int delay);
+void set_gastronomic_radius(int radius);
+int get_gastronomic_radius(bool get_max = false);
+void end_gastronomic_expanse();
+dice_def gastronomic_damage(int pow, bool random);
 
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);

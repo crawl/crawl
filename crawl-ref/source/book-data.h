@@ -276,6 +276,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Transmutation
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
+    SPELL_GASTRONOMIC_EXPANSE,
     SPELL_FULSOME_FUSILLADE,
 },
 
