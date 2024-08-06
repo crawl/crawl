@@ -2445,6 +2445,17 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             }
             break;
 
+        case MUT_INEXPERIENCED:
+        {
+            const int max_xl = you.get_max_xl();
+            for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+            {
+                if (you.get_training_target(sk) > max_xl * 10)
+                    you.set_training_target(sk, max_xl * 10);
+            }
+            break;
+        }
+
         default:
             break;
         }

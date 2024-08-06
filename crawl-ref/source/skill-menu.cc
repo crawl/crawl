@@ -924,10 +924,12 @@ int SkillMenu::read_skill_target(skill_type sk)
     else
     {
         input = round(atof(result_buf) * 10.0);    // TODO: parse fixed point?
-        if (input > 270)
+        const int max_xl = you.get_max_xl();
+        if (input > max_xl * 10)
         {
-            // 27.0 is the maximum target
-            set_help("<lightred>Your training target must be 27 or below!</lightred>");
+            // maximum XL is the maximum target
+            set_help(make_stringf("<lightred>Your training target must be %d or"
+                     " below!</lightred>", max_xl));
             return -1;
         }
         else
