@@ -790,6 +790,38 @@ bool monster::can_use_missile(const item_def &item) const
     return _needs_ranged_attack(this) && is_throwable(this, item);
 }
 
+static int _monster_wand_tier(int type)
+{
+    switch (type)
+    {
+    case WAND_FLAME:
+        return 1;
+
+    case WAND_POLYMORPH:
+        return 2;
+
+    case WAND_WARPING:
+    case WAND_LIGHT:
+        return 3;
+
+    case WAND_ACID:
+    case WAND_CHARMING:
+    case WAND_ICEBLAST:
+    case WAND_MINDBURST:
+    case WAND_PARALYSIS:
+    case WAND_QUICKSILVER:
+    case WAND_ROOTS:
+        return 4;
+
+    // Prevent abuse, only innate digging allowed
+    case WAND_DIGGING:
+    // Removed or new wands are disallowed. New wands must have a tier
+    // assigned to be usable.
+    default:
+        return 0;
+    }
+}
+
 /**
  * Does this monster have any interest in using the given wand? (Will they
  * pick it up?)
@@ -800,19 +832,26 @@ bool monster::can_use_missile(const item_def &item) const
  * @param item      The wand in question.
  * @return          Whether the monster will bother picking up the wand.
  */
-bool monster::likes_wand(const item_def &item) const
+bool monster::likes_wand(wand_type wand) const
 {
-    ASSERT(item.base_type == OBJ_WANDS);
-    if (item.sub_type == WAND_DIGGING)
-        return false; // Avoid very silly abuses.
-    // kind of a hack
-    // assumptions:
-    // bad wands are value 32, so won't be used past hd 6
-    // mediocre wands are value 24; won't be used past hd 8
-    // good wands are value 15; won't be used past hd 9
-    // best wands are value 9; won't be used past hd 10
-    // better implementations welcome
-    return wand_charge_value(item.sub_type) + get_hit_dice() * 6 <= 72;
+    ASSERT(wand >= WAND_FLAME && wand < NUM_WANDS);
+    const int tier = _monster_wand_tier(wand);
+    if (tier == 0)
+        return false;
+
+    // "Artificer" flagged monsters (Ijyb, Maurice) like even the higher tier
+    // wands, except in Sprint
+    const bool artificer = mons_class_flag(type, M_ARTIFICER)
+                           && !crawl_state.game_is_sprint();
+
+    const int hd = get_hit_dice();
+    // Monsters of hd 7 and above get to use the highest tier (so Grinder no
+    // longer needs a special flag).
+    const int min = artificer ? 1 : tier * 2 - 1;
+    // Bad wands won't be used past hd 6; mediocre wands past hd 10;
+    // good wands past hd 14; best wants past hd 18.
+    const int max = tier * 4 + 2;
+    return hd >= min && hd <= max;
 }
 
 void monster::equip_weapon_message(item_def &item)
@@ -1960,37 +1999,15 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
 
 bool monster::pickup_wand(item_def &item, bool msg, bool force)
 {
-    if (!force)
-    {
-        // Don't pick up empty wands.
-        if (item.plus == 0)
-            return false;
-
-        // Only low-HD monsters bother with wands.
-        if (!likes_wand(item))
-            return false;
-
-        // Holy monsters and worshippers of good gods won't pick up evil
-        // wands.
-        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
-            return false;
-    }
-
-    // If a monster already has a charged wand, don't bother.
-    // Otherwise, replace with a charged one.
-    if (item_def *wand = mslot_item(MSLOT_WAND))
-    {
-        if (wand->plus > 0 && !force)
-            return false;
-
-        if (!drop_item(MSLOT_WAND, msg))
-            return false;
-    }
-
-    if (pickup(item, MSLOT_WAND, msg))
-        return true;
-    else
+    // Only use wand tiers appropriate to monster level (unless forced)
+    if (!force && !likes_wand((wand_type)item.sub_type))
         return false;
+
+    // If a monster already has a wand, don't bother.
+    if (mslot_item(MSLOT_WAND) && (!force || !drop_item(MSLOT_WAND, msg)))
+        return false;
+
+    return pickup(item, MSLOT_WAND, msg);
 }
 
 bool monster::pickup_gold(item_def &item, bool msg)
