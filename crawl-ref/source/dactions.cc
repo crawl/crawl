@@ -278,11 +278,44 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
     }
 }
 
+// Print a farewell message from any of Pikel's minions who are visible.
+static void _pikel_band_message()
+{
+    int visible_minions = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_LEMURE
+            && mi->props.exists(PIKEL_BAND_KEY)
+            && mi->observable())
+        {
+            visible_minions++;
+        }
+    }
+    if (visible_minions > 0 && you.num_turns > 0)
+    {
+        if (you.get_mutation_level(MUT_NO_LOVE))
+        {
+            const char *substr = visible_minions > 1 ? "minions" : "minion";
+            mprf("Pikel's spell is broken, but his former %s can only feel hate"
+                 " for you!", substr);
+        }
+        else
+        {
+            const char *substr = visible_minions > 1
+                ? "minions thank you for their"
+                : "minion thanks you for its";
+            mprf("With Pikel's spell broken, his former %s freedom.", substr);
+        }
+    }
+}
+
 static void _apply_daction(daction_type act)
 {
     ASSERT_RANGE(act, 0, NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
 
+    if (DACT_PIKEL_MINIONS == act)
+        _pikel_band_message();
     switch (act)
     {
     case DACT_JIYVA_DEAD:
