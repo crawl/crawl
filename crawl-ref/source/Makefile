@@ -1839,7 +1839,7 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
-art-data.h: art-data.txt util/art-data.pl art-func.h
+art-data.h: art-data.txt util/art-data.pl art-func.h $(RLTILES)/dc-player.txt
 	util/art-data.pl
 art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
@@ -1855,7 +1855,7 @@ dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 mi-enum.h: mon-info.h util/gen-mi-enum
 	$(QUIET_GEN)util/gen-mi-enum
 
-mon-data.h: dat/mons/*.yaml util/mon-gen.py util/species-gen/*.txt
+mon-data.h: dat/mons/*.yaml util/mon-gen.py util/mon-gen/*.txt
 	$(QUIET_PYTHON)$(PYTHON) util/mon-gen.py dat/mons/ util/mon-gen/ mon-data.h
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
