@@ -1775,13 +1775,12 @@ void player::clear_training_targets()
  */
 bool player::set_training_target(const skill_type sk, const int target, bool announce)
 {
-    const int max_xl = you.get_max_xl();
-    if (target > max_xl * 10) // if target is above max XL, reject with an error
+    if (target > 270) // if target is above 270, reject with an error
     {
-        mprf("Your training target must be %d or below!", max_xl);
+        mpr("Your training target must be 27 or below!");
         return false;
     }
-    const int ranged_target = min(max((int) target, 0), max_xl * 10);
+    const int ranged_target = min(max((int) target, 0), 270);
     if (announce && ranged_target != (int) training_targets[sk])
     {
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
