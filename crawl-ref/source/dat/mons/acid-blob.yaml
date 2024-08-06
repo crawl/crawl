@@ -4,7 +4,7 @@ flags: [eat_doors, see_invis, unblindable, web_immune, acid_splash, no_skeleton]
 resists: {poison: 1, acid: 3}
 xp_mult: 12
 genus: jelly
-will: 160
+will: 80
 attacks:
  - {type: hit, flavour: acid, damage: 42}
 hd: 18
