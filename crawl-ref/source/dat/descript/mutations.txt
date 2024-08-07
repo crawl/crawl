@@ -905,8 +905,12 @@ Destruction (which cannot hurt you or other allies).
 Mark of the Legion mutation
 
 Your Infernal Servant ability is replaced with Infernal Legion, allowing you to
-call in a continuous stream of weaker demons over time. You may also unleash
-Makhleb's Destruction through your summoned allies without harming them.
+call in a small army of demons over time. While individually short-lived, their
+numbers are inexhaustible for as long as the status lasts, and they will never
+be hostile to you.
+
+You may also unleash Makhleb's Destruction through your summoned allies without
+harming them.
 %%%%
 Mark of Annihilation mutation
 

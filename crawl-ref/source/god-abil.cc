@@ -7240,7 +7240,7 @@ void makhleb_inscribe_mark(mutation_type mark)
 
 static void _summon_legion_demon()
 {
-    const int pow = max(0, you.skill_rdiv(SK_INVOCATIONS, 1, 2) - 1);
+    const int pow = you.skill_rdiv(SK_INVOCATIONS, 1, 2);
     monster_picker servant_picker;
     monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
 
