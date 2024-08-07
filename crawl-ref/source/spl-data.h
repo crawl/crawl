@@ -3900,7 +3900,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_RIMEBLIGHT, "Rimeblight",
     spschool::necromancy | spschool::ice,
-    spflag::dir_or_target | spflag::unclean | spflag::destructive,
+    spflag::dir_or_target | spflag::unclean | spflag::destructive
+    | spflag::not_self,
     7,
     200,
     5, 5,
