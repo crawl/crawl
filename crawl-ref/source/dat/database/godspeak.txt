@@ -635,6 +635,10 @@ Your magic slithers out of your reeling mind!
 
 Your power and thoughts are overwhelmed by magic-eaters manifest!
 
+Your magic wrenches itself out of your [@random_body_part_internal_singular@|@random_body_part_internal_plural@]!
+
+Your magic flows out through your [@random_body_part_external_singular@|@random_body_part_external_plural@]!
+
 Your magic rips itself out through your [@random_body_part_any_singular@|@random_body_part_any_plural@]!
 %%%%
 Xom banishment
