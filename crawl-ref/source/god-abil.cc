@@ -7331,8 +7331,8 @@ static const vector<random_pick_entry<monster_type>> _makhleb_torturers =
   {  6,  15, 100, SEMI, MONS_SOUL_EATER },
   {  6,  17, 150, SEMI, MONS_YNOXINUL },
   {  6,  21, 180, SEMI, MONS_SMOKE_DEMON },
-  {  8,  18, 150, SEMI, MONS_SUN_DEMON },
-  {  8,  19, 160, SEMI, MONS_SIXFIRHY },
+  {  9,  18, 150, SEMI, MONS_SUN_DEMON },
+  {  9,  19, 160, SEMI, MONS_SIXFIRHY },
   { 11,  27,  155, SEMI, MONS_BLIZZARD_DEMON },
   { 15,  27,  150, SEMI, MONS_GREEN_DEATH },
   { 20,  27,  185, SEMI, MONS_BALRUG },
@@ -7432,7 +7432,10 @@ void makhleb_enter_crucible_of_flesh(int debt)
     stop_delay(true);
     down_stairs(DNGN_ENTER_CRUCIBLE);
 
-    const int num_enemies = random_range(3, 5);
+    int num_enemies = random_range(3, 5);
+    if (you.experience_level > 17)
+        num_enemies += (you.experience_level - 17) / 5 + 1;
+
     const int num_near_enemies = random_range(1, 2);
     const int num_victims = random_range(9, 13);
 
@@ -7468,7 +7471,7 @@ void makhleb_handle_crucible_of_flesh()
             ++num_hostiles;
     }
 
-    const int max_demons = 7;
+    const int max_demons = 6 + (you.experience_level / 8);
     if (num_hostiles < max_demons)
     {
         int gen = random_range(1, 2);
