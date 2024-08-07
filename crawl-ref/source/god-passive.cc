@@ -1027,7 +1027,10 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     // This is for weapon accuracy only. Spell HD is calculated differently.
     mg.hd = 7 + (you.experience_level * 5 / 4);
-    mg.hp = you.experience_level + you.skill_rdiv(SK_INVOCATIONS, 3, 2);
+    mg.hp = 5 + you.experience_level * 3 / 2;
+    // Preserve the health boost from an active decoy
+    if (decoy_duration > 0)
+        mg.hp += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
 
     if (!friendly)
         mg.hp = mg.hp * 2;
@@ -1059,7 +1062,7 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
     if (friendly)
     {
         mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you,
-                                random_range(3, 5) * BASELINE_DELAY));
+                                random_range(4, 6) * BASELINE_DELAY));
     }
 
     // Set damage based on xl, with a bonus for UC characters (since they won't

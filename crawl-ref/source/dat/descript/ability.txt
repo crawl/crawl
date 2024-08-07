@@ -681,6 +681,9 @@ all enemies in sight about which of the two is which. Enemies which were
 previously focused on you will instead focus their attention exclusively upon
 your shadow for several turns before they realize their mistake - though if they
 succeed in destroying your shadow, the illusion will end prematurely.
+
+The duration of this effect increases with Invocations skill, as will the
+durability of your shadow immediately after using it.
 %%%%
 Aphotic Marionette ability
 

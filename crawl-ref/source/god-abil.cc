@@ -2943,8 +2943,11 @@ spret dithmenos_shadowslip(bool fail)
         }
     }
 
-    // Extend our shadow's life to last at least as long as the misdirection
+    // Extend our shadow's life to last at least as long as the misdirection,
+    // and give it some additional health.
     shadow->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
+    shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
+    shadow->hit_points = shadow->max_hit_points;
 
     dithmenos_change_shadow_appearance(*shadow, dur);
 
