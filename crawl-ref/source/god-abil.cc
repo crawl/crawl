@@ -6989,6 +6989,7 @@ static void _makhleb_atrocity_trigger(int power)
             {
                 beam.target = targs[i]->pos();
                 makhleb_setup_destruction_beam(beam, power, false);
+                beam.hit = AUTOMATIC_HIT;
                 beam.fire();
                 --shots_remain;
                 found_alive = true;

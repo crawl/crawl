@@ -271,7 +271,7 @@ struct ability_def
             && you.duration[DUR_GROWING_DESTRUCTION])
         {
             const int stacks = makhleb_get_atrocity_stacks();
-            cost = cost * (100 + (stacks * 13)) / 100 + (stacks * 4);
+            cost = cost * (100 + (stacks * 11)) / 100 + (stacks * 4);
         }
         if (you.has_mutation(MUT_HP_CASTING))
             return cost + mp_cost;
