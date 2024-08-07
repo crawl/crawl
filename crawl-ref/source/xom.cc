@@ -3843,7 +3843,15 @@ static void _xom_brain_drain(int sever)
 
         if (created)
         {
-            const string react = _get_xom_speech("drained brain");
+            string react = _get_xom_speech("drained brain");
+
+            react = replace_all(react, "@random_body_part_any_singular@",
+                              random_body_part_name(false, BPART_ANY));
+            react = replace_all(react, "@random_body_part_any_plural@",
+                              random_body_part_name(true, BPART_ANY));
+
+            react = maybe_pick_random_substring(react);
+
             const string note = make_stringf("drained mp, created monsters");
             mprf(MSGCH_WARN, "%s", react.c_str());
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
