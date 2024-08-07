@@ -2456,3 +2456,25 @@ void makhleb_execution_activate()
         }
     }
 }
+
+bool makhleb_haemoclasm_trigger_check(const monster& victim)
+{
+    int count = 0;
+    for (adjacent_iterator ai(victim.pos()); ai; ++ai)
+    {
+        if (monster* mons = monster_at(*ai))
+        {
+            if (!mons->wont_attack() && !mons_is_firewood(*mons))
+                ++count;
+        }
+    }
+
+    // These explosions can never hit anything, and so are useless or actively
+    // negative, but it looks better if they can still *sometimes* happen.
+    if (count == 0)
+        return one_chance_in(20);
+    // A much higher chance if there's at least one thing the explosion could
+    // hit, scaling slightly with *how* many things could be hit.
+    else
+        return x_chance_in_y(6, 30 - count * 2);
+}

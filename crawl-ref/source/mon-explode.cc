@@ -210,7 +210,7 @@ static void _setup_haemoclasm_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour     = BEAM_HAEMOCLASM;
-    beam.damage      = dice_def(3, 5 + origin.max_hit_points / 4);
+    beam.damage      = dice_def(3, 3 + origin.max_hit_points / 3);
     beam.name        = "rain of gore";
     beam.hit_verb    = "batters";
     beam.colour      = RED;

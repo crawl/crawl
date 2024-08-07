@@ -6960,6 +6960,11 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             loudness = spell_effect_noise(origin_spell)
                      + (r - 1) * 2; // at radius 1, base noise
         }
+        // These explosions are too punishing for the player (and also a bit too
+        // Qazlal-like in my opinion) if they make full uncontrollable noise
+        // all the time.
+        else if (flavour == BEAM_HAEMOCLASM)
+            loudness = 5;
 
         // Make bloated husks quieter, both for balance (they're waking up
         // whole levels!) and for theme (it's not a huge fireball, it's a big
