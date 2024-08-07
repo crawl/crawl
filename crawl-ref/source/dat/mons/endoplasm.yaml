@@ -1,0 +1,16 @@
+name: "endoplasm"
+glyph: {char: "J", colour: lightgray}
+flags: [see_invis, unblindable, web_immune, no_skeleton]
+resists: {poison: 1, acid: 3}
+genus: jelly
+will: 0
+attacks:
+ - {type: hit, damage: 3}
+hd: 1
+hp_10x: 60
+ac: 1
+ev: 3
+spells: endoplasm
+intelligence: brainless
+size: little
+shape: blob

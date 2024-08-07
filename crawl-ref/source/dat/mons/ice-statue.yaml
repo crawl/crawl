@@ -1,0 +1,17 @@
+name: "ice statue"
+glyph: {char: "I", colour: lightblue}
+flags: [speaks, stationary]
+resists: {elec: 1, fire: -1, cold: 3, petrify: 1}
+genus: statue
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 8
+hp_10x: 720
+ac: 12
+ev: 1
+spells: ice_statue
+intelligence: human
+habitat: amphibious
+size: large
+shape: humanoid

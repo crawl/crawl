@@ -1,17 +1,18 @@
 enum: SP_BARACHI
 monster: MONS_BARACHI
-name: "Barachi"
-adjective: "Barachian"
-genus: "Frog"
+name: Barachi
+adjective: Barachian
+genus: Frog
 difficulty: Intermediate
 difficulty_priority: 20
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_ears
 aptitudes:
   xp: 0
   hp: 0
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 2
   short_blades: 1
   long_blades: 2
@@ -27,12 +28,11 @@ aptitudes:
   summoning: 2
   necromancy: -1
   translocations: 1
-  transmutations: 1
   shapeshifting: 0
   fire_magic: 1
   ice_magic: 2
   air_magic: 1
-  poison_magic: 1
+  alchemy: 1
   invocations: -1
   evocations: 1
 can_swim: true
@@ -48,10 +48,13 @@ mutations:
   13:
     MUT_HOP: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_BERSERKER
-  - JOB_WARPER
-  - JOB_HEXSLINGER
-  - JOB_SUMMONER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_REAVER
+  - fighter
+  - berserker
+  - warper
+  - hexslinger
+  - summoner
+  - ice elementalist
+  - reaver
+
+child_name: Tadpole
+orc_name: Orcphibian

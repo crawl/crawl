@@ -53,6 +53,8 @@ void initialise_branch_depths()
     {
         brdepth.init(-1);
         brdepth[BRANCH_DUNGEON] = 1;
+        brdepth[BRANCH_CRUCIBLE] = 1;
+        brdepth[BRANCH_ARENA] = 1;
         return;
     }
 

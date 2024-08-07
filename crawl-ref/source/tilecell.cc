@@ -36,6 +36,7 @@ void packed_cell::clear()
     is_silenced      = false;
     halo             = HALO_NONE;
     is_sanctuary     = false;
+    is_blasphemy     = false;
     is_liquefied     = false;
     mangrove_water = false;
     orb_glow         = 0;
@@ -57,6 +58,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (is_silenced != other.is_silenced) return false;
     if (halo != other.halo) return false;
     if (is_sanctuary != other.is_sanctuary) return false;
+    if (is_blasphemy != other.is_blasphemy) return false;
     if (is_liquefied != other.is_liquefied) return false;
     if (mangrove_water != other.mangrove_water) return false;
     if (awakened_forest != other.awakened_forest) return false;
@@ -160,8 +162,19 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
         return;
     }
 
-    if (feat_is_solid(feat) || feat == DNGN_LAVA)
+    // Wave tiles look quite bad over lava and are hidden by most solid features,
+    // but allow them to show through solid features that have large amounts of
+    // empty space in them.
+    if (feat == DNGN_LAVA
+        || (feat_is_solid(feat)
+                && feat != DNGN_TREE
+                && feat != DNGN_GRANITE_STATUE
+                && feat != DNGN_METAL_STATUE
+                && feat != DNGN_GRATE
+                && feat != DNGN_RUNED_CLEAR_DOOR))
+    {
         return;
+    }
 
     const bool ink_only = (feat == DNGN_DEEP_WATER);
 

@@ -16,13 +16,20 @@
 #define OLD_DUVESSA_ENERGIZE_KEY "duvessa_berserk"
 #define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
 #endif
+#define BLORKULA_REVIVAL_TIMER_KEY "blorkula_revival_timer"
+#define SAVED_BLORKULA_KEY "original_blorkula"
+#define BLORKULA_DIE_FOR_REAL_KEY "blorkula_die_for_real"
+
+#define MAKHLEB_HAEMOCLASM_KEY "makhleb_haemoclasm"
+#define MAKHLEB_BLOODRITE_KILL_KEY "bloodrite_kill"
 
 class actor;
 class monster;
 
 #define MONSTER_DIES_LUA_KEY "monster_dies_lua_key"
 
-#define ORC_CORPSE_KEY "orc_corpse"
+// Mid of the monster who left this corpse (used to identify apostle corpses)
+#define CORPSE_MID_KEY "corpse_mid"
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
@@ -47,6 +54,8 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
 
 bool mons_will_goldify(const monster &mons);
 
+void handle_monster_dies_lua(monster& mons, killer_type killer);
+
 item_def* place_monster_corpse(const monster& mons, bool force = false);
 void maybe_drop_monster_organ(monster_type mon, monster_type orig,
                               coord_def pos, bool silent = false);
@@ -60,7 +69,7 @@ void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false)
 void end_flayed_effect(monster* ghost);
 
 
-int exp_rate(int killer);
+bool damage_contributes_xp(const actor& agent);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
@@ -86,3 +95,5 @@ bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
 bool mons_bennu_can_revive(const monster* mons);
+
+void blorkula_bat_merge(monster& bat);

@@ -1,0 +1,30 @@
+enum: JOB_NECROMANCER
+name: "Necromancer"
+category: Mage
+category_priority: 70
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_SOUL_SPLINTER
+  - SPELL_GRAVE_CLAW
+  - SPELL_VAMPIRIC_DRAINING
+  - SPELL_ANIMATE_DEAD
+  - SPELL_CURSE_OF_AGONY
+equipment:
+  - "dagger"
+  - "robe"
+  - "potion of magic"
+recommended_species:
+  - deep elf
+  - djinni
+  - mountain dwarf
+  - demonspawn
+  - mummy
+  - vampire
+skills:
+  dodging: 2
+  stealth: 2
+  spellcasting: 2
+  necromancy: 4
+create_enum: false

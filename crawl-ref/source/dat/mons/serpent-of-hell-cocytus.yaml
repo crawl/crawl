@@ -1,0 +1,24 @@
+name: "the Serpent of Hell"
+enum: serpent_of_hell_cocytus
+glyph: {char: "D", colour: etc_ice}
+flags: [crash_doors, flies, see_invis, unique, tall_tile]
+resists: {poison: 1, cold: 3}
+xp_mult: 21
+species: serpent_of_hell
+genus: dragon
+holiness: [demonic]
+will: 180
+attacks:
+ - {type: bite, flavour: cold, damage: 35}
+ - {type: claw, damage: 15}
+ - {type: trample, flavour: trample, damage: 15}
+hd: 17
+hp_10x: 3230
+ac: 20
+ev: 12
+spells: serpent_of_hell_coc
+shout: loud_roar
+intelligence: human
+speed: 14
+size: giant
+shape: quadruped_winged

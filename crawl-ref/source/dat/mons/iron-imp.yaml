@@ -1,0 +1,19 @@
+name: "iron imp"
+glyph: {char: "5", colour: cyan}
+flags: [speaks]
+resists: {elec: 1, poison: 1, fire: 3, cold: 1}
+xp_mult: 14
+holiness: [demonic]
+will: 10
+attacks:
+ - {type: hit, damage: 12}
+hd: 3
+hp_10x: 165
+ac: 6
+ev: 8
+shout: shout
+intelligence: human
+speed: 8
+uses: weapons_armour
+size: small
+shape: humanoid

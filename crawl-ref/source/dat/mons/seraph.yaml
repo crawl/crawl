@@ -1,0 +1,22 @@
+name: "seraph"
+glyph: {char: "A", colour: lightmagenta}
+flags: [flies, fighter, see_invis, speaks, tall_tile]
+resists: {elec: 1, poison: 1, fire: 3}
+genus: angel
+holiness: [holy]
+will: 160
+attacks:
+ - {type: hit, damage: 50}
+ - {type: hit, damage: 20}
+hd: 25
+hp_10x: 2125
+ac: 10
+ev: 20
+spells: seraph
+shout: shout
+intelligence: human
+speed: 15
+uses: weapons_armour
+size: medium
+shape: humanoid_winged
+god: Shining One

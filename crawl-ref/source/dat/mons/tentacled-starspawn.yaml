@@ -1,0 +1,17 @@
+name: "tentacled starspawn"
+glyph: {char: "X", colour: lightcyan}
+xp_mult: 20
+holiness: [nonliving]
+will: 120
+attacks:
+ - {type: bite, damage: 40}
+ - {type: tentacle_slap, damage: 25}
+hd: 16
+hp_10x: 880
+ac: 5
+ev: 5
+spells: tentacled_starspawn
+intelligence: human
+uses: open_doors
+size: giant
+shape: misc

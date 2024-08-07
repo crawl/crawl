@@ -1,0 +1,17 @@
+name: "basilisk"
+glyph: {char: "l", colour: magenta}
+flags: [cold_blood]
+genus: giant_lizard
+will: 20
+attacks:
+ - {type: bite, damage: 20}
+hd: 6
+hp_10x: 360
+ac: 3
+ev: 12
+spells: basilisk
+has_corpse: true
+shout: hiss
+intelligence: animal
+size: little
+shape: quadruped

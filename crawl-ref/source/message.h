@@ -33,12 +33,14 @@ void more(bool user_forced = false);
 void canned_msg(canned_message_type which_message);
 
 bool simple_monster_message(const monster& mons, const char *event,
+                            bool need_possessive = false,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,
                             description_level_type descrip = DESC_THE);
 
 string god_speaker(god_type which_deity = you.religion);
-void simple_god_message(const char *event, god_type which_deity = you.religion);
+void simple_god_message(const char *event, bool need_possessive = false,
+                        god_type which_deity = you.religion);
 void wu_jian_sifu_message(const char *event);
 
 class formatted_string;

@@ -29,6 +29,11 @@ public:
             FixedBitVector<NUM_MONSTERS>::set(MONS_GRUM, value);
             FixedBitVector<NUM_MONSTERS>::set(MONS_GRUNN, value);
             break;
+        case MONS_JOSEPH:
+        case MONS_WIGLAF:
+            FixedBitVector<NUM_MONSTERS>::set(MONS_JOSEPH, value);
+            FixedBitVector<NUM_MONSTERS>::set(MONS_WIGLAF, value);
+            break;
         default:
             FixedBitVector<NUM_MONSTERS>::set(i, value);
             break;

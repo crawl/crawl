@@ -47,7 +47,7 @@ void AbilityRegion::draw_tag()
     const string failure = failure_rate_to_string(get_talent(ability,
                                                              false).fail);
     string desc = make_stringf("%s    (%s)",
-                               ability_name(ability), failure.c_str());
+                               ability_name(ability).c_str(), failure.c_str());
     draw_desc(desc.c_str());
 }
 

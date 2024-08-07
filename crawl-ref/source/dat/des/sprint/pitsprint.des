@@ -10,35 +10,35 @@
 
 function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
-           bat / kobold / rat / gnoll band /\
-           hobgoblin / jackal band / worm / adder / quokka /\
+           bat / kobold / rat / dart slug / gnoll band /\
+           hobgoblin / jackal band / ribbon worm / adder / quokka /\
            gnoll bouda band / orc band / orc priest band /\
            glass eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / zombie / sky beast /\
-           bullfrog / mummy / orc warrior band / wight band /\
+           quasit / zombie / sky beast / bullfrog /\
+           crocodile / brain worm / mummy / orc warrior band / wight band /\
            kobold brigand band / warg / wolf / black bear / river rat /\
-           flying skull / iron imp / white imp / ufetubus / fire bat")
+           weeping skull / iron imp / white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / killer bee band / hornet /\
            manticore / wyvern / troll / two-headed ogre / yak band /\
            komodo dragon / wraith / unseen horror /\
            basilisk / cyclops band / efreet /\
            acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
-           kobold demonologist band / deep troll /\
+           kobold demonologist band / kobold blastminer band / deep troll /\
            deep elf pyromancer / deep elf zephyrmancer / boulder beetle /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
-           flayed ghost / freezing wraith / shadow wraith / shadow /\
+           flayed ghost / freezing wraith / shadow wraith / shadowghast /\
            redback w:20 / phantasmal warrior / cane toad / hell rat /\
            black mamba / rime drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / dream sheep band /\
            swamp drake / bog body / tyrant leech / swamp dragon w:3 /\
-           merfolk band w:5 / merfolk siren w:3 / sea snake / snapping turtle /\
-           tarantella / jumping spider / demonic crawler /\
-           small abomination / guardian mummy / spriggan /\
+           merfolk band w:5 / merfolk siren w:3 / sea snake / \
+           snapping turtle / tarantella / jumping spider / \
+           demonic crawler / small abomination / guardian mummy / spriggan / \
            orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
-           red devil / centaur band")
+           red devil / laughing skull / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
@@ -73,8 +73,8 @@ function base_monster_setup(e)
            glass eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
-           base draconian band w:5 / lorocyproca / daeva / angel /\
-           profane servitor / soul eater / hell beast / cherub / apis / ophan /\
+           base draconian band w:5 / daeva / angel /\
+           profane servitor / soul eater / sin beast / cherub / apis / ophan /\
            balrug / green death / blizzard demon / deep elf blademaster /\
            deep elf master archer / war gargoyle")
   e.kmons("E = lich / tentacled monstrosity / golden dragon /\
@@ -98,15 +98,15 @@ function base_monster_setup(e)
            hobgoblin / jackal band / adder / quokka /\
            orc / scorpion / glass eye / skeleton /\
            zombie / river rat / ufetubus")
-  e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
+  e.kmons("H = Sigmund / Jessica / Blorkula the orcula / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
            Prince Ribbit")
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
            Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
-           Nergalle / Nessos / Ilsuiw band / Arachne / Polyphemus / Rupert /\
+           Nergalle / Nessos / Ilsuiw band / Xak'krixis / Polyphemus / Rupert /\
            Saint Roka band / Snorg")
-  e.kmons("K = Louise / Nikola / Frederick / Boris / Margery band /\
+  e.kmons("K = Louise / Arachne band / Nikola / Frederick / Boris / Margery band /\
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
@@ -132,10 +132,9 @@ function base_monster_setup(e)
   e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul /\
            red devil / sixfirhy / chaos spawn / ice devil w:20 / sun demon /\
            rust devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
-           balrug w:5 / cacodemon w:5 / hell beast / reaper w:5 / soul eater /\
-           lorocyproca")
+           balrug w:5 / cacodemon w:5 / sin beast / reaper w:5 / soul eater")
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
-           lorocyproca / brimstone fiend / ice fiend / tzitzimitl /\
+           brimstone fiend / ice fiend / tzitzimitl /\
            hell sentinel / executioner")
   e.kmons("U = place:Slime:$ / slime creature band /\
            rockslime / azure jelly / acid blob /\
@@ -227,8 +226,8 @@ function general_item_setup(e)
     storm dragon scales plus:8 good_item ident:all w:5 /\
     shadow dragon scales plus:12 ident:all w:5 /\
     shadow dragon scales plus:8 good_item ident:all w:5 /\
-    gold dragon scales plus:14 ident:all /\
-    gold dragon scales plus:10 good_item ident:all /\
+    golden dragon scales plus:14 ident:all /\
+    golden dragon scales plus:10 good_item ident:all /\
     pair of gloves plus:4 ident:all /\
     pair of gloves plus:2 good_item ident:all /\
     pair of boots plus:4 ident:all /\
@@ -285,7 +284,7 @@ function general_item_setup(e)
     quicksilver dragon scales ident:all w:5 /\
     storm dragon scales plus:6 ident:all w:5 /\
     shadow dragon scales plus:6 ident:all w:5 /\
-    gold dragon scales plus:8 ident:all /\
+    golden dragon scales plus:8 ident:all /\
     pair of gloves plus:2 ident:all /\
     pair of gloves plus:0 good_item ident:all /\
     pair of boots plus:2 ident:all /\
@@ -434,7 +433,7 @@ function armoury_setup(e)
           acid dragon scales plus:2 ident:all /\
           storm dragon scales plus:3 ident:all w:5 /\
           shadow dragon scales plus:3 ident:all w:5 /\
-          gold dragon scales plus:2 ident:all /\
+          golden dragon scales plus:2 ident:all /\
           tower shield plus:1 ident:all /\
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")

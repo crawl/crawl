@@ -1,0 +1,19 @@
+name: "worldbinder"
+glyph: {char: "x", colour: cyan}
+flags: [flies]
+xp_mult: 13
+holiness: [nonliving]
+will: 60
+attacks:
+ - {type: hit, damage: 8}
+ - {type: hit, damage: 8}
+hd: 8
+hp_10x: 400
+ac: 12
+ev: 4
+spells: worldbinder
+intelligence: animal
+speed: 14
+uses: open_doors
+size: small
+shape: misc

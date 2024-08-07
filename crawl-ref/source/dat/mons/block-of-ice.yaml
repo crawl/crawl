@@ -1,0 +1,17 @@
+name: "block of ice"
+glyph: {char: "I", colour: etc_ice}
+flags: [stationary, no_exp_gain, remnant, no_threat]
+resists: {fire: -1, cold: 3}
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 3
+hp_10x: 285
+ac: 15
+ev: 0
+intelligence: brainless
+uses: starting_equipment
+size: medium
+shape: misc
+tile_variance: mod
+habitat: amphibious

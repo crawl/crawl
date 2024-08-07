@@ -1,0 +1,15 @@
+name: "unseen horror"
+glyph: {char: "x", colour: magenta}
+flags: [invis, see_invis, batty]
+xp_mult: 6
+will: 20
+attacks:
+ - {type: hit, damage: 12}
+hd: 7
+hp_10x: 385
+ac: 5
+ev: 10
+intelligence: animal
+speed: 30
+size: medium
+shape: misc

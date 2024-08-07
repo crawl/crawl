@@ -120,10 +120,10 @@ jobs:
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
         if: github.event.release.tag_name != null
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.8
       - name: Install requirements.txt
         run: |
             python -m pip install --upgrade pip
@@ -310,14 +310,48 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Install Dependencies
-        run: |
-          brew install pkg-config libpng
-          sudo pip3 install PyYAML
-      - name: Python install bug workaround # https://github.com/actions/setup-python/issues/577
+      # Some extremely messy interactions between default runner setup and what
+      # brew may or may not do here. Many closed issues around this, here's one
+      # where a github actions contributor more or less says they won't fix it:
+      # https://github.com/actions/runner-images/issues/9471. The issues comes
+      # and goes depending on runner image versions. I believe I originally
+      # found the workaround step below somewhere in:
+      #   https://github.com/actions/setup-python/issues/577
+      # We have the problem because libpng has python as a dep.
+      # * Scenario 1: libpng forces brew to install python in `/usr/local/bin`.
+      #   Then we need to clear out the pre-provided symlinks or brew will fail.
+      #   Further steps use newly installed python.
+      # * Scenario 2: libpng is up-to-date in the current runner. For this case,
+      #   clearing out the links is safe because the runner's default path
+      #   should still include
+      #   `/Library/Frameworks/Python.framework/Versions/Current/bin/python`
+      #   (with a lower priority than `/usr/local/bin`) and pre-installed
+      #   python remains available.
+      # * For both scenarios, we should install pyyaml via pip, not brew, so
+      #   that it is installed for the correct python version. Installing it
+      #   via `brew` doesn't work right in scenario 2.
+      - name: Python install bug workaround
         run: |
           find /usr/local/bin -type l -exec sh -c 'readlink -f "$1" \
           | grep -q ^/Library/Frameworks/Python.framework/Versions/' _ {} \; -exec rm -v {} \;
+      - name: Install Dependencies
+        run: |
+          brew install pkg-config libpng
+      # To fix an error running new version of pip3 in virtualised environments.
+      # > You may restore the old behavior of pip by passing
+      # > the '--break-system-packages' flag to pip, or by adding
+      # > 'break-system-packages = true' to your pip.conf file. The latter
+      # > will permanently disable this error.
+      # > If you disable this error, we STRONGLY recommend that you additionally
+      # > pass the '--user' flag to pip, or set 'user = true' in your pip.conf
+      # > file. Failure to do this can result in a broken Homebrew installation.
+      # https://peps.python.org/pep-0668/
+      - name: Install pyyaml
+        run: pip3 install pyyaml --break-system-packages --user
+      - name: diagnostic
+        run: |
+          echo $PATH
+          which python
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
@@ -363,10 +397,10 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.8
       - name: Install requirements.txt
         run: |
             python -m pip install --upgrade pip
@@ -422,10 +456,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.8
       - name: Install requirements.txt
         run: |
             python -m pip install --upgrade pip
@@ -470,7 +504,10 @@ jobs:
     runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        # oldest non-eol security release + current bugfix version
+        #   https://devguide.python.org/versions/
+        # TODO: 3.12 is currently broken because of requirements.txt brittleness
+        python-version: [3.8, 3.11]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -514,10 +551,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.8
       - name: Install requirements.txt
         run: |
             python -m pip install --upgrade pip
@@ -562,10 +599,15 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          gradle-version: 7.5 # known to work
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.7 # compatible with Android Gradle plugin 8.5
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:

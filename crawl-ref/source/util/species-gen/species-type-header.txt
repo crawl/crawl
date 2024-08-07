@@ -22,12 +22,12 @@ enum species_type
 #if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
     SP_HALFLING,
-#endif
     SP_HILL_ORC,
+#endif
     SP_KOBOLD,
     SP_MUMMY,
     SP_NAGA,
-    SP_OGRE,
+    SP_ONI,
     SP_TROLL,
 
     SP_RED_DRACONIAN,
@@ -72,7 +72,9 @@ enum species_type
     SP_ARMATAUR,
 #if TAG_MAJOR_VERSION == 34
     SP_MAYFLYTAUR,
-#endif
     SP_METEORAN,
+#endif
+    SP_MOUNTAIN_DWARF,
+    SP_COGLIN,
 
     // Auto-generated enums start here

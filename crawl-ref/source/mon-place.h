@@ -94,7 +94,8 @@ bool mons_can_hate(monster_type type);
 void check_lovelessness(monster &mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty);
+                              int radius, bool allow_centre, coord_def& empty,
+                              bool in_player_sight = false);
 
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
@@ -103,7 +104,6 @@ bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(monster_type mt, dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid = DNGN_UNSEEN);
-bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
@@ -118,7 +118,7 @@ void setup_vault_mon_list();
 
 monster* get_free_monster();
 
-void mons_add_blame(monster* mon, const string &blame_string);
+void mons_add_blame(monster* mon, const string &blame_string, bool at_front = false);
 
 void debug_bands();
 

@@ -1,0 +1,22 @@
+enum: JOB_BERSERKER
+name: "Berserker"
+category: Zealot
+category_priority: 100
+str: 9
+int: -1
+dex: 4
+equipment:
+  - "animal skin"
+weapon_choice: plain
+recommended_species:
+  - mountain dwarf
+  - oni
+  - merfolk
+  - minotaur
+  - gargoyle
+  - armataur
+skills:
+  fighting: 3
+  dodging: 2
+  weapon: 3
+create_enum: false

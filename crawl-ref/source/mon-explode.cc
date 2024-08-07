@@ -53,20 +53,66 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
 
     beam.aux_source.clear();
     beam.attitude = origin.attitude;
+
+    // Cache a copy of the exploding monster so we can look up blame info after it dies.
+    env.final_effect_monster_cache.push_back(origin);
+}
+
+static int _inferno_power(int /*hd*/)
+{
+    return 100; // dubious
+}
+
+static dice_def _inferno_damage(int hd)
+{
+    bolt beam;
+    zappy(ZAP_FIRE_STORM, _inferno_power(hd), true, beam);
+    return beam.damage;
 }
 
 static void _setup_inferno_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
-    setup_fire_storm(&origin, 100, beam);
+    const int power = _inferno_power(origin.get_hit_dice());
+    setup_fire_storm(&origin, power, beam);
     beam.refine_for_explosion();
+}
+
+static dice_def _blazeheart_damage(int hd)
+{
+    return dice_def(3, 6 + hd);
+}
+
+static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+
+    beam.flavour      = BEAM_FIRE;
+    beam.damage       = _blazeheart_damage(origin.get_hit_dice());
+    beam.name         = "fiery explosion";
+    beam.colour       = RED;
+    beam.ex_size      = 1;
+    beam.source_name  = origin.name(DESC_PLAIN, true);
+
+    // Don't place the player under penance for their golem exploding,
+    // but DO give them xp for its kills.
+    beam.thrower      = KILL_MON;
+    beam.source_id    = MID_PLAYER;
+
+    // This is so it places flame clouds under the explosion
+    beam.origin_spell = SPELL_SUMMON_BLAZEHEART_GOLEM;
+}
+
+static dice_def _spore_damage(int hd)
+{
+    return dice_def(3, 5 + hd);
 }
 
 void setup_spore_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_SPORE;
-    beam.damage  = dice_def(3, 5 + origin.get_hit_dice());
+    beam.damage  = _spore_damage(origin.get_hit_dice());
     beam.name    = "explosion of spores";
     beam.colour  = LIGHTGREY;
     beam.ex_size = 1;
@@ -108,17 +154,32 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
     beam.ex_size = origin.prism_charge;
-    if (origin.summoner)
-        beam.origin_spell = SPELL_FULMINANT_PRISM;
+    beam.origin_spell = SPELL_FULMINANT_PRISM;
     dprf("prism hd: %d, damage: %dd%d", origin.get_hit_dice(),
          beam.damage.num, beam.damage.size);
+}
+
+static void _setup_shadow_prism_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_MMISSILE;
+    beam.damage  = prism_damage(origin.get_hit_dice(), origin.prism_charge == 2);
+    beam.name    = "blast of shadow";
+    beam.colour  = MAGENTA;
+    beam.ex_size = origin.prism_charge;
+    beam.origin_spell = SPELL_SHADOW_PRISM;
+}
+
+static dice_def _bennu_damage(int hd)
+{
+    return dice_def(3, 5 + hd * 5 / 4);
 }
 
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_NEG;
-    beam.damage  = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
+    beam.damage  = _bennu_damage(origin.get_hit_dice());
     beam.name    = "pyre of ghostly fire";
     beam.explode_noise_msg = "You hear an otherworldly crackling!";
     beam.colour  = CYAN;
@@ -145,11 +206,30 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
         beam.source_id = agent->mid;
 }
 
+static void _setup_haemoclasm_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour     = BEAM_HAEMOCLASM;
+    beam.damage      = dice_def(3, 5 + origin.max_hit_points / 4);
+    beam.name        = "rain of gore";
+    beam.hit_verb    = "batters";
+    beam.colour      = RED;
+    beam.ex_size     = 1;
+    beam.source_name = origin.name(DESC_PLAIN, true);
+    beam.thrower     = KILL_YOU_MISSILE;
+    beam.source_id   = MID_PLAYER;
+}
+
+static dice_def _bloated_husk_damage(int hd)
+{
+    return dice_def(8, hd);
+}
+
 static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_MMISSILE;
-    beam.damage  = dice_def(8, origin.get_hit_dice());
+    beam.damage  = _bloated_husk_damage(origin.get_hit_dice());
     beam.name    = "blast of putrescent gases";
     beam.explode_noise_msg = "You hear an high-pitched explosion!";
     beam.colour  = GREEN;
@@ -159,17 +239,49 @@ static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 
 struct monster_explosion {
     function<void(bolt&, const monster&)> prep_explode;
+    function<dice_def(int)> damage;
     string sanct_effect;
 };
 
 static const map<monster_type, monster_explosion> explosions {
-    { MONS_BALLISTOMYCETE_SPORE, { setup_spore_explosion } },
-    { MONS_BALL_LIGHTNING, { _setup_lightning_explosion } },
-    { MONS_LURKING_HORROR, { nullptr, "torment is averted" } },
-    { MONS_FULMINANT_PRISM, { _setup_prism_explosion } },
-    { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
-    { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
-    { MONS_CREEPING_INFERNO, { _setup_inferno_explosion } },
+    { MONS_BALLISTOMYCETE_SPORE, {
+        setup_spore_explosion,
+        _spore_damage,
+    } },
+    { MONS_BALL_LIGHTNING, {
+        _setup_lightning_explosion,
+        [](int hd) { return ball_lightning_damage(hd, false); },
+    } },
+    { MONS_LURKING_HORROR, {
+        nullptr,
+        nullptr,
+        "torment is averted",
+    } },
+    { MONS_FULMINANT_PRISM, {
+        _setup_prism_explosion,
+        [](int hd){ return prism_damage(hd, true); }
+    } },
+    { MONS_SHADOW_PRISM, {
+        _setup_shadow_prism_explosion,
+        [](int hd){ return prism_damage(hd, true); }
+    } },
+    { MONS_BENNU, {
+        _setup_bennu_explosion,
+        _bennu_damage,
+        "fires are quelled",
+    } },
+    { MONS_BLOATED_HUSK, {
+        _setup_bloated_husk_explosion,
+        _bloated_husk_damage,
+    } },
+    { MONS_CREEPING_INFERNO, {
+        _setup_inferno_explosion,
+        _inferno_damage,
+    } },
+    { MONS_BLAZEHEART_CORE, {
+        _setup_blazeheart_core_explosion,
+        _blazeheart_damage,
+    } }
 };
 
 // When this monster dies, does it explode?
@@ -182,11 +294,20 @@ bool monster_explodes(const monster &mons)
 {
     if (mons.has_ench(ENCH_INNER_FLAME))
         return true;
+    else if (mons.props.exists(MAKHLEB_HAEMOCLASM_KEY))
+        return true;
     if (!mon_explodes_on_death(mons.type))
         return false;
     if (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge <= 0)
         return false;
     return true;
+}
+
+dice_def mon_explode_dam(monster_type mc, int hd)
+{
+    auto it = explosions.find(mc);
+    ASSERT(it != explosions.end());
+    return it->second.damage(hd);
 }
 
 bool explode_monster(monster* mons, killer_type killer,
@@ -222,15 +343,8 @@ bool explode_monster(monster* mons, killer_type killer,
         if (type == MONS_BENNU)
             boom_msg = make_stringf("%s blazes out!", mons->full_name(DESC_THE).c_str());
     }
-    else
+    else if (mons->has_ench(ENCH_INNER_FLAME))
     {
-        if (!mons->has_ench(ENCH_INNER_FLAME))
-        {
-            msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
-                                            << static_cast<int>(type)
-                                            << endl;
-            return false;
-        }
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
         ASSERT(i_f.ench == ENCH_INNER_FLAME);
         agent = actor_by_mid(i_f.source);
@@ -245,6 +359,13 @@ bool explode_monster(monster* mons, killer_type killer,
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "ignited by their inner flame";
         inner_flame = true;
+    }
+    else if (mons->props.exists(MAKHLEB_HAEMOCLASM_KEY))
+    {
+        _setup_haemoclasm_explosion(beam, *mons);
+        mons->flags |= MF_EXPLODE_KILL;
+        boom_msg = make_stringf("%s shudders for a moment, then explodes violently!",
+                                mons->name(DESC_THE).c_str());
     }
 
     if (beam.aux_source.empty())
@@ -277,15 +398,7 @@ bool explode_monster(monster* mons, killer_type killer,
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
-    // Unless it's a phoenix, where this isn't much of a concern.
     env.mgrid(mons->pos()) = NON_MONSTER;
-
-    // The explosion might cause a monster to be placed where the bomb
-    // used to be, so make sure that env.mgrid() doesn't get cleared a second
-    // time (causing the new monster to become floating) when
-    // mons->reset() is called.
-    if (type == MONS_BALLISTOMYCETE_SPORE)
-        mons->set_position(coord_def(0,0));
 
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;

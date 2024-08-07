@@ -443,68 +443,28 @@ void wizard_map_level()
 
 bool debug_make_trap(const coord_def& pos)
 {
-    char requested_trap[80];
-    trap_type trap = TRAP_UNASSIGNED;
-    int gridch     = env.grid(pos);
-
-    if (gridch != DNGN_FLOOR)
+    if (env.grid(pos) != DNGN_FLOOR)
     {
         mpr("You need to be on a floor square to make a trap.");
         return false;
     }
 
-    msgwin_get_line("What kind of trap? ",
-                    requested_trap, sizeof(requested_trap));
-    if (!*requested_trap)
+    vector<WizardEntry> options;
+    for (int i = TRAP_FIRST_TRAP; i < NUM_TRAPS; ++i)
     {
-        canned_msg(MSG_OK);
+        auto name = trap_name(static_cast<trap_type>(i));
+        options.emplace_back(WizardEntry(name, i));
+    }
+    sort(options.begin(), options.end());
+    options.emplace_back(WizardEntry('*', "any", TRAP_RANDOM));
+
+    auto menu = WizardMenu("Make which kind of trap?", options);
+    if (!menu.run(true))
         return false;
-    }
 
-    string spec = lowercase_string(requested_trap);
-    vector<trap_type> matches;
-    vector<string>    match_names;
-
-    if (spec == "random" || spec == "any")
-        trap = TRAP_RANDOM;
-
-    for (int t = TRAP_FIRST_TRAP; t < NUM_TRAPS; ++t)
-    {
-        const trap_type tr = static_cast<trap_type>(t);
-        string tname       = lowercase_string(trap_name(tr));
-        if (spec.find(tname) != spec.npos)
-        {
-            trap = tr;
-            break;
-        }
-        else if (tname.find(spec) != tname.npos)
-        {
-            matches.push_back(tr);
-            match_names.push_back(tname);
-        }
-    }
-
-    if (trap == TRAP_UNASSIGNED)
-    {
-        if (matches.empty())
-        {
-            mprf("I know no traps named \"%s\".", spec.c_str());
-            return false;
-        }
-        // Only one match, use that
-        else if (matches.size() == 1)
-            trap = matches[0];
-        else
-        {
-            string prefix = "No exact match for trap '";
-            prefix += spec;
-            prefix += "', possible matches are: ";
-            mpr_comma_separated_list(prefix, match_names);
-            return false;
-        }
-    }
-
+    auto trap = static_cast<trap_type>(menu.result());
     place_specific_trap(you.pos(), trap);
+
     mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
@@ -524,25 +484,21 @@ bool debug_make_shop(const coord_def& pos)
         return false;
     }
 
-    char requested_shop[80];
-    msgwin_get_line("What kind of shop? ",
-                    requested_shop, sizeof(requested_shop));
-    if (!*requested_shop)
+    vector<WizardEntry> options;
+    for (int i = 0; i < NUM_SHOPS; ++i)
     {
-        canned_msg(MSG_OK);
-        return false;
+        auto name = shoptype_to_str(static_cast<shop_type>(i));
+        if (str_to_shoptype(name) == i) // Don't offer to make "removed" shops.
+            options.emplace_back(WizardEntry(name, i));
     }
+    sort(options.begin(), options.end());
+    options.emplace_back(WizardEntry('*', "any", SHOP_RANDOM));
 
-    const shop_type new_shop_type = str_to_shoptype(requested_shop);
-
-    if (new_shop_type == SHOP_UNASSIGNED)
-    {
-        mprf("Bad shop type: \"%s\"", requested_shop);
-        list_shop_types();
+    auto menu = WizardMenu("Make which kind of shop?", options);
+    if (!menu.run(true))
         return false;
-    }
 
-    place_spec_shop(pos, new_shop_type);
+    place_spec_shop(pos, static_cast<shop_type>(menu.result()));
     mpr("Done.");
     return true;
 }
@@ -637,8 +593,8 @@ static void debug_load_map_by_name(string name, bool primary)
                        "for this location; placing it with &P may result in "
                        "crashes and save corruption. Continue?", true, 'y'))
         {
-            mprf("Ok; try placing with &L or go to the relevant location to "
-                 "safely place with &P.");
+            mpr("Ok; try placing with &L or go to the relevant location to "
+                "safely place with &P.");
             return;
         }
         if (toplace->is_minivault())

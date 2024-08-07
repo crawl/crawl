@@ -1,0 +1,17 @@
+name: "vampire bat"
+glyph: {char: "b", colour: magenta}
+flags: [flies, see_invis, batty, warm_blood, no_poly_to]
+xp_mult: 8
+genus: bat
+holiness: [undead]
+will: 10
+attacks:
+ - {type: bite, flavour: vampiric, damage: 6}
+hd: 3
+hp_10x: 145
+ac: 1
+ev: 14
+intelligence: animal
+speed: 30
+size: tiny
+shape: bat

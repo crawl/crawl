@@ -42,6 +42,8 @@
 #define RANDBK_SLVLS_KEY "randbook_slevels"
 #define RANDBK_NSPELLS_KEY "randbook_num_spells"
 
+#define CHAOTIC_ITEM_KEY "chaotic_item"
+
 #ifdef DEBUG_TAG_PROFILING
 void tag_profile_out();
 #endif

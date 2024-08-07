@@ -1,16 +1,17 @@
 TAG_MAJOR_VERSION: 34
 enum: SP_CENTAUR
 monster: MONS_CENTAUR
-name: "Centaur"
+name: Centaur
 difficulty: False
 species_flags:
-  - SPF_SMALL_TORSO
-  - SPF_BARDING
+  - small_torso
+  - barding
+  - no_feet
 aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   short_blades: -1
   long_blades: -1
   axes: -1
@@ -29,12 +30,11 @@ aptitudes:
   summoning: -1
   necromancy: -1
   translocations: -1
-  transmutations: -1
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
-  poison_magic: -2
+  alchemy: -2
   invocations: 1
   evocations: -1
 size: large
@@ -51,3 +51,5 @@ mutations:
     MUT_FAST: 2
     MUT_DEFORMED: 1
     MUT_HOOVES: 3
+
+orc_name: Centorc

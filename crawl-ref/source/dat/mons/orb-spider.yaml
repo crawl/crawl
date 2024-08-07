@@ -1,0 +1,21 @@
+name: "orb spider"
+glyph: {char: "s", colour: magenta}
+flags: [web_immune, no_skeleton, maintain_range]
+resists: {poison: -1}
+xp_mult: 12
+genus: spider
+will: 40
+attacks:
+ - {type: bite, damage: 15}
+hd: 10
+hp_10x: 420
+ac: 3
+ev: 10
+spells: orb_spider
+has_corpse: true
+shout: faint_skitter
+intelligence: animal
+speed: 12
+energy: {spell: 20}
+size: small
+shape: arachnid

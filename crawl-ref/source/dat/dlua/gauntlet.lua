@@ -364,7 +364,7 @@ tier1_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "shadow", min = 2, max = 4},
+    second = {mons = "shadowghast", min = 2, max = 4},
     liquid = "water",
     plant  = "withered",
   },
@@ -383,7 +383,8 @@ tier1_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    first  = {mons = "flying skull band", min = 1, max = 1},
+    first  = {mons = "laughing skull", min = 1, max = 1},
+    second = {mons = "laughing skull", min = 1, max = 2},
     plant  = "withered",
   },
   {
@@ -429,8 +430,8 @@ tier1_gauntlet_arenas = {
     second = {mons = "white imp / shadow imp", min = 1, max = 3},
   },
   {
-    second = {mons = "large abomination", min = 0, max = 2},
-    third  = {mons = "small abomination", min = 3, max = 6},
+    second = {mons = "large abomination", min = 0, max = 1},
+    third  = {mons = "small abomination", min = 3, max = 4},
     plant  = "demonic",
   },
   {
@@ -473,7 +474,7 @@ tier2_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    second = {mons = "shadow", min = 3, max = 6},
+    second = {mons = "shadowghast", min = 3, max = 6},
     liquid = "water",
     plant  = "withered",
   },
@@ -507,7 +508,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first  = {mons = "hell beast", min = 1, max = 1},
+    first  = {mons = "sin beast", min = 1, max = 1},
     second = {mons = "hell hound", min = 0, max = 2},
     liquid = "lava",
     plant  = "demonic",
@@ -556,7 +557,8 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "flying skull band", min = 2, max = 3},
+    first  = {mons = "weeping skull", min = 1, max = 1},
+    second = {mons = "laughing skull", min = 2, max = 4},
     plant  = "withered",
   },
   {
@@ -592,7 +594,7 @@ tier2_gauntlet_arenas = {
   },
   {
     second = {mons = "thrashing horror", min = 1, max = 2},
-    third  = {mons = "small abomination", min = 2, max = 4},
+    third  = {mons = "small abomination", min = 2, max = 3},
     plant  = "demonic",
   },
   {
@@ -606,13 +608,13 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "large abomination", min = 2, max = 3},
-    third  = {mons = "small abomination", min = 3, max = 6},
+    second = {mons = "large abomination", min = 1, max = 2},
+    third  = {mons = "small abomination", min = 3, max = 5},
     plant  = "demonic",
   },
   {
     first  = {mons = "wretched star", min = 1, max = 1},
-    second = {mons = "neqoxec / small abomination", min = 1, max = 3},
+    second = {mons = "neqoxec / small abomination", min = 1, max = 2},
     loot   = "potion of mutation ident:type",
     plant  = "demonic",
   },

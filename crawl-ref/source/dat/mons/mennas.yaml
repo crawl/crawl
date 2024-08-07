@@ -1,0 +1,22 @@
+name: "Mennas"
+glyph: {char: "A", colour: lightcyan}
+flags: [flies, fighter, speaks, unique, male]
+resists: {elec: 1, poison: 1}
+xp_mult: 18
+species: angel
+holiness: [holy]
+will: 160
+attacks:
+ - {type: hit, damage: 30}
+ - {type: hit, damage: 20}
+hd: 19
+hp_10x: 1520
+ac: 15
+ev: 28
+spells: mennas
+intelligence: human
+speed: 15
+uses: weapons_armour
+size: medium
+shape: humanoid_winged
+god: Zin

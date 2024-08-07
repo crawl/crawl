@@ -235,25 +235,13 @@ Duel ability
 成功使用这个能力，你和被挑战的敌人将被运送到奥卡瓦鲁的角斗场战斗至死，
 除非你取得胜利或被杀，否则无法逃脱。
 %%%%
-# 马科列布
-Minor Destruction ability
+Receive Weapon ability
 
-向一个目标怪物发射一道较弱的火、闪电、石、酸或负能量冲击波。
-攻击力和命中率随祈祷技能的提升而增加。
+从四把武器中选取其中一把。这个福泽只能承蒙一次。
 %%%%
-Lesser Servant of Makhleb ability
+Receive Armour ability
 
-召唤一个低阶恶魔。使用此能力时如果失败会让那个恶魔变得敌对。
-%%%%
-Major Destruction ability
-
-向一个目标怪物发射一道火、闪电、岩浆、酸或负能量冲击波。
-攻击力和命中率随祈祷技能的提升而增加。
-%%%%
-Greater Servant of Makhleb ability
-
-[[Greater Servant of Makhleb spell]] 使用此能力时如果失败
-会让那个恶魔变得敌对。
+从四件防具中选取其中一件。这个福泽只能承蒙一次。
 %%%%
 # Sif Muna
 %%%%
@@ -314,8 +302,8 @@ Heal Self ability
 %%%%
 Divine Vigour ability
 
-根据祈祷技能，极大地提高你的最大生命和魔法值。
-你当前的生命和魔法值也会成比例增加。
+根据祈祷技能，极大地提高你的最大生命和魔力值。
+你当前的生命和魔力值也会成比例增加。
 %%%%
 # 卢格努
 Depart the Abyss ability
@@ -374,10 +362,6 @@ Recall Orcish Followers ability
 Stop Recall ability
 
 停止召回你的随从。
-%%%%
-Give Item to Named Follower ability
-
-给一位有名字的兽人随从一件武器或防具。一个兽人只能收到其中一件礼物。
 %%%%
 Resurrection ability
 
@@ -438,7 +422,7 @@ Slimify ability
 Oozemancy ability
 
 从你周围的地牢墙壁中召唤出酸性软泥，对敌人造成伤害，
-伤害取决于他们所相邻的黏性墙壁的数量。
+伤害取决于与其相邻的黏性墙壁的数量。
 %%%%
 # 艾申扎利
 Curse Item ability
@@ -449,20 +433,6 @@ Curse Item ability
 Shatter The Chains ability
 
 摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
-%%%%
-# 迪斯姆诺
-Shadow Step ability
-
-在你的本影之中，进入其他敌对生物的影子，随机落在目标的相邻位置上。
-%%%%
-Shadow Form ability
-
-将你转变成旋涡状的暗影。
-在这种形态下，你将持续隐形，且免疫毒、衰竭和折磨的影响。
-所有受到的伤害减半，并且受到的任何的攻击都会使你流出烟，
-并且你将拥有无限的意志力。但是，你的近战和远程的攻击力将减半，
-施法会受到极大的阻碍，在受到伤害时，你的最大生命值会流失。
-提升祈祷技能可以增加变形的持续时间。
 %%%%
 # 哥萨戈
 Potion Petition ability
@@ -545,6 +515,7 @@ Sacrifice Forms ability
 Sacrifice Artifice ability
 
 舍弃激活魔法物品的能力，并让你的激活技能无法达到任何等级。
+
 这包括魔杖和其他需要用到激活技能的物品——
 但这*不会*影响获得的武器、符咒和金字塔雕像。
 这也使得法杖在近战时的效果大大降低。
@@ -715,7 +686,7 @@ Hop ability
 %%%%
 Blinkbolt ability
 
-将使用者化成一道活的闪电并击向选定的怪物，
+将使用者化成一道活体闪电并击向选定的怪物，
 对其路径上的所有物体造成电击伤害并将使用者放置在它的终点。
 使用此能力后，短时间内无法再次使用它。
 %%%%
@@ -727,9 +698,9 @@ Siphon Essence ability
 %%%%
 Evoke the Sceptre of Asmodeus ability
 
-唤起阿斯莫德的力量，召唤地狱的火系恶魔。
+唤起阿斯蒙蒂斯的力量，召唤地狱的火系恶魔。
 被召唤的恶魔只会在有限的时间内保持友好，在最终消失之前会变得敌对。
-该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的节杖时可用。
+该能力的强度与激活技能成正比，并且该能力仅在使用阿斯蒙蒂斯的节杖时可用。
 %%%%
 Evoke Damnation ability
 

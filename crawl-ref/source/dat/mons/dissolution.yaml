@@ -1,0 +1,19 @@
+name: "Dissolution"
+glyph: {char: "J", colour: lightmagenta}
+flags: [eat_doors, see_invis, unblindable, speaks, web_immune, burrows, unique, acid_splash, fast_regen, no_skeleton, gender_neutral]
+resists: {poison: 1, acid: 3}
+xp_mult: 60
+species: jelly
+will: 120
+attacks:
+ - {type: hit, flavour: acid, damage: 50}
+ - {type: hit, flavour: acid, damage: 30}
+hd: 16
+hp_10x: 1760
+ac: 10
+ev: 1
+spells: dissolution
+intelligence: human
+size: medium
+shape: blob
+god: Jiyva

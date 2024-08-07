@@ -110,6 +110,28 @@ string uppercase_first(string s)
     return s;
 }
 
+int codepoints(string str)
+{
+    int len = 0;
+    for (char c : str)
+        if ((c & 0xc0) != 0x80)
+            ++len;
+    return len;
+}
+
+string padded_str(const string &s, int pad_to, bool prepend)
+{
+    const int padding = pad_to - codepoints(s);
+    if (padding <= 0)
+        return s;
+    string str = s;
+    if (prepend)
+        str.insert(0, string(padding, ' '));
+    else
+        str.append(padding, ' ');
+    return str;
+}
+
 int ends_with(const string &s, const char * const suffixes[])
 {
     if (!suffixes)

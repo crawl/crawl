@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 
+#include "attack.h"
 #include "command-type.h"
 #include "deck-type.h"
 #include "enum.h"
@@ -100,7 +101,12 @@ void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const monster_info* mon_owner);
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     bool parenthesize = false, const item_def* weapon = nullptr);
+                     const item_def* weapon = nullptr, bool verbose = false,
+                     attack *source = nullptr, int distance = 0);
+
+void describe_hit_chance(int hit_chance, ostringstream &result,
+                         const item_def *weapon,
+                         bool verbose = false, int distance_from = 0);
 
 string get_command_description(const command_type cmd, bool terse);
 
@@ -119,6 +125,11 @@ string full_trap_name(trap_type trap);
 int str_to_trap(const string &s);
 
 string extra_cloud_info(cloud_type cloud_type);
+
+string desc_resist(int level, int max = 1,
+                   bool immune = false, bool allow_spacing = true);
+
+string player_species_name();
 
 /* Public for testing purposes only: do not use elsewhere. */
 string _monster_habitat_description(const monster_info& mi);

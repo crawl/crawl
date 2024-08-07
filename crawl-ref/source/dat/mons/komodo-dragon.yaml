@@ -1,0 +1,18 @@
+name: "komodo dragon"
+glyph: {char: "l", colour: lightred}
+flags: [cold_blood]
+genus: giant_lizard
+will: 40
+attacks:
+ - {type: bite, damage: 34}
+hd: 8
+hp_10x: 440
+ac: 7
+ev: 8
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+energy: {swim: 6}
+size: large
+shape: quadruped

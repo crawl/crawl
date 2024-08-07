@@ -1,0 +1,17 @@
+name: "vault guard"
+glyph: {char: "p", colour: cyan}
+flags: [fighter, see_invis, speaks, warm_blood]
+species: human
+will: 60
+attacks:
+ - {type: hit, damage: 20}
+hd: 13
+hp_10x: 715
+ac: 1
+ev: 13
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

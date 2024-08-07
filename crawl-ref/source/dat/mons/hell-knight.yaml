@@ -1,0 +1,20 @@
+name: "hell knight"
+glyph: {char: "p", colour: red}
+flags: [fighter, speaks, warm_blood]
+resists: {fire: 3}
+species: human
+will: 40
+attacks:
+ - {type: hit, damage: 26}
+hd: 10
+hp_10x: 650
+ac: 0
+ev: 10
+spells: hell_knight
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Makhleb

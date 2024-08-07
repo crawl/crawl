@@ -1,0 +1,18 @@
+name: "Crazy Yiuf"
+glyph: {char: "g", colour: colour_undef}
+flags: [speaks, warm_blood, unique, male]
+species: gnoll
+will: 10
+attacks:
+ - {type: hit, damage: 9}
+hd: 3
+hp_10x: 195
+ac: 2
+ev: 9
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid
+god: Xom

@@ -1,0 +1,16 @@
+name: "halfling"
+glyph: {char: "p", colour: lightgray}
+flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
+will: 10
+attacks:
+ - {type: hit, damage: 6}
+hd: 3
+hp_10x: 105
+ac: 2
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: small
+shape: humanoid

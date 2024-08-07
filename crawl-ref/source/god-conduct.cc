@@ -76,10 +76,12 @@ static const char *conducts[] =
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
-    "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
-    "Kill Slime", "Was Hasty", "Attack In Sanctuary",
-    "Kill Artificial", "Exploration", "Seen Monster",
-    "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
+    "Cause Glowing", "Use Unclean", "Use Chaos",
+#if TAG_MAJOR_VERSION == 34
+    "Desecrate Orcish Remains", "Kill Slime",
+#endif
+    "Was Hasty", "Attack In Sanctuary", "Kill Nonliving", "Exploration",
+    "Seen Monster", "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -361,30 +363,20 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_BEOGH,
     {
-        { DID_DESECRATE_ORCISH_REMAINS, { "you desecrate orcish remains", true, 1 } },
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allied orcs") },
-    },
-    // GOD_JIYVA,
-    {
-        { DID_KILL_SLIME, {
-            "you kill slimes", true,
-            1, 2, nullptr, nullptr, [] (const monster* victim) -> bool {
-                return victim && !victim->is_shapeshifter();
-            }
-        } },
         { DID_ATTACK_NEUTRAL, {
-            nullptr, true,
+            "you attack non-hostile orcs", true,
             1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
                 return victim
-                    && mons_is_slime(*victim) && !victim->is_shapeshifter();
+                    && mons_genus(victim->type) == MONS_ORC
+                    && !victim->is_shapeshifter();
             }
         } },
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack fellow slimes") },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack your followers") },
     },
+    // GOD_JIYVA,
+    peeve_map(),
     // GOD_FEDHAS,
-    {
-        { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
-    },
+    peeve_map(),
     // GOD_CHEIBRIADOS,
     {
         { DID_HASTY, {
@@ -644,6 +636,44 @@ static const like_response _fedhas_kill_living_response()
     };
 }
 
+static const like_response _yred_kill_response()
+{
+    return
+    {
+        nullptr, false,
+        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        nullptr, [] (int &piety, int &, const monster* victim)
+        {
+            if (victim)
+            {
+                if (!yred_torch_is_raised())
+                {
+                    piety = 0;
+                    //Print a reminder if the torch isn't lit, but *could* be
+                    if (yred_cannot_light_torch_reason().empty())
+                    {
+                        mprf(MSGCH_GOD, "With your torch unlit, %s soul goes wasted...",
+                             you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "a");
+                    }
+                }
+                else
+                {
+                    mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
+                         you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "A",
+                         mons_is_unique(victim->type) ? "potent "
+                             : victim->holiness() & MH_HOLY ? "unsullied " : "");
+
+                    if (mons_is_unique(victim->type))
+                        piety *= 3;
+
+                    if (victim->holiness() & MH_HOLY)
+                        piety *= 2;
+                }
+            }
+        }
+    };
+}
+
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
@@ -695,7 +725,11 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_YREDELEMNUL,
-    like_map(),
+    {
+        { DID_KILL_LIVING, _yred_kill_response() },
+        { DID_KILL_DEMON, _yred_kill_response() },
+        { DID_KILL_HOLY, _yred_kill_response() },
+    },
     // GOD_XOM,
     like_map(),
     // GOD_VEHUMET,
@@ -846,11 +880,15 @@ static like_map divine_likes[] =
     },
     // GOD_DITHMENOS,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
-        { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
-        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
-        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
-        { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
+        { DID_EXPLORATION, {
+            "you explore the world", false,
+            0, 0, 0, nullptr,
+            [] (int &piety, int &/*denom*/, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 20;
+            }
+        } },
     },
     // GOD_GOZAG,
     like_map(),
@@ -1055,7 +1093,8 @@ string get_god_likes(god_type which_god)
         likes.emplace_back("you make personal sacrifices");
         break;
     case GOD_YREDELEMNUL:
-        likes.emplace_back("you surround yourself with harvested souls");
+        likes.emplace_back("you kill living or demonic beings while their torch is lit");
+        really_likes.emplace_back("you kill holy or unique beings while their torch is lit");
         break;
     case GOD_ZIN:
         likes.emplace_back("you donate money");
@@ -1137,6 +1176,12 @@ void did_hurt_conduct(conduct_type thing_done,
 
         you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() += 1;
         you.props[USKAYAW_MONSTER_HURT_VALUE].get_int() += value;
+    }
+    else if (you_worship(GOD_BEOGH) && you.piety >= piety_breakpoint(2))
+    {
+        // Cap the damage we give points for by the target's max hp to reduce rat value
+        int bonus = min(victim.hit_points, min(damage_done, victim.max_hit_points / 2));
+        you.props[BEOGH_DAMAGE_DONE_KEY].get_int() += bonus;
     }
 }
 

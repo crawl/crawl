@@ -1,0 +1,27 @@
+enum: JOB_BRIGAND
+name: "Brigand"
+category: Warrior
+category_priority: 60
+str: 3
+int: 3
+dex: 6
+equipment:
+  - "dagger plus:2"
+  - "robe"
+  - "cloak"
+  - "dart ego:poisoned q:9"
+  - "dart ego:curare q:3"
+recommended_species:
+  - troll
+  - spriggan
+  - demonspawn
+  - vampire
+  - vine stalker
+  - gnoll
+skills:
+  fighting: 2
+  dodging: 1
+  stealth: 4
+  throwing: 2
+  weapon: 2
+create_enum: false

@@ -107,7 +107,7 @@
     Alexander Beisig
     benadryl
     biasface
-    bjobae
+    Björn Bähre
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
@@ -153,6 +153,7 @@
     David Damerell
     Paul Dejean
     Denzi
+    Sean Dewar
     Ed Dewey
     dicedlemming
     Lothar Dierkes
@@ -215,6 +216,7 @@
     Iainuki
     ICC
     Icy Lich
+    Wizard Ike
     Ilyak
     Matthew Ince
     Mitsuhiro Itakura
@@ -269,6 +271,7 @@
     István Markó
     Gabriel Marks
     Jean Martel
+    meckryl
     James 'Eronarn' Meickle
     Jacob Meigs
     mgdelmonte
@@ -317,6 +320,7 @@
     Pekkekke
     Rytis Petronis
     Arlen Phillips
+    pianoman523
     pikaro
     Lemuel Pitkin
     Paul Pollack
@@ -355,6 +359,7 @@
     Brett Scarborough
     Roderick Schertler
     sdynet
+    SentientSupper
     Roman Sêk
     Brennan Shacklett
     ShadyAmish
@@ -402,6 +407,7 @@
     Steven Wheeler
     WhiteShark
     Thomas Willem
+    Sam Willett
     Evan Williams
     Mara Williamson
     Jeremey Wilson

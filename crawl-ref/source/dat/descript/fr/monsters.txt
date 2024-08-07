@@ -242,9 +242,7 @@ une assez bonne protection. Et distraire les hommes au combat est une qualité.
 %%%%
 Maurice
 
-Un voleur sournois et connivent. En sa profession, Maurice est considéré comme
-une légende — du moins, d'après lui-même. Il est expérimenté toutefois, et de
-tout les voleurs attirés par l'Orbe, Maurice est sans doute le plus astucieux.
+Un voleur sournois et connivent.
 %%%%
 Menkaure
 
@@ -573,6 +571,11 @@ Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
 permanent, et ses cornes saillissent de façon obscène de ses plaques
 écailleuses.
 %%%%
+crocodile
+
+Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
+pointues.
+%%%%
 curse skull
 
 Un crâne carbonisé flottant dans les airs et se tournant lentement. Des
@@ -868,11 +871,6 @@ d'une victime torturée dont la peau lacérée pend du corps décharné. Il parc
 le donjon sans répit, en infligeant à ceux qui sont toujours vivant l'angoisse
 qu'il a ressentit pendant sa vie.
 %%%%
-flying skull
-
-Un crâne mort-vivant maintenu en l'air et voletant rapidement sur de la magie
-impure. Il émet régulièrement des cris à vous glacer le sang.
-%%%%
 freed slave
 
 Un humain qui vient de se faire libérer de son asservissement magique. Il
@@ -1015,7 +1013,7 @@ les nagas. Leur absence de bras, ajouté à leur sens extrême du devoir, en fai
 des gardiens renommés. On dit qu'un garde Serpent préfère mourir au combat
 plutôt que de laisser quoi que ce soit faire intrusion.
 %%%%
-hell beast
+sin beast
 
 Un croisement abominable d'une bête et d'un homme qui produit des glapissements
 épouvantables.
@@ -1277,11 +1275,6 @@ lindwurm
 
 Un petit dragon ophite avec une paire de membres antérieurs robustes. Ses
 épaisses écailles brillent d'une lueur verte sinistre.
-%%%%
-lorocyproca
-
-Une grande silhouette décharné, drapé dans une longue robe s'ecoulant tel une
-forme vivante. Elle a soif d'énergies magiques.
 %%%%
 lost soul
 
@@ -1620,7 +1613,7 @@ sea snake
 Un serpent vivement coloré, très à l'aise dans l'eau. Sa morsure est
 extrêmement venimeuse.
 %%%%
-shadow
+shadowghast
 
 Une ombre furtive et sans vie qui se cache dans les ténèbres du donjon. Elle se
 déplace rapidement et en silence d'une flaque d'ombre à l'autre, frappant

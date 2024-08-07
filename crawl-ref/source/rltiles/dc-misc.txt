@@ -37,6 +37,42 @@ iron_shot5
 iron_shot6
 iron_shot7
 
+splinters_thornwood0 BOLT_SPLINTERSPRAY
+splinters_thornwood1
+splinters_thornwood2
+splinters_thornwood3
+splinters_thornwood4
+splinters_thornwood5
+splinters_thornwood6
+splinters_thornwood7
+
+splinters_metal0 BOLT_METAL_SPLINTERS
+splinters_metal1
+splinters_metal2
+splinters_metal3
+splinters_metal4
+splinters_metal5
+splinters_metal6
+splinters_metal7
+
+force_lance0 BOLT_FORCE_LANCE
+force_lance1
+force_lance2
+force_lance3
+force_lance4
+force_lance5
+force_lance6
+force_lance7
+
+harpoon_shot0 BOLT_HARPOON_SHOT
+harpoon_shot1
+harpoon_shot2
+harpoon_shot3
+harpoon_shot4
+harpoon_shot5
+harpoon_shot6
+harpoon_shot7
+
 stone_arrow0 BOLT_STONE_ARROW
 stone_arrow1
 stone_arrow2
@@ -100,6 +136,11 @@ searing_ray5
 
 damnation BOLT_DAMNATION
 
+umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+
+ghostfire0 BOLT_GHOSTLY_FIREBALL
+ghostfire1
+
 irradiate0 BOLT_IRRADIATE
 irradiate1
 irradiate2
@@ -113,6 +154,32 @@ pie4
 pie5
 pie6
 pie7
+
+shadow_beam0 BOLT_SHADOW_BEAM
+shadow_beam1
+shadow_beam2
+shadow_beam3
+
+shadow_shard BOLT_SHADOW_SHARD
+
+shadow_blast0 BOLT_SHADOW_BLAST
+shadow_blast1
+shadow_blast2
+shadow_blast3
+
+haemoclasm0 BOLT_HAEMOCLASM
+haemoclasm1
+haemoclasm2
+haemoclasm3
+
+blood_arrow0 BOLT_BLOOD_ARROW
+blood_arrow1
+blood_arrow2
+blood_arrow3
+blood_arrow4
+blood_arrow5
+blood_arrow6
+blood_arrow7
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
@@ -205,9 +272,9 @@ cloud_acid2
 cloud_storm1 CLOUD_STORM
 cloud_storm2
 
-cloud_neg0 CLOUD_NEG
-cloud_neg1
-cloud_neg2
+cloud_misery0 CLOUD_MISERY
+cloud_misery1
+cloud_misery2
 
 cloud_gold_dust0 CLOUD_GOLD_DUST
 cloud_gold_dust1
@@ -223,6 +290,11 @@ cloud_electricity_trail0 CLOUD_ELECTRICITY
 cloud_electricity_trail1
 cloud_electricity_trail2
 cloud_electricity_trail3
+
+cloud_faint_miasma0 CLOUD_FAINT_MIASMA
+cloud_faint_miasma1
+cloud_faint_miasma2
+cloud_faint_miasma3
 
 cloud_degeneration CLOUD_DEGENERATION
 

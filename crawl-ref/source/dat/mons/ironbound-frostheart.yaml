@@ -1,0 +1,20 @@
+name: "ironbound frostheart"
+glyph: {char: "p", colour: blue}
+flags: [see_invis, speaks, warm_blood]
+resists: {cold: 1}
+xp_mult: 12
+species: human
+will: 40
+attacks:
+ - {type: touch, flavour: cold, damage: 25}
+hd: 11
+hp_10x: 600
+ac: 0
+ev: 10
+spells: ironbound_frostheart
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid

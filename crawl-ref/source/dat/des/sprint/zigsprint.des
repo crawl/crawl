@@ -27,8 +27,6 @@
 #   kill things. In my testing Makhleb's greater demons and Chei's slouch are
 #   two offenders for this.
 #
-#       -Also, Ashenzari lets you peek at some rooms but not all [evilmike]
-#
 ###############################################################################
 
 {{
@@ -137,7 +135,7 @@ function choose_mset_1(e)
     e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5")
 -- Crypt
   elseif rnd < 49 then
-    e.kmons("1 = zombie / skeleton / wight w:5 / necrophage / phantom")
+    e.kmons("1 = zombie / skeleton / wight w:5 / weeping skull / phantom")
 -- Abyss
   elseif rnd < 59 then
     e.kmons("1 = lesser demon / place:Abyss w:3")
@@ -197,7 +195,7 @@ function choose_mset_1(e)
     e.kmons("1 = shapeshifter hd:5 / ugly thing w:5")
 -- Uniques
   else
-    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+    e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
@@ -228,7 +226,7 @@ function choose_mset_2(e)
                wolf spider w:5 / redback w:5")
 -- Crypt
   elseif rnd < 44 then
-    e.kmons("1 = zombie w:20 / skeleton w:20 / wight / necrophage / phantom")
+    e.kmons("1 = zombie w:20 / skeleton w:20 / wight / weeping skull / phantom")
 -- Abyss
   elseif rnd < 54 then
     e.kmons("1 = lesser demon / place:Abyss w:6")
@@ -292,7 +290,7 @@ function choose_mset_2(e)
     e.kmons("1 = shapeshifter / ugly thing w:5 / neqoxec w:5 / shining eye w:2")
 -- Uniques
   else
-    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+    e.kmons("1 = Sigmund, Jessica, Blorkula the orcula, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
@@ -324,8 +322,8 @@ function choose_mset_3(e)
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
-                 necrophage w:5 / vampire w:5 / vampire mage w:5 /\
-                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow /\
+                 laughing skull w:5 / vampire w:5 / vampire mage w:5 /\
+                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadowghast /\
                  wight / necromancer")
 -- Abyss
   elseif rnd < 39 then
@@ -415,7 +413,7 @@ function choose_mset_3(e)
                shining eye w:2 / glowing shapeshifter w:20")
 -- Uniques
   elseif rnd < 114 then
-    e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
+    e.kmons("1 =  Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Pargi / Sigmund / Sonja / Terence / Urug /\
@@ -454,8 +452,8 @@ local rnd = crawl.random2(142)
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
-                 necrophage w:5 / vampire w:5 / vampire mage w:5 /\
-                 vampire knight / lich w:5 / ancient lich w:2 / shadow /\
+                 laughing skull / vampire mage w:5 /\
+                 vampire knight / lich w:5 / ancient lich w:2 / shadowghast /\
                  wight / necromancer")
 -- Abyss
   elseif rnd < 42 then
@@ -549,7 +547,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = shapeshifter w:5 / glowing shapeshifter w:15 / glowing shapeshifter hd:27")
 -- Uniques
   elseif rnd < 140 then
-    e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
+    e.kmons("1 = Blorkula the orcula / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
                Prince Ribbit / Psyche / Pargi / Sigmund / Sonja / Terence / Urug /\
@@ -728,7 +726,7 @@ KITEM:    B = plate armour mundane ident:all plus:5, \
               ice dragon scales mundane ident:all plus:5, \
               storm dragon scales mundane ident:all plus:5, \
               shadow dragon scales mundane ident:all plus:5, \
-              gold dragon scales mundane ident:all plus:5, \
+              golden dragon scales mundane ident:all plus:5, \
               crystal plate armour mundane ident:all plus:5
 KITEM:    C = buckler mundane ident:all plus:3, \
               kite shield mundane ident:all plus:3, \

@@ -8,6 +8,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -22,6 +23,7 @@
 #include "env.h"
 #include "files.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
@@ -214,7 +216,10 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         return;
 
     if (feat_is_portal(stair))
-        mpr("The world spins around you as you enter the gateway.");
+    {
+        if (stair != DNGN_ENTER_CRUCIBLE)
+            mpr("The world spins around you as you enter the gateway.");
+    }
     else if (feat_is_escape_hatch(stair))
     {
         if (going_up)
@@ -250,11 +255,15 @@ static void _clear_golubria_traps()
     }
 }
 
-static void _clear_prisms()
+static void _clear_constructs()
 {
     for (auto &mons : menv_real)
-        if (mons.type == MONS_FULMINANT_PRISM)
+        if (mons.type == MONS_FULMINANT_PRISM
+            || mons.type == MONS_SHADOW_PRISM
+            || mons.type == MONS_HELLFIRE_MORTAR)
+        {
             mons.reset();
+        }
 }
 
 static void _complete_zig()
@@ -287,9 +296,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
-    _clear_prisms();
-
-    end_recall();
+    _clear_constructs();
 }
 
 static void _update_travel_cache(const level_id& old_level,
@@ -489,7 +496,7 @@ static void _hell_effects()
     if (have_passive(passive_t::resist_hell_effects)
         && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
-        simple_god_message("'s power protects you from the chaos of Hell!");
+        simple_god_message(" power protects you from the chaos of Hell!", true);
         return;
     }
 
@@ -706,6 +713,14 @@ level_id level_above()
 void rise_through_ceiling()
 {
     const level_id whither = level_above();
+    if (you.where_are_you == BRANCH_DUNGEON
+        && you.depth == 1
+        && player_has_orb())
+    {
+        mpr("With a burst of heat and light, you rocket upward!");
+        floor_transition(DNGN_EXIT_DUNGEON, DNGN_EXIT_DUNGEON,
+                         level_id(BRANCH_DUNGEON, 0), true, true, false, false);
+    }
     if (!whither.is_valid())
     {
         mpr("In a burst of heat and light, you rocket briefly upward... "
@@ -715,6 +730,7 @@ void rise_through_ceiling()
 
     mpr("With a burst of heat and light, you rocket upward!");
     untag_followers(); // XXX: is this needed?
+    stop_delay(true);
     floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
                      whither, true, true, false, false);
     you.clear_far_engulf();
@@ -749,7 +765,7 @@ void floor_transition(dungeon_feature_type how,
 
     // We "stepped".
     if (!forced)
-        apply_barbs_damage();
+        player_did_deliberate_movement();
 
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
@@ -769,6 +785,19 @@ void floor_transition(dungeon_feature_type how,
         if (targ)
             targ->del_ench(ENCH_BULLSEYE_TARGET);
     }
+    if (yred_torch_is_raised())
+        yred_end_conquest();
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+    {
+        you.duration[DUR_FATHOMLESS_SHACKLES] = 0;
+        yred_end_blasphemy();
+    }
+
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+        flee_apostle_challenge();
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_end_blood_for_blood();
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -944,8 +973,10 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
                 mpr("Zot's attention fixes on you again. Descend or flee this branch!");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_METEORAN)
                 update_vision_range();
+#endif
         }
         else if (was_bezotted)
         {
@@ -953,9 +984,12 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot has no power in the Abyss.");
             else
                 mpr("You feel Zot lose track of you.");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_METEORAN)
                 update_vision_range();
+#endif
         }
+        print_gem_warnings(gem_for_branch(branch), 0);
 
         if (how == DNGN_ENTER_VAULTS && !runes_in_pack())
         {
@@ -965,6 +999,9 @@ void floor_transition(dungeon_feature_type how,
 
         if (branch == BRANCH_GAUNTLET)
             _gauntlet_effect();
+
+        if (branch == BRANCH_ARENA)
+            okawaru_duel_healing();
 
         const set<branch_type> boring_branch_exits = {
             BRANCH_TEMPLE,
@@ -1228,6 +1265,8 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 
     case DNGN_EXIT_ABYSS:
 #if TAG_MAJOR_VERSION == 34
+        if (you.char_class == JOB_ABYSSAL_KNIGHT && you.level_stack.empty())
+            return level_id(BRANCH_DUNGEON, 1);
     case DNGN_EXIT_PORTAL_VAULT:
 #endif
     case DNGN_EXIT_PANDEMONIUM:
@@ -1278,7 +1317,7 @@ static void _update_level_state()
 
     for (monster_iterator mon_it; mon_it; ++mon_it)
     {
-        if (mons_allows_beogh(**mon_it))
+        if (mons_offers_beogh_conversion(**mon_it))
             env.level_state |= LSTATE_BEOGH;
         if (mon_it->has_ench(ENCH_STILL_WINDS))
             env.level_state |= LSTATE_STILL_WINDS;
@@ -1322,9 +1361,10 @@ static void _update_level_state()
     env.orb_pos = coord_def();
     if (item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT))
         env.orb_pos = orb->pos;
-    else if (player_has_orb())
+    else if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
     {
-        env.orb_pos = you.pos();
+        if (player_has_orb())
+            env.orb_pos = you.pos();
         invalidate_agrid(true);
     }
 }

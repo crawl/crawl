@@ -1,0 +1,17 @@
+name: "hoarfrost cannon"
+glyph: {char: "I", colour: cyan}
+flags: [speaks, see_invis, stationary, no_regen]
+resists: {elec: 1, fire: -1, cold: 3, petrify: 1}
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 8
+hp_10x: 340
+ac: 9
+ev: 0
+spells: hoarfrost_cannon
+intelligence: brainless
+size: large
+shape: misc
+speed: 5
+habitat: amphibious

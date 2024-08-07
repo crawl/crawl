@@ -5,7 +5,7 @@ Zin the Law-Giver
 %%%%
 Yredelemnul lastname
 
-Yredelemnul the Dark
+Yredelemnul the Fallen
 %%%%
 Okawaru lastname
 
@@ -33,7 +33,7 @@ Lugonu the Unformed
 %%%%
 Beogh lastname
 
-Beogh the Brigand
+Beogh the Shepherd
 %%%%
 Fedhas lastname
 
@@ -49,7 +49,7 @@ Ashenzari the Shackled
 %%%%
 Dithmenos lastname
 
-Dithmenos the Shadowed
+Dithmenos the Shrouded
 %%%%
 Nemelex Xobeh lastname
 

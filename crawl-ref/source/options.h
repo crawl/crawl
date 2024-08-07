@@ -181,6 +181,36 @@ struct mlc_mapping
     int colour;
 };
 
+#ifdef USE_TILE
+struct colour_remapping
+{
+    colour_remapping()
+        : colour_index(NUM_TERM_COLOURS), colour_def(0, 0, 0)
+    {
+    }
+
+    colour_remapping(int c, VColour col)
+        : colour_index(c), colour_def(col)
+    {
+    }
+
+    colour_remapping(const string &s);
+
+    bool operator== (const colour_remapping &o) const
+    {
+        return colour_index == o.colour_index
+                && colour_def.r == o.colour_def.r
+                && colour_def.g == o.colour_def.g
+                && colour_def.b == o.colour_def.b;
+    }
+
+    bool valid() const { return colour_index >= 0 && colour_index < NUM_TERM_COLOURS; }
+
+    int colour_index;
+    VColour colour_def;
+};
+#endif
+
 struct flang_entry
 {
     flang_t lang_id;
@@ -198,7 +228,7 @@ enum use_animation_type
     UA_HP               = (1 << 2),
     // flashes the screen on attempt to travel or rest with a monster in view
     UA_MONSTER_IN_SIGHT = (1 << 3),
-    // various animations for picking up runes and the orb
+    // various animations for picking up runes, gems, and the orb
     UA_PICKUP           = (1 << 4),
     // various monster spell/ability effects (slime creature merging, etc)
     UA_MONSTER          = (1 << 5),
@@ -511,6 +541,7 @@ public:
     bool        darken_beyond_range; // whether to darken squares out of range
     bool        show_blood; // whether to show blood or not
     bool        reduce_animations;   // if true, don't show interim steps for animations
+    bool        drop_disables_autopickup;   // if true, automatically remove drops from autopickup
 
     vector<text_pattern> unusual_monster_items; // which monster items to
                                                 // highlight as unusual
@@ -535,6 +566,8 @@ public:
                                         // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
+    bool        always_show_gems; // Whether to always show gem timers
+    bool        more_gem_info;    // Whether to show gems breaking
 
 #ifdef USE_TILE_WEB
     vector<object_class_type> action_panel;   // types of items to show on the panel
@@ -672,9 +705,6 @@ public:
 
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
-
-    // Prompt Meteorans before exploring or resting.
-    bool        fear_zot;
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
@@ -821,6 +851,8 @@ public:
     VColour     tile_transporter_col;
     VColour     tile_transporter_landing_col;
     VColour     tile_explore_horizon_col;
+
+    vector<colour_remapping> custom_text_colours;
 
     string      tile_display_mode;
 

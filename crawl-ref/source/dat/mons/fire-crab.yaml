@@ -1,0 +1,21 @@
+name: "fire crab"
+glyph: {char: "t", colour: lightred}
+flags: [no_skeleton]
+resists: {poison: -1, fire: 3}
+xp_mult: 25
+genus: crab
+will: 40
+attacks:
+ - {type: bite, flavour: fire, damage: 15}
+ - {type: claw, flavour: fire, damage: 15}
+hd: 8
+hp_10x: 520
+ac: 9
+ev: 6
+spells: fire_crab
+has_corpse: true
+intelligence: animal
+habitat: amphibious_lava
+size: small
+shape: quadruped
+tile: fire_crab

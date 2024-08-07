@@ -328,6 +328,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:
     case SPWPN_REAPING: // only exists on Sword of Zonguldrok
+    case SPWPN_FOUL_FLAME: // only exists on Brilliance
         if (is_range_weapon(item))
             return false;
         break;
@@ -796,7 +797,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_REFLECTION:
     case SPARM_PROTECTION:
-        return slot == EQ_SHIELD;
+        return slot == EQ_OFFHAND;
 
     case SPARM_STRENGTH:
     case SPARM_DEXTERITY:
@@ -816,7 +817,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_RESISTANCE:
         if (type == ARM_FIRE_DRAGON_ARMOUR
             || type == ARM_ICE_DRAGON_ARMOUR
-            || type == ARM_GOLD_DRAGON_ARMOUR)
+            || type == ARM_GOLDEN_DRAGON_ARMOUR)
         {
             return false; // contradictory or redundant
         }
@@ -831,7 +832,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         if (type == ARM_PEARL_DRAGON_ARMOUR && brand == SPARM_POSITIVE_ENERGY)
             return false; // contradictory or redundant
 
-        return slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK
+        return slot == EQ_BODY_ARMOUR || slot == EQ_OFFHAND || slot == EQ_CLOAK
                        || !strict;
 
     case SPARM_SPIRIT_SHIELD:
@@ -841,7 +842,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_CAP ||
                type == ARM_SCARF ||
 #endif
-               slot == EQ_SHIELD || !strict;
+               slot == EQ_OFFHAND || !strict;
 
     case SPARM_REPULSION:
     case SPARM_HARM:
@@ -885,7 +886,7 @@ static int _armour_plus_threshold(equipment_type armour_type)
         case EQ_BODY_ARMOUR:
             return 3;
         // shields are fairly common
-        case EQ_SHIELD:
+        case EQ_OFFHAND:
             return 2;
         // aux armour is relatively uncommon
         default:
@@ -931,7 +932,7 @@ static armour_type _get_random_armour_type(int item_level)
         armtype = random_choose(ARM_STEAM_DRAGON_ARMOUR,
                                 ARM_ACID_DRAGON_ARMOUR,
                                 ARM_STORM_DRAGON_ARMOUR,
-                                ARM_GOLD_DRAGON_ARMOUR,
+                                ARM_GOLDEN_DRAGON_ARMOUR,
                                 ARM_SWAMP_DRAGON_ARMOUR,
                                 ARM_PEARL_DRAGON_ARMOUR,
                                 ARM_SHADOW_DRAGON_ARMOUR,
@@ -1432,6 +1433,12 @@ static void _generate_rune_item(item_def& item, int force_type)
         item.sub_type = force_type;
 }
 
+static void _generate_gem_item(item_def& item, int force_type)
+{
+    ASSERT_RANGE(force_type, 0, NUM_GEM_TYPES);
+    item.sub_type = force_type;
+}
+
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level, int agent)
 {
@@ -1603,7 +1610,7 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     if (exclude)
     {
         choices = {
-            MISC_PHIAL_OF_FLOODS,
+            (misc_item_type)item_for_set(ITEM_SET_CONTROL_MISCELLANY),
             MISC_LIGHTNING_ROD,
             (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY),
             MISC_PHANTOM_MIRROR,
@@ -1629,6 +1636,26 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
     return NUM_MISCELLANY;
 }
 
+// May also be called when a wanderer gets assigned a misc evoker at start
+void handle_generated_misc(misc_item_type typ)
+{
+    switch (typ)
+    {
+    case MISC_SACK_OF_SPIDERS:
+    case MISC_BOX_OF_BEASTS:
+    case MISC_LIGHTNING_ROD:
+    case MISC_PHIAL_OF_FLOODS:
+    case MISC_PHANTOM_MIRROR:
+    case MISC_TIN_OF_TREMORSTONES:
+    case MISC_CONDENSER_VANE:
+    case MISC_GRAVITAMBOURINE:
+        you.generated_misc.insert(typ);
+        break;
+    default:
+        break;
+    }
+}
+
 static void _generate_misc_item(item_def& item, int force_type, int item_level)
 {
     const auto typ = get_misc_item_type(force_type);
@@ -1639,20 +1666,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
         return;
     }
     item.sub_type = typ;
-    switch (typ)
-    {
-    case MISC_SACK_OF_SPIDERS:
-    case MISC_BOX_OF_BEASTS:
-    case MISC_LIGHTNING_ROD:
-    case MISC_PHIAL_OF_FLOODS:
-    case MISC_PHANTOM_MIRROR:
-    case MISC_TIN_OF_TREMORSTONES:
-    case MISC_CONDENSER_VANE:
-        you.generated_misc.insert(typ);
-        break;
-    default:
-        break;
-    }
+    handle_generated_misc(typ);
 }
 
 /**
@@ -1677,6 +1691,7 @@ static bool _ego_unrand_only(int base_type, int ego)
         switch (static_cast<brand_type>(ego))
         {
         case SPWPN_REAPING:
+        case SPWPN_FOUL_FLAME:
         case SPWPN_ACID:
             return true;
         default:
@@ -1719,7 +1734,7 @@ static void _setup_fallback_randart(const int unrand_id,
     {
         item.base_type = OBJ_STAVES;
         if (unrand_id == UNRAND_OLGREB)
-            force_type = STAFF_POISON;
+            force_type = STAFF_ALCHEMY;
         else
             force_type = OBJ_RANDOM;
         // XXX: small chance of other unrands under some circumstances...
@@ -1781,6 +1796,8 @@ static void _setup_fallback_randart(const int unrand_id,
  * @param item_level How powerful the item is allowed to be
  * @param force_ego The desired ego/brand
  * @param agent The agent creating the item (Example: Xom) or -1 if NA
+ * @param custom_name A custom name for the item
+ * @param props Any special item props
  *
  * @return The generated item's item slot or NON_ITEM if it fails.
  */
@@ -1790,7 +1807,8 @@ int items(bool allow_uniques,
           int item_level,
           int force_ego,
           int agent,
-          string custom_name)
+          string custom_name,
+          CrawlHashTable const *fixed_props)
 {
     rng::subgenerator item_rng;
 
@@ -1886,12 +1904,15 @@ int items(bool allow_uniques,
     if (!custom_name.empty())
         item.props[ITEM_NAME_KEY] = custom_name;
 
+    if (fixed_props)
+        item.props[FIXED_PROPS_KEY].get_table() = *fixed_props;
+
     // Determine sub_type accordingly. {dlb}
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        _generate_weapon_item(item, allow_uniques, force_type,
-                              item_level, agent);
+        _generate_weapon_item(item, allow_uniques, force_type, item_level,
+                              agent);
         break;
 
     case OBJ_MISSILES:
@@ -1927,12 +1948,17 @@ int items(bool allow_uniques,
     case OBJ_STAVES:
         // Don't generate unrand staves this way except through acquirement,
         // since they also generate as OBJ_WEAPONS.
-        _generate_staff_item(item, (agent != NO_AGENT), force_type, item_level, agent);
+        _generate_staff_item(item, (agent != NO_AGENT), force_type,
+                             item_level, agent);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
     case OBJ_RUNES:
         _generate_rune_item(item, force_type);
+        break;
+
+    case OBJ_GEMS:
+        _generate_gem_item(item, force_type);
         break;
 
     case OBJ_TALISMANS:
@@ -1941,6 +1967,11 @@ int items(bool allow_uniques,
 
     case OBJ_MISCELLANY:
         _generate_misc_item(item, force_type, item_level);
+        break;
+
+    case OBJ_GIZMOS:
+        item.base_type = OBJ_GIZMOS;
+        item.sub_type = 0;
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}

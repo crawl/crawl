@@ -33,6 +33,7 @@ struct packed_cell
     bool is_silenced;
     char halo;
     bool is_sanctuary;
+    bool is_blasphemy;
     bool is_liquefied;
     bool mangrove_water;
     bool awakened_forest;
@@ -42,6 +43,7 @@ struct packed_cell
     uint8_t travel_trail;
     bool quad_glow;
     uint8_t disjunct;
+    bool has_bfb_corpse;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -49,10 +51,10 @@ struct packed_cell
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0),
                     is_highlighted_summoner(false), is_bloody(false),
                     is_silenced(false), halo(HALO_NONE), is_sanctuary(false),
-                    is_liquefied(false), mangrove_water(false),
+                    is_blasphemy(false), is_liquefied(false), mangrove_water(false),
                     awakened_forest(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0),
-                    quad_glow(false), disjunct(false)
+                    quad_glow(false), disjunct(false), has_bfb_corpse(false)
                     {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
@@ -64,6 +66,7 @@ struct packed_cell
                                         is_silenced(c->is_silenced),
                                         halo(c->halo),
                                         is_sanctuary(c->is_sanctuary),
+                                        is_blasphemy(c->is_blasphemy),
                                         is_liquefied(c->is_liquefied),
                                         mangrove_water(c->mangrove_water),
                                         awakened_forest(c->awakened_forest),
@@ -72,7 +75,8 @@ struct packed_cell
                                         old_blood(c->old_blood),
                                         travel_trail(c->travel_trail),
                                         quad_glow(c->quad_glow),
-                                        disjunct(c->disjunct)
+                                        disjunct(c->disjunct),
+                                        has_bfb_corpse(c->has_bfb_corpse)
                                         {}
 
     void clear();

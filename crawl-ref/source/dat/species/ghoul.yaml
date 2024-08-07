@@ -5,12 +5,13 @@ adjective: Ghoulish
 difficulty: Intermediate
 difficulty_priority: 50
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_blood
 aptitudes:
   xp: 0
   hp: 1
-  mp_mod: -1
-  mr: 3
+  mp_mod: 0
+  wl: 3
   fighting: 1
   short_blades: -1
   long_blades: -1
@@ -30,17 +31,17 @@ aptitudes:
   hexes: -2
   summoning: -1
   translocations: -1
-  transmutations: -1
   shapeshifting: False
   fire_magic: -2
   ice_magic: 1
   air_magic: -2
   earth_magic: 1
+  alchemy: -1
   invocations: 1
   evocations: -1
-undead_type: US_UNDEAD
+undead_type: undead
 str: 11
-int: 3
+int: 7
 dex: 4
 levelup_stat_frequency: 5
 levelup_stats:
@@ -54,11 +55,13 @@ mutations:
     MUT_CLAWS: 1
     MUT_DEVOUR_ON_KILL: 1
 recommended_jobs:
-  - JOB_WARPER
-  - JOB_GLADIATOR
-  - JOB_MONK
-  - JOB_NECROMANCER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
+  - warper
+  - gladiator
+  - monk
+  - necromancer
+  - ice elementalist
+  - earth elementalist
 recommended_weapons:
-  - SK_UNARMED_COMBAT
+  - unarmed combat
+
+orc_name: Rotting Orc

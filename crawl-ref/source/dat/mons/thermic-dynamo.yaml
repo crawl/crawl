@@ -1,0 +1,21 @@
+name: "thermic dynamo"
+glyph: {char: "v", colour: etc_vehumet}
+flags: [flies, insubstantial, speaks]
+resists: {fire: 3, cold: 3}
+xp_mult: 13
+genus: fire_vortex
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: fire, damage: 18}
+ - {type: hit, flavour: cold, damage: 14}
+hd: 10
+hp_10x: 380
+ac: 4
+ev: 16
+spells: thermic_dynamo
+intelligence: brainless
+energy: {move: 8}
+size: medium
+shape: misc
+tile_variance: cycle

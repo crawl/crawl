@@ -1,0 +1,19 @@
+name: "warg"
+glyph: {char: "h", colour: white}
+flags: [see_invis, unblindable, warm_blood]
+resists: {poison: 1}
+xp_mult: 12
+genus: hound
+will: 40
+attacks:
+ - {type: bite, damage: 25}
+hd: 5
+hp_10x: 325
+ac: 9
+ev: 12
+has_corpse: true
+shout: howl
+intelligence: animal
+speed: 15
+size: large
+shape: quadruped

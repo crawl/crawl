@@ -129,7 +129,7 @@ int elemental_preference(spell_type spell, int scale = 1);
 
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);
-int skill_bump(skill_type skill, int scale = 1);
+int skill_bump(skill_type skill, int scale = 1, bool allow_random = true);
 void fixup_skills();
 
 bool target_met(skill_type sk);
@@ -168,8 +168,8 @@ static const skill_type skill_display_order[] =
     SK_BLANK_LINE,
 
     SK_CONJURATIONS, SK_HEXES, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
-    SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
+    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_ALCHEMY,
+    SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
 
     SK_BLANK_LINE,
 

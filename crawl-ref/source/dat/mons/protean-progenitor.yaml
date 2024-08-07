@@ -1,0 +1,20 @@
+name: "protean progenitor"
+glyph: {char: "C", colour: etc_random}
+flags: [speaks, warm_blood, fast_regen, no_poly_to, no_zombie, no_gen_derived]
+resists: {poison: 1}
+xp_mult: 12
+genus: giant
+will: 120
+attacks:
+ - {type: random, damage: 55}
+hd: 14
+hp_10x: 820
+ac: 7
+ev: 8
+spells: protean_progenitor
+shout: gurgle
+intelligence: human
+speed: 14
+uses: open_doors
+size: giant
+shape: humanoid

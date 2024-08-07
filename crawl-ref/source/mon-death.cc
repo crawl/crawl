@@ -13,6 +13,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "attitude-change.h"
+#include "beam.h"
 #include "bloodspatter.h"
 #include "cloud.h"
 #include "cluautil.h"
@@ -31,7 +32,7 @@
 #include "god-blessing.h"
 #include "god-companions.h"
 #include "god-conduct.h"
-#include "god-passive.h" // passive_t::bless_followers, share_exp, convert_orcs
+#include "god-passive.h" // passive_t::bless_followers, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
 #include "item-name.h"
@@ -58,8 +59,10 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
+#include "spl-selfench.h"
 #include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
 #include "stepdown.h"
@@ -67,6 +70,9 @@
 #include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "rltiles/tiledef-player.h"
+#endif
 #include "tilepick.h"
 #include "timed-effects.h"
 #include "traps.h"
@@ -154,16 +160,13 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
     }
 
-    // 0 mid indicates this is a dummy monster, such as for kiku corpse drop
-    if (mons_genus(mons.type) == MONS_ORC && mons.mid != 0)
+    // Store mid of dead orc apostles so we can find their corpse again later.
+    // (And note the floor they died on)
+    if (mons.type == MONS_ORC_APOSTLE)
     {
-        auto &saved_mon = corpse.props[ORC_CORPSE_KEY].get_monster();
-        saved_mon = mons;
-
-        // Ensure that saved_mon is alive, lest it be cleared on marshall.
-        if (saved_mon.max_hit_points <= 0)
-            saved_mon.max_hit_points = 1;
-        saved_mon.hit_points = saved_mon.max_hit_points;
+        corpse.props[CORPSE_MID_KEY].get_int() = mons.mid;
+        if (mons.is_divine_companion())
+            corpse.props[BEOGH_BFB_VALID_KEY] = true;
     }
 
     return true;
@@ -222,68 +225,13 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
         dprf("Success");
 
         if (corpse.base_type == OBJ_GOLD)
-            corpse.quantity = div_rand_round(total_gold, nchunks);
-        if (corpse.quantity)
+        {
+            corpse.quantity = max(1, div_rand_round(total_gold, nchunks));
             copy_item_to_grid(corpse, cp);
+        }
     }
 
     return true;
-}
-
-static int _calc_monster_experience(monster* victim, killer_type killer,
-                                    int killer_index)
-{
-    const int experience = exper_value(*victim);
-
-    if (!experience || !MON_KILL(killer) || invalid_monster_index(killer_index))
-        return 0;
-
-    monster* mon = &env.mons[killer_index];
-    if (!mon->alive() || !mons_gives_xp(*victim, *mon))
-        return 0;
-
-    return experience;
-}
-
-static void _give_monster_experience(int experience, int killer_index)
-{
-    if (experience <= 0 || invalid_monster_index(killer_index))
-        return;
-
-    monster* mon = &env.mons[killer_index];
-    if (!mon->alive())
-        return;
-
-    if (mon->gain_exp(experience))
-    {
-        if (!have_passive(passive_t::bless_followers) || !one_chance_in(3))
-            return;
-
-        // Randomly bless the follower who gained experience.
-        if (random2(you.piety) >= piety_breakpoint(2))
-            bless_follower(mon);
-    }
-}
-
-static void _beogh_spread_experience(int exp)
-{
-    int total_hd = 0;
-
-    for (monster_near_iterator mi(&you); mi; ++mi)
-    {
-        if (is_orcish_follower(**mi))
-            total_hd += mi->get_experience_level();
-    }
-
-    if (total_hd <= 0)
-        return;
-
-    for (monster_near_iterator mi(&you); mi; ++mi)
-        if (is_orcish_follower(**mi))
-        {
-            _give_monster_experience(exp * mi->get_experience_level() / total_hd,
-                                         mi->mindex());
-        }
 }
 
 static int _calc_player_experience(const monster* mons)
@@ -303,9 +251,8 @@ static int _calc_player_experience(const monster* mons)
         return 0;
     }
 
-    experience = (experience * mons->damage_friendly / mons->damage_total
-                  + 1) / 2;
-    ASSERT(mons->damage_friendly <= 2 * mons->damage_total);
+    experience = experience * mons->damage_friendly / mons->damage_total;
+    ASSERT(mons->damage_friendly <= mons->damage_total);
 
     return experience;
 }
@@ -358,19 +305,6 @@ static void _give_player_experience(int experience, killer_type killer,
     // Give a message for monsters dying out of sight.
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
-
-    if (kc == KC_YOU && have_passive(passive_t::share_exp))
-        _beogh_spread_experience(experience / 2);
-}
-
-static void _give_experience(int player_exp, int monster_exp,
-                             killer_type killer, int killer_index,
-                             bool pet_kill, bool was_visible,
-                             xp_tracking_type xp_tracking)
-{
-    _give_player_experience(player_exp, killer, pet_kill, was_visible,
-            xp_tracking);
-    _give_monster_experience(monster_exp, killer_index);
 }
 
 /**
@@ -437,7 +371,7 @@ static void _create_monster_hide(monster_type mtyp, monster_type montype,
         { MONS_BAI_SUZHEN_DRAGON, 3 },
     };
 
-    if (mtyp == MONS_DEEP_TROLL)
+    if (mons_species(mtyp) == MONS_DEEP_TROLL)
     {
         item.props[ITEM_TILE_NAME_KEY] = "deep_troll_leather";
         item.props[WORN_TILE_NAME_KEY] = "deep_troll_leather";
@@ -529,7 +463,9 @@ void maybe_drop_monster_organ(monster_type mon, monster_type orig,
 item_def* place_monster_corpse(const monster& mons, bool force)
 {
     if (mons.is_summoned()
-        || mons.flags & (MF_BANISHED | MF_HARD_RESET)
+        || mons.flags & MF_BANISHED
+        // Follower apostles should drop corpses (but nothing else)
+        || mons.flags & MF_HARD_RESET && !mons.is_divine_companion()
         || mons.props.exists(PIKEL_BAND_KEY))
     {
         return nullptr;
@@ -596,6 +532,10 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
+    // Preserve the corpses of your followers (helps to tell where they died)
+    if (mons.type == MONS_ORC_APOSTLE)
+        corpse.props[CORPSE_NEVER_DECAYS] = true;
+
     return &env.item[o];
 }
 
@@ -609,7 +549,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_CHARMD ? "charmed" :
+           killer == KILL_BOUND ? "bound" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -662,7 +602,8 @@ static bool _is_pet_kill(killer_type killer, int i)
         return false;
 
     const monster* m = &env.mons[i];
-    if (m->friendly()) // This includes charmed monsters.
+    // This includes charmed monsters.
+    if (m->friendly() || m->attitude == ATT_MARIONETTE)
         return true;
 
     // Check if the monster was confused by you or a friendly, which
@@ -675,24 +616,19 @@ static bool _is_pet_kill(killer_type killer, int i)
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
-int exp_rate(int killer)
+// Returns whether damage from a given agent counts as a 'player source' for
+// purposes of the player gaining XP from damage/kills they cause.
+bool damage_contributes_xp(const actor& agent)
 {
-    // Damage by Beogh orcs counts for half experience. Hepliaklqana ancestors
-    // and all other allies grant full experience.
-    if (!invalid_monster_index(killer)
-        && env.mons[killer].is_divine_companion()
-        && env.mons[killer].god == GOD_BEOGH)
-    {
-        return 1;
-    }
+    const int killer = agent.mindex();
 
     if (killer == MHITYOU || killer == YOU_FAULTLESS)
-        return 2;
+        return true;
 
     if (_is_pet_kill(KILL_MON, killer))
-        return 2;
+        return true;
 
-    return 0;
+    return false;
 }
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
@@ -717,7 +653,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     mons->hit_points = 1;
 
     const string msg = " protects " + mons->name(DESC_THE) + " from harm!";
-    simple_god_message(msg.c_str());
+    simple_god_message(msg.c_str(), false);
 
     return true;
 }
@@ -742,6 +678,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
         return false;
     }
 
+    actor *act = &you;
+
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
         monster* mon = &env.mons[i];
@@ -750,6 +688,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
         if (!you.see_cell(mons->pos()))
             return false;
+
+        act = mon;
     }
     else if (!YOU_KILL(killer))
         return false;
@@ -768,20 +708,23 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     god_speaks(god, msg.c_str());
 
+    behaviour_event(mons, ME_WHACK, act);
+
     lugonu_meddle_fineff::schedule();
 
     return true;
 }
 
-static bool _yred_bound_soul(monster* mons, killer_type killer)
+static bool _yred_bind_soul(monster* mons, killer_type killer)
 {
-    if (you_worship(GOD_YREDELEMNUL) && mons_bound_body_and_soul(*mons)
+    if (you_worship(GOD_YREDELEMNUL) && mons->has_ench(ENCH_SOUL_RIPE)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
-        && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED)
+        && killer != KILL_DISMISSED && killer != KILL_BANISHED
+        // You can't deliberately bind a summon, but this also handles mirror copies
+        && !mons->is_summoned())
     {
         record_monster_defeat(mons, killer);
-        record_monster_defeat(mons, KILL_CHARMD);
+        record_monster_defeat(mons, KILL_BOUND);
         yred_make_bound_soul(mons, player_under_penance());
         return true;
     }
@@ -815,8 +758,16 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
     {
-        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::deathbed_follower :
-                                                    conv_t::deathbed);
+        const bool follower = MON_KILL(killer);
+        conv_t ctype = follower ? conv_t::deathbed_follower
+                                : conv_t::deathbed;
+        if (mons.has_ench(ENCH_VENGEANCE_TARGET))
+        {
+            ctype = follower ? conv_t::vengeance_follower
+                             : conv_t::vengeance;
+        }
+
+        beogh_convert_orc(&mons, ctype);
         return true;
     }
 
@@ -837,7 +788,11 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (!have_passive(passive_t::convert_orcs)
         || mons_genus(mons.type) != MONS_ORC
         || mons.is_summoned() || mons.is_shapeshifter()
-        || !you.see_cell(mons.pos()) || mons_is_god_gift(mons))
+        || !you.see_cell(mons.pos()) || mons_is_god_gift(mons)
+        // Don't attempt a deathbed conversion of an already converted orc
+        || mons.flags & MF_PACIFIED
+        || mons.flags & MF_APOSTLE_BAND
+        || mons.type == MONS_ORC_APOSTLE)
     {
         return false;
     }
@@ -853,6 +808,161 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     }
 
     return false;
+}
+
+static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
+{
+    // Can't recover from these
+    if (ktype == KILL_BANISHED || ktype == KILL_RESET || ktype == KILL_DISMISSED)
+        return false;
+
+    if (blorkula.props.exists(BLORKULA_DIE_FOR_REAL_KEY))
+        return false;
+
+    // If our death escape is still on cooldown, just let him die.
+    if (blorkula.has_ench(ENCH_BREATH_WEAPON))
+    {
+        if (you.can_see(blorkula))
+        {
+            mprf("%s attempts to avoid another deathblow, but is too exhausted to transform.",
+                blorkula.name(DESC_THE).c_str());
+        }
+        return false;
+    }
+
+    const int num_bats = random_range(4, 5);
+    const int revive_timer = you.elapsed_time + random_range(150, 190);
+    {
+        // Suppress messages about status effects wearing off
+        msg::suppress msg;
+        blorkula.heal(blorkula.max_hit_points);
+        blorkula.del_ench(ENCH_CONFUSION, true);    // Don't blink at random
+        blorkula.timeout_enchantments(1000);
+    }
+    blorkula.add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, &blorkula,
+                                  random_range(450, 900) * BASELINE_DELAY));
+
+#ifdef USE_TILE
+    static vector<int> bat_colours =
+    {
+        TILEP_MONS_VAMPIRE_BAT_GREEN,
+        TILEP_MONS_VAMPIRE_BAT_ORANGE,
+        TILEP_MONS_VAMPIRE_BAT_RED,
+        TILEP_MONS_VAMPIRE_BAT_PURPLE,
+        TILEP_MONS_VAMPIRE_BAT_BLUE,
+    };
+    shuffle_array(bat_colours);
+#endif
+
+    follower saved_blork = follower(blorkula);
+    bool placed_bat = false;
+    for (int i = 0; i < num_bats; ++i)
+    {
+        monster *bat =
+        create_monster(
+            mgen_data(MONS_VAMPIRE_BAT, SAME_ATTITUDE(&blorkula),
+                      blorkula.pos(), blorkula.foe));
+
+        if (bat)
+        {
+            bat->props[BLORKULA_REVIVAL_TIMER_KEY] = revive_timer;
+#ifdef USE_TILE
+            bat->props[MONSTER_TILE_KEY] = bat_colours[i];
+#endif
+            saved_blork.write_to_prop(bat->props[SAVED_BLORKULA_KEY].get_vector());
+            mons_add_blame(bat, "manifested out of " + blorkula.name(DESC_A, true));
+            bat->flags |= (MF_NO_REWARD | MF_WAS_IN_VIEW);
+            placed_bat = true;
+        }
+    }
+
+    if (!placed_bat)
+    {
+        simple_monster_message(blorkula, " attempts to avoid the deathblow, but fails!");
+        return false;
+    }
+
+    if (you.can_see(blorkula))
+    {
+        mprf(MSGCH_MONSTER_SPELL,
+            "%s avoids the killing blow by scattering into a rainbow of bats!",
+            blorkula.name(DESC_THE).c_str());
+    }
+
+    monster_die(blorkula, KILL_RESET, NON_MONSTER, true);
+
+    return true;
+}
+
+static monster* _retrieve_saved_blorkula(monster& bat)
+{
+    follower saved_blork;
+    saved_blork.read_from_prop(bat.props[SAVED_BLORKULA_KEY].get_vector());
+    monster* blork = saved_blork.place();
+    return blork;
+}
+
+static void _blorkula_bat_death(monster& bat, killer_type killer, int killer_index)
+{
+    // Check if any other bats are still alive. If they are not, formally kill Blorkula.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_VAMPIRE_BAT && *mi != &bat && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+            return;
+    }
+
+    // No other bats left, so pass this death onto Blorkula as 'real'
+    monster* blork = _retrieve_saved_blorkula(bat);
+    blork->swap_with(&bat);
+    blork->props[BLORKULA_DIE_FOR_REAL_KEY] = true;
+
+    // Otherwise we won't get proper XP or piety for banishing Blork via banishing
+    // the final bat, if worshipping Lugonu. There is a mild possibility that in at
+    // least a decade of people playing this game, this may occur once.
+    if (killer == KILL_BANISHED && killer_index == MHITYOU)
+    {
+            did_god_conduct(DID_BANISH, blork->get_experience_level(), true, blork);
+            blork->damage_friendly = blork->hit_points;
+    }
+
+    monster_die(*blork, killer, killer_index);
+}
+
+void blorkula_bat_merge(monster& bat)
+{
+    if (!bat.props.exists(BLORKULA_REVIVAL_TIMER_KEY)
+        || bat.props[BLORKULA_REVIVAL_TIMER_KEY].get_int() > you.elapsed_time)
+    {
+        return;
+    }
+
+    monster* blork = _retrieve_saved_blorkula(bat);
+    const coord_def pos = bat.pos();
+
+    int bat_count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_VAMPIRE_BAT && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+        {
+            monster_die(**mi, KILL_RESET, NON_MONSTER, true);
+            ++bat_count;
+        }
+    }
+
+    // If not all the bats are still alive, injure Blork proportionally
+    if (bat_count < 4)
+    {
+        blork->hit_points = min(blork->max_hit_points,
+                                (blork->max_hit_points * 2 / 7) * bat_count);
+    }
+    blork->move_to_pos(pos);
+
+    if (you.can_see(*blork))
+    {
+        mprf(MSGCH_MONSTER_SPELL,
+             "The bats swarm back together and %s reappears in a puff of iridescent mist.",
+             blork->name(DESC_THE).c_str());
+    }
 }
 
 /**
@@ -876,12 +986,34 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Yredelemnul special.
-    if (_yred_bound_soul(mons, killer))
+    if (_yred_bind_soul(mons, killer))
         return true;
 
     // Beogh special.
-    if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
+    if (mons->type == MONS_ORC_APOSTLE && you_worship(GOD_BEOGH))
+    {
+        if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+        {
+            if (killer == KILL_BANISHED)
+            {
+                simple_god_message(" pulls their child back from the Abyss.",
+                                   false, GOD_BEOGH);
+            }
+
+            win_apostle_challenge(*mons);
+            mons->heal(mons->max_hit_points);
+            // monster::banish sets damage_friendly and not resetting that could
+            // crash. monster::heal resets it but not if it was at full health.
+            mons->damage_total = mons->damage_friendly = 0;
+            avoided_death_fineff::schedule(mons);
+            return true;
+        }
+    }
+    else if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
         return true;
+
+    if (mons->type == MONS_BLORKULA_THE_ORCULA)
+        return _blorkula_bat_split(*mons, killer);
 
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
         return false;
@@ -1072,7 +1204,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
                                bool summoned)
 {
     // Don't bother placing a cloud for living spells.
-    if (mons->type == MONS_LIVING_SPELL)
+    if (mons->type == MONS_LIVING_SPELL || mons->type == MONS_SOUL_WISP)
         return;
 
     // Chaos spawn always leave behind a cloud of chaos.
@@ -1089,8 +1221,13 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         return;
 
     string prefix = " ";
+    bool need_possessive = false;
+
     if (corpse && mons_class_can_leave_corpse(mons_species(mons->type)))
-        prefix = "'s corpse ";
+    {
+        prefix = " corpse ";
+        need_possessive = true;
+    }
 
     string msg = summoned_poof_msg(mons) + "!";
 
@@ -1099,9 +1236,30 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         cloud = random_smoke_type();
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
+    else if (msg.find("armoury") != string::npos)
+    {
+        cloud = CLOUD_NONE;
+
+        // XXX: This doesn't feel like quite the right place for this code, but
+        //      it *is* about the visual after-effects of a summon going poof...
+        if (monster* armoury = monster_by_mid(mons->summoner))
+        {
+            if (!silent && armoury->alive()
+                && armoury->see_cell_no_trans(mons->pos()))
+            {
+                bolt visual;
+                visual.source = mons->pos();
+                visual.target = armoury->pos();
+                visual.flavour = BEAM_VISUAL;
+                visual.range = LOS_RADIUS;
+                visual.aimed_at_spot = true;
+                visual.fire();
+            }
+        }
+    }
 
     if (!silent)
-        simple_monster_message(*mons, (prefix + msg).c_str());
+        simple_monster_message(*mons, (prefix + msg).c_str(), need_possessive);
 
     if (cloud != CLOUD_NONE)
         place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
@@ -1141,8 +1299,8 @@ static string _killer_type_name(killer_type killer)
 #endif
     case KILL_PACIFIED:
         return "pacified";
-    case KILL_CHARMD:
-        return "charmed";
+    case KILL_BOUND:
+        return "bound";
     case KILL_SLIMIFIED:
         return "slimified";
     }
@@ -1202,7 +1360,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Simulacrum, Death Channel and Yred reaping of unzombifiable things:
+    // - Bind Souls, Death Channel and Yred reaping of unzombifiable things:
     if (!requires_corpse
         && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
     {
@@ -1268,21 +1426,10 @@ static void _make_derived_undead(monster* mons, bool quiet,
     }
 
     const string message = quiet ? "" :
-                           god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudha cackles." :
+                           god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudgha cackles." :
                            _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
-            mons->get_experience_level(), agent_name, message);
-}
-
-static void _make_simulacra(monster* mons, int pow, god_type god)
-{
-    const int count = 1 + random2(1 + div_rand_round(pow, 40));
-    for (int i = 0; i < count; ++i)
-    {
-        _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
-                SPELL_SIMULACRUM, god);
-    }
-    mpr("A freezing mist starts to gather...");
+            mons->get_experience_level(), agent_name, message, spell);
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1332,7 +1479,7 @@ static void _orb_of_mayhem(actor& maniac, const monster& victim)
 {
     vector<monster *> witnesses;
     for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
-        if (mi->can_see(maniac) && mi->can_go_frenzy())
+        if (*mi != &victim && mi->can_see(maniac) && mi->can_go_frenzy())
             witnesses.push_back(*mi);
 
     if (coinflip() && !witnesses.empty())
@@ -1340,6 +1487,172 @@ static void _orb_of_mayhem(actor& maniac, const monster& victim)
         (*random_iterator(witnesses))->go_frenzy(&maniac);
         did_god_conduct(DID_HASTY, 8, true);
     }
+}
+
+static void _protean_explosion(monster* mons)
+{
+    // This is slightly hacky, but we determine which thing to turn into by
+    // creating a dummy monster of the right hd, then making a poly set for it
+    // and picking the first one.
+    monster dummy;
+    dummy.type = MONS_SHAPESHIFTER;
+    define_monster(dummy);
+    dummy.set_hit_dice(12);
+    init_poly_set(&dummy);
+    const CrawlVector &set = dummy.props[POLY_SET_KEY];
+    monster_type target = (monster_type)set[0].get_int();
+
+    // It may be thematic to become a shapeshifter, but this also tosses off the
+    // might and haste immediately. (We can just pick the second polyset target
+    // since they should be guaranteed to be different.)
+    if (target == MONS_GLOWING_SHAPESHIFTER)
+        target = (monster_type)set[1].get_int();
+
+    if (you.can_see(*mons))
+    {
+        mprf(MSGCH_MONSTER_WARNING, "For just a moment, %s begins to "
+                                    "look like %s, then it explodes!",
+                                    mons->name(DESC_THE).c_str(),
+                                    mons_type_name(target, DESC_A).c_str());
+    }
+
+    // Determine number of children based on the HD of what we roll.
+    // HD >= 12 generates 2, HD 11 generates 2-3,
+    // HD 10-9 generates 3, HD < 9 generates 4.
+    // (Going down that far should be extremely rare, but
+    //  polymorph code is weird.)
+    int num_children = 2;
+    if (mons_class_hit_dice(target) < 9)
+        num_children += 2;
+    else if (mons_class_hit_dice(target) < 11)
+        ++num_children;
+    else if (mons_class_hit_dice(target) < 12 && coinflip())
+        ++num_children;
+
+    int summoned_duration = 0;
+    int summon_type = 0;
+    bool is_summoned = mons->is_summoned(&summoned_duration, &summon_type);
+
+    // Then create and scatter the piles around
+    int delay = random_range(2, 4) * BASELINE_DELAY;
+    for (int i = 0; i < num_children; ++i)
+    {
+        coord_def spot;
+
+        // Try to find a spot within 3 tiles. If that fails, expand to 6 tiles.
+        // If that also fails, stop trying to place children; the player got off
+        // easy this time.
+        //
+        // XXX: This is somewhat imperfect, since it checks for the habitat of
+        //      what the flesh will *become*, which has a very slim chance of
+        //      being somewhere the flesh itself cannot survive if - say - we
+        //      roll turning into a salamander and there's lava nearby. So it
+        //      may think we have a valid tile when we don't. It's very awkward
+        //      to prevent that without also limiting the possible spawn pool to
+        //      ONLY monsters that can survive in deep water, though.
+        find_habitable_spot_near(mons->pos(), target, 3, false, spot);
+        if (spot.origin())
+            find_habitable_spot_near(mons->pos(), target, 6, false, spot);
+        if (spot.origin())
+            return;
+
+        mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, SAME_ATTITUDE(mons),
+                                 spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH);
+        if (is_summoned)
+        {
+            const actor* const summoner = actor_by_mid(mons->summoner);
+            mg.set_summoned(summoner, 6 /* placeholder */, summon_type, mons->god);
+        }
+        monster *child = create_monster(std::move(mg));
+
+        if (child)
+        {
+            child->props[PROTEAN_TARGET_KEY] = target;
+            child->add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, 0, 0, delay));
+            child->flags |= MF_WAS_IN_VIEW;
+
+            // Prevent them from being trivially unaware of the player
+            child->foe = mons->foe;
+            child->behaviour = BEH_SEEK;
+
+            mons_add_blame(child, "spawned from " + mons->name(DESC_A, true), true);
+
+            if (is_summoned)
+            {
+                // Match the original summoned progenitor's duration.
+                mon_enchant summon_duration_ench(ENCH_ABJ, 0, nullptr, summoned_duration);
+                child->update_ench(summon_duration_ench);
+            }
+
+            // Make each one shift a little later than the last
+            delay += random_range(1, 2) * BASELINE_DELAY;
+        }
+    }
+}
+
+static void _martyr_death_wail(monster &mons)
+{
+    if (you.can_see(mons))
+    {
+        if (mons.friendly())
+        {
+            mprf(MSGCH_FRIEND_SPELL,
+                 "%s wails in agony as it relives its own death.",
+                 mons.name(DESC_YOUR).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_MONSTER_SPELL,
+                 "%s wails in agony as it relives its own death.",
+                 mons.name(DESC_THE).c_str());
+        }
+    }
+
+    // Save the HD of our shade, because it will otherwise be reset on changing
+    int old_hd = mons.get_hit_dice();
+    change_monster_type(&mons, MONS_FLAYED_GHOST);
+    mons.max_hit_points = mons.max_hit_points * old_hd / mons.get_hit_dice();
+    mons.set_hit_dice(old_hd);
+
+    // Reset duration on its summoning, but move it out of martyr's summon cap
+    mons.del_ench(ENCH_ABJ, true, false);
+    mons.del_ench(ENCH_SUMMON, true, false);
+    mons.mark_summoned(2, true, SPELL_NO_SPELL, true);
+    mons.heal(50000);
+
+    // Show brief animation
+    bolt visual;
+    visual.target = mons.pos();
+    visual.source = mons.pos();
+    visual.aimed_at_spot = true;
+    visual.colour = ETC_DARK;
+    visual.glyph      = '*';
+    visual.draw_delay = 100;
+    visual.flavour = BEAM_VISUAL;
+    visual.fire();
+
+    // Have it instantly flay a few nearby things
+    vector <actor*> targets;
+    for (actor_near_iterator ai(mons.pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!mons_aligned(&mons, *ai) && !!(ai->holiness() & MH_NATURAL))
+            targets.push_back(*ai);
+    }
+    shuffle_array(targets);
+
+    int num_victims = min((int)targets.size(), random_range(2, 3));
+
+    // Dummy arguments
+    mon_spell_slot slot = { SPELL_FLAY, 0, MON_SPELL_MAGICAL };
+    bolt _bolt;
+
+    for (int i = 0; i < num_victims; ++i)
+    {
+        mons.foe = targets[i]->mindex();
+        mons_cast_flay(mons, slot ,_bolt);
+    }
+
+    return;
 }
 
 static bool _mons_reaped(actor &killer, monster& victim)
@@ -1440,18 +1753,11 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
         return false;
 
     // Yred takes priority over everything but Infestation.
-    // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
-    if (in_los && have_passive(passive_t::reaping))
+    if (in_los && have_passive(passive_t::reaping)
+        && mons.umbraed())
     {
         if (yred_reap_chance())
             _yred_reap(mons, corpse_gone);
-        return true;
-    }
-
-    if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
-    {
-        const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
-        _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
         return true;
     }
 
@@ -1461,24 +1767,14 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
     if (in_los && (_animate_dead_reap(mons) || _reaping(mons)))
         return true;
 
-    if (mons.has_ench(ENCH_NECROTISE))
-    {
-        _make_derived_undead(&mons, quiet, MONS_SKELETON,
-                                 BEH_FRIENDLY,
-                                 SPELL_NECROTISE,
-                                 GOD_NO_GOD);
-        return true;
-    }
     return false;
 }
 
 static bool _god_will_bless_follower(monster* victim)
 {
-    return have_passive(passive_t::bless_followers)
-           && random2(you.piety) >= piety_breakpoint(2)
-           || have_passive(passive_t::bless_followers_vs_evil)
-              && victim->evil()
-              && random2(you.piety) >= piety_breakpoint(0);
+    return have_passive(passive_t::bless_followers_vs_evil)
+           && victim->evil()
+           && random2(you.piety) >= piety_breakpoint(0);
 }
 
 /**
@@ -1491,7 +1787,7 @@ static bool _god_will_bless_follower(monster* victim)
  * @param maybe_good_kill   Whether the kill can be rewarding in piety.
  *                          (Not summoned, etc)
  */
-static void _fire_kill_conducts(monster &mons, killer_type killer,
+static void _fire_kill_conducts(const monster &mons, killer_type killer,
                                 int killer_index, bool maybe_good_kill)
 {
     const bool your_kill = killer == KILL_YOU ||
@@ -1499,10 +1795,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
                            killer == KILL_YOU_MISSILE ||
                            killer_index == YOU_FAULTLESS;
     const bool pet_kill = _is_pet_kill(killer, killer_index);
-
-    // Pretend the monster is already dead, so that make_god_gifts_disappear
-    // (and similar) don't kill it twice.
-    unwind_var<int> fake_hp(mons.hit_points, 0);
 
     // if you or your pets didn't do it, no one cares
     if (!your_kill && !pet_kill)
@@ -1550,11 +1842,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     if (mons.is_priest())
         did_kill_conduct(DID_KILL_PRIEST, mons);
 
-    // Jiyva hates you killing slimes, but eyeballs
-    // mutation can confuse without you meaning it.
-    if (mons_is_slime(mons) && killer != KILL_YOU_CONF)
-        did_kill_conduct(DID_KILL_SLIME, mons);
-
     if (mons.is_holy())
         did_kill_conduct(DID_KILL_HOLY, mons);
 
@@ -1601,10 +1888,10 @@ static void _special_corpse_messaging(monster &mons)
         // something else.
         if (!(mons.flags & MF_KNOWN_SHIFTER))
         {
-            const string message = "'s shape twists and changes as "
+            const string message = " shape twists and changes as "
                 + mons.pronoun(PRONOUN_SUBJECTIVE) + " "
                 + conjugate_verb("die", mons.pronoun_plurality()) + ".";
-            simple_monster_message(mons, message.c_str());
+            simple_monster_message(mons, message.c_str(), true);
         }
 
         return;
@@ -1631,6 +1918,41 @@ bool mons_will_goldify(const monster &mons)
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
     return have_passive(passive_t::goldify_corpses) && mons_gives_xp(mons, you);
+}
+
+void handle_monster_dies_lua(monster& mons, killer_type killer)
+{
+    if (mons.props.exists(MONSTER_DIES_LUA_KEY))
+    {
+        lua_stack_cleaner clean(dlua);
+
+        dlua_chunk &chunk = mons.props[MONSTER_DIES_LUA_KEY];
+
+        if (!chunk.load(dlua))
+        {
+            push_monster(dlua, &mons);
+            clua_pushcxxstring(dlua, _killer_type_name(killer));
+            dlua.callfn(nullptr, 2, 0);
+        }
+        else
+        {
+            mprf(MSGCH_ERROR,
+                 "Lua death function for monster '%s' didn't load: %s",
+                 mons.full_name(DESC_PLAIN).c_str(),
+                 dlua.error.c_str());
+        }
+    }
+}
+
+static void _maybe_set_monster_foe(monster& mons, int killer_index)
+{
+    if (mons.foe == MHITNOT)
+    {
+        if (!mons.wont_attack() && !crawl_state.game_is_arena())
+            mons.foe = MHITYOU;
+        else if (!invalid_monster_index(killer_index))
+            mons.foe = killer_index;
+    }
 }
 
 /**
@@ -1692,6 +2014,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Lose our bullseye target
     mons.del_ench(ENCH_BULLSEYE_TARGET, true);
 
+    // Restore old items, if appropriate
+    mons.del_ench(ENCH_ARMED, true);
+
     // Clean up any blood from the flayed effect
     if (mons.has_ench(ENCH_FLAYED))
         heal_flayed_effect(&mons, true, true);
@@ -1700,27 +2025,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
 
-    if (mons.props.exists(MONSTER_DIES_LUA_KEY))
-    {
-        lua_stack_cleaner clean(dlua);
-
-        dlua_chunk &chunk = mons.props[MONSTER_DIES_LUA_KEY];
-
-        if (!chunk.load(dlua))
-        {
-            push_monster(dlua, &mons);
-            clua_pushcxxstring(dlua, _killer_type_name(killer));
-            dlua.callfn(nullptr, 2, 0);
-        }
-        else
-        {
-            mprf(MSGCH_ERROR,
-                 "Lua death function for monster '%s' didn't load: %s",
-                 mons.full_name(DESC_PLAIN).c_str(),
-                 dlua.error.c_str());
-        }
-    }
-
+    handle_monster_dies_lua(mons, killer);
     mons_clear_trapping_net(&mons);
     mons.stop_constricting_all();
     mons.stop_being_constricted();
@@ -1738,14 +2043,13 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
     const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
-    const bool submerged     = mons.submerged();
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
                                 || killer == KILL_DISMISSED);
-    const bool leaves_corpse = !summoned && !fake_abjure && !timeout
-                               && !mons_reset
-                               && !mons_is_tentacle_segment(mons.type);
+    bool leaves_corpse = !summoned && !fake_abjure && !timeout
+                            && !mons_reset
+                            && !mons_is_tentacle_segment(mons.type);
     // Award experience for suicide if the suicide was caused by the
     // player.
     if (MON_KILL(killer) && monster_killed == killer_index)
@@ -1768,7 +2072,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player
-    // instead. Ditto Dithmenos shadow melee and shadow throw.
+    // instead. Ditto Dithmenos shadow actions.
     if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
         && ((env.mons[killer_index].type == MONS_SPECTRAL_WEAPON
@@ -1776,13 +2080,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             || mons_is_player_shadow(env.mons[killer_index])))
     {
         killer_index = you.mindex();
-    }
-
-    // Set an appropriate killer; besides the cases in the preceding if,
-    // this handles Dithmenos shadow spells, which look like they come from
-    // you because the shadow's mid is MID_PLAYER.
-    if (MON_KILL(killer) && killer_index == you.mindex())
         killer = (killer == KILL_MON_MISSILE) ? KILL_YOU_MISSILE : KILL_YOU;
+    }
 
     // Take notes and mark milestones.
     record_monster_defeat(&mons, killer);
@@ -1815,6 +2114,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    // Chance to cause monsters you kill yourself to explode with Mark of Haemoclasm
+    if (YOU_KILL(killer) && you.has_mutation(MUT_MAKHLEB_MARK_HAEMOCLASM)
+        && one_chance_in(10))
+    {
+        mons.props[MAKHLEB_HAEMOCLASM_KEY] = true;
+    }
+
     if (you.prev_targ == monster_killed)
     {
         you.prev_targ = MHITNOT;
@@ -1826,37 +2132,158 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     const bool pet_kill = _is_pet_kill(killer, killer_index);
 
+    if (player_in_branch(BRANCH_CRUCIBLE) && !summoned
+        && (YOU_KILL(killer) || pet_kill))
+    {
+        makhleb_crucible_kill(mons);
+    }
+
     bool did_death_message = false;
 
+    // We do some of these BEFORE checking for explosions from inner flame,
+    // if we don't want to prevent inner flame from doing certain effects of
+    // cleanup.
+    //
+    // (It's possible some other things should be moved here, but dead code that
+    // deals primarily with messaging seems fine to override by exploding)
+    if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
+        && !wizard && !mons_reset)
+    {
+        _protean_explosion(&mons);
+        silent = true;
+    }
+    else if (mons.type == MONS_BATTLESPHERE)
+    {
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons.pos()))
+        {
+            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
+        }
+        end_battlesphere(&mons, true);
+    }
+    else if (mons.type == MONS_SPECTRAL_WEAPON)
+    {
+        end_spectral_weapon(&mons, true, killer == KILL_RESET);
+        silent = true;
+    }
+    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
+             && !wizard && !mons_reset)
+    {
+        _druid_final_boon(&mons);
+    }
+    else if (mons.type == MONS_VAMPIRE_BAT && !silent && !mons_reset
+             && mons.props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+    {
+        _blorkula_bat_death(mons, killer, killer_index);
+    }
+    else if (mons.type == MONS_SOUL_WISP)
+    {
+        actor* source = mons.get_ench(ENCH_HAUNTING).agent();
+        if (source && source->alive())
+        {
+            if (!silent)
+                simple_monster_message(mons, " returns to where it belongs.");
+
+            if (source->is_monster())
+            {
+                source->as_monster()->del_ench(ENCH_WEAK);
+                source->props.erase(SOUL_SPLINTERED_KEY);
+            }
+            else if (source->is_player())
+            {
+                you.duration[DUR_WEAK] = 0;
+                mprf(MSGCH_RECOVERY, "You feel your strength returning.");
+            }
+
+            silent = true;
+        }
+    }
+    // Only transform if we 'died' to timeout. Something simply dealing damage
+    // to us can still shatter us.
+    else if (mons.type == MONS_BLOCK_OF_ICE
+             && mons.has_ench(ENCH_SIMULACRUM_SCULPTING)
+             && timeout)
+    {
+        mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
+                            BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
+                         .set_summoned(&you, 0, SPELL_SIMULACRUM, GOD_NO_GOD);
+        simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
+
+        // If the monster we want to create cannot occupy the tile the block of
+        // ice is on, try to find some nearby spot where it can.
+        // (Mostly this is an issue with kraken simulacra, at present.)
+        if (!monster_habitable_grid(simu.base_type, env.grid(mons.pos())))
+            find_habitable_spot_near(mons.pos(), simu.base_type, 3, true, simu.pos);
+
+        monster_type real_simu_type = simu.base_type;
+        // Don't use uniques' names here; their simulacra won't use them either.
+        if (mons_is_unique(simu.base_type))
+            real_simu_type = mons_species(simu.base_type);
+
+        string msg = "Your " + mons_type_name(real_simu_type, DESC_PLAIN) +
+                     " simulacrum begins to move.";
+        make_derived_undead_fineff::schedule(simu.pos, simu,
+                                             get_monster_data(simu.base_type)->HD,
+                                             "the player",
+                                             msg.c_str(),
+                                             SPELL_SIMULACRUM);
+
+        silent = true;
+    }
+    else if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
+             && !silent && !was_banished && !wizard && !mons_reset
+             && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
+    {
+        // If we died due to the rimeblight instakill threshold, leave a pillar
+        // of rime behind.
+        leaves_corpse = false;
+        did_death_message = true;
+        if (you.see_cell(mons.pos()))
+        {
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
+                 "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
+        }
+        death_spawn_fineff::schedule(MONS_PILLAR_OF_RIME,
+                                    mons.pos(),
+                                    random_range(3, 11) * BASELINE_DELAY);
+    }
+    else if (mons.has_ench(ENCH_MAGNETISED) && mons.type != MONS_ELECTROFERRIC_VORTEX)
+    {
+        death_spawn_fineff::schedule(MONS_ELECTROFERRIC_VORTEX,
+                                     mons.pos(),
+                                     random_range(3, 5) * BASELINE_DELAY);
+    }
 
     if (monster_explodes(mons))
     {
         did_death_message =
             explode_monster(&mons, killer, pet_kill, wizard);
     }
-    else if (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge == 0)
+    else if ((mons.type == MONS_FULMINANT_PRISM || mons.type == MONS_SHADOW_PRISM)
+             && mons.prism_charge == 0)
     {
         if (!silent && !hard_reset && !was_banished)
         {
             simple_monster_message(mons, " detonates feebly.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                                   false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
     }
     else if (mons.type == MONS_FIRE_VORTEX
              || mons.type == MONS_SPATIAL_VORTEX
              || mons.type == MONS_TWISTER
+             || mons.type == MONS_ELECTROFERRIC_VORTEX
              || (mons.type == MONS_FOXFIRE && mons.steps_remaining == 0))
     {
         if (!silent && !mons_reset && !was_banished)
         {
             simple_monster_message(mons, " dissipates!",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                                   false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
 
         if (mons.type == MONS_FIRE_VORTEX && !wizard && !mons_reset
-            && !submerged && !was_banished && !cell_is_solid(mons.pos()))
+            && !was_banished && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_FIRE, mons.pos(), 2 + random2(4), &mons);
         }
@@ -1875,12 +2302,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!silent && !mons_reset && !was_banished)
         {
             simple_monster_message(mons, " vaporises!",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                                   false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
             did_death_message = true;
         }
 
-        if (!wizard && !mons_reset && !submerged && !was_banished
+        if (!wizard && !mons_reset && !was_banished
             && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_COLD, mons.pos(), 2 + random2(4), &mons);
@@ -1888,6 +2315,14 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
+    }
+    else if (mons.type == MONS_PILE_OF_DEBRIS)
+    {
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons.pos()))
+        {
+            place_cloud(CLOUD_DUST, mons.pos(), 2 + random2(4), &mons);
+        }
     }
     else if (mons.type == MONS_DANCING_WEAPON)
     {
@@ -1917,14 +2352,14 @@ item_def* monster_die(monster& mons, killer_type killer,
                 {
                     simple_monster_message(mons,
                                        " turns to gold and falls from the air.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                                       false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
                 else
                 {
                     // something(??) is suppressing goldify
                     simple_monster_message(mons,
                                        " briefly glints gold and then vanishes.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                                       false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
                 drop_items = false;
                 silent = true;
@@ -1933,7 +2368,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             else
             {
                 simple_monster_message(mons, " falls from the air.",
-                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                                       false, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 silent = true;
                 did_death_message = true;
             }
@@ -1968,24 +2403,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons.type == MONS_BATTLESPHERE)
-    {
-        if (!wizard && !mons_reset && !was_banished
-            && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
-        }
-        end_battlesphere(&mons, true);
-    }
     else if (mons.type == MONS_BRIAR_PATCH)
     {
         if (timeout && !silent)
             simple_monster_message(mons, " crumbles away.");
-    }
-    else if (mons.type == MONS_SPECTRAL_WEAPON)
-    {
-        end_spectral_weapon(&mons, true, killer == KILL_RESET);
-        silent = true;
     }
     else if (mons.type == MONS_DROWNED_SOUL)
     {
@@ -1993,11 +2414,64 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.hit_points == -1000)
             silent = true;
     }
-    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
-             && !wizard && !mons_reset)
+    else if (mons.type == MONS_BLAZEHEART_GOLEM && !silent && !mons_reset
+             && !was_banished && !wizard)
     {
-        _druid_final_boon(&mons);
+        // Only blow up if non-dormant
+        if (grid_distance(mons.pos(), you.pos()) <= 1)
+        {
+            mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
+                 mons.name(DESC_YOUR).c_str());
+
+            int old_hd = mons.get_hit_dice();
+            change_monster_type(&mons, MONS_BLAZEHEART_CORE);
+            mons.set_hit_dice(old_hd);
+
+            // Cores should not count as summons and either expire or be removed
+            // by recasting golem itself.
+            mons.del_ench(ENCH_ABJ, true, false);
+            mons.heal(50000);
+
+            // Give exactly enough energy to act immediately after the player's
+            // next action, but never blow up during the same action that the
+            // golem died.
+            mons.speed_increment = 79;
+
+            // Short-circuiting death, since we didn't 'die'
+            return nullptr;
+        }
+        else
+        {
+            simple_monster_message(mons, " falls apart and the last of its fire"
+                                         " goes out.");
+            silent = true;
+        }
     }
+    else if (mons.type == MONS_MARTYRED_SHADE && !silent && !mons_reset
+             && !was_banished && !wizard)
+    {
+        // Don't cause transformation on the player killing their own shade.
+        // (Angering them will normally make them disappear, but if you do
+        // enough damage in one hit, you can still get here)
+        if (!YOU_KILL(killer) || mons.summoner != MID_PLAYER)
+        {
+            _martyr_death_wail(mons);
+
+            // Short-circuit this death
+            return nullptr;
+        }
+    }
+    else if (mons.type == MONS_HOARFROST_CANNON && !silent && !mons_reset
+             && !was_banished && !wizard && env.grid(mons.pos()) == DNGN_FLOOR)
+    {
+        temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
+                            TERRAIN_CHANGE_FLOOD);
+    }
+
+    if (mons.type == MONS_INUGAMI)
+        check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
+    else if (mons.type == MONS_PLAYER_SHADOW)
+        dithmenos_cleanup_player_shadow(&mons);
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
@@ -2005,25 +2479,32 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
-    // Adjust song of slaying bonus & add heals if applicable. Kills by
-    // relevant avatars are adjusted by now to KILL_YOU and are counted.
-    if (you.duration[DUR_WEREBLOOD]
-        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && gives_player_xp)
+    // Adjust fugue of the fallen bonus. This includes both kills by you and
+    // also by your allies.
+    if (you.duration[DUR_FUGUE]
+        && (gives_player_xp
+            && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
+        || mons.props.exists(KIKU_WRETCH_KEY))
     {
-        const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
-        if (wereblood_bonus <= 8) // cap at +9 slay
-            you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
-        if (you.hp < you.hp_max
-            && !you.duration[DUR_DEATHS_DOOR]
-            && !mons_is_object(mons.type)
-            && adjacent(mons.pos(), you.pos()))
+        const int slaying_bonus = you.props[FUGUE_KEY].get_int();
+        // cap at +7 slay (at which point you do bonus negative energy damage
+        // around targets hit)
+        if (slaying_bonus < FUGUE_MAX_STACKS)
         {
-            const int hp = you.hp;
-            you.heal(random_range(1, 3));
-            if (you.hp > hp)
-                mpr("You feel a bit better.");
+            you.props[FUGUE_KEY] = slaying_bonus + 1;
+
+            // Give a message for hitting max stacks
+            if (slaying_bonus + 1 == FUGUE_MAX_STACKS)
+                mpr("The wailing of the fallen reaches a fever pitch!");
         }
+    }
+
+    if (you.has_mutation(MUT_MAKHLEB_MARK_TYRANT)
+        && gives_player_xp
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && !one_chance_in(3))
+    {
+        makhleb_tyrant_buff();
     }
 
     // Apply unrand effects.
@@ -2083,22 +2564,27 @@ item_def* monster_die(monster& mons, killer_type killer,
             // killing born-friendly monsters.
             const bool valid_heal_source = gives_player_xp
                 && !mons_is_object(mons.type);
-            const bool can_divine_heal = valid_heal_source
+            // Chance scales from 30% at 1* to 80% at 6*
+            const bool can_divine_heal =
+                (valid_heal_source
+                    || you_worship(GOD_MAKHLEB)
+                        && player_in_branch(BRANCH_CRUCIBLE)
+                        && mons_class_gives_xp(mons.type)
+                        && !summoned
+                        && !fake_abjure
+                        && !mons.friendly())
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0);
-
-            if (valid_heal_source
-                && you.has_mutation(MUT_DEVOUR_ON_KILL)
-                && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                && coinflip())
-            {
-                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-            }
+                && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
+                                 / (piety_breakpoint(5) - piety_breakpoint(0)) + 30, 100)
+                    || mons.props.exists(MAKHLEB_BLOODRITE_KILL_KEY));
 
             if (can_divine_heal && have_passive(passive_t::restore_hp))
             {
                 hp_heal += (1 + mons.get_experience_level()) / 2
                         + random2(mons.get_experience_level() / 2);
+
+                if (you.form == transformation::slaughter)
+                    hp_heal *= 2;
             }
             if (can_divine_heal
                 && have_passive(passive_t::restore_hp_mp_vs_evil)
@@ -2109,6 +2595,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             if (can_divine_heal && have_passive(passive_t::mp_on_kill))
                 mp_heal += 1 + random2(mons.get_experience_level() / 2);
+
+            if (valid_heal_source
+                && you.has_mutation(MUT_DEVOUR_ON_KILL)
+                && mons.holiness() & (MH_NATURAL | MH_PLANT)
+                && coinflip())
+            {
+                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
+            }
 
             if (hp_heal && you.hp < you.hp_max
                 && !you.duration[DUR_DEATHS_DOOR])
@@ -2158,7 +2652,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     exploded                   ? " is blown up!" :
                     wounded_damaged(targ_holy) ? " is destroyed!"
                                                : " dies!";
-                simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
+                simple_monster_message(mons, msg, false, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
 
@@ -2199,11 +2693,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 if (fake_abjure)
                 {
-                    // Sticks to Snakes
-                    if (mons_genus(mons.type) == MONS_SNAKE)
-                        simple_monster_message(mons, " withers and dies!");
                     // ratskin cloak
-                    else if (mons_genus(mons.type) == MONS_RAT)
+                    if (mons_genus(mons.type) == MONS_RAT)
                     {
                         simple_monster_message(mons, " returns to the shadows"
                                                       " of the Dungeon!");
@@ -2218,19 +2709,23 @@ item_def* monster_die(monster& mons, killer_type killer,
                     {
                         simple_monster_message(mons, " crumbles into dust!");
                     }
+                    else if (mons.type == MONS_HOARFROST_CANNON)
+                        simple_monster_message(mons, " melts away.");
                     else
                     {
                         string msg = " " + summoned_poof_msg(&mons) + "!";
                         simple_monster_message(mons, msg.c_str());
                     }
                 }
+                else if (mons.type == MONS_SOUL_WISP)
+                    simple_monster_message(mons, " fades into mist!");
                 else
                 {
                     const char* msg =
                         exploded                     ? " is blown up!" :
                         wounded_damaged(targ_holy)   ? " is destroyed!"
                                                      : " dies!";
-                    simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
+                    simple_monster_message(mons, msg, false, MSGCH_MONSTER_DAMAGE,
                                            MDAM_DEAD);
                 }
             }
@@ -2253,6 +2748,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 if (!mons.is_summoned())
                     drop_items = false;
                 break;
+
+
             }
 
             {
@@ -2284,22 +2781,14 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     // Make sure Boris has a foe to address.
-    if (mons.foe == MHITNOT)
-    {
-        if (!mons.wont_attack() && !crawl_state.game_is_arena())
-            mons.foe = MHITYOU;
-        else if (!invalid_monster_index(killer_index))
-            mons.foe = killer_index;
-    }
+    _maybe_set_monster_foe(mons, killer_index);
 
     // Make sure that the monster looks dead.
     if (mons.alive() && (!summoned || duration > 0))
     {
         dprf("Non-damage %s of %s.", mons_reset ? "reset" : "kill",
                                         mons.name(DESC_A, true).c_str());
-        if (YOU_KILL(killer))
-            mons.damage_friendly += mons.hit_points * 2;
-        else if (pet_kill)
+        if (YOU_KILL(killer) || pet_kill)
             mons.damage_friendly += mons.hit_points;
         mons.damage_total += mons.hit_points;
 
@@ -2394,7 +2883,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             && !was_banished)
         {
             if (mons_base_type(mons) == MONS_KRAKEN)
-                mpr("The dead kraken's tentacles slide back into the water.");
+                mpr("The kraken's tentacles disappear.");
             else if (mons.type == MONS_TENTACLED_STARSPAWN)
                 mpr("The starspawn's tentacles wither and die.");
         }
@@ -2444,6 +2933,38 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mummy_curse_power(mons.type));
     }
 
+    if (mons.has_ench(ENCH_RIMEBLIGHT) && !was_banished && !mons_reset)
+    {
+        // Potentially infect everyone around the dead monster
+        bool did_spread_message = false;
+        for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        {
+            monster* victim = monster_at(*ai);
+            if (victim && !victim->friendly())
+            {
+                // We only 'test' for spread here, and then manually apply later
+                // on, so that we only print the message about the plague
+                // spreading if it *does* spread, but still print it before other
+                // things get infected by it.
+                if (maybe_spread_rimeblight(*victim,
+                                            mons.props[RIMEBLIGHT_POWER_KEY].get_int(),
+                                            true))
+                {
+                    if (!did_spread_message)
+                    {
+                        if (you.can_see(mons))
+                        {
+                            mprf("Plague seeps from the dead %s.",
+                                 mons.name(DESC_PLAIN).c_str());
+                        }
+                        did_spread_message = true;
+                    }
+                    apply_rimeblight(*victim, mons.props[RIMEBLIGHT_POWER_KEY].get_int());
+                }
+            }
+        }
+    }
+
     // Necromancy
     bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
@@ -2466,11 +2987,20 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
+        if (in_los && corpseworthy && yred_torch_is_raised())
+            yred_feed_torch(&mons);
+
         corpse_consumed = _apply_necromancy(mons, !death_message, corpse_gone,
                                             in_los, corpseworthy);
+
+        if (in_los && corpseworthy && you.duration[DUR_GRAVE_CLAW_RECHARGE]
+            && (mons.holiness() & MH_NATURAL))
+        {
+            gain_grave_claw_soul();
+        }
     }
 
-    if (!wizard && !submerged && !was_banished)
+    if (!wizard && !was_banished)
     {
         _monster_die_cloud(&mons, !fake_abjure && !timeout && !mons_reset,
                            silent, summoned);
@@ -2497,8 +3027,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
-    const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
-                                                             killer_index);
 
     // Player Powered by Death
     if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
@@ -2528,8 +3056,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (fake)
     {
-        _give_experience(player_xp, monster_xp, killer, killer_index,
-                         pet_kill, was_visible, mons.xp_tracking);
+        _give_player_experience(player_xp, killer, pet_kill,
+                                was_visible, mons.xp_tracking);
         crawl_state.dec_mon_acting(&mons);
 
         return corpse;
@@ -2548,6 +3076,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
     }
+
+    if (mons.has_ench(ENCH_VENGEANCE_TARGET))
+        beogh_progress_vengeance();
 
     mons_remove_from_grid(mons);
     fire_monster_death_event(&mons, killer, false);
@@ -2581,6 +3112,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             && !mons.props.exists(KIKU_WRETCH_KEY))
         {
             const monster_type orig = static_cast<monster_type>(corpse->orig_monnum);
+            // Avoid a possible crash with level excursions
+            // (See previous code block comment ^)
+            unwind_var<int> fakehp(mons.hit_points, 1);
             maybe_drop_monster_organ(corpse->mon_type, orig,
                                      item_pos(*corpse), silent);
         }
@@ -2606,6 +3140,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (hepliaklqana_ancestor() == MID_NOBODY)
                 you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
         }
+        else if (mons.type == MONS_ORC_APOSTLE)
+            beogh_swear_vegeance(mons);
+    }
+    else if (mons.is_divine_companion()
+             && killer == KILL_BANISHED
+             && mons.type == MONS_ORC_APOSTLE)
+    {
+        beogh_follower_banished(mons);
     }
 
     // If we kill an invisible monster reactivate autopickup.
@@ -2631,8 +3173,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (!mons_reset)
     {
-        _give_experience(player_xp, monster_xp, killer, killer_index,
-                pet_kill, was_visible, mons.xp_tracking);
+        _give_player_experience(player_xp, killer, pet_kill, was_visible,
+                                mons.xp_tracking);
     }
     return corpse;
 }
@@ -2812,22 +3354,22 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     // Even fire resistant monsters perish in lava.
     if (grid == DNGN_LAVA && mons->res_fire() < 2)
     {
-        simple_monster_message(*mons, " is incinerated.",
+        simple_monster_message(*mons, " is incinerated.", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
     else if (mons->can_drown())
     {
-        simple_monster_message(*mons, " drowns.",
+        simple_monster_message(*mons, " drowns.", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
     else if (mons->type == MONS_BOULDER)
     {
-        simple_monster_message(*mons, " sinks to the bottom.",
+        simple_monster_message(*mons, " sinks to the bottom.", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
     else
     {
-        simple_monster_message(*mons, " falls apart.",
+        simple_monster_message(*mons, " falls apart.", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
 
@@ -2840,7 +3382,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Yredelemnul special, redux: It's the only one that can
     // work on drowned monsters.
-    if (!_yred_bound_soul(mons, killer))
+    if (!_yred_bind_soul(mons, killer))
         monster_die(*mons, killer, killnum, true);
 }
 
@@ -2929,11 +3471,21 @@ string summoned_poof_msg(const monster* mons, bool plural)
             msg      = "dissolve%s into sparkling lights";
             no_chaos = true;
         }
+        else if (valid_mon && mons->god == GOD_YREDELEMNUL)
+            msg      = "returns to the grave";
         break;
 
     case SPELL_SPECTRAL_CLOUD:
-    case SPELL_CALL_LOST_SOUL:
+    case SPELL_CALL_LOST_SOULS:
         msg = "fade%s away";
+        break;
+
+    case SPELL_STICKS_TO_SNAKES:
+        msg = "turns back into a lifeless stick";
+        break;
+
+    case SPELL_FLASHING_BALESTRA:
+        msg = "returns to the armoury";
         break;
     }
 
@@ -3011,7 +3563,6 @@ void pikel_band_neutralise()
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_LEMURE
-            && testbits(mi->flags, MF_BAND_MEMBER)
             && mi->props.exists(PIKEL_BAND_KEY)
             && mi->observable())
         {
@@ -3180,6 +3731,9 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (mons->asleep())
         behaviour_event(mons, ME_DISTURB, 0, mons->pos());
 
+    // If the other didn't have a foe yet, it sure does now!
+    _maybe_set_monster_foe(*mons, killer_index);
+
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
@@ -3208,11 +3762,14 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
     string death_message = getSpeakString(key);
 
-    // Check if they can speak or not: they may have been polymorphed.
-    if (you.see_cell(mons->pos()) && !death_message.empty() && mons->can_speak())
-        mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
-    else if (mons->can_speak())
-        mpr(death_message);
+    if (!death_message.empty() && !invalid_msg(*mons, death_message))
+    {
+        // Check if they can speak or not: they may have been polymorphed.
+        if (you.see_cell(mons->pos()) && mons->can_speak())
+            mons_speaks_msg(mons, death_message, MSGCH_TALK, silenced(you.pos()));
+        else if (mons->can_speak())
+            mpr(death_message);
+    }
 
     // Upgrade the spellbook here, as elven_twin_energize
     // may not be called due to lack of visibility.

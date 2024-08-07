@@ -1,0 +1,22 @@
+name: "polar bear"
+glyph: {char: "h", colour: lightblue}
+flags: [warm_blood]
+resists: {cold: 1}
+xp_mult: 12
+genus: bear
+will: 20
+attacks:
+ - {type: bite, damage: 20}
+ - {type: claw, damage: 5}
+ - {type: claw, damage: 5}
+hd: 7
+hp_10x: 455
+ac: 7
+ev: 8
+spells: bear
+has_corpse: true
+shout: growl
+intelligence: animal
+habitat: amphibious
+size: large
+shape: quadruped_tailless

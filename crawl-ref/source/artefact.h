@@ -14,6 +14,7 @@
 #define ARTEFACT_PROPS_KEY  "artefact_props"
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
+#define FIXED_PROPS_KEY     "artefact_fixed_props"
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
@@ -37,13 +38,6 @@ enum unrand_flag_type
     UNRAND_FLAG_UNIDED           =0x200,
     UNRAND_FLAG_SKIP_EGO         =0x400,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
-};
-
-enum setup_missile_type
-{
-    SM_CONTINUE,
-    SM_FINISHED,
-    SM_CANCEL,
 };
 
 struct unrandart_entry
@@ -74,8 +68,7 @@ struct unrandart_entry
     void (*world_reacts_func)(item_def* item);
     void (*melee_effects)(item_def* item, actor* attacker,
                           actor* defender, bool mondied, int damage);
-    setup_missile_type (*launch)(item_def* item, bolt* beam,
-                                 string* ammo_name, bool* returning);
+    void (*launch)(bolt* beam);
     void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
 
@@ -128,6 +121,8 @@ void make_ashenzari_randart(item_def &item);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
 
+void fill_gizmo_properties(CrawlVector& gizmos);
+
 bool randart_is_bad(const item_def &item);
 bool randart_is_bad(const item_def &item, artefact_properties_t &proprt);
 
@@ -140,7 +135,7 @@ void artefact_set_property(item_def           &item,
                            int                 val);
 
 /// Type for the value of an artefact property
-enum artp_value_type
+enum artefact_value_type
 {
     ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
     ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
@@ -148,9 +143,11 @@ enum artp_value_type
                     ///      See \ref brand_type in item-prop-enum.h
     ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
 };
-artp_value_type artp_potential_value_types(artefact_prop_type prop);
+artefact_value_type artp_value_type(artefact_prop_type prop);
+bool artp_value_is_valid(artefact_prop_type prop, int value);
 
 const char *artp_name(artefact_prop_type prop);
+artefact_prop_type artp_type_from_name(const string &name);
 bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
 

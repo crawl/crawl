@@ -2,9 +2,6 @@ define(["jquery", "comm"], function ($, comm) {
     "use strict";
 
     var exports = {};
-    exports.flash = 0;
-    exports.flash_colour = null;
-    var flash_changed = false;
 
     function VColour(r, g, b, a)
     {
@@ -31,22 +28,19 @@ define(["jquery", "comm"], function ($, comm) {
         VColour(255, 255, 255, 100), // WHITE
     ];
 
-    exports.flash_changed = function ()
+    exports.get_flash_colour = function(flash_colour, flash_alpha)
     {
-        var val = flash_changed;
-        flash_changed = false;
-        return val;
-    }
+        if (!flash_colour)
+            return null;
+        const colour = flash_colours[flash_colour];
 
-    function handle_flash_message(data)
-    {
-        if (exports.flash != data.col)
-            flash_changed = true;
-        exports.flash = data.col;
-        if (data.col)
-            exports.flash_colour = flash_colours[data.col];
-        else
-            exports.flash_colour = null;
+        if (flash_alpha === undefined)
+            flash_alpha = 0;
+
+        if (flash_alpha === 0)
+            return colour;
+
+        return VColour(colour.r, colour.g, colour.b, flash_alpha);
     }
 
     exports.cursor_locs = [];
@@ -84,9 +78,6 @@ define(["jquery", "comm"], function ($, comm) {
 
     function init()
     {
-        exports.flash = 0;
-        exports.flash_colour = null;
-        flash_changed = false;
         exports.cursor_locs = [];
     }
 
@@ -94,7 +85,6 @@ define(["jquery", "comm"], function ($, comm) {
 
     comm.register_handlers({
         "cursor": handle_cursor_message,
-        "flash": handle_flash_message,
     });
 
     return exports;

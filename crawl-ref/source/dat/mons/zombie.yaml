@@ -1,0 +1,18 @@
+name: "zombie"
+glyph: {char: "Z", colour: brown}
+flags: [no_regen]
+resists: {cold: 2}
+xp_mult: 9
+holiness: [undead]
+will_per_hd: 1
+attacks:
+ - {type: hit, damage: 10}
+hd: 1
+hp_10x: 75
+ac: 0
+ev: 4
+intelligence: brainless
+speed: 5
+size: small
+shape: misc
+tile: zombie_small

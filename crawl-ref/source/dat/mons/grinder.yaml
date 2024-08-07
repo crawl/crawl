@@ -1,0 +1,21 @@
+name: "Grinder"
+glyph: {char: "5", colour: blue}
+flags: [no_ht_wand, speaks, unique, female]
+resists: {poison: 1, cold: 2}
+xp_mult: 11
+species: shadow_imp
+holiness: [demonic]
+will: 20
+attacks:
+ - {type: hit, flavour: pain, damage: 11}
+hd: 6
+hp_10x: 390
+ac: 3
+ev: 11
+spells: grinder
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: little
+shape: humanoid
+god: Makhleb

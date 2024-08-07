@@ -26,8 +26,6 @@ int absdungeon_depth(branch_type branch, int depth);
 
 bool single_level_branch(branch_type branch);
 
-bool branch_allows_followers(branch_type branch);
-
 vector<level_id> all_dungeon_ids();
 
 bool is_level_on_stack(level_id id);

@@ -48,13 +48,14 @@ int main(int argc, char **argv)
 
     if (!proc.process_list(argv[arg]))
     {
-        fprintf(stderr, "Error: failed to process '%s'\n", argv[1]);
+        fprintf(stderr, "Error: failed to process '%s' (option: %s)\n", argv[arg],
+            (image && code) ? "-i -c" : image ? "-i" : "-c");
         return -2;
     }
 
     if (!proc.write_data(image, code))
     {
-        fprintf(stderr, "Error: failed to write data for '%s'\n", argv[1]);
+        fprintf(stderr, "Error: failed to write data for '%s'\n", argv[arg]);
         return -3;
     }
 

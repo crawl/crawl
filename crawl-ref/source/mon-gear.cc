@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "dungeon.h"
+#include "ghost.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -206,6 +207,7 @@ static item_def* make_item_for_monster(
     iflags_t flags = 0);
 
 typedef vector<pair<weapon_type, int>> weapon_list;
+typedef vector<pair<armour_type, int>> armour_list;
 struct plus_range
 {
     int odds; ///<1/x chance of getting +[min,max] to weapon plus
@@ -588,7 +590,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_NAGA_WARRIOR,            { NAGA_WEAPONS } },
         { MONS_ORC_WARRIOR,             { NAGA_WEAPONS } },
         { MONS_ORC_HIGH_PRIEST,         { NAGA_WEAPONS } },
-        { MONS_BLORK_THE_ORC,           { NAGA_WEAPONS } },
+        { MONS_BLORKULA_THE_ORCULA,     { NAGA_WEAPONS } },
         { MONS_DANCING_WEAPON,          { NAGA_WEAPONS, {}, {}, 1 } },
         { MONS_SPECTRAL_WEAPON,         { NAGA_WEAPONS } }, // for mspec placement
         { MONS_FRANCES,                 { NAGA_WEAPONS } },
@@ -686,6 +688,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_TRIDENT,          1 },
                 { WPN_SPEAR,            2 },
         } } },
+        { MONS_KOBOLD_BLASTMINER,
+            { { { WPN_ORCBOW,           8 },
+                { WPN_ARBALEST,         31 },
+                { WPN_HAND_CANNON,      1 },
+        } } },
         { MONS_CENTAUR,
             { { { WPN_SHORTBOW,         1 },
                 { WPN_ORCBOW,           1 },
@@ -742,6 +749,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 0, 5},
             { { SPWPN_HOLY_WRATH, 1}}
         } },
+        { MONS_WIGLAF,
+            { { { WPN_BROAD_AXE,        14 },
+                { WPN_BATTLEAXE,        8 },
+                { WPN_EVENINGSTAR,      5 },
+                { WPN_MORNINGSTAR,      8 }
+        } } },
         { MONS_DONALD,
             { { { WPN_SCIMITAR,         12 },
                 { WPN_LONG_SWORD,       10 },
@@ -796,7 +809,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_URUG,                    { URUG_WEAPONS } },
         { MONS_NORRIS,                  { URUG_WEAPONS } },
-        { MONS_FREDERICK,               { URUG_WEAPONS } },
+        { MONS_FREDERICK,
+            { { { WPN_DEMON_BLADE,          2 },
+                { WPN_DEMON_WHIP,           1 },
+                { WPN_DEMON_TRIDENT,        2 },
+                { WPN_DOUBLE_SWORD,         1 },
+                { WPN_BROAD_AXE,            2 },
+                { WPN_EVENINGSTAR,          2 },
+        } } },
         { MONS_FIRE_GIANT, {
             { { WPN_GREAT_SWORD,        1 } }, {},
             { { SPWPN_FLAMING, 1 } },
@@ -810,6 +830,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_ORC_SORCERER,    { { { WPN_DAGGER, 1 } } } },
         { MONS_NERGALLE,        { { { WPN_DAGGER, 1 } } } },
         { MONS_DOWAN,           { { { WPN_DAGGER, 1 } } } },
+        { MONS_BURIAL_ACOLYTE,  { { { WPN_DAGGER, 1 } } } },
         { MONS_KOBOLD_DEMONOLOGIST, { { { WPN_DAGGER, 1 } } } },
         { MONS_NECROMANCER,      { { { WPN_DAGGER, 1 } } } },
         { MONS_ARCANIST,         { { { WPN_DAGGER, 1 } } } },
@@ -863,7 +884,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { NUM_SPECIAL_WEAPONS, 3 } },
         } },
         { MONS_SPRIGGAN_DEFENDER, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
-        { MONS_THE_ENCHANTRESS, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
+        { MONS_ENCHANTRESS, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
         { MONS_HELLBINDER, { { { WPN_DEMON_BLADE, 1 } } } },
         { MONS_IGNACIO, {
             { { WPN_EXECUTIONERS_AXE, 1 } },
@@ -898,7 +919,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             }, { 1, 2, 5 },
         } },
         { MONS_DEMONSPAWN_CORRUPTER,   { DS_WEAPONS } },
-        { MONS_DEMONSPAWN_BLACK_SUN,   { DS_WEAPONS } },
+        { MONS_DEMONSPAWN_SOUL_SCHOLAR,   { DS_WEAPONS } },
         { MONS_DEMONSPAWN_BLOOD_SAINT, {
             { { WPN_DAGGER,             4 },
               { WPN_QUARTERSTAFF,       1 } },
@@ -1112,6 +1133,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             level = ISPEC_GOOD_ITEM;
         break;
 
+    case MONS_WAR_GARGOYLE:
+        if (one_chance_in(3))
+            level = ISPEC_GOOD_ITEM;
+        break;
+
     case MONS_MERFOLK:
         if (active_monster_band == BAND_MERFOLK_IMPALER)
         {
@@ -1166,10 +1192,21 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             make_item_unrandart(item, UNRAND_SNAKEBITE);
         break;
 
+    case MONS_XAKKRIXIS:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.plus += 1 + random2(4);
+        item.sub_type = random_choose_weighted(15, WPN_GREAT_MACE,
+                                               10, WPN_LAJATANG,
+                                               10, WPN_QUARTERSTAFF,
+                                                5, WPN_GLAIVE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
+        break;
+
     case MONS_ARACHNE:
         force_item = true;
         item.base_type = OBJ_STAVES;
-        item.sub_type = STAFF_POISON;
+        item.sub_type = STAFF_ALCHEMY;
         item.flags    |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_OLGREB))
             make_item_unrandart(item, UNRAND_OLGREB);
@@ -1202,7 +1239,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
-    case MONS_THE_ENCHANTRESS:
+    case MONS_ENCHANTRESS:
         if (one_chance_in(6))
         {
             force_item = true;
@@ -1362,10 +1399,27 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         _give_weapon(mon, level, true);
     }
 
+    if (mon->type == MONS_ERICA && i.is_type(OBJ_WEAPONS, WPN_SCIMITAR))
+    {
+        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS,
+                              0, 1, ISFLAG_KNOW_TYPE);
+    }
+
     if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
     {
         make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
                               0, 1, ISFLAG_KNOW_TYPE);
+    }
+
+    if (mon->type == MONS_WIGLAF)
+    {
+        // Always good, and sometimes especially good
+        item_def* hat = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, ISPEC_RANDART);
+        hat->plus = random_range(2, 4);
+
+        hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
+        hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
+        bind_item_tile(*hat);
     }
 
     if (mon->type == MONS_JOSEPHINA)
@@ -1576,6 +1630,8 @@ static void _give_shield(monster* mon, int level)
     switch (mon->type)
     {
     case MONS_ASTERION:
+    case MONS_XAKKRIXIS:
+    case MONS_WIGLAF:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_KITE_SHIELD,
                               level * 2 + 1, 1);
         break;
@@ -1595,6 +1651,16 @@ static void _give_shield(monster* mon, int level)
             set_item_ego_type(*shield, OBJ_ARMOUR, ego);
         }
         break;
+
+    case MONS_FREDERICK:
+    {
+        // Divinity or conjurer support.
+        const auto ego = random_choose(SPARM_LIGHT, SPARM_ENERGY);
+
+        give_specific_item(mon, items(false, OBJ_ARMOUR,
+                           ARM_ORB, ISPEC_RANDART, ego));
+    }
+    break;
 
     case MONS_DAEVA:
     case MONS_MENNAS:
@@ -1662,9 +1728,9 @@ static void _give_shield(monster* mon, int level)
             break;
     // else fall-through
     case MONS_SPRIGGAN_DEFENDER:
-    case MONS_THE_ENCHANTRESS:
+    case MONS_ENCHANTRESS:
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
-                      mon->type == MONS_THE_ENCHANTRESS ? ISPEC_GOOD_ITEM :
+                      mon->type == MONS_ENCHANTRESS ? ISPEC_GOOD_ITEM :
                       mon->type == MONS_SPRIGGAN_DEFENDER ? level * 2 + 1 :
                       level);
         if (shield && !is_artefact(*shield)) // ineligible...
@@ -1719,7 +1785,7 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_DEMONSPAWN_SOUL_SCHOLAR:
         if (one_chance_in(3))
         {
             armour_type shield_type = random_choose(ARM_BUCKLER, ARM_KITE_SHIELD);
@@ -1862,6 +1928,7 @@ int make_mons_armour(monster_type type, int level)
     }
 
     case MONS_DONALD:
+    case MONS_WIGLAF:
         if (one_chance_in(3))
             level = ISPEC_GOOD_ITEM;
         item.base_type = OBJ_ARMOUR;
@@ -1907,7 +1974,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_PARGHIT:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
+        item.sub_type = ARM_GOLDEN_DRAGON_ARMOUR;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_DRAGON_KING))
             make_item_unrandart(item, UNRAND_DRAGON_KING);
         else
@@ -2024,7 +2091,6 @@ int make_mons_armour(monster_type type, int level)
         break;
     }
 
-    case MONS_ERICA:
     case MONS_JOSEPHINE:
     case MONS_PSYCHE:
         if (one_chance_in(5))
@@ -2034,6 +2100,13 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_BORIS:
+        force_item = true;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        make_item_randart(item);
+        item.plus = random_range(2, 4);
+        break;
+
     case MONS_JOSEPHINA:
         level = ISPEC_GOOD_ITEM;
     case MONS_ORC_SORCERER:
@@ -2043,7 +2116,7 @@ int make_mons_armour(monster_type type, int level)
             level = ISPEC_GOOD_ITEM;
         // fallthrough to robes
     case MONS_ORC_WIZARD:
-    case MONS_BLORK_THE_ORC:
+    case MONS_BLORKULA_THE_ORCULA:
     case MONS_NERGALLE:
     case MONS_DOWAN:
     case MONS_JESSICA:
@@ -2065,6 +2138,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_WIGHT:
     case MONS_SPRIGGAN_DRUID:
     case MONS_AGNES:
+    case MONS_BURIAL_ACOLYTE:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
     case MONS_PIKEL:
@@ -2074,6 +2148,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_RAGGED_HIEROPHANT:
     case MONS_FENSTRIDER_WITCH:
     case MONS_JEREMIAH:
+    case MONS_XAKKRIXIS:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;
@@ -2090,7 +2165,7 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_CLOAK;
         break;
 
-    case MONS_THE_ENCHANTRESS:
+    case MONS_ENCHANTRESS:
         force_item = true;
         make_item_unrandart(item, UNRAND_FAERIE);
         break;
@@ -2106,7 +2181,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_DEMONSPAWN_SOUL_SCHOLAR:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(2, ARM_LEATHER_ARMOUR,
                                                 3, ARM_RING_MAIL,
@@ -2214,10 +2289,17 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
+
+    if (mons->type == MONS_ORC_APOSTLE)
+        give_apostle_equipment(mons);
 }
 
 void view_monster_equipment(monster* mon)
 {
+    // Don't fully identify player shadow equipment, since it makes messaging worse.
+    if (mon->type == MONS_PLAYER_SHADOW)
+        return;
+
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mon->inv[i] == NON_ITEM)
@@ -2228,5 +2310,186 @@ void view_monster_equipment(monster* mon)
         item.flags |= ISFLAG_SEEN;
         if (item.base_type == OBJ_WANDS)
             set_ident_type(item, true);
+    }
+}
+
+// Reduced weight of axes compared to normal orcs, since they are much stronger
+// in player ally hands. (And also stronger against your apostles)
+static const weapon_list APOSTLE_WARRIOR_WEAPONS =
+    {   { WPN_GREAT_SWORD,      3 },
+        { WPN_GREAT_MACE,       3 },
+        { WPN_DIRE_FLAIL,       3 },
+        { WPN_LONG_SWORD,       2 },
+        { WPN_HALBERD,          2 },
+        { WPN_WAR_AXE,          2 },
+        { WPN_BATTLEAXE,        1 },
+        { WPN_GLAIVE,           1 },
+        { WPN_TRIDENT,          1 }, };
+
+static const weapon_list APOSTLE_WARRIOR_WEAPONS_GOOD =
+    {   { WPN_GREAT_SWORD,      3 },
+        { WPN_DOUBLE_SWORD,     3 },
+        { WPN_TRIPLE_SWORD,     1 },
+        { WPN_EVENINGSTAR,      4 },
+        { WPN_BATTLEAXE,        6 },
+        { WPN_EXECUTIONERS_AXE, 3 },
+        { WPN_BROAD_AXE,        3 },
+        { WPN_GREAT_MACE,       2 },
+        { WPN_BARDICHE,         2 },
+        { WPN_GLAIVE,           2 }, };
+
+static const weapon_list APOSTLE_PRIEST_WEAPONS =
+    {   { WPN_FLAIL,            60 },
+        { WPN_HAND_AXE,         40 },
+        { WPN_MACE,             40 },
+        { WPN_TRIDENT,          20 },
+        { WPN_HALBERD,          10 },
+        { WPN_WAR_AXE,          14 },
+        { WPN_MORNINGSTAR,      25 } };
+
+static const armour_list APOSTLE_HEAVY_ARMOUR =
+    {   { ARM_SCALE_MAIL,            50 },
+        { ARM_CHAIN_MAIL,            40 },
+        { ARM_PLATE_ARMOUR,          30 }, };
+
+static const armour_list APOSTLE_LIGHT_ARMOUR =
+    {   { ARM_LEATHER_ARMOUR,       50 },
+        { ARM_RING_MAIL,            40 },
+        { ARM_TROLL_LEATHER_ARMOUR, 7 },
+        { ARM_STEAM_DRAGON_ARMOUR,  5 },
+        { ARM_ACID_DRAGON_ARMOUR,   4 },
+        };
+
+static const armour_list APOSTLE_ELITE_HEAVY_ARMOUR =
+    {   { ARM_PLATE_ARMOUR,          45 },
+        { ARM_STORM_DRAGON_ARMOUR,   25 },
+        { ARM_SHADOW_DRAGON_ARMOUR,  20 },
+        { ARM_GOLDEN_DRAGON_ARMOUR,  8 },
+        { ARM_CRYSTAL_PLATE_ARMOUR,  12 }, };
+
+void give_apostle_equipment(monster* apostle)
+{
+    ASSERT(apostle->type == MONS_ORC_APOSTLE);
+
+    int pow = apostle->props[APOSTLE_POWER_KEY].get_int();
+
+    switch (static_cast<apostle_type>(apostle->props[APOSTLE_TYPE_KEY].get_int()))
+    {
+        default:
+        case APOSTLE_WARRIOR:
+        {
+            weapon_list list = x_chance_in_y(max(0, pow - 50), 100)
+                                 ? APOSTLE_WARRIOR_WEAPONS_GOOD
+                                 : APOSTLE_WARRIOR_WEAPONS;
+
+            const weapon_type *wpn_type = random_choose_weighted(list);
+            const bool randart = x_chance_in_y(pow, 350);
+
+            item_def* weapon =
+                make_item_for_monster(apostle, OBJ_WEAPONS, *wpn_type,
+                                      randart ? ISPEC_RANDART : ISPEC_GIFT,
+                                      true, ISFLAG_KNOW_TYPE);
+
+            // Sometimes give a shield if we rolled a one-handed weapon (with it
+            // being more likely at higher apostle power)
+            if (apostle->hands_reqd(*weapon) == HANDS_ONE
+                && x_chance_in_y(pow, 125))
+            {
+                make_item_for_monster(apostle, OBJ_ARMOUR,
+                                      one_chance_in(3) ? ARM_TOWER_SHIELD
+                                                       : ARM_KITE_SHIELD,
+                                      pow);
+            }
+
+            armour_list alist = x_chance_in_y(max(0, pow - 50), 200)
+                                 ? APOSTLE_ELITE_HEAVY_ARMOUR
+                                 : APOSTLE_HEAVY_ARMOUR;
+
+            const armour_type *arm_type = random_choose_weighted(alist);
+
+            item_def* armour =
+                make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
+                                      100, true, ISFLAG_KNOW_TYPE);
+
+            armour->plus += roll_dice(2, 2);
+            if (x_chance_in_y(max(0, pow - 50), 50))
+                armour->plus += roll_dice(2, 2);
+
+            // If we have no spell besides battlecry, have a chance for
+            // boomerangs or javelins.
+            if ((apostle->spells.size() == 0
+                 || apostle->spells[0].spell == SPELL_BATTLECRY)
+                && pow >= 25 && one_chance_in(3))
+            {
+                if (one_chance_in(3))
+                    make_item_for_monster(apostle, OBJ_MISSILES, MI_JAVELIN, 0);
+                else
+                    make_item_for_monster(apostle, OBJ_MISSILES, MI_BOOMERANG, 0);
+            }
+
+            // TODO: Very slim chance of specific unrand weapons?
+        }
+        break;
+
+        case APOSTLE_WIZARD:
+        {
+            make_item_for_monster(apostle, OBJ_WEAPONS, WPN_DAGGER,
+                                  x_chance_in_y(pow, 250) ? ISPEC_RANDART
+                                                          : ISPEC_GIFT,
+                                  true, ISFLAG_KNOW_TYPE);
+
+            make_item_for_monster(apostle, OBJ_ARMOUR, ARM_ROBE,
+                                  x_chance_in_y(pow, 550) ? ISPEC_RANDART
+                                                          : ISPEC_GIFT,
+                                  true, ISFLAG_KNOW_TYPE);
+
+            // Slim chance at higher levels of a random ring or orb of energy
+            if (x_chance_in_y(max(0, pow - 40), 280))
+            {
+                give_specific_item(apostle, items(false, OBJ_ARMOUR,
+                                    ARM_ORB, ISPEC_RANDART, SPARM_ENERGY));
+            }
+            else if (x_chance_in_y(pow, 150))
+            {
+                // Many ring types do nothing for monsters, so let's pick through
+                // ones that do.
+                jewellery_type rtype = random_choose(RING_PROTECTION_FROM_FIRE,
+                                                     RING_POISON_RESISTANCE,
+                                                     RING_PROTECTION_FROM_COLD,
+                                                     RING_EVASION,
+                                                     RING_POSITIVE_ENERGY,
+                                                     RING_PROTECTION);
+
+                make_item_for_monster(apostle, OBJ_JEWELLERY, rtype, 0,
+                                      x_chance_in_y(pow, 125)? ISPEC_RANDART : 0,
+                                      ISFLAG_KNOW_TYPE);
+            }
+        }
+        break;
+
+        case APOSTLE_PRIEST:
+        {
+            const weapon_type *wpn_type = random_choose_weighted(APOSTLE_PRIEST_WEAPONS);
+            const bool randart = x_chance_in_y(pow, 500);
+
+            make_item_for_monster(apostle, OBJ_WEAPONS, *wpn_type,
+                                    randart ? ISPEC_RANDART : ISPEC_GIFT,
+                                    true, ISFLAG_KNOW_TYPE);
+
+            // No shields for priests
+
+            armour_list alist = x_chance_in_y(max(0, pow - 50), 200)
+                                 ? APOSTLE_HEAVY_ARMOUR
+                                 : APOSTLE_LIGHT_ARMOUR;
+
+            const armour_type *arm_type = random_choose_weighted(alist);
+
+            item_def* armour =
+                make_item_for_monster(apostle, OBJ_ARMOUR, *arm_type,
+                                      100, true, ISFLAG_KNOW_TYPE);
+
+            armour->plus += roll_dice(2, 2);
+        }
+        break;
     }
 }

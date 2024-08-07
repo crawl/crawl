@@ -1,0 +1,21 @@
+name: "angel"
+glyph: {char: "A", colour: white}
+flags: [flies, fighter, speaks]
+resists: {elec: 1, poison: 1}
+holiness: [holy]
+will: 120
+attacks:
+ - {type: hit, damage: 25}
+ - {type: hit, damage: 10}
+hd: 12
+hp_10x: 1020
+ac: 10
+ev: 20
+spells: angel
+shout: shout
+intelligence: human
+speed: 15
+uses: weapons_armour
+size: medium
+shape: humanoid_winged
+god: Shining One

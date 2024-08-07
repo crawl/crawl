@@ -1,0 +1,21 @@
+name: "Asterion"
+glyph: {char: "H", colour: lightblue}
+flags: [see_invis, speaks, warm_blood, unique, male]
+xp_mult: 15
+species: minotaur
+will: 100
+attacks:
+ - {type: hit, damage: 35}
+ - {type: gore, damage: 20}
+hd: 15
+hp_10x: 1275
+ac: 4
+ev: 4
+spells: asterion
+has_corpse: true
+shout: bellow
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Makhleb

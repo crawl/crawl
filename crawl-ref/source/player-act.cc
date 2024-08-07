@@ -96,6 +96,7 @@ static void _player_moveto(const coord_def &c, bool real_movement, bool clear_ne
 
     // clear invalid constrictions even with fake movement
     you.clear_invalid_constrictions();
+    you.clear_far_engulf();
 }
 
 player_vanishes::player_vanishes(bool _movement)
@@ -125,13 +126,10 @@ void player::moveto(const coord_def &c, bool clear_net)
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 {
-    actor *target = actor_at(c);
-    if (!target || target->submerged())
-    {
-        moveto(c, clear_net);
-        return true;
-    }
-    return false;
+    if (actor_at(c))
+        return false;
+    moveto(c, clear_net);
+    return true;
 }
 
 void player::apply_location_effects(const coord_def &oldpos,
@@ -139,6 +137,11 @@ void player::apply_location_effects(const coord_def &oldpos,
                                     int /*killernum*/)
 {
     moveto_location_effects(env.grid(oldpos));
+}
+
+void player::did_deliberate_movement()
+{
+    player_did_deliberate_movement();
 }
 
 void player::set_position(const coord_def &c)
@@ -154,9 +157,10 @@ void player::set_position(const coord_def &c)
         if (duration[DUR_QUAD_DAMAGE])
             invalidate_agrid(true);
 
-        if (player_has_orb())
+        if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
         {
-            env.orb_pos = c;
+            if (player_has_orb())
+                env.orb_pos = c;
             invalidate_agrid(true);
         }
 
@@ -167,11 +171,6 @@ void player::set_position(const coord_def &c)
 bool player::swimming() const
 {
     return in_water() && can_swim();
-}
-
-bool player::submerged() const
-{
-    return false;
 }
 
 bool player::floundering() const
@@ -232,17 +231,16 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::damage_type(int)
+vorpal_damage_type player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
-    else if (form == transformation::blade_hands)
+    if (form == transformation::blade_hands)
         return DAMV_PIERCING;
-    else if (has_usable_claws())
+    if (has_usable_claws())
         return DVORP_CLAWING;
-    else if (has_usable_tentacles())
+    if (has_usable_tentacles())
         return DVORP_TENTACLE;
-
     return DVORP_CRUSHING;
 }
 
@@ -281,7 +279,22 @@ brand_type player::damage_brand(int)
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    return attack_delay_with(projectile, rescale, weapon());
+    const item_def *primary = weapon();
+    const random_var primary_delay = attack_delay_with(projectile, rescale, primary);
+    if (projectile && !is_launcher_ammo(*projectile))
+        return primary_delay; // throwing doesn't use the offhand
+
+    const item_def *offhand = you.offhand_weapon();
+    if (!offhand
+        || is_melee_weapon(*offhand) && projectile
+        || is_range_weapon(*offhand) && !projectile)
+    {
+        return primary_delay;
+    }
+
+    // re-use of projectile is very dubious here
+    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
+    return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
@@ -367,12 +380,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    // TODO: does this really have to depend on `you.time_taken`?  In basic
-    // cases at least, `you.time_taken` is just `player_speed()`. See
-    // `_prep_input`.
-    // We could simplify some code elsewhere if we fixed this,
-    // e.g. cast_manifold_assault().
-    return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
+    return rv::max(div_rand_round(attk_delay * player_speed(), BASELINE_DELAY),
                    random_var(1));
 }
 
@@ -437,11 +445,10 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
  * what they're currently wielding, transformed into, or any other state.
  *
  * @param item              The item to wield.
- * @param ignore_brand      Whether to disregard the weapon's brand.
  * @return                  Whether the player could potentially wield the
  *                          item.
  */
-bool player::could_wield(const item_def &item, bool ignore_brand,
+bool player::could_wield(const item_def &item, bool /*ignore_brand*/,
                          bool ignore_transform, bool quiet) const
 {
     // Some lingering flavor from the days where sandblast ammo was wielded.
@@ -495,21 +502,27 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
-    // don't let undead/demonspawn wield holy weapons/scrolls (out of spite)
-    if (!ignore_brand && undead_or_demonic() && is_holy_item(item))
-    {
-        if (!quiet)
-            mpr("This weapon is holy and will not allow you to wield it.");
-        return false;
-    }
-
     return true;
 }
 
 // Returns the shield the player is wearing, or nullptr if none.
 item_def *player::shield() const
 {
-    return slot_item(EQ_SHIELD, false);
+    item_def *offhand_item = slot_item(EQ_OFFHAND, false);
+    if (!offhand_item || offhand_item->base_type != OBJ_ARMOUR)
+        return nullptr;
+    return offhand_item;
+}
+
+item_def *player::offhand_weapon() const
+{
+    if (!you.has_mutation(MUT_WIELD_OFFHAND))
+        return nullptr;
+    item_def *offhand_item = slot_item(EQ_OFFHAND, false);
+    if (!offhand_item || !is_weapon(*offhand_item))
+        return nullptr;
+    // XXX: sanity check for 2hs..?
+    return offhand_item;
 }
 
 string player::name(description_level_type dt, bool, bool) const
@@ -687,7 +700,7 @@ string player::foot_name(bool plural, bool *can_plural) const
 
 string player::arm_name(bool plural, bool *can_plural) const
 {
-    if (form_changed_physiology())
+    if (form_changes_physiology())
         return hand_name(plural, can_plural);
 
     if (can_plural != nullptr)
@@ -697,9 +710,7 @@ string player::arm_name(bool plural, bool *can_plural) const
 
     string adj;
     if (form == transformation::death)
-        adj = "bony";
-    else if (form == transformation::shadow)
-        adj = "shadowy";
+        adj = "fossilised";
     else
         adj = species::skin_name(species, true);
 
@@ -819,9 +830,7 @@ bool player::go_berserk(bool intentional, bool potion)
 
     mpr("You feel mighty!");
 
-    int dur = 20 + random2avg(19,2);
-    if (!you.has_mutation(MUT_LONG_TONGUE))
-        dur /= 2;
+    int dur = (20 + random2avg(19,2)) / 2;
     you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.
@@ -897,6 +906,11 @@ bool player::is_web_immune() const
         || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 
+bool player::is_binding_sigil_immune() const
+{
+    return player_equip_unrand(UNRAND_SLICK_SLIPPERS);
+}
+
 bool player::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)
@@ -924,15 +938,15 @@ int player::constriction_damage(constrict_type typ) const
     switch (typ)
     {
     case CONSTRICT_BVC:
-        return roll_dice(2, div_rand_round(40 +
-                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 25));
+        return roll_dice(2, div_rand_round(80 +
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
     case CONSTRICT_ROOTS:
         // Assume we're using the wand.
-        // Min power 2d3, max power ~2d14 (also ramps over time)
-        return roll_dice(2, div_rand_round(20 +
-                    you.props[FASTROOT_POWER_KEY].get_int(), 10));
+        // Min power 2d5, max power ~2d19
+        return roll_dice(2, div_rand_round(25 +
+                    you.props[FASTROOT_POWER_KEY].get_int(), 7));
     default:
-        return roll_dice(2, div_rand_round(strength(), 5));
+        return roll_dice(2, div_rand_round(5 * (22 + 5 * you.experience_level), 81));
     }
 
 }

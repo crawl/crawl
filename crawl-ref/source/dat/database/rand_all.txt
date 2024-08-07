@@ -144,6 +144,7 @@ _xom_esteem_
 # chosen 20% of the time
 w:40
 @divine_esteem@
+
 Absentmindedness
 
 Amusement
@@ -178,6 +179,8 @@ Wantonness
 
 Whimsicality
 
+Temerity
+
 %%%%
 _time_name_
 Autumn
@@ -186,7 +189,11 @@ Dawn
 
 Day
 
+Dusk
+
 Eternal Night
+
+Eternal Winter
 
 Eternity
 
@@ -209,6 +216,8 @@ Summer
 
 w:5
 Summertime
+
+Time Moved Backwards
 
 Tomorrow
 
@@ -244,6 +253,8 @@ Black
 Blue
 
 Grey
+
+Indigo
 
 Orange
 
@@ -302,8 +313,6 @@ Discretion
 
 Generosity
 
-Generosity
-
 Grace
 
 Honesty
@@ -311,6 +320,8 @@ Honesty
 Hospitality
 
 Kindness
+
+Largesse
 
 Modesty
 
@@ -589,6 +600,8 @@ Dances
 Deaths
 
 Defenders
+
+Domains
 
 Demons
 
@@ -1076,6 +1089,8 @@ Haunted
 
 Histrionic
 
+Impassible
+
 Impish
 
 Indestructible
@@ -1184,6 +1199,9 @@ Orange
 
 Banana
 
+# fruit-adjacent
+Banana Bread
+
 Pear
 
 Apple
@@ -1204,6 +1222,10 @@ Mango
 
 Watermelon
 
+Rockmelon
+
+Strawberry
+
 Coconut
 
 Breadfruit
@@ -1212,9 +1234,19 @@ Eggfruit
 
 Dragonfruit
 
+Durian
+
+Jackfruit
+
+Longan
+
+Tamarind
+
 Guava
 
 Mangosteen
+
+Soursop
 
 Tangerine
 
@@ -1231,4 +1263,6 @@ Date
 Lemon
 
 Lime
+
+Medlar
 %%%%

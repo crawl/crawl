@@ -1,0 +1,55 @@
+enum: SP_COGLIN
+monster: MONS_GOBLIN
+name: Coglin
+short_name: Co
+genus: Goblin
+difficulty: Advanced
+difficulty_priority: 100
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  wl: 5
+  short_blades: -1
+  long_blades: 0
+  axes: 0
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  ranged weapons: -1
+  throwing: -1
+  armour: -1
+  dodging: -1
+  shields: -3
+  unarmed_combat: -1
+  spellcasting: -2
+  conjurations: -1
+  hexes: -1
+  alchemy: +1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: -1
+  invocations: -2
+  evocations: +3
+  shapeshifting: -2
+  stealth: -1
+str: 8
+int: 7
+dex: 9
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_WIELD_OFFHAND: 1
+    MUT_SLOW_WIELD: 1
+    MUT_WARMUP_STRIKES: 1
+    MUT_NO_JEWELLERY: 1
+recommended_jobs:
+  - artificer
+  - hunter
+  - gladiator
+  - warper
+  - berserker
+  - alchemist
+
+orc_name: Exo-Orc

@@ -1,0 +1,17 @@
+name: "vampire mosquito"
+glyph: {char: "y", colour: lightgray}
+flags: [flies, no_skeleton, no_zombie]
+holiness: [undead]
+will: 20
+attacks:
+ - {type: bite, flavour: vampiric, damage: 13}
+hd: 5
+hp_10x: 275
+ac: 2
+ev: 15
+has_corpse: true
+shout: buzz
+intelligence: animal
+speed: 19
+size: little
+shape: insect_winged

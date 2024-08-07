@@ -1,0 +1,21 @@
+name: "demonspawn blood saint"
+glyph: {char: "6", colour: lightblue}
+flags: [speaks, warm_blood]
+resists: {fire: 3}
+species: demonspawn
+holiness: [natural, demonic]
+will: 60
+attacks:
+ - {type: hit, flavour: fire, damage: 20}
+hd: 15
+hp_10x: 925
+ac: 6
+ev: 12
+spells: demonspawn_blood_saint
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Makhleb

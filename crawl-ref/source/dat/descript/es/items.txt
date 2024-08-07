@@ -40,10 +40,6 @@ bolt
 
 Un virote para ballesta.
 %%%%
-book of alchemy
-
-Un libro, algo chamuscado, con un orificio que atraviesa su tapa.
-%%%%
 book of annihilations
 
 Las andrajosas páginas de este libro rezuman sangre. Incluso un analfabeto
@@ -209,13 +205,13 @@ glaive
 
 Una garrocha con una enorme y pesada cuchilla en su extremo.
 %%%%
-gold dragon scales
+golden dragon scales
 
 Una armadura mágica elaborada a partir de las escamas de un dragón dorado. Es
 muy pesado y aparatoso, pero proporciona gran protección contra el fuego, el
 frío, y el veneno.
 %%%%
-gold dragon hide
+golden dragon hide
 
 La gruesa y pesada piel un dragón dorado, cubierta por deslumbrantes escamas
 doradas. Confiere resistencia al fuego, el frío, y el veneno a su usuario, pero

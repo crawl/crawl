@@ -30,7 +30,7 @@ enum duration_type
 #endif
     DUR_EXHAUSTED,              // fatigue counter for berserk
 
-    DUR_LIQUID_FLAMES,
+    DUR_STICKY_FLAME,
     DUR_ICY_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     DUR_REPEL_MISSILES,
@@ -39,7 +39,7 @@ enum duration_type
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
     DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina
-    DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
+    DUR_DIVINE_SHIELD,          // remaining charges of TSO's Divine Shield
 #if TAG_MAJOR_VERSION == 34
     DUR_REGENERATION,
 #endif
@@ -144,7 +144,7 @@ enum duration_type
     DUR_SPIRIT_HOWL,
     DUR_INFUSION,
 #endif
-    DUR_WEREBLOOD,
+    DUR_FUGUE,
 #if TAG_MAJOR_VERSION == 34
     DUR_SONG_OF_SHIELDING,
 #endif
@@ -227,7 +227,9 @@ enum duration_type
     DUR_WORD_OF_CHAOS_COOLDOWN,
     DUR_SICKNESS,
     DUR_BLINKBOLT_COOLDOWN,
+#if TAG_MAJOR_VERSION == 34
     DUR_DUEL_COMPLETE,
+#endif
     DUR_RISING_FLAME,
     DUR_BLINK_COOLDOWN,
     DUR_OOZEMANCY,
@@ -246,5 +248,26 @@ enum duration_type
 #endif
     DUR_JINXBITE_LOST_INTEREST,
     DUR_VITRIFIED,
+    DUR_RAMPAGE_HEAL,
+    DUR_CANINE_FAMILIAR_DEAD,
+    DUR_TEMP_CLOUD_IMMUNITY,
+    DUR_VILE_CLUTCH,
+    DUR_ALLY_RESET_TIMER,       // 5-turn buffer to cancel 'stop attack' order
+    DUR_BEOGH_DIVINE_CHALLENGE,
+    DUR_BEOGH_CAN_RECRUIT,
+    DUR_BEOGH_SEEKING_VENGEANCE,
+    DUR_BLOOD_FOR_BLOOD,
+    DUR_FATHOMLESS_SHACKLES,
+    DUR_CONSTRICTION_IMMUNITY,
+    DUR_GAVOTTE_COOLDOWN,
+    DUR_FUSILLADE,
+    DUR_PRIMORDIAL_NIGHTFALL,
+    DUR_BLIND,
+    DUR_SIGN_OF_RUIN,
+    DUR_GRAVE_CLAW_RECHARGE,
+    DUR_INFERNAL_LEGION,
+    DUR_CELEBRANT_COOLDOWN,
+    DUR_EXECUTION,
+    DUR_GROWING_DESTRUCTION,
     NUM_DURATIONS
 };

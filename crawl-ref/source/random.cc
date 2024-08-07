@@ -243,7 +243,7 @@ int maybe_random2(int x, bool random_factor)
 }
 
 // [0, ceil(nom/denom)]
-int maybe_random_div(int nom, int denom, bool random_factor)
+int maybe_random2_div(int nom, int denom, bool random_factor)
 {
     if (nom <= 0)
         return 0;
@@ -322,6 +322,15 @@ int div_rand_round(int num, int den)
 int div_round_up(int num, int den)
 {
     return num / den + (num % den != 0);
+}
+
+// Divides and rounds to *nearest* int, so 1.5 gets rounded up to 2 but 1.49 is
+// rounded down to 1. (I was amazed this function did not already exist in the
+// entire crawl codebase. Or did I just miss an obvious way? -mumra)
+int div_round_near(int num, int den)
+{
+    const int rem = num % den;
+    return num / den + (rem >= den / 2);
 }
 
 // random2avg() returns same mean value as random2() but with a lower variance

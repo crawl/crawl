@@ -339,17 +339,15 @@ static int moninf_get_target_desc(lua_State *ls)
     return 1;
 }
 
-/*** Returns the string displayed if you target this monster with a weapon (or unarmed attack).
- * @tparam[opt] weapon (item object) to use; omit for unarmed attack.
- * @treturn string (such as "about 18% to evade your dagger")
+/*** Returns the string displayed in xv for your current weapon hit chance.
+ * @treturn string (such as "about 82% to hit with your dagger")
  * @function target_weapon
  */
 static int moninf_get_target_weapon(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    item_def *item = (lua_isnone(ls, 2) || lua_isnil(ls, 2)) ? nullptr : *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
     ostringstream result;
-    describe_to_hit(*mi, result, false, item);
+    describe_to_hit(*mi, result, you.weapon(), true);
     lua_pushstring(ls, result.str().c_str());
     return 1;
 }
@@ -377,9 +375,9 @@ static int moninf_get_target_throw(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
-    ranged_attack attk(&you, nullptr, item, false);
-    string d = make_stringf("%d%% to hit", to_hit_pct(*mi, attk, false));
-    lua_pushstring(ls, d.c_str());
+    ostringstream result;
+    describe_to_hit(*mi, result, item);
+    lua_pushstring(ls, result.str().c_str());
     return 1;
 }
 
@@ -680,7 +678,7 @@ LUAFN(moninf_get_can_be_constricted)
         monster dummy;
         dummy.type = mi->type;
         dummy.base_monster = mi->base_type;
-        lua_pushboolean(ls, dummy.res_constrict() < 3);
+        lua_pushboolean(ls, !dummy.res_constrict());
     }
     return 1;
 }
@@ -734,6 +732,17 @@ LUAFN(moninf_get_is_stationary)
 {
     MONINF(ls, 1, mi);
     lua_pushboolean(ls, mons_class_is_stationary(mi->type));
+    return 1;
+}
+
+/*** Can this monster use doors?
+ * @treturn boolean
+ * @function can_use_doors
+ */
+LUAFN(moninf_get_can_use_doors)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mons_class_itemuse(mi->type) >= MONUSE_OPEN_DOORS);
     return 1;
 }
 
@@ -845,6 +854,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),
+    MIREG(can_use_doors),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),

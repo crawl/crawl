@@ -1,0 +1,22 @@
+name: "orc apostle"
+glyph: {char: "o", colour: white}
+flags: [fighter, speaks, warm_blood, ghost_demon, no_poly_to, no_zombie, no_gen_derived, fast_regen]
+xp_mult: 16
+species: orc
+attacks:
+ - {type: hit, damage: 20}
+hd: 9
+hp_10x: 675
+ac: 2
+ev: 13
+will_per_hd: 4
+has_corpse: true
+spells: ghost
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+habitat: amphibious
+shape: humanoid
+god: Beogh
+tile_variance: mod

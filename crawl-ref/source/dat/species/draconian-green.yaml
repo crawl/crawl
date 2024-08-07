@@ -1,17 +1,18 @@
 enum: SP_GREEN_DRACONIAN
 monster: MONS_GREEN_DRACONIAN
-name: "Green Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Green Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
-  - SPF_DRACONIAN
+  - draconian
+  - no_hair
 aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -22,7 +23,7 @@ aptitudes:
   shapeshifting: -1
   invocations: 1
   # Green Draconian specific
-  poison_magic: 2
+  alchemy: 2
 str: 10
 int: 8
 dex: 6
@@ -36,4 +37,6 @@ mutations:
     MUT_STINGER: 1
 fake_mutations:
   - long: You can breathe blasts of noxious fumes.
-    short: breathe noxious fumes
+    short: noxious breath
+
+orc_name: Green Orconian

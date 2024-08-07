@@ -23,6 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "god-abil.h" // fedhas_passthrough for armataur charge
+#include "god-conduct.h"
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -34,6 +35,7 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h" // armataur charge
@@ -53,6 +55,9 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "tiledoll.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
@@ -140,13 +145,14 @@ void uncontrolled_blink(bool override_stasis)
         return;
     }
 
-    if (!you.attempt_escape(2)) // prints its own messages
-        return;
+    you.stop_being_constricted(false, "blink");
 
     canned_msg(MSG_YOU_BLINK);
     const coord_def origin = you.pos();
     move_player_to_grid(target, false);
     _place_tloc_cloud(origin);
+
+    crawl_state.potential_pursuers.clear();
 }
 
 /**
@@ -306,9 +312,12 @@ static const int HOP_FUZZ_RADIUS = 2;
 
 class targeter_hop : public targeter_smite
 {
+private:
+    bool incl_unseen;
 public:
-    targeter_hop(actor *a, int hop_range)
-        : targeter_smite(a, hop_range, 0, HOP_FUZZ_RADIUS, false)
+    targeter_hop(int hop_range, bool include_unseen)
+        : targeter_smite(&you, hop_range, 0, HOP_FUZZ_RADIUS, false),
+          incl_unseen(include_unseen)
     {
         ASSERT(agent);
         obeys_mesmerise = true;
@@ -323,7 +332,7 @@ public:
             return AFF_NO; // XX is this handled by the valid blink check?
 
         const actor* p_act = actor_at(p);
-        if (p_act && agent && !agent->can_see(*p_act))
+        if (p_act && (incl_unseen || agent->can_see(*p_act)))
             return AFF_NO;
 
         // terrain details are cached in exp_map_max by set_aim
@@ -344,7 +353,7 @@ public:
         for (radius_iterator ri(a, exp_range_max, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
-            if (valid_blink_destination(agent, *ri))
+            if (valid_blink_destination(*agent, *ri, false, true, incl_unseen))
                 exp_map_max(*ri - a + centre) = 1;
         }
         return true;
@@ -362,7 +371,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
 {
     coord_def chosen;
     int seen = 0;
-    targeter_hop tgt(&you, frog_hop_range());
+    targeter_hop tgt(frog_hop_range(), true);
     tgt.set_aim(target); // XX could reuse tgt from the calling function?
     for (auto ti = tgt.affected_iterator(AFF_MAYBE); ti; ++ti)
         if (one_chance_in(++seen))
@@ -389,7 +398,7 @@ spret frog_hop(bool fail, dist *target)
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
     const int hop_range = frog_hop_range();
-    targeter_hop tgt(&you, hop_range);
+    targeter_hop tgt(hop_range, false);
 
     while (true)
     {
@@ -407,8 +416,7 @@ spret frog_hop(bool fail, dist *target)
 
     fail_check();
 
-    if (!you.attempt_escape(2)) // XXX: 1?
-        return spret::success; // of a sort
+    you.stop_being_constricted(false, "hop");
 
     // invisible monster that the targeter didn't know to avoid, or similar
     if (target->target.origin())
@@ -425,185 +433,25 @@ spret frog_hop(bool fail, dist *target)
     crawl_state.cancel_cmd_repeat();
     mpr("Boing!");
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
-    apply_barbs_damage();
+    player_did_deliberate_movement();
 
     return spret::success; // TODO
-}
-
-static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
-{
-    melee_attack attk(&you, nullptr);
-    attk.charge_pow = 1; // to give the accuracy bonus
-    const int acc_pct = to_hit_pct(mi, attk, true);
-    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
-}
-
-bool find_charge_target(vector<coord_def> &target_path, int max_range,
-                                targeter *hitfunc, dist &target)
-{
-    // Check for unholy weapons, breadswinging, etc
-    if (!wielded_weapon_check(you.weapon(), "charge"))
-        return false;
-
-    // TODO: move into generic spell targeting somehow?
-    // TODO: can't this all be done within a single direction call?
-    while (true)
-    {
-        // query for location {dlb}:
-        direction_chooser_args args;
-        args.restricts = DIR_TARGET;
-        args.mode = TARG_HOSTILE;
-        args.prefer_farthest = true;
-        args.top_prompt = "Charge where?";
-        args.hitfunc = hitfunc;
-        args.get_desc_func = bind(_desc_electric_charge_hit_chance, placeholders::_1);
-        direction(target, args);
-
-        // TODO: deduplicate with _find_cblink_target
-        if (crawl_state.seen_hups)
-        {
-            mpr("Cancelling electric charge due to HUP.");
-            return false;
-        }
-
-        if (!target.isValid || target.target == you.pos())
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-
-        const monster* beholder = you.get_beholder(target.target);
-        if (beholder)
-        {
-            mprf("You cannot charge away from %s!",
-                beholder->name(DESC_THE, true).c_str());
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        const monster* fearmonger = you.get_fearmonger(target.target);
-        if (fearmonger)
-        {
-            mprf("You cannot charge closer to %s!",
-                fearmonger->name(DESC_THE, true).c_str());
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        if (!you.see_cell_no_trans(target.target))
-        {
-            clear_messages();
-            if (you.trans_wall_blocking(target.target))
-                canned_msg(MSG_SOMETHING_IN_WAY);
-            else
-                canned_msg(MSG_CANNOT_SEE);
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        if (grid_distance(you.pos(), target.target) > max_range)
-        {
-            mpr("That's out of range!"); // ! targeting
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        ray_def ray;
-        if (!find_ray(you.pos(), target.target, ray, opc_solid))
-        {
-            mpr("You can't charge through that!");
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        // done with hard vetos; now we're on a mix of prompts and vetos.
-        // (Ideally we'd like to split these up and do all the vetos before
-        // the prompts, but...)
-
-        target_path.clear();
-        while (ray.advance())
-        {
-            target_path.push_back(ray.pos());
-            if (ray.pos() == target.target)
-                break;
-        }
-
-        // DON'T use beam.target here - we might have used ! targeting to
-        // target something behind another known monster
-        const monster* target_mons = monster_at(ray.pos());
-        const string bad_charge = bad_charge_target(ray.pos());
-        if (bad_charge != "")
-        {
-            mpr(bad_charge.c_str());
-            return false;
-        }
-
-        if (adjacent(you.pos(), ray.pos()))
-        {
-            mprf("You're already next to %s!",
-                 target_mons->name(DESC_THE).c_str());
-            return false;
-        }
-
-        // adjacency check should ensure this...
-        ASSERT(target_path.size() >= 2);
-        const coord_def dest_pos = target_path.at(target_path.size() - 2);
-        monster* dest_mon = monster_at(dest_pos);
-        const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
-        if (invalid_dest && you.can_see(*dest_mon))
-        {
-            mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
-            return false;
-        }
-
-        // prompt to make sure the player really wants to attack the monster
-        // (if extant and not hostile)
-        // Intentionally don't use the real attack position here - that's only
-        // used for sanctuary,
-        // so it's more accurate if we use our current pos, since sanctuary
-        // should move with us.
-        if (stop_attack_prompt(target_mons, false, target_mons->pos()))
-            return false;
-
-        ray.regress();
-        // confirm movement for the final square only
-        if (!check_moveto(ray.pos(), "charge"))
-            return false;
-
-        return true;
-    }
-}
-
-static void _charge_cloud_trail(const coord_def pos)
-{
-    if (!cell_is_solid(pos) && !apply_cloud_trail(pos))
-        place_cloud(CLOUD_ELECTRICITY, pos, 2 + random2(3), &you);
 }
 
 string electric_charge_impossible_reason(bool allow_safe_monsters)
 {
     // General movement checks are handled elsewhere.
-    targeter_charge tgt(&you, spell_range(SPELL_ELECTRIC_CHARGE, 0));
     int nearby_mons = 0;
     string example_reason = "";
+    string fail_reason;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
         ++nearby_mons;
-        if (!tgt.valid_aim(mi->pos()))
+        if (get_electric_charge_landing_spot(you, mi->pos(), &fail_reason).origin())
         {
             example_reason = make_stringf("you can't charge at %s because %s",
                                           mi->name(DESC_THE).c_str(),
-                                          tgt.why_not.c_str());
+                                          fail_reason.c_str());
         }
         else if (allow_safe_monsters
                  || !mons_is_safe(*mi, false)
@@ -628,25 +476,195 @@ string movement_impossible_reason()
     return "";
 }
 
-static void _displace_charge_blocker(monster &mon)
+bool valid_electric_charge_target(const actor& agent, coord_def target, string* fail_reason)
 {
-    const coord_def orig = mon.pos();
-    coord_def targ;
-    if (random_near_space(&mon, mon.pos(), targ, true)
-        && mon.blink_to(targ, true, false)) // XXX: should ignore constrict
+    string msg;
+
+    const actor* act = actor_at(target);
+
+    // Target must be in range and non-adjacent
+    if (agent.pos() == target)
     {
-        return;
+        if (fail_reason)
+            *fail_reason = "You can't charge at yourself.";
+
+        return false;
+    }
+    else if (adjacent(agent.pos(), target))
+    {
+        if (fail_reason)
+            *fail_reason = "You're already next to there.";
+
+        return false;
+    }
+    else if (grid_distance(agent.pos(), target)
+             > spell_range(SPELL_ELECTRIC_CHARGE, 50))
+    {
+        if (fail_reason)
+            *fail_reason = "That's out of range!";
+
+        return false;
     }
 
-    monster_teleport(&mon, true);
-    if (mon.pos() != orig)
-        return;
+    // No charging at things the caster cannot see.
+    if (!act || !agent.can_see(*act)
+        || agent.is_player() && act->is_monster()
+           && fedhas_passthrough(act->as_monster()))
+    {
+        if (fail_reason)
+            *fail_reason = "You can't see anything there to charge at.";
 
-    mon.banish(&you, "electric charge", -1, true);
-    if (!mon.alive())
-        return;
+        return false;
+    }
 
-    monster_die(mon, KILL_BANISHED, NON_MONSTER);
+    // No charging at friends or firewood.
+    if (mons_aligned(act, &agent)
+        || act->is_monster() && mons_is_firewood(*act->as_monster()))
+    {
+        if (fail_reason)
+            *fail_reason = "Why would you want to do that?";
+
+        return false;
+    }
+
+    // The remaining checks concern only the player.
+    if (agent.is_monster())
+        return true;
+
+    const monster* beholder = you.get_beholder(target);
+    if (beholder)
+    {
+        if (fail_reason)
+        {
+            *fail_reason = make_stringf("You cannot charge away from %s!",
+                                        beholder->name(DESC_THE, true).c_str());
+        }
+
+        return false;
+    }
+
+    const monster* fearmonger = you.get_fearmonger(target);
+    if (fearmonger)
+    {
+        if (fail_reason)
+        {
+            *fail_reason = make_stringf("You cannot charge closer to %s!",
+                                        fearmonger->name(DESC_THE, true).c_str());
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+// Gets the tile the agent would land on if they tried to charge towards target.
+// Returns (0, 0) if this charge is invalid for any reason.
+// (fail_reason will get set to an appropriate error message)
+coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
+                                           string* fail_reason)
+{
+    // Double-check that this is a valid thing to try to charge at at all
+    if (!valid_electric_charge_target(agent, target, fail_reason))
+        return coord_def(0, 0);
+
+    ray_def ray;
+    if (!find_ray(agent.pos(), target, ray, opc_solid))
+    {
+        if (fail_reason)
+            *fail_reason = "There's something in the way.";
+
+        return coord_def(0, 0);
+    }
+
+    const int dist_to_targ = grid_distance(agent.pos(), target);
+    while (ray.advance())
+    {
+         // We've reached the spot immediately before our target, which should
+        // be our landing spot (if it's valid)
+        if (grid_distance(ray.pos(), agent.pos()) == dist_to_targ -1)
+        {
+            if (agent.is_player() ? is_feat_dangerous(env.grid(ray.pos()))
+                                  : !monster_habitable_grid(agent.as_monster(), env.grid(ray.pos())))
+            {
+                if (fail_reason)
+                {
+                    *fail_reason = "There's "
+                                   + feature_description_at(ray.pos())
+                                   + " in the way.";
+                }
+
+                return coord_def(0, 0);
+            }
+
+            const monster* mon = monster_at(ray.pos());
+            if (mon && agent.can_see(*mon) && mons_class_is_stationary(mon->type))
+            {
+                if (fail_reason)
+                {
+                    *fail_reason = mon->name(DESC_THE)
+                                   + " is immovably fixed in your path.";
+                }
+
+                return coord_def(0, 0);
+            }
+
+            // We've already verified that our target is okay, and now we know
+            // that our landing spot is also. So we should be done here.
+            return ray.pos();
+        }
+    }
+
+    // Should be unreachable, but return a negative result anyway.
+    return coord_def(0, 0);
+}
+
+// Tries to push any creature out of the way of an electric charge landing spot,
+// using increasingly strong measures. Will usually keep trying until it
+// succeeds in creating open space, but in a few situations (mostly involving
+// the player being the one in the way) may fail (and return false)
+static bool _displace_charge_blocker(actor& agent, coord_def pos)
+{
+    // Try 10 times to move the obstacle out of our way. It should only be the
+    // most contrived and impossible of circumstances that require this, but
+    // let's try not to crash just in case.
+    for (int tries = 0; tries < 10; ++tries)
+    {
+        actor* blocker = actor_at(pos);
+        if (!blocker)
+            return true;
+
+        const coord_def orig = blocker->pos();
+        coord_def targ;
+        if (random_near_space(blocker, blocker->pos(), targ, true)
+            && blocker->blink_to(targ, true))
+        {
+            if (blocker->is_player())
+                mpr("You are hurled out of the way!");
+
+            continue;
+        }
+
+        // Don't teleport (or banish!) the player when something tries to Vhi's
+        // something immediately behind them. In this case, just make the monster
+        // abort.
+        if (blocker->is_player())
+            return false;
+
+        monster* mon = blocker->as_monster();
+        monster_teleport(mon, true);
+        if (mon->pos() != orig)
+            continue;
+
+        mon->banish(&agent, "electric charge", -1, true);
+        if (!mon->alive())
+            continue;
+
+        monster_die(*mon, KILL_BANISHED, NON_MONSTER);
+    }
+
+    // Against all odds, there's something still here.
+    return false;
 }
 
 /**
@@ -656,93 +674,139 @@ static void _displace_charge_blocker(monster &mon)
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret electric_charge(int powc, bool fail, const coord_def &target)
+spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target)
 {
-    const coord_def initial_pos = you.pos();
-
-    vector<coord_def> target_path;
-    const int range = spell_range(SPELL_ELECTRIC_CHARGE, powc);
-    targeter_charge tgt(&you, range);
-    dist targ;
-    ASSERT(in_bounds(target));
-    targ.target = target;
-    targ.interactive = false; // target should already be provided
-
-    // re-run target finding non-interactively in order to get the full path
-    // again (ugh)
-    if (!find_charge_target(target_path, range, &tgt, targ))
+    // Check for unholy weapons, breadswinging, etc
+    if (agent.is_player() && !wielded_weapon_check(you.weapon(), "charge"))
         return spret::abort;
 
-    const coord_def dest_pos = target_path.at(target_path.size() - 2);
-    monster* dest_mon = monster_at(dest_pos);
+    coord_def dest_pos = get_electric_charge_landing_spot(agent, target);
+
+    // Should be impossible, but bail out if there's no valid landing pos
+    if (dest_pos.origin())
+        return spret::abort;
+
+    // Prompt to make sure the player really wants to attack the monster they're
+    // charging at.
+    monster* target_mon = monster_at(target);
+    if (agent.is_player() && target_mon && stop_attack_prompt(target_mon, false, target))
+        return spret::abort;
+
+    // Test dangerous terrain at our destination
+    if (agent.is_player() && !check_moveto(dest_pos, "charge"))
+        return spret::abort;
 
     fail_check();
 
-    // at this point it should be an invisible monster; visible monsters get
-    // filtered at the targeting stage
+    // This should virtually never happen, since the spell is vetoed for stationary
+    // blockers before this; this requires a stationary blocker who is also
+    // invisible to the agent.
+    monster* dest_mon = monster_at(dest_pos);
     const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
     if (invalid_dest)
     {
-        mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
+        if (agent.is_player())
+            mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
         return spret::success;
     }
 
-    if (!you.attempt_escape(1)) // prints its own messages
+    if (!agent.attempt_escape()) // prints its own messages
         return spret::success;
 
-    const coord_def target_pos = target_path.back();
-    monster* target_mons = monster_at(target_pos);
-    if (fedhas_passthrough(target_mons))
-        target_mons = nullptr;
-    ASSERT(target_mons != nullptr);
+    const coord_def orig_pos = agent.pos();
+    actor* target_actor = actor_at(target);
 
-    crawl_state.cancel_cmd_again();
-    crawl_state.cancel_cmd_repeat();
+    if (agent.is_player())
+    {
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
 
-    const coord_def orig_pos = you.pos();
+        // Monster cast messages are handled through monspell.txt
+        if (silenced(dest_pos))
+            mpr("You charge forward in eerie silence!");
+        else
+            mpr("You charge forward with an electric crackle!");
+    }
 
-    if (silenced(dest_pos))
-        mpr("You charge forward in eerie silence!");
+    // Trying to clear space at our destination by moving actors away from it.
+    // Very rarely, this may fail. If it does, abort.
+    if (!_displace_charge_blocker(agent, dest_pos))
+    {
+        if (agent.is_player() || (agent.is_monster() && you.can_see(agent)))
+        {
+            mprf("...but somehow remain%s in the same place.",
+                                                agent.is_monster() ? "s" : "");
+        }
+
+        return spret::success;
+    }
+
+    // Actually move the agent
+    const coord_def initial_pos = agent.pos();
+    if (agent.is_player())
+        move_player_to_grid(dest_pos, true);
     else
-        mpr("You charge forward with an electric crackle!");
+    {
+        agent.move_to_pos(dest_pos);
+        agent.apply_location_effects(orig_pos);
+    }
 
-    if (dest_mon)
-        _displace_charge_blocker(*dest_mon);
+    noisy(4, agent.pos());
+    agent.did_deliberate_movement();
+    agent.clear_far_engulf(false, true);
 
-    move_player_to_grid(dest_pos, true);
-    noisy(4, you.pos());
-    apply_barbs_damage();
-    you.clear_far_engulf(false, true);
-    _charge_cloud_trail(orig_pos);
-    for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
-        _charge_cloud_trail(*it);
+    // Draw a cloud trail behind the charging agent
+    ray_def ray;
+    if (find_ray(orig_pos, target, ray, opc_solid))
+    {
+        while (ray.advance() && ray.pos() != target)
+        {
+            if (!cell_is_solid(ray.pos()) &&
+                (!agent.is_player() || !apply_cloud_trail(ray.pos())))
+            {
+                place_cloud(CLOUD_ELECTRICITY, ray.pos(), 2 + random2(3), &agent);
+            }
+        }
+    }
 
-    if (you.pos() != dest_pos) // polar vortex and trap nonsense
+    if (agent.pos() != dest_pos) // polar vortex and trap nonsense
         return spret::success; // of a sort
 
     // Maybe we hit a trap and something weird happened.
-    if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
+    if (!target_actor->alive() || !adjacent(agent.pos(), target_actor->pos()))
         return spret::success;
 
     // manually apply noise
     // this silence check feels kludgy - perhaps could check along the whole route..?
-    if (!silenced(target_pos))
-        behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+    if (!silenced(target) && target_actor->is_monster())
+        behaviour_event(target_actor->as_monster(), ME_ALERT, &agent, agent.pos()); // shout + set you as foe
 
     // We got webbed/netted at the destination, bail on the attack.
-    if (you.attribute[ATTR_HELD])
+    if (agent.is_player() && you.attribute[ATTR_HELD])
+        return spret::success;
+    // Todo: Be more comprehensive?
+    else if (agent.is_monster() && agent.as_monster()->has_ench(ENCH_HELD))
         return spret::success;
 
-    const int base_delay =
-        div_rand_round(you.time_taken * player_movement_speed(), 10);
+    melee_attack charge_atk(&agent, target_actor);
 
-    melee_attack charge_atk(&you, target_mons);
-    charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, you.pos());
-    charge_atk.attack();
+    // Player Vhi's damage is based on spellpower, distance, and their melee damage
+    if (agent.is_player())
+        charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, agent.pos());
+    // Monster Vhi's damage is flatly based on their HD
+    else
+        charge_atk.charge_pow = powc;
 
-    // Normally this is 10 aut (times haste, chei etc), but slow weapons
-    // take longer. Most relevant for low-skill players and Dark Maul.
-    you.time_taken = max(you.time_taken, base_delay);
+    charge_atk.launch_attack_set();
+
+    // Monsters will already use up attack energy via the melee attack itself,
+    // so we only need to handle delay for players.
+    if (agent.is_player())
+    {
+        // Normally this is 10 aut (times haste, chei etc), but slow weapons
+        // take longer. Most relevant for low-skill players and Dark Maul.
+        you.time_taken = max(you.attack_delay().roll(), player_speed());
+    }
 
     return spret::success;
 }
@@ -773,9 +837,6 @@ spret controlled_blink(bool safe_cancel, dist *target)
     if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
         return spret::abort;
 
-    if (!you.attempt_escape(2))
-        return spret::success; // of a sort
-
     // invisible monster that the targeter didn't know to avoid
     if (monster_at(target->target))
     {
@@ -783,6 +844,8 @@ spret controlled_blink(bool safe_cancel, dist *target)
         uncontrolled_blink();
         return spret::success; // of a sort
     }
+
+    you.stop_being_constricted(false, "blink");
 
     _place_tloc_cloud(you.pos());
     move_player_to_grid(target->target, false);
@@ -1049,6 +1112,8 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
         stop_delay(true);
     }
 
+    crawl_state.potential_pursuers.clear();
+
     _handle_teleport_update(large_change, old_pos);
     return !wizard_tele;
 }
@@ -1137,7 +1202,7 @@ void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
 
 spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
 {
-    if (target == nullptr || target->submerged() || !you.can_see(*target))
+    if (target == nullptr || !you.can_see(*target))
     {
         canned_msg(MSG_NOTHING_THERE);
         // You cannot place a bullseye on invisible enemies, so just abort
@@ -1174,24 +1239,20 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
     return spret::success;
 }
 
-string weapon_unprojectability_reason()
+string weapon_unprojectability_reason(const item_def* wpn)
 {
-    if (!you.weapon())
+    if (!wpn)
         return "";
-    const item_def &it = *you.weapon();
-    // These all cause attack prompts, which are awkward to handle.
-    // TODO: support these!
+
+    // These don't work properly when performing attacks against non-adjacent
+    // targets. Maybe support them in future?
     static const vector<int> forbidden_unrands = {
         UNRAND_POWER,
-        UNRAND_DEVASTATOR,
-        UNRAND_VARIABILITY,
-        UNRAND_SINGING_SWORD,
-        UNRAND_TORMENT,
         UNRAND_ARC_BLADE,
     };
     for (int urand : forbidden_unrands)
     {
-        if (is_unrandom_artefact(it, urand))
+        if (is_unrandom_artefact(*wpn, urand))
         {
             return make_stringf("%s would react catastrophically with paradoxical space!",
                                 you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
@@ -1200,33 +1261,71 @@ string weapon_unprojectability_reason()
     return "";
 }
 
-spret cast_manifold_assault(int pow, bool fail, bool real)
+// Mildly hacky: If this was triggered via Autumn Katana, katana_defender is the
+//               target it first triggered on. If nullptr, this is a normal cast.
+spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
+                            actor* katana_defender)
 {
-    vector<monster*> targets;
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    bool found_unsafe_target = false;
+    vector<actor*> targets;
+    for (actor_near_iterator ai(&agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (mi->friendly() || mi->neutral())
+        monster* mon = ai->is_monster() ? ai->as_monster() : nullptr;
+        if (mons_aligned(&agent, *ai) || mon && mon->neutral())
             continue; // this should be enough to avoid penance?
-        if (mons_is_firewood(**mi) || mons_is_projectile(**mi))
+        if (mon && (mons_is_firewood(*mon) || mons_is_projectile(*mon)))
             continue;
-        if (!you.can_see(**mi))
+        if (!agent.can_see(**ai)
+            || (agent.is_monster() && !monster_los_is_valid(agent.as_monster(), *ai)))
+        {
             continue;
-        targets.emplace_back(*mi);
+        }
+
+        // If this was triggered by the Autumn Katana, don't hit the original
+        // target a second time
+        if (*ai == katana_defender)
+            continue;
+
+        // If the player is casting, make a melee attack to test if we'd
+        // ordinarily need a prompt to hit this target, and ignore all such
+        // targets entirely.
+        //
+        // We only perform this test for real casts, because otherwise the game
+        // prints a misleading message to the player first (about there being
+        // no targets in range)
+        if (agent.is_player() && real)
+        {
+            melee_attack atk(&you, *ai);
+            if (!atk.would_prompt_player())
+                targets.emplace_back(*ai);
+            else
+                found_unsafe_target = true;
+        }
+        else
+            targets.emplace_back(*ai);
     }
 
     if (targets.empty())
     {
-        if (real)
-            mpr("You can't see anything to attack.");
+        if (agent.is_player() && !katana_defender)
+        {
+            if (real && !found_unsafe_target)
+                mpr("You can't see anything to attack.");
+            else if (real && found_unsafe_target)
+                mpr("You can't see anything you can safely attack.");
+        }
         return spret::abort;
     }
 
+    const item_def *weapon = agent.weapon();
+
     if (real)
     {
-        const string unproj_reason = weapon_unprojectability_reason();
+        const string unproj_reason = weapon_unprojectability_reason(weapon);
         if (unproj_reason != "")
         {
-            mprf("%s", unproj_reason.c_str());
+            if (agent.is_player())
+                mpr(unproj_reason);
             return spret::abort;
         }
     }
@@ -1234,37 +1333,58 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     if (!real)
         return spret::success;
 
-    const item_def *weapon = you.weapon();
-    if (!wielded_weapon_check(weapon))
+    if (agent.is_player() && !katana_defender && !wielded_weapon_check(weapon))
         return spret::abort;
 
     fail_check();
 
-    if (player_equip_unrand(UNRAND_AUTUMN_KATANA))
-        mpr("Space folds impossibly around your blade!");
-    else
-        mpr("Space momentarily warps into an impossible shape!");
+    if ((agent.is_player() || you.can_see(agent)) && !katana_defender)
+    {
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_AUTUMN_KATANA))
+            mprf("Space folds impossibly around %s blade!", agent.name(DESC_ITS).c_str());
+        else
+            mpr("Space momentarily warps into an impossible shape!");
+    }
 
-    const int initial_time = you.time_taken;
+    const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
 
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
     // shapeshifters have a much easier time casting it.
-    const size_t max_targets = weapon ? 2 + div_rand_round(pow, 50)
-                                      : 1 + div_rand_round(pow, 100);
+    const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
+                                      : 2 + div_rand_round(pow, 50);
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
-        // Somewhat hacky: reset attack delay before each attack so that only the final
-        // attack ends up actually setting time taken. (No quadratic effects.)
-        you.time_taken = initial_time;
+        if (animate)
+            flash_tile(targets[i]->pos(), LIGHTMAGENTA, 0);
 
-        melee_attack atk(&you, targets[i]);
+        melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
-        atk.attack();
+        if (katana_defender)
+        {
+            if (you.offhand_weapon() && is_unrandom_artefact(*you.offhand_weapon(), UNRAND_AUTUMN_KATANA))
+                atk.set_weapon(you.offhand_weapon(), true);
+            // Only the katana can attack through space!
+            atk.attack();
+        }
+        // Only rev up once, no matter how many targets you hit.
+        else
+            atk.launch_attack_set(i == 0);
 
-        if (you.hp <= 0 || you.pending_revival)
+        if (i == 0)
+            you.time_taken = you.attack_delay().roll();
+
+        // Stop further attacks if we somehow died in the process.
+        // (Unclear how this is possible?)
+        if (agent.is_player() && (you.hp <= 0 || you.pending_revival)
+            || agent.is_monster() && !agent.alive())
+        {
             break;
+        }
     }
+
+    if (animate)
+        animation_delay(50, true);
 
     return spret::success;
 }
@@ -1511,138 +1631,122 @@ spret cast_dispersal(int pow, bool fail)
     return spret::success;
 }
 
-int gravitas_range(int pow)
+int gravitas_radius(int pow)
 {
-    return pow >= 80 ? 3 : 2;
-}
-
-
-#define GRAVITY "by gravitational forces"
-
-static void _attract_actor(const actor* agent, actor* victim,
-                           const coord_def pos, int pow, int strength)
-{
-    ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = victim->is_monster()
-                                && god_protects(agent, victim->as_monster());
-
-    ray_def ray;
-    if (!find_ray(victim->pos(), pos, ray, opc_solid))
-    {
-        // This probably shouldn't ever happen, but just in case:
-        if (you.can_see(*victim))
-        {
-            mprf("%s violently %s moving!",
-                 victim->name(DESC_THE).c_str(),
-                 victim->conj_verb("stop").c_str());
-        }
-        if (fedhas_prot)
-        {
-            simple_god_message(
-                make_stringf(" protects %s from harm.",
-                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
-        }
-        else
-        {
-            victim->hurt(agent, roll_dice(strength / 2, pow / 20),
-                         BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
-        }
-        return;
-    }
-
-    const coord_def starting_pos = victim->pos();
-    for (int i = 0; i < strength; i++)
-    {
-        ray.advance();
-        const coord_def newpos = ray.pos();
-
-        if (!victim->can_pass_through_feat(env.grid(newpos)))
-        {
-            victim->collide(newpos, agent, pow);
-            break;
-        }
-        else if (actor* act_at_space = actor_at(newpos))
-        {
-            if (victim != act_at_space)
-                victim->collide(newpos, agent, pow);
-            break;
-        }
-        else if (!victim->is_habitable(newpos))
-            break;
-        else
-            victim->move_to_pos(newpos);
-
-        if (victim->is_monster() && !fedhas_prot)
-        {
-            behaviour_event(victim->as_monster(),
-                            ME_ANNOY, agent, agent ? agent->pos()
-                                                   : coord_def(0, 0));
-        }
-
-        if (victim->pos() == pos)
-            break;
-    }
-    if (starting_pos != victim->pos())
-    {
-        victim->apply_location_effects(starting_pos);
-        if (victim->is_monster())
-            mons_relocated(victim->as_monster());
-    }
-}
-
-bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
-{
-    vector <actor *> victims;
-
-    for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
-    {
-        if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
-            continue;
-
-        const int range = (pos - ai->pos()).rdist();
-        if (range > gravitas_range(pow))
-            continue;
-
-        victims.push_back(*ai);
-    }
-
-    if (victims.empty())
-        return false;
-
-    near_to_far_sorter sorter = {you.pos()};
-    sort(victims.begin(), victims.end(), sorter);
-
-    for (actor * ai : victims)
-    {
-        const int range = (pos - ai->pos()).rdist();
-        const int strength = ((pow + 100) / 20) / (range*range);
-
-        _attract_actor(agent, ai, pos, pow, strength);
-    }
-
-    return true;
+    return 2 + (pow / 48);
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
 {
-    if (cell_is_solid(where))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
     fail_check();
 
     monster* mons = monster_at(where);
+    const int radius = gravitas_radius(pow);
 
-    mprf("Gravity reorients around %s.",
-         mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
-                                                         NUM_TRAPS, "",
-                                                         DESC_THE)
-                                                         .c_str()
-                                   : "empty space");
-    fatal_attraction(where, &you, pow);
+    // XXX: If this is ever usable from elsewhere than the item, change this.
+    mpr("You rattle the tambourine.");
+
+    mprf("Waves of gravity draw inward%s%s.",
+         mons || feat_is_solid(env.grid(where)) ? " around " : "",
+         mons ? mons->name(DESC_THE).c_str() :
+                feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
+                                                                     NUM_TRAPS, "",
+                                                                     DESC_THE)
+                                                                    .c_str() : "");
+
+    // Show animation
+    for (int i = radius; i >= 0; --i)
+    {
+        for (distance_iterator di(where, false, false, i); di; ++di)
+        {
+            if (grid_distance(where, *di) == i && !feat_is_solid(env.grid(*di))
+                && you.see_cell_no_trans(*di))
+            {
+                flash_tile(*di, LIGHTMAGENTA, 0);
+            }
+        }
+
+        animation_delay(50, true);
+        view_clear_overlays();
+    }
+
+    vector<coord_def> empty[LOS_RADIUS];
+    vector<monster*> targ;
+
+    // Build lists of valid monsters and empty spaces, sorted in order of distance
+    for (distance_iterator di(where, true, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        const int dist = grid_distance(where, *di);
+        monster* mon = monster_at(*di);
+        if (mon && !mon->is_stationary())
+            targ.push_back(mon);
+        else if (!mon && !feat_is_solid(env.grid(*di)))
+            empty[dist].push_back(*di);
+    }
+
+    // Move each monster to a nearer space, if we can
+    for (monster* mon : targ)
+    {
+        bool moved = false;
+        for (int dist = 0; dist <= radius; ++dist)
+        {
+            if (grid_distance(mon->pos(), where) <= dist)
+                break;
+
+            for (unsigned int i = 0; i < empty[dist].size(); ++i)
+            {
+                const coord_def new_pos = empty[dist][i];
+
+                if (monster_habitable_grid(mon, env.grid(new_pos)))
+                {
+                    const coord_def old_pos = mon->pos();
+                    mon->move_to_pos(new_pos);
+                    mon->apply_location_effects(old_pos);
+                    mons_relocated(mon);
+
+                    empty[dist].erase(empty[dist].begin() + i);
+
+                    if (grid_distance(where, old_pos) < 2)
+                        empty[grid_distance(where, old_pos) - 1].push_back(old_pos);
+
+                    moved = true;
+
+                    break;
+                }
+            }
+
+            if (moved)
+                break;
+        }
+    }
+
+    // Bind all hostile monsters in place and damage them
+    // (friendlies are exempt from this part)
+    int dur = (random_range(2, 4) + div_rand_round(pow, 25)) * BASELINE_DELAY;
+    for (distance_iterator di(where, false, false, radius); di; ++di)
+    {
+        if (!you.see_cell_no_trans(*di))
+            continue;
+
+        if (monster* mon = monster_at(*di))
+        {
+            if (mon->wont_attack())
+                continue;
+
+            int dmg = zap_damage(ZAP_GRAVITAS, pow, false).roll();
+            dmg = mon->apply_ac(dmg);
+
+            if (you.can_see(*mon))
+                mprf("%s is pinned by gravity.", mon->name(DESC_THE).c_str());
+            mon->hurt(&you, dmg);
+            mon->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur));
+            behaviour_event(mon, ME_WHACK, &you, you.pos());
+        }
+    }
+
     return spret::success;
 }
 
@@ -1714,6 +1818,38 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
            && mons.is_habitable(pos);
 }
 
+/// Attempt to pull a monster toward the player.
+void attract_monster(monster &mon, int max_move)
+{
+    const int orig_dist = grid_distance(you.pos(), mon.pos());
+    if (orig_dist <= 1)
+        return;
+
+    ray_def ray;
+    if (!find_ray(mon.pos(), you.pos(), ray, opc_solid))
+        return;
+
+    for (int i = 0; i < max_move && i < orig_dist - 1; i++)
+        ray.advance();
+
+    while (!_can_move_mons_to(mon, ray.pos()) && ray.pos() != mon.pos())
+        ray.regress();
+
+    if (ray.pos() == mon.pos())
+        return;
+
+    const coord_def old_pos = mon.pos();
+    if (!mon.move_to_pos(ray.pos()))
+        return;
+
+    mprf("%s is attracted toward you.", mon.name(DESC_THE).c_str());
+
+    _place_tloc_cloud(old_pos);
+    _place_tloc_cloud(ray.pos());
+    mon.apply_location_effects(old_pos);
+    mons_relocated(&mon);
+}
+
 /**
   * Attempt to pull nearby monsters toward the player.
  */
@@ -1728,35 +1864,7 @@ void attract_monsters(int delay)
     sort(targets.begin(), targets.end(), sorter);
 
     for (monster *mi : targets)
-    {
-        const int orig_dist = grid_distance(you.pos(), mi->pos());
-        if (orig_dist <= 1)
-            continue;
-
-        ray_def ray;
-        if (!find_ray(mi->pos(), you.pos(), ray, opc_solid))
-            continue;
-
-        const int max_move = div_rand_round(3 * delay, BASELINE_DELAY);
-        for (int i = 0; i < max_move && i < orig_dist - 1; i++)
-            ray.advance();
-
-        while (!_can_move_mons_to(*mi, ray.pos()) && ray.pos() != mi->pos())
-            ray.regress();
-
-        if (ray.pos() == mi->pos())
-            continue;
-
-        const coord_def old_pos = mi->pos();
-        if (!mi->move_to_pos(ray.pos()))
-            continue;
-
-        mprf("%s is attracted toward you.", mi->name(DESC_THE).c_str());
-
-        _place_tloc_cloud(old_pos);
-        mi->apply_location_effects(old_pos);
-        mons_relocated(mi);
-    }
+        attract_monster(*mi, div_rand_round(3 * delay, BASELINE_DELAY));
 }
 
 vector<monster *> find_chaos_targets(bool just_check)
@@ -1794,7 +1902,7 @@ spret word_of_chaos(int pow, bool fail)
     fail_check();
     shuffle_array(targets);
 
-    mprf("You speak a word of chaos!");
+    mpr("You speak a word of chaos!");
     for (auto mons : targets)
     {
         if (mons->no_tele())
@@ -1859,10 +1967,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
     fail_check();
 
-    // Storm Form is immune to constriction, but check for it anyway in
-    // case casting Blinkbolt becomes possible in some other way!
-    if (!you.attempt_escape(2))
-        return spret::success;
+    you.stop_being_constricted(false, "bolt");
 
     beam.thrower = KILL_YOU_MISSILE;
     zappy(ZAP_BLINKBOLT, power, false, beam);
@@ -1871,4 +1976,355 @@ spret blinkbolt(int power, bolt &beam, bool fail)
     you.duration[DUR_BLINKBOLT_COOLDOWN] = 50 + random2(150);
 
     return spret::success;
+}
+
+static bool _valid_piledriver_target(monster* targ)
+{
+    return targ && !targ->friendly() && !mons_is_firewood(*targ)
+           && !targ->is_stationary() && you.can_see(*targ);
+}
+
+vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets)
+{
+    const int max_range = 5;
+
+    vector<coord_def> path;
+    for (unsigned int j = 0; j < targets.size(); ++j)
+    {
+        monster* targ = monster_at(targets[j]);
+        coord_def delta = targ->pos() - you.pos();
+
+        // Iterate through all tiles in the appropriate direction, testing at each
+        // step whether the monster can occupy its new space and whether the player
+        // can occupy the space immediately before that. Stop as soon as this is not
+        // true or we reach our maximum range.
+        for (int i = 0; i <= max_range; ++i)
+        {
+            const coord_def new_pos = targ->pos() + (delta * i);
+
+            // Check if this is where our movement stops
+            if (i > 0
+                && (actor_at(new_pos)
+                    || !monster_habitable_grid(targ, env.grid(new_pos))
+                    || is_feat_dangerous(env.grid(new_pos - delta))))
+            {
+                path.push_back(new_pos);
+                break;
+            }
+
+            path.push_back(new_pos);
+        }
+    }
+
+    return path;
+}
+
+static int calc_piledriver_dist(const monster& targ)
+{
+    vector<coord_def> path = piledriver_beam_paths(vector<coord_def>{targ.pos()});
+
+    // Test if the final space of the path would hit something and only consider
+    // paths that would do so.
+    if (path.size() > 2)
+    {
+        if (actor_at(path.back()) || feat_is_solid(env.grid(path.back())))
+            return path.size();
+    }
+
+    return 0;
+}
+
+vector<coord_def> possible_piledriver_targets()
+{
+    vector<coord_def> targs;
+    int furthest_dist = 0;
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monster* targ = monster_at(*ai);
+        if (_valid_piledriver_target(targ))
+        {
+            int dist = calc_piledriver_dist(*targ);
+
+            // Skip targets that will not move the player at all.
+            // (This needs at least 3 tiles, since the target monster will be
+            // on the 1st, and a possible blocker on the 2nd)
+            if (dist < 3)
+                continue;
+
+            // Better than any target yet found
+            if (dist > furthest_dist)
+            {
+                targs.clear();
+                furthest_dist = dist;
+                targs.push_back(*ai);
+            }
+            // Tied with a target already found
+            else if (dist == furthest_dist)
+                targs.push_back(*ai);
+            // Otherwise, ignore it
+        }
+    }
+
+    return targs;
+}
+
+dice_def piledriver_collision_damage(int pow, int dist, bool random)
+{
+    if (!random)
+        return dice_def(1 + (dist * 2), 2 + (pow + 10) / 15);
+    else
+        return dice_def(1 + (dist * 2), 2 + (div_rand_round(pow + 10, 15)));
+}
+
+spret cast_piledriver(int pow, bool fail)
+{
+    // Calculate all possible valid targets first, so we can prompt the player
+    // about anything they *might* hit.
+    vector<coord_def> targs = possible_piledriver_targets();
+    vector<coord_def> path = piledriver_beam_paths(targs);
+    if (warn_about_bad_targets(SPELL_PILEDRIVER, path))
+        return spret::abort;
+
+    fail_check();
+
+    // Now that they've confirmed, pick the *real* target
+    shuffle_array(targs);
+    targs.resize(1);
+    monster* mon = monster_at(targs[0]);
+    path = piledriver_beam_paths(targs);
+
+    mprf("Space contracts around you and %s and then re-expands violently!",
+            mon->name(DESC_THE).c_str());
+
+    // Animate the player and their victim flying forward together
+    bolt anim;
+    anim.source = you.pos();
+    anim.target = path.back();
+    anim.flavour = BEAM_VISUAL;
+    anim.range = path.size();
+    anim.fire();
+
+    // Move both the player and their target to their destination first
+    const coord_def old_pos = you.pos();
+    const coord_def old_targ_pos = mon->pos();
+
+    mon->move_to_pos(path[path.size() - 2]);
+    you.move_to_pos(path[path.size() - 3]);
+
+    // Apply collision damage (scaling with distance covered)
+    const int dmg = piledriver_collision_damage(pow, path.size() - 2, true).roll();
+    mon->collide(path.back(), &you, dmg);
+
+    // Now trigger location effects (to avoid dispersal traps causing all sorts
+    // of problems with keeping the two of us together in the middle)
+    if (mon->alive())
+        mon->apply_location_effects(old_targ_pos);
+    you.apply_location_effects(old_pos);
+
+    return spret::success;
+}
+
+dice_def gavotte_impact_damage(int pow, int dist, bool random)
+{
+    if (!random)
+        return dice_def(2, (pow * 3 / 4 + 35) * (dist + 5) / 20 + 1);
+    else
+        return dice_def(2, div_rand_round((pow * 3 / 4 + 35) * (dist + 5), 20) + 1);
+}
+
+static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor& victim)
+{
+    if (victim.is_monster() && victim.alive())
+    {
+        //potentially penance
+        if (!mons_is_conjured(victim.as_monster()->type))
+        {
+            set_attack_conducts(conducts, *victim.as_monster(),
+                you.can_see(*victim.as_monster()));
+        }
+    }
+}
+
+static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
+{
+    const bool god_prot = victim.is_monster()
+                                && god_protects(&you, victim.as_monster());
+
+    god_conduct_trigger conducts[3];
+
+    if (victim.is_monster() && !god_prot)
+    {
+        behaviour_event(victim.as_monster(), ME_ALERT, &you, you.pos());
+        victim.as_monster()->speed_increment -= 10;
+    }
+
+    const coord_def starting_pos = victim.pos();
+    for (int i = 1; i <= dist; ++i)
+    {
+        const coord_def next_pos = starting_pos + (dir * i);
+
+        if (!victim.can_pass_through_feat(env.grid(next_pos)) && i > 1
+            && !victim.is_player())
+        {
+            victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
+            _maybe_penance_for_collision(conducts, victim);
+            break;
+        }
+        else if (actor* act_at_space = actor_at(next_pos))
+        {
+            if (i > 1 && &victim != act_at_space && !victim.is_player()
+                && !act_at_space->is_player())
+            {
+                victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
+                _maybe_penance_for_collision(conducts, victim);
+                _maybe_penance_for_collision(conducts, *act_at_space);
+            }
+            break;
+        }
+        else if (!victim.is_habitable(next_pos))
+            break;
+        else
+            victim.move_to_pos(next_pos);
+    }
+
+    if (starting_pos != victim.pos())
+    {
+        victim.apply_location_effects(starting_pos);
+        if (victim.is_monster())
+            mons_relocated(victim.as_monster());
+    }
+}
+
+spret cast_gavotte(int pow, const coord_def dir, bool fail)
+{
+    vector<monster*> affected = gavotte_affected_monsters(dir);
+    if (!affected.empty())
+    {
+        vector<coord_def> spots;
+        for (unsigned int i = 0; i < affected.size(); ++i)
+            spots.push_back(affected[i]->pos());
+
+        if (warn_about_bad_targets(SPELL_GELLS_GAVOTTE, spots))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    // XXX: Surely there's a better way to do this
+    string dir_msg = "???";
+    if (dir.x == 0 && dir.y == -1)
+        dir_msg = "north";
+    else if (dir.x == 0 && dir.y == 1)
+        dir_msg = "south";
+    else if (dir.x == -1 && dir.y == 0)
+        dir_msg = "west";
+    else if (dir.x == 1 && dir.y == 0)
+        dir_msg = "east";
+    else if (dir.x == -1 && dir.y == -1)
+        dir_msg = "northwest";
+    else if (dir.x == 1 && dir.y == -1)
+        dir_msg = "northeast";
+    else if (dir.x == -1 && dir.y == 1)
+        dir_msg = "southwest";
+    else if (dir.x == 1 && dir.y == 1)
+        dir_msg = "southeast";
+
+    mprf("Gravity reorients to the %s!", dir_msg.c_str());
+
+    if (you.stasis())
+        canned_msg(MSG_STRANGE_STASIS);
+
+    // Gather all actors we will be moving
+    vector<actor*> targs;
+
+    // Don't move stationary players (or formicids)
+    if (!you.is_stationary() && !you.stasis())
+        targs.push_back(&you);
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+            targs.push_back(*mi);
+    }
+
+    // Sort by closest to the pull direction
+    sort(targs.begin( ), targs.end( ), [dir](actor* a, actor* b)
+    {
+        return (a->pos().x * dir.x) + (a->pos().y * dir.y)
+               > (b->pos().x * dir.x) + (b->pos().y * dir.y);
+    });
+
+    // Push all monsters, in order
+    for (unsigned int i = 0; i < targs.size(); ++i)
+    {
+        // Some circumstances, such as lost souls sacrificing themselves, can
+        // result in monsters dying before it even comes time to push them.
+        if (targs[i]->alive())
+            _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow);
+    }
+
+    you.increase_duration(DUR_GAVOTTE_COOLDOWN, random_range(5, 9) - div_rand_round(pow, 50));
+
+    return spret::success;
+}
+
+static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir, bool actual)
+{
+    // Scan in our push direction. We want to find at least one tile of open
+    // space before the nearest solid feature or stationary monster. Non-stationary
+    // monsters are 'free'
+    int steps = GAVOTTE_DISTANCE;
+    coord_def pos = mon->pos();
+    while (steps)
+    {
+        pos += dir;
+
+        // They may actually be able to hit something here, but we shouldn't
+        // leak the presence of immediately off-screen walls to the targeter
+        if (!you.see_cell(pos))
+            return false;
+
+        // Can never collide with the player (for the player's sake)
+        if (pos == you.pos())
+            return false;
+
+        // If we're about to hit a blocker, check whether we will have moved at
+        // least one space before doing so.
+        monster* mon_at_pos = monster_at(pos);
+        if (!mon->can_pass_through_feat(env.grid(pos))
+            || mon_at_pos && mon_at_pos->is_stationary()
+               && (actual || mon_at_pos->visible_to(&you)))
+        {
+            return steps < GAVOTTE_DISTANCE;
+        }
+        // Skip over mobile monsters as 'free' spaces (since we can all pile up
+        // against a wall)
+        else if (mon_at_pos && !mon_at_pos->is_stationary()
+                 && (actual || mon_at_pos->visible_to(&you)))
+        {
+            steps++;
+        }
+
+        steps--;
+    }
+
+    return false;
+}
+
+vector<monster*> gavotte_affected_monsters(const coord_def dir, bool actual)
+{
+    vector<monster*> affected;
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos())
+            && (actual || you.can_see(**mi)))
+        {
+            if (_gavotte_will_wall_slam(*mi, dir, actual))
+                affected.push_back(*mi);
+        }
+    }
+
+    return affected;
 }

@@ -1,0 +1,20 @@
+name: "ogre mage"
+glyph: {char: "O", colour: magenta}
+flags: [see_invis, speaks, warm_blood]
+xp_mult: 16
+species: ogre
+will: 80
+attacks:
+ - {type: hit, damage: 16}
+hd: 10
+hp_10x: 550
+ac: 1
+ev: 7
+spells: ogre_mage
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {attack: 15}
+uses: weapons_armour
+size: large
+shape: humanoid

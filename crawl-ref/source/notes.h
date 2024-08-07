@@ -50,7 +50,7 @@ enum NOTE_TYPES
     NOTE_XOM_EFFECT,            /* needs: description (name string) */
     NOTE_XOM_REVIVAL,           /* needs: death cause (string) */
     NOTE_PARALYSIS,             /* needs: paralysis source (string) */
-    NOTE_NAMED_ALLY,            /* needs: ally name (string) */
+    NOTE_RECRUITED_APOSTLE,     /* needs: ally name (string), class name (string) */
     NOTE_ALLY_DEATH,            /* needs: ally name (string) */
     NOTE_FEAT_MIMIC,            /* needs: mimiced feature (string) */
     NOTE_OFFERED_SPELL,         /* needs: spell idx */
@@ -64,6 +64,11 @@ enum NOTE_TYPES
     NOTE_ACQUIRE_ITEM,
     NOTE_ZOT_TOUCHED,           /* needs: old mhp, new mhp */
     NOTE_DREAMSHARD,
+    NOTE_GEM_LOST,              /* needs: gem idx */
+    NOTE_GAIN_LIFE,             /* needs: lives left */
+    NOTE_LOSE_LIFE,             /* needs: lives left */
+    NOTE_FLED_CHALLENGE,
+    NOTE_INFERNAL_MARK,         /* needs: name of mark accepted (string) */
     NOTE_NUM_TYPES
 };
 

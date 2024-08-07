@@ -77,8 +77,8 @@ enum attack_flavour
     AF_FIRE,
 #if TAG_MAJOR_VERSION == 34
     AF_HUNGER,
-#endif
     AF_MUTATE,
+#endif
     AF_POISON_PARALYSE,
     AF_POISON,
 #if TAG_MAJOR_VERSION == 34
@@ -99,7 +99,9 @@ enum attack_flavour
 #endif
     AF_DISTORT,
     AF_RAGE,
+#if TAG_MAJOR_VERSION == 34
     AF_STICKY_FLAME,
+#endif
     AF_CHAOTIC,
     AF_STEAL,
 #if TAG_MAJOR_VERSION == 34
@@ -145,6 +147,10 @@ enum attack_flavour
     AF_SLEEP,
     AF_MINIPARA,
     AF_FLANK,
+    AF_DRAG,
+    AF_FOUL_FLAME,
+    AF_HELL_HUNT,
+    AF_SWARM,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -228,18 +234,28 @@ enum mon_resist_flags
 #else
     // unused 1 << 25,
 #endif
-    MR_RES_STICKY_FLAME  = 1 << 26,
-    MR_RES_VORTEX        = 1 << 27,
+    // unused 1 << 26,
+    // unused 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
 #if TAG_MAJOR_VERSION == 34
     MR_VUL_WATER         = 1 << 29,
 #endif
-    MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
-    MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
-    MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
-    MR_VUL_COLD          = mrd(MR_RES_COLD, -1),
+};
+
+const mon_resist_flags ALL_MON_RESISTS[] = {
+    MR_RES_ELEC,
+    MR_RES_POISON,
+    MR_RES_FIRE,
+    MR_RES_COLD,
+    MR_RES_NEG,
+    MR_RES_ACID,
+    MR_RES_MIASMA,
+    MR_RES_TORMENT,
+    MR_RES_PETRIFY,
+    MR_RES_DAMNATION,
+    MR_RES_STEAM,
 };
 
 enum shout_type
@@ -268,6 +284,7 @@ enum shout_type
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
     S_RUSTLE,               // books
+    S_SQUEAK,               // rats and similar
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

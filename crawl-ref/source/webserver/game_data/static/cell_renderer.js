@@ -32,8 +32,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
         // game, style information is missing for some reason.
         // Use hard coded values instead.
         healthy = "#8ae234";
-        hp_spend = "#a40000";
-        magic = "#729fcf";
+        hp_spend = "#b30009";
+        magic = "#5e78ff";
         // healthy = $("#stats_hp_bar_full").css("background-color");
         // hp_spend = $("#stats_hp_bar_decrease").css("background-color");
         // magic = $("#stats_mp_bar_full").css("background-color");
@@ -224,9 +224,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
             if (!cell)
             {
-                if (options.get("tile_display_mode") != "glyphs")
-                    this.render_flash(x, y);
-
                 this.render_cursors(cx, cy, x, y);
                 return;
             }
@@ -384,7 +381,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.save();
                 try
                 {
-                    this.ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
+                    this.ctx.globalAlpha = cell.trans ? 0.55 : 1.0;
 
                     draw_dolls();
                 }
@@ -436,7 +433,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         });
             }
 
-            this.render_flash(x, y);
+            this.render_flash(x, y, map_cell);
 
             this.render_cursors(cx, cy, x, y);
 
@@ -588,11 +585,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_flash: function(x, y)
+        render_flash: function(x, y, map_cell)
         {
-            if (view_data.flash) // Flash
+            if (map_cell.flc)
             {
-                var col = view_data.flash_colour;
+                var col = view_data.get_flash_colour(map_cell.flc, map_cell.fla);
                 this.ctx.save();
                 try
                 {
@@ -803,6 +800,10 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(dngn.SANCTUARY, x, y);
+                    if (cell.blasphemy)
+                        this.draw_dngn(dngn.BLASPHEMY, x, y);
+                    if (cell.has_bfb_corpse)
+                        this.draw_dngn(dngn.BLOOD_FOR_BLOOD, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
@@ -828,17 +829,33 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         else if (fg.NEUTRAL)
                             this.draw_dngn(dngn.HALO_NEUTRAL, x, y);
 
-                        // Monster difficulty
-                        if (fg.TRIVIAL)
-                            this.draw_dngn(dngn.THREAT_TRIVIAL, x, y);
-                        else if (fg.EASY)
-                            this.draw_dngn(dngn.THREAT_EASY, x, y);
-                        else if (fg.TOUGH)
-                            this.draw_dngn(dngn.THREAT_TOUGH, x, y);
-                        else if (fg.NASTY)
-                            this.draw_dngn(dngn.THREAT_NASTY, x, y);
-                        else if (fg.UNUSUAL)
-                            this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        // Monster difficulty. Ghosts get a special highlight.
+                        if (fg.GHOST)
+                        {
+                            if (fg.TRIVIAL)
+                                this.draw_dngn(dngn.THREAT_GHOST_TRIVIAL, x, y);
+                            else if (fg.EASY)
+                                this.draw_dngn(dngn.THREAT_GHOST_EASY, x, y);
+                            else if (fg.TOUGH)
+                                this.draw_dngn(dngn.THREAT_GHOST_TOUGH, x, y);
+                            else if (fg.NASTY)
+                                this.draw_dngn(dngn.THREAT_GHOST_NASTY, x, y);
+                            else if (fg.UNUSUAL)
+                                this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        }
+                        else
+                        {
+                            if (fg.TRIVIAL)
+                                this.draw_dngn(dngn.THREAT_TRIVIAL, x, y);
+                            else if (fg.EASY)
+                                this.draw_dngn(dngn.THREAT_EASY, x, y);
+                            else if (fg.TOUGH)
+                                this.draw_dngn(dngn.THREAT_TOUGH, x, y);
+                            else if (fg.NASTY)
+                                this.draw_dngn(dngn.THREAT_NASTY, x, y);
+                            else if (fg.UNUSUAL)
+                                this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
+                        }
 
                         if (cell.highlighted_summoner)
                             this.draw_dngn(dngn.HALO_SUMMONER, x, y);
@@ -1065,10 +1082,13 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 //These icons are in the lower right, so status_shift doesn't need changing.
                 case icons.BERSERK:
                 case icons.IDEALISED:
+                case icons.TOUCH_OF_BEOGH:
+                case icons.SHADOWLESS:
                 // Anim. weap. and summoned might overlap, but that's okay
                 case icons.SUMMONED:
                 case icons.PERM_SUMMON:
                 case icons.ANIMATED_WEAPON:
+                case icons.VENGEANCE_TARGET:
                     this.draw_icon(idx, x, y, undefined, undefined, img_scale);
                     return 0;
                 case icons.DRAIN:
@@ -1086,6 +1106,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.POSSESSABLE:
                 case icons.PARTIALLY_CHARGED:
                 case icons.FULLY_CHARGED:
+                case icons.VITRIFIED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
                 case icons.CONC_VENOM:
@@ -1098,7 +1119,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.ANGUISH:
                 case icons.FIRE_VULN:
                 case icons.RESISTANCE:
-                case icons.SIMULACRUM:
+                case icons.GHOSTLY:
                 case icons.MALMUTATED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 8;
@@ -1116,6 +1137,15 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.INJURY_BOND:
                 case icons.GLOW_LIGHT:
                 case icons.GLOW_HEAVY:
+                case icons.BULLSEYE:
+                case icons.CURSE_OF_AGONY:
+                case icons.REGENERATION:
+                case icons.RETREAT:
+                case icons.RIMEBLIGHT:
+                case icons.UNDYING_ARMS:
+                case icons.BIND:
+                case icons.SIGN_OF_RUIN:
+                case icons.WEAK_WILLED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

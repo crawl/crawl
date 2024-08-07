@@ -45,13 +45,6 @@ bolt
 Ein Metallprojektil. Es ist kürzer als ein Pfeil und zum verschießen mit einer
 Armbrust vorgesehen.
 %%%%
-book of alchemy
-
-Ein Buch, das sich auf alchemistische Prozesse und ihre Benutzung in
-Zaubersprüchen konzentriert. In ihm ist die Weisheit vieler antiker Alchemisten
-gesammelt. Wenn das Buch geöffnet wird, kommt der Text ans Licht, indem die
-Tinte aus der Luft auf den Seiten kondensiert.
-%%%%
 book of annihilations
 
 Blut tropft von den zerschlissenen Seiten dieses Buches, und selbst ein
@@ -258,13 +251,13 @@ glaive
 
 Eine Stange mit einer großen und schweren Klinge an einem Ende.
 %%%%
-gold dragon scales
+golden dragon scales
 
 Rüstung von den Skalen eines Golddrachen gemacht. Es ist viel schwerer als die
 meisten Drache-Skala-Rüstungen, und gewährt seinen Träger-Widerstand gegen
 Gift, Feuer und Kälte.
 %%%%
-gold dragon hide
+golden dragon hide
 
 Das Verbergen eines Golddrachen, der in äußerst harten goldenen Skalen bedeckt
 ist. In seiner rohen Form stellt es viel Schutz außer dem Widerstand gegen Gift

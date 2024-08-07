@@ -72,7 +72,7 @@ Xom animate monster weapon
 
 “是时候找点乐子了!”
 
-你听到了佐姆疯狂的笑声。
+你听到佐姆疯狂的笑声。
 
 佐姆帮了你一个小忙。
 
@@ -105,7 +105,7 @@ Xom zero miscast effect
 
 有那么一会儿，佐姆的力量几乎触动到了你。
 
-你几乎听到了佐姆疯狂的笑声。
+你几乎听到佐姆疯狂的笑声。
 %%%%
 Xom rearrange the pieces
 
@@ -144,7 +144,7 @@ Xom draining or torment
 
 有那么一会儿，佐姆的力量触动到了你。
 
-你听到了佐姆疯狂的笑声。
+你听到佐姆疯狂的笑声。
 
 “受苦吧！”
 
@@ -159,7 +159,7 @@ Xom hostile monster
 
 “我们看看他是否足够强大，能够存活下来。”
 
-你听到了佐姆疯狂的笑声。
+你听到佐姆疯狂的笑声。
 %%%%
 Xom banishment
 
@@ -180,7 +180,6 @@ w:30
 
 佐姆把你拉回到类似地牢的宁静之中。
 %%%%
-%%%%
 Xom revert other banishment
 
 “给我回来！”
@@ -200,7 +199,7 @@ Xom chaos upgrade
 %%%%
 Xom noise
 
-佐姆制造了急剧的噪音！你听到了@weapon_noise@
+佐姆制造了急剧的噪音！你听到@weapon_noise@
 
 w:1
 “嘘！”
@@ -267,7 +266,7 @@ Xom good monster polymorph
 
 佐姆的力量触动了附近的一个怪物。
 
-“你听到了佐姆慈爱的轻笑声。”
+你听到佐姆慈爱的轻笑声。
 %%%%
 # 削弱友方，加强敌方
 Xom bad monster polymorph
@@ -282,7 +281,7 @@ Xom good mutations
 
 有那么一会儿，佐姆的力量触动到了你。
 
-你听到了佐姆疯狂的咯咯笑声。
+你听到佐姆疯狂的咯咯笑声。
 %%%%
 Xom random mutations
 
@@ -292,7 +291,7 @@ Xom random mutations
 
 有那么一会儿，佐姆的力量轻拂过你。
 
-“你听到了佐姆慈爱的轻笑声。”
+你听到佐姆慈爱的轻笑声。
 %%%%
 Xom snakes to sticks
 
@@ -506,7 +505,7 @@ Ignis elemental wrath
 
 “进攻，我最后的坚定仆从！”
 
-伊格尼斯怒号着，狂怒倾泻而出！
+伊格尼斯哀号着，狂怒倾泻而出！
 
 伊格尼斯召唤火之灵来毁灭你！
 
@@ -545,9 +544,9 @@ Cheibriados welcome
 
 切布理亚多说：慢慢来。
 %%%%
-Dithmenos penance
+Cheibriados death
 
-迪斯姆诺说：回到黑暗之中！
+切布理亚多欣赏死亡的静止。
 %%%%
 Dithmenos welcome
 
@@ -569,6 +568,10 @@ Fedhas welcome
 
 费德哈说：散播生命和死亡。
 %%%%
+Fedhas death
+
+费德哈感谢你对生态系统做出的贡献。
+%%%%
 Gozag welcome
 
 哥萨戈说：贪婪是好的。
@@ -577,9 +580,17 @@ Hepliaklqana welcome
 
 惠普利亚卡纳：你的过去变成了你的现在！
 %%%%
+Hepliaklqana death
+
+惠普利亚卡纳把你带到你的先祖那里。
+%%%%
 Ignis welcome
 
 伊格尼斯的火焰柔和地温暖着你。
+%%%%
+Ignis death
+
+伊格尼斯寂灭了，和你一起走向死亡。
 %%%%
 Jiyva welcome
 
@@ -588,9 +599,41 @@ Jiyva welcome
 w:1
 新肉体万岁！
 %%%%
+Jiyva death corpse
+
+吉瓦派来一个胶冻来消化你的尸体。
+%%%%
+Jiyva death corpse undead
+
+@Jiyva death corpse@
+%%%%
+Jiyva death corpse nonliving
+
+吉瓦派来一个胶冻来消化你的装备。
+%%%%
 Kikubaaqudgha welcome
 
 奇库巴库哈说：散播无尽的折磨和黑暗！
+%%%%
+Kikubaaqudgha death
+
+奇库巴库哈厉声说：你让我失望了！欢迎……死亡！
+%%%%
+Kikubaaqudgha death corpse undead
+
+奇库巴库哈厉声说：你让我失望了！欢迎……湮灭！
+%%%%
+Kikubaaqudgha death corpse nonliving
+
+@Kikubaaqudgha death corpse undead@
+%%%%
+Kikubaaqudgha death undead
+
+@Kikubaaqudgha death corpse undead@
+%%%%
+Kikubaaqudgha death nonliving
+
+@Kikubaaqudgha death corpse undead@
 %%%%
 Lugonu welcome
 
@@ -673,6 +716,10 @@ Ru welcome
 
 入说：切除你虚妄的肉体！
 %%%%
+Ru death
+
+入尊重你的终极舍弃。
+%%%%
 Sif Muna penance
 
 席夫·穆纳说：去寻求更多知识和智慧。
@@ -701,13 +748,25 @@ Uskayaw welcome
 
 乌斯卡亚说：让自己沉浸于节奏中！
 %%%%
+Uskayaw death corpse
+
+你的身体随着节奏完美落下。
+%%%%
+Uskayaw death corpse undead
+
+@Uskayaw death corpse@
+%%%%
+Uskayaw death corpse nonliving
+
+@Uskayaw death corpse@
+%%%%
 Vehumet welcome
 
 维胡梅特说：让一切在地狱之火中终结吧！
 %%%%
 Wu Jian welcome
 
-门派说：践行智慧和战斗之路！
+门派有言：践行智慧和战斗之路！
 %%%%
 Xom bored
 
@@ -802,11 +861,27 @@ w:2
 %%%%
 Yredelemnul penance
 
-伊莱德莱姆努尔说：面对死亡，一切平等！神圣的殉道毫无意义！
+伊莱德莱姆努尔说：死亡面前，一切平等！神圣的殉道毫无意义！
 %%%%
 Yredelemnul welcome
 
 伊莱德莱姆努尔说：拿着黑色的火炬！唤醒无所事事的死者！
+%%%%
+Yredelemnul death corpse
+
+你的身体以一个没有意识的丧尸的形式重生了。
+%%%%
+Yredelemnul death corpse undead
+
+你加入了亡灵的收割军团。
+%%%%
+Yredelemnul death corpse nonliving
+
+你的身体化为黑色火炬的燃料。
+%%%%
+Yredelemnul death undead
+
+@Yredelemnul death corpse undead@
 %%%%
 Zin penance
 

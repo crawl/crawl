@@ -1,0 +1,22 @@
+name: "demonspawn corrupter"
+glyph: {char: "6", colour: lightgreen}
+flags: [speaks, warm_blood]
+resists: {neg: 3}
+species: demonspawn
+holiness: [natural, demonic]
+will: 60
+attacks:
+ - {type: hit, damage: 25}
+ - {type: kick, damage: 20}
+hd: 15
+hp_10x: 925
+ac: 3
+ev: 15
+spells: demonspawn_corrupter
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Lugonu

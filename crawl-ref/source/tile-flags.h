@@ -2,6 +2,10 @@
 
 #include "tag-version.h"
 
+// If you change these, you need to sync your changes with:
+//     webserver/game_data/static/enums.js
+//     webserver/game_data/static/cell_renderer.js
+// to ensure that your tile will also be drawn in webtiles builds!
 enum tile_flags ENUM_INT64
 {
     //// Foreground flags
@@ -38,6 +42,8 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_TOUGH        = 0x6000000000000000ULL,
     TILE_FLAG_NASTY        = 0x8000000000000000ULL,
     TILE_FLAG_UNUSUAL      = 0xE000000000000000ULL,
+
+    TILE_FLAG_GHOST        = 0x10000000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK    = 0x1C0000000ULL,

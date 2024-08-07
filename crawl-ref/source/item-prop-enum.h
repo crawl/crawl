@@ -85,9 +85,9 @@ enum armour_type
 #endif
     ARM_STORM_DRAGON_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
-    ARM_GOLD_DRAGON_HIDE,
+    ARM_GOLDEN_DRAGON_HIDE,
 #endif
-    ARM_GOLD_DRAGON_ARMOUR,
+    ARM_GOLDEN_DRAGON_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     ARM_SWAMP_DRAGON_HIDE,
 #endif
@@ -181,6 +181,7 @@ enum brand_type // item_def.special
 #endif
     SPWPN_WEAKNESS,
     SPWPN_VULNERABILITY,
+    SPWPN_FOUL_FLAME,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
@@ -225,7 +226,7 @@ enum jewellery_type
     RING_WIZARDRY,
     RING_MAGICAL_POWER,
     RING_FLIGHT,
-    RING_LIFE_PROTECTION,
+    RING_POSITIVE_ENERGY,
     RING_WILLPOWER,
     RING_FIRE,
     RING_ICE,
@@ -320,6 +321,7 @@ enum misc_item_type
 #endif
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
+    MISC_GRAVITAMBOURINE,
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
@@ -351,6 +353,7 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
+    MISC_GRAVITAMBOURINE,
 };
 
 enum missile_type
@@ -368,6 +371,8 @@ enum missile_type
     MI_SLING_BULLET,
     MI_THROWING_NET,
     MI_BOOMERANG,
+
+    MI_SLUG,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
@@ -401,6 +406,28 @@ enum rune_type
     RUNE_SPIDER,
     RUNE_FOREST, // only used in sprints
     NUM_RUNE_TYPES
+};
+
+// Order roughly matches branch_type.
+enum gem_type
+{
+    GEM_DUNGEON,
+#if TAG_MAJOR_VERSION == 34
+    GEM_ORC,
+#endif
+    GEM_ELF,
+    GEM_LAIR,
+    GEM_SWAMP,
+    GEM_SHOALS,
+    GEM_SNAKE,
+    GEM_SPIDER,
+    GEM_SLIME,
+    GEM_VAULTS,
+    GEM_CRYPT,
+    GEM_TOMB,
+    GEM_DEPTHS,
+    GEM_ZOT,
+    NUM_GEM_TYPES
 };
 
 enum scroll_type
@@ -543,7 +570,7 @@ enum stave_type
 #endif
     STAFF_FIRE,
     STAFF_COLD,
-    STAFF_POISON,
+    STAFF_ALCHEMY,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENERGY,
 #endif
@@ -556,7 +583,7 @@ enum stave_type
     STAFF_AIR,
     STAFF_EARTH,
 #if TAG_MAJOR_VERSION == 34
-    STAFF_CHANNELING,
+    STAFF_CHANNELLING,
 #endif
     NUM_STAVES,
 };
@@ -771,6 +798,7 @@ enum wand_type
     WAND_LIGHT,
     WAND_QUICKSILVER,
     WAND_ROOTS,
+    WAND_WARPING,
     NUM_WANDS
 };
 
@@ -812,6 +840,7 @@ enum item_set_type
     ITEM_SET_ALLY_SCROLLS,
     ITEM_SET_AREA_MISCELLANY,
     ITEM_SET_ALLY_MISCELLANY,
+    ITEM_SET_CONTROL_MISCELLANY,
     NUM_ITEM_SET_TYPES
 };
 
@@ -827,4 +856,13 @@ enum talisman_type
     TALISMAN_STORM,
     TALISMAN_FLUX,
     NUM_TALISMANS,
+};
+
+enum special_gizmo_type
+{
+    SPGIZMO_NORMAL,
+    SPGIZMO_MANAREV,
+    SPGIZMO_GADGETEER,
+    SPGIZMO_PARRYREV,
+    SPGIZMO_AUTODAZZLE,
 };

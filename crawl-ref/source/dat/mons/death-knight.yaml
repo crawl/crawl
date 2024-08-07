@@ -1,0 +1,20 @@
+name: "death knight"
+glyph: {char: "p", colour: green}
+flags: [fighter, speaks, warm_blood]
+xp_mult: 12
+species: human
+will: 80
+attacks:
+ - {type: hit, damage: 28}
+hd: 10
+hp_10x: 800
+ac: 2
+ev: 12
+spells: death_knight
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Yredelemnul

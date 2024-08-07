@@ -1,0 +1,22 @@
+name: "storm dragon"
+glyph: {char: "D", colour: lightblue}
+flags: [flies, warm_blood]
+resists: {elec: 3}
+xp_mult: 13
+genus: dragon
+will: 100
+attacks:
+ - {type: bite, damage: 25}
+ - {type: claw, damage: 15}
+ - {type: trample, flavour: trample, damage: 15}
+hd: 14
+hp_10x: 1050
+ac: 13
+ev: 10
+spells: storm_dragon
+has_corpse: true
+shout: loud_roar
+intelligence: animal
+speed: 12
+size: giant
+shape: quadruped_winged

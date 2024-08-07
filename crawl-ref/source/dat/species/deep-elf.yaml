@@ -1,16 +1,16 @@
 enum: SP_DEEP_ELF
 monster: MONS_ELF
-name: "Deep Elf"
-short_name: "DE"
-adjective: "Elven"
-genus: "Elf"
+name: Deep Elf
+short_name: DE
+adjective: Elven
+genus: Elf
 difficulty: Simple
 difficulty_priority: 40
 aptitudes:
   xp: -1
   hp: -2
   mp_mod: 2
-  mr: 4
+  wl: 4
   fighting: -2
   long_blades: -1
   axes: -2
@@ -28,12 +28,12 @@ aptitudes:
   summoning: 1
   necromancy: 2
   translocations: 1
-  transmutations: 1
   shapeshifting: 0
   fire_magic: 1
   ice_magic: 1
+  air_magic: 1
   earth_magic: 1
-  poison_magic: 1
+  alchemy: 1
   invocations: 1
   evocations: 1
 str: 5
@@ -42,16 +42,21 @@ dex: 10
 levelup_stat_frequency: 4
 levelup_stats:
   - int
+mutations:
+  1:
+    MUT_MANA_REGENERATION: 1
 recommended_jobs:
-  - JOB_HEDGE_WIZARD
-  - JOB_CONJURER
-  - JOB_SUMMONER
-  - JOB_NECROMANCER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
-  - JOB_AIR_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - hedge wizard
+  - conjurer
+  - summoner
+  - necromancer
+  - fire elementalist
+  - ice elementalist
+  - air elementalist
+  - earth elementalist
+  - alchemist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_STAVES
+  - short blades
+  - staves
+
+orc_name: Deep Orc

@@ -19,8 +19,8 @@ enum attribute_type
                                 // sight of the player while in the Abyss.
     ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
     ATTR_DIVINE_STAMINA,        // strength of Zin's Divine Stamina
-    ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
 #if TAG_MAJOR_VERSION == 34
+    ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
     ATTR_WEAPON_SWAP_INTERRUPTED,
 #endif
     ATTR_GOLD_FOUND,
@@ -47,9 +47,9 @@ enum attribute_type
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts
                                // will be removed
+#if TAG_MAJOR_VERSION == 34
     ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
     ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
-#if TAG_MAJOR_VERSION == 34
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?

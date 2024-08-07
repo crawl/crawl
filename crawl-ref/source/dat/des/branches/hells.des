@@ -54,10 +54,11 @@ COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
 MONS:    zombie / skeleton
 MONS:    hell sentinel / iron giant
+KFEAT:   G = metal_statue
 SUBST:   xc = v, F~ = G
 COLOUR:  G = cyan
 TILE:    G = dngn_statue_iron
-: set_feature_name("granite_statue", "iron statue")
+: set_feature_name("metal_statue", "iron statue")
 : end
 KPROP:   lw = no_tele_into
 MAP
@@ -74,13 +75,13 @@ ENDMAP
 
 NAME:    hangedman_elemental_grid_stream
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:   Geh, Coc, Zot:1-4
+DEPTH:   Geh, Coc, Zot, !Zot:$
 :  if you.in_branch("Geh") then
 KMONS:   1 = brimstone fiend
 KMONS:   2 = searing wretch / balrug
 KMONS:   34 = fire giant / hellephant w:5
-KMONS:   56 = ancient champion ; broad axe ego:flaming ident:type | \
-         halberd ego:flaming ident:type w:7 | morningstar ego:flaming ident:type
+KMONS:   56 = ancient champion ; plate armour . broad axe ego:flaming | \
+         halberd ego:flaming w:7 | morningstar ego:flaming
 KMONS:   7 = hell hog
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
@@ -92,7 +93,7 @@ KMONS:   56 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
          ego:freezing ident:type
 KMONS:   7 = simulacrum
 SUBST:   l = w, W = .
-:  else
+:  else -- Zot
 KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
 KMONS:   3 = orb of fire / hellephant w:5
@@ -134,7 +135,8 @@ MONS:    ice fiend / shard shrike
 MONS:    wendigo band / simulacrum w:20
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
 :  elseif you.in_branch("Abyss") then
-MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
+MONS:    blizzard demon / frost giant / \
+         dancing weapon ; battleaxe ego:freezing ident:type w:5
 MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
          white very ugly thing w:15 / ice devil w:8
 MONS:    balrug / hellion / fire crab w:5 / hellephant w:5
@@ -142,10 +144,10 @@ MONS:    hell hound w:8 / red draconian / fire elemental w:5 / \
          red very ugly thing w:15 / efreet w:12
 SUBST:   * = *||, {} = ***|, xc = xxxccb, 5 = 2, 6 = 4
 :  else
-KMONS:   123 = fire dragon
-KMONS:   456 = ice dragon
-KMONS:   789 = red draconian ; cloak . long sword ego:freezing ident:type
-KMONS:   ABC = white draconian ; cloak . long sword ego:flaming ident:type
+KMONS:   123 = red draconian ; cloak . long sword ego:freezing ident:type
+KMONS:   456 = white draconian ; cloak . long sword ego:flaming ident:type
+KMONS:   789 = red draconian scorcher ; cloak . staff of fire ident:type
+KMONS:   ABC = white draconian knight ; cloak . staff of cold ident:type
 KMONS:   D = golden dragon
 SUBST:   c : c:5 b:2 n:1
 SHUFFLE: 123456 / 1784AB / 789ABC / 1D'4D'
@@ -189,18 +191,18 @@ DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 ORIENT: centre
 : if you.in_branch("Dis") then
 KMONS:  1 = hell sentinel
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / cacodemon
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / cacodemon
 : elseif you.in_branch("Geh") then
 KMONS:  1 = brimstone fiend
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / balrug
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / balrug
 : elseif you.in_branch("Coc") then
 KMONS:  1 = ice fiend
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
             blizzard demon
 : else
 KMONS:  1 = tzitzimitl
-KMONS:  2 = hell beast / hellion / reaper / tormentor / shadow demon / \
-            green death / lorocyproca
+KMONS:  2 = sin beast / hellion / reaper / tormentor / shadow demon / \
+            green death
 : end
 SUBST:  D = c.
 MAP
@@ -299,8 +301,9 @@ KMONS: 1 = ancient lich / dread lich / nothing
 KFEAT: ! = iron_grate
 : if you.in_branch("Dis") then
 SUBST: D : !c, E : Gvb, F : G., c : v
+KFEAT: G = metal_statue
 TILE:  G = dngn_statue_iron
-: set_feature_name("granite_statue", "iron statue")
+: set_feature_name("metal_statue", "iron statue")
 : elseif you.in_branch("Geh") then
 SUBST: D : xc., E : Glcx., F : ..Gl
 : elseif you.in_branch("Coc") then
@@ -353,14 +356,25 @@ NAME:   nicolae_hells_titanomachy
 TAGS:   no_monster_gen no_pool_fixup patrolling
 DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 ORIENT: encompass
+WEIGHT: 5
 KMONS:  }1 = titan
-KMONS:  2 = tainted leviathan / iron giant / juggernaut
-KMONS:  3 = fire giant / frost giant / stone giant
 KFEAT:  } = }
 SUBST:  ` = L., - = Lx, S = 12, Z = 23, 1 = 11., 2 = 22., 3 = 33.
-: if you.in_branch("Dis") or you.in_branch("Geh") then
+: if you.in_branch("Dis") then
+KMONS:  2 = iron giant / juggernaut w:15
+KMONS:  3 = fire giant / frost giant / stone giant
 SUBST:  L = l
-: elseif you.in_branch("Coc") or you.in_branch("Tar") then
+: elseif you.in_branch("Geh") then
+KMONS:  2 = juggernaut
+KMONS:  3 = fire giant / frost giant skeleton / stone giant skeleton
+SUBST:  L = l
+: elseif you.in_branch("Coc") then
+KMONS:  2 = juggernaut
+KMONS:  3 = fire giant simulacrum / frost giant / stone giant simulacrum
+SUBST:  L = w
+: elseif you.in_branch("Tar") then
+KMONS:  2 = tainted leviathan / spectral juggernaut
+KMONS:  3 = fire giant zombie / frost giant zombie / stone giant
 SUBST:  L = w
 : end
 MAP

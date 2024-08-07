@@ -1,0 +1,16 @@
+name: "elemental"
+glyph: {char: "E", colour: lightgray}
+flags: [cant_spawn]
+holiness: [nonliving]
+will: 10
+attacks:
+hd: 0
+hp_10x: 0
+ac: 0
+ev: 0
+has_corpse: true
+intelligence: brainless
+speed: 0
+size: medium
+shape: misc
+tile: water_elemental

@@ -1,0 +1,18 @@
+name: "mutant beast"
+glyph: {char: "H", colour: magenta}
+flags: [no_poly_to, no_gen_derived]
+xp_mult: 11
+will_per_hd: 3
+attacks:
+ - {type: hit, damage: 27}
+hd: 15
+hp_10x: 825
+ac: 8
+ev: 5
+has_corpse: true
+shout: random
+intelligence: animal
+size: medium
+shape: quadruped
+tile: tilep_mutant_beast_base
+corpse_tile: mutant_beast

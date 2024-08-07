@@ -131,7 +131,7 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(transformation previous_trans) const;
+    virtual string transform_message(bool was_flying) const;
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -141,7 +141,6 @@ public:
     int res_pois() const;
     bool res_rot() const;
     bool res_acid() const;
-    bool res_sticky_flame() const;
     bool res_miasma() const;
     bool res_petrify() const;
 
@@ -174,8 +173,6 @@ public:
 
     bool enables_flight() const;
     bool forbids_flight() const;
-    bool forbids_swimming() const;
-    virtual bool permits_liking_water() const { return !forbids_swimming(); }
 
     bool player_can_fly() const;
     bool player_can_swim() const;
@@ -185,6 +182,7 @@ public:
     string melding_description() const;
 
     virtual vector<string> get_fakemuts(bool terse) const;
+    virtual vector<string> get_bad_fakemuts(bool terse) const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -221,11 +219,21 @@ public:
     /// a set of verbs to use based on damage done, when using UC in this form
     const FormAttackVerbs uc_attack_verbs;
 
-    /// has blood (used for sublimation and bloodsplatters)
-    const form_capability can_bleed;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
-    // ugh
+    //
+    const bool changes_physiology;
+
+    /// Does this form have blood (used for sublimation and bloodsplatters)?
+    const form_capability has_blood;
+    /// Does this form have hair?
+    const form_capability has_hair;
+    /// Does this form have bones?
+    const form_capability has_bones;
+    /// Does this form have feet?
+    const form_capability has_feet;
+    /// Does this form have ears?
+    const form_capability has_ears;
 
     /// what verb does the player use when shouting in this form?
     const string shout_verb;
@@ -294,6 +302,7 @@ private:
     const int hp_mod;
 
     vector<pair<string,string>> fakemuts;
+    vector<pair<string,string>> badmuts;
 };
 const Form* get_form(transformation form = you.form);
 const Form* cur_form(bool temp);
@@ -312,11 +321,14 @@ bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
-bool form_likes_water(transformation form = you.form);
-bool form_changed_physiology(transformation form = you.form);
-bool form_can_bleed(transformation form = you.form);
+bool form_changes_physiology(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation form = you.form);
+bool form_has_blood(transformation form = you.form);
+bool form_has_hair(transformation form = you.form);
+bool form_has_bones(transformation form = you.form);
+bool form_has_feet(transformation form = you.form);
+bool form_has_ears(transformation form = you.form);
 
 bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat);

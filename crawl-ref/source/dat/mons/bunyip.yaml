@@ -1,0 +1,23 @@
+name: "bunyip"
+glyph: {char: "x", colour: yellow}
+flags: [warm_blood]
+resists: {poison: 1}
+xp_mult: 7
+will: 60
+attacks:
+ - {type: claw, damage: 40}
+ - {type: claw, damage: 40}
+ - {type: claw, damage: 40}
+hd: 12
+hp_10x: 800
+ac: 6
+ev: 10
+spells: bunyip
+has_corpse: true
+shout: scream
+intelligence: animal
+habitat: amphibious
+speed: 15
+energy: {attack: 45}
+size: large
+shape: quadruped

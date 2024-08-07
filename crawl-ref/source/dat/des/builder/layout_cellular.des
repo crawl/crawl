@@ -598,7 +598,13 @@ TAGS:   no_rotate no_vmirror no_hmirror
     { outer = 'W', inner = 'c', weight = 2 },
   }
 
-  mons("plant")
+  -- Zot is an ancient, sealed-away branch. No greenery.
+  if you.in_branch("Zot") then
+    kfeat("t = petrified_tree")
+    mons("withered plant")
+  else
+    mons("plant")
+  end
 
   local fills = {
     { weight = 10, name="two_materials", min_size = 3, func = function(space)

@@ -20,7 +20,7 @@ Wrath of Trog
 %%%%
 mace of Variability
 
-据说，当佐姆对寻常的混沌工具的可预测性感到厌倦，出现了一个巨大的权杖。
+据说，当佐姆对普通混沌工具的可预测性感到厌倦时，出现了一个巨大的权杖。
 %%%%
 glaive of Prune
 
@@ -37,7 +37,7 @@ sword of Power
 %%%%
 staff of Olgreb
 
-强大的巫师奥格雷布曾用过的法杖。
+强大的炼金术士奥格雷布曾用过的一把法杖。
 %%%%
 crystal ball of Wucad Mu
 
@@ -79,7 +79,7 @@ orb of Dispater
 %%%%
 sceptre of Asmodeus
 
-一把明亮的红宝石节杖，带有魔王阿斯莫德的某些力量。
+一把明亮的红宝石节杖，带有魔王阿斯蒙蒂斯的某些力量。
 持有者能凭借它召唤、号令来自地狱巢穴的火系恶魔。
 %%%%
 faerie dragon scales
@@ -317,7 +317,7 @@ skin of Zhor
 %%%%
 salamander hide armour
 
-大多数火蜥蜴的尸体都被送到它们生长的火海深处。
+大多数火蜥蜴的尸体都被送到他们生长的火海深处。
 然而，火蜥蜴很少会保留那些蜕下的皮肤。这张皮上的符文和装饰表明，
 它曾经属于一位受人尊敬的战士或祭司，甚至可能是一位国王。
 炽热的灵魂留在皮肤中，赋予穿戴者力量。
@@ -492,7 +492,8 @@ moon troll leather armour
 %%%%
 macabre finger necklace
 
-一根丑陋的手指挂在绳子上。如果它戴了戒指看起来会更好。
+一根丑陋的手指挂在绳子上。
+它的一切都散发着邪恶的影响力……但人们不禁会想，如果它戴了戒指看起来会更好。
 %%%%
 # 标签_主要_版本 == 34
 boots of the spider

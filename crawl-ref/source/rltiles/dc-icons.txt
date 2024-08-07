@@ -68,7 +68,7 @@ injury_bond INJURY_BOND
 partially_charged PARTIALLY_CHARGED
 fully_charged FULLY_CHARGED
 repel_missiles REPEL_MISSILES
-simulacrum SIMULACRUM
+ghostly GHOSTLY
 still_winds STILL_WINDS
 waterlogged WATERLOGGED
 weakened WEAKENED
@@ -80,6 +80,19 @@ glow_light GLOW_LIGHT
 glow_heavy GLOW_HEAVY
 pain_bond PAIN_BOND
 paralysed PARALYSED
+bullseye BULLSEYE
+vitrified VITRIFIED
+curse_of_agony CURSE_OF_AGONY
+regeneration REGENERATION
+retreat RETREAT
+vengeance VENGEANCE_TARGET
+beogh_touch TOUCH_OF_BEOGH
+rimeblight RIMEBLIGHT
+arms UNDYING_ARMS
+shadowless SHADOWLESS
+bind BIND
+weak_willed WEAK_WILLED
+sign_of_ruin SIGN_OF_RUIN
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

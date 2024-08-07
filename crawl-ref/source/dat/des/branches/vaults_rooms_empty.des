@@ -9,7 +9,7 @@
 # You can additionally use the following tags:
 #
 # vaults_orient_n vaults_orient_s vaults_orient_e vaults_orient_w
-# no_windows preserve_wall
+# no_windows no_wall_fixup
 #
 # vaults_orient_x: controls the entry points to the subvault.
 # A subvault using vaults_orient_n will always be entered from the north side,
@@ -17,7 +17,7 @@
 #
 # no_windows: prevents the layout from creating windows into the subvault.
 #
-# preserve_wall: prevents the layout from changing rock into the same wall type
+# no_wall_fixup: prevents the layout from changing rock into the same wall type
 # as the rest of the floor.
 #
 ################################################################################
@@ -106,10 +106,14 @@ ENDMAP
 NAME:     vaults_room_mumra_shop_pool
 TAGS:     vaults_empty vaults_orient_s
 WEIGHT:   2
-SUBST:    w = w:10 2:1, G : G.
+SUBST:    w = w:10 2:1, G : Gg.
 MONS:     plant
 KFEAT:    s = any shop
+KFEAT:    g = metal_statue
+COLOUR:   g = silver
 FTILE:    _1s = floor_swamp
+TILE:     g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 .........
 .G.www.G.
@@ -641,9 +645,13 @@ MAP
      ...
 ENDMAP
 
-NAME: ontoclasm_vaults_claustrophobia
-TAGS: vaults_empty
-SUBST: G : GGGT.
+NAME:   ontoclasm_vaults_claustrophobia
+TAGS:   vaults_empty
+KFEAT:  g = metal_statue
+SUBST:  G : GGgT.
+COLOUR: g = silver
+TILE:   g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 .x..x...x..x.
 x+xx+xxxxxx+x
@@ -660,9 +668,13 @@ x+xxxxxx+xx+x
 .x..x...x..x.
 ENDMAP
 
-NAME: grunt_vaults_hallway_short
-TAGS: vaults_empty allow_dup
+NAME:    grunt_vaults_hallway_short
+TAGS:    vaults_empty allow_dup
+KFEAT:   G = metal_statue
 SHUFFLE: G = GT
+COLOUR:  G = silver
+TILE:    G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 .xx.xx.xx.
 ..........
@@ -671,9 +683,13 @@ MAP
 .xx.xx.xx.
 ENDMAP
 
-NAME: grunt_vaults_hallway_long
-TAGS: vaults_empty allow_dup
+NAME:    grunt_vaults_hallway_long
+TAGS:    vaults_empty allow_dup
+KFEAT:   G = metal_statue
 SHUFFLE: G = GT
+COLOUR:  G = silver
+TILE:    G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 .xx.xx.xx.xx.xx.xx.
 ...................
@@ -757,9 +773,13 @@ ENDMAP
 
 NAME:    hangedman_vaults_impose
 TAGS:    vaults_empty allow_dup
+KFEAT:   G = metal_statue
 SHUFFLE: ABC, DEF
 SUBST:   A : x.., B : x.., D : x.., E : x.., CF = .
 SUBST:   G = Gx..., H : xxx., I : xx.
+COLOUR:  G = silver
+TILE:    G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 ABC.....FED
 B.........E
@@ -1560,10 +1580,14 @@ EAE           EAE
 ........D........
 ENDMAP
 
-NAME: nicolae_vaults_inception_statues
-TAGS: vaults_empty
+NAME:   nicolae_vaults_inception_statues
+TAGS:   vaults_empty
 WEIGHT: 3
-SHUFFLE: GT
+KFEAT:  g = metal_statue
+SUBST:  G : GgT
+COLOUR: g = silver
+TILE:   g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 G.................G
 ...................
@@ -1906,16 +1930,15 @@ ENDMAP
 NAME:   nicolae_vaults_storage_room_doors
 TAGS:   vaults_empty no_windows
 WEIGHT: 5
-SUBST: + = .+++
-:lua_marker('+', props_marker { connected_exclude="true" })
+: lua_marker('+', props_marker { connected_exclude="true" })
 MAP
 +++...+++
 +++...+++
-+++++++++
+.+++++++.
 ..+++++..
+..++.++..
 ..+++++..
-..+++++..
-+++++++++
+.+++++++.
 +++...+++
 +++...+++
 ENDMAP
@@ -1939,17 +1962,21 @@ ENDMAP
 # Gotta keep 'em somewhere.
 NAME:   nicolae_vaults_storage_room_statues
 TAGS:   vaults_empty no_windows
-WEIGHT: 5
+WEIGHT: 2
+KFEAT:  g = metal_statue
 SUBST:  ` = G....
+COLOUR: g = silver
+TILE:   g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
-`GGGGGG`
-.`GGG``.
+`GgggG`.
+.`GgG`..
 `.`G`...
 ..`....`
 `..`.`G`
-``..`GGG
+``..`GgG
 GG`..`GG
-GG``...`
+gG``...`
 ENDMAP
 
 # Gotta keep it somewhere. Unless the vat leaks.

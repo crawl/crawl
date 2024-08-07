@@ -4,6 +4,7 @@
  **/
 
 #include "AppHdr.h"
+#include <climits> // UCHAR_MAX
 #include <cmath> // isnan
 
 #include "prompt.h"
@@ -230,7 +231,13 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
                 // sub in any alpha char if that's what the player typed, for
                 // error messaging
-                const int actual_key = pop.getkey();
+                int actual_key = pop.getkey();
+
+                // if the typed key is out of alpha char range, leave it as
+                // ESCAPE to avoid a crash
+                if (actual_key != EOF && actual_key > UCHAR_MAX)
+                    actual_key = tmp;
+
                 if (isalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
                 // otherwise, leave as ESCAPE
@@ -249,7 +256,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         // If no safe answer exists, we still need to abort when a HUP happens.
         // The caller must handle this case, preferably by issuing an uncancel
         // event that can restart when the game restarts -- and ignore the
-        // the return value here.
+        // return value here.
         if (crawl_state.seen_hups && !default_answer)
             return false;
 
@@ -545,3 +552,70 @@ vector<MenuEntry *> PromptMenu::show_in_msgpane()
     get_selected(&sel);
     return sel;
 }
+
+#ifdef WIZARD
+
+WizardMenu::WizardMenu(string _title, vector<WizardEntry> &_options,
+                       int _default)
+    : PromptMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER
+                 | MF_GRID_LAYOUT | MF_ANYPRINTABLE), default_value(_default)
+{
+    set_title(new MenuEntry(_title, MEL_TITLE));
+    for (auto &o : _options)
+    {
+        auto p = new WizardEntry(o); // Menu expects new pointers.
+        if (!p->hotkeys_count())
+            p->add_hotkey(next_unused_symbol()); // Give everything a hotkey.
+        add_entry(p);
+    }
+}
+
+int WizardMenu::run(bool to_bool)
+{
+    run_aux();
+    return to_bool ? last_success : last_result;
+}
+
+// Display the menu. If something is selected, set success and return the
+// selected thing. If not, clear success and return default_value.
+void WizardMenu::run_aux()
+{
+    show();
+    last_success = !sel.empty();
+    if (last_success)
+        last_result = (dynamic_cast<WizardEntry*>(sel[0]))->output;
+    else
+    {
+        canned_msg(MSG_OK);
+        last_result = default_value;
+    }
+}
+
+int WizardMenu::index_to_symbol(int index) const
+{
+    if (index < 52)
+        return index_to_letter(index);
+    else if (last_symbol_index < 69)
+        return '0'+last_symbol_index-52;
+    else
+        return 0; // 0 no hotkey, cursor keys only.
+}
+
+int WizardMenu::next_unused_symbol()
+{
+    while (true)
+    {
+        int sym = index_to_symbol(last_symbol_index++);
+        if (!sym || -1 == hotkey_to_index(sym, true))
+            return sym;
+    }
+}
+
+bool WizardMenu::skip_process_command(int keyin)
+{
+    if (keyin == '!' || keyin == '?')
+        return true; // potions and scrolls in item creation
+    return Menu::skip_process_command(keyin);
+}
+
+#endif // defined(WIZARD)

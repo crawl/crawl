@@ -1,21 +1,6 @@
 default-depth: Arena
 
 {{
-function arena_duel_victory(data, triggerable, triggerer, marker, ev)
-    local mons = dgn.mons_from_mid(ev:arg1())
-    if not mons.has_prop("okawaru_duel_current") then
-        return
-    end
-
-    local x, y = marker:pos()
-    dgn.tile_feat_changed(x, y, nil)
-    dgn.terrain_changed(x, y, "floor", false)
-    dgn.place_cloud(x, y, "sparse dust", 2)
-    crawl.mpr("Okawaru crowns you victorious!", "god")
-    crawl.mpr("An exit appears.")
-    triggerable:remove(marker)
-end
-
 function arena_setup(e)
     e.tags("no_dump no_item_gen allow_dup")
     e.orient("encompass")
@@ -28,50 +13,22 @@ end
 }}
 
 NAME: okawaru_arena_1
-{{
-local duel_target_marker = TriggerableFunction:new {
-    func = "arena_duel_victory",
-    repeated = true
-}
-
-duel_target_marker:add_triggerer(DgnTriggerer:new {
-    type = "monster_dies",
-    target = "any"
-})
-
-lua_marker("B", duel_target_marker)
-}}
-SUBST: B = o
 : arena_setup(_G)
 MAP
 vvvvvvvvvvv
 v1'1'1'1'1v
 v'ooooooo'v
-v1o.....o1v
-v'o.....o'v
-v1o..A..o1v
+v1oA...Ao1v
 v'o.....o'v
 v1o.....o1v
-v'oooBooo'v
+v'o.....o'v
+v1oA...Ao1v
+v'ooooooo'v
 v1'1o<o1'1v
 vvvvvvvvvvv
 ENDMAP
 
 NAME: okawaru_arena_2
-{{
-local duel_target_marker = TriggerableFunction:new {
-    func = "arena_duel_victory",
-    repeated = true
-}
-
-duel_target_marker:add_triggerer(DgnTriggerer:new {
-    type = "monster_dies",
-    target = "any"
-})
-
-lua_marker("B", duel_target_marker)
-}}
-SUBST: B = o
 : arena_setup(_G)
 MAP
    vvvvvvvvv
@@ -86,54 +43,26 @@ voo.........oov
 v1oo.......oo1v
 v''oo.....oo''v
 vv'1oo...oo1'vv
- vv''ooBoo''vv
+ vv''ooooo''vv
   vv'1o<o1'vv
    vvvvvvvvv
 ENDMAP
 
 NAME: okawaru_arena_3
-{{
-local duel_target_marker = TriggerableFunction:new {
-    func = "arena_duel_victory",
-    repeated = true
-}
-
-duel_target_marker:add_triggerer(DgnTriggerer:new {
-    type = "monster_dies",
-    target = "any"
-})
-
-lua_marker("B", duel_target_marker)
-}}
-SUBST: B = o
 : arena_setup(_G)
 MAP
 vvvvvvvvvvvvvvv
 v''11''o''11''v
 vooooooooooooov
 v.............v
-v.G....A....G.v
+v.G..A...A..G.v
 v.............v
-vooooooBoooooov
+vooooooooooooov
 v1'o'1o<o1'o'1v
 vvvvvvvvvvvvvvv
 ENDMAP
 
 NAME: okawaru_arena_4
-{{
-local duel_target_marker = TriggerableFunction:new {
-    func = "arena_duel_victory",
-    repeated = true
-}
-
-duel_target_marker:add_triggerer(DgnTriggerer:new {
-    type = "monster_dies",
-    target = "any"
-})
-
-lua_marker("B", duel_target_marker)
-}}
-SUBST: B = o
 : arena_setup(_G)
 MAP
 vvvvvvvvvvvvvvv
@@ -148,7 +77,7 @@ voo.........oov
 v'o.........o'v
 v1o.b.....b.o1v
 v'o.........o'v
-vvoooooBooooovv
+vvooooooooooovv
 vvv'1'o<o'1'vvv
 vvvvvvvvvvvvvvv
 ENDMAP

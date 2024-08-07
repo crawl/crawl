@@ -31,7 +31,7 @@ spret cast_sublimation_of_blood(int pow, bool fail)
 
     if (you.duration[DUR_DEATHS_DOOR])
         mpr("You can't draw power from your own body while in death's door.");
-    else if (!you.can_bleed())
+    else if (!you.has_blood())
     {
         if (you.has_mutation(MUT_VAMPIRISM))
             mpr("You don't have enough blood to draw power from your own body.");
@@ -126,13 +126,11 @@ spret cast_animate_dead(int pow, bool fail)
     return spret::success;
 }
 
-void start_recall(recall_t type)
+void do_player_recall(recall_t type)
 {
-    // Assemble the recall list.
-    typedef pair<mid_t, int> mid_hd;
-    vector<mid_hd> rlist;
+    bool did_recall = false;
 
-    you.recall_list.clear();
+    // Search for recallable allies on your current floor
     for (monster_iterator mi; mi; ++mi)
     {
         if (!mons_is_recallable(&you, **mi))
@@ -145,33 +143,26 @@ void start_recall(recall_t type)
         }
         else if (type == recall_t::beogh)
         {
-            if (!is_orcish_follower(**mi))
+            if (!is_apostle_follower(**mi))
                 continue;
         }
 
-        mid_hd m(mi->mid, mi->get_experience_level());
-        rlist.push_back(m);
+        if (try_recall(mi->mid))
+            did_recall = true;
     }
 
-    if (branch_allows_followers(you.where_are_you))
-        populate_offlevel_recall_list(rlist);
-
-    if (!rlist.empty())
+    // Then search for recallable companions on any floor
+    for (auto &entry : companion_list)
     {
-        // Sort the recall list roughly
-        for (mid_hd &entry : rlist)
-            entry.second += random2(10);
-        sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
-
-        you.recall_list.clear();
-        for (mid_hd &entry : rlist)
-            you.recall_list.push_back(entry.first);
-
-        you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
-        you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
-        mpr("You begin recalling your allies.");
+        const int mid = entry.first;
+        if (companion_is_elsewhere(mid, true))
+        {
+            if (try_recall(mid))
+                did_recall = true;
+        }
     }
-    else
+
+    if (!did_recall)
         mpr("Nothing appears to have answered your call.");
 }
 
@@ -184,6 +175,7 @@ void recall_orders(monster *mons)
 
     // Don't patrol
     mons->patrol_point = coord_def(0, 0);
+    mons->travel_path.clear();
 
     // Don't wander
     mons->behaviour = BEH_SEEK;
@@ -223,41 +215,6 @@ bool try_recall(mid_t mid)
     // mons may have been killed, shafted, etc,
     // but they were still recalled!
     return true;
-}
-
-// Attempt to recall a number of allies proportional to how much time
-// has passed. Once the list has been fully processed, terminate the
-// status.
-void do_recall(int time)
-{
-    while (time > you.attribute[ATTR_NEXT_RECALL_TIME])
-    {
-        // Try to recall an ally.
-        mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
-        you.attribute[ATTR_NEXT_RECALL_INDEX]++;
-        if (try_recall(mid))
-        {
-            time -= you.attribute[ATTR_NEXT_RECALL_TIME];
-            you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
-        }
-        if ((unsigned int)you.attribute[ATTR_NEXT_RECALL_INDEX] >
-             you.recall_list.size())
-        {
-            end_recall();
-            mpr("You finish recalling your allies.");
-            return;
-        }
-    }
-
-    you.attribute[ATTR_NEXT_RECALL_TIME] -= time;
-    return;
-}
-
-void end_recall()
-{
-    you.attribute[ATTR_NEXT_RECALL_INDEX] = 0;
-    you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
-    you.recall_list.clear();
 }
 
 static bool _feat_is_passwallable(dungeon_feature_type feat)
@@ -451,6 +408,11 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     else if (p.check_moveto())
     {
         start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
+
+        // Give bonus AC while moving through the wall.
+        you.props[PASSWALL_ARMOUR_KEY].get_int() = 5 + div_rand_round(pow, 10);
+        you.redraw_armour_class = true;
+
         return spret::success;
     }
 
@@ -626,39 +588,37 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
 
 void trigger_binding_sigil(actor& actor)
 {
+    if (actor.is_binding_sigil_immune())
+    {
+        mprf("%s cannot be bound by the sigil due to %s high momentum!",
+             actor.name(DESC_THE).c_str(), actor.pronoun(PRONOUN_POSSESSIVE).c_str());
+        return;
+    }
+
     if (actor.is_player())
     {
-        mprf(MSGCH_WARN, "You move over your own binding sigil and are bound in place!");
+        mprf(MSGCH_WARN, "You move over the binding sigil and are bound in place!");
         you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 6));
         revert_terrain_change(you.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        return;
     }
-    else
+
+    monster* m = actor.as_monster();
+    const int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
+    const int dur = max(2, random_range(4 + div_rand_round(pow, 12),
+                                        7 + div_rand_round(pow, 8))
+                        - div_rand_round(m->get_hit_dice(), 4))
+                    * BASELINE_DELAY;
+
+    if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
     {
-        monster* m = actor.as_monster();
-        if (m->has_ench(ENCH_SWIFT))
-        {
-            simple_monster_message(*m,
-                " has too much momentum for your sigil to bind in place!");
-        }
-        else
-        {
-            int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
-            int dur = max(2, random_range(4 + div_rand_round(pow, 12),
-                                          7 + div_rand_round(pow, 8))
-                          - div_rand_round(m->get_hit_dice(), 4))
-                        * BASELINE_DELAY;
+        simple_monster_message(*m,
+            " moves over the binding sigil and is bound in place!",
+            false, MSGCH_FRIEND_SPELL);
 
-            if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
-            {
-                simple_monster_message(*m,
-                    " moves over your binding sigil and is bound in place!",
-                    MSGCH_FRIEND_SPELL);
-
-                // The enemy will gain swift for twice as long as it was bound
-                m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
-            }
-
-            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
-        }
+        // The enemy will gain swift for twice as long as it was bound
+        m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
     }
+
+    revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
 }

@@ -363,7 +363,7 @@ void maybe_mons_speaks(monster* mons)
     if (mons->wont_attack())
         chance *= 15;
     else if (!mons_is_unique(mons->type)
-             && testbits(mons->flags, MF_BAND_MEMBER))
+             && testbits(mons->flags, MF_BAND_FOLLOWER))
     {
         // Band members are a lot less likely to speak, since there's
         // a lot of them. Except for uniques.
@@ -375,6 +375,14 @@ void maybe_mons_speaks(monster* mons)
         chance /= 2;
     if (mons->has_ench(ENCH_CONFUSION))
         chance /= 2;
+
+    // Ally orc speech is a little one-note during Blood For Blood and there
+    // are often a lot of them, so reduce the chance somewhat.
+    if (mons->friendly() && mons_genus(mons->type) == MONS_ORC
+        && you.duration[DUR_BLOOD_FOR_BLOOD])
+    {
+        chance *= 5 / 2;
+    }
 
     if ((mons_class_flag(mons->type, M_SPEAKS)
                     || !mons->mname.empty())
@@ -503,8 +511,11 @@ bool mons_speaks(monster* mons)
     {
         // Animals only look at the current player form, smart monsters at the
         // actual player genus.
-        if (is_player_same_genus(mons->type))
-            prefixes.emplace_back("related"); // maybe overkill for Beogh?
+        if (is_player_same_genus(mons->type)
+            || mons_genus(mons->type) == MONS_ORC && you_worship(GOD_BEOGH))
+        {
+            prefixes.emplace_back("related");
+        }
     }
     else
     {
@@ -526,10 +537,16 @@ bool mons_speaks(monster* mons)
     {
         if (!mons->has_ench(ENCH_CHARM) && !mons->is_summoned())
         {
-            if (mons->god == GOD_BEOGH)
-                prefixes.emplace_back("Beogh");
+            // During Blood for Blood, your orcs should be focused on that
+            if (mons->friendly() && you.duration[DUR_BLOOD_FOR_BLOOD])
+                prefixes.emplace_back("bfb");
             else
-                prefixes.emplace_back("unbeliever");
+            {
+                if (mons->god == GOD_BEOGH)
+                    prefixes.emplace_back("Beogh");
+                else
+                    prefixes.emplace_back("unbeliever");
+            }
         }
     }
     else if (mons->type == MONS_PLAYER_GHOST)

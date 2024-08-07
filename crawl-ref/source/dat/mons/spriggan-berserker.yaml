@@ -1,0 +1,20 @@
+name: "spriggan berserker"
+glyph: {char: "i", colour: lightred}
+flags: [fighter, see_invis, speaks, warm_blood]
+species: spriggan
+will: 120
+attacks:
+ - {type: hit, damage: 27}
+hd: 12
+hp_10x: 540
+ac: 2
+ev: 18
+spells: spriggan_berserker
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 6}
+uses: weapons_armour
+size: little
+shape: humanoid
+god: Trog

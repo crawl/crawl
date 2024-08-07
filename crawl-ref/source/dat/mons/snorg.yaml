@@ -1,0 +1,21 @@
+name: "Snorg"
+glyph: {char: "T", colour: lightgreen}
+flags: [speaks, warm_blood, unique, fast_regen, female]
+xp_mult: 25
+species: troll
+will: 60
+attacks:
+ - {type: bite, damage: 20}
+ - {type: claw, damage: 15}
+ - {type: claw, damage: 15}
+hd: 8
+hp_10x: 960
+ac: 0
+ev: 10
+spells: snorg
+has_corpse: true
+shout: shout
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

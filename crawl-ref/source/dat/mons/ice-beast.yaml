@@ -1,0 +1,16 @@
+name: "ice beast"
+glyph: {char: "Y", colour: lightblue}
+flags: [no_skeleton]
+resists: {poison: 1, fire: -1, cold: 3}
+xp_mult: 13
+will: 20
+attacks:
+ - {type: hit, flavour: cold, damage: 5}
+hd: 5
+hp_10x: 275
+ac: 5
+ev: 10
+intelligence: animal
+habitat: amphibious
+size: large
+shape: quadruped

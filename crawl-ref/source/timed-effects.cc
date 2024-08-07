@@ -203,6 +203,9 @@ static void _jiyva_effects(int /*time_delta*/)
 
 static void _evolve(int /*time_delta*/)
 {
+    if (!you.can_safely_mutate())
+        return;
+
     const bool malignant = you.has_mutation(MUT_DEVOLUTION);
     if (!malignant && !you.has_mutation(MUT_EVOLUTION))
         return;
@@ -435,52 +438,6 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
-    // Ball lightning dissipates harmlessly out of LOS
-    if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
-    {
-        monster_die(*mon, KILL_RESET, NON_MONSTER);
-        return;
-    }
-
-    // Expire friendly summons and temporary allies
-    if (mon->friendly()
-        && (mon->is_summoned() || mon->has_ench(ENCH_FAKE_ABJURATION))
-        && !mon->is_perm_summoned())
-    {
-        // You might still see them disappear if you were quick
-        if (turns > 2)
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-        else
-        {
-            enchant_type abj_type = mon->has_ench(ENCH_ABJ) ? ENCH_ABJ
-                                    : ENCH_FAKE_ABJURATION;
-            mon_enchant abj  = mon->get_ench(abj_type);
-            abj.duration = 0;
-            mon->update_ench(abj);
-        }
-        return;
-    }
-
-    // Yred & animate dead zombies crumble on floor change
-    if (mon->friendly()
-        && (is_yred_undead_follower(*mon) && !mons_bound_soul(*mon)
-            || mon->props.exists(ANIMATE_DEAD_KEY)))
-    {
-        if (turns > 2)
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-        else
-        {
-            // handle expiration messages if the player was quick
-            // doing it this way so the messages are kept consistent with
-            // corresponding non-yred derived undead
-            mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
-            mon->add_ench(abj);
-            abj.duration = 0;
-            mon->update_ench(abj);
-        }
-        return;
-    }
-
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(*mon) != HT_LAND
         || mons_is_zombified(*mon)
@@ -591,28 +548,16 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
         case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
-        case ENCH_AGILE: case ENCH_FROZEN: case ENCH_PURSUING:
-        case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
+        case ENCH_AGILE: case ENCH_FROZEN: case ENCH_VITRIFIED:
+        case ENCH_SIGN_OF_RUIN: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
         case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
-        case ENCH_VITRIFIED:
+        case ENCH_SLOW: case ENCH_WEAK: case ENCH_EMPOWERED_SPELLS:
+        case ENCH_BOUND: case ENCH_CONCENTRATE_VENOM: case ENCH_TOXIC_RADIANCE:
+        case ENCH_PAIN_BOND:
             lose_ench_levels(entry.second, levels);
-            break;
-
-        case ENCH_SLOW:
-            if (torpor_slowed())
-            {
-                lose_ench_levels(entry.second,
-                                 min(levels, entry.second.degree - 1));
-            }
-            else
-            {
-                lose_ench_levels(entry.second, levels);
-                if (props.exists(TORPOR_SLOWED_KEY))
-                    props.erase(TORPOR_SLOWED_KEY);
-            }
             break;
 
         case ENCH_INVIS:
@@ -627,6 +572,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
         case ENCH_HELD:
+        case ENCH_BULLSEYE_TARGET:
             del_ench(entry.first);
             break;
 
@@ -973,6 +919,19 @@ void timeout_binding_sigils()
         mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
+// Force-cancel the player's toxic bog (in cases of !cancellation or quicksilver)
+void end_toxic_bog()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+            dynamic_cast<map_terrain_change_marker*>(mark);
+
+        if (marker->change_type == TERRAIN_CHANGE_BOG)
+            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BOG);
+    }
+}
+
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)
@@ -1002,7 +961,8 @@ void timeout_terrain_changes(int duration, bool force)
             continue;
         }
 
-        if (marker->change_type == TERRAIN_CHANGE_BOG
+        if ((marker->change_type == TERRAIN_CHANGE_BOG
+             || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
             && !you.see_cell(marker->pos))
         {
             marker->duration = 0;

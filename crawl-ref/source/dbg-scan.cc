@@ -477,8 +477,7 @@ void debug_mons_scan()
                 die("mid cache bogosity: wanted %d got %d", m->mid, m1->mid);
         }
 
-        if (you.constricted_by == m->mid && (!m->constricting
-              || m->constricting->find(MID_PLAYER) == m->constricting->end()))
+        if (you.constricted_by == m->mid && !m->is_constricting(you))
         {
             mprf(MSGCH_ERROR, "Error: constricting[you] entry missing for monster %s(%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->mindex());
@@ -492,8 +491,7 @@ void debug_mons_scan()
                 mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex());
             }
-            else if (!h->constricting
-                     || h->constricting->find(m->mid) == h->constricting->end())
+            else if (!h->is_constricting(*m))
             {
                 mprf(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
                                   "entry missing for monster %s(mindex=%d mid=%d)",
@@ -518,7 +516,7 @@ void debug_mons_scan()
 
     if (in_bounds(you.pos()))
         if (const monster* m = monster_at(you.pos()))
-            if (!m->submerged() && !fedhas_passthrough(m))
+            if (!fedhas_passthrough(m))
             {
                 mprf(MSGCH_ERROR, "Error: player on same spot as monster: %s(%d)",
                       m->name(DESC_PLAIN, true).c_str(), m->mindex());
@@ -639,7 +637,7 @@ void check_map_validity()
     // these may require you to look farther:
     if (exit == DNGN_EXIT_PANDEMONIUM)
         exit = DNGN_TRANSIT_PANDEMONIUM;
-    if (exit == DNGN_EXIT_ABYSS)
+    if (exit == DNGN_EXIT_ABYSS || exit == DNGN_EXIT_CRUCIBLE)
         exit = DNGN_UNSEEN;
 
     for (rectangle_iterator ri(0); ri; ++ri)

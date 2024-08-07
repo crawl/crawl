@@ -1,0 +1,18 @@
+name: "marrowcuda"
+glyph: {char: "F", colour: lightblue}
+resists: {cold: 1}
+flags: [flies]
+xp_mult: 9
+species: skeleton
+holiness: [undead]
+will: 10
+attacks:
+ - {type: bite, flavour: swarm, damage: 8}
+hd: 4
+hp_10x: 235
+ac: 4
+ev: 11
+intelligence: brainless
+speed: 13
+size: small
+shape: fish

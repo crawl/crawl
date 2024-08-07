@@ -118,7 +118,7 @@ static inline bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
 // NOTE: uses RNG!
 static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
 {
-    return feat_is_watery(feat)
+    return feat_is_water(feat)
            // The Shoals tide can sometimes lap past the doorways of rooms
            // near the water. Note that the actual probability of the tide
            // getting through a doorway is this probability * 0.5 --
@@ -773,15 +773,10 @@ bool dgn_shoals_connect_point(const coord_def &point)
 
         for (auto tc : track)
         {
-            int height = 0, npoints = 0;
+            int height = 0;
             for (radius_iterator ri(tc, radius, C_POINTY); ri; ++ri)
-            {
                 if (in_bounds(*ri))
-                {
                     height += dgn_height_at(*ri);
-                    ++npoints;
-                }
-            }
 
             const int target_height = SHT_FLOOR;
             if (height < target_height)

@@ -77,7 +77,7 @@ local zigstair = dgn.gridmark
 -- the estimated total map area for ziggurat maps of given depth
 -- this is (almost) independent of the layout type
 local function map_area()
-  return 30 + 18*you.depth() + you.depth()*you.depth()
+  return 30 + 18 * you.depth() + you.depth() * you.depth()
 end
 
 local function clamp_in(val, low, high)
@@ -192,36 +192,36 @@ end
 -- Lair, Snake, Swamp, Shoals, Spider, Slime,
 -- Orc, Elf, Vaults, Crypt, Tomb,
 -- Abyss, Gehenna, Cocytus, Dis, Tartarus,
--- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos
--- Giants, Dragons, Draconians, Archers, Conjurers
+-- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos,
+-- Giants, Dragons, Draconians, Archers, Conjurers,
 -- Pan, Lair Roulette, Vestibule / all Hells
 -- By using spec_fn to wrap monster-spec functions, monster weights
 -- are adjusted per-set, sometimes scaling by depth and always by zig completion.
 
 mset(with_props(spec_fn(function ()
-  local d = math.max(24, math.floor(150 - you.depth() / 4 - you.zigs_completed() * 4))
-  local e = 15 + you.zigs_completed()
-  local f = 5 + you.zigs_completed() * 3
-  local g = 10 + you.zigs_completed() * 4
+  local d = math.max(24, math.floor(150 - you.depth() / 4 - you.zigs_completed() * 12))
+  local e = 15 + you.zigs_completed() * 2
+  local f = 5 + you.zigs_completed() * 9
+  local g = 10 + you.zigs_completed() * 12
   return "place:Lair:$ w:" .. d .. " / dire elephant w:" .. e .. " / " ..
-         "hydra w:" .. e .. " / torpor snail w:" .. e - 10 .. " / " ..
-         "catoblepas w:" .. f .. " / spriggan druid w:" .. f .. " / " ..
+         "skyshark w:" .. e .. " /  catoblepas w:" .. e - 5 .. " / " ..
+         "spriggan druid w:" .. e - 5 .. " / torpor snail w:" .. f + 5 .. " / " ..
          "hellephant w:" .. g .. " / caustic shrike w:" .. g
 end), { weight = 5 }))
 
 mset(spec_fn(function ()
-  local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
-  local e = math.max(1, you.depth() + you.zigs_completed() - 18)
+  local d = math.max(6, you.depth() * 2 + (you.zigs_completed() * 3) - 2)
+  local e = math.max(1, you.depth() + (you.zigs_completed() * 3) - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
          "salamander tyrant w:" .. d .. " / nagaraja w:" .. d .. " / " ..
          "quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
-  local d = math.max(10, math.min(120 - you.zigs_completed() * 4, 280 - you.depth() * 10))
-  local e = math.floor(10 + you.zigs_completed() / 3)
-  local f = 5 + you.zigs_completed() * 3
-  local g = math.max(1, you.depth() + you.zigs_completed() - 9)
+  local d = math.max(10, math.min(120 - you.zigs_completed() * 12, 280 - you.depth() * 10))
+  local e = math.floor(10 + you.zigs_completed())
+  local f = 5 + you.zigs_completed() * 9
+  local g = math.max(1, you.depth() + (you.zigs_completed() * 3) - 9)
   return "place:Swamp:$ w:" .. d .. " / fenstrider witch w:" .. e .. " / " ..
          "tentacled monstrosity w:" .. f .. " / " ..
          "shambling mangrove w:" .. f .. " / green death w:" .. g .. " / " ..
@@ -229,228 +229,232 @@ mset(spec_fn(function ()
 end))
 
 mset(with_props(spec_fn(function ()
-  local d = math.max(24, math.floor(120 - you.depth() / 4 - you.zigs_completed() * 4))
-  local e = 10 + you.zigs_completed() * 4
-  return "place:Shoals:$ band w:" .. d .. " / merfolk impaler w:5 / " ..
-         "merfolk javelineer / water nymph w:" .. e .. " / " ..
-         "merfolk aquamancer w:" .. e
+  local d = math.max(24, math.floor(120 - you.depth() / 4 - you.zigs_completed() * 12))
+  local e = 10 + you.zigs_completed() * 12
+  return "place:Shoals:$ w:" .. d .. " / merfolk impaler w:5 / " ..
+         "merfolk javelineer / merfolk aquamancer / " ..
+         "water nymph w:" .. e
 end), { weight = 5 }))
 
 mset(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 4
-  local e = 30 + you.zigs_completed() * 5
-  local f = 5 + you.zigs_completed()
+  local d = 10 + you.zigs_completed() * 12
+  local e = 30 + you.zigs_completed() * 15
+  local f = 5 + you.zigs_completed() * 3
   return "place:Spider:$ w:250 / torpor snail w:" .. d .. " / " ..
-         "emperor scorpion w:" .. d .. " / entropy weaver w:" .. d + 10 .. " / " ..
-         "orb spider w:" .. d + 10 .. " / ghost moth w:" .. e .. " / " ..
-         "moth of wrath w:" .. f
+         "emperor scorpion w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
+         "ghost moth w:" .. e .. " / moth of wrath w:" .. f
 end))
 
 mset(spec_fn(function ()
-  local d = 5 + 5 * you.zigs_completed()
+  local d = 5 + 5 * (you.zigs_completed() * 3)
   return "place:Slime:$ w:1500 / glass eye w:" .. d .. " / " ..
          "azure jelly w:" .. d .. " / quicksilver ooze w:" .. d .. " / " ..
          "rockslime w:" .. d * 3 .. " / acid blob w:" .. d * 14
 end))
 
 mset(spec_fn(function ()
-  local d = math.max(2, 290 - 10 * you.depth() - you.zigs_completed())
-  local e = 10 + you.zigs_completed()
-  local f = math.max(0, math.floor(you.depth() + you.zigs_completed() / 2 - 20))
+  local d = math.max(2, 380 - 20 * you.depth() - you.zigs_completed() * 6)
+  local e = 25 + you.zigs_completed() * 6
+  local f = math.max(0, math.floor(you.depth() * 1.5 + you.zigs_completed() * 3 - 35))
   return "place:Orc:$ w:" .. d .. " / orc warlord w:" .. e .. " / " ..
-         "orc high priest w:" .. e .. " / orc sorcerer w:5 / " ..
-         "stone giant w:5 / iron troll w:5 / " ..
-         "moth of wrath w:" .. f .. " / juggernaut w:" .. e - 10
+         "orc high priest w:" .. e .. " / orc sorcerer / " ..
+         "stone giant / iron troll / juggernaut w:" .. e - 24 .. " / " ..
+         "moth of wrath w:" .. f .. " / undying armoury w:" .. f
 end))
 
 mset(spec_fn(function ()
-  local d = math.max(2, 300 - 10 * you.depth() - you.zigs_completed())
-  local e = math.max(2, math.floor(10 - you.zigs_completed() / 3))
+  local d = math.max(2, 300 - 10 * you.depth() - you.zigs_completed() * 3)
+  local e = math.max(2, math.floor(10 - you.zigs_completed()))
   return "place:Elf:$ w:" .. d .. " / deep elf high priest / " ..
          "deep elf blademaster / deep elf master archer / " ..
          "deep elf annihilator w:" .. e .. " / deep elf demonologist w:" .. e
 end))
 
 mset(spec_fn(function ()
-  local d = math.max(5, 25 - you.zigs_completed())
-  local e = math.max(1, you.zigs_completed() + you.depth() - 11)
-  return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ w:" .. d .. " / " ..
-         "glowing shapeshifter / sphinx w:5 / " ..
-         "titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
-         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
+  local d = math.max(5, 30 - you.zigs_completed() * 3)
+  local e = math.max(1, you.zigs_completed() * 6 + you.depth() / 2 - 11)
+  return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ 9 w:" .. d .. " / " ..
+         "sphinx w:5 / titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
+         "ancient lich w:" .. e / 3 .. " / dread lich w:" .. e / 3
 end))
 
 mset(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 2
-  local e = 10 + you.zigs_completed() * 3
-  return "place:Crypt:$ 9 w:255 / ancient champion w:" .. d - 5 .. " / " ..
-         "curse skull w:" .. d - 5 .. " / profane servitor w:" .. d - 5 .. " / " ..
-         "bone dragon w:" .. d .. " / revenant w:" .. d .. " / " ..
-         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
+  local d = 10 + you.zigs_completed() * 6
+  local e = 10 + you.zigs_completed() * 9
+  return "place:Crypt:$ 9 w:260 / " ..
+         "curse skull w:" .. d .. " / revenant w:" .. e .. " / " ..
+         "ancient lich w:" .. d .. " / dread lich w:" .. e
 end))
 
 mset(spec_fn(function ()
-  local d = you.zigs_completed()
-  local e = 20 + you.depth() * 4 + you.zigs_completed() * 2
-  return "place:Tomb:$ 9 w:760 / bennu w:" .. d + 10 .. " / " ..
-         "mummy priest w:" .. d .. " / royal mummy w:" .. e
+  local d = math.max(100, 760 - you.zigs_completed() * 10)
+  local e = you.zigs_completed() * 3
+  local f = 10 + you.zigs_completed() * 5
+  local g = 20 + you.depth() * 4 + you.zigs_completed() * 8
+  return "place:Tomb:$ 9 w:" .. d .. " / mummy priest w:" .. e .. " / " ..
+         "bennu w:" .. f .. " / royal mummy w:" .. g
 end))
 
 mset(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 10
+  local d = 10 + you.zigs_completed() * 30
   return "place:Abyss:$ w:1920 / demonspawn corrupter w:" .. d * 2 .. " / " ..
          "starcursed mass w:" .. d * 2 .. " / wretched star w:" .. d * 2 .. " / " ..
          "bone dragon w:" .. d .. " / lich w:" .. d
 end))
 
 mset(with_props(spec_fn(function ()
-  local d = math.max(20, 455 - you.zigs_completed() * 3)
-  local e = 5 + you.zigs_completed() * 2
-  local f = 10 + you.zigs_completed() * 4
-  return "place:Coc:$ w:" .. d .. " / tormentor w:" .. e .. " / " ..
-         "shard shrike w:" .. e .. " / titan w:" .. f + 15 .. " / " ..
-         "ice fiend w:" .. f
-end), { weight = 5 }))
-
-mset(with_props(spec_fn(function ()
-  local d = math.max(20, 455 - you.zigs_completed() * 3)
-  local e = 5 + you.zigs_completed() * 2
-  local f = 10 + you.zigs_completed() * 4
+  local d = math.max(10, 455 - you.zigs_completed() * 9)
+  local e = 5 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 15
   return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
-         "salamander tyrant w:" .. e .. " / balrug w:" .. f + 15 .. " / " ..
-         "brimstone fiend w:" .. f
+         "hellephant w:" .. e .. " / brimstone fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()
-  local d = math.max(20, 455 - you.zigs_completed() * 3)
-  local e = 5 + you.zigs_completed() * 2
-  local f = 10 + you.zigs_completed() * 4
-  return "place:Dis:$ w:" .. d .. " / iron dragon w:" .. e .. " / " ..
-         "iron giant w:" .. e .. " / war gargoyle w:" .. f + 15 .. " / " ..
-         "hell sentinel w:" .. f
+  local d = math.max(10, 455 - you.zigs_completed() * 9)
+  local e = 5 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 15
+  return "place:Coc:$ w:" .. d .. " / shard shrike w:" .. e .. " / " ..
+         "titan w:" .. e .. " / ice fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()
-  local d = math.max(20, 1840 - you.zigs_completed() * 12)
-  local e = 5 + you.zigs_completed() * 2
-  local f = 10 + you.zigs_completed() * 4
-  local g = 0 + you.zigs_completed()
-  return "place:Tar:$ w:" .. d .. " / putrid mouth w:" .. e .. " / " ..
-         "curse toe w:" .. e .. " / doom hound w:" .. f + 15 .. " / " ..
-         "tzitzimitl w:" .. f .. " / silent spectre w:" .. g
+  local d = math.max(10, 455 - you.zigs_completed() * 9)
+  local e = 5 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 15
+  return "place:Dis:$ w:" .. d .. " / quicksilver elemental w:" .. e .. " / " ..
+         "iron giant w:" .. e .. " / hell sentinel w:" .. f
+end), { weight = 5 }))
+
+mset(with_props(spec_fn(function ()
+  local d = math.max(20, 1840 - you.zigs_completed() * 36)
+  local e = 5 + you.zigs_completed() * 6
+  local f = 10 + you.zigs_completed() * 15
+  local g = 0 + you.zigs_completed() * 2
+  return "place:Tar:$ w:" .. d .. " / curse toe w:" .. e .. " / " ..
+         "doom hound w:" .. e .. " / tzitzimitl w:" .. f .. " / " ..
+         "silent spectre w:" .. g
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 2
-  local e = 10 + you.zigs_completed() * 3
+  local d = 10 + you.zigs_completed() * 7
+  local e = 10 + you.zigs_completed() * 15
   return "efreet / fire crab / hell knight / will-o-the-wisp / " ..
-         "fire dragon w:" .. d .. " / fire giant w:" .. d .. " / " ..
-         "balrug w:" .. d .. " / orb of fire w:" .. e
+         "salamander tyrant w:" .. d .. " / balrug w:" .. d .. " / " ..
+         "red draconian scorcher w:" .. d .. " / orb of fire w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 2
-  local e = 10 + you.zigs_completed() * 3
-  return "ice beast / ice devil / simulacrum / rime drake / " ..
-         "ice dragon w:" .. d .. " / frost giant w:" .. d .. " / " ..
+  local d = 10 + you.zigs_completed() * 6
+  local e = 10 + you.zigs_completed() * 12
+  return "ice devil w:5 / rime drake w:5 / azure jelly / " ..
+         "caustic shrike simulacrum w:5 / spriggan defender simulacrum w:5 / " ..
+         "juggernaut simulacrum w:5 / ironbound frostheart w:5 / " ..
+         "walking frostbound tome w:" .. d .. " / frost giant w:" .. d .. " / " ..
          "blizzard demon w:" .. d .. " / white draconian knight w:" .. e .. " / " ..
          "shard shrike w:" .. e .. " / ice fiend w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 2
-  local e = 10 + you.zigs_completed() * 3
-  return "raiju / air elemental / " ..
+  local d = 10 + you.zigs_completed() * 5
+  local e = 10 + you.zigs_completed() * 8
+  local f = 10 + you.zigs_completed() * you.zigs_completed() * 3
+  return "raiju w:5 / wind drake w:5 / air elemental / " ..
          "shock serpent w:" .. d .. " / spark wasp w:" .. d .. " / " ..
+         "ironbound thunderhulk w:" .. d .. " / " ..
          "spriggan air mage w:" .. e .. " / storm dragon w:" .. e .. " / " ..
-         "titan w:" .. e .. " / electric golem w:" .. e
+         "electric golem w:" .. e .. " / titan w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 20 + you.zigs_completed() * 2
-  local e = 20 + you.zigs_completed() * 3
-  local f = 20 + you.zigs_completed() * 4
+  local d = 20 + you.zigs_completed() * 5
+  local e = 20 + you.zigs_completed() * 8
+  local f = 20 + you.zigs_completed() * you.zigs_completed() * 3
   return "gargoyle w:20 / earth elemental w:20 / boulder beetle w:20 / " ..
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
-         "crystal guardian w:" .. e .. " / iron dragon w:" .. e .. " / " ..
-         "iron giant w:" .. f .. " / hell sentinel w:" .. f
+         "iron dragon w:" .. d .. " / crystal guardian w:" .. e .. " / " ..
+         "undying armoury w:" .. e .. " / iron giant w:" .. f .. " / " ..
+         "hell sentinel w:" .. f
 end), { weight = 2 }))
-
-mset(with_props(spec_fn(function ()
-  local d = 20 + you.zigs_completed() * 2
-  local e = 0
-  if you.depth() > (13 - you.zigs_completed()) then
-    e = math.max(1, math.floor(you.depth() / 3) + you.zigs_completed() - 8)
-  end
-  return "ophan w:20 / apis w:20 / cherub w:20 / angel w:20 / " ..
-         "sun moth / daeva w:" .. d .. " / "..
-         "pearl dragon w:" .. d .. " / seraph w:" .. e
-end), { weight = 2 }))
-
-mset(spec_fn(function ()
-  local d = math.max(2, math.floor((32 - you.depth()) / 5))
-  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
-  return "chaos spawn w:" .. d .. " / ugly thing w:" .. d .. " / " ..
-         "very ugly thing w:4 / apocalypse crab w:4 / " ..
-         "shapeshifter hd:16 w:" .. e .. " / glowing shapeshifter w:" .. e .. " / " ..
-         "killer klown w:8 / " ..
-         "greater demon w:2 / pandemonium lord w:" .. f
-end))
 
 mset(with_props(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
   local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
+  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 5)
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
          "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
-         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
+         "demonspawn soul scholar w:4 / curse skull w:4 / curse toe w:2 / " ..
          "player ghost w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 20 + you.zigs_completed() * 3
-  local e = 20 + you.zigs_completed() * 4
-  local f = 20 + you.zigs_completed() * 5
+  local d = 30 + you.zigs_completed() * 6
+  local e = 0
+  if you.depth() > (13 - you.zigs_completed()) then
+    e = math.max(1, math.floor(you.depth() / 3) + you.zigs_completed() * 8 - 16)
+  end
+  return "ophan w:30 / apis w:30 / cherub w:30 / angel w:30 / " ..
+         "daeva w:" .. d .. " / pearl dragon w:" .. d .. " / seraph w:" .. e
+end), { weight = 2 }))
+
+mset(spec_fn(function ()
+  local d = math.max(2, math.floor((32 - you.depth()) / 5))
+  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
+  local f = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
+  return "chaos spawn w:" .. d .. " / very ugly thing w:" .. d .. " / " ..
+         "apocalypse crab w:4 / killer klown w:8 / " ..
+         "shapeshifter hd:16 w:" .. e .. " / " ..
+         "glowing shapeshifter w:" .. e / 3 .. " / " ..
+         "protean progenitor w:" .. e .. " / " ..
+         "greater demon w:2 / pandemonium lord w:" .. f
+end))
+
+mset(with_props(spec_fn(function ()
+  local d = 20 + you.zigs_completed() * 9
+  local e = 20 + you.zigs_completed() * 12
+  local f = 20 + you.zigs_completed() * 16
   return "cyclops w:20 / ettin w:20 / " ..
          "stone giant w:" .. d .. " / " .. "fire giant w:" .. d .. " / " ..
          "frost giant w:" .. d .. " / titan w:" .. f .. " / " ..
-         "juggernaut w:" .. e .. " / iron giant w:" .. e
+         "juggernaut w:" .. e .. " / iron giant w:" .. e .. " / " ..
+         "protean progenitor w:" .. d
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 20 + you.zigs_completed() * 2
-  local e = 20 + you.zigs_completed() * 3
-  return "swamp drake w:20 / rime drake w:20 / wind drake / death drake w:20 / " ..
+  local d = 20 + you.zigs_completed() * 6
+  local e = 20 + you.zigs_completed() * 9
+  return "swamp drake / rime drake / wind drake w:20 / death drake w:20 / " ..
          "wyvern / hydra / steam dragon w:20 / acid dragon w:20 / " ..
          "swamp dragon w:" .. d .. " / fire dragon w:" .. d .. " / " ..
          "ice dragon w:" .. d .. " / storm dragon w:" .. d .. " / " ..
-         "iron dragon w:" .. e .. " / quicksilver dragon w:" .. e .. " / " ..
-         "shadow dragon w:" .. e .. " / golden dragon w:" .. e
+         "shadow dragon w:" .. d .. " / iron dragon w:" .. e .. " / " ..
+         "quicksilver dragon w:" .. e .. " / golden dragon w:" .. e
 end), { weight = 2 }))
 
 mset(spec_fn(function ()
   local d = 41 - you.depth()
-  local e = 40 + you.zigs_completed()
-  return "base draconian w:" .. d .. " / nonbase draconian w:" .. e
+  local e = 40 + you.zigs_completed() * 3
+  local f = you.zigs_completed() * 4
+  return "base draconian w:" .. d .. " / nonbase draconian w:" .. e .. " / " ..
+         "draconian stormcaller w:" .. f .. " / draconian scorcher w:" .. f
 end))
 
 mset(with_props(spec_fn(function ()
-  local d = 20 + you.zigs_completed() * 2
-  local e = 20 + you.zigs_completed() * 3
-  return "centaur w:15 / yaktaur w:15 / cyclops w:15 / " ..
-         "centaur warrior w:" .. d .. " / faun w:" .. d .. " / " ..
+  local d = 20 + you.zigs_completed() * 6
+  local e = 20 + you.zigs_completed() * 9
+  return "centaur w:5 / centaur warrior / yaktaur w:15 / cyclops w:15 / " ..
+         "kobold blastminer w:" .. d .. " / faun w:" .. d .. " / " ..
          "yaktaur captain w:" .. d .. " / satyr w:" .. d .. " / " ..
          "stone giant w:" .. e .. " / naga sharpshooter w:" .. e .. " / " ..
          "merfolk javelineer w:" .. e .. " / deep elf master archer w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
-  local d = 10 + you.zigs_completed() * 2
-  local e = 10 + you.zigs_completed() * 4
+  local d = 10 + you.zigs_completed() * 6
+  local e = 10 + you.zigs_completed() * 12
   return "arcanist w:5 / occultist w:5 / necromancer / ogre mage w:5 / " ..
          "orc sorcerer w:5 / naga mage / salamander mystic w:5 / " ..
          "merfolk aquamancer w:5 / spriggan air mage w:" .. d - 5 .. " / " ..
@@ -465,16 +469,18 @@ end), { weight = 2 }))
 
 local pan_lord_fn = zig_monster_fn("pandemonium lord")
 local pan_critter_fn = zig_monster_fn(
-         "place:Pan w:" .. math.max(10, 100 - you.zigs_completed() * 4) .. " / " ..
-         "greater demon w:100 / demonspawn black sun / " ..
+         "place:Pan w:" .. math.max(1, 105 - you.zigs_completed() * 12) .. " / " ..
+         "greater demon w:" .. math.max(1, 75 - you.zigs_completed() * 7) .. " / " ..
+         "brimstone fiend w:5 / ice fiend w:5 / tzitzimitl w:5 / " ..
+         "hell sentinel w:5 / demonspawn soul scholar / " ..
          "demonspawn blood saint / demonspawn corrupter / " ..
-         "demonspawn warmonger")
+         "demonspawn warmonger w:" .. 10 + you.zigs_completed())
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
-    dgn.set_random_mon_list("place:Pan / greater demon / " ..
-         "demonspawn black sun w:1 / demonspawn blood saint w:1 / " ..
-         "demonspawn corrupter w:1 / demonspawn warmonger w:1")
+    dgn.set_random_mon_list("place:Pan w:100 / greater demon w:90 / " ..
+         "demonspawn soul scholar / demonspawn blood saint / " ..
+         "demonspawn corrupter / demonspawn warmonger")
     return pan_lord_fn(x, y)
   else
     return pan_critter_fn(x, y)
@@ -484,29 +490,28 @@ end
 mset(mons_panlord_gen)
 
 mset_if(depth_ge(14), with_props(spec_fn(function ()
-  local d = math.max(2, math.floor(14 - you.zigs_completed() / 2))
-  local e = 10 + you.zigs_completed()
+  local d = math.max(2, math.floor(14 - you.zigs_completed() * 2))
+  local e = 10 + you.zigs_completed() * 3
   return "place:Snake:$ w:" .. d .. " / place:Swamp:$ w:" .. d .. " / " ..
          "place:Shoals:$ w:" .. d .. " / place:Spider:$ w:" .. d .. " / " ..
-         "nagaraja w:" .. e + 2 .. " / guardian serpent w:8 / " ..
-         "hydra w:5 / swamp dragon w:5 / tentacled monstrosity w:" .. e .. " / " ..
-         "merfolk aquamancer w:6 / merfolk javelineer w:" .. e - 2 .. " / " ..
-         "alligator snapping turtle w:6 / ghost moth w:" .. e - 2 .. " / " ..
-         "emperor scorpion w:8 / moth of wrath w:4"
+         "nagaraja w:" .. e - 2 .. " / guardian serpent w:5 / " ..
+         "fenstrider witch w:5 / tentacled monstrosity w:" .. e - 2 .. " / " ..
+         "merfolk aquamancer w:5 / water nymph w:" .. e + 2 .. " / " ..
+         "ghost moth w:" .. e + 2 .. " / moth of wrath w:5"
 end), { weight = 5 }))
 
 mset_if(depth_ge(14), with_props(spec_fn(function ()
-  local d = 6 + you.zigs_completed() * 2
+  local d = 10 + you.zigs_completed() * 6
   local e = 66 - (you.depth() * 3)
-  local f = math.min(16, you.zigs_completed() * 2 + 5)
-  local g = 0 + you.zigs_completed()
+  local f = math.min(16, you.zigs_completed() * 6 + 5)
+  local g = 0 + you.zigs_completed() * 2
   return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
          "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
-         "place:Hell w:60 / hell beast w:" .. e .. " / " ..
+         "place:Hell w:100 / sin beast w:" .. e .. " / " ..
          "hellion w:5 / tormentor w:5 / greater demon w:" .. f .. " / " ..
-         "shard shrike w:" .. g .. " / ancient champion w:" .. g .. " / " ..
+         "shard shrike w:" .. g .. " / quicksilver elemental w:" .. g .. " / " ..
          "searing wretch w:" .. g .. " / silent spectre w:" .. g
-end), { weight = 5 }))
+end), { weight = 2 }))
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
@@ -550,7 +555,7 @@ local dgn_passable = dgn.passable_excluding("closed_door")
 local function ziggurat_create_monsters(entry, exit, mfn)
   local depth = you.depth()
   local completed = you.zigs_completed()
-  local hd_pool = math.floor(10 + (depth * (depth + 8 * (completed + 1) )) * (1 + completed * 0.085))
+  local hd_pool = math.floor(10 + (depth * (depth + 8 * (1 + completed * 2) )) * (1 + completed * 0.17))
 
   local nth = 1
 

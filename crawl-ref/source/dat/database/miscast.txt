@@ -1,0 +1,436 @@
+######################################################
+# Miscast
+# -------------
+# miscast.txt: generate spell miscast messages for players,
+#              monsters, and invisible things
+#
+# Message keys are expected in the form:
+#   `<spell-school> miscast <player|monster|unseen>`
+######################################################
+%%%%
+conjuration miscast player
+
+Sparks fly from your @hands@
+
+A strange surge of energy strikes you from nowhere
+
+A wave of violent energy washes through your body
+
+Energy rips through your body
+
+You are caught in a violent explosion
+
+You are blasted with magical energy
+%%%%
+conjuration miscast monster
+
+Sparks fly from @the_monster_possessive@ @hands@
+
+@The_monster@ emits a flash of light
+
+@The_monster@ lurches violently
+
+@The_monster@ jerks violently
+
+@The_monster@ is caught in a violent explosion
+
+@The_monster@ is blasted with magical energy
+%%%%
+conjuration miscast unseen
+
+A violent explosion happens from out of thin air
+
+There is a sudden explosion of magical energy
+%%%%
+hexes miscast player
+
+Multicoloured lights dance before your eyes
+
+You feel a bit tired
+
+The light around you dims momentarily
+
+You hear an indistinct dissonance whispering inside your mind
+
+You feel a strange surge of energy
+
+Waves of @any_colour@ light ripple over your body
+
+You feel enfeebled
+
+Magic surges out from your body
+%%%%
+hexes miscast monster
+
+Multicoloured lights dance around @the_monster@
+
+@The_monster@ looks sleepy for a second
+
+The light around @the_monster@ dims momentarily
+
+@The_monster@ twitches
+
+@The_monster_possessive@ body glows momentarily
+
+Waves of @any_colour@ light ripple over @the_monster_possessive@ body
+
+Magic surges out from @the_monster@
+%%%%
+hexes miscast unseen
+
+Multicoloured lights dance in the air
+
+A patch of light dims momentarily
+
+Magic surges out from thin air
+%%%%
+summoning miscast player
+
+A fistful of eyes flickers past your view
+
+Distant voices call out in your mind
+
+Something forms from out of thin air
+
+A chorus of moans calls out in your mind
+
+Desperate hands claw out at you
+%%%%
+summoning miscast monster
+
+Desperate hands claw out at @the_monster@
+%%%%
+summoning miscast unseen
+
+Desperate hands claw out at random
+%%%%
+necromancy miscast player
+
+You hear strange and distant voices
+
+The world around you seems to dim momentarily
+
+You feel as though something walked over your grave
+
+You sense a malignant aura
+
+You feel very uncomfortable
+
+Pain shoots through your body
+
+You feel horribly lethargic
+
+Your flesh rots away
+
+Flickering shadows surround you
+
+You are engulfed in negative energy
+
+You convulse helplessly as pain tears through your body
+%%%%
+necromancy miscast monster
+
+@The_monster@ twitches violently
+
+@The_monster@ pauses, visibly distraught
+
+@The_monster@ seems to dim momentarily
+
+@The_monster@ looks as though something walked over @possessive@ grave
+
+@The_monster@ is briefly tinged with black
+
+@The_monster@ scowls horribly
+
+@The_monster@ convulses with pain
+
+@The_monster@ looks incredibly listless
+
+@The_monster@ rots away
+
+Flickering shadows surround @the_monster@
+
+@The_monster@ is engulfed in negative energy
+
+@The_monster@ convulses helplessly with pain
+
+@The_monster@ seems frightened for a moment
+%%%%
+necromancy miscast unseen
+
+The air has a black tinge for a moment
+
+Shadows flicker in the thin air
+%%%%
+translocation miscast player
+
+You catch a glimpse of the back of your own head
+
+You feel a wrenching sensation
+
+You feel off-balance for a moment
+
+The floor and the ceiling briefly switch places
+
+You spin around
+
+The world appears momentarily distorted
+
+You are caught in a field of spatial distortion
+
+Space twists in upon itself
+
+Space [bends|warps] [crazily |]around you
+%%%%
+translocation miscast monster
+
+@The_monster@ jerks violently for a moment
+
+@The_monster@ looks off-balance for a moment
+
+@The_monster@ spins around
+
+@The_monster@ appears momentarily distorted
+
+@The_monster_possessive@ features rearrange themselves for a while
+
+@The_monster@ is caught in a field of spatial distortion
+
+Space [bends|warps] [crazily |]around @the_monster@
+%%%%
+translocation miscast unseen
+
+The space around something warps impossibly
+
+A piece of empty space twists and distorts
+
+A rift temporarily opens in the fabric of space
+%%%%
+fire miscast player
+
+[Cinders|Ashes] fly from your @hands@
+
+The air around you burns with energy
+
+Heat runs through your body
+
+You feel uncomfortably hot
+
+Fire whirls out from your @hands@
+
+Flames sear your flesh
+
+You are blasted with [searing |][fire|flames]
+
+You are caught in a fiery explosion
+
+There is a sudden and violent explosion of flames
+%%%%
+fire miscast monster
+
+[Cinders|Ashes] fly from @the_monster_possessive@ @hands@
+
+The air around @the_monster@ burns with energy
+
+Dim flames ripple over @the_monster_possessive@ body
+
+Fire whirls out @the_monster_possessive@ @hands@
+
+Flames sear @the_monster@
+
+@The_monster@ is blasted with [searing |][fire|flames]
+
+@The_monster@ is caught in a fiery explosion
+%%%%
+fire miscast unseen
+
+Fire whirls out of nowhere
+
+A flame briefly burns in thin air
+
+Fire explodes from out of thin air
+
+A large flame burns hotly for a moment in the thin air
+%%%%
+ice miscast player
+
+You shiver with cold
+
+A chill runs through your body
+
+Your @hands@ feel@hand_conj@ numb with cold
+
+You feel [a little bit|uncomfortably|extremely] cold
+
+[Ice|Frost] covers your body
+
+You are encased in [ice|frost]
+
+You are covered in a thin layer of [ice|frost]
+
+Heat is drained from your body
+
+You are caught in an explosion of ice and frost
+%%%%
+ice miscast monster
+
+@The_monster@ shivers with cold
+
+Frost covers @the_monster_possessive@ body
+
+@The_monster@ shivers
+
+@The_monster@ is covered in a thin layer of [ice|frost]
+
+Heat is drained from @the_monster@
+
+@The_monster@ is caught in an explosion of ice and frost
+
+@The_monster@ is encased in [ice|frost]
+%%%%
+ice miscast unseen
+
+Wisps of condensation drift in the air
+
+Ice and frost explode from out of thin air
+
+An unseen figure is encased in [ice|frost]
+%%%%
+air miscast player
+
+Sparks of electricity dance around you
+
+The air around you crackles with energy
+
+You are blasted with air
+
+There is a short, sharp shower of sparks
+
+The wind whips around you
+
+You feel a sudden electric shock
+
+Electricity courses through your body
+
+You are caught in an explosion of electrical discharges
+%%%%
+air miscast monster
+
+@The_monster@ bobs in the air for a moment
+
+Sparks of electricity dance between @the_monster_possessive@ @hands@
+
+The air around @the_monster@ crackles with energy
+
+@The_monster@ is blasted with air
+
+@The_monster@ is briefly showered in sparks
+
+The wind whips around @the_monster@
+
+@The_monster@ is jolted
+
+@The_monster@ is caught in an explosion of electrical discharges
+
+@The_monster@ is struck by twisting air
+%%%%
+air miscast unseen
+
+The wind whips up out of nowhere
+
+Something invisible sparkles with electricity
+
+The air around something crackles with energy
+
+Electrical discharges explode from out of thin air
+
+The air madly twists around a spot
+%%%%
+earth miscast player
+
+[Sand|Gravel] pours from your @hands@
+
+You feel a surge of energy from the ground
+
+The floor [shifts|shudders|quakes|rumbles] beneath you alarmingly
+
+You are hit by flying rocks
+
+You are blasted with sand
+
+Rocks fall onto you out of nowhere
+
+You are caught in an explosion of flying shrapnel
+%%%%
+earth miscast monster
+
+[Sand|Gravel] pours from @the_monster_possessive@ @hands@
+
+@The_monster@ is hit by flying rocks
+
+@The_monster@ is blasted with sand
+
+Rocks fall onto @the_monster@ out of nowhere
+
+@The_monster@ is caught in an explosion of flying shrapnel
+%%%%
+earth miscast unseen
+
+Flying rocks appear out of thin air
+
+A miniature sandstorm briefly appears
+
+Rocks fall out of nowhere
+
+Flying shrapnel explodes from thin air
+%%%%
+alchemy miscast player
+
+You are engulfed in toxic fumes
+
+There is a flash of cinnabar
+
+[Mercury|Quicksilver|Fool's gold|Saltpeter|Sulphur|Liquid metal] flows from your @hands@
+
+Parts of your body briefly turn [golden|silvery|metallic|leaden|crystalline]
+
+w:4
+You are overcome by clouds of @any_colour@ smoke
+
+w:4
+The inside of your mouth momentarily tastes like @any_colour@
+
+w:2
+Your skin changes to @any_colour_pattern@
+
+w:2
+You are surrounded by clouds of @any_glowing_colour@ dust
+%%%%
+alchemy miscast monster
+
+@The_monster@ is engulfed in toxic fumes
+
+@The_monster@ is [blasted|coated] with [cinnabar|sulphur] dust
+
+@The_monster@ is coated in salt
+
+@The_monster@ starts coughing violently
+
+@The_monster@ looks incredibly sick
+
+w:5
+@The_monster@ is overcome by clouds of @any_colour@ smoke
+
+w:5
+@The_monster_possessive@ skin changes to @any_colour_pattern@
+
+w:5
+@The_monster@ is surrounded by clouds of @any_glowing_colour@ dust
+%%%%
+alchemy miscast unseen
+
+The air has a green tinge for a moment
+
+Sulphurous heat explodes from thin air
+
+An unseen figure is coated in salt

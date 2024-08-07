@@ -1,3 +1,13 @@
+{{
+  function invisibility_setup(e)
+    if you.race() == "Coglin" then
+      e.kitem("n = scarf of invisibility")
+    else
+      e.kitem("n = amulet of invisibility")
+    end
+  end
+}}
+
 NAME:   dungeon_sprint_fedhas
 TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 DESC:   Sprint IV: "Fedhas' Mad Dash"
@@ -11,7 +21,7 @@ KMONS:  D = oklob sapling hp:15 name:wizard n_suf \
             spells:spit_acid.50.natural;magic_dart.36.wizard;cantrip.18.wizard
 KMONS:  E = scorpion
 KMONS:  F = wandering mushroom
-KMONS:  G = burning bush
+KMONS:  G = scrub nettle
 KMONS:  H = killer bee
 KMONS:  I = queen bee
 KMONS:  L = oklob plant
@@ -52,11 +62,10 @@ KMONS:  h = moth of wrath
 KMONS:  m = river rat
 KMONS:  n = scorpion
 KMONS:  u = rat
-KITEM:  n = amulet of invisibility
 KITEM:  M = any book
 KITEM:  # = Orb of Zot
 KFEAT:  Z = any shop
-
+: invisibility_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccccx
@@ -69,7 +78,7 @@ xc.I....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
 xcHH...t..t..ccccccttttt..t*ccc.+.*+.....*%+Q+..Tt..Zcx
 xcc+cccc+ccccccC|+......t..tccM.c.Nc.A....Pcccccccccccx
 xc*.c$$$$+......Fct..ttt.tJ.ccc.cc+cc.A.O..cccccccccccx
-xcL*cG|cccG...L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
+xcL*cG|cccG.G.L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
 xcccccccccccccccccccccccccccccccc.....ccccccccccccccccx
 xc......................ccccccc..t..t....cccccccccccccx
 xcZa..N...............Y.ccccc.U.t......t...tccccccccccx

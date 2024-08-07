@@ -17,6 +17,9 @@ enum species_flag
     SPF_NO_BONES    = 1 << 2, /// If members of the species have bones (flavor + minor physiology checks)
     SPF_SMALL_TORSO = 1 << 3, /// Torso is smaller than body
     SPF_BARDING     = 1 << 4, /// Whether the species wears bardings (instead of boots)
+    SPF_NO_FEET     = 1 << 5, /// If members of the species have feet
+    SPF_NO_BLOOD    = 1 << 6, /// If members of the species have blood
+    SPF_NO_EARS     = 1 << 7, /// If members of the species have ears (flavor only)
 };
 DEF_BITFIELD(species_flags, species_flag);
 
@@ -57,4 +60,6 @@ struct species_def
                               /// appended. If null, use "Walk"
     const char* altar_action; ///<"You %s the altar of foo.". If null, use
                               ///"kneel at"
+    const char* child_name;   ///<"Foo the %s.". If null, use "Child".
+    const char* orc_name;     ///<"Foo the %s.". If null, use "Orc".
 };

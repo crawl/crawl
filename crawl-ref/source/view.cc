@@ -61,6 +61,7 @@
 #include "shout.h"
 #include "show.h"
 #include "showsymb.h"
+#include "spl-transloc.h" // attract_monster
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -250,40 +251,17 @@ static void _genus_factoring(map<const string, details> &types,
     types[name] = {mon, name, num, true};
 }
 
-static bool _is_weapon_worth_listing(const unique_ptr<item_def> &wpn)
-{
-    return wpn && (wpn->base_type == OBJ_STAVES
-                   || is_unrandom_artefact(*wpn.get())
-                   || get_weapon_brand(*wpn.get()) != SPWPN_NORMAL);
-}
-
-static bool _is_item_worth_listing(const unique_ptr<item_def> &item)
-{
-    return item && (item_is_branded(*item.get())
-                    || is_artefact(*item.get()));
-}
-
 static bool _is_mon_equipment_worth_listing(const monster_info &mi)
 {
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (!mi.inv[i])
+            continue;
 
-    if (_is_weapon_worth_listing(mi.inv[MSLOT_WEAPON]))
-        return true;
-    const unique_ptr<item_def> &alt_weap = mi.inv[MSLOT_ALT_WEAPON];
-    if (mi.wields_two_weapons() && _is_weapon_worth_listing(alt_weap))
-        return true;
-    // can a wand be in the alt weapon slot? get_monster_equipment_desc seems to
-    // think so, so we'll check
-    if (alt_weap && alt_weap->base_type == OBJ_WANDS)
-        return true;
-    if (mi.inv[MSLOT_WAND])
-        return true;
-    if (mi.has_unusual_items())
-        return true;
-
-    return _is_item_worth_listing(mi.inv[MSLOT_SHIELD])
-        || _is_item_worth_listing(mi.inv[MSLOT_ARMOUR])
-        || _is_item_worth_listing(mi.inv[MSLOT_JEWELLERY])
-        || _is_item_worth_listing(mi.inv[MSLOT_MISSILE]);
+        if (item_is_worth_listing(*mi.inv[i].get()))
+            return true;
+    }
+    return false;
 }
 
 /// Return whether or not monster_info::_core_name() describes the inventory
@@ -519,6 +497,18 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
     }
 }
 
+/// If the player has the attractive mutation, maybe attract newly-seen monsters.
+static void _maybe_trigger_attractivitis(const vector<monster*> monsters)
+{
+    for (monster* mon : monsters)
+    {
+        if (!should_attract_mons(*mon))
+            continue;
+        const int dist = grid_distance(you.pos(), mon->pos());
+        attract_monster(*mon, dist - 2); // never attract adjacent
+    }
+}
+
 /// Let Gozag's wrath buff newly-seen hostile monsters, maybe.
 static void _maybe_gozag_incite(vector<monster*> monsters)
 {
@@ -615,6 +605,7 @@ void update_monsters_in_view()
         // XXX: does interrupt_activity() add 'comes into view' messages to
         // 'msgs' in ALL cases we want shoutitis/gozag wrath to trigger?
         _maybe_trigger_shoutitis(monsters);
+        _maybe_trigger_attractivitis(monsters);
         _maybe_gozag_incite(monsters);
     }
 
@@ -1534,6 +1525,25 @@ void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
     glyph_overlays.push_back({gc, glyph});
 }
 
+// Simple helper function to reduce duplication with repeatedly used animation code
+void flash_tile(coord_def p, colour_t colour, int delay)
+{
+    if (!(Options.use_animations & UA_BEAM))
+        return;
+
+    if (!in_los_bounds_v(grid2view(p)))
+        return;
+
+#ifdef USE_TILE
+        view_add_tile_overlay(p, tileidx_zap(colour));
+#endif
+        view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
+                                   static_cast<unsigned short>(colour)});
+
+    if (delay > 0)
+        animation_delay(delay, true);
+}
+
 void view_clear_overlays()
 {
 #ifdef USE_TILE
@@ -1674,6 +1684,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
     cell->flash_colour = BLACK;
+    cell->flash_alpha = 0;
 #endif
 
     // Don't hide important information by recolouring monsters.
@@ -1689,6 +1700,19 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
                                && !feat_is_solid(env.grid(gc)));
 
+#ifdef USE_TILE
+    if (you.duration[DUR_BLIND] && you.see_cell(gc))
+    {
+        cell->flash_colour = real_colour(you.props[BLIND_COLOUR_KEY].get_int());
+        // Using a square curve for the alpha is nicer on the eyes than a straight multiple.
+        // The effect of alpha is already disproportionate depending on the flash colour
+        // and may need to be revised: for a white flash the effect is already extreme by
+        // around alpha 80, but for darker colours it is way dimmer and needs more like 150.
+        const int alpha_base = gc.distance_from(you.pos());
+        cell->flash_alpha = max(1, alpha_base * alpha_base);
+    }
+#endif
+
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
@@ -1697,8 +1721,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         else if (gc != you.pos() && allow_mon_recolour)
             cell->colour = real_colour(flash_colour);
 #ifdef USE_TILE
-        if (you.see_cell(gc))
+        if (you.see_cell(gc)) {
             cell->flash_colour = real_colour(flash_colour);
+            cell->flash_alpha = 0;
+        }
 #endif
     }
     else if (crawl_state.darken_range)

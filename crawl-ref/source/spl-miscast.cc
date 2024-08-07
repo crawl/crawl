@@ -9,6 +9,7 @@
 
 #include "attack.h"
 #include "beam-type.h"
+#include "database.h"
 #include "fight.h"
 #include "god-passive.h"
 #include "message.h"
@@ -26,25 +27,24 @@
 struct miscast_datum
 {
     beam_type flavour;
-    vector<string> player_messages;
-    vector<string> monster_seen_messages;
-    vector<string> monster_unseen_messages;
     function<void (actor& target, actor* source, miscast_source_info mc_info,
                    int dam, string cause)> special;
 };
 
-static void _do_msg(actor& target, miscast_datum effect, int dam)
+static void _do_msg(actor& target, spschool which, int dam)
 {
     if (!you.see_cell(target.pos()))
         return;
-    string msg;
 
+    string db_key = string(spelltype_long_name(which)) + " miscast ";
     if (target.is_player())
-        msg = *random_iterator(effect.player_messages);
+        db_key += "player";
     else if (you.can_see(target))
-        msg = *random_iterator(effect.monster_seen_messages);
+        db_key += "monster";
     else
-        msg = *random_iterator(effect.monster_unseen_messages);
+        db_key += "unseen";
+
+    string msg = getSpeakString(db_key);
 
     bool plural;
 
@@ -60,8 +60,14 @@ static void _do_msg(actor& target, miscast_datum effect, int dam)
     {
         msg = do_mon_str_replacements(msg, *target.as_monster(), S_SILENT);
         if (!mons_has_body(*target.as_monster()))
+        {
             msg = replace_all(msg, "'s body", "");
+            msg = replace_all(msg, "'s skin", "");
+        }
     }
+    // For monsters this is done inside do_mon_str_replacements
+    else
+        msg = maybe_pick_random_substring(msg);
 
     mpr(msg + attack_strength_punctuation(dam));
 }
@@ -141,29 +147,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::conjuration,
         {
             BEAM_MMISSILE,
-            {
-                "Sparks fly from your @hands@",
-                "The air around you crackles with energy",
-                "You feel a strange surge of energy",
-                "Strange energies run through your body",
-                "A wave of violent energy washes through your body",
-                "Energy rips through your body",
-                "You are caught in a violent explosion",
-                "You are blasted with magical energy",
-            },
-            {
-                "Sparks fly from @the_monster@'s @hands@",
-                "The air around @the_monster@ crackles with energy",
-                "@The_monster@ emits a flash of light",
-                "@The_monster@ lurches violently",
-                "@The_monster@ jerks violently",
-                "@The_monster@ is caught in a violent explosion",
-                "@The_monster@ is blasted with magical energy",
-            },
-            {
-                "A violent explosion happens from out of thin air",
-                "There is a sudden explosion of magical energy",
-            },
             nullptr
         }
     },
@@ -171,35 +154,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::hexes,
         {
             BEAM_NONE,
-            {
-                "You feel off-balance for a moment",
-                "Multicoloured lights dance before your eyes",
-                "You feel a bit tired",
-                "The light around you dims momentarily",
-                "Strange energies run through your body",
-                "You hear an indistinct dissonance whispering inside your mind",
-                "The air around you crackles with energy",
-                "You feel a strange surge of energy",
-                "Waves of light ripple over your body",
-                "You feel enfeebled",
-                "Magic surges out from your body",
-            },
-            {
-                "@The_monster@ looks off-balance for a moment",
-                "Multicoloured lights dance around @the_monster@",
-                "@The_monster@ looks sleepy for a second",
-                "The light around @the_monster@ dims momentarily",
-                "@The_monster@ twitches",
-                "@The_monster@'s body glows momentarily",
-                "The air around @the_monster@ crackles with energy",
-                "Waves of light ripple over @the_monster@'s body",
-                "Magic surges out from @the_monster@",
-            },
-            {
-                "Multicoloured lights dance in the air",
-                "A patch of light dims momentarily",
-                "Magic surges out from thin air",
-            },
             [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
                 int dam, string /*cause*/) {
                 target.slow_down(source, dam);
@@ -210,19 +164,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::summoning,
         {
             BEAM_NONE,
-            {
-                "A fistful of eyes flickers past your view",
-                "Distant voices call out in your mind",
-                "Something forms from out of thin air",
-                "A chorus of moans calls out in your mind",
-                "Desperate hands claw out at you",
-            },
-            {
-                "Desperate hands claw out at @the_monster@",
-            },
-            {
-                "Desperate hands claw out at random",
-            },
             [] (actor& target, actor* source,
                 miscast_source_info mc_info,
                 int dam, string cause) {
@@ -255,6 +196,7 @@ static const map<spschool, miscast_datum> miscast_effects = {
                             break;
                         case ATT_GOOD_NEUTRAL:
                         case ATT_NEUTRAL:
+                        case ATT_MARIONETTE:
 #if TAG_MAJOR_VERSION == 34
                     case ATT_OLD_STRICT_NEUTRAL:
 #endif
@@ -276,39 +218,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::necromancy,
         {
             BEAM_NEG,
-            {
-                "You hear strange and distant voices",
-                "The world around you seems to dim momentarily",
-                "Strange energies run through your body",
-                "You shiver with cold",
-                "You sense a malignant aura",
-                "You feel very uncomfortable",
-                "Pain shoots through your body",
-                "You feel horribly lethargic",
-                "Your flesh rots away",
-                "Flickering shadows surround you",
-                "You are engulfed in negative energy",
-                "You convulse helplessly as pain tears through your body",
-            },
-            {
-                "@The_monster@ twitches violently",
-                "@The_monster@ pauses, visibly distraught",
-                "@The_monster@ seems to dim momentarily",
-                "@The_monster@ shivers with cold",
-                "@The_monster@ is briefly tinged with black",
-                "@The_monster@ scowls horribly",
-                "@The_monster@ convulses with pain",
-                "@The_monster@ looks incredibly listless",
-                "@The_monster@ rots away",
-                "Flickering shadows surround @the_monster@",
-                "@The_monster@ is engulfed in negative energy",
-                "@The_monster@ convulses helplessly with pain",
-                "@The_monster@ seems frightened for a moment",
-            },
-            {
-                "The air has a black tinge for a moment",
-                "Shadows flicker in the thin air",
-            },
             nullptr,
         },
     },
@@ -316,35 +225,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::translocation,
         {
             BEAM_NONE,
-            {
-                "You catch a glimpse of the back of your own head",
-                "The air around you crackles with energy",
-                "You feel a wrenching sensation",
-                "The floor and the ceiling briefly switch places",
-                "You spin around",
-                "Strange energies run through your body",
-                "The world appears momentarily distorted",
-                "You are caught in a field of spatial distortion",
-                "Space bends around you",
-                "Space twists in upon itself",
-                "Space warps crazily around you",
-            },
-            {
-                "The air around @the_monster@ crackles with energy",
-                "@The_monster@ jerks violently for a moment",
-                "@The_monster@ spins around",
-                "@The_monster@ appears momentarily distorted",
-                "@The_monster@ scowls",
-                "@The_monster@ is caught in a field of spatial distortion",
-                "Space bends around @the_monster@",
-                "Space warps around @the_monster@",
-                "Space warps crazily around @the_monster@",
-            },
-            {
-                "The air around something crackles with energy",
-                "A piece of empty space twists and distorts",
-                "A rift temporarily opens in the fabric of space",
-            },
             [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
                 int dam, string /*cause*/) {
 
@@ -368,82 +248,9 @@ static const map<spschool, miscast_datum> miscast_effects = {
         },
     },
     {
-        spschool::transmutation,
-        {
-            BEAM_NONE,
-            {
-                "Multicoloured lights dance before your eyes",
-                "You feel a strange surge of energy",
-                "Strange energies run through your body",
-                "Your body is twisted painfully",
-                "Your limbs ache and wobble like jelly",
-                "Your body is flooded with distortional energies",
-                "You feel very strange",
-            },
-            {
-                "The air around @the_monster@ crackles with energy",
-                "Multicoloured lights dance around @the_monster@",
-                "There is a strange surge of energy around @the_monster@",
-                "Waves of light ripple over @the_monster@'s body",
-                "@The_monster@ twitches",
-                "@The_monster@'s body glows momentarily",
-                "@The_monster@'s body twists unnaturally",
-                "@The_monster@'s body twists and writhes",
-                "@The_monster@'s body is flooded with distortional energies",
-            },
-            {
-                "The thin air crackles with energy",
-                "Multicoloured lights dance in the air",
-                "Waves of light ripple in the air",
-            },
-            [] (actor& target, actor* /*source*/,
-                miscast_source_info /*mc_info*/, int dam, string cause) {
-
-                // Double existing contamination, plus more from the damage
-                // roll
-                if (target.is_player())
-                {
-                    contaminate_player(you.magic_contamination
-                                       + dam * MISCAST_DIVISOR, true);
-                }
-                else
-                    target.malmutate(cause);
-            }
-
-        },
-    },
-    {
         spschool::fire,
         {
             BEAM_FIRE,
-            {
-                "Sparks fly from your @hands@",
-                "The air around you burns with energy",
-                "Heat runs through your body",
-                "You feel uncomfortably hot",
-                "Fire whirls out from your @hands@",
-                "Flames sear your flesh",
-                "You are blasted with fire",
-                "You are caught in a fiery explosion",
-                "You are blasted with searing flames",
-                "There is a sudden and violent explosion of flames",
-            },
-            {
-                "Sparks fly from @the_monster@'s @hands@",
-                "The air around @the_monster@ burns with energy",
-                "Dim flames ripple over @the_monster@'s body",
-                "Fire whirls out @the_monster@'s @hands@",
-                "Flames sear @the_monster@",
-                "@The_monster@ is blasted with fire",
-                "@The_monster@ is caught in a fiery explosion",
-                "@The_monster@ is blasted with searing flames",
-            },
-            {
-                "Fire whirls out of nowhere",
-                "A flame briefly burns in thin air",
-                "Fire explodes from out of thin air",
-                "A large flame burns hotly for a moment in the thin air",
-            },
             nullptr,
         },
     },
@@ -451,33 +258,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::ice,
         {
             BEAM_COLD,
-            {
-                "You shiver with cold",
-                "A chill runs through your body",
-                "Your @hands@ feel@hand_conj@ numb with cold",
-                "A chill runs through your body",
-                "You feel uncomfortably cold",
-                "Frost covers your body",
-                "You feel extremely cold",
-                "You are covered in a thin layer of ice",
-                "Heat is drained from your body",
-                "You are caught in an explosion of ice and frost",
-                "You are encased in ice",
-            },
-            {
-                "@The_monster@ shivers with cold",
-                "Frost covers @the_monster@'s body",
-                "@The_monster@ shivers",
-                "@The_monster@ is covered in a thin layer of ice",
-                "Heat is drained from @the_monster@",
-                "@The_monster@ is caught in an explosion of ice and frost",
-                "@The_monster@ is encased in ice",
-            },
-            {
-                "Wisps of condensation drift in the air",
-                "Ice and frost explode from out of thin air",
-                "An unseen figure is encased in ice",
-            },
             nullptr,
         },
     },
@@ -485,31 +265,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::air,
         {
             BEAM_ELECTRICITY,
-            {
-                "Sparks of electricity dance around you",
-                "You are blasted with air",
-                "There is a short, sharp shower of sparks",
-                "The wind whips around you",
-                "You feel a sudden electric shock",
-                "Electricity courses through your body",
-                "You are caught in an explosion of electrical discharges",
-            },
-            {
-                "@The_monster@ bobs in the air for a moment",
-                "Sparks of electricity dance between @the_monster@'s @hands@",
-                "@The_monster@ is blasted with air",
-                "@The_monster@ is briefly showered in sparks",
-                "The wind whips around @the_monster@",
-                "@The_monster@ is jolted",
-                "@The_monster@ is caught in an explosion of electrical discharges",
-                "@The_monster@ is struck by twisting air",
-            },
-            {
-                "The wind whips",
-                "Something invisible sparkles with electricity",
-                "Electrical discharges explode from out of thin air",
-                "The air madly twists around a spot",
-            },
             nullptr,
         },
     },
@@ -517,28 +272,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         spschool::earth,
         {
             BEAM_NONE, // use special effect to check AC
-            {
-                "Sand pours from your @hands@",
-                "You feel a surge of energy from the ground",
-                "The floor shifts beneath you alarmingly",
-                "You are hit by flying rocks",
-                "You are blasted with sand",
-                "Rocks fall onto you out of nowhere",
-                "You are caught in an explosion of flying shrapnel",
-            },
-            {
-                "Sand pours from @the_monster@'s @hands@",
-                "@The_monster@ is hit by flying rocks",
-                "@The_monster@ is blasted with sand",
-                "Rocks fall onto @the_monster@ out of nowhere",
-                "@The_monster@ is caught in an explosion of flying shrapnel",
-            },
-            {
-                "Flying rocks appear out of thin air",
-                "A miniature sandstorm briefly appears",
-                "Rocks fall out of nowhere",
-                "Flying shrapnel explodes from thin air",
-            },
             [] (actor& target, actor* source, miscast_source_info mc_info,
                 int dam, string cause) {
                 dam = target.apply_ac(dam, 0, ac_type::triple);
@@ -547,25 +280,14 @@ static const map<spschool, miscast_datum> miscast_effects = {
         },
     },
     {
-        spschool::poison,
+        spschool::alchemy,
         {
-            BEAM_POISON,
+            BEAM_NONE,
+            [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
+                int dam, string /*cause*/)
             {
-                "You feel odd",
-                "You feel rather nauseous for a moment",
-                "You feel incredibly sick",
+                target.poison(source, dam * 5 / 2);
             },
-            {
-                "@The_monster@ looks faint for a moment",
-                "@The_monster@ has an odd expression for a moment",
-                "@The_monster@ is briefly tinged with green",
-                "@The_monster@ looks rather nauseous for a moment",
-                "@The_monster@ looks incredibly sick",
-            },
-            {
-                "The air has a green tinge for a moment",
-            },
-            nullptr,
         },
     },
 };
@@ -648,7 +370,7 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
         return;
     }
 
-    miscast_datum effect =  miscast_effects.find(school)->second;
+    miscast_datum effect = miscast_effects.find(school)->second;
 
     int dam = div_rand_round(roll_dice(level, fail + level), MISCAST_DIVISOR);
 
@@ -656,12 +378,12 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
     {
         ASSERT(effect.special);
 
-        _do_msg(target, effect, 0);
+        _do_msg(target, school, 0);
         effect.special(target, source, mc_info, dam, cause);
     }
     else
     {
-        _do_msg(target, effect,
+        _do_msg(target, school,
                 resist_adjust_damage(&target, effect.flavour, dam));
         _ouch(target, source, mc_info, dam, effect.flavour, cause);
     }

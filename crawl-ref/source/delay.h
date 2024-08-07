@@ -231,22 +231,23 @@ public:
 class EquipOnDelay : public Delay
 {
     item_def& equip;
+    bool primary_weapon;
     bool was_prompted = false;
 
     void start() override;
 
     void tick() override
     {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
-             equip.name(DESC_YOUR).c_str());
+        mprf(MSGCH_MULTITURN_ACTION, "You continue %s %s.",
+             get_verb(), equip.name(DESC_YOUR).c_str());
     }
 
     bool invalidated() override;
 
     void finish() override;
 public:
-    EquipOnDelay(int dur, item_def& item) :
-                 Delay(dur), equip(item)
+    EquipOnDelay(int dur, item_def& item, bool primary = false) :
+                 Delay(dur), equip(item), primary_weapon(primary)
     { }
 
     bool try_interrupt(bool force = false) override;
@@ -260,27 +261,30 @@ public:
     {
         return &item == &equip;
     }
+private:
+    const char* get_verb();
 };
 
 class EquipOffDelay : public Delay
 {
     const item_def& equip;
+    bool primary_weapon;
     bool was_prompted = false;
 
     void start() override;
 
     void tick() override
     {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
-             equip.name(DESC_YOUR).c_str());
+        mprf(MSGCH_MULTITURN_ACTION, "You continue %s %s.",
+             get_verb(), equip.name(DESC_YOUR).c_str());
     }
 
     bool invalidated() override;
 
     void finish() override;
 public:
-    EquipOffDelay(int dur, const item_def& item) :
-                   Delay(dur), equip(item)
+    EquipOffDelay(int dur, const item_def& item, bool primary = false) :
+                   Delay(dur), equip(item), primary_weapon(primary)
     { }
 
     bool try_interrupt(bool force = false) override;
@@ -294,6 +298,8 @@ public:
     {
         return &item == &equip;
     }
+private:
+    const char* get_verb();
 };
 
 class JewelleryOnDelay : public Delay
@@ -725,6 +731,34 @@ public:
         return "transform";
     }
 };
+
+class ImbueDelay : public Delay
+{
+    bool was_prompted = false;
+
+    void start() override;
+
+    void tick() override
+    {
+        mprf(MSGCH_MULTITURN_ACTION, "You continue imbuing your servitor.");
+    }
+
+    void finish() override;
+public:
+    ImbueDelay(int dur, spell_type _spell) : Delay(dur), spell(_spell)
+    { }
+
+    bool try_interrupt(bool force = false) override;
+
+    const char* name() const override
+    {
+        return "imbue_servitor";
+    }
+
+private:
+    spell_type spell;
+};
+
 
 void push_delay(shared_ptr<Delay> delay);
 

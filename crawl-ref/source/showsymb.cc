@@ -72,6 +72,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
                 colour = LIGHTGREY; // 1/12
         }
     }
+    else if (cell.flags & MAP_BFB_CORPSE)
+        colour = LIGHTRED;
+    else if (!feat_is_solid(feat)
+             && (cell.flags & MAP_BLASPHEMY))
+    {
+        colour = LIGHTMAGENTA;
+    }
     else if (cell.flags & MAP_BLOODY && !norecolour && Options.show_blood)
         colour = RED;
     else if (cell.flags & MAP_CORRODING && feat == DNGN_FLOOR)
@@ -314,6 +321,7 @@ show_class get_cell_show_class(const map_cell& cell,
     if (feat && feat_is_solid(feat)
         || feat_has_dry_floor(feat)
            && feat != DNGN_FLOOR
+           && feat != DNGN_ORB_DAIS
            && !feat_is_open_door(feat)
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH

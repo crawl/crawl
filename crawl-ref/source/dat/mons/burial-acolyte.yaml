@@ -1,0 +1,19 @@
+name: "burial acolyte"
+glyph: {char: "p", colour: lightcyan}
+flags: [speaks, warm_blood]
+species: human
+will: 20
+attacks:
+ - {type: hit, damage: 4}
+hd: 4
+hp_10x: 190
+ac: 0
+ev: 13
+spells: burial_acolyte
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Kikubaaqudgha

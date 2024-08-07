@@ -74,7 +74,6 @@ string feat_preposition(dungeon_feature_type feat, bool active = false,
 string stair_climb_verb(dungeon_feature_type feat);
 
 bool feat_is_water(dungeon_feature_type feat);
-bool feat_is_watery(dungeon_feature_type feat);
 bool feat_is_lava(dungeon_feature_type feat);
 god_type feat_altar_god(dungeon_feature_type feat);
 dungeon_feature_type altar_for_god(god_type god);
@@ -91,6 +90,7 @@ bool feat_is_portal_exit(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_descent_exitable(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
+bool feat_is_food(dungeon_feature_type feat);
 bool feat_is_reachable_past(dungeon_feature_type feat);
 
 bool feat_is_critical(dungeon_feature_type feat);
@@ -109,6 +109,8 @@ int slime_wall_corrosion(actor* act);
 void slime_wall_damage(actor* act, int delay);
 
 int count_adjacent_icy_walls(const coord_def &pos);
+
+bool near_visible_wall(coord_def observer_pos, coord_def cell);
 
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
@@ -169,6 +171,7 @@ bool has_push_spaces(const coord_def& pos, bool push_actor,
                     const vector<coord_def>* excluded);
 bool push_items_from(const coord_def& pos, const vector<coord_def>* excluded);
 coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* excluded, bool random);
+coord_def push_or_teleport_actor_from(const coord_def& pos);
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);

@@ -6,7 +6,6 @@
 #pragma once
 
 #include "god-type.h"
-#include "religion-enum.h"
 
 string god_prayer_reaction();
 void try_god_conversion(god_type god);

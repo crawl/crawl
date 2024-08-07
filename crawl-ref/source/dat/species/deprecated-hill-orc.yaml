@@ -1,0 +1,41 @@
+TAG_MAJOR_VERSION: 34
+enum: SP_HILL_ORC
+monster: MONS_ORC
+name: Hill Orc
+short_name: HO
+difficulty: False
+difficulty_priority: 100
+aptitudes:
+  xp: 0
+  hp: 1
+  mp_mod: 0
+  wl: 3
+  fighting: 2
+  long_blades: 1
+  axes: 3
+  maces_and_flails: 1
+  polearms: 1
+  staves: -1
+  ranged weapons: -1
+  throwing: -1
+  armour: 1
+  dodging: -2
+  stealth: -1
+  shields: 1
+  unarmed_combat: 1
+  spellcasting: -3
+  translocations: -2
+  shapeshifting: -2
+  fire_magic: 1
+  ice_magic: -1
+  air_magic: -2
+  alchemy: -2
+  invocations: 3
+str: 10
+int: 8
+dex: 6
+levelup_stat_frequency: 5
+levelup_stats:
+  - str
+
+orc_name: Antique Orc

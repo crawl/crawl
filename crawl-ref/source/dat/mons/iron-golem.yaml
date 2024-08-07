@@ -1,0 +1,20 @@
+name: "iron golem"
+glyph: {char: "9", colour: cyan}
+resists: {elec: 3, fire: 3, cold: 3}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 50}
+ - {type: hit, damage: 50}
+hd: 15
+hp_10x: 3000
+ac: 25
+ev: 5
+shout: squeak
+intelligence: brainless
+speed: 7
+energy: {attack: 7}
+uses: open_doors
+size: large
+shape: humanoid

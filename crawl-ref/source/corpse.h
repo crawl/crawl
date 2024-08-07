@@ -11,6 +11,8 @@
 // # of special units until fresh corpses rot away
 #define FRESHEST_CORPSE 110
 
+bool is_rottable(const item_def &it);
+
 void rot_corpses(int elapsedTime);
 
 bool turn_corpse_into_skeleton(item_def &item);

@@ -24,6 +24,15 @@ struct follower
     monster* place(bool near_player = false);
     void load_mons_items();
     void restore_mons_items(monster& m);
+
+    // Serialize piecemeal, to allow storing in a CrawlStoreValue
+    void write_to_prop(CrawlVector& vec);
+    void read_from_prop(CrawlVector& vec);
+
+    // Reconstitutes the monster and their equipment, but does NOT place the
+    // monster onto the floor. Use to examine stats that include equipment,
+    // but may not be safe for other purposes.
+    monster* peek();
 };
 
 // Several erase() calls rely on this being a linked list (so erasing does not
@@ -51,7 +60,7 @@ void place_transiting_monsters();
 void place_followers();
 void handle_followers(const coord_def &from,
                       bool (*handler)(const coord_def &pos,
-                                      const coord_def &from, bool &real));
+                                      const coord_def &from));
 void tag_followers();
 void untag_followers();
 void transport_followers_from(const coord_def &from);

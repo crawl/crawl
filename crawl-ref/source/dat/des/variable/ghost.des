@@ -415,11 +415,12 @@ SUBST:  D = DF
 : setup_gozag_gold(_G)
 KFEAT:  ODEJ = abandoned_shop
 KFEAT:  FH = antiques shop
+KFEAT:  G = metal_statue
 KFEAT:  _ = altar_gozag
 TILE:   G = dngn_golden_statue
 FTILE:  -_DEFHJ$0189OG = floor_limestone
 COLOUR: G = yellow
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
 : ghost_setup(_G, true)
 MAP
@@ -536,7 +537,7 @@ SUBST:   L = ':60 9 0 %, % = %*, * = **e|
 SUBST:   y = G:70 1
 : elseif you.in_branch("Spider") then
 MONS:    orange crystal statue / oklob plant
-KMONS:   2 = arachne / spark wasp, spark wasp
+KMONS:   2 = spark wasp / jorogumo
 NSUBST:  M = O / 2 / * = * O:5 8:5
 SUBST:   L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
 SUBST:   y = G:70 1, ' = ':80 W:20
@@ -693,11 +694,11 @@ KMONS:  O = player ghost
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 9 then
-MONS:   wraith / shadow
+MONS:   wraith / shadowghast
 SUBST:  d = *, e = *%, f = %$--,  ghi = -
 NSUBST: D = 1--
 :     elseif you.depth() < 12 then
-MONS:   wraith / shadow, freezing wraith
+MONS:   wraith / shadowghast, freezing wraith
 SUBST:  e = *, f = %$,  ghi = -
 NSUBST: D = 112---
 :     elseif you.depth() < 14 then
@@ -807,20 +808,19 @@ KMONS:  O = player ghost
 : if you.in_branch("D") then
 :     if you.depth() < 6 then
 MONS:   skeleton place:D:6 / zombie place:D:6
-MONS:   mummy / shadow imp / wight / necrophage / phantom
+MONS:   mummy / shadow imp / wight w:5 / phantom
 SUBST:  d = *%, e = %$, f = %$--, ghij = -
 NSUBST: D = 2=1 / 2=1- / 2- / -
 :     elseif you.depth() < 9 then
 MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 \
-        / simulacrum place:D:9 / mummy / shadow imp / wight / necrophage \
-        / phantom
+        / simulacrum place:D:9 / mummy / shadow imp / wight / phantom
 MONS:   wraith / vampire
 SUBST:  d = *, e = *%, f = %$,  ghi = -
 NSUBST: D = 2=1 / 3=1- / 2=2- / -
 :     elseif you.depth() < 12 then
 MONS:   mummy / wight / zombie place:D:12 / spectre place:D:12 \
         / simulacrum place:D:12 / phantom / wraith / vampire
-MONS:   vampire mosquito band / shadow / death knight / skeletal warrior \
+MONS:   vampire mosquito band / shadowghast / death knight / skeletal warrior \
         / freezing wraith w:5
 SUBST:  e = *, f = *%,  g = %$--, hi = -
 NSUBST: D = 3=1 / 3=1- / 2=2- / -
@@ -1162,8 +1162,8 @@ DEPTH:  Depths
 KITEM:  O = wand of polymorph ident:type
 KMONS:  O = player ghost
 MONS:   any common demon
-MONS:   balrug / blizzard demon / cacodemon / green death / \
-        hell beast / lorocyproca / shadow demon
+MONS:   balrug / blizzard demon / cacodemon / \
+        sin beast / shadow demon / green death
 MONS:   brimstone fiend / tzitzimitl / ice fiend / hell sentinel
 : ghost_good_loot(_G)
 SUBST:  f = |*
@@ -1480,7 +1480,7 @@ ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost
 KMONS:  1 = quokka / giant cockroach / rat / ball python
-KMONS:  2 = adder / worm / river rat
+KMONS:  2 = adder / ribbon worm / river rat
 KMONS:  3 = bullfrog
 KFEAT:  O = expired_portal
 KFEAT:  123*%$ = W
@@ -2331,7 +2331,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_abyssal_escape
-TAGS:   transparent passable preserve_wall
+TAGS:   transparent passable no_wall_fixup
 ORIENT: float
 KMASK:  -DEFHNOQRdeqrsyuz1234|*%$^ = opaque
 KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
@@ -2340,7 +2340,6 @@ KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / book of spatial translocations \
             / book of the warp \
             / there-and-back book \
-            / inescapable atlas \
             / book of displacement \
             / randbook owner:Lugonu disc:translocation ident:all w:5 \
             / manual of translocations w:2 / rift w:2
@@ -2395,7 +2394,7 @@ kmons("y = orc warrior ; " .. disto_weapon("warrior",
 kmons("z = skeletal warrior ; " .. disto_weapon("warrior", "randart"))
 }}
 :     if you.depth() < 6 then
-MONS:   any lesser demon / small abomination
+MONS:   any lesser demon
 MONS:   toenail golem / ancient zyme
 SUBST:  d = *%, e = %$, fghij= -
 NSUBST: - = qrs / 2=1 / 2=1- / 2--- / -
@@ -2421,8 +2420,9 @@ MONS:   raiju / shapeshifter / thrashing horror / arcanist / occultist \
         / hell hog / very ugly thing
 MONS:   ancient zyme / rakshasa / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
-        / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
-        / tentacled monstrosity w:2 / starcursed mass w:2 / daeva god:Xom w:2 \
+        / hellion / apocalypse crab / glowing shapeshifter \
+        / crystal guardian w:2 / tentacled monstrosity w:2 \
+        / starcursed mass w:2 / daeva god:Xom w:2 \
         / executioner w:2 / profane servitor w:2
 SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = yzDF / 2=1 / 3=1- / 2 / 2=2- / 3 / 4- / -
@@ -2459,8 +2459,9 @@ MONS:   shapeshifter / rakshasa / thrashing horror / occultist / hell hog \
         / very ugly thing
 MONS:   ancient zyme / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
-        / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
-        / tentacled monstrosity w:2 / starcursed mass w:2 / daeva god:Xom w:2 \
+        / hellion / apocalypse crab / glowing shapeshifter \
+        / crystal guardian w:2 / tentacled monstrosity w:2 \
+        / starcursed mass w:2 / daeva god:Xom w:2 \
         / executioner w:2 / profane servitor w:2
 SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = DH / 2=1 / 3=1- / 2 / 2=2- / 3 / 4- / -
@@ -2523,6 +2524,10 @@ kmons("q = vault warden ; " .. disto_weapon("knight", "randart") ..
       "    . kite shield good_item | tower shield good_item w:5" ..
       "    . chain mail good_item | plate armour good_item")
 }}
+# XXX: When the preserve_wall tag is used, it seems the Vaults room layout is
+# replacing stone wall with rock. Until this can be fixed in the layout code,
+# just use crystal and metal walls.
+SUBST:  c = bv
 :     else
 # Vaults needs the warlord on H, so just redefine H in Elf so we can use the
 # same NSUBST.

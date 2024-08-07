@@ -166,6 +166,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/misc.cc \
     $(CRAWL_PATH)/mon-abil.cc \
     $(CRAWL_PATH)/mon-act.cc \
+    $(CRAWL_PATH)/mon-aura.cc \
     $(CRAWL_PATH)/mon-behv.cc \
     $(CRAWL_PATH)/mon-cast.cc \
     $(CRAWL_PATH)/mon-clone.cc \
@@ -173,7 +174,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-ench.cc \
     $(CRAWL_PATH)/mon-explode.cc \
     $(CRAWL_PATH)/mon-gear.cc \
-    $(CRAWL_PATH)/mon-grow.cc \
     $(CRAWL_PATH)/mon-info.cc \
     $(CRAWL_PATH)/mon-movetarget.cc \
     $(CRAWL_PATH)/mon-pathfind.cc \

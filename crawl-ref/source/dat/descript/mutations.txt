@@ -120,11 +120,6 @@ camouflage mutation
 Your skin changes colour to match your surroundings. Each level of this
 mutation provides Stealth+.
 %%%%
-noise suppression mutation
-
-You passively dampen all noise in your surroundings, making it easier to avoid
-drawing attention to your activities.
-%%%%
 # ------ Auxes -----
 horns mutation
 
@@ -308,7 +303,7 @@ of hostile magic. Each level of this mutation reduces your willpower further.
 %%%%
 see invisible mutation
 
-You have supernaturally acute eyesight, allowing you to see monsters that are
+You have supernaturally acute vision, allowing you to see monsters that are
 hidden from mundane sight. This has no effect on your accuracy otherwise.
 %%%%
 clarity mutation
@@ -418,6 +413,16 @@ Your system is resistant to potable panaceas, reducing the effectiveness of all
 kinds of healing potions. The second level of this mutation completely blocks
 potion-based healing. (Aid from the god Gozag is unaffected.)
 %%%%
+persistent drain mutation
+
+Your health recovers twice as slowly from being drained. (The total experience
+needed is doubled.)
+%%%%
+initially attractive mutation
+
+The first time you see a monster, it may be magically pulled toward you.
+This does not wake sleeping monsters.
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 
@@ -469,14 +474,9 @@ demonic magic mutation
 
 When you cast spells, there's a chance that adjacent monsters will be
 paralysed. This effect is more powerful when casting higher-level spells, but
-monsters with greater Willpower can resist it. Each level of this mutation
+monsters with greater willpower can resist it. Each level of this mutation
 allows more distant monsters to be affected. The third level of this mutation
 also allows you to paralyse monsters in the same way while zapping wands.
-%%%%
-noise dampening mutation
-
-Your surroundings are quieter, reducing the distance that noise will travel
-from any place you can see.
 %%%%
 icemail mutation
 
@@ -497,7 +497,8 @@ level of this mutation increases the healing further.
 sturdy frame mutation
 
 Your movements are less encumbered by armour, mitigating penalties to spell
-success and accuracy. Each level of this mutation reduces armour ER by 2.
+success, evasion, and ranged weapon attack speed. Each level of this mutation
+reduces armour ER by 2.
 %%%%
 sanguine armour mutation
 
@@ -535,14 +536,14 @@ You are surrounded by an aura of silence. Those adjacent to you cannot make any
 sound. This prevents most forms of spellcasting and prayer, though demonic
 magic, being noiseless, is unaffected.
 %%%%
-bedeviling mutation
+bedevilling mutation
 
 You cast Hex spells with increased power.
 %%%%
 demonic willpower mutation
 
 Your willpower has a will of its own, sometimes injuring those who attempt to
-hex you. This mutation also bolsters your Willpower.
+hex you. This mutation also bolsters your willpower.
 %%%%
 hurl damnation mutation
 
@@ -622,7 +623,7 @@ nightstalker mutation
 You are attuned to the shadows, reducing the distance that you can see or be
 seen from.
 %%%%
-daystalker mutation
++LOS mutation
 
 You are born to the light, increasing the distance that you can see and be seen
 from.
@@ -693,12 +694,9 @@ melee. Each tentacle can wear a ring, but you need four of them to move around,
 and either two or four tentacles to hold a weapon depending on its size, and
 two tentacles to hold a shield.
 
-A constriction attack has a 66% chance of automatically triggering on any
-melee attack. When triggered, it will attempt to begin or renew constriction
-of a targeted enemy; the maximum number of enemies that can be constricted is
-determined by the number of free tentacles. Whether a constriction attempt
-succeeds when triggered is determined primarily by Dexterity, Fighting skill,
-and any slaying bonuses.
+Your tentacles will try to constrict foes which you attack in melee. (You cannot
+constrict monsters larger than you.) Independently, you have a two-thirds chance
+of launching a damaging 'squeeze' attack whenever you attack in melee.
 %%%%
 mertail mutation
 
@@ -773,40 +771,205 @@ You are foreign to this world, easily perceived by dark forces. You have only
 one-tenth the normal time on each dungeon floor before Zot finds you and
 permanently reduces your health.
 %%%%
-glowing mutation
+foul shadow mutation
 
-You glow in the dark. Foes hit you more often, your stealth is badly impaired,
-and you cannot become invisible.
+Your body is shadowed by foul flame. Foes hit you less often, and your stealth
+is greatly enhanced. Foes who strike you in melee are sometimes seared by the
+foul flame; undead and demonic foes take less damage from it, while holy beings
+and good god worshippers take more.
 %%%%
 explore regen mutation
 
-As you explore the dungeon, your wounds will heal and your magic will replenish.
+You are invigorated by the discovery of the unknown. As you explore the dungeon,
+your wounds will heal and your magic will replenish.
 %%%%
 faith mutation
 
 You were embalmed with holy oils and sacred spices and bound about with blessed
 cloth. Now you have a special connection with the divine, allowing you to gain
-favor with your chosen god more quickly.
+favour with your chosen god more quickly.
 %%%%
 devour on kill mutation
 
 When you kill living creatures you have a chance to devour their life force
 and restore health.
 %%%%
-roll mutation
+rollpage mutation
 
-You instinctively roll as you move toward enemies, rampaging forward an additional
-space.
+You instinctively roll as you move toward enemies, rampaging forward an
+additional space. This mutation grants magic regeneration when rolling; the
+second level of this mutation regenerates both magic and health.
 %%%%
-long tongue mutation
+double potion healing mutation
 
-Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
-effects on you.
+Whenever a potion restores your health or magic, it restores twice as much.
 %%%%
-awkward tongue mutation
+drunken brawling mutation
 
-Your tongue is very floppy, giving you trouble when reading the arcane syllables
-encoded on magical scrolls. As such, scrolls take you half again as long to read.
+Whenever you drink a potion that restores health or magic, you perform an
+immediate attack against all enemies adjacent to you.
+
+(This includes potions of curing, heal wounds, magic, and ambrosia.)
+%%%%
+artefact enchanting mutation
+
+You can use scrolls of enchant weapon and armour upon random artefacts.
+
+This cannot raise their enchantment above what would normally be possible on a
+mundane item of the same type, and cannot affect especially unusual artefacts
+at all.
+%%%%
+runic magic mutation
+
+You cast spells with the assistance of glyphs marked upon your armour, greatly
+reducing the complex movements which would otherwise be required.
+
+(The encumbrance rating of all armour you wear is reduced by 1/2 for purposes
+of spell success.)
+%%%%
+off-hand wielding mutation
+
+You can wield a one-handed weapon in your off-hand, if not wielding a
+two-handed weapon or wearing a shield or orb. You will follow up attacks from
+your primary weapon with your off-hand weapon, with attack delay determined
+by the average of the two. Ranged weapons can only follow attacks by ranged
+weapons, and likewise melee weapons.
+%%%%
+slow wielding mutation
+
+You must recalibrate your grasping arms when wielding or unwielding weapons.
+This takes as long as donning armour.
+%%%%
+warmup strikes mutation
+
+Your grasping arms need time to limber up, making your first few attacks in
+each fight less effective. Slow, heavy attacks help more than fast attacks.
+Both weapon-based and unarmed attacks are affected.
+%%%%
+no rings mutation
+
+Your hands are embedded into the controls for your grasping arms, leaving you
+with no place to wear magical rings without disastrous magical interference.
+%%%%
+# ------ Makhleb destruction flavours ------
+Gehenna destruction mutation
+
+Your Unleash Destruction ability is empowered by Gehenna. You are able to hurl
+bolts of magma instead of cold, and your bolts of fire can strip away their
+victims' fire resistance.
+%%%%
+Cocytus destruction mutation
+
+Your Unleash Destruction ability is empowered by Cocytus. You are able to hurl
+bolts of ice instead of fire, and your bolts of cold freeze victims solid,
+slowing their movement.
+%%%%
+Tartarus destruction mutation
+
+Your Unleash Destruction ability is empowered by Tartarus. You are able to hurl
+bolts of devastation which lower their victims' willpower instead of lightning,
+and your bolts of negative energy are more powerful.
+%%%%
+Dis destruction mutation
+
+Your Unleash Destruction ability is empowered by Dis. You are able to hurl bolts
+of corrosive acid and metal splinters instead of negative energy.
+%%%%
+# ------ Makhleb marks ------
+Mark of the Tyrant mutation
+
+Your Infernal Servants have a longer duration, and you can summon even stronger
+ones at very high Invocations (at the cost of additional piety). When you slay
+enemies, a random servant may gain one of: Haste, Might, Regeneration, or
+Brilliance.
+%%%%
+Mark of Carnage mutation
+
+Your Infernal Servants are now summoned adjacent to a random enemy instead of
+near you. When they appear, they do so in a blast of your characteristic
+Destruction (which cannot hurt you or other allies).
+
+(Your servants unleash blasts of either
+{{
+    if you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "fire or lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "cold or ice"
+    end
+}}.)
+%%%%
+Mark of the Legion mutation
+
+Your Infernal Servant ability is replaced with Infernal Legion, allowing you to
+call in a continuous stream of weaker demons over time. You may also unleash
+Makhleb's Destruction through your summoned allies without harming them.
+%%%%
+Mark of Annihilation mutation
+
+Your Infernal Servant ability is replaced with Globe of Annihilation, allowing
+you to hurl slow-moving spheres of intense destructive force that detonate
+in an enormous blast of your characteristic Destruction.
+
+(Your globes of annihilation unleash either
+{{
+    if you.get_base_mutation_level("Dis destruction") == 1 then
+        return "acid or metal splinters"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negative energy or devastation"
+    elseif you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "fire or lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "cold or ice"
+    end
+}}.)
+%%%%
+Mark of Haemoclasm mutation
+
+When you kill enemies, they have a small chance to explode in a violent rain of
+gore, which damages adjacent foes proportional to the victim's maximum health.
+
+Enemies who die to this explosion will always explode themselves.
+%%%%
+Mark of the Celebrant mutation
+
+Whenever you fall below 50% of your maximum HP, you perform an infernal rite,
+unleashing a flurry of blood arrows aimed at nearby enemies. You will fire at
+least one arrow for every valid target, but may fire additional ones if few are
+present. Invocations increases the damage of these arrows, and Makhleb will
+always bestow healing upon you for enemies killed by them.
+
+After performing a blood rite, you cannot perform another until your HP has
+fully recovered.
+%%%%
+Mark of Execution mutation
+
+A demonic incarnation of murder lies dormant within your soul. Whenever you kill
+an enemy in melee, there is a small chance for it to awaken and manifest as a
+maelstrom of scythe-like blades enveloping you. These blades will attack
+whenever you do and also retaliate whenever you successfully dodge an enemy
+attack.
+
+You have the ability to rampage swiftly towards enemies while possessed, but if
+you spend more than a short while doing anything other than attacking, the
+demonic presence will go dormant inside you once again.
+%%%%
+Mark of Atrocity mutation
+
+Your Unleash Destruction is empowered the more times you use it consecutively
+without pause, increasing in both damage and health cost. Upon using it a fourth
+time in a row, you will automatically unleash a wild barrage of additional bolts
+aimed at random targets and reset this boost.
+%%%%
+Mark of the Fanatic mutation
+
+Grants you the Vessel of Slaughter ability, allowing you to transform into a
+powerful demonic avatar with greatly boosted offence and defence for a short
+period of time, in exchange for being dragged down into the Crucible of Flesh
+afterward and made to fight for your freedom.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
@@ -875,7 +1038,7 @@ Your reflexes are slow, making it easier for foes to hit you.
 %%%%
 inexperienced mutation
 
-You are inexperienced, and unable to fully gain 27 levels.
+You are inexperienced and unable to fully gain 27 levels.
 %%%%
 missing an eye mutation
 
@@ -933,9 +1096,9 @@ no necromancy magic mutation
 
 Your Necromancy skill is 0 and you cannot train the skill.
 %%%%
-no poison magic mutation
+no alchemy magic mutation
 
-Your Poison Magic skill is 0 and you cannot train the skill.
+Your Alchemy skill is 0 and you cannot train the skill.
 %%%%
 no summoning magic mutation
 
@@ -944,8 +1107,4 @@ Your Summoning skill is 0 and you cannot train the skill.
 no translocations magic mutation
 
 Your Translocations skill is 0 and you cannot train the skill.
-%%%%
-no transmutations magic mutation
-
-Your Transmutations skill is 0 and you cannot train the skill.
 %%%%

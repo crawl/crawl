@@ -1,0 +1,20 @@
+name: "imperial myrmidon"
+glyph: {char: "a", colour: lightcyan}
+flags: [speaks, warm_blood]
+xp_mult: 12
+species: human
+will: 60
+attacks:
+ - {type: hit, flavour: vuln, damage: 30}
+hd: 16
+hp_10x: 750
+ac: 1
+ev: 22
+spells: imperial_myrmidon
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 12
+uses: weapons_armour
+size: medium
+shape: humanoid

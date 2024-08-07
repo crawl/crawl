@@ -779,6 +779,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_aut            = se.num_aut;
     num_diff_runes     = se.num_diff_runes;
     num_runes          = se.num_runes;
+    gems_found         = se.gems_found;
+    gems_intact        = se.gems_intact;
     kills              = se.kills;
     maxed_skills       = se.maxed_skills;
     fifteen_skills     = se.fifteen_skills;
@@ -1093,6 +1095,8 @@ void scorefile_entry::init_with_fields()
 
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
+    gems_found     = fields->int_field("fgem");
+    gems_intact    = fields->int_field("igem");
 
     kills = fields->int_field("kills");
     maxed_skills = fields->str_field("maxskills");
@@ -1190,6 +1194,11 @@ void scorefile_entry::set_base_xlog_fields() const
 
     if (num_runes)
         fields->add_field("nrune", "%d", num_runes);
+
+    if (gems_found)
+        fields->add_field("fgem", "%d", gems_found);
+    if (gems_intact)
+        fields->add_field("igem", "%d", gems_intact);
 
     fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
@@ -1336,7 +1345,10 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     death_type   = dtype;
     damage       = dam;
 
-    const monster *source_monster = monster_by_mid(death_source);
+    // Try searching for both a living monster and a dead-but-cached monster
+    const monster *source_monster = monster_by_mid(death_source)
+                                     ? monster_by_mid(death_source)
+                                     : cached_monster_copy_by_mid(death_source);
     if (source_monster)
         killer_map = source_monster->originating_map();
 
@@ -1366,9 +1378,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_BEING_THROWN
             || death_type == KILLED_BY_COLLISION
             || death_type == KILLED_BY_CONSTRICTION)
-        && monster_by_mid(death_source))
+        && source_monster)
     {
-        const monster* mons = monster_by_mid(death_source);
+        const monster* mons = source_monster;
         ASSERT(mons);
 
         // Previously the weapon was only used for dancing weapons,
@@ -1390,7 +1402,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             // Setting this is redundant for dancing weapons, however
             // we do care about the above identification. -- bwr
             if (!mons_class_is_animated_weapon(mons->type))
+            {
                 auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+                if (mons->has_ench(ENCH_ARMED))
+                    auxkilldata += " (from an undying armoury)";
+            }
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
@@ -1403,8 +1419,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (death || you.can_see(*mons))
             death_source_name = mons->full_name(desc);
 
-        // Some shadows have names
-        if (mons_is_player_shadow(*mons) && mons->mname.empty())
+        if (mons_is_player_shadow(*mons))
             death_source_name = "their own shadow"; // heh
 
         if (mons->mid == MID_YOU_FAULTLESS)
@@ -1431,13 +1446,12 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
+            _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
 
-            killerpath = "";
-
+            vector<string> path_parts;
             for (const auto &bl : blame)
-                killerpath = killerpath + ":" + _xlog_escape(bl.get_string());
-
-            killerpath.erase(killerpath.begin());
+                path_parts.push_back(_xlog_escape(bl.get_string()));
+            killerpath = join_strings(path_parts.begin(), path_parts.end(), ":");
         }
         else
         {
@@ -1539,6 +1553,8 @@ void scorefile_entry::reset()
     num_aut              = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
+    gems_found           = 0;
+    gems_intact          = 0;
     kills                = 0;
     maxed_skills.clear();
     fifteen_skills.clear();
@@ -1649,15 +1665,17 @@ void scorefile_entry::init(time_t dt)
     if (dlua.callfn(nullptr, 1, 2))
         dlua.fnreturns(">db", &points, &base_score);
 
+    num_runes      = runes_in_pack();
+    num_diff_runes = num_runes;
+    gems_found     = ::gems_found();
+    gems_intact    = gems_found - gems_lost();
+
     // If calc_score didn't exist, or returned true as its second value,
     // use the default formula.
     if (base_score)
     {
         // sprint games could overflow a 32 bit value
         uint64_t pt = points + _award_modified_experience();
-
-        num_runes      = runes_in_pack();
-        num_diff_runes = num_runes;
 
         // There's no point in rewarding lugging artefacts. Thus, no points
         // for the value of the inventory. -- 1KB
@@ -1668,6 +1686,9 @@ void scorefile_entry::init(time_t dt)
             pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
                 / (1+you.num_turns);
         }
+        // Add a little score for gems so that newer players who find one
+        // feel rewarded, but not so much that it impacts high score play.
+        pt += gems_found * 10000 * ((death_type == KILLED_BY_WINNING) ? 10 : 1);
         pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;
 
@@ -1734,8 +1755,8 @@ void scorefile_entry::init(time_t dt)
     intel = you.stat(STAT_INT, false);
     dex   = you.stat(STAT_DEX, false);
 
-    ac    = you.armour_class();
-    ev    = you.evasion();
+    ac    = you.armour_class_scaled(1);
+    ev    = you.evasion_scaled(1);
     sh    = player_displayed_shield_class();
 
     god = you.religion;
@@ -1943,6 +1964,56 @@ static string _append_sentence_delimiter(const string &sentence,
         return sentence;
 
     return sentence + delimiter;
+}
+
+string scorefile_entry::runes_gems_desc(bool semiverbose) const
+{
+    if (num_runes < 1 && gems_found < 1)
+        return "";
+
+    string desc = "";
+
+    bool extra = (death_type == KILLED_BY_WINNING);
+    if (num_runes >= 1)
+    {
+        desc += _hiscore_newline_string();
+        desc += make_stringf("... %s %d rune%s",
+                             extra ? "and" : "with",
+                             num_runes,
+                             (num_runes > 1) ? "s" : "");
+        extra = true;
+    }
+    if (gems_found >= 1)
+    {
+        desc += _hiscore_newline_string();
+        desc += make_stringf("... %s %d gem%s",
+                             extra ? "and" : "with",
+                             gems_found,
+                             (gems_found > 1) ? "s" : "");
+        // semiverbose is true here only when making the vmsg logfile field,
+        // so we always display all gem info when it is true
+        if (Options.more_gem_info || semiverbose)
+        {
+            if (gems_intact == 1 && gems_found == 1)
+                desc += " (intact)";
+            else if (gems_intact == 2 && gems_found == 2)
+                desc += " (both intact)";
+            else if (gems_intact == gems_found)
+                desc += " (all intact)";
+            else
+                desc += make_stringf(" (%d intact)", gems_intact);
+        }
+    }
+    if (!semiverbose
+        && death_time > 0
+        && !_hiscore_same_day(birth_time, death_time))
+    {
+        desc += " on ";
+        desc += _hiscore_date_string(death_time);
+    }
+
+    desc = _append_sentence_delimiter(desc, "!");
+    return desc + _hiscore_newline_string();
 }
 
 string
@@ -2332,7 +2403,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "left";
         else
         {
-            if (num_runes > 0)
+            if (num_runes > 0 || gems_found > 0)
                 desc += "Got out of the dungeon";
             else if (species::is_undead(static_cast<species_type>(race)))
                 desc += "Safely got out of the dungeon";
@@ -2343,7 +2414,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_WINNING:
         desc += terse? "escaped" : "Escaped with the Orb";
-        if (num_runes < 1)
+        if (num_runes < 1 && gems_found < 1)
             desc += "!";
         break;
 
@@ -2725,27 +2796,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (death_type == KILLED_BY_LEAVING
             || death_type == KILLED_BY_WINNING)
         {
-            if (num_runes > 0)
-            {
-                desc += _hiscore_newline_string();
-
-                desc += make_stringf("... %s %d rune%s",
-                         (death_type == KILLED_BY_WINNING) ? "and" : "with",
-                          num_runes, (num_runes > 1) ? "s" : "");
-
-                if (!semiverbose
-                    && death_time > 0
-                    && !_hiscore_same_day(birth_time, death_time))
-                {
-                    desc += " on ";
-                    desc += _hiscore_date_string(death_time);
-                }
-
-                desc = _append_sentence_delimiter(desc, "!");
-                desc += _hiscore_newline_string();
-            }
-            else
+            if (num_runes < 1 && gems_found < 1)
                 desc = _append_sentence_delimiter(desc, ".");
+            else
+                desc += runes_gems_desc(semiverbose);
         }
         else if (!_very_boring_death_type(death_type))
         {
@@ -2784,7 +2838,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (needs_called_by_monster_line)
             {
                 desc += make_stringf("... %s by %s",
-                         death_type == KILLED_BY_COLLISION ? "caused" :
+                         death_type == KILLED_BY_COLLISION ? "after being knocked back" :
                          auxkilldata == "by angry trees"   ? "awakened" :
                          auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",
@@ -2853,8 +2907,9 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             // TODO: strcat "after reaching level %d"; for LEAVING
             if (verbosity == DDV_NORMAL)
             {
+                const bool cool = num_runes > 0 || gems_found > 0;
                 desc = _append_sentence_delimiter(desc,
-                                                  num_runes > 0? "!" : ".");
+                                                  cool ? "!" : ".");
             }
             desc += _hiscore_newline_string();
         }

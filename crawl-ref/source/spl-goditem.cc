@@ -36,6 +36,8 @@
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "notes.h" // NOTE_DREAMSHARD
+#include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
@@ -401,11 +403,19 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && (you.form == transformation::shadow
-                                        || you.form == you.default_form))
+        if (i == DUR_TRANSFORMATION && (you.form == you.default_form
+                                        || you.form == transformation::slaughter))
         {
             continue;
         }
+        // XXX: Handle special-cases with regard to monster auras.
+        //      (It would be nice if this could be handled automatically, but
+        //      there aren't yet enough of these effects to bother doing such)
+        if (i == DUR_SLOW && aura_is_active_on_player(TORPOR_SLOWED_KEY))
+            continue;
+        else if (i == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
+            continue;
+
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut
@@ -539,12 +549,10 @@ void debuff_player()
             len = 0;
             heal_flayed_effect(&you);
         }
-        else if (duration == DUR_LIQUID_FLAMES)
+        else if (duration == DUR_STICKY_FLAME)
         {
-            len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase(STICKY_FLAME_AUX_KEY);
-            you.props.erase(STICKY_FLAMER_KEY);
+            end_sticky_flame_player();
         }
         else if (len > 1)
         {
@@ -623,7 +631,7 @@ void debuff_monster(monster &mon)
     // effect = true does for PETRIFYING is cause it to turn into
     // ENCH_PETRIFIED. So... let's not do that. (Hacky, sorry!)
 
-    simple_monster_message(mon, "'s magical effects unravel!");
+    simple_monster_message(mon, " magical effects unravel!", true);
 }
 
 // pow -1 for passive
@@ -745,14 +753,10 @@ int detect_creatures(int pow, bool telepathic)
 
 spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
-    // power guidelines:
-    // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
-    // up to 300 or so with godly assistance or end-level, and 1200
-    // as more or less the theoretical maximum.
     const coord_def& where = victim->pos();
     int number_built = 0;
 
-    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
+    // This is a very dubious set. Maybe we should just use !(feat_is_solid)?
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
@@ -897,6 +901,20 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
             {
                 temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
                                     TERRAIN_CHANGE_TOMB);
+
+                env.grid_colours(*ai) = RED;
+                tile_env.flv(*ai).feat_idx =
+                        store_tilename_get_index("wall_sandstone");
+                tile_env.flv(*ai).feat = TILE_WALL_SANDSTONE;
+                if (env.map_knowledge(*ai).seen())
+                {
+                    env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
+                    env.map_knowledge(*ai).clear_item();
+#ifdef USE_TILE
+                    tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;
+                    tile_env.bk_fg(*ai) = 0;
+#endif
+                }
             }
 
             number_built++;
@@ -928,18 +946,43 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
     return spret::success;
 }
 
+// Add 6 to this. Damage ranges from 9-12 (avg 10) at 0 invo,
+// to 9-78 at 27 invo.
+dice_def beogh_smiting_dice(int pow, bool allow_random)
+{
+    if (allow_random)
+        return dice_def(3, div_rand_round(pow, 8));
+    else
+        return dice_def(3, pow / 8);
+}
+
 spret cast_smiting(int pow, monster* mons, bool fail)
 {
-    if (mons == nullptr || mons->submerged())
+    if (mons == nullptr)
     {
         fail_check();
         canned_msg(MSG_NOTHING_THERE);
-        // Counts as a real cast, due to invisible/submerged monsters.
+        // Counts as a real cast, due to invisible monsters.
         return spret::success;
     }
 
+    if (mons->friendly())
+    {
+        mpr("Beogh will not strike down an ally of the cause.");
+        return spret::abort;
+    }
+
+    // The above should prevent most cases of attack prompts, but just in case...
     if (stop_attack_prompt(mons, false, you.pos()))
         return spret::abort;
+
+    // No direct divine intervention during apostle challenges
+    if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+    {
+        simple_god_message(" booms: This is a trial of mortal prowess."
+                           " Fight with your own strength!");
+        return spret::abort;
+    }
 
     fail_check();
 
@@ -947,14 +990,14 @@ spret cast_smiting(int pow, monster* mons, bool fail)
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-    int damage = 6 + roll_dice(3, div_rand_round(pow, 8));
+    int damage = 6 + beogh_smiting_dice(pow).roll();
 
     mprf("You smite %s%s",
          mons->name(DESC_THE).c_str(),
          attack_strength_punctuation(damage).c_str());
 
     behaviour_event(mons, ME_ANNOY, &you);
-    mons->hurt(&you, damage);
+    mons->hurt(&you, damage, BEAM_MISSILE, KILLED_BY_BEOGH_SMITING);
 
     if (mons->alive())
     {
@@ -1179,6 +1222,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
     if (!mons
         || !mons->alive()
         || mons->res_torment()
+        || attacker && god_protects(attacker, *mons, false)
         // Monsters can't currently use the sceptre, but just in case.
         || attacker
            && mons == attacker->as_monster()

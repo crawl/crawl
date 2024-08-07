@@ -1,17 +1,18 @@
 enum: SP_RED_DRACONIAN
 monster: MONS_RED_DRACONIAN
-name: "Red Draconian"
-short_name: "Dr"
-adjective: "Draconian"
-genus: "Draconian"
+name: Red Draconian
+short_name: Dr
+adjective: Draconian
+genus: Draconian
 difficulty: False
 species_flags:
-  - SPF_DRACONIAN
+  - draconian
+  - no_hair
 aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -34,5 +35,7 @@ mutations:
   7:
     MUT_HEAT_RESISTANCE: 1
 fake_mutations:
-  - long: You can breathe blasts of fire.
-    short: breathe fire
+  - long: You can breathe blasts of explosive embers.
+    short: combustion breath
+
+orc_name: Red Orconian

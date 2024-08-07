@@ -288,6 +288,27 @@ enum tag_minor_version
     TAG_MINOR_SLENGU,              // Split tengu mutations.
     TAG_MINOR_GLASS_EYES,          // Fixup paralysis gaze to vitrifying gaze.
     TAG_MINOR_SAVE_TALISMANS,      // Store the in-use talisman.
+    TAG_MINOR_NO_SPECIAL_ENERGY,   // Remove some unused monster energy types.
+    TAG_MINOR_MON_SH_INFO,         // Store SH in mon-info.
+    TAG_MINOR_RAMPAGE_HEAL,        // Adjust Armataur mutations for healpage.
+    TAG_MINOR_GEMS,                // Add gems.
+    TAG_MINOR_ALCHEMY_MERGER,      // Poison magic and transmuations merged.
+    TAG_MINOR_UNTRAVEL_ALLY_PACE,  // Cut pace travel to slowest ally setting
+    TAG_MINOR_REMOVE_MONSTER_XP,   // Remove the experience member from monster
+    TAG_MINOR_NO_INCREMENTAL_RECALL, // Remove incremental recall and make instant again
+    TAG_MINOR_APOSTLE_DATA,        // Convert apostles to using custom structs instead of props
+    TAG_MINOR_XP_CONTRIBUTE_FIXUP, // Removes the 2x multiplier for player XP contribution
+    TAG_MINOR_GHOST_UMBRAS,        // Allow ghost demons to have umbras.
+    TAG_MINOR_NO_CONSTRICTION_DUR, // Remove duration parameter from constriction tracking
+    TAG_MINOR_NEW_DRACONIAN_BREATH, // Add charges to draconian breaths, revamp effects
+    TAG_MINOR_COGLIN_NO_JEWELLERY, // Remove all jewellery from Coglins
+    TAG_MINOR_TALISMANS_SEEN,      // Keep track of seen talismans
+    TAG_MINOR_FIX_APOSTLE_DAMAGE,  // Fix damage tracking of banished apostles
+    TAG_MINOR_MON_AURA_REFACTORING,// Mark enchantments from passive auras in mon_enchant
+    TAG_MINOR_GRAVE_CLAW_CHARGES,  // Add stockpiling of Grave Claw charges
+    TAG_MINOR_ENDLESS_DIVINE_SHIELD, // Make Divine Shield not expire with time
+    TAG_MINOR_NEGATIVE_DIVINE_SHIELD, // Fix negative Divine Shield charges
+    TAG_MINOR_MAKHLEB_REVAMP,      // Handle backend of giving existing Makh worshippers mark options
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -304,6 +325,7 @@ const set<int> bones_minor_tags =
          TAG_MINOR_BOOL_FLIGHT,
          TAG_MINOR_POSITIONAL_MAGIC,
          TAG_MINOR_GHOST_MAGIC,
+         TAG_MINOR_GHOST_UMBRAS,
 #endif
         };
 

@@ -1,0 +1,22 @@
+name: "daeva"
+glyph: {char: "A", colour: yellow}
+flags: [flies, fighter, speaks]
+resists: {poison: 1}
+xp_mult: 12
+genus: angel
+holiness: [holy]
+will: 140
+attacks:
+ - {type: hit, damage: 25}
+ - {type: hit, damage: 10}
+hd: 14
+hp_10x: 1190
+ac: 10
+ev: 13
+spells: daeva
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_winged
+god: Shining One

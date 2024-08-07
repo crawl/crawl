@@ -1,0 +1,19 @@
+name: "orc high priest"
+glyph: {char: "o", colour: lightgreen}
+flags: [speaks, warm_blood]
+species: orc
+will: 60
+attacks:
+ - {type: hit, damage: 7}
+hd: 11
+hp_10x: 550
+ac: 1
+ev: 12
+spells: orc_high_priest
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Beogh

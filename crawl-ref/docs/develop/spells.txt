@@ -1,76 +1,158 @@
 Spell schools
 =============
 
-With recent changes to the spell schools, it has become important to
+With repeated overhauls to the spell schools, it has become important to
 specifically state what is and what is not included under the purview of a
 specific school.
 
-This document is essentially vague in order to distill the complete "schoolness"
-of the individual schools. It uses specific examples of things that would and
-would not be included in a school to explain them.
+This document is somewhat intentionally vague in order to distill the overall
+identity of the individual schools. It does, however, use specific examples of
+things that would and would not be included in a school to explain them.
 
 Of course, as Crawl is fluid, so too are the schools fluid: these are not
 specific rules inasmuch as they are guidelines. They will be subject to change,
-to argument, to discussion and to disagreements.
-
-In summary: we should paint the bike shed green.
+to argument, to discussion, and to disagreements. In particular, this document
+may not entirely be kept properly up to date, and reading up on the commit log's
+history of given spells and schools is crucial to gather sufficient context.
 
 None
 ====
 
-This is a school reserved for spells with no type.
+This is a school reserved for spells with no type. This is only used for monster
+spells, when none of the below schools would fit.
 
-Conjuration
-===========
+Conjurations
+============
 
 Conjuration is the act of producing something from nothing.
 
 This includes: creation of projectiles (such as Magic Dart), creation of clouds
-(such as Mephitic Cloud), and all instances where something is created from
-nothing.
+(such as Mephitic Cloud), and magical constructs of destruction (such as
+Fulminant Prism).
 
 This does not include: transmutations (creating something from something else),
-summoning (calling in a pre-existing entity), or spells that are specifically
-flavoured so as not to be conjurations. (Whatever those are.)
+nor summoning (calling in a pre-existing entity).
 
 Conjurations are always damage spells; this extends to the creation of
-damaging clouds, but anything more indirect is probably out of the school's
-scope.
+damaging clouds or familiars that extend damaging spells, but anything more
+indirect is probably out of the school's scope. The school serves both as an
+additional skill cost on casting characters, and as a means to help cross
+between elements (or by providing pure conjurations themselves) to deal with
+given elemental resists. Spells can deal damage without involving conjurations,
+mostly through directly affecting and centring around monsters or terrain
+without using projectiles.
 
 Hexes
 =====
 
-Hexes are spells that affect things and monsters (usually negatively). They
-cannot do direct damage nor change the fundamental state of anything without
-another spell school being involved.
+Hexes are spells that negatively affect entities and their equipment. They
+cannot do direct damage nor change the fundamental physical state of anything
+without involving another spell school.
 
-If we had spells that bestow a curse on someone or something, make an item
-zap anyone who touched it, enlarge a person or give him a nasty itch, they
-would be all hexes. Beguiling and illusions also belong here.
+This includes: slowing, blinding, confusing, weakening, inducing sleep or
+frenzy, animating a foe's held weapon, creating fields of silence, and so on.
 
-This includes: slowing monsters, paralysing monsters, confusing monsters, etc.
+Many Hexes have struggled with Willpower scaling somewhat arbitrarily throughout
+the game and being dissatisfying to roll unlucky with. Many newer or higher
+level Hexes sidestep the issue or check other resists and HD instead. Some work
+may be needed here eventually, but the current pool both provides a variety of
+useful utility effects and reasonably enables a stabbing playstyle of offense.
+New spells and spell revisions could involve more beguiling or illusions, as
+well as targetters beyond the whole screen or the beam for a single victim.
 
-Charms
-======
+Some debuffs are over in Alchemy as is thematically appropriate for that school-
+most of Hexes has fewer limitations of matter and conditions needed to transmute
+in comparison, in exchange for checking Willpower, HD, and possibly resists.
 
-Charms are things that positively affect yourself, having amulet ("charm")-like
-effects. They all have a lasting effect, and never affect anyone else except
-for direct contact with the warded person (RoF, RMsl, ...).
+Necromancy
+==========
 
-These are wards or enhancements: give you a resistance, let you move or heal
-faster, let you have more control on magic affecting you, make you stronger.
+Necromancy is primarily the act of talking to the dead for divinatory purposes.
+In the Crawl mythos, it is any type of magic that involves death, undeath,
+corpses, souls, causing unholy pain, or the act of draining life force.
 
-This includes: hasting yourself, spells to repel attacks, etc.
+This includes: all spells relating to the raising of slain foes as undead, be
+they as skeletons, zombies, or spectres. This also involves a variety of
+negative energy effects flavoured around suffering and usually centred around
+a given monster's holiness.
+
+Notably, this also includes vampiric draining, revivification, and directly
+staving off death. All of these are flavoured as necromantic energy regenerating
+one's wounds, and are thus considered unholy by their very nature. 
+
+Summonings
+==========
+
+Summonings involves the magical transportation of creatures and terrain from
+another place to here. This is specifically not the creation of these beings: 
+when they are "killed", or if the summoning finishes while they are still alive,
+these beings return to wherever they came from.
+
+This "place" is undefined as far as Crawl's mythos is concerned. The Abyss is
+the flavour source for Summon Horrible Things, while locations unconnected to
+the Dungeon entirely are referred to in Summon Forest and Malign Gateway.
+
+This specifically includes: all monsters that are not considered to be "here",
+that is, all monsters that have been brought here from another place.
+
+This specifically excludes: monsters that have been conjured from something,
+which only act as an extension of a spell's targeting or damage. In these
+instances the monsters are short-formed or short-lived (usually meaning, they
+die shortly after being created). All summoned monsters are Abjurable by
+monster summoners; all conjured or transmuted monsters are not.
+
+Translocations
+==============
+
+Translocations is the act of moving something through magical means, sometimes
+via portals.
+
+This includes partial or complete movement of the caster's body, usually in
+short distances compared to consumables (Blink, Vhi's Electric Charge); the
+creation of loose or controlled portals (Malign Gateway, Passage of Golubria);
+and moving others entirely, whether short distances (Maxwell's Portable
+Piledriver) or far (Teleport Other).
+
+This also includes spells which cause items to be moved from one location to
+another, such as Apportation or Dimensional Bullseye.
+
+While some forms of direct damage have been tried for this school in the past,
+most of it has become highly reliant on the presence of other schools or sheer
+weapon skill. The ability to control movement is already a very broad and potent
+space in Crawl without also providing a direct means to kill.
+
+Alchemy
+=======
+
+Alchemy mixes together two different components: the act of fundamentally
+changing matter and magic, plus anything involving poison and chemistry of any
+kind.
+
+When paired with other schools, this includes turning rock to liquids, poison to
+fire, blood to ice, and the creation and manipulation of mutagenic radiation.
+
+Poison as an effect itself is intended to be relatively strong early on and to
+fall off later. While other forms of Alchemy and multi-school spells eventually
+provide non-poison damage, they have notable limitations and caveats of player
+risk even at higher spell levels, and the overall school still has level
+limitations compared to all other schools.
+
+Note: Most of the self-warping spells were moved over to the Shapeshifting 
+skill, which uses talismans. To keep the identity of both this school and those
+talismans clean and separate, keep self-transmutation out of these spells.
 
 Fire
 ====
 
-All spells involving fire of any kind.
+All spells involving fire or heat of any kind.
 
 This includes: conjurations of fire, spells involving heat or burning, etc.
-Fire cannot produce non-damage, 'utility' effects without other schools being
-involved, but can be used to create flame clouds or, potentially, temporary
-lava.
+
+Compared to other schools, Fire's damage offers some of the largest and most
+controlled area-of-effect spells, but is unfriendly to allies and can still
+catch the caster in their own blasts. Fire also cannot produce non-damage,
+'utility' effects without other schools being involved, but can be used to
+create fiery clouds or temporary lava.
 
 Ice
 ===
@@ -78,135 +160,45 @@ Ice
 All spells involving ice or cold of any kind.
 
 This includes: conjurations of ice, spells involving freezing or cooling, etc.
-Ice is a versatile element, and can produce direct damage (with a focus on
-damage that partially ignores elemental resistances), freezing clouds, utility
-effects (especially defensive ones), and debilitating effects, especially
-slowing.
 
-Transmutation
-=============
-
-Transmutation is the act of converting one thing into another thing. This may
-also include the fundamental change of the state of a thing, whether or not that
-change is permanent.
-
-This includes: converting your body into another form, polymorphing creatures
-into other creatures, converting rock into liquid, and the creation and
-manipulation of mutagenic radiation.
-
-Caveat: there was a trend towards including the Transmutation spell in most
-schools relating to Earth. Think very carefully about whether a new Earth spell
-belongs in this school before adding it.
-
-Necromancy
-==========
-
-Necromancy is primarily the act of talking to the dead for divinatory purposes.
-In the Crawl mythos, it is any type of magic that involves death, undeath,
-corpses, causing unholy pain, or the act of draining life force, and most
-unholiness in general.
-
-This includes: all spells relating to the raising of corpses as undead, be they
-as zombies, spectral creatures, simulacra or skeletons; bolts of draining, pain,
-vampiric draining, revivification; etc.
-
-This specifically includes: regeneration. The flavour of this spell is that your
-wounds are reanimated by necromantic magic. This act is considered unholy by its
-very nature.
-
-This specifically excludes: Fedhas' ability to hasten the decay of corpses.
-This is a) a divine act, though not specifically a holy one, and b) flavoured as
-though the natural process of decay has been quickened, rather than the corpse
-being unnaturally decayed.
-
-Summoning
-=========
-
-Summoning involves the magical transportation of creatures from another place to
-here. This is specifically not the creation of these beings, as when they are
-"killed" they return to where they came from, and if the summoning finishes
-while they are still alive, they also return to where they came from.
-
-This "place" is undefined as far as Crawl's mythos is concerned. Indeed, it
-varies from spell to spell: some of them specifically summon creatures from the
-Hells (such as demons and devils: this is historically accurate as far as
-Demonology and the summoning of devils is concerned), or from the Abyss (as per
-the flavour of Summon Horrible Things), whereas others are non-specific.
-
-This specifically includes: all monsters that are not considered to be "here",
-that is, all monsters that have been brought here from another place.
-
-This specifically excludes: monsters that have been transmuted from something.
-In these instances the monsters are either short-formed (ie, they revert back to
-their previous form, or to nothing), or short-lived (ie, they die shortly after
-being created).
-
-All summoned monsters are Abjurable; all transmuted monsters are not.
-
-Note that Summoning is not limited to the summoning of monsters; it can be used
-to summon surrounding terrain as well, as with Summon Forest.
-
-Translocation
-=============
-
-This is the act of moving something through magical means, sometimes via
-portals.
-
-This includes teleportation, the indirect movement from one place to another, and
-blinking, which is the same but for shorter distances. It also includes the
-creation of portals of any description, such as Malign Gateway (the creation of a
-portal to an undefined location) or Portal Projectile (the creation of a portal
-to a specific, nearby location).
-
-This also specifically includes spells which cause things to be continuously
-moved from one location to another, such as Apportation or Gell's Gravitas.
-
-Poison
-======
-
-All spells involving poison of any kind.
-
-Poison is specifically intended to be relatively strong early on and to
-fall off later, to create a distinct experience from other spell schools.
-
-This specifically excludes: acid and acid-related spells.
-
-Earth
-=====
-
-All spells involving the earth specifically as an element.
-
-This includes: spells that affect the earth or earth-based substances.
-
-The school is mainly focused on damaging spells, especially single-target
-spells; multi-target damage spells tend to be more limited in number and in
-targeting applicability than those provided by other elemental schools. It
-also uses 'fragment' damage, which is heavily affected by AC.
-
-Other effects provided include manipulation of solid terrain for utility
-(Passwall, Leda's), and petrification (Statue Form, Petrify).
+Compared to other schools, Ice is a versatile yet diffuse element, with high mp
+efficiency in exchange for spells with limited range or aim or movement, or
+damage over multiple turns. It can also offer slowing and sleep effects,
+boosted against the cold-blooded and blocked by those cold-resistant.
 
 Air
 ===
 
 All spells involving the air specifically as an element.
 
-This includes: flying, the ability to repel missiles (presumably by
-manipulating air flow, though not currently flavoured as such), the creation
-of clouds (in combination with the relevant element and the school of
-Conjurations), etc.
+This includes: the creation of clouds (in combination with the relevant element
+and the school of Conjurations), the use of unpredictable and cascading electric
+effects, as well as sudden swift movement.
 
-This also specifically includes electricity and electrical forces. Electrical
-effects are either unpredictable and dangerous to the caster (Static Discharge,
-Chain Lightning, Conjure Ball Lightning), or inaccurate (Zap, Lightning Bolt).
-They either partially or entirely ignore AC, and, in the case of beam spells,
-can be bounced off walls for trick shots. Single-target effects are not and
-probably should not be offered; Air's only access to precise single-target
-damage is Airstrike, which is extremely situational.
+Compared to other schools, clouds are prolonged in their damage, while electric
+effects involve some danger and strange uncontrolled targeting. In exchange,
+Electricity resistance is rare compared to other resists, and all electric
+damage ignores half of AC. Single-target effects should be very rare: Air's only
+access to precise single-target damage without leaving Air and Conjurations
+is Airstrike, which has heavy limitations attached to it.
+
+Earth
+=====
+
+All spells involving the earth specifically as an element.
+
+This includes: spells that shape the earth, produce or manipulate earth-based
+substances, and petrification.
+
+Compared to other schools, the school is mainly focused on damaging spells with
+single projectiles; multi-target damage spells tend to be more limited in number
+and in targeting conditions than those provided by other elemental schools.
+It also uses 'fragment' damage, which is heavily affected by AC. In exchange,
+it provides the most straightforward irresistible spells in the game.
 
 Holy
 ====
 
 These spells specifically involve holy acts, usually defined within the scope of
-the "good" Gods (Zin, Elyvilon, The Shining One). These spells are currently
+the "good" Gods (Zin, Elyvilon, The Shining One). These spells will always be
 only available as monster spells.

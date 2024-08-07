@@ -21,6 +21,7 @@ protected:
     bool process_line(char *read_line, const char *list_file, int line);
     void add_image(tile &img, const char *enumname);
     void recolour(tile &img);
+    void maybe_mirror(tile &img);
 
     void add_abstracts(
         FILE *fp,
@@ -39,6 +40,7 @@ protected:
     bool m_corpsify;
     bool m_composing;
     bool m_shrink;
+    bool m_mirror_horizontal;
     vector<tile*> m_back;
     string m_parts_ctg;
     string m_sdir;

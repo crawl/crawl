@@ -8,6 +8,8 @@
 
 #include "fineff.h"
 
+#include "act-iter.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "bloodspatter.h"
 #include "coordit.h"
@@ -19,6 +21,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
 #include "libutil.h"
 #include "losglobal.h"
@@ -30,9 +33,11 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "movement.h"
 #include "ouch.h"
 #include "religion.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -271,6 +276,7 @@ void trample_follow_fineff::fire()
         const coord_def old_pos = attack->pos();
         attack->move_to_pos(posn);
         attack->apply_location_effects(old_pos);
+        attack->did_deliberate_movement();
     }
 }
 
@@ -402,22 +408,28 @@ void blood_fineff::fire()
 
 void deferred_damage_fineff::fire()
 {
-    if (actor *df = defender())
-    {
-        if (!fatal)
-        {
-            // Cap non-fatal damage by the defender's hit points
-            // FIXME: Consider adding a 'fatal' parameter to ::hurt
-            //        to better interact with damage reduction/boosts
-            //        which may be applied later.
-            int df_hp = df->is_player() ? you.hp
-                                        : df->as_monster()->hit_points;
-            damage = min(damage, df_hp - 1);
-        }
+    actor *df = defender();
+    if (!df)
+        return;
 
-        df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
-                 true, attacker_effects);
+    // Once we actually apply damage to tentacle monsters,
+    // remove their protection from further damage.
+    if (df->props.exists(TENTACLE_LORD_HITS))
+        df->props.erase(TENTACLE_LORD_HITS);
+
+    if (!fatal)
+    {
+        // Cap non-fatal damage by the defender's hit points
+        // FIXME: Consider adding a 'fatal' parameter to ::hurt
+        //        to better interact with damage reduction/boosts
+        //        which may be applied later.
+        int df_hp = df->is_player() ? you.hp
+                                    : df->as_monster()->hit_points;
+        damage = min(damage, df_hp - 1);
     }
+
+    df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
+             true, attacker_effects);
 }
 
 static void _do_merge_masses(monster* initial_mass, monster* merge_to)
@@ -563,7 +575,7 @@ void explosion_fineff::fire()
     if (you.see_cell(beam.target))
     {
         if (typ == EXPLOSION_FINEFF_CONCUSSION)
-            mprf("%s", boom_message.c_str());
+            mpr(boom_message);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
     }
@@ -577,12 +589,12 @@ void explosion_fineff::fire()
 
     if (typ == EXPLOSION_FINEFF_CONCUSSION)
     {
-        for (adjacent_iterator ai(beam.target); ai; ++ai)
+        for (fair_adjacent_iterator ai(beam.target); ai; ++ai)
         {
             actor *act = actor_at(*ai);
             if (!act
                 || act->is_stationary()
-                || act->is_monster() && god_protects(act->as_monster()))
+                || act->is_monster() && god_protects(*act->as_monster()))
             {
                 continue;
             }
@@ -701,6 +713,31 @@ void infestation_death_fineff::fire()
     }
 }
 
+// XXX: This entire method feels like a hack. But normal summon cap functions
+// won't work because simulacra don't use ENCH_ABJ, and even if it DID work, it
+// would probably make the simulacra disappear in a puff of smoke instead of
+// collapsing in the normal fashion.
+static void _expire_player_simulacra()
+{
+    vector <monster*> simul;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        // We're looking only for simulacra that are friendly to the player and
+        // created by the Sculpt Simulacrum spell.
+        if (mi->type == MONS_SIMULACRUM && mi->friendly()
+            && mi->has_ench(ENCH_SUMMON)
+            && mi->get_ench(ENCH_SUMMON).degree == SPELL_SIMULACRUM)
+        {
+            simul.push_back(*mi);
+        }
+    }
+
+    // If we have too many, expire the oldest.
+    // (Maybe it should use some other logic, like weakest or injured?)
+    if (simul.size() > 4)
+        simul[0]->del_ench(ENCH_FAKE_ABJURATION);
+}
+
 void make_derived_undead_fineff::fire()
 {
     monster *undead = create_monster(mg);
@@ -709,6 +746,10 @@ void make_derived_undead_fineff::fire()
 
     if (!message.empty() && you.can_see(*undead))
         mpr(message);
+
+    // Handle cap for player sculpt simulacrum
+    if (mg.summon_type == SPELL_SIMULACRUM)
+        _expire_player_simulacra();
 
     // If the original monster has been levelled up, its HD might be
     // different from its class HD, in which case its HP should be
@@ -723,18 +764,17 @@ void make_derived_undead_fineff::fire()
     if (!mg.mname.empty())
         name_zombie(*undead, mg.base_type, mg.mname);
 
-    if (mg.god != GOD_YREDELEMNUL)
+    if (mg.god != GOD_YREDELEMNUL && undead->type != MONS_ZOMBIE)
     {
-        if (undead->type == MONS_ZOMBIE)
-            undead->props[ANIMATE_DEAD_KEY] = true;
-        else
-        {
-            int dur = undead->type == MONS_SKELETON ? 3 : 5;
-            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
-        }
+        int dur = (undead->type == MONS_SKELETON || spell == SPELL_SIMULACRUM) ? 3 : 5;
+        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
     }
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);
+
+    // Tag so that we can see which undead came from which spell
+    if (spell != SPELL_NO_SPELL)
+        undead->add_ench(mon_enchant(ENCH_SUMMON, spell));
 }
 
 const actor *mummy_death_curse_fineff::fixup_attacker(const actor *a)
@@ -858,11 +898,7 @@ void spectral_weapon_fineff::fire()
         if (one_chance_in(seen_valid))
             chosen_pos = *ai;
     }
-    if (!seen_valid)
-        return;
-
-    const item_def *weapon = atkr->weapon();
-    if (!weapon)
+    if (!seen_valid || !weapon || !weapon->defined())
         return;
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,
@@ -911,6 +947,37 @@ void jinxbite_fineff::fire()
         attempt_jinxbite_hit(*defend);
 }
 
+bool beogh_resurrection_fineff::mergeable(const final_effect &fe) const
+{
+    const beogh_resurrection_fineff *o =
+        dynamic_cast<const beogh_resurrection_fineff *>(&fe);
+    return o && ostracism_only == o->ostracism_only;
+}
+
+void beogh_resurrection_fineff::fire()
+{
+    beogh_resurrect_followers(ostracism_only);
+}
+
+void dismiss_divine_allies_fineff::fire()
+{
+    if (god == GOD_BEOGH)
+        beogh_do_ostracism();
+    else
+        dismiss_god_summons(god);
+}
+
+void death_spawn_fineff::fire()
+{
+    if (monster *pillar = create_monster(mgen_data(mon_type,
+                                                   BEH_HOSTILE, posn,
+                                                   MHITNOT, MG_FORCE_PLACE),
+                                         false))
+    {
+        pillar->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, &you, duration));
+    }
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
@@ -923,4 +990,7 @@ void fire_final_effects()
         env.final_effects.pop_back();
         eff->fire();
     }
+
+    // Clear all cached monster copies
+    env.final_effect_monster_cache.clear();
 }

@@ -1,0 +1,20 @@
+name: "profane servitor"
+glyph: {char: "A", colour: red}
+flags: [flies, fighter, see_invis, speaks]
+resists: {elec: 1, cold: 1}
+genus: angel
+holiness: [undead]
+will: 140
+attacks:
+ - {type: hit, flavour: vampiric, damage: 25}
+ - {type: hit, flavour: drain, damage: 10}
+hd: 18
+hp_10x: 1530
+ac: 10
+ev: 20
+intelligence: human
+speed: 15
+uses: starting_equipment
+size: medium
+shape: humanoid_winged
+god: Yredelemnul

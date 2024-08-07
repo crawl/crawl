@@ -524,6 +524,8 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any wands.";
     case OBJ_JEWELLERY:
         return "You aren't carrying any pieces of jewellery.";
+    case OSEL_AMULET:
+        return "You aren't carrying any amulets.";
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
@@ -532,12 +534,6 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
-#if TAG_MAJOR_VERSION == 34
-    case OSEL_UNCURSED_WORN_ARMOUR:
-        return "You aren't wearing any piece of uncursed armour.";
-    case OSEL_UNCURSED_WORN_JEWELLERY:
-        return "You aren't wearing any piece of uncursed jewellery.";
-#endif
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
     case OSEL_WORN_JEWELLERY:
@@ -550,8 +546,6 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
         return "You aren't carrying any weapons that can be enchanted.";
-    case OSEL_BEOGH_GIFT:
-        return "You aren't carrying anything you can give to a follower.";
     case OSEL_CURSABLE:
         return "You aren't wearing any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
@@ -570,7 +564,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
 
-    load_items(tobeshown, procfn);
+    load_items(tobeshown, procfn, 'a', true, true);
 
     if (!item_count())
         set_title(no_selectables_message(item_selector));
@@ -596,6 +590,9 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         }
         else if (item.cursed())
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
+
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
+            tileset.emplace_back(TILE_MODIFIER_CHAOTIC);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
@@ -658,8 +655,8 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return false;
 
-    // Runes + orb of zot have a special uncollected tile
-    if (quantity <= 0 && (item->base_type != OBJ_RUNES && item->base_type != OBJ_ORBS))
+    // Runes + gems + orb of zot have a special uncollected tile
+    if (quantity <= 0 && !item_is_collectible(*item))
         return false;
 
     return get_tiles_for_item(*item, tileset, show_background);
@@ -842,6 +839,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_STAVES,
+    OBJ_GIZMOS,
 #if TAG_MAJOR_VERSION == 34
     OBJ_RODS,
 #endif
@@ -858,23 +856,26 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_CORPSES,
     OBJ_BOOKS,
     OBJ_RUNES,
+    OBJ_GEMS,
     OBJ_ORBS,
     OBJ_GOLD);
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
                                 function<MenuEntry* (MenuEntry*)> procfn,
-                                menu_letter ckey, bool sort)
+                                menu_letter ckey, bool sort, bool subkeys)
 {
     vector<const item_def*> xlatitems;
     for (const item_def &item : mitems)
         xlatitems.push_back(&item);
-    return load_items(xlatitems, procfn, ckey, sort);
+    return load_items(xlatitems, procfn, ckey, sort, subkeys);
 }
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 function<MenuEntry* (MenuEntry*)> procfn,
-                                menu_letter ckey, bool sort)
+                                menu_letter ckey, bool sort, bool subkeys)
 {
+    subkeys |= is_set(MF_MULTISELECT); // XXX Can the caller do this?
+
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (const item_def * const mitem : mitems)
         inv_class[mitem->base_type]++;
@@ -883,6 +884,18 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     const menu_sort_condition *cond = nullptr;
     if (sort)
         cond = find_menu_sort_condition();
+
+    string select_all;
+    if (subkeys)
+    {
+        // Mention the class selection shortcuts.
+        if (is_set(MF_SECONDARY_SCROLL))
+            select_all = "go to first";
+        else if (is_set(MF_MULTISELECT))
+            select_all = "select all";
+        else
+            select_all = "select first";
+    }
 
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
@@ -893,8 +906,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
 
         string subtitle = item_class_name(i);
 
-        // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT))
+        if (subkeys)
         {
             vector<char> glyphs;
             get_class_hotkeys(i, glyphs);
@@ -904,7 +916,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 const string str = "Magical Staves ";
                 subtitle += string(strwidth(str) - strwidth(subtitle),
                                    ' ');
-                subtitle += "(select all with <w>";
+                subtitle += "("+select_all+" with <w>";
                 for (char gly : glyphs)
                     subtitle += gly;
                 subtitle += "</w><blue>)";
@@ -921,6 +933,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 continue;
 
             InvEntry * const ie = new InvEntry(*mitem);
+            if (!subkeys)
+                ie->hotkeys.resize(1);
             if (mitem->sub_type == get_max_subtype(mitem->base_type))
                 forced_first = ie;
             else
@@ -1058,7 +1072,9 @@ const char *item_class_name(int type, bool terse)
         case OBJ_MISCELLANY: return "Miscellaneous";
         case OBJ_CORPSES:    return "Carrion";
         case OBJ_RUNES:      return "Runes of Zot";
+        case OBJ_GEMS:       return "Ancient Gems";
         case OBJ_TALISMANS:  return "Talismans";
+        case OBJ_GIZMOS:     return "Gizmo";
         }
     }
     return "";
@@ -1072,7 +1088,7 @@ const char* item_slot_name(equipment_type type)
     case EQ_HELMET:      return "helmet";
     case EQ_GLOVES:      return "gloves";
     case EQ_BOOTS:       return "boots";
-    case EQ_SHIELD:      return "shield";
+    case EQ_OFFHAND:     return "shield";
     case EQ_BODY_ARMOUR: return "body";
     default:             return "";
     }
@@ -1156,33 +1172,15 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_CURSED_WORN:
         return i.cursed() && item_is_equipped(i);
 
-#if TAG_MAJOR_VERSION == 34
-    case OSEL_UNCURSED_WORN_ARMOUR:
-        return !i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR;
-
-    case OSEL_UNCURSED_WORN_JEWELLERY:
-        return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY;
-#endif
-
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-        return itype == OBJ_WEAPONS
-               && !is_artefact(i)
-               && (!item_ident(i, ISFLAG_KNOW_PLUSES)
-                   || i.plus < MAX_WPN_ENCHANT);
+        return is_enchantable_weapon(i, true);
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE)
                     || you_worship(GOD_KIKUBAAQUDGHA), true);
-
-    case OSEL_BEOGH_GIFT:
-        return (itype == OBJ_WEAPONS
-                || is_offhand(i)
-                || itype == OBJ_ARMOUR
-                   && get_armour_slot(i) == EQ_BODY_ARMOUR)
-                && !item_is_equipped(i);
 
     case OSEL_CURSABLE:
         return item_is_equipped(i) && item_is_cursable(i);
@@ -1210,6 +1208,9 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_WORN_JEWELLERY:
         return item_is_equipped(i) && item_is_selected(i, OBJ_JEWELLERY);
+
+    case OSEL_AMULET:
+        return itype == OBJ_JEWELLERY && jewellery_is_amulet(i);
 
     case OSEL_WORN_EQUIPABLE:
         if (!item_is_equipped(i))
@@ -1480,6 +1481,9 @@ bool check_old_item_warning(const item_def& item,
     bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
+        if (you.has_mutation(MUT_WIELD_OFFHAND))
+            return true; // defer until unwielding
+
         if (!you.slot_item(EQ_WEAPON, check_melded))
             return true;
 

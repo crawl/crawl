@@ -107,11 +107,12 @@ local function test_random_mutations_slime(species, tries, iterations, chance_te
 end
 
 
-species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
-            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
-            "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
-            "mummy", "gnoll"}
+species = {"mountain dwarf", "minotaur", "merfolk", "gargoyle", "draconian", "troll", "deep elf",
+           "armataur", "gnoll", "human", "kobold", "djinni", "spriggan", "ghoul", "tengu", "oni",
+           "barachi", "coglin", "vine stalker", "vampire", "demigod", "formicid", "naga",
+           "octopode", "felid", "mummy"}
 
+local old_species = you.species()
 local you_x, you_y = you.pos() -- probably out of bounds
 -- move to a guaranteed real position. This is because losing some mutations
 -- can trigger things like landing the player, which will crash if out of
@@ -131,6 +132,6 @@ end
 
 -- the testbed doesn't really clean up much of anything.
 you.delete_all_mutations("Species mutation test")
-assert(you.change_species("human")) -- should clean up any innate mutatinos
+assert(you.change_species(old_species)) -- restore original player species
 assert(you.set_xl(1, false))
 you.moveto(you_x, you_y) -- restore original player pos

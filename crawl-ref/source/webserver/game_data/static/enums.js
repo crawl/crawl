@@ -58,7 +58,7 @@ define(function () {
     exports.equip.HELMET = val++;
     exports.equip.GLOVES = val++;
     exports.equip.BOOTS = val++;
-    exports.equip.SHIELD = val++;
+    exports.equip.OFFHAND = val++;
     exports.equip.BODY_ARMOUR = val++;
     exports.equip.LEFT_RING = val++;
     exports.equip.RIGHT_RING = val++;
@@ -199,6 +199,8 @@ define(function () {
         NASTY      : [0, highbit],
         UNUSUAL    : [0, 0x60000000 | highbit],
     });
+
+    fg_flags.flags.GHOST = [0, 0x00100000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

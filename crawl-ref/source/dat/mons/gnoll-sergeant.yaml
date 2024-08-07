@@ -1,0 +1,17 @@
+name: "gnoll sergeant"
+glyph: {char: "g", colour: cyan}
+flags: [fighter, speaks, warm_blood]
+species: gnoll
+will: 20
+attacks:
+ - {type: hit, damage: 11}
+hd: 4
+hp_10x: 260
+ac: 2
+ev: 9
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -1,0 +1,19 @@
+name: "Arachne"
+glyph: {char: "H", colour: lightcyan}
+flags: [see_invis, speaks, web_immune, warm_blood, unique, female]
+genus: spider
+will: 80
+attacks:
+ - {type: hit, damage: 30}
+hd: 23
+hp_10x: 2040
+ac: 9
+ev: 12
+spells: arachne
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 15
+uses: weapons_armour
+size: large
+shape: arachnid

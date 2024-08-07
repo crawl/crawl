@@ -1,0 +1,15 @@
+name: "wandering mushroom"
+glyph: {char: "f", colour: brown}
+resists: {poison: 1}
+genus: fungus
+holiness: [plant]
+will: 40
+attacks:
+ - {type: spore, flavour: confuse, damage: 20}
+hd: 8
+hp_10x: 440
+ac: 5
+ev: 0
+intelligence: brainless
+size: tiny
+shape: fungus

@@ -1,0 +1,18 @@
+name: "torpor snail"
+glyph: {char: "w", colour: green}
+flags: [web_immune, no_skeleton, has_aura]
+xp_mult: 20
+genus: elephant_slug
+will: 80
+attacks:
+ - {type: bite, damage: 25}
+hd: 10
+hp_10x: 600
+ac: 8
+ev: 1
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+speed: 7
+size: large
+shape: snail

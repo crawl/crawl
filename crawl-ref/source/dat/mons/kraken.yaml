@@ -1,0 +1,18 @@
+name: "kraken"
+glyph: {char: "X", colour: lightmagenta}
+flags: [cold_blood, no_skeleton]
+xp_mult: 6
+will: 60
+attacks:
+ - {type: bite, damage: 50}
+hd: 16
+hp_10x: 2080
+ac: 20
+ev: 0
+spells: kraken
+has_corpse: true
+intelligence: animal
+habitat: water
+speed: 14
+size: giant
+shape: misc

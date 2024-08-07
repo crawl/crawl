@@ -102,10 +102,6 @@ camouflage mutation
 
 你的皮肤会根据周围环境而变色。这个变异每升一级会提升潜行。
 %%%%
-noise suppression mutation
-
-你消极地抑制着周围环境中的所有噪音，这样怪物就更难察觉到你的行动。
-%%%%
 # ------ 生长 -----
 horns mutation
 
@@ -211,7 +207,7 @@ torment resistance mutation
 poison resistance mutation
 
 你对毒物、毒素和其他污染物有着抗性。
-它不会赋予完全的免疫力，但你中毒的机率会降低到原先的三分之一左右。
+它不会赋予完全的免疫力，但你中毒的几率会降低到原先的三分之一左右。
 %%%%
 fire resistance mutation
 
@@ -333,7 +329,7 @@ teleportitis mutation
 %%%%
 deformed body mutation
 
-你的身体被一种非人的方式塑造，这在一定程度上削弱了护甲提供的防护。
+你的身体被一种非人的方式塑造，这在一定程度上削弱了铠甲提供的防护。
 这对护甲附魔提供的防护没有影响，也不会影响训练的护甲技能的防御效果。
 %%%%
 screaming mutation
@@ -355,6 +351,10 @@ no potion heal mutation
 
 你的系统会抗拒饮用的灵丹妙药，削弱了各种治疗药水的效果。
 这个变异达到第二级，会完全阻断药水的疗效。（哥萨戈神的援助不受影响。）
+%%%%
+persistent drain mutation
+
+你衰竭后，恢复正常所用的时间是原先的两倍。（所需的总经验值增加了一倍。）
 %%%%
 # ------ 魔人变异 -----
 demonic guardian mutation
@@ -380,7 +380,7 @@ passive freeze mutation
 %%%%
 spiny mutation
 
-近战中，你的敌人有50%的机率被你的尖刺所刺穿，并受到伤害。
+近战中，你的敌人有50%的几率被你的尖刺所刺穿，并受到伤害。
 这个变异每升一级，就会增加攻击力。
 %%%%
 augmentation mutation
@@ -406,10 +406,6 @@ demonic magic mutation
 效果会更为强大，但具有更强意志力的怪物能够抵御它。这个变异每升一级，
 就能影响更远的怪物。这个变异达到第三级，你在挥动魔杖时也能麻痹怪物。
 %%%%
-noise dampening mutation
-
-你的周围环境更安静，在视线中的任何地方减少了噪音传播的距离。
-%%%%
 icemail mutation
 
 你身上覆盖着一层起保护作用的冰。火焰攻击能暂时融化冰层，
@@ -426,8 +422,9 @@ powered by death mutation
 %%%%
 sturdy frame mutation
 
-你的行动将少受到盔甲的阻碍，并减少了对施法的成功率和命中率的惩罚。
-这个变异每升一级，就会减少2点妨碍等级。
+你的行动将少受到护甲的阻碍，
+并减少了护甲对施法的成功率、命中率和远程武器的攻击速度的负面影响。
+这个变异每升一级，就会减少2点护甲的妨碍等级。
 %%%%
 sanguine armour mutation
 
@@ -442,7 +439,7 @@ ignite blood mutation
 
 每当你看到（你的或他人的）飞溅的血液，它可能会燃烧，爆发成火焰云。
 这个变异每升一级，这种可能性就越大。这个变异还能让你免疫火焰云。
-# XXX: 还提到这会让人更容易流血吗？
+# XXX：还提到这会让人更容易流血吗？
 %%%%
 corrupting presence mutation
 
@@ -459,7 +456,7 @@ aura of silence mutation
 你被沉默力场所围绕。与你相邻的怪物无法发出任何声音。
 它可以阻止大多数形式的施法和祈祷，但恶魔的魔法是无声的，不受此影响。
 %%%%
-bedeviling mutation
+bedevilling mutation
 
 你施放的妖术威力增强。
 %%%%
@@ -478,16 +475,16 @@ word of chaos mutation
 %%%%
 freezing cloud immunity mutation
 
-你将免疫冰汽云。
+你免疫冰汽云。
 %%%%
 flame cloud immunity mutation
 
-你将免疫火焰云。
+你免疫火焰云。
 %%%%
 # ------ 其他特定物种变异 -----
 spit poison mutation
 
-你可以通过<input>$cmd[CMD_USE_ABILITY]</input>吐毒。
+你可以通过<input>$cmd[CMD_USE_ABILITY]</input>喷吐毒液。
 这个变异达到第二级，毒素会从一小团毒液，变成一大片毒云。
 %%%%
 in touch with death mutation
@@ -504,7 +501,7 @@ evasive flight mutation
 %%%%
 big wings mutation
 
-你长出巨大、强壮的翅膀，能够承载你在空中飞行。
+你长出巨大、强壮的翅膀，它能够承载你在空中飞行。
 %%%%
 float mutation
 
@@ -542,13 +539,13 @@ nightstalker mutation
 
 你适应了阴影，减小了你能看到和被看到的距离。
 %%%%
-daystalker mutation
++LOS mutation
 
 你生来就向着光，增加了你能看到和被看到的距离。
 %%%%
 petrification resistance mutation
 
-你将免疫石化。
+你免疫石化。
 %%%%
 cold-blooded mutation
 
@@ -604,10 +601,8 @@ tentacles mutation
 每只触手都可以戴上戒指，但你需要四只触手用来移动，根据武器的大小，
 两只或四只触手可以拿一把武器，两只触手可以拿一面盾牌。
 
-在任何近战攻击中，束缚攻击有66%的机率自行触发。触发后，
-它将尝试开始或重新束缚一个目标敌人；
-可束缚的最大敌人数量取决于自由触手的数量。
-当被触发时，束缚是否成功主要取决于敏捷、格斗技能和任何杀戮加成。
+当你近战时，你的触手会尝试束缚敌人。（你无法束缚比你大的怪物。）
+顺便一提，每当你近战攻击时，你有三分之二的机会发动破坏性的“挤压”攻击。
 %%%%
 mertail mutation
 
@@ -630,9 +625,9 @@ no regeneration mutation
 %%%%
 strong nose mutation
 
-你有着一个敏锐的鼻子，它熟悉地牢里的气息，你可以找出宝藏藏在哪里。
-当你探索地牢时，附近的你无法直接看到的物品，
-如果它没有被探索过，其位置会有标记标出。
+你有着一个敏锐的鼻子，它熟悉地牢里的气息，从而可以找出宝藏藏在哪里。
+当你探索地牢时，附近的那些无法直接看到的物品，
+如果它没有被探索过，其位置会标出标记。
 %%%%
 # ------ 吉瓦的变异 ------
 gelatinous body mutation
@@ -671,16 +666,11 @@ engulf mutation
 otherworldly mutation
 
 你与这个世界格格不入，很容易被黑暗势力察觉。
-在佐特找到你并终结你之前，你在每层地牢的时间只有正常时间的十分之一。
-%%%%
-glowing mutation
-
-你在黑暗中发光。敌人将更频繁地袭击你，你的潜行能力受到严重削弱，
-即使你是隐形的，怪物也很容易被看到你的轮廓。
+在佐特找到你并永久降低你的生命值之前，你在每层地牢的时间只有正常时间的十分之一。
 %%%%
 explore regen mutation
 
-当你探索地牢时，你的伤口会愈合，你的魔法会恢复。
+探索未知会让你精神振奋。当你探索地牢时，你的伤口会愈合，你的魔力会恢复。
 %%%%
 faith mutation
 
@@ -691,18 +681,21 @@ devour on kill mutation
 
 当你杀死生物时，你有机会吞噬它们的生命力并恢复健康。
 %%%%
-roll mutation
+rollpage mutation
 
-当你移向敌人时会本能地翻滚，会冲到前面一个额外的空格。
+当你移向敌人时会本能地翻滚，会向前再冲出一格。
+这个变异能在你滚动时提升魔力恢复速度；
+这个变异达到第二级，魔力和生命值的恢复速度会同时提升。
 %%%%
-long tongue mutation
+double potion healing mutation
 
-你的舌头出奇地长。你会舔干药水瓶，使它们对你的影响加倍。
+每当药水恢复你的生命值或魔力时，其恢复量是原先的两倍。
 %%%%
-awkward tongue mutation
+drunken brawling mutation
 
-你的舌头很软，读魔法卷轴上的神秘音节时会有麻烦。
-因此，阅读卷轴的时间是原先的一半。
+当你喝下恢复健康或魔力的药水时，你会立即攻击附近的所有敌人。
+
+（这包括治疗、愈伤、魔力和琼浆药水。）
 %%%%
 # ------ 入要求的舍弃 ------
 inability to drink after injury mutation
@@ -722,7 +715,7 @@ missing a hand mutation
 %%%%
 no stealth mutation
 
-你将无法潜行。
+你无法潜行。
 当敌人能看到你时，你总是能引起他们的警觉，并且他们能够轻易追踪你。
 %%%%
 no forms mutation
@@ -732,7 +725,7 @@ no forms mutation
 %%%%
 inability to use devices mutation
 
-你将无法使用魔法设备。
+你无法使用魔法设备。
 其中包括魔杖和大多数需要通过<input>$cmd[CMD_EVOKE]</input>激活的物品，
 但不包括获得的武器、符咒和金字塔雕像。这也使得法杖在近战时的威力大大降低。
 %%%%
@@ -749,7 +742,7 @@ cowardly mutation
 %%%%
 disrupted magic mutation
 
-你施法的失误机率会更高。这个舍弃每升一级，施法就越容易失误。
+你施法的失误几率会更高。这个舍弃每升一级，施法就越容易失误。
 %%%%
 unskilled mutation
 
@@ -822,9 +815,9 @@ no necromancy magic mutation
 
 你的死灵术技能等级为0，你也无法训练它。
 %%%%
-no poison magic mutation
+no alchemy magic mutation
 
-你的毒系魔法技能等级为0，你也无法训练它。
+你的炼金术技能等级为0，你也无法训练它。
 %%%%
 no summoning magic mutation
 
@@ -833,8 +826,4 @@ no summoning magic mutation
 no translocations magic mutation
 
 你的移位技能等级为0，你也无法训练它。
-%%%%
-no transmutations magic mutation
-
-你的变化技能等级为0，你也无法训练它。
 %%%%

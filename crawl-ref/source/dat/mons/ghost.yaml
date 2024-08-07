@@ -1,0 +1,15 @@
+name: "ghost"
+glyph: {char: "W", colour: white}
+flags: [flies, insubstantial, no_poly_to]
+xp_mult: 0
+holiness: [undead]
+will: 0
+attacks:
+hd: 1
+hp_10x: 10
+ac: 0
+ev: 0
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

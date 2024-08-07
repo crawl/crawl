@@ -8,6 +8,7 @@
 #include "orb.h"
 
 #include "areas.h"
+#include "art-enum.h"
 #include "god-passive.h" // passive_t::slow_orb_run
 #include "shout.h"
 #include "view.h"
@@ -63,7 +64,7 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
         if (msg)
             mprf(MSGCH_ORB, "%s", msg);
         else
-            mprf(MSGCH_ORB, "The Orb lets out a hideous shriek!");
+            mprf(MSGCH_ORB, "The Orb lets out an agonising shriek!");
     }
     else
     {
@@ -76,12 +77,13 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
 
 /**
  * Is the Orb interfering with translocations?
- * @return True if the player is carrying the Orb or if the player is in Zot.
- *         Returns false otherwise.
+ * @return True if the player is carrying the Orb, the fake Orb, or if the
+ *         player is in Zot. Returns false otherwise.
  */
 bool orb_limits_translocation()
 {
-    return player_in_branch(BRANCH_ZOT) || player_has_orb();
+    return player_in_branch(BRANCH_ZOT) || player_has_orb()
+           || player_equip_unrand(UNRAND_CHARLATANS_ORB);
 }
 
 void start_orb_run(game_chapter chapter, const char* message)

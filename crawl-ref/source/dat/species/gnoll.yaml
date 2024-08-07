@@ -1,13 +1,13 @@
 enum: SP_GNOLL
 monster: MONS_GNOLL
-name: "Gnoll"
+name: Gnoll
 difficulty: Simple
 difficulty_priority: 10
 aptitudes:
   xp: 0
   hp: 0
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 8
   short_blades: 8
   long_blades: 8
@@ -28,12 +28,11 @@ aptitudes:
   summoning: 6
   necromancy: 6
   translocations: 6
-  transmutations: 6
   fire_magic: 6
   ice_magic: 6
   air_magic: 6
   earth_magic: 6
-  poison_magic: 6
+  alchemy: 6
   invocations: 9
   evocations: 8
   shapeshifting: 7
@@ -47,9 +46,12 @@ mutations:
     MUT_FANGS: 1
     MUT_DISTRIBUTED_TRAINING: 1
 recommended_jobs:
-  - JOB_CINDER_ACOLYTE
-  - JOB_REAVER
-  - JOB_WARPER
-  - JOB_HEXSLINGER
-  - JOB_SHAPESHIFTER
-  - JOB_WANDERER
+  - cinder acolyte
+  - reaver
+  - warper
+  - hexslinger
+  - shapeshifter
+  - wanderer
+
+child_name: Pup
+orc_name: Hyenorc

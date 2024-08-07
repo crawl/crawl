@@ -37,23 +37,29 @@ struct random_element_colour_calc : public base_colour_calc
     };
 
     virtual int get(const coord_def& loc = coord_def(),
-                    bool non_random = false) override;
+                    bool non_random = false) const override;
+    int get_nth(int n) const override;
 
 protected:
     random_colour_map rand_vals;
 };
 
-int base_colour_calc::rand(bool non_random)
+int base_colour_calc::rand(bool non_random) const
 {
     return non_random ? 0 : ui_random(rand_max);
 }
 
-int element_colour_calc::get(const coord_def& loc, bool non_random)
+int element_colour_calc::get(const coord_def& loc, bool non_random) const
 {
     return (*calc)(rand(non_random), loc);
 }
 
-int random_element_colour_calc::get(const coord_def& /*loc*/, bool non_random)
+int element_colour_calc::get_nth(int /*n*/) const
+{
+    return get(you.pos()); // arbitrary - hopefully unused
+}
+
+int random_element_colour_calc::get(const coord_def& /*loc*/, bool non_random) const
 {
     const auto max_val = rand(non_random);
     int accum = 0;
@@ -61,6 +67,11 @@ int random_element_colour_calc::get(const coord_def& /*loc*/, bool non_random)
         if ((accum += entry.first) > max_val)
             return entry.second;
     return BLACK;
+}
+
+int random_element_colour_calc::get_nth(int n) const
+{
+    return rand_vals[n % rand_vals.size()].second;
 }
 
 colour_t random_colour(bool ui_rand)
@@ -572,6 +583,11 @@ void init_element_colours()
                               {40,  DARKGREY},
                             }));
     add_element_colour(new random_element_colour_calc(
+                            ETC_STEEL, "steel",
+                            { {1,  CYAN},
+                              {1,  LIGHTGREY},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_BONE, "bone",
                             { {90,  WHITE},
                               {30,  LIGHTGREY},
@@ -618,6 +634,13 @@ void init_element_colours()
                               {60,  RED},
                             }));
     add_element_colour(new random_element_colour_calc(
+                            ETC_FOUL_FLAME, "foul_flame",
+                            { {60,  DARKGREY},
+                              {60,  MAGENTA},
+                              {20,  WHITE},
+                              {20,  LIGHTMAGENTA},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_MOUNTAIN, "mountain",
                             { {40,  LIGHTGREEN},
                               {40,  LIGHTMAGENTA},
@@ -639,6 +662,16 @@ void init_element_colours()
                             { {40,  RED},
                               {40,  YELLOW},
                               {40,  WHITE},
+                            }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_GLITTER, "glitter",
+                            { {20,  LIGHTRED},
+                              {20,  YELLOW},
+                              {20,  LIGHTBLUE},
+                              {20,  LIGHTCYAN},
+                              {20,  LIGHTMAGENTA},
+                              {20,  LIGHTGREEN},
+                              {100, LIGHTGREY},
                             }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
@@ -805,4 +838,25 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
         raw_colour = colflags | element_colour(raw_colour, false, loc);
 
     return raw_colour;
+}
+
+string colourize_str(string base, colour_t col)
+{
+    if (col < NUM_TERM_COLOURS)
+    {
+        if (col == BLACK)
+            col = DARKGRAY;
+        const string col_name = colour_to_str(col);
+        return make_stringf("<%s>%s</%s>",
+                            col_name.c_str(), base.c_str(), col_name.c_str());
+    }
+    ASSERT(element_colours[col]);
+    string out;
+    for (int i = 0; i < (int)base.length(); i++)
+    {
+        const colour_t term_col = element_colours[col]->get_nth(i);
+        const string col_name = colour_to_str(term_col);
+        out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
+    }
+    return out;
 }

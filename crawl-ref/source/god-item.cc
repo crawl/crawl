@@ -112,7 +112,9 @@ bool is_evil_brand(int brand)
     case SPWPN_PAIN:
     case SPWPN_VAMPIRISM:
     case SPWPN_REAPING:
+    case SPWPN_CHAOS:
     case SPWPN_DISTORTION:
+    case SPWPN_FOUL_FLAME:
         return true;
     default:
         return false;
@@ -148,7 +150,7 @@ bool is_evil_item(const item_def& item, bool calc_unid)
 
     if (item.base_type == OBJ_WEAPONS)
     {
-        if (is_demonic(item))
+        if (is_demonic(item) || testbits(item.flags, ISFLAG_CHAOTIC))
             return true;
         if (calc_unid || item_brand_known(item))
             return is_evil_brand(get_weapon_brand(item));
@@ -180,8 +182,11 @@ bool is_unclean_item(const item_def& item, bool calc_unid)
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-        if (entry->flags & UNRAND_FLAG_UNCLEAN)
+        if ((entry->flags & (UNRAND_FLAG_EVIL)
+            || testbits(item.flags, ISFLAG_CHAOTIC)))
+        {
             return true;
+        }
     }
 
     if (item.has_spells() && (item_type_known(item) || calc_unid))
@@ -196,8 +201,11 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-        if (entry->flags & UNRAND_FLAG_CHAOTIC)
+        if (entry->flags & UNRAND_FLAG_CHAOTIC ||
+           (testbits(item.flags, ISFLAG_CHAOTIC)))
+        {
             return true;
+        }
     }
 
     if (item.base_type == OBJ_WEAPONS
@@ -220,7 +228,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
                             && !have_passive(passive_t::cleanse_mut_potions))
                  || item.sub_type == POT_LIGNIFY;
     case OBJ_BOOKS:
-        return _is_book_type(item, is_chaotic_spell);
+        return item.sub_type == BOOK_MANUAL && item.plus == SK_SHAPESHIFTING
+               || _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:
@@ -233,8 +242,9 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
 static bool _is_potentially_hasty_item(const item_def& item)
 {
     if (item.base_type == OBJ_WEAPONS
-        && item_brand_known(item)
-        && get_weapon_brand(item) == SPWPN_CHAOS)
+        && (item_brand_known(item)
+        && get_weapon_brand(item) == SPWPN_CHAOS) ||
+        (testbits(item.flags, ISFLAG_CHAOTIC)))
     {
         return true;
     }
@@ -321,7 +331,7 @@ bool is_wizardly_item(const item_def& item, bool calc_unid)
 /**
  * Do the good gods hate use of this spell?
  *
- * @param spell     The spell in question; e.g. SPELL_ROT.
+ * @param spell     The spell in question; e.g. SPELL_PUTREFACTION.
  * @return          Whether the Good Gods hate this spell.
  */
 bool is_evil_spell(spell_type spell)

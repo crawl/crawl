@@ -65,6 +65,9 @@ public:
                                         killer_type killer = KILL_NONE,
                                         int killernum = -1) = 0;
 
+    // Handles sticky flame / barbs on deliberate movement.
+    virtual void did_deliberate_movement() = 0;
+
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }
 
@@ -76,7 +79,6 @@ public:
     virtual bool blink_to(const coord_def &c, bool quiet = false) = 0;
 
     virtual bool      swimming() const = 0;
-    virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
 
     // Returns true if the actor is exceptionally well balanced.
@@ -98,12 +100,13 @@ public:
                                 bool base = false) const = 0;
 
     virtual brand_type damage_brand(int which_attack = -1) = 0;
-    virtual int       damage_type(int which_attack = -1) = 0;
+    virtual vorpal_damage_type damage_type(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) const = 0;
     const item_def *primary_weapon() const
     {
         return weapon(0);
     }
+    virtual item_def *offhand_weapon() const { return nullptr; }
     virtual random_var attack_delay(const item_def *projectile = nullptr,
                                     bool rescale = true) const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
@@ -174,7 +177,8 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
-    virtual bool can_bleed(bool temp = true) const = 0;
+    virtual bool has_blood(bool temp = true) const = 0;
+    virtual bool has_bones(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
@@ -203,7 +207,9 @@ public:
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength,
                               bool hibernate = false) = 0;
-    virtual void weaken(actor *attacker, int pow) = 0;
+    virtual void weaken(const actor *attacker, int pow) = 0;
+    virtual bool strip_willpower(actor *attacker, int dur,
+                                 bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
@@ -225,9 +231,6 @@ public:
                        bool temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
-#define TORPOR_SLOWED_KEY "torpor_slowed"
-    bool torpor_slowed() const;
-
     virtual int heads() const = 0;
 
     virtual int stat_hp() const = 0;
@@ -237,24 +240,23 @@ public:
 
     virtual bool can_throw_large_rocks() const = 0;
 
+    virtual bool can_be_dazzled() const = 0;
+    virtual bool can_be_blinded() const = 0;
+
     virtual int armour_class() const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;
-    virtual int evasion(bool ignore_helpless = false,
+    virtual int evasion(bool ignore_temporary = false,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
+    virtual int shield_block_limit() const;
+    bool shield_exhausted() const;
     virtual int shield_bonus() const = 0;
-    virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *attacker);
     virtual bool missile_repulsion() const = 0;
-
-    // Combat-related virtual class methods
-    virtual int unadjusted_body_armour_penalty() const = 0;
-    virtual int adjusted_body_armour_penalty(int scale = 1) const = 0;
-    virtual int adjusted_shield_penalty(int scale) const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
@@ -278,11 +280,13 @@ public:
     virtual bool res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;
+    virtual int res_foul_flame() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
     virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
-    virtual int res_constrict() const = 0;
+    virtual bool res_constrict() const = 0;
+    int get_res(int res) const;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power) const;
     virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
@@ -312,6 +316,7 @@ public:
 
     virtual bool is_banished() const = 0;
     virtual bool is_web_immune() const = 0;
+    virtual bool is_binding_sigil_immune() const = 0;
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;
 
@@ -383,33 +388,33 @@ public:
     mid_t constricted_by;
     int escape_attempts;
 
-    // Map from mid to duration.
-    typedef map<mid_t, int> constricting_t;
+    // mids of all actors we are constricting.
     // Freed and set to nullptr when empty.
-    constricting_t *constricting;
+    vector<mid_t> *constricting;
 
-    void start_constricting(actor &whom, int duration = 0);
+    void start_constricting(actor &whom);
 
     void stop_constricting(mid_t whom, bool intentional = false,
-                           bool quiet = false);
+                           bool quiet = false, const string& escape_verb = "");
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_directly_constricting_all(bool intentional = false,
                                         bool quiet = false);
-    void stop_being_constricted(bool quiet = false);
+    void stop_being_constricted(bool quiet = false, const string& escape_verb = "");
+
+    virtual bool attempt_escape() = 0;
 
     bool can_constrict(const actor &defender, constrict_type typ) const;
     bool can_engulf(const actor &defender) const;
     bool has_invalid_constrictor(bool move = false) const;
     void clear_invalid_constrictions(bool move = false);
-    void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;
     constrict_type get_constrict_type() const;
     bool is_constricting() const;
+    bool is_constricting(const actor &victim) const;
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(constrict_type typ) const = 0;
-    virtual bool constriction_does_damage(constrict_type typ) const;
     virtual bool clear_far_engulf(bool force = false, bool moved = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
@@ -419,7 +424,7 @@ public:
 
     string resist_margin_phrase(int margin) const;
 
-    void collide(coord_def newpos, const actor *agent, int pow);
+    void collide(coord_def newpos, const actor *agent, int damage);
     bool knockback(const actor &cause, int dist, int pow, string source_name);
     coord_def stumble_pos(coord_def targ) const;
     void stumble_away_from(coord_def targ, string src);
@@ -428,8 +433,9 @@ public:
     static actor *ensure_valid_actor(actor *act);
 
 private:
-    void constriction_damage_defender(actor &defender, int duration);
-    void end_constriction(mid_t whom, bool intentional, bool quiet);
+    void constriction_damage_defender(actor &defender);
+    void end_constriction(mid_t whom, bool intentional, bool quiet,
+                          const string& escape_verb = "");
 };
 
 bool actor_slime_wall_immune(const actor *actor);

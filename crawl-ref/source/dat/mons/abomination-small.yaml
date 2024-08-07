@@ -1,0 +1,16 @@
+name: "small abomination"
+enum: abomination_small
+glyph: {char: "x", colour: lightred}
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, damage: 17}
+hd: 6
+hp_10x: 270
+ac: 6
+ev: 9
+intelligence: brainless
+speed: 12
+size: large
+shape: misc
+tile_variance: mod

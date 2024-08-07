@@ -1,16 +1,17 @@
 enum: SP_GARGOYLE
 monster: MONS_GARGOYLE
-name: "Gargoyle"
-short_name: "Gr"
+name: Gargoyle
+short_name: Gr
 difficulty: Simple
 difficulty_priority: 70
 species_flags:
-  - SPF_NO_HAIR
+  - no_hair
+  - no_blood
 aptitudes:
   xp: 0
   hp: -2
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   short_blades: -1
   long_blades: -1
@@ -27,10 +28,10 @@ aptitudes:
   summoning: -1
   necromancy: -2
   translocations: -1
-  transmutations: -2
   shapeshifting: -3
   air_magic: -2
   earth_magic: 2
+  alchemy: -2
   invocations: 1
   evocations: -1
 str: 11
@@ -52,14 +53,15 @@ fake_mutations:
   - long: You are immune to sickness and miasma.
   - short: sickness immunity
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_GLADIATOR
-  - JOB_MONK
-  - JOB_BERSERKER
-  - JOB_FIRE_ELEMENTALIST
-  - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
-  - JOB_REAVER
+  - fighter
+  - gladiator
+  - monk
+  - berserker
+  - fire elementalist
+  - earth elementalist
+  - reaver
 recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_STAVES
+  - maces and flails
+  - staves
+
+orc_name: Gargorcle

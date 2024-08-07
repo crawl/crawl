@@ -4,7 +4,10 @@
 #include "coord.h"
 #include "god-type.h"
 #include "mgen-enum.h"
+#include "mon-enum.h"
 #include "mon-flags.h"
+#include "mon-util.h"
+#include "player.h"
 #include "xp-tracking-type.h"
 
 // Hash key for passing a weapon to be given to
@@ -162,7 +165,28 @@ struct mgen_data
     mgen_data &set_summoned(const actor* _summoner, int abjuration_dur,
                             int _summon_type, god_type _god = GOD_NO_GOD)
     {
-        summoner = _summoner;
+        // Hijack any summons created by player shadows or marionettes to belong
+        // to the player (your shadow is too emphemeral to keep them from
+        // poofing and marionette is a one-shot effect)
+        if (_summoner && _summoner->is_monster()
+            && (mons_is_player_shadow(*_summoner->as_monster())
+                || _summoner->real_attitude() == ATT_MARIONETTE))
+        {
+            // Summons that would appear around a marionette caster appear
+            // around the player instead. (All bets are off it any more custom
+            // placement is used.)
+            if (pos == _summoner->pos()
+                && _summoner->real_attitude() == ATT_MARIONETTE)
+            {
+                pos = you.pos();
+            }
+
+            summoner = &you;
+            behaviour = BEH_FRIENDLY;
+
+        }
+        else
+            summoner = _summoner;
         abjuration_duration = abjuration_dur;
         summon_type = _summon_type;
         if (_god != GOD_NO_GOD)
@@ -172,16 +196,21 @@ struct mgen_data
                || cls == MONS_BALL_LIGHTNING || cls == MONS_ORB_OF_DESTRUCTION
                || cls == MONS_BATTLESPHERE || cls == MONS_BALLISTOMYCETE_SPORE
                || cls == MONS_BOULDER
+               || cls == MONS_HOARFROST_CANNON
+               || cls == MONS_PILE_OF_DEBRIS
+               || cls == MONS_HELLFIRE_MORTAR
+               || cls == MONS_GLOBE_OF_ANNIHILATION
                || summon_type == SPELL_ANIMATE_DEAD
-               || summon_type == SPELL_NECROTISE
                || summon_type == SPELL_DEATH_CHANNEL
                || summon_type == SPELL_BIND_SOULS
                || summon_type == SPELL_SIMULACRUM
                || summon_type == SPELL_AWAKEN_VINES
                || summon_type == SPELL_FULMINANT_PRISM
+               || summon_type == SPELL_SHADOW_PRISM
                || summon_type == SPELL_INFESTATION
                || summon_type == SPELL_FOXFIRE
-               || summon_type == SPELL_MARSHLIGHT);
+               || summon_type == SPELL_MARSHLIGHT
+               || summon_type == MON_SUMM_AID);
         return *this;
     }
 

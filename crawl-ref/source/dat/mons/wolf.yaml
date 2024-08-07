@@ -1,0 +1,18 @@
+name: "wolf"
+glyph: {char: "h", colour: lightgray}
+flags: [see_invis, unblindable, warm_blood]
+xp_mult: 12
+genus: hound
+will: 20
+attacks:
+ - {type: bite, damage: 12}
+hd: 4
+hp_10x: 220
+ac: 4
+ev: 15
+has_corpse: true
+shout: howl
+intelligence: animal
+speed: 17
+size: medium
+shape: quadruped

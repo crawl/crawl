@@ -1,0 +1,19 @@
+name: "shadow demon"
+glyph: {char: "2", colour: magenta}
+flags: [see_invis]
+resists: {poison: 1, cold: 2}
+xp_mult: 13
+holiness: [demonic]
+will: 100
+attacks:
+ - {type: hit, damage: 21}
+hd: 10
+hp_10x: 550
+ac: 7
+ev: 12
+spells: shadow_demon
+shout: croak
+intelligence: human
+uses: open_doors
+size: small
+shape: humanoid

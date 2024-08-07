@@ -45,6 +45,11 @@ temporary regeneration.
 
 Your health has stopped regenerating due to the presence of nearby monsters.
 %%%%
+MPRegen status
+
+You regenerate health and magic at an unnaturally fast rate. This is only shown
+for temporary regeneration.
+%%%%
 Touch status
 
 Your attacks deal no damage, but have a chance of confusing monsters that they
@@ -53,6 +58,12 @@ hit.
 Will++ status
 
 Your willpower is much stronger, protecting against many magical effects.
+%%%%
+Regen Will++ status
+
+Trog's Hand is simultaneously making you regenerate health at an unnaturally
+fast rate and strengthening your willpower to protect you against many magical
+effects.
 %%%%
 Berserk status
 
@@ -98,10 +109,24 @@ Your maximum health has been temporarily drained by negative energy. This
 status will not wear off by waiting, but will gradually expire as you gain
 experience.
 %%%%
-Breath status
+-Breath status
 
 You are catching your breath, and are unable to use your innate breath ability
 until the status expires.
+%%%%
+Breath status
+
+Indicates how many uses of your draconian breath weapon are available. If the
+indicator is dim, there are zero. Otherwise, the number of plusses indicate
+additional uses available.
+%%%%
+Breath+ status
+
+<Breath status>
+%%%%
+Breath++ status
+
+<Breath status>
 %%%%
 Exh status
 
@@ -127,11 +152,10 @@ try to struggle free.
 %%%%
 Constr status
 
-You are being constricted by an enemy and will take an increasing amount of
-damage over time. You are unable to move (or blink) away from the enemy,
-although you can struggle to escape by attempting to do so, and will become
-increasingly more likely to succeed and break the constriction when doing so
-multiple times.
+You are being constricted by an enemy. Your evasion is impaired, and you will
+take damage over time. You are unable to move away from the enemy, although you
+can struggle to escape by attempting to do so, and will become increasingly more
+likely to succeed and break the constriction when doing so multiple times.
 %%%%
 Mesm status
 
@@ -162,8 +186,17 @@ are not in their vision.
 %%%%
 Fire status
 
-You are covered with sticky fire, which causes damage over a short duration.
-Entering water will extinguish the flames.
+You are covered with sticky fire, which causes damage over a moderate duration.
+Moving will quell the fire much more rapidly, and entering water will extinguish
+it immediately.
+%%%%
+Fire+ status
+
+<Fire status>
+%%%%
+Fire++ status
+
+<Fire status>
 %%%%
 Corona status
 
@@ -347,13 +380,14 @@ if you are victorious.
 %%%%
 Disjoin status
 
-You are destabilizing space around yourself, causing nearby monsters to be
+You are destabilising space around yourself, causing nearby monsters to be
 randomly blinked away from you.
 %%%%
-Slay status
+Fugue status
 
-You have the blood of a were-beast, healing you and providing bonuses to
-your ranged and melee attacks which increase every time you slay a foe.
+Your weapon is temporarily enhanced by the souls of the damned, providing
+slaying bonuses that increase with every enemy killed. At the maximum bonus,
+foes adjacent to your attacks' targets suffer pain damage.
 %%%%
 Debt status
 
@@ -384,10 +418,10 @@ rP- status
 
 You are more vulnerable to poison.
 %%%%
-PProj status
+Bullseye status
 
-You are teleporting fired or thrown missiles directly to their targets with
-increased accuracy, at the cost of a small amount of magic for each missile.
+You have targeted an enemy with a dimensional bullseye, causing missiles fired
+or thrown at a different enemy to also be teleported at the target.
 %%%%
 Forest status
 
@@ -473,11 +507,11 @@ Flux status
 
 You are unstable at a fundamental level. You inflict dangerous levels of
 magical contamination on foes with each touch. Sufficient contamination
-causes a highly localized meltdown, dealing enormous damage.
+causes a highly localised meltdown, dealing enormous damage.
 
-However, this instability makes you unable to use weapons or shields. You
-also glow, reducing stealth and preventing invisibility, and your melee
-damage is reduced, as your limbs sometimes destabilize mid-swing.
+However, this instability makes you unable to use weapons, shields, or
+body armour. You also glow, reducing stealth and preventing invisibility,
+and you do less damage in melee, as your limbs sometimes destabilise mid-swing.
 %%%%
 Blade status
 
@@ -489,10 +523,10 @@ and reducing the effectiveness of body armour.
 
 Any equipped weapons, shields, and gloves are melded.
 %%%%
-Anaconda status
+Serpent status
 
-You have been transformed into a giant, cold-blooded anaconda, ready to wind
-your coils around foes and crush them to death.
+You have been transformed into a giant, cold-blooded, poison-resistant serpent,
+ready to wind your coils around foes and crush them to death.
 
 Any equipped weapons and armour are melded.
 %%%%
@@ -562,7 +596,7 @@ Any equipped weapons and armour are melded.
 %%%%
 Death status
 
-You have been transformed into an undying offense against life itself.
+You have been transformed into an undying offence against life itself.
 
 Foes struck by your hands or melee weapons are weakened, slowed, and drained,
 and you can heal yourself by tormenting living foes nearby. You also resist
@@ -646,8 +680,12 @@ maximum health is further drained when taking damage.
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer, and Passage of Golubria
-portals will be less accurately positioned and expire more quickly.
+translocation magic. Teleportation will take longer.
+%%%%
+Orb? status
+
+You are holding the Charlatan's Orb, whose energies disrupt translocation
+magic. Teleportation will take longer.
 %%%%
 -Hop status
 
@@ -698,8 +736,8 @@ You receive spellcasting and slaying bonuses that scale with your health.
 %%%%
 Beogh status
 
-You can swear fealty to Beogh, the god of cave orcs, through a nearby priest.
-To do so, press <white>Y</white> on the <white>a</white>bility menu.
+You can swear fealty to Beogh, the god of all orcs, through a nearby priest.
+To do so, use the Convert to Beogh ability in the ability menu.
 %%%%
 Bloodless status
 
@@ -770,11 +808,10 @@ Zot count status
 If you spend the indicated number of turns in this branch without descending to
 a new floor, Zot will find you, causing permanent health damage.
 %%%%
-Curl status
+Gem status
 
-After being struck by an attack, you reflexively curled up, protecting yourself
-against subsequent strikes. You are now emerging from that defensive curl and
-will receive no further protection until after you are struck again.
+If you spend the indicated number of turns in this branch, its gem will be found
+and shattered by the power of Zot.
 %%%%
 rF0 status
 
@@ -794,7 +831,7 @@ for a short duration.
 %%%%
 Charge- status
 
-You are currently channeling electrical charge. Pressing <w>.</w> or <w>s</w>
+You are currently channelling electrical charge. Pressing <w>.</w> or <w>s</w>
 to wait in place will maintain and continue this process until it discharges.
 Any other action, including recasting the spell, will dissipate the charge
 harmlessly.
@@ -813,7 +850,7 @@ Charge| status
 %%%%
 Wave status
 
-You are currently channeling waves of flames. Pressing <w>.</w> or <w>s</w>
+You are currently channelling waves of flames. Pressing <w>.</w> or <w>s</w>
 to wait in place will maintain and intensify the waves, at the cost of 1 MP per
 turn. Any other action, including recasting the spell, will end it.
 %%%%
@@ -834,7 +871,7 @@ You cannot sustain this transformation in areas out of your line of sight.
 Enlightened status
 
 You are in touch with a greater truth, increasing your resistance to effects
-which target your Willpower. Tragically, this epiphany won't last.
+which target your willpower. Tragically, this epiphany won't last.
 %%%%
 Will+ status
 
@@ -858,3 +895,168 @@ Ooze status
 
 Acidic ooze creeps out of the walls around you. Each turn, foes are damaged
 depending on the number of slimy walls they remain adjacent to.
+%%%%
+Dog status
+
+You have summoned your canine familiar.
+%%%%
+-Dog status
+
+Your canine familiar is recovering from its injuries, and cannot be summoned
+again for a short time.
+%%%%
+-Siphon status
+
+You have recently siphoned the essence of the living, and cannot do so again for
+a short time.
+%%%%
+-Word status
+
+You are fatigued from recently speaking a word of chaos, and are unable to do so
+again for a short time.
+%%%%
+Jinx status
+
+Jinxing spirits encircle you. When you attack foes, those who fail a Will check
+are jinxed, taking damage and becoming drained. The spirits depart quickly when
+no foes are in sight.
+%%%%
+Rise status
+
+You are hovering upward toward the ceiling. After a short delay, Ignis' power
+will blast you into the level above.
+%%%%
+Challenge status
+
+You have been challenged by a chosen apostle of Beogh, who will know your
+location no matter where on the floor you are. Defeat them, and you may recruit
+them to join you. If you flee the floor, Beogh will punish you by temporarily
+depriving you of allies.
+%%%%
+Vengeance status
+
+One of your apostles has been killed, and you have not yet killed all foes who
+were involved in their death. If you do so, Beogh will resurrect them sooner.
+%%%%
+Pray status
+
+You have invoked divine aid in avenging the death of a fallen apostle. Orcs will
+continuously rally to your side, though your prayer will end more rapidly when
+there are no more foes around to fight.
+%%%%
+Recruit status
+
+An orcish apostle is available to recruit as a permanent companion.
+(Use the Recruit Apostle ability)
+%%%%
+Torch status
+
+You carry the Black Torch. If this indicator is dark, the torch is unlit; if it
+is bright, you have called upon Yredelemnul to light the torch. So long as the
+torch burns, you will gain piety for kills. With sufficient piety, you will be
+able to use its umbral fire to empower your undead servants and damage your
+enemies.
+%%%%
+Shackles status
+
+Yredelemnul's grip is engulfing an area in life-stealing chains.
+%%%%
+Rev status
+
+You're starting to limber up. Your weapon-based and unarmed attacks are closer
+to full strength, and will continue to grow more powerful with each swing.
+%%%%
+Rev+ status
+
+You're limbering up. Your weapon-based and unarmed attacks are close to full
+strength, and will continue to grow more powerful with each swing.
+%%%%
+Rev* status
+
+You're limbered up. Your weapon-based and unarmed attacks are at full strength,
+and will remain so as long as you keep swinging and for a short while afterward.
+%%%%
+-Gavotte status
+
+Gravity around you is still unstable, and you cannot cast Gell's Gavotte again
+until it settles back down.
+%%%%
+Fusillade status
+
+You are hurling conjured alchemical reagents at nearby monsters.
+%%%%
+Nightfall status
+
+You are channelling the deepest night, greatly reducing your sight range. It
+will gradually return to normal over time.
+%%%%
+Blind status
+
+Your vision is badly impaired. All spells and attacks you perform (which do not
+automatically hit) have an increased chance to miss. This chance is much greater
+the further away you are from your target.
+%%%%
+Ruin status
+
+You are marked with the sign of ruin, causing any melee attacks which damage you
+to heavily drain and randomly slow, weaken, or blind you.
+%%%%
+-GClaw status
+
+You have not yet harvested enough death to cast Grave Claw again.
+%%%%
+Legion status
+
+You are beckoning the legions of chaos; short-lived demons will be periodically
+summoned near you.
+%%%%
+-Bloodrite status
+
+You have recently performed an infernal blood rite and must fully heal before
+being able to perform another.
+%%%%
+Execution status
+
+You are sharing your body with an Executioner, giving you a powerful auxiliary
+attack that also triggers when you dodge attacks, as well as letting you rampage
+towards foes. This will expire quickly if you stop attacking.
+%%%%
+Destr status
+
+Your Unleash Destruction is growing more powerful as you use it consecutively.
+%%%%
+Destr+ status
+
+<Destr status>
+%%%%
+Destr++ status
+
+<Destr status>
+%%%%
+Destr+++ status
+
+<Destr status>
+If you use it again, it will unleash a salvo of additional bolts aimed at random
+targets and this bonus will reset.
+%%%%
+Slaughter status
+
+You are an instrument of Makhleb's destructive will. Your power and defenses are
+greatly enhanced, but you must endure the Crucible of Flesh once this effect
+ends.
+%%%%
+Pact status
+
+Makhleb has come to collect on certain promises made to them.
+{{ if you.religion == "Makhleb" then
+        return "Fulfill your oath as their instrument by slaying the terrified " ..
+               "mortals that have been gathered here, and they may grant you " ..
+               "freedom once again."
+   else
+        return "Fight and bleed and you may be granted freedom once again."
+    end}}
+%%%%
+Escape! status
+
+A path out of the Crucible has opened. Find it and claim your freedom again. For
+a time.

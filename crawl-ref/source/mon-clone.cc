@@ -136,7 +136,7 @@ static void _init_player_illusion_properties(monsterentry *me)
     // the effects of their Necromutation form. This was 'important'
     // since Necromutation spell-users presumably also had Dispel
     // Undead available to them, but now...?!
-    if (form_changed_physiology() && me->holiness & MH_UNDEAD)
+    if (form_changes_physiology() && me->holiness & MH_UNDEAD)
         me->holiness = MH_NATURAL;
 }
 
@@ -180,14 +180,16 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
     }
 }
 
-void mons_summon_illusion_from(monster* mons, actor *foe,
-                               spell_type spell_cast, int card_power)
+int mons_summon_illusion_from(monster* mons, actor *foe,
+                              spell_type spell_cast, int card_power, bool xom)
 {
     if (foe->is_player())
     {
         int abj = 6;
 
-        if (card_power >= 0)
+        if (xom)
+            abj = 2;
+        else if (card_power >= 0)
         {
           // card effect
           abj = 2 + random2(card_power);
@@ -207,24 +209,31 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
             clone->add_ench(ENCH_PHANTOM_MIRROR);
+
+            return 1;
         }
         else if (card_power >= 0)
+        {
             mpr("You see a puff of smoke.");
+            return 0;
+        }
     }
     else
     {
         monster* mfoe = foe->as_monster();
         _mons_summon_monster_illusion(mons, mfoe);
     }
+
+    return 1;
 }
 
 bool mons_clonable(const monster* mon, bool needs_adjacent)
 {
-    // No uniques or ghost demon monsters. Also, figuring out the name
-    // for the clone of a named monster isn't worth it, and duplicate
-    // battlespheres with the same owner cause problems with the spell
+    // No uniques or inugami. Also, figuring out the name for the clone
+    // of a named monster isn't worth it, and duplicate battlespheres
+    // with the same owner cause problems with the spell.
     if (mons_is_unique(mon->type)
-        || mons_is_ghost_demon(mon->type)
+        || mon->type == MONS_INUGAMI
         || mon->is_named()
         || mons_is_conjured(mon->type)
         || mons_is_tentacle_or_tentacle_segment(mon->type))
@@ -327,6 +336,13 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     // Don't display non-functional bullseye targets
     if (mons->has_ench(ENCH_BULLSEYE_TARGET))
         mons->del_ench(ENCH_BULLSEYE_TARGET);
+
+    // Remove Beogh's Touch from an apostle of Beogh may get very confused when they die
+    if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
+        mons->del_ench(ENCH_TOUCH_OF_BEOGH);
+
+    if (mons->has_ench(ENCH_VENGEANCE_TARGET))
+        you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)

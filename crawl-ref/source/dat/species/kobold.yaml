@@ -7,7 +7,7 @@ aptitudes:
   xp: 1
   hp: -2
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   short_blades: 3
   long_blades: -2
@@ -34,13 +34,15 @@ mutations:
   1:
     MUT_NIGHTSTALKER: 3
 recommended_jobs:
-  - JOB_BRIGAND
-  - JOB_BERSERKER
-  - JOB_HEXSLINGER
-  - JOB_ENCHANTER
-  - JOB_CONJURER
-  - JOB_SUMMONER
+  - brigand
+  - berserker
+  - hexslinger
+  - enchanter
+  - conjurer
+  - earth elementalist
 recommended_weapons:
-  - SK_SHORT_BLADES
-  - SK_MACES_FLAILS
-  - SK_STAVES
+  - short blades
+  - maces and flails
+  - staves
+
+orc_name: Orcobold

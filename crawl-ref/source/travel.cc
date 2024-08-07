@@ -279,11 +279,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback,
             return true;
 
         // Permanently flying players can cross most hostile terrain.
-        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
-            || grid == DNGN_TOXIC_BOG)
-        {
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
             return assume_flight || you.permanent_flight();
-        }
+        // Players casting Toxic Bog can safely traverse it
+        else if (grid == DNGN_TOXIC_BOG)
+            return you.duration[DUR_NOXIOUS_BOG];
     }
 
     return feat_is_traversable(grid, try_fallback);
@@ -529,7 +529,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
-    if (grid == DNGN_BINDING_SIGIL)
+    if (grid == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
         return false;
 
     if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
@@ -639,24 +639,9 @@ bool is_resting()
     return you.running.is_rest();
 }
 
-static int _slowest_ally_speed()
-{
-    vector<monster* > followers = get_on_level_followers();
-    int min_speed = INT_MAX;
-    for (auto fol : followers)
-    {
-        int speed = fol->speed * BASELINE_DELAY
-                    / fol->action_energy(EUT_MOVE);
-        if (speed < min_speed)
-            min_speed = speed;
-    }
-    return min_speed;
-}
-
 static void _start_running()
 {
     _userdef_run_startrunning_hook();
-    you.running.init_travel_speed();
     you.running.turns_passed = 0;
     const bool unsafe = Options.travel_one_unsafe_move &&
                         (you.running == RMODE_TRAVEL
@@ -1045,7 +1030,7 @@ static command_type _get_non_move_command()
     return feat_stair_direction(env.grid(you.pos()));
 }
 
-// Top-level travel control (called from input() in main.cc).
+// Top-level travel control (called indirectly from TravelDelay::handle()).
 //
 // travel() is responsible for making the individual moves that constitute
 // (interlevel) travel and explore and deciding when travel and explore
@@ -1068,14 +1053,6 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (you.confused())
-    {
-        mprf("You're confused, stopping %s.",
-             you.running.runmode_name().c_str());
-        stop_running();
-        return CMD_NO_CMD;
-    }
-
     // Excluded squares are only safe if marking stairs, i.e. another level.
     if (is_excluded(you.pos()) && !is_stair_exclusion(you.pos()))
     {
@@ -1087,8 +1064,11 @@ command_type travel()
 
     if (you.running.is_explore())
     {
-        if (Options.explore_auto_rest && !you.is_sufficiently_rested())
+        if (Options.explore_auto_rest && !you.is_sufficiently_rested()
+            || you.duration[DUR_NO_MOMENTUM])
+        {
             return CMD_WAIT;
+        }
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP
@@ -1141,8 +1121,6 @@ command_type travel()
 
         if (!_find_transtravel_square(level_target) || !you.running.pos.x)
             stop_running();
-        else
-            you.running.init_travel_speed();
     }
 
     if (you.running < 0)
@@ -4542,7 +4520,6 @@ void runrest::initialise(int dir, int mode)
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
     turns_passed = 0;
-    init_travel_speed();
 
     if (dir == RDIR_REST)
     {
@@ -4570,14 +4547,6 @@ void runrest::initialise(int dir, int mode)
         start_delay<RestDelay>();
     else
         start_delay<RunDelay>();
-}
-
-void runrest::init_travel_speed()
-{
-    if (you.travel_ally_pace)
-        travel_speed = _slowest_ally_speed();
-    else
-        travel_speed = 0;
 }
 
 runrest::operator int () const
@@ -4763,7 +4732,7 @@ void runrest::clear()
 {
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
-    mp = hp = travel_speed = 0;
+    mp = hp = 0;
     turns_passed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
@@ -4870,7 +4839,8 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (feat == DNGN_TRANSPORTER)
     {
-        seen_tracked_feature(feat);
+        if (is_unknown_transporter(pos))
+            seen_tracked_feature(feat);
         if (ES_transporter)
         {
             for (orth_adjacent_iterator ai(pos); ai; ++ai)
@@ -4998,7 +4968,8 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
                          || Options.explore_stop & ES_ARTEFACT
                             && i.flags & ISFLAG_ARTEFACT_MASK
                          || Options.explore_stop & ES_RUNE
-                            && i.base_type == OBJ_RUNES))
+                            && (i.base_type == OBJ_RUNES
+                                || i.base_type == OBJ_GEMS /*enh*/)))
             {
                 ; // More conditions to stop for
             }

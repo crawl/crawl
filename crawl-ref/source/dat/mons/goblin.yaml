@@ -1,0 +1,16 @@
+name: "goblin"
+glyph: {char: "g", colour: lightgray}
+flags: [speaks, warm_blood]
+will: 0
+attacks:
+ - {type: hit, damage: 1}
+hd: 1
+hp_10x: 40
+ac: 0
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: small
+shape: humanoid

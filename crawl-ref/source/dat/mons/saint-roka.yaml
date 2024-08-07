@@ -1,0 +1,20 @@
+name: "Saint Roka"
+glyph: {char: "o", colour: lightblue}
+flags: [fighter, speaks, warm_blood, unique, gender_neutral]
+xp_mult: 15
+species: orc
+will: 80
+attacks:
+ - {type: hit, damage: 35}
+hd: 18
+hp_10x: 1980
+ac: 3
+ev: 10
+spells: saint_roka
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+god: Beogh

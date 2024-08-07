@@ -1,0 +1,61 @@
+enum: SP_ONI
+monster: MONS_ONI
+name: Oni
+adjective: Oni
+difficulty: Intermediate
+difficulty_priority: 30
+aptitudes:
+  xp: 0
+  hp: 3
+  mp_mod: 0
+  wl: 4
+  fighting: 3
+  short_blades: -1
+  long_blades: -1
+  ranged weapons: -3
+  armour: -1
+  shields: -1
+  dodging: -1
+  stealth: -2
+  unarmed_combat: -1
+  spellcasting: 1
+  conjurations: -1
+  hexes: -1
+  summoning: -1
+  necromancy: -1
+  translocations: -1
+  shapeshifting: -1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: -1
+  alchemy: -1
+  invocations: 2
+  evocations: -2
+size: large
+str: 11
+int: 9
+dex: 4
+levelup_stat_frequency: 3
+levelup_stats:
+  - str
+mutations:
+  1:
+    MUT_TOUGH_SKIN: 1
+    MUT_HORNS: 1
+    MUT_DOUBLE_POTION_HEAL: 1
+    MUT_DRUNKEN_BRAWLING: 1
+recommended_jobs:
+  - gladiator
+  - berserker
+  - cinder acolyte
+  - hedge wizard
+  - air elementalist
+  - fire elementalist
+recommended_weapons:
+  - maces and flails
+  - polearms
+  - staves
+  - axes
+
+orc_name: Big Orc

@@ -1,0 +1,20 @@
+name: "the Royal Jelly"
+enum: royal_jelly
+glyph: {char: "J", colour: yellow}
+flags: [eat_doors, see_invis, unblindable, web_immune, unique, acid_splash, no_skeleton, tall_tile]
+resists: {poison: 1, acid: 3}
+xp_mult: 20
+species: jelly
+will: 180
+attacks:
+ - {type: hit, flavour: acid, damage: 50}
+ - {type: hit, flavour: acid, damage: 30}
+hd: 21
+hp_10x: 2310
+ac: 8
+ev: 4
+intelligence: brainless
+speed: 14
+size: large
+shape: blob
+god: Jiyva

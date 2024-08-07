@@ -171,26 +171,47 @@ xxxwwwWwWxxxx
 xxx...@..xxxx
 ENDMAP
 
-NAME:  lemuel_angel_altar
-DEPTH: Depths
-TAGS:  no_trap_gen no_descent
-MONS: patrolling Daeva / patrolling Angel
-KFEAT:  n = iron_grate
-KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
-KPROP: >"1_ = no_tele_into
-KMASK: . = !opaque
+NAME:    lemuel_angel_altar
+TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup
+DEPTH:   Vaults, !Vaults:$, Depths
+MONS:    patrolling Angel, patrolling Daeva
+KMONS:   P = sacred lotus
+KFEAT:   A = altar_elyvilon
+KFEAT:   B = altar_zin
+KFEAT:   C = altar_the_shining_one
+KFEAT:   P = w
+KFEAT:   g = metal_statue
+KFEAT:   n = iron_grate
+SHUFFLE: AP / Bg / CG
+SUBST:   - = c
+: if you.in_branch("Depths") then
+SHUFFLE: 1m= / 2n-
+CLEAR:   '
+TILE:    c = wall_church
+: else
+SUBST:   ' = ., = = c
+: end
+KPROP:   >"12ABC = no_tele_into
+KMASK:   . = !opaque
+KMASK:   x = no_wall_fixup
+COLOUR:  g = silver
+TILE:    G = dngn_statue_angel
+TILE:    g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
-   .....
-  ..cnc..
- ..xc>cx..
-..xxc"cxx..
-.ccc=1cccc.
-.n>""_"">n.
-.cccc"cccc.
-..xxc"cxx..
- ..xc>cx..
-  ..cnc..
-   .....
+    '''''
+    .....
+   ..cmc..
+  ..xc>cx..
+'..xxc"cPx..'
+'.ccc=1cccc.'
+'.m>""A"">m.'
+'.cccc"cccc.'
+'..xPc"cxx..'
+  ..xc>cx..
+   ..cmc..
+    .....
+    '''''
 ENDMAP
 
 ##############################################################################
@@ -209,7 +230,7 @@ NAME:  lemuel_hellish_altar
 DEPTH: Crypt, Geh
 TAGS:  no_monster_gen no_descent
 MONS:  rust devil / orange demon
-MONS:  hell beast / red devil
+MONS:  sin beast / red devil
 MONS:  iron imp
 MONS:  hellion
 KPROP: 1234_ = no_tele_into
@@ -324,8 +345,7 @@ ENDMAP
 NAME:     amcnicky_altar_lugonu_corruption
 TAGS:     transparent no_monster_gen
 # Lugonu cares not about moderate vault placement
-DEPTH:    D:3-, Lair, Orc, Elf, Crypt, Depths, Slime, Shoals,\
-            Spider, Snake, Swamp, Zot
+DEPTH:    D:3-, Depths, Crypt, Zot, Pan, Geh, Coc, Dis, Tar
 WEIGHT:   2
 KMONS:    q = lurking_horror
 KFEAT:    p = altar_lugonu
@@ -338,6 +358,8 @@ SUBST:    ' = x'.
 : if you.in_branch("Swamp") then
 SUBST:    x = t
 KFEAT:    t = demonic_tree
+TILE:     t = dngn_demonic_tree_11 w:6 / dngn_demonic_tree_12 w:6 / \
+              dngn_demonic_tree_13 / dngn_demonic_tree_14
 : end
 SUBST:    z = zz.
 # Ordered chaos, like the abyss builder

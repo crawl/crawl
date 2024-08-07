@@ -1,0 +1,71 @@
+TAG_MAJOR_VERSION: 34
+enum: SP_MAYFLYTAUR
+monster: MONS_BUTTERFLY
+name: Mayflytaur
+short_name: My
+difficulty: False
+aptitudes:
+  xp: 0
+  hp: 2
+  mp_mod: 1
+  wl: 5
+  fighting: 1
+  short_blades: 3
+  long_blades: 3
+  maces_and_flails: 3
+  axes: 1
+  polearms: 3
+  staves: 3
+  ranged weapons: 2
+  throwing: 2
+  armour: 1
+  dodging: 1
+  stealth: 3
+  shields: 1
+  unarmed_combat: 3
+  spellcasting: 2
+  conjurations: 1
+  hexes: 2
+  summoning: 2
+  necromancy: 1
+  translocations: 2
+  fire_magic: 1
+  ice_magic: 1
+  air_magic: 1
+  earth_magic: 1
+  alchemy: 1
+  invocations: 2
+  evocations: 1
+str: 9
+int: 9
+dex: 9
+levelup_stat_frequency: 3
+levelup_stats:
+  - str
+  - int
+  - dex
+mutations:
+  1:
+    MUT_SHORT_LIFESPAN: 1
+    MUT_PASSIVE_MAPPING: 1
+    MUT_BIG_WINGS: 1
+  6:
+    MUT_MANA_REGENERATION: 1
+  9:
+    MUT_PASSIVE_MAPPING: 1
+  12:
+    MUT_REGENERATION: 1
+  14:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+  18:
+    MUT_PASSIVE_MAPPING: 1
+fake_mutations:
+  - long: You are resistant to damage.
+    short: damage resistance
+recommended_weapons:
+  - maces and flails
+  - polearms
+  - staves
+  - long blades
+
+orc_name: Mayflyorc

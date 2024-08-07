@@ -1,0 +1,66 @@
+TAG_MAJOR_VERSION: 34
+enum: SP_DEEP_DWARF
+monster: MONS_DEEP_DWARF
+name: Deep Dwarf
+short_name: DD
+adjective: Dwarven
+genus: Dwarf
+difficulty: False
+aptitudes:
+  xp: -1
+  hp: 2
+  mp_mod: 0
+  wl: 6
+  fighting: -1
+  short_blades: -1
+  axes: 1
+  polearms: -1
+  staves: -1
+  ranged weapons: 1
+  throwing: -1
+  armour: 1
+  dodging: 1
+  stealth: 3
+  shields: 1
+  unarmed_combat: -1
+  spellcasting: -2
+  conjurations: -1
+  hexes: -2
+  summoning: -1
+  necromancy: 1
+  translocations: 1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -3
+  earth_magic: 3
+  alchemy: -2
+  invocations: 3
+  evocations: 3
+str: 11
+int: 8
+dex: 8
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - int
+mutations:
+  1:
+    MUT_NO_REGENERATION: 1
+    MUT_PASSIVE_MAPPING: 1
+  9:
+    MUT_PASSIVE_MAPPING: 1
+  14:
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+  18:
+    MUT_PASSIVE_MAPPING: 1
+fake_mutations:
+  - long: You are resistant to damage.
+    short: damage resistance
+  - long: You can heal yourself by infusing magical energy.
+    short: heal wounds
+recommended_weapons:
+  - maces and flails
+  - axes
+  - long blades
+
+orc_name: Deep Dworc

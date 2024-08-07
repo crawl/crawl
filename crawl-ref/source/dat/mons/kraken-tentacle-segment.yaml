@@ -1,0 +1,17 @@
+name: "tentacle segment"
+enum: kraken_tentacle_segment
+glyph: {char: "*", colour: lightmagenta}
+flags: [flies, stationary, cold_blood, no_exp_gain, no_poly_to, no_threat]
+genus: kraken
+will: invuln
+attacks:
+hd: 12
+hp_10x: 480
+ac: 5
+ev: 7
+intelligence: animal
+habitat: amphibious
+speed: 18
+size: large
+shape: misc
+tile: program_bug

@@ -16,6 +16,7 @@ const int DEFAULT_SHATTER_DICE = 3;
 const int FLAT_DISCHARGE_ARC_DAMAGE = 3;
 const int AIRSTRIKE_PER_SPACE_BONUS = 2;
 const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
+const int GRAVE_CLAW_MAX_CHARGES = 3;
 
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
@@ -23,6 +24,9 @@ const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 #define FROZEN_RAMPARTS_POWER_KEY "frozen_ramparts_power"
 #define TOXIC_RADIANCE_POWER_KEY "toxic_radiance_power"
 #define VORTEX_POWER_KEY "vortex_power"
+#define FUSILLADE_POWER_KEY "fusillade_power"
+#define GRAVE_CLAW_CHARGES_KEY "grave_claw_charges"
+
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
@@ -36,6 +40,7 @@ spret trace_los_attack_spell(spell_type spell, int pow,
                                   const actor* agent);
 spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
                             bool fail = false, int* damage_done = nullptr);
+int adjacent_huddlers(coord_def pos);
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
@@ -58,14 +63,17 @@ spret cast_ignite_poison(actor *agent, int pow, bool fail,
 spret cast_unravelling(coord_def target, int pow, bool fail);
 string mons_inner_flame_immune_reason(const monster *mons);
 spret cast_inner_flame(coord_def target, int pow, bool fail);
-spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test=false);
-bool safe_discharge(coord_def where, vector<const actor *> &exclude);
+int get_mercury_weaken_chance(int victim_hd, int pow);
+spret cast_mercury_vapours(int pow, const coord_def target, bool fail);
+bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only = false);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
 int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
 dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
+vector<coord_def> galvanic_targets(const actor &agent, coord_def pos, bool actual);
+void do_galvanic_jolt(const actor& agent, coord_def pos, dice_def damage);
 bool mons_should_fire_plasma(int pow, const actor &agent);
 spret cast_plasma_beam(int pow, const actor &agent, bool fail);
 vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);
@@ -84,6 +92,9 @@ coord_def get_thunderbolt_last_aim(actor *caster);
 dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
+bool mons_should_fire_permafrost(int pow, const actor &agent);
+spret cast_permafrost_eruption(actor &caster, int pow, bool fail);
+set<coord_def> permafrost_targets(const actor &caster, int pow, bool actual = true);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
@@ -92,8 +103,8 @@ void forest_damage(const actor *mon);
 
 int dazzle_chance_numerator(int hd);
 int dazzle_chance_denom(int pow);
-bool dazzle_monster(monster *mon, int pow);
-spret cast_dazzling_flash(int pow, bool fail, bool tracer = false);
+bool dazzle_target(actor *victim, const actor *agent, int pow);
+spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer = false);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);
@@ -103,7 +114,7 @@ dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
-spret cast_scorch(int pow, bool fail);
+spret cast_scorch(const actor& agent, int pow, bool fail = false);
 dice_def scorch_damage(int pow, bool random);
 
 vector<coord_def> get_ignition_blast_sources(const actor *agent,
@@ -132,9 +143,9 @@ dice_def ramparts_damage(int pow, bool random = true);
 
 bool wait_spell_active(spell_type spell);
 
-spret cast_searing_ray(int pow, bolt &beam, bool fail);
-void handle_searing_ray();
-void end_searing_ray();
+spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail);
+bool handle_searing_ray(actor& agent);
+void end_searing_ray(actor& agent);
 
 vector<monster *> find_maxwells_possibles();
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
@@ -144,7 +155,8 @@ void end_maxwells_coupling(bool quiet = false);
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);
 
-vector<coord_def> find_near_hostiles(int range, bool affect_invis);
+vector<coord_def> find_near_hostiles(int range, bool affect_invis,
+                                     const actor& agent);
 
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
@@ -152,3 +164,22 @@ bool siphon_essence_affects(const monster &m);
 void attempt_jinxbite_hit(actor& victim);
 dice_def boulder_damage(int pow, bool random);
 void do_boulder_impact(monster& boulder, actor& victim);
+
+dice_def electrolunge_damage(int pow);
+
+int get_warp_space_chance(int pow);
+
+dice_def default_collision_damage(int pow, bool random);
+string describe_collision_dam(dice_def dice);
+
+vector<coord_def> get_magnavolt_targets();
+vector<coord_def> get_magnavolt_beam_paths(vector<coord_def>& targets);
+spret cast_magnavolt(coord_def target, int pow, bool fail);
+
+spret cast_fulsome_fusillade(int pow, bool fail);
+void fire_fusillade();
+
+spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail);
+void gain_grave_claw_soul(bool silent = false);
+
+bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets);

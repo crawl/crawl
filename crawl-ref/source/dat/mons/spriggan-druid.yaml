@@ -1,0 +1,19 @@
+name: "spriggan druid"
+glyph: {char: "i", colour: green}
+flags: [see_invis, speaks, warm_blood]
+species: spriggan
+will: 100
+attacks:
+ - {type: hit, damage: 18}
+hd: 11
+hp_10x: 440
+ac: 1
+ev: 18
+spells: spriggan_druid
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 6}
+uses: weapons_armour
+size: little
+shape: humanoid

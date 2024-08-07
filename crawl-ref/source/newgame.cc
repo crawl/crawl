@@ -17,6 +17,7 @@
 #include "initfile.h"
 #include "item-name.h" // make_name
 #include "item-prop.h"
+#include "job-groups.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -266,15 +267,29 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
 
 static void _resolve_species_job(newgame_def& ng, const newgame_def& ng_choice)
 {
-    // Since recommendations are no longer bidirectional, pick one of
-    // species or job to start. If one but not the other was specified
-    // as "viable", always choose that one last; otherwise use a random
-    // order.
-    const bool spfirst  = ng_choice.species != SP_VIABLE
-                          && ng_choice.job == JOB_VIABLE;
-    const bool jobfirst = ng_choice.species == SP_VIABLE
-                          && ng_choice.job != JOB_VIABLE;
-    if (spfirst || !jobfirst && coinflip())
+    bool spfirst;
+    // If both are "viable" or both are "random" resolve them in a random order,
+    // to avoid bias.
+    if (ng_choice.species == SP_VIABLE && ng_choice.job == JOB_VIABLE
+        || ng_choice.species == SP_RANDOM && ng_choice.job == JOB_RANDOM)
+    {
+        spfirst = coinflip();
+    }
+    // If exactly one is "viable", resolve that second.
+    else if (ng_choice.species == SP_VIABLE)
+        spfirst = false;
+    else if (ng_choice.job == JOB_VIABLE)
+        spfirst = true;
+    // If one is fixed and the other is "random", resolve that second (to avoid
+    // picking a random choice that is banned for the fixed one).
+    else if (ng_choice.species == SP_RANDOM)
+        spfirst = false;
+    else if (ng_choice.job == JOB_RANDOM)
+        spfirst = true;
+    // If we're here then they're both fixed and the order doesn't matter.
+    else
+        spfirst = true;
+    if (spfirst)
     {
         _resolve_species(ng, ng_choice);
         _resolve_job(ng, ng_choice);
@@ -648,10 +663,14 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         switch (id)
         {
             case '*':
+                if (overwrite_prompt)
+                    break; // too weird
                 reader.putkey(CK_END);
                 reader.putkey(CONTROL('U'));
                 for (char ch : newgame_random_name())
                     reader.putkey(ch);
+                good_name = is_good_name(buf, true);
+                ok_switcher->current() = good_name ? 0 : 1;
                 break;
             case CK_ESCAPE: // redundant with key_exits_popup check below
                 done = cancel = true;
@@ -1120,7 +1139,7 @@ static job_group jobs_order[] =
         coord_def(2, 0), 22,
         { JOB_HEDGE_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
+          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_ALCHEMIST }
     }
 };
 
@@ -1578,9 +1597,6 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
         if (this_species == SP_UNKNOWN)
             break;
 
-        if (this_species == SP_METEORAN && ng.type == GAME_TYPE_SPRINT)
-            continue;
-
         if (ng.job == JOB_UNKNOWN && !species::is_starting_species(this_species))
             continue;
 
@@ -1646,14 +1662,14 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
         game_ended(game_exit::abort);
 }
 
-typedef pair<weapon_type, char_choice_restriction> weapon_choice;
+typedef pair<weapon_type, char_choice_restriction> weap_choice;
 
 static weapon_type _fixup_weapon(weapon_type wp,
-                                 const vector<weapon_choice>& weapons)
+                                 const vector<weap_choice>& weapons)
 {
     if (wp == WPN_UNKNOWN || wp == WPN_RANDOM || wp == WPN_VIABLE)
         return wp;
-    for (weapon_choice choice : weapons)
+    for (weap_choice choice : weapons)
         if (wp == choice.first)
             return wp;
     return WPN_UNKNOWN;
@@ -1661,7 +1677,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
 
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,
-                                   const vector<weapon_choice>& weapons,
+                                   const vector<weap_choice>& weapons,
                                    shared_ptr<OuterMenu>& main_items,
                                    shared_ptr<OuterMenu>& sub_items)
 {
@@ -1795,7 +1811,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
  */
 static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults,
-                           const vector<weapon_choice>& weapons)
+                           const vector<weap_choice>& weapons)
 {
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
@@ -1941,15 +1957,15 @@ weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
     }
 }
 
-static vector<weapon_choice> _get_weapons(const newgame_def& ng)
+static vector<weap_choice> _get_weapons(const newgame_def& ng)
 {
-    vector<weapon_choice> weapons;
+    vector<weap_choice> weapons;
     weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
                                 WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
                                 WPN_UNARMED };
     for (int i = 0; i < 7; ++i)
     {
-        weapon_choice wp;
+        weap_choice wp;
         wp.first = startwep[i];
         if (job_gets_good_weapons(ng.job))
         {
@@ -1965,7 +1981,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 }
 
 static void _resolve_weapon(newgame_def& ng, newgame_def& ng_choice,
-                            const vector<weapon_choice>& weapons)
+                            const vector<weap_choice>& weapons)
 {
     int weapon = ng_choice.weapon;
 
@@ -1981,7 +1997,7 @@ static void _resolve_weapon(newgame_def& ng, newgame_def& ng_choice,
     case WPN_VIABLE:
     {
         int good_choices = 0;
-        for (weapon_choice choice : weapons)
+        for (weap_choice choice : weapons)
         {
             if (choice.second == CC_UNRESTRICTED
                 && one_chance_in(++good_choices))
@@ -2018,7 +2034,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
     if (!job_has_weapon_choice(ng.job))
         return true;
 
-    vector<weapon_choice> weapons = _get_weapons(ng);
+    vector<weap_choice> weapons = _get_weapons(ng);
 
     ASSERT(!weapons.empty());
     if (weapons.size() == 1)

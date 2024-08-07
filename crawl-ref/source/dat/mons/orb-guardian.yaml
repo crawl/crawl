@@ -1,0 +1,16 @@
+name: "Orb Guardian"
+glyph: {char: "X", colour: magenta}
+flags: [fighter, see_invis, no_poly_to]
+xp_mult: 20
+will: 120
+attacks:
+ - {type: hit, damage: 45}
+hd: 15
+hp_10x: 825
+ac: 13
+ev: 13
+intelligence: human
+speed: 14
+uses: open_doors
+size: giant
+shape: misc

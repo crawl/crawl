@@ -1,0 +1,20 @@
+name: "Sigmund"
+glyph: {char: "@", colour: yellow}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 55
+species: human
+will: 10
+attacks:
+ - {type: hit, damage: 1}
+hd: 3
+hp_10x: 270
+ac: 0
+ev: 11
+spells: orc_wizard
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {attack: 15}
+uses: weapons_armour
+size: medium
+shape: humanoid

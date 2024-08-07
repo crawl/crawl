@@ -1,0 +1,19 @@
+name: "Hell Sentinel"
+glyph: {char: "1", colour: brown}
+flags: [see_invis]
+resists: {elec: 3, poison: 3, fire: 3, cold: 3, damnation: 1}
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: hit, damage: 40}
+ - {type: hit, damage: 25}
+hd: 19
+hp_10x: 1425
+ac: 25
+ev: 3
+spells: hell_sentinel
+shout: roar
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

@@ -1,0 +1,21 @@
+name: "the Enchantress"
+enum: enchantress
+glyph: {char: "i", colour: lightmagenta}
+flags: [see_invis, speaks, warm_blood, unique, female]
+xp_mult: 35
+species: spriggan
+will: 160
+attacks:
+ - {type: hit, damage: 26}
+hd: 15
+hp_10x: 975
+ac: 1
+ev: 30
+spells: enchantress
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 6}
+uses: weapons_armour
+size: little
+shape: humanoid

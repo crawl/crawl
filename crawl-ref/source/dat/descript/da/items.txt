@@ -50,13 +50,6 @@ bolt
 
 Et metalprojektil, kortere end en pil, der skal affyres med en armbrøst.
 %%%%
-book of alchemy
-
-En bog som fokuserer på alkymistiske processer og hvordan man bruger dem i
-magiske besværgelser. Den samler mange af oldtidens alkymisters visdom. Når
-bogen åbnes, kondenseres blækket ud af den blå luft ned på siderne og afslører
-teksten.
-%%%%
 book of annihilations
 
 Denne bogs lasede sider bløder, og selv analfabeter kan mærke kraften i det
@@ -282,13 +275,13 @@ glaive
 
 En stage med en stor, tung klinge i den ene ende.
 %%%%
-gold dragon scales
+golden dragon scales
 
 En magisk rustning, som er lavet af en gulddrages skæl. Den er meget tungere
 end de fleste drageskæls-rustninger og beskytter bæreren mod gift, ild og
 kulde.
 %%%%
-gold dragon hide
+golden dragon hide
 
 En gulddrages skind, dækket af ekstremt hårde, gyldne skæl. I sin ubehandlede
 form giver det ikke megen beskyttelse ud over modstandskraft over for gift, ild

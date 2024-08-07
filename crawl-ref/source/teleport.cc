@@ -72,17 +72,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     if (is_constricted())
     {
         was_constricted = true;
-
-        if (!attempt_escape(2))
-        {
-            if (!quiet)
-            {
-                string message = " struggles to " + verb
-                                 + " free from constriction.";
-                simple_monster_message(*this, message.c_str());
-            }
-            return false;
-        }
+        stop_being_constricted(false, "blinks");
     }
 
     if (!quiet)
@@ -192,14 +182,17 @@ bool monster_space_valid(const monster* mons, coord_def target,
 }
 
 static bool _monster_random_space(const monster* mons, coord_def& target,
-                                  bool forbid_sanctuary)
+                                  bool forbid_sanctuary, bool away_from_player)
 {
     int tries = 0;
     while (tries++ < 1000)
     {
         target = random_in_bounds();
-        if (monster_space_valid(mons, target, forbid_sanctuary))
+        if (monster_space_valid(mons, target, forbid_sanctuary)
+            && (!away_from_player || !you.see_cell_no_trans(target)))
+        {
             return true;
+        }
     }
 
     return false;
@@ -223,7 +216,7 @@ void mons_relocated(monster* mons)
     }
 }
 
-void monster_teleport(monster* mons, bool instan, bool silent)
+void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_player)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool was_seen = !silent && you.can_see(*mons);
@@ -249,10 +242,16 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
-    if (!_monster_random_space(mons, newpos, !mons->wont_attack()))
+    if (!_monster_random_space(mons, newpos, !mons->wont_attack(), away_from_player))
     {
-        simple_monster_message(*mons, " flickers for a moment.");
-        return;
+        // If we're trying to teleport away from the player and failed, try once
+        // more without that restriction before giving up.
+        if (!away_from_player
+            || !_monster_random_space(mons, newpos, !mons->wont_attack(), false))
+        {
+            simple_monster_message(*mons, " flickers for a moment.");
+            return;
+        }
     }
 
     if (!silent)
@@ -308,9 +307,22 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     vector<coord_weight> dests;
     const coord_def tpos = target->pos();
 
+    int max_weight = 0;
+
+    // Calculate weight of our starting pos, so we can compare if the weights of
+    // other positions will improve it.
+    int stay_weight;
+    int stay_dist = (tpos - moved->pos()).rdist();
+    if (close)
+        stay_weight = (LOS_RADIUS - stay_dist) * (LOS_RADIUS - stay_dist);
+    else
+        stay_weight = stay_dist;
+    if (stay_weight < 0)
+        stay_weight = 0;
+
     for (radius_iterator ri(moved->pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (!valid_blink_destination(moved, *ri, !allow_sanct)
+        if (!valid_blink_destination(*moved, *ri, !allow_sanct)
             || (keep_los && !target->see_cell_no_trans(*ri)))
         {
             continue;
@@ -324,7 +336,23 @@ static coord_def random_space_weighted(actor* moved, actor* target,
             weight = dist;
         if (weight < 0)
             weight = 0;
+
+        if (weight > max_weight)
+            max_weight = weight;
+
         dests.emplace_back(*ri, weight);
+    }
+
+    // Prevent choosing spots below a minimum weight threshold, so long as at
+    // least one spot exists above that threshold. (Mostly to make sure that
+    // blink away does actually move things away, if it's possible to do so)
+    if (max_weight > stay_weight)
+    {
+        for (unsigned int i = 0; i < dests.size(); ++i)
+        {
+            if (dests[i].second <= stay_weight)
+                dests[i].second = 0;
+        }
     }
 
     coord_def* choice = random_choose_weighted(dests);
@@ -347,6 +375,17 @@ void blink_other_close(actor* victim, const coord_def &target)
         victim->as_monster()->blink_to(dest, false, false);
     else
         victim->blink_to(dest);
+}
+
+// Blink the player away from a given monster
+bool blink_player_away(monster* caster)
+{
+    coord_def dest = random_space_weighted(&you, caster, false, false, true);
+    if (dest.origin())
+        return false;
+    bool success = you.blink_to(dest, false);
+    ASSERT(success || you.is_constricted());
+    return success;
 }
 
 // Blink a monster away from the caster.
@@ -376,36 +415,32 @@ bool blink_away(monster* mon, bool self_cast)
 }
 
 // Blink the monster within range but at distance to its foe.
-void blink_range(monster* mon)
+void blink_range(monster &mon)
 {
-    ASSERT(mon); // XXX: change to monster &mon
-
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(*foe))
+    actor* foe = mon.get_foe();
+    if (!foe || !mon.can_see(*foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, false, true);
+    coord_def dest = random_space_weighted(&mon, foe, false, true);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest);
-    ASSERT(success || mon->is_constricted());
+    bool success = mon.blink_to(dest);
+    ASSERT(success || mon.is_constricted());
 #ifndef ASSERTS
     UNUSED(success);
 #endif
 }
 
 // Blink the monster close to its foe.
-void blink_close(monster* mon)
+void blink_close(monster &mon)
 {
-    ASSERT(mon); // XXX: change to monster &mon
-
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(*foe))
+    actor* foe = mon.get_foe();
+    if (!foe || !mon.can_see(*foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, true, true, true);
+    coord_def dest = random_space_weighted(&mon, foe, true, true, true);
     if (dest.origin())
         return;
-    bool success = mon->blink_to(dest, false);
-    ASSERT(success || mon->is_constricted());
+    bool success = mon.blink_to(dest, false);
+    ASSERT(success || mon.is_constricted());
 #ifndef ASSERTS
     UNUSED(success);
 #endif
@@ -414,36 +449,43 @@ void blink_close(monster* mon)
 // This only checks the contents of the tile - nothing in between.
 // Could compact most of this into a big boolean if you wanted to trade
 // readability for dubious speed improvements.
-bool valid_blink_destination(const actor* moved, const coord_def& target,
+bool valid_blink_destination(const actor &moved, const coord_def& target,
                              bool forbid_sanctuary,
-                             bool forbid_unhabitable)
+                             bool forbid_unhabitable,
+                             bool incl_unseen)
 {
-    ASSERT(moved);
-
     if (!in_bounds(target))
         return false;
-    if (actor_at(target))
+    actor *targ_act = actor_at(target);
+    if (targ_act
+        && (incl_unseen || moved.can_see(*targ_act)
+            || env.map_knowledge(targ_act->pos()).invisible_monster()))
+    {
         return false;
+    }
     if (forbid_unhabitable)
     {
-        if (!moved->is_habitable(target))
+        if (!moved.is_habitable(target))
             return false;
-        if (moved->is_player() && is_feat_dangerous(env.grid(target), true))
+        if (moved.is_player() && is_feat_dangerous(env.grid(target), true))
             return false;
     }
     if (forbid_sanctuary && is_sanctuary(target))
         return false;
-    if (!moved->see_cell_no_trans(target))
+    if (!moved.see_cell_no_trans(target))
         return false;
 
     return true;
 }
 
+// This is for purposes of the targeter UI only, and will include destinations
+// that contain invisible monsters which the player cannot see (even though
+// a real blink will never move them there).
 vector<coord_def> find_blink_targets()
 {
     vector<coord_def> result;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-        if (valid_blink_destination(&you, *ri))
+        if (valid_blink_destination(you, *ri, false, true, false))
             result.push_back(*ri);
 
     return result;
@@ -474,7 +516,7 @@ bool random_near_space(const actor* victim,
 
         target = origin + (p - tried_o);
 
-        if (valid_blink_destination(victim, target,
+        if (valid_blink_destination(*victim, target,
                                     forbid_sanctuary, forbid_unhabitable)
             && (allow_adjacent || grid_distance(origin, target) > 1))
         {

@@ -85,7 +85,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 
         // If there's a foreground, sandwich it between two semi-transparent
         // clouds at different z-indices. This uses the same alpha fading as
-        // a swimming characters but applied to the cloud (instead of as normal
+        // a swimming character but applied to the cloud (instead of as normal
         // applied to the character).
         if (fg_idx)
         {
@@ -167,19 +167,15 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
 
 void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y)
 {
-    tileidx_t base = tileidx_known_base_item(tileidx);
+    const tileidx_t base = tileidx_known_base_item(tileidx);
     if (base)
         m_buf_main.add(base, x, y);
 
     m_buf_main.add(tileidx, x, y);
 }
 
-void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y, int ox, int oy)
+void DungeonCellBuffer::add_special_tile(int tileidx, int x, int y, int ox, int oy)
 {
-    tileidx_t base = tileidx_known_base_item(tileidx);
-    if (base)
-        m_buf_main.add(base, x, y, ox, oy, false);
-
     m_buf_main.add(tileidx, x, y, ox, oy, false);
 }
 
@@ -392,6 +388,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
+            if (cell.is_blasphemy)
+                m_buf_feat.add(TILE_BLASPHEMY, x, y);
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
@@ -407,6 +405,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
             if (cell.awakened_forest)
                 m_buf_icons.add(TILEI_BERSERK, x, y);
+            if (cell.has_bfb_corpse)
+                m_buf_feat.add(TILE_BLOOD_FOR_BLOOD, x, y);
 
             if (cell.fg)
             {
@@ -419,16 +419,33 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
 
                 const tileidx_t threat_flag = cell.fg & TILE_FLAG_THREAT_MASK;
-                if (threat_flag == TILE_FLAG_TRIVIAL)
-                    m_buf_feat.add(TILE_THREAT_TRIVIAL, x, y);
-                else if (threat_flag == TILE_FLAG_EASY)
-                    m_buf_feat.add(TILE_THREAT_EASY, x, y);
-                else if (threat_flag == TILE_FLAG_TOUGH)
-                    m_buf_feat.add(TILE_THREAT_TOUGH, x, y);
-                else if (threat_flag == TILE_FLAG_NASTY)
-                    m_buf_feat.add(TILE_THREAT_NASTY, x, y);
-                else if (threat_flag == TILE_FLAG_UNUSUAL)
-                    m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
+
+                if (cell.fg & TILE_FLAG_GHOST)
+                {
+                    if (threat_flag == TILE_FLAG_TRIVIAL)
+                        m_buf_feat.add(TILE_THREAT_GHOST_TRIVIAL, x, y);
+                    else if (threat_flag == TILE_FLAG_EASY)
+                        m_buf_feat.add(TILE_THREAT_GHOST_EASY, x, y);
+                    else if (threat_flag == TILE_FLAG_TOUGH)
+                        m_buf_feat.add(TILE_THREAT_GHOST_TOUGH, x, y);
+                    else if (threat_flag == TILE_FLAG_NASTY)
+                        m_buf_feat.add(TILE_THREAT_GHOST_NASTY, x, y);
+                    else if (threat_flag == TILE_FLAG_UNUSUAL)
+                        m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
+                }
+                else
+                {
+                    if (threat_flag == TILE_FLAG_TRIVIAL)
+                        m_buf_feat.add(TILE_THREAT_TRIVIAL, x, y);
+                    else if (threat_flag == TILE_FLAG_EASY)
+                        m_buf_feat.add(TILE_THREAT_EASY, x, y);
+                    else if (threat_flag == TILE_FLAG_TOUGH)
+                        m_buf_feat.add(TILE_THREAT_TOUGH, x, y);
+                    else if (threat_flag == TILE_FLAG_NASTY)
+                        m_buf_feat.add(TILE_THREAT_NASTY, x, y);
+                    else if (threat_flag == TILE_FLAG_UNUSUAL)
+                        m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
+                }
 
                 if (cell.is_highlighted_summoner)
                     m_buf_feat.add(TILE_HALO_SUMMONER, x, y);
@@ -482,7 +499,7 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_WEAKENED,       6 },
     { TILEI_WATERLOGGED,    10 },
     { TILEI_STILL_WINDS,    10 },
-    { TILEI_SIMULACRUM,     8 },
+    { TILEI_GHOSTLY,        8 },
     { TILEI_ANTIMAGIC,      10 },
     { TILEI_DAZED,          6 },
     { TILEI_PARTIALLY_CHARGED, 6 },
@@ -498,16 +515,25 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_GLOW_LIGHT,     10 },
     { TILEI_GLOW_HEAVY,     10 },
     { TILEI_PAIN_BOND,      11 },
+    { TILEI_BULLSEYE,       10 },
+    { TILEI_VITRIFIED,      6 },
+    { TILEI_CURSE_OF_AGONY, 10 },
+    { TILEI_REGENERATION,   8 },
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
     { TILEI_IDEALISED,      FIXED_LOC_ICON },
+    { TILEI_TOUCH_OF_BEOGH, FIXED_LOC_ICON },
 
     // These are always in the top left. They may overlap.
     // (E.g. for summoned dancing weapons or animated armour.)
     { TILEI_ANIMATED_WEAPON, FIXED_LOC_ICON },
     { TILEI_SUMMONED,        FIXED_LOC_ICON },
     { TILEI_PERM_SUMMON,     FIXED_LOC_ICON },
+    { TILEI_VENGEANCE_TARGET,FIXED_LOC_ICON },
+
+    // Along the bottom of the monster.
+    { TILEI_SHADOWLESS,      FIXED_LOC_ICON },
 };
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)

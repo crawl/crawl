@@ -49,7 +49,7 @@ For but a moment your mind is laid bare before the towering infinitude of the un
 
 Your skull pulses and throbs as words spoken in an unspeakable tongue drift across your psyche.
 
-A thin, monotonous whinny from outside of time grows ever louder in your ears.
+A thin, monotonous whinny from outside of time grows ever louder.
 
 Shapeless horrors persist on the edge of your vision, drawing ever closer.
 
@@ -282,8 +282,7 @@ You shudder with dread.
 
 You suddenly feel all small and vulnerable.
 
-You taste blood in your mouth. It's definitely not yours.
-
+Blood fills your mouth. It's definitely not yours.
 %%%%
 hell_effect_noisy
 
@@ -331,4 +330,5 @@ You hear your own voice laughing maniacally!
 
 You hear your own voice screaming in agony!
 
+You hear your own voice wailing miserably!
 %%%%

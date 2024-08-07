@@ -1,0 +1,16 @@
+name: "ice devil"
+glyph: {char: "4", colour: white}
+resists: {poison: 1, fire: -1, cold: 3}
+xp_mult: 11
+holiness: [demonic]
+will: 80
+attacks:
+ - {type: hit, flavour: cold, damage: 16}
+hd: 8
+hp_10x: 440
+ac: 12
+ev: 10
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

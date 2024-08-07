@@ -84,6 +84,7 @@ struct player_info
     FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<bool, ENDOFPACK> inv_uselessness;
     FixedVector<int8_t, NUM_EQUIP> equip;
+    bool offhand_weapon;
     int8_t quiver_item;
     string quiver_desc;
     string unarmed_attack;
@@ -284,9 +285,6 @@ protected:
     void mark_clean(const coord_def& gc);
     bool is_dirty(const coord_def& gc);
     bool cell_needs_redraw(const coord_def& gc);
-
-    int m_current_flash_colour;
-    int m_next_flash_colour;
 
     FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
     map<uint32_t, coord_def> m_monster_locs;

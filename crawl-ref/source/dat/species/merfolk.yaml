@@ -9,7 +9,7 @@ aptitudes:
   xp: 0
   hp: 0
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   short_blades: 2
   long_blades: 2
@@ -26,13 +26,12 @@ aptitudes:
   conjurations: -2
   necromancy: -2
   translocations: -2
-  transmutations: 3
   shapeshifting: 2
   fire_magic: -3
   ice_magic: 1
   air_magic: -2
   earth_magic: -2
-  poison_magic: 1
+  alchemy: 3
   invocations: 1
 can_swim: true
 str: 8
@@ -44,12 +43,14 @@ mutations:
     MUT_MERTAIL: 1
     MUT_NIMBLE_SWIMMER: 2
 recommended_jobs:
-  - JOB_GLADIATOR
-  - JOB_BERSERKER
-  - JOB_SHAPESHIFTER
-  - JOB_SUMMONER
-  - JOB_ICE_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - gladiator
+  - berserker
+  - shapeshifter
+  - summoner
+  - ice elementalist
+  - alchemist
 recommended_weapons:
-  - SK_POLEARMS
-  - SK_LONG_BLADES
+  - polearms
+  - long blades
+
+orc_name: Merforc

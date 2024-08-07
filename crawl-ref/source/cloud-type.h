@@ -33,7 +33,7 @@ enum cloud_type
     CLOUD_SPECTRAL,
     CLOUD_ACID,
     CLOUD_STORM,
-    CLOUD_NEGATIVE_ENERGY,
+    CLOUD_MISERY,
     CLOUD_FLUFFY,
     CLOUD_XOM_TRAIL,
     CLOUD_SALT,
@@ -45,6 +45,7 @@ enum cloud_type
     CLOUD_DEGENERATION,
     CLOUD_BLASTMOTES,
     CLOUD_ELECTRICITY,
+    CLOUD_FAINT_MIASMA,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

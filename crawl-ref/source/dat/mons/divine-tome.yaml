@@ -1,0 +1,19 @@
+name: "walking divine tome"
+enum: divine_tome
+glyph: {char: ";", colour: lightgreen}
+xp_mult: 14
+species: earthen_tome
+genus: walking_tome
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 20}
+hd: 20
+hp_10x: 1000
+ac: 10
+ev: 5
+spells: walking_tome
+shout: rustle
+intelligence: brainless
+size: small
+shape: misc

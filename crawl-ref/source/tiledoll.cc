@@ -365,7 +365,7 @@ void fill_doll_equipment(dolls_data &result)
         break;
     default:
         // A monster tile is being used for the player.
-        if (Options.tile_use_monster != MONS_0)
+        if (player_uses_monster_tile())
         {
             result.parts[TILEP_PART_BASE]    = tileidx_player_mons();
             result.parts[TILEP_PART_HAIR]    = 0;
@@ -413,7 +413,7 @@ void fill_doll_equipment(dolls_data &result)
     // Off hand.
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_SHIELD] ? -1 : you.equip[EQ_SHIELD];
+        const int item = you.melded[EQ_OFFHAND] ? -1 : you.equip[EQ_OFFHAND];
         if (you.form == transformation::blade_hands)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
@@ -425,6 +425,8 @@ void fill_doll_equipment(dolls_data &result)
         }
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
+        else if (you.offhand_weapon())
+            result.parts[TILEP_PART_HAND2] = mirror_weapon(you.inv[item]);
         else
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
     }
@@ -542,7 +544,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_ENCH] == TILEP_SHOW_EQUIP)
     {
         result.parts[TILEP_PART_ENCH] =
-            (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
+            (you.duration[DUR_STICKY_FLAME] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
     // Draconian head/wings.
     if (species::is_draconian(you.species))
@@ -606,7 +608,7 @@ void save_doll_file(writer &dollf)
     dollf.write(fbuf, strlen(fbuf));
 }
 
-void reveal_bardings(tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
+void reveal_bardings(const tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
 {
     const tileidx_t base = parts[TILEP_PART_BASE];
     if (is_player_tile(base, TILEP_BASE_NAGA)
@@ -620,57 +622,16 @@ void reveal_bardings(tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
                    int x, int y, bool submerged, bool ghost)
 {
-    // Ordered from back to front.
-    int p_order[TILEP_PART_MAX] =
-    {
-        // background
-        TILEP_PART_SHADOW,
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        // player
-        TILEP_PART_BASE,
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,
-        TILEP_PART_HAND2
-    };
-
+    int p_order[TILEP_PART_MAX];
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[7] = TILEP_PART_BOOTS;
-        p_order[6] = TILEP_PART_LEG;
-    }
-
-    // Draw scarves above other clothing.
-    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
-    {
-        p_order[4] = p_order[5];
-        p_order[5] = p_order[6];
-        p_order[6] = p_order[7];
-        p_order[7] = p_order[8];
-        p_order[8] = p_order[9];
-        p_order[9] = TILEP_PART_CLOAK;
-    }
-
-    reveal_bardings(doll.parts, flags);
+    tilep_fill_order_and_flags(doll, p_order, flags);
 
     // Set up mcache data based on equipment. We don't need this lookup if both
     // pairs of offsets are defined in Options.
     int draw_info_count = 0, dind = 0;
     mcache_entry *entry = nullptr;
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
-    if (Options.tile_use_monster != MONS_0)
+    if (player_uses_monster_tile())
     {
         monster_info minfo(MONS_PLAYER, MONS_PLAYER);
         minfo.props[MONSTER_TILE_KEY] = int(doll.parts[TILEP_PART_BASE]);
@@ -680,9 +641,9 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             item = new item_def(get_item_known_info(*you.slot_item(EQ_WEAPON)));
             minfo.inv[MSLOT_WEAPON].reset(item);
         }
-        if (you.slot_item(EQ_SHIELD))
+        if (you.slot_item(EQ_OFFHAND))
         {
-            item = new item_def(get_item_known_info(*you.slot_item(EQ_SHIELD)));
+            item = new item_def(get_item_known_info(*you.slot_item(EQ_OFFHAND)));
             minfo.inv[MSLOT_SHIELD].reset(item);
         }
         tileidx_t mcache_idx = mcache.register_monster(minfo);
@@ -692,6 +653,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             draw_info_count = entry->info(&dinfo[0]);
         }
     }
+
     // A higher index here means that the part should be drawn on top.
     // This is drawn in reverse order because this could be a ghost
     // or being drawn in water, in which case we want the top-most part
@@ -710,17 +672,39 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
 
         int ofs_x = 0, ofs_y = 0;
         if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON)
-             || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
+             || p == TILEP_PART_HAND2 && you.slot_item(EQ_OFFHAND))
             && dind < draw_info_count - 1)
         {
             ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
             ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
             ++dind;
         }
+
         const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }
 }
 #endif
+
+// Pack the appropriate tiles to represent a given paperdoll, in the right order
+void pack_tilep_set(vector<tile_def>& tileset, const dolls_data &doll)
+{
+    int p_order[TILEP_PART_MAX];
+    int flags[TILEP_PART_MAX];
+    tilep_fill_order_and_flags(doll, p_order, flags);
+
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
+    {
+        const int p   = p_order[i];
+        const tileidx_t idx = doll.parts[p];
+        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
+
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
+        tileset.emplace_back(idx, ymax);
+    }
+}
 
 #endif

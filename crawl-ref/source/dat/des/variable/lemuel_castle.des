@@ -33,7 +33,7 @@ function castle_lemuel_setup(e)
            e.mons("gnoll bouda / gnoll sergeant / orc warrior"
                   .. " / kobold brigand")
            e.mons("troll / two-headed ogre / cyclops / kobold demonologist")
-           e.mons("hound / howler monkey / warg w:5")
+           e.mons("hound / howler monkey / wolf w:5")
            e.mons("orc / gnoll / ogre")
            e.mons("hound / howler monkey")
            e.subst("* = %$")
@@ -56,7 +56,7 @@ function castle_lemuel_setup(e)
            e.mons("orc knight / ogre mage / orc sorcerer / orc high priest"
                   .. " / deep elf knight / deep elf archer"
                   .. " / deep elf zephyrmancer")
-           e.mons("warg w:15 / hell hound / raiju w:5")
+           e.mons("warg w:15 / hell hound / raiju w:5 / obsidian bat w:1")
            e.mons("gnoll sergeant / orc warrior / troll")
            e.mons("howler monkey / warg w:50")
            e.subst("* = %*")
@@ -70,7 +70,7 @@ function castle_lemuel_setup(e)
            e.mons("orc warlord / deep troll earth mage / fire giant"
                   .. " / frost giant / tengu reaver / deep elf annihilator"
                   .. " / deep elf high priest")
-           e.mons("warg / hell hound / raiju")
+           e.mons("warg / hell hound / raiju / obsidian bat w:1")
            e.mons("two-headed ogre / troll / cyclops / tengu warrior")
            e.mons("warg / hell hound")
         end
@@ -90,8 +90,10 @@ function castle_lemuel_setup(e)
                    .. " / black draconian / purple draconian")
            e.kmons("6 = fire dragon / ice dragon / death drake / storm dragon"
                    .. " / shadow dragon")
+           e.kitem("R = |, midnight gem")
            e.kfeat("3 = enter_zot")
            e.subst("w : wl")
+           e.nsubst("| = 1:R / *:|")
        -- Depths uses a theme of mostly large/giant monsters.
        else
            e.mons("deep troll / iron troll / deep troll shaman / ettin"
@@ -110,12 +112,14 @@ function castle_lemuel_setup(e)
    e.kmons("p = plant / fungus w:1")
    e.kfeat("~ = alarm trap w:1 / floor")
    e.kfeat("m = iron_grate")
+   e.kfeat("M = cache of meat")
    e.subst("D = c +:1")
    e.subst("8 = 89")
+   e.subst("M : M..")
    e.colour("? = brown")
    e.ftile("? = floor_mud")
    e.tile("c = wall_stone_smooth")
-   e.ftile("DG+|*$.~ = floor_cobble_blood")
+   e.ftile("DG+M$%|*.~ = floor_cobble_blood")
    e.ftile("12348 = floor_cobble_blood")
 end
 }}
@@ -132,7 +136,7 @@ TAGS:   lemuel_castle_interior unrand
 MAP
 +c....+~......+..+......~+.***c+
 .c||..ccccccccc++ccccccccc.***c.
-1c||2.c1......1321......1c.$$$c1
+1c||2Mc1......1321......1cM$$$c1
 .cccccc.......2112.......cccccc.
 .+....+..1.....22.....1..+....+.
 .+....+......1....1......+....+.
@@ -153,7 +157,7 @@ MAP
 .c|.2.D*m.1..........1.m|c....c.
 .ccm+mc|m.....1111.....m|cm+mcc.
 ......c|m..1...22......m*c..1...
-......c.+....1132.2....+.D..1...
+......cM+....1132.2....+MD..1...
 .cccccccccccccccccccccccccccccc.
 .c........1..m....m..1........c.
 .+.12........+....+..........2+.
@@ -170,7 +174,7 @@ ITEM:   nothing w:20 / potion of ambrosia ident:type
 MAP
 +c....+.......1.............*|c+
 ...1..cccccccccccccccccccccccDc.
-cc....c......cG..Gc.1.......c|c1
+cc....cM.....cG..Gc.1......Mc|c1
 *cc++cc..cG..+....+...12....m|c.
 |....~12.cG..+....+...23....+.c.
 $....~.2.....c....c...12....m*c.
@@ -192,7 +196,7 @@ MAP
 .c..2........c.12.c...........c.
 .cc++c.........ww.....2..1c++cc.
 .....c.2.......ww.........c.....
-.2...c...1...c..$.c...1...c..1..
+.2...c...1..Mc..$.cM..1...c..1..
 .ccccc+cccccccccDcccccccc+ccccc.
 .c.1.c.~..1..+....+2....~.c2..c.
 .~.c$c.~2....c....c.....~.c$c1~.

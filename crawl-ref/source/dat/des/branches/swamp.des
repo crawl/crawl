@@ -40,6 +40,8 @@ function swamp_ruins(e)
     e.tags('serial_swamp_ruin extra transparent unrand')
     e.depth('Swamp')
     e.weight('6')
+    e.mons('pile of debris')
+    e.item('human skeleton')
     e.tile('x = wall_brick_vines')
     e.ftile('- = floor_sandstone')
     e.subst('- = .')
@@ -688,8 +690,11 @@ TTTTTtttt.t.t.ttttTTTTT
          Tt@tT
 ENDMAP
 
-NAME: nicolae_swamp_godswood
-TAGS: transparent extra decor
+NAME:  nicolae_swamp_godswood
+TAGS:  transparent extra decor no_pool_fixup
+KMONS: S = sacred lotus
+KFEAT: C = altar_elyvilon / altar_fedhas / altar_wu_jian
+SUBST: S = SSw
 MAP
 ttt     ttt
 ..ttttttt..
@@ -699,7 +704,7 @@ tttt...tttt
  tt..t..tt
  t.......t
  tt..w..tt
-  t.www.t
+  t.wSw.t
  tt..w..tt
  t...C...t
  tt..t..tt
@@ -767,9 +772,9 @@ ENDMAP
 
 NAME:    hangedman_swamp_lotus
 TAGS:    transparent extra no_pool_fixup decor
-MONS:    plant
-SHUFFLE: ABCDE
-SUBST:   AB : w, C : wwW1, D : wWW1, E : W1
+MONS:    plant, sacred lotus
+SHUFFLE: ABCD
+SUBST:   AB : w, C : wwW1, D : wWW1, E : 2w
 KMASK:   wW = no_monster_gen
 MAP
         ... ...
@@ -821,10 +826,9 @@ ENDMAP
 # and skeletons. These vaults are just to give swamp some variety...
 # There are no monsters or loot placed here.
 NAME:   evilmike_swamp_ruin_house_1
-NSUBST: x = 1:+ / *:x
+NSUBST: x = 1 = x:260 + / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 1:d / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
 : swamp_ruins(_G)
 MAP
   ........
@@ -858,10 +862,9 @@ MAP
 ENDMAP
 
 NAME:   evilmike_swamp_ruin_house_3
-NSUBST: x = 1:+ / *:x
+NSUBST: x = 1 = x:260 + / *:x
 SUBST:  y = x, x = xxxxx-, - = ----.
 NSUBST: - = 1:d / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
 : swamp_ruins(_G)
 MAP
     .....
@@ -896,10 +899,10 @@ MAP
 ENDMAP
 
 NAME:   evilmike_swamp_ruin_house_5
-NSUBST: x = 1:+ / *:x
+NSUBST: x = 1 = x:260 + / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 2:d / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
+ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
   ............
@@ -1020,7 +1023,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_ruin_hall
 SHUFFLE: yYzZ / yYzZ / zZyY
-NSUBST:  - = 2:d- / *:-, z = 1:+ / *:X, Z = 1:. / *:X
+NSUBST:  - = 2:d- / *:-, z = 1 = x:260 + / *:X, Z = 1:. / *:X
 SUBST:   XyY = xxxx-, - = -----.
 : swamp_ruins(_G)
 WEIGHT:  2
@@ -1252,10 +1255,12 @@ ENDMAP
 
 NAME:   nicolae_swamp_well_well_well
 TAGS:   transparent extra decor
-NSUBST: x = . / xxxx.
-SUBST:  p = p..., x : xxxxt, . = ...W
 KMONS:  p = plant
-KFEAT:  p = . w:30 / W
+KMONS:  C = pile of debris
+KFEAT:  p = . / W
+KFEAT:  C = w
+NSUBST: w = 1 = w:130 C / *:w, x = 1 = .:130 C / * = xxxx.
+SUBST:  p = p..., x : xxxxt, . = ...W
 MAP
  ........
 ..pppppp..
@@ -1347,8 +1352,9 @@ ENDMAP
 # http://i.imgur.com/H7nvQFo.jpg
 NAME:   nicolae_swamp_little_tower
 TAGS:   transparent extra no_pool_fixup decor
+KMONS:  C = pile of debris
 KMONS:  P = plant
-NSUBST: X = - / x
+NSUBST: X = 1 = -:260 C / *:x
 SUBST:  T = t-, - = ....P, z = WWw, _ = __w
 CLEAR: _
 MAP
@@ -1429,8 +1435,10 @@ ENDMAP
 NAME:   nicolae_swamp_reclaimed_castle
 TAGS:   transparent decor extra
 DEPTH:  Swamp
+KMONS:  C = pile of debris
 NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x
 NSUBST: K = + / x, L = + / x, M = + / x, N = + / x, O = + / x
+NSUBST: + = 1 = +:260 C / *:+
 SUBST:  ` = .:20 _, ' = .:50 _, + = +:20 ., x = x:110 _, . = .:70 W
 CLEAR:  _
 MAP
@@ -1503,7 +1511,7 @@ ENDMAP
 NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body, necrophage, ghoul
+MONS:    bog body, small abomination, ghoul
 KFEAT:   % = shallow_water / .
 SUBST:   jl = t
 SHUFFLE: jJ / lL, })
@@ -1560,13 +1568,18 @@ NSUBST:  1 = 1:2 / 1:3 / * = 1:80 23
 : else
 KMONS:   1 = green draconian
 KMONS:   a = death drake
-KMONS:   A = tentacled monstrosity / green death
+KMONS:   A = protean progenitor / green death
 KMONS:   B = green draconian stormcaller
 KMONS:   % = ghoul / bog body w:2
-KMONS:   *d = golden dragon w:8 / seven-headed hydra w:5 \
-              / eight-headed hydra w:5
+KMONS:   *d = golden dragon w:8 / seven-headed hydra w:5 / \
+              eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
-SHUFFLE: A%| / ad*
+KFEAT:   t = demonic_tree
+KFEAT:   T = mangrove
+SHUFFLE: A%|t / ad*T
+TILE:    t = dngn_demonic_tree_1 w:3 / dngn_demonic_tree_16 w:3 / \
+             dngn_demonic_tree_8 w:12 / dngn_demonic_tree_9 w:12 / \
+             dngn_demonic_tree_10 / dngn_demonic_tree_11
 : end
 KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch
@@ -1602,7 +1615,8 @@ ENDMAP
 
 NAME:    st_shrine_of_shade
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, ghost crab
+MONS:    bog body w:20 / small abomination w:5 / ghoul w:5 / nothing w:25
+MONS:    ghost crab
 KMONS:   P = withered plant
 SUBST:   p = Pp, p = PP., o = P..
 MAP
@@ -1642,8 +1656,9 @@ DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
+KMONS:   D = pile of debris
 KFEAT:   123 = shallow_water
-SUBST:   . = wwwWWW...t, c = c:17 .:1 t:1 w:1 W:1, C:GC., G=GG., C=cc.
+SUBST:   . = wwwWWW...t, c = c:17 .:1 t:1 w:1 W:1, C:GC., G = GGGD..., C = cc.
 SUBST:   0:45, 4=1112...., 5=1222...., 6=3.
 MAP
 ...C.C.C.C...
@@ -1661,14 +1676,16 @@ C.cc.....cc.C
 ...C.C.C.C...
 ENDMAP
 
-NAME:    st_swamp_ruins_2
-DEPTH:   Swamp, !Swamp:$
-KMONS:   1 = hydra
-KMONS:   2 = swamp dragon
-KMONS:   3 = swamp drake
-KFEAT:   123 = shallow_water
-SUBST:   . = wwwWWW...t, c = c:15 .:1 t:1 w:1 W:1, C=c.
-SUBST:   0:45, 4=11123....., 5=12223.....
+NAME:   st_swamp_ruins_2
+DEPTH:  Swamp, !Swamp:$
+KMONS:  d = pile of debris
+KMONS:  1 = hydra
+KMONS:  2 = swamp dragon
+KMONS:  3 = swamp drake
+KFEAT:  123 = shallow_water
+NSUBST: C = 1 = .:120 d / *:C
+SUBST:  . = wwwWWW...t, c = c:15 .:1 t:1 w:1 W:1, C=c.
+SUBST:  0:45, 4=11123....., 5=12223.....
 MAP
     ......
   ..........
@@ -1778,11 +1795,7 @@ MARKER: K = lua:fog_machine { cloud_type="black smoke", \
 MARKER: L = lua:fog_machine { cloud_type="flame", \
                               pow_min = 100, pow_max = 100, delay = 100, \
                               size = 1, excl_rad = 0, walk_dist = 0 }
-{{
-  dgn.delayed_decay(_G, 'd',
-                    'human skeleton / elf skeleton / dwarf skeleton' ..
-                    ' / orc skeleton')
-}}
+ITEM:   human skeleton / elf skeleton / dwarf skeleton / orc skeleton
 MAP
      wwwwww
     wwxxxxww
@@ -1836,15 +1849,17 @@ wwwww.wwwwwww
 ENDMAP
 
 NAME:   grunt_ruined_hall
+TAGS:   no_pool_fixup
 MONS:   swamp dragon, hydra, patrolling bog body
-NSUBST: : = 1:1 / 2:2 / 3:3 / 6:0 / *:-
-SUBST:  - = .W
-SUBST:  C = c:20 . W
-SUBST:  + = +.
-SUBST:  G = Gg
+KMONS:  d = pile of debris
 KITEM:  g = stone w:40 / large rock q:1
+KFEAT:  d = w
 KFEAT:  g = floor
 KFEAT:  _ = altar_yredelemnul / altar_kikubaaqudgha
+KFEAT:  d = w
+NSUBST: : = 1:1 / 2:2 / 3:3 / 6:0 / *:-, C = 1 = W:120 d / * = cc.W
+SUBST:  - = .W, + = +.
+SUBST:  G = Gg
 MAP
   --------------------
  -CCCCCCCCCCcccCCCcCCc-
@@ -2115,18 +2130,22 @@ Wxx'xxWWW
   WWW
 ENDMAP
 
-NAME:  cheibrodos_swamp_pet_leeches
-TAGS:  no_monster_gen
-MONS:  vampire mage, tyrant leech
-KPROP: .21 = bloody / w:30 nothing
-KPROP: e = bloody
+NAME:   cheibrodos_swamp_pet_leeches
+TAGS:   no_monster_gen
+MONS:   vampire mage, tyrant leech
+KPROP:  .21 = bloody / w:30 nothing
+KPROP:  e = bloody
+SUBST:  G : Gxx
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
  ttttt
-tt''ett
+tt%$ett
 txx+xxt
 tx.1.xt
-tx2.2xt
+tG2.2Gt
 tx...xt
 txx+xxt
  tt@tt
@@ -2177,7 +2196,7 @@ DEPTH:   Swamp, !Swamp:$
 KMONS:   o = oklob plant
 KFEAT:   ^ = permanent teleport trap
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
-NSUBST:  ' = ^ / o / '
+NSUBST:  ' = 1:^ / 3:o / *:'
 SUBST:   abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%
 SUBST:   _ = .._, . = ......W
 CLEAR:   _
@@ -2373,6 +2392,8 @@ NAME:   nzn_swamp_weyward_sisters
 TAGS:   no_pool_fixup
 DEPTH:  Swamp:2-
 MONS:   patrolling fenstrider witch, fungus, human att:good_neutral
+: dgn.delayed_decay(_G, 'd', 'human corpse')
+KITEM:  e = human skeleton
 KITEM:  f = any good_item no_pickup
 KFEAT:  n = iron_grate
 SUBST:  e = ddee. *:5
@@ -2381,8 +2402,6 @@ NSUBST: 3 = 3 / f / .
 MARKER: O = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
                                 pow_max = 10, delay = 10, size = 1, \
                                 walk_dist = 0, excl_rad = 0 }
-: dgn.delayed_decay(_G, 'd', 'human corpse')
-: dgn.delayed_decay(_G, 'e', 'human skeleton')
 MAP
     xxxxx@t
     xxOxxWt
@@ -2573,7 +2592,7 @@ KMONS:   5 = spectral spriggan rider / spectral spriggan berserker
 KMONS:   6 = freezing wraith / will-o-the-wisp w:5
 ITEM:    executioner's axe
 ITEM:    great sword / triple sword w:5 / great mace / eveningstar \
-         / glaive / bardiche / lajatang / arbalest w:5 / triple crossbow w:5
+         / glaive / bardiche / lajatang / hand cannon w:5 / triple crossbow w:5
 ITEM:    chain mail / plate armour / crystal plate armour w:5 \
          / kite shield / tower shield / helmet / pair of boots / pair of gloves
 ITEM:    wand of charming w:30 / wand of paralysis w:30 / any wand w:5 \
@@ -2967,7 +2986,7 @@ KFEAT:   1 = w
 SHUFFLE: LMN, OPQ, RSZ
 NSUBST:  `- = 2=H / 2=H. / .
 SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
-: dgn.delayed_decay(_G, 'H', 'hydra skeleton')
+KITEM:   H = hydra skeleton
 MAP
      LLLLM
    ZZLLLLMMM
@@ -3021,7 +3040,7 @@ ENDMAP
 NAME:   tekkud_bubbles_buried_in_this_jungle
 TAGS:   no_monster_gen
 DEPTH:  Swamp
-KMONS:  1 = fenstrider witch ; staff of poison | staff of death . \
+KMONS:  1 = fenstrider witch ; staff of alchemy | staff of death . \
                                orb ego:wrath | orb ego:mayhem w:5 . robe
 KMONS:  2 = bog body
 KMONS:  3 = bloated husk
@@ -3103,6 +3122,7 @@ MONS:    swamp dragon, swamp drake, hydra
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:1 / ice dragon w:1 / hydra w:18
 KMONS:   & = the lernaean hydra
+KITEM:   R = mossy gem
 KITEM:   O& = decaying rune of Zot
 SHUFFLE: 12
 SUBST:   - = WW.
@@ -3121,7 +3141,7 @@ MAP
  -tcc...21.1ccc--
 --tc413321.14cct-
 -tcc31333.113cct-
--tcc22113.223cc--
+-tcc2211R3223cc--
 --tcc3333113cct-
  -tcccc3O3ccct--
  --tcccccccct--
@@ -3144,9 +3164,10 @@ MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:2 / hydra w:18
 KMONS:   P = ice dragon w:2 / hydra w:18
 KMONS:   & = the lernaean hydra
+KITEM:   R = mossy gem
 KITEM:   OP& = decaying rune of Zot
-SHUFFLE: Od, 123,  lLO4 / wWP5, 56
-SUBST:   1 = 111., 2 = 2., 3 = 333.
+SHUFFLE: OR / de, 123,  lLO4 / wWP5, 56
+SUBST:   de = %, 1 = 111., 2 = 2., 3 = 333.
 SUBST:   l = l `:2, L~ = ., ' = .t, " = tc
 SUBST:   - = WW.
 KPROP:   ` = no_tele_into
@@ -3161,11 +3182,11 @@ MAP
   --""c".ccccc""-..'
  --"cc_.2ll4ccc""2-
 --"cc..33lL..27"cc'.-
--"cc1122lLl...1.2""---
+-"cc1122lLl.3.1.2""---
 -"c7...llllll21..1.-3-
 -"cc33l4llllll2.cc1-'3
---"ccll.llll34lcc"----
- --"cccO.lld3ccc"--
+--"ccllRlllle4lcc"----
+ --"ccc.Olld3ccc"--
   --""cccccccc""--
    --""""""""""--
     ---""-"""---
@@ -3183,13 +3204,14 @@ WEIGHT:  20
 ORIENT:  southeast
 MONS:    swamp dragon, hydra, swamp drake
 MONS:    the lernaean hydra
+KITEM:   R = mossy gem
+KITEM:   O = decaying rune of Zot
 SHUFFLE: ab, 12
 SUBST:   a = c, b = ', " = ttw, ` = tt`
 SUBST:   u = wwwwwWWWWxxx., ' = W....
 NSUBST:  1 = 2:. / 2:1 / * = 1111.
-NSUBST:  2 = 2:. / 2:2 / * = 2222.
+NSUBST:  2 = 3:. / 2:2 / * = 2222.
 SUBST:   3 = 3333.
-KITEM:   O = decaying rune of Zot
 CLEAR:   `
 MAP
                t
@@ -3199,7 +3221,7 @@ MAP
 ''''""tttttttttttttttttttttttttttttttt
 '''""ttt3wtcccccttcccttccttttttccctttt
 '''"tt.wcccccwwccccwcccccccttcccOccctt
-'''""'ccccuuwuuwuuwuwuuwccccccwu1ucctt
+'''""'ccccuuwuuwuuwuwuuwccccccwR1ucctt
 '3'''1''cuu3uuuuuu2uuu3uuwcccwu2uwcctt
 ''''''''''''''''''''''''uuwwccw3cccctt
 ''""'2'cc'uuuuu'uu'uuuu'u1uuwccabccttt
@@ -3223,122 +3245,34 @@ tttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ###############################################################################
-# Swamp:4 alternative (due)
-NAME:    swamp_fiery
-TAGS:    transparent no_pool_fixup no_rotate
-PLACE:   Swamp:$
-ORIENT:  float
-MONS:    fire dragon, will-o-the-wisp, swamp dragon / hydra w:12
-MONS:    swamp drake / lindwurm w:4
-SUBST:   L = ll., ' = t., " = t
-MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
-             pow_max = 12, delay_min = 40, delay_max = 70, \
-             size = 2, walk_dist = 1, spread_rate= 3, excl_rad = 0 }
-KPROP:   lR = no_cloud_gen
-KFEAT:   XR = lava
-KITEM:   O = decaying rune of Zot
-NSUBST:  O = 1:O / *:l
-SUBST:   - = WW.
-MAP
-     --'--
-   ------4-     ...3
-  --tcct-'- - -..ll.    4' -
- --tccc4c.---4-.lRl.-4-------
- -tccc3c.t-ttt-.ll..-tcc--t--
---tc.L.3cctcccc3...ttccL.ct-
--tccL4ll.ccc12cccccccc3Lc.t--
---tcc.LLl.43Ll344cc.c.L4.cct-
--tcccc4llLLlllLLl..L3Lll.Lct-
---tcc.LllllclllllLlllllL.cct-
- --tcc3LllRccllllRll.443cct--
-  -tccL.Lllllccclll3lcccct--
-  --tccc3L2lcctccO12ccttt--
-   --ttcc1Occt-tccccct----
-    ---tcccct---tttt---
-      --tttt-- -------
-       ------
-ENDMAP
-
-###############################################################################
-# The way to icy death! (due)
-#
-NAME:    swamp_icy
-TAGS:    no_pool_fixup no_rotate transparent
-PLACE:   Swamp:$
-ORIENT:  southeast
-MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly
-KMONS:   ? = swamp worm simulacrum / swamp drake simulacrum
-KFEAT:   Q? = deep_water
-NSUBST:  O = 1:O / *:Y
-SUBST:   X = tt., Y = Wwwww., 4 = 1:15 4
-KITEM:   O = decaying rune of Zot
-NSUBST:  2 = 4 = 2. / * = 2, 0 = 1:412 / 3:2 / 2:. / * = 2., 3 = 1:. / *:3
-MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 8, pow_max = 12, delay_min = 30, delay_max = 40, \
-             size = 2, walk_dist = 1, excl_rad = 0 }
-MAP
-@@             wwttttttttt
-@.  ..        wwttcccccctt
-@ ..  ..  .....wwcc.c3cctt
-    ..  .....w?.wcXc3.Xctt
-      ..    ?ww......cXctt
-           www.wwXc3c3Xctt
-            w?.wXcXc.3cctt
-             ww.wccc..cctt
-              ..ttcc..cctt
-             ..wwtcc2.cctt
-            ..wwttc..ccctt
-           .twwwttcc0Xcctt
-          .tttwwwtcc.0.ctt
-         .tttttwwtc..ccctt
-         .ttttttttcc0.cctt
-          .wwtttttccX0.ctt
-          ..?wttttccc0.cct
-     @@  2.wwwwttttcc.0cct
-    ?@. ..ww?wttttccc.0cct
-   ttww.wwwwwtttttcc..cctt
-   ttw?ww?wwtttcccc.0ccttt
-  ttttwwwwtttcccccc0Xctttt
-  tttttttttcccwwwY0.Yccttt
-  tttttttcccwwQww.YY.wcctt
-   tttttccwwwww22Yww2wwctt
-     ttccwwww22YwwwwY2wctt
-    ttccwww.2YwwQwwwY2wctt
-   ttccww1.YwwwwwwwY2wwctt
-  ttcccwOYwWWcccWY1.wwcctt
- ttcccccwwwwcW4WwOYYcccttt
-tttccccccccccccccccccttttt
-tttttttttttttttttttttttttt
-ENDMAP
-
-###############################################################################
 # Alternative swamp end, by Lemuel
 #
 NAME:    swamp_pestilence
 TAGS:    no_pool_fixup
 PLACE:   Swamp:$
 ORIENT:  southeast
-MONS:    spectral swamp dragon / spectral hydra
-MONS:    hydra zombie / swamp dragon zombie
-MONS:    spectral swamp drake / swamp drake zombie
-MONS:    death drake / vampire mosquito band / w:5 spectral bunyip
+MONS:    spectral swamp dragon / spectral hydra w:12
+MONS:    swamp dragon zombie / hydra zombie w:12
+MONS:    spectral alligator w:12 / alligator zombie
+MONS:    death drake / vampire mosquito band w:5 / spectral bunyip w:5
 MONS:    bloated husk, phantom, bog body
 KMONS:   8 = phantasmal warrior
 KMONS:   9 = ghost crab
-KMONS:   ? = swamp worm zombie / alligator zombie
+KMONS:   ? = swamp worm zombie / tyrant leech zombie
 KMONS:   O = bone dragon
+KITEM:   o = mossy gem
 KITEM:   O = decaying rune of Zot
 KITEM:   * = *
 KFEAT:   ?Y = deep_water
 KFEAT:   O* = shallow_water
-SHUFFLE: O*
-SUBST:   1 = 113, ? = ??w, " = tc, ' = .w
-NSUBST:  6 = 1:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
+SHUFFLE: Oo / *s
+SUBST:   1 = 113, ? = ??w, " = tc, ' = .w, s = .
+NSUBST:  6 = 1:5 / 3 = 89 / 12 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 1, walk_dist = 0, excl_rad = 0}
 MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
-             pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
+             pow_min = 3, pow_max = 4, delay_min = 45, delay_max = 75, \
              size = 3, walk_dist = 1, excl_rad = 0}
 COLOUR:  YO = green
 MAP
@@ -3353,15 +3287,15 @@ MAP
    tttc...ccccccccccc"ttt
   ttt"cc...Ycccc6666c"ttt
   ttt"ccY...cccO6666cc"tt
- ttttcccc...cc6666666c"tt
+ ttttcccc...cc66o6666c"tt
   t""ccccY.Yccc666666cctt
    "cc1*ccY.Ycc6666666ctt
-   tc211ccc.Ycccc6.666c"t
-   ccc2.1ccY.Ycccc..6cc"t
+   tc211ccc.Ycccc66666c"t
+   ccc2s1ccY.Ycccc..6cc"t
    ""c.1.cccY.ycccWW.cc"t
    "tcc.1.cccy..ccWW..ctt
    "t"c2.21ccc..ccc6wcctt
-   tttcc..2ccc..c..wwc"tt
+   tttcc1.2ccc..c..wwc"tt
    ttt"cc.1WWc...6wcccttt
    tttt"c2.WW...?wcc""ttt
   ttttttccc2.wwwwcc""tttt
@@ -3379,18 +3313,27 @@ NAME:    swamp_vile
 TAGS:    no_pool_fixup no_monster_gen
 PLACE:   Swamp:$
 ORIENT:  southeast
-MONS:    bog body / ugly thing, shadow / orange demon / small abomination w:2
+MONS:    bog body / ugly thing / small abomination w:2
+MONS:    shadowghast / orange demon w:2
 MONS:    large abomination / very ugly thing / thrashing horror w:6
-MONS:    green death, hell beast, great orb of eyes, titanic slime creature
+MONS:    green death, sin beast, great orb of eyes
+MONS:    shadow demon / titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KMONS:   & = the Lernaean hydra
-KITEM:   O = decaying rune of zot
+KITEM:   R = mossy gem
+KITEM:   O = decaying rune of Zot
 KFEAT:   8 = shallow_water
+KFEAT:   T = demonic_tree
 SHUFFLE: yz, '"
-SUBST:   yX = x:20 t:4 W:1, z = ..wwwWWW, ' = ....W, " = wWWW, 5 : 59
-NSUBST:  7 = 1:4 / 1:8 / *:7, 0 = 6:1 / 3:. / *:2
-NSUBST:  5 = 1:5 / 1:6 / * = 56 &:2, 9 = 1 = 9 &:1 / *:.
+SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
+SUBST:   b = bccc, 5 : 59
+NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 7:1 / 3:. / *:2
+NSUBST:  5 = 1:5 / 1:6 / * = 56 &:2, 9 = 1 = 9 &:1 / * = 33.
+TILE:    b = bedevilled_crystal_pandemonium
+TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
+             dngn_demonic_tree_12 / dngn_demonic_tree_13
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
 @@ "' Xxccxcxcct
 @'"'XWXW""'..Wcct
@@ -3406,21 +3349,21 @@ MAP
  xt"'wWWWwW..wWW.WWw.WwWcct
   x"'WxxxWwzyWwcwc.WyzWwWxct
   c'"wx0x.wyzWc...cWzywWx.cct
- xt"'wx3.xwzy.w.7.w.yzwx0..xct
+ xt"'wx3.xwzy.w.7.w.yzwx00.xct
  ct'"wx0x.wyzWc...cWzywc30xWcct
   x"'WxxWwWzyW.cwcWWyzwxcxWwWcct
   c"'wWWwWW..wWW.WW..wWwWWwWwWcct
- ctWzyzyzWW.w.yzyzy.W.WWzyzyzWttt
- xt.yzyzyzxw..zyzyzw..xzyzyzy.tct
-  c"'wWWw.WXWWwwwwwwWXc.WW.w'"ctt
-  c"'WxxWW.yWwW.x.wWWy.WWxx."'xtt
- ct'"xx.xWwzyWxx.xWwyzWWc0cx'"cxt
- xt'"x04.xWyzWx030xWzyWx055t"'tct
- ctt8xx0xxWyzWxxxxxWyz.xc5Oc'"ctt
-  ct"'xxxWwzywWwwwWwzyw.xtcc8tXct
-  cc'"8""''yz""'7'""yz'"'"'87tcct
-  tccct''""W.''"'"''W."'"'"tttcct
- tttttccxcccttcxctcxcXctcXXxtccct
+ ctWzyzyzWW.w.yzyzy.W.WWzyzyzWTct
+ ct.yzyzyzxw..zyzyzw..xzyzyzy.Tct
+  c"'wWWw.WXWWwwwwwwWXc7WW.w'"cct
+  c"'WxxWW.yWwW.x.wWWy7WWxx."'xtt
+ ct'"xx.xWwzyWxx0xWwyzWWc0cx'"cct
+ ct'"x04.xWyzWx030xWzyWx0R5T"'Tct
+ ctt8xx0xxWyzWxxxxxWyz.xc5Oc'8cct
+  ct"3xxxWwzywWwwwWwzyw.xTcb5TXct
+  cc'"8""''yz""'7'""yz'"'"'5wTcct
+  tcccT''""W.''"'"''W."'"'8TTTcct
+ ttttcccxcccTTcxcTcxcXcTcXXxTccct
 ttttttttttttttttttttttttttttttttt
 ENDMAP
 
@@ -3435,11 +3378,12 @@ MONS:    fungus w:12 / plant w:5 / bush w:1
 KMONS:   d = patrolling the lernaean hydra / hydra w:1, hydra
 KMONS:   ef = patrolling hydra
 KITEM:   d = decaying rune of Zot
+KITEM:   D = mossy gem
 KITEM:   ef = any good_item
 KITEM:   g = stone w:40 / large rock q:1
 NSUBST:  @ = 1:@ / *:.
-SUBST:   C = cc., = = +.
-SHUFFLE: def, 123
+SHUFFLE: dD / eE / fF, 123
+SUBST:   EF = ., C = cc., = = +.
 NSUBST:  : = 6:1 / 6:2 / 6:3 / 9:4 / 3 = 0.... / 20:5 / * = '
 SUBST:   ' = .....WW, G = Gg
 MAP
@@ -3447,7 +3391,7 @@ MAP
 cc%..ccCC=C=C=CCcc..%cc
 c%1...c'::'''::'c...2%c
 c..d..c'G:::::G'c..e..c
-c.....c':::C::''c.....c
+c...D.c':::C::''c.E...c
 cc....+.G:'C':G.+....cc
 Wcccc+c.::CCC:'.c+ccccW
 WC'''..'G:'C':G'..'''CW
@@ -3461,7 +3405,7 @@ WC:G'G'G'''C'''G'G'G:CW
 WC'''..'G:'C':G''''''CW
 Wcccc+c.':CCC:''C=CCCCW
 cc....+.G:'C':G'=''':CC
-c.....c''::C::''C'':::C
+c...F.c''::C::''C'':::C
 c..f..c'G:::::G'C':::'C
 c%3...c'::'''::'C:::''C
 cc%..ccCC=C-C=CCCC:'''C
@@ -3482,23 +3426,25 @@ KMONS:   1 =  swamp dragon / swamp drake / hydra w:15 / bog body w:5
      KMONS: O* = thorn hunter / shambling mangrove / spriggan berserker
      KITEM: * = *
 : end
+KITEM:   o = mossy gem
 KITEM:   O = decaying rune of Zot
 KFEAT:   1 = . w:20 / shallow_water
-NSUBST:  O = 1:O / *:*
-SUBST:   1 = 111'', % = %'
+SHUFFLE: Oo / Pp / Qq
+SUBST:   PQ = *, pq = ., % = %'
+NSUBST:  1 = 5:1 / 2:' / * = 111''
 SUBST:   ' = .....WWW, - = ..wwwWW, T = .wWtt, C = ccct
 MAP
    tt  tt
   ttttttttt @@@   tt  tt
 tttccccccttt'-'ttttttttt
 ttcc%O%Ccccc'-'ccccccccctt
-tccT1-1-Cccc1-1ccccC%O%cctt
-tcT1'1'1'ccc'-'cccC-1-1Tcctt
-tccT1-1-ccc-1T1-cc'1'1'1Tcct
+tccT1-1-Cccc1-1ccccC%Q%cctt
+tcT1'1o1'ccc'-'cccC-1-1Tcctt
+tccT1-1-ccc-1T1-cc'1q1'1Tcct
 ttcC'-'ccc''TTT''cc-1-1Tcctt
  tcC-1ccc1-ccccc-1cc'-'Ccctt
-ttcC-1cc'-cc%O%cc-'cc1-Ccctt
-ttc'-'c1-cc-1-1-cc-1c1-Ccct
+ttcC-1cc'-cc%P%cc-'cc1-Ccctt
+ttc'-'c1-cc-1p1-cc-1c1-Ccct
 ttc-1Cc'-c'1'1'1'c-'c''-cctt
  tc-''c1-cc-1-1-cc-1cC1-cct
 ttcC1'1'''cC'-'Cc-''c''-cttt
@@ -3514,40 +3460,38 @@ ENDMAP
 # Growth, Death and Undeath, by byrel
 # Presided over by an undead Lernaean hydra
 NAME:    byrel_swamp_growth_death_and_undeath
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_rotate
 PLACE:   Swamp:$
 ORIENT:  float
-TAGS:    no_rotate
-MONS:    swamp dragon / swamp drake / hydra
-MONS:    freezing wraith / flayed ghost / phantasmal warrior
-MONS:    hydra skeleton / swamp dragon skeleton / death drake skeleton
-MONS:    hydra zombie / swamp dragon zombie / death drake zombie
+MONS:    swamp drake w:12 / swamp dragon / hydra
+MONS:    freezing wraith w:15 / flayed ghost / phantasmal warrior
+MONS:    hydra skeleton / swamp dragon skeleton / swamp drake skeleton w:12
+MONS:    hydra zombie / swamp dragon zombie / swamp drake zombie w:12
 MONS:    spectral hydra / hydra simulacrum
 MONS:    patrolling thorn hunter / patrolling shambling mangrove
 MONS:    patrolling spriggan druid god:fedhas
-KITEM:   O = decaying rune of Zot
-KFEAT:   _ = altar_fedhas
-KFEAT:   - = altar_yredelemnul
-NSUBST:  O = 1:O / *:%
-SUBST:   x = xxxxxxttT
-NSUBST:  1 = 8=1 / 8=1. / .W
-NSUBST:  3 = 6=5 / 8=3 / 8=3. / .
-SUBST:   3 = 2344
-NSUBST:  6 = 3=6 / 3=6. / .
-SUBST:   . = ...W
-NSUBST:  P = 3=' / ppW
 KMONS:   p = plant
 KMONS:   ' = oklob plant
 KMONS:   q = ghoul
-KMONS:   L = patrolling the lernaean hydra zombie / patrolling the lernaean hydra skeleton
+KMONS:   L = patrolling the lernaean hydra zombie / \
+             patrolling the lernaean hydra skeleton
+KITEM:   o = mossy gem
+KITEM:   O = decaying rune of Zot
+KFEAT:   _ = altar_fedhas
+KFEAT:   - = altar_yredelemnul
+KFEAT:   E = x
+SHUFFLE: Oo / Nn
+SUBST:   N = %, n = ., x = xxxxxxttT
+NSUBST:  1 = 6:1 / 6 = 1. / * = .W, 3 = 5:5 / 7:3 / 7 = 3. / *:.
+NSUBST:  6 = 2:6 / 3 = 6. / ., P = 3=' / ppW
+SUBST:   3 = 2344, . = ...W
 KPROP:   q = bloody
-TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE, x = WALL_BRICK_VINES
+TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD
+TILE:    G = DNGN_GRAVESTONE, x = WALL_BRICK_VINES
 COLOUR:  T = brown
 SUBST:   T = t
-SUBST:   E = c
-{{
-dgn.delayed_decay_extra(_G, 'q', 'hydra corpse')
-}}
+: set_feature_name("granite_statue", "a gravestone")
+: dgn.delayed_decay_extra(_G, 'q', 'hydra corpse')
 MAP
          xxx@@@xx
         xxxx11xxxx
@@ -3563,11 +3507,11 @@ cccc..t6...ccccEEEE333TEEEcc
 ccc..66....cccE3T3333EE3Eccc
 ccP...6P.t.PccEE333G3333Eccc
 cct66.P_P66tcccE3T33q3T3Eccc
-cc66P.7P7.P6cccE3333-333Eccc
+cc66P.7P7oP6cccE3333-333Eccc
 ccPppPpppPppcccE33G3qG3EEccc
-ccccppppppcccccEEEE333EEcccc
+ccccppppppcccccEEEE3n3EEcccc
 cccccccOcccccccccE333333Eccc
-  cccccccccccccccEEOEEEEEcc
+  cccccccccccccccEENEEEEEcc
     ccccccc    cccEEEcccccc
       cc        ccccccc cc
 ENDMAP
@@ -3583,14 +3527,17 @@ NAME:   nzn_swamp_witches_coven
 PLACE:  Swamp:$
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-MONS:   fenstrider witch, green death / reaper / blizzard demon
-MONS:   neqoxec / soul eater / sixfirhy, orange demon / hellwing / chaos spawn
+MONS:   fenstrider witch, green death / sin beast / blizzard demon
+MONS:   smoke demon / soul eater / sixfirhy
+MONS:   orange demon / hellwing / chaos spawn
 MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \
         deep elf zephyrmancer w:5 / arcanist w:5 / occultist w:5
-KITEM:  O = decaying rune of zot
+KITEM:  R = mossy gem
+KITEM:  O = decaying rune of Zot
 KFEAT:  B = stone_arch
 KFEAT:  a = c
-SUBST:  ' = W:55 .:15 4:5, 4 = 049
+NSUBST: ' = 16:4 / 6 = 4. / * = W:55 .:20
+SUBST:  4 = 004449, b = baaaa
 MARKER: B = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -3598,6 +3545,8 @@ TILE:   a = wall_stone_dark
 COLOUR: a = magenta
 TILE:   G = dngn_statue_demonic_bust / dngn_statue_imp / dngn_statue_cerebov \
             / dngn_statue_ancient_evil
+TILE:   b = bedevilled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
          ccccccccc
        ccc''5t5''ccc
@@ -3615,10 +3564,10 @@ c'''''''aat''2''taa'''''''c
 c''''taaaat''G''taaaat''''c
 c''taaa''a'''t'''a''aaat''c
 cttaa53'''attttta'''35aattc
-ccaaaaaaa'aaaaaaa'aaaaaaaac
+ccaaaaaaa'aaabaaa'aaaaaaaac
  ct'''''''a'''''a'''''''tc
  ct''''tttaA'''Aattt''''tc
- cct''t''''a'''a''''t''tcc
+ cct''t''''a'R'a''''t''tcc
   ct5'1'''ta'1'at'''1'5tc
   cct'''''ta'2'at'''''tcc
    cct''''taaOaat''''tcc
@@ -3626,4 +3575,63 @@ ccaaaaaaa'aaaaaaa'aaaaaaaac
      ccct'''aaa'''tccc
        ccc'''a'''ccc
          ccccccccc
+ENDMAP
+
+###############################################################################
+# The path to an elemental demise.
+# A mix of the prior swamp_fiery and swamp_icy maps, both by due.
+NAME:    regret_index_swamp_cliche
+TAGS:    no_pool_fixup no_rotate no_monster_gen
+PLACE:   Swamp:$
+ORIENT:  southwest
+MONS:    bog body, swamp dragon, hydra simulacrum
+MONS:    spriggan rider ; robe ego:fire_resistance . spear ego:flaming . \
+                          ring of poison resistance . buckler
+MONS:    alligator simulacrum, lindwurm, will-o-the-wisp
+KMONS:   8 = azure jelly w:15 / \
+             spriggan berserker ; robe ego:poison_resistance . \
+                                  ring of protection from fire . \
+                                  war axe ego:flaming
+KMONS:   9 = fire dragon / ice dragon w:20
+KFEAT:   f = dry_fountain
+KFEAT:   F = lava
+KITEM:   R = mossy gem
+KITEM:   O = decaying rune of Zot
+SUBST:   X = tttw., - = Wwwww., ~ = ll., L : cll
+NSUBST:  O = 1:O / 1:R, ? = 1:155 / 1:6 / 2:. / * = 155666.........
+NSUBST:  8 = 1:8 / 1:9. / *:7, ! = 1:3 / 1:4 / 2 = 22337. / 2:. / * = 34..
+MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 6, \
+             pow_max = 8, delay = 110, size = 1, excl_rad = 1 }
+MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
+             size = 3, spread_rate = 1, walk_dist = 1, excl_rad = 1 }
+KPROP:   lWwfF = no_cloud_gen
+MAP
+tt                           @@@
+ttt                           .@
+tttt    ttt                  .
+tccttt ttttt@               . .
+tcccctttt....@              . .
+tccccctt.ll...             . .
+tcXwXcctt..tttttttttttttt.. .
+tcwOwwccttttccccccccccccct....
+tcw-9wwccccccl4.8cc6.4lccct.w..
+tcww2wwwcccc2?.ll..ll.?2ccc..w.
+tcww3-wwccc!..lLllllLl..!cc....
+tcw!l.wwwccc...lFFFFl...ccc...
+tc1cl~.-wccc..lFFFFFFl..cctf.w
+tc8lll...w.w..llllllll..cccw..w
+tc?lll~.w.w....lc..cl...ccf..www
+tc!clll..w.cc3..w..w...cccc.cctw
+tc8~lll~.-ccccccccc.c.ccccwWwctt
+tc-!llll~.-cccccccll.llcctc.ccct
+tc-?~cll3wccccccccc.c.cccc..ctct
+tccw.~~!wcccccccXX......-..$.cct
+ttcww42wwccc$8c...........c..?ct
+ttctwO9wtcc$..3..Xc1Xc3....c5wct
+ttcwwwwwwccc13ww!.cwccccccXwXcct
+ttcccccccctcccccccccccccccccccct
+tttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttt
 ENDMAP

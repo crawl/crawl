@@ -91,6 +91,7 @@ skeleton_quadruped_small MONS_SKELETON_QUADRUPED_SMALL
 skeleton_quadruped_large MONS_SKELETON_QUADRUPED_LARGE
 skeleton_quadruped_winged MONS_SKELETON_QUADRUPED_WINGED
 skeleton_troll MONS_SKELETON_TROLL
+skeleton_juggernaut MONS_SKELETON_JUGGERNAUT
 skeleton_frog MONS_SKELETON_FROG
 skeleton_lizard MONS_SKELETON_LIZARD
 skeleton_turtle MONS_SKELETON_TURTLE
@@ -167,3 +168,7 @@ spectral_hydra3
 spectral_hydra4
 spectral_hydra5
 %rim 1
+
+fallen_orc_warrior MONS_FALLEN_ORC_WARRIOR
+fallen_orc_knight MONS_FALLEN_ORC_KNIGHT
+fallen_orc_warlord MONS_FALLEN_ORC_WARLORD

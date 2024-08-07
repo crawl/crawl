@@ -1,0 +1,20 @@
+name: "demonic crawler"
+glyph: {char: "s", colour: lightgreen}
+flags: [see_invis, web_immune, fast_regen, no_skeleton]
+resists: {poison: 1}
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, damage: 20}
+ - {type: hit, damage: 20}
+ - {type: hit, damage: 20}
+hd: 9
+hp_10x: 585
+ac: 10
+ev: 6
+has_corpse: true
+shout: scream
+intelligence: animal
+speed: 13
+size: large
+shape: centipede

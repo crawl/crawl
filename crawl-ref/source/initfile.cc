@@ -178,6 +178,30 @@ mlc_mapping::mlc_mapping(const string &s)
     }
 }
 
+#ifdef USE_TILE
+colour_remapping::colour_remapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, true, 1);
+    const int scolour = thesplit.size() == 1 ? -1 : str_to_colour(thesplit[0]);
+
+    // let -1 for "" through
+    if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[0].empty()))
+    {
+        mprf(MSGCH_ERROR, "Options error: Bad custom_text_colours key: '%s'",
+            thesplit[1].c_str());
+        return;
+    }
+
+    colour_index = scolour;
+    colour_def = str_to_tile_colour(thesplit[1]);
+    if (colour_index == NUM_TERM_COLOURS)
+    {
+        mprf(MSGCH_ERROR, "Bad custom_text_colours: %s\n",
+                     thesplit[0].c_str());
+    }
+}
+#endif
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -193,6 +217,23 @@ const vector<GameOption*> base_game_options::build_options_list()
     vector<GameOption*> options;
     return options; // ignored by subclass...
 }
+
+#ifndef DGAMELAUNCH
+static map<string, game_type> _game_modes()
+{
+    map<string, game_type> modes = {
+        {"normal", GAME_TYPE_NORMAL},
+        {"seeded", GAME_TYPE_CUSTOM_SEED},
+        {"arena", GAME_TYPE_ARENA},
+        {"sprint", GAME_TYPE_SPRINT},
+        {"tutorial", GAME_TYPE_TUTORIAL},
+        {"hints", GAME_TYPE_HINTS}
+    };
+    if (Version::ReleaseType == VER_ALPHA)
+        modes["descent"] = GAME_TYPE_DESCENT;
+    return modes;
+}
+#endif
 
 // **Adding new options**
 //
@@ -481,6 +522,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
+        new BoolGameOption(SIMPLE_NAME(drop_disables_autopickup), false),
         new MaybeBoolGameOption(SIMPLE_NAME(show_god_gift), maybe_bool::maybe,
             {"unid", "unident", "unidentified"}),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
@@ -515,7 +557,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
-        new BoolGameOption(SIMPLE_NAME(fear_zot), false),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
@@ -535,6 +576,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
+        new BoolGameOption(SIMPLE_NAME(always_show_gems), false),
+        new BoolGameOption(SIMPLE_NAME(more_gem_info), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(show_blood), true),
         new ListGameOption<string>(ON_SET_NAME(use_animations),
@@ -636,9 +679,9 @@ const vector<GameOption*> game_options::build_options_list()
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
         new ListGameOption<string>(SIMPLE_NAME(dump_order),
-            {"header", "hiscore", "stats", "misc", "inventory", "skills",
-             "spells", "overview", "mutations", "messages", "screenshot",
-             "monlist", "kills", "notes", "screenshots", "vaults",
+            {"header", "hiscore", "stats", "misc",  "apostles", "inventory",
+             "skills", "spells", "overview", "mutations", "messages",
+             "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
              "skill_gains", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
@@ -738,13 +781,7 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         new MultipleChoiceGameOption<game_type>(NEWGAME_NAME(type),
             GAME_TYPE_NORMAL,
-            {{"normal", GAME_TYPE_NORMAL},
-             {"descent", GAME_TYPE_DESCENT},
-             {"seeded", GAME_TYPE_CUSTOM_SEED},
-             {"arena", GAME_TYPE_ARENA},
-             {"sprint", GAME_TYPE_SPRINT},
-             {"tutorial", GAME_TYPE_TUTORIAL},
-             {"hints", GAME_TYPE_HINTS}}),
+            _game_modes()),
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
@@ -853,6 +890,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
+        new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
 # ifndef __ANDROID__
@@ -1016,6 +1054,8 @@ object_class_type item_class_by_sym(char32_t c)
     case '\\': // Compat break: used to be staves (why not '|'?).
         return OBJ_RODS;
 #endif
+    case U'\x2666': // ♦
+        return OBJ_GEMS;
     default:
         return NUM_OBJECT_CLASSES;
     }
@@ -1051,7 +1091,7 @@ static const string message_channel_names[] =
     "friend_enchant", "monster_damage", "monster_target", "banishment",
     "equipment", "floor", "multiturn", "examine", "examine_filter", "diagnostic",
     "error", "tutorial", "orb", "timed_portal", "hell_effect", "monster_warning",
-    "dgl_message",
+    "dgl_message", "decor_flavour",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -1355,9 +1395,10 @@ void game_options::set_default_activity_interrupts()
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_exsanguinate = interrupt_butcher",
         "interrupt_revivify = interrupt_butcher",
+        "interrupt_imbue_servitor = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster",
+        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp",
 
@@ -1570,6 +1611,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_BOOKS);
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
+    autopickups.set(OBJ_GEMS);
 
     dump_item_origins      = IODS_ARTEFACTS;
 
@@ -1603,16 +1645,16 @@ void game_options::reset_options()
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
           SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
-          SPELL_PLASMA_BEAM };
+          SPELL_PLASMA_BEAM, SPELL_PILEDRIVER };
     always_use_static_spell_targeters = false;
 
     force_ability_targeter =
         { ABIL_ZIN_SANCTUARY, ABIL_TSO_CLEANSING_FLAME, ABIL_WORD_OF_CHAOS,
           ABIL_ZIN_RECITE, ABIL_QAZLAL_ELEMENTAL_FORCE, ABIL_JIYVA_OOZEMANCY,
-          ABIL_BREATHE_LIGHTNING, ABIL_KIKU_TORMENT, ABIL_YRED_DRAIN_LIFE,
+          ABIL_GALVANIC_BREATH, ABIL_YRED_FATHOMLESS_SHACKLES,
           ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE,
-          ABIL_SIPHON_ESSENCE };
+          ABIL_SIPHON_ESSENCE, ABIL_DITHMENOS_SHADOWSLIP };
     always_use_static_ability_targeters = false;
 
 #ifdef DGAMELAUNCH
@@ -2108,7 +2150,6 @@ string find_crawlrc()
         { "..", "init.txt" },
         { "../settings", "init.txt" },
 #endif
-        { nullptr, nullptr }                // placeholder to mark end
     };
 
     // We'll look for these files in any supplied -rcdirs.
@@ -2135,16 +2176,11 @@ string find_crawlrc()
     }
 
     // Check all possibilities for init.txt
-    for (int i = 0; locations_data[i][1] != nullptr; ++i)
+    for (const auto& row : locations_data)
     {
-        // Don't look at unset options
-        if (locations_data[i][0] != nullptr)
-        {
-            const string rc = catpath(locations_data[i][0],
-                                      locations_data[i][1]);
-            if (file_exists(rc))
-                return rc;
-        }
+        const string rc = catpath(row[0], row[1]);
+        if (file_exists(rc))
+            return rc;
     }
 
     // Last attempt: pick up init.txt from datafile_path, which will
@@ -2236,8 +2272,8 @@ void read_init_file(bool runscripts)
     }
 
     // Load init.txt.
-    const string crawl_rc = find_crawlrc();
-    const string init_file_name(crawl_rc);
+    const string init_file_name = find_crawlrc();
+    const string base_file_name = get_base_filename(init_file_name);
 
     /**
      Mac OS X apps almost always put their user-modifiable configuration files
@@ -2250,7 +2286,8 @@ void read_init_file(bool runscripts)
     char *cwd = getcwd(NULL, 0);
     if (cwd)
     {
-        const string absolute_crawl_rc = is_absolute_path(crawl_rc) ? crawl_rc : catpath(cwd, crawl_rc);
+        const string absolute_crawl_rc
+            = is_absolute_path(init_file_name) ? init_file_name : catpath(cwd, init_file_name);
         char *resolved = realpath(absolute_crawl_rc.c_str(), NULL);
         if (resolved)
         {
@@ -2265,12 +2302,8 @@ void read_init_file(bool runscripts)
     FileLineInput f(init_file_name.c_str());
 
     Options.filename = init_file_name;
+    Options.basefilename = base_file_name;
     Options.line_num = 0;
-#ifdef UNIX
-    Options.basefilename = "~/.crawlrc";
-#else
-    Options.basefilename = "init.txt";
-#endif
 
     if (f.error())
         return;
@@ -2297,7 +2330,7 @@ void read_init_file(bool runscripts)
     }
 
     Options.filename     = init_file_name;
-    Options.basefilename = get_base_filename(init_file_name);
+    Options.basefilename = base_file_name;
     Options.line_num     = -1;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -5224,6 +5257,21 @@ static void _write_vcolour(const string &name, VColour colour)
     tiles.json_close_object();
 }
 
+static void _write_custom_colours(const string &name, const vector<colour_remapping> colours)
+{
+    tiles.json_open_array(name);
+    for (const auto &entry : colours)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("index", entry.colour_index);
+        tiles.json_write_int("r", entry.colour_def.r);
+        tiles.json_write_int("g", entry.colour_def.g);
+        tiles.json_write_int("b", entry.colour_def.b);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+}
+
 static void _write_minimap_colours()
 {
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
@@ -5261,6 +5309,8 @@ void game_options::write_webtiles_options(const string& name)
     _write_colour_list(hp_colour, "hp_colour");
     _write_colour_list(mp_colour, "mp_colour");
     _write_colour_list(stat_colour, "stat_colour");
+
+    _write_custom_colours("custom_text_colours", custom_text_colours);
 
     tiles.json_write_bool("tile_show_minihealthbar",
                           tile_show_minihealthbar);

@@ -292,7 +292,7 @@ static species_type _get_hints_species(unsigned int type)
     switch (type)
     {
     case HINT_BERSERK_CHAR:
-        return SP_HILL_ORC;
+        return SP_MOUNTAIN_DWARF;
     case HINT_MAGIC_CHAR:
         return SP_DEEP_ELF;
     case HINT_RANGER_CHAR:
@@ -765,12 +765,11 @@ void hints_gained_new_skill(skill_type skill)
     case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:
-    case SK_TRANSMUTATIONS:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
-    case SK_POISON_MAGIC:
+    case SK_ALCHEMY:
         learned_something_new(HINT_GAINED_MAGICAL_SKILL);
         break;
 
@@ -1010,6 +1009,7 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_CAUGHT_IN_NET:
     case HINT_YOU_SILENCE:
     case HINT_NEED_POISON_HEALING:
+    case HINT_ON_FIRE:
     case HINT_INVISIBLE_DANGER:
     case HINT_NEED_HEALING_INVIS:
     case HINT_ABYSS:
@@ -1330,6 +1330,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             Hints.hints_just_triggered = true;
         }
         print_hint("HINT_YOU_POISON");
+        break;
+
+    case HINT_ON_FIRE:
+        print_hint("HINT_ON_FIRE");
         break;
 
     case HINT_MULTI_PICKUP:
@@ -1700,9 +1704,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         print_hint("HINT_YOU_MISCAST");
 
-        const item_def *shield = you.slot_item(EQ_SHIELD, false);
         if (!player_effectively_in_light_armour()
-            || (shield && shield->sub_type != ARM_ORB))
+            || is_shield(you.shield()))
         {
             print_hint("HINT_MISCAST_ARMOUR");
         }

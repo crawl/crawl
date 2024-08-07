@@ -296,6 +296,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_CRUCIBLE:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
+
     case NUM_BRANCHES:
     case GLOBAL_BRANCH_INFO:
         break;
@@ -1129,8 +1134,16 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB && Options.tile_misc_anim)
+
+    // Wizlab entries and conduits both have spinning sequential cycle
+    // tile animations. The Jiyva altar, meanwhile, drips.
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
+       || bg_idx == TILE_DNGN_ALTAR_JIYVA
+       || (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
+        && Options.tile_misc_anim)
+    {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
+    }
     else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
@@ -1144,7 +1157,11 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = random2(256);
     }
-    else if (bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD
+    // This includes branch / portal entries and exits, altars, runelights, and
+    // fountains in the first range, and some randomly-animated weighted
+    // vault statues in the second statues.
+    else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_DNGN_CACHE_OF_FRUIT)
+             || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_ARCANE_CONDUIT))
              && Options.tile_misc_anim)
     {
         flv->special = random2(256);
@@ -1324,6 +1341,38 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SHOALS;
     }
+    else if (player_in_branch(BRANCH_DEPTHS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_DEPTHS;
+    }
+    else if (player_in_branch(BRANCH_ABYSS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+        {
+            tileidx_t choices[3] = {TILE_STONE_WALL_ABYSS_A,
+                                    TILE_STONE_WALL_ABYSS_B,
+                                    TILE_STONE_WALL_ABYSS_C};
+            orig = choices[you.birth_time % 3];
+        }
+    }
+    else if (player_in_branch(BRANCH_ZOT))
+    {
+        if (orig == TILE_DNGN_CRYSTAL_WALL)
+            orig = TILE_CRYSTAL_WALL_ZOT;
+        else if (orig == TILE_DNGN_STONE_WALL)
+        {
+        /* Matches hall_of_zot 2 through 5. */
+            if (you.depth == 2)
+                orig = TILE_DNGN_STONE_WALL_BLUE;
+            else if (you.depth == 3)
+                orig = TILE_DNGN_STONE_WALL_LIGHTBLUE;
+            else if (you.depth == 4)
+                orig = TILE_DNGN_STONE_WALL_MAGENTA;
+            else if (you.depth == 5)
+                orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
+        }
+    }
 
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
@@ -1446,6 +1495,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if ((mc.flags & MAP_SANCTUARY_1) || (mc.flags & MAP_SANCTUARY_2))
         cell.is_sanctuary = true;
 
+    if (mc.flags & MAP_BLASPHEMY)
+        cell.is_blasphemy = true;
+
     if (mc.flags & MAP_SILENCED)
         cell.is_silenced = true;
 
@@ -1461,6 +1513,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
+
+    if (mc.flags & MAP_BFB_CORPSE)
+        cell.has_bfb_corpse = true;
 
     if (you.rampage_hints.count(gc) > 0)
         cell.bg |= TILE_FLAG_RAMPAGE;

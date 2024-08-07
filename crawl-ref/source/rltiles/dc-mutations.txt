@@ -1,6 +1,19 @@
 %parts_ctg MUT
 %sdir gui/mutations
 
+generic_good_mutation_1 GENERIC_GOOD_MUTATION
+generic_good_mutation_2
+generic_good_mutation_3
+generic_bad_mutation_1 GENERIC_BAD_MUTATION
+generic_bad_mutation_2
+generic_bad_mutation_3
+generic_demonspawn_mutation_1 GENERIC_DEMONSPAWN_MUTATION
+generic_demonspawn_mutation_2
+generic_demonspawn_mutation_3
+generic_jiyva_mutation_1 GENERIC_JIYVA_MUTATION
+generic_jiyva_mutation_2
+generic_jiyva_mutation_3
+
 blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
@@ -106,6 +119,9 @@ demonic_guardian_3
 demonic_magic_1 DEMONIC_MAGIC
 demonic_magic_2
 demonic_magic_3
+foul_shadow_1 FOUL_SHADOW
+foul_shadow_2
+foul_shadow_3
 foul_stench_1 FOUL_STENCH
 foul_stench_2
 foul_stench_3
@@ -118,6 +134,22 @@ powered_by_pain_3
 powered_by_death_1 POWERED_BY_DEATH
 powered_by_death_3
 powered_by_death_3
+word_of_chaos WORD_OF_CHAOS
 
 inhibited_regeneration INHIBITED_REGENERATION
+
+major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS
+major_destruction_of_dis MAJOR_DESTRUCTION_OF_DIS
+major_destruction_of_gehenna MAJOR_DESTRUCTION_OF_GEHENNA
+major_destruction_of_tartarus MAJOR_DESTRUCTION_OF_TARTARUS
+
+mark_of_annihilation MARK_OF_ANNIHILATION
+mark_of_atrocity MARK_OF_ATROCITY
+mark_of_carnage MARK_OF_CARNAGE
+mark_of_execution MARK_OF_EXECUTION
+mark_of_haemoclasm MARK_OF_HAEMOCLASM
+mark_of_the_celebrant MARK_OF_THE_CELEBRANT
+mark_of_the_fanatic MARK_OF_THE_FANATIC
+mark_of_the_legion MARK_OF_THE_LEGION
+mark_of_the_tyrant MARK_OF_THE_TYRANT
 %end_ctg

@@ -45,10 +45,10 @@ struct passwall_path
     vector <coord_def> possible_dests() const;
 };
 
-void start_recall(recall_t type);
+void do_player_recall(recall_t type);
 void recall_orders(monster *mons);
 bool try_recall(mid_t mid);
-void do_recall(int time);
+void do_player_recall(int time);
 void end_recall();
 
 bool passwall_simplified_check(const actor &act);

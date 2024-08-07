@@ -44,9 +44,6 @@ function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
     return
   end
 
-  -- Won't place the monster if there's a cloud there
-  dgn.delete_cloud(pt[1].x, pt[1].y)
-
   dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
   if you.see_cell(pt[1].x, pt[1].y) then
     crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
@@ -55,7 +52,7 @@ end
 }}
 
 NAME:   tgw_kikubaaqudgha
-TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha
+TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha patrolling
 KFEAT:  _ = altar_kikubaaqudgha
 {{
 local tm = TriggerableFunction:new{
@@ -72,17 +69,22 @@ local tm = TriggerableFunction:new{
 tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dreplica"})
 lua_marker('_', tm)
 }}
-
-MARKER: h = lua:portal_desc {replica_name="zombie"}
-MARKER: h = lua:MonPropsMarker:new{dreplica="dreplica"}
-KFEAT:  h = .
-KMONS:  h = generate_awake Human never_corpse hp:12 ; nothing
-KPROP:  h = no_tele_into
-TILE:   m = dngn_transparent_wall_darkgray
+KMONS:   h = generate_awake human never_corpse hp:12 ; nothing
+KFEAT:   h = .
+: if you.depth() > 4 then
+MONS:    burial acolyte, zombie
+SHUFFLE: 12 / '' / '' / '' / '' / ''
+: else
+SUBST:   12 = .
+: end
+MARKER:  h = lua:portal_desc {replica_name="zombie"}
+MARKER:  h = lua:MonPropsMarker:new{dreplica="dreplica"}
+KPROP:   h = no_tele_into
+TILE:    m = dngn_transparent_wall_darkgray
 MAP
 xxxxxxx
-@..mmmx
+@.1mmmx
 @_.mhmx
-@..mmmx
+@.2mmmx
 xxxxxxx
 ENDMAP

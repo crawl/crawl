@@ -30,7 +30,9 @@ enum enchant_type
     ENCH_SHAPESHIFTER,
     ENCH_TP,
     ENCH_SLEEP_WARY,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SUBMERGED,
+#endif
     ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,
     ENCH_SICK,
@@ -147,7 +149,7 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_EPHEMERAL_INFUSION,
 #endif
-    ENCH_BLACK_MARK,
+    ENCH_SIGN_OF_RUIN,
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRAND_AVATAR,
 #endif
@@ -173,8 +175,8 @@ enum enchant_type
     ENCH_BONE_ARMOUR,
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
-#endif
     ENCH_BRILLIANCE_AURA, // emanating a brilliance aura
+#endif
     ENCH_EMPOWERED_SPELLS, // affected by above
     ENCH_GOZAG_INCITE,
     ENCH_PAIN_BOND, // affected by above
@@ -195,19 +197,36 @@ enum enchant_type
     ENCH_RING_OF_MUTATION,
     ENCH_RING_OF_FOG,
     ENCH_RING_OF_ICE,
-    ENCH_RING_OF_DRAINING,
+    ENCH_RING_OF_MISERY,
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
     ENCH_CONCENTRATE_VENOM,
     ENCH_FIRE_CHAMPION,
     ENCH_ANGUISH,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SIMULACRUM,
     ENCH_NECROTISE,
+#endif
     ENCH_CONTAM,
+#if TAG_MAJOR_VERSION == 34
     ENCH_PURSUING,
+#endif
     ENCH_BOUND,
     ENCH_BULLSEYE_TARGET,
     ENCH_VITRIFIED,
+    ENCH_INSTANT_CLEAVE,
+    ENCH_PROTEAN_SHAPESHIFTING,
+    ENCH_SIMULACRUM_SCULPTING,
+    ENCH_CURSE_OF_AGONY,
+    ENCH_CHANNEL_SEARING_RAY,
+    ENCH_TOUCH_OF_BEOGH,
+    ENCH_VENGEANCE_TARGET,
+    ENCH_RIMEBLIGHT,
+    ENCH_MAGNETISED,
+    ENCH_ARMED,
+    ENCH_MISDIRECTED,
+    ENCH_CHANGED_APPEARANCE,  // Visual change for player shadow during Shadowslip
+    ENCH_SHADOWLESS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -1,0 +1,16 @@
+name: "large abomination"
+enum: abomination_large
+glyph: {char: "X", colour: lightred}
+genus: abomination_small
+holiness: [undead]
+will: 100
+attacks:
+ - {type: hit, damage: 32}
+hd: 11
+hp_10x: 495
+ac: 11
+ev: 6
+intelligence: brainless
+size: large
+shape: misc
+tile_variance: mod

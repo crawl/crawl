@@ -287,9 +287,6 @@ static void _establish_connection(monster* tentacle,
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
-
-            if (monster_can_submerge(connect, env.grid(connect->pos())))
-                connect->add_ench(ENCH_SUBMERGED);
         }
         else
         {
@@ -768,7 +765,7 @@ void move_solo_tentacle(monster* tentacle)
     actor* constrictee = nullptr;
     if (tentacle->is_constricting())
     {
-        constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+        constrictee = actor_by_mid((*tentacle->constricting)[0]);
 
         // Don't drag things that cannot move
         if (!constrictee->is_stationary()
@@ -1026,7 +1023,7 @@ void move_child_tentacles(monster* mons)
         actor* constrictee = nullptr;
         if (tentacle->is_constricting() && retract_found)
         {
-            constrictee = actor_by_mid(tentacle->constricting->begin()->first);
+            constrictee = actor_by_mid((*tentacle->constricting)[0]);
             if (feat_has_solid_floor(env.grid(old_pos))
                 && constrictee->is_habitable(old_pos)
                 && !constrictee->resists_dislodge("being pulled by " + tentacle->name(DESC_THE)))

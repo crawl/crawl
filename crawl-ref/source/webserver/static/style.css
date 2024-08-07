@@ -428,3 +428,7 @@ a:hover {
 #minimap, #minimap_overlay {
     position: absolute;
 }
+
+.simplebar-content pre {
+    white-space: pre-wrap;
+}

@@ -605,12 +605,16 @@ MONS:    vampire knight ; demon whip | demon trident | demon blade . \
 MONS:    putrid mouth, tormentor w:3, silent spectre
 KMONS:   9 = reaper
 KMONS:   J = Jory w:9 / tzitzimitl w:1, tzitzimitl
+KFEAT:   G = metal_statue
 NSUBST:  J = 1:J / *:9, 8 = 1:6 / * = 5:19 6:1
 SUBST:   A : x.., B : x.., } = }>
+COLOUR:  G = mist
+TILE:    G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
           xx  xx  xx  xx  xx  xx
          xxxxxxxxxxxxxxxxxxxxxxxxx
-       xxxxxxxxxxxxxxxxxxxxxxxxxxx
+       xxxxxxxxxxxGxxxxxxxxxxxxxxx
       ..xx..xx....2.....xx.........
     ....A......4c.3..4...B.....ccc...
   .............ccc+ccc......82ccccc..
@@ -622,7 +626,7 @@ MAP
 ..ccccc82......ccc+ccc.............
 ...ccc.....B...3..4.c3......A....
   .........xx.....2....xx..xx..
-   xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxGxxxxxxxxxxxx
    xxxxxxxxxxxxxxxxxxxxxxxxxx
      xx  xx  xx  xx  xx  xx
 ENDMAP
@@ -1148,6 +1152,26 @@ MAP
 FHFHFHFHF.
 .D.E.D.E..
 ..........
+ENDMAP
+
+NAME:   tekkud_tar_snaking_path
+TAGS:   transparent
+DEPTH:  Tar
+MONS:   ancient lich / dread lich w:2 / tormentor w:2, spectral anaconda
+NSUBST: 2 = 6:2 / 2:. / * = 22.
+MAP
+xx@@@xx
+ xx...xx
+  xx...xx
+   xx.2.xx
+    xx222xx
+     xx212xx
+      xx222xx
+       xx.2.xx
+        xx.2.xx
+         xx2..xx
+          xx...xx
+           xx@@@xx
 ENDMAP
 
 ##############################################################################

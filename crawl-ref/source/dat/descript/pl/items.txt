@@ -38,10 +38,6 @@ bolt
 
 Bełt do kuszy.
 %%%%
-book of alchemy
-
-Księga czarów nadżarta chemikaliami, z wypaloną dziurą w okładce.
-%%%%
 book of annihilations
 
 Ogromna moc pała z kart tej księgi, taka że nawet niepiśmienny barbarzyńca ją
@@ -202,14 +198,14 @@ glaive
 
 Duże ostrze osadzone na drzewcu.
 %%%%
-gold dragon scales
+golden dragon scales
 
 Zbroja zrobiona ze skóry i łusek złotego smoka. Jest skrajnie ciężka i
 krępująca ruchy, ale zapewnia ochronę przed ogniem, zimnem jak i trucizną. Jest
 także wspaniałą zaporą przeciw mieczom, młotom, strzałom jak i wszelakimi
 innymi narzędziami zbrodni.
 %%%%
-gold dragon hide
+golden dragon hide
 
 To jest surowa skóra złotego smoka. Zapewnia ochronę przed ogniem, zimnem i
 trucizną, jednak ma niewiele z legendarnej odporności na ciosy jaką można

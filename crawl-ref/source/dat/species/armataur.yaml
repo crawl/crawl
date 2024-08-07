@@ -1,17 +1,17 @@
 enum: SP_ARMATAUR
 monster: MONS_ARMATAUR
-name: "Armataur"
-short_name: "At"
+name: Armataur
+short_name: At
 difficulty: Simple
 difficulty_priority: 30
 species_flags:
-  - SPF_SMALL_TORSO
-  - SPF_BARDING
+  - small_torso
+  - barding
 aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: -1
   short_blades: -1
   long_blades: -1
@@ -32,13 +32,12 @@ aptitudes:
   summoning: -2
   necromancy: -2
   translocations: 0
-  transmutations: -1
   shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
-  poison_magic: -1
+  alchemy: -1
   invocations: 0
   evocations: 0
 size: large
@@ -48,19 +47,23 @@ dex: 5
 levelup_stat_frequency: 4
 mutations:
   1:
-    MUT_RUGGED_BROWN_SCALES: 3
+    MUT_TOUGH_SKIN: 3
     MUT_ROLLPAGE: 1
     MUT_ARMOURED_TAIL: 1
     MUT_DEFORMED: 1
-    MUT_LONG_TONGUE: 1
-    MUT_AWKWARD_TONGUE: 1
+  7:
+    MUT_ROLLPAGE: 1
 recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_BERSERKER
-  - JOB_WARPER
-  - JOB_HEDGE_WIZARD
+  - fighter
+  - berserker
+  - warper
+  - hedge wizard
 recommended_weapons:
-  - SK_UNARMED_COMBAT
-  - SK_MACES_FLAILS
-  - SK_AXES
-  - SK_STAVES
+  - unarmed combat
+  - maces and flails
+  - axes
+  - staves
+
+altar_action: curl up in front of
+child_name: Pup
+orc_name: Orcataur

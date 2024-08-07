@@ -21,7 +21,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function item_colour(item)
     {
-        return item.colour || 7;
+        if (item.colour === undefined)
+            return 7;
+        return item.colour;
     }
 
     function menu_title_indent()

@@ -1,0 +1,1094 @@
+# 该文件包含用于“宣告”法术的消息，如“巫师咕哝着一些奇怪的话。”
+# 游戏会按以下关键词的顺序匹配消息：
+#
+# 1) 正在施放的法术的名称：
+#   a) 首先尝试类型，然后是物种，接着是属。
+#   b) 如果是由巫师施放的，则为“wizard”，祭司、魔法、自然能力也是如此。
+#   c) 如果是由巫师或祭司用手施放的，首先尝试后缀“real”。
+#   d) 如果是由正常或更高智力的怪物用手施放的，尝试后缀“gestures”。
+#   e) 接下来，尝试不带任何后缀。
+# 2) 怪物的类型，然后是物种，接着是属。
+# 3) 如果法术是种祈祷，则为“priest”；如果是巫师法术，则为“wizard”；
+# 如果是魔力，则为“magical”。
+# 4) 如果该法术是定向的、可见的波束：
+#   a) “<波束简称> beam”。
+#   b) “beam catchall”。
+#
+# 对于2和3，如果法术有一个目标，
+# 匹配关键词时首先会加入带后缀“targeted”的条目，然后尝试不带该后缀的条目。
+#
+# 对于其中任一情形，如果巫师没有手臂，
+# 它将使用“non-humanoid wizard”而不是“wizard” 。
+#
+# 比如，一个纳迦罗阇施放传送自己：
+# * Teleport Self nagaraja cast
+# * Teleport Self naga cast
+# * Teleport Self naga cast
+# * Teleport Self wizard cast
+# * Teleport Self cast real
+# * Teleport Self cast gestures
+# * Teleport Self cast
+# * nagaraja cast
+# * naga cast
+# * naga cast
+# * wizard cast
+#
+# 一个怪物“施放”喷吐毒液：
+# * Spit Poison nagaraja cast
+# * Spit Poison naga cast
+# * Spit Poison naga cast
+# * Spit Poison naga cast
+# * Spit Poison natural cast
+# * Spit Poison cast gestures
+# * Spit Poison cast
+# * nagaraja cast targeted
+# * nagaraja cast
+# * naga cast targeted
+# * naga cast
+# * naga cast targeted
+# * naga cast
+# * poison beam cast
+# * catchall beam cast
+#
+# 在所有匹配情形中，如果是玩家看不见的怪物，匹配时关键词前会添加“unseen”，
+# 如果玩家或怪物被沉默了，关键词前会添加“silent”
+# （如果既看不见又听不见怪物，则始终不给出消息。）
+# 如果使用前缀“silent”没有结果，它将重试没有前缀的情况，
+# 假定该法术不产生声音。
+#
+# 如果不给出消息，则使用字符串“__NONE”。
+
+#####################################################
+# 独立法术。
+#####################################################
+%%%%
+Airstrike cast
+
+@The_monster@挥动@arms@，划了一个大圈。
+%%%%
+unseen Airstrike cast
+
+你听到刮风的声音。
+%%%%
+unseen Animate Dead cast real
+
+你听到@something@在呼唤死者。
+%%%%
+Animate Dead cast real
+
+@The_monster@一边吟诵，一边向周围区域做着手势。
+
+@The_monster@一边吟诵，一边张开@arms@。
+%%%%
+Animate Dead cast gestures
+
+@The_monster@向周围区域做着手势。
+
+@The_monster@张开@arms@。
+%%%%
+Battlecry cast
+
+@The_monster@咆哮着发出战吼！
+%%%%
+Hunting Call cast
+
+@The_monster@发出狩猎呼唤！
+%%%%
+Blinkbolt cast
+
+@The_monster@迸发成活体闪电！
+%%%%
+unseen Blinkbolt cast
+
+活体闪电在眼前迸发！
+%%%%
+branch summon cast prefix
+
+@The_monster@召唤出生物，他们来自
+%%%%
+Cantrip cast
+
+@The_monster@施放了一个咒语，但什么也没发生。
+
+@The_monster@开始施放咒语，却忘了词！
+
+@The_monster@的一个咒语施放失败。
+
+有那么一会儿，@The_monster@看起来更勇敢了。
+
+有那么一会儿，@The_monster@看起来受到了鼓励。
+
+有那么一会儿，@The_monster@看起来很满意。
+%%%%
+Creeping Frost cast
+
+@The_monster@激起墙壁中刺骨的寒意。
+%%%%
+Goad Beasts cast
+
+@The_monster@煽动着附近的野兽。
+%%%%
+Call Down Lightning cast
+
+电流在@the_monster@的装置上噼啪作响。
+%%%%
+Blink Range ironbound thunderhulk cast
+
+奇怪的能量在@the_monster@的装置上噼啪作响。
+%%%%
+Mara Summon cast
+
+@The_monster@编织出一个幻象。
+
+@The_monster@发出微光。
+%%%%
+unseen Mara summon cast
+
+有什么东西编织出了一个幻象！
+%%%%
+Symbol of Torment cast
+
+@The_monster@召来黑暗的力量！
+%%%%
+unseen Symbol of Torment cast
+
+@The_something@召来黑暗的力量！
+%%%%
+Orb of Destruction orb spider cast
+
+@The_monster@编织出一个发光的能量球。
+%%%%
+Orb of Destruction cast
+
+@The_monster@生成了一个发光的球体。
+
+@The_monster@生成了一个纯魔力球。
+
+@The_monster@射出一个毁灭性的魔力球。
+%%%%
+unseen Orb of Destruction cast
+
+@The_something@生成了一个发光球体。
+%%%%
+Sticky Flame cast
+
+@The_monster@向@target@喷射燃烧的粘稠物。
+%%%%
+Holy Flames cast
+
+@The_monster@召唤出神圣的火焰！
+%%%%
+unseen Holy Flames cast
+
+神圣的火焰被召唤出来！
+%%%%
+Word of Recall cast
+
+@The_monster@开始吟诵召回之语！
+%%%%
+Call Lost Soul cast
+
+@The_monster@召唤出不安分的灵魂！
+%%%%
+Major Destruction cast
+
+@The_monster@以@possessive_God@的名义，生成了一股毁灭性的力量！
+%%%%
+Sheza's Dance cast
+
+@The_monster@让飞扬的武器投入战斗！
+
+@The_monster@做出手势，武器飞入空中！
+%%%%
+Druid's Call cast
+
+@The_monster@呼唤着野兽！
+%%%%
+Legendary Destruction cast
+
+@Major Destruction cast@
+%%%%
+Phantom Mirror cast
+
+@The_monster@编织出一个幻象。
+%%%%
+Pyroclastic Surge cast
+
+@The_monster@从熔岩中召唤出一团团火焰！
+%%%%
+Eruption cast
+
+@The_monster@撕裂了你下方的大地！
+%%%%
+Call of Chaos cast
+
+@The_monster@召来混沌的力量！
+%%%%
+unseen Call of Chaos cast
+
+@The_something@召来混沌的力量！
+%%%%
+Wind Blast cast
+
+@The_monster@生成一股猛烈的大风！
+%%%%
+Harpoon Shot cast
+
+@The_monster@射出的一个鱼叉@at@ @target@。
+%%%%
+Throw Klown Pie cast
+
+@The_monster@恶毒地向@target@扔出派！
+%%%%
+Stunning Burst cast
+
+@The_monster@射出的一道电脉冲@at@ @target@。
+%%%%
+Conjure Living Spells cast
+
+@The_monster@喷出一团团活体魔法！
+%%%%
+#################################################
+# 这些是特殊的硬编码消息。
+#################################################
+%%%%
+Siren Song cast
+
+__NONE
+%%%%
+Avatar Song cast
+
+__NONE
+%%%%
+Seal Doors cast
+
+__NONE
+#####################################################
+# 自然法术（吐息和喷吐）。
+#####################################################
+%%%%
+Spit Acid cast
+
+@The_monster@喷吐的酸液@at@ @target@。
+%%%%
+unseen Spit Acid cast
+
+你听到喷吐的声音。
+%%%%
+Acid Splash cast
+
+@The_monster@喷吐的酸液@at@ @target@。
+%%%%
+unseen Acid Splash cast
+
+你听到喷吐的声音。
+%%%%
+Ensnare natural cast
+
+@The_monster@排出一串黏性的网。
+%%%%
+unseen Ensnare natural cast
+
+稀薄的空气中冒出一串黏性的网。
+%%%%
+unseen Cold Breath cast
+
+你听到一声咆哮。
+%%%%
+Cold Breath cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+unseen Chilling Breath cast
+
+你听到一声咆哮。
+%%%%
+Chilling Breath cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+# 龙人鬼魂吐息
+Bolt of Draining natural cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+Lightning Bolt natural cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+Steam Ball natural cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+Quicksilver Bolt natural cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+Poisonous Cloud natural cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+unseen Fire Breath cast
+
+你听到一声咆哮。
+%%%%
+Fire Breath cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+unseen Searing Breath cast
+
+你听到一声咆哮。
+%%%%
+Searing Breath cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%%
+Electrical Bolt cast
+
+@The_monster@射出的一道@beam@ @at@ @target@！
+%%%%%
+Spit Lava cast
+
+@The_monster@喷吐的熔岩@at@ @target@。
+%%%%
+Spit Poison cast
+
+@The_monster@喷吐的毒液@at@ @target@。
+%%%%
+unseen Spit Poison cast
+
+你听到喷吐的声音。
+%%%%
+Freeze cast
+
+@The_monster@冰冻@target@。
+%%%%
+Sticky Flame Splash cast
+
+@The_monster@喷吐的粘性火焰@at@ @target@。
+%%%%
+unseen Sticky Flame Splash cast
+
+你听到喷吐的声音。
+%%%%
+Petrifying Cloud cast
+
+@The_monster@吐息的一团石化尘@at@ @target@。
+%%%%
+Frenzy cast
+
+@The_monster@气愤地抽搐着。
+%%%%
+Volley of Thorns cast
+
+@The_monster@射出的一束荆棘@at@ @target@。
+%%%%
+Warning Cry cast
+
+@The_monster@发出警戒叫号！
+%%%%
+unseen Warning Cry cast
+
+你听到一声响亮的警戒叫号！
+%%%%
+Slug Dart cast
+
+@The_monster@射出的一枚飞镖@at@ @target@。
+%%%%
+Paralysis Gaze cast
+
+@The_monster@的尖利凝视刺透了@target@！
+%%%%
+Weakening Gaze cast
+
+@The_monster@的残酷凝视穿透了@target@！
+########################################################################
+# 独特的怪物
+########################################################################
+%%%%
+March of Sorrows Boris cast
+
+@The_monster@[发|投射]出其受害者的悲伤。
+
+w:5
+@The_monster@朗诵着其受害者的[挽歌|痛苦]。
+%%%%
+Cantrip Dissolution cast
+
+@The_monster@对着一个不在场神咯咯叫。
+
+@The_monster@悲伤地摇晃着。
+
+@The_monster@无目的地晃动着。
+
+@The_monster@说：“与我的悲伤融为一体！”
+
+w:1
+@The_monster@问：“@My_God@，你为什么抛弃我？”
+%%%%
+Summon Eyeballs Dissolution cast
+
+@The_monster@低沉地咯咯叫，呼唤着黏液同伴。
+
+@The_monster@说：“@My_God@洞察一切！”
+%%%%
+Dissolution cast
+
+@The_monster@低沉地咯咯叫。
+%%%%
+Frances cast
+
+@The_monster@呢喃着可怕的言语。
+
+@The_monster@低声说着难以弄懂的话。
+
+@The_monster@吟诵着源于恶魔之口的语句。
+
+@The_monster@喊出有力的话语！
+%%%%
+Cantrip Gastronok cast
+
+@The_monster@高兴地起着泡泡。
+
+VISUAL:@The_monster@发出鲜亮的樱桃色光芒。
+
+VISUAL:@The_monster@疯狂地晃动着。
+
+VISUAL:@The_monster@的眼柄伸展开来，然后又恢复到正常大小。
+
+你晃动着。
+
+你的脸色有点发绿。
+
+你短暂地有种迟钝感。
+
+你突然有种对盐的厌恶感。
+
+w:5
+你突然有种冲动，想转动你那并不存在的眼柄。
+%%%%
+Gastronok cast targeted
+
+@The_monster@在吟诵时，投射的目光@at@ @target@。
+
+@The_monster@在咕哝着一些奇怪的话时，投射的目光@at@ @target@。
+
+@The_monster@施展的一个法术@at@ @target@。
+%%%%
+Gastronok cast
+
+@The_monster@在咕哝着一些奇怪的话时，其眼柄颤抖着。
+
+@The_monster@吟诵了一个咒语，一直在晃动着。
+
+@The_monster@咕哝着一些奇怪的话。
+
+@The_monster@施展了一个法术。
+%%%%
+Geryon cast
+
+@The_monster@吹着一只巨大的银色号角。
+%%%%
+unseen Geryon cast
+
+你听到一个奇怪而悲伤声音。
+%%%%
+# 罗克珊无法做手势或是指点。
+Roxanne cast
+
+@sphinx cast@
+%%%%
+silent Berserker Rage Rupert cast
+
+@The_monster@勃然大怒！
+%%%%
+Berserker Rage Rupert cast
+
+@The_monster@勃然大怒，疯狂地咆哮着！
+%%%%
+Rupert cast targeted
+
+@The_monster@疯狂的咆哮@at@ @target@。
+
+@The_monster@的大声叫喊@at@ @target@。
+%%%%
+Ensnare Arachne cast
+
+@The_monster@拿法杖指着，@at@ @target@，射出一连串的网。
+
+@The_monster@的法杖射出一连串的网。
+%%%%
+unseen Ensnare Arachne cast
+
+一连串的网从稀薄的空气中喷射而来。
+%%%%
+Lehudib's Crystal Spear the Serpent of Hell cast
+
+@The_monster@喷吐的水晶@at@ @target@。
+%%%%
+Mennas cast
+
+VISUAL:@The_monster@疯狂地做着手势。
+%%%%
+Paralyse Xtahua cast
+
+@The_monster@发出的势不可挡的咆哮@at@ @target@！
+
+@The_monster@发出的猛烈雷声@at@ @target@！
+%%%%
+Vv cast
+
+VISUAL:@The_monster@猛烈地做着手势。
+
+VISUAL:@The_monster@跺着脚。
+
+VISUAL:@The_monster@用力拍打手掌。
+
+w:3
+VISUAL:@The_monster@做了一个精巧的弧形动作。
+%%%%
+unseen Vv cast
+
+你听到岩石撞击岩石的声音。
+%%%%
+Smiting Jeremiah cast
+
+@The_monster@发出一个扭曲的叫声。
+
+@The_monster@含糊不清地咕哝着祷文。
+
+VISUAL:@The_monster@恳切地举起手臂。
+
+@The_monster@喊道：“敬畏的主人，保护我吧！”
+
+@The_monster@叫道：“啊，威严的主，毁灭我的敌人！”
+%%%%
+########################################################################
+# 个别怪物
+########################################################################
+brain worm cast
+
+@The_monster@鼓鼓的脑袋在悸动。
+
+@The_monster@悸动的脑袋在搏动。
+%%%%
+glowing orange brain cast
+
+@The_monster@悸动着。
+%%%%
+silent flayed ghost cast
+
+@The_monster@痛苦地无声呻吟着。
+
+@The_monster@投射的带有痛苦的恶意凝视@at@ @foe@。
+%%%%
+flayed ghost cast
+
+@The_monster@投射的带有痛苦的恶意凝视@at@ @foe@。
+
+@The_monster@喊道：“承受我承受的！”
+
+@The_monster@喊道：“感受我感受的！”
+%%%%
+manticore cast
+
+@The_monster@甩动着尾巴。
+%%%%
+orange crystal statue cast
+
+@The_monster@闪闪发光。
+%%%%
+orange crystal statue cast targeted
+
+@The_monster@将尖利的凝视固定在@target@上。
+%%%%
+orb of fire cast
+
+@The_monster@发出黄色的光。
+
+@The_monster@发出明亮的洋红色的光。
+
+@The_monster@发出深紫色的光。
+
+@The_monster@发出红色的光。
+
+@The_monster@射出血红色的光。
+%%%%
+obsidian statue cast
+
+@The_monster@'的眼睛短暂地闪动光芒。
+%%%%
+# 斯芬克斯无法做手势或是指点。
+sphinx cast
+
+@The_monster@咕哝着一些奇怪的话。
+
+@The_monster@施展了一个法术。
+%%%%
+eidolon cast targeted
+
+@The_monster@投射的尖利凝视@at@ @target@。
+%%%%
+basilisk cast targeted
+
+@floating eye cast targeted@
+%%%%
+basilisk cast
+
+@floating eye cast@
+%%%%
+wretched star cast
+
+@The_monster@狂暴地发着光。
+%%%%
+thrashing horror cast
+
+@The_monster@剧烈地翻腾着！
+%%%%
+Airstrike wind drake cast
+
+@The_monster@拍击翅膀产生的气流@at@ @target@。
+%%%%
+Wind Blast wind drake cast
+
+@The_monster@呼出一股猛烈的大风！
+%%%%
+dryad cast
+
+@The_monster@向森林呼唤。
+%%%%
+Battlecry cherub cast
+
+@The_monster@吟唱了一首有力的圣歌！
+%%%%
+Minor Healing dryad cast
+
+@The_monster@汲取了大自然的生命力。
+%%%%
+Battlecry satyr cast
+
+@The_monster@用笛子演奏出一段充满活力的旋律！
+%%%%
+Cause Fear satyr cast
+
+@The_monster@用笛子演奏出一段可怕的旋律！
+%%%%
+Sleep satyr cast
+
+@The_monster@用笛子演奏出一段催眠的旋律！
+%%%%
+Sleep dream sheep cast
+
+@The_monster@突然生成了大量梦尘！
+%%%%
+Metal Splinters war gargoyle cast
+
+@The_monster@射出的@beam@ @at@ @target@。
+%%%%
+Splinterspray cast
+
+@The_monster@掷出的一小串@beam@ @at@ @target@。
+%%%%
+Crystallizing Shot crystal guardian cast
+
+@The_monster@射出的水晶箭@at@ @target@。
+%%%%
+Blink Other statue cast
+
+@The_monster@施展的一个法术@at@ @target@。
+%%%%
+Stone Arrow gargoyle cast
+
+@The_monster@掷出的一束@beam@ @at@ @target@。
+%%%%
+Bolt of Magma molten gargoyle cast
+
+@The_monster@轰出的岩浆@at@ @target@！
+%%%%
+Primal Wave elemental wellspring cast
+
+一股激流从@the_monster@身上涌了起来！
+%%%%
+Summon Water Elementals elemental wellspring cast
+
+水之灵从@the_monster@身上涌了出来！
+%%%%
+Invisibility shadowghast cast
+
+@The_monster@没入黑暗。
+%%%%
+ghost moth cast targeted
+
+@The_monster@投射的凝视@at@ @target@。
+%%%%
+ghost moth cast
+
+@The_monster@环顾四周。
+%%%%
+unseen ghost moth cast targeted
+
+你感觉你被什么东西注视着。@player_only@
+%%%%
+golden eye cast targeted
+
+@The_monster@闪烁的目光@at@ @target@。
+%%%%
+weeping skull cast
+
+@The_monster@[倾泻出|宣泄出]不绝于耳的抽泣声。
+
+@The_monster@的痛苦[倾泻而出|满溢而出]。
+%%%%
+silent weeping skull cast
+
+@The_monster@的痛苦[倾泻而出|满溢而出]。
+%%%%
+unseen weeping skull cast
+
+你听到不绝于耳的抽泣声。
+%%%%
+laughing skull cast
+
+@The_monster@恶意地咯咯笑。
+
+@The_monster@不屑一顾地胡言乱语。
+
+@The_monster@发出恶毒的轰然大笑。
+%%%%
+silent laughing skull cast
+
+@The_monster@嘲弄地无声咯咯笑。
+
+@The_monster@欢快、猛烈地发出咯咯声。
+%%%%
+unseen laughing skull cast
+
+你听到恶意的咯咯笑声。
+
+你听到不屑一顾的胡言乱语。
+%%%%
+Death Rattle ushabti cast
+
+@The_monster@摇晃着，嘎嘎作响。
+%%%%
+Warning Cry ushabti cast
+
+@The_monster@摇晃着，震耳欲聋地嘎嘎作响！
+%%%%
+unseen Warning Cry ushabti cast
+
+你听到震耳欲聋的嘎嘎响声！
+%%%%
+ushabti cast targeted
+
+@The_monster@做出的僵硬手势@at@ @target@。
+%%%%
+Ghostly Fireball revenant cast
+
+@The_monster@猛烈地释出鬼火。
+%%%%
+Spectral Cloud revenant cast
+
+@The_monster@在@target@周围生成幽灵迷雾。
+%%%%
+Dispel Undead revenant cast
+
+@The_monster@做出的猛烈手势@at@ @target@。
+%%%%
+Blink Away revenant cast
+
+__NONE
+%%%%
+Warning Cry seraph cast
+
+@The_monster@向友方呼喊，发出警戒！
+%%%%
+unseen Warning Cry seraph cast
+
+你听到一声响亮的警戒叫号！
+%%%%
+Battlecry seraph cast
+
+@The_monster@吟唱了一首有力的圣歌！
+%%%%
+Throw Icicle shard shrike cast
+
+@The_monster@喷吐的一块冰碎片@at@ @target@。
+%%%%
+Lightning Bolt electric golem cast
+
+@The_monster@掷出的一束@beam@ @at@ @target@。
+%%%%
+unseen Warning Cry demonic crawler cast
+
+你听到可怕的尖叫声！
+%%%%
+Warning Cry demonic crawler cast
+
+@The_monster@尖叫着以示警戒！
+%%%%
+unseen Warning Cry howler monkey cast
+
+你听到巨大的响声和嚎叫！
+%%%%
+Warning Cry howler monkey cast
+
+@The_monster@以惊人的力量嚎叫着，发出响声！
+%%%%
+unseen Warning Cry vault sentinel cast
+
+你听到用号角大声吹出的一个音符！
+%%%%
+Warning Cry vault sentinel cast
+
+@The_monster@用信号号角吹出一个响亮的音符！
+%%%%
+Fireball hell hog cast
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+Throw Barbs peacekeeper cast
+
+@The_monster@掷出的一束@beam@ @at@ @target@。
+%%%%
+Woodweal cast
+
+@The_monster@触碰了一棵树，并汲取了它的生命力。
+%%%%
+formless jellyfish cast
+
+@The_monster@奇异地发出微光。
+%%%%
+crystal echidna cast targeted
+
+@The_monster@轻甩出的棘刺@at@ @target@。
+%%%%
+culicivora cast targeted
+
+@The_monster@发出的窸窣声音@at@ @target@。
+%%%%
+kobold blastminer cast targeted
+
+@The_monster@用火铳释出的爆炸@at@ @target@。
+%%%%
+burial acolyte cast
+
+@The_monster@[低沉单调地唱|吟诵]着一首挽歌。
+%%%%
+########################################################################
+# 怪物的种族和属的消息
+########################################################################
+angel cast targeted
+
+@The_monster@呼唤@possessive_God@的愤怒，将其施加到@target@身上。
+%%%%
+crab cast targeted
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+dragon cast targeted
+
+@The_monster@吐息的@beam@ @at@ @target@。
+%%%%
+dragon cast
+
+@The_monster@咆哮着！
+%%%%
+unseen dragon cast
+
+你听到一声咆哮。
+%%%%
+drake cast targeted
+
+@dragon cast targeted@
+%%%%
+curse skull cast
+
+@The_monster@摇晃着颌骨。
+%%%%
+silent curse skull cast
+
+@The_monster@无声地摇晃着颌骨。
+%%%%
+unseen curse skull cast
+
+你听到了牙齿的撞击声。
+%%%%
+floating eye cast targeted
+
+@The_monster@投射的凝视@at@ @target@。
+%%%%
+floating eye cast
+
+@The_monster@环顾四周。
+%%%%
+unseen floating eye cast targeted
+
+你感觉有什么东西在凝视着你。@player_only@
+%%%%
+guardian serpent cast targeted
+
+@The_monster@蜷曲着，摆动着的上半身@at@ @target@。
+
+@The_monster@施展的一个法术@at@ @target@。
+%%%%
+guardian serpent cast
+
+@The_monster@蜷曲着，跳着一些神秘的蛇舞。
+
+@The_monster@施展了一个法术。
+
+@The_monster@用尾巴做着肢体动作。
+
+@The_monster@用舌尖缠绕出错综复杂的图案。
+%%%%
+Bolt of Fire ophan cast
+
+@The_monster@掌控着火的净化力量！
+%%%%
+unseen Bolt of Fire ophan cast
+
+有什么东西掌控着火的净化力量！
+%%%%
+Shock shock serpent cast
+
+@The_monster@释放出一股细小的卷须状的电流。
+%%%%
+Static Discharge shock serpent cast
+
+@The_monster@发出电的噼啪声！
+%%%%
+Corrupting Pulse wretched star cast
+
+@The_monster@搏动着怪异的光！
+%%%%
+living spell cast
+
+@The_monster@投射出自身@at@ @target@。
+%%%%
+bombardier beetle cast
+
+@The_monster@喷出的可燃液体@at@ @target@。
+%%%%
+sun moth cast
+
+@The_monster@猛烈地扑打着翅膀。
+###########################################################################
+# 牧师和巫师的通用消息，这些消息已被改动为可适用于没有手的东西。
+###########################################################################
+%%%%
+polymorphed wizard cast targeted
+
+@The_monster@施展的一个法术@at@ @target@。
+%%%%
+polymorphed wizard cast
+
+@The_monster@施展了一个法术。
+%%%%
+polymorphed unseen wizard cast
+
+你听到一些奇怪的、含糊不清的话。
+######################################################
+# 牧师、巫师和施法的通用信息。
+######################################################
+%%%%
+Haste Other priest cast
+
+@The_monster@呼唤@possessive_God@来加速@target@。
+%%%%
+Heal Other priest cast
+
+@The_monster@呼唤@possessive_God@来治疗@target@。
+%%%%
+Might Other priest cast
+
+@The_monster@呼唤@possessive_God@来加强@target@。
+%%%%
+Malign Offering priest cast
+
+@The_monster@进行黑暗祈祷时，做出指向动作@at@ @target@。
+%%%%
+Blink magical cast
+
+__NONE
+%%%%
+priest cast targeted
+
+@The_monster@呼唤@possessive_God@的愤怒，将其施加到@target@身上。
+
+@The_monster@向@possessive_God@咕哝着一些奇怪的祷词，来攻击@target@。
+
+@The_monster@向@possessive_God@求助，来攻击@target@。
+%%%%
+priest cast
+
+@The_monster@向@possessive_God@祈祷。
+
+@The_monster@向@possessive_God@咕哝着一些奇怪的祷词。
+
+@The_monster@向@possessive_God@发出祈祷。
+%%%%
+unseen priest cast targeted
+
+你听到@something@在呼唤@a_God@的愤怒，将其施加到@target@身上。
+
+你听到@something@在向@a_God@咕哝着一些奇怪的祷词，来攻击@target@。
+
+你听到@something@在向@a_God@求助，来攻击@target@。
+%%%%
+unseen priest cast
+
+你听到一些奇怪的、含糊不清的对@a_God@祈祷。
+%%%%
+non-humanoid wizard cast targeted
+
+@The_monster@在咕哝着一些奇怪的话时，投射的凝视@at@ @target@。
+
+@The_monster@施展的一个法术@at@ @target@。
+%%%%
+non-humanoid wizard cast
+
+@The_monster@咕哝着一些奇怪的话。
+
+@The_monster@施展了一个法术。
+%%%%
+unseen non-humanoid wizard cast
+
+你听到一些奇怪的、含糊不清的话。
+%%%%
+wizard cast targeted
+
+@The_monster@在吟诵时，做出的手势@at@ @target@。
+
+@The_monster@在咕哝着一些奇怪的话时，做出的指向动作@at@ @target@。
+
+@The_monster@施展的一个法术@at@ @target@。
+%%%%
+wizard cast
+
+@The_monster@一边吟诵，一边狂热地做着手势。
+
+@The_monster@咕哝着一些奇怪的话。
+
+@The_monster@施展了一个法术。
+%%%%
+unseen wizard cast
+
+你听到一些奇怪的、含糊不清的话。
+%%%%
+magical cast targeted
+
+@The_monster@做出的手势@at@ @target@。
+%%%%
+magical cast
+
+@The_monster@做出手势。
+%%%%
+######################################################
+# 通用的波束消息。
+######################################################
+beam catchall cast
+
+@The_monster@掷出的@beam@ @at@ @target@。
+%%%%

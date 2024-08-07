@@ -1,0 +1,19 @@
+name: "Nikola"
+glyph: {char: "@", colour: lightcyan}
+flags: [see_invis, speaks, warm_blood, unique, male]
+xp_mult: 13
+species: human
+will: 120
+attacks:
+ - {type: hit, damage: 20}
+hd: 18
+hp_10x: 1890
+ac: 1
+ev: 9
+spells: nikola
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

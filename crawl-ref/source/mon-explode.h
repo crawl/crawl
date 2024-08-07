@@ -13,6 +13,7 @@ struct dice_def;
 
 bool monster_explodes(const monster &mons);
 bool mon_explodes_on_death(monster_type mc);
+dice_def mon_explode_dam(monster_type mc, int hd);
 void setup_spore_explosion(bolt & beam, const monster& origin);
 bool explode_monster(monster* mons, killer_type killer,
                      bool pet_kill, bool wizard);

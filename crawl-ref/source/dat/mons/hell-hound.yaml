@@ -1,0 +1,20 @@
+name: "hell hound"
+glyph: {char: "h", colour: cyan}
+flags: [see_invis, unblindable]
+resists: {fire: 3, cold: -1}
+genus: hound
+holiness: [demonic]
+will: 20
+attacks:
+ - {type: bite, damage: 13}
+hd: 5
+hp_10x: 275
+ac: 6
+ev: 13
+spells: hell_hound
+has_corpse: true
+shout: bark
+intelligence: animal
+speed: 15
+size: medium
+shape: quadruped

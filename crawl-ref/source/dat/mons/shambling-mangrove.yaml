@@ -1,0 +1,19 @@
+name: "shambling mangrove"
+glyph: {char: "f", colour: lightred}
+resists: {poison: 1}
+xp_mult: 15
+holiness: [plant]
+will: 100
+attacks:
+ - {type: hit, damage: 41}
+hd: 13
+hp_10x: 910
+ac: 13
+ev: 3
+spells: shambling_mangrove
+intelligence: human
+habitat: amphibious
+speed: 8
+size: giant
+shape: plant
+tile: treant

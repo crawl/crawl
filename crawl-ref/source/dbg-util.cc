@@ -124,7 +124,7 @@ void debug_show_builder_logs()
 {
     if (!you.props.exists(DEBUG_BUILDER_LOGS_KEY))
     {
-        mprf("This save was not generated on a build that stores logs.");
+        mpr("This save was not generated on a build that stores logs.");
         return;
     }
     const string cur_level = level_id::current().describe();
@@ -182,17 +182,13 @@ string debug_constriction_string(const actor *act)
     if (act->constricting)
     {
         for (const auto &entry : *act->constricting)
-        {
-            s += make_stringf("Constricting %s for %d ticks.\n",
-                        _debug_mid_name(entry.first).c_str(), entry.second);
-        }
+            s += make_stringf("Constricting %s.\n", _debug_mid_name(entry).c_str());
     }
 
     if (act->constricted_by)
     {
-        s += make_stringf("Constricted by %s for %d ticks.\n",
-                _debug_mid_name(act->constricted_by).c_str(),
-                    actor_by_mid(act->constricted_by)->constricting->find(act->mid)->second);
+        s += make_stringf("Constricted by %s.\n",
+                          _debug_mid_name(act->constricted_by).c_str());
     }
     return s;
 }
@@ -365,9 +361,8 @@ void debug_dump_mon(const monster* mon, bool recurse)
     fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%" PRIx64"\n",
             mon->attitude, mon->behaviour, mon->number, mon->flags.flags);
 
-    fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
-                  "experience: %u\n",
-            mon->colour, mon->foe_memory, mon->shield_blocks, mon->experience);
+    fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d\n",
+            mon->colour, mon->foe_memory, mon->shield_blocks);
 
     fprintf(stderr, "god: %s, seen_context: %d\n",
             god_name(mon->god).c_str(), mon->seen_context);

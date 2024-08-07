@@ -25,7 +25,7 @@ public:
     bool init_pathfind(const monster* mon, coord_def dest,
                        bool diag = true, bool msg = false,
                        bool pass_unmapped = false);
-    bool init_pathfind(coord_def src, coord_def dest,
+    bool init_pathfind(coord_def src, coord_def dest, bool doors = true,
                        bool diag = true, bool msg = false);
     bool start_pathfind(bool msg = false);
     vector<coord_def> backtrack();
@@ -61,6 +61,10 @@ protected:
     // Only follow paths that do not leave the player's sight (used for
     // friendly summoned monster which are not already out of sight)
     bool traverse_in_sight;
+
+    // For pathfinding without a specific monster agent, should we be able to
+    // traverse closed doors?
+    bool traverse_doors;
 
     // Maximum range to search between start and target. None, if zero.
     int range;

@@ -61,6 +61,7 @@ static const branch_type logical_branch_order[] = {
     BRANCH_DESOLATION,
     BRANCH_GAUNTLET,
     BRANCH_ARENA,
+    BRANCH_CRUCIBLE,
 };
 COMPILE_CHECK(ARRAYSZ(logical_branch_order) == NUM_BRANCHES);
 
@@ -88,6 +89,7 @@ static const branch_type danger_branch_order[] = {
     BRANCH_CRYPT,
     BRANCH_DESOLATION,
     BRANCH_ABYSS,
+    BRANCH_CRUCIBLE,
     BRANCH_WIZLAB,
     BRANCH_SLIME,
     BRANCH_DEPTHS,
@@ -241,6 +243,11 @@ bool is_connected_branch(branch_type branch)
 bool is_connected_branch(level_id place)
 {
     return is_connected_branch(place.branch);
+}
+
+bool branch_has_rune(branch_type branch)
+{
+    return !branches[branch].runes.empty();
 }
 
 branch_type branch_by_abbrevname(const string &branch, branch_type err)
