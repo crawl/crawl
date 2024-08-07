@@ -937,19 +937,21 @@ bool melee_attack::handle_phase_killed()
                                     true, special_damage);
     }
 
+    // We test this *before* the monster dies, but only trigger afterward,
+    // for better message order.
+    const bool execute = attacker->is_player() && defender->is_monster()
+                            && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
+                            && !you.duration[DUR_EXECUTION]
+                            && !mons_is_firewood(*defender->as_monster())
+                            //&& one_chance_in(7)
+    // It's unsatisfying to repeatedly trigger a transformation on the final
+    // monster of a group, so let's not cause the player that disappointment.
+                            && there_are_monsters_nearby(true, true, false);
+
     bool killed = attack::handle_phase_killed();
 
-    if (killed && attacker->is_player() && defender->is_monster()
-        && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
-        && !you.duration[DUR_EXECUTION]
-        && mons_gives_xp(*defender->as_monster(), you)
-        && one_chance_in(8)
-        // It's unsatisfying to repeatedly trigger a transformation on the final
-        // monster of a group, so let's not cause the player that disappointment.
-        && there_are_monsters_nearby(true, true, false))
-    {
+    if (execute)
         makhleb_execution_activate();
-    }
 
     return killed;
 }
