@@ -628,9 +628,9 @@ public:
     brand_type  damage_brand(int which_attack = -1) override;
     vorpal_damage_type damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
-                             bool rescale = true) const override;
+                             bool rescale = true, bool ignore_temporary = false) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
-                                  const item_def *weapon) const;
+                                  const item_def *weapon, bool ignore_temporary = false) const;
     int         constriction_damage(constrict_type typ) const override;
 
     int       has_claws(bool allow_tran = true) const override;
@@ -872,11 +872,11 @@ public:
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
 
-    // Calculates total permanent EV/SH if the player was/wasn't wearing a given item
-    void ac_ev_sh_with_specific_item(int scale, const item_def& new_item,
-                                     int *ac, int *ev, int *sh);
-    void ac_ev_sh_without_specific_item(int scale, const item_def& item_to_remove,
-                                        int *ac, int *ev, int *sh);
+    // Calculates total permanent status if the player was/wasn't wearing a given item
+    void status_with_specific_item(int scale, const item_def& new_item,
+                                     int *ac, int *ev, int *sh, int *ad);
+    void status_without_specific_item(int scale, const item_def& item_to_remove,
+                                        int *ac, int *ev, int *sh, int *ad);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
@@ -1231,3 +1231,5 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
+
+int player_displayed_attack_delay(bool ignore_temporary);

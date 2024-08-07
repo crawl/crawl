@@ -1870,31 +1870,33 @@ static string _equipment_switchto_string(const item_def &item)
 
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
- * AC/EV/SH stats. We don't include temporary buffs in this calculation.
+ * AC/EV/SH and attack delay stats. We don't include temporary buffs in this
+ * calculation.
  *
  * @param item    The item whose description we are writing.
  * @param remove  Whether the item is already equipped, and thus whether to
                   show the change solely from unequipping the item.
  * @return        The description.
  */
-static string _equipment_ac_ev_sh_change_description(const item_def &item,
+static string _equipment_status_change_description(const item_def &item,
                                                      bool remove = false)
 {
-    // First, test if there is any AC/EV/SH change at all.
+    // First, test if there is any status change at all.
     const int cur_ac = you.base_ac(100);
     const int cur_ev = you.evasion_scaled(100, true);
     const int cur_sh = player_displayed_shield_class(100, true);
-    int new_ac, new_ev, new_sh;
+    const int cur_ad = player_displayed_attack_delay(true);
+    int new_ac, new_ev, new_sh, new_ad;
 
     if (remove)
-        you.ac_ev_sh_without_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+        you.status_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_ad);
     else
-        you.ac_ev_sh_with_specific_item(100, item, &new_ac, &new_ev, &new_sh);
+        you.status_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_ad);
 
-    // If we're previewing non-armour and there is no AC/EV/SH change, print no
+    // If we're previewing non-armour and there is no status change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
-    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh && cur_ad == new_ad
         && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
     {
         return "";
@@ -1943,6 +1945,13 @@ static string _equipment_ac_ev_sh_change_description(const item_def &item,
                        + _describe_point_diff(cur_sh, new_sh) + ".";
     }
 
+    // Only display attack delay line with non-weapons
+    if (item.base_type != OBJ_WEAPONS && cur_ad != new_ad)
+    {
+        description += "\nYour attack delay would "
+                       + _describe_point_diff(cur_ad, new_ad, 10) + ".";
+    }
+
     return description;
 }
 
@@ -1951,14 +1960,14 @@ static bool _you_are_wearing_item(const item_def &item)
     return get_equip_slot(&item) != EQ_NONE;
 }
 
-static string _equipment_ac_ev_sh_change(const item_def &item)
+static string _equipment_status_change(const item_def &item)
 {
     string description;
 
     if (!_you_are_wearing_item(item))
-        description = _equipment_ac_ev_sh_change_description(item);
+        description = _equipment_status_change_description(item);
     else
-        description = _equipment_ac_ev_sh_change_description(item, true);
+        description = _equipment_status_change_description(item, true);
 
     return description;
 }
@@ -1996,7 +2005,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         description += "\n\n" + art_desc;
 
     if (verbose && crawl_state.need_save && you.could_wield(item, true, true))
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_status_change(item);
 
     if (verbose)
     {
@@ -2347,7 +2356,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && can_wear_armour(item, false, true)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_status_change(item);
     }
 
     const int DELAY_SCALE = 100;
@@ -2629,7 +2638,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                && item.sub_type != RING_EVASION
                && item.sub_type != AMU_REFLECTION))
     {
-        description += _equipment_ac_ev_sh_change(item);
+        description += _equipment_status_change(item);
     }
 
     return description;
