@@ -886,7 +886,7 @@ static like_map divine_likes[] =
             [] (int &piety, int &/*denom*/, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 20;
+                piety = 18;
             }
         } },
     },

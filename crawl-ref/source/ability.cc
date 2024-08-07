@@ -608,9 +608,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_DITHMENOS_SHADOWSLIP, "Shadowslip",
             4, 60, 2, -1, {fail_basis::invo, 50, 6, 30}, abflag::instant },
         { ABIL_DITHMENOS_APHOTIC_MARIONETTE, "Aphotic Marionette",
-            5, 0, 4, -1, {fail_basis::invo, 60, 4, 25}, abflag::target },
+            5, 0, 3, -1, {fail_basis::invo, 60, 4, 25}, abflag::target },
         { ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL, "Primordial Nightfall",
-            8, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            8, 0, 13, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Ru
         { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power",
