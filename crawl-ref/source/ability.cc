@@ -318,7 +318,7 @@ struct ability_def
 static int _lookup_ability_slot(ability_type abil);
 static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                          bolt beam);
-static void _pay_ability_costs(const ability_def& abil);
+static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp_cost);
 
 static vector<ability_def> &_get_ability_list()
 {
@@ -2843,6 +2843,20 @@ bool activate_talent(const talent& tal, dist *target)
 
     bool fail = random2avg(100, 3) < tal.fail;
 
+    // Pay HP/MP costs first, so that abilities which heal the player (or kill
+    // things which then cause the player to get healed) can properly cover
+    // their own costs. (Also, so that Mark of Atrocity can calculate its cost
+    // properly.) We will refund this later, if the ability fails or is
+    // cancelled.
+    const int hp_cost = abil.get_hp_cost();
+    const int mp_cost = abil.get_mp_cost();
+
+    if (mp_cost)
+        pay_mp(mp_cost);
+
+    if (hp_cost)
+        pay_hp(hp_cost);
+
     const spret ability_result = _do_ability(abil, fail, target, beam);
     switch (ability_result)
     {
@@ -2850,7 +2864,7 @@ bool activate_talent(const talent& tal, dist *target)
         {
             ASSERT(!fail);
             practise_using_ability(abil.ability);
-            _pay_ability_costs(abil);
+            _finalize_ability_costs(abil, mp_cost, hp_cost);
 
             // XXX: Merge Dismiss Apostle #1/2/3 into a single count
             ability_type log_type = abil.ability;
@@ -2867,9 +2881,17 @@ bool activate_talent(const talent& tal, dist *target)
             if (!testbits(abil.flags, abflag::quiet_fail))
                 mpr("You fail to use your ability.");
             you.turn_is_over = true;
+            if (mp_cost)
+                refund_mp(mp_cost);
+            if (hp_cost)
+                refund_hp(hp_cost);
             return false;
         case spret::abort:
             crawl_state.zero_turns_taken();
+            if (mp_cost)
+                refund_mp(mp_cost);
+            if (hp_cost)
+                refund_hp(hp_cost);
             return false;
         case spret::none:
         default:
@@ -3948,7 +3970,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     return spret::success;
 }
 
-static void _pay_ability_costs(const ability_def& abil)
+// Pay piety and time costs, and flush UI for HP/MP costs which have already
+// been paid.
+static void _finalize_ability_costs(const ability_def& abil, int mp_cost, int hp_cost)
 {
     // wall jump handles its own timing, because it can be instant if
     // serpent's lash is activated.
@@ -3962,28 +3986,19 @@ static void _pay_ability_costs(const ability_def& abil)
         you.turn_is_over = true;
 
     const int piety_cost = abil.piety_cost.cost();
-    const int hp_cost    = abil.get_hp_cost();
-    const int mp_cost = abil.get_mp_cost();
 
     dprf("Cost: mp=%d; hp=%d; piety=%d",
          mp_cost, hp_cost, piety_cost);
 
-    if (mp_cost)
-    {
-        pay_mp(mp_cost);
-        finalize_mp_cost();
-    }
-
-    if (hp_cost)
-    {
-        dec_hp(hp_cost, false);
-
-        // This should still trigger off using other invocations that cost HP
-        makhleb_celebrant_bloodrite();
-    }
-
     if (piety_cost)
         lose_piety(piety_cost);
+
+    if (mp_cost || hp_cost)
+        finalize_mp_cost(hp_cost);
+
+    // This should trigger off using invocations that cost HP
+    if (hp_cost)
+        makhleb_celebrant_bloodrite();
 }
 
 int choose_ability_menu(const vector<talent>& talents)

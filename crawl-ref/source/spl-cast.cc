@@ -959,6 +959,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
+    // Check if an HP payment brought us low enough to trigger Celebrant
+    makhleb_celebrant_bloodrite();
     you.turn_is_over = true;
     alert_nearby_monsters();
 
