@@ -3774,11 +3774,11 @@ static void _xom_send_in_clones(int /*sever*/)
 
     const string note = make_stringf("summoned %d hostile %s + %d friendly %s",
                                      hostiles_summon_count,
-                                     hostiles_summon_count == 1 ? "illusions"
-                                                                : "illusion",
+                                     hostiles_summon_count == 1 ? "illusion"
+                                                                : "illusions",
                                      friendly_summon_count,
-                                     friendly_summon_count == 1 ? "illusions"
-                                                                : "illusion");
+                                     friendly_summon_count == 1 ? "illusion"
+                                                                : "illusions");
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
