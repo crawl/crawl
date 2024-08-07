@@ -2071,7 +2071,14 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         if (mon.type == MONS_PLAYER_SHADOW)
         {
             if (mon.props.exists(DITH_SHADOW_ATTACK_KEY))
+            {
                 attk.damage = mon.props[DITH_SHADOW_ATTACK_KEY].get_int();
+                if (mon.mslot_item(MSLOT_WEAPON)
+                    && mon.mslot_item(MSLOT_WEAPON)->sub_type == WPN_QUICK_BLADE)
+                {
+                    attk.damage = attk.damage * 3 / 4;
+                }
+            }
         }
 
         // summoning miscast monster; hd scaled with miscast severity
@@ -2094,7 +2101,14 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     {
         attk.type = AT_HIT;
         if (mon.props.exists(DITH_SHADOW_ATTACK_KEY))
+        {
             attk.damage = mon.props[DITH_SHADOW_ATTACK_KEY].get_int();
+            if (mon.mslot_item(MSLOT_ALT_WEAPON)
+                && mon.mslot_item(MSLOT_ALT_WEAPON)->sub_type == WPN_QUICK_BLADE)
+            {
+                attk.damage = attk.damage * 3 / 4;
+            }
+        }
     }
     else if (mons_species(mon.type) == MONS_DRACONIAN
              && mon.type != MONS_DRACONIAN

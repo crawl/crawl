@@ -1464,7 +1464,7 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
         mon->update_ench(me);
     }
 
-    mon->props[DITH_SHADOW_ATTACK_KEY] = you.experience_level * 2 / 3;
+    mon->props[DITH_SHADOW_ATTACK_KEY] = you.experience_level;
     mon->target     = aim;
     mon->foe        = monster_at(aim)->mindex();
 
