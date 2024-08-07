@@ -3846,9 +3846,9 @@ static void _xom_brain_drain(int sever)
             string react = _get_xom_speech("drained brain");
 
             react = replace_all(react, "@random_body_part_any_singular@",
-                              random_body_part_name(false, BPART_ANY));
+                               random_body_part_name(false, BPART_ANY));
             react = replace_all(react, "@random_body_part_any_plural@",
-                              random_body_part_name(true, BPART_ANY));
+                               random_body_part_name(true, BPART_ANY));
 
             react = maybe_pick_random_substring(react);
 
