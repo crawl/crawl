@@ -763,6 +763,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
             for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
             {
+                if (!targs[i]->alive())
+                    continue;
+
                 beam.source = targs[i]->pos();
                 beam.target = targs[i]->pos();
                 beam.fire();
