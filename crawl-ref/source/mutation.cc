@@ -2035,7 +2035,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // No bones for thin skeletal structure or horns.
-    if (!you.has_bones()
+    if (!you.has_bones(false)
         && (mutat == MUT_THIN_SKELETAL_STRUCTURE || mutat == MUT_HORNS))
     {
         return true;
