@@ -814,7 +814,7 @@ static int _makhleb_destruction_power()
 
 static int _makhleb_annihilation_power()
 {
-    return you.skill_rdiv(SK_INVOCATIONS, 7, 3);
+    return you.skill_rdiv(SK_INVOCATIONS, 9, 3);
 }
 
 static int _ability_zap_pow(ability_type abil)
