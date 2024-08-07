@@ -4493,6 +4493,9 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
     case ABIL_ASHENZARI_CURSE:
     case ABIL_ASHENZARI_UNCURSE:
+    case ABIL_MAKHLEB_BRAND_SELF_1:
+    case ABIL_MAKHLEB_BRAND_SELF_2:
+    case ABIL_MAKHLEB_BRAND_SELF_3:
         first_slot = letter_to_index('G');
         break;
 
