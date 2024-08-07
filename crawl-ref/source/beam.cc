@@ -6656,9 +6656,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_SHADOW_TORPOR:
     {
-        int dur = max(2, random_range(2, 5) - div_rand_round(
-                            random2(mon->get_hit_dice() * 30), ench_power));
-        obvious_effect = do_slow_monster(*mon, agent(), dur * BASELINE_DELAY);
+        int dur = max(30, ench_power / 2 + 40 - random2(mon->get_hit_dice() * 4));
+        obvious_effect = do_slow_monster(*mon, agent(), dur);
         return MON_AFFECTED;
     }
 

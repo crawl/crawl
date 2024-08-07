@@ -1560,7 +1560,6 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_IOOD:
         case SPELL_FREEZE:
         case SPELL_FULMINANT_PRISM:
-        case SPELL_SHADOW_PRISM:
         case SPELL_IGNITE_POISON:
         case SPELL_HELLFIRE_MORTAR:
             return 8;
@@ -1570,6 +1569,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_IRRADIATE:
         case SPELL_FOXFIRE:
         case SPELL_MANIFOLD_ASSAULT:
+        case SPELL_SHADOW_PRISM:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -4939,7 +4939,8 @@ static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&)
     mgen_data mg = mgen_data(MONS_SHADOW_PUPPET, SAME_ATTITUDE((&mons)), mons.pos(),
                              mons.foe);
     mg.set_summoned(&mons, 2, slot.spell, god);
-    mg.hd = 2 + div_rand_round(pow, 12);
+    mg.hd = 1 + div_rand_round(pow, 15);
+    mg.hd += div_rand_round(max(0, pow - 80), 11);
     create_monster(mg);
 }
 
