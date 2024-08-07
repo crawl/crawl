@@ -1329,7 +1329,7 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
 {
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
-    beam.explode();
+    beam.explode(true, caster != cleansing_flame_source::tso);
 }
 
 void majin_bo_vampirism(monster &mon, int damage)
