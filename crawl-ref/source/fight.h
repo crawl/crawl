@@ -84,6 +84,18 @@ int mons_weapon_damage_rating(const item_def &launcher);
 bool player_unrand_bad_attempt(const item_def &weapon,
                                const actor *defender,
                                bool check_only);
+bool player_unrand_bad_attempt(const item_def *weapon,
+                               const item_def *offhand,
+                               const actor *defender,
+                               bool check_only);
+
+bool player_unrand_bad_target(const item_def &weapon,
+                              const actor &defender,
+                              bool check_only);
+bool player_unrand_bad_target(const item_def *weapon,
+                              const item_def *offhand,
+                              const actor &defender,
+                              bool check_only);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,

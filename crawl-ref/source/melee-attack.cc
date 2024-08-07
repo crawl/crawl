@@ -101,7 +101,7 @@ bool melee_attack::bad_attempt()
     if (god_protects(attacker, defender->as_monster(), false))
         return true;
 
-    if (player_unrand_bad_attempt(offhand_weapon()))
+    if (!is_projected && player_unrand_bad_attempt(offhand_weapon()))
         return true;
 
     if (!cleave_targets.empty())
@@ -138,8 +138,8 @@ bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
     if (!you.can_see(*defender))
         return false;
 
-    return weapon && ::player_unrand_bad_attempt(*weapon, defender, check_only)
-        || offhand && ::player_unrand_bad_attempt(*offhand, defender, check_only);
+    return weapon && ::player_unrand_bad_attempt(weapon, offhand, defender,
+        check_only);
 }
 
 bool melee_attack::handle_phase_attempted()
