@@ -1743,7 +1743,7 @@ MAP
 ..@..
 ENDMAP
 
-NAME:    dolorous_big_flames_little_flames
+NAME:    dolorous_makhleb_big_flames_little_flames
 TAGS:    no_monster_gen no_item_gen no_trap_gen transparent
 TAGS:    temple_overflow_1 temple_overflow_makhleb
 DEPTH:   D:4-
@@ -1773,6 +1773,30 @@ cG.......''P''.......Gc
 cc...D...c'''c...Y...cc
  ccc....ccc'ccc....ccc
    ccccccccccccccccc
+ENDMAP
+
+NAME:    regret_index_makhleb_overflow_haemoclasm
+TAGS:    uniq_altar_makhleb temple_overflow_1 no_vmirror no_rotate
+TAGS:    transparent decor
+DEPTH:   D:3-, Depths, Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Tar, !Tar:$
+WEIGHT:  5 (D:3-, Depths), 1
+KITEM:   de = human skeleton
+KFEAT:   CD = altar_makhleb
+SHUFFLE: '? / '? / "! / "! / "!, xy
+NSUBST:  ? = 1:C / *:d, ! = 1:D / *:e
+KPROP:   'd = bloody
+FTILE:   eD" = floor_pebble_red
+CLEAR:   y
+: interest_check(_G)
+MAP
+ yyyy  yyyy  yyyy
+x'..'  '..'  .''.x
+x''.'  '..'  '..'x
+x..?.  .'?.  .?.'x
+x''.'  '..'  '.'.x
+x'..'  '''.  '..'x
+x'..'  '..'  .''.x
+ yyyy  yyyy  yyyy
 ENDMAP
 
 ### Nemelex overflow altars ###################################################
