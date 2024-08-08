@@ -35,7 +35,7 @@ static const mutation_def mut_data[] =
   {"Iron fuses itself to your scales.", "", ""},
   {"The iron flakes away from your scales.", "", ""},
   TILEG_MUT_GENERIC_GOOD_MUTATION,
-  {"Iron will fuse itself to your scales (AC + 5)"}
+  {"Iron will fuse itself to your scales. (AC + 5)"}
 },
 
 { MUT_INVIOLATE_MAGIC, 0, 1, mutflag::good, false,
