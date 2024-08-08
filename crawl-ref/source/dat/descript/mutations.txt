@@ -854,7 +854,7 @@ with no place to wear magical rings without disastrous magical interference.
 iron-fused scales mutation
 
 Your scales are fused with a thick layer of iron, giving them resilience akin to
-to a suit of armour (+5 AC).
+a suit of armour (+5 AC).
 %%%%
 inviolate magic mutation
 
