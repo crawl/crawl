@@ -2589,7 +2589,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
             { SPELL_MUD_BREATH, "You spew a torrent of mud." },
             { SPELL_GALVANIC_BREATH, "You breathe wild lightning."}
         };
-        mpr(breath_message[spell].c_str());
+
+        if (!fail)
+            mpr(breath_message[spell].c_str());
     }
     break;
 
