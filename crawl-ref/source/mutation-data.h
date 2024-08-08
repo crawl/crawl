@@ -41,8 +41,8 @@ static const mutation_def mut_data[] =
 { MUT_INVIOLATE_MAGIC, 0, 1, mutflag::good, false,
   "inviolate magic",
 
-  {"Your magical power and effects resist distruption.", "", ""},
-  {"Your magical power grows resistant to distruption.", "", ""},
+  {"Your magical power and effects resist disruption.", "", ""},
+  {"Your magical power grows resistant to disruption.", "", ""},
   {"Your magical power loses its resistance to disruption.", "", ""},
   TILEG_MUT_GENERIC_GOOD_MUTATION,
   {"Your magical power will grow resistant to disruption."}
