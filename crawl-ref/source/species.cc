@@ -184,11 +184,11 @@ namespace species
             case SP_WHITE_DRACONIAN:
                 return "icy white";
             case SP_GREEN_DRACONIAN:
-                return "lurid green";
+                return "mossy green";
             case SP_YELLOW_DRACONIAN:
-                return "golden yellow";
+                return "lurid yellow";
             case SP_GREY_DRACONIAN:
-                return "dull iron-grey";
+                return "dull grey";
             case SP_BLACK_DRACONIAN:
                 return "glossy black";
             case SP_PURPLE_DRACONIAN:
@@ -211,7 +211,7 @@ namespace species
         case SP_GREEN_DRACONIAN:
             return MONS_SWAMP_DRAGON;
         case SP_YELLOW_DRACONIAN:
-            return MONS_GOLDEN_DRAGON;
+            return MONS_ACID_DRAGON;
         case SP_GREY_DRACONIAN:
             return MONS_IRON_DRAGON;
         case SP_BLACK_DRACONIAN:

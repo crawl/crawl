@@ -350,7 +350,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
                 return mutation_activity_type::FULL;
             if ((mut == MUT_ACIDIC_BITE || mut == MUT_ACID_RESISTANCE)
-                && drag == MONS_GOLDEN_DRAGON)
+                && drag == MONS_ACID_DRAGON)
             {
                 return mutation_activity_type::FULL;
             }
