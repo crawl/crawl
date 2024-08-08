@@ -74,6 +74,7 @@
 #include "notes.h"
 #include "place.h"
 #include "prompt.h"
+#include "religion.h"
 #include "skills.h"
 #include "species.h"
 #include "spl-summoning.h"
@@ -1223,7 +1224,8 @@ static void _expire_temporary_allies()
         }
         // Yred & animate dead zombies crumble on floor change
         else if (mons.has_ench(ENCH_SUMMON)
-                    && mons.get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD)
+                    && mons.get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD
+                || (is_yred_undead_follower(mons) && mons.type != MONS_BOUND_SOUL))
         {
             monster_die(mons, KILL_RESET, NON_MONSTER, true);
         }
