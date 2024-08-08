@@ -1807,6 +1807,7 @@ void dithmenos_shadow_spell(spell_type spell)
 
         case SPELL_SHADOW_TEMPEST:
             pos = _find_shadow_aoe_position(you.current_vision);
+            break;
 
         default:
         case SPELL_SHADOW_PUPPET:
