@@ -379,25 +379,14 @@ spret cast_healing(int pow, bool fail)
     return spret::success;
 }
 
-/// Effects that occur when the player is debuffed.
-struct player_debuff_effects
-{
-    /// Attributes removed by a debuff.
-    // TODO: I'm nearly sure these are unused; REMOVEME!
-    vector<attribute_type> attributes;
-    /// Durations removed by a debuff.
-    vector<duration_type> durations;
-};
-
 /**
  * What dispellable effects currently exist on the player?
  *
- * @param[out] buffs   The dispellable effects that exist on the player.
- *                     Assumed to be empty when passed in.
+ * @return The dispellable effects that currently exist on the player.
  */
-static void _dispellable_player_buffs(player_debuff_effects &buffs)
+static vector<duration_type> _dispellable_player_buffs()
 {
-    // durations
+    vector<duration_type> dispellables;
     for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
     {
         const int dur = you.duration[i];
@@ -416,11 +405,13 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         else if (i == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
             continue;
 
-        buffs.durations.push_back((duration_type) i);
+        dispellables.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut
         // that's probably not an actual problem
     }
+
+    return dispellables;
 }
 
 /**
@@ -430,10 +421,7 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
  */
 bool player_is_debuffable()
 {
-    player_debuff_effects buffs;
-    _dispellable_player_buffs(buffs);
-    return !buffs.durations.empty()
-           || !buffs.attributes.empty();
+    return !_dispellable_player_buffs().empty();
 }
 
 /**
@@ -460,9 +448,8 @@ string describe_player_cancellation(bool debuffs_only)
     if (!debuffs_only && get_contamination_level())
         effects.push_back("as magically contaminated");
 
-    player_debuff_effects buffs;
-    _dispellable_player_buffs(buffs);
-    for (auto duration : buffs.durations)
+    vector<duration_type> buffs = _dispellable_player_buffs();
+    for (auto duration : buffs)
     {
         if (duration == DUR_TRANSFORMATION)
         {
@@ -516,21 +503,10 @@ void debuff_player()
     bool need_msg = false;
 
     // find the list of debuffable effects currently active
-    player_debuff_effects buffs;
-    _dispellable_player_buffs(buffs);
+    vector<duration_type> buffs = _dispellable_player_buffs();
 
-    for (auto attr : buffs.attributes)
-    {
-        you.attribute[attr] = 0;
-#if TAG_MAJOR_VERSION == 34
-        if (attr == ATTR_DELAYED_FIREBALL)
-            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
-        else
-#endif
-            need_msg = true;
-    }
 
-    for (auto duration : buffs.durations)
+    for (auto duration : buffs)
     {
         int &len = you.duration[duration];
         if (duration == DUR_TELEPORT)
