@@ -1,6 +1,6 @@
 name: "dryad"
 glyph: {char: "R", colour: lightgreen}
-flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
+flags: [speaks, warm_blood, cautious, no_poly_to, no_gen_derived]
 resists: {fire: -1}
 will: 80
 attacks:
