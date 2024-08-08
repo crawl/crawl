@@ -3,6 +3,7 @@
 #include "end.h"
 #include "game-type.h"
 #include "items.h"
+#include "mutation.h"
 #include "newgame-def.h"
 #include "ng-setup.h"
 #include "player.h"
@@ -40,6 +41,7 @@ MockPlayerYouTestsFixture::MockPlayerYouTestsFixture() {
 
     destroy_items_in_player_inventory();
 
+    init_mut_index();
     init_properties();
 }
 
