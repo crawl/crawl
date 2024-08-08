@@ -750,7 +750,7 @@ static void _spirit_shield_message(bool unmeld)
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF)
         {
-            drain_mp(you.magic_points);
+            drain_mp(you.magic_points, true);
             mpr("Now linked to your health, your magic stops regenerating.");
         }
 #endif

@@ -670,9 +670,9 @@ static beam_type _chaos_beam_flavour(bolt* beam)
 dice_def combustion_breath_damage(int pow, bool allow_random)
 {
     if (allow_random)
-        return dice_def(3, 3 + div_rand_round(pow * 2, 3));
+        return dice_def(3, 4 + div_rand_round(pow * 10, 9));
     else
-        return dice_def(3, 3 + pow * 2 / 3);
+        return dice_def(3, 4 + pow * 10 / 9);
 }
 
 static void _combustion_breath_explode(bolt *parent, coord_def pos)
@@ -3906,7 +3906,8 @@ void bolt::affect_player_enchantment(bool resistible)
         if (!player_is_debuffable())
             break;
 
-        debuff_player();
+        // If the player is unravelling themselves voluntarily, allow it to work.
+        debuff_player(agent() && agent()->is_player());
         _unravelling_explode(*this);
         obvious_effect = true;
         break;

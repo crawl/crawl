@@ -12,7 +12,7 @@ aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  wl: 6
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -31,6 +31,10 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+  7:
+    MUT_STRONG_WILLED: 1
+  14:
+    MUT_INVIOLATE_MAGIC: 1
 fake_mutations:
   - long: You can breathe blasts of antimagic.
     short: nullifying breath

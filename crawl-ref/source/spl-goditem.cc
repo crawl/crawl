@@ -498,13 +498,18 @@ string describe_player_cancellation(bool debuffs_only)
  * Forms, buffs, debuffs, contamination, probably a few other things.
  * Flight gets an extra 11 aut before going away to minimize instadeaths.
  */
-void debuff_player()
+void debuff_player(bool ignore_resistance)
 {
     bool need_msg = false;
 
     // find the list of debuffable effects currently active
     vector<duration_type> buffs = _dispellable_player_buffs();
 
+    if (!buffs.empty() & !ignore_resistance && you.has_mutation(MUT_INVIOLATE_MAGIC))
+    {
+        mpr("Your magical effects refuse to unravel!");
+        return;
+    }
 
     for (auto duration : buffs)
     {

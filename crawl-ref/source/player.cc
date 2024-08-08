@@ -3882,8 +3882,11 @@ static void _dec_mp(int mp_loss, bool silent)
         flush_mp();
 }
 
-void drain_mp(int mp_loss)
+void drain_mp(int mp_loss, bool ignore_resistance)
 {
+    if (!ignore_resistance && you.has_mutation(MUT_INVIOLATE_MAGIC))
+        mp_loss = mp_loss / 3;
+
     _dec_mp(mp_loss, false);
 }
 
@@ -6298,8 +6301,6 @@ int player::racial_ac(bool temp) const
             || !temp))
     {
         int AC = 400 + 100 * experience_level / 3;  // max 13
-        if (species == SP_GREY_DRACONIAN) // no breath
-            AC += 500;
         return AC;
     }
 
@@ -6384,6 +6385,7 @@ vector<mutation_ac_changes> all_mutation_ac_changes = {
     ,mutation_ac_changes(MUT_THIN_METALLIC_SCALES,   mutation_activity_type::FULL,    TWO_THREE_FOUR)
     ,mutation_ac_changes(MUT_YELLOW_SCALES,          mutation_activity_type::FULL,    TWO_THREE_FOUR)
     ,mutation_ac_changes(MUT_SHARP_SCALES,           mutation_activity_type::FULL,    ONE_TWO_THREE)
+    ,mutation_ac_changes(MUT_IRON_FUSED_SCALES,            mutation_activity_type::FULL,    {5, 5, 5})
 };
 
 /**

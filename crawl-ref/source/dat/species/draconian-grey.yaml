@@ -38,5 +38,7 @@ fake_mutations:
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+  14:
+    MUT_IRON_FUSED_SCALES: 1
 
 orc_name: Grey Orconian

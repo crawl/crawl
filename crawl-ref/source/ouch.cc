@@ -1083,7 +1083,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             mp = min(mp, you.magic_points);
 
             dam -= mp;
-            drain_mp(mp);
+            drain_mp(mp, true);
 
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshold by spirit shield.

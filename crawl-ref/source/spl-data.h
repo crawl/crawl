@@ -1561,7 +1561,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
     5,
     0,
-    5, 5,
+    6, 6,
     0,
     TILEG_SPIT_ACID,
 },

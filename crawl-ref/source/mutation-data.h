@@ -28,6 +28,26 @@ struct mutation_category_def
 static const mutation_def mut_data[] =
 {
 
+{ MUT_IRON_FUSED_SCALES, 0, 1, mutflag::good, true,
+  "iron-fused scales",
+
+  {"Your scales are fused with iron. (AC + 5)", "", ""},
+  {"Iron fuses itself to your scales.", "", ""},
+  {"The iron flakes away from your scales.", "", ""},
+  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  {"Iron will fuse itself to your scales (AC + 5)"}
+},
+
+{ MUT_INVIOLATE_MAGIC, 0, 1, mutflag::good, false,
+  "inviolate magic",
+
+  {"Your magical power and effects resist distruption.", "", ""},
+  {"Your magical power grows resistant to distruption.", "", ""},
+  {"Your magical power loses its resistance to disruption.", "", ""},
+  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  {"Your magical power will grow resistant to disruption."}
+},
+
 { MUT_TOUGH_SKIN, 0, 3, mutflag::good, true,
   "tough skin",
 

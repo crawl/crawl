@@ -985,8 +985,7 @@ static vector<string> _get_fakemuts(bool terse)
         {
             // XX generalize this code somehow?
             const string scale_clause = string(species::scale_type(you.species))
-                  + " scales are "
-                  + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
+                  + " scales are hard";
 
             result.push_back(_annotate_form_based(
                         make_stringf("Your %s. (AC +%d)", you.species == SP_NAGA

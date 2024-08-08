@@ -851,6 +851,17 @@ no rings mutation
 Your hands are embedded into the controls for your grasping arms, leaving you
 with no place to wear magical rings without disastrous magical interference.
 %%%%
+iron-fused scales mutation
+
+Your scales are fused with a thick layer of iron, giving them resilience akin to
+to a suit of armour (+5 AC).
+%%%%
+inviolate magic mutation
+
+Your magic is resistant to distruption by outside forces. Hostile effects which
+drain your MP drain only 1/3 as much and you are immune to having your magical
+effects be removed by anyone but yourself.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 
