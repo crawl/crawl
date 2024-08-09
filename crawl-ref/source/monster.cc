@@ -5159,6 +5159,12 @@ bool monster::can_burrow() const
            && (type == MONS_DISSOLUTION || behaviour != BEH_WANDER);
 }
 
+bool monster::can_burrow_through(dungeon_feature_type feat) const
+{
+    return can_burrow() && feat_is_diggable(feat)
+           && (type == MONS_DISSOLUTION || feat != DNGN_SLIMY_WALL);
+}
+
 /**
  * Malmutate the monster.
  *

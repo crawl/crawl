@@ -2903,13 +2903,12 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         return false;
 
     const bool digs = _mons_can_cast_dig(mons, false);
-    if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
-           && (mons->can_burrow() || digs)
+    if (digs && feat_is_diggable(target_grid)
+        || mons->can_burrow_through(target_grid)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
            && !feat_is_critical(target_grid)
-        || feat_is_tree(target_grid) && mons_flattens_trees(*mons)
-        || target_grid == DNGN_GRATE && digs)
+        || feat_is_tree(target_grid) && mons_flattens_trees(*mons))
     {
     }
     else if (!mons_can_traverse(*mons, targ, false, false)
@@ -3596,61 +3595,56 @@ static bool _monster_move(monster* mons, coord_def& delta)
         }
     }
 
-    const bool burrows = mons->can_burrow();
-    const bool flattens_trees = mons_flattens_trees(*mons);
-    const bool digs = _mons_can_cast_dig(mons, false);
     // Take care of Dissolution burrowing, lerny, etc
-    if (burrows || flattens_trees || digs)
+    const dungeon_feature_type feat = env.grid(mons->pos() + delta);
+    const bool burrows = mons->can_burrow_through(feat);
+    const bool flattens_trees = mons_flattens_trees(*mons) && feat_is_tree(feat);
+    const bool digs = _mons_can_cast_dig(mons, false) && feat_is_diggable(feat);
+    if (digs)
     {
-        const dungeon_feature_type feat = env.grid(mons->pos() + delta);
-        if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
-                && !burrows && digs
-            || feat == DNGN_GRATE && digs)
+        bolt beem;
+        // XXX: Check for antimagic causing failure at this point. Ideally,
+        //      monster spellcasting functions could allow this without duplication.
+        if (_mons_can_cast_dig(mons, true))
         {
-            bolt beem;
-            if (_mons_can_cast_dig(mons, true))
+            setup_mons_cast(mons, beem, SPELL_DIG);
+            beem.target = mons->pos() + delta;
+            mons_cast(mons, beem, SPELL_DIG,
+                        mons->spell_slot_flags(SPELL_DIG));
+        }
+        else
+            simple_monster_message(*mons, " falters for a moment.");
+        mons->lose_energy(EUT_SPELL);
+        return true;
+    }
+    else if ((burrows || flattens_trees)
+                && good_move[delta.x + 1][delta.y + 1] == true)
+    {
+        const coord_def target(mons->pos() + delta);
+        destroy_wall(target);
+
+        if (flattens_trees)
+        {
+            // Flattening trees has a movement cost to the monster
+            // - 100% over and above its normal move cost.
+            _swim_or_move_energy(*mons);
+            if (you.see_cell(target))
             {
-                setup_mons_cast(mons, beem, SPELL_DIG);
-                beem.target = mons->pos() + delta;
-                mons_cast(mons, beem, SPELL_DIG,
-                          mons->spell_slot_flags(SPELL_DIG));
+                const bool actor_visible = you.can_see(*mons);
+                mprf("%s knocks down a tree!",
+                        actor_visible?
+                        mons->name(DESC_THE).c_str() : "Something");
+                noisy(25, target);
             }
             else
-                simple_monster_message(*mons, " falters for a moment.");
-            mons->lose_energy(EUT_SPELL);
-            return true;
+                noisy(25, target, "You hear a crashing sound.");
         }
-        else if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
-                  && burrows)
-                  || (flattens_trees && feat_is_tree(feat)))
-                 && good_move[delta.x + 1][delta.y + 1] == true)
+        // Dissolution dissolves walls.
+        else if (player_can_hear(mons->pos() + delta))
         {
-            const coord_def target(mons->pos() + delta);
-            destroy_wall(target);
-
-            if (flattens_trees)
-            {
-                // Flattening trees has a movement cost to the monster
-                // - 100% over and above its normal move cost.
-                _swim_or_move_energy(*mons);
-                if (you.see_cell(target))
-                {
-                    const bool actor_visible = you.can_see(*mons);
-                    mprf("%s knocks down a tree!",
-                         actor_visible?
-                         mons->name(DESC_THE).c_str() : "Something");
-                    noisy(25, target);
-                }
-                else
-                    noisy(25, target, "You hear a crashing sound.");
-            }
-            // Dissolution dissolves walls.
-            else if (player_can_hear(mons->pos() + delta))
-            {
-                mprf(MSGCH_SOUND, mons->type == MONS_DISSOLUTION
-                                    ? "You hear a sizzling sound."
-                                    : "You hear a grinding noise.");
-            }
+            mprf(MSGCH_SOUND, mons->type == MONS_DISSOLUTION
+                                ? "You hear a sizzling sound."
+                                : "You hear a grinding noise.");
         }
     }
 
