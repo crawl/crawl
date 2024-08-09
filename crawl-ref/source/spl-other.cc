@@ -232,10 +232,16 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     }
 }
 
+static bool _grid_is_passwallable(coord_def pos)
+{
+    return _feat_is_passwallable(env.grid(pos))
+            && !is_temp_terrain(pos);
+}
+
 bool passwall_simplified_check(const actor &act)
 {
     for (adjacent_iterator ai(act.pos(), true); ai; ++ai)
-        if (_feat_is_passwallable(env.grid(*ai)))
+        if (_grid_is_passwallable(*ai))
             return true;
     return false;
 }
@@ -257,7 +263,7 @@ passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_ran
         path.emplace_back(pos);
         if (in_bounds(pos))
         {
-            if (!_feat_is_passwallable(env.grid(pos)))
+            if (!_grid_is_passwallable(pos))
             {
                 if (!dest_found)
                 {
