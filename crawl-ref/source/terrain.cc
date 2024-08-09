@@ -2169,6 +2169,8 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
     return true;
 }
 
+// If ctype == NUM_TERRAIN_CHANGE_TYPES, will revert *all* terrain changes on
+// the given pos.
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 {
     dungeon_feature_type newfeat = DNGN_UNSEEN;
@@ -2183,7 +2185,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
             map_terrain_change_marker* tmarker =
                     dynamic_cast<map_terrain_change_marker*>(marker);
 
-            if (tmarker->change_type == ctype)
+            if (tmarker->change_type == ctype || ctype == NUM_TERRAIN_CHANGE_TYPES)
             {
                 if (tmarker->colour != BLACK)
                     colour = tmarker->colour;

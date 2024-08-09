@@ -950,7 +950,17 @@ void bolt::digging_wall_effect()
     const dungeon_feature_type feat = env.grid(pos());
     if (feat_is_diggable(feat))
     {
-        destroy_wall(pos());
+        // If this is temporary terrain and the underlying terrain is *not*
+        // diggable, just revert it to whatever it was before. But if the
+        // original terrain was also diggable, simply destroy it.
+        if (is_temp_terrain(pos()))
+        {
+            revert_terrain_change(pos());
+            if (feat_is_diggable(env.grid(pos())))
+                destroy_wall(pos());
+        }
+        else
+            destroy_wall(pos());
         if (!msg_generated)
         {
             if (!you.see_cell(pos()))
@@ -1009,8 +1019,6 @@ void bolt::burn_wall_effect()
         return;
     }
 
-    // Destroy the wall.
-    destroy_wall(pos());
     if (you.see_cell(pos()))
     {
         if (feat == DNGN_TREE)
@@ -1023,14 +1031,42 @@ void bolt::burn_wall_effect()
     else if (you.can_smell())
         emit_message("You smell burning wood.");
 
-    if (feat == DNGN_TREE)
-        place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
-    // Mangroves do not burn so readily.
-    else if (feat == DNGN_MANGROVE)
-        place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
-    // Demonic trees produce a chaos cloud instead of fire.
-    else if (feat == DNGN_DEMONIC_TREE)
-        place_cloud(CLOUD_CHAOS, pos(), random2(30)+25, agent());
+    // If the tree we're destroying is temporary, immediately revert
+    // terrain changes on this tile rather than permanently changing it.
+    if (is_temp_terrain(pos()))
+        revert_terrain_change(pos());
+    else
+        destroy_wall(pos());
+
+    // But burning a temporary tree that was created on open ground can still
+    // start a fire.
+    if (!cell_is_solid(pos()))
+    {
+        if (feat == DNGN_TREE)
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
+        // Mangroves do not burn so readily.
+        else if (feat == DNGN_MANGROVE)
+            place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
+        // Demonic trees produce a chaos cloud instead of fire.
+        else if (feat == DNGN_DEMONIC_TREE)
+            place_cloud(CLOUD_CHAOS, pos(), random2(30)+25, agent());
+    }
+    // If a tree turned back into a wall, place some fire around it to simulate
+    // the normal burning effect without removing the wall.
+    else if (feat == DNGN_TREE)
+    {
+        for (adjacent_iterator ai(pos()); ai; ++ai)
+        {
+            if (!in_bounds(*ai) || cloud_at(*ai) || is_sanctuary(*ai)
+                || cell_is_solid(*ai) || !cell_see_cell(*ai, source, LOS_NO_TRANS))
+            {
+                continue;
+            }
+
+            if (one_chance_in(3))
+                place_cloud(CLOUD_FIRE, *ai, random_range(11, 25), agent());
+        }
+    }
 
     obvious_effect = true;
 
@@ -2820,10 +2856,6 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
     {
         return true;
     }
-
-    // Temporary trees and slime walls can't be burned/dug.
-    if ((feat_is_tree(wall) || wall == DNGN_SLIMY_WALL) && is_temp_terrain(p))
-        return false;
 
     // digging
     if (flavour == BEAM_DIGGING && feat_is_diggable(wall))
