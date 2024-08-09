@@ -943,7 +943,8 @@ bool melee_attack::handle_phase_killed()
                             && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
                             && !you.duration[DUR_EXECUTION]
                             && !mons_is_firewood(*defender->as_monster())
-                            //&& one_chance_in(7)
+                            && defender->real_attitude() != ATT_FRIENDLY
+                            && one_chance_in(7)
     // It's unsatisfying to repeatedly trigger a transformation on the final
     // monster of a group, so let's not cause the player that disappointment.
                             && there_are_monsters_nearby(true, true, false);
