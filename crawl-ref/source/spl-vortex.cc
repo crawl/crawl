@@ -315,8 +315,7 @@ void polar_vortex_damage(actor *caster, int dur)
                 && dur > 0
                 && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
-                env.grid(*dam_i) = DNGN_FLOOR;
-                set_terrain_changed(*dam_i);
+                destroy_wall(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the furious winds!");
             }
