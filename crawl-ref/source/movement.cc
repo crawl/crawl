@@ -948,12 +948,14 @@ void move_player_action(coord_def move)
 
     if (you.digging)
     {
-        if (feat_is_diggable(env.grid(targ)))
+        if (feat_is_diggable(env.grid(targ)) && env.grid(targ) != DNGN_SLIMY_WALL)
             targ_pass = true;
         else // moving or attacking ends dig
         {
             you.digging = false;
-            if (feat_is_solid(env.grid(targ)))
+            if (env.grid(targ) == DNGN_SLIMY_WALL)
+                mpr("Trying to dig through that would dissolve your mandibles.");
+            else if (feat_is_solid(env.grid(targ)))
                 mpr("You can't dig through that.");
             else
                 mpr("You retract your mandibles.");
