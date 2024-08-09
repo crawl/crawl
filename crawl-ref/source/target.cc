@@ -2463,3 +2463,16 @@ bool targeter_soul_splinter::affects_monster(const monster_info& mon)
     // No visible free spots found
     return false;
 }
+
+targeter_malign_gateway::targeter_malign_gateway(actor& caster)
+{
+    agent = &caster;
+}
+
+aff_type targeter_malign_gateway::is_affected(coord_def loc)
+{
+    if (is_gateway_target(*agent, loc))
+        return AFF_MAYBE;
+
+    return AFF_NO;
+}

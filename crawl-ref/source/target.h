@@ -662,3 +662,11 @@ public:
     targeter_soul_splinter(const actor *act, int r);
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_malign_gateway : public targeter
+{
+public:
+    targeter_malign_gateway(actor& caster);
+    aff_type is_affected(coord_def loc) override;
+    bool valid_aim(coord_def) override { return true; }
+};

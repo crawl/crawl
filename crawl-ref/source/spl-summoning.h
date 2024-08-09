@@ -61,6 +61,7 @@ spret cast_malign_gateway(actor* caster, int pow,
                           god_type god = GOD_NO_GOD, bool fail = false,
                           bool test = false);
 coord_def find_gateway_location(actor* caster);
+bool is_gateway_target(const actor& caster, coord_def location);
 spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test=false);
 spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail);
 
