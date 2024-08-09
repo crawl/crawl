@@ -6298,6 +6298,10 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mi.can_see_invisible())
         result << uppercase_first(pronoun) << " can see invisible.\n";
 
+    if (mons_class_flag(mi.type, M_BURROWS))
+        result << uppercase_first(pronoun) << " can burrow through diggable terrain.\n";
+
+
     if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
     {
         result << uppercase_first(pronoun) << " "
