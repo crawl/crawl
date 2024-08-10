@@ -65,6 +65,7 @@ tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 
 set<tileidx_t> status_icons_for(const monster_info &mon);
+set<tileidx_t> status_icons_for_player();
 
 // Return the level of enchantment as an int. None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);

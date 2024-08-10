@@ -926,6 +926,7 @@ public:
     vector<string> tile_layout_priority;
     monster_type tile_use_monster;
     bool        tile_grinch;
+    vector<string> tile_player_status_icons;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     bool        tile_level_map_hide_messages;

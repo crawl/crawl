@@ -130,6 +130,7 @@ The contents of this text are:
                 glyph_mode_font_size, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
                 tile_misc_anim, tile_realtime_anim, tile_show_player_species,
+                tile_player_status_icons,
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
@@ -2481,6 +2482,12 @@ tile_show_threat_levels = nasty, unusual
 
         When 'unusual' is specified, the option unusual_monster_items will
         determine which items cause a monster to highlight as unusual.
+
+tile_player_status_icons = slow, constr
+        This option constrols which icons will be displayed on top of the
+        player's tile when they are afflicted by certain status effects.
+        Valid values include: slow, fragile, petr, mark, will/2, haste, weak,
+        corr, might, brill, -move.
 
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)

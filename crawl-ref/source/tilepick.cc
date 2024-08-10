@@ -2280,7 +2280,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 }
 #endif
 
-static const map<monster_info_flags, tileidx_t> status_icons = {
+static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_BURNING, TILEI_STICKY_FLAME },
     { MB_INNER_FLAME, TILEI_INNER_FLAME },
     { MB_BERSERK, TILEI_BERSERK },
@@ -2350,9 +2350,51 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
         icons.insert(TILEI_ANIMATED_WEAPON);
     if (!mons.constrictor_name.empty())
         icons.insert(TILEI_CONSTRICTED);
-    for (auto status : status_icons)
+    for (auto status : monster_status_icons)
         if (mons.is(status.first))
             icons.insert(status.second);
+    return icons;
+}
+
+static const map<duration_type, pair<tileidx_t, string>> player_status_icons = {
+    // Default displayed statuses
+    { DUR_SLOW, {TILEI_SLOWED, "slow"} },
+    { DUR_VITRIFIED, {TILEI_VITRIFIED, "fragile"} },
+    { DUR_LOWERED_WL, {TILEI_WEAK_WILLED, "will/2"} },
+
+    // Less critical or positive effects (or ones already covered by a default
+    // force_more_message). Not enabled by default.
+    { DUR_HASTE, {TILEI_HASTED, "haste"} },
+    { DUR_WEAK, {TILEI_WEAKENED, "weak"} },
+    { DUR_CORROSION, {TILEI_CORRODED, "corr"} },
+    { DUR_MIGHT, {TILEI_MIGHT, "might"} },
+    { DUR_BRILLIANCE, {TILEI_BRILLIANCE, "brill"} },
+    { DUR_NO_MOMENTUM, {TILEI_BIND, "-move"} },
+    { DUR_PETRIFYING, {TILEI_PETRIFYING, "petr"} },
+    { DUR_SENTINEL_MARK, {TILEI_BULLSEYE, "mark"} },
+};
+
+static bool _should_show_player_status_icon(const string& name)
+{
+    return find (Options.tile_player_status_icons.begin(),
+                 Options.tile_player_status_icons.end(), name)
+                    != Options.tile_player_status_icons.end();
+}
+
+set<tileidx_t> status_icons_for_player()
+{
+
+    set<tileidx_t> icons;
+    if (you.is_constricted() && _should_show_player_status_icon("constr"))
+        icons.insert(TILEI_CONSTRICTED);
+    for (auto status : player_status_icons)
+    {
+        if (you.duration[status.first]
+            && _should_show_player_status_icon(status.second.second))
+        {
+            icons.insert(status.second.first);
+        }
+    }
     return icons;
 }
 
