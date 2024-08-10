@@ -2374,17 +2374,19 @@ static const map<duration_type, pair<tileidx_t, string>> player_status_icons = {
     { DUR_SENTINEL_MARK, {TILEI_BULLSEYE, "mark"} },
 };
 
+#ifdef USE_TILE
 static bool _should_show_player_status_icon(const string& name)
 {
     return find (Options.tile_player_status_icons.begin(),
                  Options.tile_player_status_icons.end(), name)
                     != Options.tile_player_status_icons.end();
 }
+#endif
 
 set<tileidx_t> status_icons_for_player()
 {
-
     set<tileidx_t> icons;
+#ifdef USE_TILE
     if (you.is_constricted() && _should_show_player_status_icon("constr"))
         icons.insert(TILEI_CONSTRICTED);
     for (auto status : player_status_icons)
@@ -2395,6 +2397,7 @@ set<tileidx_t> status_icons_for_player()
             icons.insert(status.second.first);
         }
     }
+#endif
     return icons;
 }
 
