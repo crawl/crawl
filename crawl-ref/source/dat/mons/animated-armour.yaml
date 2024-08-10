@@ -10,6 +10,7 @@ hd: 15
 hp_10x: 400
 ac: 8
 ev: 5
+uses: starting_equipment
 intelligence: brainless
 energy: {move: 30}
 size: medium
