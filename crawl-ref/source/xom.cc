@@ -2691,7 +2691,7 @@ static void _xom_wave_of_despair(int sever)
     for (distance_iterator di(you.pos(), true, true, 2); di; ++di)
     {
         if (!monster_at(*di) && !cell_is_solid(*di)
-          && env.grid(*di) != DNGN_ORB_DAIS)
+            && env.grid(*di) != DNGN_ORB_DAIS)
         {
             monster dummy;
             dummy.type = MONS_HUMAN; // maybe random floor monsters? player genus?
@@ -3006,27 +3006,27 @@ static void _xom_pseudo_miscast(int /*sever*/)
         && starts_with(species::skin_name(you.species), "bandage")
         && you_can_wear(EQ_BODY_ARMOUR, true) != false)
     {
-        string str =_get_xom_speech(
-                        (!you.airborne() && !you.swimming()) ? "floor bandages"
-                                                             : "bandages");
+        string str = _get_xom_speech(
+                (!you.airborne() && !you.swimming()) ? "floor bandages"
+                                                     : "bandages");
         messages.push_back(str);
     }
 
     if (player_has_ears())
     {
-        string str =_get_xom_speech("ears");
+        string str = _get_xom_speech("ears");
         messages.push_back(str);
     }
 
     {
-        string str =_get_xom_speech(
+        string str = _get_xom_speech(
                 you.get_mutation_level(MUT_MISSING_EYE) ? "one eye"
                                                         : "eyes");
         messages.push_back(str);
     }
 
     {
-        string str =_get_xom_speech("mouth");
+        string str = _get_xom_speech("mouth");
         messages.push_back(str);
     }
 
@@ -3089,8 +3089,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         const bool one_handed = you.slot_item(EQ_OFFHAND)
                                 || you.get_mutation_level(MUT_MISSING_HAND);
-        string str =_get_xom_speech(one_handed ? "unarmed one hand"
-                                               : "unarmed two hands");
+        string str = _get_xom_speech(one_handed ? "unarmed one hand"
+                                                : "unarmed two hands");
 
         str = replace_all(str, "@hand@", you.hand_name(false));
         str = replace_all(str, "@hands@", you.hand_name(true));
