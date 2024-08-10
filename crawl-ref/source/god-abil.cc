@@ -7511,6 +7511,17 @@ void makhleb_crucible_kill(monster& victim)
         env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
 #ifdef USE_TILE
         tile_env.bk_bg(pos) = TILE_DNGN_PORTAL;
+        tiles.update_minimap(pos);
+
+        for (adjacent_iterator ai(pos, false); ai; ++ai)
+        {
+            if (!cell_is_solid(*ai))
+            {
+                tile_env.flv(*ai).floor = TILE_FLOOR_CAGE;
+                tile_env.flv(*ai).floor_idx =
+                    store_tilename_get_index(tile_dngn_name(TILE_FLOOR_CAGE));
+            }
+        }
 #endif
 
         return;
