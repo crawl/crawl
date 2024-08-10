@@ -837,6 +837,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
         msg::suppress msg;
         blorkula.heal(blorkula.max_hit_points);
         blorkula.del_ench(ENCH_CONFUSION, true);    // Don't blink at random
+        blorkula.stop_being_constricted(true);
         blorkula.timeout_enchantments(1000);
     }
     blorkula.add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, &blorkula,
