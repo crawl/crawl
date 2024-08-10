@@ -615,17 +615,17 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         if (poison_flag == TILE_FLAG_POISON)
         {
             m_buf_icons.add(TILEI_POISON, x, y, -status_shift, 0);
-            status_shift += 5;
+            status_shift += 6;
         }
         else if (poison_flag == TILE_FLAG_MORE_POISON)
         {
             m_buf_icons.add(TILEI_MORE_POISON, x, y, -status_shift, 0);
-            status_shift += 5;
+            status_shift += 6;
         }
         else if (poison_flag == TILE_FLAG_MAX_POISON)
         {
             m_buf_icons.add(TILEI_MAX_POISON, x, y, -status_shift, 0);
-            status_shift += 5;
+            status_shift += 7;
         }
     }
 
