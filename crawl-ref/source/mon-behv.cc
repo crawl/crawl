@@ -392,7 +392,7 @@ void handle_behaviour(monster* mon)
     }
 
     // Unfriendly monsters fighting other monsters will usually
-    // target the player, if they're healthy.
+    // target the player.
     if (!isFriendly && !isNeutral
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
