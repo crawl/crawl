@@ -677,6 +677,9 @@ transponder
 # Friends
 transponster
 
+# FoxTrot
+trapovaloid
+
 trunnion
 
 tube
