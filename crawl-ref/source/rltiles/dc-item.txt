@@ -1156,6 +1156,7 @@ misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 misc_tremorstones MISC_TIN_OF_TREMORSTONES
+misc_tremorstones_inert MISC_TIN_OF_TREMORSTONES_INERT
 misc_vane MISC_CONDENSER_VANE
 misc_vane_inert MISC_CONDENSER_VANE_INERT
 %rim 1

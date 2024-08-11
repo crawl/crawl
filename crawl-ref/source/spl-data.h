@@ -3972,7 +3972,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     20,
-    TILEG_BOLT_OF_MAGMA,
+    TILEG_HELLFIRE_MORTAR,
 },
 
 // Dithmenos shadow mimic spells

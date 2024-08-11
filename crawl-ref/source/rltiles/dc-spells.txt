@@ -68,6 +68,7 @@ foxfire FOXFIRE
 ignite_poison IGNITE_POISON
 ignition IGNITION
 inner_flame INNER_FLAME
+hellfire_mortar HELLFIRE_MORTAR
 plasma_beam PLASMA_BEAM
 scorch SCORCH
 starburst STARBURST

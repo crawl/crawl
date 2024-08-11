@@ -879,7 +879,7 @@ static const mutation_def mut_data[] =
   {"Your fingernails shrink to normal size.",
    "Your fingernails look duller.",
    "Your hands feel fleshier."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_CLAWS,
 },
 
 { MUT_FANGS, 1, 3, mutflag::good, true,
@@ -913,7 +913,7 @@ static const mutation_def mut_data[] =
   {"Your hooves expand and flesh out into feet!",
    "Your hooves look more like feet.",
    "Your hooves look more like feet."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_HOOVES,
 },
 
 { MUT_ANTENNAE, 4, 3, mutflag::good, true,

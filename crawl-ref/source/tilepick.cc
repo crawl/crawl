@@ -2976,7 +2976,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
                                              : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
     case MISC_TIN_OF_TREMORSTONES:
-        return TILE_MISC_TIN_OF_TREMORSTONES;
+        return evoker_charges(item.sub_type) ? TILE_MISC_TIN_OF_TREMORSTONES
+                                             : TILE_MISC_TIN_OF_TREMORSTONES_INERT;
 
     case MISC_CONDENSER_VANE:
             return evoker_charges(item.sub_type) ? TILE_MISC_CONDENSER_VANE

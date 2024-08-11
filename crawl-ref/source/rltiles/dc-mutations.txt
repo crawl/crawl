@@ -101,6 +101,12 @@ horns_3
 antennae_1 ANTENNAE
 antennae_2
 antennae_3
+claws_1 CLAWS
+claws_2
+claws_3
+hooves_1 HOOVES
+hooves_2
+hooves_3
 
 passive_mapping_1 PASSIVE_MAPPING
 passive_mapping_2
