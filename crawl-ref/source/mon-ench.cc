@@ -1506,9 +1506,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
                 switch (type)
                 {
-                    case MONS_ELECTROFERRIC_VORTEX:
-                        mprf("%s dissipates.", name(DESC_THE, false).c_str());
-                        break;
                     case MONS_PILE_OF_DEBRIS:
                         mprf("%s collapses into dust.", name(DESC_THE, false).c_str());
                         break;

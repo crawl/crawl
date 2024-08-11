@@ -327,6 +327,11 @@ static const cloud_data clouds[] = {
       DARKGREY,                                      // colour
       { TILE_CLOUD_FAINT_MIASMA, CTVARY_RANDOM },    // tile
     },
+    // CLOUD_MAGNETISED_DUST,
+    { "magnetised fragments", nullptr,                  // terse, verbose name
+      ETC_ELECTRICITY,                                 // colour
+      { TILE_CLOUD_MAGNETISED_DUST, CTVARY_RANDOM },   // tile
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 

@@ -5239,10 +5239,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         simple_monster_message(*mon, " is empowered.");
     }
 
-    // Give electroferric vorticies a little more life if the player is shooting them
-    if (origin_spell == SPELL_MAGNAVOLT && mon->type == MONS_ELECTROFERRIC_VORTEX)
-        mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 0, nullptr, BASELINE_DELAY * 2));
-
     if (origin_spell == SPELL_RIMEBLIGHT)
         maybe_spread_rimeblight(*mon, ench_power);
 

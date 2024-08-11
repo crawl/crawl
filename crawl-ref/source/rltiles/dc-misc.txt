@@ -302,6 +302,10 @@ cloud_blastmotes0 CLOUD_BLASTMOTES
 cloud_blastmotes1
 cloud_blastmotes2
 
+cloud_magnetic0 CLOUD_MAGNETISED_DUST
+cloud_magnetic2
+cloud_magnetic2
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 

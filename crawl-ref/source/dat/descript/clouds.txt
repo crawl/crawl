@@ -194,3 +194,9 @@ faint pestilence cloud
 
 The faintest hint of foul pestilence, seeping out from somewhere. While not
 dense enough to be harmful yet, it is thickening rapidly.
+%%%%
+magnetised fragments cloud
+
+A cloud of countless tiny fragments of magnetised metal, still vibrating
+slightly from a recent electrical discharge. They will function as an attractor
+for the Magnavolt spell until they dissipate.

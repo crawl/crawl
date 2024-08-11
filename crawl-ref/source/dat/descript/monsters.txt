@@ -1268,11 +1268,6 @@ electric eel
 
 A type of fish capable of generating a powerful electric field.
 %%%%
-electroferric vortex
-
-A swirling cluster of magnetic iron fragments and lingering electricity
-crackling between them. It dissipates rapidly unless re-electrified.
-%%%%
 eleionoma
 
 Spirits of marshes and bogs. From the cypresses and willows of the fens stems the

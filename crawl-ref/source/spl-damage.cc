@@ -4950,10 +4950,16 @@ string describe_collision_dam(dice_def dice)
 vector<coord_def> get_magnavolt_targets()
 {
     vector<coord_def> targets;
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        if (mi->has_ench(ENCH_MAGNETISED))
-            targets.push_back(mi->pos());
+        if (monster* mon = monster_at(*ri))
+        {
+            if (mon->has_ench(ENCH_MAGNETISED))
+                targets.push_back(mon->pos());
+        }
+
+        if (cloud_type_at(*ri) == CLOUD_MAGNETIZED_DUST)
+            targets.push_back(*ri);
     }
 
     return targets;

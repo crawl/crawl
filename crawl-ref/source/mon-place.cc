@@ -1155,9 +1155,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->add_ench(mon_enchant(ENCH_POLAR_VORTEX, 0, 0, INFINITE_DURATION));
     }
 
-    if (mg.cls == MONS_ELECTROFERRIC_VORTEX)
-        mon->add_ench(mon_enchant(ENCH_MAGNETISED, 1, nullptr, INFINITE_DURATION));
-
     // this MUST follow hd initialization!
     if (mons_is_hepliaklqana_ancestor(mon->type))
     {

@@ -994,9 +994,10 @@ Envelops a target in a thin layer of magnetically charged metal fragments, then
 unleashes a powerful surge of electricity that arcs unerringly towards every
 visible target coated in these fragments.
 
-Magnetised creatures are additionally unable to evade attacks, and will leave
-behind a short-lived vortex of electrified metal upon death that will continue
-to serve as a lightning rod for this spell.
+Magnetised creatures are additionally unable to evade attacks and will be
+revealed if invisible. If they die while still coated, they will leave behind a
+short-lived cloud of electrified metal that will continue to serve as a
+lightning rod for this spell.
 %%%%
 Major Destruction spell
 
