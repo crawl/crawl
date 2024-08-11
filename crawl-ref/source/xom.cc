@@ -852,35 +852,35 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   {  3,  8,  50, SEMI, MONS_UFETUBUS },
   {  3,  8,  40, SEMI, MONS_WHITE_IMP },
   {  4,  8,   5, SEMI, MONS_MUMMY },
-  {  4,  9,  75, SEMI, MONS_PHANTOM },
+  {  4, 10,  75, SEMI, MONS_PHANTOM },
   {  5, 10,  10, SEMI, MONS_BOMBARDIER_BEETLE },
-  {  5, 11,  80, SEMI, MONS_SWAMP_DRAKE },
-  {  5, 12,  20, SEMI, MONS_WEEPING_SKULL },
-  {  7, 14,  50, SEMI, MONS_ICE_DEVIL },
-  {  7, 14,  60, SEMI, MONS_ORANGE_DEMON },
-  {  7, 15, 105, SEMI, MONS_SHAPESHIFTER },
-  {  8, 14,  50, SEMI, MONS_RED_DEVIL },
-  {  8, 15,  70, SEMI, MONS_BOGGART },
+  {  5, 12,  90, SEMI, MONS_SWAMP_DRAKE },
+  {  5, 12,  25, SEMI, MONS_WEEPING_SKULL },
+  {  7, 14,  50, SEMI, MONS_ORANGE_DEMON },
+  {  7, 15,  95, SEMI, MONS_SHAPESHIFTER },
+  {  8, 14,  40, SEMI, MONS_ICE_DEVIL },
+  {  8, 14,  40, SEMI, MONS_RED_DEVIL },
+  {  8, 15,  60, SEMI, MONS_BOGGART },
   {  8, 20, 155, SEMI, MONS_CHAOS_SPAWN },
-  {  9, 13,  40, SEMI, MONS_HELL_RAT },
-  {  9, 14,  80, SEMI, MONS_HELLWING },
+  {  9, 14,  60, SEMI, MONS_HELLWING },
   {  9, 14,   5, FLAT, MONS_TOENAIL_GOLEM },
   {  9, 14,  30, SEMI, MONS_VAMPIRE },
   {  9, 16,  50, SEMI, MONS_YNOXINUL },
-  {  9, 18,  85, SEMI, MONS_RUST_DEVIL },
+  { 10, 14,  40, SEMI, MONS_HELL_RAT },
   { 10, 14,  30, SEMI, MONS_KOBOLD_DEMONOLOGIST },
   { 10, 15,  90, SEMI, MONS_ABOMINATION_SMALL },
   { 10, 16,  50, SEMI, MONS_UGLY_THING },
   { 10, 17,  50, SEMI, MONS_SOUL_EATER },
+  { 10, 18,  85, SEMI, MONS_RUST_DEVIL },
   { 11, 17,  50, SEMI, MONS_SMOKE_DEMON },
   { 11, 17,  30, SEMI, MONS_DREAM_SHEEP },
-  { 11, 18,  30, SEMI, MONS_TARANTELLA },
   { 11, 20,  80, SEMI, MONS_WORLDBINDER },
   { 11, 22,  50, SEMI, MONS_NEQOXEC },
   { 12, 16,  30, SEMI, MONS_OBSIDIAN_BAT },
+  { 12, 18,  30, SEMI, MONS_TARANTELLA },
   { 12, 18,  15, SEMI, MONS_DEMONSPAWN },
-  { 12, 19,  75, SEMI, MONS_SUN_DEMON },
-  { 12, 19,  75, SEMI, MONS_SIXFIRHY },
+  { 13, 19,  75, SEMI, MONS_SUN_DEMON },
+  { 13, 20,  75, SEMI, MONS_SIXFIRHY },
   { 13, 20,  15, SEMI, MONS_GREAT_ORB_OF_EYES },
   { 13, 21, 105, SEMI, MONS_LAUGHING_SKULL },
   { 14, 22,  90, SEMI, MONS_ABOMINATION_LARGE },
@@ -944,13 +944,14 @@ static int _xom_pal_counting(int roll, bool isFriendly)
 
     if (roll <= 150)
     {
-        // The earliest options are really weak, while the later options will
-        // struggle against the inherent player power curve, so the ends
-        // get more enemies than the middle does.
-        if (you.experience_level < 10 || you.experience >= 19)
-            count = random_range(4, 5);
-        else
+        if (you.experience_level < 4)
+            count = random_range(2, 3);
+        else if (you.experience_level < 10)
             count = random_range(3, 4);
+        else if (you.experience_level < 19)
+            count = random_range(3, 5);
+        else
+            count = random_range(4, 5);
     }
     else if (roll <= 300)
     {
@@ -999,15 +1000,15 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
             variance += random_range(-2, 0);
     else
         if (you.experience_level < 10)
-            variance += random_range(0, 1);
+            variance += random_range(-1, 1);
         else if (you.experience_level < 19)
-            variance += random_range(1, 2);
+            variance += random_range(0, 2);
         else
             variance += random_range(1, 3);
 
     // Make it a little flashier if it's allied or if Xom's quite dissatisfied.
     if (isFriendly)
-        variance += random_range(0, 4);
+        variance += random_range(1, 4);
     else if (_xom_is_bored())
         variance += random_range(2, 4);
     else if (you.penance[GOD_XOM])

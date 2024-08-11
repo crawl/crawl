@@ -2210,15 +2210,15 @@ end
 cons = table.concat(cons, " | ")
 
 -- Finally, assemble the shops.
-kfeat('A = book shop no_mimic ' .. magi_name .. ' greed:8 count:10 use_all ; ' ..
+kfeat('A = book shop no_mimic ' .. magi_name .. ' greed:8 count:9 use_all ; ' ..
            use_books .. ' | ' .. manual .. ' | ' ..  ' any talisman | ' ..
-           ' any talisman | any talisman randart | ' .. wand1 ..
+           ' any talisman randart | ' .. wand1 ..
            ' | ' .. wand2 .. ' | ' .. wand3)
 kfeat('B = weapon shop no_mimic ' .. equip_name .. ' greed:13 ' ..
            ' count:' .. equip_count .. ' use_all ; ' .. equips .. ' | ' ..
            ring .. ' | ' .. ring .. ' | ' .. aux)
 kfeat('C = general shop no_mimic type:Party suffix:Supplies greed:6 count:' ..
-           crawl.random_range(8, 11) .. ' ; ' .. darts .. ' | ' .. cons)
+           crawl.random_range(8, 12) .. ' ; ' .. darts .. ' | ' .. cons)
 
 -- Xom bazaars should look quite garishly variable.
 if crawl.x_chance_in_y(4, 7) then

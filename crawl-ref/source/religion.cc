@@ -4658,6 +4658,7 @@ int get_tension(god_type god)
     if (!nearby_monster)
         return 0;
 
+    // XXX: Maybe too low?
     const int scale = 1;
 
     int tension = total;
