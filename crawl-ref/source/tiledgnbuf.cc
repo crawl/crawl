@@ -138,13 +138,6 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
             m_buf_main.add(base_idx, x, y);
         m_buf_main.add(t0, x, y);
     }
-
-    // hijack pack_foreground() to draw status icons
-    packed_cell fake_cell;
-    fake_cell.fg = flag;
-    fake_cell.bg = 0;
-    fake_cell.icons = status_icons_for(mon);
-    pack_foreground(x, y, fake_cell);
 }
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
