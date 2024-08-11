@@ -476,12 +476,15 @@ zzX..0..XXxx.xxXX.....Xzz
        zzzzzzzzzzz
 ENDMAP
 
-NAME: nicolae_slime_ancient_tower_intersection
-DEPTH: Slime, !Slime:$
+# XXX: Would prefer to have different tiles for slimy rock rather than
+#      break the rule of no regular walls for early Slime floors....
+NAME:   nicolae_slime_ancient_tower_intersection
+TAGS:   extra decor transparent
+DEPTH:  Slime, !Slime:$
 WEIGHT: 2
-TAGS: extra decor transparent
-SUBST: c = ccc., X = x_, V = V..
-CLEAR: _
+KFEAT:  + = broken_door
+SUBST:  c = ccc., z = xx., X = x_, V = V..
+CLEAR:  _
 MAP
   XXXX         XXXX
  XXxxXX       XXxxXX
@@ -489,15 +492,15 @@ XXxxxxxx@@@@@xxxxxxXX
 Xxxxx...........xxxxX
 Xxxx.............xxxX
 XXx...............xXX
- Xx.....ccccc.....xX
-  x....cc...cc....x
-  @...cc.....cc...@
-  @...c..V.V..c...@
+ Xx.....zc+cz.....xX
+  x....zc...cz....x
+  @...zc.....cz...@
+  @...z..V.V..c...@
   @...c.......+...@
-  @...c..V.V..c...@
-  @...cc.....cc...@
-  x....cc...cc....x
- Xx.....ccccc.....xX
+  @...z..V.V..c...@
+  @...zc.....cz...@
+  x....zc...cz....x
+ Xx.....zzczz.....xX
 XXx...............xXX
 Xxxx.............xxxX
 Xxxxx...........xxxxX

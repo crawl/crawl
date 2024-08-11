@@ -549,9 +549,9 @@ MONS:    weeping skull / burial acolyte
 # more likely to be the one with less loot, giving weak players a chance.
 ITEM:    any scroll, any potion
 SHUFFLE: def$
-NSUBST:  d = 1:1 / *:d, e = 1:1 / *:e,  $ = 1:1 / *:$
-SUBST:   ? = 2 3:1 .:1
-NSUBST:  ! = 1:4 / 1:5 / 1:4! / * = 3 2:1 .:1
+NSUBST:  d = 1:1 / *:d, e = 1:1 / *:e, $ = 1:1 / *:$
+SUBST:   ? = 2:11 3:2 .:1
+NSUBST:  ! = 1:4 / 1:5 / 1:4. / * = 3 2:1 .:1
 : ossuary_setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -561,7 +561,7 @@ x......cccccccc......x
 x...cccc!??!+eccc+...x
 x..cc.......ceec.+c..x
 x..c<!ccccc.cccc..c..x
-x..cc.+dddc..!.?.+c..x
+x..cc?+dddc..!.?.+c..x
 x..?ccccddc...ccc+?..x
 x......cccccccc......x
 x..?....?.!.?........x
@@ -569,7 +569,7 @@ x........?.!.?....?..x
 x......cccccccc......x
 x..?+ccc!+ffc!cccc?..x
 x..c+...?cccc.c$$cc..x
-x..c..?....!..+$$<c..x
+x..c..?....!?.+$$<c..x
 x..c+...?cccc.c$$cc..x
 x...+ccc!+ffc!cccc...x
 x......cccccccc......x
@@ -637,7 +637,7 @@ MONS:   gnoll zombie / jackal zombie / orc zombie / \
         human zombie / ball python zombie / adder zombie / \
         centaur zombie / scorpion zombie w:30
 ITEM:   any scroll / any potion / any jewellery w:1
-SUBST:  1 = 11..., 3 = 33., d = d:21 .
+SUBST:  1 = 111.., 3 = 33., d = d:21 .
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccc
@@ -826,7 +826,7 @@ WEIGHT:  10
 ORIENT:  encompass
 MONS:    kobold skeleton / orc skeleton / gnoll skeleton
 MONS:    mummy
-KMONS:   3X = wight
+KMONS:   3X = wight ; mace | flail | falchion | short sword . robe
 KMONS:   4C = burial acolyte
 KITEM:   34d = any scroll / any potion
 KFEAT:   C = altar_kikubaaqudgha
@@ -982,7 +982,7 @@ KMONS:  6 = spectral bullfrog / spectral scorpion
 ITEM:   any potion / any scroll / nothing w:1
 KFEAT:  IP`" = floor
 KFEAT:  ^ = alarm trap
-NSUBST: I = 1:5i / 6:I / 5 = I` / *:`, P = 1:6p / 6:P / 5 = P" / *:"
+NSUBST: I = 1:5i / 5:I / 5 = I` / *:`, P = 1:6p / 5:P / 5 = P" / *:"
 COLOUR: I` = cyan
 COLOUR: P" = green
 SUBST:  ' = ^ .:70
@@ -1084,7 +1084,8 @@ MONS:   bullfrog simulacrum / spectral scorpion / \
         killer bee zombie w:5 / crocodile zombie w:35
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
-NSUBST: 2 = 1:. / 2 = 12 / *:1
+KFEAT:  ^ = alarm trap
+NSUBST: 2 = 1:2 / 2 = 12 / *:1, ^ = 1:^ / 1:. / *:^.
 : ossuary_setup_features(_G)
 MAP
             ccc
@@ -1093,21 +1094,21 @@ MAP
          c..ddd..c
          c...d...c
          c.......c
-         cc.....cc
+         cc..^..cc
           ccc.ccc
             c+c
   ccccc   ccc.ccc   ccccc
  cc1.2cc cc.....cc cc2.1cc
  c.....c c.......c c.....c
 cc.....ccc...<...ccc.....cc
-c3......+...<A<...+......3c
+c3....^.+...<A<...+.^....3c
 cc.....ccc...<...ccc.....cc
  c.....c c.......c c.....c
  cc1.2cc cc.....cc cc2.1cc
   ccccc   ccc.ccc   ccccc
             c+c
           ccc.ccc
-         cc.....cc
+         cc..^..cc
          c2.....2c
          c.......c
          c1.....1c
@@ -1255,7 +1256,7 @@ c...........................c
 c.............F.............c
 c..xxxx..4..xxxxx..4..xxxx..c
 c..xL+..4G4.xMMMx.4G4..+Nx..c
-c..xL+...4..x+++x..4...+Nx..c
+c..xL+...4..x+++x.44...+Nx..c
 c..xxxx.....x...x.....xxxx..c
 c...........................c
 c......xxxxx..4..xxxxx......c
@@ -1263,7 +1264,7 @@ c^....FxOO+..4C4..+PPxF....^c
 c......xxxxx..4..xxxxx......c
 c...........................c
 c..xxxx.....x...x.....xxxx..c
-c..xQ+...4..x+++x..4...+Sx..c
+c..xQ+...44.x+++x..4...+Sx..c
 c..xQ+..4G4.xRRRx.4G4..+Sx..c
 c..xxxx..4..xxxxx..4..xxxx..c
 c.............D.............c

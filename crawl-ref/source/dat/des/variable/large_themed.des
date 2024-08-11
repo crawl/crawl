@@ -697,66 +697,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# The Constructs Gauntlet (by Mu, modernized by HangedMan)
-#
-# Each room is progressively more challenging; both the constructs, and their
-# creators.
-NAME:   constructs_gauntlet_mu_hangedman
-TAGS:   no_monster_gen no_item_gen no_pool_fixup no_descent
-DEPTH:  Depths, !Depths:$
-ORIENT: east
-MARKER: y = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 4, size_buildup_amnt = 1, \
-                size_buildup_time = 25, cloud_type = "flame" }
-MARKER: z = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 4, size_buildup_amnt = 1, \
-                size_buildup_time = 25, cloud_type = "freezing vapour" }
-MONS:   gargoyle, earth elemental, air elemental
-MONS:   thermic dynamo, crystal guardian, war gargoyle
-KMONS:  A = occultist
-KMONS:  B = deep elf pyromancer
-KMONS:  C = deep elf zephyrmancer
-KMONS:  D = deep elf sorcerer
-KMONS:  E = lich
-KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
-KFEAT:  S = metal_statue
-KFEAT:  yz = .
-COLOUR: y = yellow
-COLOUR: z = lightblue
-FTILE:  y = floor_rough_red
-FTILE:  z = floor_rough_blue
-COLOUR: S = earth
-TILE:   S = earthen_conduit
-:   set_feature_name("metal_statue", "earthen conduit")
-MAP
- cccccccccccccccccccccccccccccc
- cccccccccccccccccccccccccccccc
- cc......+.....cc......+....$cc
- ccycccccc.....cczcccccc...6$cc
- cc.....cc*.E5.cc.....cc..F.$Sc
- ccccccycc|.5..cccccczcc.6.>$cc
- cc.....cc*$$..+......cc|||||cc
- cc.ccccccccccccccccccccccccccc
- cc+ccccccccccccccccccccccccccc
- cc.....cllllllcc%$$..cwwwwwwcc
- cc...4.clcccclcc$>.3.cwccccwcc
- cS..D..+.cllllcc$3C..+.cwwwwcc
- cc%4...ccclccccc..3..cccwccccc
- cc$$$%%ccclllll+.....cccwwwwcc
- cccccccccccccccccccccccccccwcc
- ccccccccccccccccccccccccccc+cc
-.cc......+...$$ccWWWWWW+.....cc
-.cc.cccccc..1.$ccWcccccc...2.cc
-.cc.....cc..A..ccWWWWWWc..B..Gc
-Gcccccc.cc..1..cccccccWc.2.1$cc
-@+......cc.....+WWWWWWWc...$%cc
-Gcccccccccccccccccccccccccccccc
- cccccccccccccccccccccccccccccc
-ENDMAP
-
-##############################################################################
 # Gold mine. Can come up in the dungeon and in Orc.
 #
 NAME:   minmay_goldmine

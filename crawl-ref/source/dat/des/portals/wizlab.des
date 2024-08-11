@@ -934,24 +934,25 @@ kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
       .. string.gsub(wizname, " ", "_") .. " ; majin-bo")
 }}
 KITEM:      d = scroll of summoning / w:5 scroll of torment / \
-                / any scroll w:20 / potion of haste \
-                / potion of heal wounds / any potion w:20
+                any scroll w:20 / potion of haste / \
+                potion of heal wounds / any potion w:20
 KITEM:      e = any beam wand / any blast wand / \
                 ring of fire / ring of ice / randbook disc:summoning
-KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
-                / manual of summonings w:3 / any randart jewellery w:5 \
-                / damnation w:1 / star_item w:25 / superb_item
+KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 / \
+                any randart jewellery w:5 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
+KITEM:      h = manual of summonings
 NSUBST:     d = e / d, ' = 2:1 / 4 = 112......, " = 2:1 / 4 = 12....
 NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3 = 112......
-NSUBST:     3 = 1:3 / 1, ~ = 3:1 / 4:2 / 1:3 / 1:4 / 8 = 12.... / ., f = 1:g / f
+NSUBST:     3 = 1:3 / 1, ~ = 3:1 / 4:2 / 1:3 / 1:4 / 8 = 12.... / .
+NSUBST:     f = 1:g / 1:hhf / 1:hffff / *:f
 COLOUR:     c = darkgrey
 COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
 TILE:       c = wall_stone_dark
 TILE:       b = bedevilled_crystal_gehenna / bedevilled_crystal_cocytus / \
                 bedevilled_crystal_dis / bedevilled_crystal_pandemonium
-TILE:       p = dngn_statue_demonic_bust / dngn_statue_imp \
-                / dngn_statue_cerebov / dngn_statue_ancient_evil
+TILE:       p = dngn_statue_demonic_bust / dngn_statue_imp / \
+                dngn_statue_cerebov / dngn_statue_ancient_evil
 # symbols roughly corresponding to sigil shape
 FTILE:      - = sigil_straight_E_W
 FTILE:      | = sigil_straight_N_S
@@ -1148,25 +1149,24 @@ SUBST:      efghijklmn = %
 SUBST:      opqrstu = *
 :           end
 #           Monsters
-#            - Demons (if demons are added or reclassified, please change!)
-#            - Tomb set: zombies, mummies (weight *2)
-:           local mrnd = crawl.random2(3)
-:           if mrnd == 0 then
-KMONS:      0% = smoke demon / ynoxinul / neqoxec w:6 / ice devil /\
-                 chaos spawn / soul eater / sun demon
-KMONS:      * = reaper / shadow demon w:12 / tormentor / hellion / \
-                blizzard demon w:12 / green death w:12 / balrug w:12 / cacodemon
-KMONS:      | = hell sentinel / brimstone fiend / tzitzimitl /\
-                ice fiend / executioner
-:           set_random_mon_list(
-:               "smoke demon / ynoxinul / neqoxec / " ..
-:               "chaos spawn / soul eater / sun demon / " ..
-:               "reaper / shadow demon / tormentor / hellion")
+#            - Earth and spirits
+#            - Unholy undead and demons
+:           if crawl.x_chance_in_y(3, 7) then
+KMONS:      0% = stone giant skeleton / spectral iron troll / \
+                 crystal guardian / gargoyle w:20 / skeletal warrior w:5
+KMONS:      * = war gargoyle w:30 / walking earthen tome / ancient champion
+KMONS:      | = undying armoury / walking crystal tome w:5
+:             set_random_mon_list(
+:                 "spectral iron troll / gargoyle / crystal guardian / " ..
+:                 "war gargoyle / walking earthen tome")
 :           else
-KMONS:      0% = place:Depths:1 zombie / guardian mummy w:4
-KMONS:      * = zombie / mummy priest w:6
-KMONS:      | = ancient lich / dread lich / royal mummy w:20
-:           set_random_mon_list("place:Depths:1 zombie / guardian mummy")
+KMONS:      0% = place:Depths:1 zombie w:15 / guardian mummy w:15 / \
+                 ushabti w:5 / ynoxinul / soul eater / smoke demon
+KMONS:      * = revenant / mummy priest w:5 / reaper / shadow demon
+KMONS:      | = ancient lich / royal mummy / executioner / tzitzimitl
+:             set_random_mon_list(
+:                 "guardian mummy w:20 / ynoxinul / soul eater / " ..
+:                 "smoke demon / mummy priest / revenant / reaper")
 :           end
 
 #           Hints.

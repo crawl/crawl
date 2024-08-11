@@ -130,19 +130,6 @@ end
 # Basic bailey entries ##########################################
 default-depth: D:7-10
 
-NAME: enter_bailey_1
-TAGS: transparent
-WEIGHT: 1
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
-: end
-MAP
-O
-ENDMAP
-
 NAME: enter_bailey_2
 TAGS: transparent
 : local rnd = crawl.random2(2)

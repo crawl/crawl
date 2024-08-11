@@ -135,7 +135,7 @@ ENDMAP
 
 # Sorry, no wand of wishing in this one
 NAME:   evilmike_zot_entry_castle
-TAGS:   no_monster_gen zot_entry layout_city
+TAGS:   no_monster_gen no_pool_fixup zot_entry layout_city
 NSUBST: O = 1:O / *:A
 SUBST:  ^ = ^..
 SUBST:  s = ccc+
@@ -191,25 +191,21 @@ SUBST:  X = x
 SUBST:  - = ., D = +
 KITEM:  R = midnight gem
 KFEAT:  O = enter_zot
-# easy: 1, 2
-: if crawl.coinflip() then
-MONS:   pale draconian, steam dragon
-: else
-MONS:   grey draconian, wyvern
-: end
-# medium: 3, 4
+# entry: 1, 2
+MONS:   place:Depths:1, place:Depths:$
+# easy: 3, 4
 : if crawl.coinflip() then
 MONS:   yellow draconian, acid dragon
 : else
 MONS:   green draconian, swamp dragon
 : end
-# hard: 5, 6
+# medium: 5, 6
 : if crawl.coinflip() then
 MONS:   red draconian, fire dragon
 : else
 MONS:   white draconian, ice dragon
 : end
-# harder: 7, 8
+# hard: 7, 8
 : if crawl.coinflip() then
 MONS:   black draconian
 KMONS:  8 = storm dragon

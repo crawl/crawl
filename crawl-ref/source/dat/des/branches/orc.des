@@ -2374,7 +2374,8 @@ KFEAT:  D = altar_beogh
 KFEAT:  E = altar_kikubaaqudgha
 KFEAT:  F = altar_vehumet
 KFEAT:  mn = rock_wall
-NSUBST: . = 8:1 / 16:2 / 8:3, 6 = 1:6 / 1:6. / *:.
+NSUBST: . = 8:1 / 18:2 / 10:3 / 2 = 12 / 6 = 223.. / *:.
+NSUBST: 6 = 1:6 / 2 = 6. / *:.
 NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
 COLOUR: n = black
 TILE:   n = wall_hall_darkgray
@@ -2385,7 +2386,7 @@ MAP
                    cccbbbbbbbccc  ccccc
                  lccbbblllllbbbccccbbbcc
                 llclllllllllllllcclllbbcc
-               lllccllllllll...cc...llbbcc
+               lllccllllllll..6cc...llbbcc
                llllcccI.lll....+..Immmlbbc
                llccc.........I.c....Fmllbc
               lllc.............+.....m6lbccccc
@@ -2409,7 +2410,7 @@ MAP
               lllc.............+.....n6lbccccc
                llccc.........I.c....Enllbc
                llllcccI.lll....+..Innnlbbc
-               lllccllllllll...cc...llbbcc
+               lllccllllllll..6cc...llbbcc
                 llclllllllllllllcclllbbcc
                  lccbbblllllbbbccccbbbcc
                    cccbbbbbbbccc  ccccc

@@ -761,27 +761,25 @@ DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
 # everything here (bar the very top) spawns regularly in depths,
 # if possibly as part of a band.
-MONS:    occultist w:8 / necromancer w:8 / tengu warrior / \
-         spriggan defender w:2 / tengu conjurer / nothing w:2
+MONS:    occultist w:8 / necromancer w:8 / tengu warrior w:8 / \
+         tengu conjurer / deep troll w:6 / spriggan rider w:4
 MONS:    rakshasa / hell knight / stone giant w:5 / \
          vampire mage / ettin / spriggan berserker / \
          deep troll earth mage / deep troll shaman w:5
 MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          vampire knight / spriggan air mage / tengu reaver / \
-         deep elf high priest w:4 / deep elf demonologist w:4 / \
-         deep elf annihilator w:4 / deep elf sorcerer w:4 / \
-         deep elf death mage w:2 / deep elf elementalist w:2
+         walking earthen tome / walking divine tome
 MONS:    very ugly thing w:10 / ugly thing w:30 / \
-         great orb of eyes / glowing orange brain / deep troll
+         great orb of eyes / glowing orange brain / glass eye w:4
 MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
-         titanic slime creature w:4 / jiangshi w:2 / phantasmal warrior w:2 / \
+         jiangshi w:4 / phantasmal warrior w:4 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
-MONS:    sphinx / entropy weaver / spark wasp / flayed ghost / \
+MONS:    sphinx / spark wasp / flayed ghost / \
          storm dragon w:4 / shadow dragon w:4 / quicksilver dragon w:4 / \
          iron dragon w:4 / golden dragon w:4 / caustic shrike / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
-         deep elf blademaster / deep elf master archer / \
+         walking crystal tome / walking frostbound tome / \
          draconian monk / draconian annihilator / draconian knight / \
          juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator

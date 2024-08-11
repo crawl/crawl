@@ -3320,7 +3320,6 @@ MONS:    green death, sin beast, great orb of eyes
 MONS:    shadow demon / titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
-KMONS:   & = the Lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   O = decaying rune of Zot
 KFEAT:   8 = shallow_water
@@ -3329,7 +3328,7 @@ SHUFFLE: yz, '"
 SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
 SUBST:   b = bccc, 5 : 59
 NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 7:1 / 3:. / *:2
-NSUBST:  5 = 1:5 / 1:6 / * = 56 &:2, 9 = 1 = 9 &:1 / * = 33.
+NSUBST:  5 = 1:5 / 1:6 / * = 56, 9 = 1:9 / * = 33.
 TILE:    b = bedevilled_crystal_pandemonium
 TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
              dngn_demonic_tree_12 / dngn_demonic_tree_13
@@ -3339,8 +3338,8 @@ MAP
 @'"'XWXW""'..Wcct
   'XWXWx''"zyW.xct
    WXWx"wwwyzwxWcct
-  XXWx.x1wwzyw.x.xct
- txWx"x2wwwyzwx0..cctt
+  XXWx3x1wwzyw.x.xct
+ txWx"x2wwwyzwx00.cctt
  xt"'w1w28wzywx30xWcctt
  ct"'www88wyxwcxx.xWxttt
   x'"wwwww.cXWwwwwWwWcttt
@@ -3349,8 +3348,8 @@ MAP
  xt"'wWWWwW..wWW.WWw.WwWcct
   x"'WxxxWwzyWwcwc.WyzWwWxct
   c'"wx0x.wyzWc...cWzywWx.cct
- xt"'wx3.xwzy.w.7.w.yzwx00.xct
- ct'"wx0x.wyzWc...cWzywc30xWcct
+ xt"'wx30xwzy.w.7.w.yzwx00.xct
+ ct'"wx0x.wyzWc..4cWzywc30xWcct
   x"'WxxWwWzyW.cwcWWyzwxcxWwWcct
   c"'wWWwWW..wWW.WW..wWwWWwWwWcct
  ctWzyzyzWW.w.yzyzy.W.WWzyzyzWTct
@@ -3361,7 +3360,7 @@ MAP
  ct'"x04.xWyzWx030xWzyWx0R5T"'Tct
  ctt8xx0xxWyzWxxxxxWyz.xc5Oc'8cct
   ct"3xxxWwzywWwwwWwzyw.xTcb5TXct
-  cc'"8""''yz""'7'""yz'"'"'5wTcct
+  cc7"8""''yz""'7'""yz'"'"'5wTcct
   tcccT''""W.''"'"''W."'"'8TTTcct
  ttttcccxcccTTcxcTcxcXcTcXXxTccct
 ttttttttttttttttttttttttttttttttt
@@ -3377,22 +3376,23 @@ MONS:    swamp dragon, swamp drake, hydra, bog body
 MONS:    fungus w:12 / plant w:5 / bush w:1
 KMONS:   d = patrolling the lernaean hydra / hydra w:1, hydra
 KMONS:   ef = patrolling hydra
+KMONS:   P = pile of debris
 KITEM:   d = decaying rune of Zot
 KITEM:   D = mossy gem
 KITEM:   ef = any good_item
 KITEM:   g = stone w:40 / large rock q:1
 NSUBST:  @ = 1:@ / *:.
-SHUFFLE: dD / eE / fF, 123
-SUBST:   EF = ., C = cc., = = +.
+SHUFFLE: dDP / eE? / fF!, 123
+SUBST:   EF?! = ., C = cc., = = +.
 NSUBST:  : = 6:1 / 6:2 / 6:3 / 9:4 / 3 = 0.... / 20:5 / * = '
 SUBST:   ' = .....WW, G = Gg
 MAP
  cccccWWW'''''WWWccccc
 cc%..ccCC=C=C=CCcc..%cc
-c%1...c'::'''::'c...2%c
-c..d..c'G:::::G'c..e..c
-c...D.c':::C::''c.E...c
-cc....+.G:'C':G.+....cc
+c%d...c'::'''::'c...e%c
+c..1.Pc'G:::::G'c?.2..c
+c...DPc':::C::''c?E...c
+cc.PPP+.G:'C':G.+???.cc
 Wcccc+c.::CCC:'.c+ccccW
 WC'''..'G:'C':G'..'''CW
 WC:G:G:G'''C'''G'G'G:CW
@@ -3404,10 +3404,10 @@ WC:G:G:G'''C'''G'G'G:CW
 WC:G'G'G'''C'''G'G'G:CW
 WC'''..'G:'C':G''''''CW
 Wcccc+c.':CCC:''C=CCCCW
-cc....+.G:'C':G'=''':CC
-c...F.c''::C::''C'':::C
-c..f..c'G:::::G'C':::'C
-c%3...c'::'''::'C:::''C
+cc.!!!+.G:'C':G'=''':CC
+c...F!c''::C::''C'':::C
+c..3.!c'G:::::G'C':::'C
+c%f...c'::'''::'C:::''C
 cc%..ccCC=C-C=CCCC:'''C
  cccccWWW'.@.'WWWCCCCC@
 ENDMAP
@@ -3585,23 +3585,25 @@ TAGS:    no_pool_fixup no_rotate no_monster_gen
 PLACE:   Swamp:$
 ORIENT:  southwest
 MONS:    bog body, swamp dragon, hydra simulacrum
-MONS:    spriggan rider ; robe ego:fire_resistance . spear ego:flaming . \
+MONS:    spriggan rider ; damaged robe ego:fire_resistance . \
+                          damaged spear ego:flaming . \
                           ring of poison resistance . buckler
 MONS:    alligator simulacrum, lindwurm, will-o-the-wisp
 KMONS:   8 = azure jelly w:15 / \
-             spriggan berserker ; robe ego:poison_resistance . \
+             spriggan berserker ; damaged robe ego:poison_resistance . \
                                   ring of protection from fire . \
-                                  war axe ego:flaming
+                                  damaged war axe ego:flaming
 KMONS:   9 = fire dragon / ice dragon w:20
 KFEAT:   f = dry_fountain
 KFEAT:   F = lava
 KITEM:   R = mossy gem
 KITEM:   O = decaying rune of Zot
 SUBST:   X = tttw., - = Wwwww., ~ = ll., L : cll
-NSUBST:  O = 1:O / 1:R, ? = 1:155 / 1:6 / 2:. / * = 155666.........
-NSUBST:  8 = 1:8 / 1:9. / *:7, ! = 1:3 / 1:4 / 2 = 22337. / 2:. / * = 34..
+NSUBST:  O = 1:O / 1:R, ? = 1:155 / 1:6 / 3:. / * = 155666.........
+NSUBST:  8 = 1:8. / 1:9. / * = 277, ! = 1:3 / 1:4 / 2 = 22337. / 2:. / * = 34..
+KPROP:   l = no_cloud_gen
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 6, \
-             pow_max = 8, delay = 110, size = 1, excl_rad = 1 }
+             pow_max = 8, delay = 110, size = 1, excl_rad = 0 }
 MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 3, spread_rate = 1, walk_dist = 1, excl_rad = 1 }
@@ -3616,19 +3618,19 @@ tccccctt.ll...             . .
 tcXwXcctt..tttttttttttttt.. .
 tcwOwwccttttccccccccccccct....
 tcw-9wwccccccl4.8cc6.4lccct.w..
-tcww2wwwcccc2?.ll..ll.?2ccc..w.
+tcww2wwwcccc2?.ll..ll.?2ccc.1w.
 tcww3-wwccc!..lLllllLl..!cc....
 tcw!l.wwwccc...lFFFFl...ccc...
-tc1cl~.-wccc..lFFFFFFl..cctf.w
-tc8lll...w.w..llllllll..cccw..w
-tc?lll~.w.w....lc..cl...ccf..www
-tc!clll..w.cc3..w..w...cccc.cctw
+tc8cl~.-wccc..lFFFFFFl..cctf.w
+tc.lll..tw.w..lLllllLl..cccw..w
+tc.lll~.w.w....lc..cl...ccf..www
+tc!clll..wtcc3..w..w...cccc.cctw
 tc8~lll~.-ccccccccc.c.ccccwWwctt
 tc-!llll~.-cccccccll.llcctc.ccct
 tc-?~cll3wccccccccc.c.cccc..ctct
 tccw.~~!wcccccccXX......-..$.cct
-ttcww42wwccc$8c...........c..?ct
-ttctwO9wtcc$..3..Xc1Xc3....c5wct
+ttcww42wwccc$8c.......c...c..?ct
+ttctwO9wtcc$..3..Xc1Xc....?c5wct
 ttcwwwwwwccc13ww!.cwccccccXwXcct
 ttcccccccctcccccccccccccccccccct
 tttttttttttttttttttttttttttttttt

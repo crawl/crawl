@@ -1347,16 +1347,15 @@ MAP
 .....................
 ENDMAP
 
-# A similar idea didn't cut it as a Swamp rune vault, so let's resurrect it as
-# a lower-Dungeon vault. The gimmick, of course, is that each room has
-# 27 hydra heads, just arranged on a different number of hydra bodies.
-# Only places if this game doesn't have Swamp. This way, there's no incentive
-# to dive down through D in the hopes of finding this vault before the Swamp
-# end is generated to keep the Lernaean Hydra from being generated in the
-# rune vault.
+# TODO: Convert this to a decorative skeleton vault by letting corpses recieve
+#       more monster data like hydra head count, and let it be a vault that
+#       another adventurer went through already. Reduces the issues of
+#       weaker hydras being freer experience and keeps actually-fighting Lerny
+#       properly kept to the Swamp rune.
 NAME:   nicolae_hydra_factorization
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:12-
+WEIGHT: 0
 veto {{
    return crawl.game_started() and dgn.br_exists("Swamp")
 }}
@@ -4277,7 +4276,7 @@ KFEAT:   E56 = deep_water
 KFEAT:   de = shallow_water
 KFEAT:   T = dispersal trap
 SHUFFLE: vb
-NSUBST:  E = 8:E / 3 = Ew / *:w, 5 = 3:5 / *:w
+NSUBST:  E = 6:E / 3 = Ew / *:w, 5 = 3:5 / *:w
 : if you.branch() == "Depths" then
 SUBST:   2 = 3, 5 = 6
 : end
@@ -4289,9 +4288,9 @@ MAP
  .bvb bvb bvbvbtt
 .bvEvbvEvbv...vbtt
 @nEEwEwEEv2.5.1vtt
-.bvwwv5wvb.4v4.bvt
-f=TEndnE+.5nen5<bt
-.bvw5vwwvb.4v4.bvt
+.bTwwv5wvb.4v4.bvt
+f=wEndnE+.5nen5<bt
+.bTw5vwwvb.4v4.bvt
 @nEEwEwEEv2.5.1vtt
 .bvEvbvEvbv...vbtt
  .bvb bvb bvbvbtt
@@ -9694,6 +9693,136 @@ xxxxxxc.....cxxxxxx
   xxx         xxx
 ENDMAP
 
+# A monster will have this equipped rather than it being on the ground
+# Yo ho ho and a bottle o' rum
+NAME:   beargit_guarded_unrand_captain_cutlass
+TAGS:   no_monster_gen no_item_gen patrolling
+DEPTH:  Shoals, Swamp, Crypt, Depths
+WEIGHT: 3
+# The captain and their parrot(s), the lore-invoking kraken,
+# some undead crew members, and some lingering ghosts.
+: if you.in_branch("Swamp") then
+MONS:   skeletal warrior ; captain's cutlass . swamp dragon scales
+MONS:   shard shrike zombie, kraken zombie / kraken simulacrum
+MONS:   bog body / freezing wraith / spriggan berserker skeleton
+KMONS:  56 = bloated husk / hydra skeleton
+KMONS:  7 = ghost crab / will-o-the-wisp
+NSUBST: w = 1:3 / 4:6 / 1:67 / 1:7 / *:w
+SUBST:  ~ = t, ? = 4
+KITEM: Z = human skeleton / spriggan skeleton
+: elseif you.in_branch("Shoals") then
+TAGS:   water_ok no_pool_fixup
+# Shoals doesn't have any default undead themes, so instead have
+# mostly wildlife that picked the crew's bones clean.
+MONS:   skeletal warrior ; captain's cutlass . scale mail . buckler
+MONS:   shard shrike skeleton, kraken
+MONS:   merfolk impaler skeleton / snapping turtle skeleton w:4
+KMONS:  56 = wind drake / manticore
+KMONS:  7 = alligator snapping turtle
+KMONS:  0 = harpy / sea snake / snapping turtle
+NSUBST: w = 2:3 / 3:6 / 1:77w / *:w, 4 = 4:0 / 2:Z / *:4
+SUBST:  ~ = @, ? = 0
+KITEM: Z = human skeleton / merfolk skeleton
+: elseif you.in_branch("Crypt") then
+MONS:   ancient champion ; captain's cutlass . scale mail . kite shield
+MONS:   shard shrike simulacrum / spectral shard shrike, spectral kraken
+MONS:   skeletal warrior / jiangshi / vampire knight w:4 / \
+        alligator snapping turtle skeleton w:2 / sea snake simulacrum w:2
+KMONS:  56 = flayed ghost / vampire mage
+KMONS:  7 = curse skull
+SUBST:  ~ = xw, ? = 2
+NSUBST: w = 2:3 / 2:6 / 1:7 / 1:6w / *:w, . = 2:4
+KITEM: Z = spriggan skeleton / merfolk skeleton
+: else -- Depths
+MONS:   ancient champion ; captain's cutlass . plate armour
+MONS:   caustic shrike simulacrum / spectral caustic shrike
+MONS:   kraken / kraken simulacrum / spectral kraken
+MONS:   jiangshi / spriggan defender skeleton / vampire knight w:4
+KMONS:  56 = phantasmal warrior / storm dragon skeleton
+KMONS:  7 = flayed ghost / merfolk javelineer
+NSUBST: w = 3:3 / 3:6 / 3:7 / 4 = 67w / *:w
+SUBST:  ~ = xw, ? = 2
+KITEM:  Z = any skeleton
+: end
+ITEM:   potion of degeneration ident:type, potion of ambrosia ident:type
+ITEM:   scroll of immolation ident:type / % w:20
+KFEAT:  67 = w
+KFEAT:  G = metal_statue
+NSUBST: . = 10:d / 2:e / 8:Z / 3:` / 3:4 / 3 = 45.. / *:.
+KPROP:  ` = bloody
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
+MAP
+     WWWWWWWWWWWWWW.@.WWWWWWWWWWWWWW
+    WWWWWWWWwwwwwww...wWwWwwWWWwwwwwww
+   WwwwWwwwWwwwwwww.`.wwwwwwwWwwwwwwwwww
+ wwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
+wwwwwxxmxmxmxmxmx...`.wwwwwwwwwwwwwwwwwww
+wwwwxxff.f+.....+............wwwwwwwwwwww
+wwwwxf..fxx..4..x...............xxxxwwwwwwww
+wwwxxxxxxxxxxxxxx.....4....>....x.4xxxxwwwwww
+wwxx.G..x.......+...............x`.`.5xxxxwww
+wwm.....x.......x....xxx........+.4.`.x4.xxwwww
+wwx*12?.xxx+xxxxx....xxx........xxxxxxx.4|xxxww
+wwm.....+...4...+....xxx..4.....+.....+.4xxwww
+wwxx....x.......x...............x..4..xxxxwwww
+wwwxxx+xxxxx+xxxx....4.....>....x..xxxxwwwwww
+wwwwx$$$$$x...4.x...............xxxxwwwwwwww
+wwwwxx$$$$x.....x............wwwwwwwwwwww
+wwwwwxxxxxxmxmxmx.....wwwwwwwwwwwwwwwwww
+ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+  ~~~~~~~wwwwwww~~~w~w~ww~~~wwwwwwww
+ENDMAP
+
+NAME:    orjb1_guarded_unrand_arga
+TAGS:    no_monster_gen no_trap_gen no_item_gen
+DEPTH:   Vaults, Depths
+WEIGHT:  3
+KITEM:   d = arga no_pickup
+MONS:    quicksilver dragon
+TILE:    v = dngn_metal_wall_lightblue
+MAP
+ vv=====vv
+ v.......v
+ v...1...v
+ vv.....vv
+  v1...1v
+  vv.d.vv
+   vvvvv
+ENDMAP
+
+NAME:   orjb1_guarded_unrand_rift
+TAGS:   no_monster_gen no_trap_gen no_item_gen uniq_guarded_rift
+DEPTH:  Vaults, Elf
+WEIGHT: 2
+MONS:   dancing weapon ; damaged demon trident ego:distortion
+KMONS:  D = dancing weapon ; rift
+KMONS:  E = generate_awake occultist god:Lugonu name:mad_acolyte_of_Lugonu \
+        n_rpl n_des n_noc col:lightgreen tile:mons_mad_acolyte_of_lugonu; \
+        robe good_item . demon trident ego:distortion | demon trident ego:none \
+        spells:smiting.20.priest;banishment.10.priest;invisibility.10.priest;
+KMONS:  B = pile of debris
+ITEM:   demon trident ego:none w:15 / demon trident ego:distortion / \
+        demon trident ego:chaos w:5
+ITEM:   elf skeleton / blink frog skeleton
+KFEAT:  D = altar_lugonu
+KFEAT:  E = stone_arch
+NSUBST: ? = 3:1 / 4:d / *:., ! = 3:e / *:.
+TILE:   c : stone_wall_abyss_a / stone_wall_abyss_b / stone_wall_abyss_c
+MAP
+      c===c
+     cc..?cc
+    cc!?..?cc
+   cc??.DB.?cc
+  cc.?.!EU!?.cc
+ cc!.?.???!!?.cc
+ccccccccccccccccc
+ENDMAP
+
+####
+
 # From the dcss channel on the roguelikes discord:
 # Lici the Crawler: @nicolae  FR some earlyish (d7-d11) vaults
 #                   with lightning rod in them
@@ -9838,136 +9967,11 @@ xxxxxxxx
 ENDMAP
 
 ####
-
-# A monster will have this equipped rather than it being on the ground
-# Yo ho ho and a bottle o' rum
-NAME:   beargit_guarded_unrand_captain_cutlass
-TAGS:   no_monster_gen no_item_gen patrolling
-DEPTH:  Shoals, Swamp, Crypt, Depths
-WEIGHT: 3
-# The captain and their parrot(s), the lore-invoking kraken,
-# some undead crew members, and some lingering ghosts.
-: if you.in_branch("Swamp") then
-MONS:   skeletal warrior ; captain's cutlass . swamp dragon scales
-MONS:   shard shrike zombie, kraken zombie / kraken simulacrum
-MONS:   bog body / freezing wraith / spriggan berserker skeleton
-KMONS:  56 = bloated husk / hydra skeleton
-KMONS:  7 = ghost crab / will-o-the-wisp
-NSUBST: w = 1:3 / 4:6 / 1:67 / 1:7 / *:w
-SUBST:  ~ = t, ? = 4
-KITEM: Z = human skeleton / spriggan skeleton
-: elseif you.in_branch("Shoals") then
-TAGS:   water_ok no_pool_fixup
-# Shoals doesn't have any default undead themes, so instead have
-# mostly wildlife that picked the crew's bones clean.
-MONS:   skeletal warrior ; captain's cutlass . scale mail . buckler
-MONS:   shard shrike skeleton, kraken
-MONS:   merfolk impaler skeleton / snapping turtle skeleton w:4
-KMONS:  56 = wind drake / manticore
-KMONS:  7 = alligator snapping turtle
-KMONS:  0 = harpy / sea snake / snapping turtle
-NSUBST: w = 2:3 / 3:6 / 1:77w / *:w, 4 = 4:0 / 2:Z / *:4
-SUBST:  ~ = @, ? = 0
-KITEM: Z = human skeleton / merfolk skeleton
-: elseif you.in_branch("Crypt") then
-MONS:   ancient champion ; captain's cutlass . scale mail . kite shield
-MONS:   shard shrike simulacrum / spectral shard shrike, spectral kraken
-MONS:   skeletal warrior / jiangshi / vampire knight w:4 / \
-        alligator snapping turtle skeleton w:2 / sea snake simulacrum w:2
-KMONS:  56 = flayed ghost / vampire mage
-KMONS:  7 = curse skull
-SUBST:  ~ = xw, ? = 2
-NSUBST: w = 2:3 / 2:6 / 1:7 / 1:6w / *:w, . = 2:4
-KITEM: Z = spriggan skeleton / merfolk skeleton
-: else -- Depths
-MONS:   ancient champion ; captain's cutlass . plate armour
-MONS:   caustic shrike simulacrum / spectral caustic shrike
-MONS:   kraken / kraken simulacrum / spectral kraken
-MONS:   jiangshi / spriggan defender skeleton / vampire knight w:4
-KMONS:  56 = phantasmal warrior / storm dragon skeleton
-KMONS:  7 = flayed ghost / merfolk javelineer
-NSUBST: w = 3:3 / 3:6 / 3:7 / 4 = 67w / *:w
-SUBST:  ~ = xw, ? = 2
-KITEM:  Z = any skeleton
-: end
-ITEM:   potion of degeneration ident:type, potion of ambrosia ident:type
-ITEM:   scroll of immolation ident:type / % w:20
-KFEAT:  67 = w
-KFEAT:  G = metal_statue
-NSUBST: . = 10:d / 2:e / 8:Z / 3:` / 3:4 / 3 = 45.. / *:.
-KPROP:  ` = bloody
-COLOUR: G = mist
-TILE:   G = dngn_mystic_cage
-: set_feature_name("metal_statue", "mystic cage")
-MAP
-     WWWWWWWWWWWWWW.@.WWWWWWWWWWWWWW
-    WWWWWWWWwwwwwww...wWwWwwWWWwwwwwww
-   WwwwWwwwWwwwwwww.`.wwwwwwwWwwwwwwwwww
- wwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
-wwwwwxxmxmxmxmxmx...`.wwwwwwwwwwwwwwwwwww
-wwwwxxff.f+.....+............wwwwwwwwwwww
-wwwwxf..fxx..4..x...............xxxxwwwwwwww
-wwwxxxxxxxxxxxxxx.....4....>....x.4xxxxwwwwww
-wwxx.G..x.......+...............x`.`.5xxxxwww
-wwm.....x.......x....xxx........+.4.`.x4.xxwwww
-wwx*12?.xxx+xxxxx....xxx........xxxxxxx.4|xxxww
-wwm.....+...4...+....xxx..4.....+.....+.4xxwww
-wwxx....x.......x...............x..4..xxxxwwww
-wwwxxx+xxxxx+xxxx....4.....>....x..xxxxwwwwww
-wwwwx$$$$$x...4.x...............xxxxwwwwwwww
-wwwwxx$$$$x.....x............wwwwwwwwwwww
-wwwwwxxxxxxmxmxmx.....wwwwwwwwwwwwwwwwww
- wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-  ~~~~~~~wwwwwww~~~w~w~ww~~~wwwwwwww
-ENDMAP
-
-NAME:    orjb1_guarded_unrand_arga
-TAGS:    no_monster_gen no_trap_gen no_item_gen
-DEPTH:   Vaults, Depths
-WEIGHT:  3
-KITEM:   d = arga no_pickup
-MONS:    quicksilver dragon
-TILE:    v = dngn_metal_wall_lightblue
-MAP
- vv=====vv
- v.......v
- v...1...v
- vv.....vv
-  v1...1v
-  vv.d.vv
-   vvvvv
-ENDMAP
-
-NAME:   orjb1_guarded_unrand_rift
-TAGS:   no_monster_gen no_trap_gen no_item_gen uniq_guarded_rift
-DEPTH:  Vaults, Elf
-WEIGHT: 2
-MONS:   dancing weapon ; damaged demon trident ego:distortion
-KMONS:  D = dancing weapon ; rift
-KMONS:  E = generate_awake occultist god:Lugonu name:mad_acolyte_of_Lugonu \
-        n_rpl n_des n_noc col:lightgreen tile:mons_mad_acolyte_of_lugonu; \
-        robe good_item . demon trident ego:distortion | demon trident ego:none \
-        spells:smiting.20.priest;banishment.10.priest;invisibility.10.priest;
-KMONS:  B = pile of debris
-ITEM:   demon trident ego:none w:15 / demon trident ego:distortion / \
-        demon trident ego:chaos w:5
-ITEM:   elf skeleton / blink frog skeleton
-KFEAT:  D = altar_lugonu
-KFEAT:  E = stone_arch
-NSUBST: ? = 3:1 / 4:d / *:., ! = 3:e / *:.
-TILE:   c : stone_wall_abyss_a / stone_wall_abyss_b / stone_wall_abyss_c
-MAP
-      c===c
-     cc..?cc
-    cc!?..?cc
-   cc??.DB.?cc
-  cc.?.!EU!?.cc
- cc!.?.???!!?.cc
-ccccccccccccccccc
-ENDMAP
-
-####
+# A simple idea I had about vaults guarding highly valued dual-school spells
+# alongside other thematic loot. Since these have a bit of a spoilery nature,
+# they're still sorted with the other guarded unrands and less likely than
+# default, but it'd be a nice concept to extend to other spells in game-long
+# vaults like Permafrost Eruption, Hellfire Mortar, or Freezing Cloud....
 
 NAME:    regret_index_guardbook_plasma_beam
 TAGS:    no_monster_gen no_item_gen vaults_hard vaults_orient_n vaults_orient_s

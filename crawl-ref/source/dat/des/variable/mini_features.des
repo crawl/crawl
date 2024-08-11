@@ -4314,16 +4314,21 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:  lemuel_nasty_fountain
+TAGS:  allow_dup extra opaque
 DEPTH: D:11-, Depths, Crypt, Tar
-TAGS:  allow_dup
+KFEAT: + = closed_clear_door
 MARKER: Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
              size = 2, walk_dist = 1, spread_rate= 33 }
-:  if you.in_branch("Tar") then
-TAGS:   extra
-:  end
+: if you.in_branch("Tar") then
+CLEAR:  x
+: else
+NSUBST: x = 3:+ / 1:+x / *:x
+: end
 MAP
-Y
+xxx
+xYx
+xxx
 ENDMAP
 
 NAME:   lemuel_flame_loot_1

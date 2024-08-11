@@ -1015,8 +1015,8 @@ xxx...xx-xx........=...SCS...
 ENDMAP
 
 NAME:   kennysheep_cross_landing
-ORIENT: centre
 TAGS:   no_pool_fixup extra decor
+ORIENT: centre
 SUBST:  c:ccxxbvt
 DEPTH:  D:10-, Depths
 MAP
@@ -1048,10 +1048,12 @@ ccww.wwcccww.wwcccww.wwcc
 ENDMAP
 
 NAME:   wander_river
-TAGS:   transparent no_pool_fixup no_monster_gen
+TAGS:   transparent no_pool_fixup no_monster_gen extra
 DEPTH:  D, Lair, !Lair:$
 ORIENT: float
 FTILE:  - = floor_pebble_lightgray
+TILE:   G = dngn_statue_mermaid / dngn_statue_polearm w:5 / \
+            dngn_statue_hydra w:5 / dngn_statue_princess w:5
 MAP
                   .@@.
                   ....       WWWWWWWW
@@ -1899,8 +1901,8 @@ ORIENT: float
 MONS:   yak, troll, deep troll
 SUBST:  2 = .:100 2:90 3
 :     else
-MONS:   death yak, troll, deep troll, iron troll
-SUBST:  2 = .:50 2:60 3:30 4
+MONS:   death yak, troll, deep troll
+SUBST:  2 = .:50 2:60 3:30
 :     end
 # Depths
 : else
@@ -4241,7 +4243,6 @@ NAME:    cheibrodos_frozen_isle
 TAGS:    no_item_gen no_monster_gen no_pool_fixup vaults_hard
 DEPTH:   D:8-, Vaults, !Vaults:$, Zot
 ORIENT:  float
-MONS:    ice statue
 : if you.branch() == "Zot" then
 # No blinking off, no scorching.
 MONS:    white draconian stormcaller / white draconian annihilator / \
@@ -4250,7 +4251,7 @@ MONS:    white draconian stormcaller / white draconian annihilator / \
 MONS:    white draconian ; halberd ego:freezing . cloak
 KFEAT:   b = metal_statue
 NSUBST:  . = 1:{} / 1 = ):50 / 1 = ]:40 >
-NSUBST:  - = 4:2 / 4:3 / 2 = 233 / *:.
+NSUBST:  - = 4:1 / 4:2 / 2 = 122 / *:-
 SHUFFLE: {([, })]
 SUBST:   b : bm
 COLOUR:  b = ice
@@ -4259,22 +4260,24 @@ TILE:    b = icy_conduit
 : elseif you.branch() == "Vaults" then
 MONS:   ironbound frostheart, arcanist / white very ugly thing w:2
 SUBST:  @ = ., b = m
-NSUBST: - = 2:2 / 2:3 / 2 = 233 / *:.
-: else
+NSUBST: - = 2:1 / 2:2 / 2 = 122 / *:-
+: else -- D
 :   if you.depth() > 11 then
 MONS:   arcanist / deep elf knight w:2, ice devil
-NSUBST: - = 3:2 / 3:3 / 2 = 233 / *:.
+NSUBST: - = 3:1 / 3:2 / 2 = 122 / *:-
 :   else
 MONS:   ice devil, ufetubus
-NSUBST: - = 4:2 / 4:3 / 4 = 23 / *:.
+NSUBST: - = 4:1 / 4:2 / 4 = 12 / *:-
 :   end
 SUBST:  b = bmm
 TILE:   b = bedevilled_crystal_cocytus
 :   set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
+KMONS:  3 = ice statue
+KFEAT:  3 = >
 NSUBST: ' = 5=*$ / *:%
-KPROP:  '123$%* = no_tele_into
-KMASK:  '123$%* = opaque
+KPROP:  -W123$%* = no_tele_into
+KMASK:  -W123$%* = opaque
 MAP
         ...
        ..x..
@@ -4285,7 +4288,7 @@ MAP
   ..wWW-----WWw..
  ..wwW-bm-mm-Www..
 ..xwW--m'''m--Wwx..
-@xxwW---'1'---Wwxx@
+@xxwW---'3'---Wwxx@
 ..xwW--m'''m--Wwx..
  ..wwW-mm-mb-Www..
   ..wWW-----WWw..

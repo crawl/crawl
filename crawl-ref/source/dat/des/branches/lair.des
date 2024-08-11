@@ -3192,7 +3192,7 @@ KITEM:   & = |, earthy gem
 KFEAT:   R = deep_water
 KFEAT:   s = closed_clear_door
 # Thin out elephant/dire elephant bands of central necromancers a bit.
-SUBST:   2 = 222.., 5 = 555..
+SUBST:   2 = 2., 5 = 5.
 # DE/FH/JK will always have a monster set, with one a guaranteed necromancer
 # plus band, next a 50% chance to be a # necromancer band, 50% chance to be
 # derived undead band, last guaranteed derived undead band. Necromancer band is
@@ -3423,7 +3423,7 @@ KMONS:  P = plant perm_ench:petrified dbname:petrified_plant \
             col:lightgrey tile:mons_withered_plant
 SUBST:  P = P.
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
-NSUBST: 9 = 1:C / 2:2 / 2:3 / * = 11222
+NSUBST: 9 = 1:C / 2:2 / 3:3 / * = 11222
 COLOUR: d|*$4c-R = lightgrey
 FTILE:  d|*$4c-R = floor_cobble_blood
 MAP
@@ -3438,7 +3438,7 @@ xxxxxxxxcc-ccxP.9.0.x...xxxxxxxxxxx
 xxxxxxxxxc-cxx.0.9.xxxP..xxxxPP.%xxxx
 xxxxxxxxxc-cxxP...xxxxx...xxxx0.9xxxx
 xxxxxxxxxx.cxxxx..xxxxxxx...xx.1.0xxx
-xxxxxxxxxx.xxxxxx...xxxxxxx......xxxx
+xxxxxxxxxx.xxxxxx...xxxxxxx.....9xxxx
 xxxxxxxxxx.xxxxxxxx..xxxxxx...xxPPxxx
 xxxxxxx.....xxxxxxx..Pxxxx..xxxxxxxxxx
 xxxxxx90.x..xxxxxxP..xxxx..xxxxcccxxxx
@@ -3449,7 +3449,7 @@ xxxxxxxxx.....xx..xxxxxxP..c------ccx
 xxxxxxxxP.G.G.....xxxxxxx..---cc--cxx
 xxx%xxx..G.P9.G.xxxxxxxxxxx-ccc---cxx
 x%P9Pxx..9..G....xxxxxxxxxxxxc---ccxx
-xx0..1....P..G..PPxxxxxxPPxxx...xxxx
+xx0..1....P0.G..PPxxxxxxPPxxx...xxxx
 xxxP1...xxxP..PxxxxxxxxxxP9....xxxxx
 xxxxxPPxxxxxxxxxxxxxxxxxxx......xxx
 xxxxxxxxxxxxxxxxxxxxxxxx......G...

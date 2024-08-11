@@ -87,7 +87,6 @@ MAP
 ENDMAP
 
 NAME:   portal_sewer_entry_b
-ORIENT: float
 : sewer_portal(_G)
 SUBST:  ' = W. , W = WW1
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
@@ -132,6 +131,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_e
 : sewer_portal(_G)
+KFEAT:  z = rock_wall
 ORIENT: northwest
 NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
@@ -139,15 +139,21 @@ NSUBST: W = 8:111W / *:W
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
             giant cockroach / ribbon worm w:3
 MAP
-xxxxxxxxx
-xWWWXWww.
-xWOWXWww.
-xWWWXWww.
-xXXXXWw..
-xWWWWWw..
-xwwwww...
-xwww.....
-x........
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzzzzzzzzzz
+zzzzzzzzzzzzzzzzxxxxxxxxx
+zzzzzzzzzzzzzzzzxWWWXWww.
+zzzzzzzzzzzzzzzzxWOWXWww.
+zzzzzzzzzzzzzzzzxWWWXWww.
+zzzzzzzzzzzzzzzzxXXXXWw..
+zzzzzzzzzzzzzzzzxWWWWWw..
+zzzzzzzzzzzzzzzzxwwwww...
+zzzzzzzzzzzzzzzzxwww.....
+zzzzzzzzzzzzzzzzx........
 ENDMAP
 
 NAME:   portal_sewer_entry_f
@@ -276,26 +282,27 @@ ENDMAP
 
 NAME: cheibrodos_sewer_entry_bend
 TAGS: no_monster_gen
-ORIENT: northeast
 KMONS: 1 = ribbon worm
 NSUBST: - = 1:1 / 1=1.. / 1=1...
 KFEAT: A = iron_grate
 : sewer_portal(_G)
 MAP
-xxxxxxxxxxxxxx
-xxAAxxxxxxxxxx
-xxWWxxxxx---xx
-...WWWWWWW--xx
-....WWWWWWW-xx
- @..xxxxOWWxxx
-  .....mxWWxxx
-     @..xWWxxx
-      @.xWWxxx
-       .xWWxxx
-       ...WWAx
-       ....WAx
-        @..xxx
-         ..xxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+xxxAAxxxxxxxxxxxxxxxxx
+xxxWWxxxxx---xxxxxxxxx
+x...WWWWWWW--xxxxxxxxx
+.....WWWWWWW-xxxxxxxxx
+@xx..xxxxOWWxxxxxxxxxx
+  x.....mxWWxxxxxxxxxx
+  xxxx...xWWxxxxxxxxxx
+     xx..xWWxxxxxxxxxx
+      x..xWWxxxxxxxxxx
+        ...WWAxxxxxxxx
+        ....WAxxxxxxxx
+         @..xxxxxxxxxx
+          ..xxxxxxxxxx
 ENDMAP
 
 NAME: cheibrodos_sewer_entry_drain
@@ -620,14 +627,15 @@ ORIENT:   encompass
 SUBST:    - = WWWW.
 KMONS:    1 = frilled lizard / ball python / giant cockroach / \
               dart slug / endoplasm / adder w:4
+KMONS:    2 = jelly
 KMONS:    ! = bullfrog
 : item(dgn.loot_scrolls)
 ITEM:     scroll of blinking ident:all
-KFEAT:    1W = W
+KFEAT:    12W = W
 KFEAT:    ! = w
-NSUBST:   W = 175 = 1WWW / *:W
+NSUBST:   W = 175 = 1WWW / 1:2 / *:W
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
-COLOUR:   1! = green
+COLOUR:   12! = green
 SHUFFLE:  ed|
 : sewer_setup(_G)
 MAP
@@ -820,7 +828,7 @@ KMONS:   2 = frilled lizard w:8 / ball python w:8 / adder w:2
 KFEAT:   1 = W
 KFEAT:   2 = w
 SUBST:   QR = .
-NSUBST:  2 = 2:2 / 1:w / * = 2w, . = 1:1 / 1 = 1.. / * = .WW
+NSUBST:  2 = 2:2 / 1:w / * = 2w, . = 1:1 / 1 = 1. / * = .WW
 SUBST:   e = !!!!????%, X = xx., Y = xw
 COLOUR:  1 = lightgreen
 COLOUR:  2 = green
@@ -916,9 +924,11 @@ KMONS:  3 = hell rat
 ITEM:   any potion / any scroll
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
+ITEM:   ratskin_cloak
 KFEAT:  3 = shallow_water
 NSUBST: - = 20 = 1... / 8 = 2... / *:.
 SUBST:  . = WWW..
+NSUBST: d = 1 = d:49 g:1 / *:d
 SUBST:  d = ddddef*
 COLOUR: 3 = lightgreen
 : sewer_setup(_G)
@@ -1019,7 +1029,7 @@ KMONS:   K = crocodile
 KFEAT:   gsh = W
 KFEAT:   GnHJ = w
 KFEAT:   O = open_sea
-SHUFFLE: 12 / 12 / 34 / 34 / 34
+SHUFFLE: 12 / 34 / 34
 NSUBST:  1 = 2:1 / 1:. / * = 1.,2 = 2:2 / * = 1 2:5 .:15
 NSUBST:  3 = 2:. / * = 1., 4 = 1:K / 2:. / * = 1 2:4 .:14
 SUBST:   J = Jn, h = hW, g = gggW
@@ -1043,10 +1053,10 @@ OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccWWW.ccccccccW..c..c
 OOOnnnnnnnnnJnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...12....1.cc.c
 OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccccccccccccccccccc.c
 OOOnnnJnnnnnJnnnscccccccccccccccccccccccccccccccc ccccccccccwhwwwwwwwWwwwww2.1c
-OOOnnnnnnnnnnnnsK+.....+...%Wwcccc1....1cc$$$.1McccwwWWWgWWhWWWWW..W..WW.Www2.c
+OOOnnnnnnnnnnnns1+.....+...%Wwcccc1....1cc$$$.1McccwwWWWgWWhWWWWW..W..WW.Www2.c
 OOOnnnnnnnnHnnsW.ccccccc...%*Wcccc2ccccc.c.1.W.NcccwWWccccccccccccc11cccc.gwWwcc
 OOOnnnnnJnnnnnsW.ccc.1cc...%*Wcccc2cwwcc.ccccWcccwwwc.c           cccc  cc1.WWwc
-OOOnnnnnnnnnJnsW.ccc.1cc...*WWccccwWgcwc.cGwwWWWWWWcc1c                  ccccccc
+OOOnnnnnnnnnJnsW1ccc.1cc...*WWccccwWgcwc.cGwwWWWWWWcc1c                  ccccccc
 OOOnnnnnnnnnnssWWccc1.cc<..WwccccwgWccwc.chwgWW..1...1c
 OOOnnnnnnnnsssWWhWWc.1ccccccccwwwhW.1cwWWcWWW..2ccccccc
 OOOnnnnnnnsssWWWWWWWWsswwwwwwwcWh..1ccccWWgW1.2cc

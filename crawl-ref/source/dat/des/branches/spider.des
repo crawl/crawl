@@ -721,19 +721,21 @@ NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   ghost moth, tarantella
-ITEM:   potion of ambrosia ident:type
+ITEM:   potion of ambrosia ident:type q:1 / \
+        potion of ambrosia ident:type q:2 w:5
+KFEAT:  ^ = web
 MAP
     ........
    ..xx..xx..
   ..xx....xx..
  ..xx......xx..
 ..xx........xx..
-.xx....WW....xx.
-.x....WxxW....x.
-.x...WxxxxW...x.
-.x.2.WxxxxW.2.x.
-.x.22.WxxW.22.x.
-.xx....WW....xx.
+.xx....^^....xx.
+.x....^xx^....x.
+.x...^xxxx^...x.
+.x.2.^xxxx^.2.x.
+.x.22.^xx^.22.x.
+.xx....^^....xx.
 ..xx...1....xx..
  ..xx......xx..
   ..xxddddxx..
@@ -2340,7 +2342,7 @@ SHUFFLE: OP / 1p / 2Q / *q
 NSUBST:  8 = 2:c / *:7, " = 1:. / 1:c. / *:c
 NSUBST:  d = 1:e / * = def
 SUBST:   3 = 3., 4 = 4., 5 = 55., 6 = 66..., 7 = 777.
-SUBST:   - = .....WWW^, pQq = .
+SUBST:   - = .....WW^^, pQq = .
 KFEAT:   ^ = web trap
 TILE:    C = wall_brick_gray
 : setup_endvault_loot(_G)

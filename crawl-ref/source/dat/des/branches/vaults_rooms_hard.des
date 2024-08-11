@@ -2058,6 +2058,64 @@ ENDMAP
 
 ####
 
+
+##############################################################################
+# The Constructs Gauntlet (by Mu, modernized by HangedMan)
+#
+# Each room is progressively more challenging; both the constructs, and their
+# creators.
+NAME:   constructs_gauntlet_mu_hangedman
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_descent
+TAGS:   vaults_orient_w vaults_hard
+DEPTH:  Vaults, !Vaults:$
+ORIENT: east
+MONS:   gargoyle, peacekeeper, thermic dynamo
+MONS:   dancing weapon, crystal guardian, war gargoyle
+KMONS:  A = arcanist
+KMONS:  B = deep elf pyromancer
+KMONS:  C = deep elf zephyrmancer
+KMONS:  D = deep elf annihilator
+KMONS:  E = lich
+KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
+KFEAT:  S = metal_statue
+KFEAT:  yz = .
+COLOUR: y = yellow
+COLOUR: z = lightblue
+COLOUR: S = earth
+FTILE:  y = floor_rough_red
+FTILE:  z = floor_rough_blue
+TILE:   S = earthen_conduit
+MARKER: y = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 4, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "flame" }
+MARKER: z = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 4, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "freezing vapour" }
+:   set_feature_name("metal_statue", "earthen conduit")
+MAP
+ c......+.....cc......+....$c
+ cycccccc.....cczcccccc...6$c
+ c.....cc*.E5.cc.....cc..F.$S
+ cccccycc|.5..cccccczcc.6.>$c
+ c.....cc*$$..+......cc|||||c
+ c.cccccccccccccccccccccccccc
+ c+cccccccccccccccccccccccccc
+ c.....cllllllcc%$$..cwwwwwwc
+ c...4.clcccclcc$>.3.cwccccwc
+ S..D..+.cllllcc$3C..+.cwwwwc
+ c%4...ccclccccc..3..cccwcccc
+ c$$$%%ccclllll+.....cccwwwwc
+ ccccccccccccccccccccccccccwc
+ cccccccccccccccccccccccccc+c
+.cG.....+...$$ccWWWWWW+.....c
+.c.cccccc..1.$ccWcccccc...2.c
+.c....Gcc..A..ccWWWWWWc..B..G
+.ccccc.cc..1..cccccccWc.2.1$c
+.+.....cc.....+WWWWWWWc...$%c
+ENDMAP
+
 NAME:   dpeg_vaults_hating_casters
 TAGS:   vaults_hard
 MONS:   ghost moth

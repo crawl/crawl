@@ -269,6 +269,9 @@ function pan_entry_vault_contents(e, glyph)
         e.kmons(glyph .. " = " .. tiertwo .. " / " ..
                 tierthree .. " / " .. tierthree)
     end
+
+    e.ftile(".+12O : floor_demonic_red / floor_demonic_blue / " ..
+                    "floor_demonic_green / floor_demonic_magenta")
 end
 
 function pan_declare_demonic_rune(holy)
@@ -338,14 +341,14 @@ TAGS:   transparent
 : pan_entry_vault_contents(_G, 'O')
 MAP
 xxxxxxxx@@x
-x..1...x..x
-x..x...x..x
-x..x...x..x
-x..x.1.x..x
-x..x2O2x..x
-x..x.1.x..x
-x..x...x..x
-x..x...1..x
+x''1...x''x
+x''x...x''x
+x''x...x''x
+x''x.1.x''x
+x''x2O2x''x
+x''x.1.x''x
+x''x...x''x
+x''x...1''x
 x@@xxxxxxxx
 ENDMAP
 
@@ -354,18 +357,18 @@ TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-.x.x.x.x.x..
-..x.x.x.x.x.
-.x.x.x2x.x..
-..x.x1x1x.x.
-.x.x2xOx2x..
-..x.x1x1x.x.
-.x.x.x2x.x..
-..x.x.x.x.x.
-.x.x.x.x.x..
-..x.x.x.x.x.
-............
+''''''''''''
+'x'x'x'x'x''
+''x.x.x.x.x'
+'x.x.x2x.x''
+''x.x1x1x.x'
+'x.x2xOx2x''
+''x.x1x1x.x'
+'x.x.x2x.x''
+''x.x.x.x.x'
+'x.x.x.x.x''
+''x'x'x'x'x'
+''''''''''''
 ENDMAP
 
 NAME:   rand_demon_pan_entry_4
@@ -373,17 +376,17 @@ TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-...........
-.xxxxxxxxx.
-.x...x1+.x.
-.x+x+x+x.x.
-.x1x..2x2x.
-.x+xxx+x.x.
-.x2..x1xOx.
-.x+x.xxxxx.
-.x1x.....+.
-.xxxxxxxxx.
-...........
+'''''''''''
+'xxxxxxxxx'
+'x...x1+.x'
+'x+x+x+x.x'
+'x1x..2x2x'
+'x+xxx+x.x'
+'x2..x1xOx'
+'x+x.xxxxx'
+'x1x.....+'
+'xxxxxxxxx'
+'''''''''''
 ENDMAP
 
 NAME:   rand_demon_pan_entry_5
@@ -391,18 +394,18 @@ TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-...xx++xx...
-..xx....xx..
-.xx......xx.
-.x..2.....x.
-.+...1O...+.
-.+...11...+.
-.x..2..2..x.
-.xx......xx.
-..xx....xx..
-...xx++xx...
-............
+''''''''''''
+'''xx++xx'''
+''xx....xx''
+'xx......xx'
+'x..2.....x'
+'+...1O...+'
+'+...11...+'
+'x..2..2..x'
+'xx......xx'
+''xx....xx''
+'''xx++xx'''
+''''''''''''
 ENDMAP
 
 NAME:   rand_demon_pan_entry_7
@@ -411,18 +414,18 @@ NSUBST: ? = 1:O / 4:1 / 2:2 /*:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-.xxx....xxx.
-.x?xx+xxx?x.
-.xx+....+xx.
-..x.x++x.x..
-..x.+??+.+..
-..+.+??+.x..
-..x.x++x.x..
-.xx+....+xx.
-.x?xxx+xx?x.
-.xxx....xxx.
-............
+''''''''''''
+'xxx....xxx'
+'x?xx+xxx?x'
+'xx+....+xx'
+''x.x++x.x''
+''x.+??+.+''
+''+.+??+.x''
+''x.x++x.x''
+'xx+....+xx'
+'x?xxx+xx?x'
+'xxx''''xxx'
+''''''''''''
 ENDMAP
 
 NAME:   rand_demon_pan_entry_8
@@ -430,18 +433,18 @@ TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
- ...........
-....xxxxxxx.
-..xxx....1x.
-.xx..1..O.x.
-.x........x.
-.xx.......x.
-..xx21..1.x.
-....22...xx.
-.....x...x..
-..x..xx.xx..
- @....xxx...
-  ........
+ '''''''''''
+''''xxxxxxx'
+''xxx....1x'
+'xx..1..O.x'
+'x........x'
+'xx.......x'
+''xx21..1.x'
+''''22...xx'
+'''''x...x''
+''x''xx.xx''
+ @''''xxx'''
+  '''''''''
 ENDMAP
 
 NAME:   rand_demon_pan_entry_9
@@ -450,18 +453,18 @@ NSUBST: ^ = 4:1 / 2:2 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-.xxxxxxxxxx.
-.x.+.....xx.
-.x.xxxxxx.x.
-.x.xO^^^x.x.
-.x.x^^^^x.x.
-.x.x^^^^x.x.
-.x.x^^^^x.x.
-.x.xxxx+x.x.
-.xx....2x.x.
-.xxxxxxxx+x.
-............
+''''''''''''
+'xxxxxxxxxx'
+'x.+.....xx'
+'x.xxxxxx.x'
+'x.xO^^^x.x'
+'x.x^^^^x.x'
+'x.x^^^^x.x'
+'x.x^^^^x.x'
+'x.xxxx+x.x'
+'xx....2x.x'
+'xxxxxxxx+x'
+''''''''''''
 ENDMAP
 
 ###################################
@@ -472,18 +475,18 @@ TAGS:  transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-.x+xxxxxx+x.
-.x.x.2O.x.x.
-.x2x....x2x.
-.x.x.11.x.x.
-.x2x....x2x.
-.x.xx++xx.x.
-.x2xx..xx2x.
-.x.xx..xx.x.
-.x2..11..2x.
-.xxxxxxxxxx.
-............
+''''''''''''
+'x+xxxxxx+x'
+'x.x.2O.x.x'
+'x2x....x2x'
+'x.x.11.x.x'
+'x2x....x2x'
+'x.xx++xx.x'
+'x2xx..xx2x'
+'x.xx..xx.x'
+'x2..11..2x'
+'xxxxxxxxxx'
+''''''''''''
 ENDMAP
 
 NAME:  grunt_pan_entry_spiral
@@ -491,18 +494,18 @@ TAGS:  transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-.x+xxxxxxxx.
-.x.xx2.2..+.
-.x.x.xxxxxx.
-.x2x1x.1.xx.
-.x.x.2Oxx2x.
-.x2xx$$.x.x.
-.xx.1.x1x2x.
-.xxxxxx.x.x.
-.+..2.2xx.x.
-.xxxxxxxx+x.
-............
+''''''''''''
+'x+xxxxxxxx'
+'x.xx2.2..+'
+'x.x.xxxxxx'
+'x2x1x.1.xx'
+'x.x.2Oxx2x'
+'x2xx$$.x.x'
+'xx.1.x1x2x'
+'xxxxxx.x.x'
+'+..2.2xx.x'
+'xxxxxxxx+x'
+''''''''''''
 ENDMAP
 
 NAME:  grunt_pan_entry_zigzag
@@ -510,27 +513,27 @@ TAGS:  transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
-............
-.xxxxxxxxxx.
-.x..2..2..+.
-.x.2.xxxxxx.
-.xx.1.xx....
-..xx.21xx...
-...xx1O.xx..
-....xx.1.xx.
-.xxxxxx.2.x.
-.+..2..2..x.
-.xxxxxxxxxx.
-............
+''''''''''''
+'xxxxxxxxxx'
+'x..2..2..+'
+'x.2.xxxxxx'
+'xx.1.xx''''
+''xx.21xx'''
+'''xx1O.xx''
+''''xx.1.xx'
+'xxxxxx.2.x'
+'+..2..2..x'
+'xxxxxxxxxx'
+''''''''''''
 ENDMAP
 
 NAME:  grunt_pan_entry_sceptre
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
- @........@
-@..xxxxxx..@
-..xx.2O.xx..
+ @''''''''@
+@''xxxxxx''@
+''xx.2O.xx''
 x+x......x+x
 x.x.1..1.x.x
 x.x......x.x

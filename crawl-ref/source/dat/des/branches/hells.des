@@ -231,16 +231,17 @@ KMONS:   2 = brimstone fiend
 KMONS:   3 = ice fiend
 KMONS:   4 = tzitzimitl
 KFEAT:   ! = iron_grate
-SHUFFLE: 1!/2l/3w/4m
+SHUFFLE: 1! / 2l / 3w / 4m
+KMASK:   .wl = no_monster_gen
 MAP
     .....
    .!!!!!.
   ..!.1.!..
  ...........
 .mm.......ll.
-.m.........l.
-.m4...{...2l.
-.m.........l.
+.m...'''...l.
+.m4..'{'..2l.
+.m...'''...l.
 .mm.......ll.
  ...........
   ..w.3.w..

@@ -60,8 +60,12 @@ end
 
 function crypt_entry(e)
     e.tags("crypt_entry vaults_entry_crypt")
-    e.kmons("0 = place:Crypt:1")
+    e.kmons("0 = laughing skull band w:5 / death knight w:5 / \
+                 skeletal warrior / ancient champion / ghoul / \
+                 phantasmal warrior / flayed ghost / eidolon")
     e.kfeat("O = enter_crypt")
+    e.tile("c = wall_crypt")
+    e.tile("G = dngn_statue_wraith / dngn_statue_sigmund / dngn_statue_angel")
 end
 
 function crypt_loot_plus(e)
@@ -153,15 +157,15 @@ TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ...........
-.x.......x.
+.c.......c.
 ...........
-...GxxxG...
-...xx0xx...
-....0O0x...
-...xx0xx...
-...GxxxG...
+...GcccG...
+...cc0cc...
+....0O0c...
+...cc0cc...
+...GcccG...
 ...........
-.x.......x.
+.c.......c.
 ...........
 ENDMAP
 
@@ -172,15 +176,15 @@ ORIENT: float
 : crypt_entry(_G)
 MAP
 ...........
-.x...x...x.
+.c...c...c.
 ...........
-...x.0.x...
+...c.0.c...
 ...........
-.x.0.O.0.x.
+.c.0.O.0.c.
 ...........
-...x.0.x...
+...c.0.c...
 ...........
-.x...x...x.
+.c...c...c.
 ...........
 ENDMAP
 
@@ -190,19 +194,19 @@ TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ..........
-.xxxxxxxx.
-.x........
-.x0xxxxxx.
-.x......x.
-.x.xxxx0x.
-.x.x....x.
-.x.x.O..x.
-.x.x....x.
-.x.xxxx0x.
-.x......x.
-.x0xxxxxx.
-.x........
-.xxxxxxxx.
+.cccccccc.
+.c........
+.c0cccccc.
+.c......c.
+.c.cccc0c.
+.c.c....c.
+.c.c.O..c.
+.c.c....c.
+.c.cccc0c.
+.c......c.
+.c0cccccc.
+.c........
+.cccccccc.
 ..........
 ENDMAP
 
@@ -212,15 +216,15 @@ TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ...........
-.xx.....xx.
-.x0.....0x.
-....x.x....
-...xx.xx...
+.cc.....cc.
+.c0.....0c.
+....c.c....
+...cc.cc...
 .....O.....
-...xx.xx...
-....x.x....
-.x0.....0x.
-.xx.....xx.
+...cc.cc...
+....c.c....
+.c0.....0c.
+.cc.....cc.
 ...........
 ENDMAP
 
@@ -230,13 +234,13 @@ TAGS:   transparent
 : crypt_entry(_G)
 MAP
 ......................
-..............xxxxxxx.
-.....G...G...Gx..0..x.
-..............x.....x.
-...........0..+..O.0x.
-..............x.....x.
-.....G...G...Gx..0..x.
-..............xxxxxxx.
+..............ccccccc.
+.....G...G...Gc..0..c.
+..............c.....c.
+...........0..+..O.0c.
+..............c.....c.
+.....G...G...Gc..0..c.
+..............ccccccc.
 ......................
 ENDMAP
 
@@ -247,15 +251,15 @@ MONS:   skeleton w:20 / skeletal warrior, ancient champion
 : crypt_entry(_G)
 MAP
 ...........
-.xxxxxxxxx.
-.x..1..1.x.
-.x1xxxxx.x.
-.x.x121x1x.
-.x.x1O1x.x.
-.x1x111x1x.
-.x.x.xxx.x.
-.x.x1.1.1x.
-.x.xxxxxxx.
+.ccccccccc.
+.c..1..1.c.
+.c1ccccc.c.
+.c.c121c1c.
+.c.c1O1c.c.
+.c1c111c1c.
+.c.c.ccc.c.
+.c.c1.1.1c.
+.c.ccccccc.
 ...........
 ENDMAP
 
@@ -288,41 +292,41 @@ MONS:    bone dragon w:25 / lich / shadow dragon w:5
 : crypt_entry(_G)
 MAP
 .........
-.x.....x.
-.xx...xx.
-..x.1.x..
-..x.x.x..
-.xx...xx.
-.x.....x.
-.x..O..x.
-.x.....x.
-.xx...xx.
-..xxxxx..
+.c.....c.
+.cc...cc.
+..c.1.c..
+..c.c.c..
+.cc...cc.
+.c.....c.
+.c..O..c.
+.c.....c.
+.cc...cc.
+..ccccc..
 .........
 ENDMAP
 
 ##############################################################################
-NAME:   minmay_crypt_entry_vampire_xt
+NAME:   minmay_crypt_entry_vampire_ct
 TAGS:   transparent
 MONS:   vampire, vampire knight / vampire mage
 SUBST:  V = VVVY
 : crypt_entry(_G)
 MAP
 ................
-.xxxxx....xxxxx.
-.x...xx..xx...x.
-.x.O..xxxx..1.x.
-.x..2..xx.....x.
-.xx..V....V..xx.
-..xx........xx..
-...xx..cc..xx...
-...xx..cc..xx...
-..xx........xx..
-.xx..V....V..xx.
-.x.....xx.....x.
-.x.1..xxxx..1.x.
-.x...xx..xx.....
-.xxxxx....xxx...
+.ccccc....ccccc.
+.c...cc..cc...c.
+.c.O..cccc..1.c.
+.c..2..cc.....c.
+.cc..V....V..cc.
+..cc........cc..
+...cc..cc..cc...
+...cc..cc..cc...
+..cc........cc..
+.cc..V....V..cc.
+.c.....cc.....c.
+.c.1..cccc..1.c.
+.c...cc..cc.....
+.ccccc....ccc...
 ................
 ENDMAP
 
@@ -1432,9 +1436,9 @@ ENDMAP
 # For Crypt and Tartarus
 #
 NAME:    minmay_shadows
-ORIENT:  northwest
+ORIENT:  centre
 DEPTH:   Crypt, Tar
-MONS:    shadowghast, soul eater, tzitzimitl
+MONS:    shadowghast, soul eater / eidolon w:2, tzitzimitl
 ITEM:    any misc
 SUBST:   A : x., B : x., C : x., E : x., F : x.
 : if you.in_branch("Tar") then
@@ -1450,8 +1454,8 @@ xx....1....xxxd.dxxx....1....x
 xx.........xxx2.2xxx.........x
 xx...xxx...xxx...xxx...xxx...x
 xx.D.xxx.E.xxx.1.xxx.E.xxx.D.x
-xx...xxx.2.xxx...xxx.2.xxx...x
-xx1..xxx....1..3..1....xxx..1x
+xx...xxx.2.xxx3.3xxx.2.xxx...x
+xx1..xxx....1.....1....xxx..1x
 xx...xxx....F.....F....xxx...x
 xx...xxx.......1.......xxx...x
 xx...xxxxxxxxxxxxxxxxxxxxx...x
