@@ -449,7 +449,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<yellow>Builder debugging</yellow>\n"
                        "<w>L</w>      place a vault by name\n"
                        "<w>P</w>      create a level based on a vault\n"
-                       "<w>R</w> regenerate current level\n"
+                       "<w>R</w>      regenerate current level\n"
                        "<w>Ctrl-A</w> generate new Abyss area\n"
                        "<w>K</w>      mark all vaults as unused\n"
                        "<w>:</w>      find branches and overflow\n"

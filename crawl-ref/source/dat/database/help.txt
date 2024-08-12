@@ -722,7 +722,7 @@ Number pad keys:
 <w>-1001</w>: NP1   <w>-1002</w>: NP2   <w>-1003</w>: NP3
 <w>-1000</w>: NP0
 <w>-1010</w>: NPenter
-<w>-1012</2>: NP/   <w>-1015</w>: NP*   <w>-1016</w>: NP+   <w>-1018</w>: NP-
+<w>-1012</w>: NP/   <w>-1015</w>: NP*   <w>-1016</w>: NP+   <w>-1018</w>: NP-
 <w>-1019</w>: NP.   <w>-1021</w>: NP=
 
 Some number pad punctuation keys may not be distinguished from their "regular"
