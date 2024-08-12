@@ -3047,11 +3047,13 @@ void define_monster(monster& mons, bool friendly)
         ghost.init_orc_apostle(type, pow);
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
-        mons.bind_melee_flags();
 
         mons.props[MON_GENDER_KEY] = random_choose(GENDER_MALE,
                                                    GENDER_FEMALE,
                                                    GENDER_NEUTRAL);
+
+        if (type == APOSTLE_WIZARD)
+            mons.flags |= MF_CAUTIOUS;
 
         // Choose tile based on apostle class
         if (type == APOSTLE_WIZARD)
