@@ -1941,7 +1941,12 @@ string hints_memorise_info()
                "already memorised: Magic Dart. (To view memorised spells, you "
                "can exit this menu and select <w>I</w>.)";
 
-    if (player_has_available_spells())
+    if (you.form == transformation::dungeon_denizen)
+    {
+        m += "\n\nYou can't memorize spells while in a completely different "
+             "form as a Denizen of the dungeon.";
+    }
+     if (player_has_available_spells())
     {
         m += "\n\nA spell that isn't <darkgray>grayed out</darkgray> or "
              "<lightred>forbidden</lightred> can be "

@@ -2194,7 +2194,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
  * @param size      The size of the creature trying to wield the weapon.
  * @return          Whether a creature of the given size can wield the weapon.
  */
-bool is_weapon_wieldable(const item_def &item, size_type size)
+bool is_weapon_wieldable(const item_def &item, size_type size, hands_reqd_type check_hands)
 {
     ASSERT(is_weapon(item));
 
@@ -2202,7 +2202,19 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
                                                      : item.sub_type;
     // Check we aren't about to index with a bogus subtype for weapons
     ASSERT(item.base_type != OBJ_WEAPONS || subtype < get_max_subtype(item.base_type));
-    return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
+    switch (check_hands)
+    {
+    case HANDS_TWO:
+      return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
+      break;
+    case HANDS_ONE:
+      return Weapon_prop[Weapon_index[subtype]].min_1h_size <= size;
+      break;
+
+    default:
+      return false;
+      break;
+    }
 }
 
 //

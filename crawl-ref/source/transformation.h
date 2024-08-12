@@ -36,6 +36,8 @@ enum class transformation
     maw,
     flux,
     slaughter,
+    dungeon_denizen,    // Applicable for characters that have (temporarily)
+                        // transformed into dungeon creatures not in this list
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

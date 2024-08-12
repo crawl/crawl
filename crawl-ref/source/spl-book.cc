@@ -29,6 +29,7 @@
 #include "invent.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-mst.h"    // NUM_MSTYPES
 #include "output.h"
 #include "prompt.h"
 #include "random-pick.h"
@@ -337,6 +338,8 @@ static spell_list _get_spell_list(bool just_check = false,
         {
             if (you.has_mutation(MUT_INNATE_CASTER))
                 mprf(MSGCH_PROMPT, "You need no library to learn spells.");
+            else if (you.get_form_shifted_mon_spellbook() != NUM_MSTYPES)
+                mprf(MSGCH_PROMPT, "You cannot learn new spells while in this form.");
             else
                 mprf(MSGCH_PROMPT, "Your library has no spells.");
         }
@@ -959,6 +962,12 @@ bool can_learn_spell(bool silent)
 
 bool learn_spell()
 {
+    if (you.form == transformation::dungeon_denizen)
+    {
+        mprf(MSGCH_PROMPT, "You must return to your base form to change your true memory.");
+        return false;
+    }
+
     spell_list spells(_get_spell_list());
     if (spells.empty())
         return false;
@@ -1061,6 +1070,12 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 */
 bool learn_spell(spell_type specspell, bool wizard, bool interactive)
 {
+    if (you.form == transformation::dungeon_denizen)
+    {
+        mprf(MSGCH_PROMPT, "You must return to your base form to change your true memory.");
+        return false;
+    }
+
     if (!_learn_spell_checks(specspell, wizard))
         return false;
 
@@ -1137,12 +1152,18 @@ bool book_has_title(const item_def &book, bool ident)
 
 spret divine_exegesis(bool fail)
 {
+    if (you.form == transformation::dungeon_denizen)
+        mpr("Divine power draws upon your true magical knowledge.");
+
     unwind_var<bool> dk(you.divine_exegesis, true);
 
     spell_list spells(_get_spell_list(true, true));
     if (spells.empty())
     {
-        mpr("You don't know of any spells!");
+        if (you.form == transformation::dungeon_denizen)
+            mpr("Your true magical knowledge is empty!");
+        else
+            mpr("You don't know of any spells!");
         return spret::abort;
     }
 

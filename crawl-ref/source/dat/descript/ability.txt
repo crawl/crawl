@@ -73,6 +73,15 @@ attributes.
 While transformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to cast spells.
 %%%%
+
+Form Shift ability
+
+Transforms the user into a native creature, taking on its characteristics
+entirely.
+
+While transformed, any equipped weapons and armour are melded, and the
+user becomes unable to cast spells.
+%%%%
 Exsanguinate ability
 
 Remove all of your blood, transitioning to a bloodless state.

@@ -602,8 +602,16 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
+
+    // Changeling form shifts are permanent (until ended)
+    if (you.has_mutation(MUT_FORM_SHIFTER)
+        && you.form == transformation::dungeon_denizen)
+    {
+      return;
+    }
+
+    // Vampire bat transformations are permanent (until ended), unless they are
+    // uncancellable (polymorph wand on a full vampire).
     if (you.get_mutation_level(MUT_VAMPIRISM) < 2
         || you.form != transformation::bat
         || you.transform_uncancellable)

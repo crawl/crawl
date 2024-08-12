@@ -432,7 +432,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "vamp", "pain", "antimagic", "distort",
+    "vamp", "form_absorb", "pain", "antimagic", "distort",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -460,7 +460,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
-    "vampirism", "pain", "antimagic", "distortion",
+    "vampirism", "form absorbing", "pain", "antimagic", "distortion",
 #if TAG_MAJOR_VERSION == 34
     "reaching", "returning",
 #endif
@@ -488,7 +488,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "flaming", "freezing",
 #endif
-    "vampiric", "painful", "antimagic", "distorting",
+    "vampiric", "form absorbing", "painful", "antimagic", "distorting",
 #if TAG_MAJOR_VERSION == 34
     "reaching", "returning",
 #endif
@@ -3168,6 +3168,9 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
         case SCR_AMNESIA:
             if (you.has_mutation(MUT_INNATE_CASTER))
                 return "You don't have control over your spell memory.";
+            if (you.form == transformation::dungeon_denizen)
+                return "You must return to your base form to change your true memory.";
+
             // XX possibly amnesia should be allowed to work under Trog, despite
             // being marked useless..
             if (you_worship(GOD_TROG))
@@ -3236,6 +3239,8 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
             return you.no_tele_reason(item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
+            if (you.form == transformation::dungeon_denizen)
+                return "You must return to your base form to change your true memory.";
             if (you.spell_no == 0)
                 return "You have no spells to forget.";
             return "";

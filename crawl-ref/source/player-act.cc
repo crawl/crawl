@@ -222,11 +222,11 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
 size_type player::body_size(size_part_type psize, bool base) const
 {
     const auto charsize = species::size(species, psize);
-    if (base)
+    if (base && you.form != transformation::dungeon_denizen)
         return charsize;
     else
     {
-        size_type tf_size = get_form()->size;
+        size_type tf_size = get_form()->get_size();
         return tf_size == SIZE_CHARACTER ? charsize : tf_size;
     }
 }

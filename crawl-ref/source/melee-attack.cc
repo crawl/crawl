@@ -651,8 +651,9 @@ bool melee_attack::handle_phase_hit()
     {
         if (needs_message)
         {
-            attack_verb = attacker->is_player()
-                                    ? attack_verb
+            // TODO: Verb update for DD for more hitwording variety
+            attack_verb = attacker->is_player() && !get_form()->use_assumed_monster_stats
+                                    ? attacker->conj_verb(attack_verb)
                                     : attacker->conj_verb(mons_attack_verb());
 
             // TODO: Clean this up if possible, checking atype for do / does is ugly
@@ -2306,7 +2307,7 @@ void melee_attack::set_attack_verb(int damage)
 
     case -1: // unarmed
     {
-        const FormAttackVerbs verbs = get_form(you.form)->uc_attack_verbs;
+        const FormAttackVerbs verbs = get_form(you.form)->get_uc_attack_verbs();
         if (verbs.weak != nullptr)
         {
             if (damage < HIT_WEAK)
@@ -2439,6 +2440,21 @@ bool melee_attack::player_monattk_hit_effects()
         && stab_bonus > 0)
     {
         _player_vampire_draws_blood(defender->as_monster(), damage_done, true);
+    }
+
+    // Unarmed and untransformed form shifters will try to use a stabbing situation
+    // to gain transformation charges.
+    if (you.has_mutation(MUT_FORM_SHIFTER)
+        && !using_weapon()
+        && damage_done > 0
+        && stab_attempt
+        && stab_bonus == 1
+        && you.form == transformation::none)
+    {
+        mprf("Essence shoots up your %s from %s as you absorb their being!",
+            you.arm_name(true).c_str(),
+            defender->as_monster()->name(DESC_THE, true).c_str());
+        gain_form_shift_uses(1);
     }
 
     if (!defender->alive())
@@ -2933,7 +2949,9 @@ void melee_attack::announce_hit()
         }
 
         mprf("You %s %s%s%s%s%s%s",
-             attack_verb.c_str(),
+             get_form()->use_assumed_monster_stats ?
+                attacker->conj_verb(mons_attack_verb()).c_str() :
+                attack_verb.c_str(),
              defender->name(DESC_THE).c_str(), verb_degree.c_str(),
              weapon_desc().c_str(),
              charge_desc().c_str(), debug_damage_number().c_str(),

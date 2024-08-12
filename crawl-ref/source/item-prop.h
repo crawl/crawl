@@ -155,7 +155,7 @@ bool is_mana_regen_item(const item_def& item);
 // weapon functions:
 int weapon_rarity(int w_type) IMMUTABLE;
 
-bool  is_weapon_wieldable(const item_def &item, size_type size) PURE;
+bool  is_weapon_wieldable(const item_def &item, size_type size, hands_reqd_type check_hands = HANDS_TWO) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
 hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);

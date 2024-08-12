@@ -1997,6 +1997,10 @@ static bool _exoskeleton_incompatible(mutation_type mutat)
 
 bool physiology_mutation_conflict(mutation_type mutat)
 {
+    // Only changelings can shift forms at will
+    if (mutat == MUT_FORM_SHIFTER && you.species != SP_CHANGELING)
+        return true;
+
     if (mutat == MUT_IRIDESCENT_SCALES)
     {
         // No extra scales for most demonspawn, but monstrous demonspawn who

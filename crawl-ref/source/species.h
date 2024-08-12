@@ -96,6 +96,14 @@ const int MAX_DRACONIAN_BREATH = 3;
 int draconian_breath_uses_available();
 bool gain_draconian_breath_uses(int num);
 
+#define FORM_SHIFT_USES_KEY "form_shift_uses"
+#define FORM_SHIFT_USES_RECHARGE_KEY "form_shift_recharge"
+const int MAX_FORM_SHIFT = 3;
+
+int form_shift_uses_available();
+bool gain_form_shift_uses(int num);
+int max_form_shift_uses();
+
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);
 

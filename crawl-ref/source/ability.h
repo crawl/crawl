@@ -40,6 +40,7 @@ enum class abflag
     card                = 0x00004000, // deck drawing (Nemelex)
     torchlight          = 0x00008000, // costs torchlight (Yred)
     drac_charges        = 0x00010000, // consumes draconian breath charges
+    form_shift_charges  = 0x00020000, // consumes changeling form shift charges
 
     // targeting flags
     dir_or_target       = 0x10000000, // uses DIR_NONE targeting

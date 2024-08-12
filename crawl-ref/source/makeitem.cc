@@ -324,6 +324,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
 
     // Melee-only brands.
     case SPWPN_VAMPIRISM:
+    case SPWPN_FORM_ABSORB: // does not currently exist
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_SPECTRAL:

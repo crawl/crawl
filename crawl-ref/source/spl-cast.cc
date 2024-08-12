@@ -624,7 +624,7 @@ void inspect_spells()
 */
 bool can_cast_spells(bool quiet)
 {
-    if (!get_form()->can_cast)
+    if (!get_form()->get_can_cast())
     {
         if (!quiet)
             canned_msg(MSG_PRESENT_FORM);

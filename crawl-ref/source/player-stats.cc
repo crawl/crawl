@@ -47,7 +47,7 @@ int player::dex(bool nonneg) const
     return stat(STAT_DEX, nonneg);
 }
 
-static int _stat_modifier(stat_type stat, bool innate_only);
+static int _stat_modifier(stat_type stat, bool innate_only, bool no_form);
 
 /**
  * What's the player's current maximum for a stat, before ability damage is
@@ -59,9 +59,9 @@ static int _stat_modifier(stat_type stat, bool innate_only);
  * @return      The player's maximum for the given stat; capped at
  *              MAX_STAT_VALUE.
  */
-int player::max_stat(stat_type s, bool innate) const
+int player::max_stat(stat_type s, bool innate, bool no_form) const
 {
-    return min(base_stats[s] + _stat_modifier(s, innate), MAX_STAT_VALUE);
+    return min(base_stats[s] + _stat_modifier(s, innate, no_form), MAX_STAT_VALUE);
 }
 
 int player::max_strength() const
@@ -309,7 +309,7 @@ static int _get_mut_effects(stat_type which_stat, bool innate_only)
     return total;
 }
 
-static int _strength_modifier(bool innate_only)
+static int _strength_modifier(bool innate_only, bool no_form)
 {
     int result = 0;
 
@@ -330,7 +330,8 @@ static int _strength_modifier(bool innate_only)
         result += you.scan_artefacts(ARTP_STRENGTH);
 
         // form
-        result += get_form()->str_mod;
+        if (!no_form)
+            result += get_form()->get_str_mod();
     }
 
     // mutations
@@ -339,7 +340,7 @@ static int _strength_modifier(bool innate_only)
     return result;
 }
 
-static int _int_modifier(bool innate_only)
+static int _int_modifier(bool innate_only, bool no_form)
 {
     int result = 0;
 
@@ -358,6 +359,10 @@ static int _int_modifier(bool innate_only)
 
         // randarts of intelligence
         result += you.scan_artefacts(ARTP_INTELLIGENCE);
+
+        // form
+        if (!no_form)
+            result += get_form()->get_int_mod();
     }
 
     // mutations
@@ -366,7 +371,7 @@ static int _int_modifier(bool innate_only)
     return result;
 }
 
-static int _dex_modifier(bool innate_only)
+static int _dex_modifier(bool innate_only, bool no_form)
 {
     int result = 0;
 
@@ -387,7 +392,8 @@ static int _dex_modifier(bool innate_only)
         result += you.scan_artefacts(ARTP_DEXTERITY);
 
         // form
-        result += get_form()->dex_mod;
+        if (!no_form)
+            result += get_form()->get_dex_mod();
     }
 
     // mutations
@@ -420,13 +426,13 @@ bool mutation_causes_stat_zero(mutation_type mut)
         || _base_stat_with_new_mut(STAT_DEX, mut) <= 0;
 }
 
-static int _stat_modifier(stat_type stat, bool innate_only)
+static int _stat_modifier(stat_type stat, bool innate_only, bool no_form)
 {
     switch (stat)
     {
-    case STAT_STR: return _strength_modifier(innate_only);
-    case STAT_INT: return _int_modifier(innate_only);
-    case STAT_DEX: return _dex_modifier(innate_only);
+    case STAT_STR: return _strength_modifier(innate_only, no_form);
+    case STAT_INT: return _int_modifier(innate_only, no_form);
+    case STAT_DEX: return _dex_modifier(innate_only, no_form);
     default:
         mprf(MSGCH_ERROR, "Bad stat: %d", stat);
         return 0;

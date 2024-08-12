@@ -1777,6 +1777,10 @@ static string _describe_weapon_brand(const item_def &item)
     case SPWPN_VAMPIRISM:
         return "It occasionally heals its wielder for a portion "
                "of the damage dealt when it wounds a living foe.";
+    case SPWPN_FORM_ABSORB:
+        return "When striking a helpless foe, allows "
+               "the absorption of bodily energies of enemies, "
+               "recharging formshifting abilities.";
     case SPWPN_PAIN:
         {
             string desc = "In the hands of one skilled in necromantic "
@@ -2508,8 +2512,9 @@ static string _describe_talisman_form(const item_def &item, bool monster)
         if (max_contam_dam != contam_dam)
             description += make_stringf(" (max %d)", max_contam_dam);
     }
-    description += _maybe_desc_prop("Str", form->str_mod);
-    description += _maybe_desc_prop("Dex", form->dex_mod);
+    description += _maybe_desc_prop("Str", form->get_str_mod());
+    description += _maybe_desc_prop("Dex", form->get_dex_mod());
+    description += _maybe_desc_prop("Int", form->get_int_mod());
 
     if (form_type == transformation::maw)
     {

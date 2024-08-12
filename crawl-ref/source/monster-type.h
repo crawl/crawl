@@ -1270,6 +1270,7 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_PRISM,
     MONS_SOUL_WISP,
     MONS_GLOBE_OF_ANNIHILATION,
+    MONS_CHANGELING,                          // player species only
 #endif
 
     NUM_MONSTERS,               // used for polymorph

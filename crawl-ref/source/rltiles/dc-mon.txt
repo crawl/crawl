@@ -666,6 +666,7 @@ player_shadow MONS_PLAYER_SHADOW
 shadow_armataur MONS_PLAYER_SHADOW_ARMATAUR
 shadow_barachi MONS_PLAYER_SHADOW_BARACHI
 shadow_coglin MONS_PLAYER_SHADOW_COGLIN
+shadow_human MONS_PLAYER_SHADOW_CHANGELING
 shadow_demigod MONS_PLAYER_SHADOW_DEMIGOD
 shadow_demonspawn MONS_PLAYER_SHADOW_DEMONSPAWN
 shadow_djinn MONS_PLAYER_SHADOW_DJINN
@@ -746,6 +747,11 @@ halfling MONS_HALFLING
 %rim 0
 demigod MONS_DEMIGOD
 meteoran MONS_METEORAN
+
+## Human-adjacent
+%sdir mon/humanoids
+%rim 1
+changeling MONS_CHANGELING
 
 ## Angels ('A')
 %sdir mon/holy

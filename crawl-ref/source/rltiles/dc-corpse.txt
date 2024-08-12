@@ -219,6 +219,8 @@ mon/demihumanoids/entropy_weaver CORPSE_ENTROPY_WEAVER
 %sdir mon/amorphous
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
+%sdir mon/humanoids
+changeling CORPSE_CHANGELING
 
 ## Dwarves ('q')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4

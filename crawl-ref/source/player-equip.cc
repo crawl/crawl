@@ -550,6 +550,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld,
                         mpr("You feel a sense of dread.");
                     break;
 
+                case SPWPN_FORM_ABSORB:
+                    mprf("You feel your flesh ripple down your %s!", you.arm_name(true).c_str());
+                    break;
+
                 case SPWPN_PAIN:
                 {
                     const string your_arm = you.arm_name(false);
@@ -706,6 +710,10 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                     else
                         mpr("You feel the dreadful sensation subside.");
                 }
+                break;
+
+            case SPWPN_FORM_ABSORB:
+                mpr("You feel more distant from the creatures around you.");
                 break;
 
             case SPWPN_DISTORTION:

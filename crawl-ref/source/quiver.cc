@@ -449,7 +449,7 @@ namespace quiver
 
             if (!weapon)
             {
-                const auto form_verbs = get_form(you.form)->uc_attack_verbs;
+                const auto form_verbs = get_form(you.form)->get_uc_attack_verbs();
                 if (form_verbs.medium) // we use med because it mostly has better flavor
                     return form_verbs.medium;
                 else

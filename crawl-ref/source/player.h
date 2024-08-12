@@ -63,6 +63,8 @@
 
 #define SEVERE_CONTAM_LEVEL 3
 
+#define HP_PRE_TRANSFORM "hp_pre_transform"
+
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
@@ -200,6 +202,7 @@ public:
     FixedBitVector<NUM_SPELLS> spell_library;
     FixedBitVector<NUM_SPELLS> hidden_spells;
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
+    FixedVector<spell_type, MAX_KNOWN_SPELLS> form_shifted_spells;
     set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
     uint8_t spell_no;
@@ -323,7 +326,11 @@ public:
     // In other words, the spell table contains hard links and the ability
     // table contains soft links.
     FixedVector<int, 52>           spell_letter_table;   // ref to spell by slot
+    FixedVector<int, 52>           form_shifted_spell_letter_table; //  ^ ^ ^
     FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
+    // TODO: Implement this later after handling abilities with
+    // transformation::dungeon_denizen
+    // FixedVector<ability_type, 52>  form_shifted_ability_letter_table; // ref to abil by enum
 
     // Maps without allow_dup that have been already used.
     set<string> uniq_map_tags;
@@ -511,7 +518,7 @@ public:
     int strength(bool nonneg = true) const;
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;
-    int max_stat(stat_type stat, bool base = false) const;
+    int max_stat(stat_type stat, bool base = false, bool no_form = false) const;
     int max_strength() const;
     int max_intel() const;
     int max_dex() const;
@@ -907,6 +914,21 @@ public:
     void rev_up(int time_taken);
     void rev_down(int time_taken);
 
+    int get_form_shifted_monster() const;
+    void set_form_shifted_monster(monster_type mon);
+    void clear_form_shifted_monster();
+
+    int get_form_shifted_mon_stat(stat_type stat) const;
+    void set_form_shifted_mon_stat(stat_type stat, int val);
+    void clear_form_shifted_mon_stats();
+
+    int get_form_shifted_mon_spellbook() const;
+    void set_form_shifted_mon_spellbook(int mon_spellbook); // actually mon_spellbook_type
+    void clear_form_shifted_mon_spellbook();
+
+    FixedVector<spell_type, MAX_KNOWN_SPELLS> get_spells(bool innate=false) const;
+    FixedVector<int, 52> get_spell_letter_table(bool innate=false) const;
+
     bool allies_forbidden();
 
     // TODO: move this somewhere else
@@ -1124,7 +1146,7 @@ bool player_has_ears(bool temp = true);
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
-void calc_hp(bool scale = false);
+void calc_hp(bool scale = false, bool force_max_hp = false);
 void calc_mp(bool scale = false);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);

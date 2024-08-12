@@ -14,6 +14,11 @@ Coglin
 Coglins ride enchanted exoskeletons able to wield weapons in both hands,
 wrapping slow-revving metal around their puny goblinoid frames.
 %%%%
+Changeling
+
+Changelings are rarely seen, often going their entire lives shapeshifted into
+other beings. They cling to life by abandoning broken forms.
+%%%%
 Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.

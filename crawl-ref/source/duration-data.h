@@ -670,6 +670,7 @@ static const duration_def duration_data[] =
       "growing destruction", "growing destruction",
       "Your Destruction is growing increasingly wild.", D_EXPIRES,
       {{ "", _end_growing_destruction}}},
+    { DUR_DUNGEON_DENIZEN, 0, "Denizen", "", "", "", D_EXPIRES, {{""}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

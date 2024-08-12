@@ -20,23 +20,34 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning
+#include "item-def.h"
 #include "item-use.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-flags.h"      // for penalizing monster choice in dungeon_denizen
+#include "mon-mst.h"        // determine monster spellbook type
+#include "mon-pick.h"       // for picking monsters in dungeon_denizen
+#include "mon-pick-data.h"  // ^^^
+#include "mon-place.h"      // god_hates_monster for dungeon_denizen
+#include "mon-spell.h"      // get spells from monsters for dungeon_denizen
+#include "mon-util.h"
 #include "mutation.h"
 #include "output.h"
+#include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-book.h"       // for is_player_spell checks on dungeon_denizen
 #include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "tags.h"           // for mon_spell_slot
 #include "traps.h"
 #include "xom.h"
 
@@ -75,13 +86,13 @@ string Form::melding_description() const
 {
     // this is a bit rough and ready...
     // XX simplify slot melding rather than complicate this function?
-    if (blocked_slots == EQF_ALL)
+    if (get_blocked_slots() == EQF_ALL)
         return "Your equipment is entirely melded.";
-    else if (blocked_slots == EQF_PHYSICAL)
+    else if (get_blocked_slots() == EQF_PHYSICAL)
         return "Your armour is entirely melded.";
-    else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
+    else if ((get_blocked_slots() & EQF_PHYSICAL) == EQF_PHYSICAL)
         return "Your equipment is almost entirely melded.";
-    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
+    else if ((get_blocked_slots() & EQF_STATUE) == EQF_STATUE
              && (you_can_wear(EQ_GLOVES, false) != false
                  || you_can_wear(EQ_BOOTS, false) != false
                  || you_can_wear(EQ_BODY_ARMOUR, false) != false))
@@ -116,7 +127,7 @@ Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       duration(fe.duration),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
-      str_mod(fe.str_mod), dex_mod(fe.dex_mod),
+      str_mod(fe.str_mod), dex_mod(fe.dex_mod), int_mod(fe.int_mod),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
@@ -133,6 +144,7 @@ Form::Form(const form_entry &fe)
       resists(fe.resists), ac(fe.ac),
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
       can_fly(fe.can_fly), can_swim(fe.can_swim),
+      use_assumed_monster_stats(fe.use_assumed_monster_stats),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
       hp_mod(fe.hp_mod), fakemuts(fe.fakemuts), badmuts(fe.badmuts)
@@ -160,7 +172,8 @@ bool Form::slot_available(int slot) const
 
     if (slot == EQ_STAFF)
         slot = EQ_WEAPON;
-    return !(blocked_slots & SLOTF(slot));
+
+    return !(get_blocked_slots() & SLOTF(slot));
 }
 
 /**
@@ -182,7 +195,7 @@ bool Form::can_wear_item(const item_def& item) const
     }
 
     if (is_unrandom_artefact(item, UNRAND_LEAR))
-        return !(blocked_slots & EQF_LEAR); // ok if no body slots blocked
+        return !(get_blocked_slots() & EQF_LEAR); // ok if no body slots blocked
 
     const equipment_type slot = is_weapon(item) ? EQ_OFFHAND
                                                 : get_armour_slot(item);
@@ -330,11 +343,32 @@ int Form::divided_scaling(const FormScaling &sc, bool random,
  */
 int Form::get_ac_bonus(bool get_max) const
 {
+    if (use_assumed_monster_stats && transform_mons() != MONS_PROGRAM_BUG)
+        return get_mons_class_ac(transform_mons()) * 100;
     return max(0, scaling_value(ac, false, get_max, 100));
 }
 
 int Form::get_base_unarmed_damage(bool random, bool get_max) const
 {
+    if (use_assumed_monster_stats && transform_mons() != MONS_PROGRAM_BUG)
+    {
+        monsterentry *me = get_monster_data(transform_mons());
+        if (me)
+        {
+            int final_damage = 0;
+            int attack_count = 0;
+            for (int i = 0; i < MAX_NUM_ATTACKS; i++)
+            {
+                if (me->attack[i].type == AT_NONE)
+                    continue;
+                final_damage += me->attack[i].damage;
+                attack_count++;
+            }
+            if (attack_count)
+                return max(3, final_damage / 2);  // UC is too high otherwise
+            return 3;
+        }
+    }
     // All forms start with base 3 UC damage.
     return 3 + max(0, divided_scaling(unarmed_bonus_dam, random, get_max, 100));
 }
@@ -386,7 +420,13 @@ string Form::get_uc_attack_name(string default_name) const
  */
 int Form::res_fire() const
 {
-    return get_resist(resists, MR_RES_FIRE);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_FIRE
+    );
 }
 
 /**
@@ -394,7 +434,13 @@ int Form::res_fire() const
  */
 int Form::res_cold() const
 {
-    return get_resist(resists, MR_RES_COLD);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_COLD
+    );
 }
 
 /**
@@ -402,7 +448,13 @@ int Form::res_cold() const
  */
 int Form::res_neg() const
 {
-    return get_resist(resists, MR_RES_NEG);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_NEG
+    );
 }
 
 /**
@@ -410,7 +462,13 @@ int Form::res_neg() const
  */
 bool Form::res_elec() const
 {
-    return get_resist(resists, MR_RES_ELEC);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_ELEC
+    );
 }
 
 /**
@@ -418,7 +476,13 @@ bool Form::res_elec() const
  */
 int Form::res_pois() const
 {
-    return get_resist(resists, MR_RES_POISON);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_POISON
+    );
 }
 
 /**
@@ -426,7 +490,13 @@ int Form::res_pois() const
  */
 bool Form::res_miasma() const
 {
-    return get_resist(resists, MR_RES_MIASMA);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_MIASMA
+    );
 }
 
 /**
@@ -434,7 +504,13 @@ bool Form::res_miasma() const
  */
 bool Form::res_acid() const
 {
-    return get_resist(resists, MR_RES_ACID);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_ACID
+    );
 }
 
 /**
@@ -442,9 +518,14 @@ bool Form::res_acid() const
  */
 bool Form::res_petrify() const
 {
-    return get_resist(resists, MR_RES_PETRIFY);
+    return get_resist
+    (
+        use_assumed_monster_stats
+        ? get_mons_class_resists(transform_mons())
+        : resists,
+        MR_RES_PETRIFY
+    );
 }
-
 
 /**
  * Does this form enable flight?
@@ -454,7 +535,11 @@ bool Form::res_petrify() const
  */
 bool Form::enables_flight() const
 {
-    return can_fly == FC_ENABLE;
+    return (
+      use_assumed_monster_stats
+        ? monster_class_flies(transform_mons())
+        : can_fly == FC_ENABLE
+    );
 }
 
 /**
@@ -489,13 +574,18 @@ bool Form::player_can_fly() const
 bool Form::player_can_swim() const
 {
     // XX this is kind of a mess w.r.t. player::can_swim
-    const size_type player_size = size == SIZE_CHARACTER ?
+    const size_type player_size = get_size() == SIZE_CHARACTER ?
                                           you.body_size(PSIZE_BODY, true) :
-                                          size;
-    return can_swim == FC_ENABLE
+                                          get_size();
+
+    return (
+      use_assumed_monster_stats
+        ? mons_habitat_type(transform_mons(), transform_mons()) == HT_AMPHIBIOUS
+        :  can_swim == FC_ENABLE
            || species::can_swim(you.species)
               && can_swim != FC_FORBID
-           || player_size >= SIZE_GIANT;
+           || player_size >= SIZE_GIANT
+    );
 }
 
 /**
@@ -507,7 +597,7 @@ bool Form::player_can_swim() const
  */
 bool Form::all_blocked(int slotflags) const
 {
-    return slotflags == (blocked_slots & slotflags);
+    return slotflags == (get_blocked_slots() & slotflags);
 }
 
 /**
@@ -1093,6 +1183,491 @@ public:
     }
 };
 
+class FormDungeonDenizen : public Form
+{
+private:
+    FormDungeonDenizen() : Form(transformation::dungeon_denizen) { }
+    DISALLOW_COPY_AND_ASSIGN(FormDungeonDenizen);
+
+    static bool _dungeon_denizen_veto_mon(monster_type mon)
+    {
+        return (
+            mons_class_hit_dice(mon) > you.get_hit_dice()
+            || mons_class_is_stationary(mon)
+            || !mons_class_can_be_spectralised(mon)
+            || mons_class_is_draconic(mon)  // Right now you just turn into
+            // disembodied floating monk armor if you hit MONS_DRACONIAN_MONK
+            || god_hates_monster(mon)  // TODO: needs testing
+            || mon == MONS_HYDRA  // We had this before in Hydra Form
+            || mon == MONS_UGLY_THING  // Ugly things need additional
+            || mon == MONS_VERY_UGLY_THING  // logic support to work
+        );
+    }
+
+#define STAT_MAP unordered_map<stat_type, int>
+
+    // We cache these stats only when also calling you.set_form_shifted_monster()
+    STAT_MAP _all_stat_mods_for_monster_type(monster_type mt, int scale = 1) const
+    {
+        // This map and this function use statsx100 for precision
+        STAT_MAP stat_map = {
+            {STAT_STR, you.get_form_shifted_mon_stat(STAT_STR)},
+            {STAT_DEX, you.get_form_shifted_mon_stat(STAT_DEX)},
+            {STAT_INT, you.get_form_shifted_mon_stat(STAT_INT)}
+        };
+
+        if (you.get_form_shifted_monster() == mt)
+            return stat_map;
+
+        monsterentry *me = get_monster_data(mt);
+        bool is_fighter = static_cast<bool>(me->bitfields & M_FIGHTER);
+        bool is_archer = static_cast<bool>(me->bitfields & M_ARCHER);
+        bool is_caster = me->sec != MST_NO_SPELLS;
+
+        mon_intel_type mon_intel = mons_class_intel(mt);
+        bool is_brainless = mon_intel == I_BRAINLESS;
+        bool is_animal = mon_intel == I_ANIMAL;
+        bool is_human = mon_intel == I_HUMAN;
+
+        mon_itemuse_type mon_use_item = mons_class_itemuse(mt);
+        bool is_door_opener = mon_use_item == MONUSE_OPEN_DOORS;
+        bool is_use_weapon_armor = mon_use_item == MONUSE_WEAPONS_ARMOUR;
+        bool is_use_start_equip = mon_use_item == MONUSE_STARTING_EQUIPMENT;
+
+        int mon_ev = get_mons_class_ev(mt);
+        int mon_speed = mons_class_base_speed(mt);
+
+        size_type size = mons_class_body_size(mt);
+        int hd = me->HD;
+        int shapeshifting_level = you.skill(SK_SHAPESHIFTING);
+
+        STAT_MAP scaled_stat_map;
+        // Calculate strength
+        stat_map[STAT_STR] = 100 * 2 * (size - SIZE_MEDIUM);
+        if (is_fighter)
+            stat_map[STAT_STR] += 100 * hd;
+        if (is_use_weapon_armor || is_use_start_equip)
+            stat_map[STAT_STR] += 100 * hd / 3;
+        if (is_caster)
+            stat_map[STAT_STR] += 100 * -hd / 2;
+        if (is_animal)
+            stat_map[STAT_STR] += 100 * hd / 2;
+        stat_map[STAT_STR] =
+        stat_map[STAT_STR] = max(
+            scale * -(500 - (shapeshifting_level << 4)) / 100,
+            scale * stat_map[STAT_STR] / 100
+        );
+
+        // Calculate dexterity
+        stat_map[STAT_DEX] = 100 * 2 * (SIZE_MEDIUM - size);
+        stat_map[STAT_DEX] += 100 * (mon_speed - 10);
+        stat_map[STAT_DEX] += 100 * (mon_ev - 10);
+        if (is_fighter)
+            stat_map[STAT_DEX] += 100 * hd / 2;
+        if (is_archer)
+            stat_map[STAT_DEX] += 100 * hd;
+        if (is_caster || is_brainless) // too spellfocused or dumb?
+            stat_map[STAT_DEX] += 100 * -hd / 2;
+        if (is_door_opener)
+            stat_map[STAT_DEX] += 100 * hd / 4;
+        if (is_animal)
+            stat_map[STAT_DEX] += 100 * hd;
+        stat_map[STAT_DEX] = max(
+            scale * -(500 - (shapeshifting_level << 4)) / 100,
+            scale * stat_map[STAT_DEX] / 100
+        );
+
+        // Calculate intelligence
+        stat_map[STAT_INT] = 0;
+        if (is_fighter)
+            stat_map[STAT_INT] += 100 * -hd / 2;
+        if (is_caster)
+            stat_map[STAT_INT] += 100 * hd / 2;
+        if (is_animal)
+            stat_map[STAT_INT] += 100 * -hd;
+        else if (is_human)
+            stat_map[STAT_INT] += 100 * hd / 2;
+        stat_map[STAT_INT] = max(
+            scale * -(500 - (shapeshifting_level << 4)) / 100,
+            scale * stat_map[STAT_INT] / 100
+        );
+
+        return stat_map;
+    }
+
+    int _stat_mod_for_monster_type(stat_type stat, monster_type mt, int scale = 1) const
+    {
+        if (you.get_form_shifted_monster() == mt)
+            return you.get_form_shifted_mon_stat(stat);
+
+        return _all_stat_mods_for_monster_type(mt, scale).count(stat) ?
+               _all_stat_mods_for_monster_type(mt, scale)[stat] :
+               0;
+    }
+
+    /**
+     * Get a penalty for a given monster based on player progression and monster
+     * characteristics. Higher values are more extreme penalties, while lower
+     * increases their pick chances.
+     *
+     * @return  An int representing the penalty (or boost) to pick a monster.
+     */
+    int _monster_weight_penalty(monster_type mon, int scale = 1) const
+    {
+        int penalty = 0; // Operating off of 100 until the final return
+
+        // Turning off true... but this could be bad :p
+        int player_str = you.max_stat(STAT_STR, false, true) * 100;
+        int player_dex = you.max_stat(STAT_DEX, false, true) * 100;;
+        int player_int = you.max_stat(STAT_INT, false, true) * 100;;
+
+        stat_type player_favored_stat = (
+            player_str >= player_dex + 500 && player_str >= player_int + 500 ?
+            STAT_STR :
+            player_dex >= player_str + 500 && player_dex >= player_int + 500 ?
+            STAT_DEX :
+            player_int >= player_str + 500 && player_int >= player_dex + 500 ?
+            STAT_INT :
+            STAT_ALL
+        );
+
+        // Get modifications if we were to assume this monster form
+        STAT_MAP mon_stats = _all_stat_mods_for_monster_type(mon, 100);
+        int* mon_str = &mon_stats[STAT_STR];
+        int* mon_dex = &mon_stats[STAT_DEX];
+        int* mon_int = &mon_stats[STAT_INT];
+
+        stat_type mon_favored_stat = (
+            mon_str >= mon_dex + 500 && mon_str >= mon_int + 500 ?
+            STAT_STR :
+            mon_dex >= mon_str + 500 && mon_dex >= mon_int + 500 ?
+            STAT_DEX :
+            mon_int >= mon_str + 500 && mon_int >= mon_dex + 500 ?
+            STAT_INT :
+            STAT_ALL
+        );
+
+        // TODO: Use equipped weapon(s) and gear to also nudge weights
+        // to favor matching the playstyle of the player
+        // E.g., Spellbooks matching trained magic, daggers for DEX wielders
+        // Big weapon dudes for club guys, etc
+        if (player_favored_stat == mon_favored_stat)
+            penalty += -you.skill(SK_SHAPESHIFTING);
+
+        return scale * penalty / 100;
+    }
+
+    int _pick_monster_weight(monster_type mon, int highest_mon_hd_seen) const
+    {
+        int hd_cap = min(highest_mon_hd_seen, you.experience_level);
+        // Use a cumulative distribution function to adjust monster weights
+        // See chart at https://www.desmos.com/calculator/f2kyqadkpw
+        int calc_mon_weight =
+            static_cast<int>(static_cast<double>(-100) *
+            atan(
+              (100 * (hd_cap - mons_class_hit_dice(mon)) + _monster_weight_penalty(mon, 100)) /
+              static_cast<double>((100*(36-you.skill(SK_SHAPESHIFTING)))/900)
+            )
+            + 100);
+
+        // Regardless of penalties or boosts, the highest weight should be 100
+        return min(100, max(1, calc_mon_weight));
+    }
+
+public:
+    static const FormDungeonDenizen &instance() { static FormDungeonDenizen inst; return inst; }
+
+    reach_type get_reach_range() const override
+    {
+        monster_type mt = transform_mons();
+        if (mt != MONS_PROGRAM_BUG)
+            return mons_class_innate_reach(mt);
+        return REACH_NONE;
+    }
+
+    int get_str_mod() const override
+    {
+        monster_type mt = transform_mons();
+        if (mt != MONS_PROGRAM_BUG)
+            return _stat_mod_for_monster_type(STAT_STR, mt, 1);
+        return str_mod;
+    }
+
+    int get_dex_mod() const override
+    {
+        monster_type mt = transform_mons();
+        if (mt != MONS_PROGRAM_BUG)
+            return _stat_mod_for_monster_type(STAT_DEX, mt, 1);
+        return dex_mod;
+    }
+
+    int get_int_mod() const override
+    {
+        monster_type mt = transform_mons();
+        if (mt != MONS_PROGRAM_BUG)
+            return _stat_mod_for_monster_type(STAT_INT, mt, 1);
+        return int_mod;
+    }
+
+    bool get_can_cast() const override
+    {
+        if (transform_mons() != MONS_PROGRAM_BUG)
+        {
+            // TODO: Figure out how to support draconians with breath but no
+            // spells (MONS_DRACONIAN_MONK)?
+            return get_monster_data(transform_mons())->sec != MST_NO_SPELLS;
+        }
+        return can_cast;
+    }
+
+    size_type get_size() const override
+    {
+        if (transform_mons() != MONS_PROGRAM_BUG)
+            return mons_class_body_size(transform_mons());
+        return size;
+    }
+
+    int ev_bonus(bool /*get_max*/) const override
+    {
+        if (transform_mons() != MONS_PROGRAM_BUG)
+            return get_mons_class_ev(transform_mons());
+        return 4;
+    }
+
+    int get_blocked_slots() const override
+    {
+        // Dungeon denizens do not have any jewellery available to them
+        int blocked = EQF_RINGS | EQF_AMULETS;
+        monster_type mt = transform_mons();
+        if (mt != MONS_PROGRAM_BUG)
+            if (mons_class_itemuse(mt) == MONUSE_WEAPONS_ARMOUR
+             || mons_class_itemuse(mt) == MONUSE_STARTING_EQUIPMENT)
+            {
+                switch (get_mon_shape(mt))
+                {
+                case MON_SHAPE_CENTAUR:
+                case MON_SHAPE_NAGA:
+                    blocked |= SLOTF(EQ_BOOTS);
+                    break;
+
+                default:
+                    break;
+                }
+            }
+            else
+                blocked = EQF_ALL;
+
+        return blocked;
+    }
+
+    attack_type get_attk_type(int attack_number) const override
+    {
+        if (transform_mons() != MONS_PROGRAM_BUG)
+        {
+            monsterentry *me = get_monster_data(transform_mons());
+            if (me)
+                return me->attack[attack_number].type;
+        }
+        return AT_NONE;
+    }
+
+    attack_flavour get_attk_flavour(int attack_number) const override
+    {
+        if (transform_mons() != MONS_PROGRAM_BUG)
+        {
+            monsterentry *me = get_monster_data(transform_mons());
+            if (me)
+                return me->attack[attack_number].flavour;
+        }
+        return AF_PLAIN;
+    }
+
+    // TODO: Add 'hand' equivalents so we don't say as an alligator:
+    // "You tail-slapped the slime. Your hands burn!"
+    FormAttackVerbs get_uc_attack_verbs(int attack_number) const override
+    {
+        if (transform_mons() != MONS_PROGRAM_BUG)
+        {
+            string attack_name = mon_attack_name(get_attk_type(attack_number));
+            return FormAttackVerbs(attack_name.c_str());
+        }
+        return uc_attack_verbs;
+
+    }
+
+    // TODO: Consider not using this and just rely on the function
+    // 'melee_attack::mons_apply_attack_flavour' to properly apply
+    // hit effects based on monster actions
+    brand_type get_uc_brand() const override
+    {
+        return SPWPN_NORMAL; // Short-circuit this for now while AF_* gets
+                             // figured out
+
+        if (transform_mons() != MONS_PROGRAM_BUG)
+        {
+            monsterentry *me = get_monster_data(transform_mons());
+            if (me)
+            {
+                switch (me->attack[0].flavour)
+                {
+                    case AF_ACID:
+                    case AF_CORRODE:
+                        return SPWPN_ACID;
+                        break;
+                    case AF_COLD:
+                        return SPWPN_FREEZING;
+                        break;
+                    case AF_CONFUSE:
+                        return SPWPN_CONFUSE;
+                        break;
+                    case AF_DRAIN_STR:
+                    case AF_DRAIN_INT:
+                    case AF_DRAIN_DEX:
+                    case AF_DRAIN_STAT:
+                    case AF_DRAIN_SPEED:
+                    case AF_DRAIN:
+                        return SPWPN_DRAINING;
+                        break;
+                    case AF_ELEC:
+                        return SPWPN_ELECTROCUTION;
+                        break;
+                    case AF_FIRE:
+                    case AF_FIREBRAND:
+                    case AF_STICKY_FLAME:
+                    case AF_SEAR:
+                        return SPWPN_FLAMING;
+                        break;
+                    case AF_POISON_PARALYSE:
+                    case AF_POISON_NASTY:
+                    case AF_POISON_MEDIUM:
+                    case AF_POISON_STRONG:
+                    case AF_POISON_STR:
+                    case AF_POISON_INT:
+                    case AF_POISON_DEX:
+                    case AF_POISON_STAT:
+                    case AF_POISON:
+                        return SPWPN_VENOM;
+                        break;
+                    case AF_ROT:
+                        return SPWPN_PAIN;
+                        break;
+                    case AF_VAMPIRIC:
+                        return SPWPN_VAMPIRISM;
+                        break;
+                    case AF_KLOWN:
+                    case AF_CHAOTIC:
+                        return SPWPN_CHAOS;
+                        break;
+                    case AF_DISTORT:
+                        return SPWPN_DISTORTION;
+                        break;
+                    case AF_REACH_STING:
+                    case AF_REACH_TONGUE:
+                    case AF_REACH:
+                        return SPWPN_REACHING;
+                        break;
+                    case AF_HOLY:
+                        return SPWPN_HOLY_WRATH;
+                        break;
+                    case AF_ANTIMAGIC:
+                        return SPWPN_ANTIMAGIC;
+                        break;
+                    case AF_PAIN:
+                        return SPWPN_PAIN;
+                        break;
+                    case AF_VULN:
+                        return SPWPN_VULNERABILITY;
+                        break;
+                    case AF_WEAKNESS:
+                        return SPWPN_WEAKNESS;
+                        break;
+                    case AF_RIFT:
+                        return SPWPN_DISTORTION;
+                        break;
+                    case AF_FOUL_FLAME:
+                        return SPWPN_FOUL_FLAME;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get a monster type corresponding to the player branch and values.
+     *
+     * @return  A monster type corresponding to the player's location and values.
+     */
+    monster_type get_equivalent_mons() const override
+    {
+        // TODO: Look at phantom mirror mechanics and consider targeting a foe to turn into
+        // TODO: Consider assigning a random monster family to changelings
+        // on start that they thereafter like to transform into.
+        if (you.get_form_shifted_monster() != MONS_PROGRAM_BUG)
+            return static_cast<monster_type>(you.get_form_shifted_monster());
+
+        monster_type cur_mon = MONS_PROGRAM_BUG;
+
+        // Choose from among all available local monsters
+        int highest_hd_seen = -1;
+        unordered_set<monster_type> valid_monsters;
+
+        for (auto i : population[you.where_are_you])
+        {
+            if (!valid_monsters.count(i.value) && !_dungeon_denizen_veto_mon(i.value))
+            {
+                highest_hd_seen = max(highest_hd_seen, mons_class_hit_dice(i.value));
+                valid_monsters.insert(i.value);
+            }
+        }
+
+        vector<pair<monster_type, int> > monster_weights(valid_monsters.size());
+        size_t j = 0;
+        for (monster_type mt : valid_monsters)
+        {
+            int mon_weight = _pick_monster_weight(mt, highest_hd_seen);
+            monster_weights[j++] = pair<monster_type, int>(mt, mon_weight);
+        }
+
+        // TODO: Make this more secure? If monster_weights gets messed up
+        // someone could inject new monster data or corrupt this assignment
+        if (!monster_weights.empty())
+            cur_mon = *random_choose_weighted(monster_weights);
+
+        if (cur_mon == MONS_PROGRAM_BUG)
+        {
+          mprf(MSGCH_DANGER, "You feel inept as you fail to grasp the form of the monsters here. The Abyss invades your mind while shifting!");
+          int xl = you.experience_level;
+          int sk_sh_lv = you.skill(SK_SHAPESHIFTING);
+          cur_mon = random_choose_weighted(
+                                       90 - xl - sk_sh_lv, MONS_UNSEEN_HORROR,
+                                       10 + xl + sk_sh_lv, MONS_THRASHING_HORROR,
+                                       10, MONS_SPATIAL_VORTEX,
+                                       3, MONS_SPATIAL_MAELSTROM,
+                                       3, MONS_LURKING_HORROR,
+                                       1, MONS_NAMELESS);
+        }
+
+        // Call set_form_shifted_monster after other setters, so we don't start
+        // fetching cur_mon based stats before we're actually ready
+        STAT_MAP cur_mon_mod = _all_stat_mods_for_monster_type(cur_mon, 100);
+        for (auto const& i : cur_mon_mod)
+            you.set_form_shifted_mon_stat(i.first, i.second / 100);
+        you.set_form_shifted_monster(cur_mon);
+        return cur_mon;
+    }
+
+    /**
+     * Get a string describing the form you're turning into. (If not the same
+     * as the one used to describe this form in @.
+     */
+    string get_transform_description() const override { return make_stringf("a %s.", mons_class_name(get_equivalent_mons())); }
+
+    string get_untransform_message() const override { return "You feel less connected to this place."; }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1130,6 +1705,7 @@ static const Form* forms[] =
     &FormMaw::instance(),
     &FormFlux::instance(),
     &FormSlaughter::instance(),
+    &FormDungeonDenizen::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1147,7 +1723,6 @@ const Form* cur_form(bool temp)
     return get_form(you.default_form);
 }
 
-
 /**
  * Get the wizmode name of a form.
  *
@@ -1161,6 +1736,7 @@ const char* transform_name(transformation form)
 
 /**
  * Can the player (w)ield weapons when in the given form?
+ * Does not use for checking 2-handedness or size for wielding
  *
  * @param form      The form in question.
  * @return          Whether the player can wield items when in that form.
@@ -1178,7 +1754,7 @@ bool form_can_wield(transformation form)
  */
 bool form_can_wear(transformation form)
 {
-    return !testbits(get_form(form)->blocked_slots, EQF_WEAR);
+    return !testbits(get_form(form)->get_blocked_slots(), EQF_WEAR);
 }
 
 /**
@@ -1314,13 +1890,42 @@ bool form_has_ears(transformation form)
 static set<equipment_type>
 _init_equipment_removal(transformation form)
 {
+    // dungeon_denizen is special and needs the form active for equipment
+    // management logic to work correctly (otherwise we use MONS_PLAYER
+    // instead of the right psuedo-random monster)
+    transformation old_form = you.form;
+    if (form == transformation::dungeon_denizen)
+        you.form = form;
+
+    // TODO: I died as an efreet and kept my giant club, lol
+    // Needs to look at min_2h_size and min_1h_size from
+    // item-prop and compare to is_weapon_wieldable
+
+    size_type new_size = get_form(form)->get_size();
+    if (new_size == SIZE_CHARACTER)
+        new_size = species::size(you.species, PSIZE_TORSO);
+
+    const item_def *weapon = you.slot_item(EQ_WEAPON, true);
+    bool offhand_taken = you.slot_item(EQ_OFFHAND, true) ? true : false;
+    hands_reqd_type available_hands = offhand_taken ? HANDS_ONE : HANDS_TWO;
+
     set<equipment_type> result;
-    if (!form_can_wield(form))
+
+    // If there's already a weapon melded, add it to the list!
+    if (you.melded[EQ_WEAPON])
+        result.insert(EQ_WEAPON);
+    // If we can't wield a weapon, merge weapons AND offhands!
+    else if (!form_can_wield(form))
     {
-        if (you.weapon() || you.melded[EQ_WEAPON])
+        if (you.weapon())
             result.insert(EQ_WEAPON);
-        if (you.offhand_weapon() || you.melded[EQ_OFFHAND])
-            result.insert(EQ_OFFHAND); // ^ dubious!
+        if (offhand_taken)
+            result.insert(EQ_OFFHAND);
+    // Lastly, merge any weapon that won't fit the given form
+    } else {
+        if (weapon && !is_weapon_wieldable(
+                *weapon, new_size, available_hands))
+            result.insert(EQ_WEAPON);
     }
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
@@ -1330,13 +1935,53 @@ _init_equipment_removal(transformation form)
         const equipment_type eq = static_cast<equipment_type>(i);
         const item_def *pitem = you.slot_item(eq, true);
 
-        if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
-                      || (i != EQ_RING_AMULET && i != EQ_GIZMO
-                          && !get_form(form)->can_wear_item(*pitem))))
+        // Check the item exists
+        if (pitem)
         {
-            result.insert(eq);
+            // If item already melded, add it to the list!
+            if (you.melded[eq])
+            {
+                result.insert(eq);
+                continue;
+            }
+
+            // Check for blocked slots
+            if(!get_form(form)->can_wear_item(*pitem))
+            {
+                result.insert(eq);
+                continue;
+            }
+
+            // If the slot isn't blocked, but something else can affect wear
+            else
+            {
+                // Don't merge special cases (ring amulet and gizmo)
+                if (i == EQ_RING_AMULET || i == EQ_GIZMO)
+                    continue;
+
+                // Check that your offhand item (orbs and shields) fits and
+                // that your main weapon doesn't take up two hands
+                if ((item_is_orb(*pitem) ||
+                    (is_shield(*pitem)) && check_armour_size(*pitem, new_size))
+                    && (weapon && you.hands_reqd(*weapon) == HANDS_TWO))
+                {
+                    result.insert(eq);
+                    continue;
+                }
+
+                // Check that any remaining armor is wieldable
+                // Check any remaining armor that is wieldable but not our size
+                // TODO: Figure out why ettins are wearing hats smaller than their heads
+                if (pitem->base_type == OBJ_ARMOUR && !check_armour_size(*pitem, new_size))
+                {
+                    result.insert(eq);
+                    continue;
+                }
+            }
         }
     }
+
+    you.form = old_form;
     return result;
 }
 
@@ -1344,6 +1989,14 @@ static void _remove_equipment(const set<equipment_type>& removed,
                               transformation form,
                               bool meld = true, bool mutation = false)
 {
+    size_type new_size = get_form(form)->get_size();
+    if (new_size == SIZE_CHARACTER)
+        new_size = species::size(you.species, PSIZE_TORSO);
+
+    const item_def *weapon = you.slot_item(EQ_WEAPON, true);
+    bool offhand_taken = you.slot_item(EQ_OFFHAND, true) ? true : false;
+    hands_reqd_type available_hands = offhand_taken ? HANDS_ONE : HANDS_TWO;
+
     // Meld items into you in (reverse) order. (set is a sorted container)
     for (const equipment_type e : removed)
     {
@@ -1352,12 +2005,40 @@ static void _remove_equipment(const set<equipment_type>& removed,
             continue;
 
         bool unequip = !meld;
-        if (!unequip && e == EQ_WEAPON)
+        if (meld)
         {
-            if (form_can_wield(form))
-                unequip = true;
-            if (!is_weapon(*equip))
-                unequip = true;
+            if (e == EQ_WEAPON)
+            {
+                // Is this a rod or other non-traditional weapon slot item?
+                if (!is_weapon(*equip))
+                    unequip = true;
+
+                // Could we normally wield this, but can't due to size?
+                else if (form_can_wield(form) && !is_weapon_wieldable(
+                        *equip, new_size, available_hands))
+                {
+                    unequip = true;
+                }
+            }
+            else
+            {
+                // Check that your offhand item (orbs and shields) fits and
+                // that your main weapon doesn't take up two hands
+                if ((item_is_orb(*equip) ||
+                    (is_shield(*equip)) && check_armour_size(*equip, new_size))
+                     && (weapon && you.hands_reqd(*weapon) == HANDS_TWO))
+                {
+                    unequip = true;
+                }
+
+                // Check any remaining armor that is wieldable but not our size
+                else if (get_form(form)->can_wear_item(*equip) &&
+                        equip->base_type == OBJ_ARMOUR &&
+                        !check_armour_size(*equip, new_size))
+                {
+                    unequip = true;
+                }
+            }
         }
 
         const string msg = make_stringf("%s %s%s %s",
@@ -1407,10 +2088,23 @@ static void _unmeld_equipment_type(equipment_type e)
     item_def& item = you.inv[you.equip[e]];
     bool force_remove = false;
 
+    size_type cur_size = cur_form(true)->get_size();
+    if (cur_size == SIZE_CHARACTER)
+        cur_size = species::size(you.species, PSIZE_TORSO);
+
+    const item_def *weapon = you.slot_item(EQ_WEAPON, true);
+    bool offhand_taken = you.slot_item(EQ_OFFHAND, true) ? true : false;
+    hands_reqd_type available_hands = offhand_taken ? HANDS_ONE : HANDS_TWO;
+
     if (e == EQ_WEAPON)
     {
-        if (you.slot_item(EQ_OFFHAND)
-            && is_shield_incompatible(item, you.slot_item(EQ_OFFHAND)))
+        if (
+            // Size is too small/big for the weapon
+            !is_weapon_wieldable(
+                item, cur_size, available_hands)
+            // Shield is incompatible
+            || (you.slot_item(EQ_OFFHAND)
+                && is_shield_incompatible(item, you.slot_item(EQ_OFFHAND))))
         {
             force_remove = true;
         }
@@ -1425,8 +2119,8 @@ static void _unmeld_equipment_type(equipment_type e)
         // sure you can still wear your shield.
         // (This is only possible with Statue Form.)
         if (e == EQ_OFFHAND
-            && you.weapon()
-            && is_shield_incompatible(*you.weapon(), &item))
+            && weapon
+            && is_shield_incompatible(*weapon, &item))
         {
             force_remove = true;
         }
@@ -1614,12 +2308,17 @@ bool feat_dangerous_for_form(transformation which_trans,
  */
 bool check_form_stat_safety(transformation new_form, bool quiet)
 {
-    const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
-    const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
+    // For now, dungeon denizen form can cause many stat changes, so we don't
+    // cover that here
+
+    const int str_mod = get_form(new_form)->get_str_mod() - get_form()->get_str_mod();
+    const int dex_mod = get_form(new_form)->get_dex_mod() - get_form()->get_dex_mod();
+    const int int_mod = get_form(new_form)->get_int_mod() - get_form()->get_int_mod();
 
     const bool bad_str = you.strength() > 0 && str_mod + you.strength() <= 0;
     const bool bad_dex = you.dex() > 0 && dex_mod + you.dex() <= 0;
-    if (!bad_str && !bad_dex)
+    const bool bad_int = you.intel() > 0 && int_mod + you.intel() <= 0;
+    if (!bad_str && !bad_dex && !bad_int)
         return true;
     if (quiet)
         return false;
@@ -1628,7 +2327,9 @@ bool check_form_stat_safety(transformation new_form, bool quiet)
                                  new_form == transformation::none
                                      ? "Turning back"
                                      : "Transforming",
-                                 bad_str ? "strength" : "dexterity");
+                                 bad_str ? "strength" :
+                                 bad_dex ? "dexterity" :
+                              /**bad_int*/ "intelligence");
     if (yesno(prompt.c_str(), false, 'n'))
         return true;
 
@@ -1692,6 +2393,9 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
 string cant_transform_reason(transformation which_trans,
                              bool involuntary, bool temp)
 {
+    if (you.form == transformation::dungeon_denizen && !involuntary)
+        return "You can't shift again while in the form of a local creature!";
+
     if (!involuntary && you.has_mutation(MUT_NO_FORMS))
         return "You have sacrificed the ability to change form!";
 
@@ -1809,6 +2513,9 @@ static void _on_enter_form(transformation which_trans)
         }
         break;
 
+    case transformation::dungeon_denizen:
+        break;
+
     default:
         break;
     }
@@ -1818,11 +2525,23 @@ void set_form(transformation which_trans, int dur)
 {
     const transformation old_form = you.form;
     you.form = which_trans;
+
+    const bool entering_dungeon_denizen = transformation::dungeon_denizen == which_trans;
+    const bool leaving_dungeon_denizen = transformation::dungeon_denizen == old_form;
+
+    if (entering_dungeon_denizen)
+    {
+        // Doing a single call here to let DungeonDenizen populate its
+        // selected monster of choice
+        transform_mons();
+    }
+
     you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
     update_player_symbol();
 
-    const int str_mod = get_form(which_trans)->str_mod;
-    const int dex_mod = get_form(which_trans)->dex_mod;
+    const int str_mod = get_form(which_trans)->get_str_mod();
+    const int dex_mod = get_form(which_trans)->get_dex_mod();
+    const int int_mod = get_form(which_trans)->get_int_mod();
 
     if (str_mod)
         notify_stat_change(STAT_STR, str_mod, true);
@@ -1830,23 +2549,68 @@ void set_form(transformation which_trans, int dur)
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
+    if (int_mod)
+        notify_stat_change(STAT_INT, int_mod, true);
+
     // Don't scale HP when going from nudity to a talisman form
     // or vice versa. This is to discourage regenerating in a -90%
     // underskilled talisman form and scaling back up to full, or
     // leaving a +HP form to regen.
     // Do scale HP when entering or leaving eg tree form, regardless
     // of whether you're going from a talisman form or not.
+    //
+    // Dungeon denizen form is special, in that it doesn't change the
+    // default form of the player (we can be polymorphed back to default
+    // form). Handle that accordingly.
     const bool leaving_default = you.default_form == old_form
                                  && which_trans == transformation::none;
     const bool entering_default = you.default_form == which_trans
                                  && old_form == transformation::none;
     const bool scale_hp = !entering_default && !leaving_default;
-    calc_hp(scale_hp);
 
-    you.redraw_evasion      = true;
-    you.redraw_armour_class = true;
-    you.wield_change        = true;
-    quiver::set_needs_redraw();
+    // Transforming into a dungeon denizen doesn't need scaling and requires
+    // settings lots of values, so skip that here (do it later)
+    if (entering_dungeon_denizen)
+        calc_hp(false, true);
+    else
+        calc_hp(scale_hp);
+
+    // Going to and from dungeon denizens require a lot of redraws, since we're
+    // changing a lot each time
+    if (entering_dungeon_denizen || leaving_dungeon_denizen)
+    {
+        if (leaving_dungeon_denizen)
+        {
+            you.hp = you.props[HP_PRE_TRANSFORM].get_int();
+            you.clear_form_shifted_monster();
+        }
+        calc_mp(true);
+#ifdef USE_TILE
+        init_player_doll();
+#endif
+        you.redraw_stats.init(true);
+        you.redraw_hit_points    = true;
+        you.redraw_magic_points  = true;
+        you.redraw_armour_class  = true;
+        you.redraw_evasion       = true;
+        you.wield_change         = true;
+        you.gear_change          = true;
+        you.redraw_quiver        = true;
+        quiver::on_actions_changed();
+#ifdef USE_TILE_LOCAL
+        tiles.layout_statcol();
+        redraw_screen();
+        update_screen();
+#endif
+    }
+    else
+    {
+        you.redraw_evasion      = true;
+        you.redraw_armour_class = true;
+        you.wield_change        = true;
+        // TODO: Add whatever needs a redraw on intelligence changes
+        quiver::set_needs_redraw();
+    }
 }
 
 static void _enter_form(int pow, transformation which_trans, bool was_flying)
@@ -2021,23 +2785,46 @@ void untransform(bool skip_move)
     if (!form_can_wield(old_form))
         you.received_weapon_warning = false;
 
-    // We may have to unmeld a couple of equipment types.
-    set<equipment_type> melded = _init_equipment_removal(old_form);
+    set<equipment_type> melded;
+
+    // dungeon_denizen is special and needs the form active for equipment
+    // management logic to work correctly (otherwise we use MONS_PLAYER
+    // instead of the right psuedo-random monster)
+    if (you.form == transformation::dungeon_denizen)
+    {
+        you.form = transformation::none;
+        // We may have to unmeld a couple of equipment types.
+        melded = _init_equipment_removal(
+            transformation::none
+        );
+        you.form = old_form;
+    }
+    else
+    {
+        // We may have to unmeld a couple of equipment types.
+        melded = _init_equipment_removal(old_form);
+    }
+
+    you.form = old_form;
 
     const string message = get_form(old_form)->get_untransform_message();
     if (!message.empty())
         mprf(MSGCH_DURATION, "%s", message.c_str());
 
-    set_form(transformation::none, 0);
+    const int str_mod = get_form(old_form)->get_str_mod();
+    const int dex_mod = get_form(old_form)->get_dex_mod();
+    const int int_mod = get_form(old_form)->get_int_mod();
 
-    const int str_mod = get_form(old_form)->str_mod;
-    const int dex_mod = get_form(old_form)->dex_mod;
+    set_form(transformation::none, 0);
 
     if (str_mod)
         notify_stat_change(STAT_STR, -str_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, -int_mod, true);
 
     // If you're a mer in water, boots stay melded even after the form ends.
     if (you.fishtail)
@@ -2078,7 +2865,7 @@ void untransform(bool skip_move)
     }
 
 #ifdef USE_TILE
-    if (you.has_innate_mutation(MUT_MERTAIL))
+    if (you.has_innate_mutation(MUT_MERTAIL) || you.species == SP_CHANGELING)
         init_player_doll();
 #endif
 
@@ -2259,6 +3046,8 @@ int form_base_movespeed(transformation tran)
         return 5; // but allowed minimum is six
     else if (tran == transformation::pig)
         return 7;
+    else if (tran == transformation::dungeon_denizen)
+        return 10 / mons_class_base_speed(get_form(tran)->get_equivalent_mons()) * 10;
     else
         return 10;
 }
@@ -2396,8 +3185,9 @@ void describe_talisman_form(transformation form_type, talisman_form_desc &d,
     default:
         break;
     }
-    _maybe_add_prop(d.offenses, "Str", form->str_mod);
-    _maybe_add_prop(d.offenses, "Dex", form->dex_mod);
+    _maybe_add_prop(d.offenses, "Str", form->get_str_mod());
+    _maybe_add_prop(d.offenses, "Dex", form->get_dex_mod());
+    _maybe_add_prop(d.offenses, "Int", form->get_int_mod());
 
    _pad_talisman_descs(d.skills);
    _pad_talisman_descs(d.defenses);

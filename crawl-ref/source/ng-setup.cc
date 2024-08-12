@@ -541,6 +541,9 @@ static void _setup_generic(const newgame_def& ng,
     if (you.has_mutation(MUT_MULTILIVED))
         you.lives = 1;
 
+    if (you.has_mutation(MUT_FORM_SHIFTER))
+        gain_form_shift_uses(1);
+
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
 

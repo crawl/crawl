@@ -719,7 +719,7 @@ monster_type player_mons(bool transform)
 {
     monster_type mons;
 
-    if (transform)
+    if (transform || you.form == transformation::dungeon_denizen)
     {
         mons = transform_mons();
         if (mons != MONS_PLAYER)
@@ -1272,6 +1272,15 @@ static int _player_bonus_regen()
     {
         rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
     }
+
+    // Current monster form regen bonus (can be set to 0 if non-regen mon!)
+    if (mons_class_can_regenerate(transform_mons()))
+    {
+      if (mons_class_fast_regen(transform_mons()))
+          rr += REGEN_PIP;
+    }
+    else
+        rr = 0;
 
     return rr;
 }
@@ -1996,6 +2005,8 @@ int player_movement_speed(bool check_terrain, bool temp)
 // spellcasting, combat) applies a ratio to this value.
 int player_speed()
 {
+    // TODO: Consider different speeds for different actions, a la
+    // Coglin, but for specific action types like monsters do
     int ps = 10;
 
     // When paralysed, speed is irrelevant.
@@ -2226,13 +2237,16 @@ static int _player_evasion(int final_scale, bool ignore_temporary)
     const int size_base_ev = (10 + size_factor) * scale;
 
     // Calculate 'base' evasion from all permanent modifiers
-    const int natural_evasion =
-        size_base_ev
-        + _player_armour_adjusted_dodge_bonus(scale)
-        - you.adjusted_body_armour_penalty(scale)
-        - you.adjusted_shield_penalty(scale)
-        - _player_aux_evasion_penalty(scale)
-        + _player_base_evasion_modifiers() * scale;
+    const int natural_evasion = you.form == transformation::dungeon_denizen
+        ? get_form()->ev_bonus() * scale
+        : (
+            size_base_ev
+            + _player_armour_adjusted_dodge_bonus(scale)
+            - you.adjusted_body_armour_penalty(scale)
+            - you.adjusted_shield_penalty(scale)
+            - _player_aux_evasion_penalty(scale)
+            + _player_base_evasion_modifiers() * scale
+        );
 
     // Everything below this are transient modifiers
     if (ignore_temporary)
@@ -2625,6 +2639,31 @@ static void _handle_breath_recharge(int exp)
     }
 }
 
+static void _handle_form_uses_recharge(int exp)
+{
+    if (!you.has_mutation(MUT_FORM_SHIFTER))
+    {
+        return;
+    }
+
+    if (!you.props.exists(FORM_SHIFT_USES_RECHARGE_KEY))
+        you.props[FORM_SHIFT_USES_RECHARGE_KEY] = 50;
+
+    // Recharge form shifting faster if you gain exp while not transformed
+    int exp_mod = you.form == transformation::none ? exp : exp / 2;
+
+    int loss = div_rand_round(exp_mod, calc_skill_cost(you.skill_cost_level));
+    you.props[FORM_SHIFT_USES_RECHARGE_KEY].get_int() -= loss;
+
+    if (you.props[FORM_SHIFT_USES_RECHARGE_KEY].get_int() <= 0)
+    {
+        you.props.erase(FORM_SHIFT_USES_RECHARGE_KEY);
+        mprf(MSGCH_DURATION, "You feel more attuned to the dungeon creatures around you.");
+        gain_form_shift_uses(1);
+    }
+}
+
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2686,6 +2725,7 @@ void apply_exp()
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
     _handle_breath_recharge(skill_xp);
+    _handle_form_uses_recharge(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -2770,18 +2810,24 @@ static bool _should_stop_resting(int cur, int max, bool check_opts=true)
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
-void calc_hp(bool scale)
+void calc_hp(bool scale, bool force_max_hp)
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
     int oldhp = you.hp;
     int old_max = you.hp_max;
 
-    you.hp_max = get_real_hp(true, true);
+    // Monster HP returned should be consistent in the values it returns,
+    // since this will be run on game load as well, and we can't have people
+    // load-scumming for extra HP when in Denizen form.
+    if (you.form == transformation::dungeon_denizen)
+        you.hp_max = get_monster_data(transform_mons())->avg_hp_10x / 10;
+    else
+        you.hp_max = get_real_hp(true, true);
 
     // hp_max is not serialized, so fixup code that tries to trigger rescaling
     // during load should not actually do it.
-    if (scale && old_max > 0)
+    if (!force_max_hp && scale && old_max > 0)
     {
         int hp = you.hp * 100 + you.hit_points_regeneration;
         int new_max = you.hp_max;
@@ -2792,7 +2838,7 @@ void calc_hp(bool scale)
         you.hit_points_regeneration = hp % 100;
     }
 
-    you.hp = min(you.hp, you.hp_max);
+    you.hp = force_max_hp ? you.hp_max : min(you.hp, you.hp_max);
 
     if (oldhp != you.hp || old_max != you.hp_max)
     {
@@ -3135,6 +3181,22 @@ void level_change(bool skip_attribute_increase)
                 break;
             }
 
+            case SP_CHANGELING:
+            {
+                switch (you.experience_level)
+                {
+                    case 7:
+                        gain_form_shift_uses(MAX_FORM_SHIFT);
+                        break;
+                    case 14:
+                        gain_form_shift_uses(MAX_FORM_SHIFT);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
             default:
                 break;
             }
@@ -3347,7 +3409,9 @@ bool dur_expiring(duration_type dur)
         return false;
 
     // XXX: reconsider using DUR_TRANSFORM here
-    if (dur == DUR_TRANSFORMATION && you.form == you.default_form)
+    if (dur == DUR_TRANSFORMATION &&
+              (you.form == you.default_form
+               || you.form == transformation::dungeon_denizen))
         return false;
 
     return value <= duration_expire_point(dur);
@@ -7862,6 +7926,24 @@ bool player::polymorph(int pow, bool allow_immobile)
         forms.emplace_back(transformation::fungus);
     }
 
+    if (species == SP_CHANGELING)
+    {
+        // Changelings revert to base forms when polymorphed
+        if (form != transformation::none)
+        {
+          forms = {transformation::none};
+        }
+        // If a changeling gets polymorphed while in base form, give it a
+        // chance to instead turn into a dungeon denizen based on XL and Shapeshifting skill
+        // https://www.desmos.com/calculator/p9eo2n4kq1
+        else if (
+          random2(100) <= (5 * experience_level / 3)
+          + (3 * you.skill(SK_SHAPESHIFTING) / 4) + 20)
+        {
+            forms = {transformation::dungeon_denizen};
+        }
+    }
+
     for (int tries = 0; tries < 3; tries++)
     {
         f = forms[random2(forms.size())];
@@ -8583,6 +8665,125 @@ void player::rev_up(int dur)
 
     if (you.wearing_ego(EQ_GIZMO, SPGIZMO_PARRYREV))
         you.redraw_armour_class = true;
+}
+
+#define FORM_SHIFT_MONS "form_shifted_mon"
+
+int player::get_form_shifted_monster() const
+{
+    if (!you.props.exists(FORM_SHIFT_MONS))
+        return MONS_PROGRAM_BUG;
+    return you.props[FORM_SHIFT_MONS];
+}
+
+void player::set_form_shifted_monster(monster_type mon)
+{
+    you.props[FORM_SHIFT_MONS] = mon;
+}
+
+// Should only be called on an untransform away from Denizen
+void player::clear_form_shifted_monster()
+{
+    you.props.erase(FORM_SHIFT_MONS);
+}
+
+#define FORM_SHIFT_MONS_STR "form_shifted_mon_str"
+#define FORM_SHIFT_MONS_DEX "form_shifted_mon_dex"
+#define FORM_SHIFT_MONS_INT "form_shifted_mon_int"
+
+int player::get_form_shifted_mon_stat(stat_type stat) const
+{
+    if (you.get_form_shifted_monster() == MONS_PROGRAM_BUG)
+        return 0;
+    switch (stat)
+    {
+    case STAT_STR:
+      if (you.props.exists(FORM_SHIFT_MONS_STR))
+        return you.props[FORM_SHIFT_MONS_STR];
+      break;
+    case STAT_DEX:
+      if (you.props.exists(FORM_SHIFT_MONS_DEX))
+        return you.props[FORM_SHIFT_MONS_DEX];
+      break;
+    case STAT_INT:
+      if (you.props.exists(FORM_SHIFT_MONS_INT))
+        return you.props[FORM_SHIFT_MONS_INT];
+      break;
+
+    default:
+      break;
+    }
+    return 0;
+}
+
+void player::set_form_shifted_mon_stat(stat_type stat, int val)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+      you.props[FORM_SHIFT_MONS_STR] = val;
+      break;
+    case STAT_DEX:
+      you.props[FORM_SHIFT_MONS_DEX] = val;
+      break;
+    case STAT_INT:
+      you.props[FORM_SHIFT_MONS_INT] = val;
+      break;
+
+    default:
+      break;
+    }
+}
+
+// Should only be called on an untransform away from Denizen
+void player::clear_form_shifted_mon_stats()
+{
+    you.props.erase(FORM_SHIFT_MONS_STR);
+    you.props.erase(FORM_SHIFT_MONS_DEX);
+    you.props.erase(FORM_SHIFT_MONS_INT);
+}
+
+#define FORM_SHIFT_MONS_SPELLBOOK "form_shifted_mon_spellbook"
+
+int player::get_form_shifted_mon_spellbook() const
+{
+    if (!you.props.exists(FORM_SHIFT_MONS_SPELLBOOK))
+        return -1;
+    return you.props[FORM_SHIFT_MONS_SPELLBOOK];
+}
+
+void player::set_form_shifted_mon_spellbook(int mon_spellbook)
+{
+    you.props[FORM_SHIFT_MONS_SPELLBOOK] = mon_spellbook;
+}
+
+// Should only be called on an untransform away from Denizen
+void player::clear_form_shifted_mon_spellbook()
+{
+    you.props.erase(FORM_SHIFT_MONS_SPELLBOOK);
+
+    // Additionally, clear form spells and letter tables
+    you.form_shifted_spells.init(SPELL_NO_SPELL);
+    you.form_shifted_spell_letter_table.init(-1);
+}
+
+// TODO: Update tags.cc to know about this... maybe? We can reconstruct the
+// monster spell list on load... although it's possible there'd be differences
+FixedVector<spell_type, MAX_KNOWN_SPELLS> player::get_spells(bool innate) const
+{
+    if (!innate && you.form != transformation::none)
+        return get_form()->get_spells();
+
+    return you.spells;
+}
+
+// TODO: Same concern as with get_spells
+FixedVector<int, 52> player::get_spell_letter_table(bool innate) const
+{
+    if (!innate && you.form != transformation::none)
+        return get_form()->get_spell_letter_table();
+
+    return you.spell_letter_table;
 }
 
 void player_open_door(coord_def doorpos)

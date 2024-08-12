@@ -11,6 +11,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "mon-util.h"
 #include "player.h"
 #include "tile-flags.h"
 #include "tile-player-flag-cut.h"
@@ -520,6 +521,8 @@ tileidx_t tileidx_player()
         }
         break;
     }
+    case transformation::dungeon_denizen:
+        ch = get_mon_base_tile(transform_mons());
     // no special tile
     case transformation::blade_hands:
     case transformation::none:
@@ -677,6 +680,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DJINNI;
     case SP_COGLIN:
         return TILEP_BASE_COGLIN;
+    case SP_CHANGELING:
+        return TILEP_BASE_CHANGELING;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -1306,7 +1311,8 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
 bool player_uses_monster_tile()
 {
     return Options.tile_use_monster != MONS_0
-            || you.duration[DUR_EXECUTION];
+            || you.duration[DUR_EXECUTION]
+            || you.duration[DUR_DUNGEON_DENIZEN];
 }
 
 #endif

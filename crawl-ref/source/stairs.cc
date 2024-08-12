@@ -44,6 +44,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
+#include "species.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -1059,6 +1060,9 @@ void floor_transition(dungeon_feature_type how,
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
+
+        if(you.has_mutation(MUT_FORM_SHIFTER))
+            gain_form_shift_uses(MAX_FORM_SHIFT);
 
         // scary hack!
         if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))

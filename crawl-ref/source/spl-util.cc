@@ -242,26 +242,28 @@ int get_spell_slot_by_letter(char letter)
 
     const int index = letter_to_index(letter);
 
-    if (you.spell_letter_table[ index ] == -1)
+    if (you.get_spell_letter_table()[ index ] == -1)
         return -1;
 
-    return you.spell_letter_table[index];
+    return you.get_spell_letter_table()[index];
 }
 
 static int _get_spell_slot(spell_type spell)
 {
     // you.spells is a FixedVector of spells in some arbitrary order. It
     // doesn't correspond to letters.
-    auto i = find(begin(you.spells), end(you.spells), spell);
-    return i == end(you.spells) ? -1 : i - begin(you.spells);
+    auto cur_spells = you.get_spells();
+
+    auto i = find(begin(cur_spells), end(cur_spells), spell);
+    return i == end(cur_spells) ? -1 : i - begin(cur_spells);
 }
 
 static int _get_spell_letter_from_slot(int slot)
 {
     // you.spell_letter_table is a FixedVector that is basically a mapping
     // from alpha char indices to spell slots (e.g. indices in you.spells).
-    auto letter = find(begin(you.spell_letter_table), end(you.spell_letter_table), slot);
-    return letter == end(you.spell_letter_table) ? -1 : letter - begin(you.spell_letter_table);
+    auto letter = find(begin(you.get_spell_letter_table()), end(you.get_spell_letter_table()), slot);
+    return letter == end(you.get_spell_letter_table()) ? -1 : letter - begin(you.get_spell_letter_table());
 }
 
 int get_spell_letter(spell_type spell)
@@ -275,8 +277,7 @@ spell_type get_spell_by_letter(char letter)
     ASSERT(isaalpha(letter));
 
     const int slot = get_spell_slot_by_letter(letter);
-
-    return (slot == -1) ? SPELL_NO_SPELL : you.spells[slot];
+    return (slot == -1) ? SPELL_NO_SPELL : you.get_spells()[slot];
 }
 
 bool add_spell_to_memory(spell_type spell)
@@ -420,6 +421,12 @@ bool del_spell_from_memory_by_slot(int slot)
 
 bool del_spell_from_memory(spell_type spell)
 {
+    if (you.form == transformation::dungeon_denizen)
+    {
+        mprf(MSGCH_PROMPT, "You must return to your base form to change your true memory.");
+        return false;
+    }
+
     int i = _get_spell_slot(spell);
     if (i == -1)
         return false;

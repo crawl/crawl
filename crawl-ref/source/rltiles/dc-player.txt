@@ -91,6 +91,7 @@ oni_green_m
 oni_green_f
 oni_black_m
 oni_black_f
+changeling CHANGELING
 meteoran_f METEORAN
 meteoran_m
 troll_f TROLL

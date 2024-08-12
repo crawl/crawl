@@ -725,6 +725,32 @@ void give_level_mutations(species_type species, int xp_level)
         }
 }
 
+int form_shift_uses_available()
+{
+    if (!you.props.exists(FORM_SHIFT_USES_KEY))
+        return 0;
+
+    return you.props[FORM_SHIFT_USES_KEY].get_int();
+}
+
+int max_form_shift_uses()
+{
+    return min(MAX_FORM_SHIFT, you.get_mutation_level(MUT_FORM_SHIFTER));
+}
+
+// Attempts to gain num uses of form shift abilities.
+// Returns true if any were gained (ie: we were not already capped)
+bool gain_form_shift_uses(int num)
+{
+    int cur = form_shift_uses_available();
+
+    if (cur >= MAX_FORM_SHIFT)
+        return false;
+
+    you.props[FORM_SHIFT_USES_KEY] = min(max_form_shift_uses(), cur + num);
+    return true;
+}
+
 void species_stat_init(species_type species)
 {
     you.base_stats[STAT_STR] = get_species_def(species).s;

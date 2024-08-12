@@ -3468,6 +3468,11 @@ static void _brand_weapon(item_def &wpn)
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
         break;
 
+    case SPWPN_FORM_ABSORB:
+        flash_colour = DARKGREY;
+        mprf("%s lunges for nearby creatures!", itname.c_str());
+        break;
+
     case SPWPN_VENOM:
         flash_colour = GREEN;
         mprf("%s drips with poison.", itname.c_str());

@@ -8,6 +8,7 @@
 #include <set>
 
 #include "enum.h"
+#include "mon-enum.h"
 #include "player.h"
 
 #define DRAGON_CLAWS 3
@@ -144,6 +145,13 @@ public:
     bool res_miasma() const;
     bool res_petrify() const;
 
+    virtual attack_type           get_attk_type(int /**attack_number*/ = 0)
+                                         const { return AT_HIT; }
+    virtual attack_flavour     get_attk_flavour(int /**attack_number*/ = 0)
+                                         const { return AF_PLAIN; }
+    virtual FormAttackVerbs get_uc_attack_verbs(int /**attack_number*/ = 0)
+                                         const { return uc_attack_verbs; }
+
     /**
      * Base unarmed damage provided by the form.
      */
@@ -163,13 +171,21 @@ public:
      */
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
+    virtual bool get_can_cast() const { return can_cast; }
+    virtual size_type get_size() const { return size; }
     virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
     virtual int slay_bonus(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
     virtual int contam_dam(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
+    virtual reach_type get_reach_range() const { return REACH_NONE; }
     virtual int get_ac_bonus(bool max = false) const;
     virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
     virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
+    virtual int get_str_mod() const { return str_mod; }
+    virtual int get_dex_mod() const { return dex_mod; }
+    virtual int get_int_mod() const { return int_mod; }
+
+    virtual int get_blocked_slots() const { return blocked_slots; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -198,11 +214,6 @@ public:
     /// The skill level beyond which further skill provides no benefit.
     const int max_skill;
 
-    /// flat str bonus
-    const int str_mod;
-    /// flat dex bonus
-    const int dex_mod;
-
     /// Equipment types unusable in this form.
     /** A bitfield representing a union of (1 << equipment_type) values for
      * equipment types that are unusable in this form.
@@ -210,9 +221,6 @@ public:
     const int blocked_slots; // XX check enum size at compile time?
     /// size of the form
     const size_type size;
-
-    /// can the player cast while in this form?
-    const bool can_cast;
 
     /// colour of 'weapon' in UI
     const int uc_colour;
@@ -223,6 +231,13 @@ public:
     const bool keeps_mutations;
     //
     const bool changes_physiology;
+
+    /// Does this form require using the equivalent_mons instead of the player?
+    /**
+     * Dungeon Denizen form can change the monster the player assumes,
+     * requiring updating stats, attacks, and more per transformation.
+     */
+    const bool use_assumed_monster_stats;
 
     /// Does this form have blood (used for sublimation and bloodsplatters)?
     const form_capability has_blood;
@@ -253,6 +268,9 @@ protected:
     /// See Form::get_transform_description().
     const string description;
 
+    /// Can the player cast while in this form?
+    const bool can_cast;
+
     /// Resistances granted by this form.
     /** A bitfield holding a union of mon_resist_flags for resists granted
      * by the form.
@@ -264,6 +282,13 @@ protected:
 
     /// See Form::get_base_unarmed_damage().
     const FormScaling unarmed_bonus_dam;
+
+    /// flat str bonus
+    const int str_mod;
+    /// flat dex bonus
+    const int dex_mod;
+    /// flat int bonus
+    const int int_mod;
 
     /// Calculate the given FormScaling for this form, multiplied by scale.
     int scaling_value(const FormScaling &sc, bool random,

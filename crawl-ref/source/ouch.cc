@@ -68,6 +68,7 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "transform.h"
+#include "transformation.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -1067,6 +1068,18 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         {
             dreamshard_shatter();
             return;
+        }
+        // player was killed while shapeshifted, so return to their base form
+        // with any overkill damage applied
+        else if (dam >= you.hp && you.form == transformation::dungeon_denizen)
+        {
+            int overkill_dmg = abs(dam - you.hp);
+            mprf(MSGCH_DANGER, "You took lethal damage while transformed! %s",
+            overkill_dmg > 0 ? "Your assumed form comes violently undone!": "");
+            return_to_default_form();
+            dec_hp(overkill_dmg, true);
+            if (you.hp > 0)
+                return;
         }
     }
 

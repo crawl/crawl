@@ -371,6 +371,8 @@ static vector<ability_def> &_get_ability_list()
             abflag::drac_charges },
         { ABIL_TRAN_BAT, "Bat Form",
             2, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
+        { ABIL_FORM_SHIFT, "Form Shift",
+            0, 0, 0, -1, {}, abflag::form_shift_charges | abflag::instant },
         { ABIL_EXSANGUINATE, "Exsanguinate",
             0, 0, 0, -1, {}, abflag::delay},
         { ABIL_REVIVIFY, "Revivify",
@@ -985,6 +987,13 @@ const string make_cost_description(ability_type ability)
                     MAX_DRACONIAN_BREATH);
     }
 
+    if (abil.flags & abflag::form_shift_charges)
+    {
+        ret += make_stringf(", %d/%d uses available",
+                    form_shift_uses_available(),
+                    max_form_shift_uses());
+    }
+
     if (abil.flags & abflag::delay)
         ret += ", Delay";
 
@@ -1128,6 +1137,9 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.flags & abflag::drac_charges)
         ret << "\nGaining experience will replenish charges of this ability.";
+
+    if (abil.flags & abflag::form_shift_charges)
+        ret << "\nGaining experience will recharge this ability. Maximum charges increase with levels of 'Form Shifter'.";
 
 #if TAG_MAJOR_VERSION == 34
     if (abil.ability == ABIL_HEAL_WOUNDS)
@@ -1638,6 +1650,7 @@ void no_ability_msg()
     // Give messages if the character cannot use innate talents right now.
     // * Vampires can't turn into bats when full of blood.
     // * Tengu can't start to fly if already flying.
+    // * Changelings can't change forms when not in base changeling form
     if (you.get_mutation_level(MUT_VAMPIRISM) >= 2)
     {
         if (you.transform_uncancellable)
@@ -1648,6 +1661,8 @@ void no_ability_msg()
             mpr("Sorry, you cannot become a bat while alive.");
         }
     }
+    else if (you.has_mutation(MUT_FORM_SHIFTER) && you.form != you.default_form)
+        mpr("You can't transform again while already transformed!");
     else
         mpr("Sorry, you're not good enough to have a special ability.");
 }
@@ -2197,6 +2212,23 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
     }
+    case ABIL_FORM_SHIFT:
+    {
+        if (form_shift_uses_available() <= 0)
+        {
+            if (!quiet)
+                mpr("Your shapeshifting abilities are exhausted. Explore or slay more enemies!");
+            return false;
+        }
+        const string reason = cant_transform_reason(transformation::dungeon_denizen);
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason);
+            return false;
+        }
+        return true;
+    }
 
 #if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
@@ -2683,6 +2715,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
 
     // Self-targeted:
     case ABIL_TRAN_BAT:
+    case ABIL_FORM_SHIFT:
     case ABIL_EXSANGUINATE:
     case ABIL_REVIVIFY:
     case ABIL_SHAFT_SELF:
@@ -2990,6 +3023,32 @@ static bool _player_cancels_vampire_bat_transformation()
 
     string prompt = _vampire_bat_transform_prompt(str_affected, dex_affected,
                                                   intel_affected);
+
+    bool proceed_with_transformation = yesno(prompt.c_str(), false, 'n');
+
+    if (!proceed_with_transformation)
+        canned_msg(MSG_OK);
+
+    return !proceed_with_transformation;
+}
+
+static string _form_shift_prompt()
+{
+    string prompt = "You feel your flesh shifting rapidly! " \
+                    "A new form is open to you... Continue?";
+
+    return prompt;
+}
+
+/*
+ * Give the player a chance to cancel a form shift.
+ *
+ * @returns Whether the player canceled the form shift.
+ */
+static bool _player_cancels_form_shift()
+{
+
+    string prompt = _form_shift_prompt();
 
     bool proceed_with_transformation = yesno(prompt.c_str(), false, 'n');
 
@@ -3725,6 +3784,23 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         _cause_vampire_bat_form_stat_drain();
         break;
 
+    case ABIL_FORM_SHIFT:
+        if (_player_cancels_form_shift())
+            return spret::abort;
+        fail_check();
+        you.props[HP_PRE_TRANSFORM] = you.hp;
+        if (transform(100, transformation::dungeon_denizen))
+            if (!i_feel_safe(true))
+            {
+                mpr("In desperation, your shift locations as well as forms!");
+                uncontrolled_blink();
+            }
+            // TODO: consume a talisman like a potion of experience but for Shapeshifting
+            // and gain FORM SHIFT charges
+            // potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
+            you.props[FORM_SHIFT_USES_KEY].get_int() -= 1;
+        break;
+
     case ABIL_EXSANGUINATE:
         start_delay<ExsanguinateDelay>(5);
         break;
@@ -4230,6 +4306,9 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
                && !you.vampire_alive
                && you.form != transformation::bat;
+    case ABIL_FORM_SHIFT:
+        return you.has_mutation(MUT_FORM_SHIFTER)
+            && you.form == transformation::none;
     case ABIL_BREATHE_FIRE:
         return you.form == transformation::dragon
                && !species::is_draconian(you.species);
@@ -4313,6 +4392,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_CAUSTIC_BREATH,
             ABIL_MUD_BREATH,
             ABIL_TRAN_BAT,
+            ABIL_FORM_SHIFT,
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,
             ABIL_DAMNATION,

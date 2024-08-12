@@ -4994,6 +4994,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "frost",
 #endif
         "vampirism",
+        "form_absorb",
         "pain",
         "antimagic",
         "distortion",

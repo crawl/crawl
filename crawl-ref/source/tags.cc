@@ -2961,6 +2961,11 @@ static void _tag_read_you(reader &th)
     you.spell_no = count_if(begin(you.spells), end(you.spells),
             [](const spell_type spell) { return spell != SPELL_NO_SPELL; });
 
+    // Refresh transformation properties on load
+    you.clear_form_shifted_monster();
+    you.clear_form_shifted_mon_stats();
+    you.clear_form_shifted_mon_spellbook();
+
     count = unmarshallByte(th);
     ASSERT(count == (int)you.ability_letter_table.size());
     for (int i = 0; i < count; i++)
@@ -3521,6 +3526,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
     SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
     SP_MUT_FIX(MUT_DRUNKEN_BRAWLING, SP_ONI);
+    SP_MUT_FIX(MUT_FORM_SHIFTER, SP_CHANGELING);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)

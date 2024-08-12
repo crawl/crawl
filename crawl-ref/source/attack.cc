@@ -119,7 +119,7 @@ bool attack::handle_phase_damaged()
         if (damage_done)
             player_exercise_combat_skills();
     }
-    else
+    if (attacker->is_monster() || get_form()->use_assumed_monster_stats)
     {
         if (!mons_attack_effects())
             return false;
@@ -437,6 +437,11 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
             // Elephant trunks have no bones inside.
             attk_type = AT_NONE;
         }
+    }
+    else if (attacker->is_player() && you.form != transformation::none && wpn_skill == SK_UNARMED_COMBAT)
+    {
+        attk_type    = get_form()->get_attk_type(attack_number);
+        attk_flavour = get_form()->get_attk_flavour(attack_number);
     }
     else
     {
@@ -1173,7 +1178,8 @@ bool attack::apply_damage_brand(const char *what)
 
     if (brand != SPWPN_FLAMING && brand != SPWPN_FREEZING
         && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRISM
-        && brand != SPWPN_PROTECTION && !defender->alive())
+        && brand != SPWPN_FORM_ABSORB && brand != SPWPN_PROTECTION
+        && !defender->alive())
     {
         // Most brands have no extra effects on just killed enemies, and the
         // effect would be often inappropriate.
@@ -1183,7 +1189,8 @@ bool attack::apply_damage_brand(const char *what)
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_FOUL_FLAME
-            || brand == SPWPN_ANTIMAGIC || brand == SPWPN_VAMPIRISM))
+            || brand == SPWPN_ANTIMAGIC || brand == SPWPN_VAMPIRISM
+            || brand == SPWPN_FORM_ABSORB))
     {
         // These brands require some regular damage to function.
         return false;
@@ -1324,6 +1331,19 @@ bool attack::apply_damage_brand(const char *what)
                  damage_done, hp_boost);
             attacker->heal(hp_boost);
         }
+        break;
+    }
+    case SPWPN_FORM_ABSORB:
+    {
+        if (!stab_attempt || stab_bonus != 1)
+            break;
+
+        mprf("You absorb essence from %s%s",
+            defender->as_monster()->name(DESC_THE, true).c_str(),
+            you.has_mutation(MUT_FORM_SHIFTER)
+            ? " and siphon their very being!"
+            : ", but feel it quickly dissipate into your surroundings.");
+        gain_form_shift_uses(1);
         break;
     }
     case SPWPN_PAIN:

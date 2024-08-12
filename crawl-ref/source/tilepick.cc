@@ -4463,6 +4463,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
 #endif
         case SP_COGLIN:
             return TILEG_SP_COGLIN;
+        case SP_CHANGELING:
+            return TILEG_SP_CHANGELING;
         default:
             return TILEP_ERROR;
     }

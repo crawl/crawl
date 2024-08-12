@@ -242,6 +242,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_PROTECTION:
             case SPWPN_VENOM:
+            case SPWPN_FORM_ABSORB:
                 valued *= 12;
                 break;
             }

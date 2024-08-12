@@ -52,6 +52,8 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
+    // Changeling
+    ABIL_FORM_SHIFT,
 #if TAG_MAJOR_VERSION == 34
     // Armataurs
     ABIL_ROLLING_CHARGE,

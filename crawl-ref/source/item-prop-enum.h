@@ -150,6 +150,7 @@ enum brand_type // item_def.special
     SPWPN_FROST,   // ranged, only
 #endif
     SPWPN_VAMPIRISM,
+    SPWPN_FORM_ABSORB,
     SPWPN_PAIN,
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,

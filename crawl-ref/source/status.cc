@@ -216,6 +216,29 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case STATUS_FORM_SHIFT:
+    {
+        if (!you.has_mutation(MUT_FORM_SHIFTER))
+            break;
+
+        inf.light_text = "FormShift";
+        inf.short_text = "can shift forms at will";
+        inf.long_text  = "You can transform into a local creature.";
+
+        const int num = form_shift_uses_available();
+        if (num == 0)
+            inf.light_colour = DARKGREY;
+        else
+        {
+            inf.light_colour = LIGHTCYAN;
+            if (num == 2)
+                inf.light_text += "+";
+            else if (num == 3)
+                inf.light_text += "++";
+        }
+        break;
+    }
+
     case STATUS_BLACK_TORCH:
         if (!you_worship(GOD_YREDELEMNUL))
             break;

@@ -1,0 +1,58 @@
+enum: SP_CHANGELING
+monster: MONS_CHANGELING
+name: Changeling
+short_name: Ch
+difficulty: Advanced
+difficulty_priority: 100
+species_flags:
+  - no_blood
+  - no_hair
+aptitudes:
+  xp: 0
+  hp: -2
+  mp_mod: 0
+  wl: 4
+  fighting: -1
+  armour: -2
+  unarmed_combat: -1
+  short_blades: 1
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  ranged weapons: -1
+  throwing: -1
+  necromancy: -2
+  alchemy: 1
+  summoning: -1
+  dodging: 1
+  stealth: 3
+  shapeshifting: 4
+str: 5
+int: 7
+dex: 9
+levelup_stat_frequency: 4
+levelup_stats:
+  - dex
+  - int
+mutations:
+  1:
+    MUT_FORM_SHIFTER: 1
+    MUT_TRANSLUCENT_SKIN: 1
+  7:
+    MUT_FORM_SHIFTER: 1
+  14:
+    MUT_FORM_SHIFTER: 1
+  21:
+    MUT_TRANSLUCENT_SKIN: 1
+recommended_jobs:
+  - shapeshifter
+  - alchemist
+  - warper
+  - enchanter
+  - hedge wizard
+recommended_weapons:
+  - short blades
+
+orc_name: Orclike

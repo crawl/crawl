@@ -204,6 +204,7 @@ i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
 # end TAG_MAJOR_VERSION
 i-vampirism BRAND_VAMPIRISM
+i-vampirism BRAND_FORM_ABSORB
 i-pain BRAND_PAIN
 %rim 1
 i-antimagic BRAND_ANTIMAGIC

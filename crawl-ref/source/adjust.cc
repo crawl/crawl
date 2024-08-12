@@ -78,6 +78,8 @@ void adjust_item(int from_slot)
 
 static void _adjust_spell()
 {
+    // TODO: Verify this logic works for alternate spell letter tables when
+    // in dungeon denizen form (couldn't figure out how myself)
     if (!you.spell_no)
     {
         canned_msg(MSG_NO_SPELLS);
@@ -139,9 +141,9 @@ static void _adjust_spell()
     }
 
     // swap references in the letter table:
-    const int tmp = you.spell_letter_table[index_2];
-    you.spell_letter_table[index_2] = you.spell_letter_table[index_1];
-    you.spell_letter_table[index_1] = tmp;
+    const int tmp = you.get_spell_letter_table()[index_2];
+    you.get_spell_letter_table()[index_2] = you.get_spell_letter_table()[index_1];
+    you.get_spell_letter_table()[index_1] = tmp;
 
     // print out spell in new slot
     mprf_nocap("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));

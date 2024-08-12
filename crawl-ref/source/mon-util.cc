@@ -1300,7 +1300,9 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && species::is_draconian(you.species)))
+        || (mc == MONS_PLAYER_ILLUSION && species::is_draconian(you.species))
+        || (you.form == transformation::dungeon_denizen
+            && mons_is_draconian(mc)))
     {
         return MONS_DRACONIAN;
     }
