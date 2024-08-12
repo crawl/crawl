@@ -50,7 +50,7 @@ spret cast_putrefaction(monster* target, int pow, bool fail)
 
     mprf("Rot billows forth from %s wounds!", target->name(DESC_ITS).c_str());
 
-    drain_player(55 - div_rand_round(pow, 2), true, true);
+    drain_player(75 - div_rand_round(pow * 4, 10), true, true);
 
     return spret::success;
 }
