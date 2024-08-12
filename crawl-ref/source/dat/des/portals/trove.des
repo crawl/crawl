@@ -165,7 +165,7 @@ function trove.get_trove_item(e, value, base_item)
   local chosen = util.random_from(prices)
   item.base_type = chosen.base
   item.sub_type = chosen.type
-  if chosen.base == "armour" or chosen.base == "wand" then
+  if chosen.base == "armour" then
     item.plus1 = chosen.quant
   elseif chosen.base == "weapon" then
     item.plus1 = chosen.quant
