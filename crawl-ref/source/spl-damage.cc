@@ -4849,7 +4849,7 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
         if (!feat_has_solid_floor(env.grid(*ri)))
             continue;
 
-        // If a candidate cell is next to more than one solid feature, we can't
+        // If a candidate cell is next to more than two solid features, we can't
         // bog it. Cells we can't currently see are also considered solid,
         // regardless of what the cell contains. Don't want to leak information
         // about out-of-los cells.
@@ -4859,7 +4859,7 @@ vector<coord_def> find_bog_locations(const coord_def &center, int pow)
             if (!you.see_cell(*ai) || feat_is_solid(env.grid(*ai)))
                 walls++;
         }
-        if (walls <= 1)
+        if (walls <= 2)
             bog_locs.push_back(*ri);
     }
 
