@@ -165,7 +165,7 @@ function trove.get_trove_item(e, value, base_item)
   local chosen = util.random_from(prices)
   item.base_type = chosen.base
   item.sub_type = chosen.type
-  if chosen.base == "armour" or chosen.base == "wand" then
+  if chosen.base == "armour" then
     item.plus1 = chosen.quant
   elseif chosen.base == "weapon" then
     item.plus1 = chosen.quant
@@ -929,9 +929,9 @@ COLOUR:  ' = yellow
 FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
 veto {{ return crawl.game_started()
-        and (you.base_skill("Evocations") < 4
-             and not crawl.one_chance_in(3)
-             or you.mutation("inability to use devices") == 1) }}
+        and (you.mutation("inability to use devices") == 1
+             or (you.mutation("no forms") == 1
+             and crawl.x_chance_in_y(2, 3))) }}
 MAP
   xxxxx
   xdxex
