@@ -929,9 +929,9 @@ COLOUR:  ' = yellow
 FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
 veto {{ return crawl.game_started()
-        and (you.base_skill("Evocations") < 4
-             and not crawl.one_chance_in(3)
-             or you.mutation("inability to use devices") == 1) }}
+        and (you.mutation("inability to use devices") == 1
+             and you.mutation("no forms") == 1
+             or not crawl.one_chance_in(3)) }}
 MAP
   xxxxx
   xdxex
