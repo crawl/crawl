@@ -3060,8 +3060,8 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
 static int _hellfire_mortar_hd(int pow, bool random = true)
 {
     if (random)
-        return 6 + div_rand_round(pow, 30);
-    return 6 + pow / 30;
+        return 3 + div_rand_round(pow, 28);
+    return 3 + pow / 28;
 }
 
 dice_def hellfire_mortar_damage(int pow)
