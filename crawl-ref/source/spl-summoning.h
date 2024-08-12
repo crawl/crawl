@@ -21,6 +21,8 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 #define SERVITOR_SPELL_KEY "servitor_spell"
 
+constexpr int BOULDER_ABRASION_DAMAGE = 5;
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -126,6 +128,7 @@ bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
 
+int barrelling_boulder_hp(int pow);
 spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool fail);
 
 string mons_simulacrum_immune_reason(const monster *mons);

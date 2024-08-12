@@ -163,7 +163,7 @@ bool siphon_essence_affects(const monster &m);
 
 void attempt_jinxbite_hit(actor& victim);
 dice_def boulder_damage(int pow, bool random);
-void do_boulder_impact(monster& boulder, actor& victim);
+void do_boulder_impact(monster& boulder, actor& victim, bool quiet = false);
 
 dice_def electrolunge_damage(int pow);
 

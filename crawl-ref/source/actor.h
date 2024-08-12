@@ -427,7 +427,7 @@ public:
     void collide(coord_def newpos, const actor *agent, int damage);
     bool knockback(const actor &cause, int dist, int pow, string source_name);
     coord_def stumble_pos(coord_def targ) const;
-    void stumble_away_from(coord_def targ, string src);
+    void stumble_away_from(coord_def targ, string src = "");
 
     static const actor *ensure_valid_actor(const actor *act);
     static actor *ensure_valid_actor(actor *act);

@@ -2853,6 +2853,11 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
     return spret::success;
 }
 
+int barrelling_boulder_hp(int pow)
+{
+    return 15 + pow / 3;
+}
+
 spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool fail)
 {
     fail_check();
@@ -2878,6 +2883,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
                                 : SAME_ATTITUDE(agent.as_monster()),
                              pos, MHITNOT, MG_FORCE_PLACE);
     mg.set_summoned(&agent, 0, SPELL_BOULDER);
+    mg.hp = barrelling_boulder_hp(pow);
     monster *boulder = create_monster(mg);
 
     // If some other reason prevents this from working (I'm not sure what?)
@@ -2893,6 +2899,10 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     boulder->props[BOULDER_DIRECTION_KEY] = pos - agent.pos();
 
     mpr("You send a boulder barrelling forward!");
+
+    // Let the boulder roll one space immediately.
+    boulder->speed_increment = 80;
+
     return spret::success;
 }
 

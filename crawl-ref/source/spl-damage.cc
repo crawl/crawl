@@ -4905,14 +4905,21 @@ bool siphon_essence_affects(const monster &m)
 dice_def boulder_damage(int pow, bool random)
 {
     if (random)
-        return dice_def(2, 3 + div_rand_round(pow, 12));
-    return dice_def(2, 3 + pow / 12);
+        return dice_def(2, 4 + div_rand_round(pow, 10));
+    return dice_def(2, 4 + pow / 10);
 }
 
-void do_boulder_impact(monster& boulder, actor& victim)
+void do_boulder_impact(monster& boulder, actor& victim, bool quiet)
 {
     if (you.can_see(boulder))
-        mprf("The boulder barrels into %s!", victim.name(DESC_THE).c_str());
+    {
+        if (!quiet)
+        {
+            mprf("%s barrels into %s!",
+                    boulder.name(DESC_THE).c_str(),
+                    victim.name(DESC_THE).c_str());
+        }
+    }
 
     const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
     int dam = boulder_damage(pow, true).roll();
@@ -4922,9 +4929,6 @@ void do_boulder_impact(monster& boulder, actor& victim)
         ouch(dam, KILLED_BY_ROLLING, boulder.mid);
     else
         _player_hurt_monster(*victim.as_monster(), dam, BEAM_MISSILE);
-
-    // Dealing damage causes the boulder to also take damage.
-    boulder.hurt(&boulder, roll_dice(2, 5), BEAM_NONE, KILLED_BY_COLLISION);
 }
 
 dice_def electrolunge_damage(int pow)

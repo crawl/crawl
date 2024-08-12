@@ -1183,7 +1183,7 @@ void actor::stumble_away_from(coord_def targ, string src)
 
     if (is_player())
         mprf("%s sends you backwards.", uppercase_first(src).c_str());
-    else if (you.can_see(*this))
+    else if (you.can_see(*this) && !src.empty())
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
     move_to_pos(newpos);

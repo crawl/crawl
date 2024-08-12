@@ -1935,8 +1935,8 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && !mon.is(MB_ANGUISH);
 }
 
-targeter_boulder::targeter_boulder(const actor* caster)
-    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0)
+targeter_boulder::targeter_boulder(const actor* caster, int boulder_hp)
+    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0), hp(boulder_hp)
 {
 }
 
@@ -1953,6 +1953,45 @@ bool targeter_boulder::set_aim(coord_def a)
     tempbeam.fire();
     path_taken = tempbeam.path_taken;
 
+    boulder_sim.clear();
+
+    // Now simulate rolling a boulder down the given path, and see how quickly
+    // it is possible for it to get abraded by walls (to indicate what part of
+    // the path it will always roll, and which is more questionable.)
+    int _hp = hp;
+    for (auto pos : path_taken)
+    {
+        if (cell_is_solid(pos))
+            continue;
+
+        // If we've already passed the point of possible destruction, no
+        // need to calculate anything else.
+        if (_hp <= 0)
+        {
+            boulder_sim[pos] = AFF_MAYBE;
+            continue;
+        }
+
+        int solid_count = 0;
+        for (adjacent_iterator ai(pos); ai; ++ai)
+        {
+            // Assume that unseen tiles are walls.
+            if (env.map_knowledge(pos).feat() == DNGN_UNSEEN
+                || cell_is_solid(*ai))
+            {
+                ++solid_count;
+            }
+        }
+
+        // Assume maximum damage is taken
+        _hp -= (solid_count * BOULDER_ABRASION_DAMAGE);
+
+        if (_hp <= 0)
+            boulder_sim[pos] = AFF_MAYBE;
+        else
+            boulder_sim[pos] = AFF_YES;
+    }
+
     return true;
 }
 
@@ -1964,10 +2003,9 @@ bool targeter_boulder::valid_aim(coord_def a)
     if (a == agent->pos())
         return notify_fail("There's a thick-headed creature in the way.");
 
-    // make sure it's a true cardinal
     const coord_def delta = a - agent->pos();
     if (delta.x && delta.y && abs(delta.x) != abs(delta.y))
-        return notify_fail("Boulders only roll along the cardinals.");
+        return notify_fail("You can only roll a boulder in a compass direction.");
 
     ray_def ray;
     if (!find_ray(agent->pos(), a, ray, opc_solid))
@@ -1987,9 +2025,8 @@ bool targeter_boulder::valid_aim(coord_def a)
 
 aff_type targeter_boulder::is_affected(coord_def loc)
 {
-    for (auto pc : path_taken)
-        if (pc == loc)
-            return cell_is_solid(pc) ? AFF_NO : AFF_YES;
+    if (boulder_sim.count(loc))
+        return boulder_sim[loc];
 
     return AFF_NO;
 }

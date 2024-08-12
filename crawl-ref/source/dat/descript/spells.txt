@@ -209,13 +209,15 @@ reserves, they will take doubled damage.
 %%%%
 Brom's Barrelling Boulder spell
 
-Unleashes a massive rolling boulder in a given cardinal direction. The boulder
-squashes and knocks back creatures it strikes, suffering wear and tear with each
-hit. If it strikes a wall, it will explode into fragments of rock, doing damage
-that is strongly reduced by armour.
+Unleashes a massive rolling boulder in a given compass direction. This boulder
+damages any creature it hits, rolling over those who perish beneath it and
+pushing any others helplessly backwards (along with anyone else unfortunate
+enough to be standing behind them).
 
-The boulder sometimes veers from side to side, and will disintegrate if it leaves
-the caster's sight.
+Its size and reckless locomotion make it difficult to use in confined areas; if
+lauched down narrow passages, it will rapidly abrade against the walls and fall
+apart. It will also crumble if it leaves the caster's sight or strikes a wall
+or otherwise unmoveable creature.
 %%%%
 Brothers in Arms spell
 

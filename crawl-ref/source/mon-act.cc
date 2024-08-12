@@ -938,39 +938,6 @@ static bool _handle_reaching(monster& mons)
     return ret;
 }
 
-static void _setup_boulder_explosion(monster& boulder, bolt& beam)
-{
-    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
-    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.source_id    = boulder.mid;
-    beam.thrower      = boulder.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
-    beam.source       = boulder.pos();
-    beam.target       = beam.source;
-    beam.hit          = AUTOMATIC_HIT;
-    beam.colour       = BROWN;
-    beam.flavour      = BEAM_FRAG;
-    beam.ex_size      = 1;
-    beam.is_explosion = true;
-    beam.hit_verb     = "hits";
-    beam.name         = "rocky shrapnel";
-    beam.source_name  = boulder.name(DESC_PLAIN, true);
-    beam.damage       = boulder_damage(pow, true);
-}
-
-static coord_def _wobble_dir(coord_def dir)
-{
-    // Computer, can I get a boulder wobble?
-    if (dir.x && dir.y)
-    {
-        if (coinflip())
-            return coord_def(dir.x, 0);
-        return coord_def(0, dir.y);
-    }
-    if (dir.y)
-        return coord_def(coinflip() ? 1 : -1, dir.y);
-    return coord_def(dir.x, coinflip() ? 1 : -1);
-}
-
 static void _handle_boulder_movement(monster& boulder)
 {
     // If we don't have a movement direction (probably from a vault-placed
@@ -989,8 +956,6 @@ static void _handle_boulder_movement(monster& boulder)
 
     // First, find out where we intend to move next
     coord_def dir = boulder.props[BOULDER_DIRECTION_KEY].get_coord();
-    if (one_chance_in(10))
-        dir = _wobble_dir(dir);
     coord_def targ = boulder.pos() + dir;
 
     // If our summoner is the player, and they cannot see us, silently crumble
@@ -1007,15 +972,11 @@ static void _handle_boulder_movement(monster& boulder)
     {
         if (you.can_see(boulder))
         {
-            mprf("%s slams into a %s and explodes!",
+            mprf("%s slams into a %s and falls apart!",
                  boulder.name(DESC_THE).c_str(),
                  feat_type_name(env.grid(targ)));
         }
-
-        bolt beam;
-        _setup_boulder_explosion(boulder, beam);
         monster_die(boulder, KILL_NONE, true);
-        beam.explode();
         return;
     }
 
@@ -1044,14 +1005,48 @@ static void _handle_boulder_movement(monster& boulder)
 
             for (int i = push_targs.size() - 1; i >= 0; --i)
                 if (push_targs[i]->alive()) // died from earlier knockback?
-                    push_targs[i]->knockback(boulder, 1, 0, "");
+                    push_targs[i]->stumble_away_from(boulder.pos());
         }
 
-        // If there is still somehow something in our way (maybe we were unable to
-        // push everything out of it), stop here
+        // If there is still somehow something in our way (maybe we were unable
+        // to push everything out of it), destroy the boulder (and deal an
+        // additional hit to the actor in question if they're against something
+        // solid)
         if (actor_at(targ))
         {
-            _swim_or_move_energy(boulder);
+            actor* blocker = nullptr;
+            string blocker_name;
+            if (blocker = monster_at(obstruction->pos() + dir))
+                blocker_name = blocker->name(DESC_THE);
+            else
+                blocker_name = feature_description_at(targ + dir);
+
+            if (blocker || cell_is_solid(targ + dir))
+            {
+                if (you.can_see(boulder) || you.can_see(*obstruction))
+                {
+                    mprf("%s crushes %s against %s and falls apart!",
+                            boulder.name(DESC_THE).c_str(),
+                            obstruction->name(DESC_THE).c_str(),
+                            blocker_name.c_str());
+                }
+                do_boulder_impact(boulder, *obstruction, true);
+            }
+            // This generally means we're trying to push an enemy against deep
+            // water / lava without it being able to swim. This should still
+            // destroy the boulder for gameplay reasons, but it's awkward to say
+            // something was 'crushed' against water.
+            else
+            {
+                if (you.can_see(boulder))
+                {
+                    mprf("%s crumbles against %s.",
+                            boulder.name(DESC_THE).c_str(),
+                            obstruction->name(DESC_THE).c_str());
+                }
+            }
+
+            monster_die(boulder, nullptr, true);
             return;
         }
     }
@@ -1059,6 +1054,33 @@ static void _handle_boulder_movement(monster& boulder)
     // If we're still here, actually move. (But consume energy, even if we somehow don't)
     if (!_do_move_monster(boulder, dir))
         _swim_or_move_energy(boulder);
+    else
+    {
+        // Might have been killed by barbs while moving!
+        if (!boulder.alive())
+            return;
+
+        // Abrade boulder by the number of solid tiles we passed by just now
+        int solid_count = 0;
+        string solid_name;
+        for (adjacent_iterator ai(boulder.pos()); ai; ++ai)
+            if (cell_is_solid(*ai))
+            {
+                ++solid_count;
+                if (solid_name.empty())
+                    solid_name = feat_type_name(env.grid(*ai));
+            }
+
+        const int self_dmg = roll_dice(solid_count, BOULDER_ABRASION_DAMAGE);
+        if (self_dmg > boulder.hit_points)
+        {
+            mprf("%s is abraded by the %s and falls apart.",
+                    boulder.name(DESC_THE).c_str(), solid_name.c_str());
+            monster_die(boulder, nullptr, true);
+        }
+        else
+            boulder.hurt(nullptr, self_dmg, BEAM_NONE, KILLED_BY_COLLISION);
+    }
 }
 
 static void _handle_hellfire_mortar(monster& mortar)

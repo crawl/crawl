@@ -552,10 +552,13 @@ public:
 class targeter_boulder : public targeter_beam
 {
 public:
-    targeter_boulder(const actor* caster);
+    targeter_boulder(const actor* caster, int boulder_hp);
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+private:
+    int hp;
+    map<coord_def, aff_type> boulder_sim;
 };
 
 class targeter_petrify : public targeter_beam
