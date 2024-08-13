@@ -154,6 +154,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_INFERNAL_DEMONSPAWN, "infernal demonspawn")
     AXED_MON(MONS_TORTUROUS_DEMONSPAWN, "torturous demonspawn")
     AXED_MON(MONS_LOROCYPROCA, "lorocyproca")
+    AXED_MON(MONS_ELECTROFERRIC_VORTEX, "electroferric vortex")
 #endif
 
 // Real monsters begin here {dlb}:
