@@ -714,6 +714,7 @@ static const mutation_def mut_data[] =
   {"You feel a strange anaesthesia.",
    "You feel a very strange anaesthesia.", ""},
   {"", "", ""},
+  TILEG_MUT_TORMENT_RES,
 },
 
 { MUT_NEGATIVE_ENERGY_RESISTANCE, 0, 3, mutflag::good, false,
@@ -862,7 +863,7 @@ static const mutation_def mut_data[] =
   {"You have a beak for a mouth.", "", ""},
   {"Your mouth lengthens and hardens into a beak!", "", ""},
   {"Your beak shortens and softens into a mouth.", "", ""},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_BEAK,
 },
 
 { MUT_CLAWS, 2, 3, mutflag::good, true,
@@ -948,7 +949,7 @@ static const mutation_def mut_data[] =
   {"Your talons dull and shrink into feet.",
    "Your talons look more like feet.",
    "Your talons look more like feet."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_TALONS,
 },
 
 // Octopode only
@@ -1136,7 +1137,7 @@ static const mutation_def mut_data[] =
   {"You shed all your fur.",
    "Your thick fur recedes somewhat.",
    "Your shaggy fur recedes somewhat."},
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_SHAGGY_FUR,
 
   {0, 0, "Your shaggy fur will keep you warm. (AC + 3, rC+)"}
 },
@@ -1440,7 +1441,7 @@ static const mutation_def mut_data[] =
   {"Your body returns to its normal consistency.",
    "Your body becomes less malleable.",
    "Your body becomes less viscous."},
-  TILEG_MUT_GENERIC_JIYVA_MUTATION,
+  TILEG_MUT_GELATINOUS_BODY,
 },
 
 { MUT_EYEBALLS, 0, 3, mutflag::good | mutflag::jiyva, true,
@@ -1825,7 +1826,7 @@ static const mutation_def mut_data[] =
    "Your natural camouflage becomes less effective.",
    "Your natural camouflage becomes less effective."},
 
-  TILEG_MUT_GENERIC_GOOD_MUTATION,
+  TILEG_MUT_CAMOUFLAGE,
 },
 
 { MUT_IGNITE_BLOOD, 0, 3, mutflag::good, false,
@@ -2352,6 +2353,7 @@ static const mutation_def mut_data[] =
   {"Your paws help you pounce on unaware monsters.", "", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_PAWS,
 },
 
 { MUT_MISSING_EYE, 0, 1, mutflag::bad, false,
@@ -2422,6 +2424,7 @@ static const mutation_def mut_data[] =
   {"You do not drink.", "", ""},
   {"Your mouth dries to ashes.", "", ""},
   {"You gain the ability to drink.", "", ""},
+  TILEG_MUT_NO_DRINK,
 },
 
 { MUT_FAITH, 0, 1, mutflag::good, false,
@@ -2456,6 +2459,7 @@ static const mutation_def mut_data[] =
   {"You are incapable of wielding weapons or throwing items.", "", ""},
   {"You can no longer grasp objects.", "", ""},
   {"You can now grasp objects.", "", ""},
+  TILEG_MUT_NO_GRASPING,
 },
 
 { MUT_NO_ARMOUR, 0, 1, mutflag::bad, false,
@@ -2464,6 +2468,7 @@ static const mutation_def mut_data[] =
   {"You cannot wear armour.", "", ""},
   {"You can no longer wear armour.", "", ""},
   {"You can now wear armour.", "", ""},
+  TILEG_MUT_NO_ARMOUR,
 },
 
 { MUT_MULTILIVED, 0, 1, mutflag::good, false,
@@ -2472,6 +2477,7 @@ static const mutation_def mut_data[] =
   {"You gain extra lives every three experience levels.", "", ""},
   {"You are no longer multi-lived.", "", ""},
   {"You can now gain extra lives.", "", ""},
+  TILEG_MUT_MULTILIVED,
 },
 
 { MUT_DISTRIBUTED_TRAINING, 0, 1, mutflag::good, false,

@@ -1265,6 +1265,7 @@ dwarf MONS_DWARF
 deep_dwarf MONS_DEEP_DWARF
 %sdir mon/unique
 jorgrun MONS_JORGRUN
+wiglaf MONS_WIGLAF
 
 ## Non-derived undead ('z')
 %sdir mon/undead
@@ -1390,7 +1391,6 @@ old-serpent-coc MONS_OLD_SERPENT_COC
 old-serpent-dis MONS_OLD_SERPENT_DIS
 old-serpent-geh MONS_OLD_SERPENT_GEH
 old-serpent-tar MONS_OLD_SERPENT_TAR
-wiglaf MONS_WIGLAF
 orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 polymoth MONS_POLYMOTH
 %rim 0

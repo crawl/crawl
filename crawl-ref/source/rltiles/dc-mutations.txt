@@ -14,6 +14,9 @@ generic_jiyva_mutation_1 GENERIC_JIYVA_MUTATION
 generic_jiyva_mutation_2
 generic_jiyva_mutation_3
 
+shaggy_fur_1 SHAGGY_FUR
+shaggy_fur_2
+shaggy_fur_3
 blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
@@ -95,6 +98,7 @@ strong_willed_3
 fangs_1 FANGS
 fangs_2
 fangs_3
+beak BEAK
 horns_1 HORNS
 horns_2
 horns_3
@@ -104,10 +108,16 @@ antennae_3
 claws_1 CLAWS
 claws_2
 claws_3
+talons_1 TALONS
+talons_2
+talons_3
 hooves_1 HOOVES
 hooves_2
 hooves_3
 
+camouflage_1 CAMOUFLAGE
+camouflage_2
+camouflage_3
 passive_mapping_1 PASSIVE_MAPPING
 passive_mapping_2
 passive_mapping_3
@@ -158,6 +168,8 @@ powered_by_death_1 POWERED_BY_DEATH
 powered_by_death_3
 powered_by_death_3
 demonic_will DEMONIC_WILL
+torment_res_1 TORMENT_RES
+torment_res_2
 hurl_damnation HURL_DAMNATION
 silence_aura SILENCE_AURA
 word_of_chaos WORD_OF_CHAOS
@@ -167,11 +179,16 @@ cold_blooded COLD_BLOODED
 acid_res ACID_RES
 acidic_bite ACIDIC_BITE
 steam_res STEAM_RES
+multilived MULTILIVED
+no_armour NO_ARMOUR
+no_grasping NO_GRASPING
+paws PAWS
 petrification_res PETRIFICATION_RES
 nightstalker_1 NIGHTSTALKER
 nightstalker_2
 nightstalker_3
 inhibited_regeneration INHIBITED_REGENERATION
+no_drink NO_DRINK
 faith FAITH
 spit_poison_1 SPIT_POISON
 spit_poison_2
@@ -199,6 +216,9 @@ engulf ENGULF
 eyeballs_1 EYEBALLS
 eyeballs_2
 eyeballs_3
+gelatinous_body_1 GELATINOUS_BODY
+gelatinous_body_2
+gelatinous_body_3
 jelly_growth JELLY_GROWTH
 
 no_armour_skill NO_ARMOUR_SKILL
