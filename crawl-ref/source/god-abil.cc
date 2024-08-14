@@ -7414,8 +7414,8 @@ static void _spawn_crucible_victim(bool near_player_okay = false)
                                           ENCH_WEAK);
         victim->add_ench(mon_enchant(ench, 0, nullptr, INFINITE_DURATION));
 
-        victim->hit_points = random_range(victim->hit_points * 3 / 10,
-                                          victim->hit_points * 8 / 10);
+        victim->hit_points = max(1, random_range(victim->hit_points * 3 / 10,
+                                                 victim->hit_points * 8 / 10));
 
         victim->props[MAKHLEB_CRUCIBLE_VICTIM_KEY] = true;
         victim->props[ALWAYS_CORPSE_KEY] = true;
