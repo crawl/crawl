@@ -1946,8 +1946,6 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DRAIN_LIFE, "Drain Life",
     spschool::necromancy,
-    // n.b. marked as spflag::monster for wizmode purposes, but this spell is
-    // called by the yred ability.
     spflag::area | spflag::monster,
     6,
     0,

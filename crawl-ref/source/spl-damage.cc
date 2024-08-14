@@ -604,7 +604,7 @@ static bool _drain_lifeable(const actor* agent, const actor* act)
 }
 
 static int _los_spell_damage_actor(const actor* agent, actor &target,
-                                   bolt &beam, bool actual)
+                                   bolt &beam, bool actual, bool ignore_ac)
 {
 
     beam.thrower = (agent && agent->is_player()) ? KILL_YOU :
@@ -622,13 +622,15 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     if (actual)
     {
         hurted = beam.damage.roll();
-        hurted = max(0, target.apply_ac(hurted));
+        if (!ignore_ac)
+            hurted = max(0, target.apply_ac(hurted));
     }
     else
     {
         // Tracers use the average for damage calculations.
         hurted = (1 + beam.damage.num * beam.damage.size) / 2;
-        hurted = max(0, hurted - target.armour_class() / 2);
+        if (!ignore_ac)
+            hurted = max(0, hurted - target.armour_class() / 2);
     }
 
     const bool doFlavour = actual && beam.origin_spell != SPELL_DRAIN_LIFE;
@@ -841,7 +843,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         if (spell == SPELL_OZOCUBUS_REFRIGERATION)
             beam.damage.size = _ozo_adj_dam(base_dam_size, ozo_adj_count[a], actual);
 
-        int this_damage = _los_spell_damage_actor(agent, *a, beam, actual);
+        int this_damage = _los_spell_damage_actor(agent, *a, beam, actual,
+                                                    spell == SPELL_DRAIN_LIFE);
         total_damage += this_damage;
 
         if (actual || !this_damage)
