@@ -3366,7 +3366,7 @@ bool dazzle_target(actor *victim, const actor *agent, int pow)
         if (you.can_be_dazzled()
             && x_chance_in_y(numerator, dazzle_chance_denom(pow)))
         {
-            blind_player(random_range(4, 8));
+            blind_player(random_range(6, 12));
             return true;
         }
     }
@@ -3403,7 +3403,22 @@ spret cast_dazzling_flash(const actor *caster, int pow, bool fail, bool tracer)
                 continue;
 
             if (!mons_aligned(caster, victim))
-                return spret::success;
+            {
+                // If this is a player tracer, consider blind monsters to be
+                // valid targets (since you *could* stand more duration on them.)
+                if (caster->is_player())
+                    return spret::success;
+                // But for monsters, it's generally a waste of time to reblind
+                // things which are already blind, so don't bother.
+                else
+                {
+                    if ((victim->is_monster() && !victim->as_monster()->has_ench(ENCH_BLIND))
+                        || (victim->is_player() && !you.duration[DUR_BLIND]))
+                    {
+                        return spret::success;
+                    }
+                }
+            }
         }
 
         return spret::abort;
