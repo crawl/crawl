@@ -3281,7 +3281,7 @@ void _walk_on_decor(dungeon_feature_type new_grid)
 {
     string messageLookup = "";
     string decorLine = "";
-    int frequency = Options.food_snacking_frequency; // default 33%
+    int frequency = Options.food_snacking_frequency; // default 40%
 
     if (new_grid == DNGN_CACHE_OF_FRUIT)
         messageLookup += "fruit cache";
