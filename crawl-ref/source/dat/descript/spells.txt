@@ -994,7 +994,8 @@ Magnavolt spell
 
 Envelops a target in a thin layer of magnetically charged metal fragments, then
 unleashes a powerful surge of electricity that arcs unerringly towards every
-visible target coated in these fragments.
+visible target coated in these fragments - firing an additional beam at each
+target thus marked.
 
 Magnetised creatures are additionally unable to evade attacks and will be
 revealed if invisible. If they die while still coated, they will leave behind a
