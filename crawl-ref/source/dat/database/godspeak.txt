@@ -290,13 +290,13 @@ Xom underfoot general
 
 @The_feature@ briefly shifts under you.
 
-Something invisible lands on @the_feature@ beside you!
+An imperceptible spirit brushes against @the_feature@ beside you.
 %%%%
 Xom underfoot water
 
 @The_feature@ briefly recedes away from you.
 
-Something invisible splashes into @the_feature@ beside you!
+An imperceptible spirit sends ripples through @the_feature@ beside you.
 %%%%
 Xom underfoot airborne general
 
@@ -308,7 +308,7 @@ Xom underfoot airborne water
 
 @Xom underfoot airborne general@
 
-Something invisible splashes into @the_feature@ beneath you!
+An imperceptible spirit flows into @the_feature@ beneath you.
 %%%%
 Xom inventory singular
 
