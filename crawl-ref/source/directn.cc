@@ -3281,13 +3281,14 @@ void _walk_on_decor(dungeon_feature_type new_grid)
 {
     string messageLookup = "";
     string decorLine = "";
+    int frequency = Options.food_snacking_frequency; // default 33%
 
     if (new_grid == DNGN_CACHE_OF_FRUIT)
         messageLookup += "fruit cache";
     else if (new_grid == DNGN_CACHE_OF_MEAT)
         messageLookup += "meat cache";
 
-    if (messageLookup != "" && one_chance_in(3))
+    if (messageLookup != "" && x_chance_in_y(frequency, 100))
     {
         decorLine = getMiscString(get_form(you.form)->wiz_name + " " + messageLookup);
 

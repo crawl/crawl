@@ -540,6 +540,7 @@ public:
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
     bool        show_blood; // whether to show blood or not
+    int         food_snacking_frequency; // how often walking on food makes one eat
     bool        reduce_animations;   // if true, don't show interim steps for animations
     bool        drop_disables_autopickup;   // if true, automatically remove drops from autopickup
 

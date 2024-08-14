@@ -77,12 +77,12 @@ The contents of this text are:
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, reduce_animations,
                 use_animations, unusual_monster_items, darken_beyond_range,
-                show_blood, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, always_show_gems,
-                more_gem_info, action_panel, action_panel_filter,
-                action_panel_show_unidentified, action_panel_scale,
-                action_panel_orientation, action_panel_font_family,
-                action_panel_font_size
+                show_blood, food_snacking_frequency, force_more_message,
+                flash_screen_message, cloud_status, always_show_zot,
+                always_show_gems, more_gem_info, action_panel,
+                action_panel_filter, action_panel_show_unidentified,
+                action_panel_scale, action_panel_orientation,
+                action_panel_font_family, action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -1784,6 +1784,12 @@ darken_beyond_range = true
 show_blood = true
         Setting this option to false will hide blood splatters in the floor
         and on the walls. In tiles, corpses will be displayed as skeletons.
+
+food_snacking_frequency = 33
+        Controls the frequency of producing flavour messages when walking on a
+        cache of fruit or meat, with the number corresponding to a percent
+        chance. As one would expect, 100% means always, 0% means never, and
+        the default 33% means a third of the time.
 
 force_more_message += <regex>, <regex>
         (List option)
