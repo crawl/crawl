@@ -4202,7 +4202,7 @@ bool god_protects_from_harm()
 {
     if ((have_passive(passive_t::protect_from_harm)
          || have_passive(passive_t::lifesaving))
-        && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
+         && x_chance_in_y(100 + min(piety_breakpoint(5), (int)you.piety), 1000))
     {
         return true;
     }
