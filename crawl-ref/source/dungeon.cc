@@ -5927,6 +5927,10 @@ static dungeon_feature_type _pick_an_altar()
             god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_KIKUBAAQUDGHA);
             break;
 
+       case BRANCH_SNAKE: // barding god, slow god, treasure hoard god
+            god = random_choose(GOD_OKAWARU, GOD_CHEIBRIADOS, GOD_GOZAG);
+            break;
+
         case BRANCH_SLIME:
             god = GOD_JIYVA;
             break;
@@ -5939,15 +5943,19 @@ static dungeon_feature_type _pick_an_altar()
         case BRANCH_DIS:
         case BRANCH_GEHENNA:
         case BRANCH_COCYTUS:
-        case BRANCH_TARTARUS:
-        case BRANCH_PANDEMONIUM: // particularly destructive / elemental gods
-            if (one_chance_in(3))
+        case BRANCH_TARTARUS:  // particularly destructive / elemental gods
+            if (one_chance_in(9))
             {
                 god = random_choose(GOD_KIKUBAAQUDGHA, GOD_NEMELEX_XOBEH,
                                     GOD_QAZLAL, GOD_VEHUMET);
             }
             else
                 god = GOD_MAKHLEB;
+            break;
+
+        case BRANCH_PANDEMONIUM: // DS enemy gods + the & summoner
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_LUGONU, GOD_TROG,
+                                GOD_MAKHLEB, GOD_NEMELEX_XOBEH);
             break;
 
         default: // Any temple-valid god

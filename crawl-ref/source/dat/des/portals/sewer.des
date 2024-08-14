@@ -1166,9 +1166,12 @@ ENDMAP
 NAME:   sewer_co_tree
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-MONS:   kobold / kobold brigand
-MONS:   adder / ball python / ribbon worm / brain worm w:1
-MONS:   endoplasm / rat / river rat w:5
+KMONS:  1 = kobold / kobold brigand
+KMONS:  2 = adder / ball python / ribbon worm / brain worm w:1
+KMONS:  3 = endoplasm / rat / river rat w:5
+KITEM:  1 = $ no_pickup
+KITEM:  2 = $ q:1 no_pickup
+KITEM:  3 = stone
 : kitem("e = " .. dgn.loot_potions)
 : kitem("f =  " .. dgn.loot_scrolls)
 # less water in the middle, more at the endpoints.

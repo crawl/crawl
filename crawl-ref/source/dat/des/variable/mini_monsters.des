@@ -2564,7 +2564,7 @@ SUBST:  56 = -
 : end
 : if you.in_branch("Crypt") then
 SUBST:  x = c
-COLOUR: t = lightgrey w:5 / brown
+COLOUR: t = brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 FTILE:  - = floor_crypt
@@ -6189,7 +6189,7 @@ cc.0.x0*0x...cc
 ENDMAP
 
 NAME:   kennysheep_treasure_room
-TAGS:   no_monster_gen no_pool_fixup
+TAGS:   no_monster_gen no_pool_fixup extra
 DEPTH:  D:12-, Depths
 MAP
 ccccc

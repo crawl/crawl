@@ -48,12 +48,43 @@ CHANCE: 8% (Elf)
 CHANCE: 5% (Lair, Slime, Crypt)
 CHANCE: 1% (Zot)
 CHANCE: 0
+: if crawl.one_chance_in(4) then
+SUBST:  ? : ??`, ! : ?```, ~ : "'', ` : ```""', " : """''`
+CLEAR:  ?
+:   if you.in_branch("Lair") then
+FTILE:  ` = floor_pebble_red
+FTILE:  " = floor_pebble_green
+FTILE:  'C = floor_vines
+:   elseif you.in_branch("Orc") then
+FTILE:  ` = floor_sandstone
+FTILE:  " = floor_pebble_darkgray
+FTILE:  'C = floor_pebble_brown
+:   elseif you.in_branch("Snake") then
+FTILE:  ` = floor_vault
+FTILE:  " = floor_crystal_squares
+FTILE:  'C = floor_volcanic
+:   elseif you.in_branch("Elf") then
+FTILE:  ` = floor_vault
+FTILE:  " = floor_nerves_blue
+FTILE:  'C = floor_marble
+:   elseif you.in_branch("Crypt") then
+FTILE:  ` = floor_crystal_squares
+FTILE:  " = floor_tomb
+FTILE:  'C = floor_black_cobalt
+:   elseif you.in_branch("Zot") then
+FTILE:  ` = floor_hall
+FTILE:  " : floor_demonic_white / floor_demonic_blue / floor_demonic_magenta
+FTILE:  'C = floor_marble
+:   end
+: else
+SUBST:  '"`?! = .
+: end
 MAP
-.....
-.....
-..C..
-.....
-.....
+?`"`!
+`"'~`
+"'C'"
+`~'"`
+!`"`?
 ENDMAP
 
 NAME:   lemuel_altar_in_water
