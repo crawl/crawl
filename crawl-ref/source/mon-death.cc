@@ -2561,13 +2561,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
             int hp_heal = 0, mp_heal = 0;
-            // Divine and innate health and mana restoration doesn't happen when
-            // killing born-friendly monsters.
-            const bool valid_heal_source = gives_player_xp
-                && !mons_is_object(mons.type);
             // Chance scales from 30% at 1* to 80% at 6*
             const bool can_divine_heal =
-                (valid_heal_source
+                (gives_player_xp
                     || you_worship(GOD_MAKHLEB)
                         && player_in_branch(BRANCH_CRUCIBLE)
                         && mons_class_gives_xp(mons.type)
@@ -2597,7 +2593,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (can_divine_heal && have_passive(passive_t::mp_on_kill))
                 mp_heal += 1 + random2(mons.get_experience_level() / 2);
 
-            if (valid_heal_source
+            if (gives_player_xp
                 && you.has_mutation(MUT_DEVOUR_ON_KILL)
                 && mons.holiness() & (MH_NATURAL | MH_PLANT)
                 && coinflip())
