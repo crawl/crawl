@@ -3780,7 +3780,7 @@ static const struct spell_desc spelldata[] =
     3,
     0,
     LOS_RADIUS, LOS_RADIUS,
-    0,
+    6,
     TILEG_ERROR,
 },
 
