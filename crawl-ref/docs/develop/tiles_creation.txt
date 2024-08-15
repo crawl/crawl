@@ -33,7 +33,7 @@ Table of Contents
    5.4 Dynamic weapons
    5.5 Variant tiles
 6. Compiling the game
-7. Tiles suggestions
+7. Tiles priorities
 8. Submitting your tiles
 9. Reducing file size
 
@@ -434,33 +434,33 @@ recreated, as will changes to tiles included in the git repository.
 
 See INSTALL.txt for compilation instructions. It is recommended that you first
 try to get the game compiled without any changes. If you face any problems,
-don't hesitate to send an email to our crawl-ref-discuss mailing list or the
-rec.games.roguelike.misc newsgroup.
+don't hesitate to make posts in the official Tavern 2.0 forums at
+https://tavern.dcss.io/.
 
 
-7. Tiles suggestions
+7. Tiles priorities
 ====================
 
-In case you'd like to draw some tiles but have run out of ideas, check out the
-following links:
+While better replacements for current tiles may be recieved positively, there
+are hundreds of missing or lacking tiles specifically desired by the DevTeam
+that will most likely attract more attention. Check out the following link to
+see such:
 
-http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_missing_for_0.6
-http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_improvement
-http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_missing_for_wizlabs
+https://github.com/crawl/crawl/wiki/Art-Requests
 
-(Should these links be invalid, check this document's online version:
- http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation)
+(Should this link be invalid, check this document's online version:
+ https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/tiles_creation.txt)
 
-Also, if you have any further suggestions, feel free to add them.
+Also, if you have any further suggestions, feel free to suggest their addition
+to said link.
 
 
 8. Submitting your tiles
 ========================
 
-To submit new tiles, please add them as a new item in the Graphics category of
-our Mantis tracker (http://crawl.develz.org/mantis/bug_report_page.php), or
-contact one of our tiles developers (these currently include ontoclasm and
-roctavian).
+To submit new tiles, please submit a pull request to our github
+(https://github.com/crawl/crawl/pulls), or contact one of our tiles developers
+(these currently include Sastreii and CanOfWorms).
 
 Please note that, unless you specify otherwise, tiles you submit to Crawl will
 be released under the CC0 license, which is similar to placing them in the
