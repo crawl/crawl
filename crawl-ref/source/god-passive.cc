@@ -2477,5 +2477,5 @@ bool makhleb_haemoclasm_trigger_check(const monster& victim)
     // A much higher chance if there's at least one thing the explosion could
     // hit, scaling slightly with *how* many things could be hit.
     else
-        return x_chance_in_y(6, 30 - count * 2);
+        return x_chance_in_y(6, 30 - count * 3);
 }
