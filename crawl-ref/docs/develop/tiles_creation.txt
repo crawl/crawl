@@ -441,7 +441,7 @@ https://tavern.dcss.io/.
 7. Tiles priorities
 ====================
 
-While better replacements for current tiles may be recieved positively, there
+While better replacements for current tiles may be received positively, there
 are hundreds of missing or lacking tiles specifically desired by the DevTeam
 that will most likely attract more attention. Check out the following link to
 see such:
