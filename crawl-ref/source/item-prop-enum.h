@@ -861,7 +861,7 @@ enum talisman_type
 enum special_gizmo_type
 {
     SPGIZMO_NORMAL,
-    SPGIZMO_MANAREV,
+    SPGIZMO_SPELLMOTOR,
     SPGIZMO_GADGETEER,
     SPGIZMO_PARRYREV,
     SPGIZMO_AUTODAZZLE,

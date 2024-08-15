@@ -2202,6 +2202,10 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         if (will_have_passive(passive_t::shadow_spells) && actual_spell)
             dithmenos_shadow_spell(spell);
         _spellcasting_side_effects(spell, god, !actual_spell);
+
+        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR))
+            coglin_spellmotor_attack();
+
         return spret::success;
     }
     case spret::fail:

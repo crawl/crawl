@@ -4436,3 +4436,39 @@ vector<string> get_player_aux_names()
 
     return names;
 }
+
+bool coglin_spellmotor_attack()
+{
+    // Only operates for melee attacks.
+    if (you.weapon() && is_range_weapon(*you.weapon()))
+        return false;
+
+    // Never let this give an effective speed boost for attacking. If the
+    // attack would take longer than a spell, give a proportional chance of not
+    // launching the attack at all.
+    int delay = you.attack_delay().roll();
+    if (delay > 10 && !x_chance_in_y(10, delay))
+        return false;
+
+    // Gather all possible targets in attack range
+    list<actor*> targets;
+    get_cleave_targets(you, coord_def(), targets, -1, true);
+
+    // Test that we have at least one valid non-prompting attack
+    vector<actor*> targs;
+    for (actor* victim : targets)
+    {
+        melee_attack attk(&you, victim);
+        if (!attk.would_prompt_player())
+            targs.push_back(victim);
+    }
+
+    if (targs.empty())
+        return false;
+
+    melee_attack attk(&you, targs[random2(targs.size())]);
+    mpr("Your spellmotor activates!");
+    attk.launch_attack_set();
+
+    return true;
+}

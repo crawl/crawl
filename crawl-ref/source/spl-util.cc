@@ -534,7 +534,7 @@ int spell_mana(spell_type which_spell, bool real_spell)
     if (real_spell)
     {
         int cost = level;
-        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_MANAREV))
+        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR))
             cost = max(1, cost - you.rev_tier());
 
         if (you.duration[DUR_BRILLIANCE] || player_equip_unrand(UNRAND_FOLLY))

@@ -2664,9 +2664,10 @@ static string _describe_gizmo(const item_def &item)
         ret += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 2, name.c_str());
         switch (item.brand)
         {
-            case SPGIZMO_MANAREV:
-                ret += "Your spells cost less MP based on how Revved you are "
-                       "(up to 3 less, but cannot reduce below 1).\n";
+            case SPGIZMO_SPELLMOTOR:
+                ret += "Your spells cost less MP as you Rev up. Whenever you "
+                       "cast a spell, you make a melee attack against a random "
+                       "enemy in range.\n";
                 break;
 
             case SPGIZMO_GADGETEER:
