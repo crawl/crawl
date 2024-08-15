@@ -358,6 +358,10 @@ void maybe_mons_speaks(monster* mons)
 
     int chance = 21; // this is a very old number; no idea why it was chosen
 
+    // Uniques tend to have more distinctive things to say and are only seen once.
+    if (mons_is_unique(mons->type))
+        chance -= 9;
+
     // allies stick around longer, so should probably have longer to say
     // their piece; no need for them to chatter as much.
     if (mons->wont_attack())
@@ -391,7 +395,7 @@ void maybe_mons_speaks(monster* mons)
         mons_speaks(mons);
     }
     else if ((mons->type == MONS_CRAZY_YIUF || mons->type == MONS_DONALD)
-        && one_chance_in(7))
+        && one_chance_in(9))
     {
         // Yiuf gets an extra chance to speak!
         // So does Donald.
