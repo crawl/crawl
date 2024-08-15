@@ -2265,9 +2265,6 @@ static void unmarshall_level_vault_data(reader &th)
 static void marshall_shop(writer &th, const shop_struct& shop)
 {
     marshallByte(th, shop.type);
-    marshallByte(th, shop.keeper_name[0]);
-    marshallByte(th, shop.keeper_name[1]);
-    marshallByte(th, shop.keeper_name[2]);
     marshallByte(th, shop.pos.x);
     marshallByte(th, shop.pos.y);
     marshallByte(th, shop.greed);
@@ -2275,6 +2272,7 @@ static void marshall_shop(writer &th, const shop_struct& shop)
     marshallString(th, shop.shop_name);
     marshallString(th, shop.shop_type_name);
     marshallString(th, shop.shop_suffix_name);
+    marshallString(th, shop.full_shop_name);
     _marshall_iterator(th, shop.stock.begin(), shop.stock.end(),
                        bind(marshallItem, placeholders::_1, placeholders::_2,
                             false));
@@ -2295,17 +2293,43 @@ static void unmarshall_shop(reader &th, shop_struct& shop)
 #else
     ASSERT(shop.type != SHOP_UNASSIGNED);
 #endif
-    shop.keeper_name[0] = unmarshallUByte(th);
-    shop.keeper_name[1] = unmarshallUByte(th);
-    shop.keeper_name[2] = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+    // Replicate the old code for shopkeeper names and just save it in
+    // shop_name field (if not populated with a non-empty string anyway)
+    FixedVector<uint8_t, 2> keeper_name = 0;
+    if (th.getMinorVersion() < TAG_MINOR_SHOP_NAME_GENERATOR)
+    {
+        keeper_name[0] = unmarshallUByte(th);
+        keeper_name[1] = unmarshallUByte(th);
+        // Third seed was always thrown away; see note further below
+        unmarshallUByte(th);
+    }
+#endif
     shop.pos.x = unmarshallByte(th);
     shop.pos.y = unmarshallByte(th);
     shop.greed = unmarshallByte(th);
     shop.level = unmarshallByte(th);
     shop.shop_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SHOP_NAME_GENERATOR && shop.shop_name.empty())
+    {
+        uint32_t seed = static_cast<uint32_t>(keeper_name[0])
+            | (static_cast<uint32_t>(keeper_name[1]) << 8)
+            // XX: Intentionally replicated bug here; the third seed was never used
+            // The bug is preserved so shop names don't change during save transfers
+            | (static_cast<uint32_t>(keeper_name[1]) << 16);
+        shop.shop_name = make_name(seed);
+    }
+#endif
     shop.shop_type_name = unmarshallString(th);
     shop.shop_suffix_name = unmarshallString(th);
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_SHOP_NAME_GENERATOR)
+    {
+#endif
+        shop.full_shop_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+    }
     if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
         shop.stock.clear();
     else

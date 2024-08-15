@@ -44,8 +44,11 @@ const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
 const char * const GOZAG_PRICE_KEY = "gozag_price%d";
 
 const char * const GOZAG_SHOPKEEPER_NAME_KEY = "gozag_shopkeeper_%d";
-const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
+#if TAG_MAJOR_VERSION == 34
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
+#endif
+const char * const GOZAG_SHOP_NAME_KEY       = "gozag_shop_%d";
+const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"

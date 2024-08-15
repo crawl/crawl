@@ -309,6 +309,7 @@ enum tag_minor_version
     TAG_MINOR_ENDLESS_DIVINE_SHIELD, // Make Divine Shield not expire with time
     TAG_MINOR_NEGATIVE_DIVINE_SHIELD, // Fix negative Divine Shield charges
     TAG_MINOR_MAKHLEB_REVAMP,      // Handle backend of giving existing Makh worshippers mark options
+    TAG_MINOR_SHOP_NAME_GENERATOR, // New generator for shop names
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

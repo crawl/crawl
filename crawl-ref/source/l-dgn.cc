@@ -21,6 +21,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
+#include "shopping.h"
 #include "shout.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1780,6 +1781,16 @@ LUAFN(dgn_state_is_descent)
     return 1;
 }
 
+LUAFN(dgn_shopname)
+{
+    const char* type_name = luaL_checkstring(ls, 1);
+    shop_type shop = str_to_shoptype(type_name);
+    int level = luaL_safe_checkint(ls, 2);
+    bool gozag = lua_isboolean(ls, 3) ? lua_toboolean(ls, 3) : false;
+    auto generated = generate_shop_name(shop, level, gozag);
+    PLUARET(string, generated.first.c_str());
+}
+
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1897,6 +1908,8 @@ const struct luaL_reg dgn_dlib[] =
 { "apply_tide", dgn_apply_tide },
 
 { "is_descent", dgn_state_is_descent },
+
+{ "shopname", dgn_shopname },
 
 { nullptr, nullptr }
 };
