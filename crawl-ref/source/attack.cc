@@ -1582,6 +1582,10 @@ void attack::handle_noise(const coord_def & pos)
     if (stab_attempt)
         return;
 
+    // Shadow attacks are silent.
+    if (attacker->type == MONS_PLAYER_SHADOW)
+        return;
+
     int loudness = damage_done / 4;
 
     // All non-stab attacks make some noise.
