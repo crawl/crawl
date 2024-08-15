@@ -116,10 +116,10 @@ static void _set_vortex_durations()
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
 }
 
-spret cast_polar_vortex(int powc, bool fail)
+spret cast_polar_vortex(int powc, bool fail, bool no_prompt)
 {
     targeter_radius hitfunc(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
-    if (stop_attack_prompt(hitfunc, "make a polar vortex",
+    if (!no_prompt && stop_attack_prompt(hitfunc, "make a polar vortex",
                 [](const actor *act) -> bool {
                     return !act->res_polar_vortex()
                         && (!act->is_monster()

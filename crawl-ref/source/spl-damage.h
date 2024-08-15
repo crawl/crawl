@@ -84,7 +84,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const char **what, bool &hole);
 spret cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
-spret cast_polar_vortex(int powc, bool fail);
+spret cast_polar_vortex(int powc, bool fail, bool no_prompt = false);
 void polar_vortex_damage(actor *caster, int dur);
 dice_def polar_vortex_dice(int pow, bool random);
 void cancel_polar_vortex(bool tloc = false);

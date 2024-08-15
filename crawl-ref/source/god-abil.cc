@@ -3013,13 +3013,9 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_INK_CLOUD:
 
         // Could possibly be adapted to function, but currently doesn't
-        case SPELL_MALIGN_GATEWAY:
         case SPELL_SPECTRAL_CLOUD:
         case SPELL_CORRUPTING_PULSE:
-        case SPELL_OLGREBS_TOXIC_RADIANCE:
-        case SPELL_POLAR_VORTEX:
         case SPELL_SUMMON_ILLUSION:
-        case SPELL_BATTLESPHERE:
             return false;
 
         default:

@@ -3476,7 +3476,21 @@ static bool _toxic_can_affect(const actor *act)
 
 spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
 {
-    if (agent->is_player())
+    // XXX: This must come before the player check, due to Marionette.
+    if (mon_tracer)
+    {
+        for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
+        {
+            if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
+                continue;
+            else
+                return spret::success;
+        }
+
+        // Didn't find any susceptible targets
+        return spret::abort;
+    }
+    else if (agent->is_player())
     {
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
         if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
@@ -3497,19 +3511,6 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
         flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
 
         return spret::success;
-    }
-    else if (mon_tracer)
-    {
-        for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
-        {
-            if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
-                continue;
-            else
-                return spret::success;
-        }
-
-        // Didn't find any susceptible targets
-        return spret::abort;
     }
     else
     {

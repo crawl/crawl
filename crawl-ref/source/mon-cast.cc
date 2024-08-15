@@ -93,6 +93,8 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 static const string MIRROR_RECAST_KEY = "mirror_recast_time";
 
+static bool _trace_los(const monster* agent, bool (*vulnerable)(const actor*));
+static bool _vortex_vulnerable(const actor* victim);
 static god_type _find_god(const monster &mons, mon_spell_slot_flags flags);
 static monster* _get_allied_target(const monster &caster, bolt &tracer);
 static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
@@ -855,10 +857,13 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
     } },
     { SPELL_INVISIBILITY, {
         [](const monster&) {
-            return ai_action::good_or_impossible(!you.duration[DUR_INVIS] && !you.backlit());
+            return ai_action::good_or_impossible(!(you.duration[DUR_INVIS] || you.backlit()));
         },
         [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-           you.increase_duration(DUR_INVIS, random_range(10, 15), 100);
+            mprf(MSGCH_DURATION, !you.duration[DUR_INVIS]
+                                    ? "You fade into invisibility!"
+                                    : "You fade further into invisibility.");
+            you.increase_duration(DUR_INVIS, random_range(10, 15), 100);
         }
     } },
     { SPELL_BERSERKER_RAGE, {
@@ -867,6 +872,38 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
         },
         [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             you.go_berserk(true);
+        }
+    } },
+    { SPELL_BATTLESPHERE, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(!find_battlesphere(&you));
+        },
+        [] (monster& caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            cast_battlesphere(&you, mons_spellpower(caster, SPELL_BATTLESPHERE), GOD_NO_GOD, false);
+        }
+    } },
+    { SPELL_MALIGN_GATEWAY, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(can_cast_malign_gateway());
+        },
+        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            cast_malign_gateway(&you, 200);
+        }
+    } },
+    { SPELL_OLGREBS_TOXIC_RADIANCE, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(cast_toxic_radiance(&you, 100, false, true) == spret::success);
+        },
+        [] (monster&, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            cast_toxic_radiance(&you, 100, false, false);
+        }
+    } },
+    { SPELL_POLAR_VORTEX, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(!you.duration[DUR_VORTEX]);
+        },
+        [] (monster& caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            cast_polar_vortex(mons_spellpower(caster, SPELL_POLAR_VORTEX), false, true);
         }
     } },
 };
@@ -3809,7 +3846,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     return mirror;
 }
 
-static bool _trace_los(monster* agent, bool (*vulnerable)(const actor*))
+static bool _trace_los(const monster* agent, bool (*vulnerable)(const actor*))
 {
     bolt tracer;
     tracer.foe_ratio = 0;
@@ -4283,6 +4320,12 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
         // Good idea?
         return mons_should_fire(beem, ignore_good_idea);
     }
+
+    // Spells with custom marionette logic get to bypass certain normal checks
+    // (largely so that they will use some aggressive 'self-buffs' without
+    // needing the presence of another enemy.)
+    if (mons.attitude == ATT_MARIONETTE && spell_has_marionette_override(spell))
+        return true;
 
     // All direct-effect/summoning/self-enchantments/etc.
     const actor *foe = mons.get_foe();
