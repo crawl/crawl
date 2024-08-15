@@ -3174,6 +3174,9 @@ static void _xom_pseudo_miscast(int /*sever*/)
         str = replace_all(str, "@your_item@", name);
         str = replace_all(str, "@Your_item@", uppercase_first(name));
 
+        str = replace_all(str, "@hand@", you.hand_name(false));
+        str = replace_all(str, "@hands@", you.hand_name(true));
+
         messages.push_back(str);
     }
 
