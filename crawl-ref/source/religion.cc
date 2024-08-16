@@ -3899,6 +3899,15 @@ void join_religion(god_type which_god)
         _print_good_god_brand_changes(you.offhand_weapon(), false);
     }
 
+    // If in a form your god hates and they can do something about it...
+    if (you.form == transformation::dungeon_denizen && god_hates_monster(transform_mons()))
+    {
+        mprf("%s hates your current form and forcibly untransforms you!",
+             god_name(you.religion).c_str());
+        you.transform_uncancellable = true;
+        return_to_default_form();
+    }
+
     // after join_effect() so that gozag's service fee is right for monks
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
