@@ -3613,7 +3613,8 @@ void melee_attack::mons_apply_attack_flavour()
                           attacker->as_monster()->god, SPELL_NO_SPELL,
                           attacker->get_hit_dice() * 12))
         {
-            mpr("A spider bursts forth from the wound!");
+            if (needs_message)
+                mpr("A spider bursts forth from the wound!");
         }
         break;
     }
@@ -3624,8 +3625,11 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (summon_hell_out_of_bat(*attacker, defender->pos()))
         {
-            mprf("Faint brimstone surges around %s!",
-                 defender_name(true).c_str());
+            if (needs_message)
+            {
+                mprf("Faint brimstone surges around %s!",
+                    defender_name(true).c_str());
+            }
         }
         break;
     }
