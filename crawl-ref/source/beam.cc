@@ -5796,7 +5796,7 @@ bool bolt::ignores_monster(const monster* mon) const
 
     // Rimeblight explosions won't hurt allies OR the monster that is exploding
     if (origin_spell == SPELL_RIMEBLIGHT && is_explosion)
-        return mon->friendly() || mon->pos() == source;
+        return mon->friendly() || mon->good_neutral() || mon->pos() == source;
 
     if (origin_spell == SPELL_HOARFROST_BULLET)
         return in_explosion_phase && mons_aligned(agent(), mon);
