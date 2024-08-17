@@ -587,6 +587,24 @@ MAP
   ''w'
 ENDMAP
 
+NAME:   portal_ice_cave_entry_guarded_snowflake
+TAGS:   no_monster_gen transparent
+: ice_cave_portal(_G)
+MONS:   polar bear, rime drake
+MAP
+.....a.....
+.a...a...a.
+...aa.aa...
+..a.a.a.a..
+..aa...aa..
+aa..1O2..aa
+..aa...aa..
+..a.a.a.a..
+...aa.aa...
+.a...a...a.
+.....a.....
+ENDMAP
+
 ###############################################################################
 # Entry vaults that only place hard ice cave entrances
 
