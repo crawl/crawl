@@ -1789,7 +1789,7 @@ food_snacking_frequency = 40
         Controls the frequency of producing flavour messages when walking on a
         cache of fruit or meat, with the number corresponding to a percent
         chance. As one would expect, 100% means always, 0% means never, and
-        the default 40% means a third of the time.
+        the default 40% means two-fifths of the time.
 
 force_more_message += <regex>, <regex>
         (List option)
