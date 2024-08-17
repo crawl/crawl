@@ -739,7 +739,8 @@ indifferent if they have not become your allies.
 Upheaval ability
 
 Calls on the forces of nature to blast a small area with magma, ice, wind,
-or rubble. Invocations skill increases both damage and area affected.
+or rubble. This blast will never harm you or any elementals manifested by you.
+Invocations skill increases both damage and area affected.
 %%%%
 Elemental Force ability
 
