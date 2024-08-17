@@ -260,7 +260,9 @@ static void _clear_constructs()
     for (auto &mons : menv_real)
         if (mons.type == MONS_FULMINANT_PRISM
             || mons.type == MONS_SHADOW_PRISM
-            || mons.type == MONS_HELLFIRE_MORTAR)
+            || mons.type == MONS_HELLFIRE_MORTAR
+            || mons.type == MONS_BOULDER
+            || mons.type == MONS_BALLISTOMYCETE_SPORE)
         {
             mons.reset();
         }
