@@ -291,7 +291,7 @@ void tick_rimeblight(monster& victim)
 
     // Determine chance to explode with ice (rises over time)
     // Never happens below 3, always happens at 4, random chance beyond that
-    if (ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16)
+    if ((ticks == 4 || ticks > 4 && x_chance_in_y(ticks, ticks + 16))
         && you.see_cell_no_trans(victim.pos()))
     {
         mprf("Shards of ice erupt from %s body!", apostrophise(victim.name(DESC_THE)).c_str());
