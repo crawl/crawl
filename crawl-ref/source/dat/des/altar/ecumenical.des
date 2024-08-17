@@ -1255,3 +1255,17 @@ W...W
 .WWW.
 ENDMAP
 
+NAME:     angelslayer_ecumenical_altar_broken_walls_simple
+TAGS:     ruin transparent
+SHUFFLE:  _E
+FTILE:    ._Ec = floor_crypt
+TILE:     c = wall_catacombs
+SUBST:    E = G:10 V:5 A:3 .:3
+: ecumenical_altar_setup(_G)
+MAP
+ccccccccc
+c.......c
+c._...E.c
+c.......c
+cc.cccccc
+ENDMAP
