@@ -2117,9 +2117,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     // Not sure about this: is it flavour or misleading? (jpeg)
 
     int fail = 0;
-    if (evoked_wand && evoked_wand->charges == 0)
-        return spret::fail;
-    else if (actual_spell)
+    if (actual_spell)
     {
         int spfl = random2avg(100, 3);
 
