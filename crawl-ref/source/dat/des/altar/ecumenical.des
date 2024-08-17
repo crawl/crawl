@@ -1244,3 +1244,48 @@ xxxGx._.xGxxx
 xxx..xxx..xxx
  x    x    x
 ENDMAP
+
+NAME:   angelslayer_ecumenical_altar_simple_liquid
+TAGS:   transparent no_monster_gen no_pool_fixup
+SUBST:  W : W:10 w:5 l:1
+: ecumenical_altar_setup(_G)
+MAP
+.WWW.
+W...W
+W._.W
+W...W
+.WWW.
+ENDMAP
+
+NAME:     angelslayer_ecumenical_altar_broken_walls_simple
+TAGS:     ruin transparent
+SHUFFLE:  _E
+SUBST:    E = G:10 V:5 A:3 .:3
+TILE:     x = wall_catacombs
+FTILE:    ._xGVA = floor_crypt
+: ecumenical_altar_setup(_G)
+MAP
+xxxxxxxxx
+x.......x
+x._...E.x
+x.......x
+xx.xxxxxx
+ENDMAP
+
+NAME:     angelslayer_ecumenical_altar_muddy
+TAGS:     transparent ruin
+KMONS:    F = plant
+NSUBST:   - = 1:_ / 1:t / 3:F / *:.
+NSUBST:   ? = 1:t / 5:F / *:.
+FTILE:    t_.F = floor_mud
+: ecumenical_altar_setup(_G)
+MAP
+?  ? ?
+????????
+ ?-----??
+??-----?  ?
+??-----???
+ ???????
+ ? ??
+  ??
+ENDMAP
