@@ -4354,9 +4354,9 @@ void foxfire_attack(const monster *foxfire, const actor *target)
     }
 
     bolt beam;
-    beam.thrower = (foxfire && foxfire->friendly()) ? KILL_YOU :
-                   (foxfire)                       ? KILL_MON
-                                                  : KILL_MISC;
+    beam.thrower = (foxfire && foxfire->summoner == MID_PLAYER) ? KILL_YOU :
+                        (foxfire)   ? KILL_MON
+                                    : KILL_MISC;
     beam.range       = 1;
     beam.source      = foxfire->pos();
     beam.source_id   = foxfire->summoner;
