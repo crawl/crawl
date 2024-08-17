@@ -2385,6 +2385,10 @@ void makhleb_celebrant_bloodrite()
 
     mpr("You consecrate your suffering and invoke the rites of blood!");
 
+    // Set cooldown before firing, in case we recieve damage during the volley
+    // (eg: via reflected projectiles) that would trigger this again.
+    you.duration[DUR_CELEBRANT_COOLDOWN] = 1;
+
     shuffle_array(targs);
 
     int shots_fired = 0;
@@ -2407,8 +2411,9 @@ void makhleb_celebrant_bloodrite()
         for (size_t i = 0; i < targs.size()
                 && (repeats == 0 || shots_fired < BLOODRITE_MIN_SHOTS); ++i)
         {
-            beam.target = targs[i];
-            beam.fire();
+            bolt shot = beam;
+            shot.target = targs[i];
+            shot.fire();
             view_clear_overlays();
             ++shots_fired;
         }
@@ -2427,13 +2432,12 @@ void makhleb_celebrant_bloodrite()
         if (targ == you.pos())
             continue;
 
-        beam.target = targ;
-        beam.fire();
+        bolt shot = beam;
+        shot.target = targ;
+        shot.fire();
         view_clear_overlays();
         ++shots_fired;
     }
-
-    you.duration[DUR_CELEBRANT_COOLDOWN] = 1;
 }
 
 void makhleb_execution_activate()
