@@ -4981,7 +4981,7 @@ vector<coord_def> get_magnavolt_targets()
                 targets.push_back(mon->pos());
         }
 
-        if (cloud_type_at(*ri) == CLOUD_MAGNETIZED_DUST)
+        if (cloud_type_at(*ri) == CLOUD_MAGNETISED_DUST)
             targets.push_back(*ri);
     }
 

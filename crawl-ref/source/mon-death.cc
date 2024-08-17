@@ -2251,7 +2251,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (mons.has_ench(ENCH_MAGNETISED))
     {
-        place_cloud(CLOUD_MAGNETIZED_DUST, mons.pos(),
+        place_cloud(CLOUD_MAGNETISED_DUST, mons.pos(),
                         random_range(7, 11),
                         mons.get_ench(ENCH_MAGNETISED).agent());
     }
