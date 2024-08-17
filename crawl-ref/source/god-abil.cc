@@ -7506,7 +7506,7 @@ void makhleb_crucible_kill(monster& victim)
     if (--you.props[MAKHLEB_CRUCIBLE_DEBT_KEY].get_int() == 0)
     {
         coord_def pos;
-        while (pos.origin() || cell_is_solid(pos)
+        while (pos.origin() || env.grid(pos) != DNGN_FLOOR
                || grid_distance(you.pos(), pos) < 12)
         {
             pos = random_in_bounds();
