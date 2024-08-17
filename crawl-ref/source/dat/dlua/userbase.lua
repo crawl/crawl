@@ -431,10 +431,10 @@ function c_message(text, channel) end
 -- This hook can be defined to execute lua when Okawaru's Recieve Weapon
 -- capstone ability is used.
 --
--- The hook should call @{items.acquirement_items} with an argument of 2
--- (for weapons) or 3 (for armour) to get an array of @{items.Item}
--- representations of the offered items. If it returns a valid index in this
--- array, the given item will be acquired without the usual acquirement menu.
+-- The hook should call @{items.acquirement_items} with an argument of 2 to get
+-- an array of @{items.Item} representations of the offered items. If it
+-- returns a valid index in this array, the given item will be acquired without
+-- the usual acquirement menu.
 --
 -- @function c_choose_okawaru_weapon
 -- @treturn int An index between 1 and the number of offered items.
@@ -444,10 +444,10 @@ function c_message(text, channel) end
 -- This hook can be defined to execute lua when Okawaru's Recieve Armour
 -- capstone ability is used.
 --
--- The hook should call @{items.acquirement_items} with an argument of 2
--- (for weapons) or 3 (for armour) to get an array of @{items.Item}
--- representations of the offered items. If it returns a valid index in this
--- array, the given item will be acquired without the usual acquirement menu.
+-- The hook should call @{items.acquirement_items} with an argument of 3 to get
+-- an array of @{items.Item} representations of the offered items. If it
+-- returns a valid index in this array, the given item will be acquired without
+-- the usual acquirement menu.
 --
 -- @function c_choose_okawaru_armour
 -- @treturn int An index between 1 and the number of offered items.
