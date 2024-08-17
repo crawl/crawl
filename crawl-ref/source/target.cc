@@ -2240,7 +2240,7 @@ bool targeter_gavotte::set_aim(coord_def a)
     tempbeam.fire();
     path_taken = tempbeam.path_taken;
 
-    vector<monster*> affected = gavotte_affected_monsters(a - you.pos(), false);
+    vector<monster*> affected = gavotte_affected_monsters(a - you.pos());
     for (monster* mon : affected)
         affected_monsters.push_back(mon->pos());
 
@@ -2268,13 +2268,13 @@ bool targeter_gavotte::valid_aim(coord_def a)
 
 aff_type targeter_gavotte::is_affected(coord_def loc)
 {
-    for (auto pc : path_taken)
-        if (pc == loc)
-            return cell_is_solid(pc) ? AFF_NO : AFF_MAYBE;
-
     for (coord_def pos : affected_monsters)
         if (pos == loc)
             return AFF_YES;
+
+    for (auto pc : path_taken)
+        if (pc == loc)
+            return cell_is_solid(pc) ? AFF_NO : AFF_MAYBE;
 
     return AFF_NO;
 }

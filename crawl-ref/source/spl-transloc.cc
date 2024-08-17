@@ -2269,7 +2269,10 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
     return spret::success;
 }
 
-static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir, bool actual)
+// Note: this is only used for the targeting display and prompts about
+// potentially harming allies. As such, it relies on player-known info and may
+// not reflect the exact results of the spell.
+static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
 {
     // Scan in our push direction. We want to find at least one tile of open
     // space before the nearest solid feature or stationary monster. Non-stationary
@@ -2280,30 +2283,59 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir, bool actu
     {
         pos += dir;
 
-        // They may actually be able to hit something here, but we shouldn't
-        // leak the presence of immediately off-screen walls to the targeter
-        if (!you.see_cell(pos))
-            return false;
-
         // Can never collide with the player (for the player's sake)
         if (pos == you.pos())
             return false;
 
-        // If we're about to hit a blocker, check whether we will have moved at
-        // least one space before doing so.
-        monster* mon_at_pos = monster_at(pos);
-        if (!mon->can_pass_through_feat(env.grid(pos))
-            || mon_at_pos && mon_at_pos->is_stationary()
-               && (actual || mon_at_pos->visible_to(&you)))
-        {
+        // If we are moving out of the player's line of sight, use map knowledge
+        // to estimate collisions with walls the player has already seen, but do
+        // not leak info about unseen terrain.
+        const bool seen = you.see_cell(pos);
+        dungeon_feature_type feat = seen ? env.grid(pos)
+                                         : env.map_knowledge(pos).feat();
+
+        // Assume that monsters can pass through unknown terrain
+        if (feat == DNGN_UNSEEN)
+            feat = DNGN_FLOOR;
+
+        // If there is an obstructing feature here - or the player THINKS there
+        // is, at least - consider this monster affected if it moved at least
+        // one space before hitting it.
+        if (!mon->can_pass_through_feat(feat))
             return steps < GAVOTTE_DISTANCE;
-        }
-        // Skip over mobile monsters as 'free' spaces (since we can all pile up
-        // against a wall)
-        else if (mon_at_pos && !mon_at_pos->is_stationary()
-                 && (actual || mon_at_pos->visible_to(&you)))
+
+        bool mons_in_way = false;
+        bool mons_in_way_is_stationary = false;
+
+        // Find any visible monster that may be in the way (or our memory of such)
+        if (seen)
         {
-            steps++;
+            monster* mon_at_pos = monster_at(pos);
+            if (mon_at_pos && you.can_see(*mon_at_pos))
+            {
+                mons_in_way = true;
+                mons_in_way_is_stationary = mon_at_pos->is_stationary();
+            }
+        }
+        else
+        {
+            monster_info* mon_at_pos = env.map_knowledge(pos).monsterinfo();
+            if (mon_at_pos)
+            {
+                mons_in_way = true;
+                mons_in_way_is_stationary = mons_class_is_stationary(mon_at_pos->type);
+            }
+        }
+
+        // If we're about to hit a blocker, check whether we will have moved at
+        // least one space before doing so. Skip over mobile monsters as 'free'
+        // spaces (since we can all pile up against a wall)
+        if (mons_in_way)
+        {
+            if (mons_in_way_is_stationary)
+                return steps < GAVOTTE_DISTANCE;
+            else
+                steps++;
         }
 
         steps--;
@@ -2312,16 +2344,16 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir, bool actu
     return false;
 }
 
-vector<monster*> gavotte_affected_monsters(const coord_def dir, bool actual)
+vector<monster*> gavotte_affected_monsters(const coord_def dir)
 {
     vector<monster*> affected;
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos())
-            && (actual || you.can_see(**mi)))
+            && you.can_see(**mi))
         {
-            if (_gavotte_will_wall_slam(*mi, dir, actual))
+            if (_gavotte_will_wall_slam(*mi, dir))
                 affected.push_back(*mi);
         }
     }
