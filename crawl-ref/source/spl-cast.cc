@@ -2113,9 +2113,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     else if (actual_spell)
         surge_power(_spell_enhancement(spell));
 
-    // Enhancers only matter for calc_spell_power() and raw_spell_fail().
-    // Not sure about this: is it flavour or misleading? (jpeg)
-
     int fail = 0;
     if (actual_spell)
     {
