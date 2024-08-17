@@ -7220,6 +7220,14 @@ void makhleb_infernal_servant()
 
 void makhleb_inscribe_mark(mutation_type mark)
 {
+    string prompt = make_stringf("Really brand yourself with the %s?",
+                                    mutation_name(mark));
+    if (!yesno(prompt.c_str(), true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     mprf("You utter a prayer to Makhleb and carve the %s into yourself.",
          mutation_name(mark));
 
