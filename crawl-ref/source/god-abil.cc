@@ -2912,6 +2912,9 @@ spret dithmenos_shadowslip(bool fail)
     int dur = random_range(40, 60 + you.skill(SK_INVOCATIONS, 2));
     for (monster_near_iterator mi(shadow->pos(), LOS_NO_TRANS); mi; ++mi)
     {
+        if (mons_is_firewood(**mi))
+            continue;
+
         // For every monster in sight of both the player *and* their shadow, and
         // which is currently aware of and targeting the player, direct their
         // attention towards the shadow instead.
