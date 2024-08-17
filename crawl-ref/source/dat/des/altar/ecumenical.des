@@ -1242,3 +1242,16 @@ xxxGx._.xGxxx
 xxx..xxx..xxx
  x    x    x
 ENDMAP
+
+NAME:   angelslayer_ecumenical_altar_simple_liquid
+TAGS:   transparent no_monster_gen no_pool_fixup
+SUBST:  W : W:10 w:5 l:1 
+: ecumenical_altar_setup(_G)
+MAP
+.WWW.
+W...W
+W._.W
+W...W
+.WWW.
+ENDMAP
+
