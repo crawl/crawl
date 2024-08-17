@@ -1272,7 +1272,7 @@ ENDMAP
 
 NAME:     angelslayer_ecumenical_altar_muddy
 TAGS:     transparent ruin
-NSUBST:   D = 1:t / 1:_ / 3:F / *:.
+NSUBST:   D = 1:_ / 1:t / 3:F / *:.
 NSUBST:   E = 1:t / 5:F / *:.
 KMONS:    F = plant
 FTILE:    t_.DEF = floor_mud
