@@ -2013,7 +2013,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         // (right now otherwise used only on god abilities)
         const targeting_type dir =
             spell == SPELL_BLINKBOLT ? DIR_ENFORCE_RANGE
-            : testbits(flags, spflag::target) ? DIR_TARGET : DIR_NONE;
+            : testbits(flags, spflag::target) ? DIR_ENFORCE_RANGE : DIR_NONE;
 
         // TODO: it's extremely inconsistent when this prompt shows up, not
         // sure why
