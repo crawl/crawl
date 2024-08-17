@@ -6096,7 +6096,7 @@ Nergalle
 
 VISUAL:@The_monster@ consults an enormous parchment and nods.
 
-VISUAL:@The_monster@ engages in an animated conversation with the air beside them.
+VISUAL:@The_monster@ engages in an animated conversation with the air beside @objective@.
 
 @The_monster@ says, "Orcish loyalty transcends such trifles as death."
 
