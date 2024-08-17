@@ -770,7 +770,7 @@ public:
         return _can_mutate(reason, temp);
     }
 
-    bool effect(bool = true, int = 40, bool is_potion= true) const override
+    bool effect(bool = true, int = 40, bool = true) const override
     {
         if (have_passive(passive_t::cleanse_mut_potions))
             simple_god_message(" cleanses your potion of mutation!");
@@ -789,7 +789,7 @@ public:
         for (int i = 0; i < add_mutations; i++)
             mutated |= mutate(RANDOM_MUTATION, "potion of mutation", false);
         // Sometimes one good mutation.
-        if (coinflip() || is_potion && you.has_mutation(MUT_DOUBLE_POTION_HEAL))
+        if (coinflip())
         {
             mutated |= mutate(RANDOM_GOOD_MUTATION, "potion of mutation",
                               false);
