@@ -422,7 +422,8 @@ void handle_behaviour(monster* mon)
         actor* agent = mon->get_ench(ENCH_MISDIRECTED).agent();
         // agent() will return ANON_FRIENDLY_MONSTER if the source no longer
         // exists, but was originally friendly
-        if (agent && agent->alive() && agent->mindex() != ANON_FRIENDLY_MONSTER)
+        if (agent && agent->alive() && agent->mindex() != ANON_FRIENDLY_MONSTER
+            && !mons_aligned(mon, agent))
         {
             mon->foe = agent->mindex();
             mon->target = agent->pos();
