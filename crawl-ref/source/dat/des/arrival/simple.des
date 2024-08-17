@@ -2617,3 +2617,39 @@ MAP
 ......xxxxx......
 @...............@
 ENDMAP
+
+NAME:   angelslayer_arrival_single_sparkle
+TAGS:   arrival no_monster_gen transparent
+ORIENT: float
+MAP
+      .....      
+      ..c..      
+      ..c..      
+      ..c..      
+      ..c..      
+     ..c.c..     
+     ..c.c..     
+     ..c.c..
+     ..c.c..
+     ..c.c..     
+    ..cc.cc..    
+    .cc...cc.  
+   ..c.....c.. 
+....cc.....cc....
+.cccc...{...cccc.
+....cc.....cc....
+   ..c.....c..  
+    .cc...cc.  
+    ..cc.cc..
+     ..c.c..
+     ..c.c..
+     ..c.c..
+     ..c.c..
+     ..c.c..
+      ..c..
+      ..c..
+      ..c..
+      ..c..
+      .....
+ENDMAP
+
