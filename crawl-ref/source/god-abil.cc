@@ -2951,6 +2951,7 @@ spret dithmenos_shadowslip(bool fail)
     shadow->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
     shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
     shadow->hit_points = shadow->max_hit_points;
+    shadow->props[KNOWN_MAX_HP_KEY] = shadow->max_hit_points;
 
     dithmenos_change_shadow_appearance(*shadow, dur);
 
