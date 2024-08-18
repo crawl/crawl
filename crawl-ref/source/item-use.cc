@@ -4536,7 +4536,14 @@ void tile_item_use_secondary(int idx)
         if (offhand && offhand == &item)
             unwield_weapon(item); // undocumented convenience
         else if (you.weapon() != &item)
+        {
+            if (you.offhand_weapon() && you.offhand_weapon()->cursed())
+            {
+                mprf(MSGCH_PROMPT, "You can't unwield that weapon to draw a new one!");
+                return;
+            }
             _do_wield_weapon(item, you.offhand_weapon(), false);
+        }
         return;
     }
 
@@ -4578,7 +4585,15 @@ void tile_item_use(int idx)
         if (equipped)
             unwield_weapon(item);
         else if (can_wield(nullptr, true, false))
+        {
+            if (you.has_mutation(MUT_WIELD_OFFHAND)
+                    && you.weapon() && you.weapon()->cursed())
+            {
+                mprf(MSGCH_PROMPT, "You can't unwield that weapon to draw a new one!");
+                return;
+            }
             _do_wield_weapon(item, you.weapon());
+        }
         return;
     }
 
