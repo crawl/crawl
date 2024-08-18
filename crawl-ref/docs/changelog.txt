@@ -165,9 +165,9 @@ Gods
   - Summoned monsters (both friendly and hostile) now scale with the player's
     XL, resulting in fewer unfair encounters at low XL and fewer harmless ones
     at high XL. A much greater variety of creatures can now be summoned.
-  - Xom can now transport the player to a curious bazaar where an assortment of
-    spells and consumables Xom finds amusing may be purchased (as well as
-    occasionally a chaos-branded unrand weapon).
+  - Xom can now transport sufficiently-wealthy players to a curious bazaar where
+    an assortment of spells and consumables Xom finds amusing may be purchased
+    (as well as occasionally a chaos-branded unrand weapon).
   - Many other new Xom effects have been added, such as planting a garden,
     creating a safe adventurer enclosure, teaching rats how to chant Word of
     Recall, and summoning a fleet of living Force Lance spells.
@@ -257,6 +257,9 @@ Monsters
   - Deep elf elementalists cast Hoarfrost Cannonade instead of Freezing Cloud.
   - Deep elf high priests give a long duration brilliance buff to every ally
     in their sight, rather than using an aura of brilliance.
+  - Demonspawn Black Suns have been renamed to Soul Scholars and their Black
+    Mark spell has been replaced with Sign of Ruin (which functions like the new
+    Kikubaaqudgha invocation).
   - Demonspawn corrupters now summon thunderhulks instead of vault sentinels.
   - Draconian monster adjustments: yellow draconians have acidic bites,
     white draconians have more damaging breath, and stormcallers no longer are
@@ -268,15 +271,11 @@ Monsters
   - Hell beasts have become sin beasts, gaining HD and antimagic attacks.
     Geryon's (hell -> sin) beast summoning has been weakened in exchange.
   - Monster shadows are now called shadowghasts.
-  - Monster demonspawn black suns are now called soul scholars.
   - Necrophages are weaker and now only appear from Yred's summonings.
   - Norris now casts Draining Gaze instead of Brain Bite.
   - Ophanim now passively irresistibly inflict Mark on all those they see.
   - Worldbinders now summon ironbound frosthearts instead of thunderhulks and
     their summons have a longer duration.
-  - Demonspawn Black Suns have been renamed to Soul Scholars and their Black
-    Mark spell has been replaced with Sign of Ruin (which functions like the new
-    Kikubaaqudgha invocation).
   - The Serpent of Hell has been adjusted to have more appropriate breath
     attacks in Dis, Gehenna, and Tartarus.
 
@@ -366,11 +365,17 @@ Tiles and Other Art
 -------------------
 * New tiles for existing game elements:
   * Dozens of monster-only spells.
-  * Yred's Recall tile.
-  * Formless jellyfish.
-  * Box of beasts.
+  * Dozens of mutation icons.
+  * Several monster-specific metal spell effects.
+  * The Alchemist starting screen icon.
   * Boulders from Brom's Barrelling Boulder.
+  * Box of beasts & the tin of tremorstones (now with inert and usable splits).
+  * Calcifying dust clouds.
+  * Call Canine Familiar's spell icon.
   * Crystal walls in Zot.
+  * Formless jellyfish.
+  * Jiyva's altar.
+  * Yred's Recall tile.
 
 Stone Soup 0.31 (20240119)
 --------------------------
