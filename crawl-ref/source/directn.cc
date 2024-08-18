@@ -3629,6 +3629,12 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
             hex_success_chance(wl, pow, 100)));
     }
 
+    if (mi.type == MONS_ASPIRING_FLESH && mi.props.exists(PROTEAN_TARGET_KEY))
+    {
+        const monster_type mtype = (monster_type)mi.props[PROTEAN_TARGET_KEY].get_int();
+        descs.emplace_back(make_stringf("becoming %s", mons_type_name(mtype, DESC_A).c_str()));
+    }
+
     if (mi.attitude == ATT_FRIENDLY)
         descs.emplace_back("friendly");
     else if (mi.fellow_slime())

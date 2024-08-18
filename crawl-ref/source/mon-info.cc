@@ -816,6 +816,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->props.exists(SOUL_SPLINTERED_KEY))
         mb.set(MB_SOUL_SPLINTERED);
 
+    if (m->type == MONS_ASPIRING_FLESH)
+        props[PROTEAN_TARGET_KEY] = m->props[PROTEAN_TARGET_KEY];
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
