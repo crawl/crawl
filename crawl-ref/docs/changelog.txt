@@ -1,5 +1,5 @@
-Stone Soup 0.32 (through 0.32-a0-1996-gad2143bade)
---------------------------
+Stone Soup 0.32 (through 0.32-a0-2150-gfdaad256b3)
+--------------------------------------------------
 
 Highlights
 ----------
@@ -218,6 +218,11 @@ Items
   their creation, rather than placing nothing as a result.
 * Randart launchers can now generate with Chaos or Holy brands.
 
+Lua
+---
+* A new crawl.stack() function that returns a backtrace string for either the
+  current lua execution stack or that of a coroutine given as an argument.
+
 Monsters
 --------
 * Uniques:
@@ -352,6 +357,9 @@ Spells
   hits 4 to 12 foes at once instead of 2 to 4.
 * Blazeheart Golem now scales properly with spellpower.
 * Polar Vortex no longer damages enemies outside the player's line-of-sight.
+* Animated Armours now gain the resists from their armour base type.
+* The Dryad created by Summon Forest now avoids moving towards hostile
+  monsters.
 * Removed spells: Necrotise, Cigotuvi's Dreadful Rot, Gell's Gravitas.
 
 Tiles and Other Art
