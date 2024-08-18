@@ -1,4 +1,4 @@
-Stone Soup 0.32 (through 0.32-a0-1996-g48cd30fd63)
+Stone Soup 0.32 (through 0.32-a0-1996-gad2143bade)
 --------------------------
 
 Highlights
