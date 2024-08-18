@@ -1984,7 +1984,7 @@ static bool _valid_piledriver_target(monster* targ)
            && !targ->is_stationary() && you.can_see(*targ);
 }
 
-vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets)
+vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets, bool actual)
 {
     const int max_range = 5;
 
@@ -2004,7 +2004,7 @@ vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets)
 
             // Check if this is where our movement stops
             if (i > 0
-                && (actor_at(new_pos)
+                && (actor_at(new_pos) && (actual || you.can_see(*actor_at(new_pos)))
                     || !monster_habitable_grid(targ, env.grid(new_pos))
                     || is_feat_dangerous(env.grid(new_pos - delta))))
             {
@@ -2019,9 +2019,9 @@ vector<coord_def> piledriver_beam_paths(const vector<coord_def> &targets)
     return path;
 }
 
-static int calc_piledriver_dist(const monster& targ)
+static int calc_piledriver_dist(const monster& targ, bool actual)
 {
-    vector<coord_def> path = piledriver_beam_paths(vector<coord_def>{targ.pos()});
+    vector<coord_def> path = piledriver_beam_paths(vector<coord_def>{targ.pos()}, actual);
 
     // Test if the final space of the path would hit something and only consider
     // paths that would do so.
@@ -2034,7 +2034,7 @@ static int calc_piledriver_dist(const monster& targ)
     return 0;
 }
 
-vector<coord_def> possible_piledriver_targets()
+vector<coord_def> possible_piledriver_targets(bool actual)
 {
     vector<coord_def> targs;
     int furthest_dist = 0;
@@ -2044,7 +2044,7 @@ vector<coord_def> possible_piledriver_targets()
         monster* targ = monster_at(*ai);
         if (_valid_piledriver_target(targ))
         {
-            int dist = calc_piledriver_dist(*targ);
+            int dist = calc_piledriver_dist(*targ, actual);
 
             // Skip targets that will not move the player at all.
             // (This needs at least 3 tiles, since the target monster will be
@@ -2081,19 +2081,27 @@ spret cast_piledriver(int pow, bool fail)
 {
     // Calculate all possible valid targets first, so we can prompt the player
     // about anything they *might* hit.
-    vector<coord_def> targs = possible_piledriver_targets();
-    vector<coord_def> path = piledriver_beam_paths(targs);
+    vector<coord_def> targs = possible_piledriver_targets(false);
+    vector<coord_def> path = piledriver_beam_paths(targs, false);
     if (warn_about_bad_targets(SPELL_PILEDRIVER, path))
         return spret::abort;
 
     fail_check();
 
     // Now that they've confirmed, pick the *real* target
+    targs = possible_piledriver_targets(true);
+
+    // There must be something invisible blocking all possible paths, so 'fail'.
+    if (targs.empty())
+    {
+        mprf("Space begins to contract around you, but something blocks your path.");
+        return spret::success;
+    }
+
     shuffle_array(targs);
     targs.resize(1);
     monster* mon = monster_at(targs[0]);
-    path = piledriver_beam_paths(targs);
-
+    path = piledriver_beam_paths(targs, true);
     mprf("Space contracts around you and %s and then re-expands violently!",
             mon->name(DESC_THE).c_str());
 

@@ -1254,8 +1254,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     }
     case SPELL_PILEDRIVER:
     {
-        auto piledriver_targets = possible_piledriver_targets();
-        auto piledriver_paths = piledriver_beam_paths(piledriver_targets);
+        auto piledriver_targets = possible_piledriver_targets(false);
+        auto piledriver_paths = piledriver_beam_paths(piledriver_targets, false);
         const aff_type a = piledriver_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
         return make_unique<targeter_multiposition>(&you, piledriver_paths, a);
     }
