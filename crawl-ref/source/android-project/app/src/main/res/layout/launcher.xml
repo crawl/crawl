@@ -126,6 +126,42 @@
                     android:layout_weight="1"
                     android:inputType="number" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="6dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/full_screen"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/fullScreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
