@@ -136,7 +136,7 @@ function ch_stash_search_annotate_item(it)
       ["pearl"] = "rN+",
       ["storm"] = "rElec",
       ["shadow"] = "Stlth++++",
-      ["gold"] = "rF+ rC+ rPois"
+      ["golden"] = "rF+ rC+ rPois"
     }
     local t = it.name("base"):match("%w+")
     if props[t] then
