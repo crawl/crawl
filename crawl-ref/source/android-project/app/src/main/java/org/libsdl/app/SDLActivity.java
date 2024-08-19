@@ -69,6 +69,7 @@ public class SDLActivity extends AppCompatActivity {
     protected static int keyboardOption;
     protected static int extraKeyboardOption;
     protected static int keyboardSize;
+    protected static boolean fullScreen;
     protected static View mTextEdit;
     protected static boolean mScreenKeyboardShown;
     protected static boolean mScreenExtraKeyboardShown;
@@ -147,6 +148,7 @@ public class SDLActivity extends AppCompatActivity {
         keyboardOption = 0;
         extraKeyboardOption = 0;
         keyboardSize = 0;
+        fullScreen = true;
         mTextEdit = null;
         mLayout = null;
         mClipboardHandler = null;
@@ -232,6 +234,8 @@ public class SDLActivity extends AppCompatActivity {
         Log.i(TAG, "Extra keyboard option: " + extraKeyboardOption);
         keyboardSize = intent.getIntExtra("keyboard_size", 0);
         Log.i(TAG, "Extra keyboard option: " + keyboardSize);
+        fullScreen = intent.getBooleanExtra("full_screen", false);
+        Log.i(TAG, "Full screen: " + fullScreen);
 
         mLayout = new RelativeLayout(this);
         mLayout.setBackgroundColor(getResources().getColor(R.color.black));
@@ -376,10 +380,18 @@ public class SDLActivity extends AppCompatActivity {
            return;
         }
 
+        // Full screen
+        // Once UI flags have been cleared (for example, by navigating away from the activity),
+        // your app needs to reset them if you want to hide the bars again
+        if (fullScreen) {
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+
         SDLActivity.mHasFocus = hasFocus;
         if (hasFocus) {
            mNextNativeState = NativeState.RESUMED;
-
         } else {
            mNextNativeState = NativeState.PAUSED;
         }

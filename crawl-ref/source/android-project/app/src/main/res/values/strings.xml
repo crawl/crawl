@@ -16,6 +16,7 @@
     <string name="keyboard">Keyboard</string>
     <string name="extra_keyboard">Extra directional pad</string>
     <string name="keyboard_size">Keyboard size</string>
+    <string name="full_screen">Full screen</string>
     <string-array name="sort_options">
         <item>Name asc.</item>
         <item>Name desc.</item>

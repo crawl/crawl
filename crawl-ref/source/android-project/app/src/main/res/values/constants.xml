@@ -6,6 +6,8 @@
         <item name="android:textColor">@color/white</item>
         <item name="colorButtonNormal">@color/gray</item>
         <item name="android:windowAnimationStyle">@style/CrawlActivityAnimation</item>
+        <item name="colorControlActivated">@color/light_green</item>
+        <item name="colorSwitchThumbNormal">@color/gray</item>
     </style>
     <style name="CrawlActivityAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
