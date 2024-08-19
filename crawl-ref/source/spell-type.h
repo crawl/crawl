@@ -295,7 +295,9 @@ enum spell_type : int
     SPELL_HOMUNCULUS,
 #endif
     SPELL_SUMMON_HYDRA,
+#if TAG_MAJOR_VERSION == 34
     SPELL_DARKNESS,
+#endif
     SPELL_MESMERISE,
 #if TAG_MAJOR_VERSION == 34
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
@@ -481,7 +483,9 @@ enum spell_type : int
     SPELL_DREAM_DUST,
     SPELL_BECKONING,
     SPELL_UPHEAVAL,
+#if TAG_MAJOR_VERSION == 34
     SPELL_RANDOM_EFFECTS,
+#endif
     SPELL_MERCURY_VAPOURS,
 #if TAG_MAJOR_VERSION == 34
     SPELL_RING_OF_THUNDER,
