@@ -830,8 +830,13 @@ static bool _handle_swoop_or_flank(monster& mons)
     }
 
     actor *defender = mons.get_foe();
-    if (mons.confused() || !defender || !mons.can_see(*defender))
+    if (mons.confused() || !defender || !mons.can_see(*defender)
+        || (mons_aligned(&mons, defender) && !mons.has_ench(ENCH_FRENZIED))
+        || mons_is_fleeing(mons) || mons.pacified()
+        || is_sanctuary(mons.pos()) || is_sanctuary(defender->pos()))
+    {
         return false;
+    }
 
     // Swoop can only be used at range. Flanking can only be used in melee.
     if (is_swoop && (mons.foe_distance() >= 5 || mons.foe_distance() == 1))
