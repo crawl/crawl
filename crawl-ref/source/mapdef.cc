@@ -1425,6 +1425,16 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
 
             // Set keyspec index for this subvault.
             (*overlay)(x, y).keyspec_idx = idx;
+
+            // Apply kprops to this glyph from subvault tags
+            for (const auto &tag : vmap.get_tags_unsorted())
+            {
+                const feature_property_type prop = str_to_fprop(tag);
+                if (prop == FPROP_NONE)
+                    continue;
+
+                (*overlay)(x, y).property |= prop;
+            }
         }
 
     dprf(DIAG_DNGN, "Merged subvault '%s' at %d,%d x %d,%d",
