@@ -3174,8 +3174,32 @@ static void _xom_pseudo_miscast(int /*sever*/)
         str = replace_all(str, "@your_item@", name);
         str = replace_all(str, "@Your_item@", uppercase_first(name));
 
-        str = replace_all(str, "@hand@", you.hand_name(false));
-        str = replace_all(str, "@hands@", you.hand_name(true));
+        string ring_holder_singular;
+        string ring_holder_plural;
+
+        // The ring on the amulet slot is on a neck/mantle, not a hand.
+        if (item == you.slot_item(EQ_RING_AMULET))
+        {
+            // XXX: Logic duplicated from item_def::name().
+            if (you.species == SP_OCTOPODE && form_keeps_mutations())
+            {
+                ring_holder_singular = "mantle";
+                ring_holder_plural = "mantles";
+            }
+            else
+            {
+                ring_holder_singular = "neck";
+                ring_holder_plural = "necks";
+            }
+        }
+        else
+        {
+            ring_holder_singular = you.hand_name(false);
+            ring_holder_plural = you.hand_name(true);
+        }
+
+        str = replace_all(str, "@hand@", ring_holder_singular);
+        str = replace_all(str, "@hands@", ring_holder_plural);
 
         messages.push_back(str);
     }
