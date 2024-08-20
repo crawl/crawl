@@ -3134,7 +3134,15 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     if (item_def* item = you.slot_item(EQ_GLOVES))
     {
-        string name = "your " + item->name(DESC_BASENAME, false, false, false);
+        string gloves_name = item->name(DESC_BASENAME, false, false, false);
+        // XXX: If the gloves' name doesn't start with "pair of", make it do so,
+        // so that it always comes out as singular for grammar purposes. This
+        // happens with the Mad Mage's Maulers and Delatra's gloves; see
+        // item_def::name_aux().
+        if (gloves_name.find("pair of ") != 0)
+            gloves_name = "pair of " + gloves_name;
+
+        string name = "your " + gloves_name;
         string str = _get_xom_speech("gloves slot");
 
         str = replace_all(str, "@your_item@", name);
