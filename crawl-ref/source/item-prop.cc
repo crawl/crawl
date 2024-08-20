@@ -2940,9 +2940,8 @@ bool gives_ability(const item_def &item)
         const equipment_type eq = get_armour_slot(item);
         if (eq == EQ_NONE)
             return false;
-        const special_armour_type ego = get_armour_ego_type(item);
 
-        if (ego == SPARM_INVISIBILITY || ego == SPARM_FLYING)
+        if (get_armour_ego_type(item) == SPARM_INVISIBILITY)
             return true;
         break;
     }
