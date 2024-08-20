@@ -2124,7 +2124,7 @@ _Boris_rare_
 # Magic: the Gathering
 @The_monster@ claims, "I care not for such insignificant forces as time or death."
 
-@The_monster@ says "Magic. You know nothing about it."
+@The_monster@ says, "Magic. You know nothing about it."
 
 @The_monster@ says @to_foe@, "Join my legions of the broken and the beaten."
 %%%%
@@ -4903,7 +4903,7 @@ VISUAL:@The_monster@ pauses a moment, imagining something with a smile on @posse
 
 @The_monster@ says happily, "The price on your head will fill my nest egg nicely!" @player_only@
 
-@The_monster@ thinks, and says @to_foe@ "Perhaps I'll take up @_Harold_ret_hobby_@ after I'm done here..."
+@The_monster@ thinks, and says @to_foe@, "Perhaps I'll take up @_Harold_ret_hobby_@ after I'm done here..."
 
 @The_monster@ says, "Try to look on the bright side. Your death will help put my children through school." @player_only@
 
