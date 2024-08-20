@@ -1243,6 +1243,8 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
 
     // CRAWL HACK: Long press as right click
     protected static long touchStart = 0L;
+    protected static float touchStartX = 0;
+    protected static float touchStartY = 0;
 
     // Startup
     public SDLSurface(Context context) {
@@ -1500,7 +1502,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                 case MotionEvent.ACTION_MOVE:
 
                     // CRAWL HACK: Scroll with 2 fingers
-                    if (pointerCount == 2) {
+                    if (pointerCount > 1) {
                         int historySize = event.getHistorySize();
                         if (historySize > 0) {
                             float scroll0 = event.getY(0) - event.getHistoricalY(0, 0);
@@ -1525,15 +1527,23 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                 // CRAWL HACK: Long press as right click
                 case MotionEvent.ACTION_DOWN:
                     touchStart = System.currentTimeMillis();
+                    touchStartX = event.getX();
+                    touchStartY = event.getY();
                     break;
 
                 // CRAWL HACK: Long press as right click
                 case MotionEvent.ACTION_UP:
                     if (!scrolling) {
-                        if (touchStart+500 > System.currentTimeMillis()) {
-                            SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
-                        } else {
-                            SDLActivity.onNativeMouse(MotionEvent.BUTTON_SECONDARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                        // Don't perform a click if the finger moved more than 1%
+                        float margin = Math.min(mWidth, mHeight) / 100;
+                        if (event.getX() + margin >= touchStartX && event.getX() - margin <= touchStartX &&
+                            event.getY() + margin >= touchStartY && event.getY() - margin <= touchStartY)
+                        {
+                            if (touchStart + 500 > System.currentTimeMillis()) {
+                                SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                            } else {
+                                SDLActivity.onNativeMouse(MotionEvent.BUTTON_SECONDARY, MotionEvent.ACTION_DOWN, event.getX(0), event.getY(0));
+                            }
                         }
                         SDLActivity.onNativeMouse(0, MotionEvent.ACTION_UP, event.getX(0), event.getY(0));
                     }
