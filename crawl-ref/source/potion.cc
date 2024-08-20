@@ -589,11 +589,22 @@ public:
 
     bool effect(bool=true, int = 40, bool=true) const override
     {
-        inc_mp(POT_MAGIC_MP);
+        inc_mp(you.scale_potion_mp_healing(POT_MAGIC_MP));
         if (you.has_mutation(MUT_HP_CASTING))
             mpr("Magic washes over you without effect.");
         else
+        {
+            if (player_equip_unrand(UNRAND_KRYIAS))
+            {
+                item_def* item = you.slot_item(EQ_BODY_ARMOUR);
+                mprf("%s enhances the restoration.",
+                item->name(DESC_THE, false, false, false).c_str());
+            }
+            else if (you.has_mutation(MUT_DOUBLE_POTION_HEAL))
+                mpr("You savour every drop.");
+
             mpr("Magic courses through your body.");
+        }
         return true;
     }
 };
