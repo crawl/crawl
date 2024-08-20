@@ -32,6 +32,7 @@ Branches, Environment
 * Troves no longer ask Draconians to offer dragon scales.
 * Ziggurats now scale up their enemy choices and counts up much faster
   if one dares to dive through multiple ziggurats on the same character.
+* All bazaar portals are timed now.
 * Quite a few new decorative features have been added to many a vault:
   - Several new types of decorative statue: silver statues,
     scintillating statues, mystic cages, and magic conduits.
