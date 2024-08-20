@@ -2277,9 +2277,9 @@ level. Using RGB hex codes is also allowed, such as #00ff00 for green.
    tile_window_col              - colour of the rectangular view window
 
 custom_text_colours = lightmagenta:#fd59fa, blue:#005afa
-	Remaps any of the 16 basic terminal colours used by Crawl's interface,
-	specified as pairs of colour names and RGB hex codes. Any colours not
-	included in the list will use their default values.
+        Remaps any of the 16 basic terminal colours used by Crawl's interface,
+        specified as pairs of colour names and RGB hex codes. Any colours not
+        included in the list will use their default values.
 
 tile_update_rate = 1000
         The number of milliseconds that tick by before the screen is redrawn
@@ -2635,7 +2635,7 @@ dump_message_count = 20
         The number of last messages to be displayed in character dump
         files.
 
-dump_order  = header,hiscore,stats,misc,inventory,skills,spells,
+dump_order  = header,hiscore,stats,misc,apostles,inventory,skills,spells,
 dump_order += overview,mutations,messages,screenshot,monlist,kills,
 dump_order += notes,screenshots,vaults,skill_gains,action_counts
         (Ordered list option)
