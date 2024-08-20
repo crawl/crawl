@@ -3974,24 +3974,23 @@ SUBST:   [=., (=>, D=x, E=x, F=x, H=.
 SUBST:   T:TV
 ORIENT:  float
 MAP
-      xxxxxxx       
-    DxD.....ExE     
-   DD.........EE    
-  DD...........EE   
- DD.............EE  
- x...xxxx........x  
-xD...x[.x........Ex  
-x....x..x.........x  
-x....xxx..........x  
-x........T........x  
-x....xxx...xxx....x  
-x....x..x.x..x....x  
-xF...x{.x.x.(x...Hx  
- x...xxxx.xxxx...x  
- FF.............HH  
-  FF...........HH   
-   FF.........HH    
-    FxF.....HxH     
-      xxxxxxx       
+      xxxxxxx
+    DxD.....ExE
+   DD.........EE
+  DD...........EE
+ DD.............EE
+ x...xxxx........x
+xD...x[.x........Ex
+x....x..x.........x
+x....xxx..........x
+x........T........x
+x....xxx...xxx....x
+x....x..x.x..x....x
+xF...x{.x.x.(x...Hx
+ x...xxxx.xxxx...x
+ FF.............HH
+  FF...........HH
+   FF.........HH
+    FxF.....HxH
+      xxxxxxx
 ENDMAP
-
