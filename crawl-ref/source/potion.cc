@@ -598,7 +598,7 @@ public:
             {
                 item_def* item = you.slot_item(EQ_BODY_ARMOUR);
                 mprf("%s enhances the restoration.",
-                item->name(DESC_THE, false, false, false).c_str());
+                     item->name(DESC_THE, false, false, false).c_str());
             }
             else if (you.has_mutation(MUT_DOUBLE_POTION_HEAL))
                 mpr("You savour every drop.");
