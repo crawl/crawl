@@ -438,12 +438,14 @@ ENDMAP
 
 NAME:   dilly_ecumenical_altar_fadedgnrine
 TAGS:   transparent
-MONS:   plant
-KITEM:  E = gnoll bouda skeleton / gnoll skeleton
-SUBST:  z = t111
-SUBST:  1 = 11'
 KPROP:  E = no_tele_into
 KMASK:  E = opaque
+KMASK:  E = no_monster_gen
+KMASK:  E = no_item_gen
+MONS:   plant
+KITEM:  E = gnoll skeleton
+SUBST:  z = t111
+SUBST:  1 = 11'
 FTILE:  1Et'_  = floor_grass
 COLOUR: 1E'_ = green
 : ecumenical_altar_setup(_G)
