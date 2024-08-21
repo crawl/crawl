@@ -380,7 +380,7 @@ public class SDLActivity extends AppCompatActivity {
            return;
         }
 
-        // Full screen
+        // CRAWL HACK: Full screen
         // Once UI flags have been cleared (for example, by navigating away from the activity),
         // your app needs to reset them if you want to hide the bars again
         if (fullScreen) {
