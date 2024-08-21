@@ -1242,9 +1242,9 @@ void mons_create_tentacles(monster* head)
     if (mons_base_type(*head) == MONS_KRAKEN)
     {
         if (visible_count == 1)
-            mpr("A tentacle rises from the water!");
+            mpr("A tentacle reaches out from the kraken!");
         else if (visible_count > 1)
-            mpr("Tentacles burst out of the water!");
+            mpr("Tentacles reach out from the kraken!");
     }
     else if (head->type == MONS_TENTACLED_STARSPAWN)
     {
