@@ -391,8 +391,14 @@ class SDLGenericMotionListener_API12 implements View.OnGenericMotionListener {
     public boolean onGenericMotion(View v, MotionEvent event) {
         float x, y;
         int action;
+        int source = event.getSource();
 
-        switch ( event.getSource() ) {
+        // CRAWL HACK: Fix mousewheel scrolling
+        if (event.isFromSource(InputDevice.SOURCE_CLASS_POINTER)) {
+            source = InputDevice.SOURCE_MOUSE;
+        }
+
+        switch ( source ) {
             case InputDevice.SOURCE_JOYSTICK:
             case InputDevice.SOURCE_GAMEPAD:
             case InputDevice.SOURCE_DPAD:
