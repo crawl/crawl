@@ -800,10 +800,10 @@ static bool _god_prevents_berserk_haste(bool intentional)
 
 /**
  * Make the player go berserk!
- * @param intentional If true, this was initiated by the player, so god conduts
- *                    about anger apply.
+ * @param intentional If true, this was initiated by the player, and so god
+ *                    conducts about anger apply.
  * @param potion      If true, this was caused by the player quaffing !berserk;
- *                    and we get additional messages if goingn berserk isn't
+ *                    and we get additional messages if going berserk isn't
  *                    possible.
  * @return            True if we went berserk, false otherwise.
  */
