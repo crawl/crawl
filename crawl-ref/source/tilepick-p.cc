@@ -999,7 +999,6 @@ void tilep_job_default(int job, dolls_data *doll)
             break;
 
         case JOB_GLADIATOR:
-            parts[TILEP_PART_HAND2] = TILEP_HAND2_KITE_SHIELD_ROUND2;
             parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_GRAY;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
