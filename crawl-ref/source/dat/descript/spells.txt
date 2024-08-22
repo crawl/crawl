@@ -1563,7 +1563,8 @@ Attempts to force a tiny fragment of a living, holy, or demonic being's soul to
 take leave of their body and manifest as a soul wisp. This wisp is nominally
 under the necromancer's control, but will focus its attacks foremost on the
 creature it was created from, instinctually trying to return to its proper home
-once more.
+once more. The victim will be weakened until the wisp reverts to where it
+belongs.
 
 Wisps created from more powerful souls have more damaging attacks, but are
 always fragile.
