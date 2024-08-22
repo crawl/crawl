@@ -227,7 +227,7 @@ static feature_def feat_defs[] =
     DNGN_MALIGN_GATEWAY, "portal to somewhere", "malign_gateway",
     DCHAR_ARCH, NUM_DCHAR_TYPES,
     COLOURS(ETC_SHIMMER_BLUE, LIGHTGREY),
-    FFT_SOLID, MF_STAIR_UP,
+    FFT_SOLID, MF_WALL,
 },
 
 {
