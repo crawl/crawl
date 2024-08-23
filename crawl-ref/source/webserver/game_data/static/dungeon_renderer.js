@@ -33,6 +33,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
     {
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
+            || base_bg == dngn.DNGN_EXIT_NECROPOLIS
             || base_bg == dngn.DNGN_ALTAR_JIYVA
             || base_bg == dngn.DNGN_TRAP_HARLEQUIN
             || base_bg >= dngn.ARCANE_CONDUIT && base_bg < dngn.STORM_CONDUIT

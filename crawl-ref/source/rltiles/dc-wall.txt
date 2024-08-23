@@ -1601,6 +1601,40 @@ bmaus_stone_wall3
 desolation1 WALL_DESOLATION
 desolation2
 
+%weight 20
+wall_stone_necropolis_1 WALL_STONE_NECROPOLIS
+wall_stone_necropolis_2
+wall_stone_necropolis_3
+wall_stone_necropolis_4
+wall_stone_necropolis_5
+%weight 5
+wall_stone_necropolis_6
+wall_stone_necropolis_7
+wall_stone_necropolis_8
+%weight 2
+wall_stone_necropolis_9
+wall_stone_necropolis_10
+
+metal_wall_necropolis_0 METAL_WALL_NECROPOLIS
+metal_wall_necropolis_1
+metal_wall_necropolis_2
+metal_wall_necropolis_3
+metal_wall_necropolis_4
+metal_wall_necropolis_5
+
+metal_wall_necropolis_red_0 METAL_WALL_NECROPOLIS_RED
+metal_wall_necropolis_red_1
+metal_wall_necropolis_red_2
+metal_wall_necropolis_red_3
+metal_wall_necropolis_red_4
+metal_wall_necropolis_red_5
+
+wall_clear_permarock_necropolis0 CLEAR_PERMAROCK_NECROPOLIS
+wall_clear_permarock_necropolis1
+wall_clear_permarock_necropolis2
+wall_clear_permarock_necropolis3
+
+%weight 10
 crucible_of_flesh0 WALL_CRUCIBLE
 %weight 6
 crucible_of_flesh1

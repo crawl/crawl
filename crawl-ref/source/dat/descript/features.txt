@@ -1095,6 +1095,11 @@ A decorative floor
 A base floor type for various decorations one can walk over. If you see this,
 file a bug report.
 %%%%
+# Necropolis.
+A tree of woe
+
+A half-alive tree burdened with fruits of crystallized sorrow.
+%%%%
 A dead tree
 
 The dry remains of a long-dead tree.

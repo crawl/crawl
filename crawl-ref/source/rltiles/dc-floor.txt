@@ -1015,6 +1015,19 @@ green_bones10
 green_bones11
 green_bones12
 
+necropolis_squares_1 FLOOR_NECROPOLIS_SQUARES
+necropolis_squares_2
+necropolis_squares_3
+necropolis_squares_4
+necropolis_square_grass_1 FLOOR_NECROPOLIS_SQUARE_GRASS
+necropolis_square_grass_2
+necropolis_square_grass_3
+necropolis_square_grass_4
+necropolis_grass_1 FLOOR_NECROPOLIS_GRASS
+necropolis_grass_2
+necropolis_grass_3
+necropolis_grass_4
+
 woodground01 FLOOR_WOODGROUND
 woodground02
 woodground03
@@ -1140,6 +1153,24 @@ shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 shallow_water_murky2
 shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 shallow_water_murky_disturbance2
+%weight 120
+starwater_00 DNGN_STARWATER
+%weight 60
+starwater_01
+%weight 30
+starwater_02
+%weight 15
+starwater_03
+%weight 3
+starwater_04
+starwater_05
+starwater_06
+starwater_07
+%weight 1
+starwater_08
+starwater_09
+starwater_10
+starwater_11
 
 toxic_bog1 DNGN_TOXIC_BOG
 toxic_bog2
