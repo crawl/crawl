@@ -437,7 +437,9 @@ bool actor::shield_exhausted() const
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return act->is_player() && have_passive(passive_t::slime_wall_immune)
+    return act->is_player()
+        && (have_passive(passive_t::slime_wall_immune)
+            || mons_class_is_slime(transform_mons()))
         || act->res_acid() == 3
         || act->is_monster() && mons_is_slime(*act->as_monster());
 }
