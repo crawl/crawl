@@ -5152,7 +5152,8 @@ static void _do_fusillade_hit(monster* mon, int power, beam_type flavour)
     exp.colour        = concoction_colour[flavour];
     exp.fire();
 
-    if (flavour == BEAM_MMISSILE && mon && mon->alive())
+    if (flavour == BEAM_MMISSILE && mon && mon->alive()
+        && !god_protects(mon, true))
     {
         // Do reaction here
         beam_type effect = *random_choose_weighted(reaction_effects);
