@@ -1422,9 +1422,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     // selfench is used mainly for monster AI, so it is a bit over-applied in
     // the spell data
     if (get_spell_flags(spell) & spflag::selfench
-        && !spell_typematch(spell, spschool::summoning) // all summoning spells are selfench
-        && !spell_typematch(spell, spschool::translocation) // blink, passage
-        && spell != SPELL_PHANTOM_MIRROR) // ??
+        && !spell_typematch(spell, spschool::translocation)) // blink, passage
     {
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
     }

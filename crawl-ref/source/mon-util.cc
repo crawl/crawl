@@ -3828,11 +3828,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
                              bool ench_too = true)
 {
     // summoning spells are usable from ranged, but not direct attacks.
-    if (spell_typematch(monspell, spschool::summoning)
-        || monspell == SPELL_CONJURE_BALL_LIGHTNING)
-    {
+    if (spell_typematch(monspell, spschool::summoning))
         return !attack_only;
-    }
 
     const spell_flags flags = get_spell_flags(monspell);
 
@@ -3882,10 +3879,9 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
 
     for (const mon_spell_slot &slot : mon.spells)
     {
-        if (slot.spell == SPELL_CREATE_TENTACLES)
-            return true;
         if (_ms_ranged_spell(slot.spell, attack_only, ench_too)
-            // Assume ranged spells with no defined range are always effective.
+            // Assume spells with no defined range are always effective at
+            // range.
             && mons_spell_range(mon, slot.spell) != 1)
         {
             return true;

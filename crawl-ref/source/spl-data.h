@@ -595,7 +595,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_DEAD, "Animate Dead",
     spschool::necromancy,
-    spflag::helpful | spflag::utility | spflag::selfench
+    spflag::helpful | spflag::utility
         | spflag::no_ghost,
     4,
     100,
@@ -741,7 +741,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CALL_IMP, "Call Imp",
     spschool::summoning,
-    spflag::unholy | spflag::selfench,
+    spflag::unholy,
     2,
     50,
     -1, -1,
@@ -752,7 +752,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
     spschool::air,
-    spflag::monster,
+    spflag::monster | spflag::selfench,
     2,
     50,
     -1, -1,
@@ -763,7 +763,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
     spschool::earth,
-    spflag::hasty | spflag::monster,
+    spflag::hasty | spflag::monster | spflag::selfench,
     3,
     0,
     -1, -1,
@@ -843,7 +843,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
     spschool::summoning,
-    spflag::unholy | spflag::selfench
+    spflag::unholy
     | spflag::mons_abjure | spflag::monster,
     5,
     200,
@@ -855,7 +855,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",
     spschool::summoning,
-    spflag::unholy | spflag::selfench
+    spflag::unholy
     | spflag::mons_abjure  | spflag::monster,
     7,
     200,
@@ -1228,7 +1228,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONJURE_BALL_LIGHTNING, "Conjure Ball Lightning",
     spschool::air | spschool::conjuration,
-    spflag::selfench,
+    spflag::none,
     6,
     200,
     -1, -1,
@@ -1389,7 +1389,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_UFETUBUS, "Summon Ufetubus",
     spschool::summoning,
-    spflag::unholy | spflag::monster | spflag::selfench,
+    spflag::unholy | spflag::monster,
     4,
     0,
     -1, -1,
@@ -1400,7 +1400,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_SIN_BEAST, "Summon Sin Beast",
     spschool::summoning,
-    spflag::unholy | spflag::monster | spflag::selfench,
+    spflag::unholy | spflag::monster,
     4,
     0,
     -1, -1,
@@ -1535,7 +1535,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_MUSHROOMS, "Summon Mushrooms",
     spschool::summoning,
-    spflag::monster | spflag::selfench | spflag::mons_abjure,
+    spflag::monster | spflag::mons_abjure,
     4,
     0,
     -1, -1,
@@ -1662,7 +1662,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CREATE_TENTACLES, "Spawn Tentacles",
     spschool::none,
-    spflag::monster | spflag::selfench,
+    spflag::monster,
     5,
     0,
     -1, -1,
@@ -1742,7 +1742,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FAKE_MARA_SUMMON, "Mara Summon",
     spschool::summoning,
-    spflag::monster | spflag::selfench,
+    spflag::monster,
     5,
     0,
     -1, -1,
@@ -2067,7 +2067,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_MINOR_DEMON, "Summon Minor Demon",
     spschool::summoning,
-    spflag::unholy | spflag::selfench | spflag::monster,
+    spflag::unholy | spflag::monster,
     2,
     200,
     -1, -1,
@@ -2293,7 +2293,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_VERMIN, "Summon Vermin",
     spschool::summoning,
-    spflag::monster | spflag::unholy | spflag::selfench | spflag::mons_abjure,
+    spflag::monster | spflag::unholy | spflag::mons_abjure,
     5,
     0,
     -1, -1,
@@ -2595,7 +2595,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PHANTOM_MIRROR, "Phantom Mirror",
     spschool::hexes,
-    spflag::helpful | spflag::selfench,
+    spflag::helpful,
     5,
     200,
     -1, -1,
@@ -3012,7 +3012,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_EXECUTIONERS, "Summon Executioners",
     spschool::summoning,
-    spflag::unholy | spflag::selfench | spflag::mons_abjure | spflag::monster,
+    spflag::unholy | spflag::mons_abjure | spflag::monster,
     9,
     200,
     -1, -1,
@@ -3078,7 +3078,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GREATER_SERVANT_MAKHLEB, "Greater Servant of Makhleb",
     spschool::summoning,
-    spflag::unholy | spflag::selfench | spflag::mons_abjure | spflag::monster,
+    spflag::unholy | spflag::mons_abjure | spflag::monster,
     7,
     200,
     -1, -1,
@@ -3266,7 +3266,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SPORULATE, "Sporulate",
     spschool::conjuration | spschool::earth,
-    spflag::monster | spflag::selfench,
+    spflag::monster,
     5,
     200,
     -1, -1,
@@ -3288,7 +3288,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FOXFIRE, "Foxfire",
     spschool::conjuration | spschool::fire,
-    spflag::selfench,
+    spflag::none,
     1,
     25,
     -1, -1,
@@ -3299,7 +3299,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MARSHLIGHT, "Marshlight",
     spschool::conjuration | spschool::fire,
-    spflag::selfench | spflag::monster,
+    spflag::monster,
     4,
     200,
     -1, -1,
@@ -3510,7 +3510,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONJURE_LIVING_SPELLS, "Conjure Living Spells",
     spschool::conjuration,
-    spflag::selfench | spflag::monster,
+    spflag::monster,
     6,
     200,
     -1, -1,
