@@ -3071,7 +3071,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
 // reworded slightly to sound like they do not currently have it.
 static string _future_mutation_description(mutation_type mut_type, int levels)
 {
-    levels += you.get_base_mutation_level(mut_type);
+    levels += you.innate_mutation[mut_type];
     string mut_desc = mutation_desc(mut_type, levels);
 
     // If we have a custom message defined for this future mutation, use it.
