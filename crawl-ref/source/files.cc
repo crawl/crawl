@@ -1214,8 +1214,6 @@ static void _expire_temporary_allies()
             end_battlesphere(&mons, false);
         else if (mons.type == MONS_SPECTRAL_WEAPON)
             end_spectral_weapon(&mons, false);
-        else if (mons.type == MONS_INUGAMI)
-            check_canid_farewell(mons, false);
         else if (mons.friendly()
                 && (mons.is_summoned() || mons.has_ench(ENCH_FAKE_ABJURATION))
                     && !mons.is_perm_summoned())
