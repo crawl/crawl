@@ -2586,7 +2586,12 @@ static vector<coord_def> _find_shadowslip_affected()
     vector<coord_def> targs;
 
     monster* shadow = dithmenos_get_player_shadow();
-    ASSERT(shadow && shadow->alive());
+
+    // XXX: It is possible for this code to be called by attempting to use a
+    //      quivvered Shadowslip with no shadow active. The targets would never
+    //      be displayed in that case anyway, so return an empty list.
+    if (!shadow || !shadow->alive())
+        return targs;
 
     // All monsters in LoS of both the player and their shadow, and which are
     // currently focused on the player.
