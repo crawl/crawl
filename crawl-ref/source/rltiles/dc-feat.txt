@@ -302,6 +302,34 @@ teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 golden_statue_1 DNGN_GOLDEN_STATUE
 golden_statue_2
 
+## wall assets not usable as is, edit on top of the desired wall texture as needed (ie TILE_NAME_banner_beogh)
+mop_1 DNGN_MOP
+mop_2 DNGN_MOP_BLOODY
+yak_fur DNGN_YAK_FUR
+stacked_books_1 DNGN_STACKED_BOOKS
+stacked_books_2
+stacked_books_3
+lectern DNGN_LECTERN
+machinery_1 DNGN_GENERATOR
+machinery_2 DNGN_TESLA_COIL
+flower_pot_1 DNGN_FLOWER_POT
+flower_pot_broken_1 DNGN_FLOWER_POT_BROKEN
+flower_pot_2 DNGN_DARK_FLOWER_POT
+flower_pot_broken_2 DNGN_DARK_FLOWER_POT_BROKEN
+djembe_set DNGN_DJEMBE
+ensign_beogh DNGN_ENSIGN_BEOGH
+ensign_dark DNGN_ENSIGN_DARK
+ensign_gehenna DNGN_ENSIGN_GEHENNA
+## preferably have more of these
+%weight 10
+skull_pike_1 DNGN_SKULL_PIKE
+%weight 2
+skull_pike_2
+fountain_double_decker DNGN_FOUNTAIN_NOVELTY_FANCY
+fountain_octopode DNGN_FOUNTAIN_NOVELTY_OCTOPODE
+fountain_stone_lantern DNGN_FOUNTAIN_NOVELTY_LANTERN
+fountain_xom DNGN_FOUNTAIN_NOVELTY_XOM
+
 #### Random tile animation for statuary starts here.
 
 ## silver statues for Zin and the Vaults
@@ -702,6 +730,9 @@ cache_of_fruit_1
 %weight 10
 cache_of_fruit_2
 cache_of_meat_0 DNGN_CACHE_OF_MEAT
+cache_of_baked_goods_1 DNGN_CACHE_OF_BAKED_GOODS
+cache_of_baked_goods_2
+garden DNGN_GARDEN
 
 %sdir dngn
 # Remove this entry when TAG_MAJOR_VERSION == 34 is false.
