@@ -921,7 +921,7 @@ ITEM:    manual of evocations, manual of shapeshifting, acquire magical staff
 ITEM:    any misc, maw talisman randart / blade talisman randart
 ITEM:    dragon-blood talisman randart / granite talisman randart
 ITEM:    storm talisman / talisman of death
-ITEM:    wand of digging charge:8 / any hex wand charges:8 / \
+ITEM:    wand of digging charges:8 / any hex wand charges:8 / \
          any beam wand charges:8 / any blast wand charges:8
 SHUFFLE: hij
 COLOUR:  x = blue
