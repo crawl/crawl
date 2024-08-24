@@ -2011,14 +2011,14 @@ bool targeter_boulder::valid_aim(coord_def a)
     if (!find_ray(agent->pos(), a, ray, opc_solid))
         return notify_fail("There's something in the way.");
     if (!ray.advance())
-        return notify_fail("You cannot create a boulder there.");
+        return notify_fail("You cannot conjure a boulder there.");
 
     const coord_def start = ray.pos();
     actor* act = actor_at(start);
     if (feat_is_solid(env.grid(start)) || (act && you.can_see(*act)))
-        return notify_fail("You cannot create a boulder in an occupied space.");
-    if (!feat_has_solid_floor(env.grid(start)))
-        return notify_fail("You cannot create a boulder there.");
+        return notify_fail("You cannot conjure a boulder in an occupied space.");
+    if (env.grid(start) == DNGN_LAVA)
+        return notify_fail("You cannot conjure a boulder there.");
 
     return true;
 }
