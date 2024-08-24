@@ -1489,16 +1489,12 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         /* Ref: http://developer.android.com/training/gestures/multi.html */
-        int touchDevId = event.getDeviceId();
         int pointerCount = event.getPointerCount();
         int action = event.getActionMasked();
-        int pointerFingerId;
         int mouseButton;
-        int i = -1;
-        float x,y,p;
 
         // !!! FIXME: dump this SDK check after 2.0.4 ships and require API14.
-        if (event.getSource() == InputDevice.SOURCE_MOUSE && SDLActivity.mSeparateMouseAndTouch) {
+        if (event.isFromSource(InputDevice.SOURCE_MOUSE) && SDLActivity.mSeparateMouseAndTouch) {
             if (Build.VERSION.SDK_INT < 14) {
                 mouseButton = 1; // all mouse buttons are the left button
             } else {
