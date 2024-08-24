@@ -2858,6 +2858,10 @@ void beogh_increase_orcification()
 void dithmenos_change_shadow_appearance(monster& shadow, int dur)
 {
 #ifdef USE_TILE
+    // Delete old enchantment, if one exists, so that it won't give a
+    // misleading duration.
+    shadow.del_ench(ENCH_CHANGED_APPEARANCE);
+
     // Change tile to show our shadow is in decoy mode
     shadow.props[MONSTER_TILE_KEY].get_int() = tileidx_player_shadow();
     shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, 0, &you, dur));
@@ -2948,7 +2952,9 @@ spret dithmenos_shadowslip(bool fail)
 
     // Extend our shadow's life to last at least as long as the misdirection,
     // and give it some additional health.
-    shadow->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you, dur));
+    mon_enchant abj = shadow->get_ench(ENCH_FAKE_ABJURATION);
+    abj.duration = max(abj.duration, dur);
+    shadow->update_ench(abj);
     shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
     shadow->hit_points = shadow->max_hit_points;
     shadow->props[KNOWN_MAX_HP_KEY] = shadow->max_hit_points;
