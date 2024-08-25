@@ -674,13 +674,17 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
  * Returns the number of allied monsters adjacent to the given position which
  * other monsters can huddle against. (Reducing damage taken from Refrigeration.)
  */
-int adjacent_huddlers(coord_def pos)
+int adjacent_huddlers(coord_def pos, bool only_in_sight)
 {
     int adj_count = 0;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         const actor* act = actor_at(*ai);
         if (!act || !act->is_monster())
+            continue;
+
+        // For the targeter, only display huddlers the player is aware of.
+        if (only_in_sight && !you.can_see(*act))
             continue;
 
         const monster* mon = act->as_monster();
