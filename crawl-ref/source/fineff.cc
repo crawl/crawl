@@ -534,33 +534,40 @@ void shock_discharge_fineff::fire()
         return;
     }
 
+    const int amount = roll_dice(3, 4 + power * 3 / 2);
+    int final_dmg = resist_adjust_damage(&oppressor, BEAM_ELECTRICITY, amount);
+    final_dmg = oppressor.apply_ac(final_dmg, 0, ac_type::half);
+
     const actor *serpent = defender();
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s %s discharges%s, shocking %s!",
+        mprf("%s %s discharges%s, shocking %s%s",
              serpent->name(DESC_ITS).c_str(),
              shock_source.c_str(),
              power < 4 ? "" : " violently",
-             oppressor.name(DESC_THE).c_str());
+             oppressor.name(DESC_THE).c_str(),
+             attack_strength_punctuation(final_dmg).c_str());
     }
     else if (you.can_see(oppressor))
     {
-        mprf("The air sparks with electricity, shocking %s!",
-             oppressor.name(DESC_THE).c_str());
+        mprf("The air sparks with electricity, shocking %s%s",
+             oppressor.name(DESC_THE).c_str(),
+             attack_strength_punctuation(final_dmg).c_str());
     }
+
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY;
-
-    int amount = roll_dice(3, 4 + power * 3 / 2);
-    amount = oppressor.apply_ac(oppressor.beam_resists(beam, amount, true),
-                                0, ac_type::half);
     const string name = serpent && serpent->alive() ?
                         serpent->name(DESC_A, true) :
                         "a shock serpent"; // dubious
-    oppressor.hurt(serpent, amount, beam.flavour, KILLED_BY_BEAM,
+    oppressor.hurt(serpent, final_dmg, beam.flavour, KILLED_BY_BEAM,
                    name.c_str(), shock_source.c_str());
-    if (amount)
-        oppressor.expose_to_element(beam.flavour, amount);
+
+    // Do resist messaging
+    oppressor.beam_resists(beam, amount, true);
+
+    if (final_dmg)
+        oppressor.expose_to_element(beam.flavour, final_dmg);
 }
 
 void explosion_fineff::fire()
