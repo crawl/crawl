@@ -2895,10 +2895,8 @@ void bolt::affect_place_clouds()
         // blastmote explosions
         if (cloud->type == CLOUD_BLASTMOTES && is_fiery())
             explode_blastmotes_at(p);
-        return;
     }
 
-    // No clouds here, free to make new ones.
     const dungeon_feature_type feat = env.grid(p);
 
     if (origin_spell == SPELL_POISONOUS_CLOUD)
