@@ -908,6 +908,19 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+static int _lightning_spire_hd(int pow, bool random = true)
+{
+    if (random)
+        return max(1, div_rand_round(pow, 10));
+    else
+        return max(1, pow / 10);
+}
+
+dice_def lightning_spire_damage(int pow)
+{
+    return zap_damage(ZAP_ELECTRICAL_BOLT, _lightning_spire_hd(pow, false) * 12, true, false);
+}
+
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
@@ -917,7 +930,7 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 
     mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, 2, god,
                                 SPELL_SUMMON_LIGHTNING_SPIRE);
-    spire.hd = max(1, div_rand_round(pow, 10));
+    spire.hd = _lightning_spire_hd(pow);
 
     monster* mons = create_monster(spire);
 
