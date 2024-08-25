@@ -50,6 +50,7 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 int ball_lightning_hd(int pow, bool random = true);
 int mons_ball_lightning_hd(int pow, bool random = true);
 int mons_ball_lightning_per_cast(int pow, bool random = true);
+dice_def lightning_spire_damage(int pow);
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail);
 
 spret cast_call_imp(int pow, god_type god, bool fail);

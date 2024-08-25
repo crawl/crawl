@@ -2891,6 +2891,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return thunderbolt_damage(power, 1);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(power);
+        case SPELL_SUMMON_LIGHTNING_SPIRE:
+            return lightning_spire_damage(power);
         default:
             break;
     }
