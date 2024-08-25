@@ -50,6 +50,7 @@ stop += You now have enough gold to
 # Enchantments
 #
 ignore += of your corpse armour falls away.
+stop += ^Careful!
 
 # Transformation endings.
 # Badforms (and tree) excluded since we might be resting those off
