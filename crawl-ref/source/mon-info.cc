@@ -1657,19 +1657,11 @@ bool monster_info::can_regenerate() const
 
 reach_type monster_info::reach_range(bool items) const
 {
-    const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
-                                             ? base_type : type);
-    ASSERT(e);
-    reach_type range = REACH_NONE;
-
-    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-    {
-        const attack_flavour fl = e->attack[i].flavour;
-        if (fl == AF_RIFT)
-            range = REACH_THREE;
-        else if (flavour_has_reach(fl))
-            range = max(REACH_TWO, range);
-    }
+    monster_type mt = mons_class_is_zombified(type)
+                      ? base_type : type;
+    const monsterentry *me = get_monster_data(mt);
+    ASSERT(me);
+    reach_type range = mons_class_innate_reach(mt);
 
     if (items)
     {

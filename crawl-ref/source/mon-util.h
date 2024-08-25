@@ -274,6 +274,7 @@ bool mons_is_beast(monster_type mc);
 bool mons_is_avatar(monster_type mc);
 int mons_demon_tier(monster_type mc);
 
+reach_type mons_class_innate_reach(monster_type mc);
 bool mons_class_wields_two_weapons(monster_type mc);
 bool mons_wields_two_weapons(const monster& m);
 bool mons_self_destructs(const monster& m);
