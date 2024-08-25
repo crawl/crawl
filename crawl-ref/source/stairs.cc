@@ -801,6 +801,12 @@ void floor_transition(dungeon_feature_type how,
     if (you.duration[DUR_BLOOD_FOR_BLOOD])
         beogh_end_blood_for_blood();
 
+    if (you.duration[DUR_BEOGH_CAN_RECRUIT])
+    {
+        you.duration[DUR_BEOGH_CAN_RECRUIT] = 0;
+        end_beogh_recruit_window();
+    }
+
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
