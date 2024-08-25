@@ -798,6 +798,12 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
+    if (you.duration[DUR_WATER_HOLD]
+        && m->mid == (mid_t)you.props[WATER_HOLDER_KEY].get_int())
+    {
+        mb.set(MB_ENGULFING_PLAYER);
+    }
+
     if (!mons_has_attacks(*m))
         mb.set(MB_NO_ATTACKS);
 
