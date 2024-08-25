@@ -1393,7 +1393,7 @@ aff_type targeter_refrig::is_affected(coord_def loc)
         return AFF_NO;
     if (god_protects(agent, act->as_monster(), true))
         return AFF_NO;
-    switch (adjacent_huddlers(loc))
+    switch (adjacent_huddlers(loc, true))
     {
     case 0:  return AFF_MULTIPLE;
     case 1:  return AFF_YES;
