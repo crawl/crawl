@@ -43,6 +43,7 @@
 #include "religion.h"
 #include "spl-book.h"       // for is_player_spell checks on dungeon_denizen
 #include "spl-cast.h"
+#include "spl-mon-self-map.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -1189,6 +1190,98 @@ private:
     FormDungeonDenizen() : Form(transformation::dungeon_denizen) { }
     DISALLOW_COPY_AND_ASSIGN(FormDungeonDenizen);
 
+    bool _set_form_spells(monster_type mt) const
+    {
+        // Refresh spell properties related to form shifting
+        you.form_shifted_spells.init(SPELL_NO_SPELL);
+        you.form_shifted_spell_letter_table.init(-1);
+        you.set_form_shifted_mon_spellbook(MST_NO_SPELLS);
+
+        const monsterentry *me = get_monster_data(mt);
+        if (!me)
+            return false;
+
+        bool did_add_spells = false;
+
+        // Swap out spellbooks! Look at spl-book.h and mon-spell.h
+        // or mon-util.cc=>mons_load_spells
+        mon_spellbook_type book = static_cast<mon_spellbook_type>(me->sec);
+
+        int slot_i = 0;
+        int letter_j = 0;
+        set<spell_type> seen_spells;
+
+        if (mons_is_draconian_job(mt))
+        {
+            mon_spell_slot breath = drac_breath(mons_genus(mt));
+            if (breath.spell != SPELL_NO_SPELL)
+            {
+                you.form_shifted_spells[slot_i] = breath.spell;
+                you.form_shifted_spell_letter_table[letter_j++] = slot_i++;
+                spell_skills(breath.spell, you.skills_to_show);
+                did_add_spells = true;
+            }
+        }
+
+        if (book == MST_NO_SPELLS || book == MST_GHOST)
+        {
+            return did_add_spells;
+        }
+
+        for (const mon_spellbook &spbook : mspell_list)
+        {
+            if (spbook.type == book)
+            {
+                for (const mon_spell_slot mss : spbook.spells)
+                {
+                    if (slot_i >= MAX_KNOWN_SPELLS)
+                        continue;
+
+                    // TODO: Consider giving out multiple spells for a given
+                    // monster spell, such as (Bolt of Fire: {Scorch, Fireball})
+                    spell_type spell = mon_spell_to_player_equivalent(
+                        mss.spell, mons_class_hit_dice(mt)
+                    );
+                    if (spell == SPELL_NO_SPELL || seen_spells.count(spell))
+                        continue;
+
+                    you.form_shifted_spells[slot_i] = spell;
+                    seen_spells.insert(spell);
+                    // TODO: Reproduce spl-util.cc->add_spell_to_memory logic
+                    // AND/OR copy over the existing letter map
+                    for ( ; letter_j < 52; )
+                    {
+                        you.form_shifted_spells[slot_i] = spell;
+                        you.form_shifted_spell_letter_table[letter_j++] = slot_i++;
+                        spell_skills(spell, you.skills_to_show);
+                        did_add_spells = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (!did_add_spells)
+        {
+            // TODO: Draconians (MONS_DRACONIAN_MONK) don't have a real
+            // spellbook, so we're gonna need to improvise or re-create
+            // Draconian species logic... which I think we can just decide
+            // not to do
+            you.set_form_shifted_mon_spellbook(-1);
+            return false;
+        }
+        you.set_form_shifted_mon_spellbook(book);
+
+        you.spell_no = slot_i;
+        ASSERT(you.spell_no < MAX_KNOWN_SPELLS);
+
+        for (int i = 0; i < slot_i; i++)
+            spell_skills(you.form_shifted_spells[i], you.skills_to_show);
+
+        return did_add_spells;
+    };
+
     static bool _dungeon_denizen_veto_mon(monster_type mon)
     {
         return (
@@ -1434,6 +1527,30 @@ public:
         return 4;
     }
 
+    FixedVector<spell_type, MAX_KNOWN_SPELLS> get_spells() const override
+    {
+        if (!get_can_cast())
+            return you.spells;
+
+        if (you.get_form_shifted_mon_spellbook() != NUM_MSTYPES)
+            return you.form_shifted_spells;
+
+        _set_form_spells(transform_mons());
+        return you.form_shifted_spells;
+    }
+
+    FixedVector<int, 52> get_spell_letter_table() const override
+    {
+        if (!get_can_cast())
+            return you.spell_letter_table;
+
+        if (you.get_form_shifted_mon_spellbook() != NUM_MSTYPES)
+            return you.form_shifted_spell_letter_table;
+
+        _set_form_spells(transform_mons());
+        return you.form_shifted_spell_letter_table;
+    }
+
     int get_blocked_slots() const override
     {
         // Dungeon denizens do not have any jewellery available to them
@@ -1606,7 +1723,19 @@ public:
         // TODO: Consider assigning a random monster family to changelings
         // on start that they thereafter like to transform into.
         if (you.get_form_shifted_monster() != MONS_PROGRAM_BUG)
+        {
+            // If we just loaded the game, check to see if we need to reset
+            // form spells since we don't save them in a prop or tags value
+            if ((you.get_form_shifted_mon_spellbook() != MST_NO_SPELLS
+                && you.get_form_shifted_mon_spellbook() != NUM_MSTYPES)
+                && you.form_shifted_spells[0] == SPELL_NO_SPELL)
+            {
+                _set_form_spells(static_cast<monster_type>(
+                                 you.get_form_shifted_monster()));
+            }
+
             return static_cast<monster_type>(you.get_form_shifted_monster());
+        }
 
         monster_type cur_mon = MONS_PROGRAM_BUG;
 
@@ -1655,6 +1784,9 @@ public:
         STAT_MAP cur_mon_mod = _all_stat_mods_for_monster_type(cur_mon, 100);
         for (auto const& i : cur_mon_mod)
             you.set_form_shifted_mon_stat(i.first, i.second / 100);
+        _set_form_spells(cur_mon);
+
+        // Call set_form_shifted_monster last!
         you.set_form_shifted_monster(cur_mon);
         return cur_mon;
     }
@@ -2581,7 +2713,9 @@ void set_form(transformation which_trans, int dur)
     {
         if (leaving_dungeon_denizen)
         {
-            you.hp = you.props[HP_PRE_TRANSFORM].get_int();
+            you.hp = min(you.props[HP_PRE_TRANSFORM].get_int(), you.hp_max);
+            you.spell_no = count_if(begin(you.spells), end(you.spells),
+            [](const spell_type spell) { return spell != SPELL_NO_SPELL; });
             you.clear_form_shifted_monster();
         }
         calc_mp(true);

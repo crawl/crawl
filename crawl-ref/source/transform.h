@@ -185,6 +185,9 @@ public:
     virtual int get_dex_mod() const { return dex_mod; }
     virtual int get_int_mod() const { return int_mod; }
 
+    virtual FixedVector<spell_type, MAX_KNOWN_SPELLS> get_spells() const { return you.spells; }
+    virtual FixedVector<int, 52> get_spell_letter_table() const { return you.spell_letter_table; }
+
     virtual int get_blocked_slots() const { return blocked_slots; }
 
     bool enables_flight() const;

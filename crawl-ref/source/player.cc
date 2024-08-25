@@ -54,6 +54,7 @@
 #include "macro.h"
 #include "melee-attack.h"
 #include "message.h"
+#include "mon-mst.h"  // for NUM_MSTYPES
 #include "mon-place.h"
 #include "movement.h"
 #include "mutation.h"
@@ -8748,7 +8749,7 @@ void player::clear_form_shifted_mon_stats()
 int player::get_form_shifted_mon_spellbook() const
 {
     if (!you.props.exists(FORM_SHIFT_MONS_SPELLBOOK))
-        return -1;
+        return NUM_MSTYPES;
     return you.props[FORM_SHIFT_MONS_SPELLBOOK];
 }
 
