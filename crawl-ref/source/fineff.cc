@@ -564,10 +564,12 @@ void shock_discharge_fineff::fire()
                    name.c_str(), shock_source.c_str());
 
     // Do resist messaging
-    oppressor.beam_resists(beam, amount, true);
-
-    if (final_dmg)
-        oppressor.expose_to_element(beam.flavour, final_dmg);
+    if (oppressor.alive())
+    {
+        oppressor.beam_resists(beam, amount, true);
+        if (final_dmg)
+            oppressor.expose_to_element(beam.flavour, final_dmg);
+    }
 }
 
 void explosion_fineff::fire()
