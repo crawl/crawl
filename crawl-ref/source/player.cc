@@ -8001,6 +8001,8 @@ bool player::can_feel_fear(bool include_unknown) const
 
 bool player::can_throw_large_rocks() const
 {
+    if (you.form == transformation::dungeon_denizen)
+        return mons_class_body_size(transform_mons()) >= SIZE_LARGE;
     return species::can_throw_large_rocks(species);
 }
 
