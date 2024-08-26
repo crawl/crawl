@@ -1,0 +1,20 @@
+# Or spirit shield?
+name: "yak siege wall"
+glyph: {char: "[", colour: colour_undef}
+flags: [unblindable, avatar, crash_doors]
+xp_mult: 9
+holiness: [undead]
+# Does this matter for allies since it's a summon?
+# species: yaktaur
+will: invuln
+# Maybe {type: bash, flavour: knockback} - but this is close for now
+attacks:
+ - {type: hit, flavour: trample, damage: 14}
+hd: 13
+hp_10x: 400
+ac: 18
+ev: 0
+intelligence: human
+uses: open_doors
+size: giant
+shape: misc

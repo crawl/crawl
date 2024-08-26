@@ -443,7 +443,15 @@ bool ranged_attack::ignores_shield(bool verbose)
 {
     if (defender->is_player() && player_omnireflects())
         return false;
-
+    if (defender->is_monster() && defender->as_monster()->type == MONS_YAK_SIEGE_WALL)
+    {
+        if (verbose)
+        {
+            mprf("%s absorbs the full impact of %s, stopping it dead.",
+                defender_name(false).c_str(), projectile->name(DESC_THE).c_str());
+        }
+        return false;
+    }
     if (is_penetrating_attack(*attacker, weapon, *projectile))
     {
         if (verbose)

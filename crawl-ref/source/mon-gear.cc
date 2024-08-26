@@ -743,7 +743,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only, bool force_a
             { 1, 1, 3 },
             { { SPWPN_FLAMING, 1 } }
         } },
-        { MONS_YAKTAUR,         { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR,             { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR_CLERIC, {
+            { { WPN_ARBALEST, 1 } },
+            { 5, 1, 3 },
+            { { SPWPN_DRAINING, 1 },
+              { SPWPN_NORMAL,   5 } }
+        } },
         { MONS_YAKTAUR_CAPTAIN, { {
             { WPN_ARBALEST,      19 },
             { WPN_HAND_CANNON, 1  },
@@ -1172,6 +1178,26 @@ int make_mons_weapon(monster_type type, int level, bool melee_only, bool force_a
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_QUARTERSTAFF;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HEAVY);
+        }
+        break;
+
+    case MONS_YAKTAUR_CLERIC:
+        if (!melee_only)
+            break;
+        if (one_chance_in(4))
+        {
+            item.base_type = OBJ_STAVES;
+            item.sub_type = STAFF_DEATH;
+        }
+        else
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_QUARTERSTAFF;
+            if (one_chance_in(3))
+            {
+                set_item_ego_type(item, OBJ_WEAPONS, random_choose(SPWPN_PAIN,
+                                            SPWPN_DRAINING, SPWPN_FOUL_FLAME));
+            }
         }
         break;
 
@@ -2072,10 +2098,12 @@ int make_mons_armour(monster_type type, int level)
     case MONS_CENTAUR_WARRIOR:
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
+    case MONS_YAKTAUR_CLERIC:
         if (one_chance_in(type == MONS_CENTAUR              ? 1000 :
                           type == MONS_CENTAUR_WARRIOR      ?  500 :
-                          type == MONS_YAKTAUR              ?  300
-                       /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
+                          type == MONS_YAKTAUR              ?  300 :
+                          type == MONS_YAKTAUR_CLERIC       ?  250 :
+                       /* type == MONS_YAKTAUR_CAPTAIN   ? */  200))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_BARDING;

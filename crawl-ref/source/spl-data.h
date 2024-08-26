@@ -4418,6 +4418,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RAISE_SHIELDS, "Raise Shields",
+    spschool::necromancy,
+    spflag::unholy | spflag::monster,
+    6,
+    0,
+    -1, -1,
+    0,
+    TILEG_RAISE_SHIELDS,
+},
+
+{
+    SPELL_FLESH_SACRIFICE, "Flesh Sacrifice",
+    spschool::necromancy,
+    spflag::target | spflag::monster,
+    6,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    20,
+    TILEG_FLESH_SACRIFICE,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

@@ -3279,12 +3279,24 @@ yaktaur captain
 An exceptionally strong and brutish yaktaur, able to order its weaker brethren
 around to do its bidding.
 %%%%
+yaktaur cleric
+
+Resplendant in the finery of religious office and bearing the totem of a
+nameless deity, the Cleric acts with divine purpose. It is able to summon to
+its aid the spirits of ancient warriors of its order.
+%%%%
+yak siege wall
+
+The ghost of a legendary yak from ancient times, returned to the mortal plane to
+protect its descendants by standing in the way of that which would do them harm.
+It takes the full impact of anything which strikes it, stopping even the most
+piercing of projectiles.
+%%%%
 yellow draconian
 
 A muscular yellow-scaled humanoid with a reptilian tail and small wings.
 %%%%
 ynoxinul
-
 A winged demon covered in shiny metallic scales. It has a legion of minor
 demons under its command.
 %%%%

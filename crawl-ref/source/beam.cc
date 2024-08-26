@@ -93,6 +93,15 @@ static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
 int _ench_pow_to_dur(int pow);
 
+static bool _acts_as_wall(const actor* target, const actor* agent)
+{
+    // Yak siege walls absorb all hostile beams, even piercing
+    return target && target->is_monster()
+        && !invalid_monster(target->as_monster())
+        && target->as_monster()->type == MONS_YAK_SIEGE_WALL
+        && (!agent || !mons_aligned(target, agent));
+}
+
 tracer_info::tracer_info()
 {
     reset();
@@ -1165,8 +1174,9 @@ void bolt::affect_cell()
         if (m && can_affect_actor(m))
         {
             const bool ignored = ignores_monster(m);
+            const bool as_wall = _acts_as_wall(m, agent(true));
             affect_monster(m);
-            if (hit == AUTOMATIC_HIT && !pierce && !ignored
+            if ((hit == AUTOMATIC_HIT && !pierce || as_wall) && !ignored
                 && (!is_tracer || (agent() && m->visible_to(agent()))))
             {
                 finish_beam();
@@ -4989,6 +4999,9 @@ void bolt::tracer_affect_monster(monster* mon)
         tracer_enchantment_affect_monster(mon);
     else
         tracer_nonenchantment_affect_monster(mon);
+
+    if (_acts_as_wall(mon, agent(true)))
+        finish_beam();
 }
 
 void bolt::enchantment_affect_monster(monster* mon)
@@ -5064,7 +5077,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     handle_enchant_chaining(mon->pos());
 
-    extra_range_used += range_used_on_hit();
+    extra_range_used += range_used_on_hit(mon);
 
     // Nasty enchantments will annoy the monster, and are considered
     // naughty (even if a monster resisted).
@@ -5577,8 +5590,13 @@ bool bolt::at_blocking_monster() const
     if (!mon || !you.can_see(*mon))
         return false;
 
-    if (!pierce && !ignores_monster(mon) && mon->is_firewood())
+    // Siege walls can't even be pierced, otherwise only firewood blocks
+    if ((_acts_as_wall(mon, agent(true)) || !pierce && mon->is_firewood())
+        && !ignores_monster(mon))
+    {
         return true;
+    }
+
     if (have_passive(passive_t::neutral_slimes)
         && mons_is_slime(*mon)
         && flavour != BEAM_VILE_CLUTCH)
@@ -5682,6 +5700,7 @@ void bolt::affect_monster(monster* mon)
 
     // Explosions always 'hit'.
     const bool engulfs = (is_explosion || is_big_cloud());
+    const bool as_wall = _acts_as_wall(mon, agent(true));
 
     if (is_enchantment())
     {
@@ -5699,6 +5718,8 @@ void bolt::affect_monster(monster* mon)
         }
         // no to-hit check
         enchantment_affect_monster(mon);
+        if (as_wall)
+            finish_beam();
         return;
     }
 
@@ -5749,7 +5770,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     // Make a copy of the to-hit before we modify it.
-    int beam_hit = hit;
+    int beam_hit = as_wall ? AUTOMATIC_HIT : hit;
 
     if (beam_hit != AUTOMATIC_HIT)
         beam_hit = apply_lighting(beam_hit, *mon);
@@ -5878,7 +5899,7 @@ void bolt::affect_monster(monster* mon)
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 
-    extra_range_used += range_used_on_hit();
+    extra_range_used += range_used_on_hit(mon);
 }
 
 bool bolt::ignores_monster(const monster* mon) const
@@ -6867,8 +6888,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 }
 
 // Extra range used on hit.
-int bolt::range_used_on_hit() const
+int bolt::range_used_on_hit(const monster* victim) const
 {
+    if (_acts_as_wall(victim, agent(true)))
+        return BEAM_STOP;
+
     if (is_tracer && source_id == MID_PLAYER && hit < AUTOMATIC_HIT)
         return 0;
 

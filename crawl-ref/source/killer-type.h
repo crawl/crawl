@@ -30,4 +30,5 @@ enum killer_type                       // monster_die(), thing_thrown
                                        // the death of a tentacle segment kills
                                        // the rest of the tentacle. (Otherwise
                                        // identical to KILL_RESET)
+    KILL_SACRIFICED,                   // only used by milestones and notes
 };

@@ -106,6 +106,8 @@ deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
 fugue_of_the_fallen FUGUE_OF_THE_FALLEN
+# TODO: update the tile
+UNUSED/spells/animate_skeleton FLESH_SACRIFICE
 grave_claw GRAVE_CLAW
 haunt HAUNT
 infestation INFESTATION
@@ -282,6 +284,7 @@ primal_wave PRIMAL_WAVE
 pyroclastic_surge PYROCLASTIC_SURGE
 quicksilver_bolt QUICKSILVER_BOLT
 ravenous_swarm RAVENOUS_SWARM
+raise_shields RAISE_SHIELDS
 rebounding_blaze REBOUNDING_BLAZE
 rebounding_chill REBOUNDING_CHILL
 resonance_strike RESONANCE_STRIKE

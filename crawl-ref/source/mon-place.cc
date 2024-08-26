@@ -1416,7 +1416,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             blame_prefix = "called from beyond by ";
     }
     else if (mons_class_is_zombified(mg.cls))
-        blame_prefix = "animated by ";
+        if (mg.summon_type == SPELL_FLESH_SACRIFICE)
+            blame_prefix = "sacrificed by ";
+        else
+            blame_prefix = "animated by ";
     else if (mg.cls == MONS_ELDRITCH_TENTACLE
              || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
@@ -1821,6 +1824,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_CENTAUR, { centaur_band_condition, {{ BAND_CENTAURS, {2, 6} }}}},
     { MONS_YAKTAUR_CAPTAIN, { {2}, {{ BAND_YAKTAURS, {2, 5}, true }}}},
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
+    { MONS_YAKTAUR_CLERIC,  { {2}, {{ BAND_YAKTAUR_CLERIC, {4, 8} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
     { MONS_LODUL,           { {}, {{ BAND_OGRES, {6, 10}, true }}}},
@@ -2232,6 +2236,18 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_BOGGARTS,            {{{MONS_BOGGART, 1}}}},
     { BAND_CENTAURS,            {{{MONS_CENTAUR, 1}}}},
     { BAND_YAKTAURS,            {{{MONS_YAKTAUR, 1}}}},
+    { BAND_YAKTAUR_CLERIC,      {{{MONS_YAKTAUR_CAPTAIN, 1}, // Occasionally a (subservient) captain
+                                  {MONS_YAKTAUR, 4}},
+                                 {{MONS_POLTERGUARDIAN, 1}, // Maybe an undead-themed support
+                                  {MONS_UNDYING_ARMOURY, 1},
+                                  {MONS_MARTYRED_SHADE, 1},
+                                  {MONS_YAKTAUR, 3}},
+                                 {{MONS_YAKTAUR, 3}, // Mix of yaktaurs, death yaks, skeleton
+                                  {MONS_DEATH_YAK, 2}, // For flavour but also fodder for necro
+                                  // XX: Force to yaktaur
+                                  {RANDOM_SKELETON_ARCHER, 1},
+                                  {RANDOM_ZOMBIE_ARCHER, 1}}
+                                }},
     { BAND_MERFOLK_IMPALER,     {{{MONS_MERFOLK, 1}}}},
     { BAND_MERFOLK_JAVELINEER,  {{{MONS_MERFOLK, 1}}}},
     { BAND_ELEPHANT,            {{{MONS_ELEPHANT, 1}}}},

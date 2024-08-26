@@ -177,6 +177,7 @@ static const vector<pop_entry> population[] =
   { 19, 26,  136, SEMI, MONS_DEEP_TROLL },
   { 19, 27,   25, PEAK, MONS_ORC_SORCERER },
   { 20, 30,  310, FALL, MONS_YAKTAUR_CAPTAIN },
+  { 20, 30,   60, SEMI, MONS_YAKTAUR_CLERIC },
   { 20, 30,  136, SEMI, MONS_FIRE_GIANT },
   { 20, 30,  136, SEMI, MONS_FROST_GIANT },
   { 21, 27,  310, FALL, MONS_STONE_GIANT },

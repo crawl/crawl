@@ -5945,6 +5945,10 @@ bool shoot_through_monster(const actor* agent, const monster& mon, bool do_messa
     if (agent->is_player() && mon.type == MONS_HAUNTED_ARMOUR)
         return true;
 
+    // Allies can shoot through their yak siege walls
+    if (mon.type == MONS_YAK_SIEGE_WALL)
+        return true;
+
     return false;
 }
 

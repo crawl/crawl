@@ -32,6 +32,7 @@
 #include "god-blessing.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-item.h"
 #include "god-passive.h" // passive_t::bless_followers, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
@@ -551,7 +552,8 @@ static string _milestone_kill_verb(killer_type killer)
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
            killer == KILL_BOUND ? "bound" :
-           killer == KILL_SLIMIFIED ? "slimified" : "killed";
+           killer == KILL_SLIMIFIED ? "slimified" :
+           killer == KILL_SACRIFICED ? "sacrificed" : "killed";
 }
 
 void record_monster_defeat(const monster* mons, killer_type killer)
@@ -1388,6 +1390,8 @@ static string _killer_type_name(killer_type killer)
         return "slimified";
     case KILL_TENTACLE_CLEANUP:
         return "tentacle cleanup";
+    case KILL_SACRIFICED:
+        return "sacrificed";
     }
     die("invalid killer type");
 }
@@ -4041,4 +4045,51 @@ bool mons_bennu_can_revive(const monster* mons)
 {
     return !mons->props.exists(BENNU_REVIVES_KEY)
            || mons->props[BENNU_REVIVES_KEY].get_byte() < 1;
+}
+
+void make_skeleton(monster& mons, monster& /*agent*/)
+{
+    // Based on yred_make_bound_soul initially but it's much simpler.
+    // Rebrand or drop any holy equipment, and keep wielding the rest. Also
+    // remove any active avatars.
+    for (int slot = MSLOT_WEAPON; slot <= MSLOT_ALT_WEAPON; slot++)
+    {
+        item_def *wpn = mons.mslot_item(static_cast<mon_inv_type>(slot));
+        if (wpn && get_weapon_brand(*wpn) == SPWPN_HOLY_WRATH)
+        {
+            set_item_ego_type(*wpn, OBJ_WEAPONS, SPWPN_DRAINING);
+            convert2bad(*wpn);
+        }
+    }
+    monster_drop_things(&mons, false, [](const item_def& item)
+                                    { return is_holy_item(item); });
+
+    // Fire death events (since the monster avoids *actually* dying).
+    // In practice, this mostly means "Let Binding TRJ actually open the vault"
+    handle_monster_dies_lua(mons, KILL_SACRIFICED);
+    fire_monster_death_event(&mons, KILL_SACRIFICED, false);
+
+    const monster orig = mons;
+
+    // Use the original monster type as the zombified type here, to get
+    // the proper stats from it.
+    define_zombie(&mons, mons.type, MONS_SKELETON);
+
+    // Modify health based on invocations skill
+    // mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
+    mons.hit_points = div_rand_round(mons.max_hit_points, 2);
+
+    // If the original monster type has melee abilities, make sure
+    // its spectral thing has them as well.
+    mons.flags |= orig.flags & MF_MELEE_MASK;
+
+    // XX: Do we really want the spells?
+    monster_spells spl = orig.spells;
+    for (const mon_spell_slot &slot : spl)
+        if (!(get_spell_flags(slot.spell) & spflag::holy))
+            mons.spells.push_back(slot);
+    if (mons.spells.size())
+        mons.props[CUSTOM_SPELLS_KEY] = true;
+
+    name_zombie(mons, orig);
 }

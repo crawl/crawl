@@ -2320,6 +2320,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_PHANTOM_BLITZ,            { 0, 2 } },
     { SPELL_SHADOW_PUPPET,            { 3, 3 } },
     { SPELL_SHADOW_TURRET,            { 2, 2 } },
+    { SPELL_RAISE_SHIELDS,            { 0, 3 } },
 };
 
 bool summons_are_capped(spell_type spell)

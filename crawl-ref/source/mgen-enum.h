@@ -140,9 +140,9 @@ enum band_type
     BAND_ARCHERS,
     BAND_SKELETON_ARCHERS,
     BAND_ZOMBIE_ARCHERS,
+    BAND_YAKTAUR_CLERIC,
     NUM_BANDS                   // always last
 };
-
 enum proximity_type   // proximity to player to create monster
 {
     PROX_ANYWHERE,

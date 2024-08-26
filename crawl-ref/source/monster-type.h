@@ -509,6 +509,8 @@ enum monster_type                      // env.mons[].type
     MONS_YAKTAUR,
     MONS_YAKTAUR_CAPTAIN,
 #if TAG_MAJOR_VERSION > 34
+    MONS_YAKTAUR_CLERIC,
+    MONS_YAK_SIEGE_WALL,
     MONS_FAUN,
     MONS_SATYR,
 #endif
@@ -1332,6 +1334,8 @@ enum monster_type                      // env.mons[].type
     MONS_VAMPIRE_BLOODPRINCE,
     MONS_REVENANT,               // player species dummy
     MONS_NAMELESS_REVENANT,      // 'Nobody' (except with a less misleading enum name)
+    MONS_YAKTAUR_CLERIC,
+    MONS_YAK_SIEGE_WALL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

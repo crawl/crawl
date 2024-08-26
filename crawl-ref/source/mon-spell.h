@@ -1817,6 +1817,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_YAKTAUR_CLERIC,
+      {
+       { SPELL_RAISE_SHIELDS, 24, MON_SPELL_PRIEST },
+       { SPELL_FLESH_SACRIFICE, 36, MON_SPELL_PRIEST },
+      }
+    },
+
     // ('d') Draconians.
     { MST_BAI_SUZHEN,
       {

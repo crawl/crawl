@@ -110,6 +110,8 @@ static string _god_name(god_type god);
 static coord_def _mons_ghostly_sacrifice_target(const monster &caster,
                                                 bolt tracer);
 static coord_def _mons_bomblet_target(const monster& caster);
+static coord_def _mons_flesh_sacrifice_target(const monster &caster);
+static void _flesh_sacrifice(monster &caster, bolt &beam);
 static function<void(bolt&, const monster&, int)>
     _selfench_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
@@ -554,6 +556,17 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 canned_msg(MSG_NOTHING_HAPPENS);
         },
         _setup_ghostly_sacrifice_beam,
+    } },
+    { SPELL_FLESH_SACRIFICE, {
+        [](const monster& caster) {
+            coord_def target = _mons_flesh_sacrifice_target(caster);
+            if (in_bounds(target))
+                return ai_action::good();
+            return ai_action::impossible();
+        },
+        [](monster& caster, mon_spell_slot /*slot*/, bolt& pbolt) {
+            _flesh_sacrifice(caster, pbolt);
+        },
     } },
     { SPELL_SLOW, _hex_logic(SPELL_SLOW) },
     { SPELL_CONFUSE, _hex_logic(SPELL_CONFUSE) },
@@ -2370,6 +2383,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MESMERISE:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_BROTHERS_IN_ARMS:
+    case SPELL_RAISE_SHIELDS:
     case SPELL_BERSERKER_RAGE:
     case SPELL_SPRINT:
 #if TAG_MAJOR_VERSION == 34
@@ -4273,6 +4287,51 @@ static coord_def _mons_bomblet_target(const monster& caster)
 
     // Found nothing
     return coord_def();
+}
+
+/**
+ * Pick a target for Flesh Sacrifice.
+ *
+ *  @param  caster       The monster casting the spell.
+ *  @return The target square, or an out of bounds coord if none was found.
+ */
+static coord_def _mons_flesh_sacrifice_target(const monster &caster)
+{
+    vector<pair<coord_def,int>> candidates;
+    for (monster_near_iterator mi(&caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        // Must be aligned to self (but not actually sacrifice themselves!)
+        // and actually zombifiable (which covers every other check we might want)
+        if (*mi == &caster || !mons_aligned(&caster, *mi)
+            || !mons_can_be_zombified(**mi))
+        {
+            continue;
+        }
+        // Only HP <= 1/3
+        if (mi->hit_points > mi->max_hit_points / 3)
+            continue;
+        int weight = (mi->max_hit_points / 2 - mi->hit_points)
+                     * 100 / mi->max_hit_points;
+        candidates.push_back({mi->pos(), weight});
+    }
+    if (candidates.size() == 0)
+        return {0,0};
+    return *random_choose_weighted(candidates);
+}
+
+static void _flesh_sacrifice(monster& caster, bolt& beam)
+{
+    coord_def target = _mons_flesh_sacrifice_target(caster);
+    monster* monster = monster_at(target);
+    ASSERT(monster);
+
+    if (you.can_see(*monster))
+        mprf("The flesh sloughs from %s bones.", monster->name(DESC_THE).c_str());
+    if (you.can_see(caster))
+        mprf("%s grins and starts rejuvenating.", caster.name(DESC_THE).c_str());
+    make_skeleton(*monster, caster);
+    caster.add_ench(mon_enchant{ENCH_REGENERATION, 0, &caster});
+    blood_spray(target, monster->type, beam.ench_power);
 }
 
 static bool _can_injury_bond(const monster &protector, const monster &protectee)
@@ -7402,6 +7461,20 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mons->props[BROTHERS_KEY].get_int()++;
         return;
     }
+
+    case SPELL_RAISE_SHIELDS:
+        sumcount2 = 3;
+
+        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
+
+        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
+        {
+            create_monster(
+                mgen_data(MONS_YAK_SIEGE_WALL, SAME_ATTITUDE(mons), mons->pos(),
+                          mons->foe)
+                .set_summoned(mons, spell_cast, summ_dur(duration), god));
+        }
+        return;
 
     case SPELL_SYMBOL_OF_TORMENT:
         torment(mons, TORMENT_SPELL, mons->pos());
