@@ -305,7 +305,7 @@ sky_beast MONS_SKY_BEAST
 nellie MONS_NELLIE
 %sdir mon/holy
 apis MONS_APIS
-%sdir mon/vaults
+%sdir mon/vault
 pretty_yak MONS_YAK_BOW
 
 ### Elemental monsters
