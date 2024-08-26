@@ -598,7 +598,9 @@ zin6
 shining_one DNGN_ALTAR_SHINING_ONE
 kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
 yredelemnul DNGN_ALTAR_YREDELEMNUL
+%weight 3
 xom0 DNGN_ALTAR_XOM
+%weight 1
 xom1
 xom2
 xom3
