@@ -2291,6 +2291,12 @@ static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
     {
         pos += dir;
 
+        // It is possible to move out of bounds if we're near the level boundary
+        // and the player has not seen some of the terrain between this monster
+        // and the level edge (meaning it assumes that terrain is non-collidable)
+        if (!in_bounds(pos))
+            return steps < GAVOTTE_DISTANCE;
+
         // Can never collide with the player (for the player's sake)
         if (pos == you.pos())
             return false;
