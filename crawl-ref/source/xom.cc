@@ -1940,10 +1940,10 @@ static void _xom_fake_shatter(int /*sever*/)
         if (one_chance_in(5) && rocks <= dest / 2 && !monster_at(*di)
               && !cell_is_solid(*di))
         {
-             int rock_spot = items(true, OBJ_MISSILES, MI_LARGE_ROCK, 0, 0, GOD_XOM);
-             move_item_to_grid(&rock_spot, *di);
-             env.item[rock_spot].quantity = 1;
-             rocks++;
+            int rock_spot = items(true, OBJ_MISSILES, MI_LARGE_ROCK, 0, 0, GOD_XOM);
+            env.item[rock_spot].quantity = 1;
+            move_item_to_grid(&rock_spot, *di);
+            rocks++;
         }
     }
 
