@@ -1210,6 +1210,21 @@ static const mutation_def mut_data[] =
   TILEG_MUT_GENERIC_BAD_MUTATION,
 },
 
+{ MUT_EFFICIENT_MAGIC, 4, 2, mutflag::good, false,
+  "efficient magic",
+
+  {"Spells you cast cost 1 less MP (to a minimum of 1).",
+   "Spells you cast cost 2 less MP (to a minimum of 1).",
+   ""},
+  {"You gain a new grip on the flow of your magic.",
+   "Your grip strengthens on the flow of your magic.",
+   ""},
+  {"The flow of your magic slips from your grasp.",
+   "The flow of your magic starts slipping from your grasp.",
+   ""},
+  TILEG_MUT_EFFICIENT_MAGIC,
+},
+
 { MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false,
   "demonic magic",
 

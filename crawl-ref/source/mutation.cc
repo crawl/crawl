@@ -201,6 +201,7 @@ static const int conflict[][3] =
 #endif
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
+    { MUT_HP_CASTING<          MUT_EFFICIENT_MAGIC,        -1}
 };
 
 static bool _mut_has_use(const mutation_def &mut, mutflag use)

@@ -115,6 +115,12 @@ low mp mutation
 
 You have a low magical capacity. Each level of this mutation provides -10% MP.
 %%%%
+efficient magic mutation
+
+You have both an innate understanding and a greater control over the exact flow
+of your magic, letting you cast spells with greater efficiency. Each level of
+this mutation reduces the cost of your spells by 1 MP, to a minimum of 1 MP.
+%%%%
 camouflage mutation
 
 Your skin changes colour to match your surroundings. Each level of this

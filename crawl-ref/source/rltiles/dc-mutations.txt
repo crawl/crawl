@@ -72,6 +72,8 @@ high_mp_3
 low_mp_1 LOW_MP
 low_mp_2
 low_mp_3
+efficient_magic_1 EFFICIENT_MAGIC
+efficient_magic_2
 
 cold_res_1 COLD_RESISTANCE
 cold_res_2
