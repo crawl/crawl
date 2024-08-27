@@ -2112,9 +2112,9 @@ spinnerets. It seems to want to keep its distance.
 %%%%
 orc
 
-A peculiar subterranean creature, thought to be a distant relative of the
-human, or the pig, or perhaps the platypus. Orcs love groups, in which they
-gather for whatever worrying activities orcs enjoy.
+A subterranean tribe whose forebearers were once scattered across every corner
+of the surface world. Eons of persecution have taught them the necessity of
+violence and the importance of having your brethren at your side.
 %%%%
 orc apostle
 
