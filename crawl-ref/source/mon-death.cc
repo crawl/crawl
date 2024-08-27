@@ -816,6 +816,13 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
     if (ktype == KILL_BANISHED || ktype == KILL_RESET || ktype == KILL_DISMISSED)
         return false;
 
+    // XXX: Summoned Blorkulas (ie: from phantom mirror) will cease to be when
+    // timeout_enchantments() below is called, leading to a crash. If some
+    // refactoring is done which allows this to not be the case, feel free to
+    // remove this line.
+    if (blorkula.is_summoned())
+        return false;
+
     if (blorkula.props.exists(BLORKULA_DIE_FOR_REAL_KEY))
         return false;
 
