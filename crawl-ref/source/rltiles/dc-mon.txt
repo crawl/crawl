@@ -921,7 +921,7 @@ slime_creature3
 slime_creature4
 slime_creature5
 rockslime MONS_ROCKSLIME
-quicksilver_ooze MONS_QUICKSILVER_OOZE
+void_ooze MONS_VOID_OOZE
 %rim 1
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB

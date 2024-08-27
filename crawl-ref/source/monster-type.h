@@ -156,7 +156,7 @@ enum monster_type                      // env.mons[].type
     MONS_GIANT_AMOEBA,
 #else
     MONS_ROCKSLIME,
-    MONS_QUICKSILVER_OOZE,
+    MONS_VOID_OOZE,
 #endif
     MONS_AZURE_JELLY,
 #if TAG_MAJOR_VERSION == 34
@@ -1187,7 +1187,7 @@ enum monster_type                      // env.mons[].type
     MONS_DEEP_ELF_AIR_MAGE,
     MONS_ANIMATED_ARMOUR,
     MONS_ROCKSLIME,
-    MONS_QUICKSILVER_OOZE,
+    MONS_VOID_OOZE,
     MONS_IRONBOUND_FROSTHEART,
     MONS_IRONBOUND_THUNDERHULK,
     MONS_IRONBOUND_BEASTMASTER,

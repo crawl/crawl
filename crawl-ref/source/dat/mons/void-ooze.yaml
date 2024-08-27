@@ -1,4 +1,4 @@
-name: "quicksilver ooze"
+name: "void ooze"
 glyph: {char: "J", colour: cyan}
 flags: [eat_doors, see_invis, unblindable, web_immune, no_skeleton]
 resists: {poison: 1, acid: 3}

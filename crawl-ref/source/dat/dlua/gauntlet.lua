@@ -499,7 +499,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first = {mons = "quicksilver ooze", min = 1, max = 1},
+    first = {mons = "void ooze", min = 1, max = 1},
     liquid = "water",
   },
   {

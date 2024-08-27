@@ -988,7 +988,7 @@ ENDMAP
 NAME:     slime_end
 TAGS:     slime_end
 KMONS:    1 = azure jelly / acid blob w:20 / rockslime / glass eye w:4 /\
-              golden eye w:4 / quicksilver ooze w:4
+              golden eye w:4 / void ooze w:4
 KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen

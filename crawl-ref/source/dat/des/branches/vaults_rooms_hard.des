@@ -2224,7 +2224,7 @@ TAGS:    vaults_hard
 KITEM:   O = * / | w:3
 KMONS:   O = slime creature w:40 / glowing orange brain / great orb of eyes / \
              large slime creature / very large slime creature w:5 / \
-             quicksilver ooze w:5
+             void ooze w:5
 KMASK:   O = no_trap_gen
 KPROP:   O = no_tele_into
 SHUFFLE: xn

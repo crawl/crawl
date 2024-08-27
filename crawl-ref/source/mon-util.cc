@@ -4270,7 +4270,7 @@ monster_type royal_jelly_ejectable_monster()
     return random_choose(MONS_ACID_BLOB,
                          MONS_AZURE_JELLY,
                          MONS_ROCKSLIME,
-                         MONS_QUICKSILVER_OOZE);
+                         MONS_VOID_OOZE);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.

@@ -745,7 +745,7 @@ DEPTH:  D:8-, Lair, Elf, Vaults, !Vaults:$, Depths, Zot
 ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, glowing orange brain / great orb of eyes
-MONS:   eye of devastation / rockslime / quicksilver ooze
+MONS:   eye of devastation / rockslime / void ooze
 MONS:   glass eye / shining eye / golden eye band
 MONS:   azure jelly / acid blob
 : ghost_good_loot(_G)

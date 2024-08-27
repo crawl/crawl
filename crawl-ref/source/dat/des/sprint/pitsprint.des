@@ -138,7 +138,7 @@ function base_monster_setup(e)
            hell sentinel / executioner")
   e.kmons("U = place:Slime:$ / slime creature band /\
            rockslime / azure jelly / acid blob /\
-           glass eye w:3 / quicksilver ooze w:3 / eye of devastation /\
+           glass eye w:3 / void ooze w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / rockslime / acid blob")
   e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\

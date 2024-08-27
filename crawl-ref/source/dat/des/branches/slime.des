@@ -394,7 +394,7 @@ TAGS: no_monster_gen no_item_gen no_trap_gen
 DEPTH: Slime:2-, !Slime:$
 SUBST: X = x., { = {[(
 KMONS: 1 : jelly w:20 / endoplasm / slime creature w:30 / \
-   acid blob w:5 / rockslime w:5 / quicksilver ooze w:5 /\
+   acid blob w:5 / rockslime w:5 / void ooze w:5 /\
    azure jelly w:5
 MAP
       xxx
@@ -1272,7 +1272,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   slime_pit_nicolae_royal_road_to_ruin
-KMONS:  R = rockslime / quicksilver ooze
+KMONS:  R = rockslime / void ooze
 SUBST:  " = cx, ! = cxx.., ' = x., r = rr., 4 = 444.
 NSUBST: k = 1:k / *:|
 : setup_slime_pit_ending(_G)

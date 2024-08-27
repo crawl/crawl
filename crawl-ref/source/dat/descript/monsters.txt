@@ -2304,11 +2304,6 @@ quicksilver elemental
 A mercurial spirit drawn from the elemental plane of earth. It exists in
 this world by inhabiting a shimmering body of liquid metal.
 %%%%
-quicksilver ooze
-
-A thin coating of shining, reflective goo, covering a great area and rushing
-forward with startling speed. Enchantments slide off it like water.
-%%%%
 quokka
 
 A pesky little marsupial that is a bit like a rat, but not quite.
@@ -2974,6 +2969,13 @@ vine stalker
 
 A bizarre symbiotic creature, made up of a carnivorous vine magically combined
 with a humanoid.
+%%%%
+void ooze
+
+The viscous detritus of a thousand failed spells, surging forward with a speed
+that defies its towering size. Its very substance is a hole in the fabric of
+magic; enchantments find no purchase there and it leaches magical power from
+anything it touches like a dry sponge in water.
 %%%%
 walking earthen tome
 

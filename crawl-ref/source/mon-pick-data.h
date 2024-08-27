@@ -454,7 +454,7 @@ static const vector<pop_entry> population[] =
   {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
   {  1,  5,  515, FLAT, MONS_AZURE_JELLY },
   {  1,  5,  515, FLAT, MONS_ROCKSLIME },
-  {  1,  5,  515, FLAT, MONS_QUICKSILVER_OOZE },
+  {  1,  5,  515, FLAT, MONS_VOID_OOZE },
   {  1,  5,  515, FLAT, MONS_SHINING_EYE },
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },

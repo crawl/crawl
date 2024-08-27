@@ -3485,7 +3485,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_ENGULF:
         if (x_chance_in_y(2, 3) && attacker->can_engulf(*defender))
         {
-            const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
+            const bool watery = attacker->type != MONS_VOID_OOZE;
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
             {
                 you.duration[DUR_WATER_HOLD] = 10;
