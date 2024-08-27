@@ -2138,7 +2138,7 @@ static void _print_overview_screen_equip(column_composer& cols,
 static string _overview_screen_title(int sw)
 {
     string title = player_title();
-    title = (title[0] == ',' ? "" : " ") + title;
+    title = (title[0] == ',' ? "" : " ") + title + " ";
 
     string species_job = make_stringf("(%s %s)",
                                       species::name(you.species).c_str(),
