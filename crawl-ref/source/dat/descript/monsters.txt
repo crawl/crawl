@@ -692,6 +692,10 @@ A wizard fond of spectacle and destruction. They scorn the cowardice of other
 magicians, who hide from their foes rather than simply blasting them out of
 existence.
 %%%%
+armataur
+
+A curious quadraped, resembling a cross between an armadillo and a yaktaur.
+%%%%
 aspiring flesh
 
 The divided and churning remains of a protean progenitor, striving desperately
