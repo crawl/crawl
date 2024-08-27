@@ -1013,7 +1013,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     else if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
         return true;
 
-    if (mons->type == MONS_BLORKULA_THE_ORCULA)
+    if (mons->type == MONS_BLORKULA_THE_ORCULA && !mons->is_summoned())
         return _blorkula_bat_split(*mons, killer);
 
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
