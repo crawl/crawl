@@ -4391,6 +4391,8 @@ string mut_aux_attack_desc(mutation_type mut)
     case MUT_ANTIMAGIC_BITE:
     case MUT_FANGS:
         return AUX_BITE.describe();
+    case MUT_PSEUDOPODS:
+        return AUX_PSEUDOPODS.describe();
     case MUT_DEMONIC_TOUCH:
         return AUX_TOUCH.describe();
     case MUT_REFLEXIVE_HEADBUTT:
