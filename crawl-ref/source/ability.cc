@@ -1537,7 +1537,9 @@ static string _ability_damage_string(ability_type ability)
             return spell_damage_string(SPELL_BLINKBOLT, false,
                                        _blinkbolt_power());
         case ABIL_COMBUSTION_BREATH:
-            dam = combustion_breath_damage(you.experience_level, false);
+            dam = combustion_breath_damage(you.form == transformation::dragon
+                                            ? you.experience_level * 2
+                                            : you.experience_level, false);
             break;
         case ABIL_MUD_BREATH:
         case ABIL_GALVANIC_BREATH:
