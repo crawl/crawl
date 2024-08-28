@@ -824,10 +824,9 @@ static int _ability_zap_pow(ability_type abil)
         case ABIL_SPIT_POISON:
             return 10 + you.experience_level;
         case ABIL_BREATHE_FIRE:
+            return you.experience_level * 2;
         case ABIL_BREATHE_POISON:
-            return you.form == transformation::dragon
-                                 ? 2 * you.experience_level
-                                 : you.experience_level;
+            return you.experience_level;
         case ABIL_MAKHLEB_DESTRUCTION:
             return _makhleb_destruction_power();
         default:
@@ -1548,7 +1547,9 @@ static string _ability_damage_string(ability_type ability)
         case ABIL_NOXIOUS_BREATH:
         case ABIL_CAUSTIC_BREATH:
             return spell_damage_string(breath_to_spell[ability], false,
-                                       you.experience_level);
+                                       you.form == transformation::dragon
+                                        ? you.experience_level * 2
+                                        : you.experience_level);
         default:
             return "";
     }
@@ -3104,7 +3105,10 @@ static spret _do_draconian_breath(const ability_def& abil, dist *target, bool fa
 {
     spret result = spret::abort;
 
-    result = your_spells(breath_to_spell[abil.ability], you.experience_level,
+    const int pow = you.form == transformation::dragon ? you.experience_level * 2
+                                                       : you.experience_level;
+
+    result = your_spells(breath_to_spell[abil.ability], pow,
                             false, nullptr, target, fail);
 
     if (result == spret::success)
