@@ -631,6 +631,8 @@ static bool _boosted_ev()
 static bool _boosted_sh()
 {
     return qazlal_sh_boost() > 0
+           || (you.get_mutation_level(MUT_EPHEMERAL_SHIELD)
+                && you.duration[DUR_EPHEMERAL_SHIELD])
            || (you.get_mutation_level(MUT_CONDENSATION_SHIELD)
                 && !you.duration[DUR_ICEMAIL_DEPLETED]);
 }

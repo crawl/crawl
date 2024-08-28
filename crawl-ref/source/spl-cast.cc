@@ -2178,11 +2178,18 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         _apply_post_zap_effect(spell, orig_target_pos);
 
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
+        const bool ephemeral_shield = you.get_mutation_level(MUT_EPHEMERAL_SHIELD);
 
         if ((demonic_magic == 3 && evoked_wand)
             || (demonic_magic > 0 && (actual_spell || you.divine_exegesis)))
         {
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
+        }
+
+        if (ephemeral_shield && (actual_spell || you.divine_exegesis))
+        {
+            you.set_duration(DUR_EPHEMERAL_SHIELD, 2);
+            you.redraw_armour_class = true;
         }
 
         if (you.props.exists(BATTLESPHERE_KEY)

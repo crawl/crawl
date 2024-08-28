@@ -2874,6 +2874,13 @@ bool activate_talent(const talent& tal, dist *target)
             practise_using_ability(abil.ability);
             _finalize_ability_costs(abil, mp_cost, hp_cost);
 
+            if (is_religious_ability(abil.ability)
+                && you.has_mutation(MUT_EPHEMERAL_SHIELD))
+            {
+                you.set_duration(DUR_EPHEMERAL_SHIELD, random_range(3, 5));
+                you.redraw_armour_class = true;
+            }
+
             // XXX: Merge Dismiss Apostle #1/2/3 into a single count
             ability_type log_type = abil.ability;
             if (log_type == ABIL_BEOGH_DISMISS_APOSTLE_2

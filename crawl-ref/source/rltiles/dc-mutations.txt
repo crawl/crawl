@@ -133,6 +133,7 @@ passive_freeze PASSIVE_FREEZE
 regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
+ephemeral_shield EPHEMERAL_SHIELD
 
 berserk_1 BERSERK
 berserk_2

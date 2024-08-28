@@ -2339,13 +2339,20 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
                ? you.get_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
                : 0);
 
-    // Icemail isn't active all of the time, so consider it temporary;
-    // this behaviour is consistent with how icemail's AC is dealt with.
+    // Icemail and Ephemeral Shield aren't active all of the time, so consider
+    // them temporary; this behaviour is consistent with how icemail's AC
+    // is dealt with.
     if (!ignore_temporary
         && you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
         && !you.duration[DUR_ICEMAIL_DEPLETED])
     {
         shield += ICEMAIL_MAX * 100;
+    }
+    if (!ignore_temporary
+        && you.get_mutation_level(MUT_EPHEMERAL_SHIELD)
+        && you.duration[DUR_EPHEMERAL_SHIELD])
+    {
+        shield += you.get_mutation_level(MUT_EPHEMERAL_SHIELD) * 1400;
     }
 
     shield += qazlal_sh_boost() * 100;
@@ -6067,6 +6074,7 @@ bool player::shielded() const
 {
     return shield()
            || duration[DUR_DIVINE_SHIELD]
+           || duration[DUR_EPHEMERAL_SHIELD]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || you.wearing(EQ_AMULET, AMU_REFLECTION)

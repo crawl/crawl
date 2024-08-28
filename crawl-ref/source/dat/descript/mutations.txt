@@ -121,6 +121,13 @@ You have both an innate understanding and a greater control over the exact flow
 of your magic, letting you cast spells with greater efficiency. Each level of
 this mutation reduces the cost of your spells by 1 MP, to a minimum of 1 MP.
 %%%%
+ephemeral shield mutation
+
+Whenever you use spells or divine abilities, a shield forms from the excess
+loose magical or spiritual energy to guard you. The magical energy from spells
+only sustains the shield for but a moment, while spiritual energy makes it last
+briefly longer.
+%%%%
 camouflage mutation
 
 Your skin changes colour to match your surroundings. Each level of this

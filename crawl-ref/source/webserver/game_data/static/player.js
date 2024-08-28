@@ -18,7 +18,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
               + "|under a protective aura|fiery-armoured",
         "ev": "^agile|acrobatic|in a heavenly storm",
 
-        "sh": "I am here because empty strings match everything and this does not"
+        // RIP "I am here because empty strings match everything and this does not"
+        "sh": "ephemerally shielded"
     }
 
     /**

@@ -1225,6 +1225,16 @@ static const mutation_def mut_data[] =
   TILEG_MUT_EFFICIENT_MAGIC,
 },
 
+{ MUT_EPHEMERAL_SHIELD, 4, 1, mutflag::good, false,
+  "ephemeral shield",
+
+  {"A shield forms around you when casting spells or using Invocations. (SH +7)",
+    "", ""},
+  {"Ambient excess energy start collecting around you.", "", ""},
+  {"The ambient excess energy around you dissipates.", "", ""},
+  TILEG_MUT_EPHEMERAL_SHIELD,
+},
+
 { MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false,
   "demonic magic",
 

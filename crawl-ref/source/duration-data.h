@@ -532,6 +532,13 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "",
       "divinely shielded", "divine shield",
       "You are shielded by the power of the Shining One.", D_NO_FLAGS},
+    { DUR_EPHEMERAL_SHIELD,
+      LIGHTBLUE, "",
+      "ephemerally shielded", "ephemeral shield",
+      "You are briefly shielded by having casted or invoked spells", D_DISPELLABLE | D_EXPIRES,
+      {{ "", []() {
+          you.redraw_armour_class = true; // includes shields
+      }}}},
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
