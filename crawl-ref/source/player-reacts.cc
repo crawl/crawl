@@ -1127,6 +1127,16 @@ void player_reacts()
         you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
     }
 
+    if (you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] && you.hp == you.hp_max)
+    {
+        // Don't print it the message if the mutation is lost
+        // before the cooldown wears off.
+        if (you.get_mutation_level(MUT_TIME_WARPED_BLOOD))
+            mprf(MSGCH_DURATION, "Your time-warped blood is ready to ripple again.");
+
+        you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 0;
+    }
+
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

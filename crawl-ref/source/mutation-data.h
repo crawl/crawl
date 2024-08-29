@@ -1235,6 +1235,21 @@ static const mutation_def mut_data[] =
   TILEG_MUT_EPHEMERAL_SHIELD,
 },
 
+{ MUT_TIME_WARPED_BLOOD, 2, 2, mutflag::good, false,
+  "time-warped blood",
+
+  {"Your blood hastes a few of your allies when you are sufficiently damaged.",
+   "Your blood hastes several of your allies when you are sufficiently damaged.",
+   ""},
+  {"The flow of your blood desyncs from the flow of time itself.",
+   "The flow of your blood has become unstuck from time.",
+   ""},
+  {"Your blood flow once more matches the normal passage of time.",
+   "Your blood flow starts aligning itself with the normal passage of time.",
+   ""},
+  TILEG_MUT_TIME_WARPED_BLOOD,
+},
+
 { MUT_DEMONIC_MAGIC, 0, 3, mutflag::good, false,
   "demonic magic",
 

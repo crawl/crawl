@@ -45,6 +45,7 @@ void expose_player_to_element(beam_type flavour, int strength = 0,
                               bool slow_cold_blooded = true);
 
 int timescale_damage(const actor *act, int damage);
+void _maybe_blood_hastes_allies();
 #if TAG_MAJOR_VERSION == 34
 bool can_shave_damage();
 int do_shave_damage(int dam);

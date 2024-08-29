@@ -21,6 +21,7 @@
 #endif
 
 #include "artefact.h"
+#include "act-iter.h"
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
@@ -46,6 +47,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -619,6 +621,66 @@ static void _maybe_summon_demonic_guardian(int dam, kill_method_type death_type)
     }
 }
 
+// The time-warped blood mutation grants haste to
+// your allies when you're brought below half health.
+void _maybe_blood_hastes_allies()
+{
+    if (you.hp * 2 > you.hp_max
+        || !you.has_mutation(MUT_TIME_WARPED_BLOOD)
+        || you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN])
+    {
+        return;
+    }
+
+    vector<monster*> targetable;
+    int target_count = you.get_mutation_level(MUT_TIME_WARPED_BLOOD) * 2;
+    int affected = 0;
+    int time = random_range(20, 30);
+
+    you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 1;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        // Try to look for valid allies that aren't already hasted,
+        // and which would properly function when given haste.
+        if (mi->alive() && mons_attitude(**mi) == ATT_FRIENDLY
+            && !mi->berserk_or_frenzied() && you.can_see(**mi)
+            && !mi->has_ench(ENCH_HASTE)
+            && !mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !mons_is_firewood(**mi) && !mons_is_object(mi->type))
+        {
+            targetable.emplace_back(*mi);
+        }
+    }
+
+    if (targetable.empty())
+    {
+       mpr("Your atemporal blood churns to no real effect.");
+       return;
+    }
+
+    // Affect the highest HD allies you have.
+    shuffle_array(targetable);
+    sort(targetable.begin(), targetable.end(),
+         [](const monster* a, const monster* b)
+         {return a->get_hit_dice() > b->get_hit_dice();});
+
+    for (monster *application: targetable)
+    {
+        if (affected < target_count)
+        {
+             flash_tile(application->pos(), BLUE, 0);
+             animation_delay(15, true);
+             application->add_ench(mon_enchant(ENCH_HASTE, 0, &you,
+                                   time * BASELINE_DELAY));
+             affected++;
+        }
+    }
+
+    if (affected > 0)
+        mpr("The spilling of your atemporal blood hastes your allies!");
+}
+
 static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
                                   mid_t death_source)
 {
@@ -1148,6 +1210,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_spawn_rats(dam, death_type);
             _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
+            _maybe_blood_hastes_allies();
             _powered_by_pain(dam);
             makhleb_celebrant_bloodrite();
             if (sanguine_armour_valid())

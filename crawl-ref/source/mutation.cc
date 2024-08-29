@@ -201,7 +201,7 @@ static const int conflict[][3] =
 #endif
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
-    { MUT_HP_CASTING<          MUT_EFFICIENT_MAGIC,        -1}
+    { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        -1}
 };
 
 static bool _mut_has_use(const mutation_def &mut, mutflag use)
@@ -436,6 +436,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 
     if (!form_has_blood(you.form) && mut == MUT_SANGUINE_ARMOUR)
         return mutation_activity_type::INACTIVE;
+
+    if (mut == MUT_TIME_WARPED_BLOOD && (!form_has_blood(you.form)
+            || have_passive(passive_t::no_haste)))
+    {
+        return mutation_activity_type::INACTIVE;
+    }
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
         return mutation_activity_type::INACTIVE;

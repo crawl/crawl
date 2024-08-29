@@ -959,8 +959,10 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
-    // Check if an HP payment brought us low enough to trigger Celebrant
+    // Check if an HP payment brought us low enough
+    // to trigger Celebrant or time-warped blood.
     makhleb_celebrant_bloodrite();
+    _maybe_blood_hastes_allies();
     you.turn_is_over = true;
     alert_nearby_monsters();
 

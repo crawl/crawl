@@ -125,13 +125,26 @@ ephemeral shield mutation
 
 Whenever you use spells or divine abilities, a shield forms from the excess
 loose magical or spiritual energy to guard you. The magical energy from spells
-only sustains the shield for but a moment, while spiritual energy makes it last
-briefly longer.
+only sustains the shield for but a moment, while the spiritual energy from using
+divine abilities lasts a brief bit longer.
 %%%%
 camouflage mutation
 
 Your skin changes colour to match your surroundings. Each level of this
 mutation provides Stealth+.
+%%%%
+passive freeze mutation
+
+Foes who strike you in melee will be frozen, taking damage. This effect is
+guaranteed to trigger if your foe does any damage.
+%%%%
+time-warped blood mutation
+
+Your blood has desynchronized itself from the flow of time. Whenever you fall
+below 50% of your maximum HP, the spilling of your blood surges strangely
+through your surroundings, hasting two of your strongest allies in sight for
+each level of this mutation. After doing so, your blood will be unable to
+further diliate time until your HP has fully recovered.
 %%%%
 # ------ Auxes -----
 horns mutation
@@ -454,11 +467,6 @@ foul stench mutation
 Foes who strike you in melee sometimes cause you to emit a cloud of foul
 miasma, slowing and severely poisoning those caught within. This mutation also
 grants you immunity to miasma (from any source).
-%%%%
-passive freeze mutation
-
-Foes who strike you in melee will be frozen, taking damage. This effect is
-guaranteed to trigger if your foe does any damage.
 %%%%
 spiny mutation
 
