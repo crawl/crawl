@@ -5,10 +5,10 @@ species: human
 will: 60
 attacks:
  - {type: hit, damage: 8}
-hd: 12
-hp_10x: 450
+hd: 13
+hp_10x: 540
 ac: 0
-ev: 13
+ev: 15
 spells: occultist
 has_corpse: true
 shout: shout

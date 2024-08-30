@@ -298,7 +298,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     case BEAM_CRYSTALLIZING:
         if (doEffects)
         {
-            if (x_chance_in_y(2, 3)) {
+            if (x_chance_in_y(3, 4)) {
                 if (!you.duration[DUR_VITRIFIED])
                     mpr("Your body becomes as fragile as glass!");
                 else

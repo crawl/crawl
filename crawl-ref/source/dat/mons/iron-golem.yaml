@@ -8,9 +8,9 @@ attacks:
  - {type: hit, damage: 50}
  - {type: hit, damage: 50}
 hd: 15
-hp_10x: 3000
-ac: 25
-ev: 5
+hp_10x: 2700
+ac: 24
+ev: 2
 shout: squeak
 intelligence: brainless
 speed: 7
