@@ -154,7 +154,7 @@ CFWARN_L += -Wextra \
 	    -Wno-type-limits \
 	    -Wno-uninitialized \
 
-DEFINES := $(EXTERNAL_DEFINES)
+DEFINES := -DTOURNEY='"0.32"' $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
