@@ -3464,7 +3464,7 @@ bool bolt::misses_player()
 
         // Divine shield only blocks conventionally blockable things, even if
         // the player is using the Warlock's Mirror.
-        if (blocked || (you.duration[DUR_DIVINE_SHIELD] || is_blockable()))
+        if (blocked || (you.duration[DUR_DIVINE_SHIELD] && is_blockable()))
         {
             const string refl_name = name.empty() &&
                                      origin_spell != SPELL_NO_SPELL ?
