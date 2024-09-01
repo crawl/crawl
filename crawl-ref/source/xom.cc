@@ -1416,10 +1416,9 @@ static int _xom_random_stickable(const int HD)
 
     static const int arr[] =
     {
-        WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
-        WPN_GLAIVE,     WPN_QUARTERSTAFF,
-        WPN_SHORTBOW,   WPN_LONGBOW,      WPN_GIANT_CLUB,
-        WPN_GIANT_SPIKED_CLUB
+        WPN_CLUB, WPN_SPEAR, WPN_TRIDENT, WPN_HALBERD,
+        WPN_GLAIVE, WPN_QUARTERSTAFF, WPN_SHORTBOW, WPN_ORCBOW,
+        WPN_LONGBOW, WPN_GIANT_CLUB, WPN_GIANT_SPIKED_CLUB
     };
 
     // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10, and
@@ -2633,6 +2632,157 @@ static void _xom_good_enchant_monster(int sever)
 static void _xom_bad_enchant_monster(int sever)
 {
     _xom_enchant_monster(sever, false);
+}
+
+// Look for monsters sufficiently weak enough for Xom to buff.
+static vector<monster*> _xom_find_weak_monsters(bool range)
+{
+    vector<monster*> targetable;
+    int runes = (you.runes.count() > 3) ? div_rand_round(you.runes.count(), 3) : 0;
+    int maximum_hd = 3 + you.experience_level * 7 / 20 + runes;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        // No counting battlespheres or orbs of destruction. Try not to buff
+        // the same target multiple times by checking the most prominent ones.
+        // Fuzz the HD range to make it harder to deliberately plan around.
+        if (mons_attitude(**mi) == ATT_FRIENDLY
+            && !mons_is_conjured(mi->type)
+            && !mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !(mi->has_ench(ENCH_HASTE) && mi->has_ench(ENCH_INVIS)
+                 && mi->has_ench(ENCH_EMPOWERED_SPELLS) && mi->has_ench(ENCH_MIGHT))
+            && mi->get_hit_dice() < maximum_hd + (range ? random_range(-2, 1) : 0))
+        {
+            targetable.push_back(*mi);
+        }
+    }
+
+    return targetable;
+}
+
+// Throw nearly every single monster buff in the game on a random ally in sight.
+// Xom will only buff very low HD monsters this way, and will summon weaklings
+// if you don't have anything weak enough to get a buff.
+static void _xom_hyper_enchant_monster(int sever)
+{
+    vector<enchant_type> buff_list { ENCH_MIGHT, ENCH_HASTE, ENCH_INVIS,
+                                     ENCH_EMPOWERED_SPELLS, ENCH_REPEL_MISSILES,
+                                     ENCH_RESISTANCE, ENCH_REGENERATION,
+                                     ENCH_STRONG_WILLED, ENCH_TOXIC_RADIANCE,
+                                     ENCH_MIRROR_DAMAGE, ENCH_SWIFT };
+    vector<monster*> targetable = _xom_find_weak_monsters(true);
+    int time = random_range(200, 200 + sever * 2);
+    int xl = you.experience_level;
+    int good_god = you_worship(GOD_ELYVILON) || you_worship(GOD_ZIN) ||
+                   you_worship(GOD_SHINING_ONE);
+    int buff_count = 0;
+
+    if (targetable.empty())
+    {
+        monster_type mon_type;
+
+        // Mostly more mundane choices than usual Xom summons.
+        if (xl < 7)
+        {
+            mon_type = (good_god || one_chance_in(4)) ? MONS_IGUANA
+                                                      : MONS_CERULEAN_IMP;
+        }
+        else if (xl < 14 + random_range(-1, 1))
+        {
+            mon_type = (good_god || one_chance_in(4)) ? MONS_BLACK_BEAR
+                                                      : MONS_HELL_RAT;
+        }
+        else if (xl < 21 + random_range(-1, 1))
+        {
+            mon_type = (good_god || one_chance_in(4)) ? MONS_WYVERN
+                                                      : MONS_HELL_HOUND;
+        }
+        else
+        {
+            mon_type = (good_god || one_chance_in(3)) ? MONS_ELEPHANT
+                                                      : MONS_TOENAIL_GOLEM;
+        }
+
+        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(),
+                    MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
+        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+        mg.non_actor_summoner = "Xom";
+        monster* mon = create_monster(mg);
+
+        if (mon)
+        {
+            targetable.insert(targetable.begin(), mon);
+            string summ = make_stringf("%s pulls itself out of thin air.",
+                                        targetable[0]->name(DESC_A, true).c_str());
+            god_speaks(GOD_XOM, summ.c_str());
+        }
+    }
+    else
+    {
+        shuffle_array(targetable);
+
+        if (_xom_feels_nasty())
+        {
+            sort(targetable.begin(), targetable.end(),
+            [](const monster* a, const monster* b)
+            {return a->get_hit_dice() < b->get_hit_dice();});
+        }
+    }
+
+    if (!targetable.empty())
+    {
+        string lines = "";
+
+        for (enchant_type apply : buff_list)
+        {
+            string ench_name = description_for_ench(apply).c_str();
+
+            // Avoid repeats or completely useless effects.
+            if ((targetable[0]->has_ench(apply)
+                || apply == ENCH_MIGHT && !mons_has_attacks(*(targetable[0])))
+                || (apply == ENCH_EMPOWERED_SPELLS && !targetable[0]->is_actual_spellcaster())
+                || (apply == ENCH_SWIFT && targetable[0]->is_stationary())
+                || (apply == ENCH_STRONG_WILLED && targetable[0]->willpower() == WILL_INVULN))
+            {
+                continue;
+            }
+
+            if (apply == ENCH_REPEL_MISSILES || apply == ENCH_REGENERATION
+                || apply == ENCH_TOXIC_RADIANCE || apply == ENCH_MIRROR_DAMAGE
+                || apply == ENCH_SWIFT)
+            {
+                lines += make_stringf("starts %s, ", ench_name.c_str());
+            }
+            else if (apply == ENCH_EMPOWERED_SPELLS)
+                lines += make_stringf("has its spells empowered, ");
+            else
+                lines += make_stringf("looks %s, ", ench_name.c_str());
+
+            targetable[0]->add_ench(mon_enchant(apply, 0, nullptr, time));
+            buff_count++;
+        }
+
+    if (buff_count > 0)
+    {
+        if (targetable[0]->hit_points < targetable[0]->max_hit_points)
+        {
+            targetable[0]->heal(targetable[0]->max_hit_points);
+            lines += make_stringf("is healed, ");
+        }
+
+        god_speaks(GOD_XOM, _get_xom_speech("good hyper enchant monster").c_str());
+
+        // Rather than figuring out sentence structure from the above list,
+        // just staple on a line from casting Cantrip onto the end instead.
+        mprf("%s suddenly %sand looks braver for a moment!",
+              targetable[0]->name(DESC_THE, true).c_str(), lines.c_str());
+    }
+
+    const string note = make_stringf("buffed friendly %s %d %s",
+                                     targetable[0]->name(DESC_PLAIN, true).c_str(),
+                                     buff_count, buff_count == 1 ? "time" : "times" );
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    }
 }
 
 static void _xom_mass_charm(int sever)
@@ -4457,6 +4607,28 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > 0 && x_chance_in_y(24, sever)
+        && !you.allies_forbidden())
+    {
+        vector<monster*> potential = _xom_find_weak_monsters(false);
+        int space = 0;
+
+        // Check if there's space to summon something instead.
+        if (potential.empty() && one_chance_in(3))
+        {
+            for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
+                ri; ++ri)
+            {
+                if (!cell_is_solid(*ri))
+                    space++;
+            }
+            if (space >= 0)
+                return XOM_GOOD_HYPER_ENCHANT_MONSTER;
+        }
+        else
+            return XOM_GOOD_HYPER_ENCHANT_MONSTER;
+    }
+
+    if (tension > 0 && x_chance_in_y(25, sever)
         && player_in_a_dangerous_place())
     {
         // Make sure there's at least one enemy within the lightning radius.
@@ -4469,7 +4641,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         }
     }
 
-    if (tension > 0 && x_chance_in_y(25, sever)
+    if (tension > 0 && x_chance_in_y(26, sever)
         && mon_nearby(_choose_enchantable_monster))
     {
         return XOM_GOOD_WAVE_OF_DESPAIR;
@@ -5190,6 +5362,8 @@ static const map<xom_event_type, xom_event> xom_events = {
                                    _xom_force_lances }},
     { XOM_GOOD_ENCHANT_MONSTER, { "good enchant monster",
                                   _xom_good_enchant_monster }},
+    { XOM_GOOD_HYPER_ENCHANT_MONSTER, { "hyper enchant monster",
+                                        _xom_hyper_enchant_monster }},
     { XOM_GOOD_MASS_CHARM, {"mass charm", _xom_mass_charm }},
     { XOM_GOOD_WAVE_OF_DESPAIR, {"wave of despair", _xom_wave_of_despair }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},

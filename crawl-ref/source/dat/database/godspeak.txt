@@ -944,6 +944,16 @@ Xom bad enchant monster
 
 @Xom good enchant monster@
 %%%%
+Xom good hyper enchant monster
+
+"Witness the rise of a true [hero|champion]!"
+
+Xom demands grand glory in combat!
+
+Xom's power very briefly touches upon your surroundings.
+
+You hear Xom's avuncular cackling.
+%%%%
 Xom mass charm
 
 Xom readies the chaos crusade!
