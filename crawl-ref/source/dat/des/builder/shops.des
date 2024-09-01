@@ -2034,7 +2034,7 @@ ENDMAP
 # 1/3 randbooks, 1/3 consumables, 1/4 gear, 1/12 magic manuals
 NAME:  nicolae_shop_magical_conduits
 TAGS:  transparent
-DEPTH: D:6-, Depths, Elf, Snake, Shoals, Zot
+DEPTH: D:6-, Depths, Elf, Snake, Shoals, Zot, !Zot:$
 KFEAT: G = metal_statue
 # The w:10 in the shop def is here for bug workaround purposes.
 KFEAT: S = general shop type:Magical suffix:Supplies w:10 ; \

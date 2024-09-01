@@ -2840,8 +2840,8 @@ ORIENT:  float
 DEPTH:   D:12-, Vaults
 : if you.branch() == "D" then
 MONS:    howler monkey, shapeshifter
-MONS:    slime creature, yaktaur
-MONS:    glowing orange brain, yaktaur captain
+MONS:    slime creature, centaur warrior
+MONS:    glowing orange brain, yaktaur
 : else
 MONS:    vault sentinel, glowing shapeshifter
 MONS:    large slime creature, great orb of eyes

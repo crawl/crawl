@@ -1261,19 +1261,19 @@ COLOUR: 48 = lightmagenta
 MAP
  "cccccc4@4cccccc"
  cc .. ccAcc .. cc
-"c 4."" x"x "".4 c"
+"c .."" x"x "".. c"
 cc44nnn.c+c.nnn44cc
 c 4nn7n.....n7nn4 c
 c44+13n5.c.5n31+44c
 c 4nn2n.....n2nn4 c
-cc"4nnn.....nnn4"cc
-"c ......6...... c"
- ccc "4nnnnn4" ccc
+cc".nnn.....nnn."cc
+"c ............. c"
+ ccc ".nnnnn." ccc
   "cc84n2O2n48cc"
    "c 4nn1nn4 c"
     cc44n+n44cc
     "c 44444 c"
-     ccc 4 ccc
+     ccc 6 ccc
       "ccccc"
 ENDMAP
 
@@ -1470,42 +1470,37 @@ ENDMAP
 
 NAME:   spicy_pingpong_abyss_rune
 TAGS:   abyss_rune unrand
-# four starflowers, 2 inside, 2 outside (1)
-NSUBST: F = 2:1 / 3
-MONS:   starflower
-# four wretched stars, with a 1/3 chance of being something else (2)
-SUBST:  2=223
-MONS:   wretched star
-# the "something else" squad contains the following:
-# monsters similarish to starflowers (3)
-SUBST:  3=3334
-MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:20
-# generic abyss badthings who don't mind if their target is moved around (4)
-MONS:   lich / occultist / thrashing horror
+# Four starflowers, 2 inside, 2 outside (1). Four wretched stars maximum, with
+# chances for monsters similiar to starflowers or generic abyss monsters
+# who don't mind their target being moved around.
+MONS:   starflower, wretched star
+MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:30
+MONS:   lich w:5 / occultist / thrashing horror, demonic plant
 KITEM:  O = abyssal rune of Zot
-COLOUR: cO = magenta
-SUBST:  c = ccccb
-COLOUR: n- = lightmagenta
-FTILE:  AO = floor_crystal_squares
 KFEAT:  - = runelight
 KFEAT:  A = stone_arch
 KFEAT:  n = iron_grate
 KFEAT:  P = demonic_tree w:30 / petrified_tree / tree
 KFEAT:  t : demonic_tree / altar_lugonu / granite_statue
+NSUBST: F = 2:1 / *:3
+SUBST:  2 = 223, 3 = 3334
+COLOUR: cbO = magenta
+COLOUR: n- = lightmagenta
+FTILE:  AO = floor_crystal_squares
 MAP
 3
  A F P PP    3
   @--.-..-....-
  F-++cccccccbb.3
-  -+-n3nPn3ntb.
- P.cnA......nc.
+  -+-n5nPn3ntb.
+ P.cnA.....3nc.
   -c3.-.P.n.3c.
  P.cn..n2nP.nc-
  P.cP.12O21.Pc.P
   -cn.Pn2n..nc.P
   .c3.n.P.-.3c-
   .cn......Anc.P
-  .btn3nPn3n-+-
+  .btn3nPn5n-+-
  3.bbccccccc++-F
   -....-..-.--@
    3    PP P F A

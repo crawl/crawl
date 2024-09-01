@@ -8436,7 +8436,7 @@ ENDMAP
 
 NAME:    minmay_guarded_unrand_wrath_of_trog
 TAGS:    transparent
-DEPTH:   D:13-, Depths
+DEPTH:   Elf, Depths
 WEIGHT:  3
 MONS:    spriggan berserker
 ITEM:    wrath_of_trog no_pickup ident:all

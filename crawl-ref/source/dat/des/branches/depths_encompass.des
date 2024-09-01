@@ -784,7 +784,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator
 KITEM:   Z = midnight gem
-KFEAT:   z^ = zot trap w:499 / floor w:1
+KFEAT:   z^ = zot trap / dispersal trap
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
 SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
@@ -826,16 +826,16 @@ xx....x..x...........b.2.b5cc....xxxxxxxxxxxxx
 xx...cF..x..F....%...xx.2x..cc...xxxxxxxxxxxxxx
 xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
 xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
-xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
+xx..cb...b.x.....*|....x.b...bc..xxxxxx........xxx
 xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
 xx....cc@b...b.......b%63b5cc....xxxxxxxx...I.x.xxxx
 xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.!..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
 xx.....x.cc!.x2.xxx.6x*7cc.......xx.......xx...H....xxx
 xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....@..cc.bxb.bxb.cc.@.xxx...xxx...xxx...x......@xx
+ xxx....@..cc.bxb.bxb.cc...xxx...xxx...xxx...x......@xx
   xx........cc5..b..5cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
+  xxxxL....x.cc..x..cc...x....SR..@..RS..@.x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
@@ -849,21 +849,21 @@ xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x.....cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x].Y..xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..4c...x.x....Mxxxx
+    x@cc......cb%bc...x..x.@..SR..@..RS....x.x.x..4c...x.x....Mxxxx
     xc..cc..cc.4b.....KJ........x...x.....x....b..1b14.b.........xx
     xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
-     xc.....k..c....xx..KJJ.......xx]....x.x..4c.0ccc5.c...x.x....xxx
-     xxc..%...c.....xx...KKxx.....xx...Y...b.41b*cc7cc%b25.b.......xx
-     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x6cbcbcb.bx.....xx
+     xc.....k..c....xx..KJJ.......xx]....x.x.4.c.0ccc5.c...x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx...Y...b..1b*cc7cc%b25.b.......xx
+     xxc..%%..c.......xx....xxxx..xx.....xb.bcbcbc6x.cbcbcb.bx.....xx
      xc..k.....c......xx.......xxxxx.Y..x..b..*b@..x..5b*..b..x....xx
     xxc........c...j....xx......nnnx...x...c.0cc.@|x|*4cc3.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.41c%cc3.|x%*|.4cc*b36.bc..xx
+    xc....cc....c.......xx.c......nx..cb.41c%cc3.|x%*|..cc*b36.bc..xx
     xc2.cc..cc."b".........b......nx.cbcbccccc7xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..1c%cc3.|*%x.....%C...Bx..xx
+    x.cc......cb'bc......cb%bc....nx..cb..1c%cc..|*%x.....%C...Bx..xx
     xc........!"b".cc..cc.4b.......x...x..4c.5cc.*|x....C..x...x...xx
    xxc.mm....ll!c....cc....c.xx....x....x..b..%c21.x.....%.x..x....xx
-   xc..mm...%ll..c........c..xx....x.....xb.bccccc1x....D.x........xx
+   xc..mm...%ll..c........c..xx....x.....xb.bccccc.x....D.x........xx
    xc......xx%...c.....k..c....xx..........b..2c*ccc.C%D...........xx
   xc%.....%xx.....c..%...c.....xx........x.x..5c.5cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx

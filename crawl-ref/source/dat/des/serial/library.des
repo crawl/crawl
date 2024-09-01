@@ -42,7 +42,11 @@ function init_serial_library_setup(e)
   e.item('any book')
   e.item('any book good_item')
   e.item('any manual')
-  e.kfeat('B = altar_sif_muna')
+  if you.in_branch('D') and you.depth() > 7 then
+    e.kfeat('B = altar_sif_muna')
+  else
+    e.kfeat('B = fountain_blue')
+  end
 
   if you.in_branch('Crypt') then
      e.subst('T = V:75 c:25 t:5 G:5 Y:5 B:1')

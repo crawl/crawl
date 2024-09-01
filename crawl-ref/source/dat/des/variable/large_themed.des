@@ -2952,15 +2952,16 @@ KMONS:   4 = ghoul
 KMONS:   5 = ghost crab
 KMONS:   6 = will-o-the-wisp
 KMONS:   7 = tyrant leech
-KMONS:   8 = death drake
-KMONS:   9 = fenstrider witch
+KMONS:   8 = fenstrider witch
+KMONS:   9 = death drake
+KFEAT:   ^ = shaft trap
 KFEAT:   13579 = W / w
 KFEAT:   - = broken_door
-NSUBST:  1 = 2:., 2 = 3:., 345 = 2:., 67 = 1:., 89 = 1:., defghij = 3:.
-NSUBST:  . = 2:12 / 1:5 / 2 = 778 / 20:. / 3:t / * = WW.
-NSUBST:  ' = 1:6 / 30:. / 3:t / * = WW..., " = 2 = 233 / 6:. / 1:t / * = W..
-NSUBST:  C = 12:W / 3:t / *:c
-SUBST:   x = t, X = tx, " = W"", ' = WW''', . = WW., G = Gww, % = .
+NSUBST:  1 = 2:., 2 = 3:., 345 = 3:., 67 = 1:., 89 = 1:., defghij = 3:.
+NSUBST:  . = 3:127 / 1:5 / 35:. / 3:t / * = WWW..
+NSUBST:  ' = 1:6 / 35:. / 3:^ / 3:t / * = WW...
+NSUBST:  " = 2 = 233 / 6:. / 1:t / * = W.., C = 12:W / 3:t / *:c
+SUBST:   x = t, X = tx, " = W"", ' = WW''', . = WW., G = Gww, % = ., V = <
 : else   -- Zot
 KMONS:   12 = shadow dragon
 KMONS:   34 = tentacled monstrosity

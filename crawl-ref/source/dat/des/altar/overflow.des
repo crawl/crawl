@@ -1264,102 +1264,100 @@ ENDMAP
 NAME:    beargit_hepliaklqana_dungeon_heroes
 TAGS:    temple_overflow_hepliaklqana temple_overflow_1 transparent
 TAGS:    no_monster_gen patrolling no_trap_gen uniq_altar_hepliaklqana
-SHUFFLE: 123
-SHUFFLE: _-G
+SHUFFLE: 123, _-G
 : if you.in_branch("D") then
 :     if you.depth() < 5 then
 KMONS:   1 = orc wizard; quarterstaff . robe
-# Early for kobold brigands, but they get a wand of charming instead of darts,
-# so less threatening.
-KMONS:   2 = jessica; dagger . robe . wand of charming \
-             / kobold brigand ; dagger . wand of charming \
-             , kobold brigand ; dagger . wand of charming
+# Extremely early for kobold brigands, but they get a wand of polymorph
+# instead of darts, so less threatening.
+KMONS:   2 = jessica; dagger . robe . wand of polymorph / \
+             kobold brigand ; dagger . wand of polymorph, \
+             kobold brigand ; dagger . wand of polymorph
 KMONS:   3 = orc ; flail . kite shield . chain mail
-# We generate one ancestor monster for D:3-9
-NSUBST:  123 = 2=.
+# Only generate one ancestor monster for D:3-9
+NSUBST:  123 = 2:.
 :     elseif you.depth() < 7 then
-KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe \
-             / orc wizard ; quarterstaff good_item . robe \
-             , orc wizard ; quarterstaff good_item . robe
-KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe \
-             / kobold brigand ; dagger ego:draining . wand of charming \
-             , kobold brigand ; dagger ego:draining . wand of charming
-KMONS:   3 = edmund ; flail good_item . kite shield . chain mail \
-             / orc warrior ; flail good_item . kite shield . chain mail \
-             / gnoll sergeant ; flail good_item . kite shield . chain mail \
-             , orc warrior ; flail good_item . kite shield . chain mail \
-             / gnoll sergeant ; flail good_item . kite shield . chain mail
-NSUBST:  123 = 2=.
+KMONS:   1 = blorkula the orcula ; quarterstaff good_item . robe / \
+             orc wizard ; quarterstaff good_item . robe, \
+             orc wizard ; quarterstaff good_item . robe
+KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe / \
+             kobold brigand ; dagger ego:draining . dart ego:atropa, \
+             kobold brigand ; dagger ego:draining . dart ego:atropa
+KMONS:   3 = edmund ; flail good_item . kite shield . chain mail / \
+             orc warrior ; flail good_item . kite shield . chain mail / \
+             gnoll sergeant ; flail good_item . kite shield . chain mail, \
+             orc warrior ; flail good_item . kite shield . chain mail / \
+             gnoll sergeant ; flail good_item . kite shield . chain mail
+NSUBST:  123 = 2:.
 :     elseif you.depth() < 10 then
 MONS:    gargoyle ; quarterstaff good_item
-MONS:    kobold brigand ; dagger ego:draining good_item . wand of paralysis \
-             . dart ego:atropa \
-         / spriggan ; dagger ego:draining good_item . robe good_item . buckler \
-             . wand of paralysis \
-         / vampire ; dagger ego:draining good_item . robe good_item
-MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
-         / gnoll sergeant ; flail good_item . kite shield . chain mail good_item
-NSUBST:  123 = 2=.
+MONS:    kobold brigand ; dagger ego:draining good_item . wand of paralysis . \
+                          dart ego:atropa / \
+         spriggan ; dagger ego:draining good_item . robe good_item . \
+                    buckler . wand of paralysis / \
+         vampire ; dagger ego:draining good_item . robe good_item
+MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item / \
+         gnoll sergeant ; flail good_item . kite shield . chain mail good_item
+NSUBST:  123 = 2:.
 :     elseif you.depth() < 13 then
-MONS:    gargoyle ; quarterstaff good_item \
-         / molten gargoyle w:5 ; quarterstaff good_item
-MONS:   kobold brigand ; dagger ego:draining good_item . wand of paralysis \
-             . dart ego:atropa \
-         / spriggan ; dagger ego:draining good_item . robe good_item . buckler \
-             . wand of paralysis \
-         / vampire ; dagger ego:draining good_item . robe good_item
-MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
-         / gnoll sergeant ; flail good_item . kite shield \
-             . chain mail good_item \
-         / skeletal warrior ; flail good_item . kite shield \
-             . chain mail good_item
-# Generate two ancestor monsters for D:10-D:12
+MONS:    gargoyle ; quarterstaff good_item / \
+         molten gargoyle w:5 ; quarterstaff good_item
+MONS:    kobold brigand ; dagger ego:draining good_item . wand of paralysis . \
+                          dart ego:atropa / \
+         spriggan ; dagger ego:draining good_item . robe good_item . \
+                    buckler . wand of paralysis / \
+         vampire ; dagger ego:draining good_item . robe good_item
+MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item / \
+         gnoll sergeant ; flail good_item . kite shield . \
+                          chain mail good_item / \
+         skeletal warrior ; flail good_item . kite shield . \
+                            chain mail good_item
+# Generate two ancestor monsters for D:10-D:12.
 NSUBST:  123 = 1=.
-# For D:13- and Depths, we generate all three ancestor monsters.
+# For D:13- and Depths, generate all three ancestor monsters.
 :     else
-MONS:    ogre mage; lajatang ego:freezing \
-         / molten gargoyle ; lajatang ego:flaming
-MONS:    spriggan ; dagger ego:draining good_item . robe good_item \
-             . buckler good_item . wand of paralysis \
-         / vampire ; dagger ego:draining good_item . robe good_item \
-             . buckler . wand of paralysis
-MONS:    orc knight; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection \
-         / tengu warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection \
-         / naga warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection \
-         / skeletal warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection
+MONS:    ogre mage; lajatang ego:freezing / \
+         molten gargoyle ; lajatang ego:flaming
+MONS:    spriggan ; dagger ego:draining good_item . robe good_item . \
+                    buckler . wand of paralysis / \
+         vampire ; dagger ego:draining good_item . robe good_item . \
+                   buckler . wand of paralysis
+MONS:    orc knight; broad axe ego:flaming . chain mail good_item . \
+                     tower shield ego:reflection / \
+         tengu warrior ; broad axe ego:flaming . chain mail good_item . \
+                         tower shield ego:reflection / \
+         naga warrior ; broad axe ego:flaming . chain mail good_item  . \
+                        tower shield ego:reflection / \
+         skeletal warrior ; broad axe ego:flaming . chain mail good_item . \
+                            tower shield ego:reflection
 :     end
-# Depths
-: else
-MONS:    tengu reaver ; lajatang ego:freezing good_item \
-             | lajatang ego:freezing randart . scale mail \
-         / ancient champion ; lajatang ego:freezing good_item \
-             | lajatang ego:freezing randart . scale mail
-MONS:    vampire knight; quick blade ego:antimagic . buckler good_item \
-             . shadow dragon scales good_item \
-         / spriggan defender; quick blade ego:antimagic w:20 \
-             . robe good_item . buckler good_item . wand of paralysis
-MONS:    minotaur ; broad axe ego:speed good_item \
-             | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_item \
-         / orc warlord ; broad axe ego:speed good_item \
-             | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_item
+: else -- Depths
+MONS:    tengu reaver ; lajatang ego:freezing good_item | \
+                        lajatang ego:freezing randart . scale mail / \
+         ancient champion ; lajatang ego:freezing good_item | \
+                            lajatang ego:freezing randart . scale mail
+MONS:    vampire knight; quick blade ego:antimagic . buckler good_item . \
+                         shadow dragon scales good_item / \
+         spriggan defender; quick blade ego:antimagic w:20 . robe good_item . \
+                            buckler good_item . wand of paralysis
+MONS:    minotaur ; broad axe ego:speed good_item | \
+                    broad axe ego:speed randart | arga w:1 . \
+                    plate armour good_item . \
+                    tower shield ego:reflection good_item / \
+         orc warlord ; broad axe ego:speed good_item | \
+                       broad axe ego:speed randart | arga w:1 . \
+                      plate armour good_item . \
+                      tower shield ego:reflection good_item
 : end
 KFEAT:   _ = altar_hepliaklqana
 KFEAT:   - = altar_ecumenical
 MARKER:  ` = lua:fog_machine { cloud_type = "thin mist", \
-                              pow_min = 100, pow_max = 200, \
-                              delay = 100, size = 2, walk_dist = 1 }
+                               pow_min = 100, pow_max = 200, \
+                               delay = 100, size = 2, walk_dist = 1 }
 TILE:   G = dngn_gravestone
 : interest_check(_G)
 veto {{
-  if you.depth() < 7 then
-    return items.excluded_from_set("wand of charming")
-  else
+  if you.depth() > 7 then
     return items.excluded_from_set("wand of paralysis")
   end
 }}

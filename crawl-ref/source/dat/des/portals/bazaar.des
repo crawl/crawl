@@ -2014,7 +2014,6 @@ WEIGHT: 50
 # Heavily customized in flavour and power to emphasize Xom's love of risks.
 ##########################################################################
 
-# TODO: integrate the Chaotic flag code.
 NAME:    regret_index_bazaar_x_original
 TAGS:    allow_dup xom_bazaar
 ORIENT:  encompass

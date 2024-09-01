@@ -2732,11 +2732,15 @@ NAME:    minmay_elemental_castle
 TAGS:    no_rotate no_descent
 ORIENT:  southwest
 DEPTH:   Zot, !Zot:$
+KITEM:   $ = $ no_pickup
 KFEAT:   G = metal_statue
 SHUFFLE: GHIJ
 : if crawl.coinflip() then
-MONS:    titan, storm dragon, electric golem
-SUBST:   F = 3
+MONS:    titan, storm dragon
+KMONS:   F = electric golem
+MARKER:  F = lua:fog_machine { cloud_type = "thunder", pow_min = 5, \
+              pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
+              spread_rate= 0 }
 ITEM:    storm talisman, book of lightning, staff of air, book of storms
 COLOUR:  G = electricity
 TILE:    G = storm_conduit
@@ -2747,10 +2751,8 @@ KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
-# XXX: we should replace iceblast with something else when it's not
-# in this game's chosen item set.
-ITEM:    wand of iceblast, staff of cold, book of winter, \
-         book of ice
+ITEM:    granite talisman randart artprops:rC:2&&rF:-1
+ITEM:    staff of cold, book of winter, book of ice
 SUBST:   w = l
 SUBST:   W = l..
 COLOUR:  G = ice
@@ -2767,7 +2769,8 @@ COLOUR:  G = fire
 TILE:    G = fiery_conduit
 :   set_feature_name("metal_statue", "fiery conduit")
 : end
-ITEM:    potion of enlightenment ident:type q:1, ring of flight ident:type
+ITEM:    potion of enlightenment ident:type q:1
+ITEM:    ring of flight randart ident:type no_pickup
 SHUFFLE: defg, hi
 SUBST:   HIJ = c
 SUBST:   1 = 112., 2 = 221.
@@ -2776,17 +2779,17 @@ xx...................@@...................
 xx.WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.
 xx.WwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.
 xx.WwcccccccwwwwwwwwwwwwwwwwwwwwcccccccwW.
-xx.Wwcd*%.1cwwwwwwwwwwwwwwwwwwwwc1.%*gcwW.
-xx.Wwc*%...cwwwwwwwwwwwwwwwwwwwwc...%*cwW.
-xx.Wwc%....ccccccccc++++ccccccccc....%cwW.
-xx.Wwc................................cwW.
+xx.Wwcd*%$1cwwwwwwwwwwwwwwwwwwwwc1$%*gcwW.
+xx.Wwc*%$$.cwwwwwwwwwwwwwwwwwwwwc.$$%*cwW.
+xx.Wwc%$$$.ccccccccc++++ccccccccc.$$$%cwW.
+xx.Wwc$$$$........................$$$$cwW.
 xx.Wwc1........2............2........1cwW.
 xx.Wwcccc..........................ccccwW.
 xx.Wwwwwc...ccccccccGccGcccccccc...cwwwwW.
 xx.Wwwwwc...HccccccccccccccccccH...cwwwwW.
 xx.Wwwwwc...cccccccccccccccccccc...cwwwwW.
 xx.Wwwwwc.2.ccc*|*cccccccc*|*ccc.2.cwwwwW.
-xx.Wwwwwc...ccc...cccccccc...ccc...cwwwwW.
+xx.Wwwwwc...ccc$$$cccccccc$$$ccc...cwwwwW.
 xx.Wwwwwc...ccc...cccccccc...ccc...cwwwwW.
 xx.Wwwwwc...ccc.F.cccccccc.F.ccc...cwwwwW.
 xx.Wwwwwc...Icc...cccccccc...ccI...cwwwwW.
@@ -2804,10 +2807,10 @@ xx.Wwwwwc...Hcccccccc..ccccccccH...cwwwwW.
 xx.Wwwwwc...cccccccGc..cGccccccc...cwwwwW.
 xx.Wwcccc..........................ccccwW.
 xx.Wwc1........2............2........1cwW.
-xx.Wwci..............................hcwW.
-xx.Wwc%....cccccccccccccccccccccc....%cwW.
-xx.Wwc*%...cwwwwwwwwwwwwwwwwwwwwc...%*cwW.
-xx.Wwce*%.1cwwwwwwwwwwwwwwwwwwwwc1.%*fcwW.
+xx.Wwc$$$$........................$$$$cwW.
+xx.Wwc%$$$.cccccccccccccccccccccc.$$$%cwW.
+xx.Wwc*i$$.cwwwwwwwwwwwwwwwwwwwwc.$$h*cwW.
+xx.Wwce*%$1cwwwwwwwwwwwwwwwwwwwwc1$%*fcwW.
 xx.WwcccccccwwwwwwwwwwwwwwwwwwwwcccccccwW.
 xx.WwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.
 xx.WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.
@@ -4174,7 +4177,7 @@ DEPTH:  Zot, !Zot:$
 MONS:   toenail golem w:1 / glowing orange brain / golden eye band
 MONS:   shining eye / glass eye w:5, bone dragon, curse toe / curse skull
 SUBST:  ' = c., V:VYY
-NSUBST: - = 16 = 1... / 16 = 2... / 16 = 3... / 16 = 4... / .
+NSUBST: - = 6 = 1.. / 16 = 2... / 8 = 3... / 8 = 4... / .
 NSUBST:  > = 1 = ):80 . / 1 = ]:80 . / 1 = }:80 >
 MAP
   ccccccc

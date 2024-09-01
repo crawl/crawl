@@ -2854,7 +2854,7 @@ TAGS:    shoal_rune_grunt_garden shoal_mimic_grunt_garden water_ok
 TAGS:    no_dump allow_dup transparent
 MONS:    satyr w:18 / merfolk impaler / merfolk javelineer / merfolk aquamancer
 MONS:    faun w:6 / 0
-KMONS:   P = plant
+KMONS:   pP = plant
 : if shoals_vault_is_mimic() then
 KITEM:   R = azure gem mimic
 KITEM:   O = barnacled rune of Zot mimic
@@ -2864,8 +2864,11 @@ KITEM:   O = barnacled rune of Zot
 : end
 NSUBST:  R = 1:R / *:1, 1 = 4:1 / 2:1. / 2:1. / 2:2 / 2:2. / 2:2. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
-SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
-KPROP:   O = no_tide
+SUBST:   abcABC = x, def = p, DEF = P, g : xp, h : p', ijk = ', GH = "
+TILE:    x = wall_brick_gray
+FTILE:   xpP"' = floor_swamp
+FTILE:   12P.OR = floor_grass
+KPROP:   OR = no_tide
 MAP
    abcbd
  kkaBAAdee
@@ -2883,10 +2886,13 @@ ENDMAP
 NAME:    shoals_garden
 TAGS:    shoal_hut_grunt_garden water_ok no_dump allow_dup transparent
 MONS:    faun w:6 / 0
-KMONS:   P = plant
+KMONS:   pP = plant
 NSUBST:  1 = 2:1 / 2:1. / 2:1. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
-SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
+SUBST:   abAB = x, cdef = p, CDE = P, g : xp, h : p', ijk = ', FGH = "
+TILE:    x = wall_brick_gray
+FTILE:   xpP"' = floor_swamp
+FTILE:   1P.| = floor_grass
 MAP
    abcbd
  kkaBAAdee
