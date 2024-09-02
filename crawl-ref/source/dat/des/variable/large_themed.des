@@ -3465,7 +3465,7 @@ MONS:    white draconian w:15 / green draconian w:15 / ice dragon w:15 / \
          moth of wrath perm_ench:glowing_shapeshifter
 KMONS:   ) = lich / ancient lich
 KFEAT:   ) = enter_zot
-KITEM:   S = smoky gem
+KITEM:   S = midnight gem
 SUBST:   }] = %
 NSUBST:  . = 1:1 / 3 = 245. / *:.
 NSUBST:  | = 4 = hfg / 1:i / 1:hi / *:f, % = 2:d / 2 = fg / * = ee.
