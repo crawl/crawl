@@ -239,6 +239,8 @@ bool fill_status_info(int status, status_info& inf)
             }
             else
                 inf.light_text = "Torch";
+
+            inf.short_text = "lit torch";
         }
     break;
 
