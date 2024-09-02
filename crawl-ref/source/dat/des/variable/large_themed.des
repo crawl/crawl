@@ -1755,15 +1755,15 @@ ppptc.......c..........c...c..Fctpt''
 ENDMAP
 
 NAME:   cheibrodos_hippocracy
-DEPTH:  D:12-
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
+DEPTH:  D:12-
 ORIENT: north
 MONS:   glowing orange brain, small abomination, glass eye, demonic crawler
 ITEM:   randbook
 KFEAT:  G = metal_statue
-NSUBST: ' = 3:4 / *:.
-NSUBST: " = 4:0 / 1:9 / *:.
-NSUBST: ? = 1:9 / *:0
+KFEAT:  T = fountain_eyes
+NSUBST: ' = 2:4 / *:.
+NSUBST: " = 4:0 / 1:9 / *:., ? = 1:9 / *:0
 SUBST:  G = Gbx
 COLOUR: G = warp
 TILE:   G = dimensional_conduit
@@ -1784,10 +1784,10 @@ xxwxx%..........xx....xxwxx..xx
 xxxwxxxx......xxxw.xx..xxx..xxx
  xxxwwwxxxxxxxxwwww'xx.....xxx
   xxxxxwwwwwwwwxx.w'xxxxxxxxx
-   xxxxxxxx4.xxxx.w'xxxxxxxx
+   xxxxxxxx4>xxxx.w'xxxxxxxx
    xx"m"xxx*%xxxxw'wxx
   xx"m""".xmxxxxx'wxxx
-  xx3m"""..xxxx''w'xx
+  xx3m"""T.xxxx''w'xx
   xx"m"""..xxx'ww'xx
    xx"m"xx.xxx'w'xx
     xxxxxx.xx'ww'xx
@@ -2753,6 +2753,7 @@ MONS:    moth of wrath / tentacled monstrosity w:15 / death cob
 MONS:    golden dragon, curse toe, protean progenitor
 KFEAT:   t = demonic_tree
 KFEAT:   ^ = zot trap
+KFEAT:   > = fountain_eyes
 SHUFFLE: 456
 :   if you.depth() == 1 then
 SUBST:   { = }, ( = ), [ = ]
@@ -2766,7 +2767,8 @@ TILE:    t = dngn_demonic_tree_1 w:3 / dngn_demonic_tree_16 w:3 / \
 : end
 # Swamp flavour loot: dragon scales, witch / elei wands, consumables, rings.
 KITEM:   & = swamp dragon scales randart / swamp dragon scales good_item / \
-             any beam wand / scroll of poison q:4 ident:type / \
+             any beam wand w:4 / any blast wand w:6 / \
+             scroll of poison q:4 ident:type / \
              potion of lignification q:4 ident:type / \
              ring of poison resistance randart / ring of flight randart
 KFEAT:   ~ = w
@@ -2968,6 +2970,7 @@ KMONS:   34 = tentacled monstrosity
 KMONS:   56 = ghost moth
 KMONS:   78 = curse toe
 KMONS:   9 = protean progenitor
+KFEAT:   | = fountain_eyes
 KFEAT:   + = broken_door
 SUBST:   m = +, jk = .
 NSUBST:  12 = 9:. / *:1, 34 = 2:3 / 2 = 13. / *:.

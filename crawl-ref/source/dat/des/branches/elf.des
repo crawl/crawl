@@ -1917,10 +1917,11 @@ ENDMAP
 NAME:   nicolae_elf_shapeshifter_party
 TAGS:   transparent patrolling misc_elf_vault no_monster_gen
 DEPTH:  Elf
-ITEM:   potion of mutation / potion of lignification / wand of polymorph \
-        / randbook disc:alchemy / any potion / any wand / randbook \
-        / any good_item w:30
 MONS:   shapeshifter / glowing shapeshifter w:5
+ITEM:   potion of mutation / potion of lignification / wand of polymorph / \
+        randbook disc:alchemy / any potion / any wand / randbook / \
+        any good_item w:30
+KFEAT:  T = fountain_eyes
 SUBST:  Z = x., z = ddFFx, E = Fx, . = 1 .:90
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 5, \
         pow_max = 15, delay = 30, size = 1, walk_dist = 0, start_clouds = 0, \
@@ -1930,11 +1931,11 @@ MAP
    xxzdzxx
   xxZ...Zxx
  xxZ.....Zxx
-xxZ.......Zxx
+xxZT......Zxx
 xZ....E....Zx
 +....EEE....+
 xZ....E....Zx
-xxZ.......Zxx
+xxZ......TZxx
  xxZ.....Zxx
   xxZ...Zxx
    xxzdzxx

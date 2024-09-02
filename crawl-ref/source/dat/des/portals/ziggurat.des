@@ -252,11 +252,12 @@ NAME:  ziggurat_pillar_centre_h
 TAGS:  ziggurat_pillar centered no_dump unrand no_exits
 MONS:  laughing skull w:1 / crimson imp w:31 / pandemonium lord w:1
 KFEAT: % : cache of meat / cache of fruit
+KFEAT: T = fountain_eyes
 MAP
 ccncc
-c%..c
+c%.Tc
 n.1.n
-c..%c
+cT.%c
 ccncc
 ENDMAP
 
@@ -348,7 +349,9 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_oklobs
 TAGS: ziggurat_pillar centered unrand no_exits
-MONS: plant / oklob plant / nothing w:20
+MONS: plant, oklob plant
+KFEAT: d = cache of fruit
+NSUBST: 1 = 2:1 / 2:2 / 6 = 12dd / * = 1...
 MAP
  111
 11111

@@ -1280,8 +1280,6 @@ ENDMAP
 # The western half of his lab is full of abominations, including the terrible
 # "Cigotuvi's Monster".
 #
-# TODO:     * door tile is *really* ugly, fix this?
-#
 NAME:       wizlab_cigotuvi
 TAGS:       no_rotate
 KPROP:      . = w:1 bloody / w:15 nothing
@@ -1324,6 +1322,7 @@ ITEM:       flux talisman randart / maw talisman randart / \
 ITEM:       staff of death ident:type, scroll of poison ident:type
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
+KFEAT:      ? = fountain_eyes
 SHUFFLE:    d^ / e~ / g|
 NSUBST:     ^ = 2:d / 2:. / * = dd., e = 1:e / 2:f / *:.
 NSUBST:     g = 1:g / *:h, i = 1:i / *:$

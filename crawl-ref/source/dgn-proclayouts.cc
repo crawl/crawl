@@ -221,6 +221,15 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
             return DNGN_LAVA;
         case DNGN_ENTER_SHOP:
             return DNGN_ABANDONED_SHOP;
+        case DNGN_FOUNTAIN_BLUE:
+        case DNGN_FOUNTAIN_SPARKLING:
+        case DNGN_DRY_FOUNTAIN:
+        {
+            if (player_in_branch(BRANCH_ABYSS))
+                return DNGN_FOUNTAIN_EYES;
+            else
+                return feature;
+        }
         default:
             return feature;
     }

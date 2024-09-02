@@ -2323,6 +2323,7 @@ ORIENT: float
 MONS:   eye of devastation / great orb of eyes w:2
 MONS:   golden eye / glass eye w:5
 MONS:   glowing orange brain
+KFEAT:  T = fountain_eyes
 KFEAT:  m = iron_grate
 KFEAT:  G = metal_statue
 SUBST:  G = G..
@@ -2336,11 +2337,11 @@ MAP
 .c.1.............1.............mmc.
 .c...............................c.
 .c...cccccccccnnnnnnnccccccccc...c.
-.c...c......................Gc...c.
+.c...cT.....................Gc...c.
 .c...c.1.........1.........1.c...c.
 .c...c.......................c...c.
 .c...c...ccccccnnnnncccccc...c...c.
-.c...c...cG..............c...c...c.
+.c...c...cG.............Tc...c...c.
 .c...c...c.1.....1.....1.c...c...c.
 .c...c...c...............c...c...c.
 .c...c...c...cccmmmccc...c...c...n.
@@ -2362,7 +2363,7 @@ MAP
 .c...ccccccccccccccccccccccccc...c.
 .c...............................c.
 .c.1.............1.............1.c.
-.c...............................c.
+.cT..............................c.
 .ccccccccccccccccccccccccccccccccc.
 ...................................
 ENDMAP
@@ -2846,6 +2847,7 @@ MONS:    glowing orange brain, yaktaur
 MONS:    vault sentinel, glowing shapeshifter
 MONS:    large slime creature, great orb of eyes
 MONS:    glowing orange brain, vault warden
+KFEAT:   T = fountain_eyes
 : end
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
@@ -2862,7 +2864,7 @@ MAP
 ..cc+cn.......nc+cc..
 .cc..c.........c..cc.
 .m..+c....<....c+..m.
-.m1.+2...[{(...2+.1m.
+.m1.+2.T.[{(.T.2+.1m.
 .m..+c....>....c+..m.
 .cc..c.........c..cc.
 ..cc+cc.......cc+cc..

@@ -3772,6 +3772,7 @@ MONS:    halazid warlock / revenant / apocalypse crab
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
 KITEM:   O = charlatans_orb no_pickup
+KFEAT:   T = fountain_eyes
 # Altars obliquely refer to those temple maps.
 KFEAT:   C = altar_ecumenical
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / altar_ignis w:5
@@ -3802,7 +3803,7 @@ SHUFFLE: ])deOG, OGUCD~
 : tile("b = dngn_crystal_" .. wallc)
 : tile("v = dngn_metal_wall_" .. wallc)
 : tile("c = dngn_stone_wall_" .. wallc)
-: ftile(".`123409deO%CDG~+ = floor_rough_" .. floorc)
+: ftile(".`123409deO%CDTG~+ = floor_rough_" .. floorc)
 COLOUR: G = mountain
 TILE:   G = dngn_scintillating_statue
 : set_feature_name("granite_statue", "scintillating statue")
@@ -3830,7 +3831,7 @@ xxxyyyXXX...............XXXyyyyyyye``.....2zzX'''
 xxxxxyyyXX.............XXyyyxxxxyyyyyyyyyyyyzzX'
 xxxxxxxyyX...zzz1zzz...XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxxxxyX..Xz1z+z1zX..XyxxxxxxxxxxxxxxxxxxyXX'''
-xxxxxxxxyX.2zzX$$$Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
+xxxxxxxxyXT2zzX$$$Xzz2TXyxxxxxxxxxxxxxxxxxyyX'''
 xxxxxxxxyzzzz1.$)$.1zzzzyxxxxxxxxxxxxxxxxxyX1''
 xxxxxxxxyX''zzX$$$Xzz''XyxxxxxxxxxxxxxxxxxyyX'''
 xxxxxxxxyX''Xz2zzz2zX''XyxxxxxxxxxxxxxxxxxxyXX'''
@@ -4211,6 +4212,7 @@ TAGS:   no_monster_gen transparent no_pool_fixup
 DEPTH:  Zot, !Zot:$
 MONS:   protean progenitor
 MONS:   glowing shapeshifter hd:20 / glowing shapeshifter hd:18
+KFEAT:  T = fountain_eyes
 SUBST:  - : Ac, A : lw
 NSUBST: ' = 2:1 / 3:2 / 2 = 1... / 8 = 2... / .
 NSUBST: < = 1 = }. / 1 = ). / 1 = ]<
@@ -4220,7 +4222,7 @@ MAP
  cc+++++cc
  cG..-..Gc
  c...-...c
- c...-...c
+ cT..-..Tc
  c'''''''c
 cc''''''Gc
 cG''ccccccc

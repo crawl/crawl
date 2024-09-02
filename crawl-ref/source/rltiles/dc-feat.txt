@@ -688,6 +688,7 @@ sparkling_fountain DNGN_SPARKLING_FOUNTAIN
 sparkling_fountain2
 blood_fountain DNGN_BLOOD_FOUNTAIN
 blood_fountain2
+eyes_fountain DNGN_EYES_FOUNTAIN
 dry_fountain DNGN_DRY_FOUNTAIN
 
 %variation DNGN_DRY_FOUNTAIN white

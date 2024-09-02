@@ -666,6 +666,7 @@ KMONS:   9 = glass eye / chaos spawn / anaconda perm_ench:shapeshifter w:2
 KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
+KFEAT:   T = fountain_eyes
 ITEM:    randbook disc:summoning numspells:1 / \
          scarf ego:shadows / scarf ego:invisibility / \
          wand of polymorph charges:20 / flux talisman randart / \
@@ -680,11 +681,11 @@ MAP
 ......x..x.xxx
 . xx.d.... xxxx
 xxxxx.X.XXXXXxxxxxx
-xx ......X'AXxxxxxx
+xx ....T.X'AXxxxxxx
 xx.x..X.A$d'X 3.3xx
 xx..x.XX$>$XX.x..xx
 xx1.1 X'd$A.X..x.xx
-xxxxxxXA'X...... xx
+xxxxxxXA'X.T.... xx
 xxxxxxXXXXX.X.xxxxx
     xxxx ....d.xx.
      xxx.x..x... ..
@@ -1254,6 +1255,7 @@ KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  n = iron_grate
 KFEAT:  " = runelight
+KFEAT:  T = fountain_eyes
 KFEAT:  1237 = shallow_water w:1 / . w:14
 SUBST:  c = ccccvb
 FTILE:  A+@W48O = floor_crystal_squares
@@ -1266,7 +1268,7 @@ cc44nnn.c+c.nnn44cc
 c 4nn7n.....n7nn4 c
 c44+13n5.c.5n31+44c
 c 4nn2n.....n2nn4 c
-cc".nnn.....nnn."cc
+cc".nnn..T..nnn."cc
 "c ............. c"
  ccc ".nnnnn." ccc
   "cc84n2O2n48cc"

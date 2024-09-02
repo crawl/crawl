@@ -670,6 +670,7 @@ bool feat_is_fountain(dungeon_feature_type feat)
     return feat == DNGN_FOUNTAIN_BLUE
            || feat == DNGN_FOUNTAIN_SPARKLING
            || feat == DNGN_FOUNTAIN_BLOOD
+           || feat == DNGN_FOUNTAIN_EYES
            || feat == DNGN_DRY_FOUNTAIN;
 }
 

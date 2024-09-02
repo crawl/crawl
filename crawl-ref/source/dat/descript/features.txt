@@ -353,6 +353,10 @@ A fountain of blood
 
 A decorative fountain, spurting with foul-looking blood.
 %%%%
+A fountain of eyes
+
+A decorative fountain, bubbling over with listless and unmoving eyes.
+%%%%
 A fountain of sparkling water
 
 A decorative fountain, flowing with brightly sparkling water.

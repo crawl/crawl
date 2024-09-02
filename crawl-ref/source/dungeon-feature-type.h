@@ -237,6 +237,9 @@ enum dungeon_feature_type
     DNGN_FOUNTAIN_BLUE,
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
     DNGN_FOUNTAIN_BLOOD,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_FOUNTAIN_EYES,
+#endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_DRY_FOUNTAIN_BLUE,
     DNGN_DRY_FOUNTAIN_SPARKLING,
@@ -366,6 +369,7 @@ enum dungeon_feature_type
     DNGN_ORB_DAIS,
     DNGN_ENTER_CRUCIBLE,
     DNGN_EXIT_CRUCIBLE,
+    DNGN_FOUNTAIN_EYES,
 
 #endif
 

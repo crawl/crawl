@@ -2033,9 +2033,10 @@ KFEAT:   y = x
 KFEAT:   D = abandoned_shop
 KFEAT:   X = altar_xom
 KFEAT:   + = closed_clear_door
+KFEAT:   u = fountain_eyes
 NSUBST:  A = 1:A / 1:B / 1:C / *:D
 NSUBST:  ? = 1:E+ / 2 = E+n / * = xy
-NSUBST:  X = 2:X / 2:g / 2:G / 2:D / 2:U / 2:Y / 2:> / * = XgGDUY
+NSUBST:  X = 2:X / 2:g / 2:G / 2:D / 2 = UUu / 2 = YYu / 2:> / * = XgGDUuY
 # Each of the eight passages towards possible shops
 # has different randomized decor configurations.
 SHUFFLE: HIJKLMNOPQRS

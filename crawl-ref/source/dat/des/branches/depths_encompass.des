@@ -46,6 +46,7 @@
         e.kmons("r = war gargoyle / molten gargoyle / nothing w:20")
         e.kmons("t = glowing orange brain / wind drake w:5")
         e.kfeat("A = stone_arch")
+        e.kfeat("T = fountain_eyes")
         e.kfeat("W = deep_water")
         e.shuffle("wKLMN / lghij")
         e.shuffle("KLMN")
@@ -929,7 +930,7 @@ xxxxxxxxxxxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
 xxxxxxxxxxxxxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxbbbbbb.br...b...b...b...b...rb.bbbbbbxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxbbb+b..b+b.T...7...T.b+b..b+bbbxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxbb....b.b...........b.b....bbxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxbbt...bzbqq.b...b.qqbzb...tbbxxxxxxxxxxxxxxxxxxxx
@@ -976,7 +977,7 @@ xx..NN.t.xxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
 xx.t.......xxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
 xx..JJt..xx.xxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
 xx.......xxx.xxxbbbbbb.br...b...b...b...b...rb.bbbbbbxxxxxxxxxxxxxxxx
-xxx.....xxxxx.xxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxx.....xxxxx.xxxxxbbb+b..b+b.T...7...T.b+b..b+bbbxxxxxxxxxxxxxxxxxxx
 xxxx...xxxxxxxt.xxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
 xxxxx..xxxxxxxxt.xxxbb....b.b...........b.b....bbxlllllxxxxxxxxxxxxxx
 xxxxxx..xxxxxxxx..xxbbt...bzbqq.b...b.qqbzb...tbbxlKK.lxxxxxxxxxxxxxx

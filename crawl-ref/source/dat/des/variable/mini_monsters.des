@@ -4203,8 +4203,9 @@ MONS:   golden eye, ophan, glass eye, eye of devastation
 MONS:   great orb of eyes / shining eye w:5
 ITEM:   scroll of vulnerability q:1 ident:type / orb ego:guile randart w:4 / \
         book of the spheres w:4 / potion of enlightenment q:2 ident:type
-NSUBST: 5 = 2:5 / *:4 5:15
 KFEAT:  m = iron_grate
+KFEAT:  T = fountain_eyes
+NSUBST: 5 = 2:5 / *:4 5:15
 : if you.in_branch("Abyss") then
 SUBST:  c = c:4 v:1 b:1, '| = d
 : end
@@ -4220,7 +4221,7 @@ c1m...mm5mm...m.c
 c+m.4.m|m2m.5.m+c
 c.m...mm|mm...m1c
 c.mm...mmm...mm.c
-cc.m.5.....5.m.cc
+cc.m.5..T..5.m.cc
  c.mm...5...mm.c
  cc.mmm...mmm.cc
   cc..mmmmm..cc

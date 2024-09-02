@@ -698,6 +698,7 @@ MONS:     glass eye / eye of devastation / golden eye w:2
 MONS:     protean progenitor, shadow demon / tentacled monstrosity
 MONS:     cacodemon, neqoxec / chaos spawn w:2 / great orb of eyes w:2
 ITEM:     potion of mutation ident:type
+KFEAT:    T = fountain_eyes
 SHUFFLE:  '-
 NSUBST:   O = 1:O / 1:d / *:|
 NSUBST:   C = 1:4 / *:N, N = 2:4 / *:6
@@ -732,7 +733,7 @@ xcccc.....ccccccc..c..cc''cc.....ccxx
 xcccMMC..ccccc--cc..c.&cccc.....ccxxx
 xcc.ccM.ccccc----cc..&..cc.....ccxxxx
 xcc.ccMccccc------cc&.&.......ccxxxxx
-xcc...ccccc---cc---cc........cccxxxxx
+xcc...ccccc---cc---cc..T.....cccxxxxx
 xcOccccccc---cccc---cc......ccccxxxxx
 xcccccccc----cccc---cc......ccccxxxxx
 xccccccc------cc---cc........cccxxxxx
@@ -807,6 +808,7 @@ MONS:     shadow demon / tentacled monstrosity
 MONS:     very ugly thing / glass eye band w:15 / golden eye band w:5 / \
           eye of devastation / great orb of eyes
 ITEM:     potion of mutation ident:type q:1
+KFEAT:    T = fountain_eyes
 NSUBST:   O = 1:O / 1:d / *:|
 : pan_lord_setup(_G, 'Mnoleg')
 epilogue{{
@@ -824,7 +826,7 @@ MAP
    x.3.ccc...c.....c...ccc.3.x
   xxc..cccc..c..2..c..cccc..cxx
   xcc....cc..c.....c..cc....ccx
- xx.c..6.............5...4..c.xx
+ xx.c..6...T.........5...4..c.xx
  x..........3.......3..........x
  ......cccc..cc...cc..cccc......
 ..&ccccc.....c..4..c.....ccccc...
@@ -834,7 +836,7 @@ MAP
 ...ccccc.....c..4..c.....ccccc&..
  ......cccc..cc...cc..cccc......
  x..........3.......3..........x
- xx.c..4...5.............6..c.xx
+ xx.c..4...5.........T...6..c.xx
   xcc....cc..c.....c..cc....ccx
   xxc..cccc..c..2..c..cccc..cxx
    x.3.ccc...c.....c...ccc.3.x

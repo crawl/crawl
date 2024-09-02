@@ -2092,8 +2092,11 @@ static vector<coord_def> _xom_scenery_candidates()
     for (vision_iterator ri(you); ri; ++ri)
     {
         dungeon_feature_type feat = env.grid(*ri);
-        if (feat_is_fountain(feat) && feat != DNGN_FOUNTAIN_BLOOD)
+        if (feat_is_fountain(feat) && feat != DNGN_FOUNTAIN_BLOOD
+            && feat != DNGN_FOUNTAIN_EYES)
+        {
             candidates.push_back(*ri);
+        }
         else if (feat_is_tree(feat))
             candidates.push_back(*ri);
         else if (feat_is_food(feat))
