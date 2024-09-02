@@ -363,6 +363,10 @@ void UIMenu::update_item(int index)
 #ifdef USE_TILE_LOCAL
 static bool _has_hotkey_prefix(const string &s)
 {
+    // Don't read out of bounds!
+    if (s.size() < 5)
+        return false;
+
     // [enne] - Ugh, hack. Maybe MenuEntry could specify the
     // presence and length of this substring?
     bool let = (s[1] >= 'a' && s[1] <= 'z' || s[1] >= 'A' && s[1] <= 'Z');
