@@ -5110,6 +5110,9 @@ static void _cast_vanquished_vanguard(monster* mons)
 
             give_specific_item(orc, items(false, OBJ_WEAPONS, wpn, 0, SPWPN_FORBID_BRAND));
             give_specific_item(orc, items(false, OBJ_ARMOUR, arm, 0, SPARM_FORBID_EGO));
+
+            // Mark the items we just gave the orc as summoned
+            orc->mark_summoned(0, true, 0, false);
         }
     }
 }
