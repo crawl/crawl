@@ -2196,7 +2196,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             dithmenos_shadow_spell(spell);
         _spellcasting_side_effects(spell, god, !actual_spell);
 
-        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR))
+        if (you.wearing_ego(EQ_GIZMO, SPGIZMO_SPELLMOTOR) && actual_spell)
             coglin_spellmotor_attack();
 
         return spret::success;
