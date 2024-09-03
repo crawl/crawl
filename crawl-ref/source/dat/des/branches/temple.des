@@ -1035,7 +1035,7 @@ ENDMAP
 # <<2>> Nine to twelve altars
 # <<3>> Thirteen to fifteen altars
 # <<4>> Sixteen to twenty altars
-# <<5>> Twenty-one altars
+# <<5>> Twenty-one to twenty-six altars
 # <<6>> Variable altars, generic layouts
 # <<7>> Variable altars, unusual layouts
 # <<8>> Rare temples, tagged with temple_rare
@@ -2387,9 +2387,9 @@ twwwwwwwwwwwwwwwwwwwwwwwwwwwwwwt
 tttttttttttttttttttttttttttttttt
 ENDMAP
 
-# 18 gods
+# 20 gods
 NAME:    regret_index_temple_chain_breaker
-TAGS:    temple_altars_18
+TAGS:    temple_altars_20
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -2751,7 +2751,8 @@ xxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# <<5>> Twenty-one gods.
+# <<5>> Twenty-one to twenty-six gods.
+# Note: the max non-rare Temples can find is 22.
 
 NAME:    kilobyte_greek_temple
 TAGS:    no_rotate temple_altars_21
@@ -3033,7 +3034,7 @@ llllllClllllllllllllllllllEllllllllDlllllllllllllll
 ENDMAP
 
 NAME:    mainiacjoe_temple_archimedes_tessellation
-TAGS:    temple_altars_21
+TAGS:    temple_altars_22
 PLACE:   Temple
 ORIENT:  encompass
 TAGS:    no_pool_fixup
@@ -3166,7 +3167,7 @@ cc......x.....x.......xxx............x.....x......x...x......cc
 ENDMAP
 
 NAME:    mainiacjoe_temple_hex_bubbles
-TAGS:    temple_altars_21
+TAGS:    temple_altars_22
 PLACE:   Temple
 ORIENT:  encompass
 NSUBST:  B = 1:{ / *:B
@@ -5373,7 +5374,7 @@ ENDMAP
 
 # every god in the game
 NAME:   hellmonk_choose_your_character
-TAGS:   temple_rare temple_altars_22 no_rotate no_vmirror no_hmirror
+TAGS:   temple_rare temple_altars_26 no_rotate no_vmirror no_hmirror
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 1
