@@ -237,6 +237,8 @@ i-frenzy BRAND_FRENZY
 i-sleep BRAND_SLEEP
 # end TAG_MAJOR_VERSION
 i-blinding BRAND_BLINDING
+i-acid BRAND_ACID
+i-foul_flame BRAND_FOUL_FLAME
 
 
 i-chaotic MODIFIER_CHAOTIC

@@ -4492,7 +4492,15 @@ tileidx_t tileidx_known_brand(const item_def &item)
     case OBJ_WEAPONS:
         {
             const int brand = get_weapon_brand(item);
-            if (brand != SPWPN_NORMAL)
+            // XXX HACK: The weapon enums list is a scattered mess of removed
+            // brands presuming a messy false fixed order, and bleeds into
+            // missile brands otherwise. Maybe this should just be a full
+            // switch case fix-up instead.
+            if (brand == SPWPN_ACID)
+                return TILE_BRAND_ACID;
+            else if (brand == SPWPN_FOUL_FLAME)
+                return TILE_BRAND_FOUL_FLAME;
+            else if (brand != SPWPN_NORMAL)
                 return TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1;
             break;
         }

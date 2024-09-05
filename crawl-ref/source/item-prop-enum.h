@@ -169,7 +169,7 @@ enum brand_type // item_def.special
     SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
 #endif
     SPWPN_PENETRATION,
-    SPWPN_REAPING,
+    SPWPN_REAPING, // Sword of Zonguldrok
     SPWPN_SPECTRAL,
 
 // From this point on save compat is irrelevant.
@@ -179,8 +179,8 @@ enum brand_type // item_def.special
 #if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
-    SPWPN_WEAKNESS,
-    SPWPN_VULNERABILITY,
+    SPWPN_WEAKNESS,  // Weakness Stinger
+    SPWPN_VULNERABILITY, // Demonic Touch
     SPWPN_FOUL_FLAME,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
