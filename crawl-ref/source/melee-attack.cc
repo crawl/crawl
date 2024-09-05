@@ -669,7 +669,8 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC))
+    if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
+        && defender->alive())
     {
         unwind_var<brand_type> save_brand(damage_brand);
         damage_brand = SPWPN_CHAOS;
