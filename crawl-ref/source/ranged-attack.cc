@@ -330,7 +330,8 @@ bool ranged_attack::handle_phase_hit()
             return false;
         }
 
-        if (using_weapon() && testbits(weapon->flags, ISFLAG_CHAOTIC))
+        if (using_weapon() && testbits(weapon->flags, ISFLAG_CHAOTIC)
+            && defender->alive())
         {
             unwind_var<brand_type> save_brand(damage_brand);
             damage_brand = SPWPN_CHAOS;
