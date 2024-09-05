@@ -123,6 +123,7 @@ static TextDB AllDBs[] =
             "godname.txt",  // god-related names (mostly His Xomminess)
             "montitle.txt", // titles for monsters (i.e. uniques)
             "decorlines.txt", //  miscellaneous lines for walking on decoration
+            "colourname.txt", // colour names again
             "gizmo.txt",    // name-assembling for gizmos
             }),
 

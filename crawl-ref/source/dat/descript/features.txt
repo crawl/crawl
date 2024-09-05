@@ -343,7 +343,7 @@ a monster within its confines.
 %%%%
 A dry fountain
 
-A dried-up fountain that has seen better days.
+A dried-up decorative fountain that has seen better days.
 %%%%
 A fountain of clear blue water
 
@@ -359,7 +359,7 @@ A decorative fountain, bubbling over with listless and unmoving eyes.
 %%%%
 A fountain of sparkling water
 
-A decorative fountain, flowing with brightly sparkling water.
+A decorative fountain, flowing with brightly sparkling, faintly magic water.
 %%%%
 A cache of fruit
 

@@ -144,7 +144,7 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
     FC_DEFAULT, FC_ENABLE, false, true,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, FC_FORBID, FC_FORBID,
-    "hiss", -2, "", "", "coil in front of", "flesh",
+    "hiss", -2, "coils", "", "coil in front of", "flesh",
     { { "constrict", "You have a powerful constriction melee attack."} },
     // cold-blooded and amphibious are added separately
     {}

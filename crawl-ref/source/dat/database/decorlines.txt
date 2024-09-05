@@ -1,7 +1,369 @@
-########################## TODO? ###############################################
+############################ Fountains ########################################
+%%%%
+default peaceful fountain_blue
 
-# Fountains? Seeing weird things in them?
+{{
+  -- Wisps can drink potions, so no need for another message here.
+  if you.transform() == "death" or you.race() == "Mummy" then
+    if crawl.one_chance_in(3) then
+      return "You briefly stare at the drinking fountain and sigh."
+    else
+      return "__NONE"
+    end
+  elseif you.transform() == "storm" then
+    return "The fountain crackles underneath you."
+  else
+    return "You take a small sip from the fountain. Refreshing.";
+  end
+}}
 
+{{
+  if you.transform() == "storm" then
+    return "Small shocks surge through the fountain."
+  elseif you.transform() == "wisp" then
+    return "Your reflection flickers strangely in the water."
+  elseif crawl.coinflip() or you.god() == "Okawaru" then
+    return "You briefly stop to wash @your_hands@."
+  else
+    return "You briefly stop to clean @your_weapon@."
+  end
+}}
+%%%%
+default fountain_blue
+
+The fountain briefly ripples from your approaching presence.
+%%%%
+default peaceful fountain_sparkling
+
+{{
+  if you.transform() == "death" or you.race() == "Mummy" then
+    if crawl.one_chance_in(3) then
+      return "You briefly stare at the sparkling fountain and sigh."
+    else
+      return "__NONE"
+    end
+  elseif you.transform() == "storm" then
+    return "The fountain curiously crackles underneath you."
+  elseif crawl.coinflip() or you.god == "Zin" or you.god == "Cheibriados" then
+    return "The fountain pulses a strange @any_colour_pattern@, and you decide not to drink from it."
+  else
+    return "You take a small sip from the fountain. @sparkling_message@"
+  end
+}}
+%%%%
+sparkling_message
+
+# Flavouring around antique sparkling fountain potion possibilities is
+# reasonable, but keep it very short and unlikely to be confused for any
+# actually meaningful effects. (Also, don't mention blood.)
+You feel fleetingly lighter.
+
+You feel a fleeting jolt of bravery.
+
+You feel nauseous for a moment.
+
+Your emotions uncomfortably twist.
+%%%%
+default fountain_sparkling
+
+The sparkling fountain shimmers a faint @any_colour@.
+%%%%
+default fountain_blood
+
+{{
+   if you.can_smell() then
+     return "You smell the mouldering metallic scent of the fountain's ceaseless blood."
+   elseif you.god() == "Trog" then
+     return "You make sure not to track any more blood on yourself."
+   else
+     return "You make sure not to track any blood on yourself."
+   end
+}}
+
+Miniscule mosquitoes swarm blood-drunk across the fountain's surface.
+
+w:3
+Your reflection in the fountain of blood stares back at you in silent [judgement|horror].
+
+w:3
+# Mixing translations of Baudelaire's poem "La Fontaine du sang".
+The fountain of blood pulses in murmuring sobs.
+
+w:1
+The blood fountain gushes with blood, as blood fountains often do.
+%%%%
+default fountain_eyes
+
+The fountain's eyes stare blankly through you.
+
+The fountain's eyes stare idly in all directions.
+
+The fountain's eyes stare into nothing.
+
+# nothing for default dry_fountain, they don't exactly do anything inherently.
+%%%%
+Ashenzari peaceful fountain_blue
+
+You attempt to scry through the fountain, but the Dungeon's magics reject you.
+%%%%
+Ashenzari fountain_blue
+
+You catch brief visions of the Dungeon's past in the fountain's reflection.
+%%%%
+Beogh fountain_blue
+
+# XXX: Chance to use species::orc_name? Jokes for being transformed?
+You look at your reflection in the fountain and see a proud orc.
+%%%%
+Beogh fountain_sparkling
+
+You look at your [shimmering|glittering] reflection in the fountain and see a proud orc.
+%%%%
+Cheibriados fountain_sparkling
+
+You briefly disapprove of the fountain's mystically arrhythmic flow.
+%%%%
+Cheibriados peaceful dry_fountain
+
+You briefly muse on the calm stillness of an empty fountain.
+%%%%
+Dithmenos fountain_blood
+
+You scoff at the overwrought melodramatics of this fountain.
+%%%%
+Elyvilon peaceful fountain_blue
+
+You approve of the purity and functionality of this drinking fountain.
+
+@default peaceful fountain_blue@
+%%%%
+Fedhas peaceful fountain_blue
+
+You briefly survey the algae on the fountain's rim. They seem healthy.
+%%%%
+Fedhas peaceful fountain_sparkling
+
+You briefly survey the algae on the fountain's rim. They shimmer back.
+%%%%
+Fedhas peaceful fountain_blood
+
+You briefly survey the mould on the fountain's rim. It seems... concerning.
+%%%%
+Fedhas peaceful fountain_eyes
+
+You briefly survey the mould on the fountain's rim. It possibly surveys back.
+%%%%
+Gozag peaceful fountain_blue
+
+You look for coins within the fountain, but they're all too worthless to bother.
+%%%%
+Gozag peaceful fountain_sparkling
+
+@Gozag peaceful fountain_blue@
+%%%%
+Gozag fountain_blood
+
+w:2
+You flinch at the exorbitant financial cost of maintaining this fountain.
+
+@default fountain_blood@
+%%%%
+Hepliaklqana fountain_blue
+
+The fountain's ripples stir distant, transient memories.
+%%%%
+Hepliakqana dry_fountain
+
+You swear to never forget your legacy as this fountain's builders were forgotten.
+%%%%
+Hepliakqana peaceful fountain_blood
+
+You observe a moment of silence for whomever's blood flows through this fountain.
+%%%%
+Ignis fountain_blue
+
+The fountain's water lightly sizzles in your presence.
+
+w:1
+The dying flame fearfully flickers in the reflection of the fountain.
+%%%%
+Ignis fountain_sparkling
+
+The fountain's sparkling water lightly sizzles and shimmers in your presence.
+
+w:1
+The dying flame fearfully flickers in the reflection of the sparkling fountain.
+%%%%
+Ignis fountain_blood
+
+The fountain's blood briefly boils in your presence.
+%%%%
+Jiyva peaceful fountain_blue
+
+You stop to admire the slime slowly growing over the fountain's rim.
+%%%%
+Jiyva peaceful fountain_blue
+
+You stop to admire the sparkling slime slowly growing over the fountain's rim.
+%%%%
+Jiyva fountain_eyes
+
+Your genes instinctively attempt to commune with the fountain's eyes and fail.
+
+A few eyes on the fountain briefly shift into confused golden shades.
+%%%%
+Kikubaaqudgha peaceful dry_fountain
+
+You muse upon the day when the entire world will share this fountain's fate.
+%%%%
+Lugonu peaceful fountain_eyes
+
+You muse on Lugonu's promise to warp all of reality as thoroughly as this fountain.
+%%%%
+Makhleb peaceful fountain_blood
+
+You stop to admire the quantity of blood running through this fountain.
+
+Your mind is briefly consumed by the idea of bathing in this fountain.
+
+You anoint yourself with the fountain's blood.
+
+You briefly wash @your_weapon@ in the fountain with ritualistic fervour.
+%%%%
+Nemelex Xobeh peaceful fountain_blue
+
+You toss an ancient coin into the fountain for a little extra luck.
+%%%%
+Nemelex Xobeh peaceful fountain_sparkling
+
+You toss an ancient coin into the fountain for some extra glamorous luck.
+%%%%
+Okawaru peaceful fountain_blue
+
+You briefly wash @your_weapon@ with practiced discipline.
+%%%%
+Qazlal peaceful fountain_blue
+
+w:5
+You scoff at such attempts to contain the uncontrollable elements.
+
+@Qazlal fountain_blue@
+%%%%
+Qazlal fountain_blue
+
+The fountain bubbles and surges in the storm.
+%%%%
+Qazlal fountain_sparkling
+
+The fountain bubbles and surges violently in the storm.
+%%%%
+Qazlal fountain_blood
+
+The fountain's blood bubbles and surges in the storm.
+%%%%
+Ru peaceful fountain_blue
+
+The water in the fountain reflects the world, which is itself a mere reflection.
+%%%%
+Ru peaceful fountain_eyes
+
+w:2
+The eyes in the fountain cannot see the truth any more than any other material.
+
+@default fountain_eyes@
+%%%%
+Sif Muna peaceful fountain_sparkling
+
+You struggle to determine the manifold diluted potions present in the fountain.
+%%%%
+Sif Muna peaceful fountain_blood
+
+You struggle to identify the manner of creatures' blood used in this fountain.
+%%%%
+Sif Muna peaceful fountain_eyes
+
+You idly identify at least [five|six] types of eyes growing in the fountain.
+%%%%
+Trog peaceful fountain_blue
+
+{{
+if you.transform() == "wisp" then
+  return "Your reflection in the fountain writhes with quiet rage."
+elseif you.transform() == "fungus" then
+  return "You briefly stop and wring some of the blood out of your mycelia."
+else
+  return "You briefly stop and wash some of the blood off your face."
+end
+}}
+%%%%
+Uskayaw peaceful fountain_blue
+
+# TODO: combine with "Xom impromptu dance"?
+You do an impromptu, brief dance in the water, like the crinaeae of old.
+%%%%
+Uskayaw fountain_blood
+
+The fountain of blood pulses a joyous rhythm of life and death.
+%%%%
+Vehumet fountain_blood
+
+You sense the potent destructive power at rest in within this fountain.
+%%%%
+Wu Jian peaceful fountain_blue
+
+You briefly muse on the need to flow like the water through this fountain.
+
+w:5
+The fountain is calm. The water trickles softly. Here one can find peace.
+%%%%
+# XXX: miniscule chance of normal Xom fountain messages?
+Xom fountain_blue
+
+Harmless butterflyfish stare at you from within the fountain.
+
+w:1
+For a brief moment, you thought you saw Xom summoned an eel in this fountain.
+
+w:1
+For a terrifying moment, you swear Xom summoned a kraken in this fountain.
+%%%%
+Xom fountain_sparkling
+
+Shimmering and harmless butterflyfish glower at you from within the fountain.
+
+w:1
+For a brief moment, you swear Xom called forth a formless jellyfish here.
+%%%%
+Xom fountain_blood
+
+Harmless vampiric butterflyfish glare at you from within the fountain.
+
+w:1
+For a terrifying moment, you swear Xom placed a vampire kraken in this fountain.
+%%%%
+Yredelemnul fountain_blue
+
+A miniscule dead [mosquito|moth] on the fountain's rim briefly twitches under your umbra.
+%%%%
+Yredelemnul fountain_sparkling
+
+@Yredelemnul fountain_blue@
+%%%%
+Yredelemnul fountain_blood
+
+You dismiss the blood in this fountain as useless to your harvest.
+%%%%
+Zin fountain_sparkling
+
+You avert your eyes from the scattered magic in the fountain's sparkles.
+%%%%
+Zin fountain_eyes
+
+You avert your eyes from the unclean eyes pooled in the fountain.
+%%%%
+The Shining One fountain_blood
+
+You quietly vow to avenge the poor creatures bled out for this fountain.
 ########################## Caches of food ######################################
 %%%%
 fruit cache
@@ -20,11 +382,13 @@ an apple. Crisp.
 
 an apricot. Delicious.
 
+a banana. Delcious.
+
 a choko. Bland.
 
 some grapes. Delicious.
 
-some lychee. Delicious.
+some lychee. Delicately sweet.
 
 an orange. Delicious.
 
@@ -192,7 +556,7 @@ You root around, looking for a blood orange, but fail to find any.
 w:4
 You reach down and find a blood orange. Delicious.
 ########################## Form diets ######################################
-# TODO: Statue, fungus, wisp messages?
+# TODO: fungus, wisp messages?
 %%%%
 bat fruit cache
 

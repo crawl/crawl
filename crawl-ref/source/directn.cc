@@ -46,6 +46,7 @@
 #include "nearby-danger.h"
 #include "output.h"
 #include "prompt.h"
+#include "religion.h"
 #include "showsymb.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
@@ -3281,23 +3282,78 @@ void _walk_on_decor(dungeon_feature_type new_grid)
 {
     string messageLookup = "";
     string decorLine = "";
-    int frequency = Options.food_snacking_frequency; // default 40%
+    int frequency = 0;
+    bool peaceful = !there_are_monsters_nearby(true, false);
 
     if (new_grid == DNGN_CACHE_OF_FRUIT)
+    {
         messageLookup += "fruit cache";
+        frequency = Options.food_snacking_frequency; // default 40%
+    }
     else if (new_grid == DNGN_CACHE_OF_MEAT)
+    {
         messageLookup += "meat cache";
+        frequency = Options.food_snacking_frequency; // default 40%
+    }
+    else if (feat_is_fountain(new_grid))
+    {
+        messageLookup += dungeon_feature_name(new_grid);
+        frequency = Options.fountain_line_frequency; // default 40%
+    }
+
+    // Reduce the odds of flooding the message log if there's any visible
+    // threats, unless extenuating circumstances make it funny
+    // or if the player clearly always wants to see it.
+    if (!peaceful && frequency != 100 && !(you.religion == GOD_XOM)
+        && !player_in_branch(BRANCH_ZIGGURAT) && !(you.confused() == false))
+    {
+        frequency /= 4;
+    }
 
     if (messageLookup != "" && x_chance_in_y(frequency, 100))
     {
-        decorLine = getMiscString(get_form(you.form)->wiz_name + " " + messageLookup);
+        if (feat_is_fountain(new_grid))
+        {
+            // Use god lines ~75% of the time, and regular lines ~25% of the
+            // time. They'll always fall through to regular lines if nothing's
+            // written for that particular god with that particular fountain.
+            // XXX: maybe different arrangements for "generic" versus "default"?
+            if (peaceful && x_chance_in_y(3, 4))
+                decorLine = getMiscString(god_name(you.religion) + " peaceful " + messageLookup);
 
-        if (decorLine == "")
-            decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
+            if (decorLine == "" && x_chance_in_y(3, 4))
+                decorLine = getMiscString(god_name(you.religion) + " " + messageLookup);
 
-        if (decorLine == "")
-            decorLine = getMiscString(messageLookup);
-        mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
+            if (decorLine == "" && peaceful)
+                decorLine = getMiscString("default peaceful " + messageLookup);
+
+            if (decorLine == "" && !(new_grid == DNGN_DRY_FOUNTAIN))
+                decorLine = getMiscString("default " + messageLookup);
+        }
+        else
+        {
+            decorLine = getMiscString(get_form(you.form)->wiz_name + " " + messageLookup);
+
+            if (decorLine == "")
+                decorLine = getMiscString(species::name(you.species) + " " + messageLookup);
+
+            if (decorLine == "")
+                decorLine = getMiscString(messageLookup);
+        }
+
+        // Needed for in-line randomization.
+        decorLine = maybe_pick_random_substring(decorLine);
+
+        // XXX: Ugly, but it'd take a lot of restructuring
+        //      to follow melee_attack's use of @your_weapon@.
+        string weap = "your " + (you.weapon() ? you.weapon()->name(DESC_DBNAME).c_str()
+                                              : you.hand_name(true));
+
+        decorLine = replace_all(decorLine, "@your_weapon@", weap);
+        decorLine = replace_all(decorLine, "@your_hands@", "your " + you.hand_name(true));
+
+        if (!(decorLine == "" || decorLine == "__NONE"))
+            mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
     }
 }
 
