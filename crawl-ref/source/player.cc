@@ -5032,6 +5032,11 @@ bool haste_player(int turns, bool rageext)
         mpr("Your stasis prevents you from being hasted.");
         return false;
     }
+    else if (have_passive(passive_t::no_haste))
+    {
+        simple_god_message(" protects you from inadvertent hurry.");
+        return false;
+    }
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.

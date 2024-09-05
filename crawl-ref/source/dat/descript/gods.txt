@@ -513,9 +513,10 @@ deserting them.
 Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
-the attention of Cheibriados remains upon them, and will frequently have any
-magical hasting stripped away. They may also become further slowed, be put
-to sleep, or have their bodies decay.
+the attention of Cheibriados remains upon them, and may have any magical hasting
+stripped away. They may also become further slowed, be put to sleep, or have
+their bodies decay as the unparalleled volume of the inevitable passage of
+time rings throughout the Dungeon.
 %%%%
 Dithmenos wrath
 

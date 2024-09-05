@@ -329,61 +329,34 @@ static bool _xom_retribution()
 
 static bool _cheibriados_retribution()
 {
-    // time god/slowness theme
+    // time god theme
     const god_type god = GOD_CHEIBRIADOS;
 
-    // Chei retribution might only make sense in combat.
-    // We can crib some Xom code for this. {bh}
+    // Several of the main effects should care only about present enemies.
     int tension = get_tension(GOD_CHEIBRIADOS);
-    int wrath_value = random2(tension);
 
-    // Determine the level of wrath
-    int wrath_type = 0;
-    if (wrath_value < 2)
-        wrath_type = 0;
-    else if (wrath_value < 4)
-        wrath_type = 1;
-    else if (wrath_value < 8)
-        wrath_type = 2;
-    else if (wrath_value < 16)
-        wrath_type = 3;
-    else
-        wrath_type = 4;
-
-    // Strip away extra speed
-    dec_haste_player(10000);
-
-    switch (wrath_type)
+    // Almost any tension: sleep if >66% HP, otherwise remove haste and give
+    // slow. Next to / no tension: noise + stat drain.
+    if (tension > random_range(5, 8))
     {
-    // Very high tension wrath.
-    // Add noise then start sleeping and slow the player with 2/3 chance.
-    case 4:
-        simple_god_message(" strikes the hour.", false, god);
-        noisy(40, you.pos());
-        dec_penance(god, 1); // and fall-through.
-    // High tension wrath
-    // Sleep the player and slow the player with 50% chance.
-    case 3:
-        mpr("You lose track of time.");
-        you.put_to_sleep(nullptr, 30 + random2(20));
-        if (one_chance_in(wrath_type - 1))
-            break;
+        if (you.hp >= (you.hp_max * 3 / 4))
+        {
+            mprf(MSGCH_DANGER, "You lose track of time!");
+            you.put_to_sleep(nullptr, 30 + random2(20));
+            dec_penance(god, 1);
+        }
         else
-            dec_penance(god, 1); // and fall-through.
-    // Medium tension
-    case 2:
-        mprf(MSGCH_WARN, "You feel the world leave you behind!");
-        slow_player(91 + random2(10));
-        break;
-    // Low/no tension; lose stats.
-    case 1:
-    case 0:
-        mpr("Time shudders.");
-        lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
-        break;
-
-    default:
-        break;
+        {
+            mprf(MSGCH_DANGER, "The world leaves you behind!");
+            dec_haste_player(10000);
+            slow_player(81 + random2(10));
+        }
+    }
+    else
+    {
+        simple_god_message(" strikes the hour, and time shudders.", false, god);
+        noisy(40, you.pos());
+        lose_stat(STAT_RANDOM, 2 + random2avg(5, 2));
     }
 
     return true;
