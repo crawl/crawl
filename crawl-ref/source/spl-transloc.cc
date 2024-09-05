@@ -1681,7 +1681,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
         const int dist = grid_distance(where, *di);
         monster* mon = monster_at(*di);
-        if (mon && !mon->is_stationary())
+        if (mon && !mon->is_stationary() && !mons_is_projectile(*mon))
             targ.push_back(mon);
         else if (!mon && !feat_is_solid(env.grid(*di)))
             empty[dist].push_back(*di);
