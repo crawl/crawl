@@ -3993,7 +3993,7 @@ static const spell_type smitey_spells[] = {
  * @param mon   The monster in question.
  * @return      Whether the given monster has 'smitey' effects.
  */
-static bool _mons_has_smite_attack(const monster* mons)
+bool _mons_has_smite_attack(const monster* mons)
 {
     return any_of(begin(smitey_spells), end(smitey_spells),
                   [=] (spell_type sp) { return mons->has_spell(sp); });

@@ -362,6 +362,7 @@ bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
 bool mons_has_ranged_attack(const monster& mon);
+bool _mons_has_smite_attack(const monster* mons);
 bool mons_can_attack(const monster& mon);
 
 gender_type mons_class_gender(monster_type mc);

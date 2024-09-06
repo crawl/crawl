@@ -1264,10 +1264,16 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     const bool powerup = !(mons.wont_attack() ^ helpful);
 
     if (powerup)
-        if (you.experience_level > 4)
+    {
+        if (you.experience_level > 4 && !helpful)
             mons.polymorph(PPT_MORE);
         else
             mons.polymorph(PPT_SAME);
+
+        if (you.experience_level < 10 && !helpful)
+            mons.malmutate("");
+    }
+
     else
         mons.polymorph(PPT_LESS);
 
@@ -1294,10 +1300,26 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
 /// Find a monster to poly.
 static monster* _xom_mons_poly_target()
 {
+    vector<monster*> polymorphable;
+
+    // XXX: Polymorphing early bats over liquids turn into D:1 steam dragons
+    //      and killer bees, so skip them while polymorphing at low xls.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi))
-            return *mi;
-    return nullptr;
+    {
+        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi)
+           && (you.experience_level < 4 && (env.grid(mi->pos()) != DNGN_DEEP_WATER)
+               && env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 3 )
+        {
+            polymorphable.push_back(*mi);
+        }
+    }
+
+    shuffle_array(polymorphable);
+
+    if (polymorphable.empty())
+        return nullptr;
+    else
+        return polymorphable[0];
 }
 
 /// Try to polymporph a nearby monster into something weaker... or stronger.
@@ -3751,13 +3773,12 @@ static void _xom_cloud_trail(int /*sever*/)
 static void _xom_statloss(int /*sever*/)
 {
     const string speech = _get_xom_speech("draining or torment");
-    const bool nasty = _xom_feels_nasty();
 
     const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
     int loss = 1;
 
-    // Don't kill the player unless Xom is being nasty.
-    if (nasty)
+    // Don't set the player to statzero unless Xom is being nasty.
+    if (_xom_feels_nasty())
         loss = 1 + random2(3);
     else if (you.stat(stat) <= loss)
         return;
@@ -3775,10 +3796,17 @@ static void _xom_statloss(int /*sever*/)
 
 static void _xom_draining(int /*sever*/)
 {
+    int power = 100;
     const string speech = _get_xom_speech("draining or torment");
     god_speaks(GOD_XOM, speech.c_str());
 
-    drain_player(100, true);
+    if (you.experience_level < 4
+        || (you.hp_max_adj_temp < 0 && !_xom_feels_nasty()))
+    {
+        power /= 2;
+    }
+
+    drain_player(power, true);
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
 }
@@ -4516,6 +4544,8 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     if (tension > random2(3) && x_chance_in_y(16, sever))
     {
         int plant_capacity = 0;
+        int smiters = 0;
+
         for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true);
              ri; ++ri)
         {
@@ -4523,8 +4553,15 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
                 plant_capacity++;
         }
 
-        if (plant_capacity >= 3)
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+            if (_mons_has_smite_attack(*mi) && grid_distance(mi->pos(), you.pos()) > 2)
+                smiters++;
+
+        if (plant_capacity >= 3
+            && smiters < div_rand_round(you.experience_level, 6) - 1)
+        {
             return XOM_GOOD_FLORA_RING;
+        }
     }
 
     if (tension > random2(3) && x_chance_in_y(17, sever))
@@ -4599,10 +4636,11 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     // The bazaar's most interesting in its first few trips, so it should be
     // less likely each time unless it's a chance to escape big trouble.
     // Always expect some minimum gold. Don't interrupt autotravel too much.
-    if ((tension > 27 || (one_chance_in(you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 2)
+    if ((tension > 27 || (one_chance_in(you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 4)
         && (_exploration_estimate(true) < 80
         || x_chance_in_y(_exploration_estimate(true), 120))))
-        && you.gold > (500 + sever * 6) && x_chance_in_y(23, sever)
+        && you.gold > (777 + sever * (4 + (you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 2)))
+        && x_chance_in_y(23, sever)
         && !player_in_branch(BRANCH_BAZAAR)
         && !player_in_branch(BRANCH_ABYSS))
     {

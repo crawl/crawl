@@ -4535,7 +4535,7 @@ int get_monster_tension(const monster& mons, god_type god)
 
     const mon_attitude_type att = mons_attitude(mons);
 
-    if (mons.cannot_act() || mons.asleep() || mons_is_fleeing(mons))
+    if (mons.cannot_act())
         return 0;
 
     int exper = exper_value(mons);
@@ -4550,8 +4550,8 @@ int get_monster_tension(const monster& mons, god_type god)
             return 0;
     }
 
-    // Almost dead monsters might die the next turn, but they're also
-    // still entirely capable of killing you.
+    // Almost dead monsters might die the next turn, but
+    // they're also still entirely capable of killing you.
     if (att == ATT_HOSTILE || att == ATT_NEUTRAL)
         exper = exper * (10 + (mons.hit_points * 10 / mons.max_hit_points)) / 30;
     else
@@ -4562,8 +4562,8 @@ int get_monster_tension(const monster& mons, god_type god)
     if (god != GOD_NO_GOD)
         gift = mons_is_god_gift(mons, god);
 
-    // FIXME: God gift checking is fine for Xom and
-    // deeply weird for everything else.
+    // FIXME: God gift checking is fine for Xom, weird for almost everything else.
+    // Need to look at the Beogh apostle thresholds before adjusting it there.
     if (att == ATT_HOSTILE)
     {
         // God is punishing you with a hostile gift, so it doesn't
@@ -4573,8 +4573,7 @@ int get_monster_tension(const monster& mons, god_type god)
     }
     else if (att == ATT_FRIENDLY)
     {
-        // Friendly monsters being around to help you reduce
-        // tension.
+        // Friendly monsters being around to help you reduce tension.
         exper = -exper;
 
         // If it's a god gift, it reduces tension even more, since
@@ -4589,9 +4588,12 @@ int get_monster_tension(const monster& mons, god_type god)
     }
     else if (att == ATT_GOOD_NEUTRAL)
     {
-        // Unreliable in its help versus wandering or leaving entirely.
+        // Unreliable in its help versus wandering around or leaving entirely.
         exper = -exper / 2;
     }
+
+    if (mons.asleep() || mons_is_fleeing(mons))
+        exper /= 20;
 
     if (att != ATT_FRIENDLY && att != ATT_GOOD_NEUTRAL)
     {
@@ -4625,11 +4627,9 @@ int get_monster_tension(const monster& mons, god_type god)
     if (mons.has_ench(ENCH_ARMED))
         exper = exper * 5 / 4;
 
+    // Health boost stacks further on top of haste and might bonuses
     if (mons.berserk_or_frenzied())
-    {
-        // Health boosting gives adds more to haste and might bonuses above
         exper = exper * 3 / 2;
-    }
 
     return exper;
 }
@@ -4663,8 +4663,7 @@ int get_tension(god_type god)
 
     int tension = total;
 
-    // Tension goes up inversely proportional to the percentage of max
-    // hp you have.
+    // Tension goes up inversely proportional to the percentage of your max HP.
     tension *= (scale + 1) * you.hp_max;
     tension /= max(you.hp_max + scale * you.hp, 1);
 
@@ -4717,7 +4716,7 @@ int get_tension(god_type god)
     if (you.cannot_act())
     {
         tension *= 10;
-        tension  = max(1, tension);
+        tension = max(1, tension);
 
         return tension;
     }
