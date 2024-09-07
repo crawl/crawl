@@ -230,7 +230,7 @@ static void _mark_net_trapping(const coord_def& where)
  */
 bool monster_caught_in_net(monster* mon)
 {
-    if (mon->is_insubstantial() || (mons_genus(mon->type) == MONS_JELLY))
+    if (mon->is_insubstantial() || mon->is_amorphous())
     {
         if (you.can_see(*mon))
         {
@@ -303,7 +303,7 @@ bool player_caught_in_net()
 void check_net_will_hold_monster(monster* mons)
 {
     ASSERT(mons); // XXX: should be monster &mons
-    if (mons->is_insubstantial() || (mons_genus(mons->type) == MONS_JELLY))
+    if (mons->is_insubstantial() || mons->is_amorphous())
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
@@ -631,7 +631,7 @@ void trap_def::trigger(actor& triggerer)
             {
                 if (m->is_insubstantial())
                     simple_monster_message(*m, " passes through a web.");
-                else if (mons_genus(m->type) == MONS_JELLY)
+                else if (m->is_amorphous())
                     simple_monster_message(*m, " oozes through a web.");
                 // too spammy for spiders, and expected
             }

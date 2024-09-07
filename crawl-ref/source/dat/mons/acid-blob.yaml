@@ -1,6 +1,6 @@
 name: "acid blob"
 glyph: {char: "J", colour: lightcyan}
-flags: [eat_doors, see_invis, unblindable, web_immune, acid_splash, no_skeleton]
+flags: [eat_doors, see_invis, unblindable, amorphous, acid_splash, no_skeleton]
 resists: {poison: 1, acid: 3}
 xp_mult: 12
 genus: jelly

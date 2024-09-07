@@ -3277,8 +3277,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (defender->is_player())
             barb_player(random_range(4, 8), 4);
         // Insubstantial and jellies are immune
-        else if (!(defender->is_insubstantial() &&
-                    mons_genus(defender->type) != MONS_JELLY))
+        else if (!(defender->is_insubstantial()))
         {
             if (defender_visible)
             {

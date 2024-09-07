@@ -6865,6 +6865,12 @@ bool player::is_insubstantial() const
         || form == transformation::storm;
 }
 
+bool player::is_amorphous() const
+{
+    // Maybe this'll change some day?...
+    return false;
+}
+
 int player::res_acid() const
 {
     return player_res_acid();

@@ -903,6 +903,7 @@ bool player::antimagic_susceptible() const
 bool player::is_web_immune() const
 {
     return is_insubstantial()
+        || is_amorphous()
         || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 

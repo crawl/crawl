@@ -1,5 +1,6 @@
 name: "elemental wellspring"
 glyph: {char: "E", colour: lightcyan}
+flags: [amorphous]
 resists: {elec: 1}
 xp_mult: 13
 genus: elemental

@@ -1,5 +1,6 @@
 name: "water elemental"
 glyph: {char: "E", colour: etc_water}
+flags: [amorphous]
 resists: {elec: 1, fire: -1}
 xp_mult: 12
 genus: elemental

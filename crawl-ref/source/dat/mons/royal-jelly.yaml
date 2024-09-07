@@ -1,7 +1,7 @@
 name: "the Royal Jelly"
 enum: royal_jelly
 glyph: {char: "J", colour: yellow}
-flags: [eat_doors, see_invis, unblindable, web_immune, unique, acid_splash, no_skeleton, tall_tile]
+flags: [eat_doors, see_invis, unblindable, amorphous, unique, acid_splash, no_skeleton, tall_tile]
 resists: {poison: 1, acid: 3}
 xp_mult: 20
 species: jelly

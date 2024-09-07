@@ -5189,7 +5189,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     if (origin_spell == SPELL_THROW_BARBS && dmg > 0
-        && !(mon->is_insubstantial() || mons_genus(mon->type) == MONS_JELLY))
+        && !(mon->is_insubstantial()))
     {
         mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(),
                                   random_range(5, 7) * BASELINE_DELAY));

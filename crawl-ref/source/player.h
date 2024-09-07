@@ -777,6 +777,7 @@ public:
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
+    bool is_amorphous() const override;
     int res_acid() const override;
     bool res_damnation() const override { return false; };
     int res_fire() const override;

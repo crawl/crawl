@@ -1583,7 +1583,7 @@ static int _shatter_mon_dice(const monster *mon)
     {
         return DEFAULT_SHATTER_DICE * 2;
     }
-    else if (mon->airborne() || mons_is_slime(*mon))
+    else if (mon->airborne() || mon->is_amorphous())
         return 1;
     // Normal damage to everything else.
     else
@@ -1686,7 +1686,7 @@ static int _shatter_player_dice()
         return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
-    else if (you.airborne())
+    else if (you.airborne() || you.is_amorphous())
         return 1;
     else
         return 3;

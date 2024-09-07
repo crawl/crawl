@@ -1,6 +1,6 @@
 name: "formless jellyfish"
 glyph: {char: "J", colour: white}
-flags: [unblindable, web_immune, no_skeleton]
+flags: [unblindable, amorphous, no_skeleton]
 resists: {poison: 1}
 genus: jelly
 will: 60

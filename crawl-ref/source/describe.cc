@@ -6299,7 +6299,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
                << " insubstantial and immune to ensnarement.\n";
     }
 
-    if (mons_genus(mi.type) == MONS_JELLY)
+    if (mons_class_flag(mi.type, M_AMORPHOUS))
     {
         result << uppercase_first(pronoun) << " "
                << conjugate_verb("are", plural)

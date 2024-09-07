@@ -269,6 +269,7 @@ public:
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
+    virtual bool is_amorphous() const = 0;
     virtual int res_acid() const = 0;
     virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;

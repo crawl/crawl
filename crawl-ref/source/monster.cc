@@ -3608,6 +3608,11 @@ bool monster::is_insubstantial() const
     return mons_class_flag(type, M_INSUBSTANTIAL);
 }
 
+bool monster::is_amorphous() const
+{
+    return mons_class_flag(type, M_AMORPHOUS);
+}
+
 /// All resists intrinsic to a monster, including enchants, equip, etc.
 resists_t monster::all_resists() const
 {
@@ -3919,7 +3924,7 @@ bool monster::res_petrify(bool /*temp*/) const
 
 bool monster::res_constrict() const
 {
-    return is_insubstantial() || is_spiny() || mons_genus(type) == MONS_JELLY;
+    return is_insubstantial() || is_spiny() || is_amorphous();
 }
 
 bool monster::res_corr(bool /*allow_random*/, bool temp) const
@@ -6280,7 +6285,7 @@ bool monster::is_web_immune() const
 {
     return mons_class_flag(type, M_WEB_IMMUNE)
             || mons_class_flag(mons_genus(type), M_WEB_IMMUNE)
-            || is_insubstantial();
+            || is_insubstantial() || is_amorphous();
 }
 
 /**

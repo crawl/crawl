@@ -183,6 +183,9 @@ enum monclass_flag_type : uint64_t
     M_THUNDER_RING      = BIT(58),
     M_FIRE_RING         = BIT(59),
     M_MIASMA_RING       = BIT(60),
+
+    // monster is made of liquid and is immune to webs, nets, and constriction
+    M_AMORPHOUS         = BIT(61),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
