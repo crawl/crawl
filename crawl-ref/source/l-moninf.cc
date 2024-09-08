@@ -541,19 +541,18 @@ LUAFN(moninf_get_spells)
 {
     MONINF(ls, 1, mi);
 
-    lua_newtable(ls);
-
     if (!mi->has_spells())
+    {
+        lua_newtable(ls);
         return 1;
+    }
 
     const vector<mon_spell_slot> &unique_slots = get_unique_spells(*mi);
     vector<string> spell_titles;
 
     for (const auto& slot : unique_slots)
         spell_titles.emplace_back(spell_title(slot.spell));
-
     clua_stringtable(ls, spell_titles);
-    lua_rawseti(ls, -2, 1);
 
     return 1;
 }
