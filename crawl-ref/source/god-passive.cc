@@ -1814,7 +1814,12 @@ void dithmenos_shadow_spell(spell_type spell)
             // Don't cast this spell without any enemies in sight, to prevent
             // tedious pre-casting by the player.
             if (_shadow_target_exists())
-                pos = _get_shadow_spots()[0];
+            {
+                auto spots = _get_shadow_spots();
+                if (spots.empty())
+                    break;
+                pos = spots[0];
+            }
             break;
     }
 
