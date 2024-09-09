@@ -620,6 +620,25 @@ behind it — perhaps danger, perhaps treasure. You may break the runes by
 opening it like any other door, but creatures of the dungeon will not dare
 to try.
 %%%%
+A runed translucent door
+
+A door, covered in runic writing, made from magically translucent wood. It has
+been created to seal away great danger or glorious treasure. You may break the
+runes by opening it like any other door, but creatures of the dungeon will not
+dare to try.
+%%%%
+A large runed translucent door
+
+<A runed translucent door>
+%%%%
+A runed translucent gate
+
+<A runed translucent door>
+%%%%
+A huge runed translucent gate
+
+<A runed translucent door>
+%%%%
 A large open door
 
 <An open door>
