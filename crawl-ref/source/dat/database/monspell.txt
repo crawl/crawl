@@ -949,6 +949,10 @@ flashing balestra undying armoury cast
 
 A weapon leaps out from @the_monster@ and lunges @at@ @target@!
 %%%%
+summon mortal champion fravashi cast
+
+@The_monster@ beckons forth its champion.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

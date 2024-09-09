@@ -4245,7 +4245,21 @@ ENDMAP
 NAME:   evilmike_holy_pan
 TAGS:   no_pool_fixup
 ORIENT: encompass
-NSUBST: . = > / .
+MONS:   angel
+MONS:   cherub
+MONS:   angel
+MONS:   fravashi
+MONS:   ophan
+MONS:   daeva
+KMONS:  8 = pearl dragon
+KMONS:  9 = pearl dragon
+KMONS:  0 = apis
+KMONS:  A = apis
+KMONS:  E = apis
+KMONS:  B = daeva god:Zin
+KMONS:  Z = daeva god:Zin
+KMONS:  S = patrolling seraph
+KMONS:  P = sacred lotus
 # There's a somewhat iffy interaction with pregen here. As long as only one
 # pan level is ever pregenerated, it should be basically fine.
 : if you.have_rune("demonic") then
@@ -4259,27 +4273,12 @@ ITEM:   any good_item
 ITEM:   potion of cancellation
 ITEM:   potion of might / potion of brilliance
 ITEM:   any
-NSUBST: i = 2=ghh / 3=ghhiii / *:i
-MONS:   angel
-MONS:   cherub
-MONS:   angel
-MONS:   ophan
-MONS:   ophan
-MONS:   daeva
-KMONS:  8 = pearl dragon
-KMONS:  9 = pearl dragon
-KMONS:  0 = apis
-KMONS:  A = apis
-KMONS:  E = apis
-KMONS:  B = daeva god:Zin
-KMONS:  Z = daeva god:Zin
-KMONS:  S = patrolling seraph
-KMONS:  P = sacred lotus
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
 KFEAT:  G = metal_statue
 KFEAT:  P = w
+NSUBST: . = 1:> / *:., i = 2=ghh / 3=ghhiii / *:i
 TILE:   c = wall_church
 COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
@@ -4293,7 +4292,8 @@ KPROP:  ;E80$ = no_tele_into
 SUBST:  D& = +, '"-; = ., H = G, C = c
 : set_feature_name("metal_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
-: set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
+: set_random_mon_list("angel w:20 / cherub / ophan / daeva /\
+:                      fravashi / apis w:20")
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune(true)
@@ -4321,13 +4321,13 @@ xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
 xCf63......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
 xCCCCCCCC..Cxxxx.......wwwwxxwwww...............xx...................xxxxxxxxxxx
 xxxxxxxCCC.Cxx........wwwwwwwwcccc.............................cccc...xxxxxxxxxx
-xxxxxxxxxC+Cx...xx...wwwwwwwwwc1*ccccccccccccccccccccccccccccccc*1c...xxxxxxxxxx
+xxxxxxxxxC+Cx...xx...wwwwwwwwwc4*ccccccccccccccccccccccccccccccc*4c...xxxxxxxxxx
 xxxxxxxxx......xxx..wwwwwwwww.c*'ccccccccccccccccccccccccccccccc'*c...xxxxxxxxxx
 xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
 xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
 xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
 xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|O|cccccccc.wHw..cc....xxxxxxxxxx
-xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw4''|||||||''4wcc.www..cc....xxxxxxxxxx
+xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw5''|||||||''5wcc.www..cc....xxxxxxxxxx
 xxxxxx....xxx...wwwwwxxwwww....cc......ccw''||||'||||''wcc......cc....xxxxxxxxxx
 xxxxxx...xxx...wwwwwwwwwww..xx.cc..ccc+cccccccccSccccccccc+ccc..cc.....xxxxxxxxx
 xxxxx....xx....wwwwwwwwww..xx..cc..c'''ccwwwcccc'ccccwwwcc***c..cc.....xxxxxxxxx
@@ -4346,9 +4346,9 @@ xx.....wwwwwwwww..xxxxxxxxx....cc..cc''''2'''G'''''G'''2''''cc..cc.........xxxxx
 xx....wwwwwwwww...xxxxxxxxx....cc..cc4'''''''''''''''''''''4cc..cc........xxxxxx
 xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
 xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
-xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''''''cccccccccc..cc...xx....xxxxx
+xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''4'''cccccccccc..cc...xx....xxxxx
 xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
-xwwwwwww.....xxxx.........x....cc......5........3........5......cc....xx....xxxx
+xwwwwwww.....xxxx.........x....cc......5.................5......cc....xx....xxxx
 xwwwwww.....xxxx.........xx...ccc+.............................+ccc.........xxxx
 xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
 xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx

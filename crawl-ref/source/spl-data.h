@@ -1874,6 +1874,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_MORTAL_CHAMPION, "Summon Mortal Champion",
+    spschool::summoning,
+    spflag::monster,
+    7,
+    0,
+    -1, -1,
+    0,
+    TILEG_SUMMON_MORTAL_CHAMPION,
+},
+
+{
     SPELL_VANQUISHED_VANGUARD, "Vanquished Vanguard",
     spschool::necromancy | spschool::summoning,
     spflag::monster | spflag::target,

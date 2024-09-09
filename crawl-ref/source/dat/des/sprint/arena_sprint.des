@@ -550,7 +550,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     death knight w:5 / place:Tar:$ w:40",
-                "daeva / angel / cherub / pearl dragon w:20 / ophan / apis",
+                "daeva / angel / cherub / fravashi w:15 / pearl dragon w:15 /\
+                     ophan / apis",
                 -- Misc
                 "yaktaur captain / vashnia w:1",
                 "lich / ancient lich",
@@ -563,7 +564,8 @@ function arena_sprint_get_monster_set(round, boss)
                     great orb of eyes / w:5 ophan",
                 "w:20 hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
-                "profane servitor w:25 / angel / daeva / cherub / seraph",
+                "profane servitor w:25 / angel / daeva / fravashi w:5 /\
+                    cherub / seraph",
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
@@ -623,7 +625,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / demonspawn soul scholar /\
                     death knight w:5",
-                "daeva w:20 / angel / cherub / pearl dragon w:20 / ophan / apis",
+                "daeva w:20 / angel / cherub w:5 / fravashi w:15 /\
+                    pearl dragon w:20 / ophan / apis",
                 -- Misc
                 "deep elf master archer",
                 "ancient lich / dread lich",
@@ -636,7 +639,8 @@ function arena_sprint_get_monster_set(round, boss)
                     great orb of eyes / w:5 ophan",
                 "w:30 hellion / hell sentinel / sin beast / hell hog / hell knight /\
                     hell hound / hellephant / w:2 nellie",
-                "profane servitor w:25 / angel w:5 / daeva / cherub w:5 / seraph w:15",
+                "profane servitor w:25 / angel w:5 / daeva / fravashi /\
+                    cherub w:5 / seraph w:15",
                 -- Gimmicks
                 "cacodemon", "sun moth", "catoblepas / iron golem w:5",
                 "moth of wrath / w:20 juggernaut", "orb spider", "apocalypse crab",

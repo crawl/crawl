@@ -1374,6 +1374,13 @@ A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
+fravashi
+
+A beneficent remnant of the countless mortal knights who serve the Shining One.
+Their hosts' role in the divine hierarchy is to guide and direct their legions
+in righteous moral warfare, though they may also call upon those mortals to
+defend themselves.
+%%%%
 frilled lizard
 
 A lizard with a giant and colourful fringe folded around its neck. It flares

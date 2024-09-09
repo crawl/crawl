@@ -422,7 +422,7 @@ function choose_mset_3(e)
                Rupert / Saint Roka / Snorg")
 -- Holy
   else
-    e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
+    e.kmons("1 = daeva / angel / fravashi / cherub / ophan / \
                  apis / nothing w:78")
   end
 end
@@ -562,7 +562,7 @@ local rnd = crawl.random2(142)
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
-                 apis")
+                 fravashi / apis")
   end
 end
 

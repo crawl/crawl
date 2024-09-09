@@ -2885,9 +2885,9 @@ DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
 : if you.depth() > 3 then
-MONS:   pearl dragon
+MONS:   pearl dragon / fravashi god:Zin w:2
 : else
-KMONS:  4 = Mennas, angel god:Zin dbname:zin_angel
+KMONS:  4 = Mennas, fravashi god:Zin
 : end
 KFEAT:  G = metal_statue
 NSUBST: A = 3 / '

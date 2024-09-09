@@ -129,7 +129,7 @@
         elseif set_weight == 5 and crawl.one_chance_in(4) then
             e.mons("cherub / apis")
             e.mons("angel / daeva")
-            e.mons("ophan / pearl dragon w:5")
+            e.mons("ophan / fravashi w:3 / pearl dragon w:3")
             e.kfeat("A : fountain_sparkling")
             e.kfeat("B = altar_zin / altar_the_shining_one / " ..
                         " altar_elyvilon")

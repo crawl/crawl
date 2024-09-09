@@ -731,6 +731,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 0, 4 },
             { { SPWPN_FLAMING, 1 } },
         } },
+        { MONS_FRAVASHI,
+          // it'd be kinda weird to use trishulas considering they're from
+          // the literal opposing faith in the region, so just use two-handers.
+            { { { WPN_HALBERD,       3 },
+                { WPN_GLAIVE,        6 },
+                { WPN_BARDICHE,      1 }, },
+            { 1, 1, 3 },
+            { { SPWPN_HOLY_WRATH, 1 } },
+        } },
         { MONS_SERAPH, {
             { { WPN_GREAT_SWORD,        1 } },
             { 1, 3, 8 }, // highly enchanted, we're top rank

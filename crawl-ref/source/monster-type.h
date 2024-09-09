@@ -821,6 +821,9 @@ enum monster_type                      // env.mons[].type
     MONS_ANGEL,
     MONS_DAEVA,
     MONS_CHERUB,
+#if TAG_MAJOR_VERSION > 34
+    MONS_FRAVASHI,
+#endif
     MONS_SERAPH,
 #if TAG_MAJOR_VERSION == 34
     MONS_PHOENIX,
@@ -1270,6 +1273,7 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_PRISM,
     MONS_SOUL_WISP,
     MONS_GLOBE_OF_ANNIHILATION,
+    MONS_FRAVASHI,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

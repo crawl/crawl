@@ -751,6 +751,7 @@ meteoran MONS_METEORAN
 %sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
+fravashi MONS_FRAVASHI
 %rim 1
 cherub MONS_CHERUB
 %sdir mon/undead

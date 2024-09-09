@@ -610,6 +610,8 @@ static int _mons_class_halo_radius(monster_type type)
         return 4;
     case MONS_DAEVA:
         return 4;
+    case MONS_FRAVASHI:
+        return 4;
     case MONS_OPHAN:
         return 6;
     case MONS_SERAPH:

@@ -1806,6 +1806,12 @@ Summon Minor Demon spell
 
 Summons between one and three minor (rank 5) demons.
 %%%%
+Summon Mortal Champion spell
+
+Calls forth one of the mightiest and fastest mortal champions of the Shining
+One. In this Dungeon, spriggan defenders and deep elf blademasters will answer
+the call.
+%%%%
 Summon Mushrooms spell
 
 Summons wandering mushrooms and deathcaps next to a targeted creature.

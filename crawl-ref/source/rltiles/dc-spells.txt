@@ -274,6 +274,7 @@ summon_hell_sentinel SUMMON_HELL_SENTINEL
 summon_holies SUMMON_HOLIES
 summon_illusion SUMMON_ILLUSION
 summon_minor_demon SUMMON_MINOR_DEMON
+summon_mortal_champion SUMMON_MORTAL_CHAMPION
 summon_mushrooms SUMMON_MUSHROOMS
 summon_scarabs SUMMON_SCARABS
 summon_scorpions SUMMON_SCORPIONS

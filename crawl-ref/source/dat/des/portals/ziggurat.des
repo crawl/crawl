@@ -68,7 +68,7 @@ TAGS:    zig_entry no_trap_gen transparent no_descent
 WEIGHT:  15
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich, dread lich
-MONS:    angel / pearl dragon w:2, daeva
+MONS:    angel / pearl dragon w:2, daeva / fravashi w:2
 MONS:    eye of devastation / great orb of eyes / shining eye, glass eye
 # Iron grates are guaranteed to get at least one monster that can threaten
 # from behind the grates, while transparent rock is not.

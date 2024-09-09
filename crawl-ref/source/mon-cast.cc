@@ -2184,6 +2184,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SILENCE:
     case SPELL_AWAKEN_FOREST:
     case SPELL_DRUIDS_CALL:
+    case SPELL_SUMMON_MORTAL_CHAMPION:
     case SPELL_SUMMON_HOLIES:
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
@@ -5065,6 +5066,49 @@ static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
     mons_summon_illusion_from(mons, foe, spell);
 }
 
+static void _cast_mortal_champion(monster* mons)
+{
+    ASSERT(mons->get_foe());
+
+    monster_type type = coinflip() ? MONS_SPRIGGAN_DEFENDER
+                                   : MONS_DEEP_ELF_BLADEMASTER;
+
+    if (monster *mortal = create_monster(
+            mgen_data(type, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
+            .set_summoned(mons, 3, SPELL_SUMMON_MORTAL_CHAMPION, mons->god)))
+    {
+        // Replace their weapons with short blades of holy wrath- aside from
+        // feeling more holy, it avoids the spriggans' demon whips.
+        weapon_type wpn;
+        armour_type arm = ARM_PEARL_DRAGON_ARMOUR;
+
+        destroy_item(mortal->inv[MSLOT_WEAPON]);
+
+        if (type == MONS_SPRIGGAN_DEFENDER)
+        {
+            wpn = WPN_QUICK_BLADE;
+            if (mortal->inv[MSLOT_SHIELD] == NON_ITEM)
+            {
+                give_specific_item(mortal, items(false, OBJ_WEAPONS,
+                                   ARM_BUCKLER, 0, SPARM_FORBID_EGO));
+            }
+        }
+        else if (type == MONS_DEEP_ELF_BLADEMASTER)
+        {
+            wpn = WPN_RAPIER;
+            destroy_item(mortal->inv[MSLOT_ALT_WEAPON]);
+            give_specific_item(mortal, items(false, OBJ_WEAPONS, wpn, 0, SPWPN_HOLY_WRATH));
+        }
+
+        give_specific_item(mortal, items(false, OBJ_WEAPONS, wpn, 0, SPWPN_HOLY_WRATH));
+        give_specific_item(mortal, items(false, OBJ_ARMOUR, arm, 0, SPARM_FORBID_EGO));
+
+        // Re-mark the items we just gave as summoned
+        mortal->mark_summoned(0, true, 0, false);
+    }
+}
+
+
 static void _cast_vanquished_vanguard(monster* mons)
 {
     ASSERT(mons->get_foe());
@@ -6663,6 +6707,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else if (you.can_see(*foe))
             mprf("The long-dead rise up around %s.", foe->name(DESC_THE).c_str());
         _cast_vanquished_vanguard(mons);
+        return;
+
+    case SPELL_SUMMON_MORTAL_CHAMPION:
+        if (!foe)
+            return;
+        _cast_mortal_champion(mons);
         return;
 
     case SPELL_HAUNT:

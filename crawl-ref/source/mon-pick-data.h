@@ -978,6 +978,7 @@ POP_DEPTHS,
   {  1,  7,    5, FLAT, MONS_BUNYIP },
 
   {  3,  7,    1, FLAT, MONS_DEMONSPAWN_CORRUPTER },
+  {  5,  7,    2, FLAT, MONS_FRAVASHI },
   {  1,  7,   11, FLAT, MONS_ANGEL },
   {  1,  7,   14, FLAT, MONS_DAEVA },
   {  1,  7,    8, FLAT, MONS_OPHAN },

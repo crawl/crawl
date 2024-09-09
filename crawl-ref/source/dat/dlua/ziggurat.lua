@@ -396,7 +396,7 @@ mset(with_props(spec_fn(function ()
   if you.depth() > (13 - you.zigs_completed()) then
     e = math.max(1, math.floor(you.depth() / 3) + you.zigs_completed() * 8 - 16)
   end
-  return "ophan w:30 / apis w:30 / cherub w:30 / angel w:30 / " ..
+  return "ophan w:30 / apis w:30 / cherub w:30 / angel w:30 / fravashi w:30 / " ..
          "daeva w:" .. d .. " / pearl dragon w:" .. d .. " / seraph w:" .. e
 end), { weight = 2 }))
 

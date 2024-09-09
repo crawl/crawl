@@ -775,6 +775,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_FRAVASHI,
+      {
+       { SPELL_SUMMON_MORTAL_CHAMPION, 64, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_SERAPH,
       {
        { SPELL_WARNING_CRY, 50, MON_SPELL_VOCAL| MON_SPELL_BREATH },

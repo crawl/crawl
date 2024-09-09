@@ -2086,7 +2086,7 @@ KMONS:  c = fire dragon / ice dragon / shadow dragon / iron dragon w:5 /\
         quicksilver dragon w:5 / golden dragon / swamp dragon /\
         hydra
 KMONS:  C = quicksilver dragon
-KMONS:  d = angel / daeva / cherub
+KMONS:  d = angel / daeva / fravashi / cherub
 KMONS:  D = pearl dragon
 NSUBST: + = 1:& / *:v
 SUBST:  1 : a, 2 : A
