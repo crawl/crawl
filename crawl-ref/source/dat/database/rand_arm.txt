@@ -206,11 +206,43 @@ Shishi
 
 Tsukumogami
 
-# Brasilia
+# South America
+
+Carbunclo
+
+Cherruve
+
+Cuero
 
 Curupira
 
+Ebigane
+
+Gasogonaga
+
 Mpinguari
+
+Tapire-iauara
+
+# Africa
+
+Biloko
+
+Guiamala
+
+Impundulu
+
+Isitwalangcengce
+
+Nkala
+
+Zankallala
+
+# South East Asia
+
+Bakunawa
+
+Minokawa
 
 # Unlikely hybrids
 
