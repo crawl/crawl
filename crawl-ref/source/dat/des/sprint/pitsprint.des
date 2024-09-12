@@ -9,153 +9,189 @@
 {{
 
 function base_monster_setup(e)
-  e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
-           bat / kobold / rat / dart slug / gnoll band /\
-           hobgoblin / jackal band / ribbon worm / adder / quokka /\
-           gnoll bouda band / orc band / orc priest band /\
-           glass eye / hound / iguana / ogre / orc wizard band /\
-           phantom / scorpion / skeleton / gnoll sergeant band /\
-           centaur / jelly / water moccasin / ice beast / crimson imp /\
-           quasit / zombie / sky beast / bullfrog /\
-           crocodile / brain worm / mummy / orc warrior band / wight band /\
-           kobold brigand band / warg / wolf / black bear / river rat /\
-           weeping skull / iron imp / white imp / ufetubus / fire bat")
-  e.kmons("B = steam dragon / killer bee band / hornet /\
-           manticore / wyvern / troll / two-headed ogre / yak band /\
-           komodo dragon / wraith / unseen horror /\
-           basilisk / cyclops band / efreet /\
-           acid dragon / blink frog band / vampire mosquito band /\
-           gargoyle / molten gargoyle /\
-           kobold demonologist band / kobold blastminer band / deep troll /\
-           deep elf pyromancer / deep elf zephyrmancer / boulder beetle /\
-           orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
-           flayed ghost / freezing wraith / shadow wraith / shadowghast /\
-           redback w:20 / phantasmal warrior / cane toad / hell rat /\
-           black mamba / rime drake / hydra w:5 / polar bear / lindwurm /\
-           elephant / death yak / wolf band / dream sheep band /\
-           swamp drake / bog body / tyrant leech / swamp dragon w:3 /\
-           merfolk band w:5 / merfolk siren w:3 / sea snake / \
-           snapping turtle / tarantella / jumping spider / \
-           demonic crawler / small abomination / guardian mummy / spriggan / \
-           orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
-           red devil / laughing skull / centaur band")
-  e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
-           catoblepas / vampire / wandering mushroom /\
-           guardian serpent / rakshasa w:5 / slime creature band w:5 /\
-           centaur warrior band w:5 / ugly thing w:5 / arcanist w:5 /\
-           occultist w:5 / simulacrum / ogre mage band w:5 /\
-           wolf spider / yaktaur / air elemental / fire elemental /\
-           water elemental / earth elemental / deep elf knight band w:5 /\
-           great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
-           necromancer band w:5 / orc knight band w:5 /\
-           harpy band w:5 / fire crab / redback band /\
-           wind drake / deep elf pyromancer w:3 / shapeshifter / zombie /\
-           skeleton / death knight / eidolon / elephant band w:5 /\
-           death yak band w:5 / swamp dragon /\
-           merfolk avatar / alligator snapping turtle / anaconda / nagaraja /\
-           merfolk javelineer band w:5 / merfolk impaler band w:5 /\
-           merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
-           vampire knight / vampire mage / large abomination /\
-           spriggan druid / spriggan rider / death cob /\
-           hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
-           chaos spawn / ice devil / sun demon / rust devil /\
-           hell hog band w:5 / alligator band w:5 / minotaur")
-  e.kmons("D = fire dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
-           ugly thing band w:5 / sphinx / iron troll /\
-           orc warlord band / yaktaur captain band w:5 /\
-           deep troll shaman band w:5 / fire giant w:20 / frost giant w:20 /\
-           hell knight band / storm dragon / glowing shapeshifter /\
-           bone dragon / stone giant / deep elf annihilator /\
-           deep elf death mage / deep elf high priest /\
-           deep elf demonologist / deep elf sorcerer / shadow dragon /\
-           titan w:5 / death knight / ettin /\
-           nagaraja / dancing weapon / dire elephant band /\
-           glass eye / vault guard / ghoul band w:5 /\
-           mummy priest / spriggan air mage / spriggan berserker /\
-           spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
-           base draconian band w:5 / daeva / angel /\
-           profane servitor / soul eater / sin beast / cherub / apis / ophan /\
-           balrug / green death / blizzard demon / deep elf blademaster /\
-           deep elf master archer / war gargoyle")
-  e.kmons("E = lich / tentacled monstrosity / golden dragon /\
-           iron dragon / quicksilver dragon / titan / acid blob /\
-           azure jelly / golden eye / ancient lich w:5 /\
-           rockslime / reaper / royal mummy w:3 / curse toe / ghost moth /\
-           killer klown / nonbase draconian w:15 /\
-           nonbase draconian band w:15 / storm dragon / shadow dragon /\
-           hellephant / balrug w:5 / deep elf blademaster / cacodemon /\
-           deep elf master archer / blizzard demon / executioner /\
-           green death / hellion / tormentor / iron elemental w:3 /\
-           death drake w:2 / hell sentinel w:2 / brimstone fiend w:2 /\
-           ice fiend w:2 / tzitzimitl w:2 / moth of wrath w:5 /\
-           balrug band w:5")
-  e.kmons("F = orb of fire / electric golem / ancient lich / royal mummy /\
-           hell sentinel / brimstone fiend / ice fiend / tzitzimitl /\
-           pandemonium lord w:20 / pearl dragon / titan")
-  e.kmons("G = goblin / frilled lizard / giant cockroach / endoplasm /\
-           ball python /\
-           bat / kobold / rat / gnoll /\
-           hobgoblin / jackal band / adder / quokka /\
-           orc / scorpion / glass eye / skeleton /\
-           zombie / river rat / ufetubus")
-  e.kmons("H = Sigmund / Jessica / Blorkula the orcula / Crazy Yiuf / Duvessa band /\
-           Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
-           Prince Ribbit")
-  e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
-           Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
-  e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
-           Nergalle / Nessos / Ilsuiw band / Xak'krixis / Polyphemus / Rupert /\
-           Saint Roka band / Snorg")
-  e.kmons("K = Louise / Arachne band / Nikola / Frederick / Boris / Margery band /\
-           Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
-  e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
-           Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
-           the Serpent of Hell")
-  e.kmons("M = stone giant / cyclops / frost giant /\
-           fire giant / ettin / deep troll / iron troll")
-  e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
-  e.kmons("O = deep elf pyromancer w:15 / deep elf zephyrmancer w:15 /\
-           deep elf annihilator / deep elf knight band / deep elf death mage /\
-           deep elf high priest / deep elf knight / deep elf sorcerer /\
-           deep elf demonologist /\
-           deep elf master archer w:3 / deep elf blademaster w:3")
+  -- The vague order goes: D / Vaults / Elf / Depths, Lair, Lair branches,
+  -- Zot, holies, undead, demons and Hells, portals and Sprint.
+  e.kmons("A = rat w:5 / river rat w:15 / quokka / bat / frilled lizard /\
+               iguana / ball python / adder / giant cockroach / ribbon worm /\
+               dart slug / scorpion / bombardier beetle / endoplasm / jelly /\
+               jackal band / hound / ice beast / sky beast / black bear /\
+               water moccasin / bullfrog / goblin / hobgoblin / kobold /\
+               kobold brigand band / gnoll band / gnoll bouda band w:6 /\
+               gnoll sergeant band w:6 / orc band / orc priest band /\
+               orc wizard band / ogre / centaur / phantom / zombie / skeleton /\
+               crimson imp / quasit / iron imp / white imp / ufetubus band /\
+               fire bat / crocodile / brain worm / weeping skull / mummy w:5")
+  e.kmons("B = steam dragon / acid dragon / blink frog band / killer bee band /\
+               hornet / sleepcap / wyvern / basilisk / manticore / elephant /\
+               komodo dragon / yak band / cane toad / hell rat / death yak /\
+               rime drake / polar bear / lindwurm / wolf band / warg /\
+               orc warrior band / wight band / troll / two-headed ogre /\
+               centaur band / gargoyle / deep elf pyromancer /\
+               wandering mushroom / sleepcap / swamp drake / bog body /\
+               tyrant leech / spriggan / naga w:5 / salamander w:5 /\
+               merfolk band w:5 / merfolk siren w:3 / snapping turtle /\
+               jumping spider / redback / culicivora / wraith / vampire /\
+               vampire mosquito band / marrowcuda / freezing wraith /\
+               guardian mummy / orange demon / ynoxinul / ice devil /\
+               red devil / burial acolyte")
+  e.kmons("C = molten gargoyle w:5 / kobold demonologist band / arcanist /\
+               rakshasa / necromancer / ugly thing / tengu warrior /\
+               catoblepas / fire crab / elephant band w:5 / dream sheep band /\
+               unseen horror / yaktaur / cyclops / deep troll / shapeshifter /\
+               fire elemental / water elemental / earth elemental / raiju /\
+               ugly thing / kobold blastminer band / orc high priest band w:5 /\
+               orc sorcerer w:5 / orc knight band / swamp dragon / hydra /\
+               black mamba / mana viper / merfolk avatar / wind drake / \
+               sea snake / tarantella / wolf spider / steelbarb worm /\
+               shadowghast / shadow wraith / small abomination /\
+               laughing skull band / skeletal warrior / thrashing horror /\
+               hell hound band w:5 / efreet w:5 / smoke demon / hellwing /\
+               chaos spawn / soul eater")
+  e.kmons("D = fire dragon w:25 / ice dragon w:25 / very ugly thing w:5 /\
+               dire elephant / torpor snail / skyshark / death yak band w:5 /\
+               meliai band / yaktaur / ogre mage band w:5 / ettin /\
+               enormous slime creature w:5 / centaur warrior band w:5 /\
+               occultist w:5 / tengu conjurer / deep elf knight /\
+               deep elf zephyrmancer / deep elf archer /\
+               glowing shapeshifter / glowing orange brain /\
+               great orb of eyes / air elemental / naga mage band w:5 /\
+               naga warrior band w:5 / naga ritualist band w:5 /\
+               naga sharpshooter / anaconda / spriggan druid / spriggan rider /\
+               shambling mangrove w:5 / alligator band / harpy band w:5 /\
+               alligator snapping turtle / formless jellyfish / water nymph /\
+               satyr band w:5 / merfolk impaler band w:5 /\
+               merfolk aquamancer w:5 / boulder beetle / pharaoh ant /\
+               radroach w:5 / jorogumo w:5 / broodmother w:5 / sun moth w:5 /\
+               entropy weaver / eye of devastation / place:Crypt:1 zombie /\
+               place:Crypt:1 skeleton / large abomination /\
+               anaconda simulacrum / alligator simulacrum / death knight /\
+               eidolon / flayed ghost / phantasmal warrior / vampire knight /\
+               vampire mage / starcursed mass / demonic crawler / neqoxec /\
+               sixfirhy / sun demon / rust devil / shadow demon /\
+               hell hog band w:5 / sin beast / death scarab / minotaur")
+  e.kmons("E = orc warlord / yaktaur captain band w:5 / vault warden /\
+               ironbound thunderhulk / ironbound frostheart /\
+               crystal guardian / fire giant w:25 / frost giant w:25 /\
+               stone giant / deep troll shaman band w:7 / hell knight band /\
+               sphinx / war gargoyle / thermic dynamo / dancing weapon /\
+               deep elf annihilator / deep elf death mage /\
+               deep elf high priest / deep elf demonologist /\
+               deep elf sorcerer / deep elf elementalist / shadow dragon /\
+               deep elf blademaster w:5 / deep elf master archer w:5 /\
+               spriggan air mage / spriggan berserker / spriggan defender /\
+               glass eye / walking divine tome / walking earthen tome /\
+               nagaraja / salamander tyrant / guardian serpent /\
+               shock serpent w:5 / thorn hunter / fenstrider witch / bunyip /\
+               will-o-the-wisp w:5 / death drake w:5 /\
+               merfolk javelineer band w:5 / orb spider w:5 /\
+               emperor scorpion / ghost moth w:5 / azure jelly / death cob /\
+               jiangshi band / ghoul band w:5 / mummy priest /\
+               base draconian w:60 / draconian monk / daeva / angel /\
+               profane servitor / cherub / apis / ophan / \
+               balrug / green death / blizzard demon / reaper / \
+               searing wretch / imperial myrmidon / halazid warlock")
+  e.kmons("F = storm dragon w:12 / shadow dragon / golden dragon w:12 /\
+               iron dragon / quicksilver dragon w:15 / spark wasp /\
+               tengu reaver / juggernaut / titan / lich /\
+               tentacled monstrosity / undying armoury w:5 /\
+               deep elf blademaster / deep elf master archer /\
+               walking frostbound tome / walking crystal tome / acid blob /\
+               rockslime / moth of wrath w:15 / ghost moth /\
+               killer klown / draconian monk w:4 / draconian stormcaller w:7 /\
+               draconian scorcher w:7 / draconian annihilator w:7 /\
+               draconian knight w:7 / ancient champion / curse skull /\
+               royal mummy w:3 / hellephant / balrug band w:5 / cacodemon /\
+               hellion / tormentor / executioner / nargun w:5 /\
+               demonspawn warmonger band w:5 / demonspawn blood saint band w:5 /\
+               demonspawn corrupter band w:5 / demonspawn soul scholar band w:5 /\
+               quicksilver elemental w:5 / putrid mouth / doom hound w:5 /\
+               bennu w:5 / fravashi w:5 / pearl dragon /\
+               primal mutant beast w:2 / iron elemental w:3")
+  e.kmons("G = caustic shrike w:5 / caustic shrike band w:5 /\
+               shard shrike w:3 / shard shrike band w:3 /\
+               orb of fire w:12 / electric golem / protean progenitor band w:6 /\
+               ancient lich w:6 / dread lich w:6 / royal mummy / curse toe w:2 /\
+               antique champion w:5 ; shadow dragon scales . kite shield . double sword /\
+               iron giant / hell sentinel w:12 / brimstone fiend / ice fiend /\
+               tzitzimitl / demonspawn corrupter w:2 / purple draconian shifter w:6 /\
+               pandemonium lord w:20 / seraph w:2")
+
+  -- FIXME: this should probably use a huge comma uniq fallbacks syntax instead,
+  --        to place more of the overall uniques over time, but for whatever
+  --        reason, this fails to place some uniques (Yiuf, Jessica, Pargi,
+  --        Ribbit, etc). Should figure out genuinely why at some point.
+  e.kmons("H = Crazy Yiuf / Duvessa band / Edmund / Ijyb /\
+               Grinder / Jessica / Menkaure / Pargi / Pikel band /\
+               Prince Ribbit / Robin band / Sigmund / Terence")
+  e.kmons("I = Amaemon / Blorkula the orcula / Erica / Erolcha / Eustachio /\
+               Fannar / Gastronok / Grum band / Harold / Jeremiah / Joseph /\
+               Josephine / Maurice / Nergalle / Lodul / Sonja / Urug")
+  e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Jorgrun /\
+               Kirke band / Nessos / Ilsuiw band / Polyphemus / Psyche /\
+               Rupert / Saint Roka band / Snorg / Xak'krixis")
+  e.kmons("K = Arachne band / Boris / Dissolution / Frederick / Jory /\
+               Josephina band / the Lernaean hydra /  Margery band / Mennas /\
+               Mara / Nikola / Grunn band / Parghit / Wiglaf / Xtahua")
+  e.kmons("L = Vv / Zenata / Khufu band / Tiamat band / Murray / Mnoleg /\
+               Gloorx Vloq / Lom Lobon / Cerebov / Dispater / Asmodeus /\
+               Antaeus / Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
+               the Serpent of Hell")
+  -- These just get occasional placements regardless of tiering for some of
+  -- the later vaults, to... reduce Lair branch gimmickry or something.
+  e.kmons("M = stone giant / frost giant / fire giant / iron troll")
+  e.kmons("N = titan / frost giant / fire giant / ettin /\
+               juggernaut / iron giant w:5 / protean progenitor w:5")
+  e.kmons("O = deep elf pyromancer w:30 / deep elf zephyrmancer w:30 /\
+               deep elf archer w:20 / deep elf knight w:20 /\
+               deep elf annihilator / deep elf death mage w:3 /\
+               deep elf high priest / deep elf sorcerer /\
+               deep elf demonologist / deep elf elementalist")
   e.kmons("P = deep elf annihilator / deep elf death mage /\
-           deep elf sorcerer / deep elf high priest / deep elf demonologist /\
-           deep elf master archer / deep elf blademaster")
-  e.kmons("Q = skeleton / zombie / skeletal warrior band /\
-           ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
-           guardian mummy / mummy priest w:5")
+               deep elf sorcerer / deep elf high priest / deep elf demonologist /\
+               deep elf elementalist / deep elf master archer / deep elf blademaster")
+  e.kmons("Q = place:Crypt:1 skeleton / place:Crypt:1 zombie / skeletal warrior band /\
+               ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
+               guardian mummy / mummy priest w:5")
   e.kmons("R = royal mummy w:3 / mummy priest / lich / ancient lich /\
-           ghoul band / skeletal warrior band / vampire knight /\
-           vampire mage band")
-  e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul /\
-           red devil / sixfirhy / chaos spawn / ice devil w:20 / sun demon /\
-           rust devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
-           balrug w:5 / cacodemon w:5 / sin beast / reaper w:5 / soul eater")
+               ghoul band / searing wretch w:3 / vampire knight band /\
+               vampire mage band / revenant / ancient champion")
+  e.kmons("S = obsidian bat / orange demon / hellwing / smoke demon /\
+               ynoxinul / red devil / sixfirhy / chaos spawn / ice devil /\
+               sun demon / rust devil / neqoxec band / green death w:5 /\
+               blizzard demon w:5 / balrug w:5 / cacodemon w:5 / sin beast /\
+               reaper w:5")
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
-           brimstone fiend / ice fiend / tzitzimitl /\
-           hell sentinel / executioner")
+               brimstone fiend / ice fiend / tzitzimitl /\
+               hell sentinel / executioner /\
+               demonspawn warmonger band w:5 / demonspawn corrupter band w:5 /\
+               demonspawn blood saint band w:5 / demonspawn soul scholar band w:5")
   e.kmons("U = place:Slime:$ / slime creature band /\
-           rockslime / azure jelly / acid blob /\
-           glass eye w:3 / void ooze w:3 / eye of devastation /\
-           golden eye w:3 / shining eye w:3")
+               rockslime / azure jelly / acid blob /\
+               glass eye w:3 / void ooze w:3 / eye of devastation /\
+               golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / rockslime / acid blob")
   e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
-           storm dragon / swamp drake / lindwurm / rime drake /\
-           shadow dragon w:5")
+               storm dragon / swamp drake / lindwurm / rime drake /\
+               shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
-           golden dragon")
+               golden dragon")
   e.kmons("Y = base draconian")
   e.kmons("Z = nonbase draconian")
   e.subst("1 = A:30 H:2")
-  e.subst("2 = B:76 A:15 C:5 I:4")
-  e.subst("3 = C:76 B:15 D:5 J:4")
-  e.subst("4 = D:71 C:20 E:5 K:4")
-  e.subst("5 = E:44 D:30 F:5 L:2 K:15")
-  e.subst("6 = F:70 E:25 L:10")
+  e.subst("2 = B:76 A:12 C:10 I:2")
+  e.subst("3 = C:76 B:5 D:15 J:4")
+  e.subst("4 = D:71 E:20 F:5 J:4")
+  e.subst("5 = E:76 D:16 F:15 K:3")
+  e.subst("6 = F:65 G:30 E:5 L:2 K:10")
+  e.subst("7 = G:70 F:25 L:10")
 end
 
+function storerooms_monster_setup(e)
+  e.kmons("0 = goblin / frilled lizard / giant cockroach / endoplasm /\
+               ball python / dart slug / bat / kobold / rat / gnoll /\
+               hobgoblin / jackal band / adder / quokka /\
+               orc / skeleton / zombie / ufetubus w:5 / crimson imp w:1")
+end
 
 function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 /\
@@ -171,15 +207,14 @@ function general_item_setup(e)
   e.kitem("* = star_item ident:all w:66 / any ident:all w:33")
   e.kitem("% = any ident:all")
   e.kitem("! = potion of heal wounds ident:all q:2 w:30 /\
-          potion of curing ident:all w:20 / potion of might ident:all /\
-          potion of haste ident:all /\
-          potion of resistance ident:all w:5 /\
-          potion of brilliance ident:all / potion of berserk rage ident:all /\
-          potion of mutation ident:all")
-  e.kitem("? = scroll of blinking ident:all / scroll of identify ident:all /\
-          scroll of fog ident:all / scroll of fear ident:all /\
-          scroll of enchant weapon ident:all q:2 /\
-          scroll of enchant armour ident:all q:2")
+               potion of curing ident:all w:20 / potion of might ident:all /\
+               potion of haste ident:all / potion of resistance ident:all w:5 /\
+               potion of brilliance ident:all /\
+               potion of berserk rage ident:all / potion of mutation ident:all")
+  e.kitem("? = scroll of blinking ident:all / any ally scroll ident:all /\
+               scroll of fog ident:all / scroll of fear ident:all /\
+               scroll of enchant weapon ident:all q:2 /\
+               scroll of enchant armour ident:all q:2")
   e.kitem(") = battleaxe plus:9 good_item ident:all /\
     battleaxe plus:7 randart ident:all /\
     executioner's axe plus:7 good_item ident:all /\
@@ -305,19 +340,14 @@ function general_setup(e)
   e.tags("no_rotate no_hmirror no_vmirror")
   e.tags("no_item_gen no_trap_gen no_pool_fixup")
   e.kfeat("& = closed_door")
+  e.kfeat("=~<>#_ = runed_door")
   e.marker("& = lua:restrict_door()")
   e.colour("& = lightgrey")
-  e.kfeat("~ = closed_door")
   e.marker("~ = lua:restrict_door()")
-  e.kfeat("< = closed_door")
   e.marker("< = lua:restrict_door()")
-  e.kfeat("> = closed_door")
   e.marker("> = lua:restrict_door()")
-  e.kfeat("# = closed_door")
   e.marker("# = lua:restrict_door()")
-  e.kfeat("_ = closed_door")
   e.marker("_ = lua:restrict_door()")
-  e.kfeat("= = closed_door")
   e.marker("= = lua:restrict_door()")
   e.colour("=~<>#_ = yellow")
   e.kfeat("@ = floor")
@@ -369,15 +399,15 @@ function steel_vault_setup(e)
            })
 end
 
-function crystal_vault_setup(e)
-  e.tags("the_vault_of_crystal")
+function titanium_vault_setup(e)
+  e.tags("the_vault_of_titanium")
   e.colour("v = red")
   e.tile("v = dngn_metal_iron")
   e.subst("4 = 4:290 M:1 O:1 Q:1 S:1 U:1 W:1 Y:1 J:1")
   e.subst("5 = 5:290 N:1 P:1 R:1 T:1 V:1 X:1 Z:1 K:1")
   e.kitem("c = any jewellery randart level:27 ident:all")
   e.lua_marker('>', props_marker {
-           door_description_suffix=" to the Crystal Vault (Extremely Hard)",
+           door_description_suffix=" to the Titanium Vault (Extremely Hard)",
            })
 end
 
@@ -386,7 +416,7 @@ function iron_vault_setup(e)
   e.colour("v = red")
   e.tile("v = dngn_metal_iron")
   e.kitem("c = any jewellery randart level:27 ident:all")
-  e.kitem("d = iron rune of zot")
+  e.kitem("d = scroll of acquirement q:1, iron rune of zot")
   e.subst("' = ))]]cc")
   e.lua_marker('~', props_marker {
            door_description_suffix=" to the Iron Vault (Extremely Hard)",
@@ -396,9 +426,10 @@ end
 function armoury_setup(e)
   e.tile("v = dngn_metal_wall_cyan")
   e.kmons("8 = orc warlord")
-  e.kmons("9 = orc knight")
-  e.kmons("0 = orc knight / vault guard / naga warrior / deep elf knight /\
-             deep elf blademaster w:1 / yaktaur captain band w:5")
+  e.kmons("9 = orc knight / orc warrior w:5")
+  e.kmons("0 = orc warrior / gargoyle / naga warrior / deep elf knight /\
+               naga sharpshooter w:5 / vault guard / yaktaur band w:5 /\
+               ironbound preserver w:5")
   e.kitem("a = any weapon level:27 ident:all /\
           broad axe plus:5 ident:all /\
           battleaxe plus:3 ident:all /\
@@ -456,10 +487,14 @@ end
 
 function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
-        deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
-        sphinx / lich / ancient lich w:3 / arcanist w:5 / occultist w:5 /\
-        ogre mage / vampire mage / naga mage / nagaraja / base draconian w:20")
-  e.kmons("9 = Frederick / Margery band / Boris / Frances")
+               deep elf demonologist / deep elf high priest /\
+               deep elf elementalist / nonbase draconian w:20 /\
+               sphinx / lich / ancient lich w:3 / dread lich w:3 /\
+               arcanist w:5 / occultist w:5 / rakshasa w:5 /\
+               tengu conjurer w:5 / ogre mage w:5 / naga mage / nagaraja /\
+               merfolk aquamancer w:5 / jorogumo w:5 / vampire mage /\
+               base draconian w:20 / demonspawn blood saint w:3")
+  e.kmons("9 = Frederick / Boris / Margery band w:5 / Sojobo band w:5")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")
   e.tile("v = wall_emerald")
@@ -489,10 +524,10 @@ function coven_setup(e)
           ring of wizardry ident:all randart")
   e.kitem("d = potion of heal wounds q:5 ident:all")
   e.kitem("e = potion of haste q:5 ident:all")
-  e.kitem("f = any wand good_item ident:all")
+  e.kitem("f = any misc")
   e.kitem("h = any magical staff ident:all")
   e.kitem("i = potion of magic q:5 ident:all")
-  e.kitem("j = potion of mutation ident:all")
+  e.kitem("j = potion of mutation q:5 ident:all")
   e.lua_marker('~', props_marker {
            door_description_suffix=" to the Coven (Very Hard)",
            })
@@ -521,7 +556,7 @@ SUBVAULT:  K : the_vestibule
 SUBVAULT:  L : the_vault_of_steel
 SUBVAULT:  N : the_golden_pit
 SUBVAULT:  P : the_hallway_of_sentries
-SUBVAULT:  R : the_vault_of_crystal
+SUBVAULT:  R : the_vault_of_titanium
 SUBVAULT:  S : the_vault_of_iron
 SUBVAULT:  Z : the_final_vault
 LFLOORTILE: floor_iron
@@ -644,15 +679,18 @@ KITEM: i = lajatang plus:0 ident:all /\
 KITEM: j = scimitar plus:2 ego:flaming ident:all /\
        scimitar plus:2 ego:holy_wrath ident:all /\
        scimitar plus:2 good_item ident:all
-KITEM: k = pair of gloves mundane ident:all /\
-       pair of boots mundane ident:all /\
-       helmet mundane ident:all /\
-       cloak mundane ident:all /\
-       chain mail plus:4 ident:all w:20 /\
-       ring mail plus:5 ident:all /\
-       scale mail plus:4 ident:all /\
-       plate armour plus:3 ident:all
-KITEM: l = ring of protection plus:3 ident:all /\
+KITEM: k = flux talisman / serpent talisman /\
+           blade talisman / maw talisman, /\
+           pair of gloves mundane ident:all /\
+           pair of boots mundane ident:all /\
+           helmet mundane ident:all /\
+           cloak mundane ident:all /\
+           chain mail plus:4 ident:all w:20 /\
+           ring mail plus:5 ident:all /\
+           scale mail plus:4 ident:all /\
+           plate armour plus:3 ident:all
+KITEM: l = any randbook slevels:14, /\
+       ring of protection plus:3 ident:all \
        ring of evasion plus:3 ident:all /\
        ring of strength plus:3 ident:all /\
        ring of intelligence plus:3 ident:all /\
@@ -665,6 +703,7 @@ TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
+: storerooms_monster_setup(_G)
 MAP
 vvvvvvvvvvvv
 vTTTTTTTTTTv
@@ -673,7 +712,7 @@ vTTTTTTTTTTv
 vvvvvvvvvv~v
 vabcd+UUU+@v
 vvvvvvvvvv.v
-v.........G@
+v.........0@
 v+vvvvv&vvvv
 v.vZZZZZZZZv
 v.vZZZZZZZZv
@@ -705,7 +744,6 @@ KITEM: c = trident plus:2 ident:all, /\
 SHUFFLE: abc
 : general_setup(_G)
 : general_item_setup(_G)
-: base_monster_setup(_G)
 MAP
 abc
 ENDMAP
@@ -734,12 +772,10 @@ KITEM: i = chain mail plus:3 ident:all w:20 /\
        plate armour plus:2 ident:all
 SHUFFLE: abcdef
 : general_item_setup(_G)
-: base_monster_setup(_G)
 MAP
 gedai
 hfcbi
 ENDMAP
-
 
 NAME:  storerooms_room_a_1
 TAGS:  storerooms_room_a unrand
@@ -747,16 +783,17 @@ SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
+: storerooms_monster_setup(_G)
 : base_monster_setup(_G)
 MAP
-GGv..G&.
-..vG..v.
+00v..0&.
+..v0..v.
 ..vvvvv.
-..&..Gv.
-..&G..&.
+..&..0v.
+..&0..&.
 ..vvvvvv
 ..&UUUUU
-G1vUUUUU
+01vUUUUU
 ENDMAP
 
 NAME:  storerooms_room_a_2
@@ -766,15 +803,16 @@ TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
+: storerooms_monster_setup(_G)
 MAP
-UUv.G..G
+UUv.0..0
 UUvvvvv&
-UUv...G.
-UUv.G...
+UUv...0.
+UUv.0...
 UUvvv&vv
-v&v....G
+v&v....0
 .1......
-..G....G
+..0....0
 ENDMAP
 
 NAME:  storerooms_room_a_3
@@ -784,15 +822,16 @@ TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
+: storerooms_monster_setup(_G)
 MAP
-.Gv..vUU
-..&GGvUU
-G.vvvvUU
-..v1GvUU
-.Gv..vUU
+.0v..vUU
+..&00vUU
+0.vvvvUU
+..v10vUU
+.0v..vUU
 v&v..v&v
-.......G
-.....G..
+.......0
+.....0..
 ENDMAP
 
 NAME:  storerooms_room_a_4
@@ -802,15 +841,16 @@ TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
+: storerooms_monster_setup(_G)
 MAP
-G..vGvUU
-..Gv.vUU
-...&GvUU
+0..v0vUU
+..0v.vUU
+...&0vUU
 v&vvvvUU
-....GvUU
-G....v&v
+....0vUU
+0....v&v
 ......1.
-....G...
+....0...
 ENDMAP
 
 NAME:  storerooms_room_a_5
@@ -820,15 +860,16 @@ TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
+: storerooms_monster_setup(_G)
 MAP
-..G..vUU
-.G...vUU
+..0..vUU
+.0...vUU
 vv&vvvUU
-G..G.vUU
+0..0.vUU
 .....vUU
 vvv&vv&v
-G......1
-G......G
+0......1
+0......0
 ENDMAP
 
 NAME:  storerooms_room_a_6
@@ -838,12 +879,13 @@ TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
+: storerooms_monster_setup(_G)
 MAP
-.Gv..vG.
-G.&G.&.G
+.0v..v0.
+0.&0.&.0
 v&vvvv&v
-...GG...
-...1G...
+...00...
+...10...
 vvvv&vvv
 ..UUUUU.
 ..UUUUU.
@@ -1292,36 +1334,34 @@ ENDMAP
 ################################################################################
 # The Steel Vault
 ################################################################################
-# 44
-# 17 '3', 24 '4', 3 '5'
+# 46 - 16 '3', 25 '4', 5 '5', 1 '6'
 NAME:   steel_vault_1
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 : steel_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v..!!!????v..+........33.........v
+v..!!!????v..+........34.........v
 v..!!!???vv..+.4......33......4..v
 v..!!!!?vv..vvvv4.....vv.....4vvvv
 v..!!vvvv..vv||vvvv........vvvv||v
 v&vvvv4....4v||.43vvvv++vvvv34.||v
 v.5.4....vv.v4........33........4v
-v..4..vv...4v5........vv........3v
+v..6..vv...4v5.......5vv5.......3v
 v.5.4....vv.v4........33........4v
 v&vvvv4....4v||.43vvvv++vvvv34.||v
 v..ccvvvv..vv||vvvv........vvvv||v
 v..cc[[(vv..vvvv4.....vv.....4vvvv
 v..cc[[((vv..+.4......33......4.@~
-v@@|[[[(((v..+........33........@~
+v@@|[[[(((v..+........34........@~
 v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 44
-# 17 '3', 24 '4', 3 '5'
+# 46 - 16 '3', 25 '4', 5 '5', 1 '6'
 NAME:   steel_vault_2
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1333,9 +1373,9 @@ vcccvv||4.....4.v.v.4.......4vv..v
 v[[[[v|44...4.vv...vv.3....43v...v
 v[[[(vv54..vvv.......vvv...3vv...v
 v((((!vvvvv.............vvvvv..v.v
-v((!!!!v........4v3.......+3..33.v
-v!!!!?.&.5.....vv3vv......v...vv.v
-v!!??..v........4v3.......+3..33.v
+v((!!!!v........5v3.......+3..43.v
+v!!!!?.&.5.6...vv3vv4.....v...vv.v
+v!!??..v........5v3.......+3..43.v
 v!??..vvvvv.............vvvvv..v.v
 v??..vv54..vvv.......vvv...3vv...v
 v?...v|44...4.vv...vv.3....43v...v
@@ -1344,11 +1384,9 @@ v@@.v|||||.......4..........34v.@~
 v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-
-# 44
-# 17 '3', 24 '4', 3 '5'
+# 46 - 16 '3', 25 '4', 5 '5', 1 '6'
 NAME:   steel_vault_3
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1361,7 +1399,7 @@ v++vvvvvvvvv..44...v....v...3...|v
 vccc(((([[[v..5v+vvv....+.......|v
 vccc((([[[[v..4v..3.....vvvvvvv.vv
 vvvvvvvvvvvv.vvv.3vv4...........4v
-v54v...v..........vv...3........4v
+v54v...v.........5vv5..3........4v
 v4.v.4............3.vv+vvvvv.vvvvv
 v..+...vvvv+vvv.v...v.....v......v
 v.4v.5.v........v............33..v
@@ -1371,10 +1409,9 @@ v@@....v||||||||v4.4v3|||4v.....@~
 v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 44
-# 17 '3', 24 '4', 3 '5'
+# 46 - 16 '3', 25 '4', 5 '5', 1 '6'
 NAME:   steel_vault_4
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1382,194 +1419,187 @@ TAGS:    unrand
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v!!!!v.4v||||||||v.44.v.34v33..44v
-v!!!!v4....v44v...........v.....4v
+v!!!!v4....v44v...........v5....4v
 v??!!v......5.............v......v
-v??!!v..v..v4.v..v....v...v....33v
+v??!!v..v..v4.v..v....v...v....34v
 v??vvv.vv........vv..vv...vv...vvv
-v??v..4..v......v..33..v.v..v.v.4v
-vc[&..5...vvvvvv...43............v
-vc[v..4..v......v..33..v.v..v.v.4v
+v??v.....v......v..33..v.v..v.v.4v
+vc[&.654..vvvvvv...43............v
+vc[v.....v......v..33..v.v..v.v.4v
 vc[vvv.vv........vv..vv...vv...vvv
-vc[[[v..v..v4.v..v....v...v....33v
+vc[[[v..v..v4.v..v....v...v....34v
 vc[((v......5.............v......v
-vc(((v4....v44v...........v.....@~
+vc(((v4....v44v...........v5....@~
 v@@((v.4v||||||||v.44.v.34v33...@~
 v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 44
-# 16 '3', 25 '4', 3 '5'
+# 46 - 16 '3', 25 '4', 5 '5', 1 '6'
 NAME:   steel_vault_5
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 : steel_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v!!!!v4...4v5......4v4....33..v..v
+v!!!!v4...4v55.....4v4....33..v..v
 v!!!!v.....v........v.........v..v
 v!!!!v.....4..3..v..4..v......v..v
-v????v4.........4v.....v4....4v33v
-v????vvv..vvv..vvv..v..vvv..vvv33v
+v????v4.........4v.....v4....4v34v
+v????vvv..vvv..vvv..v..vvv..vvv43v
 v[...v...4.........3v3...........v
-vc[..&.5...4.33.4.vvvvv..........v
+vc[..&.6...5.33.4.vvvvv..........v
 vc[[.v...4.........3v3...........v
 vc[[(vvv..vvv..vvv..v..vvv..vvv..v
 vcc[(v4.........4v.....v4....4v..v
 v.c((v.....4..3..v..4..v......v..v
 v..((v.....v........v.........v.@~
-v@@.(v4...4v5......4v4....33..v.@~
+v@@.(v4...4v55.....4v4....33..v.@~
 v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 
 ################################################################################
-# The Crystal Vault
+# The Titanium Vault
 ################################################################################
-# 47
-# 20 '4', 27 '5'
-NAME:   crystal_vault_1
-TAGS:    unrand
+# 50 - 16 '4', 30 '5', 3 '6', 1 '7'
+NAME:   titanium_vault_1
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
-: crystal_vault_setup(_G)
+: titanium_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v44v55v5......5......5v55v55v
-v44v44v.....5...5.....v44v44v
+v54v55v5......5......5v55v66v
+v44v4.v.....5...5.....v44v44v
 v++v++v..vvvvvvvvvvv..v++v++v
-v........v))))$!!!!v.......5v
-v.......5v))))$!!!!v5......4v
-v..v..v..v$$$$$$$$$&..v..v.5v
-v.......5v]]]]$ccccv5......4v
-v........v]]]]$ccccv.......5v
+v........v))))$!!!!v.......6v
+v.......5v))))$!!!!v6.....54v
+v..v..v..v$$$$$$$$$&..v..v75v
+v.......5v]]]]$ccccv6.....54v
+v........v]]]]$ccccv.......6v
 v++v++v..vvvvvvvvvvv..v++v++v
->@.v44v.....5...5.....v44v44v
->@.v44v5......5......5v55v55v
+>@.v4.v.....5...5.....v44v44v
+>@.v45v5......5......5v55v66v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 46
-# 20 '4', 26 '5'
-NAME:   crystal_vault_2
-TAGS:    unrand
+# 50 - 16 '4', 30 '5', 3 '6', 1 '7'
+NAME:   titanium_vault_2
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
-: crystal_vault_setup(_G)
+: titanium_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v54...v55vcccc$!!!!v5....454v
 v54...v..vcccc$!!!!v5....454v
 vvvv++v++vvvvv&vvvvv++v++vvvv
-v44...................5....4v
-v44...v...5...5...5...v....5v
-v..v.....v5.v555v.5v.....v.5v
-v44...v...5...5...5...v....5v
-v44...................5....4v
+v54...................6....4v
+v45...v...5...5...6...v....5v
+v..v.....v5.v555v.5v....7v.6v
+v45...v...5...5...6...v....5v
+v54...................6....4v
 vvvv++v++vvvvv&vvvvv++v++vvvv
 >@....v..v]]]]$))))v5....454v
 >@....v55v]]]]$))))v5....454v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 47
-# 20 '4', 27 '5'
-NAME:   crystal_vault_3
+# 50 - 16 '4', 30 '5', 3 '6', 1 '7'
+NAME:   titanium_vault_3
+TAGS:   unrand
 WEIGHT: 5
-TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
-: crystal_vault_setup(_G)
+: titanium_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v]]))v54..vv....5vv5...5..5.v
-v]]))&54.+v...4...vv..4..4..v
-v]]))v54+v.........vv5..5..5v
+v]]))v54..vv....5vv5...5..6.v
+v]]))&54.+v...5...vv..4..4..v
+v]]))v54+v.........vv5..5..6v
 vvvvvvvvv.....4.....vv+vv+vvv
 v44..........5v5............v
-v5.......4..4v5v4..5..5...5.v
+v5.......5..4v5v4..5..5...67v
 v44..........5v5............v
 vvvv++vvv.....4.....vvvvv++vv
-v.......vv.........vvc!!v..5v
->@......4vv...4...vvcc!!&.45v
->@......44vv5...5vvccc!!v.55v
+v.......vv.........vvc!!v..6v
+>@......4vv...5...vvcc!!&.45v
+>@......54vv5...5vvccc!!v.65v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 47
-# 20 '4', 27 '5'
-NAME:   crystal_vault_4
-TAGS:    unrand
+# 50 - 16 '4', 30 '5', 3 '6', 1 '7'
+NAME:   titanium_vault_4
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
-: crystal_vault_setup(_G)
+: titanium_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v5.4.4v5.5.5v55vcccc&.55.v))v
+v5.4.5v5.5.5v55vcccc&.66.v))v
 v.....v.....v44vccccv4444v))v
 v4.v++v++v++v++vvvvvv+vv+v))v
 v..+.....................v))v
-v4.+.....5.....5.....5...vv&v
-vvvv..v.5v5.v.5v5.v.5v5.....v
-v44+.....5.....5.....5...vv&v
+v5.+.....5.....5.....5...vv&v
+vvvv..v.5v5.v.5v5.v.5v6..7..v
+v45+.....5.....5.....5...vv&v
 v..+.....................v]]v
 v..v++v++v++v++vvvvvv+vv+v]]v
->@...4v.....v44v!!!!v4444v]]v
->@...4v5.5.5v55v!!!!&.55.v]]v
+>@...5v.....v44v!!!!v4444v]]v
+>@...4v5.5.5v55v!!!!&.66.v]]v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 47
-# 20 '4', 27 '5'
-NAME:   crystal_vault_5
+# 50 - 16 '4', 30 '5', 3 '6', 1 '7'
+NAME:   titanium_vault_5
+TAGS:   unrand
 WEIGHT: 5
-TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
-: crystal_vault_setup(_G)
+: titanium_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v]]vccccv4...5.4..4...5..555v
-v]]vccccv..................5v
-v]]vv&vvv.5.4.....vvv...5..5v
-v]]&4.............v5555v....v
+v]]vccccv4...5.4..4...6..656v
+v]]vccccv.................75v
+v]]vv&vvv.5.4.....vvv...5..6v
+v]]&5.............v5555v....v
 vvvv.........5.4..v5555v5...v
-v4...vvv....4...5....vvv...5v
-v....v5444v...5..........vvvv
-v....v4445v...4...4...4..&))v
+v4...vvv....4...5....vvv...6v
+v....v5445v...5..........vvvv
+v....v5445v...4...4...4..&))v
 v.......vvv5........vvv&vv))v
 >@..................v!!!!v))v
->@..4.....4...5..4.5v!!!!v))v
+>@..4.....5...5..4.5v!!!!v))v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 47
-# 20 '4', 27 '5'
-NAME:   crystal_vault_6
+# 50 - 16 '4', 30 '5', 3 '6', 1 '7'
+NAME:   titanium_vault_6
+TAGS:   unrand
 WEIGHT: 5
-TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
-: crystal_vault_setup(_G)
+: titanium_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-v]]+44+..+))+..+..+44+..+ccvv
-v]]+44+..+))+.5+5.+44+..+ccvv
+v]]+45+..+))+..+..+44+..+ccvv
+v]]+54+..+))+.5+5.+44+..+ccvv
 v++v++v++v++v++v++v++v++v++vv
-v..+..+45+..+45+]]+55+..+55vv
-v.5+..+54+..+54+]]+55+..+55vv
+v..+..+45+..+45+]]+55+..+56vv
+v.5+..+54+..+54+]]+56+.7+55vv
 v++v++v++v++v++v++v++v++v++vv
-v..+44+..+55+..+55+..+!!+.5vv
-v..+44+..+55+5.+55+.5+!!+5.vv
+v..+45+..+55+..+55+..+!!+.6vv
+v..+54+..+55+5.+55+.6+!!+5.vv
 v++v++v++v++v++v++v++v++v++vv
->@.+..+..+..+))+44+!!+.5+ccvv
+>@.+..+..+..+))+44+!!+.6+ccvv
 >@.+..+5.+5.+))+44+!!+5.+ccvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
@@ -1579,65 +1609,65 @@ ENDMAP
 # The Iron Vault
 ################################################################################
 # 42
-# 21 '5', 21 '6'
+# 21 '6', 21 '7'
 NAME:   iron_vault_1
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 : iron_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvv
-vv6vv5vvv5vvv6vvv5vvvv
-vv+v555+...+...+.5.+6v
-vv.+v5+vv6+vv5vvv5+vvv
-v6.6vvv6vvv6vvv.vvv.vv
-vv.v+vvvv'vvvv.5.+.5.v
-vv+vv6vv'''vvvv.vv+.vv
-vvv5vvv'''''vvv+v5vvvv
-vv565&'''d'''vv.vvv.vv
-vv+5+vv'''''vv.6.+.6.v
-v6vvv6vv'''vvv+.vv+.vv
-vvv'vvvvv'vvv6vvv6v+vv
+vv7vv6vvv6vvv7vvv6vvvv
+vv+v666+...+...+.6.+7v
+vv.+v6+vv7+vv6vvv6+vvv
+v7.7vvv7vvv7vvv.vvv.vv
+vv.v+vvvv'vvvv.6.+.6.v
+vv+vv7vv'''vvvv.vv+.vv
+vvv6vvv'''''vvv+v6vvvv
+vv676&'''d'''vv.vvv.vv
+vv+6+vv'''''vv.7.+.7.v
+v7vvv7vv'''vvv+.vv+.vv
+vvv'vvvvv'vvv7vvv7v+vv
 vvv'vvv.vvv.vvv.vvv.vv
-v''6'+.6.+.6.+.5.+.5.v
+v''7'+.7.+.7.+.6.+.6.v
 vv+'vv+.vv+.vv+.vv+.vv
-v6v'v5vvv5vvv6vvv5vv~~
+v7v'v6vvv6vvv7vvv6vv~~
 vvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 # 42
-# 21 '5', 21 '6'
+# 21 '6', 21 '7'
 NAME:   iron_vault_2
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 : iron_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvv
-vv6+v.vvv5vvv.vvv5vvvv
-vvvv.6.+.65v.6.+.6.+5v
-v6vvv.vvv.vvv.vvv5vvvv
+vv7+v.vvv6vvv.vvv6vvvv
+vvvv.7.+.76v.7.+.7.+6v
+v7vvv.vvv.vvv.vvv6vvvv
 vv+.v+v.vv+.vv+.vvv.vv
-vv6.6v.6.v555v.5.v.5.v
+vv7.7v.7.v666v.6.v.6.v
 vvv.vvv.+vv.+vv.vv+.vv
-v6v+v6vvv6v+v6v+v5v+vv
-vv+5+vv6vvv.vvv.vvv.vv
-vv565+.55v.6.+.5.v.6.v
-vvv5vvv6vv+.+vv.+v+.vv
-vvvvvvv&v6vvv6vvv6v+vv
+v7v+v7vvv7v+v7v+v6v+vv
+vv+6+vv7vvv.vvv.vvv.vv
+vv676+.66v.7.+.6.v.7.v
+vvv6vvv7vv+.+vv.+v+.vv
+vvvvvvv&v7vvv7vvv7v+vv
 vv''''''vv+.vvv.vvv.vv
-v''''''''v.6.+.5.+.5.v
+v''''''''v.7.+.6.+.6.v
 v'''d''''vv.vv+.vv+.vv
-vv''''''vvvvv5vvv5vv~~
+vv''''''vvvvv6vvv6vv~~
 vvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 # 44
-# 21 '5', 23 '6'
+# 21 '6', 23 '7'
 NAME:   iron_vault_3
-TAGS:    unrand
+TAGS:   unrand
 WEIGHT: 5
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1645,56 +1675,56 @@ WEIGHT: 5
 : iron_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvv
-vv6vv+6&''''''d''''''v
-v+vv6vvv'''''''''''''v
+vv7vv+7&''''''d''''''v
+v+vv7vvv'''''''''''''v
 vv.vv+vvvvvvvvvvvvvvvv
-v.6.+5v6v6+.+6v6vv+5vv
-vv.vvvv+v+v+v+v+v6vvvv
-vv+v.v+5+.+6+.+5+v+.vv
-v6v.6.vvvvvvvvvvvv.6.v
-vvvv.vv5+6+5v5+6vvv.vv
-v5+vvvv+vvv+vvv+v6v+vv
-v+v5+v+5+vv6+v+5+v+6vv
-v5vvv6vvv6vvv5vvv5vvvv
+v.7.+6v7v7+.+7v7vv+6vv
+vv.vvvv+v+v+v+v+v7vvvv
+vv+v.v+6+.+7+.+6+v+.vv
+v7v.7.vvvvvvvvvvvv.7.v
+vvvv.vv6+7+6v6+7vvv.vv
+v6+vvvv+vvv+vvv+v7v+vv
+v+v6+v+6+vv7+v+6+v+7vv
+v6vvv7vvv7vvv6vvv6vvvv
 vv+.vvv.vvv.vvv.vvv.vv
-vv.6.+.6.+.5.+.5.+.5.v
+vv.7.+.7.+.6.+.6.+.6.v
 vv+.vv+.vv+.vv+.vv+.vv
-v5vvv5vvv5vvv6vvv5vv~~
+v6vvv6vvv6vvv7vvv6vv~~
 vvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 # 43
-# 21 '5', 22 '6'
+# 21 '6', 22 '7'
 NAME:   iron_vault_4
-TAGS:    unrand
+TAGS:   unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 : iron_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvv
-vv6vvv6vvv6vvv6vvvvvvv
-vvv+.+vv.+vv6+vv''''vv
-v6+.65+565+.6.&''''''v
-vvvv.vvv.vvv6vv''d'''v
-v5vv+vvv+vvvvvv''''''v
-vvvv5vvv5vvv.vvv''''vv
-v6+.6.+.5.+.6.vvvvvvvv
-v+vv5vvv5vvv.vvv5+v.vv
-vv6vvv6v+v5vvv6vvv.6.v
+vv7vvv7vvv7vvv7vvvvvvv
+vvv+.+vv.+vv7+vv''''vv
+v7+.76+676+.7.&''''''v
+vvvv.vvv.vvv7vv''d'''v
+v6vv+vvv+vvvvvv''''''v
+vvvv6vvv6vvv.vvv''''vv
+v7+.7.+.6.+.7.vvvvvvvv
+v+vv6vvv6vvv.vvv6+v.vv
+vv7vvv7v+v6vvv7vvv.7.v
 v+v+.vv+.vv+.vv+.+v.vv
-v6v.6.+555v.6.v.5.v+vv
+v7v.7.+666v.7.v.6.v+vv
 vv+v.vvv.vvv.+vv.vv.vv
-vv.vvv5vvv.vvv.+vv.5.v
-v.6.+.5.+.5.+.6.vv+.vv
-vv.vvv5vvv.vvv.vv5vv~~
+vv.vvv6vvv.vvv.+vv.6.v
+v.7.+.6.+.6.+.7.vv+.vv
+vv.vvv6vvv.vvv.vv6vv~~
 vvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 # 42
-# 20 '5', 22 '6'
+# 20 '6', 22 '7'
 NAME:   iron_vault_5
-TAGS:    unrand
+TAGS:   unrand
 WEIGHT: 5
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1702,21 +1732,21 @@ WEIGHT: 5
 : iron_vault_setup(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvv
-vvvvv5vvvv+v+..vv6vvvv
-v6+6vv+vv5v6vv..+vv6vv
-vvvv+vv6vvvvv+v..v+vvv
-v6v6v6vv+vv6v5vv..vv5v
-vv+vvv+v5.+vvvv+v..+vv
-v6v6v5v.vv5v5v6vvv..vv
-vv+vvvvv..vvv+vv5vv.5v
-vv6vv6v.vv..+5vvv+v.5v
-v656vv+v5.vvvvv6vv..vv
-vv6vv5v+vv+6v5vv+..vvv
-vv&vvvv6v5vvvv+v..+vvv
-v'''''vvvvvv6vv..vv5vv
-v''''''vvv5vv+..v+vv+v
-v'''d'''vvv+v..+vv5v.v
-v''''''''vvv..vv5vvv~~
+vvvvv6vvvv+v+..vv7vvvv
+v7+7vv+vv6v7vv..+vv7vv
+vvvv+vv7vvvvv+v..v+vvv
+v7v7v7vv+vv7v6vv..vv6v
+vv+vvv+v6.+vvvv+v..+vv
+v7v7v6v.vv6v6v7vvv..vv
+vv+vvvvv..vvv+vv6vv.6v
+vv7vv7v.vv..+6vvv+v.6v
+v767vv+v6.vvvvv7vv..vv
+vv7vv6v+vv+7v6vv+..vvv
+vv&vvvv7v6vvvv+v..+vvv
+v'''''vvvvvv7vv..vv6vv
+v''''''vvv6vv+..v+vv+v
+v'''d'''vvv+v..+vv6v.v
+v''''''''vvv..vv6vvv~~
 vvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
@@ -1738,11 +1768,11 @@ MAP
             v........2.3.............3.2.......v
             v..vvvvvvvvvvvvvv##vvvvvvvvvvvvvv..v
             v2.vaavaavccccv......vddddvbbvbbv..v
-            v..vaavaavv&&vv......vv&&vvbbvbbv.2v
+            v..vaavaavv&&vv......vv&&vvbbvbbv.3v
 vvvv        v.3v.....v0030v3....3v0300v.....v..v
-v..v        v..v..vvvv....vvv..vvv....vvvv..v3.v
+v..v        v..v..vvvv....vvv..vvv....vvvv..v4.v
 v..v        v2.v..&4....................4&..v..v
-_@.v        v..v..vvvv................vvvv..v.2v
+_@.v        v..v..vvvv................vvvv..v.3v
 _@.vvvvvvvvvv..v.....v..vvvv9999vvvv..v.....v..v
 v......22......vaavaav..veev9889vffv..vbbvbbv..v
 v..............vaavaav00&eevv99vvff&00vbbvbbv@@v
@@ -1761,11 +1791,11 @@ MAP
             v........2.3.............3.2.......v
             v..vvvvvvvvvvvvvv##vvvvvvvvvvvvvv..v
             v2.vaa&030&aav........vbb&030&bbv..v
-            v..vaav...vaav3......3vbbv...vbbv.2v
+            v..vaav...vaav3......3vbbv...vbbv.3v
 vvvv        v.3vvvv...vvvvvvv..vvvvvvv...vvvv..v
-v..v        v..v.........v........v.........v3.v
+v..v        v..v.........v........v.........v4.v
 v..v        v2.v4..........................4v..v
-_@.v        v..v.0...0...v99999999v...0...0.v.2v
+_@.v        v..v.0...0...v99999999v...0...0.v.3v
 _@.vvvvvvvvvv..vv&vvv&vv.vvvv88vvvv.vv&vvv&vv..v
 v......22......vaaaavccv.veevvvvffv.vddvbbbbv..v
 v..............vaaaavccv0&eevvvvff&0vddvbbbbv@@v
@@ -1785,11 +1815,11 @@ MAP
             v........2.3.............3.2.......v
             v..vvvvvvvvvvvvvv##vvvvvvvvvvvvvv..v
             v2.vaaavcvev3v........v3vfvdvbbbv..v
-            v..vavavcvev.v.v....v.v.vfvdvbvbv.2v
+            v..vavavcvev.v.v....v.v.vfvdvbvbv.3v
 vvvv        v.3vaaavcvev............vfvdvbbbv..v
-v..v        v..vv.vvcvev.v.v....v.v.vfvdvv.vv3.v
+v..v        v..vv.vvcvev.v.v....v.v.vfvdvv.vv4.v
 v..v        v2.vaaav&v&v............v&v&vbbbv..v
-_@.v        v..vavav040v.v.v....v.v.v040vbvbv.2v
+_@.v        v..vavav040v.v.v....v.v.v040vbvbv.3v
 _@.vvvvvvvvvv..vaaav........9999........vbbbv..v
 v......22......v&vvv.v.v.v.v9889v.v.v.v.vvv&v..v
 v..............v0......v030v9999v030v......0v@@v
@@ -1930,7 +1960,7 @@ v...................@<
 v..vvv+vvv+vvv+v+vv..v
 v..+v.v.v.v3v.v.v.v..v
 v..v.v2v2v3v3v2v2v+..v
-v..+v3v3v4v3v4v3v3v..v
+v..+v3v3v4v5v4v3v3v..v
 v..v.v2v2v3v3v2v2v+..v
 v..vv.v.v.v3v.v.v.v..v
 v..v+vvv+vvv+vvv+vv..v
@@ -1955,7 +1985,26 @@ TILE:   v = dngn_metal_wall_cyan
 :           })
 MAP
 v~v
+v6v
+v&v
+v7v
+v&v
+v6v
+v&v
+v7v
+v&v
+v6v
+v&v
+v7v
+v&v
 v5v
+575
+565
+v7v
+v&v
+v6v
+v&v
+v7v
 v&v
 v6v
 v&v
@@ -1964,25 +2013,6 @@ v&v
 v6v
 v&v
 v5v
-v&v
-v6v
-v&v
-v5v
-464
-464
-v5v
-v&v
-v5v
-v&v
-v6v
-v&v
-v5v
-v&v
-v6v
-v&v
-v5v
-v&v
-v6v
 v<v
 ENDMAP
 
@@ -2002,11 +2032,11 @@ TILE:   v = dngn_metal_wall_blue
 MAP
 vvvvvvvvvv>>vvvvvvv
 vvvv......@@...vvvv
-vv....5.....5....vv
-v..4...........5..v
+vv....6.....6....vv
+v..5...........7..v
 v........5........v
-v..4...........5..v
-vv....4.....5....vv
+v..5...........6..v
+vv....5.....6....vv
 vvvv.@@........vvvv
 vvvvv~~vvvvvvvvvvvv
 ENDMAP
@@ -2018,35 +2048,37 @@ ENDMAP
 ################################################################################
 # The Silver Pit
 ################################################################################
-NAME:   silver_pit
-TAGS:   the_silver_pit unrand
-KITEM:  2ABCDE = silver rune of zot
-KITEM:  1abcde = superb_item ident:all w:66 / star_item ident:all w:33 /\
-        any ident:all w:133
-NSUBST: + = 1:& / *:v
-KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
-        orc sorcerer / orc high priest
-KMONS:  A = orc warlord
-KMONS:  b = ogre / two-headed ogre / troll / deep troll /\
-        iron troll w:5 / deep troll / ogre mage w:5 /\
-        cyclops / stone giant w:5 / ettin w:5
-KMONS:  B = titan
-KMONS:  c = human / arcanist w:5 / occultist w:5 / / hell knight /\
-        vault guard / necromancer
-KMONS:  C = Frederick, Louise, Rupert
-KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
-        vampire / vampire mage / vampire knight / ghoul w:5 /\
-        skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
-        freezing wraith w:3 / flayed ghost
-KMONS:  D = lich
-KMONS:  e = hydra w:20 / swamp dragon / acid dragon / steam dragon /\
-        catoblepas / dire elephant / rime drake / lindwurm / komodo dragon /\
-        basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
-KMONS:  E = golden dragon
-SUBST:  1 : a, 2 : A
+NAME:    silver_pit
+TAGS:    the_silver_pit unrand
+KMONS:   a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
+             orc sorcerer / orc high priest
+KMONS:   A = orc warlord
+KMONS:   b = ogre / two-headed ogre / troll / deep troll /\
+             iron troll w:5 / deep troll / ogre mage w:5 /\
+             cyclops / stone giant w:5 / ettin w:5
+KMONS:   B = titan
+KMONS:   c = human w:20 / arcanist / occultist / hell knight w:15 /\
+             vault guard w:20 / necromancer / ironbound preserver /\
+             ironbound frostheart w:1
+KMONS:   C = Frederick, Louise, Rupert, vault warden
+KMONS:   d = burial acolyte w:5 / place:Crypt:$ zombie w:15 /\
+             place:Crypt:$ skeleton w:15 / simulacrum w:15 / vampire /\
+             vampire mage / jiangshi w:3 / ghoul w:5 /\
+             skeletal warrior w:20 / lich w:3 / wraith w:3 /\
+             freezing wraith w:3 / phantasmal warrior w:3 / flayed ghost
+KMONS:   D = lich
+KMONS:   e = wyvern / acid dragon / steam dragon / basilisk / rime drake /\
+             lindwurm / komodo dragon / alligator / hydra w:20 / swamp dragon /\
+             swamp drake / fire dragon w:5 / ice dragon w:5
+KMONS:   E = golden dragon
+KITEM:   2ABCDE = scroll of acquirement q:1, silver rune of zot
+KITEM:   1abcde = superb_item ident:all w:66 / star_item ident:all w:33 /\
+         any ident:all w:133
+NSUBST:  + = 1:& / *:v
+SUBST:   1 : a, 2 : A
 SHUFFLE: aA / bB / cC / dD / eE
-COLOUR: v = yellow
-TILE:   v = wall_lab_metal
+COLOUR:  v = yellow
+TILE:    v = wall_lab_metal
 : general_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
@@ -2071,23 +2103,25 @@ ENDMAP
 ################################################################################
 NAME:   golden_pit
 TAGS:   the_golden_pit unrand
-KITEM:  2ABCD = golden rune of zot
-KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
-        any ident:all w:33
 KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
-KMONS:  A = titan
-# I'm sorry if you get an undead pit here
-KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\
-        ancient lich w:5 / vampire knight / mummy priest / lich /\
-        royal mummy / bone dragon / ghoul / skeletal warrior /\
-        guardian mummy
-KMONS:  B = ancient lich
-KMONS:  c = fire dragon / ice dragon / shadow dragon / iron dragon w:5 /\
-        quicksilver dragon w:5 / golden dragon / swamp dragon /\
-        hydra
-KMONS:  C = quicksilver dragon
-KMONS:  d = angel / daeva / fravashi / cherub
-KMONS:  D = pearl dragon
+KMONS:  A = iron giant
+# Honestly, the non-giant ones are awful. Suffer.
+KMONS:  b = ushabti w:5 / place:Crypt:$ zombie w:20 /\
+            place:Crypt:$ skeleton w:20 / place:Crypt:$ simulacrum w:20 /\
+            lich / ancient lich w:5 / revenant w:5 / vampire knight /\
+            bone dragon / ghoul / ancient champion w:5 /\
+            guardian mummy / mummy priest / royal mummy
+KMONS:  B = dread lich
+KMONS:  c = saltling w:25 / peacekeeper w:20 / crystal guardian w:15 /\
+            molten gargoyle w:5 / dancing weapon w:1 /\
+            guardian serpent w:5 / servant of whispers / \
+            imperial myrmidon / ragged hierophant w:20 / halazid warlock w:5
+KMONS:  C = Zenata, halazid warlock
+KMONS:  d = angel / daeva w:15 / cherub / fravashi w:1 / pearl dragon w:1
+KMONS:  D = seraph
+KITEM:  2ABCD = scroll of acquirement q:3, golden rune of zot
+KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
+                any ident:all w:33
 NSUBST: + = 1:& / *:v
 SUBST:  1 : a, 2 : A
 SHUFFLE: aA / bB / cC / dD
@@ -2114,13 +2148,14 @@ ENDMAP
 ################################################################################
 # The Final Vault
 ################################################################################
-# 65
-# ~13 '7', 13 '6', ~12 '0', 4 '5', 23 '9'
+# 65?
+# ~19 '7', ~20 '6', 23 '9'
 NAME:    final_vault
 TAGS:    the_final_vault unrand
 KMONS:   98 = patrolling orb guardian
 KITEM:   8 = orb of zot
-SUBST:   0 = 65., 7 = 5.
+KFEAT:   8 = orb dais
+SUBST:   0 = 7776.., Z = 6.
 COLOUR:  v = lightmagenta
 TILE:    v = dngn_metal_wall_magenta
 : general_setup(_G)
@@ -2132,19 +2167,19 @@ TILE:    v = dngn_metal_wall_magenta
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvv.......vvvvvvv...............vvvvvvv........vvvv
-vvvv...6.6...vvvvv.................vvvvv.....7....vvv
-vvv...........vvv.....vvv999vvv.....vvv..7......7..vv
-vv..5...6...5..v....vvv.......vvv....v......7.....0.v
-vv....0...0........vv...0...0...vv...v0.7.....7.....v
-vv6.....9....0....vv..0.......0..vv..v....7.....7.7.v
-vv..0..999........v.....7...7.....v..9......6.......v
-vv6...99899.0.....v.7.6...6...6.7.v..9.7.7.....7.7..v
-vv..0..999........v.....7...7.....v..9.....7.7......v
-vv6.....9....0....vv..0.......0..vv..v..7......7....v
-vv....0...0........vv...0...0...vv...v............7.v
-vv..5...6...5..v....vvv.......vvv....v....7...7.....v
+vvvv...7.7...vvvvv.................vvvvv.....Z....vvv
+vvv...........vvv.....vvv999vvv.....vvv..Z......Z..vv
+vv..6...7...6..v....vvv.......vvv....v......Z.....0.v
+vv....0...0........vv...0...0...vv...v0.Z.....Z.....v
+vv7.....9....0....vv..0.......0..vv..v....Z.....Z.Z.v
+vv..0..999........v.....Z...Z.....v..9......7.......v
+vv7...99899.0.....v.Z.7...7...7.Z.v..9.Z.Z.....Z.Z..v
+vv..0..999........v.....Z...Z.....v..9.....Z.Z......v
+vv7.....9....0....vv..0.......0..vv..v..Z......Z....v
+vv....0...0........vv...0...0...vv...v............Z.v
+vv..6...7...6..v....vvv.......vvv....v....Z...Z.....v
 vvv...........vvv.....vvv999vvv.....vvv............vv
-vvvv...6.6...vvvvv.................vvvvv...9999...vvv
+vvvv...7.7...vvvvv.................vvvvv...9999...vvv
 vvvvv.......vvvvvvv...............vvvvvvv...@@...vvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv~~vvvvvvv
 ENDMAP
