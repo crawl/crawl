@@ -695,6 +695,17 @@ mon_holy_type mons_class_holiness(monster_type mc)
     return smc->holiness;
 }
 
+const char* intelligence_description(mon_intel_type intel)
+{
+    switch (intel)
+    {
+    case I_BRAINLESS:   return "Mindless";
+    case I_ANIMAL:      return "Animal";
+    case I_HUMAN:       return "Human";
+    default:            return "Eggplantelligent";
+    }
+}
+
 bool mons_class_is_stationary(monster_type mc)
 {
     return mons_class_flag(mc, M_STATIONARY);

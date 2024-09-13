@@ -436,6 +436,18 @@ LUAFN(moninf_get_holiness)
         PLUARET(string, holiness_description(mi->holi).c_str());
 }
 
+/*** Get the monster's intelligence.
+ * Returns a string describing the intelligence level of the monster. Possible
+ * descriptions: "Mindless", "Animal", or "Human"
+ * @treturn string
+ * @function intelligence
+ */
+LUAFN(moninf_get_intelligence)
+{
+    MONINF(ls, 1, mi);
+    PLUARET(string, intelligence_description(mi->intel()));
+}
+
 /*** Get the monster's average depth of (random) generation in the current branch
  * Returns -1 if the monster is not generated in this branch. Does not handle
  * fish or zombies.
@@ -842,6 +854,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_firewood),
     MIREG(stabbability),
     MIREG(holiness),
+    MIREG(intelligence),
     MIREG(attitude),
     MIREG(threat),
     MIREG(is_caught),
