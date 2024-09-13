@@ -4932,17 +4932,6 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
-static const char* _get_int_desc(mon_intel_type intel)
-{
-    switch (intel)
-    {
-    case I_BRAINLESS:   return "Mindless";
-    case I_ANIMAL:      return "Animal";
-    case I_HUMAN:       return "Human";
-    default:            return "Eggplantelligent";
-    }
-}
-
 static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
@@ -6142,7 +6131,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         pr.AddCell(); // ensure alignment
     pr.AddCell("Class", uppercase_first(holi).c_str());
     pr.AddCell("Size", size_desc.c_str());
-    pr.AddCell("Int", _get_int_desc(mi.intel()));
+    pr.AddCell("Int", intelligence_description(mi.intel()));
     if (mi.is(MB_SICK) || mi.is(MB_NO_REGEN))
         pr.AddCell("Regen", "None");
     else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION))

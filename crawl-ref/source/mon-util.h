@@ -262,6 +262,8 @@ const char * single_holiness_description(mon_holy_type holiness);
 string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
+const char * intelligence_description(mon_intel_type intel);
+
 void discover_mimic(const coord_def& pos);
 void discover_shifter(monster& shifter);
 
