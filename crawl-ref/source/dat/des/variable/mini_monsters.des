@@ -258,7 +258,9 @@ KMONS:   4 = thrashing horror
 KITEM:   ' = stone no_pickup q:1 w:5 / nothing
 SHUFFLE: ABCDEF / ABCDEF / ABCCBA, ABC, DEF, 13 / 13 / 31, {`
 :  if you.in_branch("Abyss") then
+:    if you.depth() ~= dgn.br_depth(you.branch()) then
 KFEAT:   04 = abyssal_stair
+:    end
 SUBST:   G = BEG, C : x:5 cvb, B : x:5 cvbw, A : xcvb w:4
 SUBST:   D: x:5 cvb, E : x:5 cvbw, F : xcvb w:4, { = '
 SUBST:   0 = 4:50 0
