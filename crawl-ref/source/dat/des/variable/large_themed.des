@@ -499,7 +499,7 @@ ITEM:   battleaxe good_item no_pickup / plate armour good_item no_pickup / \
         kite shield good_item no_pickup / manual of invocations / \
         $ q:50 no_pickup w:30
 KFEAT:  C = altar_beogh
-KFEAT:  e = cache of fruit / cache of meat
+KFEAT:  e = cache of fruit / cache of meat / cache of baked goods
 SUBST:  e : e$
 MAP
 xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
@@ -548,7 +548,7 @@ CLEAR:  x
 MONS:   gnoll, yak, death yak, yaktaur, minotaur
 SUBST:  d : d.
 : end
-KFEAT:  d = cache of fruit
+KFEAT:  d = cache of fruit / cache of baked goods w:4
 MAP
 .........@....wwwwwwwwwwwwwwwwwxx
 .ccccc.......ww....wwwwwwwwwwwwxx
@@ -1065,12 +1065,13 @@ MONS:   tengu reaver / deep elf annihilator / deep elf sorcerer \
         / deep elf demonologist / lich
 MONS:   ancient lich / dread lich
 : end
+KFEAT:  g = cache of baked goods
 KFEAT:  _ = altar_sif_muna
 KFEAT:  D = U
 SUBST:  U = U:4 V:1 T:1
 COLOUR: c" = lightblue
 TILE:   c = dngn_stone_wall_blue
-FTILE:  .+def12Ubc|* = floor_crystal_squares
+FTILE:  .+def123TUVbc|* = floor_crystal_squares
 FTILE:  "_ = floor_marble
 MAP
                 xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1088,7 +1089,7 @@ MAP
   xcccccf...cc...fccccccccw..wccccccccccc
   xccccc.bb.cc.bb.ccccccccc++cccccccccccc
   xccccc..1.cc.1..cccwwwwwwWWwwwcccwwwwwc
-  xcccccccc+cc+ccccccwbb..1..bbwcccdd.eec
+  xcccccccc+cc+ccccccwbb..1..bbwcccddgeec
 ''cccc..............cwb...U...bwccccc+ccc
 'Dc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
 @'+..c..............cw.."""""..wccc..b.3c
@@ -1096,7 +1097,7 @@ MAP
 @'+..c..............cw.."""""..wccc..b.3c
 'Dc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
 ''cccc..............cwb...U...bwccccc+ccc
-  xcccccccc+cc+ccccccwbb..1..bbwcccee.ddc
+  xcccccccc+cc+ccccccwbb..1..bbwccceegddc
   xccccc..c....c..cccwwwwwwwwwwwcccwwwwwc
   xcccccU.+1bb1+.Uccccccccccccccccccccccc
   xcccccf.c....c.fccccccccccccccccccccccc
@@ -1514,7 +1515,7 @@ FTILE:  GU = floor_depthstone
 : end
 KMONS:  p = plant
 KMONS:  P = fungus
-KFEAT:  C = cache of fruit / cache of meat
+KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
 KFEAT:  ~ = w
 NSUBST: H = 3:* / 7:1 / 3 = CC""" / *:"
 NSUBST: . = 2:9 / 5:p / *:., q = 3:1 / 6:P / *:"

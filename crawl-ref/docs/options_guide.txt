@@ -1787,10 +1787,10 @@ show_blood = true
 
 food_snacking_frequency = 40
         Controls the frequency of producing flavour messages when walking on a
-        cache of fruit or meat, with the number corresponding to a percent
-        chance. As one would expect, 100% means always, 0% means never, and
-        the default 40% means two-fifths of the time. Unless the frequency is
-        set to 100%, the chance is lowered to a fourth if there are hostile
+        cache of fruit, meat, or baked goods, with the number corresponding to a
+        percent chance. As one would expect, 100% means always, 0% means never,
+        and the default 40% means two-fifths of the time. Unless the frequency
+        is set to 100%, the chance is lowered to a fourth if there are hostile
         enemies in sight in most situations.
 
 fountain_line_frequency = 40

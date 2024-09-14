@@ -3285,14 +3285,15 @@ void _walk_on_decor(dungeon_feature_type new_grid)
     int frequency = 0;
     bool peaceful = !there_are_monsters_nearby(true, false);
 
-    if (new_grid == DNGN_CACHE_OF_FRUIT)
+    if (feat_is_food(new_grid))
     {
-        messageLookup += "fruit cache";
-        frequency = Options.food_snacking_frequency; // default 40%
-    }
-    else if (new_grid == DNGN_CACHE_OF_MEAT)
-    {
-        messageLookup += "meat cache";
+        if (new_grid == DNGN_CACHE_OF_FRUIT)
+            messageLookup += "fruit cache";
+        else if (new_grid == DNGN_CACHE_OF_MEAT)
+            messageLookup += "meat cache";
+        else if (new_grid == DNGN_CACHE_OF_BAKED_GOODS)
+            messageLookup += "baked goods cache";
+
         frequency = Options.food_snacking_frequency; // default 40%
     }
     else if (feat_is_fountain(new_grid))

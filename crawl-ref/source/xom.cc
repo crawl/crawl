@@ -2196,9 +2196,10 @@ static void _xom_place_decor()
     bool success = false;
     int aby = player_in_branch(BRANCH_ABYSS) ? 0 : 1;
     dungeon_feature_type decor = random_choose_weighted(10, DNGN_ALTAR_XOM,
-                                                        5, DNGN_TRAP_TELEPORT,
+                                                        7, DNGN_TRAP_TELEPORT,
                                                         2, DNGN_CACHE_OF_FRUIT,
                                                         2, DNGN_CACHE_OF_MEAT,
+                                                        2, DNGN_CACHE_OF_BAKED_GOODS,
                                                         1, DNGN_CLOSED_DOOR,
                                                         1, DNGN_OPEN_DOOR,
                                                         aby, DNGN_ENTER_ABYSS);
@@ -2286,11 +2287,14 @@ static void _xom_change_scenery(int /*sever*/)
             break;
         case DNGN_CACHE_OF_FRUIT:
         case DNGN_CACHE_OF_MEAT:
+        case DNGN_CACHE_OF_BAKED_GOODS:
             if (x_chance_in_y(food_swapped, 3))
                 continue;
 
             if (env.grid(pos) == DNGN_CACHE_OF_FRUIT)
                 env.grid(pos) = DNGN_CACHE_OF_MEAT;
+            else if (env.grid(pos) == DNGN_CACHE_OF_MEAT)
+                env.grid(pos) = DNGN_CACHE_OF_BAKED_GOODS;
             else
                 env.grid(pos) = DNGN_CACHE_OF_FRUIT;
             set_terrain_changed(pos);

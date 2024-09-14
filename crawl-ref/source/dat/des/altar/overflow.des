@@ -2129,6 +2129,7 @@ TAGS:   no_pool_fixup transparent
 KFEAT:  _ = altar_okawaru
 : if you.in_branch("Depths") then
 KMONS:  1 = spriggan defender ; demon trident . robe . boomerang
+KFEAT:  1 = cache of baked goods
 :else
 KMONS:  1 = goblin ; spear
 :end

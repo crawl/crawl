@@ -20,8 +20,9 @@ NAME:    spriggan_forest
 TAGS:    no_pool_fixup uniq_d_encompass
 ORIENT:  encompass
 MONS:    spriggan ; sling . spear | rapier . robe . buckler, spriggan rider
-MONS:    spriggan druid, spriggan berserker, spriggan air mage
-MONS:    spriggan defender, the Enchantress
+MONS:    spriggan druid, spriggan berserker
+MONS:    spriggan air mage, spriggan defender
+KMONS:   7 = the Enchantress
 KMONS:   0 = spark wasp / caustic shrike w:1 / stone giant w:5 / \
              tengu warrior band / tengu conjurer band / \
              rakshasa / occultist w:5 / deep troll w:5 / \
@@ -31,7 +32,7 @@ KMONS:   9 = ettin ; giant club randart . giant club randart / \
              tengu reaver w:5 / juggernaut w:5
 KMONS:   J = caustic shrike skeleton
 KMONS:   K = spriggan rider
-KMONS:   L = spriggan ; robe . dagger
+KMONS:   L = spriggan col:white name:baker n_suf ; robe . dagger
 KMONS:   M = death yak / thorn hunter w:5
 KMONS:   N = spriggan ; quarterstaff . robe
 KMONS:   O = dire elephant / emperor scorpion / anaconda w:5
@@ -40,6 +41,7 @@ KMONS:   R = plant
 KFEAT:   ~ = +
 KFEAT:   u = t
 KFEAT:   Ff = cache of fruit
+KFEAT:   B7 = cache of baked goods
 ITEM:    dagger / short sword / rapier / flail / whip / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
 KFEAT:   _ = altar_trog
@@ -65,8 +67,8 @@ tC.4C...Ttttttt.t..tttttttttttttttttttttc-6-c6--6c$*|ctT..C.1.+....+.%CT.TT.tttt
 tCCCCt.Tttttt..tttt........tttttttttttttc7--~----~$*|ctt..CCCCC....CCCC.TT.Ttttt
 tttT..tttttt.tttttttttttttt.ttttttttttttc-6-c6--6c$*|cttQ..................ttttt
 ttTPTTtttt...ttttttttttttttt..ttttttttttcccccc~~ccccccttttCCCCC....CCCC......ttt
-ttTTtttttt..ttttttttttttttttt.ttttttttttceeec....cdddcttttCfxLC....C1%C.....tttt
-tttttttt...ttttttttttttttttttt.tttttttttceee~..1.~dddcttttCF$.+....+.5C..1...ttt
+ttTTtttttt..ttttttttttttttttt.ttttttttttceeec....cdddcttttCBxLC....C1%C.....tttt
+tttttttt...ttttttttttttttttttt.tttttttttceee~..1.~dddcttttCB$.+....+.5C..1...ttt
 tttttt.tttt..ttttttttttttttttt.tttttttttceeec1...cdddcttttCCCCC....CCCC...1.tttt
 tttttt.ttttt.tttttttttttttt.....ttttttttcccccc++ccccccttttt...................tt
 ttttt.ttttt..ttttttttttt...tttT..tttttttcR.....1....RcCCCCCCCCC....Y.........ttt

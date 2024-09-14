@@ -1228,7 +1228,7 @@ ITEM:   good_item ice dragon scales w:3 /\
         good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
         good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
         good_item quicksilver dragon scales w:3
-KFEAT:  C = cache of fruit
+KFEAT:  C = cache of fruit / cache of baked goods w:4
 KFEAT:  D = deep_water
 SUBST:  C : CC., ! = t:20 x c:3, - = t c:30 x
 NSUBST: ' = 20 = 1... / 2 = 2... / *:.

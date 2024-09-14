@@ -679,7 +679,8 @@ bool feat_is_fountain(dungeon_feature_type feat)
 bool feat_is_food(dungeon_feature_type feat)
 {
     return feat == DNGN_CACHE_OF_FRUIT
-           || feat == DNGN_CACHE_OF_MEAT;
+           || feat == DNGN_CACHE_OF_MEAT
+           || feat == DNGN_CACHE_OF_BAKED_GOODS;
 }
 
 /** Is this feature non-solid enough that you can reach past it?

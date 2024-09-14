@@ -133,6 +133,10 @@ Xom [offers|fetches] you some snacks.
 
 Xom prepares a banquet formed from your trail of carnage through the Dungeon.
 %%%%
+Xom scenery cache of baked goods
+
+Xom offers some snacks, fresh out of the oven.
+%%%%
 Xom scenery enter_abyss
 
 Xom suggests a refreshing change of pace.

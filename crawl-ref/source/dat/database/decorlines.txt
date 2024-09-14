@@ -374,6 +374,10 @@ meat cache
 
 You reach down and sample @_meat_and_reaction_@
 %%%%
+baked goods cache
+
+You reach down and sample @_baked_good_and_reaction_@
+%%%%
 _fruit_and_reaction_
 
 # Old fruits.
@@ -451,11 +455,65 @@ some shrike confit. Tangy!
 
 w:2
 a century hydra egg. An acquired taste.
+
+%%%%
+_baked_good_and_reaction_
+
+# Most of these overall are fudging old preferences to keep Crawl in-world
+# flavour a couple hundred years back on average, but there's only so far
+# back many cookbooks go, and most of these are at least a hundred years old.
+# It's probably fine for here for most contexts, though keeping at least
+# some consistency for countries of origin is preferred.
+w:24
+some spriggan [bread loaf|tarts|rock buns|scones|biscuits|hardtack]. Delicious.
+
+# Highly widespread choices to match varied orcish backgrounds.
+w:14
+an orcish [pirog|pastel de nata|bizcocho]. Tasty.
+
+w:14
+some elven [shortbread|rye rolls]. Refined.
+
+some merfolk [baklava|tsoureki]. Decadent.
+
+a stuffed naga paratha. Phenomenal.
+
+# Would be good to find earlier french names for long bread....
+a draconian baguette. Hearty and warming.
+
+w:6
+some [dwarven|kobold|kobold] pretzels. Scrumptious.
+
+w:6
+some choko cake. Less bland than expected!
+
+w:2
+some [trollish|giant|giant] [wittenberger|grovbrød]. Savory.
+
+w:2
+some tengu anpan. Delightful.
+
+w:2
+some ghoulish sourdough. A strange taste.
+
+w:2
+some vault guards' spare rations. Filling.
+
+w:2
+a strangely fresh circus pie. Mirthful.
+
+w:2
+some starflower jam biscuits. A disquieting taste.
 ########################## Shared diets ######################################
 %%%%
 carnivore fruit cache
 
 You peruse the fruit pile and shrug.
+%%%%
+carnivore baked goods cache
+
+# Yes, of course a kobold would make a cake sandwich.
+You peruse the pile and make a meat sandwich with @_baked_good_and_reaction_@
 %%%%
 short fruit cache
 
@@ -465,6 +523,10 @@ short meat cache
 
 You root around and sample @_meat_and_reaction_@
 %%%%
+short baked goods cache
+
+You root around and sample @_baked_good_and_reaction_@
+%%%%
 stone fruit cache
 
 You pestle and swallow @_fruit_and_reaction_@
@@ -473,6 +535,10 @@ stone meat cache
 
 You pestle and swallow @_meat_and_reaction_@
 %%%%
+stone baked goods cache
+
+You mill down and swallow @_baked_good_and_reaction_@
+%%%%
 inediate fruit cache
 
 You briefly stare at the fruit pile and sigh.
@@ -480,6 +546,10 @@ You briefly stare at the fruit pile and sigh.
 inediate meat cache
 
 You briefly stare at the meat pile and sigh.
+%%%%
+inediate baked goods cache
+
+You briefly stare at the breadstuffs pile and sigh.
 ########################## Species diets ######################################
 %%%%
 draconian fruit cache
@@ -502,6 +572,10 @@ felid meat cache
 
 You nibble upon @_meat_and_reaction_@
 %%%%
+felid baked goods cache
+
+You nibble upon @_baked_good_and_reaction_@
+%%%%
 gargoyle fruit cache
 
 @stone fruit cache@
@@ -510,9 +584,17 @@ gargoyle meat cache
 
 @stone meat cache@
 %%%%
+gargoyle baked goods cache
+
+@stone baked goods cache@
+%%%%
 ghoul fruit cache
 
 @carnivore fruit cache@
+%%%%
+ghoul baked goods cache
+
+@carnivore baked goods cache@
 %%%%
 kobold fruit cache
 
@@ -522,6 +604,10 @@ kobold meat cache
 
 @short meat cache@
 %%%%
+kobold baked goods cache
+
+@carnivore baked goods cache@
+%%%%
 mummy fruit cache
 
 @inediate fruit cache@
@@ -530,9 +616,17 @@ mummy meat cache
 
 @inediate meat cache@
 %%%%
+mummy baked goods cache
+
+@inediate baked goods cache@
+%%%%
 oni fruit cache
 
 You reach down and grab @_fruit_and_reaction_@ You go for seconds.
+%%%%
+oni baked goods cache
+
+You reach down and grab @_baked_good_and_reaction_@ You go for seconds.
 %%%%
 spriggan fruit cache
 
@@ -545,9 +639,21 @@ You root around, looking for pizza, but fail to find any.
 w:4
 You find a slice of magically-preserved pizza, and pick the meat off. Delicious!
 %%%%
+spriggan baked goods cache
+
+You root around and eagerly enjoy @_baked_good_and_reaction_@
+%%%%
+tengu baked goods cache
+
+You reach down and peck at @_baked_good_and_reaction_@
+%%%%
 troll fruit cache
 
 @oni fruit cache@
+%%%%
+troll baked goods cache
+
+@oni baked goods cache@
 %%%%
 vampire fruit cache
 
@@ -555,12 +661,20 @@ You root around, looking for a blood orange, but fail to find any.
 
 w:4
 You reach down and find a blood orange. Delicious.
+%%%%
+vampire baked goods cache
+
+You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.
 ########################## Form diets ######################################
 # TODO: fungus, wisp messages?
 %%%%
 bat fruit cache
 
 You slurp up @_fruit_and_reaction_@
+%%%%
+bat baked goods cache
+
+You swoop down and nibble at @_baked_good_and_reaction_@
 %%%%
 blade fruit cache
 
@@ -583,6 +697,10 @@ death meat cache
 
 @inediate meat cache@
 %%%%
+death baked goods cache
+
+@inediate baked goods cache@
+%%%%
 dragon fruit cache
 
 You devour @_fruit_and_reaction_@
@@ -600,6 +718,10 @@ maw meat cache
 
 You devour half the meat pile! It's not enough.
 %%%%
+maw baked goods cache
+
+You devour half the baked goods pile! It's not enough.
+%%%%
 pig fruit cache
 
 @short fruit cache@
@@ -607,6 +729,10 @@ pig fruit cache
 pig meat cache
 
 @short meat cache@
+%%%%
+pig baked goods cache
+
+@short baked goods cache@
 %%%%
 snake fruit cache
 
@@ -616,6 +742,10 @@ snake meat cache
 
 You distend your jaw to swallow @_meat_and_reaction_@
 %%%%
+snake baked goods cache
+
+You distend your jaw to swallow @_baked_good_and_reaction_@
+%%%%
 statue fruit cache
 
 @stone fruit cache@
@@ -623,6 +753,10 @@ statue fruit cache
 statue meat cache
 
 @stone meat cache@
+%%%%
+statue baked goods cache
+
+@stone baked goods cache@
 %%%%
 storm fruit cache
 
@@ -639,3 +773,7 @@ tree fruit cache
 tree meat cache
 
 @short meat cache@
+%%%%
+tree baked goods cache
+
+@short baked goods cache@

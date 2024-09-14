@@ -247,6 +247,7 @@ enum dungeon_feature_type
 #endif
     DNGN_DRY_FOUNTAIN,
 #if TAG_MAJOR_VERSION > 34
+    DNGN_CACHE_OF_BAKED_GOODS,
     DNGN_CACHE_OF_FRUIT,
     DNGN_CACHE_OF_MEAT,
     DNGN_RUNELIGHT,
@@ -370,6 +371,7 @@ enum dungeon_feature_type
     DNGN_ENTER_CRUCIBLE,
     DNGN_EXIT_CRUCIBLE,
     DNGN_FOUNTAIN_EYES,
+    DNGN_CACHE_OF_BAKED_GOODS,
 
 #endif
 

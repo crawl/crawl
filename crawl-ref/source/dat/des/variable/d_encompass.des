@@ -911,6 +911,7 @@ KMONS:  3 = orc priest / orc wizard / centaur / gnoll bouda
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:6 / manticore w:3 / black bear w:19
+KFEAT:  B = cache of baked goods
 KITEM:  o5 = gold / nothing w:1000
 SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4
@@ -919,7 +920,7 @@ NSUBST: ' = 2:6 / 3 = 66... / *:., " = 2:6 / 3 = 66... / *:.
 NSUBST: ` = 3:6 / 4 = 66... / *:., - = 1:6 / 2 = 6.. / *:.
 NSUBST: } = 1:] / 1:) / 1:} / * = **23..
 TILE:   x = wall_pebble_brown
-FTILE:  !pPt = floor_grass / floor_dirt w:1
+FTILE:  !pPt = floor_grass / floor_swamp w:1
 FTILE:  5oR = floor_dirt
 SUBST:  ! = .
 MAP
@@ -937,7 +938,7 @@ xttt!!tptpppppppptttttp!pp!!!!!wwwwwwwwppppppppttp!ttttttttt!ttttxxxxxxxxxxx*xxx
 xtttt!!ppppwwwppppppppp!!!!!!!!!wwwwwwww!!!!!!ppp!pttttttttt!ptttttttxxxxxxx}xxx
 xtttp!!!wwwwwwwwppw!!!!!!wwwwwwwwwwwwwwwww!!!!!!!!!ptttttttt!!ptttttttxxxxxxxxxx
 xtttp!!!wccmmccwwwwwwwwwwccmmccwwwwwwwwwwwwwwwwwwww!pptttttttt!pttttttttxxxxxxxx
-xttpp!!!wcHHHHcRRRRwRRRRRcHHHHcwww!wwwwwwwwwwwwwwww..!ptttttttt!pttttttttpxxxxxx
+xttpp!!!wcBHHHcRRRRwRRRRRcHHHHcwww!wwwwwwwwwwwwwwww..!ptttttttt!pttttttttpxxxxxx
 xtttp!!!wmH3HHcRRRRRRRRRRcHH3Hmww!!!!wwwwwwwwwwwwwwww.!ppppptpp!!ppppppptp!!xxxx
 xtttp!!!wmHHHHcRRRRRRRRRRcHHHHmww!!!!!!wwwwwwwwwwwwwwww!!!!!!!!!!!!!!!!!!!!!xxxx
 xtttp!!!wcHHHHccccccccccccHHHHcw!!!!!!.!!!!!!!!wwwwwwww.FFFFFFFFFFFFFFFFFFF!!xxx
@@ -951,7 +952,7 @@ xtttpp!!wcccHHHHHH2HH2HHHHHHcccw!...........!!!wwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wcHHHHccccHHHHccccHHHHcw!!.cc...cc.!!!!wwwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttttp!!wmHHHHcRRcHHHHcRRcHHHHmw!!!cc...cc!!!!wwwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wmH3HHcRRcc++ccRRcHH3Hmw!!!!..G..!!!!wwwwwwwwwwwFFFFFFFFFFFFccccccc!!!!x
-xtttpp!!wcHHHHcRRRR..RRRRcHHHHcww!!!!...!!!!wwwwwwwwwwww!!!!!!!!!!!!cHHH}Hc!!!!x
+xtttpp!!wcHHHHcRRRR..RRRRcHHHBcww!!!!...!!!!wwwwwwwwwwww!!!!!!!!!!!!cHHH}Hc!!!!x
 xtttppp!wccmmccRRRw..RwRRccmmccw!!!!!...!!!wwwwwwwwwwwwwFFFFFFFFFFFFcHHHHHc!!!!x
 xtttttppwwwwwwwwwww..wwwwwwwwwww!!!!!...!!wwwwwwww!!wwww.!!!!!!!!!!!c++cccc!!!!x
 xttttttpp!!!www!ww!..!!!!!!!!!!!!!!!!...!wwwwccc!!!!!wwwwFFFFFFFFFFFF..!!!!!!!!x

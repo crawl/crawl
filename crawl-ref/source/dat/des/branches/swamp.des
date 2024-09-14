@@ -712,8 +712,9 @@ tttt...tttt
    ttttt
 ENDMAP
 
-NAME: nicolae_swamp_orc_logging_accident
-TAGS: decor extra no_monster_gen no_trap_gen
+NAME:  nicolae_swamp_orc_logging_accident
+TAGS:  decor extra no_monster_gen no_trap_gen
+KFEAT: r = cache of baked goods
 SUBST: F = 't, T = _t
 NSUBST: p = 4:p / *:., ' = o / '
 SUBST: . = ...b
@@ -741,7 +742,7 @@ TTt..xxxx........tptT
 Tttp.xwwx...xxmx...tT
 Tt...xww+...xpsx...tT
 Tt.p.xwwxp..+.sm.p.tT
-Tt...xxxx...x.sx..ttT
+Tt...xxxx...x.rx..ttT
 Tt..p.......xxmx..tTT
 Ttt.....p......p.ttT
 TTtttt..........ttTT
@@ -1785,7 +1786,9 @@ MONS:   fenstrider witch
 MONS:   hydra
 KITEM:  K = potion of degeneration ident:type w:20 / \
             potion of mutation ident:type
+KITEM:  * = *
 KFEAT:  K = shallow_water
+KFEAT:  * = cache of baked goods
 NSUBST: : = 5:W / *:.
 SUBST:  w = w:10 t:10
 KPROP:  w = no_tele_into
@@ -2170,10 +2173,11 @@ ENDMAP
 ####
 NAME:    nicolae_swamp_spriggan_camp
 KMONS:   D = patrolling spriggan rider
-KMONS:   SGHI = spriggan / nothing
+KMONS:   SGHI = spriggan
 KMONS:   F = spriggan druid
+KFEAT:   C = cache of baked goods
 SHUFFLE: Ff/Gg/Hh/Ii
-SUBST:   ghi = .
+SUBST:   GHI = S., ghi = .
 MAP
        ttttt
   ttttttgggt
@@ -2183,7 +2187,7 @@ t...D..S...t
 tttt.......tt
  ttt.S..S...t
  tt......tt.t
-tttt.tt.tt..t
+tttt.tt.ttC.t
 ti...t...tH.t
 tiI..t.F.thht
 ti...t...tttt

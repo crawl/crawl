@@ -2287,7 +2287,7 @@ kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
 }}
 ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
 ITEM:   scroll of enchant armour ident:all / scroll of enchant weapon ident:all
-KFEAT:  C = cache of fruit / cache of meat
+KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
 KFEAT:  S = metal_statue
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A, C = 3 = C.. / *:.
@@ -2568,7 +2568,7 @@ KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item
 KITEM:  JKL = potion of degeneration ident:all
-KFEAT:  C = cache of meat / cache of fruit
+KFEAT:  C = cache of meat / cache of fruit / cache of baked goods
 KFEAT:  E = shallow_water
 KFEAT:  N = granite_statue
 NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = E:1 W:16, F = 1:F / * = F----

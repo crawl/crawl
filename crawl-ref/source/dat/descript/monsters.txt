@@ -3453,9 +3453,9 @@ skeletal bat
 A bat skeleton without the decency to lie unmoving like dead bats are supposed
 to.
 %%%%
-spriggan hatter
+spriggan baker
 
-A spriggan who is going slightly mad from the toxic fumes of their craft.
+A spriggan that has mastered the culinary arts.
 %%%%
 #if TAG_MAJOR_VERSION > 34
 still boulder

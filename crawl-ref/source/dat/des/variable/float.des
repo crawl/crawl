@@ -2275,6 +2275,7 @@ ORIENT: float
 MONS:   spriggan, spriggan rider, spriggan defender
 MONS:   boggart, spriggan druid
 KFEAT:  d = cache of fruit
+KFEAT:  e = cache of baked goods
 : if you.absdepth() < 8 then
 SUBST:  130 = ., 245 = 0
 : elseif you.absdepth() < 13 then
@@ -2284,8 +2285,8 @@ SUBST:  3 = 0, 5 = 4
 : else
 SUBST:  2 = 3, 1 = 2
 : end
-SUBST:  d : dd.
-FTILE:  .dt0@*12345 = floor_moss
+SUBST:  d : dd., e = ee.
+FTILE:  .det0@%*12345 = floor_moss
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
     xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
@@ -2299,7 +2300,7 @@ xt.ttttttttttttttt...1tttttttttt.tttt.tttttttttttxx
 xttttttttttttttt..tttttttttttttt5...ttttttttttttttx
 xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
 xtttttttttttttttt1.1.tttttttttttt.tttttttttt%.dtttx
-xtttttttttttttttttt.0...tttttttttt..ttttttt.5*..ttx
+xtttttttttttttttttt.0...tttttttttt..ttttttt.5*.ettx
 xttttttttttttttttttttt1...ttttttttt.ttttttt.000%ttx
 xttttttttttttttttttttttt...tttttttt.ttttt1..2.5tttx
 xttttttttttttttttttttttttt....tttt.ttttttt.tt.t3ttx
@@ -2768,9 +2769,11 @@ WEIGHT: 5 (Vaults), 10
 MONS:   yaktaur / vault sentinel ; arbalest . long sword | war axe | \
                                    falchion | morningstar . ring mail
 MONS:   deep elf annihilator / deep elf sorcerer / lich
-: local y = "yaktaur captain w:5"
-: mons(y .. " / vault warden ; arbalest . chain mail . ", "warlord", nil, nil)
-SUBST:  @W' = ., | = |*%
+MONS:   yaktaur captain w:5 / orc warlord ; arbalest . war axe . ring mail / \
+        vault warden ; arbalest . long sword . chain mail
+KITEM:  | = | / * / %
+KFEAT:  | = cache of baked goods
+SUBST:  @W' = .
 : else
 :   if you.depth() < 12 then
 MONS:   centaur, orc wizard
@@ -2851,12 +2854,13 @@ KFEAT:   T = fountain_eyes
 : end
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
+KFEAT:   B = cache of baked goods
 SHUFFLE: {[(
 SUBST:   ( = (:70 <, [ = [:50 <
 MAP
   .................
   ......ccccc......
-....ccccc*.*ccccc....
+....ccccc*B*ccccc....
 ...cc$.c..6..c.%cc...
 ..cc$..+.ccc.+..%cc..
 ..c$.5$ccc6ccc%32%c..
@@ -3395,7 +3399,7 @@ ORIENT: float
 DEPTH:  D:2-4
 KMONS:  1 = Ijyb / hobgoblin, hobgoblin
 KMONS:  2 = goblin
-KFEAT:  F = cache of fruit / cache of meat
+KFEAT:  F = cache of fruit / cache of meat / cache of baked goods
 SUBST:  F : F..
 MAP
 xxxxxxxxx
@@ -3663,7 +3667,7 @@ DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   tengu warrior, tengu conjurer, tengu reaver
 KFEAT:  m = iron_grate
-KFEAT:  F = cache of fruit / cache of meat
+KFEAT:  F = cache of fruit / cache of meat / cache of baked goods
 NSUBST: " = 2 = FFF1W / * = ........1W
 NSUBST: ' = 2:3 / 4=12 / *:.
 NSUBST: ? = 3:* / *:%
@@ -4577,7 +4581,7 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:2-4
 ORIENT: float
 MONS:   goblin, hobgoblin
-KFEAT:  % = cache of fruit / cache of meat
+KFEAT:  % = cache of fruit / cache of meat / cache of baked goods
 SUBST:  - = 112..., " = 12`, ' = 12`
 NSUBST: ` = 1:%. / *:.
 MAP
@@ -6318,7 +6322,7 @@ MONS:    tengu warrior, tengu conjurer, tengu reaver
 KMONS:   p = plant / bush
 KFEAT:   - = +
 KFEAT:   d = cache of meat
-KFEAT:   e = cache of fruit
+KFEAT:   e = cache of fruit / cache of baked goods w:4
 SHUFFLE: mno, de / de / ~~
 SUBST:   n : xxm, o = x, '~ = t:2 p:3 `
 NSUBST:  2 = 2 = 112 / 1:_ / *:2
@@ -6705,6 +6709,7 @@ KITEM:   & = shadow dragon scales randart / manual of stealth / \
              boots ego:stealth good_item ident:type / \
              cloak ego:stealth good_item ident:type / \
              scroll of fog q:3 ident:type
+KFEAT:   B = cache of baked goods
 KFEAT:   _ = altar_dithmenos
 KFEAT:   C = c
 NSUBST:  ? = 1:1 / 1:2 / 1:4 / 1:5 / 2 = 112245..
@@ -6724,7 +6729,7 @@ x   ccc%3h....i..i.2cc.k..cc.m..   x
     ccc|2.%cccc++ccccc..4.+..iix
     ccc*..%ccc............+c....
 x   ccc%3h%cc.j..j......l.cc.m..
-x.@.ccc'..%cc......1..2..1cc....   x
+x.@.ccc'..%ccB.....1..2..1cc....   x
 x...ccccccccccccccccccccccccc......x
 x...ccccccccccccccccccccccccc....j.x
 x.k..ccccccccccccccccccccccccccc...x
@@ -6734,7 +6739,7 @@ xxx.....?.?..?..?x...x?..?..?.?.....xxx
    x...CCCCCCCCCCCCCCCCCCCCCCCCCCC..K.x
    x.J....CCCCCCCCCCCCCCCCCCCCCCCCC...x
    x......CCCCCCCCCCCCCCCCCCCCCCCCC...x
-   x   ....CC4..5..4......CC%.4"CCC.@.x
+   x   ....CC4..5..4.....BCC%.4"CCC.@.x
        ..M.CC.K......J..J.CC%H6%CCC   x
        ....C+.............CC%..*CCC
        xII..+..1.CCCCC++CCCC%._&CCC

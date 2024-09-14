@@ -361,6 +361,13 @@ A fountain of sparkling water
 
 A decorative fountain, flowing with brightly sparkling, faintly magic water.
 %%%%
+A cache of baked goods
+
+A hoard of breadstuffs, baked and fried from minor divine gifts of flour and
+growth cultures, granted extended shelflife through sacred succour. You already
+carry as much food as you will ever need for this journey, but a light snack
+shouldn't hurt.
+%%%%
 A cache of fruit
 
 A pile of assorted fruit, ranging from common dungeon staples like chokos and

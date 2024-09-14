@@ -571,9 +571,10 @@ NAME:  minmay_rat_hole
 DEPTH: D:2-4
 MONS:  rat, quokka
 ITEM:  stone / nothing w:30
+KFEAT: C = cache of baked goods
 MAP
  xxx
-xxdx
+xxCx
 xddxx
 xdddxxxx
 xxxx211xx
@@ -1774,7 +1775,6 @@ TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
 MONS:    arcanist w:6 / deep elf pyromancer
 MONS:    occultist w:6 / deep elf zephyrmancer
-ITEM:    any potion
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
 ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
@@ -1782,13 +1782,15 @@ ITEM:    randbook numspells:2 title:Axaxaxas_mlö
 ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên \
                   disc:hexes disc2:alchemy
 ITEM:    randbook numspells:2 title:Sand
-KFEAT:   ^ : shaft trap
+KITEM:   % = any potion
+KFEAT:   ^ = shaft trap
+KFEAT:   % = cache of baked goods
 : if you.branch() == "D" and you.depth() < 12 then
 NSUBST:  1 = 1:. / *:1
 : else
 NSUBST:  1 = 1:2 / * = 12
 : end
-SHUFFLE: defg, efghij, bm, bm / ++
+SHUFFLE: %def, defghi, bm, bm / ++
 MAP
    xxx@xxx     xxx@xxx
   xx.....xx   xx.....xx
@@ -1852,8 +1854,9 @@ NAME:   centaur_isle
 TAGS:   no_monster_gen no_pool_fixup no_rotate no_descent
 DEPTH:  D:6-12, Shoals
 MONS:   centaur, yaktaur, faun, centaur warrior
+KFEAT:  d = cache of baked goods
 : if you.absdepth() > 11 then
-NSUBST: 1 = 1:4 / 1:123 / *:1
+NSUBST: 1 = 1:4 / 2:33 / * = 123
 : end
 SUBST:  ? = *$
 MAP
@@ -1865,10 +1868,10 @@ wwwwwwww..wwwwwwwwwwwww
 wwwwww.11...wwwwwwwwwww
 wwwww........wwwwwwwwww
 wwwww...x+x..wwwwwwwwww
-wwww..11x.x..wwwwwwwww
- www...xx>x11wwwwwwwww
+wwww..11x>x..wwwwwwwww
+ www...xx?x11wwwwwwwww
  www..xx??x.wwwwwwwww
- wwww.xx??x.wwwwwww
+ wwww.xx?dx.wwwwwww
   wwww.xxxx.wwwwww
    wwwwww..wwwww
     wwwwwwwwwww
@@ -2289,23 +2292,24 @@ DEPTH: D:6-11, Orc, Vaults
 MONS:  orc warrior, orc, orc warlord, orc knight w:14 / lindwurm w:1
 KITEM: d = stone q:1 no_pickup
 KFEAT: e = cache of meat
+KFEAT: f = cache of baked goods
 : if you.in_branch("Vaults") then
-SUBST: 1 = 3, 2 = 4, @ = ., d = e, f = g
+SUBST: 1 = 3, 2 = 4, @ = ., d = f, g = h
 : else
-SUBST: d = ddeee
+SUBST: d = def
 : end
-: dgn.delayed_decay(_G, 'f', 'rat corpse')
-: dgn.delayed_decay(_G, 'g', 'hog corpse / lindwurm corpse')
+: dgn.delayed_decay(_G, 'g', 'adder corpse / electric eel corpse')
+: dgn.delayed_decay(_G, 'h', 'hog corpse / lindwurm corpse')
 MAP
 xxxxxxxxxx
-xvvvffffxx
+xvvvggggxx
 xvl+.222.x
 xvvv.212.x
 xxxx...xxx
 xxx.x..xxx
 xxx+xx..xx
-x$$.xx..xx
-xd$xx..xxx
+x$$$xx..xx
+xdexx..xxx
 xxxx.@xxxx
 ENDMAP
 
@@ -2614,22 +2618,24 @@ xxxtt--tttttttxx
      xxxxxxxxxxx
 ENDMAP
 
-NAME:   the_hattery
+NAME:   the_bakery
 DEPTH:  D:7-14
-: if crawl.one_chance_in(8) then
-:   dgn.delayed_decay(_G, 'e', 'spriggan name:skinned n_adj n_spe n_des corpse')
-: else
-SUBST: =e = x
-: end
-SUBST: = = +
+MONS:   spriggan col:white name:baker n_suf ; robe . dagger
+# It's a chef's hat. Maybe we should get a tile for that?
 ITEM:   hat
-MONS:   spriggan col:white name:hatter n_suf ; robe . dagger
+KFEAT:  e = cache of baked goods
+: if crawl.one_chance_in(8) then
+SUBST:  = = +
+:   dgn.delayed_decay(_G, 'f', 'spriggan name:baked n_adj n_spe n_des corpse')
+: else
+SUBST:  =f = x
+: end
 MAP
 xxxxxx
-xdd=ex
+xee=fx
 x.xxxx
-x.1x
-x+xx
+x..1dx
+x+xxxx
 ENDMAP
 
 NAME:   hangedman_fish_farm
@@ -2993,6 +2999,7 @@ MONS:   titan, merfolk javelineer
 NSUBST: 1 = 12:1 / 4 = 12. / *:.
 : end
 ITEM:   throwing net q:1, javelin
+KFEAT:  B = cache of baked goods
 MARKER: G = lua:fog_machine { cloud_type='translocational energy',  \
                               pow_min = 7, pow_max = 10, delay = 50, \
                               size = 4, walk_dist = 1 }
@@ -3005,7 +3012,7 @@ MAP
 @xx1x1x1x1x1x1xxxxww
 @xx1x1x1x1x1x1x2xxxww
 @x.............d*xxxw
-@+.............34CxGw
+@+............B34CxGw
 @x.............d|xxxw
 @xx1x1x1x1x1x1x2xxxww
 @xx1x1x1x1x1x1xxxxww
