@@ -560,8 +560,10 @@ ITEM:   potion of experience ident:type q:1 /\
 : hard_axe_fighter(_G)
 : orc_warlord_with_axe(_G)
 : bailey_setup(_G)
+KFEAT:  C = c
 SUBST:  I = t., 1 = 11.
 NSUBST: 2 = 3:2 / *=2.
+TILE:   C = stone_smooth_wall_beogh
 MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
@@ -589,7 +591,7 @@ tttttc1.....1c2.......2c1.....1cttttt
 ttttcc.......cc.......cc.......cctttt
 ttttc1.......1c|$$$$$|c1.......1ctttt
 tttcc.........cc$$e$$cc.........ccttt
-tttc2....T....1ccccccc1....T....2cttt
+tttc2....T....1cCcccCc1....T....2cttt
 tttcc.........cc1.1.1cc.........ccttt
 ttttc1.......1c.......c1.......1ctttt
 ttttcc.......cc1.....1cc.......cctttt
@@ -990,9 +992,11 @@ ITEM:   potion of experience ident:type q:1 / \
 : hard_axe_fighter(_G)
 : orc_warlord_with_axe(_G)
 : bailey_setup(_G)
+KFEAT:  C = c
 SUBST:  1 = 1.., 2 = 22.
 NSUBST: 3 = 2:3 / * = 3.
 NSUBST: e = 1:e / *:d
+TILE:   C = stone_smooth_wall_beogh
 MAP
       ccccc         ccccc
      ccd$1cc       cc1$dcc
@@ -1019,7 +1023,7 @@ ttc21......1.......1......12ctt
 ttc..G..G.............G..G..ctt
 ttc21.....................12ctt
 ttcc.......................cctt
-ttwcc...G...cc+++cc...G...ccwtt
+ttwcc...G...cC+++Cc...G...ccwtt
 ttwwcc.....cc.....cc.....ccwwtt
 ttwwwcc...cc.......cc...ccwwwtt
 tttwwwccccc.........cccccwwwttt

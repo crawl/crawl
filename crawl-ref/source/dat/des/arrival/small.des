@@ -1281,14 +1281,15 @@ TAGS:    arrival
 ORIENT:  float
 SHUFFLE: +'
 SUBST:   ' : x + ':40, '=x+
+FTILE:   p = dngn_garden_cobble
 MAP
 xxxxxxx.@.xxxxxxx
 x.....+...x.....x
 x..(..'...+.....x
 x.....xx.xx.....x
 xxx+'xxx.xxxx'xxx
-@....xx...xx....@
-.....xx...xx.....
+@....xxp..xx....@
+.....xx..pxx.....
 xxx+xxxx.xxxx+xxx
 x.....xx.xx.....x
 x.....'...'..]..x

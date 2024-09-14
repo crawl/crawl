@@ -2777,9 +2777,9 @@ C.1....E....
 ..xT....dxx
 ..+.2.s..1x
 D.+..S`S.Ax
-..x.s`s`.1x
+..x.s`s``1x
 ..x..S`F1Bx
-.Exd...1.3x
+.Exd..`1p3x
 ..xx1A1B2xx
 ..xxxxxxxx
 x..
@@ -2798,8 +2798,8 @@ MAP
      x2.D`F`D.C.x
      xd1..`S`...x.....
  xxxxxxxxxxxsdB.+..B..
-.AA.1x...````...-.....
-.....-...````...x1.AA.
+.AA.1x...``p`...-.....
+.....-...`p``...x1.AA.
 ..B..+.Bdsxxxxxxxxxxx
 .....x...`S`...dx
      x.C.D`F`D13x
@@ -2818,14 +2818,14 @@ MAP
 xxd....B....x..
 xd........A....
 x.C.xxxxxxxA...
-x....x.sSsx...E
+x....xpsSsx...E
 xD.T.-.1`Sx..xxxxx
 x....+..1`x...E.1xx
 x.C.xxx3`Fxxx....1x
 x1....xxxF`2xxx.C.x
 xx1.E...x`1..+....x
  xxxxx..xS`1.-.T.Dx
-    E...xsSs.x....x
+    E...xsSspx....x
     ...Axxxxxxx.C.x
     ....A........dx
     ..x....B....dxx

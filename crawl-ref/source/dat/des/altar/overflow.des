@@ -665,8 +665,15 @@ KFEAT:  C = altar_elyvilon
 : local g = "att:good_neutral"
 : mons("quokka " .. g .. " w:30 / bombardier beetle " .. g)
 : mons("bat " .. g .. " / rat " .. g .. " / butterfly " .. g)
-KMASK:  '12CFJ = opaque
+: mons("yak tile:mons_yak_bow " .. g)
+: if you.absdepth() > 10 then
+SUBST:  2 = 3
+FTILE:  13 = dngn_garden_cobble
+FTILE:  'CFJt = floor_grass
+: else
 FTILE:  '12CFJt = floor_grass
+: end
+KMASK:  '123CFJ = opaque
 MARKER: E = lua:transp_loc("ely_altar_entry")
 MARKER: F = lua:transp_dest_loc("ely_altar_entry")
 MARKER: J = lua:transp_loc("ely_altar_exit")

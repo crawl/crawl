@@ -1449,6 +1449,7 @@ DEPTH: D:2-4
 MONS:  goblin / hobgoblin, kobold
 SUBST: . = 1%......
 SUBST: 1 : 112
+FTILE: p = dngn_garden_cobble
 MAP
  xxxxxxx
 xx.....xx
@@ -1457,8 +1458,8 @@ x.......x
 x.......x
 xx.....xx
  xxx+xxx
-  x...x
-  x...x
+  xp.px
+  x.1.x
   xx+xx
 ENDMAP
 
@@ -2394,9 +2395,10 @@ SHUFFLE: SE, 1' / 'F
 NSUBST:  S = 1:S / *:., E = 1:E / *:., 1 = 1:1 / * = 1.
 SUBST:   ' = .
 veto {{ return you.uniques("Edmund") or you.uniques("Sigmund") }}
+FTILE:   p = dngn_garden_cobble
 MAP
 ....................
-.xxxxxxxxxxxxxxxx...
+.xxxxxxxxxxxxxxxxp..
 .xEEEExWS....x.'x11.
 .x...'xWE.......x11.
 .x..xxxxxx.xxx..x11.

@@ -2339,8 +2339,8 @@ SUBST:   AB = x, C : x., DE = ., s = `, F : F`, - : +x, | = |**%
 MAP
      xx1123
     xx`...12x
-   `Fxs`.C.|x
-  `w`xSs.D.|x
+   pFxs`.C.|x
+  pw`xSs.D.|x
  xF`S``...d1x
 xxxx`xn+-xxxx
 x`sS`n3......

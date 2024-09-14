@@ -262,7 +262,9 @@ function index_vaults_room_themes (e, set, hard)
            'entropy weaver w:' .. 2 + d * 4)
     e.kmons('S = bush')
     e.kfeat('F = cache of fruit')
+    e.ftile('p = dngn_garden_cobble')
     e.ftile('`SF = floor_lair')
+    e.tile('T = dngn_fountain_novelty_fancy')
     e.kitem('d = animal skin / club / whip w:5 / quarterstaff w:5')
   elseif set == 'rangers' then
     local eq = "arbalest w:29 | hand cannon w:1 . " ..

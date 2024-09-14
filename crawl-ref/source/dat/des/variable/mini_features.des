@@ -3834,6 +3834,7 @@ ENDMAP
 NAME:   evilmike_butchery
 TAGS:   no_item_gen transparent
 DEPTH:  D:9-, Depths
+KFEAT:  C = cache of meat
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
@@ -3844,11 +3845,11 @@ SUBST:  ' = .
 MAP
 xxxxxxxxx
 xXXXXXXXx
-xX.....Xx
+xX....CXx
 xX.....Xx
 +'.....Xx
 xX.....Xx
-xX.....Xx
+xXC....Xx
 xXXXXXXXx
 xxxxxxxxx
 ENDMAP
@@ -3860,17 +3861,19 @@ TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
+KFEAT:  C = cache of fruit
+FTILE:  p = dngn_garden_cobble
 FTILE:  .d = floor_moss / floor_grass / floor_dirt
 COLOUR: .d = green
 MAP
 xxxxxxxxx
 xwwwwwwwx
-xw.....wx
+xwC...pwx
 xw.....wx
 xw.....w+
 xw.....wx
 xw.....wx
-xw.....wx
+xwp...Cwx
 xwwwwwwwx
 xxxxxxxxx
 ENDMAP

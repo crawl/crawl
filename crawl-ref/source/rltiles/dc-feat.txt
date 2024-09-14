@@ -423,6 +423,9 @@ fountain_double_decker DNGN_FOUNTAIN_NOVELTY_FANCY
 fountain_octopode DNGN_FOUNTAIN_NOVELTY_OCTOPODE
 fountain_stone_lantern DNGN_FOUNTAIN_NOVELTY_LANTERN
 fountain_xom DNGN_FOUNTAIN_NOVELTY_XOM
+##
+stone_smooth_beogh_0 STONE_SMOOTH_WALL_BEOGH
+stone_smooth_beogh_1
 
 ## Wall assets are not usable as is, edit on them top of the
 ## desired wall texture as needed (ie TILE_NAME_banner_beogh)

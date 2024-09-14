@@ -1641,22 +1641,24 @@ SHUFFLE: AB / CD
 SUBST: A = P, B = _, C = _, D = P, c = cccccc.
 NSUBST: - = 3:1 / 2=1_ / 1:2 / 1=23 / 1=3_
 FTILE: -_TP123 = floor_grass
+FTILE: p = dngn_garden_cobble
+FTILE: ' = floor_swamp
 COLOUR: -_P123 = green
 COLOUR: c = white
 MAP
 ....................
 .cc..cc..cc..cc..cc.
 .cc..cc..cc..cc..cc.
-....................
-....-------A----....
-.cc.BA-AB----BA-.cc.
-.cc.--T--A-B---B.cc.
-@...BA--B---AB--...@
-@...--BA---B--AB...@
-.cc.B---B-A--T--.cc.
-.cc.-AB----BA-AB.cc.
-....----A-------....
-....................
+...''''''''''''''...
+...'p------A----'...
+.cc'BA-AB----BA-'cc.
+.cc'--T--A-B---B'cc.
+@..'BA--B---AB--'..@
+@..'--BA---B--AB'..@
+.cc'B---B-A--T--'cc.
+.cc'-AB----BA-AB'cc.
+...'----A------p'...
+...''''''''''''''...
 .cc..cc..cc..cc..cc.
 .cc..cc..cc..cc..cc.
 ....................
@@ -2892,7 +2894,8 @@ SHUFFLE: abcdefghijk, ABCDEFGH
 SUBST:   abAB = x, cdef = p, CDE = P, g : xp, h : p', ijk = ', FGH = "
 TILE:    x = wall_brick_gray
 FTILE:   xpP"' = floor_swamp
-FTILE:   1P.| = floor_grass
+FTILE:   1P. = floor_grass
+FTILE:   | = dngn_garden_cobble
 MAP
    abcbd
  kkaBAAdee

@@ -2330,6 +2330,7 @@ SUBST:   p : xww., qr = ., - : ++., w : www.., C : CCb
 CLEAR:   '
 TILE:    m = dngn_transparent_wall_blue
 TILE:    b = bedevilled_crystal_cocytus
+TILE:    T = dngn_fountain_novelty_octopode
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
    .............
@@ -3401,6 +3402,7 @@ TILE:      r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
            b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
            g = dngn_transparent_stone_green, q = dngn_transparent_stone
 TILE:      S = storm_conduit
+TILE:      T = dngn_fountain_novelty_octopode
 : set_feature_name("metal_statue", "storm conduit")
 MAP
            @.......................@
@@ -3656,14 +3658,15 @@ xxxlll......................llx
 ENDMAP
 
 ####
-NAME: nicolae_moth_party
-TAGS: no_pool_fixup no_monster_gen
-DEPTH: Zot, !Zot:$
-ORIENT: north
-SUBST: l : lw
+NAME:    nicolae_moth_party
+TAGS:    no_pool_fixup no_monster_gen
+DEPTH:   Zot, !Zot:$
+ORIENT:  north
+MONS:    ghost moth, moth of wrath
+MONS:    any base draconian
+SUBST:   l : lw
 SHUFFLE: ]})>, 12
-MONS: ghost moth, moth of wrath
-MONS: any base draconian
+TILE:    T = dngn_fountain_novelty_octopode
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx......xxxxxxxxx......xxx
@@ -3680,7 +3683,7 @@ xxxx...................xxxx
 xxx.....................xxx
 xx...lll...........lll...xx
 xx..lllll..x...x..lllll..xx
-xx...lll...x...x...lll...xx
+xx...lll...x.T.x...lll...xx
 xxx...3...xx...xx...3...xxx
 xxxx.....xxx...xxx.....xxxx
 xxxxxxxxxxx@@@@@xxxxxxxxxxx

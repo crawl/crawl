@@ -1547,10 +1547,11 @@ NAME:       bazaar_minmay_plants
 TAGS:       no_rotate
 WEIGHT:     5
 ORIENT:     encompass
-MONS:       plant / bush w:5
+MONS:       plant / bush w:6, yak tile:mons_yak_bow att:neutral
 KFEAT:      ! = any shop
 SUBST:      " = """"111t
-KPROP:      "1t = no_tele_into
+KPROP:      "12t = no_tele_into
+FTILE:      - = dngn_garden_cobble
 LFLOORTILE: floor_grass
 LFLOORCOL:  green
 : bazaar_setup(_G, false, false)
@@ -1566,18 +1567,18 @@ MAP
 """"""""""""""""""""""""""""""""""
 """""""""mmmmm""""""mmmmm"""""""""
 """""""""m...mm""""mm...m"""""""""
-"""""""""m.!..mm""mm..!.m"""""""""
+"""""""""m.!..mm"2mm..!.m"""""""""
 """""""""m.....mmmm.....m"""""""""
 """""""""mm............mm"""""""""
 """"""""""mm..........mm""""""""""
-"""""""""""mm....cc..mm"""""""""""
+"""""""""""mm...-cc..mm"""""""""""
 """"""""""""m..cc>c..m""""""""""""
-""""""""""""m..c<c...m""""""""""""
+""""""""""""m..c<c-..m""""""""""""
 """""""""""mm..ccc...mm"""""""""""
 """"""""""mm..........mm""""""""""
 """""""""mm............mm"""""""""
 """""""""m.....mmmm.....m"""""""""
-"""""""""m.!..mm""mm..!.m"""""""""
+"""""""""m.!..mm2"mm..!.m"""""""""
 """""""""m...mm""""mm...m"""""""""
 """""""""mmmmm""""""mmmmm"""""""""
 """"""""""""""""""""""""""""""""""
