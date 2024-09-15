@@ -138,6 +138,7 @@ bool origin_describable(const item_def &item);
 string origin_desc(const item_def &item);
 void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
+void milestone_check(const item_def &item);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 god_type origin_as_god_gift(const item_def& item);

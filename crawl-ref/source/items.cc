@@ -1133,7 +1133,7 @@ static string _milestone_collectible(const item_def &item)
     return string("found ") + item.name(DESC_A) + ".";
 }
 
-static void _milestone_check(const item_def &item)
+void milestone_check(const item_def &item)
 {
     if (item.base_type == OBJ_RUNES)
         mark_milestone("rune", _milestone_collectible(item));
@@ -1159,7 +1159,7 @@ static void _check_note_item(item_def &item)
         // further notes.
         if (fully_identified(item))
             item.flags |= ISFLAG_NOTED_ID;
-        _milestone_check(item);
+        milestone_check(item);
     }
 }
 

@@ -813,6 +813,10 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     if (fully_identified(item))
         item.flags |= ISFLAG_NOTED_ID;
 
+    // Record milestones for purchasing especially notable items (runes,
+    // gems, the Orb).
+    milestone_check(item);
+
     you.del_gold(cost);
 
     you.attribute[ATTR_PURCHASES] += cost;
