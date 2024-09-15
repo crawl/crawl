@@ -7929,10 +7929,8 @@ bool player::asleep() const
 
 bool player::can_feel_fear(bool include_unknown) const
 {
-    // XXX: monsters are immune to fear when berserking.
-    // should players also be?
-    return you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
-           && (!include_unknown || !you.clarity());
+    return (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+           && (!include_unknown || (!you.clarity() && !you.berserk()));
 }
 
 bool player::can_throw_large_rocks() const
