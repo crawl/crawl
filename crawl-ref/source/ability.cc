@@ -2874,7 +2874,17 @@ bool activate_talent(const talent& tal, dist *target)
             practise_using_ability(abil.ability);
             _finalize_ability_costs(abil, mp_cost, hp_cost);
 
+            // Ephemeral Shield activates on any invocation with a cost,
+            // even if that's just a cooldown or small amounts of HP.
+            // No rapidly wall-jumping or renaming your ancestor, alas.
             if (is_religious_ability(abil.ability)
+                && (abil.piety_cost > 0 || (abil.flags & abflag::exhaustion)
+                    || (abil.flags & abflag::max_hp_drain)
+                    || (abil.ability == ABIL_ZIN_RECITE)
+                    || (abil.flags & abflag::card) || (abil.flags & abflag::gold)
+                    || (abil.flags & abflag::sacrifice)
+                    || (abil.flags & abflag::pain) || abil.get_hp_cost() > 0
+                    || abil.get_mp_cost() > 0)
                 && you.has_mutation(MUT_EPHEMERAL_SHIELD))
             {
                 you.set_duration(DUR_EPHEMERAL_SHIELD, random_range(3, 5));

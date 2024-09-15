@@ -123,10 +123,10 @@ this mutation reduces the cost of your spells by 1 MP, to a minimum of 1 MP.
 %%%%
 ephemeral shield mutation
 
-Whenever you use spells or divine abilities, a shield forms from the excess
-loose magical or spiritual energy to guard you. The magical energy from spells
-only sustains the shield for but a moment, while the spiritual energy from using
-divine abilities lasts a brief bit longer.
+Whenever you use spells or divine abilities with any costs, a shield forms from
+the excess loose magical or spiritual energy to guard you. The magical energy
+from spells only sustains the shield for but a moment, while the spiritual
+energy from using divine abilities lasts a brief bit longer.
 %%%%
 camouflage mutation
 
