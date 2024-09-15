@@ -463,7 +463,7 @@ HINT_SEEN_RUNED_DOOR
 
 That<console> $1</console> is a runed door, which is probably in front of
 something unusually dangerous. Monsters will never open it. If you do, the runes
-will be broken, and it will become a normal door
+will be broken, and it will become a normal door.
 %%%%
 HINT_KILLED_MONSTER
 

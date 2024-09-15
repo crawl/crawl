@@ -594,26 +594,33 @@ this location to return back through the transporter.
 ########################################################################
 An open door
 
-An open wooden door. If reopened by a monster, it has a chance of breaking.
+An open wooden door. If closed again, all monsters that can wield equipment,
+and some of them that can't, could open it again. If it is closed and reopened
+by a monster that is aware of you, it has a chance of breaking.
 %%%%
 A closed door
 
-A closed wooden door. If opened by a monster, it has a chance of breaking.
+A closed wooden door. All monsters that can wield equipment, and some of them
+that can't, may open it again. If it is opened by a monster while it is aware
+of you, it has a chance of breaking.
 %%%%
 A broken door
 
-A disappointingly poorly maintained wooden door. It'd take nothing short of magic
-to get this properly closed again.
+A disappointingly poorly maintained wooden door. It'd take nothing short of
+magic to get this properly closed again.
 %%%%
 An open translucent door
 
-An open door made from magically translucent wood. If reopened by a monster,
-it has a chance of breaking.
+An open door made from magically translucent wood. If closed again, all monsters
+that can wield equipment, and some of them that can't, could open it again. If
+it is closed and reopened by a monster that is aware of you, it has a chance of
+breaking.
 %%%%
 A closed translucent door
 
-A closed door made from magically translucent wood. If opened by a monster, it
-has a chance of breaking.
+A closed door made from magically translucent wood. All monsters that can wield
+equipment, and some of them that can't, may open it again. If it is opened by a
+monster while it is aware of you, it has a chance of breaking.
 %%%%
 A broken translucent door
 
