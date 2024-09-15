@@ -5,12 +5,12 @@ xp_mult: 13
 genus: snake
 will: 0
 attacks:
- - {type: bite, damage: 3}
+ - {type: bite, damage: 2}
  - {type: constrict, flavour: crush, damage: 1}
 hd: 1
 hp_10x: 35
 ac: 0
-ev: 11
+ev: 9
 has_corpse: true
 shout: hiss
 intelligence: animal
