@@ -3399,9 +3399,9 @@ void melee_attack::mons_apply_attack_flavour()
     {
         const int rff = defender->res_foul_flame();
         if (rff < 0)
-            special_damage = attk_damage * 1.5;
+            special_damage = attk_damage * 0.75;
         else if (rff < 3)
-            special_damage = attk_damage / (rff + 1);
+            special_damage = attk_damage / ((rff + 1) * 2);
 
         if (needs_message && special_damage)
         {
