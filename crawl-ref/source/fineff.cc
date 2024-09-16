@@ -694,6 +694,9 @@ void bennu_revive_fineff::fire()
         newmons->props[OKAWARU_DUEL_TARGET_KEY] = true;
         newmons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
     }
+
+    if (gozag_bribe.ench != ENCH_NONE)
+        newmons->add_ench(gozag_bribe);
 }
 
 void avoided_death_fineff::fire()
