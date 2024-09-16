@@ -3968,11 +3968,10 @@ ENDMAP
 
 NAME:    angelslayer_arrival_pockets_within_ring
 TAGS:    arrival no_monster_gen transparent
+ORIENT:  float
 SHUFFLE: {([
 SHUFFLE: DEFH
-SUBST:   [=., (=>, D=x, E=x, F=x, H=.
-SUBST:   T:TV
-ORIENT:  float
+SUBST:   [H = ., ( = >, DEF = x, T = TV
 MAP
       xxxxxxx
     DxD.....ExE

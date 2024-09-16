@@ -1258,32 +1258,32 @@ ENDMAP
 NAME:     angelslayer_ecumenical_altar_broken_walls_simple
 TAGS:     ruin transparent
 SHUFFLE:  _E
-FTILE:    ._Ec = floor_crypt
-TILE:     c = wall_catacombs
 SUBST:    E = G:10 V:5 A:3 .:3
+TILE:     x = wall_catacombs
+FTILE:    ._xGVA = floor_crypt
 : ecumenical_altar_setup(_G)
 MAP
-ccccccccc
-c.......c
-c._...E.c
-c.......c
-cc.cccccc
+xxxxxxxxx
+x.......x
+x._...E.x
+x.......x
+xx.xxxxxx
 ENDMAP
 
 NAME:     angelslayer_ecumenical_altar_muddy
 TAGS:     transparent ruin
-NSUBST:   D = 1:_ / 1:t / 3:F / *:.
-NSUBST:   E = 1:t / 5:F / *:.
+NSUBST:   - = 1:_ / 1:t / 3:F / *:.
+NSUBST:   ? = 1:t / 5:F / *:.
 KMONS:    F = plant
-FTILE:    t_.DEF = floor_mud
+FTILE:    t_. = floor_mud
 : ecumenical_altar_setup(_G)
 MAP
-E  E E
-EEEEEEEE
- EDDDDDEE
-EEDDDDDE  E
-EEDDDDDEEE
- EEEEEEE
- E EE
-  EE
+?  ? ?
+????????
+ ?-----??
+??-----?  ?
+??-----???
+ ???????
+ ? ??
+  ??
 ENDMAP
