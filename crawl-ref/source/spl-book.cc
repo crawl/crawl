@@ -427,10 +427,9 @@ bool library_add_spells(vector<spell_type> spells, bool quiet)
         if (!you.spell_library[st])
         {
             you.spell_library.set(st, true);
-            bool memorise = you_can_memorise(st);
-            if (memorise)
+            if (you_can_memorise(st))
                 new_spells.push_back(st);
-            if (!memorise || Options.auto_hide_spells)
+            if (Options.auto_hide_spells)
                 you.hidden_spells.set(st, true);
         }
     }
