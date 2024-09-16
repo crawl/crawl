@@ -2035,7 +2035,9 @@ static void _apply_gizmo_prop(item_def& gizmo, gizmo_prop_type prop)
             break;
 
         case GIZMO_RAMPAGE:
-            artefact_set_property(gizmo, ARTP_RAMPAGING, 1);
+            // Don't give rampage to Chei worshippers
+            if (!you.religion == GOD_CHEIBRIADOS)
+                artefact_set_property(gizmo, ARTP_RAMPAGING, 1);
             artefact_set_property(gizmo, ARTP_ACROBAT, 1);
             break;
 
