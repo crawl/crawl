@@ -7,6 +7,15 @@
 
 : crawl_require("dlua/ziggurat.lua")
 
+{{
+function megazig_zot_traps(e)
+  if crawl.x_chance_in_y(math.min(27, you.zigs_completed() * 3), 27) then
+    e.kfeat("~ = zot trap")
+    e.subst(". = ~")
+  end
+end
+}}
+
 ### Entry vaults to ziggurats ##########################################
 #
 # There is one Ziggurat in Depths.
@@ -240,6 +249,7 @@ WEIGHT:  20
 SHUFFLE: xy'z / xY'z / "Y"Z
 SUBST:   xYZ : bcmvxG, y" = .
 CLEAR:   'z
+: megazig_zot_traps(_G)
 MAP
 z'z'z
 'x.x'
@@ -289,6 +299,7 @@ TILE:    G = dngn_scintillating_statue
 TILE:    g = dngn_silver_statue
 : set_feature_name("granite_statue", "scintillating statue")
 : set_feature_name("metal_statue", "silver statue")
+: megazig_zot_traps(_G)
 MAP
   x
  ...
@@ -309,6 +320,7 @@ TILE:    G = dngn_scintillating_statue
 TILE:    g = dngn_silver_statue
 : set_feature_name("granite_statue", "scintillating statue")
 : set_feature_name("metal_statue", "silver statue")
+: megazig_zot_traps(_G)
 MAP
   x x
 x."...x
@@ -327,6 +339,7 @@ TILE:    G = dngn_scintillating_statue
 TILE:    g = dngn_silver_statue
 : set_feature_name("granite_statue", "scintillating statue")
 : set_feature_name("metal_statue", "silver statue")
+: megazig_zot_traps(_G)
 MAP
  ...
 .wxw.
@@ -339,6 +352,7 @@ NAME:    ziggurat_pillar_centre_o
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 WEIGHT:  5
 SUBST:   x : bcmvx
+: megazig_zot_traps(_G)
 MAP
  ...
 ..x..
@@ -352,6 +366,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 MONS: plant, oklob plant
 KFEAT: d = cache of fruit
 NSUBST: 1 = 2:1 / 2:2 / 6 = 12dd / * = 1...
+: megazig_zot_traps(_G)
 MAP
  111
 11111
@@ -379,6 +394,7 @@ WEIGHT: 5
 MARKER:  Z = lua:fog_machine { cloud_type = "black smoke", \
          pow_min = 25, pow_max = 25, \
          delay = 30, size = 1, walk_dist = 3 }
+: megazig_zot_traps(_G)
 MAP
  v..
 .v.vv
@@ -390,6 +406,7 @@ ENDMAP
 NAME:  ziggurat_pillar_centre_lightning
 TAGS:  ziggurat_pillar centered no_dump unrand no_exits
 MONS:  lightning spire
+: megazig_zot_traps(_G)
 MAP
 v...v
 .....
@@ -408,6 +425,7 @@ KMONS:   0 = sacred lotus
 SHUFFLE: 1t / 2t / t2
 NSUBST:  1 = 2 : 001 / 2:1
 SUBST:   2 : 23, 4 : 45..., x : bcmvxG
+: megazig_zot_traps(_G)
 MAP
   .t.
  ..t.1
@@ -423,7 +441,7 @@ TAGS:    ziggurat_pillar centered generate_awake unrand no_exits
 DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul, rakshasa
-KFEAT:   ~ = permanent teleport trap
+KFEAT:   ^ = permanent teleport trap
 KFEAT:   a = iron_grate
 SHUFFLE: xbcv
 SUBST:   9 : 00.
@@ -434,7 +452,7 @@ MAP
   xax
  ax0xa
 xx9.9xx
-a0.~.0a
+a0.^.0a
 xx9.9xx
  ax0xa
   xax
@@ -447,6 +465,7 @@ KFEAT:  a = iron_grate
 COLOUR: G = mountain
 TILE:   G = dngn_scintillating_statue
 : set_feature_name("granite_statue", "scintillating statue")
+: megazig_zot_traps(_G)
 MAP
 ^a.a^
 aG.Ga
@@ -463,6 +482,7 @@ KFEAT:  G = metal_statue
 COLOUR: G = silver
 TILE:   G = dngn_silver_statue
 : set_feature_name("metal_statue", "silver statue")
+: megazig_zot_traps(_G)
 MAP
  G.G
 G^.^G
@@ -503,6 +523,7 @@ WEIGHT:  1
 KFEAT:   ^ = zot trap
 SHUFFLE: .G
 TILE:    G = dngn_statue_orb_guardian
+: megazig_zot_traps(_G)
 MAP
 G.G
 .^.
