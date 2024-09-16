@@ -631,6 +631,9 @@ void win_apostle_challenge(monster& apostle)
     apostle.stop_constricting_all();
     apostle.stop_being_constricted();
 
+    // Don't let the player get XP from killing off apostles with e.g. ?poison
+    apostle.flags |= MF_NO_REWARD;
+
     // Save the recruit's current, healthy state
     if (apostles.size() > 0)
         apostles[0] = apostle_data(apostle);
