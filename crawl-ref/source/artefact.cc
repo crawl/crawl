@@ -2067,7 +2067,16 @@ void fill_gizmo_properties(CrawlVector& gizmos)
     // Shuffle all props
     vector<gizmo_prop_type> rare_props;
     for (int i = 0; i <= LAST_RARE_GIZMO; ++i)
-        rare_props.push_back(static_cast<gizmo_prop_type>(i));
+    {
+        const gizmo_prop_type ptype = static_cast<gizmo_prop_type>(i);
+
+        // Don't generate the gizmo prop for Chei worshippers, since the rampage
+        // will prevent them from using the entire thing.
+        if (you_worship(GOD_CHEIBRIADOS) && ptype == GIZMO_RAMPAGE)
+            continue;
+
+        rare_props.push_back(ptype);
+    }
     shuffle_array(rare_props);
 
     vector<gizmo_prop_type> common_props;
