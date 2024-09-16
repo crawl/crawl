@@ -505,6 +505,16 @@ static bool _any_crosstrained()
     return false;
 }
 
+static bool _charlatan_bonus()
+{
+    if (player_equip_unrand(UNRAND_CHARLATANS_ORB)
+        && you.skill(SK_EVOCATIONS, 10, true) > 0)
+    {
+        return true;
+    }
+    return false;
+}
+
 static bool _hermit_bonus()
 {
     if (player_equip_unrand(UNRAND_HERMITS_PENDANT)
@@ -566,6 +576,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("cross-training");
             if (_hermit_bonus())
                 causes.push_back("the Hermit's pendant");
+            if (_charlatan_bonus())
+                causes.push_back("the Charlatan's Orb");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";

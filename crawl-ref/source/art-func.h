@@ -1844,9 +1844,13 @@ static void _DOOM_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
 static void _CHARLATANS_ORB_equip(item_def */*item*/, bool */*show_msgs*/, bool /*unmeld*/)
 {
     invalidate_agrid(true);
+    calc_hp(true);
+    calc_mp(true);
 }
 
 static void _CHARLATANS_ORB_unequip(item_def */*item*/, bool */*show_msgs*/)
 {
     invalidate_agrid(true);
+    calc_hp(true);
+    calc_mp(true);
 }
