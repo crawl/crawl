@@ -2870,12 +2870,17 @@ item_def* monster_die(monster& mons, killer_type killer,
             const beh_type att = mons.has_ench(ENCH_CHARM)
                                  ? BEH_HOSTILE : SAME_ATTITUDE(&mons);
 
+            // Carry over bribe enchantments (as otherwise revived bribed
+            // bennu will follow the player out of their branch)
+            const mon_enchant gozag_bribe = mons.get_ench(ENCH_NEUTRAL_BRIBED,
+                                                          ENCH_FRIENDLY_BRIBED);
+
             // Don't consider this a victory yet, and duel the new bennu.
             if (duel)
                 mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
 
             bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe,
-                                          duel);
+                                          duel, gozag_bribe);
         }
     }
 

@@ -361,21 +361,24 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, int revives, beh_type attitude,
-                         unsigned short foe, bool duel)
+                         unsigned short foe, bool duel, mon_enchant gozag_bribe)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe, duel));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude,
+                                                       foe, duel, gozag_bribe));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
-                        unsigned short _foe, bool _duel)
+                        unsigned short _foe, bool _duel,
+                        mon_enchant _gozag_bribe)
         : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe),
-          duel(_duel)
+          duel(_duel), gozag_bribe(_gozag_bribe)
     {
     }
     int revives;
     beh_type attitude;
     unsigned short foe;
     bool duel;
+    mon_enchant gozag_bribe;
 };
 
 class avoided_death_fineff : public final_effect
