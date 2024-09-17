@@ -520,8 +520,7 @@ monster_type fixup_zombie_type(const monster_type cls,
 
 // Checks if the monster is ok to place at mg_pos. If force_location
 // is true, then we'll be less rigorous in our checks, in particular
-// allowing land monsters to be placed in shallow water and water
-// creatures in fountains.
+// allowing land monsters to be placed in shallow water.
 static bool _valid_monster_generation_location(const mgen_data &mg,
                                                 const coord_def &mg_pos)
 {
