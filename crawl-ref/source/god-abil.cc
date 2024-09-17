@@ -3026,6 +3026,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_SPECTRAL_CLOUD:
         case SPELL_CORRUPTING_PULSE:
         case SPELL_SUMMON_ILLUSION:
+        case SPELL_PHANTOM_BLITZ:
             return false;
 
         default:

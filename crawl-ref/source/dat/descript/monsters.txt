@@ -1494,11 +1494,6 @@ A short, impatient and unfriendly humanoid. Goblins first appeared only a few
 years ago, but are now remarkably numerous. Sadly, no number of raucous goblin
 parties will put them in a welcoming mood toward adventurers.
 %%%%
-goblin sharper
-
-A goblin newly converted to Nemelex Xobeh. It's still learning about all the
-cards and, thankfully, isn't inclined to use them against you.
-%%%%
 golden dragon
 
 A great winged dragon covered in shining golden scales. Legends say that its
@@ -2030,6 +2025,12 @@ necrophage
 A vile undead creation of the most unholy necromancy, made from the decaying
 corpses of humanoid creatures. It exists to spread disease and decay.
 %%%%
+nekomata
+
+An upright feliform trickster of a elderly demon, with a forked tail ablaze
+with a shimmering haze. It holds a deep disdain for mortal humanoids, a
+patronizing pity for mortal cats, and enough mystic might to subjugate both.
+%%%%
 neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
@@ -2327,8 +2328,9 @@ the gods, it now relies on constructs to protect itself.
 %%%%
 rakshasa
 
-A demon in the form of a tiger, in search of hidden power and knowledge. It is
-an expert in the art of illusion, and is exceptionally intelligent and cruel.
+A maneater demon, beastial and misshapen, in search of hidden power and
+knowledge. It is an expert in the art of illusion, and is exceptionally
+intelligent and cruel.
 %%%%
 rat
 
@@ -3326,6 +3328,11 @@ A bat with a spectral visage.
 giga bat
 
 An enormous, bloated bat.
+%%%%
+goblin sharper
+
+A goblin newly converted to Nemelex Xobeh. It's still learning about all the
+cards and, thankfully, isn't inclined to use them against you.
 %%%%
 greater air elemental
 

@@ -241,6 +241,7 @@ mindburst MINDBURST
 noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
 petrifying_cloud PETRIFYING_CLOUD
+phantom_blitz PHANTOM_BLITZ
 phantom_mirror PHANTOM_MIRROR
 plane_rend PLANE_REND
 polymorph POLYMORPH

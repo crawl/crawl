@@ -568,8 +568,7 @@ function arena_sprint_get_monster_set(round, boss)
                     cherub / seraph",
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
-                "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "boulder beetle",
+                "moth of wrath / w:20 ettin", "orb spider", "nekomata",
                 "shining eye", "tormentor",
                 "unseen horror / shadow wraith / ghost moth",
                 "reaper / sin beast / geryon w:1",
@@ -644,7 +643,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "cacodemon", "sun moth", "catoblepas / iron golem w:5",
                 "moth of wrath / w:20 juggernaut", "orb spider", "apocalypse crab",
-                "shining eye", "tormentor",
+                "nekomata", "tormentor",
                 "unseen horror / shadow wraith / ghost moth w:15",
                 "reaper / sin beast / geryon w:1",
                 "ghost moth / void ooze / demonspawn warmonger",
@@ -756,7 +755,7 @@ function arena_sprint_init_boss_table()
               "tentacled monstrosity / glass eye / golden eye / " ..
               "eye of devastation / shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
-              "nagaraja / merfolk aquamancer / jorogumo / " ..
+              "nekomata / nagaraja / merfolk aquamancer / jorogumo / " ..
               "fenstrider witch / titan / lich / draconian annihilator / " ..
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
     bs[12] = {"efreet / sun moth / undying armoury / balrug / brimstone fiend",

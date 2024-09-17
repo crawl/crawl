@@ -7690,6 +7690,39 @@ VISUAL: A cold fog rises from @the_monster@.
 
 @The_monster@ makes a faint grinding noise.
 %%%%
+################## Nekomata ##################################
+nekomata
+
+{{
+  if you.race() == "Felid" then
+    return '@The_monster@ grumbles @to_foe@, "Young upstarts should know their place."'
+  else
+    return 'VISUAL:@The_monster@ examines your form and snarls in deep contempt.'
+  end
+}} @player_only@
+
+{{
+  if you.race() == "Felid" then
+    return [[@The_monster@ sighs and remarks, "You haven't even grown your second tail yet."]]
+  elseif you.skill("Spellcasting") >= 5 then
+    return 'VISUAL:@The_monster@ scoffs at your paltry magic.'
+  else
+    return 'VISUAL:@The_monster@ regards your strength with dismissive scorn.'
+  end
+}} @player_only@
+
+{{
+  if you.race() == "Felid" then
+    return '@The_monster@ advises @to_foe@, "Grace and deceit. The only things anyone needs."'
+  else
+    return 'VISUAL:@The_monster@ briefly ignores you to bat at some conjured hitodama.'
+  end
+}} @player_only@
+
+# Terry Pratchett
+w:1
+@The_monster@ states, "It's not just demons who despoil everything they cannot have."
+%%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A
 # speech.

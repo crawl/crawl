@@ -705,6 +705,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_RAKSHASA_FAKE,
 #else
+    MONS_NEKOMATA,
     MONS_DRYAD,
     MONS_ELEIONOMA,
     MONS_WENDIGO,
@@ -1274,6 +1275,7 @@ enum monster_type                      // env.mons[].type
     MONS_SOUL_WISP,
     MONS_GLOBE_OF_ANNIHILATION,
     MONS_FRAVASHI,
+    MONS_NEKOMATA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

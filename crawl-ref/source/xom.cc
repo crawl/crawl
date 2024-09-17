@@ -903,6 +903,7 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 22, 33,   1, FLAT, MONS_STARFLOWER },
   { 23, 33,  30, SEMI, MONS_HELLEPHANT },
   { 24, 33,   5, SEMI, MONS_MOTH_OF_WRATH },
+  { 25, 33,   5, SEMI, MONS_NEKOMATA },
 };
 
 // Whenever choosing a monster that obviously comes in bands, spawn a few more,

@@ -15,7 +15,8 @@ monster *clone_mons(const monster* orig, bool quiet = false,
                     bool* obvious = nullptr);
 
 monster *clone_mons(const monster* orig, bool quiet,
-                    bool* obvious, mon_attitude_type mon_att);
+                    bool* obvious, mon_attitude_type mon_att,
+                    coord_def place = coord_def());
 
 int mons_summon_illusion_from(monster* mons, actor *foe,
                                spell_type spell_cast = SPELL_NO_SPELL,

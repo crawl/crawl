@@ -1253,6 +1253,12 @@ Petrifying Cloud spell
 Exhales calcifying dust, which petrifies anyone affected for longer than a
 brief moment.
 %%%%
+Phantom Blitz spell
+
+Weaves and fires a phantom copy of the caster with great force. Such phantoms
+have the same martial and mystic prowess as the caster, and an impromptu night
+parade of illusions may overwhelm the caster's victims.
+%%%%
 Phantom Mirror spell
 
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but

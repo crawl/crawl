@@ -452,7 +452,8 @@ mset(with_props(spec_fn(function ()
          "kobold blastminer w:" .. d .. " / faun w:" .. d .. " / " ..
          "yaktaur captain w:" .. d .. " / satyr w:" .. d .. " / " ..
          "stone giant w:" .. e .. " / naga sharpshooter w:" .. e .. " / " ..
-         "merfolk javelineer w:" .. e .. " / deep elf master archer w:" .. e
+         "merfolk javelineer w:" .. e .. " / deep elf master archer w:" .. e .. " / " ..
+         "nekomata w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -475,7 +476,7 @@ local pan_critter_fn = zig_monster_fn(
          "place:Pan w:" .. math.max(1, 105 - you.zigs_completed() * 12) .. " / " ..
          "greater demon w:" .. math.max(1, 75 - you.zigs_completed() * 7) .. " / " ..
          "brimstone fiend w:5 / ice fiend w:5 / tzitzimitl w:5 / " ..
-         "hell sentinel w:5 / demonspawn soul scholar / " ..
+         "hell sentinel w:5 / nekomata w:2 / demonspawn soul scholar / " ..
          "demonspawn blood saint / demonspawn corrupter / " ..
          "demonspawn warmonger w:" .. 10 + you.zigs_completed())
 

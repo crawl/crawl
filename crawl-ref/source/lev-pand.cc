@@ -57,7 +57,8 @@ void init_pandemonium()
                                                     2, MONS_SIN_BEAST,
                                                     1, MONS_HELLION,
                                                     1, MONS_TORMENTOR,
-                                                    1, MONS_REAPER);
+                                                    1, MONS_REAPER,
+                                                    2, MONS_NEKOMATA);
 
         // The last three slots have a good chance of big badasses.
         if (pc == 7 && one_chance_in(8)

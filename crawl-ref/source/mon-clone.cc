@@ -279,10 +279,11 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
  * @param quiet         If true, suppress messages
  * @param obvious       If true, player can see the orig & cloned monster
  * @param mon_att       The attitude to set for the cloned monster
+ * @param place         If set, place it somewhere instead of near the source
  * @return              Returns the cloned monster
  */
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
-                    mon_attitude_type mon_att)
+                    mon_attitude_type mon_att, coord_def place)
 {
     // Is there an open slot in env.mons?
     monster* mons = get_free_monster();
@@ -291,18 +292,23 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     if (!mons)
         return nullptr;
 
-    for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
+    if (place.origin())
     {
-        if (in_bounds(*ai)
-            && !actor_at(*ai)
-            && monster_habitable_grid(orig, env.grid(*ai)))
+        for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
         {
-            pos = *ai;
+            if (in_bounds(*ai)
+                && !actor_at(*ai)
+                && monster_habitable_grid(orig, env.grid(*ai)))
+            {
+                pos = *ai;
+            }
         }
-    }
 
-    if (!in_bounds(pos))
-        return nullptr;
+        if (!in_bounds(pos))
+            return nullptr;
+    }
+    else
+       pos = place;
 
     ASSERT(!actor_at(pos));
 

@@ -2179,6 +2179,22 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 },
 
 {
+    ZAP_PHANTOM_BLITZ,
+    "phantom echo",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 9, 1, 11>,
+    new tohit_calculator<20, 1, 30>,
+    CYAN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+},
+
+{
     ZAP_SHADOW_SHARD,
     "shard of hardened shadow",
     200,

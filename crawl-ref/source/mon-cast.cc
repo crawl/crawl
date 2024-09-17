@@ -503,6 +503,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_FLASHING_BALESTRA, { _foe_not_nearby, _fire_simple_beam,
                                  _zap_setup(SPELL_FLASHING_BALESTRA)
     } },
+    { SPELL_PHANTOM_BLITZ, { _always_worthwhile, _fire_simple_beam,
+                             _zap_setup(SPELL_PHANTOM_BLITZ)
+    } },
     { SPELL_DIVINE_ARMAMENT, { _always_worthwhile, _cast_divine_armament } },
     { SPELL_HASTE_OTHER, {
         _always_worthwhile,

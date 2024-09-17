@@ -140,6 +140,14 @@ Blink Range ironbound thunderhulk cast
 
 Strange energies crackle from @the_monster_possessive@ apparatus.
 %%%%
+Phantom Blitz cast
+
+@The_monster@ weaves a phantasmal image and fires it @at@ @target@.
+%%%%
+unseen Phantom Blitz cast
+
+@The_something@ weaves a phantasmal image and casts it forth!
+%%%%
 Mara Summon cast
 
 @The_monster@ weaves an illusion.

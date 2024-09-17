@@ -560,6 +560,9 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_TRIDENT,          1 },
                 { WPN_LONG_SWORD,       1 },
         } } },
+        { MONS_NEKOMATA, {
+            { { WPN_DEMON_BLADE, 1 } },
+              { 4, 2, 4 }, { { SPWPN_FLAMING, 3 }, { SPWPN_DRAINING, 2 }, }, } },
         { MONS_DEEP_ELF_KNIGHT,         { DE_KNIGHT_WEAPONS } },
         { MONS_DEEP_ELF_HIGH_PRIEST,    { DE_KNIGHT_WEAPONS } },
         { MONS_DEEP_ELF_BLADEMASTER,
@@ -1040,6 +1043,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_GLAIVE,                     2 },
               { WPN_SHORTBOW,                   5 }, },
             { 4, 0, 4 },
+        } },
+        { MONS_NEKOMATA,
+            { { { WPN_SLING,                    9 },
+                { WPN_ARBALEST,                 9 },
+                { WPN_HAND_CANNON,              1 }, },
+              { 4, 2, 4 },
+              { { SPWPN_FLAMING,                3 },
+                { SPWPN_DRAINING,               2 }, },
         } },
         { MONS_DEMONSPAWN_WARMONGER, {
             { { WPN_LONGBOW,                    10 }, // total 60

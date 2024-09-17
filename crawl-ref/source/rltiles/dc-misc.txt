@@ -155,6 +155,8 @@ pie5
 pie6
 pie7
 
+phantom_blitz BOLT_PHANTOM_BLITZ
+
 shadow_beam0 BOLT_SHADOW_BEAM
 shadow_beam1
 shadow_beam2

@@ -3963,6 +3963,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PHANTOM_BLITZ, "Phantom Blitz",
+    spschool::conjuration | spschool::summoning,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    7,
+    200,
+    7, 7,
+    0,
+    TILEG_PHANTOM_BLITZ,
+},
+
+{
     SPELL_BESTOW_ARMS, "Bestow Arms",
     spschool::hexes,
     spflag::area | spflag::utility | spflag::monster,

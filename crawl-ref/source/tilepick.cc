@@ -3542,6 +3542,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             return TILE_BOLT_GHOSTLY_FIREBALL;
         else if (bolt.name == "umbral torchlight")
             return TILE_BOLT_UMBRAL_TORCHLIGHT;
+        else if (bolt.name == "phantom echo")
+            return TILE_BOLT_PHANTOM_BLITZ;
         break;
 
     case ETC_MUTAGENIC:

@@ -45,6 +45,7 @@
 #include "los.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-explode.h"
 #include "mon-place.h"
@@ -2707,6 +2708,37 @@ void bolt::affect_endpoint()
 
             if (blade)
                 blade->add_ench(ENCH_MIGHT);
+        }
+    }
+    break;
+
+    case SPELL_PHANTOM_BLITZ:
+    {
+        if (!agent(true) || !agent(true)->alive())
+            break;
+
+        coord_def spot;
+        int num_found = 0;
+        for (fair_adjacent_iterator ai(pos()); ai; ++ai)
+        {
+            if (feat_is_solid(env.grid(*ai)) || actor_at(*ai))
+                continue;
+
+            if (one_chance_in(++num_found))
+                spot = *ai;
+        }
+
+        if (!spot.origin())
+        {
+            // Clone the original monster and heal the clone to full.
+            monster* blitzer = agent(true)->as_monster();
+            bool obviousness; // dummy argument
+            monster *mirror = clone_mons(blitzer, true, &obviousness,
+                                         blitzer->attitude, spot);
+            mirror->mark_summoned(2, true, SPELL_PHANTOM_BLITZ);
+            mirror->summoner = blitzer->mid;
+            mirror->foe = blitzer->foe;
+            mirror->hit_points = blitzer->max_hit_points;
         }
     }
     break;

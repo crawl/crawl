@@ -3405,6 +3405,12 @@ necromancer
  Gives them hunger for vengeance...”
     -Rush, “The Necromancer”. 1975.
 %%%%
+nekomata
+
+“Humans, eh? Think they’re lords of creation. Not like us cats. We _know_ we
+ are. Ever see a cat feed a human? Case proven.”
+    -Terry Pratchett, “The Amazing Maurice and His Educated Rodents”. 2001.
+%%%%
 neqoxec
 
 “If thus mutation is influenced by natural selection, it implies, that any

@@ -1312,6 +1312,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_NEKOMATA,
+      {
+       { SPELL_PHANTOM_BLITZ, 48, MON_SPELL_MAGICAL },
+       { SPELL_REPEL_MISSILES, 12, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_WENDIGO,
       {
        { SPELL_SERACFALL, 50, MON_SPELL_MAGICAL },
