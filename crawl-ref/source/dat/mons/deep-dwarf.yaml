@@ -1,6 +1,6 @@
 name: "deep dwarf"
 glyph: {char: "g", colour: lightblue}
-flags: [speaks, warm_blood, no_regen, no_poly_to]
+flags: [speaks, warm_blood, no_regen, no_poly_to, no_gen_derived]
 genus: dwarf
 will: 40
 attacks:
