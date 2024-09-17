@@ -778,7 +778,7 @@ void make_derived_undead_fineff::fire()
 
     if (mg.god != GOD_YREDELEMNUL && undead->type != MONS_ZOMBIE)
     {
-        int dur = (undead->type == MONS_SKELETON || spell == SPELL_SIMULACRUM) ? 3 : 5;
+        int dur = spell == SPELL_SIMULACRUM ? 3 : 5;
         undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
     }
     if (!agent.empty())
