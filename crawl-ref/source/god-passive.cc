@@ -1289,7 +1289,8 @@ static coord_def _find_preferred_shadow_shoot_position(monster* target)
     return coord_def();
 }
 
-static bool _simple_shot_tracer(coord_def source, coord_def target, mid_t source_mid = MID_PLAYER)
+static bool _simple_shot_tracer(coord_def source, coord_def target,
+                                    mid_t source_mid = MID_PLAYER_SHADOW_DUMMY)
 {
     bolt tracer;
     tracer.attitude = ATT_FRIENDLY;
