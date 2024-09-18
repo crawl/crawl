@@ -1,5 +1,6 @@
 #pragma once
 
+#include "coord-def.h"
 #include "mon-attitude-type.h"
 #include "spell-type.h"
 
