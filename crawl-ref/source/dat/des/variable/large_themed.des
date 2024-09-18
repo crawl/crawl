@@ -646,51 +646,52 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 #############################################################################
-# The Lair of the Golden Dragon (by Mu.)
+# The Lair of the Golden Dragons (by Mu.)
 #
 NAME:   gold_lair_mu
 ORIENT: southeast
 TAGS:   no_monster_gen no_descent
 DEPTH:  Depths, !Depths:$
-MONS:   golden dragon, any draconian, fungus, plant, oklob plant
-KMONS:  6 = rime drake / swamp drake / lindwurm
-KMONS:  D = rime drake w:5 / swamp drake w:5 / death drake / lindwurm w:5
+MONS:   golden dragon, any draconian
+MONS:   rime drake / swamp drake / lindwurm
+KMONS:  D = rime drake w:5 / wind drake w:5 / death drake / lindwurm w:5
+KMONS:  f = fungus
+KMONS:  p = plant
 KITEM:  D = $
+KFEAT:  D = >
 SUBST:  $ = $|
-SUBST:  f : A B
-SUBST:  A = 3:30 .:90 5:1
-SUBST:  B = 4:30 .:120 5:1
+SUBST:  f : AB, A = f:30 .:90, B = p:30 .:120
 SUBST:  m = W:20 w:10
-KFEAT:  o = granite_statue
+TILE:   G = dngn_statue_dragon
 MAP
         ...........ffffmmmmmmmxxx
        ..........ffmmmwwwwwwwmxxx
       .........ffmmwwwwwwwwwxxxxx
-     ..6....ffffmmwwwwwxxxxxxxxxx
+     ..3....ffffmmwwwwwxxxxxxxxxx
     ..9...ffffmmwwwwwxxxxxxxxxxxx
    ..9..ffffmmwwwwwwxxxxxxxxxxxxx
-  ..6..fffmmwwwwwwwxxxxx.2x.2xxxx
+  ..3..fffmmwwwwwwwxxxxx.2x.2xxxx
  .....fffmwwwwwwwwxxx........xxxx
 ......ffmwwwwwwwwxxx.....xx...xxx
 .....fffmwwwwwwxxxxx...xxxxx..xxx
 .....ffmwwwwwwxxxxxx..xxxxxxx..xx
-....fffmwwwwwxxxx.....xxxoxxxx.xx
-....ffmwwwwwxxxx..6..xx....xx..xx
-...fffmwwwwxxxxx..xxxx...6....cxx
+....fffmwwwwwxxxx.....xxxGxxxx.xx
+....ffmwwwwwxxxx..3..xx....xx..xx
+...fffmwwwwxxxxx..xxxx...3....cxx
 ...ffmwwwwwxxxx..xxxxx..xxxx2xxxx
 ..fffmwwwwxxxx...xxxx...ccccccccx
 .fffmwwwwwxxx....xxx..ccccccccccx
-..ffmwwwwxxxx..x..xx.cccc.6..cccx
-.fffmwwwxxxxx..xx..xc.c.......ocx
+..ffmwwwwxxxx..x..xx.cccc.3..cccx
+.fffmwwwxxxxx..xx..xc.c.......Gcx
 .fffmwwwxxxx..xxx..ccc....lllllcx
 ..ffmwwxxxx..xxxx.xcc....llllllcx
 .fffwwxxxx..xxxxx.ccc...llll$$Dcx
 .fffwwxxx..x..2xx.cc...llll$$$$cx
-..ffwwxxx....xxx..cc6.llll$$$$$cx
-.ffffwxxxx..xxx..xcc..lll$$$$$$cx
-..8ffwwxxx...xx2xxcc..ll$$$$$$$cx
-.6.fffwwxxx..xxxxxccc.ll$$$$$1ccx
-....fffmwwwxxxxxxxcccollD$$$$cccx
+..ffwwxxx....xxx..cc3.llll$$$$$cx
+.ffffwxxxx..xxx2.xcc..lll$$$$$$cx
+..8ffwwxxx...xx>xxcc..ll$$$$$$1cx
+.3.fffwwxxx..xxxxxccc.ll$$$$$$ccx
+....fffmwwwxxxxxxxcccGllD$$$1cccx
 .....fffmmwwwwwwwwccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
