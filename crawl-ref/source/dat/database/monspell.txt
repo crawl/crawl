@@ -615,6 +615,26 @@ glowing orange brain cast
 
 @The_monster@ pulsates.
 %%%%
+Airstrike blizzard demon cast
+
+@The_monster@ lashes out with icy intensity.
+
+@The_monster@ gestures with frozen lightning.
+
+@The_monster@ waves @possessive@ @arms@ in writhing circles.
+%%%%
+silent blizzard demon cast
+
+@The_monster@ lashes out with icy intensity.
+
+@The_monster@ gestures with frozen lightning.
+%%%%
+blizzard demon cast
+
+@The_monster@ crackles with melancholic malice.
+
+@The_monster@ roars with sorrowful spite.
+%%%%
 silent flayed ghost cast
 
 @The_monster@ moans in silent anguish.

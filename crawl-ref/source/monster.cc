@@ -2349,6 +2349,11 @@ string monster::hand_name(bool plural, bool *can_plural) const
             str = "tentacle";
             break;
         }
+        else if (type == MONS_BLIZZARD_DEMON)
+        {
+            str = "stratum";
+            break;
+        }
         // Deliberate fallthrough.
     case MON_SHAPE_FUNGUS:
         str         = "body";
@@ -2545,7 +2550,8 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
-    // TODO: shared code with species::skin_name for player species
+    // TODO: All extremely non-general or shared species::skin_name code.
+    // (Probably all monster part / adjectives should be in the monster .yaml?)
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -2565,7 +2571,6 @@ string monster::arm_name(bool plural, bool *can_plural) const
         str = "tentacle";
         break;
 
-    // TODO: this looks extremely non-general
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:

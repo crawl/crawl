@@ -79,6 +79,8 @@ string pluralise(const string &name, const char * const qualifiers[],
         return name.substr(0, name.length() - 1) + "es";
     else if (lowname == "catoblepas")
         return "catoblepae";
+    else if (lowname == "stratum")
+        return "strata";
     else if (ends_with(lowname, "s"))
         return name;
     else if (ends_with(lowname, "y"))
