@@ -216,7 +216,9 @@ swamp_worm_water
 %rim 1
 %sdir mon/animals
 ribbon_worm MONS_RIBBON_WORM
+%rim 0
 brain_worm MONS_BRAIN_WORM
+%rim 1
 tyrant_leech MONS_TYRANT_LEECH
 dart_slug MONS_DART_SLUG
 steelbarb_worm MONS_STEELBARB_WORM
