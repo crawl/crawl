@@ -2002,7 +2002,8 @@ static const vector<chaos_effect> chaos_effects = {
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     { "confusing", 12, [](const actor &victim) {
         return !(victim.clarity()
-               || mons_is_conjured(victim.as_monster()->type)); },
+               || (victim.is_monster()
+               && mons_is_conjured(victim.as_monster()->type))); },
                BEAM_CONFUSION },
     { "weakening", 10, [](const actor & victim) {
         return !victim.is_monster()
