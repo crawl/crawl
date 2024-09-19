@@ -3925,12 +3925,12 @@ ENDMAP
 
 NAME:  minmay_the_grid_triangle_9x9_subtriangle
 TAGS:  the_grid_triangle_9x9 unrand
-SUBST: 9 = 9..
+SUBST: 9 = 9.
 MAP
-.n*999*n.
-.  999  .
+.n     n.
+.  *9*  .
  .n999n.
- .  .  .
+ .  9  .
   .n.n.
   . = .
    ...
