@@ -8,7 +8,7 @@ Acid Splash spell
 向附近的一个生物吐出一团酸液，使其被腐蚀性粘液覆盖一小段时间。
 它也有可能溅射到目标附近的其他生物。
 %%%%
-Agonizing Touch spell
+Agonising Touch spell
 
 让一个邻近生物的生命值减半。但永远不会直接杀死目标。
 %%%%

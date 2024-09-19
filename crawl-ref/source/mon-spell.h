@@ -1017,7 +1017,7 @@ static const mon_spellbook mspell_list[] =
     { MST_FENSTRIDER_WITCH,
       {
        { SPELL_PARALYSE, 15, MON_SPELL_WIZARD },
-       { SPELL_AGONIZING_TOUCH, 30, MON_SPELL_WIZARD },
+       { SPELL_AGONISING_TOUCH, 30, MON_SPELL_WIZARD },
        { SPELL_HURL_SLUDGE, 15, MON_SPELL_WIZARD },
       }
     },

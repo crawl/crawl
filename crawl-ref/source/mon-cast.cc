@@ -576,7 +576,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return ai_action::good_or_impossible(_torment_vulnerable(foe));
         }, 6)
     },
-    { SPELL_AGONIZING_TOUCH, _hex_logic(SPELL_AGONIZING_TOUCH, [](const monster &caster) {
+    { SPELL_AGONISING_TOUCH, _hex_logic(SPELL_AGONISING_TOUCH, [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(_torment_vulnerable(foe));

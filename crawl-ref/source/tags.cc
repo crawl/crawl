@@ -2508,7 +2508,7 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_IRON_SHOT:
             return SPELL_BOMBARD;
 
-        case SPELL_AGONIZING_TOUCH:
+        case SPELL_AGONISING_TOUCH:
             return SPELL_CURSE_OF_AGONY;
 
         default:
@@ -2528,7 +2528,7 @@ static spell_type _fixup_positional_monster_spell(spell_type s)
         case SPELL_ISKENDERUNS_MYSTIC_BLAST:
             return SPELL_FORCE_LANCE;
 
-        case SPELL_AGONIZING_TOUCH:
+        case SPELL_AGONISING_TOUCH:
             return SPELL_AGONY;
 
         case SPELL_DISPEL_UNDEAD:

@@ -130,7 +130,7 @@ enum spell_type : int
 #if TAG_MAJOR_VERSION == 34
     SPELL_RECALL,
 #endif
-    SPELL_AGONIZING_TOUCH,
+    SPELL_AGONISING_TOUCH,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SPIDER_FORM,
 #endif
