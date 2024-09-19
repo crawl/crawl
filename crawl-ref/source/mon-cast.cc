@@ -7019,11 +7019,24 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                             .set_summoned(mons, 1, spell_cast, god);
             mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(spell);
             mg.hd = hd;
-            create_monster(mg);
+            monster* living = create_monster(mg);
+
+           if (living)
+           {
+#ifdef USE_TILE
+                if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
+                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_CRYSTAL;
+                else if (spell == SPELL_PETRIFY)
+                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_EARTH;
+                else if (spell == SPELL_SMITING)
+                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_HOLY;
+                else if (spell == SPELL_ICEBLAST)
+                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ICE;
+#endif
+           }
         }
         return;
     }
-
 
     case SPELL_SUMMON_UNDEAD:
         _do_high_level_summon(mons, spell_cast, _pick_undead_summon,

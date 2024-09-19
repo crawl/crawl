@@ -373,6 +373,10 @@ shadow_prism4
 foxfire MONS_FOXFIRE
 marshlight MONS_MARSHLIGHT
 living_spell MONS_LIVING_SPELL
+living_spell_crystal MONS_LIVING_SPELL_CRYSTAL
+living_spell_earth MONS_LIVING_SPELL_EARTH
+living_spell_holy MONS_LIVING_SPELL_HOLY
+living_spell_ice MONS_LIVING_SPELL_ICE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno MONS_CREEPING_INFERNO

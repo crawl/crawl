@@ -469,6 +469,7 @@ vanhel1 VANHEL
 deep_troll_leather DEEP_TROLL_LEATHER
 iron_troll_leather IRON_TROLL_LEATHER
 
+augmentation AUGMENTATION
 maxwell MAXWELL
 lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
