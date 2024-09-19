@@ -1,8 +1,8 @@
 %%%%
 Air Elementalist
 
-Air Elementalists have learned the Shock spell. Later on, their selection of
-Air Magic spells provides them with the flexibility to survive.
+Air Elementalists have learned the Shock spell. Their library of spells are 
+jittery and sometimes uncontrollable, but very effective.
 %%%%
 Artificer
 
@@ -30,7 +30,8 @@ there is nothing left.
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells.
+Conjurers confront problems with reliable spells. Their starter Magic Dart spell 
+is an attack that always hits.
 %%%%
 Delver
 
@@ -55,7 +56,7 @@ choice and a potion of might.
 Fire Elementalist
 
 Fire Elementalists have learned the Foxfire spell. Their other starting spells
-are likewise focused on fiery destruction.
+are likewise focused on fiery, explosive destruction.
 %%%%
 Gladiator
 
@@ -99,8 +100,8 @@ when in need. They start with the Kiss of Death spell.
 %%%%
 Summoner
 
-Summoners are able to cast Summon Small Mammal from the start, and begin with
-other Summonings spells in their library.
+Summoners are able to cast Summon Small Mammal from the start, and can
+summon deadlier beings further down the line.
 %%%%
 Shapeshifter
 
@@ -109,8 +110,8 @@ fighters (especially when unarmed) at the cost of armour.
 %%%%
 Alchemist
 
-Alchemists start with the Sting spell, and their magic is very effective against
-foes susceptible to poison.
+Alchemists start with the Sting spell, and their wide range of effects
+can harm a variety of foes.
 %%%%
 Wanderer
 
