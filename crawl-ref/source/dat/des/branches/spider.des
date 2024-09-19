@@ -1778,16 +1778,16 @@ ENDMAP
 
 NAME:  nicolae_spider_orb_run
 TAGS:  no_pool_fixup transparent
-KMASK: '1 = opaque
-KMASK: '1 = no_monster_gen
-KMASK: '1 = no_item_gen
-KMASK: '1 = no_trap_gen
-KPROP: '1 = no_tele_into
-MONS:  orb spider
+KMONS: 1 = orb spider
 SUBST: D = x., 0 = 000.
+KMASK: '1> = opaque
+KMASK: '1> = no_monster_gen
+KMASK: '1> = no_item_gen
+KMASK: '1> = no_trap_gen
+KPROP: '1> = no_tele_into
 MAP
      xxxxxxxxxxx
-  xxxx'1'''''1'xxxx
+  xxxx'1''>''1'xxxx
  xxxxxwwwxxxwwwxxxxx
 ....xx....0....xx....
 xD.DxxD0DxxxD0DxxD.Dx
@@ -1799,7 +1799,7 @@ xxD.xD.D.DxD.D.Dx.Dxx
 xD.DxxD0DxxxD0DxxD.Dx
 xxD0.....xxx.....0Dxx
  xxxxxwwwxxxwwwxxxxx
-  xxxx'1'''''1'xxxx
+  xxxx'1''>''1'xxxx
      xxxxxxxxxxx
 ENDMAP
 
