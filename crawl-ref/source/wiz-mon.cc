@@ -575,7 +575,7 @@ void debug_make_monster_shout(monster* mon)
 
     if (type == 's')
         for (int i = 0; i < num_times; ++i)
-            monster_shout(mon, mons_shouts(mon->type, false));
+            monster_shout(*mon, mons_shouts(mon->type, false));
     else
     {
         if (mon->invisible())

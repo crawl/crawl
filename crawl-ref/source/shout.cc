@@ -137,7 +137,7 @@ bool monster_attempt_shout(monster &mon)
         return false;
     }
 
-    monster_shout(&mon, shout);
+    monster_shout(mon, shout);
     return true;
 }
 
@@ -146,36 +146,36 @@ bool monster_attempt_shout(monster &mon)
  * Have a monster perform a specific shout.
  *
  * @param mons      The monster in question.
- *                  TODO: use a reference, not a pointer
  * @param shout    The shout_type to use.
  */
-void monster_shout(monster* mons, int shout)
+void monster_shout(monster &mons, int shout)
 {
     shout_type s_type = static_cast<shout_type>(shout);
-    mon_acting mact(mons);
+    mon_acting mact(&mons);
 
     // less specific, more specific.
     const string default_msg_key
-        = mons->type == MONS_PLAYER_GHOST ?
+        = mons.type == MONS_PLAYER_GHOST ?
                  "player ghost" :
                  lookup(default_msg_keys, s_type, "__BUGGY");
-    const string key = _shout_key(*mons);
+    const string key = _shout_key(mons);
 
     // Now that we have the message key, get a random verb and noise level
     // for pandemonium lords.
     if (s_type == S_DEMON_TAUNT)
-        s_type = mons_shouts(mons->type, true);
+        s_type = mons_shouts(mons.type, true);
 
     // Tries to find an entry for "name seen" or "name unseen",
     // and if no such entry exists then looks simply for "name".
-    const string suffix = you.can_see(*mons) ? " seen" : " unseen";
+    const bool seen = you.can_see(mons);
+    const string suffix = seen ? " seen" : " unseen";
     string message = getShoutString(key, suffix);
 
     if (message == "__DEFAULT" || message == "__NEXT")
         message = getShoutString(default_msg_key, suffix);
     else if (message.empty())
     {
-        char mchar = mons_base_char(mons->type);
+        char mchar = mons_base_char(mons.type);
 
         // See if there's a shout for all monsters using the
         // same glyph/symbol
@@ -225,26 +225,26 @@ void monster_shout(monster* mons, int shout)
 
         strip_channel_prefix(message, channel);
 
-        if (channel != MSGCH_TALK_VISUAL || you.can_see(*mons))
+        if (seen)
         {
             // Otherwise it can move away with no feedback.
-            if (you.can_see(*mons))
-            {
-                if (!(mons->flags & MF_WAS_IN_VIEW))
-                    handle_seen_interrupt(mons);
-                seen_monster(mons);
-            }
+            if (!(mons.flags & MF_WAS_IN_VIEW))
+                handle_seen_interrupt(&mons);
+            seen_monster(&mons);
+        }
 
-            message = do_mon_str_replacements(message, *mons, s_type);
+        if (channel != MSGCH_TALK_VISUAL || seen)
+        {
+            message = do_mon_str_replacements(message, mons, s_type);
             msg::streams(channel) << message << endl;
         }
     }
 
     const int  noise_level = get_shout_noise_level(s_type);
-    const bool heard       = noisy(noise_level, mons->pos(), mons->mid);
+    const bool heard       = noisy(noise_level, mons.pos(), mons.mid);
 
-    if (crawl_state.game_is_hints() && (heard || you.can_see(*mons)))
-        learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
+    if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
+        learned_something_new(HINT_MONSTER_SHOUT, mons.pos());
 }
 
 bool check_awaken(monster* mons, int stealth)
