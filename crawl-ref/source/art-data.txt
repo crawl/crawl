@@ -951,7 +951,7 @@ OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    4
 COLOUR:  LIGHTGREY
 TILE:    urand_folly
-TILE_EQ: robe_red2
+TILE_EQ: robe_of_folly
 INT:     8
 INSCRIP: Brill Will-∞
 DESCRIP: Brill:     It increases the power of your magical spells and halves
