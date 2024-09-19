@@ -2879,9 +2879,11 @@ static void _xom_wave_of_despair(int sever)
             dummy.position = *di;
 
             item_def* corpse = place_monster_corpse(dummy, true);
-            turn_corpse_into_skeleton(*corpse);
             if (corpse)
+            {
+                turn_corpse_into_skeleton(*corpse);
                 skeleton_count++;
+            }
         }
     }
 
