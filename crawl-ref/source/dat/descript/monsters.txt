@@ -2027,9 +2027,9 @@ corpses of humanoid creatures. It exists to spread disease and decay.
 %%%%
 nekomata
 
-An upright feliform trickster of a elderly demon, with a forked tail ablaze
+An upright feliform trickster of an elderly demon, with a forked tail ablaze
 with a shimmering haze. It holds a deep disdain for mortal humanoids, a
-patronizing pity for mortal cats, and enough mystic might to subjugate both.
+patronising pity for mortal cats, and enough mystic might to subjugate both.
 %%%%
 neqoxec
 
@@ -2328,7 +2328,7 @@ the gods, it now relies on constructs to protect itself.
 %%%%
 rakshasa
 
-A maneater demon, beastial and misshapen, in search of hidden power and
+A maneater demon, bestial and misshapen, in search of hidden power and
 knowledge. It is an expert in the art of illusion, and is exceptionally
 intelligent and cruel.
 %%%%
