@@ -226,7 +226,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
         case DNGN_DRY_FOUNTAIN:
         {
             if (player_in_branch(BRANCH_ABYSS))
-                return DNGN_FOUNTAIN_EYES;
+                return DNGN_FOUNTAIN_EYES; // de-sanitizing, really
             else
                 return feature;
         }

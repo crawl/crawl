@@ -468,7 +468,7 @@ void push_features_to_abyss()
 
             dungeon_feature_type feature = map_bounds(p) ? env.grid(p)
                                                          : DNGN_UNSEEN;
-            sanitize_feature(feature);
+            feature = sanitize_feature(feature);
 
             abyssal_features.push_back(feature);
         }
