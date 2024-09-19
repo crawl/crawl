@@ -742,6 +742,9 @@ cache_of_fruit_1
 %weight 10
 cache_of_fruit_2
 cache_of_meat_0 DNGN_CACHE_OF_MEAT
+%weight 3
+%syn DNGN_CACHE_OF_PIZZA
+cache_of_meat_1
 cache_of_baked_goods_1 DNGN_CACHE_OF_BAKED_GOODS
 cache_of_baked_goods_2
 garden_cobble DNGN_GARDEN_COBBLE

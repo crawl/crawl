@@ -188,11 +188,12 @@ KITEM:   1 = gold w:5 / nothing / animal skin / \
              potion of degeneration ident:type w:20 / \
              potion of haste ident:type w:2 / \
              potion of might ident:type w:2
-KFEAT:   1 = 1
 ITEM:    club, potion of degeneration ident:type, gold w:5
 ITEM:    gold w:2 / nothing, potion of degeneration ident:type
-SHUFFLE: defO
+KFEAT:   C = cache of meat
 KFEAT:   O = enter_orcish_mines
+SHUFFLE: defO
+TILE:    C = dngn_cache_of_pizza
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........g..........2x...w4xxx
@@ -201,7 +202,7 @@ x.........xx.....e..........xxx
 @.......f...1g............3.x$x
 x..x1.................O...x.xhx
 x..x1...1........2..1....gx.xhx
-x......2....g.........d.1.x1+hx
+x......2....g.........d.1Cx1+hx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

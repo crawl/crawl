@@ -1957,7 +1957,7 @@ ORIENT:  northeast
 DEPTH:   D:5-8, Lair:1-3
 MONS:    rat, quokka, river rat, hell rat
 ITEM:    gold / stone
-KFEAT:   e = cache of fruit
+KFEAT:   e = cache of meat
 SUBST:   d = d$$$........., e : e$.
 SHUFFLE: 234 / 324 / 243
 : if you.in_branch("Lair") then
@@ -1973,6 +1973,7 @@ SUBST:   4 = 430
 SUBST:   4 = 30
 :   end
 : end
+TILE:    e = dngn_cache_of_pizza
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
