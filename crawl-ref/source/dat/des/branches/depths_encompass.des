@@ -755,7 +755,7 @@ default-depth: Depths:2-, !Depths:$
 # LIE DOWN. FORGET YOUR TROUBLES.
 # SMILE.
 NAME:    hangedman_pleasuredromes
-TAGS:    no_monster_gen no_item_gen uniq_d_encompass
+TAGS:    no_monster_gen no_item_gen no_trap_gen uniq_d_encompass
 ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
@@ -769,10 +769,10 @@ MONS:    rakshasa / hell knight / stone giant w:5 / \
          deep troll earth mage / deep troll shaman w:5
 MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          vampire knight / spriggan air mage / tengu reaver / \
-         walking earthen tome / walking divine tome
+         walking earthen tome w:6 / walking divine tome w:6
 MONS:    very ugly thing w:10 / ugly thing w:30 / \
-         great orb of eyes / glowing orange brain / glass eye w:4
-MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
+         great orb of eyes / fire dragon / ice dragon / glass eye w:4
+MONS:    glowing orange brain / very ugly thing / glowing shapeshifter / \
          jiangshi w:4 / phantasmal warrior w:4 / \
          caustic shrike skeleton w:2 / spark wasp zombie w:2
 MONS:    sphinx / spark wasp / flayed ghost / \
@@ -834,9 +834,9 @@ xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.!..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
 xx.....x.cc!.x2.xxx.6x*7cc.......xx.......xx...H....xxx
 xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....@..cc.bxb.bxb.cc...xxx...xxx...xxx...x......@xx
+ xxx....@..cc.bxb.bxb.cc...xxx...xxx...xxx.@.x......@xx
   xx........cc5..b..5cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x....SR..@..RS..@.x..xx....%xx
+  xxxxL....x.cc..x..cc...x....SR..@..RS....x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
@@ -850,9 +850,9 @@ xxxx..n..@cc.b.2.b..3b|cc.....xMx.x.xLx.....x.x.I....xx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x.....cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x].Y..xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x@cc......cb%bc...x..x.@..SR..@..RS....x.x.x..4c...x.x....Mxxxx
+    x@cc......cb%bc...x..x....SR..@..RS....x.x.x..4c...x.x....Mxxxx
     xc..cc..cc.4b.....KJ........x...x.....x....b..1b14.b.........xx
-    xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
+    xc....cc....c.xx..KJ.@.xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
      xc.....k..c....xx..KJJ.......xx]....x.x.4.c.0ccc5.c...x.x....xxx
      xxc..%...c.....xx...KKxx.....xx...Y...b..1b*cc7cc%b25.b.......xx

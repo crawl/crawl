@@ -424,36 +424,6 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
 end
 
-function yara_students(e)
-    local anti = "ego:antimagic ident:all"
-    local will = "ego:willpower ident:all"
-    local goodgear = "halberd " .. anti .. " | scimitar " .. anti
-                     .. " | morningstar " .. anti .. " | dire flail " .. anti
-                     .. " . ring mail " .. will
-                     .. " w:3 | scale mail | chain mail "
-    local greatweap = "double sword " .. anti .. " | demon blade " .. anti
-                      .. " | great sword " .. anti .. " | glaive " .. anti
-                      .. " | demon trident " .. anti .. " | bardiche " .. anti
-                      .. " | eveningstar " .. anti .. " | demon whip " .. anti
-                      .. " | great mace " .. anti .. " | quick blade " .. anti
-    local greatarm = "chain mail " .. will .. " | plate armour " .. will
-                      .. " | plate armour w:20 | crystal plate armour w:3"
-    e.mons("tengu conjurer ; " .. goodgear .. " / ogre mage ; " .. goodgear ..
-           " / deep elf knight ; " .. goodgear ..
-           " / naga mage ; " .. goodgear ..
-           " / salamander mystic ; " .. goodgear ..
-           " / arcanist ; " .. goodgear ..
-           " / occultist ; " .. goodgear ..
-           " / hell knight ; " .. goodgear ..
-           " / necromancer ; " .. goodgear ..
-           " / vampire mage ; " .. goodgear ..
-           " / spriggan air mage ; rapier ego:antimagic . acid dragon scales")
-    e.mons("tengu reaver ; " .. greatweap .. " . " .. greatarm ..
-           " / draconian knight ; " .. greatweap ..
-           " / vampire knight ; " .. greatweap .. " . " .. greatarm)
-end
-
-
 function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
   if triggerer.type ~= "monster_dies" then
     return
@@ -2276,7 +2246,29 @@ ENDMAP
 # books, random good items, and gold.
 NAME:   wizlab_yara
 TAGS:   no_rotate
-:       yara_students(_G)
+{{
+  local anti = "ego:antimagic"
+  local will = "ego:willpower"
+  local gear = "halberd " .. anti .. " | scimitar " .. anti
+                .. " | morningstar " .. anti .. " | dire flail " .. anti
+                .. " . ring mail " .. will .. " w:3 | scale mail | chain mail "
+  local greatweap = "double sword " .. anti .. " | demon blade " .. anti
+                    .. " | great sword " .. anti .. " | glaive " .. anti
+                    .. " | demon trident " .. anti .. " | bardiche " .. anti
+                    .. " | eveningstar " .. anti .. " | demon whip " .. anti
+                    .. " | great mace " .. anti .. " | quick blade " .. anti
+  local greatarm = "chain mail " .. will .. " | plate armour " .. will
+                    .. " | plate armour w:20 | crystal plate armour w:3"
+  mons("tengu conjurer ; " .. gear .. " / ogre mage ; " .. gear ..
+       " / deep elf knight ; " .. gear .. " / naga mage ; " .. gear ..
+       " / salamander mystic ; " .. gear .. " / arcanist ; " .. gear ..
+       " / occultist ; " .. gear .. " / hell knight ; " .. gear ..
+       " / necromancer ; " .. gear .. " / vampire mage ; " .. gear ..
+       " / spriggan air mage ; rapier ego:antimagic . acid dragon scales")
+  mons("tengu reaver ; " .. greatweap .. " . " .. greatarm ..
+       " / draconian knight ; " .. greatweap ..
+       " / vampire knight ; " .. greatweap .. " . " .. greatarm)
+}}
 MONS:   mana viper, quicksilver dragon
 KMONS:  P = bush
 {{

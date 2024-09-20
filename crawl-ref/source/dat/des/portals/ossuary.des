@@ -45,8 +45,9 @@ function ossuary_portal(e)
   e.depth_chance("D:4-5", 500)
   e.depth_chance("D:6-7", 550)
   e.kfeat("O = enter_ossuary")
-  e.colour("' = yellow")
-  e.ftile("' = floor_sandstone")
+  e.colour("123' = yellow")
+  e.colour("c = white")
+  e.ftile("123'O = floor_sandstone")
   e.tile("c = wall_tomb")
 end
 
@@ -115,9 +116,11 @@ ENDMAP
 
 NAME:   enter_ossuary_4
 TAGS:   transparent
-COLOUR: 1 = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
-FTILE:  1 = floor_sandstone, x = floor_sandstone, O = floor_sandstone
+MONS:   adder zombie / scorpion zombie / centaur zombie w:5
+: if you.depth() > 5 then
+SUBST:  1 = 2
+: end
 : ossuary_portal(_G)
 MAP
 .........
@@ -132,7 +135,6 @@ ENDMAP
 
 NAME:   enter_ossuary_5
 TAGS:   transparent
-COLOUR: c = white, + = white, ' = yellow
 : ossuary_portal(_G)
 MAP
    ...
@@ -337,16 +339,16 @@ TAGS:  no_monster_gen
 :      " / hound " .. z .. d .. " / hound " .. s .. d ..
 :      " / scorpion " .. z .. e .. " / howler monkey " .. s .. e ..
 :      " / bullfrog " .. s .. f .. " / killer bee " .. z .. f)
-SUBST: 1 = 11., 3 = 1.
+SUBST: 1 = 11', 3 = 1'
 : ossuary_portal(_G)
 MAP
    .....
   .x+x+x.
- ..x.x1x..
-.xxc.cccxx.
-.+1c3.3c1+.
-.xxc.O.cxx.
-.+1c3.3c1+.
+ ..x'x1x..
+.xxc'cccxx.
+.+1c3'3c1+.
+.xxc'O'cxx.
+.+1c3'3c1+.
 .xxcccccxx.
  ..x1x1x..
   .x+x+x.

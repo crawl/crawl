@@ -3168,6 +3168,7 @@ PLACE:  Depths:$
      kmons("3 = base draconian")
      kfeat("1 = stone_stairs_down_i / stone_stairs_down_ii / "
            .. "stone_stairs_down_iii / escape_hatch_down")
+     kfeat("t = petrified_tree")
      subst("* = .")
   elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
      colour(".+123* = magenta")

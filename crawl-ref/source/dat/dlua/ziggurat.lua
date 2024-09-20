@@ -412,7 +412,7 @@ mset(spec_fn(function ()
          "shapeshifter hd:16 w:" .. e .. " / " ..
          "glowing shapeshifter w:" .. e / 3 .. " / " ..
          "protean progenitor w:" .. e .. " / " ..
-         "greater demon w:2 / pandemonium lord w:" .. f
+         "pandemonium lord w:" .. f
 end))
 
 mset(with_props(spec_fn(function ()
@@ -507,8 +507,8 @@ end), { weight = 5 }))
 mset_if(depth_ge(14), with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 6
   local e = 66 - (you.depth() * 3)
-  local f = math.min(16, you.zigs_completed() * 6 + 5)
-  local g = 0 + you.zigs_completed() * you.zigs_completed() * 2
+  local f = math.min(16, you.zigs_completed() * 7 + 5)
+  local g = 0 + you.zigs_completed() * you.zigs_completed()
   return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
          "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
          "place:Hell w:100 / sin beast w:" .. e .. " / " ..

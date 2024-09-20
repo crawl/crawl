@@ -3599,6 +3599,9 @@ ENDMAP
 ###############################################################################
 # A mini-volcano! No fire clouds and twice as many enemies, though.
 #
+# XXX: Other ends and earlier vaults already allow encountering a fire dragon
+#      without a runed door, but this would be a bit meaner than those others
+#      due to the glass and an inability to use regular doors. What to do...?
 NAME:    cheibrodos_lair_end_hotspot
 TAGS:    no_item_gen no_monster_gen
 PLACE:   Lair:$

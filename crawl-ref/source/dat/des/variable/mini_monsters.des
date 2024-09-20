@@ -1596,10 +1596,19 @@ TAGS:    transparent
 KMASK:   1>"% = opaque
 KFEAT:   " = floor
 DEPTH:   D:11-, Orc, Elf
-MONS:    deep elf pyromancer / deep elf zephyrmancer
+: if (you.in_branch("D") and you.depth()) > 12 or you.in_branch("Elf") then
+MONS:    deep elf pyromancer, deep elf knight / deep elf archer
+MONS:    deep elf zephyrmancer / thermic dynamo w:4
+NSUBST:  1 = 2 = %** / 2 = 1% / 3 = 11122 / 3 = 22333 / *:1
+: else
+MONS:    fire elemental / water elemental w:12
+MONS:    deep elf pyromancer ; dagger . robe ego:fire_resistance . \
+                               ring of protection from fire
+MONS:    deep elf archer
+NSUBST:  1 = 2 = %%* / 2 = 1% / 2 = 12 / 2 = 23 / *:1
+: end
 SHUFFLE: _?/bb, _'/ww
 SUBST:   ?_' = .
-NSUBST:  1 = 2:% / 2 = 1% / *:1
 MAP
 .?.....???..
 ?.'''__'''?.
@@ -8112,41 +8121,48 @@ ENDMAP
 # If the vault comes up in Orc or Elf, there will be natives around.
 #
 # The dancing weapon is very out of depth early in D, but digging it out
-# is mostly a deliberate action and there are enough system warnings. (r-i)
+# is mostly a deliberate action and there are enough system warnings. (Index)
 NAME:    sword_in_stone
 TAGS:    no_monster_gen patrolling vaults_hard transparent no_descent
-DEPTH:   D:5-, Depths, !Depths:$, Vaults, Orc, Elf
+DEPTH:   D:6-, Depths, !Depths:$, Vaults, Orc, Elf
 WEIGHT:  3
+: local ss = "rapier | long sword . leather armour . buckler | nothing"
+: local gs = "great sword . chain mail | plate armour"
+: local ls = "falchion | scimitar . chain mail . kite shield"
+: local rs = "long sword . robe | leather armour . kite shield"
 KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . kite shield
-KMONS:   B = wight ; falchion | long sword . ring mail | scale mail . kite shield | nothing
-KMONS:   C = Blorkula the orcula / orc warrior ; great sword . chain mail | plate armour, \
-                             orc warrior ; great sword . chain mail | plate armour / nothing
-KMONS:   D = Eustachio / orc warrior ; long sword | falchion . chain mail . kite shield, \
-                         orc warrior ; long sword | falchion . chain mail . kite shield / nothing
-KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . kite shield, \
-                      orc knight ; long sword | scimitar . chain mail . kite shield / nothing
-KMONS:   F = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
-                    orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
-KMONS:   G = Erica / arcanist ; long sword . robe | leather armour . kite shield, \
-                     arcanist ; long sword . robe | leather armour . kite shield / nothing
-KMONS:   H = Harold / deep elf knight, deep elf knight / nothing
-KMONS:   I = Donald / orc warlord, orc warlord / nothing
-KMONS:   J = Louise / hell knight, hell knight / nothing
-KMONS:   K = Frances / hell knight, hell knight / nothing
-KMONS:   L = Agnes / spriggan defender, spriggan defender / nothing
-KMONS:   M = Rupert / vampire knight, vampire knight / nothing
-KMONS:   N = Asterion / ancient champion, ancient champion / nothing
-KMONS:   O = Frederick / draconian knight, draconian knight / nothing
-KMONS:   P = Sojobo / tengu reaver, tengu reaver / nothing
+: kmons("B = wight ; " .. ls .. " | nothing")
+: kmons("C = Eustachio / orc warrior ; " .. ss .. ", " ..
+:            "orc warrior ; " .. ss .. " / nothing")
+: kmons("D = Blorkula the Orcula / orc warrior ; " .. gs .. ", " ..
+:           "orc warrior ; " .. gs .. " / nothing")
+: kmons("E = Maurice / kobold brigand ; dart ego:poisoned . " .. ss .. ", " ..
+:           "kobold brigand ; dart ego:poisoned . " .. ss .. " / nothing")
+: kmons("F = Joseph / orc knight ; " .. ls .. ", " ..
+:           "orc knight ; " .. ls .. " / nothing")
+: kmons("G = Erica / arcanist ; " .. rs .. ", arcanist ; " .. rs .. " / nothing")
+: kmons("H = Maggie / occultist ; " .. rs .. ", " ..
+:           "occultist ; " .. rs .. " / nothing")
+: kmons("I = Urug / orc knight ; " .. gs .. ", orc knight ; " .. gs .. " / nothing")
+KMONS:   J = Harold / deep elf knight, deep elf knight / nothing
+KMONS:   K = Donald / orc warlord, orc warlord / nothing
+KMONS:   L = Louise / hell knight, hell knight / nothing
+KMONS:   M = Frances / hell knight, hell knight / nothing
+KMONS:   N = Agnes / spriggan defender, spriggan defender / nothing
+KMONS:   O = Rupert / vampire knight, vampire knight / nothing
+KMONS:   P = Asterion / ancient champion, ancient champion / nothing
+KMONS:   Q = Frederick / draconian knight, draconian knight / nothing
+KMONS:   R = Sojobo / tengu reaver, tengu reaver / nothing
 : if crawl.one_chance_in(50) then
 KMONS:   S = dancing weapon ; singing sword
 KITEM:   s = singing sword
 : else
-KMONS:   S = dancing weapon ; long sword good_item | good_item great sword | \
-                              demon blade good_item | triple sword good_item | \
+KMONS:   S = dancing weapon ; scimitar good_item | great sword good_item | \
+                              demon blade good_item | double sword good_item | \
                               double sword good_item
-KITEM:   s = long sword good_item / good_item great sword / \
-             demon blade good_item / triple sword good_item / double sword good_item
+KITEM:   s = scimitar good_item / great sword good_item / \
+             demon blade good_item / double sword good_item / \
+             triple sword good_item
 : end
 KMONS:   o = orc warrior / orc knight w:5
 KMONS:   e = deep elf knight
@@ -8154,21 +8170,23 @@ NSUBST:  k = 4:k / 2 = k. / *:.
 SHUFFLE: bm
 SUBST:   b = cccvvb
 : if you.in_branch("Orc") then
-NSUBST:  k = 1:A / 1 = CF / *:o
+NSUBST:  k = 1:A / 1:I / *:o
 : elseif you.in_branch("Elf") then
-NSUBST:  k = 2 = IJKL / *:e
-: elseif you.absdepth() < 10 then
+NSUBST:  k = 2 = KLMN / *:e
+: elseif you.absdepth() < 12 then
 SUBST:   k = ABCD, S = s
-: elseif you.absdepth() < 13 then
+: elseif you.absdepth() < 14 then
 SUBST:   k = EFGH
 : elseif you.absdepth() < 16 then
-SUBST:   k = FGHJ
-: elseif you.absdepth() < 19 then
-SUBST:   k = HIJKL
+SUBST:   k = GHIJ
+: elseif you.absdepth() < 20 then
+SUBST:   k = KLMNO
 : else
-SUBST:   k = LMNOP
+SUBST:   k = OPQR
 : end
 KMASK:   Ss = opaque
+FTILE:   ABCDEFGHJIKLMNOPQRS. = floor_limestone
+FTILE:   m = floor_pebble_darkgray
 MAP
 kkkkkkk
 kkkkkkk

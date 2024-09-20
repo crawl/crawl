@@ -394,7 +394,6 @@ WEIGHT: 5
 MARKER:  Z = lua:fog_machine { cloud_type = "black smoke", \
          pow_min = 25, pow_max = 25, \
          delay = 30, size = 1, walk_dist = 3 }
-: megazig_zot_traps(_G)
 MAP
  v..
 .v.vv
