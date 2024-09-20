@@ -87,21 +87,20 @@ static int _auto_autofoe(const actor *caster)
 }
 
 static mgen_data _summon_data(const actor &caster, monster_type mtyp,
-                              int dur, god_type god, spell_type spell)
+                              int dur, spell_type spell)
 {
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
                      _auto_autofoe(&caster),
                      MG_AUTOFOE)
-                     .set_summoned(&caster, dur, spell, god);
+                     .set_summoned(&caster, dur, spell);
 }
 
-static mgen_data _pal_data(monster_type pal, int dur, god_type god,
-                           spell_type spell)
+static mgen_data _pal_data(monster_type pal, int dur, spell_type spell)
 {
-    return _summon_data(you, pal, dur, god, spell);
+    return _summon_data(you, pal, dur, spell);
 }
 
-spret cast_summon_small_mammal(int pow, god_type god, bool fail)
+spret cast_summon_small_mammal(int pow, bool fail)
 {
     if (stop_summoning_prompt())
         return spret::abort;
@@ -115,7 +114,7 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
     else
         mon = MONS_QUOKKA;
 
-    if (!create_monster(_pal_data(mon, 3, god, SPELL_SUMMON_SMALL_MAMMAL)))
+    if (!create_monster(_pal_data(mon, 3, SPELL_SUMMON_SMALL_MAMMAL)))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -153,7 +152,7 @@ void check_canid_farewell(const monster &dog, bool deadish)
     }
 }
 
-spret cast_call_canine_familiar(int pow, god_type god, bool fail)
+spret cast_call_canine_familiar(int pow, bool fail)
 {
     // Many parts of this spell behave differently if our familiar has already
     // been summoned.
@@ -173,7 +172,7 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     // Summon our dog if one isn't already active
     if (!old_dog)
     {
-        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
+        mgen_data mg = _pal_data(MONS_INUGAMI, 5, SPELL_CALL_CANINE_FAMILIAR);
 
         monster* dog = create_monster(mg);
         if (!dog)
@@ -216,14 +215,14 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_summon_cactus(int pow, god_type god, bool fail)
+spret cast_summon_cactus(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, 3, god, SPELL_SUMMON_CACTUS);
+    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, 3, SPELL_SUMMON_CACTUS);
     mg.hp = hit_points(pow + 27, 1);
     if (!create_monster(mg))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -231,7 +230,7 @@ spret cast_summon_cactus(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
+spret cast_summon_armour_spirit(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
@@ -253,8 +252,7 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
     fail_check();
 
-    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, god,
-                             SPELL_ANIMATE_ARMOUR);
+    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, SPELL_ANIMATE_ARMOUR);
     mg.hd = 15 + div_rand_round(pow, 10);
     monster* spirit = create_monster(mg);
     if (!spirit)
@@ -279,15 +277,14 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
 
 
-spret cast_summon_ice_beast(int pow, god_type god, bool fail)
+spret cast_summon_ice_beast(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, 3, god,
-                                    SPELL_SUMMON_ICE_BEAST);
+    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, 3, SPELL_SUMMON_ICE_BEAST);
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
     if (create_monster(ice_beast))
@@ -298,7 +295,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
+spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
 {
     if (caster->is_player() && stop_summoning_prompt())
         return spret::abort;
@@ -311,8 +308,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     else
         type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 
-    mgen_data mdata = _summon_data(*caster, type, 3, god,
-                                   SPELL_MONSTROUS_MENAGERIE);
+    mgen_data mdata = _summon_data(*caster, type, 3, SPELL_MONSTROUS_MENAGERIE);
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
@@ -335,7 +331,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
+spret cast_summon_hydra(actor *caster, int pow, bool fail)
 {
     if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
@@ -347,8 +343,7 @@ spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     const int heads = max(4, min(div_rand_round(random2(1 + pow), 6), maxheads));
 
     // Duration is always very short - just 1.
-    mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, god,
-                                SPELL_SUMMON_HYDRA);
+    mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, SPELL_SUMMON_HYDRA);
     mg.props[MGEN_NUM_HEADS] = heads;
     if (monster *hydra = create_monster(mg))
     {
@@ -361,7 +356,7 @@ spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     return spret::success;
 }
 
-static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
+static monster_type _choose_dragon_type(int pow, bool player)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -401,7 +396,7 @@ spret cast_dragon_call(int pow, bool fail)
 static void _place_dragon()
 {
     const int pow = you.props[DRAGON_CALL_POWER_KEY].get_int();
-    monster_type mon = _choose_dragon_type(pow, you.religion, true);
+    monster_type mon = _choose_dragon_type(pow, true);
     int mp_cost = random_range(2, 3);
 
     vector<monster*> targets;
@@ -543,7 +538,7 @@ void doom_howl(int time)
     }
 }
 
-spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
+spret cast_summon_dragon(actor *caster, int pow, bool fail)
 {
     // Dragons are always friendly. Dragon type depends on power and
     // random chance, with two low-tier dragons possible at high power.
@@ -552,11 +547,8 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    if (god == GOD_NO_GOD)
-        god = caster->deity();
-
     int how_many = 1;
-    monster_type mon = _choose_dragon_type(pow, god, caster->is_player());
+    monster_type mon = _choose_dragon_type(pow, caster->is_player());
 
     if (pow >= 100 && (mon == MONS_FIRE_DRAGON || mon == MONS_ICE_DRAGON))
         how_many = 2;
@@ -564,7 +556,7 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     for (int i = 0; i < how_many; ++i)
     {
         if (monster *dragon = create_monster(
-                _summon_data(*caster, mon, 6, god, SPELL_SUMMON_DRAGON)))
+                _summon_data(*caster, mon, 6, SPELL_SUMMON_DRAGON)))
         {
             if (you.see_cell(dragon->pos()))
                 mpr("A dragon appears.");
@@ -578,15 +570,14 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_summon_mana_viper(int pow, god_type god, bool fail)
+spret cast_summon_mana_viper(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
-                                SPELL_SUMMON_MANA_VIPER);
+    mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, SPELL_SUMMON_MANA_VIPER);
     viper.hd = (7 + div_rand_round(pow, 12));
 
     if (create_monster(viper))
@@ -877,13 +868,13 @@ int mons_ball_lightning_hd(int pow, bool random)
     return ball_lightning_hd(pow, random) / 2;
 }
 
-spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
+spret cast_conjure_ball_lightning(int pow, bool fail)
 {
     fail_check();
     bool success = false;
 
-    mgen_data cbl = _pal_data(MONS_BALL_LIGHTNING, 0, god,
-                             SPELL_CONJURE_BALL_LIGHTNING);
+    mgen_data cbl = _pal_data(MONS_BALL_LIGHTNING, 0,
+                              SPELL_CONJURE_BALL_LIGHTNING);
     cbl.foe = MHITNOT;
     cbl.hd = ball_lightning_hd(pow);
 
@@ -921,14 +912,14 @@ dice_def lightning_spire_damage(int pow)
     return zap_damage(ZAP_ELECTRICAL_BOLT, _lightning_spire_hd(pow, false) * 12, true, false);
 }
 
-spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
+spret cast_summon_lightning_spire(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, 2, god,
+    mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, 2,
                                 SPELL_SUMMON_LIGHTNING_SPIRE);
     spire.hd = _lightning_spire_hd(pow);
 
@@ -942,14 +933,14 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
+spret cast_summon_blazeheart_golem(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3, god,
+    mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3,
                                 SPELL_SUMMON_BLAZEHEART_GOLEM);
     golem.flags &= ~MG_AUTOFOE; // !!!
     golem.hd = 6 + div_rand_round(pow, 10);
@@ -973,18 +964,17 @@ spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
  * Cast the spell Call Imp, summoning a friendly imp nearby.
  *
  * @param pow   The spellpower at which the spell is being cast.
- * @param god   The god of the caster.
  * @param fail  Whether the caster (you) failed to cast the spell.
  * @return      spret::fail if fail is true; spret::success otherwise.
  */
-spret cast_call_imp(int pow, god_type god, bool fail)
+spret cast_call_imp(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
-    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, 3, god, SPELL_CALL_IMP);
+    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, 3, SPELL_CALL_IMP);
     if (monster *imp = create_monster(imp_data))
     {
         mpr("A tiny devil pulls itself out of the air.");
@@ -1165,7 +1155,7 @@ coord_def find_gateway_location(actor* caster)
 }
 
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
-                           int pow, god_type god, bool is_player)
+                           int pow, bool is_player)
 {
     const int malign_gateway_duration = BASELINE_DELAY * (random2(2) + 1);
     env.markers.add(new map_malign_gateway_marker(point,
@@ -1173,7 +1163,7 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                             is_player,
                             is_player ? "" : cause,
                             beh,
-                            god,
+                            GOD_NO_GOD,
                             pow));
     env.markers.clear_need_activate();
     env.grid(point) = DNGN_MALIGN_GATEWAY;
@@ -1184,8 +1174,7 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
                      "and a portal to some otherworldly place is opened!");
 }
 
-spret cast_malign_gateway(actor * caster, int pow, god_type god,
-                          bool fail, bool test)
+spret cast_malign_gateway(actor * caster, int pow, bool fail, bool test)
 {
     if (!test && caster->is_player()
         && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
@@ -1212,7 +1201,6 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god,
             is_player ? ""
                       : caster->as_monster()->full_name(DESC_A),
             pow,
-            god,
             is_player);
 
         return spret::success;
@@ -1221,13 +1209,13 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god,
     return spret::abort;
 }
 
-spret cast_summon_horrible_things(int pow, god_type god, bool fail)
+spret cast_summon_horrible_things(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
-    if (god == GOD_NO_GOD && one_chance_in(5))
+    if (one_chance_in(5))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss"));
@@ -1244,7 +1232,7 @@ spret cast_summon_horrible_things(int pow, god_type god, bool fail)
 
     while (num_abominations-- > 0)
     {
-        const mgen_data abom = _pal_data(MONS_ABOMINATION_LARGE, 3, god,
+        const mgen_data abom = _pal_data(MONS_ABOMINATION_LARGE, 3,
                                          SPELL_SUMMON_HORRIBLE_THINGS);
         if (create_monster(abom))
             ++count;
@@ -1252,7 +1240,7 @@ spret cast_summon_horrible_things(int pow, god_type god, bool fail)
 
     while (num_tmons-- > 0)
     {
-        const mgen_data tmons = _pal_data(MONS_TENTACLED_MONSTROSITY, 3, god,
+        const mgen_data tmons = _pal_data(MONS_TENTACLED_MONSTROSITY, 3,
                                           SPELL_SUMMON_HORRIBLE_THINGS);
         if (create_monster(tmons))
             ++count;
@@ -1290,13 +1278,12 @@ static bool _can_summon_forest(actor &caster)
  *
  * @param caster The caster.
  * @param pow    The spell power.
- * @param god    The god of the summoned dryad (usually the caster's).
  * @param fail   Did this spell miscast? If true, abort the cast.
  * @return       spret::abort if a summoning area couldn't be found,
  *               spret::fail if one could be found but we miscast, and
  *               spret::success if the spell was successfully cast.
 */
-spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test)
+spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
 {
     if (!_can_summon_forest(*caster))
         return spret::abort;
@@ -1359,8 +1346,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
     mpr("A forested plane collides here with a resounding crunch!");
     noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
 
-    mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
-                                     SPELL_SUMMON_FOREST);
+    mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, SPELL_SUMMON_FOREST);
     dryad_data.hd = 6 + div_rand_round(pow, 16);
 
     if (monster *dryad = create_monster(dryad_data))
@@ -1388,7 +1374,7 @@ monster_type pick_random_wraith()
                                   2, MONS_PHANTASMAL_WARRIOR);
 }
 
-spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
+spret cast_haunt(int pow, const coord_def& where, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES, "haunt your foe"))
         return spret::abort;
@@ -1425,7 +1411,7 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
         if (monster *mons = create_monster(
                 mgen_data(mon, BEH_FRIENDLY, where, mi, MG_FORCE_BEH)
-                .set_summoned(&you, 3, SPELL_HAUNT, god)))
+                .set_summoned(&you, 3, SPELL_HAUNT)))
         {
             success++;
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
@@ -1452,14 +1438,14 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_martyrs_knell(const actor* caster, int pow, god_type god, bool fail)
+spret cast_martyrs_knell(const actor* caster, int pow, bool fail)
 {
     if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
-    mgen_data mg = _summon_data(*caster, MONS_MARTYRED_SHADE, 2, god,
+    mgen_data mg = _summon_data(*caster, MONS_MARTYRED_SHADE, 2,
                                 SPELL_MARTYRS_KNELL);
     mg.hd = (6 + div_rand_round(pow, 11));
 
@@ -1610,14 +1596,14 @@ void init_servitor(monster* servitor, actor* caster, int pow)
     servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
-spret cast_spellforged_servitor(int pow, god_type god, bool fail)
+spret cast_spellforged_servitor(int pow, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
-    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 3, god,
+    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 3,
                                 SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
@@ -1665,7 +1651,7 @@ dice_def battlesphere_damage(int pow)
     return _battlesphere_damage(_battlesphere_hd(pow, false));
 }
 
-spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
+spret cast_battlesphere(actor* agent, int pow, bool fail)
 {
     if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
@@ -1711,7 +1697,7 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
                       agent->pos(), agent->mindex());
-        mg.set_summoned(agent, 0, SPELL_BATTLESPHERE, god);
+        mg.set_summoned(agent, 0, SPELL_BATTLESPHERE);
         mg.hd = _battlesphere_hd(pow);
         battlesphere = create_monster(mg);
 
@@ -2655,14 +2641,14 @@ void kiku_unearth_wretches()
         simple_god_message(" calls piteous wretches from the earth!");
 }
 
-static bool _create_foxfire(const actor &agent, coord_def pos,
-                            god_type god, int pow, bool marshlight = false)
+static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
+                            bool marshlight = false)
 {
     const auto att = agent.is_player() ? BEH_FRIENDLY
                                        : SAME_ATTITUDE(agent.as_monster());
     mgen_data fox(MONS_FOXFIRE, att,
                   pos, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-    fox.set_summoned(&agent, 0, SPELL_FOXFIRE, god);
+    fox.set_summoned(&agent, 0, SPELL_FOXFIRE);
     fox.hd = pow;
     monster *foxfire;
 
@@ -2687,7 +2673,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
     return true;
 }
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlight)
+spret cast_foxfire(actor &agent, int pow, bool fail, bool marshlight)
 {
     bool see_space = false;
     for (adjacent_iterator ai(agent.pos()); ai; ++ai)
@@ -2712,7 +2698,7 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlig
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
-        if (!_create_foxfire(agent, *ai, god, pow, marshlight))
+        if (!_create_foxfire(agent, *ai, pow, marshlight))
             continue;
         ++created;
         if (created == 2)
@@ -2820,7 +2806,7 @@ bool summon_swarm_clone(const monster& agent, coord_def target_pos)
     return false;
 }
 
-bool summon_spider(const actor &agent, coord_def pos, god_type god,
+bool summon_spider(const actor &agent, coord_def pos,
                         spell_type spell, int pow)
 {
     monster_type mon = random_choose_weighted(100, MONS_REDBACK,
@@ -2832,14 +2818,14 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
 
     monster *mons = create_monster(
             mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
-                      .set_summoned(&agent, 3, spell, god));
+                      .set_summoned(&agent, 3, spell));
     if (mons)
         return true;
 
     return false;
 }
 
-spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
+spret summon_spiders(actor &agent, int pow, bool fail)
 {
     // Can't happen at present, but why not check just to be sure.
     if (agent.is_player() && stop_summoning_prompt())
@@ -2851,7 +2837,7 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
 
     for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
     {
-        if (summon_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
+        if (summon_spider(agent, agent.pos(), SPELL_SUMMON_SPIDERS, pow))
             created++;
     }
 
@@ -2972,7 +2958,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     for (int i = 0; i < num_simulacra; ++i)
     {
         // Note that this *not* marked as coming from SPELL_SIMULACRUM
-        mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, GOD_NO_GOD, SPELL_NO_SPELL);
+        mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, SPELL_NO_SPELL);
         mg.base_type = mons->type;
         mg.hd = 8; // make them more durable
         monster *ice = create_monster(mg);
@@ -3018,7 +3004,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
             monster_die(**mi, KILL_MISC, NON_MONSTER);
     }
 
-    mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0, GOD_NO_GOD,
+    mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0,
                                     SPELL_HOARFROST_CANNONADE);
     cannon.flags |= MG_FORCE_PLACE;
     cannon.hd = _hoarfrost_cannon_hd(pow);
@@ -3165,7 +3151,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     noisy(spell_effect_noise(SPELL_HELLFIRE_MORTAR), agent.pos(), agent.mid);
 
     mgen_data mg = _summon_data(agent, MONS_HELLFIRE_MORTAR, 0,
-                                GOD_NO_GOD, SPELL_HELLFIRE_MORTAR);
+                                SPELL_HELLFIRE_MORTAR);
     mg.flags |= MG_FORCE_PLACE;
     mg.pos = beam.path_taken[0];
     mg.hd = _hellfire_mortar_hd(pow);
@@ -3257,7 +3243,7 @@ bool make_soul_wisp(const actor& agent, actor& victim)
 
     }
 
-    mgen_data mg = _summon_data(agent, MONS_SOUL_WISP, 2, GOD_NO_GOD, SPELL_SOUL_SPLINTER);
+    mgen_data mg = _summon_data(agent, MONS_SOUL_WISP, 2, SPELL_SOUL_SPLINTER);
     mg.pos = spots[random2(spots.size())];
     mg.flags |= MG_FORCE_PLACE;
 

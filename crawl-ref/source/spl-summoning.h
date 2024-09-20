@@ -23,49 +23,44 @@ constexpr int MAX_HOARFROST_SHOTS = 4;
 
 constexpr int BOULDER_ABRASION_DAMAGE = 5;
 
-spret cast_summon_small_mammal(int pow, god_type god, bool fail);
+spret cast_summon_small_mammal(int pow, bool fail);
 
 bool canine_familiar_is_alive();
 monster *find_canine_familiar();
 void check_canid_farewell(const monster &dog, bool deadish);
-spret cast_call_canine_familiar(int pow, god_type god, bool fail);
+spret cast_call_canine_familiar(int pow, bool fail);
 
-spret cast_summon_armour_spirit(int pow, god_type god, bool fail);
-spret cast_summon_ice_beast(int pow, god_type god, bool fail);
-spret cast_summon_cactus(int pow, god_type god, bool fail);
-spret cast_monstrous_menagerie(actor* caster, int pow, god_type god,
-                                 bool fail = false);
-spret cast_summon_dragon(actor *caster, int pow,
-                              god_type god = GOD_NO_GOD, bool fail = false);
-spret cast_summon_hydra(actor *caster, int pow, god_type god = GOD_NO_GOD,
-                             bool fail = false);
-spret cast_summon_mana_viper(int pow, god_type god, bool fail);
+spret cast_summon_armour_spirit(int pow, bool fail);
+spret cast_summon_ice_beast(int pow, bool fail);
+spret cast_summon_cactus(int pow, bool fail);
+spret cast_monstrous_menagerie(actor* caster, int pow, bool fail = false);
+spret cast_summon_dragon(actor *caster, int pow, bool fail = false);
+spret cast_summon_hydra(actor *caster, int pow, bool fail = false);
+spret cast_summon_mana_viper(int pow, bool fail);
 bool summon_berserker(int pow, actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, bool punish);
 
 bool tukima_affects(const actor &target);
 void cast_tukimas_dance(int pow, actor *target);
-spret cast_conjure_ball_lightning(int pow, god_type god, bool fail);
+spret cast_conjure_ball_lightning(int pow, bool fail);
 int ball_lightning_hd(int pow, bool random = true);
 int mons_ball_lightning_hd(int pow, bool random = true);
 int mons_ball_lightning_per_cast(int pow, bool random = true);
 dice_def lightning_spire_damage(int pow);
-spret cast_summon_lightning_spire(int pow, god_type god, bool fail);
+spret cast_summon_lightning_spire(int pow, bool fail);
 
-spret cast_call_imp(int pow, god_type god, bool fail);
+spret cast_call_imp(int pow, bool fail);
 spret summon_shadow_creatures();
-spret cast_summon_horrible_things(int pow, god_type god, bool fail);
+spret cast_summon_horrible_things(int pow, bool fail);
 bool can_cast_malign_gateway();
 void create_malign_gateway(coord_def point, beh_type beh, string cause,
-                           int pow, god_type god = GOD_NO_GOD,
-                           bool is_player = false);
-spret cast_malign_gateway(actor* caster, int pow,
-                          god_type god = GOD_NO_GOD, bool fail = false,
+                           int pow, bool is_player = false);
+spret cast_malign_gateway(actor* caster, int pow, bool fail = false,
                           bool test = false);
 coord_def find_gateway_location(actor* caster);
-spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test=false);
-spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail);
+spret cast_summon_forest(actor* caster, int pow, bool fail, bool test=false);
+spret cast_summon_blazeheart_golem(int pow, bool fail);
 
 spret cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);
@@ -75,16 +70,16 @@ void doom_howl(int time);
 spell_type player_servitor_spell();
 bool spell_servitorable(spell_type spell);
 void init_servitor(monster* servitor, actor* caster, int pow);
-spret cast_spellforged_servitor(int pow, god_type god, bool fail);
+spret cast_spellforged_servitor(int pow, bool fail);
 void remove_player_servitor();
 
 monster_type pick_random_wraith();
-spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
+spret cast_haunt(int pow, const coord_def& where, bool fail);
 
-spret cast_martyrs_knell(const actor* caster, int pow, god_type god, bool fail);
+spret cast_martyrs_knell(const actor* caster, int pow, bool fail);
 
 monster* find_battlesphere(const actor* agent);
-spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
+spret cast_battlesphere(actor* agent, int pow, bool fail);
 void end_battlesphere(monster* mons, bool killed);
 bool battlesphere_can_mirror(spell_type spell);
 vector<spell_type> player_battlesphere_spells();
@@ -118,13 +113,12 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 void kiku_unearth_wretches();
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail,
+spret cast_foxfire(actor &agent, int pow, bool fail,
                    bool marshlight = false);
 spret foxfire_swarm();
 bool summon_hell_out_of_bat(const actor &agent, coord_def pos);
-bool summon_spider(const actor &agent, coord_def pos, god_type god,
-                        spell_type spell, int pow);
-spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
+bool summon_spider(const actor &agent, coord_def pos, spell_type spell, int pow);
+spret summon_spiders(actor &agent, int pow, bool fail = false);
 bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
