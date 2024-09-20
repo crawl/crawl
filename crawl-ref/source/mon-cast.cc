@@ -882,7 +882,7 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
             return ai_action::good_or_impossible(!find_battlesphere(&you));
         },
         [] (monster& caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            cast_battlesphere(&you, mons_spellpower(caster, SPELL_BATTLESPHERE), GOD_NO_GOD, false);
+            cast_battlesphere(&you, mons_spellpower(caster, SPELL_BATTLESPHERE), false);
         }
     } },
     { SPELL_MALIGN_GATEWAY, {
@@ -5733,13 +5733,13 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
 {
     const int pow = mons_spellpower(mons, SPELL_MARSHLIGHT);
-    cast_foxfire(mons, pow, GOD_NO_GOD, false, true);
+    cast_foxfire(mons, pow, false, true);
 }
 
 static void _cast_foxfire(monster &mons, mon_spell_slot, bolt&)
 {
     const int pow = mons_spellpower(mons, SPELL_FOXFIRE);
-    cast_foxfire(mons, pow, GOD_NO_GOD, false, false);
+    cast_foxfire(mons, pow, false, false);
 }
 
 void mons_cast_flay(monster &caster, mon_spell_slot, bolt&)
@@ -6730,7 +6730,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MARTYRS_KNELL:
-        cast_martyrs_knell(mons, splpow, GOD_NO_GOD, false);
+        cast_martyrs_knell(mons, splpow, false);
         return;
 
     // SPELL_SLEEP_GAZE ;)
@@ -7135,7 +7135,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BATTLESPHERE:
-        cast_battlesphere(mons, min(splpow, 200), mons->god, false);
+        cast_battlesphere(mons, min(splpow, 200), false);
         return;
 
     case SPELL_POLAR_VORTEX:

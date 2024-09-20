@@ -3609,8 +3609,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (!one_chance_in(3))
             break;
 
-        if (summon_spider(*attacker, defender->pos(),
-                          attacker->as_monster()->god, SPELL_NO_SPELL,
+        if (summon_spider(*attacker, defender->pos(), SPELL_NO_SPELL,
                           attacker->get_hit_dice() * 12))
         {
             if (needs_message)

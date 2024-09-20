@@ -1345,7 +1345,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the dungeon can only cope with one malign gateway"
                     " at a time.";
         }
-        if (temp && cast_malign_gateway(&you, 0, GOD_NO_GOD, false, true)
+        if (temp && cast_malign_gateway(&you, 0, false, true)
                     == spret::abort)
         {
             return "you need more open space to create a gateway.";
@@ -1355,7 +1355,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
             return "you can only summon one forest at a time.";
-        if (temp && cast_summon_forest(&you, 0, GOD_NO_GOD, false, true) == spret::abort)
+        if (temp && cast_summon_forest(&you, 0, false, true) == spret::abort)
             return "you need more open space to fit a forest.";
         break;
 

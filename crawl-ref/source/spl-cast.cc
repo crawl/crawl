@@ -2365,82 +2365,80 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_frozen_ramparts(powc, fail);
 
     // Summoning spells, and other spells that create new monsters.
-    // If a god is making you cast one of these spells, any monsters
-    // produced will count as god gifts.
     case SPELL_SUMMON_SMALL_MAMMAL:
-        return cast_summon_small_mammal(powc, god, fail);
+        return cast_summon_small_mammal(powc, fail);
 
     case SPELL_CALL_CANINE_FAMILIAR:
-        return cast_call_canine_familiar(powc, god, fail);
+        return cast_call_canine_familiar(powc, fail);
 
     case SPELL_ANIMATE_ARMOUR:
-        return cast_summon_armour_spirit(powc, god, fail);
+        return cast_summon_armour_spirit(powc, fail);
 
     case SPELL_SUMMON_ICE_BEAST:
-        return cast_summon_ice_beast(powc, god, fail);
+        return cast_summon_ice_beast(powc, fail);
 
     case SPELL_SUMMON_CACTUS:
-        return cast_summon_cactus(powc, god, fail);
+        return cast_summon_cactus(powc, fail);
 
     case SPELL_MONSTROUS_MENAGERIE:
-        return cast_monstrous_menagerie(&you, powc, god, fail);
+        return cast_monstrous_menagerie(&you, powc, fail);
 
     case SPELL_SUMMON_DRAGON:
-        return cast_summon_dragon(&you, powc, god, fail);
+        return cast_summon_dragon(&you, powc, fail);
 
     case SPELL_DRAGON_CALL:
         return cast_dragon_call(powc, fail);
 
     case SPELL_SUMMON_HYDRA:
-        return cast_summon_hydra(&you, powc, god, fail);
+        return cast_summon_hydra(&you, powc, fail);
 
     case SPELL_SUMMON_MANA_VIPER:
-        return cast_summon_mana_viper(powc, god, fail);
+        return cast_summon_mana_viper(powc, fail);
 
     case SPELL_CONJURE_BALL_LIGHTNING:
-        return cast_conjure_ball_lightning(powc, god, fail);
+        return cast_conjure_ball_lightning(powc, fail);
 
     case SPELL_SUMMON_LIGHTNING_SPIRE:
-        return cast_summon_lightning_spire(powc, god, fail);
+        return cast_summon_lightning_spire(powc, fail);
 
     case SPELL_SUMMON_BLAZEHEART_GOLEM:
-        return cast_summon_blazeheart_golem(powc, god, fail);
+        return cast_summon_blazeheart_golem(powc, fail);
 
     case SPELL_CALL_IMP:
-        return cast_call_imp(powc, god, fail);
+        return cast_call_imp(powc, fail);
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
-        return cast_summon_horrible_things(powc, god, fail);
+        return cast_summon_horrible_things(powc, fail);
 
     case SPELL_MALIGN_GATEWAY:
-        return cast_malign_gateway(&you, powc, god, fail);
+        return cast_malign_gateway(&you, powc, fail);
 
     case SPELL_SUMMON_FOREST:
-        return cast_summon_forest(&you, powc, god, fail);
+        return cast_summon_forest(&you, powc, fail);
 
     case SPELL_ANIMATE_DEAD:
         return cast_animate_dead(powc, fail);
 
     case SPELL_MARTYRS_KNELL:
-        return cast_martyrs_knell(&you, powc, god, fail);
+        return cast_martyrs_knell(&you, powc, fail);
 
     case SPELL_HAUNT:
-        return cast_haunt(powc, beam.target, god, fail);
+        return cast_haunt(powc, beam.target, fail);
 
     case SPELL_DEATH_CHANNEL:
         return cast_death_channel(powc, god, fail);
 
     case SPELL_SPELLFORGED_SERVITOR:
-        return cast_spellforged_servitor(powc, god, fail);
+        return cast_spellforged_servitor(powc, fail);
 
     case SPELL_BATTLESPHERE:
-        return cast_battlesphere(&you, powc, god, fail);
+        return cast_battlesphere(&you, powc, fail);
 
     case SPELL_INFESTATION:
         return cast_infestation(powc, beam, fail);
 
     case SPELL_FOXFIRE:
-        return cast_foxfire(you, powc, god, fail);
+        return cast_foxfire(you, powc, fail);
 
     case SPELL_NOXIOUS_BOG:
         return cast_noxious_bog(powc, fail);

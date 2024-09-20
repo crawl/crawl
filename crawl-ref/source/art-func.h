@@ -1460,7 +1460,7 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
         const int pow = div_rand_round(15 + you.skill(SK_CONJURATIONS, 15), 3);
-        cast_battlesphere(&you, pow, GOD_NO_GOD, false);
+        cast_battlesphere(&you, pow, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
     }
 }
