@@ -1209,7 +1209,7 @@ bool melee_attack::run_attack_set()
  */
 bool melee_attack::attack()
 {
-    if (!cleaving && !never_cleave)
+    if (!cleaving && !never_cleave && !is_multihit)
     {
         cleave_setup();
         if (!handle_phase_attempted())
