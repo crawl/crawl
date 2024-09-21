@@ -1330,8 +1330,7 @@ static void _setup_fake_beam(bolt& beam, const monster&, int)
  *
  * @param summoner      The monster doing the summoning.
  * @param mtyp          The type of monster to summon.
- * @param dur           The duration for which the monster should last.
- *                      Not in aut or turns; nonlinear. Sorry!
+ * @param dur           The duration for which the monster should last (in aut).
  * @param slot          The spell & slot flags.
  * @return              The summoned creature, if any.
  */
@@ -1342,8 +1341,8 @@ static monster* _summon(const monster &summoner, monster_type mtyp, int dur,
     const god_type god = _find_god(summoner, slot.flags);
     return create_monster(
             mgen_data(mtyp, SAME_ATTITUDE((&summoner)), summoner.pos(),
-                      summoner.foe)
-            .set_summoned(&summoner, dur, slot.spell, god));
+                      summoner.foe, MG_NONE, god)
+            .set_summoned(&summoner, slot.spell, dur));
 }
 
 void init_mons_spells()
@@ -3550,8 +3549,8 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
         // Actually place the vine and update properties
         if (monster* vine = create_monster(
             mgen_data(MONS_SNAPLASHER_VINE, SAME_ATTITUDE(mon), spot, mon->foe,
-                        MG_FORCE_PLACE)
-            .set_summoned(mon, 0, SPELL_AWAKEN_VINES, mon->god)))
+                        MG_FORCE_PLACE, mon->god)
+            .set_summoned(mon, SPELL_AWAKEN_VINES)))
         {
             vine->props[VINE_AWAKENER_KEY].get_int() = mon->mid;
             mon->props[VINES_AWAKENED_KEY].get_int()++;
@@ -3689,7 +3688,6 @@ static bool _wall_of_brambles(monster* mons)
 {
     mgen_data briar_mg = mgen_data(MONS_BRIAR_PATCH, SAME_ATTITUDE(mons),
                                    coord_def(-1, -1), MHITNOT, MG_FORCE_PLACE);
-    briar_mg.set_summoned(mons, 0, 0);
 
     // We want to raise a defensive wall if we think our foe is moving to attack
     // us, and otherwise raise a wall further away to block off their escape.
@@ -3757,13 +3755,10 @@ static bool _wall_of_brambles(monster* mons)
     for (coord_def point : points)
     {
         briar_mg.pos = point;
+        briar_mg.set_summoned(mons, SPELL_NO_SPELL, 80 + random2(100), false, false);
         monster* briar = create_monster(briar_mg, false);
-        if (briar)
-        {
-            briar->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, nullptr, 80 + random2(100)));
-            if (you.can_see(*briar))
-                seen = true;
-        }
+        if (briar && you.can_see(*briar))
+            seen = true;
     }
 
     if (seen)
@@ -3838,7 +3833,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
     }
     targ->reset_client_id();
 
-    mirror->mark_summoned(5, true, summ_type);
+    mirror->mark_summoned(summ_type, 5);
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
     mirror->summoner = mons->mid;
     mirror->hit_points = max(mirror->hit_points * hp_perc / 100, 1);
@@ -4799,10 +4794,10 @@ bool spell_has_marionette_override(spell_type spell)
 
 static int _monster_abjure_target(monster* target, int pow, bool actual)
 {
-    int duration;
-
-    if (!target->is_summoned(&duration))
+    if (!target->is_abjurable())
         return 0;
+
+    int duration = target->get_ench(ENCH_SUMMON_TIMER).duration;
 
     pow = max(20, fuzz_value(pow, 40, 25));
 
@@ -4839,8 +4834,8 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
 
     dprf("Abj: dur: %d, pow: %d, ndur: %d", duration, pow, duration - pow);
 
-    mon_enchant abj = target->get_ench(ENCH_ABJ);
-    if (!target->lose_ench_duration(abj, pow))
+    mon_enchant timer = target->get_ench(ENCH_SUMMON_TIMER);
+    if (!target->lose_ench_duration(timer, pow))
     {
         if (!shielded)
             simple_monster_message(*target, " shudders.");
@@ -4939,8 +4934,8 @@ static void _do_high_level_summon(monster* mons, spell_type spell_cast,
 
         monster* summon = create_monster(
             mgen_data(which_mons, SAME_ATTITUDE(mons),
-                      target ? *target : mons->pos(), mons->foe)
-            .set_summoned(mons, duration, spell_cast, god));
+                      target ? *target : mons->pos(), mons->foe, MG_NONE, god)
+            .set_summoned(mons, spell_cast, summ_dur(duration)));
         if (summon && post_hook)
             post_hook(summon, target ? *target : mons->pos());
     }
@@ -4963,7 +4958,7 @@ static void _mons_summon_elemental(monster &mons, mon_spell_slot slot, bolt&)
     const int count = 1 + (spell_hd > 15) + random2(spell_hd / 7 + 1);
 
     for (int i = 0; i < count; i++)
-        _summon(mons, *mtyp, 3, slot);
+        _summon(mons, *mtyp, summ_dur(3), slot);
 }
 
 static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&)
@@ -4979,7 +4974,7 @@ static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&)
         type = MONS_BLACK_MAMBA;
 
     for (int i = 0; i < 2; ++i)
-        _summon(mons, type, 2, slot);
+        _summon(mons, type, summ_dur(2), slot);
 }
 
 static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&)
@@ -4987,8 +4982,8 @@ static void _mons_shadow_puppet(monster& mons, mon_spell_slot slot, bolt&)
     const int pow = mons_spellpower(mons, SPELL_SHADOW_PUPPET);
     const god_type god = _find_god(mons, slot.flags);
     mgen_data mg = mgen_data(MONS_SHADOW_PUPPET, SAME_ATTITUDE((&mons)), mons.pos(),
-                             mons.foe);
-    mg.set_summoned(&mons, 2, slot.spell, god);
+                             mons.foe, MG_NONE, god);
+    mg.set_summoned(&mons, slot.spell, summ_dur(2));
     mg.hd = 1 + div_rand_round(pow, 15);
     mg.hd += div_rand_round(max(0, pow - 80), 11);
     create_monster(mg);
@@ -5000,7 +4995,7 @@ static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bol
     const int count = random_range(2, 4);
     for (int i = 0; i < count; i++)
     {
-        monster* mon = _summon(mons, MONS_DANCING_WEAPON, 3, slot);
+        monster* mon = _summon(mons, MONS_DANCING_WEAPON, summ_dur(3), slot);
         if (mon)
             mon->add_ench(ENCH_HASTE);
     }
@@ -5008,7 +5003,7 @@ static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bol
 
 static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&)
 {
-    monster* weapon = _summon(mons, MONS_DANCING_WEAPON, 2, slot);
+    monster* weapon = _summon(mons, MONS_DANCING_WEAPON, summ_dur(2), slot);
 
     // If we created a base weapon, adjust it to match the caster
     if (weapon)
@@ -5080,8 +5075,9 @@ static void _cast_mortal_champion(monster* mons)
                                    : MONS_DEEP_ELF_BLADEMASTER;
 
     if (monster *mortal = create_monster(
-            mgen_data(type, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-            .set_summoned(mons, 3, SPELL_SUMMON_MORTAL_CHAMPION, mons->god)))
+            mgen_data(type, SAME_ATTITUDE(mons), mons->pos(), mons->foe, MG_NONE,
+                      mons->god)
+            .set_summoned(mons, SPELL_SUMMON_MORTAL_CHAMPION, summ_dur(3))))
     {
         // Replace their weapons with short blades of holy wrath- aside from
         // feeling more holy, it avoids the spriggans' demon whips.
@@ -5109,7 +5105,7 @@ static void _cast_mortal_champion(monster* mons)
         give_specific_item(mortal, items(false, OBJ_ARMOUR, arm, 0, SPARM_FORBID_EGO));
 
         // Re-mark the items we just gave as summoned
-        mortal->mark_summoned(0, true, 0, false);
+        mortal->mark_summoned();
     }
 }
 
@@ -5131,8 +5127,8 @@ static void _cast_vanquished_vanguard(monster* mons)
 
         if (monster *orc = create_monster(
                 mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), fpos,
-                          mons->foe)
-                .set_summoned(mons, 3, SPELL_VANQUISHED_VANGUARD, mons->god)
+                          mons->foe, MG_NONE, mons->god)
+                .set_summoned(mons, SPELL_VANQUISHED_VANGUARD, summ_dur(3))
                 .set_base(type)))
         {
             weapon_type wpn = WPN_TRIDENT;
@@ -5161,7 +5157,7 @@ static void _cast_vanquished_vanguard(monster* mons)
             give_specific_item(orc, items(false, OBJ_ARMOUR, arm, 0, SPARM_FORBID_EGO));
 
             // Mark the items we just gave the orc as summoned
-            orc->mark_summoned(0, true, 0, false);
+            orc->mark_summoned();
         }
     }
 }
@@ -5723,7 +5719,7 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
             continue;
 
         mgen_data mg(type, SAME_ATTITUDE(mons), mons->pos(), mons->foe);
-        mg.set_summoned(mons, spell_cast == SPELL_PLANEREND ? 2 : 1, spell_cast);
+        mg.set_summoned(mons, spell_cast, summ_dur(spell_cast == SPELL_PLANEREND ? 2 : 1));
         if (type == MONS_SLIME_CREATURE)
             mg.props[MGEN_BLOB_SIZE] = 5;
         create_monster(mg);
@@ -6825,8 +6821,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             const monster_type mon = (one_chance_in(3) ? MONS_BAT
                                                        : RANDOM_ELEMENT(rats));
             create_monster(
-                mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, 5, spell_cast, god));
+                mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe,
+                          MG_NONE, god)
+                .set_summoned(mons, spell_cast, summ_dur(5)));
         }
         return;
 
@@ -6840,8 +6837,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons),
-                          mons->pos(), mons->foe)
-                          .set_summoned(mons, 5, spell_cast, god)
+                          mons->pos(), mons->foe, MG_NONE, god)
+                          .set_summoned(mons, spell_cast, summ_dur(5))
                           .set_place(place));
         }
         return;
@@ -6886,8 +6883,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_COMMON, true),
-                          SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, duration, spell_cast, god));
+                          SAME_ATTITUDE(mons), mons->pos(), mons->foe, MG_NONE, god)
+                .set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
@@ -6903,8 +6900,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         create_monster(
             mgen_data(MONS_CERULEAN_IMP,
-                      SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-            .set_summoned(mons, duration, spell_cast, god));
+                      SAME_ATTITUDE(mons), mons->pos(), mons->foe, MG_NONE, god)
+            .set_summoned(mons, spell_cast, summ_dur(duration)));
         return;
 
     case SPELL_SUMMON_MINOR_DEMON: // class 5 demons
@@ -6915,8 +6912,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_LESSER, true),
-                          SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, duration, spell_cast, god));
+                          SAME_ATTITUDE(mons), mons->pos(), mons->foe, MG_NONE, god)
+                .set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
@@ -6929,19 +6926,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(MONS_UFETUBUS, SAME_ATTITUDE(mons), mons->pos(),
-                          mons->foe)
-                .set_summoned(mons, duration, spell_cast, god));
+                          mons->foe, MG_NONE, god)
+                .set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
     case SPELL_SUMMON_SIN_BEAST:  // Geryon
         create_monster(
             mgen_data(MONS_SIN_BEAST, SAME_ATTITUDE(mons), mons->pos(),
-                      mons->foe).set_summoned(mons, 3, spell_cast, god));
+                      mons->foe, MG_NONE, god).set_summoned(mons, spell_cast, summ_dur(3)));
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
-        _summon(*mons, MONS_ICE_BEAST, 5, slot);
+        _summon(*mons, MONS_ICE_BEAST, summ_dur(5), slot);
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.
@@ -6970,8 +6967,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(one_chance_in(3) ? MONS_DEATHCAP
                                            : MONS_WANDERING_MUSHROOM,
-                          SAME_ATTITUDE(mons), empty, mons->foe, MG_FORCE_PLACE)
-                .set_summoned(mons, duration, spell_cast, god));
+                          SAME_ATTITUDE(mons), empty, mons->foe, MG_FORCE_PLACE,
+                          god).set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
@@ -6998,11 +6995,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (int i = 0; i < n; ++i)
         {
             mgen_data mg = mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(mons),
-                                     mons->pos(), mons->foe)
-                            .set_summoned(mons, 0, spell_cast, god);
+                                     mons->pos(), mons->foe, MG_NONE, god)
+                            .set_summoned(mons, spell_cast, random_range(40, 70), false, false);
             mg.hd = mons_ball_lightning_hd(pow);
-            if (monster *ball = create_monster(mg))
-                ball->add_ench(ENCH_SHORT_LIVED);
+            create_monster(mg);
         }
         return;
     }
@@ -7017,8 +7013,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (int i = 0; i < n; ++i)
         {
             mgen_data mg = mgen_data(MONS_LIVING_SPELL, SAME_ATTITUDE(mons),
-                                     mons->pos(), mons->foe)
-                            .set_summoned(mons, 1, spell_cast, god);
+                                     mons->pos(), mons->foe, MG_NONE, god)
+                            .set_summoned(mons, spell_cast, summ_dur(1));
             mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(spell);
             mg.hd = hd;
             monster* living = create_monster(mg);
@@ -7101,8 +7097,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         create_monster(
             mgen_data(summon_any_demon(RANDOM_DEMON_GREATER, true),
-                      SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-            .set_summoned(mons, duration, spell_cast, god));
+                      SAME_ATTITUDE(mons), mons->pos(), mons->foe, MG_NONE, god)
+            .set_summoned(mons, spell_cast, summ_dur(duration)));
         return;
 
     // Journey -- Added in Summon Lizards
@@ -7124,8 +7120,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             {
                 create_monster(
                     mgen_data(type, SAME_ATTITUDE(mons), mons->pos(),
-                              mons->foe)
-                    .set_summoned(mons, duration, spell_cast, god));
+                              mons->foe, MG_NONE, god)
+                    .set_summoned(mons, spell_cast, summ_dur(duration)));
             }
         }
         return;
@@ -7155,8 +7151,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 mgen_data(random_choose_weighted(
                             100, MONS_ANGEL,     80,  MONS_CHERUB,
                             50,  MONS_DAEVA,      1,  MONS_OPHAN),
-                          SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, duration, spell_cast, god));
+                          SAME_ATTITUDE(mons), mons->pos(), mons->foe,
+                          MG_NONE, god).set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
@@ -7208,8 +7204,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                         10, MONS_EYE_OF_DEVASTATION);
 
             create_monster(
-                mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, duration, spell_cast, god));
+                mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe,
+                          MG_NONE, god).set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
@@ -7251,7 +7247,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     {
-        monster* spire = _summon(*mons, MONS_LIGHTNING_SPIRE, 2, slot);
+        monster* spire = _summon(*mons, MONS_LIGHTNING_SPIRE, summ_dur(2), slot);
         if (spire && !silenced(spire->pos()))
             mpr("An electric hum fills the air.");
         return;
@@ -7270,17 +7266,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                        1, MONS_BRIMSTONE_FIEND);
 
             create_monster(
-                mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, duration, spell_cast, god));
+                mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe,
+                          MG_NONE, god).set_summoned(mons, spell_cast, summ_dur(duration)));
         }
         return;
 
     case SPELL_SUMMON_TZITZIMITL:
-        _summon(*mons, MONS_TZITZIMITL, 2, slot);
+        _summon(*mons, MONS_TZITZIMITL, summ_dur(2), slot);
         return;
 
     case SPELL_SUMMON_HELL_SENTINEL:
-        _summon(*mons, MONS_HELL_SENTINEL, 2, slot);
+        _summon(*mons, MONS_HELL_SENTINEL, summ_dur(2), slot);
         return;
 
     case SPELL_WORD_OF_RECALL:
@@ -7315,8 +7311,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
-                                     mons->pos(), mons->foe)
-                           .set_summoned(mons, 2, spell_cast, god));
+                                     mons->pos(), mons->foe, MG_NONE, god)
+                           .set_summoned(mons, spell_cast, summ_dur(2)));
         }
         return;
 
@@ -7430,7 +7426,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         const int num_vipers = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
         for (int i = 0; i < num_vipers; ++i)
-            _summon(*mons, MONS_MANA_VIPER, 2, slot);
+            _summon(*mons, MONS_MANA_VIPER, summ_dur(2), slot);
         return;
     }
 
@@ -7439,7 +7435,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const int max_scorps = 1 + div_rand_round(splpow, 42);
         const int num_scorps = random_range(1, max_scorps);
         for (int i = 0; i < num_scorps; ++i)
-            _summon(*mons, MONS_SCORPION, 2, slot);
+            _summon(*mons, MONS_SCORPION, summ_dur(2), slot);
         return;
     }
 
@@ -7447,7 +7443,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         const int num_scorps = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
         for (int i = 0; i < num_scorps; ++i)
-            _summon(*mons, MONS_EMPEROR_SCORPION, 5, slot);
+            _summon(*mons, MONS_EMPEROR_SCORPION, summ_dur(5), slot);
         return;
     }
 
@@ -7474,7 +7470,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SPELLFORGED_SERVITOR:
     {
         const int pow = 7 * mons->spell_hd(spell_cast);
-        monster* servitor = _summon(*mons, MONS_SPELLFORGED_SERVITOR, 4, slot);
+        monster* servitor = _summon(*mons, MONS_SPELLFORGED_SERVITOR, summ_dur(4), slot);
         if (servitor)
             init_servitor(servitor, mons, pow);
         else if (you.can_see(*mons))
@@ -7507,7 +7503,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         const int num_scarabs = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
         for (int i = 0; i < num_scarabs; ++i)
-            _summon(*mons, MONS_DEATH_SCARAB, 2, slot);
+            _summon(*mons, MONS_DEATH_SCARAB, summ_dur(2), slot);
         return;
     }
 
@@ -7527,7 +7523,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const int num_exec = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
         duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
         for (int i = 0; i < num_exec; ++i)
-            _summon(*mons, MONS_EXECUTIONER, duration, slot);
+            _summon(*mons, MONS_EXECUTIONER, summ_dur(duration), slot);
         return;
     }
 
@@ -7564,7 +7560,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         const monster_type servants[] = { MONS_EXECUTIONER, MONS_GREEN_DEATH,
                                           MONS_BLIZZARD_DEMON, MONS_BALRUG,
                                           MONS_CACODEMON };
-        _summon(*mons, RANDOM_ELEMENT(servants), 5, slot);
+        _summon(*mons, RANDOM_ELEMENT(servants), summ_dur(5), slot);
         return;
     }
 
@@ -7581,13 +7577,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mgen_data mgen (MONS_BALLISTOMYCETE_SPORE,
                 mons->friendly() ? BEH_FRIENDLY : BEH_HOSTILE, mons->pos(),
                 mons->foe);
-        mgen.set_summoned(mons, 0, SPELL_SPORULATE);
+        mgen.set_summoned(mons, SPELL_SPORULATE, random_range(40, 70), false, false);
         // Add 1HD to the spore for each additional HD the spawner has.
         mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE_SPORE) +
             max(0, mons->spell_hd() - mons_class_hit_dice(mons->type));
 
-        if (monster* const spore = create_monster(mgen))
-            spore->add_ench(ENCH_SHORT_LIVED);
+        create_monster(mgen);
 
         return;
     }
@@ -7599,7 +7594,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_STOKE_FLAMES:
-        _summon(*mons, MONS_CREEPING_INFERNO, 2, slot);
+        _summon(*mons, MONS_CREEPING_INFERNO, summ_dur(2), slot);
         return;
 
     case SPELL_BOMBARD:

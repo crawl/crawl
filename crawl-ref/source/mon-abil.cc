@@ -805,13 +805,13 @@ void treant_release_fauna(monster& mons)
 
     monster_type fauna_t = MONS_HORNET;
 
-    mon_enchant abj = mons.get_ench(ENCH_ABJ);
+    mon_enchant timer = mons.get_ench(ENCH_SUMMON_TIMER);
 
     for (int i = 0; i < count; ++i)
     {
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(&mons),
                             mons.pos(),  mons.foe);
-        fauna_data.set_summoned(&mons, 0, SPELL_NO_SPELL);
+        fauna_data.set_summoned(&mons, SPELL_NO_SPELL);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
         monster* fauna = create_monster(fauna_data);
 
@@ -820,8 +820,8 @@ void treant_release_fauna(monster& mons)
             fauna->set_band_leader(mons);
 
             // Give released fauna the same summon duration as their 'parent'
-            if (abj.ench != ENCH_NONE)
-                fauna->add_ench(abj);
+            if (timer.ench != ENCH_NONE)
+                fauna->add_ench(timer);
 
             created = true;
             mons.mangrove_pests--;

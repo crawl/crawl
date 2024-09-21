@@ -2602,13 +2602,13 @@ void beogh_blood_for_blood()
         }
 
         mgen_data mg(_get_orc_reinforcement_type(pow), BEH_FRIENDLY, *di,
-                     MHITNOT, MG_AUTOFOE | MG_FORCE_PLACE);
-        mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+                     MHITNOT, MG_AUTOFOE | MG_FORCE_PLACE, GOD_BEOGH);
+        mg.set_summoned(&you, MON_SUMM_AID);
         monster* orc = create_monster(mg);
         if (orc)
         {
             orc->flags |= MF_HARD_RESET;
-            orc->mark_summoned(0, true, MON_SUMM_AID, false);
+            orc->mark_summoned(MON_SUMM_AID);
             orc->god = GOD_BEOGH;
             num_orcs -= 1;
 
@@ -2674,15 +2674,15 @@ static void _place_orcish_reinforcement()
 
     // Otherwise, generate an orc!
 
-    mgen_data mg(MONS_ORC_PRIEST, BEH_FRIENDLY, pos, MHITNOT, MG_AUTOFOE);
-    mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+    mgen_data mg(MONS_ORC_PRIEST, BEH_FRIENDLY, pos, MHITNOT, MG_AUTOFOE, GOD_BEOGH);
+    mg.set_summoned(&you, MON_SUMM_AID);
     mg.cls = _get_orc_reinforcement_type(you.skill_rdiv(SK_INVOCATIONS, 7, 2));
 
     monster* orc = create_monster(mg);
     if (orc)
     {
         orc->flags |= MF_HARD_RESET;
-        orc->mark_summoned(0, true, MON_SUMM_AID, false);
+        orc->mark_summoned(MON_SUMM_AID);
         orc->god = GOD_BEOGH;
     }
 }
@@ -2952,9 +2952,9 @@ spret dithmenos_shadowslip(bool fail)
 
     // Extend our shadow's life to last at least as long as the misdirection,
     // and give it some additional health.
-    mon_enchant abj = shadow->get_ench(ENCH_FAKE_ABJURATION);
-    abj.duration = max(abj.duration, dur);
-    shadow->update_ench(abj);
+    mon_enchant timer = shadow->get_ench(ENCH_SUMMON_TIMER);
+    timer.duration = max(timer.duration, dur);
+    shadow->update_ench(timer);
     shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
     shadow->hit_points = shadow->max_hit_points;
     shadow->props[KNOWN_MAX_HP_KEY] = shadow->max_hit_points;
@@ -3920,13 +3920,9 @@ static bool _qazlal_affected(coord_def pos)
         if (act->is_monster())
         {
             const monster *mon = act->as_monster();
-            int summon_type = 0;
             // Never fire at elemental forces.
-            if (mon && mon->is_summoned(nullptr, &summon_type)
-                && summon_type == MON_SUMM_AID)
-            {
+            if (mon && mon->is_summoned_by(MON_SUMM_AID))
                 return false;
-            }
         }
     }
 
@@ -4168,7 +4164,7 @@ spret qazlal_elemental_force(bool fail)
                                        1 + you.skill_rdiv(SK_INVOCATIONS, 1, 2)));
     mgen_data mg;
     mg.summon_type = MON_SUMM_AID;
-    mg.abjuration_duration = 1;
+    mg.summon_duration = 1;
     mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
     mg.summoner = &you;
     int placed = 0;
@@ -7139,8 +7135,8 @@ void makhleb_infernal_servant()
     monster_picker servant_picker;
     monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, tyrant ? 6 : 4, MON_SUMM_AID, GOD_MAKHLEB);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE, GOD_MAKHLEB);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(tyrant ? 6 : 4));
 
     if (carnage)
     {
@@ -7259,8 +7255,8 @@ static void _summon_legion_demon()
     monster_picker servant_picker;
     monster_type mon_type = servant_picker.pick(_makhleb_servants, pow, MONS_RED_DEVIL);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, 1, MON_SUMM_AID, GOD_MAKHLEB);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE, GOD_MAKHLEB);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(1));
     create_monster(mg);
 }
 

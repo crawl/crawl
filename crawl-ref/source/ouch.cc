@@ -595,10 +595,10 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
         return;
 
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
+    mg.set_summoned(&you, SPELL_NO_SPELL, summ_dur(3), false);
     mg.flags |= MG_FORCE_BEH; // don't mention how much it hates you before it appears
     if (monster *m = create_monster(mg))
     {
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         mprf("%s scurries out from under your cloak.", m->name(DESC_A).c_str());
         // We should return early in the case of no_love or no_allies,
         // so this is more a sanity check.
@@ -717,8 +717,8 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
         for (int i = 0; i < how_many; ++i)
         {
             const int mindex = damager->alive() ? damager->mindex() : MHITNOT;
-            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex);
-            mg.set_summoned(&you, 2, 0, you.religion);
+            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex, MG_NONE, you.religion);
+            mg.set_summoned(&you, 0, summ_dur(2));
 
             if (create_monster(mg))
                 count_created++;

@@ -3534,7 +3534,7 @@ void check_demonic_guardian()
 
         monster *guardian = create_monster(
             mgen_data(mt, BEH_FRIENDLY, you.pos(), MHITYOU,
-                      MG_FORCE_BEH | MG_AUTOFOE).set_summoned(&you, 2, 0));
+                      MG_FORCE_BEH | MG_AUTOFOE).set_summoned(&you, 0, summ_dur(2)));
 
         if (!guardian)
             return;

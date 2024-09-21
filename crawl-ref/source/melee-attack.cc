@@ -2028,7 +2028,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                      spell_user ? "magic" : "power");
 
                 if (you.magic_points != you.max_magic_points
-                    && !defender->as_monster()->is_summoned()
+                    && !defender->is_summoned()
                     && !mons_is_firewood(*defender->as_monster()))
                 {
                     int drain = random2(damage_done * 2) + 1;
@@ -3441,7 +3441,7 @@ void melee_attack::mons_apply_attack_flavour()
             monster* vine = attacker->as_monster();
             if (vine->has_ench(ENCH_ANTIMAGIC)
                 && (defender->is_player()
-                    || (!defender->as_monster()->is_summoned()
+                    || (!defender->is_summoned()
                         && !mons_is_firewood(*defender->as_monster()))))
             {
                 mon_enchant me = vine->get_ench(ENCH_ANTIMAGIC);

@@ -818,7 +818,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             else if (mon->type == MONS_ORC_APOSTLE)
             {
                 member->flags |= (MF_HARD_RESET | MF_APOSTLE_BAND | MF_NO_REWARD);
-                member->mark_summoned(0, true, 0, false);
+                member->mark_summoned();
             }
         }
     }
@@ -857,9 +857,9 @@ void mons_add_blame(monster* mon, const string &blame_string, bool at_front)
 static void _place_twister_clouds(monster *mon)
 {
     // Yay for the abj_degree having a huge granularity.
-    if (mon->has_ench(ENCH_ABJ))
+    if (mon->has_ench(ENCH_SUMMON_TIMER))
     {
-        mon_enchant abj = mon->get_ench(ENCH_ABJ);
+        mon_enchant abj = mon->get_ench(ENCH_SUMMON_TIMER);
         mon->lose_ench_duration(abj, abj.duration / 2);
     }
 
@@ -1206,10 +1206,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->flags &= ~MF_KNOWN_SHIFTER;
     }
 
-    // dur should always be 1-6 for monsters that can be abjured.
-    const bool summoned = mg.abjuration_duration >= 1
-                       && mg.abjuration_duration <= 6;
-
     if (mons_class_is_animated_weapon(mg.cls))
     {
         if (mg.props.exists(TUKIMA_WEAPON))
@@ -1218,7 +1214,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->props[TUKIMA_WEAPON] = true;
         }
         else
-            give_item(mon, place.absdepth(), summoned);
+            give_item(mon, place.absdepth(), mg.is_summoned());
 
 
         // Dancing weapons *always* have a weapon. Fail to create them
@@ -1248,7 +1244,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
              && !mg.props.exists(KIKU_WRETCH_KEY))
     {
-        give_item(mon, place.absdepth(), summoned);
+        give_item(mon, place.absdepth(), mg.is_summoned());
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
             give_weapon(mon, place.absdepth());
@@ -1302,13 +1298,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->behaviour = BEH_WANDER;
     }
 
-    if (summoned)
+    if (mg.is_summoned())
     {
-        // Instead of looking for dancing weapons, look for Tukima's dance.
-        // Dancing weapons can be created with shadow creatures. {due}
-        mon->mark_summoned(mg.abjuration_duration,
-                           mg.summon_type != SPELL_TUKIMAS_DANCE,
-                           mg.summon_type);
+        // Dancing weapons created by Tukima's Dance shouldn't mark their
+        // inventory as summoned so that they can drop themselves to the floor
+        // upon death.
+        mon->mark_summoned(mg.summon_type, mg.summon_duration,
+                           mg.summon_type != SPELL_TUKIMAS_DANCE);
         _inherit_kmap(*mon, mg.summoner);
 
         if (mg.summon_type > 0 && mg.summoner)
@@ -1327,7 +1323,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // Perm summons shouldn't leave gear either.
     if (mg.extra_flags & MF_HARD_RESET && mg.extra_flags & MF_NO_REWARD)
-        mon->mark_summoned(0, true, 0, false);
+        mon->mark_summoned();
 
     ASSERT(!invalid_monster_index(mg.foe)
            || mg.foe == MHITYOU || mg.foe == MHITNOT);
@@ -1337,7 +1333,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.flags & MG_BAND_MINION)
         blame_prefix = "led by ";
-    else if (mg.abjuration_duration > 0)
+    else if (mg.summon_duration > 0)
     {
         blame_prefix = "summoned by ";
 
@@ -2671,7 +2667,7 @@ monster* mons_place(mgen_data mg)
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
     if (_is_random_monster(mg.cls) && player_on_orb_run()
-        && !player_in_branch(BRANCH_ABYSS) && !mg.summoned())
+        && !player_in_branch(BRANCH_ABYSS) && !mg.is_summoned())
     {
 #ifdef DEBUG_MON_CREATION
         mprf(MSGCH_DIAGNOSTICS, "Call _pick_zot_exit_defender()");

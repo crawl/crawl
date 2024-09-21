@@ -5,6 +5,7 @@
 #pragma once
 
 #include "act-iter.h"
+#include "mon-death.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h"
@@ -32,12 +33,8 @@ static void _end_death_channel()
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_SPECTRAL_THING && mi->summoner == MID_PLAYER)
-        {
-            mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
-            abj.duration = 0;
-            mi->update_ench(abj);
-        }
+        if (mi->is_summoned_by(you, SPELL_DEATH_CHANNEL))
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
     }
 }
 

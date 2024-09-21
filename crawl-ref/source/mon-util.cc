@@ -756,14 +756,12 @@ bool mons_gives_xp(const monster& victim, const actor& agent)
 {
     const bool mon_killed_friend
         = agent.is_monster() && mons_aligned(&victim, &agent);
-    return !victim.is_summoned()                   // no summons
-        && !victim.has_ench(ENCH_ABJ)              // not-really-summons
-        && !victim.has_ench(ENCH_FAKE_ABJURATION)  // no animated remains
-        && mons_class_gives_xp(victim.type)        // class must reward xp
-        && (!testbits(victim.flags, MF_WAS_NEUTRAL)// no neutral monsters
-            || victim.has_ench(ENCH_MAD))          // ...except frenzied ones
-        && !testbits(victim.flags, MF_NO_REWARD)   // no reward for no_reward
-        && !mon_killed_friend;
+    return !victim.is_summoned()                        // no summons
+            && mons_class_gives_xp(victim.type)         // class must reward xp
+            && (!testbits(victim.flags, MF_WAS_NEUTRAL) // no neutral monsters
+                || victim.has_ench(ENCH_MAD))           // ...except frenzied ones
+            && !testbits(victim.flags, MF_NO_REWARD)    // no reward for no_reward
+            && !mon_killed_friend;
 }
 
 bool mons_class_is_threatening(monster_type mo)
@@ -1084,8 +1082,8 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
 
     // Don't allow HP draining from temporary monsters, spectralised monsters,
     // or firewood.
-    return !mon->has_ench(ENCH_FAKE_ABJURATION)
-           && !testbits(mon->flags, MF_SPECTRALISED)
+    return !testbits(mon->flags, MF_SPECTRALISED)
+           && !mons_is_conjured(mon->type)
            && !mons_is_firewood(*mon);
 }
 
@@ -1824,12 +1822,8 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
         return false;
 
     // Summons can't use stairs. (And neither can animated zombies)
-    if (mon.has_ench(ENCH_ABJ) || mon.has_ench(ENCH_FAKE_ABJURATION)
-        || (mon.has_ench(ENCH_SUMMON)
-            && mon.get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD))
-    {
+    if (mon.is_summoned())
         return false;
-    }
 
     if (mon.has_ench(ENCH_FRIENDLY_BRIBED)
         && (feat_is_branch_entrance(stair) || feat_is_branch_exit(stair)))

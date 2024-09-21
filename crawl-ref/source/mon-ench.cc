@@ -634,29 +634,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_web_cleanup(*this, true);
         break;
     }
-    case ENCH_FAKE_ABJURATION:
-        if (type == MONS_BATTLESPHERE)
-            return end_battlesphere(this, false);
-    case ENCH_ABJ:
+
+    case ENCH_SUMMON_TIMER:
         if (type == MONS_SPECTRAL_WEAPON)
             return end_spectral_weapon(this, false);
-        // Set duration to -1 so that monster_die() and any of its
-        // callees can tell that the monster ran out of time or was
-        // abjured.
-        add_ench(mon_enchant(
-            (me.ench != ENCH_FAKE_ABJURATION) ?
-                ENCH_ABJ : ENCH_FAKE_ABJURATION, 0, 0, -1));
+        else if (type == MONS_BATTLESPHERE)
+            return end_battlesphere(this, false);
 
         if (berserk())
             simple_monster_message(*this, " is no longer berserk.");
 
-        monster_die(*this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
-                            (quiet) ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
-        break;
-    case ENCH_SHORT_LIVED:
-        // Conjured ball lightnings explode when they time out.
-        suicide();
-        monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
+        monster_die(*this, quiet ? KILL_RESET : KILL_TIMEOUT, NON_MONSTER);
         break;
 
     case ENCH_SOUL_RIPE:
@@ -750,10 +738,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_HAUNTING:
         if (type != MONS_SOUL_WISP)
         {
-            mon_enchant abj = get_ench(ENCH_ABJ);
-            abj.degree = 1;
-            abj.duration = min(5 + random2(30), abj.duration);
-            update_ench(abj);
+            mon_enchant timer = get_ench(ENCH_SUMMON_TIMER);
+            timer.degree = 1;
+            timer.duration = min(5 + random2(30), timer.duration);
+            update_ench(timer);
         }
         break;
 
@@ -1284,7 +1272,7 @@ static void _merfolk_avatar_song(monster* mons)
                 monster* soul = create_monster(
                     mgen_data(MONS_DROWNED_SOUL, SAME_ATTITUDE(mons),
                               deep_water[i], mons->foe, MG_FORCE_PLACE)
-                    .set_summoned(mons, 1, SPELL_NO_SPELL));
+                    .set_summoned(mons, SPELL_NO_SPELL, summ_dur(1)));
 
                 // Scale down drowned soul damage for low level merfolk avatars
                 if (soul)
@@ -1338,7 +1326,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SICK:
     case ENCH_CORONA:
     case ENCH_CONTAM:
-    case ENCH_ABJ:
+    case ENCH_SUMMON_TIMER:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_WL:
@@ -1350,7 +1338,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
     case ENCH_DAZED:
-    case ENCH_FAKE_ABJURATION:
     case ENCH_RECITE_TIMER:
     case ENCH_INNER_FLAME:
     case ENCH_MUTE:
@@ -1501,12 +1488,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en, true);
         break;
     }
-
-    case ENCH_SHORT_LIVED:
-        // This should only be used for ball lightning -- bwr
-        if (decay_enchantment(en))
-            suicide();
-        break;
 
     case ENCH_SLOWLY_DYING:
         // If you are no longer dying, you must be dead.
@@ -1910,83 +1891,61 @@ void monster::apply_enchantment(const mon_enchant &me)
     }
 }
 
-void monster::mark_summoned(int longevity, bool mark_items, int summon_type, bool abj)
+void monster::mark_summoned(int summon_type, int longevity, bool mark_items)
 {
-    if (abj)
-        add_ench(mon_enchant(ENCH_ABJ, longevity));
-    if (summon_type != 0)
-        add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
+    if (longevity > 0)
+        add_ench(mon_enchant(ENCH_SUMMON_TIMER, 1, 0, longevity));
+
+    add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 
     if (mark_items)
         for (mon_inv_iterator ii(*this); ii; ++ii)
             ii->flags |= ISFLAG_SUMMONED;
 }
 
-/* Is the monster temporarily summoned?
+/* Is the monster created by a spell or effect (generally temporary)?
  *
- * Monsters must have ENCH_ABJ (giving how long they last) to be considered
- * summons. If they additionally set ENCH_SUMMON, which gives how they were
- * derived, this must not be from certain spells or "monster summoning types"
- * we don't consider actual summons. Temporary monsters with
- * ENCH_FAKE_ABJURATION also aren't summons, and durably summoned monsters
- * aren't temporary.
- *
- * @param[out] duration    The monster's summon duration in aut.
- * @param[out] summon_type The monster's means of summoning. If negative, this
- *                         is a mon_summon_type, otherwise it's a spell_type.
- * @returns True if the monster is a temporary summon, false otherwise.
+ * Monsters with ENCH_SUMMON are considered summoned for this purpose, whether
+ * or not they are 'actual' abjurable summons or non-abjurable magical creations
+ * like battlespheres or hoarfrost cannons.
+
+ * @returns True if the monster is a temporary summon/creation, false otherwise.
  */
-bool monster::is_summoned(int* duration, int* summon_type) const
+bool monster::is_summoned() const
 {
-    // Not everything with a 'summon source' counts as a temporary summon, but
-    // we should at least return their source if one exists
-    const mon_enchant summ = get_ench(ENCH_SUMMON);
-    if (summ.ench == ENCH_NONE)
-    {
-        if (summon_type != nullptr)
-            *summon_type = 0;
-    }
-    else if (summon_type != nullptr)
-        *summon_type = summ.degree;
+    return has_ench(ENCH_SUMMON);
+}
 
-    const mon_enchant abj = get_ench(ENCH_ABJ);
-    if (abj.ench == ENCH_NONE)
-    {
-        if (duration != nullptr)
-            *duration = -1;
-
-        return false;
-    }
-    if (duration != nullptr)
-        *duration = abj.duration;
-
-    // Conjured things (fire vortices, ball lightning, IOOD) are not summoned.
-    if (mons_is_conjured(type))
+bool monster::is_summoned_by(int summon_type) const
+{
+    if (!is_summoned())
         return false;
 
-    // No summon type specified, but we otherwise seem to be temporary.
-    if (summ.ench == ENCH_NONE)
+    mon_enchant summ = get_ench(ENCH_SUMMON);
+    return summ.degree == summon_type;
+}
+
+bool monster::is_summoned_by(const actor& _summoner, int summon_type) const
+{
+    if (!is_summoned())
+        return false;
+
+    if (summoner != _summoner.mid)
+        return false;
+
+    // If we didn't specify a specific summon type to check for, any summon
+    // type will do.
+    if (summon_type == SPELL_NO_SPELL)
         return true;
 
-    // Certain spells or monster summon types that set abjuration but aren't
-    // considered summons.
-    switch (summ.degree)
-    {
-    // Temporarily dancing weapons are really there.
-    case SPELL_TUKIMAS_DANCE:
+    // Otherwise check that the creating spell/effect matches the query.
+    mon_enchant summ = get_ench(ENCH_SUMMON);
+    return summ.degree == summon_type;
+}
 
-    // Clones aren't really summoned (though their equipment might be).
-    case MON_SUMM_CLONE:
-
-    // Nor are body parts.
-    case SPELL_CREATE_TENTACLES:
-
-    // Some object which was animated, and thus not really summoned.
-    case MON_SUMM_ANIMATE:
-        return false;
-    }
-
-    return true;
+bool monster::is_abjurable() const
+{
+    return is_summoned() && testbits(flags, MF_ACTUAL_SUMMON);
 }
 
 bool monster::is_perm_summoned() const
@@ -2030,13 +1989,13 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "rot",
 #endif
-    "summon", "abj", "corona",
+    "summon", "summon_timer", "corona",
     "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
     "sleep_wary",
 #if TAG_MAJOR_VERSION == 34
-    "submerged",
+    "submerged", "short_lived",
 #endif
-    "short_lived", "paralysis", "sick",
+    "paralysis", "sick",
 #if TAG_MAJOR_VERSION == 34
     "sleepy",
 #endif
@@ -2072,7 +2031,10 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "withdrawn", "attached",
 #endif
-    "guardian_timer", "flight", "liquefying", "polar_vortex", "fake_abjuration",
+    "guardian_timer", "flight", "liquefying", "polar_vortex",
+#if TAG_MAJOR_VERSION == 34
+    "fake_abjuration",
+#endif
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame",
 #if TAG_MAJOR_VERSION == 34
@@ -2229,7 +2191,7 @@ void mon_enchant::cap_degree()
 
     // Hard cap to simulate old enum behaviour, we should really throw this
     // out entirely.
-    const int max = (ench == ENCH_ABJ || ench == ENCH_FAKE_ABJURATION) ?
+    const int max = (ench == ENCH_SUMMON_TIMER) ?
             MAX_ENCH_DEGREE_ABJURATION : MAX_ENCH_DEGREE_DEFAULT;
     if (degree > max)
         degree = max;
@@ -2351,9 +2313,6 @@ int mon_enchant::calc_duration(const monster* mons,
             cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
         cturn += 1000 / _mod_speed(100, mons->speed);
         break;
-    case ENCH_SHORT_LIVED:
-        cturn = 1200 / _mod_speed(200, mons->speed);
-        break;
     case ENCH_SLOWLY_DYING:
     {
         // This may be a little too direct but the randomization at the end
@@ -2377,8 +2336,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 30 * 10 / _mod_speed(10, mons->speed);
         break;
 
-    case ENCH_FAKE_ABJURATION:
-    case ENCH_ABJ:
+    case ENCH_SUMMON_TIMER:
         // The duration is:
         // deg = 1     90 aut
         // deg = 2    180 aut
@@ -2467,4 +2425,19 @@ void mon_enchant::set_duration(const monster* mons, const mon_enchant *added)
 
     if (duration > maxduration)
         maxduration = duration;
+}
+
+// Converts a given summon duration category into a duration in aut (with random
+// fuzzing).
+int summ_dur(int degree)
+{
+    int aut = 0;
+
+    if (degree >= 6)
+        aut = 1000;
+    if (degree >= 5)
+        aut += 500;
+    aut += 100 * min(4, degree);
+
+    return fuzz_value(aut, 60, 40);
 }

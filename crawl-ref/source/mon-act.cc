@@ -387,7 +387,7 @@ static void _passively_summon_butterfly(const monster &summoner)
 
     auto mg = mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(&summoner),
                         summoner.pos(), summoner.foe);
-    mg.set_summoned(&summoner, 1, MON_SUMM_BUTTERFLIES);
+    mg.set_summoned(&summoner, MON_SUMM_BUTTERFLIES, summ_dur(1));
     monster *butt = create_monster(mg);
     if (!butt)
         return;
@@ -2320,7 +2320,7 @@ static void _post_monster_move(monster* mons)
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->type == MONS_RAKSHASA && mi->summoner == mons->mid)
-                mi->del_ench(ENCH_ABJ);
+                mi->del_ench(ENCH_SUMMON_TIMER);
         }
     }
 
@@ -3616,8 +3616,9 @@ static bool _monster_move(monster* mons, coord_def& delta)
         {
             const coord_def target(mons->pos() + delta);
             create_monster(
-                    mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), target)
-                    .set_summoned(mons, 2, MON_SUMM_ANIMATE, GOD_LUGONU));
+                    mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), target,
+                              MHITNOT, MG_NONE, GOD_LUGONU)
+                    .set_summoned(mons, MON_SUMM_ANIMATE, summ_dur(2)));
             destroy_wall(target);
         }
     }

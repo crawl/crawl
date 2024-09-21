@@ -6609,9 +6609,17 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
     {
-        inf.body << "\nThis monster has been summoned"
-                 << (mi.is(MB_SUMMONED) ? ", and is thus only temporary. "
-                                        : " in a durable way. ");
+        inf.body << "\nThis monster has been ";
+
+        // XXX: Expand this for better descriptions of some other types of
+        //      non-abjurable summons?
+        if (mi.is(MB_ABJURABLE))
+            inf.body << "temporarily summoned to this location. ";
+        else if (mi.is(MB_SUMMONED))
+            inf.body << "created by magic and is temporary. ";
+        else if (mi.is(MB_PERM_SUMMON))
+            inf.body << "permanently summoned to this plane. ";
+
         // TODO: hacks; convert angered_by_attacks to a monster_info check
         // (but on the other hand, it is really limiting to not have access
         // to the monster...)

@@ -103,7 +103,7 @@ static bool _evoke_horn_of_geryon()
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
         mgen_data mg(MONS_SIN_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3, SPELL_NO_SPELL);
+        mg.set_summoned(&you, SPELL_NO_SPELL, summ_dur(3));
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
         if (mon)
@@ -284,7 +284,7 @@ static bool _box_of_beasts()
 
     mgen_data mg(MONS_MUTANT_BEAST, BEH_FRIENDLY, you.pos(), MHITYOU,
                  MG_AUTOFOE);
-    mg.set_summoned(&you, 3 + random2(3), 0);
+    mg.set_summoned(&you, 0, summ_dur(3 + random2(3)));
 
     mg.hd = beast_tiers[tier];
     dprf("hd %d (min %d, tier %d)", mg.hd, hd_min, tier);
@@ -385,7 +385,7 @@ static bool _spill_out_spiders()
         monster_type mon = pick_monster_from(pop_spiders, evo_skill,
                                              _sack_of_spiders_veto_mon);
         mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-        mg.set_summoned(&you, 3 + random2(4), 0);
+        mg.set_summoned(&you, 0, summ_dur(3 + random2(4)));
         if (create_monster(mg))
             made_mons = true;
     }
@@ -685,7 +685,7 @@ static spret _phantom_mirror(dist *target)
     int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                          * (100 - victim->check_willpower(&you, power)) / 100));
 
-    mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
+    mon->mark_summoned(SPELL_PHANTOM_MIRROR, dur);
 
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");

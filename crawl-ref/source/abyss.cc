@@ -1857,7 +1857,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         if (!monster_habitable_grid(mons, env.grid(p)))
             continue;
         mgen_data mg(mons, BEH_NEUTRAL, p);
-        mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
+        mg.set_summoned(0, 0, summ_dur(5)).set_non_actor_summoner("Lugonu's corruption");
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);
     }
@@ -1882,7 +1882,7 @@ static void _spawn_corrupted_servant_near_monster(const monster &who)
         if (!monster_habitable_grid(mons, env.grid(p)))
             continue;
         mgen_data mg(mons, BEH_COPY, p);
-        mg.set_summoned(&who, 3, 0);
+        mg.set_summoned(&who, 0, summ_dur(3));
         mg.place = BRANCH_ABYSS;
         if (create_monster(mg))
             return;

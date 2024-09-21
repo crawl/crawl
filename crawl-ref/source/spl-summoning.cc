@@ -92,7 +92,7 @@ static mgen_data _summon_data(const actor &caster, monster_type mtyp,
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
                      _auto_autofoe(&caster),
                      MG_AUTOFOE)
-                     .set_summoned(&caster, dur, spell);
+                     .set_summoned(&caster, spell, dur);
 }
 
 static mgen_data _pal_data(monster_type pal, int dur, spell_type spell)
@@ -114,7 +114,7 @@ spret cast_summon_small_mammal(int pow, bool fail)
     else
         mon = MONS_QUOKKA;
 
-    if (!create_monster(_pal_data(mon, 3, SPELL_SUMMON_SMALL_MAMMAL)))
+    if (!create_monster(_pal_data(mon, summ_dur(3), SPELL_SUMMON_SMALL_MAMMAL)))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -172,7 +172,7 @@ spret cast_call_canine_familiar(int pow, bool fail)
     // Summon our dog if one isn't already active
     if (!old_dog)
     {
-        mgen_data mg = _pal_data(MONS_INUGAMI, 5, SPELL_CALL_CANINE_FAMILIAR);
+        mgen_data mg = _pal_data(MONS_INUGAMI, summ_dur(5), SPELL_CALL_CANINE_FAMILIAR);
 
         monster* dog = create_monster(mg);
         if (!dog)
@@ -206,10 +206,10 @@ spret cast_call_canine_familiar(int pow, bool fail)
         // Give our familiar a small amount of extra duration, if its duration
         // is currently low, to avoid imbuing it and then having it immediately
         // poof before it can even do anything with the buff.
-        mon_enchant abj = old_dog->get_ench(ENCH_ABJ);
-        if (abj.duration < 110)
-            abj.duration += random_range(60, 90);
-        old_dog->update_ench(abj);
+        mon_enchant timer = old_dog->get_ench(ENCH_SUMMON_TIMER);
+        if (timer.duration < 110)
+            timer.duration += random_range(60, 90);
+        old_dog->update_ench(timer);
     }
 
     return spret::success;
@@ -222,7 +222,7 @@ spret cast_summon_cactus(int pow, bool fail)
 
     fail_check();
 
-    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, 3, SPELL_SUMMON_CACTUS);
+    mgen_data mg = _pal_data(MONS_CACTUS_GIANT, summ_dur(3), SPELL_SUMMON_CACTUS);
     mg.hp = hit_points(pow + 27, 1);
     if (!create_monster(mg))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -252,7 +252,7 @@ spret cast_summon_armour_spirit(int pow, bool fail)
 
     fail_check();
 
-    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, SPELL_ANIMATE_ARMOUR);
+    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, summ_dur(2), SPELL_ANIMATE_ARMOUR);
     mg.hd = 15 + div_rand_round(pow, 10);
     monster* spirit = create_monster(mg);
     if (!spirit)
@@ -284,7 +284,7 @@ spret cast_summon_ice_beast(int pow, bool fail)
 
     fail_check();
 
-    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, 3, SPELL_SUMMON_ICE_BEAST);
+    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, summ_dur(3), SPELL_SUMMON_ICE_BEAST);
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
     if (create_monster(ice_beast))
@@ -308,7 +308,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, bool fail)
     else
         type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 
-    mgen_data mdata = _summon_data(*caster, type, 3, SPELL_MONSTROUS_MENAGERIE);
+    mgen_data mdata = _summon_data(*caster, type, summ_dur(3), SPELL_MONSTROUS_MENAGERIE);
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
@@ -343,7 +343,7 @@ spret cast_summon_hydra(actor *caster, int pow, bool fail)
     const int heads = max(4, min(div_rand_round(random2(1 + pow), 6), maxheads));
 
     // Duration is always very short - just 1.
-    mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, SPELL_SUMMON_HYDRA);
+    mgen_data mg = _summon_data(*caster, MONS_HYDRA, summ_dur(1), SPELL_SUMMON_HYDRA);
     mg.props[MGEN_NUM_HEADS] = heads;
     if (monster *hydra = create_monster(mg))
     {
@@ -439,7 +439,7 @@ static void _place_dragon()
         const coord_def pos = spots[random2(spots.size())];
         monster *dragon = create_monster(
             mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_FORCE_PLACE | MG_AUTOFOE)
-            .set_summoned(&you, 2, SPELL_DRAGON_CALL));
+            .set_summoned(&you, SPELL_DRAGON_CALL, summ_dur(2)));
         if (!dragon)
             continue;
 
@@ -556,7 +556,7 @@ spret cast_summon_dragon(actor *caster, int pow, bool fail)
     for (int i = 0; i < how_many; ++i)
     {
         if (monster *dragon = create_monster(
-                _summon_data(*caster, mon, 6, SPELL_SUMMON_DRAGON)))
+                _summon_data(*caster, mon, summ_dur(6), SPELL_SUMMON_DRAGON)))
         {
             if (you.see_cell(dragon->pos()))
                 mpr("A dragon appears.");
@@ -577,7 +577,7 @@ spret cast_summon_mana_viper(int pow, bool fail)
 
     fail_check();
 
-    mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, SPELL_SUMMON_MANA_VIPER);
+    mgen_data viper = _pal_data(MONS_MANA_VIPER, summ_dur(2), SPELL_SUMMON_MANA_VIPER);
     viper.hd = (7 + div_rand_round(pow, 12));
 
     if (create_monster(viper))
@@ -593,15 +593,15 @@ static void _make_mons_berserk_summon(monster* mon)
 {
     mon->go_berserk(false);
     mon_enchant berserk = mon->get_ench(ENCH_BERSERK);
-    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+    mon_enchant timer = mon->get_ench(ENCH_SUMMON_TIMER);
 
     // Let Trog's gifts berserk longer, and set the abjuration timeout
     // to the berserk timeout.
     berserk.duration = berserk.duration * 3 / 2;
     berserk.maxduration = berserk.duration;
-    abj.duration = abj.maxduration = berserk.duration;
+    timer.duration = timer.maxduration = berserk.duration;
     mon->update_ench(berserk);
-    mon->update_ench(abj);
+    mon->update_ench(timer);
 }
 
 // This is actually one of Trog's wrath effects.
@@ -642,8 +642,8 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
                  caster ? caster->pos() : you.pos(),
                  _auto_autofoe(caster),
-                 MG_AUTOFOE);
-    mg.set_summoned(caster, caster ? dur : 0, SPELL_NO_SPELL, GOD_TROG);
+                 MG_AUTOFOE, GOD_TROG);
+    mg.set_summoned(caster, SPELL_NO_SPELL, summ_dur(caster ? dur : 0));
 
     if (!caster)
     {
@@ -665,10 +665,9 @@ bool summon_holy_warrior(int pow, bool punish)
 {
     mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA),
                  punish ? BEH_HOSTILE : BEH_FRIENDLY,
-                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE);
-    mg.set_summoned(punish ? 0 : &you,
-                    punish ? 0 : min(2 + (random2(pow) / 4), 6),
-                    SPELL_NO_SPELL, GOD_SHINING_ONE);
+                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, GOD_SHINING_ONE);
+    mg.set_summoned(punish ? 0 : &you, SPELL_NO_SPELL,
+                    summ_dur(punish ? 0 : min(2 + (random2(pow) / 4), 6)));
 
     if (punish)
     {
@@ -791,7 +790,7 @@ static void _animate_weapon(int pow, actor* target)
                  target->pos(),
                  hostile ? MHITYOU : target->mindex(),
                  hostile ? MG_NONE : MG_FORCE_BEH);
-    mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE);
+    mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur));
     mg.props[TUKIMA_WEAPON] = *wpn;
     mg.props[TUKIMA_POWER] = pow;
 
@@ -877,13 +876,13 @@ spret cast_conjure_ball_lightning(int pow, bool fail)
                               SPELL_CONJURE_BALL_LIGHTNING);
     cbl.foe = MHITNOT;
     cbl.hd = ball_lightning_hd(pow);
+    cbl.set_summoned(&you, SPELL_CONJURE_BALL_LIGHTNING, random_range(40, 70), false, false);
 
     for (int i = 0; i < 3; ++i)
     {
         if (monster *ball = create_monster(cbl))
         {
             success = true;
-            ball->add_ench(ENCH_SHORT_LIVED);
 
             // Avoid ball lightnings without targets always moving towards (0,0)
             if (!(ball->get_foe() && ball->get_foe()->is_monster()))
@@ -919,7 +918,7 @@ spret cast_summon_lightning_spire(int pow, bool fail)
 
     fail_check();
 
-    mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, 2,
+    mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, summ_dur(2),
                                 SPELL_SUMMON_LIGHTNING_SPIRE);
     spire.hd = _lightning_spire_hd(pow);
 
@@ -940,7 +939,7 @@ spret cast_summon_blazeheart_golem(int pow, bool fail)
 
     fail_check();
 
-    mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3,
+    mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, summ_dur(3),
                                 SPELL_SUMMON_BLAZEHEART_GOLEM);
     golem.flags &= ~MG_AUTOFOE; // !!!
     golem.hd = 6 + div_rand_round(pow, 10);
@@ -974,7 +973,7 @@ spret cast_call_imp(int pow, bool fail)
 
     fail_check();
 
-    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, 3, SPELL_CALL_IMP);
+    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, summ_dur(3), SPELL_CALL_IMP);
     if (monster *imp = create_monster(imp_data))
     {
         mpr("A tiny devil pulls itself out of the air.");
@@ -1035,7 +1034,7 @@ spret summon_butterflies()
     {
         mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
                             MG_AUTOFOE);
-        butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
+        butterfly.set_summoned(&you, MON_SUMM_BUTTERFLIES, summ_dur(3));
 
         if (create_monster(butterfly))
             success = true;
@@ -1052,7 +1051,7 @@ spret summon_butterflies()
             break;
         mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, pos, MHITYOU,
                             MG_AUTOFOE);
-        butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
+        butterfly.set_summoned(&you, MON_SUMM_BUTTERFLIES, summ_dur(3));
 
         if (create_monster(butterfly))
             success = true;
@@ -1081,14 +1080,14 @@ spret summon_shadow_creatures()
             mgen_data(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                       MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD)
                       // This duration is only used for band members.
-                      .set_summoned(&you, 2, MON_SUMM_SCROLL)
+                      .set_summoned(&you, MON_SUMM_SCROLL, summ_dur(2))
                       .set_place(level_id::current()),
             false))
         {
             // Choose a new duration based on HD.
             int x = max(mons->get_experience_level() - 3, 1);
             int d = min(4, 1 + div_rand_round(17, x));
-            mon_enchant me = mon_enchant(ENCH_ABJ, d);
+            mon_enchant me = mon_enchant(ENCH_SUMMON_TIMER, d);
             me.set_duration(mons, &me);
             mons->update_ench(me);
 
@@ -1232,7 +1231,7 @@ spret cast_summon_horrible_things(int pow, bool fail)
 
     while (num_abominations-- > 0)
     {
-        const mgen_data abom = _pal_data(MONS_ABOMINATION_LARGE, 3,
+        const mgen_data abom = _pal_data(MONS_ABOMINATION_LARGE, summ_dur(3),
                                          SPELL_SUMMON_HORRIBLE_THINGS);
         if (create_monster(abom))
             ++count;
@@ -1240,7 +1239,7 @@ spret cast_summon_horrible_things(int pow, bool fail)
 
     while (num_tmons-- > 0)
     {
-        const mgen_data tmons = _pal_data(MONS_TENTACLED_MONSTROSITY, 3,
+        const mgen_data tmons = _pal_data(MONS_TENTACLED_MONSTROSITY, summ_dur(3),
                                           SPELL_SUMMON_HORRIBLE_THINGS);
         if (create_monster(tmons))
             ++count;
@@ -1351,9 +1350,9 @@ spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
 
     if (monster *dryad = create_monster(dryad_data))
     {
-        mon_enchant abj = dryad->get_ench(ENCH_ABJ);
-        abj.duration = duration - 10;
-        dryad->update_ench(abj);
+        mon_enchant timer = dryad->get_ench(ENCH_SUMMON_TIMER);
+        timer.duration = duration - 10;
+        dryad->update_ench(timer);
 
         // Pre-awaken the forest just summoned.
         bolt dummy;
@@ -1411,7 +1410,7 @@ spret cast_haunt(int pow, const coord_def& where, bool fail)
 
         if (monster *mons = create_monster(
                 mgen_data(mon, BEH_FRIENDLY, where, mi, MG_FORCE_BEH)
-                .set_summoned(&you, 3, SPELL_HAUNT)))
+                .set_summoned(&you, SPELL_HAUNT, summ_dur(3))))
         {
             success++;
             mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, m, INFINITE_DURATION));
@@ -1445,7 +1444,7 @@ spret cast_martyrs_knell(const actor* caster, int pow, bool fail)
 
     fail_check();
 
-    mgen_data mg = _summon_data(*caster, MONS_MARTYRED_SHADE, 2,
+    mgen_data mg = _summon_data(*caster, MONS_MARTYRED_SHADE, summ_dur(2),
                                 SPELL_MARTYRS_KNELL);
     mg.hd = (6 + div_rand_round(pow, 11));
 
@@ -1603,7 +1602,7 @@ spret cast_spellforged_servitor(int pow, bool fail)
 
     fail_check();
 
-    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 3,
+    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, summ_dur(3),
                                 SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
@@ -1685,10 +1684,10 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
                                               + 4 + random2(pow + 10) / 10);
 
         // Increase duration and update HD
-        mon_enchant abj = battlesphere->get_ench(ENCH_FAKE_ABJURATION);
+        mon_enchant timer = battlesphere->get_ench(ENCH_SUMMON_TIMER);
         battlesphere->set_hit_dice(_battlesphere_hd(pow));
-        abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
-        battlesphere->update_ench(abj);
+        timer.duration = min(timer.duration + (7 + roll_dice(2, pow)) * 10, 500);
+        battlesphere->update_ench(timer);
     }
     else
     {
@@ -1697,15 +1696,13 @@ spret cast_battlesphere(actor* agent, int pow, bool fail)
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
                       agent->pos(), agent->mindex());
-        mg.set_summoned(agent, 0, SPELL_BATTLESPHERE);
+        mg.set_summoned(agent, SPELL_BATTLESPHERE,
+                        min((7 + roll_dice(2, pow)) * 10, 500), false);
         mg.hd = _battlesphere_hd(pow);
         battlesphere = create_monster(mg);
 
         if (battlesphere)
         {
-            int dur = min((7 + roll_dice(2, pow)) * 10, 500);
-            battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
-            battlesphere->summoner = agent->mid;
             agent->props[BATTLESPHERE_KEY].get_int() = battlesphere->mid;
 
             if (agent->is_player())
@@ -2084,8 +2081,8 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
                                         ? BEH_FRIENDLY
                                         : SAME_ATTITUDE(caster->as_monster()),
                                      where, MHITNOT, MG_FORCE_PLACE);
-    prism_data.set_summoned(caster, 0, is_shadow ? SPELL_SHADOW_PRISM
-                                                 : SPELL_FULMINANT_PRISM);
+    prism_data.set_summoned(caster, is_shadow ? SPELL_SHADOW_PRISM
+                                              : SPELL_FULMINANT_PRISM);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
@@ -2275,9 +2272,9 @@ static bool _spell_has_variable_cap(spell_type spell)
 static void _expire_capped_summon(monster* mon, bool recurse)
 {
     // Timeout the summon
-    mon_enchant abj = mon->get_ench(ENCH_ABJ);
-    abj.duration = 10;
-    mon->update_ench(abj);
+    mon_enchant timer = mon->get_ench(ENCH_SUMMON_TIMER);
+    timer.duration = 10;
+    mon->update_ench(timer);
     // Mark our cap abjuration so we don't keep abjuring the same
     // one if creating multiple summons (also, should show a status light).
     mon->add_ench(ENCH_SUMMON_CAPPED);
@@ -2327,38 +2324,43 @@ void summoned_monster(const monster *mons, const actor *caster,
         if (mons == *mi)
             continue;
 
-        int duration = 0;
-        int stype    = 0;
-        const bool summoned = mi->is_summoned(&duration, &stype);
-        if (summoned && stype == spell && caster->mid == mi->summoner
-            && mons_aligned(caster, *mi))
+        // Ignore monsters that were not summoned by the caster.
+        if (mi->summoner != caster->mid || !mi->is_summoned()
+            || !mons_aligned(caster, *mi))
         {
-            // Count large abominations and tentacled monstrosities separately
-            if (spell == SPELL_SUMMON_HORRIBLE_THINGS && mi->type != mons->type)
+            continue;
+        }
+
+        // Check that the monster was created by the spell in question.
+        mon_enchant summ = mi->get_ench(ENCH_SUMMON);
+        if (summ.degree != spell)
+            continue;
+
+        // Count large abominations and tentacled monstrosities separately
+        if (spell == SPELL_SUMMON_HORRIBLE_THINGS && mi->type != mons->type)
+            continue;
+
+        if (_spell_has_variable_cap(spell) && mi->props.exists(SUMMON_ID_KEY))
+        {
+            const int id = mi->props[SUMMON_ID_KEY].get_int();
+
+            // Skip any linked summon whose set we have seen already,
+            // otherwise add it to the list of seen summon IDs
+            if (seen_ids.find(id) == seen_ids.end())
+                seen_ids.insert(id);
+            else
                 continue;
+        }
 
-            if (_spell_has_variable_cap(spell) && mi->props.exists(SUMMON_ID_KEY))
-            {
-                const int id = mi->props[SUMMON_ID_KEY].get_int();
+        count++;
 
-                // Skip any linked summon whose set we have seen already,
-                // otherwise add it to the list of seen summon IDs
-                if (seen_ids.find(id) == seen_ids.end())
-                    seen_ids.insert(id);
-                else
-                    continue;
-            }
-
-            count++;
-
-            // If this summon is the oldest (well, the closest to expiry)
-            // remember it (unless already expiring due to a cap)
-            if (!mi->has_ench(ENCH_SUMMON_CAPPED)
-                && (!oldest_summon || duration < oldest_duration))
-            {
-                oldest_summon = *mi;
-                oldest_duration = duration;
-            }
+        // If this summon is the oldest (well, the closest to expiry)
+        // remember it (unless already expiring due to a cap)
+        if (!mi->has_ench(ENCH_SUMMON_CAPPED)
+            && (!oldest_summon || summ.duration < oldest_duration))
+        {
+            oldest_summon = *mi;
+            oldest_duration = summ.duration;
         }
     }
 
@@ -2374,13 +2376,8 @@ int count_summons(const actor *summoner, spell_type spell)
         if (summoner == *mi)
             continue;
 
-        int stype    = 0;
-        const bool summoned = mi->is_summoned(nullptr, &stype);
-        if (summoned && stype == spell && summoner->mid == mi->summoner
-            && mons_aligned(summoner, *mi))
-        {
+        if (mi->is_summoned_by(*summoner, spell) && mons_aligned(summoner, *mi))
             count++;
-        }
     }
 
     return count;
@@ -2392,8 +2389,8 @@ static bool _create_briar_patch(coord_def& target)
             MHITNOT, MG_FORCE_PLACE, GOD_FEDHAS);
     mgen.hd = mons_class_hit_dice(MONS_BRIAR_PATCH) +
         you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, min(2 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
-            SPELL_NO_SPELL);
+    mgen.set_summoned(&you, SPELL_NO_SPELL,
+                        summ_dur(min(2 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6)));
 
     if (create_monster(mgen))
     {
@@ -2465,8 +2462,8 @@ static void _overgrow_wall(const coord_def &pos)
                                                     1, MONS_OKLOB_PLANT);
     mgen_data mgen(mon, BEH_FRIENDLY, pos, MHITYOU, MG_FORCE_PLACE);
     mgen.hd = mons_class_hit_dice(mon) + you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
-            SPELL_NO_SPELL);
+    mgen.set_summoned(&you, SPELL_NO_SPELL,
+                        summ_dur(min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6)));
     if (const monster* const plant = create_monster(mgen))
     {
         mprf("%s is torn apart as %s grows in its place.", what.c_str(),
@@ -2537,8 +2534,8 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE) +
         you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
-            SPELL_NO_SPELL);
+    mgen.set_summoned(&you, SPELL_NO_SPELL,
+                        summ_dur(min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6)));
 
     if (create_monster(mgen))
         mpr("A ballistomycete grows from the ground.");
@@ -2584,8 +2581,8 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
             MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
     mgen.hd = mons_class_hit_dice(MONS_OKLOB_PLANT) +
         you.skill_rdiv(SK_INVOCATIONS);
-    mgen.set_summoned(&you, min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6),
-            SPELL_NO_SPELL);
+    mgen.set_summoned(&you, SPELL_NO_SPELL,
+                        summ_dur(min(3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5), 6)));
 
     if (create_monster(mgen))
         mpr("An oklob plant grows from the ground.");
@@ -2648,7 +2645,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
                                        : SAME_ATTITUDE(agent.as_monster());
     mgen_data fox(MONS_FOXFIRE, att,
                   pos, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-    fox.set_summoned(&agent, 0, SPELL_FOXFIRE);
+    fox.set_summoned(&agent, SPELL_FOXFIRE, random_range(40, 70), false, false);
     fox.hd = pow;
     monster *foxfire;
 
@@ -2659,7 +2656,6 @@ static bool _create_foxfire(const actor &agent, coord_def pos, int pow,
     if (!foxfire)
         return false;
 
-    foxfire->add_ench(ENCH_SHORT_LIVED);
     foxfire->steps_remaining = you.current_vision + 2;
     if (marshlight)
         foxfire->props[MONSTER_TILE_KEY] = TILEP_MONS_MARSHLIGHT;
@@ -2765,7 +2761,7 @@ bool summon_hell_out_of_bat(const actor &agent, coord_def pos)
 
     monster *mons = create_monster(
             mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
-                      .set_summoned(&agent, 1, SPELL_NO_SPELL, GOD_NO_GOD));
+                      .set_summoned(&agent, SPELL_NO_SPELL, summ_dur(1)));
     if (mons)
         return true;
 
@@ -2794,7 +2790,7 @@ bool summon_swarm_clone(const monster& agent, coord_def target_pos)
     }
 
     mgen_data mg(agent.type, BEH_COPY, target_pos, _auto_autofoe(parent), MG_AUTOFOE);
-    mg.set_summoned(parent, 2, SPELL_NO_SPELL, GOD_NO_GOD);
+    mg.set_summoned(parent, SPELL_NO_SPELL, summ_dur(2));
 
     if (monster* spawn = create_monster(mg))
     {
@@ -2818,7 +2814,7 @@ bool summon_spider(const actor &agent, coord_def pos,
 
     monster *mons = create_monster(
             mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
-                      .set_summoned(&agent, 3, spell));
+                      .set_summoned(&agent, spell, summ_dur(3)));
     if (mons)
         return true;
 
@@ -2883,7 +2879,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
                                 ? BEH_FRIENDLY
                                 : SAME_ATTITUDE(agent.as_monster()),
                              pos, MHITNOT, MG_FORCE_PLACE);
-    mg.set_summoned(&agent, 0, SPELL_BOULDER);
+    mg.set_summoned(&agent, SPELL_BOULDER);
     mg.hp = barrelling_boulder_hp(pow);
     monster *boulder = create_monster(mg);
 
@@ -2959,6 +2955,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     {
         // Note that this *not* marked as coming from SPELL_SIMULACRUM
         mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, SPELL_NO_SPELL);
+        mg.set_summoned(&you, SPELL_SIMULACRUM, delay, false, false);
         mg.base_type = mons->type;
         mg.hd = 8; // make them more durable
         monster *ice = create_monster(mg);
@@ -2966,7 +2963,6 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
         if (ice)
         {
             ice->props[SIMULACRUM_TYPE_KEY] = mons->type;
-            ice->add_ench(mon_enchant(ENCH_SHORT_LIVED, 0, &you, delay));
             ice->add_ench(mon_enchant(ENCH_SIMULACRUM_SCULPTING, 0, &you, INFINITE_DURATION));
             ice->flags |= MF_WAS_IN_VIEW;
 
@@ -3010,7 +3006,8 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     cannon.hd = _hoarfrost_cannon_hd(pow);
 
     // Make both cannons share the same duration
-    const int dur = random_range(16, 22) * BASELINE_DELAY;
+    cannon.set_summoned(&agent, SPELL_HOARFROST_CANNONADE,
+                        random_range(16, 22) * BASELINE_DELAY, false);
 
     int num_seen = 0;
 
@@ -3032,8 +3029,6 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
             // Give a bit of instant energy so the slow cannons don't take
             // multiple turns to fire their first shot.
             mons->speed_increment = 70;
-            mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &agent, dur));
-            mons->mark_summoned(0, false, SPELL_HOARFROST_CANNONADE, false);
 
             if (you.can_see(*mons))
                 ++num_seen;
@@ -3152,6 +3147,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
 
     mgen_data mg = _summon_data(agent, MONS_HELLFIRE_MORTAR, 0,
                                 SPELL_HELLFIRE_MORTAR);
+    mg.set_summoned(&agent, SPELL_HELLFIRE_MORTAR, dur, false, false);
     mg.flags |= MG_FORCE_PLACE;
     mg.pos = beam.path_taken[0];
     mg.hd = _hellfire_mortar_hd(pow);
@@ -3173,8 +3169,6 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
         const coord_def pos = beam.path_taken[i];
         path.push_back(pos);
     }
-
-    cannon->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, &agent, dur));
 
     mprf("With a deafening crack, the ground splits apart in the path of %s "
         "chthonic artillery!", agent.name(DESC_ITS).c_str());
@@ -3243,7 +3237,7 @@ bool make_soul_wisp(const actor& agent, actor& victim)
 
     }
 
-    mgen_data mg = _summon_data(agent, MONS_SOUL_WISP, 2, SPELL_SOUL_SPLINTER);
+    mgen_data mg = _summon_data(agent, MONS_SOUL_WISP, summ_dur(2), SPELL_SOUL_SPLINTER);
     mg.pos = spots[random2(spots.size())];
     mg.flags |= MG_FORCE_PLACE;
 
@@ -3254,7 +3248,7 @@ bool make_soul_wisp(const actor& agent, actor& victim)
     monster* wisp = create_monster(mg);
 
     wisp->add_ench(mon_enchant(ENCH_HAUNTING, 1, &victim, INFINITE_DURATION));
-    victim.weaken(&agent, wisp->get_ench(ENCH_ABJ).duration / 10);
+    victim.weaken(&agent, wisp->get_ench(ENCH_SUMMON_TIMER).duration / 10);
     victim.props[SOUL_SPLINTERED_KEY]= true;
 
     // Let wisp act immediately (so that if it appears behind the enemy, the

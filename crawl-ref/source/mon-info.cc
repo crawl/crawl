@@ -190,7 +190,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MAX_POISONED;
     case ENCH_CONTAM:
         return mons.get_ench(ench).degree == 1 ? MB_CONTAM_LIGHT : MB_CONTAM_HEAVY;
-    case ENCH_SHORT_LIVED:
     case ENCH_SLOWLY_DYING:
         if (mons.type == MONS_WITHERED_PLANT)
             return MB_CRUMBLING;
@@ -450,11 +449,14 @@ monster_info::monster_info(const monster* m, int milev)
     _colour = m->colour;
 
     if (m->is_summoned()
+        && !(m->flags & MF_PERSISTS)
         && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
     {
         mb.set(MB_SUMMONED);
         if (m->type == MONS_SPELLFORGED_SERVITOR && m->summoner == MID_PLAYER)
             mb.set(MB_PLAYER_SERVITOR);
+        if (m->is_abjurable())
+            mb.set(MB_ABJURABLE);
     }
     else if (m->is_perm_summoned() && !mons_is_player_shadow(*m))
         mb.set(MB_PERM_SUMMON);
@@ -1840,7 +1842,7 @@ bool monster_info::has_trivial_ench(enchant_type ench) const
 // the player's knowledge?
 bool monster_info::unravellable() const
 {
-    if (is(MB_SUMMONED))
+    if (is(MB_ABJURABLE))
         return true;
 
     // NOTE: assumes that all debuffable enchantments are trivially mapped

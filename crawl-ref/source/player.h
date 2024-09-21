@@ -610,8 +610,10 @@ public:
 
     god_type  deity() const override;
     bool      alive() const override;
-    bool      is_summoned(int* duration = nullptr,
-                          int* summon_type = nullptr) const override;
+    bool      is_summoned() const override { return false; };
+    bool      is_summoned_by(int) const override { return false; };
+    bool      is_summoned_by(const actor&, int = SPELL_NO_SPELL) const override
+                             { return false; };
     bool      is_perm_summoned() const override { return false; };
 
     bool        swimming() const override;

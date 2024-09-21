@@ -2704,7 +2704,7 @@ void bolt::affect_endpoint()
                                             SAME_ATTITUDE(agent(true)->as_monster()),
                                             spot, agent(true)->as_monster()->foe,
                                             MG_FORCE_PLACE)
-                            .set_summoned(agent(true), 1, SPELL_FLASHING_BALESTRA, GOD_NO_GOD));
+                            .set_summoned(agent(true), SPELL_FLASHING_BALESTRA, summ_dur(1)));
 
             if (blade)
                 blade->add_ench(ENCH_MIGHT);
@@ -2735,7 +2735,7 @@ void bolt::affect_endpoint()
             bool obviousness; // dummy argument
             monster *mirror = clone_mons(blitzer, true, &obviousness,
                                          blitzer->attitude, spot);
-            mirror->mark_summoned(2, true, SPELL_PHANTOM_BLITZ);
+            mirror->mark_summoned(SPELL_PHANTOM_BLITZ, 2);
             mirror->summoner = blitzer->mid;
             mirror->foe = blitzer->foe;
             mirror->hit_points = blitzer->max_hit_points;
@@ -3075,7 +3075,7 @@ void bolt::affect_place_explosion_clouds()
 
             actor* summ = agent();
             mgen_data mg(MONS_FIRE_VORTEX, att, p, MHITNOT, MG_NONE, god);
-            mg.set_summoned(summ, 1, SPELL_FIRE_STORM);
+            mg.set_summoned(summ, SPELL_FIRE_STORM, summ_dur(1), false, false);
 
             // Spell-summoned monsters need to have a live summoner.
             if (summ == nullptr || !summ->alive())
@@ -5846,9 +5846,7 @@ bool bolt::ignores_monster(const monster* mon) const
     if ((flavour == BEAM_HAEMOCLASM || flavour == BEAM_BLOODRITE) && mon->friendly())
         return true;
 
-    int summon_type = 0;
-    mon->is_summoned(nullptr, &summon_type);
-    if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)
+    if (flavour == BEAM_QAZLAL && mon->is_summoned_by(you, MON_SUMM_AID))
         return true;
 
     if (origin_spell == SPELL_UPHEAVAL && agent() && agent() == mon)
@@ -6664,7 +6662,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (!monster_can_be_unravelled(*mon))
             return MON_UNAFFECTED;
 
-        if (mon->is_summoned())
+        if (mon->is_abjurable())
         {
             mprf("The magic binding %s to this plane unravels!",
                  mon->name(DESC_THE).c_str());

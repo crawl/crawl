@@ -1210,19 +1210,10 @@ static void _expire_temporary_allies()
         if (!mons.alive())
             continue;
 
-        if (mons.type == MONS_BATTLESPHERE)
-            end_battlesphere(&mons, false);
-        else if (mons.type == MONS_SPECTRAL_WEAPON)
-            end_spectral_weapon(&mons, false);
-        else if (mons.friendly()
-                && (mons.is_summoned() || mons.has_ench(ENCH_FAKE_ABJURATION))
-                    && !mons.is_perm_summoned())
-        {
+        if (mons.friendly() && mons.is_summoned())
             monster_die(mons, KILL_RESET, NON_MONSTER, true);
-        }
         // Yred & animate dead zombies crumble on floor change
-        else if (mons.has_ench(ENCH_SUMMON)
-                    && mons.get_ench(ENCH_SUMMON).degree == SPELL_ANIMATE_DEAD
+        else if (mons.is_summoned_by(you, SPELL_ANIMATE_DEAD)
                 || (is_yred_undead_follower(mons) && mons.type != MONS_BOUND_SOUL))
         {
             monster_die(mons, KILL_RESET, NON_MONSTER, true);

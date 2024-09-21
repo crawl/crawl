@@ -364,7 +364,7 @@ void trj_spawn_fineff::fire()
         if (monster *mons = mons_place(
                               mgen_data(jelly, spawn_beh, jpos, foe,
                                         MG_DONT_COME, GOD_JIYVA)
-                              .set_summoned(trj, 0, 0)))
+                              .set_summoned(trj, 0)))
         {
             // Don't allow milking the Royal Jelly.
             mons->flags |= MF_NO_REWARD;
@@ -711,12 +711,10 @@ void infestation_death_fineff::fire()
     if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
                                                    BEH_FRIENDLY, posn,
                                                    MHITYOU, MG_AUTOFOE)
-                                         .set_summoned(&you, 0,
-                                                       SPELL_INFESTATION),
+                                         .set_summoned(&you, SPELL_INFESTATION,
+                                                       summ_dur(5), false),
                                          false))
     {
-        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
-
         if (you.see_cell(posn) || you.can_see(*scarab))
         {
             mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
@@ -747,7 +745,7 @@ static void _expire_player_simulacra()
     // If we have too many, expire the oldest.
     // (Maybe it should use some other logic, like weakest or injured?)
     if (simul.size() > 4)
-        simul[0]->del_ench(ENCH_FAKE_ABJURATION);
+        simul[0]->del_ench(ENCH_SUMMON_TIMER);
 }
 
 void make_derived_undead_fineff::fire()
@@ -776,17 +774,8 @@ void make_derived_undead_fineff::fire()
     if (!mg.mname.empty())
         name_zombie(*undead, mg.base_type, mg.mname);
 
-    if (mg.god != GOD_YREDELEMNUL && undead->type != MONS_ZOMBIE)
-    {
-        int dur = spell == SPELL_SIMULACRUM ? 3 : 5;
-        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
-    }
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);
-
-    // Tag so that we can see which undead came from which spell
-    if (spell != SPELL_NO_SPELL)
-        undead->add_ench(mon_enchant(ENCH_SUMMON, spell));
 }
 
 const actor *mummy_death_curse_fineff::fixup_attacker(const actor *a)
@@ -919,7 +908,7 @@ void spectral_weapon_fineff::fire()
                  chosen_pos,
                  atkr->mindex(),
                  MG_FORCE_BEH | MG_FORCE_PLACE);
-    mg.set_summoned(atkr, 0, 0);
+    mg.set_summoned(atkr, 0);
     mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     mg.props[TUKIMA_WEAPON] = *weapon;
     mg.props[TUKIMA_POWER] = 50;

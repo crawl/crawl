@@ -239,6 +239,7 @@ enum monster_info_flags
     MB_SOUL_SPLINTERED,
     MB_ENGULFING_PLAYER,
     MB_DOUBLED_VIGOUR,
+    MB_ABJURABLE,
     NUM_MB_FLAGS
 };
 

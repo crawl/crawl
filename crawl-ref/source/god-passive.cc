@@ -1034,6 +1034,8 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
 
     if (!friendly)
         mg.hp = mg.hp * 2;
+    else
+        mg.set_summoned(&you, SPELL_NO_SPELL, random_range(4, 6) * BASELINE_DELAY, false);
 
     monster* mon = create_monster(mg);
     if (!mon)
@@ -1057,12 +1059,6 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
         // Randomize order, like for players
         if (coinflip())
             mon->swap_weapons(false);
-    }
-
-    if (friendly)
-    {
-        mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 0, &you,
-                                random_range(4, 6) * BASELINE_DELAY));
     }
 
     // Set damage based on xl, with a bonus for UC characters (since they won't
@@ -1463,7 +1459,7 @@ void dithmenos_shadow_shoot(const dist &d, const item_def &item)
     // one turn.
     if (!existing_target.origin())
     {
-        mon_enchant me = mon->get_ench(ENCH_FAKE_ABJURATION);
+        mon_enchant me = mon->get_ench(ENCH_SUMMON_TIMER);
         me.duration += you.time_taken;
         mon->update_ench(me);
     }
