@@ -46,8 +46,10 @@ public:
     virtual bool      alive() const = 0;
 
     // Should return false for perma-summoned things.
-    virtual bool is_summoned(int* duration = nullptr,
-                             int* summon_type = nullptr) const = 0;
+    virtual bool is_summoned() const = 0;
+    virtual bool is_summoned_by(int summon_type) const = 0;
+    virtual bool is_summoned_by(const actor& summoner,
+                                int summon_type = SPELL_NO_SPELL) const = 0;
 
     virtual bool is_perm_summoned() const = 0;
 

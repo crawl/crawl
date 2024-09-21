@@ -296,6 +296,15 @@ enum monster_flag_type : uint64_t
 
     /// Will prefer not to approach enemies it's already in spellcast range of
     MF_CAUTIOUS           = BIT(41),
+
+    // Is abjurable and will disappear in a puff of smoke (or similar) when it
+    // times out, rather than appearing to die physically.
+    MF_ACTUAL_SUMMON      = BIT(42),
+
+    // Despite being temporarily created, will not expire upon its creator's
+    // death (eg: ball lightning)
+    MF_PERSISTS           = BIT(43),
+
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

@@ -590,7 +590,7 @@ bool monster_is_debuffable(const monster &mon)
 
 bool monster_can_be_unravelled(const monster& mon)
 {
-    return monster_is_debuffable(mon) || mon.is_summoned();
+    return monster_is_debuffable(mon) || mon.is_abjurable();
 }
 
 /**
@@ -1367,7 +1367,7 @@ void dreamshard_shatter()
         {
             mgen_data mg(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
                          MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
-            mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_NO_GOD);
+            mg.set_summoned(&you, MON_SUMM_AID, summ_dur(4));
             if (create_monster(mg))
                 ++created;
         }

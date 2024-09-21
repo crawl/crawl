@@ -462,7 +462,7 @@ void maybe_drop_monster_organ(monster_type mon, monster_type orig,
  */
 item_def* place_monster_corpse(const monster& mons, bool force)
 {
-    if (mons.is_summoned()
+    if (mons.is_abjurable()
         || mons.flags & MF_BANISHED
         // Follower apostles should drop corpses (but nothing else)
         || mons.flags & MF_HARD_RESET && !mons.is_divine_companion()
@@ -559,7 +559,7 @@ void record_monster_defeat(const monster* mons, killer_type killer)
         return;
     if (killer == KILL_RESET || killer == KILL_DISMISSED)
         return;
-    if (mons->has_ench(ENCH_FAKE_ABJURATION) || mons->is_summoned())
+    if (mons->is_summoned())
         return;
     if (mons->is_named() && mons->friendly()
         && !mons_is_hepliaklqana_ancestor(mons->type))
@@ -1390,12 +1390,13 @@ static void _make_derived_undead(monster* mons, bool quiet,
                  beh,
                  mons->pos(),
                  // XXX: is MHITYOU really correct here?
-                 crawl_state.game_is_arena() ? MHITNOT : MHITYOU);
+                 crawl_state.game_is_arena() ? MHITNOT : MHITYOU,
+                 MG_NONE,
+                 god);
     // Don't link monster-created derived undead to the summoner, they
     // shouldn't poof
     mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr,
-                    0,
-                    spell, god);
+                    spell, summ_dur(spell == SPELL_SIMULACRUM ? 3 : 0), false);
     mg.set_base(mons->type);
     if (god == GOD_KIKUBAAQUDGHA) // kiku wrath
         mg.extra_flags |= MF_NO_REWARD;
@@ -1539,7 +1540,13 @@ static void _protean_explosion(monster* mons)
 
     int summoned_duration = 0;
     int summon_type = 0;
-    bool is_summoned = mons->is_summoned(&summoned_duration, &summon_type);
+    bool is_summoned = mons->is_summoned();
+    if (is_summoned)
+    {
+        mon_enchant summ = mons->get_ench(ENCH_SUMMON);
+        summoned_duration = summ.duration;
+        summon_type = summ.degree;
+    }
 
     // Then create and scatter the piles around
     int delay = random_range(2, 4) * BASELINE_DELAY;
@@ -1565,11 +1572,12 @@ static void _protean_explosion(monster* mons)
             return;
 
         mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, SAME_ATTITUDE(mons),
-                                 spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH);
+                                 spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH,
+                                 mons->god);
         if (is_summoned)
         {
             const actor* const summoner = actor_by_mid(mons->summoner);
-            mg.set_summoned(summoner, 6 /* placeholder */, summon_type, mons->god);
+            mg.set_summoned(summoner, summon_type, 1 /* dummy value*/);
         }
         monster *child = create_monster(std::move(mg));
 
@@ -1588,7 +1596,7 @@ static void _protean_explosion(monster* mons)
             if (is_summoned)
             {
                 // Match the original summoned progenitor's duration.
-                mon_enchant summon_duration_ench(ENCH_ABJ, 0, nullptr, summoned_duration);
+                mon_enchant summon_duration_ench(ENCH_SUMMON_TIMER, 0, nullptr, summoned_duration);
                 child->update_ench(summon_duration_ench);
             }
 
@@ -1623,9 +1631,9 @@ static void _martyr_death_wail(monster &mons)
     mons.set_hit_dice(old_hd);
 
     // Reset duration on its summoning, but move it out of martyr's summon cap
-    mons.del_ench(ENCH_ABJ, true, false);
+    mons.del_ench(ENCH_SUMMON_TIMER, true, false);
     mons.del_ench(ENCH_SUMMON, true, false);
-    mons.mark_summoned(2, true, SPELL_NO_SPELL, true);
+    mons.mark_summoned(SPELL_NO_SPELL, 2);
     mons.heal(50000);
 
     // Show brief animation
@@ -2043,19 +2051,18 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Uniques leave notes and milestones, so this information is already leaked.
     remove_unique_annotation(&mons);
 
-          int  duration      = 0;
-    const bool summoned      = mons.is_summoned(&duration);
+    const bool summoned      = mons.is_summoned();
+    int  duration            = summoned ? mons.get_ench(ENCH_SUMMON_TIMER).duration : 0;
     const int monster_killed = mons.mindex();
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
-    const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
     const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
                                 || killer == KILL_DISMISSED);
-    bool leaves_corpse = !summoned && !fake_abjure && !timeout
+    bool leaves_corpse = !summoned && !timeout
                             && !mons_reset
                             && !mons_is_tentacle_segment(mons.type);
     // Award experience for suicide if the suicide was caused by the
@@ -2214,7 +2221,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
                             BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
-                         .set_summoned(&you, 0, SPELL_SIMULACRUM, GOD_NO_GOD);
+                         .set_summoned(&you, SPELL_SIMULACRUM);
         simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
 
         // If the monster we want to create cannot occupy the tile the block of
@@ -2345,7 +2352,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         int w_idx = mons.inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
 
-        bool summoned_it = mons.is_summoned();
+        bool summoned_it = mons.is_abjurable();
 
         // Let summoned dancing weapons be handled like normal summoned creatures.
         if (!was_banished && !summoned_it && !silent && !hard_reset)
@@ -2383,7 +2390,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
 
         if (was_banished && !summoned_it && !hard_reset
-            && mons.has_ench(ENCH_ABJ)) // temp animated but not summoned
+            && mons.has_ench(ENCH_SUMMON_TIMER)) // temp animated but not summoned
         {
             // if this is set, it (in principle) allows the unrand to
             // show up in the abyss. We don't want to set this for a banished
@@ -2437,7 +2444,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             // Cores should not count as summons and either expire or be removed
             // by recasting golem itself.
-            mons.del_ench(ENCH_ABJ, true, false);
+            mons.del_ench(ENCH_SUMMON_TIMER, true, false);
             mons.heal(50000);
 
             // Give exactly enough energy to act immediately after the player's
@@ -2554,7 +2561,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 if (!gives_player_xp
                     && mons_class_gives_xp(mons.type)
                     && !summoned
-                    && !fake_abjure
                     && !mons.friendly())
                 {
                     mpr("That felt strangely unrewarding.");
@@ -2575,7 +2581,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                         && player_in_branch(BRANCH_CRUCIBLE)
                         && mons_class_gives_xp(mons.type)
                         && !summoned
-                        && !fake_abjure
                         && !mons.friendly())
                 && !player_under_penance()
                 && (x_chance_in_y(50 * (min(piety_breakpoint(5), (int)you.piety) - 30)
@@ -2695,7 +2700,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         case KILL_MISCAST:
             if (death_message)
             {
-                if (fake_abjure)
+                if (summoned)
                 {
                     // ratskin cloak
                     if (mons_genus(mons.type) == MONS_RAT)
@@ -3011,8 +3016,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (!wizard && !was_banished)
     {
-        _monster_die_cloud(&mons, !fake_abjure && !timeout && !mons_reset,
-                           silent, summoned);
+        _monster_die_cloud(&mons, !timeout && !mons_reset,
+                           silent, summoned && mons.is_abjurable());
     }
 
     item_def* corpse = nullptr;
@@ -3308,7 +3313,7 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     define_monster(mon); // assumes mc is not a zombie
     mon.flags = daddy->flags;
 
-    // Need to copy ENCH_ABJ etc. or we could get real XP/meat from a summon.
+    // Need to copy ENCH_SUMMON_TIMER etc. or we could get real XP/meat from a summon.
     mon.enchantments = daddy->enchantments;
     mon.ench_cache = daddy->ench_cache;
 
@@ -3449,7 +3454,8 @@ string summoned_poof_msg(const monster* mons, bool plural)
     bool valid_mon   = false;
     if (mons != nullptr && !invalid_monster(mons))
     {
-        (void) mons->is_summoned(nullptr, &summon_type);
+        if (mons->is_summoned())
+            summon_type = mons->get_ench(ENCH_SUMMON).degree;
         valid_mon = true;
     }
 

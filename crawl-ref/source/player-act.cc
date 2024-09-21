@@ -61,16 +61,6 @@ bool player::alive() const
     return !crawl_state.game_is_arena();
 }
 
-bool player::is_summoned(int* _duration, int* summon_type) const
-{
-    if (_duration != nullptr)
-        *_duration = -1;
-    if (summon_type != nullptr)
-        *summon_type = 0;
-
-    return false;
-}
-
 // n.b. it might be better to use this as player::moveto's function signature
 // itself (or something more flexible), but that involves annoying refactoring
 // because of the actor/monster signature.

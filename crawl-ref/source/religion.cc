@@ -1074,16 +1074,16 @@ bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
     for (int i = 0; i < num; ++i)
     {
         mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 you.pos(), MHITYOU, MG_AUTOFOE);
+                 you.pos(), MHITYOU, MG_AUTOFOE, GOD_YREDELEMNUL);
 
         if (force_hostile)
         {
-            mg.set_summoned(0, 0, 0, GOD_YREDELEMNUL);
+            mg.set_summoned(0, 0, 0);
             mg.non_actor_summoner = "the anger of Yredelemnul";
             mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
         }
         else
-            mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_YREDELEMNUL);
+            mg.set_summoned(&you, MON_SUMM_AID, summ_dur(5));
 
         if (create_monster(mg))
             created = true;
@@ -1750,8 +1750,9 @@ mgen_data hepliaklqana_ancestor_gen_data()
     const monster_type type = you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY) ?
         (monster_type)you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() :
         MONS_ANCESTOR;
-    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
-    mg.set_summoned(&you, 0, 0, GOD_HEPLIAKLQANA);
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE,
+                 GOD_HEPLIAKLQANA);
+    mg.set_summoned(&you, SPELL_NO_SPELL);
     mg.hd = _hepliaklqana_ally_hd();
     mg.hp = hepliaklqana_ally_hp();
     mg.extra_flags |= MF_NO_REWARD;
@@ -3700,13 +3701,9 @@ static void _join_okawaru()
     bool needs_message = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->is_summoned()
-            && mi->summoner == MID_PLAYER
-            && mi->friendly())
+        if (mi->is_summoned_by(you))
         {
-            mon_enchant abj = mi->get_ench(ENCH_ABJ);
-            abj.duration = 0;
-            mi->update_ench(abj);
+            mi->del_ench(ENCH_SUMMON_TIMER);
             needs_message = true;
         }
     }

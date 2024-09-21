@@ -22,7 +22,7 @@ enum enchant_type
     ENCH_ROT,
 #endif
     ENCH_SUMMON,
-    ENCH_ABJ,
+    ENCH_SUMMON_TIMER,
     ENCH_CORONA,
     ENCH_CHARM,
     ENCH_STICKY_FLAME,
@@ -32,8 +32,8 @@ enum enchant_type
     ENCH_SLEEP_WARY,
 #if TAG_MAJOR_VERSION == 34
     ENCH_SUBMERGED,
-#endif
     ENCH_SHORT_LIVED,
+#endif
     ENCH_PARALYSIS,
     ENCH_SICK,
 #if TAG_MAJOR_VERSION == 34
@@ -89,7 +89,9 @@ enum enchant_type
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
     ENCH_POLAR_VORTEX,
+#if TAG_MAJOR_VERSION == 34
     ENCH_FAKE_ABJURATION,
+#endif
     ENCH_DAZED,          // Dazed - less chance of acting each turn.
     ENCH_MUTE,           // Silenced.
     ENCH_BLIND,          // Blind (everything is invisible).

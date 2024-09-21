@@ -97,8 +97,8 @@ static void _mons_summon_monster_illusion(monster* caster,
         foe->props[CLONE_PRIMARY_KEY] = clone_id;
         mons_add_blame(clone,
                        "woven by " + caster->name(DESC_THE));
-        if (!clone->has_ench(ENCH_ABJ))
-            clone->mark_summoned(6, true, MON_SUMM_CLONE);
+        if (!clone->has_ench(ENCH_SUMMON_TIMER))
+            clone->mark_summoned(MON_SUMM_CLONE, 6);
         clone->add_ench(ENCH_PHANTOM_MIRROR);
         clone->summoner = caster->mid;
 
@@ -207,20 +207,20 @@ int mons_summon_illusion_from(monster* mons, actor *foe,
 {
     if (foe->is_player())
     {
-        int abj = 6;
+        int dur = 6;
 
         if (xom)
-            abj = 2;
+            dur = 2;
         else if (card_power >= 0)
         {
           // card effect
-          abj = 2 + random2(card_power);
+          dur = 2 + random2(card_power);
         }
 
         if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons),
                           mons->pos(), mons->foe)
-                 .set_summoned(mons, abj, spell_cast)))
+                 .set_summoned(mons, spell_cast, summ_dur(dur))))
         {
             if (card_power >= 0)
                 mpr("Suddenly you stand beside yourself.");

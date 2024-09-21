@@ -6477,39 +6477,22 @@ int monster::spell_hd(spell_type spell) const
 }
 
 /**
- * Remove this monsters summon's. Any monsters summoned by this monster will be
- * abjured and any spectral weapon or battlesphere avatars they have will be
- * ended.
+ * Remove this monsters summons. Any dependent summoned/created monsters
+ * belonging to this monster will time out.
  *
- * @param check_attitude If true, only remove summons/avatars whose attitude
+ * @param check_attitude If true, only remove summons/constructs whose attitude
  *                       differs from the the monster.
  */
 void monster::remove_summons(bool check_attitude)
 {
-    monster* avatar = find_spectral_weapon(this);
-    if (avatar && (!check_attitude || attitude != avatar->attitude))
-        end_spectral_weapon(avatar, false, false);
-
-    avatar = find_battlesphere(this);
-    if (avatar && (!check_attitude || attitude != avatar->attitude))
-        end_battlesphere(avatar, false);
-
     for (monster_iterator mi; mi; ++mi)
     {
-        int sumtype = 0;
-
         if ((!check_attitude || attitude != mi->attitude)
             && mi->summoner == mid
-            && (mi->is_summoned(nullptr, &sumtype)
-                || sumtype == MON_SUMM_CLONE)
-                || sumtype == SPELL_HOARFROST_CANNONADE)
+            && mi->is_summoned()
+            && !(mi->flags & MF_PERSISTS))
         {
-            mi->del_ench(ENCH_ABJ);
-
-            // TODO: Make non-abjurable things that should still be removed on
-            //       caster death not be special-cased in 4 different ways.
-            if (sumtype == SPELL_HOARFROST_CANNONADE)
-                mi->del_ench(ENCH_FAKE_ABJURATION);
+            mi->del_ench(ENCH_SUMMON_TIMER);
         }
     }
 }

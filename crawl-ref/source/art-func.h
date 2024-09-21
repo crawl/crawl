@@ -564,7 +564,7 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_COMMON),
                           SAME_ATTITUDE(mons), mons->pos(), mons->foe)
-                .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
+                .set_summoned(mons, SPELL_SUMMON_DEMON, summ_dur(6)));
         }
         else if (!you.allies_forbidden())
         {
@@ -572,7 +572,7 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                                                   : random_demon_by_tier(4));
             if (create_monster(
                     mgen_data(type, BEH_COPY, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE)
-                    .set_summoned(&you, 6, SPELL_SUMMON_DEMON, GOD_NO_GOD)))
+                    .set_summoned(&you, SPELL_SUMMON_DEMON, summ_dur(6))))
             {
                 mpr("A gate to Pandemonium opens briefly!");
             }
@@ -1814,7 +1814,7 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
 
         mgen_data mg(demon, BEH_FRIENDLY, you.pos(), MHITYOU,
                      MG_FORCE_BEH | MG_AUTOFOE);
-        mg.set_summoned(&you, 4, SPELL_FIRE_SUMMON);
+        mg.set_summoned(&you, SPELL_FIRE_SUMMON, summ_dur(4));
 
         if (create_monster(mg))
         {

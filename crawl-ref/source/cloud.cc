@@ -617,8 +617,8 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
                              (agent ? agent->foe : short{MHITYOU}),
                              MG_FORCE_PLACE)
                     .set_base(basetype)
-                    .set_summoned(actor_by_mid(cloud.source), 1,
-                                  SPELL_SPECTRAL_CLOUD));
+                    .set_summoned(actor_by_mid(cloud.source),
+                                  SPELL_SPECTRAL_CLOUD, summ_dur(1)));
 }
 
 void manage_clouds()
@@ -1005,10 +1005,8 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
-    int summon_type = 0;
-    act.is_summoned(nullptr, &summon_type);
     if (!player && have_passive(passive_t::cloud_immunity)
-        && (act.as_monster()->friendly() && summon_type == MON_SUMM_AID))
+        && act.is_summoned_by(MON_SUMM_AID))
     {
         return true;
     }
@@ -1959,7 +1957,7 @@ static const vector<chaos_effect> chaos_effects = {
 
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
-                clone->mark_summoned(6, true, MON_SUMM_CLONE);
+                clone->mark_summoned(MON_SUMM_CLONE, 6);
             else
                 clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 

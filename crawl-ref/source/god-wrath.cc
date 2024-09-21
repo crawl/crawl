@@ -123,9 +123,10 @@ static string _god_wrath_name(god_type god)
 static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
 {
     mgen_data mg = mgen_data::hostile_at(mtyp, true, you.pos())
-                    .set_summoned(nullptr, 0, 0, god)
+                    .set_summoned(nullptr, 0, 0)
                     .set_non_actor_summoner(_god_wrath_name(god));
     mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.god = god;
     return mg;
 }
 
@@ -1675,7 +1676,7 @@ static int _fedhas_corpse_spores(beh_type attitude)
                                                MHITNOT,
                                                MG_FORCE_PLACE,
                                                GOD_FEDHAS)
-                                            .set_summoned(&you, 0, 0)))
+                                            .set_summoned(&you, SPELL_NO_SPELL)))
         {
             plant->flags |= MF_NO_REWARD;
 

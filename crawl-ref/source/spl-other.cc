@@ -15,6 +15,7 @@
 #include "god-companions.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "movement.h" // passwall
@@ -92,20 +93,11 @@ static bool _dismiss_dead()
             continue;
 
         monster &mon = **mi;
-        if (!mon.alive()
-            || !mon.friendly()
-            || mon.type != MONS_ZOMBIE
-            || mon.is_summoned()
-            || is_yred_undead_follower(mon))
-        {
+        if (!mon.is_summoned_by(you, SPELL_ANIMATE_DEAD))
             continue;
-        }
 
         // crumble into dust...
-        mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
-        mon.add_ench(abj);
-        abj.duration = 0;
-        mon.update_ench(abj);
+        monster_die(mon, KILL_TIMEOUT, NON_MONSTER);
         found = true;
     }
     return found;

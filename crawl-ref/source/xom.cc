@@ -1153,8 +1153,8 @@ static void _xom_send_allies(int sever)
     {
         monster_type mon_type = _xom_random_pal(strengthRoll, true);
 
-        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(3));
 
         // Even though the friendlies are charged to you for accounting,
         // they should still show as Xom's fault if one of them kills you.
@@ -1211,8 +1211,8 @@ static void _xom_send_one_ally(int sever)
     int strengthRoll = random2(1000 - (MAX_PIETY + sever) * 5);
     const monster_type mon_type = _xom_random_pal(strengthRoll, true);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
-    mg.set_summoned(&you, 6, MON_SUMM_AID, GOD_XOM);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(6));
 
     mg.non_actor_summoner = "Xom";
 
@@ -1220,7 +1220,7 @@ static void _xom_send_one_ally(int sever)
     {
         // Add a little extra length and regen. Make friends with your new pal.
         int extra = random_range(100, 200);
-        summons->add_ench(mon_enchant(ENCH_ABJ, MON_SUMM_AID, nullptr, extra));
+        summons->add_ench(mon_enchant(ENCH_SUMMON_TIMER, MON_SUMM_AID, nullptr, extra));
         summons->add_ench(mon_enchant(ENCH_REGENERATION, MON_SUMM_AID,
                                        nullptr, 2000));
         god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
@@ -1563,8 +1563,9 @@ static void _xom_animate_monster_weapon(int sever)
 
     const int dur = min(2 + (random2(sever) / 5), 6);
 
-    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, mon->pos(), mon->mindex());
-    mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE, GOD_XOM);
+    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, mon->pos(), mon->mindex(),
+                 MG_NONE, GOD_XOM);
+    mg.set_summoned(&you, SPELL_TUKIMAS_DANCE, summ_dur(dur));
 
     mg.non_actor_summoner = "Xom";
 
@@ -1611,8 +1612,9 @@ static void _xom_harmless_flora(int /*sever*/)
 
         if (!actor_at(*ri) && monster_habitable_grid(MONS_PLANT, env.grid(*ri)))
         {
-            mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
-            mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_XOM);
+            mgen_data mg(mon_type, BEH_HOSTILE, *ri, MHITYOU,
+                         MG_FORCE_BEH | MG_FORCE_PLACE, GOD_XOM);
+            mg.set_summoned(&you, MON_SUMM_AID, summ_dur(5));
 
             mg.non_actor_summoner = "Xom";
 
@@ -2234,8 +2236,8 @@ static void _xom_summon_butterflies()
     for (int i = 0; i < how_many; ++i)
     {
         mgen_data mg(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
-                     MG_FORCE_BEH);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+                     MG_FORCE_BEH, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(3));
         if (create_monster(mg))
             success = true;
     }
@@ -2557,9 +2559,9 @@ static void _xom_force_lances(int /* sever */)
     for (int i = 0; i < count; ++i)
     {
         mgen_data mg(MONS_LIVING_SPELL, BEH_FRIENDLY, you.pos(),
-                     MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+                     MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, GOD_XOM);
 
-        mg.set_summoned(&you, 2, MON_SUMM_AID, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(2));
         mg.hd = strength;
         mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(SPELL_FORCE_LANCE);
         mg.non_actor_summoner = "Xom";
@@ -2735,8 +2737,8 @@ static void _xom_hyper_enchant_monster(int sever)
         }
 
         mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(),
-                    MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
+                    MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_XOM);
+        mg.set_summoned(&you, MON_SUMM_AID, summ_dur(3));
         mg.non_actor_summoner = "Xom";
         monster* mon = create_monster(mg);
 
@@ -3858,8 +3860,8 @@ static monster* _xom_summon_hostile(monster_type hostile)
             spot = *ri;
     }
 
-    monster* mon = create_monster(mgen_data::hostile_at(hostile, true, spot)
-                          .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)
+    monster* mon = create_monster(mgen_data::hostile_at(hostile, true, spot, GOD_XOM)
+                          .set_summoned(nullptr, MON_SUMM_WRATH, summ_dur(4))
                           .set_non_actor_summoner("Xom"));
 
     // To prevent high-stealth players from just ducking around a corner
@@ -4014,8 +4016,8 @@ static bool _xom_maybe_neutral_summon(int sever, bool threat,
     beh_type setting = (x_chance_in_y(sever, 300) || threat) ? BEH_HOSTILE
                                                              : BEH_NEUTRAL;
 
-    mgen_data mg(mon_type, setting, you.pos(), MHITYOU, MG_FORCE_BEH);
-    mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_XOM);
+    mgen_data mg(mon_type, setting, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mg.set_summoned(&you, MON_SUMM_AID, summ_dur(4));
     mg.non_actor_summoner = "Xom";
 
     return create_monster(mg);

@@ -1145,7 +1145,7 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
     // If the first band member makes it past the summon throttle cut,
     // let all of the rest of its band in too regardless of the summon
     // throttle.
-    if (mg.abjuration_duration > 0 && first_band_member)
+    if (mg.summon_duration > 0 && first_band_member)
     {
         if (mg.behaviour == BEH_FRIENDLY
             && arena::faction_a.active_members > arena::summon_throttle)
@@ -1222,7 +1222,7 @@ void arena_placed_monster(monster* mons)
         // Real summons drop corpses and items.
         if (arena::real_summons)
         {
-            mons->del_ench(ENCH_ABJ, true, false);
+            mons->del_ench(ENCH_SUMMON_TIMER, true, false);
             for (mon_inv_iterator ii(*mons); ii; ++ii)
                 ii->flags &= ~ISFLAG_SUMMONED;
         }

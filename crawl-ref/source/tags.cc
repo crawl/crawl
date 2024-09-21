@@ -6046,6 +6046,12 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_MON_AURA_REFACTORING)
         me.ench_is_aura = static_cast<ench_aura_type>(unmarshallByte(th));
+
+    if (th.getMinorVersion() < TAG_MINOR_NO_FAKE_ABJ
+        && me.ench == ENCH_FAKE_ABJURATION || me.ench == ENCH_SHORT_LIVED)
+    {
+        me.ench = ENCH_SUMMON_TIMER;
+    }
 #endif
     return me;
 }

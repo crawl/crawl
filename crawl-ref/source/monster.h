@@ -146,10 +146,13 @@ public:
 
     const monsterentry *find_monsterentry() const;
 
-    void mark_summoned(int longevity, bool mark_items_summoned,
-                       int summon_type = 0, bool abj = true);
-    bool is_summoned(int* duration = nullptr, int* summon_type = nullptr) const
-        override;
+    void mark_summoned(int summon_type = 0, int longevity = 0,
+                       bool mark_items_summoned = true);
+    bool is_summoned() const override;
+    bool is_summoned_by(int summon_type) const override;
+    bool is_summoned_by(const actor& summoner,
+                        int summon_type = SPELL_NO_SPELL) const override;
+    bool is_abjurable() const;
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
     void drain_action_energy();

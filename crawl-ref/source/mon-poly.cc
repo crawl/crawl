@@ -302,8 +302,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     if (!mons->props.exists(ORIG_HD_KEY))
         mons->props[ORIG_HD_KEY] = mons->get_experience_level();
 
-    mon_enchant abj       = mons->get_ench(ENCH_ABJ);
-    mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
+    mon_enchant timer     = mons->get_ench(ENCH_SUMMON_TIMER);
     mon_enchant charm     = mons->get_ench(ENCH_CHARM);
     mon_enchant shifter   = mons->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                            ENCH_SHAPESHIFTER);
@@ -345,8 +344,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->god = (mons->is_priest() && old_god == GOD_NO_GOD) ? GOD_NAMELESS
                                                              : old_god;
 
-    mons->add_ench(abj);
-    mons->add_ench(fabj);
+    mons->add_ench(timer);
     mons->add_ench(charm);
     mons->add_ench(shifter);
     mons->add_ench(summon);

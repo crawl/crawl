@@ -5096,7 +5096,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 if (_apply_item_props(item, spec, (useless_tries >= 10), true))
                 {
                     // Mark items on summoned monsters as such.
-                    if (mspec.abjuration_duration != 0)
+                    if (mspec.summon_duration != 0)
                         item.flags |= ISFLAG_SUMMONED;
 
                     if (!mon->pickup_item(item, false, true))
@@ -5244,7 +5244,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mg.xp_tracking = XP_VAULT;
 
     // Marking monsters as summoned
-    mg.abjuration_duration = mspec.abjuration_duration;
+    mg.summon_duration     = mspec.summon_duration;
     mg.summon_type         = mspec.summon_type;
     mg.non_actor_summoner  = mspec.non_actor_summoner;
 

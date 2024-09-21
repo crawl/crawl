@@ -1097,7 +1097,7 @@ static monster* _friendly(monster_type mt, int dur)
 {
     return create_monster(mgen_data(mt, BEH_FRIENDLY, you.pos(), MHITYOU,
                                     MG_AUTOFOE)
-                          .set_summoned(&you, dur, 0));
+                          .set_summoned(&you, 0, summ_dur(dur)));
 }
 
 static void _damaging_card(card_type card, int power,
@@ -1244,7 +1244,7 @@ static void _summon_demon_card(int power)
 
     if (!create_monster(mgen_data(dct, hostile ? BEH_HOSTILE : BEH_FRIENDLY,
                                   you.pos(), MHITYOU, MG_AUTOFOE)
-                        .set_summoned(&you, 5 - power_level, 0)))
+                        .set_summoned(&you, 0, summ_dur(5 - power_level))))
     {
         mpr("You see a puff of smoke.");
     }
@@ -1287,7 +1287,7 @@ static void _summon_dancing_weapon(int power)
     monster *mon =
         create_monster(
             mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY, you.pos(), MHITYOU,
-                      MG_AUTOFOE).set_summoned(&you, power_level + 2, 0),
+                      MG_AUTOFOE).set_summoned(&you, 0, summ_dur(power_level + 2)),
             false);
 
     if (!mon)
