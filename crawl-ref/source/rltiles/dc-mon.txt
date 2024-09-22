@@ -490,6 +490,7 @@ azrael MONS_AZRAEL
 efreet MONS_EFREET
 %rim 0
 nekomata MONS_NEKOMATA
+nekomata_phantom MONS_NEKOMATA_PHANTOM
 wendigo MONS_WENDIGO
 %sdir mon/nonliving
 ancestor MONS_ANCESTOR

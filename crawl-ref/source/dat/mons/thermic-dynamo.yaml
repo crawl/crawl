@@ -2,7 +2,7 @@ name: "thermic dynamo"
 glyph: {char: "v", colour: etc_vehumet}
 flags: [flies, insubstantial, speaks]
 resists: {fire: 3, cold: 3}
-xp_mult: 13
+xp_mult: 18
 genus: fire_vortex
 holiness: [nonliving]
 will: invuln
