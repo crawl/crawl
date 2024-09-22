@@ -1121,7 +1121,7 @@ harmlessly disperse.
 # Wizlabs and Zot _only_.
 An enigmatic dynamo
 
-An harmless yet sturdy metal construct, arcane both in power-source and
+A harmless yet sturdy metal construct, arcane both in power-source and
 purpose. Whatever it analyses, processes, powers, or produces can neither be
 assessed nor accessed by intruders like you infiltrating the Dungeon.
 %%%%
