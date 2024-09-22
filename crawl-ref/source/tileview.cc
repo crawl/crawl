@@ -1345,6 +1345,15 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_DEPTHS;
+        else if  (orig ==TILE_DNGN_GRANITE_STATUE)
+        {
+            int hash = hash3(gc.x * gc.x * 10, gc.y * gc.y * 10,
+                             you.depth * gc.x * gc.y * 27);
+            if (hash % 2 && hash % 7)
+                orig = TILE_DNGN_GRANITE_STATUE_DEPTHS_ZOT;
+            else
+                orig = TILE_DNGN_GRANITE_STATUE_DEPTHS;
+        }
     }
     else if (player_in_branch(BRANCH_ABYSS))
     {
@@ -1371,6 +1380,15 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                 orig = TILE_DNGN_STONE_WALL_MAGENTA;
             else if (you.depth == 5)
                 orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
+        }
+        else if (orig == TILE_DNGN_GRANITE_STATUE)
+        {
+            int hash = hash3(gc.x * gc.x * 10, gc.y * gc.y * 10,
+                             you.depth * gc.x * gc.y * 27);
+            if (hash % 2 && hash % 3 && hash % 7)
+                orig = TILE_DNGN_GRANITE_STATUE_ZOT;
+            else
+                orig = TILE_DNGN_GRANITE_STATUE_DEPTHS_ZOT;
         }
     }
 

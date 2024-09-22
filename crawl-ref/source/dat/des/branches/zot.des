@@ -1423,7 +1423,7 @@ SHUFFLE: hH / iI / jJ / kK / lL, hH, iI, jJ, kK, lL
 SUBST:   hij = x, k : xxxm, HIJKlL = .
 SUBST:   a : cccG., b : cc., c : ccb
 NSUBST:  @ = 2:@ / *:.
-TILE:    G = dngn_statue_tentacles
+TILE:    G = dngn_statue_depths_zot_tentacles
 MAP
             xxxxxxxxxx.@x
           xxxxxhxxxxix..x
@@ -1565,7 +1565,7 @@ FTILE:   'ABC : floor_w_marble
 TILE:    m : dngn_transparent_wall_white
 TILE:    n : dngn_transparent_wall_yellow
 TILE:    o : dngn_transparent_wall_brown
-TILE:    G = dngn_statue_angel
+TILE:    G = dngn_statue_depths_zot_angel
 TILE:    g = dngn_silver_statue
 : set_feature_name("metal_statue", "silver statue")
 MAP
@@ -2161,7 +2161,7 @@ SUBST:   D : ++., EF = v, p : v., q : v., rs : v
 SUBST:   ' : ., V = v, C = CCC>>>GG$dd<{([})]
 KPROP:   l = no_cloud_gen
 TILE:    m = dngn_transparent_wall_brown
-TILE:    G = dngn_statue_cerebov
+TILE:    G = dngn_statue_depths_zot_cerebov
 MAP
        ...vvDvv..........
        .vvv...vvv...vvEv.
@@ -2245,7 +2245,7 @@ KPROP:    uk = no_tele_into
 KPROP:    l = no_cloud_gen
 TILE:     m : dngn_transparent_wall_red / dngn_transparent_wall_yellow
 TILE:     n : dngn_transparent_wall_green / dngn_transparent_wall_blue
-TILE:     G = dngn_statue_ancient_evil
+TILE:     G = dngn_statue_depths_zot_ancient_evil
 TILE:     b = bedevilled_crystal_pandemonium
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
@@ -2370,7 +2370,7 @@ KFEAT:   ^ = shaft trap
 SHUFFLE: opqrst
 SUBST:   op = x, q : xx., r : x.., st = .
 SUBST:   - : +c, { = {([})]++CC^^.., b = bxx
-TILE:    G = dngn_statue_wraith
+TILE:    G = dngn_statue_depths_fangs
 TILE:    b = bedevilled_crystal_tartarus
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
@@ -2398,7 +2398,7 @@ ITEM:    mundane mace, any mundane weapon
 SHUFFLE: opqrst, P- / Q~ / R' / S"
 SUBST:   o : v.., p : vG., r : vGb, s : vb, t = v
 SUBST:   P = CCC>>><$d{([})], ~QRS = e, -'" = v, G : Gvv
-TILE:    G = dngn_statue_imp
+TILE:    G = dngn_statue_depths_zot_devil
 : if crawl.coinflip() then
 TILE:    b = bedevilled_crystal_dis
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
@@ -2481,7 +2481,7 @@ SUBST:  x : xv, w : w?, G : Gg
 NSUBST: ? = 12 = 11. / *:.
 SUBST:  4 = 4 5:2 .:4
 COLOUR: g = smoke
-TILE:   G = dngn_statue_wraith / dngn_statue_demonic_bust
+TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_zot_old_guardian
 TILE:   c = wall_studio
 TILE:   g = soul_conduit
 : set_feature_name("metal_statue", "soul conduit")
@@ -4247,7 +4247,7 @@ KFEAT:  T = fountain_eyes
 SUBST:  - : Ac, A : lw
 NSUBST: ' = 2:1 / 3:2 / 2 = 1... / 8 = 2... / .
 NSUBST: < = 1 = }. / 1 = ). / 1 = ]<
-TILE:   G = dngn_statue_tentacles
+TILE:   G = dngn_statue_depths_zot_tentacles
 MAP
    @@@@@
  cc+++++cc

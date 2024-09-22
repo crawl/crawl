@@ -2296,7 +2296,11 @@ SHUFFLE: DEFH / DEDE / FHFH / FHFH
 SUBST:   D = +, E = ., F = c, H = w, t = t1Gg
 KMASK:   W = no_monster_gen
 FTILE:   'tGg : floor_w_marble / floor_limestone
+: if you.in_branch("D") then
 TILE:    G = dngn_statue_angel
+: else
+TILE:    G = dngn_statue_depths_zot_angel
+: end
 : if crawl.coinflip() then
 COLOUR:  g = silver
 TILE:    g = dngn_silver_statue

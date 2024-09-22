@@ -269,6 +269,56 @@ statue_maw
 statue_tentacles
 %syn DNGN_STATUE_TENTACLES
 
+# Depths and Zot statues
+%weight 5
+statue_depths_tengu DNGN_GRANITE_STATUE_DEPTHS
+%syn DNGN_STATUE_DEPTHS_TENGU
+statue_depths_spriggan
+%syn DNGN_STATUE_DEPTHS_SPRIGGAN
+%weight 3
+statue_depths_asmodeus
+%syn DNGN_STATUE_DEPTHS_ASMODEUS
+statue_depths_tomes
+%syn DNGN_STATUE_DEPTHS_TOMES
+%weight 1
+statue_depths_seraph
+%syn DNGN_STATUE_DEPTHS_SERAPH
+statue_depths_fangs
+%syn DNGN_STATUE_DEPTHS_FANGS
+
+%weight 6
+statue_depths_zot_dragon DNGN_GRANITE_STATUE_DEPTHS_ZOT
+%syn DNGN_STATUE_DEPTHS_ZOT_DRAGON
+statue_depths_zot_orb_guardian
+%syn DNGN_STATUE_DEPTHS_ZOT_ORB_GUARDIAN
+statue_depths_zot_tentacles
+%syn DNGN_STATUE_DEPTHS_ZOT_TENTACLES
+%weight 4
+statue_depths_zot_angel
+%syn DNGN_STATUE_DEPTHS_ZOT_ANGEL
+statue_depths_zot_devil
+%syn DNGN_STATUE_DEPTHS_ZOT_DEVIL
+%weight 2
+statue_depths_zot_cerebov
+%syn DNGN_STATUE_DEPTHS_ZOT_CEREBOV
+statue_depths_zot_lich
+%syn DNGN_STATUE_DEPTHS_ZOT_LICH
+%weight 1
+statue_depths_zot_ancient_evil
+%syn DNGN_STATUE_DEPTHS_ZOT_ANCIENT_EVIL
+
+%weight 7
+statue_zot_orb DNGN_GRANITE_STATUE_ZOT
+%syn DNGN_STATUE_ZOT_ORB
+statue_zot_serpent
+%syn DNGN_STATUE_ZOT_SERPENT
+%weight 5
+statue_zot_old_guardian
+%syn DNGN_STATUE_ZOT_OLD_GUARDIAN
+%weight 1
+statue_zot_oldest_guardian
+%syn DNGN_STATUE_ZOT_OLDEST_GUARDIAN
+
 # damaged statues
 %weight 1
 crumbled_column_1 DNGN_CRUMBLED_COLUMN

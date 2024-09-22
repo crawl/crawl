@@ -866,7 +866,7 @@ KFEAT:  g = metal_statue
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
 COLOUR: g = mist
-TILE:   G = dngn_statue_wraith
+TILE:   G = dngn_statue_depths_fangs
 TILE:   g = dngn_mystic_cage
 COLOUR: 5M% = white
 MARKER: V = lua:fog_machine { \
@@ -1184,10 +1184,15 @@ MONS:   ogre mage / orc sorcerer / deep elf zephyrmancer
 MONS:   salamander mystic / thermic dynamo w:5
 KMONS:  5 = nikola / jorgrun, deep elf annihilator
 SUBST:  1 = 2GG, 4 = 4.
+TILE:   G = dngn_statue_cat / dngn_statue_dragon / dngn_statue_tengu / \
+            dngn_statue_princess / dngn_statue_triangle
 : else
 MONS:   tengu conjurer / occultist / spriggan air mage / deep elf annihilator
 MONS:   deep elf annihilator / tengu reaver / lich, salamander tyrant
 KMONS:  5 = frederick / boris, ancient lich
+TILE:   G = dngn_statue_depths_zot_lich / dngn_statue_depths_zot_dragon / \
+            dngn_statue_depths_tengu w:15 / dngn_statue_depths_tomes w:15 / \
+            dngn_statue_depths_asmodeus
 : end
 KFEAT:  _ = altar_vehumet
 KFEAT:  a = c
@@ -1203,8 +1208,6 @@ FTILE:  a'4! = floor_pebble_red
 FTILE:  GS1 = floor_vault
 TILE:   a = dngn_stone_wall_red
 TILE:   S = arcane_conduit
-TILE:   G = dngn_statue_cat / dngn_statue_dragon / dngn_statue_tengu / \
-            dngn_statue_princess / dngn_statue_triangle
 : set_feature_name("metal_statue", "arcane conduit")
 MAP
 xccccccccccccccccccccccccccccc
@@ -2542,7 +2545,7 @@ MONS:   nothing
 # Depths
 :    if crawl.coinflip() then
 # Holy defenders
-TILE:   G : dngn_statue_angel
+TILE:   G = dngn_statue_depths_zot_angel
 KFEAT:  O = altar_zin / altar_elyvilon / altar_the_shining_one
 FTILE:  -O : floor_limestone / floor_w_marble
 COLOUR: - : white
@@ -2551,7 +2554,7 @@ MONS:   lich / ancient lich w:3
 MONS:   zombie / simulacrum
 :    else
 # Unholy defenders
-TILE:   G : dngn_statue_imp / dngn_statue_demonic_bust
+TILE:   G : dngn_statue_depths_zot_devil / dngn_statue_depths_zot_lich
 KFEAT:  O = altar_yredelemnul / altar_kikubaaqudgha
 KPROP:  -O = bloody
 MONS:   ancient champion / vampire knight / lich
@@ -3001,8 +3004,16 @@ SHUFFLE: aAbB, Hhe / Idi, de, fg, hi, JKL
 SUBST:   HJK = +, ILa = c, A : c', bB = ', E : EE.
 NSUBST:  m = 1:m / *:c
 COLOUR:  G = mist
+: if you.in_branch("Depths") then
+TILE:    F = dngn_statue_depths_fangs / dngn_statue_depths_zot_tentacles
+TILE:    G = dngn_statue_depths_tomes / dngn_statue_depths_zot_angel
+: elseif you.in_branch("Zot") then
+TILE:    F = dngn_statue_zot_serpent / dngn_statue_depths_zot_tentacles
+TILE:    G = dngn_statue_zot_oldest_guardian / dngn_statue_depths_zot_angel
+: else
 TILE:    F = dngn_statue_maw / dngn_statue_tentacles
 TILE:    G = dngn_statue_wraith / dngn_statue_princess
+: end
 TILE:    M = dngn_mystic_cage
 : set_feature_name("metal_statue", "mystic cage")
 MAP
