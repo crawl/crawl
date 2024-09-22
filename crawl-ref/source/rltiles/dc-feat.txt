@@ -373,6 +373,10 @@ storm_conduit_3
 
 #### Cycling tile animation for statuary ends here.
 
+## machinery for wizlabs and Zot and nowhere else
+enigmatic_dynamo DNGN_ENIGMATIC_DYNAMO
+nascence_circuit DNGN_NASCENCE_CIRCUIT
+
 ## sarcophagus for ragdoll_tomb_raider
 sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
 
@@ -398,8 +402,6 @@ mop_1 DNGN_MOP
 mop_2 DNGN_MOP_BLOODY
 yak_fur DNGN_YAK_FUR
 lectern DNGN_LECTERN
-machinery_1 DNGN_GENERATOR
-machinery_2 DNGN_TESLA_COIL
 flower_pot_1 DNGN_FLOWER_POT
 flower_pot_broken_1 DNGN_FLOWER_POT_BROKEN
 flower_pot_2 DNGN_DARK_FLOWER_POT

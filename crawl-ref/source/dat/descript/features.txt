@@ -1118,6 +1118,20 @@ A strange but benign metal construct, analysing raw ambient magical energy. If
 destroyed and disrupted by sufficiently mighty magic, its crackling energy will
 harmlessly disperse.
 %%%%
+# Wizlabs and Zot _only_.
+An enigmatic dynamo
+
+An harmless yet sturdy metal construct, arcane both in power-source and
+purpose. Whatever it analyses, processes, powers, or produces can neither be
+assessed nor accessed by intruders like you infiltrating the Dungeon.
+%%%%
+A nascence circuit
+
+A coruscating spark gap of twin electrodes of impenetrably advanced technology.
+These are used to forge and power thaumaturgical constructs, though despite the
+constant crackling, this one is used up and unable to do much more than
+harmlessly dance with the joy of creating life.
+%%%%
 # Vaults with extraplanar contents.
 A bedevilled crystal wall
 

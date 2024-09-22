@@ -98,8 +98,8 @@
 # TO-DO:
 #
 # Actual portals need quite a bit of editing, and some unique tiles.
-# Tiles to fix: Doroklohe's plain floor, Cigotuvi's doorways, less generic
-# Iskenderun tiles, Cloud Mage's "white fluffiness" and "sea of clouds".
+# Tiles to fix: Doroklohe's and Maxwell's plain floor, Cloud Mage's "white
+# fluffiness" and "sea of clouds", Yara's floor.
 #
 ##
 
@@ -1293,6 +1293,7 @@ ITEM:       staff of death ident:type, scroll of poison ident:type
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
 KFEAT:      ? = fountain_eyes
+KFEAT:      Z = metal_statue
 SHUFFLE:    d^ / e~ / g|
 NSUBST:     ^ = 2:d / 2:. / * = dd., e = 1:e / 2:f / *:.
 NSUBST:     g = 1:g / *:h, i = 1:i / *:$
@@ -1318,6 +1319,9 @@ TILE:       + = dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
+COLOUR:     Z = magic
+TILE:       Z = dngn_nascence_circuit
+:           set_feature_name("metal_statue", "nascence circuit")
 :           set_feature_name("shallow_water", "Viscous fluid")
 :           set_feature_name("stone_wall", "sinewy wall")
 :           set_feature_name("clear_rock_wall", "thin membrane")
@@ -1376,7 +1380,7 @@ c-----cc-----cccWW.......WWcc""""""c""""""ccc
 cc-JJccccIIIcccccWW..0..WWcc""""""ccc""""""cc
 ccJJ-cccc-F-ccccccWWWWWWWccc""ccccccccccc""cc
 cc-HccccccIIccccccccWWWccccc"""""""""""""""cc
-ccccccccccccccccccccccccccccc"""""""""""""ccc
+cccccccccccccccccccccZccccccc"""""""""""""ccc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -1937,7 +1941,7 @@ ITEM:       randbook owner:Lehudib disc:earth disc2:alchemy \
                      spells:lehudib's_crystal_spear \
             / randbook owner:Lehudib disc:earth disc2:conjuration \
                      spells:lehudib's_crystal_spear
-
+KFEAT:      G = metal_statue
 ## The substitutions/shuffles below give 1/3 chance each of both paths
 ## open, D-path open, or E-path open, and gives 1/4 chance for the
 ## portal being in any of the 4 locations.
@@ -1975,6 +1979,9 @@ LROCKTILE:  wall_moon
 COLOUR:     b = silver
 COLOUR:     J = disjunction
 COLOUR:     c = blue
+COLOUR:     G = magic
+TILE:       G = dngn_enigmatic_dynamo
+:           set_feature_name("metal_statue", "enigmatic dynamo")
 :           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Lehudib's Moon Base")
@@ -2167,13 +2174,17 @@ ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
             any weapon randart / any armour randart / any jewellery randart w:5
 ITEM:       potion of attraction ident:all / any scroll w:20 /\
             scroll of vulnerability ident:all / any potion w:20
+KFEAT:      Z = metal_statue
 SHUFFLE:    DE/JK, pqrs, ;~
 SUBST:      D : b+, E:., J:., K: b+, F:.+, p:v, q:b., r: v.., s:b...
 SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
 NSUBST:     3 = 1:3 / *=3.., 4 = 1:4 / *=4.., 5 = 1:5 / *=5.., 6 = 2:6 / *=6..
 NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
 NSUBST:     e = 3:e / *=dff
+COLOUR:     Z = magic
 TILE:       v = dngn_metal_wall_cyan
+TILE:       Z = dngn_nascence_circuit
+:           set_feature_name("metal_statue", "nascence circuit")
 :           set_random_mon_list(
 :               "earth elemental / molten gargoyle / thermic dynamo / " ..
 :               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
@@ -2187,7 +2198,7 @@ MAP
                       vvv..eeree..vvv
                       v6s..rrrrr..s6v
                       v..s.sspss.s..v
-                     vv...psspssp...vv
+                     vvZ..psspssp..Zvv
                      v...r.prprp.r...v
                      vq.r..rpppr..r.qv
                      vqq..ppppppp..qqv
@@ -2199,8 +2210,8 @@ MAP
         vlllllvvvvvvvvv...psspssp...vv
         vlllllvvvvvvvvv6.s.sspss.s.6v
         vlllllvvvvvvvvvvs..rrrrr..svv
-       vvnnlnnvvvvvvvvvvvv...r...vvv
-      vv.3nln3.vvvvvvvvvvvvv+++vvv
+       vvnnlnnvvvvvvvvvvvZ...r...Zvv
+      vv.3nln3.vvvvvvvvvvvvv+++vvvv
      vv..2nln2..vvvvvvvvvvvH6.6Hvvvvv
     vv...2nln2...vvvvvvvvvv.....vvvvvv
     v2.2nnnlnnn2.2vvvvvH...4...4...Hvv
@@ -2233,7 +2244,7 @@ vv...vv....G....vvvvvvvv..v1.v..v..v
         vvv+vvvvvvvvvvvv1.~.....5.1v
         vv...vvvvvvvvvvvvvvvvvvvvvvv
         v.....v
-        v.AGA.v
+        v.AZA.v
         v.....v
         vv...vv
          vvvvv
@@ -2482,13 +2493,17 @@ ITEM:   hat good_item / pair of boots good_item / scarf good_item /\
         any book w:35 / any armour good_item w:5
 ITEM:   phantom mirror
 KFEAT:   ~ = closed_clear_door
+KFEAT:   G = metal_statue
 SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 2...
 NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 1:4 / *= 42.., A = 1:< / *:A
 NSUBST:     5 = 1:5 / *:5.
+COLOUR:     G = magic
 TILE:       c = wall_marble_tukima
 TILE:       V = dngn_dry_fountain_white
+TILE:       G = dngn_enigmatic_dynamo
 LFLOORTILE: floor_w_marble
 :           set_random_mon_list("dancing weapon / rakshasa")
+:           set_feature_name("metal_statue", "enigmatic dynamo")
 :           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Tukima's Studio")
@@ -2497,8 +2512,8 @@ MAP
             ccccccc
             ccmmmcc
         ccccccA.Acccccc
-       ccm...c...c...mcc
-       cc.............cc
+      cccm...c...c...mccc
+      cGc.............cGc
       cc..ccm.....mcc..cc
       c~~ccccm...mcccc~~c
       c2.."""cm~mc"""..2c

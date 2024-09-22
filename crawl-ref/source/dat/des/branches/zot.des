@@ -2535,18 +2535,22 @@ ENDMAP
 ###########################
 # Globe of electric golems
 #
-NAME:  lemuel_golem_globe
-TAGS:  no_rotate no_exits
-DEPTH: Zot
-KFEAT: ^ = permanent teleport trap / dispersal trap
-KFEAT: m = iron_grate
-SUBST: 1 = 1.
-MONS:  electric golem
+NAME:   lemuel_golem_globe
+TAGS:   no_rotate no_exits
+DEPTH:  Zot
+MONS:   electric golem
+KFEAT:  ^ = permanent teleport trap / dispersal trap
+KFEAT:  m = iron_grate
+KFEAT:  Z = metal_statue
+NSUBST: 1 = 1:1 / 1:. / * = 1.
+COLOUR: Z = magic
+TILE:   Z = dngn_nascence_circuit
+:       set_feature_name("metal_statue", "nascence circuit")
 MAP
   mmmm
  mm..mm
 mm.11.mm
-m.1^^1.m
+mZ1^^1Zm
 mm.11.mm
  mm..mm
   mmmm
@@ -2700,21 +2704,24 @@ ENDMAP
 
 ######################################
 # This is weird, but in Zot weirdness fits. (nrook)
-NAME:  nrook_zot_tub
+NAME:   nrook_zot_tub
+TAGS:   no_monster_gen
 DEPTH:  Zot
-KFEAT:  X = W
+KMONS:  M = patrolling red draconian att:neutral / \
+            patrolling nonbase red draconian att:neutral
+KMONS:  F = orb of fire att:neutral
+KFEAT:  MFX = W
+KFEAT:  G = metal_statue
 MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
-KMONS:  M = patrolling red draconian att:neutral / \
-            patrolling nonbase red draconian att:neutral
-KFEAT:  M = W
-KMONS:  F = orb of fire att:neutral
-KFEAT:  F = W
+COLOUR: G = magic
+TILE:   G = dngn_enigmatic_dynamo
+:       set_feature_name("metal_statue", "enigmatic dynamo")
 MAP
      @
 xxxxx+xxxxx
-xWWWWWWWWWx
+xGWWWWWWWGx
 xWMWWMWWMWx
 xWWXWXWXWWx
 xWWWmmmWWWx
@@ -2722,7 +2729,7 @@ xWMXmFmXMWx
 xWWWmmmWWWx
 xWWXWXWXWWx
 xWMWWMWWMWx
-xWWWWWWWWWx
+xGWWWWWWWGx
 xxxxxxxxxxx
 ENDMAP
 
@@ -2831,12 +2838,16 @@ MONS:   oklob plant w:4 / lightning spire w:3
 MONS:   obsidian statue / orange crystal statue / curse skull
 # Not quite the orb, but but close enough
 ITEM:   orb randart no_pickup
+KFEAT:  G = metal_statue
 NSUBST: 1 = 1:1 / 6 = 11. / *:., 3 = 1:1 / 4 = 11....... / *:.
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
+COLOUR: G = magic
+TILE:   G = dngn_enigmatic_dynamo
+:       set_feature_name("metal_statue", "enigmatic dynamo")
 MAP
         xxxxxxxxx
         xxx.2.xxx
-        xxx...xxx
+        xGx...xGx
         xx..1..xx
 xxxxxxxxx1.....1xxxxxxxxx
 xxxxxxx.....).....xxxxxxx
@@ -2844,7 +2855,7 @@ xxx.....1..}d]..1.....xxx
 xx...xx.....>.....xx...xx
 @x..xxxxx1.....1xxxxx..x@
 .x.3xxxxxx..1..xxxxxx3.x.
-.x..xxxxxxx...xxxxxxx..x.
+.x..xxxxxGx...xGxxxxx..x.
 .x..xxxxxxx...xxxxxxx..x.
 .x..xxxxxxxx.xxxxxxxx..x.
 .x..xxxxxxxx2xxxxxxxx..x.
@@ -3747,17 +3758,21 @@ DEPTH:  Zot, !Zot:$
 MONS:   lightning spire, patrolling electric golem
 KMONS:  ! = patrolling death cob
 KFEAT:  C = cache of baked goods
-NSUBST: % = 2:! / 2:C / 2:a / * = %
-:dgn.delayed_decay(_G, 'a', 'random draconian corpse')
+KFEAT:  Z = metal_statue
+NSUBST: % = 2:! / 2:C / *:a
+COLOUR: Z = magic
+TILE:   Z = dngn_nascence_circuit
+: set_feature_name("metal_statue", "nascence circuit")
+: dgn.delayed_decay(_G, 'a', 'random draconian corpse')
 MAP
 @xxxxx@
-...*...
+..$*$..
 x.....x
 x.%%%.x
 x.%1%.x
 x2%%%2x
-xx...xx
- xxxxx
+xZ$.$Zx
+xxxxxxx
 ENDMAP
 
 # Inspired by a distant submission from nicolae-,
@@ -3783,6 +3798,7 @@ KFEAT:   C = altar_ecumenical
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / altar_ignis w:5
 KFEAT:   ~ = zot trap
 KFEAT:   y = x
+KFEAT:   M = metal_statue
 SHUFFLE: Xy / Xy / Xy / Aa
 NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
 SUBST:   X : X Y Z:4, X = bbbbvvc, Y = bvvvvc, Z = bvvcccc
@@ -3790,7 +3806,7 @@ SUBST:   az = bbvc
 NSUBST:  2 = 4 = 2223 / 2 = 122 / 1 = 1.. / *:1
 NSUBST:  . = 1:3 / 4:4 / 12:% / *:.
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])deOG, OGUCD~
+SHUFFLE: ])deOG, OGUCD~, GM
 # Invert the normal Zot colours.
 : local wallc = "darkgray"
 : local floorc = "white"
@@ -3810,8 +3826,11 @@ SHUFFLE: ])deOG, OGUCD~
 : tile("c = dngn_stone_wall_" .. wallc)
 : ftile(".`123409deO%CDTG~+ = floor_rough_" .. floorc)
 COLOUR: G = mountain
+COLOUR: M = magic
 TILE:   G = dngn_scintillating_statue
+TILE:   M = dngn_enigmatic_dynamo
 : set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "enigmatic dynamo")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3867,7 +3886,6 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
         rapier ego:electrocution
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
-KFEAT:  G = metal_statue
 ITEM:   storm talisman, randbook disc:air spells:chain_lightning
 : local e = "ego:electrocution good_item ident:type"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
@@ -3881,18 +3899,25 @@ ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
 KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate
+KFEAT:  G = metal_statue
 NSUBST: . = 4:1 / 4:2 / 3:3 / 3 = 123. / *:., ' = 2:3 / 6:4 / 4 = 34455 / *:.
-NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g, G = 2:G. / *:.
+NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g, G = 2:GG. / *:.
 SUBST:  ` = ., ) = )>>
 KPROP:  -_ly"O> = no_tele_into
 MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
                               pow_max = 100, pow_min = 10, delay = 20, \
                               size = 1, start_clouds = 5, excl_rad = 0 }
-COLOUR: G = electricity
 TILE:   v = dngn_metal_iron
-TILE:   G = storm_conduit
 FTILE:  -_ = floor_pebble_darkgray
-: set_feature_name("metal_statue", "storm conduit")
+: if crawl.coinflip() then
+COLOUR: G = electricity
+TILE:   G = storm_conduit
+:   set_feature_name("metal_statue", "storm conduit")
+: else
+COLOUR: G = magic
+TILE:   G = dngn_nascence_circuit
+:   set_feature_name("metal_statue", "nascence circuit")
+: end
 MAP
                  vvvvvvvvv
                  vd`d`d`dv
@@ -4433,8 +4458,16 @@ TILE:    k = dngn_transparent_wall_blue
 TILE:    m = dngn_transparent_wall_magenta
 TILE:    G = dngn_gravestone
 TILE:    s = storm_conduit
-: set_feature_name("metal_statue", "storm conduit")
 : set_feature_name("granite_statue", "a gravestone")
+: if crawl.coinflip() then
+COLOUR:  s = electricity
+TILE:    s = storm_conduit
+:   set_feature_name("metal_statue", "storm conduit")
+: else
+COLOUR:  s = magic
+TILE:    s = dngn_nascence_circuit
+:   set_feature_name("metal_statue", "nascence circuit")
+: end
 MAP
                          xccccccccccccccx
                  xxccccccccsccWcccWcckccccccccxx
