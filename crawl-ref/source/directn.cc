@@ -2665,7 +2665,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
 
     // get the real items if we are describing the player's position, so that
     // actions can work.
-    if (c == you.pos() && you.visible_igrd(c) != NON_ITEM)
+    if (you.on_current_level && c == you.pos())
         list_items = item_list_on_square(you.visible_igrd(c));
     else if (env.map_knowledge(c).item())
     {
