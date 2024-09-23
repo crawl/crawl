@@ -1524,7 +1524,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 }
             }
 
-            monster_die(*this, KILL_MISC, NON_MONSTER, true);
+            monster_die(*this, KILL_NON_ACTOR, NON_MONSTER, true);
         }
         break;
 
@@ -2222,7 +2222,7 @@ killer_type mon_enchant::killer() const
 {
     return who == KC_YOU      ? KILL_YOU :
            who == KC_FRIENDLY ? KILL_MON
-                              : KILL_MISC;
+                              : KILL_NON_ACTOR;
 }
 
 int mon_enchant::kill_agent() const

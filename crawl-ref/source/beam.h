@@ -74,7 +74,7 @@ struct bolt
     coord_def   target = {0,0};           // intended target
     dice_def    damage = dice_def(0,0);
     int         ench_power = 0, hit = 0;
-    killer_type thrower = KILL_MISC;   // what kind of thing threw this?
+    killer_type thrower = KILL_NON_ACTOR;   // what kind of thing threw this?
     int         ex_size = 0;           // explosion radius (0==none)
 
     mid_t       source_id = MID_NOBODY;// The mid of the source (remains
@@ -99,7 +99,7 @@ struct bolt
     bool   is_explosion = false;
     bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
-    string aux_source = "";       // source of KILL_MISC beams
+    string aux_source = "";       // source of KILL_NON_ACTOR beams
 
     bool   affects_nothing = false; // should not hit monsters or features
 

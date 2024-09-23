@@ -385,7 +385,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 
         case KC_OTHER:
             return killer == KILL_MON_MISSILE || killer == KILL_MISCAST
-                   || killer == KILL_MISC || killer == KILL_MON;
+                   || killer == KILL_NON_ACTOR || killer == KILL_MON;
 
         case KC_NCATEGORIES:
             die("kill category not matching killer type");
@@ -797,7 +797,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     god_conduct_trigger conducts[3];
     kill_category whose = KC_OTHER;
-    killer_type killer  = KILL_MISC;
+    killer_type killer  = KILL_NON_ACTOR;
     mid_t source        = MID_NOBODY;
     if (agent && agent->is_player())
     {
@@ -1618,7 +1618,7 @@ kill_category cloud_struct::killer_to_whose(killer_type _killer)
 
         case KILL_MON:
         case KILL_MON_MISSILE:
-        case KILL_MISC:
+        case KILL_NON_ACTOR:
             return KC_OTHER;
 
         default:
@@ -1633,7 +1633,7 @@ killer_type cloud_struct::whose_to_killer(kill_category _whose)
     {
         case KC_YOU:         return KILL_YOU_MISSILE;
         case KC_FRIENDLY:    return KILL_MON_MISSILE;
-        case KC_OTHER:       return KILL_MISC;
+        case KC_OTHER:       return KILL_NON_ACTOR;
         case KC_NCATEGORIES: die("invalid kill category");
     }
     return KILL_NONE;

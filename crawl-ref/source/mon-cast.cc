@@ -1780,7 +1780,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.ench_power   = max(1, power / ENCH_POW_FACTOR); // U G H
     beam.glyph        = 0;
     beam.flavour      = BEAM_NONE;
-    beam.thrower      = KILL_MISC;
+    beam.thrower      = KILL_NON_ACTOR;
     beam.pierce       = false;
     beam.is_explosion = false;
     beam.attitude     = mons_attitude(*mons);

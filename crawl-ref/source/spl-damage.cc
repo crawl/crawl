@@ -609,7 +609,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
 
     beam.thrower = (agent && agent->is_player()) ? KILL_YOU :
                     agent                        ? KILL_MON
-                                                 : KILL_MISC;
+                                                 : KILL_NON_ACTOR;
 
     // Set conducts here. The monster needs to be alive when this is done, and
     // mons_adjust_flavoured() could kill it.
@@ -4360,7 +4360,7 @@ void foxfire_attack(const monster *foxfire, const actor *target)
     bolt beam;
     beam.thrower = (foxfire && foxfire->summoner == MID_PLAYER) ? KILL_YOU :
                         (foxfire)   ? KILL_MON
-                                    : KILL_MISC;
+                                    : KILL_NON_ACTOR;
     beam.range       = 1;
     beam.source      = foxfire->pos();
     beam.source_id   = foxfire->summoner;

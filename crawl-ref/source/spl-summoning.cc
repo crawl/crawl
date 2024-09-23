@@ -2997,7 +2997,7 @@ spret cast_hoarfrost_cannonade(const actor& agent, int pow, bool fail)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_HOARFROST_CANNON && mi->summoner == agent.mid)
-            monster_die(**mi, KILL_MISC, NON_MONSTER);
+            monster_die(**mi, KILL_NON_ACTOR, NON_MONSTER);
     }
 
     mgen_data cannon = _summon_data(agent, MONS_HOARFROST_CANNON, 0,

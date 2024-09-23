@@ -11,7 +11,9 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_MON_MISSILE,                  // in the dungeon, with a club
     KILL_YOU_CONF,                     // died while confused as caused by you
     KILL_MISCAST,                      // as a result of a spell miscast
-    KILL_MISC,                         // any miscellaneous killing
+    KILL_NON_ACTOR,                    // Killed directly by something that was
+                                       // not the player or a monster (eg:
+                                       // neutral cloud generators or god effects)
     KILL_RESET,                        // excised from existence
     KILL_DISMISSED,                    // like KILL_RESET, but drops inventory
     KILL_BANISHED,                     // monsters what got banished
