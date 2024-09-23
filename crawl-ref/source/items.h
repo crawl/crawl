@@ -186,7 +186,7 @@ void name_weapon(item_def &item);
 void maybe_name_weapon(item_def &item, bool silent = false);
 void say_farewell_to_weapon(const item_def &item);
 
-bool valid_item_index(int i);
+bool is_floor_item(const item_def &item);
 
 void maybe_split_nets(item_def &item, const coord_def& where);
 

@@ -3746,7 +3746,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
     // this is a copy, we can't do anything with it. (Probably via stash
     // search.)
-    if (!valid_item_index(item.index()) && !in_inventory(item))
+    if (!is_floor_item(item) && !in_inventory(item))
         return actions;
 
     // XX CMD_ACTIVATE
@@ -3954,7 +3954,7 @@ static bool _do_action(item_def &item, const command_type action)
         }
         break;
     case CMD_PICKUP:
-        ASSERT(!in_inventory(item) && valid_item_index(item.index()));
+        ASSERT(!in_inventory(item) && is_floor_item(item));
         pickup_single_item(item.index(), item.quantity);
         return false;
     case CMD_READ:             read(&item);         return false;
