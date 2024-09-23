@@ -2502,9 +2502,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Adjust fugue of the fallen bonus. This includes both kills by you and
     // also by your allies.
     if (you.duration[DUR_FUGUE]
-        && (gives_player_xp
+        && ((gives_player_xp
             && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
-        || mons.props.exists(KIKU_WRETCH_KEY))
+            || mons.props.exists(KIKU_WRETCH_KEY)))
     {
         const int slaying_bonus = you.props[FUGUE_KEY].get_int();
         // cap at +7 slay (at which point you do bonus negative energy damage
