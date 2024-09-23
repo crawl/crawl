@@ -99,7 +99,7 @@ static void _ouch(actor& target, actor * source, miscast_source_info mc_info, in
         else
         {
             ASSERT(mc_info.source != miscast_source::melee);
-            kt = KILL_MISCAST;
+            kt = KILL_NON_ACTOR;
         }
 
         monster* mon_target = target.as_monster();

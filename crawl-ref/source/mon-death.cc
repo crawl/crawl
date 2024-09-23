@@ -1289,8 +1289,10 @@ static string _killer_type_name(killer_type killer)
         return "mon_missile";
     case KILL_YOU_CONF:
         return "you_conf";
+#if TAG_MAJOR_VERSION == 34
     case KILL_MISCAST:
         return "miscast";
+#endif
     case KILL_NON_ACTOR:
         return "non_actor";
     case KILL_RESET:
@@ -2700,7 +2702,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
         case KILL_NON_ACTOR:
-        case KILL_MISCAST:
             if (death_message)
             {
                 if (summoned)

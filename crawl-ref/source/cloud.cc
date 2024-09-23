@@ -384,7 +384,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
                    || killer == KILL_MON;
 
         case KC_OTHER:
-            return killer == KILL_MON_MISSILE || killer == KILL_MISCAST
+            return killer == KILL_MON_MISSILE
                    || killer == KILL_NON_ACTOR || killer == KILL_MON;
 
         case KC_NCATEGORIES:

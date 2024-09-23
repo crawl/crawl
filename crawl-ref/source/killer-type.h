@@ -10,7 +10,9 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_YOU_MISSILE,                  // in the library, with a dart
     KILL_MON_MISSILE,                  // in the dungeon, with a club
     KILL_YOU_CONF,                     // died while confused as caused by you
+#if TAG_MAJOR_VERSION == 34
     KILL_MISCAST,                      // as a result of a spell miscast
+#endif
     KILL_NON_ACTOR,                    // Killed directly by something that was
                                        // not the player or a monster (eg:
                                        // neutral cloud generators or god effects)
