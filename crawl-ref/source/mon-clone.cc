@@ -148,14 +148,36 @@ static enchant_type _player_duration_to_mons_enchantment(duration_type dur)
 {
     switch (dur)
     {
-    case DUR_INVIS:     return ENCH_INVIS;
-    case DUR_CONF:      return ENCH_CONFUSION;
-    case DUR_PARALYSIS: return ENCH_PARALYSIS;
-    case DUR_SLOW:      return ENCH_SLOW;
-    case DUR_HASTE:     return ENCH_HASTE;
-    case DUR_MIGHT:     return ENCH_MIGHT;
-    case DUR_BERSERK:   return ENCH_BERSERK;
-    case DUR_POISONING: return ENCH_POISON;
+    case DUR_BARBS:            return ENCH_BARBS;
+    case DUR_BERSERK:          return ENCH_BERSERK;
+    case DUR_BRILLIANCE:       return ENCH_EMPOWERED_SPELLS;
+    case DUR_BLIND:            return ENCH_BLIND;
+    case DUR_CONF:             return ENCH_CONFUSION;
+    case DUR_CORROSION:        return ENCH_CORROSION;
+    case DUR_DIMENSION_ANCHOR: return ENCH_DIMENSION_ANCHOR;
+    case DUR_FIRE_VULN:        return ENCH_FIRE_VULN;
+    case DUR_FROZEN:           return ENCH_FROZEN;
+    case DUR_HASTE:            return ENCH_HASTE;
+    case DUR_INVIS:            return ENCH_INVIS;
+    case DUR_LOWERED_WL:       return ENCH_LOWERED_WL;
+    case DUR_MIGHT:            return ENCH_MIGHT;
+    case DUR_NO_MOMENTUM:      return ENCH_BOUND;
+    case DUR_PARALYSIS:        return ENCH_PARALYSIS;
+    case DUR_PETRIFYING:       return ENCH_PETRIFYING;
+    case DUR_PETRIFIED:        return ENCH_PETRIFIED;
+    case DUR_POISONING:        return ENCH_POISON;
+    case DUR_POISON_VULN:      return ENCH_POISON_VULN;
+    case DUR_RESISTANCE:       return ENCH_RESISTANCE;
+    case DUR_SAP_MAGIC:        return ENCH_SAP_MAGIC;
+    case DUR_SIGN_OF_RUIN:     return ENCH_SIGN_OF_RUIN;
+    case DUR_SLOW:             return ENCH_SLOW;
+    case DUR_STICKY_FLAME:     return ENCH_STICKY_FLAME;
+    case DUR_SWIFTNESS:        return ENCH_SWIFT;
+    case DUR_TOXIC_RADIANCE:   return ENCH_TOXIC_RADIANCE;
+    case DUR_TROGS_HAND:
+    case DUR_ENLIGHTENED:      return ENCH_STRONG_WILLED;
+    case DUR_VITRIFIED:        return ENCH_VITRIFIED;
+    case DUR_WEAK:             return ENCH_WEAK;
 
     default:            return ENCH_NONE;
     }
