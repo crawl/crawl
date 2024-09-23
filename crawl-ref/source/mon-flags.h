@@ -139,7 +139,9 @@ enum monclass_flag_type : uint64_t
     // has a double-sized tile
     M_TALL_TILE         = BIT(42),
 
-                        //BIT(43), // was M_WEB_SENSE
+    // If summoned, will disappear whenever the player leaves the floor, whether
+    // made by the player or something else.
+    M_UNSTABLE          = BIT(43),
 
     /// tries to maintain LOS/2 range from its target
     M_MAINTAIN_RANGE    = BIT(44),
