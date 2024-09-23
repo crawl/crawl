@@ -2663,9 +2663,9 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     // the stash list case
     vector<item_def> stash_items;
 
-    // get the real items if we are describing the player's position, so that
-    // actions can work.
-    if (you.on_current_level && c == you.pos())
+    // get the real items if we are describing somewehere visible to the player,
+    // so that actions can work.
+    if (you.on_current_level && you.see_cell(c))
         list_items = item_list_on_square(you.visible_igrd(c));
     else if (env.map_knowledge(c).item())
     {

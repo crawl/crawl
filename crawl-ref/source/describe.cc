@@ -3731,47 +3731,9 @@ void get_item_desc(const item_def &item, describe_info &inf)
     inf.body << name << get_item_description(item, mode);
 }
 
-static vector<command_type> _allowed_actions(const item_def& item)
+static void _allowed_inv_actions(vector<command_type>& actions,
+                                 const item_def& item)
 {
-    vector<command_type> actions;
-
-    bool here = you.on_current_level && item.pos == you.pos();
-    if (!in_inventory(item) && !here && is_travelsafe_square(item.pos))
-    {
-        // XX might be nice to have a way for this to be visible but grayed
-        // out?
-        actions.push_back(CMD_MAP_GOTO_TARGET);
-        return actions;
-    }
-
-    // this is a copy, we can't do anything with it. (Probably via stash
-    // search.)
-    if (!is_floor_item(item) && !in_inventory(item))
-        return actions;
-
-    // XX CMD_ACTIVATE
-    switch (item.base_type)
-    {
-    case OBJ_SCROLLS:
-        if (cannot_read_item_reason(&item, true).empty())
-            actions.push_back(CMD_READ);
-        break;
-    case OBJ_POTIONS:
-        if (cannot_drink_item_reason(&item, true).empty())
-            actions.push_back(CMD_QUAFF);
-        break;
-    default:
-        break;
-    }
-
-    if (!in_inventory(item))
-    {
-        // guaranteed to be at the player's position
-        if (!item_is_stationary(item))
-            actions.push_back(CMD_PICKUP);
-        return actions;
-    }
-
     // evoking from inventory only
     if (cannot_evoke_item_reason(&item, true).empty())
         actions.push_back(CMD_EVOKE);
@@ -3817,6 +3779,46 @@ static vector<command_type> _allowed_actions(const item_def& item)
     {
         actions.push_back(CMD_SET_SKILL_TARGET);
     }
+}
+
+static vector<command_type> _allowed_actions(const item_def& item)
+{
+    vector<command_type> actions;
+
+    bool here = you.on_current_level && item.pos == you.pos();
+    if (!in_inventory(item) && !here && is_travelsafe_square(item.pos))
+    {
+        // XX might be nice to have a way for this to be visible but grayed
+        // out?
+        actions.push_back(CMD_MAP_GOTO_TARGET);
+    }
+
+    // this is a copy, we can't do anything with it. (Probably via stash
+    // search.)
+    if (!is_floor_item(item) && !in_inventory(item))
+        return actions;
+
+    if (in_inventory(item) || here)
+    {
+        switch (item.base_type)
+        {
+        case OBJ_SCROLLS:
+            if (cannot_read_item_reason(&item, true).empty())
+                actions.push_back(CMD_READ);
+            break;
+        case OBJ_POTIONS:
+            if (cannot_drink_item_reason(&item, true).empty())
+                actions.push_back(CMD_QUAFF);
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (in_inventory(item))
+        _allowed_inv_actions(actions, item);
+    else if (here && !item_is_stationary(item))
+        actions.push_back(CMD_PICKUP);
 
     if (!crawl_state.game_is_tutorial())
         actions.push_back(CMD_INSCRIBE_ITEM);
