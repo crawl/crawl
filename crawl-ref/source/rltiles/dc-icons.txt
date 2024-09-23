@@ -93,6 +93,7 @@ shadowless SHADOWLESS
 bind BIND
 weak_willed WEAK_WILLED
 sign_of_ruin SIGN_OF_RUIN
+doubled_vigour DOUBLED_VIGOUR
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

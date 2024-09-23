@@ -226,9 +226,13 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     switch (ench.ench)
     {
     case ENCH_BERSERK:
-        // Inflate hp.
         scale_hp(3, 2);
-        // deliberate fall-through
+        calc_speed();
+        break;
+
+    case ENCH_DOUBLED_VIGOUR:
+        scale_hp(2, 1);
+        break;
 
     case ENCH_FRENZIED:
         calc_speed();
@@ -410,6 +414,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_BERSERK:
         scale_hp(2, 3);
         calc_speed();
+        break;
+
+    case ENCH_DOUBLED_VIGOUR:
+        scale_hp(1, 2);
+        if (!quiet)
+            mprf("%s excess vigour fades away.", name(DESC_ITS).c_str());
         break;
 
     case ENCH_HASTE:
@@ -1334,6 +1344,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_WL:
     case ENCH_TIDE:
     case ENCH_REGENERATION:
+    case ENCH_DOUBLED_VIGOUR:
     case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
     case ENCH_LIFE_TIMER:
@@ -2147,7 +2158,7 @@ static const char *enchant_names[] =
     "rimeblight",
     "magnetised",
     "armed",
-    "misdirected", "changed appearance", "shadowless",
+    "misdirected", "changed appearance", "shadowless", "doubled_vigour",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2398,6 +2409,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_INNER_FLAME:
         return random_range(25, 35) * 10;
     case ENCH_BERSERK:
+    case ENCH_DOUBLED_VIGOUR:
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:
         return random_range(10 * BASELINE_DELAY, 15 * BASELINE_DELAY);

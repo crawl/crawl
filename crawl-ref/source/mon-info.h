@@ -238,6 +238,7 @@ enum monster_info_flags
     MB_FROZEN_IN_TERROR,
     MB_SOUL_SPLINTERED,
     MB_ENGULFING_PLAYER,
+    MB_DOUBLED_VIGOUR,
     NUM_MB_FLAGS
 };
 

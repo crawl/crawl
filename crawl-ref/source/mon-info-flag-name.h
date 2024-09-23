@@ -75,6 +75,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CLOUD_RING_MIASMA, "clouds", "surrounded by foul miasma", "clouds" },
     { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
     { MB_SILENCE_IMMUNE, "unsilenced", "unaffected by silence", "unsilenced" },
+    { MB_DOUBLED_VIGOUR, "doubled vigour", "doubled in vigour", "doubled vigour"},
     // Vulnerabilities
     { MB_POSSESSABLE, "soul-gripped", "soul-gripped", "soul-gripped"},
     { MB_CAUGHT, "caught", "entangled in a net", "caught"},

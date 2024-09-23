@@ -3271,6 +3271,7 @@ bool bolt::harmless_to_player() const
     case BEAM_AGILITY:
     case BEAM_INVISIBILITY:
     case BEAM_RESISTANCE:
+    case BEAM_DOUBLE_VIGOUR:
         return true;
 
     case BEAM_HOLY:
@@ -6328,6 +6329,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_DOUBLE_VIGOUR:
+        if (!mon->has_ench(ENCH_DOUBLED_VIGOUR)
+            && mon->add_ench(ENCH_DOUBLED_VIGOUR))
+        {
+            if (simple_monster_message(*mon, " surges with doubled vitality!"))
+                obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
     case BEAM_WEAKNESS:
         mon->weaken(agent(), 8 + random2(4));
         obvious_effect = true;
@@ -7328,6 +7338,7 @@ bool bolt::nice_to(const monster_info& mi) const
 
     if (flavour == BEAM_HASTE
         || flavour == BEAM_HEALING
+        || flavour == BEAM_DOUBLE_VIGOUR
         || flavour == BEAM_MIGHT
         || flavour == BEAM_AGILITY
         || flavour == BEAM_INVISIBILITY
@@ -7585,6 +7596,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SHADOW_TORPOR:         return "shadow torpor";
     case BEAM_HAEMOCLASM:            return "gore";
     case BEAM_BLOODRITE:             return "blood";
+    case BEAM_DOUBLE_VIGOUR:         return "vigour-doubling";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

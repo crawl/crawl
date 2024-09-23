@@ -1411,6 +1411,9 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     case BEAM_RESISTANCE:
         return !monster.has_ench(ENCH_RESISTANCE);
 
+    case BEAM_DOUBLE_VIGOUR:
+        return !monster.has_ench(ENCH_DOUBLED_VIGOUR);
+
     case BEAM_CONCENTRATE_VENOM:
         return !monster.has_ench(ENCH_CONCENTRATE_VENOM)
                && (monster.has_spell(SPELL_SPIT_POISON)
@@ -2620,7 +2623,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
 
         beam_type flavour = random_choose_weighted(150, BEAM_HASTE,
                                                    150, BEAM_MIGHT,
-                                                   150, BEAM_AGILITY,
+                                                   150, BEAM_DOUBLE_VIGOUR,
                                                    150, BEAM_RESISTANCE,
                                                     15, BEAM_VULNERABILITY,
                                                     15, BEAM_BERSERK,

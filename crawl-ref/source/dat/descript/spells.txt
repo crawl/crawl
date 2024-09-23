@@ -262,9 +262,9 @@ creatures into ghostly versions of themselves.
 Call of Chaos spell
 
 Calls upon the powers of chaos to empower nearby allies, granting them haste,
-might, agility, or improved resistances. The chaotic magic may occasionally
-backfire and cause allies to instead lose their willpower or be berserked,
-polymorphed, or filled with inner flame.
+might, doubled health, or improved resistances. The chaotic magic may
+occasionally backfire and cause allies to instead lose their willpower or be
+berserked, polymorphed, or filled with inner flame.
 %%%%
 Call Tide spell
 
