@@ -2915,9 +2915,9 @@ Ctrl-X
 
 You can use the { command to manually inscribe items; alternatively, you can
 also inscribe when viewing items from the inventory (done by pressing the item's
-letter). This adds a note in curly braces to the item description. Besides
-simply allowing you to make comments about items, there are several further
-uses.
+letter) or nearby items on the floor. This adds a note in curly braces to the
+item description. Besides simply allowing you to make comments about items,
+there are several further uses.
 
 Inscriptions as shortcuts
 ========================================

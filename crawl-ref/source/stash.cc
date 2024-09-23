@@ -359,29 +359,40 @@ string Stash::feature_description() const
     return feat_desc;
 }
 
-vector<stash_search_result> Stash::matches_search(
+static void search_results_for_item(vector<stash_search_result> &results,
+    const string &prefix, const base_pattern &search, const item_def &item)
+{
+    const string s   = Stash::stash_item_name(item);
+    const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+    string haystack  = prefix + " " + ann + " " + s;
+    if (is_dumpable_artefact(item))
+        haystack += " " + chardump_desc(item);
+    if (search.matches(haystack))
+    {
+        results.push_back({});
+        results.rbegin()->match_type = MATCH_ITEM;
+        results.rbegin()->match = s;
+        results.rbegin()->primary_sort = item.name(DESC_QUALNAME);
+        results.rbegin()->item = &item;
+    }
+}
+
+vector<stash_search_result> Stash::matches_search(const level_id &m_place,
     const string &prefix, const base_pattern &search) const
 {
     vector<stash_search_result> results;
     if (empty())
         return results;
-
-    for (const item_def &item : items)
+    if (you.on_current_level && m_place == level_id::current()
+        && you.see_cell(pos))
     {
-        const string s   = stash_item_name(item);
-        const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        string haystack = prefix + " " + ann + " " + s;
-        if (is_dumpable_artefact(item))
-            haystack += " " + chardump_desc(item);
-        if (search.matches(haystack))
-        {
-            stash_search_result res;
-            res.match_type = MATCH_ITEM;
-            res.match = s;
-            res.primary_sort = item.name(DESC_QUALNAME);
-            res.item = item;
-            results.push_back(res);
-        }
+        for (stack_iterator si(you.visible_igrd(pos)); si; ++si)
+            search_results_for_item(results, prefix, search, *si);
+    }
+    else
+    {
+        for (const item_def &item : items)
+            search_results_for_item(results, prefix, search, item);
     }
 
     if (feat != DNGN_FLOOR)
@@ -642,7 +653,7 @@ vector<stash_search_result> ShopInfo::matches_search(
             res.match_type = MATCH_ITEM;
             res.match = sname;
             res.primary_sort = item.name(DESC_QUALNAME);
-            res.item = item;
+            res.item = &item;
             res.pos.pos = shop.pos;
             results.push_back(res);
         }
@@ -823,7 +834,7 @@ void LevelStashes::_waypoint_search(
     if (!stash)
         return;
     vector<stash_search_result> new_results =
-        stash->matches_search("", text_pattern(".*"));
+        stash->matches_search(m_place, "", text_pattern(".*"));
     for (auto &res : new_results)
     {
         res.pos.id = m_place;
@@ -837,24 +848,10 @@ void LevelStashes::get_matching_stashes(
 {
     string lplace = "{" + m_place.describe() + "}";
 
-    // a single digit or * means we're searching for waypoints' content.
-    const string s = search.tostring();
-    if (s == "*")
-    {
-        for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-            _waypoint_search(i, results);
-        return;
-    }
-    else if (s.size() == 1 && s[0] >= '0' && s[0] <= '9')
-    {
-        _waypoint_search(s[0] - '0', results);
-        return;
-    }
-
     for (const auto &entry : m_stashes)
     {
         vector<stash_search_result> new_results =
-            entry.second.matches_search(lplace, search);
+            entry.second.matches_search(m_place, lplace, search);
         for (auto &res : new_results)
         {
             res.pos.id = m_place;
@@ -1147,13 +1144,13 @@ protected:
 
 static bool _is_potentially_boring(stash_search_result res)
 {
-    return res.match_type == MATCH_ITEM && res.item.defined()
+    return res.match_type == MATCH_ITEM && res.item
         && !res.in_inventory
-        && (res.item.base_type == OBJ_WEAPONS
-            || res.item.base_type == OBJ_ARMOUR
-            || res.item.base_type == OBJ_MISSILES
-            || res.item.base_type == OBJ_TALISMANS) // TODO: also misc?
-        && (item_type_known(res.item) || !item_is_branded(res.item))
+        && (res.item->base_type == OBJ_WEAPONS
+            || res.item->base_type == OBJ_ARMOUR
+            || res.item->base_type == OBJ_MISSILES
+            || res.item->base_type == OBJ_TALISMANS) // TODO: also misc?
+        && (item_type_known(*res.item) || !item_is_branded(*res.item))
         || res.match_type == MATCH_FEATURE && feat_is_trap(res.feat);
 }
 
@@ -1164,11 +1161,11 @@ static bool _is_duplicate_for_search(stash_search_result l,
     if (l.in_inventory || r.in_inventory)
         return false;
     if (ignore_missile_stacks &&
-        l.item.base_type == OBJ_MISSILES
-        && r.item.base_type == OBJ_MISSILES
-        && l.item.sub_type == r.item.sub_type
-        && l.item.brand == r.item.brand
-        && is_shop_item(l.item) == is_shop_item(r.item))
+        l.item->base_type == OBJ_MISSILES
+        && r.item->base_type == OBJ_MISSILES
+        && l.item->sub_type == r.item->sub_type
+        && l.item->brand == r.item->brand
+        && is_shop_item(*l.item) == is_shop_item(*r.item))
     {
         // Special handling for missile deduplication: ignore that stacks
         // of different sizes have different "names".
@@ -1182,7 +1179,7 @@ static bool _is_duplicate_for_search(stash_search_result l,
 // Filter out useless results in search_stashes
 static bool _is_useless_result(const stash_search_result res)
 {
-    return res.item.defined() && is_useless_item(res.item, false)
+    return res.item && is_useless_item(*res.item, false)
            || feat_is_altar(res.feat)
               && !player_can_join_god(feat_altar_god(res.feat), false);
 }
@@ -1231,8 +1228,8 @@ static bool _compare_by_name(const stash_search_result& lhs,
         // check is there so that non-shop ammo (which isn't considered a
         // search duplicate for shop ammo) will be adjacent, and thus
         // collapsible, in _stash_filter_duplicates.
-        const bool l_shop = is_shop_item(lhs.item);
-        const bool r_shop = is_shop_item(rhs.item);
+        const bool l_shop = is_shop_item(*lhs.item);
+        const bool r_shop = is_shop_item(*rhs.item);
 
         return !l_shop && r_shop
             || l_shop == r_shop && lhs.match < rhs.match;
@@ -1269,10 +1266,7 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
             stash_search_result res;
             res.match = s;
             res.primary_sort = s; // don't use DESC_QUALNAME for inventory items
-            res.item = item;
-            // Needs to not be equal to ITEM_IN_INVENTORY so the describe
-            // menu doesn't think it can manipulate the item.
-            res.item.pos = you.pos();
+            res.item = &item;
             res.in_inventory = true;
             res.pos = level_pos::current();
             results.push_back(res);
@@ -1312,7 +1306,7 @@ static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_
             {
             case MATCH_ITEM:
                 out.back().duplicate_piles++;
-                out.back().duplicates += res.item.quantity;
+                out.back().duplicates += res.item->quantity;
                 break;
             case MATCH_FEATURE:
                 // number of piles is meaningless for features; just keep track
@@ -1423,11 +1417,15 @@ void StashTracker::search_stashes(string search_term)
     lastsearch = csearch_literal;
 
     vector<stash_search_result> results;
-    if (!curr_lev)
+    bool waypoint = get_named_stashes(search->tostring(), results);
+    if (!curr_lev && !waypoint)
         results = _inventory_search(*search);
     // allowing offlevel stash searching is not useful in descent mode
-    get_matching_stashes(*search, results, curr_lev
-                                           || crawl_state.game_is_descent());
+    if (!waypoint)
+    {
+        bool descent = crawl_state.game_is_descent();
+        get_matching_stashes(*search, results, curr_lev || descent);
+    }
 
     if (results.empty())
     {
@@ -1507,6 +1505,34 @@ void StashTracker::get_matching_stashes(
 
         result.player_distance = ldist;
     }
+}
+
+bool StashTracker::get_named_stashes(const string &search,
+        vector<stash_search_result> &results)
+{
+    if (search[0] == '*')
+    {
+        set<level_pos> cache;
+        for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+        {
+            const level_pos &pos = travel_cache.get_waypoint(i);
+            if (cache.end() != cache.find(pos))
+                continue;
+            cache.insert(pos);
+            if (pos.is_valid())
+                find_level(pos.id)->_waypoint_search(i, results);
+        }
+        return true;
+    }
+    else if (isadigit(search[0]))
+    {
+        const level_pos &pos = travel_cache.get_waypoint(search[0]-'0');
+        if (pos.is_valid())
+            find_level(pos.id)->_waypoint_search(search[0]-'0', results);
+        return true;
+    }
+    else
+        return false;
 }
 
 class StashSearchMenu : public Menu
@@ -1651,9 +1677,9 @@ bool StashSearchMenu::examine_index(int i)
     const StashMenuEntry *sme = dynamic_cast<const StashMenuEntry *>(items[i]);
     const stash_search_result *res = sme->get_search_result();
 
-    if (res->item.defined())
+    if (res->item)
     {
-        item_def it = res->item;
+        item_def &it = *const_cast<item_def*>(res->item);
         // pass the level as a prop, not very elegant
         it.props["level_id"].get_string() = res->pos.id.describe();
         if (!describe_item(it,
@@ -1775,10 +1801,11 @@ bool StashTracker::display_search_results(
         int colour = MENU_ITEM_STOCK_COLOUR;
         if (res.shop && !res.shop->is_visited()) // ???
             colour = CYAN;
-        else if (res.item.defined())
+        else if (res.item)
         {
-            const int itemcol = menu_colour(res.item.name(DESC_PLAIN).c_str(),
-                                        item_prefix(res.item, false), "pickup", false);
+            const string name = res.item->name(DESC_PLAIN);
+            const string prefix = item_prefix(*res.item, false);
+            const int itemcol = menu_colour(name, prefix, "pickup", false);
             if (itemcol != -1)
                 colour = itemcol;
         }
@@ -1790,10 +1817,10 @@ bool StashTracker::display_search_results(
         // set items on this position to darkgrey if we're in travel mode
         me->set_here_enabled(stashmenu.menu_action != Menu::ACT_EXECUTE);
 
-        if (res.item.defined())
+        if (res.item)
         {
             vector<tile_def> item_tiles;
-            get_tiles_for_item(res.item, item_tiles, false);
+            get_tiles_for_item(*res.item, item_tiles, false);
             for (const auto &tile : item_tiles)
                 me->add_tile(tile);
         }
