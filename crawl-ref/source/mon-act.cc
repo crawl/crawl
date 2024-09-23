@@ -2065,7 +2065,7 @@ void handle_monster_move(monster* mons)
             if (outward)
                 outward->props[INWARDS_KEY].get_int() = mons->mid;
 
-            monster_die(*targ, KILL_MISC, NON_MONSTER, true);
+            monster_die(*targ, KILL_TENTACLE_CLEANUP, NON_MONSTER, true);
             targ = nullptr;
         }
 
