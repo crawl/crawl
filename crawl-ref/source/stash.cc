@@ -837,27 +837,6 @@ void LevelStashes::get_matching_stashes(
 {
     string lplace = "{" + m_place.describe() + "}";
 
-    // a single digit or * means we're searching for waypoints' content.
-    const string s = search.tostring();
-    if (s == "*")
-    {
-        set<level_pos> cache;
-        for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        {
-            const level_pos &pos = travel_cache.get_waypoint(i);
-            if (cache.end() != cache.find(pos))
-                continue;
-            cache.insert(pos);
-            _waypoint_search(i, results);
-        }
-        return;
-    }
-    else if (s.size() == 1 && s[0] >= '0' && s[0] <= '9')
-    {
-        _waypoint_search(s[0] - '0', results);
-        return;
-    }
-
     for (const auto &entry : m_stashes)
     {
         vector<stash_search_result> new_results =
@@ -1430,11 +1409,15 @@ void StashTracker::search_stashes(string search_term)
     lastsearch = csearch_literal;
 
     vector<stash_search_result> results;
-    if (!curr_lev)
+    bool waypoint = get_named_stashes(search->tostring(), results);
+    if (!curr_lev && !waypoint)
         results = _inventory_search(*search);
     // allowing offlevel stash searching is not useful in descent mode
-    get_matching_stashes(*search, results, curr_lev
-                                           || crawl_state.game_is_descent());
+    if (!waypoint)
+    {
+        bool descent = crawl_state.game_is_descent();
+        get_matching_stashes(*search, results, curr_lev || descent);
+    }
 
     if (results.empty())
     {
@@ -1514,6 +1497,34 @@ void StashTracker::get_matching_stashes(
 
         result.player_distance = ldist;
     }
+}
+
+bool StashTracker::get_named_stashes(const string &search,
+        vector<stash_search_result> &results)
+{
+    if (search[0] == '*')
+    {
+        set<level_pos> cache;
+        for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+        {
+            const level_pos &pos = travel_cache.get_waypoint(i);
+            if (cache.end() != cache.find(pos))
+                continue;
+            cache.insert(pos);
+            if (pos.is_valid())
+                find_level(pos.id)->_waypoint_search(i, results);
+        }
+        return true;
+    }
+    else if (isadigit(search[0]))
+    {
+        const level_pos &pos = travel_cache.get_waypoint(search[0]-'0');
+        if (pos.is_valid())
+            find_level(pos.id)->_waypoint_search(search[0]-'0', results);
+        return true;
+    }
+    else
+        return false;
 }
 
 class StashSearchMenu : public Menu

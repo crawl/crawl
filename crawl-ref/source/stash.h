@@ -278,6 +278,8 @@ private:
     void get_matching_stashes(const base_pattern &search,
                               vector<stash_search_result> &results,
                               bool curr_lev = false) const;
+    bool get_named_stashes(const string &search,
+                           vector<stash_search_result> &results);
     bool display_search_results(vector<stash_search_result> &results,
                                 bool& sort_by_dist,
                                 bool& filter_useless,
