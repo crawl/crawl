@@ -2162,7 +2162,7 @@ Boris unsummoned
 
 @The_monster@ says, "You can't fire me, I quit!"
 %%%%
-friendly Boris unsummoned
+friendly Boris timeout
 
 @Boris unsummoned@
 %%%%

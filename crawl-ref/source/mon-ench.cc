@@ -1492,40 +1492,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOWLY_DYING:
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(en))
-        {
-            if (you.can_see(*this))
-            {
-
-                switch (type)
-                {
-                    case MONS_PILE_OF_DEBRIS:
-                        mprf("%s collapses into dust.", name(DESC_THE, false).c_str());
-                        break;
-                    case MONS_PILLAR_OF_SALT:
-                    case MONS_WITHERED_PLANT:
-                        mprf("%s crumbles away.", name(DESC_THE, false).c_str());
-                        break;
-                    case MONS_BLOCK_OF_ICE:
-                        mprf("%s melts away.", name(DESC_THE, false).c_str());
-                        break;
-                    default:
-                        if (props.exists(KIKU_WRETCH_KEY))
-                        {
-                            mprf("A nearby %s perishes wretchedly.",
-                                 name(DESC_PLAIN, false).c_str());
-                        }
-                        else
-                        {
-                            mprf("A nearby %s withers and dies.",
-                                 name(DESC_PLAIN, false).c_str());
-                        }
-                        break;
-
-                }
-            }
-
-            monster_die(*this, KILL_NON_ACTOR, NON_MONSTER, true);
-        }
+            monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
         break;
 
     case ENCH_EXPLODING:
