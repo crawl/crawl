@@ -3735,8 +3735,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
 {
     vector<command_type> actions;
 
-    if (!in_inventory(item) && item.pos != you.pos()
-        && is_travelsafe_square(item.pos))
+    bool here = you.on_current_level && item.pos == you.pos();
+    if (!in_inventory(item) && !here && is_travelsafe_square(item.pos))
     {
         // XX might be nice to have a way for this to be visible but grayed
         // out?
