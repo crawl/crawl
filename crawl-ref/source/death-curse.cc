@@ -74,7 +74,7 @@ static void _ouch(actor& target, const actor * source, int dam,
         else
             kt = KILL_MON_MISSILE;
     else
-        kt = KILL_MISCAST;
+        kt = KILL_NON_ACTOR;
 
     if (target.is_monster())
     {
