@@ -1311,6 +1311,8 @@ static string _killer_type_name(killer_type killer)
         return "bound";
     case KILL_SLIMIFIED:
         return "slimified";
+    case KILL_TENTACLE_CLEANUP:
+        return "tentacle cleanup";
     }
     die("invalid killer type");
 }
@@ -2061,7 +2063,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
-                                || killer == KILL_DISMISSED);
+                                || killer == KILL_DISMISSED
+                                || killer == KILL_TENTACLE_CLEANUP);
     bool leaves_corpse = !summoned && !timeout
                             && !mons_reset
                             && !mons_is_tentacle_segment(mons.type);
@@ -2903,7 +2906,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(mons.type)
-             && killer != KILL_MISC
+             && killer != KILL_TENTACLE_CLEANUP
                  || mons.type == MONS_ELDRITCH_TENTACLE
                  || mons.type == MONS_SNAPLASHER_VINE)
     {
@@ -2920,7 +2923,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         destroy_tentacle(&mons);
     }
     else if (mons.type == MONS_ELDRITCH_TENTACLE_SEGMENT
-             && killer != KILL_MISC)
+             && killer != KILL_TENTACLE_CLEANUP)
     {
        monster_die(*monster_by_mid(mons.tentacle_connect), killer,
                    killer_index, silent, wizard, fake);

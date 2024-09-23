@@ -22,4 +22,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_PACIFIED,                     // only used by milestones and notes
     KILL_BOUND,                        // only used by milestones and notes
     KILL_SLIMIFIED,                    // only used by milestones and notes
+    KILL_TENTACLE_CLEANUP,             // Used to prevent infinite recursion when
+                                       // the death of a tentacle segment kills
+                                       // the rest of the tentacle. (Otherwise
+                                       // identical to KILL_RESET)
 };
