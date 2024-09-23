@@ -47,7 +47,7 @@ public:
     // Returns true if this Stash is unvisited since the last update.
     bool unvisited() const;
 
-    vector<stash_search_result> matches_search(
+    vector<stash_search_result> matches_search(const level_id &m_place,
         const string &prefix, const base_pattern &search) const;
 
     void write(FILE *f, coord_def refpos, string place = "",
@@ -136,7 +136,7 @@ struct stash_search_result
     string primary_sort;
 
     // Item that was matched.
-    item_def item;
+    const item_def *item;
 
     // The shop in question, if this result is for a shop name.
     const ShopInfo *shop;
@@ -155,8 +155,8 @@ struct stash_search_result
     int duplicate_piles;
 
     stash_search_result() : pos(), player_distance(0), match_type(), match(),
-                            primary_sort(), item(), shop(nullptr), feat(),
-                            trap(TRAP_UNASSIGNED), in_inventory(false),
+                            primary_sort(), item(nullptr), shop(nullptr),
+                            feat(), trap(TRAP_UNASSIGNED), in_inventory(false),
                             duplicates(0), duplicate_piles(0)
     {
     }
