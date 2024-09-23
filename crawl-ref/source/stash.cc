@@ -841,8 +841,15 @@ void LevelStashes::get_matching_stashes(
     const string s = search.tostring();
     if (s == "*")
     {
+        set<level_pos> cache;
         for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+        {
+            const level_pos &pos = travel_cache.get_waypoint(i);
+            if (cache.end() != cache.find(pos))
+                continue;
+            cache.insert(pos);
             _waypoint_search(i, results);
+        }
         return;
     }
     else if (s.size() == 1 && s[0] >= '0' && s[0] <= '9')
