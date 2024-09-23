@@ -1291,8 +1291,8 @@ static string _killer_type_name(killer_type killer)
         return "you_conf";
     case KILL_MISCAST:
         return "miscast";
-    case KILL_MISC:
-        return "misc";
+    case KILL_NON_ACTOR:
+        return "non_actor";
     case KILL_RESET:
         return "reset";
     case KILL_DISMISSED:
@@ -2699,7 +2699,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
-        case KILL_MISC:
+        case KILL_NON_ACTOR:
         case KILL_MISCAST:
             if (death_message)
             {

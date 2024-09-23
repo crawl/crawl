@@ -1040,7 +1040,7 @@ bool melee_attack::handle_phase_end()
         && attacker->as_monster()->type != MONS_NO_MONSTER
         && attacker->as_monster()->hit_points < 1)
     {
-        monster_die(*attacker->as_monster(), KILL_MISC, NON_MONSTER);
+        monster_die(*attacker->as_monster(), KILL_NON_ACTOR, NON_MONSTER);
     }
 
     return attack::handle_phase_end();

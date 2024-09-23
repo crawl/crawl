@@ -798,7 +798,7 @@ void mummy_death_curse_fineff::fire()
     {
         // Mummy killed by trap or something other than the player or
         // another monster, so no curse.
-        case KILL_MISC:
+        case KILL_NON_ACTOR:
         case KILL_RESET:
         case KILL_DISMISSED:
         // Mummy sent to the Abyss wasn't actually killed, so no curse.

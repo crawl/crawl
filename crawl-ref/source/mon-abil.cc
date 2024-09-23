@@ -789,7 +789,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
         }
 
         if (mi->alive())
-            monster_die(**mi, KILL_MISC, -1, true);
+            monster_die(**mi, KILL_NON_ACTOR, -1, true);
 
         return true;
     }

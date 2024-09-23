@@ -2034,7 +2034,7 @@ static void _xom_drop_lightning()
     beam.target       = you.pos();
     beam.name         = "blast of lightning";
     beam.colour       = LIGHTCYAN;
-    beam.thrower      = KILL_MISC;
+    beam.thrower      = KILL_NON_ACTOR;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
     beam.ex_size      = 2;
@@ -2058,7 +2058,7 @@ static void _xom_spray_lightning(coord_def position)
         beam.target.x     += random_range(-1, 1);
         beam.target.y     += random_range(-1, 1);
     }
-    beam.thrower      = KILL_MISC;
+    beam.thrower      = KILL_NON_ACTOR;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
 
@@ -2501,7 +2501,7 @@ static void _xom_destruction(int sever, bool real)
         beam.target       = mi->pos();
         beam.name         = "sticky fireball";
         beam.colour       = RED;
-        beam.thrower      = KILL_MISC;
+        beam.thrower      = KILL_NON_ACTOR;
         beam.source_id    = MID_NOBODY;
         beam.aux_source   = "Xom's destruction";
         beam.ex_size      = 1;

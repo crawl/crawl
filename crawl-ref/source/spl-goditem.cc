@@ -1286,7 +1286,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
     if (caster == cleansing_flame_source::generic
         || caster == cleansing_flame_source::tso)
     {
-        beam.thrower   = KILL_MISC;
+        beam.thrower   = KILL_NON_ACTOR;
         beam.source_id = MID_NOBODY;
     }
     else if (attacker->is_player())

@@ -3139,7 +3139,7 @@ void bolt::internal_ouch(int dam)
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else // KILL_MISC || (YOU_KILL && aux_source)
+    else // KILL_NON_ACTOR || (YOU_KILL && aux_source)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
 

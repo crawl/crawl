@@ -3121,7 +3121,7 @@ void mark_milestone(const string &type, const string &milestone,
     lastmilestone = milestone;
     lastturn      = you.num_turns;
 
-    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
+    const scorefile_entry se(0, MID_NOBODY, KILL_NON_ACTOR, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     if (!origin_level.empty())
@@ -3167,7 +3167,7 @@ void mark_milestone(const string &type, const string &milestone,
 #if defined(USE_TILE_WEB) || defined(DGL_WHEREIS)
 static xlog_fields _xlog_status(const char *status)
 {
-    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
+    const scorefile_entry se(0, MID_NOBODY, KILL_NON_ACTOR, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());

@@ -1141,7 +1141,7 @@ static void _handle_hellfire_mortar(monster& mortar)
             if (i + 1 == path.size())
             {
                 simple_monster_message(mortar, " sinks back into the magma.");
-                monster_die(mortar, KILL_MISC, true);
+                monster_die(mortar, KILL_NON_ACTOR, true);
                 return;
             }
 
@@ -1161,7 +1161,7 @@ static void _handle_hellfire_mortar(monster& mortar)
                          reason.c_str());
                 }
 
-                monster_die(mortar, KILL_MISC, true);
+                monster_die(mortar, KILL_NON_ACTOR, true);
                 return;
             }
 
@@ -2352,7 +2352,7 @@ static void _post_monster_move(monster* mons)
     crawl_state.potential_pursuers.erase(mons);
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
-        monster_die(*mons, KILL_MISC, NON_MONSTER);
+        monster_die(*mons, KILL_NON_ACTOR, NON_MONSTER);
 }
 
 priority_queue<pair<monster *, int>,

@@ -1297,7 +1297,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         // Don't respawn when a slime 'dies' from merging with another
         // slime.
         && !(mons->type == MONS_SLIME_CREATURE && silent
-             && killer == KILL_MISC
+             && killer == KILL_NON_ACTOR
              && killer_index == NON_MONSTER))
     {
         arena::faction *fac = nullptr;

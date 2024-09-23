@@ -4453,7 +4453,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         && type != MONS_NO_MONSTER)
     {
         if (agent == nullptr)
-            monster_die(*this, KILL_MISC, NON_MONSTER);
+            monster_die(*this, KILL_NON_ACTOR, NON_MONSTER);
         else if (agent->is_player())
             monster_die(*this, KILL_YOU, NON_MONSTER);
         else
@@ -5903,7 +5903,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 mname = old_name;
 
             mounted_kill(this, fly_died ? MONS_HORNET : MONS_SPRIGGAN,
-                !oppressor ? KILL_MISC
+                !oppressor ? KILL_NON_ACTOR
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,
                 (oppressor && oppressor->is_monster())

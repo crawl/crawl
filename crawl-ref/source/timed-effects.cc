@@ -606,7 +606,7 @@ void monster::timeout_enchantments(int levels)
         {
             const int actdur = speed_to_duration(speed) * levels;
             if (lose_ench_duration(entry.first, actdur))
-                monster_die(*this, KILL_MISC, NON_MONSTER, true);
+                monster_die(*this, KILL_NON_ACTOR, NON_MONSTER, true);
             break;
         }
 

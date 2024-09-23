@@ -225,7 +225,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     }
 
     // Inform listeners that the original monster is gone.
-    fire_monster_death_event(mons, KILL_MISC, true);
+    fire_monster_death_event(mons, KILL_NON_ACTOR, true);
 
     // the actual polymorphing:
     auto flags =
