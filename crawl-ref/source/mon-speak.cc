@@ -296,8 +296,8 @@ static string _get_speak_string(const vector<string> &prefixes,
         }
         key += " killed";
     }
-    else if (mons->is_summoned() && mons->get_ench(ENCH_SUMMON).duration <= 0)
-        key += " unsummoned";
+    else if (mons->is_summoned() && mons->get_ench(ENCH_SUMMON_TIMER).duration <= 0)
+        key += " timeout";
 
     string msg;
     for (int tries = 0; tries < 10; tries++)

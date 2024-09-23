@@ -2704,43 +2704,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         case KILL_NON_ACTOR:
             if (death_message)
             {
-                if (summoned)
-                {
-                    // ratskin cloak
-                    if (mons_genus(mons.type) == MONS_RAT)
-                    {
-                        simple_monster_message(mons, " returns to the shadows"
-                                                      " of the Dungeon!");
-                    }
-                    // Death Channel
-                    else if (mons.type == MONS_SPECTRAL_THING)
-                        simple_monster_message(mons, " fades into mist!");
-                    // Necrotise/Animate Dead/Infestation
-                    else if (mons.type == MONS_ZOMBIE
-                             || mons.type == MONS_SKELETON
-                             || mons.type == MONS_DEATH_SCARAB)
-                    {
-                        simple_monster_message(mons, " crumbles into dust!");
-                    }
-                    else if (mons.type == MONS_HOARFROST_CANNON)
-                        simple_monster_message(mons, " melts away.");
-                    else
-                    {
-                        string msg = " " + summoned_poof_msg(&mons) + "!";
-                        simple_monster_message(mons, msg.c_str());
-                    }
-                }
-                else if (mons.type == MONS_SOUL_WISP)
-                    simple_monster_message(mons, " fades into mist!");
-                else
-                {
-                    const char* msg =
-                        exploded                     ? " is blown up!" :
-                        wounded_damaged(targ_holy)   ? " is destroyed!"
-                                                     : " dies!";
-                    simple_monster_message(mons, msg, false, MSGCH_MONSTER_DAMAGE,
-                                           MDAM_DEAD);
-                }
+                const char* msg =
+                    exploded                     ? " is blown up!" :
+                    wounded_damaged(targ_holy)   ? " is destroyed!"
+                                                    : " dies!";
+                simple_monster_message(mons, msg, false, MSGCH_MONSTER_DAMAGE,
+                                        MDAM_DEAD);
             }
             break;
 
@@ -2785,6 +2754,47 @@ item_def* monster_die(monster& mons, killer_type killer,
             break;
 
         case KILL_TIMEOUT:
+            if (!death_message)
+                break;
+
+            // Poof messages for abjurable summons (which happen regardless of
+            // how the summon was killed) are handled later, in _monster_die_cloud
+
+            // ratskin cloak
+            if (mons_genus(mons.type) == MONS_RAT)
+            {
+                simple_monster_message(mons, " returns to the shadows"
+                                                " of the Dungeon!");
+            }
+            // Death Channel
+            else if (mons.type == MONS_SPECTRAL_THING)
+                simple_monster_message(mons, " fades into mist!");
+            // Animate Dead/Infestation
+            else if (mons.type == MONS_ZOMBIE
+                        || mons.type == MONS_SKELETON
+                        || mons.type == MONS_DEATH_SCARAB)
+            {
+                simple_monster_message(mons, " crumbles into dust!");
+            }
+            else if (mons.type == MONS_SOUL_WISP)
+                simple_monster_message(mons, " fades into mist!");
+            else if (mons.type == MONS_HOARFROST_CANNON)
+                simple_monster_message(mons, " melts away.");
+            else if (mons.type == MONS_PILE_OF_DEBRIS)
+                simple_monster_message(mons, " collapses into dust.");
+            else if (mons.type == MONS_PILLAR_OF_SALT || mons.type == MONS_WITHERED_PLANT)
+                simple_monster_message(mons, " crumbles away.");
+            else if (mons.type == MONS_BLOCK_OF_ICE)
+                simple_monster_message(mons, " melts away.");
+            else if (!mons.is_abjurable() && you.can_see(mons))
+            {
+                if (mons.props.exists(KIKU_WRETCH_KEY))
+                    mprf("A nearby %s perishes wretchedly.", mons.name(DESC_PLAIN, false).c_str());
+                else if (mons_class_is_fragile(mons.type))
+                    mprf("A nearby %s withers and dies.", mons.name(DESC_PLAIN, false).c_str());
+            }
+            break;
+
         case KILL_DISMISSED:
             break;
 
@@ -2811,9 +2821,20 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (!silent && !wizard && you.see_cell(mons.pos()))
     {
-        // Make sure that the monster looks dead.
+        // Make sure that the monster looks dead to mons_speaks, so that it can
+        // look up death speach.
         if (mons.alive() && !in_transit && (!summoned || duration > 0))
             mons.hit_points = -1;
+
+        // XXX: Likewise, we do this so mons_speaks will recognize timeouts.
+        //      (But maybe the function should actually take arguments?)
+        if (timeout && mons.is_summoned())
+        {
+            mon_enchant summ = mons.get_ench(ENCH_SUMMON);
+            summ.duration = -1;
+            mons.update_ench(summ);
+        }
+
         // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
         // [malign] kraken has no valid head reference.
         if (!mons_is_tentacle_or_tentacle_segment(mons.type))
