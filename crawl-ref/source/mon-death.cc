@@ -2097,8 +2097,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Various sources of berserk extension on kills.
     if (killer == KILL_YOU && you.berserk())
     {
+        int trog_piety = min(piety_breakpoint(5), (int)you.piety);
         if (have_passive(passive_t::extend_berserk)
-            && you.piety > random2(1000))
+            && trog_piety > random2(800))
         {
             const int bonus = (3 + random2avg(10, 2)) / 2;
 
