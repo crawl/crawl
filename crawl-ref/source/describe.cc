@@ -3274,6 +3274,10 @@ static vector<command_type> _allowed_feat_actions(const coord_def &pos)
 {
     vector<command_type> actions;
 
+    // Don't allow interacting with features while viewing other floors.
+    if (!you.on_current_level)
+        return actions;
+
     // ugh code duplication, some refactoring could be useful in all of this
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
     // TODO: CMD_MAP_GOTO_TARGET
