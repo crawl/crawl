@@ -212,7 +212,7 @@ void mons_relocated(monster* mons)
                             ? mons : monster_by_mid(mons->tentacle_connect);
 
         // this should take care of any tentacles
-        monster_die(*tentacle, KILL_RESET, -1, true, false);
+        monster_die(*tentacle, KILL_RESET, -1, true);
     }
 }
 

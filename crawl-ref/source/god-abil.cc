@@ -6064,7 +6064,7 @@ spret uskayaw_grand_finale(bool fail)
     // throw_monster_bits can cause mons to be killed already, e.g. via pain
     // bond or dismissing summons
     if (mons->alive())
-        monster_die(*mons, KILL_YOU, NON_MONSTER, false);
+        monster_die(*mons, KILL_YOU, NON_MONSTER);
 
     // a lost soul may sneak in here
     if (!mons->alive() && !monster_at(beam.target))

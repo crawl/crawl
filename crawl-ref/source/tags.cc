@@ -7553,7 +7553,7 @@ static void _tag_read_level_monsters(reader &th)
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
-            monster_die(m, KILL_RESET, -1, true, false);
+            monster_die(m, KILL_RESET, -1, true);
             // avoid "mid cache bogosity" if there's an unhandled clone bug
             if (dup_m && dup_m->alive())
             {

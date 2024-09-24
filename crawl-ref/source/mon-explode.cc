@@ -310,10 +310,9 @@ dice_def mon_explode_dam(monster_type mc, int hd)
     return it->second.damage(hd);
 }
 
-bool explode_monster(monster* mons, killer_type killer,
-                             bool pet_kill, bool wizard)
+bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
 {
-    if (mons->hit_points > 0 || mons->hit_points <= -15 || wizard
+    if (mons->hit_points > 0 || mons->hit_points <= -15
         || killer == KILL_RESET || killer == KILL_DISMISSED
         || killer == KILL_BANISHED)
     {
