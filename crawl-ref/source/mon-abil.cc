@@ -370,7 +370,7 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // case 5 (no-op)
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(*initial_slime, KILL_DISMISSED, NON_MONSTER, true);
+    monster_die(*initial_slime, KILL_RESET, NON_MONSTER, true);
 }
 
 // Slime creatures can split but not merge under these conditions.
@@ -726,7 +726,7 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
 bool lost_soul_revive(monster& mons, killer_type killer)
 {
     if (killer == KILL_RESET
-        || killer == KILL_DISMISSED
+        || killer == KILL_RESET_KEEP_ITEMS
         || killer == KILL_BANISHED)
     {
         return false;

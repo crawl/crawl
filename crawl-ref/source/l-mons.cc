@@ -247,10 +247,7 @@ static int l_mons_do_dismiss(lua_State *ls)
     monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
 
     if (mons->alive())
-    {
-        mons->flags |= MF_HARD_RESET;
-        monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
-    }
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
     return 0;
 }
 MDEFN(dismiss, do_dismiss)

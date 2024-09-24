@@ -151,7 +151,7 @@ void dismiss_god_summons(god_type god)
             && mons_is_god_gift(**mi, god))
         {
             // The monster disappears.
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
         }
     }
 }

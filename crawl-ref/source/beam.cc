@@ -6666,7 +6666,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             mprf("The magic binding %s to this plane unravels!",
                  mon->name(DESC_THE).c_str());
-            monster_die(*mon, KILL_DISMISSED, actor_to_death_source(agent()));
+            monster_die(*mon, KILL_RESET, actor_to_death_source(agent()));
         }
         else
             debuff_monster(*mon);

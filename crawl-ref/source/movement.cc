@@ -77,7 +77,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
     {
         simple_monster_message(*mons, " dissipates!", false,
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        monster_die(*mons, KILL_DISMISSED, NON_MONSTER, true);
+        monster_die(*mons, KILL_RESET, NON_MONSTER, true);
         return;
     }
 

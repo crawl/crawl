@@ -454,7 +454,7 @@ static void _do_merge_masses(monster* initial_mass, monster* merge_to)
     behaviour_event(merge_to, ME_EVAL);
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(*initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+    monster_die(*initial_mass, KILL_RESET, NON_MONSTER, true);
 }
 
 void starcursed_merge_fineff::fire()
@@ -800,7 +800,7 @@ void mummy_death_curse_fineff::fire()
         // another monster, so no curse.
         case KILL_NON_ACTOR:
         case KILL_RESET:
-        case KILL_DISMISSED:
+        case KILL_RESET_KEEP_ITEMS:
         // Mummy sent to the Abyss wasn't actually killed, so no curse.
         case KILL_BANISHED:
             return;
@@ -844,7 +844,7 @@ void mummy_death_curse_fineff::fire()
 void summon_dismissal_fineff::fire()
 {
     if (defender() && defender()->alive())
-        monster_die(*(defender()->as_monster()), KILL_DISMISSED, NON_MONSTER);
+        monster_die(*(defender()->as_monster()), KILL_RESET_KEEP_ITEMS, NON_MONSTER);
 }
 
 void spectral_weapon_fineff::fire()

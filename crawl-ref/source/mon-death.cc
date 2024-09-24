@@ -557,7 +557,7 @@ void record_monster_defeat(const monster* mons, killer_type killer)
 {
     if (crawl_state.game_is_arena())
         return;
-    if (killer == KILL_RESET || killer == KILL_DISMISSED)
+    if (killer == KILL_RESET || killer == KILL_RESET_KEEP_ITEMS)
         return;
     if (mons->is_summoned())
         return;
@@ -719,7 +719,7 @@ static bool _yred_bind_soul(monster* mons, killer_type killer)
 {
     if (you_worship(GOD_YREDELEMNUL) && mons->has_ench(ENCH_SOUL_RIPE)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
-        && killer != KILL_DISMISSED && killer != KILL_BANISHED
+        && killer != KILL_RESET_KEEP_ITEMS && killer != KILL_BANISHED
         // You can't deliberately bind a summon, but this also handles mirror copies
         && !mons->is_summoned())
     {
@@ -813,7 +813,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
 static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 {
     // Can't recover from these
-    if (ktype == KILL_BANISHED || ktype == KILL_RESET || ktype == KILL_DISMISSED)
+    if (ktype == KILL_BANISHED || ktype == KILL_RESET || ktype == KILL_RESET_KEEP_ITEMS)
         return false;
 
     // XXX: Summoned Blorkulas (ie: from phantom mirror) will cease to be when
@@ -1297,8 +1297,8 @@ static string _killer_type_name(killer_type killer)
         return "non_actor";
     case KILL_RESET:
         return "reset";
-    case KILL_DISMISSED:
-        return "dismissed";
+    case KILL_RESET_KEEP_ITEMS:
+        return "reset_keep_items";
     case KILL_BANISHED:
         return "banished";
     case KILL_TIMEOUT:
@@ -2063,7 +2063,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = (killer == KILL_RESET
-                                || killer == KILL_DISMISSED
+                                || killer == KILL_RESET_KEEP_ITEMS
                                 || killer == KILL_TENTACLE_CLEANUP);
     bool leaves_corpse = !summoned && !timeout
                             && !mons_reset
@@ -2304,9 +2304,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             place_cloud(CLOUD_FIRE, mons.pos(), 2 + random2(4), &mons);
         }
-
-        if (killer == KILL_RESET)
-            killer = KILL_DISMISSED;
     }
     else if (mons.type == MONS_FOXFIRE)
     {
@@ -2329,9 +2326,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             place_cloud(CLOUD_COLD, mons.pos(), 2 + random2(4), &mons);
         }
-
-        if (killer == KILL_RESET)
-            killer = KILL_DISMISSED;
     }
     else if (mons.type == MONS_PILE_OF_DEBRIS)
     {
@@ -2343,14 +2337,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_DANCING_WEAPON)
     {
-        // TODO: does any of the following ever need to happen for other
-        // animated objects?
-        if (!hard_reset)
-        {
-            if (killer == KILL_RESET)
-                killer = KILL_DISMISSED;
-        }
-
         int w_idx = mons.inv[MSLOT_WEAPON];
         ASSERT(w_idx != NON_ITEM);
 
@@ -2416,9 +2402,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             silent = true;
         }
-
-        if (killer == KILL_RESET)
-            killer = KILL_DISMISSED;
     }
     else if (mons.type == MONS_BRIAR_PATCH)
     {
@@ -2792,7 +2775,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             break;
 
-        case KILL_DISMISSED:
+        case KILL_RESET_KEEP_ITEMS:
             break;
 
         default:
@@ -3462,7 +3445,7 @@ int dismiss_monsters(string pattern)
         {
             if (!keep_item)
                 _vanish_orig_eq(*mi);
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true);
+            monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER, true);
             ++ndismissed;
         }
     }
@@ -3731,7 +3714,7 @@ monster* mons_find_elven_twin_of(const monster* mons)
 **/
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
-    if (killer == KILL_DISMISSED || killer == KILL_RESET)
+    if (killer == KILL_RESET_KEEP_ITEMS || killer == KILL_RESET)
         return;
 
     // Sometimes, if you pacify one twin near a staircase, they leave

@@ -788,7 +788,7 @@ namespace arena
                          "Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
                          other.name(DESC_PLAIN, true).c_str());
-                    monster_die(other, KILL_DISMISSED, NON_MONSTER);
+                    monster_die(other, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
                 }
                 else
                 {

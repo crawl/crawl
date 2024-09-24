@@ -2998,7 +2998,10 @@ void excommunication(bool voluntary, god_type new_god)
         yred_end_blasphemy();
         for (monster_iterator mi; mi; ++mi)
             if (is_yred_undead_follower(**mi))
-                monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
+            {
+                // Bound souls should still drop their equipment
+                monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+            }
         remove_all_companions(GOD_YREDELEMNUL);
         add_daction(DACT_OLD_CHARMD_SOULS_POOF);
         break;

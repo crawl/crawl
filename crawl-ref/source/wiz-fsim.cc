@@ -337,7 +337,7 @@ static monster* _init_fsim()
 
     if (!adjacent(mon->pos(), you.pos()))
     {
-        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_RESET, NON_MONSTER);
         mpr("Could not put monster adjacent to player.");
         return 0;
     }
@@ -356,7 +356,7 @@ static monster* _init_fsim()
 
 static void _uninit_fsim(monster *mon)
 {
-    monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+    monster_die(*mon, KILL_RESET, NON_MONSTER);
     reset_training();
 }
 
