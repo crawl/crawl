@@ -1870,8 +1870,7 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
         did_kill_conduct(DID_KILL_FAST, mons);
 }
 
-item_def* monster_die(monster& mons, const actor *killer, bool silent,
-                      bool wizard, bool fake)
+item_def* monster_die(monster& mons, const actor *killer, bool silent, bool fake)
 {
     killer_type ktype = KILL_YOU;
     int kindex = NON_MONSTER;
@@ -1885,7 +1884,7 @@ item_def* monster_die(monster& mons, const actor *killer, bool silent,
         kindex = kmons->mindex();
     }
 
-    return monster_die(mons, ktype, kindex, silent, wizard, fake);
+    return monster_die(mons, ktype, kindex, silent, fake);
 }
 
 /**
@@ -1983,12 +1982,11 @@ static void _maybe_set_monster_foe(monster& mons, int killer_index)
  *               documented/coded)
  * @param killer_index The mindex of the killer (TODO: always use an actor*)
  * @param silent whether to print any messages about the death
- * @param wizard various switches
  * @param fake   The death of the mount of a mounted monster (spriggan rider).
  * @returns a pointer to the created corpse, possibly null
  */
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent, bool wizard, bool fake)
+                      int killer_index, bool silent, bool fake)
 {
     ASSERT(!invalid_monster(&mons));
 
@@ -2166,15 +2164,14 @@ item_def* monster_die(monster& mons, killer_type killer,
     //
     // (It's possible some other things should be moved here, but dead code that
     // deals primarily with messaging seems fine to override by exploding)
-    if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
-        && !wizard && !mons_reset)
+    if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished && !mons_reset)
     {
         _protean_explosion(&mons);
         silent = true;
     }
     else if (mons.type == MONS_BATTLESPHERE)
     {
-        if (!wizard && !mons_reset && !was_banished
+        if (!mons_reset && !was_banished
             && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
@@ -2187,7 +2184,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         silent = true;
     }
     else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
-             && !wizard && !mons_reset)
+             && !mons_reset)
     {
         _druid_final_boon(&mons);
     }
@@ -2251,7 +2248,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         silent = true;
     }
     else if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
-             && !silent && !was_banished && !wizard && !mons_reset
+             && !silent && !was_banished && !mons_reset
              && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
     {
         // If we died due to the rimeblight instakill threshold, leave a pillar
@@ -2278,7 +2275,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (monster_explodes(mons))
     {
         did_death_message =
-            explode_monster(&mons, killer, pet_kill, wizard);
+            explode_monster(&mons, killer, pet_kill);
     }
     else if ((mons.type == MONS_FULMINANT_PRISM || mons.type == MONS_SHADOW_PRISM)
              && mons.prism_charge == 0)
@@ -2302,7 +2299,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             silent = true;
         }
 
-        if (mons.type == MONS_FIRE_VORTEX && !wizard && !mons_reset
+        if (mons.type == MONS_FIRE_VORTEX && !mons_reset
             && !was_banished && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_FIRE, mons.pos(), 2 + random2(4), &mons);
@@ -2327,7 +2324,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             did_death_message = true;
         }
 
-        if (!wizard && !mons_reset && !was_banished
+        if (!mons_reset && !was_banished
             && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_COLD, mons.pos(), 2 + random2(4), &mons);
@@ -2338,7 +2335,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_PILE_OF_DEBRIS)
     {
-        if (!wizard && !mons_reset && !was_banished
+        if (!mons_reset && !was_banished
             && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_DUST, mons.pos(), 2 + random2(4), &mons);
@@ -2435,7 +2432,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             silent = true;
     }
     else if (mons.type == MONS_BLAZEHEART_GOLEM && !silent && !mons_reset
-             && !was_banished && !wizard)
+             && !was_banished)
     {
         // Only blow up if non-dormant
         if (grid_distance(mons.pos(), you.pos()) <= 1)
@@ -2468,7 +2465,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
     else if (mons.type == MONS_MARTYRED_SHADE && !silent && !mons_reset
-             && !was_banished && !wizard)
+             && !was_banished)
     {
         // Don't cause transformation on the player killing their own shade.
         // (Angering them will normally make them disappear, but if you do
@@ -2482,14 +2479,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
     else if (mons.type == MONS_HOARFROST_CANNON && !silent && !mons_reset
-             && !was_banished && !wizard && env.grid(mons.pos()) == DNGN_FLOOR)
+             && !was_banished && env.grid(mons.pos()) == DNGN_FLOOR)
     {
         temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
                             TERRAIN_CHANGE_FLOOD);
     }
 
     if (mons.type == MONS_INUGAMI)
-        check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
+        check_canid_farewell(mons, !mons_reset && !was_banished);
     else if (mons.type == MONS_PLAYER_SHADOW)
         dithmenos_cleanup_player_shadow(&mons);
 
@@ -2819,7 +2816,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             mons.hit_points = -1;
     }
 
-    if (!silent && !wizard && you.see_cell(mons.pos()))
+    if (!silent && you.see_cell(mons.pos()))
     {
         // Make sure that the monster looks dead to mons_speaks, so that it can
         // look up death speach.
@@ -2877,7 +2874,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Like Boris, but regenerates immediately
             if (mons_is_mons_class(&mons, MONS_NATASHA))
                 you.unique_creatures.set(MONS_NATASHA, false);
-            if (!mons_reset && !wizard)
+            if (!mons_reset)
                 mons_felid_revive(&mons);
         }
         else if (mons_is_mons_class(&mons, MONS_PIKEL))
@@ -2890,7 +2887,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             elven_twin_died(&mons, in_transit, killer, killer_index);
         else if (mons.type == MONS_BENNU && !in_transit && !was_banished
                  && !mons_reset && !mons.pacified()
-                 && (!summoned || duration > 0) && !wizard
+                 && (!summoned || duration > 0)
                  && mons_bennu_can_revive(&mons))
         {
             // All this information may be lost by the time the monster revives.
@@ -2948,14 +2945,14 @@ item_def* monster_die(monster& mons, killer_type killer,
              && killer != KILL_TENTACLE_CLEANUP)
     {
        monster_die(*monster_by_mid(mons.tentacle_connect), killer,
-                   killer_index, silent, wizard, fake);
+                   killer_index, silent, fake);
     }
     else if (mons.type == MONS_FLAYED_GHOST)
         end_flayed_effect(&mons);
     // Give the treant a last chance to release its hornets if it is killed in a
     // single blow from above half health
     else if (mons.type == MONS_SHAMBLING_MANGROVE && !was_banished
-             && !mons.pacified() && (!summoned || duration > 0) && !wizard
+             && !mons.pacified() && (!summoned || duration > 0)
              && !mons_reset)
     {
         treant_release_fauna(mons);
@@ -3039,7 +3036,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
-    if (!wizard && !was_banished)
+    if (!was_banished)
     {
         _monster_die_cloud(&mons, !timeout && !mons_reset,
                            silent, summoned && mons.is_abjurable());
@@ -3144,7 +3141,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (leaves_corpse && corpse)
     {
-        if (!silent && !wizard)
+        if (!silent)
             _special_corpse_messaging(mons);
         // message ordering... :(
         if (corpse->base_type == OBJ_CORPSES // not gold
@@ -3355,7 +3352,7 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
         mon.props[REAPER_KEY].get_int() = daddy->props[REAPER_KEY].get_int();
     }
 
-    return monster_die(mon, killer, killer_index, false, false, true);
+    return monster_die(mon, killer, killer_index, false, true);
 }
 
 /**
@@ -3465,7 +3462,7 @@ int dismiss_monsters(string pattern)
         {
             if (!keep_item)
                 _vanish_orig_eq(*mi);
-            monster_die(**mi, KILL_DISMISSED, NON_MONSTER, false, true);
+            monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true);
             ++ndismissed;
         }
     }

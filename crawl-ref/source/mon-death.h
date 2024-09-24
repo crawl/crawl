@@ -43,11 +43,10 @@ class monster;
 struct bolt;
 
 item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
-                      bool wizard = false, bool fake = false);
+                      bool fake = false);
 
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent = false,
-                      bool wizard = false, bool fake = false);
+                      int killer_index, bool silent = false, bool fake = false);
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
