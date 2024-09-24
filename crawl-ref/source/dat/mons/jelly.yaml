@@ -1,6 +1,6 @@
 name: "jelly"
 glyph: {char: "J", colour: lightred}
-flags: [eat_doors, see_invis, unblindable, splits, web_immune, acid_splash, no_skeleton]
+flags: [eat_doors, see_invis, unblindable, splits, amorphous, acid_splash, no_skeleton]
 resists: {poison: 1, acid: 3}
 xp_mult: 15
 will: 10
