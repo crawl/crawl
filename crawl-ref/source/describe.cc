@@ -3499,7 +3499,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += "\nSome spells can be cast through it.";
     }
 
-    if (pos == you.pos())
+    if (pos == you.pos() && you.on_current_level)
         long_desc += "\nYou are here.";
 
     inf.body << long_desc;
