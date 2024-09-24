@@ -845,6 +845,7 @@ eye_of_devastation MONS_EYE_OF_DEVASTATION
 %rim 1
 golden_eye MONS_GOLDEN_EYE
 %sdir mon/holy
+%rim 0
 ophan MONS_OPHAN
 
 ## Hybrids ('H')
