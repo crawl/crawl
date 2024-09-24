@@ -4252,13 +4252,10 @@ MONS:   angel
 MONS:   fravashi
 MONS:   ophan
 MONS:   daeva
-KMONS:  8 = pearl dragon
-KMONS:  9 = pearl dragon
-KMONS:  0 = apis
-KMONS:  A = apis
-KMONS:  E = apis
-KMONS:  B = daeva god:Zin
-KMONS:  Z = daeva god:Zin
+KMONS:  89 = pearl dragon
+KMONS:  0A = apis
+KMONS:  BE = cherub god:Elyvilon
+KMONS:  DZ = daeva god:Zin
 KMONS:  S = patrolling seraph
 KMONS:  P = sacred lotus
 # There's a somewhat iffy interaction with pregen here. As long as only one
@@ -4285,12 +4282,12 @@ COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
 TILE:   GH = dngn_golden_statue
-FTILE:  _124SDcG|*'O = floor_limestone
-FTILE:  "E80;$ = floor_grass
-COLOUR: "80;$ = green
-FTILE:  -ZBghi&v = floor_vault
-KPROP:  ;E80$ = no_tele_into
-SUBST:  D& = +, '"-; = ., H = G, C = c
+FTILE:  _124S~cG|*'O = floor_limestone
+FTILE:  "E80B;$ = floor_grass
+COLOUR: "80B;$ = green
+FTILE:  -ZDghi&v = floor_vault
+KPROP:  ;E8$ = no_tele_into
+SUBST:  ~& = +, '"-; = ., H = G, C = c
 : set_feature_name("metal_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva /\
@@ -4308,7 +4305,7 @@ xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+..{.(..+...Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxx""0"""wwwwwPwwwww;wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCC"""""""""wwwwwwww;;;;wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCd[+9......+""0"wPw0"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd[+9......+""B"wPwB"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCCx""""ww"""""wwwww;;;wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxxx""""""""""wwwww;;wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
@@ -4336,7 +4333,7 @@ xxxx...........wwwxwwwwww.xxx..cc..c1'1cGw'2'cc1_1cc'2'wGc***c..cc......xxxxxxxx
 xxxx..........wwwwxxwwww..xxx..cc..ccccccw''''c'4'c''''wcccccc..cc........xxxxxx
 xxxx...xxx....wwwxxxwwww.xxx...cc..ccwwcGw''''c'''c''''wGcwwcc..cc.........xxxxx
 xxxxx..xxx...wwwwxxxwww.xxxx...cc..cc22ccw''''''G''''''wcc22cc..cc..........xxxx
-xxxxx...xxx..wwwxxxwww...xx....cc..cc''D'''''''''''''''''D''cc..cc..........xxxx
+xxxxx...xxx..wwwxxxwww...xx....cc..cc''~'''''''''''''''''~''cc..cc..........xxxx
 xxxxx...xx...wwwwwwww..........cc..cc''ccw'''''''''''''wcc''cc..cc.....xx....xxx
 xxxx...xxx..wwwwwwww...xx......cc..cc''cGw'''''''''''''wGc''cc..cc....xxxx...xxx
 xxx...xxx..wwwwwww...xxxxxx....cc..cc''ccwwwwwwwwwwwwwwwcc''cc..cc....xxxx...xxx
@@ -4345,25 +4342,25 @@ xxx.......wwwwww....xxxxxxxx...cc..cc''ccccccccccccccccccc''cc..cc.....x....xxxx
 xxx......wwwwwww...xxxxxxxxx...cc..cc'''''''''''''''''''''''cc..cc..........xxxx
 xx.....wwwwwwwww..xxxxxxxxx....cc..cc''''2'''G'''''G'''2''''cc..cc.........xxxxx
 xx....wwwwwwwww...xxxxxxxxx....cc..cc4'''''''''''''''''''''4cc..cc........xxxxxx
-xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
+xx...wwwwwwwww.....xxxxxxxx....cc..cc''ccccccc~c~c~ccccccc''cc..cc........xxxxxx
 xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
 xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''4'''cccccccccc..cc...xx....xxxxx
-xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
+xxwwwwwwww....xx....xxx........cc...........ccc~~~ccc...........cc...xxx....xxxx
 xwwwwwww.....xxxx.........x....cc......5.................5......cc....xx....xxxx
 xwwwwww.....xxxx.........xx...ccc+.............................+ccc.........xxxx
 xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
 xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
 xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx
 xxxx..xx...vvv----v-----iv.v................................x..........xxxxxxxxx
-xxxx...x..vvv-Bv-----vvBiv.vv...............H.......H......xxx........xxxxxxxxxx
+xxxx...x..vvv-Dv-----vvDiv.vv...............H.......H......xxx........xxxxxxxxxx
 xxxxx.....vvi-----v-----iv........v........................xxx.........xxxxxxxxx
 xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
-xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
+xxxxx.....vv---------vDv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
 xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.Axx
-xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
+xxxxxx....vv---------vDv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
 xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx.A.xxxxx..xxxx...x
-xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx.A..xxxxA.xxxx..xxx
-xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx.A..xxxxxxx....xx
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx.A..xxxx3.xxxx..xxx
+xxxxxxxx..vvv-Dv-----vvDiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx.6..xxxxxxx....xx
 xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$8$$$xxxxxx..x..xxx....x..x
 xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$$$xxxxxxx........xxxxAx
 xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$$$;;;xxxxxxx......xxxxxxx

@@ -127,7 +127,9 @@
             e.tile("A = depths_column / depths_crumbled_column")
             e.tile("x = wall_catacombs")
         elseif set_weight == 5 and crawl.one_chance_in(4) then
-            e.mons("cherub / apis")
+            e.mons("cherub w:26 / apis w:6 / " ..
+                   "merfolk impaler ; trident ego:holy_wrath . " ..
+                                     "kite shield . plate armour")
             e.mons("angel / daeva")
             e.mons("ophan / fravashi w:3 / pearl dragon w:3")
             e.kfeat("A : fountain_sparkling")

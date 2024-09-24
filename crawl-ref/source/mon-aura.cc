@@ -60,6 +60,11 @@ static const vector<mon_aura_data> aura_map =
         ENCH_EMPOWERED_SPELLS, 1, false,
         NUM_DURATIONS, "",
         [](const actor& targ) { return targ.antimagic_susceptible() ;}},
+
+    {MONS_APIS,
+        ENCH_DOUBLED_VIGOUR, 1, false,
+        NUM_DURATIONS, "",
+        [](const actor& targ) { return targ.type != MONS_APIS ;}},
 };
 
 static mon_aura_data _get_aura_for(const monster& mon)
@@ -183,9 +188,10 @@ void mons_update_aura(const monster& mon)
                         continue;
                 }
 
-                // Remove any enchantment that may currently exist, since we don't
-                // want them to stack.
-                mi->del_ench(aura.ench_type, true, false);
+                // Remove any enchantment that may currently exist, since we
+                // don't want them to stack. (Treat doubled vigour differently,
+                // since otherwise it'll keep stacking HP scaling.)
+                mi->del_ench(aura.ench_type, true, aura.ench_type == ENCH_DOUBLED_VIGOUR);
                 mi->add_ench(mon_enchant(aura.ench_type, 1, &mon, aura.base_duration,
                                         aura.is_hostile ? AURA_HOSTILE : AURA_FRIENDLY));
             }

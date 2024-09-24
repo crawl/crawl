@@ -679,7 +679,8 @@ protect its wearer in a more aggressive fashion than armour customarily does.
 %%%%
 apis
 
-A placid, sacred bull of Elyvilon.
+A placid, sacred bull of Elyvilon. Its status as an exalted envoy of the Healer
+lets its very presence double the vitality and vigour of its allies.
 %%%%
 apocalypse crab
 
@@ -2087,7 +2088,8 @@ ophan
 
 A creature from the heavenly realms. It consists of a wheel within a wheel, and
 both of these are covered in eyes; strange flames of holy fire flicker all over
-it.
+it. To be seen by its countless eyes is to be highlighted and branded as both
+dissident and quarry for its allies to hunt down.
 %%%%
 orange crystal statue
 

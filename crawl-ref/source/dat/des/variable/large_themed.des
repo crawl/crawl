@@ -2528,11 +2528,13 @@ NSUBST: . = 1=2 / 3=2. / 10=3. / 10=3.. / .
 : if you.in_branch("D") then
 TILE:   G : dngn_statue_angel
 KFEAT:  O = altar_zin / altar_elyvilon / altar_the_shining_one
+MONS:   apis
+MONS:   necromancer band / death knight band
+KMONS:  H = merfolk ; trident ego:holy_wrath . buckler . robe
+NSUBST: 1 = 1:1 / *:H
+SUBST:  3 = .
 FTILE:  -O : floor_limestone / floor_w_marble
 COLOUR: - : white
-MONS:   apis / nothing
-MONS:   necromancer band / death knight band
-MONS:   nothing
 : elseif you.in_branch("Orc") then
 SUBST:  ( = {, [ = >, G = I
 KFEAT:  > = escape_hatch_down
@@ -2540,7 +2542,7 @@ KFEAT:  O = altar_beogh
 KPROP:  -O = bloody
 MONS:   orc warrior band / nothing
 MONS:   necromancer band
-MONS:   nothing
+SUBST:  3 = .
 : else
 # Depths
 :    if crawl.coinflip() then

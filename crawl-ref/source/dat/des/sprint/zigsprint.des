@@ -422,8 +422,8 @@ function choose_mset_3(e)
                Rupert / Saint Roka / Snorg")
 -- Holy
   else
-    e.kmons("1 = daeva / angel / fravashi / cherub / ophan / \
-                 apis / nothing w:78")
+    e.kmons("1 = daeva w:5 / angel / fravashi / cherub / ophan / \
+                 apis w:5 / nothing w:88")
   end
 end
 

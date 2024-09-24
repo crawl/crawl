@@ -2532,10 +2532,13 @@ int exper_value(const monster& mon, bool real, bool legacy)
     // up the exact value anyway. Especially for pillusions.
     if (real || mon.type == MONS_PLAYER_GHOST || mon.type == MONS_PLAYER_ILLUSION)
     {
-        // A berserking monster is much harder, but the xp value shouldn't
-        // depend on whether it was berserk at the moment of death.
+        // Monsters with extra health are much harder, but the xp value
+        // shouldn't depend on whether it was boosted at the moment of death.
         if (mon.has_ench(ENCH_BERSERK))
             maxhp = (maxhp * 2 + 1) / 3;
+
+        if (mon.has_ench(ENCH_DOUBLED_VIGOUR))
+            maxhp = maxhp / 2;
     }
     else
     {
