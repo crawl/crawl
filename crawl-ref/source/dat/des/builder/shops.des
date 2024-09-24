@@ -1453,8 +1453,8 @@ ENDMAP
 NAME:    nicolae_shop_gadgets
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KFEAT:   S = general shop type:Gadget suffix:Gallery count:4 ; \
-         any wand | any misc
+KFEAT:   S = general shop type:Gadget suffix:Gallery count:5 use_all ; \
+         any wand | any wand | any wand | any wand | any misc
 SHUFFLE: cvmb
 MAP
 cc.vv
