@@ -2693,10 +2693,11 @@ bool full_describe_square(const coord_def &c, bool cleanup)
 
     if (quantity > 1)
     {
+        string verb = you.on_current_level && you.see_cell(c) ? "examine"
+                                                              : "remember";
         const coord_def describe_result =
             _full_describe_menu(list_mons, list_items, list_features, "", true,
-                    false, you.see_cell(c) ? "What do you want to examine?"
-                                           : "What do you want to remember?");
+                                false, "What do you want to "+verb+"?");
         if (describe_result != coord_def(-1, -1))
             return true; // something happened, we want to exit
     }

@@ -3279,7 +3279,7 @@ static vector<command_type> _allowed_feat_actions(const coord_def &pos)
     // TODO: CMD_MAP_GOTO_TARGET
     const command_type dir = feat_stair_direction(feat);
 
-    if (dir != CMD_NO_CMD && you.pos() == pos)
+    if (you.on_current_level && dir != CMD_NO_CMD && you.pos() == pos)
         actions.push_back(dir);
 
     if ((feat_is_staircase(feat) || feat_is_escape_hatch(feat))
@@ -3290,9 +3290,9 @@ static vector<command_type> _allowed_feat_actions(const coord_def &pos)
                             ? CMD_MAP_PREV_LEVEL : CMD_MAP_NEXT_LEVEL);
     }
 
-    if (feat_is_door(feat) && feat != DNGN_BROKEN_DOOR && feat != DNGN_BROKEN_CLEAR_DOOR
-        && (you.pos() - pos).rdist() == 1 // XX better handling of big gates
-        && !feat_is_sealed(feat))
+    if (you.on_current_level && feat_is_door(feat) && feat != DNGN_BROKEN_DOOR
+        && feat != DNGN_BROKEN_CLEAR_DOOR && !feat_is_sealed(feat)
+        && (you.pos() - pos).rdist() == 1) // XX better handling of big gates
     {
         // XX maybe also a (G)o and traverse command?
         actions.push_back(feat_is_closed_door(feat)
@@ -3495,7 +3495,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += "\nSome spells can be cast through it.";
     }
 
-    if (pos == you.pos())
+    if (you.on_current_level && pos == you.pos())
         long_desc += "\nYou are here.";
 
     inf.body << long_desc;
