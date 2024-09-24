@@ -2694,15 +2694,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             break;
 
         case KILL_BANISHED:
-            // Monster doesn't die, just goes back to wherever it came from.
-            // This must only be called by monsters running out of time (or
-            // abjuration), because it uses the beam variables!  Or does it???
-            // Pacified monsters leave the level when this happens.
-
             // Monster goes to the Abyss.
             mons.flags |= MF_BANISHED;
-            // KILL_RESET monsters no longer lose their whole inventory, only
-            // items they were generated with.
             if (mons.pacified() || !mons.needs_abyss_transit())
             {
                 // A banished monster that doesn't go on the transit list
