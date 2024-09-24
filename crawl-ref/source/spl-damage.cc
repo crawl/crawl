@@ -4979,6 +4979,10 @@ vector<coord_def> get_magnavolt_targets()
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
+        // Don't zap at ourselves, even if we're standing in a cloud
+        if (*ri == you.pos())
+            continue;
+
         if (monster* mon = monster_at(*ri))
         {
             if (mon->has_ench(ENCH_MAGNETISED))
